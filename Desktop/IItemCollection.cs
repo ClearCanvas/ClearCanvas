@@ -68,7 +68,7 @@ namespace ClearCanvas.Desktop
         private readonly int _itemIndex;
         private readonly ItemChangeType _changeType;
 
-        internal ItemChangedEventArgs(ItemChangeType changeType, int itemIndex, object item)
+        public ItemChangedEventArgs(ItemChangeType changeType, int itemIndex, object item)
         {
             _changeType = changeType;
             _itemIndex = itemIndex;
