@@ -562,6 +562,7 @@ namespace ClearCanvas.Desktop.View.WinForms
             _treeCtrl.SelectedNode = node;
 			if (node == null)
 				EventsHelper.Fire(_selectionChanged, this, EventArgs.Empty);
+            e.Cancel = !CollectionUtils.Contains<ToolStripItem>(_contextMenu.Items, item => item.Available);
         }
 
         private void _contextMenu_Opened(object sender, EventArgs e)
