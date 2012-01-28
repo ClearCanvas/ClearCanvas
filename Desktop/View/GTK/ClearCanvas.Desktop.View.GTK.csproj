@@ -156,7 +156,6 @@
         <Folder Include="Tests\"/>
     </ItemGroup>
     <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets"/>
-    <Import Project="..\..\..\Common\ClearCanvas.Strings.targets"/>
     <PropertyGroup>
         <PreBuildEvent/>
         <PostBuildEvent/>
