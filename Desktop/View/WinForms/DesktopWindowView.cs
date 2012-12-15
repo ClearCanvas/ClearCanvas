@@ -117,6 +117,11 @@ namespace ClearCanvas.Desktop.View.WinForms
 			_errorNotificationDialog.Dismissed += ErrorDialogDismissed;
        }
 
+        protected DesktopWindow DesktopWindow
+        {
+            get { return _desktopWindow; }
+        }
+
     	internal string DesktopWindowName
     	{
 			get { return _desktopWindow.Name; }	
