@@ -101,7 +101,7 @@ namespace ClearCanvas.ImageViewer.Explorer.Dicom
 					{
 						Platform.Log(LogLevel.Debug, "Querying for a StudyUpdate work items that are in progress for the studies that are being opened.");
 
-						var anyStudyBeingModified = Context.SelectedStudies.Any(study =>
+						var isStudyBeingProcessed = Context.SelectedStudies.Any(study =>
 						{
 							var request = new WorkItemQueryRequest { StudyInstanceUid = study.StudyInstanceUid };
 							IEnumerable<WorkItemData> workItems = null;
@@ -110,13 +110,8 @@ namespace ClearCanvas.ImageViewer.Explorer.Dicom
 							return workItems.Any(IsNonTerminalStudyUpdateItem);
 						});
 
-						if (anyStudyBeingModified)
-						{
-							var message = Context.SelectedStudies.Count == 1 ? SR.MessageStudyIsBeingModified : SR.MessageStudiesAreBeingModified;
-
-							if (DialogBoxAction.No == Context.DesktopWindow.ShowMessageBox(message, MessageBoxActions.YesNo))
-								return;
-						}
+						if (isStudyBeingProcessed && DialogBoxAction.No == Context.DesktopWindow.ShowMessageBox(SR.MessageLoadStudiesBeingProcessed, MessageBoxActions.YesNo))
+							return;
 					}
 					catch (Exception e)
 					{

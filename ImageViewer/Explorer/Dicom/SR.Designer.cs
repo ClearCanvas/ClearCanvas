@@ -516,6 +516,15 @@ namespace ClearCanvas.ImageViewer.Explorer.Dicom {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to One or more studies you selected are being processed. They may be incomplete or contain out-of-date information. Do you still want to continue?.
+        /// </summary>
+        internal static string MessageLoadStudiesBeingProcessed {
+            get {
+                return ResourceManager.GetString("MessageLoadStudiesBeingProcessed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to One of the selected studies is on a non-streaming server and cannot be opened..
         /// </summary>
         internal static string MessageOneNonStreamingStudyCannotBeOpened {
@@ -602,24 +611,6 @@ namespace ClearCanvas.ImageViewer.Explorer.Dicom {
         internal static string MessageSomeOfSelectedStudiesInUse {
             get {
                 return ResourceManager.GetString("MessageSomeOfSelectedStudiesInUse", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Some of the selected studies are being modified and may be incomplete. The studies will not be updated once they are opened.  Are you sure you want to continue?.
-        /// </summary>
-        internal static string MessageStudiesAreBeingModified {
-            get {
-                return ResourceManager.GetString("MessageStudiesAreBeingModified", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to The selected study is being modified and may be incomplete. The study will not be updated once it is opened.  Are you sure you want to continue?.
-        /// </summary>
-        internal static string MessageStudyIsBeingModified {
-            get {
-                return ResourceManager.GetString("MessageStudyIsBeingModified", resourceCulture);
             }
         }
         
