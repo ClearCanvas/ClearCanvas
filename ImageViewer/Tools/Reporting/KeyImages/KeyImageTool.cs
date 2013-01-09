@@ -231,14 +231,14 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
                     if (image != null)
                     {
                         // New Virtual Display Set
-                        KeyImageDisplaySet.AddKeyImage(image);
+                        // TODO (9-JAN-13) As per Phoenx5, Sprint 4 review, disable creation of the virtual display set in Webstation.
+                        //KeyImageDisplaySet.AddKeyImage(image);
 
                         // Still save to clipboard, makes publishing easier later
                         KeyImageClipboard.Add(image);
 		     
                         _flashOverlayController.Flash(image);
                     }
-
                 }
                 catch (Exception ex)
                 {
