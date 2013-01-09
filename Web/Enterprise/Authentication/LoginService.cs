@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Net;
 using System.Reflection;
 using System.ServiceModel;
@@ -168,10 +169,19 @@ namespace ClearCanvas.Web.Enterprise.Authentication
 
                             //If we're renewing, might as well renew well before expiry. If we're only validating,
                             //we don't want to force a call to the server unless it's actually expired.
-                            var addSeconds = renew ? 30 : 0;
+                            var addSeconds = 0.0;
+                            if (renew)
+                            {
+                                //Minor hack - the ImageServer client shows a little bar at the top of the page counting down to session timeout,
+                                //and allowing the user to cancel. This timeout value determines when that bar shows up. If, however, the 
+                                //validate response is being cached, we need to make sure we hit the server - otherwise the bar doesn't go away.
+                                double.TryParse(ConfigurationManager.AppSettings.Get("ClientTimeoutWarningMinDuration"), out addSeconds);
+                                addSeconds = Math.Max(addSeconds, 30);
+                            }
+
                             if (Platform.Time.AddSeconds(addSeconds) >= response.SessionToken.ExpiryTime)
                             {
-                                Platform.Log(LogLevel.Info, "Session is at or near expiry; bypassing cache.");
+                                Platform.Log(LogLevel.Debug, "Session is at or near expiry; bypassing cache.");
 
                                 //The response likely came from the cache, and we want to make sure we get a real validation response.
                                 //Note that this only really matters when 2 processes are sharing a session, like ImageServer and Webstation.
