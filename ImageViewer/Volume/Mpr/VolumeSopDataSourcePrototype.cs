@@ -22,6 +22,9 @@
 
 #endregion
 
+using System.Collections.Generic;
+using System.Linq;
+using ClearCanvas.Common;
 using ClearCanvas.Dicom;
 using ClearCanvas.Dicom.Iod.Modules;
 
@@ -87,26 +90,35 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 				foreach (uint tag in ClinicalTrialStudyModuleIod.DefinedTags)
 					volumeDataSet[tag] = source[tag].Copy();
 
-				// TODO JY: flesh out these other modules.
+				// perform exact copy on the General Series Module except for tags that will be overridden as part of reformatting
+				foreach (uint tag in GeneralSeriesModuleIod.DefinedTags.Except(new[] {DicomTags.LargestPixelValueInSeries, DicomTags.SmallestPixelValueInSeries, DicomTags.SeriesInstanceUid}))
+					volumeDataSet[tag] = source[tag].Copy();
 
-				// generate and cache Series Module attributes that are common among all slicings
-				volumeDataSet[DicomTags.Modality] = source[DicomTags.Modality].Copy();
-				volumeDataSet[DicomTags.SeriesNumber].SetStringValue("0");
-				volumeDataSet[DicomTags.SeriesDescription] = source[DicomTags.SeriesDescription].Copy();
+				// perform exact copy on the Clinical Trial Series Module
+				foreach (uint tag in ClinicalTrialSeriesModuleIod.DefinedTags)
+					volumeDataSet[tag] = source[tag].Copy();
 
-				// generate General Equipment Module
-				// these is a ticket to properly implement the GenEq module in all created instances.
-				// the ticket is specific to KO and PR, but it should equally apply to these MPR SCs
+				// perform exact copy on additional modality specific modules in the series IE
+				foreach (uint tag in ModalitySpecificSeriesModuleTags)
+					volumeDataSet[tag] = source[tag].Copy();
+
+				// perform exact copy on the General Equipment Module
+				foreach (uint tag in GeneralEquipmentModuleIod.DefinedTags)
+					volumeDataSet[tag] = source[tag].Copy();
 
 				// generate SC Equipment Module
-				volumeDataSet[DicomTags.ConversionType].SetStringValue("WSD");
+				var scEquipment = new ScEquipmentModuleIod(volumeDataSet);
+				scEquipment.ConversionType = @"WSD";
+				scEquipment.SecondaryCaptureDeviceManufacturer = @"ClearCanvas Inc.";
+				scEquipment.SecondaryCaptureDeviceManufacturersModelName = ProductInformation.GetName(true, false);
+				scEquipment.SecondaryCaptureDeviceSoftwareVersions = new[] {ProductInformation.GetVersion(true, true, true)};
 
-				// generate General Image Module
+				// generate common values for the General Image Module
 				volumeDataSet[DicomTags.ImageType].SetStringValue(@"DERIVED\SECONDARY");
 				volumeDataSet[DicomTags.PixelSpacing] = source[DicomTags.PixelSpacing].Copy();
 				volumeDataSet[DicomTags.FrameOfReferenceUid] = source[DicomTags.FrameOfReferenceUid].Copy();
 
-				// generate Image Pixel Module
+				// generate common values for the Image Pixel Module
 				volumeDataSet[DicomTags.SamplesPerPixel] = source[DicomTags.SamplesPerPixel].Copy();
 				volumeDataSet[DicomTags.PhotometricInterpretation] = source[DicomTags.PhotometricInterpretation].Copy();
 				volumeDataSet[DicomTags.BitsAllocated].SetInt32(0, bitsAllocated);
@@ -114,10 +126,40 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 				volumeDataSet[DicomTags.HighBit].SetInt32(0, bitsStored - 1);
 				volumeDataSet[DicomTags.PixelRepresentation].SetInt32(0, isSigned ? 1 : 0);
 
-				// generate SOP Common Module
+				// generate common values for the SOP Common Module
 				volumeDataSet[DicomTags.SopClassUid].SetStringValue(SopClass.SecondaryCaptureImageStorageUid);
 
 				return prototype;
+			}
+
+			private static IList<uint> _seriesModuleTags;
+
+			private static IEnumerable<uint> ModalitySpecificSeriesModuleTags
+			{
+				get
+				{
+					if (_seriesModuleTags == null)
+					{
+						// only need to list modules for logically reformattable IODs (e.g. CT, MR, NM, PET)
+						// and enhanced/tomography versions of nominally non-reformattable modalities (e.g. Enh US, Enh MG)
+						_seriesModuleTags = EnhancedSeriesModuleIod.DefinedTags
+							.Union(EnhancedPetSeriesModuleIod.DefinedTags)
+							.Union(EnhancedUsSeriesModuleIod.DefinedTags)
+							.Union(CtSeriesModuleIod.DefinedTags)
+							.Union(EnhancedMammographySeriesModuleIod.DefinedTags)
+							.Union(OpthalmicTomographySeriesModuleIod.DefinedTags)
+							.Union(MrSeriesModuleIod.DefinedTags)
+							.Union(NmPetPatientOrientationModuleIod.DefinedTags)
+							.Union(PetSeriesModuleIod.DefinedTags)
+							.Union(PetIsotopeModuleIod.DefinedTags)
+							.Union(PetMultiGatedAcquisitionModuleIod.DefinedTags)
+							.Union(XaXrfSeriesModuleIod.DefinedTags)
+							.Distinct()
+							.Except(new[] {DicomTags.LargestPixelValueInSeries, DicomTags.SmallestPixelValueInSeries, DicomTags.SeriesInstanceUid})
+							.ToList().AsReadOnly();
+					}
+					return _seriesModuleTags;
+				}
 			}
 		}
 	}
