@@ -110,7 +110,8 @@ namespace ClearCanvas.ImageViewer.Explorer.Dicom
 							return workItems.Any(IsNonTerminalStudyUpdateItem);
 						});
 
-						if (isStudyBeingProcessed && DialogBoxAction.No == Context.DesktopWindow.ShowMessageBox(SR.MessageLoadStudiesBeingProcessed, MessageBoxActions.YesNo))
+						var message = this.Context.SelectedStudies.Count > 1 ? SR.MessageLoadStudiesBeingProcessed : SR.MessageLoadStudyBeingProcessed;
+						if (isStudyBeingProcessed && DialogBoxAction.No == Context.DesktopWindow.ShowMessageBox(message, MessageBoxActions.YesNo))
 							return;
 					}
 					catch (Exception e)

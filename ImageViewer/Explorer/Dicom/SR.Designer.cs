@@ -516,11 +516,20 @@ namespace ClearCanvas.ImageViewer.Explorer.Dicom {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to One or more studies you selected are being processed. They may be incomplete or contain out-of-date information. Do you still want to continue?.
+        ///   Looks up a localized string similar to Some of the studies you selected are being processed. They may be incomplete or contain out-of-date information. Do you still want to continue?.
         /// </summary>
         internal static string MessageLoadStudiesBeingProcessed {
             get {
                 return ResourceManager.GetString("MessageLoadStudiesBeingProcessed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The study you selected is being processed. It may be incomplete or contain out-of-date information. Do you still want to continue?.
+        /// </summary>
+        internal static string MessageLoadStudyBeingProcessed {
+            get {
+                return ResourceManager.GetString("MessageLoadStudyBeingProcessed", resourceCulture);
             }
         }
         
