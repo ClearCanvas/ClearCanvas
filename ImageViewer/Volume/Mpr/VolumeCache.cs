@@ -621,6 +621,11 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 			{
 				return obj is CacheKey && Equals((CacheKey) obj);
 			}
+
+			public override string ToString()
+			{
+				return _hash.ToString();
+			}
 		}
 	}
 }
