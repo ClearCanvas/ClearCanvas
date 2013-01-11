@@ -39,7 +39,7 @@ namespace ClearCanvas.ImageViewer.AdvancedImaging.Fusion
 
 		public IEnumerable<IDisplaySetFactory> CreateDisplaySetFactories(IPresentationImageFactory presentationImageFactory)
 		{
-			if (!Thread.CurrentPrincipal.IsInRole(AuthorityTokens.ViewerClinical))
+			if (!PermissionsHelper.IsInRole(AuthorityTokens.ViewerClinical))
 				yield return null;
 			else
 				yield return new PETFusionDisplaySetFactory(PETFusionType.CT);
