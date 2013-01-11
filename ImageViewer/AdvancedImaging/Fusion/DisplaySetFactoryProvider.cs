@@ -22,7 +22,9 @@
 
 #endregion
 
+using System;
 using System.Collections.Generic;
+using System.Threading;
 using ClearCanvas.Common;
 using ClearCanvas.ImageViewer.Layout.Basic;
 
@@ -37,7 +39,10 @@ namespace ClearCanvas.ImageViewer.AdvancedImaging.Fusion
 
 		public IEnumerable<IDisplaySetFactory> CreateDisplaySetFactories(IPresentationImageFactory presentationImageFactory)
 		{
-			yield return new PETFusionDisplaySetFactory(PETFusionType.CT);
+			if (!Thread.CurrentPrincipal.IsInRole(AuthorityTokens.ViewerClinical))
+				yield return null;
+			else
+				yield return new PETFusionDisplaySetFactory(PETFusionType.CT);
 		}
 
 		#endregion

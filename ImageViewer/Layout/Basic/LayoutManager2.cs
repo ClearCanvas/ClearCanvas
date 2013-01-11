@@ -145,6 +145,7 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
                 foreach (IDisplaySetFactoryProvider provider in new DisplaySetFactoryProviderExtensionPoint().CreateExtensions())
                     externalFactories.AddRange(provider.CreateDisplaySetFactories(imageFactory));
 
+                externalFactories.RemoveAll(f => f == null);
                 _externalFactories = externalFactories.AsReadOnly();
 
                 _placeholderDisplaySetFactory = new PlaceholderDisplaySetFactory();
