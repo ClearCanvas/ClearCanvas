@@ -555,7 +555,7 @@ namespace ClearCanvas.Desktop
     	/// <summary>
     	/// Gets or sets the current application UI culture.
     	/// </summary>
-    	protected CultureInfo CurrentUICultureCore
+    	protected virtual CultureInfo CurrentUICultureCore
     	{
     		get
     		{
@@ -584,7 +584,7 @@ namespace ClearCanvas.Desktop
     	/// <summary>
     	/// Gets or sets the current application UI theme.
     	/// </summary>
-		protected ApplicationTheme CurrentUIThemeCore
+		protected virtual ApplicationTheme CurrentUIThemeCore
     	{
     		get
     		{
