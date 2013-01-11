@@ -35,14 +35,17 @@ namespace ClearCanvas.ImageViewer.AdvancedImaging.Fusion
 	[ExtensionOf(typeof (DisplaySetFactoryProviderExtensionPoint))]
 	public class DisplaySetFactoryProvider : IDisplaySetFactoryProvider
 	{
+		public DisplaySetFactoryProvider()
+		{
+			if (!PermissionsHelper.IsInRole(AuthorityTokens.ViewerClinical))
+				throw new NotSupportedException();
+		}
+
 		#region IDisplaySetFactoryProvider Members
 
 		public IEnumerable<IDisplaySetFactory> CreateDisplaySetFactories(IPresentationImageFactory presentationImageFactory)
 		{
-			if (!PermissionsHelper.IsInRole(AuthorityTokens.ViewerClinical))
-				yield return null;
-			else
-				yield return new PETFusionDisplaySetFactory(PETFusionType.CT);
+			yield return new PETFusionDisplaySetFactory(PETFusionType.CT);
 		}
 
 		#endregion
