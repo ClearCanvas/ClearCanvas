@@ -123,7 +123,9 @@ namespace ClearCanvas.ImageViewer.Explorer.Dicom
 				var helper = new OpenStudyHelper
 				                 {
 				                     WindowBehaviour = ViewerLaunchSettings.WindowBehaviour,
-				                     AllowEmptyViewer = ViewerLaunchSettings.AllowEmptyViewer
+				                     AllowEmptyViewer = ViewerLaunchSettings.AllowEmptyViewer,
+                                     //The user has elected to ignore "in use" studies.
+                                     StudyLoaderOptions = new StudyLoaderOptions(true)
 				                 };
 
 				foreach (var study in Context.SelectedStudies)

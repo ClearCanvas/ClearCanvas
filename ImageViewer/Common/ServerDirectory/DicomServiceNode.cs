@@ -39,7 +39,7 @@ namespace ClearCanvas.ImageViewer.Common.ServerDirectory
         {
             Server = new ApplicationEntity
                        {
-                           Name = "<local>",
+                           Name = SR.LocalServerName,
                            AETitle = localConfiguration.AETitle,
                            ScpParameters = new ScpParameters(localConfiguration.HostName, localConfiguration.Port)
                        };

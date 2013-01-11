@@ -23,9 +23,11 @@
 #endregion
 
 using System.Collections.Generic;
+using System.Linq;
 using ClearCanvas.Common;
 using ClearCanvas.ImageViewer.Common;
 using ClearCanvas.ImageViewer.Common.Auditing;
+using ClearCanvas.ImageViewer.Common.WorkItem;
 using ClearCanvas.ImageViewer.StudyManagement;
 using ClearCanvas.ImageViewer.Common.StudyManagement;
 using ClearCanvas.ImageViewer.StudyManagement.Core;
@@ -91,6 +93,25 @@ namespace ClearCanvas.ImageViewer.StudyLoaders.Local
             {
                 using (var context = new DataAccessContext())
                 {
+                    if (!studyLoaderArgs.Options.IgnoreInUse)
+                    {
+                        var activeUpdateItems =
+                            context.GetWorkItemBroker().GetWorkItems(WorkItemConcurrency.StudyUpdate,
+                                                                     WorkItemStatusFilter.Active,
+                                                                     studyLoaderArgs.StudyInstanceUid);
+
+                        var activeDeleteItems =
+                            context.GetWorkItemBroker().GetWorkItems(WorkItemConcurrency.StudyDelete,
+                                                                     WorkItemStatusFilter.Active,
+                                                                     studyLoaderArgs.StudyInstanceUid);
+
+                        if (activeUpdateItems.Any() || activeDeleteItems.Any())
+                        {
+                            var message = string.Format("There are work items actively modifying the study with UID '{0}'.", studyLoaderArgs.StudyInstanceUid);
+                            throw new InUseLoadStudyException(studyLoaderArgs.StudyInstanceUid, message);
+                        }
+                    }
+
                     IStudy study = context.GetStudyBroker().GetStudy(studyLoaderArgs.StudyInstanceUid);
                     if (study == null)
                     {

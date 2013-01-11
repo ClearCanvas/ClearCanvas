@@ -87,11 +87,11 @@ namespace ClearCanvas.ImageViewer.StudyManagement.Core.Storage
 
         public IEnumerable<WorkItem> GetWorkItems(string type, WorkItemStatusFilter statusFilter, string studyInstanceUid)
         {
-            string[] types = !String.IsNullOrEmpty(type) ? new[] {type} : null;
+            List<string> types = !String.IsNullOrEmpty(type) ? new List<string>(new[]{type}) : null;
             return GetWorkItems(types, statusFilter, studyInstanceUid);
         }
 
-        private IEnumerable<WorkItem> GetWorkItems(IList<string> types, WorkItemStatusFilter statusFilter, string studyInstanceUid)
+        private IEnumerable<WorkItem> GetWorkItems(List<string> types, WorkItemStatusFilter statusFilter, string studyInstanceUid)
         {
             IQueryable<WorkItem> query = from w in Context.WorkItems select w;
 

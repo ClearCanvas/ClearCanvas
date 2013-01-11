@@ -265,7 +265,7 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="SR.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
+      <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>SR.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>

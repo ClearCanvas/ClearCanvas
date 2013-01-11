@@ -92,7 +92,7 @@ namespace ClearCanvas.ImageViewer.Configuration.ServerTree.Tests
             Assert.AreEqual(1, serviceNodes.Count);
             var ae = serviceNodes.First();
 
-            Assert.AreEqual(@"<local>", ae.Name);
+            Assert.AreEqual(Common.SR.LocalServerName, ae.Name);
             Assert.AreEqual(string.Empty, ae.Location ?? "");
             Assert.AreEqual("AETITLE", ae.AETitle);
             Assert.AreEqual("localhost", ae.ScpParameters.HostName);
