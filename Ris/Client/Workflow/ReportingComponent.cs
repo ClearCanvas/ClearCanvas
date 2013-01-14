@@ -1264,7 +1264,7 @@ namespace ClearCanvas.Ris.Client.Workflow
 				var procRefs = new[] { this.WorklistItem.ProcedureRef }
 					.Concat(_report.Procedures.Where(p => !p.ProcedureRef.Equals(this.WorklistItem.ProcedureRef, true)).Select(p => p.ProcedureRef));
 
-				_openViewers = ViewImagesHelper.ViewStudies(_orderDetail.OrderRef, procRefs, new ViewImagesHelper.ViewStudiesOptions());
+				_openViewers = ViewImagesHelper.ViewStudies(_orderDetail.OrderRef, procRefs, new ViewImagesHelper.ViewStudiesOptions { FallbackToOrder = true });
 				SetImageAvailabilityMessage(_openViewers.Length > 0 ? null : "No images found for this procedure.");
 
 				// if multiple viewers were opened, ensure the first one is active
