@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DynamicTE", "DynamicTE\DynamicTE.csproj", "{B3DDF3AD-033B-4E3F-9289-067F37D5FF9C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DynamicTE.View", "DynamicTE.View\DynamicTE.View.csproj", "{CE791CE4-A2A9-42E9-92EF-900F55DE018C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B3DDF3AD-033B-4E3F-9289-067F37D5FF9C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B3DDF3AD-033B-4E3F-9289-067F37D5FF9C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B3DDF3AD-033B-4E3F-9289-067F37D5FF9C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B3DDF3AD-033B-4E3F-9289-067F37D5FF9C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CE791CE4-A2A9-42E9-92EF-900F55DE018C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CE791CE4-A2A9-42E9-92EF-900F55DE018C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CE791CE4-A2A9-42E9-92EF-900F55DE018C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CE791CE4-A2A9-42E9-92EF-900F55DE018C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

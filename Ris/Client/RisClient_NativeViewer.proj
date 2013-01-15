@@ -1,0 +1,106 @@
+<Project DefaultTargets="BuildSolution" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <Choose>
+    <When Condition=" '$(PROCESSOR_ARCHITEW6432)' == 'IA64' Or '$(PROCESSOR_ARCHITEW6432)' == 'AMD64' Or '$(PROCESSOR_ARCHITECTURE)' == 'IA64' Or '$(PROCESSOR_ARCHITECTURE)' == 'AMD64'">
+      <PropertyGroup>
+        <BuildPlatform>x64</BuildPlatform>
+      </PropertyGroup>
+    </When>
+    <When Condition="'$(PROCESSOR_ARCHITECTURE)' == 'x86' ">
+      <PropertyGroup>
+        <BuildPlatform>x86</BuildPlatform>
+      </PropertyGroup>
+    </When>
+    <Otherwise>
+      <PropertyGroup>
+        <BuildPlatform></BuildPlatform>
+      </PropertyGroup>
+    </Otherwise>
+  </Choose>
+
+  <PropertyGroup>
+    <TargetPlatform>$(BuildPlatform)</TargetPlatform>
+  </PropertyGroup>
+
+  <Choose>
+    <When Condition="'$(TargetPlatform)' == 'x64'">
+      <PropertyGroup>
+        <PlatformSubFolder>x64</PlatformSubFolder>
+      </PropertyGroup>
+    </When>
+    <Otherwise>
+      <!-- assumes Win32 -->
+      <PropertyGroup>
+        <PlatformSubFolder></PlatformSubFolder>
+      </PropertyGroup>
+    </Otherwise>
+  </Choose>
+
+  <!-- set out some defaults -->
+  <PropertyGroup>
+    <Configuration>Debug</Configuration>
+    <DistributionBuild>false</DistributionBuild>
+    <PackageOption>Thin</PackageOption>
+    <!-- Default, triceratops options -->
+    <TriceratopsOptions>ExcludeHttpDesktopServices+ExcludeEFilmAutomation+ExcludeEnterprise+ExcludeStudyBrowser+ExcludeStudyComposer+ExcludeDicomEditor+ExcludeHelpUpdate+ExcludeDatabase+ExcludeShredHostService+ExcludeServiceTools+ExcludeStudyFilters+ExcludeReporting+ExcludeMpr</TriceratopsOptions>
+    <ThinViewerOptions>ExcludeEFilmAutomation+ExcludeEnterprise+ExcludeStudyComposer+ExcludeHelpUpdate+ExcludeDatabase+ExcludeShredHostService+ExcludeServiceTools</ThinViewerOptions>
+    <FullViewerOptions>ExcludeEFilmAutomation+ExcludeEnterprise+ExcludeStudyComposer</FullViewerOptions>
+  </PropertyGroup>
+
+  <Choose>
+    <When Condition="'$(PackageOption)' == 'FullViewer'">
+      <PropertyGroup>
+        <Options>$(FullViewerOptions)</Options>
+		    <BuildSuffix>FullViewer</BuildSuffix>
+      </PropertyGroup>
+    </When>
+    <When Condition="'$(PackageOption)' == 'Triceratops'">
+      <PropertyGroup>
+        <Options>$(TriceratopsOptions)</Options>
+        <BuildSuffix>Triceratops</BuildSuffix>
+      </PropertyGroup>
+    </When>
+    <Otherwise>
+      <PropertyGroup>
+        <Options>$(ThinViewerOptions)</Options>
+		    <BuildSuffix>ThinViewer</BuildSuffix>
+      </PropertyGroup>
+    </Otherwise>
+  </Choose>
+
+  <Choose>
+    <When Condition="$(DistributionBuild)">
+      <PropertyGroup>
+        <DistributionDir>$(MSBuildProjectDirectory)\..\..\Distribution\Build\RisClient_$(BuildSuffix)\$(PlatformSubFolder)\$(Configuration)</DistributionDir>
+      </PropertyGroup>
+    </When>
+    <Otherwise>
+      <PropertyGroup>
+        <DistributionDir></DistributionDir>
+      </PropertyGroup>
+    </Otherwise>
+  </Choose>
+
+  <Choose>
+    <When Condition="$(DistributionBuild) And '$(Configuration)' == 'Release' And '$(KeyFile)' != ''">
+      <PropertyGroup>
+        <RisClientProperties>Configuration=$(Configuration);TargetPlatform=$(TargetPlatform);DistributionDir=$(DistributionDir);Options=$(Options);SignAssembly=true;DelaySign=false;AssemblyOriginatorKeyFile=$(KeyFile)</RisClientProperties>
+      </PropertyGroup>
+    </When>
+    <Otherwise>
+      <PropertyGroup>
+        <RisClientProperties>Configuration=$(Configuration);TargetPlatform=$(TargetPlatform);DistributionDir=$(DistributionDir);Options=$(Options)</RisClientProperties>
+      </PropertyGroup>
+    </Otherwise>
+  </Choose>
+
+  <Target Name="Build JScript">
+    <MSBuild Projects="$(MSBuildProjectDirectory)\..\..\JScript\Build.proj" Properties="Configuration=$(Configuration);KeyFile=$(KeyFile)"/>
+  </Target>
+
+  <Target Name="BuildSolution" DependsOnTargets="Build JScript">
+    <RemoveDir Condition="$(DistributionBuild)" Directories="$(DistributionDir)" />
+
+    <MSBuild Projects="RisClient_NativeViewer.sln" Properties="$(RisClientProperties)" />
+  </Target>
+</Project>

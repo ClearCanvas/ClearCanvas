@@ -1,0 +1,16 @@
+﻿<!-- 
+This rule instructs the server to use JPEG 2000 Lossy compression
+on DX and CR studies. The Compression ratio in this example is 8.5:1
+-->
+<rule>
+	<condition
+	  expressionLanguage="dicom">		
+		<or>
+			<equal test="$Modality" refValue="DX" />
+			<equal test="$Modality" refValue="CR" />
+		</or>
+	</condition>
+	<action>
+	  <jpeg-2000-lossy ratio="8.5"  time="10" unit="weeks"/>
+	</action>
+</rule>

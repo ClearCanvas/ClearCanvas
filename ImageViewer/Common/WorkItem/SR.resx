@@ -1,0 +1,303 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="DicomAutoRouteRequest_ActivityDescription" xml:space="preserve">
+    <value>Auto Route to {0}</value>
+  </data>
+  <data name="DicomReceiveRequest_ActivityDescription" xml:space="preserve">
+    <value>DICOM Receive from {0}</value>
+  </data>
+  <data name="DicomRetreiveRequest_ActivityDescription" xml:space="preserve">
+    <value>Retrieve of Study from {0}</value>
+  </data>
+  <data name="DicomSendRequest_ActivityDescription" xml:space="preserve">
+    <value>DICOM Send to {0}</value>
+  </data>
+  <data name="ImportFilesProgress_Status" xml:space="preserve">
+    <value>{0} of {1} files imported, {2} failed</value>
+  </data>
+  <data name="ImportFilesRequest_ActivityDescription" xml:space="preserve">
+    <value>Processing files for import from {0} location</value>
+  </data>
+  <data name="ImportStudyRequest_AcitivityDescription" xml:space="preserve">
+    <value>Import Study</value>
+  </data>
+  <data name="Progress_Pending" xml:space="preserve">
+    <value>Pending.</value>
+  </data>
+  <data name="ReindexProgress_Status" xml:space="preserve">
+    <value>{0} of {1} studies processed, {2} of {3} study folders processed, {4} studies deleted, {5} studies failed</value>
+  </data>
+  <data name="ReindexRequest_ActivityDescription" xml:space="preserve">
+    <value>Re-index of the local file store</value>
+  </data>
+  <data name="ReindexRequest_ActivityType" xml:space="preserve">
+    <value>Re-index</value>
+  </data>
+  <data name="StudyProcessProgress_Status" xml:space="preserve">
+    <value>{0} of {1} images processed, {2} failed</value>
+  </data>
+  <data name="WorkItemPriorityEnumNormal" xml:space="preserve">
+    <value>Normal</value>
+  </data>
+  <data name="WorkItemPriorityEnumStat" xml:space="preserve">
+    <value>Stat</value>
+  </data>
+  <data name="WorkItemStatusEnumCanceled" xml:space="preserve">
+    <value>Stopped</value>
+  </data>
+  <data name="WorkItemStatusEnumComplete" xml:space="preserve">
+    <value>Complete</value>
+  </data>
+  <data name="WorkItemStatusEnumDeleted" xml:space="preserve">
+    <value>Deleted</value>
+  </data>
+  <data name="WorkItemStatusEnumFailed" xml:space="preserve">
+    <value>Failed</value>
+  </data>
+  <data name="WorkItemStatusEnumIdle" xml:space="preserve">
+    <value>Idle</value>
+  </data>
+  <data name="WorkItemStatusEnumInProgress" xml:space="preserve">
+    <value>In Progress</value>
+  </data>
+  <data name="WorkItemStatusEnumPending" xml:space="preserve">
+    <value>Pending</value>
+  </data>
+  <data name="ActivityTypeEnumAutoRoute" xml:space="preserve">
+    <value>Auto Route</value>
+  </data>
+  <data name="ActivityTypeEnumDicomReceive" xml:space="preserve">
+    <value>DICOM Receive</value>
+  </data>
+  <data name="ActivityTypeEnumDicomRetrieve" xml:space="preserve">
+    <value>DICOM Retrieve</value>
+  </data>
+  <data name="ActivityTypeEnumDicomSendStudy" xml:space="preserve">
+    <value>DICOM Send Study</value>
+  </data>
+  <data name="ActivityTypeEnumImportFiles" xml:space="preserve">
+    <value>Import Files</value>
+  </data>
+  <data name="ActivityTypeEnumImportStudy" xml:space="preserve">
+    <value>Import Study</value>
+  </data>
+  <data name="ActivityTypeEnumReIndex" xml:space="preserve">
+    <value>Re-index</value>
+  </data>
+  <data name="ActivityTypeEnumDicomSendSeries" xml:space="preserve">
+    <value>DICOM Send Series</value>
+  </data>
+  <data name="ActivityTypeEnumPublishFiles" xml:space="preserve">
+    <value>Publish Files</value>
+  </data>
+  <data name="DicomSendSeriesRequest_ActivityDescription" xml:space="preserve">
+    <value>DICOM Send Series to {0}</value>
+  </data>
+  <data name="DicomSendStudyRequest_ActivityDescription" xml:space="preserve">
+    <value>DICOM Send Study to {0}</value>
+  </data>
+  <data name="PublishFilesRequest_ActivityDescription" xml:space="preserve">
+    <value>Publish Files to {0}</value>
+  </data>
+  <data name="ActivityTypeEnumDicomSendSop" xml:space="preserve">
+    <value>DICOM Send Images</value>
+  </data>
+  <data name="DicomSendSopRequest_ActivityDescription" xml:space="preserve">
+    <value>DICOM Send Images to {0}</value>
+  </data>
+  <data name="DicomSend_Status" xml:space="preserve">
+    <value>{0} Images Sent, {1} Failed, {2} Pending</value>
+  </data>
+  <data name="Progress_Complete" xml:space="preserve">
+    <value>Completed.</value>
+  </data>
+  <data name="ReindexProgress_StatusNoStudies" xml:space="preserve">
+    <value>No studies found during reindex.</value>
+  </data>
+  <data name="WorkItemStatusEnumDeleteInProgress" xml:space="preserve">
+    <value>Delete In Progress</value>
+  </data>
+  <data name="ActivityTypeEnumDeleteSeries" xml:space="preserve">
+    <value>Delete Series</value>
+  </data>
+  <data name="ActivityTypeEnumDeleteStudy" xml:space="preserve">
+    <value>Delete Study</value>
+  </data>
+  <data name="DeleteProgressPlural_Status" xml:space="preserve">
+    <value>{0} Images Deleted</value>
+  </data>
+  <data name="DeleteSeriesRequest_ActivityDescription" xml:space="preserve">
+    <value>Delete Series</value>
+  </data>
+  <data name="DeleteStudyRequest_ActivityDescription" xml:space="preserve">
+    <value>Delete Study</value>
+  </data>
+  <data name="DicomSendProgress_Status" xml:space="preserve">
+    <value>{0} Images Sent, {1} Failed, {2} Pending</value>
+  </data>
+  <data name="ReapplyRulesProgress_Status" xml:space="preserve">
+    <value>{0} of {1} studies processed</value>
+  </data>
+  <data name="ReapplyRulesProgress_StatusNoStudies" xml:space="preserve">
+    <value>No studies found when reapplying rules.</value>
+  </data>
+  <data name="DeleteProgress_Status" xml:space="preserve">
+    <value>{0} Image Deleted</value>
+  </data>
+  <data name="ImportFilesRequest_ActivityDescriptionPlural" xml:space="preserve">
+    <value>Processing files for import from {0} locations</value>
+  </data>
+  <data name="DicomRetrieveProgress_Status" xml:space="preserve">
+    <value>{0} Images Retrieved, {1} Failed, {2} Pending</value>
+  </data>
+  <data name="DicomRetreiveSeriesRequest_ActivityDescription" xml:space="preserve">
+    <value>Retrieve of Series from {0}</value>
+  </data>
+  <data name="WorkItemPriorityEnumHigh" xml:space="preserve">
+    <value>High</value>
+  </data>
+  <data name="ActivityTypeEnumReapplyRules" xml:space="preserve">
+    <value>Reapply Rules</value>
+  </data>
+  <data name="ReapplyRulesRequest_ActivityDescription" xml:space="preserve">
+    <value>Re-apply rule '{0}'</value>
+  </data>
+  <data name="MessageFailedToStartReapplyRules" xml:space="preserve">
+    <value>Failed to start reapply rules operation, possibly because a conflicting operation is currently running.  If this problem persists, please contact your system administrator.</value>
+  </data>
+  <data name="ReapplyRulesRequestMultiple_ActivityDescription" xml:space="preserve">
+    <value>Re-apply multiple rules</value>
+  </data>
+  <data name="WorkItemStatusEnumCanceling" xml:space="preserve">
+    <value>Stopping</value>
+  </data>
+  <data name="RetryDelayTimeUnitMinutes" xml:space="preserve">
+    <value>minute(s)</value>
+  </data>
+  <data name="RetryDelayTimeUnitSeconds" xml:space="preserve">
+    <value>second(s)</value>
+  </data>
+  <data name="RetryStatus" xml:space="preserve">
+    <value>Retry #{0} will occur at {1}</value>
+  </data>
+  <data name="ImportFilesProgress_StatusEnumerationIncomplete" xml:space="preserve">
+    <value>Import incomplete. {0} files imported.</value>
+  </data>
+</root>

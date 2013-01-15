@@ -1,0 +1,141 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Font Name="Tahoma" Size="8.25" />
+  <Class Name="ClearCanvas.ImageViewer.PresentationStates.Dicom.DicomGraphicsPlane" Collapsed="true">
+    <Position X="0.75" Y="1.5" Width="3.25" />
+    <TypeIdentifier>
+      <FileName>PresentationStates\Dicom\DicomGraphicsPlaneLayers.cs</FileName>
+      <HashCode>IAAAAEAAEAAAAAAAAANAAAEAAAgEAAIECAAIAABAEAA=</HashCode>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Layers" />
+      <Property Name="Shutters" />
+      <Property Name="ImageOverlays" />
+      <Property Name="PresentationOverlays" />
+      <Property Name="UserOverlays" />
+    </ShowAsCollectionAssociation>
+    <NestedTypes>
+      <Class Name="ClearCanvas.ImageViewer.PresentationStates.Dicom.DicomGraphicsPlane.LayerCollection" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>PresentationStates\Dicom\DicomGraphicsPlaneLayers.cs</NewMemberFileName>
+        </TypeIdentifier>
+        <Lollipop Position="0.2" />
+      </Class>
+      <Class Name="ClearCanvas.ImageViewer.PresentationStates.Dicom.DicomGraphicsPlane.LayerGraphic" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>PresentationStates\Dicom\DicomGraphicsPlaneLayers.cs</NewMemberFileName>
+        </TypeIdentifier>
+        <Lollipop Position="0.2" />
+      </Class>
+      <Class Name="ClearCanvas.ImageViewer.PresentationStates.Dicom.DicomGraphicsPlane.OverlaysCollection" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>PresentationStates\Dicom\DicomGraphicsPlaneOverlays.cs</NewMemberFileName>
+        </TypeIdentifier>
+        <Lollipop Position="0.2" />
+      </Class>
+      <Class Name="ClearCanvas.ImageViewer.PresentationStates.Dicom.DicomGraphicsPlane.ShutterCollection" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>PresentationStates\Dicom\DicomGraphicsPlaneShutters.cs</NewMemberFileName>
+        </TypeIdentifier>
+        <Lollipop Position="0.2" />
+      </Class>
+      <Class Name="ClearCanvas.ImageViewer.PresentationStates.Dicom.DicomGraphicsPlane.UserOverlaysCollection" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>PresentationStates\Dicom\DicomGraphicsPlaneUserOverlays.cs</NewMemberFileName>
+        </TypeIdentifier>
+        <Lollipop Position="0.2" />
+      </Class>
+    </NestedTypes>
+    <AssociationLine Name="Layers" Type="ClearCanvas.ImageViewer.PresentationStates.Dicom.ILayer" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="3.562" Y="2.13" />
+        <Point X="3.562" Y="3.507" />
+        <Point X="5" Y="3.507" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="Shutters" Type="ClearCanvas.ImageViewer.PresentationStates.IShutterGraphic" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="3.756" Y="2.13" />
+        <Point X="3.756" Y="2.563" />
+        <Point X="5" Y="2.563" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="ImageOverlays" Type="ClearCanvas.ImageViewer.PresentationStates.Dicom.OverlayPlaneGraphic" FixedFromPoint="true">
+      <Path>
+        <Point X="0.938" Y="2.13" />
+        <Point X="0.938" Y="5.25" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-1.19" Y="0.735" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="PresentationOverlays" Type="ClearCanvas.ImageViewer.PresentationStates.Dicom.OverlayPlaneGraphic" FixedFromPoint="true">
+      <Path>
+        <Point X="3.375" Y="2.13" />
+        <Point X="3.375" Y="5.25" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-1.565" Y="0.11" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="UserOverlays" Type="ClearCanvas.ImageViewer.PresentationStates.Dicom.OverlayPlaneGraphic" FixedToPoint="true">
+      <Path>
+        <Point X="2.188" Y="2.13" />
+        <Point X="2.188" Y="5.25" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-1.128" Y="0.433" />
+      </MemberNameLabel>
+    </AssociationLine>
+  </Class>
+  <Class Name="ClearCanvas.ImageViewer.PresentationStates.Dicom.OverlayPlaneGraphic" Collapsed="true">
+    <Position X="0.75" Y="5.25" Width="3" />
+    <TypeIdentifier>
+      <FileName>PresentationStates\Dicom\OverlayPlaneGraphic.cs</FileName>
+      <HashCode>AAAAAAAAGkEoAEQEABAgAEAAAAAAAAIEEQmggIhQBAA=</HashCode>
+    </TypeIdentifier>
+    <NestedTypes>
+      <Class Name="ClearCanvas.ImageViewer.PresentationStates.Dicom.OverlayPlaneGraphic.OverlayVoiLut" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>PresentationStates\Dicom\OverlayPlaneGraphic.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+      <Class Name="ClearCanvas.ImageViewer.PresentationStates.Dicom.OverlayPlaneGraphic.GrayscaleColorMap" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>PresentationStates\Dicom\OverlayPlaneGraphic.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+      <Class Name="ClearCanvas.ImageViewer.PresentationStates.Dicom.OverlayPlaneGraphic.OverlayColorMap" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>PresentationStates\Dicom\OverlayPlaneGraphic.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <Lollipop Orientation="Right" Position="0.173" />
+  </Class>
+  <Interface Name="ClearCanvas.ImageViewer.PresentationStates.Dicom.ILayer" Collapsed="true">
+    <Position X="5" Y="3.25" Width="1.75" />
+    <TypeIdentifier>
+      <FileName>PresentationStates\Dicom\DicomGraphicsPlaneLayers.cs</FileName>
+      <HashCode>AAACAACAAAAgAAAAAAAAAAAACAAAAAAIAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Graphics" />
+    </ShowAsCollectionAssociation>
+  </Interface>
+  <Interface Name="ClearCanvas.ImageViewer.PresentationStates.IShutterGraphic" Collapsed="true" HideInheritanceLine="true">
+    <Position X="5" Y="2.25" Width="1.75" />
+    <TypeIdentifier>
+      <FileName>PresentationStates\IShutterGraphic.cs</FileName>
+      <HashCode>AAAAEAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+    <InheritanceLine Type="ClearCanvas.ImageViewer.Graphics.IGraphic" IsHidden="true" />
+  </Interface>
+  <Interface Name="ClearCanvas.ImageViewer.Graphics.IGraphic" Collapsed="true">
+    <Position X="8" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Graphics\IGraphic.cs</FileName>
+      <HashCode>AIIAAAAAAIBAAAAAAoAAAgQAACAAAgAIAAAQRAAAABA=</HashCode>
+    </TypeIdentifier>
+  </Interface>
+</ClassDiagram>

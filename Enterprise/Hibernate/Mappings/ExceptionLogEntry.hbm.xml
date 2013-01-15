@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" assembly="ClearCanvas.Enterprise.Core" namespace="ClearCanvas.Enterprise.Core">
+  <class name="ExceptionLogEntry" lazy="false" table="ExceptionLog_">
+    <id name="OID" column="OID_" type="Guid">
+      <generator class="guid.comb"/>
+    </id>
+    <version name="Version" column="Version_"/>
+    <property name="TimeStamp" column="TimeStamp_" type="Timestamp" not-null="true"/>
+    <property name="HostName" column="HostName_" type="String" not-null="false"/>
+    <property name="Application" column="Application_" type="String" not-null="false"/>
+    <property name="User" column="User_" type="String"/>
+    <property name="Operation" column="Operation_" type="String" length="1000"/>
+    <property name="ExceptionClass" column="ExceptionClass_" type="String" length="1000"/>
+    <property name="Message" column="Message_" type="StringClob" length="1000000"/>
+    <property name="Details" column="Details_" type="StringClob" length="1000000"/>
+    <property name="AssemblyName" column="AssemblyName_" type="String" length="500"/>
+    <property name="AssemblyLocation" column="AssemblyLocation_" type="String" length="500"/>
+  </class>
+</hibernate-mapping>

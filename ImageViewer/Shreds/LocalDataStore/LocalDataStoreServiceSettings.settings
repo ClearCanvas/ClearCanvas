@@ -1,0 +1,21 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="ClearCanvas.ImageViewer.Shreds.LocalDataStore" GeneratedClassName="LocalDataStoreServiceSettings">
+  <Profiles />
+  <Settings>
+    <Setting Name="StorageDirectory" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">c:\dicom_datastore\filestore\</Value>
+    </Setting>
+    <Setting Name="BadFileDirectory" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">c:\dicom_datastore\badfiles\</Value>
+    </Setting>
+    <Setting Name="SendReceiveImportConcurrency" Type="System.UInt32" Scope="Application">
+      <Value Profile="(Default)">2</Value>
+    </Setting>
+    <Setting Name="DatabaseUpdateFrequencyMilliseconds" Type="System.UInt32" Scope="Application">
+      <Value Profile="(Default)">5000</Value>
+    </Setting>
+    <Setting Name="PurgeTimeMinutes" Type="System.UInt32" Scope="Application">
+      <Value Profile="(Default)">120</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

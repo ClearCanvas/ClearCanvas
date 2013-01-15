@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" assembly="ClearCanvas.Healthcare" namespace="ClearCanvas.Healthcare">
+  <class name="ProtocolGroup" proxy="ProtocolGroup" table="ProtocolGroup_">
+    <cache usage="nonstrict-read-write"/>
+    <id name="OID" column="OID_" type="Guid">
+      <generator class="guid.comb"/>
+    </id>
+    
+    <version name="Version" column="Version_"/>
+
+    <property name="Name" column="Name_" type="String" length="100" not-null="true" unique="true"/>
+    <property name="Description" column="Description_" type="String" length="1024"/>
+
+    <set name="ReadingGroups" table="ProtocolGroupReadingGroup_" lazy="true" access="nosetter.camelcase-underscore">
+      <key column="ProtocolGroupOID_"/>
+      <many-to-many column="ReadingGroupOID_" class="ReadingGroup" fetch="join"/>
+    </set>
+
+    <list name="Codes" table="ProtocolGroupProtocolCode_" lazy="true" access="nosetter.camelcase-underscore">
+      <key column="ProtocolGroupOID_"/>
+      <index column="Index_"/>
+      <many-to-many column="ProtocolCodeOID_" class="ClearCanvas.Healthcare.ProtocolCode, ClearCanvas.Healthcare" fetch="join"/>
+    </list>
+    
+  </class>
+</hibernate-mapping>

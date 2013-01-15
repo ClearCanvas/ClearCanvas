@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" assembly="ClearCanvas.Healthcare" namespace="ClearCanvas.Healthcare">
+	<query name="visitsByPractitioner">
+    from Visit v1
+    where v1 in 
+    (
+		  select v
+		  from Visit v
+		  join v.Practitioners vp
+		  where vp.Practitioner = ?
+    )
+	</query>
+  <query name="visitCountByPractitioner">
+    select count(*)
+    from Visit v1
+    where v1 in
+    (
+      select v
+      from Visit v
+      join v.Practitioners vp
+      where vp.Practitioner = ?
+    )
+  </query>
+</hibernate-mapping>

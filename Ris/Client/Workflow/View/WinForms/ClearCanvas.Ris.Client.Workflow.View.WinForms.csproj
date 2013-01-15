@@ -1,0 +1,397 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{125E2EC0-6D49-492D-BE66-4B75FE7A1590}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ClearCanvas.Ris.Client.Workflow.View.WinForms</RootNamespace>
+    <AssemblyName>ClearCanvas.Ris.Client.Workflow.View.WinForms</AssemblyName>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CheckInOrderComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CheckInOrderComponentControl.Designer.cs">
+      <DependentUpon>CheckInOrderComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CheckInOrderComponentView.cs" />
+    <Compile Include="MppsDocumentationComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="MppsDocumentationComponentControl.Designer.cs">
+      <DependentUpon>MppsDocumentationComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MppsDocumentationComponentView.cs" />
+    <Compile Include="DicomSeriesEditorComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="DicomSeriesEditorComponentControl.Designer.cs">
+      <DependentUpon>DicomSeriesEditorComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DicomSeriesEditorComponentView.cs" />
+    <Compile Include="DowntimePrintFormsComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="DowntimePrintFormsComponentControl.Designer.cs">
+      <DependentUpon>DowntimePrintFormsComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DowntimePrintFormsComponentView.cs" />
+    <Compile Include="DowntimeReportEntryComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="DowntimeReportEntryComponentControl.Designer.cs">
+      <DependentUpon>DowntimeReportEntryComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DowntimeReportEntryComponentView.cs" />
+    <Compile Include="Folders\FolderOptionComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Folders\FolderOptionComponentControl.Designer.cs">
+      <DependentUpon>FolderOptionComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Folders\FolderOptionComponentView.cs" />
+    <Compile Include="LinkProceduresComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="LinkProceduresComponentControl.Designer.cs">
+      <DependentUpon>LinkProceduresComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="LinkProceduresComponentView.cs" />
+    <Compile Include="MergeOrdersComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="MergeOrdersComponentControl.Designer.cs">
+      <DependentUpon>MergeOrdersComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MergeOrdersComponentView.cs" />
+    <Compile Include="PerformedProcedureComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="PerformedProcedureComponentControl.Designer.cs">
+      <DependentUpon>PerformedProcedureComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PerformedProcedureComponentView.cs" />
+    <Compile Include="PriorReportComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="PriorReportComponentControl.Designer.cs">
+      <DependentUpon>PriorReportComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PriorReportComponentView.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReasonSelectionComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ReasonSelectionComponentControl.Designer.cs">
+      <DependentUpon>ReasonSelectionComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ReasonSelectionComponentView.cs" />
+    <Compile Include="ReassignComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ReassignComponentControl.Designer.cs">
+      <DependentUpon>ReassignComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ReassignComponentView.cs" />
+    <Compile Include="ReportEditorComponentView.cs" />
+    <Compile Include="ReportEditorComponentViewBase.cs" />
+    <Compile Include="ReportingComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ReportingComponentControl.Designer.cs">
+      <DependentUpon>ReportingComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ReportingComponentView.cs" />
+    <Compile Include="ReportingMppsDocumentationComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ReportingMppsDocumentationComponentControl.Designer.cs">
+      <DependentUpon>ReportingMppsDocumentationComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ReportingMppsDocumentationComponentView.cs" />
+    <Compile Include="SR.Designer.cs">
+      <DependentUpon>SR.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="PerformingDocumentationComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="PerformingDocumentationComponentControl.Designer.cs">
+      <DependentUpon>PerformingDocumentationComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PerformingDocumentationComponentView.cs" />
+    <Compile Include="PerformingDocumentationOrderDetailsComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="PerformingDocumentationOrderDetailsComponentControl.Designer.cs">
+      <DependentUpon>PerformingDocumentationOrderDetailsComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PerformingDocumentationOrderDetailsComponentView.cs" />
+    <Compile Include="StaffSelectionComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="StaffSelectionComponentControl.Designer.cs">
+      <DependentUpon>StaffSelectionComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="StaffSelectionComponentView.cs" />
+    <Compile Include="TranscriptionComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="TranscriptionComponentControl.Designer.cs">
+      <DependentUpon>TranscriptionComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TranscriptionComponentView.cs" />
+    <Compile Include="RichTextReportEditorComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="RichTextReportEditorComponentControl.Designer.cs">
+      <DependentUpon>RichTextReportEditorComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TranscriptionEditorComponentView.cs" />
+    <Compile Include="VisitDetailsEditorComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="VisitDetailsEditorComponentControl.Designer.cs">
+      <DependentUpon>VisitDetailsEditorComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="VisitDetailsEditorComponentView.cs" />
+    <Compile Include="VisitLocationsSummaryComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="VisitLocationsSummaryComponentControl.Designer.cs">
+      <DependentUpon>VisitLocationsSummaryComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="VisitLocationsSummaryComponentView.cs" />
+    <Compile Include="VisitPractitionersSummaryComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="VisitPractitionersSummaryComponentControl.Designer.cs">
+      <DependentUpon>VisitPractitionersSummaryComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="VisitPractitionersSummaryComponentView.cs" />
+    <Service Include="{94E38DFF-614B-4cbd-B67C-F211BB35CE8B}" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\..\Common\ClearCanvas.Common.csproj">
+      <Project>{F6EAD428-E6CF-4DF6-B2F3-D33D532C5343}</Project>
+      <Name>ClearCanvas.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\..\Desktop\ClearCanvas.Desktop.csproj">
+      <Project>{26E9A01A-64B5-42C5-8252-FBB30DF9CEC7}</Project>
+      <Name>ClearCanvas.Desktop</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\..\Desktop\View\WinForms\ClearCanvas.Desktop.View.WinForms.csproj">
+      <Project>{BB434EC3-A580-4744-A635-A2B4029C66DE}</Project>
+      <Name>ClearCanvas.Desktop.View.WinForms</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\..\Enterprise\Desktop\ClearCanvas.Enterprise.Desktop.csproj">
+      <Project>{CBD5EBD0-7AE9-4824-AE8C-4888983E1B5B}</Project>
+      <Name>ClearCanvas.Enterprise.Desktop</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\ClearCanvas.Ris.Client.csproj">
+      <Project>{F8E75C01-AB14-4DDE-ABEA-3EECC4957A1F}</Project>
+      <Name>ClearCanvas.Ris.Client</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\View\WinForms\ClearCanvas.Ris.Client.View.WinForms.csproj">
+      <Project>{7932D8CA-34CF-47E6-A425-9B8DA4F60341}</Project>
+      <Name>ClearCanvas.Ris.Client.View.WinForms</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\ClearCanvas.Ris.Client.Workflow.csproj">
+      <Project>{FFB85377-995C-47A6-BF22-26D264CA3225}</Project>
+      <Name>ClearCanvas.Ris.Client.Workflow</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="CheckInOrderComponentControl.resx">
+      <DependentUpon>CheckInOrderComponentControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MppsDocumentationComponentControl.resx">
+      <DependentUpon>MppsDocumentationComponentControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Folders\FolderOptionComponentControl.resx">
+      <DependentUpon>FolderOptionComponentControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PerformedProcedureComponentControl.resx">
+      <DependentUpon>PerformedProcedureComponentControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PerformingDocumentationComponentControl.resx">
+      <DependentUpon>PerformingDocumentationComponentControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PerformingDocumentationOrderDetailsComponentControl.resx">
+      <DependentUpon>PerformingDocumentationOrderDetailsComponentControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ReportingMppsDocumentationComponentControl.resx">
+      <DependentUpon>ReportingMppsDocumentationComponentControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="VisitDetailsEditorComponentControl.resx">
+      <DependentUpon>VisitDetailsEditorComponentControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="VisitLocationsSummaryComponentControl.resx">
+      <DependentUpon>VisitLocationsSummaryComponentControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="VisitPractitionersSummaryComponentControl.resx">
+      <DependentUpon>VisitPractitionersSummaryComponentControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\NextSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="DicomSeriesEditorComponentControl.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>DicomSeriesEditorComponentControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DowntimePrintFormsComponentControl.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>DowntimePrintFormsComponentControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DowntimeReportEntryComponentControl.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>DowntimeReportEntryComponentControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LinkProceduresComponentControl.resx">
+      <DependentUpon>LinkProceduresComponentControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MergeOrdersComponentControl.resx">
+      <DependentUpon>MergeOrdersComponentControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PriorReportComponentControl.resx">
+      <DependentUpon>PriorReportComponentControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ReasonSelectionComponentControl.resx">
+      <DependentUpon>ReasonSelectionComponentControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ReassignComponentControl.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>ReassignComponentControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ReportingComponentControl.resx">
+      <DependentUpon>ReportingComponentControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\PreviousSmall.PNG" />
+    <EmbeddedResource Include="SR.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>SR.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="StaffSelectionComponentControl.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>StaffSelectionComponentControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TranscriptionComponentControl.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>TranscriptionComponentControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RichTextReportEditorComponentControl.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>RichTextReportEditorComponentControl.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 2.0 %28x86%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.0 %28x86%29</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\MergeLeftSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\MergeRightSmall.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

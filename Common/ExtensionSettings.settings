@@ -1,0 +1,10 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="ClearCanvas.Common" GeneratedClassName="ExtensionSettings">
+  <Profiles />
+  <Settings>
+    <Setting Name="ExtensionConfigurationXml" Type="System.Xml.XmlDocument" Scope="Application">
+      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;extensions /&gt;</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

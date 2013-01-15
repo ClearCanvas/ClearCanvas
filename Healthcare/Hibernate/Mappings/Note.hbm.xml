@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" assembly="ClearCanvas.Healthcare" namespace="ClearCanvas.Healthcare">
+	<class name="Note" proxy="Note" table="Note_">
+		<id name="OID" column="OID_" type="Guid">
+			<generator class="guid.comb"/>
+		</id>
+		<discriminator column="Discriminator_"	type="String"/>
+		<version name="Version" column="Version_"/>
+
+		<property name="Category" column="Category_" type="String" length ="1024"/>
+		<property name="Body" column="Body_" type="StringClob" length="65000"/>
+    <property name="Urgent" column="Urgent_" type="Boolean" not-null="true"/>
+
+    <property name="CreationTime" column="CreationTime_" type="DateTime" not-null="true"/>
+    <many-to-one name="Author" class="Staff" column="AuthorOID_" not-null="true"/>
+    <many-to-one name="OnBehalfOfGroup" class="StaffGroup" column="OnBehalfOfGroupOID_" not-null="false"/>
+    <property name="PostTime" column="PostTime_" type="DateTime" not-null="false"/>
+    <property name="IsFullyAcknowledged" column="IsFullyAcknowledged_" type="Boolean" not-null="true" access="nosetter.camelcase-underscore"/>
+    <property name="HasPostings" column="HasPostings_" type="Boolean" not-null="true" access="nosetter.camelcase-underscore"/>
+
+    <set name="Postings" lazy="true" cascade="all-delete-orphan" fetch="subselect">
+      <key column="NoteOID_"/>
+      <one-to-many class="NotePosting"/>
+    </set>
+    <!-- if this note is a ghost, this references the live note that it is a ghost of -->
+    <many-to-one name="GhostOf" class="Note" column="GhostOfOID_"/>
+  </class>
+</hibernate-mapping>

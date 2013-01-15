@@ -1,0 +1,22 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="ClearCanvas.Desktop.View.WinForms" GeneratedClassName="DesktopViewSettings">
+  <Profiles />
+  <Settings>
+    <Setting Name="LocalToolStripItemAlignment" Description="Controls appearance of local toolbars" Type="System.Windows.Forms.ToolStripItemAlignment" Scope="Application">
+      <Value Profile="(Default)">Left</Value>
+    </Setting>
+    <Setting Name="LocalToolStripItemTextImageRelation" Description="Controls appearance of local toolbars" Type="System.Windows.Forms.TextImageRelation" Scope="Application">
+      <Value Profile="(Default)">ImageBeforeText</Value>
+    </Setting>
+    <Setting Name="ShowNonPermissibleActions" Description="Controls whether protected actions are visible in the desktop" Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="EnableNonPermissibleActions" Description="Controls whether protected actions are enabled in the desktop - this should neve be enabled in a production environment" Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="DesktopViewSettingsXml" Description="XML document that stores information about window locations" Type="System.Xml.XmlDocument" Scope="User">
+      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;desktops /&gt;</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

@@ -1,0 +1,31 @@
+﻿<condition expressionLanguage="dicom">
+	<!-- 
+		Rule for matching on two Referring Physician's Names
+		Replace 'LastName'/'LastNameDoc2' with the Referring Physician's last name 
+		Replace 'FirstName'/'FirstNameDoc2' with the Referring Physician's first name 
+		Replace 'MiddleName'/'MiddleNameDoc2' with the Referring Physician's middle name
+
+		Note that these sample patterns may not match how the names are 
+		encoded at a specific site.  The patterns only match common formats
+		know to exist and testing should be done to ensure they work.
+	-->
+	<or>
+    <!-- Matches on LastName^FirstName^MiddleName -->
+    <regex  test="$ReferringPhysiciansName"	 pattern="LastName.FirstName.MiddleName" ignoreCase="true"/>
+    <!-- Matches on LastName^FirstName -->
+    <regex  test="$ReferringPhysiciansName"	 pattern="LastName.FirstName" ignoreCase="true"/>
+    <!-- Matches on LastName, FirstName -->
+    <regex  test="$ReferringPhysiciansName"  pattern="LastName,.FirstName" ignoreCase="true"/>
+    <!-- Matches on 'FirstName LastName' appearing in the name -->
+    <regex  test="$ReferringPhysiciansName"  pattern="FirstName\sLastName" ignoreCase="true"/>
+
+    <!-- Matches on LastNameDoc2^FirstNameDoc2^MiddleNameDoc2 -->
+    <regex  test="$ReferringPhysiciansName"	 pattern="LastNameDoc2.FirstNameDoc2.MiddleNameDoc2" ignoreCase="true"/>
+    <!-- Matches on LastNameDoc2^FirstNameDoc2 -->
+    <regex  test="$ReferringPhysiciansName"	 pattern="LastNameDoc2.FirstNameDoc2" ignoreCase="true"/>
+    <!-- Matches on LastNameDoc2, FirstNameDoc2 -->
+    <regex  test="$ReferringPhysiciansName"  pattern="LastNameDoc2,.FirstNameDoc2" ignoreCase="true"/>
+    <!-- Matches on 'FirstNameDoc2 LastNameDoc2' appearing in the name -->
+    <regex  test="$ReferringPhysiciansName"  pattern="FirstNameDoc2\sLastNameDoc2" ignoreCase="true"/>
+  </or>
+</condition>

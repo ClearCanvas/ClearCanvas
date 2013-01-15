@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Instance SopClassUID="1.2.840.10008.5.1.4.1.2.1.1">
+  <Attribute Tag="$QueryRetrieveLevel">STUDY</Attribute>
+  <Attribute Tag="$PatientId"></Attribute>
+  <Attribute Tag="$QueryRetrieveLevel">STUDY</Attribute>
+  <Attribute Tag="$StudyInstanceUid"></Attribute>
+  <Attribute Tag="$StudyId"></Attribute>
+  <Attribute Tag="$StudyDate"></Attribute>
+  <Attribute Tag="$StudyTime"></Attribute>
+  <Attribute Tag="$StudyDescription"></Attribute>
+  <Attribute Tag="$AccessionNumber"></Attribute>
+  <Attribute Tag="$NumberOfStudyRelatedInstances"></Attribute>
+  <Attribute Tag="$NumberOfStudyRelatedSeries"></Attribute>
+  <Attribute Tag="$ModalitiesInStudy"></Attribute>
+  <Attribute Tag="$RequestingPhysician"></Attribute>
+  <Attribute Tag="$ReferringPhysiciansName"></Attribute>
+</Instance>

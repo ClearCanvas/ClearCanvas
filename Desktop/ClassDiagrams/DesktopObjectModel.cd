@@ -1,0 +1,72 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Font Name="Tahoma" Size="8.4" />
+  <Class Name="ClearCanvas.Desktop.Application" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="0.75" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Application.cs</FileName>
+      <HashCode>IQAEABkAADAEgUAAIEAEKAyAAAAJAAAAwHAASEABBZI=</HashCode>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="DesktopWindows" />
+    </ShowAsCollectionAssociation>
+    <NestedTypes>
+      <Class Name="ClearCanvas.Desktop.Application.ApplicationToolContext" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Application.cs</NewMemberFileName>
+        </TypeIdentifier>
+        <Lollipop Position="0.2" />
+      </Class>
+      <Class Name="ClearCanvas.Desktop.Application.DefaultSessionManager" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Application.cs</NewMemberFileName>
+        </TypeIdentifier>
+        <Lollipop Position="0.2" />
+      </Class>
+    </NestedTypes>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="ClearCanvas.Desktop.DesktopWindow" Collapsed="true">
+    <Position X="3" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>DesktopWindow.cs</FileName>
+      <HashCode>BGAIAYEFELAEDAAIEAEAIAAAAAIABgQIAIACAAAAFQA=</HashCode>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Shelves" />
+      <Property Name="Workspaces" />
+    </ShowAsCollectionAssociation>
+    <NestedTypes>
+      <Class Name="ClearCanvas.Desktop.DesktopWindow.DesktopToolContext" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>DesktopWindow.cs</NewMemberFileName>
+        </TypeIdentifier>
+        <Lollipop Position="0.2" />
+      </Class>
+    </NestedTypes>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ClearCanvas.Desktop.Shelf" Collapsed="true">
+    <Position X="6" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Shelf.cs</FileName>
+      <HashCode>gBAAAAIAACAAAQAAUEEAAAAAAAAEAgAAAAJABACAAAA=</HashCode>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ClearCanvas.Desktop.Workspace" Collapsed="true">
+    <Position X="6" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Workspace.cs</FileName>
+      <HashCode>ABAAAAAAMCEAAQAAQAEACAAAAAAAAgAAAABABACAAAA=</HashCode>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ClearCanvas.Desktop.DialogBox" Collapsed="true">
+    <Position X="6" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>DialogBox.cs</FileName>
+      <HashCode>ABAAAgAEACAAAQAAAAEQAAAAAAQAAhAAAABABACAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+</ClassDiagram>

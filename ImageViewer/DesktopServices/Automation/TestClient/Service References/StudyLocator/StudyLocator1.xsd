@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://www.clearcanvas.ca/dicom/query" elementFormDefault="qualified" targetNamespace="http://www.clearcanvas.ca/dicom/query" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="http://localhost:51124/ClearCanvas/ImageViewer/StudyLocator?xsd=xsd2" namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
+  <xs:element name="StudyQuery">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="queryCriteria" nillable="true" type="tns:StudyRootStudyIdentifier" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:complexType name="StudyRootStudyIdentifier">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:StudyIdentifier">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="PatientId" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="PatientsBirthDate" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="PatientsBirthTime" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="PatientsName" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="PatientsSex" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="StudyRootStudyIdentifier" nillable="true" type="tns:StudyRootStudyIdentifier" />
+  <xs:complexType name="StudyIdentifier">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:Identifier">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="AccessionNumber" nillable="true" type="xs:string" />
+          <xs:element xmlns:q1="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="ModalitiesInStudy" nillable="true" type="q1:ArrayOfstring" />
+          <xs:element minOccurs="0" name="NumberOfStudyRelatedInstances" nillable="true" type="xs:int" />
+          <xs:element minOccurs="0" name="NumberOfStudyRelatedSeries" nillable="true" type="xs:int" />
+          <xs:element minOccurs="0" name="ReferringPhysiciansName" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="StudyDate" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="StudyDescription" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="StudyId" nillable="true" type="xs:string" />
+          <xs:element name="StudyInstanceUid" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="StudyTime" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="StudyIdentifier" nillable="true" type="tns:StudyIdentifier" />
+  <xs:complexType name="Identifier">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="InstanceAvailability" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="RetrieveAeTitle" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="SpecificCharacterSet" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Identifier" nillable="true" type="tns:Identifier" />
+  <xs:element name="StudyQueryResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="StudyQueryResult" nillable="true" type="tns:ArrayOfStudyRootStudyIdentifier" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:complexType name="ArrayOfStudyRootStudyIdentifier">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="StudyRootStudyIdentifier" nillable="true" type="tns:StudyRootStudyIdentifier" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfStudyRootStudyIdentifier" nillable="true" type="tns:ArrayOfStudyRootStudyIdentifier" />
+  <xs:complexType name="DataValidationFault">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Description" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="DataValidationFault" nillable="true" type="tns:DataValidationFault" />
+  <xs:complexType name="QueryFailedFault">
+    <xs:sequence>
+      <xs:element name="Description" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="QueryFailedFault" nillable="true" type="tns:QueryFailedFault" />
+  <xs:element name="SeriesQuery">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="queryCriteria" nillable="true" type="tns:SeriesIdentifier" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:complexType name="SeriesIdentifier">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:Identifier">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Modality" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="NumberOfSeriesRelatedInstances" nillable="true" type="xs:int" />
+          <xs:element minOccurs="0" name="SeriesDescription" nillable="true" type="xs:string" />
+          <xs:element name="SeriesInstanceUid" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="SeriesNumber" nillable="true" type="xs:int" />
+          <xs:element name="StudyInstanceUid" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="SeriesIdentifier" nillable="true" type="tns:SeriesIdentifier" />
+  <xs:element name="SeriesQueryResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="SeriesQueryResult" nillable="true" type="tns:ArrayOfSeriesIdentifier" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:complexType name="ArrayOfSeriesIdentifier">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="SeriesIdentifier" nillable="true" type="tns:SeriesIdentifier" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfSeriesIdentifier" nillable="true" type="tns:ArrayOfSeriesIdentifier" />
+  <xs:element name="ImageQuery">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="queryCriteria" nillable="true" type="tns:ImageIdentifier" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:complexType name="ImageIdentifier">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:Identifier">
+        <xs:sequence>
+          <xs:element name="InstanceNumber" nillable="true" type="xs:int" />
+          <xs:element name="SeriesInstanceUid" nillable="true" type="xs:string" />
+          <xs:element name="SopClassUid" nillable="true" type="xs:string" />
+          <xs:element name="SopInstanceUid" nillable="true" type="xs:string" />
+          <xs:element name="StudyInstanceUid" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="ImageIdentifier" nillable="true" type="tns:ImageIdentifier" />
+  <xs:element name="ImageQueryResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="ImageQueryResult" nillable="true" type="tns:ArrayOfImageIdentifier" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:complexType name="ArrayOfImageIdentifier">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="ImageIdentifier" nillable="true" type="tns:ImageIdentifier" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfImageIdentifier" nillable="true" type="tns:ArrayOfImageIdentifier" />
+</xs:schema>

@@ -1,0 +1,106 @@
+<Project DefaultTargets="CopyPlugins;CopyBin;CopyConfigFiles;AddSplashScreen" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+	<Choose>
+		<When Condition=" '$(PROCESSOR_ARCHITEW6432)' == 'IA64' Or '$(PROCESSOR_ARCHITEW6432)' == 'AMD64' Or '$(PROCESSOR_ARCHITECTURE)' == 'IA64' Or '$(PROCESSOR_ARCHITECTURE)' == 'AMD64'">
+			<PropertyGroup>
+				<BuildPlatform>x64</BuildPlatform>
+			</PropertyGroup>
+		</When>
+		<When Condition="'$(PROCESSOR_ARCHITECTURE)' == 'x86' ">
+			<PropertyGroup>
+				<BuildPlatform>x86</BuildPlatform>
+			</PropertyGroup>
+		</When>
+		<Otherwise>
+			<PropertyGroup>
+				<BuildPlatform></BuildPlatform>
+			</PropertyGroup>
+		</Otherwise>
+	</Choose>
+
+	<PropertyGroup>
+		<TargetPlatform>$(BuildPlatform)</TargetPlatform>
+		<TrunkDirectory>$(ProjectDir)..\..\..</TrunkDirectory>
+	</PropertyGroup>
+	<PropertyGroup>
+		<WebViewerSolutionDir>$(ProjectDir)..\Viewer</WebViewerSolutionDir>
+		<SilverlightBinFolder>$(ProjectDir)ClientBin</SilverlightBinFolder>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<ImageViewerWebClientSilverlightXAPOutputDir>$(TrunkDirectory)\ImageServer\Web\Client\Silverlight\bin\$(Configuration)</ImageViewerWebClientSilverlightXAPOutputDir>
+	</PropertyGroup>
+
+
+	<Choose>
+    <When Condition=" '$(BuildPlatform)' == 'x64' ">
+      <PropertyGroup>
+        <PlatformSubFolder>$(BuildPlatform)</PlatformSubFolder>
+      </PropertyGroup>
+    </When>
+    <When Condition=" '$(TargetPlatform)' != 'x86' ">
+      <PropertyGroup>
+        <PlatformSubFolder>$(TargetPlatform)</PlatformSubFolder>
+      </PropertyGroup>
+    </When>
+    <Otherwise>
+      <!-- assumes Win32 -->
+      
+      <PropertyGroup>
+        <PlatformSubFolder></PlatformSubFolder>
+      </PropertyGroup>
+    </Otherwise>
+  </Choose>
+
+	<UsingTask TaskName="ClearCanvas.Utilities.BuildTasks.CombineAppConfigs" AssemblyFile="$(TrunkDirectory)\Utilities\BuildTasks\bin\$(Configuration)\ClearCanvas.Utilities.BuildTasks.dll"/>
+
+
+	<ItemGroup>
+		<LogConfigFiles Include="$(ProjectDir)\..\..\..\ImageServer\Executable\Logging.config"/>
+
+		<WebCriticalConfigCreatorSourceFiles Include="$(SolutionDir)\$(SolutionName)_web_critical.config"/>
+		<WebConfig Include="$(SolutionDir)\$(SolutionName)_Web.config"/>
+	</ItemGroup>
+
+	<ItemGroup>
+    <PluginFiles Include="$(ProjectDir)\..\..\Enterprise\SqlServer\bin\$(Configuration)\ClearCanvas.ImageServer.Enterprise.SqlServer.dll"/>
+		<PluginFiles Include="$(ProjectDir)\..\..\Model\SqlServer\bin\$(Configuration)\ClearCanvas.ImageServer.Model.SqlServer.dll"/>
+	</ItemGroup>
+  
+  <ItemGroup>
+    <CodecPlugins Condition=" '$(TargetPlatform)' == 'x86' " Include="$(TrunkDirectory)\ReferencedAssemblies\Codecs\$(PlatformSubFolder)\ClearCanvas.Dicom.Codec.Jpeg.dll"/>
+    <CodecPlugins Include="$(TrunkDirectory)\Dicom\Codec\Rle\bin\$(Configuration)\ClearCanvas.Dicom.Codec.Rle.dll"/>
+  </ItemGroup>
+
+
+	<Target Name="CopyPlugins">
+		<Message Text="Copying plugin assemblies into plugins folder (ASP.NET Development Server must not be running)"/>
+		<Message Text="$(ProjectDir)"/>
+		<Message Text="@(PluginFiles)"/>
+		<Message Text="$(CodecPlugins)"/>
+		
+		<Copy SkipUnchangedFiles="false" SourceFiles="@(PluginFiles)" DestinationFolder="$(ProjectDir)\bin"/>
+		<Copy SkipUnchangedFiles="false" SourceFiles="@(CodecPlugins)" DestinationFolder="$(ProjectDir)\bin"/>    
+	</Target>
+	<Target Name="CopyBin">
+		<Message Text="Copying common assemblies into bin folder (ASP.NET Development Server must not be running)"/>
+		<Message Text="$(ProjectDir)"/>
+		<Message Text="@(BinFiles)"/>
+		<Copy SkipUnchangedFiles="true" SourceFiles="@(BinFiles)" DestinationFolder="$(ProjectDir)\bin"/>
+	</Target>
+	<Target Name="CopyConfigFiles">
+		<Copy SkipUnchangedFiles="true" SourceFiles="@(LogConfigFiles)" DestinationFiles="$(ProjectDir)\Logging.config"/>
+
+		<CombineAppConfigs CheckDependency="false" SourceFiles="@(WebCriticalConfigCreatorSourceFiles)" 
+						   OutputFile="$(ProjectDir)\critical.config"/>
+
+		<Copy SkipUnchangedFiles="false" SourceFiles="@(WebConfig)" DestinationFiles="$(ProjectDir)\Web.config"/>
+		
+	</Target>
+
+	<Target Name="AddSplashScreen">
+		<Message Text="Adding ImageServer splash screen"/>
+		<Copy SourceFiles="$(ProjectDir)\Builds\SplashScreen\LoginSplash.png"
+			  DestinationFolder="$(ProjectDir)\App_Themes\Default\images"/>
+	</Target>
+</Project>

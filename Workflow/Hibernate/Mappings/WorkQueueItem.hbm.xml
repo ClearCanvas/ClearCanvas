@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" assembly="ClearCanvas.Workflow" namespace="ClearCanvas.Workflow">
+  <class name="WorkQueueItem" proxy="WorkQueueItem" table="WorkQueueItem_">
+    <id name="OID" column="OID_" type="Guid">
+      <generator class="guid.comb"/>
+    </id>
+    <version name="Version" column="Version_"/>
+    
+    <property name="CreationTime" column="CreationTime_" type="DateTime" not-null="true" access="nosetter.camelcase-underscore"/>
+    <property name="ScheduledTime" column="ScheduledTime_" type="DateTime" not-null="true" access="nosetter.camelcase-underscore"/>
+    <property name="ExpirationTime" column="ExpirationTime_" type="DateTime"/>
+    <property name="User" column="User_" type="String" access="nosetter.camelcase-underscore"/>
+    <!-- NB:  Type is implemented as a "loose" enum with WorkQueueItemTypeEnum synchronized to any of its values via WorkQueueItemChangeSetListener -->
+    <property name="Type" column="Type_" type="String" not-null="true" access="nosetter.camelcase-underscore"/>
+    <property name="Status" column="Status_" type="ClearCanvas.Workflow.Hibernate.WorkQueueStatusEnumHbm, ClearCanvas.Workflow.Hibernate" not-null="true" access="nosetter.camelcase-underscore"/>
+    <property name="ProcessedTime" column="ProcessedTime_" type="DateTime" access="nosetter.camelcase-underscore"/>
+    <property name="FailureCount" column="FailureCount_" type="int" not-null="true" access="nosetter.camelcase-underscore"/>
+    <property name="FailureDescription" column="FailureDescription_" type="String" length="1024" not-null="false" access="nosetter.camelcase-underscore"/>
+
+    <map name="ExtendedProperties" lazy="true" table="WorkQueueExtendedProperty_">
+      <key column="WorkQueueOID_"/>
+      <index column="Name_" type="String"/>
+      <element type="String" column="Value_" length="65000"/>
+    </map>
+
+  </class>
+</hibernate-mapping>

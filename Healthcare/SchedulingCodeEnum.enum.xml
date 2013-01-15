@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<enum class="SchedulingCode">
+	<enum-value code="SDPY">
+		<value>SDP - Yes</value>
+		<description></description>
+	</enum-value>
+	<enum-value code="SDPN">
+		<value>SDP - No</value>
+		<description></description>
+	</enum-value>
+	<enum-value code="AOP">
+		<value>Add on procedure</value>
+		<description></description>
+	</enum-value>
+</enum>

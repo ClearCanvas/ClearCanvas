@@ -1,0 +1,135 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{AD5F2F64-C37C-48D6-82F9-D2199873C24A}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ClearCanvas.ImageViewer.Utilities.StudyComposer</RootNamespace>
+    <AssemblyName>ClearCanvas.ImageViewer.Utilities.StudyComposer</AssemblyName>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Adapters\BindingListWrapper.cs" />
+    <Compile Include="Adapters\SimpleComposerAdapter\PatientCollection.cs" />
+    <Compile Include="Adapters\SimpleComposerAdapter\SeriesCollection.cs" />
+    <Compile Include="Adapters\SimpleComposerAdapter\SimpleComposerAdapterComponent.cs" />
+    <Compile Include="Adapters\SimpleComposerAdapter\SimpleComposerAdapterTools.cs" />
+    <Compile Include="Adapters\SimpleComposerAdapter\ImageCollection.cs" />
+    <Compile Include="Adapters\SimpleComposerAdapter\StudyCollection.cs" />
+    <Compile Include="IconCache.cs" />
+    <Compile Include="IconHelper.cs" />
+    <Compile Include="ImageItem.cs" />
+    <Compile Include="IStudyComposerItem.cs" />
+    <Compile Include="PatientItem.cs" />
+    <Compile Include="PatientItemCollection.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SeriesItem.cs" />
+    <Compile Include="ImageItemCollection.cs" />
+    <Compile Include="SeriesItemCollection.cs" />
+    <Compile Include="SR.Designer.cs">
+      <DependentUpon>SR.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="StudyComposerComponent.cs" />
+    <Compile Include="StudyComposerItemBase.cs" />
+    <Compile Include="StudyComposerItemEditorComponent.cs" />
+    <Compile Include="StudyItem.cs" />
+    <Compile Include="StudyItemCollection.cs" />
+    <Compile Include="Tools\StudyComposerTool.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\AddToolSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\DeleteAllToolSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\DeleteToolSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\EditToolSmall.png" />
+    <EmbeddedResource Include="SR.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>SR.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Common\ClearCanvas.Common.csproj">
+      <Project>{F6EAD428-E6CF-4DF6-B2F3-D33D532C5343}</Project>
+      <Name>ClearCanvas.Common</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Desktop\ClearCanvas.Desktop.csproj">
+      <Project>{26E9A01A-64B5-42C5-8252-FBB30DF9CEC7}</Project>
+      <Name>ClearCanvas.Desktop</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Dicom\ClearCanvas.Dicom.csproj">
+      <Project>{AD9ECE2B-8268-4115-8DC8-860FBD011FFF}</Project>
+      <Name>ClearCanvas.Dicom</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\ClearCanvas.ImageViewer.csproj">
+      <Project>{85100D3E-471C-47C9-9687-ABF25F617ED7}</Project>
+      <Name>ClearCanvas.ImageViewer</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Clipboard\ClearCanvas.ImageViewer.Clipboard.csproj">
+      <Project>{8517089B-809E-4A62-9AB2-CFF8C72E1AEB}</Project>
+      <Name>ClearCanvas.ImageViewer.Clipboard</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Configuration\ClearCanvas.ImageViewer.Configuration.csproj">
+      <Project>{89DF567B-A0D1-456A-A28F-043FD57D7F9A}</Project>
+      <Name>ClearCanvas.ImageViewer.Configuration</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Services\ClearCanvas.ImageViewer.Services.csproj">
+      <Project>{2F464B93-3631-4886-96A0-D3F493536997}</Project>
+      <Name>ClearCanvas.ImageViewer.Services</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Services\Configuration\ClearCanvas.ImageViewer.Services.Configuration.csproj">
+      <Project>{CD1E4F1B-5E8F-426E-9637-19EF973B3B91}</Project>
+      <Name>ClearCanvas.ImageViewer.Services.Configuration</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\StudyComposerToolSmall.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

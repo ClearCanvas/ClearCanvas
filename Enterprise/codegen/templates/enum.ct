@@ -1,0 +1,17 @@
+using System;
+using System.Collections;
+using System.Text;
+
+using ClearCanvas.Common;
+using ClearCanvas.Enterprise.Core;
+
+namespace <%= namespace %> {
+
+    /// <summary>
+    /// <%= enumName %> enumeration
+    /// </summary>
+    [EnumValueClass(typeof(<%= className %>))]
+	public enum <%= enumName %>
+	{
+	}
+}

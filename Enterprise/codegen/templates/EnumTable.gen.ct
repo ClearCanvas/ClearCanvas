@@ -1,0 +1,32 @@
+// This file is machine generated - changes will be lost.
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+using ClearCanvas.Enterprise.Core;
+
+
+namespace <%= namespace %> {
+
+    /// <summary>
+    /// <%= className %> wrapper for <see cref="<%= enumName %>"/>
+    /// </summary>
+    public class <%= className %>Table : EnumTable<<%= enumName %>, <%= className %>>
+    {
+        /// <summary>
+        /// Constructor - not used by application code.
+        /// </summary>
+        public <%= className %>Table()
+        {
+        }
+
+        /// <summary>
+        /// Constructor - not used by application code.
+        /// </summary>
+        /// <param name="values">The values to insert in the table</param>
+        public <%= className %>Table(IList<<%= className %>> values)
+		    :base(values)
+        {
+        }
+    }
+}

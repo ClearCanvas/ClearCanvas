@@ -1,0 +1,144 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="ClearCanvas.Desktop.Help" GeneratedClassName="AboutSettings">
+  <Profiles />
+  <Settings>
+    <Setting Name="UseSettings" Description="Boolean switch to turn usage of these settings on/off." Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="BackgroundImageAssemblyName" Description="Assembly name of the background image." Type="System.String" Scope="Application">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="BackgroundImageResourceName" Description="Name of the image resource in the background image assembly." Type="System.String" Scope="Application">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="CopyrightLocation" Description="Location of the copyright, in the coordinates of the about window." Type="System.Drawing.Point" Scope="Application">
+      <Value Profile="(Default)">375, 340</Value>
+    </Setting>
+    <Setting Name="CopyrightSize" Description="Size of the copyright, in pixels." Type="System.Drawing.Size" Scope="Application">
+      <Value Profile="(Default)">286, 13</Value>
+    </Setting>
+    <Setting Name="CopyrightAutoSize" Description="Specifies whether or not the copyright should be auto-sized." Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="CopyrightForeColor" Description="Forecolor of the copyright." Type="System.Drawing.Color" Scope="Application">
+      <Value Profile="(Default)">Black</Value>
+    </Setting>
+    <Setting Name="CopyrightFontBold" Description="Copyright bolded." Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="CopyrightTextAlign" Description="Copyright text alignment." Type="System.Drawing.ContentAlignment" Scope="Application">
+      <Value Profile="(Default)">TopLeft</Value>
+    </Setting>
+    <Setting Name="VersionLocation" Description="Location of the version, in the coordinates of the about window." Type="System.Drawing.Point" Scope="Application">
+      <Value Profile="(Default)">447, 292</Value>
+    </Setting>
+    <Setting Name="VersionSize" Description="Size of the version, in pixels." Type="System.Drawing.Size" Scope="Application">
+      <Value Profile="(Default)">214, 13</Value>
+    </Setting>
+    <Setting Name="VersionAutoSize" Description="Specifies whether or not the version should be auto-sized." Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="VersionForeColor" Description="Forecolor of the version." Type="System.Drawing.Color" Scope="Application">
+      <Value Profile="(Default)">White</Value>
+    </Setting>
+    <Setting Name="VersionFontBold" Description="Version bolded." Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="VersionTextAlign" Description="Version text alignment." Type="System.Drawing.ContentAlignment" Scope="Application">
+      <Value Profile="(Default)">TopLeft</Value>
+    </Setting>
+    <Setting Name="VersionTextFormat" Description="Format string for displaying the version." Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Version {0}</Value>
+    </Setting>
+    <Setting Name="LicenseVisible" Description="Specifies whether or not to display the license (from ProductSettings) on the about window." Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="LicenseLocation" Description="Location of the license, in the coordinates of the about window." Type="System.Drawing.Point" Scope="Application">
+      <Value Profile="(Default)">617, 33</Value>
+    </Setting>
+    <Setting Name="LicenseSize" Description="Size of the license, in pixels." Type="System.Drawing.Size" Scope="Application">
+      <Value Profile="(Default)">44, 13</Value>
+    </Setting>
+    <Setting Name="LicenseAutoSize" Description="Specifies whether or not the license should be auto-sized." Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="LicenseForeColor" Description="Forecolor of the license." Type="System.Drawing.Color" Scope="Application">
+      <Value Profile="(Default)">Black</Value>
+    </Setting>
+    <Setting Name="LicenseFontBold" Description="License bolded." Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="LicenseTextAlign" Description="License text alignment." Type="System.Drawing.ContentAlignment" Scope="Application">
+      <Value Profile="(Default)">TopLeft</Value>
+    </Setting>
+    <Setting Name="CloseButtonLinkColor" Description="Color of the close button link." Type="System.Drawing.Color" Scope="Application">
+      <Value Profile="(Default)">60, 150, 208</Value>
+    </Setting>
+    <Setting Name="ManifestLocation" Description="Location of the manifest message, in the coordinates of the about window." Type="System.Drawing.Point" Scope="Application">
+      <Value Profile="(Default)">447, 331</Value>
+    </Setting>
+    <Setting Name="ManifestSize" Description="Size of the manifest message, in pixels." Type="System.Drawing.Size" Scope="Application">
+      <Value Profile="(Default)">214, 13</Value>
+    </Setting>
+    <Setting Name="ManifestAutoSize" Description="Specifies whether or not the manifest message should be auto-sized." Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="ManifestForeColor" Description="Forecolor of the manifest message." Type="System.Drawing.Color" Scope="Application">
+      <Value Profile="(Default)">Firebrick</Value>
+    </Setting>
+    <Setting Name="ManifestFontBold" Description="Manifest message bolded." Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="ManifestTextAlign" Description="Manifest message text alignment." Type="System.Drawing.ContentAlignment" Scope="Application">
+      <Value Profile="(Default)">TopLeft</Value>
+    </Setting>
+    <Setting Name="CloseButtonLocation" Type="System.Drawing.Point" Scope="Application">
+      <Value Profile="(Default)">659, 9</Value>
+    </Setting>
+    <Setting Name="CloseButtonAnchor" Type="System.Drawing.ContentAlignment" Scope="Application">
+      <Value Profile="(Default)">TopRight</Value>
+    </Setting>
+    <Setting Name="EvaluationVisible" Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="EvaluationLocation" Type="System.Drawing.Point" Scope="Application">
+      <Value Profile="(Default)">617, 33</Value>
+    </Setting>
+    <Setting Name="EvaluationSize" Type="System.Drawing.Size" Scope="Application">
+      <Value Profile="(Default)">214, 13</Value>
+    </Setting>
+    <Setting Name="EvaluationAutoSize" Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="EvaluationForeColor" Type="System.Drawing.Color" Scope="Application">
+      <Value Profile="(Default)">Firebrick</Value>
+    </Setting>
+    <Setting Name="EvaluationFontBold" Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="EvaluationTextAlign" Type="System.Drawing.ContentAlignment" Scope="Application">
+      <Value Profile="(Default)">TopRight</Value>
+    </Setting>
+    <Setting Name="NotForDiagnosticUseVisible" Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="NotForDiagnosticUseLocation" Type="System.Drawing.Point" Scope="Application">
+      <Value Profile="(Default)">617, 33</Value>
+    </Setting>
+    <Setting Name="NotForDiagnosticUseSize" Type="System.Drawing.Size" Scope="Application">
+      <Value Profile="(Default)">214, 13</Value>
+    </Setting>
+    <Setting Name="NotForDiagnosticUseForeColor" Type="System.Drawing.Color" Scope="Application">
+      <Value Profile="(Default)">Firebrick</Value>
+    </Setting>
+    <Setting Name="NotForDiagnosticUseAutoSize" Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="NotForDiagnosticUseFontBold" Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="NotForDiagnosticUseTextAlign" Type="System.Drawing.ContentAlignment" Scope="Application">
+      <Value Profile="(Default)">TopRight</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

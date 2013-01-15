@@ -1,0 +1,544 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{748C08F1-FD6E-49F6-90BB-90C3A323C714}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ClearCanvas.Healthcare</RootNamespace>
+    <AssemblyName>ClearCanvas.Healthcare</AssemblyName>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;UNIT_TESTS</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Iesi.Collections, Version=1.0.0.3, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\ReferencedAssemblies\NHibernate2.1\Iesi.Collections.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.framework, Version=2.2.7.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\ReferencedAssemblies\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="*.gen.cs" />
+    <Compile Include="Alerts\AlertBase.cs" />
+    <Compile Include="Alerts\AlertHelper.cs" />
+    <Compile Include="Alerts\AlertNotification.cs" />
+    <Compile Include="Alerts\AlertsSettings.cs" />
+    <Compile Include="Alerts\AlertsSettings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>AlertsSettings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="Alerts\ExternalPractitionerAlertBase.cs" />
+    <Compile Include="Alerts\ExternalPractitionerAlerts.cs" />
+    <Compile Include="Alerts\IncompleteDemographicDataAlert.cs" />
+    <Compile Include="Alerts\OrderAlertBase.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Alerts\PatientAlertBase.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Alerts\PatientAllergyAlert.cs" />
+    <Compile Include="Alerts\PatientProfileAlertBase.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Alerts\ReconciliationAlert.cs" />
+    <Compile Include="Allergy.cs" />
+    <Compile Include="AttachedDocument.cs" />
+    <Compile Include="Brokers\IDicomUidBroker.cs" />
+    <Compile Include="Brokers\IMrnBroker.cs" />
+    <Compile Include="Brokers\IPerformedProcedureStepBroker.cs" />
+    <Compile Include="Brokers\IProcedureNumberBroker.cs" />
+    <Compile Include="Brokers\IProtocolWorklistItemBroker.cs" />
+    <Compile Include="Brokers\IExternalPractitionerBroker.cs" />
+    <Compile Include="Brokers\IExternalPractitionerContactPointBroker.cs" />
+    <Compile Include="Brokers\IOrderBroker.cs" />
+    <Compile Include="Brokers\IPatientBroker.cs" />
+    <Compile Include="Brokers\IPatientHistoryBroker.cs" />
+    <Compile Include="Brokers\IPriorReportBroker.cs" />
+    <Compile Include="Brokers\IProcedureTypeGroupBroker.cs" />
+    <Compile Include="Brokers\IProtocolGroupBroker.cs" />
+    <Compile Include="Brokers\IPublicationStepBroker.cs" />
+    <Compile Include="Brokers\ISequenceBroker.cs" />
+    <Compile Include="Brokers\IStaffBroker.cs" />
+    <Compile Include="Brokers\ITranscriptionReviewStepBroker.cs" />
+    <Compile Include="Brokers\IVisitBroker.cs" />
+    <Compile Include="Brokers\IWorklistBroker.cs" />
+    <Compile Include="Alerts\IAlert.cs" />
+    <Compile Include="Alerts\LanguageAlert.cs" />
+    <Compile Include="Alerts\NoteAlert.cs" />
+    <Compile Include="Brokers\IWorklistItemBroker.cs" />
+    <Compile Include="CannedText.cs" />
+    <Compile Include="DateTimeExtensions.cs" />
+    <Compile Include="Department.cs" />
+    <Compile Include="FtpAttachedDocumentStore.cs" />
+    <Compile Include="IAttachedDocumentStore.cs" />
+    <Compile Include="Imex\DepartmentImex.cs" />
+    <Compile Include="IOrderNoteProvider.cs" />
+    <Compile Include="LogicalHL7EventSettings.cs" />
+    <Compile Include="LogicalHL7EventSettings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>LogicalHL7EventSettings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="MergeWorkQueueItem.cs" />
+    <Compile Include="OrderMergeHistoryVirtualOrderNoteProvider.cs" />
+    <Compile Include="OrderMergeInfo.cs" />
+    <Compile Include="OrderRules.cs" />
+    <Compile Include="Printing\PrintTemplateSettings.cs" />
+    <Compile Include="Printing\DowntimeFormPageModel.cs" />
+    <Compile Include="Printing\PageModel.cs" />
+    <Compile Include="Printing\LetterheadSettings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>LetterheadSettings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="Printing\LetterheadSettings.cs" />
+    <Compile Include="Printing\ReportPageModel.cs" />
+    <Compile Include="ProcedureBuilderSettings.cs" />
+    <Compile Include="ProcedureBuilderSettings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>ProcedureBuilderSettings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="ProcedurePlan.cs" />
+    <Compile Include="ProtocolingWorklistItemSearchCriteria.cs" />
+    <Compile Include="DicomSeries.cs" />
+    <Compile Include="EntityValidationRulesSettings.cs" />
+    <Compile Include="EntityValidationRulesSettings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>EntityValidationRulesSettings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="GroupNotePosting.cs" />
+    <Compile Include="ImageAvailability.cs" />
+    <Compile Include="Imex\CannedTextImex.cs" />
+    <Compile Include="Imex\LocationImex.cs" />
+    <Compile Include="Imex\PatientNoteCategoryImex.cs" />
+    <Compile Include="LogicalHL7Event.cs" />
+    <Compile Include="LogicalHL7EventArgs.cs" />
+    <Compile Include="ModalityPerformedProcedureStepSearchCriteria.cs" />
+    <Compile Include="NoteboxFactory.cs" />
+    <Compile Include="Imex\ExternalPractitionerImex.cs" />
+    <Compile Include="Imex\FacilityImex.cs" />
+    <Compile Include="Imex\ModalityImex.cs" />
+    <Compile Include="Imex\DiagnosticServiceImex.cs" />
+    <Compile Include="Imex\ProcedureTypeGroupImex.cs" />
+    <Compile Include="Imex\ProcedureTypeImex.cs" />
+    <Compile Include="Imex\ProtocolGroupImex.cs" />
+    <Compile Include="Imex\SharedDataContracts.cs" />
+    <Compile Include="Imex\StaffImex.cs" />
+    <Compile Include="Imex\WorklistImex.cs" />
+    <Compile Include="INotebox.cs" />
+    <Compile Include="Brokers\IOrderNoteboxItemBroker.cs" />
+    <Compile Include="Note.cs" />
+    <Compile Include="NoteAcknowledgementException.cs" />
+    <Compile Include="Notebox.cs" />
+    <Compile Include="NoteboxItemSearchCriteria.cs" />
+    <Compile Include="NoteAcknowledgement.cs" />
+    <Compile Include="NotePosting.cs" />
+    <Compile Include="Imex\ExternalPractitionerImporter.cs" />
+    <Compile Include="Imex\FacilityImporter.cs" />
+    <Compile Include="Imex\StaffImporter.cs" />
+    <Compile Include="OrderCancelInfo.cs" />
+    <Compile Include="OrderCreationArgs.cs" />
+    <Compile Include="OrderNoteboxes.cs" />
+    <Compile Include="OrderNoteboxItem.cs" />
+    <Compile Include="PatientReconciliation\Utility.cs" />
+    <Compile Include="PublicationStepSearchCriteria.cs" />
+    <Compile Include="RadiologistAdminWorklists.cs" />
+    <Compile Include="RegistrationProcedureStep.cs" />
+    <Compile Include="ExternalPractitionerContactPoint.cs" />
+    <Compile Include="IWorklistQueryContext.cs" />
+    <Compile Include="MinMaxHelper.cs" />
+    <Compile Include="OrderNote.cs" />
+    <Compile Include="PerformingGroup.cs" />
+    <Compile Include="ProcedureBuilder.cs" />
+    <Compile Include="ProcedureStepSchedulingSearchCriteria.cs" />
+    <Compile Include="ReadingGroup.cs" />
+    <Compile Include="ProtocolAssignmentStep.cs" />
+    <Compile Include="ProtocolProcedureStepSearchCriteria.cs" />
+    <Compile Include="ProtocolResolutionStep.cs" />
+    <Compile Include="RelevanceGroup.cs" />
+    <Compile Include="ReportingReviewWorklists.cs" />
+    <Compile Include="ReportingWorklists.cs" />
+    <Compile Include="ReportTrackingWorklists.cs" />
+    <Compile Include="ResultCommunicationMode.cs" />
+    <Compile Include="ResultRecipient.cs" />
+    <Compile Include="StaffGroup.cs" />
+    <Compile Include="Imex\StaffGroupImex.cs" />
+    <Compile Include="StaffNotePosting.cs" />
+    <Compile Include="PerformingWorklists.cs" />
+    <Compile Include="Tests\DocumentationProcedureStepTests.cs" />
+    <Compile Include="Tests\ExternalPractitionerContactPointTests.cs" />
+    <Compile Include="Tests\ExternalPractitionerTests.cs" />
+    <Compile Include="Tests\InterpretationStepTests.cs" />
+    <Compile Include="Tests\ModalityProcedureStepTests.cs" />
+    <Compile Include="Tests\OrderTests.cs" />
+    <Compile Include="Tests\ProcedureCheckInTests.cs" />
+    <Compile Include="Tests\ProcedureStepTests.cs" />
+    <Compile Include="Tests\ProcedureTests.cs" />
+    <Compile Include="Tests\ProtocolAssignmentStepTests.cs" />
+    <Compile Include="Tests\ProtocolProcedureStepTests.cs" />
+    <Compile Include="Tests\ProtocolResolutionStepTests.cs" />
+    <Compile Include="Tests\PublicationStepTests.cs" />
+    <Compile Include="Tests\ReportingProcedureStepTests.cs" />
+    <Compile Include="Tests\ReportTests.cs" />
+    <Compile Include="Tests\TestDicomUidBroker.cs" />
+    <Compile Include="Tests\TestExtensionFactory.cs" />
+    <Compile Include="Tests\TestLocationFactory.cs" />
+    <Compile Include="Tests\TestOrderNoteFactory.cs" />
+    <Compile Include="Tests\TestProcedureNumberBroker.cs" />
+    <Compile Include="Tests\TranscriptionReviewStepTests.cs" />
+    <Compile Include="Tests\TranscriptionStepTests.cs" />
+    <Compile Include="Tests\VerificationStepTests.cs" />
+    <Compile Include="Tests\WorklistQueryContext.cs" />
+    <Compile Include="Tests\WorklistTimePointTests.cs" />
+    <Compile Include="TranscriptionReviewStep.cs" />
+    <Compile Include="TranscriptionReviewStepSearchCriteria.cs" />
+    <Compile Include="TranscriptionReviewWorklists.cs" />
+    <Compile Include="TranscriptionWorklists.cs" />
+    <Compile Include="Workflow\DiscontinueOrderOperation.cs" />
+    <Compile Include="Workflow\OrderEntry\Operations.cs" />
+    <Compile Include="Workflow\Reporting\ReportingWorkflowSettings.cs" />
+    <Compile Include="Workflow\Reporting\ReportingWorkflowSettings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>ReportingWorkflowSettings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="Workflow\Reporting\ReportingWorklistItem.cs" />
+    <Compile Include="Workflow\Tests\CancelOrderOperationTests.cs" />
+    <Compile Include="Workflow\Tests\DiscontinueOrderOperationTests.cs" />
+    <Compile Include="Workflow\Transcription\TranscriptionOperations.cs" />
+    <Compile Include="WorklistFactory.cs" />
+    <Compile Include="WorklistFilters.cs" />
+    <Compile Include="WorklistItem.cs" />
+    <Compile Include="WorklistItemProjection.cs" />
+    <Compile Include="WorklistItemSearchArgs.cs" />
+    <Compile Include="WorklistItemSearchCriteria.cs" />
+    <Compile Include="ReportingWorklistItemSearchCriteria.cs" />
+    <Compile Include="ModalityWorklistItemSearchCriteria.cs" />
+    <Compile Include="RegistrationWorklistItemSearchCriteria.cs" />
+    <Compile Include="DocumentationProcedureStep.cs" />
+    <Compile Include="DocumentationProcedureStepSearchCriteria.cs" />
+    <Compile Include="ExternalPractitioner.cs" />
+    <Compile Include="OrderAttachment.cs" />
+    <Compile Include="PatientAttachment.cs" />
+    <Compile Include="PatientIdentifier.cs" />
+    <Compile Include="ProcedureCheckIn.cs" />
+    <Compile Include="Protocol.cs" />
+    <Compile Include="ProtocolCode.cs" />
+    <Compile Include="ProtocolGroup.cs" />
+    <Compile Include="ProtocolProcedureStep.cs" />
+    <Compile Include="ProtocolStatus.cs" />
+    <Compile Include="PublicationStep.cs" />
+    <Compile Include="Laterality.cs" />
+    <Compile Include="ReportPartStatus.cs" />
+    <Compile Include="ReportStatus.cs" />
+    <Compile Include="PatientNoteCategory.cs" />
+    <Compile Include="NoteSeverity.cs" />
+    <Compile Include="OrderStatus.cs" />
+    <Compile Include="PatientReconciliationException.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="PatientReconciliation\DefaultPatientReconciliationStrategy.cs" />
+    <Compile Include="PatientReconciliation\IPatientReconciliationStrategy.cs" />
+    <Compile Include="PatientReconciliation\PatientProfileDiscrepancy.cs" />
+    <Compile Include="PatientReconciliation\PatientProfileDiscrepancyTest.cs" />
+    <Compile Include="PatientReconciliation\PatientProfileMatch.cs" />
+    <Compile Include="PatientReconciliation\PatientReconciliationStrategyExtensionPoint.cs" />
+    <Compile Include="PatientNote.cs" />
+    <Compile Include="RegistrationWorklists.cs" />
+    <Compile Include="Report.cs" />
+    <Compile Include="ReportPart.cs" />
+    <Compile Include="ProcedureStatus.cs" />
+    <Compile Include="ProcedureTypeGroup.cs" />
+    <Compile Include="SR.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SR.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Tests\TestAttachedDocumentFactory.cs" />
+    <Compile Include="Tests\TestOrderAttachmentFactory.cs" />
+    <Compile Include="Tests\TestDiagnosticServiceFactory.cs" />
+    <Compile Include="Tests\TestVisitFactory.cs" />
+    <Compile Include="Tests\TestPatientFactory.cs" />
+    <Compile Include="Tests\TestExternalPractitionerFactory.cs" />
+    <Compile Include="Tests\TestFacilityFactory.cs" />
+    <Compile Include="Tests\TestOrderFactory.cs" />
+    <Compile Include="Tests\ScheduledWorkflowTests.cs" />
+    <Compile Include="Tests\TestStaffFactory.cs" />
+    <Compile Include="VisitNumber.cs" />
+    <Compile Include="Workflow\CancelOrderOperation.cs" />
+    <Compile Include="Brokers\*.gen.cs" />
+    <Compile Include="Address.cs" />
+    <Compile Include="AddressType.cs" />
+    <Compile Include="Brokers\IAccessionNumberBroker.cs" />
+    <Compile Include="Brokers\IRegistrationWorklistItemBroker.cs" />
+    <Compile Include="Brokers\IModalityWorklistItemBroker.cs" />
+    <Compile Include="Brokers\IModalityProcedureStepBroker.cs" />
+    <Compile Include="Brokers\IPatientProfileBroker.cs" />
+    <Compile Include="Brokers\IReportingProcedureStepBroker.cs" />
+    <Compile Include="Brokers\IReportingWorklistItemBroker.cs" />
+    <Compile Include="ContactPerson.cs" />
+    <Compile Include="DateTimeRange.cs" />
+    <Compile Include="DiagnosticService.cs" />
+    <Compile Include="EmailAddress.cs" />
+    <Compile Include="Facility.cs" />
+    <Compile Include="HealthcardNumber.cs" />
+    <Compile Include="HealthcareWorkflowException.cs" />
+    <Compile Include="IHealthcareServiceLayer.cs" />
+    <Compile Include="InterpretationStep.cs" />
+    <Compile Include="IProcedureStepProperties.cs" />
+    <Compile Include="Location.cs" />
+    <Compile Include="Modality.cs" />
+    <Compile Include="ModalityPerformedProcedureStep.cs" />
+    <Compile Include="ModalityProcedureStep.cs" />
+    <Compile Include="ModalityProcedureStepSearchCriteria.cs" />
+    <Compile Include="Order.cs" />
+    <Compile Include="OrderPriority.cs" />
+    <Compile Include="Patient.cs" />
+    <Compile Include="PatientIdentifierType.cs" />
+    <Compile Include="PatientProfile.cs" />
+    <Compile Include="PerformedProcedureStep.cs" />
+    <Compile Include="PerformedProcedureStepSearchCriteria.cs" />
+    <Compile Include="PersonName.cs" />
+    <Compile Include="ProcedureStep.cs" />
+    <Compile Include="ProcedureStepPerformer.cs" />
+    <Compile Include="ProcedureStepPerformerSearchCriteria.cs" />
+    <Compile Include="ProcedureStepSearchCriteria.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReportingPerformedProcedureStep.cs" />
+    <Compile Include="ReportingProcedureStep.cs" />
+    <Compile Include="ReportingProcedureStepSearchCriteria.cs" />
+    <Compile Include="Procedure.cs" />
+    <Compile Include="ProcedureType.cs" />
+    <Compile Include="Sex.cs" />
+    <Compile Include="Staff.cs" />
+    <Compile Include="TelephoneEquipment.cs" />
+    <Compile Include="TelephoneNumber.cs" />
+    <Compile Include="TelephoneUse.cs" />
+    <Compile Include="TranscriptionStep.cs" />
+    <Compile Include="VerificationStep.cs" />
+    <Compile Include="Visit.cs" />
+    <Compile Include="VisitLocation.cs" />
+    <Compile Include="VisitLocationRole.cs" />
+    <Compile Include="VisitPractitioner.cs" />
+    <Compile Include="VisitPractitionerRole.cs" />
+    <Compile Include="VisitStatus.cs" />
+    <Compile Include="Workflow\Protocolling\ProtocollingOperations.cs" />
+    <Compile Include="Workflow\Registration\Operation.cs" />
+    <Compile Include="IWorklist.cs" />
+    <Compile Include="Workflow\Modality\Operations.cs" />
+    <Compile Include="Workflow\Reporting\Operations.cs" />
+    <Compile Include="Worklist.cs" />
+    <Compile Include="WorklistAttributes.cs" />
+    <Compile Include="WorklistOwner.cs" />
+    <Compile Include="WorklistSearchCriteria.cs" />
+    <Compile Include="WorklistItemField.cs" />
+    <Compile Include="WorklistSettings.cs" />
+    <Compile Include="WorklistSettings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>WorklistSettings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="WorklistTimePoint.cs" />
+    <Compile Include="WorklistTimeRange.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{B4F97281-0DBD-4835-9ED8-7DFB966E87FF}" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Common\ClearCanvas.Common.csproj">
+      <Project>{F6EAD428-E6CF-4DF6-B2F3-D33D532C5343}</Project>
+      <Name>ClearCanvas.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Enterprise\Common\ClearCanvas.Enterprise.Common.csproj">
+      <Project>{B5EBFFD7-6641-4932-91C9-4C4322B41868}</Project>
+      <Name>ClearCanvas.Enterprise.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Enterprise\Core\ClearCanvas.Enterprise.Core.csproj">
+      <Project>{431E9444-9915-4D49-B92D-9B7EC086622A}</Project>
+      <Name>ClearCanvas.Enterprise.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Workflow\ClearCanvas.Workflow.csproj">
+      <Project>{576C4A35-B314-49D0-BF53-4BD43D8D1F31}</Project>
+      <Name>ClearCanvas.Workflow</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Alerts\AlertsSettings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>AlertsSettings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="app.config" />
+    <None Include="EntityValidationRulesSettings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>EntityValidationRulesSettings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="LogicalHL7EventSettings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>LogicalHL7EventSettings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="Printing\LetterheadSettings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>LetterheadSettings.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="ProcedureBuilderSettings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>ProcedureBuilderSettings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="ProcedureStepHierarchy.cd" />
+    <None Include="Workflow\Reporting\ReportingWorkflowSettings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>ReportingWorkflowSettings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="WorklistSettings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>WorklistSettings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="AdmissionTypeEnum.enum.xml" />
+    <EmbeddedResource Include="AmbulatoryStatusEnum.enum.xml" />
+    <EmbeddedResource Include="OrderCancelReasonEnum.enum.xml" />
+    <EmbeddedResource Include="PatientClassEnum.enum.xml" />
+    <EmbeddedResource Include="PatientTypeEnum.enum.xml" />
+    <EmbeddedResource Include="ReligionEnum.enum.xml" />
+    <EmbeddedResource Include="SpokenLanguageEnum.enum.xml" />
+    <EmbeddedResource Include="PatientAttachmentCategoryEnum.enum.xml" />
+    <EmbeddedResource Include="OrderAttachmentCategoryEnum.enum.xml" />
+    <EmbeddedResource Include="SR.resx">
+      <SubType>Designer</SubType>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>SR.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="ProtocolRejectReasonEnum.enum.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="InsuranceAuthorityEnum.enum.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="ProtocolUrgencyEnum.enum.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="StaffTypeEnum.enum.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="ContactPersonRelationshipEnum.enum.xml" />
+    <EmbeddedResource Include="ContactPersonTypeEnum.enum.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="TranscriptionRejectReasonEnum.enum.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="EntityValidationRules.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="DicomModalityEnum.enum.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="SchedulingCodeEnum.enum.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="PersonRelationshipTypeEnum.enum.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="AllergyAllergenTypeEnum.enum.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="AllergySeverityEnum.enum.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="AllergySensitivityTypeEnum.enum.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Workflow\Modality\Tests\" />
+    <Folder Include="Workflow\Protocolling\Tests\" />
+    <Folder Include="Workflow\Registration\Tests\" />
+    <Folder Include="Workflow\Reporting\Tests\" />
+    <Folder Include="Workflow\Transcription\Tests\" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="ProcedureBuilderRootProcedurePlan.xml" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

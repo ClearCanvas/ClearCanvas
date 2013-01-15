@@ -1,0 +1,283 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>Print Report Preview</title>
+	<link href="../css/default.css" rel="stylesheet" type="text/css" />
+	<link href="../css/printedreport.css" rel="stylesheet" type="text/css" />
+	<link href="../css/structuredreport.css" rel="stylesheet" type="text/css" />
+	<script type="text/javascript" src="../js/jsx.js"></script>
+	<script type="text/javascript" src="../js/jsml.js"></script>
+	<script type="text/javascript" src="../js/ui.js"></script>
+	<script type="text/javascript" src="../js/ris.js"></script>
+	<script type="text/javascript" src="../js/preview.js"></script>
+	<script type="text/javascript" src="../js/layout.js"></script>
+	<script type="text/javascript" src="../js/structuredreportsummary.js"></script>
+	<script type="text/javascript" >
+		var data = {};
+		var errorProvider = new ErrorProvider();
+
+		function onBodyLoad()
+		{
+			if(!Ris)
+				return;
+
+			try
+			{
+				var worklistItem = Ris.getHealthcareContext();
+				if (worklistItem == null)
+				{
+					Field.setValue($("myForm"), "");
+					return;
+				}
+
+				Ris.getPatientDataService().getDataAsync(
+					CreateRequest(worklistItem),
+					function(data)
+					{
+						OnPatientDataLoaded(data, worklistItem);
+					});
+			}
+			catch(e)
+			{
+				var message = "Failed to load preview page.  An exception occurred in the script. Error name: " + e.name + ". Error message: " + e.message;
+				Field.setValue($("myForm"), message);
+			}
+			finally
+			{
+				var renderedReportHtml = "";
+
+				renderedReportHtml += "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">";
+				renderedReportHtml += "<html xmlns=\"http://www.w3.org/1999/xhtml\">";
+				renderedReportHtml += "<head>";
+				renderedReportHtml += "	<title>Report Preview</title>";
+				renderedReportHtml += "	<link href=\"css/default.css\" rel=\"stylesheet\" type=\"text/css\" />";
+				renderedReportHtml += "	<link href=\"css/printedreport.css\" rel=\"stylesheet\" type=\"text/css\" />";
+				renderedReportHtml += "	<link href=\"css/structuredreport.css\" rel=\"stylesheet\" type=\"text/css\" />";
+				renderedReportHtml += "</head>";
+				renderedReportHtml += "<body>";
+				renderedReportHtml += document.body.innerHTML;
+				renderedReportHtml += "</body>";
+				renderedReportHtml += "</html>";
+
+				Field.setValue($("renderedReport"), renderedReportHtml);
+				Field.show($("renderedReport"), false);
+
+				Ris.notifyScriptCompleted();
+			}
+		}
+
+		function CreateRequest(context)
+		{
+			return {
+				GetPatientProfileDetailRequest:
+					{
+						PatientProfileRef: worklistItem.PatientProfileRef
+					},
+				GetOrderDetailRequest: worklistItem.OrderRef == null ? null : 
+					{
+						OrderRef: worklistItem.OrderRef,
+						IncludeVisit: true
+					},
+				// only request the report detail if there is a report     
+				GetReportDetailRequest: 
+					worklistItem.ReportRef == null 
+						? { ProcedureRef: worklistItem.ProcedureRef }
+						: { ReportRef: worklistItem.ReportRef }
+			};
+		}
+
+		function OnPatientDataLoaded(data, worklistItem)
+		{
+			if (data == null || data.length == 0)
+			{
+				Field.setValue($("myForm"), "");
+				return;
+			}
+
+			// update patient demography
+			var patientProfile = data.GetPatientProfileDetailResponse.PatientProfile;
+			if (patientProfile)
+			{
+				Field.setValue($("patient"), Ris.formatPersonName(patientProfile.Name));
+				Field.setValue($("patientFooter"), Ris.formatPersonName(patientProfile.Name));
+				Field.setValue($("mrn"), Ris.formatMrn(patientProfile.Mrn));
+				Field.setValue($("mrnFooter"), Ris.formatMrn(patientProfile.Mrn));
+				Field.setValue($("dateOfBirth"), Ris.formatDate(patientProfile.DateOfBirth));
+			}
+
+			var orderDetail = data.GetOrderDetailResponse ? data.GetOrderDetailResponse.Order : null;
+			if (orderDetail)
+			{
+				Field.setValue($("accessionNumber"), Ris.formatAccessionNumber(orderDetail.AccessionNumber));
+				Field.setValue($("orderingMD"), Ris.formatPersonName(orderDetail.OrderingPractitioner.Name));
+
+				var visitDetail = orderDetail.Visit;
+				if (visitDetail)
+				{
+					Field.setValue($("visitNumber"), Ris.formatVisitNumber(visitDetail.VisitNumber));
+					Field.setValue($("location"), visitDetail.CurrentLocation ? visitDetail.CurrentLocation.Name : "");
+				}
+			}
+
+			var reportDetail = data.GetReportDetailResponse ? data.GetReportDetailResponse.Report : null;
+			if (reportDetail)
+			{
+				var procedure = reportDetail.Procedures[0];
+				createReportLetterhead(procedure.PerformingFacility ? procedure.PerformingFacility.Code : null);
+				Preview.ReportPreview.create($("reportSection"), reportDetail);
+			}
+			
+			var procedures = reportDetail ? reportDetail.Procedures : orderDetail.Procedures;
+			var proceduresTable = Table.createTable($("proceduresTable"), { editInPlace: false, flow: false },
+				 [
+					{   label: "Procedure",
+						cellType: "text",
+						getValue: function(item) { return Ris.formatProcedureName(item); }
+					},
+					{   label: "Performed",
+						size:15,
+						cellType: "text",
+						getValue: function(item) { return Ris.formatDate(item.CheckOutTime); }
+					}
+				 ]);
+			proceduresTable.bindItems(procedures);
+
+			if(worklistItem.SelectedResultRecipient)
+			{
+				Field.show($("recipient"), true);
+				Field.setValue($("recipientName"), Ris.formatPersonName(worklistItem.SelectedResultRecipient.Practitioner.Name));
+
+				if(worklistItem.SelectedResultRecipient.ContactPoint && worklistItem.SelectedResultRecipient.ContactPoint.CurrentAddress)
+				{
+					var recipientAddress = worklistItem.SelectedResultRecipient.ContactPoint.CurrentAddress;
+					var line1 = (recipientAddress.Unit ? recipientAddress.Unit + "-" : "") + recipientAddress.Street;
+					var line2 = [recipientAddress.City, recipientAddress.Province, recipientAddress.Country, recipientAddress.PostalCode].join(" ");
+					Field.setValue($("recipientAddress1"), line1);
+					Field.setValue($("recipientAddress2"), line2);
+				}
+			}
+			else
+			{
+				Field.show($("recipient"), false);
+			}
+		}
+
+		function createReportLetterhead(facilityCode)
+		{
+			var letterHead = letterHeads[facilityCode] || letterHeads["default"];
+			
+			if(!letterHead)
+				return;
+
+			$("letterheadLogo").className = letterHead.className;
+			Field.setValue($("letterheadFacilityName"), letterHead.name);
+			Field.setValue($("letterheadFacilityDescription"), letterHead.description);
+			Field.setValue($("letterheadAddress1"), letterHead.address1);
+			Field.setValue($("letterheadAddress2"), letterHead.address2);
+			Field.setValue($("letterheadPhone"), letterHead.phone);
+		}
+		
+		var letterHeads = 
+		{
+			"CCH":
+			{
+				className: "cch",
+				name: "County Hospital",
+				description: "Department of Medical Imaging",
+				address1: "123 County Rd",
+				address2: "Smallville, USA",
+				phone: "Tel: (416) 555-0002"
+			},
+			"CTH":
+			{
+				className: "cth",
+				name: "City Hospital",
+				description: "Department of Medical Imaging",
+				address1: "123 Luthor St",
+				address2: "Metropolis, USA",
+				phone: "Tel: (416) 555-0001"
+			}
+		};		
+	</script>
+</head>
+<body onload="javascript: onBodyLoad()">
+	<form id="myForm">
+		<div id="letterhead" style="{height:2.8in; margin-bottome:0px; padding-bottom:0px;}">
+			<div id="letterheadLogo">
+			</div>
+			<div id="letterheadFacility">
+				<div id="letterheadFacilityName"></div>
+				<div id="letterheadFacilityDescription"></div>
+			</div>
+			<div id="letterheadAddress">
+				<div id="letterheadAddress1"></div>
+				<div id="letterheadAddress2"></div>
+				<div id="letterheadPhone"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		<div id="recipient" style="{height:1.3in; position:absolute; top:1.5in;}">
+			<div id="recipientName"></div>
+			<div id="recipientAddress1"></div>
+			<div id="recipientAddress2"></div>
+		</div>
+		<div id="ordersummary" style="{margin-top:0px; padding-top:0px;}">
+			<div class="leftcolumn">
+				<table>
+					<tbody valign="top">
+						<tr>
+							<td class="propertyname">Patient:</td>
+							<td><div id="patient"/></td>
+						</tr>
+						<tr>
+							<td class="propertyname">Location:</td>
+							<td><div id="location"/></td>
+						</tr>
+						<tr>
+							<td class="propertyname">A#:</td>
+							<td><div id="accessionNumber"/></td>
+						</tr>
+						<tr>
+							<td class="propertyname">Visit #:</td>
+							<td><div id="visitNumber"/></td>
+						</tr>
+						<tr>
+							<td class="propertyname">Ordering MD:</td>
+							<td><div id="orderingMD"/></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="rightcolumn">
+				<table>
+					<tbody valign="top">
+						<tr>
+							<td class="propertyname">MRN:</td>
+							<td><div id="mrn"/></td>
+						</tr>
+						<tr>
+							<td class="propertyname">Birth Date:</td>
+							<td><div id="dateOfBirth"/></td>
+						</tr>
+					</tbody>
+				</table>
+				<table>
+					<tbody valign="top">
+						<tr>
+							<td class="propertyname">Procedures:</td>
+						</tr>
+						<tr>
+							<td><table id="proceduresTable"></table></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="clear"></div>
+		</div>
+		<div id="reportSection"></div>
+		<div id="endofreport">***** END OF REPORT *****</div>
+		<div id="footer">(Medical Imaging Report for <span class="propertyname">Patient:</span> <span id="patientFooter"></span>; <span class="propertyname">MRN:</span> <span id="mrnFooter"></span>)</div>
+		<pre id="renderedReport" style="{white-space:normal;}"></pre>
+	</form>
+</body>
+</html>

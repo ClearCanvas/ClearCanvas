@@ -1,0 +1,21 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="ClearCanvas.Desktop" GeneratedClassName="FormatSettings">
+  <Profiles />
+  <Settings>
+    <Setting Name="DateFormat" Description="Date format string" Type="System.String" Scope="User">
+      <Value Profile="(Default)">dd-MMM-yyyy</Value>
+    </Setting>
+    <Setting Name="TimeFormat" Description="Time format string (use hh:mm tt for non-military)" Type="System.String" Scope="User">
+      <Value Profile="(Default)">HH:mm</Value>
+    </Setting>
+    <Setting Name="DateTimeFormat" Description="Date and time format string (use hh:mm tt for non-military)" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="DescriptiveDateThresholdInDays" Description="Threshold for usage of relative datetime terms. A setting of 0 turns off relative terms." Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
+    <Setting Name="DescriptiveFormattingEnabled" Description="Specifies whether descriptive date formatting (e.g. &quot;today&quot;, &quot;2 days ago&quot;, etc) is enabled." Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

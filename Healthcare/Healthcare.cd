@@ -1,0 +1,147 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Font Name="Tahoma" Size="8.25" />
+  <Class Name="ClearCanvas.Healthcare.Patient" Collapsed="true">
+    <Position X="3" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Patient.cs</FileName>
+      <HashCode>AAAwAAAAAAKAAgEAAAAAAAAAAAAAAQAAAAAAAAAYAAg=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ClearCanvas.Healthcare.Visit" Collapsed="true">
+    <Position X="5.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Visit.cs</FileName>
+      <HashCode>AEAIAAEE3AgCACQAAgIAEWgGCAJIIgBECAAAiAiFGAw=</HashCode>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_patient" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="ClearCanvas.Healthcare.Order" Collapsed="true">
+    <Position X="0.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Order.cs</FileName>
+      <HashCode>TVGACAAE4UAUQAUkAIhAAQAK4sAgMKSACAgAAEgRSBw=</HashCode>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_patient" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="ClearCanvas.Healthcare.Procedure">
+    <Position X="0.5" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Procedure.cs</FileName>
+      <HashCode>IEHqEQAGZACQAAYwgYAgAABCYGAyEDiEAQEiIEgAAEw=</HashCode>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_order" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="ClearCanvas.Healthcare.Report" Collapsed="true">
+    <Position X="8" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Report.cs</FileName>
+      <HashCode>AEAAQAAEAQAAAAhAABAAgAAAAACAAAAAAQAAgABACBw=</HashCode>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Field Name="_procedures" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="ClearCanvas.Healthcare.ProcedureStep" Collapsed="true">
+    <Position X="3" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>ProcedureStep.cs</FileName>
+      <HashCode>AAAAQEwADCAAEgJgABAAAAwAAAAAACAACQAAAIQACAE=</HashCode>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_procedure" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="ClearCanvas.Healthcare.ReportPart" Collapsed="true">
+    <Position X="8" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>ReportPart.cs</FileName>
+      <HashCode>AUAAIAAGwB4AAIJAQAAggAEAQACAACAQCAEAggEAFCw=</HashCode>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_report" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="ClearCanvas.Healthcare.ModalityProcedureStep" Collapsed="true">
+    <Position X="4" Y="4" Width="2" />
+    <TypeIdentifier>
+      <FileName>ModalityProcedureStep.cs</FileName>
+      <HashCode>AAAAAAAAAAAgAAAFAAAAAAQAAAAAACAACAAAAAAACAE=</HashCode>
+    </TypeIdentifier>
+    <InheritanceLine Type="ClearCanvas.Healthcare.ProcedureStep" FixedToPoint="true">
+      <Path>
+        <Point X="3.75" Y="3.63" />
+        <Point X="3.75" Y="4.312" />
+        <Point X="4" Y="4.312" />
+      </Path>
+    </InheritanceLine>
+  </Class>
+  <Class Name="ClearCanvas.Healthcare.ReportingProcedureStep" Collapsed="true">
+    <Position X="4" Y="4.75" Width="2" />
+    <TypeIdentifier>
+      <FileName>ReportingProcedureStep.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAgAACAACAEAAAAABAE=</HashCode>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_reportPart" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="ClearCanvas.Healthcare.InterpretationStep" Collapsed="true">
+    <Position X="5.25" Y="5.75" Width="1.75" />
+    <TypeIdentifier>
+      <FileName>InterpretationStep.cs</FileName>
+      <HashCode>AAAAAAAABAAAAABAAAAAAAQAAAAAAAAAAAAAAAAACAg=</HashCode>
+    </TypeIdentifier>
+    <InheritanceLine Type="ClearCanvas.Healthcare.ReportingProcedureStep" FixedToPoint="true">
+      <Path>
+        <Point X="5" Y="5.38" />
+        <Point X="5" Y="6.062" />
+        <Point X="5.25" Y="6.062" />
+      </Path>
+    </InheritanceLine>
+  </Class>
+  <Class Name="ClearCanvas.Healthcare.TranscriptionStep" Collapsed="true">
+    <Position X="5.25" Y="6.5" Width="1.75" />
+    <TypeIdentifier>
+      <FileName>TranscriptionStep.cs</FileName>
+      <HashCode>AAAAAAAABAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAACAg=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ClearCanvas.Healthcare.VerificationStep" Collapsed="true">
+    <Position X="5.25" Y="7.25" Width="1.75" />
+    <TypeIdentifier>
+      <FileName>VerificationStep.cs</FileName>
+      <HashCode>AAAAAAAABAAAAAAAABAAAAQAAAAAAAAAAAAAAAAACAg=</HashCode>
+    </TypeIdentifier>
+    <InheritanceLine Type="ClearCanvas.Healthcare.ReportingProcedureStep" ManuallyRouted="true" FixedToPoint="true">
+      <Path>
+        <Point X="5" Y="5.38" />
+        <Point X="5" Y="7.562" />
+        <Point X="5.25" Y="7.562" />
+      </Path>
+    </InheritanceLine>
+  </Class>
+  <Class Name="ClearCanvas.Healthcare.PublicationStep" Collapsed="true">
+    <Position X="5.25" Y="8" Width="1.75" />
+    <TypeIdentifier>
+      <FileName>PublicationStep.cs</FileName>
+      <HashCode>ACAAAAAABAAAAAAAAAAgAAwAAAAAAAAAAAAgAAAAiAg=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ClearCanvas.Healthcare.PatientProfile" Collapsed="true">
+    <Position X="3" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>PatientProfile.cs</FileName>
+      <HashCode>BgJBIAAACAAABQEAEARYAAQAUAAYAAIYEkMAAAIRCAg=</HashCode>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_patient" />
+    </ShowAsAssociation>
+  </Class>
+</ClassDiagram>

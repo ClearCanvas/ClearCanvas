@@ -1,0 +1,77 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" GroupingSetting="Alphabetical">
+  <Font Name="Tahoma" Size="8.25" />
+  <Class Name="ClearCanvas.Dicom.Iod.VoiDataLut" Collapsed="true">
+    <Position X="1.25" Y="3.75" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="ClearCanvas.ImageViewer.Imaging.VoiWindow" Collapsed="true">
+    <Position X="3.25" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Imaging\VoiWindow.cs</FileName>
+      <HashCode>AAAABAAAAAAAAIAEgAAAAEAAABABAIAAAQAAAAEIAAA=</HashCode>
+    </TypeIdentifier>
+    <Lollipop Orientation="Right" Position="0.122" />
+  </Class>
+  <Interface Name="ClearCanvas.ImageViewer.Imaging.IDicomVoiLutsProvider" Collapsed="true">
+    <Position X="2" Y="0.5" Width="2" />
+    <TypeIdentifier>
+      <FileName>Imaging\DicomVoiLuts.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="DicomVoiLuts" />
+    </ShowAsAssociation>
+  </Interface>
+  <Interface Name="ClearCanvas.ImageViewer.Imaging.IDicomVoiLuts" Collapsed="true">
+    <Position X="1.25" Y="1.75" Width="3.5" />
+    <TypeIdentifier>
+      <FileName>Imaging\DicomVoiLuts.cs</FileName>
+      <HashCode>AgAAAAAIAAAAIAAACAAIABAAAAAAAAAEAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="ImageVoiDataLuts" />
+      <Property Name="ImageVoiLinearLuts" />
+      <Property Name="PresentationVoiDataLuts" />
+      <Property Name="PresentationVoiLinearLuts" />
+    </ShowAsCollectionAssociation>
+    <Members>
+      <Property Name="ImageSopFrameNumber" Hidden="true" />
+      <Property Name="ImageSopInstanceUid" Hidden="true" />
+      <Property Name="PresentationStateSopInstanceUid" Hidden="true" />
+    </Members>
+    <AssociationLine Name="ImageVoiDataLuts" Type="ClearCanvas.Dicom.Iod.VoiDataLut" FixedFromPoint="true">
+      <Path>
+        <Point X="1.775" Y="2.264" />
+        <Point X="1.775" Y="3.75" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.089" Y="0.091" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="ImageVoiLinearLuts" Type="ClearCanvas.ImageViewer.Imaging.VoiWindow" FixedFromPoint="true">
+      <Path>
+        <Point X="4.283" Y="2.264" />
+        <Point X="4.283" Y="2.75" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="PresentationVoiDataLuts" Type="ClearCanvas.Dicom.Iod.VoiDataLut" FixedFromPoint="true">
+      <Path>
+        <Point X="2.067" Y="2.264" />
+        <Point X="2.067" Y="3.75" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-1.609" Y="0.081" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="PresentationVoiLinearLuts" Type="ClearCanvas.ImageViewer.Imaging.VoiWindow" FixedFromPoint="true">
+      <Path>
+        <Point X="4.575" Y="2.264" />
+        <Point X="4.575" Y="2.75" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-1.721" Y="0.079" />
+      </MemberNameLabel>
+    </AssociationLine>
+  </Interface>
+</ClassDiagram>

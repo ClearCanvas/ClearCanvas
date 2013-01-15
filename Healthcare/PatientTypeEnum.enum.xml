@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<enum class="PatientType">
+  <enum-value code="X">
+    <value>Unspecified</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="A">
+    <value>Accident</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="E">
+    <value>Emergency</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="L">
+    <value>Labor and Delivery</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="R">
+    <value>Routine</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="N">
+    <value>Newborn</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="U">
+    <value>Urgent</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="C">
+    <value>Elective</value>
+    <description></description>
+  </enum-value>
+</enum>

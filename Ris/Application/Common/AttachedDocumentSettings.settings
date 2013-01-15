@@ -1,0 +1,21 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="ClearCanvas.Ris.Application.Common" GeneratedClassName="AttachedDocumentSettings">
+  <Profiles />
+  <Settings>
+    <Setting Name="FtpUserId" Description="User ID for FTP site where attached documents are stored." Type="System.String" Scope="Application">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="FtpPassword" Description="Password for FTP site where attached documents are stored." Type="System.String" Scope="Application">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="FtpPassiveMode" Description="Specifies whether FTP passive mode is enabled." Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="FtpBaseUrl" Description="Base URL of the FTP attached document store." Type="System.String" Scope="Application">
+      <Value Profile="(Default)">ftp://localhost</Value>
+    </Setting>
+    <Setting Name="DownloadCacheTimeToLive" Description="Time-to-live in the download cache, in seconds.  The file will then be deleted in the interest of patient confidentialty." Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">60</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

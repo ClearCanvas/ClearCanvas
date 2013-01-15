@@ -1,0 +1,296 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{52128A83-7192-4A6B-899E-886F43C74126}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ClearCanvas.Ris.Client.Workflow.Extended</RootNamespace>
+    <AssemblyName>ClearCanvas.Ris.Client.Workflow.Extended</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="BookingWorkflowFolderSystem.cs" />
+    <Compile Include="BookingWorkflowTools.cs" />
+    <Compile Include="MppsStructuredDocumentationComponent.cs" />
+    <Compile Include="OrderAdditionalInfoComponentPageProviders.cs" />
+    <Compile Include="EditProtocolTool.cs" />
+    <Compile Include="EmergencyWorkflowFolder.cs" />
+    <Compile Include="EmergencyWorkflowFolderSystem.cs" />
+    <Compile Include="EmergencyWorkflowItemTools.cs" />
+    <Compile Include="ExternalPractitionerFolder.cs" />
+    <Compile Include="ExternalPractitionerFolders.cs" />
+    <Compile Include="ExternalPractitionerFolderSystem.cs" />
+    <Compile Include="ExternalPractitionerTool.cs" />
+    <Compile Include="Folders\BookingWorkflowFolders.cs" />
+    <Compile Include="Folders\ProtocollingWorkflowFolders.cs" />
+    <Compile Include="WorkflowTools.cs" />
+    <Compile Include="OrderAdditionalInfoComponent.cs" />
+    <Compile Include="OrderNoteboxConfigurationComponent.cs" />
+    <Compile Include="OrderNoteboxFolder.cs" />
+    <Compile Include="OrderNoteboxFolders.cs" />
+    <Compile Include="OrderNoteboxFolderSystem.cs" />
+    <Compile Include="OrderNoteboxFolderSystemSettings.cs" />
+    <Compile Include="OrderNoteboxFolderSystemSettings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>OrderNoteboxFolderSystemSettings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="OrderNoteboxTable.cs" />
+    <Compile Include="OrderNoteConversationComponent.cs" />
+    <Compile Include="OrderNoteConversationComponentRecipientTable.cs" />
+    <Compile Include="OrderNoteConversationComponentSettings.cs" />
+    <Compile Include="OrderNoteConversationComponentSettings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>OrderNoteConversationComponentSettings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="OrderNoteConversationComponentTemplates.cs" />
+    <Compile Include="OrderNoteConversationTool.cs" />
+    <Compile Include="PatientProfileDiffComponent.cs" />
+    <Compile Include="PatientReconcileTool.cs" />
+    <Compile Include="PatientReconciliation.cs" />
+    <Compile Include="PreliminaryDiagnosis.cs" />
+    <Compile Include="PreliminaryDiagnosisConversationTool.cs" />
+    <Compile Include="PreliminaryDiagnosisSettings.cs" />
+    <Compile Include="PreliminaryDiagnosisSettings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>PreliminaryDiagnosisSettings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ProtocolCodeEditorComponent.cs" />
+    <Compile Include="ProtocolCodeSummaryComponent.cs" />
+    <Compile Include="ProtocolDocument.cs" />
+    <Compile Include="ProtocolEditorComponent.cs" />
+    <Compile Include="ProtocolEditorProcedurePlanSummaryTable.cs" />
+    <Compile Include="ProtocolEditorProcedurePlanSummaryTableItem.cs" />
+    <Compile Include="ProtocolGroupEditorComponent.cs" />
+    <Compile Include="ProtocolGroupSummaryComponent.cs" />
+    <Compile Include="ProtocolGroupTable.cs" />
+    <Compile Include="ProtocollingComponent.cs" />
+    <Compile Include="ProtocollingComponentWorklistItemManager.cs" />
+    <Compile Include="ProtocollingOrderDetailViewComponent.cs" />
+    <Compile Include="ProtocollingSettings.cs" />
+    <Compile Include="ProtocollingSettings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>ProtocollingSettings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="ProtocollingSupervisorSelectionComponent.cs" />
+    <Compile Include="ProtocolReasonComponent.cs" />
+    <Compile Include="ProtocolWorkflowFolderSystem.cs" />
+    <Compile Include="ProtocolWorkflowItemTool.cs" />
+    <Compile Include="ProtocolWorkflowTools.cs" />
+    <Compile Include="ReconciliationCandidateTable.cs" />
+    <Compile Include="ReconciliationCandidateTableEntry.cs" />
+    <Compile Include="ReconciliationComponent.cs" />
+    <Compile Include="ReconciliationConfirmComponent.cs" />
+    <Compile Include="ReportingPreliminaryDiagnosisConversationTool.cs" />
+    <Compile Include="ResubmitProtocolTool.cs" />
+    <Compile Include="SR.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SR.resx</DependentUpon>
+    </Compile>
+    <Compile Include="WorklistPrintComponent.cs" />
+    <Compile Include="WorklistPrintTool.cs" />
+    <Compile Include="WorklistPrintViewComponent.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\Common\ClearCanvas.Common.csproj">
+      <Project>{F6EAD428-E6CF-4DF6-B2F3-D33D532C5343}</Project>
+      <Name>ClearCanvas.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Desktop\ClearCanvas.Desktop.csproj">
+      <Project>{26E9A01A-64B5-42C5-8252-FBB30DF9CEC7}</Project>
+      <Name>ClearCanvas.Desktop</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Enterprise\Common\ClearCanvas.Enterprise.Common.csproj">
+      <Project>{B5EBFFD7-6641-4932-91C9-4C4322B41868}</Project>
+      <Name>ClearCanvas.Enterprise.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Enterprise\Desktop\ClearCanvas.Enterprise.Desktop.csproj">
+      <Project>{CBD5EBD0-7AE9-4824-AE8C-4888983E1B5B}</Project>
+      <Name>ClearCanvas.Enterprise.Desktop</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Application\Common\ClearCanvas.Ris.Application.Common.csproj">
+      <Project>{09F49217-CD98-4773-8CFB-594F189EEE3B}</Project>
+      <Name>ClearCanvas.Ris.Application.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Application\Extended\Common\ClearCanvas.Ris.Application.Extended.Common.csproj">
+      <Project>{8546CA19-2F56-4546-992B-B6AA5D34E081}</Project>
+      <Name>ClearCanvas.Ris.Application.Extended.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Admin\ClearCanvas.Ris.Client.Admin.csproj">
+      <Project>{7CC7F1B8-2253-4C0D-A369-EC54B6CE7C32}</Project>
+      <Name>ClearCanvas.Ris.Client.Admin</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\ClearCanvas.Ris.Client.csproj">
+      <Project>{F8E75C01-AB14-4DDE-ABEA-3EECC4957A1F}</Project>
+      <Name>ClearCanvas.Ris.Client</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ClearCanvas.Ris.Client.Workflow.csproj">
+      <Project>{FFB85377-995C-47A6-BF22-26D264CA3225}</Project>
+      <Name>ClearCanvas.Ris.Client.Workflow</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="SR.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>SR.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="OrderNoteboxFolderSystemSettings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>OrderNoteboxFolderSystemSettings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="OrderNoteConversationComponentSettings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>OrderNoteConversationComponentSettings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="PreliminaryDiagnosisSettings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>PreliminaryDiagnosisSettings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="ProtocollingSettings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>ProtocollingSettings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\EditReportToolLarge.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\EditReportToolSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\EditReportToolMedium.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\PrintLarge.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\PrintSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\PrintMedium.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\ViewImagesLarge.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\ViewImagesSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\ViewImagesMedium.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\PatientDetailsToolLarge.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\PatientDetailsToolSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\PatientDetailsToolMedium.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\ReconcilePatientToolLarge.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\ReconcilePatientToolSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\ReconcilePatientToolMedium.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\VerifyReportLarge.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\VerifyReportSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\VerifyReportMedium.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\RejectProtocolLarge.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\RejectProtocolSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\RejectProtocolMedium.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\SubmitForReviewLarge.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\SubmitForReviewSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\SubmitForReviewMedium.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\CancelReportLarge.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\CancelReportSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\CancelReportMedium.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\ResubmitOrderLarge.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\ResubmitOrderSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\ResubmitOrderMedium.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

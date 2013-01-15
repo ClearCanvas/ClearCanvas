@@ -1,0 +1,161 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{8546CA19-2F56-4546-992B-B6AA5D34E081}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ClearCanvas.Ris.Application.Extended.Common</RootNamespace>
+    <AssemblyName>ClearCanvas.Ris.Application.Extended.Common</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Admin\ProtocolAdmin\AddProtocolCodeRequest.cs" />
+    <Compile Include="Admin\ProtocolAdmin\AddProtocolCodeResponse.cs" />
+    <Compile Include="Admin\ProtocolAdmin\AddProtocolGroupRequest.cs" />
+    <Compile Include="Admin\ProtocolAdmin\AddProtocolGroupResponse.cs" />
+    <Compile Include="Admin\ProtocolAdmin\DeleteProtocolCodeRequest.cs" />
+    <Compile Include="Admin\ProtocolAdmin\DeleteProtocolCodeResponse.cs" />
+    <Compile Include="Admin\ProtocolAdmin\DeleteProtocolGroupRequest.cs" />
+    <Compile Include="Admin\ProtocolAdmin\DeleteProtocolGroupResponse.cs" />
+    <Compile Include="Admin\ProtocolAdmin\GetProtocolGroupEditFormDataRequest.cs" />
+    <Compile Include="Admin\ProtocolAdmin\GetProtocolGroupEditFormDataResponse.cs" />
+    <Compile Include="Admin\ProtocolAdmin\IProtocolAdminService.cs" />
+    <Compile Include="Admin\ProtocolAdmin\ListProtocolCodesRequest.cs" />
+    <Compile Include="Admin\ProtocolAdmin\ListProtocolCodesResponse.cs" />
+    <Compile Include="Admin\ProtocolAdmin\ListProtocolGroupsRequest.cs" />
+    <Compile Include="Admin\ProtocolAdmin\ListProtocolGroupsResponse.cs" />
+    <Compile Include="Admin\ProtocolAdmin\LoadProtocolCodeForEditRequest.cs" />
+    <Compile Include="Admin\ProtocolAdmin\LoadProtocolCodeForEditResponse.cs" />
+    <Compile Include="Admin\ProtocolAdmin\LoadProtocolGroupForEditRequest.cs" />
+    <Compile Include="Admin\ProtocolAdmin\LoadProtocolGroupForEditResponse.cs" />
+    <Compile Include="Admin\ProtocolAdmin\UpdateProtocolCodeRequest.cs" />
+    <Compile Include="Admin\ProtocolAdmin\UpdateProtocolCodeResponse.cs" />
+    <Compile Include="Admin\ProtocolAdmin\UpdateProtocolGroupRequest.cs" />
+    <Compile Include="Admin\ProtocolAdmin\UpdateProtocolGroupResponse.cs" />
+    <Compile Include="AuthorityTokens.cs" />
+    <Compile Include="DefaultAuthorityGroups.cs" />
+    <Compile Include="OrderNotes\AcknowledgeAndPostRequest.cs" />
+    <Compile Include="OrderNotes\AcknowledgeAndPostResponse.cs" />
+    <Compile Include="OrderNotes\AddStaffGroupsRequest.cs" />
+    <Compile Include="OrderNotes\AddStaffGroupsResponse.cs" />
+    <Compile Include="OrderNotes\GetConversationEditorFormDataRequest.cs" />
+    <Compile Include="OrderNotes\GetConversationEditorFormDataResponse.cs" />
+    <Compile Include="OrderNotes\GetConversationRequest.cs" />
+    <Compile Include="OrderNotes\GetConversationResponse.cs" />
+    <Compile Include="OrderNotes\IOrderNoteService.cs" />
+    <Compile Include="OrderNotes\ListStaffGroupsRequest.cs" />
+    <Compile Include="OrderNotes\ListStaffGroupsResponse.cs" />
+    <Compile Include="OrderNotes\OrderNoteboxItemSummary.cs" />
+    <Compile Include="OrderNotes\QueryNoteboxRequest.cs" />
+    <Compile Include="OrderNotes\QueryNoteboxResponse.cs" />
+    <Compile Include="PatientReconciliation\IPatientReconciliationService.cs" />
+    <Compile Include="PatientReconciliation\ListPatientReconciliationMatchesRequest.cs" />
+    <Compile Include="PatientReconciliation\ListPatientReconciliationMatchesResponse.cs" />
+    <Compile Include="PatientReconciliation\ListProfilesForPatientsRequest.cs" />
+    <Compile Include="PatientReconciliation\ListProfilesForPatientsResponse.cs" />
+    <Compile Include="PatientReconciliation\LoadPatientProfileDiffRequest.cs" />
+    <Compile Include="PatientReconciliation\LoadPatientProfileDiffResponse.cs" />
+    <Compile Include="PatientReconciliation\PatientProfileDiff.cs" />
+    <Compile Include="PatientReconciliation\ReconcilePatientsRequest.cs" />
+    <Compile Include="PatientReconciliation\ReconcilePatientsResponse.cs" />
+    <Compile Include="PatientReconciliation\ReconciliationCandidate.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ProtocollingWorkflow\AcceptProtocolRequest.cs" />
+    <Compile Include="ProtocollingWorkflow\AcceptProtocolResponse.cs" />
+    <Compile Include="ProtocollingWorkflow\AddOrderProtocolStepsRequest.cs" />
+    <Compile Include="ProtocollingWorkflow\AddOrderProtocolStepsResponse.cs" />
+    <Compile Include="ProtocollingWorkflow\ApproveResidentProtocolRequest.cs" />
+    <Compile Include="ProtocollingWorkflow\ApproveResidentProtocolResponse.cs" />
+    <Compile Include="ProtocollingWorkflow\CancelProtocolAndOrderRequest.cs" />
+    <Compile Include="ProtocollingWorkflow\CancelProtocolAndOrderResponse.cs" />
+    <Compile Include="ProtocollingWorkflow\DiscardProtocolRequest.cs" />
+    <Compile Include="ProtocollingWorkflow\DiscardProtocolResponse.cs" />
+    <Compile Include="ProtocollingWorkflow\GetLinkableProtocolsRequest.cs" />
+    <Compile Include="ProtocollingWorkflow\GetLinkableProtocolsResponse.cs" />
+    <Compile Include="ProtocollingWorkflow\GetProcedurePlanForProtocollingWorklistItemRequest.cs" />
+    <Compile Include="ProtocollingWorkflow\GetProcedurePlanForProtocollingWorklistItemResponse.cs" />
+    <Compile Include="ProtocollingWorkflow\GetProcedureProtocolRequest.cs" />
+    <Compile Include="ProtocollingWorkflow\GetProcedureProtocolResponse.cs" />
+    <Compile Include="ProtocollingWorkflow\GetProtocolFormDataRequest.cs" />
+    <Compile Include="ProtocollingWorkflow\GetProtocolFormDataResponse.cs" />
+    <Compile Include="ProtocollingWorkflow\GetProtocolGroupDetailRequest.cs" />
+    <Compile Include="ProtocollingWorkflow\GetProtocolGroupDetailResponse.cs" />
+    <Compile Include="ProtocollingWorkflow\GetProtocolRequest.cs" />
+    <Compile Include="ProtocollingWorkflow\GetProtocolResponse.cs" />
+    <Compile Include="ProtocollingWorkflow\GetSuspendRejectReasonChoicesRequest.cs" />
+    <Compile Include="ProtocollingWorkflow\GetSuspendRejectReasonChoicesResponse.cs" />
+    <Compile Include="ProtocollingWorkflow\IProtocollingWorkflowService.cs" />
+    <Compile Include="ProtocollingWorkflow\ListProtocolGroupsForProcedureRequest.cs" />
+    <Compile Include="ProtocollingWorkflow\ListProtocolGroupsForProcedureResponse.cs" />
+    <Compile Include="ProtocollingWorkflow\RejectProtocolRequest.cs" />
+    <Compile Include="ProtocollingWorkflow\RejectProtocolResponse.cs" />
+    <Compile Include="ProtocollingWorkflow\ResubmitProtocolRequest.cs" />
+    <Compile Include="ProtocollingWorkflow\ResubmitProtocolResponse.cs" />
+    <Compile Include="ProtocollingWorkflow\ReviseSubmittedProtocolRequest.cs" />
+    <Compile Include="ProtocollingWorkflow\ReviseSubmittedProtocolResponse.cs" />
+    <Compile Include="ProtocollingWorkflow\SaveProtocolRequest.cs" />
+    <Compile Include="ProtocollingWorkflow\SaveProtocolResponse.cs" />
+    <Compile Include="ProtocollingWorkflow\StartProtocolRequest.cs" />
+    <Compile Include="ProtocollingWorkflow\StartProtocolResponse.cs" />
+    <Compile Include="ProtocollingWorkflow\SubmitProtocolForApprovalRequest.cs" />
+    <Compile Include="ProtocollingWorkflow\SubmitProtocolForApprovalResponse.cs" />
+    <Compile Include="ProtocollingWorkflow\UpdateProtocolRequest.cs" />
+    <Compile Include="WorklistClassNames.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\Common\ClearCanvas.Common.csproj">
+      <Project>{F6EAD428-E6CF-4DF6-B2F3-D33D532C5343}</Project>
+      <Name>ClearCanvas.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Enterprise\Common\ClearCanvas.Enterprise.Common.csproj">
+      <Project>{B5EBFFD7-6641-4932-91C9-4C4322B41868}</Project>
+      <Name>ClearCanvas.Enterprise.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Common\ClearCanvas.Ris.Application.Common.csproj">
+      <Project>{09F49217-CD98-4773-8CFB-594F189EEE3B}</Project>
+      <Name>ClearCanvas.Ris.Application.Common</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

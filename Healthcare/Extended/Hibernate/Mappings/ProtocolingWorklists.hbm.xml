@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!-- @codegen: ignore -->
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" assembly="ClearCanvas.Healthcare.Extended" namespace="ClearCanvas.Healthcare.Extended">
+  <!-- abstract intermediate classes -->
+  <subclass name="ProtocolingWorklist" extends="ClearCanvas.Healthcare.Worklist" discriminator-value="REPORTING_PROTOCOLING"/>
+	<subclass name="RegistrationProtocolWorklist" extends="ClearCanvas.Healthcare.Worklist" discriminator-value="REGISTRATION_PROTOCOL"/>
+
+	<!-- concrete classes -->
+  <subclass name="ReportingToBeProtocolledWorklist" extends="ProtocolingWorklist" discriminator-value="REPORTING_TOBEPROTOCOLLED"/>
+  <subclass name="ReportingToBeReviewedProtocolWorklist" extends="ProtocolingWorklist" discriminator-value="REPORTING_TOBEREVIEWEDPROTOCOL"/>
+
+	<subclass name="RegistrationToBeScheduledWorklist" extends="ClearCanvas.Healthcare.RegistrationWorklist" discriminator-value="REGISTRATION_UNSCHEDULED"/>
+	<subclass name="RegistrationCompletedProtocolWorklist" extends="RegistrationProtocolWorklist" discriminator-value="REGISTRATION_PROTOCOL_COMPLETED"/>
+	<subclass name="RegistrationRejectedProtocolWorklist" extends="RegistrationProtocolWorklist" discriminator-value="REGISTRATION_PROTOCOL_REJECTED"/>
+	<subclass name="RegistrationPendingProtocolWorklist" extends="RegistrationProtocolWorklist" discriminator-value="REGISTRATION_PROTOCOL_PENDING"/>
+	<subclass name="RegistrationAsapPendingProtocolWorklist" extends="RegistrationProtocolWorklist" discriminator-value="REGISTRATION_PROTOCOL_ASAP_PENDING"/>
+
+	<subclass name="ProtocollingAdminAssignedWorklist" extends="ProtocolingWorklist" discriminator-value="PROTOCOLLING_ADMIN_ASSIGNED"/>
+</hibernate-mapping>

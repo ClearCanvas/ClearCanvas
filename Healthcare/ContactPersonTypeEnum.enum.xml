@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<enum class="ContactPersonType">
+  <enum-value code="NK">
+	<value>Next of Kin</value>
+	<description>Next of Kin</description>
+  </enum-value>
+  <enum-value code="EC">
+	<value>Emergency Contact</value>
+	<description>Emergency Contact</description>
+  </enum-value>
+</enum>

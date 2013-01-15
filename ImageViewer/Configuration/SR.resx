@@ -1,0 +1,409 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="DescriptionFileStoreChanged" xml:space="preserve">
+    <value>If you wish to keep your existing studies, you must manually copy them to the new
+location before restarting the local service. Otherwise, you should restart the local service
+and immediately re-index.</value>
+  </data>
+  <data name="DescriptionPriorsServers" xml:space="preserve">
+    <value>Please check the servers that should be automatically searched for prior studies.</value>
+  </data>
+  <data name="DescriptionStorageOptions" xml:space="preserve">
+    <value>The file store location cannot be changed unless the local service is stopped. Once the file store has changed, you must either manually copy files over from the old location before restarting the local service, or simply restart the local service and immediately re-index.
+
+If the maximum disk usage is exceeded, the Workstation will refuse to import images or receive them over the network in order to avoid exhausting the disk. If the used space is reaching the maximum, it is recommended you increase the maximum usage, delete some studies, or move the file store to a disk with more capacity.</value>
+  </data>
+  <data name="ExampleGroup" xml:space="preserve">
+    <value>Example Group</value>
+  </data>
+  <data name="ExampleLocation" xml:space="preserve">
+    <value>Rm 101</value>
+  </data>
+  <data name="ExampleServer" xml:space="preserve">
+    <value>Example Server</value>
+  </data>
+  <data name="FormatLocalServerConfigurationUnavailable" xml:space="preserve">
+    <value>{0} (Offline)
+The configuration is currently unavailable.</value>
+  </data>
+  <data name="FormatLocalServerDetails" xml:space="preserve">
+    <value>{0}
+AE Title: {1}
+Host: {2}
+Listening Port: {3}</value>
+  </data>
+  <data name="FormatLocalServerOfflineDetails" xml:space="preserve">
+    <value>{0} (Offline)
+AE Title: {1}
+Host: {2}
+Listening Port: {3}</value>
+  </data>
+  <data name="FormatServerConflict" xml:space="preserve">
+    <value>The server properties conflict with an existing entry ({0}).
+Each server must have a unique Name and cannot have the same AE Title, Host and Port as another server.</value>
+  </data>
+  <data name="FormatServerDetails" xml:space="preserve">
+    <value>{0}
+AE Title: {1}
+Host: {2}
+Listening Port: {3}</value>
+  </data>
+  <data name="FormatServerGroupConflict" xml:space="preserve">
+    <value>The Server Group '{0}' conflicts with '{1}'.
+Please choose another Server Group Name.</value>
+  </data>
+  <data name="FormatStreamingDetails" xml:space="preserve">
+    <value>Streaming Header Port: {0}
+Streaming Image Port: {1}</value>
+  </data>
+  <data name="LabelContextMenu" xml:space="preserve">
+    <value>Context Menu</value>
+  </data>
+  <data name="LabelMainMenu" xml:space="preserve">
+    <value>Main Menu</value>
+  </data>
+  <data name="LabelToolbar" xml:space="preserve">
+    <value>Toolbar</value>
+  </data>
+  <data name="LinkLabelStartLocalService" xml:space="preserve">
+    <value>Start Local Service</value>
+  </data>
+  <data name="LinkLabelStopLocalService" xml:space="preserve">
+    <value>Stop Local Service</value>
+  </data>
+  <data name="LocalConfiguration" xml:space="preserve">
+    <value>Local</value>
+  </data>
+  <data name="Location" xml:space="preserve">
+    <value>Location: {0}</value>
+  </data>
+  <data name="MenuAddServer" xml:space="preserve">
+    <value>Add server</value>
+  </data>
+  <data name="MenuAddServerGroup" xml:space="preserve">
+    <value>Add server group</value>
+  </data>
+  <data name="MenuCustomizeActionModels" xml:space="preserve">
+    <value>&amp;Customize...</value>
+  </data>
+  <data name="MenuDelete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="MenuEdit" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="MenuSharedConfiguration" xml:space="preserve">
+    <value>System Configuration</value>
+  </data>
+  <data name="MenuVerify" xml:space="preserve">
+    <value>Verify</value>
+  </data>
+  <data name="MessageActionModelUpdateFailure" xml:space="preserve">
+    <value>Failed to update action models</value>
+  </data>
+  <data name="MessageCannotChangeFileStoreAndStudyDeletionSimultaneously" xml:space="preserve">
+    <value>File Store and Study Deletion must be changed separately</value>
+  </data>
+  <data name="MessageCEchoVerificationPrefix" xml:space="preserve">
+    <value>C-ECHO Verification:</value>
+  </data>
+  <data name="MessageCEchoVerificationSingleServerResultFail" xml:space="preserve">
+    <value>    {0}: fail    </value>
+  </data>
+  <data name="MessageCEchoVerificationSingleServerResultSuccess" xml:space="preserve">
+    <value>    {0}: successful    </value>
+  </data>
+  <data name="MessageConfirmDeleteServer" xml:space="preserve">
+    <value>Are you sure you want to delete the selected server?</value>
+  </data>
+  <data name="MessageConfirmDeleteServerGroup" xml:space="preserve">
+    <value>Are you sure you want to delete the selected server group?</value>
+  </data>
+  <data name="MessageFailedToSavePriorsServers" xml:space="preserve">
+    <value>Failed to save priors server changes.</value>
+  </data>
+  <data name="MessageFileStoreChanged" xml:space="preserve">
+    <value>File store has changed</value>
+  </data>
+  <data name="MessageHostNameCannotBeEmpty" xml:space="preserve">
+    <value>The Host Name cannot be empty.</value>
+  </data>
+  <data name="MessageKeyStrokeAlreadyAssigned" xml:space="preserve">
+    <value>The shortcut {0} is already assigned to {1}. Do you wish to reassign the shortcut?</value>
+  </data>
+  <data name="MessageKeyStrokeReserved" xml:space="preserve">
+    <value>The shortcut {0} is reserved and cannot be reassigned.</value>
+  </data>
+  <data name="MessageMouseButtonActiveToolAssignmentConflict" xml:space="preserve">
+    <value>The global tool for {0} is already assigned to {1}. You will not be able to use the global shortcut for {1} whenever this tool is active. Do you still wish to assign this mouse button?</value>
+  </data>
+  <data name="MessageMouseButtonGlobalToolAlreadyAssigned" xml:space="preserve">
+    <value>The global tool for {0} is already assigned to {1}. Do you wish to reassign the mouse button shortcut?</value>
+  </data>
+  <data name="MessageMouseButtonGlobalToolAssignmentConflict" xml:space="preserve">
+    <value>There are active tools for {0} (e.g. {1}). You will not be able to use this global shortcut whenever {1} is active. Do you still wish to assign this mouse button?</value>
+  </data>
+  <data name="MessageMouseButtonInitialToolAlreadyAssigned" xml:space="preserve">
+    <value>The default tool for {0} is already assigned to {1}. Do you wish to reassign the mouse button?</value>
+  </data>
+  <data name="MessageNoServersSelected" xml:space="preserve">
+    <value>No servers have been selected.  Please select at least one server and try again.</value>
+  </data>
+  <data name="MessagePortInvalid" xml:space="preserve">
+    <value>The Port must be between 1 and 65535.</value>
+  </data>
+  <data name="MessageServerAEInvalidCharacters" xml:space="preserve">
+    <value>The AE Title contains invalid characters.</value>
+  </data>
+  <data name="MessageServerAEInvalidLength" xml:space="preserve">
+    <value>The AE Title must be between 1 and 16 characters.</value>
+  </data>
+  <data name="MessageServerGroupNameCannotBeEmpty" xml:space="preserve">
+    <value>The Server Group Name cannot be empty.</value>
+  </data>
+  <data name="MessageServerNameCannotBeEmpty" xml:space="preserve">
+    <value>The Server Name cannot be empty.</value>
+  </data>
+  <data name="MessageStorageHelp" xml:space="preserve">
+    <value>Click for an explanation of study storage options.</value>
+  </data>
+  <data name="MessageUnableToStartLocalService" xml:space="preserve">
+    <value>Failed to start the local service. See the logs for more details.</value>
+  </data>
+  <data name="MessageUnableToStopLocalService" xml:space="preserve">
+    <value>Failed to stop the local service. See the logs for more details.</value>
+  </data>
+  <data name="MonitorConfiguration" xml:space="preserve">
+    <value>Window Configuration</value>
+  </data>
+  <data name="MyServersTitle" xml:space="preserve">
+    <value>My Servers</value>
+  </data>
+  <data name="MyStudiesTitle" xml:space="preserve">
+    <value>My Studies</value>
+  </data>
+  <data name="NotApplicable" xml:space="preserve">
+    <value>N/A</value>
+  </data>
+  <data name="PathContextMenuConfiguration" xml:space="preserve">
+    <value>Context Menu (Image)</value>
+  </data>
+  <data name="PriorsServersConfiguration" xml:space="preserve">
+    <value>Priors Servers</value>
+  </data>
+  <data name="PublishingConfiguration" xml:space="preserve">
+    <value>Publishing</value>
+  </data>
+  <data name="ServerConfiguration" xml:space="preserve">
+    <value>DICOM Server</value>
+  </data>
+  <data name="StorageConfiguration" xml:space="preserve">
+    <value>Study Storage</value>
+  </data>
+  <data name="TitleAddNewServer" xml:space="preserve">
+    <value>Add New Server</value>
+  </data>
+  <data name="TitleAddServerGroup" xml:space="preserve">
+    <value>Add New Server Group</value>
+  </data>
+  <data name="TitleCustomizeActionModels" xml:space="preserve">
+    <value>Customize Menus and Toolbars</value>
+  </data>
+  <data name="TitleEditServer" xml:space="preserve">
+    <value>Edit Server</value>
+  </data>
+  <data name="TitleEditServerGroup" xml:space="preserve">
+    <value>Edit Server Group</value>
+  </data>
+  <data name="TitleMyServers" xml:space="preserve">
+    <value>My Servers</value>
+  </data>
+  <data name="TitleSelectFileStore" xml:space="preserve">
+    <value>Select File Store Folder</value>
+  </data>
+  <data name="TitleSharedConfiguration" xml:space="preserve">
+    <value>System Configuration</value>
+  </data>
+  <data name="ToolbarAddServer" xml:space="preserve">
+    <value>Add server</value>
+  </data>
+  <data name="ToolbarAddServerGroup" xml:space="preserve">
+    <value>Add server group</value>
+  </data>
+  <data name="ToolbarDelete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="ToolbarEdit" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="ToolbarVerify" xml:space="preserve">
+    <value>Verify</value>
+  </data>
+  <data name="TooltipAddServer" xml:space="preserve">
+    <value>Add server</value>
+  </data>
+  <data name="TooltipAddServerGroup" xml:space="preserve">
+    <value>Add server group</value>
+  </data>
+  <data name="TooltipDelete" xml:space="preserve">
+    <value>Delete server or server group</value>
+  </data>
+  <data name="TooltipEdit" xml:space="preserve">
+    <value>Edit server or server group</value>
+  </data>
+  <data name="TooltipVerify" xml:space="preserve">
+    <value>Verify server or server group</value>
+  </data>
+  <data name="ValidationAETitleInvalidCharacters" xml:space="preserve">
+    <value>The AE Title contains invalid characters.</value>
+  </data>
+  <data name="ValidationAETitleLengthIncorrect" xml:space="preserve">
+    <value>The AE Title must be between 1 and 16 characters.</value>
+  </data>
+  <data name="ValidationCannotChangeDeletionRule" xml:space="preserve">
+    <value>The local service must be started before the automatic study deletion behaviour can be changed.
+You can click the "Start Local Service" link now, or cancel your changes.</value>
+  </data>
+  <data name="ValidationDriveDoesNotExist" xml:space="preserve">
+    <value>The specified drive ({0}) does not exist.</value>
+  </data>
+  <data name="ValidationDriveInvalid" xml:space="preserve">
+    <value>The specified path is invalid.</value>
+  </data>
+  <data name="ValidationMessageCannotChangeFileStore" xml:space="preserve">
+    <value>The local service must be stopped before the file store can be changed.
+You can click the "Stop Local Service" link now, or cancel your changes.</value>
+  </data>
+  <data name="ValidationPortOutOfRange" xml:space="preserve">
+    <value>The Port must be between 1 and 65535.</value>
+  </data>
+  <data name="DicomSendConfiguration" xml:space="preserve">
+    <value>DICOM Send</value>
+  </data>
+  <data name="ConfirmAETitleConflict_MultipleServers" xml:space="preserve">
+    <value>{0} other servers exist with the same AE Title, but different host names and/or ports. Are you sure you want to apply this change?</value>
+  </data>
+  <data name="ConfirmAETitleConflict_OneServer" xml:space="preserve">
+    <value>Another server exists with the same AE Title, but a different host name and/or port. Are you sure you want to apply this change?</value>
+  </data>
+  <data name="MessageSystemConfigurationNoPermission" xml:space="preserve">
+    <value>You do not have permission to view System Configuration.</value>
+  </data>
+</root>

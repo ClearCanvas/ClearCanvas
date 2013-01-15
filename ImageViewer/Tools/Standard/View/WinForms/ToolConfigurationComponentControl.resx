@@ -1,0 +1,906 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <assembly alias="mscorlib" name="mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="_radWindowLevelImages.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="_radWindowLevelImages.CheckAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleCenter</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="_radWindowLevelImages.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="_radWindowLevelImages.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="_radWindowLevelImages.Location" type="System.Drawing.Point, System.Drawing">
+    <value>88, 23</value>
+  </data>
+  <data name="_radWindowLevelImages.Size" type="System.Drawing.Size, System.Drawing">
+    <value>55, 14</value>
+  </data>
+  <data name="_radWindowLevelImages.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <data name="&gt;&gt;_radWindowLevelImages.Name" xml:space="preserve">
+    <value>_radWindowLevelImages</value>
+  </data>
+  <data name="&gt;&gt;_radWindowLevelImages.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_radWindowLevelImages.Parent" xml:space="preserve">
+    <value>_lyoTable</value>
+  </data>
+  <data name="&gt;&gt;_radWindowLevelImages.ZOrder" xml:space="preserve">
+    <value>9</value>
+  </data>
+  <data name="_radWindowLevelDisplaySets.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="_radWindowLevelDisplaySets.CheckAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleCenter</value>
+  </data>
+  <data name="_radWindowLevelDisplaySets.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="_radWindowLevelDisplaySets.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="_radWindowLevelDisplaySets.Location" type="System.Drawing.Point, System.Drawing">
+    <value>149, 23</value>
+  </data>
+  <data name="_radWindowLevelDisplaySets.Size" type="System.Drawing.Size, System.Drawing">
+    <value>93, 14</value>
+  </data>
+  <data name="_radWindowLevelDisplaySets.TabIndex" type="System.Int32, mscorlib">
+    <value>4</value>
+  </data>
+  <data name="&gt;&gt;_radWindowLevelDisplaySets.Name" xml:space="preserve">
+    <value>_radWindowLevelDisplaySets</value>
+  </data>
+  <data name="&gt;&gt;_radWindowLevelDisplaySets.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_radWindowLevelDisplaySets.Parent" xml:space="preserve">
+    <value>_lyoTable</value>
+  </data>
+  <data name="&gt;&gt;_radWindowLevelDisplaySets.ZOrder" xml:space="preserve">
+    <value>8</value>
+  </data>
+  <data name="_radFlipRotateImages.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="_radFlipRotateImages.CheckAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleCenter</value>
+  </data>
+  <data name="_radFlipRotateImages.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="_radFlipRotateImages.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="_radFlipRotateImages.Location" type="System.Drawing.Point, System.Drawing">
+    <value>88, 43</value>
+  </data>
+  <data name="_radFlipRotateImages.Size" type="System.Drawing.Size, System.Drawing">
+    <value>55, 14</value>
+  </data>
+  <data name="_radFlipRotateImages.TabIndex" type="System.Int32, mscorlib">
+    <value>6</value>
+  </data>
+  <data name="&gt;&gt;_radFlipRotateImages.Name" xml:space="preserve">
+    <value>_radFlipRotateImages</value>
+  </data>
+  <data name="&gt;&gt;_radFlipRotateImages.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_radFlipRotateImages.Parent" xml:space="preserve">
+    <value>_lyoTable</value>
+  </data>
+  <data name="&gt;&gt;_radFlipRotateImages.ZOrder" xml:space="preserve">
+    <value>7</value>
+  </data>
+  <data name="_radFlipRotateDisplaySets.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="_radFlipRotateDisplaySets.CheckAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleCenter</value>
+  </data>
+  <data name="_radFlipRotateDisplaySets.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="_radFlipRotateDisplaySets.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="_radFlipRotateDisplaySets.Location" type="System.Drawing.Point, System.Drawing">
+    <value>149, 43</value>
+  </data>
+  <data name="_radFlipRotateDisplaySets.Size" type="System.Drawing.Size, System.Drawing">
+    <value>93, 14</value>
+  </data>
+  <data name="_radFlipRotateDisplaySets.TabIndex" type="System.Int32, mscorlib">
+    <value>7</value>
+  </data>
+  <data name="&gt;&gt;_radFlipRotateDisplaySets.Name" xml:space="preserve">
+    <value>_radFlipRotateDisplaySets</value>
+  </data>
+  <data name="&gt;&gt;_radFlipRotateDisplaySets.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_radFlipRotateDisplaySets.Parent" xml:space="preserve">
+    <value>_lyoTable</value>
+  </data>
+  <data name="&gt;&gt;_radFlipRotateDisplaySets.ZOrder" xml:space="preserve">
+    <value>6</value>
+  </data>
+  <data name="_radZoomImages.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="_radZoomImages.CheckAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleCenter</value>
+  </data>
+  <data name="_radZoomImages.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="_radZoomImages.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="_radZoomImages.Location" type="System.Drawing.Point, System.Drawing">
+    <value>88, 63</value>
+  </data>
+  <data name="_radZoomImages.Size" type="System.Drawing.Size, System.Drawing">
+    <value>55, 14</value>
+  </data>
+  <data name="_radZoomImages.TabIndex" type="System.Int32, mscorlib">
+    <value>9</value>
+  </data>
+  <data name="&gt;&gt;_radZoomImages.Name" xml:space="preserve">
+    <value>_radZoomImages</value>
+  </data>
+  <data name="&gt;&gt;_radZoomImages.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_radZoomImages.Parent" xml:space="preserve">
+    <value>_lyoTable</value>
+  </data>
+  <data name="&gt;&gt;_radZoomImages.ZOrder" xml:space="preserve">
+    <value>5</value>
+  </data>
+  <data name="_radZoomDisplaySets.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="_radZoomDisplaySets.CheckAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleCenter</value>
+  </data>
+  <data name="_radZoomDisplaySets.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="_radZoomDisplaySets.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="_radZoomDisplaySets.Location" type="System.Drawing.Point, System.Drawing">
+    <value>149, 63</value>
+  </data>
+  <data name="_radZoomDisplaySets.Size" type="System.Drawing.Size, System.Drawing">
+    <value>93, 14</value>
+  </data>
+  <data name="_radZoomDisplaySets.TabIndex" type="System.Int32, mscorlib">
+    <value>10</value>
+  </data>
+  <data name="&gt;&gt;_radZoomDisplaySets.Name" xml:space="preserve">
+    <value>_radZoomDisplaySets</value>
+  </data>
+  <data name="&gt;&gt;_radZoomDisplaySets.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_radZoomDisplaySets.Parent" xml:space="preserve">
+    <value>_lyoTable</value>
+  </data>
+  <data name="&gt;&gt;_radZoomDisplaySets.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="_radResetImages.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="_radResetImages.CheckAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleCenter</value>
+  </data>
+  <data name="_radResetImages.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="_radResetImages.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="_radResetImages.Location" type="System.Drawing.Point, System.Drawing">
+    <value>88, 103</value>
+  </data>
+  <data name="_radResetImages.Size" type="System.Drawing.Size, System.Drawing">
+    <value>55, 14</value>
+  </data>
+  <data name="_radResetImages.TabIndex" type="System.Int32, mscorlib">
+    <value>15</value>
+  </data>
+  <data name="&gt;&gt;_radResetImages.Name" xml:space="preserve">
+    <value>_radResetImages</value>
+  </data>
+  <data name="&gt;&gt;_radResetImages.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_radResetImages.Parent" xml:space="preserve">
+    <value>_lyoTable</value>
+  </data>
+  <data name="&gt;&gt;_radResetImages.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="_radResetDisplaySets.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="_radResetDisplaySets.CheckAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleCenter</value>
+  </data>
+  <data name="_radResetDisplaySets.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="_radResetDisplaySets.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="_radResetDisplaySets.Location" type="System.Drawing.Point, System.Drawing">
+    <value>149, 103</value>
+  </data>
+  <data name="_radResetDisplaySets.Size" type="System.Drawing.Size, System.Drawing">
+    <value>93, 14</value>
+  </data>
+  <data name="_radResetDisplaySets.TabIndex" type="System.Int32, mscorlib">
+    <value>16</value>
+  </data>
+  <data name="&gt;&gt;_radResetDisplaySets.Name" xml:space="preserve">
+    <value>_radResetDisplaySets</value>
+  </data>
+  <data name="&gt;&gt;_radResetDisplaySets.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_radResetDisplaySets.Parent" xml:space="preserve">
+    <value>_lyoTable</value>
+  </data>
+  <data name="&gt;&gt;_radResetDisplaySets.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="_radPanImages.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="_radPanImages.CheckAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleCenter</value>
+  </data>
+  <data name="_radPanImages.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="_radPanImages.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="_radPanImages.Location" type="System.Drawing.Point, System.Drawing">
+    <value>88, 83</value>
+  </data>
+  <data name="_radPanImages.Size" type="System.Drawing.Size, System.Drawing">
+    <value>55, 14</value>
+  </data>
+  <data name="_radPanImages.TabIndex" type="System.Int32, mscorlib">
+    <value>12</value>
+  </data>
+  <data name="&gt;&gt;_radPanImages.Name" xml:space="preserve">
+    <value>_radPanImages</value>
+  </data>
+  <data name="&gt;&gt;_radPanImages.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_radPanImages.Parent" xml:space="preserve">
+    <value>_lyoTable</value>
+  </data>
+  <data name="&gt;&gt;_radPanImages.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="_radPanDisplaySets.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="_radPanDisplaySets.CheckAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleCenter</value>
+  </data>
+  <data name="_radPanDisplaySets.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="_radPanDisplaySets.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="_radPanDisplaySets.Location" type="System.Drawing.Point, System.Drawing">
+    <value>149, 83</value>
+  </data>
+  <data name="_radPanDisplaySets.Size" type="System.Drawing.Size, System.Drawing">
+    <value>93, 14</value>
+  </data>
+  <data name="_radPanDisplaySets.TabIndex" type="System.Int32, mscorlib">
+    <value>13</value>
+  </data>
+  <data name="&gt;&gt;_radPanDisplaySets.Name" xml:space="preserve">
+    <value>_radPanDisplaySets</value>
+  </data>
+  <data name="&gt;&gt;_radPanDisplaySets.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_radPanDisplaySets.Parent" xml:space="preserve">
+    <value>_lyoTable</value>
+  </data>
+  <data name="&gt;&gt;_radPanDisplaySets.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="_cboModality.Location" type="System.Drawing.Point, System.Drawing">
+    <value>11, 37</value>
+  </data>
+  <data name="_cboModality.MaxDropDownItems" type="System.Int32, mscorlib">
+    <value>24</value>
+  </data>
+  <data name="_cboModality.Size" type="System.Drawing.Size, System.Drawing">
+    <value>83, 21</value>
+  </data>
+  <data name="_cboModality.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;_cboModality.Name" xml:space="preserve">
+    <value>_cboModality</value>
+  </data>
+  <data name="&gt;&gt;_cboModality.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_cboModality.Parent" xml:space="preserve">
+    <value>_grpToolModalityBehavior</value>
+  </data>
+  <data name="&gt;&gt;_cboModality.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="_lblModality.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="_lblModality.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="_lblModality.Location" type="System.Drawing.Point, System.Drawing">
+    <value>11, 21</value>
+  </data>
+  <data name="_lblModality.Size" type="System.Drawing.Size, System.Drawing">
+    <value>46, 13</value>
+  </data>
+  <data name="_lblModality.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="_lblModality.Text" xml:space="preserve">
+    <value>Modality</value>
+  </data>
+  <data name="&gt;&gt;_lblModality.Name" xml:space="preserve">
+    <value>_lblModality</value>
+  </data>
+  <data name="&gt;&gt;_lblModality.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_lblModality.Parent" xml:space="preserve">
+    <value>_grpToolModalityBehavior</value>
+  </data>
+  <data name="&gt;&gt;_lblModality.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="_lyoTable.ColumnCount" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <data name="_lblEntireDisplaySet.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="_lblEntireDisplaySet.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="_lblEntireDisplaySet.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="_lblEntireDisplaySet.Location" type="System.Drawing.Point, System.Drawing">
+    <value>149, 0</value>
+  </data>
+  <data name="_lblEntireDisplaySet.Size" type="System.Drawing.Size, System.Drawing">
+    <value>93, 20</value>
+  </data>
+  <data name="_lblEntireDisplaySet.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="_lblEntireDisplaySet.Text" xml:space="preserve">
+    <value>Per Display Set</value>
+  </data>
+  <data name="_lblEntireDisplaySet.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleCenter</value>
+  </data>
+  <data name="&gt;&gt;_lblEntireDisplaySet.Name" xml:space="preserve">
+    <value>_lblEntireDisplaySet</value>
+  </data>
+  <data name="&gt;&gt;_lblEntireDisplaySet.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_lblEntireDisplaySet.Parent" xml:space="preserve">
+    <value>_lyoTable</value>
+  </data>
+  <data name="&gt;&gt;_lblEntireDisplaySet.ZOrder" xml:space="preserve">
+    <value>10</value>
+  </data>
+  <data name="_lblWindowLevel.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="_lblWindowLevel.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="_lblWindowLevel.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="_lblWindowLevel.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 20</value>
+  </data>
+  <data name="_lblWindowLevel.Size" type="System.Drawing.Size, System.Drawing">
+    <value>79, 20</value>
+  </data>
+  <data name="_lblWindowLevel.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="_lblWindowLevel.Text" xml:space="preserve">
+    <value>Window/Level</value>
+  </data>
+  <data name="_lblWindowLevel.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
+  </data>
+  <data name="&gt;&gt;_lblWindowLevel.Name" xml:space="preserve">
+    <value>_lblWindowLevel</value>
+  </data>
+  <data name="&gt;&gt;_lblWindowLevel.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_lblWindowLevel.Parent" xml:space="preserve">
+    <value>_lyoTable</value>
+  </data>
+  <data name="&gt;&gt;_lblWindowLevel.ZOrder" xml:space="preserve">
+    <value>11</value>
+  </data>
+  <data name="_lblReset.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="_lblReset.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="_lblReset.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="_lblReset.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 100</value>
+  </data>
+  <data name="_lblReset.Size" type="System.Drawing.Size, System.Drawing">
+    <value>79, 20</value>
+  </data>
+  <data name="_lblReset.TabIndex" type="System.Int32, mscorlib">
+    <value>14</value>
+  </data>
+  <data name="_lblReset.Text" xml:space="preserve">
+    <value>Reset</value>
+  </data>
+  <data name="_lblReset.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
+  </data>
+  <data name="&gt;&gt;_lblReset.Name" xml:space="preserve">
+    <value>_lblReset</value>
+  </data>
+  <data name="&gt;&gt;_lblReset.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_lblReset.Parent" xml:space="preserve">
+    <value>_lyoTable</value>
+  </data>
+  <data name="&gt;&gt;_lblReset.ZOrder" xml:space="preserve">
+    <value>12</value>
+  </data>
+  <data name="_lblSelectedImage.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="_lblSelectedImage.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="_lblSelectedImage.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="_lblSelectedImage.Location" type="System.Drawing.Point, System.Drawing">
+    <value>88, 0</value>
+  </data>
+  <data name="_lblSelectedImage.Size" type="System.Drawing.Size, System.Drawing">
+    <value>55, 20</value>
+  </data>
+  <data name="_lblSelectedImage.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="_lblSelectedImage.Text" xml:space="preserve">
+    <value>Per Image</value>
+  </data>
+  <data name="_lblSelectedImage.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleCenter</value>
+  </data>
+  <data name="&gt;&gt;_lblSelectedImage.Name" xml:space="preserve">
+    <value>_lblSelectedImage</value>
+  </data>
+  <data name="&gt;&gt;_lblSelectedImage.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_lblSelectedImage.Parent" xml:space="preserve">
+    <value>_lyoTable</value>
+  </data>
+  <data name="&gt;&gt;_lblSelectedImage.ZOrder" xml:space="preserve">
+    <value>13</value>
+  </data>
+  <data name="_lblOrientation.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="_lblOrientation.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="_lblOrientation.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="_lblOrientation.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 40</value>
+  </data>
+  <data name="_lblOrientation.Size" type="System.Drawing.Size, System.Drawing">
+    <value>79, 20</value>
+  </data>
+  <data name="_lblOrientation.TabIndex" type="System.Int32, mscorlib">
+    <value>5</value>
+  </data>
+  <data name="_lblOrientation.Text" xml:space="preserve">
+    <value>Flips/Rotations</value>
+  </data>
+  <data name="_lblOrientation.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
+  </data>
+  <data name="&gt;&gt;_lblOrientation.Name" xml:space="preserve">
+    <value>_lblOrientation</value>
+  </data>
+  <data name="&gt;&gt;_lblOrientation.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_lblOrientation.Parent" xml:space="preserve">
+    <value>_lyoTable</value>
+  </data>
+  <data name="&gt;&gt;_lblOrientation.ZOrder" xml:space="preserve">
+    <value>14</value>
+  </data>
+  <data name="_lblPan.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="_lblPan.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="_lblPan.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="_lblPan.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 80</value>
+  </data>
+  <data name="_lblPan.Size" type="System.Drawing.Size, System.Drawing">
+    <value>79, 20</value>
+  </data>
+  <data name="_lblPan.TabIndex" type="System.Int32, mscorlib">
+    <value>11</value>
+  </data>
+  <data name="_lblPan.Text" xml:space="preserve">
+    <value>Pan</value>
+  </data>
+  <data name="_lblPan.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
+  </data>
+  <data name="&gt;&gt;_lblPan.Name" xml:space="preserve">
+    <value>_lblPan</value>
+  </data>
+  <data name="&gt;&gt;_lblPan.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_lblPan.Parent" xml:space="preserve">
+    <value>_lyoTable</value>
+  </data>
+  <data name="&gt;&gt;_lblPan.ZOrder" xml:space="preserve">
+    <value>15</value>
+  </data>
+  <data name="_lblZoom.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="_lblZoom.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="_lblZoom.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="_lblZoom.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 60</value>
+  </data>
+  <data name="_lblZoom.Size" type="System.Drawing.Size, System.Drawing">
+    <value>79, 20</value>
+  </data>
+  <data name="_lblZoom.TabIndex" type="System.Int32, mscorlib">
+    <value>8</value>
+  </data>
+  <data name="_lblZoom.Text" xml:space="preserve">
+    <value>Zoom</value>
+  </data>
+  <data name="_lblZoom.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
+  </data>
+  <data name="&gt;&gt;_lblZoom.Name" xml:space="preserve">
+    <value>_lblZoom</value>
+  </data>
+  <data name="&gt;&gt;_lblZoom.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_lblZoom.Parent" xml:space="preserve">
+    <value>_lyoTable</value>
+  </data>
+  <data name="&gt;&gt;_lblZoom.ZOrder" xml:space="preserve">
+    <value>16</value>
+  </data>
+  <data name="_lyoTable.Location" type="System.Drawing.Point, System.Drawing">
+    <value>11, 64</value>
+  </data>
+  <data name="_lyoTable.RowCount" type="System.Int32, mscorlib">
+    <value>6</value>
+  </data>
+  <data name="_lyoTable.Size" type="System.Drawing.Size, System.Drawing">
+    <value>245, 120</value>
+  </data>
+  <data name="_lyoTable.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="&gt;&gt;_lyoTable.Name" xml:space="preserve">
+    <value>_lyoTable</value>
+  </data>
+  <data name="&gt;&gt;_lyoTable.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TableLayoutPanel, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_lyoTable.Parent" xml:space="preserve">
+    <value>_grpToolModalityBehavior</value>
+  </data>
+  <data name="&gt;&gt;_lyoTable.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="_lyoTable.LayoutSettings" type="System.Windows.Forms.TableLayoutSettings, System.Windows.Forms">
+    <value>&lt;?xml version="1.0" encoding="utf-16"?&gt;&lt;TableLayoutSettings&gt;&lt;Controls&gt;&lt;Control Name="_radResetDisplaySets" Row="5" RowSpan="1" Column="2" ColumnSpan="1" /&gt;&lt;Control Name="_radResetImages" Row="5" RowSpan="1" Column="1" ColumnSpan="1" /&gt;&lt;Control Name="_radPanDisplaySets" Row="4" RowSpan="1" Column="2" ColumnSpan="1" /&gt;&lt;Control Name="_radPanImages" Row="4" RowSpan="1" Column="1" ColumnSpan="1" /&gt;&lt;Control Name="_radZoomDisplaySets" Row="3" RowSpan="1" Column="2" ColumnSpan="1" /&gt;&lt;Control Name="_radZoomImages" Row="3" RowSpan="1" Column="1" ColumnSpan="1" /&gt;&lt;Control Name="_radFlipRotateDisplaySets" Row="2" RowSpan="1" Column="2" ColumnSpan="1" /&gt;&lt;Control Name="_radFlipRotateImages" Row="2" RowSpan="1" Column="1" ColumnSpan="1" /&gt;&lt;Control Name="_radWindowLevelDisplaySets" Row="1" RowSpan="1" Column="2" ColumnSpan="1" /&gt;&lt;Control Name="_radWindowLevelImages" Row="1" RowSpan="1" Column="1" ColumnSpan="1" /&gt;&lt;Control Name="_lblEntireDisplaySet" Row="0" RowSpan="1" Column="2" ColumnSpan="1" /&gt;&lt;Control Name="_lblWindowLevel" Row="1" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="_lblReset" Row="5" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="_lblSelectedImage" Row="0" RowSpan="1" Column="1" ColumnSpan="1" /&gt;&lt;Control Name="_lblOrientation" Row="2" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="_lblPan" Row="4" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="_lblZoom" Row="3" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;/Controls&gt;&lt;Columns Styles="Absolute,85,AutoSize,0,AutoSize,0" /&gt;&lt;Rows Styles="Absolute,20,Absolute,20,Absolute,20,Absolute,20,Absolute,20,Absolute,20" /&gt;&lt;/TableLayoutSettings&gt;</value>
+  </data>
+  <data name="_grpToolModalityBehavior.Location" type="System.Drawing.Point, System.Drawing">
+    <value>8, 8</value>
+  </data>
+  <data name="_grpToolModalityBehavior.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>8, 8, 8, 8</value>
+  </data>
+  <data name="_grpToolModalityBehavior.Size" type="System.Drawing.Size, System.Drawing">
+    <value>267, 198</value>
+  </data>
+  <data name="_grpToolModalityBehavior.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="_grpToolModalityBehavior.Text" xml:space="preserve">
+    <value>Tool Behavior</value>
+  </data>
+  <data name="&gt;&gt;_grpToolModalityBehavior.Name" xml:space="preserve">
+    <value>_grpToolModalityBehavior</value>
+  </data>
+  <data name="&gt;&gt;_grpToolModalityBehavior.Type" xml:space="preserve">
+    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_grpToolModalityBehavior.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;_grpToolModalityBehavior.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <metadata name="_tooltipProvider.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>17, 17</value>
+  </metadata>
+  <data name="_chkInvertZoomDirection.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="_chkInvertZoomDirection.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="_chkInvertZoomDirection.Location" type="System.Drawing.Point, System.Drawing">
+    <value>11, 24</value>
+  </data>
+  <data name="_chkInvertZoomDirection.Size" type="System.Drawing.Size, System.Drawing">
+    <value>140, 17</value>
+  </data>
+  <data name="_chkInvertZoomDirection.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="_chkInvertZoomDirection.Text" xml:space="preserve">
+    <value>Inverted zoom operation</value>
+  </data>
+  <data name="_chkInvertZoomDirection.ToolTip" xml:space="preserve">
+    <value>When inverted, up will zoom out and down will zoom in</value>
+  </data>
+  <data name="&gt;&gt;_chkInvertZoomDirection.Name" xml:space="preserve">
+    <value>_chkInvertZoomDirection</value>
+  </data>
+  <data name="&gt;&gt;_chkInvertZoomDirection.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_chkInvertZoomDirection.Parent" xml:space="preserve">
+    <value>_grpGeneral</value>
+  </data>
+  <data name="&gt;&gt;_chkInvertZoomDirection.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="_grpGeneral.Location" type="System.Drawing.Point, System.Drawing">
+    <value>8, 212</value>
+  </data>
+  <data name="_grpGeneral.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>8, 8, 8, 8</value>
+  </data>
+  <data name="_grpGeneral.Size" type="System.Drawing.Size, System.Drawing">
+    <value>267, 55</value>
+  </data>
+  <data name="_grpGeneral.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="_grpGeneral.Text" xml:space="preserve">
+    <value>General</value>
+  </data>
+  <data name="&gt;&gt;_grpGeneral.Name" xml:space="preserve">
+    <value>_grpGeneral</value>
+  </data>
+  <data name="&gt;&gt;_grpGeneral.Type" xml:space="preserve">
+    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_grpGeneral.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;_grpGeneral.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <metadata name="_tooltipProvider.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>17, 17</value>
+  </metadata>
+  <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
+    <value>6, 13</value>
+  </data>
+  <data name="$this.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>5, 5, 5, 5</value>
+  </data>
+  <data name="$this.Size" type="System.Drawing.Size, System.Drawing">
+    <value>452, 291</value>
+  </data>
+  <data name="&gt;&gt;_tooltipProvider.Name" xml:space="preserve">
+    <value>_tooltipProvider</value>
+  </data>
+  <data name="&gt;&gt;_tooltipProvider.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolTip, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;$this.Name" xml:space="preserve">
+    <value>ToolConfigurationComponentControl</value>
+  </data>
+  <data name="&gt;&gt;$this.Type" xml:space="preserve">
+    <value>System.Windows.Forms.UserControl, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+</root>

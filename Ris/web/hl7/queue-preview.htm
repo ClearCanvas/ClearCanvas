@@ -1,0 +1,217 @@
+<!--
+Copyright (c) 2010, ClearCanvas Inc.
+All rights reserved.
+http://www.clearcanvas.ca
+
+For information about the licensing and copyright of this software please
+contact ClearCanvas, Inc. at info@clearcanvas.ca
+-->
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title>HL7 Queue Item Preview</title>
+		<link href="../css/default.css" rel="stylesheet" type="text/css" />
+		<script type="text/javascript" src="../js/jsx.js"></script>
+		<script type="text/javascript" src="../js/jsml.js"></script>
+		<script type="text/javascript" src="../js/ui.js"></script>
+		<script type="text/javascript" src="../js/ris.js"></script>
+		<script type="text/javascript" src="../js/preview.js"></script>
+		<script type="text/javascript" >
+			var imagePath = "../images";
+
+			function onBodyLoad()
+			{
+				if(!Ris)
+					return;
+
+				try
+				{
+					var queueItem = Ris.getHealthcareContext();
+					if (queueItem == null)
+					{
+						Field.setValue($("myForm"), "");
+						return;
+					}
+
+					Field.setValue($("peer"), queueItem.Peer);
+					Field.setValue($("direction"), queueItem.Direction.Value);
+					Field.setValue($("type"), queueItem.MessageType);
+					Field.setValue($("version"), queueItem.MessageVersion.Value);
+					Field.setValue($("status"), queueItem.StatusCode.Value);
+					Field.setValue($("created"), Ris.formatDateTime(queueItem.CreationTime));
+					Field.setValue($("processed"), Ris.formatDateTime(queueItem.UpdateTime));
+				
+					Field.show($("error"), queueItem.StatusCode.Value === "Error");
+					Field.setValue($("errorMessage"), queueItem.StatusDescription);
+					
+					Field.setPreFormattedValue($("messagePlain"), queueItem.MessageText);
+
+					if(queueItem.MessageFormat.Code === "Er7")
+					{
+						Field.show($("messagePlain"), false);
+						 
+						var text = String.replaceLineBreak(queueItem.MessageText);
+						var segments = text.split("<br>");
+						
+						var segmentList = document.createElement("ul");
+						segmentList.className = "hl7Message";
+						$("messageTreeContainer").appendChild(segmentList);
+
+						for(var i = 0; i < segments.length; i++)
+						{
+							var segmentItem = document.createElement("li");
+							segmentItem.className = "collapsedSegmentItem";
+							segmentList.appendChild(segmentItem);
+
+							var segmentName = document.createElement("div");
+							segmentName.className = "segmentName";
+							segmentItem.appendChild(segmentName);
+
+							var allComponents = document.createElement("div");
+							allComponents.className = "allComponents";
+							segmentItem.appendChild(allComponents);
+
+							var componentList = document.createElement("ol");
+							componentList.className = "componentList";
+							segmentItem.appendChild(componentList);
+							
+							var othis = segmentItem;
+							segmentItem.onclick = function()
+							{
+								this.className = this.className === "collapsedSegmentItem" ? "expandedSegmentItem" : "collapsedSegmentItem";
+							}
+							
+							var components = segments[i].split("|");
+							segmentName.innerText = components[0];
+							var segmentText = "";
+							if(components[0] === "MSH")
+							{
+								components.splice(1,0,"|");
+							}
+							for(var j = 1; j < components.length; j++)
+							{
+								var componentItem = document.createElement("li");
+								componentList.appendChild(componentItem);
+								componentItem.innerHTML = components[j] || "<span class='emptycomponent'>-</span>";
+								if(components[j] !== "|")
+								{
+									segmentText = segmentText + "<div class='separator'>|</div>" + components[j];
+								}
+							}
+							allComponents.innerHTML = segmentText;
+						}
+					}
+					else
+					{
+						Field.show($("messageTree"), false);
+					}
+				}
+				catch(e)
+				{
+					var message = "Failed to load editor page.  An exception occurred in the script. Error name: " + e.name + ". Error message: " + e.message;
+					Field.setValue($("myForm"), message);
+				}
+			}
+			
+			function showClipboard()
+			{
+				Field.show($("messagePlain"), $("messagePlain").style.display == 'none');
+			}
+		</script>
+		<style>
+			.propertyname {
+				background-color:white;
+			}
+			#errorMessage, .message {
+				margin-left:1em;
+				margin-right:2em;
+				margin-top: 1em;
+			}
+			.message {
+				font-size:85%;
+				font-family:"monospace";
+			}
+			.hl7Message {
+				list-style-type:none;
+				margin-left:0;
+				margin-top:0;
+				margin-bottom:0;
+				padding-left:0em;
+				cursor:hand;
+			}
+			.collapsedSegmentItem .allComponents {
+				display:inline;
+			}
+			.collapsedSegmentItem .componentList {
+				display:none;
+			}
+			.expandedSegmentItem .allComponents {
+				display:none;
+			}
+			.expandedSegmentItem .componentList {
+				display:block;
+			}
+			.segmentName {
+				color: #3D98D1;
+				display:inline;
+			}
+			.separator {
+				color: #999999;
+				display:inline-block;
+			}
+			.separator {
+				display: inline !ie;
+			}
+			.emptycomponent {
+				color: #dddddd;
+			}
+			#copyToClipboard {
+				color: #3D98D1;
+				font-size: 90%;
+				text-decoration:underline;
+				cursor:hand;
+			}
+		</style>
+	</head>
+	<body onload="javascript: onBodyLoad()">
+		<form id="myForm">
+			<p class="sectionheading">Message Details</p>
+			<table border="0" class="fixedTableLayout" width="660px" id="orderTable">
+				<tr>
+					<td class="propertyname" width="80x">Peer</td>
+					<td class="propertyvalue" width="200px"><div id="peer"/></td>
+					<td class="propertyname" width="80px">Direction</td>
+					<td class="propertyvalue"><div id="direction" /></td>
+				</tr>
+				<tr>
+					<td class="propertyname">Type</td>
+					<td class="propertyvalue"><div id="type" /></td>
+					<td class="propertyname">Version</td>
+					<td class="propertyvalue"><div id="version"/></td>
+				</tr>
+				<tr>
+					<td class="propertyname">Status</td>
+					<td class="propertyvalue"><div id="status"/></td>
+				</tr>
+				<tr>
+					<td class="propertyname">Created</td>
+					<td class="propertyvalue"><div id="created"/></td>
+					<td class="propertyname">Processed</td>
+					<td class="propertyvalue"><div id="processed"/></td>
+				</tr>
+			</table>
+
+			<div id="error">
+				<p class="sectionheading">Error Detail</p>
+				<div id="errorMessage"></div>
+			</div>
+			<p class="sectionheading">Message Text</p>
+			<div id="messageTree" class="message">
+				<div id="messageTreeContainer"></div>
+				<div id="copyToClipboard" onclick="javascript: showClipboard()">Show/hide clipboard-friendly version.</div>
+			</div>
+			<div id="messagePlain" class="message"></div>
+		</form>
+	</body>
+</html>

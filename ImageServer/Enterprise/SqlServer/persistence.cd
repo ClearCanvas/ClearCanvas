@@ -1,0 +1,75 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Font Name="Segoe UI" Size="9" />
+  <Class Name="ClearCanvas.ImageServer.Enterprise.SqlServer.Broker" Collapsed="true">
+    <Position X="2.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Broker.cs</FileName>
+      <HashCode>AAAAAAAAAgIABAAAAAAAAAAAAAAAAAAAAAAAAAAQCAA=</HashCode>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ClearCanvas.ImageServer.Database.SqlServer.BrokerExtensionPoint" Collapsed="true">
+    <Position X="8.75" Y="4.75" Width="3.75" />
+    <TypeIdentifier>
+      <FileName>PersistenceContext.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ClearCanvas.ImageServer.Enterprise.SqlServer.PersistenceContext" Collapsed="true">
+    <Position X="5.25" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>PersistenceContext.cs</FileName>
+      <HashCode>AAIQgAAAACCAIAkAAAAAAAAgAEAAACAAAAAAAAgABAA=</HashCode>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ClearCanvas.ImageServer.Enterprise.SqlServer.PersistentStore" Collapsed="true">
+    <Position X="8.75" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>PersistentStore.cs</FileName>
+      <HashCode>CAAAAAAAAACAAQAAAAAAAAAAAAAAAAAIgAAAAAAAAAE=</HashCode>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ClearCanvas.ImageServer.Database.SqlServer.ProcedureSelectBroker&lt;TInput, TOutput&gt;" Collapsed="true">
+    <Position X="0.5" Y="2" Width="2.75" />
+    <TypeIdentifier>
+      <FileName>ProcedureSelectBroker.cs</FileName>
+      <HashCode>AAAAgAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ClearCanvas.ImageServer.Enterprise.SqlServer.ProcedureReadBroker&lt;TOutput&gt;" Collapsed="true">
+    <Position X="3.75" Y="2" Width="3" />
+    <TypeIdentifier>
+      <FileName>ProcedureReadBroker.cs</FileName>
+      <HashCode>AAAAgAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ClearCanvas.ImageServer.Enterprise.SqlServer.ProcedureUpdateBroker&lt;TInput&gt;" Collapsed="true">
+    <Position X="7.5" Y="2" Width="2.5" />
+    <TypeIdentifier>
+      <FileName>ProcedureUpdateBroker.cs</FileName>
+      <HashCode>AAAAgAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ClearCanvas.ImageServer.Enterprise.SqlServer.ReadContext" Collapsed="true">
+    <Position X="6.25" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>ReadContext.cs</FileName>
+      <HashCode>AAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ClearCanvas.ImageServer.Enterprise.SqlServer.UpdateContext" Collapsed="true">
+    <Position X="4" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>UpdateContext.cs</FileName>
+      <HashCode>AACAAAAAACAAAAQAAgAAAAAAAAAAACAAAAAAAIgAAAA=</HashCode>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+</ClassDiagram>

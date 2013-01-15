@@ -1,0 +1,75 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Font Name="Segoe UI" Size="9" />
+  <Class Name="ClearCanvas.ImageViewer.View.WinForms.ImageBoxControl" Collapsed="true">
+    <Position X="6" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>ImageBoxControl.cs</FileName>
+      <HashCode>BACIACAAICAJBggAIACAAAACAAQAAAAAAAAUAAAggIA=</HashCode>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_imageBox" />
+    </ShowAsAssociation>
+    <AssociationLine Name="_imageBox" Type="ClearCanvas.ImageViewer.ImageBox">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.11" Y="1.039" />
+      </MemberNameLabel>
+    </AssociationLine>
+  </Class>
+  <Class Name="ClearCanvas.ImageViewer.View.WinForms.TileControl" Collapsed="true">
+    <Position X="8.5" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>TileControl.cs</FileName>
+      <HashCode>AwCERCyoACHBIgCAEECAAAAGBBIAAQBAIAAgEAACESA=</HashCode>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_tile" />
+    </ShowAsAssociation>
+    <AssociationLine Name="_tile" Type="ClearCanvas.ImageViewer.Tile">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.112" Y="1.058" />
+      </MemberNameLabel>
+    </AssociationLine>
+  </Class>
+  <Class Name="ClearCanvas.ImageViewer.View.WinForms.ImageViewerControl" Collapsed="true">
+    <Position X="2.25" Y="0.75" Width="1.75" />
+    <TypeIdentifier>
+      <FileName>ImageViewerControl.cs</FileName>
+      <HashCode>AAAAAAAABCABBgAAAACACIACAAAAABAAAAAAAAABIAA=</HashCode>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_component" />
+      <Field Name="_physicalWorkspace" />
+    </ShowAsAssociation>
+    <AssociationLine Name="_component" Type="ClearCanvas.ImageViewer.ImageViewerComponent">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.133" Y="1.089" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="_physicalWorkspace" Type="ClearCanvas.ImageViewer.PhysicalWorkspace">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-1.505" Y="1.06" />
+      </MemberNameLabel>
+    </AssociationLine>
+  </Class>
+  <Class Name="ClearCanvas.ImageViewer.ImageViewerComponent" Collapsed="true">
+    <Position X="0.5" Y="3" Width="2" />
+    <TypeIdentifier />
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ClearCanvas.ImageViewer.PhysicalWorkspace" Collapsed="true">
+    <Position X="3.75" Y="3" Width="1.75" />
+    <TypeIdentifier />
+    <Lollipop Position="0.554" />
+  </Class>
+  <Class Name="ClearCanvas.ImageViewer.ImageBox" Collapsed="true">
+    <Position X="6" Y="3" Width="1.5" />
+    <TypeIdentifier />
+    <Lollipop Position="1.085" />
+  </Class>
+  <Class Name="ClearCanvas.ImageViewer.Tile" Collapsed="true">
+    <Position X="8.5" Y="3" Width="1.5" />
+    <TypeIdentifier />
+    <Lollipop Position="1.127" />
+  </Class>
+</ClassDiagram>

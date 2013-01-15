@@ -1,0 +1,144 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Font Name="Tahoma" Size="9.75" />
+  <Class Name="ClearCanvas.ImageViewer.StudyManagement.StudyTree" Collapsed="true">
+    <Position X="1.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>StudyManagement\StudyTree.cs</FileName>
+      <HashCode>AAAAAAAAACAAAEAgAAAAABAAAkEAAAAADABAAACBACA=</HashCode>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Patients" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="ClearCanvas.ImageViewer.StudyManagement.Patient" Collapsed="true">
+    <Position X="2.5" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>StudyManagement\Patient.cs</FileName>
+      <HashCode>BAABAAAAAQAAAQAWAAAAAAAAAAACAAAAAAAAAACAAAA=</HashCode>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Studies" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="ClearCanvas.ImageViewer.StudyManagement.Study" Collapsed="true">
+    <Position X="3" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>StudyManagement\Study.cs</FileName>
+      <HashCode>AAABAAMUAAAAAwAEAgABQAAAABQAAAAAAABAYAAAAAE=</HashCode>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Series" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="ClearCanvas.ImageViewer.StudyManagement.Series" Collapsed="true">
+    <Position X="3.75" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>StudyManagement\Series.cs</FileName>
+      <HashCode>EogBAAAAAAAAEQAlAwCEAABEAAhAAFAAAAAQAABAAEA=</HashCode>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Sops" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="ClearCanvas.ImageViewer.StudyManagement.Sop" Collapsed="true">
+    <Position X="4.75" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>StudyManagement\Sop.cs</FileName>
+      <HashCode>NogAAAMUATGACgIVC1CFRoBFEBxSAFCIgEYYWBBAAGA=</HashCode>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="DataSource" />
+    </ShowAsAssociation>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ClearCanvas.ImageViewer.StudyManagement.ImageSop" Collapsed="true">
+    <Position X="4.75" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>StudyManagement\ImageSop.cs</FileName>
+      <HashCode>UAEAAACAICOgrEAgQICEZMMAAAAgAAEAAAJQIAkAQAU=</HashCode>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Frames" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="ClearCanvas.ImageViewer.ImageViewerComponent" Collapsed="true">
+    <Position X="0.5" Y="0.5" Width="2.25" />
+    <TypeIdentifier>
+      <FileName>ImageViewerComponent.cs</FileName>
+      <HashCode>SCCAsCABUChgIAgAxAEAAEAEFWCYEBAIIIgCCEAYIMQ=</HashCode>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="StudyTree" />
+    </ShowAsAssociation>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+      <Compartment Name="Events" Collapsed="true" />
+    </Compartments>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ClearCanvas.ImageViewer.StudyManagement.Frame" Collapsed="true">
+    <Position X="6.5" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>StudyManagement\Frame.cs</FileName>
+      <HashCode>UwEAAACAYCOgjEQAQICA5EOAABAiAAgAgAJRIAkgICg=</HashCode>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ClearCanvas.ImageViewer.StudyManagement.DicomMessageSopDataSource" Collapsed="true">
+    <Position X="11" Y="5.25" Width="2.25" />
+    <TypeIdentifier>
+      <FileName>StudyManagement\DicomMessageSopDataSource.cs</FileName>
+      <HashCode>gAAAgAEAAAAAAAAAHACAAAEACBAAAAACAAAAAABgAAA=</HashCode>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ClearCanvas.ImageViewer.StudyManagement.LocalSopDataSource" Collapsed="true">
+    <Position X="11" Y="6.5" Width="2.25" />
+    <TypeIdentifier>
+      <FileName>StudyManagement\LocalSopDataSource.cs</FileName>
+      <HashCode>AAAAAAAAAAAAQAAAEAAAAAAAAAAEAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ClearCanvas.ImageViewer.StudyManagement.StandardSopDataSource" Collapsed="true">
+    <Position X="11" Y="4" Width="2.25" />
+    <TypeIdentifier>
+      <FileName>StudyManagement\StandardSopDataSource.cs</FileName>
+      <HashCode>AAIAAAAAACAAAAAACAAAAAACAAAAAIAAAAAAAAAgAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ClearCanvas.ImageViewer.StudyManagement.SopDataSource" Collapsed="true">
+    <Position X="11.25" Y="3" Width="1.75" />
+    <TypeIdentifier>
+      <FileName>StudyManagement\SopDataSource.cs</FileName>
+      <HashCode>AAoAAgAAIKAAAAAASACAAAIAAEAAAIAQAEIAigAAQBA=</HashCode>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Interface Name="ClearCanvas.ImageViewer.StudyManagement.IDicomMessageSopDataSource" Collapsed="true">
+    <Position X="7.25" Y="4.75" Width="2.75" />
+    <TypeIdentifier>
+      <FileName>StudyManagement\IDicomMessageSopDataSource.cs</FileName>
+      <HashCode>AAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="ClearCanvas.ImageViewer.StudyManagement.ILocalSopDataSource" Collapsed="true">
+    <Position X="7.25" Y="3.5" Width="2.75" />
+    <TypeIdentifier>
+      <FileName>StudyManagement\ILocalSopDataSource.cs</FileName>
+      <HashCode>AAAAAAAAAAAAQAAAAAAAAAAAAAAEAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="ClearCanvas.ImageViewer.StudyManagement.ISopDataSource" Collapsed="true">
+    <Position X="7.5" Y="6" Width="2.25" />
+    <TypeIdentifier>
+      <FileName>StudyManagement\ISopDataSource.cs</FileName>
+      <HashCode>AAIAAgAAIIAAAAAAAAAAAAIAAAAAAIAQAEAACgAAQBA=</HashCode>
+    </TypeIdentifier>
+  </Interface>
+</ClassDiagram>

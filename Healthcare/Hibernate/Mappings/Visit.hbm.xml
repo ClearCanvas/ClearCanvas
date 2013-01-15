@@ -1,0 +1,77 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" assembly="ClearCanvas.Healthcare" namespace="ClearCanvas.Healthcare">
+	<class name="Visit" proxy="Visit" table="Visit_">
+		<id name="OID" column="OID_" type="Guid">
+			<generator class="guid.comb"/>
+		</id>
+		<version name="Version" column="Version_"/>
+		<many-to-one name="Patient" class="Patient" column="PatientOID_" not-null="true" fetch="join"/>
+
+		<component name="VisitNumber" class="VisitNumber">
+			<property name="Id" type="String">
+				<column name="VisitNumberId_" unique-key="VisitNumberKey_" not-null="true" length="50"/>
+			</property>
+			<many-to-one name="AssigningAuthority" class="InformationAuthorityEnum">
+				<column name="VisitNumberAssigningAuthority_" unique-key="VisitNumberKey_" not-null="true"/>
+			</many-to-one>
+		</component>
+
+		<property name="Status" column="Status_" type="ClearCanvas.Healthcare.Hibernate.VisitStatusEnumHbm, ClearCanvas.Healthcare.Hibernate" not-null="true"/>
+		<property name="AdmitTime" column="AdmitTime_" type="DateTime" not-null="false"/>
+		<property name="DischargeTime" column="DischargeTime_" type="DateTime" not-null="false"/>
+		<property name="DischargeDisposition" column="DischargeDisposition_" type="String" length="100" not-null="false"/>
+
+		<!--  Following three encompass "Visit Type" -->
+		<many-to-one name="PatientClass" class="PatientClassEnum" column="PatientClass_" not-null="true"/>
+		<many-to-one name="PatientType" class="PatientTypeEnum" column="PatientType_"/>
+		<many-to-one name="AdmissionType" class="AdmissionTypeEnum" column="AdmissionType_"/>
+
+		<many-to-one name="Facility" class="Facility" column="FacilityOID_" not-null="true" fetch="join"/>
+
+		<!-- This field indicates the current patient location, whereas the Locations collection is optional, and maintains a history of all locations -->
+		<many-to-one name="CurrentLocation" class="Location" column="CurrentLocationOID_"/>
+		<property name="CurrentRoom" column="CurrentRoom_" type="String" length="100" not-null="false"/>
+		<property name="CurrentBed" column="CurrentBed_" type="String" length="100" not-null="false"/>
+		<idbag name="Locations" lazy="true" table="VisitLocation_" access="nosetter.camelcase-underscore">
+			<collection-id column="OID_" type="Guid">
+				<generator class="guid.comb"/>
+			</collection-id>
+			<key column="VisitOID_"/>
+			<composite-element class="VisitLocation">
+				<many-to-one name="Location" class="Location" column="LocationOID_" not-null="true" fetch="join"/>
+				<property name="Room" column="Room_" type="String" length="100" not-null="false"/>
+				<property name="Bed" column="Bed_" type="String" length="100" not-null="false"/>
+				<property name="Role" column="Role_" type="ClearCanvas.Healthcare.Hibernate.VisitLocationRoleEnumHbm, ClearCanvas.Healthcare.Hibernate" not-null="true"/>
+				<property name="StartTime" column="StartTime_" type="DateTime" not-null="false"/>
+				<property name="EndTime" column="EndTime_" type="DateTime" not-null="false"/>
+			</composite-element>
+		</idbag>
+
+		<idbag name="Practitioners" lazy="true" table="VisitPractitioner_" access="nosetter.camelcase-underscore">
+			<collection-id column="OID_" type="Guid">
+				<generator class="guid.comb"/>
+			</collection-id>
+			<key column="VisitOID_"/>
+			<composite-element class="VisitPractitioner">
+				<many-to-one name="Practitioner" class="ExternalPractitioner" column="PractitionerOID_" not-null="true" fetch="join"/>
+				<property name="Role" column="Role_" type="ClearCanvas.Healthcare.Hibernate.VisitPractitionerRoleEnumHbm, ClearCanvas.Healthcare.Hibernate" not-null="true"/>
+				<property name="StartTime" column="StartTime_" type="DateTime" not-null="false"/>
+				<property name="EndTime" column="EndTime_" type="DateTime" not-null="false"/>
+			</composite-element>
+		</idbag>
+
+		<property name="VipIndicator" column="VipIndicator_" type="Boolean" not-null="true"/>
+		<property name="PreadmitNumber" column="PreadmitNumber_" type="String" length="20" not-null="false"/>
+
+		<set name="AmbulatoryStatuses" lazy="true" table="VisitAmbulatoryStatus_" access="nosetter.camelcase-underscore">
+			<key column="VisitOID_"/>
+			<many-to-many column="AmbulatoryStatus_" class="AmbulatoryStatusEnum"/>
+		</set>
+
+		<map name="ExtendedProperties" lazy="true" table="VisitExtendedProperty_">
+			<key column="VisitOID_"/>
+			<index column="Name_" type="String"/>
+      <element type="String" column="Value_" length="65000"/>
+    </map>
+	</class>
+</hibernate-mapping>

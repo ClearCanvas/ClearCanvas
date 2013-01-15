@@ -1,0 +1,96 @@
+<%@ Register assembly="ClearCanvas.ImageServer.Web.Common" namespace="ClearCanvas.ImageServer.Web.Common.WebControls.UI" tagPrefix="ccUI" %>
+
+<%-- Error Pages --%>
+<asp:Image runat="server" SkinID="ImageServerLogo" ImageUrl="images/ImageServerLogo.png" />
+
+<%-- Header and Menu Images --%>
+
+<asp:Image runat="server" SkinID="Logo" ImageUrl="images/Header/ClearCanvasLogo.png" Height="68" Width="210" />
+<asp:Image runat="server" SkinID="MenuEdge" ImageUrl="images/Header/MenuEdge.png" Height="39" Width="22"/>
+<asp:Image runat="server" SkinID="MainContentBottomLeftCorner" ImageUrl="images/MainContent/MainContentBottomLeftCorner.png" Height="10" Width="7"/>
+<asp:Image runat="server" SkinID="MainContentBottomRightCorner" ImageUrl="images/MainContent/MainContentBottomRightCorner.png" Height="10" Width="7" /> 
+
+<asp:Menu runat="server" SkinID="MainMenu" CssClass="MainMenuContent" Orientation="Horizontal" RenderingMode="Table"
+          StaticSubMenuIndent="1" DynamicVerticalOffset="0" DynamicHorizontalOffset="0" StaticEnableDefaultPopOutImage="false" DynamicPopOutImageURL="images/Indicators/MenuArrow.gif">
+    <DynamicMenuStyle CssClass="DynamicMenu" BackColor="#3482b2"/>
+    <DynamicHoverStyle CssClass="DynamicHover" />
+    <DynamicMenuItemStyle CssClass="DynamicMenuItem" />
+    <DynamicSelectedStyle CssClass="DynamicSelected" />
+    <StaticHoverStyle CssClass="StaticHover" />
+    <StaticMenuItemStyle CssClass="StaticMenuItem" />
+    <StaticMenuStyle CssClass="StaticMenu" />
+    <StaticSelectedStyle CssClass="StaticSelected" />
+</asp:Menu>
+
+<%-- Buttons --%>
+
+<ccUI:ToolbarButton runat="server" SkinID="SearchIcon" EnabledImageUrl="images/Buttons/SearchIcon.png" HoverImageUrl="images/Buttons/SearchIconHover.png"/>
+<ccUI:ToolbarButton runat="server" SkinID="ViewDetailsButton" EnabledImageURL="images/Buttons/ViewDetailsEnabled.png" DisabledImageURL="images/Buttons/ViewDetailsDisabled.png" HoverImageURL="images/Buttons/ViewDetailsHover.png"/>
+<ccUI:ToolbarButton runat="server" SkinID="ViewSeriesButton" EnabledImageURL="images/Buttons/ViewSeriesEnabled.png" DisabledImageURL="images/Buttons/ViewSeriesDisabled.png" HoverImageURL="images/Buttons/ViewSeriesHover.png"/>
+<ccUI:ToolbarButton runat="server" SkinID="ViewStudyButton" EnabledImageURL="images/Buttons/ViewStudyEnabled.png" DisabledImageURL="images/Buttons/ViewStudyDisabled.png" HoverImageURL="images/Buttons/ViewStudyHover.png"/>
+<ccUI:ToolbarButton runat="server" SkinID="MoveButton" EnabledImageURL="images/Buttons/MoveEnabled.png" DisabledImageURL="images/Buttons/MoveDisabled.png" HoverImageURL="images/Buttons/MoveHover.png"/>
+<ccUI:ToolbarButton runat="server" SkinID="MoveSeriesButton" EnabledImageURL="images/Buttons/MoveSeriesEnabled.png" DisabledImageURL="images/Buttons/MoveSeriesDisabled.png" HoverImageURL="images/Buttons/MoveSeriesHover.png"/>
+<ccUI:ToolbarButton runat="server" SkinID="DeleteButton" EnabledImageURL="images/Buttons/DeleteEnabled.png" DisabledImageURL="images/Buttons/DeleteDisabled.png" HoverImageURL="images/Buttons/DeleteHover.png"/>
+<ccUI:ToolbarButton runat="server" SkinID="DeleteStudyButton" EnabledImageURL="images/Buttons/DeleteStudyEnabled.png" DisabledImageURL="images/Buttons/DeleteStudyDisabled.png" HoverImageURL="images/Buttons/DeleteStudyHover.png"/>
+<ccUI:ToolbarButton runat="server" SkinID="DeleteSeriesButton" EnabledImageURL="images/Buttons/DeleteSeriesEnabled.png" DisabledImageURL="images/Buttons/DeleteSeriesDisabled.png" HoverImageURL="images/Buttons/DeleteSeriesHover.png"/>
+<ccUI:ToolbarButton runat="server" SkinID="DeleteAllButton" EnabledImageURL="images/Buttons/DeleteAllEnabled.png" DisabledImageURL="images/Buttons/DeleteAllDisabled.png" HoverImageURL="images/Buttons/DeleteAllHover.png"/>
+<ccUI:ToolbarButton runat="server" SkinID="EditButton" EnabledImageURL="images/Buttons/EditEnabled.png" DisabledImageURL="images/Buttons/EditDisabled.png" HoverImageURL="images/Buttons/EditHover.png"/>
+<ccUI:ToolbarButton runat="server" SkinID="EditStudyButton" EnabledImageURL="images/Buttons/EditStudyEnabled.png" DisabledImageURL="images/Buttons/EditStudyDisabled.png" HoverImageURL="images/Buttons/EditStudyHover.png"/>
+<ccUI:ToolbarButton runat="server" SkinID="ResetButton" EnabledImageURL="images/Buttons/ResetEnabled.png" DisabledImageURL="images/Buttons/ResetDisabled.png" HoverImageURL="images/Buttons/ResetHover.png"/>
+<ccUI:ToolbarButton runat="server" SkinID="RescheduleButton" EnabledImageURL="images/Buttons/RescheduleEnabled.png" DisabledImageURL="images/Buttons/RescheduleDisabled.png" HoverImageURL="images/Buttons/RescheduleHover.png"/>
+<ccUI:ToolbarButton runat="server" SkinID="AddButton" EnabledImageURL="images/Buttons/AddEnabled.png" DisabledImageURL="images/Buttons/AddDisabled.png" HoverImageURL="images/Buttons/AddHover.png"/>
+<ccUI:ToolbarButton runat="server" SkinID="DoneButton" EnabledImageURL="images/Buttons/DoneEnabled.png" DisabledImageURL="images/Buttons/DoneDisabled.png" HoverImageURL="images/Buttons/DoneHover.png"/>
+<ccUI:ToolbarButton runat="server" SkinID="SearchButton" EnabledImageURL="images/Buttons/SearchEnabled.png" DisabledImageURL="images/Buttons/SearchDisabled.png" HoverImageURL="images/Buttons/SearchHover.png"/>
+<ccUI:ToolbarButton runat="server" SkinID="OKButton" EnabledImageURL="images/Buttons/OKEnabled.png" DisabledImageURL="images/Buttons/OKDisabled.png" HoverImageURL="images/Buttons/OKHover.png"/>
+<ccUI:ToolbarButton runat="server" SkinID="CancelButton" EnabledImageURL="images/Buttons/CancelEnabled.png" DisabledImageURL="images/Buttons/CancelDisabled.png" HoverImageURL="images/Buttons/CancelHover.png"/>
+<ccUI:ToolbarButton runat="server" SkinID="YesButton" EnabledImageURL="images/Buttons/YesEnabled.png" DisabledImageURL="images/Buttons/YesDisabled.png" HoverImageURL="images/Buttons/YesHover.png"/>
+<ccUI:ToolbarButton runat="server" SkinID="NoButton" EnabledImageURL="images/Buttons/NoEnabled.png" DisabledImageURL="images/Buttons/NoDisabled.png" HoverImageURL="images/Buttons/NoHover.png"/>
+<ccUI:ToolbarButton runat="server" SkinID="ApplyButton" EnabledImageURL="images/Buttons/ApplyEnabled.png" DisabledImageURL="images/Buttons/ApplyDisabled.png" HoverImageURL="images/Buttons/ApplyHover.png"/>
+<ccUI:ToolbarButton runat="server" SkinID="UpdateButton" EnabledImageURL="images/Buttons/UpdateEnabled.png" DisabledImageURL="images/Buttons/UpdateDisabled.png" HoverImageURL="images/Buttons/UpdateHover.png"/>
+<ccUI:ToolbarButton runat="server" SkinID="RestoreButton" EnabledImageURL="images/Buttons/RestoreEnabled.png" DisabledImageURL="images/Buttons/RestoreDisabled.png" HoverImageURL="images/Buttons/RestoreHover.png"/>
+<ccUI:ToolbarButton runat="server" SkinID="ReprocessButton" EnabledImageURL="images/Buttons/ReprocessEnabled.png" DisabledImageURL="images/Buttons/ReprocessDisabled.png" HoverImageURL="images/Buttons/ReprocessHover.png"/>
+<ccUI:ToolbarButton runat="server" SkinID="ReprocessStudyButton" EnabledImageURL="images/Buttons/ReprocessStudyEnabled.png" DisabledImageURL="images/Buttons/ReprocessStudyDisabled.png" HoverImageURL="images/Buttons/ReprocessStudyHover.png"/>
+<ccUI:ToolbarButton runat="server" SkinID="ReconcileButton" EnabledImageURL="images/Buttons/ReconcileEnabled.png" DisabledImageURL="images/Buttons/ReconcileDisabled.png" HoverImageURL="images/Buttons/ReconcileHover.png"/>
+<ccUI:ToolbarButton runat="server" SkinID="NewStudyButton" EnabledImageURL="images/Buttons/NewStudyEnabled.png" DisabledImageURL="images/Buttons/NewStudyDisabled.png" HoverImageURL="images/Buttons/NewStudyHover.png"/>
+<ccUI:ToolbarButton runat="server" SkinID="DiscardButton" EnabledImageURL="images/Buttons/DiscardEnabled.png" DisabledImageURL="images/Buttons/DiscardDisabled.png" HoverImageURL="images/Buttons/DiscardHover.png"/>
+<ccUI:ToolbarButton runat="server" SkinID="ResetPasswordButton" EnabledImageURL="images/Buttons/ResetPasswordEnabled.png" DisabledImageURL="images/Buttons/ResetPasswordDisabled.png" HoverImageURL="images/Buttons/ResetPasswordHover.png"/>
+<ccUI:ToolbarButton runat="server" SkinID="ViewImagesButton" EnabledImageURL="images/Buttons/ViewImagesEnabled.png" DisabledImageURL="images/Buttons/ViewImagesDisabled.png" HoverImageURL="images/Buttons/ViewImagesHover.png"/>
+<ccUI:ToolbarButton runat="server" SkinID="AddDataAccessButton" EnabledImageURL="images/Buttons/AddDataAccessEnabled.png" DisabledImageURL="images/Buttons/AddDataAccessDisabled.png" HoverImageURL="images/Buttons/AddDataAccessHover.png"/>
+<ccUI:ToolbarButton runat="server" SkinID="CopyButton" EnabledImageURL="images/Buttons/CopyEnabled.png" DisabledImageURL="images/Buttons/CopyDisabled.png" HoverImageURL="images/Buttons/CopyHover.png"/>
+
+<asp:LinkButton runat="server" SkinId="CloseButton"  CssClass="CloseButton" />
+
+<%-- Tables --%>
+
+<asp:table runat="server" CellPadding="0" BorderWidth="0" CellSpacing="0" Width="100%"/>
+<asp:table runat="server" SkinId="MainContentTable" CellPadding="0" BorderWidth="0" CellSpacing="0" Width="100%" CssClass="MainContentTable"/>
+
+<%-- Images --%>
+<asp:Image runat="server" SkinID="Unchecked" ImageUrl="images/Indicators/unchecked.png" />
+<asp:Image runat="server" SkinID="Checked" ImageUrl="images/Indicators/checked.png" />
+<asp:Image runat="server" SkinID="Watermark" ImageUrl="images/Indicators/Watermark.gif" />
+<asp:Image runat="server" SkinID="Searching" ImageUrl="images/Indicators/Searching.gif" />
+<asp:Image runat="server" SkinID="Loading" ImageUrl="images/MainContent/Loading.gif" />
+<asp:Image runat="server" SkinID="AjaxLoadingBlue" ImageUrl="images/Indicators/ajax-loader-blue.gif" style="margin-right: 7px;" />
+<asp:Image runat="server" SkinID="AjaxLoadingIndicator" ImageUrl="images/Indicators/ajax-loader.gif"  />
+<asp:Image runat="server" SkinID="RefreshEnabled" ImageUrl="images/Indicators/RefreshEnabled.gif" style="margin-right: 7px;" />
+<asp:Image runat="server" SkinID="RefreshEnabledWhite" ImageUrl="images/Indicators/RefreshEnabledWhite.gif" />
+<asp:Image runat="server" SkinID="Spacer" ImageUrl="images/blank.gif" />
+<asp:Image runat="server" SkinID="Warning" ImageUrl="images/Indicators/Warning.png" />
+<asp:Image runat="server" SkinID="WarningSmall" ImageUrl="images/Indicators/WarningSmall.png" />
+
+<asp:Image runat="server" SkinID="GridViewPagerTotalStudiesLeft" ImageUrl="images/Controls/GridView/GridViewPagerTotalStudiesLeft.png" />
+<asp:Image runat="server" SkinID="GridViewPagerTotalStudiesRight" ImageUrl="images/Controls/GridView/GridViewPagerTotalStudiesRight.png" />
+
+
+<%-- GridView --%>
+<asp:GridView runat="server" SkinID="GlobalGridView" AutoGenerateColumns="False" CssClass="GlobalGridView" Width="100%" EmptyDataText="" CellPadding="0" PageSize="20" CellSpacing="0" AllowPaging="True" CaptionAlign="Top" BorderWidth="0px" BackColor="White" BorderColor="Transparent" GridLines="Horizontal"/>
+
+
+
+<%-- Custom Controls --%>
+<ccAsp:InvalidInputIndicator SkinID="InvalidInputIndicator" runat="server" ImageUrl="~/App_Themes/Default/images/Indicators/HelpSmall.png" Visible="true" />
+<ccUI:GridView runat="server" AutoGenerateColumns="False" CssClass="GlobalGridView" CaptionAlign="Top" Width="100%" MouseHoverRowHighlightEnabled="true" RowHighlightColor="#d6f2ce" GridLines="Horizontal" BackColor="White" AllowSorting="True" PageSize="1" CellPadding="0" CellSpacing="0" AllowPaging="True" BorderWidth="0px" HorizontalAlign="left" />
+<ccUI:GridView SkinID="WebViewerMultipleStudiesGridView" runat="server" AutoGenerateColumns="False" CssClass="WebViewerGridView" CaptionAlign="Top" Width="100%" MouseHoverRowHighlightEnabled="true" RowHighlightColor="#666666" GridLines="Horizontal" BackColor="Black" AllowSorting="True" PageSize="1" CellPadding="0" CellSpacing="0" AllowPaging="True" BorderWidth="0px" HorizontalAlign="left" />
+<ccUI:Warning runat="server" SkinID="Warning" ImageUrl="images/Indicators/Warning.png" />
+

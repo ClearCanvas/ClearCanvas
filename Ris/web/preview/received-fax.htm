@@ -1,0 +1,102 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title>Received Fax Preview Page</title>
+		<link href="../css/default.css" rel="stylesheet" type="text/css" />
+		<script type="text/javascript" src="../js/jsx.js"></script>
+		<script type="text/javascript" src="../js/jsml.js"></script>
+		<script type="text/javascript" src="../js/ui.js"></script>
+		<script type="text/javascript" src="../js/ris.js"></script>
+		<script type="text/javascript" src="../js/layout.js"></script>
+		<script type="text/javascript" src="../js/pdfSupport.js"></script>
+		<script type="text/javascript" >
+		var imagePath = "../images";
+		
+		function onBodyLoad()
+		{
+				try
+				{
+					if(!Ris)
+						return;
+
+					var faxboxItem = Ris.getHealthcareContext();
+
+					var faxUrl = faxboxItem ? Ris.getAttachedDocumentUrl(faxboxItem.Document) : "about:blank";
+					
+					var urlExtension = faxUrl.substring(faxUrl.length - 3, faxUrl.length).toLowerCase();;
+					if (urlExtension == "pdf")
+					{
+						// show PDF in the embedded object.  Use exposed methods to hide toolbar
+						var pdfObject = PdfObject("PdfObject", faxUrl);
+						pdfObject.createToolbar("PdfButtons");
+					}
+					else
+					{
+						// redirect all other documents
+						window.location = faxUrl;
+					}
+
+					if(faxboxItem != null)
+					{
+						Field.setValue($("senderNumber"), Ris.formatStringTelephone(faxboxItem.SenderNumber));
+						Field.setValue($("receivedAtNumber"), Ris.formatStringTelephone(faxboxItem.ReceivedAt.Number));
+						Field.setValue($("receivedTime"), Ris.formatDateTime(faxboxItem.ReceivedTime));
+						Field.setValue($("pages"), faxboxItem.Document.Pages);
+						Field.setValue($("status"), faxboxItem.Status.Value);
+					}
+					else
+					{
+						Field.setValue($("senderNumber"), "Not found.");
+						Field.setValue($("receivedAtNumber"), "Not found.");
+						Field.setValue($("pages"), "Not implemented yet.");
+						Field.setValue($("status"), "Not found.");
+					}
+				}
+				catch(e)
+				{
+					var message = "Failed to load details page.  An exception occurred in the script. Error name: " + e.name + ". Error message: " + e.message;
+					Field.setValue($("errorMsg"), message);
+				}
+		}
+
+		</script>
+		<style>
+			html, body {
+				height: 100%;
+				margin: 0;
+				padding: 0;
+			}
+			#faxPreviewInfo {
+				height: 5em;
+			}
+			#PdfButtons {
+				height:32px; 
+				margin: 2px;
+			}
+			#PdfObject {
+				border: 1px solid #BBBBBB; 
+				height:88%; 
+				width:99%;
+			}
+		</style>
+	</head>
+	<body onload="onBodyLoad()">
+		<div id="loadingAnimation"></div>
+		<div id="faxPreviewInfo">
+			<table border="0" cellspacing="0" cellpadding="0" class="PatientDemographicsTable">
+				<tr>
+					<td valign="top" class="DemographicsLabel" nowrap="nowrap">From #: </td><td valign="top" class="DemographicsCell" nowrap="nowrap"><div id="senderNumber"/></td>
+					<td valign="top" class="DemographicsLabel" nowrap="nowrap">To #: </td><td valign="top" class="DemographicsCell" nowrap="nowrap"><div id="receivedAtNumber"/></td>
+					<td valign="top" class="DemographicsLabel" nowrap="nowrap">Received: </td><td valign="top" class="DemographicsCell" nowrap="nowrap"><div id="receivedTime"/></td>
+				</tr>
+				<tr>
+					<td valign="top" class="DemographicsLabel" nowrap="nowrap">Pages: </td><td valign="top" class="DemographicsCell" nowrap="nowrap"><div id="pages"/></td>
+					<td valign="top" class="DemographicsLabel" nowrap="nowrap">Status: </td><td valign="top" class="DemographicsCell" nowrap="nowrap"><div id="status"/></td>
+				</tr>
+			</table>
+		</div>
+		<div id="PdfButtons"></div>
+		<object id="PdfObject" type="application/pdf"></object>
+		<div id="errorMsg" />
+	</body>
+</html>

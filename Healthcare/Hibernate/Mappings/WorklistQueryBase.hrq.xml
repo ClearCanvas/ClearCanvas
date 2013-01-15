@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" ?> 
+<reportquery-mapping assembly="ClearCanvas.Healthcare" namespace="ClearCanvas.Healthcare">
+  <query name="WorklistQueryBase" abstract="true">
+    <join alias="rp" source="mps.Procedure" class="Procedure"/>
+    <join alias="rpt" source="rp.Type"/>
+	  <join alias="o"  source="rp.Order"/>
+    <join alias="ds" source="o.DiagnosticService"/>
+	  <join alias="p" source="o.Patient"/>
+	  <join alias="pp" source="p.Profiles"/>
+	  <result name="WorklistQueryBaseResult">
+      <property name="Patient" source="p"/>
+      <property name="PatientProfile" source="pp"/>
+      <property name="Order" source="o"/>
+      <property name="Procedure" source="rp"/>
+		  <property name="PatientName" source="pp.Name"/>
+		  <property name="PatientMrn" source="pp.Mrn"/>
+		  <property name="AccessionNumber" source="o.AccessionNumber"/>
+      <property name="DiagnosticServiceName" source="ds.Name"/>
+      <property name="ProcedureName" source="rpt.Name"/>
+      <property name="Priority" source="o.Priority"/>
+	  </result>
+	  <criteria name="WorklistQueryBaseCriteria">
+		  <property name="PatientProfileAssigningAuthority" source="pp.Mrn.AssigningAuthority"/>
+	  </criteria>
+  </query>
+</reportquery-mapping>

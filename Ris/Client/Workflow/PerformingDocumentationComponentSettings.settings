@@ -1,0 +1,15 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="ClearCanvas.Ris.Client.Workflow" GeneratedClassName="PerformingDocumentationComponentSettings">
+  <Profiles />
+  <Settings>
+    <Setting Name="InitiallySelectedTabPageName" Description="Name of the documentation page that is initially selected when the documentation workspace is opened" Type="System.String" Scope="Application">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="RadiologistStaffTypeFilters" Description="A comma separated list of staff type codes, used to filter the Assigned Radiolgist lookup field" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">PRAD, PRAR</Value>
+    </Setting>
+    <Setting Name="ShowDicomSeriesTab" Description="Specifies whether the DICOM Series tab is shown.  Set this flag to false to disable this feature." Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

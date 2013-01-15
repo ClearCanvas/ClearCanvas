@@ -1,0 +1,691 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="BoolNo" xml:space="preserve">
+    <value>No</value>
+  </data>
+  <data name="BoolYes" xml:space="preserve">
+    <value>Yes</value>
+  </data>
+  <data name="CommandChange" xml:space="preserve">
+    <value>Change</value>
+  </data>
+  <data name="CommandCreateMultilineGraphic" xml:space="preserve">
+    <value>Create multiline graphic</value>
+  </data>
+  <data name="CommandCreateRectangleGraphic" xml:space="preserve">
+    <value>Create rectangle graphic</value>
+  </data>
+  <data name="CommandCreateROIGraphic" xml:space="preserve">
+    <value>Create ROI graphic</value>
+  </data>
+  <data name="CommandDelete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="CommandEditText" xml:space="preserve">
+    <value>Edit Text</value>
+  </data>
+  <data name="CommandMove" xml:space="preserve">
+    <value>Move</value>
+  </data>
+  <data name="CommandMoveControlPoint" xml:space="preserve">
+    <value>Move control point</value>
+  </data>
+  <data name="CommandMoveGraphic" xml:space="preserve">
+    <value>Move graphic</value>
+  </data>
+  <data name="CommandResize" xml:space="preserve">
+    <value>Resize</value>
+  </data>
+  <data name="CommandStretch" xml:space="preserve">
+    <value>Stretch</value>
+  </data>
+  <data name="DescriptionBlueColorMap" xml:space="preserve">
+    <value>Blue</value>
+  </data>
+  <data name="DescriptionGrayscaleColorMap" xml:space="preserve">
+    <value>(None)</value>
+  </data>
+  <data name="DescriptionGreenColorMap" xml:space="preserve">
+    <value>Green</value>
+  </data>
+  <data name="DescriptionPaletteColorMap" xml:space="preserve">
+    <value>Palette Color</value>
+  </data>
+  <data name="DescriptionPrefetchingStrategyVisibleDisplaySet" xml:space="preserve">
+    <value>Prefetches image data in a display set when display set becomes visible.</value>
+  </data>
+  <data name="DescriptionRedColorMap" xml:space="preserve">
+    <value>Red</value>
+  </data>
+  <data name="ExceptionAdditionalMouseToolAssignmentsMustBeModified" xml:space="preserve">
+    <value>Additional mouse tool assignments must be modified ({0}).</value>
+  </data>
+  <data name="ExceptionFormatAnnotationItemHasNoDisplayName" xml:space="preserve">
+    <value>AnnotationItem has no display name: {0}.</value>
+  </data>
+  <data name="ExceptionImageBufferWin32NotSupported" xml:space="preserve">
+    <value>ImageBufferWin32 is not supported on non-Win32 platforms.</value>
+  </data>
+  <data name="ExceptionImageIsNotGrayscale" xml:space="preserve">
+    <value>Image is not grayscale.</value>
+  </data>
+  <data name="ExceptionIncorrectPixelDataSize" xml:space="preserve">
+    <value>Invalid pixel data (expected size: {0} bytes, actual size: {1} bytes).</value>
+  </data>
+  <data name="ExceptionInvalidAnnotationLayoutXml" xml:space="preserve">
+    <value>Invalid Annotation Layout XML ({0}).</value>
+  </data>
+  <data name="ExceptionInvalidFilteredAnnotationLayoutXml" xml:space="preserve">
+    <value>Invalid Filtered Annotation Layout XML ({0}).</value>
+  </data>
+  <data name="ExceptionInvalidNormalizedRectangle" xml:space="preserve">
+    <value>({0},{1},{2},{3}) is an invalid normalized rectangle.  Normalized rectangle coordinates must be between 0.0 and 1.0 with Right &gt; Left, Bottom &gt; Top.</value>
+  </data>
+  <data name="ExceptionInvalidParentRectangle" xml:space="preserve">
+    <value>({0},{1},{2},{3}) is an invalid parent rectangle.  Parent rectangle must be such that all coordinates are positive with Right &gt; Left, Bottom &gt; Top.</value>
+  </data>
+  <data name="ExceptionInvalidPatientID" xml:space="preserve">
+    <value>Patient ID must not be empty.</value>
+  </data>
+  <data name="ExceptionInvalidRotationValue" xml:space="preserve">
+    <value>Rotation value must be 0, 90, 180 or 270.</value>
+  </data>
+  <data name="ExceptionInvalidStandardPathItem" xml:space="preserve">
+    <value>{0} is an invalid standard path item.</value>
+  </data>
+  <data name="ExceptionInvalidStride" xml:space="preserve">
+    <value>Stride improperly calculated (correct stride = {0}, calculated stride = {1}).</value>
+  </data>
+  <data name="ExceptionLayoutIsNotRectangular" xml:space="preserve">
+    <value>The layout of the physical workspace is either non-rectangular or has not been set.</value>
+  </data>
+  <data name="ExceptionLinearLutDataCannotBeSet" xml:space="preserve">
+    <value>Linear Luts have no settable data.</value>
+  </data>
+  <data name="ExceptionLUTIndexOutOfRange" xml:space="preserve">
+    <value>LUT index out of range (index = {0}).</value>
+  </data>
+  <data name="ExceptionLUTInputOutputRange" xml:space="preserve">
+    <value>Output range of previous LUT does not match input range of current LUT.</value>
+  </data>
+  <data name="ExceptionLUTLastOutputRange" xml:space="preserve">
+    <value>Output range of last LUT is not 8 bits.</value>
+  </data>
+  <data name="ExceptionLUTMinGreaterThanEqualToMax" xml:space="preserve">
+    <value>Minimum input value greater than or equal to maximum input value.</value>
+  </data>
+  <data name="ExceptionLUTNotAdded" xml:space="preserve">
+    <value>Cannot generate composite LUT because no LUTs have been added yet.</value>
+  </data>
+  <data name="ExceptionMaximumOutputValueIsNotSettable" xml:space="preserve">
+    <value>The maximum output value is not settable.</value>
+  </data>
+  <data name="ExceptionMinimumOutputValueIsNotSettable" xml:space="preserve">
+    <value>The minimum output value is not settable.</value>
+  </data>
+  <data name="ExceptionMinMaxInputValuesNotSet" xml:space="preserve">
+    <value>The minimum and maximum input values have not been set.</value>
+  </data>
+  <data name="ExceptionMustOverrideSetMemento" xml:space="preserve">
+    <value>You must override SetMemento in order to restore state from a previous call to CreateMemento.</value>
+  </data>
+  <data name="ExceptionNoDisplaySetAssociatedWithImageBoxTile" xml:space="preserve">
+    <value>Is the ImageBox to which this Tile belongs supposed to be empty?</value>
+  </data>
+  <data name="ExceptionNoPresentationImageAssociatedWithTile" xml:space="preserve">
+    <value>Is the tile supposed to be empty?</value>
+  </data>
+  <data name="ExceptionNoSopsExistInSeries" xml:space="preserve">
+    <value>No SOPs exist in this series.  SeriesDescription cannot be determined.</value>
+  </data>
+  <data name="ExceptionObjectMustBeSingleType" xml:space="preserve">
+    <value>Object must be of Type Single.</value>
+  </data>
+  <data name="ExceptionSopInstanceValidationFailed" xml:space="preserve">
+    <value>Sop Instance validation failed.</value>
+  </data>
+  <data name="ExceptionStatefulGraphicMustBeIMemorable" xml:space="preserve">
+    <value>For undo support, your StatefulGraphic subclass must implement IMemorable.</value>
+  </data>
+  <data name="FormatAdjustableDataLutDescription" xml:space="preserve">
+    <value>{0} [C:{1:F2}% B:{2:F2}%]</value>
+  </data>
+  <data name="FormatAreaPixels" xml:space="preserve">
+    <value>Area: {0:F1} pixels</value>
+  </data>
+  <data name="FormatAreaSquareCm" xml:space="preserve">
+    <value>Area: {0:F3} cm²</value>
+  </data>
+  <data name="FormatAreaSquareMm" xml:space="preserve">
+    <value>Area: {0:F1} mm²</value>
+  </data>
+  <data name="FormatDefaultMultiFrameOverlayGraphicName" xml:space="preserve">
+    <value>Overlay Plane ({0} #{1}, Fr #{2})</value>
+    <comment>{0} is the overlay source, {1} is the overlay group index, {2} is the overlay frame index</comment>
+  </data>
+  <data name="FormatDefaultSingleFrameOverlayGraphicName" xml:space="preserve">
+    <value>Overlay Plane ({0} #{1})</value>
+    <comment>{0} is the overlay source, {1} is the overlay group index, {2} is the overlay frame index</comment>
+  </data>
+  <data name="FormatDescriptionBasicLinearLut" xml:space="preserve">
+    <value>W:{0} L:{1}</value>
+  </data>
+  <data name="FormatDescriptionIdentityVoiLinearLut" xml:space="preserve">
+    <value>W:{0} L:{1} (Identity)</value>
+  </data>
+  <data name="FormatDescriptionMinMaxCalculatedLinearLut" xml:space="preserve">
+    <value>W:{0} L:{1} (Min/Max)</value>
+  </data>
+  <data name="FormatDescriptionModalityLutLinear" xml:space="preserve">
+    <value>Slope: {0:F2} Int.: {1:F2}</value>
+  </data>
+  <data name="FormatDescriptionPresentationStateLinearLut" xml:space="preserve">
+    <value>W:{0} L:{1} ({2})</value>
+  </data>
+  <data name="FormatExceptionReason" xml:space="preserve">
+    <value>Reason: {0}</value>
+  </data>
+  <data name="FormatLengthCm" xml:space="preserve">
+    <value>{0:F2} cm</value>
+  </data>
+  <data name="FormatLengthMm" xml:space="preserve">
+    <value>{0:F1} mm</value>
+  </data>
+  <data name="FormatLengthPixels" xml:space="preserve">
+    <value>{0:F1} pixels</value>
+  </data>
+  <data name="FormatMean" xml:space="preserve">
+    <value>Mean: {0}</value>
+  </data>
+  <data name="FormatMouseButtonShortcutDescription" xml:space="preserve">
+    <value>{0} : {1}</value>
+  </data>
+  <data name="FormatMouseToolHasNoAssignment" xml:space="preserve">
+    <value>The mouse tool does not have a shortcut assignment ({0}).  The tool cannot be activated.</value>
+  </data>
+  <data name="FormatMouseToolInvalidAssignment" xml:space="preserve">
+    <value>The mouse tool has an invalid shortcut assignment ({0}).</value>
+  </data>
+  <data name="FormatMouseWheelShortcutDescription" xml:space="preserve">
+    <value>Wheel : {0}</value>
+  </data>
+  <data name="FormatStdDev" xml:space="preserve">
+    <value>Std Dev: {0}</value>
+  </data>
+  <data name="LabelError" xml:space="preserve">
+    <value>Error:</value>
+  </data>
+  <data name="LabelUnknown" xml:space="preserve">
+    <value>Unknown</value>
+  </data>
+  <data name="MenuDeleteVertex" xml:space="preserve">
+    <value>Delete Vertex</value>
+  </data>
+  <data name="MenuEditText" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="MenuInsertVertex" xml:space="preserve">
+    <value>Insert Vertex</value>
+  </data>
+  <data name="MenuRename" xml:space="preserve">
+    <value>Rename</value>
+  </data>
+  <data name="MenuShowAnalysis" xml:space="preserve">
+    <value>Show Analysis</value>
+  </data>
+  <data name="MessageContactPacsAdmin" xml:space="preserve">
+    <value>Please contact your PACS administrator for assistance.</value>
+  </data>
+  <data name="MessageErrorCloningDisplaySet" xml:space="preserve">
+    <value>An error has occured while attempting to clone a display set.  Please check the log for more details.</value>
+  </data>
+  <data name="MessageErrorCloningPresentationImage" xml:space="preserve">
+    <value>An error has occured while attempting to clone an image.  Please check the log for more details.</value>
+  </data>
+  <data name="MessageErrorLoadingAnnotationLayout" xml:space="preserve">
+    <value>An unrecoverable error occurred while attempting to load the text overlay.  Please see the log for details.</value>
+  </data>
+  <data name="MessageFailedToApplyDicomHeaderGraphics" xml:space="preserve">
+    <value>An error occurred while trying to add graphics from the image header.  Some or all of them will not appear.</value>
+  </data>
+  <data name="MessageFormatLoadStudyIncomplete" xml:space="preserve">
+    <value>ClearCanvas was only able to load {0} of the {1} images you requested.</value>
+  </data>
+  <data name="MessageFormatOpeningImages" xml:space="preserve">
+    <value>Opening {0} of {1} images</value>
+  </data>
+  <data name="MessageFormatXStudiesIncomplete" xml:space="preserve">
+    <value>{0} studies were only partially loaded.</value>
+  </data>
+  <data name="MessageFormatXStudiesInUse" xml:space="preserve">
+    <value>{0} studies are in use.</value>
+  </data>
+  <data name="MessageFormatXStudiesNearline" xml:space="preserve">
+    <value>{0} studies are nearline.</value>
+  </data>
+  <data name="MessageFormatXStudiesNotFound" xml:space="preserve">
+    <value>{0} studies were not found.</value>
+  </data>
+  <data name="MessageFormatXStudiesNotLoaded" xml:space="preserve">
+    <value>{0} studies could not be loaded.</value>
+  </data>
+  <data name="MessageFormatXStudiesOffline" xml:space="preserve">
+    <value>{0} studies are offline.</value>
+  </data>
+  <data name="MessageLoadMultipleStudiesFailurePrefix" xml:space="preserve">
+    <value>The following failures occurred while loading studies:</value>
+  </data>
+  <data name="MessageLoadStudyCompleteFailure" xml:space="preserve">
+    <value>ClearCanvas was unable to load any of the images you requested.</value>
+  </data>
+  <data name="MessageNoRendererPluginsExist" xml:space="preserve">
+    <value>No renderer plugins exist; defaulting to GDI renderer.</value>
+  </data>
+  <data name="MessageNoVisibleDisplaySets" xml:space="preserve">
+    <value>No images could be loaded for display.</value>
+  </data>
+  <data name="MessageOneStudyIncomplete" xml:space="preserve">
+    <value>One study was only partially loaded.</value>
+  </data>
+  <data name="MessageOneStudyInUse" xml:space="preserve">
+    <value>One study is in use.</value>
+  </data>
+  <data name="MessageOneStudyNearline" xml:space="preserve">
+    <value>One study is nearline.</value>
+  </data>
+  <data name="MessageOneStudyNotFound" xml:space="preserve">
+    <value>One study was not found.</value>
+  </data>
+  <data name="MessageOneStudyNotLoaded" xml:space="preserve">
+    <value>One study could not be loaded.</value>
+  </data>
+  <data name="MessageOneStudyOffline" xml:space="preserve">
+    <value>One study is offline.</value>
+  </data>
+  <data name="MessagePresentationStateApplicationFailure" xml:space="preserve">
+    <value>An error has occured while attempting to load a presentation state. The presentation state may not have been loaded in its entirety. Please check the log for more details.</value>
+  </data>
+  <data name="MessagePresentationStateDeserializeFailure" xml:space="preserve">
+    <value>An error has occurred while deserializing the image presentation state.</value>
+  </data>
+  <data name="MessagePresentationStateReadFailure" xml:space="preserve">
+    <value>An error has occured while attempting to read a presentation state file. Please check the log for more details.</value>
+  </data>
+  <data name="MessageRoiAnalysisError" xml:space="preserve">
+    <value>An error has occurred while analyzing the Roi.
+Please check the log for more details.</value>
+  </data>
+  <data name="MessageLoadStudyFailedInUse" xml:space="preserve">
+    <value>The study is being processed by the server and cannot be loaded at this time.  Please try again later.</value>
+  </data>
+  <data name="MessageLoadStudyFailedNearlineNoRestore" xml:space="preserve">
+    <value>The study is nearline and cannot be restored at this time.  Please contact your PACS administrator to restore the study.</value>
+  </data>
+  <data name="MessageLoadStudyFailedNotFound" xml:space="preserve">
+    <value>The study could not be found.</value>
+  </data>
+  <data name="MessageLoadStudyFailedOffline" xml:space="preserve">
+    <value>The study cannot be loaded because it is offline. Please contact your PACS administrator to restore the study.</value>
+  </data>
+  <data name="NamePrefetchingStrategyVisibleDisplaySet" xml:space="preserve">
+    <value>Visible Display Set</value>
+  </data>
+  <data name="SeparatorPatientDescription" xml:space="preserve">
+    <value>-</value>
+  </data>
+  <data name="SeparatorPatientsLoaded" xml:space="preserve">
+    <value>::</value>
+  </data>
+  <data name="StringNotApplicable" xml:space="preserve">
+    <value>N/A</value>
+  </data>
+  <data name="StringNoValue" xml:space="preserve">
+    <value>---</value>
+  </data>
+  <data name="SuffixFormatMREchoDisplaySet" xml:space="preserve">
+    <value>Echo #{0}</value>
+  </data>
+  <data name="SuffixFormatMultiframeDisplaySet" xml:space="preserve">
+    <value>Multiframe #{0}</value>
+  </data>
+  <data name="SuffixSingleImagesDisplaySet" xml:space="preserve">
+    <value>Single images</value>
+  </data>
+  <data name="SuffixFormatSingleFrameDisplaySet" xml:space="preserve">
+    <value>Image/Frame#: {0}/{1}</value>
+  </data>
+  <data name="LabelPresentationVoiDataLut" xml:space="preserve">
+    <value>USER</value>
+  </data>
+  <data name="LabelPresentationVoiLinearLut" xml:space="preserve">
+    <value>USER</value>
+  </data>
+  <data name="SuffixFormatSingleImageDisplaySet" xml:space="preserve">
+    <value>Image #{0}</value>
+  </data>
+  <data name="SuffixFormatSingleImageDisplaySetWithLateralityViewPosition" xml:space="preserve">
+    <value>{0} (Image# {1})</value>
+  </data>
+  <data name="SuffixFormatSingleReferencedFrameDisplaySet" xml:space="preserve">
+    <value>Series/Image/Frame: {0}/{1}/{2}</value>
+  </data>
+  <data name="SuffixFormatSingleReferencedImageDisplaySet" xml:space="preserve">
+    <value>Series/Image#: {0}/{1}</value>
+  </data>
+  <data name="SuffixFormatSingleReferencedImageDisplaySetWithLateralityViewPosition" xml:space="preserve">
+    <value>{0} (Series/Image#: {1}/{2})</value>
+  </data>
+  <data name="MessageReferencedKeyImageFrameNotFound" xml:space="preserve">
+    <value>The referenced key image was found, but does not contain the specified frame.</value>
+  </data>
+  <data name="MessageReferencedKeyImageFromOtherStudy" xml:space="preserve">
+    <value>The referenced key image could not be displayed because it is not part of the loaded study.</value>
+  </data>
+  <data name="MessageUnsupportedImageType" xml:space="preserve">
+    <value>Unsupported Image Type: {0}</value>
+  </data>
+  <data name="MessageErrorDisplayingOverlays" xml:space="preserve">
+    <value>One or more overlays
+cannot be displayed.
+Use image with caution.</value>
+  </data>
+  <data name="MessageLoadStudyFailedNearline" xml:space="preserve">
+    <value>The study is currently being restored from archive and cannot be loaded at this time.  Please try again later.</value>
+  </data>
+  <data name="FormatReason" xml:space="preserve">
+    <value>Reason: {0}</value>
+  </data>
+  <data name="MessageRenderingPipelineFailure" xml:space="preserve">
+    <value>An error has occurred in the rendering pipeline.</value>
+  </data>
+  <data name="FormatAnnotationItem" xml:space="preserve">
+    <value>{0}: {1}</value>
+  </data>
+  <data name="ValueNil" xml:space="preserve">
+    <value>-</value>
+  </data>
+  <data name="FormatDescriptionNamedLinearLut" xml:space="preserve">
+    <value>W:{0} L:{1} ({2})</value>
+  </data>
+  <data name="LabelUnknownServer" xml:space="preserve">
+    <value>Unknown</value>
+  </data>
+  <data name="MessageInfoNoStudyLoader" xml:space="preserve">
+    <value>The study is on a non-streaming server and must be retrieved and reopened.</value>
+  </data>
+  <data name="MessageInfoStudyCouldNotBeLoaded" xml:space="preserve">
+    <value>The study could not be loaded.  Please contact your PACS administrator.</value>
+  </data>
+  <data name="MessageInfoStudyInUse" xml:space="preserve">
+    <value>The study is in use.  Please close the current study, wait a few minutes, then try loading the study again.</value>
+  </data>
+  <data name="MessageInfoStudyNearline" xml:space="preserve">
+    <value>The study is nearline.  If your PACS is a ClearCanvas ImageServer, please try opening the study manually, then wait a few minutes before trying again.
+Alternately, the study can be brought back online by a PACS administrator.</value>
+  </data>
+  <data name="MessageInfoStudyOffline" xml:space="preserve">
+    <value>The study is offline and must be brought back online by a PACS administrator.</value>
+  </data>
+  <data name="MessageFormatStudyNotLoadable" xml:space="preserve">
+    <value>{0}
+{1}</value>
+  </data>
+  <data name="FormatDescriptionModalityDisplaySet" xml:space="preserve">
+    <value>[{0}] All Images</value>
+  </data>
+  <data name="FormatNameModalityDisplaySet" xml:space="preserve">
+    <value>[{0}] All Images</value>
+  </data>
+  <data name="DescriptionUnits1cm" xml:space="preserve">
+    <value>1/centimetre</value>
+  </data>
+  <data name="DescriptionUnitsBqml" xml:space="preserve">
+    <value>becquerels/millilitre</value>
+  </data>
+  <data name="DescriptionUnitsCm2" xml:space="preserve">
+    <value>square centimetre</value>
+  </data>
+  <data name="DescriptionUnitsCm2ml" xml:space="preserve">
+    <value>square centimetre/millilitre</value>
+  </data>
+  <data name="DescriptionUnitsCnts" xml:space="preserve">
+    <value>counts</value>
+  </data>
+  <data name="DescriptionUnitsCps" xml:space="preserve">
+    <value>counts/second</value>
+  </data>
+  <data name="DescriptionUnitsGml" xml:space="preserve">
+    <value>grams/millilitre</value>
+  </data>
+  <data name="DescriptionUnitsHU" xml:space="preserve">
+    <value>Hounsfield units</value>
+  </data>
+  <data name="DescriptionUnitsMgminml" xml:space="preserve">
+    <value>milligrams/minute/millilitre</value>
+  </data>
+  <data name="DescriptionUnitsMlg" xml:space="preserve">
+    <value>millilitre/grams</value>
+  </data>
+  <data name="DescriptionUnitsMlming" xml:space="preserve">
+    <value>millilitre/minute/grams</value>
+  </data>
+  <data name="DescriptionUnitsMlminml" xml:space="preserve">
+    <value>millilitre/minute/millilitre</value>
+  </data>
+  <data name="DescriptionUnitsMlml" xml:space="preserve">
+    <value>millilitre/millilitre</value>
+  </data>
+  <data name="DescriptionUnitsOD" xml:space="preserve">
+    <value>1/1000 optical density</value>
+  </data>
+  <data name="DescriptionUnitsPcnt" xml:space="preserve">
+    <value>percent</value>
+  </data>
+  <data name="DescriptionUnitsPropcnts" xml:space="preserve">
+    <value>proportional to counts</value>
+  </data>
+  <data name="DescriptionUnitsPropcps" xml:space="preserve">
+    <value>proportional to counts/second</value>
+  </data>
+  <data name="DescriptionUnitsStddev" xml:space="preserve">
+    <value>standard deviations</value>
+  </data>
+  <data name="DescriptionUnitsUmolminml" xml:space="preserve">
+    <value>micromoles/minute/millilitre</value>
+  </data>
+  <data name="DescriptionUnitsUmolml" xml:space="preserve">
+    <value>micromoles/millilitre</value>
+  </data>
+  <data name="DescriptionUnitsUnspecified" xml:space="preserve">
+    <value>unknown</value>
+  </data>
+  <data name="LabelUnits1cm" xml:space="preserve">
+    <value>1/cm</value>
+  </data>
+  <data name="LabelUnitsBqml" xml:space="preserve">
+    <value>Bq/ml</value>
+  </data>
+  <data name="LabelUnitsCm2" xml:space="preserve">
+    <value>cm²</value>
+  </data>
+  <data name="LabelUnitsCm2ml" xml:space="preserve">
+    <value>cm²/ml</value>
+  </data>
+  <data name="LabelUnitsCnts" xml:space="preserve">
+    <value>counts</value>
+  </data>
+  <data name="LabelUnitsCps" xml:space="preserve">
+    <value>counts/s</value>
+  </data>
+  <data name="LabelUnitsGml" xml:space="preserve">
+    <value>g/ml</value>
+  </data>
+  <data name="LabelUnitsHU" xml:space="preserve">
+    <value>HU</value>
+  </data>
+  <data name="LabelUnitsMgminml" xml:space="preserve">
+    <value>mg/min/ml</value>
+  </data>
+  <data name="LabelUnitsMlg" xml:space="preserve">
+    <value>ml/g</value>
+  </data>
+  <data name="LabelUnitsMlming" xml:space="preserve">
+    <value>ml/min/g</value>
+  </data>
+  <data name="LabelUnitsMlminml" xml:space="preserve">
+    <value>ml/min/ml</value>
+  </data>
+  <data name="LabelUnitsMlml" xml:space="preserve">
+    <value>ml/ml</value>
+  </data>
+  <data name="LabelUnitsMm2" xml:space="preserve">
+    <value>mm²</value>
+  </data>
+  <data name="LabelUnitsOD" xml:space="preserve">
+    <value>1/1000 OD</value>
+  </data>
+  <data name="LabelUnitsPcnt" xml:space="preserve">
+    <value>%</value>
+  </data>
+  <data name="LabelUnitsPixels" xml:space="preserve">
+    <value>pixels</value>
+  </data>
+  <data name="LabelUnitsPropcnts" xml:space="preserve">
+    <value>prop. to counts</value>
+  </data>
+  <data name="LabelUnitsPropcps" xml:space="preserve">
+    <value>prop. to counts/s</value>
+  </data>
+  <data name="LabelUnitsStddev" xml:space="preserve">
+    <value>σ</value>
+  </data>
+  <data name="LabelUnitsUmolminml" xml:space="preserve">
+    <value>µmol/min/ml</value>
+  </data>
+  <data name="LabelUnitsUmolml" xml:space="preserve">
+    <value>µmol/ml</value>
+  </data>
+  <data name="LabelUnitsUnspecified" xml:space="preserve">
+    <value />
+  </data>
+  <data name="SuffixFormatKeyImageDisplaySet" xml:space="preserve">
+    <value>Key Images</value>
+  </data>
+</root>

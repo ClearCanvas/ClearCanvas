@@ -1,0 +1,263 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ColumnActive" xml:space="preserve">
+    <value>Active</value>
+  </data>
+  <data name="ColumnAuthorityGroup" xml:space="preserve">
+    <value>Authority Group</value>
+  </data>
+  <data name="ColumnAuthorityGroupDataGroup" xml:space="preserve">
+    <value>Data Access Authority Group</value>
+  </data>
+  <data name="ColumnAuthorityGroupDescription" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="ColumnAuthorityGroupName" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="ColumnAuthorityTokenDescription" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="ColumnAuthorityTokenName" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="ColumnCreatedOn" xml:space="preserve">
+    <value>Created On</value>
+  </data>
+  <data name="ColumnEmailAddress" xml:space="preserve">
+    <value>Email Address</value>
+  </data>
+  <data name="ColumnEnabled" xml:space="preserve">
+    <value>Enabled</value>
+  </data>
+  <data name="ColumnLastLoginTime" xml:space="preserve">
+    <value>Last Login Time</value>
+  </data>
+  <data name="ColumnPasswordExpiry" xml:space="preserve">
+    <value>Password Expiry</value>
+  </data>
+  <data name="ColumnSessionCount" xml:space="preserve">
+    <value>Sessions</value>
+  </data>
+  <data name="ColumnUser" xml:space="preserve">
+    <value>User</value>
+  </data>
+  <data name="ColumnUserId" xml:space="preserve">
+    <value>User ID</value>
+  </data>
+  <data name="ColumnUserName" xml:space="preserve">
+    <value>Display Name</value>
+  </data>
+  <data name="ColumnValidFrom" xml:space="preserve">
+    <value>Valid From</value>
+  </data>
+  <data name="ColumnValidUntil" xml:space="preserve">
+    <value>Valid Until</value>
+  </data>
+  <data name="DescriptionDataAccessGroupChange" xml:space="preserve">
+    <value>Disabling data access for an authority group removes the association between the authority group and imaging studies.  Users associated with the authority group will no longer be able to see their imaging studies.  Please re-enter your password to confirm this change.
+
+Note: This change may not take effect immediately.</value>
+  </data>
+  <data name="ExceptionAuthorityGroupIsNotEmpty_MultitpleUsers" xml:space="preserve">
+    <value>There are currently {0} users in '{1}' user group. Are you sure you want to delete this group?</value>
+  </data>
+  <data name="ExceptionAuthorityGroupIsNotEmpty_OneUser" xml:space="preserve">
+    <value>There is currently one user in '{0}' user group. Are you sure you want to delete this group?</value>
+  </data>
+  <data name="ExceptionSaveAuthorityGroup" xml:space="preserve">
+    <value>Unable to save Authority Group</value>
+  </data>
+  <data name="ExceptionSaveUser" xml:space="preserve">
+    <value>Unable to save User</value>
+  </data>
+  <data name="ExceptionUserAccessDenied" xml:space="preserve">
+    <value>Unable to update Authority Group, the password entered is incorrect.</value>
+  </data>
+  <data name="LabelTerminateSessions" xml:space="preserve">
+    <value>Terminate...</value>
+  </data>
+  <data name="MenuAdmin" xml:space="preserve">
+    <value>Admin</value>
+  </data>
+  <data name="MenuAuthorityGroups" xml:space="preserve">
+    <value>Authority Groups</value>
+  </data>
+  <data name="MenuUsers" xml:space="preserve">
+    <value>Users</value>
+  </data>
+  <data name="MessageCannotDeleteOwnCurrentSession" xml:space="preserve">
+    <value>You cannot delete your own current session.</value>
+  </data>
+  <data name="MessageConfirmDeleteSelectedItems" xml:space="preserve">
+    <value>Are you sure you want to delete the selected item(s)?</value>
+  </data>
+  <data name="MessageConfirmImportLocallyDefinedAuthorityTokens" xml:space="preserve">
+    <value>Import authority tokens defined in locally installed plugins?</value>
+  </data>
+  <data name="MessageConfirmTerminateSelectedSessions" xml:space="preserve">
+    <value>Terminating a session that is in use may cause the associated user to lose unsaved data.  Are you sure you want to terminate the selected session(s)?</value>
+  </data>
+  <data name="MessageServerOffline" xml:space="preserve">
+    <value>The server is currently offline.  Please try again later.</value>
+  </data>
+  <data name="TitleAddAuthorityGroup" xml:space="preserve">
+    <value>Add Authority Group</value>
+  </data>
+  <data name="TitleAddUser" xml:space="preserve">
+    <value>Add User</value>
+  </data>
+  <data name="TitleAuthorityGroup" xml:space="preserve">
+    <value>Authority Group Admin</value>
+  </data>
+  <data name="TitleDuplicate" xml:space="preserve">
+    <value>Duplicate</value>
+  </data>
+  <data name="TitleImport" xml:space="preserve">
+    <value>Import</value>
+  </data>
+  <data name="TitlePasswordConfirm" xml:space="preserve">
+    <value>Please Confirm Update</value>
+  </data>
+  <data name="TitleResetPassword" xml:space="preserve">
+    <value>Reset Password</value>
+  </data>
+  <data name="TitleUpdateAuthorityGroup" xml:space="preserve">
+    <value>Update Authority Group</value>
+  </data>
+  <data name="TitleUpdateUser" xml:space="preserve">
+    <value>Update User</value>
+  </data>
+  <data name="TitleUser" xml:space="preserve">
+    <value>User Admin</value>
+  </data>
+  <data name="TitleViewUserSessions" xml:space="preserve">
+    <value>View User's Sessions</value>
+  </data>
+  <data name="TooltipDuplicateAuthorityGroup" xml:space="preserve">
+    <value>Duplicate the selected authority group</value>
+  </data>
+  <data name="TooltipImportAuthorityGroup" xml:space="preserve">
+    <value>Import authority tokens and groups from local plugins</value>
+  </data>
+  <data name="TooltipTerminateSessions" xml:space="preserve">
+    <value>Terminate selected session(s)</value>
+  </data>
+</root>

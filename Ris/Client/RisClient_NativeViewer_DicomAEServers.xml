@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<ServerTreeRoot xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <ServerGroupNode>
+    <ChildGroups />
+    <ChildServers>
+      <Server>
+        <NameOfServer>Boardroom</NameOfServer>
+        <Location />
+        <Host>cc_uhn490</Host>
+        <AETitle>BOARDROOM</AETitle>
+        <Port>104</Port>
+        <IsStreaming>true</IsStreaming>
+        <HeaderServicePort>50221</HeaderServicePort>
+        <WadoServicePort>1000</WadoServicePort>
+        <IsDefault>true</IsDefault>
+      </Server>
+    </ChildServers>
+    <NameOfGroup>My Servers</NameOfGroup>
+  </ServerGroupNode>
+  <LocalDataStoreNode>
+    <OfflineAE>AETITLE</OfflineAE>
+  </LocalDataStoreNode>
+</ServerTreeRoot>

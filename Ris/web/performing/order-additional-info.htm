@@ -1,0 +1,684 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title>Order Additional Info</title>
+		<link href="../css/default.css" rel="stylesheet" type="text/css" />
+		<link href="../css/tabs.css" rel="stylesheet" type="text/css" />
+		<script type="text/javascript" SRC="../js/SparrowScripts/datepicker/ss_datepicker_settings.js"></script>
+		<script type="text/javascript" SRC="../js/SparrowScripts/datepicker/ss_datepicker.js"></script>
+		<script type="text/javascript" SRC="../js/SparrowScripts/timepicker/ss_timepicker_settings.js"></script>
+		<script type="text/javascript" SRC="../js/SparrowScripts/timepicker/ss_timepicker.js"></script>
+		<script type="text/javascript" src="../js/jsx.js"></script>
+		<script type="text/javascript" src="../js/jsml.js"></script>
+		<script type="text/javascript" src="../js/ui.js"></script>
+		<script type="text/javascript" src="../js/ris.js"></script>
+		<script type="text/javascript" src="../js/preview.js"></script>
+		<script type="text/javascript" src="../js/layout.js"></script>
+		<script type="text/javascript" src="../js/tabs.js"></script>
+		<script type="text/javascript" >
+			var data = {};
+			var errorProvider = new ErrorProvider();
+			var canEdit = false;
+
+			function onBodyLoad()
+			{
+				try
+				{
+					scaleWidth();
+
+					if(Ris)
+					{
+						canEdit = Ris.getTag("ReadOnly") !== "true";
+						data = JSML.parse(Ris.getTag("PreExamDetails")) || {};
+					}
+
+					// Vitals Tab
+					data.vitals = data.vitals || {};
+					data.patientScreening = data.patientScreening || {};
+					data.labResults = data.labResults || {};
+					data.translation = data.translation || {};
+
+					data.patientScreening.drugAllergies = data.patientScreening.drugAllergies || [];
+					data.labResults.psa = data.labResults.psa || [];
+
+					initVitalsTable();
+					initPatientScreeningTable();
+					initLabResultsTable();
+					initTranslationTable();
+
+					initModifiedCallback();
+				}
+				catch(e)
+				{
+					var message = "Failed to load details page.  An exception occurred in the script. Error name: " + e.name + ". Error message: " + e.message;
+					Field.setValue($("myForm"), message);
+				}
+			}
+
+			function initVitalsTable()
+			{
+				var weightTable = Table.createTable($("weightTable"), { editInPlace: canEdit, flow: true, checkBoxes: false, empty: Table.defaultEmptyOption },
+					[
+						{	label: "Weight",
+							cellType: "text",
+							getValue: function(item) { return item.weightValue; },
+							setValue: function(item, value) 
+							{ 
+								item.weightValue = parseFloat(value) || null; 
+							},
+							getError: function(item) { return null; }
+						},
+						{	label: "lbs/kg",
+							cellType: "choice",
+							choices: [ "kg", "lbs" ],
+							getValue: function(item) { return item.weightUnit; },
+							setValue: function(item, value) { item.weightUnit = value; },
+							getError: function(item) { return item.weightValue ? "Value required" : null; }
+						}
+					]);
+				weightTable.errorProvider = errorProvider;   // share errorProvider with the rest of the form
+				weightTable.bindItems([data.vitals]);
+
+				var heightTable = Table.createTable($("heightTable"), { editInPlace: canEdit, flow: true, checkBoxes: false, empty: Table.defaultEmptyOption },
+					[
+						{	label: "Height",
+							cellType: "text",
+							getValue: function(item) { return item.heightValue; },
+							setValue: function(item, value) { item.heightValue = parseFloat(value) || null; },
+							getError: function(item) { return null; }
+						},
+						{	label: "cm/in",
+							cellType: "choice",
+							choices: [ "cm", "inches" ],
+							getValue: function(item) { return item.heightUnit; },
+							setValue: function(item, value) { item.heightUnit = value; },
+							getError: function(item) { return item.heightValue ? "Value Required" : null; }
+						}
+					]);
+				heightTable.errorProvider = errorProvider;   // share errorProvider with the rest of the form
+				heightTable.bindItems([data.vitals]);
+
+				var bloodGlucosLevelTable = Table.createTable($("bloodGlucoseLevelTable"), { editInPlace: canEdit, flow: true, checkBoxes: false, empty: Table.defaultEmptyOption },
+					[
+						{	label: "Blood Glucose Level",
+							cellType: "text",
+							getValue: function(item) { return item.bloodGlucoseLevel; },
+							setValue: function(item, value) { item.bloodGlucoseLevel = parseFloat(value) || null; },
+							getError: function(item) { return null; }
+						},
+						{	label: "mmol/L, mg/DL",
+							cellType: "choice",
+							choices: [ "mmol/L", "mg/DL" ],
+							getValue: function(item) { return item.bloodGlucoseLevelUnit; },
+							setValue: function(item, value) { item.bloodGlucoseLevelUnit = value; },
+							getError: function(item) { return item.bloodGlucoseLevel ? "Value Required" : null; }
+						}
+					]);
+				bloodGlucosLevelTable.errorProvider = errorProvider;   // share errorProvider with the rest of the form
+				bloodGlucosLevelTable.bindItems([data.vitals]);
+
+				var otherVitalsTable = Table.createTable($("otherVitalsTable"), { editInPlace: canEdit, flow: true, checkBoxes: false, empty: Table.defaultEmptyOption },
+					[
+						{	label: "Blood Pressure (BP)",
+							cellType: "text",
+							getValue: function(item) { return item.bloodPressure; },
+							setValue: function(item, value) { item.bloodPressure = value; },
+							getError: function(item) { return null; }
+						},
+						{	label: "Heart Rate (bpm)",
+							cellType: "text",
+							getValue: function(item) { return item.heartRate; },
+							setValue: function(item, value) { item.heartRate = parseInt(value) || null; item.heartRateUnit = "bpm"; },
+							getError: function(item) { return null; }
+						},
+						{	label: "Temperature (&deg;C)",
+							cellType: "text",
+							getValue: function(item) { return item.temperature; },
+							setValue: function(item, value) { item.temperature = parseInt(value) || null; item.temperatureUnit = "&deg;C"; },
+							getError: function(item) { return null; }
+						},
+						{	label: "Body Surface Area",
+							cellType: "text",
+							getValue: function(item) { return item.bodySurfaceArea; },
+							setValue: function(item, value) { item.bodySurfaceArea = value; },
+							getError: function(item) { return null; }
+						}
+					]);
+				otherVitalsTable.errorProvider = errorProvider;   // share errorProvider with the rest of the form
+				otherVitalsTable.bindItems([data.vitals]);
+			}
+
+			function initPatientScreeningTable()
+			{
+				var drugAllergiesStatusTable = Table.createTable($("drugAllergiesStatusTable"), { editInPlace: canEdit, flow: true, checkBoxes: false, empty: Table.defaultEmptyOption },
+					[
+						{	label: "Has allergies?",
+							cellType: "choice",
+							choices: ["No known allergies", "Yes"],
+							getValue: function(item) { return item.allergyStatus || "No known allergies"; },
+							setValue: function(item, value) { item.allergyStatus = value; Field.show($("drugAllergiesSection"), item.allergyStatus == "Yes"); },
+							getError: function(item) { return null; }
+						}
+					]);					
+				drugAllergiesStatusTable.errorProvider = errorProvider;   // share errorProvider with the rest of the form
+				drugAllergiesStatusTable.bindItems([data.patientScreening]);
+				Field.show($("drugAllergiesSection"), data.patientScreening.allergyStatus == "Yes");
+
+				var drugAllergiesTable = Table.createTable($("drugAllergiesTable"), { editInPlace: canEdit, flow: true, checkBoxes: canEdit, empty: Table.defaultEmptyOption },
+					[
+						{	label: "Allergy",
+							cellType: "text",
+							getValue: function(item) { return item.allergies; },
+							setValue: function(item, value) { item.allergies = value; },
+							getError: function(item) { return null; }
+						}
+					]);
+				drugAllergiesTable.initAddDeleteButtons(canEdit, "Delete selected drug allergy?");
+				drugAllergiesTable.errorProvider = errorProvider;   // share errorProvider with the rest of the form
+				drugAllergiesTable.bindItems(data.patientScreening.drugAllergies);
+
+				var renalDiseaseTable = Table.createTable($("renalDiseaseTable"), { editInPlace: canEdit, flow: true, checkBoxes: false, empty: Table.defaultEmptyOption },
+					[
+						{	label: "Has renal disease?",
+							cellType: "choice",
+							choices: ["No", "Yes"],
+							getValue: function(item) { return item.renalDiseaseStatus || "No"; },
+							setValue: function(item, value) { item.renalDiseaseStatus = value; },
+							getError: function(item) { return null; }
+						},
+						{	label: "Renal Disease",
+							cellType: "text",
+							getValue: function(item) { return item.renalDisease; },
+							setValue: function(item, value) { item.renalDisease = value; },
+							getVisible: function(item) { return item.renalDiseaseStatus  == "Yes"; },
+							getError: function(item) { return item.renalDiseaseStatus == "Yes" ? "Value required" : null; }
+						}
+					]);
+				renalDiseaseTable.errorProvider = errorProvider;   // share errorProvider with the rest of the form
+				renalDiseaseTable.bindItems([data.patientScreening]);
+
+				var renalDialysisTable = Table.createTable($("renalDialysisTable"), { editInPlace: canEdit, flow: true, checkBoxes: false, empty: Table.defaultEmptyOption },
+					[
+						{	label: "Has renal dialysis?",
+							cellType: "choice",
+							choices: ["No", "Yes"],
+							getValue: function(item) { return item.renalDialysisStatus || "No"; },
+							setValue: function(item, value) { item.renalDialysisStatus  = value; },
+							getError: function(item) { return null; }
+						},
+						{	label: "Renal Dialysis",
+							cellType: "choice",
+							choices: [ "Hemodialysis", "Peritoneal dialysis"],
+							getValue: function(item) { return item.renalDialysis; },
+							setValue: function(item, value) { item.renalDialysis = value; },
+							getVisible: function(item) { return item.renalDialysisStatus  == "Yes"; },
+							getError: function(item) { return item.renalDialysisStatus  == "Yes" ? "Value required" : null; }
+						}
+					]);
+				renalDialysisTable.errorProvider = errorProvider;   // share errorProvider with the rest of the form
+				renalDialysisTable.bindItems([data.patientScreening]);
+
+				var medicationsTable = Table.createTable($("medicationsTable"), { editInPlace: canEdit, flow: true, checkBoxes: false, empty: Table.defaultEmptyOption },
+					[
+						{	label: "On ASA or Aspirin x1 week",
+							cellType: "bool",
+							getValue: function(item) { return item.onAsaOrAspirint || false; },
+							setValue: function(item, value) { item.onAsaOrAspirint = value; },
+							getError: function(item) { return null; }
+						},
+						{	label: "On Coumadin",
+							cellType: "bool",
+							getValue: function(item) { return item.onCoumadin || false; },
+							setValue: function(item, value) { item.onCoumadin = value; },
+							getError: function(item) { return null; }
+						},
+						{	label: "On Arthritis medication",
+							cellType: "bool",
+							getValue: function(item) { return item.onArthritisMed || false; },
+							setValue: function(item, value) { item.onArthritisMed = value; },
+							getError: function(item) { return null; }
+						},
+						new NewLineField(),
+						{	label: "Other medications",
+							cellType: "textarea",
+							getValue: function(item) { return item.otherMedication; },
+							setValue: function(item, value) { item.otherMedication = value; },
+							getError: function(item) { return null; }
+						}
+					]);
+				medicationsTable.errorProvider = errorProvider;   // share errorProvider with the rest of the form
+				medicationsTable.bindItems([data.patientScreening]);
+
+				var pregnancyTable = Table.createTable($("pregnancyTable"), { editInPlace: canEdit, flow: true, checkBoxes: false, empty: Table.defaultEmptyOption },
+					[
+						{	label: "Is patient pregnant?",
+							cellType: "choice",
+							choices: ["N/A", "No", "Yes"],
+							getValue: function(item) { return item.pregnancyStatus || "N/A"; },
+							setValue: function(item, value) { item.pregnancyStatus = value; },
+							getError: function(item) { return item.pregnancyStatus ? null : "Value required"; }
+						},
+						{	label: "Pregnancy test performed?",
+							cellType: "choice",
+							choices: ["N/A", "No", "Yes"],
+							getValue: function(item) { return item.pregnancyTestPerformed || "N/A"; },
+							setValue: function(item, value) { item.pregnancyTestPerformed = value; },
+							getError: function(item) { return item.pregnancyTestPerformed ? null : "Value required"; }
+						},
+						{	label: "Consent obtained by",
+							cellType: "lookup",
+							lookup: function(query) { return Ris.resolveStaffName(query); },
+							getValue: function(item) { return item.pregnancyConsentObtainedBy; },
+							setValue: function(item, value) { item.pregnancyConsentObtainedBy = value; },
+							getVisible: function(item) { return item.pregnancyStatus == "Yes" || item.pregnancyTestPerformed == "Yes"; },
+							getError: function(item) { return item.pregnancyStatus == "Yes" || item.pregnancyTestPerformed == "Yes" ? "Value required" : null; }
+						},
+						{	label: "Pregnancy Test Given - Result?",
+							cellType: "text",
+							getValue: function(item) { return item.pregnancyTestResult; },
+							setValue: function(item, value) { item.pregnancyTestResult = value; },
+							getVisible: function(item) { return item.pregnancyStatus == "Yes" || item.pregnancyTestPerformed == "Yes"; },
+							getError: function(item) { return null; }
+						},
+						{	label: "LMP",
+							cellType: "date",
+							getValue: function(item) { return item.pregnancyLMP; },
+							setValue: function(item, value) { item.pregnancyLMP = value; },
+							getVisible: function(item) { return item.pregnancyStatus == "Yes" || item.pregnancyTestPerformed == "Yes"; },
+							getError: function(item) { return null; }
+						}
+					]);
+				pregnancyTable.errorProvider = errorProvider;   // share errorProvider with the rest of the form
+				pregnancyTable.bindItems([data.patientScreening]);
+
+				var breastFeedingTable = Table.createTable($("breastFeedingTable"), { editInPlace: canEdit, flow: true, checkBoxes: false, empty: Table.defaultEmptyOption },
+					[
+						{	label: "Breast feeding?",
+							cellType: "choice",
+							choices: ["No", "Yes"],
+							getValue: function(item) { return item.breastFeedingStatus || "No"; },
+							setValue: function(item, value) { item.breastFeedingStatus = value; },
+							getError: function(item) { return null; }
+						},
+						{	label: "Exam cancelled?",
+							cellType: "choice",
+							choices: ["No", "Yes"],
+							getValue: function(item) { return item.breastFeedingExamCancelledStatus || "Yes"; },
+							setValue: function(item, value) { item.breastFeedingExamCancelledStatus = value; },
+							getVisible: function(item) { return item.breastFeedingStatus == "Yes"; },
+							getError: function(item) { return null; }
+						},
+						{	label: "Note",
+							cellType: "text",
+							getValue: function(item) { return item.breastFeedingExamNotCancelledNote; },
+							setValue: function(item, value) { item.breastFeedingExamNotCancelledNote = value; },
+						  getVisible: function(item) { return item.breastFeedingExamCancelledStatus == "No"; },
+							getError: function(item) { return null; }
+						}
+					]);
+				breastFeedingTable.errorProvider = errorProvider;   // share errorProvider with the rest of the form
+				breastFeedingTable.bindItems([data.patientScreening]);
+
+				var sedationTable = Table.createTable($("sedationTable"), { editInPlace: canEdit, flow: true, checkBoxes: false, empty: Table.defaultEmptyOption },
+					[
+						{	label: "Sedation",
+							cellType: "choice",
+							choices: ["None", "Patient self-administered per Rx", "GA", "Radiologist prescribed"],
+							getValue: function(item) { return item.sedationStatus; },
+							setValue: function(item, value) { item.sedationStatus = value; },
+							getError: function(item) { return item.sedationStatus ? null : "Value Required"; }
+						},
+						{	label: "Radiologist",
+							cellType: "lookup",
+							lookup: function(query) { return Ris.resolveStaffNameWithFilter(query, ["PRAD"]); },
+							getValue: function(item) { return item.sedationRadiologist; },
+							setValue: function(item, value) { item.sedationRadiologist = value; },
+							getError: function(item) { return null; },
+							getVisible: function(item) { return item.sedationStatus == "Radiologist prescribed"; }
+						},
+						{	label: "Type/Amount",
+							cellType: "text",
+							getValue: function(item) { return item.sedationTypeAndAmount; },
+							setValue: function(item, value) { item.sedationTypeAndAmount = value; },
+							getError: function(item) { return null; },
+							getVisible: function(item) { return item.sedationStatus == "Radiologist prescribed" || item.sedationStatus == "Patient self-administered per Rx" ; }
+						},
+						{	label: "Who is taking patient home",
+							cellType: "text",
+							getValue: function(item) { return item.patientWillBeTakenHomeBy; },
+							setValue: function(item, value) { item.patientWillBeTakenHomeBy = value; },
+							getError: function(item) { return null; },
+							getVisible: function(item) { return item.sedationStatus == "Radiologist prescribed" || item.sedationStatus == "Patient self-administered per Rx" ; }
+						},
+						{	label: "Note",
+							cellType: "text",
+							getValue: function(item) { return item.sedationNote; },
+							setValue: function(item, value) { item.sedationNote = value; },
+							getError: function(item) { return null; },
+							getVisible: function(item) { return item.sedationStatus == "Radiologist prescribed" || item.sedationStatus == "GA"; }
+						}
+					]);
+				sedationTable.errorProvider = errorProvider;   // share errorProvider with the rest of the form
+				sedationTable.bindItems([data.patientScreening]);
+
+				var cardiacConditionTable = Table.createTable($("cardiacConditionTable"), { editInPlace: canEdit, flow: true, checkBoxes: false, empty: Table.defaultEmptyOption },
+					[
+						{	label: "Has cardiac condition?",
+							cellType: "choice",
+							choices: ["No", "Yes"],
+							getValue: function(item) { return item.cardiacStatus || "No"; },
+							setValue: function(item, value) { item.cardiacStatus = value; },
+							getError: function(item) { return null; }
+						},
+						{	label: "Cardiac Condition",
+							cellType: "text",
+							getValue: function(item) { return item.cardiacCondition; },
+							setValue: function(item, value) { item.cardiacCondition = value; },
+							getVisible: function(item) { return item.cardiacStatus == "Yes"; },
+							getError: function(item) { return item.cardiacStatus == "Yes" ? "Value required" : null; }
+						}
+					]);
+				cardiacConditionTable.errorProvider = errorProvider;   // share errorProvider with the rest of the form
+				cardiacConditionTable.bindItems([data.patientScreening]);
+
+				var diabetesTable = Table.createTable($("diabetesTable"), { editInPlace: canEdit, flow: true, checkBoxes: false, empty: Table.defaultEmptyOption },
+				[
+					{	label: "Is patient diabetic?",
+						cellType: "choice",
+						choices: ["No", "Yes"],
+						getValue: function(item) { return item.hasDiabetes || "No"; },
+						setValue: function(item, value) { item.hasDiabetes = value; },
+						getError: function(item) { return null; }
+					},
+					{	label: "How is it controlled?",
+						cellType: "choice",
+						choices: ["Diet", "Medication", "Insulin"],
+						getValue: function(item) { return item.diabetesControl; },
+						setValue: function(item, value) { item.diabetesControl = value; },
+						getVisible: function(item) { return item.hasDiabetes == "Yes"; },
+						getError: function(item) { return item.hasDiabetes == "Yes" ? "Value required" : null; }
+					},
+					{	label: "Medication",
+						cellType: "text",
+						getValue: function(item) { return item.diabetesMedication; },
+						setValue: function(item, value) { item.diabetesMedication = value; },
+						getVisible: function(item) { return item.diabetesControl == "Medication"; },
+						getError: function(item) { return null; }
+					}
+				]);
+				diabetesTable.errorProvider = errorProvider;   // share errorProvider with the rest of the form
+				diabetesTable.bindItems([data.patientScreening]);
+			}
+
+			function initLabResultsTable()
+			{
+				var psaStatusTable = Table.createTable($("psaStatusTable"), { editInPlace: canEdit, flow: true, checkBoxes: false, empty: Table.defaultEmptyOption },
+					[
+						{	label: "Has psa results?",
+							cellType: "choice",
+							choices: ["No", "Yes"],
+							getValue: function(item) { return item.psaStatus || "No"; },
+							setValue: function(item, value) { item.psaStatus = value; Field.show($("psaSection"), item.psaStatus == "Yes"); },
+							getError: function(item) { return null; }
+						}
+					]);
+				psaStatusTable.errorProvider = errorProvider;   // share errorProvider with the rest of the form
+				psaStatusTable.bindItems([data.patientScreening]);
+				Field.show($("psaSection"), data.patientScreening.psaStatus == "Yes");
+
+				var psaTable = Table.createTable($("psaTable"), { editInPlace: canEdit, flow: true, checkBoxes: canEdit, empty: Table.defaultEmptyOption },
+					[
+						{	label: "Level",
+							cellType: "text",
+							getValue: function(item) { return item.level; },
+							setValue: function(item, value) { item.level = value; },
+							getError: function(item) { return null; }
+						},
+						{	label: "Free/Total PSA Ratio",
+							cellType: "text",
+							getValue: function(item) { return item.freeTotalRatio; },
+							setValue: function(item, value) { item.freeTotalRatio = value; },
+							getError: function(item) { return null; }
+						},
+						{	label: "Date",
+							 cellType: "date",
+							 getValue: function(item) { return item.date; },
+							 setValue: function(item, value) { item.date = value; },
+							 getError: function(item) { return null; }
+						}
+					]);
+				psaTable.initAddDeleteButtons(canEdit, "Delete selected PSA level(s)?");
+				psaTable.errorProvider = errorProvider;   // share errorProvider with the rest of the form
+				psaTable.bindItems(data.labResults.psa);
+
+				var otherResultsTable = Table.createTable($("otherResultsTable"), { editInPlace: canEdit, flow: true, checkBoxes: false, empty: Table.defaultEmptyOption },
+					[
+						{	label: "PT",
+							cellType: "text",
+							getValue: function(item) { return item.pt; },
+							setValue: function(item, value) { item.pt = value; },
+							getError: function(item) { return null; }
+						},
+						{	label: "PTT",
+							cellType: "text",
+							getValue: function(item) { return item.ptt; },
+							setValue: function(item, value) { item.ptt = value; },
+							getError: function(item) { return null; }
+						},
+						{	label: "INR",
+							cellType: "text",
+							getValue: function(item) { return item.inr; },
+							setValue: function(item, value) { item.inr = value; },
+							getError: function(item) { return null; }
+						},
+						{	label: "Platelets",
+							cellType: "text",
+							getValue: function(item) { return item.platelets; },
+							setValue: function(item, value) { item.platelets = value; },
+							getError: function(item) { return null; }
+						},
+						{	label: "Hemoglobin",
+							cellType: "text",
+							getValue: function(item) { return item.hemoglobin; },
+							setValue: function(item, value) { item.hemoglobin= value; },
+							getError: function(item) { return null; }
+						},
+						{	label: "WBC",
+							cellType: "text",
+							getValue: function(item) { return item.wbc; },
+							setValue: function(item, value) { item.wbc = value; },
+							getError: function(item) { return null; }
+						},
+						{	label: "HCG",
+							cellType: "text",
+							getValue: function(item) { return item.hcg; },
+							setValue: function(item, value) { item.hcg = value; },
+							getError: function(item) { return null; }
+						},
+						{	label: "Date",
+							cellType: "date",
+							getValue: function(item) { return item.date; },
+							setValue: function(item, value) { item.date = value; },
+							getError: function(item) { return null; }
+						}
+					]);
+				otherResultsTable.errorProvider = errorProvider;   // share errorProvider with the rest of the form
+				otherResultsTable.bindItems([data.labResults]);
+			}
+
+			function initTranslationTable()
+			{
+				var table = Table.createTable($("translationTable"), { editInPlace: canEdit, flow: true, checkBoxes: false, empty: Table.defaultEmptyOption },
+					[
+						{	label: "Translation required?",
+							cellType: "choice",
+							choices: ["No", "Yes"],
+							getValue: function(item) { return item.translationRequired || "No"; },
+							setValue: function(item, value) { item.translationRequired = value; },
+							getError: function(item) { return null; }
+						},
+						{	label: "Translator",
+							cellType: "text",
+							getValue: function(item) { return item.translator; },
+							setValue: function(item, value) { item.translator = value; },
+							getVisible: function(item) { return item.translationRequired == "Yes"; },
+							getError: function(item) { return null; }
+						},
+						{	label: "Relationship to patient",
+							cellType: "text",
+							getValue: function(item) { return item.relationship; },
+							setValue: function(item, value) { item.relationship = value; },
+							getVisible: function(item) { return item.translationRequired == "Yes"; },
+							getError: function(item) { return null; }
+						},
+						{	label: "Language",
+							cellType: "text",
+							getValue: function(item) { return item.language; },
+							setValue: function(item, value) { item.language = value; },
+							getVisible: function(item) { return item.translationRequired == "Yes"; },
+							getError: function(item) { return item.status == "Yes" ? "Value required" : null; }
+						}
+					]);
+				table.errorProvider = errorProvider;   // share errorProvider with the rest of the form
+				table.bindItems([data.translation]);
+			}
+
+			function initModifiedCallback()
+			{
+				var tables = ["weightTable", "heightTable", "bloodGlucoseLevelTable", "otherVitalsTable", "drugAllergiesStatusTable", "drugAllergiesTable", "diabetesTable", "renalDiseaseTable",
+					"renalDialysisTable", "medicationsTable", "pregnancyTable", "breastFeedingTable", "sedationTable", "cardiacConditionTable", 
+					"psaStatusTable", "psaTable", "otherResultsTable", "translationTable"];
+
+				tables.each( function(table) 
+				{
+					$(table).cellUpdated = function() { Ris.setModified(true); };
+				});
+			}
+
+			//////////////////////////////////////////////////////////////////////////
+			// RIS integration API
+			function showValidation(show)
+			{
+				errorProvider.setVisible(show);
+			}
+
+			function hasValidationErrors()
+			{
+				return errorProvider.hasErrors();
+			}
+
+			function saveData()
+			{
+				Ris.setTag("PreExamDetails", JSML.create(data, "data"));
+			}
+			//////////////////////////////////////////////////////////////////////////
+
+		</script>
+	</head>
+	<body onload="javascript: onBodyLoad()" onresize="javascript: scaleWidth()">
+		<form id="myForm">
+
+		<div id="OptionalAdditionalDetails" class="TabControl">
+			<div class="TabList">
+			<label for="Vitals" class="Tab">Vitals</label>
+			<label for="PatientScreening" class="Tab">Patient Screening</label>
+			<label for="LabResults" class="Tab">Lab Results/Bloodwork</label>
+			<label for="Translation" class="Tab">Translation</label>
+			</div>
+			<div id="Vitals" class="TabPage">
+				<p class="sectionheading">Weight</p>
+				<table id="weightTable"  width="100%">
+					<tr><td></td></tr>
+				</table>
+
+				<p class="sectionheading">Height</p>
+				<table id="heightTable"  width="100%">
+					<tr><td></td></tr>
+				</table>
+
+				<p class="sectionheading">Blood Glucose Level</p>
+				<table id="bloodGlucoseLevelTable"  width="100%">
+					<tr><td></td></tr>
+				</table>
+
+				<p class="sectionheading">Other Vitals</p>
+				<table id="otherVitalsTable"  width="100%">
+					<tr><td></td></tr>
+				</table>
+			</div>
+			<div id="PatientScreening" class="TabPage">
+				<p class="sectionheading">Drug Allergies</p>
+				<table id="drugAllergiesStatusTable"  width="100%">
+					<tr><td></td></tr>
+				</table>
+				<div id="drugAllergiesSection">
+					<table id="drugAllergiesTable" border="1" width="100%">
+						<tr><td></td></tr>
+					</table>
+				</div>
+
+				<p class="sectionheading">Diabetes</p>
+				<table id="diabetesTable"  width="100%">
+					<tr><td></td></tr>
+				</table>
+
+				<p class="sectionheading">Renal Disease</p>
+				<table id="renalDiseaseTable"  width="100%">
+					<tr><td></td></tr>
+				</table>
+
+				<p class="sectionheading">Renal Dialysis</p>
+				<table id="renalDialysisTable"  width="100%">
+					<tr><td></td></tr>
+				</table>
+
+				<p class="sectionheading">Current Medications</p>
+				<table id="medicationsTable"  width="100%">
+					<tr><td></td></tr>
+				</table>
+
+				<p class="sectionheading">Pregnancy</p>
+				<table id="pregnancyTable"  width="100%">
+					<tr><td></td></tr>
+				</table>
+
+				<p class="sectionheading">Breast Feeding</p>
+				<table id="breastFeedingTable"  width="100%">
+					<tr><td></td></tr>
+				</table>
+
+				<p class="sectionheading">Sedation</p>
+				<table id="sedationTable"  width="100%">
+					<tr><td></td></tr>
+				</table>
+
+				<p class="sectionheading">Cardiac Condition</p>
+				<table id="cardiacConditionTable"  width="100%">
+					<tr><td></td></tr>
+				</table>
+			</div>
+			<div id="LabResults" class="TabPage">
+				<p class="sectionheading">PSA</p>
+				<table id="psaStatusTable"  width="100%">
+					<tr><td></td></tr>
+				</table>
+				<div id="psaSection">
+					<table id="psaTable" border="1" width="100%">
+						<tr><td></td></tr>
+					</table>
+				</div>
+
+				<p class="sectionheading">Other results</p>
+				<table id="otherResultsTable"  width="100%">
+					<tr><td></td></tr>
+				</table>
+			</div>
+			<div id="Translation" class="TabPage">
+				<table id="translationTable"  width="100%">
+					<tr><td></td></tr>
+				</table>
+			</div>
+		</div>
+      </form>
+	</body>
+</html>

@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!-- @codegen: ignore -->
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" assembly="ClearCanvas.Healthcare" namespace="ClearCanvas.Healthcare">
+  <class name="PerformedProcedureStep" proxy="PerformedProcedureStep" table="PerformedProcedureStep_">
+    <id name="OID" column="OID_" type="Guid">
+      <generator class="guid.comb"/>
+    </id>
+    <discriminator column="Discriminator_"  type="String"/>
+    <version name="Version" column="Version_"/>
+
+    <property name="CreationTime" column="CreationTime_" type="DateTime" not-null="true"/>
+    <property name="State" column="State_" type="ClearCanvas.Workflow.Hibernate.PerformedStepStatusEnumHbm, ClearCanvas.Workflow.Hibernate" not-null="true"/>
+    <property name="LastStateChangeTime" column="LastStateChangeTime_" type="DateTime" not-null="true"/>
+    <property name="StartTime" column="StartTime_" type="DateTime" not-null="false"/>
+    <property name="EndTime" column="EndTime_" type="DateTime" not-null="false"/>
+    <component name="Performer" class="ProcedureStepPerformer">
+      <many-to-one name="Staff" class="Staff" column="PerformingStaffOID_" not-null="false"/>
+    </component>
+    
+    <map name="ExtendedProperties" lazy="true" table="PerformedProcedureStepExtendedProperty_">
+      <key column="PerformedProcedureStepOID_"/>
+      <index column="Name_" type="String"/>
+      <element type="String" column="Value_" length="65000"/>
+    </map>
+  </class>
+</hibernate-mapping>

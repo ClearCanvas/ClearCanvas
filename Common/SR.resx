@@ -1,0 +1,339 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ExceptionPathDoesNotExist" xml:space="preserve">
+    <value>{0} does not exist.</value>
+  </data>
+  <data name="ExceptionNotAPlugin" xml:space="preserve">
+    <value>Assembly {0} is not a plugin.</value>
+  </data>
+  <data name="ExceptionDuplicatePluginFound" xml:space="preserve">
+    <value>Duplicate plugin {0} found.</value>
+  </data>
+  <data name="ExceptionMoreThanOneModelPluginFound" xml:space="preserve">
+    <value>More than one model plugin found.</value>
+  </data>
+  <data name="ExceptionPluginDirectoryNotFound" xml:space="preserve">
+    <value>Plugin directory could not be found.</value>
+  </data>
+  <data name="ExceptionNoPluginsFound" xml:space="preserve">
+    <value>No plugins could be found.</value>
+  </data>
+  <data name="ExceptionPluginWarning" xml:space="preserve">
+    <value>There was a problem loading one or more plugins. Please see the log for more information.</value>
+  </data>
+  <data name="ExceptionUnableToLoadPlugins" xml:space="preserve">
+    <value>Unable to load any plugins.  Please see the log for more information.</value>
+  </data>
+  <data name="ExceptionPluginCouldNotBeFound" xml:space="preserve">
+    <value>Plugin {0} could not be found.  Unable to start plugin.</value>
+  </data>
+  <data name="ExceptionNoPluginsLoaded" xml:space="preserve">
+    <value>No plugins have been loaded.</value>
+  </data>
+  <data name="ExceptionInvalidCast" xml:space="preserve">
+    <value>{0} must be of type {1}.</value>
+  </data>
+  <data name="ExceptionArgumentNotPositive" xml:space="preserve">
+    <value>Value must be greater than zero.</value>
+  </data>
+  <data name="ExceptionArgumentNegative" xml:space="preserve">
+    <value>Value must be non-negative.</value>
+  </data>
+  <data name="ExceptionArgumentOutOfRange" xml:space="preserve">
+    <value>{3} = {0} is invalid. {3} must be &gt;= {1} and &lt;= {2}.</value>
+  </data>
+  <data name="ExceptionIndexOutOfRange" xml:space="preserve">
+    <value>{3}[{0}] is invalid.  Index must be &gt;= {1} and &lt;= {2}.</value>
+  </data>
+  <data name="ExceptionMemberNotSet" xml:space="preserve">
+    <value>{0} has not been set.  Object state is invalid.</value>
+  </data>
+  <data name="ExceptionMemberNotSetVerbose" xml:space="preserve">
+    <value>{0} has not been set.  {1}</value>
+  </data>
+  <data name="LogFoundUnmanagedDLL" xml:space="preserve">
+    <value>Found unmanaged DLL: {0}</value>
+  </data>
+  <data name="LogPluginLoaded" xml:space="preserve">
+    <value>Loaded plugin: {0}</value>
+  </data>
+  <data name="FormatLoadingPlugin" xml:space="preserve">
+    <value>Loading plugin: {0}</value>
+  </data>
+  <data name="ExceptionEmptyString" xml:space="preserve">
+    <value>{0} cannot be empty.</value>
+  </data>
+  <data name="ExceptionExpectedType" xml:space="preserve">
+    <value>Expected type {0}.</value>
+  </data>
+  <data name="ExceptionThrown" xml:space="preserve">
+    <value>Exception thrown</value>
+  </data>
+  <data name="ExceptionExtensionDoesNotImplementRequiredInterface" xml:space="preserve">
+    <value>Extension class {0} does not implement required interface {1}.</value>
+  </data>
+  <data name="ExceptionExtensionMustBeConcreteClass" xml:space="preserve">
+    <value>Extension class {0} must be a concrete class.</value>
+  </data>
+  <data name="ExceptionNoExtensionsCreated" xml:space="preserve">
+    <value>No extensions found for extension point {0}, or the extensions could not be instantiated.  Please see the log for more information.</value>
+  </data>
+  <data name="ExceptionFatalApplicationError" xml:space="preserve">
+    <value>We're sorry, but an error has occurred that ClearCanvas Workstation cannot recover from.  Please check the log and restart.</value>
+  </data>
+  <data name="ExceptionCastExpressionArrayCollectionEnumerable" xml:space="preserve">
+    <value>Expression must evaluate to Array, ICollection, or IEnumerable type.</value>
+  </data>
+  <data name="ExceptionCastExpressionBoolean" xml:space="preserve">
+    <value>Expression must evaluate to Boolean type.</value>
+  </data>
+  <data name="ExceptionCastExpressionEnumerable" xml:space="preserve">
+    <value>Expression must evaluate to IEnumerable type.</value>
+  </data>
+  <data name="ExceptionCastExpressionString" xml:space="preserve">
+    <value>Expression must evaluate to String type.</value>
+  </data>
+  <data name="LogFailedToProcessPluginAssembly" xml:space="preserve">
+    <value>Failed to process plugin assembly {0} with the following exception(s):</value>
+  </data>
+  <data name="FormatSeconds" xml:space="preserve">
+    <value>{0} seconds</value>
+  </data>
+  <data name="ExceptionInvalidSpecificationId" xml:space="preserve">
+    <value>{0} is not a valid specification id.</value>
+  </data>
+  <data name="ExceptionJScriptEvaluation" xml:space="preserve">
+    <value>JScript evaluation error on: {0}</value>
+  </data>
+  <data name="ExceptionResourceNotFound" xml:space="preserve">
+    <value>Resource {0}  not found.</value>
+  </data>
+  <data name="ExceptionScriptEngineLanguage" xml:space="preserve">
+    <value>No script engine available for language {0}.</value>
+  </data>
+  <data name="ExceptionTemplateEvaluation" xml:space="preserve">
+    <value>Template evaluation generated an exception.</value>
+  </data>
+  <data name="LogTimeProviderNotFound" xml:space="preserve">
+    <value>Time provider not found - defaulting to local machine time.</value>
+  </data>
+  <data name="MessageFindingPlugins" xml:space="preserve">
+    <value>Finding plugins...</value>
+  </data>
+  <data name="LogConfigurationStoreNotFound" xml:space="preserve">
+    <value>Configuration store not found - defaulting to LocalFileSettingsProvider</value>
+  </data>
+  <data name="LogLocalConfigurationStoreNotFound" xml:space="preserve">
+    <value>Local configuration store not found - defaulting to LocalFileSettingsProvider</value>
+  </data>
+  <data name="ExceptionBackgroundTaskAlreadyRunning" xml:space="preserve">
+    <value>The background task is already running</value>
+  </data>
+  <data name="ExceptionExtensionPointMustSubclassExtensionPoint" xml:space="preserve">
+    <value>The extension point {0} is invalid because it is not a direct subclass of ExtensionPoint&lt;&gt;</value>
+  </data>
+  <data name="ExceptionThreadPoolAlreadyStarted" xml:space="preserve">
+    <value>The thread pool has already been started.</value>
+  </data>
+  <data name="ExceptionThreadPoolNotStarted" xml:space="preserve">
+    <value>The thread pool has not been started.  Unable to enqueue the specified item.</value>
+  </data>
+  <data name="ExceptionThreadPoolMustBeStopped" xml:space="preserve">
+    <value>The thread pool must be stopped before setting the {0} parameter.</value>
+  </data>
+  <data name="ExceptionFormatCannotConvertFromStringToType" xml:space="preserve">
+    <value>Unable to convert from String to {0}</value>
+  </data>
+  <data name="ExceptionFormatCannotConvertFromTypeToString" xml:space="preserve">
+    <value>Unable to convert from {0} to String</value>
+  </data>
+  <data name="ExceptionFormatDeserializationFailedForType" xml:space="preserve">
+    <value>Deserialization failed for object type '{0}'</value>
+  </data>
+  <data name="ExceptionFormatSerializationFailedForType" xml:space="preserve">
+    <value>Serialization failed for object type '{0}'</value>
+  </data>
+  <data name="FormatTypeMustBeInterface" xml:space="preserve">
+    <value>'{0}' must be an interface.</value>
+  </data>
+  <data name="FormatTypeMustImplementInterface" xml:space="preserve">
+    <value>Type '{0}' must implement interface '{1}'.</value>
+  </data>
+  <data name="FormatUnableToFindMatchingAction" xml:space="preserve">
+    <value>Unable to find matching action for '{0}' node in script.  Unable to perform action.</value>
+  </data>
+  <data name="MessageCannotExtendIExtensionPoint" xml:space="preserve">
+    <value>An extension point cannot extend IExtensionPoint.</value>
+  </data>
+  <data name="MessageSettingsScopeNotDefined" xml:space="preserve">
+    <value>Settings scope not defined.</value>
+  </data>
+  <data name="ExceptionConditionIsNotMet" xml:space="preserve">
+    <value>Condition is not met :{0}</value>
+  </data>
+  <data name="ExceptionApplicationRootMultipleMatches" xml:space="preserve">
+    <value>Unable to resolve application root class {0} - multiple matches.</value>
+  </data>
+  <data name="ExceptionApplicationRootNoMatches" xml:space="preserve">
+    <value>Unable to resolve application root class {0} - no matches.</value>
+  </data>
+  <data name="ShredFailedToStart" xml:space="preserve">
+    <value>The {0} shred has failed to start.  Please check the log for more details.</value>
+  </data>
+  <data name="ShredFailedToStop" xml:space="preserve">
+    <value>The {0} shred has failed to stop.  Please check the log for more details.</value>
+  </data>
+  <data name="ShredStartedSuccessfully" xml:space="preserve">
+    <value>The {0} shred has started successfully.</value>
+  </data>
+  <data name="ShredStarting" xml:space="preserve">
+    <value>Starting {0} Shred</value>
+  </data>
+  <data name="ShredStoppedSuccessfully" xml:space="preserve">
+    <value>The {0} shred has stopped successfully.</value>
+  </data>
+  <data name="ShredStopping" xml:space="preserve">
+    <value>Stopping {0} Shred</value>
+  </data>
+  <data name="ExceptionFailedToTransferFile" xml:space="preserve">
+    <value>Failed to transfer file from {0} to {1}.</value>
+  </data>
+  <data name="LogLicenseProviderNotFound" xml:space="preserve">
+    <value>License provider not found - defaulting to local license provider.</value>
+  </data>
+  <data name="FormatFileSizeBytes" xml:space="preserve">
+    <value>{0} Bytes</value>
+  </data>
+  <data name="FormatFileSizeGB" xml:space="preserve">
+    <value>{0:f2} GB</value>
+  </data>
+  <data name="FormatFileSizeKB" xml:space="preserve">
+    <value>{0:f2} KB</value>
+  </data>
+  <data name="FormatFileSizeMB" xml:space="preserve">
+    <value>{0:f2} MB</value>
+  </data>
+  <data name="FormatFileSizeTB" xml:space="preserve">
+    <value>{0:f2} TB</value>
+  </data>
+  <data name="FormatReleaseType" xml:space="preserve">
+    <value>({0})</value>
+  </data>
+</root>

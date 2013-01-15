@@ -1,0 +1,918 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{7932D8CA-34CF-47E6-A425-9B8DA4F60341}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ClearCanvas.Ris.Client.View.WinForms</RootNamespace>
+    <AssemblyName>ClearCanvas.Ris.Client.View.WinForms</AssemblyName>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AddressEditorComponentView.cs" />
+    <Compile Include="AddressEditorControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="AddressEditorControl.designer.cs">
+      <DependentUpon>AddressEditorControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="AttachDocumentComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="AttachDocumentComponentControl.Designer.cs">
+      <DependentUpon>AttachDocumentComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="BiographyDemographicComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="BiographyDemographicComponentControl.designer.cs">
+      <DependentUpon>BiographyDemographicComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="BiographyDemographicComponentView.cs" />
+    <Compile Include="BiographyNoteComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="BiographyNoteComponentControl.designer.cs">
+      <DependentUpon>BiographyNoteComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="BiographyNoteComponentView.cs" />
+    <Compile Include="BiographyOrderHistoryComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="BiographyOrderHistoryComponentControl.designer.cs">
+      <DependentUpon>BiographyOrderHistoryComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="BiographyOrderHistoryComponentView.cs" />
+    <Compile Include="BiographyOrderReportsComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="BiographyOrderReportsComponentControl.Designer.cs">
+      <DependentUpon>BiographyOrderReportsComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="BiographyOrderReportsComponentView.cs" />
+    <Compile Include="BiographyOverviewComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="BiographyOverviewComponentControl.designer.cs">
+      <DependentUpon>BiographyOverviewComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="BiographyOverviewComponentView.cs" />
+    <Compile Include="BiographyVisitHistoryComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="BiographyVisitHistoryComponentControl.Designer.cs">
+      <DependentUpon>BiographyVisitHistoryComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="BiographyVisitHistoryComponentView.cs" />
+    <Compile Include="CancelOrderComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CancelOrderComponentControl.Designer.cs">
+      <DependentUpon>CancelOrderComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CancelOrderComponentView.cs" />
+    <Compile Include="CannedTextCategoryEditorComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CannedTextCategoryEditorComponentControl.Designer.cs">
+      <DependentUpon>CannedTextCategoryEditorComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CannedTextCategoryEditorComponentView.cs" />
+    <Compile Include="CannedTextSupport.cs" />
+    <Compile Include="CannedTextInplaceLookupControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CannedTextInplaceLookupControl.Designer.cs">
+      <DependentUpon>CannedTextInplaceLookupControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CannedTextSummaryComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CannedTextSummaryComponentControl.Designer.cs">
+      <DependentUpon>CannedTextSummaryComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CannedTextSummaryComponentView.cs" />
+    <Compile Include="CannedTextEditorComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CannedTextEditorComponentControl.Designer.cs">
+      <DependentUpon>CannedTextEditorComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CannedTextEditorComponentView.cs" />
+    <Compile Include="ContactPersonEditorComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ContactPersonEditorComponentControl.Designer.cs">
+      <DependentUpon>ContactPersonEditorComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ContactPersonEditorComponentView.cs" />
+    <Compile Include="ChangePasswordForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ChangePasswordForm.Designer.cs">
+      <DependentUpon>ChangePasswordForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ChangePasswordDialog.cs" />
+    <Compile Include="AttachDocumentComponentView.cs" />
+    <Compile Include="UnmergeOrderComponentView.cs" />
+    <Compile Include="UnmergeOrderComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UnmergeOrderComponentControl.Designer.cs">
+      <DependentUpon>UnmergeOrderComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PrintReportComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="PrintReportComponentControl.Designer.cs">
+      <DependentUpon>PrintReportComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PrintReportComponentView.cs" />
+    <Compile Include="DateTimeEntryComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="DateTimeEntryComponentControl.Designer.cs">
+      <DependentUpon>DateTimeEntryComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DateTimeEntryComponentView.cs" />
+    <Compile Include="DescriptiveSpinControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="DescriptiveSpinControl.Designer.cs">
+      <DependentUpon>DescriptiveSpinControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DiagnosticServiceEditorComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="DiagnosticServiceEditorComponentControl.Designer.cs">
+      <DependentUpon>DiagnosticServiceEditorComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DiagnosticServiceEditorComponentView.cs" />
+    <Compile Include="DiagnosticServiceSummaryComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="DiagnosticServiceSummaryComponentControl.Designer.cs">
+      <DependentUpon>DiagnosticServiceSummaryComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DiagnosticServiceSummaryComponentView.cs" />
+    <Compile Include="DynamicCustomControlTable.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="DynamicTableCommonControlFactory.cs" />
+    <Compile Include="ExternalPractitionerContactPointDetailsEditorComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ExternalPractitionerContactPointDetailsEditorComponentControl.Designer.cs">
+      <DependentUpon>ExternalPractitionerContactPointDetailsEditorComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ExternalPractitionerContactPointDetailsEditorComponentView.cs" />
+    <Compile Include="ExternalPractitionerContactPointSummaryComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ExternalPractitionerContactPointSummaryComponentControl.Designer.cs">
+      <DependentUpon>ExternalPractitionerContactPointSummaryComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ExternalPractitionerContactPointSummaryComponentView.cs" />
+    <Compile Include="ExtendedPropertyChoicesTable.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ExternalPractitionerMergePropertiesComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ExternalPractitionerMergePropertiesComponentControl.Designer.cs">
+      <DependentUpon>ExternalPractitionerMergePropertiesComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ExternalPractitionerMergePropertiesComponentView.cs" />
+    <Compile Include="ExternalPractitionerReplaceDisabledContactPointsTableItemControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ExternalPractitionerReplaceDisabledContactPointsTableItemControl.Designer.cs">
+      <DependentUpon>ExternalPractitionerReplaceDisabledContactPointsTableItemControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ExternalPractitionerReplaceDisabledContactPointsComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ExternalPractitionerReplaceDisabledContactPointsComponentControl.Designer.cs">
+      <DependentUpon>ExternalPractitionerReplaceDisabledContactPointsComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ExternalPractitionerReplaceDisabledContactPointsComponentView.cs" />
+    <Compile Include="ExternalPractitionerSelectDisabledContactPointsComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ExternalPractitionerSelectDisabledContactPointsComponentControl.Designer.cs">
+      <DependentUpon>ExternalPractitionerSelectDisabledContactPointsComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ExternalPractitionerSelectDisabledContactPointsComponentView.cs" />
+    <Compile Include="ExternalPractitionerMergeSelectedDuplicateComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ExternalPractitionerMergeSelectedDuplicateComponentControl.Designer.cs">
+      <DependentUpon>ExternalPractitionerMergeSelectedDuplicateComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ExternalPractitionerMergeSelectedDuplicateComponentView.cs" />
+    <Compile Include="FolderExplorerConfigurationComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="FolderExplorerConfigurationComponentControl.Designer.cs">
+      <DependentUpon>FolderExplorerConfigurationComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FolderExplorerConfigurationComponentView.cs" />
+    <Compile Include="HomepageConfigurationComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="HomepageConfigurationComponentControl.Designer.cs">
+      <DependentUpon>HomepageConfigurationComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="HomepageConfigurationComponentView.cs" />
+    <Compile Include="ListBoxView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ListBoxView.Designer.cs">
+      <DependentUpon>ListBoxView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ListBoxWithDragSupport.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="PatientProfileSummaryComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="PatientProfileSummaryComponentControl.Designer.cs">
+      <DependentUpon>PatientProfileSummaryComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PatientProfileSummaryComponentView.cs" />
+    <Compile Include="LookupHandlerCellEditorControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="LookupHandlerCellEditorControl.Designer.cs">
+      <DependentUpon>LookupHandlerCellEditorControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="LookupHandlerCellEditorView.cs" />
+    <Compile Include="MergeComponentBaseControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="MergeComponentBaseControl.Designer.cs">
+      <DependentUpon>MergeComponentBaseControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MergeComponentBaseView.cs" />
+    <Compile Include="FolderContentsComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="FolderContentsComponentControl.Designer.cs">
+      <DependentUpon>FolderContentsComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FolderContentsComponentView.cs" />
+    <Compile Include="FolderExplorerComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="FolderExplorerComponentControl.Designer.cs">
+      <DependentUpon>FolderExplorerComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FolderExplorerComponentView.cs" />
+    <Compile Include="ExternalPractitionerSummaryComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ExternalPractitionerSummaryComponentControl.designer.cs">
+      <DependentUpon>ExternalPractitionerSummaryComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ExternalPractitionerDetailsEditorComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ExternalPractitionerDetailsEditorComponentControl.designer.cs">
+      <DependentUpon>ExternalPractitionerDetailsEditorComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ExternalPractitionerDetailsEditorComponentView.cs" />
+    <Compile Include="ExternalPractitionerSummaryComponentView.cs" />
+    <Compile Include="EmailAddressEditorComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="EmailAddressEditorComponentControl.Designer.cs">
+      <DependentUpon>EmailAddressEditorComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="EmailAddressEditorComponentView.cs" />
+    <Compile Include="DHtmlComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="DHtmlComponentControl.Designer.cs">
+      <DependentUpon>DHtmlComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DHtmlComponentView.cs" />
+    <Compile Include="FolderExplorerGroupComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="FolderExplorerGroupComponentControl.Designer.cs">
+      <DependentUpon>FolderExplorerGroupComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FolderExplorerGroupComponentView.cs" />
+    <Compile Include="AttachedDocumentPreviewComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="AttachedDocumentPreviewComponentControl.Designer.cs">
+      <DependentUpon>AttachedDocumentPreviewComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="AttachedDocumentPreviewComponentView.cs" />
+    <Compile Include="LoginDialog.cs" />
+    <Compile Include="LoginForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="LoginForm.Designer.cs">
+      <DependentUpon>LoginForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="LookupField.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="LookupField.Designer.cs">
+      <DependentUpon>LookupField.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MergeOutcomeReportComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="MergeOutcomeReportComponentControl.Designer.cs">
+      <DependentUpon>MergeOutcomeReportComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MergeOutcomeReportComponentView.cs" />
+    <Compile Include="MultipleProceduresEditorComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="MultipleProceduresEditorComponentControl.Designer.cs">
+      <DependentUpon>MultipleProceduresEditorComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MultipleProceduresEditorComponentView.cs" />
+    <Compile Include="OrderEditorComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="OrderEditorComponentControl.Designer.cs">
+      <DependentUpon>OrderEditorComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="OrderEditorComponentView.cs" />
+    <Compile Include="OrderNoteEditorComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="OrderNoteEditorComponentControl.Designer.cs">
+      <DependentUpon>OrderNoteEditorComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="OrderNoteEditorComponentView.cs" />
+    <Compile Include="PatientNoteEditorComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="PatientNoteEditorComponentControl.Designer.cs">
+      <DependentUpon>PatientNoteEditorComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PatientNoteEditorComponentView.cs" />
+    <Compile Include="PatientProfileAdditionalInfoEditorComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="PatientProfileAdditionalInfoEditorComponentControl.Designer.cs">
+      <DependentUpon>PatientProfileAdditionalInfoEditorComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PatientProfileAdditionalInfoEditorComponentView.cs" />
+    <Compile Include="PatientProfileDetailsEditorComponentView.cs" />
+    <Compile Include="PatientProfileDetailsEditorControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="PatientProfileDetailsEditorControl.Designer.cs">
+      <DependentUpon>PatientProfileDetailsEditorControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PatientSearchComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="PatientSearchComponentControl.Designer.cs">
+      <DependentUpon>PatientSearchComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PatientSearchComponentView.cs" />
+    <Compile Include="PhoneNumberEditorComponentView.cs" />
+    <Compile Include="PhoneNumberEditorControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="PhoneNumberEditorControl.designer.cs">
+      <DependentUpon>PhoneNumberEditorControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ProcedureEditorComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ProcedureEditorComponentControl.Designer.cs">
+      <DependentUpon>ProcedureEditorComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ProcedureEditorComponentView.cs" />
+    <Compile Include="ProcedureTypeEditorComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ProcedureTypeEditorComponentControl.Designer.cs">
+      <DependentUpon>ProcedureTypeEditorComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ProcedureTypeEditorComponentView.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="SearchComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="SearchComponentControl.designer.cs">
+      <DependentUpon>SearchComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SearchComponentView.cs" />
+    <Compile Include="SmartTimeField.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="SmartTimeField.Designer.cs">
+      <DependentUpon>SmartTimeField.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SR.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SR.resx</DependentUpon>
+    </Compile>
+    <Compile Include="StaffDetailsEditorComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="StaffDetailsEditorComponentControl.designer.cs">
+      <DependentUpon>StaffDetailsEditorComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="StaffDetailsEditorComponentView.cs" />
+    <Compile Include="StaffGroupDetailsEditorComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="StaffGroupDetailsEditorComponentControl.Designer.cs">
+      <DependentUpon>StaffGroupDetailsEditorComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="StaffGroupDetailsEditorComponentView.cs" />
+    <Compile Include="StaffOrStaffGroupSummaryComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="StaffOrStaffGroupSummaryComponentControl.Designer.cs">
+      <DependentUpon>StaffOrStaffGroupSummaryComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="StaffOrStaffGroupSummaryComponentView.cs" />
+    <Compile Include="StaffStaffGroupEditorComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="StaffStaffGroupEditorComponentControl.Designer.cs">
+      <DependentUpon>StaffStaffGroupEditorComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="StaffStaffGroupEditorComponentView.cs" />
+    <Compile Include="StaffSummaryComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="StaffSummaryComponentControl.designer.cs">
+      <DependentUpon>StaffSummaryComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="StaffSummaryComponentView.cs" />
+    <Compile Include="StackedComponentContainerControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="StackedComponentContainerControl.Designer.cs">
+      <DependentUpon>StackedComponentContainerControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="StackedComponentContainerView.cs" />
+    <Compile Include="WorkflowHistoryComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="WorkflowHistoryComponentControl.Designer.cs">
+      <DependentUpon>WorkflowHistoryComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="WorkflowHistoryComponentView.cs" />
+    <Compile Include="WorklistDetailEditorComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="WorklistDetailEditorComponentControl.Designer.cs">
+      <DependentUpon>WorklistDetailEditorComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="WorklistDetailEditorComponentView.cs" />
+    <Compile Include="WorklistFilterEditorComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="WorklistFilterEditorComponentControl.Designer.cs">
+      <DependentUpon>WorklistFilterEditorComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="WorklistFilterEditorComponentView.cs" />
+    <Compile Include="WorklistMultiDetailEditorComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="WorklistMultiDetailEditorComponentControl.Designer.cs">
+      <DependentUpon>WorklistMultiDetailEditorComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="WorklistMultiDetailEditorComponentView.cs" />
+    <Compile Include="SelectorEditorComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="SelectorEditorComponentControl.Designer.cs">
+      <DependentUpon>SelectorEditorComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SelectorEditorComponentView.cs" />
+    <Compile Include="WorklistTimeWindowEditorComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="WorklistTimeWindowEditorComponentControl.Designer.cs">
+      <DependentUpon>WorklistTimeWindowEditorComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="WorklistTimeWindowEditorComponentView.cs" />
+    <Service Include="{94E38DFF-614B-4cbd-B67C-F211BB35CE8B}" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\Common\ClearCanvas.Common.csproj">
+      <Project>{F6EAD428-E6CF-4DF6-B2F3-D33D532C5343}</Project>
+      <Name>ClearCanvas.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Desktop\ClearCanvas.Desktop.csproj">
+      <Project>{26E9A01A-64B5-42C5-8252-FBB30DF9CEC7}</Project>
+      <Name>ClearCanvas.Desktop</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Desktop\View\WinForms\ClearCanvas.Desktop.View.WinForms.csproj">
+      <Project>{BB434EC3-A580-4744-A635-A2B4029C66DE}</Project>
+      <Name>ClearCanvas.Desktop.View.WinForms</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Enterprise\Common\ClearCanvas.Enterprise.Common.csproj">
+      <Project>{B5EBFFD7-6641-4932-91C9-4C4322B41868}</Project>
+      <Name>ClearCanvas.Enterprise.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Enterprise\Desktop\ClearCanvas.Enterprise.Desktop.csproj">
+      <Project>{CBD5EBD0-7AE9-4824-AE8C-4888983E1B5B}</Project>
+      <Name>ClearCanvas.Enterprise.Desktop</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Utilities\Manifest\ClearCanvas.Utilities.Manifest.csproj">
+      <Project>{E2F1A5D4-73A4-4BA6-AA5A-87BBDEC727F8}</Project>
+      <Name>ClearCanvas.Utilities.Manifest</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Application\Common\ClearCanvas.Ris.Application.Common.csproj">
+      <Project>{09F49217-CD98-4773-8CFB-594F189EEE3B}</Project>
+      <Name>ClearCanvas.Ris.Application.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\ClearCanvas.Ris.Client.csproj">
+      <Project>{F8E75C01-AB14-4DDE-ABEA-3EECC4957A1F}</Project>
+      <Name>ClearCanvas.Ris.Client</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="AddressEditorControl.resx">
+      <DependentUpon>AddressEditorControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="BiographyDemographicComponentControl.resx">
+      <DependentUpon>BiographyDemographicComponentControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="BiographyNoteComponentControl.resx">
+      <DependentUpon>BiographyNoteComponentControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="BiographyOrderHistoryComponentControl.resx">
+      <DependentUpon>BiographyOrderHistoryComponentControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="BiographyOrderReportsComponentControl.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>BiographyOrderReportsComponentControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="BiographyOverviewComponentControl.resx">
+      <DependentUpon>BiographyOverviewComponentControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="BiographyVisitHistoryComponentControl.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>BiographyVisitHistoryComponentControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CancelOrderComponentControl.resx">
+      <DependentUpon>CancelOrderComponentControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CannedTextEditorComponentControl.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>CannedTextEditorComponentControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CannedTextInplaceLookupControl.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>CannedTextInplaceLookupControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CannedTextSummaryComponentControl.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>CannedTextSummaryComponentControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ContactPersonEditorComponentControl.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>ContactPersonEditorComponentControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ChangePasswordForm.resx">
+      <DependentUpon>ChangePasswordForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UnmergeOrderComponentControl.resx">
+      <DependentUpon>UnmergeOrderComponentControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PrintReportComponentControl.resx">
+      <DependentUpon>PrintReportComponentControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ExternalPractitionerContactPointDetailsEditorComponentControl.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>ExternalPractitionerContactPointDetailsEditorComponentControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ExternalPractitionerContactPointSummaryComponentControl.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>ExternalPractitionerContactPointSummaryComponentControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PatientProfileSummaryComponentControl.resx">
+      <DependentUpon>PatientProfileSummaryComponentControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MergeComponentBaseControl.resx">
+      <DependentUpon>MergeComponentBaseControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FolderContentsComponentControl.resx">
+      <DependentUpon>FolderContentsComponentControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FolderExplorerComponentControl.resx">
+      <DependentUpon>FolderExplorerComponentControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ExternalPractitionerSummaryComponentControl.resx">
+      <DependentUpon>ExternalPractitionerSummaryComponentControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ExternalPractitionerDetailsEditorComponentControl.resx">
+      <DependentUpon>ExternalPractitionerDetailsEditorComponentControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EmailAddressEditorComponentControl.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>EmailAddressEditorComponentControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FolderExplorerGroupComponentControl.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>FolderExplorerGroupComponentControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AttachedDocumentPreviewComponentControl.resx">
+      <DependentUpon>AttachedDocumentPreviewComponentControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DHtmlComponentControl.resx">
+      <DependentUpon>DHtmlComponentControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LoginForm.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>LoginForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LookupField.resx">
+      <DependentUpon>LookupField.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OrderEditorComponentControl.resx">
+      <DependentUpon>OrderEditorComponentControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OrderNoteEditorComponentControl.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>OrderNoteEditorComponentControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PatientNoteEditorComponentControl.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>PatientNoteEditorComponentControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PatientProfileAdditionalInfoEditorComponentControl.resx">
+      <DependentUpon>PatientProfileAdditionalInfoEditorComponentControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PatientProfileDetailsEditorControl.resx">
+      <DependentUpon>PatientProfileDetailsEditorControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PatientSearchComponentControl.resx">
+      <DependentUpon>PatientSearchComponentControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PhoneNumberEditorControl.resx">
+      <DependentUpon>PhoneNumberEditorControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <SubType>Designer</SubType>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SearchComponentControl.resx">
+      <DependentUpon>SearchComponentControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SmartTimeField.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>SmartTimeField.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="StaffDetailsEditorComponentControl.resx">
+      <DependentUpon>StaffDetailsEditorComponentControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="StaffStaffGroupEditorComponentControl.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>StaffStaffGroupEditorComponentControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="StaffSummaryComponentControl.resx">
+      <DependentUpon>StaffSummaryComponentControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\FacilityText.png" />
+    <None Include="Resources\ClearFilterSmall.png" />
+    <None Include="Resources\ClearFilterMini.png" />
+    <Content Include="Resources\LogoLarge.PNG" />
+    <None Include="Resources\SwapMedium.png" />
+    <None Include="Resources\SwapLarge.png" />
+    <None Include="Resources\SwapSmall.png" />
+    <None Include="Resources\RefreshSmall.png" />
+    <None Include="Resources\searchtoolsmall.png" />
+    <None Include="Resources\UserText.png" />
+    <None Include="Resources\PasswordText.png" />
+    <EmbeddedResource Include="AttachDocumentComponentControl.resx">
+      <DependentUpon>AttachDocumentComponentControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CannedTextCategoryEditorComponentControl.resx">
+      <DependentUpon>CannedTextCategoryEditorComponentControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DateTimeEntryComponentControl.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>DateTimeEntryComponentControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DescriptiveSpinControl.resx">
+      <DependentUpon>DescriptiveSpinControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DiagnosticServiceEditorComponentControl.resx">
+      <DependentUpon>DiagnosticServiceEditorComponentControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DiagnosticServiceSummaryComponentControl.resx">
+      <DependentUpon>DiagnosticServiceSummaryComponentControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ExternalPractitionerMergePropertiesComponentControl.resx">
+      <DependentUpon>ExternalPractitionerMergePropertiesComponentControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ExternalPractitionerReplaceDisabledContactPointsComponentControl.resx">
+      <DependentUpon>ExternalPractitionerReplaceDisabledContactPointsComponentControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ExternalPractitionerReplaceDisabledContactPointsTableItemControl.resx">
+      <DependentUpon>ExternalPractitionerReplaceDisabledContactPointsTableItemControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ExternalPractitionerSelectDisabledContactPointsComponentControl.resx">
+      <DependentUpon>ExternalPractitionerSelectDisabledContactPointsComponentControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ExternalPractitionerMergeSelectedDuplicateComponentControl.resx">
+      <DependentUpon>ExternalPractitionerMergeSelectedDuplicateComponentControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FolderExplorerConfigurationComponentControl.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>FolderExplorerConfigurationComponentControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="HomepageConfigurationComponentControl.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>HomepageConfigurationComponentControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ListBoxView.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>ListBoxView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LookupHandlerCellEditorControl.resx">
+      <DependentUpon>LookupHandlerCellEditorControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MergeOutcomeReportComponentControl.resx">
+      <DependentUpon>MergeOutcomeReportComponentControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MultipleProceduresEditorComponentControl.resx">
+      <DependentUpon>MultipleProceduresEditorComponentControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ProcedureEditorComponentControl.resx">
+      <DependentUpon>ProcedureEditorComponentControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ProcedureTypeEditorComponentControl.resx">
+      <DependentUpon>ProcedureTypeEditorComponentControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Splash.png" />
+    <EmbeddedResource Include="SR.resx">
+      <SubType>Designer</SubType>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>SR.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="StaffGroupDetailsEditorComponentControl.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>StaffGroupDetailsEditorComponentControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="StaffOrStaffGroupSummaryComponentControl.resx">
+      <DependentUpon>StaffOrStaffGroupSummaryComponentControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="StackedComponentContainerControl.resx">
+      <DependentUpon>StackedComponentContainerControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WorkflowHistoryComponentControl.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>WorkflowHistoryComponentControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WorklistDetailEditorComponentControl.resx">
+      <DependentUpon>WorklistDetailEditorComponentControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WorklistFilterEditorComponentControl.resx">
+      <DependentUpon>WorklistFilterEditorComponentControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WorklistMultiDetailEditorComponentControl.resx">
+      <DependentUpon>WorklistMultiDetailEditorComponentControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SelectorEditorComponentControl.resx">
+      <DependentUpon>SelectorEditorComponentControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WorklistTimeWindowEditorComponentControl.resx">
+      <DependentUpon>WorklistTimeWindowEditorComponentControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

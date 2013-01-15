@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.0" assembly="ClearCanvas.Healthcare" namespace="ClearCanvas.Healthcare">
+  <class name="$safeitemname$" proxy="$safeitemname$" table="$safeitemname$_">
+    <id name="OID" column="OID" type="Int64">
+      <generator class="hilo">
+        <param name="max_lo">100</param>
+      </generator>
+    </id>
+    <version name="Version" column="Version"/>
+    <!-- add properties and collections here -->
+  </class>
+</hibernate-mapping>

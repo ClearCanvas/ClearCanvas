@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<enum class="AmbulatoryStatus">
+  <enum-value code="X">
+    <value>Unspecified</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="A0">
+    <value>No Functional limitations</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="A1">
+    <value>Ambulates with assistive device</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="A2">
+    <value>Wheelchair/stretcher bound</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="A3">
+    <value>Comatose; non-responsive</value>
+    <description></description>
+  </enum-value>
+</enum>

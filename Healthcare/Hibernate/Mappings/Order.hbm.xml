@@ -1,0 +1,113 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" assembly="ClearCanvas.Healthcare" namespace="ClearCanvas.Healthcare">
+	<class name="Order" proxy="Order" table="Order_">
+		<id name="OID" column="OID_" type="Guid">
+			<generator class="guid.comb"/>
+		</id>
+		<version name="Version" column="Version_"/>
+
+		<many-to-one name="Patient" class="Patient" column="PatientOID_" not-null="true" fetch="join"/>
+		<many-to-one name="Visit" class="Visit" column="VisitOID_" not-null="true"/>
+
+		<!-- Placer may need to be more than simple string (eg may need a namespace or assigning authority ) -->
+		<property name="PlacerNumber" column="PlacerNumber_" type="String" length="30"/>
+		<property name="AccessionNumber" column="AccessionNumber_" type="String" length="30" not-null="true" unique="true"/>
+
+		<many-to-one name="DiagnosticService" class="DiagnosticService" column="DiagnosticServiceOID_" not-null="true" fetch="join"/>
+
+		<!-- Time that the order was entered -->
+		<property name="EnteredTime" column="EnteredTime_" type="DateTime" not-null="true"/>
+		<many-to-one name="EnteredBy" class="Staff" column="EnteredByOID_"/>
+		<!-- If entered by HL7, this field could be using to capture the name of the person who ordered it -->
+		<property name="EnteredComment" column="EnteredComment_" type="String"/>
+
+		<!-- Time that the order should ideally be scheduled at -->
+		<property name="SchedulingRequestTime" column="SchedulingRequestTime_" type="DateTime" not-null="false"/>
+
+		<!-- Time the order is scheduled to start, if known -->
+		<property name="ScheduledStartTime" column="ScheduledStartTime_" type="DateTime" not-null="false" access="nosetter.camelcase-underscore"/>
+
+		<!-- Time order status moved to IP -->
+		<property name="StartTime" column="StartTime_" type="DateTime" not-null="false" access="nosetter.camelcase-underscore"/>
+
+		<!-- Time order status moved to CM, CA, DC, RP -->
+		<property name="EndTime" column="EndTime_" type="DateTime" not-null="false" access="nosetter.camelcase-underscore"/>
+
+		<many-to-one name="OrderingPractitioner" class="ExternalPractitioner" column="OrderingPractitionerOID_" not-null="true"/>
+		<many-to-one name="OrderingFacility" class="Facility" column="OrderingFacilityOID_" not-null="true"/>
+
+    <!-- Procedures associated with order, excluding those in the GH status-->
+		<set name="Procedures" lazy="true" inverse="true" cascade="all-delete-orphan" where="Status_ not in ('GH')">
+			<key column="OrderOID_"/>
+			<one-to-many class="Procedure"/>
+		</set>
+    
+    <!-- Ghost Procedures associated with order (for internal use only - no public property) -->
+    <set name="GhostProcedures" lazy="true" inverse="true" cascade="none" access="field.camelcase-underscore" where="Status_ in ('GH')">
+      <key column="OrderOID_"/>
+      <one-to-many class="Procedure"/>
+    </set>
+
+    <idbag name="ResultRecipients" table="OrderResultRecipient_" lazy="true" >
+			<collection-id column="OID_" type="Guid">
+				<generator class="guid.comb"/>
+			</collection-id>
+			<key column="OrderOID_"/>
+			<composite-element class="ResultRecipient">
+				<many-to-one name="PractitionerContactPoint" column="PractitionerContactPointOID_" class="ExternalPractitionerContactPoint" fetch="join" not-null="true"/>
+				<property name="PreferredCommunicationMode" column="PreferredCommunicationMode_" type="ClearCanvas.Healthcare.Hibernate.ResultCommunicationModeEnumHbm, ClearCanvas.Healthcare.Hibernate" not-null="true"/>
+			</composite-element>
+		</idbag>
+
+		<idbag name="Attachments" table="OrderAttachment_" lazy="true" access="nosetter.camelcase-underscore">
+			<collection-id column="OID_" type="Guid">
+				<generator class="guid.comb"/>
+			</collection-id>
+			<key column="OrderOID_"/>
+			<composite-element class="OrderAttachment">
+				<many-to-one name="Category" column="Category_" class="OrderAttachmentCategoryEnum"/>
+				<many-to-one name="AttachedBy" column="AttachedByStaffOID_" class="Staff" not-null="true" fetch="join"/>
+				<property name="AttachedTime" column="AttachedTime_" type="DateTime" not-null="true"/>
+
+				<!-- this is supposed to be an one-to-one mapping with document, but unique="true is currently not supported with value member"  -->
+				<many-to-one name="Document" column="AttachedDocumentOID_" class="AttachedDocument" not-null="true" cascade="all" fetch="join"/>
+			</composite-element>
+		</idbag>
+
+		<!-- Indications.... may need to be a coded-value, not sure yet -->
+		<property name="ReasonForStudy" column="ReasonForStudy_" type="String" length="400"/>
+		<property name="Priority" column="Priority_" type="ClearCanvas.Healthcare.Hibernate.OrderPriorityEnumHbm, ClearCanvas.Healthcare.Hibernate" not-null="true" access="field.camelcase-underscore"/>
+		<property name="PriorityRank" column="PriorityRank_" type="int" not-null="true" access="field.camelcase-underscore"/>
+		<property name="Status" column="Status_" type="ClearCanvas.Healthcare.Hibernate.OrderStatusEnumHbm, ClearCanvas.Healthcare.Hibernate" not-null="true" access="nosetter.camelcase-underscore"/>
+
+		<!-- Information about why the order was cancelled, populated if the order status is CA, DC, or RP -->
+		<component name="CancelInfo" class="OrderCancelInfo" access="nosetter.camelcase-underscore">
+			<many-to-one name="Reason" class="OrderCancelReasonEnum" column="CancelReason_"/>
+			<many-to-one name="CancelledBy" class="Staff" column="CancelledByOID_"/>
+			<!-- If cancelled by HL7, this field could be using to capture the name of the person who cancelled it -->
+			<property name="Comment" column="CancelComment_" type="String"/>
+			<!-- Link to the replacment order, if the order was replaced -->
+			<many-to-one name="ReplacementOrder" class="Order" column="ReplacementOrderOID_"/>
+		</component>
+
+		<!-- Information about where the order was merged, populated if the order status is MG -->
+		<component name="MergeInfo" class="OrderMergeInfo" access="nosetter.camelcase-underscore">
+			<many-to-one name="MergedBy" class="Staff" column="MergedByOID_"/>
+      <property name="MergedTime" column="MergedTime_" type="DateTime"/>
+      <!-- Link to the destination order, if the order was merged -->
+			<many-to-one name="MergeDestinationOrder" class="Order" column="MergeDestinationOrderOID_"/>
+		</component>
+    
+    <!-- Collection of orders that were merged into this order. -->
+    <set name="MergeSourceOrders" lazy="true" inverse="true">
+      <key column="MergeDestinationOrderOID_"/>
+      <one-to-many class="Order"/>
+    </set>
+
+    <map name="ExtendedProperties" lazy="true" table="OrderExtendedProperty_">
+			<key column="OrderOID_"/>
+			<index column="Name_" type="String"/>
+			<element type="String" column="Value_" length="65000"/>
+		</map>
+	</class>
+</hibernate-mapping>

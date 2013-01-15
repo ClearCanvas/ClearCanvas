@@ -1,0 +1,21 @@
+<project SchemaVersion="1.3">
+    <assemblies>
+        <assembly location=".\bin\Release\ClearCanvas.Dicom.dll" documentation=".\bin\Release\ClearCanvas.Dicom.xml" />
+    </assemblies>
+    <referencePaths>
+        <referencePath path=".\bin\**" />
+        <referencePath path="..\Common\bin\**" />
+        <referencePath path=".\OffisWrapper\cppwrapper\**" />
+        <referencePath path=".\OffisWrapper\csharp\**" />
+    </referencePaths>
+    <documenters>
+        <documenter name="MSDN">
+            <property name="OutputDirectory" value="C:\Code\ClearCanvas\Trunk\Dicom\Docs\" />
+            <property name="HtmlHelpName" value="ClearCanvas.Dicom" />
+            <property name="Title" value="ClearCanvas DICOM Services Framework" />
+            <property name="FeedbackEmailAddress" value="clinton@clearcanvas.ca" />
+            <property name="IncludeDefaultThreadSafety" value="False" />
+            <property name="CleanIntermediates" value="True" />
+        </documenter>
+    </documenters>
+</project>

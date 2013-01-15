@@ -1,0 +1,350 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ManifestInput xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.clearcanvas.ca">
+  <Files>
+    <File name="Web\critical.config" checksum="true" />
+    <File name="Web\Default.aspx" />
+    <File name="Web\GlobalMasterPage.master" />
+    <File name="Web\KeepSessionAlive.aspx" />
+    <File name="Web\Logging.config" ignore="true" />
+    <File name="Web\PersistantImage.ashx" />
+    <File name="Web\PrecompiledApp.config" />
+    <File name="Web\Users.xml" />
+    <File name="Web\web.config" config="true" />
+    <File name="Web\Web.sitemap" />
+    <File name="Web\logs" ignore="true"/>
+    <File name="Web\Pages\Help\UsersGuide" ignore="true"/>
+    <File name="Web\bin\AjaxControlToolkit.dll" checksum="true" />
+    <File name="Web\bin\App_Code.compiled" ignore="true"/>
+    <File name="Web\bin\App_global.asax.compiled" ignore="true"/>
+    <File name="Web\bin\App_GlobalResources.compiled" ignore="true"/>
+    <File name="Web\bin\Castle.Core.dll" checksum="true" />
+    <File name="Web\bin\Castle.DynamicProxy2.dll" checksum="true" />
+    <File name="Web\bin\ClearCanvas.Common.dll" checksum="true" />
+    <File name="Web\bin\ClearCanvas.Common.Core.dll" checksum="true" />
+    <File name="Web\bin\ClearCanvas.Dicom.Codec.Jpeg.dll" checksum="true" />
+    <File name="Web\bin\ClearCanvas.Dicom.Codec.Rle.dll" checksum="true" />
+    <File name="Web\bin\ClearCanvas.Dicom.dll" checksum="true" />
+    <File name="Web\bin\ClearCanvas.Enterprise.Common.dll" checksum="true" />
+    <File name="Web\bin\ClearCanvas.Enterprise.Core.dll" checksum="true" />
+    <File name="Web\bin\ClearCanvas.ImageServer.Common.dll" checksum="true" />
+    <File name="Web\bin\ClearCanvas.ImageServer.Core.dll" checksum="true" />
+    <File name="Web\bin\ClearCanvas.ImageServer.Enterprise.dll" checksum="true" />
+    <File name="Web\bin\ClearCanvas.ImageServer.Enterprise.SqlServer.dll" checksum="true" />
+    <File name="Web\bin\ClearCanvas.ImageServer.Model.dll" checksum="true" />
+    <File name="Web\bin\ClearCanvas.ImageServer.Model.SqlServer.dll" checksum="true" />
+    <File name="Web\bin\ClearCanvas.ImageServer.Rules.dll" checksum="true" />
+    <File name="Web\bin\ClearCanvas.ImageServer.Rules.JpegCodec.dll" checksum="true" />
+    <File name="Web\bin\ClearCanvas.ImageServer.Rules.RleCodec.dll" checksum="true" />
+    <File name="Web\bin\ClearCanvas.ImageServer.Services.Archiving.dll" checksum="true" />
+    <File name="Web\bin\ClearCanvas.ImageServer.Services.Archiving.Hsm.dll" checksum="true" />
+    <File name="Web\bin\ClearCanvas.ImageServer.Services.Common.dll" checksum="true" />
+    <File name="Web\bin\ClearCanvas.ImageServer.Services.Dicom.dll" checksum="true" />
+    <File name="Web\bin\ClearCanvas.ImageServer.Services.WorkQueue.dll" checksum="true" />
+    <File name="Web\bin\ClearCanvas.ImageServer.Utilities.dll" checksum="true" />
+    <File name="Web\bin\ClearCanvas.ImageServer.Web.Application.Assembly.dll" checksum="true" />
+    <File name="Web\bin\ClearCanvas.ImageServer.Web.Application.Assembly.dll.LOCKED" ignore="true"/>
+    <File name="Web\bin\ClearCanvas.ImageServer.Web.Application.Deployment.dll" checksum="true" />
+    <File name="Web\bin\ClearCanvas.ImageServer.Web.Common.dll" checksum="true" />
+    <File name="Web\bin\ClearCanvas.Jscript.dll" checksum="true" />
+    <File name="Web\bin\ClearCanvas.Server.ShredHost.dll" checksum="true" />
+    <File name="Web\bin\ClearCanvas.Utilities.Manifest.dll" checksum="true" />
+    <File name="Web\bin\ClearCanvas.Web.Enterprise.dll" checksum="true" />
+    <File name="Web\bin\Ionic.Zip.dll" checksum="true" />
+    <File name="Web\bin\log4net.dll" checksum="true" />
+    <File name="Web\bin\nunit.framework.dll" checksum="true" />
+    <!--File name="Web\bin\System.Web.Extensions.dll" checksum="true" />
+    <File name="Web\bin\System.Web.Extensions.Design.dll" checksum="true" /-->
+    <File name="Web\bin\ar\AjaxControlToolkit.resources.dll" checksum="true" />
+    <File name="Web\bin\cs\AjaxControlToolkit.resources.dll" checksum="true" />
+    <File name="Web\bin\de\AjaxControlToolkit.resources.dll" checksum="true" />
+    <File name="Web\bin\es\AjaxControlToolkit.resources.dll" checksum="true" />
+    <File name="Web\bin\fr\AjaxControlToolkit.resources.dll" checksum="true" />
+    <File name="Web\bin\he\AjaxControlToolkit.resources.dll" checksum="true" />
+    <File name="Web\bin\hi\AjaxControlToolkit.resources.dll" checksum="true" />
+    <File name="Web\bin\it\AjaxControlToolkit.resources.dll" checksum="true" />
+    <File name="Web\bin\ja\AjaxControlToolkit.resources.dll" checksum="true" />
+    <File name="Web\bin\ko\AjaxControlToolkit.resources.dll" checksum="true" />
+    <File name="Web\bin\nl\AjaxControlToolkit.resources.dll" checksum="true" />
+    <File name="Web\bin\pt\AjaxControlToolkit.resources.dll" checksum="true" />
+    <File name="Web\bin\ru\AjaxControlToolkit.resources.dll" checksum="true" />
+    <File name="Web\bin\tr-TR\AjaxControlToolkit.resources.dll" checksum="true" />
+    <File name="Web\bin\zh-CHS\AjaxControlToolkit.resources.dll" checksum="true" />
+    <File name="Web\bin\zh-CHT\AjaxControlToolkit.resources.dll" checksum="true" />
+    <File name="Web\Controls\AlertIndicator.ascx" />
+    <File name="Web\Controls\ApplicationAlertPanel.ascx" />
+    <File name="Web\Controls\CheckJavascript.ascx" />
+    <File name="Web\Controls\EmptySearchResultsMessage.ascx" />
+    <File name="Web\Controls\GridPager.ascx" />
+    <File name="Web\Controls\InvalidInputIndicator.ascx" />
+    <File name="Web\Controls\JQuery.ascx" />
+    <File name="Web\Controls\MessageBox.ascx" />
+    <File name="Web\Controls\ModalDialog.ascx" />
+    <File name="Web\Controls\PersonNameInputPanel.ascx" />
+    <File name="Web\Controls\PersonNameInputPanel.js" />
+    <File name="Web\Controls\SectionPanel.ascx" />
+    <File name="Web\Controls\ServerPartitionSelector.ascx" />
+    <File name="Web\Controls\SessionTimeout.ascx" />
+    <File name="Web\Controls\TimedDialog.ascx" />
+	<File name="Web\Controls\UsersGuideLink.ascx" />
+	<File name="Web\Images\favicon.ico" checksum="true" />
+    <File name="Web\Pages\Admin\Alerts\AlertHoverPopupDetails.ascx" />
+    <File name="Web\Pages\Admin\Alerts\StudyAlertContextInfoView.ascx" />
+    <File name="Web\Pages\Admin\Alerts\AlertsGridPanel.ascx" />
+    <File name="Web\Pages\Admin\Alerts\AlertsPanel.ascx" />
+    <File name="Web\Pages\Admin\Alerts\AlertsPanel.js" />
+    <File name="Web\Pages\Admin\Alerts\Default.aspx" />
+    <File name="Web\Pages\Admin\Alerts\WorkQueueAlertContextDataView.ascx" />
+    <File name="Web\Pages\Admin\ApplicationLog\ApplicationLogGridView.ascx" />
+    <File name="Web\Pages\Admin\ApplicationLog\ApplicationLogPanel.ascx" />
+    <File name="Web\Pages\Admin\ApplicationLog\Default.aspx" />
+    <File name="Web\Pages\Admin\Audit\DeletedStudies\Default.aspx" />
+    <File name="Web\Pages\Admin\Audit\DeletedStudies\DeletedStudiesSearchPanel.ascx" />
+    <File name="Web\Pages\Admin\Audit\DeletedStudies\DeletedStudyArchiveInfoPanel.ascx" />
+    <File name="Web\Pages\Admin\Audit\DeletedStudies\DeletedStudyDetailsDialog.ascx" />
+    <File name="Web\Pages\Admin\Audit\DeletedStudies\DeletedStudyDetailsDialogGeneralPanel.ascx" />
+    <File name="Web\Pages\Admin\Audit\DeletedStudies\DeletedStudyDetailsDialogPanel.ascx" />
+    <File name="Web\Pages\Admin\Audit\DeletedStudies\DeletedStudySearchPanel.js" />
+    <File name="Web\Pages\Admin\Audit\DeletedStudies\GeneralArchiveInfoPanel.ascx" />
+    <File name="Web\Pages\Admin\Audit\DeletedStudies\HsmArchiveInfoPanel.ascx" />
+    <File name="Web\Pages\Admin\Audit\DeletedStudies\SearchResultGridView.ascx" />
+    <File name="Web\Pages\Admin\Configure\DataRules\AddEditDataRuleDialog.ascx" />
+    <File name="Web\Pages\Admin\Configure\DataRules\DataRuleGridView.ascx" />
+    <File name="Web\Pages\Admin\Configure\DataRules\DataRulePanel.ascx" />
+    <File name="Web\Pages\Admin\Configure\DataRules\DataRulePanel.js" />
+    <File name="Web\Pages\Admin\Configure\DataRules\DataRuleSamples.asmx" />
+    <File name="Web\Pages\Admin\Configure\DataRules\Default.aspx" />
+    <File name="Web\Pages\Admin\Configure\Devices\AddEditDeviceDialog.ascx" />
+    <File name="Web\Pages\Admin\Configure\Devices\Default.aspx" />
+    <File name="Web\Pages\Admin\Configure\Devices\DeviceGridView.ascx" />
+    <File name="Web\Pages\Admin\Configure\Devices\DevicePanel.ascx" />
+    <File name="Web\Pages\Admin\Configure\Devices\DevicePanel.js" />
+    <File name="Web\Pages\Admin\Configure\Devices\ThrottleSettingsTab.ascx" />
+    <File name="Web\Pages\Admin\Configure\FileSystems\AddEditFileSystemDialog.ascx" />
+    <File name="Web\Pages\Admin\Configure\FileSystems\Default.aspx" />
+    <File name="Web\Pages\Admin\Configure\FileSystems\Filesystem.js" />
+    <File name="Web\Pages\Admin\Configure\FileSystems\FileSystemsGridView.ascx" />
+    <File name="Web\Pages\Admin\Configure\FileSystems\FileSystemsPanel.ascx" />
+    <File name="Web\Pages\Admin\Configure\FileSystems\FileSystemsPanel.js" />
+    <File name="Web\Pages\Admin\Configure\PartitionArchive\AddEditPartitionDialog.ascx" />
+    <File name="Web\Pages\Admin\Configure\PartitionArchive\Default.aspx" />
+    <File name="Web\Pages\Admin\Configure\PartitionArchive\PartitionArchiveGridPanel.ascx" />
+    <File name="Web\Pages\Admin\Configure\PartitionArchive\PartitionArchivePanel.ascx" />
+    <File name="Web\Pages\Admin\Configure\PartitionArchive\PartitionArchivePanel.js" />
+    <File name="Web\Pages\Admin\Configure\ServerPartitions\AddEditPartitionDialog.ascx" />
+    <File name="Web\Pages\Admin\Configure\ServerPartitions\DataAccessGroupPanel.ascx" />
+    <File name="Web\Pages\Admin\Configure\ServerPartitions\Default.aspx" />
+    <File name="Web\Pages\Admin\Configure\ServerPartitions\ServerPartitionGridPanel.ascx" />
+    <File name="Web\Pages\Admin\Configure\ServerPartitions\ServerPartitionPanel.ascx" />
+    <File name="Web\Pages\Admin\Configure\ServerPartitions\ServerPartitionPanel.js" />
+    <File name="Web\Pages\Admin\Configure\ServerRules\AddEditServerRuleDialog.ascx" />
+    <File name="Web\Pages\Admin\Configure\ServerRules\Default.aspx" />
+    <File name="Web\Pages\Admin\Configure\ServerRules\ServerRuleGridView.ascx" />
+    <File name="Web\Pages\Admin\Configure\ServerRules\ServerRulePanel.ascx" />
+    <File name="Web\Pages\Admin\Configure\ServerRules\ServerRulePanel.js" />
+    <File name="Web\Pages\Admin\Configure\ServerRules\ServerRuleSamples.asmx" />
+    <File name="Web\Pages\Admin\Configure\ServiceLocks\Default.aspx" />
+    <File name="Web\Pages\Admin\Configure\ServiceLocks\EditServiceLockDialog.ascx" />
+    <File name="Web\Pages\Admin\Configure\ServiceLocks\ServiceLockGridView.ascx" />
+    <File name="Web\Pages\Admin\Configure\ServiceLocks\ServiceLockPanel.ascx" />
+    <File name="Web\Pages\Admin\Configure\ServiceLocks\ServiceLockPanel.js" />
+    <File name="Web\Pages\Admin\Dashboard\AlertHoverPopupDetails.ascx" />
+    <File name="Web\Pages\Admin\Dashboard\AlertsGridView.ascx" />
+    <File name="Web\Pages\Admin\Dashboard\Default.aspx" />
+    <File name="Web\Pages\Admin\Dashboard\FileSystemsGridView.ascx" />
+    <File name="Web\Pages\Admin\Dashboard\ServerPartitionGridView.ascx" />
+    <File name="Web\Pages\Admin\Dashboard\StudiesSummary.ascx" />
+    <File name="Web\Pages\Admin\Dashboard\StudyIntegrityQueueSummary.ascx" />
+    <!--File name="Web\Pages\Admin\Dashboard\WorkQueueAlertContextDataView.ascx" /-->
+    <File name="Web\Pages\Admin\Dashboard\WorkQueueSummary.ascx" />
+    <File name="Web\Pages\Admin\UserManagement\UserGroups\AddEditUserGroupsDialog.ascx" />
+    <File name="Web\Pages\Admin\UserManagement\UserGroups\Default.aspx" />
+    <File name="Web\Pages\Admin\UserManagement\UserGroups\PasswordConfirmDialog.ascx" />
+    <File name="Web\Pages\Admin\UserManagement\UserGroups\UserGroupsGridPanel.ascx" />
+    <File name="Web\Pages\Admin\UserManagement\UserGroups\UserGroupsPanel.ascx" />
+    <File name="Web\Pages\Admin\UserManagement\UserGroups\UserGroupsPanel.js" />
+    <File name="Web\Pages\Admin\UserManagement\Users\AddEditUserDialog.ascx" />
+    <File name="Web\Pages\Admin\UserManagement\Users\Default.aspx" />
+    <File name="Web\Pages\Admin\UserManagement\Users\UserGridPanel.ascx" />
+    <File name="Web\Pages\Admin\UserManagement\Users\UserPanel.ascx" />
+    <File name="Web\Pages\Admin\UserManagement\Users\UserPanel.js" />
+    <File name="Web\Pages\Common\BarChart.aspx" />
+    <File name="Web\Pages\Common\BaseAdminPage.aspx" />
+    <File name="Web\Pages\Common\BasePage.aspx" />
+    <File name="Web\Pages\Common\Default.aspx" />
+    <File name="Web\Pages\Common\MainContentSection.Master" />
+    <File name="Web\Pages\Error\AuthorizationErrorPage.aspx" />
+    <File name="Web\Pages\Error\CookiesRequired.aspx" />
+    <File name="Web\Pages\Error\Default.aspx" />
+    <File name="Web\Pages\Error\ErrorPage.aspx" />
+    <File name="Web\Pages\Error\ErrorPageMaster.Master" />
+    <File name="Web\Pages\Error\JavascriptRequired.aspx" />
+    <File name="Web\Pages\Error\LicenseErrorPage.aspx" />
+    <File name="Web\Pages\Error\SoftwareExpiredErrorPage.aspx" />
+    <File name="Web\Pages\Error\TimeoutErrorPage.aspx" />
+    <File name="Web\Pages\Error\WebViewerAuthorizationErrorPage.aspx" />
+    <File name="Web\Pages\Error\WebViewerErrorPage.aspx" />
+    <File name="Web\Pages\Error\WebViewerErrorPageMaster.Master" />
+    <File name="Web\Pages\Error\WebViewerMultipleStudiesTimeoutErrorPage.aspx" />
+    <File name="Web\Pages\Error\WebViewerTimeoutErrorPage.aspx" />
+    <File name="Web\Pages\Help\Default.aspx" />
+    <File name="Web\Pages\Help\Documentation.aspx" />
+    <File name="Web\Pages\Login\ChangePasswordDialog.ascx" />
+    <File name="Web\Pages\Login\Default.aspx" />
+    <File name="Web\Pages\Login\PasswordExpiredDialog.ascx" />
+    <File name="Web\Pages\Queues\ArchiveQueue\ArchiveQueueItemList.ascx" />
+    <File name="Web\Pages\Queues\ArchiveQueue\Default.aspx" />
+    <File name="Web\Pages\Queues\ArchiveQueue\ResetArchiveQueueDialog.ascx" />
+    <File name="Web\Pages\Queues\ArchiveQueue\SearchPanel.ascx" />
+    <File name="Web\Pages\Queues\ArchiveQueue\SearchPanel.js" />
+    <File name="Web\Pages\Queues\RestoreQueue\Default.aspx" />
+    <File name="Web\Pages\Queues\RestoreQueue\RestoreQueueItemList.ascx" />
+    <File name="Web\Pages\Queues\RestoreQueue\SearchPanel.ascx" />
+    <File name="Web\Pages\Queues\RestoreQueue\SearchPanel.js" />
+    <File name="Web\Pages\Queues\StudyIntegrityQueue\Default.aspx" />
+    <File name="Web\Pages\Queues\StudyIntegrityQueue\DuplicateSopDialog.ascx" />
+    <File name="Web\Pages\Queues\StudyIntegrityQueue\ReconcileDialog.ascx" />
+    <File name="Web\Pages\Queues\StudyIntegrityQueue\SearchPanel.ascx" />
+    <File name="Web\Pages\Queues\StudyIntegrityQueue\SearchPanel.js" />
+    <File name="Web\Pages\Queues\StudyIntegrityQueue\StudyIntegrityQueueItemList.ascx" />
+    <File name="Web\Pages\Queues\StudyIntegrityQueue\SIQEntryTooltip.ascx" />
+    <File name="Web\Pages\Queues\WorkQueue\Default.aspx" />
+    <File name="Web\Pages\Queues\WorkQueue\SearchPanel.ascx" />
+    <File name="Web\Pages\Queues\WorkQueue\SearchPanel.js" />
+    <File name="Web\Pages\Queues\WorkQueue\WorkQueueAlertPanel.ascx" />
+    <File name="Web\Pages\Queues\WorkQueue\WorkQueueItemList.ascx" />
+    <File name="Web\Pages\Queues\WorkQueue\WorkQueueSettings.settings" />
+    <File name="Web\Pages\Queues\WorkQueue\Edit\AutoRouteWorkQueueDetailsView.ascx" />
+    <File name="Web\Pages\Queues\WorkQueue\Edit\Default.aspx" />
+    <File name="Web\Pages\Queues\WorkQueue\Edit\DeleteWorkQueueDialog.ascx" />
+    <File name="Web\Pages\Queues\WorkQueue\Edit\GeneralWorkQueueDetailsView.ascx" />
+    <File name="Web\Pages\Queues\WorkQueue\Edit\EditWorkQueueDetailsView.ascx" />
+    <File name="Web\Pages\Queues\WorkQueue\Edit\ProcessDuplicateWorkQueueDetailsView.ascx" />
+    <File name="Web\Pages\Queues\WorkQueue\Edit\ResetWorkQueueDialog.ascx" />
+    <File name="Web\Pages\Queues\WorkQueue\Edit\ScheduleWorkQueueDialog.ascx" />
+    <File name="Web\Pages\Queues\WorkQueue\Edit\TierMigrationWorkQueueDetailsView.ascx" />
+    <File name="Web\Pages\Queues\WorkQueue\Edit\WebEditStudyWorkQueueDetailsView.ascx" />
+    <File name="Web\Pages\Queues\WorkQueue\Edit\WebMoveStudyWorkQueueDetailsView.ascx" />
+    <File name="Web\Pages\Queues\WorkQueue\Edit\WorkQueueItemDeleted.aspx" />
+    <File name="Web\Pages\Queues\WorkQueue\Edit\WorkQueueItemDetailsPanel.ascx" />
+    <File name="Web\Pages\Queues\WorkQueue\Edit\WorkQueueItemDetailsPanel.js" />
+    <File name="Web\Pages\Queues\WorkQueue\Edit\WorkQueueSettingsPanel.ascx" />
+    <File name="Web\Pages\Studies\Default.aspx" />
+    <File name="Web\Pages\Studies\SearchPanel.ascx" />
+    <File name="Web\Pages\Studies\SearchPanel.js" />
+    <File name="Web\Pages\Studies\StudyListGridView.ascx" />
+    <File name="Web\Pages\Studies\Move\Default.aspx" />
+    <File name="Web\Pages\Studies\Move\DeviceGridView.ascx" />
+    <File name="Web\Pages\Studies\Move\MovePanel.ascx" />
+    <File name="Web\Pages\Studies\Move\MovePanel.js" />
+    <File name="Web\Pages\Studies\Move\StudyGridView.ascx" />
+    <File name="Web\Pages\Studies\MoveSeries\Default.aspx" />
+    <File name="Web\Pages\Studies\MoveSeries\DeviceGridView.ascx" />
+    <File name="Web\Pages\Studies\MoveSeries\MovePanel.ascx" />
+    <File name="Web\Pages\Studies\MoveSeries\MovePanel.js" />
+    <File name="Web\Pages\Studies\MoveSeries\PatientSummaryPanel.ascx" />
+    <File name="Web\Pages\Studies\MoveSeries\SeriesGridView.ascx" />
+    <File name="Web\Pages\Studies\MoveSeries\StudySummaryPanel.ascx" />
+    <File name="Web\Pages\Studies\SeriesDetails\Default.aspx" />
+    <File name="Web\Pages\Studies\SeriesDetails\PatientSummaryPanel.ascx" />
+    <File name="Web\Pages\Studies\SeriesDetails\SeriesDetailsPanel.ascx" />
+    <File name="Web\Pages\Studies\SeriesDetails\SeriesDetailsView.ascx" />
+    <File name="Web\Pages\Studies\SeriesDetails\StudySummaryPanel.ascx" />
+    <File name="Web\Pages\Studies\StudyDetails\Default.aspx" />
+    <File name="Web\Pages\Studies\StudyDetails\Controls\AddAuthorityGroupsDialog.ascx" />
+    <File name="Web\Pages\Studies\StudyDetails\Controls\ArchivePanel.ascx" />
+    <File name="Web\Pages\Studies\StudyDetails\Controls\DataAccessPanel.ascx" />
+    <File name="Web\Pages\Studies\StudyDetails\Controls\DeleteSeriesConfirmDialog.ascx" />
+    <File name="Web\Pages\Studies\StudyDetails\Controls\DeleteStudyConfirmDialog.ascx" />
+    <File name="Web\Pages\Studies\StudyDetails\Controls\DuplicateProcessChangeLog.ascx" />
+    <File name="Web\Pages\Studies\StudyDetails\Controls\EditHistoryDetailsColumn.ascx" />
+    <File name="Web\Pages\Studies\StudyDetails\Controls\EditStudyDetailsDialog.ascx" />
+    <File name="Web\Pages\Studies\StudyDetails\Controls\FileSystemQueueGridView.ascx" />
+    <File name="Web\Pages\Studies\StudyDetails\Controls\HistoryPanel.ascx" />
+    <File name="Web\Pages\Studies\StudyDetails\Controls\PatientSummaryPanel.ascx" />
+    <File name="Web\Pages\Studies\StudyDetails\Controls\ReconcileHistoryDetailsColumn.ascx" />
+    <File name="Web\Pages\Studies\StudyDetails\Controls\SeriesDeleteChangeLog.ascx" />
+    <File name="Web\Pages\Studies\StudyDetails\Controls\SeriesGridView.ascx" />
+    <File name="Web\Pages\Studies\StudyDetails\Controls\StudyDetailsPanel.ascx" />
+    <File name="Web\Pages\Studies\StudyDetails\Controls\StudyDetailsTabs.ascx" />
+    <File name="Web\Pages\Studies\StudyDetails\Controls\StudyDetailsView.ascx" />
+    <File name="Web\Pages\Studies\StudyDetails\Controls\StudyHistoryChangeDescPanel.ascx" />
+    <File name="Web\Pages\Studies\StudyDetails\Controls\StudyIntegrityQueueGridView.ascx" />
+    <File name="Web\Pages\Studies\StudyDetails\Controls\StudyReprocessChangeLog.ascx" />
+    <File name="Web\Pages\Studies\StudyDetails\Controls\StudyStateAlertPanel.ascx" />
+    <File name="Web\Pages\Studies\StudyDetails\Controls\StudyStorageView.ascx" />
+    <File name="Web\Pages\Studies\StudyDetails\Controls\UpdateAuthorityGroupDialog.ascx" />
+    <File name="Web\Pages\Studies\StudyDetails\Controls\WorkQueueGridView.ascx" />
+    <File name="Web\Pages\Studies\StudyDetails\Scripts\FileSystemQueueGridView.js" />
+    <File name="Web\Pages\Studies\StudyDetails\Scripts\SeriesGridView.js" />
+    <File name="Web\Pages\Studies\StudyDetails\Scripts\StudyDetailsTabs.js" />
+    <File name="Web\Pages\Studies\StudyDetails\Scripts\WorkQueueGridView.js" />
+    <File name="Web\Pages\Studies\View\Default.aspx" />
+    <File name="Web\Pages\Studies\View\silverlight.js" />
+    <File name="Web\Pages\Studies\View\SplashScreen\SplashScreen.js" />
+    <File name="Web\Pages\Studies\View\SplashScreen\SplashScreen.xaml" />
+    <File name="Web\Pages\WebViewer\AutomaticLoginDemo.htm" />
+    <File name="Web\Pages\WebViewer\Default.aspx" />
+    <File name="Web\Pages\WebViewer\GridPager.ascx" />
+    <File name="Web\Pages\WebViewer\jquery-1.4.2.min.js" />
+    <File name="Web\Pages\WebViewer\JQuery.ascx" />
+    <File name="Web\Pages\WebViewer\Launch.aspx" />
+    <File name="Web\Pages\WebViewer\SearchPanel.ascx" />
+    <File name="Web\Pages\WebViewer\SearchPanel.js" />
+    <File name="Web\Pages\WebViewer\SessionTimeout.ascx" />
+    <File name="Web\Pages\WebViewer\silverlight.js" />
+    <File name="Web\Pages\WebViewer\StandaloneDemo.htm" />
+    <File name="Web\Pages\WebViewer\StudyList.aspx" />
+    <File name="Web\Pages\WebViewer\StudyListGridView.ascx" />
+    <File name="Web\Pages\WebViewer\Images\Searching.gif" checksum="true" />
+    <File name="Web\Pages\WebViewer\Images\StudiesPageLogo.png" checksum="false" />
+    <File name="Web\Pages\WebViewer\Images\WebViewerPagerBackground.png" checksum="true" />
+    <File name="Web\Pages\WebViewer\Images\WebViewerPagerFirstDisabled.png" checksum="true" />
+    <File name="Web\Pages\WebViewer\Images\WebViewerPagerFirstEnabled.png" checksum="true" />
+    <File name="Web\Pages\WebViewer\Images\WebViewerPagerLastDisabled.png" checksum="true" />
+    <File name="Web\Pages\WebViewer\Images\WebViewerPagerLastEnabled.png" checksum="true" />
+    <File name="Web\Pages\WebViewer\Images\WebViewerPagerNextDisabled.png" checksum="true" />
+    <File name="Web\Pages\WebViewer\Images\WebViewerPagerNextEnabled.png" checksum="true" />
+    <File name="Web\Pages\WebViewer\Images\WebViewerPagerPreviousDisabled.png" checksum="true" />
+    <File name="Web\Pages\WebViewer\Images\WebViewerPagerPreviousEnabled.png" checksum="true" />
+    <File name="Web\Pages\WebViewer\Images\WebViewerPagerTotalStudiesLeft.png" checksum="true" />
+    <File name="Web\Pages\WebViewer\Images\WebViewerPagerTotalStudiesRight.png" checksum="true" />
+    <File name="Web\Pages\WebViewer\SplashScreen\SplashScreen.js" />
+    <File name="Web\Pages\WebViewer\SplashScreen\SplashScreen.xaml" />
+    <File name="Web\Scripts\ClearCanvas.js" />
+    <File name="Web\Scripts\date.js" />
+    <File name="Web\Scripts\ErrorHandling.js" />
+    <File name="Web\Scripts\NumberFormat154.js" />
+    <File name="Web\Scripts\CodeMirror\LICENSE" />
+    <File name="Web\Scripts\CodeMirror\css\csscolors.css" />
+    <File name="Web\Scripts\CodeMirror\css\docs.css" />
+    <File name="Web\Scripts\CodeMirror\css\jscolors.css" />
+    <File name="Web\Scripts\CodeMirror\css\sparqlcolors.css" />
+    <File name="Web\Scripts\CodeMirror\css\xmlcolors.css" />
+    <File name="Web\Scripts\CodeMirror\js\codemirror.js" />
+    <File name="Web\Scripts\CodeMirror\js\editor.js" />
+    <File name="Web\Scripts\CodeMirror\js\mirrorframe.js" />
+    <File name="Web\Scripts\CodeMirror\js\parsecss.js" />
+    <File name="Web\Scripts\CodeMirror\js\parsehtmlmixed.js" />
+    <File name="Web\Scripts\CodeMirror\js\parsejavascript.js" />
+    <File name="Web\Scripts\CodeMirror\js\parsesparql.js" />
+    <File name="Web\Scripts\CodeMirror\js\parsexml.js" />
+    <File name="Web\Scripts\CodeMirror\js\select.js" />
+    <File name="Web\Scripts\CodeMirror\js\stringstream.js" />
+    <File name="Web\Scripts\CodeMirror\js\tokenize.js" />
+    <File name="Web\Scripts\CodeMirror\js\tokenizejavascript.js" />
+    <File name="Web\Scripts\CodeMirror\js\undo.js" />
+    <File name="Web\Scripts\CodeMirror\js\util.js" />
+    <File name="Web\Scripts\jquery\jquery-1.2.6.min.js" />
+    <File name="Web\Scripts\jquery\jquery-1.3.2.min.js" />
+    <File name="Web\Scripts\jquery\jquery.dimensions.js" />
+    <File name="Web\Scripts\jquery\jquery.dropshadow.js" />
+    <File name="Web\Scripts\jquery\jquery.maskedinput-1.2.1.js" />
+    <File name="Web\Scripts\jquery\jquery.multiselect.js" />
+    <File name="Web\Services\ApplicationService.svc" />
+    <File name="Web\Services\FilesystemInfoService.asmx" />
+    <File name="Web\Services\ValidationServices.asmx" />
+    <File name="Web\Services\webservice.htc" />
+    <File name="Web\Test\speedtest_small.bin" ignore="true" />
+    <File name="Web\Test\speedtest_tiny.bin" ignore="true" />
+  </Files>
+</ManifestInput>

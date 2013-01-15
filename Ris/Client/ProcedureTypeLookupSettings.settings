@@ -1,0 +1,12 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="ClearCanvas.Ris.Client" GeneratedClassName="ProcedureTypeLookupSettings">
+  <Profiles />
+  <Settings>
+    <Setting Name="MinQueryStringLength" Description="Minium number of characters that must be entered before a lookup is initiated." Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">2</Value>
+    </Setting>
+    <Setting Name="QuerySpecificityThreshold" Description="Queries that would return more than this number of results will be rejected (no results will be returned until more characters are entered)." Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">200</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

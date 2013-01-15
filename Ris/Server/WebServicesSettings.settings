@@ -1,0 +1,36 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="ClearCanvas.Ris.Server" GeneratedClassName="WebServicesSettings">
+  <Profiles />
+  <Settings>
+    <Setting Name="BaseUrl" Description="Base URL on which web services are hosted." Type="System.String" Scope="Application">
+      <Value Profile="(Default)">net.tcp://localhost:8000/</Value>
+    </Setting>
+    <Setting Name="SendExceptionDetailToClient" Description="Indicates whether exception details should be transmitted to the client." Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="ConfigurationClass" Description="Specifies the name of the service configuration class." Type="System.String" Scope="Application">
+      <Value Profile="(Default)">ClearCanvas.Enterprise.Common.ServiceConfiguration.Server.NetTcpConfiguration, ClearCanvas.Enterprise.Common</Value>
+    </Setting>
+    <Setting Name="MaxReceivedMessageSize" Description="Specifies the max received message size in bytes." Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">1000000</Value>
+    </Setting>
+    <Setting Name="EnablePerformanceLogging" Description="Indicates whether to enable performance logging." Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="ConfigurationServiceResponseCachingEnabled" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="CertificateFindType" Type="System.Security.Cryptography.X509Certificates.X509FindType" Scope="Application">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="CertificateStoreName" Type="System.Security.Cryptography.X509Certificates.StoreName" Scope="Application">
+      <Value Profile="(Default)">My</Value>
+    </Setting>
+    <Setting Name="CertificateStoreLocation" Type="System.Security.Cryptography.X509Certificates.StoreLocation" Scope="Application">
+      <Value Profile="(Default)">LocalMachine</Value>
+    </Setting>
+    <Setting Name="CertificateCustomFindValue" Type="System.String" Scope="Application">
+      <Value Profile="(Default)" />
+    </Setting>
+  </Settings>
+</SettingsFile>

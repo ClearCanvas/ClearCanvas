@@ -1,0 +1,795 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <metadata name="_grpAvailableColumns.GenerateMember" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>False</value>
+  </metadata>
+  <metadata name="_grpDicomColumns.GenerateMember" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>False</value>
+  </metadata>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="_btnAddDicomColumn.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Right</value>
+  </data>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="_btnAddDicomColumn.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAAOwgAA
+        DsIBFShKgAAAAFRJREFUOE+1UskNACAI0/2XYjNEE3/SYo0mvExP6O7e5DfB6sjA5fikGjFmFjez+M6d
+        QTAjSG1vdUQAMzMCWhgi+KPMLNNVSW0/7bl6rrTt6wurKg+RVUcruro4qgAAAABJRU5ErkJggg==
+</value>
+  </data>
+  <data name="_btnAddDicomColumn.Location" type="System.Drawing.Point, System.Drawing">
+    <value>288, 19</value>
+  </data>
+  <data name="_btnAddDicomColumn.Size" type="System.Drawing.Size, System.Drawing">
+    <value>32, 31</value>
+  </data>
+  <assembly alias="mscorlib" name="mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="_btnAddDicomColumn.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <metadata name="_tooltips.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>100, 17</value>
+  </metadata>
+  <data name="_btnAddDicomColumn.ToolTip" xml:space="preserve">
+    <value>Add</value>
+  </data>
+  <data name="&gt;&gt;_btnAddDicomColumn.Name" xml:space="preserve">
+    <value>_btnAddDicomColumn</value>
+  </data>
+  <data name="&gt;&gt;_btnAddDicomColumn.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_btnAddDicomColumn.Parent" xml:space="preserve">
+    <value>_grpDicomColumns</value>
+  </data>
+  <data name="&gt;&gt;_btnAddDicomColumn.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="_lstDicomColumns.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Bottom, Left, Right</value>
+  </data>
+  <data name="_lstDicomColumns.Location" type="System.Drawing.Point, System.Drawing">
+    <value>6, 45</value>
+  </data>
+  <data name="_lstDicomColumns.Size" type="System.Drawing.Size, System.Drawing">
+    <value>276, 186</value>
+  </data>
+  <data name="_lstDicomColumns.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="&gt;&gt;_lstDicomColumns.Name" xml:space="preserve">
+    <value>_lstDicomColumns</value>
+  </data>
+  <data name="&gt;&gt;_lstDicomColumns.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ListBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_lstDicomColumns.Parent" xml:space="preserve">
+    <value>_grpDicomColumns</value>
+  </data>
+  <data name="&gt;&gt;_lstDicomColumns.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="_txtFilterDicomColumns.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Left, Right</value>
+  </data>
+  <data name="_txtFilterDicomColumns.Location" type="System.Drawing.Point, System.Drawing">
+    <value>6, 19</value>
+  </data>
+  <data name="_txtFilterDicomColumns.Size" type="System.Drawing.Size, System.Drawing">
+    <value>276, 20</value>
+  </data>
+  <data name="_txtFilterDicomColumns.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="_txtFilterDicomColumns.ToolTip" xml:space="preserve">
+    <value>Search DICOM tags</value>
+  </data>
+  <data name="&gt;&gt;_txtFilterDicomColumns.Name" xml:space="preserve">
+    <value>_txtFilterDicomColumns</value>
+  </data>
+  <data name="&gt;&gt;_txtFilterDicomColumns.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_txtFilterDicomColumns.Parent" xml:space="preserve">
+    <value>_grpDicomColumns</value>
+  </data>
+  <data name="&gt;&gt;_txtFilterDicomColumns.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="_grpDicomColumns.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="_grpDicomColumns.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 137</value>
+  </data>
+  <data name="_grpDicomColumns.Size" type="System.Drawing.Size, System.Drawing">
+    <value>326, 243</value>
+  </data>
+  <data name="_grpDicomColumns.TabIndex" type="System.Int32, mscorlib">
+    <value>8</value>
+  </data>
+  <data name="_grpDicomColumns.Text" xml:space="preserve">
+    <value>DICOM Columns</value>
+  </data>
+  <data name="&gt;&gt;_grpDicomColumns.Name" xml:space="preserve">
+    <value>_grpDicomColumns</value>
+  </data>
+  <data name="&gt;&gt;_grpDicomColumns.Type" xml:space="preserve">
+    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_grpDicomColumns.Parent" xml:space="preserve">
+    <value>_grpAvailableColumns</value>
+  </data>
+  <data name="&gt;&gt;_grpDicomColumns.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="_splitSpecialColumnsResizer.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Top</value>
+  </data>
+  <data name="_splitSpecialColumnsResizer.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 134</value>
+  </data>
+  <data name="_splitSpecialColumnsResizer.Size" type="System.Drawing.Size, System.Drawing">
+    <value>326, 3</value>
+  </data>
+  <data name="_splitSpecialColumnsResizer.TabIndex" type="System.Int32, mscorlib">
+    <value>10</value>
+  </data>
+  <data name="&gt;&gt;_splitSpecialColumnsResizer.Name" xml:space="preserve">
+    <value>_splitSpecialColumnsResizer</value>
+  </data>
+  <data name="&gt;&gt;_splitSpecialColumnsResizer.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Splitter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_splitSpecialColumnsResizer.Parent" xml:space="preserve">
+    <value>_grpAvailableColumns</value>
+  </data>
+  <data name="&gt;&gt;_splitSpecialColumnsResizer.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <metadata name="_grpDicomTag.GenerateMember" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>False</value>
+  </metadata>
+  <data name="_btnAddDicomTag.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Right</value>
+  </data>
+  <data name="_btnAddDicomTag.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAAOwgAA
+        DsIBFShKgAAAAFRJREFUOE+1UskNACAI0/2XYjNEE3/SYo0mvExP6O7e5DfB6sjA5fikGjFmFjez+M6d
+        QTAjSG1vdUQAMzMCWhgi+KPMLNNVSW0/7bl6rrTt6wurKg+RVUcruro4qgAAAABJRU5ErkJggg==
+</value>
+  </data>
+  <data name="_btnAddDicomTag.Location" type="System.Drawing.Point, System.Drawing">
+    <value>288, 19</value>
+  </data>
+  <data name="_btnAddDicomTag.Size" type="System.Drawing.Size, System.Drawing">
+    <value>32, 31</value>
+  </data>
+  <data name="_btnAddDicomTag.TabIndex" type="System.Int32, mscorlib">
+    <value>4</value>
+  </data>
+  <data name="_btnAddDicomTag.ToolTip" xml:space="preserve">
+    <value>Add</value>
+  </data>
+  <data name="&gt;&gt;_btnAddDicomTag.Name" xml:space="preserve">
+    <value>_btnAddDicomTag</value>
+  </data>
+  <data name="&gt;&gt;_btnAddDicomTag.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_btnAddDicomTag.Parent" xml:space="preserve">
+    <value>_grpDicomTag</value>
+  </data>
+  <data name="&gt;&gt;_btnAddDicomTag.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="_txtDicomTagElement.Location" type="System.Drawing.Point, System.Drawing">
+    <value>155, 25</value>
+  </data>
+  <data name="_txtDicomTagElement.MaxLength" type="System.Int32, mscorlib">
+    <value>4</value>
+  </data>
+  <data name="_txtDicomTagElement.Size" type="System.Drawing.Size, System.Drawing">
+    <value>51, 20</value>
+  </data>
+  <data name="_txtDicomTagElement.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <data name="&gt;&gt;_txtDicomTagElement.Name" xml:space="preserve">
+    <value>_txtDicomTagElement</value>
+  </data>
+  <data name="&gt;&gt;_txtDicomTagElement.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_txtDicomTagElement.Parent" xml:space="preserve">
+    <value>_grpDicomTag</value>
+  </data>
+  <data name="&gt;&gt;_txtDicomTagElement.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <metadata name="_lblDicomTagElement.GenerateMember" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>False</value>
+  </metadata>
+  <data name="_lblDicomTagElement.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="_lblDicomTagElement.Location" type="System.Drawing.Point, System.Drawing">
+    <value>104, 28</value>
+  </data>
+  <data name="_lblDicomTagElement.Size" type="System.Drawing.Size, System.Drawing">
+    <value>45, 13</value>
+  </data>
+  <data name="_lblDicomTagElement.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="_lblDicomTagElement.Text" xml:space="preserve">
+    <value>Element</value>
+  </data>
+  <data name="&gt;&gt;_lblDicomTagElement.Name" xml:space="preserve">
+    <value>_lblDicomTagElement</value>
+  </data>
+  <data name="&gt;&gt;_lblDicomTagElement.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_lblDicomTagElement.Parent" xml:space="preserve">
+    <value>_grpDicomTag</value>
+  </data>
+  <data name="&gt;&gt;_lblDicomTagElement.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="_txtDicomTagGroup.Location" type="System.Drawing.Point, System.Drawing">
+    <value>48, 25</value>
+  </data>
+  <data name="_txtDicomTagGroup.MaxLength" type="System.Int32, mscorlib">
+    <value>4</value>
+  </data>
+  <data name="_txtDicomTagGroup.Size" type="System.Drawing.Size, System.Drawing">
+    <value>51, 20</value>
+  </data>
+  <data name="_txtDicomTagGroup.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;_txtDicomTagGroup.Name" xml:space="preserve">
+    <value>_txtDicomTagGroup</value>
+  </data>
+  <data name="&gt;&gt;_txtDicomTagGroup.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_txtDicomTagGroup.Parent" xml:space="preserve">
+    <value>_grpDicomTag</value>
+  </data>
+  <data name="&gt;&gt;_txtDicomTagGroup.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <metadata name="_lblDicomTagGroup.GenerateMember" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>False</value>
+  </metadata>
+  <data name="_lblDicomTagGroup.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="_lblDicomTagGroup.Location" type="System.Drawing.Point, System.Drawing">
+    <value>6, 28</value>
+  </data>
+  <data name="_lblDicomTagGroup.Size" type="System.Drawing.Size, System.Drawing">
+    <value>36, 13</value>
+  </data>
+  <data name="_lblDicomTagGroup.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="_lblDicomTagGroup.Text" xml:space="preserve">
+    <value>Group</value>
+  </data>
+  <data name="&gt;&gt;_lblDicomTagGroup.Name" xml:space="preserve">
+    <value>_lblDicomTagGroup</value>
+  </data>
+  <data name="&gt;&gt;_lblDicomTagGroup.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_lblDicomTagGroup.Parent" xml:space="preserve">
+    <value>_grpDicomTag</value>
+  </data>
+  <data name="&gt;&gt;_lblDicomTagGroup.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="_grpDicomTag.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Bottom</value>
+  </data>
+  <data name="_grpDicomTag.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 380</value>
+  </data>
+  <data name="_grpDicomTag.Size" type="System.Drawing.Size, System.Drawing">
+    <value>326, 59</value>
+  </data>
+  <data name="_grpDicomTag.TabIndex" type="System.Int32, mscorlib">
+    <value>9</value>
+  </data>
+  <data name="_grpDicomTag.Text" xml:space="preserve">
+    <value>Custom DICOM Columns</value>
+  </data>
+  <data name="&gt;&gt;_grpDicomTag.Name" xml:space="preserve">
+    <value>_grpDicomTag</value>
+  </data>
+  <data name="&gt;&gt;_grpDicomTag.Type" xml:space="preserve">
+    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_grpDicomTag.Parent" xml:space="preserve">
+    <value>_grpAvailableColumns</value>
+  </data>
+  <data name="&gt;&gt;_grpDicomTag.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <metadata name="_grpSpecialColumns.GenerateMember" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>False</value>
+  </metadata>
+  <data name="_btnAddSpecialColumn.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Right</value>
+  </data>
+  <data name="_btnAddSpecialColumn.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAAOwQAA
+        DsEBuJFr7QAAAFRJREFUOE+1UskNACAI0/2XYjNEE3/SYo0mvExP6O7e5DfB6sjA5fikGjFmFjez+M6d
+        QTAjSG1vdUQAMzMCWhgi+KPMLNNVSW0/7bl6rrTt6wurKg+RVUcruro4qgAAAABJRU5ErkJggg==
+</value>
+  </data>
+  <data name="_btnAddSpecialColumn.Location" type="System.Drawing.Point, System.Drawing">
+    <value>288, 19</value>
+  </data>
+  <data name="_btnAddSpecialColumn.Size" type="System.Drawing.Size, System.Drawing">
+    <value>32, 31</value>
+  </data>
+  <data name="_btnAddSpecialColumn.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="_btnAddSpecialColumn.ToolTip" xml:space="preserve">
+    <value>Add</value>
+  </data>
+  <data name="&gt;&gt;_btnAddSpecialColumn.Name" xml:space="preserve">
+    <value>_btnAddSpecialColumn</value>
+  </data>
+  <data name="&gt;&gt;_btnAddSpecialColumn.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_btnAddSpecialColumn.Parent" xml:space="preserve">
+    <value>_grpSpecialColumns</value>
+  </data>
+  <data name="&gt;&gt;_btnAddSpecialColumn.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="_lstSpecialColumns.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Bottom, Left, Right</value>
+  </data>
+  <data name="_lstSpecialColumns.Location" type="System.Drawing.Point, System.Drawing">
+    <value>6, 19</value>
+  </data>
+  <data name="_lstSpecialColumns.Size" type="System.Drawing.Size, System.Drawing">
+    <value>276, 82</value>
+  </data>
+  <data name="_lstSpecialColumns.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;_lstSpecialColumns.Name" xml:space="preserve">
+    <value>_lstSpecialColumns</value>
+  </data>
+  <data name="&gt;&gt;_lstSpecialColumns.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ListBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_lstSpecialColumns.Parent" xml:space="preserve">
+    <value>_grpSpecialColumns</value>
+  </data>
+  <data name="&gt;&gt;_lstSpecialColumns.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="_grpSpecialColumns.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Top</value>
+  </data>
+  <data name="_grpSpecialColumns.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 16</value>
+  </data>
+  <data name="_grpSpecialColumns.Size" type="System.Drawing.Size, System.Drawing">
+    <value>326, 118</value>
+  </data>
+  <data name="_grpSpecialColumns.TabIndex" type="System.Int32, mscorlib">
+    <value>7</value>
+  </data>
+  <data name="_grpSpecialColumns.Text" xml:space="preserve">
+    <value>Special Columns</value>
+  </data>
+  <data name="&gt;&gt;_grpSpecialColumns.Name" xml:space="preserve">
+    <value>_grpSpecialColumns</value>
+  </data>
+  <data name="&gt;&gt;_grpSpecialColumns.Type" xml:space="preserve">
+    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_grpSpecialColumns.Parent" xml:space="preserve">
+    <value>_grpAvailableColumns</value>
+  </data>
+  <data name="&gt;&gt;_grpSpecialColumns.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="_grpAvailableColumns.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="_grpAvailableColumns.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="_grpAvailableColumns.Size" type="System.Drawing.Size, System.Drawing">
+    <value>332, 442</value>
+  </data>
+  <data name="_grpAvailableColumns.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="_grpAvailableColumns.Text" xml:space="preserve">
+    <value>Available Columns</value>
+  </data>
+  <data name="&gt;&gt;_grpAvailableColumns.Name" xml:space="preserve">
+    <value>_grpAvailableColumns</value>
+  </data>
+  <data name="&gt;&gt;_grpAvailableColumns.Type" xml:space="preserve">
+    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_grpAvailableColumns.Parent" xml:space="preserve">
+    <value>pnlSplitter.Panel1</value>
+  </data>
+  <data name="&gt;&gt;_grpAvailableColumns.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <metadata name="_grpSelectedColumns.GenerateMember" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>False</value>
+  </metadata>
+  <data name="_btnMoveColumnDown.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Right</value>
+  </data>
+  <data name="_btnMoveColumnDown.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAAOwgAA
+        DsIBFShKgAAAAGBJREFUOE9j/M/wn4EiADKAEkiRZrDr8dl+4MCB/zCMSx1OA0AagWEDxyA+NkOGmwHo
+        /kYOA1zhgREGhAxBD0ysgYjLEGwxQbtYAMU5zCW40gDBlAgzBF9qpW1eICaXAgDeftbqsKU3fwAAAABJ
+        RU5ErkJggg==
+</value>
+  </data>
+  <data name="_btnMoveColumnDown.Location" type="System.Drawing.Point, System.Drawing">
+    <value>293, 167</value>
+  </data>
+  <data name="_btnMoveColumnDown.Size" type="System.Drawing.Size, System.Drawing">
+    <value>32, 31</value>
+  </data>
+  <data name="_btnMoveColumnDown.TabIndex" type="System.Int32, mscorlib">
+    <value>5</value>
+  </data>
+  <data name="_btnMoveColumnDown.ToolTip" xml:space="preserve">
+    <value>Move Down</value>
+  </data>
+  <data name="&gt;&gt;_btnMoveColumnDown.Name" xml:space="preserve">
+    <value>_btnMoveColumnDown</value>
+  </data>
+  <data name="&gt;&gt;_btnMoveColumnDown.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_btnMoveColumnDown.Parent" xml:space="preserve">
+    <value>_grpSelectedColumns</value>
+  </data>
+  <data name="&gt;&gt;_btnMoveColumnDown.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="_btnMoveColumnUp.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Right</value>
+  </data>
+  <data name="_btnMoveColumnUp.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAAOwgAA
+        DsIBFShKgAAAAF1JREFUOE/N08sNACAIA1Ddfyk2Q3vg4IdiJCbquU9BqVq0pBaAzA7DIqLsAAog3MtT
+        hriAhQEwZAvMYYYsgBf2kAGIwjvkTQ/wbKkm/gHYLVDK1Uc6nY9wFiIoDTQlbdbqZD+pLwAAAABJRU5E
+        rkJggg==
+</value>
+  </data>
+  <data name="_btnMoveColumnUp.Location" type="System.Drawing.Point, System.Drawing">
+    <value>293, 130</value>
+  </data>
+  <data name="_btnMoveColumnUp.Size" type="System.Drawing.Size, System.Drawing">
+    <value>32, 31</value>
+  </data>
+  <data name="_btnMoveColumnUp.TabIndex" type="System.Int32, mscorlib">
+    <value>4</value>
+  </data>
+  <data name="_btnMoveColumnUp.ToolTip" xml:space="preserve">
+    <value>Move Up</value>
+  </data>
+  <data name="&gt;&gt;_btnMoveColumnUp.Name" xml:space="preserve">
+    <value>_btnMoveColumnUp</value>
+  </data>
+  <data name="&gt;&gt;_btnMoveColumnUp.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_btnMoveColumnUp.Parent" xml:space="preserve">
+    <value>_grpSelectedColumns</value>
+  </data>
+  <data name="&gt;&gt;_btnMoveColumnUp.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="_btnDelColumn.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Right</value>
+  </data>
+  <data name="_btnDelColumn.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAAOwgAA
+        DsIBFShKgAAAAHRJREFUOE+tk9sOgCAMQ/H/P3oCyUypu3CbiQ/CDu2ojxQpR9UAJ09vrtVe0ivB8d4B
+        kIGs9e88XfQg7neWjCC1FNkzHbOaZQAONhvufQXeDDwlgwKrWYec3kLUjBAOm5mDKJFs5WdhJs6Yna0f
+        CVVsAVDBCwHn1TpYRhhoAAAAAElFTkSuQmCC
+</value>
+  </data>
+  <data name="_btnDelColumn.Location" type="System.Drawing.Point, System.Drawing">
+    <value>293, 93</value>
+  </data>
+  <data name="_btnDelColumn.Size" type="System.Drawing.Size, System.Drawing">
+    <value>32, 31</value>
+  </data>
+  <data name="_btnDelColumn.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <data name="_btnDelColumn.ToolTip" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="&gt;&gt;_btnDelColumn.Name" xml:space="preserve">
+    <value>_btnDelColumn</value>
+  </data>
+  <data name="&gt;&gt;_btnDelColumn.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_btnDelColumn.Parent" xml:space="preserve">
+    <value>_grpSelectedColumns</value>
+  </data>
+  <data name="&gt;&gt;_btnDelColumn.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="_lstSelectedColumns.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Bottom, Left, Right</value>
+  </data>
+  <data name="_lstSelectedColumns.IntegralHeight" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="_lstSelectedColumns.Location" type="System.Drawing.Point, System.Drawing">
+    <value>6, 19</value>
+  </data>
+  <data name="_lstSelectedColumns.Size" type="System.Drawing.Size, System.Drawing">
+    <value>281, 417</value>
+  </data>
+  <data name="_lstSelectedColumns.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;_lstSelectedColumns.Name" xml:space="preserve">
+    <value>_lstSelectedColumns</value>
+  </data>
+  <data name="&gt;&gt;_lstSelectedColumns.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ListBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_lstSelectedColumns.Parent" xml:space="preserve">
+    <value>_grpSelectedColumns</value>
+  </data>
+  <data name="&gt;&gt;_lstSelectedColumns.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="_grpSelectedColumns.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="_grpSelectedColumns.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="_grpSelectedColumns.Size" type="System.Drawing.Size, System.Drawing">
+    <value>331, 442</value>
+  </data>
+  <data name="_grpSelectedColumns.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="_grpSelectedColumns.Text" xml:space="preserve">
+    <value>Selected Columns</value>
+  </data>
+  <data name="&gt;&gt;_grpSelectedColumns.Name" xml:space="preserve">
+    <value>_grpSelectedColumns</value>
+  </data>
+  <data name="&gt;&gt;_grpSelectedColumns.Type" xml:space="preserve">
+    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_grpSelectedColumns.Parent" xml:space="preserve">
+    <value>pnlSplitter.Panel2</value>
+  </data>
+  <data name="&gt;&gt;_grpSelectedColumns.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="pnlSplitter.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="pnlSplitter.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="&gt;&gt;pnlSplitter.Panel1.Name" xml:space="preserve">
+    <value>pnlSplitter.Panel1</value>
+  </data>
+  <data name="&gt;&gt;pnlSplitter.Panel1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.SplitterPanel, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;pnlSplitter.Panel1.Parent" xml:space="preserve">
+    <value>pnlSplitter</value>
+  </data>
+  <data name="&gt;&gt;pnlSplitter.Panel1.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;pnlSplitter.Panel2.Name" xml:space="preserve">
+    <value>pnlSplitter.Panel2</value>
+  </data>
+  <data name="&gt;&gt;pnlSplitter.Panel2.Type" xml:space="preserve">
+    <value>System.Windows.Forms.SplitterPanel, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;pnlSplitter.Panel2.Parent" xml:space="preserve">
+    <value>pnlSplitter</value>
+  </data>
+  <data name="&gt;&gt;pnlSplitter.Panel2.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="pnlSplitter.Size" type="System.Drawing.Size, System.Drawing">
+    <value>667, 442</value>
+  </data>
+  <data name="pnlSplitter.SplitterDistance" type="System.Int32, mscorlib">
+    <value>332</value>
+  </data>
+  <data name="pnlSplitter.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="&gt;&gt;pnlSplitter.Name" xml:space="preserve">
+    <value>pnlSplitter</value>
+  </data>
+  <data name="&gt;&gt;pnlSplitter.Type" xml:space="preserve">
+    <value>System.Windows.Forms.SplitContainer, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;pnlSplitter.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;pnlSplitter.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
+    <value>6, 13</value>
+  </data>
+  <data name="$this.Size" type="System.Drawing.Size, System.Drawing">
+    <value>667, 442</value>
+  </data>
+  <data name="&gt;&gt;_tooltips.Name" xml:space="preserve">
+    <value>_tooltips</value>
+  </data>
+  <data name="&gt;&gt;_tooltips.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolTip, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;$this.Name" xml:space="preserve">
+    <value>ColumnPickerComponentPanel</value>
+  </data>
+  <data name="&gt;&gt;$this.Type" xml:space="preserve">
+    <value>System.Windows.Forms.UserControl, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+</root>

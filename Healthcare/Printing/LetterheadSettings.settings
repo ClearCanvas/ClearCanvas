@@ -1,0 +1,39 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="ClearCanvas.Healthcare.Printing" GeneratedClassName="LetterheadSettings">
+  <Profiles />
+  <Settings>
+    <Setting Name="LetterheadFacilityTitle" Description="Name of the Imaging Facility." Type="System.String" Scope="Application">
+      <Value Profile="(Default)">TotallyRAD</Value>
+    </Setting>
+    <Setting Name="LetterheadFacilitySubtitle" Description="Description of the Imaging Facility." Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Medical Imaging Centre</Value>
+    </Setting>
+    <Setting Name="LetterheadLogoFile" Description="Name of the file containing the Imaging Facility logo. This file must be located in the same directory as the template file." Type="System.String" Scope="Application">
+      <Value Profile="(Default)">logo.jpg</Value>
+    </Setting>
+    <Setting Name="LetterheadPhone" Description="Phone number for the Imaging Facility." Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Phone: (555) 555-5555</Value>
+    </Setting>
+    <Setting Name="LetterheadFax" Description="Fax number for the Imaging Facility." Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Fax: (555) 555-5555</Value>
+    </Setting>
+    <Setting Name="LetterheadEmail" Description="Email address for the Imaging Facility." Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Email: info@totallyrad.ca</Value>
+    </Setting>
+    <Setting Name="LetterheadAddressStreet" Description="Street name and number of the Imaging Facility." Type="System.String" Scope="Application">
+      <Value Profile="(Default)">123 Any St.</Value>
+    </Setting>
+    <Setting Name="LetterheadAddressUnit" Description="Unit, Suite, or Apartment number, if applicable." Type="System.String" Scope="Application">
+      <Value Profile="(Default)">100</Value>
+    </Setting>
+    <Setting Name="LetterheadAddressCity" Description="City in which the Imaging Facility is located." Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Anywhere</Value>
+    </Setting>
+    <Setting Name="LetterheadAddressProvince" Description="Province in which the Imaging Facility is located." Type="System.String" Scope="Application">
+      <Value Profile="(Default)">ON</Value>
+    </Setting>
+    <Setting Name="LetterheadAddressPostalCode" Description="Postal code of the Imaging Facility." Type="System.String" Scope="Application">
+      <Value Profile="(Default)">A1B 2C3</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

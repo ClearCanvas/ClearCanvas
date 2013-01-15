@@ -1,0 +1,256 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{83BA7538-8DC6-4190-993A-7A4A27D43DBB}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ClearCanvas.ImageServer.Model.SqlServer</RootNamespace>
+    <AssemblyName>ClearCanvas.ImageServer.Model.SqlServer</AssemblyName>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile />
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Brokers\PostponeWorkQueue.cs" />
+    <Compile Include="Brokers\QueryCurrentStudyMove.cs" />
+    <Compile Include="Brokers\WebResetWorkQueue.cs" />
+    <Compile Include="Brokers\WorkQueueProcessorIDs.cs" />
+    <Compile Include="Brokers\CreatePatientForStudy.cs" />
+    <Compile Include="Brokers\AttachStudyToPatient.cs" />
+    <Compile Include="Brokers\DeleteInstance.cs" />
+    <Compile Include="Brokers\DeleteSeries.cs" />
+    <Compile Include="Brokers\InsertDuplicateSopReceivedQueue.cs" />
+    <Compile Include="Brokers\LockStudy.cs" />
+    <Compile Include="Brokers\ResetStudyStorage.cs" />
+    <Compile Include="Brokers\SetSeriesRelatedInstanceCount.cs" />
+    <Compile Include="Brokers\SetStudyRelatedInstanceCount.cs" />
+    <Compile Include="Brokers\WebQueryStudyIntegrityQueue.cs" />
+    <Compile Include="Brokers\InsertReconcileQueue.cs" />
+    <Compile Include="Brokers\WebQueryRestoreQueue.cs" />
+    <Compile Include="Brokers\DeleteFilesystemStudyStorage.cs" />
+    <Compile Include="Brokers\InsertArchiveQueue.cs" />
+    <Compile Include="Brokers\DeleteServerPartition.cs" />
+    <Compile Include="Brokers\DeleteWorkQueue.cs" />
+    <Compile Include="Brokers\InsertRestoreQueue.cs" />
+    <Compile Include="Brokers\QueryArchiveQueue.cs" />
+    <Compile Include="Brokers\QueryPartitionTransferSyntaxes.cs" />
+    <Compile Include="Brokers\QueryRestoreQueue.cs" />
+    <Compile Include="Brokers\UpdateArchiveQueue.cs" />
+    <Compile Include="Brokers\UpdateRestoreQueue.cs" />
+    <Compile Include="Brokers\WebQueryArchiveQueue.cs" />
+    <Compile Include="Brokers\WebQueryWorkQueue.cs" />
+    <Compile Include="Brokers\DeleteStudyStorage.cs" />
+    <Compile Include="Brokers\InsertFilesystem.cs" />
+    <Compile Include="Brokers\InsertFilesystemQueue.cs" />
+    <Compile Include="Brokers\InsertWorkQueueFromFilesystemQueue.cs" />
+    <Compile Include="Brokers\QueryFilesystemQueue.cs" />
+    <Compile Include="Brokers\QueryServiceLock.cs" />
+    <Compile Include="Brokers\ResetServiceLock.cs" />
+    <Compile Include="Brokers\ResetWorkQueue.cs" />
+    <Compile Include="Brokers\InsertInstance.cs" />
+    <Compile Include="Brokers\InsertRequestAttributes.cs" />
+    <Compile Include="Brokers\InsertServerPartition.cs" />
+    <Compile Include="Brokers\InsertStudyStorage.cs" />
+    <Compile Include="Brokers\InsertWorkQueue.cs" />
+    <Compile Include="Brokers\UpdateServiceLock.cs" />
+    <Compile Include="EntityBrokers\AlertCategoryEnumBroker.gen.cs" />
+    <Compile Include="EntityBrokers\AlertEntityBroker.gen.cs" />
+    <Compile Include="EntityBrokers\AlertLevelEnumBroker.gen.cs" />
+    <Compile Include="EntityBrokers\ApplicationLogEntityBroker.gen.cs" />
+    <Compile Include="EntityBrokers\ArchiveQueueEntityBroker.gen.cs" />
+    <Compile Include="EntityBrokers\ArchiveQueueStatusEnumBroker.gen.cs" />
+    <Compile Include="EntityBrokers\ArchiveStudyStorageEntityBroker.gen.cs" />
+    <Compile Include="EntityBrokers\ArchiveTypeEnumBroker.gen.cs" />
+    <Compile Include="EntityBrokers\CannedTextEntityBroker.gen.cs" />
+    <Compile Include="EntityBrokers\DataAccessGroupEntityBroker.gen.cs" />
+    <Compile Include="EntityBrokers\DatabaseVersionEntityBroker.gen.cs" />
+    <Compile Include="EntityBrokers\DeviceEntityBroker.gen.cs" />
+    <Compile Include="EntityBrokers\DevicePreferredTransferSyntaxEntityBroker.gen.cs" />
+    <Compile Include="EntityBrokers\DeviceTypeEnumBroker.gen.cs" />
+    <Compile Include="EntityBrokers\DuplicateSopEntryEntityBroker.cs" />
+    <Compile Include="EntityBrokers\DuplicateSopPolicyEnumBroker.gen.cs" />
+    <Compile Include="EntityBrokers\FilesystemEntityBroker.gen.cs" />
+    <Compile Include="EntityBrokers\FilesystemQueueEntityBroker.gen.cs" />
+    <Compile Include="EntityBrokers\FilesystemQueueTypeEnumBroker.gen.cs" />
+    <Compile Include="EntityBrokers\FilesystemTierEnumBroker.gen.cs" />
+    <Compile Include="EntityBrokers\PartitionArchiveEntityBroker.gen.cs" />
+    <Compile Include="EntityBrokers\PartitionSopClassEntityBroker.gen.cs" />
+    <Compile Include="EntityBrokers\PartitionTransferSyntaxEntityBroker.gen.cs" />
+    <Compile Include="EntityBrokers\PatientEntityBroker.gen.cs" />
+    <Compile Include="EntityBrokers\QueueStudyStateEnumBroker.gen.cs" />
+    <Compile Include="EntityBrokers\RequestAttributesEntityBroker.gen.cs" />
+    <Compile Include="EntityBrokers\RestoreQueueEntityBroker.gen.cs" />
+    <Compile Include="EntityBrokers\RestoreQueueStatusEnumBroker.gen.cs" />
+    <Compile Include="EntityBrokers\SeriesEntityBroker.gen.cs" />
+    <Compile Include="EntityBrokers\ServerPartitionDataAccessEntityBroker.gen.cs" />
+    <Compile Include="EntityBrokers\ServerPartitionEntityBroker.gen.cs" />
+    <Compile Include="EntityBrokers\ServerRuleApplyTimeEnumBroker.gen.cs" />
+    <Compile Include="EntityBrokers\ServerRuleEntityBroker.gen.cs" />
+    <Compile Include="EntityBrokers\ServerRuleTypeEnumBroker.gen.cs" />
+    <Compile Include="EntityBrokers\ServerSopClassEntityBroker.gen.cs" />
+    <Compile Include="EntityBrokers\ServerTransferSyntaxEntityBroker.gen.cs" />
+    <Compile Include="EntityBrokers\ServiceLockEntityBroker.gen.cs" />
+    <Compile Include="EntityBrokers\ServiceLockTypeEnumBroker.gen.cs" />
+    <Compile Include="EntityBrokers\FilesystemStudyStorageEntityBroker.gen.cs" />
+    <Compile Include="EntityBrokers\StudyDataAccessEntityBroker.gen.cs" />
+    <Compile Include="EntityBrokers\StudyDeleteRecordEntityBroker.gen.cs" />
+    <Compile Include="EntityBrokers\StudyEntityBroker.gen.cs" />
+    <Compile Include="EntityBrokers\StudyHistoryEntityBroker.gen.cs" />
+    <Compile Include="EntityBrokers\StudyHistoryTypeEnumBroker.gen.cs" />
+    <Compile Include="EntityBrokers\StudyIntegrityQueueEntityBroker.gen.cs" />
+    <Compile Include="EntityBrokers\StudyIntegrityQueueUidEntityBroker.gen.cs" />
+    <Compile Include="EntityBrokers\StudyIntegrityReasonEnumBroker.gen.cs" />
+    <Compile Include="EntityBrokers\StudyStatusEnumBroker.gen.cs" />
+    <Compile Include="EntityBrokers\StudyStorageEntityBroker.gen.cs" />
+    <Compile Include="EntityBrokers\WorkQueueEntityBroker.gen.cs" />
+    <Compile Include="EntityBrokers\WorkQueuePriorityEnumBroker.gen.cs" />
+    <Compile Include="EntityBrokers\WorkQueueProcessDuplicateSopBroker.cs" />
+    <Compile Include="EntityBrokers\WorkQueueStatusEnumBroker.gen.cs" />
+    <Compile Include="EntityBrokers\WorkQueueTypeEnumBroker.gen.cs" />
+    <Compile Include="EntityBrokers\WorkQueueTypePropertiesEntityBroker.gen.cs" />
+    <Compile Include="EntityBrokers\WorkQueueUidEntityBroker.gen.cs" />
+    <Compile Include="Brokers\QueryModalitiesInStudy.cs" />
+    <Compile Include="Brokers\QueryPartitionSopClasses.cs" />
+    <Compile Include="Brokers\QueryStudyStorageLocation.cs" />
+    <Compile Include="Brokers\QueryWorkQueue.cs" />
+    <Compile Include="Brokers\UpdateWorkQueue.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RunSqlScriptApplication.cs" />
+    <Compile Include="UpgradeScripts\UpgradeFrom_4_0_5014_9549.cs" />
+    <Compile Include="UpgradeScripts\UpgradeFrom_1_3_8146_27242.cs" />
+    <Compile Include="UpgradeScripts\UpgradeFrom_1_4_9277_29698.cs" />
+    <Compile Include="UpgradeScripts\UpgradeFrom_1_3_8146_27241.cs" />
+    <Compile Include="UpgradeScripts\BaseUpgradeScript.cs" />
+    <Compile Include="UpgradeScripts\UpgradeFrom_1_5_10019_31163.cs" />
+    <Compile Include="UpgradeScripts\UpgradeFrom_1_5_10588_32543.cs" />
+    <Compile Include="UpgradeScripts\UpgradeFrom_1_5_10676_32680.cs" />
+    <Compile Include="UpgradeScripts\UpgradeFrom_1_5_10852_32944.cs" />
+    <Compile Include="UpgradeScripts\UpgradeFrom_1_5_12104_35993 .cs" />
+    <Compile Include="UpgradeScripts\UpgradeFrom_2_0_12655_37768.cs" />
+    <Compile Include="UpgradeScripts\UpgradeFrom_2_2_13745_40623.cs" />
+    <Compile Include="UpgradeScripts\UpgradeFrom_2_2_14734_44343.cs" />
+    <Compile Include="UpgradeScripts\UpgradeFrom_3_5_16130_48592.cs" />
+    <Compile Include="UpgradeScripts\UpgradeFrom_5_0_5655_9770.cs" />
+    <Compile Include="UpgradeScripts\UpgradeFrom_6_0_6778_10140.cs" />
+    <Compile Include="UpgradeScripts\UpgradeFrom_6_1_7081_10268.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Common\ClearCanvas.Common.csproj">
+      <Project>{F6EAD428-E6CF-4DF6-B2F3-D33D532C5343}</Project>
+      <Name>ClearCanvas.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Enterprise\Common\ClearCanvas.Enterprise.Common.csproj">
+      <Project>{B5EBFFD7-6641-4932-91C9-4C4322B41868}</Project>
+      <Name>ClearCanvas.Enterprise.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Enterprise\Core\ClearCanvas.Enterprise.Core.csproj">
+      <Project>{431E9444-9915-4D49-B92D-9B7EC086622A}</Project>
+      <Name>ClearCanvas.Enterprise.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Enterprise\ClearCanvas.ImageServer.Enterprise.csproj">
+      <Project>{86CA6EDB-DE59-45E9-8BD8-832FBB3F8009}</Project>
+      <Name>ClearCanvas.ImageServer.Enterprise</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Enterprise\SqlServer\ClearCanvas.ImageServer.Enterprise.SqlServer.csproj">
+      <Project>{D8B59C0F-A097-4D7D-A488-0188100AF8E2}</Project>
+      <Name>ClearCanvas.ImageServer.Enterprise.SqlServer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ClearCanvas.ImageServer.Model.csproj">
+      <Project>{2C9126D3-5B73-4539-BBC9-D56E6097D335}</Project>
+      <Name>ClearCanvas.ImageServer.Model</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\ImageServerDatabase.sql" />
+    <None Include="Scripts\ImageServerDefaultData.sql" />
+    <EmbeddedResource Include="Scripts\ImageServerStoredProcedures.sql" />
+    <None Include="Scripts\ImageServerTables.sql" />
+    <EmbeddedResource Include="UpgradeScripts\UpgradeFrom_5_0_5655_9770.sql" />
+    <EmbeddedResource Include="UpgradeScripts\UpgradeFrom_4_0_5014_9549.sql" />
+    <EmbeddedResource Include="UpgradeScripts\UpgradeFrom_2_2_13745_40623.sql" />
+    <EmbeddedResource Include="UpgradeScripts\UpgradeFrom_2_2_14734_44343.sql" />
+    <EmbeddedResource Include="UpgradeScripts\UpgradeFrom_2_0_12655_37768.sql" />
+    <EmbeddedResource Include="UpgradeScripts\UpgradeFrom_1_5_12104_35993.sql" />
+    <EmbeddedResource Include="UpgradeScripts\UpgradeFrom_1_5_10019_31163.sql" />
+    <EmbeddedResource Include="UpgradeScripts\UpgradeFrom_NoOp.sql" />
+    <EmbeddedResource Include="UpgradeScripts\UpgradeFrom_1_4_9277_29698.sql" />
+    <EmbeddedResource Include="UpgradeScripts\UpgradeFrom_1_3_8146_27241.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="UpgradeScripts\UpgradeFrom_6_1_7081_10268.sql" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

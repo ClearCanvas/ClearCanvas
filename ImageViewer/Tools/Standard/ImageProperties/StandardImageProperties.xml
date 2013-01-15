@@ -1,0 +1,62 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<standard-image-properties>
+  <image-property-group name="Patient">
+    <image-property tag-variable-name="PatientsName" />
+    <!--<image-property tag-variable-name="OtherPatientNames" />-->
+    <image-property tag-variable-name="PatientId" />
+    <!--<image-property tag-variable-name="IssuerOfPatientId" />-->
+    <!--<image-property tag-variable-name="OtherPatientIds" />-->
+    <image-property tag-variable-name="PatientsAge" />
+    <image-property tag-variable-name="PatientsBirthDate" />
+    <image-property tag-variable-name="PatientsBirthTime" />
+    <image-property tag-variable-name="PatientsSex" />
+  </image-property-group>
+  <image-property-group name="Study">
+    <image-property tag-variable-name="StudyId" />
+    <image-property tag-variable-name="StudyDescription" />
+    <image-property tag-variable-name="StudyInstanceUid" />
+    <image-property tag-variable-name="StudyDate" />
+    <image-property tag-variable-name="StudyTime" />
+    <image-property tag-variable-name="ReferringPhysiciansName" />
+    <image-property tag-variable-name="AdditionalPatientHistory" />
+    <image-property tag-variable-name="AdmittingDiagnosesDescription" />
+  </image-property-group>
+  <image-property-group name="Equipment">
+    <image-property tag-variable-name="StationName" />
+    <image-property tag-variable-name="InstitutionName" />
+    <image-property tag-variable-name="InstitutionalDepartmentName" />
+    <image-property tag-variable-name="InstitutionAddress" />
+    <image-property tag-variable-name="Manufacturer" />
+    <image-property tag-variable-name="ManufacturersModelName" />
+    <image-property tag-variable-name="SoftwareVersions" />
+    <image-property tag-variable-name="DeviceSerialNumber" />
+  </image-property-group>
+  <image-property-group name="Series">
+    <image-property tag-variable-name="Modality" />
+    <image-property tag-variable-name="Laterality" />
+    <image-property tag-variable-name="SeriesInstanceUid" />
+    <image-property tag-variable-name="SeriesNumber" />
+    <image-property tag-variable-name="SeriesDescription" />
+    <image-property tag-variable-name="ProtocolName" />
+    <image-property tag-variable-name="BodyPartExamined" />
+    <image-property tag-variable-name="SeriesDate" />
+    <image-property tag-variable-name="SeriesTime" />
+    <image-property tag-variable-name="OperatorsName" />
+    <image-property tag-variable-name="PerformingPhysiciansName" />
+  </image-property-group>
+  <image-property-group name="Image">
+    <image-property tag-variable-name="InstanceNumber" />
+    <image-property tag-variable-name="SopInstanceUid" />
+    <image-property tag-variable-name="ImageLaterality" />
+    <image-property tag-variable-name="ImageComments" />
+    <!--<image-property tag-variable-name="ContentDate" />
+    <image-property tag-variable-name="ContentTime" />-->
+    <image-property tag-variable-name="ImageType" separator="\" />
+    <image-property tag-variable-name="AcquisitionNumber" />
+    <image-property tag-variable-name="AcquisitionDate" />
+    <image-property tag-variable-name="AcquisitionTime" />
+    <image-property tag-variable-name="LossyImageCompression" />
+    <image-property tag-variable-name="LossyImageCompressionRatio" />
+    <image-property tag-variable-name="LossyImageCompressionMethod" />
+  </image-property-group>
+</standard-image-properties>

@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" assembly="ClearCanvas.Enterprise.Authentication" namespace="ClearCanvas.Enterprise.Authentication">
+  <class name="AuthorityToken" proxy="AuthorityToken" table="AuthorityToken_">
+    <id name="OID" column="OID_" type="Guid">
+      <generator class="guid.comb"/>
+    </id>
+    <version name="Version" column="Version_"/>
+    <property name="Name" column="Name_" type="String" length="400" not-null="true" unique="true"/>
+    <property name="Description" column="Description_" type="String" length="1024"/>
+  </class>
+</hibernate-mapping>

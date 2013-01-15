@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" assembly="ClearCanvas.Enterprise.Hibernate" namespace="ClearCanvas.Enterprise.Hibernate">
+  <class name="PersistentStoreVersion" lazy="false" table="DatabaseVersion_">
+    <id name="OID" column="OID_" type="Guid">
+      <generator class="guid.comb"/>
+    </id>
+    <property name="Major" column="Major_" type="String" not-null="true" length="5"/>
+    <property name="Minor" column="Minor_" type="String" not-null="true" length="5"/>
+    <property name="Build" column="Build_" type="String" not-null="true" length="5"/>
+    <property name="Revision" column="Revision_" type="String" not-null="true" length="5"/>
+  </class>
+</hibernate-mapping>

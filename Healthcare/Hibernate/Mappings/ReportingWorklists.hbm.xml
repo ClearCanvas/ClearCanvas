@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!-- @codegen: ignore -->
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" assembly="ClearCanvas.Healthcare" namespace="ClearCanvas.Healthcare">
+  <!-- abstract intermediate classes -->
+	<subclass name="ReportingWorklist" extends="Worklist" discriminator-value="REPORTING">
+
+		<component name="InterpretedByStaffFilter" class="WorklistStaffFilter">
+			<property name="IsEnabled" type="Boolean" column="InterpretedByStaffFilterIsEnabled_"/>
+			<property name="IncludeCurrentStaff" type="Boolean" column="InterpretedByStaffFilterIncludeCurrentUser_"/>
+			<set name="Values" table="WorklistInterpretedByStaff_" lazy="true">
+				<key column="WorklistOID_"/>
+				<many-to-many column="StaffOID_" class="Staff" fetch="join"/>
+			</set>
+		</component>
+
+		<component name="TranscribedByStaffFilter" class="WorklistStaffFilter">
+			<property name="IsEnabled" type="Boolean" column="TranscribedByStaffFilterIsEnabled_"/>
+			<property name="IncludeCurrentStaff" type="Boolean" column="TranscribedByStaffFilterIncludeCurrentUser_"/>
+			<set name="Values" table="WorklistTranscribedByStaff_" lazy="true">
+				<key column="WorklistOID_"/>
+				<many-to-many column="StaffOID_" class="Staff" fetch="join"/>
+			</set>
+		</component>
+
+		<component name="VerifiedByStaffFilter" class="WorklistStaffFilter">
+			<property name="IsEnabled" type="Boolean" column="VerifiedByStaffFilterIsEnabled_"/>
+			<property name="IncludeCurrentStaff" type="Boolean" column="VerifiedByStaffFilterIncludeCurrentUser_"/>
+			<set name="Values" table="WorklistVerifiedByStaff_" lazy="true">
+				<key column="WorklistOID_"/>
+				<many-to-many column="StaffOID_" class="Staff" fetch="join"/>
+			</set>
+		</component>
+
+		<component name="SupervisedByStaffFilter" class="WorklistStaffFilter">
+			<property name="IsEnabled" type="Boolean" column="SupervisedByStaffFilterIsEnabled_"/>
+			<property name="IncludeCurrentStaff" type="Boolean" column="SupervisedByStaffFilterIncludeCurrentUser_"/>
+			<set name="Values" table="WorklistSupervisedByStaff_" lazy="true">
+				<key column="WorklistOID_"/>
+				<many-to-many column="StaffOID_" class="Staff" fetch="join"/>
+			</set>
+		</component>
+
+	</subclass>
+  
+  <!-- concrete classes -->
+  <subclass name="ReportingToBeReportedWorklist" extends="ReportingWorklist" discriminator-value="REPORTING_TOBEREPORTED"/>
+	<subclass name="ReportingToBeReviewedReportWorklist" extends="ReportingWorklist" discriminator-value="REPORTING_TOBEREVIEWEDREPORT"/>
+</hibernate-mapping>

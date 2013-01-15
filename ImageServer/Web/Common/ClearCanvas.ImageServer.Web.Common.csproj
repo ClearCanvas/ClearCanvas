@@ -1,0 +1,377 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{9A4EF57B-2702-4931-9E94-B194707E87FA}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ClearCanvas.ImageServer.Web.Common</RootNamespace>
+    <AssemblyName>ClearCanvas.ImageServer.Web.Common</AssemblyName>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile />
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="AjaxControlToolkit, Version=1.0.10920.32880, Culture=neutral, PublicKeyToken=28f01b0e84b6d53e, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\ReferencedAssemblies\AjaxControls\AjaxControlToolkit.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Design" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Extensions.Design" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Cache.cs" />
+    <Compile Include="Data\ApplicationLogAdaptor.cs" />
+    <Compile Include="Data\AlertAdaptor.cs" />
+    <Compile Include="Data\AlertController.cs" />
+    <Compile Include="Data\AuthorityGroupStudyAccessInfo.cs" />
+    <Compile Include="Data\DataAccessGroupInfo.cs" />
+    <Compile Include="Data\DataSource\IStudySummaryAssembler.cs" />
+    <Compile Include="Data\StudyDataAccessAdaptor.cs" />
+    <Compile Include="Data\StudyDataAccessController.cs" />
+    <Compile Include="Data\StudyEditReasonAdaptor.cs" />
+    <Compile Include="Data\DataSource\BaseDatasource.cs" />
+    <Compile Include="Data\DuplicateSopEntryController.cs" />
+    <Compile Include="Data\Model\WorkQueueInfo.cs" />
+    <Compile Include="EntityCollection.cs" />
+    <Compile Include="Extensions\LoginPageExtensionPoint.cs" />
+    <Compile Include="HttpContextData.cs" />
+    <Compile Include="Data\StudyDeleteReasonAdaptor.cs" />
+    <Compile Include="Data\UserManagementController.cs" />
+    <Compile Include="Data\DataSource\AlertDataSource.cs" />
+    <Compile Include="Data\ApplicationLogController.cs" />
+    <Compile Include="Data\ArchiveQueueAdaptor.cs" />
+    <Compile Include="Data\ArchiveQueueController.cs" />
+    <Compile Include="Data\DataSource\ArchiveQueueDataSource.cs" />
+    <Compile Include="Data\ArchiveStudyStorageAdaptor.cs" />
+    <Compile Include="Data\DataSource\ApplicationLogDataSource.cs" />
+    <Compile Include="Data\DataSource\TokenDataSource.cs" />
+    <Compile Include="Data\DataSource\UserGroupDataSource.cs" />
+    <Compile Include="Data\DataSource\UserDataSource.cs" />
+    <Compile Include="Data\DeletedStudyController.cs" />
+    <Compile Include="Data\DataSource\DeletedStudyDataSource.cs" />
+    <Compile Include="Data\DeleteStudyRecordAdaptor.cs" />
+    <Compile Include="Data\Model\DeletedStudyInfo.cs" />
+    <Compile Include="Data\StudyHistoryAdaptor.cs" />
+    <Compile Include="Data\StudyIntegrityQueueUidAdaptor.cs" />
+    <Compile Include="Data\StudyIntegrityQueueAdaptor.cs" />
+    <Compile Include="Data\StudyIntegrityQueueController.cs" />
+    <Compile Include="Data\DataSource\StudyIntegrityQueueDataSource.cs" />
+    <Compile Include="Data\ServerTransferSyntaxAdaptor.cs" />
+    <Compile Include="Data\RestoreQueueAdaptor.cs" />
+    <Compile Include="Data\RestoreQueueController.cs" />
+    <Compile Include="Data\DataSource\RestoreQueueDataSource.cs" />
+    <Compile Include="Data\PartitionArchiveDataAdapter.cs" />
+    <Compile Include="Data\PartitionArchiveConfigController.cs" />
+    <Compile Include="Data\FileSystemQueueController.cs" />
+    <Compile Include="Data\FileSystemQueueAdapter.cs" />
+    <Compile Include="Data\PartitionArchiveAdaptor.cs" />
+    <Compile Include="Data\BaseAdaptor.cs" />
+    <Compile Include="Data\BaseController.cs" />
+    <Compile Include="Data\ServiceLockDataAdapter.cs" />
+    <Compile Include="Data\ServiceLockConfigurationController.cs" />
+    <Compile Include="Data\DeviceConfigurationController.cs" />
+    <Compile Include="Data\DeviceDataAdapter.cs" />
+    <Compile Include="Data\FileSystemDataAdapter.cs" />
+    <Compile Include="Data\FileSystemsConfigurationController.cs" />
+    <Compile Include="Data\PatientAdaptor.cs" />
+    <Compile Include="Data\SeriesSearchAdaptor.cs" />
+    <Compile Include="Data\ServerPartitionConfigController.cs" />
+    <Compile Include="Data\ServerPartitionDataAdapter.cs" />
+    <Compile Include="Data\ServerRuleController.cs" />
+    <Compile Include="Data\StudyAdaptor.cs" />
+    <Compile Include="Data\StudyController.cs" />
+    <Compile Include="Data\DataSource\StudyDataSource.cs" />
+    <Compile Include="Data\StudyStorageAdaptor.cs" />
+    <Compile Include="Data\WorkQueueAdaptor.cs" />
+    <Compile Include="Data\WorkQueueController.cs" />
+    <Compile Include="Data\DataSource\WorkQueueDataSource.cs" />
+    <Compile Include="Data\WorkQueueUidAdaptor.cs" />
+    <Compile Include="DicomConstants.cs" />
+    <Compile Include="Exceptions\AJAXErrorException.cs" />
+    <Compile Include="Exceptions\AuthorizationException.cs" />
+    <Compile Include="Exceptions\WorkQueueItemNotFoundException.cs" />
+    <Compile Include="Exceptions\PartitionNotFoundException.cs" />
+    <Compile Include="Exceptions\StudyNotFoundException.cs" />
+    <Compile Include="Exceptions\ExceptionHandler.cs" />
+    <Compile Include="Exceptions\BaseWebException.cs" />
+    <Compile Include="Exceptions\ExceptionMessages.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ExceptionMessages.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Exceptions\StudyInstanceUIDNotFoundException.cs" />
+    <Compile Include="ImageServerConstants.cs" />
+    <Compile Include="ImageServerHttpApplication.cs" />
+    <Compile Include="KeyedCollectionBase.cs" />
+    <Compile Include="Modules\CultureOverrideModule.cs" />
+    <Compile Include="Modules\ErrorModule.cs" />
+    <Compile Include="Modules\HttpContextDataManagementModule.cs" />
+    <Compile Include="Modules\ApplicationModule.cs" />
+    <Compile Include="PageSettings\AboutPage.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>AboutPage.settings</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Security\WebAppUserCredentialProvider.cs" />
+    <Compile Include="Security\XmlMembershipProvider.cs" />
+    <Compile Include="Security\DefaultRoleProvider.cs" />
+    <Compile Include="Security\CustomFormAuthenticationModule.cs" />
+    <Compile Include="Security\SessionManager.cs" />
+    <Compile Include="CustomExpressionBuilder.cs" />
+    <Compile Include="ServerPartitionTabsExtensionPoint.cs" />
+    <Compile Include="SR.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SR.resx</DependentUpon>
+    </Compile>
+    <Compile Include="StudySearchPanelExtensionPoint.cs" />
+    <Compile Include="ThemeManager.cs" />
+    <Compile Include="UICommonSettings.cs" />
+    <Compile Include="UISettings.cs" />
+    <Compile Include="UserProfile.cs" />
+    <Compile Include="Utilities\DataAccessHelper.cs" />
+    <Compile Include="Utilities\HtmlUtility.cs" />
+    <Compile Include="Utilities\NameFormatter.cs" />
+    <Compile Include="Utilities\ServerUtility.cs" />
+    <Compile Include="HttpApplicationExtension.cs" />
+    <Compile Include="Utilities\UsersGuideLinkHelper.cs" />
+    <Compile Include="Utilities\WebControlExtensions.cs" />
+    <Compile Include="Utilities\WebStationHelper.cs" />
+    <Compile Include="WebControls\UI\Timer.cs" />
+    <Compile Include="WebControls\UI\AJAXScriptControl.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebControls\UI\CalendarExtender.cs" />
+    <Compile Include="WebControls\UI\PersonNameLabel.cs" />
+    <Compile Include="Utilities\DateTimeFormatter.cs" />
+    <Compile Include="WebControls\UI\PreformattedLabel.cs" />
+    <Compile Include="WebControls\UI\SiteMapProvider.cs" />
+    <Compile Include="WebControls\UI\TextBox.cs" />
+    <Compile Include="WebControls\UI\TMLabel.cs" />
+    <Compile Include="WebControls\UI\DALabel.cs" />
+    <Compile Include="WebControls\UI\DateTimeLabel.cs" />
+    <Compile Include="WebControls\UI\GridView.cs" />
+    <Compile Include="UISettings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>UISettings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="WebControls\UI\Warning.cs" />
+    <Compile Include="WebControls\Validators\BaseValidator.cs" />
+    <Compile Include="WebControls\Validators\ConditionalRequiredFieldValidator.cs" />
+    <Compile Include="WebControls\Validators\DeviceValidator.cs" />
+    <Compile Include="WebControls\Validators\DuplicateUsergroupValidator.cs" />
+    <Compile Include="WebControls\Validators\DuplicateUsernameValidator.cs" />
+    <Compile Include="WebControls\Validators\PartitionArchiveValidator.cs" />
+    <Compile Include="WebControls\Validators\DateValidator.cs" />
+    <Compile Include="WebControls\Validators\RangeComparisonValidator.cs" />
+    <Compile Include="WebControls\Validators\FilesystemPathValidator.cs" />
+    <Compile Include="WebControls\Validators\IInvalidInputIndicator.cs" />
+    <Compile Include="WebControls\Validators\LengthValidator.cs" />
+    <Compile Include="WebControls\ScriptTemplate.cs" />
+    <Compile Include="WebControls\Validators\ServerPartitionFolderValidator.cs" />
+    <Compile Include="WebControls\Validators\ServerPartitionValidator.cs" />
+    <Compile Include="WebControls\Validators\ServerRuleValidator.cs" />
+    <Compile Include="WebControls\UI\ToolbarButton.cs" />
+    <Compile Include="WebControls\Validators\ValidationErrors.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ValidationErrors.resx</DependentUpon>
+    </Compile>
+    <Compile Include="WebControls\Validators\ValidationResult.cs" />
+    <Compile Include="WebControls\Validators\WebServiceValidator.cs" />
+    <Compile Include="WebControls\Validators\RangeValidator.cs" />
+    <Compile Include="WebControls\Validators\RegularExpressionFieldValidator.cs" />
+    <Compile Include="WebRemoteServiceProvider.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Common\ClearCanvas.Common.csproj">
+      <Project>{F6EAD428-E6CF-4DF6-B2F3-D33D532C5343}</Project>
+      <Name>ClearCanvas.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Dicom\ClearCanvas.Dicom.csproj">
+      <Project>{AD9ECE2B-8268-4115-8DC8-860FBD011FFF}</Project>
+      <Name>ClearCanvas.Dicom</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Enterprise\Common\ClearCanvas.Enterprise.Common.csproj">
+      <Project>{B5EBFFD7-6641-4932-91C9-4C4322B41868}</Project>
+      <Name>ClearCanvas.Enterprise.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Enterprise\Core\ClearCanvas.Enterprise.Core.csproj">
+      <Project>{431E9444-9915-4D49-B92D-9B7EC086622A}</Project>
+      <Name>ClearCanvas.Enterprise.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Web\Enterprise\ClearCanvas.Web.Enterprise.csproj">
+      <Project>{22444EF5-740E-41C2-B6DD-0029BD616338}</Project>
+      <Name>ClearCanvas.Web.Enterprise</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Common\ClearCanvas.ImageServer.Common.csproj">
+      <Project>{DDFB1D25-75AE-43A6-A7A5-33D173EFFD04}</Project>
+      <Name>ClearCanvas.ImageServer.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Core\ClearCanvas.ImageServer.Core.csproj">
+      <Project>{64DD80D0-2B72-46C0-8F6E-382CA1EAFF9D}</Project>
+      <Name>ClearCanvas.ImageServer.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Enterprise\ClearCanvas.ImageServer.Enterprise.csproj">
+      <Project>{86CA6EDB-DE59-45E9-8BD8-832FBB3F8009}</Project>
+      <Name>ClearCanvas.ImageServer.Enterprise</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Model\ClearCanvas.ImageServer.Model.csproj">
+      <Project>{2C9126D3-5B73-4539-BBC9-D56E6097D335}</Project>
+      <Name>ClearCanvas.ImageServer.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Rules\ClearCanvas.ImageServer.Rules.csproj">
+      <Project>{523EDDC1-7C6E-404D-A8ED-5F043F5E6BE3}</Project>
+      <Name>ClearCanvas.ImageServer.Rules</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Services\Common\ClearCanvas.ImageServer.Services.Common.csproj">
+      <Project>{6863F5CE-F1D3-46A7-915C-DE02D1452EED}</Project>
+      <Name>ClearCanvas.ImageServer.Services.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Services\WorkQueue\ClearCanvas.ImageServer.Services.WorkQueue.csproj">
+      <Project>{65B9B08C-EAE4-4EE2-B164-905B03134443}</Project>
+      <Name>ClearCanvas.ImageServer.Services.WorkQueue</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config">
+    </None>
+    <None Include="PageSettings\AboutPage.settings">
+      <Generator>PublicSettingsSingleFileGenerator</Generator>
+      <LastGenOutput>AboutPage.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="UISettings.settings">
+      <Generator>PublicSettingsSingleFileGenerator</Generator>
+      <LastGenOutput>UISettings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="WebControls\Validators\LengthValidator.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="WebControls\Validators\WebServiceValidator_Init.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="WebControls\Validators\RangeComparisonValidator.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="WebControls\Validators\RangeValidator.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="WebControls\Validators\RegularExpressionValidator.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="WebControls\Validators\BaseValidator.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="WebControls\Validators\ConditionalRequiredFieldValidator.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="WebControls\Validators\BaseValidator_OnClientValidation.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="WebControls\Validators\WebServiceValidator.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="WebControls\UI\GridView.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="WebControls\UI\ToolbarButton.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Exceptions\ExceptionMessages.resx">
+      <SubType>Designer</SubType>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ExceptionMessages.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SR.resx">
+      <SubType>Designer</SubType>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>SR.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WebControls\Validators\DateValidator.js" />
+    <EmbeddedResource Include="WebControls\Validators\ValidationErrors.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>ValidationErrors.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

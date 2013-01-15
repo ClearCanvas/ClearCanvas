@@ -1,0 +1,74 @@
+/*************************************************************************************************
+
+	AJAX Tab control CSS
+
+*************************************************************************************************/
+
+
+/* .ajax__tab_header - A container element that wraps all of the tabs at the top of the TabContainer. Child CSS classes:.ajax__tab_outer. */
+/* .ajax__tab_outer - An outer element of a tab, often used to set the left-side background image of the tab.Child CSS classes: .ajax__tab_inner. */
+/* .ajax__tab_inner	 - An inner element of a tab, often used to set the right-side image of the tab. Child CSS classes:.ajax__tab_tab. */
+/* .ajax__tab_tab - An element of the tab that contains the text content. Child CSS classes:none. */
+/* .ajax__tab_body - A container element that wraps the area where a TabPanel is displayed. Child CSS classes: none. */
+/* .ajax__tab_hover - This is applied to a tab when the mouse is hovering over. Child CSS classes:.ajax__tab_outer. */
+/* .ajax__tab_active - This is applied to a tab when it is the currently selected tab. Child CSS classes:.ajax__tab_outer. */   
+
+
+/*************************************************************************************************
+	Background styles
+*************************************************************************************************/
+
+.TabControl .ajax__tab_header					
+{
+    background: #dddddd url(../../../../PersistantImage.ashx?key=TabHeaderBackgroundTop) repeat-x top;
+	padding-bottom: 0px;
+	white-space: normal!important;
+}
+.TabControl .ajax__tab_outer
+{
+    margin-left: 2px;
+    margin-right: 4px;
+    background:  url(../../images/Controls/Tabs/TabInactiveLeft.png) no-repeat;
+    height: 24px;
+}
+.TabControl .ajax__tab_inner
+{
+  padding-left: 3px;
+  padding-right: 3px;
+  background: url(../../images/Controls/Tabs/TabInactiveRight.png) no-repeat right;
+}
+.TabControl .ajax__tab_tab
+{
+	padding: 6px 5px 3px 5px;
+	font-family: Sans-Serif;
+	color: #3a74ae;
+	font-size: 12px;
+	font-weight: bold;
+	background: url(../../../../PersistantImage.ashx?key=TabInactiveMiddle) repeat-x;
+}
+.TabControl .ajax__tab_hover .ajax__tab_outer
+{
+}
+.TabControl .ajax__tab_hover .ajax__tab_inner
+{  
+}
+.TabControl .ajax__tab_hover .ajax__tab_tab
+{
+    color: #618FAD;
+    font-family: Sans-Serif;
+}
+.TabControl .ajax__tab_active .ajax__tab_outer
+{
+    background: url(../../images/Controls/Tabs/TabActiveLeft.png) no-repeat;
+}
+.TabControl .ajax__tab_active .ajax__tab_inner
+{
+	background: url(../../images/Controls/Tabs/TabActiveRight.png) no-repeat right;
+}
+.TabControl .ajax__tab_active .ajax__tab_tab
+{
+	background: url(../../../../PersistantImage.ashx?key=TabActiveMiddle) repeat-x;
+	color: #3a74ae;
+	font-weight: bold;
+	font-family: Sans-Serif;
+}

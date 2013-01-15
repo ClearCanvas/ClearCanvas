@@ -1,0 +1,342 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{B15108DE-ED83-4385-9E79-01D3DC8B0AE6}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ClearCanvas.Ris.Client.Admin.View.WinForms</RootNamespace>
+    <AssemblyName>ClearCanvas.Ris.Client.Admin.View.WinForms</AssemblyName>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="DotNetMagic2005, Version=5.2.2.0, Culture=neutral, PublicKeyToken=6cf6edec59e036ec, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\ReferencedAssemblies\DotNetMagic2005.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Design" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DepartmentEditorComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="DepartmentEditorComponentControl.Designer.cs">
+      <DependentUpon>DepartmentEditorComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DepartmentEditorComponentView.cs" />
+    <Compile Include="EnumerationEditorComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="EnumerationEditorComponentControl.Designer.cs">
+      <DependentUpon>EnumerationEditorComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="EnumerationEditorComponentView.cs" />
+    <Compile Include="EnumerationSummaryComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="EnumerationSummaryComponentControl.Designer.cs">
+      <DependentUpon>EnumerationSummaryComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="EnumerationSummaryComponentView.cs" />
+    <Compile Include="FacilityEditorComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="FacilityEditorComponentControl.Designer.cs">
+      <DependentUpon>FacilityEditorComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FacilityEditorComponentView.cs" />
+    <Compile Include="DataImportComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="DataImportComponentControl.designer.cs">
+      <DependentUpon>DataImportComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DataImportComponentView.cs" />
+    <Compile Include="LocationEditorComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="LocationEditorComponentControl.Designer.cs">
+      <DependentUpon>LocationEditorComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="LocationEditorComponentView.cs" />
+    <Compile Include="LocationSummaryComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="LocationSummaryComponentControl.Designer.cs">
+      <DependentUpon>LocationSummaryComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="LocationSummaryComponentView.cs" />
+    <Compile Include="ModalityEditorComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ModalityEditorComponentControl.Designer.cs">
+      <DependentUpon>ModalityEditorComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ModalityEditorComponentView.cs" />
+    <Compile Include="NoteCategoryEditorComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="NoteCategoryEditorComponentControl.designer.cs">
+      <DependentUpon>NoteCategoryEditorComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="NoteCategoryEditorComponentView.cs" />
+    <Compile Include="ProcedureTypeSummaryComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ProcedureTypeSummaryComponentControl.Designer.cs">
+      <DependentUpon>ProcedureTypeSummaryComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ProcedureTypeSummaryComponentView.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="ProcedureTypeGroupEditorComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ProcedureTypeGroupEditorComponentControl.Designer.cs">
+      <DependentUpon>ProcedureTypeGroupEditorComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ProcedureTypeGroupEditorComponentView.cs" />
+    <Compile Include="ProcedureTypeGroupSummaryComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ProcedureTypeGroupSummaryComponentControl.Designer.cs">
+      <DependentUpon>ProcedureTypeGroupSummaryComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ProcedureTypeGroupSummaryComponentView.cs" />
+    <Compile Include="SR.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SR.resx</DependentUpon>
+    </Compile>
+    <Compile Include="ValidationEditorComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ValidationEditorComponentControl.Designer.cs">
+      <DependentUpon>ValidationEditorComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ValidationEditorComponentView.cs" />
+    <Compile Include="ValidationManagementComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ValidationManagementComponentControl.Designer.cs">
+      <DependentUpon>ValidationManagementComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ValidationManagementComponentView.cs" />
+    <Compile Include="WorklistSummaryComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="WorklistSummaryComponentControl.Designer.cs">
+      <DependentUpon>WorklistSummaryComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="WorklistSummaryComponentView.cs" />
+    <Compile Include="WorkQueueAdminComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="WorkQueueAdminComponentControl.Designer.cs">
+      <DependentUpon>WorkQueueAdminComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="WorkQueueAdminComponentView.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\..\Common\ClearCanvas.Common.csproj">
+      <Project>{F6EAD428-E6CF-4DF6-B2F3-D33D532C5343}</Project>
+      <Name>ClearCanvas.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\..\Desktop\ClearCanvas.Desktop.csproj">
+      <Project>{26E9A01A-64B5-42C5-8252-FBB30DF9CEC7}</Project>
+      <Name>ClearCanvas.Desktop</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\..\Desktop\View\WinForms\ClearCanvas.Desktop.View.WinForms.csproj">
+      <Project>{BB434EC3-A580-4744-A635-A2B4029C66DE}</Project>
+      <Name>ClearCanvas.Desktop.View.WinForms</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\..\Enterprise\Common\ClearCanvas.Enterprise.Common.csproj">
+      <Project>{B5EBFFD7-6641-4932-91C9-4C4322B41868}</Project>
+      <Name>ClearCanvas.Enterprise.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\..\Enterprise\Desktop\ClearCanvas.Enterprise.Desktop.csproj">
+      <Project>{CBD5EBD0-7AE9-4824-AE8C-4888983E1B5B}</Project>
+      <Name>ClearCanvas.Enterprise.Desktop</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Application\Common\ClearCanvas.Ris.Application.Common.csproj">
+      <Project>{09F49217-CD98-4773-8CFB-594F189EEE3B}</Project>
+      <Name>ClearCanvas.Ris.Application.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\ClearCanvas.Ris.Client.csproj">
+      <Project>{F8E75C01-AB14-4DDE-ABEA-3EECC4957A1F}</Project>
+      <Name>ClearCanvas.Ris.Client</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\View\WinForms\ClearCanvas.Ris.Client.View.WinForms.csproj">
+      <Project>{7932D8CA-34CF-47E6-A425-9B8DA4F60341}</Project>
+      <Name>ClearCanvas.Ris.Client.View.WinForms</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\ClearCanvas.Ris.Client.Admin.csproj">
+      <Project>{7CC7F1B8-2253-4C0D-A369-EC54B6CE7C32}</Project>
+      <Name>ClearCanvas.Ris.Client.Admin</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{B4F97281-0DBD-4835-9ED8-7DFB966E87FF}" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="DepartmentEditorComponentControl.resx">
+      <DependentUpon>DepartmentEditorComponentControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EnumerationEditorComponentControl.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>EnumerationEditorComponentControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EnumerationSummaryComponentControl.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>EnumerationSummaryComponentControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FacilityEditorComponentControl.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>FacilityEditorComponentControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DataImportComponentControl.resx">
+      <DependentUpon>DataImportComponentControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LocationEditorComponentControl.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>LocationEditorComponentControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LocationSummaryComponentControl.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>LocationSummaryComponentControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ModalityEditorComponentControl.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>ModalityEditorComponentControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NoteCategoryEditorComponentControl.resx">
+      <DependentUpon>NoteCategoryEditorComponentControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ProcedureTypeGroupSummaryComponentControl.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>ProcedureTypeGroupSummaryComponentControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ProcedureTypeSummaryComponentControl.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>ProcedureTypeSummaryComponentControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <SubType>Designer</SubType>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ProcedureTypeGroupEditorComponentControl.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>ProcedureTypeGroupEditorComponentControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SR.resx">
+      <SubType>Designer</SubType>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>SR.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ValidationEditorComponentControl.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>ValidationEditorComponentControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ValidationManagementComponentControl.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>ValidationManagementComponentControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WorklistSummaryComponentControl.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>WorklistSummaryComponentControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WorkQueueAdminComponentControl.resx">
+      <DependentUpon>WorkQueueAdminComponentControl.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\SearchToolSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ClearFilterMini.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ClearFilterSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

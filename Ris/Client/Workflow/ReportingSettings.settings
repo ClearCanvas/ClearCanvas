@@ -1,0 +1,27 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="ClearCanvas.Ris.Client.Workflow" GeneratedClassName="ReportingSettings">
+  <Profiles />
+  <Settings>
+    <Setting Name="AllowMultipleReportingWorkspaces" Description="Indicates whether the application allows multiple reporting workspaces to be open at the same time.  This may cause problems if the Report Editor in use depends on singleton resources such as an audio input device." Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="SupervisorStaffTypeFilters" Description="A comma separated list of staff types used to filter the Supervisor lookup field." Type="System.String" Scope="Application">
+      <Value Profile="(Default)">PRAD</Value>
+    </Setting>
+    <Setting Name="SupervisorID" Description="Stores user default supervisor." Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="ShouldApplyDefaultSupervisor" Description="Indicates if a default supervisor should be automatically loaded if it is not yet specified." Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="ShouldOpenImages" Description="Specifies whether patient images should be opened when opening a reporting component." Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="InitiallySelectedTabPageName" Description="Specifies the name of the initially selected tab." Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="NextItemQueueCacheSize" Description="The number of items to keep in the &quot;Next Item&quot; queue.  A higher value means fewer trips to the server, but also the possibility that higher priority items will not be seen by the user as quickly." Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">3</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

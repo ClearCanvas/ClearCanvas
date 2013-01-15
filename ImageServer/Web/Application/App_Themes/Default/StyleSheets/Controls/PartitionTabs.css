@@ -1,0 +1,101 @@
+.PartitionPanel
+{
+    background: #B8D9EE url(../../../../PersistantImage.ashx?key=SearchPanelBackground) repeat-x top;
+    padding-top: 4px;
+    border-top: solid 1px #205F87;
+}
+
+
+
+/*************************************************************************************************
+
+	AJAX Tab control CSS
+
+*************************************************************************************************/
+
+
+/* .ajax__tab_header - A container element that wraps all of the tabs at the top of the TabContainer. Child CSS classes:.ajax__tab_outer. */
+/* .ajax__tab_outer - An outer element of a tab, often used to set the left-side background image of the tab.Child CSS classes: .ajax__tab_inner. */
+/* .ajax__tab_inner	 - An inner element of a tab, often used to set the right-side image of the tab. Child CSS classes:.ajax__tab_tab. */
+/* .ajax__tab_tab - An element of the tab that contains the text content. Child CSS classes:none. */
+/* .ajax__tab_body - A container element that wraps the area where a TabPanel is displayed. Child CSS classes: none. */
+/* .ajax__tab_hover - This is applied to a tab when the mouse is hovering over. Child CSS classes:.ajax__tab_outer. */
+/* .ajax__tab_active - This is applied to a tab when it is the currently selected tab. Child CSS classes:.ajax__tab_outer. */   
+
+
+/*************************************************************************************************
+	Background styles
+*************************************************************************************************/
+
+.PartitionTabControl .ajax__tab_header					
+{
+/*    background: #ffffff url(../../../../PersistantImage.ashx?key=SearchTextBoxBackground) repeat-x;*/
+/*    border: solid 1px #305ba6;*/
+	padding-bottom: 0px;
+	margin-left: 4px;
+	margin-right: 4px;
+	white-space: normal!important;
+}
+.PartitionTabControl .ajax__tab_outer
+{
+}
+.PartitionTabControl .ajax__tab_inner
+{
+    padding-left: 2px;
+	padding-bottom: 5px;
+}
+.PartitionTabControl .ajax__tab_tab
+{
+	padding: 2px 5px 2px 5px;
+	font-family: Sans-Serif;
+	color: #618FAD;
+	font-size: 11px;
+	font-weight: bold;
+	border: solid 1px #618FAD;
+	background: #ffffff url(../../../../PersistantImage.ashx?key=SearchTextBoxBackground) repeat-x;
+}
+.PartitionTabControl .ajax__tab_hover .ajax__tab_outer
+{
+
+}
+.PartitionTabControl .ajax__tab_hover .ajax__tab_inner
+{
+    
+}
+.PartitionTabControl .ajax__tab_hover .ajax__tab_tab
+{
+    color: #305ba6;
+	font-family: Sans-Serif;	    
+}
+
+.PartitionTabControl .ajax__tab_active .ajax__tab_outer
+{
+}
+.PartitionTabControl .ajax__tab_active .ajax__tab_inner
+{
+}
+.PartitionTabControl .ajax__tab_active .ajax__tab_tab
+{
+	background: #ffffff;
+	border: solid 1px #305ba6;
+	font-weight: bold;
+	color: #305ba6;
+	font-family: Sans-Serif;	    	
+}
+
+.AddPartitionMessage
+{
+    background: white;
+    text-align: center;
+    color: #205F87;
+    font-size: 16px;
+    padding-top: 40px;
+    padding-bottom: 40px;
+}
+
+.AddPartitionLink
+{
+    color: Red;
+    font-size: 16px;
+}
+

@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!--  
+
+This file adds a number of supplementary indexes to the AuditLogEntry model.
+Note that all entity and enumeration references are already indexed automatically,
+so the only fields that are explicitly marked for indexing here are generally 
+time-stamps and other value fields that are known to be supported in Mwl queries.
+
+-->
+<indexes>
+	<!-- Timestamp -->
+	<index table="AuditLog_" columns="TimeStamp_"/>
+</indexes>

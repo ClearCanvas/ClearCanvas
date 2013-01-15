@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ManifestInput xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.clearcanvas.ca">
+  <Files>
+    <File name="app.ico" ignore="true"/>
+    <File name="ClearCanvas Workstation.url" ignore="true"/>
+    <File name="install.log" ignore="true" />
+    <File name="uninst.exe" ignore="true" />
+    <File name="uninstall.log" ignore="true" />
+    <!--<File name="EULA.rtf" />-->
+    <!--<File name="PrivacyNotice.rtf" />-->
+    <File name="Logging.config" ignore="true" />
+    <File name="logs\" ignore="true" />
+    <File name="manifest\" ignore="true" />
+    <File name="ClearCanvas.Desktop.Executable.exe" checksum="true" />
+    <File name="ClearCanvas.Desktop.Executable.exe.config" config="true" />
+    <!--<File name="ClearCanvas.Desktop.Executable.exe.critical.config" checksum="true" config="true" />-->
+    <File name="common\DotNetMagic2005.DLL" />
+    <File name="common\log4net.dll" checksum="true" />
+    <File name="common\Castle.Core.dll" checksum="true" />
+    <File name="common\Castle.DynamicProxy2.dll" checksum="true" />
+    <File name="common\ClearCanvas.Common.dll" checksum="true" />
+    <File name="plugins\ClearCanvas.Desktop.dll" checksum="true" />
+    <File name="plugins\ClearCanvas.Desktop.ExtensionBrowser.dll" checksum="true" />
+    <File name="plugins\ClearCanvas.Desktop.ExtensionBrowser.View.WinForms.dll" checksum="true" />
+    <File name="plugins\ClearCanvas.Desktop.Help.dll" checksum="true" />
+    <File name="plugins\ClearCanvas.Desktop.View.WinForms.dll" checksum="true" />
+    <File name="plugins\ClearCanvas.Enterprise.Common.dll" checksum="true" />
+    <File name="plugins\ClearCanvas.Enterprise.Desktop.dll" checksum="true" />
+    <File name="plugins\ClearCanvas.Enterprise.Desktop.View.WinForms.dll" checksum="true" />
+    <File name="plugins\ClearCanvas.Jscript.dll" checksum="true" />
+    <File name="plugins\ClearCanvas.Ris.Application.Common.dll" checksum="true" />
+    <File name="plugins\ClearCanvas.Ris.Client.dll" checksum="true" />
+    <File name="plugins\ClearCanvas.Ris.Client.Admin.dll" checksum="true" />
+    <File name="plugins\ClearCanvas.Ris.Client.Admin.View.WinForms.dll" checksum="true" />
+    <File name="plugins\ClearCanvas.Ris.Client.View.WinForms.dll" checksum="true" />
+    <File name="plugins\ClearCanvas.Ris.Client.Workflow.dll" checksum="true" />
+    <File name="plugins\ClearCanvas.Ris.Client.Workflow.View.WinForms.dll" checksum="true" />
+    <File name="plugins\ClearCanvas.Utilities.Manifest.dll" checksum="true" />
+  </Files>
+</ManifestInput>

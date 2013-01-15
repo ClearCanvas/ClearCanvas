@@ -1,0 +1,518 @@
+<Project DefaultTargets="Copy Files" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!-- ImageViewer specific postbuild step -->
+
+  <UsingTask TaskName="ClearCanvas.Utilities.BuildTasks.FileReplaceText" AssemblyFile="$(TrunkDirectory)\ReferencedAssemblies\MSBuild\ClearCanvas.Utilities.BuildTasks.dll"/>
+  <UsingTask TaskName="ClearCanvas.Utilities.BuildTasks.XmlFileRemoveNodes" AssemblyFile="$(TrunkDirectory)\ReferencedAssemblies\MSBuild\ClearCanvas.Utilities.BuildTasks.dll"/>
+  <UsingTask TaskName="ClearCanvas.Utilities.BuildTasks.CombineAppConfigs" AssemblyFile="$(TrunkDirectory)\ReferencedAssemblies\MSBuild\ClearCanvas.Utilities.BuildTasks.dll"/>
+  <UsingTask TaskName="ClearCanvas.Utilities.BuildTasks.RegexIsMatch" AssemblyFile="$(TrunkDirectory)\ReferencedAssemblies\MSBuild\ClearCanvas.Utilities.BuildTasks.dll"/>
+
+  <PropertyGroup>
+    <TrunkDirectory>$(MSBuildProjectDirectory)\..\</TrunkDirectory>
+    <JscriptDirectory>$(TrunkDirectory)\Jscript\bin\$(Configuration)</JscriptDirectory>
+    <DesktopBuild>false</DesktopBuild>
+    <ShredHostBuild>false</ShredHostBuild>
+    <ConsoleBuild>false</ConsoleBuild>
+    <DistributionDesktopConfig>$(DistributionDirectory)\ClearCanvas.Desktop.Executable.exe.config</DistributionDesktopConfig>
+    <DistributionShredHostConfig>$(DistributionDirectory)\ClearCanvas.Server.ShredHostService.exe.config</DistributionShredHostConfig>
+    <DistributionConsoleConfig>$(DistributionDirectory)\ClearCanvas.Executable.exe.config</DistributionConsoleConfig>
+    <DistributionDesktopCriticalConfig>$(DistributionDirectory)\ClearCanvas.Desktop.Executable.exe.critical.config</DistributionDesktopCriticalConfig>
+    <DistributionShredHostCriticalConfig>$(DistributionDirectory)\ClearCanvas.Server.ShredHostService.exe.critical.config</DistributionShredHostCriticalConfig>
+    <DistributionConsoleCriticalConfig>$(DistributionDirectory)\ClearCanvas.Executable.exe.critical.config</DistributionConsoleCriticalConfig>
+  </PropertyGroup>
+
+  <Choose>
+    <When Condition=" '$(ProjectOutDir)' != '$(DistributionDirectory)' ">
+      <PropertyGroup>
+        <IsDistributionBuild>true</IsDistributionBuild>
+      </PropertyGroup>
+    </When>
+    <Otherwise>
+      <PropertyGroup>
+        <IsDistributionBuild>false</IsDistributionBuild>
+      </PropertyGroup>
+    </Otherwise>
+  </Choose>
+
+  <Choose>
+    <When Condition=" '$(TargetPlatform)' != 'x86' ">
+      <PropertyGroup>
+        <PlatformSubFolder>$(TargetPlatform)</PlatformSubFolder>
+      </PropertyGroup>
+    </When>
+    <Otherwise>
+      <!-- assumes Win32 -->
+      <PropertyGroup>
+        <PlatformSubFolder></PlatformSubFolder>
+      </PropertyGroup>
+    </Otherwise>
+  </Choose>
+
+  <Choose>
+    <When Condition="'$(Options)' == ''">
+      <PropertyGroup>
+        <!--<OptionsFlags>ExcludeHttpDesktopServices+ExcludeDatabase+ExcludeDicomEditor+ExcludeStudyComposer+ExcludeStudyFilters+ExcludeReporting+ExcludeHelpUpdate+ExcludeMpr</OptionsFlags>-->
+        <!--<OptionsFlags>ExcludeHttpDesktopServices+ExcludeDatabase+ExcludeDicomEditor+ExcludeStudyComposer+ExcludeStudyFilters+ExcludeReporting+ExcludeHelpUpdate+ExcludeMpr</OptionsFlags>-->
+        <!--<OptionsFlags>ExcludeStudyComposer+ExcludeStudyFilters+ExcludeMpr</OptionsFlags>-->
+        <OptionsFlags>ExcludeStudyComposer</OptionsFlags>
+      </PropertyGroup>
+    </When>
+    <Otherwise>
+      <PropertyGroup>
+        <OptionsFlags>$(Options)</OptionsFlags>
+      </PropertyGroup>
+    </Otherwise>
+  </Choose>
+
+  <!--What files get copied depends on which project we are building.  The only other
+  way to do this would be to have ImageViewerDesktop_dist.config and ImageViewerShredHost_dist.config, but they would be
+  pretty much identical except for the plugins.  Also, this way, you only have to do the upkeep on one file.-->
+
+  <PropertyGroup Condition ="'$(ProjectName)' == 'ClearCanvas.Desktop.Executable'">
+    <DesktopBuild>true</DesktopBuild>
+    <ShredHostBuild>false</ShredHostBuild>
+    <ConsoleBuild>false</ConsoleBuild>
+  </PropertyGroup>
+
+  <PropertyGroup Condition ="'$(ProjectName)' == 'ClearCanvas.Server.ShredHostService'">
+    <DesktopBuild>false</DesktopBuild>
+    <ShredHostBuild>true</ShredHostBuild>
+    <ConsoleBuild>false</ConsoleBuild>
+  </PropertyGroup>
+
+  <PropertyGroup Condition ="'$(ProjectName)' == 'ClearCanvas.Executable'">
+    <DesktopBuild>false</DesktopBuild>
+    <ShredHostBuild>false</ShredHostBuild>
+    <ConsoleBuild>true</ConsoleBuild>
+  </PropertyGroup>
+
+  <Choose>
+    <When Condition="$(DesktopBuild)">
+      <PropertyGroup>
+        <DistributionAppConfig>$(DistributionDesktopConfig)</DistributionAppConfig>
+       </PropertyGroup>
+    </When>
+    <Otherwise>
+      <PropertyGroup>
+        <DistributionAppConfig>$(DistributionShredHostConfig)</DistributionAppConfig>
+      </PropertyGroup>
+    </Otherwise>
+  </Choose>
+
+  <ItemGroup>
+    <JscriptFiles Include="$(JscriptDirectory)\ClearCanvas.Jscript.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <DatabaseLibraries Include="$(TrunkDirectory)\ReferencedAssemblies\SqlCe\v4.0\$(PlatformSubFolder)\sqlce*.dll" />
+    <DatabaseLibraries Include="$(TrunkDirectory)\ReferencedAssemblies\SqlCe\v4.0\$(PlatformSubFolder)\System.Data.SqlServerCe.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <DatabasePlugins Include="$(TrunkDirectory)\ImageViewer\StudyManagement\Core\bin\$(Configuration)\ClearCanvas.ImageViewer.StudyManagement.Core.dll" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <DicomToolkitFiles Include="$(TrunkDirectory)\Dicom\bin\$(Configuration)\ClearCanvas.Dicom.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+  	<ImageViewerAppConfigCreatorSourceFiles Include="$(TrunkDirectory)\Desktop\Executable\app.config" />
+    <ImageViewerAppConfigCreatorSourceFiles Include="$(TrunkDirectory)\ImageViewer\ImageViewer_dist.config" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <ShredHostAppConfigCreatorSourceFiles Include="$(TrunkDirectory)\Server\ShredHostService\app.config" />
+    <ShredHostAppConfigCreatorSourceFiles Include="$(TrunkDirectory)\ImageViewer\ImageViewer_Shreds_dist.config" />
+  </ItemGroup>
+
+  <ItemGroup Condition="$(DesktopBuild)">
+    <CriticalConfigFiles Include="$(TrunkDirectory)\ImageViewer\ImageViewer_critical.config" />
+  </ItemGroup>
+
+  <ItemGroup Condition="$(ShredHostBuild)">
+    <CriticalConfigFiles Include="$(TrunkDirectory)\ImageViewer\ImageViewer_Shreds_critical.config" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CodecFiles Include="$(TrunkDirectory)\Dicom\Codec\Rle\bin\$(Configuration)\ClearCanvas.Dicom.Codec.Rle.dll" />
+    <CodecFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Codecs\$(PlatformSubFolder)\ClearCanvas.Dicom.Codec.Jpeg.dll" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <StudyBrowserFiles Include="$(TrunkDirectory)\Controls\WinForms\bin\$(Configuration)\ClearCanvas.Controls.WinForms.dll" />
+    <StudyBrowserFiles Include="$(TrunkDirectory)\Desktop\Explorer\bin\$(Configuration)\ClearCanvas.Desktop.Explorer.dll" />
+    <StudyBrowserFiles Include="$(TrunkDirectory)\Desktop\Explorer\View\WinForms\bin\$(Configuration)\ClearCanvas.Desktop.Explorer.View.WinForms.dll" />
+    <StudyBrowserFiles Include="$(TrunkDirectory)\ImageViewer\Explorer\Local\bin\$(Configuration)\ClearCanvas.ImageViewer.Explorer.Local.dll" />
+    <StudyBrowserFiles Include="$(TrunkDirectory)\ImageViewer\Explorer\Local\View\WinForms\bin\$(Configuration)\ClearCanvas.ImageViewer.Explorer.Local.View.WinForms.dll" />
+    <StudyBrowserFiles Include="$(TrunkDirectory)\ImageViewer\Explorer\Dicom\bin\$(Configuration)\ClearCanvas.ImageViewer.Explorer.Dicom.dll" />
+    <StudyBrowserFiles Include="$(TrunkDirectory)\ImageViewer\Explorer\Dicom\View\WinForms\bin\$(Configuration)\ClearCanvas.ImageViewer.Explorer.Dicom.View.WinForms.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <DesktopServiceFiles Include="$(TrunkDirectory)\ImageViewer\DesktopServices\bin\$(Configuration)\ClearCanvas.ImageViewer.DesktopServices.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <StudyComposerFiles Include="$(TrunkDirectory)\ImageViewer\Utilities\StudyComposer\bin\$(Configuration)\ClearCanvas.ImageViewer.Utilities.StudyComposer.dll" />
+    <StudyComposerFiles  Include="$(TrunkDirectory)\ImageViewer\Utilities\StudyComposer\View\WinForms\bin\$(Configuration)\ClearCanvas.ImageViewer.Utilities.StudyComposer.View.WinForms.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <DicomEditorFiles Include="$(TrunkDirectory)\Utilities\DicomEditor\bin\$(Configuration)\ClearCanvas.Utilities.DicomEditor.dll" />
+    <DicomEditorFiles Include="$(TrunkDirectory)\Utilities\DicomEditor\View\WinForms\bin\$(Configuration)\ClearCanvas.Utilities.DicomEditor.View.WinForms.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <StudyFiltersFiles Include="$(TrunkDirectory)\ImageViewer\Utilities\StudyFilters\bin\$(Configuration)\ClearCanvas.ImageViewer.Utilities.StudyFilters.dll" />
+    <StudyFiltersFiles Include="$(TrunkDirectory)\ImageViewer\Utilities\StudyFilters\Tools\bin\$(Configuration)\ClearCanvas.ImageViewer.Utilities.StudyFilters.Tools.dll" />
+    <StudyFiltersFiles Include="$(TrunkDirectory)\ImageViewer\Utilities\StudyFilters\View\WinForms\bin\$(Configuration)\ClearCanvas.ImageViewer.Utilities.StudyFilters.View.WinForms.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ReportingFiles Include="$(TrunkDirectory)\ImageViewer\Tools\Reporting\bin\$(Configuration)\ClearCanvas.ImageViewer.Tools.Reporting.dll" />
+    <ReportingFiles Include="$(TrunkDirectory)\ImageViewer\Tools\Reporting\View\WinForms\bin\$(Configuration)\ClearCanvas.ImageViewer.Tools.Reporting.View.WinForms.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <HelpUpdateFiles Include="$(TrunkDirectory)\Desktop\Help\UpdateTools\bin\$(Configuration)\ClearCanvas.Desktop.Help.UpdateTools.dll" />
+  </ItemGroup>
+
+  <!-- Study Finders and Loaders -->
+  <ItemGroup>
+    <DicomRemoteClientFiles Include="$(TrunkDirectory)\ImageViewer\StudyFinders\Remote\bin\$(Configuration)\ClearCanvas.ImageViewer.StudyFinders.Remote.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <LocalStoreClientFiles Include="$(TrunkDirectory)\ImageViewer\StudyFinders\Local\bin\$(Configuration)\ClearCanvas.ImageViewer.StudyFinders.Local.dll" />
+    <LocalStoreClientFiles Include="$(TrunkDirectory)\ImageViewer\StudyLoaders\Local\bin\$(Configuration)\ClearCanvas.ImageViewer.StudyLoaders.Local.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <StreamingClientFiles Include="$(TrunkDirectory)\ImageViewer\StudyLoaders\Streaming\bin\$(Configuration)\ClearCanvas.ImageViewer.StudyLoaders.Streaming.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <MprPluginFiles Include="$(TrunkDirectory)\ImageViewer\Volume\Mpr\bin\$(Configuration)\ClearCanvas.ImageViewer.Volume.Mpr.dll" />
+    <MprPluginFiles Include="$(TrunkDirectory)\ImageViewer\Volume\Mpr\View\WinForms\bin\$(Configuration)\ClearCanvas.ImageViewer.Volume.Mpr.View.WinForms.dll" />
+    <MprPluginFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Vtk\$(PlatformSubFolder)\vtksys.dll" />
+    <MprPluginFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Vtk\$(PlatformSubFolder)\vtkCommon.dll" />
+    <MprPluginFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Vtk\$(PlatformSubFolder)\vtkFiltering.dll" />
+    <MprPluginFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Vtk\$(PlatformSubFolder)\vtkImaging.dll" />
+    <MprPluginFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Vtk\$(PlatformSubFolder)\vtkCommonDotNet.dll" />
+    <MprPluginFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Vtk\$(PlatformSubFolder)\vtkFilteringDotNet.dll" />
+    <MprPluginFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Vtk\$(PlatformSubFolder)\vtkImagingDotNet.dll" />
+    
+    <!-- Dependencies for Slabbing Support -->
+    <!-- (as indicated by DependencyWalker)
+    <MprPluginFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Vtk\$(PlatformSubFolder)\vtkftgl.dll" />
+    <MprPluginFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Vtk\$(PlatformSubFolder)\vtkfreetype.dll" />
+    <MprPluginFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Vtk\$(PlatformSubFolder)\vtkverdict.dll" />
+    <MprPluginFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Vtk\$(PlatformSubFolder)\vtkGraphics.dll" />
+   
+    <MprPluginFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Vtk\$(PlatformSubFolder)\vtkDicomParser.dll" />
+    <MprPluginFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Vtk\$(PlatformSubFolder)\vtkNetCDF.dll" />
+    <MprPluginFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Vtk\$(PlatformSubFolder)\vtkMetaIO.dll" />
+    <MprPluginFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Vtk\$(PlatformSubFolder)\vtkPNG.dll" />
+    <MprPluginFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Vtk\$(PlatformSubFolder)\vtkZlib.dll" />
+    <MprPluginFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Vtk\$(PlatformSubFolder)\vtkJpeg.dll" />
+    <MprPluginFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Vtk\$(PlatformSubFolder)\vtkTiff.dll" />
+    <MprPluginFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Vtk\$(PlatformSubFolder)\vtkExpat.dll" />
+    <MprPluginFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Vtk\$(PlatformSubFolder)\vtkIO.dll" />
+
+    <MprPluginFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Vtk\$(PlatformSubFolder)\vtkRendering.dll" />
+    <MprPluginFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Vtk\$(PlatformSubFolder)\vtkRenderingDotNet.dll" />
+    <MprPluginFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Vtk\$(PlatformSubFolder)\vtkVolumeRendering.dll" />
+    <MprPluginFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Vtk\$(PlatformSubFolder)\vtkVolumeRenderingDotNet.dll" />
+    -->
+  </ItemGroup>
+
+  <ItemGroup>
+    <FusionPluginFiles Include="$(TrunkDirectory)\ImageViewer\AdvancedImaging\Fusion\bin\$(Configuration)\ClearCanvas.ImageViewer.AdvancedImaging.Fusion.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <TestToolPluginFiles Include="$(TrunkDirectory)\ImageViewer\TestTools\bin\$(Configuration)\ClearCanvas.ImageViewer.TestTools.dll" />
+    <TestToolPluginFiles Include="$(TrunkDirectory)\ImageViewer\TestTools\View\WinForms\bin\$(Configuration)\ClearCanvas.ImageViewer.TestTools.View.WinForms.dll" />
+  </ItemGroup>
+
+  <ItemGroup Condition="$(DesktopBuild)">
+    <SynchronizationPluginFiles Include="$(TrunkDirectory)\ImageViewer\Tools\Synchronization\bin\$(Configuration)\ClearCanvas.ImageViewer.Tools.Synchronization.dll" />
+    <SynchronizationPluginFiles Include="$(TrunkDirectory)\ImageViewer\Tools\Synchronization\View\WinForms\bin\$(Configuration)\ClearCanvas.ImageViewer.Tools.Synchronization.View.WinForms.dll" />
+  </ItemGroup>
+
+  <ItemGroup Condition="$(DesktopBuild)">
+    <!-- Externals -->
+    <ExternalsPluginFiles Include="$(TrunkDirectory)\ImageViewer\Externals\bin\$(Configuration)\ClearCanvas.ImageViewer.Externals.dll" />
+    <ExternalsPluginFiles Include="$(TrunkDirectory)\ImageViewer\Externals\View\WinForms\bin\$(Configuration)\ClearCanvas.ImageViewer.Externals.View.WinForms.dll" />
+  </ItemGroup>
+
+  <!--Plugins common to all-->
+  <ItemGroup>
+    <PluginFiles Include="$(TrunkDirectory)\ImageViewer\Common\bin\$(Configuration)\ClearCanvas.ImageViewer.Common.dll" />
+    <PluginFiles Include="$(TrunkDirectory)\ImageViewer\StudyManagement\Core\bin\$(Configuration)\ClearCanvas.ImageViewer.StudyManagement.Core.dll" />
+  </ItemGroup>
+
+  <ItemGroup Condition="$(DesktopBuild)">
+    <!-- Core Viewer -->
+    <PluginFiles Include="$(TrunkDirectory)\ImageViewer\bin\$(Configuration)\ClearCanvas.ImageViewer.dll" />
+    <PluginFiles Include="$(TrunkDirectory)\ImageViewer\View\WinForms\bin\$(Configuration)\ClearCanvas.ImageViewer.View.WinForms.dll" />
+    <PluginFiles Include="$(TrunkDirectory)\ImageViewer\AnnotationProviders\bin\$(Configuration)\ClearCanvas.ImageViewer.AnnotationProviders.dll" />
+    <PluginFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Interpolators\$(PlatformSubFolder)\BilinearInterpolation.dll" />
+
+    <!-- Configuration -->
+    <PluginFiles Include="$(TrunkDirectory)\ImageViewer\Configuration\bin\$(Configuration)\ClearCanvas.ImageViewer.Configuration.dll" />
+    <PluginFiles Include="$(TrunkDirectory)\ImageViewer\Configuration\View\WinForms\bin\$(Configuration)\ClearCanvas.ImageViewer.Configuration.View.WinForms.dll" />
+
+    <!-- Tools -->
+    <PluginFiles Include="$(TrunkDirectory)\ImageViewer\Tools\Measurement\bin\$(Configuration)\ClearCanvas.ImageViewer.Tools.Measurement.dll" />
+    <PluginFiles Include="$(TrunkDirectory)\ImageViewer\Tools\Measurement\View\WinForms\bin\$(Configuration)\ClearCanvas.ImageViewer.Tools.Measurement.View.WinForms.dll" />
+    <PluginFiles Include="$(TrunkDirectory)\ImageViewer\Tools\Standard\bin\$(Configuration)\ClearCanvas.ImageViewer.Tools.Standard.dll" />
+    <PluginFiles Include="$(TrunkDirectory)\ImageViewer\Tools\Standard\View\WinForms\bin\$(Configuration)\ClearCanvas.ImageViewer.Tools.Standard.View.WinForms.dll" />
+
+    <!-- Layout -->
+    <PluginFiles Include="$(TrunkDirectory)\ImageViewer\Layout\Basic\bin\$(Configuration)\ClearCanvas.ImageViewer.Layout.Basic.dll" />
+    <PluginFiles Include="$(TrunkDirectory)\ImageViewer\Layout\Basic\View\WinForms\bin\$(Configuration)\ClearCanvas.ImageViewer.Layout.Basic.View.WinForms.dll" />
+
+    <!-- Clipboard -->
+    <PluginFiles Include="$(TrunkDirectory)\ImageViewer\Clipboard\bin\$(Configuration)\ClearCanvas.ImageViewer.Clipboard.dll" />
+    <PluginFiles Include="$(TrunkDirectory)\ImageViewer\Clipboard\View\WinForms\bin\$(Configuration)\ClearCanvas.ImageViewer.Clipboard.View.WinForms.dll" />
+
+    <!-- Thumbnails -->
+    <PluginFiles Include="$(TrunkDirectory)\ImageViewer\Thumbnails\bin\$(Configuration)\ClearCanvas.ImageViewer.Thumbnails.dll" />
+    <PluginFiles Include="$(TrunkDirectory)\ImageViewer\Thumbnails\View\WinForms\bin\$(Configuration)\ClearCanvas.ImageViewer.Thumbnails.View.WinForms.dll" />
+
+    <!-- Manifest -->
+    <PluginFiles Include="$(TrunkDirectory)\Utilities\Manifest\bin\$(Configuration)\ClearCanvas.Utilities.Manifest.dll" />
+
+  </ItemGroup>
+
+  <ItemGroup Condition="$(ShredHostBuild)">
+    <PluginFiles Include="$(TrunkDirectory)\ImageViewer\Shreds\bin\$(Configuration)\ClearCanvas.ImageViewer.Shreds.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UnitTestImages Include="$(TrunkDirectory)\ImageViewer\RoiGraphics\Tests\Images\**\*.*" Exclude=".svn\*.*;_svn\*.*" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ExecutableBootstrapFiles Include="$(TrunkDirectory)\Executable\bin\$(Configuration)\ClearCanvas.Executable.exe" />
+  </ItemGroup>
+
+  <Target Name="Copy ImageViewer App Config">
+    <CombineAppConfigs SourceFiles="@(ImageViewerAppConfigCreatorSourceFiles)" OutputFile="$(DistributionDesktopConfig)" />
+    <Copy SourceFiles="@(CriticalConfigFiles)" DestinationFiles="$(DistributionDesktopCriticalConfig)" />
+  </Target>
+
+  <Target Name="Exclude Http Desktop Services">
+    <XmlFileRemoveNodes File="$(DistributionDesktopConfig)" XPath="//configuration/system.serviceModel/services/service/endpoint[contains(@binding, 'Http')]" />
+    <XmlFileRemoveNodes File="$(DistributionDesktopConfig)" XPath="//configuration/system.serviceModel/services/service/host/baseAddresses/add[starts-with(@baseAddress, 'http')]" />
+    <XmlFileRemoveNodes File="$(DistributionDesktopConfig)" XPath="//configuration/system.serviceModel/behaviors/serviceBehaviors/behavior/serviceMetadata" />
+  </Target>
+  
+  <Target Name="Copy ShredHost App Config">
+    <CombineAppConfigs SourceFiles="@(ShredHostAppConfigCreatorSourceFiles)" OutputFile="$(DistributionShredHostConfig)" />
+    <Copy SourceFiles="@(CriticalConfigFiles)" DestinationFiles="$(DistributionShredHostCriticalConfig)" />
+    <Copy SourceFiles="@(CriticalConfigFiles)" DestinationFiles="$(DistributionShredHostCriticalConfig)" />
+  </Target>
+
+  <Target Name="Copy Database Files">
+    <!-- Copy Hibernate and sql ce files -->
+    <Copy SourceFiles="@(DatabaseLibraries)" DestinationFolder="$(CommonDirectory)" />
+    <Copy SourceFiles="@(DatabasePlugins)" DestinationFolder="$(PluginsDirectory)" />
+  </Target>
+
+  <Target Name="Copy Study Browser">
+    <Copy SourceFiles="@(StudyBrowserFiles)" DestinationFolder="$(PluginsDirectory)" />
+    <CombineAppConfigs SourceFiles="$(TrunkDirectory)\ImageViewer\ImageViewer.DicomExplorer_dist.config;$(DistributionDesktopConfig)" OutputFile="$(DistributionDesktopConfig)" />
+  </Target>
+
+  <Target Name="Copy Desktop Services">
+    <Copy SourceFiles="@(DesktopServiceFiles)" DestinationFolder="$(PluginsDirectory)" />
+    <CombineAppConfigs SourceFiles="$(TrunkDirectory)\ImageViewer\ImageViewer.DesktopServices_dist.config;$(DistributionDesktopConfig)" OutputFile="$(DistributionDesktopConfig)" />
+  </Target>
+  <Target Name="Copy Study Composer">
+    <Copy SourceFiles="@(StudyComposerFiles)" DestinationFolder="$(PluginsDirectory)" />
+  </Target>
+  <Target Name="Copy Study Filters">
+    <Copy SourceFiles="@(StudyFiltersFiles)" DestinationFolder="$(PluginsDirectory)" />
+  </Target>
+  <Target Name="Copy Reporting">
+    <Copy SourceFiles="@(ReportingFiles)" DestinationFolder="$(PluginsDirectory)" />
+  </Target>
+  <Target Name="Copy Dicom Editor">
+    <Copy SourceFiles="@(DicomEditorFiles)" DestinationFolder="$(PluginsDirectory)" />
+  </Target>
+  <Target Name="Copy Synchronization Plugin">
+    <Copy SourceFiles="@(SynchronizationPluginFiles)" DestinationFolder="$(PluginsDirectory)" />
+  </Target>
+  <Target Name="Copy Externals Plugin">
+    <Copy SourceFiles="@(ExternalsPluginFiles)" DestinationFolder="$(PluginsDirectory)" />
+  </Target>
+  <Target Name="Copy Help Update">
+    <Copy SourceFiles="@(HelpUpdateFiles)" DestinationFolder="$(PluginsDirectory)" />
+    <CombineAppConfigs SourceFiles="$(TrunkDirectory)\ImageViewer\Desktop.HelpUpdate_dist.config;$(DistributionDesktopConfig)" OutputFile="$(DistributionDesktopConfig)" />
+  </Target>
+  <Target Name="Copy Local Store Client Files">
+    <Copy SourceFiles="@(LocalStoreClientFiles)" DestinationFolder="$(PluginsDirectory)" />
+  </Target>
+  
+  <Target Name="Copy Dicom Remote Client Files">
+    <Copy SourceFiles="@(DicomRemoteClientFiles)" DestinationFolder="$(PluginsDirectory)" />
+  </Target>
+  <Target Name="Copy Streaming Client Files">
+    <Copy SourceFiles="@(StreamingClientFiles)" DestinationFolder="$(PluginsDirectory)" />
+    <CombineAppConfigs SourceFiles="$(TrunkDirectory)\ImageViewer\ImageViewer.Streaming_dist.config;$(DistributionDesktopConfig)" OutputFile="$(DistributionDesktopConfig)" />
+  </Target>
+  <Target Name="Copy Mpr Files">
+    <Copy SourceFiles="@(MprPluginFiles)" DestinationFolder="$(PluginsDirectory)" />
+  </Target>
+  <Target Name="Copy Fusion Files">
+    <Copy SourceFiles="@(FusionPluginFiles)" DestinationFolder="$(PluginsDirectory)" />
+  </Target>
+  <Target Name="Copy Test Tool Files">
+    <Copy SourceFiles="@(TestToolPluginFiles)" DestinationFolder="$(PluginsDirectory)" />
+  </Target>
+
+  <Target Name="Copy Optional Viewer Plugins" Condition="$(DesktopBuild)">
+
+    <RegexIsMatch Pattern="ExcludeStudyBrowser" Input="$(OptionsFlags)" >
+      <Output TaskParameter="IsMatch" PropertyName="ExcludeStudyBrowser" />
+    </RegexIsMatch>
+    <RegexIsMatch Pattern="ExcludeDesktopServices" Input="$(OptionsFlags)" >
+      <Output TaskParameter="IsMatch" PropertyName="ExcludeDesktopServices" />
+    </RegexIsMatch>
+    <RegexIsMatch Pattern="ExcludeStudyComposer" Input="$(OptionsFlags)" >
+      <Output TaskParameter="IsMatch" PropertyName="ExcludeStudyComposer" />
+    </RegexIsMatch>
+    <RegexIsMatch Pattern="ExcludeDicomEditor" Input="$(OptionsFlags)" >
+      <Output TaskParameter="IsMatch" PropertyName="ExcludeDicomEditor" />
+    </RegexIsMatch>
+    <RegexIsMatch Pattern="ExcludeStudyFilters" Input="$(OptionsFlags)" >
+      <Output TaskParameter="IsMatch" PropertyName="ExcludeStudyFilters" />
+    </RegexIsMatch>
+    <RegexIsMatch Pattern="ExcludeExternals" Input="$(OptionsFlags)" >
+      <Output TaskParameter="IsMatch" PropertyName="ExcludeExternals" />
+    </RegexIsMatch>
+    <RegexIsMatch Pattern="ExcludeReporting" Input="$(OptionsFlags)" >
+      <Output TaskParameter="IsMatch" PropertyName="ExcludeReporting" />
+    </RegexIsMatch>
+    <RegexIsMatch Pattern="ExcludeHelpUpdate" Input="$(OptionsFlags)" >
+      <Output TaskParameter="IsMatch" PropertyName="ExcludeHelpUpdate" />
+    </RegexIsMatch>
+    <RegexIsMatch Pattern="ExcludeDatabase" Input="$(OptionsFlags)" >
+      <Output TaskParameter="IsMatch" PropertyName="ExcludeDatabase" />
+    </RegexIsMatch>
+    <RegexIsMatch Pattern="ExcludeSynchronizationTools" Input="$(OptionsFlags)" >
+      <Output TaskParameter="IsMatch" PropertyName="ExcludeSynchronizationTools" />
+    </RegexIsMatch>
+    <RegexIsMatch Pattern="ExcludeDicomRemote" Input="$(OptionsFlags)" >
+      <Output TaskParameter="IsMatch" PropertyName="ExcludeDicomRemote" />
+    </RegexIsMatch>
+    <RegexIsMatch Pattern="ExcludeStreaming" Input="$(OptionsFlags)" >
+      <Output TaskParameter="IsMatch" PropertyName="ExcludeStreaming" />
+    </RegexIsMatch>
+    <RegexIsMatch Pattern="ExcludeMpr" Input="$(OptionsFlags)" >
+      <Output TaskParameter="IsMatch" PropertyName="ExcludeMpr" />
+    </RegexIsMatch>
+    <RegexIsMatch Pattern="ExcludeFusion" Input="$(OptionsFlags)" >
+      <Output TaskParameter="IsMatch" PropertyName="ExcludeFusion" />
+    </RegexIsMatch>
+    <RegexIsMatch Pattern="IncludeTestTools" Input="$(OptionsFlags)" >
+      <Output TaskParameter="IsMatch" PropertyName="IncludeTestTools" />
+    </RegexIsMatch>
+
+    <CallTarget Condition="!$(ExcludeStudyBrowser)" Targets="Copy Study Browser" />
+    <CallTarget Condition="!$(ExcludeDesktopServices)" Targets="Copy Desktop Services" />
+    <CallTarget Condition="!$(ExcludeStudyComposer)" Targets="Copy Study Composer" />
+    <CallTarget Condition="!$(ExcludeDicomEditor)" Targets="Copy Dicom Editor" />
+    <CallTarget Condition="!$(ExcludeStudyFilters)" Targets="Copy Study Filters" />
+    <CallTarget Condition="!$(ExcludeExternals)" Targets="Copy Externals Plugin" />
+    <CallTarget Condition="!$(ExcludeReporting)" Targets="Copy Reporting" />
+    <CallTarget Condition="!$(ExcludeHelpUpdate)" Targets="Copy Help Update" />
+    <CallTarget Condition="!$(ExcludeDicomRemote)" Targets="Copy Dicom Remote Client Files" />
+    <CallTarget Condition="!$(ExcludeStreaming)" Targets="Copy Streaming Client Files" />
+    <CallTarget Condition="!$(ExcludeMpr)" Targets="Copy Mpr Files" />
+    <CallTarget Condition="!$(ExcludeFusion)" Targets="Copy Fusion Files" />
+    <CallTarget Condition="!$(ExcludeDatabase)" Targets="Copy Local Store Client Files" />
+    <CallTarget Condition="!$(ExcludeSynchronizationTools)" Targets="Copy Synchronization Plugin" />
+    <CallTarget Condition="$(IncludeTestTools)" Targets="Copy Test Tool Files" />
+
+  </Target>
+
+  <Target Name="Copy Plugin Files" DependsOnTargets="Copy Optional Viewer Plugins">
+
+    <!-- Copy plugins -->
+    <Copy SourceFiles="@(PluginFiles)" DestinationFolder="$(PluginsDirectory)" />
+    <Copy SourceFiles="@(CodecFiles)" DestinationFolder="$(PluginsDirectory)" />
+
+  </Target>
+
+  <Target Name="Copy Project Files" DependsOnTargets="Copy Plugin Files">
+
+    <Copy SourceFiles="@(DicomToolkitFiles)" DestinationFolder="$(PluginsDirectory)" />
+    <Copy SourceFiles="@(CommonFiles)" DestinationFolder="$(CommonDirectory)" />
+
+    <RegexIsMatch Pattern="ExcludeDatabase" Input="$(OptionsFlags)" >
+      <Output TaskParameter="IsMatch" PropertyName="ExcludeDatabase" />
+    </RegexIsMatch>
+
+    <!-- Always copy database for shred host -->
+    <CallTarget Condition="$(ShredHostBuild) Or !$(ExcludeDatabase)" Targets="Copy Database Files" />
+    
+    <!-- If building in debug configuration, copy unit test images -->
+    <Copy Condition="'$(Configuration)' == 'Debug'" SourceFiles="@(UnitTestImages)" DestinationFiles="@(UnitTestImages->'$(PluginsDirectory)/TestImages/%(RecursiveDir)%(Filename)%(Extension)')" />
+
+  </Target>
+
+  <Target Name="Copy JScript Files">
+
+    <MSBuild Projects="$(TrunkDirectory)\JScript\Build.proj" Properties="Configuration=$(Configuration);KeyFile=$(StrongNameKeyFile)"/>
+    <Copy Condition="$(DesktopBuild)" SourceFiles="@(JScriptFiles)" DestinationFolder="$(PluginsDirectory)" />
+
+  </Target>
+
+  <Target Name="Copy Executable Bootstrap">
+    <Copy SourceFiles="@(ExecutableBootstrapFiles)" DestinationFolder="$(DistributionDirectory)" />
+  </Target>
+
+  <Target Name="Copy Executable Bootstrap for Desktop">
+    <CallTarget Targets="Copy Executable Bootstrap" />
+    <Copy SourceFiles="$(DistributionDesktopConfig)" DestinationFiles="$(DistributionConsoleConfig)" />
+    <Copy SourceFiles="$(DistributionDesktopCriticalConfig)" DestinationFiles="$(DistributionConsoleCriticalConfig)" />
+  </Target>
+
+  <Target Name="Copy Executable Bootstrap for ShredHost">
+    <CallTarget Targets="Copy Executable Bootstrap" />
+    <Copy SourceFiles="$(DistributionShredHostConfig)" DestinationFiles="$(DistributionConsoleConfig)" />
+    <Copy SourceFiles="$(DistributionShredHostCriticalConfig)" DestinationFiles="$(DistributionConsoleCriticalConfig)" />
+  </Target>
+
+  <Target Name="Copy Desktop Files" DependsOnTargets="Copy ImageViewer App Config;Copy JScript Files">
+    <CallTarget Targets="Copy Project Files" />
+
+    <RegexIsMatch Pattern="ExcludeHttpDesktopServices" Input="$(OptionsFlags)" >
+      <Output TaskParameter="IsMatch" PropertyName="ExcludeHttpDesktopServices" />
+    </RegexIsMatch>
+
+    <CallTarget Condition="$(ExcludeHttpDesktopServices)" Targets="Exclude Http Desktop Services" />
+
+    <CallTarget Targets="Copy Executable Bootstrap for Desktop" />
+
+  </Target>
+
+  <Target Name="Copy ShredHost Files" DependsOnTargets="Copy ShredHost App Config">
+    <CallTarget Targets="Copy Project Files" />
+
+    <!--Only copy console executable to ShredHost folder if not doing distribution build-->
+    <CallTarget Condition="!$(IsDistributionBuild)" Targets="Copy Executable Bootstrap for ShredHost" />
+  </Target>
+
+  <Target Name ="Copy Files" >
+    
+    <CallTarget Condition="$(DesktopBuild)" Targets="Copy Desktop Files" />
+    <CallTarget Condition="$(ShredHostBuild)" Targets="Copy ShredHost Files" />
+    
+  </Target>
+
+</Project>

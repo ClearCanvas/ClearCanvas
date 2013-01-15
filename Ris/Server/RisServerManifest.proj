@@ -1,0 +1,123 @@
+<Project DefaultTargets="Create Manifests" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!-- ImageViewer Manifest Creation -->
+
+  <UsingTask TaskName="ClearCanvas.Utilities.BuildTasks.RegexIsMatch" AssemblyFile="$(TrunkDirectory)\ReferencedAssemblies\MSBuild\ClearCanvas.Utilities.BuildTasks.dll"/>
+  <UsingTask TaskName="ClearCanvas.Utilities.BuildTasks.XmlInsert" AssemblyFile="$(TrunkDirectory)\ReferencedAssemblies\MSBuild\ClearCanvas.Utilities.BuildTasks.dll"/>
+  <UsingTask TaskName="ClearCanvas.Utilities.BuildTasks.XmlUpdate" AssemblyFile="$(TrunkDirectory)\ReferencedAssemblies\MSBuild\ClearCanvas.Utilities.BuildTasks.dll"/>
+
+  <PropertyGroup>
+    <TrunkDirectory>$(MSBuildProjectDirectory)\..\..\</TrunkDirectory>
+  </PropertyGroup>
+
+  <Choose>
+    <When Condition=" '$(ProjectOutDir)' != '$(DistributionDirectory)' ">
+      <PropertyGroup>
+        <ManifestDirectory>$(DistributionDirectory)\manifest</ManifestDirectory>
+      </PropertyGroup>
+    </When>
+    <Otherwise>
+      <PropertyGroup>
+        <ManifestDirectory>$(TrunkDirectory)\manifest</ManifestDirectory>
+      </PropertyGroup>
+    </Otherwise>
+  </Choose>
+
+  <Choose>
+    <When Condition=" '$(TargetPlatform)' != 'x86' ">
+      <PropertyGroup>
+        <PlatformSubFolder>$(TargetPlatform)</PlatformSubFolder>
+      </PropertyGroup>
+    </When>
+    <Otherwise>
+      <!-- assumes Win32 -->
+      <PropertyGroup>
+        <PlatformSubFolder></PlatformSubFolder>
+      </PropertyGroup>
+    </Otherwise>
+  </Choose>
+
+  <Choose>
+    <When Condition="'$(Options)' == ''">
+      <PropertyGroup>
+        <OptionsFlags></OptionsFlags>
+      </PropertyGroup>
+    </When>
+    <Otherwise>
+      <PropertyGroup>
+        <OptionsFlags>$(Options)</OptionsFlags>
+      </PropertyGroup>
+    </Otherwise>
+  </Choose>
+
+  <Target Name="GetDefaultManifestInputs" >
+    <CreateItem Include="$(TrunkDirectory)\Ris\Server\ManifestInputRisServer.xml">
+      <Output TaskParameter="Include" ItemName="ManifestFiles" />
+    </CreateItem>
+  </Target>
+ 
+  <Target Name="Create Desktop Manifest">
+    
+    <Exec Command="$(DistributionDirectory)\ClearCanvas.Ris.Server.Executable.exe ClearCanvas.Utilities.Manifest.ManifestGenerationApplication /d=$(DistributionDirectory) /m=Manifest.xml /c=$(Certificate) /pw=&quot;$(Password)&quot; &quot;@(ManifestFiles)&quot;" WorkingDirectory="$(DistributionDirectory)"/>
+
+    <Delete Files="$(DistributionDirectory)\logs\*"/>
+  </Target>
+
+  <Target Name="WebResources" Condition="'$(DistributionDirectory)' != ''">
+    <!-- Prepare properties -->
+    <PropertyGroup>
+      <WebResourceCheckedFilesManifestFile>$(MSBuildProjectDirectory)\ManifestInputWebResources_$(MSBuildProjectName)_checked.gen.xml</WebResourceCheckedFilesManifestFile>
+      <WebResourceIgnoredItemsManifestFile>$(MSBuildProjectDirectory)\ManifestInputWebResources_$(MSBuildProjectName)_ignored.gen.xml</WebResourceIgnoredItemsManifestFile>
+    </PropertyGroup>
+
+    <!-- Delete old generated manifest file -->
+    <Delete Files="$(WebResourceCheckedFilesManifestFile)" Condition="Exists($(WebResourceCheckedFilesManifestFile))" />
+    <Delete Files="$(WebResourceIgnoredItemsManifestFile)" Condition="Exists($(WebResourceIgnoredItemsManifestFile))" />
+
+    <!-- Prepare list of web resources to be included in the manifest -->
+    <ItemGroup>
+      <WebResourceCheckedFiles Include="$(DistributionDirectory)\web\**\*.*" Exclude="$(DistributionDirectory)\web\print_templates\**\*.*" />
+      <WebResourceIgnoredItems Include="web\print_templates\" />
+    </ItemGroup>
+
+    <Message Text="Generating manifest inputs for RIS web resources" />
+    <XmlInsert File="$(WebResourceCheckedFilesManifestFile)" XPathNamespaces="cc=http://www.clearcanvas.ca" XPath="/" Name="ManifestInput" Namespace="http://www.clearcanvas.ca" Type="element" UseEmptyTag="true" />
+    <XmlInsert File="$(WebResourceCheckedFilesManifestFile)" XPathNamespaces="cc=http://www.clearcanvas.ca" XPath="/cc:ManifestInput" Name="Files" Namespace="http://www.clearcanvas.ca" Type="element" UseEmptyTag="true" />
+    <XmlInsert File="$(WebResourceCheckedFilesManifestFile)" XPathNamespaces="cc=http://www.clearcanvas.ca" XPath="/cc:ManifestInput/cc:Files" Name="File" Namespace="http://www.clearcanvas.ca" Type="element" UseEmptyTag="true" Attribute="name" Value="@(WebResourceCheckedFiles->'web\%(RecursiveDir)%(Filename)%(Extension)')" Condition="'@(WebResourceCheckedFiles)' != ''" />
+    <XmlUpdate File="$(WebResourceCheckedFilesManifestFile)" XPathNamespaces="cc=http://www.clearcanvas.ca" XPath="/cc:ManifestInput/cc:Files/cc:File" Attribute="checksum" Value="true" ErrorIfNotExists="false" />
+    <XmlInsert File="$(WebResourceIgnoredItemsManifestFile)" XPathNamespaces="cc=http://www.clearcanvas.ca" XPath="/" Name="ManifestInput" Namespace="http://www.clearcanvas.ca" Type="element" UseEmptyTag="true" />
+    <XmlInsert File="$(WebResourceIgnoredItemsManifestFile)" XPathNamespaces="cc=http://www.clearcanvas.ca" XPath="/cc:ManifestInput" Name="Files" Namespace="http://www.clearcanvas.ca" Type="element" UseEmptyTag="true" />
+    <XmlInsert File="$(WebResourceIgnoredItemsManifestFile)" XPathNamespaces="cc=http://www.clearcanvas.ca" XPath="/cc:ManifestInput/cc:Files" Name="File" Namespace="http://www.clearcanvas.ca" Type="element" UseEmptyTag="true" Attribute="name" Value="@(WebResourceIgnoredItems->'%(Identity)')" Condition="'@(WebResourceIgnoredItems)' != ''" />
+    <XmlUpdate File="$(WebResourceIgnoredItemsManifestFile)" XPathNamespaces="cc=http://www.clearcanvas.ca" XPath="/cc:ManifestInput/cc:Files/cc:File" Attribute="ignore" Value="true" ErrorIfNotExists="false" />
+
+    <CreateItem Include="$(WebResourceCheckedFilesManifestFile);$(WebResourceIgnoredItemsManifestFile)">
+      <Output TaskParameter="Include" ItemName="ManifestFiles" />
+    </CreateItem>
+  </Target>
+
+  <!-- Example of using OptionsFlags for optional subcomponents
+  <Target Name="DesktopServices" >
+    <CreateItem Include="$(TrunkDirectory)\ImageViewer\ManifestInputDesktopServices.xml">
+      <Output TaskParameter="Include" ItemName="ManifestFiles" />
+    </CreateItem>
+  </Target>
+  -->
+  
+  <Target Name ="Create Manifests">
+
+    <!-- Example of using OptionsFlags for optional subcomponents
+    <RegexIsMatch Pattern="ExcludeDesktopServices" Input="$(OptionsFlags)" >
+      <Output TaskParameter="IsMatch" PropertyName="ExcludeDesktopServices" />
+    </RegexIsMatch>
+    <CallTarget Targets="DesktopServices" Condition ="!$(ExcludeDesktopServices)"/>
+    -->
+
+    <!-- Generate manifest input for RIS web resources -->
+    <CallTarget Targets="WebResources" />
+
+    <CallTarget Targets="GetDefaultManifestInputs" />
+
+    <!-- Create the base manifest -->
+    <CallTarget Targets="Create Desktop Manifest" />
+
+  </Target>
+</Project>

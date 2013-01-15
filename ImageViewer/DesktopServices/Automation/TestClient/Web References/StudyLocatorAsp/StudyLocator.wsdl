@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:tns="http://www.clearcanvas.ca/dicom/query" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" name="StudyLocator" targetNamespace="http://www.clearcanvas.ca/dicom/query" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsp:Policy wsu:Id="StudyLocator1_policy">
+    <wsp:ExactlyOne>
+      <wsp:All>
+        <msb:BinaryEncoding xmlns:msb="http://schemas.microsoft.com/ws/06/2004/mspolicy/netbinary1" />
+        <sp:TransportBinding xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+          <wsp:Policy>
+            <sp:TransportToken>
+              <wsp:Policy>
+                <msf:WindowsTransportSecurity xmlns:msf="http://schemas.microsoft.com/ws/2006/05/framing/policy">
+                  <msf:ProtectionLevel>EncryptAndSign</msf:ProtectionLevel>
+                </msf:WindowsTransportSecurity>
+              </wsp:Policy>
+            </sp:TransportToken>
+            <sp:AlgorithmSuite>
+              <wsp:Policy>
+                <sp:Basic256 />
+              </wsp:Policy>
+            </sp:AlgorithmSuite>
+            <sp:Layout>
+              <wsp:Policy>
+                <sp:Strict />
+              </wsp:Policy>
+            </sp:Layout>
+          </wsp:Policy>
+        </sp:TransportBinding>
+        <wsaw:UsingAddressing />
+      </wsp:All>
+    </wsp:ExactlyOne>
+  </wsp:Policy>
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://www.clearcanvas.ca/dicom/query/Imports">
+      <xsd:import schemaLocation="http://localhost:51124/ClearCanvas/ImageViewer/StudyLocator?xsd=xsd0" namespace="http://www.clearcanvas.ca/dicom/query" />
+      <xsd:import schemaLocation="http://localhost:51124/ClearCanvas/ImageViewer/StudyLocator?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+      <xsd:import schemaLocation="http://localhost:51124/ClearCanvas/ImageViewer/StudyLocator?xsd=xsd2" namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="IStudyRootQuery_StudyQuery_InputMessage">
+    <wsdl:part name="parameters" element="tns:StudyQuery" />
+  </wsdl:message>
+  <wsdl:message name="IStudyRootQuery_StudyQuery_OutputMessage">
+    <wsdl:part name="parameters" element="tns:StudyQueryResponse" />
+  </wsdl:message>
+  <wsdl:message name="IStudyRootQuery_StudyQuery_DataValidationFaultFault_FaultMessage">
+    <wsdl:part name="detail" element="tns:DataValidationFault" />
+  </wsdl:message>
+  <wsdl:message name="IStudyRootQuery_StudyQuery_QueryFailedFaultFault_FaultMessage">
+    <wsdl:part name="detail" element="tns:QueryFailedFault" />
+  </wsdl:message>
+  <wsdl:message name="IStudyRootQuery_SeriesQuery_InputMessage">
+    <wsdl:part name="parameters" element="tns:SeriesQuery" />
+  </wsdl:message>
+  <wsdl:message name="IStudyRootQuery_SeriesQuery_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SeriesQueryResponse" />
+  </wsdl:message>
+  <wsdl:message name="IStudyRootQuery_SeriesQuery_QueryFailedFaultFault_FaultMessage">
+    <wsdl:part name="detail" element="tns:QueryFailedFault" />
+  </wsdl:message>
+  <wsdl:message name="IStudyRootQuery_SeriesQuery_DataValidationFaultFault_FaultMessage">
+    <wsdl:part name="detail" element="tns:DataValidationFault" />
+  </wsdl:message>
+  <wsdl:message name="IStudyRootQuery_ImageQuery_InputMessage">
+    <wsdl:part name="parameters" element="tns:ImageQuery" />
+  </wsdl:message>
+  <wsdl:message name="IStudyRootQuery_ImageQuery_OutputMessage">
+    <wsdl:part name="parameters" element="tns:ImageQueryResponse" />
+  </wsdl:message>
+  <wsdl:message name="IStudyRootQuery_ImageQuery_QueryFailedFaultFault_FaultMessage">
+    <wsdl:part name="detail" element="tns:QueryFailedFault" />
+  </wsdl:message>
+  <wsdl:message name="IStudyRootQuery_ImageQuery_DataValidationFaultFault_FaultMessage">
+    <wsdl:part name="detail" element="tns:DataValidationFault" />
+  </wsdl:message>
+  <wsdl:portType name="IStudyRootQuery">
+    <wsdl:operation name="StudyQuery">
+      <wsdl:input wsaw:Action="http://www.clearcanvas.ca/dicom/query/IStudyRootQuery/StudyQuery" message="tns:IStudyRootQuery_StudyQuery_InputMessage" />
+      <wsdl:output wsaw:Action="http://www.clearcanvas.ca/dicom/query/IStudyRootQuery/StudyQueryResponse" message="tns:IStudyRootQuery_StudyQuery_OutputMessage" />
+      <wsdl:fault wsaw:Action="http://www.clearcanvas.ca/dicom/query/IStudyRootQuery/StudyQueryDataValidationFaultFault" name="DataValidationFaultFault" message="tns:IStudyRootQuery_StudyQuery_DataValidationFaultFault_FaultMessage" />
+      <wsdl:fault wsaw:Action="http://www.clearcanvas.ca/dicom/query/IStudyRootQuery/StudyQueryQueryFailedFaultFault" name="QueryFailedFaultFault" message="tns:IStudyRootQuery_StudyQuery_QueryFailedFaultFault_FaultMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="SeriesQuery">
+      <wsdl:input wsaw:Action="http://www.clearcanvas.ca/dicom/query/IStudyRootQuery/SeriesQuery" message="tns:IStudyRootQuery_SeriesQuery_InputMessage" />
+      <wsdl:output wsaw:Action="http://www.clearcanvas.ca/dicom/query/IStudyRootQuery/SeriesQueryResponse" message="tns:IStudyRootQuery_SeriesQuery_OutputMessage" />
+      <wsdl:fault wsaw:Action="http://www.clearcanvas.ca/dicom/query/IStudyRootQuery/SeriesQueryQueryFailedFaultFault" name="QueryFailedFaultFault" message="tns:IStudyRootQuery_SeriesQuery_QueryFailedFaultFault_FaultMessage" />
+      <wsdl:fault wsaw:Action="http://www.clearcanvas.ca/dicom/query/IStudyRootQuery/SeriesQueryDataValidationFaultFault" name="DataValidationFaultFault" message="tns:IStudyRootQuery_SeriesQuery_DataValidationFaultFault_FaultMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="ImageQuery">
+      <wsdl:input wsaw:Action="http://www.clearcanvas.ca/dicom/query/IStudyRootQuery/ImageQuery" message="tns:IStudyRootQuery_ImageQuery_InputMessage" />
+      <wsdl:output wsaw:Action="http://www.clearcanvas.ca/dicom/query/IStudyRootQuery/ImageQueryResponse" message="tns:IStudyRootQuery_ImageQuery_OutputMessage" />
+      <wsdl:fault wsaw:Action="http://www.clearcanvas.ca/dicom/query/IStudyRootQuery/ImageQueryQueryFailedFaultFault" name="QueryFailedFaultFault" message="tns:IStudyRootQuery_ImageQuery_QueryFailedFaultFault_FaultMessage" />
+      <wsdl:fault wsaw:Action="http://www.clearcanvas.ca/dicom/query/IStudyRootQuery/ImageQueryDataValidationFaultFault" name="DataValidationFaultFault" message="tns:IStudyRootQuery_ImageQuery_DataValidationFaultFault_FaultMessage" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="StudyLocator" type="tns:IStudyRootQuery">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="StudyQuery">
+      <soap:operation soapAction="http://www.clearcanvas.ca/dicom/query/IStudyRootQuery/StudyQuery" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+      <wsdl:fault name="DataValidationFaultFault">
+        <soap:fault use="literal" name="DataValidationFaultFault" namespace="" />
+      </wsdl:fault>
+      <wsdl:fault name="QueryFailedFaultFault">
+        <soap:fault use="literal" name="QueryFailedFaultFault" namespace="" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="SeriesQuery">
+      <soap:operation soapAction="http://www.clearcanvas.ca/dicom/query/IStudyRootQuery/SeriesQuery" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+      <wsdl:fault name="QueryFailedFaultFault">
+        <soap:fault use="literal" name="QueryFailedFaultFault" namespace="" />
+      </wsdl:fault>
+      <wsdl:fault name="DataValidationFaultFault">
+        <soap:fault use="literal" name="DataValidationFaultFault" namespace="" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="ImageQuery">
+      <soap:operation soapAction="http://www.clearcanvas.ca/dicom/query/IStudyRootQuery/ImageQuery" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+      <wsdl:fault name="QueryFailedFaultFault">
+        <soap:fault use="literal" name="QueryFailedFaultFault" namespace="" />
+      </wsdl:fault>
+      <wsdl:fault name="DataValidationFaultFault">
+        <soap:fault use="literal" name="DataValidationFaultFault" namespace="" />
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="StudyLocator1" type="tns:IStudyRootQuery">
+    <wsp:PolicyReference URI="#StudyLocator1_policy" />
+    <soap12:binding transport="http://schemas.microsoft.com/soap/named-pipe" />
+    <wsdl:operation name="StudyQuery">
+      <soap12:operation soapAction="http://www.clearcanvas.ca/dicom/query/IStudyRootQuery/StudyQuery" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+      <wsdl:fault name="DataValidationFaultFault">
+        <soap12:fault use="literal" name="DataValidationFaultFault" namespace="" />
+      </wsdl:fault>
+      <wsdl:fault name="QueryFailedFaultFault">
+        <soap12:fault use="literal" name="QueryFailedFaultFault" namespace="" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="SeriesQuery">
+      <soap12:operation soapAction="http://www.clearcanvas.ca/dicom/query/IStudyRootQuery/SeriesQuery" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+      <wsdl:fault name="QueryFailedFaultFault">
+        <soap12:fault use="literal" name="QueryFailedFaultFault" namespace="" />
+      </wsdl:fault>
+      <wsdl:fault name="DataValidationFaultFault">
+        <soap12:fault use="literal" name="DataValidationFaultFault" namespace="" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="ImageQuery">
+      <soap12:operation soapAction="http://www.clearcanvas.ca/dicom/query/IStudyRootQuery/ImageQuery" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+      <wsdl:fault name="QueryFailedFaultFault">
+        <soap12:fault use="literal" name="QueryFailedFaultFault" namespace="" />
+      </wsdl:fault>
+      <wsdl:fault name="DataValidationFaultFault">
+        <soap12:fault use="literal" name="DataValidationFaultFault" namespace="" />
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="StudyLocator">
+    <wsdl:port name="StudyLocator" binding="tns:StudyLocator">
+      <soap:address location="http://localhost:51124/ClearCanvas/ImageViewer/StudyLocator" />
+    </wsdl:port>
+    <wsdl:port name="StudyLocator1" binding="tns:StudyLocator1">
+      <soap12:address location="net.pipe://localhost/ClearCanvas/ImageViewer/StudyLocator" />
+      <wsa10:EndpointReference>
+        <wsa10:Address>net.pipe://localhost/ClearCanvas/ImageViewer/StudyLocator</wsa10:Address>
+        <Identity xmlns="http://schemas.xmlsoap.org/ws/2006/02/addressingidentity">
+          <Upn>SBRIGHT\stewart</Upn>
+        </Identity>
+      </wsa10:EndpointReference>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

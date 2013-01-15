@@ -1,0 +1,42 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+        <title>Default Addendum Editor</title>
+        <link href="../css/default.css" rel="stylesheet" type="text/css" />
+        <script type="text/javascript" src="../js/jsx.js"></script>
+	    <script type="text/javascript" src="../js/jsml.js"></script>
+	    <script type="text/javascript" src="../js/ui.js"></script>
+	    <script type="text/javascript" src="../js/ris.js"></script>
+	    <script type="text/javascript" >
+		    function onBodyLoad()
+		    {		        
+		        if(!Ris)
+		            return;
+
+	            try
+	            {
+                    var content = Ris.getTag("ReportContent");
+                    Field.setValue($("addendum"), content);
+	            }
+	            catch(e)
+	            {
+	                var message = "Failed to load editor page.  An exception occurred in the script. Error name: " + e.name + ". Error message: " + e.message;
+		            Field.setValue($("myForm"), message);
+	            }
+				
+		    }
+			
+            // this no-arg method must be implemented for the component to save report
+            function saveData()
+            {
+                Ris.setTag("ReportContent", Field.getValue($("addendum")));
+            }
+		</script>
+	</head>
+	<body onload="javascript: onBodyLoad()" style="padding-top:0">
+		<form id="myForm" style="padding-top:0">
+		    <p class="sectionheading">Addendum</p>
+			<textarea style="width:99%" rows="5" border="0" id="addendum"></textarea>
+		</form>
+	</body>
+</html>

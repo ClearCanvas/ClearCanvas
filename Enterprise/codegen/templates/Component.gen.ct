@@ -1,0 +1,141 @@
+// This file is machine generated - changes will be lost.
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+using Iesi.Collections.Generic;
+using ClearCanvas.Common;
+using ClearCanvas.Enterprise.Core;
+using ClearCanvas.Enterprise.Core.Modelling;
+
+
+namespace <%= namespace %>
+{
+
+
+    /// <summary>
+    /// <%= @className %> component
+    /// </summary>
+	public sealed partial class <%= className %> : <%= superClassName %>, IEquatable<<%= @className %>>, IAuditFormattable
+	{
+       	#region Private fields
+       	
+		<% fields.each do |f| %>
+	  	private <%= f.dataType %> <%= f.fieldName %>;
+	  	<% end %>
+	  	
+	  	#endregion
+	  	
+	  	#region Constructors
+	  	
+	  	/// <summary>
+	  	/// Default no-args constructor required by NHibernate
+	  	/// </summary>
+	  	public <%= className %>()
+	  	{
+		 	<% fields.each do |f| 
+		 		if(f.initialValue)%>
+		  	<%= f.fieldName %> = <%= f.initialValue %>;
+		  	<% 	end 
+		  	end %>
+		  	
+		  	CustomInitialize();
+	  	}
+
+		<% if(fields.length > 0) %>
+	  	/// <summary>
+	  	/// All fields constructor
+	  	/// </summary>
+	  	public <%= className %>(<%= fields.map {|f| "#{f.dataType} #{f.accessorName.downcase}1"}.join(', ') %>)
+	  	{
+		  	CustomInitialize();
+
+			<% fields.each do |f| %>
+		  	<%= f.fieldName %> = <%= f.accessorName.downcase %>1;
+		  	<% end %>
+	  	}
+		<% end %>
+                
+	  	#endregion
+	  	
+	  	#region Public Properties
+	  	
+	  	<% fields.each do |f| %>
+		<% 	if(f.hasGetter || f.hasSetter) %>
+		<% f.attributes.each do |attr| %>
+		[<%= attr %>]<% end %>
+	  	public <%= f.dataType %> <%= f.accessorName %>
+	  	{
+			<% if(f.hasGetter) %>
+			get { return <%= f.fieldName %>; }
+			<% end %>
+			<% if(f.hasSetter) %>
+			set { <%= f.fieldName %> = value; }
+			<% end %>
+	  	}
+		<%	end %>
+	  	<% end %>
+	  	
+	  	#endregion
+	  	
+	  	#region IEquatable methods
+	  	
+	  	public bool Equals(<%= className %> that)
+		{
+			return (that != null) &&
+			<% fields.each do |f| %>
+				EqualityUtils<<%= f.dataType %>>.AreEqual(this.<%= f.fieldName %>, that.<%= f.fieldName %>) &&
+			<% end %>
+				true;
+		}
+	  	
+	  	#endregion
+	  	
+	  	#region Object overrides
+	  	
+	  	public override bool Equals(object that)
+		{
+			return this.Equals(that as <%= className %>);
+		}
+		
+		public override int GetHashCode()
+		{
+			return
+	  	<% fields.each do |f| %>
+				(<%= f.fieldName %> == default(<%= f.dataType %>) ? 0 : <%= f.fieldName %>.GetHashCode()) ^
+	  	<% end %>
+				0;
+		}
+				
+	  	#endregion
+	  	
+	  	/// <summary>
+	  	/// Returns a clone of this object.  A deep-copy is performed, so the clone will not share
+	  	/// any mutable data with this object.
+	  	/// NB. Note that collections are not currently supported.  If this object contains collections
+	  	/// they will not be cloned.  It should be relatively easy to add collection support when the need arises.
+	  	/// </summary>
+        public override object Clone()
+        {
+			<%= className %> clone = new <%= className %>();
+		<% fields.select {|f| f.kind == :component || f.kind == :userType }.each do |f| %>
+			clone.<%= f.fieldName %> = (this.<%= f.fieldName %> == default(<%= f.dataType %>)) ? default(<%= f.dataType %>) : (<%= f.dataType %>)this.<%= f.fieldName %>.Clone();
+		<% end %>
+		<% fields.select {|f| f.kind == :primitive || f.kind == :enum || f.kind == :entity }.each do |f| %>
+	  		clone.<%= f.fieldName %> = this.<%= f.fieldName %>;
+		<% end %>
+			return clone;
+        }
+		
+		#region IAuditFormattable Members
+
+		void IAuditFormattable.Write(IObjectWriter writer)
+		{
+			<% fields.each do |f| %>
+		  	writer.WriteProperty("<%= f.accessorName %>", <%= f.fieldName %>);
+		  	<% end %>
+		}
+
+		#endregion
+	}
+}

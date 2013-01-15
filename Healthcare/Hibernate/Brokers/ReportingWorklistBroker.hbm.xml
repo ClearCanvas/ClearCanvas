@@ -1,0 +1,85 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" assembly="ClearCanvas.Healthcare" namespace="ClearCanvas.Healthcare">
+	<!-- 
+    Obtains a list of scheduled interpretation steps that may be linked
+    to a reference step (for combined reading).
+    Parameters: 1. the reference InterpretationStep
+                2. the staff who is requesting the link candidates
+  -->
+	<query name="linkedInterpretationCandidates">
+		select otherStep
+		from InterpretationStep otherStep
+		join otherStep.Procedure otherProcedure
+		join otherProcedure.Type otherProcedureType,
+		InterpretationStep refStep
+		join refStep.Procedure refProcedure
+		join refProcedure.Type refProcedureType
+		where
+		refStep = ?
+
+		<!-- refStep must be SC -->
+		and refStep.State = 'SC'
+
+		<!-- otherProcedure must be for the same order -->
+		and otherProcedure.Order = refProcedure.Order
+
+		<!-- otherStep must be SC -->
+		and otherStep.State = 'SC'
+
+		<!-- otherProcedureType must be in the same reading group -->
+		and otherProcedureType in (
+		select elements(readingGroup.ProcedureTypes)
+		from ReadingGroup readingGroup
+		where refProcedureType in elements(readingGroup.ProcedureTypes)
+		)
+		<!-- otherStep must be either unassigned or assigned to the same staff -->
+		and (
+		otherStep.Scheduling.Performer.Staff is null
+		or otherStep.Scheduling.Performer.Staff = ?
+		)
+		<!-- exclude refStep from the results -->
+		and otherStep not in (refStep)
+	</query>
+
+	<!-- 
+    Obtains a list of scheduled protocol assignment steps that may be linked
+    to a reference step (for combined reading).
+    Parameters: 1. the reference ProtocolAssignmentStep
+                2. the staff who is requesting the link candidates
+  -->
+	<query name="linkedProtocolCandidates">
+		select otherStep
+		from ProtocolAssignmentStep otherStep
+		join otherStep.Procedure otherProcedure
+		join otherProcedure.Type otherProcedureType,
+		ProtocolAssignmentStep refStep
+		join refStep.Procedure refProcedure
+		join refProcedure.Type refProcedureType
+		where
+		refStep = ?
+
+		<!-- refStep must be SC -->
+		and refStep.State = 'SC'
+
+		<!-- otherProcedure must be for the same order -->
+		and otherProcedure.Order = refProcedure.Order
+
+		<!-- otherStep must be SC -->
+		and otherStep.State = 'SC'
+
+		<!-- otherProcedureType must be in the same reading group -->
+		and otherProcedureType in (
+		select elements(readingGroup.ProcedureTypes)
+		from ReadingGroup readingGroup
+		where refProcedureType in elements(readingGroup.ProcedureTypes)
+		)
+		<!-- otherStep must be either unassigned or assigned to the same staff -->
+		and (
+		otherStep.Scheduling.Performer.Staff is null
+		or otherStep.Scheduling.Performer.Staff = ?
+		)
+		<!-- exclude refStep from the results -->
+		and otherStep not in (refStep)
+	</query>
+
+</hibernate-mapping>

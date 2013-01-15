@@ -1,0 +1,15 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="ClearCanvas.ImageViewer.Common.StudyManagement" GeneratedClassName="StudyDeletionSettings">
+  <Profiles />
+  <Settings>
+    <Setting Name="Enabled" Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="TimeUnit" Type="ClearCanvas.ImageViewer.Common.StudyManagement.TimeUnit" Scope="Application">
+      <Value Profile="(Default)">Weeks</Value>
+    </Setting>
+    <Setting Name="TimeValue" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

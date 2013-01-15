@@ -1,0 +1,81 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title>Patient Reconciliation</title>
+		<link href="css/default.css" rel="stylesheet" type="text/css" />
+		<script type="text/javascript" src="js/jsx.js"></script>
+		<script type="text/javascript" src="js/jsml.js"></script>
+		<script type="text/javascript" src="js/ui.js"></script>
+		<script type="text/javascript" src="js/ris.js"></script>
+		<script type="text/javascript" src="js/layout.js"></script>
+		<script type="text/javascript" >			
+			function onBodyLoad()
+			{
+				function format(obj)
+				{
+					return (obj === null || obj === undefined) ? "": ("" + obj).escapeHTML().replace(" ", "&nbsp");
+				}
+
+				scaleWidth();
+				
+				if(!Ris)
+					return;
+				try
+				{
+					var context = Ris.getHealthcareContext();
+					if(context === null)
+					{
+						Field.setValue($("myForm"), "");
+						return;
+					}
+					var html = "<tr class='row1'><td class='tableheading'>Profile Authority</td>";
+					context.ProfileAuthorities.each(function(s) { html += "<td class='tableheading'>" + s  + "</td>"; });
+					html += "</tr>";
+					for(var i=0; i < context.Fields.length; i++)
+					{
+						var field = context.Fields[i];
+						var htmlTableRows = ((i%2 == 0)) ? "<tr class='row0'><td class='propertyname'>" + field.Heading + "</td>" :
+														   "<tr class='row1'><td class='propertyname'>" + field.Heading + "</td>";
+						for(var v = 0; v < field.Values.length; v++)
+						{
+							var value = field.Values[v];
+							var tdcell = "";
+							for(var s=0; s < value.Segments.length; s++)
+							{
+								var segment = value.Segments[s];
+								if (segment.IsDiscrepant)
+								{
+									tdcell += "<span class='discrepancy'>" + format(segment.Text) + "</span>";
+								}
+								else
+								{
+									tdcell += "<span class=''>" + format(segment.Text) + "</span>";
+								}
+							}
+							htmlTableRows += "<td>"+tdcell+"</td>";
+						}
+						htmlTableRows += "</tr>";
+						
+						html += htmlTableRows;
+					}
+					html = "<table border='0'>" + html + "</table>";
+					$("diffTable").innerHTML = html;
+				}
+				catch(e)
+				{
+					var message = "Failed to load preview page.  An exception occurred in the script. Error name: " + e.name + ". Error message: " + e.message;
+					Field.setValue($("myForm"), message);
+				}
+			}
+			
+		</script>
+	</head>
+	<body onload="javascript: onBodyLoad()" onresize="javascript: scaleWidth()">
+		<form id="myForm">
+				<p class="sectionheading">Discrepancies</p>
+					<div id="diffTable">
+					
+					</div>
+		</form>
+	</body>
+</html>

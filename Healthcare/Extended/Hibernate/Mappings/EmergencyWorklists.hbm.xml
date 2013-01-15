@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!-- @codegen: ignore -->
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" assembly="ClearCanvas.Healthcare.Extended" namespace="ClearCanvas.Healthcare.Extended">
+  <!-- concrete classes -->
+  <subclass name="EmergencyScheduledWorklist" extends="ClearCanvas.Healthcare.RegistrationWorklist" discriminator-value="EMERGENCY_SCHEDULED"/>
+  <subclass name="EmergencyInProgressWorklist" extends="ClearCanvas.Healthcare.RegistrationInProgressWorklist" discriminator-value="EMERGENCY_INPROGRESS"/>
+  <subclass name="EmergencyCancelledWorklist" extends="ClearCanvas.Healthcare.RegistrationCancelledWorklist" discriminator-value="EMERGENCY_CANCELLED"/>
+  <subclass name="EmergencyPerformedWorklist" extends="ClearCanvas.Healthcare.RegistrationPerformedWorklist" discriminator-value="EMERGENCY_PERFORMED"/>
+</hibernate-mapping>

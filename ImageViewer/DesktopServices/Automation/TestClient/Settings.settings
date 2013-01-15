@@ -1,0 +1,12 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="ClearCanvas.ImageViewer.DesktopServices.Automation.TestClient" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="ViewerWorkingDirectory" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">..\..\..\..\..\..\Desktop\Executable\bin\Debug</Value>
+    </Setting>
+    <Setting Name="ViewerProcessExecutable" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">ClearCanvas.Desktop.Executable</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

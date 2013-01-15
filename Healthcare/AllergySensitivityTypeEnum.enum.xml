@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<enum class="AllergySensitivityType">
+  <enum-value code="AD">
+    <value>Adverse Reaction (Not otherwise classified)</value>
+    <description></description>
+  </enum-value>
+	<enum-value code="AL">
+		<value>Allergy</value>
+		<description></description>
+	</enum-value>
+	<enum-value code="CT">
+		<value>Contraindication</value>
+		<description></description>
+	</enum-value>
+	<enum-value code="IN">
+		<value>Intolerance</value>
+		<description></description>
+	</enum-value>
+</enum>

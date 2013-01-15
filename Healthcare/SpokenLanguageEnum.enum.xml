@@ -1,0 +1,559 @@
+<?xml version="1.0" encoding="utf-8"?>
+<enum class="SpokenLanguage">
+  <enum-value code="en">
+    <value>English</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="aa">
+    <value>Afar</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="ab">
+    <value>Abkhazian</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="af">
+    <value>Afrikaans</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="am">
+    <value>Amharic</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="ar">
+    <value>Arabic</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="as">
+    <value>Assamese</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="ay">
+    <value>Aymara</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="az">
+    <value>Azerbaijani</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="ba">
+    <value>Bashkir</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="be">
+    <value>Byelorussian</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="bg">
+    <value>Bulgarian</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="bh">
+    <value>Bihari</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="bi">
+    <value>Bislama</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="bn">
+    <value>Bengali; Bangla</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="bo">
+    <value>Tibetan</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="br">
+    <value>Breton</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="ca">
+    <value>Catalan</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="co">
+    <value>Corsican</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="cs">
+    <value>Czech</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="cy">
+    <value>Welsh</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="da">
+    <value>Danish</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="de">
+    <value>German</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="dz">
+    <value>Bhutani</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="el">
+    <value>Greek</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="eo">
+    <value>Esperanto</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="es">
+    <value>Spanish</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="et">
+    <value>Estonian</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="eu">
+    <value>Basque</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="fa">
+    <value>Persian</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="fi">
+    <value>Finnish</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="fj">
+    <value>Fiji</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="fo">
+    <value>Faroese</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="fr">
+    <value>French</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="fy">
+    <value>Frisian</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="ga">
+    <value>Irish</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="gd">
+    <value>Scots Gaelic</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="gl">
+    <value>Galician</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="gn">
+    <value>Guarani</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="gu">
+    <value>Gujarati</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="ha">
+    <value>Hausa</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="he">
+    <value>Hebrew (formerly iw)</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="hi">
+    <value>Hindi</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="hr">
+    <value>Croatian</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="hu">
+    <value>Hungarian</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="hy">
+    <value>Armenian</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="ia">
+    <value>Interlingua</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="id">
+    <value>Indonesian (formerly in)</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="ie">
+    <value>Interlingue</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="ik">
+    <value>Inupiak</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="is">
+    <value>Icelandic</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="it">
+    <value>Italian</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="iu">
+    <value>Inuktitut</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="ja">
+    <value>Japanese</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="jw">
+    <value>Javanese</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="ka">
+    <value>Georgian</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="kk">
+    <value>Kazakh</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="kl">
+    <value>Greenlandic</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="km">
+    <value>Cambodian</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="kn">
+    <value>Kannada</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="ko">
+    <value>Korean</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="ks">
+    <value>Kashmiri</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="ku">
+    <value>Kurdish</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="ky">
+    <value>Kirghiz</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="la">
+    <value>Latin</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="ln">
+    <value>Lingala</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="lo">
+    <value>Laothian</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="lt">
+    <value>Lithuanian</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="lv">
+    <value>Latvian Lettish</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="mg">
+    <value>Malagasy</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="mi">
+    <value>Maori</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="mk">
+    <value>Macedonian</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="ml">
+    <value>Malayalam</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="mn">
+    <value>Mongolian</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="mo">
+    <value>Moldavian</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="mr">
+    <value>Marathi</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="ms">
+    <value>Malay</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="mt">
+    <value>Maltese</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="my">
+    <value>Burmese</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="na">
+    <value>Nauru</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="ne">
+    <value>Nepali</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="nl">
+    <value>Dutch</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="no">
+    <value>Norwegian</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="oc">
+    <value>Occitan</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="om">
+    <value>(Afan) Oromo</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="or">
+    <value>Oriya</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="pa">
+    <value>Punjabi</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="pl">
+    <value>Polish</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="ps">
+    <value>Pashto Pushto</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="pt">
+    <value>Portuguese</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="qu">
+    <value>Quechua</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="rm">
+    <value>Rhaeto-Romance</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="rn">
+    <value>Kirundi</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="ro">
+    <value>Romanian</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="ru">
+    <value>Russian</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="rw">
+    <value>Kinyarwanda</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="sa">
+    <value>Sanskrit</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="sd">
+    <value>Sindhi</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="sg">
+    <value>Sangho</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="sh">
+    <value>Serbo-Croatian</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="si">
+    <value>Sinhalese</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="sk">
+    <value>Slovak</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="sl">
+    <value>Slovenian</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="sm">
+    <value>Samoan</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="sn">
+    <value>Shona</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="so">
+    <value>Somali</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="sq">
+    <value>Albanian</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="sr">
+    <value>Serbian</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="ss">
+    <value>Siswati</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="st">
+    <value>Sesotho</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="su">
+    <value>Sundanese</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="sv">
+    <value>Swedish</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="sw">
+    <value>Swahili</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="ta">
+    <value>Tamil</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="te">
+    <value>Telugu</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="tg">
+    <value>Tajik</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="th">
+    <value>Thai</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="ti">
+    <value>Tigrinya</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="tk">
+    <value>Turkmen</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="tl">
+    <value>Tagalog</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="tn">
+    <value>Setswana</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="to">
+    <value>Tonga</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="tr">
+    <value>Turkish</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="ts">
+    <value>Tsonga</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="tt">
+    <value>Tatar</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="tw">
+    <value>Twi</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="ug">
+    <value>Uighur</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="uk">
+    <value>Ukrainian</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="ur">
+    <value>Urdu</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="uz">
+    <value>Uzbek</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="vi">
+    <value>Vietnamese</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="vo">
+    <value>Volapuk</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="wo">
+    <value>Wolof</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="xh">
+    <value>Xhosa</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="yi">
+    <value>Yiddish (formerly ji)</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="yo">
+    <value>Yoruba</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="za">
+    <value>Zhuang</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="zh">
+    <value>Chinese</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="zu">
+    <value>Zulu</value>
+    <description></description>
+  </enum-value>
+</enum>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/ClearCanvas.Enterprise.Common.ServerVersion" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/ClearCanvas.Enterprise.Common.ServerVersion" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="http://localhost:8001/IVersionService/mex?xsd=xsd3" namespace="http://schemas.datacontract.org/2004/07/ClearCanvas.Enterprise.Common" />
+  <xs:complexType name="GetVersionRequest">
+    <xs:complexContent mixed="false">
+      <xs:extension xmlns:q1="http://schemas.datacontract.org/2004/07/ClearCanvas.Enterprise.Common" base="q1:DataContractBase">
+        <xs:sequence />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="GetVersionRequest" nillable="true" type="tns:GetVersionRequest" />
+  <xs:complexType name="GetVersionResponse">
+    <xs:complexContent mixed="false">
+      <xs:extension xmlns:q2="http://schemas.datacontract.org/2004/07/ClearCanvas.Enterprise.Common" base="q2:DataContractBase">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Component" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="Edition" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="VersionBuild" type="xs:int" />
+          <xs:element minOccurs="0" name="VersionMajor" type="xs:int" />
+          <xs:element minOccurs="0" name="VersionMinor" type="xs:int" />
+          <xs:element minOccurs="0" name="VersionRevision" type="xs:int" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="GetVersionResponse" nillable="true" type="tns:GetVersionResponse" />
+</xs:schema>

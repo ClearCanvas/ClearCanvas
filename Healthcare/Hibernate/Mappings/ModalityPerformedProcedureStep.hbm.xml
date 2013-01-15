@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!-- @codegen: ignore -->
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" assembly="ClearCanvas.Healthcare" namespace="ClearCanvas.Healthcare">
+  <subclass name="ModalityPerformedProcedureStep" proxy="ModalityPerformedProcedureStep" extends="PerformedProcedureStep" discriminator-value="MODALITY">
+
+    <set name="DicomSeries" lazy="true" inverse="true" cascade="all-delete-orphan" access="nosetter.camelcase-underscore">
+      <key column="ModalityPerformedProcedureStepOID_"/>
+      <one-to-many class="DicomSeries"/>
+    </set>
+
+    <set name="Activities" table="ProcedureStepPerformedProcedureStep_" lazy="true" inverse="true" access="nosetter.camelcase-underscore">
+      <key column="PerformedProcedureStepOID_"/>
+      <many-to-many column="ProcedureStepOID_" class="ModalityProcedureStep" fetch="join"/>
+    </set>
+  </subclass>
+</hibernate-mapping>

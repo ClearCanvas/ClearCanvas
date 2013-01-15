@@ -1,0 +1,159 @@
+html {
+	font-size: 75%;
+	height: 100%;
+}
+
+body {
+	font-family: Arial;
+	margin: 0px;
+	height: 100%;
+	background: #e0dfe3;
+	/* filter: progid:DXImageTransform.Microsoft.Gradient(startColorstr='#BAD2EC', endColorstr='#7CB1DD', gradientType='0'); */
+}
+
+table {
+	height: 100%;
+	border-collapse:collapse; 
+	margin-top: 0px;
+	margin-bottom: 0px;
+	margin-left: 0px;
+	margin-right: 0px;
+	padding-top: 0px;
+	padding-bottom: 0px;
+	padding-left: 0px;
+	padding-right: 0px;
+	display:inline;
+}
+
+table td {
+	vertical-align: top;
+	padding-top: 2px;
+	padding-bottom: 0px;
+	padding-left: 0px;
+	padding-right: 0px;
+}
+
+.patientnameheading {
+	font-family: Tahoma, Geneva, Arial;
+	font-size: 170%;
+	font-weight: bold;
+	padding-top: 0.15em;
+	padding-right: 1em;
+	padding-bottom: 0.2em;
+	padding-left: 10px;
+	color: #003366;
+}
+
+.patientmrnheading {
+	font-family: Tahoma, Geneva, Arial;
+	font-size: 140%;
+	font-weight: bold;
+	padding-top: 0.15em;
+	padding-right: 1em;
+	padding-bottom: 0.2em;
+	padding-left: 10px;
+	white-space: nowrap;
+	color: #003366;
+}
+
+.propertyname {
+	font-weight: bold;
+	padding-top: 0.25em;
+	padding-right: 0.2em;
+	padding-bottom: 0em;
+	padding-left: 0.5em;
+	white-space: nowrap;
+	color: #003366;
+}
+
+.propertyvalue {
+	padding-top: 0.25em;
+	padding-right: 1em;
+	padding-bottom: 0em;
+	padding-left: 0.5em;
+}
+
+#myForm {
+	overflow: auto;
+}
+
+.alerticons {
+	position: relative;
+	right: 2px;
+	top: 2px;
+}
+
+img.alert{
+	margin-left: 5px;
+}
+
+img
+{
+
+	background-image: expression(
+
+		this.runtimeStyle.backgroundImage = "none",
+
+		this.runtimeStyle.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='" + this.src + "', sizingMethod='image')",
+
+		this.src = "images/blank.gif"
+
+	);
+}
+
+/*
+ * GlobalPatientBanner - used to display information about the patient across the top of the application
+ */
+
+.GlobalPatientBanner_topleft {
+	background: url(../images/GlobalPatientBanner_tl.png) no-repeat top right;
+	height: 11px;
+	width: 11px;
+}
+
+.GlobalPatientBanner_top {
+	background: url(../images/GlobalPatientBanner_t.png) repeat-x top;
+	height: 11px;
+	width: 1px;
+}
+
+.GlobalPatientBanner_topright {
+	background: url(../images/GlobalPatientBanner_tr.png) no-repeat top left;
+	height: 11px;
+	width: 11px;
+}
+
+.GlobalPatientBanner_left {
+	background: url(../images/GlobalPatientBanner_l.png) no-repeat bottom;
+	width: 11px;
+}
+
+.GlobalPatientBanner_right {
+	background: url(../images/GlobalPatientBanner_r.png) no-repeat bottom left;
+	width: 11px;
+}
+
+.GlobalPatientBanner_bottomleft {
+	background: url(../images/GlobalPatientBanner_bl.png) no-repeat bottom right;
+	height: 11px;
+	width: 11px;
+}
+
+.GlobalPatientBanner_bottom {
+	background: url(../images/GlobalPatientBanner_b.png) repeat-x bottom;
+	height: 11px;
+	width: 1px;
+}
+
+.GlobalPatientBanner_bottomright {
+	background: url(../images/GlobalPatientBanner_br.png) no-repeat bottom left;
+	height: 11px;
+	width: 11px;
+}
+
+.GlobalPatientBanner_content {
+	background: #e3f1f9 url(../images/GlobalPatientBannerBackground.png) repeat-x bottom;
+}
+
+.GlobalPatientBanner_Container {
+}

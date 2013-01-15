@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<enum class="OrderAttachmentCategory">
+  <enum-value code="X">
+    <value>Unspecified</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="R">
+    <value>Requisition</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="C">
+    <value>Consent Form</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="S">
+    <value>Screen Form</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="L">
+    <value>Lab Result</value>
+    <description></description>
+  </enum-value>
+</enum>

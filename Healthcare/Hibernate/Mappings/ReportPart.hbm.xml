@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" assembly="ClearCanvas.Healthcare" namespace="ClearCanvas.Healthcare">
+  <class name="ReportPart" proxy="ReportPart" table="ReportPart_">
+    <id name="OID" column="OID_" type="Guid">
+      <generator class="guid.comb"/>
+    </id>
+    <version name="Version" column="Version_"/>
+
+    <property name="Index" column="Index_" type="int" not-null="true" access="nosetter.camelcase-underscore"/>
+
+    <property name="Status" column="Status_" type="ClearCanvas.Healthcare.Hibernate.ReportPartStatusEnumHbm, ClearCanvas.Healthcare.Hibernate" not-null="true" access="nosetter.camelcase-underscore"/>
+
+    <property name="CreationTime" column="CreationTime_" type="DateTime" not-null="true" access="nosetter.camelcase-underscore"/>
+    <property name="PreliminaryTime" column="PreliminaryTime_" type="DateTime" access="nosetter.camelcase-underscore"/>
+    <property name="CompletedTime" column="CompletedTime_" type="DateTime" access="nosetter.camelcase-underscore"/>
+    <property name="CancelledTime" column="CancelledTime_" type="DateTime" access="nosetter.camelcase-underscore"/>
+    
+    <many-to-one name="Supervisor" class="Staff" column="SupervisorOID_"/>
+    <many-to-one name="Interpreter" class="Staff" column="InterpreterOID_"/>
+    <many-to-one name="Transcriber" class="Staff" column="TranscriberOID_"/>
+    <many-to-one name="TranscriptionSupervisor" class="Staff" column="TranscriptionSupervisorOID_"/>
+    <many-to-one name="Verifier" class="Staff" column="VerifierOID_"/>
+
+    <many-to-one name="TranscriptionRejectReason" class="TranscriptionRejectReasonEnum" column="TranscriptionRejectReason_"/>
+
+    <many-to-one name="Report" class="Report" column="ReportOID_" not-null="true" fetch="join" access="nosetter.camelcase-underscore"/>
+
+    <map name="ExtendedProperties" lazy="true" table="ReportPartExtendedProperty_">
+      <key column="ReportPartOID_"/>
+      <index column="Name_" type="String"/>
+      <element type="String" column="Value_" length="65000"/>
+    </map>
+  </class>
+</hibernate-mapping>

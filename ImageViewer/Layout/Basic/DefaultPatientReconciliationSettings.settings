@@ -1,0 +1,14 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="ClearCanvas.ImageViewer.Layout.Basic" GeneratedClassName="DefaultPatientReconciliationSettings">
+  <Profiles />
+  <Settings>
+    <Setting Name="PatientReconciliationRulesXml" Description="Rules XML document used to massage the patient ID after searching for prior studies, essentially allowing patients with different patient IDs to be merged together in the viewer context menu.  **BE EXTREMELY CAREFUL** if you are going to modify this setting." Type="System.Xml.XmlDocument" Scope="Application">
+      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;patient-reconciliation-rules /&gt;</Value>
+    </Setting>
+    <Setting Name="SearchReconciliationRulesXml" Description="Rules XML document used to massage the patient ID before searching for prior studies.  **BE EXTREMELY CAREFUL** if you are going to modify this setting." Type="System.Xml.XmlDocument" Scope="Application">
+      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;search-reconciliation-rules /&gt;</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

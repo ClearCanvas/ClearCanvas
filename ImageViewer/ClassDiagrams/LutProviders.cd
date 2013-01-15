@@ -1,0 +1,63 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Font Name="Segoe UI" Size="9" />
+  <Class Name="ClearCanvas.ImageViewer.GrayscalePresentationImage" Collapsed="true">
+    <Position X="0.5" Y="1.25" Width="2.5" />
+    <TypeIdentifier>
+      <FileName>GrayscalePresentationImage.cs</FileName>
+      <HashCode>BA4ACQwAAAAABACAAAAgJAAAAIAABAAACAAAIAAQAAI=</HashCode>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Interface Name="ClearCanvas.ImageViewer.Imaging.IModalityLutProvider" Collapsed="true">
+    <Position X="0.5" Y="2.5" Width="1.75" />
+    <TypeIdentifier>
+      <FileName>Imaging\IModalityLutProvider.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="ModalityLut" />
+    </ShowAsAssociation>
+  </Interface>
+  <Interface Name="ClearCanvas.ImageViewer.Imaging.IVoiLutProvider" Collapsed="true">
+    <Position X="0.5" Y="3.75" Width="1.75" />
+    <TypeIdentifier>
+      <FileName>Imaging\IVoiLutProvider.cs</FileName>
+      <HashCode>AAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="VoiLutManager" />
+    </ShowAsAssociation>
+  </Interface>
+  <Interface Name="ClearCanvas.ImageViewer.Imaging.IVoiLutManager" Collapsed="true">
+    <Position X="4" Y="3.75" Width="2.25" />
+    <TypeIdentifier>
+      <FileName>Imaging\IVoiLutManager.cs</FileName>
+      <HashCode>AAAAAEAAAAAAAAAABAAAAAAAAAAAAAAAAACAABAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="ClearCanvas.ImageViewer.Imaging.IColorMapProvider" Collapsed="true">
+    <Position X="0.5" Y="5" Width="1.75" />
+    <TypeIdentifier>
+      <FileName>Imaging\IColorMapProvider.cs</FileName>
+      <HashCode>AAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="ColorMapManager" />
+    </ShowAsAssociation>
+  </Interface>
+  <Interface Name="ClearCanvas.ImageViewer.Imaging.IColorMapManager" Collapsed="true">
+    <Position X="4" Y="5" Width="2.25" />
+    <TypeIdentifier>
+      <FileName>Imaging\IColorMapManager.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAEAAAAAAAAAAAAAAQAAAAEAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="ClearCanvas.ImageViewer.Imaging.IComposableLut" Collapsed="true">
+    <Position X="4" Y="2.5" Width="2.25" />
+    <TypeIdentifier>
+      <FileName>Imaging\IComposableLut.cs</FileName>
+      <HashCode>IEAAAAAAAAAAAAAAIAAAAAQAAAAAAAAAAAQAAAAAABA=</HashCode>
+    </TypeIdentifier>
+  </Interface>
+</ClassDiagram>

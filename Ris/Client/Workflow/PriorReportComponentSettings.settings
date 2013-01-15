@@ -1,0 +1,9 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="ClearCanvas.Ris.Client.Workflow" GeneratedClassName="PriorReportComponentSettings">
+  <Profiles />
+  <Settings>
+    <Setting Name="ShowRelevantPriorsOnly" Description="Indicates if the prior reports component should be restricted to relevant reports only by default.  Setting to false will display all reports by default." Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

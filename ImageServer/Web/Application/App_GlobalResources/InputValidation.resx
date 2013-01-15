@@ -1,0 +1,207 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AdminDevices_ThrottleSettings_InvalidNumOfConnections" xml:space="preserve">
+    <value>The value must be between 1 and 100</value>
+  </data>
+  <data name="AdminPartitionArchive_InvalidDelay" xml:space="preserve">
+    <value>This field must be a positive integer</value>
+  </data>
+  <data name="AdminUserGroups_UserGroupAlreadyExists" xml:space="preserve">
+    <value>This user group already exists.</value>
+  </data>
+  <data name="DeleteSeriesConfirmDialog_MissingComment" xml:space="preserve">
+    <value>You must specify a comment for the reason for deleting the series for future auditing purposes.</value>
+  </data>
+  <data name="DeleteSeriesConfirmDialog_MissingName" xml:space="preserve">
+    <value>You must specify a name for the reason.</value>
+  </data>
+  <data name="DeleteSeriesConfirmDialog_MissingReason" xml:space="preserve">
+    <value>You must specify the reason for deleting the series for future auditing purposes.</value>
+  </data>
+  <data name="DeleteStudyConfirmDialog_MissingComment" xml:space="preserve">
+    <value>You must specify a comment for the reason for deleting the studies for future auditing purposes.</value>
+  </data>
+  <data name="DeleteStudyConfirmDialog_MissingName" xml:space="preserve">
+    <value>You must specify a name for the reason.</value>
+  </data>
+  <data name="DeleteStudyConfirmDialog_MissingReason" xml:space="preserve">
+    <value>You must specify the reason for deleting the studies for future auditing purposes.</value>
+  </data>
+  <data name="DuplicateAETitle" xml:space="preserve">
+    <value>This AE Title already exists</value>
+  </data>
+  <data name="EditStudyDialog_InvalidPatientAge" xml:space="preserve">
+    <value>Patient Age must contain only digits and may not be negative</value>
+  </data>
+  <data name="EditStudyDialog_MissingComment" xml:space="preserve">
+    <value>You must specify a comment for the reason for editing the studies for future auditing purposes.</value>
+  </data>
+  <data name="EditStudyDialog_MissingName" xml:space="preserve">
+    <value>You must specify a name for the reason.</value>
+  </data>
+  <data name="EditStudyDialog_MissingReason" xml:space="preserve">
+    <value>You must specify the reason for editing the studies for future auditing purposes.</value>
+  </data>
+  <data name="EmailAddressInvalid" xml:space="preserve">
+    <value>The email address is invalidly formatted.</value>
+  </data>
+  <data name="HighWatermark_InvalidRange" xml:space="preserve">
+    <value>High Watermark must be between 1 and 99 and less than the Low Watermark</value>
+  </data>
+  <data name="InvalidAETitle" xml:space="preserve">
+    <value>Invalid AE Title</value>
+  </data>
+  <data name="InvalidDataRule" xml:space="preserve">
+    <value>Invalid Data Access Rule Condition</value>
+  </data>
+  <data name="InvalidDate" xml:space="preserve">
+    <value>Invalid date: {0}</value>
+  </data>
+  <data name="InvalidPartitionFolderName" xml:space="preserve">
+    <value>Partition Folder Name is either invalid or is being used for another partition.</value>
+  </data>
+  <data name="InvalidPatientID" xml:space="preserve">
+    <value>This is an invalid DICOM Patient ID.</value>
+  </data>
+  <data name="InvalidPort" xml:space="preserve">
+    <value>Port must be between 1 and 65535</value>
+  </data>
+  <data name="InvalidRuleName" xml:space="preserve">
+    <value>Rule must have a name</value>
+  </data>
+  <data name="InvalidTime" xml:space="preserve">
+    <value>Invalid time</value>
+  </data>
+  <data name="LowWatermark_InvalidRange" xml:space="preserve">
+    <value>Low Watermark must be between 1 and 99 and less than the High Watermark</value>
+  </data>
+  <data name="PersonNameInputPanel_InvalidName" xml:space="preserve">
+    <value>Invalid Person Name. Each field may contain up to 64 characters.</value>
+  </data>
+  <data name="SIQ_ReconcileDialog_PatientSexOverriddenOnMerge" xml:space="preserve">
+    <value>Invalid value for Patient's Sex.  If you choose to use data in these images, Patient's Sex of the study will be set to Other. Howerver, you can still edit the study after the reconciliation has completed.</value>
+  </data>
+  <data name="ThisFieldIsRequired" xml:space="preserve">
+    <value>This field is required</value>
+  </data>
+  <data name="UserIDAlreadyExists" xml:space="preserve">
+    <value>This user id already exists</value>
+  </data>
+</root>

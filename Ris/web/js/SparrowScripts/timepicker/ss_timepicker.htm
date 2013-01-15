@@ -1,0 +1,201 @@
+<html>
+	<head>
+		<link rel="stylesheet" type="text/css" href="ss_timepicker.css"/>
+		<SCRIPT LANGUAGE="JavaScript" SRC="ss_timepicker_settings.js"></SCRIPT>
+		<SCRIPT LANGUAGE="JavaScript">
+		<!--
+			document.write("<SCRIPT LANGUAGE='JavaScript' SRC='ss_timepicker_lang_"+sstp_language+".js'></SCRIPT>");
+		//-->
+		</SCRIPT>
+	</head>
+	<body leftmargin='0' topmargin='0' marginheight='0' marginwidth='0'>
+		<div style='position:absolute;visibility:hidden' id='sstp_selector'></div>
+		<span id="sstp_timepicker"></span>
+	</body>
+<SCRIPT LANGUAGE="JavaScript">
+<!--
+	var sstp_mouseOverTimeout;
+	var sstp_mouseOverInterval;
+	var sstp_currentSession=0;
+	var ssdp_parentControl;
+	var sstp_originalData;
+
+	function sstp_hideTimePicker() {
+		if(sstp_type==0) {
+			parent.document.getElementById("sstp_iframe").style.visibility = 'hidden';
+		}
+		else {
+			window.close();
+		}
+	}
+
+	function sstp_closeTimePicker(dt) {
+		if (sstp_type==0)
+		{
+			parent.document.getElementById(sstp_parentControl).value=dt;
+		}
+		else {
+			opener.document.getElementById(sstp_parentControl).value=dt;
+		}
+		sstp_hideTimePicker();
+		
+		var date = new Date();
+		if(sstp_24Hr)
+		{
+			date.setHours(parseInt(dt.substring(0, 2)));
+			date.setMinutes(parseInt(dt.substring(2)));
+		}
+		else
+		{
+			var colon = dt.indexOf(":");
+			date.setHours(parseInt(dt.substring(0, colon)));
+			date.setMinutes(parseInt(dt.substring(colon+1, colon+3)));
+			if(dt.indexOf("pm") > -1)
+			{
+				date.setHours((date.getHours() == 12) ?  0 : date.getHours() + 12);
+			}
+		}	
+		parent.sstp_onTimePickerClosed(date);
+	}
+
+	function sstp_padZero(num) {
+		return (num	< 10) ? '0' + num : num;
+	}
+
+	function sstp_setImage(id, filename) {
+		document.getElementById(id).src=filename;
+	}
+
+	function sstp_renderTimePicker() {
+
+		var nHour, i, sPostfix;
+
+		sHTML="<table cellspacing='2' width='"+sstp_popupWidth+"' height='"+sstp_popupHeight+"' class='sstp_mainTable'>";
+		sHTML+="<tr height='30' valign='center'><td class='sstp_title'><table cellpadding=0 cellspacing=2><tr valign='center'>"
+		
+		// Morning/Afternoon Selector
+
+		sHTML+="<td>&nbsp;</td><td class='sstp_titleText' id='sstp_selectorCell' onmousemove='window.status=sstp_text[4]' title='"+sstp_text[4]+"'  onmouseover='sstp_hideSelector();this.className=\"sstp_titleTextHover\";sstp_setImage(\"sstp_selectorIcon\",\"drop2.gif\");sstp_showSelector();clearTimeout(sstp_mouseOverTimeout)' onmouseout='window.status=\"\";this.className=\"sstp_titleText\";sstp_setImage(\"sstp_selectorIcon\",\"drop1.gif\")' nowrap>&nbsp;";
+		sHTML+=sstp_text[sstp_currentSession];
+		if (!sstp_24Hr)
+		{
+			sPostfix=" " + sstp_text[sstp_currentSession+2];
+		}
+		else {
+			sPostfix="";
+		}
+		sHTML+="&nbsp;<IMG ID=\"sstp_selectorIcon\" SRC=\"drop1.gif\" WIDTH=\"12\" HEIGHT=\"10\" BORDER=\"0\"></td>";
+		
+		// Close Button
+
+		sHTML+="<td align='right' width='100%'><IMG TITLE=\""+sstp_text[5]+"\" onmouseover='window.status=sstp_text[5]' SRC=\"close.gif\" WIDTH=\"15\" HEIGHT=\"13\" BORDER=\"0\" onclick=\"sstp_hideTimePicker()\" style=\"cursor:pointer\"></td><td width='3'></td></tr></table></td></tr>";
+
+		sHTML+="<tr height='100%'><td><table width='100%' class='sstp_innerTable'>"
+
+		for (i=0;i<12;i++)
+		{
+			if ((i==0)&&(!sstp_24Hr))
+			{
+				nHour=12;
+			}
+			else {
+				if ((sstp_24Hr)&&(sstp_currentSession==1))
+				{
+					nHour=i+12;
+				} else {
+					nHour=i;
+				}
+			}
+			sHTML+="<tr>"
+
+			for (j=0;j<46;j+=15)
+			{	
+ 					if (sstp_originalData==(sstp_padZero(nHour)+":"+sstp_padZero(j)+sPostfix))
+					{
+						if (sstp_24Hr)
+						{
+							sHTML+="<td class='sstp_innerCellSelected' onmouseover='this.className=\"sstp_innerCellSelectedHover\"' onmouseout='this.className=\"sstp_innerCellSelected\"' onclick='sstp_closeTimePicker(\""+sstp_padZero(nHour)+":"+sstp_padZero(j)+"\")'>"+sstp_padZero(nHour)+":"+sstp_padZero(j)+"&nbsp;";
+						}
+						else {
+							sHTML+="<td class='sstp_innerCellSelected' onmouseover='this.className=\"sstp_innerCellSelectedHover\"' onmouseout='this.className=\"sstp_innerCellSelected\"' onclick='sstp_closeTimePicker(\""+nHour+":"+sstp_padZero(j)+sPostfix+"\")'>"+nHour+":"+sstp_padZero(j)+"&nbsp;<font class='sstp_postfix'>"+sPostfix+"</font>";
+						}
+					}
+					else {
+						if (sstp_24Hr)
+						{
+							sHTML+="<td class='sstp_innerCell' onmouseover='this.className=\"sstp_innerCellHover\"' onmouseout='this.className=\"sstp_innerCell\"' onclick='sstp_closeTimePicker(\""+sstp_padZero(nHour)+":"+sstp_padZero(j)+"\")'>"+sstp_padZero(nHour)+":"+sstp_padZero(j)+"&nbsp;";
+						}
+						else {
+							sHTML+="<td class='sstp_innerCell' onmouseover='this.className=\"sstp_innerCellHover\"' onmouseout='this.className=\"sstp_innerCell\"' onclick='sstp_closeTimePicker(\""+nHour+":"+sstp_padZero(j)+sPostfix+"\")'>"+nHour+":"+sstp_padZero(j)+"&nbsp;<font class='sstp_postfix'>"+sPostfix+"</font>";
+						}
+					}
+
+			}
+			sHTML+="</td></tr>";
+		}
+
+		sHTML+="</table></td><tr>";
+
+		sHTML+="</table>";
+
+		document.getElementById("sstp_timepicker").innerHTML=sHTML;
+	}
+
+	function sstp_hideSelector() {
+		document.getElementById("sstp_selector").style.visibility="hidden";		
+		document.getElementById("sstp_selectorCell").className="sstp_titleText";
+		sstp_setImage("sstp_selectorIcon","drop1.gif");
+	}
+
+	function sstp_setSession(nSession) {
+		if (sstp_currentSession!=nSession)
+		{
+			sstp_currentSession=nSession;
+		}
+	}
+
+	function sstp_showSelector() {
+
+		var sHTML;
+		var i;
+
+		sHTML="<table class='sstp_selectorTable' cellspacing='1' cellpadding=0 onmouseover='clearTimeout(sstp_mouseOverTimeout)' onmouseout='sstp_mouseOverTimeout=setTimeout(\"sstp_hideSelector()\",200)'>";
+
+		sHTML+="<tr><td nowrap class='sstp_selector' onmouseover='this.className=\"sstp_selectorHover\"'  onmouseout='this.className=\"sstp_selector\"' onclick='sstp_setSession(0);sstp_hideSelector();sstp_renderTimePicker();'><span id='sstp_morning'>"+sstp_text[0]+"</span></td></tr>";
+
+		sHTML+="<tr><td nowrap class='sstp_selector' onmouseover='this.className=\"sstp_selectorHover\"' onmouseout='this.className=\"sstp_selector\"' onclick='sstp_setSession(1);sstp_hideSelector();sstp_renderTimePicker();'><span id='sstp_morning'>"+sstp_text[1]+"</span></td></tr>";
+
+		sHTML+="</table>";
+
+		document.getElementById("sstp_selector").style.left = document.getElementById("sstp_selectorCell").offsetLeft+3;
+		document.getElementById("sstp_selector").style.top = document.getElementById("sstp_selectorCell").offsetTop+document.getElementById("sstp_selectorCell").offsetHeight+7;
+
+		document.getElementById("sstp_selector").innerHTML=sHTML;	
+		document.getElementById("sstp_selector").style.visibility="visible";
+	}
+
+	sstp_parentControl=document.location.hash.substring(1,document.location.hash.length);
+
+	if (sstp_type==0)
+	{
+		sstp_originalData=parent.document.getElementById(sstp_parentControl).value;
+	}
+	else {
+		sstp_originalData=opener.document.getElementById(sstp_parentControl).value;
+	}
+
+	if (sstp_originalData!="")
+	{
+		if (sstp_originalData.indexOf(sstp_text[3])>0)
+		{
+			sstp_currentSession=1;
+		}
+		else {
+			sstp_currentSession=0;
+		}
+	}
+
+	sstp_renderTimePicker();
+//-->
+</SCRIPT>
+</html>

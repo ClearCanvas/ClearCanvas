@@ -1,0 +1,356 @@
+.DefaultModalDialogBackground
+{
+	background-color: #333333;
+	filter:alpha(opacity=30); opacity:0.3;
+}
+
+.DefaultModalDialogTitleBarLeft
+{
+	cursor: move;
+	text-align: center;
+	padding-top: 5px;
+	color: #205F87;
+	font-family: Sans-Serif;
+	font-weight:bold;
+	height:20px;
+	background-image: url(../../images/Controls/Dialog/DialogTitleBarBG.png);
+	background-repeat: repeat-x;
+	background-color: #b8d9ee;
+	border-bottom: #3D98D1 solid 1px;	
+	border-left: #3D98D1 solid 5px;
+	border-top: #3D98D1 solid 5px;
+}
+
+.DefaultModalDialogTitleBarTitle
+{
+	cursor: move;
+	text-align: center;
+	padding-top: 5px;
+	color: #205F87;
+	font-family: Sans-Serif;
+	font-weight:bold;
+	height:20px;
+	background-image: url(../../images/Controls/Dialog/DialogTitleBarBG.png);
+	background-repeat: repeat-x;
+	background-color: #b8d9ee;
+	border-top: #3D98D1 solid 5px;
+	border-bottom: #3D98D1 solid 1px;
+}
+
+.DefaultModalDialogTitleBarControlBoxes
+{
+
+}
+
+.DefaultModalDialogTitleBarRight
+{
+	cursor: move;
+	text-align: right;
+	padding-top: 5px;
+	color: #205F87;
+	font-family: Sans-Serif;
+	font-weight:bold;
+	height:20px;
+	background-image: url(../../images/Controls/Dialog/DialogTitleBarBG.png);
+	background-repeat: repeat-x;
+	background-color: #b8d9ee;
+	border-bottom: #3D98D1 solid 1px;	
+	border-right: #3D98D1 solid 5px;
+	border-top: #3D98D1 solid 5px;
+}
+
+.DefaultModalDialogContent
+{
+	vertical-align: top;
+	padding: 10px 10px 0px 10px;
+	background-color: #E1EFF8;
+	border-left: #3D98D1 5px solid;
+	border-right: #3D98D1 5px solid;
+	border-bottom: #3D98D1 5px solid;
+}
+
+.DefaultModalDialogButtonPanel
+{
+    padding-top: 10px;
+    padding-right: 1px;
+    padding-bottom: 7px;
+}
+
+.ConfirmationButtonPanel
+{
+    padding-top: 10px;
+    padding-bottom: 8px;
+}
+
+.ConfirmationContent
+{
+    background: #ffffff; 
+    padding: 10px 10px 10px 10px; 
+    border: solid 1px #618FAD; 
+}
+
+.DialogTextBoxLabel
+{
+    font-family: Sans-Serif;
+    font-size: 12px;
+    font-weight: bold;
+    margin-left: 3px;
+	margin-right: 3px;
+	color: #16425D;
+}
+
+.DataAccessChangeDialogLabel
+{
+	font-family: Sans-Serif;
+    font-size: 12px;
+    font-weight: bold;
+    margin-left: 3px;
+	margin-right: 3px;
+	color: #16425D;
+	width: 350px;
+}
+
+.DataAccessChangeDialogWarningLabel
+{
+	font-family: Sans-Serif;
+    font-size: 12px;
+    font-weight: bold;
+    margin-left: 3px;
+	margin-right: 3px;
+	color: #FF0000;
+	width: 350px;
+}
+
+.DialogTextBoxLabelScroll
+{
+    font-family: Sans-Serif;
+    font-size: 12px;
+    font-weight: bold;
+    margin-left: 3px;
+	margin-right: 3px;
+	color: #16425D;
+	overflow: auto
+}
+
+.DialogLabelBackground
+{
+    background-color: #dfdfdf;
+    border: solid 1px #cccccc;
+}
+
+.DialogTextBox
+{
+    font-family: Sans-Serif;
+    font-size: 11px;
+    font-weight: normal;
+    padding-left: 2px;
+    width: 100px;
+	margin-left: 3px;
+	margin-right: 3px;
+	border: solid 1px #618FAD;
+}
+
+.DialogTextArea
+{
+    font-family: Sans-Serif;
+    font-size: 11px;
+    font-weight: normal;
+    padding-left: 2px;
+  	margin-left: 3px;
+	margin-right: 3px;
+	border: solid 1px #618FAD;
+}
+
+.DialogTextBoxInvalidInput
+{
+    font-family: Sans-Serif;
+    font-size: 11px;
+    font-weight: normal;
+    padding-left: 2px;
+    width: 100px;
+	margin-left: 3px;
+	margin-right: 3px;
+    border: solid 1px red;
+    background: #FAFFB5;
+}
+
+.DialogCheckBox
+{
+    font-family: Sans-Serif;
+    font-size: 14px;
+    font-weight: normal;
+    color: #16425D;
+    
+}
+
+.DialogDropDownList
+{
+	margin-left: 3px;
+	margin-right: 3px;
+	font-family: Sans-Serif;
+	font-size: 11px;
+	border: solid 1px #618FAD;
+}
+
+.DialogDropDownListInvalidInput
+{
+	margin-left: 3px;
+	margin-right: 3px;
+	font-family: Sans-Serif;
+	font-size: 11px;
+    border: solid 1px red;
+    background: #FAFFB5;
+}
+
+.DialogCheckBoxList
+{
+    border: solid 1px #618FAD;
+    overflow: auto; 
+    height: 200px;
+    background: white;
+    padding-left: 2px;
+	margin-left: 3px;
+	margin-right: 3px;
+	font-weight: normal;
+	color: Black;
+}
+
+.DialogLinkButton
+{
+    color: #D13D4D;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 0px 4px 1px 4px;
+}
+
+.DialogLabel
+{
+    font-size: 12px;
+}
+
+.DialogPanelContent
+{
+    background: #ffffff url(../../images/Controls/Dialog/DialogBodyBackground.png) repeat-x bottom;
+    border: #618FAD 1px solid;
+}
+
+.DialogMessagePanel
+{
+    margin-bottom: 3px; 
+    border: solid 1px #618FAD; 
+    background: #ffffff; 
+    padding: 4px;
+}
+
+.ConfirmDialogMessage
+{
+    font-weight: bold;
+    font-size: 16px; 
+    color: red;
+}
+
+.ConfirmDialogTable
+{
+    margin-top: 10px;
+    border: solid 1px black;
+}
+
+.ConfirmDialogHeadingText td
+{
+    color: #205F87;
+    font-weight: bold;
+    font-size: 14px;
+    text-align: left;
+    border-bottom: solid 1px black;
+    background-color: #eeeeee;
+}
+
+.ConfirmDialogItemText td
+{
+    font-size: 14px;
+    text-align: left;
+    border-top: solid 2px #eeeeee;
+    background-color: white;
+}
+
+/*************************************************************************************************
+	
+	AJAX Tabcontrol CSS for tabs used in popup dialog 
+
+*************************************************************************************************/
+
+/* .ajax__tab_header - A container element that wraps all of the tabs at the top of the TabContainer. Child CSS classes:.ajax__tab_outer. */
+/* .ajax__tab_outer - An outer element of a tab, often used to set the left-side background image of the tab.Child CSS classes: .ajax__tab_inner. */
+/* .ajax__tab_inner	 - An inner element of a tab, often used to set the right-side image of the tab. Child CSS classes:.ajax__tab_tab. */
+/* .ajax__tab_tab - An element of the tab that contains the text content. Child CSS classes:none. */
+/* .ajax__tab_body - A container element that wraps the area where a TabPanel is displayed. Child CSS classes: none. */
+/* .ajax__tab_hover - This is applied to a tab when the mouse is hovering over. Child CSS classes:.ajax__tab_outer. */
+/* .ajax__tab_active - This is applied to a tab when it is the currently selected tab. Child CSS classes:.ajax__tab_outer. */   
+
+
+.DialogTabControl .ajax__tab_header					
+{
+    margin-top: 8px;
+}
+.DialogTabControl .ajax__tab_outer
+{
+	background: url(../../images/Controls/Dialog/DialogInactiveTabRight.png) no-repeat right;
+	margin-right: 1px;
+}
+.DialogTabControl .ajax__tab_inner
+{
+	background: url(../../images/Controls/Dialog/DialogInactiveTabLeft.png) no-repeat;
+	padding-left: 3px;
+}
+.DialogTabControl .ajax__tab_tab
+{
+	background: url(../../../../PersistantImage.ashx?key=DialogInactiveTabMiddle) repeat-x;
+	padding-left: 3px;
+	padding-right: 2px;
+	padding-top: 1px;
+	color: #16425D;
+	font-size: 12px;
+}
+.DialogTabControl .ajax__tab_hover .ajax__tab_outer
+{
+	background: url(../../images/Controls/Dialog/DialogHoverTabRight.png) no-repeat right;
+}
+.DialogTabControl .ajax__tab_hover .ajax__tab_inner
+{
+	background: url(../../images/Controls/Dialog/DialogHoverTabLeft.png) no-repeat;
+}
+.DialogTabControl .ajax__tab_hover .ajax__tab_tab
+{
+	background: url(../../../../PersistantImage.ashx?key=DialogHoverTabMiddle) repeat-x;
+    color: #16425D;
+}
+.DialogTabControl .ajax__tab_active .ajax__tab_outer
+{
+	background: url(../../images/Controls/Dialog/DialogActiveTabRight.png) no-repeat right;
+}
+.DialogTabControl .ajax__tab_active .ajax__tab_inner
+{
+	background: url(../../images/Controls/Dialog/DialogActiveTabLeft.png) no-repeat;
+	
+}
+.DialogTabControl .ajax__tab_active .ajax__tab_tab
+{
+	background: url(../../../../PersistantImage.ashx?key=DialogActiveTabMiddle) repeat-x;
+	color: #205F87;
+    font-weight: bold;
+    font-size: 14px;    
+}
+
+
+
+/*************************************************************************************************
+	Other styles
+*************************************************************************************************/
+
+.DialogTabControl .ajax__tab_body
+{
+	margin: 0px;
+	padding: 6px;
+	background: #ffffff url(../../../../PersistantImage.ashx?key=DialogBodyBackground) repeat-x bottom;
+	border: #618FAD 1px solid;
+}

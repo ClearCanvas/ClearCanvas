@@ -1,0 +1,19 @@
+﻿<!-- 
+This rule instructs the server to use JPEG baseline compression
+on 8-bit US and RF studies.
+-->
+<rule>
+	<condition expressionLanguage="dicom">
+		<and>
+			<equal test="$BitsAllocated" refValue="8" />
+		    <not-equal test="$PhotometricInterpretation" refValue="PALETTE COLOR" />
+			<or>
+				<equal test="$Modality" refValue="US" />
+				<equal test="$Modality" refValue="RF" />
+			</or>
+		</and>
+	</condition>
+	<action>
+		<jpeg-baseline quality="80" time="10" unit="weeks" convertFromPalette="true"/>
+	</action>
+</rule>

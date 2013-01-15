@@ -1,0 +1,12 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="ClearCanvas.Healthcare" GeneratedClassName="WorklistSettings">
+  <Profiles />
+  <Settings>
+    <Setting Name="TimeWindowRequired" Description="Specifies whether a worklist is required to have a time window specified." Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="TimeWindowMaxSpanDays" Description="Specifies the maximum number of days that a worklist time window can span.  Use 0 to disable this constraint." Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">14</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

@@ -1,0 +1,177 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{BD56AC53-F4B2-46AA-9371-D0E6F569A9D2}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ClearCanvas.ImageViewer.AdvancedImaging.Fusion</RootNamespace>
+    <AssemblyName>ClearCanvas.ImageViewer.AdvancedImaging.Fusion</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <UpgradeBackupLocation />
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;UNIT_TESTS</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="nunit.framework, Version=2.2.7.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\ReferencedAssemblies\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DisplaySetFactoryProvider.cs" />
+    <Compile Include="AlphaColorMapFactory.cs" />
+    <Compile Include="ErrorPresentationImage.cs" />
+    <Compile Include="FusionImageAnnotationItemProvider.cs" />
+    <Compile Include="FusionOverlayMinMaxVoiLutLinear.cs" />
+    <Compile Include="IFusionDisplaySetDescriptor.cs" />
+    <Compile Include="Tests\AsynchronousFusionTestTool.cs" />
+    <Compile Include="Tests\FusionColorCompositingTest.cs" />
+    <Compile Include="Tests\FusionDisplaySetFactoryTests.cs" />
+    <Compile Include="Tests\FusionLayerCoregistrationTests.cs" />
+    <Compile Include="Tests\FusionPresentationImageTextAnnotationTests.cs" />
+    <Compile Include="Tests\FusionTestDataContainer.cs" />
+    <Compile Include="Tests\Modality.cs" />
+    <Compile Include="Tests\TestDisplaySetGenerator.cs" />
+    <Compile Include="Tests\TestDataFunction.cs" />
+    <Compile Include="Tests\TestDisplaySetsTool.cs" />
+    <Compile Include="Utilities\InvertedLinearLut.cs" />
+    <Compile Include="VoiLutManagerProxy.cs" />
+    <Compile Include="LayerOpacityOperation.cs" />
+    <Compile Include="AdjustOpacityTool.cs" />
+    <Compile Include="ColorMapManagerProxy.cs" />
+    <Compile Include="AlphaColorMap.cs" />
+    <Compile Include="FusionOverlayCompositeGraphic.cs" />
+    <Compile Include="FusionOverlayFrameData.cs" />
+    <Compile Include="FusionOverlayFrameDataReference.cs" />
+    <Compile Include="FusionPresentationImage.cs" />
+    <Compile Include="HotIronColorMapFactory.cs" />
+    <Compile Include="ILayerOpacityManager.cs" />
+    <Compile Include="PETFusionDisplaySetDescriptor.cs" />
+    <Compile Include="PETFusionDisplaySetFactory.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="FusionOverlayDataReference.cs" />
+    <Compile Include="FusionOverlayData.cs" />
+    <Compile Include="PETFusionType.cs" />
+    <Compile Include="SR.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SR.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Utilities\DicomImagePlane.cs" />
+    <Compile Include="WindowLevelSynchronicityTool.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Common\ClearCanvas.Common.csproj">
+      <Project>{F6EAD428-E6CF-4DF6-B2F3-D33D532C5343}</Project>
+      <Name>ClearCanvas.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Desktop\ClearCanvas.Desktop.csproj">
+      <Project>{26E9A01A-64B5-42C5-8252-FBB30DF9CEC7}</Project>
+      <Name>ClearCanvas.Desktop</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Dicom\ClearCanvas.Dicom.csproj">
+      <Project>{AD9ECE2B-8268-4115-8DC8-860FBD011FFF}</Project>
+      <Name>ClearCanvas.Dicom</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\ClearCanvas.ImageViewer.csproj">
+      <Project>{85100D3E-471C-47C9-9687-ABF25F617ED7}</Project>
+      <Name>ClearCanvas.ImageViewer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Common\ClearCanvas.ImageViewer.Common.csproj">
+      <Project>{FEFD73C5-8541-47D2-BBDB-FF61DEA28291}</Project>
+      <Name>ClearCanvas.ImageViewer.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Layout\Basic\ClearCanvas.ImageViewer.Layout.Basic.csproj">
+      <Project>{EA38C1F1-C4BD-4ED7-9B60-C95DF22D6A72}</Project>
+      <Name>ClearCanvas.ImageViewer.Layout.Basic</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Volume\Mpr\ClearCanvas.ImageViewer.Volume.Mpr.csproj">
+      <Project>{AD8F67CF-0F30-412D-ACCD-80BACA332F22}</Project>
+      <Name>ClearCanvas.ImageViewer.Volume.Mpr</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="SR.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>SR.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\AdjustOpacityToolLarge.png" />
+    <EmbeddedResource Include="Icons\AdjustOpacityToolMedium.png" />
+    <EmbeddedResource Include="Icons\AdjustOpacityToolSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

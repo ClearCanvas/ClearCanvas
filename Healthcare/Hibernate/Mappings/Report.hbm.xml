@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" assembly="ClearCanvas.Healthcare" namespace="ClearCanvas.Healthcare">
+  <class name="Report" proxy="Report" table="Report_">
+    <id name="OID" column="OID_" type="Guid">
+      <generator class="guid.comb"/>
+    </id>
+    <version name="Version" column="Version_"/>
+
+    <property name="Status" column="Status_" type="ClearCanvas.Healthcare.Hibernate.ReportStatusEnumHbm, ClearCanvas.Healthcare.Hibernate" not-null="true" access="nosetter.camelcase-underscore"/>
+
+  
+    <set name="Procedures" table="ProcedureReport_" lazy="true">
+      <key column="ReportOID_"/>
+      <many-to-many column="ProcedureOID_" class="Procedure" fetch="join"/>
+    </set>
+
+    <!-- Note: Parts is an ordered bag (the order-by attribute tells nhibernate the order in which to load the elements) -->
+    <bag name="Parts" lazy="true" inverse="true" cascade="all-delete-orphan" access="nosetter.camelcase-underscore" order-by="Index_ asc">
+      <key column="ReportOID_"/>
+      <one-to-many class="ReportPart"/>
+    </bag>
+
+  </class>
+</hibernate-mapping>

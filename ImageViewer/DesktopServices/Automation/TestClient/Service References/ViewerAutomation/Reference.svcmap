@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="ba47898d-47ad-457d-ba4b-a8f15faf4a95" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://localhost:51124/ClearCanvas/ImageViewer/Automation" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="Automation.xsd" MetadataType="Schema" ID="7fe60bc7-f389-43b0-bc69-73e7b825bd37" SourceId="1" SourceUrl="http://localhost:51124/ClearCanvas/ImageViewer/Automation?xsd=xsd3" />
+    <MetadataFile FileName="Automation1.xsd" MetadataType="Schema" ID="eef9c0c5-0dd3-40f0-9c5d-af728a06da52" SourceId="1" SourceUrl="http://localhost:51124/ClearCanvas/ImageViewer/Automation?xsd=xsd0" />
+    <MetadataFile FileName="Automation.disco" MetadataType="Disco" ID="61a5db68-61e6-4630-901b-43b7b9ef729c" SourceId="1" SourceUrl="http://localhost:51124/ClearCanvas/ImageViewer/Automation?disco" />
+    <MetadataFile FileName="Automation2.xsd" MetadataType="Schema" ID="beb1c14e-5f88-4c68-96af-bcf12502116d" SourceId="1" SourceUrl="http://localhost:51124/ClearCanvas/ImageViewer/Automation?xsd=xsd2" />
+    <MetadataFile FileName="Automation3.xsd" MetadataType="Schema" ID="ec603709-3309-46a0-8496-c5d560bc2faf" SourceId="1" SourceUrl="http://localhost:51124/ClearCanvas/ImageViewer/Automation?xsd=xsd1" />
+    <MetadataFile FileName="ViewerAutomation.wsdl" MetadataType="Wsdl" ID="dcc2862f-3b58-4c04-b3eb-ca0843adcc98" SourceId="1" SourceUrl="http://localhost:51124/ClearCanvas/ImageViewer/Automation?wsdl" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

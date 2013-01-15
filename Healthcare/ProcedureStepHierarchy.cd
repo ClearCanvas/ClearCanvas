@@ -1,0 +1,119 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="ClearCanvas.Healthcare.DocumentationProcedureStep" Collapsed="true">
+    <Position X="9.5" Y="3" Width="2.25" />
+    <InheritanceLine Type="ClearCanvas.Healthcare.ProcedureStep" ManuallyRouted="true">
+      <Path>
+        <Point X="8" Y="1.38" />
+        <Point X="8" Y="2.619" />
+        <Point X="10.625" Y="2.619" />
+        <Point X="10.625" Y="3" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAQAAAAAACAACAAAAAAACAE=</HashCode>
+      <FileName>DocumentationProcedureStep.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ClearCanvas.Healthcare.ModalityProcedureStep" Collapsed="true">
+    <Position X="6.75" Y="3" Width="2.25" />
+    <InheritanceLine Type="ClearCanvas.Healthcare.ProcedureStep" ManuallyRouted="true">
+      <Path>
+        <Point X="8" Y="1.38" />
+        <Point X="8" Y="2.619" />
+        <Point X="7.875" Y="2.619" />
+        <Point X="7.875" Y="3" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAgAAAFAAAAAAQAAAAAACAACAAAAAAACAE=</HashCode>
+      <FileName>ModalityProcedureStep.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ClearCanvas.Healthcare.InterpretationStep" Collapsed="true">
+    <Position X="8.25" Y="5.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAABAAAAABAAAAAAAQAAAAAAAAAAAAAAAAACAg=</HashCode>
+      <FileName>InterpretationStep.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ClearCanvas.Healthcare.ProtocolAssignmentStep" Collapsed="true">
+    <Position X="3.25" Y="4.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAABAIAgAACQCgAAAAAAAAACAAAAACAg=</HashCode>
+      <FileName>ProtocolAssignmentStep.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ClearCanvas.Healthcare.ProtocolProcedureStep" Collapsed="true">
+    <Position X="2" Y="3" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAQAAAAAABAAAAAACAACAAAAAAAAAE=</HashCode>
+      <FileName>ProtocolProcedureStep.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ClearCanvas.Healthcare.ProtocolResolutionStep" Collapsed="true">
+    <Position X="0.5" Y="4.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAQAABAAAAAAAAAAAAAACAg=</HashCode>
+      <FileName>ProtocolResolutionStep.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ClearCanvas.Healthcare.PublicationStep" Collapsed="true">
+    <Position X="16.75" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAAAAABAAAAAAAAAAgAAwAAAAAAAAAAAAgAAAAiAg=</HashCode>
+      <FileName>PublicationStep.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ClearCanvas.Healthcare.ReportingProcedureStep" Collapsed="true">
+    <Position X="12.25" Y="3" Width="2.5" />
+    <InheritanceLine Type="ClearCanvas.Healthcare.ProcedureStep" ManuallyRouted="true">
+      <Path>
+        <Point X="8" Y="1.38" />
+        <Point X="8" Y="2.625" />
+        <Point X="13.5" Y="2.625" />
+        <Point X="13.5" Y="3" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAgAACAACAEAAAAABAE=</HashCode>
+      <FileName>ReportingProcedureStep.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ClearCanvas.Healthcare.TranscriptionReviewStep" Collapsed="true">
+    <Position X="12.5" Y="5.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAgAAAAAAAAAAAAAAAAAAAQAAAAAAAAIAAAAAAAACAg=</HashCode>
+      <FileName>TranscriptionReviewStep.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ClearCanvas.Healthcare.TranscriptionStep" Collapsed="true">
+    <Position X="10.5" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAABAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAACAg=</HashCode>
+      <FileName>TranscriptionStep.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ClearCanvas.Healthcare.VerificationStep" Collapsed="true">
+    <Position X="15" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAABAAAAAAAABAAAAQAAAAAAAAAAAAAAAAACAg=</HashCode>
+      <FileName>VerificationStep.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ClearCanvas.Healthcare.ProcedureStep" Collapsed="true">
+    <Position X="7.25" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAQEwADCAAEgJgABAAAAwAAAAAACAACQAAAIQACAE=</HashCode>
+      <FileName>ProcedureStep.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ClearCanvas.Healthcare.RegistrationProcedureStep" Collapsed="true">
+    <Position X="4.25" Y="3" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAQAAAAAACAACAAAAAAACAE=</HashCode>
+      <FileName>RegistrationProcedureStep.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Tahoma" Size="8.25" />
+</ClassDiagram>

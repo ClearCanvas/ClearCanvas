@@ -1,0 +1,46 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<% 
+var component = this.Component;
+%>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Untitled Document</title>
+<link href="<%= component.Server %>/Styles/default.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+<table border="0" width="100%">
+    <tr>
+        <td></td>
+<% for(var auth in component.ProfileAuthorities) { %>
+        <td class="tableheading"><%= auth %></td>
+<% } %>
+   
+    </tr>
+<% for(var field in component.Fields) { %>
+    <tr>
+        <td class="propertyname"><%= field.Heading %></td>
+            <% for(var value in field.Values) {
+                    var i=0;
+                    var tdcell = "";
+                    for(var segment in value.Segments) {                        
+                        if (segment.IsDiscrepant) {
+                            tdcell += "<span class='discrepancy'>" + segment.Text.replace(" ", "&nbsp") + "</span>"
+                        }
+                        else {
+                            tdcell += "<span class=''>" + segment.Text.replace(" ", "&nbsp") + "</span>"
+                        }
+                        i += 1;
+                    }
+            %>
+        <td ><%= tdcell %></td>
+            <%      
+                }
+            %>
+    </tr>
+<% } %>
+
+</table>
+</body>
+</html>

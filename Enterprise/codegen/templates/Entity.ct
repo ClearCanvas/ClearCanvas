@@ -1,0 +1,24 @@
+using System;
+using System.Collections;
+using System.Text;
+
+using ClearCanvas.Enterprise.Core;
+
+namespace <%= namespace %> {
+
+
+    /// <summary>
+    /// <%= @className %> entity
+    /// </summary>
+	public partial class <%= @className %> : <%= @superClassName %>
+	{
+	
+		/// <summary>
+		/// This method is called from the constructor.  Use this method to implement any custom
+		/// object initialization.
+		/// </summary>
+		private void CustomInitialize()
+		{
+		}
+	}
+}

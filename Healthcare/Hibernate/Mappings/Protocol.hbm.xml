@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" assembly="ClearCanvas.Healthcare" namespace="ClearCanvas.Healthcare">
+  <class name="Protocol" proxy="Protocol" table="Protocol_">
+    <id name="OID" column="OID_" type="Guid">
+      <generator class="guid.comb"/>
+    </id>
+    <version name="Version" column="Version_"/>
+
+    <set name="Procedures" table="ProcedureProtocol_" lazy="true">
+      <key column="ProtocolOID_"/>
+      <many-to-many column="ProcedureOID_" class="Procedure" fetch="join"/>
+    </set>
+
+    <many-to-one name="Author" class="Staff" column="AuthorOID_"/>
+    <many-to-one name="Supervisor" class="Staff" column="SupervisorOID_"/>
+    <property name="Status" column="Status_" type="ClearCanvas.Healthcare.Hibernate.ProtocolStatusEnumHbm, ClearCanvas.Healthcare.Hibernate" not-null="true"/>
+    <many-to-one name="Urgency" class="ProtocolUrgencyEnum" column="Urgency_" />
+    <many-to-one name="RejectReason" class="ProtocolRejectReasonEnum" column="RejectReason_"/>
+
+    <set name="Codes" table="ProtocolProtocolCode_" lazy="true" access="nosetter.camelcase-underscore">
+      <key column="ProtocolOID_"/>
+      <many-to-many column="ProtocolCodeOID_" class="ClearCanvas.Healthcare.ProtocolCode, ClearCanvas.Healthcare" fetch="join"/>
+    </set>
+  </class>
+</hibernate-mapping>

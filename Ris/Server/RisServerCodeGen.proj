@@ -1,0 +1,12 @@
+<Project DefaultTargets="BuildSolution" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Target Name="BuildSolution" >
+    <Exec Command="codegen-clean.bat" WorkingDirectory="..\..\Enterprise\Authentication" ContinueOnError="true" />
+    <Exec Command="codegen-gen.bat" WorkingDirectory="..\..\Enterprise\Authentication" />
+    <Exec Command="codegen-clean.bat" WorkingDirectory="..\..\Enterprise\Configuration" ContinueOnError="true" />
+    <Exec Command="codegen-gen.bat" WorkingDirectory="..\..\Enterprise\Configuration" />
+    <Exec Command="codegen-clean.bat" WorkingDirectory="..\..\Workflow" ContinueOnError="true" />
+    <Exec Command="codegen-gen.bat" WorkingDirectory="..\..\Workflow" />
+    <Exec Command="codegen-clean.bat" WorkingDirectory="..\..\Healthcare" ContinueOnError="true" />
+    <Exec Command="codegen-gen.bat" WorkingDirectory="..\..\Healthcare" />
+  </Target>
+</Project>

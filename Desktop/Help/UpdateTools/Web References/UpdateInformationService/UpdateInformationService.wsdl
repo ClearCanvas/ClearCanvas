@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://www.clearcanvas.ca/services/update" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" targetNamespace="http://www.clearcanvas.ca/services/update" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://www.clearcanvas.ca/services/update">
+      <s:element name="GetUpdateInformation">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="request" type="tns:UpdateInformationRequest" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="UpdateInformationRequest">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="InstalledProduct" type="tns:Product" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="Product">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:Component" />
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="Component">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Name" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Edition" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Version" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="VersionSuffix" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Release" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="GetUpdateInformationResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetUpdateInformationResult" type="tns:UpdateInformationResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="UpdateInformationResult">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="DownloadUrl" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="InstalledProduct" type="tns:Product" />
+        </s:sequence>
+      </s:complexType>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="GetUpdateInformationSoapIn">
+    <wsdl:part name="parameters" element="tns:GetUpdateInformation" />
+  </wsdl:message>
+  <wsdl:message name="GetUpdateInformationSoapOut">
+    <wsdl:part name="parameters" element="tns:GetUpdateInformationResponse" />
+  </wsdl:message>
+  <wsdl:portType name="UpdateInformationServiceSoap">
+    <wsdl:operation name="GetUpdateInformation">
+      <wsdl:input message="tns:GetUpdateInformationSoapIn" />
+      <wsdl:output message="tns:GetUpdateInformationSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="UpdateInformationServiceSoap" type="tns:UpdateInformationServiceSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="GetUpdateInformation">
+      <soap:operation soapAction="http://www.clearcanvas.ca/services/update/GetUpdateInformation" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="UpdateInformationServiceSoap12" type="tns:UpdateInformationServiceSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="GetUpdateInformation">
+      <soap12:operation soapAction="http://www.clearcanvas.ca/services/update/GetUpdateInformation" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="UpdateInformationService">
+    <wsdl:port name="UpdateInformationServiceSoap" binding="tns:UpdateInformationServiceSoap">
+      <soap:address location="http://localhost/ClearCanvas.Distribution.UpdateService/UpdateInformationService.asmx" />
+    </wsdl:port>
+    <wsdl:port name="UpdateInformationServiceSoap12" binding="tns:UpdateInformationServiceSoap12">
+      <soap12:address location="http://localhost/ClearCanvas.Distribution.UpdateService/UpdateInformationService.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

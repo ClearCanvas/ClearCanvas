@@ -1,0 +1,852 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="All" xml:space="preserve">
+    <value>All</value>
+  </data>
+  <data name="Any" xml:space="preserve">
+    <value>Any</value>
+  </data>
+  <data name="ConfirmDialogDefault" xml:space="preserve">
+    <value>Please Confirm</value>
+  </data>
+  <data name="ConfirmDialogError" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="Default" xml:space="preserve">
+    <value>Default</value>
+  </data>
+  <data name="DeleteConfirmationPlural" xml:space="preserve">
+    <value>The selected studies were moved to the work queue for deletion.</value>
+  </data>
+  <data name="DeleteConfirmationSingle" xml:space="preserve">
+    <value>The selected study was moved to the work queue for deletion.</value>
+  </data>
+  <data name="DeviceAE" xml:space="preserve">
+    <value>DEVICEAE</value>
+  </data>
+  <data name="DeviceDefaultPort" xml:space="preserve">
+    <value>104</value>
+  </data>
+  <data name="DHCP" xml:space="preserve">
+    <value>DHCP</value>
+  </data>
+  <data name="DialogAddDeviceTitle" xml:space="preserve">
+    <value>Add Device</value>
+  </data>
+  <data name="DialogAddFileSystemTitle" xml:space="preserve">
+    <value>Add File System</value>
+  </data>
+  <data name="DialogAddPartitionTitle" xml:space="preserve">
+    <value>Add Partition</value>
+  </data>
+  <data name="DialogAddServerRuleTitle" xml:space="preserve">
+    <value>Add Server Rule</value>
+  </data>
+  <data name="DialogEditDeviceTitle" xml:space="preserve">
+    <value>Edit Device</value>
+  </data>
+  <data name="DialogEditFileSystemTitle" xml:space="preserve">
+    <value>Edit File System</value>
+  </data>
+  <data name="DialogEditPartitionTitle" xml:space="preserve">
+    <value>Edit Partition</value>
+  </data>
+  <data name="DialogEditServerRuleTitle" xml:space="preserve">
+    <value>Edit Server Rule</value>
+  </data>
+  <data name="Disabled" xml:space="preserve">
+    <value>Disabled</value>
+  </data>
+  <data name="Enabled" xml:space="preserve">
+    <value>Enabled</value>
+  </data>
+  <data name="GridPagerDeviceMultipleItems" xml:space="preserve">
+    <value>Devices Found</value>
+  </data>
+  <data name="GridPagerDeviceSingleItem" xml:space="preserve">
+    <value>Device Found</value>
+  </data>
+  <data name="GridPagerFileSystemMultipleItems" xml:space="preserve">
+    <value>File Systems found</value>
+  </data>
+  <data name="GridPagerFileSystemSingleItem" xml:space="preserve">
+    <value>File System found</value>
+  </data>
+  <data name="GridPagerLineSpacer" xml:space="preserve">
+    <value> | </value>
+  </data>
+  <data name="GridPagerNext" xml:space="preserve">
+    <value>next &gt;</value>
+  </data>
+  <data name="GridPagerPartitionMultipleItems" xml:space="preserve">
+    <value>Partitions Found</value>
+  </data>
+  <data name="GridPagerPartitionSingleItem" xml:space="preserve">
+    <value>Partition Found</value>
+  </data>
+  <data name="GridPagerPrevious" xml:space="preserve">
+    <value>&lt; previous</value>
+  </data>
+  <data name="GridPagerServerRulesMultipleItems" xml:space="preserve">
+    <value>Rules Found</value>
+  </data>
+  <data name="GridPagerServerRulesSingleItem" xml:space="preserve">
+    <value>Rule Found</value>
+  </data>
+  <data name="GridPagerServiceMultipleItems" xml:space="preserve">
+    <value>Services Found</value>
+  </data>
+  <data name="GridPagerServiceSingleItem" xml:space="preserve">
+    <value>Service Found</value>
+  </data>
+  <data name="GridPagerStudyMultipleItems" xml:space="preserve">
+    <value>Studies Found</value>
+  </data>
+  <data name="GridPagerStudySingleItem" xml:space="preserve">
+    <value>Study Found</value>
+  </data>
+  <data name="GridPagerWorkQueueMultipleItems" xml:space="preserve">
+    <value>Work Items Found</value>
+  </data>
+  <data name="GridPagerWorkQueueSingleItem" xml:space="preserve">
+    <value>Work Item Found</value>
+  </data>
+  <data name="MoveStudyMessage" xml:space="preserve">
+    <value>The following studies will be moved to {0}:</value>
+  </data>
+  <data name="MultipleArchiveQueueDelete" xml:space="preserve">
+    <value>Are you sure you want to delete these Archive Queue items?</value>
+  </data>
+  <data name="MultipleStudyIntegrityQueueDelete" xml:space="preserve">
+    <value>Are you sure you want to delete these items?</value>
+  </data>
+  <data name="MultipleRestoreQueueDelete" xml:space="preserve">
+    <value>Are you sure you want to delete these Restore Queue Items?</value>
+  </data>
+  <data name="MultipleStudyDelete" xml:space="preserve">
+    <value>Are you sure you want to delete the following studies?</value>
+  </data>
+  <data name="MultipleStudyRestore" xml:space="preserve">
+    <value>Are you sure you want to restore the following studies?</value>
+  </data>
+  <data name="NoDHCP" xml:space="preserve">
+    <value>No DHCP</value>
+  </data>
+  <data name="NotDefault" xml:space="preserve">
+    <value>Not Default</value>
+  </data>
+  <data name="ReprocessFailed" xml:space="preserve">
+    <value>The study could not be scheduled for reprocess. Please contact server administrator.</value>
+  </data>
+  <data name="ReprocessOK" xml:space="preserve">
+    <value>The study has been scheduled for reprocess.</value>
+  </data>
+  <data name="SelectedWorkQueueNoLongerOnTheList" xml:space="preserve">
+    <value>The item you selected is no longer on the list.&lt;br/&gt;It could have been modified by the system or another person.</value>
+  </data>
+  <data name="ServiceLockUpdate_Confirm_ServiceIsLocked" xml:space="preserve">
+    <value>This service lock is being used by the server.  Are you sure you want to edit it ?</value>
+  </data>
+  <data name="ServiceLockUpdateFailed_ContactAdmin" xml:space="preserve">
+    <value>Unable to update this service lock. Please contact the server administrator.</value>
+  </data>
+  <data name="SingleArchiveQueueDelete" xml:space="preserve">
+    <value>Are you sure you want to delete this Archive Queue item?</value>
+  </data>
+  <data name="SingleStudyIntegrityQueueDelete" xml:space="preserve">
+    <value>Are you sure you want to delete this Item?</value>
+  </data>
+  <data name="SingleRestoreQueueDelete" xml:space="preserve">
+    <value>Are you sure you want to delete this Restore Queue Item?</value>
+  </data>
+  <data name="SingleStudyDelete" xml:space="preserve">
+    <value>Are you sure you want to delete this study?</value>
+  </data>
+  <data name="SingleStudyRestore" xml:space="preserve">
+    <value>Are you sure you want to restore this study?</value>
+  </data>
+  <data name="StudyScheduledForDeletion" xml:space="preserve">
+    <value>This study has been scheduled for deletion.</value>
+  </data>
+  <data name="StudyScheduledForEdit" xml:space="preserve">
+    <value>This study has been scheduled for editing.</value>
+  </data>
+  <data name="Unknown" xml:space="preserve">
+    <value>Unknown</value>
+  </data>
+  <data name="WorkQueueBeingProcessed" xml:space="preserve">
+    <value>This work queue item is being processed. Try again later.</value>
+  </data>
+  <data name="WorkQueueBeingProcessed_CannotDelete" xml:space="preserve">
+    <value>Unable to delete this item. It is being processed by the server.</value>
+  </data>
+  <data name="WorkQueueBeingProcessed_CannotReschedule" xml:space="preserve">
+    <value>This item is being processed. It cannot be rescheduled at this point.&lt;br&gt;Please retry again later.</value>
+  </data>
+  <data name="WorkQueueDeleteConfirm" xml:space="preserve">
+    <value>Are you sure you want to delete this item from the queue?</value>
+  </data>
+  <data name="WorkQueueDeleteFailed" xml:space="preserve">
+    <value>Unable to delete this work queue item. Please contact server administrator.</value>
+  </data>
+  <data name="WorkQueueDeleteFailed_WithException" xml:space="preserve">
+    <value>Failed to delete this work queue item.&lt;br&gt;Error: {0}</value>
+  </data>
+  <data name="WorkQueueFailed_CannotReschedule" xml:space="preserve">
+    <value>This item has already failed. It cannot be rescheduled. Try reset it instead.</value>
+  </data>
+  <data name="WorkQueueNoLongerAvailable" xml:space="preserve">
+    <value>One or more items is no longer available.</value>
+  </data>
+  <data name="WorkQueueNotAvailable" xml:space="preserve">
+    <value>This work queue item is no longer available in the system</value>
+  </data>
+  <data name="WorkQueueRescheduleConfirm_ItemBeingProcessed" xml:space="preserve">
+    <value>Unable to reschedule the selected item because it is being processed.</value>
+  </data>
+  <data name="WorkQueueRescheduleConfirm_OneOrMoreAreBeingProcessed" xml:space="preserve">
+    <value>Unable to reschedule the selected item because it is being processed. </value>
+  </data>
+  <data name="WorkQueueRescheduleFailed_Exception" xml:space="preserve">
+    <value>Unable to reschedule this/these work queue item: {0}</value>
+  </data>
+  <data name="WorkQueueRescheduleFailed_ItemHasFailed" xml:space="preserve">
+    <value>Cannot reschedule this workqueue item because it has failed. Try reset it instead.</value>
+  </data>
+  <data name="WorkQueueRescheduleFailed_ItemNotAvailable" xml:space="preserve">
+    <value>One or more items you selected is no longer available and therefore will not be updated</value>
+  </data>
+  <data name="WorkQueueRescheduleFailed_MustBeInFuture" xml:space="preserve">
+    <value>Schedule start time must be in the future.</value>
+  </data>
+  <data name="WorkQueueResetConfirm" xml:space="preserve">
+    <value>Are you sure you want to reset this item to Pending?</value>
+  </data>
+  <data name="WorkQueueResetFailed" xml:space="preserve">
+    <value>Unable to reset this work queue item. Please contact server administrator.&lt;P&gt;{0}</value>
+  </data>
+  <data name="StudyScheduledForReconcile" xml:space="preserve">
+    <value>This study has been scheduled for reconciliation.</value>
+  </data>
+  <data name="StudyBeingProcessed" xml:space="preserve">
+    <value>This study is being processed.</value>
+  </data>
+  <data name="StudyIsNearline" xml:space="preserve">
+    <value>This study is not online.</value>
+  </data>
+  <data name="StudyRequiresReconcilie" xml:space="preserve">
+    <value>This study needs to be reconciled.</value>
+  </data>
+  <data name="AlertDeleteConfirm" xml:space="preserve">
+    <value>Are you sure you want to delete this item from the queue?</value>
+  </data>
+  <data name="GridPagerAlertMultipleItemsFound" xml:space="preserve">
+    <value>Alerts Found</value>
+  </data>
+  <data name="GridPagerAlertSingleItemFound" xml:space="preserve">
+    <value>Alert Found</value>
+  </data>
+  <data name="AlertDeleteAllConfirm" xml:space="preserve">
+    <value>Are you sure you want to delete all of the current Alert items? &lt;br/&gt;Only the alerts that are a result of the current search will be deleted.</value>
+  </data>
+  <data name="GridPagerApplicationLogMultipleItems" xml:space="preserve">
+    <value>Logs Found</value>
+  </data>
+  <data name="GridPagerApplicationLogSingleItem" xml:space="preserve">
+    <value>Log Found</value>
+  </data>
+  <data name="GridPagerUserMultipleItemsFound" xml:space="preserve">
+    <value>Users Found</value>
+  </data>
+  <data name="GridPagerUserSingleItemFound" xml:space="preserve">
+    <value>User Found</value>
+  </data>
+  <data name="GridPagerUserGroupsMultipleItemsFound" xml:space="preserve">
+    <value>Authority Groups Found</value>
+  </data>
+  <data name="GridPagerUserGroupsSingleItemFound" xml:space="preserve">
+    <value>Authority Group Found</value>
+  </data>
+  <data name="GridPagerAuthorityTokenMultipleItemsFound" xml:space="preserve">
+    <value>Authority Tokens Found</value>
+  </data>
+  <data name="GridPagerAuthorityTokenSingleItemFound" xml:space="preserve">
+    <value>Authority Token Found</value>
+  </data>
+  <data name="DialogAddTokenTitle" xml:space="preserve">
+    <value>Add Token</value>
+  </data>
+  <data name="DialogAddUserGroupTitle" xml:space="preserve">
+    <value>Add Authority Group</value>
+  </data>
+  <data name="DialogAddUserTitle" xml:space="preserve">
+    <value>Add User</value>
+  </data>
+  <data name="DialogEditTokenTitle" xml:space="preserve">
+    <value>Edit Token</value>
+  </data>
+  <data name="DialogEditUserGroupTitle" xml:space="preserve">
+    <value>Edit Authority Group</value>
+  </data>
+  <data name="DialogEditUserTitle" xml:space="preserve">
+    <value>Edit User</value>
+  </data>
+  <data name="ArchiveQueueNotAvailable" xml:space="preserve">
+    <value>This archive queue item is no longer available in the system</value>
+  </data>
+  <data name="ArchiveQueueBeingProcessed" xml:space="preserve">
+    <value>This archive queue item is being processed. Try again later.</value>
+  </data>
+  <data name="ArchiveQueueResetConfirm" xml:space="preserve">
+    <value>Are you sure you want to reset this item to Pending?</value>
+  </data>
+  <data name="ArchiveQueueResetFailed" xml:space="preserve">
+    <value>Unable to reset this archive queue item. Please contact server administrator.</value>
+  </data>
+  <data name="MultipleArchiveQueueResetConfirm" xml:space="preserve">
+    <value>Are you sure you want to reset these items to Pending?</value>
+  </data>
+  <data name="MultipleAlertDelete" xml:space="preserve">
+    <value>Are you sure you want to delete these Alert items?</value>
+  </data>
+  <data name="SingleAlertDelete" xml:space="preserve">
+    <value>Are you sure you want to delete this Alert item?</value>
+  </data>
+  <data name="MoveSeriesMessage" xml:space="preserve">
+    <value>The following series will be moved to {0}:</value>
+  </data>
+  <data name="DeleteSeriesMessage" xml:space="preserve">
+    <value>Are you sure you want to delete the following series?</value>
+  </data>
+  <data name="CustomReason" xml:space="preserve">
+    <value>-- Custom Reason --</value>
+  </data>
+  <data name="CustomReasonComment" xml:space="preserve">
+    <value>Enter Custom Reason Comment</value>
+  </data>
+  <data name="SelectAll" xml:space="preserve">
+    <value>-- Select All --</value>
+  </data>
+  <data name="SelectOne" xml:space="preserve">
+    <value>-- Select One --</value>
+  </data>
+  <data name="NoFiltersSearchWarning" xml:space="preserve">
+    <value>With no filters specified, this search may return a large number of studies.&lt;br/&gt;Are you sure you want to continue?</value>
+  </data>
+  <data name="NonStandardInstallation" xml:space="preserve">
+    <value>The installation has been modified.</value>
+  </data>
+  <data name="NoPartitionAvailable" xml:space="preserve">
+    <value>No server partition has been set up or you do not have the permission to access any partitions.</value>
+  </data>
+  <data name="NoStudiesFound" xml:space="preserve">
+    <value>No studies found matching the provided criteria.</value>
+  </data>
+  <data name="PleaseEnterSearchCriteriaToFindStudies" xml:space="preserve">
+    <value>Please enter search criteria to find studies.</value>
+  </data>
+  <data name="AreYouSureToReprocessThisStudy" xml:space="preserve">
+    <value>Are you sure you want to reprocess this study?</value>
+  </data>
+  <data name="ReprocessStudyViaGUI" xml:space="preserve">
+    <value>Reprocess Study via GUI</value>
+  </data>
+  <data name="NotAvailable" xml:space="preserve">
+    <value>N/A</value>
+  </data>
+  <data name="SeriesDetails_NoSeriesForThisStudy" xml:space="preserve">
+    <value>No Series Items for this study.</value>
+  </data>
+  <data name="StudyDetails_NoWorkQueueForThisStudy" xml:space="preserve">
+    <value>No Work Queue items for this study.</value>
+  </data>
+  <data name="StudyDetails_NoArchiveQueueItemForThisStudy" xml:space="preserve">
+    <value>No Archive Queue items for this study.</value>
+  </data>
+  <data name="StudyDetails_NoFileSystemForThisStudy" xml:space="preserve">
+    <value>No File System Queue items for this study.</value>
+  </data>
+  <data name="StudyDetails_NoHistoryItemForThisStudy" xml:space="preserve">
+    <value>No history record exists for this study.</value>
+  </data>
+  <data name="StudyDetails_NoSIQForThisStudy" xml:space="preserve">
+    <value>No reconcile items for this study.</value>
+  </data>
+  <data name="StudyDetails_NoStudyStorageForThisStudy" xml:space="preserve">
+    <value>No Study Storage details for this study.</value>
+  </data>
+  <data name="StudyDetails_NoArchiveStudyStorageForThisStudy" xml:space="preserve">
+    <value>No Archive Study Storage items for this study.</value>
+  </data>
+  <data name="StudyDetails_StudyWasNoChanged" xml:space="preserve">
+    <value>Study was not modified</value>
+  </data>
+  <data name="StudyDetails_WebEdit_Description" xml:space="preserve">
+    <value>Edited using Web GUI</value>
+  </data>
+  <data name="NoneSpecified" xml:space="preserve">
+    <value>None Specified</value>
+  </data>
+  <data name="EditBy" xml:space="preserve">
+    <value>{0} by {1}</value>
+  </data>
+  <data name="StudyDetails_Reconcile_Discard_Description" xml:space="preserve">
+    <value>Discarded conflicting images</value>
+  </data>
+  <data name="StudyDetails_Reconcile_Merge_Description" xml:space="preserve">
+    <value>Merged study and conflicting images</value>
+  </data>
+  <data name="StudyDetails_Reconcile_NewStudy_Description" xml:space="preserve">
+    <value>Created new study from conflicting images</value>
+  </data>
+  <data name="StudyDetails_Reconcile_ProcessAsIs_Description" xml:space="preserve">
+    <value>Processed the images normally</value>
+  </data>
+  <data name="StudyDetails_History_Reconcile_PerformedBy" xml:space="preserve">
+    <value>Performed By {0}</value>
+  </data>
+  <data name="StudyDetails_History_Reconcile_ReprocessedBecause" xml:space="preserve">
+    <value>Study was reprocessed. Reason: {0}</value>
+  </data>
+  <data name="StudyDetails_History_Reconcile_ReprocessedByBecause" xml:space="preserve">
+    <value>Study was reprocessed by {0}. Reason: {1}</value>
+  </data>
+  <data name="StudyDetails_NoSeriesForThisStudy" xml:space="preserve">
+    <value>This study does not contain any series.</value>
+  </data>
+  <data name="Days" xml:space="preserve">
+    <value>Days</value>
+  </data>
+  <data name="Female" xml:space="preserve">
+    <value>Female</value>
+  </data>
+  <data name="Male" xml:space="preserve">
+    <value>Male</value>
+  </data>
+  <data name="Months" xml:space="preserve">
+    <value>Months</value>
+  </data>
+  <data name="Other" xml:space="preserve">
+    <value>Other</value>
+  </data>
+  <data name="Weeks" xml:space="preserve">
+    <value>Weeks</value>
+  </data>
+  <data name="Years" xml:space="preserve">
+    <value>Years</value>
+  </data>
+  <data name="StudyDetails_History_Duplicate_PerformedBy" xml:space="preserve">
+    <value>Performed by {0}</value>
+  </data>
+  <data name="StudyDetails_History_MultipleSeriesDeletedBy" xml:space="preserve">
+    <value>{0} series were deleted by {1}</value>
+  </data>
+  <data name="StudyDetails_History_OneSeriesDeletedBy" xml:space="preserve">
+    <value>{0} series was deleted by {1}</value>
+  </data>
+  <data name="NoDevicesWereFound" xml:space="preserve">
+    <value>No devices were found using the provided criteria.</value>
+  </data>
+  <data name="StudyDetails_History_Duplicate_Delete" xml:space="preserve">
+    <value>Delete duplicate SOPs.</value>
+  </data>
+  <data name="StudyDetails_History_Duplicate_OverwriteAsIs" xml:space="preserve">
+    <value>Overwrite existing SOPs and preserve data in duplicates.</value>
+  </data>
+  <data name="StudyDetails_History_Duplicate_OverwriteWithDuplicateData" xml:space="preserve">
+    <value>Overwrite existing SOPs and update study with information in duplicates.</value>
+  </data>
+  <data name="StudyDetails_History_Duplicate_OverwriteWithExistingData" xml:space="preserve">
+    <value>Overwrite existing SOPs and use the existing study information.</value>
+  </data>
+  <data name="NoStudiesWereFound" xml:space="preserve">
+    <value>No studies were found using the provided criteria.</value>
+  </data>
+  <data name="Date" xml:space="preserve">
+    <value>Date</value>
+  </data>
+  <data name="NoWorkQueueFound" xml:space="preserve">
+    <value>No work queue items found matching the provided criteria.</value>
+  </data>
+  <data name="Time" xml:space="preserve">
+    <value>Time</value>
+  </data>
+  <data name="WorkQueuePleaseEnterSearchCritera" xml:space="preserve">
+    <value>Please enter search criteria to find work queue items.</value>
+  </data>
+  <data name="WorkQueueSuccessfullyDeleted" xml:space="preserve">
+    <value>The item has been successfully deleted from the Work Queue.</value>
+  </data>
+  <data name="AccessionNumber" xml:space="preserve">
+    <value>Accession #</value>
+  </data>
+  <data name="AlertNoStudyInformationForThisItem" xml:space="preserve">
+    <value>There is no study information for this item.</value>
+  </data>
+  <data name="NoAlertsFound" xml:space="preserve">
+    <value>No alerts were found using the provided criteria.</value>
+  </data>
+  <data name="NoArchiveQueueItemFound" xml:space="preserve">
+    <value>No items were found using the provided criteria</value>
+  </data>
+  <data name="NoRestoreQueueItemFound" xml:space="preserve">
+    <value>No items were found using the provided criteria.</value>
+  </data>
+  <data name="Partition" xml:space="preserve">
+    <value>Partition</value>
+  </data>
+  <data name="PatientID" xml:space="preserve">
+    <value>Patient ID</value>
+  </data>
+  <data name="PatientName" xml:space="preserve">
+    <value>Patient Name</value>
+  </data>
+  <data name="RestoreQueuePleaseEnterSearchCriteria" xml:space="preserve">
+    <value>Please enter the search criteria to search for entries.</value>
+  </data>
+  <data name="StudyDate" xml:space="preserve">
+    <value>Study Date</value>
+  </data>
+  <data name="StudyInstanceUID" xml:space="preserve">
+    <value>Study Instance UID</value>
+  </data>
+  <data name="LogLevelError" xml:space="preserve">
+    <value>ERROR</value>
+  </data>
+  <data name="LogLevelInfo" xml:space="preserve">
+    <value>INFO</value>
+  </data>
+  <data name="LogLevelWarning" xml:space="preserve">
+    <value>WARN</value>
+  </data>
+  <data name="AppLogNotFound" xml:space="preserve">
+    <value>No log entries found matching the provided criteria.</value>
+  </data>
+  <data name="LogLevelAny" xml:space="preserve">
+    <value>-- ANY --</value>
+  </data>
+  <data name="AppLogPleaseEnterSearchCriteria" xml:space="preserve">
+    <value>Please enter search criteria to find log entries.</value>
+  </data>
+  <data name="AdminDeletedStudies_CheckPartitionConfiguration" xml:space="preserve">
+    <value>Check Server Partition configuration to ensure a copy of the study is maintained after deletion.</value>
+  </data>
+  <data name="AdminDeletedStudies_DeleteConfirmationDialog_AreYouSure" xml:space="preserve">
+    <value>Are you sure you want to delete this record? You will have to delete all backup files manually.</value>
+  </data>
+  <data name="AdminDeletedStudies_ModifySearchCriteria" xml:space="preserve">
+    <value>Modify your search criteria.</value>
+  </data>
+  <data name="AdminDeletedStudies_NoStudiesFound" xml:space="preserve">
+    <value>No studies found using the provided criteria.</value>
+  </data>
+  <data name="AdminDeletedStudies_StudyWasNotArchived" xml:space="preserve">
+    <value>This study had not been archived at the time it was deleted.</value>
+  </data>
+  <data name="AdminDevices_DeleteDevice_AreYouSure" xml:space="preserve">
+    <value>Are you sure you want to remove {0} from partition {1}?</value>
+  </data>
+  <data name="AdminDevices_ThrottleSettings_Info" xml:space="preserve">
+    <value>Specify the maximum number of simultaneous connections Image Server can initiate for this device.</value>
+  </data>
+  <data name="AdminFilesystem_NoFilesystemFound" xml:space="preserve">
+    <value>No file systems were found using the provided criteria.</value>
+  </data>
+  <data name="AdminPartitionArchive_AddEditDialog_ArchiveNameDefaultText" xml:space="preserve">
+    <value>Partition Archive Name</value>
+  </data>
+  <data name="AdminPartitionArchive_DeleteDialog_AreYouSure" xml:space="preserve">
+    <value>Are you sure you want to delete partition archive "{0}" and all related settings permanently?</value>
+  </data>
+  <data name="AdminPartitionArchive_NoArchiveFound" xml:space="preserve">
+    <value>No partition archives were found using the provided criteria.</value>
+  </data>
+  <data name="Hours" xml:space="preserve">
+    <value>Hours</value>
+  </data>
+  <data name="AdminPartition_AddEditDialog_StudyMatchingInfo" xml:space="preserve">
+    <value>Incoming studies will be placed in the Study Integrity Queue if the Study Instance UID matches an existing study and the data differs from any of the selected criteria below.</value>
+  </data>
+  <data name="AdminPartition_NoPartitionsFound" xml:space="preserve">
+    <value>No server partitions were found using the provided criteria.</value>
+  </data>
+  <data name="AdminPartition_DeletePartitionDialog_AreYouSure" xml:space="preserve">
+    <value>It's recommended that you disable the partition instead of deleting it.
+
+Are you sure you still want to delete partition {0} and all related settings permanently?</value>
+  </data>
+  <data name="AdminPartition_DeletePartition_Successful_AddOneNow" xml:space="preserve">
+    <value>Server partition {0} has been removed.
+
+At least one server partition is required. Please add a new server partition.</value>
+  </data>
+  <data name="AdminServerRules_DeleteDialog_AreYouSure" xml:space="preserve">
+    <value>Are you sure you want to remove rule "{0}" from partition {1}?</value>
+  </data>
+  <data name="NoServerRulesFound" xml:space="preserve">
+    <value>No server rules were found using the provided criteria.</value>
+  </data>
+  <data name="NoServicesFound" xml:space="preserve">
+    <value>No services were found using the provided criteria</value>
+  </data>
+  <data name="NoUserGroupsFound" xml:space="preserve">
+    <value>No Authority Groups were found using the provided criteria.</value>
+  </data>
+  <data name="AdminUserGroups_DeleteDialog_AreYouSure" xml:space="preserve">
+    <value>Are you sure you want to delete authority group "{0}"?</value>
+  </data>
+  <data name="AdminUser_DeleteDialog_AreYouSure" xml:space="preserve">
+    <value>Are you sure to delete user "{0}" ({1})?</value>
+  </data>
+  <data name="AdminUser_PasswordReset" xml:space="preserve">
+    <value>Password for {0} has been reset.</value>
+  </data>
+  <data name="NoUsersFound" xml:space="preserve">
+    <value>No users were found using the provided criteria.</value>
+  </data>
+  <data name="NoSIQItemsFound" xml:space="preserve">
+    <value>No items were found using the provided criteria.</value>
+  </data>
+  <data name="SIQ_ReconcileDuplicateDialog_UseDuplicateWarning" xml:space="preserve">
+    <value>WARNING: Duplicates contain information which does not match the existing study. The information in the study (and all existing images) will be replaced.</value>
+  </data>
+  <data name="SIQ_ReconcileDuplicateDialog_UseExistingWarning" xml:space="preserve">
+    <value>WARNING: Duplicates contain information which does not match the existing study. This information will be lost when the existing SOPs are overwritten.</value>
+  </data>
+  <data name="NotSpecified" xml:space="preserve">
+    <value>Not Specified</value>
+  </data>
+  <data name="ForFurtherAssistanceTryTheFollowingLinks" xml:space="preserve">
+    <value>For further assistance, try the following links:</value>
+  </data>
+  <data name="ImageServerDevelopersForum" xml:space="preserve">
+    <value>ImageServer Developers Forum</value>
+  </data>
+  <data name="ImageServerUsersForum" xml:space="preserve">
+    <value>ImageServer Users Forum</value>
+  </data>
+  <data name="YourPasswordHasExpired" xml:space="preserve">
+    <value>Your password has expired, or this is your first login to the ImageServer. Please enter a new password below.</value>
+  </data>
+  <data name="WebViewerMutipleMatchingStudiesFound" xml:space="preserve">
+    <value>Multiple matching studies have been found. Please select a study to view.</value>
+  </data>
+  <data name="SessionTimeoutCountdownMessage" xml:space="preserve">
+    <value>No activity is detected. For security reasons, this session will end in {0} seconds.</value>
+  </data>
+  <data name="SIQ_DataMayBeTruncated" xml:space="preserve">
+    <value>Conflicting images contain information which is too long and will be truncated</value>
+  </data>
+  <data name="AdminUserGroup_DeleteNonEmptyGroupDialog_AreYouSure" xml:space="preserve">
+    <value>{0} Are you sure you want to delete this group?</value>
+    <comment>{0} is a reason for the message. For eg: the group contains one or more users.</comment>
+  </data>
+  <data name="DialogAddDataRuleTitle" xml:space="preserve">
+    <value>Add Data Access Rule</value>
+  </data>
+  <data name="DialogEditDataRuleTitle" xml:space="preserve">
+    <value>Edit Data Access Rule</value>
+  </data>
+  <data name="StudyDetails_NoAuthorityGroupsForThisStudy" xml:space="preserve">
+    <value>No Data Access Authority Groups assigned to this study.</value>
+  </data>
+  <data name="AddEditUserGroups_DataAccessChanged" xml:space="preserve">
+    <value>Disabling data access for an authority group removes the association between the authority group and imaging studies.  Users associated with the authority group will no longer be able to see their imaging studies.  Please re-enter your password to confirm this change.</value>
+  </data>
+  <data name="AddEditUserGroupsDialog_InvalidPassword" xml:space="preserve">
+    <value>Unable to update Authority Group, the password entered is incorrect.</value>
+  </data>
+  <data name="AddEditUserGroups_PasswordConfirmTitle" xml:space="preserve">
+    <value>Please Confirm Update</value>
+  </data>
+  <data name="WarningEditStudyWithAttachment" xml:space="preserve">
+    <value>Warning: this study contains attachment(s) which must be examined AFTER the edit to ensure all information is consistent.</value>
+  </data>
+  <data name="CCDocumentation" xml:space="preserve">
+    <value>ClearCanvas Documentation</value>
+  </data>
+  <data name="CCImageServerUsersGuide" xml:space="preserve">
+    <value>ImageServer User's Guide</value>
+  </data>
+  <data name="AddEditUserGroups_DataAccessChangedDelayWarning" xml:space="preserve">
+    <value>Note: This change may not take effect immediately.</value>
+  </data>
+  <data name="AdminPartition_DataAccess_PleaseSelect" xml:space="preserve">
+    <value>Select authority groups that will be granted access to this partition.</value>
+  </data>
+  <data name="NoPartitionCreated" xml:space="preserve">
+    <value>No server partition has been created.</value>
+  </data>
+  <data name="ContactAdmin" xml:space="preserve">
+    <value>Please contact the administrators.</value>
+  </data>
+  <data name="AdminPartition_DataAccess_WarningAllStudiesAccess" xml:space="preserve">
+    <value>authority group with access to all studies on accessible partitions</value>
+    <comment>Legend that explains what the "*" beside the group means</comment>
+  </data>
+  <data name="StudyDetails_WebServiceEdit_Description" xml:space="preserve">
+    <value>Edited by external web service</value>
+  </data>
+  <data name="HighWatermark" xml:space="preserve">
+    <value>High watermark</value>
+  </data>
+  <data name="LowWatermark" xml:space="preserve">
+    <value>Low watermark</value>
+  </data>
+  <data name="EmptySearchResult_Suggestions" xml:space="preserve">
+    <value>Suggestions:</value>
+  </data>
+  <data name="WorkQueueDeleteConfirmExternalEdit" xml:space="preserve">
+    <value>Removing an External Edit WorkQueue entry may cause the demographics for the study to be incorrect.  Are you sure you want to delete this item from the queue?</value>
+  </data>
+  <data name="StudyDetails_UpdatableDataAccessGroupListingSectionTitle" xml:space="preserve">
+    <value>The following Data Access authority group(s) currently have access to this study:</value>
+  </data>
+  <data name="StudyDetails_NonUpdatableGroupListingSectionTitle" xml:space="preserve">
+    <value>The following authority group(s) also have access to this study due to administrative tokens:</value>
+  </data>
+  <data name="StudyDetails_JumpToNonUpdatableGroupListingSectionLink" xml:space="preserve">
+    <value>Jump to other authority groups</value>
+  </data>
+  <data name="Example" xml:space="preserve">
+    <value>e.g. {0}</value>
+  </data>
+  <data name="ServerModeArchive" xml:space="preserve">
+    <value>This server is configured with a Partition Archive and will store studies permanently.</value>
+  </data>
+  <data name="ServerModeMixedMode" xml:space="preserve">
+    <value>This server is configured with a Partition Archive and as a temporary cache.</value>
+  </data>
+  <data name="ServerModeTemporaryCache" xml:space="preserve">
+    <value>This server is configured to operate as a temporary cache.</value>
+  </data>
+  <data name="PartitionStorageConfiguration_ArchiveConfiguredNoDeleteRule" xml:space="preserve">
+    <value>Archive exists, studies may become nearline.</value>
+  </data>
+  <data name="PartitionStorageConfiguration_DeleteRuleExists" xml:space="preserve">
+    <value>Delete rule enabled, older studies may be deleted.</value>
+  </data>
+  <data name="PartitionStorageConfiguration_NoArchiveConfiguredNoDeleteRule" xml:space="preserve">
+    <value>New processed studies will now be kept online.</value>
+  </data>
+  <data name="WorkQueueDeleteWarning" xml:space="preserve">
+    <value>Warning: deleting this WorkQueue item may result in loss of images or incorrect study information!</value>
+  </data>
+</root>

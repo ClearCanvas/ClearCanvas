@@ -1,0 +1,223 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<specifications>
+  
+  <!--
+    Verify setting the 'test' expression.
+    This should succeed for *all* specification operators, but
+    we can only test it on the built-in operators. 
+  -->
+  <spec id="testExpression">
+    <true test="XXX"/>
+    <false test="XXX"/>
+    <null test="XXX"/>
+    <not-null test="XXX"/>
+    <regex test="XXX" pattern="XXX"/>
+    <equal test="XXX" refValue="XXX"/>
+    <not-equal test="XXX" refValue="XXX"/>
+    <greater-than test="XXX" refValue="XXX"/>
+    <less-than test="XXX" refValue="XXX"/>
+    <count test="XXX"/>
+    <and test="XXX">
+      <true/>
+    </and>
+    <or test="XXX">
+      <true/>
+    </or>
+    <each test="XXX">
+      <true/>
+    </each>
+    <any test="XXX">
+      <true/>
+    </any>
+    <case test="XXX">
+      <else>
+        <true/>
+      </else>
+    </case>
+  </spec>
+
+  <!--
+    Verify setting the 'failMessage' expression.
+    This should succeed for *all* specification operators, but
+    we can only test it on the built-in operators. 
+  -->
+  <spec id="failMessage">
+    <true failMessage="XXX"/>
+    <false failMessage="XXX"/>
+    <null failMessage="XXX"/>
+    <not-null failMessage="XXX"/>
+    <regex failMessage="XXX" pattern="XXX"/>
+    <equal failMessage="XXX" refValue="XXX"/>
+    <not-equal failMessage="XXX" refValue="XXX"/>
+    <greater-than failMessage="XXX" refValue="XXX"/>
+    <less-than failMessage="XXX" refValue="XXX"/>
+    <count failMessage="XXX"/>
+    <and failMessage="XXX">
+      <true/>
+    </and>
+    <or failMessage="XXX">
+      <true/>
+    </or>
+    <each failMessage="XXX">
+      <true/>
+    </each>
+    <any failMessage="XXX">
+      <true/>
+    </any>
+    <case failMessage="XXX">
+      <else>
+        <true/>
+      </else>
+    </case>
+  </spec>
+
+  <!-- true/false -->
+  <spec id="true_default">
+    <true/>
+  </spec>
+  <spec id="false_default">
+    <false/>
+  </spec>
+  
+  <!-- null/not-null -->
+  <spec id="null_default">
+    <null/>
+  </spec>
+  <spec id="notNull_default">
+    <not-null/>
+  </spec>
+  
+  <!-- regex -->
+  <spec id="regex_default">
+    <regex pattern="XXX"/>
+  </spec>
+  <spec id="regex_options1">
+    <regex pattern="XXX" ignoreCase="false" nullMatches="false"/>
+  </spec>
+  <spec id="regex_options2">
+    <regex pattern="XXX" ignoreCase="true" nullMatches="true"/>
+  </spec>
+  <spec id="regex_missingPattern">
+    <regex ignoreCase="true" nullMatches="true"/>
+  </spec>
+  
+  <!-- equal-->
+  <spec id="equal_default">
+    <equal refValue="XXX"/>
+  </spec>
+  <spec id="equal_missingRefValue">
+    <equal/>
+  </spec>
+  
+  <!-- not equal -->
+  <spec id="notEqual_default">
+    <not-equal refValue="XXX"/>
+  </spec>
+  <spec id="notEqual_missingRefValue">
+    <not-equal/>
+  </spec>
+  
+  <!-- greater than -->
+  <spec id="greaterThan_default">
+    <greater-than refValue="XXX"/>
+  </spec>
+  <spec id="greaterThan_options1">
+    <greater-than refValue="XXX" inclusive="false"/>
+  </spec>
+  <spec id="greaterThan_options2">
+    <greater-than refValue="XXX" inclusive="true"/>
+  </spec>
+  <spec id="greaterThan_missingRefValue">
+    <greater-than/>
+  </spec>
+  
+  <!-- less than -->
+  <spec id="lessThan_default">
+    <less-than refValue="XXX"/>
+  </spec>
+  <spec id="lessThan_options1">
+    <less-than refValue="XXX" inclusive="false"/>
+  </spec>
+  <spec id="lessThan_options2">
+    <less-than refValue="XXX" inclusive="true"/>
+  </spec>
+  <spec id="lessThan_missingRefValue">
+    <less-than/>
+  </spec>
+  
+  <!-- count -->
+  <spec id="count_default">
+    <count/>
+  </spec>
+  <spec id="count_options1">
+    <count min="1"/>
+  </spec>
+  <spec id="count_options2">
+    <count max="2"/>
+  </spec>
+  <spec id="count_options3">
+    <count min="1" max="2"/>
+  </spec>
+  <spec id="count_filtered">
+    <count min="1" max="2">
+      <true/>
+    </count>
+  </spec>
+  
+  <!-- and-->
+  <spec id="and_default">
+    <and>
+      <true/>
+      <false/>
+    </and>
+  </spec>
+  <spec id="and_implicit">
+    <true/>
+    <false/>
+  </spec>
+  <spec id="and_empty">
+    <and/>
+  </spec>
+  
+  <!-- or -->
+  <spec id="or_default">
+    <or>
+      <true/>
+      <false/>
+    </or>
+  </spec>
+  <spec id="or_empty">
+    <or/>
+  </spec>
+
+  <!-- not -->
+  <spec id="not_default">
+	<not>
+	  <true/>
+	  <false/>
+	</not>
+  </spec>
+  <spec id="not_missingElement">
+	<not/>
+  </spec>
+
+<!-- each -->
+  <spec id="each_default">
+    <each>
+      <true/>
+    </each>
+  </spec>
+  <spec id="each_missingElement">
+    <each/>
+  </spec>
+  
+  <!-- any -->
+  <spec id="any_default">
+    <any>
+      <true/>
+    </any>
+  </spec>
+  <spec id="any_missingElement">
+    <any/>
+  </spec>
+</specifications> 

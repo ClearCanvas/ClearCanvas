@@ -1,0 +1,15 @@
+<VSTemplate Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005" Type="Item">
+  <TemplateData>
+    <DefaultName>RequestResponse</DefaultName>
+    <Name>ClearCanvas Request-Response</Name>
+    <Description>&lt;No description available&gt;</Description>
+    <ProjectType>CSharp</ProjectType>
+    <SortOrder>10</SortOrder>
+    <Icon>__TemplateIcon.ico</Icon>
+  </TemplateData>
+  <TemplateContent>
+    <References />
+    <ProjectItem SubType="Code" TargetFileName="$fileinputname$Request.cs" ReplaceParameters="true">Request.cs</ProjectItem>
+    <ProjectItem SubType="Code" TargetFileName="$fileinputname$Response.cs" ReplaceParameters="true">Response.cs</ProjectItem>
+  </TemplateContent>
+</VSTemplate>

@@ -1,0 +1,25 @@
+﻿<NUnitProject>
+  <Settings activeconfig="Debug" />
+  <Config name="Debug" binpathtype="Auto">
+    <assembly path="ShredHostService\bin\Debug\common\ClearCanvas.Dicom.dll" />
+    <assembly path="ShredHostService\bin\Debug\common\ClearCanvas.Common.dll" />
+    <assembly path="ShredHostService\bin\Debug\plugins\ClearCanvas.Dicom.Codec.Jpeg.dll" />
+    <assembly path="ShredHostService\bin\Debug\plugins\ClearCanvas.Dicom.Codec.Rle.dll" />
+    <assembly path="ShredHostService\bin\Debug\plugins\ClearCanvas.Enterprise.Common.dll" />
+    <assembly path="ShredHostService\bin\Debug\plugins\ClearCanvas.Enterprise.Core.dll" />
+    <assembly path="ShredHostService\bin\Debug\plugins\ClearCanvas.ImageServer.Common.dll" />
+    <assembly path="ShredHostService\bin\Debug\plugins\ClearCanvas.ImageServer.Core.dll" />
+    <assembly path="ShredHostService\bin\Debug\plugins\ClearCanvas.ImageServer.Enterprise.dll" />
+    <assembly path="ShredHostService\bin\Debug\plugins\ClearCanvas.ImageServer.Rules.dll" />
+    <assembly path="ShredHostService\bin\Debug\plugins\ClearCanvas.ImageServer.Services.Archiving.dll" />
+    <assembly path="ShredHostService\bin\Debug\plugins\ClearCanvas.ImageServer.Services.Archiving.Hsm.dll" />
+    <assembly path="ShredHostService\bin\Debug\plugins\ClearCanvas.ImageServer.Services.Common.dll" />
+    <assembly path="ShredHostService\bin\Debug\plugins\ClearCanvas.ImageServer.Services.Dicom.dll" />
+    <assembly path="ShredHostService\bin\Debug\plugins\ClearCanvas.ImageServer.Services.Streaming.dll" />
+    <assembly path="ShredHostService\bin\Debug\plugins\ClearCanvas.ImageServer.Services.ServiceLock.dll" />
+    <assembly path="ShredHostService\bin\Debug\plugins\ClearCanvas.ImageServer.Services.WorkQueue.dll" />
+    <assembly path="ShredHostService\bin\Debug\plugins\ClearCanvas.ImageServer.Utilities.dll" />
+    <assembly path="ShredHostService\bin\Debug\plugins\ClearCanvas.Utilities.Manifest.dll" />
+  </Config>
+  <Config name="Release" binpathtype="Auto" />
+</NUnitProject>

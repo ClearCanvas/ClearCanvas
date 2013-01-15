@@ -1,0 +1,681 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="_imageExporters.LabelText" xml:space="preserve">
+    <value>Export As</value>
+  </data>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="_imageExporters.Location" type="System.Drawing.Point, System.Drawing">
+    <value>12, 11</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="_imageExporters.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 2, 2, 2</value>
+  </data>
+  <data name="_imageExporters.Size" type="System.Drawing.Size, System.Drawing">
+    <value>315, 41</value>
+  </data>
+  <assembly alias="mscorlib" name="mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="_imageExporters.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;_imageExporters.Name" xml:space="preserve">
+    <value>_imageExporters</value>
+  </data>
+  <data name="&gt;&gt;_imageExporters.Type" xml:space="preserve">
+    <value>ClearCanvas.Desktop.View.WinForms.ComboBoxField, ClearCanvas.Desktop.View.WinForms, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;_imageExporters.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;_imageExporters.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="_buttonConfigure.Location" type="System.Drawing.Point, System.Drawing">
+    <value>257, 57</value>
+  </data>
+  <data name="_buttonConfigure.Size" type="System.Drawing.Size, System.Drawing">
+    <value>70, 23</value>
+  </data>
+  <data name="_buttonConfigure.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="_buttonConfigure.Text" xml:space="preserve">
+    <value>Configure</value>
+  </data>
+  <data name="&gt;&gt;_buttonConfigure.Name" xml:space="preserve">
+    <value>_buttonConfigure</value>
+  </data>
+  <data name="&gt;&gt;_buttonConfigure.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_buttonConfigure.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;_buttonConfigure.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="_buttonOk.Location" type="System.Drawing.Point, System.Drawing">
+    <value>183, 6</value>
+  </data>
+  <data name="_buttonOk.Size" type="System.Drawing.Size, System.Drawing">
+    <value>70, 23</value>
+  </data>
+  <data name="_buttonOk.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="_buttonOk.Text" xml:space="preserve">
+    <value>Ok</value>
+  </data>
+  <data name="&gt;&gt;_buttonOk.Name" xml:space="preserve">
+    <value>_buttonOk</value>
+  </data>
+  <data name="&gt;&gt;_buttonOk.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_buttonOk.Parent" xml:space="preserve">
+    <value>_pnlDialogButtons</value>
+  </data>
+  <data name="&gt;&gt;_buttonOk.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="_buttonCancel.Location" type="System.Drawing.Point, System.Drawing">
+    <value>259, 6</value>
+  </data>
+  <data name="_buttonCancel.Size" type="System.Drawing.Size, System.Drawing">
+    <value>70, 23</value>
+  </data>
+  <data name="_buttonCancel.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="_buttonCancel.Text" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="&gt;&gt;_buttonCancel.Name" xml:space="preserve">
+    <value>_buttonCancel</value>
+  </data>
+  <data name="&gt;&gt;_buttonCancel.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_buttonCancel.Parent" xml:space="preserve">
+    <value>_pnlDialogButtons</value>
+  </data>
+  <data name="&gt;&gt;_buttonCancel.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="_checkOptionCompleteImage.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="_checkOptionCompleteImage.Location" type="System.Drawing.Point, System.Drawing">
+    <value>162, 19</value>
+  </data>
+  <data name="_checkOptionCompleteImage.Size" type="System.Drawing.Size, System.Drawing">
+    <value>101, 17</value>
+  </data>
+  <data name="_checkOptionCompleteImage.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="_checkOptionCompleteImage.Text" xml:space="preserve">
+    <value>Complete Image</value>
+  </data>
+  <data name="&gt;&gt;_checkOptionCompleteImage.Name" xml:space="preserve">
+    <value>_checkOptionCompleteImage</value>
+  </data>
+  <data name="&gt;&gt;_checkOptionCompleteImage.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_checkOptionCompleteImage.Parent" xml:space="preserve">
+    <value>_groupFieldOfView</value>
+  </data>
+  <data name="&gt;&gt;_checkOptionCompleteImage.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="_checkOptionWysiwyg.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="_checkOptionWysiwyg.Location" type="System.Drawing.Point, System.Drawing">
+    <value>16, 19</value>
+  </data>
+  <data name="_checkOptionWysiwyg.Size" type="System.Drawing.Size, System.Drawing">
+    <value>79, 17</value>
+  </data>
+  <data name="_checkOptionWysiwyg.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="_checkOptionWysiwyg.Text" xml:space="preserve">
+    <value>WYSIWYG</value>
+  </data>
+  <data name="&gt;&gt;_checkOptionWysiwyg.Name" xml:space="preserve">
+    <value>_checkOptionWysiwyg</value>
+  </data>
+  <data name="&gt;&gt;_checkOptionWysiwyg.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_checkOptionWysiwyg.Parent" xml:space="preserve">
+    <value>_groupFieldOfView</value>
+  </data>
+  <data name="&gt;&gt;_checkOptionWysiwyg.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="_groupFieldOfView.Location" type="System.Drawing.Point, System.Drawing">
+    <value>12, 86</value>
+  </data>
+  <data name="_groupFieldOfView.Size" type="System.Drawing.Size, System.Drawing">
+    <value>315, 49</value>
+  </data>
+  <data name="_groupFieldOfView.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="_groupFieldOfView.Text" xml:space="preserve">
+    <value>Field of View</value>
+  </data>
+  <data name="&gt;&gt;_groupFieldOfView.Name" xml:space="preserve">
+    <value>_groupFieldOfView</value>
+  </data>
+  <data name="&gt;&gt;_groupFieldOfView.Type" xml:space="preserve">
+    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_groupFieldOfView.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;_groupFieldOfView.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="_scale.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="_scale.Size" type="System.Drawing.Size, System.Drawing">
+    <value>68, 20</value>
+  </data>
+  <data name="_scale.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;_scale.Name" xml:space="preserve">
+    <value>_scale</value>
+  </data>
+  <data name="&gt;&gt;_scale.Type" xml:space="preserve">
+    <value>ClearCanvas.Desktop.View.WinForms.NonEmptyNumericUpDown, ClearCanvas.Desktop.View.WinForms, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;_scale.Parent" xml:space="preserve">
+    <value>_pnlScale</value>
+  </data>
+  <data name="&gt;&gt;_scale.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="_pnlDialogButtons.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Bottom</value>
+  </data>
+  <data name="_pnlDialogButtons.FlowDirection" type="System.Windows.Forms.FlowDirection, System.Windows.Forms">
+    <value>RightToLeft</value>
+  </data>
+  <data name="_pnlDialogButtons.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 283</value>
+  </data>
+  <data name="_pnlDialogButtons.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 3, 3, 3</value>
+  </data>
+  <data name="_pnlDialogButtons.Size" type="System.Drawing.Size, System.Drawing">
+    <value>338, 36</value>
+  </data>
+  <data name="_pnlDialogButtons.TabIndex" type="System.Int32, mscorlib">
+    <value>5</value>
+  </data>
+  <data name="&gt;&gt;_pnlDialogButtons.Name" xml:space="preserve">
+    <value>_pnlDialogButtons</value>
+  </data>
+  <data name="&gt;&gt;_pnlDialogButtons.Type" xml:space="preserve">
+    <value>System.Windows.Forms.FlowLayoutPanel, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_pnlDialogButtons.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;_pnlDialogButtons.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="_lblScalePercent.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="_lblScalePercent.Location" type="System.Drawing.Point, System.Drawing">
+    <value>74, 5</value>
+  </data>
+  <data name="_lblScalePercent.Size" type="System.Drawing.Size, System.Drawing">
+    <value>15, 13</value>
+  </data>
+  <data name="_lblScalePercent.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="_lblScalePercent.Text" xml:space="preserve">
+    <value>%</value>
+  </data>
+  <data name="&gt;&gt;_lblScalePercent.Name" xml:space="preserve">
+    <value>_lblScalePercent</value>
+  </data>
+  <data name="&gt;&gt;_lblScalePercent.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_lblScalePercent.Parent" xml:space="preserve">
+    <value>_pnlScale</value>
+  </data>
+  <data name="&gt;&gt;_lblScalePercent.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="_pnlScale.Location" type="System.Drawing.Point, System.Drawing">
+    <value>99, 16</value>
+  </data>
+  <data name="_pnlScale.Size" type="System.Drawing.Size, System.Drawing">
+    <value>210, 23</value>
+  </data>
+  <data name="_pnlScale.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;_pnlScale.Name" xml:space="preserve">
+    <value>_pnlScale</value>
+  </data>
+  <data name="&gt;&gt;_pnlScale.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_pnlScale.Parent" xml:space="preserve">
+    <value>_groupOutputSize</value>
+  </data>
+  <data name="&gt;&gt;_pnlScale.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="_backgroundColorSwatch.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
+    <value>Flat</value>
+  </data>
+  <data name="_backgroundColorSwatch.Location" type="System.Drawing.Point, System.Drawing">
+    <value>45, 16</value>
+  </data>
+  <data name="_backgroundColorSwatch.Size" type="System.Drawing.Size, System.Drawing">
+    <value>42, 26</value>
+  </data>
+  <data name="_backgroundColorSwatch.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;_backgroundColorSwatch.Name" xml:space="preserve">
+    <value>_backgroundColorSwatch</value>
+  </data>
+  <data name="&gt;&gt;_backgroundColorSwatch.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_backgroundColorSwatch.Parent" xml:space="preserve">
+    <value>_pnlBackgroundColor</value>
+  </data>
+  <data name="&gt;&gt;_backgroundColorSwatch.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="_lblBackgroundColor.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="_lblBackgroundColor.Location" type="System.Drawing.Point, System.Drawing">
+    <value>17, 0</value>
+  </data>
+  <data name="_lblBackgroundColor.Size" type="System.Drawing.Size, System.Drawing">
+    <value>98, 13</value>
+  </data>
+  <data name="_lblBackgroundColor.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="_lblBackgroundColor.Text" xml:space="preserve">
+    <value>Background Colour</value>
+  </data>
+  <data name="&gt;&gt;_lblBackgroundColor.Name" xml:space="preserve">
+    <value>_lblBackgroundColor</value>
+  </data>
+  <data name="&gt;&gt;_lblBackgroundColor.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_lblBackgroundColor.Parent" xml:space="preserve">
+    <value>_pnlBackgroundColor</value>
+  </data>
+  <data name="&gt;&gt;_lblBackgroundColor.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="_pnlBackgroundColor.Location" type="System.Drawing.Point, System.Drawing">
+    <value>144, 6</value>
+  </data>
+  <data name="_pnlBackgroundColor.Size" type="System.Drawing.Size, System.Drawing">
+    <value>133, 44</value>
+  </data>
+  <data name="_pnlBackgroundColor.TabIndex" type="System.Int32, mscorlib">
+    <value>4</value>
+  </data>
+  <data name="&gt;&gt;_pnlBackgroundColor.Name" xml:space="preserve">
+    <value>_pnlBackgroundColor</value>
+  </data>
+  <data name="&gt;&gt;_pnlBackgroundColor.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_pnlBackgroundColor.Parent" xml:space="preserve">
+    <value>_pnlFixedSize</value>
+  </data>
+  <data name="&gt;&gt;_pnlBackgroundColor.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="_imageHeight.Location" type="System.Drawing.Point, System.Drawing">
+    <value>70, 30</value>
+  </data>
+  <data name="_imageHeight.Size" type="System.Drawing.Size, System.Drawing">
+    <value>68, 20</value>
+  </data>
+  <data name="_imageHeight.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <data name="&gt;&gt;_imageHeight.Name" xml:space="preserve">
+    <value>_imageHeight</value>
+  </data>
+  <data name="&gt;&gt;_imageHeight.Type" xml:space="preserve">
+    <value>ClearCanvas.Desktop.View.WinForms.NonEmptyNumericUpDown, ClearCanvas.Desktop.View.WinForms, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;_imageHeight.Parent" xml:space="preserve">
+    <value>_pnlFixedSize</value>
+  </data>
+  <data name="&gt;&gt;_imageHeight.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="_imageWidth.Location" type="System.Drawing.Point, System.Drawing">
+    <value>70, 4</value>
+  </data>
+  <data name="_imageWidth.Size" type="System.Drawing.Size, System.Drawing">
+    <value>68, 20</value>
+  </data>
+  <data name="_imageWidth.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;_imageWidth.Name" xml:space="preserve">
+    <value>_imageWidth</value>
+  </data>
+  <data name="&gt;&gt;_imageWidth.Type" xml:space="preserve">
+    <value>ClearCanvas.Desktop.View.WinForms.NonEmptyNumericUpDown, ClearCanvas.Desktop.View.WinForms, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;_imageWidth.Parent" xml:space="preserve">
+    <value>_pnlFixedSize</value>
+  </data>
+  <data name="&gt;&gt;_imageWidth.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="_lblHeight.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="_lblHeight.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 32</value>
+  </data>
+  <data name="_lblHeight.Size" type="System.Drawing.Size, System.Drawing">
+    <value>38, 13</value>
+  </data>
+  <data name="_lblHeight.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="_lblHeight.Text" xml:space="preserve">
+    <value>Height</value>
+  </data>
+  <data name="&gt;&gt;_lblHeight.Name" xml:space="preserve">
+    <value>_lblHeight</value>
+  </data>
+  <data name="&gt;&gt;_lblHeight.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_lblHeight.Parent" xml:space="preserve">
+    <value>_pnlFixedSize</value>
+  </data>
+  <data name="&gt;&gt;_lblHeight.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="_lblWidth.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="_lblWidth.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 6</value>
+  </data>
+  <data name="_lblWidth.Size" type="System.Drawing.Size, System.Drawing">
+    <value>35, 13</value>
+  </data>
+  <data name="_lblWidth.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="_lblWidth.Text" xml:space="preserve">
+    <value>Width</value>
+  </data>
+  <data name="&gt;&gt;_lblWidth.Name" xml:space="preserve">
+    <value>_lblWidth</value>
+  </data>
+  <data name="&gt;&gt;_lblWidth.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_lblWidth.Parent" xml:space="preserve">
+    <value>_pnlFixedSize</value>
+  </data>
+  <data name="&gt;&gt;_lblWidth.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="_pnlFixedSize.Location" type="System.Drawing.Point, System.Drawing">
+    <value>29, 65</value>
+  </data>
+  <data name="_pnlFixedSize.Size" type="System.Drawing.Size, System.Drawing">
+    <value>280, 58</value>
+  </data>
+  <data name="_pnlFixedSize.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <data name="&gt;&gt;_pnlFixedSize.Name" xml:space="preserve">
+    <value>_pnlFixedSize</value>
+  </data>
+  <data name="&gt;&gt;_pnlFixedSize.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_pnlFixedSize.Parent" xml:space="preserve">
+    <value>_groupOutputSize</value>
+  </data>
+  <data name="&gt;&gt;_pnlFixedSize.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="_checkOptionFixed.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="_checkOptionFixed.Location" type="System.Drawing.Point, System.Drawing">
+    <value>16, 42</value>
+  </data>
+  <data name="_checkOptionFixed.Size" type="System.Drawing.Size, System.Drawing">
+    <value>50, 17</value>
+  </data>
+  <data name="_checkOptionFixed.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="_checkOptionFixed.Text" xml:space="preserve">
+    <value>Fixed</value>
+  </data>
+  <data name="&gt;&gt;_checkOptionFixed.Name" xml:space="preserve">
+    <value>_checkOptionFixed</value>
+  </data>
+  <data name="&gt;&gt;_checkOptionFixed.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_checkOptionFixed.Parent" xml:space="preserve">
+    <value>_groupOutputSize</value>
+  </data>
+  <data name="&gt;&gt;_checkOptionFixed.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="_checkOptionScale.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="_checkOptionScale.Location" type="System.Drawing.Point, System.Drawing">
+    <value>16, 19</value>
+  </data>
+  <data name="_checkOptionScale.Size" type="System.Drawing.Size, System.Drawing">
+    <value>52, 17</value>
+  </data>
+  <data name="_checkOptionScale.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="_checkOptionScale.Text" xml:space="preserve">
+    <value>Scale</value>
+  </data>
+  <data name="&gt;&gt;_checkOptionScale.Name" xml:space="preserve">
+    <value>_checkOptionScale</value>
+  </data>
+  <data name="&gt;&gt;_checkOptionScale.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_checkOptionScale.Parent" xml:space="preserve">
+    <value>_groupOutputSize</value>
+  </data>
+  <data name="&gt;&gt;_checkOptionScale.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="_groupOutputSize.Location" type="System.Drawing.Point, System.Drawing">
+    <value>12, 141</value>
+  </data>
+  <data name="_groupOutputSize.Size" type="System.Drawing.Size, System.Drawing">
+    <value>315, 137</value>
+  </data>
+  <data name="_groupOutputSize.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <data name="_groupOutputSize.Text" xml:space="preserve">
+    <value>Output Size</value>
+  </data>
+  <data name="&gt;&gt;_groupOutputSize.Name" xml:space="preserve">
+    <value>_groupOutputSize</value>
+  </data>
+  <data name="&gt;&gt;_groupOutputSize.Type" xml:space="preserve">
+    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_groupOutputSize.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;_groupOutputSize.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
+    <value>6, 13</value>
+  </data>
+  <data name="$this.Size" type="System.Drawing.Size, System.Drawing">
+    <value>338, 319</value>
+  </data>
+  <data name="&gt;&gt;$this.Name" xml:space="preserve">
+    <value>ImageExportComponentControl</value>
+  </data>
+  <data name="&gt;&gt;$this.Type" xml:space="preserve">
+    <value>ClearCanvas.Desktop.View.WinForms.ApplicationComponentUserControl, ClearCanvas.Desktop.View.WinForms, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+</root>

@@ -1,0 +1,497 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+	<title>Jsml Unit Tests</title>
+	<script type="text/javascript" src="../jsunit/app/jsUnitCore.js"></script>
+	<script type="text/javascript" src="../jsx.js"></script>
+	<script type="text/javascript" src="../jsml.js"></script>
+	<script type="text/javascript">
+		/* Note, all the unit tests are written specifically for Internet Explorer 6.  The tests will failed under other browser.
+		 * The unit tests were also tested for under IE8 in Windows 7 */
+
+		// A global variable that is included in the assert messages.  Helps to identify which test is currently running
+		var currentTest = "";
+
+		/* The Javascript Jsml parser differs slightly from the .Net parser.  The javascript Jsml.parse always failed to parse \r.
+		* See http://support.microsoft.com/kb/261293 for explaination.
+		* Versions of MSXML prior to 2.5 used both carriage return and linefeed (CRLF) characters to indicate the end of a line of text. 
+		* However, starting with MSXML version 2.5, this behavior is different. Methods of the XML Document Object Model (DOM) now 
+		* return text by using only the linefeed character. This change was made to comply with the World Wide Web (W3C) specification 
+		* for how XML output should be generated.*/
+
+		function testNull()
+		{
+			currentTest = "Null value";
+			SerializeHelper(null, null);
+			DeserializeHelper(null, null);
+			DeserializeHelper(null, "");
+		}
+
+		function testString()
+		{
+			currentTest = "Empty string";
+			SerializeHelper("", "<Tag></Tag>");
+			DeserializeHelper("", "<Tag></Tag>");
+			DeserializeHelper("", "<Tag />");
+
+			currentTest = "Alphabets";
+			SerializeHelper("abcdefghijklmnopqrstuvwxyz", "<Tag>abcdefghijklmnopqrstuvwxyz</Tag>");
+			DeserializeHelper("abcdefghijklmnopqrstuvwxyz", "<Tag>abcdefghijklmnopqrstuvwxyz</Tag>");
+
+			currentTest = "Numbers";
+			SerializeHelper("000", "<Tag>000</Tag>");
+			DeserializeHelper("000", "<Tag>000</Tag>");
+			SerializeHelper("1234567890", "<Tag>1234567890</Tag>");
+			DeserializeHelper("1234567890", "<Tag>1234567890</Tag>");
+
+			currentTest = "Unusual characters";
+			SerializeHelper("`~!@#$%^*()-_=+[{]}\|;:,./?", "<Tag>`~!@#$%^*()-_=+[{]}\|;:,./?</Tag>");
+			DeserializeHelper("`~!@#$%^*()-_=+[{]}\|;:,./?", "<Tag>`~!@#$%^*()-_=+[{]}\|;:,./?</Tag>");
+
+			currentTest = "Single & Double quotes";
+			SerializeHelper("''", "<Tag>&apos;&apos;</Tag>");
+			DeserializeHelper("''", "<Tag>&apos;&apos;</Tag>");
+			SerializeHelper('""', '<Tag>&quot;&quot;</Tag>');
+			DeserializeHelper('""', '<Tag>&quot;&quot;</Tag>');
+
+			currentTest = "Escaped characters";
+			SerializeHelper("&<>", "<Tag>&amp;&lt;&gt;</Tag>");
+			DeserializeHelper("&<>", "<Tag>&amp;&lt;&gt;</Tag>");
+		}
+
+		function test_CR_LF_Spaces()
+		{
+			currentTest = "Testing LF (\\n)";
+			SerializeHelper("ABC\n", "<Tag>ABC\n</Tag>");
+			DeserializeHelper("ABC\n", "<Tag>ABC\n</Tag>");
+
+			currentTest = "Testing CR (\\r)";
+			SerializeHelper("ABC\r", "<Tag>ABC\r</Tag>");
+			// \r is deserialized to\n, as described here: http://support.microsoft.com/kb/261293
+			DeserializeHelper("ABC\n", "<Tag>ABC\r</Tag>");
+	
+			currentTest = "Testing CR-LF (\\r\\n)";
+			SerializeHelper("ABC\r\n", "<Tag>ABC\r\n</Tag>");
+			// \r\n is deserialized to just \n, as described here: http://support.microsoft.com/kb/261293
+			DeserializeHelper("ABC\n", "<Tag>ABC\r\n</Tag>");
+
+			// Because of the \r problem, all subsequent tests will ignore deserializing \r.
+			currentTest = "CR, LF, spaces between words";
+			SerializeHelper("ABC\nDEF", "<Tag>ABC\nDEF</Tag>");
+			DeserializeHelper("ABC\nDEF", "<Tag>ABC\nDEF</Tag>");
+			SerializeHelper("ABCDEF", "<Tag>ABCDEF</Tag>");
+			DeserializeHelper("ABCDEF", "<Tag>ABCDEF</Tag>");
+			SerializeHelper("ABC\nDEF", "<Tag>ABC\nDEF</Tag>");
+			DeserializeHelper("ABC\nDEF", "<Tag>ABC\nDEF</Tag>");
+			SerializeHelper(" ABC DEF ", "<Tag> ABC DEF </Tag>");
+			DeserializeHelper(" ABC DEF ", "<Tag> ABC DEF </Tag>");
+
+			currentTest = "CR, LF, spaces before words";
+			SerializeHelper("\nDEF", "<Tag>\nDEF</Tag>");
+			DeserializeHelper("\nDEF", "<Tag>\nDEF</Tag>");
+			SerializeHelper("DEF", "<Tag>DEF</Tag>");
+			DeserializeHelper("DEF", "<Tag>DEF</Tag>");
+			SerializeHelper("\nDEF", "<Tag>\nDEF</Tag>");
+			DeserializeHelper("\nDEF", "<Tag>\nDEF</Tag>");
+			SerializeHelper("  DEF", "<Tag>  DEF</Tag>");
+			DeserializeHelper("  DEF", "<Tag>  DEF</Tag>");
+
+			currentTest = "CR, LF, spaces after words";
+			SerializeHelper("ABC\n", "<Tag>ABC\n</Tag>");
+			DeserializeHelper("ABC\n", "<Tag>ABC\n</Tag>");
+			SerializeHelper("ABC", "<Tag>ABC</Tag>");
+			DeserializeHelper("ABC", "<Tag>ABC</Tag>");
+			SerializeHelper("ABC\n", "<Tag>ABC\n</Tag>");
+			DeserializeHelper("ABC\n", "<Tag>ABC\n</Tag>");
+			SerializeHelper("ABC  ", "<Tag>ABC  </Tag>");
+			DeserializeHelper("ABC  ", "<Tag>ABC  </Tag>");
+
+			currentTest = "CR, LF, whitespace by themselves";
+			SerializeHelper("\n", "<Tag>\n</Tag>");
+			DeserializeHelper("\n", "<Tag>\n</Tag>");
+			SerializeHelper("\n\n", "<Tag>\n\n</Tag>");
+			DeserializeHelper("\n\n", "<Tag>\n\n</Tag>");
+			SerializeHelper(" ", "<Tag> </Tag>");
+			DeserializeHelper(" ", "<Tag> </Tag>");
+			SerializeHelper("  ", "<Tag>  </Tag>");
+			DeserializeHelper("  ", "<Tag>  </Tag>");
+			SerializeHelper(" \n", "<Tag> \n</Tag>");
+			DeserializeHelper(" \n", "<Tag> \n</Tag>");
+			SerializeHelper("  \n", "<Tag>  \n</Tag>");
+			DeserializeHelper("  \n", "<Tag>  \n</Tag>");
+		}
+
+		function testInt()
+		{
+			currentTest = "Integers zeroes";
+			SerializeHelper(0, "<Tag>0</Tag>");
+			DeserializeHelper(0, "<Tag>0</Tag>");
+
+			SerializeHelper(00, "<Tag>0</Tag>");
+			DeserializeHelper(00, "<Tag>0</Tag>");
+
+			currentTest = "Integers non-zeroes";
+			SerializeHelper(5, "<Tag>5</Tag>");
+			DeserializeHelper(5, "<Tag>5</Tag>");
+
+			SerializeHelper(99999, "<Tag>99999</Tag>");
+			DeserializeHelper(99999, "<Tag>99999</Tag>");
+
+			currentTest = "Negative integers";
+			SerializeHelper(-1, "<Tag>-1</Tag>");
+			DeserializeHelper(-1, "<Tag>-1</Tag>");
+
+			SerializeHelper(-99999, "<Tag>-99999</Tag>");
+			DeserializeHelper(-99999, "<Tag>-99999</Tag>");
+		}
+
+		function testDouble()
+		{
+			currentTest = "Double";
+			SerializeHelper(0.00, "<Tag>0</Tag>");
+			DeserializeHelper(0.00, "<Tag>0</Tag>");
+
+			SerializeHelper(5.1, "<Tag>5.1</Tag>");
+			DeserializeHelper(5.1, "<Tag>5.1</Tag>");
+
+			SerializeHelper(-5.1, "<Tag>-5.1</Tag>");
+			DeserializeHelper(-5.1, "<Tag>-5.1</Tag>");
+
+			SerializeHelper(0.99999999, "<Tag>0.99999999</Tag>");
+			DeserializeHelper(0.99999999, "<Tag>0.99999999</Tag>");
+
+			SerializeHelper(0.001, "<Tag>0.001</Tag>");
+			DeserializeHelper(0.001, "<Tag>0.001</Tag>");
+
+			// Scientific notation.  Note that the serialized jsml is always non-capitalized and trimmed.  ie. e-8 rather than e-08
+			// Make sure the upper case and padded E-08 E-8 can all be deserialized
+			currentTest = "Scientific Notations";
+			SerializeHelper(0.000000015, "<Tag>1.5e-8</Tag>");
+			SerializeHelper(1.5E-08, "<Tag>1.5e-8</Tag>");
+			SerializeHelper(15E-09, "<Tag>1.5e-8</Tag>");
+			DeserializeHelper(0.000000015, "<Tag>1.5E-08</Tag>");
+			DeserializeHelper(1.5E-8, "<Tag>1.5E-8</Tag>");
+			DeserializeHelper(1.5E-8, "<Tag>1.5e-08</Tag>");
+			DeserializeHelper(1.5E-8, "<Tag>1.5e-8</Tag>");
+		}
+
+		function testBool()
+		{
+			currentTest = "Bool: true";
+			SerializeHelper(true, "<Tag>true</Tag>");
+			DeserializeHelper(true, "<Tag>true</Tag>");
+
+			currentTest = "Bool: false";
+			SerializeHelper(false, "<Tag>false</Tag>");
+			DeserializeHelper(false, "<Tag>false</Tag>");
+		}
+
+		function testNullableDateTime()
+		{
+			var now = new Date();
+
+			// Serializer do not support milliseconds and below.
+			var nowWithoutMilliseconds = new Date(now.getFullYear(), now.getMonth(), now.getDay(), now.getHours(), now.getMinutes(), now.getSeconds());
+
+			currentTest = "DateTime";
+			SerializeHelper(nowWithoutMilliseconds, "<Tag>" + nowWithoutMilliseconds.toISOString() + "</Tag>");
+			DeserializeDate(nowWithoutMilliseconds, "<Tag>" + nowWithoutMilliseconds.toISOString() + "</Tag>");
+			
+			currentTest = "Null-DateTime";
+			nowWithoutMilliseconds = null;
+			SerializeHelper(nowWithoutMilliseconds, null);
+			DeserializeDate(nowWithoutMilliseconds, null);
+			DeserializeDate(nowWithoutMilliseconds, "");
+		}
+
+		function testList()
+		{
+			currentTest = "Empty List";
+			var emptylist = [];
+			SerializeHelper(emptylist, "<Tag type=\"array\"></Tag>");
+			DeserializeHelper(emptylist, "<Tag type=\"array\" />");
+			DeserializeHelper(emptylist, "<Tag type=\"array\"></Tag>");
+			DeserializeHelper(emptylist, "<Tag array=\"true\" />");
+			DeserializeHelper(emptylist, "<Tag array=\"true\"></Tag>");
+
+			currentTest = "String List";
+			stringList = [ "1" ];
+			SerializeHelper(stringList, "<Tag type=\"array\"><item>1</item></Tag>");
+			DeserializeHelper(stringList, "<Tag type=\"array\"><item>1</item></Tag>");
+			DeserializeHelper(stringList, "<Tag type=\"array\">\r\n  <item>1</item>\r\n</Tag>");
+			DeserializeHelper(stringList, "<Tag array=\"true\"><item>1</item></Tag>");
+			DeserializeHelper(stringList, "<Tag array=\"true\">\r\n  <item>1</item>\r\n</Tag>");
+
+			currentTest = "Integer List";
+			intList = [ 1 ];
+			SerializeHelper(intList, "<Tag type=\"array\"><item>1</item></Tag>");
+			DeserializeHelper(intList, "<Tag type=\"array\"><item>1</item></Tag>");
+			DeserializeHelper(intList, "<Tag type=\"array\">\r\n  <item>1</item>\r\n</Tag>");
+			DeserializeHelper(intList, "<Tag array=\"true\"><item>1</item></Tag>");
+			DeserializeHelper(intList, "<Tag array=\"true\">\r\n  <item>1</item>\r\n</Tag>");
+
+			currentTest = "Double List";
+			doubleList = [ 1.0 ];
+			SerializeHelper(doubleList, "<Tag type=\"array\"><item>1</item></Tag>");
+			DeserializeHelper(doubleList, "<Tag type=\"array\"><item>1</item></Tag>");
+			DeserializeHelper(doubleList, "<Tag type=\"array\">\r\n  <item>1</item>\r\n</Tag>");
+			DeserializeHelper(doubleList, "<Tag array=\"true\"><item>1</item></Tag>");
+			DeserializeHelper(doubleList, "<Tag array=\"true\">\r\n  <item>1</item>\r\n</Tag>");
+
+			currentTest = "Boolean List";
+			boolList = [ true, false ];
+			SerializeHelper(boolList, "<Tag type=\"array\"><item>true</item><item>false</item></Tag>");
+			DeserializeHelper(boolList, "<Tag type=\"array\"><item>true</item><item>false</item></Tag>");
+			DeserializeHelper(boolList, "<Tag type=\"array\">\r\n  <item>true</item>\r\n  <item>false</item>\r\n</Tag>");
+			DeserializeHelper(boolList, "<Tag array=\"true\"><item>true</item><item>false</item></Tag>");
+			DeserializeHelper(boolList, "<Tag array=\"true\">\r\n  <item>true</item>\r\n  <item>false</item>\r\n</Tag>");
+		}
+
+		function testDictionary()
+		{
+			currentTest = "Empty Dictionary";
+			var emptyDictionary = {};
+			SerializeHelper(emptyDictionary, "<Tag type=\"hash\"></Tag>");
+			DeserializeDictionary(emptyDictionary, "<Tag type=\"hash\" />");
+			DeserializeDictionary(emptyDictionary, "<Tag type=\"hash\"></Tag>");
+			DeserializeDictionary(emptyDictionary, "<Tag hash=\"true\" />");
+			DeserializeDictionary(emptyDictionary, "<Tag hash=\"true\"></Tag>");
+
+			currentTest = "Str-Str Dictionary";
+			var strStrDictionary = { "key": "value" };
+			SerializeHelper(strStrDictionary, "<Tag type=\"hash\"><key>value</key></Tag>");
+			DeserializeDictionary(strStrDictionary, "<Tag type=\"hash\">\r\n  <key>value</key>\r\n</Tag>");
+			DeserializeDictionary(strStrDictionary, "<Tag type=\"hash\"><key>value</key></Tag>");
+			DeserializeDictionary(strStrDictionary, "<Tag hash=\"true\">\r\n  <key>value</key>\r\n</Tag>");
+			DeserializeDictionary(strStrDictionary, "<Tag hash=\"true\"><key>value</key></Tag>");
+
+			currentTest = "Str-Int Dictionary";
+			var strIntDictionary = { "key": 5 };
+			SerializeHelper(strIntDictionary, "<Tag type=\"hash\"><key>5</key></Tag>");
+			DeserializeDictionary(strIntDictionary, "<Tag type=\"hash\">\r\n  <key>5</key>\r\n</Tag>");
+			DeserializeDictionary(strIntDictionary, "<Tag type=\"hash\"><key>5</key></Tag>");
+			DeserializeDictionary(strIntDictionary, "<Tag hash=\"true\">\r\n  <key>5</key>\r\n</Tag>");
+			DeserializeDictionary(strIntDictionary, "<Tag hash=\"true\"><key>5</key></Tag>");
+		}
+
+		function testDictionary_NonStringKeyType()
+		{
+			// This is not supported by the .Net JsmlSerializer.  But is supported in javascript counterpart.
+			currentTest = "Int-Str Dictionary";
+			var intStrDictionary = { 0: "value" };
+			var jsml = "<Tag type=\"hash\"><0>value</0></Tag>"
+			SerializeHelper(intStrDictionary, jsml);
+
+			try
+			{
+				DeserializeDictionary(intStrDictionary, jsml);
+			}
+			catch (e)
+			{
+				var expectedMessage = "A name was started with an invalid character.\r\n" + jsml;
+				assertTrue(e == expectedMessage);
+			}
+
+			try
+			{
+				jsml = "<Tag hash=\"true\"><0>value</0></Tag>";
+				DeserializeDictionary(intStrDictionary, jsml);
+			}
+			catch (e)
+			{
+				var expectedMessage = "A name was started with an invalid character.\r\n" + jsml;
+				assertTrue(e == expectedMessage);
+			}
+		}
+
+		function testDataContract()
+		{
+			currentTest = "Empty Contract";
+			var emptyContract = {};
+			SerializeHelper(emptyContract, "<Tag type=\"hash\"></Tag>");
+			// not sure how to test parsing of  empty contract
+
+			currentTest = "Populated Contract";
+			var now = new Date();
+			var nowWithoutMilliseconds = new Date(now.getFullYear(), now.getMonth(), now.getDay(), now.getHours(), now.getMinutes(), now.getSeconds());
+			var contract = {
+					Double: 5.0,
+					Bool: true,
+					DateTime: nowWithoutMilliseconds,
+					ExtendedProperties: { key1: "value1" , key2: "value2" },
+					ExpectedJsml: function()
+						{
+							return "<Tag type=\"hash\">"
+								+ "<Double>" + this.Double + "</Double>"
+								+ "<Bool>" + this.Bool + "</Bool>"
+								+ "<DateTime>" + this.DateTime.toISOString() + "</DateTime>"
+								+ "<ExtendedProperties type=\"hash\">"
+									+ "<key1>" + this.ExtendedProperties.key1 + "</key1>"
+									+ "<key2>" + this.ExtendedProperties.key2 + "</key2>"
+								+ "</ExtendedProperties>"
+								+ "</Tag>";
+						},
+					LegacyJsml: function()
+						{
+							return this.ExpectedJsml().replace("type=\"hash\"", "hash=\"true\"").replace("type=\"array\"", "array=\"true\"");
+						},
+					Equals: function(that)
+						{
+							return this.Double == contract.Double
+								&& this.Bool == contract.Bool
+								&& this.DateTime.toISOString() == contract.DateTime.toISOString()
+								&& this.ExtendedProperties.key1 == contract.ExtendedProperties.key1
+								&& this.ExtendedProperties.key2 == contract.ExtendedProperties.key2
+						}
+				};
+
+				
+			SerializeHelper(contract, contract.ExpectedJsml());
+			var parsedValue = JSML.parse(contract.ExpectedJsml());
+			assertTrue(currentTest, contract.Equals(parsedValue));
+
+			parsedValue = JSML.parse(contract.LegacyJsml());
+			assertTrue(currentTest, contract.Equals(parsedValue));
+		}
+
+		/************ Helper functions ************/
+
+		function SerializeHelper(inputValue, expectedJsml)
+		{
+			var jsml = JSML.create(inputValue, "Tag");
+			assertEquals(currentTest, expectedJsml, jsml);
+		}
+
+		function DeserializeHelper(expectedValue, jsml)
+		{
+			var value = JSML.parse(jsml);
+
+			if (null == value)
+			{
+				assertNull(currentTest, expectedValue);
+			}
+			else if (expectedValue.isArray)
+			{
+				assertTrue(currentTest, CompareArrays(expectedValue, value));
+			}
+			else
+			{
+				assertTrue(currentTest, expectedValue == value);
+			}
+		}
+
+		// Customize deserialize helper for date values.  When parsed, an date object is in its default format
+		// which causes assert to fail when we compare a non ISO format with a ISO formatted date.
+		function DeserializeDate(expectedValue, jsml)
+		{
+			var value = JSML.parse(jsml);
+
+			if (null == value)
+			{
+				assertNull(currentTest, expectedValue);
+			}
+			else
+			{
+				assertTrue(currentTest, expectedValue.toISOString() == value.toISOString());
+			}
+		}
+
+		// Customize deserialize helper for simple hased objects that behave like .Net dictionary. 
+		// If the javascript object is a tree, there would only be the parent and the children level.  Nested object is not supported here.
+		function DeserializeDictionary(expectedValue, jsml)
+		{
+			var value = JSML.parse(jsml);
+
+			if (null == value)
+			{
+				assertNull(currentTest, expectedValue);
+			}
+			else
+			{
+				assertTrue(currentTest, CompareHashedObjects(expectedValue, value));
+			}
+		}
+
+		// Compare two dictionary.  Return true if the arrays are equivalent.  Key and values of the dictionary must be primitives and not nested objects
+		function CompareHashedObjects(x, y)
+		{
+			function ownPropertyLength(obj)
+			{
+				var count = 0;
+				for (var p in obj)
+				{
+					if (obj.hasOwnProperty(p))
+						count++;
+				}
+
+				return count;
+			}
+
+			if (x == null && y == null)
+				return true;
+
+			if (x == null || y == null)
+				return false;
+
+			if (ownPropertyLength(x) != ownPropertyLength(y))
+				return false;
+
+			for (var p in x)
+			{
+				if (x.hasOwnProperty(p))
+				{
+					if (x[p] != y[p])
+						return false;
+				}
+			}
+
+			return true;
+		}
+
+		// Compare two arrays.  Return true if the arrays are equivalent.  Ordering of the elements is important.
+		function CompareArrays(x, y)
+		{
+			if (x == null && y == null)
+				return true;
+
+			if (x == null || y == null)
+				return false;
+
+			if (x.length != y.length)
+				return false;
+
+			// order matters, compare each item one by one
+			for(var i = 0; i < x.length; i++)
+			{
+				if (x[i] != y[i])
+					return false;
+			}
+
+			return true;
+		}
+
+		// A helper function that returns the value of the immediately children.
+		function ShowMembers(obj, onlyShowOwnProperty)
+		{
+			var description = "";
+			for (var p in obj)
+			{
+				if (onlyShowOwnProperty && !obj.hasOwnProperty(p))
+					continue;
+
+				var value = obj[p];
+				description += p + ": " + value + "\r\n";
+			}
+			
+			return description;
+		}
+
+	</script>
+</head>
+
+<body>
+<h1>JSML Unit Tests</h1>
+
+<p>This page contains test for the JSML javascript object.  Use the testRunner.html to run the tests.</p>
+</body>
+</html>

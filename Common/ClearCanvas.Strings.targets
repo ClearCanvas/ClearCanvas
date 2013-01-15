@@ -1,0 +1,15 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<Target Name="BeforeBuild"
+		Inputs="SR.resx"
+		Outputs="SR.Designer.cs;$(RootNamespace).SR.resources">
+		<GenerateResource  
+		Sources="SR.resx"
+		OutputResources="$(RootNamespace).SR.resources;"
+		StronglyTypedLanguage="C#" 
+		StronglyTypedClassName="SR"
+		StronglyTypedFilename="SR.Designer.cs"
+		StronglyTypedNamespace="$(RootNamespace)"
+		PublicClass="true"
+		/>
+	</Target>
+</Project>

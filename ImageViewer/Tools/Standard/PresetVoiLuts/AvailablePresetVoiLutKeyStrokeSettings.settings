@@ -1,0 +1,21 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="ClearCanvas.ImageViewer.Tools.Standard.PresetVoiLuts" GeneratedClassName="AvailablePresetVoiLutKeyStrokeSettings">
+  <Profiles />
+  <Settings>
+    <Setting Name="AvailableKeyStrokes" Description="A list of keystrokes to use for user-defined LUT (e.g. window/level) presets." Type="System.Collections.Specialized.StringCollection" Scope="Application">
+      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;ArrayOfString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;string&gt;F3&lt;/string&gt;
+  &lt;string&gt;F4&lt;/string&gt;
+  &lt;string&gt;F5&lt;/string&gt;
+  &lt;string&gt;F6&lt;/string&gt;
+  &lt;string&gt;F7&lt;/string&gt;
+  &lt;string&gt;F8&lt;/string&gt;
+  &lt;string&gt;F9&lt;/string&gt;
+  &lt;string&gt;F10&lt;/string&gt;
+  &lt;string&gt;F11&lt;/string&gt;
+  &lt;string&gt;F12&lt;/string&gt;
+&lt;/ArrayOfString&gt;</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

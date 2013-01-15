@@ -1,0 +1,203 @@
+<Project DefaultTargets="Create Manifests" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!-- ImageViewer Manifest Creation -->
+
+  <UsingTask TaskName="ClearCanvas.Utilities.BuildTasks.RegexIsMatch" AssemblyFile="$(TrunkDirectory)\ReferencedAssemblies\MSBuild\ClearCanvas.Utilities.BuildTasks.dll"/>
+
+  <PropertyGroup>
+    <TrunkDirectory>$(MSBuildProjectDirectory)\..\</TrunkDirectory>
+  </PropertyGroup>
+
+  <Choose>
+    <When Condition="True">
+      <PropertyGroup>
+        <OptionsFlags>ExcludeStudyComposer+ExcludeHelpFiles+ExcludeEnterprise</OptionsFlags>
+      </PropertyGroup>
+    </When>
+  </Choose>
+
+  <Target Name="GetDefaultManifestInputs" >
+    <CreateItem Include="$(TrunkDirectory)\ImageViewer\ManifestInputDesktop.xml">
+      <Output TaskParameter="Include" ItemName="ManifestFiles" />
+    </CreateItem>
+  </Target>
+ 
+  <Target Name="Create Desktop Manifest">
+    
+    <Exec Command="$(DistributionDirectory)\ClearCanvas.Executable.exe ClearCanvas.Utilities.Manifest.ManifestGenerationApplication &quot;/d=$(DistributionDirectory)&quot; /m=Manifest.xml &quot;/c=$(Certificate)&quot; &quot;/pw=$(Password)&quot; &quot;@(ManifestFiles)&quot;" WorkingDirectory="$(DistributionDirectory)"/>
+
+    <Delete Files="$(DistributionDirectory)\logs\*"/>
+  </Target>
+
+  <Target Name="Explorer" >
+    <CreateItem Include="$(TrunkDirectory)\ImageViewer\ManifestInputExplorer.xml">
+      <Output TaskParameter="Include" ItemName="ManifestFiles" />
+    </CreateItem>
+  </Target>
+  <Target Name="DesktopServices" >
+    <CreateItem Include="$(TrunkDirectory)\ImageViewer\ManifestInputDesktopServices.xml">
+      <Output TaskParameter="Include" ItemName="ManifestFiles" />
+    </CreateItem>
+  </Target>
+  <Target Name="StudyComposer" >
+    <CreateItem Include="$(TrunkDirectory)\ImageViewer\ManifestInputStudyComposer.xml">
+      <Output TaskParameter="Include" ItemName="ManifestFiles" />
+    </CreateItem>
+  </Target>
+  <Target Name="DicomEditor" >
+    <CreateItem Include="$(TrunkDirectory)\ImageViewer\ManifestInputDicomEditor.xml">
+      <Output TaskParameter="Include" ItemName="ManifestFiles" />
+    </CreateItem>
+  </Target>
+  <Target Name="StudyFilters" >
+    <CreateItem Include="$(TrunkDirectory)\ImageViewer\ManifestInputStudyFilters.xml">
+      <Output TaskParameter="Include" ItemName="ManifestFiles" />
+    </CreateItem>
+  </Target>
+  <Target Name="Reporting" >
+    <CreateItem Include="$(TrunkDirectory)\ImageViewer\ManifestInputReporting.xml">
+      <Output TaskParameter="Include" ItemName="ManifestFiles" />
+    </CreateItem>
+  </Target>
+  <Target Name="HelpUpdate" >
+    <CreateItem Include="$(TrunkDirectory)\ImageViewer\ManifestInputHelpUpdate.xml">
+      <Output TaskParameter="Include" ItemName="ManifestFiles" />
+    </CreateItem>
+  </Target>
+  <Target Name="DicomRemote" >
+    <CreateItem Include="$(TrunkDirectory)\ImageViewer\ManifestInputDicomRemote.xml">
+      <Output TaskParameter="Include" ItemName="ManifestFiles" />
+    </CreateItem>
+  </Target>
+  <Target Name="Database" >
+    <CreateItem Include="$(TrunkDirectory)\ImageViewer\ManifestInputDatabase.xml">
+      <Output TaskParameter="Include" ItemName="ManifestFiles" />
+    </CreateItem>
+  </Target>
+  <Target Name="Streaming" >
+    <CreateItem Include="$(TrunkDirectory)\ImageViewer\ManifestInputStreaming.xml">
+      <Output TaskParameter="Include" ItemName="ManifestFiles" />
+    </CreateItem>
+  </Target>
+  <Target Name="Mpr" >
+    <CreateItem Include="$(TrunkDirectory)\ImageViewer\ManifestInputMpr.xml">
+      <Output TaskParameter="Include" ItemName="ManifestFiles" />
+    </CreateItem>
+  </Target>
+  <Target Name="Fusion" >
+    <CreateItem Include="$(TrunkDirectory)\ImageViewer\ManifestInputFusion.xml">
+      <Output TaskParameter="Include" ItemName="ManifestFiles" />
+    </CreateItem>
+  </Target>
+  <Target Name="Externals" >
+    <CreateItem Include="$(TrunkDirectory)\ImageViewer\ManifestInputExternals.xml">
+      <Output TaskParameter="Include" ItemName="ManifestFiles" />
+    </CreateItem>
+  </Target>
+  <Target Name="SynchronizationTools" >
+    <CreateItem Include="$(TrunkDirectory)\ImageViewer\ManifestInputSynchronizationTools.xml">
+      <Output TaskParameter="Include" ItemName="ManifestFiles" />
+    </CreateItem>
+  </Target>
+
+  <Target Name="Enterprise" >
+    <CreateItem Include="$(TrunkDirectory)\ImageViewer\ManifestInputEnterprise.xml">
+      <Output TaskParameter="Include" ItemName="ManifestFiles" />
+    </CreateItem>
+  </Target>
+
+  <Target Name="HelpFiles" >
+    <CreateItem Include="$(TrunkDirectory)\ImageViewer\ManifestInputHelpFiles.xml">
+      <Output TaskParameter="Include" ItemName="ManifestFiles" />
+    </CreateItem>
+  </Target>
+  
+  <Target Name ="Create Manifests" >
+
+    <RegexIsMatch Pattern="ExcludeExplorer" Input="$(OptionsFlags)" >
+      <Output TaskParameter="IsMatch" PropertyName="ExcludeExplorer" />
+    </RegexIsMatch>
+    <CallTarget Targets="Explorer" Condition ="!$(ExcludeExplorer)"/>
+    
+    <RegexIsMatch Pattern="ExcludeDesktopServices" Input="$(OptionsFlags)" >
+      <Output TaskParameter="IsMatch" PropertyName="ExcludeDesktopServices" />
+    </RegexIsMatch>
+    <CallTarget Targets="DesktopServices" Condition ="!$(ExcludeDesktopServices)"/>
+
+    <RegexIsMatch Pattern="ExcludeStudyComposer" Input="$(OptionsFlags)" >
+      <Output TaskParameter="IsMatch" PropertyName="ExcludeStudyComposer" />
+    </RegexIsMatch>
+    <CallTarget Targets="StudyComposer" Condition ="!$(ExcludeStudyComposer)"/>
+    
+    <RegexIsMatch Pattern="ExcludeDicomEditor" Input="$(OptionsFlags)" >
+      <Output TaskParameter="IsMatch" PropertyName="ExcludeDicomEditor" />
+    </RegexIsMatch>
+    <CallTarget Targets="DicomEditor" Condition ="!$(ExcludeDicomEditor)"/>
+    
+    <RegexIsMatch Pattern="ExcludeStudyFilters" Input="$(OptionsFlags)" >
+      <Output TaskParameter="IsMatch" PropertyName="ExcludeStudyFilters" />
+    </RegexIsMatch>
+    <CallTarget Targets="StudyFilters" Condition ="!$(ExcludeStudyFilters)"/>
+    
+    <RegexIsMatch Pattern="ExcludeReporting" Input="$(OptionsFlags)" >
+      <Output TaskParameter="IsMatch" PropertyName="ExcludeReporting" />
+    </RegexIsMatch>
+    <CallTarget Targets="Reporting" Condition ="!$(ExcludeReporting)"/>
+    
+    <RegexIsMatch Pattern="ExcludeHelpUpdate" Input="$(OptionsFlags)" >
+      <Output TaskParameter="IsMatch" PropertyName="ExcludeHelpUpdate" />
+    </RegexIsMatch>
+    <CallTarget Targets="HelpUpdate" Condition ="!$(ExcludeHelpUpdate)"/>
+    
+    <RegexIsMatch Pattern="ExcludeDatabase" Input="$(OptionsFlags)" >
+      <Output TaskParameter="IsMatch" PropertyName="ExcludeDatabase" />
+    </RegexIsMatch>
+    <CallTarget Targets="Database" Condition ="!$(ExcludeDatabase)"/>
+    
+    <RegexIsMatch Pattern="ExcludeDicomRemote" Input="$(OptionsFlags)" >
+      <Output TaskParameter="IsMatch" PropertyName="ExcludeDicomRemote" />
+    </RegexIsMatch>
+    <CallTarget Targets="DicomRemote" Condition ="!$(ExcludeDicomRemote)"/>
+        
+    <RegexIsMatch Pattern="ExcludeStreaming" Input="$(OptionsFlags)" >
+      <Output TaskParameter="IsMatch" PropertyName="ExcludeStreaming" />
+    </RegexIsMatch>
+    <CallTarget Targets="Streaming" Condition ="!$(ExcludeStreaming)"/>
+    
+    <RegexIsMatch Pattern="ExcludeMpr" Input="$(OptionsFlags)" >
+      <Output TaskParameter="IsMatch" PropertyName="ExcludeMpr" />
+    </RegexIsMatch>
+    <CallTarget Targets="Mpr" Condition ="!$(ExcludeMpr)"/>
+    
+    <RegexIsMatch Pattern="ExcludeFusion" Input="$(OptionsFlags)" >
+      <Output TaskParameter="IsMatch" PropertyName="ExcludeFusion" />
+    </RegexIsMatch>
+    <CallTarget Targets="Fusion" Condition ="!$(ExcludeFusion)"/>
+    
+    <RegexIsMatch Pattern="ExcludeExternals" Input="$(OptionsFlags)" >
+      <Output TaskParameter="IsMatch" PropertyName="ExcludeExternals" />
+    </RegexIsMatch>
+    <CallTarget Targets="Externals" Condition ="!$(ExcludeExternals)"/>
+
+    <RegexIsMatch Pattern="ExcludeSynchronizationTools" Input="$(OptionsFlags)" >
+      <Output TaskParameter="IsMatch" PropertyName="ExcludeSynchronizationTools" />
+    </RegexIsMatch>
+    <CallTarget Targets="SynchronizationTools" Condition ="!$(ExcludeSynchronizationTools)"/>
+
+    <RegexIsMatch Pattern="ExcludeEnterprise" Input="$(OptionsFlags)" >
+      <Output TaskParameter="IsMatch" PropertyName="ExcludeEnterprise" />
+    </RegexIsMatch>
+    <CallTarget Targets="Enterprise" Condition ="!$(ExcludeEnterprise)"/>
+
+    <RegexIsMatch Pattern="ExcludeHelpFiles" Input="$(OptionsFlags)" >
+      <Output TaskParameter="IsMatch" PropertyName="ExcludeHelpFiles" />
+    </RegexIsMatch>
+    <CallTarget Targets="HelpFiles" Condition ="!$(ExcludeHelpFiles)"/>
+
+    <!-- Calling CreateItems here directly causes default inputs to be omitted for some reason -->
+    <CallTarget Targets="GetDefaultManifestInputs" />
+
+    <!-- Create the base manifest -->
+    <CallTarget Targets="Create Desktop Manifest" />
+    
+  </Target>
+</Project>

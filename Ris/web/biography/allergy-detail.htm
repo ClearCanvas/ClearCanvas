@@ -1,0 +1,154 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title>Allergy Detail</title>
+		<link href="../css/default.css" rel="stylesheet" type="text/css" />
+		<script type="text/javascript" src="../js/jsx.js"></script>
+		<script type="text/javascript" src="../js/jsml.js"></script>
+		<script type="text/javascript" src="../js/ui.js"></script>
+		<script type="text/javascript" src="../js/ris.js"></script>
+		<script type="text/javascript" src="../js/preview.js"></script>
+		<script type="text/javascript" src="../js/layout.js"></script>
+		<script type="text/javascript" >
+			var data = {};
+			var errorProvider = new ErrorProvider();
+			var canEdit = false;
+
+			function onBodyLoad()
+			{
+				if(!Ris)
+					return;
+
+				try
+				{
+					var context = Ris.getHealthcareContext();
+					if (context == null)
+					{
+						Field.setValue($("myForm"), "");
+						return;
+					}
+
+					canEdit = Ris.getTag("ReadOnly") != "true";
+					data.Allergies = context.Allergies;
+
+					initAllergyTable($("allergyTable"), context);
+				}
+				catch(e)
+				{
+					var message = "Failed to load editor page.  An exception occurred in the script. Error name: " + e.name + ". Error message: " + e.message;
+					Field.setValue($("myForm"), message);
+				}
+			}
+
+			function initAllergyTable(htmlTable, allergyContext)
+			{
+				var allergenTypeTextChoices = allergyContext.AllergenTypeChoices.map(function(item) { return item.Value; });
+				var severityTextChoices = allergyContext.SeverityChoices.map(function(item) { return item.Value; });
+				var sensitivityTypeTextChoices = allergyContext.SensitivityTypeChoices.map(function(item) { return item.Value; });
+				var personRelationShipTypeTextChoices = allergyContext.PersonRelationshipTypeChoices.map(function(item) { return item.Value; });
+
+				var htmlTable = Table.createTable(htmlTable, 
+						{ editInPlace: canEdit, flow: false, checkBoxes: canEdit, empty: Table.defaultEmptyOption },
+						[
+							{	label: "Allergen Type",
+								cellType: "choice",
+								choices: allergenTypeTextChoices,
+								size: 20,
+								getValue: function(item) { return item.AllergenType ? item.AllergenType.Value : null; },
+								setValue: function(item, value) { item.AllergenType = allergyContext.AllergenTypeChoices.find(function(c) { return c.Value == value; }); },
+								getError: function(item) { return null; }
+							},
+							{	label: "Allergen Description",
+								cellType: "text",
+								size: 50,
+								getValue: function(item) { return item.AllergenDescription; },
+								setValue: function(item, value) { item.AllergenDescription = value; },
+								getError: function(item) { return null; }
+							},
+							{	label: "Severity",
+								cellType: "choice",
+								choices: severityTextChoices,
+								size: 20,
+								getValue: function(item) { return item.Severity ? item.Severity.Value : null; },
+								setValue: function(item, value) { item.Severity = allergyContext.SeverityChoices.find(function(c) { return c.Value == value; }); },
+								getError: function(item) { return null; }
+							},
+							{	label: "Reaction",
+								cellType: "text",
+								size: 50,
+								getValue: function(item) { return item.Reaction; },
+								setValue: function(item, value) { item.Reaction = value; },
+								getError: function(item) { return null; }
+							},
+							{	label: "Sensitivity Type",
+								cellType: "choice",
+								choices: sensitivityTypeTextChoices,
+								size: 20,
+								getValue: function(item) { return item.SensitivityType ? item.SensitivityType.Value : null; },
+								setValue: function(item, value) { item.SensitivityType = allergyContext.SensitivityTypeChoices.find(function(c) { return c.Value == value; }); },
+								getError: function(item) { return null; }
+							},
+							{	label: "Onset Time",
+								cellType: "datetime",
+								getValue: function(item) { return item.OnsetTime; },
+								setValue: function(item, value) { item.OnsetTime = value; },
+								getError: function(item) { return null; }
+							},
+							{	label: "Reported Time",
+								cellType: "datetime",
+								getValue: function(item) { return item.ReportedTime; },
+								setValue: function(item, value) { item.ReportedTime = value; },
+								getError: function(item) { return null; }
+							},
+							{	label: "Reporter",
+								cellType: "text",
+								getValue: function(item) { return item.ReporterName ? Ris.formatPersonName(item.ReporterName) : null; },
+								setValue: function(item, value) { item.ReporterName = { FamilyName: "FamilyName", GivenName: "GivenName" }; },
+								getError: function(item) { return null; }
+							},
+							{	label: "Relationship",
+								getValue: function(item) { return item.ReporterRelationshipType ? item.ReporterRelationshipType.Value : null; },
+								cellType: "choice",
+								choices: personRelationShipTypeTextChoices,
+								getValue: function(item) { return item.ReporterRelationshipType ? item.ReporterRelationshipType.Value : null; },
+								setValue: function(item, value) { item.ReporterRelationshipType = allergyContext.PersonRelationshipTypeChoices.find(function(c) { return c.Value == value; }); },
+								getError: function(item) { return null; }
+							}
+						]);
+
+				if (canEdit)
+				{
+					htmlTable.initAddDeleteButtons(canEdit, "Delete selected patient allergy");
+					htmlTable.cellUpdated = function() { Ris.setModified(true); };
+				}
+				
+				htmlTable.errorProvider = errorProvider;
+				htmlTable.rowCycleClassNames = ["row0", "row1"];
+				htmlTable.bindItems(data.Allergies);
+			}
+
+			function saveData()
+			{
+				// TODO: There is a problem saving date.
+				Ris.setTag("Allergies", JSML.create(data.Allergies, "Allergies"));
+			}
+		</script>
+	</head>
+	<body onload="javascript: onBodyLoad()">
+		<form id="myForm">
+			<table  style="{margin-bottom:2em}" id="allergyTable" border="1" width="100%">
+				<tr class="tableheading">
+					<td>Allergen Type</td>
+					<td>Description</td>
+					<td>Severity</td>
+					<td>Reaction</td>
+					<td>Sensitivity Type</td>
+					<td>Onset Time</td>
+					<td>Reported Time</td>
+					<td>Reporter</td>
+					<td>Relationship</td>
+				</tr>
+			</table>
+		</form>
+	</body>
+</html>

@@ -1,0 +1,135 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!-- @codegen: ignore -->
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" assembly="ClearCanvas.Healthcare" namespace="ClearCanvas.Healthcare">
+  <class name="Worklist" proxy="Worklist" table="Worklist_">
+    <cache usage="nonstrict-read-write"/>
+    <id name="OID" column="OID_" type="Guid">
+      <generator class="guid.comb"/>
+    </id>
+    <discriminator column="Discriminator_" type ="String"/>
+    <version name="Version" column="Version_"/>
+
+    <!-- the ClassName is persisted only for the purpose of enforcing the unique constraint -->
+    <property name="FullClassName" type="String">
+      <column name="FullClassName_" unique-key="WorklistKey_" not-null="true" length="200"/>
+    </property>
+    
+    <property name="Name" type="String">
+      <column name="Name_" unique-key="WorklistKey_" not-null="true" length="200"/>
+    </property>
+    
+    <property name="Description" column="Description_" type="String" length="1024"/>
+
+    <component name="Owner" class="WorklistOwner">
+      <many-to-one name="Staff" class="Staff">
+        <column name="OwnerStaffOID_" unique-key="WorklistKey_"/>
+      </many-to-one>
+      <many-to-one name="Group" class="StaffGroup">
+        <column name="OwnerGroupOID_" unique-key="WorklistKey_"/>
+      </many-to-one>
+    </component>
+
+    <component name="ProcedureTypeFilter" class="WorklistProcedureTypeFilter">
+      <property name="IsEnabled" type="Boolean" column="ProcedureTypeFilterIsEnabled_"/>
+      <set name="Values" table="WorklistProcedureType_" lazy="true">
+        <cache usage="nonstrict-read-write"/>
+        <key column="WorklistOID_"/>
+        <many-to-many column="ProcedureTypeOID_" class="ProcedureType" fetch="join"/>
+      </set>
+    </component>
+
+    <component name="ProcedureTypeGroupFilter" class="WorklistProcedureTypeGroupFilter">
+      <property name="IsEnabled" type="Boolean" column="ProcedureTypeGroupFilterIsEnabled_"/>
+      <set name="Values" table="WorklistProcedureTypeGroup_" lazy="true">
+        <cache usage="nonstrict-read-write"/>
+        <key column="WorklistOID_"/>
+        <many-to-many column="ProcedureTypeGroupOID_" class="ProcedureTypeGroup" fetch="join"/>
+      </set>
+    </component>
+
+    <component name="FacilityFilter" class="WorklistFacilityFilter">
+      <property name="IsEnabled" type="Boolean" column="FacilityFilterIsEnabled_"/>
+      <property name="IncludeWorkingFacility" type="Boolean" column="FacilityFilterIncludeWorkingFacility_"/>
+      <set name="Values" table="WorklistFacility_" lazy="true">
+        <cache usage="nonstrict-read-write"/>
+        <key column="WorklistOID_"/>
+        <many-to-many column="FacilityOID_" class="Facility" fetch="join"/>
+      </set>
+    </component>
+    
+    <component name="DepartmentFilter" class="WorklistDepartmentFilter">
+      <property name="IsEnabled" type="Boolean" column="DepartmentFilterIsEnabled_"/>
+      <set name="Values" table="WorklistDepartment_" lazy="true">
+        <cache usage="nonstrict-read-write"/>
+        <key column="WorklistOID_"/>
+        <many-to-many column="DepartmentOID_" class="Department" fetch="join"/>
+      </set>
+    </component>
+
+    <component name="PatientClassFilter" class="WorklistPatientClassFilter">
+      <property name="IsEnabled" type="Boolean" column="PatientClassFilterIsEnabled_"/>
+      <set name="Values" table="WorklistPatientClass_" lazy="true">
+        <cache usage="nonstrict-read-write"/>
+        <key column="WorklistOID_"/>
+        <many-to-many column="PatientClassOID_" class="PatientClassEnum" fetch="join"/>
+      </set>
+    </component>
+
+    <component name="PatientLocationFilter" class="WorklistPatientLocationFilter">
+      <property name="IsEnabled" type="Boolean" column="PatientLocationFilterIsEnabled_"/>
+      <set name="Values" table="WorklistPatientLocation_" lazy="true">
+        <cache usage="nonstrict-read-write"/>
+        <key column="WorklistOID_"/>
+        <many-to-many column="PatientLocationOID_" class="Location" fetch="join"/>
+      </set>
+    </component>
+
+    <component name="OrderPriorityFilter" class="WorklistOrderPriorityFilter">
+      <property name="IsEnabled" type="Boolean" column="OrderPriorityFilterIsEnabled_"/>
+      <set name="Values" table="WorklistOrderPriority_" lazy="true">
+        <cache usage="nonstrict-read-write"/>
+        <key column="WorklistOID_"/>
+        <many-to-many column="OrderPriorityOID_" class="OrderPriorityEnum" fetch="join"/>
+      </set>
+    </component>
+    
+    <component name="OrderingPractitionerFilter" class="WorklistPractitionerFilter">
+      <property name="IsEnabled" type="Boolean" column="OrderingPractitionerFilterIsEnabled_"/>
+      <set name="Values" table="WorklistOrderingPractitioner_" lazy="true">
+        <cache usage="nonstrict-read-write"/>
+        <key column="WorklistOID_"/>
+        <many-to-many column="OrderingPractitionerOID_" class="ExternalPractitioner" fetch="join"/>
+      </set>
+    </component>
+
+    <component name="PortableFilter" class="WorklistPortableFilter">
+      <property name="IsEnabled" type="Boolean" column="PortableFilterIsEnabled_"/>
+      <property name="Value" type="Boolean" column="PortableFilterValue_"/>
+    </component>
+
+    <component name="TimeFilter" class="WorklistTimeFilter">
+      <property name="IsEnabled" type="Boolean" column="TimeFilterIsEnabled_"/>
+      <component name="Value" class="WorklistTimeRange">
+        <component name="Start" class="WorklistTimePoint">
+          <property name="FixedValue" column="StartTimeFilterFixedValue_" type="DateTime"/>
+          <property name="RelativeValue" column="StartTimeFilterRelativeValue_" type="TimeSpan"/>
+          <property name="Resolution" column="StartTimeFilterResolution_" type="Int64"/>
+        </component>
+        <component name="End" class="WorklistTimePoint">
+          <property name="FixedValue" column="EndTimeFilterFixedValue_" type="DateTime"/>
+          <property name="RelativeValue" column="EndTimeFilterRelativeValue_" type="TimeSpan"/>
+          <property name="Resolution" column="EndTimeFilterResolution_" type="Int64"/>
+        </component>
+      </component>
+    </component>
+
+    <set name="StaffSubscribers" lazy="true" table="WorklistStaffSubscriber_">
+      <key column="WorklistOID_"/>
+      <many-to-many column="StaffOID_" class="Staff" fetch="join"/>
+    </set>
+    <set name="GroupSubscribers" lazy="true" table="WorklistGroupSubscriber_">
+      <key column="WorklistOID_"/>
+      <many-to-many column="StaffGroupOID_" class="StaffGroup" fetch="join"/>
+    </set>
+  </class>
+</hibernate-mapping>

@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" assembly="ClearCanvas.Healthcare" namespace="ClearCanvas.Healthcare">
+  <class name="TranscriptionRejectReasonEnum" proxy="TranscriptionRejectReasonEnum" table="TranscriptionRejectReasonEnum_">
+    <id name="Code" column="Code_" type="String">
+      <generator class="assigned"/>
+    </id>
+    <property name="Value" column="Value_" type="String" length="50"/>
+    <property name="Description" column="Description_" type="String" length="200"/>
+    <property name="DisplayOrder" column="DisplayOrder_" type="Single"/>
+    <property name="Deactivated" column="Deactivated_" type="Boolean" not-null="true"/>
+  </class>
+</hibernate-mapping>

@@ -1,0 +1,54 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="ClearCanvas.ImageServer.Common" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="StudyHeaderIncludePrivateTags" Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="StudyHeaderIncludeUNTags" Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="StudyHeaderMaxValueLength" Type="System.UInt64" Scope="Application">
+      <Value Profile="(Default)">4096</Value>
+    </Setting>
+    <Setting Name="DefaultStudyRootFolder" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Unknown</Value>
+    </Setting>
+    <Setting Name="FilesystemCheckDelaySeconds" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">120</Value>
+    </Setting>
+    <Setting Name="DbChangeDelaySeconds" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">180</Value>
+    </Setting>
+    <Setting Name="UseReceiveDateAsFolder" Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="TooManyStudyMoveWarningThreshold" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">15</Value>
+    </Setting>
+    <Setting Name="DeviceConfig_MaxConnections" Type="System.Int16" Scope="Application">
+      <Value Profile="(Default)">15</Value>
+    </Setting>
+    <Setting Name="TemporaryPath" Type="System.String" Scope="Application">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="InstanceLogging" Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="MinStorageRequiredInMB" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">1024</Value>
+    </Setting>
+    <Setting Name="WorkQueueMaxFailureCount" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">3</Value>
+    </Setting>
+    <Setting Name="InactiveWorkQueueMinTime" Type="System.TimeSpan" Scope="Application">
+      <Value Profile="(Default)">2.00:00:00</Value>
+    </Setting>
+    <Setting Name="AllowedConvertToUnicodeOnEdit" Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="OverrideDuplicatePolicyForStudyUIDs" Type="System.String" Scope="Application">
+      <Value Profile="(Default)" />
+    </Setting>
+  </Settings>
+</SettingsFile>

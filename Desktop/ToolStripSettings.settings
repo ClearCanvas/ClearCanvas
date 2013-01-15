@@ -1,0 +1,15 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="ClearCanvas.Desktop" GeneratedClassName="ToolStripSettings">
+  <Profiles />
+  <Settings>
+    <Setting Name="WrapLongToolstrips" Description="Controls if tool strips longer than the window size should be wrapped." Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="IconSize" Description="Controls the size of toolstrip buttons." Type="ClearCanvas.Desktop.IconSize" Scope="User">
+      <Value Profile="(Default)">Large</Value>
+    </Setting>
+    <Setting Name="ToolStripDock" Description="User's preference as to where the main toolbar should be docked." Type="ClearCanvas.Desktop.ToolStripDock" Scope="User">
+      <Value Profile="(Default)">Top</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.0" assembly="ClearCanvas.Healthcare" namespace="ClearCanvas.Healthcare">
+  <class name="$safeitemname$" table="$safeitemname$_">
+    <id name="Code" column="Code_" type="$rootnamespace$.$safeitemname$Hbm, $rootnamespace$">
+      <generator class="assigned"/>
+    </id>
+    <property name="Value" column="Value_" type="String" length="50"/>
+    <property name="Description" column="Description_" type="String" length="200"/>
+  </class>
+</hibernate-mapping>

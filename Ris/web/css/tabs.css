@@ -1,0 +1,66 @@
+.TabControl 
+{
+   margin-top: 1em;
+}
+
+.Tab 
+{
+	display: inline-block;
+   white-space:nowrap;
+   font-size: 1.2em;
+   font-weight: bold;
+   margin: 0 0 0 0;
+   color: #3D98D1;
+   background-color: #ffffff;
+   border: 1px solid #A8D8F4;
+   padding: 0 0.1em 0 0.1em;
+}
+
+.ActiveTab
+{
+   color: #3D98D1;
+   background-color: #A8D8F4;
+}
+
+.Tab:hover, .ActiveTab:hover
+{
+   background-color: #dddddd;
+}
+
+.TabPage 
+{
+   padding: 1em 1em 1em 1em;
+   display:none;
+   border:none;
+	margin-top: -1px;
+	background-color: #ffffff;
+}
+
+.ActiveTabPage
+{
+   display: block;
+   border: 1px solid #A8D8F4;
+	margin-top: -1px;
+	background-color: #ffffff;
+}
+
+.TabHeader
+{
+	padding-top: 0.5em;
+	padding-bottom: 0.5em;
+	padding-left: 0.5em;
+	padding-right: 0.5em;
+	display: inline-block;
+   background-color: #F4FAFF;	
+	border: 1px solid #A8D8F4;
+	border-bottom: 1px solid EEFFFF;
+}
+
+.TabHeader h3
+{
+   color: #3D98D1;
+   font-size: 1.5em;
+   font-weight: bold;
+	font-style: italic;
+	margin-bottom: 0.5em;
+}

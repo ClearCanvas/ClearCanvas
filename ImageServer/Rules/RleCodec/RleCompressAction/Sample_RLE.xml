@@ -1,0 +1,15 @@
+﻿<!-- 
+This rule instructs the server to use RLE compression
+on US and CR studies.
+-->
+<rule>
+	<condition expressionLanguage="dicom">		
+		<or>
+			<equal test="$Modality"  refValue="US" />
+			<equal test="$Modality"  refValue="CR" />
+		</or>
+	</condition>
+	<action>
+	  <rle time="10" unit="weeks" convertFromPalette="true"/>
+	</action>
+</rule>

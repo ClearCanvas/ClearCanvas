@@ -1,0 +1,72 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title>External Practitioner Preview</title>
+		<link href="../../css/default.css" rel="stylesheet" type="text/css" />
+		<script type="text/javascript" src="../../js/jsx.js"></script>
+		<script type="text/javascript" src="../../js/jsml.js"></script>
+		<script type="text/javascript" src="../../js/ui.js"></script>
+		<script type="text/javascript" src="../../js/ris.js"></script>
+		<script type="text/javascript" src="../../js/preview.js"></script>
+		<script type="text/javascript" src="../../JDMI/js/preview.js"></script>
+		<script type="text/javascript" >
+			var errorProvider = new ErrorProvider();
+			var imagePath = "../images";
+
+			function onBodyLoad()
+			{
+				if(!Ris)
+					return;
+
+				try
+				{
+					var context = Ris.getHealthcareContext();
+					if (context == null)
+					{
+						Field.setValue($("myForm"), "");
+						return;
+					}
+
+					GetExternalPractitionerService().loadExternalPractitionerForEditAsync(CreateRequest(context), OnResponseReceived);
+				}
+				catch(e)
+				{
+					var message = "Failed to load preview page.  An exception occurred in the script. Error name: " + e.name + ". Error message: " + e.message;
+					Field.setValue($("myForm"), message);
+				}
+			}
+
+			function GetExternalPractitionerService()
+			{
+				return Ris.getService("ClearCanvas.Ris.Application.Common.Admin.ExternalPractitionerAdmin.IExternalPractitionerAdminService, ClearCanvas.Ris.Application.Common");
+			}
+
+			function CreateRequest(context)
+			{
+				return {
+						PractitionerRef: context.PractitionerRef,
+						IncludeAlerts: true
+					};
+			}
+
+			function OnResponseReceived(response)
+			{
+				if (response == null || response.length == 0)
+				{
+					Field.setValue($("myForm"), "");
+					return;
+				}
+
+				Preview.ExternalPractitionerSummary.create($("externalPractitionerSummary"), response.PractitionerDetail, response.Alerts);
+				
+				var alerts = response.Alerts | [];
+			}
+		</script>
+	</head>
+	<body onload="javascript: onBodyLoad()">
+		<div id="loadingAnimation"></div>
+		<form id="myForm">
+			<div id="externalPractitionerSummary"></div>
+		</form>
+	</body>
+</html>

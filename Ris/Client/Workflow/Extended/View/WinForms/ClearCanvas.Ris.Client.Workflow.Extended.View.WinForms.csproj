@@ -1,0 +1,173 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{A3990227-9735-4C1C-A0D0-0A10CBD5D0EC}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ClearCanvas.Ris.Client.Workflow.Extended.View.WinForms</RootNamespace>
+    <AssemblyName>ClearCanvas.Ris.Client.Workflow.Extended.View.WinForms</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="OrderNoteboxConfigurationComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="OrderNoteboxConfigurationComponentControl.designer.cs">
+      <DependentUpon>OrderNoteboxConfigurationComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="OrderNoteboxConfigurationComponentView.cs" />
+    <Compile Include="OrderNoteConversationComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="OrderNoteConversationComponentControl.designer.cs">
+      <DependentUpon>OrderNoteConversationComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="OrderNoteConversationComponentView.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ProtocolCodeEditorComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ProtocolCodeEditorComponentControl.designer.cs">
+      <DependentUpon>ProtocolCodeEditorComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ProtocolCodeEditorComponentView.cs" />
+    <Compile Include="ProtocolEditorComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ProtocolEditorComponentControl.Designer.cs">
+      <DependentUpon>ProtocolEditorComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ProtocolEditorComponentView.cs" />
+    <Compile Include="ProtocolGroupEditorComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ProtocolGroupEditorComponentControl.designer.cs">
+      <DependentUpon>ProtocolGroupEditorComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ProtocolGroupEditorComponentView.cs" />
+    <Compile Include="ProtocollingComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ProtocollingComponentControl.Designer.cs">
+      <DependentUpon>ProtocollingComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ProtocollingComponentView.cs" />
+    <Compile Include="ReconciliationComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ReconciliationComponentControl.Designer.cs">
+      <DependentUpon>ReconciliationComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ReconciliationComponentView.cs" />
+    <Compile Include="ReconciliationConfirmComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ReconciliationConfirmComponentControl.Designer.cs">
+      <DependentUpon>ReconciliationConfirmComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ReconciliationConfirmComponentView.cs" />
+    <Compile Include="WorklistPrintComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="WorklistPrintComponentControl.Designer.cs">
+      <DependentUpon>WorklistPrintComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="WorklistPrintComponentView.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\..\..\Common\ClearCanvas.Common.csproj">
+      <Project>{F6EAD428-E6CF-4DF6-B2F3-D33D532C5343}</Project>
+      <Name>ClearCanvas.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\..\..\Desktop\ClearCanvas.Desktop.csproj">
+      <Project>{26E9A01A-64B5-42C5-8252-FBB30DF9CEC7}</Project>
+      <Name>ClearCanvas.Desktop</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\..\..\Desktop\View\WinForms\ClearCanvas.Desktop.View.WinForms.csproj">
+      <Project>{BB434EC3-A580-4744-A635-A2B4029C66DE}</Project>
+      <Name>ClearCanvas.Desktop.View.WinForms</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\ClearCanvas.Ris.Client.csproj">
+      <Project>{F8E75C01-AB14-4DDE-ABEA-3EECC4957A1F}</Project>
+      <Name>ClearCanvas.Ris.Client</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\View\WinForms\ClearCanvas.Ris.Client.View.WinForms.csproj">
+      <Project>{7932D8CA-34CF-47E6-A425-9B8DA4F60341}</Project>
+      <Name>ClearCanvas.Ris.Client.View.WinForms</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\ClearCanvas.Ris.Client.Workflow.Extended.csproj">
+      <Project>{52128A83-7192-4A6B-899E-886F43C74126}</Project>
+      <Name>ClearCanvas.Ris.Client.Workflow.Extended</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="OrderNoteboxConfigurationComponentControl.resx">
+      <DependentUpon>OrderNoteboxConfigurationComponentControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OrderNoteConversationComponentControl.resx">
+      <DependentUpon>OrderNoteConversationComponentControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ProtocolCodeEditorComponentControl.resx">
+      <DependentUpon>ProtocolCodeEditorComponentControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ProtocolEditorComponentControl.resx">
+      <DependentUpon>ProtocolEditorComponentControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ProtocolGroupEditorComponentControl.resx">
+      <DependentUpon>ProtocolGroupEditorComponentControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ProtocollingComponentControl.resx">
+      <DependentUpon>ProtocollingComponentControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ReconciliationComponentControl.resx">
+      <DependentUpon>ReconciliationComponentControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ReconciliationConfirmComponentControl.resx">
+      <DependentUpon>ReconciliationConfirmComponentControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WorklistPrintComponentControl.resx">
+      <DependentUpon>WorklistPrintComponentControl.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

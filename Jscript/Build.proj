@@ -1,0 +1,61 @@
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <DistributionBuild>false</DistributionBuild>
+    <Configuration>Debug</Configuration>
+  </PropertyGroup>
+
+  <Choose>
+    <When Condition="'$(Configuration)' == 'Release' And '$(KeyFile)' != ''">
+      <PropertyGroup>
+        <CommonProperties>Platform=AnyCPU;Configuration=$(Configuration);SignAssembly=true;DelaySign=false;AssemblyOriginatorKeyFile=$(KeyFile)</CommonProperties>
+      </PropertyGroup>
+    </When>
+    <Otherwise>
+      <PropertyGroup>
+        <CommonProperties>Platform=AnyCPU;Configuration=$(Configuration)</CommonProperties>
+      </PropertyGroup>
+    </Otherwise>
+  </Choose>
+
+  <Choose>
+		<When Condition=" '$(Configuration)' == 'Debug' ">
+			<PropertyGroup>
+				<EmitDebugInformation>/debug+</EmitDebugInformation>
+			</PropertyGroup>
+		</When>
+		<When Condition=" '$(Configuration)' == 'Release' ">
+			<PropertyGroup>
+				<EmitDebugInformation>/debug-</EmitDebugInformation>
+			</PropertyGroup>
+		</When>
+	</Choose>
+
+  <Target Name="Build" DependsOnTargets="Compile;SignAssembly">
+  </Target>
+
+  <Target Name="Compile" Inputs="ClearCanvas.Jscript.js;AssemblyInfo.js; ..\Common\bin\$(Configuration)\ClearCanvas.Common.dll" Outputs="bin\$(Configuration)\ClearCanvas.Jscript.dll">
+    <GetFrameworkPath>
+      <Output TaskParameter="Path" PropertyName="FxPath" />
+    </GetFrameworkPath>
+
+    <MakeDir Directories="bin\$(Configuration)" Condition="!Exists('bin\$(Configuration)')" />
+    <MSBuild Projects="..\Common\ClearCanvas.Common.csproj" Properties="$(CommonProperties)" />
+    <Exec Command="$(FxPath)\jsc $(EmitDebugInformation) /t:library /lib:..\Common\bin\$(Configuration) /out:bin\$(Configuration)\ClearCanvas.Jscript.dll ClearCanvas.Jscript.js AssemblyInfo.js"/>
+  </Target>
+
+  <Target Name="SignAssembly" DependsOnTargets="Compile" Condition="'$(Configuration)' == 'Release' And '$(KeyFile)' != ''">
+    <!-- The JScript compiler doesn't have options for strong naming the assemblies, so we have to reassemble the library here with a strong name -->
+    <GetFrameworkPath>
+      <Output TaskParameter="Path" PropertyName="FxPath" />
+    </GetFrameworkPath>
+    <GetFrameworkSdkPath>
+      <Output TaskParameter="Path" PropertyName="SdkPath" />
+    </GetFrameworkSdkPath>
+
+    <MakeDir Directories="obj\$(Configuration)" Condition="!Exists('obj\$(Configuration)')" />
+    <Delete Files="obj\$(Configuration)\*.*" />
+    <Exec Command="ildasm /nobar &quot;$(MSBuildProjectDirectory)\bin\$(Configuration)\ClearCanvas.Jscript.dll&quot; &quot;/out:$(MSBuildProjectDirectory)\obj\$(Configuration)\ClearCanvas.Jscript.il&quot;" WorkingDirectory="$(SdkPath)\bin\"/>
+    <Exec Command="ilasm /quiet &quot;$(MSBuildProjectDirectory)\obj\$(Configuration)\ClearCanvas.Jscript.il&quot; &quot;/key=$(KeyFile)&quot; /dll &quot;/output=$(MSBuildProjectDirectory)\bin\$(Configuration)\ClearCanvas.Jscript.dll&quot;" WorkingDirectory="$(FxPath)" />
+    <Message Text="ClearCanvas.Jscript.dll signed with strong name" />
+  </Target>
+</Project>

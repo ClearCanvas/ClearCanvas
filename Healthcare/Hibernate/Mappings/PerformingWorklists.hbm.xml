@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!-- @codegen: ignore -->
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" assembly="ClearCanvas.Healthcare" namespace="ClearCanvas.Healthcare">
+  <!-- abstract intermediate classes -->
+  <subclass name="PerformingWorklist" extends="Worklist" discriminator-value="PERFORMING"/>
+
+  <!-- concrete classes -->
+  <subclass name="PerformingScheduledWorklist" extends="PerformingWorklist" discriminator-value="PERFORMING_SCHEDULED"/>
+  <subclass name="PerformingCheckedInWorklist" extends="PerformingWorklist" discriminator-value="PERFORMING_CHECKEDIN"/>
+  <subclass name="PerformingInProgressWorklist" extends="PerformingWorklist" discriminator-value="PERFORMING_INPROGRESS"/>
+  <subclass name="PerformingCancelledWorklist" extends="PerformingWorklist" discriminator-value="PERFORMING_CANCELLED"/>
+  <subclass name="PerformingPerformedWorklist" extends="PerformingWorklist" discriminator-value="PERFORMING_PERFORMED"/>
+  <subclass name="PerformingUndocumentedWorklist" extends="PerformingWorklist" discriminator-value="PERFORMING_UNDOCUMENTED"/>
+</hibernate-mapping>

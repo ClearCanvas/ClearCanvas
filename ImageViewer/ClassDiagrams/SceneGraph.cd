@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Font Name="Tahoma" Size="8.25" />
+  <Class Name="ClearCanvas.ImageViewer.PresentationImage" Collapsed="true">
+    <Position X="0.75" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>PresentationImage.cs</FileName>
+      <HashCode>UEMVACAgICBAAgAAABACAABAFACADgEIAABAAIAAASI=</HashCode>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="SceneGraph" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ClearCanvas.ImageViewer.Graphics.CompositeGraphic" Collapsed="true">
+    <Position X="3.5" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Graphics\CompositeGraphic.cs</FileName>
+      <HashCode>CAKAAIAAAKBAAAAAAgAAAAAACAAAAAIKAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+</ClassDiagram>

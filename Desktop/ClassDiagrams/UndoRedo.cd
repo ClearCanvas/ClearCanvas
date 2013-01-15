@@ -1,0 +1,104 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Font Name="Tahoma" Size="8.25" />
+  <Class Name="ClearCanvas.Desktop.Command">
+    <Position X="4.75" Y="1.75" Width="1.75" />
+    <TypeIdentifier>
+      <FileName>Command.cs</FileName>
+      <HashCode>AAAAIAAAAAAAAAQAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+    <Members>
+      <Field Name="_name" Hidden="true" />
+      <Method Name="Command" Hidden="true" />
+      <Property Name="Name" Hidden="true" />
+    </Members>
+  </Class>
+  <Class Name="ClearCanvas.Desktop.CommandHistory">
+    <Position X="1.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>CommandHistory.cs</FileName>
+      <HashCode>AAAAAgAAAABABAACEAAAAAAhAAAgIAxAAgAAAAAAAkA=</HashCode>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Field Name="_history" />
+    </ShowAsCollectionAssociation>
+    <Members>
+      <Event Name="_currentCommandChangedEvent" Hidden="true" />
+      <Event Name="_currentCommandChangingEvent" Hidden="true" />
+      <Field Name="_currentCommandIndex" Hidden="true" />
+      <Field Name="_lastCommandIndex" Hidden="true" />
+      <Field Name="_maxSize" Hidden="true" />
+      <Method Name="CommandHistory" Hidden="true" />
+      <Event Name="CurrentCommandChanged" Hidden="true" />
+      <Event Name="CurrentCommandChanging" Hidden="true" />
+      <Property Name="CurrentCommandIndex" Hidden="true" />
+      <Property Name="LastCommandIndex" Hidden="true" />
+      <Property Name="MaxSize" Hidden="true" />
+      <Property Name="NumCommands" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Events" Collapsed="true" />
+    </Compartments>
+  </Class>
+  <Class Name="ClearCanvas.Desktop.UndoableCommand">
+    <Position X="4.75" Y="3.25" Width="1.75" />
+    <TypeIdentifier>
+      <FileName>UndoableCommand.cs</FileName>
+      <HashCode>AAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+    <Members>
+      <Method Name="UndoableCommand" Hidden="true" />
+    </Members>
+  </Class>
+  <Class Name="ClearCanvas.Desktop.CompositeUndoableCommand">
+    <Position X="5.75" Y="5.5" Width="2.5" />
+    <TypeIdentifier>
+      <FileName>CompositeUndoableCommand.cs</FileName>
+      <HashCode>AABAgAAAAAAAAAQAAAAAAAQAAAAAAAAAAAAAABAAAAA=</HashCode>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Field Name="_commands" />
+    </ShowAsCollectionAssociation>
+    <Members>
+      <Method Name="CompositeUndoableCommand" Hidden="true" />
+    </Members>
+    <AssociationLine Name="_commands" Type="ClearCanvas.Desktop.UndoableCommand" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="7.562" Y="5.5" />
+        <Point X="7.562" Y="3.801" />
+        <Point X="6.5" Y="3.801" />
+      </Path>
+    </AssociationLine>
+  </Class>
+  <Class Name="ClearCanvas.Desktop.MemorableUndoableCommand">
+    <Position X="3" Y="5.5" Width="2.5" />
+    <TypeIdentifier>
+      <FileName>MemorableUndoableCommand.cs</FileName>
+      <HashCode>AAAAgAAAAEAAAAQAAAEAAAAAIAAAAAAAAABBAAACAAA=</HashCode>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Originator" />
+    </ShowAsAssociation>
+    <Members>
+      <Field Name="_beginState" Hidden="true" />
+      <Field Name="_endState" Hidden="true" />
+      <Field Name="_originator" Hidden="true" />
+      <Method Name="MemorableUndoableCommand" Hidden="true" />
+    </Members>
+    <InheritanceLine Type="ClearCanvas.Desktop.UndoableCommand" FixedFromPoint="true">
+      <Path>
+        <Point X="5.625" Y="4.351" />
+        <Point X="5.625" Y="5.125" />
+        <Point X="4.25" Y="5.125" />
+        <Point X="4.25" Y="5.5" />
+      </Path>
+    </InheritanceLine>
+  </Class>
+  <Interface Name="ClearCanvas.Desktop.IMemorable">
+    <Position X="0.5" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>IMemorable.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAQAAAAAAAAABAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Interface>
+</ClassDiagram>

@@ -1,0 +1,128 @@
+using System;
+using System.Collections;
+using System.Text;
+
+using Iesi.Collections;
+using ClearCanvas.Common;
+using ClearCanvas.Enterprise;
+
+
+namespace <%= namespace %>.Support {
+
+
+    /// <summary>
+    /// Provides context-independent support for the <see cref="<%= className %>"/> class.
+    /// This file is machine generated - changes will be lost.
+    /// </summary>
+	public partial class <%= supportClassName %> : <%= (kind == :entity) ? (isSubClass ? superClass.supportClassName : "EntitySupport") : "ValueObjectSupport" %>, IEquatable<<%= supportClassName %>>
+	{
+       	#region Private fields
+        
+		<% singleValuedFields.each do |f| %>
+	  	private <%= f.supportDataType %> <%= f.fieldName %>;
+	  	<% end %>
+	  	
+	  	#endregion
+	  	
+	  	#region Constructors
+	  	
+	  	/// <summary>
+	  	/// Constructs a new support object
+	  	/// </summary>
+	  	public <%= supportClassName %>()
+	  	{
+		 	<% singleValuedFields.find_all {|f| f.supportInitialValue}.each do |f| %>
+		  	<%= f.fieldName %> = <%= f.supportInitialValue %>;
+		  	<% end %>
+	  	}
+
+		<% if(kind == :entity) %>
+	  	/// <summary>
+	  	/// Constructs a new support object based on the specified entity
+	  	/// </summary>
+	  	internal <%= supportClassName %>(EntityRef entityRef)
+			:base(entityRef)
+	  	{
+		 	<% singleValuedFields.find_all {|f| f.supportInitialValue}.each do |f| %>
+		  	<%= f.fieldName %> = <%= f.supportInitialValue %>;
+		  	<% end %>
+	  	}
+		<% end %>
+	  	
+	  	#endregion
+	  	
+	  	#region Public Properties
+	  	
+	  	<% singleValuedFields.each do |f| %>
+	  	/// <summary>
+	  	/// <%= f.accessorName %> property
+	  	/// </summary>
+	  	public <%= f.supportDataType %> <%= f.accessorName %>
+	  	{
+			get { return <%= f.fieldName %>; }
+			set { <%= f.fieldName %> = value; }
+	  	}
+	  	<% end %>
+	  	
+	  	#endregion
+	  	
+	  	#region IEquatable Members
+	  	
+	  	public bool Equals(<%= supportClassName %> that)
+		{
+			return (that != null) &&
+	  	<% singleValuedFields.each do |f| %>
+			((this.<%= f.fieldName %> == default(<%= f.supportDataType %>)) ? (that.<%= f.fieldName %> == default(<%= f.supportDataType %>)) : this.<%= f.fieldName %>.Equals(that.<%= f.fieldName %>)) &&
+	  	<% end %>
+                    base.Equals(that);
+		}
+	  	
+	  	#endregion
+	  	
+	  	#region Overrides
+	  	
+	  	/// <summary>
+	  	/// Returns a clone of this support object.  A deep-copy is performed, so the clone will not share
+	  	/// any mutable data with this object.
+	  	/// </summary>
+        public override object Clone()
+        {
+			<%= supportClassName %> clone = new <%= supportClassName %>();
+			clone.CopyFrom(this);
+			return clone;
+        }
+	  	
+	  	public override bool Equals(object that)
+		{
+			return this.Equals(that as <%= supportClassName %>);
+		}
+		
+		public override int GetHashCode()
+		{
+			return
+	  	<% singleValuedFields.each do |f| %>
+				(<%= f.fieldName %> == default(<%= f.supportDataType %>) ? 0 : <%= f.fieldName %>.GetHashCode()) ^
+	  	<% end %>
+                    base.GetHashCode();
+		}
+                
+	  	#endregion
+	  	
+	  	#region Helper methods
+	  	
+	  	protected void CopyFrom(<%= supportClassName %> that)
+	  	{
+		<% fields.select {|f| f.kind == :component || f.kind == :userType }.each do |f| %>
+			this.<%= f.fieldName %> = (that.<%= f.fieldName %> == default(<%= f.supportDataType %>)) ? default(<%= f.supportDataType %>) : (<%= f.supportDataType %>)that.<%= f.fieldName %>.Clone();
+		<% end %>
+		<% fields.select {|f| f.kind == :primitive || f.kind == :enum }.each do |f| %>
+	  		this.<%= f.fieldName %> = that.<%= f.fieldName %>;
+		<% end %>
+		
+			base.CopyFrom(that);
+	  	}
+	  	
+	  	#endregion
+
+	}
+}

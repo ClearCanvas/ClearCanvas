@@ -1,0 +1,9 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="ClearCanvas.ImageViewer.Layout.Basic" GeneratedClassName="LayoutSettings">
+  <Profiles />
+  <Settings>
+    <Setting Name="LayoutSettingsXml" Description="Per-modality image box and tile configuration(s) used to layout the viewer when it is first opened, based on the loaded study." Type="System.Xml.XmlDocument" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+  </Settings>
+</SettingsFile>

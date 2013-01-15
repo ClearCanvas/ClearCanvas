@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" assembly="ClearCanvas.Healthcare" namespace="ClearCanvas.Healthcare">
+  <class name="ExternalPractitioner" proxy="ExternalPractitioner" table="ExternalPractitioner_">
+    <cache usage="nonstrict-read-write"/>
+    <id name="OID" column="OID_" type="Guid">
+      <generator class="guid.comb"/>
+    </id>
+    <version name="Version" column="Version_"/>
+    <component name="Name" class="PersonName">
+      <property name="FamilyName" column="FamilyName_" type="String" length="40" not-null="true"/>
+      <property name="GivenName" column="GivenName_" type="String" length="40" not-null="true"/>
+      <property name="MiddleName" column="MiddleName_" type="String" length="40" not-null="false"/>
+      <property name="Prefix" column="Prefix_" type="String" length="10" not-null="false"/>
+      <property name="Suffix" column="Suffix_" type="String" length="10" not-null="false"/>
+      <property name="Degree" column="Degree_" type="String" length="10" not-null="false"/>
+    </component>
+    <property name="LicenseNumber" column="LicenseNumber_" type="String" length="100"/>
+    <property name="BillingNumber" column="BillingNumber_" type="String" length="100"/>
+    <property name="IsVerified" column="IsVerified_" type="Boolean" not-null="true" access="nosetter.camelcase-underscore"/>
+    <property name="LastVerifiedTime" column="LastVerifiedTime_" type="DateTime" access="nosetter.camelcase-underscore"/>
+    <property name="LastEditedTime" column="LastEditedTime_" type="DateTime" access="nosetter.camelcase-underscore"/>
+
+    <set name="ContactPoints" lazy="true" inverse="true" cascade="all-delete-orphan" access="nosetter.camelcase-underscore">
+      <key column="PractitionerOID_"/>
+      <one-to-many class="ExternalPractitionerContactPoint"/>
+    </set>
+    
+    <map name="ExtendedProperties" lazy="true" table="ExternalPractitionerExtendedProperty_">
+      <key column="ExternalPractitionerOID_"/>
+      <index column="Name_" type="String"/>
+      <element type="String" column="Value_" length="65000"/>
+    </map>
+    <property name="Deactivated" column="Deactivated_" type="Boolean" not-null="true" access="nosetter.camelcase-underscore"/>
+    <many-to-one name="MergedInto" class="ExternalPractitioner" column="MergedIntoOID_" access="nosetter.camelcase-underscore"/>
+  </class>
+</hibernate-mapping>

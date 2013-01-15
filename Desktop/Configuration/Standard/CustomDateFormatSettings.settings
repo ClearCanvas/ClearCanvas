@@ -1,0 +1,28 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="ClearCanvas.Desktop.Configuration.Standard" GeneratedClassName="CustomDateFormatSettings">
+  <Profiles />
+  <Settings>
+    <Setting Name="AvailableCustomFormats" Description="A list of custom date formats the user can select from to set their own preferred date format." Type="System.Collections.Specialized.StringCollection" Scope="Application">
+      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;ArrayOfString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;string&gt;M/d/yyyy&lt;/string&gt;
+  &lt;string&gt;M/d/yy&lt;/string&gt;
+  &lt;string&gt;MM/dd/yyyy&lt;/string&gt;
+  &lt;string&gt;MM/dd/yy&lt;/string&gt;
+  &lt;string&gt;yyyy-MM-dd&lt;/string&gt;
+  &lt;string&gt;yy-MM-dd&lt;/string&gt;
+  &lt;string&gt;yyyy/MM/dd&lt;/string&gt;
+  &lt;string&gt;yy/MM/dd&lt;/string&gt;
+  &lt;string&gt;dd-MMM-yy&lt;/string&gt;
+  &lt;string&gt;dd-MMM-yyyy&lt;/string&gt;
+  &lt;string&gt;dd-MM-yy&lt;/string&gt;
+  &lt;string&gt;dd-MM-yyyy&lt;/string&gt;
+  &lt;string&gt;yyyyMMdd&lt;/string&gt;
+  &lt;string&gt;dddd, MMMM dd, yyyy&lt;/string&gt;
+  &lt;string&gt;MMMM dd, yyyy&lt;/string&gt;
+  &lt;string&gt;dddd, dd MMMM, yyyy&lt;/string&gt;
+  &lt;string&gt;dd MMMM, yyyy&lt;/string&gt;
+&lt;/ArrayOfString&gt;</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

@@ -1,0 +1,27 @@
+﻿<!-- 
+This rule instructs the server to use JPEG baseline compression
+on 8-bit US and RF studies that are not already compressed as 
+JPEG Baseline, JPEG Extended, and Jpeg 2000 Lossy.
+-->
+<rule>
+  <condition expressionLanguage="dicom">
+	<and>
+	  <!-- JPEG Baseline -->
+	  <not-equal test="$TransferSyntaxUid" refValue="1.2.840.10008.1.2.4.50" />
+	  <!-- JPEG Extended -->
+	  <not-equal test="$TransferSyntaxUid" refValue="1.2.840.10008.1.2.4.51" />
+	  <!-- JPEG 2000 Lossless/Lossy -->
+	  <not-equal test="$TransferSyntaxUid" refValue="1.2.840.10008.1.2.4.91" />
+	  <equal test="$BitsAllocated" refValue="8" />
+	  <not-equal test="$PhotometricInterpretation" refValue="PALETTE COLOR" />
+	  <or>
+		<equal test="$Modality" refValue="US" />
+		<equal test="$Modality" refValue="RF" />
+		<equal test="$Modality" refValue="XA" />
+	  </or>
+	</and>
+  </condition>
+  <action>
+	<jpeg-baseline-sop quality="80" convertFromPalette="true"/>
+  </action>
+</rule>

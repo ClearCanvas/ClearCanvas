@@ -1,0 +1,12 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="ClearCanvas.Ris.Client" GeneratedClassName="FolderExplorerComponentSettings">
+  <Profiles />
+  <Settings>
+    <Setting Name="DefaultConfigurationXml" Description="XML document that describes the default ordering of folders in folder systems." Type="System.String" Scope="Application">
+      <Value Profile="(Default)">FolderExplorerComponentSettings.xml</Value>
+    </Setting>
+    <Setting Name="UserConfigurationXml" Description="XML document that describes user-customizations to folder system display." Type="System.String" Scope="User">
+      <Value Profile="(Default)">FolderExplorerComponentUserSettings.xml</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

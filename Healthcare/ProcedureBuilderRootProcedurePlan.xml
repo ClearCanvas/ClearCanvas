@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<procedure-plan>
+	<procedure-steps>
+		<!-- 
+			The root procedure plan contains only the Registration step which is common
+			to all procedure types.
+		-->
+		<procedure-step class="ClearCanvas.Healthcare.RegistrationProcedureStep" />
+	</procedure-steps>
+</procedure-plan>

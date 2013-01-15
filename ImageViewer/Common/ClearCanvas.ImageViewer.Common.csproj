@@ -1,0 +1,287 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{FEFD73C5-8541-47D2-BBDB-FF61DEA28291}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ClearCanvas.ImageViewer.Common</RootNamespace>
+    <AssemblyName>ClearCanvas.ImageViewer.Common</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>4.0</OldToolsVersion>
+    <UpgradeBackupLocation />
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;UNIT_TESTS</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="nunit.framework, Version=2.2.7.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\ReferencedAssemblies\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.configuration, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Windows\Microsoft.NET\Framework\v2.0.50727\System.configuration.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization, Version=3.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Program Files\Reference Assemblies\Microsoft\Framework\v3.0\System.Runtime.Serialization.dll</HintPath>
+      <RequiredTargetFramework>3.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.ServiceModel, Version=3.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Program Files\Reference Assemblies\Microsoft\Framework\v3.0\System.ServiceModel.dll</HintPath>
+      <RequiredTargetFramework>3.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Auditing\AuditedInstances.cs" />
+    <Compile Include="Auditing\AuditHelper.cs" />
+    <Compile Include="Auditing\EventReceiptAction.cs" />
+    <Compile Include="Auditing\EventResult.cs" />
+    <Compile Include="Auditing\EventSource.cs" />
+    <Compile Include="Automation\DataContracts.cs" />
+    <Compile Include="Automation\IDicomExplorerAutomation.cs" />
+    <Compile Include="Automation\IViewerAutomation.cs" />
+    <Compile Include="Automation\IViewerAutomationBridge.cs" />
+    <Compile Include="Automation\ViewerAutomationBridge.cs" />
+    <Compile Include="Automation\ViewerAutomationServiceClient.cs" />
+    <Compile Include="BlockingCollection.cs" />
+    <Compile Include="BlockingThreadPool.cs" />
+    <Compile Include="BufferCache.cs" />
+    <Compile Include="Cache.cs" />
+    <Compile Include="CompressionType.cs" />
+    <Compile Include="Configuration\ISystemConfigurationSettingsStore.cs" />
+    <Compile Include="Configuration\SystemConfigurationSettingsProvider.cs" />
+    <Compile Include="Configuration\Tests\SystemConfigurationSettingsProviderTests.cs" />
+    <Compile Include="Configuration\Tests\TestSettingsClass.cs" />
+    <Compile Include="Configuration\Tests\TestSettingsStore.cs" />
+    <Compile Include="DataContracts.cs" />
+    <Compile Include="DefaultMemoryManagementStrategy.cs" />
+    <Compile Include="Diagnostics.cs" />
+    <Compile Include="ConfigureLocalServerApplication.cs" />
+    <Compile Include="DicomServer\DataContracts.cs" />
+    <Compile Include="DicomServer\DicomServer.cs" />
+    <Compile Include="DicomServer\DicomServerClient.cs" />
+    <Compile Include="DicomServer\DicomServerConfigurationServiceProvider.cs" />
+    <Compile Include="DicomServer\DicomServerSettings.cs" />
+    <Compile Include="DicomServer\DicomServerSettings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>DicomServerSettings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="DicomServer\IDicomServerConfiguration.cs" />
+    <Compile Include="DicomServer\IDicomServer.cs" />
+    <Compile Include="DicomServer\Tests\DicomServerSettingsTests.cs" />
+    <Compile Include="Diskspace.cs" />
+    <Compile Include="DiskspaceMonitor.cs" />
+    <Compile Include="ExtensionData.cs" />
+    <Compile Include="FilteredGroup.cs" />
+    <Compile Include="IBlockingEnumerator.cs" />
+    <Compile Include="LargeObjectContainer.cs" />
+    <Compile Include="LargeObjectContainerCache.cs" />
+    <Compile Include="PublishManager.cs" />
+    <Compile Include="ServerDirectory\ServerDirectory.cs" />
+    <Compile Include="ServerDirectory\Tests\ServerDirectoryTests.cs" />
+    <Compile Include="DicomServer\Tests\DicomServerTestServiceProvider.cs" />
+    <Compile Include="ServerDirectory\Tests\ServerDirectoryTestServiceProvider.cs" />
+    <Compile Include="ServiceProxyHelper.cs" />
+    <Compile Include="StorageMonitorSettings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>StorageMonitorSettings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="StudyManagement\IStudyLocator.cs" />
+    <Compile Include="StudyManagement\IStudyLocatorBridge.cs" />
+    <Compile Include="StudyManagement\StudyDeletionSettings.cs" />
+    <Compile Include="StudyManagement\DataContracts.cs" />
+    <Compile Include="StudyManagement\IPublishFiles.cs" />
+    <Compile Include="StudyManagement\IStorageConfiguration.cs" />
+    <Compile Include="StudyManagement\IStudyStoreQuery.cs" />
+    <Compile Include="RulesApplicationOptions.cs" />
+    <Compile Include="StudyManagement\RemoteStudyRootQuery.cs" />
+    <Compile Include="StudyManagement\DataContracts2.cs" />
+    <Compile Include="StudyManagement\StorageConfigurationServiceProvider.cs" />
+    <Compile Include="StudyManagement\StorageSettings.cs" />
+    <Compile Include="StudyManagement\StorageSettings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>StorageSettings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="StudyManagement\StoreStudyRootQuery.cs" />
+    <Compile Include="StudyManagement\StudyDeletionSettings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>StudyDeletionSettings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="StudyManagement\StudyLocatorBridge.cs" />
+    <Compile Include="StudyManagement\StudyLocatorServiceClient.cs" />
+    <Compile Include="StudyManagement\StudyRootQueryStoreAdapter.cs" />
+    <Compile Include="StudyManagement\StudyStore.cs" />
+    <Compile Include="MemoryCollector.cs" />
+    <Compile Include="MemoryManagementSettings.cs" />
+    <Compile Include="MemoryManagementSettings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>MemoryManagementSettings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="MemoryManagementStrategy.cs" />
+    <Compile Include="MemoryManager.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReferenceCountedObjectWrapper.cs" />
+    <Compile Include="RetryableCommandExecutor.cs" />
+    <Compile Include="ServerDirectory\DataContracts.cs" />
+    <Compile Include="ServerDirectory\IServerDirectory.cs" />
+    <Compile Include="ServerDirectory\DicomServiceNode.cs" />
+    <Compile Include="ServerDirectory\ServerDirectoryBridge.cs" />
+    <Compile Include="ServiceNode.cs" />
+    <Compile Include="SR.Designer.cs">
+      <DependentUpon>SR.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="StudyManagement\StudyStoreBridge.cs" />
+    <Compile Include="StudyManagement\Tests\StorageConfigurationTests.cs" />
+    <Compile Include="StudyManagement\Tests\StudyStoreTests.cs" />
+    <Compile Include="SubscriptionManager.cs" />
+    <Compile Include="StudyManagement\Tests\StudyStoreTestServiceProvider.cs" />
+    <Compile Include="Tests\DiskspaceTests.cs" />
+    <Compile Include="StudyManagement\TimeOrigin.cs" />
+    <Compile Include="StudyManagement\TimeUnit.cs" />
+    <Compile Include="Utilities\Imaging\JpegCompressor.cs" />
+    <Compile Include="Utilities\Imaging\PngEncoder.cs" />
+    <Compile Include="WorkItem\RetryDelayTimeUnit.cs" />
+    <Compile Include="WorkItem\DicomSendSettings.cs" />
+    <Compile Include="WorkItem\DicomSendSettings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>DicomSendSettings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="WorkItem\EnumExtensions.cs" />
+    <Compile Include="WorkItem\Tests\AutoRouteScheduledTimeTests.cs" />
+    <Compile Include="WorkItem\Tests\TestActivityMonitor.cs" />
+    <Compile Include="WorkItem\Tests\TestServiceProvider.cs" />
+    <Compile Include="WorkItem\Tests\TestUISynchronizationContext.cs" />
+    <Compile Include="WorkItem\Tests\TestWorkItemService.cs" />
+    <Compile Include="WorkItem\WorkItemActivityMonitorReal.cs" />
+    <Compile Include="WorkItem\WorkItemActivityMonitorProxy.cs" />
+    <Compile Include="WorkItem\WorkItemActivityCallback.cs" />
+    <Compile Include="WorkItem\IWorkItemService.cs" />
+    <Compile Include="WorkItem\Tests\ActivityMonitorTests.cs" />
+    <Compile Include="WorkItem\Tests\ActivityMonitorTestApplication.cs" />
+    <Compile Include="WorkItem\WorkItemKnownTypeAttribute.cs" />
+    <Compile Include="WorkItem\WorkItemPublishSubscribeHelper.cs" />
+    <Compile Include="WorkItem\WorkItemRequestAttribute.cs" />
+    <Compile Include="WorkItem\WorkItemRequestHelper.cs" />
+    <Compile Include="WorkItem\WorkItemsChangedEventArgs.cs" />
+    <Compile Include="WorkItem\WorkItemBridge.cs" />
+    <Compile Include="WorkItem\WorkItemServiceClient.cs" />
+    <Compile Include="WorkItem\SR.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SR.resx</DependentUpon>
+    </Compile>
+    <Compile Include="WorkItem\WorkItemActivityMonitor.cs" />
+    <Compile Include="WorkItem\WorkItemData.cs" />
+    <Compile Include="WorkItem\WorkItemProgressDataContractAttribute.cs" />
+    <Compile Include="WorkItem\WorkItemRequestDataContractAttribute.cs" />
+    <Compile Include="WorkItem\WorkItemProgress.cs" />
+    <Compile Include="WorkItem\WorkItemRequest.cs" />
+    <Compile Include="WorkItem\WorkItemServiceProvider.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="DataContracts.cd" />
+    <None Include="DicomServer\DicomServerSettings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>DicomServerSettings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="MemoryManagementSettings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>MemoryManagementSettings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="StorageMonitorSettings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>StorageMonitorSettings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="StudyManagement\StorageSettings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>StorageSettings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="StudyManagement\StudyDeletionSettings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>StudyDeletionSettings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="WorkItem\DicomSendSettings.settings">
+      <Generator>PublicSettingsSingleFileGenerator</Generator>
+      <LastGenOutput>DicomSendSettings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Common\ClearCanvas.Common.csproj">
+      <Project>{F6EAD428-E6CF-4DF6-B2F3-D33D532C5343}</Project>
+      <Name>ClearCanvas.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Dicom\ClearCanvas.Dicom.csproj">
+      <Project>{AD9ECE2B-8268-4115-8DC8-860FBD011FFF}</Project>
+      <Name>ClearCanvas.Dicom</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="SR.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>SR.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WorkItem\SR.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>SR.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -1,0 +1,28 @@
+// This file is machine generated - changes will be lost.
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+using ClearCanvas.Common;
+using ClearCanvas.Common.Utilities;
+using ClearCanvas.Enterprise.Common;
+using ClearCanvas.Enterprise.Core;
+
+namespace <%= namespace %>
+{
+    /// <summary>
+    /// Defines the interface for a <%= queryName %> broker
+    /// </summary>
+    public partial interface I<%= queryName %>Broker : IPersistenceBroker
+    {
+	    /// <summary>
+	    /// Executes the query for the specified criteria
+	    /// </summary>
+        IList<<%= resultClass.qualifiedName %>> Query(<%= criteriaClass.qualifiedName %> criteria);
+        
+	    /// <summary>
+	    /// Executes the query for the specified criteria, limiting the results to the specified page
+	    /// </summary>
+        IList<<%= resultClass.qualifiedName %>> Query(<%= criteriaClass.qualifiedName %> criteria, SearchResultPage page);
+	}
+}

@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Font Name="Segoe UI" Size="9" />
+  <Class Name="ClearCanvas.ImageViewer.ImageViewerComponent" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="0.75" Y="1.25" Width="1.75" />
+    <TypeIdentifier>
+      <FileName>ImageViewerComponent.cs</FileName>
+      <HashCode>QCCAoCABUChgIAAAgAEAAEAEFEAIEAAAIAgCCEAQIMQ=</HashCode>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Field Name="_studyFinders" />
+      <Field Name="_studyLoaders" />
+    </ShowAsCollectionAssociation>
+    <NestedTypes>
+      <Class Name="ClearCanvas.ImageViewer.ImageViewerComponent.ImageViewerToolContext" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>ImageViewerComponent.cs</NewMemberFileName>
+        </TypeIdentifier>
+        <Lollipop Position="0.2" />
+      </Class>
+    </NestedTypes>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Interface Name="ClearCanvas.ImageViewer.StudyManagement.IStudyFinder" Collapsed="true">
+    <Position X="3" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>StudyManagement\IStudyFinder.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAQAAAAAAAgAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="ClearCanvas.ImageViewer.StudyManagement.IStudyLoader" Collapsed="true">
+    <Position X="3" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>StudyManagement\IStudyLoader.cs</FileName>
+      <HashCode>AAAAAAAAACAAAAAAAEAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Interface>
+</ClassDiagram>

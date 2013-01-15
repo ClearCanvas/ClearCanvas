@@ -1,0 +1,117 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" assembly="ClearCanvas.Healthcare" namespace="ClearCanvas.Healthcare">
+	<class name="PatientProfile" proxy="PatientProfile" table="PatientProfile_">
+		<id name="OID" column="OID_" type="Guid">
+			<generator class="guid.comb"/>
+		</id>
+		<version name="Version" column="Version_"/>
+		<component name="Mrn" class="PatientIdentifier">
+			<property name="Id" type="String">
+				<column name="MrnId_" unique-key="MrnKey_" not-null="true" length="50"/>
+			</property>
+			<many-to-one name="AssigningAuthority" class="InformationAuthorityEnum">
+				<column name="MrnAssigningAuthority_" unique-key="MrnKey_" not-null="true"/>
+			</many-to-one>
+		</component>
+		<idbag name="ExpiredMrns" lazy="true" table="PatientProfileExpiredMrn_">
+			<collection-id column="OID_" type="Guid">
+				<generator class="guid.comb"/>
+			</collection-id>
+			<key column="PatientProfileOID_"/>
+			<composite-element class="PatientIdentifier">
+				<property name="Id" column="MrnId_" type="String" not-null="true" length="50"/>
+				<many-to-one name="AssigningAuthority" class="InformationAuthorityEnum" column="MrnAssigningAuthority_" not-null="true"/>
+			</composite-element>
+		</idbag>
+		<component name="Healthcard" class="HealthcardNumber">
+			<property name="Id" column="HealthcardId_" type="String" length="30" not-null="false"/>
+			<many-to-one name="AssigningAuthority" class="InsuranceAuthorityEnum" column="HealthcardAssigningAuthority_" not-null="false"/>
+			<property name="VersionCode" column="HealthcardVersionCode_" type="String" length="20" not-null="false"/>
+			<property name="ExpiryDate" column="HealthcardExpiryDate_" type="DateTime" not-null="false"/>
+		</component>
+		<component name="Name" class="PersonName">
+			<property name="FamilyName" column="FamilyName_" type="String" length="40" not-null="true"/>
+			<property name="GivenName" column="GivenName_" type="String" length="40" not-null="true"/>
+			<property name="MiddleName" column="MiddleName_" type="String" length="40" not-null="false"/>
+			<property name="Prefix" column="Prefix_" type="String" length="10" not-null="false"/>
+			<property name="Suffix" column="Suffix_" type="String" length="10" not-null="false"/>
+			<property name="Degree" column="Degree_" type="String" length="10" not-null="false"/>
+		</component>
+		<property name="DateOfBirth" column="DateOfBirth_" type="DateTime" not-null="false" access="field.camelcase-underscore"/>
+		<property name="Sex" column="Sex_" type="ClearCanvas.Healthcare.Hibernate.SexEnumHbm, ClearCanvas.Healthcare.Hibernate" not-null="true"/>
+		<many-to-one name="PrimaryLanguage" class="SpokenLanguageEnum" column="PrimaryLanguage_"/>
+		<many-to-one name="Religion" class="ReligionEnum" column="Religion_"/>
+		<property name="DeathIndicator" column="DeathIndicator_" type="Boolean" not-null="true"/>
+		<property name="TimeOfDeath" column="TimeOfDeath_" type="DateTime" not-null="false"/>
+		<many-to-one name="FamilyPhysician" class="ExternalPractitioner" column="FamilyPhysicianOID_"/>
+		<property name="BillingInformation" column="BillingInformation_" type="String" length="512"/>
+		<idbag name="ContactPersons" lazy="true" table="PatientProfileContactPerson_" access="nosetter.camelcase-underscore">
+			<collection-id column="OID_" type="Guid">
+				<generator class="guid.comb"/>
+			</collection-id>
+			<key column="PatientProfileOID_"/>
+			<composite-element class="ContactPerson">
+				<property name="Name" column="Name_" type="String" length="50" not-null="true"/>
+				<property name="Address" column="Address_" type="String" length="255" not-null="false"/>
+				<property name="HomePhone" column="HomePhone_" type="String" length="25" not-null="false"/>
+				<property name="BusinessPhone" column="BusinessPhone_" type="String" length="25" not-null="false"/>
+				<many-to-one name="Type"  class="ContactPersonTypeEnum" column="Type_" not-null="true"/>
+				<many-to-one name="Relationship" class="ContactPersonRelationshipEnum" column="Relationship_" not-null="true"/>
+			</composite-element>
+		</idbag>
+
+		<idbag name="EmailAddresses" lazy="true" table="PatientProfileEmailAddress_" access="nosetter.camelcase-underscore">
+			<collection-id column="OID_" type="Guid">
+				<generator class="guid.comb"/>
+			</collection-id>
+			<key column="PatientProfileOID_"/>
+			<composite-element class="EmailAddress">
+				<property name="Address" column="Address_" type="String" length="255" not-null="true"/>
+				<property name="ValidRange" type="ClearCanvas.Healthcare.Hibernate.DateTimeRangeHbm, ClearCanvas.Healthcare.Hibernate">
+					<column name="ValidFrom_"/>
+					<column name="ValidUntil_"/>
+				</property>
+			</composite-element>
+		</idbag>
+
+		<idbag name="TelephoneNumbers" lazy="true" table="PatientProfileTelephoneNumber_" access="nosetter.camelcase-underscore">
+			<collection-id column="OID_" type="Guid">
+				<generator class="guid.comb"/>
+			</collection-id>
+			<key column="PatientProfileOID_"/>
+			<composite-element class="TelephoneNumber">
+				<property name="CountryCode" column="CountryCode_" type="String" length="10" not-null="false"/>
+				<property name="AreaCode" column="AreaCode_" type="String" length="10" not-null="false"/>
+				<property name="Number" column="Number_" type="String" length="10" not-null="true"/>
+				<property name="Extension" column="Extension_" type="String" length="10" not-null="false"/>
+				<property name="Use" column="Use_" type="ClearCanvas.Healthcare.Hibernate.TelephoneUseEnumHbm, ClearCanvas.Healthcare.Hibernate" not-null="true"/>
+				<property name="Equipment" column="Equipment_" type="ClearCanvas.Healthcare.Hibernate.TelephoneEquipmentEnumHbm, ClearCanvas.Healthcare.Hibernate" not-null="true"/>
+				<property name="ValidRange" type="ClearCanvas.Healthcare.Hibernate.DateTimeRangeHbm, ClearCanvas.Healthcare.Hibernate">
+					<column name="ValidFrom_"/>
+					<column name="ValidUntil_"/>
+				</property>
+			</composite-element>
+		</idbag>
+
+		<idbag name="Addresses" table="PatientProfileAddress_" lazy="true" access="nosetter.camelcase-underscore">
+			<collection-id column="OID_" type="Guid">
+				<generator class="guid.comb"/>
+			</collection-id>
+			<key column="PatientProfileOID_"/>
+			<composite-element class="Address">
+				<property name="Street" column="Street_" type="String" length="100" not-null="true"/>
+				<property name="Unit" column="Unit_" type="String" length="50" not-null="false"/>
+				<property name="City" column="City_" type="String" length="50" not-null="true"/>
+				<property name="Province" column="Province_" type="String" length="50" not-null="true"/>
+				<property name="PostalCode" column="PostalCode_" type="String" length="20" not-null="false"/>
+				<property name="Country" column="Country_" type="String" length="50" not-null="false"/>
+				<property name="Type" column="Type_" type="ClearCanvas.Healthcare.Hibernate.AddressTypeEnumHbm, ClearCanvas.Healthcare.Hibernate" not-null="true"/>
+				<property name="ValidRange" type="ClearCanvas.Healthcare.Hibernate.DateTimeRangeHbm, ClearCanvas.Healthcare.Hibernate">
+					<column name="ValidFrom_"/>
+					<column name="ValidUntil_"/>
+				</property>
+			</composite-element>
+		</idbag>
+		<many-to-one name="Patient" class="Patient" column="PatientOID_" not-null="true" fetch="join"/>
+	</class>
+</hibernate-mapping>

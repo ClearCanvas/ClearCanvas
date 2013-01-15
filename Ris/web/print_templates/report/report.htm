@@ -1,0 +1,226 @@
+<!--
+	***************************************** WARNING ************************************************************************************************
+	Modifying this template incorrectly may cause the report printing functionality and publication of reports to the Web Portal to fail.
+	It is recommended that:
+	
+	1. This template only be modified by qualified personnel.
+	2. A backup copy of the original template is made, prior to making any modifications.
+	3. This template is modified only during scheduled system downtime.
+	4. After modifying the template, report printing functionality is thoroughly tested.
+	**************************************************************************************************************************************************
+	
+	This file defines the HTML template that is used to determine the format of printed radiology reports.
+	The template can include dynamic variables, like so:
+	
+	<%= AccessionNumber %>
+	
+	The following set of dynamic variables can be used in the template:
+	
+	Variable Name								Variable Description									Example
+	--------------------------------------------------------------------------------------------------------------------------------------------------
+	Letterhead.FacilityTitle					Name of the Imaging Facility.							ACME
+	Letterhead.FacilitySubtitle					Description of the Imaging Facility.					Medical Imaging Centre
+	Letterhead.LogoFile							Image file for the Imaging Facility logo.				logo.jpg
+	Letterhead.Address							Full address of the Imaging Facility.					100-123 Any St., Anywhere ON A1B 2C3
+	Letterhead.Address.Line1					First line of address of the Imaging Facility.			100-123 Any St.
+	Letterhead.Address.Line2					Second line of address of the Imaging Facility.			Anywhere ON A1B 2C3
+	Letterhead.Address.Street					Address of the Imaging Facility - street.				123 Any St.
+	Letterhead.Address.Unit						Address of the Imaging Facility - unit/apt.				100
+	Letterhead.Address.City						Address of the Imaging Facility - city.					Anywhere
+	Letterhead.Address.Province					Address of the Imaging Facility - province/state.		ON	
+	Letterhead.Address.PostalCode				Address of the Imaging Facility - postal code/zip.		A1B 2C3
+	Letterhead.Phone							Phone number for the Imaging Facility.					(555) - 555-5555
+	Letterhead.Fax								Fax number for the Imaging Facility.					(555) - 555-5555
+	Letterhead.Email							Email address for the Imaging Facility.					info@acme-imaging.ca
+
+	Patient										Name and MRN of the patient.							Smith, John Edward (BG 13288779)
+	Patient.Mrn									MRN of the patient, including authority.				BG 13288779
+	Patient.Mrn.Id								MRN of the patient, number only.						13288779
+	Patient.Name								Name of the patient.									Smith, John Edward
+	Patient.Name.FamilyName						Family name of the patient.								Smith
+	Patient.Name.GivenName						Given name of the patient.								John
+	Patient.Name.MiddleName						Middle name of the patient.								Edward
+	Patient.DateOfBirth							Date of birth of the patient.							1970-02-25
+	
+	Recipient									Name of the report recipient.							Good, Doctor
+	Recipient.Name								Name of the report recipient.							Good, Doctor
+	Recipient.Name.FamilyName					Family name of the report recipient.					Good
+	Recipient.Name.GivenName					Given name of the report recipient.						Doctor
+	Recipient.Address							Full address of report recipient.						12-122 Forrest Street, Toronto ON M5H 6U6
+	Recipient.Address.Line1						First line of address of report recipient.				12-122 Forrest Street
+	Recipient.Address.Line2						Second line of address of report recipient.				Toronto ON M5H 6U6
+	Recipient.Address.Street					Address of report recipient - street.					122 Forrest Street
+	Recipient.Address.Unit						Address of report recipient - unit/apt.					12
+	Recipient.Address.City						Address of report recipient - city.						Toronto
+	Recipient.Address.Province					Address of report recipient - province/state.			ON	
+	Recipient.Address.PostalCode				Address of report recipient - postal code/zip.			M5H 6U6	
+	Recipient.Address.Country					Address of report recipient - country.					Canada
+	
+	AccessionNumber								Accession number assigned to the order.					7654321
+	
+	OrderingPractitioner						Name of the ordering practitioner.						Good, Doctor
+	OrderingPractitioner.Name					Name of the ordering practitioner.						Good, Doctor
+	OrderingPractitioner.Name.FamilyName		Family name of the ordering practitioner.				Good
+	OrderingPractitioner.Name.GivenName			Given name of the ordering practitioner.				Doctor
+	OrderingPractitioner.Address				Full address of ordering practitioner.					12-122 Forrest Street, Toronto ON M5H 6U6
+	OrderingPractitioner.Address.Line1			First line of address of ordering practitioner.			12-122 Forrest Street
+	OrderingPractitioner.Address.Line2			Second line of address of ordering practitioner.		Toronto ON M5H 6U6
+	OrderingPractitioner.Address.Street			Address of ordering practitioner - street.				122 Forrest Street
+	OrderingPractitioner.Address.Unit			Address of ordering practitioner - unit/apt.			12
+	OrderingPractitioner.Address.City			Address of ordering practitioner - city.				Toronto
+	OrderingPractitioner.Address.Province		Address of ordering practitioner - province/state.		ON	
+	OrderingPractitioner.Address.PostalCode		Address of ordering practitioner - postal code/zip.		M5H 6U6	
+	OrderingPractitioner.Address.Country		Address of ordering practitioner - country.				Canada
+	
+	Procedures									Procedures covered by the report.						CT Chest, CT Abdomen/Pelvis
+	Procedures.Count							Number of procedures covered by the report.				2
+	Procedures[n]								Name of the nth procedure.							 	n=0 -> CT Chest, n=1 -> CT Abdomen/Pelvis
+	Procedures[n].Name							Name of the nth procedure.							 	n=0 -> CT Chest, n=1 -> CT Abdomen/Pelvis
+	Procedures[n].Code							Code of the nth procedure.							 	n=0 -> 3045, n=1 -> 3046
+	
+	ReportParts									n/a
+	ReportParts.Count							Number of report parts (1 + # of addenda).				1 (for a report with no addenda); 2 (for a report with 1 addendum)
+	ReportParts[n].Index						Index of the nth report part.							n=0 -> 0 (original report); n=1 -> 1 (addendum)
+	ReportParts[n].Status						Status of the nth report part.							Draft, Preliminary, or Final
+	ReportParts[n].StatusDate					Date when status was assumed.							2012-06-04
+	ReportParts[n].StatusDateTime				Date/time when status was assumed.						2012-06-04 10:25
+	ReportParts[n].Body							Body of the nth report part.							The body of the report or addendum
+	ReportParts[n].InterpretedBy				Name of interpreter for nth report part.				Radman, Rocky
+	ReportParts[n].InterpretedBy.FamilyName		Family name of interpreting rad for nth report part.	Radman
+	ReportParts[n].InterpretedBy.GivenName		Given name of interpreting rad for nth report part.		Rocky
+	ReportParts[n].VerifiedBy					Name of verifying rad for nth report part.				Radman, Rocky
+	ReportParts[n].VerifiedBy.FamilyName		Family name of verifying rad for nth report part.		Radman
+	ReportParts[n].VerifiedBy.GivenName			Given name of verifying rad for nth report part.		Rocky
+	ReportParts[n].TranscribedBy				Name of transcriptionist for nth report part.			Tran, Tess
+	ReportParts[n].TranscribedBy.FamilyName		Family name of transcriptionist for nth report part.	Tran	
+	ReportParts[n].TranscribedBy.GivenName		Given name of transcriptionist for nth report part.		Tess	
+	ReportParts[n].CreationDate					Creation (draft) date of the nth report part.			2012-06-04
+	ReportParts[n].CreationDateTime				Creation (draft) date/time of the nth report part.		2012-06-04 10:25
+	ReportParts[n].PreliminaryDate				Preliminary date of the nth report part.				2012-06-04
+	ReportParts[n].PreliminaryDateTime			Preliminary date/time of the nth report part.			2012-06-04 10:25
+	ReportParts[n].CompletedDate				Completed (Final) date of the nth report part.			2012-06-04	
+	ReportParts[n].CompletedDateTime			Completed (Final) date/time of the nth report part.		2012-06-04 10:25
+	
+	Note that the variables Procedures and ReportParts are actually collections that can be iterated using javascript code.	
+	More generally, javascript code can be used to manipulate the variables, and must be placed between <% %> tags.
+	
+	See examples in the default template that is provided below.
+
+-->
+<%
+	function formatReportPartStatus(part, isAddendum)
+	{
+		var statusText = part.Status + " as of " + part.StatusDateTime;
+		var warningText = " *** THIS " + (isAddendum ? "ADDENDUM" : "REPORT") + " HAS NOT BEEN FINALIZED ***";
+		if (part.Status.toUpperCase() !== 'FINAL')
+			statusText = "<font color='red'>" + statusText + warningText + "</font>";
+
+		return " (" + statusText + ")";
+	}
+%>
+<html>
+<head>
+	<title>Report Template</title>
+	<link href="report.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+	<form id="myForm">
+		<div id="letterhead">
+			<div id="letterheadLogo">
+				<img src="<%= Letterhead.LogoFile %>"/>
+			</div>
+			<div id="letterheadFacility">
+				<div id="letterheadFacilityName"><%= Letterhead.FacilityTitle %></div>
+				<div id="letterheadFacilityDescription"><%= Letterhead.FacilitySubtitle %></div>
+			</div>
+			<div id="letterheadAddress">
+				<div id="letterheadAddress1"><%= Letterhead.Address.Line1 %></div>
+				<div id="letterheadAddress2"><%= Letterhead.Address.Line2 %></div>
+				<div id="letterheadPhone"><%= Letterhead.Phone %></div>
+				<% if(Letterhead.Fax) { %>
+				<div id="letterheadFax"><%= Letterhead.Fax %></div>
+				<% } %>
+				<% if(Letterhead.Email) { %>
+				<div id="letterheadEmail"><%= Letterhead.Email %></div>
+				<% } %>
+			</div>
+			<div class="clear"></div>
+		</div>
+		<div id="recipient">
+			<div id="recipientName"><%= Recipient.Name %></div>
+			<div id="recipientAddress1"><%= Recipient.Address.Line1 %></div>
+			<div id="recipientAddress2"><%= Recipient.Address.Line2 %></div>
+			<% if(Recipient.Address.Country) { %>
+			<div id="recipientAddress3"><%= Recipient.Address.Country %></div>
+			<% } %>
+		</div>
+		<div id="ordersummary">
+			<div class="leftcolumn">
+				<table>
+					<tbody valign="top">
+						<tr>
+							<td class="propertyname">Patient:</td>
+							<td><%= Patient.Name %></td>
+						</tr>
+						<tr>
+							<td class="propertyname">A#:</td>
+							<td><%= AccessionNumber %></td>
+						</tr>
+						<tr>
+							<td class="propertyname">Ordering Practitioner:</td>
+							<td><%= OrderingPractitioner.Name %></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="rightcolumn">
+				<table>
+					<tbody valign="top">
+						<tr>
+							<td class="propertyname">MRN:</td>
+							<td><%= Patient.Mrn %></td>
+						</tr>
+						<tr>
+							<td class="propertyname">Birth Date:</td>
+							<td><%= Patient.DateOfBirth %></td>
+						</tr>
+					</tbody>
+				</table>
+				<table>
+					<tbody valign="top">
+						<tr>
+							<td class="propertyname">Procedures:</td>
+							<td><%= Procedures %></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="clear"></div>
+		</div>
+		<div id="reportSection">
+		<% for (var i = ReportParts.Count - 1; i >= 0; i--) {
+			var part = ReportParts[i]; %>
+			<div class="reportPart">
+				<b><%= i > 0 ? "Addendum" : "Report" %> <%= formatReportPartStatus(part, i > 0) %></b>
+				<br><br>
+				<%= part.Body %>
+				<br>
+				<% if(part.InterpretedBy) { %>
+				<br> Interpreted By: <%= part.InterpretedBy %>
+				<% } %>
+				<% if(part.TranscribedBy) { %>
+				<br> Transcribed By: <%= part.TranscribedBy %>
+				<% } %>
+				<% if(part.VerifiedBy) { %>
+				<br> Verified By: <%= part.VerifiedBy %>
+				<% } %>
+				<% if(part.SupervisedBy) { %>
+				<br> Supervised By: <%= part.SupervisedBy %>
+				<% } %>
+				<br><br>
+			</div>
+		<% } %>
+		</div>
+	</form>
+</body>
+</html>

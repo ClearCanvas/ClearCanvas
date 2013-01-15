@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<dicom-filtered-annotation-layout-configuration>
+  <dicom-filtered-annotation-layouts>
+    <dicom-filtered-annotation-layout id="Dicom.Filtered.CR" matching-layout-id="Dicom.CR">
+      <filters>
+        <filter key="Modality" value="CR" />
+      </filters>
+    </dicom-filtered-annotation-layout>
+    <dicom-filtered-annotation-layout id="Dicom.Filtered.CT" matching-layout-id="Dicom.CT">
+      <filters>
+        <filter key="Modality" value="CT" />
+      </filters>
+    </dicom-filtered-annotation-layout>
+    <dicom-filtered-annotation-layout id="Dicom.Filtered.DX" matching-layout-id="Dicom.DX">
+      <filters>
+        <filter key="Modality" value="DX" />
+      </filters>
+    </dicom-filtered-annotation-layout>
+    <dicom-filtered-annotation-layout id="Dicom.Filtered.MG.RowDirectionPosterior" matching-layout-id="Dicom.MG.RowDirectionPosterior">
+      <filters>
+        <filter key="Modality" value="MG" />
+        <filter key="PatientOrientation_Row" value="P" />
+      </filters>
+    </dicom-filtered-annotation-layout>
+    <dicom-filtered-annotation-layout id="Dicom.Filtered.MG.RowDirectionAnterior" matching-layout-id="Dicom.MG.RowDirectionAnterior">
+      <filters>
+        <filter key="Modality" value="MG" />
+        <filter key="PatientOrientation_Row" value="A" />
+      </filters>
+    </dicom-filtered-annotation-layout>
+    <dicom-filtered-annotation-layout id="Dicom.Filtered.MG.ColumnDirectionPosterior" matching-layout-id="Dicom.MG.ColumnDirectionPosterior">
+      <filters>
+        <filter key="Modality" value="MG" />
+        <filter key="PatientOrientation_Col" value="P" />
+      </filters>
+    </dicom-filtered-annotation-layout>
+    <dicom-filtered-annotation-layout id="Dicom.Filtered.MG.ColumnDirectionAnterior" matching-layout-id="Dicom.MG.ColumnDirectionAnterior">
+      <filters>
+        <filter key="Modality" value="MG" />
+        <filter key="PatientOrientation_Col" value="A" />
+      </filters>
+    </dicom-filtered-annotation-layout>
+    <dicom-filtered-annotation-layout id="Dicom.Filtered.MG" matching-layout-id="Dicom.MG">
+      <filters>
+        <filter key="Modality" value="MG" />
+      </filters>
+    </dicom-filtered-annotation-layout>
+    <dicom-filtered-annotation-layout id="Dicom.Filtered.MR" matching-layout-id="Dicom.MR">
+      <filters>
+        <filter key="Modality" value="MR" />
+      </filters>
+    </dicom-filtered-annotation-layout>
+    <dicom-filtered-annotation-layout id="Dicom.Filtered.NM" matching-layout-id="Dicom.NM">
+      <filters>
+        <filter key="Modality" value="NM" />
+      </filters>
+    </dicom-filtered-annotation-layout>
+    <dicom-filtered-annotation-layout id="Dicom.Filtered.PT" matching-layout-id="Dicom.PT">
+      <filters>
+        <filter key="Modality" value="PT" />
+      </filters>
+    </dicom-filtered-annotation-layout>
+    <dicom-filtered-annotation-layout id="Dicom.Filtered.AllMatch" matching-layout-id="Dicom.OT">
+      <!-- Everything matches the OT layout, by default -->
+      <filters /> 
+    </dicom-filtered-annotation-layout>
+  </dicom-filtered-annotation-layouts>
+</dicom-filtered-annotation-layout-configuration>

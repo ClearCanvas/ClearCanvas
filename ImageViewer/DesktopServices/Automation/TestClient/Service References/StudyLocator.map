@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ServiceReference>
+	<ProxyGenerationParameters
+		ServiceReferenceUri="http://localhost:51122/StudyLocator"
+		Name="StudyLocator"
+		NotifyPropertyChange="True"
+		UseObservableCollection="False">
+	</ProxyGenerationParameters>
+	<EndPoints>
+		<EndPoint
+			Address="http://localhost:51122/StudyLocator/StudyLocator"
+			BindingConfiguration="BasicHttpBinding_IStudyRootQuery"
+			Contract="ClearCanvas.ImageViewer.DesktopServices.Automation.TestClient.StudyLocator.IStudyRootQuery"
+			>
+		</EndPoint>
+	</EndPoints>
+</ServiceReference>

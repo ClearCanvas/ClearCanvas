@@ -1,0 +1,12 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="ClearCanvas.ImageServer.Web.Common.PageSettings" GeneratedClassName="AboutPage">
+  <Profiles />
+  <Settings>
+    <Setting Name="UsersGuideUrl" Type="System.String" Scope="Application">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="DocumentationUrl" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">http://www.clearcanvas.ca/dnn/Resources/Documentation/tabid/107/Default.aspx</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

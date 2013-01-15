@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<Instance SopClassUID="1.2.840.10008.5.1.4.1.2.2.1">
+  <Attribute Tag="$QueryRetrieveLevel">SERIES</Attribute>
+  <Attribute Tag="$StudyInstanceUid"></Attribute>
+  <Attribute Tag="$SeriesInstanceUid"></Attribute>
+  <Attribute Tag="$Modality"></Attribute>
+  <Attribute Tag="$SeriesDescription"></Attribute>
+  <Attribute Tag="$NumberOfSeriesRelatedInstances"></Attribute>
+  <Attribute Tag="$SeriesNumber"></Attribute>
+  <Attribute Tag="$SeriesDate"></Attribute>
+  <Attribute Tag="$SeriesTime"></Attribute>
+  <Attribute Tag="$RequestAttributesSequence"></Attribute>
+  <Attribute Tag="$PerformedProcedureStepStartDate"></Attribute>
+  <Attribute Tag="$PerformedProcedureStepStartTime"></Attribute>
+</Instance>

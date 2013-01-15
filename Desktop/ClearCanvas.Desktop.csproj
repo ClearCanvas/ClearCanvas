@@ -1,0 +1,636 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{26E9A01A-64B5-42C5-8252-FBB30DF9CEC7}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ClearCanvas.Desktop</RootNamespace>
+    <AssemblyName>ClearCanvas.Desktop</AssemblyName>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile />
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;UNIT_TESTS</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>
+    </DocumentationFile>
+    <NoWarn>
+    </NoWarn>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>ClearCanvas.Desktop.xml</DocumentationFile>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="nunit.framework, Version=2.2.7.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\ReferencedAssemblies\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Actions\Action.cs" />
+    <Compile Include="Actions\ActionAttribute.cs" />
+    <Compile Include="Actions\ActionAttributeProcessor.cs" />
+    <Compile Include="Actions\ActionBuildingContext.cs" />
+    <Compile Include="Actions\ActionBuilderException.cs" />
+    <Compile Include="Actions\ActionDecoratorAttribute.cs" />
+    <Compile Include="Actions\ActionFeatureAttribute.cs" />
+    <Compile Include="Actions\ActionFormerlyAttribute.cs" />
+    <Compile Include="Actions\ActionInitiatorAttribute.cs" />
+    <Compile Include="Actions\ActionModelNode.cs" />
+    <Compile Include="Actions\ActionModelNodeList.cs" />
+    <Compile Include="Actions\ActionModelRoot.cs" />
+    <Compile Include="Actions\ActionModelSettings.cs" />
+    <Compile Include="Actions\ActionModelSettings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>ActionModelSettings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="Actions\ActionPath.cs" />
+    <Compile Include="Actions\ActionPermissionAttribute.cs" />
+    <Compile Include="Actions\ActionSet.cs" />
+    <Compile Include="Actions\ActionViewContext.cs" />
+    <Compile Include="Actions\ITextBoxAction.cs" />
+    <Compile Include="Actions\LanguagePickerAction.cs" />
+    <Compile Include="Actions\Tests\MockActionPermissionAttribute.cs" />
+    <Compile Include="Actions\DropDownActionAttribute.cs" />
+    <Compile Include="Actions\CrudActionModel.cs" />
+    <Compile Include="Actions\DropDownButtonAction.cs" />
+    <Compile Include="Actions\DropDownButtonActionAttribute.cs" />
+    <Compile Include="Actions\DynamicObservablePropertyBinding.cs" />
+    <Compile Include="Actions\ExportActionModelTool.cs" />
+    <Compile Include="Actions\GroupHint.cs" />
+    <Compile Include="Actions\GroupHintAttribute.cs" />
+    <Compile Include="Actions\IActionView.cs" />
+    <Compile Include="Actions\IconSetObserverAttribute.cs" />
+    <Compile Include="Actions\IDropDownAction.cs" />
+    <Compile Include="Actions\IObservablePropertyBinding.cs" />
+    <Compile Include="Actions\KeyboardAction.cs" />
+    <Compile Include="Actions\KeyboardActionAttribute.cs" />
+    <Compile Include="Actions\LabelValueObserverAttribute.cs" />
+    <Compile Include="Actions\ObservablePropertyCoupler.cs" />
+    <Compile Include="Actions\TextBoxAction.cs" />
+    <Compile Include="AlertLevel.cs" />
+    <Compile Include="AlertLog.cs" />
+    <Compile Include="AlertNotificationArgs.cs" />
+    <Compile Include="ApplicationSettingsRegistry.cs" />
+    <Compile Include="ApplicationTheme.cs" />
+    <Compile Include="ApplicationThemeManager.cs" />
+    <Compile Include="Actions\AbstractAction.cs" />
+    <Compile Include="ApplicationThemeResourceProviderBase.cs" />
+    <Compile Include="ApplicationThemeResourceResolver.cs" />
+    <Compile Include="Async.cs" />
+    <Compile Include="AsyncTask.cs" />
+    <Compile Include="AlertViewerComponent.cs" />
+    <Compile Include="Configuration\Tools\ActionModelsTool.cs" />
+    <Compile Include="IDesktopAlertContext.cs" />
+    <Compile Include="Tables\ComboBoxCellEditor.cs" />
+    <Compile Include="Configuration\ActionModel\AbstractActionModelTreeBranch.cs" />
+    <Compile Include="Configuration\ActionModel\AbstractActionModelTreeLeafAction.cs" />
+    <Compile Include="Configuration\ActionModel\AbstractActionModelTreeLeafClickAction.cs" />
+    <Compile Include="Configuration\ActionModel\AbstractActionModelTreeLeafSeparator.cs" />
+    <Compile Include="Configuration\ActionModel\AbstractActionModelTreeNode.cs" />
+    <Compile Include="Configuration\ActionModel\AbstractActionModelTreeRoot.cs" />
+    <Compile Include="Configuration\ActionModel\ActionModelConfigurationComponent.cs" />
+    <Compile Include="Configuration\ActionModel\ActionModelConfigurationComponentTool.cs" />
+    <Compile Include="Configuration\ActionModel\GrayscaleIconSet.cs" />
+    <Compile Include="Configuration\ActionModel\NodePropertiesValidationRule.cs" />
+    <Compile Include="Configuration\ActionModel\NodePropertiesComponent.cs" />
+    <Compile Include="Configuration\ActionModel\BasicActionModelConfigurationComponentTools.cs" />
+    <Compile Include="Configuration\ActionModel\ClickActionKeystrokePropertyComponent.cs" />
+    <Compile Include="Configuration\ActionModel\UnavailableActionIconSet.cs" />
+    <Compile Include="Configuration\AuthorityTokens.cs" />
+    <Compile Include="Configuration\ConfigurationApplicationComponent.cs" />
+    <Compile Include="Configuration\ConfigurationDialog.cs" />
+    <Compile Include="Configuration\ConfigurationDialogComponent.cs" />
+    <Compile Include="Configuration\ConfigurationPage.cs" />
+    <Compile Include="Configuration\IConfigurationApplicationComponent.cs" />
+    <Compile Include="Configuration\IConfigurationPage.cs" />
+    <Compile Include="Configuration\IConfigurationPageProvider.cs" />
+    <Compile Include="Configuration\IConfigurationProvider.cs" />
+    <Compile Include="Configuration\LocalSettingsStore.cs" />
+    <Compile Include="Configuration\SettingEditorComponent.cs" />
+    <Compile Include="Configuration\ConfigurationDialogSettings.cs" />
+    <Compile Include="Configuration\ConfigurationDialogSettings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>ConfigurationDialogSettings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="Configuration\SettingsManagementComponent.cs" />
+    <Compile Include="Configuration\SettingsStoreWatcher.cs" />
+    <Compile Include="Configuration\Standard\CustomDateFormatSettings.cs" />
+    <Compile Include="Configuration\Standard\CustomDateFormatSettings.designer.cs">
+      <DependentUpon>CustomDateFormatSettings.settings</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="Configuration\Standard\DateFormatApplicationComponent.cs" />
+    <Compile Include="Configuration\Standard\ToolbarConfigurationComponent.cs" />
+    <Compile Include="Configuration\Tools\OptionsTool.cs" />
+    <Compile Include="Configuration\Standard\ConfigurationPageProvider.cs" />
+    <Compile Include="Checkable.cs" />
+    <Compile Include="ChildComponentHost.cs" />
+    <Compile Include="ClosedEventArgs.cs" />
+    <Compile Include="CloseHelperComponent.cs" />
+    <Compile Include="CloseHelperTool.cs" />
+    <Compile Include="CodeEditorFactory.cs" />
+    <Compile Include="CompositeUndoableCommand.cs" />
+    <Compile Include="DefaultCodeEditorComponent.cs" />
+    <Compile Include="DefaultSuggestionProvider.cs" />
+    <Compile Include="DesktopMonitorComponent.cs" />
+    <Compile Include="DesktopObjectCreationArgs.cs" />
+    <Compile Include="DesktopObjectState.cs" />
+    <Compile Include="DesktopObject.cs" />
+    <Compile Include="DesktopObjectCollection.cs" />
+    <Compile Include="DesktopWindowCollection.cs" />
+    <Compile Include="DesktopWindowCreationArgs.cs" />
+    <Compile Include="ProductStateInfo.cs" />
+    <Compile Include="DialogBoxCollection.cs" />
+    <Compile Include="DialogBoxCreationArgs.cs" />
+    <Compile Include="Actions\DropDownAction.cs" />
+    <Compile Include="DragDropOption.cs" />
+    <Compile Include="DragDropPosition.cs" />
+    <Compile Include="ExceptionDialog.cs" />
+    <Compile Include="Factories.cs" />
+    <Compile Include="FileDialogCreationArgs.cs" />
+    <Compile Include="FormatSettings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>FormatSettings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="IApplicationThemeResourceProvider.cs" />
+    <Compile Include="IconSize.cs" />
+    <Compile Include="IWorkspaceDialogBox.cs" />
+    <Compile Include="IWorkspaceDialogBoxHost.cs" />
+    <Compile Include="IWorkspaceDialogBoxView.cs" />
+    <Compile Include="IPagingController.cs" />
+    <Compile Include="Configuration\IUserUpgradeProgressDialogView.cs" />
+    <Compile Include="FeatureAuthorizationSpecification.cs" />
+    <Compile Include="LocalePolicy.cs" />
+    <Compile Include="LocalePolicy.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>LocalePolicy.settings</DependentUpon>
+    </Compile>
+    <Compile Include="InstalledLocales.cs" />
+    <Compile Include="LocaleSettings.cs" />
+    <Compile Include="LocaleSettings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>LocaleSettings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="ModifierFlags.cs" />
+    <Compile Include="ModifierFlagsConverter.cs" />
+    <Compile Include="OemConfiguration.cs" />
+    <Compile Include="PagingActionModel.cs" />
+    <Compile Include="PagingController.cs" />
+    <Compile Include="PhoneHome.cs" />
+    <Compile Include="SelectFolderDialogCreationArgs.cs" />
+    <Compile Include="GalleryItemEventArgs.cs" />
+    <Compile Include="IApplicationView.cs" />
+    <Compile Include="IDragDropObject.cs" />
+    <Compile Include="IDesktopObject.cs" />
+    <Compile Include="IDesktopObjectView.cs" />
+    <Compile Include="IDialogBoxHost.cs" />
+    <Compile Include="IGalleryItem.cs" />
+    <Compile Include="GalleryComponent.cs" />
+    <Compile Include="IGalleryToolContext.cs" />
+    <Compile Include="IGuiToolkit.cs" />
+    <Compile Include="SessionManager.cs" />
+    <Compile Include="IShelfHost.cs" />
+    <Compile Include="ISuggestionProvider.cs" />
+    <Compile Include="IWorkspaceHost.cs" />
+    <Compile Include="FileDialogResult.cs" />
+    <Compile Include="ReorderableGalleryComponent.cs" />
+    <Compile Include="Screen.cs" />
+    <Compile Include="StackTabPage.cs" />
+    <Compile Include="StockChangeLanguageTool.cs" />
+    <Compile Include="StockDesktopTools.cs" />
+    <Compile Include="SuggestionProviderBase.cs" />
+    <Compile Include="Tables\TableCellEditor.cs" />
+    <Compile Include="Tables\DateTableColumn.cs" />
+    <Compile Include="Tables\DateTimeTableColumn.cs" />
+    <Compile Include="Tables\FilteredItemCollection.cs" />
+    <Compile Include="Tables\ITableCellEditor.cs" />
+    <Compile Include="Tables\ITableCellEditorView.cs" />
+    <Compile Include="Tables\TableFilterParams.cs" />
+    <Compile Include="Tests\ItemCollectionTests.cs" />
+    <Compile Include="Tests\FormatTests.cs" />
+    <Compile Include="Tests\ModifierFlagsConverterTest.cs" />
+    <Compile Include="Tests\PathSegmentTests.cs" />
+    <Compile Include="Tests\PathTests.cs" />
+    <Compile Include="Tests\TableTest.cs" />
+    <Compile Include="Tests\UnhandledExceptionTests.cs" />
+    <Compile Include="Tests\XKeysConverterTest.cs" />
+    <Compile Include="Tests\XMouseButtonComboTest.cs" />
+    <Compile Include="Tests\XMouseButtonsConverterTest.cs" />
+    <Compile Include="ToolStripDock.cs" />
+    <Compile Include="ToolStripSettings.cs" />
+    <Compile Include="ToolStripSettings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>ToolStripSettings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="Trees\CheckState.cs" />
+    <Compile Include="UndoableCommand.cs" />
+    <Compile Include="UserInteraction.cs" />
+    <Compile Include="PrincipalPermissionSpecification.cs" />
+    <Compile Include="Actions\Tests\ActionModelStoreTests.cs" />
+    <Compile Include="Actions\TooltipValueObserverAttribute.cs" />
+    <Compile Include="Actions\VisibleStateObserverAttribute.cs" />
+    <Compile Include="BlockingOperation.cs" />
+    <Compile Include="ExceptionHandlerSettings.cs" />
+    <Compile Include="ExceptionHandlerSettings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>ExceptionHandlerSettings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="ExceptionHandlingContext.cs" />
+    <Compile Include="ExceptionPolicyFactory.cs" />
+    <Compile Include="IExceptionPolicy.cs" />
+    <Compile Include="IExceptionHandlingContext.cs" />
+    <Compile Include="QuittingEventArgs.cs" />
+    <Compile Include="ShelfCreationArgs.cs" />
+    <Compile Include="StackTabComponentContainer.cs" />
+    <Compile Include="TabGroup.cs" />
+    <Compile Include="TabGroupComponentContainer.cs" />
+    <Compile Include="CursorToken.cs" />
+    <Compile Include="Actions\IActionSet.cs" />
+    <Compile Include="ApplicationComponentContainer.cs" />
+    <Compile Include="ApplicationComponentHost.cs" />
+    <Compile Include="DialogBox.cs" />
+    <Compile Include="ClosingEventArgs.cs" />
+    <Compile Include="SimpleComponentContainer.cs" />
+    <Compile Include="DragDropKind.cs" />
+    <Compile Include="ExceptionHandler.cs" />
+    <Compile Include="Format.cs" />
+    <Compile Include="FormatSettings.cs" />
+    <Compile Include="IApplicationComponentContainer.cs" />
+    <Compile Include="IBlockingOperationView.cs" />
+    <Compile Include="Actions\SimpleActionModel.cs" />
+    <Compile Include="TestComponent.cs" />
+    <Compile Include="TestTool.cs" />
+    <Compile Include="Validation\IApplicationComponentContainerValidationStrategy.cs" />
+    <Compile Include="IItemCollection.cs" />
+    <Compile Include="ItemCollection.cs" />
+    <Compile Include="PagedComponentContainer.cs" />
+    <Compile Include="ProgressDialog.cs" />
+    <Compile Include="ProgressDialogComponent.cs" />
+    <Compile Include="Selection.cs" />
+    <Compile Include="Tables\ITable.cs" />
+    <Compile Include="Tables\ITableColumn.cs" />
+    <Compile Include="Tables\ITableColumnCollection.cs" />
+    <Compile Include="SplitComponentContainer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="SplitPane.cs" />
+    <Compile Include="TabComponentContainer.cs" />
+    <Compile Include="Tables\ITableItemCollection.cs" />
+    <Compile Include="Tables\Table.cs" />
+    <Compile Include="Tables\TableColumn.cs" />
+    <Compile Include="Tables\TableColumnBase.cs" />
+    <Compile Include="Tables\TableColumnCollection.cs" />
+    <Compile Include="Tables\TableSortParams.cs" />
+    <Compile Include="Tables\TableColumnChangeType.cs" />
+    <Compile Include="Tables\TableColumnEventArgs.cs" />
+    <Compile Include="TabPage.cs" />
+    <Compile Include="DesktopWindow.cs" />
+    <Compile Include="IDesktopWindow.cs" />
+    <Compile Include="IDesktopWindowView.cs" />
+    <Compile Include="IDialogBoxView.cs" />
+    <Compile Include="IShelf.cs" />
+    <Compile Include="IShelfView.cs" />
+    <Compile Include="NavigatorPage.cs" />
+    <Compile Include="Path.cs" />
+    <Compile Include="PathSegment.cs" />
+    <Compile Include="Actions\ActionResourceResolver.cs" />
+    <Compile Include="Actions\ButtonAction.cs" />
+    <Compile Include="Actions\ButtonActionAttribute.cs" />
+    <Compile Include="Actions\CheckedStateObserverAttribute.cs" />
+    <Compile Include="Actions\ClickAction.cs" />
+    <Compile Include="Actions\ClickActionAttribute.cs" />
+    <Compile Include="Actions\ClickActionFlags.cs" />
+    <Compile Include="Actions\ClickHandlerAttribute.cs" />
+    <Compile Include="Actions\EnabledStateObserverAttribute.cs" />
+    <Compile Include="Actions\IAction.cs" />
+    <Compile Include="Actions\IActionBuildingContext.cs" />
+    <Compile Include="Actions\IClickAction.cs" />
+    <Compile Include="IconScheme.cs" />
+    <Compile Include="IconSet.cs" />
+    <Compile Include="Actions\IconSetAttribute.cs" />
+    <Compile Include="Actions\MenuAction.cs" />
+    <Compile Include="Actions\MenuActionAttribute.cs" />
+    <Compile Include="Actions\StateObserverAttribute.cs" />
+    <Compile Include="Actions\TooltipAttribute.cs" />
+    <Compile Include="Tools\ToolBase.cs" />
+    <Compile Include="Trees\ITree.cs" />
+    <Compile Include="Trees\ITreeItemBinding.cs" />
+    <Compile Include="Trees\ITreeItemCollection.cs" />
+    <Compile Include="Trees\TreeItemBindingBase.cs" />
+    <Compile Include="Trees\Tree.cs" />
+    <Compile Include="Trees\TreeItemBinding.cs" />
+    <Compile Include="Validation\AllComponentsValidationStrategy.cs" />
+    <Compile Include="Validation\IValidationRuleSet.cs" />
+    <Compile Include="Validation\IValidationRule.cs" />
+    <Compile Include="Validation\IValidationRuleSource.cs" />
+    <Compile Include="Validation\NoComponentsValidationStrategy.cs" />
+    <Compile Include="Validation\ValidateCompareAttribute.cs" />
+    <Compile Include="Validation\ValidateGreaterThanAttribute.cs" />
+    <Compile Include="Validation\ValidateLengthAttribute.cs" />
+    <Compile Include="Validation\ValidateLessThanAttribute.cs" />
+    <Compile Include="Validation\ValidateNotNullAttribute.cs" />
+    <Compile Include="Validation\ValidateRegexAttribute.cs" />
+    <Compile Include="Validation\ValidationAttribute.cs" />
+    <Compile Include="Validation\ValidationAttributeException.cs" />
+    <Compile Include="Validation\ValidationCache.cs" />
+    <Compile Include="Validation\ValidationResult.cs" />
+    <Compile Include="Validation\ValidationMethodForAttribute.cs" />
+    <Compile Include="Validation\ValidationRuleSet.cs" />
+    <Compile Include="Validation\ValidationRule.cs" />
+    <Compile Include="Validation\StartedComponentsValidationStrategy.cs" />
+    <Compile Include="ApplicationComponent.cs" />
+    <Compile Include="AssociateViewAttribute.cs" />
+    <Compile Include="Command.cs" />
+    <Compile Include="CommandHistory.cs" />
+    <Compile Include="IApplicationComponent.cs" />
+    <Compile Include="IApplicationComponentHost.cs" />
+    <Compile Include="IApplicationComponentView.cs" />
+    <Compile Include="IMemorable.cs" />
+    <Compile Include="IView.cs" />
+    <Compile Include="IWorkspace.cs" />
+    <Compile Include="IWorkspaceView.cs" />
+    <Compile Include="ISelection.cs" />
+    <Compile Include="NavigatorComponentContainer.cs" />
+    <Compile Include="Shelf.cs" />
+    <Compile Include="ShelfCollection.cs" />
+    <Compile Include="ShelfDisplayHint.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SR.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SR.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Tests\CommandHistoryTest.cs" />
+    <Compile Include="Tools\ITool.cs" />
+    <Compile Include="Tools\IToolContext.cs" />
+    <Compile Include="Tools\IToolSet.cs" />
+    <Compile Include="Tools\Tool.cs" />
+    <Compile Include="Tools\ToolContext.cs" />
+    <Compile Include="Tools\ToolSet.cs" />
+    <Compile Include="MemorableUndoableCommand.cs" />
+    <Compile Include="Validation\ValidationRulesSettings.cs" />
+    <Compile Include="Validation\ValidationRulesSettings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>ValidationRulesSettings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="Validation\XmlValidationCompiler.cs" />
+    <Compile Include="Validation\XmlValidationManager.cs" />
+    <Compile Include="ViewFactory.cs" />
+    <Compile Include="Workspace.cs" />
+    <Compile Include="WorkspaceCollection.cs" />
+    <Compile Include="Application.cs" />
+    <Compile Include="WorkspaceCreationArgs.cs" />
+    <Compile Include="XKeys.cs" />
+    <Compile Include="XKeysConverter.cs" />
+    <Compile Include="XKeysNames.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>XKeysNames.resx</DependentUpon>
+    </Compile>
+    <Compile Include="XMouseButtonCombo.cs" />
+    <Compile Include="XMouseButtons.cs" />
+    <Compile Include="XMouseButtonsConverter.cs" />
+    <Compile Include="WorkspaceDialogBox.cs" />
+    <Compile Include="WorkspaceDialogBoxCollection.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{B4F97281-0DBD-4835-9ED8-7DFB966E87FF}" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="SR.resx">
+      <SubType>Designer</SubType>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>SR.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Common\ClearCanvas.Common.csproj">
+      <Project>{F6EAD428-E6CF-4DF6-B2F3-D33D532C5343}</Project>
+      <Name>ClearCanvas.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Utilities\Manifest\ClearCanvas.Utilities.Manifest.csproj">
+      <Project>{E2F1A5D4-73A4-4BA6-AA5A-87BBDEC727F8}</Project>
+      <Name>ClearCanvas.Utilities.Manifest</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Actions\ActionModelSettings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>ActionModelSettings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="ClassDiagrams\Actions.cd" />
+    <None Include="app.config" />
+    <None Include="ClassDiagrams\ApplicationComponentContainers.cd" />
+    <None Include="ClassDiagrams\DesktopActions.cd" />
+    <None Include="ClassDiagrams\DesktopObjectModel.cd" />
+    <None Include="ClassDiagrams\Tool.cd" />
+    <None Include="ClassDiagrams\UndoRedo.cd" />
+    <None Include="ClassDiagrams\Desktop.cd" />
+    <None Include="Configuration\ConfigurationDialogSettings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>ConfigurationDialogSettings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="Configuration\Standard\CustomDateFormatSettings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>CustomDateFormatSettings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="ExceptionHandlerSettings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>ExceptionHandlerSettings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="FormatSettings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>FormatSettings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="ClassDiagrams\Tools.cd" />
+    <None Include="LocalePolicy.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>LocalePolicy.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="LocaleSettings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>LocaleSettings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="ToolStripSettings.settings">
+      <Generator>PublicSettingsSingleFileGenerator</Generator>
+      <LastGenOutput>ToolStripSettings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="Validation\ValidationRulesSettings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>ValidationRulesSettings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\AddToolSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\EditToolSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\DeleteToolSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\NextPageToolSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\PreviousPageToolSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\OptionsToolLarge.png" />
+    <EmbeddedResource Include="Icons\OptionsToolMedium.png" />
+    <EmbeddedResource Include="Icons\OptionsToolSmall.png" />
+    <EmbeddedResource Include="Icons\SaveToolSmall.png" />
+    <EmbeddedResource Include="Icons\ResetAllToolSmall.png" />
+    <EmbeddedResource Include="Icons\ResetToolSmall.png" />
+    <EmbeddedResource Include="Icons\ImportToolSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 2.0 %28x86%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.0 %28x86%29</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Validation\ValidationRules.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\AddActionModelGroupToolLarge.png" />
+    <EmbeddedResource Include="Icons\AddActionModelGroupToolMedium.png" />
+    <EmbeddedResource Include="Icons\AddActionModelGroupToolSmall.png" />
+    <EmbeddedResource Include="Icons\AddActionModelSeparatorToolLarge.png" />
+    <EmbeddedResource Include="Icons\AddActionModelSeparatorToolMedium.png" />
+    <EmbeddedResource Include="Icons\AddActionModelSeparatorToolSmall.png" />
+    <EmbeddedResource Include="Icons\RenameToolSmall.png" />
+    <EmbeddedResource Include="Icons\UnavailableToolOverlayLarge.png" />
+    <EmbeddedResource Include="Icons\UnavailableToolOverlayMedium.png" />
+    <EmbeddedResource Include="Icons\UnavailableToolOverlaySmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\ActionModelGroupLarge.png" />
+    <EmbeddedResource Include="Icons\ActionModelGroupMedium.png" />
+    <EmbeddedResource Include="Icons\ActionModelGroupSmall.png" />
+    <EmbeddedResource Include="Icons\ActionModelNullLarge.png" />
+    <EmbeddedResource Include="Icons\ActionModelNullMedium.png" />
+    <EmbeddedResource Include="Icons\ActionModelNullSmall.png" />
+    <EmbeddedResource Include="Icons\ActionModelSeparatorLarge.png" />
+    <EmbeddedResource Include="Icons\ActionModelSeparatorMedium.png" />
+    <EmbeddedResource Include="Icons\ActionModelSeparatorSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="XKeysNames.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>XKeysNames.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\ErrorMedium.png" />
+    <EmbeddedResource Include="Icons\InfoMedium.png" />
+    <EmbeddedResource Include="Icons\InfoTipMedium.png" />
+    <EmbeddedResource Include="Icons\WarningMedium.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\ErrorSmall.png" />
+    <EmbeddedResource Include="Icons\InfoSmall.png" />
+    <EmbeddedResource Include="Icons\InfoTipSmall.png" />
+    <EmbeddedResource Include="Icons\WarningSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\ErrorMini.png" />
+    <EmbeddedResource Include="Icons\InfoMini.png" />
+    <EmbeddedResource Include="Icons\InfoTipMini.png" />
+    <EmbeddedResource Include="Icons\WarningMini.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Tools\Tests\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="..\Common\ClearCanvas.Strings.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

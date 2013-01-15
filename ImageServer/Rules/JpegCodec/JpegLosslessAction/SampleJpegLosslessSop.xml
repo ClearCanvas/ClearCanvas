@@ -1,0 +1,30 @@
+﻿<!-- 
+This rule instructs the server to use JPEG Lossless compression
+CR and DX studies that have not been compressed already.
+-->
+<rule>
+  <condition expressionLanguage="dicom">
+	<and>
+	  <!-- RLE -->
+	  <not-equal test="$TransferSyntaxUid" refValue="1.2.840.10008.1.2.5" />
+	  <!-- JPEG Baseline -->
+	  <not-equal test="$TransferSyntaxUid" refValue="1.2.840.10008.1.2.4.50" />
+	  <!-- JPEG Extended -->
+	  <not-equal test="$TransferSyntaxUid" refValue="1.2.840.10008.1.2.4.51" />
+	  <!-- JPEG Lossless -->
+	  <not-equal test="$TransferSyntaxUid" refValue="1.2.840.10008.1.2.4.70" />
+	  <!-- JPEG 2000 Lossless -->
+	  <not-equal test="$TransferSyntaxUid" refValue="1.2.840.10008.1.2.4.90" />
+	  <!-- JPEG 2000 Lossless/Lossy -->
+	  <not-equal test="$TransferSyntaxUid" refValue="1.2.840.10008.1.2.4.91" />
+
+	  <or>
+		<equal test="$Modality" refValue="CR" />
+		<equal test="$Modality" refValue="DX" />
+	  </or>
+	</and>
+  </condition>
+  <action>
+	<jpeg-lossless-sop convertFromPalette="true"/>
+  </action>
+</rule>

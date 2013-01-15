@@ -1,0 +1,5 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" assembly="ClearCanvas.Healthcare" namespace="ClearCanvas.Healthcare">
+  <subclass name="ProtocolAssignmentStep" proxy="ProtocolAssignmentStep" extends="ProtocolProcedureStep" discriminator-value="PROTOCOL_ASSIGNMENT">
+  </subclass>
+</hibernate-mapping>

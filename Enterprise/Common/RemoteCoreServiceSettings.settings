@@ -1,0 +1,33 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="ClearCanvas.Enterprise.Common" GeneratedClassName="RemoteCoreServiceSettings">
+  <Profiles />
+  <Settings>
+    <Setting Name="BaseUrl" Description="Base URL that hosts the remote core services" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">net.tcp://localhost:8000/</Value>
+    </Setting>
+    <Setting Name="ConfigurationClass" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">ClearCanvas.Enterprise.Common.ServiceConfiguration.Client.NetTcpConfiguration, ClearCanvas.Enterprise.Common</Value>
+    </Setting>
+    <Setting Name="MaxReceivedMessageSize" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">2000000</Value>
+    </Setting>
+    <Setting Name="CertificateValidationMode" Type="System.ServiceModel.Security.X509CertificateValidationMode" Scope="Application">
+      <Value Profile="(Default)">PeerOrChainTrust</Value>
+    </Setting>
+    <Setting Name="RevocationMode" Type="System.Security.Cryptography.X509Certificates.X509RevocationMode" Scope="Application">
+      <Value Profile="(Default)">NoCheck</Value>
+    </Setting>
+    <Setting Name="UserCredentialsProviderClass" Type="System.String" Scope="Application">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="FailoverBaseUrl" Description="Optional failover base URL (see BaseURL property)" Type="System.String" Scope="Application">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="ConfigurationServiceResponseCachingEnabled" Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="FailedEndpointBlackoutTime" Type="System.TimeSpan" Scope="Application">
+      <Value Profile="(Default)">00:01:00</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

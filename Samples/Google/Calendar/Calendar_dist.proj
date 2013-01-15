@@ -1,0 +1,100 @@
+<Project DefaultTargets="Copy Sample Files" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <TrunkDirectory>$(MSBuildProjectDirectory)\..\..\..\</TrunkDirectory>
+    <JscriptDirectory>$(TrunkDirectory)\Jscript\bin\$(Configuration)</JscriptDirectory>
+    <EmptyViewerDatabaseFile>$(TrunkDirectory)\Dicom\DataStore\AuxiliaryFiles\$(PlatformSubFolder)\empty_viewer.sdf</EmptyViewerDatabaseFile>
+    <DesktopBuild>false</DesktopBuild>
+    <ShredHostBuild>false</ShredHostBuild>
+    <DistributionDesktopConfig>$(DistributionDirectory)\ClearCanvas.Desktop.Executable.exe.config</DistributionDesktopConfig>
+    <DistributionShredHostConfig>$(DistributionDirectory)\ClearCanvas.Server.ShredHostService.exe.config</DistributionShredHostConfig>
+  </PropertyGroup>
+
+  <Choose>
+    <When Condition=" '$(ProjectOutDir)' != '$(DistributionDirectory)' ">
+      <PropertyGroup>
+        <DatabaseDirectory>$(DistributionDirectory)\dicom_datastore</DatabaseDirectory>
+        <FileStoreDirectory>.\filestore</FileStoreDirectory>
+        <DatabaseFile>$(DatabaseDirectory)\viewer.sdf</DatabaseFile>
+        <HibernateConfigurationFileDataSource>dicom_datastore\viewer.sdf</HibernateConfigurationFileDataSource>
+      </PropertyGroup>
+    </When>
+    <Otherwise>
+      <PropertyGroup>
+        <DatabaseDirectory>$(TrunkDirectory)\dicom_datastore</DatabaseDirectory>
+        <FileStoreDirectory>$(TrunkDirectory)\dicom_datastore\filestore</FileStoreDirectory>
+        <DatabaseFile>$(DatabaseDirectory)\viewer.sdf</DatabaseFile>
+        <HibernateConfigurationFileDataSource>$(DatabaseFile)</HibernateConfigurationFileDataSource>
+      </PropertyGroup>
+    </Otherwise>
+  </Choose>
+
+  <Choose>
+    <When Condition=" '$(TargetPlatform)' != 'x86' ">
+      <PropertyGroup>
+        <PlatformSubFolder>$(TargetPlatform)</PlatformSubFolder>
+      </PropertyGroup>
+    </When>
+    <Otherwise>
+      <!-- assumes Win32 -->
+      <PropertyGroup>
+        <PlatformSubFolder></PlatformSubFolder>
+      </PropertyGroup>
+    </Otherwise>
+  </Choose>
+
+  <PropertyGroup>
+
+    <!--Hibernate Configuration-->
+    <HibernateConfigurationFileName>ClearCanvas.Dicom.DataStore.cfg.xml</HibernateConfigurationFileName>
+    <HibernateConfigurationFileSource>$(TrunkDirectory)\Dicom\DataStore\AuxiliaryFiles\$(HibernateConfigurationFileName)</HibernateConfigurationFileSource>
+
+  </PropertyGroup>
+
+  <!--What files get copied depends on which project we are building.  The only other
+  way to do this would be to have ImageViewerDesktop_dist.config and ImageViewerShredHost_dist.config, but they would be
+  pretty much identical except for the plugins.  Also, this way, you only have to do the upkeep on one file.-->
+
+  <PropertyGroup Condition ="'$(ProjectName)' == 'ClearCanvas.Desktop.Executable'">
+    <DesktopBuild>true</DesktopBuild>
+    <ShredHostBuild>false</ShredHostBuild>
+  </PropertyGroup>
+
+  <PropertyGroup Condition ="'$(ProjectName)' == 'ClearCanvas.Server.ShredHostService'">
+    <DesktopBuild>false</DesktopBuild>
+    <ShredHostBuild>true</ShredHostBuild>
+  </PropertyGroup>
+
+  <Choose>
+    <When Condition="$(DesktopBuild)">
+      <PropertyGroup>
+        <DistributionAppConfig>$(DistributionDesktopConfig)</DistributionAppConfig>
+       </PropertyGroup>
+    </When>
+    <Otherwise>
+      <PropertyGroup>
+        <DistributionAppConfig>$(DistributionShredHostConfig)</DistributionAppConfig>
+      </PropertyGroup>
+    </Otherwise>
+  </Choose>
+
+  <ItemGroup>
+    <SampleProjectFiles Include="$(TrunkDirectory)\Samples\Google\Calendar\Google.GData.Client.dll" />
+    <SampleProjectFiles Include="$(TrunkDirectory)\Samples\Google\Calendar\Google.GData.Calendar.dll" />
+    <SampleProjectFiles Include="$(TrunkDirectory)\Samples\Google\Calendar\Google.GData.AccessControl.dll" />
+    <SampleProjectFiles Include="$(TrunkDirectory)\Samples\Google\Calendar\Google.GData.Extensions.dll" />
+    <SampleProjectFiles Include="$(TrunkDirectory)\Samples\Google\Calendar\Google.GData.SpreadSheets.dll" />
+    <SampleProjectFiles Include="$(TrunkDirectory)\Samples\Google\Calendar\bin\$(Configuration)\ClearCanvas.Samples.Google.Calendar.dll" />
+    <SampleProjectFiles Include="$(TrunkDirectory)\Samples\Google\Calendar\View\WinForms\bin\$(Configuration)\ClearCanvas.Samples.Google.Calendar.View.WinForms.dll" />
+    <SampleProjectFiles Include="$(TrunkDirectory)\Samples\Google\Calendar\Mail\bin\$(Configuration)\ClearCanvas.Samples.Google.Calendar.Mail.dll" />
+    <SampleProjectFiles Include="$(TrunkDirectory)\Samples\Google\Calendar\Mail\View\WinForms\bin\$(Configuration)\ClearCanvas.Samples.Google.Calendar.Mail.View.WinForms.dll" />
+  </ItemGroup>
+
+  <Target Name="Copy Sample Files">
+
+    <MSBuild Projects="$(TrunkDirectory)\ImageViewer\ImageViewer_dist.proj" Properties="SolutionDir=$(SolutionDir);SolutionName=$(SolutionName);TargetPlatform=$(TargetPlatform);Configuration=$(Configuration);ProjectName=$(ProjectName);ProjectOutDir=$(ProjectOutDir);StrongNameKeyFile=$(StrongNameKeyFile);DistributionDirectory=$(DistributionDirectory);CommonDirectory=$(CommonDirectory);PluginsDirectory=$(PluginsDirectory);LogDirectory=$(LogDirectory);Options=$(Options)"/>
+    <Copy Condition="$(DesktopBuild)" SourceFiles="@(SampleProjectFiles)" DestinationFolder="$(PluginsDirectory)" />
+
+  </Target>
+
+</Project>
+

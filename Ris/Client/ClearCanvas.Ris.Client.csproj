@@ -1,0 +1,781 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{F8E75C01-AB14-4DDE-ABEA-3EECC4957A1F}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ClearCanvas.Ris.Client</RootNamespace>
+    <AssemblyName>ClearCanvas.Ris.Client</AssemblyName>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <IsWebBootstrapper>true</IsWebBootstrapper>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <PublishUrl>http://localhost/ClearCanvas.Ris.Client/</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Web</InstallFrom>
+    <UpdateEnabled>true</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Management" />
+    <Reference Include="System.Runtime.Serialization, Version=3.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Program Files\Reference Assemblies\Microsoft\Framework\v3.0\System.Runtime.Serialization.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ServiceModel, Version=3.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Program Files\Reference Assemblies\Microsoft\Framework\v3.0\System.ServiceModel.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AddressEditorComponent.cs" />
+    <Compile Include="AddressesSummaryComponent.cs" />
+    <Compile Include="AttachmentSummaryTable.cs" />
+    <Compile Include="AuditHelper.cs" />
+    <Compile Include="AuditDataContracts.cs" />
+    <Compile Include="AuthorityTokens.cs" />
+    <Compile Include="BannerSettings.cs" />
+    <Compile Include="AttachDocumentComponent.cs" />
+    <Compile Include="CancelOrderComponent.cs" />
+    <Compile Include="IViewerIntegration.cs" />
+    <Compile Include="UnmergeOrderComponent.cs" />
+    <Compile Include="DocumentViewTool.cs" />
+    <Compile Include="LoginFacilityProvider.cs" />
+    <Compile Include="PrintReportComponent.cs" />
+    <Compile Include="OrderCancelHelper.cs" />
+    <Compile Include="OrderEditorComponent2.cs" />
+    <Compile Include="OrderEditorComponentSettings.cs" />
+    <Compile Include="OrderEditorComponentSettings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>OrderEditorComponentSettings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="PatientProfileLookupHandler.cs" />
+    <Compile Include="DocumentAttachTool.cs" />
+    <Compile Include="DocumentDetachTool.cs" />
+    <Compile Include="ExternalPractitionerReplaceDisabledContactPointsComponent.cs" />
+    <Compile Include="ExternalPractitionerReplaceDisabledContactPointsTableItem.cs" />
+    <Compile Include="IFolderExplorerComponent.cs" />
+    <Compile Include="MergeOutcomeReportComponent.cs" />
+    <Compile Include="PatientAllergiesComponent.cs" />
+    <Compile Include="BiographyDemographicComponent.cs" />
+    <Compile Include="BiographyOrderReportsComponent.cs" />
+    <Compile Include="BiographyPrintReportTool.cs" />
+    <Compile Include="BiographyVisitDetailViewComponent.cs" />
+    <Compile Include="BiographyVisitHistoryComponent.cs" />
+    <Compile Include="BiographyOrderDetailViewComponent.cs" />
+    <Compile Include="CannedTextCategoryEditorComponent.cs" />
+    <Compile Include="CannedTextSettings.cs" />
+    <Compile Include="CannedTextSettings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>CannedTextSettings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="CannedTextLookupHandler.cs" />
+    <Compile Include="CannedTextSummaryComponent.cs" />
+    <Compile Include="CannedTextEditorComponent.cs" />
+    <Compile Include="CannedTextTable.cs" />
+    <Compile Include="CheckInSettings.cs" />
+    <Compile Include="ExternalPractitionerMergeNavigatorComponent.cs" />
+    <Compile Include="ExternalPractitionerMergePropertiesComponent.cs" />
+    <Compile Include="ExternalPractitionerSelectDisabledContactPointsComponent.cs" />
+    <Compile Include="ExternalPractitionerMergeSelectedDuplicateComponent.cs" />
+    <Compile Include="ExternalPractitionerOverviewComponent.cs" />
+    <Compile Include="ExternalPractitionerTable.cs" />
+    <Compile Include="FolderExplorerConfiguration.cs" />
+    <Compile Include="FolderSystemSettings.cs" />
+    <Compile Include="FolderSystemSettings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>FolderSystemSettings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="Formatting\TimeSpanFormat.cs" />
+    <Compile Include="LookupHandlerAggregator.cs" />
+    <Compile Include="LookupHandlerCellEditor.cs" />
+    <Compile Include="MultipleProceduresEditorComponent.cs" />
+    <Compile Include="DateTimeEntryComponent.cs" />
+    <Compile Include="DiagnosticServiceEditorComponent.cs" />
+    <Compile Include="DiagnosticServiceLookupSettings.cs" />
+    <Compile Include="DiagnosticServiceLookupSettings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>DiagnosticServiceLookupSettings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="DiagnosticServiceSummaryComponent.cs" />
+    <Compile Include="DowntimeRecovery.cs" />
+    <Compile Include="EnumValueAdminInfoTable.cs" />
+    <Compile Include="ExternalPractitionerContactPointLookupHandler.cs" />
+    <Compile Include="ExternalPractitionerContactPointMergeComponent.cs" />
+    <Compile Include="FolderExplorerConfigurationComponent.cs" />
+    <Compile Include="FolderExplorerConfigurationTool.cs" />
+    <Compile Include="FolderExplorerConfigurationTreeNode.cs" />
+    <Compile Include="FolderTreeNode.cs" />
+    <Compile Include="Formatting\ProcedureFormat.cs" />
+    <Compile Include="Formatting\StaffNameAndRoleFormat.cs" />
+    <Compile Include="IEHeaderFooterSettings.cs" />
+    <Compile Include="HomepageConfigurationComponent.cs" />
+    <Compile Include="IExtensionPageProvider.cs" />
+    <Compile Include="AttachedDocument.cs" />
+    <Compile Include="MergeComponentBase.cs" />
+    <Compile Include="FolderExplorerGroupComponent.cs" />
+    <Compile Include="OrderEditorComponent.cs" />
+    <Compile Include="OrderListTable.cs" />
+    <Compile Include="ExternalPractitionerContactPointDetailsEditorComponent.cs" />
+    <Compile Include="ExternalPractitionerContactPointEditorComponent.cs" />
+    <Compile Include="ExternalPractitionerContactPointSummaryComponent.cs" />
+    <Compile Include="Formatting\AccessionFormat.cs" />
+    <Compile Include="Formatting\ExternalPractitionerContactPointFormat.cs" />
+    <Compile Include="Formatting\StringMask.cs" />
+    <Compile Include="GlobalHomeTool.cs" />
+    <Compile Include="HomePageSettings.cs" />
+    <Compile Include="HomePageSettings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>HomePageSettings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="HomeTool.cs" />
+    <Compile Include="IChangePasswordDialog.cs" />
+    <Compile Include="IFolderSystem.cs" />
+    <Compile Include="OrderDetailViewComponent.cs" />
+    <Compile Include="OrderNoteCategory.cs" />
+    <Compile Include="OrderNoteEditorComponent.cs" />
+    <Compile Include="OrderNoteViewComponent.cs" />
+    <Compile Include="OrderNoteSummaryComponent.cs" />
+    <Compile Include="OrderNoteTable.cs" />
+    <Compile Include="HtmlActionModelRenderer.cs" />
+    <Compile Include="BannerComponent.cs" />
+    <Compile Include="PatientProfileAdditionalInfoEditorComponent.cs" />
+    <Compile Include="PatientProfileDetailsEditorComponent.cs" />
+    <Compile Include="PatientProfileEditorComponent.cs" />
+    <Compile Include="PatientProfileLookupSettings.cs" />
+    <Compile Include="PatientProfileLookupSettings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>PatientProfileLookupSettings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="PatientSearchComponentSettings.cs" />
+    <Compile Include="PatientSearchComponentSettings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>PatientSearchComponentSettings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="IEPrintBackgroundSettings.cs" />
+    <Compile Include="PatientProfileSummaryComponent.cs" />
+    <Compile Include="ProcedureEditorComponentBase.cs" />
+    <Compile Include="ProcedureEditorComponent.cs" />
+    <Compile Include="FolderRefreshTool.cs" />
+    <Compile Include="ProcedureRequisitionTable.cs" />
+    <Compile Include="ProcedureTypeEditorComponent.cs" />
+    <Compile Include="ProcedureTypeLookupHandler.cs" />
+    <Compile Include="ProcedureTypeLookupSettings.cs" />
+    <Compile Include="ProcedureTypeLookupSettings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>ProcedureTypeLookupSettings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="ProcedureTypeSummaryComponent.cs" />
+    <Compile Include="ProcedureTypeSummaryTable.cs" />
+    <Compile Include="PrintReportComponentSettings.cs" />
+    <Compile Include="PrintReportComponentSettings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>PrintReportComponentSettings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="RelativeTime.cs" />
+    <Compile Include="SearchComponentBase.cs" />
+    <Compile Include="SearchComponentSettings.cs" />
+    <Compile Include="SearchComponentSettings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>SearchComponentSettings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="SearchResultsFolder.cs" />
+    <Compile Include="SearchTool.cs" />
+    <Compile Include="SessionManagerTool.cs" />
+    <Compile Include="StackedComponentContainer.cs" />
+    <Compile Include="StaffGroupDetailsEditorComponent.cs" />
+    <Compile Include="StaffGroupEditorComponent.cs" />
+    <Compile Include="StaffGroupLookupHandler.cs" />
+    <Compile Include="StaffGroupSummaryComponent.cs" />
+    <Compile Include="StaffOrStaffGroupSummaryComponent.cs" />
+    <Compile Include="StaffProfileEditorTool.cs" />
+    <Compile Include="StaffSelectorEditorComponent.cs" />
+    <Compile Include="StaffStaffGroupEditorComponent.cs" />
+    <Compile Include="FolderExplorerUserConfiguration.cs" />
+    <Compile Include="TestViewerIntegration.cs" />
+    <Compile Include="UserLookupHandler.cs" />
+    <Compile Include="UserWorklistTool.cs" />
+    <Compile Include="ViewImagesHelper.cs" />
+    <Compile Include="VisitDetailsEditorComponent.cs" />
+    <Compile Include="VisitDetailViewComponent.cs" />
+    <Compile Include="VisitEditorComponent.cs" />
+    <Compile Include="VisitListTable.cs" />
+    <Compile Include="VisitLocationsSummaryComponent.cs" />
+    <Compile Include="VisitLocationTable.cs" />
+    <Compile Include="VisitPractitionersSummaryComponent.cs" />
+    <Compile Include="VisitPractitionerTable.cs" />
+    <Compile Include="VisitSummaryComponent.cs" />
+    <Compile Include="VisitSummaryTable.cs" />
+    <Compile Include="WeakSearchCriteriaException.cs" />
+    <Compile Include="WorkflowEventPublisher.cs" />
+    <Compile Include="WorkflowHistoryComponent.cs" />
+    <Compile Include="WorklistDetailEditorComponent.cs" />
+    <Compile Include="WorklistDetailEditorComponentBase.cs" />
+    <Compile Include="WorklistEditorComponent.cs" />
+    <Compile Include="WorklistEditorComponentSettings.cs" />
+    <Compile Include="WorklistEditorComponentSettings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>WorklistEditorComponentSettings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="WorklistFilterEditorComponent.cs" />
+    <Compile Include="WorklistItemPreviewComponent.cs" />
+    <Compile Include="FolderContentsComponent.cs" />
+    <Compile Include="IFolderSystemContext.cs" />
+    <Compile Include="HomePageContainer.cs" />
+    <Compile Include="FolderExplorerComponent.cs" />
+    <Compile Include="FolderExplorerComponentSettings.cs" />
+    <Compile Include="FolderExplorerComponentSettings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>FolderExplorerComponentSettings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="Formatting\VisitNumberFormat.cs" />
+    <Compile Include="IWorkflowFolderToolContext.cs" />
+    <Compile Include="IWorkflowItemToolContext.cs" />
+    <Compile Include="BiographyNoteComponent.cs" />
+    <Compile Include="BiographyNoteTable.cs" />
+    <Compile Include="BiographyOrderHistoryComponent.cs" />
+    <Compile Include="BiographyOverviewComponent.cs" />
+    <Compile Include="DiagnosticServiceLookupHandler.cs" />
+    <Compile Include="ExternalPractitionerDetailsEditorComponent.cs" />
+    <Compile Include="ExternalPractitionerEditorComponent.cs" />
+    <Compile Include="ExternalPractitionerLookupHandler.cs" />
+    <Compile Include="ExternalPractitionerSummaryComponent.cs" />
+    <Compile Include="AttachedDocumentPreviewComponent.cs" />
+    <Compile Include="ILookupHandler.cs" />
+    <Compile Include="Document.cs" />
+    <Compile Include="DocumentManager.cs" />
+    <Compile Include="ExceptionPolicies.cs" />
+    <Compile Include="LookupHandler.cs" />
+    <Compile Include="OrderSummaryTable.cs" />
+    <Compile Include="PatientBiographyDocument.cs" />
+    <Compile Include="ProcedurePlanSummaryTable.cs" />
+    <Compile Include="PatientProfileTable.cs" />
+    <Compile Include="PatientSearchComponent.cs" />
+    <Compile Include="ProtocolCodeTable.cs" />
+    <Compile Include="RandomUtils.cs" />
+    <Compile Include="RandomUtilsSettings.cs" />
+    <Compile Include="RandomUtilsSettings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>RandomUtilsSettings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="RisDesktopWindow.cs" />
+    <Compile Include="SearchComponent.cs" />
+    <Compile Include="TempFileManager.cs" />
+    <Compile Include="WebServicesSettings.cs" />
+    <Compile Include="WebServicesSettings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>WebServicesSettings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="Formatting\AddressFormat.cs" />
+    <Compile Include="AddressEditorComponentSettings.cs" />
+    <Compile Include="AddressEditorComponentSettings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>AddressEditorComponentSettings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="AddressTable.cs" />
+    <Compile Include="ContactPersonEditorComponent.cs" />
+    <Compile Include="ContactPersonsSummaryComponent.cs" />
+    <Compile Include="ContactPersonTable.cs" />
+    <Compile Include="EmailAddressEditorComponent.cs" />
+    <Compile Include="EmailAddressesSummaryComponent.cs" />
+    <Compile Include="EmailAddressTable.cs" />
+    <Compile Include="Folder.cs" />
+    <Compile Include="FormatSettings.cs" />
+    <Compile Include="FormatSettings.designer.cs">
+      <DependentUpon>FormatSettings.settings</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="Formatting\HealthcardFormat.cs" />
+    <Compile Include="Formatting\MrnFormat.cs" />
+    <Compile Include="HtmlApplicationComponent.cs" />
+    <Compile Include="IDropHandler.cs" />
+    <Compile Include="IFolder.cs" />
+    <Compile Include="ILoginDialog.cs" />
+    <Compile Include="JsmlServiceProxy.cs" />
+    <Compile Include="LoginSession.cs" />
+    <Compile Include="PatientNoteEditorComponent.cs" />
+    <Compile Include="PatientNoteSummaryComponent.cs" />
+    <Compile Include="PatientNoteTable.cs" />
+    <Compile Include="Formatting\PersonNameFormat.cs" />
+    <Compile Include="DHtmlComponent.cs" />
+    <Compile Include="RisServiceProvider.cs" />
+    <Compile Include="SessionManager.cs" />
+    <Compile Include="Formatting\TelephoneFormat.cs" />
+    <Compile Include="StaffDetailsEditorComponent.cs" />
+    <Compile Include="StaffEditorComponent.cs" />
+    <Compile Include="StaffLookupHandler.cs" />
+    <Compile Include="StaffSummaryComponent.cs" />
+    <Compile Include="StaffTable.cs" />
+    <Compile Include="WebResourcesSettings.cs" />
+    <Compile Include="WorkflowFolderSystem.cs" />
+    <Compile Include="PhoneNumberEditorComponent.cs" />
+    <Compile Include="PhoneNumbersSummaryComponent.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SR.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SR.resx</DependentUpon>
+    </Compile>
+    <Compile Include="StorageFolder.cs" />
+    <Compile Include="TelephoneNumberTable.cs" />
+    <Compile Include="TestStorageFolders.cs" />
+    <Compile Include="TextFieldMasks.cs" />
+    <Compile Include="WorkflowFolder.cs" />
+    <Compile Include="LoginDialogSettings.cs" />
+    <Compile Include="LoginDialogSettings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>LoginDialogSettings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="WorkflowItemTool.cs" />
+    <Compile Include="WorklistFolder.cs" />
+    <Compile Include="WorklistFolderSystem.cs" />
+    <Compile Include="WorklistMultiDetailEditorComponent.cs" />
+    <Compile Include="WorklistPropertiesTool.cs" />
+    <Compile Include="WorklistSummaryComponent.cs" />
+    <Compile Include="SelectorEditorComponent.cs" />
+    <Compile Include="WorklistTimeWindowEditorComponent.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="SR.resx">
+      <SubType>Designer</SubType>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>SR.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Common\ClearCanvas.Common.csproj">
+      <Project>{F6EAD428-E6CF-4DF6-B2F3-D33D532C5343}</Project>
+      <Name>ClearCanvas.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Desktop\ClearCanvas.Desktop.csproj">
+      <Project>{26E9A01A-64B5-42C5-8252-FBB30DF9CEC7}</Project>
+      <Name>ClearCanvas.Desktop</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Enterprise\Common\ClearCanvas.Enterprise.Common.csproj">
+      <Project>{B5EBFFD7-6641-4932-91C9-4C4322B41868}</Project>
+      <Name>ClearCanvas.Enterprise.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Enterprise\Desktop\ClearCanvas.Enterprise.Desktop.csproj">
+      <Project>{CBD5EBD0-7AE9-4824-AE8C-4888983E1B5B}</Project>
+      <Name>ClearCanvas.Enterprise.Desktop</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Application\Common\ClearCanvas.Ris.Application.Common.csproj">
+      <Project>{09F49217-CD98-4773-8CFB-594F189EEE3B}</Project>
+      <Name>ClearCanvas.Ris.Application.Common</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="AcquisitionWorkflowPreview.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="AddressEditorComponentSettings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>AddressEditorComponentSettings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="app.config" />
+    <None Include="CannedTextSettings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>CannedTextSettings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="FolderSystemSettings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>FolderSystemSettings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="LocalFileSettings.config" />
+    <None Include="DiagnosticServiceLookupSettings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>DiagnosticServiceLookupSettings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="FolderExplorerComponentSettings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>FolderExplorerComponentSettings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="FormatSettings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>FormatSettings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="HomePageSettings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>HomePageSettings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="OrderEditorComponentSettings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>OrderEditorComponentSettings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="PatientProfileLookupSettings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>PatientProfileLookupSettings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="PatientSearchComponentSettings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>PatientSearchComponentSettings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="ProcedureTypeLookupSettings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>ProcedureTypeLookupSettings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="PrintReportComponentSettings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>PrintReportComponentSettings.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="RandomUtilsSettings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>RandomUtilsSettings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="LoginDialogSettings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>LoginDialogSettings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="SearchComponentSettings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>SearchComponentSettings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="WebServicesSettings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>WebServicesSettings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="WorklistEditorComponentSettings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>WorklistEditorComponentSettings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\AddToolSmall.png" />
+    <EmbeddedResource Include="Icons\DeleteToolSmall.png" />
+    <EmbeddedResource Include="Icons\EditToolSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\ContainerFolderClosedLarge.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\ContainerFolderOpenSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\ContainerFolderClosedMedium.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\ContainerFolderClosedSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\ContainerFolderOpenLarge.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\ContainerFolderOpenMedium.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\AlertClock.png" />
+    <EmbeddedResource Include="Icons\AlertGeneral.png" />
+    <EmbeddedResource Include="Icons\AlertIncompleteData.png" />
+    <EmbeddedResource Include="Icons\AlertMessenger.png" />
+    <EmbeddedResource Include="Icons\AlertPen.png" />
+    <EmbeddedResource Include="Icons\AlertWorld.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Test\Dictionary.Name.Family.txt" />
+    <EmbeddedResource Include="Test\Dictionary.Name.Female.txt" />
+    <EmbeddedResource Include="Test\Dictionary.Name.Male.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\FolderClosedLarge.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\FolderOpenSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\FolderClosedMedium.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\FolderClosedSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\FolderOpenLarge.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\FolderOpenMedium.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\SearchFolderClosedLarge.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\SearchFolderOpenSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\SearchFolderClosedMedium.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\SearchFolderClosedSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\SearchFolderOpenLarge.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\SearchFolderOpenMedium.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="FolderExplorerComponentSettings.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\RefreshToolLarge.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\SearchToolSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\RefreshToolMedium.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\RefreshToolSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\SearchToolLarge.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\SearchToolMedium.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\Mail.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\NoteRead.png" />
+    <EmbeddedResource Include="Icons\NoteUnread.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\PreliminaryDiagnosisToolLarge.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\PreliminaryDiagnosisToolMedium.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\PreliminaryDiagnosisToolSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\WarningHS.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\CopyToolSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\GlobalHomeToolSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\GlobalHomeToolLarge.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\GlobalHomeToolMedium.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\DuplicateToolSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\MergeToolSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\CopyToClipboardToolSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\OptionsToolSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\FolderClosedRefreshMedium.gif" />
+    <EmbeddedResource Include="Icons\FolderOpenRefreshMedium.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\SingleExclamation.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\DoubleExclamation.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\PrintLarge.png" />
+    <EmbeddedResource Include="Icons\PrintMedium.png" />
+    <EmbeddedResource Include="Icons\PrintSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\OrderNoteConversationLarge.png" />
+    <EmbeddedResource Include="Icons\OrderNoteConversationMedium.png" />
+    <EmbeddedResource Include="Icons\OrderNoteConversationSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\PrelimDiagConvoToolLarge.png" />
+    <EmbeddedResource Include="Icons\PrelimDiagConvoToolMedium.png" />
+    <EmbeddedResource Include="Icons\PrelimDiagConvoToolSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\RefreshLarge.png" />
+    <EmbeddedResource Include="Icons\RefreshMedium.png" />
+    <EmbeddedResource Include="Icons\RefreshSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\DuplicateSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\FolderClosedErrorLarge.png" />
+    <EmbeddedResource Include="Icons\FolderClosedErrorMedium.png" />
+    <EmbeddedResource Include="Icons\FolderClosedErrorSmall.png" />
+    <EmbeddedResource Include="Icons\FolderOpenErrorLarge.png" />
+    <EmbeddedResource Include="Icons\FolderOpenErrorMedium.png" />
+    <EmbeddedResource Include="Icons\FolderOpenErrorSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\UpToolSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\DownToolSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\UserFolderClosedLarge.png" />
+    <EmbeddedResource Include="Icons\UserFolderClosedMedium.png" />
+    <EmbeddedResource Include="Icons\UserFolderClosedSmall.png" />
+    <EmbeddedResource Include="Icons\UserFolderOpenLarge.png" />
+    <EmbeddedResource Include="Icons\UserFolderOpenMedium.png" />
+    <EmbeddedResource Include="Icons\UserFolderOpenSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\GroupFolderClosedLarge.png" />
+    <EmbeddedResource Include="Icons\GroupFolderClosedMedium.png" />
+    <EmbeddedResource Include="Icons\GroupFolderClosedSmall.png" />
+    <EmbeddedResource Include="Icons\GroupFolderOpenLarge.png" />
+    <EmbeddedResource Include="Icons\GroupFolderOpenMedium.png" />
+    <EmbeddedResource Include="Icons\GroupFolderOpenSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\ToggleActivationSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\ToggleActivationLarge.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\ToggleActivationMedium.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 2.0 %28x86%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.0 %28x86%29</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\MultiEditToolSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="FolderExplorerComponentUserSettings.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\ResetToolSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\CheckInToolSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\VerifyPractitionerToolLarge.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\VerifyPractitionerToolSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\VerifyPractitionerToolMedium.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\MergeContactPointToolLarge.png" />
+    <EmbeddedResource Include="Icons\MergeContactPointToolMedium.png" />
+    <EmbeddedResource Include="Icons\MergeContactPointToolSmall.png" />
+    <EmbeddedResource Include="Icons\MergePersonToolLarge.png" />
+    <EmbeddedResource Include="Icons\MergePersonToolMedium.png" />
+    <EmbeddedResource Include="Icons\MergePersonToolSmall.png" />
+    <EmbeddedResource Include="Icons\SwapLarge.png" />
+    <EmbeddedResource Include="Icons\SwapMedium.png" />
+    <EmbeddedResource Include="Icons\SwapSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\AttachmentsToolLarge.png" />
+    <EmbeddedResource Include="Icons\AttachmentsToolMedium.png" />
+    <EmbeddedResource Include="Icons\AttachmentsToolSmall.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

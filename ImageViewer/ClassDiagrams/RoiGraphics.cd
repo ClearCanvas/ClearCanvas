@@ -1,0 +1,61 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Font Name="Tahoma" Size="8.25" />
+  <Class Name="ClearCanvas.ImageViewer.RoiGraphics.Roi" Collapsed="true">
+    <Position X="5.75" Y="2.25" Width="1.75" />
+    <TypeIdentifier>
+      <FileName>RoiGraphics\Roi.cs</FileName>
+      <HashCode>AAAABAAAAAAAAQCBAAAQwBAAFKAAACAACAAwAAgYIgE=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ClearCanvas.ImageViewer.RoiGraphics.RoiGraphic" Collapsed="true">
+    <Position X="3" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>RoiGraphics\RoiGraphic.cs</FileName>
+      <HashCode>AJAGAEAABCJAAQAAAAKgAAACAAAIAoBEIAAAAAAsEAA=</HashCode>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Callout" />
+      <Property Name="Roi" />
+    </ShowAsAssociation>
+    <AssociationLine Name="Callout" Type="ClearCanvas.ImageViewer.RoiGraphics.RoiCalloutGraphic" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="3.75" Y="1.13" />
+        <Point X="3.75" Y="1.5" />
+        <Point X="5.75" Y="1.5" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.112" Y="0.068" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="Roi" Type="ClearCanvas.ImageViewer.RoiGraphics.Roi" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="3.75" Y="1.13" />
+        <Point X="3.75" Y="2.5" />
+        <Point X="5.75" Y="2.5" />
+      </Path>
+    </AssociationLine>
+  </Class>
+  <Class Name="ClearCanvas.ImageViewer.RoiGraphics.RoiCalloutGraphic" Collapsed="true">
+    <Position X="5.75" Y="1.25" Width="1.75" />
+    <TypeIdentifier>
+      <FileName>RoiGraphics\RoiCalloutGraphic.cs</FileName>
+      <HashCode>AEQAABAAQgAAAAAAIAAAAAAAAAABAEAAAAARAAAAhAA=</HashCode>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="RoiAnalyzers" />
+    </ShowAsCollectionAssociation>
+    <AssociationLine Name="RoiAnalyzers" Type="ClearCanvas.ImageViewer.RoiGraphics.Analyzers.IRoiAnalyzer">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.133" Y="0.068" />
+      </MemberNameLabel>
+    </AssociationLine>
+  </Class>
+  <Interface Name="ClearCanvas.ImageViewer.RoiGraphics.Analyzers.IRoiAnalyzer" Collapsed="true">
+    <Position X="8.75" Y="1.25" Width="1.75" />
+    <TypeIdentifier>
+      <FileName>RoiGraphics\Analyzers\IRoiAnalyzer.cs</FileName>
+      <HashCode>AAAAAAAAAAIAAEAAAAAAAAAAAAAAAAAAEAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Interface>
+</ClassDiagram>

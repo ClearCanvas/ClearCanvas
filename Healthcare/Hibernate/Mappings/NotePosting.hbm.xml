@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" assembly="ClearCanvas.Healthcare" namespace="ClearCanvas.Healthcare">
+	<class name="NotePosting" proxy="NotePosting" table="NotePosting_">
+		<id name="OID" column="OID_" type="Guid">
+			<generator class="guid.comb"/>
+		</id>
+    <discriminator column="Discriminator_" type ="String"/>
+    <version name="Version" column="Version_"/>
+
+    <property name="CreationTime" column="CreationTime_" type="DateTime" not-null="true"/>
+    <many-to-one name="Note" class="Note" column="NoteOID_" not-null="true"/>
+    <property name="IsAcknowledged" column="IsAcknowledged_" type="Boolean" not-null="true"/>
+		<component name="AcknowledgedBy" class="NoteAcknowledgement">
+			<many-to-one name="Staff" class="Staff" column="AcknowledgedByStaffOID_" not-null="false"/>
+			<property name="Time" column="AcknowledgedByTime_" type="DateTime" not-null="false"/>
+		</component>
+  </class>
+  
+  <!-- subclasses -->
+  <subclass name="StaffNotePosting" extends="NotePosting" discriminator-value="STAFF">
+    <many-to-one name="Recipient" column="RecipientStaffOID_" class="Staff" fetch="join" not-null="false"/>
+  </subclass>
+  <subclass name="GroupNotePosting" extends="NotePosting" discriminator-value="GROUP">
+    <many-to-one name="Recipient" column="RecipientGroupOID_" class="StaffGroup" fetch="join" not-null="false"/>
+  </subclass>
+</hibernate-mapping>

@@ -1,0 +1,343 @@
+.GlobalGridView
+{
+    font-family: Sans-Serif;
+    font-size: 12px;
+    background: #ffffff;
+    border-top: solid 1px #3D98D1;
+    border-bottom: solid 1px #ffffff;
+}
+
+.GridViewBorder
+{
+	border:solid 1px #eeeeee;
+}
+
+.GlobalGridViewTableContainer
+{
+	border-top:solid 2px white;
+}
+
+.GlobalGridViewHeader
+{
+    background: #ffffff url(../../../../PersistantImage.ashx?key=GridViewHeaderBackground) repeat-x;
+    height: 23px;
+	text-align: left;
+	padding-left: 8px;
+    color: #205F87;
+}
+
+.GlobalGridViewHeader th
+{
+    padding-left: 8px;
+}
+
+.GlobalGridViewRow
+{
+    border-bottom: solid 2px #eeeeee;
+    padding: 0px 0px 0px 8px;
+    height: 20px;
+}
+
+.GlobalGridViewRow > td
+{
+    border-bottom: solid 2px #eeeeee;
+    padding: 0px 0px 0px 8px;
+    height: 20px;
+}
+
+.GlobalGridViewAlternatingRow
+{
+    padding: 0px 0px 0px 8px;
+    border-bottom: solid 2px #eeeeee;
+    height: 20px;
+}
+
+.GlobalGridViewAlternatingRow > td
+{
+    padding: 0px 0px 0px 8px;
+    border-bottom: solid 2px #eeeeee;
+    height: 20px;
+}
+
+.GlobalGridViewSelectedRow
+{
+    background: #9edc98;
+    border-bottom: solid 2px #eeeeee;
+    padding: 0px 0px 0px 8px;
+    height: 20px;    
+}
+
+.GlobalGridViewSelectedRow > td
+{
+    background: #9edc98;
+    border-bottom: solid 2px #eeeeee;
+    color: Black;
+    height: 20px;
+    padding: 0px 0px 0px 8px;
+}
+
+.GlobalGridViewEmptyText
+{
+    color: #205F87;
+    font-weight: bold;
+    font-size: 12px;
+}
+
+/*==========================================
+ * Grid Pager
+ *==========================================*/
+
+.GlobalGridPager
+{
+    background: #e1eff7 url(../../../../PersistantImage.ashx?key=GridViewPagerTopBackground) repeat-x bottom;
+    height: 24px;
+}
+
+.GlobalGridPagerLabel
+{
+    font-family: Sans-Serif;
+    font-size: 12px;
+    font-weight: bold;
+    color:  #55be50;
+    padding-left: 0px;
+    vertical-align: middle;
+}
+
+.GlobalGridPagerLink
+{
+    font-family: Sans-Serif;
+    font-size: 12px;
+    font-weight: bold;
+    text-decoration: none;
+    color: #55be50; 
+    vertical-align: middle;
+}
+
+#ItemCountContainer
+{
+    background: #e1eff7; 
+    border-bottom: solid 1px #b8d9ee; 
+    padding-top: 1px;
+	padding-bottom: 3px;
+    padding-left: 20px;
+	padding-right: 20px;
+	text-align: center;
+}
+
+#ItemCountContainer_FF
+{
+    background: #e1eff7; 
+    border-bottom: solid 1px #b8d9ee; 
+    padding-left: 20px;
+	padding-right: 20px;
+	padding-top: 1px;
+    padding-bottom: 3px;
+    text-align: center;    
+}
+
+#ItemCountContainer_Chrome
+{
+    background: #e1eff7; 
+    border-bottom: solid 1px #b8d9ee; 
+    padding-top: 1px;
+    padding-bottom: 4px;
+    padding-left: 20px;
+	padding-right: 20px;
+	text-align: center;
+}
+
+.CurrentPageContainer
+{
+    background: #e1eff7; 
+    border-bottom: solid 1px #b8d9ee; 
+    padding-top: 1px;
+    width: 175px; 
+    text-align: center;
+}
+
+.CurrentPageContainer_FF
+{
+    background: #e1eff7; 
+    border-bottom: solid 1px #b8d9ee; 
+    padding-top: 1px;
+    padding-bottom: 2px;
+    width: 175px; 
+    text-align: center;
+}
+
+.CurrentPageContainer_Chrome
+{
+    background: #e1eff7; 
+    border-bottom: solid 1px #b8d9ee; 
+    width: 175px; 
+    text-align: center;
+}
+
+.GlobalGridPagerLinkDisabled
+{
+    font-family: Sans-Serif;
+    font-size: 12px;
+    font-weight: bold;
+    text-decoration: none;
+    color: #dddddd; 
+    vertical-align: middle;
+}
+
+.GridViewTextBox
+{
+    font-family: Sans-Serif;
+    font-size: 11px;
+    font-weight: normal;
+    padding-left: 2px;
+    padding-right: 2px;
+    width: 100px;
+	margin-left: 1px;
+	margin-right: 1px;
+	border: solid 1px #3D98D1;
+    background: #ffffff url(../../../../PersistantImage.ashx?key=SearchTextBoxBackground) repeat-x ;
+}
+
+.GridViewTextBox.hover {
+	background: #fff;
+	border: solid 1px #99CCFF;
+	font-weight: bold;
+	color: #333333;
+}
+
+.GridViewTextBox.focus {
+	background: #fff;
+	border: solid 1px #99CCFF;
+	font-weight: bold;
+	color: #333333;
+}
+
+/*==========================================
+ * WebViewer Grid Pager and GridView
+ *==========================================*/
+
+.WebViewerGridView
+{
+    font-family: Sans-Serif;
+    font-size: 12px;
+    background: black;
+}
+
+.WebViewerGridPager
+{
+    background: #707070 url(../../../../PersistantImage.ashx?key=WebViewerPagerBackground) repeat-x bottom;
+    height: 24px;
+}
+
+.WebViewerGridPagerLabel
+{
+    font-family: Sans-Serif;
+    font-size: 12px;
+    font-weight: bold;
+    color:  #16425D;
+    padding-left: 0px;
+    vertical-align: middle;
+}
+
+.WebViewerGridPagerLink
+{
+    font-family: Sans-Serif;
+    font-size: 12px;
+    font-weight: bold;
+    text-decoration: none;
+    color: #55be50; 
+    vertical-align: middle;
+}
+
+.WebViewerGridPagerLinkDisabled
+{
+    font-family: Sans-Serif;
+    font-size: 12px;
+    font-weight: bold;
+    text-decoration: none;
+    color: #dddddd; 
+    vertical-align: middle;
+}
+
+#WebViewerItemCountContainer
+{
+    border-top: solid 1px #444444;
+    background: #999999; 
+    padding-top: 1px;
+    width: 175px; 
+    text-align: center;
+}
+
+#WebViewerItemCountContainer_FF
+{
+    border-top: solid 1px #444444;
+    background: #999999; 
+    padding-top: 1px;
+    padding-bottom: 3px;
+    width: 175px; 
+    text-align: center;
+}
+
+#WebViewerItemCountContainer_Chrome
+{
+    border-top: solid 1px #444444;
+    background: #999999; 
+    padding-top: 1px;
+    padding-bottom: 4px;
+    width: 175px; 
+    text-align: center;
+}
+
+.WebViewerCurrentPageContainer
+{
+    background: #999999; 
+    border-top: solid 1px #444444; 
+    padding-top: 1px;
+    width: 175px; 
+    text-align: center;
+}
+
+.WebViewerCurrentPageContainer_FF
+{
+    background: #999999; 
+    border-top: solid 1px #444444; 
+    padding-top: 1px;
+    padding-bottom: 2px;
+    width: 175px; 
+    text-align: center;
+}
+
+.WebViewerCurrentPageContainer_Chrome
+{
+    background: #999999; 
+    border-top: solid 1px #444444; 
+    width: 175px; 
+    text-align: center;
+}
+
+.WebViewerGridViewTextBox
+{
+    font-family: Sans-Serif;
+    font-size: 11px;
+    font-weight: normal;
+    padding-left: 2px;
+    padding-right: 2px;
+    width: 100px;
+	margin-left: 1px;
+	margin-right: 1px;
+	border: solid 1px #444444;
+    background: #ffffff url(../../../../PersistantImage.ashx?key=SearchTextBoxBackground) repeat-x ;
+}
+
+.WebViewerGridViewTextBox.hover {
+	background: #fff;
+	border: solid 1px #444444;
+	font-weight: bold;
+	color: #333333;
+}
+
+.WebViewerGridViewTextBox.focus {
+	background: #fff;
+	border: solid 1px #444444;
+	font-weight: bold;
+	color: #333333;
+}

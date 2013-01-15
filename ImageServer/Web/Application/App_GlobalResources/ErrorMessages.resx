@@ -1,0 +1,244 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ActionNotAllowedAtThisTime" xml:space="preserve">
+    <value>Cannot perform the action at this time: {0}. Please try again later.</value>
+  </data>
+  <data name="AdminDevices_DeleteDevice_PendingWorkQueue" xml:space="preserve">
+    <value>The device {0} has entries in the WorkQueue and cannot be deleted.</value>
+  </data>
+  <data name="AdminPartition_DeletePartition_Failed" xml:space="preserve">
+    <value>Unable to delete this server partition. This could mean there are studies on this partition.
+
+Please check the log file or contact the server administrator.</value>
+  </data>
+  <data name="AlertDeleteFailed" xml:space="preserve">
+    <value>Unable to delete this alert item.</value>
+  </data>
+  <data name="AlertDeleteFailed_WithException" xml:space="preserve">
+    <value>Failed to delete this alert item.&lt;br&gt;Error: {0}</value>
+  </data>
+  <data name="AlertNotAvailable" xml:space="preserve">
+    <value>This alert item is no longer available in the system.</value>
+  </data>
+  <data name="AuthorizationError" xml:space="preserve">
+    <value>ImageServer Authorization Failed.</value>
+  </data>
+  <data name="CannotContactEnterpriseServer" xml:space="preserve">
+    <value>Unable to contact the authentication and authorization server.</value>
+  </data>
+  <data name="ChangePasswordError" xml:space="preserve">
+    <value>{0}</value>
+  </data>
+  <data name="CookiesAreDisabled" xml:space="preserve">
+    <value>Cookies are currently disabled on your browser.</value>
+  </data>
+  <data name="CookiesAreDisabledLongDescription" xml:space="preserve">
+    <value>ClearCanvas ImageServer requires your browser to accept Cookies.  Please enable Cookies on your browser and click here to try again.</value>
+  </data>
+  <data name="DeleteStudyError" xml:space="preserve">
+    <value>Unable to delete the study. See server log for more details.</value>
+  </data>
+  <data name="EditDeviceValidationError" xml:space="preserve">
+    <value>Validation Error. Please check all tabs for indicated errors and correct before submitting changes.</value>
+  </data>
+  <data name="EditFileSystemValidationError" xml:space="preserve">
+    <value>Validation Error. Please check all tabs for indicated errors and correct before submitting changes.</value>
+  </data>
+  <data name="EditPartitionValidationError" xml:space="preserve">
+    <value>Validation Error. Please check all tabs for indicated errors and correct before submitting changes.</value>
+  </data>
+  <data name="EditServerRuleValidationError" xml:space="preserve">
+    <value>Validation Error. Please check all tabs for indicated errors and correct before submitting changes.</value>
+  </data>
+  <data name="EditStudyValidationError" xml:space="preserve">
+    <value>Validation Error. Please check all tabs for indicated errors and correct before submitting changes.</value>
+  </data>
+  <data name="ErrorShowStackTraceMessage" xml:space="preserve">
+    <value>To include the ImageServer's error message, click here.</value>
+  </data>
+  <data name="ExceptionAuthorityGroupIsNotEmpty_MultipleUsers" xml:space="preserve">
+    <value>There are currently {1} users belonging to this group.</value>
+  </data>
+  <data name="ExceptionAuthorityGroupIsNotEmpty_OneUser" xml:space="preserve">
+    <value>There is currently one user belonging to this group.</value>
+  </data>
+  <data name="GeneralErrorMessage" xml:space="preserve">
+    <value>This message is being displayed because the ClearCanvas ImageServer encountered a situation that was unexpected. The resulting error has been recorded for future analysis. 
+
+If you would like to report the error, please post to one of the forums listed below and provide any information you think will be helpful in handling this situation in the future.</value>
+  </data>
+  <data name="JavascriptIsDisabled" xml:space="preserve">
+    <value>Javascript is currently disabled on your browser.</value>
+  </data>
+  <data name="JavascriptIsDisabledLongDescription" xml:space="preserve">
+    <value>ClearCanvas ImageServer requires Javascript in order to run. Please enable Javascript on your browser and click here to try again</value>
+  </data>
+  <data name="LicenseError" xml:space="preserve">
+    <value>Could not find a valid license</value>
+  </data>
+  <data name="LicenseErrorLongDescription" xml:space="preserve">
+    <value>The ImageServer license is invalid or has expired. A valid license must be entered in ClearCanvas Workstation Team Edition. If you have already entered a valid license, please refresh this page to login.</value>
+  </data>
+  <data name="LoginInvalidUsernameOrPassword" xml:space="preserve">
+    <value>Invalid User ID or Password.</value>
+  </data>
+  <data name="MessageSoftwareExpired" xml:space="preserve">
+    <value>The evaluation period for this software has expired.</value>
+  </data>
+  <data name="MultiplePartitionsExistWithAETitle" xml:space="preserve">
+    <value>Unexpected Error: Multiple Partitions exist with AE title {0}</value>
+  </data>
+  <data name="PasswordExpired" xml:space="preserve">
+    <value>Your password has expired.</value>
+  </data>
+  <data name="PasswordPolicyNotMet" xml:space="preserve">
+    <value>The password you entered is not acceptable. Please contact the administrator.</value>
+  </data>
+  <data name="PasswordResetFailed" xml:space="preserve">
+    <value>An error occurred resetting the password. Password has not been changed.</value>
+  </data>
+  <data name="PasswordsDoNotMatch" xml:space="preserve">
+    <value>Provided passwords do not match.&lt;br/&gt;Please retype your passwords and try again.</value>
+  </data>
+  <data name="PasswordsDontMatch" xml:space="preserve">
+    <value>Provided passwords don't match. 
+Please retype your passwords and try again.</value>
+  </data>
+  <data name="SessionTimedout" xml:space="preserve">
+    <value>ImageServer session timed out.</value>
+  </data>
+  <data name="SessionTimedoutLongDescription" xml:space="preserve">
+    <value>This message is being displayed because there has been no activity in the past {0} minute(s). For security purposes, your ImageServer session has been closed. Please login again to continue using ClearCanvas ImageServer. </value>
+    <comment>Timeout page when user logged into IS</comment>
+  </data>
+  <data name="UnexpectedError" xml:space="preserve">
+    <value>Something happened that the ImageServer was unprepared for.</value>
+  </data>
+  <data name="UserAccessDenied" xml:space="preserve">
+    <value>Access denied.  The user credentials may be invalid or the account may be disabled.</value>
+  </data>
+  <data name="WebAuthorizationErrorDescription" xml:space="preserve">
+    <value>This message is being displayed because the ClearCanvas ImageServer encountered an error authorizing user with ID "{0}"</value>
+  </data>
+  <data name="WebViewerSessionTimedoutLongDescription" xml:space="preserve">
+    <value>This message is being displayed because there has been no activity in the past {0} minute(s). For security purposes, your ImageServer session has been closed.</value>
+    <comment>Timeout page for standalone use case</comment>
+  </data>
+</root>

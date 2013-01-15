@@ -1,0 +1,14 @@
+<VSTemplate Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005" Type="Item">
+  <TemplateData>
+    <DefaultName>EntityName</DefaultName>
+    <Name>CRUD Summary Application Component</Name>
+    <Description>Creates a CRUD Summary Application Component</Description>
+    <ProjectType>CSharp</ProjectType>
+    <SortOrder>10</SortOrder>
+    <Icon>__TemplateIcon.ico</Icon>
+  </TemplateData>
+  <TemplateContent>
+    <References />
+    <ProjectItem SubType="Code" TargetFileName="$fileinputname$SummaryComponent.cs" ReplaceParameters="true">MyComponent.cs</ProjectItem>
+  </TemplateContent>
+</VSTemplate>

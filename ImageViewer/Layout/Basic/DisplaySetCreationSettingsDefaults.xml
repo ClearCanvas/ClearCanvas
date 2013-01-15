@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<display-set-creation-settings>
+  <setting modality="CR">
+    <options>
+      <option identifier="CreateSingleImageDisplaySets" value="True" />
+    </options>
+  </setting>
+  <setting modality="CT">
+    <options>
+      <option identifier="SplitMixedMultiframes" value="True" show-original="False" />
+    </options>
+  </setting>
+  <setting modality="DX">
+    <options>
+      <option identifier="CreateSingleImageDisplaySets" value="True" />
+    </options>
+  </setting>
+  <setting modality="KO">
+    <options>
+      <option identifier="CreateSingleImageDisplaySets" value="True" />
+    </options>
+  </setting>
+  <setting modality="MG">
+    <options>
+      <option identifier="CreateSingleImageDisplaySets" value="True" />
+    </options>
+  </setting>
+  <setting modality="MR">
+    <options>
+      <option identifier="SplitEchos" value="True" show-original="False" />
+      <option identifier="SplitMixedMultiframes" value="True" show-original="False" />
+    </options>
+  </setting>
+  <setting modality="NM">
+    <options>
+      <option identifier="SplitMixedMultiframes" value="True" show-original="False" />
+    </options>
+    <presentation-intent show-grayscale-inverted="True" />
+  </setting>
+  <setting modality="RF">
+    <options>
+      <option identifier="SplitMixedMultiframes" value="True" show-original="False" />
+    </options>
+  </setting>
+  <setting modality="SC">
+    <options>
+      <option identifier="SplitMixedMultiframes" value="True" show-original="False" />
+    </options>
+  </setting>
+  <setting modality="XA">
+    <options>
+      <option identifier="SplitMixedMultiframes" value="True" show-original="False" />
+    </options>
+  </setting>
+</display-set-creation-settings>

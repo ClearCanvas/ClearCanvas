@@ -1,0 +1,165 @@
+##########################
+for entities
+###########################
+
+
+	  	/// <summary>
+	  	/// Support constructor
+	  	/// </summary>
+        public <%= className %>(<%= supportClassName %> support)
+        {
+			this.CopyFieldsFrom(support);
+        }
+
+	  	
+
+
+		#region Support Helper methods
+                
+ 	  	protected override void CopyFieldsTo(EntitySupport entitySupport)
+	  	{
+	  		<%= supportClassName %> support = (<%= supportClassName %>)entitySupport;
+		<% fields.select {|f| f.kind == :entity }.each do |f| %>
+			support.<%= f.accessorName %> = (this.<%= f.fieldName %> == null) ? null : new EntityRef(this.<%= f.fieldName %>);
+		<% end %>
+		<% fields.select {|f| f.kind == :component }.each do |f| %>
+			support.<%= f.accessorName %> = (this.<%= f.fieldName %> == default(<%= f.dataType %>)) ? default(<%= f.supportDataType %>) : this.<%= f.fieldName %>.GetSupport();
+		<% end %>
+		<% fields.select {|f| f.kind == :userType }.each do |f| %>
+			support.<%= f.accessorName %> = (this.<%= f.fieldName %> == default(<%= f.dataType %>)) ? default(<%= f.dataType %>) : (<%= f.dataType %>)this.<%= f.fieldName %>.Clone();
+		<% end %>
+		<% fields.select {|f| f.kind == :primitive || f.kind == :enum }.each do |f| %>
+	  		support.<%= f.accessorName %> = this.<%= f.fieldName %>;
+		<% end %>
+
+		<% if(isSubClass) %>
+			base.CopyFieldsTo(support);
+		<% end %>
+	  	}
+	  	
+	  	public override void CopyFieldsFrom(EntitySupport entitySupport)
+	  	{
+	  		<%= supportClassName %> support = (<%= supportClassName %>)entitySupport;
+		<% fields.select {|f| f.kind == :entity }.each do |f| %>
+			this.<%= f.fieldName %> = (support.<%= f.accessorName %> == null) ? null : (<%= f.dataType %>)EntityUtils.Resolve(support.<%= f.accessorName %>);
+		<% end %>
+		<% fields.select {|f| f.kind == :component }.each do |f| %>
+			this.<%= f.fieldName %> = (support.<%= f.accessorName %> == default(<%= f.supportDataType %>)) ? default(<%= f.dataType %>) : new <%= f.dataType %>(support.<%= f.accessorName %>);
+		<% end %>
+		<% fields.select {|f| f.kind == :userType }.each do |f| %>
+			this.<%= f.fieldName %> = (support.<%= f.accessorName %> == default(<%= f.dataType %>)) ? default(<%= f.dataType %>) : (<%= f.dataType %>)support.<%= f.accessorName %>.Clone();
+		<% end %>
+		<% fields.select {|f| f.kind == :primitive || f.kind == :enum }.each do |f| %>
+	  		this.<%= f.fieldName %> = support.<%= f.accessorName %>;
+		<% end %>
+		
+        <% if(isSubClass) %>
+			base.CopyFieldsFrom(support);
+        <% end %>
+	  	}
+	  	
+		public <%= isSubClass ? "new " : "" %><%= supportClassName %> GetSupport()
+		{
+			<%= supportClassName %> support = new <%= supportClassName %>(new EntityRef(this));
+			CopyFieldsTo(support);
+			return support;
+		}
+		
+        public override bool EqualFields(EntitySupport entitySupport)
+	  	{
+	  		if(entitySupport == null)
+	  			return false;
+	  			
+	  		<%= supportClassName %> support = (<%= supportClassName %>)entitySupport;
+			return
+		<% fields.select {|f| f.kind == :entity }.each do |f| %>
+			((this.<%= f.fieldName %> == null) ? (support.<%= f.accessorName %> == null) : support.<%= f.accessorName %>.RefersTo(this.<%= f.fieldName %>, true)) &&
+	  	<% end %>
+		<% fields.select {|f| f.kind == :component }.each do |f| %>
+			((this.<%= f.fieldName %> == null) ? (support.<%= f.accessorName %> == null) : this.<%= f.fieldName %>.EqualFields(support.<%= f.accessorName %>)) &&
+	  	<% end %>
+		<% fields.select {|f| f.kind == :primitive || f.kind == :enum || f.kind == :userType}.each do |f| %>
+			((this.<%= f.fieldName %> == default(<%= f.dataType %>)) ? (support.<%= f.accessorName %> == default(<%= f.supportDataType %>)) : this.<%= f.fieldName %>.Equals(support.<%= f.accessorName %>)) &&
+	  	<% end %>
+				<% if(isSubClass) %>base.EqualFields(support);<% else %>true;<% end %>
+	  	}
+	  	
+		#endregion
+
+##########################
+for components
+###########################
+
+                
+	  	/// <summary>
+	  	/// Support constructor
+	  	/// </summary>
+		public <%= className %>(<%= supportClassName %> support)
+		{
+			this.CopyFieldsFrom(support);
+		}
+	  	
+		#region Support Helper methods
+                
+ 	  	protected override void CopyFieldsTo(ValueObjectSupport valueObjSupport)
+	  	{
+	  		<%= supportClassName %> support = (<%= supportClassName %>)valueObjSupport;
+		<% fields.select {|f| f.kind == :entity }.each do |f| %>
+			support.<%= f.accessorName %> = (this.<%= f.fieldName %> == null) ? null : new EntityRef(this.<%= f.fieldName %>);
+		<% end %>
+		<% fields.select {|f| f.kind == :component }.each do |f| %>
+			support.<%= f.accessorName %> = (this.<%= f.fieldName %> == default(<%= f.dataType %>)) ? default(<%= f.supportDataType %>) : this.<%= f.fieldName %>.GetSupport();
+		<% end %>
+		<% fields.select {|f| f.kind == :userType }.each do |f| %>
+			support.<%= f.accessorName %> = (this.<%= f.fieldName %> == default(<%= f.dataType %>)) ? default(<%= f.dataType %>) : (<%= f.dataType %>)this.<%= f.fieldName %>.Clone();
+		<% end %>
+		<% fields.select {|f| f.kind == :primitive || f.kind == :enum }.each do |f| %>
+	  		support.<%= f.accessorName %> = this.<%= f.fieldName %>;
+		<% end %>
+	  	}
+	  	
+	  	public override void CopyFieldsFrom(ValueObjectSupport valueObjSupport)
+	  	{
+	  		<%= supportClassName %> support = (<%= supportClassName %>)valueObjSupport;
+		<% fields.select {|f| f.kind == :entity }.each do |f| %>
+			this.<%= f.fieldName %> = (support.<%= f.accessorName %> == null) ? null : (<%= f.dataType %>)EntityUtils.Resolve(support.<%= f.accessorName %>);
+		<% end %>
+		<% fields.select {|f| f.kind == :component }.each do |f| %>
+			this.<%= f.fieldName %> = (support.<%= f.accessorName %> == default(<%= f.supportDataType %>)) ? default(<%= f.dataType %>) : new <%= f.dataType %>(support.<%= f.accessorName %>);
+		<% end %>
+		<% fields.select {|f| f.kind == :userType }.each do |f| %>
+			this.<%= f.fieldName %> = (support.<%= f.accessorName %> == default(<%= f.dataType %>)) ? default(<%= f.dataType %>) : (<%= f.dataType %>)support.<%= f.accessorName %>.Clone();
+		<% end %>
+		<% fields.select {|f| f.kind == :primitive || f.kind == :enum }.each do |f| %>
+	  		this.<%= f.fieldName %> = support.<%= f.accessorName %>;
+		<% end %>
+	  	}
+                
+        public <%= supportClassName %> GetSupport()
+        {
+			<%= supportClassName %> support = new <%= supportClassName %>();
+			CopyFieldsTo(support);
+			return support;
+        }
+        
+        public override bool EqualFields(ValueObjectSupport valueObjSupport)
+	  	{
+	  		if(valueObjSupport == null)
+	  			return false;
+	  			
+	  		<%= supportClassName %> support = (<%= supportClassName %>)valueObjSupport;
+			return
+		<% fields.select {|f| f.kind == :entity }.each do |f| %>
+			((this.<%= f.fieldName %> == null) ? (support.<%= f.accessorName %> == null) : support.<%= f.accessorName %>.RefersTo(this.<%= f.fieldName %>, true)) &&
+	  	<% end %>
+		<% fields.select {|f| f.kind == :component }.each do |f| %>
+			((this.<%= f.fieldName %> == null) ? (support.<%= f.accessorName %> == null) : this.<%= f.fieldName %>.EqualFields(support.<%= f.accessorName %>)) &&
+	  	<% end %>
+		<% fields.select {|f| f.kind == :primitive || f.kind == :enum || f.kind == :userType}.each do |f| %>
+			((this.<%= f.fieldName %> == default(<%= f.dataType %>)) ? (support.<%= f.accessorName %> == default(<%= f.supportDataType %>)) : this.<%= f.fieldName %>.Equals(support.<%= f.accessorName %>)) &&
+	  	<% end %>
+				true;
+	  	}
+
+        
+		#endregion

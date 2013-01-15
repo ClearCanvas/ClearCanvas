@@ -1,0 +1,12 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="ClearCanvas.Ris.Client" GeneratedClassName="AddressEditorComponentSettings">
+  <Profiles />
+  <Settings>
+    <Setting Name="Countries" Description="Comma separated list of countries to populate dropdown" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Canada</Value>
+    </Setting>
+    <Setting Name="Provinces" Description="Comma separated list of provinces to populate dropdown" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">ON, AB, BC, MB, NB, NL, NS, PE, QC, SK, NT, NU, YT</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

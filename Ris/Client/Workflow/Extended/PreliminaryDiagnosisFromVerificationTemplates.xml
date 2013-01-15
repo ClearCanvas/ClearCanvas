@@ -1,0 +1,22 @@
+﻿<TemplateDefinitions hash="true">
+  <Templates array="true">
+    <item hash="true">
+      <DisplayName>Review Required</DisplayName>
+      <Recipients array="true">
+        <item hash="true">
+          <Type>Group</Type>
+          <Id>ER Physician</Id>
+          <Mandatory>true</Mandatory>
+        </item>
+      </Recipients>
+      <SuggestOtherRecipients>true</SuggestOtherRecipients>
+      <NoteContent>Review Required</NoteContent>
+    </item>
+    <item hash="true">
+      <DisplayName>No Review Required</DisplayName>
+      <NoteContent>No Review Required</NoteContent>
+      <AllowPostWithoutRecipients>true</AllowPostWithoutRecipients>
+      <SuggestOtherRecipients>false</SuggestOtherRecipients>
+    </item>
+  </Templates>
+</TemplateDefinitions>

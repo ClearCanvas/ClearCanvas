@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<enum class="OrderCancelReason">
+  <enum-value code="IO">
+    <value>Inappropriate imaging service ordered</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="PA">
+    <value>Cancelled by patient</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="PH">
+    <value>Cancelled by physician</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="CL">
+    <value>Patient is claustrophobic</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="AL">
+    <value>Patient has an allergy</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="NS">
+    <value>Patient did not show for exam</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="UM">
+    <value>Order was un-merged and replaced</value>
+    <description></description>
+  </enum-value>
+</enum>

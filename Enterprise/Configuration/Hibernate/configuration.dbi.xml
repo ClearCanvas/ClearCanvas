@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!--  
+
+This file adds a number of supplementary indexes to the Healthcare model.
+Note that all entity and enumeration references are already indexed automatically,
+so the only fields that are explicitly marked for indexing here are generally 
+time-stamps and other value fields that are known to be used in queries, and only
+on key tables that play a central role in the workflow queries.
+
+-->
+<indexes>
+  <index table="ConfigurationDocument_" columns="CreationTime_"/>
+  <index table="ConfigurationDocumentBody_" columns="ModifiedTime_"/>
+</indexes>

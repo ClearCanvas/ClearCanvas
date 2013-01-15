@@ -1,0 +1,292 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{B5EBFFD7-6641-4932-91C9-4C4322B41868}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ClearCanvas.Enterprise.Common</RootNamespace>
+    <AssemblyName>ClearCanvas.Enterprise.Common</AssemblyName>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;UNIT_TESTS</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Castle.Core, Version=1.0.3.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\ReferencedAssemblies\NHibernate2.1\Castle.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.DynamicProxy2, Version=2.0.3.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\ReferencedAssemblies\NHibernate2.1\Castle.DynamicProxy2.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.framework, Version=2.2.7.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\ReferencedAssemblies\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.IdentityModel, Version=3.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files\Reference Assemblies\Microsoft\Framework\v3.0\System.IdentityModel.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization, Version=3.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Program Files\Reference Assemblies\Microsoft\Framework\v3.0\System.Runtime.Serialization.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ServiceModel, Version=3.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Program Files\Reference Assemblies\Microsoft\Framework\v3.0\System.ServiceModel.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AdditionalServiceInterceptorProvider.cs" />
+    <Compile Include="Admin\AuthorityGroupAdmin\IAuthorityGroupAdminService.cs" />
+    <Compile Include="Admin\AuthorityGroupAdmin\AddAuthorityGroupRequest.cs" />
+    <Compile Include="Admin\AuthorityGroupAdmin\AddAuthorityGroupResponse.cs" />
+    <Compile Include="Admin\AuthorityGroupAdmin\IAuthorityGroupReadService.cs" />
+    <Compile Include="Admin\UserAdmin\AddUserRequest.cs" />
+    <Compile Include="Admin\UserAdmin\AddUserResponse.cs" />
+    <Compile Include="Admin\AuthorityGroupAdmin\AuthorityGroupDetail.cs" />
+    <Compile Include="Admin\AuthorityGroupAdmin\AuthorityGroupSummary.cs" />
+    <Compile Include="Admin\AuthorityGroupAdmin\AuthorityTokenSummary.cs" />
+    <Compile Include="Admin\AuthorityGroupAdmin\DeleteAuthorityGroupRequest.cs" />
+    <Compile Include="Admin\AuthorityGroupAdmin\DeleteAuthorityGroupResponse.cs" />
+    <Compile Include="Admin\UserAdmin\DeleteUserRequest.cs" />
+    <Compile Include="Admin\UserAdmin\DeleteUserResponse.cs" />
+    <Compile Include="Admin\AuthorityGroupAdmin\ImportAuthorityGroupsRequest.cs" />
+    <Compile Include="Admin\AuthorityGroupAdmin\ImportAuthorityGroupsResponse.cs" />
+    <Compile Include="Admin\AuthorityGroupAdmin\ImportAuthorityTokensRequest.cs" />
+    <Compile Include="Admin\AuthorityGroupAdmin\ImportAuthorityTokensResponse.cs" />
+    <Compile Include="Admin\UserAdmin\IUserAdminService.cs" />
+    <Compile Include="Admin\AuthorityGroupAdmin\ListAuthorityGroupsRequest.cs" />
+    <Compile Include="Admin\AuthorityGroupAdmin\ListAuthorityGroupsResponse.cs" />
+    <Compile Include="Admin\AuthorityGroupAdmin\ListAuthorityTokensRequest.cs" />
+    <Compile Include="Admin\AuthorityGroupAdmin\ListAuthorityTokensResponse.cs" />
+    <Compile Include="Admin\UserAdmin\ListUserSessionsRequest.cs" />
+    <Compile Include="Admin\UserAdmin\ListUserSessionsResponse.cs" />
+    <Compile Include="Admin\UserAdmin\ListUsersRequest.cs" />
+    <Compile Include="Admin\UserAdmin\ListUsersResponse.cs" />
+    <Compile Include="Admin\AuthorityGroupAdmin\LoadAuthorityGroupForEditRequest.cs" />
+    <Compile Include="Admin\AuthorityGroupAdmin\LoadAuthorityGroupForEditResponse.cs" />
+    <Compile Include="Admin\UserAdmin\LoadUserForEditRequest.cs" />
+    <Compile Include="Admin\UserAdmin\LoadUserForEditResponse.cs" />
+    <Compile Include="Admin\UserAdmin\ResetUserPasswordRequest.cs" />
+    <Compile Include="Admin\UserAdmin\ResetUserPasswordResponse.cs" />
+    <Compile Include="Admin\AuthorityGroupAdmin\UpdateAuthorityGroupRequest.cs" />
+    <Compile Include="Admin\AuthorityGroupAdmin\UpdateAuthorityGroupResponse.cs" />
+    <Compile Include="Admin\UserAdmin\TerminateUserSessionRequest.cs" />
+    <Compile Include="Admin\UserAdmin\TerminateUserSessionResponse.cs" />
+    <Compile Include="Admin\UserAdmin\UpdateUserRequest.cs" />
+    <Compile Include="Admin\UserAdmin\UpdateUserResponse.cs" />
+    <Compile Include="Admin\UserAdmin\UserDetail.cs" />
+    <Compile Include="Admin\UserAdmin\UserSessionSummary.cs" />
+    <Compile Include="Admin\UserAdmin\UserSummary.cs" />
+    <Compile Include="AopInterceptorChain.cs" />
+    <Compile Include="Audit\AuditException.cs" />
+    <Compile Include="Audit\AuditSink.cs" />
+    <Compile Include="Audit\IAuditService.cs" />
+    <Compile Include="Audit\WriteEntryRequest.cs" />
+    <Compile Include="Audit\WriteEntryResponse.cs" />
+    <Compile Include="AuthenticationAttribute.cs" />
+    <Compile Include="AuthenticationScope.cs" />
+    <Compile Include="Authentication\ChangePasswordRequest.cs" />
+    <Compile Include="Authentication\ChangePasswordResponse.cs" />
+    <Compile Include="Authentication\GetAuthorizationsRequest.cs" />
+    <Compile Include="Authentication\GetAuthorizationsResponse.cs" />
+    <Compile Include="Authentication\InitiateSessionRequest.cs" />
+    <Compile Include="Authentication\InitiateSessionResponse.cs" />
+    <Compile Include="Authentication\ResetPasswordRequest.cs" />
+    <Compile Include="Authentication\ResetPasswordResponse.cs" />
+    <Compile Include="Authentication\TerminateSessionRequest.cs" />
+    <Compile Include="Authentication\TerminateSessionResponse.cs" />
+    <Compile Include="Authentication\ValidateSessionRequest.cs" />
+    <Compile Include="Authentication\ValidateSessionResponse.cs" />
+    <Compile Include="AuthorityGroupIsNotEmptyException.cs" />
+    <Compile Include="Configuration\IApplicationConfigurationReadService.cs" />
+    <Compile Include="Configuration\ImportSettingsGroupRequest.cs" />
+    <Compile Include="Configuration\ImportSettingsGroupResponse.cs" />
+    <Compile Include="Configuration\ListConfigurationDocumentsRequest.cs" />
+    <Compile Include="Configuration\ListConfigurationDocumentsResponse.cs" />
+    <Compile Include="DefaultPrincipal.cs" />
+    <Compile Include="EntityRefJsmlSerializerHook.cs" />
+    <Compile Include="Facility.cs" />
+    <Compile Include="FailoverClientAdvice.cs" />
+    <Compile Include="IChannelProvider.cs" />
+    <Compile Include="IOfflineCache.cs" />
+    <Compile Include="ListRequestBase.cs" />
+    <Compile Include="Manifest\IManifestService.cs" />
+    <Compile Include="Manifest\ServerManifestVerification.cs" />
+    <Compile Include="NullOfflineCache.cs" />
+    <Compile Include="PagedDataContractBase.cs" />
+    <Compile Include="Ping\IPingService.cs" />
+    <Compile Include="RemoteCoreServiceProvider2.cs" />
+    <Compile Include="ResponseCachingAdviceBase.cs" />
+    <Compile Include="ResponseCachingClientSideAdvice.cs" />
+    <Compile Include="ConcurrentModificationException.cs" />
+    <Compile Include="Authentication\IAuthenticationService.cs" />
+    <Compile Include="AuthorityTokens.cs" />
+    <Compile Include="Configuration\ConfigurationDocumentRequestBase.cs" />
+    <Compile Include="Configuration\GetConfigurationDocumentRequest.cs" />
+    <Compile Include="Configuration\GetConfigurationDocumentResponse.cs" />
+    <Compile Include="Configuration\ListSettingsGroupsRequest.cs" />
+    <Compile Include="Configuration\ListSettingsGroupsResponse.cs" />
+    <Compile Include="Configuration\ListSettingsPropertiesRequest.cs" />
+    <Compile Include="Configuration\ListSettingsPropertiesResponse.cs" />
+    <Compile Include="Configuration\RemoveConfigurationDocumentRequest.cs" />
+    <Compile Include="Configuration\RemoveConfigurationDocumentResponse.cs" />
+    <Compile Include="Configuration\SetConfigurationDocumentRequest.cs" />
+    <Compile Include="Configuration\SetConfigurationDocumentResponse.cs" />
+    <Compile Include="EnterpriseCoreServiceAttribute.cs" />
+    <Compile Include="EnterpriseConfigurationStore.cs" />
+    <Compile Include="EnterpriseSettingsStore.cs" />
+    <Compile Include="EnterpriseTimeProvider.cs" />
+    <Compile Include="EntityChange.cs" />
+    <Compile Include="EntityChangeEventArgs.cs" />
+    <Compile Include="EntityChangeSet.cs" />
+    <Compile Include="EntityRef.cs" />
+    <Compile Include="EntityRefUtils.cs" />
+    <Compile Include="Configuration\IConfigurationService.cs" />
+    <Compile Include="ICoreServiceLayer.cs" />
+    <Compile Include="ResponseCachingDirective.cs" />
+    <Compile Include="ServiceConfiguration\Server\CertificateSearchDirective.cs" />
+    <Compile Include="Setup\SetupApplication.cs" />
+    <Compile Include="Setup\SetupCommandLine.cs" />
+    <Compile Include="Setup\SetupHelper.cs" />
+    <Compile Include="StaticChannelProvider.cs" />
+    <Compile Include="Tests\AopInterceptorChainTests.cs" />
+    <Compile Include="Tests\EntityRefJsmlSerializerHookTests.cs" />
+    <Compile Include="Tests\ResponseCachingAdviceBaseTests.cs" />
+    <Compile Include="UserAccessDeniedException.cs" />
+    <Compile Include="InvalidUserSessionException.cs" />
+    <Compile Include="IServiceChannelConfiguration.cs" />
+    <Compile Include="IServiceHostConfiguration.cs" />
+    <Compile Include="Time\GetTimeRequest.cs" />
+    <Compile Include="Time\GetTimeResponse.cs" />
+    <Compile Include="Time\ITimeService.cs" />
+    <Compile Include="IVersionedEquatable.cs" />
+    <Compile Include="PasswordExpiredException.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PropertyChange.cs" />
+    <Compile Include="RemoteCoreServiceProvider.cs" />
+    <Compile Include="RemoteCoreServiceSettings.cs" />
+    <Compile Include="RemoteCoreServiceSettings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>RemoteCoreServiceSettings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="RemoteServiceProviderBase.cs" />
+    <Compile Include="RequestValidationException.cs" />
+    <Compile Include="SearchResultPage.cs" />
+    <Compile Include="ServiceChannelConfigurationArgs.cs" />
+    <Compile Include="ServiceConfiguration\Client\NetTcpConfiguration.cs" />
+    <Compile Include="ServiceConfiguration\Client\WSHttpConfiguration.cs" />
+    <Compile Include="ServiceConfiguration\Server\NetTcpConfiguration.cs" />
+    <Compile Include="ServiceConfiguration\Server\WSHttpConfiguration.cs" />
+    <Compile Include="ServiceHostConfigurationArgs.cs" />
+    <Compile Include="SessionToken.cs" />
+    <Compile Include="SettingsParser.cs" />
+    <Compile Include="SR.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SR.resx</DependentUpon>
+    </Compile>
+    <Compile Include="TransactionNotifier.cs" />
+    <Compile Include="DefaultUserCredentialsProvider.cs" />
+    <Compile Include="ServerVersion\GetVersionRequest.cs" />
+    <Compile Include="ServerVersion\GetVersionResponse.cs" />
+    <Compile Include="ServerVersion\IVersionService.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="SR.resx">
+      <SubType>Designer</SubType>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>SR.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Common\ClearCanvas.Common.csproj">
+      <Project>{F6EAD428-E6CF-4DF6-B2F3-D33D532C5343}</Project>
+      <Name>ClearCanvas.Common</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="RemoteCoreServiceSettings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>RemoteCoreServiceSettings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

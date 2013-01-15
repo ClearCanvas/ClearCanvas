@@ -1,0 +1,51 @@
+// This file is machine generated - changes will be lost.
+using System;
+using System.Collections;
+using System.Text;
+
+using Iesi.Collections;
+using ClearCanvas.Common;
+using ClearCanvas.Enterprise.Core;
+
+
+namespace <%= namespace %>
+{
+
+
+    /// <summary>
+    /// <%= className %> query result container
+    /// </summary>
+	public partial class <%= className %> : <%= superClassName ? superClassName : 'System.Object' %>
+	{
+       	#region Private fields
+       	
+		<% fields.each do |f| %>
+	  	private <%= f.dataType %> <%= f.fieldName %>;
+	  	<% end %>
+	  	
+	  	#endregion
+	  	
+	  	#region Constructors
+	  	
+	  	/// <summary>
+	  	/// Default no-args constructor
+	  	/// </summary>
+	  	public <%= className %>()
+	  	{
+	  	}
+                
+	  	#endregion
+	  	
+	  	#region Public Properties
+	  	
+	  	<% fields.each do |f| %>
+	  	public <%= f.dataType %> <%= f.accessorName %>
+	  	{
+			get { return <%= f.fieldName %>; }
+			set { <%= f.fieldName %> = value; }
+	  	}
+	  	<% end %>
+	  	
+	  	#endregion
+	}
+}

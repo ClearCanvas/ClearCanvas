@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="af60a347-a01f-49d1-9583-61ff60325160" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://localhost:51124/ClearCanvas/ImageViewer/StudyLocator" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="StudyLocator.xsd" MetadataType="Schema" ID="c260bc91-8893-46d9-bb95-c1ae3af31ebb" SourceId="1" SourceUrl="http://localhost:51124/ClearCanvas/ImageViewer/StudyLocator?xsd=xsd1" />
+    <MetadataFile FileName="StudyLocator1.xsd" MetadataType="Schema" ID="ad37d7f6-0b4a-4e2a-93d7-12d4e3cbff16" SourceId="1" SourceUrl="http://localhost:51124/ClearCanvas/ImageViewer/StudyLocator?xsd=xsd0" />
+    <MetadataFile FileName="StudyLocator2.xsd" MetadataType="Schema" ID="dcb3c61f-8511-4709-88d7-c2fb403fe434" SourceId="1" SourceUrl="http://localhost:51124/ClearCanvas/ImageViewer/StudyLocator?xsd=xsd2" />
+    <MetadataFile FileName="StudyLocator.disco" MetadataType="Disco" ID="292356b0-0ca8-4e18-97db-0dd9d8ab6169" SourceId="1" SourceUrl="http://localhost:51124/ClearCanvas/ImageViewer/StudyLocator?disco" />
+    <MetadataFile FileName="StudyLocator.wsdl" MetadataType="Wsdl" ID="e93617a8-dedc-448c-afa6-1f1b47d80dba" SourceId="1" SourceUrl="http://localhost:51124/ClearCanvas/ImageViewer/StudyLocator?wsdl" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

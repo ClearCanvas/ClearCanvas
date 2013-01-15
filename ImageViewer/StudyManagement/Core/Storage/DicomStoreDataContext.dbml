@@ -1,0 +1,106 @@
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="dicom_store" EntityNamespace="ClearCanvas.ImageViewer.StudyManagement.Core.Storage" ContextNamespace="ClearCanvas.ImageViewer.StudyManagement.Core.Storage" Class="DicomStoreDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Table Name="Study" Member="Studies">
+    <Type Name="Study">
+      <Column Name="Oid" Type="System.Int64" DbType="BigInt NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Version" Type="System.Data.Linq.Binary" DbType="rowversion" CanBeNull="true" IsVersion="true" />
+      <Column Name="SpecificCharacterSet" Type="System.String" DbType="NVarChar(64)" CanBeNull="true" />
+      <Column Name="StudyId" Type="System.String" DbType="NVarChar(16)" CanBeNull="true" />
+      <Column Name="StudyTimeTicks" Storage="_StudyTime" Type="System.Int64" DbType="BIGINT" CanBeNull="true" />
+      <Column Name="StudyTimeRaw" Type="System.String" DbType="NVarChar(16)" CanBeNull="true" />
+      <Column Name="StudyDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="StudyDateRaw" Type="System.String" DbType="NVarChar(26)" CanBeNull="true" />
+      <Column Name="AccessionNumber" Type="System.String" DbType="NVarChar(16)" CanBeNull="true" />
+      <Column Name="StudyInstanceUid" Type="System.String" DbType="NVarChar(64) NOT NULL" CanBeNull="false" />
+      <Column Name="StudyDescription" Type="System.String" DbType="NVarChar(64)" CanBeNull="true" />
+      <Column Name="ModalitiesInStudy" Type="System.String" DbType="NVarChar(4000)" CanBeNull="true" />
+      <Column Name="SopClassesInStudy" Type="System.String" DbType="NVarChar(4000)" CanBeNull="true" />
+      <Column Name="NumberOfStudyRelatedSeries" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="NumberOfStudyRelatedInstances" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="ProcedureCodeSequenceCodingSchemeDesignator" Type="System.String" DbType="NVarChar(16)" CanBeNull="true" />
+      <Column Name="ProcedureCodeSequenceCodeValue" Type="System.String" DbType="NVarChar(16)" CanBeNull="true" />
+      <Column Name="PatientsName" Type="System.String" DbType="NVarChar(256)" CanBeNull="true" />
+      <Column Name="ReferringPhysiciansName" Type="System.String" DbType="NVarChar(256)" CanBeNull="true" />
+      <Column Name="PatientId" Type="System.String" DbType="NVarChar(64)" CanBeNull="true" />
+      <Column Name="PatientsSex" Type="System.String" DbType="NVarChar(16)" CanBeNull="true" />
+      <Column Name="PatientsBirthDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="PatientsBirthDateRaw" Type="System.String" DbType="NVarChar(16)" CanBeNull="true" />
+      <Column Name="PatientsBirthTimeTicks" Storage="_PatientsBirthTime" Type="System.Int64" DbType="BIGINT" CanBeNull="true" />
+      <Column Name="PatientsBirthTimeRaw" Type="System.String" DbType="NVarChar(16)" CanBeNull="true" />
+      <Column Name="PatientSpeciesDescription" Type="System.String" DbType="NVarChar(64)" CanBeNull="true" />
+      <Column Name="PatientSpeciesCodeSequenceCodingSchemeDesignator" Type="System.String" DbType="NVarChar(16)" CanBeNull="true" />
+      <Column Name="PatientSpeciesCodeSequenceCodeValue" Type="System.String" DbType="NVarChar(16)" CanBeNull="true" />
+      <Column Name="PatientSpeciesCodeSequenceCodeMeaning" Type="System.String" DbType="NVarChar(64)" CanBeNull="true" />
+      <Column Name="PatientBreedDescription" Type="System.String" DbType="NVarChar(64)" CanBeNull="true" />
+      <Column Name="PatientBreedCodeSequenceCodingSchemeDesignator" Type="System.String" DbType="NVarChar(16)" CanBeNull="true" />
+      <Column Name="PatientBreedCodeSequenceCodeValue" Type="System.String" DbType="NVarChar(16)" CanBeNull="true" />
+      <Column Name="PatientBreedCodeSequenceCodeMeaning" Type="System.String" DbType="NVarChar(64)" CanBeNull="true" />
+      <Column Name="ResponsiblePerson" Type="System.String" DbType="NVarChar(256)" CanBeNull="true" />
+      <Column Name="ResponsiblePersonRole" Type="System.String" DbType="NVarChar(16)" CanBeNull="true" />
+      <Column Name="ResponsibleOrganization" Type="System.String" DbType="NVarChar(64)" CanBeNull="true" />
+      <Column Name="SourceAETitlesInStudy" Type="System.String" DbType="NVarChar(4000)" CanBeNull="true" />
+      <Column Name="StationNamesInStudy" Type="System.String" DbType="NVarChar(4000)" CanBeNull="true" />
+      <Column Name="InstitutionNamesInStudy" Type="System.String" DbType="NVarChar(4000)" CanBeNull="true" />
+      <Column Name="StoreTime" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="DeleteTime" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Deleted" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="Reindex" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+    </Type>
+  </Table>
+  <Table Name="WorkItem" Member="WorkItems">
+    <Type Name="WorkItem">
+      <Column Name="Oid" Type="System.Int64" DbType="BigInt NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Version" Type="System.Data.Linq.Binary" DbType="rowversion" CanBeNull="true" IsVersion="true" />
+      <Column Name="ProcessTime" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="ScheduledTime" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="ExpirationTime" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="DeleteTime" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="RequestedTime" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="Status" Type="global::ClearCanvas.ImageViewer.Common.WorkItem.WorkItemStatusEnum" DbType="SmallInt NOT NULL" CanBeNull="false" />
+      <Column Name="Type" Type="System.String" DbType="NVarChar(32)" CanBeNull="false" />
+      <Column Name="Priority" Type="global::ClearCanvas.ImageViewer.Common.WorkItem.WorkItemPriorityEnum" DbType="SmallInt NOT NULL" CanBeNull="false" />
+      <Column Name="StudyInstanceUid" Type="System.String" DbType="NVarChar(64)" CanBeNull="true" />
+      <Column Name="SerializedProgress" Storage="_SerializedPatient" Type="System.String" DbType="NText" CanBeNull="true" />
+      <Column Name="SerializedRequest" Type="System.String" DbType="NText" CanBeNull="true" />
+      <Column Name="FailureCount" Type="System.Int32" DbType="SmallInt NOT NULL" CanBeNull="false" />
+      <Association Name="WorkItem_WorkItemUid" Member="WorkItemUids" ThisKey="Oid" OtherKey="WorkItemOid" Type="WorkItemUid" />
+    </Type>
+  </Table>
+  <Table Name="WorkItemUid" Member="WorkItemUids">
+    <Type Name="WorkItemUid">
+      <Column Name="Oid" Type="System.Int64" DbType="BigInt NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Version" Type="System.Data.Linq.Binary" DbType="rowversion" CanBeNull="true" IsVersion="true" />
+      <Column Name="WorkItemOid" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
+      <Column Name="SeriesInstanceUid" Type="System.String" DbType="NVarChar(64)" CanBeNull="true" />
+      <Column Name="SopInstanceUid" Type="System.String" DbType="NVarChar(64)" CanBeNull="true" />
+      <Column Name="Complete" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="FailureCount" Type="System.Byte" DbType="TinyInt" CanBeNull="true" />
+      <Column Name="File" Type="System.String" DbType="NVarChar(128)" CanBeNull="true" />
+      <Column Name="Failed" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Association Name="WorkItem_WorkItemUid" Member="WorkItem" ThisKey="WorkItemOid" OtherKey="Oid" Type="WorkItem" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="Device" Member="Devices">
+    <Type Name="Device">
+      <Column Name="Oid" Type="System.Int64" DbType="BigInt NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Version" Type="System.Data.Linq.Binary" DbType="rowversion" CanBeNull="true" IsVersion="true" />
+      <Column Name="Name" Type="System.String" DbType="NVarChar(64) NOT NULL" CanBeNull="false" />
+      <Column Name="Description" Type="System.String" DbType="NVarChar(64) NULL" CanBeNull="true" />
+      <Column Name="Location" Type="System.String" DbType="NVarChar(64) NULL" CanBeNull="true" />
+      <Column Name="AETitle" Type="System.String" DbType="NVarChar(64) NOT NULL" CanBeNull="false" />
+      <Column Name="HostName" Type="System.String" DbType="NVarChar(64) NOT NULL" CanBeNull="false" />
+      <Column Name="Port" Type="System.Int32" DbType="Int" CanBeNull="false" />
+      <Column Name="StreamingHeaderPort" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="StreamingImagePort" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IsPriorsServer" Type="System.Boolean" DbType="BIT NOT NULL" CanBeNull="false" />
+      <Column Name="ExtensionData" Type="System.String" DbType="NText" CanBeNull="false" />
+    </Type>
+  </Table>
+  <Table Name="Configuration" Member="Configurations">
+    <Type Name="Configuration">
+      <Column Name="Oid" Type="System.Int64" DbType="BigInt NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Version" Type="System.Data.Linq.Binary" DbType="rowversion" CanBeNull="true" IsVersion="true" />
+      <Column Name="Name" AutoSync="OnInsert" Type="System.String" DbType="NVarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="Value" Type="System.String" DbType="NText" CanBeNull="false" />
+    </Type>
+  </Table>
+</Database>

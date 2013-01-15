@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Font Name="Segoe UI" Size="9" />
+  <Class Name="ClearCanvas.ImageViewer.PresentationImage" Collapsed="true">
+    <Position X="4" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>PresentationImage.cs</FileName>
+      <HashCode>UEMVACAgICBAAgAAABACAABAFACADgEIAABAAIAAATI=</HashCode>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ClearCanvas.ImageViewer.BasicPresentationImage" Collapsed="true">
+    <Position X="3.75" Y="1.75" Width="2" />
+    <TypeIdentifier>
+      <FileName>BasicPresentationImage.cs</FileName>
+      <HashCode>CAQAAAgAIKgRAgCQAIAAABFAAAgAAAAkAggAhAAAAAA=</HashCode>
+    </TypeIdentifier>
+    <Lollipop Orientation="Left" Position="0.1" />
+  </Class>
+  <Class Name="ClearCanvas.ImageViewer.ColorPresentationImage" Collapsed="true">
+    <Position X="2.25" Y="3.5" Width="2" />
+    <TypeIdentifier>
+      <FileName>ColorPresentationImage.cs</FileName>
+      <HashCode>AAQACQAAAAAABACAAAAgIAAAAAAABAAACAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ClearCanvas.ImageViewer.GrayscalePresentationImage" Collapsed="true">
+    <Position X="5" Y="3.5" Width="2.25" />
+    <TypeIdentifier>
+      <FileName>GrayscalePresentationImage.cs</FileName>
+      <HashCode>BA4ACQwAAAAABACAAAAgJAAAAIAABAAACAAAIAAQAAI=</HashCode>
+    </TypeIdentifier>
+    <Lollipop Orientation="Right" Position="0.1" />
+  </Class>
+  <Class Name="ClearCanvas.ImageViewer.DicomGrayscalePresentationImage" Collapsed="true">
+    <Position X="4.75" Y="4.75" Width="2.75" />
+    <TypeIdentifier>
+      <FileName>DicomGrayscalePresentationImage.cs</FileName>
+      <HashCode>AAAQAAgAACAAARAEAQAAAgAAAQAABAAkAAAAABAIAAE=</HashCode>
+    </TypeIdentifier>
+    <Lollipop Orientation="Right" Position="0.1" />
+  </Class>
+  <Class Name="ClearCanvas.ImageViewer.DicomColorPresentationImage" Collapsed="true">
+    <Position X="2" Y="4.75" Width="2.5" />
+    <TypeIdentifier>
+      <FileName>DicomColorPresentationImage.cs</FileName>
+      <HashCode>AAAQAAgAACAAARAEAAAAAgAAAQAABAAkAAAAABAIAAE=</HashCode>
+    </TypeIdentifier>
+    <Lollipop Orientation="Left" Position="0.1" />
+  </Class>
+</ClassDiagram>

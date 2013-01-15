@@ -1,0 +1,18 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="ClearCanvas.ImageViewer.Clipboard.ImageExport" GeneratedClassName="ImageExportSettings">
+  <Profiles />
+  <Settings>
+    <Setting Name="SelectedImageExporterId" Description="Stores the user's last chosen exporter (e.g. JPEG)." Type="System.String" Scope="User">
+      <Value Profile="(Default)">Jpg</Value>
+    </Setting>
+    <Setting Name="SelectedImageExportOption" Description="Stores the user's last selection for how the images should be exported (WYSIWYG vs. Complete)." Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="SizeMode" Description="Specifies how images should be sized (e.g. scaled or fixed dimensions)." Type="ClearCanvas.ImageViewer.Clipboard.ImageExport.SizeMode" Scope="User">
+      <Value Profile="(Default)">Scale</Value>
+    </Setting>
+    <Setting Name="BackgroundColor" Description="Background color to use when SizeMode is Fixed." Type="System.Drawing.Color" Scope="User">
+      <Value Profile="(Default)">Black</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

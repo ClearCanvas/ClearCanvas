@@ -1,0 +1,675 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="_lblCommand.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Top</value>
+  </data>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="_lblCommand.Location" type="System.Drawing.Point, System.Drawing">
+    <value>25, 10</value>
+  </data>
+  <data name="_lblCommand.Size" type="System.Drawing.Size, System.Drawing">
+    <value>346, 16</value>
+  </data>
+  <assembly alias="mscorlib" name="mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="_lblCommand.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="_lblCommand.Text" xml:space="preserve">
+    <value>Command (Full Path)</value>
+  </data>
+  <data name="&gt;&gt;_lblCommand.Name" xml:space="preserve">
+    <value>_lblCommand</value>
+  </data>
+  <data name="&gt;&gt;_lblCommand.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_lblCommand.Parent" xml:space="preserve">
+    <value>_pnlCommand</value>
+  </data>
+  <data name="&gt;&gt;_lblCommand.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="_txtCommand.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="_txtCommand.Location" type="System.Drawing.Point, System.Drawing">
+    <value>25, 26</value>
+  </data>
+  <data name="_txtCommand.Size" type="System.Drawing.Size, System.Drawing">
+    <value>321, 20</value>
+  </data>
+  <data name="_txtCommand.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;_txtCommand.Name" xml:space="preserve">
+    <value>_txtCommand</value>
+  </data>
+  <data name="&gt;&gt;_txtCommand.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_txtCommand.Parent" xml:space="preserve">
+    <value>_pnlCommand</value>
+  </data>
+  <data name="&gt;&gt;_txtCommand.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="_lblWorkingDir.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Top</value>
+  </data>
+  <data name="_lblWorkingDir.Location" type="System.Drawing.Point, System.Drawing">
+    <value>25, 10</value>
+  </data>
+  <data name="_lblWorkingDir.Size" type="System.Drawing.Size, System.Drawing">
+    <value>346, 16</value>
+  </data>
+  <data name="_lblWorkingDir.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="_lblWorkingDir.Text" xml:space="preserve">
+    <value>Working Directory</value>
+  </data>
+  <data name="&gt;&gt;_lblWorkingDir.Name" xml:space="preserve">
+    <value>_lblWorkingDir</value>
+  </data>
+  <data name="&gt;&gt;_lblWorkingDir.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_lblWorkingDir.Parent" xml:space="preserve">
+    <value>_pnlWorkingDir</value>
+  </data>
+  <data name="&gt;&gt;_lblWorkingDir.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="_txtWorkingDir.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="_txtWorkingDir.Location" type="System.Drawing.Point, System.Drawing">
+    <value>25, 26</value>
+  </data>
+  <data name="_txtWorkingDir.Size" type="System.Drawing.Size, System.Drawing">
+    <value>346, 20</value>
+  </data>
+  <data name="_txtWorkingDir.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;_txtWorkingDir.Name" xml:space="preserve">
+    <value>_txtWorkingDir</value>
+  </data>
+  <data name="&gt;&gt;_txtWorkingDir.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_txtWorkingDir.Parent" xml:space="preserve">
+    <value>_pnlWorkingDir</value>
+  </data>
+  <data name="&gt;&gt;_txtWorkingDir.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="_lblArguments.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Top</value>
+  </data>
+  <data name="_lblArguments.Location" type="System.Drawing.Point, System.Drawing">
+    <value>25, 10</value>
+  </data>
+  <data name="_lblArguments.Size" type="System.Drawing.Size, System.Drawing">
+    <value>346, 16</value>
+  </data>
+  <data name="_lblArguments.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="_lblArguments.Text" xml:space="preserve">
+    <value>Arguments</value>
+  </data>
+  <data name="&gt;&gt;_lblArguments.Name" xml:space="preserve">
+    <value>_lblArguments</value>
+  </data>
+  <data name="&gt;&gt;_lblArguments.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_lblArguments.Parent" xml:space="preserve">
+    <value>_pnlArguments</value>
+  </data>
+  <data name="&gt;&gt;_lblArguments.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="_txtArguments.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="_txtArguments.Location" type="System.Drawing.Point, System.Drawing">
+    <value>25, 26</value>
+  </data>
+  <data name="_txtArguments.Size" type="System.Drawing.Size, System.Drawing">
+    <value>346, 20</value>
+  </data>
+  <data name="_txtArguments.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;_txtArguments.Name" xml:space="preserve">
+    <value>_txtArguments</value>
+  </data>
+  <data name="&gt;&gt;_txtArguments.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_txtArguments.Parent" xml:space="preserve">
+    <value>_pnlArguments</value>
+  </data>
+  <data name="&gt;&gt;_txtArguments.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="_lnkHelpFields.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Bottom</value>
+  </data>
+  <data name="_lnkHelpFields.Location" type="System.Drawing.Point, System.Drawing">
+    <value>25, 50</value>
+  </data>
+  <data name="_lnkHelpFields.Size" type="System.Drawing.Size, System.Drawing">
+    <value>346, 16</value>
+  </data>
+  <data name="_lnkHelpFields.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="_lnkHelpFields.Text" xml:space="preserve">
+    <value>Special Fields...</value>
+  </data>
+  <data name="_lnkHelpFields.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
+  </data>
+  <data name="&gt;&gt;_lnkHelpFields.Name" xml:space="preserve">
+    <value>_lnkHelpFields</value>
+  </data>
+  <data name="&gt;&gt;_lnkHelpFields.Type" xml:space="preserve">
+    <value>System.Windows.Forms.LinkLabel, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_lnkHelpFields.Parent" xml:space="preserve">
+    <value>_pnlArguments</value>
+  </data>
+  <data name="&gt;&gt;_lnkHelpFields.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="_btnCommand.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Right</value>
+  </data>
+  <data name="_btnCommand.Location" type="System.Drawing.Point, System.Drawing">
+    <value>346, 26</value>
+  </data>
+  <data name="_btnCommand.Size" type="System.Drawing.Size, System.Drawing">
+    <value>25, 20</value>
+  </data>
+  <data name="_btnCommand.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="_btnCommand.Text" xml:space="preserve">
+    <value>...</value>
+  </data>
+  <data name="&gt;&gt;_btnCommand.Name" xml:space="preserve">
+    <value>_btnCommand</value>
+  </data>
+  <data name="&gt;&gt;_btnCommand.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_btnCommand.Parent" xml:space="preserve">
+    <value>_pnlCommand</value>
+  </data>
+  <data name="&gt;&gt;_btnCommand.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="_pnlCommand.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Top</value>
+  </data>
+  <data name="_pnlCommand.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 57</value>
+  </data>
+  <data name="_pnlCommand.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>5, 5, 5, 5</value>
+  </data>
+  <data name="_pnlCommand.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>25, 10, 25, 10</value>
+  </data>
+  <data name="_pnlCommand.Size" type="System.Drawing.Size, System.Drawing">
+    <value>396, 56</value>
+  </data>
+  <data name="_pnlCommand.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;_pnlCommand.Name" xml:space="preserve">
+    <value>_pnlCommand</value>
+  </data>
+  <data name="&gt;&gt;_pnlCommand.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_pnlCommand.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;_pnlCommand.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="_pnlWorkingDir.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Top</value>
+  </data>
+  <data name="_pnlWorkingDir.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 113</value>
+  </data>
+  <data name="_pnlWorkingDir.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>5, 5, 5, 5</value>
+  </data>
+  <data name="_pnlWorkingDir.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>25, 10, 25, 10</value>
+  </data>
+  <data name="_pnlWorkingDir.Size" type="System.Drawing.Size, System.Drawing">
+    <value>396, 55</value>
+  </data>
+  <data name="_pnlWorkingDir.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="&gt;&gt;_pnlWorkingDir.Name" xml:space="preserve">
+    <value>_pnlWorkingDir</value>
+  </data>
+  <data name="&gt;&gt;_pnlWorkingDir.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_pnlWorkingDir.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;_pnlWorkingDir.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="_pnlArguments.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Top</value>
+  </data>
+  <data name="_pnlArguments.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 168</value>
+  </data>
+  <data name="_pnlArguments.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>5, 5, 5, 5</value>
+  </data>
+  <data name="_pnlArguments.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>25, 10, 25, 10</value>
+  </data>
+  <data name="_pnlArguments.Size" type="System.Drawing.Size, System.Drawing">
+    <value>396, 76</value>
+  </data>
+  <data name="_pnlArguments.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <data name="&gt;&gt;_pnlArguments.Name" xml:space="preserve">
+    <value>_pnlArguments</value>
+  </data>
+  <data name="&gt;&gt;_pnlArguments.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_pnlArguments.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;_pnlArguments.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="_txtMultiValueFieldSeparator.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Left</value>
+  </data>
+  <data name="_txtMultiValueFieldSeparator.Location" type="System.Drawing.Point, System.Drawing">
+    <value>105, 0</value>
+  </data>
+  <data name="_txtMultiValueFieldSeparator.Size" type="System.Drawing.Size, System.Drawing">
+    <value>85, 20</value>
+  </data>
+  <data name="_txtMultiValueFieldSeparator.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;_txtMultiValueFieldSeparator.Name" xml:space="preserve">
+    <value>_txtMultiValueFieldSeparator</value>
+  </data>
+  <data name="&gt;&gt;_txtMultiValueFieldSeparator.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_txtMultiValueFieldSeparator.Parent" xml:space="preserve">
+    <value>_pnlMultiValueFieldSeparator</value>
+  </data>
+  <data name="&gt;&gt;_txtMultiValueFieldSeparator.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="_lblMultiValueFieldSeparator.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Left</value>
+  </data>
+  <data name="_lblMultiValueFieldSeparator.Location" type="System.Drawing.Point, System.Drawing">
+    <value>20, 0</value>
+  </data>
+  <data name="_lblMultiValueFieldSeparator.Size" type="System.Drawing.Size, System.Drawing">
+    <value>85, 21</value>
+  </data>
+  <data name="_lblMultiValueFieldSeparator.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="_lblMultiValueFieldSeparator.Text" xml:space="preserve">
+    <value>Field separator:</value>
+  </data>
+  <data name="_lblMultiValueFieldSeparator.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
+  </data>
+  <data name="&gt;&gt;_lblMultiValueFieldSeparator.Name" xml:space="preserve">
+    <value>_lblMultiValueFieldSeparator</value>
+  </data>
+  <data name="&gt;&gt;_lblMultiValueFieldSeparator.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_lblMultiValueFieldSeparator.Parent" xml:space="preserve">
+    <value>_pnlMultiValueFieldSeparator</value>
+  </data>
+  <data name="&gt;&gt;_lblMultiValueFieldSeparator.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="_pnlMultiValueFieldSeparator.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Top</value>
+  </data>
+  <data name="_pnlMultiValueFieldSeparator.Location" type="System.Drawing.Point, System.Drawing">
+    <value>25, 27</value>
+  </data>
+  <data name="_pnlMultiValueFieldSeparator.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>20, 0, 0, 0</value>
+  </data>
+  <data name="_pnlMultiValueFieldSeparator.Size" type="System.Drawing.Size, System.Drawing">
+    <value>346, 21</value>
+  </data>
+  <data name="_pnlMultiValueFieldSeparator.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;_pnlMultiValueFieldSeparator.Name" xml:space="preserve">
+    <value>_pnlMultiValueFieldSeparator</value>
+  </data>
+  <data name="&gt;&gt;_pnlMultiValueFieldSeparator.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_pnlMultiValueFieldSeparator.Parent" xml:space="preserve">
+    <value>_pnlOptions</value>
+  </data>
+  <data name="&gt;&gt;_pnlMultiValueFieldSeparator.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="_chkAllowMultiValueFields.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="_chkAllowMultiValueFields.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Top</value>
+  </data>
+  <data name="_chkAllowMultiValueFields.Location" type="System.Drawing.Point, System.Drawing">
+    <value>25, 10</value>
+  </data>
+  <data name="_chkAllowMultiValueFields.Size" type="System.Drawing.Size, System.Drawing">
+    <value>346, 17</value>
+  </data>
+  <data name="_chkAllowMultiValueFields.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="_chkAllowMultiValueFields.Text" xml:space="preserve">
+    <value>Supports multiple images</value>
+  </data>
+  <data name="&gt;&gt;_chkAllowMultiValueFields.Name" xml:space="preserve">
+    <value>_chkAllowMultiValueFields</value>
+  </data>
+  <data name="&gt;&gt;_chkAllowMultiValueFields.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_chkAllowMultiValueFields.Parent" xml:space="preserve">
+    <value>_pnlOptions</value>
+  </data>
+  <data name="&gt;&gt;_chkAllowMultiValueFields.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="_pnlOptions.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Top</value>
+  </data>
+  <data name="_pnlOptions.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 244</value>
+  </data>
+  <data name="_pnlOptions.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>5, 5, 5, 5</value>
+  </data>
+  <data name="_pnlOptions.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>25, 10, 25, 10</value>
+  </data>
+  <data name="_pnlOptions.Size" type="System.Drawing.Size, System.Drawing">
+    <value>396, 62</value>
+  </data>
+  <data name="_pnlOptions.TabIndex" type="System.Int32, mscorlib">
+    <value>4</value>
+  </data>
+  <data name="&gt;&gt;_pnlOptions.Name" xml:space="preserve">
+    <value>_pnlOptions</value>
+  </data>
+  <data name="&gt;&gt;_pnlOptions.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_pnlOptions.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;_pnlOptions.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <metadata name="_dlgCommand.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>17, 17</value>
+  </metadata>
+  <data name="_dlgCommand.Filter" xml:space="preserve">
+    <value>Executable Files (*.exe)|*.exe|All Files (*.*)|*.*</value>
+  </data>
+  <data name="_dlgCommand.Title" xml:space="preserve">
+    <value>Browse for Executable</value>
+  </data>
+  <data name="_txtName.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="_txtName.Location" type="System.Drawing.Point, System.Drawing">
+    <value>25, 27</value>
+  </data>
+  <data name="_txtName.Size" type="System.Drawing.Size, System.Drawing">
+    <value>346, 20</value>
+  </data>
+  <data name="_txtName.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="&gt;&gt;_txtName.Name" xml:space="preserve">
+    <value>_txtName</value>
+  </data>
+  <data name="&gt;&gt;_txtName.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_txtName.Parent" xml:space="preserve">
+    <value>_pnlName</value>
+  </data>
+  <data name="&gt;&gt;_txtName.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="_lblName.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Top</value>
+  </data>
+  <data name="_lblName.Location" type="System.Drawing.Point, System.Drawing">
+    <value>25, 10</value>
+  </data>
+  <data name="_lblName.Size" type="System.Drawing.Size, System.Drawing">
+    <value>346, 17</value>
+  </data>
+  <data name="_lblName.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="_lblName.Text" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="_lblName.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
+  </data>
+  <data name="&gt;&gt;_lblName.Name" xml:space="preserve">
+    <value>_lblName</value>
+  </data>
+  <data name="&gt;&gt;_lblName.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_lblName.Parent" xml:space="preserve">
+    <value>_pnlName</value>
+  </data>
+  <data name="&gt;&gt;_lblName.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="_pnlName.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Top</value>
+  </data>
+  <data name="_pnlName.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="_pnlName.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>25, 10, 25, 10</value>
+  </data>
+  <data name="_pnlName.Size" type="System.Drawing.Size, System.Drawing">
+    <value>396, 57</value>
+  </data>
+  <data name="_pnlName.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;_pnlName.Name" xml:space="preserve">
+    <value>_pnlName</value>
+  </data>
+  <data name="&gt;&gt;_pnlName.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_pnlName.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;_pnlName.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
+    <value>6, 13</value>
+  </data>
+  <data name="$this.Size" type="System.Drawing.Size, System.Drawing">
+    <value>396, 308</value>
+  </data>
+  <data name="&gt;&gt;_dlgCommand.Name" xml:space="preserve">
+    <value>_dlgCommand</value>
+  </data>
+  <data name="&gt;&gt;_dlgCommand.Type" xml:space="preserve">
+    <value>System.Windows.Forms.OpenFileDialog, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;$this.Name" xml:space="preserve">
+    <value>CommandLineExternalPropertiesComponentControl</value>
+  </data>
+  <data name="&gt;&gt;$this.Type" xml:space="preserve">
+    <value>ClearCanvas.Desktop.View.WinForms.ApplicationComponentUserControl, ClearCanvas.Desktop.View.WinForms, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+</root>

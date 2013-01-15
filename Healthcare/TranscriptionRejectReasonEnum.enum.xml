@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<enum class="TranscriptionRejectReason">
+  <enum-value code="NA">
+    <value>No audio/dictation file</value>
+    <description></description>
+  </enum-value>
+	<enum-value code="PA">
+		<value>Poor audio/dictation file</value>
+		<description></description>
+	</enum-value>
+	<enum-value code="ID">
+		<value>Incomplete dictation</value>
+		<description></description>
+	</enum-value>
+	<enum-value code="MW">
+		<value>Missing word(s)</value>
+		<description></description>
+	</enum-value>
+	<enum-value code="CM">
+    <value>Other</value>
+    <description></description>
+  </enum-value>
+</enum>

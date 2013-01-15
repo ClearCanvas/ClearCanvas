@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Project DefaultTargets="Test" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ClearCanvasBuildTasksPath Condition="'$(ClearCanvasBuildTasksPath)' == ''">$(MSBuildExtensionsPath)\ClearCanvasBuildTasks</ClearCanvasBuildTasksPath>
+    <ClearCanvasTasksDll>$(ClearCanvasBuildTasksPath)\ClearCanvas.Utilities.BuildTasks.dll</ClearCanvasTasksDll>
+  </PropertyGroup>
+  <UsingTask AssemblyFile="$(ClearCanvasTasksDll)" TaskName="ClearCanvas.Utilities.BuildTasks.CombineAppConfigs"/>
+  <UsingTask AssemblyFile="$(ClearCanvasTasksDll)" TaskName="ClearCanvas.Utilities.BuildTasks.CombineStrings"/>
+  <UsingTask AssemblyFile="$(ClearCanvasTasksDll)" TaskName="ClearCanvas.Utilities.BuildTasks.FileReplaceText"/>
+  <UsingTask AssemblyFile="$(ClearCanvasTasksDll)" TaskName="ClearCanvas.Utilities.BuildTasks.NUnitLogParser"/>
+  <UsingTask AssemblyFile="$(ClearCanvasTasksDll)" TaskName="ClearCanvas.Utilities.BuildTasks.RegexIsMatch"/>
+  <UsingTask AssemblyFile="$(ClearCanvasTasksDll)" TaskName="ClearCanvas.Utilities.BuildTasks.RelativeBuildDateTime"/>
+  <UsingTask AssemblyFile="$(ClearCanvasTasksDll)" TaskName="ClearCanvas.Utilities.BuildTasks.SendEmail"/>
+  <UsingTask AssemblyFile="$(ClearCanvasTasksDll)" TaskName="ClearCanvas.Utilities.BuildTasks.VersionProjects"/>
+  <UsingTask AssemblyFile="$(ClearCanvasTasksDll)" TaskName="ClearCanvas.Utilities.BuildTasks.VersionWebFiles"/> 
+  <UsingTask AssemblyFile="$(ClearCanvasTasksDll)" TaskName="ClearCanvas.Utilities.BuildTasks.XmlFileRemoveNodes"/>
+  <UsingTask AssemblyFile="$(ClearCanvasTasksDll)" TaskName="ClearCanvas.Utilities.BuildTasks.XmlReplaceValue"/>
+</Project>

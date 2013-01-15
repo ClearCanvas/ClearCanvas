@@ -1,0 +1,679 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{09F49217-CD98-4773-8CFB-594F189EEE3B}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ClearCanvas.Ris.Application.Common</RootNamespace>
+    <AssemblyName>ClearCanvas.Ris.Application.Common</AssemblyName>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Runtime.Serialization, Version=3.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Program Files\Reference Assemblies\Microsoft\Framework\v3.0\System.Runtime.Serialization.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ServiceModel, Version=3.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Program Files\Reference Assemblies\Microsoft\Framework\v3.0\System.ServiceModel.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AddressDetail.cs" />
+    <Compile Include="Admin\DepartmentAdmin\AddDepartmentRequest.cs" />
+    <Compile Include="Admin\DepartmentAdmin\AddDepartmentResponse.cs" />
+    <Compile Include="Admin\DepartmentAdmin\DeleteDepartmentRequest.cs" />
+    <Compile Include="Admin\DepartmentAdmin\DeleteDepartmentResponse.cs" />
+    <Compile Include="Admin\ExternalPractitionerAdmin\GetActiveOrdersCountsForContactPointsRequest.cs" />
+    <Compile Include="Admin\ExternalPractitionerAdmin\GetActiveOrdersCountsForContactPointsResponse.cs" />
+    <Compile Include="Admin\ModalityAdmin\LoadModalityEditorFormDataRequest.cs" />
+    <Compile Include="Admin\ModalityAdmin\LoadModalityEditorFormDataResponse.cs" />
+    <Compile Include="DepartmentDetail.cs" />
+    <Compile Include="DepartmentSummary.cs" />
+    <Compile Include="Admin\DepartmentAdmin\IDepartmentAdminService.cs" />
+    <Compile Include="Admin\DepartmentAdmin\ListDepartmentsRequest.cs" />
+    <Compile Include="Admin\DepartmentAdmin\ListDepartmentsResponse.cs" />
+    <Compile Include="Admin\DepartmentAdmin\LoadDepartmentEditorFormDataRequest.cs" />
+    <Compile Include="Admin\DepartmentAdmin\LoadDepartmentEditorFormDataResponse.cs" />
+    <Compile Include="Admin\DepartmentAdmin\LoadDepartmentForEditRequest.cs" />
+    <Compile Include="Admin\DepartmentAdmin\LoadDepartmentForEditResponse.cs" />
+    <Compile Include="Admin\DepartmentAdmin\UpdateDepartmentRequest.cs" />
+    <Compile Include="Admin\DepartmentAdmin\UpdateDepartmentResponse.cs" />
+    <Compile Include="Admin\DiagnosticServiceAdmin\AddDiagnosticServiceRequest.cs" />
+    <Compile Include="Admin\DiagnosticServiceAdmin\AddDiagnosticServiceResponse.cs" />
+    <Compile Include="Admin\DiagnosticServiceAdmin\DeleteDiagnosticServiceRequest.cs" />
+    <Compile Include="Admin\DiagnosticServiceAdmin\DeleteDiagnosticServiceResponse.cs" />
+    <Compile Include="Admin\DiagnosticServiceAdmin\IDiagnosticServiceAdminService.cs" />
+    <Compile Include="Admin\DiagnosticServiceAdmin\ListDiagnosticServicesRequest.cs" />
+    <Compile Include="Admin\DiagnosticServiceAdmin\ListDiagnosticServicesResponse.cs" />
+    <Compile Include="Admin\DiagnosticServiceAdmin\LoadDiagnosticServiceEditorFormDataRequest.cs" />
+    <Compile Include="Admin\DiagnosticServiceAdmin\LoadDiagnosticServiceEditorFormDataResponse.cs" />
+    <Compile Include="Admin\DiagnosticServiceAdmin\LoadDiagnosticServiceForEditRequest.cs" />
+    <Compile Include="Admin\DiagnosticServiceAdmin\LoadDiagnosticServiceForEditResponse.cs" />
+    <Compile Include="Admin\DiagnosticServiceAdmin\UpdateDiagnosticServiceRequest.cs" />
+    <Compile Include="Admin\DiagnosticServiceAdmin\UpdateDiagnosticServiceResponse.cs" />
+    <Compile Include="Admin\EnumerationAdmin\EnumValueAdminInfo.cs" />
+    <Compile Include="Admin\ExternalPractitionerAdmin\DeleteExternalPractitionerRequest.cs" />
+    <Compile Include="Admin\ExternalPractitionerAdmin\DeleteExternalPractitionerResponse.cs" />
+    <Compile Include="Admin\ExternalPractitionerAdmin\LoadMergeDuplicateContactPointFormDataRequest.cs" />
+    <Compile Include="Admin\ExternalPractitionerAdmin\LoadMergeDuplicateContactPointFormDataResponse.cs" />
+    <Compile Include="Admin\ExternalPractitionerAdmin\LoadMergeDuplicatePractitionerFormDataRequest.cs" />
+    <Compile Include="Admin\ExternalPractitionerAdmin\LoadMergeDuplicatePractitionerFormDataResponse.cs" />
+    <Compile Include="Admin\ExternalPractitionerAdmin\LoadMergeExternalPractitionerFormDataRequest.cs" />
+    <Compile Include="Admin\ExternalPractitionerAdmin\LoadMergeExternalPractitionerFormDataResponse.cs" />
+    <Compile Include="Admin\ExternalPractitionerAdmin\MergeDuplicateContactPointRequest.cs" />
+    <Compile Include="Admin\ExternalPractitionerAdmin\MergeDuplicateContactPointResponse.cs" />
+    <Compile Include="Admin\ExternalPractitionerAdmin\MergeDuplicatePractitionerRequest.cs" />
+    <Compile Include="Admin\ExternalPractitionerAdmin\MergeDuplicatePractitionerResponse.cs" />
+    <Compile Include="Admin\ExternalPractitionerAdmin\MergeExternalPractitionerRequest.cs" />
+    <Compile Include="Admin\ExternalPractitionerAdmin\MergeExternalPractitionerResponse.cs" />
+    <Compile Include="Admin\FacilityAdmin\DeleteFacilityRequest.cs" />
+    <Compile Include="Admin\FacilityAdmin\DeleteFacilityResponse.cs" />
+    <Compile Include="Admin\LocationAdmin\DeleteLocationRequest.cs" />
+    <Compile Include="Admin\LocationAdmin\DeleteLocationResponse.cs" />
+    <Compile Include="Admin\ModalityAdmin\DeleteModalityRequest.cs" />
+    <Compile Include="Admin\ModalityAdmin\DeleteModalityResponse.cs" />
+    <Compile Include="Admin\NoteCategoryAdmin\DeleteNoteCategoryRequest.cs" />
+    <Compile Include="Admin\NoteCategoryAdmin\DeleteNoteCategoryResponse.cs" />
+    <Compile Include="Admin\ProcedureTypeAdmin\AddProcedureTypeRequest.cs" />
+    <Compile Include="Admin\ProcedureTypeAdmin\AddProcedureTypeResponse.cs" />
+    <Compile Include="Admin\ProcedureTypeAdmin\DeleteProcedureTypeRequest.cs" />
+    <Compile Include="Admin\ProcedureTypeAdmin\DeleteProcedureTypeResponse.cs" />
+    <Compile Include="Admin\ProcedureTypeAdmin\IProcedureTypeAdminService.cs" />
+    <Compile Include="Admin\ProcedureTypeAdmin\ListProcedureTypesRequest.cs" />
+    <Compile Include="Admin\ProcedureTypeAdmin\ListProcedureTypesResponse.cs" />
+    <Compile Include="Admin\ProcedureTypeAdmin\LoadProcedureTypeEditorFormDataRequest.cs" />
+    <Compile Include="Admin\ProcedureTypeAdmin\LoadProcedureTypeEditorFormDataResponse.cs" />
+    <Compile Include="Admin\ProcedureTypeAdmin\LoadProcedureTypeForEditRequest.cs" />
+    <Compile Include="Admin\ProcedureTypeAdmin\LoadProcedureTypeForEditResponse.cs" />
+    <Compile Include="Admin\ProcedureTypeAdmin\UpdateProcedureTypeRequest.cs" />
+    <Compile Include="Admin\ProcedureTypeAdmin\UpdateProcedureTypeResponse.cs" />
+    <Compile Include="Admin\ProcedureTypeGroupAdmin\DeleteProcedureTypeGroupRequest.cs" />
+    <Compile Include="Admin\ProcedureTypeGroupAdmin\DeleteProcedureTypeGroupResponse.cs" />
+    <Compile Include="Admin\ProcedureTypeGroupAdmin\GetProcedureTypeGroupSummaryFormDataRequest.cs" />
+    <Compile Include="Admin\ProcedureTypeGroupAdmin\GetProcedureTypeGroupSummaryFormDataResponse.cs" />
+    <Compile Include="Admin\StaffAdmin\DeleteStaffRequest.cs" />
+    <Compile Include="Admin\StaffAdmin\DeleteStaffResponse.cs" />
+    <Compile Include="Admin\StaffGroupAdmin\AddStaffGroupRequest.cs" />
+    <Compile Include="Admin\StaffGroupAdmin\AddStaffGroupResponse.cs" />
+    <Compile Include="Admin\StaffGroupAdmin\DeleteStaffGroupRequest.cs" />
+    <Compile Include="Admin\StaffGroupAdmin\DeleteStaffGroupResponse.cs" />
+    <Compile Include="Admin\StaffGroupAdmin\IStaffGroupAdminService.cs" />
+    <Compile Include="Admin\StaffGroupAdmin\ListStaffGroupsRequest.cs" />
+    <Compile Include="Admin\StaffGroupAdmin\ListStaffGroupsResponse.cs" />
+    <Compile Include="Admin\StaffGroupAdmin\LoadStaffGroupEditorFormDataRequest.cs" />
+    <Compile Include="Admin\StaffGroupAdmin\LoadStaffGroupEditorFormDataResponse.cs" />
+    <Compile Include="Admin\StaffGroupAdmin\LoadStaffGroupForEditRequest.cs" />
+    <Compile Include="Admin\StaffGroupAdmin\LoadStaffGroupForEditResponse.cs" />
+    <Compile Include="Admin\StaffGroupAdmin\StaffGroupTextQueryRequest.cs" />
+    <Compile Include="Admin\WorklistAdmin\DeleteWorklistRequest.cs" />
+    <Compile Include="Admin\WorklistAdmin\DeleteWorklistResponse.cs" />
+    <Compile Include="Admin\WorklistAdmin\GetWorklistEditFormChoicesRequest.cs" />
+    <Compile Include="Admin\WorklistAdmin\GetWorklistEditFormChoicesResponse.cs" />
+    <Compile Include="Admin\WorklistAdmin\GetWorklistEditValidationRequest.cs" />
+    <Compile Include="Admin\WorklistAdmin\GetWorklistEditValidationResponse.cs" />
+    <Compile Include="Admin\WorklistAdmin\ListWorklistCategoriesRequest.cs" />
+    <Compile Include="Admin\WorklistAdmin\ListWorklistCategoriesResponse.cs" />
+    <Compile Include="Admin\WorklistAdmin\ListWorklistClassesRequest.cs" />
+    <Compile Include="Admin\WorklistAdmin\ListWorklistClassesResponse.cs" />
+    <Compile Include="Admin\WorklistAdmin\WorklistClassSummary.cs" />
+    <Compile Include="Admin\WorkQueueAdmin\GetWorkQueueFormDataRequest.cs" />
+    <Compile Include="Admin\WorkQueueAdmin\GetWorkQueueFormDataResponse.cs" />
+    <Compile Include="Admin\WorkQueueAdmin\IWorkQueueAdminService.cs" />
+    <Compile Include="Admin\WorkQueueAdmin\ListWorkQueueItemsRequest.cs" />
+    <Compile Include="Admin\WorkQueueAdmin\ListWorkQueueItemsResponse.cs" />
+    <Compile Include="Admin\WorkQueueAdmin\LoadWorkQueueItemForEditRequest.cs" />
+    <Compile Include="Admin\WorkQueueAdmin\LoadWorkQueueItemForEditResponse.cs" />
+    <Compile Include="Admin\WorkQueueAdmin\PurgeCompletedWorkQueueItemsRequest.cs" />
+    <Compile Include="Admin\WorkQueueAdmin\PurgeCompletedWorkQueueItemsResponse.cs" />
+    <Compile Include="Admin\WorkQueueAdmin\RemoveWorkQueueItemRequest.cs" />
+    <Compile Include="Admin\WorkQueueAdmin\RemoveWorkQueueItemResponse.cs" />
+    <Compile Include="Admin\WorkQueueAdmin\ResubmitWorkQueueItemRequest.cs" />
+    <Compile Include="Admin\WorkQueueAdmin\ResubmitWorkQueueItemResponse.cs" />
+    <Compile Include="AttachedDocumentSettings.cs" />
+    <Compile Include="AttachedDocumentSettings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>AttachedDocumentSettings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="AttachmentSummary.cs" />
+    <Compile Include="CannedTextService\EditCannedTextCategoriesRequest.cs" />
+    <Compile Include="CannedTextService\EditCannedTextCategoriesResponse.cs" />
+    <Compile Include="Documents\UploadResponse.cs" />
+    <Compile Include="Documents\UploadRequest.cs" />
+    <Compile Include="FeatureTokens.cs" />
+    <Compile Include="Jsml\ShimUtil.cs" />
+    <Compile Include="Manifest\IRisManifestService.cs" />
+    <Compile Include="Manifest\RisServerManifestVerification.cs" />
+    <Compile Include="ModalityProcedureStepSummary.cs" />
+    <Compile Include="ModalityWorkflow\DicomSeriesDetail.cs" />
+    <Compile Include="PatientAllergyDetail.cs" />
+    <Compile Include="DiagnosticServicePlanDetail.cs" />
+    <Compile Include="RegistrationWorkflow\OrderEntry\MergeOrderRequest.cs" />
+    <Compile Include="RegistrationWorkflow\OrderEntry\MergeOrderResponse.cs" />
+    <Compile Include="RegistrationWorkflow\OrderEntry\QueryCancelOrderWarningsRequest.cs" />
+    <Compile Include="RegistrationWorkflow\OrderEntry\QueryCancelOrderWarningsResponse.cs" />
+    <Compile Include="RegistrationWorkflow\OrderEntry\UnmergeOrderRequest.cs" />
+    <Compile Include="RegistrationWorkflow\OrderEntry\UnmergeOrderResponse.cs" />
+    <Compile Include="ReportingWorkflow\PrintReportRequest.cs" />
+    <Compile Include="ReportingWorkflow\PrintReportResponse.cs" />
+    <Compile Include="ReportingWorkflow\GetDocumentationStatusResponse.cs" />
+    <Compile Include="ReportingWorkflow\GetDocumentationStatusRequest.cs" />
+    <Compile Include="ReportingWorkflow\ReturnToInterpreterRequest.cs" />
+    <Compile Include="ReportingWorkflow\ReturnToInterpreterResponse.cs" />
+    <Compile Include="ReportingWorkflow\StartTranscriptionReviewRequest.cs" />
+    <Compile Include="ReportingWorkflow\StartTranscriptionReviewResponse.cs" />
+    <Compile Include="SupervisorValidationException.cs" />
+    <Compile Include="TranscriptionWorkflow\CompleteTranscriptionRequest.cs" />
+    <Compile Include="TranscriptionWorkflow\CompleteTranscriptionResponse.cs" />
+    <Compile Include="TranscriptionWorkflow\DiscardTranscriptionRequest.cs" />
+    <Compile Include="TranscriptionWorkflow\DiscardTranscriptionResponse.cs" />
+    <Compile Include="TranscriptionWorkflow\GetRejectReasonChoicesRequest.cs" />
+    <Compile Include="TranscriptionWorkflow\GetRejectReasonChoicesResponse.cs" />
+    <Compile Include="TranscriptionWorkflow\ITranscriptionWorkflowService.cs" />
+    <Compile Include="TranscriptionWorkflow\LoadTranscriptionForEditRequest.cs" />
+    <Compile Include="TranscriptionWorkflow\LoadTranscriptionForEditResponse.cs" />
+    <Compile Include="TranscriptionWorkflow\RejectTranscriptionRequest.cs" />
+    <Compile Include="TranscriptionWorkflow\RejectTranscriptionResponse.cs" />
+    <Compile Include="TranscriptionWorkflow\SaveTranscriptionRequest.cs" />
+    <Compile Include="TranscriptionWorkflow\SaveTranscriptionResponse.cs" />
+    <Compile Include="TranscriptionWorkflow\StartTranscriptionRequest.cs" />
+    <Compile Include="TranscriptionWorkflow\StartTranscriptionResponse.cs" />
+    <Compile Include="TranscriptionWorkflow\SubmitTranscriptionForReviewRequest.cs" />
+    <Compile Include="TranscriptionWorkflow\SubmitTranscriptionForReviewResponse.cs" />
+    <Compile Include="WorkflowConfigurationReader.cs" />
+    <Compile Include="WorkflowSettings.cs" />
+    <Compile Include="WorkflowSettings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>WorkflowSettings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="WorkQueueItemDetail.cs" />
+    <Compile Include="ReportingWorkflow\CompleteDowntimeProcedureRequest.cs" />
+    <Compile Include="ReportingWorkflow\CompleteDowntimeProcedureResponse.cs" />
+    <Compile Include="ReportingWorkflow\SendReportToQueueRequest.cs" />
+    <Compile Include="ReportingWorkflow\SendReportToQueueResponse.cs" />
+    <Compile Include="ReportingWorkflow\ReassignProcedureStepRequest.cs" />
+    <Compile Include="ReportingWorkflow\ReassignProcedureStepResponse.cs" />
+    <Compile Include="WorklistItemTextQueryOptions.cs" />
+    <Compile Include="WorkQueueItemSummary.cs" />
+    <Compile Include="BrowsePatientData\GetVisitDetailRequest.cs" />
+    <Compile Include="BrowsePatientData\GetVisitDetailResponse.cs" />
+    <Compile Include="BrowsePatientData\ListVisitsRequest.cs" />
+    <Compile Include="BrowsePatientData\ListVisitsResponse.cs" />
+    <Compile Include="BrowsePatientData\VisitListItem.cs" />
+    <Compile Include="CannedTextService\AddCannedTextRequest.cs" />
+    <Compile Include="CannedTextService\AddCannedTextResponse.cs" />
+    <Compile Include="CannedTextService\CannedTextDetail.cs" />
+    <Compile Include="CannedTextService\DeleteCannedTextRequest.cs" />
+    <Compile Include="CannedTextService\DeleteCannedTextResponse.cs" />
+    <Compile Include="CannedTextService\GetCannedTextEditFormDataRequest.cs" />
+    <Compile Include="CannedTextService\GetCannedTextEditFormDataResponse.cs" />
+    <Compile Include="CannedTextService\ICannedTextService.cs" />
+    <Compile Include="CannedTextService\ListCannedTextForUserRequest.cs" />
+    <Compile Include="CannedTextService\ListCannedTextForUserResponse.cs" />
+    <Compile Include="CannedTextService\LoadCannedTextForEditRequest.cs" />
+    <Compile Include="CannedTextService\LoadCannedTextForEditResponse.cs" />
+    <Compile Include="CannedTextService\UpdateCannedTextRequest.cs" />
+    <Compile Include="CannedTextService\UpdateCannedTextResponse.cs" />
+    <Compile Include="CannedTextService\CannedTextSummary.cs" />
+    <Compile Include="ProtocolCodeSummary.cs" />
+    <Compile Include="GetOperationEnablementRequest.cs" />
+    <Compile Include="GetOperationEnablementResponse.cs" />
+    <Compile Include="IWorkflowService.cs" />
+    <Compile Include="IWorklistService.cs" />
+    <Compile Include="ListWorklistsForUserRequest.cs" />
+    <Compile Include="ListWorklistsForUserResponse.cs" />
+    <Compile Include="ModalityWorkflow\LoadOrderDocumentationDataRequest.cs" />
+    <Compile Include="ModalityWorkflow\LoadOrderDocumentationDataResponse.cs" />
+    <Compile Include="OrderNoteSummary.cs" />
+    <Compile Include="RegistrationWorkflow\OrderEntry\PrintDowntimeFormsRequest.cs" />
+    <Compile Include="RegistrationWorkflow\OrderEntry\PrintDowntimeFormsResponse.cs" />
+    <Compile Include="RegistrationWorkflow\OrderEntry\TimeShiftOrderRequest.cs" />
+    <Compile Include="RegistrationWorkflow\OrderEntry\TimeShiftOrderResponse.cs" />
+    <Compile Include="RisApplicationServiceAttribute.cs" />
+    <Compile Include="StaffGroupDetail.cs" />
+    <Compile Include="StaffGroupSummary.cs" />
+    <Compile Include="Admin\StaffGroupAdmin\UpdateStaffGroupRequest.cs" />
+    <Compile Include="Admin\StaffGroupAdmin\UpdateStaffGroupResponse.cs" />
+    <Compile Include="Admin\ExternalPractitionerAdmin\AddExternalPractitionerRequest.cs" />
+    <Compile Include="Admin\ExternalPractitionerAdmin\AddExternalPractitionerResponse.cs" />
+    <Compile Include="Admin\ExternalPractitionerAdmin\IExternalPractitionerAdminService.cs" />
+    <Compile Include="Admin\ExternalPractitionerAdmin\ListExternalPractitionersRequest.cs" />
+    <Compile Include="Admin\ExternalPractitionerAdmin\ListExternalPractitionersResponse.cs" />
+    <Compile Include="Admin\ExternalPractitionerAdmin\LoadExternalPractitionerEditorFormDataRequest.cs" />
+    <Compile Include="Admin\ExternalPractitionerAdmin\LoadExternalPractitionerEditorFormDataResponse.cs" />
+    <Compile Include="Admin\ExternalPractitionerAdmin\LoadExternalPractitionerForEditRequest.cs" />
+    <Compile Include="Admin\ExternalPractitionerAdmin\LoadExternalPractitionerForEditResponse.cs" />
+    <Compile Include="Admin\ExternalPractitionerAdmin\UpdateExternalPractitionerRequest.cs" />
+    <Compile Include="Admin\ExternalPractitionerAdmin\UpdateExternalPractitionerResponse.cs" />
+    <Compile Include="Admin\FacilityAdmin\GetFacilityEditFormDataRequest.cs" />
+    <Compile Include="Admin\FacilityAdmin\GetFacilityEditFormDataResponse.cs" />
+    <Compile Include="BrowsePatientData\ReportListItem.cs" />
+    <Compile Include="BrowsePatientData\ListReportsResponse.cs" />
+    <Compile Include="BrowsePatientData\ListReportsRequest.cs" />
+    <Compile Include="ExternalPractitionerContactPointDetail.cs" />
+    <Compile Include="ExternalPractitionerContactPointSummary.cs" />
+    <Compile Include="RegistrationWorkflow\OrderEntry\GetExternalPractitionerContactPointsResponse.cs" />
+    <Compile Include="RegistrationWorkflow\OrderEntry\GetExternalPractitionerContactPointsRequest.cs" />
+    <Compile Include="ResultRecipientDetail.cs" />
+    <Compile Include="ReportDetail.cs" />
+    <Compile Include="OrderNoteDetail.cs" />
+    <Compile Include="ReportingWorkflow\CompleteInterpretationRequestBase.cs" />
+    <Compile Include="ReportingWorkflow\GetLinkableInterpretationsRequest.cs" />
+    <Compile Include="ReportingWorkflow\GetLinkableInterpretationsResponse.cs" />
+    <Compile Include="ReportingWorkflow\PriorProcedureSummary.cs" />
+    <Compile Include="WorklistItemSummaryBase.cs" />
+    <Compile Include="Login\GetWorkingFacilityChoicesRequest.cs" />
+    <Compile Include="Login\GetWorkingFacilityChoicesResponse.cs" />
+    <Compile Include="ModalityWorkflow\CanCompleteOrderDocumentationRequest.cs" />
+    <Compile Include="ModalityWorkflow\CanCompleteOrderDocumentationResponse.cs" />
+    <Compile Include="Documents\GetAttachedDocumentFormDataRequest.cs" />
+    <Compile Include="Documents\GetAttachedDocumentFormDataResponse.cs" />
+    <Compile Include="Documents\IDocumentsService.cs" />
+    <Compile Include="ExternalPractitionerDetail.cs" />
+    <Compile Include="ExternalPractitionerSummary.cs" />
+    <Compile Include="Admin\EnumerationAdmin\AddValueRequest.cs" />
+    <Compile Include="Admin\EnumerationAdmin\AddValueResponse.cs" />
+    <Compile Include="Admin\EnumerationAdmin\EditValueRequest.cs" />
+    <Compile Include="Admin\EnumerationAdmin\EditValueResponse.cs" />
+    <Compile Include="Admin\EnumerationAdmin\EnumerationSummary.cs" />
+    <Compile Include="Admin\EnumerationAdmin\IEnumerationAdminService.cs" />
+    <Compile Include="Admin\EnumerationAdmin\ListEnumerationsRequest.cs" />
+    <Compile Include="Admin\EnumerationAdmin\ListEnumerationsResponse.cs" />
+    <Compile Include="Admin\EnumerationAdmin\ListEnumerationValuesRequest.cs" />
+    <Compile Include="Admin\EnumerationAdmin\ListEnumerationValuesResponse.cs" />
+    <Compile Include="Admin\EnumerationAdmin\RemoveValueRequest.cs" />
+    <Compile Include="Admin\EnumerationAdmin\RemoveValueResponse.cs" />
+    <Compile Include="FacilityDetail.cs" />
+    <Compile Include="FacilitySummary.cs" />
+    <Compile Include="Admin\FacilityAdmin\AddFacilityRequest.cs" />
+    <Compile Include="Admin\FacilityAdmin\AddFacilityResponse.cs" />
+    <Compile Include="Admin\FacilityAdmin\ListAllFacilitiesRequest.cs" />
+    <Compile Include="Admin\FacilityAdmin\ListAllFacilitiesResponse.cs" />
+    <Compile Include="Admin\FacilityAdmin\IFacilityAdminService.cs" />
+    <Compile Include="Admin\FacilityAdmin\LoadFacilityForEditRequest.cs" />
+    <Compile Include="Admin\FacilityAdmin\LoadFacilityForEditResponse.cs" />
+    <Compile Include="Admin\FacilityAdmin\UpdateFacilityRequest.cs" />
+    <Compile Include="Admin\FacilityAdmin\UpdateFacilityResponse.cs" />
+    <Compile Include="Admin\Import\IImportService.cs" />
+    <Compile Include="Admin\Import\ImportCsvRequest.cs" />
+    <Compile Include="Admin\Import\ImportCsvResponse.cs" />
+    <Compile Include="Admin\Import\ListImportersRequest.cs" />
+    <Compile Include="Admin\Import\ListImportersResponse.cs" />
+    <Compile Include="Admin\NoteCategoryAdmin\AddNoteCategoryRequest.cs" />
+    <Compile Include="Admin\NoteCategoryAdmin\AddNoteCategoryResponse.cs" />
+    <Compile Include="Admin\NoteCategoryAdmin\GetNoteCategoryEditFormDataRequest.cs" />
+    <Compile Include="Admin\NoteCategoryAdmin\GetNoteCategoryEditFormDataResponse.cs" />
+    <Compile Include="Admin\NoteCategoryAdmin\INoteCategoryAdminService.cs" />
+    <Compile Include="Admin\NoteCategoryAdmin\ListAllNoteCategoriesRequest.cs" />
+    <Compile Include="Admin\NoteCategoryAdmin\ListAllNoteCategoriesResponse.cs" />
+    <Compile Include="Admin\NoteCategoryAdmin\LoadNoteCategoryForEditRequest.cs" />
+    <Compile Include="Admin\NoteCategoryAdmin\LoadNoteCategoryForEditResponse.cs" />
+    <Compile Include="Admin\NoteCategoryAdmin\UpdateNoteCategoryRequest.cs" />
+    <Compile Include="Admin\NoteCategoryAdmin\UpdateNoteCategoryResponse.cs" />
+    <Compile Include="Admin\PatientAdmin\AddPatientRequest.cs" />
+    <Compile Include="Admin\PatientAdmin\AddPatientResponse.cs" />
+    <Compile Include="Admin\PatientAdmin\IPatientAdminService.cs" />
+    <Compile Include="LocationDetail.cs" />
+    <Compile Include="LocationSummary.cs" />
+    <Compile Include="Admin\LocationAdmin\AddLocationRequest.cs" />
+    <Compile Include="Admin\LocationAdmin\AddLocationResponse.cs" />
+    <Compile Include="Admin\LocationAdmin\ListAllLocationsRequest.cs" />
+    <Compile Include="Admin\LocationAdmin\ListAllLocationsResponse.cs" />
+    <Compile Include="Admin\LocationAdmin\GetLocationEditFormDataRequest.cs" />
+    <Compile Include="Admin\LocationAdmin\GetLocationEditFormDataResponse.cs" />
+    <Compile Include="Admin\LocationAdmin\ILocationAdminService.cs" />
+    <Compile Include="Admin\LocationAdmin\LoadLocationForEditRequest.cs" />
+    <Compile Include="Admin\LocationAdmin\LoadLocationForEditResponse.cs" />
+    <Compile Include="Admin\LocationAdmin\UpdateLocationRequest.cs" />
+    <Compile Include="Admin\LocationAdmin\UpdateLocationResponse.cs" />
+    <Compile Include="Admin\ModalityAdmin\AddModalityRequest.cs" />
+    <Compile Include="Admin\ModalityAdmin\AddModalityResponse.cs" />
+    <Compile Include="Admin\ModalityAdmin\IModalityAdminService.cs" />
+    <Compile Include="Admin\ModalityAdmin\ListAllModalitiesRequest.cs" />
+    <Compile Include="Admin\ModalityAdmin\ListAllModalitiesResponse.cs" />
+    <Compile Include="Admin\ModalityAdmin\LoadModalityForEditRequest.cs" />
+    <Compile Include="Admin\ModalityAdmin\LoadModalityForEditResponse.cs" />
+    <Compile Include="Admin\ModalityAdmin\UpdateModalityRequest.cs" />
+    <Compile Include="Admin\ModalityAdmin\UpdateModalityResponse.cs" />
+    <Compile Include="ModalityDetail.cs" />
+    <Compile Include="ModalitySummary.cs" />
+    <Compile Include="Admin\PatientAdmin\LoadPatientProfileForEditRequest.cs" />
+    <Compile Include="Admin\PatientAdmin\LoadPatientProfileForEditResponse.cs" />
+    <Compile Include="Admin\PatientAdmin\LoadPatientProfileEditorFormDataRequest.cs" />
+    <Compile Include="Admin\PatientAdmin\LoadPatientProfileEditorFormDataResponse.cs" />
+    <Compile Include="Admin\PatientAdmin\UpdatePatientProfileRequest.cs" />
+    <Compile Include="Admin\PatientAdmin\UpdatePatientProfileResponse.cs" />
+    <Compile Include="Admin\ProcedureTypeGroupAdmin\AddProcedureTypeGroupRequest.cs" />
+    <Compile Include="Admin\ProcedureTypeGroupAdmin\AddProcedureTypeGroupResponse.cs" />
+    <Compile Include="Admin\ProcedureTypeGroupAdmin\GetProcedureTypeGroupEditFormDataRequest.cs" />
+    <Compile Include="Admin\ProcedureTypeGroupAdmin\GetProcedureTypeGroupEditFormDataResponse.cs" />
+    <Compile Include="Admin\ProcedureTypeGroupAdmin\IProcedureTypeGroupAdminService.cs" />
+    <Compile Include="Admin\ProcedureTypeGroupAdmin\ListProcedureTypeGroupsRequest.cs" />
+    <Compile Include="Admin\ProcedureTypeGroupAdmin\ListProcedureTypeGroupsResponse.cs" />
+    <Compile Include="Admin\ProcedureTypeGroupAdmin\LoadProcedureTypeGroupForEditRequest.cs" />
+    <Compile Include="Admin\ProcedureTypeGroupAdmin\LoadProcedureTypeGroupForEditResponse.cs" />
+    <Compile Include="Admin\ProcedureTypeGroupAdmin\ProcedureTypeGroupDetail.cs" />
+    <Compile Include="ProtocolGroupDetail.cs" />
+    <Compile Include="ProtocolGroupSummary.cs" />
+    <Compile Include="ProtocolNoteDetail.cs" />
+    <Compile Include="ProtocolProcedureStepDetail.cs" />
+    <Compile Include="RegistrationWorkflow\OrderEntry\GetOrderRequisitionForEditRequest.cs" />
+    <Compile Include="RegistrationWorkflow\OrderEntry\GetOrderRequisitionForEditResponse.cs" />
+    <Compile Include="RegistrationWorkflow\OrderEntry\ModifyOrderRequest.cs" />
+    <Compile Include="RegistrationWorkflow\OrderEntry\ModifyOrderResponse.cs" />
+    <Compile Include="RegistrationWorkflow\OrderEntry\OrderRequisition.cs" />
+    <Compile Include="RegistrationWorkflow\ProcedureRequisition.cs" />
+    <Compile Include="ReportingWorkflow\PublishReportRequest.cs" />
+    <Compile Include="ReportingWorkflow\PublishReportResponse.cs" />
+    <Compile Include="ReportingWorkflow\ReviseUnpublishedReportRequest.cs" />
+    <Compile Include="ReportingWorkflow\ReviseUnpublishedReportResponse.cs" />
+    <Compile Include="ProcedureTypeGroupSummary.cs" />
+    <Compile Include="Admin\StaffAdmin\StaffTextQueryRequest.cs" />
+    <Compile Include="RegistrationWorkflow\OrderEntry\ListOrderableProcedureTypesRequest.cs" />
+    <Compile Include="RegistrationWorkflow\OrderEntry\ListOrderableProcedureTypesResponse.cs" />
+    <Compile Include="ProcedureTypeSummary.cs" />
+    <Compile Include="Admin\ProcedureTypeGroupAdmin\UpdateProcedureTypeGroupRequest.cs" />
+    <Compile Include="Admin\ProcedureTypeGroupAdmin\UpdateProcedureTypeGroupResponse.cs" />
+    <Compile Include="Admin\StaffAdmin\AddStaffRequest.cs" />
+    <Compile Include="Admin\StaffAdmin\AddStaffResponse.cs" />
+    <Compile Include="Admin\StaffAdmin\ListStaffRequest.cs" />
+    <Compile Include="Admin\StaffAdmin\ListStaffResponse.cs" />
+    <Compile Include="Admin\StaffAdmin\IStaffAdminService.cs" />
+    <Compile Include="Admin\StaffAdmin\LoadStaffEditorFormDataRequest.cs" />
+    <Compile Include="Admin\StaffAdmin\LoadStaffEditorFormDataResponse.cs" />
+    <Compile Include="Admin\StaffAdmin\LoadStaffForEditRequest.cs" />
+    <Compile Include="Admin\StaffAdmin\LoadStaffForEditResponse.cs" />
+    <Compile Include="Admin\StaffAdmin\UpdateStaffRequest.cs" />
+    <Compile Include="Admin\StaffAdmin\UpdateStaffResponse.cs" />
+    <Compile Include="StaffDetail.cs" />
+    <Compile Include="StaffSummary.cs" />
+    <Compile Include="Admin\VisitAdmin\AddVisitRequest.cs" />
+    <Compile Include="Admin\VisitAdmin\AddVisitResponse.cs" />
+    <Compile Include="Admin\VisitAdmin\IVisitAdminService.cs" />
+    <Compile Include="Admin\VisitAdmin\LoadVisitEditorFormDataRequest.cs" />
+    <Compile Include="Admin\VisitAdmin\LoadVisitEditorFormDataResponse.cs" />
+    <Compile Include="Admin\VisitAdmin\ListVisitsForPatientRequest.cs" />
+    <Compile Include="Admin\VisitAdmin\ListVisitsForPatientResponse.cs" />
+    <Compile Include="Admin\VisitAdmin\LoadVisitForEditRequest.cs" />
+    <Compile Include="Admin\VisitAdmin\LoadVisitForEditResponse.cs" />
+    <Compile Include="Admin\VisitAdmin\UpdateVisitRequest.cs" />
+    <Compile Include="Admin\VisitAdmin\UpdateVisitResponse.cs" />
+    <Compile Include="VisitDetail.cs" />
+    <Compile Include="VisitLocationDetail.cs" />
+    <Compile Include="VisitPractitionerDetail.cs" />
+    <Compile Include="VisitSummary.cs" />
+    <Compile Include="Admin\WorklistAdmin\AddWorklistRequest.cs" />
+    <Compile Include="Admin\WorklistAdmin\AddWorklistResponse.cs" />
+    <Compile Include="Admin\WorklistAdmin\GetWorklistEditFormDataRequest.cs" />
+    <Compile Include="Admin\WorklistAdmin\GetWorklistEditFormDataResponse.cs" />
+    <Compile Include="Admin\WorklistAdmin\IWorklistAdminService.cs" />
+    <Compile Include="Admin\WorklistAdmin\ListProcedureTypeGroupsRequest.cs" />
+    <Compile Include="Admin\WorklistAdmin\ListProcedureTypeGroupsResponse.cs" />
+    <Compile Include="Admin\WorklistAdmin\ListWorklistsRequest.cs" />
+    <Compile Include="Admin\WorklistAdmin\ListWorklistsResponse.cs" />
+    <Compile Include="Admin\WorklistAdmin\LoadWorklistForEditRequest.cs" />
+    <Compile Include="Admin\WorklistAdmin\LoadWorklistForEditResponse.cs" />
+    <Compile Include="Admin\WorklistAdmin\UpdateWorklistRequest.cs" />
+    <Compile Include="Admin\WorklistAdmin\UpdateWorklistResponse.cs" />
+    <Compile Include="Admin\WorklistAdmin\WorklistAdminDetail.cs" />
+    <Compile Include="CompositeIdentifierDetail.cs" />
+    <Compile Include="DefaultAuthorityGroups.cs" />
+    <Compile Include="AttachedDocumentSummary.cs" />
+    <Compile Include="Jsml\GetOperationNamesRequest.cs" />
+    <Compile Include="Jsml\GetOperationNamesResponse.cs" />
+    <Compile Include="Jsml\IJsmlShimService.cs" />
+    <Compile Include="Jsml\InvokeOperationRequest.cs" />
+    <Compile Include="Jsml\InvokeOperationResponse.cs" />
+    <Compile Include="Jsml\JsmlBlob.cs" />
+    <Compile Include="ModalityWorkflow\CompleteOrderDocumentationRequest.cs" />
+    <Compile Include="ModalityWorkflow\CompleteOrderDocumentationResponse.cs" />
+    <Compile Include="ModalityWorkflow\DiscontinueModalityPerformedProcedureStepRequest.cs" />
+    <Compile Include="ModalityWorkflow\DiscontinueModalityPerformedProcedureStepResponse.cs" />
+    <Compile Include="ModalityWorkflow\DiscontinueModalityProcedureStepsRequest.cs" />
+    <Compile Include="ModalityWorkflow\DiscontinueModalityProcedureStepsResponse.cs" />
+    <Compile Include="ModalityWorkflow\GetProcedurePlanRequest.cs" />
+    <Compile Include="ModalityWorkflow\GetProcedurePlanResponse.cs" />
+    <Compile Include="ModalityWorkflow\ListPerformedProcedureStepsRequest.cs" />
+    <Compile Include="ModalityWorkflow\ListPerformedProcedureStepsResponse.cs" />
+    <Compile Include="ModalityWorkflow\ModalityPerformedProcedureStepDetail.cs" />
+    <Compile Include="ProcedureStepDetail.cs" />
+    <Compile Include="ProcedurePlanDetail.cs" />
+    <Compile Include="ProcedureDetail.cs" />
+    <Compile Include="ModalityWorkflow\StartModalityProcedureStepsRequest.cs" />
+    <Compile Include="ModalityWorkflow\StartModalityProcedureStepsResponse.cs" />
+    <Compile Include="ModalityWorkflow\SaveOrderDocumentationDataRequest.cs" />
+    <Compile Include="ModalityWorkflow\SaveOrderDocumentationDataResponse.cs" />
+    <Compile Include="ModalityWorkflow\CompleteModalityPerformedProcedureStepRequest.cs" />
+    <Compile Include="ModalityWorkflow\CompleteModalityPerformedProcedureStepResponse.cs" />
+    <Compile Include="ProtocolCodeDetail.cs" />
+    <Compile Include="ProtocolDetail.cs" />
+    <Compile Include="RegistrationWorkflow\LoadSearchPatientFormDataRequest.cs" />
+    <Compile Include="RegistrationWorkflow\LoadSearchPatientFormDataResponse.cs" />
+    <Compile Include="RegistrationWorkflow\OrderEntry\ReplaceOrderRequest.cs" />
+    <Compile Include="RegistrationWorkflow\OrderEntry\ReplaceOrderResponse.cs" />
+    <Compile Include="ReportingWorkflow\GetRadiologistListRequest.cs" />
+    <Compile Include="ReportingWorkflow\GetRadiologistListResponse.cs" />
+    <Compile Include="Admin\WorklistAdmin\WorklistAdminSummary.cs" />
+    <Compile Include="DiagnosticServiceDetail.cs" />
+    <Compile Include="DiagnosticServiceSummary.cs" />
+    <Compile Include="ProcedureStepSummary.cs" />
+    <Compile Include="ModalityProcedureStepTypeDetail.cs" />
+    <Compile Include="ModalityWorkflow\ResumeProcedureRequest.cs" />
+    <Compile Include="ModalityWorkflow\ResumeProcedureResponse.cs" />
+    <Compile Include="ContactPersonDetail.cs" />
+    <Compile Include="PatientNoteCategoryDetail.cs" />
+    <Compile Include="PatientNoteCategorySummary.cs" />
+    <Compile Include="EnablementMethodNotFoundException.cs" />
+    <Compile Include="EmailAddressDetail.cs" />
+    <Compile Include="EnumValueInfo.cs" />
+    <Compile Include="HealthcardDetail.cs" />
+    <Compile Include="ImportException.cs" />
+    <Compile Include="Login\ILoginService.cs" />
+    <Compile Include="ModalityWorkflow\SuspendProcedureRequest.cs" />
+    <Compile Include="ModalityWorkflow\SuspendProcedureResponse.cs" />
+    <Compile Include="ModalityWorkflow\CompleteProcedureRequest.cs" />
+    <Compile Include="ModalityWorkflow\CompleteProcedureResponse.cs" />
+    <Compile Include="ModalityWorkflow\CancelProcedureRequest.cs" />
+    <Compile Include="ModalityWorkflow\CancelProcedureResponse.cs" />
+    <Compile Include="ModalityWorkflow\StartProcedureResponse.cs" />
+    <Compile Include="ModalityWorkflow\ExecuteOperationRequest.cs" />
+    <Compile Include="ModalityWorkflow\IModalityWorkflowService.cs" />
+    <Compile Include="ModalityWorkflow\ModalityWorklistItemSummary.cs" />
+    <Compile Include="ModalityWorkflow\StartProcedureRequest.cs" />
+    <Compile Include="PatientNoteDetail.cs" />
+    <Compile Include="OrderDetail.cs" />
+    <Compile Include="OrderSummary.cs" />
+    <Compile Include="BrowsePatientData\ListPatientProfilesRequest.cs" />
+    <Compile Include="BrowsePatientData\ListPatientProfilesResponse.cs" />
+    <Compile Include="BrowsePatientData\GetOrderDetailRequest.cs" />
+    <Compile Include="BrowsePatientData\GetOrderDetailResponse.cs" />
+    <Compile Include="BrowsePatientData\LoadPatientProfileFormDataRequest.cs" />
+    <Compile Include="BrowsePatientData\LoadPatientProfileFormDataResponse.cs" />
+    <Compile Include="PatientProfileDetail.cs" />
+    <Compile Include="PatientProfileSummary.cs" />
+    <Compile Include="AuthorityTokens.cs" />
+    <Compile Include="PersonNameDetail.cs" />
+    <Compile Include="BrowsePatientData\GetReportDetailRequest.cs" />
+    <Compile Include="BrowsePatientData\GetReportDetailResponse.cs" />
+    <Compile Include="BrowsePatientData\OrderListItem.cs" />
+    <Compile Include="BrowsePatientData\GetDataRequest.cs" />
+    <Compile Include="BrowsePatientData\GetDataResponse.cs" />
+    <Compile Include="BrowsePatientData\IBrowsePatientDataService.cs" />
+    <Compile Include="BrowsePatientData\ListOrdersRequest.cs" />
+    <Compile Include="BrowsePatientData\ListOrdersResponse.cs" />
+    <Compile Include="BrowsePatientData\GetPatientProfileDetailRequest.cs" />
+    <Compile Include="BrowsePatientData\GetPatientProfileDetailResponse.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="AlertNotificationDetail.cs" />
+    <Compile Include="RegistrationWorkflow\OrderEntry\CancelOrderRequest.cs" />
+    <Compile Include="RegistrationWorkflow\OrderEntry\CancelOrderResponse.cs" />
+    <Compile Include="RegistrationWorkflow\CheckInProcedureRequest.cs" />
+    <Compile Include="RegistrationWorkflow\CheckInProcedureResponse.cs" />
+    <Compile Include="RegistrationWorkflow\OrderEntry\GetCancelOrderFormDataRequest.cs" />
+    <Compile Include="RegistrationWorkflow\OrderEntry\GetCancelOrderFormDataResponse.cs" />
+    <Compile Include="RegistrationWorkflow\ListProceduresForCheckInRequest.cs" />
+    <Compile Include="RegistrationWorkflow\ListProceduresForCheckInResponse.cs" />
+    <Compile Include="QueryWorklistRequest.cs" />
+    <Compile Include="QueryWorklistResponse.cs" />
+    <Compile Include="RegistrationWorkflow\IRegistrationWorkflowService.cs" />
+    <Compile Include="RegistrationWorkflow\OrderEntry\ListOrdersForPatientRequest.cs" />
+    <Compile Include="RegistrationWorkflow\OrderEntry\ListOrdersForPatientResponse.cs" />
+    <Compile Include="RegistrationWorkflow\OrderEntry\ListVisitsForPatientRequest.cs" />
+    <Compile Include="RegistrationWorkflow\OrderEntry\ListVisitsForPatientResponse.cs" />
+    <Compile Include="RegistrationWorkflow\RegistrationWorklistItemSummary.cs" />
+    <Compile Include="RegistrationWorkflow\OrderEntry\GetOrderEntryFormDataRequest.cs" />
+    <Compile Include="RegistrationWorkflow\OrderEntry\GetOrderEntryFormDataResponse.cs" />
+    <Compile Include="RegistrationWorkflow\OrderEntry\IOrderEntryService.cs" />
+    <Compile Include="RegistrationWorkflow\OrderEntry\LoadDiagnosticServicePlanRequest.cs" />
+    <Compile Include="RegistrationWorkflow\OrderEntry\LoadDiagnosticServicePlanResponse.cs" />
+    <Compile Include="RegistrationWorkflow\OrderEntry\PlaceOrderRequest.cs" />
+    <Compile Include="RegistrationWorkflow\OrderEntry\PlaceOrderResponse.cs" />
+    <Compile Include="ReportingWorkflow\CancelReportingStepRequest.cs" />
+    <Compile Include="ReportingWorkflow\CompleteInterpretationAndVerifyRequest.cs" />
+    <Compile Include="ReportingWorkflow\CompleteInterpretationForTranscriptionRequest.cs" />
+    <Compile Include="ReportingWorkflow\CompleteInterpretationForVerificationRequest.cs" />
+    <Compile Include="ReportingWorkflow\CompleteVerificationRequest.cs" />
+    <Compile Include="ReportingWorkflow\CancelReportingStepResponse.cs" />
+    <Compile Include="ReportingWorkflow\CompleteInterpretationAndVerifyResponse.cs" />
+    <Compile Include="ReportingWorkflow\CompleteInterpretationForTranscriptionResponse.cs" />
+    <Compile Include="ReportingWorkflow\CompleteInterpretationForVerificationResponse.cs" />
+    <Compile Include="ReportingWorkflow\CompleteVerificationResponse.cs" />
+    <Compile Include="ReportingWorkflow\CreateAddendumRequest.cs" />
+    <Compile Include="ReportingWorkflow\CreateAddendumResponse.cs" />
+    <Compile Include="ReportingWorkflow\GetPriorsRequest.cs" />
+    <Compile Include="ReportingWorkflow\GetPriorsResponse.cs" />
+    <Compile Include="ReportingWorkflow\LoadReportForEditRequest.cs" />
+    <Compile Include="ReportingWorkflow\LoadReportForEditResponse.cs" />
+    <Compile Include="ReportPartDetail.cs" />
+    <Compile Include="ReportSummary.cs" />
+    <Compile Include="ReportingWorkflow\ReviseResidentReportRequest.cs" />
+    <Compile Include="ReportingWorkflow\ReviseResidentReportResponse.cs" />
+    <Compile Include="ReportingWorkflow\SaveReportRequest.cs" />
+    <Compile Include="ReportingWorkflow\SaveReportResponse.cs" />
+    <Compile Include="ReportingWorkflow\StartVerificationResponse.cs" />
+    <Compile Include="ReportingWorkflow\StartInterpretationResponse.cs" />
+    <Compile Include="ReportingWorkflow\IReportingWorkflowService.cs" />
+    <Compile Include="ReportingWorkflow\ReportingWorklistItemSummary.cs" />
+    <Compile Include="ReportingWorkflow\StartInterpretationRequest.cs" />
+    <Compile Include="ReportingWorkflow\StartVerificationRequest.cs" />
+    <Compile Include="ProcedureSummary.cs" />
+    <Compile Include="ProcedureTypeDetail.cs" />
+    <Compile Include="TextQueryRequest.cs" />
+    <Compile Include="TextQueryResponse.cs" />
+    <Compile Include="SR.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SR.resx</DependentUpon>
+    </Compile>
+    <Compile Include="TelephoneDetail.cs" />
+    <Compile Include="WorklistItemTextQueryRequest.cs" />
+    <Compile Include="WorklistTokenAttribute.cs" />
+    <Compile Include="WorklistClassNames.cs" />
+    <Compile Include="WorklistSummary.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="SR.resx">
+      <SubType>Designer</SubType>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>SR.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Common\ClearCanvas.Common.csproj">
+      <Project>{F6EAD428-E6CF-4DF6-B2F3-D33D532C5343}</Project>
+      <Name>ClearCanvas.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Enterprise\Common\ClearCanvas.Enterprise.Common.csproj">
+      <Project>{B5EBFFD7-6641-4932-91C9-4C4322B41868}</Project>
+      <Name>ClearCanvas.Enterprise.Common</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="AttachedDocumentSettings.settings">
+      <Generator>PublicSettingsSingleFileGenerator</Generator>
+      <LastGenOutput>AttachedDocumentSettings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="WorkflowSettings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>WorkflowSettings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

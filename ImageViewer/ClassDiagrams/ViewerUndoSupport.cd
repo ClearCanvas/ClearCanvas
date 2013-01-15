@@ -1,0 +1,69 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Font Name="Tahoma" Size="8.25" />
+  <Class Name="ClearCanvas.ImageViewer.UndoableOperation&lt;T&gt;">
+    <Position X="8" Y="1" Width="2" />
+    <TypeIdentifier>
+      <FileName>UndoableOperation.cs</FileName>
+      <HashCode>AAAAAAAAABAAAAAAAAAAAAAAACAAAAAAEAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+    <Members>
+      <Method Name="UndoableOperation" Hidden="true" />
+    </Members>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ClearCanvas.ImageViewer.UndoableOperationCommand&lt;T&gt;" Collapsed="true">
+    <Position X="4.5" Y="2.75" Width="2.5" />
+    <TypeIdentifier>
+      <FileName>UndoableOperationCommand.cs</FileName>
+      <HashCode>AAAAAAAAABAAAAQAAAAABAAAADAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_operation" />
+      <Field Name="_items" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="ClearCanvas.ImageViewer.DrawableUndoableCommand" Collapsed="true">
+    <Position X="4.5" Y="5.25" Width="2.5" />
+    <TypeIdentifier>
+      <FileName>DrawableUndoableCommand.cs</FileName>
+      <HashCode>AAAAgAAAAAAAAAQAAAAAAAAAAAAAAAAIgAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ClearCanvas.ImageViewer.DrawableUndoableOperationCommand&lt;T&gt;" Collapsed="true">
+    <Position X="4.25" Y="1" Width="3" />
+    <TypeIdentifier>
+      <FileName>DrawableUndoableOperationCommand.cs</FileName>
+      <HashCode>AAAAgAAAABAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ClearCanvas.Desktop.CompositeUndoableCommand" Collapsed="true">
+    <Position X="4.5" Y="4" Width="2.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="ClearCanvas.ImageViewer.ImageOperationApplicator">
+    <Position X="8" Y="4.25" Width="2" />
+    <TypeIdentifier>
+      <FileName>ImageOperationApplicator.cs</FileName>
+      <HashCode>AAAAAAAAAAAQAQAAAAAABAABAAAAAAABAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_operation" />
+    </ShowAsAssociation>
+    <Members>
+      <Field Name="_imageEnumerator" Hidden="true" />
+      <Method Name="ImageOperationApplicator" Hidden="true" />
+    </Members>
+  </Class>
+  <Interface Name="ClearCanvas.ImageViewer.IUndoableOperation&lt;T&gt;" Collapsed="true">
+    <Position X="8" Y="2.75" Width="2" />
+    <TypeIdentifier>
+      <FileName>IUndoableOperation.cs</FileName>
+      <HashCode>AAAAAAAAABAAAAAAAAAAAAAAACAAAAAAEAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="System.Collections.Generic.IEnumerable&lt;T&gt;" Collapsed="true">
+    <Position X="2" Y="2.75" Width="1.5" />
+    <TypeIdentifier />
+  </Interface>
+</ClassDiagram>

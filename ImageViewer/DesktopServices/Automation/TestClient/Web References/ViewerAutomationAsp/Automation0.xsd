@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:ser="http://schemas.microsoft.com/2003/10/Serialization/" elementFormDefault="qualified" targetNamespace="http://www.clearcanvas.ca/imageViewer/automation" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="http://localhost:51124/ClearCanvas/ImageViewer/Automation?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+  <xs:import schemaLocation="http://localhost:51124/ClearCanvas/ImageViewer/Automation?xsd=xsd2" namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
+  <xs:element name="GetActiveViewers">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetActiveViewersResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q1="http://www.clearcanvas.ca/imageViewer/automation" minOccurs="0" name="GetActiveViewersResult" nillable="true" type="q1:GetActiveViewersResult" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:complexType name="GetActiveViewersResult">
+    <xs:sequence>
+      <xs:element xmlns:q2="http://www.clearcanvas.ca/imageViewer/automation" name="ActiveViewers" nillable="true" type="q2:ArrayOfViewer" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element xmlns:q3="http://www.clearcanvas.ca/imageViewer/automation" name="GetActiveViewersResult" nillable="true" type="q3:GetActiveViewersResult" />
+  <xs:complexType name="ArrayOfViewer">
+    <xs:sequence>
+      <xs:element xmlns:q4="http://www.clearcanvas.ca/imageViewer/automation" minOccurs="0" maxOccurs="unbounded" name="Viewer" nillable="true" type="q4:Viewer" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element xmlns:q5="http://www.clearcanvas.ca/imageViewer/automation" name="ArrayOfViewer" nillable="true" type="q5:ArrayOfViewer" />
+  <xs:complexType name="Viewer">
+    <xs:sequence>
+      <xs:element name="Identifier" type="ser:guid" />
+      <xs:element name="PrimaryStudyInstanceUid" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element xmlns:q6="http://www.clearcanvas.ca/imageViewer/automation" name="Viewer" nillable="true" type="q6:Viewer" />
+  <xs:complexType name="NoActiveViewersFault">
+    <xs:sequence />
+  </xs:complexType>
+  <xs:element xmlns:q7="http://www.clearcanvas.ca/imageViewer/automation" name="NoActiveViewersFault" nillable="true" type="q7:NoActiveViewersFault" />
+  <xs:element name="GetViewerInfo">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q8="http://www.clearcanvas.ca/imageViewer/automation" minOccurs="0" name="request" nillable="true" type="q8:GetViewerInfoRequest" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:complexType name="GetViewerInfoRequest">
+    <xs:sequence>
+      <xs:element xmlns:q9="http://www.clearcanvas.ca/imageViewer/automation" name="Viewer" nillable="true" type="q9:Viewer" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element xmlns:q10="http://www.clearcanvas.ca/imageViewer/automation" name="GetViewerInfoRequest" nillable="true" type="q10:GetViewerInfoRequest" />
+  <xs:element name="GetViewerInfoResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q11="http://www.clearcanvas.ca/imageViewer/automation" minOccurs="0" name="GetViewerInfoResult" nillable="true" type="q11:GetViewerInfoResult" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:complexType name="GetViewerInfoResult">
+    <xs:sequence>
+      <xs:element xmlns:q12="http://schemas.microsoft.com/2003/10/Serialization/Arrays" name="AdditionalStudyInstanceUids" nillable="true" type="q12:ArrayOfstring" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element xmlns:q13="http://www.clearcanvas.ca/imageViewer/automation" name="GetViewerInfoResult" nillable="true" type="q13:GetViewerInfoResult" />
+  <xs:complexType name="ViewerNotFoundFault">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="FailureDescription" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element xmlns:q14="http://www.clearcanvas.ca/imageViewer/automation" name="ViewerNotFoundFault" nillable="true" type="q14:ViewerNotFoundFault" />
+  <xs:element name="OpenStudies">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q15="http://www.clearcanvas.ca/imageViewer/automation" minOccurs="0" name="request" nillable="true" type="q15:OpenStudiesRequest" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:complexType name="OpenStudiesRequest">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="ActivateIfAlreadyOpen" nillable="true" type="xs:boolean" />
+      <xs:element minOccurs="0" name="ReportFaultToUser" type="xs:boolean" />
+      <xs:element xmlns:q16="http://www.clearcanvas.ca/imageViewer/automation" name="StudiesToOpen" nillable="true" type="q16:ArrayOfOpenStudyInfo" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element xmlns:q17="http://www.clearcanvas.ca/imageViewer/automation" name="OpenStudiesRequest" nillable="true" type="q17:OpenStudiesRequest" />
+  <xs:complexType name="ArrayOfOpenStudyInfo">
+    <xs:sequence>
+      <xs:element xmlns:q18="http://www.clearcanvas.ca/imageViewer/automation" minOccurs="0" maxOccurs="unbounded" name="OpenStudyInfo" nillable="true" type="q18:OpenStudyInfo" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element xmlns:q19="http://www.clearcanvas.ca/imageViewer/automation" name="ArrayOfOpenStudyInfo" nillable="true" type="q19:ArrayOfOpenStudyInfo" />
+  <xs:complexType name="OpenStudyInfo">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="SourceAETitle" nillable="true" type="xs:string" />
+      <xs:element name="StudyInstanceUid" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element xmlns:q20="http://www.clearcanvas.ca/imageViewer/automation" name="OpenStudyInfo" nillable="true" type="q20:OpenStudyInfo" />
+  <xs:element name="OpenStudiesResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q21="http://www.clearcanvas.ca/imageViewer/automation" minOccurs="0" name="OpenStudiesResult" nillable="true" type="q21:OpenStudiesResult" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:complexType name="OpenStudiesResult">
+    <xs:sequence>
+      <xs:element xmlns:q22="http://www.clearcanvas.ca/imageViewer/automation" name="Viewer" nillable="true" type="q22:Viewer" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element xmlns:q23="http://www.clearcanvas.ca/imageViewer/automation" name="OpenStudiesResult" nillable="true" type="q23:OpenStudiesResult" />
+  <xs:complexType name="OpenStudiesFault">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="FailureDescription" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element xmlns:q24="http://www.clearcanvas.ca/imageViewer/automation" name="OpenStudiesFault" nillable="true" type="q24:OpenStudiesFault" />
+  <xs:element name="ActivateViewer">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q25="http://www.clearcanvas.ca/imageViewer/automation" minOccurs="0" name="request" nillable="true" type="q25:ActivateViewerRequest" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:complexType name="ActivateViewerRequest">
+    <xs:sequence>
+      <xs:element xmlns:q26="http://www.clearcanvas.ca/imageViewer/automation" name="Viewer" nillable="true" type="q26:Viewer" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element xmlns:q27="http://www.clearcanvas.ca/imageViewer/automation" name="ActivateViewerRequest" nillable="true" type="q27:ActivateViewerRequest" />
+  <xs:element name="ActivateViewerResponse">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CloseViewer">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q28="http://www.clearcanvas.ca/imageViewer/automation" minOccurs="0" name="request" nillable="true" type="q28:CloseViewerRequest" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:complexType name="CloseViewerRequest">
+    <xs:sequence>
+      <xs:element xmlns:q29="http://www.clearcanvas.ca/imageViewer/automation" name="Viewer" nillable="true" type="q29:Viewer" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element xmlns:q30="http://www.clearcanvas.ca/imageViewer/automation" name="CloseViewerRequest" nillable="true" type="q30:CloseViewerRequest" />
+  <xs:element name="CloseViewerResponse">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

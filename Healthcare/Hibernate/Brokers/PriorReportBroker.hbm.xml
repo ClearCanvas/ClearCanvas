@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" assembly="ClearCanvas.Healthcare" namespace="ClearCanvas.Healthcare">
+
+  <!-- 
+    Obtains the set of procedure types relevant to a given procedure type.
+    Parameters: 1. the reference procedure type.
+    Note: it may seem that the outer select is not necessary given that the inner select returns exactly what we want.
+    However, removing the outer select causes NHibernate to issues 1+N selects in order to obtain the full ProcedureType
+    entity for each result.  The addition of the outer select allows the entire query to execute as a single SQL statement.
+  -->
+  <query name="relevantProcedureTypes">
+    select pt
+    from ProcedureType pt
+    where pt in
+    (
+      select elements(relevanceGroup.ProcedureTypes)
+      from RelevanceGroup relevanceGroup
+      where ? in elements(relevanceGroup.ProcedureTypes)
+    )
+  </query>
+
+
+  <!-- 
+    Obtains all reports for a given patient.
+    Parameters: 1. the reference Patient
+    Note: it is important that the join on Type be a left join, for performance reasons.
+  -->
+  <query name="allPriorsByPatient">
+    select priorReport, priorProcedure, priorProcType, priorOrder
+    from
+    Order priorOrder
+    join priorOrder.Procedures priorProcedure
+    left join priorProcedure.Type priorProcType
+    join priorProcedure.Reports priorReport
+    where
+    priorReport.Status not in ('X')
+    and priorOrder.Patient = ?
+  </query>
+</hibernate-mapping>

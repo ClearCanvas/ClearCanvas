@@ -1,0 +1,27 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="ClearCanvas.Ris.Client.Workflow.Extended" GeneratedClassName="PreliminaryDiagnosisSettings">
+  <Profiles />
+  <Settings>
+    <Setting Name="RadiologyTemplatesXml" Description="XML document that defines the templates available when accessed from Reporting." Type="System.String" Scope="Application">
+      <Value Profile="(Default)">PreliminaryDiagnosisFromRadiologyTemplates.xml</Value>
+    </Setting>
+    <Setting Name="EmergencyTemplatesXml" Description="XML document that defines the templates available when accessed from Emergency." Type="System.String" Scope="Application">
+      <Value Profile="(Default)">PreliminaryDiagnosisFromEmergencyTemplates.xml</Value>
+    </Setting>
+    <Setting Name="RadiologySoftKeysXml" Description="XML document that defines the soft-keys available when accessed from Reporting." Type="System.String" Scope="Application">
+      <Value Profile="(Default)">PreliminaryDiagnosisFromRadiologySoftKeys.xml</Value>
+    </Setting>
+    <Setting Name="EmergencySoftKeysXml" Description="XML document that defines the soft-keys available when accessed from Emergency." Type="System.String" Scope="Application">
+      <Value Profile="(Default)">PreliminaryDiagnosisFromEmergencySoftKeys.xml</Value>
+    </Setting>
+    <Setting Name="VerificationTemplatesXml" Description="XML document that defines the templates available when accessed during Verification." Type="System.String" Scope="Application">
+      <Value Profile="(Default)">PreliminaryDiagnosisFromVerificationTemplates.xml</Value>
+    </Setting>
+    <Setting Name="VerificationSoftKeysXml" Description="XML document that defines the soft-keys available when accessed during Verification." Type="System.String" Scope="Application">
+      <Value Profile="(Default)">PreliminaryDiagnosisFromVerificationSoftKeys.xml</Value>
+    </Setting>
+    <Setting Name="PreliminaryDiagnosisReviewForPatientClass" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">E</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<enum class="InsuranceAuthorityEnum">
+  <enum-value code="OHIP">
+    <value>OHIP</value>
+    <description>Ontario Health Insurance Plan</description>
+  </enum-value>
+  <enum-value code="OOP">
+    <value>OOP</value>
+    <description>Out of Province Health Insurance Plan</description>
+  </enum-value>
+  <enum-value code="X">
+    <value>Other</value>
+    <description>Other Insurance</description>
+  </enum-value>
+</enum>

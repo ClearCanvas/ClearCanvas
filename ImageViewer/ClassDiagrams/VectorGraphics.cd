@@ -1,0 +1,127 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Font Name="Tahoma" Size="8.25" />
+  <Class Name="ClearCanvas.ImageViewer.Graphics.VectorGraphic" Collapsed="true">
+    <Position X="5.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Graphics\VectorGraphic.cs</FileName>
+      <HashCode>AAAAAAAAAAAIAAAAABAAAAAAAAAAAAAAAEAAgABAAAA=</HashCode>
+    </TypeIdentifier>
+    <Lollipop Position="0.921" />
+  </Class>
+  <Class Name="ClearCanvas.ImageViewer.Graphics.LinePrimitive" Collapsed="true">
+    <Position X="0.75" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Graphics\LinePrimitive.cs</FileName>
+      <HashCode>AAAAAAADBIBAgAAAAAAAAAAAQCAAAAAEAAAAQIAAgAA=</HashCode>
+    </TypeIdentifier>
+    <Lollipop Position="0.888" />
+  </Class>
+  <Class Name="ClearCanvas.ImageViewer.Graphics.RectanglePrimitive" Collapsed="true">
+    <Position X="5.25" Y="4.5" Width="1.75" />
+    <TypeIdentifier>
+      <FileName>Graphics\RectanglePrimitive.cs</FileName>
+      <HashCode>AIAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAQAAQAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ClearCanvas.ImageViewer.Graphics.InvariantPrimitive" Collapsed="true">
+    <Position X="7.75" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Graphics\InvariantPrimitive.cs</FileName>
+      <HashCode>AAAAIAAAAIAAIAAAAAIAAAAQABAAAAAAACAgAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ClearCanvas.ImageViewer.Graphics.InvariantRectanglePrimitive" Collapsed="true">
+    <Position X="10.5" Y="6" Width="2.25" />
+    <TypeIdentifier>
+      <FileName>Graphics\InvariantRectanglePrimitive.cs</FileName>
+      <HashCode>AAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAQAAQAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ClearCanvas.ImageViewer.Graphics.InvariantTextPrimitive" Collapsed="true">
+    <Position X="10" Y="4.5" Width="1.75" />
+    <TypeIdentifier>
+      <FileName>Graphics\InvariantTextPrimitive.cs</FileName>
+      <HashCode>AAAAAAAAARBAAAAACAAAAAIAACCBAAAIAAgACAACAAA=</HashCode>
+    </TypeIdentifier>
+    <Lollipop Position="1.044" />
+  </Class>
+  <Class Name="ClearCanvas.ImageViewer.Graphics.Graphic" Collapsed="true">
+    <Position X="5.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Graphics\Graphic.cs</FileName>
+      <HashCode>AJKCISEgAKBAggAABoEAAgQMACABEgIMAABQRIgAABA=</HashCode>
+    </TypeIdentifier>
+    <Lollipop Position="0.69" />
+  </Class>
+  <Class Name="ClearCanvas.ImageViewer.Graphics.BoundableGraphic" Collapsed="true">
+    <Position X="3" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Graphics\BoundableGraphic.cs</FileName>
+      <HashCode>AgAIAgAABIAAABAAAIIAAEAAACAgACAAAAAAAAAQBAA=</HashCode>
+    </TypeIdentifier>
+    <Lollipop Position="1.02" />
+  </Class>
+  <Class Name="ClearCanvas.ImageViewer.Graphics.PointPrimitive" Collapsed="true">
+    <Position X="5.25" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Graphics\PointPrimitive.cs</FileName>
+      <HashCode>AAAAAAAAAIBAwAAAAAAAAAAEACAAAAAAAAAAQAQAAAQ=</HashCode>
+    </TypeIdentifier>
+    <Lollipop Position="0.898" />
+  </Class>
+  <Class Name="ClearCanvas.ImageViewer.Graphics.ArcPrimitive" Collapsed="true">
+    <Position X="0.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Graphics\ArcPrimitive.cs</FileName>
+      <HashCode>AAAAAAAAAABAAAIAAgAAAAAAAAAAAAAAAAAAQIIUAAQ=</HashCode>
+    </TypeIdentifier>
+    <Lollipop Position="0.981" />
+  </Class>
+  <Class Name="ClearCanvas.ImageViewer.Graphics.EllipsePrimitive" Collapsed="true">
+    <Position X="3" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Graphics\EllipsePrimitive.cs</FileName>
+      <HashCode>AIAAAAAAAABAAAAAAAgAAAAAAAAAAAAAAAAAQAAQAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ClearCanvas.ImageViewer.Graphics.InvariantBoundablePrimitive" Collapsed="true">
+    <Position X="7.25" Y="4.5" Width="2.5" />
+    <TypeIdentifier>
+      <FileName>Graphics\InvariantBoundablePrimitive.cs</FileName>
+      <HashCode>AgAAIgAABAA0ABAACIAAAECAACAgACQAAAAAAAIYBAA=</HashCode>
+    </TypeIdentifier>
+    <Lollipop Position="1.398" />
+  </Class>
+  <Class Name="ClearCanvas.ImageViewer.Graphics.InvariantArcPrimitive" Collapsed="true">
+    <Position X="4" Y="6" Width="1.75" />
+    <TypeIdentifier>
+      <FileName>Graphics\InvariantArcPrimitive.cs</FileName>
+      <HashCode>AAAAAAAAAABAAAIAAAAAAAAAAAAAAAAAAAAAQIIUAAA=</HashCode>
+    </TypeIdentifier>
+    <Lollipop Position="1.137" />
+  </Class>
+  <Class Name="ClearCanvas.ImageViewer.Graphics.InvariantEllipsePrimitive" Collapsed="true">
+    <Position X="8.25" Y="6" Width="2" />
+    <TypeIdentifier>
+      <FileName>Graphics\InvariantEllipsePrimitive.cs</FileName>
+      <HashCode>AAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAQAAQAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ClearCanvas.ImageViewer.Graphics.CurvePrimitive" Collapsed="true">
+    <Position X="9.75" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Graphics\CurvePrimitive.cs</FileName>
+      <HashCode>AAAAAAAAAIBEgQAAgAAAAAAAACAAAAAEAAAAQIAAAAA=</HashCode>
+    </TypeIdentifier>
+    <Lollipop Position="0.96" />
+  </Class>
+  <Class Name="ClearCanvas.ImageViewer.Graphics.InvariantLinePrimitive" Collapsed="true">
+    <Position X="6" Y="6" Width="2" />
+    <TypeIdentifier>
+      <FileName>Graphics\InvariantLinePrimitive.cs</FileName>
+      <HashCode>AAAAAAAAAABAAAAACQAAAAAAAIACAAAAAAAAQIIQAAQ=</HashCode>
+    </TypeIdentifier>
+    <Lollipop Position="1.158" />
+  </Class>
+</ClassDiagram>

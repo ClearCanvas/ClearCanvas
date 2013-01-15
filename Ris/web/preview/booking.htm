@@ -1,0 +1,131 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title>Booking Preview</title>
+		<link href="../css/default.css" rel="stylesheet" type="text/css" />
+		<script type="text/javascript" src="../js/jsx.js"></script>
+		<script type="text/javascript" src="../js/jsml.js"></script>
+		<script type="text/javascript" src="../js/ui.js"></script>
+		<script type="text/javascript" src="../js/ris.js"></script>
+		<script type="text/javascript" src="../js/preview.js"></script>
+		<script type="text/javascript" >
+			var imagePath = "../images";
+
+			function onBodyLoad()
+			{
+				if(!Ris)
+					return;
+
+				try
+				{
+					var worklistItem = Ris.getHealthcareContext();
+					if (worklistItem == null)
+					{
+						Field.setValue($("myForm"), "");
+						return;
+					}
+
+					Ris.getPatientDataService().getDataAsync(CreateRequest(worklistItem), OnPatientDataLoaded);
+				}
+				catch(e)
+				{
+					var message = "Failed to load preview page.  An exception occurred in the script. Error name: " + e.name + ". Error message: " + e.message;
+					Field.setValue($("myForm"), message);
+				}
+			}
+
+			function CreateRequest(worklistItem)
+			{
+				return {
+					GetPatientProfileDetailRequest: 
+					{ 
+						PatientProfileRef: worklistItem.PatientProfileRef, 
+						IncludeAlerts: true 
+					},
+					GetOrderDetailRequest: worklistItem.OrderRef == null ? null : 
+					{ 
+						OrderRef: worklistItem.OrderRef, 
+						IncludeAlerts: true,
+						IncludeProcedures: true,
+						IncludeVisit: true,
+						IncludeNotes: true
+					},
+
+					// list other relevant orders
+					ListOrdersRequest: 	
+					{ 
+						PatientRef: worklistItem.PatientRef, 
+						QueryDetailLevel: "Procedure" 
+					}
+				};
+			}
+
+			function OnPatientDataLoaded(data)
+			{
+				if (data == null || data.length == 0)
+				{
+					Field.setValue($("myForm"), "");
+						return;
+				}
+
+				var patientProfile = data.GetPatientProfileDetailResponse.PatientProfile;
+				var patientAlerts = data.GetPatientProfileDetailResponse.PatientAlerts;
+				var orderAlerts = data.GetOrderDetailResponse ? data.GetOrderDetailResponse.OrderAlerts : [];
+				var alerts = patientAlerts.concat(orderAlerts);
+
+				Preview.PatientBannerSection.create($("patientBannerSection"), patientProfile, alerts);
+				Preview.PatientDemographicsSection.create($("patientDemographicsSection"), patientProfile);
+
+				var orderDetail = data.GetOrderDetailResponse ? data.GetOrderDetailResponse.Order : null;
+				if(orderDetail)
+				{
+					Preview.ImagingServiceSection.create($("imagingServiceSection"), orderDetail);
+					Preview.ProceduresTable.create($("proceduresSection"), orderDetail.Procedures);
+
+					Preview.ProtocolProceduresTable.create($("protocolProceduresSection"), orderDetail.Procedures, orderDetail.Notes);
+
+					var notes = orderDetail.Notes.select(function(note) { return note.Category == "PrelimDiagnosis"; });
+					Preview.OrderNotesTable.create($("prelimDiagnosisNotesSection"), notes, "Preliminary Diagnosis", false);
+
+					notes = orderDetail.Notes.select(function(note) { return note.Category == "General"; });
+					Preview.OrderNotesTable.create($("generalNotesSection"), notes, "Order Notes", true);
+				}
+				else
+				{
+					Field.show($("orderDetailsSection"), false);
+				}
+
+				// update active and past RIC tables
+				var patientOrderData = data.ListOrdersResponse.Orders;
+				if (patientOrderData)
+				{
+					// exclude the current order from the imaging service tables
+					if (orderDetail)
+						patientOrderData = patientOrderData.select(function(data) { return data.AccessionNumber != orderDetail.AccessionNumber; });
+
+					Preview.ImagingServiceTable.createActive($("activeProceduresSection"), patientOrderData);
+					Preview.ImagingServiceTable.createPast($("pastProceduresSection"), patientOrderData);
+				}
+			}
+		</script>
+	</head>
+	<body onload="javascript: onBodyLoad()">
+		<div id="loadingAnimation"></div>
+		<form id="myForm">
+			<div id="patientBanner">
+				<div id="patientBannerSection"></div>
+				<div id="patientDemographicsSection"></div>
+			</div>
+			<div id="orderDetailsSection">
+				<div id="imagingServiceSection"></div>
+				<div id="proceduresSection"></div>
+				<div id="protocolProceduresSection"></div>
+				<div id="prelimDiagnosisNotesSection"></div>
+				<div id="generalNotesSection"></div>
+			</div>
+
+			<div id="activeProceduresSection"></div>
+			<div id="pastProceduresSection"></div>
+		</form>
+	</body>
+</html>

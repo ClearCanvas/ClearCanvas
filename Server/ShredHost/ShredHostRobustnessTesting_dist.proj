@@ -1,0 +1,43 @@
+<Project DefaultTargets="Copy All Files" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<PropertyGroup>
+		<!-- The 'ProjectOutDir' property is the default output folder of the project and should not be overridden -->
+		<ProjectOutDir>$(ProjectDir)\$(OutDir)</ProjectOutDir>
+		<DeletePlugins>true</DeletePlugins>
+	</PropertyGroup>
+
+	<!-- If DistributionDirectory were set directly on the command line, we would be unable to override it.-->
+	<!-- Therefore, DistributionDir is the command line variable, and we set DistributionDirectory based on its value. -->
+	<Choose>
+		<When Condition=" '$(DistributionDir)' == ''">
+			<PropertyGroup>
+				<DistributionDirectory>$(ProjectOutDir)</DistributionDirectory>
+				<DeletePlugins>true</DeletePlugins>
+			</PropertyGroup>
+		</When>
+		<When Condition=" '$(DistributionDir)' != '$(ProjectOutDir)' ">
+			<PropertyGroup>
+				<DistributionDirectory>$(DistributionDir)</DistributionDirectory>
+				<DeletePlugins>false</DeletePlugins>
+			</PropertyGroup>
+		</When>
+	</Choose>
+
+	<PropertyGroup>
+		<CommonDirectory>$(DistributionDirectory)\common</CommonDirectory>
+		<PluginsDirectory>$(DistributionDirectory)\plugins</PluginsDirectory>
+		<LogDirectory>$(DistributionDirectory)\logs</LogDirectory>
+	</PropertyGroup>
+
+
+	<ItemGroup>
+		<ShredFiles Include="$(SolutionDir)\RobustnessTesting\PiCalculatorShred\bin\$(Configuration)\ClearCanvas.Server.ShredHost.RobustnessTesting.PiCalculatorShred.dll" />
+		<ShredFiles Include="$(SolutionDir)\RobustnessTesting\FibonacciCalculatorShred\bin\$(Configuration)\ClearCanvas.Server.ShredHost.RobustnessTesting.FibonacciCalculatorShred.dll" />
+		<ShredFiles Include="$(SolutionDir)\RobustnessTesting\DoNothingShred\bin\$(Configuration)\ClearCanvas.Server.ShredHost.RobustnessTesting.DoNothingShred.dll" />
+	</ItemGroup>
+
+	<Target Name="Copy All Files">
+		<Copy SourceFiles="@(ShredFiles)" DestinationFolder="$(PluginsDirectory)" />
+		<!-- <Copy SourceFiles="@(ConfigurationFiles)" Condition="!Exists('$(DistributionDirectory)\%(FileName).%(Extension)')" DestinationFolder="$(DistributionDirectory)" />
+		-->
+	</Target>
+</Project>

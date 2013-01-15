@@ -1,0 +1,504 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build" ToolsVersion="4.0">
+  <PropertyGroup>
+    <ProjectType>Local</ProjectType>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{9AF0770C-7E9F-483F-8429-D7894F06EB6C}</ProjectGuid>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ApplicationIcon />
+    <AssemblyKeyContainerName />
+    <AssemblyName>ClearCanvas.ImageViewer.Tools.Standard</AssemblyName>
+    <AssemblyOriginatorKeyFile />
+    <DefaultClientScript>JScript</DefaultClientScript>
+    <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
+    <DefaultTargetSchema>IE50</DefaultTargetSchema>
+    <DelaySign>false</DelaySign>
+    <OutputType>Library</OutputType>
+    <RootNamespace>ClearCanvas.ImageViewer.Tools.Standard</RootNamespace>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+    <StartupObject />
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation />
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputPath>bin\Debug\</OutputPath>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile />
+    <DefineConstants>DEBUG;TRACE;UNIT_TESTS</DefineConstants>
+    <DocumentationFile />
+    <DebugSymbols>true</DebugSymbols>
+    <FileAlignment>4096</FileAlignment>
+    <NoStdLib>false</NoStdLib>
+    <NoWarn>1591, 0419, 1574, 1587</NoWarn>
+    <Optimize>false</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>full</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile />
+    <DefineConstants>TRACE</DefineConstants>
+    <DocumentationFile />
+    <DebugSymbols>false</DebugSymbols>
+    <FileAlignment>4096</FileAlignment>
+    <NoStdLib>false</NoStdLib>
+    <NoWarn>1591, 0419, 1574, 1587</NoWarn>
+    <Optimize>true</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>none</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Common\ClearCanvas.Common.csproj">
+      <Project>{F6EAD428-E6CF-4DF6-B2F3-D33D532C5343}</Project>
+      <Name>ClearCanvas.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Desktop\ClearCanvas.Desktop.csproj">
+      <Project>{26E9A01A-64B5-42C5-8252-FBB30DF9CEC7}</Project>
+      <Name>ClearCanvas.Desktop</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Dicom\ClearCanvas.Dicom.csproj">
+      <Project>{AD9ECE2B-8268-4115-8DC8-860FBD011FFF}</Project>
+      <Name>ClearCanvas.Dicom</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\ClearCanvas.ImageViewer.csproj">
+      <Project>{85100D3E-471C-47C9-9687-ABF25F617ED7}</Project>
+      <Name>ClearCanvas.ImageViewer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Configuration\ClearCanvas.ImageViewer.Configuration.csproj">
+      <Project>{89DF567B-A0D1-456A-A28F-043FD57D7F9A}</Project>
+      <Name>ClearCanvas.ImageViewer.Configuration</Name>
+    </ProjectReference>
+    <Reference Include="nunit.framework, Version=2.2.7.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\ReferencedAssemblies\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="System">
+      <Name>System</Name>
+    </Reference>
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data">
+      <Name>System.Data</Name>
+    </Reference>
+    <Reference Include="System.Drawing">
+      <Name>System.Drawing</Name>
+    </Reference>
+    <Reference Include="System.Xml">
+      <Name>System.XML</Name>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="MagnificationTool2.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CineApplicationComponent.cs" />
+    <Compile Include="CineTool.cs" />
+    <Compile Include="ColorBarTool.cs" />
+    <Compile Include="Configuration\ConfigurationPageProvider.cs" />
+    <Compile Include="Configuration\ToolConfigurationComponent.cs" />
+    <Compile Include="Configuration\ToolModalityBehavior.cs" />
+    <Compile Include="Configuration\ToolModalityBehaviorCollection.cs" />
+    <Compile Include="Configuration\ToolModalityBehaviorHelper.cs" />
+    <Compile Include="Configuration\Tests\ToolModalityBehaviorCollectionTests.cs" />
+    <Compile Include="ImageComparerList.cs" />
+    <Compile Include="ImageProperties\ImagePropertyProvider.cs" />
+    <Compile Include="ImageProperties\ImagePropertiesApplicationComponent.cs" />
+    <Compile Include="ImageProperties\ImagePropertiesSettings.cs" />
+    <Compile Include="ImageProperties\ImagePropertiesSettings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>ImagePropertiesSettings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="ImageProperties\ImagePropertiesTool.cs" />
+    <Compile Include="ImageProperties\ImageProperty.cs" />
+    <Compile Include="ImageProperties\KeyObjectImagePropertyProvider.cs" />
+    <Compile Include="ImageProperties\SR.Designer.cs">
+      <DependentUpon>SR.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="ImageProperties\StandardImagePropertyProvider.cs" />
+    <Compile Include="InteractiveShutterGraphicBuilders.cs" />
+    <Compile Include="InteractiveTextCalloutBuilder.cs" />
+    <Compile Include="InteractiveTextAreaBuilder.cs" />
+    <Compile Include="ClearCustomShuttersTool.cs" />
+    <Compile Include="DeleteAnnotationsTool.cs" />
+    <Compile Include="DicomOverlaysTool.cs" />
+    <Compile Include="DrawShutterTool.cs" />
+    <Compile Include="InteractiveTextGraphicBuilder.cs" />
+    <Compile Include="MagnificationTool.cs" />
+    <Compile Include="OverlayToolBase.cs" />
+    <Compile Include="PresetVoiLuts\Luts\AutoVoiLutData.cs" />
+    <Compile Include="PresetVoiLuts\Operations\AutoVoiLutApplicator.cs" />
+    <Compile Include="PresetVoiLuts\LutHelper.cs" />
+    <Compile Include="PresetVoiLuts\Operations\VoiLutSelector.cs" />
+    <Compile Include="PresetVoiLuts\PresetVoiLutReservedActionModelKeyStrokesProvider.cs" />
+    <Compile Include="ScaleGraphic.cs" />
+    <Compile Include="ScaleOverlayTool.cs" />
+    <Compile Include="ShowHideOverlaysTool.cs" />
+    <Compile Include="ShutterOverlayTool.cs" />
+    <Compile Include="TextCalloutTool.cs" />
+    <Compile Include="ToolSettings.cs" />
+    <Compile Include="ToolSettings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>ToolSettings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="EditHistoryTool.cs" />
+    <Compile Include="InvertTool.cs" />
+    <Compile Include="MatchScaleTool.cs" />
+    <Compile Include="PresetVoiLuts\Operations\AutoPresetVoiLutOperationComponent.cs" />
+    <Compile Include="PresetVoiLuts\Operations\DefaultPresetVoiLutOperationComponent.cs" />
+    <Compile Include="PresetVoiLuts\Operations\PresetVoiLutOperationsComponentContainer.cs" />
+    <Compile Include="PresetVoiLuts\Operations\LinearPresetVoiLutOperationFactory.cs" />
+    <Compile Include="PresetVoiLuts\Operations\MinMaxAlgorithmPresetVoiLutOperationComponent.cs" />
+    <Compile Include="PresetVoiLuts\Operations\MinMaxAlgorithmPresetVoiLutOperationFactory.cs" />
+    <Compile Include="PresetVoiLuts\KeyStrokeDescriptor.cs" />
+    <Compile Include="LocateOnDiskTool.cs" />
+    <Compile Include="PresetVoiLuts\Operations\LinearPresetVoiLutOperationComponent.cs" />
+    <Compile Include="PresetVoiLuts\Operations\AutoPresetVoiLutOperationFactory.cs" />
+    <Compile Include="PresetVoiLuts\Luts\AutoVoiLutLinear.cs" />
+    <Compile Include="PresetVoiLuts\AvailablePresetVoiLutKeyStrokeSettings.cs" />
+    <Compile Include="PresetVoiLuts\AvailablePresetVoiLutKeyStrokeSettings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>AvailablePresetVoiLutKeyStrokeSettings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="PresetVoiLuts\Operations\PresetVoiLutOperationComponent.cs" />
+    <Compile Include="PresetVoiLuts\Operations\InitialVoiLutProvider.cs" />
+    <Compile Include="PresetVoiLuts\Operations\AllowMultiplePresetVoiLutOperationsAttribute.cs" />
+    <Compile Include="PresetVoiLuts\Operations\PresetVoiLutOperationFactory.cs" />
+    <Compile Include="PresetVoiLuts\PresetVoiLut.cs" />
+    <Compile Include="PresetVoiLuts\Operations\PresetVoiLutOperationFactories.cs" />
+    <Compile Include="PresetVoiLuts\Operations\PresetVoiLutOperation.cs" />
+    <Compile Include="PresetVoiLuts\PresetVoiLutCollection.cs" />
+    <Compile Include="PresetVoiLuts\PresetVoiLutConfiguration.cs" />
+    <Compile Include="PresetVoiLuts\PresetVoiLutGroup.cs" />
+    <Compile Include="PresetVoiLuts\PresetVoiLutGroupCollection.cs" />
+    <Compile Include="PresetVoiLuts\PresetVoiLutSettings.cs" />
+    <Compile Include="PresetVoiLuts\PresetVoiLutSettings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>PresetVoiLutSettings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="WindowLevelToolPresets.cs" />
+    <Compile Include="MemoryUsageTool.cs" />
+    <Compile Include="ColorMapTool.cs" />
+    <Compile Include="PresetVoiLuts\PresetVoiLutConfigurationComponent.cs" />
+    <Compile Include="PresetVoiLuts\PresetVoiLutConfigurationPageProvider.cs" />
+    <Compile Include="FlipHorizontalTool.cs" />
+    <Compile Include="FlipVerticalTool.cs" />
+    <Compile Include="PanTool.cs" />
+    <Compile Include="ProbeTool.cs" />
+    <Compile Include="ResetTool.cs" />
+    <Compile Include="RotateLeftTool.cs" />
+    <Compile Include="RotateRightTool.cs" />
+    <EmbeddedResource Include="SR.resx">
+      <SubType>Designer</SubType>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>SR.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <Compile Include="SR.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SR.resx</DependentUpon>
+    </Compile>
+    <Compile Include="StackTool.cs" />
+    <Compile Include="ImageComparer.cs" />
+    <Compile Include="TextOverlayTool.cs" />
+    <Compile Include="WindowLevelTool.cs" />
+    <Compile Include="WindowLevelToolSensitivity.cs" />
+    <Compile Include="ZoomTool.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\FlipHorizontalToolLarge.png" />
+    <EmbeddedResource Include="Icons\FlipHorizontalToolMedium.png" />
+    <EmbeddedResource Include="Icons\FlipVerticalToolLarge.png" />
+    <EmbeddedResource Include="Icons\FlipVerticalToolMedium.png" />
+    <EmbeddedResource Include="Icons\PanToolLarge.png" />
+    <EmbeddedResource Include="Icons\PanToolMedium.png" />
+    <EmbeddedResource Include="Icons\RotateLeftToolLarge.png" />
+    <EmbeddedResource Include="Icons\RotateLeftToolMedium.png" />
+    <EmbeddedResource Include="Icons\RotateRightToolLarge.png" />
+    <EmbeddedResource Include="Icons\RotateRightToolMedium.png" />
+    <EmbeddedResource Include="Icons\StackToolLarge.png" />
+    <EmbeddedResource Include="Icons\StackToolMedium.png" />
+    <EmbeddedResource Include="Icons\WindowLevelToolLarge.png" />
+    <EmbeddedResource Include="Icons\WindowLevelToolMedium.png" />
+    <EmbeddedResource Include="Icons\ZoomToolLarge.png" />
+    <EmbeddedResource Include="Icons\ZoomToolMedium.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{B4F97281-0DBD-4835-9ED8-7DFB966E87FF}" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\ProbeToolLarge.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\ProbeToolMedium.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\ProbeToolSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\ResetToolLarge.png" />
+    <EmbeddedResource Include="Icons\ResetToolSmall.png" />
+    <EmbeddedResource Include="Icons\ResetToolMedium.png" />
+    <EmbeddedResource Include="ProbeCursor.png" />
+    <EmbeddedResource Include="PresetVoiLuts\DefaultPresetVoiLutConfiguration.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="ImageProperties\ImagePropertiesSettings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>ImagePropertiesSettings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="ToolSettings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>ToolSettings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="PresetVoiLuts\AvailablePresetVoiLutKeyStrokeSettings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>AvailablePresetVoiLutKeyStrokeSettings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="PresetVoiLuts\PresetVoiLutSettings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>PresetVoiLutSettings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\FlipHorizontalToolSmall.png" />
+    <EmbeddedResource Include="Icons\FlipVerticalToolSmall.png" />
+    <EmbeddedResource Include="Icons\PanToolSmall.png" />
+    <EmbeddedResource Include="Icons\RotateLeftToolSmall.png" />
+    <EmbeddedResource Include="Icons\RotateRightToolSmall.png" />
+    <EmbeddedResource Include="Icons\StackToolSmall.png" />
+    <EmbeddedResource Include="Icons\WindowLevelToolSmall.png" />
+    <EmbeddedResource Include="Icons\ZoomToolSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\EditToolSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\DeleteToolSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\AddToolSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\CineToolLarge.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\CineToolMedium.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\CineToolSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\RedoToolLarge.png" />
+    <EmbeddedResource Include="Icons\RedoToolMedium.png" />
+    <EmbeddedResource Include="Icons\RedoToolSmall.png" />
+    <EmbeddedResource Include="Icons\UndoToolLarge.png" />
+    <EmbeddedResource Include="Icons\UndoToolMedium.png" />
+    <EmbeddedResource Include="Icons\UndoToolSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\InvertToolLarge.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\InvertToolMedium.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\InvertToolSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\TextOverlayToolLarge.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\TextOverlayToolMedium.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\TextOverlayToolSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\MatchScaleToolLarge.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\MatchScaleToolSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\MatchScaleToolMedium.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\ScaleOverlayToolLarge.png" />
+    <EmbeddedResource Include="Icons\ScaleOverlayToolMedium.png" />
+    <EmbeddedResource Include="Icons\ScaleOverlayToolSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\TextCalloutToolLarge.png" />
+    <EmbeddedResource Include="Icons\TextCalloutToolMedium.png" />
+    <EmbeddedResource Include="Icons\TextCalloutToolSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\ShowHideOverlaysToolLarge.png" />
+    <EmbeddedResource Include="Icons\ShowHideOverlaysToolMedium.png" />
+    <EmbeddedResource Include="Icons\ShowHideOverlaysToolSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\TextAreaToolLarge.png" />
+    <EmbeddedResource Include="Icons\TextAreaToolMedium.png" />
+    <EmbeddedResource Include="Icons\TextAreaToolSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\DicomOverlaysToolLarge.png" />
+    <EmbeddedResource Include="Icons\DicomOverlaysToolMedium.png" />
+    <EmbeddedResource Include="Icons\DicomOverlaysToolSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\DeleteAllAnnotationsToolLarge.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\DeleteAllAnnotationsToolMedium.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\DeleteAllAnnotationsToolSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\DeleteAnnotationToolLarge.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\DeleteAnnotationToolMedium.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\DeleteAnnotationToolSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\ShutterOverlayToolLarge.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\ShutterOverlayToolMedium.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\ShutterOverlayToolSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\ClearCustomShuttersToolLarge.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\ClearCustomShuttersToolMedium.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\ClearCustomShuttersToolSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\MagnificationToolLarge.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\MagnificationToolMedium.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\MagnificationToolSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\BlankCursor.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\DrawCircularShutterToolLarge.png" />
+    <EmbeddedResource Include="Icons\DrawCircularShutterToolMedium.png" />
+    <EmbeddedResource Include="Icons\DrawCircularShutterToolSmall.png" />
+    <EmbeddedResource Include="Icons\DrawPolygonalShutterToolLarge.png" />
+    <EmbeddedResource Include="Icons\DrawPolygonalShutterToolMedium.png" />
+    <EmbeddedResource Include="Icons\DrawPolygonalShutterToolSmall.png" />
+    <EmbeddedResource Include="Icons\DrawRectangularShutterToolLarge.png" />
+    <EmbeddedResource Include="Icons\DrawRectangularShutterToolMedium.png" />
+    <EmbeddedResource Include="Icons\DrawRectangularShutterToolSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="ImageProperties\SR.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>SR.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ImageProperties\StandardImageProperties.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\ImagePropertiesToolLarge.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\ImagePropertiesToolSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\ImagePropertiesToolMedium.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\ColorBarToolLarge.png" />
+    <EmbeddedResource Include="Icons\ColorBarToolMedium.png" />
+    <EmbeddedResource Include="Icons\ColorBarToolSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Configuration\ToolModalityBehaviorCollectionDefault.xml" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent />
+    <PostBuildEvent />
+  </PropertyGroup>
+</Project>

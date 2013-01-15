@@ -1,0 +1,417 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ColumnBuilding" xml:space="preserve">
+    <value>Building</value>
+  </data>
+  <data name="ColumnCategory" xml:space="preserve">
+    <value>Category</value>
+  </data>
+  <data name="ColumnCode" xml:space="preserve">
+    <value>Code</value>
+  </data>
+  <data name="ColumnCreatedOn" xml:space="preserve">
+    <value>Created On</value>
+  </data>
+  <data name="ColumnCreationTime" xml:space="preserve">
+    <value>Creation Time</value>
+  </data>
+  <data name="ColumnDegree" xml:space="preserve">
+    <value>Degree</value>
+  </data>
+  <data name="ColumnDescription" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="ColumnDirection" xml:space="preserve">
+    <value>Direction</value>
+  </data>
+  <data name="ColumnExpirationTime" xml:space="preserve">
+    <value>Expiration Time</value>
+  </data>
+  <data name="ColumnFacility" xml:space="preserve">
+    <value>Facility</value>
+  </data>
+  <data name="ColumnFailureCount" xml:space="preserve">
+    <value>Failure Count</value>
+  </data>
+  <data name="ColumnFailureDescription" xml:space="preserve">
+    <value>Failure Description</value>
+  </data>
+  <data name="ColumnFamilyName" xml:space="preserve">
+    <value>Family Name</value>
+  </data>
+  <data name="ColumnFloor" xml:space="preserve">
+    <value>Floor</value>
+  </data>
+  <data name="ColumnGivenName" xml:space="preserve">
+    <value>Given Name</value>
+  </data>
+  <data name="ColumnID" xml:space="preserve">
+    <value>ID</value>
+  </data>
+  <data name="ColumnInactiveDate" xml:space="preserve">
+    <value>Inactive Date</value>
+  </data>
+  <data name="ColumnInformationAuthority" xml:space="preserve">
+    <value>Information Authority</value>
+  </data>
+  <data name="ColumnLicenseNumber" xml:space="preserve">
+    <value>License #</value>
+  </data>
+  <data name="ColumnMiddleName" xml:space="preserve">
+    <value>Middle Name</value>
+  </data>
+  <data name="ColumnName" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="ColumnPeer" xml:space="preserve">
+    <value>Peer</value>
+  </data>
+  <data name="ColumnPointOfCare" xml:space="preserve">
+    <value>Point Of Care</value>
+  </data>
+  <data name="ColumnPrefix" xml:space="preserve">
+    <value>Prefix</value>
+  </data>
+  <data name="ColumnProcessedTime" xml:space="preserve">
+    <value>Processed Time</value>
+  </data>
+  <data name="ColumnScheduledTime" xml:space="preserve">
+    <value>Scheduled Time</value>
+  </data>
+  <data name="ColumnSeverity" xml:space="preserve">
+    <value>Severity</value>
+  </data>
+  <data name="ColumnStatus" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="ColumnStatusDescription" xml:space="preserve">
+    <value>Status Description</value>
+  </data>
+  <data name="ColumnSuffix" xml:space="preserve">
+    <value>Suffix</value>
+  </data>
+  <data name="ColumnType" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="ColumnUpdatedOn" xml:space="preserve">
+    <value>Updated On</value>
+  </data>
+  <data name="ColumnUser" xml:space="preserve">
+    <value>User</value>
+  </data>
+  <data name="DummyItemNone" xml:space="preserve">
+    <value>(None)</value>
+  </data>
+  <data name="ExceptionEnumValueAdd" xml:space="preserve">
+    <value>Unable to add value</value>
+  </data>
+  <data name="ExceptionEnumValueDelete" xml:space="preserve">
+    <value>Unable to delete value</value>
+  </data>
+  <data name="ExceptionEnumValueUpdate" xml:space="preserve">
+    <value>Unable to update value</value>
+  </data>
+  <data name="ExceptionSaveDiagnosticService" xml:space="preserve">
+    <value>Unable to save Imaging Service</value>
+  </data>
+  <data name="ExceptionSaveFacility" xml:space="preserve">
+    <value>Unable to save Facility</value>
+  </data>
+  <data name="ExceptionSaveLocation" xml:space="preserve">
+    <value>Unable to save Location</value>
+  </data>
+  <data name="ExceptionSaveModality" xml:space="preserve">
+    <value>Unable to save Modality</value>
+  </data>
+  <data name="ExceptionSaveNoteCategory" xml:space="preserve">
+    <value>Unable to save Note Category</value>
+  </data>
+  <data name="ExceptionSaveProcedureTypeGroup" xml:space="preserve">
+    <value>Unable to save Procedure Type Group</value>
+  </data>
+  <data name="ExceptionSaveValidationRules" xml:space="preserve">
+    <value>Unable to save validation rules</value>
+  </data>
+  <data name="LabelEdit" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="LabelReset" xml:space="preserve">
+    <value>Reset</value>
+  </data>
+  <data name="LabelResetAll" xml:space="preserve">
+    <value>Reset All</value>
+  </data>
+  <data name="LabelSaveAll" xml:space="preserve">
+    <value>Save All</value>
+  </data>
+  <data name="MessageDuplicateDiagnosticServiceID" xml:space="preserve">
+    <value>This diagnostic ID already exist.  Your changes could not be saved.</value>
+  </data>
+  <data name="MessageDuplicateModalityID" xml:space="preserve">
+    <value>This modality ID already exist.  Your changes could not be saved.</value>
+  </data>
+  <data name="MessageEnumCodeContainsInvalidChars" xml:space="preserve">
+    <value>Contains invalid characters</value>
+  </data>
+  <data name="MessageEnumConfirmDelete" xml:space="preserve">
+    <value>Warning: Attempting to delete this value will fail if the value has been referenced by another entity.  Delete?</value>
+  </data>
+  <data name="MessageErrorDeleteOwnUser" xml:space="preserve">
+    <value>Error: You cannot delete your own user account: {0}</value>
+  </data>
+  <data name="MessageStaffAlreadyAssociated" xml:space="preserve">
+    <value>The Staff person {0} is already associated with user {1}.  You must edit that user and clear the association.</value>
+  </data>
+  <data name="MessageStaffChangeAssociation" xml:space="preserve">
+    <value>Staff {0} has changed its association from user {1} to {2}</value>
+  </data>
+  <data name="MessageWorklistMustHaveName" xml:space="preserve">
+    <value>Worklist must have a name</value>
+  </data>
+  <data name="TitleAddDiagnosticService" xml:space="preserve">
+    <value>Add Imaging Service ...</value>
+  </data>
+  <data name="TitleAddFacility" xml:space="preserve">
+    <value>Add Facility</value>
+  </data>
+  <data name="TitleAddLocation" xml:space="preserve">
+    <value>Add Location</value>
+  </data>
+  <data name="TitleAddModality" xml:space="preserve">
+    <value>Add Modality</value>
+  </data>
+  <data name="TitleAddNoteCategory" xml:space="preserve">
+    <value>Add Note Category</value>
+  </data>
+  <data name="TitleAddProcedureTypeGroup" xml:space="preserve">
+    <value>Add Procedure Type Group</value>
+  </data>
+  <data name="TitleAddWorklist" xml:space="preserve">
+    <value>Add Worklist</value>
+  </data>
+  <data name="TitleAuthorityGroup" xml:space="preserve">
+    <value>Authority Groups Admin</value>
+  </data>
+  <data name="TitleDeleteDiagnosticService" xml:space="preserve">
+    <value>Delete Imaging Service</value>
+  </data>
+  <data name="TitleDeleteFacility" xml:space="preserve">
+    <value>Delete Facility</value>
+  </data>
+  <data name="TitleDeleteLocation" xml:space="preserve">
+    <value>Delete Location</value>
+  </data>
+  <data name="TitleDeleteModality" xml:space="preserve">
+    <value>Delete Modality</value>
+  </data>
+  <data name="TitleDeleteStaff" xml:space="preserve">
+    <value>Delete Staff</value>
+  </data>
+  <data name="TitleDuplicate" xml:space="preserve">
+    <value>Duplicate</value>
+  </data>
+  <data name="TitleEnumAddValue" xml:space="preserve">
+    <value>New Value</value>
+  </data>
+  <data name="TitleEnumEditValue" xml:space="preserve">
+    <value>Edit Value</value>
+  </data>
+  <data name="TitleEnumerationAdmin" xml:space="preserve">
+    <value>Enumerations</value>
+  </data>
+  <data name="TitleFacilities" xml:space="preserve">
+    <value>Facilities</value>
+  </data>
+  <data name="TitleHL7Queue" xml:space="preserve">
+    <value>HL7 Queue</value>
+  </data>
+  <data name="TitleImagingServices" xml:space="preserve">
+    <value>Imaging Services</value>
+  </data>
+  <data name="TitleImportData" xml:space="preserve">
+    <value>Import Data</value>
+  </data>
+  <data name="TitleLocations" xml:space="preserve">
+    <value>Locations</value>
+  </data>
+  <data name="TitleModalities" xml:space="preserve">
+    <value>Modalities</value>
+  </data>
+  <data name="TitleNoteCategories" xml:space="preserve">
+    <value>Note Categories</value>
+  </data>
+  <data name="TitleProcedureTypeGroup" xml:space="preserve">
+    <value>Procedure Type Groups Admin</value>
+  </data>
+  <data name="TitleUpdateDiagnosticService" xml:space="preserve">
+    <value>Update Imaging Service</value>
+  </data>
+  <data name="TitleUpdateFacility" xml:space="preserve">
+    <value>Update Facility</value>
+  </data>
+  <data name="TitleUpdateLocation" xml:space="preserve">
+    <value>Update Location</value>
+  </data>
+  <data name="TitleUpdateModality" xml:space="preserve">
+    <value>Update Modality</value>
+  </data>
+  <data name="TitleUpdateNoteCategory" xml:space="preserve">
+    <value>Update Note Category</value>
+  </data>
+  <data name="TitleUpdateProcedureTypeGroup" xml:space="preserve">
+    <value>Update Procedure Type Group</value>
+  </data>
+  <data name="TitleUpdateWorklist" xml:space="preserve">
+    <value>Update Worklist</value>
+  </data>
+  <data name="TitleWorklists" xml:space="preserve">
+    <value>Worklists</value>
+  </data>
+  <data name="TitleWorkQueue" xml:space="preserve">
+    <value>Work Queue</value>
+  </data>
+  <data name="TitleAddDepartment" xml:space="preserve">
+    <value>Add Department</value>
+  </data>
+  <data name="TitleUpdateDepartment" xml:space="preserve">
+    <value>Update Department</value>
+  </data>
+  <data name="ExceptionSaveDepartment" xml:space="preserve">
+    <value>Unable to save Department</value>
+  </data>
+  <data name="ColumnDicomModality" xml:space="preserve">
+    <value>DICOM Modality</value>
+  </data>
+  <data name="TitleAETitle" xml:space="preserve">
+    <value>AE Title</value>
+  </data>
+  <data name="ColumnAETitle" xml:space="preserve">
+    <value>AE Title</value>
+  </data>
+  <data name="String1" xml:space="preserve">
+    <value />
+  </data>
+  <data name="ValidationAETitleInvalidCharacters" xml:space="preserve">
+    <value>The AE Title contains invalid characters.</value>
+  </data>
+  <data name="ValidationAETitleLengthIncorrect" xml:space="preserve">
+    <value>The AE Title must be 16 characters or less.</value>
+  </data>
+</root>

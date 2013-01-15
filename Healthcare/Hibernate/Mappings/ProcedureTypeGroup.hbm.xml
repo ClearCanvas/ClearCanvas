@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" assembly="ClearCanvas.Healthcare" namespace="ClearCanvas.Healthcare">
+  <class name="ProcedureTypeGroup" proxy="ProcedureTypeGroup" table="ProcedureTypeGroup_">
+    <cache usage="nonstrict-read-write"/>
+    <id name="OID" column="OID_" type="Guid">
+      <generator class="guid.comb"/>
+    </id>
+    <discriminator column="Discriminator_" type="String"/>
+    <version name="Version" column="Version_"/>
+
+    <property name="Name" column="Name_" type="String" length="100" not-null="true" unique="true"/>
+    <property name="Description" column="Description_" type="String" length="1024" not-null="false"/>
+
+    <!-- set of procedure types in this group - "cascade" is set to none because the group does not own the procedure types -->
+    <set name="ProcedureTypes" table="ProcedureTypeGroupProcedureType_" lazy="true" cascade="none" access="nosetter.camelcase-underscore">
+      <cache usage="nonstrict-read-write"/>
+      <key column="ProcedureTypeGroupOID_"/>
+      <many-to-many column="ProcedureTypeOID_" class="ProcedureType" fetch="join"/>
+    </set>
+  </class>
+  <subclass name="ReadingGroup" extends="ProcedureTypeGroup" discriminator-value="READING"/>
+  <subclass name="RelevanceGroup" extends="ProcedureTypeGroup" discriminator-value="RELEVANCE"/>
+  <subclass name="PerformingGroup" extends="ProcedureTypeGroup" discriminator-value="PERFORMING"/>
+</hibernate-mapping>

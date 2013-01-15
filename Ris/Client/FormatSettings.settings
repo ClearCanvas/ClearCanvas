@@ -1,0 +1,54 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="ClearCanvas.Ris.Client" GeneratedClassName="FormatSettings">
+  <Profiles />
+  <Settings>
+    <Setting Name="HealthcardNumberMask" Description="Mask used on Healthcard Number input fields.  The mask format is 0 for a digit character and L for a letter character." Type="System.String" Scope="Application">
+      <Value Profile="(Default)">0000 000 000</Value>
+    </Setting>
+    <Setting Name="HealthcardVersionCodeMask" Description="Mask used on Healthcard Version code input field.  The mask format is 0 for a digit character and L for a letter character." Type="System.String" Scope="Application">
+      <Value Profile="(Default)">LL</Value>
+    </Setting>
+    <Setting Name="TelephoneNumberLocalMask" Description="Mask used on local telephone number input fields.  The mask format is 0 for a digit character and L for a letter character." Type="System.String" Scope="Application">
+      <Value Profile="(Default)">000-0000</Value>
+    </Setting>
+    <Setting Name="TelephoneNumberFullMask" Description="Mask used on full telephone number input fields.  The mask format is 0 for a digit character and L for a letter character." Type="System.String" Scope="Application">
+      <Value Profile="(Default)">(000) 000-0000</Value>
+    </Setting>
+    <Setting Name="PersonNameDefaultFormat" Description="Default display format for person names" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">%F, %G %M</Value>
+    </Setting>
+    <Setting Name="HealthcardDefaultFormat" Description="Default display format for healthcard numbers" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">%A %N %V</Value>
+    </Setting>
+    <Setting Name="AddressDefaultFormat" Description="Default display format for addresses" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">%S, %V %P %Z</Value>
+    </Setting>
+    <Setting Name="TelephoneNumberSuppressCountryCode" Description="Country-code to suppress in display (all other country codes will be shown)" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
+    <Setting Name="TelephoneNumberDefaultFormat" Description="Default display format for telephone numbers" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">%c (%A) %N %X</Value>
+    </Setting>
+    <Setting Name="MrnDefaultFormat" Description="Default display format for MRN" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">%A %N</Value>
+    </Setting>
+    <Setting Name="VisitNumberDefaultFormat" Description="Default display format for Visit Number" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">%A %N</Value>
+    </Setting>
+    <Setting Name="ExternalPractitionerContactPointDefaultFormat" Description="Default display format for external practitioner contact point" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">%N (%A ph:%T fx:%F Em:%E)</Value>
+    </Setting>
+    <Setting Name="AccessionNumberDefaultFormat" Description="Default display format for accession numbers.  Eligible placeholders are:  '%N' number (masked);  '%n' number (unmasked);  '%L' label" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">%L %N</Value>
+    </Setting>
+    <Setting Name="AccessionNumberLabel" Description="Text substited for the '%L' placeholder in an Accession number format string" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">A#</Value>
+    </Setting>
+    <Setting Name="AccessionNumberMask" Description="Mask applied to the '%N' placeholder in an Accession number format string.  The mask format is 0 for a digit character and L for a letter character." Type="System.String" Scope="Application">
+      <Value Profile="(Default)">0000000 </Value>
+    </Setting>
+    <Setting Name="ProcedurePortableLateralityDefaultFormat" Description="Default display format for procedures" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">%P/%L</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

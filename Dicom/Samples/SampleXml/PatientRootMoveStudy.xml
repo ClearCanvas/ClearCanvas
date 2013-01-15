@@ -1,0 +1,5 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Instance SopClassUID="1.2.840.10008.5.1.4.1.2.1.2">
+  <Attribute Tag="$PatientId"></Attribute>
+  <Attribute Tag="$StudyInstanceUid"></Attribute>
+</Instance>

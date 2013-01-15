@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" assembly="ClearCanvas.Healthcare" namespace="ClearCanvas.Healthcare">
+  <class name="ProcedureCheckIn" proxy="ProcedureCheckIn" table="ProcedureCheckIn_">
+    <id name="OID" column="OID_" type="Guid">
+      <generator class="guid.comb"/>
+    </id>
+    <version name="Version" column="Version_"/>
+
+    <property name="CheckInTime" column="CheckInTime_" type="DateTime" not-null="false"/>
+    <property name="CheckOutTime" column="CheckOutTime_" type="DateTime" not-null="false"/>
+  </class>
+</hibernate-mapping>

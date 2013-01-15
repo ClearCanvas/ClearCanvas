@@ -1,0 +1,354 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TransferSyntaxList>
+  <TransferSyntax uid="1.2.840.10008.1.2.1.99"
+				  description="Deflated Explicit VR Little Endian"
+				  littleEndian="true"
+				  explicitVR="true"
+				  encapsulated="false"
+				  deflated="true"
+				  lossless="true"
+				  lossy="false"/>
+
+  <TransferSyntax uid="1.2.840.10008.1.2.2"
+				  description="Explicit VR Big Endian"
+				  littleEndian="false"
+				  encapsulated="false"
+				  explicitVR="true"
+				  deflated="false"
+				  lossless="false"
+				  lossy="false"/>
+
+
+  <TransferSyntax uid="1.2.840.10008.1.2.1"
+				  description="Explicit VR Little Endian"
+				  littleEndian="true"
+				  encapsulated="false"
+				  explicitVR="true"
+				  deflated="false"
+				  lossless="false"
+				  lossy="false"/>
+
+
+  <TransferSyntax uid="1.2.840.10008.1.2"
+				  description="Implicit VR Little Endian: Default Transfer Syntax for DICOM"
+				  littleEndian="true"
+				  encapsulated="false"
+				  explicitVR="false"
+				  deflated="false"
+				  lossless="false"
+			  	  lossy="false"/>
+
+
+  <TransferSyntax uid="1.2.840.10008.1.2.4.91"
+				  description="JPEG 2000 Image Compression"
+				  littleEndian="true"
+				  encapsulated="true"
+				  explicitVR="true"
+				  deflated="false"
+				  lossless="false"
+				  lossy="true"/>
+
+
+  <TransferSyntax uid="1.2.840.10008.1.2.4.90"
+				  description="JPEG 2000 Image Compression (Lossless Only)"
+				  littleEndian="true"
+				  encapsulated="true"
+				  explicitVR="true"
+				  deflated="false"
+				  lossless="true"
+				  lossy="false"/>
+
+  <TransferSyntax uid="1.2.840.10008.1.2.4.93"
+				  description="JPEG 2000 Part 2 Multi-component  Image Compression"
+				  littleEndian="true"
+				  encapsulated="true"
+				  explicitVR="true"
+				  deflated="false"
+				  lossless="false"
+				  lossy="true"/>
+
+
+  <TransferSyntax uid="1.2.840.10008.1.2.4.92"
+				  description="JPEG 2000 Part 2 Multi-component  Image Compression (Lossless Only)"
+				  littleEndian="true"
+				  encapsulated="true"
+				  explicitVR="true"
+				  deflated="false"
+				  lossless="true"
+				  lossy="false"/>
+
+
+  <TransferSyntax uid="1.2.840.10008.1.2.4.50"
+				  description="JPEG Baseline (Process 1): Default Transfer Syntax for Lossy JPEG 8 Bit Image Compression"
+				  littleEndian="true"
+				  encapsulated="true"
+				  explicitVR="true"
+				  deflated="false"
+				  lossless="false"
+				  lossy="true"/>
+
+  <TransferSyntax uid="1.2.840.10008.1.2.4.51"
+				  description="JPEG Extended (Process 2  4): Default Transfer Syntax for Lossy JPEG 12 Bit Image Compression (Process 4 only)"
+				  littleEndian="true"
+				  encapsulated="true"
+				  explicitVR="true"
+				  deflated="false"
+				  lossless="false"
+				  lossy="true"/>
+
+
+  <TransferSyntax uid="1.2.840.10008.1.2.4.52"
+				  description="JPEG Extended (Process 3  5) (Retired)"
+				  littleEndian="true"
+				  encapsulated="true"
+				  explicitVR="true"
+				  deflated="false"
+				  lossless="false"
+				  lossy="true"/>
+
+
+  <TransferSyntax uid="1.2.840.10008.1.2.4.59"
+				  description="JPEG Extended, Hierarchical (Process 16  18) (Retired)"
+				  littleEndian="true"
+				  encapsulated="true"
+				  explicitVR="true"
+				  deflated="false"
+				  lossless="false"
+				  lossy="true"/>
+
+
+  <TransferSyntax uid="1.2.840.10008.1.2.4.60"
+				  description="JPEG Extended, Hierarchical (Process 17  19) (Retired)"
+				  littleEndian="true"
+				  encapsulated="true"
+				  explicitVR="true"
+				  deflated="false"
+				  lossless="false"
+				  lossy="true"/>
+
+  <TransferSyntax uid="1.2.840.10008.1.2.4.63"
+				  description="JPEG Full Progression, Hierarchical (Process 24  26) (Retired)"
+				  littleEndian="true"
+				  encapsulated="true"
+				  explicitVR="true"
+				  deflated="false"
+				  lossless="false"
+				  lossy="true"/>
+
+
+  <TransferSyntax uid="1.2.840.10008.1.2.4.64"
+				  description="JPEG Full Progression, Hierarchical (Process 25  27) (Retired)"
+				  littleEndian="true"
+				  encapsulated="true"
+				  explicitVR="true"
+				  deflated="false"
+				  lossless="false"
+				  lossy="true"/>
+
+
+  <TransferSyntax uid="1.2.840.10008.1.2.4.55"
+				  description="JPEG Full Progression, non-Hierarchical (Process 10  12) (Retired)"
+				  littleEndian="true"
+				  encapsulated="true"
+				  explicitVR="true"
+				  deflated="false"
+				  lossless="false"
+				  lossy="true"/>
+
+
+  <TransferSyntax uid="1.2.840.10008.1.2.4.56"
+				  description="JPEG Full Progression, non-Hierarchical (Process 11  13) (Retired)"
+				  littleEndian="true"
+				  encapsulated="true"
+				  explicitVR="true"
+				  deflated="false"
+				  lossless="false"
+				  lossy="true"/>
+
+
+  <TransferSyntax uid="1.2.840.10008.1.2.4.65"
+				  description="JPEG Lossless, Hierarchical (Process 28) (Retired)"
+				  littleEndian="true"
+				  encapsulated="true"
+				  explicitVR="true"
+				  deflated="false"
+				  lossless="true"
+			  	  lossy="false"/>
+
+  <TransferSyntax uid="1.2.840.10008.1.2.4.66"
+				  description="JPEG Lossless, Hierarchical (Process 29) (Retired)"
+				  littleEndian="true"
+				  encapsulated="true"
+				  explicitVR="true"
+				  deflated="false"
+				  lossless="true"
+				  lossy="false"/>
+
+
+  <TransferSyntax uid="1.2.840.10008.1.2.4.57"
+				  description="JPEG Lossless, non-Hierarchical (Process 14)"
+				  littleEndian="true"
+				  encapsulated="true"
+				  explicitVR="true"
+				  deflated="false"
+				  lossless="true"
+				  lossy="false"/>
+
+
+  <TransferSyntax uid="1.2.840.10008.1.2.4.58"
+				  description="JPEG Lossless, non-Hierarchical (Process 15) (Retired)"
+				  littleEndian="true"
+				  encapsulated="true"
+				  explicitVR="true"
+				  deflated="false"
+				  lossless="true"
+				  lossy="false"/>
+
+
+  <TransferSyntax uid="1.2.840.10008.1.2.4.70"
+				  description="JPEG Lossless, non-Hierarchical, First-Order Prediction (Process 14 [Selection Value 1]): Default Transfer Syntax for Lossless JPEG Image Compression"
+				  littleEndian="true"
+				  encapsulated="true"
+				  explicitVR="true"
+				  deflated="false"
+				  lossless="true"
+				  lossy="false"/>
+
+
+  <TransferSyntax uid="1.2.840.10008.1.2.4.61"
+				  description="JPEG Spectral Selection, Hierarchical (Process 20  22) (Retired)"
+				  littleEndian="true"
+				  encapsulated="true"
+				  explicitVR="true"
+				  deflated="false"
+				  lossless="false"
+				  lossy="true"/>
+
+
+  <TransferSyntax uid="1.2.840.10008.1.2.4.62"
+				  description="JPEG Spectral Selection, Hierarchical (Process 21  23) (Retired)"
+				  littleEndian="true"
+				  encapsulated="true"
+				  explicitVR="true"
+				  deflated="false"
+				  lossless="false"
+				  lossy="true"/>
+
+
+  <TransferSyntax uid="1.2.840.10008.1.2.4.53"
+				  description="JPEG Spectral Selection, non-Hierarchical (Process 6  8) (Retired)"
+				  littleEndian="true"
+				  encapsulated="true"
+				  explicitVR="true"
+				  deflated="false"
+				  lossless="false"
+				  lossy="true"/>
+
+  <TransferSyntax uid="1.2.840.10008.1.2.4.54"
+				  description="JPEG Spectral Selection, non-Hierarchical (Process 7  9) (Retired)"
+				  littleEndian="true"
+				  encapsulated="true"
+				  explicitVR="true"
+				  deflated="false"
+				  lossless="false"
+			  	  lossy="true"/>
+
+  <TransferSyntax uid="1.2.840.10008.1.2.4.80"
+				  description="JPEG-LS Lossless Image Compression"
+				  littleEndian="true"
+				  encapsulated="true"
+				  explicitVR="true"
+				  deflated="false"
+				  lossless="true"
+				  lossy="false"/>
+
+  <TransferSyntax uid="1.2.840.10008.1.2.4.81"
+				  description="JPEG-LS Lossy (Near-Lossless) Image Compression"
+				  littleEndian="true"
+				  encapsulated="true"
+				  explicitVR="true"
+				  deflated="false"
+				  lossless="false"
+				  lossy="true"/>
+
+  <TransferSyntax uid="1.2.840.10008.1.2.4.94"
+				  description="JPIP Referenced"
+				  littleEndian="true"
+				  explicitVR="true"
+				  encapsulated="false"
+				  deflated="false"
+				  lossless="false"
+				  lossy="false"/>
+
+  <TransferSyntax uid="1.2.840.10008.1.2.4.95"
+				  description="JPIP Referenced Deflate"
+				  littleEndian="true"
+				  explicitVR="true"
+				  encapsulated="false"
+				  deflated="true"
+				  lossless="true"
+				  lossy="false"/>
+
+  <TransferSyntax uid="1.2.840.10008.1.2.4.100"
+				  description="MPEG2 Main Profile @ Main Level"
+				  littleEndian="true"
+				  explicitVR="true"
+				  encapsulated="true"
+				  deflated="false"
+				  lossless="false"
+				  lossy="true"/>
+
+  <TransferSyntax uid="1.2.840.10008.1.2.4.101"
+				  description="MPEG2 Main Profile @ High Level"
+				  littleEndian="true"
+				  explicitVR="true"
+				  encapsulated="true"
+				  deflated="false"
+				  lossless="false"
+				  lossy="true"/>
+
+  <TransferSyntax uid="1.2.840.10008.1.2.6.1"
+				  description="RFC 2557 MIME encapsulation"
+				  littleEndian="true"
+				  explicitVR="true"
+				  encapsulated="false"
+				  deflated="false"
+				  lossless="false"
+				  lossy="false"/>
+
+  <TransferSyntax uid="1.2.840.10008.1.2.6.2"
+				  description="XML Encoding"
+				  littleEndian="true"
+				  explicitVR="true"
+				  encapsulated="false"
+				  deflated="false"
+				  lossless="false"
+				  lossy="false"/>
+
+  <TransferSyntax uid="1.2.840.10008.1.2.5"
+				  description="RLE Lossless"
+				  littleEndian="true"
+				  explicitVR="true"
+				  encapsulated="true"
+				  deflated="false"
+				  lossless="true"
+				  lossy="false"/>
+
+  <TransferSyntax uid="1.2.840.10008.1.2.4.103"
+				  description="MPEG-4 AVC/H.264 BD-compatible High Profile / Level 4.1"
+				  littleEndian="true"
+				  explicitVR="true"
+				  encapsulated="true"
+				  deflated="false"
+				  lossless="true"
+				  lossy="false"/>
+
+  <TransferSyntax uid="1.2.840.10008.1.2.4.102"
+				  description="MPEG-4 AVC/H.264 High Profile / Level 4.1"
+				  littleEndian="true"
+				  explicitVR="true"
+				  encapsulated="true"
+				  deflated="false"
+				  lossless="true"
+				  lossy="false"/>
+</TransferSyntaxList>

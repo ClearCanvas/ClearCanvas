@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" assembly="ClearCanvas.Enterprise.Configuration" namespace="ClearCanvas.Enterprise.Configuration">
+  <class name="ConfigurationDocumentBody" table="ConfigurationDocumentBody_">
+    <!-- Instances of this class are updated rarely, and never concurrently, therefore can be cached as nonstrict-read-write -->
+    <cache usage="nonstrict-read-write"/>
+    <id name="OID" column="DocumentOID_" type="Guid">
+      <generator class="foreign">
+        <param name="property">Document</param>
+      </generator>
+    </id>
+    <version name="Version" column="Version_"/>
+    <one-to-one name="Document" class="ConfigurationDocument" constrained="true"/>
+    <property name="DocumentText" column="DocumentText_" type="StringClob" length="1000000" not-null="false"/>
+    <property name="ModifiedTime" column="ModifiedTime_" type="DateTime" not-null="true"/>
+  </class>
+</hibernate-mapping>

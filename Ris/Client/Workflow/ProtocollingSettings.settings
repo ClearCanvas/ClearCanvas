@@ -1,0 +1,21 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="ClearCanvas.Ris.Client.Workflow" GeneratedClassName="ProtocollingSettings">
+  <Profiles />
+  <Settings>
+    <Setting Name="DefaultProtocolGroupsXml" Description="Stores user default protocol groups." Type="System.String" Scope="User">
+      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-8" ?&gt;&lt;procedure-protocolgroup-defaults&gt;&lt;/procedure-protocolgroup-defaults&gt;</Value>
+    </Setting>
+    <Setting Name="SupervisorID" Description="Stores user default supervisor." Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="ShouldApplyDefaultSupervisor" Description="Indicates if a default supervisor should be automatically loaded if it is not yet specified." Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="AllowMultipleProtocollingWorkspaces" Description="Indicates whether the application allows multiple protocolling workspaces to be open at the same time." Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="InitiallySelectedTabPageName" Description="Specifies the name of the initially selected tab." Type="System.String" Scope="User">
+      <Value Profile="(Default)">Order Attachments</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

@@ -1,0 +1,355 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AddRemoveColumns" xml:space="preserve">
+    <value>Add/Remove Columns</value>
+  </data>
+  <data name="CDRomMedia" xml:space="preserve">
+    <value>CD-ROM Media</value>
+  </data>
+  <data name="DateAccessed" xml:space="preserve">
+    <value>Date Accessed</value>
+  </data>
+  <data name="DateCreated" xml:space="preserve">
+    <value>Date Created</value>
+  </data>
+  <data name="DateModified" xml:space="preserve">
+    <value>Date Modified</value>
+  </data>
+  <data name="Directory" xml:space="preserve">
+    <value>Directory</value>
+  </data>
+  <data name="Drive" xml:space="preserve">
+    <value>Drive</value>
+  </data>
+  <data name="DriveFormat" xml:space="preserve">
+    <value>Drive Format</value>
+  </data>
+  <data name="DriveType" xml:space="preserve">
+    <value>Drive Type</value>
+  </data>
+  <data name="EditFilters" xml:space="preserve">
+    <value>Edit Filters</value>
+  </data>
+  <data name="Export" xml:space="preserve">
+    <value>Export</value>
+  </data>
+  <data name="Extension" xml:space="preserve">
+    <value>Extension</value>
+  </data>
+  <data name="Filename" xml:space="preserve">
+    <value>Filename</value>
+  </data>
+  <data name="FileSize" xml:space="preserve">
+    <value>File Size</value>
+  </data>
+  <data name="FixedMedia" xml:space="preserve">
+    <value>Fixed Media</value>
+  </data>
+  <data name="FormatDicomTag" xml:space="preserve">
+    <value>{2} ({0:x4},{1:x4})</value>
+  </data>
+  <data name="FormatRepeatingDicomTagName" xml:space="preserve">
+    <value>{0} #{1}</value>
+  </data>
+  <data name="FormatUnknownDicomTag" xml:space="preserve">
+    <value>({0:x4},{1:x4})</value>
+  </data>
+  <data name="LabelAllFiles" xml:space="preserve">
+    <value>All Files</value>
+  </data>
+  <data name="LabelBinaryTagValue" xml:space="preserve">
+    <value>({0} length={1})</value>
+    <comment>{0}=actual VR, {1}=length</comment>
+  </data>
+  <data name="LabelNonExistentValue" xml:space="preserve">
+    <value />
+  </data>
+  <data name="LabelNullTagValue" xml:space="preserve">
+    <value>(null)</value>
+  </data>
+  <data name="LabelVRIncorrect" xml:space="preserve">
+    <value>({0} data)</value>
+    <comment>{0}=actual VR, {1}=expected VR</comment>
+  </data>
+  <data name="LabelVRUnknown" xml:space="preserve">
+    <value>(UN data)</value>
+  </data>
+  <data name="MenuAddFiles" xml:space="preserve">
+    <value>Select &amp;Files...</value>
+  </data>
+  <data name="MenuAddFolders" xml:space="preserve">
+    <value>Select a Fol&amp;der...</value>
+  </data>
+  <data name="MenuClearFilters" xml:space="preserve">
+    <value>&amp;Clear Filters</value>
+  </data>
+  <data name="MenuExportAnonymized" xml:space="preserve">
+    <value>Export &amp;Anonymized to...</value>
+  </data>
+  <data name="MenuExportCopy" xml:space="preserve">
+    <value>Export &amp;Copy to...</value>
+  </data>
+  <data name="MenuOpenInStudyFilters" xml:space="preserve">
+    <value>Open in Study &amp;Filters...</value>
+  </data>
+  <data name="MenuRemoveItems" xml:space="preserve">
+    <value>&amp;Remove Items</value>
+  </data>
+  <data name="MenuSortAscending" xml:space="preserve">
+    <value>Sort &amp;Ascending</value>
+  </data>
+  <data name="MenuSortAscendingLexically" xml:space="preserve">
+    <value>Sort &amp;A to Z</value>
+  </data>
+  <data name="MenuSortAscendingNumerically" xml:space="preserve">
+    <value>Sort by &amp;Increasing Order</value>
+  </data>
+  <data name="MenuSortAscendingSpatially" xml:space="preserve">
+    <value>Sort &amp;Ascending</value>
+  </data>
+  <data name="MenuSortAscendingTemporally" xml:space="preserve">
+    <value>Sort from &amp;Earliest to Latest</value>
+  </data>
+  <data name="MenuSortDescending" xml:space="preserve">
+    <value>Sort &amp;Descending</value>
+  </data>
+  <data name="MenuSortDescendingLexically" xml:space="preserve">
+    <value>Sort &amp;Z to A</value>
+  </data>
+  <data name="MenuSortDescendingNumerically" xml:space="preserve">
+    <value>Sort by &amp;Descreasing Order</value>
+  </data>
+  <data name="MenuSortDescendingSpatially" xml:space="preserve">
+    <value>Sort &amp;Descending</value>
+  </data>
+  <data name="MenuSortDescendingTemporally" xml:space="preserve">
+    <value>Sort from &amp;Latest to Earliest</value>
+  </data>
+  <data name="MenuStudyFilters" xml:space="preserve">
+    <value>Study &amp;Filters</value>
+  </data>
+  <data name="MenuValueFilters" xml:space="preserve">
+    <value>&amp;Value Filters</value>
+  </data>
+  <data name="MessageDicomException" xml:space="preserve">
+    <value>Invalid DICOM file: {0}</value>
+  </data>
+  <data name="MessageInvalidPath" xml:space="preserve">
+    <value>Invalid path or filename: {0}</value>
+  </data>
+  <data name="MessageLoading" xml:space="preserve">
+    <value>Loading...</value>
+  </data>
+  <data name="MessageSelectAddFilesFolder" xml:space="preserve">
+    <value>Select a folder from which to recursively add files.</value>
+  </data>
+  <data name="MessageSelectFolderToFilter" xml:space="preserve">
+    <value>Select a folder to filter.</value>
+  </data>
+  <data name="MessageSelectOutputLocation" xml:space="preserve">
+    <value>Select output location:</value>
+  </data>
+  <data name="NetworkMedia" xml:space="preserve">
+    <value>Networked Media</value>
+  </data>
+  <data name="Path" xml:space="preserve">
+    <value>Path</value>
+  </data>
+  <data name="RAM" xml:space="preserve">
+    <value>RAM</value>
+  </data>
+  <data name="RemovableMedia" xml:space="preserve">
+    <value>Removable Media</value>
+  </data>
+  <data name="StudyFilters" xml:space="preserve">
+    <value>Study Filters</value>
+  </data>
+  <data name="ToolbarAddItems" xml:space="preserve">
+    <value>Add Items</value>
+  </data>
+  <data name="ToolbarAddRemoveColumns" xml:space="preserve">
+    <value>Add/Remove Columns</value>
+  </data>
+  <data name="ToolbarEditFilters" xml:space="preserve">
+    <value>Edit Filters</value>
+  </data>
+  <data name="ToolbarExport" xml:space="preserve">
+    <value>Export</value>
+  </data>
+  <data name="ToolbarFilter" xml:space="preserve">
+    <value>Filter</value>
+  </data>
+  <data name="ToolbarLaunchInViewer" xml:space="preserve">
+    <value>Open in Viewer</value>
+  </data>
+  <data name="ToolbarRemoveItems" xml:space="preserve">
+    <value>Remove Items</value>
+  </data>
+  <data name="TooltipOpenInStudyFilters" xml:space="preserve">
+    <value>Opens the selected DICOM files in a table for filtering purposes</value>
+  </data>
+  <data name="Unknown" xml:space="preserve">
+    <value>Unknown</value>
+  </data>
+  <data name="MenuLaunchInViewer" xml:space="preserve">
+    <value>&amp;Open in Viewer</value>
+  </data>
+  <data name="MessageConfirmClearAllFilters" xml:space="preserve">
+    <value>Are you sure you want to clear all filters?</value>
+  </data>
+  <data name="ToolbarClearFilters" xml:space="preserve">
+    <value>Clear Filters</value>
+  </data>
+  <data name="ToolbarFiltersAreOff" xml:space="preserve">
+    <value>Filters are OFF</value>
+  </data>
+  <data name="ToolbarFiltersAreOn" xml:space="preserve">
+    <value>Filters are ON</value>
+  </data>
+  <data name="TooltipClearFilters" xml:space="preserve">
+    <value>Clear all filters from all columns</value>
+  </data>
+  <data name="TooltipFiltersAreOff" xml:space="preserve">
+    <value>The list is currently unfiltered. Click here to re-enable filters.</value>
+  </data>
+  <data name="TooltipFiltersAreOn" xml:space="preserve">
+    <value>The list is currently filtered. Click here to temporarily disable filters.</value>
+  </data>
+  <data name="MessageDirectoryDoesNotExist" xml:space="preserve">
+    <value>The specified directory does not exist.</value>
+  </data>
+  <data name="MessageFormatExportingFiles" xml:space="preserve">
+    <value>Exporting file {0} of {1}</value>
+  </data>
+  <data name="MessageOutputPathMustBeSpecified" xml:space="preserve">
+    <value>The output path must be specified.</value>
+  </data>
+  <data name="MessagePatientIdCannotBeEmpty" xml:space="preserve">
+    <value>The patient id cannot be empty.</value>
+  </data>
+  <data name="MessagePatientNameCannotBeEmpty" xml:space="preserve">
+    <value>The patient's name cannot be empty.</value>
+  </data>
+  <data name="MessageConfirmOverwriteFiles" xml:space="preserve">
+    <value>A file exists with the same name as the one that is about to be saved.
+
+Would you like to continue and overwrite all conflicting files?</value>
+  </data>
+</root>

@@ -1,0 +1,33 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="ClearCanvas.Dicom.Network" GeneratedClassName="NetworkSettings">
+  <Profiles />
+  <Settings>
+    <Setting Name="ReadTimeout" Description="The timeout, in milliseconds, for read operations on an association." Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">30000</Value>
+    </Setting>
+    <Setting Name="WriteTimeout" Description="The timeout, in milliseconds, for write operations on an association." Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">30000</Value>
+    </Setting>
+    <Setting Name="ConnectTimeout" Description="The length of time, in milliseconds, to wait for a connection to be established." Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">10000</Value>
+    </Setting>
+    <Setting Name="ReceiveBufferSize" Description="The size of buffers used to receive incoming data." Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">118341</Value>
+    </Setting>
+    <Setting Name="SendBufferSize" Description="The size of buffers used for sending data." Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">118341</Value>
+    </Setting>
+    <Setting Name="LocalMaxPduLength" Description="Maximum length of a PDU." Type="System.UInt32" Scope="Application">
+      <Value Profile="(Default)">116794</Value>
+    </Setting>
+    <Setting Name="RemoteMaxPduLength" Description="Maximum length of a PDU (remote)." Type="System.UInt32" Scope="Application">
+      <Value Profile="(Default)">116794</Value>
+    </Setting>
+    <Setting Name="DisableNagle" Description="Specifies whether or not to disable use of the Nagle algorithm on socket connections." Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="CombineCommandDataPdu" Description="Specifies whether or not to combine the command and data parts of a PDU together when writing to the network." Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

@@ -1,0 +1,229 @@
+<Project DefaultTargets="Default Target" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <UsingTask TaskName="ClearCanvas.Utilities.BuildTasks.RegexIsMatch" AssemblyFile="$(ProjectDir)\..\..\ReferencedAssemblies\MSBuild\ClearCanvas.Utilities.BuildTasks.dll"/>
+
+  <Choose>
+    <When Condition=" '$(PROCESSOR_ARCHITEW6432)' == 'IA64' Or '$(PROCESSOR_ARCHITEW6432)' == 'AMD64' Or '$(PROCESSOR_ARCHITECTURE)' == 'IA64' Or '$(PROCESSOR_ARCHITECTURE)' == 'AMD64'">
+      <PropertyGroup>
+        <BuildPlatform>x64</BuildPlatform>
+      </PropertyGroup>
+    </When>
+    <When Condition="'$(PROCESSOR_ARCHITECTURE)' == 'x86' ">
+      <PropertyGroup>
+        <BuildPlatform>x86</BuildPlatform>
+      </PropertyGroup>
+    </When>
+    <Otherwise>
+      <PropertyGroup>
+        <BuildPlatform></BuildPlatform>
+      </PropertyGroup>
+    </Otherwise>
+  </Choose>
+
+  <PropertyGroup>
+    <!-- The 'ProjectOutDir' property is the default output folder of the project and should not be overridden -->
+    <ProjectOutDir>$(ProjectDir)\$(OutDir)</ProjectOutDir>
+    <DeletePlugins>true</DeletePlugins>
+  </PropertyGroup>
+
+  <!-- If DistributionDirectory were set directly on the command line, we would be unable to override it.-->
+  <!-- Therefore, DistributionDir is the command line variable, and we set DistributionDirectory based on its value. -->
+  <Choose>
+    <When Condition=" '$(DistributionDir)' == ''">
+      <PropertyGroup>
+        <DistributionDirectory>$(ProjectOutDir)</DistributionDirectory>
+        <DeletePlugins>true</DeletePlugins>
+      </PropertyGroup>
+    </When>
+    <When Condition=" '$(DistributionDir)' != '$(ProjectOutDir)' ">
+      <PropertyGroup>
+        <DistributionDirectory>$(DistributionDir)</DistributionDirectory>
+        <DeletePlugins>false</DeletePlugins>
+      </PropertyGroup>
+    </When>
+  </Choose>
+
+  <Choose>
+    <When Condition="'$(Options)' == ''">
+      <PropertyGroup>
+        <OptionsFlags>None</OptionsFlags>
+      </PropertyGroup>
+    </When>
+    <Otherwise>
+      <PropertyGroup>
+        <OptionsFlags>$(Options)</OptionsFlags>
+      </PropertyGroup>
+    </Otherwise>
+  </Choose>
+
+  <PropertyGroup>
+    <CommonDirectory>$(DistributionDirectory)\common</CommonDirectory>
+    <PluginsDirectory>$(DistributionDirectory)\plugins</PluginsDirectory>
+    <LogDirectory>$(DistributionDirectory)\logs</LogDirectory>
+    <ManifestDirectory>$(DistributionDirectory)\manifest</ManifestDirectory>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <DestinationDirectories Include="$(DistributionDirectory)" />
+    <DestinationDirectories Include="$(CommonDirectory)" />
+    <DestinationDirectories Include="$(PluginsDirectory)" />
+    <DestinationDirectories Include="$(LogDirectory)" />
+    <DestinationDirectories Include="$(ManifestDirectory)" />
+  </ItemGroup>
+
+  <!-- Config files, to be placed in distribution directory -->
+  <ItemGroup>
+    <ConfigFiles Include="$(ProjectDir)\Logging.config" />
+  </ItemGroup>
+
+  <!-- Shared library files, to be placed in common directory -->
+  <ItemGroup>
+    <SharedLibraryFiles Include="$(ProjectDir)\..\..\Common\bin\$(Configuration)\ClearCanvas.Common.dll" />
+    <SharedLibraryFiles Include="$(ProjectDir)\..\..\ReferencedAssemblies\log4net.dll" />
+    <SharedLibraryFiles Include="$(ProjectDir)\..\..\ReferencedAssemblies\DotNetMagic2005.DLL" />
+  </ItemGroup>
+  <ItemGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <SharedLibraryFiles Include="$(ProjectDir)\..\..\ReferencedAssemblies\nunit.framework.dll" />
+  </ItemGroup>
+
+  <!-- Shared plugin files, to be placed in plugin directory -->
+  <ItemGroup>
+    <SharedPluginFiles Include="$(ProjectDir)\..\..\Desktop\bin\$(Configuration)\ClearCanvas.Desktop.dll" />
+    <SharedPluginFiles Include="$(ProjectDir)\..\..\Desktop\View\WinForms\bin\$(Configuration)\ClearCanvas.Desktop.View.WinForms.dll" />
+    <SharedPluginFiles Include="$(ProjectDir)\..\..\Desktop\Help\bin\$(Configuration)\ClearCanvas.Desktop.Help.dll" />
+    <SharedPluginFiles Include="$(ProjectDir)\..\..\Utilities\Manifest\bin\$(Configuration)\ClearCanvas.Utilities.Manifest.dll" />
+  </ItemGroup>
+
+  <!-- Extension Browser plugin files -->
+  <ItemGroup>
+    <ExtensionBrowserPlugin Include="$(ProjectDir)\..\..\Desktop\ExtensionBrowser\bin\$(Configuration)\ClearCanvas.Desktop.ExtensionBrowser.dll" />
+    <ExtensionBrowserPlugin Include="$(ProjectDir)\..\..\Desktop\ExtensionBrowser\View\WinForms\bin\$(Configuration)\ClearCanvas.Desktop.ExtensionBrowser.View.WinForms.dll" />
+  </ItemGroup>
+
+  <!--Icon Files-->
+  <ItemGroup>
+    <IconFiles Include="$(ProjectDir)\app.ico" />
+  </ItemGroup>
+
+  <!-- Execution files -->
+  <ItemGroup>
+    <ExecutionFiles Include="$(ProjectDir)\bin\$(Configuration)\ClearCanvas.Desktop.Executable.exe" />
+    <ExecutionFiles Include="$(ProjectDir)\bin\$(Configuration)\ClearCanvas.Desktop.Executable.exe.config" />
+  </ItemGroup>
+
+  <!-- Plugin files -->
+  <ItemGroup>
+    <PluginDeleteFiles Include="$(PluginsDirectory)\*.*" />
+  </ItemGroup>
+
+  <!-- Re-signs the desktop executable's strong name if modified for PE flags after strong name is originally applied -->
+  <Target Name="ReSignExeSN" Condition="'$(StrongNameKeyFile)' != '' and Exists('$(StrongNameKeyFile)')">
+    <!-- Do not strong name plugin launcher executables due to side effect of forcing all same-version launchers to use the same user config regardless of location -->
+  </Target>
+
+  <!-- Flags the CIL desktop executable as requiring 32-bit execution even on a 64-bit machine -->
+  <Target Name="SetExeX86Flag">
+    <GetFrameworkSdkPath>
+      <Output TaskParameter="Path" PropertyName="SdkPath" />
+    </GetFrameworkSdkPath>
+    <Exec Command="corflags /Force /32BIT+ &quot;$(DistributionDirectory)\ClearCanvas.Desktop.Executable.exe&quot;" WorkingDirectory="$(SdkPath)\bin\" />
+  </Target>
+
+  <!-- Flags the CIL desktop executable as capable of handling extended process memory space ("large addresses") if the OS is configured to do so -->
+  <Target Name="SetExeLAAFlag">
+    <!-- The 64-bit version of editbin can be run directly from VC\bin\amd64 -->
+    <Exec Condition="'$(BuildPlatform)' == 'x64'"
+          Command="editbin /LARGEADDRESSAWARE &quot;$(DistributionDirectory)\ClearCanvas.Desktop.Executable.exe&quot;"
+          WorkingDirectory="$(VS90COMNTOOLS)\..\..\VC\bin\amd64" />
+    <!-- The 32-bit version of editbin has a dependency in Common7\IDE, hence the weird use of both WorkdingDirectory and a full command path -->
+    <Exec Condition="'$(BuildPlatform)' != 'x64'"
+          Command="&quot;$(VS90COMNTOOLS)..\..\VC\bin\editbin&quot; /LARGEADDRESSAWARE &quot;$(DistributionDirectory)\ClearCanvas.Desktop.Executable.exe&quot;"
+          WorkingDirectory="$(VS90COMNTOOLS)\..\IDE" />
+  </Target>
+
+  <Target Name="Copy App Icon">
+    <!-- Copy icon file -->
+    <Copy SkipUnchangedFiles="true" SourceFiles="@(IconFiles)" DestinationFolder="$(DistributionDirectory)" ContinueOnError="true"/>
+  </Target>
+
+  <Target Name="Disable Logging">
+    <!-- Disables logging -->
+    <RemoveDir Directories="$(LogDirectory)" />
+    <Delete Files="$(DistributionDirectory)\Logging.config" />
+  </Target>
+  
+  <Target Name="Copy Files">
+
+    <!-- Make required directories -->
+    <MakeDir Directories="@(DestinationDirectories)" ContinueOnError="true" />
+
+    <!-- Delete contents of plugin directory -->
+    <Delete Condition="$(DeletePlugins)" Files="@(PluginDeleteFiles)" ContinueOnError="true" />
+
+    <!-- Copy shared config files -->
+    <Copy SourceFiles="@(ConfigFiles)" DestinationFolder="$(DistributionDirectory)" ContinueOnError="true"/>
+
+    <!-- Copy shared libraries -->
+    <Copy SourceFiles="@(SharedLibraryFiles)" DestinationFolder="$(CommonDirectory)" />
+
+    <!-- Copy shared plugins -->
+    <Copy SourceFiles="@(SharedPluginFiles)" DestinationFolder="$(PluginsDirectory)" />
+    
+    <!-- Evaluate desktop executable specific build options -->
+    <RegexIsMatch Pattern="ExcludeExtensionBrowser" Input="$(OptionsFlags)" >
+      <Output TaskParameter="IsMatch" PropertyName="ExcludeExtensionBrowser" />
+    </RegexIsMatch>
+    
+    <!-- Copy Extension Browser plugins-->
+    <Copy SourceFiles="@(ExtensionBrowserPlugin)" DestinationFolder="$(PluginsDirectory)" Condition="!$(ExcludeExtensionBrowser)" />
+
+    <!-- Copy execution files -->
+    <Copy SkipUnchangedFiles="true" SourceFiles="@(ExecutionFiles)" DestinationFolder="$(DistributionDirectory)" />
+  </Target>
+  
+  <Target Name="Copy Desktop Executable Files">
+    <!-- Evaluate desktop executable specific build options -->
+    <RegexIsMatch Pattern="DisableLogging" Input="$(OptionsFlags)" >
+      <Output TaskParameter="IsMatch" PropertyName="DisableLogging" />
+    </RegexIsMatch>
+    <RegexIsMatch Pattern="IncludeApplicationIcon" Input="$(OptionsFlags)" >
+      <Output TaskParameter="IsMatch" PropertyName="IncludeApplicationIcon" />
+    </RegexIsMatch>
+    <RegexIsMatch Pattern="SetDesktopExecutableX86Flag" Input="$(OptionsFlags)" >
+      <Output TaskParameter="IsMatch" PropertyName="SetDesktopExecutableX86Flag" />
+    </RegexIsMatch>
+    <RegexIsMatch Pattern="SetDesktopExecutableLAAFlag" Input="$(OptionsFlags)" >
+      <Output TaskParameter="IsMatch" PropertyName="SetDesktopExecutableLAAFlag" />
+    </RegexIsMatch>
+    
+    <!-- Copy core desktop executable files -->
+    <CallTarget Targets="Copy Files" />
+
+    <!-- Copy optional components -->
+    <CallTarget Condition="$(IncludeApplicationIcon)" Targets="Copy App Icon" />
+    
+    <!-- Disables logging if desired -->
+    <CallTarget Condition="$(DisableLogging)" Targets="Disable Logging" />
+
+    <!-- Set executable header flags -->
+    <CallTarget Condition="$(SetDesktopExecutableX86Flag)" Targets="SetExeX86Flag" />
+    <CallTarget Condition="$(SetDesktopExecutableLAAFlag)" Targets="SetExeLAAFlag" />
+    <CallTarget Condition="$(SetDesktopExecutableX86Flag) or $(SetDesktopExecutableLAAFlag)" Targets="ReSignExeSN" />
+
+    <!-- Override the value of TargetPlatform for this task. -->
+    <CreateProperty Value="$(BuildPlatform)" Condition=" '$(TargetPlatform)' == '' ">
+      <Output TaskParameter="Value" PropertyName="TargetPlatform" />
+    </CreateProperty>
+
+    <!-- Run the solution specific build file -->
+    <MSBuild Projects="$(SolutionDir)\$(SolutionName)_dist.proj" Properties="SolutionDir=$(SolutionDir);SolutionName=$(SolutionName);TargetPlatform=$(TargetPlatform);Configuration=$(Configuration);ProjectName=$(ProjectName);ProjectOutDir=$(ProjectOutDir);StrongNameKeyFile=$(StrongNameKeyFile);DistributionDirectory=$(DistributionDirectory);CommonDirectory=$(CommonDirectory);PluginsDirectory=$(PluginsDirectory);LogDirectory=$(LogDirectory);Options=$(Options);Localizations=$(Localizations);ReleaseType=$(ReleaseType)" />
+  </Target>
+
+  <Target Name="Default Target">
+    <RegexIsMatch Pattern="ExcludeDesktopExecutable" Input="$(OptionsFlags)" >
+      <Output TaskParameter="IsMatch" PropertyName="ExcludeDesktopExecutable" />
+    </RegexIsMatch>
+    
+    <CallTarget Condition="!$(ExcludeDesktopExecutable)" Targets="Copy Desktop Executable Files" />
+  </Target>
+</Project>

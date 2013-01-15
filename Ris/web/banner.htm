@@ -1,0 +1,223 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title>Banner</title>
+		<link href="css/banner.css" rel="stylesheet" type="text/css" />
+		<script type="text/javascript" src="js/jsx.js"></script>
+		<script type="text/javascript" src="js/jsml.js"></script>
+		<script type="text/javascript" src="js/ui.js"></script>
+		<script type="text/javascript" src="js/ris.js"></script>
+		<script type="text/javascript" src="js/preview.js"></script>
+		<script type="text/javascript" src="js/layout.js"></script>
+		<script type="text/javascript" >
+			var imagePath = "images";
+
+			function onBodyLoad()
+			{
+				if(!Ris)
+					return;
+
+				try
+				{
+					var worklistItem = Ris.getHealthcareContext();
+					if (worklistItem == null)
+					{
+						Field.setValue($("myForm"), "");
+						return;
+					}
+
+					Ris.getPatientDataService().getDataAsync(CreateRequest(worklistItem), OnPatientDataLoaded);
+				}
+				catch(e)
+				{
+					var message = "Failed to load editor page.  An exception occurred in the script. Error name: " + e.name + ". Error message: " + e.message;
+					Field.setValue($("myForm"), message);
+				}
+			}
+
+			function CreateRequest(worklistItem)
+			{
+				return {
+					GetPatientProfileDetailRequest: 
+						{
+							PatientProfileRef: worklistItem.PatientProfileRef, 
+							IncludeAlerts: true 
+						},
+					GetOrderDetailRequest: 
+						worklistItem.OrderRef == null ? null :
+						{
+							OrderRef: worklistItem.OrderRef,
+							IncludeAlerts: true,
+							IncludeProcedures: true
+						}
+				};
+			}
+
+			function OnPatientDataLoaded(data)
+			{
+				if (data == null || data.length == 0)
+				{
+					Field.setValue($("myForm"), "");
+					return;
+				}
+
+				// update patient demography
+				var patientProfile = data.GetPatientProfileDetailResponse.PatientProfile;
+				var patientName = Ris.formatPersonName(patientProfile.Name);
+				var patientMrn = Ris.formatMrn(patientProfile.Mrn);
+				if (patientProfile)
+				{
+					Field.setValue($("name"), patientName);
+					Field.setTooltip($("name"), patientName);
+					Field.setValue($("mrn"), patientMrn);
+					Field.setTooltip($("mrn"), patientMrn);
+					Field.setValue($("dateOfBirth"), Ris.formatDate(patientProfile.DateOfBirth));
+					Field.setValue($("healthcard"), Ris.formatHealthcard(patientProfile.Healthcard));
+					Field.setValue($("agesex"), 
+						Preview.getPatientAge(patientProfile.DateOfBirth, patientProfile.DeathIndicator, patientProfile.TimeOfDeath) +
+						" / " + patientProfile.Sex.Value); 
+				}
+
+				var orderDetail = data.GetOrderDetailResponse ? data.GetOrderDetailResponse.Order : null;
+				if (orderDetail)
+				{
+					Field.setValue($("AccessionNumber"), Ris.formatAccessionNumber(orderDetail.AccessionNumber));
+					Field.setValue($("OrderPriority"), orderDetail.OrderPriority.Value);
+					Field.setValue($("OrderingPhysician"), Ris.formatPersonName(orderDetail.OrderingPractitioner.Name));
+					Field.setTooltip($("OrderingPhysician"), Ris.formatPersonName(orderDetail.OrderingPractitioner.Name));
+					Field.setValue($("DiagnosticService"), orderDetail.DiagnosticService.Name);
+					Field.setTooltip($("DiagnosticService"), orderDetail.DiagnosticService.Name);
+
+					var orderedProcedures = orderDetail.Procedures.select(
+							function(rp) { return rp.Status.Code != "CA" && rp.Status.Code != "DC"; }
+						);
+
+					setProceduresField($("Procedure"), orderedProcedures);
+				}
+				else
+				{
+					Field.show($("orderTable"), false);
+				}
+
+				// update alerts
+				var alertNotifications = data.GetPatientProfileDetailResponse.PatientAlerts;
+				if (data.GetOrderDetailResponse && data.GetOrderDetailResponse.OrderAlerts)
+					alertNotifications = alertNotifications.concat(data.GetOrderDetailResponse.OrderAlerts);
+
+				if (alertNotifications)
+					Preview.createAlerts($("alerts"), alertNotifications, patientName);
+			}
+
+			function setProceduresField(element, procedures)
+			{
+				var procedureNames = procedures.map(
+						function(rp) { return Ris.formatProcedureName(rp); }
+					);
+
+				var displayName = "";
+				var tooltip = "";
+				if (procedureNames.length > 2)
+				{
+					displayName += procedureNames[0] + ", " + procedureNames[1] + ", ";
+					displayName += "...";
+					tooltip = String.combine(procedureNames, ", ");
+				}
+				else
+				{
+					displayName = String.combine(procedureNames, ", ");
+					tooltip = displayName;
+				}
+
+				Field.setTooltip($("Procedures"), tooltip);
+				Field.setValue($("Procedures"), displayName);
+			}
+		</script>
+		<style>
+			.singleLineNoWrap {
+				overflow:hidden; 
+				text-overflow:ellipsis; 
+				white-space: nowrap;
+			}
+
+			.patientNameColumn {
+				overflow:hidden; 
+				text-overflow:ellipsis; 
+				white-space: nowrap;
+				width:250px;
+			}
+			
+			.patientnameheading {
+				overflow:hidden; 
+				text-overflow:ellipsis; 
+				white-space: nowrap;
+				width:250px;
+			}
+
+			.patientmrnheading {
+				overflow:hidden; 
+				text-overflow:ellipsis; 
+				white-space: nowrap;
+			}
+		</style>
+	</head>
+	<body onload="javascript: onBodyLoad()">
+		<form id="myForm">
+			<table width="100%" cellspacing="0" cellpadding="0" border="0">
+				<tr><td class="GlobalPatientBanner_topleft"></td><td class="GlobalPatientBanner_top"></td><td class="GlobalPatientBanner_topright"></td></tr>
+				<tr><td class="GlobalPatientBanner_left"></td><td class="GlobalPatientBanner_content">
+					<div class="GlobalPatientBanner_Container">
+						<table border="0" width="100%">
+							<tr>
+								<td class="patientNameColumn">
+									<div class="patientnameheading" id="name"></div>
+									<div class="patientmrnheading"id="mrn"></div>
+								</td>
+								<td>
+									<table border="0" id="profileTable">
+										<tr>
+											<td class="propertyname" nowrap>Healthcard #</td>
+											<td class="propertyvalue" nowrap><div id="healthcard"/></td>
+										</tr>
+										<tr>
+											<td class="propertyname" nowrap>Date of Birth</td>
+											<td class="propertyvalue" nowrap><div id="dateOfBirth"/></td>
+										</tr>
+										<tr>
+											<td class="propertyname" nowrap>Age / Sex</td>
+											<td class="propertyvalue" nowrap><div id="agesex"/></td>
+										</tr>
+									</table>
+								</td>
+
+								<td align="left">
+									<table border="0" id="orderTable">
+										<tr>
+											<td class="propertyname" nowrap>Accession #</td>
+											<td class="propertyvalue" nowrap><div id="AccessionNumber"/></td>
+											<td class="propertyname" nowrap>Imaging Service</td>
+											<td class="propertyvalue"><div id="DiagnosticService" class="singleLineNoWrap" style="width:250px"/></td>
+										</tr>
+										<tr>
+											<td class="propertyname" nowrap>Ordering Physician</td>
+											<td class="propertyvalue"><div id="OrderingPhysician" class="singleLineNoWrap" style="width:120px"/></td>
+											<td class="propertyname" rowspan="2">Procedures</td>
+											<td class="propertyvalue" rowspan="2"><div id="Procedures"/></td>
+										</tr>
+										<tr>
+											<td class="propertyname">Priority</td>
+											<td class="propertyvalue"><div id="OrderPriority"/></td>
+										</tr>
+									</table>
+								</td>
+								<td class="alerticons" align="right" >
+									<div id="alerts" />
+								</td>
+							</tr>
+						</table>
+					</div>
+					</td><td class="GlobalPatientBanner_right"></td></tr>
+				<tr><td class="GlobalPatientBanner_bottomleft"></td><td class="GlobalPatientBanner_bottom"></td><td class="GlobalPatientBanner_bottomright"></td></tr>								
+			</table>
+		</form>
+	</body>
+</html>

@@ -1,0 +1,104 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Font Name="Tahoma" Size="9.75" />
+  <Interface Name="ClearCanvas.ImageViewer.IImageViewer" Collapsed="true">
+    <Position X="1" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>IImageViewer.cs</FileName>
+      <HashCode>AACAoAAAEABgAAAAAAAAAAAEAAAAAAAAAQACAAAAAAQ=</HashCode>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="PhysicalWorkspace" />
+      <Property Name="LogicalWorkspace" />
+    </ShowAsAssociation>
+    <AssociationLine Name="PhysicalWorkspace" Type="ClearCanvas.ImageViewer.IPhysicalWorkspace" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="2.5" Y="1.687" />
+        <Point X="2.875" Y="1.687" />
+        <Point X="2.875" Y="1.188" />
+        <Point X="4.5" Y="1.188" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="LogicalWorkspace" Type="ClearCanvas.ImageViewer.ILogicalWorkspace" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="2.5" Y="2.062" />
+        <Point X="2.875" Y="2.062" />
+        <Point X="2.875" Y="2.812" />
+        <Point X="4.5" Y="2.812" />
+      </Path>
+    </AssociationLine>
+  </Interface>
+  <Interface Name="ClearCanvas.ImageViewer.IPhysicalWorkspace" Collapsed="true">
+    <Position X="4.5" Y="0.75" Width="2" />
+    <TypeIdentifier>
+      <FileName>IPhysicalWorkspace.cs</FileName>
+      <HashCode>AAAAAAAAABBAAkAAAAAAAAAAAAAAAgBAAAACCAkAAAA=</HashCode>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="LogicalWorkspace" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="ImageBoxes" />
+    </ShowAsCollectionAssociation>
+  </Interface>
+  <Interface Name="ClearCanvas.ImageViewer.IImageBox" Collapsed="true">
+    <Position X="9.75" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>IImageBox.cs</FileName>
+      <HashCode>IAAQAAAAAAAAAkAACAAAAAAECAEAAgIAAAAAQAkgAAI=</HashCode>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="DisplaySet" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="Tiles" />
+    </ShowAsCollectionAssociation>
+  </Interface>
+  <Interface Name="ClearCanvas.ImageViewer.ITile" Collapsed="true">
+    <Position X="13" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>ITile.cs</FileName>
+      <HashCode>AAAAAAAgAAAAAgAAACAIAAAACAIAAgAAAAAAQAAAAAI=</HashCode>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="PresentationImage" />
+    </ShowAsAssociation>
+  </Interface>
+  <Interface Name="ClearCanvas.ImageViewer.ILogicalWorkspace" Collapsed="true">
+    <Position X="4.5" Y="2.5" Width="1.75" />
+    <TypeIdentifier>
+      <FileName>ILogicalWorkspace.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAgAAAAAAAAAIAAAAAgAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="ImageSets" />
+    </ShowAsCollectionAssociation>
+  </Interface>
+  <Interface Name="ClearCanvas.ImageViewer.IDisplaySet" Collapsed="true">
+    <Position X="9.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>IDisplaySet.cs</FileName>
+      <HashCode>AACIAAAAAAAgAgAAAAACAAQAAAIAAgAIAAAAAAAEABI=</HashCode>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="PresentationImages" />
+    </ShowAsCollectionAssociation>
+  </Interface>
+  <Interface Name="ClearCanvas.ImageViewer.IPresentationImage" Collapsed="true">
+    <Position X="12.75" Y="2.5" Width="2" />
+    <TypeIdentifier>
+      <FileName>IPresentationImage.cs</FileName>
+      <HashCode>AAIEAAAAAAAgAgAAAAACAAAAAAAACgAIAAAAAAAAARI=</HashCode>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="ClearCanvas.ImageViewer.IImageSet" Collapsed="true">
+    <Position X="7.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>IImageSet.cs</FileName>
+      <HashCode>AAAAAAAAAAAgAgAAAAAAAAQCAAAgAgAQAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="DisplaySets" />
+    </ShowAsCollectionAssociation>
+  </Interface>
+</ClassDiagram>

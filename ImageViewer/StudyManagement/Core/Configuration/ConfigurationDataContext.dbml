@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="configuration" EntityNamespace="ClearCanvas.ImageViewer.StudyManagement.Core.Configuration" ContextNamespace="ClearCanvas.ImageViewer.StudyManagement.Core.Configuration" Class="ConfigurationDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Table Name="ConfigurationDocument" Member="ConfigurationDocuments">
+    <Type Name="ConfigurationDocument">
+      <Column Name="Oid" Type="System.Int64" DbType="BigInt NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="DocumentName" Type="System.String" DbType="NVarChar(255) NOT NULL" CanBeNull="false" />
+      <Column Name="DocumentVersionString" Type="System.String" DbType="NVarChar(30) NOT NULL" CanBeNull="false" />
+      <Column Name="User" Type="System.String" DbType="NVarChar(50) NULL" CanBeNull="true" />
+      <Column Name="InstanceKey" Type="System.String" DbType="NVarChar(100) NULL" CanBeNull="true" />
+      <Column Name="CreationTime" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="DocumentText" Type="System.String" DbType="NText" CanBeNull="true" />
+      <Column Name="Version" Type="System.Data.Linq.Binary" DbType="rowversion" CanBeNull="false" IsVersion="true" />
+    </Type>
+  </Table>
+</Database>

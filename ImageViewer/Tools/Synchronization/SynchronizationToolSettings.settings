@@ -1,0 +1,12 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="ClearCanvas.ImageViewer.Tools.Synchronization" GeneratedClassName="SynchronizationToolSettings">
+  <Profiles />
+  <Settings>
+    <Setting Name="ShowFirstAndLastReferenceLines" Description="Toggles whether or not reference lines should be shown for first and last slices in a stack." Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="ParallelPlanesToleranceAngle" Description="Maximum angle difference, in degrees, between two planes for synchronization tools to treat the planes as parallel." Type="System.Single" Scope="User">
+      <Value Profile="(Default)">10</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

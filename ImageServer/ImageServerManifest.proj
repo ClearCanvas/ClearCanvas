@@ -1,0 +1,70 @@
+<Project DefaultTargets="Create Manifests" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!-- ImageViewer Manifest Creation -->
+
+  <UsingTask TaskName="ClearCanvas.Utilities.BuildTasks.RegexIsMatch" AssemblyFile="$(TrunkDirectory)\Xian\ReferencedAssemblies\MSBuild\ClearCanvas.Utilities.BuildTasks.dll"/>
+
+  <PropertyGroup>
+    <TrunkDirectory>$(MSBuildProjectDirectory)\..\</TrunkDirectory>
+  </PropertyGroup>
+
+  <Choose>
+    <When Condition=" '$(ProjectOutDir)' != '$(DistributionDirectory)' ">
+      <PropertyGroup>
+        <ManifestDirectory>$(DistributionDirectory)\manifest</ManifestDirectory>
+      </PropertyGroup>
+    </When>
+    <Otherwise>
+      <PropertyGroup>
+        <ManifestDirectory>$(TrunkDirectory)\Xian\manifest</ManifestDirectory>
+      </PropertyGroup>
+    </Otherwise>
+  </Choose>
+
+  <Choose>
+    <When Condition=" '$(TargetPlatform)' != 'x86' ">
+      <PropertyGroup>
+        <PlatformSubFolder>$(TargetPlatform)</PlatformSubFolder>
+      </PropertyGroup>
+    </When>
+    <Otherwise>
+      <!-- assumes Win32 -->
+      <PropertyGroup>
+        <PlatformSubFolder></PlatformSubFolder>
+      </PropertyGroup>
+    </Otherwise>
+  </Choose>
+
+  <Choose>
+    <When Condition="'$(Options)' == ''">
+      <PropertyGroup>
+        <OptionsFlags></OptionsFlags>
+      </PropertyGroup>
+    </When>
+    <Otherwise>
+      <PropertyGroup>
+        <OptionsFlags>$(Options)</OptionsFlags>
+      </PropertyGroup>
+    </Otherwise>
+  </Choose>
+
+  <ItemGroup>
+    <ManifestFiles Include="$(TrunkDirectory)\ImageServer\ManifestInputShredHost.xml" />
+    <ManifestFiles Include="$(TrunkDirectory)\ImageServer\ManifestInputWeb.xml" />
+    <ManifestFiles Include="$(TrunkDirectory)\ImageServer\ManifestInputWebDefaultTheme.xml" />
+    <ManifestFiles Include="$(TrunkDirectory)\ImageServer\ManifestInputCommunity.xml" />
+  </ItemGroup>
+  
+  <Target Name="Create ImageServer Manifest">
+    <MakeDir Directories="$(DistributionDirectory)\manifest" />
+    <Exec Command="$(DistributionDirectory)\ClearCanvas.ImageServer.Executable.exe ClearCanvas.Utilities.Manifest.ManifestGenerationApplication /dist=$(DistributionDirectory) /m=Manifest.xml /c=$(Certificate) /pw=%22$(Password)%22 @(ManifestFiles)" WorkingDirectory="$(DistributionDirectory)"/>
+    <Delete Files="$(DistributionDirectory)\logs\*"/>
+  </Target>
+
+  <Target Name ="Create Manifests" >
+
+    <!-- Create the base manifest -->
+    <CallTarget Targets="Create ImageServer Manifest" />
+    
+  </Target>
+</Project>
+

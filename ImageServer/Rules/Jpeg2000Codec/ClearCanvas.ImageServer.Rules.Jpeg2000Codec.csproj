@@ -1,0 +1,100 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{106DA31F-C502-493B-9478-F3E22566FDF2}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ClearCanvas.ImageServer.Rules.Jpeg2000Codec</RootNamespace>
+    <AssemblyName>ClearCanvas.ImageServer.Rules.Jpeg2000Codec</AssemblyName>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>2.0</OldToolsVersion>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Jpeg2000LosslessAction\Jpeg2000LosslessActionItem.cs" />
+    <Compile Include="Jpeg2000LosslessAction\Jpeg2000LosslessActionOperator.cs" />
+    <Compile Include="Jpeg2000LosslessAction\Jpeg2000LosslessSamples.cs" />
+    <Compile Include="Jpeg2000LosslessAction\Jpeg2000LosslessSopActionItem.cs" />
+    <Compile Include="Jpeg2000LosslessAction\Jpeg2000LosslessSopActionOperator.cs" />
+    <Compile Include="Jpeg2000LossyAction\Jpeg2000LossyActionItem.cs" />
+    <Compile Include="Jpeg2000LossyAction\Jpeg2000LossyActionOperator.cs" />
+    <Compile Include="Jpeg2000LossyAction\Jpeg2000LossySamples.cs" />
+    <Compile Include="Jpeg2000LossyAction\Jpeg2000LossySopActionItem.cs" />
+    <Compile Include="Jpeg2000LossyAction\Jpeg2000LossySopActionOperator.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Common\ClearCanvas.Common.csproj">
+      <Project>{F6EAD428-E6CF-4DF6-B2F3-D33D532C5343}</Project>
+      <Name>ClearCanvas.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Dicom\ClearCanvas.Dicom.csproj">
+      <Project>{AD9ECE2B-8268-4115-8DC8-860FBD011FFF}</Project>
+      <Name>ClearCanvas.Dicom</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Enterprise\Core\ClearCanvas.Enterprise.Core.csproj">
+      <Project>{431E9444-9915-4D49-B92D-9B7EC086622A}</Project>
+      <Name>ClearCanvas.Enterprise.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Common\ClearCanvas.ImageServer.Common.csproj">
+      <Project>{DDFB1D25-75AE-43A6-A7A5-33D173EFFD04}</Project>
+      <Name>ClearCanvas.ImageServer.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Enterprise\ClearCanvas.ImageServer.Enterprise.csproj">
+      <Project>{86CA6EDB-DE59-45E9-8BD8-832FBB3F8009}</Project>
+      <Name>ClearCanvas.ImageServer.Enterprise</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Model\ClearCanvas.ImageServer.Model.csproj">
+      <Project>{2C9126D3-5B73-4539-BBC9-D56E6097D335}</Project>
+      <Name>ClearCanvas.ImageServer.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Rules\ClearCanvas.ImageServer.Rules.csproj">
+      <Project>{523EDDC1-7C6E-404D-A8ED-5F043F5E6BE3}</Project>
+      <Name>ClearCanvas.ImageServer.Rules</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Jpeg2000LosslessAction\SampleJpeg2000Lossless.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Jpeg2000LossyAction\SampleJpeg2000Lossy.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Jpeg2000LosslessAction\SampleJpeg2000Combo.xml" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

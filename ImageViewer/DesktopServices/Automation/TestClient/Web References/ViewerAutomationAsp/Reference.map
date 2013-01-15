@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DiscoveryClientResultsFile xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Results>
+    <DiscoveryClientResult referenceType="System.Web.Services.Discovery.SchemaReference" url="http://localhost:51124/ClearCanvas/ImageViewer/Automation?xsd=xsd1" filename="Automation.xsd" />
+    <DiscoveryClientResult referenceType="System.Web.Services.Discovery.SchemaReference" url="http://localhost:51124/ClearCanvas/ImageViewer/Automation?xsd=xsd0" filename="Automation0.xsd" />
+    <DiscoveryClientResult referenceType="System.Web.Services.Discovery.SchemaReference" url="http://localhost:51124/ClearCanvas/ImageViewer/Automation?xsd=xsd3" filename="Automation1.xsd" />
+    <DiscoveryClientResult referenceType="System.Web.Services.Discovery.ContractReference" url="http://127.0.0.1:51124/ClearCanvas/ImageViewer/Automation?wsdl" filename="ViewerAutomation.wsdl" />
+    <DiscoveryClientResult referenceType="System.Web.Services.Discovery.SchemaReference" url="http://localhost:51124/ClearCanvas/ImageViewer/Automation?xsd=xsd2" filename="Automation2.xsd" />
+  </Results>
+</DiscoveryClientResultsFile>

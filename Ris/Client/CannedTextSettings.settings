@@ -1,0 +1,18 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="ClearCanvas.Ris.Client" GeneratedClassName="CannedTextSettings">
+  <Profiles />
+  <Settings>
+    <Setting Name="RestrictNameToAlphaChars" Description="Enable validation of characters in the canned text name.  If true, the name can only contain spaces and alphabetic characters, which ensures the name can be recognized by speech recognition." Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="SummarySortColumnName" Description="Remembers the name of the last sorted column in the CannedTextSummaryComponent" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Name</Value>
+    </Setting>
+    <Setting Name="SummarySortAscending" Description="Remembers the last sort direction of the sorted column in the CannedTextSummaryComponent" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="RestrictFieldsToAlphaChars" Description="Enable validation of characters in defined fields.  If true, contents enclosed within square brackets can only contain spaces and alphabetic characters, which ensures the name can be recognized by speech recognition." Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

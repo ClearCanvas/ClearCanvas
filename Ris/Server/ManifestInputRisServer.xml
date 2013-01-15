@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ManifestInput xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.clearcanvas.ca">
+  <Files>
+    <File name="ClearCanvas.url" ignore="true"/>
+    <File name="install.log" ignore="true" />
+    <File name="uninst.exe" ignore="true" />
+    <File name="uninstall.log" ignore="true" />
+    <!--<File name="EULA.rtf" />-->
+    <!--<File name="PrivacyNotice.rtf" />-->
+    <File name="Logging.config" ignore="true" />
+    <File name="logs\" ignore="true" />
+    <File name="manifest\" ignore="true" />
+    <File name="scripts\" ignore="true" />
+    <File name="ClearCanvas.Ris.Server.Executable.exe" checksum="true" />
+    <File name="ClearCanvas.Ris.Server.Executable.exe.config" config="true" />
+    <!--<File name="ClearCanvas.Ris.Server.Executable.exe.critical.config" checksum="true" config="true" />-->
+    <File name="ClearCanvas.Server.ShredHostService.exe" checksum="true" />
+    <File name="ClearCanvas.Server.ShredHostService.exe.config" config="true" />
+    <!--<File name="ClearCanvas.Server.ShredHostService.exe.critical.config" checksum="true" config="true" />-->
+    <File name="common\log4net.dll" checksum="true" />
+    <File name="common\ClearCanvas.Common.dll" checksum="true" />
+    <File name="common\ClearCanvas.Server.ShredHost.dll" checksum="true" />
+    <File name="plugins\Antlr3.Runtime.dll" checksum="true" />
+    <File name="plugins\Castle.Core.dll" checksum="true" />
+    <File name="plugins\Castle.DynamicProxy2.dll" checksum="true" />
+    <File name="plugins\ClearCanvas.Dicom.dll" checksum="true" />
+    <File name="plugins\ClearCanvas.Enterprise.Authentication.dll" checksum="true" />
+    <File name="plugins\ClearCanvas.Enterprise.Authentication.Hibernate.dll" checksum="true" />
+    <File name="plugins\ClearCanvas.Enterprise.Common.dll" checksum="true" />
+    <File name="plugins\ClearCanvas.Enterprise.Configuration.dll" checksum="true" />
+    <File name="plugins\ClearCanvas.Enterprise.Configuration.Hibernate.dll" checksum="true" />
+    <File name="plugins\ClearCanvas.Enterprise.Core.dll" checksum="true" />
+    <File name="plugins\ClearCanvas.Enterprise.Hibernate.dll" checksum="true" />
+    <File name="plugins\ClearCanvas.Enterprise.Hibernate.DdlWriter.dll" checksum="true" />
+    <File name="plugins\ClearCanvas.Healthcare.dll" checksum="true" />
+    <File name="plugins\ClearCanvas.Healthcare.Hibernate.dll" checksum="true" />
+    <File name="plugins\ClearCanvas.Ris.Application.Common.dll" checksum="true" />
+    <File name="plugins\ClearCanvas.Ris.Application.Services.dll" checksum="true" />
+    <File name="plugins\ClearCanvas.Ris.Server.dll" checksum="true" />
+    <File name="plugins\ClearCanvas.Ris.Shreds.dll" checksum="true" />
+    <File name="plugins\ClearCanvas.Server.ShredHost.dll" checksum="true" />
+    <File name="plugins\ClearCanvas.Utilities.Manifest.dll" checksum="true" />
+    <File name="plugins\ClearCanvas.Workflow.dll" checksum="true" />
+    <File name="plugins\ClearCanvas.Workflow.Hibernate.dll" checksum="true" />
+    <File name="plugins\Iesi.Collections.dll" checksum="true" />
+    <File name="plugins\NHibernate.dll" checksum="true" />
+    <File name="plugins\NHibernate.ByteCode.Castle.dll" checksum="true" />
+    <File name="plugins\NHibernate.Caches.SysCache.dll" checksum="true" />
+  </Files>
+</ManifestInput>

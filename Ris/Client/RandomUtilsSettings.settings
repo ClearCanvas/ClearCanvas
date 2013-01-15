@@ -1,0 +1,15 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="ClearCanvas.Ris.Client" GeneratedClassName="RandomUtilsSettings">
+  <Profiles />
+  <Settings>
+    <Setting Name="MaleNameDictionary" Description="Dictionary of male first names used in random order generation." Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Dictionary.Name.Male.txt</Value>
+    </Setting>
+    <Setting Name="FemaleNameDictionary" Description="Dictionary of female first names used in random order generation." Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Dictionary.Name.Female.txt</Value>
+    </Setting>
+    <Setting Name="FamilyNameDictionary" Description="Dictionary of surnames used in random order generation." Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Dictionary.Name.Family.txt</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

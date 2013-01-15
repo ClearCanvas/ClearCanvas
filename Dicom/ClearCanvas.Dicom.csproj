@@ -1,0 +1,629 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build" ToolsVersion="4.0">
+  <PropertyGroup>
+    <ProjectType>Local</ProjectType>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{AD9ECE2B-8268-4115-8DC8-860FBD011FFF}</ProjectGuid>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ApplicationIcon />
+    <AssemblyKeyContainerName />
+    <AssemblyName>ClearCanvas.Dicom</AssemblyName>
+    <AssemblyOriginatorKeyFile />
+    <DefaultClientScript>JScript</DefaultClientScript>
+    <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
+    <DefaultTargetSchema>IE50</DefaultTargetSchema>
+    <DelaySign>false</DelaySign>
+    <OutputType>Library</OutputType>
+    <RootNamespace>ClearCanvas.Dicom</RootNamespace>
+    <RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
+    <StartupObject />
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation />
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <IsWebBootstrapper>true</IsWebBootstrapper>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <PublishUrl>http://localhost/ClearCanvas.Dicom/</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Web</InstallFrom>
+    <UpdateEnabled>true</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputPath>bin\Debug\</OutputPath>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile />
+    <DefineConstants>TRACE;DEBUG;UNIT_TESTS</DefineConstants>
+    <DocumentationFile>
+    </DocumentationFile>
+    <DebugSymbols>true</DebugSymbols>
+    <FileAlignment>4096</FileAlignment>
+    <NoStdLib>false</NoStdLib>
+    <NoWarn>1591, 0419, 1574, 1587</NoWarn>
+    <Optimize>false</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>full</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile />
+    <DefineConstants>TRACE</DefineConstants>
+    <DocumentationFile>
+    </DocumentationFile>
+    <DebugSymbols>true</DebugSymbols>
+    <FileAlignment>4096</FileAlignment>
+    <NoStdLib>false</NoStdLib>
+    <NoWarn>1591, 0419, 1574, 1587</NoWarn>
+    <Optimize>true</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>pdbonly</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="nunit.framework, Version=2.2.7.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\ReferencedAssemblies\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="sysglobl" />
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data">
+      <Name>System.Data</Name>
+    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization, Version=3.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\WINDOWS\Microsoft.NET\Framework\v3.0\Windows Communication Foundation\System.Runtime.Serialization.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ServiceModel, Version=3.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\WINDOWS\Microsoft.NET\Framework\v3.0\Windows Communication Foundation\System.ServiceModel.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml">
+      <Name>System.XML</Name>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Compile Include="Audit\AuditedInstances.cs" />
+    <Compile Include="Audit\AuditLogHelper.cs" />
+    <Compile Include="Audit\EventReceiptAction.cs" />
+    <Compile Include="Audit\EventResult.cs" />
+    <Compile Include="Audit\EventSource.cs" />
+    <Compile Include="DicomAttribute.cs" />
+    <Compile Include="DicomAttributeBinaryData.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DicomCompressedPixelData.cs" />
+    <Compile Include="DicomMessageBase.cs" />
+    <Compile Include="DicomAttributeBinary.cs" />
+    <Compile Include="DicomAttributeCollection.cs" />
+    <Compile Include="DicomAttributeSingleValueText.cs" />
+    <Compile Include="DicomAttributeSQ.cs" />
+    <Compile Include="DicomUncompressedPixelData.cs" />
+    <Compile Include="FileReference.cs" />
+    <Compile Include="Iod\ComponentGroup.cs" />
+    <Compile Include="Iod\Modules\Tests\FilmSizeTests.cs" />
+    <Compile Include="Iod\Modules\Tests\PrintScuTests.cs" />
+    <Compile Include="IO\IByteBuffer.cs" />
+    <Compile Include="IO\Tests\ByteBufferHighCapacityTests.cs" />
+    <Compile Include="IO\Tests\ByteBufferPerformanceTest.cs" />
+    <Compile Include="IO\Tests\ByteBufferTests.cs" />
+    <Compile Include="IO\Tests\LegacyByteBuffer.cs" />
+    <Compile Include="IO\Tests\TestByteBuffer.cs" />
+    <Compile Include="Network\SR.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SR.resx</DependentUpon>
+    </Compile>
+    <Compile Include="ServiceModel\Streaming\HeaderStreamingServiceClient.cs" />
+    <Compile Include="Tests\DicomAttributeBinaryDataTests.cs" />
+    <Compile Include="Tests\DicomUncompressedPixelDataTests.cs" />
+    <Compile Include="Utilities\Command\AggregateCommand.cs" />
+    <Compile Include="Utilities\Command\RemoveSeriesFromStudyXml.cs" />
+    <Compile Include="Utilities\Command\Tests\CommandTests.cs" />
+    <Compile Include="Utilities\DateParser.cs" />
+    <Compile Include="Utilities\DateRangeHelper.cs" />
+    <Compile Include="Utilities\DateTimeParser.cs" />
+    <Compile Include="DicomException.cs" />
+    <Compile Include="DicomFieldAttribute.cs" />
+    <Compile Include="DicomFile.cs" />
+    <Compile Include="DicomSequenceItem.cs" />
+    <Compile Include="DicomTag.cs" />
+    <Compile Include="DicomTagDictionary.cs" />
+    <Compile Include="DicomTags.cs" />
+    <Compile Include="DicomUid.cs" />
+    <Compile Include="DicomVr.cs" />
+    <Compile Include="Flags.cs" />
+    <Compile Include="Iod\ImageOrientationPatient.cs" />
+    <Compile Include="Iod\ImagePositionPatient.cs" />
+    <Compile Include="Interfaces.cs" />
+    <Compile Include="IO\ByteBuffer.cs" />
+    <Compile Include="IO\ByteConvertor.cs" />
+    <Compile Include="IO\ChunkStream.cs" />
+    <Compile Include="IO\Endian.cs" />
+    <Compile Include="IO\StreamReader.cs" />
+    <Compile Include="IO\StreamWriter.cs" />
+    <Compile Include="Iod\PatientOrientation.cs" />
+    <Compile Include="Iod\PhotometricInterpretation.cs" />
+    <Compile Include="Iod\PixelAspectRatio.cs" />
+    <Compile Include="Iod\PixelSpacing.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Iod\PersonName.cs" />
+    <Compile Include="SopClass.cs" />
+    <Compile Include="SpecificCharacterSetParser.cs" />
+    <Compile Include="SR.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SR.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Tests\DateTimeTests.cs" />
+    <Compile Include="Iod\Tests\ImageOrientationPatientTests.cs" />
+    <Compile Include="Utilities\SopInstanceFactory.cs" />
+    <Compile Include="Utilities\TimeParser.cs" />
+    <Compile Include="TransferSyntax.cs" />
+    <Compile Include="Iod\Window.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Common\ClearCanvas.Common.csproj">
+      <Project>{F6EAD428-E6CF-4DF6-B2F3-D33D532C5343}</Project>
+      <Name>ClearCanvas.Common</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Network\SR.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>SR.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SR.resx">
+      <SubType>Designer</SubType>
+      <LastGenOutput>SR.Designer.cs</LastGenOutput>
+      <Generator>ResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{B4F97281-0DBD-4835-9ED8-7DFB966E87FF}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Audit\AuditActiveParticipant.cs" />
+    <Compile Include="Audit\AuditParticipantObject.cs" />
+    <Compile Include="Audit\BeginTransferringDicomInstancesAuditHelper.cs" />
+    <Compile Include="Audit\ApplicationActivityAuditHelper.cs" />
+    <Compile Include="Audit\DataExportAuditHelper.cs" />
+    <Compile Include="Audit\DataImportAuditHelper.cs" />
+    <Compile Include="Audit\DicomAuditHelper.cs" />
+    <Compile Include="Audit\AuditLogUsedAuditHelper.cs" />
+    <Compile Include="Audit\DicomAuditMessage.cs" />
+    <Compile Include="Audit\DicomAuditMessage.gen.cs" />
+    <Compile Include="Audit\DicomAuditMessageEnums.cs" />
+    <Compile Include="Audit\DicomAuditSource.cs" />
+    <Compile Include="Audit\DicomInstancesAccessedAuditHelper.cs" />
+    <Compile Include="Audit\DicomInstancesTransferredAuditHelper.cs" />
+    <Compile Include="Audit\DicomStudyDeletedAuditHelper.cs" />
+    <Compile Include="Audit\NetworkEntryAuditHelper.cs" />
+    <Compile Include="Audit\QueryAuditHelper.cs" />
+    <Compile Include="Audit\SecurityAlertAuditHelper.cs" />
+    <Compile Include="Audit\Test\AuditTest.cs" />
+    <Compile Include="Audit\UserAuthenticationAuditHelper.cs" />
+    <Compile Include="Codec\DicomCodecException.cs" />
+    <Compile Include="Codec\DicomCodecFactoryExtensionPoint.cs" />
+    <Compile Include="Codec\DicomCodecRegistry.cs" />
+    <Compile Include="Codec\DicomCodecUnsupportedSopException.cs" />
+    <Compile Include="Codec\IDicomCodec.cs" />
+    <Compile Include="Codec\Tests\AbstractCodecTest.cs" />
+    <Compile Include="ComparisonResultType.cs" />
+    <Compile Include="DicomAttributeComparisonResult.cs" />
+    <Compile Include="DicomAttributeMultiValueText.cs" />
+    <Compile Include="DicomDataException.cs" />
+    <Compile Include="DicomDirectory.cs" />
+    <Compile Include="DicomFragmentSequence.cs" />
+    <Compile Include="DicomImplementation.cs" />
+    <Compile Include="DicomMessage.cs" />
+    <Compile Include="DicomPixelData.cs" />
+    <Compile Include="DicomSettings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>DicomSettings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="DirectoryRecordCollection.cs" />
+    <Compile Include="DirectoryRecordSequenceItem.cs" />
+    <Compile Include="IDicomAttributeProvider.cs" />
+    <Compile Include="Iod\AnatomicalOrientationType.cs" />
+    <Compile Include="Iod\ContextGroups\BreedContextGroup.cs" />
+    <Compile Include="Iod\ContextGroups\BreedRegistryContextGroup.cs" />
+    <Compile Include="Iod\ContextGroups\ContextGroupItemBase.cs" />
+    <Compile Include="Iod\ContextGroups\IsotopesInRadiopharmaceuticals.cs" />
+    <Compile Include="Iod\ContextGroups\MixBreedsContextGroup.cs" />
+    <Compile Include="Iod\ContextGroups\SpeciesContextGroup.cs" />
+    <Compile Include="Iod\DataLut.cs" />
+    <Compile Include="Iod\ContextGroups\ContextGroupBase.cs" />
+    <Compile Include="Iod\ContextGroups\KeyObjectSelectionDocumentTitle.cs" />
+    <Compile Include="Iod\ContinuityOfContent.cs" />
+    <Compile Include="Iod\HierarchicalSopInstanceReferenceDictionary.cs" />
+    <Compile Include="Iod\IApplicationEntity.cs" />
+    <Compile Include="Iod\ImageSopInstanceReferenceDictionary.cs" />
+    <Compile Include="Iod\Institution.cs" />
+    <Compile Include="Iod\IodBase.cs" />
+    <Compile Include="Iod\Iods\ColorSoftcopyPresentationStateIod.cs" />
+    <Compile Include="Iod\Iods\EncapsulatedPdfIod.cs" />
+    <Compile Include="Iod\Iods\GrayscaleSoftcopyPresentationStateIod.cs" />
+    <Compile Include="Iod\Iods\ImageIod.cs" />
+    <Compile Include="Iod\Iods\ImageQueryIod.cs" />
+    <Compile Include="Iod\Iods\KeyObjectSelectionDocumentIod.cs" />
+    <Compile Include="Iod\Iods\ModalityPerformedProcedureStepIod.cs" />
+    <Compile Include="Iod\Iods\ModalityWorklistIod.cs" />
+    <Compile Include="Iod\Iods\PatientQueryIod.cs" />
+    <Compile Include="Iod\Iods\QueryIodBase.cs" />
+    <Compile Include="Iod\Iods\SeriesQueryIod.cs" />
+    <Compile Include="Iod\Iods\StudyQueryIod.cs" />
+    <Compile Include="Iod\MacAlgorithm.cs" />
+    <Compile Include="Iod\Macros\BasicPixelSpacingCalibrationMacro.cs" />
+    <Compile Include="Iod\Macros\CompositeObjectReferenceMacro.cs" />
+    <Compile Include="Iod\Macros\ContainerMacro.cs" />
+    <Compile Include="Iod\Macros\ContentIdentificationMacro.cs" />
+    <Compile Include="Iod\Macros\DocumentContentMacro.cs" />
+    <Compile Include="Iod\Macros\CodeSequenceMacro.cs" />
+    <Compile Include="Iod\Macros\ContentItemMacro.cs" />
+    <Compile Include="Iod\Macros\DocumentRelationshipMacro.cs" />
+    <Compile Include="Iod\Macros\HierarchicalSeriesInstanceReferenceMacro.cs" />
+    <Compile Include="Iod\Macros\HierarchicalSopInstanceReferenceMacro.cs" />
+    <Compile Include="Iod\Macros\IIodMacro.cs" />
+    <Compile Include="Iod\Macros\ImageReferenceMacro.cs" />
+    <Compile Include="Iod\Macros\ImageSopInstanceReferenceMacro.cs" />
+    <Compile Include="Iod\Macros\ModalityLutMacro.cs" />
+    <Compile Include="Iod\Macros\PerformedProcedureStepSummaryMacro.cs" />
+    <Compile Include="Iod\Macros\PersonIdentificationMacro.cs" />
+    <Compile Include="Iod\Macros\PresentationStateRelationshipMacro.cs" />
+    <Compile Include="Iod\Macros\RequestAttributesMacro.cs" />
+    <Compile Include="Iod\Macros\SeriesAndInstanceReferenceMacro.cs" />
+    <Compile Include="Iod\Macros\VoiLut.cs" />
+    <Compile Include="Iod\ModalityDataLut.cs" />
+    <Compile Include="Iod\Macros\SopInstanceReferenceMacro.cs" />
+    <Compile Include="Iod\Modality.cs" />
+    <Compile Include="Iod\Modules\BasicFilmBoxModuleIod.cs" />
+    <Compile Include="Iod\Modules\BasicFilmSessionModuleIod.cs" />
+    <Compile Include="Iod\Modules\BillingAndMaterialManagementCodesModuleIod.cs" />
+    <Compile Include="Iod\Modules\BitmapDisplayShutter.cs" />
+    <Compile Include="Iod\CIELabColor.cs" />
+    <Compile Include="Iod\Modules\ClinicalTrialSeriesModuleIod.cs" />
+    <Compile Include="Iod\Modules\ClinicalTrialStudyModuleIod.cs" />
+    <Compile Include="Iod\Modules\ClinicalTrialSubjectModuleIod.cs" />
+    <Compile Include="Iod\Modules\DisplayedArea.cs" />
+    <Compile Include="Iod\Modules\DisplayShutterMacroIod.cs" />
+    <Compile Include="Iod\Modules\EncapsulatedDocumentModule.cs" />
+    <Compile Include="Iod\Modules\EncapsulatedDocumentSeriesModuleIod.cs" />
+    <Compile Include="Iod\Modules\GeneralEquipment.cs" />
+    <Compile Include="Iod\Modules\GeneralSeriesModuleIod.cs" />
+    <Compile Include="Iod\Modules\GeneralStudyModuleIod.cs" />
+    <Compile Include="Iod\Modules\GraphicAnnotation.cs" />
+    <Compile Include="Iod\Modules\GraphicLayer.cs" />
+    <Compile Include="Iod\Modules\IccProfileModule.cs" />
+    <Compile Include="Iod\Modules\KeyObjectDocument.cs" />
+    <Compile Include="Iod\Modules\KeyObjectDocumentSeries.cs" />
+    <Compile Include="Iod\Modules\MaskModuleIod.cs" />
+    <Compile Include="Iod\Modules\ModalityLut.cs" />
+    <Compile Include="Iod\Modules\MultiframeOverlayModule.cs" />
+    <Compile Include="Iod\Modules\OverlayActivation.cs" />
+    <Compile Include="Iod\Modules\OverlayPlane.cs" />
+    <Compile Include="Iod\Modules\PatientMedicalModule.cs" />
+    <Compile Include="Iod\Modules\PatientModuleIod.cs" />
+    <Compile Include="Iod\Modules\GeneralImageModuleIod.cs" />
+    <Compile Include="Iod\Modules\ImageAcquisitionResultsModuleIod.cs" />
+    <Compile Include="Iod\Modules\ImageBoxPixelModuleIod.cs" />
+    <Compile Include="Iod\Modules\ImagePixelMacroIod.cs" />
+    <Compile Include="Iod\Modules\ImagePlaneModuleIod.cs" />
+    <Compile Include="Iod\Modules\ImagingServiceRequestModule.cs" />
+    <Compile Include="Iod\Modules\PatientIdentificationModuleIod.cs" />
+    <Compile Include="Iod\Modules\PatientStudyModuleIod.cs" />
+    <Compile Include="Iod\Modules\PerformedProcedureStepInformationModuleIod.cs" />
+    <Compile Include="Iod\Modules\PerformedProcedureStepRelationshipModuleIod.cs" />
+    <Compile Include="Iod\Modules\PresentationSeriesModuleIod.cs" />
+    <Compile Include="Iod\Modules\PresentationStateIdentificationModule.cs" />
+    <Compile Include="Iod\Modules\PresentationStateMask.cs" />
+    <Compile Include="Iod\Modules\PresentationStateRelationship.cs" />
+    <Compile Include="Iod\Modules\PresentationStateShutter.cs" />
+    <Compile Include="Iod\Modules\PrinterModuleIod.cs" />
+    <Compile Include="Iod\Modules\PrintJobModuleIod.cs" />
+    <Compile Include="Iod\Modules\RadiationDoseModuleIod.cs" />
+    <Compile Include="Iod\Modules\RequestedProcedureModuleIod.cs" />
+    <Compile Include="Iod\Modules\ScEquipmentModuleIod.cs" />
+    <Compile Include="Iod\Modules\ScheduledProcedureStepModuleIod.cs" />
+    <Compile Include="Iod\Modules\SoftcopyPresentationLut.cs" />
+    <Compile Include="Iod\Modules\SoftcopyVoiLut.cs" />
+    <Compile Include="Iod\Modules\SopCommonModuleIod.cs" />
+    <Compile Include="Iod\Modules\SpatialTransform.cs" />
+    <Compile Include="Iod\Modules\SpecimenIdentificationModuleIod.cs" />
+    <Compile Include="Iod\Modules\SrDocumentContentModule.cs" />
+    <Compile Include="Iod\Modules\StudyModuleIod.cs" />
+    <Compile Include="Iod\Modules\Tests\OverlayPlaneTests.cs" />
+    <Compile Include="Iod\PaletteColorLut.cs" />
+    <Compile Include="Iod\PatientDirection.cs" />
+    <Compile Include="Iod\PatientsSexNeutered.cs" />
+    <Compile Include="Iod\ResponsiblePersonRole.cs" />
+    <Compile Include="Iod\SequenceIodBase.cs" />
+    <Compile Include="Iod\SequenceIodList.cs" />
+    <Compile Include="Iod\Sequences\BasicColorImageSequenceIod.cs" />
+    <Compile Include="Iod\Sequences\BasicGrayscaleImageSequenceIod.cs" />
+    <Compile Include="Iod\Sequences\BillingSuppliesAndDevicesSequenceIod.cs" />
+    <Compile Include="Iod\Sequences\BreedRegistryCodeSequence.cs" />
+    <Compile Include="Iod\Sequences\BreedRegistrationSequence.cs" />
+    <Compile Include="Iod\Sequences\CodingSchemeIdentificationSequenceIod.cs" />
+    <Compile Include="Iod\Sequences\ContentTemplateSequence.cs" />
+    <Compile Include="Iod\Sequences\GraphicAnnotationSequenceItem.cs" />
+    <Compile Include="Iod\Sequences\MaskSubtractionSequenceIod.cs" />
+    <Compile Include="Iod\Sequences\OtherPatientIdsSequence.cs" />
+    <Compile Include="Iod\Sequences\DeIdentificationMethodCodeSequence.cs" />
+    <Compile Include="Iod\Sequences\PatientBreedCodeSequence.cs" />
+    <Compile Include="Iod\Sequences\ExposureDoseSequenceIod.cs" />
+    <Compile Include="Iod\Sequences\FilmConsumptionSequenceIod.cs" />
+    <Compile Include="Iod\Sequences\PatientSpeciesCodeSequence.cs" />
+    <Compile Include="Iod\Sequences\PerformedSeriesSequenceIod.cs" />
+    <Compile Include="Iod\Sequences\QuantitySequenceIod.cs" />
+    <Compile Include="Iod\Sequences\ReferencedDigitalSignatureSequence.cs" />
+    <Compile Include="Iod\Sequences\ReferencedInstanceSequenceIod.cs" />
+    <Compile Include="Iod\Sequences\ReferencedRequestSequence.cs" />
+    <Compile Include="Iod\Sequences\ReferencedSeriesSequenceIod.cs" />
+    <Compile Include="Iod\Sequences\ReferencedSopInstanceMacSequence.cs" />
+    <Compile Include="Iod\Sequences\RelatedSeriesSequence.cs" />
+    <Compile Include="Iod\Sequences\RequestAttributesSequenceIod.cs" />
+    <Compile Include="Iod\Sequences\ScheduledProcedureStepSequenceIod.cs" />
+    <Compile Include="Iod\Sequences\ScheduledStepAttributesSequenceIod.cs" />
+    <Compile Include="Iod\Sequences\SpecimenSequence.cs" />
+    <Compile Include="Iod\Sequences\SpecimenTypeCodeSequence.cs" />
+    <Compile Include="Iod\Sequences\ViewCodeSequenceIod.cs" />
+    <Compile Include="Iod\SeriesReferenceDictionary.cs" />
+    <Compile Include="Iod\ShutterShape.cs" />
+    <Compile Include="Iod\StandardPaletteColorLuts.cs" />
+    <Compile Include="Iod\Tests\ModuleIodAttributeTests.cs" />
+    <Compile Include="Iod\Tests\PatientDirectionTests.cs" />
+    <Compile Include="Iod\Tests\QuadrupedPatientDirectionTests.cs" />
+    <Compile Include="Iod\VerificationFlag.cs" />
+    <Compile Include="Iod\VoiDataLut.cs" />
+    <Compile Include="Iod\PatientIdentityRemoved.cs" />
+    <Compile Include="Iod\PatientsSex.cs" />
+    <Compile Include="Iod\TypeOfPatientId.cs" />
+    <Compile Include="Iod\ValueType.cs" />
+    <Compile Include="Network\NetworkSettings.cs" />
+    <Compile Include="Network\NetworkSettings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>NetworkSettings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="Network\Scp\DicomScp.cs" />
+    <Compile Include="Network\Scp\DicomScpExtensionPoint.cs" />
+    <Compile Include="Network\Scp\DicomScpHandler.cs" />
+    <Compile Include="Network\Scp\IDicomScp.cs" />
+    <Compile Include="Network\Scu\FindScu.cs" />
+    <Compile Include="Network\Scu\ModalityWorklistScu.cs" />
+    <Compile Include="Network\Scu\MoveScu.cs" />
+    <Compile Include="Network\Scu\PrinterStatusScu.cs" />
+    <Compile Include="Network\Scu\PrintScu.cs" />
+    <Compile Include="Network\Scu\PrintScu2.cs" />
+    <Compile Include="Network\Scu\ScuBase.cs" />
+    <Compile Include="Network\Scu\StorageCommitScu.cs" />
+    <Compile Include="Network\Scu\StorageInstance.cs" />
+    <Compile Include="Network\Scu\StorageScu.cs" />
+    <Compile Include="Network\Scu\VerificationScu.cs" />
+    <Compile Include="Network\SupportedSop.cs" />
+    <Compile Include="ServiceModel\ApplicationEntity.cs" />
+    <Compile Include="ServiceModel\FaultContracts.cs" />
+    <Compile Include="ServiceModel\Query\Comparers.cs" />
+    <Compile Include="ServiceModel\Query\DicomStudyRootQuery.cs" />
+    <Compile Include="ServiceModel\Query\FaultContracts.cs" />
+    <Compile Include="ServiceModel\Query\ImageIdentifier.cs" />
+    <Compile Include="Iod\IPatientData.cs" />
+    <Compile Include="ServiceModel\Query\IPatientRootQuery.cs" />
+    <Compile Include="Iod\IStudyData.cs" />
+    <Compile Include="Iod\ISeriesData.cs" />
+    <Compile Include="Iod\ISopInstanceData.cs" />
+    <Compile Include="ServiceModel\Query\IStudyRootQuery.cs" />
+    <Compile Include="ServiceModel\Query\IStudyRootQueryBridge.cs" />
+    <Compile Include="ServiceModel\Query\PatientRootPatientIdentifier.cs" />
+    <Compile Include="ServiceModel\Query\PatientRootStudyIdentifier.cs" />
+    <Compile Include="ServiceModel\Query\Identifier.cs" />
+    <Compile Include="ServiceModel\Query\SeriesIdentifier.cs" />
+    <Compile Include="ServiceModel\Query\StudyIdentifier.cs" />
+    <Compile Include="ServiceModel\Query\StudyRootQueryBridge.cs" />
+    <Compile Include="ServiceModel\Query\StudyRootQueryServiceClient.cs" />
+    <Compile Include="ServiceModel\Query\StudyRootStudyIdentifier.cs" />
+    <Compile Include="ServiceModel\Query\Tests\SortStudyTests.cs" />
+    <Compile Include="ServiceModel\Streaming\HeaderStreamingParameters.cs" />
+    <Compile Include="ServiceModel\Streaming\IHeaderStreamingService.cs" />
+    <Compile Include="ServiceModel\Streaming\StreamingClient.cs" />
+    <Compile Include="ServiceModel\Streaming\StreamingClientException.cs" />
+    <Compile Include="ServiceModel\Streaming\StreamingResultMetaData.cs" />
+    <Compile Include="ServiceModel\Streaming\StreamingSettings.cs" />
+    <Compile Include="ServiceModel\Streaming\StreamingSettings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>StreamingSettings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="ServiceModel\Streaming\StudyNotFoundFault.cs" />
+    <Compile Include="ServiceModel\Streaming\StudyIsInUseFault.cs" />
+    <Compile Include="ServiceModel\Streaming\StudyIsNearlineFault.cs" />
+    <Compile Include="Tests\AttributeCollectionTest.cs" />
+    <Compile Include="Tests\DicomOverlayTestHelper.cs" />
+    <Compile Include="Tests\DicomPixelDataTests.cs" />
+    <Compile Include="Tests\GlobalizedCultureAttributeTests.cs" />
+    <Compile Include="Tests\DicomDirectoryTests.cs" />
+    <Compile Include="Tests\ImageDisplayFormatTests.cs" />
+    <Compile Include="Tests\ScuTests.cs" />
+    <Compile Include="Tests\UnknownVrTests.cs" />
+    <Compile Include="Utilities\Anonymization\ValidationStrategy.cs" />
+    <Compile Include="Utilities\Command\CommandProcessor.cs" />
+    <Compile Include="Utilities\Command\CopyDirectoryCommand.cs" />
+    <Compile Include="Utilities\Command\CopyFileCommand.cs" />
+    <Compile Include="Utilities\Command\CreateDirectoryCommand.cs" />
+    <Compile Include="Utilities\Command\DeleteDirectoryCommand.cs" />
+    <Compile Include="Utilities\Command\DicomCompressCommand.cs" />
+    <Compile Include="Utilities\Command\FileDeleteCommand.cs" />
+    <Compile Include="Utilities\Command\IAggregateCommand.cs" />
+    <Compile Include="Utilities\Command\ICommandProcessorContext.cs" />
+    <Compile Include="Utilities\Command\ICommand.cs" />
+    <Compile Include="Utilities\Command\CommandBase.cs" />
+    <Compile Include="Utilities\Command\CommandStatistics.cs" />
+    <Compile Include="Utilities\Command\InsertInstanceXmlCommand.cs" />
+    <Compile Include="Utilities\Command\MoveDirectoryCommand.cs" />
+    <Compile Include="Utilities\Command\RenameFileCommand.cs" />
+    <Compile Include="Utilities\Command\SaveDicomFileCommand.cs" />
+    <Compile Include="Utilities\DicomTagPath.cs" />
+    <Compile Include="Utilities\Rules\ActionContext.cs" />
+    <Compile Include="Utilities\Rules\ActionItemBase.cs" />
+    <Compile Include="Utilities\Rules\ActionOperatorCompilerBase.cs" />
+    <Compile Include="Utilities\Rules\Rule.cs" />
+    <Compile Include="Utilities\Rules\RulesEngineStatistics.cs" />
+    <Compile Include="Utilities\Rules\RulesEngine.cs" />
+    <Compile Include="Utilities\Rules\RuleTypeCollection.cs" />
+    <Compile Include="Utilities\Rules\Specifications\DicomAgeGreaterThanSpecification.cs" />
+    <Compile Include="Utilities\Rules\Specifications\DicomAgeLessThanSpecification.cs" />
+    <Compile Include="Utilities\Rules\Specifications\DicomExpression.cs" />
+    <Compile Include="Utilities\StudyBuilder\DicomConverter.cs" />
+    <Compile Include="Utilities\StudyBuilder\IUidCollection.cs" />
+    <Compile Include="Utilities\StudyBuilder\PatientNode.cs" />
+    <Compile Include="Utilities\StudyBuilder\PatientNodeCollection.cs" />
+    <Compile Include="Utilities\StudyBuilder\PatientSex.cs" />
+    <Compile Include="Utilities\StudyBuilder\SeriesNode.cs" />
+    <Compile Include="Utilities\StudyBuilder\SeriesNodeCollection.cs" />
+    <Compile Include="Utilities\StudyBuilder\SopInstanceNode.cs" />
+    <Compile Include="Utilities\StudyBuilder\SopInstanceNodeCollection.cs" />
+    <Compile Include="Utilities\StudyBuilder\StudyBuilder.cs" />
+    <Compile Include="Utilities\StudyBuilder\StudyBuilderNode.cs" />
+    <Compile Include="Utilities\StudyBuilder\StudyNode.cs" />
+    <Compile Include="Utilities\StudyBuilder\StudyNodeCollection.cs" />
+    <Compile Include="Utilities\Tests\DicomTagPathTests.cs" />
+    <Compile Include="Utilities\Xml\InstanceXmlDicomAttributeCollection.cs" />
+    <Compile Include="Utilities\Xml\Tests\InstanceXmlTests.cs" />
+    <Compile Include="Utilities\Xml\Tests\StudyXmlTests.cs" />
+    <Compile Include="Validation\DicomValidator.cs" />
+    <Compile Include="IDicomCharacterSetParser.cs" />
+    <Compile Include="Network\DicomNetworkException.cs" />
+    <Compile Include="Network\AssociationParameters.cs" />
+    <Compile Include="Network\DicomClient.cs" />
+    <Compile Include="Network\DicomServer.cs" />
+    <Compile Include="Network\DicomStatus.cs" />
+    <Compile Include="Network\IDicomClientHandler.cs" />
+    <Compile Include="Network\IDicomServerHandler.cs" />
+    <Compile Include="Network\Listener.cs" />
+    <Compile Include="Network\NetworkBase.cs" />
+    <Compile Include="Network\PDataTFStream.cs" />
+    <Compile Include="Network\PDU.cs" />
+    <Compile Include="Tests\AbstractTest.cs" />
+    <Compile Include="Tests\AssociationTests.cs" />
+    <Compile Include="Tests\AttributeTests.cs" />
+    <Compile Include="Tests\DicomFieldTests.cs" />
+    <Compile Include="Tests\FileTest.cs" />
+    <Compile Include="Utilities\Anonymization\DicomAnonymizer.cs" />
+    <Compile Include="Utilities\Anonymization\DicomAnonymizerTags.cs" />
+    <Compile Include="Utilities\Anonymization\SeriesData.cs" />
+    <Compile Include="Utilities\Anonymization\StudyData.cs" />
+    <Compile Include="Utilities\Anonymization\Tests\AnonymizationTests.cs" />
+    <Compile Include="Utilities\DicomStringHelper.cs" />
+    <Compile Include="Utilities\Statistics\AssociationStatisticsRecorder.cs" />
+    <Compile Include="Utilities\Statistics\TransmissionStatistics.cs" />
+    <Compile Include="Utilities\Tests\DicomStringHelperTests.cs" />
+    <Compile Include="Utilities\Xml\BaseInstanceXml.cs" />
+    <Compile Include="Utilities\Xml\InstanceXml.cs" />
+    <Compile Include="Utilities\Xml\SeriesXml.cs" />
+    <Compile Include="Utilities\Xml\StudyXml.cs" />
+    <Compile Include="Utilities\Xml\StudyXmlIo.cs" />
+    <Compile Include="Utilities\Xml\StudyXmlOutputSettings.cs" />
+    <Compile Include="Utilities\Xml\Tests\GeneralStreamingTest.cs" />
+    <Compile Include="Validation\StringValueValidation.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <EmbeddedResource Include="Audit\DicomAuditMessageSchema.xsd">
+      <SubType>
+      </SubType>
+    </EmbeddedResource>
+    <None Include="Audit\DicomAuditMessageSchema.xsx">
+      <DependentUpon>DicomAuditMessageSchema.xsd</DependentUpon>
+    </None>
+    <None Include="DicomSettings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>DicomSettings.Designer.cs</LastGenOutput>
+    </None>
+    <EmbeddedResource Include="DicomTagDictionary.data" />
+    <None Include="Network\NetworkSettings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>NetworkSettings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="ServiceModel\Streaming\StreamingSettings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>StreamingSettings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 2.0 %28x86%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.0 %28x86%29</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Iod\Resources\HotIronStandardColorPalette.xml" />
+    <EmbeddedResource Include="Iod\Resources\HotMetalBlueStandardColorPalette.xml" />
+    <EmbeddedResource Include="Iod\Resources\PET20StepStandardColorPalette.xml" />
+    <EmbeddedResource Include="Iod\Resources\PETStandardColorPalette.xml" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="..\Common\ClearCanvas.Strings.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+    <PostBuildEvent />
+  </PropertyGroup>
+</Project>

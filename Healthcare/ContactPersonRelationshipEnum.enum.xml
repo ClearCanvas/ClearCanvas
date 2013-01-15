@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<enum class="ContactPersonRelationship">
+  <enum-value code="MTH">
+	<value>Mother</value>
+	<description>Mother</description>
+  </enum-value>
+  <enum-value code="FTH">
+	<value>Father</value>
+	<description>Father</description>
+  </enum-value>
+  <enum-value code="GRD">
+	<value>Guardian</value>
+	<description>Guardian</description>
+  </enum-value>
+  <enum-value code="CGV">
+	<value>Care Giver</value>
+	<description>Care Giver</description>
+  </enum-value>
+  <enum-value code="SPO">
+	<value>Spouse</value>
+	<description>Spouse</description>
+  </enum-value>
+  <enum-value code="BRO">
+	<value>Brother</value>
+	<description>Brother</description>
+  </enum-value>
+  <enum-value code="SIS">
+	<value>Sister</value>
+	<description>Sister</description>
+  </enum-value>
+  <enum-value code="SON">
+	<value>Son</value>
+	<description>Son</description>
+  </enum-value>
+  <enum-value code="DAU">
+	<value>Daughter</value>
+	<description>Daughter</description>
+  </enum-value>
+  <enum-value code="OTH">
+	<value>Other</value>
+	<description>Other</description>
+  </enum-value>
+</enum>

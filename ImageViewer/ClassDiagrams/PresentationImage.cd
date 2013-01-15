@@ -1,0 +1,113 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Font Name="Tahoma" Size="8.25" />
+  <Class Name="ClearCanvas.ImageViewer.PresentationImage" Collapsed="true">
+    <Position X="3.5" Y="3.25" Width="2" />
+    <TypeIdentifier>
+      <FileName>PresentationImage.cs</FileName>
+      <HashCode>UEMVACAgICBAAgAAABACAABAFACADgEIAABAAIAAATI=</HashCode>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="ImageViewer" />
+      <Property Name="ParentDisplaySet" />
+      <Property Name="Tile" />
+      <Property Name="SceneGraph" />
+      <Property Name="SelectedGraphic" />
+      <Property Name="FocussedGraphic" />
+      <Property Name="ImageRenderer" />
+    </ShowAsAssociation>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <AssociationLine Name="ImageViewer" Type="ClearCanvas.ImageViewer.IImageViewer" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="3.5" Y="3.312" />
+        <Point X="3.125" Y="3.312" />
+        <Point X="3.125" Y="2.815" />
+        <Point X="2" Y="2.815" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="ParentDisplaySet" Type="ClearCanvas.ImageViewer.IDisplaySet" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="3.5" Y="3.688" />
+        <Point X="3.125" Y="3.688" />
+        <Point X="3.125" Y="4.125" />
+        <Point X="2" Y="4.125" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.1" Y="-0.263" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="SceneGraph" Type="ClearCanvas.ImageViewer.Graphics.CompositeGraphic" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="5.188" Y="3.759" />
+        <Point X="5.188" Y="4.315" />
+        <Point X="7" Y="4.315" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="FocussedGraphic" Type="ClearCanvas.ImageViewer.Graphics.IFocussableGraphic" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="5.188" Y="3.25" />
+        <Point X="5.188" Y="2.097" />
+        <Point X="7" Y="2.097" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="ImageRenderer" Type="ClearCanvas.ImageViewer.Rendering.IRenderer" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="4.75" Y="3.759" />
+        <Point X="4.75" Y="5.315" />
+        <Point X="7" Y="5.315" />
+      </Path>
+    </AssociationLine>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ClearCanvas.ImageViewer.Graphics.CompositeGraphic" Collapsed="true">
+    <Position X="7" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Graphics\CompositeGraphic.cs</FileName>
+      <HashCode>CAKAAIAAAKBAAQAAAgAAAAAACAAAAAIKAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="ClearCanvas.ImageViewer.Graphics.IFocussableGraphic" Collapsed="true">
+    <Position X="7" Y="1.75" Width="1.75" />
+    <TypeIdentifier>
+      <FileName>Graphics\IFocussableGraphic.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="ClearCanvas.ImageViewer.Rendering.IRenderer" Collapsed="true">
+    <Position X="7" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Rendering\IRenderer.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAACAAAA=</HashCode>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="ClearCanvas.ImageViewer.Graphics.ISelectableGraphic" Collapsed="true">
+    <Position X="7" Y="2.75" Width="1.75" />
+    <TypeIdentifier>
+      <FileName>Graphics\ISelectableGraphic.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAI=</HashCode>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="ClearCanvas.ImageViewer.IDisplaySet" Collapsed="true">
+    <Position X="0.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>IDisplaySet.cs</FileName>
+      <HashCode>AACIAAAAAAAAAAAAABACAAQAAAIABgAIAAAAAAAEABI=</HashCode>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="ClearCanvas.ImageViewer.IImageViewer" Collapsed="true">
+    <Position X="0.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>IImageViewer.cs</FileName>
+      <HashCode>ACCAoCABEABgAAAAQAAAAAAEAAAAAAAIAAACAAAAAAQ=</HashCode>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="ClearCanvas.ImageViewer.ITile" Collapsed="true">
+    <Position X="3.75" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>ITile.cs</FileName>
+      <HashCode>AAAAAAAgAAAAAIAAACAIAAAACAIAAgAAAAAAQAAAAAI=</HashCode>
+    </TypeIdentifier>
+  </Interface>
+</ClassDiagram>

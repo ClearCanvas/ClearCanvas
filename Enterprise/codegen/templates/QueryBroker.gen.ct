@@ -1,0 +1,61 @@
+// This file is machine generated - changes will be lost.
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+using ClearCanvas.Common;
+using ClearCanvas.Common.Utilities;
+using ClearCanvas.Enterprise.Common;
+using ClearCanvas.Enterprise.Hibernate;
+using ClearCanvas.Enterprise.Hibernate.Hql;
+
+namespace <%= namespace %>
+{
+    /// <summary>
+    /// NHibernate implementation of <see cref="I<%= queryName %>Broker"/>.
+    /// </summary>
+    [ExtensionOf(typeof(BrokerExtensionPoint))]
+    public partial class <%= queryName %>Broker : Broker, I<%= queryName %>Broker
+    {
+        public IList<<%= resultClass.qualifiedName %>> Query(<%= criteriaClass.qualifiedName %> criteria)
+        {
+        	return this.Query(criteria, null);
+        }
+    
+        public IList<<%= resultClass.qualifiedName %>> Query(<%= criteriaClass.qualifiedName %> criteria, SearchResultPage page)
+        {
+            HqlReportQuery query = new HqlReportQuery(new HqlFrom("<%= root.hqlAlias %>", "<%= root.dataType %>"));
+            
+            <% orderedJoins.each do |j| %>
+            query.Joins.Add(new HqlJoin("<%= j.hqlAlias %>", "<%= j.source %>"));
+	  		<% end %>
+
+            <% resultFieldMappings.each do |m| %>
+            query.Selects.Add(new HqlSelect("<%= m.source %>"));
+	  		<% end %>
+
+            <% criteriaFieldMappings.each do |m| %>
+            query.Conditions.AddRange(HqlCondition.FromSearchCriteria("<%= m.source %>", criteria.SubCriteria["<%= m.name %>"]));
+	  		<% end %>
+
+            <% criteriaFieldMappings.each do |m| %>
+            query.Sorts.AddRange(HqlSort.FromSearchCriteria("<%= m.source %>", criteria.SubCriteria["<%= m.name %>"]));
+	  		<% end %>
+	  		
+	  		query.Page = page;
+
+            return CollectionUtils.Map<object[], <%= resultClass.qualifiedName %>, List<<%= resultClass.qualifiedName %>>>(
+            	ExecuteHql(query),
+            	delegate(object[] tuple)
+            	{
+            		<%= resultClass.qualifiedName %> result = new <%= resultClass.qualifiedName %>();
+            		
+              		<% resultFieldMappings.each do |m| %>
+              		result.<%= m.name %> = (<%= m.dataType %>)tuple[<%= m.index %>];
+	  				<% end %>
+	  				
+	  				return result;
+            	});
+        }
+    }
+}

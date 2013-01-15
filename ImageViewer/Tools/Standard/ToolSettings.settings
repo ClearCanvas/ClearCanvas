@@ -1,0 +1,27 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="ClearCanvas.ImageViewer.Tools.Standard" GeneratedClassName="ToolSettings">
+  <Profiles />
+  <Settings>
+    <Setting Name="ShowRawPixelValue" Description="Enables display of stored pixel value when using the probe tool." Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="ShowVOIPixelValue" Description="Enables display of post-VOI LUT value when using the probe tool." Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="TextCalloutMode" Description="Last used text tool mode." Type="System.String" Scope="User">
+      <Value Profile="(Default)">TextCallout</Value>
+    </Setting>
+    <Setting Name="MagnificationFactor" Description="Magnification factor for magnifier tool." Type="System.Single" Scope="User">
+      <Value Profile="(Default)">2</Value>
+    </Setting>
+    <Setting Name="InvertedZoomToolOperation" Description="Inverts the operation of the Zoom tool such that moving the mouse up zooms out, and moving down zooms in." Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="MatchScaleForNonParallelImages" Description="Enables match scale tool for non-parallel images." Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="ToolModalityBehavior" Description="Configures modality-specific behavior for various tools" Type="ClearCanvas.ImageViewer.Tools.Standard.Configuration.ToolModalityBehaviorCollection" Scope="User">
+      <Value Profile="(Default)">Configuration.ToolModalityBehaviorCollectionDefault.xml</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

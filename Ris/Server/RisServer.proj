@@ -1,0 +1,94 @@
+<Project DefaultTargets="BuildSolution" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <Choose>
+    <When Condition=" '$(PROCESSOR_ARCHITEW6432)' == 'IA64' Or '$(PROCESSOR_ARCHITEW6432)' == 'AMD64' Or '$(PROCESSOR_ARCHITECTURE)' == 'IA64' Or '$(PROCESSOR_ARCHITECTURE)' == 'AMD64'">
+      <PropertyGroup>
+        <BuildPlatform>x64</BuildPlatform>
+      </PropertyGroup>
+    </When>
+    <When Condition="'$(PROCESSOR_ARCHITECTURE)' == 'x86' ">
+      <PropertyGroup>
+        <BuildPlatform>x86</BuildPlatform>
+      </PropertyGroup>
+    </When>
+    <Otherwise>
+      <PropertyGroup>
+        <BuildPlatform></BuildPlatform>
+      </PropertyGroup>
+    </Otherwise>
+  </Choose>
+
+  <PropertyGroup>
+    <TargetPlatform>$(BuildPlatform)</TargetPlatform>
+  </PropertyGroup>
+
+  <Choose>
+    <When Condition="'$(TargetPlatform)' == 'x64'">
+      <PropertyGroup>
+		<PlatformName>x64</PlatformName>
+        <PlatformSubFolder>x64</PlatformSubFolder>
+		<PlatformBuildOptions></PlatformBuildOptions>
+      </PropertyGroup>
+    </When>
+    <Otherwise>
+      <!-- assumes Win32 -->
+      <PropertyGroup>
+		<PlatformName>x86</PlatformName>
+        <PlatformSubFolder></PlatformSubFolder>
+		<PlatformBuildOptions></PlatformBuildOptions>
+      </PropertyGroup>
+    </Otherwise>
+  </Choose>
+
+  <!-- set out some defaults -->
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <DistributionBuild>false</DistributionBuild>
+  </PropertyGroup>
+
+  <Choose>
+    <When Condition="$(DistributionBuild)">
+      <PropertyGroup>
+        <DistributionDir>$(MSBuildProjectDirectory)\..\..\Distribution\Build\RisServer\$(PlatformSubFolder)\$(Configuration)</DistributionDir>
+      </PropertyGroup>
+    </When>
+    <Otherwise>
+      <PropertyGroup>
+        <DistributionDir></DistributionDir>
+      </PropertyGroup>
+    </Otherwise>
+  </Choose>
+
+  <Choose>
+    <When Condition="$(DistributionBuild) And '$(Configuration)' == 'Release' And '$(KeyFile)' != ''">
+      <PropertyGroup>
+        <RisServerProperties>Platform=Any CPU;Configuration=$(Configuration);TargetPlatform=$(TargetPlatform);DistributionDir=$(DistributionDir);SignAssembly=true;DelaySign=false;AssemblyOriginatorKeyFile=$(KeyFile)</RisServerProperties>
+      </PropertyGroup>
+    </When>
+    <Otherwise>
+      <PropertyGroup>
+        <RisServerProperties>Platform=Any CPU;Configuration=$(Configuration);TargetPlatform=$(TargetPlatform);DistributionDir=$(DistributionDir)</RisServerProperties>
+      </PropertyGroup>
+    </Otherwise>
+  </Choose>
+
+  <Target Name="Build JScript">
+    <MSBuild Projects="$(MSBuildProjectDirectory)\..\..\JScript\Build.proj" Properties="Configuration=$(Configuration);KeyFile=$(KeyFile)"/>
+  </Target>
+
+  <Target Name="CopyRISWebFiles">
+    <CreateItem Include="$(MSBuildProjectDirectory)\..\web\**\*.*">
+      <Output TaskParameter="Include" ItemName="RisWebFiles" />
+    </CreateItem>
+    <Copy SourceFiles="@(RisWebFiles)" DestinationFiles="$(DistributionDir)\web\%(RecursiveDir)%(Filename)%(Extension)" />
+  </Target>
+
+  <Target Name="BuildSolution" DependsOnTargets="Build JScript" >
+    <RemoveDir Condition="$(DistributionBuild)" Directories="$(DistributionDir)" />
+
+    <MSBuild Projects=".\RisServerCodeGen.proj" />
+    <MSBuild Projects=".\RisServer.sln" Properties="$(RisServerProperties)" />
+
+    <CallTarget Targets="CopyRISWebFiles" Condition="$(DistributionBuild)" />
+  </Target>
+</Project>

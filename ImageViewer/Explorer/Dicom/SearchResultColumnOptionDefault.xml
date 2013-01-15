@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<SearchResultColumnOptionCollection>
+  <Column Key="Instances">
+    <SearchResultColumnOption>
+      <Visible>True</Visible>
+    </SearchResultColumnOption>
+  </Column>
+  <Column Key="Phonetic Name">
+    <SearchResultColumnOption>
+      <Visible>False</Visible>
+    </SearchResultColumnOption>
+  </Column>
+  <Column Key="Ideographic Name">
+    <SearchResultColumnOption>
+      <Visible>False</Visible>
+    </SearchResultColumnOption>
+  </Column>
+</SearchResultColumnOptionCollection>

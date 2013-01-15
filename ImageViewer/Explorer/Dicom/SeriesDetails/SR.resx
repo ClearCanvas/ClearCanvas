@@ -1,0 +1,230 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="LinkOpenActivityMonitor" xml:space="preserve">
+    <value>Open Activity Monitor</value>
+  </data>
+  <data name="MenuDeleteSeries" xml:space="preserve">
+    <value>Delete Series</value>
+  </data>
+  <data name="MenuRetrieveSeries" xml:space="preserve">
+    <value>Retrieve Series</value>
+  </data>
+  <data name="MenuSendSeries" xml:space="preserve">
+    <value>Send Series</value>
+  </data>
+  <data name="MenuShowSeriesDetails" xml:space="preserve">
+    <value>View Series Details</value>
+  </data>
+  <data name="MessageCannotSendSeriesScheduledForDeletion" xml:space="preserve">
+    <value>Series scheduled for deletion cannot be sent.</value>
+  </data>
+  <data name="MessageConfirmDeleteEntireStudy" xml:space="preserve">
+    <value>Deleting the remaining series will cause the entire study to be deleted. Are you sure you want to delete the entire study?</value>
+  </data>
+  <data name="MessageConfirmDeleteSeries" xml:space="preserve">
+    <value>Are you sure you want to delete the selected series?</value>
+  </data>
+  <data name="MessageConfirmSendToMultipleServers" xml:space="preserve">
+    <value>You have selected multiple servers to send to.  Are you sure you want to continue?</value>
+  </data>
+  <data name="MessageFailedToDeleteSeries" xml:space="preserve">
+    <value>Failed to initiate deletion of the series.</value>
+  </data>
+  <data name="MessageFailedToRetrieveSeries" xml:space="preserve">
+    <value>Failed to initiate retrieving of the selected items.</value>
+  </data>
+  <data name="MessageFailedToSendSeries" xml:space="preserve">
+    <value>Failed to initiate sending of the selected items.</value>
+  </data>
+  <data name="MessageFormatConfirmDeleteSeries" xml:space="preserve">
+    <value>Are you sure you want to delete the {0} selected series?</value>
+  </data>
+  <data name="MessageFormatDeleteSeriesScheduled" xml:space="preserve">
+    <value>The deletion of {0} series in the study for {1} [{2},A#:{3}] has been scheduled.</value>
+  </data>
+  <data name="MessageFormatRetrieveSeriesScheduled" xml:space="preserve">
+    <value>The retrieve of {0} series for {2} [{3},A#:{4}] from {1} has been scheduled.</value>
+  </data>
+  <data name="MessageFormatSendSeriesScheduled" xml:space="preserve">
+    <value>The send of {0} series to {1} for {2} [{3},A#:{4}] has been scheduled.</value>
+  </data>
+  <data name="MessagePartialStudyWarning" xml:space="preserve">
+    <value>Deleting series may result in partial study data, which could lead to patient misdiagnosis.</value>
+  </data>
+  <data name="MessageRetrieveDicomServerServiceNotRunning" xml:space="preserve">
+    <value>Failed to retrieve the selected series because the DICOM Server service is not running.
+Please ensure the ClearCanvas Service is running or contact your system administrator for assistance.</value>
+  </data>
+  <data name="MessageSelectDestination" xml:space="preserve">
+    <value>Please select a destination.</value>
+  </data>
+  <data name="MessageSelectSeriesNotAlreadyScheduledForDeletion" xml:space="preserve">
+    <value>Please select series that are not already scheduled for deletion.</value>
+  </data>
+  <data name="MessageSendDicomServerServiceNotRunning" xml:space="preserve">
+    <value>Failed to send the selected studies because the DICOM Server service is not running.
+Please ensure the ClearCanvas Service is running or contact your system administrator for assistance.</value>
+  </data>
+  <data name="MessageStudyInUse" xml:space="preserve">
+    <value>The selected study is currently in use.  Please close all relevant workspaces before deleting.</value>
+  </data>
+  <data name="TitleDeleteScheduled" xml:space="preserve">
+    <value>Delete Scheduled</value>
+  </data>
+  <data name="TitleModality" xml:space="preserve">
+    <value>Modality</value>
+  </data>
+  <data name="TitleNumberOfSeriesRelatedInstances" xml:space="preserve">
+    <value>Instances</value>
+  </data>
+  <data name="TitleSendSeries" xml:space="preserve">
+    <value>Send Series</value>
+  </data>
+  <data name="TitleSeriesDescription" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="TitleSeriesDetails" xml:space="preserve">
+    <value>Series Details</value>
+  </data>
+  <data name="TitleSeriesNumber" xml:space="preserve">
+    <value>Number</value>
+  </data>
+  <data name="ToolbarDeleteSeries" xml:space="preserve">
+    <value>Delete Series</value>
+  </data>
+  <data name="ToolbarRetrieveSeries" xml:space="preserve">
+    <value>Retrieve Series</value>
+  </data>
+  <data name="ToolbarSendSeries" xml:space="preserve">
+    <value>Send Series</value>
+  </data>
+  <data name="TooltipDeleteSeries" xml:space="preserve">
+    <value>Delete the selected series from local storage</value>
+  </data>
+  <data name="TooltipRetrieveSeries" xml:space="preserve">
+    <value>Retrieve the selected series</value>
+  </data>
+  <data name="TooltipSendSeries" xml:space="preserve">
+    <value>Send the selected series to another DICOM device</value>
+  </data>
+  <data name="TooltipSeriesDetails" xml:space="preserve">
+    <value>View Series Details</value>
+  </data>
+</root>

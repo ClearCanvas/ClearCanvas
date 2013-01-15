@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<enum class="ProtocolRejectReason">
+  <enum-value code="IO">
+    <value>Innappriate order</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="CM">
+    <value>Other</value>
+    <description></description>
+  </enum-value>
+</enum>

@@ -1,0 +1,12 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="ClearCanvas.ImageViewer.Tools.Standard.ImageProperties" GeneratedClassName="ImagePropertiesSettings">
+  <Profiles />
+  <Settings>
+    <Setting Name="StandardImagePropertiesXml" Description="XML document defines standard DICOM tags to show in the Image Properties window." Type="System.Xml.XmlDocument" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="ShowEmptyValues" Description="Specifies whether or not to show empty values in the Image Properties window." Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

@@ -1,0 +1,226 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ManifestInput xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.clearcanvas.ca">
+  <Files>
+	<File name="Web\App_Themes\Default\Global.skin" />
+	<File name="Web\App_Themes\Default\images\infoSmall.png" checksum="true" />
+	<File name="Web\App_Themes\Default\images\AboutBackground.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Background.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\blank.gif" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Buttons\AddDataAccessDisabled.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Buttons\AddDataAccessEnabled.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Buttons\AddDataAccessHover.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Buttons\AddDisabled.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Buttons\AddEnabled.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Buttons\AddHover.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Buttons\ApplyDisabled.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Buttons\ApplyEnabled.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Buttons\ApplyHover.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Buttons\CalendarIcon.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Buttons\CancelDisabled.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Buttons\CancelEnabled.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Buttons\CancelHover.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Buttons\ClearButtonBackground.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Buttons\CopyDisabled.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Buttons\CopyEnabled.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Buttons\CopyHover.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Buttons\DeleteAllDisabled.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Buttons\DeleteAllEnabled.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Buttons\DeleteAllHover.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Buttons\DeleteDisabled.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Buttons\DeleteEnabled.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Buttons\DeleteHover.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Buttons\DeleteSeriesDisabled.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Buttons\DeleteSeriesEnabled.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Buttons\DeleteSeriesHover.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Buttons\DeleteStudyDisabled.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Buttons\DeleteStudyEnabled.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Buttons\DeleteStudyHover.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Buttons\DiscardDisabled.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Buttons\DiscardEnabled.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Buttons\DiscardHover.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Buttons\DoneDisabled.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Buttons\DoneEnabled.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Buttons\DoneHover.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Buttons\EditDisabled.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Buttons\EditEnabled.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Buttons\EditHover.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Buttons\EditStudyDisabled.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Buttons\EditStudyEnabled.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Buttons\EditStudyHover.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Buttons\MoveDisabled.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Buttons\MoveEnabled.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Buttons\MoveHover.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Buttons\MoveSeriesDisabled.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Buttons\MoveSeriesEnabled.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Buttons\MoveSeriesHover.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Buttons\NewStudyDisabled.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Buttons\NewStudyEnabled.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Buttons\NewStudyHover.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Buttons\NoDisabled.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Buttons\NoEnabled.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Buttons\NoHover.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Buttons\OKDisabled.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Buttons\OKEnabled.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Buttons\OKHover.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Buttons\ReconcileDisabled.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Buttons\ReconcileEnabled.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Buttons\ReconcileHover.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Buttons\ReprocessDisabled.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Buttons\ReprocessEnabled.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Buttons\ReprocessHover.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Buttons\ReprocessStudyDisabled.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Buttons\ReprocessStudyEnabled.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Buttons\ReprocessStudyHover.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Buttons\RescheduleDisabled.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Buttons\RescheduleEnabled.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Buttons\RescheduleHover.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Buttons\ResetDisabled.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Buttons\ResetEnabled.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Buttons\ResetHover.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Buttons\ResetPasswordDisabled.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Buttons\ResetPasswordEnabled.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Buttons\ResetPasswordHover.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Buttons\RestoreDisabled.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Buttons\RestoreEnabled.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Buttons\RestoreHover.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Buttons\SearchClicked.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Buttons\SearchDisabled.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Buttons\SearchEnabled.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Buttons\SearchHover.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Buttons\SearchIcon.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Buttons\SearchIconHover.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Buttons\UpdateDisabled.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Buttons\UpdateEnabled.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Buttons\UpdateHover.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Buttons\ViewDetailsDisabled.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Buttons\ViewDetailsEnabled.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Buttons\ViewDetailsHover.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Buttons\ViewImagesDisabled.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Buttons\ViewImagesEnabled.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Buttons\ViewImagesHover.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Buttons\ViewSeriesDisabled.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Buttons\ViewSeriesEnabled.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Buttons\ViewSeriesHover.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Buttons\ViewStudyDisabled.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Buttons\ViewStudyEnabled.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Buttons\ViewStudyHover.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Buttons\YesDisabled.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Buttons\YesEnabled.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Buttons\YesHover.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Controls\Calendar\calendar-arrow-left.gif" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Controls\Calendar\calendar-arrow-right.gif" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Controls\Calendar\TitleBackground.gif" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Controls\Dialog\DialogActiveTabLeft.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Controls\Dialog\DialogActiveTabMiddle.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Controls\Dialog\DialogActiveTabRight.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Controls\Dialog\DialogBodyBackground.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Controls\Dialog\DialogBodyBackgroundTall.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Controls\Dialog\DialogHoverTabLeft.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Controls\Dialog\DialogHoverTabMiddle.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Controls\Dialog\DialogHoverTabRight.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Controls\Dialog\DialogInactiveTabLeft.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Controls\Dialog\DialogInactiveTabMiddle.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Controls\Dialog\DialogInactiveTabRight.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Controls\Dialog\DialogTabContentBottom.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Controls\Dialog\DialogTitleBarBG-left.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Controls\Dialog\DialogTitleBarBG-right.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Controls\Dialog\DialogTitleBarBG.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Controls\Dialog\HeadingBackground.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Controls\Dialog\LinkButtonBackground.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Controls\Dialog\ReconcileButtonBackground.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Controls\Dialog\SubHeadingBackground.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Controls\GridView\GridViewHeaderBackground.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Controls\GridView\GridViewPagerFirstDisabled.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Controls\GridView\GridViewPagerFirstEnabled.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Controls\GridView\GridViewPagerLastDisabled.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Controls\GridView\GridViewPagerLastEnabled.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Controls\GridView\GridViewPagerNextDisabled.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Controls\GridView\GridViewPagerNextEnabled.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Controls\GridView\GridViewPagerPreviousDisabled.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Controls\GridView\GridViewPagerPreviousEnabled.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Controls\GridView\GridViewPagerTopBackground.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Controls\GridView\GridViewPagerTotalStudiesLeft.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Controls\GridView\GridViewPagerTotalStudiesRight.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Controls\GridView\GridViewSelectedBackground.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Controls\GridView\WebViewerPagerFirstEnabled.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Controls\GridView\WebViewerPagerLastEnabled.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Controls\Tabs\TabActiveLeft.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Controls\Tabs\TabActiveMiddle.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Controls\Tabs\TabActiveRight.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Controls\Tabs\TabHeaderBackgroundTop.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Controls\Tabs\TabHoverLeft.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Controls\Tabs\TabHoverMiddle.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Controls\Tabs\TabHoverRight.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Controls\Tabs\TabInactiveLeft.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Controls\Tabs\TabInactiveMiddle.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Controls\Tabs\TabInactiveRight.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Error\ErrorDescriptionBackground.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Error\ErrorMessageBackground.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Error\UserEscapeLinkBackground.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Header\LocationBackground.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Header\LocationEdge.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Header\MenuBackground.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Header\MenuEdge.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Header\MenuHoverBackground.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Indicators\AcceptKOPRFeature.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Indicators\ajax-loader-blue.gif" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Indicators\ajax-loader-green.gif" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Indicators\ajax-loader-yellow.gif" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Indicators\ajax-loader.gif" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Indicators\AlertIndicatorBackground.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Indicators\AutoRouteFeature.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Indicators\checked.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Indicators\HelpSmall.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Indicators\IdeographicName.gif" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Indicators\MenuArrow.gif" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Indicators\PhoneticName.gif" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Indicators\QueryFeature.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Indicators\RefreshEnabled.gif" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Indicators\RefreshEnabled.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Indicators\RetrieveFeature.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Indicators\Searching.gif" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Indicators\StoreFeature.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Indicators\unchecked.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Indicators\usage.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Indicators\Warning.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Indicators\WarningSmall.png" />
+    <File name="Web\App_Themes\Default\images\Indicators\Watermark.gif" checksum="true" />
+    <File name="Web\App_Themes\Default\images\MainContent\dropdown.gif" checksum="true" />
+    <File name="Web\App_Themes\Default\images\MainContent\Loading.gif" checksum="true" />
+    <File name="Web\App_Themes\Default\images\MainContent\Loading.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\MainContent\MainContentBottom.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\MainContent\MainContentBottomLeftCorner.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\MainContent\MainContentBottomRightCorner.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\MainContent\MainContentLeftEdge.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\MainContent\MainContentRightEdge.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\MainContent\MainContentTitleBackground.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\MainContent\PatientSummaryBackground.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\MainContent\SearchDropDownListBackground.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\MainContent\SearchPanelBackground.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\MainContent\SearchTextBoxBackground.png" checksum="true" />
+	<File name="Web\App_Themes\Default\images\MainContent\SelectedPartitionTabBackground.png" checksum="true" />
+	<File name="Web\App_Themes\Default\images\MainContent\ToolbarButtonPanelBackground.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\MainContent\WebViewerToolbarBackground.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Pages\Dashboard\SidebarItemBackground.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Pages\Dashboard\StudiesSummaryTotalBackground.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Pages\Dashboard\UserOverviewBackground.png" checksum="true" />
+    <File name="Web\App_Themes\Default\StyleSheets\Admin.css" />
+    <File name="Web\App_Themes\Default\StyleSheets\Error.css" />
+    <File name="Web\App_Themes\Default\StyleSheets\Global.css" />
+    <File name="Web\App_Themes\Default\StyleSheets\Login.css" />
+    <File name="Web\App_Themes\Default\StyleSheets\Studies.css" />
+    <File name="Web\App_Themes\Default\StyleSheets\StudyIntegrityQueue.css" />
+    <File name="Web\App_Themes\Default\StyleSheets\WorkQueue.css" />
+    <File name="Web\App_Themes\Default\StyleSheets\Controls\Calendar.css" />
+    <File name="Web\App_Themes\Default\StyleSheets\Controls\Dialog.css" />
+    <File name="Web\App_Themes\Default\StyleSheets\Controls\GridView.css" />
+    <File name="Web\App_Themes\Default\StyleSheets\Controls\InvalidInputIndicator.css" />
+    <File name="Web\App_Themes\Default\StyleSheets\Controls\jqueryMultiSelect.css" />
+    <File name="Web\App_Themes\Default\StyleSheets\Controls\PartitionTabs.css" />
+    <File name="Web\App_Themes\Default\StyleSheets\Controls\ReconcileDialog.css" />
+    <File name="Web\App_Themes\Default\StyleSheets\Controls\Tabs.css" />
+	  <File name="Web\App_Themes\Default\WebStation\SplashScreen.xaml" checksum="true"/>
+	  <File name="Web\App_Themes\Default\WebStation\WebstationLogo.png" checksum="true"/>
+
+  </Files>
+</ManifestInput>

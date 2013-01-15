@@ -1,0 +1,129 @@
+.sstp_mainTable {
+	border-width:1px;
+	border-style:solid;
+	border-color:#c0c0c0;
+	background-Color:#ffffff;
+}
+
+.sstp_title {
+	background-Color:#0000aa;
+}
+
+.sstp_titleText {
+	border-width:1px;
+	border-style:solid;
+	border-color:#3355ff;
+	padding:1px;
+	font-weight:bold;
+	font-family:arial;
+	font-size:11px;
+	text-decoration:none;
+	color:#ffffff;
+	cursor:pointer;
+}
+
+.sstp_titleTextHover {
+	border-width:1px;
+	border-style:solid;
+	border-color:#5599ff;
+	padding:1px;
+	font-weight:bold;
+	font-family:arial;
+	font-size:11px;
+	text-decoration:none;
+	color:#ffffff;
+	cursor:pointer;
+	background-color:#116699;
+}
+
+.sstp_selectorTable {
+
+	border-width:1px;
+	border-color:#a0a0a0;
+	border-style:solid;
+
+	background-color:#e5f5f5;
+}
+
+.sstp_selector {
+	border-width:1px;
+	border-color:#e5f5f5;
+	border-style:solid;
+	background-color:#e5f5f5;
+
+	font-family:arial;
+	font-size:11px;
+	text-align:left;
+	padding-left:10px;
+	padding-right:10px;
+	padding-top:2px;
+	padding-bottom:2px;
+	cursor:pointer;
+}
+
+.sstp_selectorHover {
+	border-width:1px;
+	border-color:#d0d0d0;
+	border-style:solid;
+
+	background-color:#ccddff;
+	font-family:arial;
+	font-size:11px;
+	text-align:left;
+	padding-left:10px;
+	padding-right:10px;
+	padding-top:2px;
+	padding-bottom:2px;
+	cursor:pointer;
+}
+
+.sstp_innerTable {
+	background-color:#ffffff;
+}
+
+.sstp_innerCell {
+	text-align:right;
+	font-family:arial;
+	font-size:11px;
+	color:#000000;
+	padding-left:3px;
+	padding-right:3px;
+	cursor:pointer;
+}
+
+.sstp_innerCellHover {
+	color:#000000;
+	background-color:#ccddff;
+	text-align:right;
+	font-family:arial;
+	font-size:11px;
+	padding-left:3px;
+	padding-right:3px;
+	cursor:pointer;
+}
+
+.sstp_innerCellSelected {
+	background-color:#ffff00;
+	text-align:right;
+	font-family:arial;
+	font-size:11px;
+	color:#000000;
+	padding-left:3px;
+	padding-right:3px;
+	cursor:pointer;
+}
+
+.sstp_innerCellSelectedHover {
+	color:#000000;
+	background-color:#ccddff;
+	text-align:right;
+	font-family:arial;
+	font-size:11px;
+	padding-left:3px;
+	padding-right:3px;
+	cursor:pointer;
+}
+
+.sstp_postfix {
+	color:#a0a0a0;
+}

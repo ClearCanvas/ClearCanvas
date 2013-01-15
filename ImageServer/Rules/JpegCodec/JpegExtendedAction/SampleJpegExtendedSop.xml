@@ -1,0 +1,30 @@
+﻿<!-- 
+This rule instructs the server to use JPEG Extended compression
+on 8-bit and 12-bit CT and MR studies that are not already Jpeg Baseline,
+JPEG Extended, or JPEG 2000 Lossy.
+-->
+<rule>
+  <condition expressionLanguage="dicom">
+	<and>
+	  <!-- JPEG Baseline -->
+	  <not-equal test="$TransferSyntaxUid" refValue="1.2.840.10008.1.2.4.50" />
+	  <!-- JPEG Extended -->
+	  <not-equal test="$TransferSyntaxUid" refValue="1.2.840.10008.1.2.4.51" />
+	  <!-- JPEG 2000 Lossless/Lossy -->
+	  <not-equal test="$TransferSyntaxUid" refValue="1.2.840.10008.1.2.4.91" />
+	  
+	  <or>
+		<equal test="$BitsStored" refValue="12" />
+		<equal test="$BitsStored" refValue="8"/>
+	  </or>
+	  <or>
+		<equal test="$Modality" refValue="CT" />
+		<equal test="$Modality" refValue="MR" />
+	  </or>
+	  <not-equal test="$PhotometricInterpretation" refValue="PALETTE COLOR" />
+	</and>
+  </condition>
+  <action>
+	<jpeg-extended-sop quality="80" convertFromPalette="true"/>
+  </action>
+</rule>

@@ -1,0 +1,13 @@
+﻿<!-- 
+This rule instructs the server to do schedule the amount of time a study will
+stay on the first tier of storage.  The time is set to 3 weeks from the study
+date.  The rule is applied to MR modality studies only.
+-->
+<rule>
+  <condition expressionLanguage="dicom">
+	<equal test="$Modality" refValue="MR" />
+  </condition>
+  <action>
+	<tier1-retention time="3" unit="weeks" refValue="$StudyDate"/>
+  </action>
+</rule>

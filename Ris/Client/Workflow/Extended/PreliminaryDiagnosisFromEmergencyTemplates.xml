@@ -1,0 +1,16 @@
+﻿<TemplateDefinitions hash="true">
+  <Templates array="true">
+    <item hash="true">
+      <DisplayName>Notify Radiology</DisplayName>
+      <OnBehalfOfGroup>ER Physician</OnBehalfOfGroup>
+      <Recipients array="true">
+        <item hash="true">
+          <Type>Group</Type>
+          <Id>Radiology Department</Id>
+          <Mandatory>true</Mandatory>
+        </item>
+      </Recipients>
+      <SuggestOtherRecipients>true</SuggestOtherRecipients>
+    </item>
+  </Templates>
+</TemplateDefinitions>

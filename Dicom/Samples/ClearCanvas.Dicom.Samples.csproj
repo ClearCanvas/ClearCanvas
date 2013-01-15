@@ -1,0 +1,152 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{F861DCC5-2BC0-4B8B-8DCD-656A3206E2A0}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ClearCanvas.Dicom.Samples</RootNamespace>
+    <AssemblyName>ClearCanvas.Dicom.Samples</AssemblyName>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <NoWin32Manifest>true</NoWin32Manifest>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\ReferencedAssemblies\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Compression.cs" />
+    <Compile Include="DicomdirDisplay.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DicomdirDisplay.Designer.cs">
+      <DependentUpon>DicomdirDisplay.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DicomdirReader.cs" />
+    <Compile Include="EditSop.cs" />
+    <Compile Include="SamplesForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SamplesForm.Designer.cs">
+      <DependentUpon>SamplesForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="SamplesForm.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>SamplesForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <None Include="app.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="StorageScp.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Common\ClearCanvas.Common.csproj">
+      <Project>{F6EAD428-E6CF-4DF6-B2F3-D33D532C5343}</Project>
+      <Name>ClearCanvas.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ClearCanvas.Dicom.csproj">
+      <Project>{AD9ECE2B-8268-4115-8DC8-860FBD011FFF}</Project>
+      <Name>ClearCanvas.Dicom</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Codec\Jpeg2000\Dicom.Jpeg2000.vcxproj">
+      <Project>{B389F627-F243-4B7E-8A04-90E1071B2754}</Project>
+      <Name>ClearCanvas.Dicom.Codec.Jpeg2000</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Codec\Jpeg\Jpeg.vcxproj">
+      <Project>{FC264853-24DF-4E17-BC69-871BAF421A6D}</Project>
+      <Name>ClearCanvas.Dicom.Codec.Jpeg</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Codec\Rle\ClearCanvas.Dicom.Codec.Rle.csproj">
+      <Project>{AB89527E-B1B6-49A4-B3A0-D07948FC23E0}</Project>
+      <Name>ClearCanvas.Dicom.Codec.Rle</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="SampleXml\StudyRootStudy.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="SampleXml\PatientRootPatient.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="DicomdirDisplay.resx">
+      <DependentUpon>DicomdirDisplay.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SampleXml\PatientRootImage.xml" />
+    <EmbeddedResource Include="SampleXml\PatientRootSeries.xml" />
+    <EmbeddedResource Include="SampleXml\PatientRootStudy.xml" />
+    <EmbeddedResource Include="SampleXml\StudyRootImage.xml" />
+    <EmbeddedResource Include="SampleXml\StudyRootSeries.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="SampleXml\PatientRootMoveImage.xml" />
+    <EmbeddedResource Include="SampleXml\PatientRootMovePatient.xml" />
+    <EmbeddedResource Include="SampleXml\PatientRootMoveSeries.xml" />
+    <EmbeddedResource Include="SampleXml\PatientRootMoveStudy.xml" />
+    <EmbeddedResource Include="SampleXml\StudyRootMoveImage.xml" />
+    <EmbeddedResource Include="SampleXml\StudyRootMoveSeries.xml" />
+    <EmbeddedResource Include="SampleXml\StudyRootMoveStudy.xml" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

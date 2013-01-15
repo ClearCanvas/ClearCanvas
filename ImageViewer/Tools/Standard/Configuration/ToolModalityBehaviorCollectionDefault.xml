@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<ToolModalityBehaviorCollection>
+  <Entry Modality="CR">
+    <ToolModalityBehavior>
+      <SelectedImageWindowLevelTool>True</SelectedImageWindowLevelTool>
+      <SelectedImageWindowLevelPresetsTool>True</SelectedImageWindowLevelPresetsTool>
+      <SelectedImageInvertTool>True</SelectedImageInvertTool>
+      <SelectedImagePanTool>True</SelectedImagePanTool>
+      <SelectedImageZoomTool>True</SelectedImageZoomTool>
+      <SelectedImageFlipTool>True</SelectedImageFlipTool>
+      <SelectedImageRotateTool>True</SelectedImageRotateTool>
+      <SelectedImageResetTool>True</SelectedImageResetTool>
+    </ToolModalityBehavior>
+  </Entry>
+  <Entry Modality="DX">
+    <ToolModalityBehavior>
+      <SelectedImageWindowLevelTool>True</SelectedImageWindowLevelTool>
+      <SelectedImageWindowLevelPresetsTool>True</SelectedImageWindowLevelPresetsTool>
+      <SelectedImageInvertTool>True</SelectedImageInvertTool>
+      <SelectedImagePanTool>True</SelectedImagePanTool>
+      <SelectedImageZoomTool>True</SelectedImageZoomTool>
+      <SelectedImageFlipTool>True</SelectedImageFlipTool>
+      <SelectedImageRotateTool>True</SelectedImageRotateTool>
+      <SelectedImageResetTool>True</SelectedImageResetTool>
+    </ToolModalityBehavior>
+  </Entry>
+  <Entry Modality="MG">
+    <ToolModalityBehavior>
+      <SelectedImageWindowLevelTool>True</SelectedImageWindowLevelTool>
+      <SelectedImageWindowLevelPresetsTool>True</SelectedImageWindowLevelPresetsTool>
+      <SelectedImageInvertTool>True</SelectedImageInvertTool>
+      <SelectedImagePanTool>True</SelectedImagePanTool>
+      <SelectedImageZoomTool>True</SelectedImageZoomTool>
+      <SelectedImageFlipTool>True</SelectedImageFlipTool>
+      <SelectedImageRotateTool>True</SelectedImageRotateTool>
+      <SelectedImageResetTool>True</SelectedImageResetTool>
+    </ToolModalityBehavior>
+  </Entry>
+  <Entry Modality="KO">
+    <ToolModalityBehavior>
+      <SelectedImageWindowLevelTool>True</SelectedImageWindowLevelTool>
+      <SelectedImageWindowLevelPresetsTool>True</SelectedImageWindowLevelPresetsTool>
+      <SelectedImageInvertTool>True</SelectedImageInvertTool>
+      <SelectedImagePanTool>True</SelectedImagePanTool>
+      <SelectedImageZoomTool>True</SelectedImageZoomTool>
+      <SelectedImageFlipTool>True</SelectedImageFlipTool>
+      <SelectedImageRotateTool>True</SelectedImageRotateTool>
+      <SelectedImageResetTool>True</SelectedImageResetTool>
+    </ToolModalityBehavior>
+  </Entry>
+</ToolModalityBehaviorCollection>

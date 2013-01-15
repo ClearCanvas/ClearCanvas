@@ -1,0 +1,227 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{9C04C2BC-BB87-4286-A2A6-49523B677060}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ClearCanvas.ImageViewer.VtkItkAdapters</RootNamespace>
+    <AssemblyName>ClearCanvas.ImageViewer.VtkItkAdapters</AssemblyName>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="ManagedITK.Calculators, Version=3.4.0.1, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\ReferencedAssemblies\Itk\ManagedITK.Calculators.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ManagedITK.CastFilters, Version=3.4.0.1, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\ReferencedAssemblies\Itk\ManagedITK.CastFilters.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ManagedITK.Common, Version=3.4.0.1, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\ReferencedAssemblies\Itk\ManagedITK.Common.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ManagedITK.ComposeFilters, Version=3.4.0.1, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\ReferencedAssemblies\Itk\ManagedITK.ComposeFilters.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ManagedITK.DistanceMaps, Version=3.4.0.1, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\ReferencedAssemblies\Itk\ManagedITK.DistanceMaps.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ManagedITK.EdgeFilters, Version=3.4.0.1, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\ReferencedAssemblies\Itk\ManagedITK.EdgeFilters.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ManagedITK.GradientFilters, Version=3.4.0.1, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\ReferencedAssemblies\Itk\ManagedITK.GradientFilters.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ManagedITK.IntensityFilters, Version=3.4.0.1, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\ReferencedAssemblies\Itk\ManagedITK.IntensityFilters.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ManagedITK.Interpolators, Version=3.4.0.1, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\ReferencedAssemblies\Itk\ManagedITK.Interpolators.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ManagedITK.IO, Version=3.4.0.1, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\ReferencedAssemblies\Itk\ManagedITK.IO.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ManagedITK.Iterators, Version=3.4.0.1, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\ReferencedAssemblies\Itk\ManagedITK.Iterators.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ManagedITK.LevelSetFilters, Version=3.4.0.1, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\ReferencedAssemblies\Itk\ManagedITK.LevelSetFilters.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ManagedITK.MorphologicalFilters, Version=3.4.0.1, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\ReferencedAssemblies\Itk\ManagedITK.MorphologicalFilters.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ManagedITK.NoiseFilters, Version=3.4.0.1, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\ReferencedAssemblies\Itk\ManagedITK.NoiseFilters.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ManagedITK.Optimizers, Version=3.4.0.1, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\ReferencedAssemblies\Itk\ManagedITK.Optimizers.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ManagedITK.Paths, Version=3.4.0.1, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\ReferencedAssemblies\Itk\ManagedITK.Paths.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ManagedITK.PixelMathFilters, Version=3.4.0.1, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\ReferencedAssemblies\Itk\ManagedITK.PixelMathFilters.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ManagedITK.ProjectionFilters, Version=3.4.0.1, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\ReferencedAssemblies\Itk\ManagedITK.ProjectionFilters.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ManagedITK.Registration, Version=3.4.0.1, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\ReferencedAssemblies\Itk\ManagedITK.Registration.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ManagedITK.ResizeFilters, Version=3.4.0.1, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\ReferencedAssemblies\Itk\ManagedITK.ResizeFilters.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ManagedITK.SpatialObjects, Version=3.4.0.1, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\ReferencedAssemblies\Itk\ManagedITK.SpatialObjects.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ManagedITK.Statistics, Version=3.4.0.1, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\ReferencedAssemblies\Itk\ManagedITK.Statistics.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ManagedITK.ThresholdFilters, Version=3.4.0.1, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\ReferencedAssemblies\Itk\ManagedITK.ThresholdFilters.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ManagedITK.Topology, Version=3.4.0.1, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\ReferencedAssemblies\Itk\ManagedITK.Topology.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ManagedITK.Transforms, Version=3.4.0.1, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\ReferencedAssemblies\Itk\ManagedITK.Transforms.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ManagedITK.VTK, Version=3.4.0.1, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\ReferencedAssemblies\Itk\ManagedITK.VTK.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ItkHelper.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ClearCanvas.ImageViewer.csproj">
+      <Project>{85100D3E-471C-47C9-9687-ABF25F617ED7}</Project>
+      <Name>ClearCanvas.ImageViewer</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -1,0 +1,12 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="ClearCanvas.Ris.Client.Workflow" GeneratedClassName="DowntimeSettings">
+  <Profiles />
+  <Settings>
+    <Setting Name="ReportEntryTranscriptionistStaffTypeFilters" Description="Comma separated list of staff types to filter transcriptionist lookup." Type="System.String" Scope="Application">
+      <Value Profile="(Default)">STRA</Value>
+    </Setting>
+    <Setting Name="ReportEntryRadiologistStaffTypeFilters" Description="Comma separated list of staff types to filter Interpreter lookup." Type="System.String" Scope="Application">
+      <Value Profile="(Default)">PRAD, PRAR</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

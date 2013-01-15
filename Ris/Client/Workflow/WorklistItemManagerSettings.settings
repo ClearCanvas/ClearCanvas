@@ -1,0 +1,9 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="ClearCanvas.Ris.Client.Workflow" GeneratedClassName="WorklistItemManagerSettings">
+  <Profiles />
+  <Settings>
+    <Setting Name="ShouldProceedToNextItem" Description="Indicates if the next workflow item should be automatically loaded when the current one is completed.  If not, the component will be closed.  Applies to the reporting, protocolling and transcription components." Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

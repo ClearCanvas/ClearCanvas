@@ -1,0 +1,75 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Font Name="Tahoma" Size="8.4" />
+  <Class Name="ClearCanvas.Desktop.NavigatorComponentContainer" Collapsed="true">
+    <Position X="7.5" Y="7.25" Width="2.5" />
+    <TypeIdentifier>
+      <FileName>NavigatorComponentContainer.cs</FileName>
+      <HashCode>AYAAAAAAQAAAAAAQAAEAAAAAgBAYAAgAIAAgBAgGIAI=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ClearCanvas.Desktop.PagedComponentContainer&lt;TPage&gt;" Collapsed="true">
+    <Position X="11.5" Y="6" Width="2.75" />
+    <TypeIdentifier>
+      <FileName>PagedComponentContainer.cs</FileName>
+      <HashCode>EAAIAABAACAAAAAkAADAgIAAAAAKIEgAIAAABAAAAAI=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ClearCanvas.Desktop.StackTabComponentContainer" Collapsed="true">
+    <Position X="10.5" Y="7.25" Width="2.25" />
+    <TypeIdentifier>
+      <FileName>StackTabComponentContainer.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAE=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ClearCanvas.Desktop.TabComponentContainer" Collapsed="true">
+    <Position X="13.25" Y="7.25" Width="2.25" />
+    <TypeIdentifier>
+      <FileName>TabComponentContainer.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ClearCanvas.Desktop.ApplicationComponentContainer" Collapsed="true">
+    <Position X="7.5" Y="4.5" Width="2.5" />
+    <TypeIdentifier>
+      <FileName>ApplicationComponentContainer.cs</FileName>
+      <HashCode>AAAAAAAAAAAAADAAAACAIIAAAAACAAgAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+    <InheritanceLine Type="ClearCanvas.Desktop.ApplicationComponent" FixedFromPoint="true">
+      <Path>
+        <Point X="8.75" Y="3.764" />
+        <Point X="8.75" Y="4.5" />
+      </Path>
+    </InheritanceLine>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ClearCanvas.Desktop.SplitComponentContainer" Collapsed="true">
+    <Position X="6.5" Y="6" Width="2" />
+    <TypeIdentifier>
+      <FileName>SplitComponentContainer.cs</FileName>
+      <HashCode>AAACAiAAACAAAABAAACAAIQAAAASAAgAIAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ClearCanvas.Desktop.TabGroupComponentContainer" Collapsed="true">
+    <Position X="8.75" Y="6" Width="2.5" />
+    <TypeIdentifier>
+      <FileName>TabGroupComponentContainer.cs</FileName>
+      <HashCode>AAAAACAQACAAAAAAACCAAIBAAAACAAiAIAAAAAAACAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ClearCanvas.Desktop.ApplicationComponent" Collapsed="true">
+    <Position X="8" Y="3.25" Width="1.75" />
+    <TypeIdentifier>
+      <FileName>ApplicationComponent.cs</FileName>
+      <HashCode>EAEAYCQICCQIAKCAADMAAAQQkBNgDAggKAAgDAgBACA=</HashCode>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ClearCanvas.Desktop.SimpleComponentContainer" Collapsed="true">
+    <Position X="3.75" Y="6" Width="2.25" />
+    <TypeIdentifier>
+      <FileName>SimpleComponentContainer.cs</FileName>
+      <HashCode>AAAAAAAAQCAAAAAAAACAAIAAAAACABgAKAABAAACAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+</ClassDiagram>

@@ -1,0 +1,165 @@
+.ssdp_mainTable {
+	border-width:1px;
+	border-style:solid;
+	border-color:#c0c0c0;
+	background-Color:#ffffff;
+}
+
+.ssdp_title {
+	background-Color:#0000aa;
+}
+
+.ssdp_titleText {
+	border-width:1px;
+	border-style:solid;
+	border-color:#3355ff;
+	padding:1px;
+	font-weight:bold;
+	font-family:arial;
+	font-size:11px;
+	text-decoration:none;
+	color:#ffffff;
+	cursor:pointer;
+}
+
+.ssdp_titleTextHover {
+	border-width:1px;
+	border-style:solid;
+	border-color:#5599ff;
+	padding:1px;
+	font-weight:bold;
+	font-family:arial;
+	font-size:11px;
+	text-decoration:none;
+	color:#ffffff;
+	cursor:pointer;
+	background-color:#116699;
+}
+
+.ssdp_footer{
+	background-color:#f0f0f0;
+	text-align:center;
+	font-family:arial;
+	font-size:11px;
+	padding:5px;
+}
+
+.ssdp_weekLabel {
+	text-align:right;
+	font-family:arial;
+	font-size:11px;
+	font-weight:bold;
+	color:#000088;
+	padding-left:3px;
+	padding-right:3px;
+}
+
+.ssdp_dateLabel {
+	font-family:arial;
+	font-size:12px;
+	padding-left:3px;
+	padding-right:3px;
+	cursor:pointer;
+}
+
+.ssdp_selectedDateLabel {
+	background-color:#ffff00;
+}
+
+.ssdp_disabledDateLabel {
+	font-family:arial;
+	font-size:12px;
+	padding-left:3px;
+	padding-right:3px;
+	color:#a0a0a0;
+}
+
+.ssdp_holidayLabel {
+	color:#aa0000;
+	font-weight:bold;	
+}
+
+.ssdp_today {
+	font-weight:bold;
+	color:#008800;
+}
+
+.ssdp_todayLink {
+	color:#808080;
+	text-decoration:none;
+}
+
+.ssdp_todayLink:hover {
+	color:#008800;
+}
+
+.ssdp_selectorTable {
+
+	border-width:1px;
+	border-color:#a0a0a0;
+	border-style:solid;
+
+	background-color:#e5f5f5;
+}
+
+.ssdp_selector {
+	border-width:1px;
+	border-color:#e5f5f5;
+	border-style:solid;
+	background-color:#e5f5f5;
+
+	font-family:arial;
+	font-size:11px;
+	text-align:center;
+	padding:1px;
+	cursor:pointer;
+}
+
+.ssdp_selectorHover {
+	border-width:1px;
+	border-color:#d0d0d0;
+	border-style:solid;
+
+	background-color:#f0f0f0;
+	font-family:arial;
+	font-size:11px;
+	text-align:center;
+	padding:1px;
+	cursor:pointer;
+}
+
+.ssdp_selector_scroll {
+
+	border-width:1px;
+	border-color:#e5f5f5;
+	border-style:solid;
+	
+	background-color:#d0e0e0;
+	font-family:arial;
+	font-size:11px;
+	text-align:center;
+	padding:1px;
+	cursor:pointer;
+}
+
+.ssdp_selector_scrollHover {
+	border-width:1px;
+	border-color:#d0d0d0;
+	border-style:solid;
+
+	background-color:#f0f0f0;
+	font-family:arial;
+	font-size:11px;
+	text-align:center;
+	padding:1px;
+	cursor:pointer;
+}
+
+.ssdp_weekNoLabel {
+	text-align:right;
+	font-family:arial;
+	font-size:11px;
+	color:#00a000;
+	padding-left:3px;
+	padding-right:3px;
+}

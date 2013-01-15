@@ -1,0 +1,1 @@
+This project requires that ClearCanvas SDK 1.3 be installed before it can be built.

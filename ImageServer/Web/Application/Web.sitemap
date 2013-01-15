@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<siteMap xmlns="http://schemas.microsoft.com/AspNet/SiteMap-File-1.0" enableLocalization="true">
+  <siteMapNode url="" title="Root"  description="" roles="*">
+    <siteMapNode url="~/Pages/Studies/Default.aspx" title="$Resources: Titles, Studies" roles="PACS/Study/Search" />
+
+    <siteMapNode url="" title="$Resources: Titles, Queues" roles="PACS/WorkQueue/Search,PACS/ArchiveQueue/Search,PACS/RestoreQueue/Search,PACS/StudyIntegrityQueue/Search">
+      <siteMapNode url="~/Pages/Queues/WorkQueue/Default.aspx" title="$Resources: Titles, WorkQueue" roles="PACS/WorkQueue/Search" />
+      <siteMapNode url="~/Pages/Queues/ArchiveQueue/Default.aspx" title="$Resources: Titles, ArchiveQueue" roles="PACS/ArchiveQueue/Search" />
+      <siteMapNode url="~/Pages/Queues/RestoreQueue/Default.aspx" title="$Resources: Titles, RestoreQueue" roles="PACS/RestoreQueue/Search" />
+      <siteMapNode url="~/Pages/Queues/StudyIntegrityQueue/Default.aspx" title="$Resources: Titles, StudyIntegrityQueue" roles="PACS/StudyIntegrityQueue/Search" />
+    </siteMapNode>
+
+    <siteMapNode url="" title="$Resources: Titles, Admin" roles="Enterprise/Admin/System/Configuration,Enterprise/Admin/Security/Authority Group,Enterprise/Admin/Security/User,PACS/Configure/Devices,PACS/Configure/ServerPartitions,PACS/Configure/FileSystems,PACS/Configure/ServerRules,PACS/Configure/PartitionArchive,PACS/StudyDeleteHistory/Search,PACS/Configure/ServiceScheduling,PACS/Alert/View">
+
+      <siteMapNode url="" title="$Resources: Titles, Configure" roles="PACS/Configure/Devices,PACS/Configure/ServerPartitions,PACS/Configure/FileSystems,PACS/Configure/ServerRules,Enterprise/Admin/Security/Authority Group,PACS/Configure/PartitionArchive">
+        <siteMapNode url="~/Pages/Admin/Configure/Devices/Default.aspx" title="$Resources: Titles, Devices" roles="PACS/Configure/Devices" />
+        <siteMapNode url="~/Pages/Admin/Configure/ServerPartitions/Default.aspx" title="$Resources: Titles, ServerPartitions" roles="PACS/Configure/ServerPartitions" />
+        <siteMapNode url="~/Pages/Admin/Configure/FileSystems/Default.aspx" title="$Resources: Titles, FileSystems" roles="PACS/Configure/FileSystems" />
+        <siteMapNode url="~/Pages/Admin/Configure/ServerRules/Default.aspx" title="$Resources: Titles, ServerRules" roles="PACS/Configure/ServerRules" />
+        <siteMapNode url="~/Pages/Admin/Configure/DataRules/Default.aspx" title="$Resources: Titles, DataRules" roles="PACS/Configure/Data Access Rules" />
+        <siteMapNode url="~/Pages/Admin/Configure/PartitionArchive/Default.aspx" title="$Resources: Titles, PartitionArchive" roles="PACS/Configure/PartitionArchive" />
+      </siteMapNode>
+
+      <siteMapNode url="" title="$Resources: Titles, UserManagement" roles="Enterprise/Admin/Security/Authority Group,Enterprise/Admin/Security/User">
+        <siteMapNode url="~/Pages/Admin/UserManagement/Users/Default.aspx" title="$Resources: Titles, Users" roles="Enterprise/Admin/Security/User" />
+        <siteMapNode url="~/Pages/Admin/UserManagement/UserGroups/Default.aspx" title="$Resources: Titles, UserGroups" roles="Enterprise/Admin/Security/Authority Group" />
+      </siteMapNode>
+      
+      <siteMapNode url="~/Pages/Admin/Audit/DeletedStudies/Default.aspx" title="$Resources: Titles, DeletedStudies" roles="PACS/StudyDeleteHistory/Search" />
+
+      <siteMapNode url="~/Pages/Admin/Configure/ServiceLocks/Default.aspx" title="$Resources: Titles, ServiceScheduling" roles="PACS/Configure/ServiceScheduling" />
+      
+      <siteMapNode url="~/Pages/Admin/Alerts/Default.aspx" title="$Resources: Titles, Alerts" roles="PACS/Alert/View" />
+
+      <siteMapNode url="~/Pages/Admin/ApplicationLog/Default.aspx" title="$Resources: Titles, ApplicationLog" roles="PACS/ApplicationLog/Search" />
+
+      <siteMapNode url="~/Pages/Admin/Dashboard/Default.aspx" title="$Resources: Titles, DashboardMenu" roles="PACS/Dashboard/View" />
+      
+    </siteMapNode>
+
+    <siteMapNode url="~/Pages/Help/Default.aspx" title="$Resources: Titles, About" roles="*" />
+  </siteMapNode>
+
+
+</siteMap>

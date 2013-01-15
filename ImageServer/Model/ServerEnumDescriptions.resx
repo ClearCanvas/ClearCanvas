@@ -1,0 +1,780 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="DuplicateSopPolicyEnum_SendSuccess_Description" xml:space="preserve">
+    <value>Send Success</value>
+  </data>
+  <data name="DuplicateSopPolicyEnum_SendSuccess_LongDescription" xml:space="preserve">
+    <value>Send a DICOM C-STORE-RSP success status when receiving a duplicate, but ignore the file.</value>
+  </data>
+  <data name="DuplicateSopPolicyEnum_RejectDuplicates_Description" xml:space="preserve">
+    <value>Reject Duplicates</value>
+  </data>
+  <data name="DuplicateSopPolicyEnum_RejectDuplicates_LongDescription" xml:space="preserve">
+    <value>Send a DICOM C-STORE-RSP reject status when receiving a duplicate.</value>
+  </data>
+  <data name="DuplicateSopPolicyEnum_CompareDuplicates_Description" xml:space="preserve">
+    <value>Compare Duplicates</value>
+  </data>
+  <data name="DuplicateSopPolicyEnum_CompareDuplicates_LongDescription" xml:space="preserve">
+    <value>Process duplicate objects received and compare them to originals flagging any differences as a failure.</value>
+  </data>
+  <data name="AlertCategoryEnum_System_Description" xml:space="preserve">
+    <value>System alert</value>
+  </data>
+  <data name="AlertCategoryEnum_System_LongDescription" xml:space="preserve">
+    <value>System alert</value>
+  </data>
+  <data name="AlertCategoryEnum_Application_Description" xml:space="preserve">
+    <value>Application alert</value>
+  </data>
+  <data name="AlertCategoryEnum_Application_LongDescription" xml:space="preserve">
+    <value>Application alert</value>
+  </data>
+  <data name="AlertCategoryEnum_Security_Description" xml:space="preserve">
+    <value>Security alert</value>
+  </data>
+  <data name="AlertCategoryEnum_Security_LongDescription" xml:space="preserve">
+    <value>Security alert</value>
+  </data>
+  <data name="AlertCategoryEnum_User_Description" xml:space="preserve">
+    <value>User alert</value>
+  </data>
+  <data name="AlertCategoryEnum_User_LongDescription" xml:space="preserve">
+    <value>User alert</value>
+  </data>
+  <data name="AlertLevelEnum_Informational_Description" xml:space="preserve">
+    <value>Informational</value>
+  </data>
+  <data name="AlertLevelEnum_Informational_LongDescription" xml:space="preserve">
+    <value>Informational alert</value>
+  </data>
+  <data name="AlertLevelEnum_Warning_Description" xml:space="preserve">
+    <value>Warning</value>
+  </data>
+  <data name="AlertLevelEnum_Warning_LongDescription" xml:space="preserve">
+    <value>Warning alert</value>
+  </data>
+  <data name="AlertLevelEnum_Error_Description" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="AlertLevelEnum_Error_LongDescription" xml:space="preserve">
+    <value>Error alert</value>
+  </data>
+  <data name="AlertLevelEnum_Critical_Description" xml:space="preserve">
+    <value>Critical</value>
+  </data>
+  <data name="AlertLevelEnum_Critical_LongDescription" xml:space="preserve">
+    <value>Critical alert</value>
+  </data>
+  <data name="StudyIntegrityReasonEnum_InconsistentData_Description" xml:space="preserve">
+    <value>Inconsistent Data</value>
+  </data>
+  <data name="StudyIntegrityReasonEnum_InconsistentData_LongDescription" xml:space="preserve">
+    <value>Images must be reconciled because of inconsistent data.</value>
+  </data>
+  <data name="StudyIntegrityReasonEnum_Duplicate_Description" xml:space="preserve">
+    <value>Duplicate</value>
+  </data>
+  <data name="StudyIntegrityReasonEnum_Duplicate_LongDescription" xml:space="preserve">
+    <value>Duplicates were received and need to be reconciled.</value>
+  </data>
+  <data name="WorkQueueStatusEnum_Idle_Description" xml:space="preserve">
+    <value>Idle</value>
+  </data>
+  <data name="WorkQueueStatusEnum_Idle_LongDescription" xml:space="preserve">
+    <value>Waiting to expire or for more images</value>
+  </data>
+  <data name="WorkQueueStatusEnum_Pending_Description" xml:space="preserve">
+    <value>Pending</value>
+  </data>
+  <data name="WorkQueueStatusEnum_Pending_LongDescription" xml:space="preserve">
+    <value>Pending</value>
+  </data>
+  <data name="WorkQueueStatusEnum_In Progress_Description" xml:space="preserve">
+    <value>In Progress</value>
+  </data>
+  <data name="WorkQueueStatusEnum_In Progress_LongDescription" xml:space="preserve">
+    <value>In Progress</value>
+  </data>
+  <data name="WorkQueueStatusEnum_Completed_Description" xml:space="preserve">
+    <value>Completed</value>
+  </data>
+  <data name="WorkQueueStatusEnum_Completed_LongDescription" xml:space="preserve">
+    <value>The Queue entry is completed.</value>
+  </data>
+  <data name="WorkQueueStatusEnum_Failed_Description" xml:space="preserve">
+    <value>Failed</value>
+  </data>
+  <data name="WorkQueueStatusEnum_Failed_LongDescription" xml:space="preserve">
+    <value>The Queue entry has failed.</value>
+  </data>
+  <data name="StudyStatusEnum_Online_Description" xml:space="preserve">
+    <value>Online</value>
+  </data>
+  <data name="StudyStatusEnum_Online_LongDescription" xml:space="preserve">
+    <value>Study is online</value>
+  </data>
+  <data name="StudyStatusEnum_OnlineLossless_Description" xml:space="preserve">
+    <value>Online (Lossless)</value>
+  </data>
+  <data name="StudyStatusEnum_OnlineLossless_LongDescription" xml:space="preserve">
+    <value>Study is online and lossless compressed</value>
+  </data>
+  <data name="StudyStatusEnum_OnlineLossy_Description" xml:space="preserve">
+    <value>Online (Lossy)</value>
+  </data>
+  <data name="StudyStatusEnum_OnlineLossy_LongDescription" xml:space="preserve">
+    <value>Study is online and lossy compressed</value>
+  </data>
+  <data name="StudyStatusEnum_Nearline_Description" xml:space="preserve">
+    <value>Nearline</value>
+  </data>
+  <data name="StudyStatusEnum_Nearline_LongDescription" xml:space="preserve">
+    <value>The study is nearline (in an automated library)</value>
+  </data>
+  <data name="QueueStudyStateEnum_Idle_Description" xml:space="preserve">
+    <value>Idle</value>
+  </data>
+  <data name="QueueStudyStateEnum_Idle_LongDescription" xml:space="preserve">
+    <value>The study currently does not have any queue entries.</value>
+  </data>
+  <data name="QueueStudyStateEnum_DeleteScheduled_Description" xml:space="preserve">
+    <value>Delete Scheduled</value>
+  </data>
+  <data name="QueueStudyStateEnum_DeleteScheduled_LongDescription" xml:space="preserve">
+    <value>The study is scheduled for deletion</value>
+  </data>
+  <data name="QueueStudyStateEnum_WebDeleteScheduled_Description" xml:space="preserve">
+    <value>Web Delete Scheduled</value>
+  </data>
+  <data name="QueueStudyStateEnum_WebDeleteScheduled_LongDescription" xml:space="preserve">
+    <value>The study or a series is scheduled for deletion.</value>
+  </data>
+  <data name="QueueStudyStateEnum_EditScheduled_Description" xml:space="preserve">
+    <value>Edit Scheduled</value>
+  </data>
+  <data name="QueueStudyStateEnum_EditScheduled_LongDescription" xml:space="preserve">
+    <value>The study is scheduled for editing</value>
+  </data>
+  <data name="QueueStudyStateEnum_ProcessingScheduled_Description" xml:space="preserve">
+    <value>Processing</value>
+  </data>
+  <data name="QueueStudyStateEnum_ProcessingScheduled_LongDescription" xml:space="preserve">
+    <value>The study is being processed</value>
+  </data>
+  <data name="QueueStudyStateEnum_PurgeScheduled_Description" xml:space="preserve">
+    <value>Purge Scheduled</value>
+  </data>
+  <data name="QueueStudyStateEnum_PurgeScheduled_LongDescription" xml:space="preserve">
+    <value>The study has been scheduled for purging</value>
+  </data>
+  <data name="QueueStudyStateEnum_ReconcileScheduled_Description" xml:space="preserve">
+    <value>Reconcile Scheduled</value>
+  </data>
+  <data name="QueueStudyStateEnum_ReconcileScheduled_LongDescription" xml:space="preserve">
+    <value>The study has been scheduled for reconciliation</value>
+  </data>
+  <data name="QueueStudyStateEnum_ReconcileRequired_Description" xml:space="preserve">
+    <value>Reconcile Required</value>
+  </data>
+  <data name="QueueStudyStateEnum_ReconcileRequired_LongDescription" xml:space="preserve">
+    <value>The study needs to be reconciled</value>
+  </data>
+  <data name="QueueStudyStateEnum_CleanupScheduled_Description" xml:space="preserve">
+    <value>Cleanup Scheduled</value>
+  </data>
+  <data name="QueueStudyStateEnum_CleanupScheduled_LongDescription" xml:space="preserve">
+    <value>A WorkQueue entry for the study needs to be cleaned up</value>
+  </data>
+  <data name="QueueStudyStateEnum_CompressScheduled_Description" xml:space="preserve">
+    <value>Compress Scheduled</value>
+  </data>
+  <data name="QueueStudyStateEnum_CompressScheduled_LongDescription" xml:space="preserve">
+    <value>The study is scheduled for compression</value>
+  </data>
+  <data name="QueueStudyStateEnum_MigrationScheduled_Description" xml:space="preserve">
+    <value>Migration Scheduled</value>
+  </data>
+  <data name="QueueStudyStateEnum_MigrationScheduled_LongDescription" xml:space="preserve">
+    <value>The study is scheduled for migration to a new tier of storage</value>
+  </data>
+  <data name="QueueStudyStateEnum_ReprocessScheduled_Description" xml:space="preserve">
+    <value>Reprocess Scheduled</value>
+  </data>
+  <data name="QueueStudyStateEnum_ReprocessScheduled_LongDescription" xml:space="preserve">
+    <value>The study is scheduled for reprocessing</value>
+  </data>
+  <data name="QueueStudyStateEnum_RestoreScheduled_Description" xml:space="preserve">
+    <value>Restore Scheduled</value>
+  </data>
+  <data name="QueueStudyStateEnum_RestoreScheduled_LongDescription" xml:space="preserve">
+    <value>The study is scheduled for restore</value>
+  </data>
+  <data name="QueueStudyStateEnum_ArchiveScheduled_Description" xml:space="preserve">
+    <value>Archive Scheduled</value>
+  </data>
+  <data name="QueueStudyStateEnum_ArchiveScheduled_LongDescription" xml:space="preserve">
+    <value>The study is scheduled for archiving</value>
+  </data>
+  <data name="WorkQueueTypeEnum_StudyProcess_Description" xml:space="preserve">
+    <value>Process Study</value>
+  </data>
+  <data name="WorkQueueTypeEnum_StudyProcess_LongDescription" xml:space="preserve">
+    <value>Processing of a new incoming study.</value>
+  </data>
+  <data name="WorkQueueTypeEnum_AutoRoute_Description" xml:space="preserve">
+    <value>Auto Route</value>
+  </data>
+  <data name="WorkQueueTypeEnum_AutoRoute_LongDescription" xml:space="preserve">
+    <value>DICOM Auto-route request.</value>
+  </data>
+  <data name="WorkQueueTypeEnum_DeleteStudy_Description" xml:space="preserve">
+    <value>Delete Study</value>
+  </data>
+  <data name="WorkQueueTypeEnum_DeleteStudy_LongDescription" xml:space="preserve">
+    <value>Automatic deletion of a Study.</value>
+  </data>
+  <data name="WorkQueueTypeEnum_WebDeleteStudy_Description" xml:space="preserve">
+    <value>Web Delete Study</value>
+  </data>
+  <data name="WorkQueueTypeEnum_WebDeleteStudy_LongDescription" xml:space="preserve">
+    <value>Manual study delete via the Web UI.</value>
+  </data>
+  <data name="WorkQueueTypeEnum_WebMoveStudy_Description" xml:space="preserve">
+    <value>Web Move Study</value>
+  </data>
+  <data name="WorkQueueTypeEnum_WebMoveStudy_LongDescription" xml:space="preserve">
+    <value>Manual DICOM move of a study via the Web UI.</value>
+  </data>
+  <data name="WorkQueueTypeEnum_WebEditStudy_Description" xml:space="preserve">
+    <value>Web Edit Study</value>
+  </data>
+  <data name="WorkQueueTypeEnum_WebEditStudy_LongDescription" xml:space="preserve">
+    <value>Manual study edit via the Web UI.</value>
+  </data>
+  <data name="WorkQueueTypeEnum_CleanupStudy_Description" xml:space="preserve">
+    <value>Cleanup Study</value>
+  </data>
+  <data name="WorkQueueTypeEnum_CleanupStudy_LongDescription" xml:space="preserve">
+    <value>Cleanup all unprocessed or failed instances within a study.</value>
+  </data>
+  <data name="WorkQueueTypeEnum_CompressStudy_Description" xml:space="preserve">
+    <value>Compress Study</value>
+  </data>
+  <data name="WorkQueueTypeEnum_CompressStudy_LongDescription" xml:space="preserve">
+    <value>Compress a study.</value>
+  </data>
+  <data name="WorkQueueTypeEnum_MigrateStudy_Description" xml:space="preserve">
+    <value>Study Tier Migration</value>
+  </data>
+  <data name="WorkQueueTypeEnum_MigrateStudy_LongDescription" xml:space="preserve">
+    <value>Migrate studies between tiers.</value>
+  </data>
+  <data name="WorkQueueTypeEnum_PurgeStudy_Description" xml:space="preserve">
+    <value>Purge Study</value>
+  </data>
+  <data name="WorkQueueTypeEnum_PurgeStudy_LongDescription" xml:space="preserve">
+    <value>Purge archived study and place offline.</value>
+  </data>
+  <data name="WorkQueueTypeEnum_ReprocessStudy_Description" xml:space="preserve">
+    <value>Reprocess Study</value>
+  </data>
+  <data name="WorkQueueTypeEnum_ReprocessStudy_LongDescription" xml:space="preserve">
+    <value>Reprocess an entire study.</value>
+  </data>
+  <data name="WorkQueueTypeEnum_ReconcileStudy_Description" xml:space="preserve">
+    <value>Reconcile Study</value>
+  </data>
+  <data name="WorkQueueTypeEnum_ReconcileStudy_LongDescription" xml:space="preserve">
+    <value>Reconcile images.</value>
+  </data>
+  <data name="WorkQueueTypeEnum_ReconcileCleanup_Description" xml:space="preserve">
+    <value>Cleanup Failed Reconcile Study</value>
+  </data>
+  <data name="WorkQueueTypeEnum_ReconcileCleanup_LongDescription" xml:space="preserve">
+    <value>Cleanup a failed Reconcile Study entry</value>
+  </data>
+  <data name="WorkQueueTypeEnum_ReconcilePostProcess_Description" xml:space="preserve">
+    <value>Process Reconciled Images</value>
+  </data>
+  <data name="WorkQueueTypeEnum_ReconcilePostProcess_LongDescription" xml:space="preserve">
+    <value>Process reconciled images.</value>
+  </data>
+  <data name="WorkQueueTypeEnum_ProcessDuplicate_Description" xml:space="preserve">
+    <value>Process Duplicate</value>
+  </data>
+  <data name="WorkQueueTypeEnum_ProcessDuplicate_LongDescription" xml:space="preserve">
+    <value>Process duplicate.</value>
+  </data>
+  <data name="WorkQueueTypeEnum_CleanupDuplicate_Description" xml:space="preserve">
+    <value>Cleanup Duplicate</value>
+  </data>
+  <data name="WorkQueueTypeEnum_CleanupDuplicate_LongDescription" xml:space="preserve">
+    <value>Cleanup failed ProcessDuplicate entry.</value>
+  </data>
+  <data name="WorkQueueTypeEnum_ExternalEdit_Description" xml:space="preserve">
+    <value>External Edit</value>
+  </data>
+  <data name="WorkQueueTypeEnum_ExternalEdit_LongDescription" xml:space="preserve">
+    <value>Edit request trigger by an external application.</value>
+  </data>
+  <data name="StudyHistoryTypeEnum_StudyReconciled_Description" xml:space="preserve">
+    <value>Study was reconciled</value>
+  </data>
+  <data name="StudyHistoryTypeEnum_StudyReconciled_LongDescription" xml:space="preserve">
+    <value>Demographics in the orginal images were modified to match against another study on the server.</value>
+  </data>
+  <data name="StudyHistoryTypeEnum_WebEdited_Description" xml:space="preserve">
+    <value>Web GUI Edited</value>
+  </data>
+  <data name="StudyHistoryTypeEnum_WebEdited_LongDescription" xml:space="preserve">
+    <value>Study was edited via the Web GUI</value>
+  </data>
+  <data name="StudyHistoryTypeEnum_Duplicate_Description" xml:space="preserve">
+    <value>Duplicate  Processsed</value>
+  </data>
+  <data name="StudyHistoryTypeEnum_Duplicate_LongDescription" xml:space="preserve">
+    <value>Duplicate was received and processed.</value>
+  </data>
+  <data name="StudyHistoryTypeEnum_Reprocessed_Description" xml:space="preserve">
+    <value>Study was reprocessed</value>
+  </data>
+  <data name="StudyHistoryTypeEnum_Reprocessed_LongDescription" xml:space="preserve">
+    <value>Study was reprocessed.</value>
+  </data>
+  <data name="StudyHistoryTypeEnum_SeriesDeleted_Description" xml:space="preserve">
+    <value>One or more series was deleted</value>
+  </data>
+  <data name="StudyHistoryTypeEnum_SeriesDeleted_LongDescription" xml:space="preserve">
+    <value>One or more series was deleted manually.</value>
+  </data>
+  <data name="StudyHistoryTypeEnum_ExternalEdit_Description" xml:space="preserve">
+    <value>External Edit</value>
+  </data>
+  <data name="StudyHistoryTypeEnum_ExternalEdit_LongDescription" xml:space="preserve">
+    <value>Study was edited via an external request.</value>
+  </data>
+  <data name="ServiceLockTypeEnum_FilesystemDelete_Description" xml:space="preserve">
+    <value>Filesystem Watermark Check</value>
+  </data>
+  <data name="ServiceLockTypeEnum_FilesystemDelete_LongDescription" xml:space="preserve">
+    <value>This services checks if a filesystem is above its high watermark.  If the filesystem is above the high watermark it migrates studies, deletes studies, and purges studies until the low watermark is reached.</value>
+  </data>
+  <data name="ServiceLockTypeEnum_FilesystemReinventory_Description" xml:space="preserve">
+    <value>Filesystem Reinventory</value>
+  </data>
+  <data name="ServiceLockTypeEnum_FilesystemReinventory_LongDescription" xml:space="preserve">
+    <value>This service re-inventories the studies stored on a filesystem.  It scans the contents of the filesystem, and if a study is not already stored in the database, it will insert records to process the study into the WorkQueue.</value>
+  </data>
+  <data name="ServiceLockTypeEnum_FilesystemStudyProcess_Description" xml:space="preserve">
+    <value>Filesystem Reapply Rules</value>
+  </data>
+  <data name="ServiceLockTypeEnum_FilesystemStudyProcess_LongDescription" xml:space="preserve">
+    <value>This service scans the contents of a filesystem and reapplies Study Processing rules to all studies on the filesystem that have not been archived.  Studies that have been archived will have Study Archived and Data Access rules applied.</value>
+  </data>
+  <data name="ServiceLockTypeEnum_FilesystemLosslessCompress_Description" xml:space="preserve">
+    <value>Filesystem Lossless Compress</value>
+  </data>
+  <data name="ServiceLockTypeEnum_FilesystemLosslessCompress_LongDescription" xml:space="preserve">
+    <value>This service checks for studies that are eligible to be lossless compressed on a filesystem.  It works independently from the watermarks configured for the filesystem and will insert records into the WorkQueue to compress the studies as soon as they are eligible.</value>
+  </data>
+  <data name="ServiceLockTypeEnum_FilesystemLossyCompress_Description" xml:space="preserve">
+    <value>Filesystem Lossy Compress</value>
+  </data>
+  <data name="ServiceLockTypeEnum_FilesystemLossyCompress_LongDescription" xml:space="preserve">
+    <value>This service checks for studies that are eligible to be lossy compressed on a filesystem.  It works independently from the watermarks configured for the filesystem and will insert records into the WorkQueue to compress the studies as soon as they are eligible.</value>
+  </data>
+  <data name="ServiceLockTypeEnum_FilesystemRebuildXml_Description" xml:space="preserve">
+    <value>Filesystem Rebuild Study XML</value>
+  </data>
+  <data name="ServiceLockTypeEnum_FilesystemRebuildXml_LongDescription" xml:space="preserve">
+    <value>Rebuild the Study XML file for each study stored on the Filesystem</value>
+  </data>
+  <data name="ServiceLockTypeEnum_ArchiveApplicationLog_Description" xml:space="preserve">
+    <value>Archive Application Log</value>
+  </data>
+  <data name="ServiceLockTypeEnum_ArchiveApplicationLog_LongDescription" xml:space="preserve">
+    <value>This service removes application log entries from the database and archives them in zip files to a filesystem.  When initially run, it selects a filesystem from the lowest filesystem tier configured on the system.</value>
+  </data>
+  <data name="ServiceLockTypeEnum_PurgeAlerts_Description" xml:space="preserve">
+    <value>Purge Alerts</value>
+  </data>
+  <data name="ServiceLockTypeEnum_PurgeAlerts_LongDescription" xml:space="preserve">
+    <value>This service by default removes Alert records from the database after a configurable time.  If configured it can save the alerts in zip files on a filesystem.  When initially run, it selects a filesystem from the lowest filesystem tier configured on the system to archive to.</value>
+  </data>
+  <data name="ServiceLockTypeEnum_ImportFiles_Description" xml:space="preserve">
+    <value>Import Dicom Files</value>
+  </data>
+  <data name="ServiceLockTypeEnum_ImportFiles_LongDescription" xml:space="preserve">
+    <value>This service periodically scans the filesystem for dicom files and imports them into the system.</value>
+  </data>
+  <data name="ServiceLockTypeEnum_SyncDataAccess_Description" xml:space="preserve">
+    <value>Synchronize Data Access</value>
+  </data>
+  <data name="ServiceLockTypeEnum_SyncDataAccess_LongDescription" xml:space="preserve">
+    <value>This service periodically synchronizes the deletion status of Authority Groups on the Administrative Services with Data Access granted to studies on the ImageServer.</value>
+  </data>
+  <data name="ServerRuleTypeEnum_AutoRoute_Description" xml:space="preserve">
+    <value>Auto Routing</value>
+  </data>
+  <data name="ServerRuleTypeEnum_AutoRoute_LongDescription" xml:space="preserve">
+    <value>A DICOM auto-routing rule</value>
+  </data>
+  <data name="ServerRuleTypeEnum_StudyDelete_Description" xml:space="preserve">
+    <value>Study Delete</value>
+  </data>
+  <data name="ServerRuleTypeEnum_StudyDelete_LongDescription" xml:space="preserve">
+    <value>A rule to specify when to delete a study</value>
+  </data>
+  <data name="ServerRuleTypeEnum_Tier1Retention_Description" xml:space="preserve">
+    <value>Tier1 Retention</value>
+  </data>
+  <data name="ServerRuleTypeEnum_Tier1Retention_LongDescription" xml:space="preserve">
+    <value>A rule to specify how long a study will be retained on Tier1</value>
+  </data>
+  <data name="ServerRuleTypeEnum_OnlineRetention_Description" xml:space="preserve">
+    <value>Online Retention</value>
+  </data>
+  <data name="ServerRuleTypeEnum_OnlineRetention_LongDescription" xml:space="preserve">
+    <value>A rule to specify how long a study will be retained online</value>
+  </data>
+  <data name="ServerRuleTypeEnum_StudyCompress_Description" xml:space="preserve">
+    <value>Study Compress</value>
+  </data>
+  <data name="ServerRuleTypeEnum_StudyCompress_LongDescription" xml:space="preserve">
+    <value>A rule to specify when a study should be compressed</value>
+  </data>
+  <data name="ServerRuleTypeEnum_SopCompress_Description" xml:space="preserve">
+    <value>SOP Compress</value>
+  </data>
+  <data name="ServerRuleTypeEnum_SopCompress_LongDescription" xml:space="preserve">
+    <value>A rule to specify when a SOP Instance should be compressed (during initial processing)</value>
+  </data>
+  <data name="ServerRuleTypeEnum_DataAccess_Description" xml:space="preserve">
+    <value>Data Access</value>
+  </data>
+  <data name="ServerRuleTypeEnum_DataAccess_LongDescription" xml:space="preserve">
+    <value>A rule to specify the Authority Groups that have access to a study</value>
+  </data>
+  <data name="ServerRuleApplyTimeEnum_SopReceived_Description" xml:space="preserve">
+    <value>SOP Received</value>
+  </data>
+  <data name="ServerRuleApplyTimeEnum_SopReceived_LongDescription" xml:space="preserve">
+    <value>Apply rule when a SOP Instance has been received</value>
+  </data>
+  <data name="ServerRuleApplyTimeEnum_SopProcessed_Description" xml:space="preserve">
+    <value>SOP Processed</value>
+  </data>
+  <data name="ServerRuleApplyTimeEnum_SopProcessed_LongDescription" xml:space="preserve">
+    <value>Apply rule when a SOP Instance has been processed</value>
+  </data>
+  <data name="ServerRuleApplyTimeEnum_SeriesProcessed_Description" xml:space="preserve">
+    <value>Series Processed</value>
+  </data>
+  <data name="ServerRuleApplyTimeEnum_SeriesProcessed_LongDescription" xml:space="preserve">
+    <value>Apply rule when a Series is initially processed</value>
+  </data>
+  <data name="ServerRuleApplyTimeEnum_StudyProcessed_Description" xml:space="preserve">
+    <value>Study Processed</value>
+  </data>
+  <data name="ServerRuleApplyTimeEnum_StudyProcessed_LongDescription" xml:space="preserve">
+    <value>Apply rule after a Study has been processed</value>
+  </data>
+  <data name="ServerRuleApplyTimeEnum_StudyArchived_Description" xml:space="preserve">
+    <value>Study Archived</value>
+  </data>
+  <data name="ServerRuleApplyTimeEnum_StudyArchived_LongDescription" xml:space="preserve">
+    <value>Apply rule after a Study is archived</value>
+  </data>
+  <data name="ServerRuleApplyTimeEnum_StudyRestored_Description" xml:space="preserve">
+    <value>Study Restored</value>
+  </data>
+  <data name="ServerRuleApplyTimeEnum_StudyRestored_LongDescription" xml:space="preserve">
+    <value>Apply rule after a Study has been restored</value>
+  </data>
+  <data name="ServerRuleApplyTimeEnum_SopEdited_Description" xml:space="preserve">
+    <value>SOP Edited</value>
+  </data>
+  <data name="ServerRuleApplyTimeEnum_SopEdited_LongDescription" xml:space="preserve">
+    <value>Apply rule when a SOP Instance is edited</value>
+  </data>
+  <data name="FilesystemTierEnum_Tier1_Description" xml:space="preserve">
+    <value>Tier 1</value>
+  </data>
+  <data name="FilesystemTierEnum_Tier1_LongDescription" xml:space="preserve">
+    <value>Filesystem Tier 1</value>
+  </data>
+  <data name="FilesystemTierEnum_Tier2_Description" xml:space="preserve">
+    <value>Tier 2</value>
+  </data>
+  <data name="FilesystemTierEnum_Tier2_LongDescription" xml:space="preserve">
+    <value>Filesystem Tier 2</value>
+  </data>
+  <data name="FilesystemTierEnum_Tier3_Description" xml:space="preserve">
+    <value>Tier 3</value>
+  </data>
+  <data name="FilesystemTierEnum_Tier3_LongDescription" xml:space="preserve">
+    <value>Filesystem Tier 3</value>
+  </data>
+  <data name="DeviceTypeEnum_Workstation_Description" xml:space="preserve">
+    <value>Workstation</value>
+  </data>
+  <data name="DeviceTypeEnum_Workstation_LongDescription" xml:space="preserve">
+    <value>Workstation</value>
+  </data>
+  <data name="DeviceTypeEnum_Modality_Description" xml:space="preserve">
+    <value>Modality</value>
+  </data>
+  <data name="DeviceTypeEnum_Modality_LongDescription" xml:space="preserve">
+    <value>Modality</value>
+  </data>
+  <data name="DeviceTypeEnum_Server_Description" xml:space="preserve">
+    <value>Server</value>
+  </data>
+  <data name="DeviceTypeEnum_Server_LongDescription" xml:space="preserve">
+    <value>Server</value>
+  </data>
+  <data name="DeviceTypeEnum_Broker_Description" xml:space="preserve">
+    <value>Broker</value>
+  </data>
+  <data name="DeviceTypeEnum_Broker_LongDescription" xml:space="preserve">
+    <value>Broker</value>
+  </data>
+  <data name="DeviceTypeEnum_PriorsServer_Description" xml:space="preserve">
+    <value>Priors Server</value>
+  </data>
+  <data name="DeviceTypeEnum_PriorsServer_LongDescription" xml:space="preserve">
+    <value>Server with Prior Studies for the Web Viewer</value>
+  </data>
+  <data name="FilesystemQueueTypeEnum_DeleteStudy_Description" xml:space="preserve">
+    <value>Delete Study</value>
+  </data>
+  <data name="FilesystemQueueTypeEnum_DeleteStudy_LongDescription" xml:space="preserve">
+    <value>A record telling when a study is eligible for deletion.  The study will be completely removed from the system.</value>
+  </data>
+  <data name="FilesystemQueueTypeEnum_PurgeStudy_Description" xml:space="preserve">
+    <value>Purge Study</value>
+  </data>
+  <data name="FilesystemQueueTypeEnum_PurgeStudy_LongDescription" xml:space="preserve">
+    <value>A record telling when a study can be purged from a filesystem.  Only archived studies can be purged.  The study will remain archived and can be restored.</value>
+  </data>
+  <data name="FilesystemQueueTypeEnum_TierMigrate_Description" xml:space="preserve">
+    <value>Tier Migrate</value>
+  </data>
+  <data name="FilesystemQueueTypeEnum_TierMigrate_LongDescription" xml:space="preserve">
+    <value>A record telling when a study is eligible to be migrated to a lower tier filesystem.</value>
+  </data>
+  <data name="FilesystemQueueTypeEnum_LosslessCompress_Description" xml:space="preserve">
+    <value>Lossless Compress</value>
+  </data>
+  <data name="FilesystemQueueTypeEnum_LosslessCompress_LongDescription" xml:space="preserve">
+    <value>A record telling when a study is eligible for lossless compression and the type of compression to be performed on the study.</value>
+  </data>
+  <data name="FilesystemQueueTypeEnum_LossyCompress_Description" xml:space="preserve">
+    <value>Lossy Compress</value>
+  </data>
+  <data name="FilesystemQueueTypeEnum_LossyCompress_LongDescription" xml:space="preserve">
+    <value>A record telling when a study is eligible for lossy compression and the type of compression to be performed.</value>
+  </data>
+  <data name="WorkQueuePriorityEnum_Low_Description" xml:space="preserve">
+    <value>Low</value>
+  </data>
+  <data name="WorkQueuePriorityEnum_Low_LongDescription" xml:space="preserve">
+    <value>Low priority</value>
+  </data>
+  <data name="WorkQueuePriorityEnum_Medium_Description" xml:space="preserve">
+    <value>Medium</value>
+  </data>
+  <data name="WorkQueuePriorityEnum_Medium_LongDescription" xml:space="preserve">
+    <value>Medium priority</value>
+  </data>
+  <data name="WorkQueuePriorityEnum_High_Description" xml:space="preserve">
+    <value>High</value>
+  </data>
+  <data name="WorkQueuePriorityEnum_High_LongDescription" xml:space="preserve">
+    <value>High priority</value>
+  </data>
+  <data name="WorkQueuePriorityEnum_Stat_Description" xml:space="preserve">
+    <value>Stat</value>
+  </data>
+  <data name="WorkQueuePriorityEnum_Stat_LongDescription" xml:space="preserve">
+    <value>Stat priority</value>
+  </data>
+  <data name="ArchiveTypeEnum_HsmArchive_Description" xml:space="preserve">
+    <value>HSM Archive</value>
+  </data>
+  <data name="ArchiveTypeEnum_HsmArchive_LongDescription" xml:space="preserve">
+    <value>Hierarchical storage management archive such as StorageTek QFS</value>
+  </data>
+  <data name="ArchiveQueueStatusEnum_Pending_Description" xml:space="preserve">
+    <value>Pending</value>
+  </data>
+  <data name="ArchiveQueueStatusEnum_Pending_LongDescription" xml:space="preserve">
+    <value>Pending</value>
+  </data>
+  <data name="ArchiveQueueStatusEnum_In Progress_Description" xml:space="preserve">
+    <value>In Progress</value>
+  </data>
+  <data name="ArchiveQueueStatusEnum_In Progress_LongDescription" xml:space="preserve">
+    <value>In Progress</value>
+  </data>
+  <data name="ArchiveQueueStatusEnum_Completed_Description" xml:space="preserve">
+    <value>Completed</value>
+  </data>
+  <data name="ArchiveQueueStatusEnum_Completed_LongDescription" xml:space="preserve">
+    <value>The Queue entry is completed.</value>
+  </data>
+  <data name="ArchiveQueueStatusEnum_Failed_Description" xml:space="preserve">
+    <value>Failed</value>
+  </data>
+  <data name="ArchiveQueueStatusEnum_Failed_LongDescription" xml:space="preserve">
+    <value>The Queue entry has failed.</value>
+  </data>
+  <data name="RestoreQueueStatusEnum_Pending_Description" xml:space="preserve">
+    <value>Pending</value>
+  </data>
+  <data name="RestoreQueueStatusEnum_Pending_LongDescription" xml:space="preserve">
+    <value>Pending</value>
+  </data>
+  <data name="RestoreQueueStatusEnum_In Progress_Description" xml:space="preserve">
+    <value>In Progress</value>
+  </data>
+  <data name="RestoreQueueStatusEnum_In Progress_LongDescription" xml:space="preserve">
+    <value>In Progress</value>
+  </data>
+  <data name="RestoreQueueStatusEnum_Completed_Description" xml:space="preserve">
+    <value>Completed</value>
+  </data>
+  <data name="RestoreQueueStatusEnum_Completed_LongDescription" xml:space="preserve">
+    <value>The Queue entry is completed.</value>
+  </data>
+  <data name="RestoreQueueStatusEnum_Failed_Description" xml:space="preserve">
+    <value>Failed</value>
+  </data>
+  <data name="RestoreQueueStatusEnum_Failed_LongDescription" xml:space="preserve">
+    <value>The Queue entry has failed.</value>
+  </data>
+  <data name="RestoreQueueStatusEnum_Restoring_Description" xml:space="preserve">
+    <value>Restoring</value>
+  </data>
+  <data name="RestoreQueueStatusEnum_Restoring_LongDescription" xml:space="preserve">
+    <value>The Queue entry is waiting for the study to be restored by the archive.</value>
+  </data>
+</root>

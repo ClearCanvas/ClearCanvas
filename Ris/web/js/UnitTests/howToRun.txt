@@ -1,0 +1,5 @@
+1. Open the "jsunit/testRunner.html" in Internet Explorer*
+2. Enter the full path of jsmlTest.html in the test page location
+3. Click on Run to run unit tests
+
+* Note, all the unit tests are written specifically for Internet Explorer 6.  The tests will failed under other browser.  The unit tests were also tested for under IE8 in Windows 7.

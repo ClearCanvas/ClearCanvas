@@ -1,0 +1,18 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="ClearCanvas.Ris.Shreds.Merge" GeneratedClassName="MergeShredSettings">
+  <Profiles />
+  <Settings>
+    <Setting Name="BatchSize" Description="Number of items to pull from queue per read" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">20</Value>
+    </Setting>
+    <Setting Name="EmptyQueueSleepTime" Description="Number of seconds to sleep when queue is empty" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">30</Value>
+    </Setting>
+    <Setting Name="ThrottleInterval" Description="Minimum number of seconds to wait between subsequent actions on the same queue item." Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">10</Value>
+    </Setting>
+    <Setting Name="ItemsProcessedPerTransaction" Description="Number of records to process per transaction." Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">4</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

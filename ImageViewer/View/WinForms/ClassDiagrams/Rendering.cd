@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
+  <Font Name="Tahoma" Size="8.25" />
+  <Class Name="ClearCanvas.ImageViewer.View.WinForms.TileControl" Collapsed="true">
+    <Position X="2" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>TileControl.cs</FileName>
+      <HashCode>A4CERCyoACHBIgCAAECAAAAGBBIAAQBAMAAgEAACESA=</HashCode>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Tile" />
+      <Property Name="Surface" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="ClearCanvas.ImageViewer.PresentationImage" Collapsed="true">
+    <Position X="2" Y="5.5" Width="1.5" />
+    <TypeIdentifier />
+    <ShowAsAssociation>
+      <Property Name="ImageRenderer" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ClearCanvas.ImageViewer.Tile" Collapsed="true">
+    <Position X="2" Y="2.75" Width="1.5" />
+    <TypeIdentifier />
+    <ShowAsAssociation>
+      <Property Name="PresentationImage" />
+    </ShowAsAssociation>
+    <Lollipop Position="1.267" />
+  </Class>
+  <Interface Name="ClearCanvas.ImageViewer.Rendering.IRenderer">
+    <Position X="5.25" Y="5.5" Width="2.75" />
+    <TypeIdentifier />
+  </Interface>
+  <Interface Name="ClearCanvas.ImageViewer.Rendering.IRenderingSurface">
+    <Position X="5.25" Y="1.25" Width="2.25" />
+    <TypeIdentifier />
+  </Interface>
+  <Interface Name="ClearCanvas.ImageViewer.IPresentationImage" Collapsed="true">
+    <Position X="2" Y="4" Width="1.75" />
+    <TypeIdentifier />
+  </Interface>
+</ClassDiagram>

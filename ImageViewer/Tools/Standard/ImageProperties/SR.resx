@@ -1,0 +1,474 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="CategoryEquipment" xml:space="preserve">
+    <value>Equipment</value>
+  </data>
+  <data name="CategoryImage" xml:space="preserve">
+    <value>Image</value>
+  </data>
+  <data name="CategoryKeyImageSeries" xml:space="preserve">
+    <value>Key Image Series</value>
+  </data>
+  <data name="CategoryPatient" xml:space="preserve">
+    <value>Patient</value>
+  </data>
+  <data name="CategorySeries" xml:space="preserve">
+    <value>Series</value>
+  </data>
+  <data name="CategoryStudy" xml:space="preserve">
+    <value>Study</value>
+  </data>
+  <data name="DescriptionAcquisitionDate" xml:space="preserve">
+    <value>The date on which the image was acquired</value>
+  </data>
+  <data name="DescriptionAcquisitionNumber" xml:space="preserve">
+    <value>A number indicating the order of acquisition of images in the parent series</value>
+  </data>
+  <data name="DescriptionAcquisitionTime" xml:space="preserve">
+    <value>The time at which the image was acquired</value>
+  </data>
+  <data name="DescriptionAdditionalPatientHistory" xml:space="preserve">
+    <value>Relevant patient history</value>
+  </data>
+  <data name="DescriptionAdmittingDiagnosesDescription" xml:space="preserve">
+    <value>Diagnoses made at the time the patient was admitted</value>
+  </data>
+  <data name="DescriptionBodyPartExamined" xml:space="preserve">
+    <value>The body part examined</value>
+  </data>
+  <data name="DescriptionDeviceSerialNumber" xml:space="preserve">
+    <value>The serial number of the equipment on which the study/exam was performed</value>
+  </data>
+  <data name="DescriptionImageComments" xml:space="preserve">
+    <value>Comments about the image at the time of acquisition</value>
+  </data>
+  <data name="DescriptionImageLaterality" xml:space="preserve">
+    <value>The laterality of this image</value>
+  </data>
+  <data name="DescriptionImageType" xml:space="preserve">
+    <value>The type of the image</value>
+  </data>
+  <data name="DescriptionInstanceNumber" xml:space="preserve">
+    <value>A numeric identifier for the image</value>
+  </data>
+  <data name="DescriptionInstitutionAddress" xml:space="preserve">
+    <value>The address of the institution where the study/exam was performed</value>
+  </data>
+  <data name="DescriptionInstitutionalDepartmentName" xml:space="preserve">
+    <value>The name of the department where the study/exam was performed</value>
+  </data>
+  <data name="DescriptionInstitutionName" xml:space="preserve">
+    <value>The name of the institution where the study/exam was performed</value>
+  </data>
+  <data name="DescriptionKeyImageDocumentDescription" xml:space="preserve">
+    <value>User defined description of the Key Image series</value>
+  </data>
+  <data name="DescriptionLaterality" xml:space="preserve">
+    <value>The laterality of all images in the parent series</value>
+  </data>
+  <data name="DescriptionLossyImageCompression" xml:space="preserve">
+    <value>Indicates whether or not the image has been lossy compressed</value>
+  </data>
+  <data name="DescriptionLossyImageCompressionMethod" xml:space="preserve">
+    <value>The method(s) used to perform any lossy compressions on this image</value>
+  </data>
+  <data name="DescriptionLossyImageCompressionRatio" xml:space="preserve">
+    <value>The ratio(s) of any lossy compressions that have been performed on this image</value>
+  </data>
+  <data name="DescriptionManufacturer" xml:space="preserve">
+    <value>The manufacturer of the equipment on which the study/exam was performed</value>
+  </data>
+  <data name="DescriptionManufacturersModelName" xml:space="preserve">
+    <value>The model name of the equipment on which the study/exam was performed</value>
+  </data>
+  <data name="DescriptionModality" xml:space="preserve">
+    <value>The modality of all images in the series</value>
+  </data>
+  <data name="DescriptionOperatorsName" xml:space="preserve">
+    <value>The name(s) of people operating the equipment on which the series was acquired</value>
+  </data>
+  <data name="DescriptionPatientId" xml:space="preserve">
+    <value>A unique identifier for the patient (e.g. Medical Record Number (MRN))</value>
+  </data>
+  <data name="DescriptionPatientsAge" xml:space="preserve">
+    <value>The age of the patient</value>
+  </data>
+  <data name="DescriptionPatientsBirthDate" xml:space="preserve">
+    <value>The patient's birth date</value>
+  </data>
+  <data name="DescriptionPatientsBirthTime" xml:space="preserve">
+    <value>The time of day at which the patient was born</value>
+  </data>
+  <data name="DescriptionPatientsName" xml:space="preserve">
+    <value>The patient's name</value>
+  </data>
+  <data name="DescriptionPatientsSex" xml:space="preserve">
+    <value>The sex/gender of the patient</value>
+  </data>
+  <data name="DescriptionPerformingPhysiciansName" xml:space="preserve">
+    <value>The name(s) of the physician(s) performing the exam</value>
+  </data>
+  <data name="DescriptionProtocolName" xml:space="preserve">
+    <value>The protocol name for the series</value>
+  </data>
+  <data name="DescriptionReferringPhysiciansName" xml:space="preserve">
+    <value>The name of the referring physician</value>
+  </data>
+  <data name="DescriptionSeriesDate" xml:space="preserve">
+    <value>The date on which the series was acquired</value>
+  </data>
+  <data name="DescriptionSeriesDescription" xml:space="preserve">
+    <value>A description of the series</value>
+  </data>
+  <data name="DescriptionSeriesInstanceUid" xml:space="preserve">
+    <value>A DICOM unique identifier for the series</value>
+  </data>
+  <data name="DescriptionSeriesNumber" xml:space="preserve">
+    <value>A numeric identifier for the series</value>
+  </data>
+  <data name="DescriptionSeriesTime" xml:space="preserve">
+    <value>The time at which the series was acquired</value>
+  </data>
+  <data name="DescriptionStationName" xml:space="preserve">
+    <value>The name/identifier of the station where the study/exam was performed</value>
+  </data>
+  <data name="DescriptionStudyDate" xml:space="preserve">
+    <value>The date the study/exam was performed</value>
+  </data>
+  <data name="DescriptionStudyDescription" xml:space="preserve">
+    <value>A description of the study</value>
+  </data>
+  <data name="DescriptionStudyId" xml:space="preserve">
+    <value>An identification number for the study</value>
+  </data>
+  <data name="DescriptionStudyInstanceUid" xml:space="preserve">
+    <value>A DICOM unique identifier for the study</value>
+  </data>
+  <data name="DescriptionStudyTime" xml:space="preserve">
+    <value>The time of day the study/exam was performed</value>
+  </data>
+  <data name="NameAcquisitionDate" xml:space="preserve">
+    <value>Acquisition Date</value>
+  </data>
+  <data name="NameAcquisitionNumber" xml:space="preserve">
+    <value>Acquisition Number</value>
+  </data>
+  <data name="NameAcquisitionTime" xml:space="preserve">
+    <value>Acquisition Time</value>
+  </data>
+  <data name="NameAdditionalPatientHistory" xml:space="preserve">
+    <value>Addtional Patient History</value>
+  </data>
+  <data name="NameAdmittingDiagnosesDescription" xml:space="preserve">
+    <value>Admitting Diagnoses</value>
+  </data>
+  <data name="NameBodyPartExamined" xml:space="preserve">
+    <value>Body Part Examined</value>
+  </data>
+  <data name="NameDeviceSerialNumber" xml:space="preserve">
+    <value>Device Serial Number</value>
+  </data>
+  <data name="NameImageComments" xml:space="preserve">
+    <value>Image Comments</value>
+  </data>
+  <data name="NameImageLaterality" xml:space="preserve">
+    <value>Image Laterality</value>
+  </data>
+  <data name="NameImageType" xml:space="preserve">
+    <value>Image Type</value>
+  </data>
+  <data name="NameInstanceNumber" xml:space="preserve">
+    <value>Instance Number</value>
+  </data>
+  <data name="NameInstitutionAddress" xml:space="preserve">
+    <value>Institution Address</value>
+  </data>
+  <data name="NameInstitutionalDepartmentName" xml:space="preserve">
+    <value>Institutional Department</value>
+  </data>
+  <data name="NameInstitutionName" xml:space="preserve">
+    <value>Institution Name</value>
+  </data>
+  <data name="DescriptionKeyImageDocumentTitle" xml:space="preserve">
+    <value>A coded description of the purpose of the Key Image document</value>
+  </data>
+  <data name="NameKeyImageDocumentTitle" xml:space="preserve">
+    <value>Key Image Document Title</value>
+  </data>
+  <data name="NameKeyImageDocumentDescription" xml:space="preserve">
+    <value>Key Image Document Description</value>
+  </data>
+  <data name="NameLaterality" xml:space="preserve">
+    <value>Laterality</value>
+  </data>
+  <data name="NameLossyImageCompression" xml:space="preserve">
+    <value>Lossy Image Compression</value>
+  </data>
+  <data name="NameLossyImageCompressionMethod" xml:space="preserve">
+    <value>Lossy Image Compression Method</value>
+  </data>
+  <data name="NameLossyImageCompressionRatio" xml:space="preserve">
+    <value>Lossy Image Compression Ratio</value>
+  </data>
+  <data name="NameManufacturer" xml:space="preserve">
+    <value>Manufacturer</value>
+  </data>
+  <data name="NameManufacturersModelName" xml:space="preserve">
+    <value>Manufacturer's Model</value>
+  </data>
+  <data name="NameModality" xml:space="preserve">
+    <value>Modality</value>
+  </data>
+  <data name="NameOperatorsName" xml:space="preserve">
+    <value>Operator's Name</value>
+  </data>
+  <data name="NamePatientId" xml:space="preserve">
+    <value>Patient ID</value>
+  </data>
+  <data name="NamePatientsAge" xml:space="preserve">
+    <value>Patient's Age</value>
+  </data>
+  <data name="NamePatientsBirthDate" xml:space="preserve">
+    <value>Patient's Birth Date</value>
+  </data>
+  <data name="NamePatientsBirthTime" xml:space="preserve">
+    <value>Patient's Birth Time</value>
+  </data>
+  <data name="NamePatientsName" xml:space="preserve">
+    <value>Patient's Name</value>
+  </data>
+  <data name="NamePatientsSex" xml:space="preserve">
+    <value>Patient's Sex</value>
+  </data>
+  <data name="NamePerformingPhysiciansName" xml:space="preserve">
+    <value>Performing Physician</value>
+  </data>
+  <data name="NameProtocolName" xml:space="preserve">
+    <value>Protocol Name</value>
+  </data>
+  <data name="NameReferringPhysiciansName" xml:space="preserve">
+    <value>Referring Physician(s)</value>
+  </data>
+  <data name="NameSeriesDate" xml:space="preserve">
+    <value>Series Date</value>
+  </data>
+  <data name="NameSeriesDescription" xml:space="preserve">
+    <value>Series Description</value>
+  </data>
+  <data name="NameSeriesInstanceUid" xml:space="preserve">
+    <value>Series Instance UID</value>
+  </data>
+  <data name="NameSeriesNumber" xml:space="preserve">
+    <value>Series Number</value>
+  </data>
+  <data name="NameSeriesTime" xml:space="preserve">
+    <value>Series Time</value>
+  </data>
+  <data name="NameStationName" xml:space="preserve">
+    <value>Station Name</value>
+  </data>
+  <data name="NameStudyDate" xml:space="preserve">
+    <value>Study Date</value>
+  </data>
+  <data name="NameStudyDescription" xml:space="preserve">
+    <value>Study Description</value>
+  </data>
+  <data name="NameStudyId" xml:space="preserve">
+    <value>Study ID</value>
+  </data>
+  <data name="NameStudyInstanceUid" xml:space="preserve">
+    <value>Study Instance UID</value>
+  </data>
+  <data name="NameStudyTime" xml:space="preserve">
+    <value>Study Time</value>
+  </data>
+  <data name="TitleImageProperties" xml:space="preserve">
+    <value>Image Properties</value>
+  </data>
+  <data name="CategoryKeyImageEquipment" xml:space="preserve">
+    <value>Key Image Equipment</value>
+  </data>
+  <data name="DescriptionSoftwareVersions" xml:space="preserve">
+    <value>The version of the software that created the data</value>
+  </data>
+  <data name="NameSoftwareVersions" xml:space="preserve">
+    <value>Software Version(s)</value>
+  </data>
+  <data name="DescriptionSopInstanceUid" xml:space="preserve">
+    <value>The DICOM unique identifier of the image</value>
+  </data>
+  <data name="NameSopInstanceUid" xml:space="preserve">
+    <value>Sop Instance UID</value>
+  </data>
+  <data name="DescriptionPatientBreedCodeSequence" xml:space="preserve">
+    <value>Coded identifier of the breed of the patient</value>
+  </data>
+  <data name="DescriptionPatientBreedDescription" xml:space="preserve">
+    <value>Description of the breed of the patient</value>
+  </data>
+  <data name="DescriptionPatientSpeciesCodeSequence" xml:space="preserve">
+    <value>Coded identifier of the species of the patient</value>
+  </data>
+  <data name="DescriptionPatientSpeciesDescription" xml:space="preserve">
+    <value>Description of the species of the patient</value>
+  </data>
+  <data name="DescriptionResponsibleOrganization" xml:space="preserve">
+    <value>The organization responsible for the patient</value>
+  </data>
+  <data name="DescriptionResponsiblePerson" xml:space="preserve">
+    <value>The person responsible for the patient (e.g. the owner)</value>
+  </data>
+  <data name="NamePatientBreedCodeSequence" xml:space="preserve">
+    <value>Patient Breed Code Sequence</value>
+  </data>
+  <data name="NamePatientBreedDescription" xml:space="preserve">
+    <value>Patient Breed Description</value>
+  </data>
+  <data name="NamePatientSpeciesCodeSequence" xml:space="preserve">
+    <value>Patient Species Code Sequence</value>
+  </data>
+  <data name="NamePatientSpeciesDescription" xml:space="preserve">
+    <value>Patient Species Description</value>
+  </data>
+  <data name="NameResponsibleOrganization" xml:space="preserve">
+    <value>Responsible Organization</value>
+  </data>
+  <data name="NameResponsiblePerson" xml:space="preserve">
+    <value>Responsible Person</value>
+  </data>
+  <data name="DescriptionCodeMeaning" xml:space="preserve">
+    <value>The meaning of the coded identifier value</value>
+  </data>
+  <data name="DescriptionCodeValue" xml:space="preserve">
+    <value>The coded identifier value</value>
+  </data>
+  <data name="DescriptionCodingSchemeDesignator" xml:space="preserve">
+    <value>The identifier of the coding scheme</value>
+  </data>
+  <data name="NameCodeMeaning" xml:space="preserve">
+    <value>Code Meaning</value>
+  </data>
+  <data name="NameCodeValue" xml:space="preserve">
+    <value>Code Value</value>
+  </data>
+  <data name="NameCodingSchemeDesignator" xml:space="preserve">
+    <value>Coding Scheme Designator</value>
+  </data>
+</root>

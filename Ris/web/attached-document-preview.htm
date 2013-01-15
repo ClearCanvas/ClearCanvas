@@ -1,0 +1,108 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title>Attached Document Preview Page</title>
+		<link href="./css/default.css" rel="stylesheet" type="text/css" />
+		<script type="text/javascript" src="./js/jsx.js"></script>
+		<script type="text/javascript" src="./js/jsml.js"></script>
+		<script type="text/javascript" src="./js/ui.js"></script>
+		<script type="text/javascript" src="./js/ris.js"></script>
+		<script type="text/javascript" src="./js/layout.js"></script>
+		<script type="text/javascript" src="./js/pdfSupport.js"></script>
+		<script type="text/javascript" >
+		var imagePath = "./images";
+		
+		function onBodyLoad()
+		{
+				try
+				{
+					if(!Ris)
+						return;
+
+					var document = Ris.getHealthcareContext();
+					if(!document) {
+						window.location = "about:blank";
+						return;
+					}
+					
+					var url = Ris.getAttachedDocumentUrl(document);
+					if (document.FileExtension === "pdf") {
+						viewPdf(url);
+					} else {
+						window.location = url;
+					}
+					
+				}
+				catch(e)
+				{
+					var message = "Failed to load details page.  An exception occurred in the script. Error name: " + e.name + ". Error message: " + e.message;
+					Field.setValue($("errorMsg"), message);
+				}
+		}
+		
+		function viewPdf(url) {
+			try {
+				var pdfObject = PdfObject("pdfObject", url);
+				pdfObject.createToolbar("pdfButtons");
+				Field.show($("pdfButtons"), true);
+				Field.show($("pdfObject"), true);
+
+				if(document.DocumentTypeName !== "Fax") {
+					Field.setValue($("senderName"), document.DocumentHeaders.SenderName);
+					Field.setValue($("senderNumber"), Ris.formatStringTelephone(document.DocumentHeaders.SenderNumber));
+					Field.setValue($("receivedAt"), document.DocumentHeaders.ReceivingFaxMachineName);
+					Field.setValue($("receivedAtNumber"), Ris.formatStringTelephone(document.DocumentHeaders.ReceivingFaxMachineNumber));
+					Field.show($("faxPreviewInfo"), true);
+				}
+			} catch(e) {
+				Field.show($("pdfPluginError"), true);
+			}
+		}
+		
+		</script>
+		<style>
+			html, body {
+				height: 100%;
+				margin: 0;
+				padding: 0;
+			}
+			#pdfPluginError {
+			}
+			#faxPreviewInfo {
+				height: 5em;
+				display: none;
+			}
+			#pdfButtons {
+				height:32px; 
+				margin: 2px;
+				display: none;
+			}
+			#pdfObject {
+				border: 1px solid #BBBBBB; 
+				height:80%; 
+				width:99%;
+				display: none;
+			}
+		</style>
+	</head>
+	<body onload="onBodyLoad()">
+		<div id="pdfPluginError">
+		Embedded PDF viewer is not available on this computer.  Double-click on the selected item to open it in an external application.
+		</div>
+		<div id="faxPreviewInfo">
+			<table border="0" cellspacing="0" cellpadding="0" class="PatientDemographicsTable">
+				<tr>
+					<td valign="top" class="DemographicsLabel" nowrap="nowrap">Sender: </td><td valign="top" class="DemographicsCell" nowrap="nowrap"><div id="senderName"/></td>
+					<td valign="top" class="DemographicsLabel" nowrap="nowrap">Sender Number: </td><td valign="top" class="DemographicsCell" nowrap="nowrap"><div id="senderNumber"/></td>
+				</tr>
+				<tr>
+					<td valign="top" class="DemographicsLabel" nowrap="nowrap">Received At: </td><td valign="top" class="DemographicsCell" nowrap="nowrap"><div id="receivedAt"/></td>
+					<td valign="top" class="DemographicsLabel" nowrap="nowrap">Received At Number: </td><td valign="top" class="DemographicsCell" nowrap="nowrap"><div id="receivedAtNumber"/></td>
+				</tr>
+			</table>
+		</div>
+		<div id="pdfButtons"></div>
+		<object id="pdfObject" type="application/pdf"></object>
+		<div id="errorMsg" />
+	</body>
+</html>

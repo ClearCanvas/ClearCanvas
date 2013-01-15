@@ -1,0 +1,458 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ExceptionNullReference" xml:space="preserve">
+    <value>{0} is null</value>
+  </data>
+  <data name="ExceptionDICOMTag" xml:space="preserve">
+    <value>Tag: {0} - {1}</value>
+  </data>
+  <data name="ExceptionDICOMFile" xml:space="preserve">
+    <value>File: {0} - {1}</value>
+  </data>
+  <data name="ExceptionDicomSaveDirectoryDoesNotExist" xml:space="preserve">
+    <value>The specified directory where incoming DICOM objects should be saved does not exist - {0}</value>
+    <comment>0 - path of save directory</comment>
+  </data>
+  <data name="ExceptionDicomNullDataset" xml:space="preserve">
+    <value>The passed in dataset is null</value>
+    <comment>Currently used in the client calls to affect a Retrieve</comment>
+  </data>
+  <data name="ExceptionDicomConnectionTimeoutOutOfRange" xml:space="preserve">
+    <value>The connection timeout value must be between 1 and 32767</value>
+  </data>
+  <data name="ExceptionDicomPatientLevelQueryInvalid" xml:space="preserve">
+    <value>PATIENT level query using the Study Root Query/Retrieve Information model is invalid</value>
+  </data>
+  <data name="ExceptionDicomListeningPortOutOfRange" xml:space="preserve">
+    <value>The listeningPort must be greater than zero and less than System.Int32.MaxValue</value>
+  </data>
+  <data name="ExceptionDicomSaveDirectoryNull" xml:space="preserve">
+    <value>The directory where inbound DICOM objects are stored cannot be null</value>
+  </data>
+  <data name="ExceptionGeneralUidCompareToTypeIncorrect" xml:space="preserve">
+    <value>The argument to CompareTo for the type Uid is not itself of type Uid</value>
+  </data>
+  <data name="ExceptionDicomAETitleNull" xml:space="preserve">
+    <value>The AE Title cannot be null</value>
+  </data>
+  <data name="ExceptionDicomHostnameNull" xml:space="preserve">
+    <value>The hostname cannot be null</value>
+  </data>
+  <data name="ExceptionDicomHostnameZeroLength" xml:space="preserve">
+    <value>The hostname cannot be zero-length</value>
+  </data>
+  <data name="ExceptionDicomAETitleZeroLength" xml:space="preserve">
+    <value>The AE Title cannot be zero-length</value>
+  </data>
+  <data name="ExceptionDicomFindDatasetNull" xml:space="preserve">
+    <value>The find dataset cannot be null</value>
+  </data>
+  <data name="ExceptionDicomMoveDatasetNull" xml:space="preserve">
+    <value>The move dataset cannot be null</value>
+  </data>
+  <data name="ExceptionGeneralAccessionNull" xml:space="preserve">
+    <value>The Accession Number cannot be null</value>
+  </data>
+  <data name="ExceptionGeneralAccessionZeroLength" xml:space="preserve">
+    <value>The Accession Number cannot be zero-length</value>
+  </data>
+  <data name="ExceptionGeneralUidNull" xml:space="preserve">
+    <value>The UID cannot be null</value>
+  </data>
+  <data name="ExceptionGeneralUidZeroLength" xml:space="preserve">
+    <value>The UID cannot be zero-length</value>
+  </data>
+  <data name="ExceptionGeneralEqualsWrongType" xml:space="preserve">
+    <value>The object passed is not of the right type for Equals comparison.</value>
+  </data>
+  <data name="ExceptionDicomTransferSyntaxNotSupported" xml:space="preserve">
+    <value>Transfer syntax {0} for SOP UID = {1} not supported.  Compressed pixel data cannot be loaded at this time.</value>
+  </data>
+  <data name="ExceptionPoorlyFormattedDateRange" xml:space="preserve">
+    <value>Poorly formatted DICOM date range {0}.</value>
+  </data>
+  <data name="ExceptionApplicationLevelLogic" xml:space="preserve">
+    <value>Non-DICOM, application-level logic exception or execution failure</value>
+    <comment>Used to indicate execution failures that have to do with the intended functionality, rather than technical DICOM problems</comment>
+  </data>
+  <data name="InvalidType" xml:space="preserve">
+    <value>The type being set is not compatible with the value representation of the tag.</value>
+  </data>
+  <data name="InvalidVR" xml:space="preserve">
+    <value>The Value Representatoin (VR)  selected was invalid for the tag.</value>
+  </data>
+  <data name="ExceptionInvalidBitsAllocated" xml:space="preserve">
+    <value>BitsAllocated must be either 8 or 16 (bitsAllocated = {0}).</value>
+  </data>
+  <data name="ExceptionInvalidBitsStored" xml:space="preserve">
+    <value>BitsStored must be greater than zero (bitsStored = {0}).</value>
+  </data>
+  <data name="ExceptionInvalidBitsStoredBitsAllocated" xml:space="preserve">
+    <value>BitsStored must be &lt;= BitsAllocated (bitsStored = {0}, bitsAllocated = {1}).</value>
+  </data>
+  <data name="ExceptionInvalidColumns" xml:space="preserve">
+    <value>Columns must be greater than zero (columns = {0}).</value>
+  </data>
+  <data name="ExceptionInvalidHighBit" xml:space="preserve">
+    <value>HighBit must be greater than zero (highBit = {0}).</value>
+  </data>
+  <data name="ExceptionInvalidHighBitBitsAllocated" xml:space="preserve">
+    <value>HighBit must be &lt;= BitsAllocated - 1 (highBit = {0}, bitsAllocated = {1}).</value>
+  </data>
+  <data name="ExceptionInvalidPhotometricInterpretation" xml:space="preserve">
+    <value>PhotometricInterpretation must be one of the enumerated values specified in DICOM PS 3.3 (photometricInterpretation = {0}).</value>
+  </data>
+  <data name="ExceptionInvalidPhotometricInterpretationSamplesPerPixel" xml:space="preserve">
+    <value>PhotometricInterpretation must be consistent with the the number of SamplesPerPixel (photometricInterpretation = {0}, samplesPerPixel = {1}).</value>
+  </data>
+  <data name="ExceptionInvalidPixelData" xml:space="preserve">
+    <value>PixelData length must be equal to SizeInBytes (pixelDataLength = {0}, sizeInBytes = {1}).</value>
+  </data>
+  <data name="ExceptionInvalidPixelRepresentation" xml:space="preserve">
+    <value>PixelRepresentation must be 0 or 1 (pixelRepresentation = {0}).</value>
+  </data>
+  <data name="ExceptionInvalidPlanarConfiguration" xml:space="preserve">
+    <value>PlanarConfiguration must be 0 or 1 (planarConfiguration = {0}).</value>
+  </data>
+  <data name="ExceptionInvalidRows" xml:space="preserve">
+    <value>Rows must be greater than zero (rows = {0}).</value>
+  </data>
+  <data name="ExceptionInvalidSamplesPerPixel" xml:space="preserve">
+    <value>SamplesPerPixel must be 1, 3 or 4 (samplesPerPixel = {0}).</value>
+  </data>
+  <data name="ExceptionInvalidSeriesInstanceUID" xml:space="preserve">
+    <value>SeriesInstanceUID must not be empty.</value>
+  </data>
+  <data name="ExceptionInvalidSizeInBytes" xml:space="preserve">
+    <value>SizeInBytes improperly calculated (correct size = {0}, calculated size {1}).</value>
+  </data>
+  <data name="ExceptionInvalidSOPInstanceUID" xml:space="preserve">
+    <value>SOPInstanceUID must not be empty.</value>
+  </data>
+  <data name="ExceptionInvalidStudyInstanceUID" xml:space="preserve">
+    <value>StudyInstanceUID must not be empty.</value>
+  </data>
+  <data name="ExceptionInvalidTransferUID" xml:space="preserve">
+    <value>The TransferSyntaxUID cannot be empty.</value>
+  </data>
+  <data name="ExceptionSequenceQueriesNotSupported" xml:space="preserve">
+    <value>Sequence queries are not supported at this time (tag path = {0}).</value>
+  </data>
+  <data name="ExceptionFindCancelled" xml:space="preserve">
+    <value>C-Find failed: operation was cancelled.</value>
+  </data>
+  <data name="ExceptionFindFailedIdentifierDoesNotMatchSOPClass" xml:space="preserve">
+    <value>C-Find failed: identifier does not match SOP Class.</value>
+  </data>
+  <data name="ExceptionFindFailedUnableToProcess" xml:space="preserve">
+    <value>C-Find failed: unable to process.</value>
+  </data>
+  <data name="ExceptionFindPendingWarningUnsupportedOptionalKeys" xml:space="preserve">
+    <value>C-Find warning: unsupported optional keys.</value>
+  </data>
+  <data name="ExceptionFindRefusedOutOfResources" xml:space="preserve">
+    <value>C-Find refused: out of resources.</value>
+  </data>
+  <data name="ExceptionFindRefusedSOPClassNotSupported" xml:space="preserve">
+    <value>C-Find refused: SOP Class not supported.</value>
+  </data>
+  <data name="ExceptionMoveCancelled" xml:space="preserve">
+    <value>C-Move failed: operation was cancelled.</value>
+  </data>
+  <data name="ExceptionMoveFailedDestinationUnknown" xml:space="preserve">
+    <value>C-Move failed: destination unknown.</value>
+  </data>
+  <data name="ExceptionMoveFailedIdentifierDoesNotMatchSOPClass" xml:space="preserve">
+    <value>C-Move failed: Identifier does not match SOP Class.</value>
+  </data>
+  <data name="ExceptionMoveFailedOutOfResourcesNumberOfMatches" xml:space="preserve">
+    <value>C-Move failed: out of resources (number of matches).</value>
+  </data>
+  <data name="ExceptionMoveFailedOutOfResourcesSubOperations" xml:space="preserve">
+    <value>C-Move failed: out of resources (sub-operations).</value>
+  </data>
+  <data name="ExceptionMoveFailedSopClassNotSupported" xml:space="preserve">
+    <value>C-Move failed: SOP Class not supported.</value>
+  </data>
+  <data name="ExceptionMoveFailedUnableToProcess" xml:space="preserve">
+    <value>C-Move failed: unable to process.</value>
+  </data>
+  <data name="ExceptionMoveWarningSuboperationsCompleteOneOrMoreFailures" xml:space="preserve">
+    <value>C-Move warning: sub-operations completed; one or more failures.</value>
+  </data>
+  <data name="ExceptionGeneralUIDFormat" xml:space="preserve">
+    <value>Invalid DICOM UID format: {0}</value>
+    <comment>0 - violated uid string</comment>
+  </data>
+  <data name="ExceptionGeneralUIDLength" xml:space="preserve">
+    <value>UID cannot exceeed 64 characters: {0}</value>
+    <comment>0 - violated uid value</comment>
+  </data>
+  <data name="FormatFilmSize" xml:space="preserve">
+    <value>{0} {2} x {1} {2}</value>
+  </data>
+  <data name="LabelDefault" xml:space="preserve">
+    <value>Default</value>
+  </data>
+  <data name="LabelFilmMediumTypeBlueFilm" xml:space="preserve">
+    <value>Blue Film</value>
+  </data>
+  <data name="LabelFilmMediumTypeClearFilm" xml:space="preserve">
+    <value>Clear Film</value>
+  </data>
+  <data name="LabelFilmMediumTypeMammoBlueFilm" xml:space="preserve">
+    <value>Mammo Blue Film</value>
+  </data>
+  <data name="LabelFilmMediumTypeMammoClearFilm" xml:space="preserve">
+    <value>Mammo Clear Film</value>
+  </data>
+  <data name="LabelFilmMediumTypePaper" xml:space="preserve">
+    <value>Paper</value>
+  </data>
+  <data name="LabelFilmSizeUnitInch" xml:space="preserve">
+    <value>in</value>
+  </data>
+  <data name="LabelFilmSizeUnitCentimeter" xml:space="preserve">
+    <value>cm</value>
+  </data>
+  <data name="FormatImageDisplayFormatColumn" xml:space="preserve">
+    <value>Column {0}</value>
+  </data>
+  <data name="FormatImageDisplayFormatRow" xml:space="preserve">
+    <value>Row {0}</value>
+  </data>
+  <data name="FormatImageDisplayFormatStandard" xml:space="preserve">
+    <value>Standard {0}x{1}</value>
+  </data>
+  <data name="ExceptionInvalidFilmSize" xml:space="preserve">
+    <value>Invalid film size: {0}</value>
+  </data>
+  <data name="ExceptionInvalidImageDisplayFormat" xml:space="preserve">
+    <value>Invalid image display format: {0}</value>
+  </data>
+  <data name="ExceptionNotSupportedImageDisplayFormat" xml:space="preserve">
+    <value>Image display format {0} is not supported.</value>
+  </data>
+  <data name="LabelFilmDensityBlack" xml:space="preserve">
+    <value>Black</value>
+  </data>
+  <data name="LabelFilmDensityWhite" xml:space="preserve">
+    <value>White</value>
+  </data>
+  <data name="LabelFilmDestinationBinN" xml:space="preserve">
+    <value>Bin {0}</value>
+  </data>
+  <data name="LabelFilmDestinationMagazine" xml:space="preserve">
+    <value>Magazine</value>
+  </data>
+  <data name="LabelFilmDestinationProcessor" xml:space="preserve">
+    <value>Processor</value>
+  </data>
+  <data name="LabelFilmMagnificationTypeBilinear" xml:space="preserve">
+    <value>Bilinear</value>
+  </data>
+  <data name="LabelFilmMagnificationTypeCubic" xml:space="preserve">
+    <value>Cubic</value>
+  </data>
+  <data name="LabelFilmMagnificationTypeReplicate" xml:space="preserve">
+    <value>Replicate</value>
+  </data>
+  <data name="LabelFilmOrientationLandscape" xml:space="preserve">
+    <value>Landscape</value>
+  </data>
+  <data name="LabelFilmOrientationPortrait" xml:space="preserve">
+    <value>Portrait</value>
+  </data>
+  <data name="LabelFilmRequestedResolutionHigh" xml:space="preserve">
+    <value>High</value>
+  </data>
+  <data name="LabelFilmRequestedResolutionStandard" xml:space="preserve">
+    <value>Standard</value>
+  </data>
+  <data name="LabelPrintPriorityHigh" xml:space="preserve">
+    <value>High</value>
+  </data>
+  <data name="LabelPrintPriorityLow" xml:space="preserve">
+    <value>Low</value>
+  </data>
+  <data name="LabelPrintPriorityMedium" xml:space="preserve">
+    <value>Medium</value>
+  </data>
+  <data name="LabelFilmSmoothingTypeCubic" xml:space="preserve">
+    <value>Cubic</value>
+  </data>
+  <data name="LabelPatientDirectionAnterior" xml:space="preserve">
+    <value>Anterior</value>
+  </data>
+  <data name="LabelPatientDirectionCaudal" xml:space="preserve">
+    <value>Caudal</value>
+  </data>
+  <data name="LabelPatientDirectionCranial" xml:space="preserve">
+    <value>Cranial</value>
+  </data>
+  <data name="LabelPatientDirectionDistal" xml:space="preserve">
+    <value>Distal</value>
+  </data>
+  <data name="LabelPatientDirectionDorsal" xml:space="preserve">
+    <value>Dorsal</value>
+  </data>
+  <data name="LabelPatientDirectionFoot" xml:space="preserve">
+    <value>Foot</value>
+  </data>
+  <data name="LabelPatientDirectionHead" xml:space="preserve">
+    <value>Head</value>
+  </data>
+  <data name="LabelPatientDirectionLateral" xml:space="preserve">
+    <value>Lateral</value>
+  </data>
+  <data name="LabelPatientDirectionLeft" xml:space="preserve">
+    <value>Left</value>
+  </data>
+  <data name="LabelPatientDirectionMedial" xml:space="preserve">
+    <value>Medial</value>
+  </data>
+  <data name="LabelPatientDirectionPalmar" xml:space="preserve">
+    <value>Palmar</value>
+  </data>
+  <data name="LabelPatientDirectionPlantar" xml:space="preserve">
+    <value>Plantar</value>
+  </data>
+  <data name="LabelPatientDirectionPosterior" xml:space="preserve">
+    <value>Posterior</value>
+  </data>
+  <data name="LabelPatientDirectionProximal" xml:space="preserve">
+    <value>Proximal</value>
+  </data>
+  <data name="LabelPatientDirectionRight" xml:space="preserve">
+    <value>Right</value>
+  </data>
+  <data name="LabelPatientDirectionRostral" xml:space="preserve">
+    <value>Rostral</value>
+  </data>
+  <data name="LabelPatientDirectionVentral" xml:space="preserve">
+    <value>Ventral</value>
+  </data>
+  <data name="LabelPatientDirectionUnspecified" xml:space="preserve">
+    <value>Unspecified</value>
+  </data>
+  <data name="LabelPatientDirectionSeparator" xml:space="preserve">
+    <value>-</value>
+  </data>
+</root>

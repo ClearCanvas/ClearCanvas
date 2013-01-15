@@ -1,0 +1,634 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AccessionNumber" xml:space="preserve">
+    <value>Accession#</value>
+  </data>
+  <data name="AddNewPartition" xml:space="preserve">
+    <value>Add New Partition</value>
+  </data>
+  <data name="AddPartition" xml:space="preserve">
+    <value>Add Partition</value>
+  </data>
+  <data name="ButtonLogin" xml:space="preserve">
+    <value>Login</value>
+  </data>
+  <data name="ChangePassword" xml:space="preserve">
+    <value>Change Password</value>
+  </data>
+  <data name="DeleteSeriesConfirmDialog_DeleteEntireStudy" xml:space="preserve">
+    <value>Note: All series for this study have been selected, so the entire study will be deleted.</value>
+  </data>
+  <data name="DeleteSeriesConfirmDialog_SeriesListingLabel" xml:space="preserve">
+    <value>The following series will be deleted:</value>
+  </data>
+  <data name="DeleteSeriesConfirmReasonLabel" xml:space="preserve">
+    <value>Reason For Deletion:</value>
+  </data>
+  <data name="DeleteSeriesReasonDetailedDescription" xml:space="preserve">
+    <value>Detailed Description</value>
+  </data>
+  <data name="DeleteStudyConfirmDialog_StudyListingLabel" xml:space="preserve">
+    <value>The following study/studies will be deleted:</value>
+  </data>
+  <data name="DeleteStudyConfirmReasonLabel" xml:space="preserve">
+    <value>Reason For Deletion:</value>
+  </data>
+  <data name="DeleteStudyReasonDetailedDescription" xml:space="preserve">
+    <value>Detailed Description</value>
+  </data>
+  <data name="Description" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="EditStudyDialog" xml:space="preserve">
+    <value>Edit Study</value>
+  </data>
+  <data name="FromDate" xml:space="preserve">
+    <value>From Date</value>
+  </data>
+  <data name="GridPagerQueueMultipleItems" xml:space="preserve">
+    <value>Items Found</value>
+  </data>
+  <data name="GridPagerQueueSingleItem" xml:space="preserve">
+    <value>Item Found</value>
+  </data>
+  <data name="Instances" xml:space="preserve">
+    <value>Instances</value>
+  </data>
+  <data name="LoggedInAs" xml:space="preserve">
+    <value>Logged in as</value>
+  </data>
+  <data name="Logout" xml:space="preserve">
+    <value>Logout</value>
+  </data>
+  <data name="Modality" xml:space="preserve">
+    <value>Modality</value>
+  </data>
+  <data name="Partitions" xml:space="preserve">
+    <value>Partitions</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="PatientID" xml:space="preserve">
+    <value>Patient ID</value>
+  </data>
+  <data name="PatientName" xml:space="preserve">
+    <value>Patient Name</value>
+  </data>
+  <data name="PatientSummary_Age" xml:space="preserve">
+    <value>Age:</value>
+  </data>
+  <data name="PatientSummary_DOB" xml:space="preserve">
+    <value>DOB:</value>
+  </data>
+  <data name="PatientSummary_Gender" xml:space="preserve">
+    <value>Gender:</value>
+  </data>
+  <data name="PatientSummary_ID" xml:space="preserve">
+    <value>ID:</value>
+  </data>
+  <data name="ReconcileLink" xml:space="preserve">
+    <value>Reconcile</value>
+    <comment>Study search to SIQ</comment>
+  </data>
+  <data name="ReferringPhysician" xml:space="preserve">
+    <value>Ref. Physician</value>
+  </data>
+  <data name="Series" xml:space="preserve">
+    <value>Series</value>
+  </data>
+  <data name="SeriesNumber" xml:space="preserve">
+    <value>Series #</value>
+  </data>
+  <data name="Status" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="StudyDate" xml:space="preserve">
+    <value>Study Date</value>
+  </data>
+  <data name="StudyStatus" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="ToDate" xml:space="preserve">
+    <value>To Date</value>
+  </data>
+  <data name="UserID" xml:space="preserve">
+    <value>User ID</value>
+  </data>
+  <data name="Version" xml:space="preserve">
+    <value>Version</value>
+  </data>
+  <data name="StudyDetails_History_Changes" xml:space="preserve">
+    <value>Changes:</value>
+  </data>
+  <data name="StudyDetails_History_Comment" xml:space="preserve">
+    <value>Comment:</value>
+  </data>
+  <data name="StudyDetails_History_HideDetails" xml:space="preserve">
+    <value>Hide Details</value>
+  </data>
+  <data name="StudyDetails_History_Reason" xml:space="preserve">
+    <value>Reason:</value>
+  </data>
+  <data name="StudyDetails_History_ShowDetails" xml:space="preserve">
+    <value>Show Details</value>
+  </data>
+  <data name="StudyDetails_History_Reconcile_AccessionNumber" xml:space="preserve">
+    <value>Accession Number</value>
+  </data>
+  <data name="StudyDetails_History_Reconcile_ChangesApplied" xml:space="preserve">
+    <value>Changes Applied To Existing Study:</value>
+  </data>
+  <data name="StudyDetails_History_Reconcile_IssuerOfPatientID" xml:space="preserve">
+    <value>Issuer of Patient ID</value>
+  </data>
+  <data name="StudyDetails_History_Reconcile_PatientBirthDate" xml:space="preserve">
+    <value>Patient's Birth Date</value>
+  </data>
+  <data name="StudyDetails_History_Reconcile_PatientID" xml:space="preserve">
+    <value>Patient ID</value>
+  </data>
+  <data name="StudyDetails_History_Reconcile_PatientName" xml:space="preserve">
+    <value>Patient's Name</value>
+  </data>
+  <data name="StudyDetails_History_Reconcile_PatientSex" xml:space="preserve">
+    <value>Patient's Sex</value>
+  </data>
+  <data name="StudyDetails_History_Reconcile_Snapshot" xml:space="preserve">
+    <value>Reconciled Images (Snapshot):</value>
+  </data>
+  <data name="StudyDetails_History_Reconcile_StudyDate" xml:space="preserve">
+    <value>Study Date</value>
+  </data>
+  <data name="DeleteStudyConfirmDialog_Comment" xml:space="preserve">
+    <value>Comment:</value>
+  </data>
+  <data name="DeleteStudyConfirmDialog_Reason" xml:space="preserve">
+    <value>Reason:</value>
+  </data>
+  <data name="DeleteStudyConfirmDialog_SaveReasonAs" xml:space="preserve">
+    <value>Save Reason As:</value>
+  </data>
+  <data name="SeriesInstanceUID" xml:space="preserve">
+    <value>Series Instance UID</value>
+  </data>
+  <data name="PerformedOn" xml:space="preserve">
+    <value>Performed On</value>
+  </data>
+  <data name="SeriesDetails_Instances" xml:space="preserve">
+    <value>Instances:</value>
+  </data>
+  <data name="SeriesDetails_Modality" xml:space="preserve">
+    <value>Modality:</value>
+  </data>
+  <data name="SeriesDetails_PerformedOn" xml:space="preserve">
+    <value>Performed On:</value>
+  </data>
+  <data name="SeriesDetails_SeriesDescription" xml:space="preserve">
+    <value>Series Description:</value>
+  </data>
+  <data name="SeriesDetails_SeriesInstanceUID" xml:space="preserve">
+    <value>Series Instance UID:</value>
+  </data>
+  <data name="SeriesDetails_SeriesNumber" xml:space="preserve">
+    <value>Series Number:</value>
+  </data>
+  <data name="SeriesDetails_SourceAE" xml:space="preserve">
+    <value>Source AE:</value>
+  </data>
+  <data name="StudyDetails_SeriesPanel_SeriesSummary" xml:space="preserve">
+    <value>Series Summary</value>
+  </data>
+  <data name="StudyDetails_SeriesPanel_StudySummary" xml:space="preserve">
+    <value>Study Summary</value>
+  </data>
+  <data name="DeviceDescription" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="DeviceType" xml:space="preserve">
+    <value>Device Type</value>
+  </data>
+  <data name="DHCP" xml:space="preserve">
+    <value>DHCP</value>
+  </data>
+  <data name="IPAddress" xml:space="preserve">
+    <value>IP Address</value>
+  </data>
+  <data name="DestinationDevices" xml:space="preserve">
+    <value>Destination Devices</value>
+  </data>
+  <data name="StudySummary" xml:space="preserve">
+    <value>Study Summary</value>
+  </data>
+  <data name="SeriesDetails_SeriesSummary" xml:space="preserve">
+    <value>Series Summary</value>
+  </data>
+  <data name="SeriesDetails_StudySummary" xml:space="preserve">
+    <value>Study Summary</value>
+  </data>
+  <data name="AETitle" xml:space="preserve">
+    <value>AE Title</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="EditStudyDialog_PatientInformation" xml:space="preserve">
+    <value>Patient Information</value>
+  </data>
+  <data name="EditStudyDialog_StudyInformation" xml:space="preserve">
+    <value>Study Information</value>
+  </data>
+  <data name="Age" xml:space="preserve">
+    <value>Age</value>
+  </data>
+  <data name="DateOfBirth" xml:space="preserve">
+    <value>Date Of Birth</value>
+  </data>
+  <data name="PatientGender" xml:space="preserve">
+    <value>Sex</value>
+  </data>
+  <data name="StudyDateTime" xml:space="preserve">
+    <value>Study Date/Time</value>
+  </data>
+  <data name="StudyDescription" xml:space="preserve">
+    <value>Study Description</value>
+  </data>
+  <data name="EditStudyDialog_Comment" xml:space="preserve">
+    <value>Comment:</value>
+  </data>
+  <data name="EditStudyDialog_Reason" xml:space="preserve">
+    <value>Reason:</value>
+  </data>
+  <data name="EditStudyDialog_SaveReasonAs" xml:space="preserve">
+    <value>Save Reason As:</value>
+  </data>
+  <data name="StudyID" xml:space="preserve">
+    <value>Study ID</value>
+  </data>
+  <data name="PersonNamePanel_GivenName" xml:space="preserve">
+    <value>Given Name</value>
+  </data>
+  <data name="PersonNamePanel_LastName" xml:space="preserve">
+    <value>Last Name</value>
+  </data>
+  <data name="PersonNamePanel_MiddleName" xml:space="preserve">
+    <value>Middle Name</value>
+  </data>
+  <data name="PersonNamePanel_Suffix" xml:space="preserve">
+    <value>Suffix</value>
+  </data>
+  <data name="PersonNamePanel_Title" xml:space="preserve">
+    <value>Title</value>
+  </data>
+  <data name="Clear" xml:space="preserve">
+    <value>Clear</value>
+  </data>
+  <data name="StudyDetails_History_SeriesDeleted" xml:space="preserve">
+    <value>Series deleted:</value>
+  </data>
+  <data name="IssuerOfPatientID" xml:space="preserve">
+    <value>Issuer Of Patient ID</value>
+  </data>
+  <data name="PatientBirthdate" xml:space="preserve">
+    <value>Patient's Birthdate</value>
+  </data>
+  <data name="PatientsSex" xml:space="preserve">
+    <value>Patient's Sex</value>
+  </data>
+  <data name="StudyDetails_History_Duplicate_ChangesApplied" xml:space="preserve">
+    <value>Changes Applied:</value>
+  </data>
+  <data name="StudyDetails_History_Duplicate_DuplicateImages" xml:space="preserve">
+    <value>Duplicate Images:</value>
+  </data>
+  <data name="StudyDetails_History_Duplicate_StudySnapshot" xml:space="preserve">
+    <value>Study (Snapshot):</value>
+  </data>
+  <data name="Enabled" xml:space="preserve">
+    <value>Enabled</value>
+  </data>
+  <data name="Features" xml:space="preserve">
+    <value>Features</value>
+  </data>
+  <data name="Partition" xml:space="preserve">
+    <value>Partition</value>
+  </data>
+  <data name="Port" xml:space="preserve">
+    <value>Port</value>
+  </data>
+  <data name="Priority" xml:space="preserve">
+    <value>Priority</value>
+  </data>
+  <data name="Refresh" xml:space="preserve">
+    <value>Refresh</value>
+  </data>
+  <data name="Schedule" xml:space="preserve">
+    <value>Schedule</value>
+  </data>
+  <data name="Server" xml:space="preserve">
+    <value>Server</value>
+  </data>
+  <data name="WorkQueueType" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="DeleteSeriesConfirmDialog_Comment" xml:space="preserve">
+    <value>Comment:</value>
+  </data>
+  <data name="DeleteSeriesConfirmDialog_Reason" xml:space="preserve">
+    <value>Reason:</value>
+  </data>
+  <data name="DeleteSeriesConfirmDialog_SaveReasonAs" xml:space="preserve">
+    <value>Save Reason As:</value>
+  </data>
+  <data name="SeriesDeleteDialog_Comment" xml:space="preserve">
+    <value>Comment:</value>
+  </data>
+  <data name="SeriesDeleteDialog_Reason" xml:space="preserve">
+    <value>Reason:</value>
+  </data>
+  <data name="SeriesDeleteDialog_SaveReasonAs" xml:space="preserve">
+    <value>Save Reason As:</value>
+  </data>
+  <data name="StudyDetails_ArchivePanel_ArchiveQueue" xml:space="preserve">
+    <value>Archive Queue</value>
+  </data>
+  <data name="StudyDetails_ArchivePanel_ArchiveStudyStorage" xml:space="preserve">
+    <value>Archive Study Storage</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>No</value>
+    <comment>Refresh</comment>
+  </data>
+  <data name="ScheduleWorkQueueDialog_Priority" xml:space="preserve">
+    <value>Priority:</value>
+  </data>
+  <data name="ScheduleWorkQueueDialog_Schedule" xml:space="preserve">
+    <value>Schedule:</value>
+  </data>
+  <data name="ScheduleWorkQueueDialog_ScheduleNow" xml:space="preserve">
+    <value>Schedule Now:</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>Yes</value>
+    <comment>Refresh </comment>
+  </data>
+  <data name="Login" xml:space="preserve">
+    <value>Login</value>
+  </data>
+  <data name="AlertGridPanel_LinkToLogs" xml:space="preserve">
+    <value>[Logs]</value>
+    <comment>Link user can click to go from alert to app log page</comment>
+  </data>
+  <data name="AlertHoverPopupDetails_MoreInfo" xml:space="preserve">
+    <value>more info</value>
+  </data>
+  <data name="WorkQueueAlertContextDataView_ViewStudy" xml:space="preserve">
+    <value>View Study</value>
+    <comment>link from alert page to study</comment>
+  </data>
+  <data name="WorkQueueAlertContextDataView_ViewWorkQueue" xml:space="preserve">
+    <value>View Work Queue</value>
+    <comment>Link from alert to work queue page</comment>
+  </data>
+  <data name="AlertIndicator_ViewAllAlerts" xml:space="preserve">
+    <value>View All Alerts</value>
+    <comment>Link in the the alert popup indicator at the top left corner</comment>
+  </data>
+  <data name="AdminFilesystem_AddEditDialog_TotalSize" xml:space="preserve">
+    <value>Total Size</value>
+  </data>
+  <data name="AdminFilesystem_AddEditDialog_Used" xml:space="preserve">
+    <value>Used</value>
+  </data>
+  <data name="HSMArchive" xml:space="preserve">
+    <value>HSM Archive</value>
+    <comment>In admin partition archive config</comment>
+  </data>
+  <data name="PatientSex" xml:space="preserve">
+    <value>Patient Sex</value>
+  </data>
+  <data name="Dashboard_Alerts" xml:space="preserve">
+    <value>Alerts</value>
+  </data>
+  <data name="Dashboard_FileSystems" xml:space="preserve">
+    <value>File Systems</value>
+  </data>
+  <data name="Dashboard_ServerPartitions" xml:space="preserve">
+    <value>Server Partitions</value>
+  </data>
+  <data name="Dashboard_Studies" xml:space="preserve">
+    <value>Studies</value>
+  </data>
+  <data name="Dashboard_StudiesSummary_TotalStudies" xml:space="preserve">
+    <value>Total Studies:</value>
+  </data>
+  <data name="Dashboard_StudyIntegrityQueue" xml:space="preserve">
+    <value>Study Integrity Queue</value>
+  </data>
+  <data name="Dashboard_WorkQueue" xml:space="preserve">
+    <value>WorkQueue</value>
+  </data>
+  <data name="SIQ_ReconcileDialog_ConflictingImageLocation" xml:space="preserve">
+    <value>Conflicting Study Location</value>
+  </data>
+  <data name="SIQ_ReconcileDialog_ConflictingImages" xml:space="preserve">
+    <value>Conflicting Images</value>
+  </data>
+  <data name="SIQ_ReconcileDialog_CreateNewStudy" xml:space="preserve">
+    <value>Create New Study</value>
+  </data>
+  <data name="SIQ_ReconcileDialog_DiscardStudy" xml:space="preserve">
+    <value>Discard Images</value>
+  </data>
+  <data name="SIQ_ReconcileDialog_DuplicateSOP" xml:space="preserve">
+    <value>Duplicate SOP</value>
+  </data>
+  <data name="SIQ_ReconcileDialog_DuplicateSOPLocation" xml:space="preserve">
+    <value>Duplicate SOP Location</value>
+  </data>
+  <data name="SIQ_ReconcileDialog_ExistingStudy" xml:space="preserve">
+    <value>Existing Study</value>
+  </data>
+  <data name="SIQ_ReconcileDialog_FilesystemLocations" xml:space="preserve">
+    <value>Filesystem Locations</value>
+  </data>
+  <data name="SIQ_ReconcileDialog_MergeUsingConflictingStudy" xml:space="preserve">
+    <value>Merge Using Conflicting Study</value>
+  </data>
+  <data name="SIQ_ReconcileDialog_MergeUsingExistingStudy" xml:space="preserve">
+    <value>Merge Using Existing Study</value>
+  </data>
+  <data name="SIQ_ReconcileDialog_ProcessAsIs" xml:space="preserve">
+    <value>Ignore (Process As Is)</value>
+  </data>
+  <data name="SIQ_ReconcileDialog_StudyLocation" xml:space="preserve">
+    <value>Study Location</value>
+  </data>
+  <data name="CriticalAlerts" xml:space="preserve">
+    <value>Critical Alerts:</value>
+  </data>
+  <data name="DefaultPage" xml:space="preserve">
+    <value>Default Page</value>
+    <comment>Link from error page to user's default page</comment>
+  </data>
+  <data name="Back" xml:space="preserve">
+    <value>Back</value>
+    <comment>go Back to previous page</comment>
+  </data>
+  <data name="LoginAfterPasswordChange" xml:space="preserve">
+    <value>Login After Password Change</value>
+  </data>
+  <data name="NewPassword" xml:space="preserve">
+    <value>New Password</value>
+  </data>
+  <data name="OriginalPassword" xml:space="preserve">
+    <value>Original Password</value>
+  </data>
+  <data name="RetypeNewPassword" xml:space="preserve">
+    <value>Retype New Password</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="AddAuthorityGroupsDialog_AuthorityGroupsLabel" xml:space="preserve">
+    <value>To the following data access authority groups (The below does not reflect the current state of data access.  See Study Details for the study of interest to determine current access.):</value>
+  </data>
+  <data name="AddAuthorityGroupsDialog_StudyListingLabel" xml:space="preserve">
+    <value>The following study/studies will be assigned:</value>
+  </data>
+  <data name="ArchiveQueue_NoResults" xml:space="preserve">
+    <value>No items found matching the provided criteria.</value>
+  </data>
+  <data name="StudyDetails_History_Reconcile_StudySnapshot" xml:space="preserve">
+    <value>Study (Snapshot)</value>
+  </data>
+  <data name="NotSpecified" xml:space="preserve">
+    <value>Not Specified</value>
+  </data>
+  <data name="ArchiveQueue_EnterSearchCriteria" xml:space="preserve">
+    <value>Please enter search criteria</value>
+  </data>
+  <data name="Dashboard_OperatingMode" xml:space="preserve">
+    <value>Operating Mode</value>
+  </data>
+  <data name="LoginWarnings" xml:space="preserve">
+    <value>Warnings: </value>
+  </data>
+</root>

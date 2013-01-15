@@ -1,0 +1,115 @@
+/*	***************************************** WARNING ************************************************************************************************
+	Modifying this template incorrectly may cause the report printing functionality and publication of reports to the Web Portal to fail.
+	It is recommended that:
+	
+	1. This template only be modified by qualified personnel.
+	2. A backup copy of the original template is made, prior to making any modifications.
+	3. This template is modified only during scheduled system downtime.
+	4. After modifying the template, report printing functionality is thoroughly tested.
+	**************************************************************************************************************************************************
+*/
+
+table {
+	border-collapse:collapse;
+	width:100%;
+	margin-top: 0;
+	margin-left: 0;
+}
+
+table td {
+	padding: 0.2em 0.5em 0.2em 0.5em; 
+}
+
+#letterhead {
+	margin-bottom: 2em;
+	height:2.8in;
+	padding-bottom:0px;
+}
+
+#letterheadFacility {
+	margin-left:0.5em;
+	float:left;
+}
+
+#letterheadFacility div {
+	margin-left:0;
+	line-height:1em;
+	padding-left:0;
+}
+
+#letterheadFacilityName {
+	font-size: 2em;
+}
+
+#letterheadAddress {
+	float:right;
+}
+
+#recipient {
+	margin-left: 1em;
+	margin-bottom: 1em;
+	font-weight: bold;
+}
+
+#ordersummary {
+	padding: 0.5em 1em 0.5em 1em;
+	margin-bottom: 2em;
+	background: #f1f4f8;
+}
+
+#ordersummary table {
+	padding: 0em 0em 0em 0em;
+	margin: 0em 0em 0em 0em;
+}
+
+#ordersummary td,div {
+	margin-left: 0.1em;
+	padding: 0.1em 0.1em 0.1em 0.1em;
+}
+
+#ordersummary .leftcolumn {
+	float:left;
+	width:49%;
+}
+
+#ordersummary .leftcolumn .propertyname {
+	width:8em;
+}
+
+#ordersummary .rightcolumn {
+	float:right;
+	width:49%;
+	margin-left:0.5em;
+}
+
+#ordersummary .rightcolumn .propertyname {
+	width:7em;
+}
+
+#ordersummary table {
+	width:95%;
+}
+
+.clear{
+	visibility:hidden;
+	clear:both;
+}
+
+#ordersummary #proceduresTable  {
+	margin-left:1.5em;
+}
+
+.propertyname {
+	font-weight: bold;
+	color: #205F87;
+	background: #f1f4f8;
+}
+
+div.reportPart {
+	width: 93%;
+	margin-left: 1em;
+	padding: 0.0em 0.5em 0.0em 0.5em;
+	text-align: justify;
+}
+
+

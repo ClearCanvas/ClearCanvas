@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" assembly="ClearCanvas.Enterprise.Configuration" namespace="ClearCanvas.Enterprise.Configuration">
+  <class name="ConfigurationSettingsGroup" table="ConfigurationSettingsGroup_">
+    <cache usage="nonstrict-read-write"/>
+    <id name="OID" column="OID_" type="Guid">
+      <generator class="guid.comb"/>
+    </id>
+    <version name="Version" column="Version_"/>
+    
+    <property name="Name" type="String">
+      <column name="Name_" unique-key="SettingsGroupKey_" not-null="true"/>
+    </property>
+    <property name="VersionString" type="String">
+      <column name="VersionString_" unique-key="SettingsGroupKey_" length="30" not-null="true"/>
+    </property>
+    <property name="Description" column="Description_" type="String" length="1000"/>
+    <property name="AssemblyQualifiedTypeName" column="AssemblyQualifiedTypeName_" type="String" length="500"/>
+    <property name="HasUserScopedSettings" column="HasUserScopedSettings_" type="Boolean" not-null="true"/>
+    <idbag name="SettingsProperties" table="ConfigurationSettingsProperty_" lazy="true">
+      <collection-id column="OID_" type="Guid">
+        <generator class="guid.comb"/>
+      </collection-id>
+      <key column="ConfigurationSettingsGroupOID_"/>
+      <composite-element class="ConfigurationSettingsProperty">
+        <property name="Name" column="Name_" type="String" not-null="true"/>
+        <property name="TypeName" column="TypeName_" type="String" not-null="true"/>
+        <property name="Scope" column="Scope_" type="String" not-null="true"/>
+        <property name="Description" column="Description_" type="String" length="1000"/>
+        <property name="DefaultValue" column="DefaultValue_" type="StringClob" length="1000000"/>
+      </composite-element>
+    </idbag>
+  </class>
+</hibernate-mapping>

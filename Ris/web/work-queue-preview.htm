@@ -1,0 +1,131 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title>Work Queue Item Preview</title>
+		<link href="css/default.css" rel="stylesheet" type="text/css" />
+		<script type="text/javascript" src="js/jsx.js"></script>
+		<script type="text/javascript" src="js/jsml.js"></script>
+		<script type="text/javascript" src="js/ui.js"></script>
+		<script type="text/javascript" src="js/ris.js"></script>
+		<script type="text/javascript" src="js/preview.js"></script>
+		<script type="text/javascript" src="js/layout.js"></script>
+		<script type="text/javascript" >
+
+			function onBodyLoad()
+			{
+				scaleWidth();
+
+				if(!Ris)
+					return;
+
+				try
+				{
+					var context = Ris.getHealthcareContext();
+					if (context == null)
+					{
+						Field.setValue($("myForm"), "");
+						return;
+					}
+
+					Field.setValue($("CreationTime"), Ris.formatDateTime(context.CreationTime));
+					Field.setValue($("ScheduledTime"), Ris.formatDateTime(context.ScheduledTime));
+					Field.setValue($("ExpirationTime"), Ris.formatDateTime(context.ExpirationTime));
+					Field.setValue($("ProcessedTime"), Ris.formatDateTime(context.ProcessedTime));
+					Field.setValue($("User"), context.User);
+					Field.setValue($("Type"), context.Type);
+					Field.setValue($("Status"), context.Status.Value);
+					Field.setValue($("FailureCount"), context.FailureCount);
+					Field.setValue($("FailureDescription"), context.FailureDescription);
+
+					createExtendedPropertiesTable($("extendedPropertiesTable"), context.ExtendedProperties);
+				}
+				catch(e)
+				{
+					var message = "Failed to load editor page.  An exception occurred in the script. Error name: " + e.name + ". Error message: " + e.message;
+					Field.setValue($("myForm"), message);
+				}
+				
+			}
+
+			function createExtendedPropertiesTable(htmlTable, extendedProperties)
+			{
+				var propertyArray = [];
+				for (var propertyName in extendedProperties)
+				{
+					if (extendedProperties.hasOwnProperty(propertyName))
+					{
+						var propertyValue = propertyName == "AccessionNumber"
+							? Ris.formatAccessionNumber(extendedProperties[propertyName])
+							: extendedProperties[propertyName];
+						
+						var p = { PropertyName: propertyName, PropertyValue: propertyValue };
+						propertyArray.push(p);
+					}
+				}
+
+				htmlTable = Table.createTable(htmlTable, { editInPlace: false, flow: false },
+					 [
+						{   label: "Name",
+							cellType: "text",
+							getValue: function(item) { return item.PropertyName; }
+						},
+						{   label: "Value",
+							cellType: "html",
+							getValue: function(item) { return item.PropertyValue; }
+						}
+					 ]);
+					 
+				htmlTable.rowCycleClassNames = ["row0", "row1"];
+				htmlTable.bindItems(propertyArray);
+			}
+			
+		</script>
+	</head>
+	<body onload="javascript: onBodyLoad()" onresize="javascript: scaleWidth()">
+		<form id="myForm">
+			<table width="100%" border="0">
+				<tr>
+					<td class="patientnameheading"><div id="Type"/></td>
+				</tr>
+				<tr>
+					<td class="patientmrnheading"><div id="Status"/></td>
+				</tr>
+			</table>
+
+			<p class="sectionheading">Overview</p>
+			<table width="100%" border="0">
+				<tr>
+					<td width="120" class="propertyname">Creation Time</td>
+					<td width="200"><div id="CreationTime"/></td>
+					<td width="120" class="propertyname">Expiration Time</td>
+					<td width="200"><div id="ExpirationTime"/></td>
+				</tr>
+				<tr>
+					<td width="120" class="propertyname">Scheduled Time</td>
+					<td width="200"><div id="ScheduledTime"/></td>
+					<td width="120" class="propertyname">Processed Time</td>
+					<td width="200"><div id="ProcessedTime"/></td>
+				</tr>
+				<tr>
+					<td width="120" class="propertyname">Failure Count</td>
+					<td width="200"><div id="FailureCount"/></td>
+					<td width="120" class="propertyname">User</td>
+					<td width="200"><div id="User"/></td>
+				</tr>
+				<tr>
+					<td width="120" class="propertyname">Failure Description</td>
+					<td width="200" colspan=3><div id="FailureDescription"/></td>
+				</tr>
+			</table>
+
+			<p class="sectionheading">Properties</p>
+			<table border="0" id="extendedPropertiesTable">
+				<tr class="tableheading">
+					<td>Name</td>
+					<td>Value</td>
+				</tr>
+			</table>
+			
+		</form>
+	</body>
+</html>

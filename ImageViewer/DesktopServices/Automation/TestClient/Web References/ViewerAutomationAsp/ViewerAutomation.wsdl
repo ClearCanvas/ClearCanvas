@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:tns="http://www.clearcanvas.ca/imageViewer/automation" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" name="ViewerAutomation" targetNamespace="http://www.clearcanvas.ca/imageViewer/automation" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsp:Policy wsu:Id="ViewerAutomation1_policy">
+    <wsp:ExactlyOne>
+      <wsp:All>
+        <msb:BinaryEncoding xmlns:msb="http://schemas.microsoft.com/ws/06/2004/mspolicy/netbinary1" />
+        <sp:TransportBinding xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+          <wsp:Policy>
+            <sp:TransportToken>
+              <wsp:Policy>
+                <msf:WindowsTransportSecurity xmlns:msf="http://schemas.microsoft.com/ws/2006/05/framing/policy">
+                  <msf:ProtectionLevel>EncryptAndSign</msf:ProtectionLevel>
+                </msf:WindowsTransportSecurity>
+              </wsp:Policy>
+            </sp:TransportToken>
+            <sp:AlgorithmSuite>
+              <wsp:Policy>
+                <sp:Basic256 />
+              </wsp:Policy>
+            </sp:AlgorithmSuite>
+            <sp:Layout>
+              <wsp:Policy>
+                <sp:Strict />
+              </wsp:Policy>
+            </sp:Layout>
+          </wsp:Policy>
+        </sp:TransportBinding>
+        <wsaw:UsingAddressing />
+      </wsp:All>
+    </wsp:ExactlyOne>
+  </wsp:Policy>
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://www.clearcanvas.ca/imageViewer/automation/Imports">
+      <xsd:import schemaLocation="http://localhost:51124/ClearCanvas/ImageViewer/Automation?xsd=xsd0" namespace="http://www.clearcanvas.ca/imageViewer/automation" />
+      <xsd:import schemaLocation="http://localhost:51124/ClearCanvas/ImageViewer/Automation?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+      <xsd:import schemaLocation="http://localhost:51124/ClearCanvas/ImageViewer/Automation?xsd=xsd2" namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
+      <xsd:import schemaLocation="http://localhost:51124/ClearCanvas/ImageViewer/Automation?xsd=xsd3" namespace="http://schemas.datacontract.org/2004/07/ClearCanvas.Dicom.ServiceModel" />
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="IViewerAutomation_GetActiveViewers_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetActiveViewers" />
+  </wsdl:message>
+  <wsdl:message name="IViewerAutomation_GetActiveViewers_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetActiveViewersResponse" />
+  </wsdl:message>
+  <wsdl:message name="IViewerAutomation_GetActiveViewers_NoActiveViewersFaultFault_FaultMessage">
+    <wsdl:part name="detail" element="tns:NoActiveViewersFault" />
+  </wsdl:message>
+  <wsdl:message name="IViewerAutomation_GetViewerInfo_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetViewerInfo" />
+  </wsdl:message>
+  <wsdl:message name="IViewerAutomation_GetViewerInfo_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetViewerInfoResponse" />
+  </wsdl:message>
+  <wsdl:message name="IViewerAutomation_GetViewerInfo_ViewerNotFoundFaultFault_FaultMessage">
+    <wsdl:part name="detail" element="tns:ViewerNotFoundFault" />
+  </wsdl:message>
+  <wsdl:message name="IViewerAutomation_OpenStudies_InputMessage">
+    <wsdl:part name="parameters" element="tns:OpenStudies" />
+  </wsdl:message>
+  <wsdl:message name="IViewerAutomation_OpenStudies_OutputMessage">
+    <wsdl:part name="parameters" element="tns:OpenStudiesResponse" />
+  </wsdl:message>
+  <wsdl:message name="IViewerAutomation_OpenStudies_StudyNearlineFaultFault_FaultMessage">
+    <wsdl:part xmlns:q1="http://schemas.datacontract.org/2004/07/ClearCanvas.Dicom.ServiceModel" name="detail" element="q1:StudyNearlineFault" />
+  </wsdl:message>
+  <wsdl:message name="IViewerAutomation_OpenStudies_StudyInUseFaultFault_FaultMessage">
+    <wsdl:part xmlns:q2="http://schemas.datacontract.org/2004/07/ClearCanvas.Dicom.ServiceModel" name="detail" element="q2:StudyInUseFault" />
+  </wsdl:message>
+  <wsdl:message name="IViewerAutomation_OpenStudies_StudyOfflineFaultFault_FaultMessage">
+    <wsdl:part xmlns:q3="http://schemas.datacontract.org/2004/07/ClearCanvas.Dicom.ServiceModel" name="detail" element="q3:StudyOfflineFault" />
+  </wsdl:message>
+  <wsdl:message name="IViewerAutomation_OpenStudies_OpenStudiesFaultFault_FaultMessage">
+    <wsdl:part name="detail" element="tns:OpenStudiesFault" />
+  </wsdl:message>
+  <wsdl:message name="IViewerAutomation_OpenStudies_StudyNotFoundFaultFault_FaultMessage">
+    <wsdl:part xmlns:q4="http://schemas.datacontract.org/2004/07/ClearCanvas.Dicom.ServiceModel" name="detail" element="q4:StudyNotFoundFault" />
+  </wsdl:message>
+  <wsdl:message name="IViewerAutomation_ActivateViewer_InputMessage">
+    <wsdl:part name="parameters" element="tns:ActivateViewer" />
+  </wsdl:message>
+  <wsdl:message name="IViewerAutomation_ActivateViewer_OutputMessage">
+    <wsdl:part name="parameters" element="tns:ActivateViewerResponse" />
+  </wsdl:message>
+  <wsdl:message name="IViewerAutomation_ActivateViewer_ViewerNotFoundFaultFault_FaultMessage">
+    <wsdl:part name="detail" element="tns:ViewerNotFoundFault" />
+  </wsdl:message>
+  <wsdl:message name="IViewerAutomation_CloseViewer_InputMessage">
+    <wsdl:part name="parameters" element="tns:CloseViewer" />
+  </wsdl:message>
+  <wsdl:message name="IViewerAutomation_CloseViewer_OutputMessage">
+    <wsdl:part name="parameters" element="tns:CloseViewerResponse" />
+  </wsdl:message>
+  <wsdl:message name="IViewerAutomation_CloseViewer_ViewerNotFoundFaultFault_FaultMessage">
+    <wsdl:part name="detail" element="tns:ViewerNotFoundFault" />
+  </wsdl:message>
+  <wsdl:portType name="IViewerAutomation">
+    <wsdl:operation name="GetActiveViewers">
+      <wsdl:input wsaw:Action="http://www.clearcanvas.ca/imageViewer/automation/IViewerAutomation/GetActiveViewers" message="tns:IViewerAutomation_GetActiveViewers_InputMessage" />
+      <wsdl:output wsaw:Action="http://www.clearcanvas.ca/imageViewer/automation/IViewerAutomation/GetActiveViewersResponse" message="tns:IViewerAutomation_GetActiveViewers_OutputMessage" />
+      <wsdl:fault wsaw:Action="http://www.clearcanvas.ca/imageViewer/automation/IViewerAutomation/GetActiveViewersNoActiveViewersFaultFault" name="NoActiveViewersFaultFault" message="tns:IViewerAutomation_GetActiveViewers_NoActiveViewersFaultFault_FaultMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetViewerInfo">
+      <wsdl:input wsaw:Action="http://www.clearcanvas.ca/imageViewer/automation/IViewerAutomation/GetViewerInfo" message="tns:IViewerAutomation_GetViewerInfo_InputMessage" />
+      <wsdl:output wsaw:Action="http://www.clearcanvas.ca/imageViewer/automation/IViewerAutomation/GetViewerInfoResponse" message="tns:IViewerAutomation_GetViewerInfo_OutputMessage" />
+      <wsdl:fault wsaw:Action="http://www.clearcanvas.ca/imageViewer/automation/IViewerAutomation/GetViewerInfoViewerNotFoundFaultFault" name="ViewerNotFoundFaultFault" message="tns:IViewerAutomation_GetViewerInfo_ViewerNotFoundFaultFault_FaultMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="OpenStudies">
+      <wsdl:input wsaw:Action="http://www.clearcanvas.ca/imageViewer/automation/IViewerAutomation/OpenStudies" message="tns:IViewerAutomation_OpenStudies_InputMessage" />
+      <wsdl:output wsaw:Action="http://www.clearcanvas.ca/imageViewer/automation/IViewerAutomation/OpenStudiesResponse" message="tns:IViewerAutomation_OpenStudies_OutputMessage" />
+      <wsdl:fault wsaw:Action="http://www.clearcanvas.ca/imageViewer/automation/IViewerAutomation/OpenStudiesStudyNearlineFaultFault" name="StudyNearlineFaultFault" message="tns:IViewerAutomation_OpenStudies_StudyNearlineFaultFault_FaultMessage" />
+      <wsdl:fault wsaw:Action="http://www.clearcanvas.ca/imageViewer/automation/IViewerAutomation/OpenStudiesStudyInUseFaultFault" name="StudyInUseFaultFault" message="tns:IViewerAutomation_OpenStudies_StudyInUseFaultFault_FaultMessage" />
+      <wsdl:fault wsaw:Action="http://www.clearcanvas.ca/imageViewer/automation/IViewerAutomation/OpenStudiesStudyOfflineFaultFault" name="StudyOfflineFaultFault" message="tns:IViewerAutomation_OpenStudies_StudyOfflineFaultFault_FaultMessage" />
+      <wsdl:fault wsaw:Action="http://www.clearcanvas.ca/imageViewer/automation/IViewerAutomation/OpenStudiesOpenStudiesFaultFault" name="OpenStudiesFaultFault" message="tns:IViewerAutomation_OpenStudies_OpenStudiesFaultFault_FaultMessage" />
+      <wsdl:fault wsaw:Action="http://www.clearcanvas.ca/imageViewer/automation/IViewerAutomation/OpenStudiesStudyNotFoundFaultFault" name="StudyNotFoundFaultFault" message="tns:IViewerAutomation_OpenStudies_StudyNotFoundFaultFault_FaultMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="ActivateViewer">
+      <wsdl:input wsaw:Action="http://www.clearcanvas.ca/imageViewer/automation/IViewerAutomation/ActivateViewer" message="tns:IViewerAutomation_ActivateViewer_InputMessage" />
+      <wsdl:output wsaw:Action="http://www.clearcanvas.ca/imageViewer/automation/IViewerAutomation/ActivateViewerResponse" message="tns:IViewerAutomation_ActivateViewer_OutputMessage" />
+      <wsdl:fault wsaw:Action="http://www.clearcanvas.ca/imageViewer/automation/IViewerAutomation/ActivateViewerViewerNotFoundFaultFault" name="ViewerNotFoundFaultFault" message="tns:IViewerAutomation_ActivateViewer_ViewerNotFoundFaultFault_FaultMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="CloseViewer">
+      <wsdl:input wsaw:Action="http://www.clearcanvas.ca/imageViewer/automation/IViewerAutomation/CloseViewer" message="tns:IViewerAutomation_CloseViewer_InputMessage" />
+      <wsdl:output wsaw:Action="http://www.clearcanvas.ca/imageViewer/automation/IViewerAutomation/CloseViewerResponse" message="tns:IViewerAutomation_CloseViewer_OutputMessage" />
+      <wsdl:fault wsaw:Action="http://www.clearcanvas.ca/imageViewer/automation/IViewerAutomation/CloseViewerViewerNotFoundFaultFault" name="ViewerNotFoundFaultFault" message="tns:IViewerAutomation_CloseViewer_ViewerNotFoundFaultFault_FaultMessage" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="ViewerAutomation" type="tns:IViewerAutomation">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="GetActiveViewers">
+      <soap:operation soapAction="http://www.clearcanvas.ca/imageViewer/automation/IViewerAutomation/GetActiveViewers" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+      <wsdl:fault name="NoActiveViewersFaultFault">
+        <soap:fault use="literal" name="NoActiveViewersFaultFault" namespace="" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="GetViewerInfo">
+      <soap:operation soapAction="http://www.clearcanvas.ca/imageViewer/automation/IViewerAutomation/GetViewerInfo" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+      <wsdl:fault name="ViewerNotFoundFaultFault">
+        <soap:fault use="literal" name="ViewerNotFoundFaultFault" namespace="" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="OpenStudies">
+      <soap:operation soapAction="http://www.clearcanvas.ca/imageViewer/automation/IViewerAutomation/OpenStudies" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+      <wsdl:fault name="StudyNearlineFaultFault">
+        <soap:fault use="literal" name="StudyNearlineFaultFault" namespace="" />
+      </wsdl:fault>
+      <wsdl:fault name="StudyInUseFaultFault">
+        <soap:fault use="literal" name="StudyInUseFaultFault" namespace="" />
+      </wsdl:fault>
+      <wsdl:fault name="StudyOfflineFaultFault">
+        <soap:fault use="literal" name="StudyOfflineFaultFault" namespace="" />
+      </wsdl:fault>
+      <wsdl:fault name="OpenStudiesFaultFault">
+        <soap:fault use="literal" name="OpenStudiesFaultFault" namespace="" />
+      </wsdl:fault>
+      <wsdl:fault name="StudyNotFoundFaultFault">
+        <soap:fault use="literal" name="StudyNotFoundFaultFault" namespace="" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="ActivateViewer">
+      <soap:operation soapAction="http://www.clearcanvas.ca/imageViewer/automation/IViewerAutomation/ActivateViewer" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+      <wsdl:fault name="ViewerNotFoundFaultFault">
+        <soap:fault use="literal" name="ViewerNotFoundFaultFault" namespace="" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="CloseViewer">
+      <soap:operation soapAction="http://www.clearcanvas.ca/imageViewer/automation/IViewerAutomation/CloseViewer" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+      <wsdl:fault name="ViewerNotFoundFaultFault">
+        <soap:fault use="literal" name="ViewerNotFoundFaultFault" namespace="" />
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="ViewerAutomation1" type="tns:IViewerAutomation">
+    <wsp:PolicyReference URI="#ViewerAutomation1_policy" />
+    <soap12:binding transport="http://schemas.microsoft.com/soap/named-pipe" />
+    <wsdl:operation name="GetActiveViewers">
+      <soap12:operation soapAction="http://www.clearcanvas.ca/imageViewer/automation/IViewerAutomation/GetActiveViewers" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+      <wsdl:fault name="NoActiveViewersFaultFault">
+        <soap12:fault use="literal" name="NoActiveViewersFaultFault" namespace="" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="GetViewerInfo">
+      <soap12:operation soapAction="http://www.clearcanvas.ca/imageViewer/automation/IViewerAutomation/GetViewerInfo" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+      <wsdl:fault name="ViewerNotFoundFaultFault">
+        <soap12:fault use="literal" name="ViewerNotFoundFaultFault" namespace="" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="OpenStudies">
+      <soap12:operation soapAction="http://www.clearcanvas.ca/imageViewer/automation/IViewerAutomation/OpenStudies" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+      <wsdl:fault name="StudyNearlineFaultFault">
+        <soap12:fault use="literal" name="StudyNearlineFaultFault" namespace="" />
+      </wsdl:fault>
+      <wsdl:fault name="StudyInUseFaultFault">
+        <soap12:fault use="literal" name="StudyInUseFaultFault" namespace="" />
+      </wsdl:fault>
+      <wsdl:fault name="StudyOfflineFaultFault">
+        <soap12:fault use="literal" name="StudyOfflineFaultFault" namespace="" />
+      </wsdl:fault>
+      <wsdl:fault name="OpenStudiesFaultFault">
+        <soap12:fault use="literal" name="OpenStudiesFaultFault" namespace="" />
+      </wsdl:fault>
+      <wsdl:fault name="StudyNotFoundFaultFault">
+        <soap12:fault use="literal" name="StudyNotFoundFaultFault" namespace="" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="ActivateViewer">
+      <soap12:operation soapAction="http://www.clearcanvas.ca/imageViewer/automation/IViewerAutomation/ActivateViewer" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+      <wsdl:fault name="ViewerNotFoundFaultFault">
+        <soap12:fault use="literal" name="ViewerNotFoundFaultFault" namespace="" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="CloseViewer">
+      <soap12:operation soapAction="http://www.clearcanvas.ca/imageViewer/automation/IViewerAutomation/CloseViewer" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+      <wsdl:fault name="ViewerNotFoundFaultFault">
+        <soap12:fault use="literal" name="ViewerNotFoundFaultFault" namespace="" />
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="ViewerAutomation">
+    <wsdl:port name="ViewerAutomation" binding="tns:ViewerAutomation">
+      <soap:address location="http://localhost:51124/ClearCanvas/ImageViewer/Automation" />
+    </wsdl:port>
+    <wsdl:port name="ViewerAutomation1" binding="tns:ViewerAutomation1">
+      <soap12:address location="net.pipe://localhost/ClearCanvas/ImageViewer/Automation" />
+      <wsa10:EndpointReference>
+        <wsa10:Address>net.pipe://localhost/ClearCanvas/ImageViewer/Automation</wsa10:Address>
+        <Identity xmlns="http://schemas.xmlsoap.org/ws/2006/02/addressingidentity">
+          <Upn>SBRIGHT\stewart</Upn>
+        </Identity>
+      </wsa10:EndpointReference>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

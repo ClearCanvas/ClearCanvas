@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" assembly="ClearCanvas.Healthcare" namespace="ClearCanvas.Healthcare">
+
+  <!-- 
+    Obtains the owner of a specified document.
+    Parameters: 1. the attached document.
+  -->
+  <query name="documentPatientOwner">
+    select p
+    from Patient p
+    join p.Attachments pa
+    where pa.Document = ?
+  </query>
+
+</hibernate-mapping>

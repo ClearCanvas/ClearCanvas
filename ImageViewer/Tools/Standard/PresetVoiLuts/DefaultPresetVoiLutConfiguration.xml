@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<preset-voi-luts>
+  <group modality ="CT">
+    <presets>
+      <preset keystroke="F3" factory="Linear Preset">
+        <configuration>
+          <item key="PresetName" value="Chest" />
+          <item key="WindowWidth" value="350" />
+          <item key="WindowCenter" value="40" />
+        </configuration>
+      </preset>
+      <preset keystroke="F4" factory="Linear Preset">
+        <configuration>
+          <item key="PresetName" value="Abdomen/Pelvis" />
+          <item key="WindowWidth" value="350" />
+          <item key="WindowCenter" value="40" />
+        </configuration>
+      </preset>
+      <preset keystroke="F5" factory="Linear Preset">
+        <configuration>
+          <item key="PresetName" value="Lung" />
+          <item key="WindowWidth" value="1500" />
+          <item key="WindowCenter" value="-600" />
+        </configuration>
+      </preset>
+      <preset keystroke="F6" factory="Linear Preset">
+        <configuration>
+          <item key="PresetName" value="Brain" />
+          <item key="WindowWidth" value="80" />
+          <item key="WindowCenter" value="40" />
+        </configuration>
+      </preset>
+      <preset keystroke="F7" factory="Linear Preset">
+        <configuration>
+          <item key="PresetName" value="Bone" />
+          <item key="WindowWidth" value="2500" />
+          <item key="WindowCenter" value="480" />
+        </configuration>
+      </preset>
+      <preset keystroke="F8" factory="Linear Preset">
+        <configuration>
+          <item key="PresetName" value="Head/Neck" />
+          <item key="WindowWidth" value="350" />
+          <item key="WindowCenter" value="90" />
+        </configuration>
+      </preset>
+    </presets>
+  </group>
+</preset-voi-luts>

@@ -1,0 +1,22 @@
+using System;
+using System.Collections;
+using System.Text;
+
+using Iesi.Collections;
+using ClearCanvas.Enterprise.Core;
+
+
+namespace <%= namespace %> {
+
+    /// <summary>
+    /// Abstract base class for service layers that make use of this domain model.
+    /// This file is machine generated - changes will be lost.
+    /// </summary>
+	public abstract partial class <%= shortName %>ServiceLayer : I<%= shortName %>ServiceLayer
+	{
+		protected IPersistenceContext CurrentContext
+		{
+			get { return PersistenceScope.Current; }
+		}	  	
+	}
+}

@@ -1,0 +1,42 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="ClearCanvas.Enterprise.Authentication" GeneratedClassName="AuthenticationSettings">
+  <Profiles />
+  <Settings>
+    <Setting Name="PasswordExpiryDays" Description="Number of days until a password expires" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">60</Value>
+    </Setting>
+    <Setting Name="DefaultTemporaryPassword" Description="Temporary password assigned to new users" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">clearcanvas</Value>
+    </Setting>
+    <Setting Name="UserSessionTimeoutMinutes" Description="User session inactivity timeout in minutes" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">15</Value>
+    </Setting>
+    <Setting Name="UserSessionTimeoutEnabled" Description="Specify true to enable user session inactivity timeout, otherwise user sessions never time out" Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="ValidPasswordRegex" Description="Regular expression used to validate new password candidates" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">^\w{8,16}$</Value>
+    </Setting>
+    <Setting Name="ValidPasswordMessage" Description="User friendly description of a valid password" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Password must contain only letters and numbers, and be 8-16 characters long</Value>
+    </Setting>
+    <Setting Name="ApplicationWhiteList" Description="Comma delimited list of valid application names.  If blank, all application names are valid." Type="System.String" Scope="Application">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="HostNameWhiteList" Description="Comma delimited list of valid host names.  If blank, all host names are valid." Type="System.String" Scope="Application">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="SessionTokenCachingEnabled" Description="Specifies whether session token cache is enabled." Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="SessionTokenCachingTimeToLiveSeconds" Description="Specifies session token cache TTL in seconds - max recommended value is 60" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">45</Value>
+    </Setting>
+    <Setting Name="AuthorityTokenCachingEnabled" Description="Specifies whether authority token cache is enabled." Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="AuthorityTokenCachingTimeToLiveSeconds" Description="Specifies authority token cache TTL in seconds.  Authority token changes may not take effect until this time elapses." Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">180</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

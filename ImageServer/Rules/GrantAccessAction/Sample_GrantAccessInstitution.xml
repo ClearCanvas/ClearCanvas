@@ -1,0 +1,4 @@
+﻿<condition expressionLanguage="dicom">
+	<!-- Rule for matching the InstitutionName -->
+	<regex  test="$InstitutionName"  pattern="TD Imaging" ignoreCase="true"/>
+</condition>

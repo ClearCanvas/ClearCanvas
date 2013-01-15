@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Font Name="Tahoma" Size="8.4" />
+  <Interface Name="ClearCanvas.Enterprise.Core.IPersistenceBroker" Collapsed="true">
+    <Position X="10.5" Y="0.75" Width="2" />
+    <TypeIdentifier>
+      <FileName>IPersistenceBroker.cs</FileName>
+      <HashCode>AAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="ClearCanvas.Enterprise.Core.IPersistenceContext">
+    <Position X="6.5" Y="0.5" Width="1.75" />
+    <TypeIdentifier>
+      <FileName>IPersistenceContext.cs</FileName>
+      <HashCode>AAIQgAAAAAAAIAgAAAAAAAAgAEAAACAAAAAAAAgAAAA=</HashCode>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="ClearCanvas.Enterprise.Core.IPersistentStore">
+    <Position X="3.25" Y="1" Width="2" />
+    <TypeIdentifier>
+      <FileName>IPersistentStore.cs</FileName>
+      <HashCode>CAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAgAAAAAAAAAE=</HashCode>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="ClearCanvas.Enterprise.Core.IUpdateContext">
+    <Position X="7.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>IUpdateContext.cs</FileName>
+      <HashCode>AAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAA=</HashCode>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="ClearCanvas.Enterprise.Core.IReadContext" Collapsed="true">
+    <Position X="5.75" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>IReadContext.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="ClearCanvas.Enterprise.Core.IEntityBroker&lt;TEntity, TSearchCriteria&gt;">
+    <Position X="9.75" Y="2.5" Width="3.5" />
+    <TypeIdentifier>
+      <FileName>IEntityBroker.cs</FileName>
+      <HashCode>AAAAgAAAAAAAAAAAAIAQAAQAAAEIAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Interface>
+</ClassDiagram>

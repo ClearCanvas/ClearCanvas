@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" assembly="ClearCanvas.Enterprise.Authentication" namespace="ClearCanvas.Enterprise.Authentication">
+  <class name="User" table="User_">
+    <cache usage="read-write"/>
+    <id name="OID" column="OID_" type="Guid">
+      <generator class="guid.comb"/>
+    </id>
+    <version name="Version" column="Version_"/>
+    <property name="UserName" column="UserName_" type="String" not-null="true" unique="true" access="nosetter.camelcase-underscore"/>
+    <component name="Password" class="Password" access="nosetter.camelcase-underscore">
+      <property name="Salt" column="PasswordSalt_" type="String" not-null="true" access="nosetter.camelcase-underscore"/>
+      <property name="SaltedHash" column="PasswordSaltedHash_" type="String" not-null="true" access="nosetter.camelcase-underscore"/>
+      <property name="ExpiryTime" column="PasswordExpiryDate_" type="DateTime"/>
+    </component>
+    <property name="DisplayName" column="DisplayName_" type="String"/>
+    <property name="ValidFrom" column="ValidFrom_" type="DateTime"/>
+    <property name="ValidUntil" column="ValidUntil_" type="DateTime"/>
+    <property name="Enabled" column="Enabled_" type="Boolean" not-null="true"/>
+    <property name="CreationTime" column="CreationTime_" type="DateTime" not-null="true" access="nosetter.camelcase-underscore"/>
+    <property name="LastLoginTime" column="LastLoginTime_" type="DateTime" access="nosetter.camelcase-underscore"/>
+    <property name="EmailAddress" column="EmailAddress_" type="String" not-null="false" length="255"/>
+    <set name="AuthorityGroups" table="AuthorityGroupUser_" lazy="true" cascade="all">
+      <key column="UserOID_"/>
+      <many-to-many column="AuthorityGroupOID_" class="AuthorityGroup" fetch="join"/>
+    </set>
+    <set name="Sessions" lazy="true" inverse="true" batch-size="50" cascade="all-delete-orphan">
+      <cache usage="nonstrict-read-write"/>
+      <key column="UserOID_"/>
+      <one-to-many class="UserSession"/>
+    </set>
+  </class>
+</hibernate-mapping>

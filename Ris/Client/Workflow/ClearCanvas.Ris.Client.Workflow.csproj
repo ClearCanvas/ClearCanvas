@@ -1,0 +1,507 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{FFB85377-995C-47A6-BF22-26D264CA3225}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ClearCanvas.Ris.Client.Workflow</RootNamespace>
+    <AssemblyName>ClearCanvas.Ris.Client.Workflow</AssemblyName>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CancelOrdersTool.cs" />
+    <Compile Include="CheckInOrderComponent.cs" />
+    <Compile Include="CheckInOrderTable.cs" />
+    <Compile Include="MppsDocumentationComponent.cs" />
+    <Compile Include="OrderCheckInHelper.cs" />
+    <Compile Include="PrintReportTool.cs" />
+    <Compile Include="OrderMergeSettings.cs" />
+    <Compile Include="OrderMergeSettings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>OrderMergeSettings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="ReportingMppsDocumentationComponent.cs" />
+    <Compile Include="UnmergeOrdersTool.cs" />
+    <Compile Include="DicomSeriesEditorComponent.cs" />
+    <Compile Include="DowntimePrintFormsComponent.cs" />
+    <Compile Include="DowntimeReportEntryComponent.cs" />
+    <Compile Include="DowntimeSettings.cs" />
+    <Compile Include="DowntimeSettings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>DowntimeSettings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="EditReportTool.cs" />
+    <Compile Include="Folders\RadiologistAdminWorkflowFolders.cs" />
+    <Compile Include="Folders\TranscriptionWorkflowFolders.cs" />
+    <Compile Include="MergedOrderDetailViewComponent.cs" />
+    <Compile Include="MergeOrdersComponent.cs" />
+    <Compile Include="MergeOrdersTool.cs" />
+    <Compile Include="PatientSearchTool.cs" />
+    <Compile Include="PerformedProcedureDicomSeriesComponent.cs" />
+    <Compile Include="PriorReportComponentSettings.cs" />
+    <Compile Include="PriorReportComponentSettings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>PriorReportComponentSettings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="RadiologistAdminWorkflowFolderSystem.cs" />
+    <Compile Include="RadiologistAdminWorkflowItemTools.cs" />
+    <Compile Include="ReassignComponent.cs" />
+    <Compile Include="ReportContent.cs" />
+    <Compile Include="ReportEditorComponentBase.cs" />
+    <Compile Include="ReportingOrderDetailViewComponent.cs" />
+    <Compile Include="StaffSelectionComponent.cs" />
+    <Compile Include="SupervisorSelectionComponent.cs" />
+    <Compile Include="TranscriptionComponent.cs" />
+    <Compile Include="TranscriptionComponentWorklistItemManager.cs" />
+    <Compile Include="TranscriptionDocument.cs" />
+    <Compile Include="TranscriptionEditorComponent.cs" />
+    <Compile Include="TranscriptionRejectReasonComponent.cs" />
+    <Compile Include="TranscriptionSettings.cs" />
+    <Compile Include="TranscriptionSettings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>TranscriptionSettings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="TranscriptionWorkflowFolder.cs" />
+    <Compile Include="TranscriptionWorkflowFolderSystem.cs" />
+    <Compile Include="TranscriptionWorkflowItemTool.cs" />
+    <Compile Include="TranscriptionWorkflowTools.cs" />
+    <Compile Include="ViewImagesTool.cs" />
+    <Compile Include="Folders\FolderOptionComponent.cs" />
+    <Compile Include="Folders\RegistrationWorkflowFolders.cs" />
+    <Compile Include="Folders\ReportingWorkflowFolders.cs" />
+    <Compile Include="Folders\PerformingWorkflowFolders.cs" />
+    <Compile Include="IPerformingDocumentationPage.cs" />
+    <Compile Include="LinkProceduresComponent.cs" />
+    <Compile Include="ModifyOrderTool.cs" />
+    <Compile Include="NewOrderTool.cs" />
+    <Compile Include="PatientAddTool.cs" />
+    <Compile Include="PatientBiographyTool.cs" />
+    <Compile Include="PatientEditTool.cs" />
+    <Compile Include="PerformedProcedureComponent.cs" />
+    <Compile Include="PriorReportComponent.cs" />
+    <Compile Include="PriorSummaryTable.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReasonSelectionComponentBase.cs" />
+    <Compile Include="RandomOrderTool.cs" />
+    <Compile Include="RegistrationWorkflowFolder.cs" />
+    <Compile Include="RegistrationWorkflowFolderSystem.cs" />
+    <Compile Include="RegistrationWorkflowFolderSystemBase.cs" />
+    <Compile Include="RegistrationWorkflowTool.cs" />
+    <Compile Include="WorklistItemTable.cs" />
+    <Compile Include="ReplaceOrderTool.cs" />
+    <Compile Include="ReportDocument.cs" />
+    <Compile Include="ReportEditorComponent.cs" />
+    <Compile Include="ReportingComponent.cs" />
+    <Compile Include="ReportingComponentWorklistItemManager.cs" />
+    <Compile Include="ReportingSettings.cs" />
+    <Compile Include="ReportingSettings.Designer.cs">
+      <DependentUpon>ReportingSettings.settings</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="ReportingWorkflowFolder.cs" />
+    <Compile Include="ReportingWorkflowFolderSystem.cs" />
+    <Compile Include="ReportingWorkflowFolderSystemBase.cs" />
+    <Compile Include="ReportingWorkflowItemTool.cs" />
+    <Compile Include="ReportingWorkflowTools.cs" />
+    <Compile Include="ReviseReportTool.cs" />
+    <Compile Include="SR.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SR.resx</DependentUpon>
+    </Compile>
+    <Compile Include="PerformingDocumentationComponent.cs" />
+    <Compile Include="PerformingDocumentationComponentSettings.cs" />
+    <Compile Include="PerformingDocumentationComponentSettings.Designer.cs">
+      <DependentUpon>PerformingDocumentationComponentSettings.settings</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="PerformingDocumentationDocument.cs" />
+    <Compile Include="PerformingDocumentationMppsSummaryTable.cs" />
+    <Compile Include="PerformingDocumentationOrderDetailsComponent.cs" />
+    <Compile Include="PerformingDocumentationTool.cs" />
+    <Compile Include="PerformingWorkflowFolder.cs" />
+    <Compile Include="PerformingWorkflowFolderSystem.cs" />
+    <Compile Include="PerformingWorkflowFolderSystemBase.cs" />
+    <Compile Include="WorkflowHistoryTool.cs" />
+    <Compile Include="WorklistItemManager.cs" />
+    <Compile Include="WorklistItemManagerSettings.cs" />
+    <Compile Include="WorklistItemManagerSettings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>WorklistItemManagerSettings.settings</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="SR.resx">
+      <SubType>Designer</SubType>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>SR.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Common\ClearCanvas.Common.csproj">
+      <Project>{F6EAD428-E6CF-4DF6-B2F3-D33D532C5343}</Project>
+      <Name>ClearCanvas.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Desktop\ClearCanvas.Desktop.csproj">
+      <Project>{26E9A01A-64B5-42C5-8252-FBB30DF9CEC7}</Project>
+      <Name>ClearCanvas.Desktop</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Enterprise\Common\ClearCanvas.Enterprise.Common.csproj">
+      <Project>{B5EBFFD7-6641-4932-91C9-4C4322B41868}</Project>
+      <Name>ClearCanvas.Enterprise.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Enterprise\Desktop\ClearCanvas.Enterprise.Desktop.csproj">
+      <Project>{CBD5EBD0-7AE9-4824-AE8C-4888983E1B5B}</Project>
+      <Name>ClearCanvas.Enterprise.Desktop</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Application\Common\ClearCanvas.Ris.Application.Common.csproj">
+      <Project>{09F49217-CD98-4773-8CFB-594F189EEE3B}</Project>
+      <Name>ClearCanvas.Ris.Application.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ClearCanvas.Ris.Client.csproj">
+      <Project>{F8E75C01-AB14-4DDE-ABEA-3EECC4957A1F}</Project>
+      <Name>ClearCanvas.Ris.Client</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="DowntimeSettings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>DowntimeSettings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="OrderMergeSettings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>OrderMergeSettings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="PriorReportComponentSettings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>PriorReportComponentSettings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="ReportingSettings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>ReportingSettings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="PerformingDocumentationComponentSettings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>PerformingDocumentationComponentSettings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="TranscriptionSettings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>TranscriptionSettings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="WorklistItemManagerSettings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>WorklistItemManagerSettings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\AddPatientToolLarge.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\AddPatientToolMedium.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\AddPatientToolSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\AddToolLarge.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\AddToolMedium.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\AddToolSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\CheckInToolLarge.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\CheckInToolMedium.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\CheckInToolSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\CheckSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\CompleteToolLarge.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\CompleteToolMedium.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\CompleteToolSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\DeleteToolLarge.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\DeleteToolMedium.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\DeleteToolSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\EditPatientToolMedium.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\EditPatientToolSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\EditPatientToolToolLarge.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\EditToolLarge.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\EditToolMedium.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\EditToolSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\NoteTestToolLarge.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\NoteTestToolMedium.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\NoteTestToolSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\PatientDetailsToolLarge.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\PatientDetailsToolMedium.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\PatientDetailsToolSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\ProcessMessageToolLarge.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\ProcessMessageToolMedium.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\ProcessMessageToolSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\RegistrationHomeToolLarge.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\RegistrationHomeToolMedium.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\RegistrationHomeToolSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\ResumeToolLarge.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\ResumeToolMedium.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\ResumeToolSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\StartToolLarge.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\StartToolMedium.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\StartToolSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\SuspendToolLarge.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\SuspendToolMedium.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\SuspendToolSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\PerformingHomeToolLarge.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\PerformingHomeToolMedium.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\PerformingHomeToolSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\VisitSummaryToolLarge.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\VisitSummaryToolMedium.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\VisitSummaryToolSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\RejectTranscriptionLarge.png" />
+    <EmbeddedResource Include="Icons\RejectTranscriptionMedium.png" />
+    <EmbeddedResource Include="Icons\RejectTranscriptionSmall.png" />
+    <EmbeddedResource Include="Icons\CancelReportLarge.png" />
+    <EmbeddedResource Include="Icons\CancelReportMedium.png" />
+    <EmbeddedResource Include="Icons\CancelReportSmall.png" />
+    <EmbeddedResource Include="Icons\CancelAddendumLarge.png" />
+    <EmbeddedResource Include="Icons\CancelAddendumMedium.png" />
+    <EmbeddedResource Include="Icons\CancelAddendumSmall.png" />
+    <EmbeddedResource Include="Icons\AssignLarge.png" />
+    <EmbeddedResource Include="Icons\AssignMedium.png" />
+    <EmbeddedResource Include="Icons\AssignSmall.png" />
+    <Content Include="Icons\ClearFilterLarge.png" />
+    <Content Include="Icons\ClearFilterMedium.png" />
+    <Content Include="Icons\ClearFilterSmall.png" />
+    <EmbeddedResource Include="Icons\DoubleExclamation.png" />
+    <EmbeddedResource Include="Icons\EditReportWithImagesToolSmall.png" />
+    <EmbeddedResource Include="Icons\EditReportWithImagesToolLarge.png" />
+    <EmbeddedResource Include="Icons\EditReportWithImagesToolMedium.png" />
+    <EmbeddedResource Include="Icons\CreateReportWithImagesLarge.png" />
+    <EmbeddedResource Include="Icons\CreateReportWithImagesSmall.png" />
+    <EmbeddedResource Include="Icons\CreateReportWithImagesMedium.png" />
+    <EmbeddedResource Include="Icons\MergeOrdersLarge.png" />
+    <EmbeddedResource Include="Icons\MergeOrdersSmall.png" />
+    <EmbeddedResource Include="Icons\MergeOrdersMedium.png" />
+    <Content Include="Icons\ImportAuthorityTokensLarge.png" />
+    <Content Include="Icons\ImportAuthorityTokensMedium.png" />
+    <Content Include="Icons\ImportAuthorityTokensSmall.png" />
+    <EmbeddedResource Include="Icons\UnmergeOrdersLarge.png" />
+    <EmbeddedResource Include="Icons\UnmergeOrdersMedium.png" />
+    <EmbeddedResource Include="Icons\UnmergeOrdersSmall.png" />
+    <EmbeddedResource Include="Icons\SubmitForReviewLarge.png" />
+    <EmbeddedResource Include="Icons\SubmitForReviewMedium.png" />
+    <EmbeddedResource Include="Icons\SubmitForReviewSmall.png" />
+    <EmbeddedResource Include="Icons\SearchPatientToolLarge.png" />
+    <EmbeddedResource Include="Icons\SearchPatientToolMedium.png" />
+    <EmbeddedResource Include="Icons\SearchPatientToolSmall.png" />
+    <EmbeddedResource Include="Icons\SingleExclamation.png" />
+    <EmbeddedResource Include="Icons\PerformingOpenDocumentationLarge.png" />
+    <EmbeddedResource Include="Icons\PerformingOpenDocumentationMedium.png" />
+    <EmbeddedResource Include="Icons\PerformingOpenDocumentationSmall.png" />
+    <EmbeddedResource Include="Icons\ModifyOrderLarge.png" />
+    <EmbeddedResource Include="Icons\ModifyOrderMedium.png" />
+    <EmbeddedResource Include="Icons\ModifyOrderSmall.png" />
+    <EmbeddedResource Include="Icons\NewOrderLarge.png" />
+    <EmbeddedResource Include="Icons\NewOrderMedium.png" />
+    <EmbeddedResource Include="Icons\NewOrderSmall.png" />
+    <EmbeddedResource Include="Icons\ViewImagesLarge.png" />
+    <EmbeddedResource Include="Icons\ViewImagesMedium.png" />
+    <EmbeddedResource Include="Icons\ViewImagesSmall.png" />
+    <EmbeddedResource Include="Icons\AddAddendumToolLarge.png" />
+    <EmbeddedResource Include="Icons\AddAddendumToolMedium.png" />
+    <EmbeddedResource Include="Icons\AddAddendumToolSmall.png" />
+    <EmbeddedResource Include="Icons\RedoToolLarge.png" />
+    <EmbeddedResource Include="Icons\RedoToolMedium.png" />
+    <EmbeddedResource Include="Icons\RedoToolSmall.png" />
+    <EmbeddedResource Include="Icons\CreateReportLarge.png" />
+    <EmbeddedResource Include="Icons\CreateReportMedium.png" />
+    <EmbeddedResource Include="Icons\CreateReportSmall.png" />
+    <EmbeddedResource Include="Icons\ReplaceOrderLarge.png" />
+    <EmbeddedResource Include="Icons\ReplaceOrderMedium.png" />
+    <EmbeddedResource Include="Icons\ReplaceOrderSmall.png" />
+    <EmbeddedResource Include="Icons\CancelOrderLarge.png" />
+    <EmbeddedResource Include="Icons\CancelOrderMedium.png" />
+    <EmbeddedResource Include="Icons\CancelOrderSmall.png" />
+    <EmbeddedResource Include="Icons\PrintLarge.png" />
+    <EmbeddedResource Include="Icons\PrintMedium.png" />
+    <EmbeddedResource Include="Icons\PrintSmall.png" />
+    <EmbeddedResource Include="Icons\EditReportToolLarge.png" />
+    <EmbeddedResource Include="Icons\EditReportToolMedium.png" />
+    <EmbeddedResource Include="Icons\VerifyReportLarge.png" />
+    <EmbeddedResource Include="Icons\VerifyReportMedium.png" />
+    <EmbeddedResource Include="Icons\VerifyReportSmall.png" />
+    <EmbeddedResource Include="Icons\EditReportToolSmall.png" />
+    <EmbeddedResource Include="Icons\EmergencyPhysicianHomeToolMedium.png" />
+    <EmbeddedResource Include="Icons\EmergencyPhysicianHomeToolSmall.png" />
+    <EmbeddedResource Include="Icons\EmergencyPhysicianHomeToolLarge.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!-- @codegen: ignore -->
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" assembly="ClearCanvas.Healthcare" namespace="ClearCanvas.Healthcare">
+  <subclass name="PublicationStep" proxy="PublicationStep" extends="ReportingProcedureStep" discriminator-value="PUBLICATION">
+    <property name="FailureCount" column="FailureCount_" type="int" not-null="false" access="nosetter.camelcase-underscore"/>
+    <property name="LastFailureTime" column="LastFailureTime_" type="DateTime" not-null="false" access="nosetter.camelcase-underscore"/>
+  </subclass>
+</hibernate-mapping>

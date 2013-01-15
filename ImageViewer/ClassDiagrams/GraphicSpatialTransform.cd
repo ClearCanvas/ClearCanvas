@@ -1,0 +1,79 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Font Name="Tahoma" Size="8.25" />
+  <Class Name="ClearCanvas.ImageViewer.Graphics.Graphic" Collapsed="true">
+    <Position X="0.75" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Graphics\Graphic.cs</FileName>
+      <HashCode>AAKAISEAAKBAggAAAoAAAgQMAAABEgIIAABQAIAAAAA=</HashCode>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="SpatialTransform" />
+    </ShowAsAssociation>
+    <Members>
+      <Field Name="_coordinateSystemStack" Hidden="true" />
+      <Field Name="_name" Hidden="true" />
+      <Field Name="_parentGraphic" Hidden="true" />
+      <Field Name="_parentImageViewer" Hidden="true" />
+      <Field Name="_parentPresentationImage" Hidden="true" />
+      <Field Name="_spatialTransform" Hidden="true" />
+      <Field Name="_visible" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ClearCanvas.ImageViewer.Graphics.SpatialTransform">
+    <Position X="3.75" Y="1.25" Width="2.5" />
+    <TypeIdentifier>
+      <FileName>Graphics\SpatialTransform.cs</FileName>
+      <HashCode>AAGACCAgAgAAAQCqMSMACTQAICCIAAQJAAAgAAJBYWE=</HashCode>
+    </TypeIdentifier>
+    <Members>
+      <Field Name="_clientRectangle" Hidden="true" />
+      <Field Name="_cumulativeScale" Hidden="true" />
+      <Field Name="_cumulativeTransform" Hidden="true" />
+      <Field Name="_flipX" Hidden="true" />
+      <Field Name="_flipY" Hidden="true" />
+      <Field Name="_maximumScale" Hidden="true" />
+      <Field Name="_minimumScale" Hidden="true" />
+      <Field Name="_ownerGraphic" Hidden="true" />
+      <Field Name="_recalculationRequired" Hidden="true" />
+      <Field Name="_rotationXY" Hidden="true" />
+      <Field Name="_scale" Hidden="true" />
+      <Field Name="_scaleX" Hidden="true" />
+      <Field Name="_scaleY" Hidden="true" />
+      <Field Name="_transform" Hidden="true" />
+      <Field Name="_translationX" Hidden="true" />
+      <Field Name="_translationY" Hidden="true" />
+      <Method Name="Calculate" Hidden="true" />
+      <Method Name="CalculateFlip" Hidden="true" />
+      <Method Name="CalculatePostTransform" Hidden="true" />
+      <Method Name="CalculatePreTransform" Hidden="true" />
+      <Method Name="CalculateScale" Hidden="true" />
+      <Property Name="ClientRectangle" Hidden="true" />
+      <Method Name="ConvertToDestination" Hidden="true" />
+      <Method Name="ConvertToSource" Hidden="true" />
+      <Method Name="ConvertVectorsToDestination" Hidden="true" />
+      <Method Name="ConvertVectorsToSource" Hidden="true" />
+      <Method Name="CreateMemento" Hidden="true" />
+      <Property Name="CumulativeScale" Hidden="true" />
+      <Property Name="CumulativeTransformInternal" Hidden="true" />
+      <Method Name="Initialize" Hidden="true" />
+      <Property Name="MaximumScale" Hidden="true" />
+      <Property Name="MinimumScale" Hidden="true" />
+      <Property Name="OwnerGraphic" Hidden="true" />
+      <Property Name="RecalculationRequired" Hidden="true" />
+      <Property Name="ScaleX" Hidden="true" />
+      <Property Name="ScaleY" Hidden="true" />
+      <Method Name="SetMemento" Hidden="true" />
+      <Method Name="SpatialTransform" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <Lollipop Position="0.2" />
+  </Class>
+</ClassDiagram>

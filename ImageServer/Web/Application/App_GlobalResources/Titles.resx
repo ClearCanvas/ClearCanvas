@@ -1,0 +1,441 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="About" xml:space="preserve">
+    <value>About</value>
+  </data>
+  <data name="AddPartitionArchiveTitle" xml:space="preserve">
+    <value>Add Partition Archive</value>
+  </data>
+  <data name="Archive" xml:space="preserve">
+    <value>Archive</value>
+  </data>
+  <data name="ArchiveQueue" xml:space="preserve">
+    <value>Archive Queue</value>
+  </data>
+  <data name="ArchiveQueuePageTitle" xml:space="preserve">
+    <value>Archive Queue | {0}</value>
+  </data>
+  <data name="Configure" xml:space="preserve">
+    <value>Configure</value>
+  </data>
+  <data name="DeleteStudyConfirmation" xml:space="preserve">
+    <value>Delete Confirmation</value>
+  </data>
+  <data name="Devices" xml:space="preserve">
+    <value>Devices</value>
+  </data>
+  <data name="EditPartitionArchiveTitle" xml:space="preserve">
+    <value>Edit Partition Archive</value>
+  </data>
+  <data name="EditStudyDialog" xml:space="preserve">
+    <value>Edit Study Details</value>
+  </data>
+  <data name="FileSystemQueue" xml:space="preserve">
+    <value>File System Queue</value>
+  </data>
+  <data name="FileSystems" xml:space="preserve">
+    <value>File Systems</value>
+  </data>
+  <data name="MoveStudiesPageTitle" xml:space="preserve">
+    <value>Move Studies | {0}</value>
+  </data>
+  <data name="PartitionArchive" xml:space="preserve">
+    <value>Partition Archive</value>
+  </data>
+  <data name="Queues" xml:space="preserve">
+    <value>Queues</value>
+  </data>
+  <data name="StudyIntegrityQueue" xml:space="preserve">
+    <value>Study Integrity Queue</value>
+  </data>
+  <data name="StudyIntegrityQueuePageTitle" xml:space="preserve">
+    <value>Study Integrity Queue | {0}</value>
+  </data>
+  <data name="ReconcileStudyDialog" xml:space="preserve">
+    <value>Reconcile Study</value>
+  </data>
+  <data name="RestoreQueue" xml:space="preserve">
+    <value>Restore Queue</value>
+  </data>
+  <data name="RestoreQueuePageTitle" xml:space="preserve">
+    <value>Restore Queue | {0}</value>
+  </data>
+  <data name="RestoreStudyConfirmation" xml:space="preserve">
+    <value>Restore Confirmation</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>Search</value>
+  </data>
+  <data name="SearchPageTitle" xml:space="preserve">
+    <value>Search | {0}</value>
+  </data>
+  <data name="Series" xml:space="preserve">
+    <value>Series</value>
+  </data>
+  <data name="SeriesDetails" xml:space="preserve">
+    <value>Series Details</value>
+  </data>
+  <data name="ServerPartitions" xml:space="preserve">
+    <value>Server Partitions</value>
+  </data>
+  <data name="ServerRules" xml:space="preserve">
+    <value>Server Rules</value>
+  </data>
+  <data name="ServiceScheduling" xml:space="preserve">
+    <value>Service Scheduling</value>
+  </data>
+  <data name="Studies" xml:space="preserve">
+    <value>Studies</value>
+  </data>
+  <data name="StudiesPageTitle" xml:space="preserve">
+    <value>Studies | {0}</value>
+  </data>
+  <data name="StudyDetails" xml:space="preserve">
+    <value>Study Details</value>
+  </data>
+  <data name="StudyStorage" xml:space="preserve">
+    <value>Study Storage</value>
+  </data>
+  <data name="WorkQueue" xml:space="preserve">
+    <value>Work Queue</value>
+  </data>
+  <data name="WorkQueuePageTitle" xml:space="preserve">
+    <value>Work Queue | {0}</value>
+  </data>
+  <data name="DeleteStudyConfirmDialogTitle" xml:space="preserve">
+    <value>Delete Study Confirmation</value>
+  </data>
+  <data name="Admin" xml:space="preserve">
+    <value>Admin</value>
+  </data>
+  <data name="Audit" xml:space="preserve">
+    <value>Audit</value>
+  </data>
+  <data name="DeletedStudies" xml:space="preserve">
+    <value>Deleted Studies</value>
+  </data>
+  <data name="Alerts" xml:space="preserve">
+    <value>Alerts</value>
+  </data>
+  <data name="AlertsPageTitle" xml:space="preserve">
+    <value>Alerts | {0}</value>
+  </data>
+  <data name="ApplicationLog" xml:space="preserve">
+    <value>Application Log</value>
+  </data>
+  <data name="UserManagement" xml:space="preserve">
+    <value>User Management</value>
+  </data>
+  <data name="UserManagementPageTitle" xml:space="preserve">
+    <value>Users | {0}</value>
+  </data>
+  <data name="AuthorityTokens" xml:space="preserve">
+    <value>Authority Tokens</value>
+  </data>
+  <data name="Users" xml:space="preserve">
+    <value>Users</value>
+  </data>
+  <data name="UserGroups" xml:space="preserve">
+    <value>Authority Groups</value>
+  </data>
+  <data name="StudyHistory" xml:space="preserve">
+    <value>History</value>
+  </data>
+  <data name="AboutPageTitle" xml:space="preserve">
+    <value>About | {0}</value>
+  </data>
+  <data name="ApplicationLogPageTitle" xml:space="preserve">
+    <value>Application Log | {0}</value>
+  </data>
+  <data name="DeletedStudiesPageTitle" xml:space="preserve">
+    <value>Deleted Studies | {0}</value>
+  </data>
+  <data name="UserGroupsPageTitle" xml:space="preserve">
+    <value>Authority Groups | {0}</value>
+  </data>
+  <data name="DevicesPageTitle" xml:space="preserve">
+    <value>Devices | {0}</value>
+  </data>
+  <data name="FileSystemsPageTitle" xml:space="preserve">
+    <value>File Systems | {0}</value>
+  </data>
+  <data name="PartitionArchivesPageTitle" xml:space="preserve">
+    <value>Partition Archives | {0}</value>
+  </data>
+  <data name="ServerPartitionsPageTitle" xml:space="preserve">
+    <value>Server Partitions | {0}</value>
+  </data>
+  <data name="ServerRulesPageTitle" xml:space="preserve">
+    <value>Server Rules | {0}</value>
+  </data>
+  <data name="ServiceSchedulingPageTitle" xml:space="preserve">
+    <value>Service Scheduling | {0}</value>
+  </data>
+  <data name="AuthorizationErrorPageTitle" xml:space="preserve">
+    <value>Authorization Error</value>
+  </data>
+  <data name="ErrorPageTitle" xml:space="preserve">
+    <value>Error | {0}</value>
+  </data>
+  <data name="JavascriptRequiredPageTitle" xml:space="preserve">
+    <value>Javascript Required</value>
+  </data>
+  <data name="TimeoutErrorPageTitle" xml:space="preserve">
+    <value>Session timed out</value>
+  </data>
+  <data name="DeleteManagement" xml:space="preserve">
+    <value>Delete Management</value>
+  </data>
+  <data name="DeleteSeriesConfirmDialogTitle" xml:space="preserve">
+    <value>Delete Series Confirmation</value>
+  </data>
+  <data name="Dashboard" xml:space="preserve">
+    <value>ImageServer Dashboard</value>
+  </data>
+  <data name="DashboardTitle" xml:space="preserve">
+    <value>Dashboard | {0}</value>
+  </data>
+  <data name="DashboardMenu" xml:space="preserve">
+    <value>Dashboard</value>
+  </data>
+  <data name="CookiesRequiredPageTitle" xml:space="preserve">
+    <value>Cookies Required</value>
+  </data>
+  <data name="DefaultPageTitle" xml:space="preserve">
+    <value>{0}</value>
+  </data>
+  <data name="LoginPageTitle" xml:space="preserve">
+    <value>{0}</value>
+  </data>
+  <data name="ViewImagesPageTitle" xml:space="preserve">
+    <value>Webstation | {0}</value>
+  </data>
+  <data name="MoveSeries" xml:space="preserve">
+    <value>Move Series</value>
+  </data>
+  <data name="MoveSeries_Dialog_Confirmation" xml:space="preserve">
+    <value>Move Series Confirmation</value>
+  </data>
+  <data name="DeleteWorkQueueConfirmationDialogTitle" xml:space="preserve">
+    <value>Please confirm</value>
+  </data>
+  <data name="ScheduleWorkQueueDialogTitle" xml:space="preserve">
+    <value>Reschedule Work Queue Item</value>
+  </data>
+  <data name="WorkQueueItemDetails" xml:space="preserve">
+    <value>WorkQueue Item Details</value>
+  </data>
+  <data name="AdminDeletedStudies_DeleteConfirmationDialogTitle" xml:space="preserve">
+    <value>Please confirm</value>
+  </data>
+  <data name="AdminDeleteStudies_DetailsDialog_ArchiveInfoTabTitle" xml:space="preserve">
+    <value>Archive Information</value>
+  </data>
+  <data name="AdminDeleteStudies_DetailsDialog_StudyInfoTabTitle" xml:space="preserve">
+    <value>Study Information</value>
+  </data>
+  <data name="AdminDevices_AddEditDialog_FeaturesTabTitle" xml:space="preserve">
+    <value>Features</value>
+  </data>
+  <data name="AdminDevices_AddEditDialog_GeneralTabTitle" xml:space="preserve">
+    <value>General</value>
+  </data>
+  <data name="AdminDevices_AddEditDialog_ThrottleTabTitle" xml:space="preserve">
+    <value>Throttle</value>
+  </data>
+  <data name="AdminFilesystem_AddEditDialog_GeneralTabTitle" xml:space="preserve">
+    <value>General</value>
+  </data>
+  <data name="AdminFilesystem_AddEditDialog_WatermarksTabTitle" xml:space="preserve">
+    <value>Watermarks</value>
+  </data>
+  <data name="AdminPartition_AddEditDialog_DeleteManagementTabTitle" xml:space="preserve">
+    <value>Delete Management</value>
+  </data>
+  <data name="AdminPartition_AddEditDialog_GeneralTabTitle" xml:space="preserve">
+    <value>General</value>
+  </data>
+  <data name="AdminPartition_AddEditDialog_RemoteDevicesTabTitle" xml:space="preserve">
+    <value>Remote Devices</value>
+  </data>
+  <data name="AdminPartition_AddEditDialog_StudyMatchingTabTitle" xml:space="preserve">
+    <value>Study Matching</value>
+  </data>
+  <data name="AdminServerRules_AddEditDialog_GeneralTabTitle" xml:space="preserve">
+    <value>General</value>
+  </data>
+  <data name="AdminServerRules_AddEditDialog_RuleXMLTabTitle" xml:space="preserve">
+    <value>Rule XML</value>
+  </data>
+  <data name="AdminServices_EditDialogTitle" xml:space="preserve">
+    <value>Edit Service Schedule</value>
+  </data>
+  <data name="AdminUser_PasswordResetDialogTitle" xml:space="preserve">
+    <value>Password Reset</value>
+  </data>
+  <data name="SIQ_ReconcileDialog_AdditionalInfoTabTitle" xml:space="preserve">
+    <value>Additional Info</value>
+  </data>
+  <data name="SIQ_ReconcileDialog_OverviewTabTitle" xml:space="preserve">
+    <value>Overview</value>
+  </data>
+  <data name="ReconcileDuplicateSOPDialog" xml:space="preserve">
+    <value>Duplicate SOP Reconciliation</value>
+  </data>
+  <data name="ChangePasswordDialogTitle" xml:space="preserve">
+    <value>Change Password</value>
+  </data>
+  <data name="PasswordExpiredDialogTitle" xml:space="preserve">
+    <value>Password Expired</value>
+  </data>
+  <data name="MoveStudy_Dialog_Confirmation" xml:space="preserve">
+    <value>Move Confirmation</value>
+  </data>
+  <data name="LabelNotForDiagnosticUse" xml:space="preserve">
+    <value>Not for Diagnostic Use</value>
+  </data>
+  <data name="MoveStudies" xml:space="preserve">
+    <value>Move Studies</value>
+  </data>
+  <data name="DataRules" xml:space="preserve">
+    <value>Data Access Rules</value>
+  </data>
+  <data name="DataRulesPageTitle" xml:space="preserve">
+    <value>Data Access Rules | {0}</value>
+  </data>
+  <data name="DataAccess" xml:space="preserve">
+    <value>Data Access</value>
+  </data>
+  <data name="UpdateAuthorityGroupDialog" xml:space="preserve">
+    <value>Update Data Access Authority Group Assignments</value>
+  </data>
+  <data name="AddAuthorityGroupsDialogTitle" xml:space="preserve">
+    <value>Add Data Access Authority Groups to Studies</value>
+  </data>
+  <data name="DicomTagsTitle" xml:space="preserve">
+    <value>DICOM Tags</value>
+  </data>
+  <data name="AdminPartition_AddEditDialog_DataAccessTabTitle" xml:space="preserve">
+    <value>Data Access</value>
+  </data>
+  <data name="Webstation" xml:space="preserve">
+    <value>Webstation</value>
+  </data>
+</root>

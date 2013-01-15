@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/ClearCanvas.Dicom.ServiceModel" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/ClearCanvas.Dicom.ServiceModel" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:complexType name="StudyNearlineFault">
+    <xs:sequence />
+  </xs:complexType>
+  <xs:element name="StudyNearlineFault" nillable="true" type="tns:StudyNearlineFault" />
+  <xs:complexType name="StudyInUseFault">
+    <xs:sequence />
+  </xs:complexType>
+  <xs:element name="StudyInUseFault" nillable="true" type="tns:StudyInUseFault" />
+  <xs:complexType name="StudyOfflineFault">
+    <xs:sequence />
+  </xs:complexType>
+  <xs:element name="StudyOfflineFault" nillable="true" type="tns:StudyOfflineFault" />
+  <xs:complexType name="StudyNotFoundFault">
+    <xs:sequence />
+  </xs:complexType>
+  <xs:element name="StudyNotFoundFault" nillable="true" type="tns:StudyNotFoundFault" />
+</xs:schema>

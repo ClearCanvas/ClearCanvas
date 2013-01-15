@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<enum class="ProtocolUrgency">
+  <enum-value code="I">
+    <value>Immediate</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="U">
+    <value>Inpatient/Urgent</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="SU">
+    <value>Semi-urgent</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="NU">
+    <value>Non-urgent</value>
+    <description></description>
+  </enum-value>
+</enum>

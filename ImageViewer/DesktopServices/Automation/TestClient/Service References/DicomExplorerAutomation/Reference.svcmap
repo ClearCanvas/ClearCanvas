@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="f088866f-3713-42e0-9d81-643415d300e4" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://localhost:51124/ClearCanvas/ImageViewer/DicomExplorer/Automation?wsdl" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="Automation.xsd" MetadataType="Schema" ID="ba3d1a69-34f8-4b16-81a8-4c85f1be7291" SourceId="1" SourceUrl="http://localhost:51124/ClearCanvas/ImageViewer/DicomExplorer/Automation?xsd=xsd2" />
+    <MetadataFile FileName="Automation1.xsd" MetadataType="Schema" ID="50ceb1a0-df4b-4a4a-92f8-595c871ccd84" SourceId="1" SourceUrl="http://localhost:51124/ClearCanvas/ImageViewer/DicomExplorer/Automation?xsd=xsd1" />
+    <MetadataFile FileName="DicomExplorerAutomation.wsdl" MetadataType="Wsdl" ID="6d153b0f-524a-45dd-a40f-8642f3cd9880" SourceId="1" SourceUrl="http://localhost:51124/ClearCanvas/ImageViewer/DicomExplorer/Automation?wsdl" />
+    <MetadataFile FileName="Automation2.xsd" MetadataType="Schema" ID="2ee27022-5cc0-4923-ac43-a1e3b6dc844c" SourceId="1" SourceUrl="http://localhost:51124/ClearCanvas/ImageViewer/DicomExplorer/Automation?xsd=xsd0" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

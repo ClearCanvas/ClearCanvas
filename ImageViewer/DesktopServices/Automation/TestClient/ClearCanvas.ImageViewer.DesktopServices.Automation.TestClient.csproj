@@ -1,0 +1,364 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{2E7D2857-B9BE-496D-A9DD-78C4C56124CE}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ClearCanvas.ImageViewer.DesktopServices.Automation.TestClient</RootNamespace>
+    <AssemblyName>ClearCanvas.ImageViewer.DesktopServices.Automation.TestClient</AssemblyName>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <NoWin32Manifest>true</NoWin32Manifest>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug ASP|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug ASP\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;USE_ASP</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release ASP|AnyCPU' ">
+    <OutputPath>bin\Release ASP\</OutputPath>
+    <DefineConstants>TRACE;USE_ASP</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Form1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form1.Designer.cs">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Form1.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="app.config" />
+    <None Include="Properties\DataSources\StudyItem.datasource" />
+    <None Include="Service References\ViewerAutomation\Automation.xsd" />
+    <None Include="Service References\ViewerAutomation\Automation1.xsd" />
+    <None Include="Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="Web References\DicomExplorerAutomationAsp\Automation.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Web References\DicomExplorerAutomationAsp\Automation0.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Web References\DicomExplorerAutomationAsp\Automation1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Web References\DicomExplorerAutomationAsp\DicomExplorerAutomation.wsdl" />
+    <None Include="Web References\DicomExplorerAutomationAsp\Reference.map">
+      <Generator>MSDiscoCodeGenerator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <None Include="Web References\DicomExplorerAutomationAsp\SearchLocalStudiesResult.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </None>
+    <None Include="Web References\DicomExplorerAutomationAsp\SearchRemoteStudiesResult.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </None>
+    <None Include="Web References\StudyLocatorAsp\ImageIdentifier.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </None>
+    <None Include="Web References\StudyLocatorAsp\Reference.map">
+      <Generator>MSDiscoCodeGenerator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <None Include="Web References\StudyLocatorAsp\SeriesIdentifier.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </None>
+    <None Include="Web References\StudyLocatorAsp\StudyLocator.wsdl" />
+    <None Include="Web References\StudyLocatorAsp\StudyLocator.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Web References\StudyLocatorAsp\StudyLocator0.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Web References\StudyLocatorAsp\StudyLocator1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Web References\StudyLocatorAsp\StudyRootStudyIdentifier.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </None>
+    <None Include="Web References\ViewerAutomationAsp\Automation.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Web References\ViewerAutomationAsp\Automation0.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Web References\ViewerAutomationAsp\Automation1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Web References\ViewerAutomationAsp\GetActiveViewersResult.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </None>
+    <None Include="Web References\ViewerAutomationAsp\GetViewerInfoResult.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </None>
+    <None Include="Web References\ViewerAutomationAsp\OpenStudiesResult.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </None>
+    <None Include="Web References\ViewerAutomationAsp\Reference.map">
+      <Generator>MSDiscoCodeGenerator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <None Include="Web References\ViewerAutomationAsp\ViewerAutomation.wsdl" />
+    <Compile Include="Service References\DicomExplorerAutomation\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\StudyLocator\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\ViewerAutomation\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="Web References\DicomExplorerAutomationAsp\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.map</DependentUpon>
+    </Compile>
+    <Compile Include="Web References\StudyLocatorAsp\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.map</DependentUpon>
+    </Compile>
+    <Compile Include="Web References\ViewerAutomationAsp\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.map</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <WebReferences Include="Web References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WebReferenceUrl Include="http://127.0.0.1:51124/ClearCanvas/ImageViewer/Automation%3fwsdl">
+      <UrlBehavior>Static</UrlBehavior>
+      <RelPath>Web References\ViewerAutomationAsp\</RelPath>
+      <UpdateFromURL>http://127.0.0.1:51124/ClearCanvas/ImageViewer/Automation%3fwsdl</UpdateFromURL>
+      <ServiceLocationURL>
+      </ServiceLocationURL>
+      <CachedDynamicPropName>
+      </CachedDynamicPropName>
+      <CachedAppSettingsObjectName>Settings</CachedAppSettingsObjectName>
+      <CachedSettingsPropName>ClearCanvas_ImageViewer_DesktopServices_Automation_TestClient_ViewerAutomationAsp_ViewerAutomation</CachedSettingsPropName>
+    </WebReferenceUrl>
+    <WebReferenceUrl Include="http://127.0.0.1:51124/ClearCanvas/ImageViewer/StudyLocator%3fwsdl">
+      <UrlBehavior>Static</UrlBehavior>
+      <RelPath>Web References\StudyLocatorAsp\</RelPath>
+      <UpdateFromURL>http://127.0.0.1:51124/ClearCanvas/ImageViewer/StudyLocator%3fwsdl</UpdateFromURL>
+      <ServiceLocationURL>
+      </ServiceLocationURL>
+      <CachedDynamicPropName>
+      </CachedDynamicPropName>
+      <CachedAppSettingsObjectName>Settings</CachedAppSettingsObjectName>
+      <CachedSettingsPropName>ClearCanvas_ImageViewer_DesktopServices_Automation_TestClient_StudyLocatorAsp_StudyLocator</CachedSettingsPropName>
+    </WebReferenceUrl>
+    <WebReferenceUrl Include="http://localhost:51124/ClearCanvas/ImageViewer/DicomExplorer/Automation%3fwsdl">
+      <UrlBehavior>Static</UrlBehavior>
+      <RelPath>Web References\DicomExplorerAutomationAsp\</RelPath>
+      <UpdateFromURL>http://localhost:51124/ClearCanvas/ImageViewer/DicomExplorer/Automation%3fwsdl</UpdateFromURL>
+      <ServiceLocationURL>
+      </ServiceLocationURL>
+      <CachedDynamicPropName>
+      </CachedDynamicPropName>
+      <CachedAppSettingsObjectName>Settings</CachedAppSettingsObjectName>
+      <CachedSettingsPropName>ClearCanvas_ImageViewer_DesktopServices_Automation_TestClient_DicomExplorerAutomationAsp_DicomExplorerAutomation</CachedSettingsPropName>
+    </WebReferenceUrl>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadataStorage Include="Service References\DicomExplorerAutomation\" />
+    <WCFMetadataStorage Include="Service References\StudyLocator\" />
+    <WCFMetadataStorage Include="Service References\ViewerAutomation\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ViewerAutomation\Automation.disco" />
+    <None Include="Service References\ViewerAutomation\Automation2.xsd" />
+    <None Include="Service References\ViewerAutomation\Automation3.xsd" />
+    <None Include="Service References\ViewerAutomation\ViewerAutomation.wsdl" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ViewerAutomation\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ViewerAutomation\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\DicomExplorerAutomation\Automation.xsd" />
+    <None Include="Service References\DicomExplorerAutomation\Automation1.xsd" />
+    <None Include="Service References\DicomExplorerAutomation\Automation2.xsd" />
+    <None Include="Service References\DicomExplorerAutomation\DicomExplorerAutomation.wsdl" />
+    <None Include="Service References\ViewerAutomation\ClearCanvas.ImageViewer.DesktopServices.Automation.TestClient.ViewerAutomation.GetActiveViewersResult.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ViewerAutomation\ClearCanvas.ImageViewer.DesktopServices.Automation.TestClient.ViewerAutomation.GetViewerInfoResult.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ViewerAutomation\ClearCanvas.ImageViewer.DesktopServices.Automation.TestClient.ViewerAutomation.OpenStudiesResult.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ViewerAutomation\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\DicomExplorerAutomation\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\DicomExplorerAutomation\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\DicomExplorerAutomation\ClearCanvas.ImageViewer.DesktopServices.Automation.TestClient.DicomExplorerAutomation.SearchLocalStudiesResult.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\DicomExplorerAutomation\ClearCanvas.ImageViewer.DesktopServices.Automation.TestClient.DicomExplorerAutomation.SearchRemoteStudiesResult.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\DicomExplorerAutomation\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <None Include="Service References\StudyLocator\StudyLocator.xsd" />
+    <None Include="Service References\StudyLocator\StudyLocator1.xsd" />
+    <None Include="Service References\StudyLocator\StudyLocator2.xsd" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\StudyLocator\StudyLocator.disco" />
+    <None Include="Service References\StudyLocator\StudyLocator.wsdl" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\StudyLocator\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\StudyLocator\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\StudyLocator\ClearCanvas.ImageViewer.DesktopServices.Automation.TestClient.StudyLocator.ImageIdentifier.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\StudyLocator\ClearCanvas.ImageViewer.DesktopServices.Automation.TestClient.StudyLocator.SeriesIdentifier.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\StudyLocator\ClearCanvas.ImageViewer.DesktopServices.Automation.TestClient.StudyLocator.StudyRootStudyIdentifier.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\StudyLocator\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <None Include="Web References\ViewerAutomationAsp\Automation2.xsd" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+</Project>

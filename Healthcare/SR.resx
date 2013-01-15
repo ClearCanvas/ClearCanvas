@@ -1,0 +1,567 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AccessionNumber" xml:space="preserve">
+    <value>Accession Number</value>
+  </data>
+  <data name="Address" xml:space="preserve">
+    <value>Address</value>
+  </data>
+  <data name="AddressCity" xml:space="preserve">
+    <value>City</value>
+  </data>
+  <data name="AddressCountry" xml:space="preserve">
+    <value>Country</value>
+  </data>
+  <data name="AddressPostalCode" xml:space="preserve">
+    <value>Postal Code</value>
+  </data>
+  <data name="AddressProvince" xml:space="preserve">
+    <value>Province</value>
+  </data>
+  <data name="AddressStreet" xml:space="preserve">
+    <value>Street</value>
+  </data>
+  <data name="AddressUnit" xml:space="preserve">
+    <value>Unit/Apt #</value>
+  </data>
+  <data name="AddressValidRange" xml:space="preserve">
+    <value>Valid Date Range</value>
+  </data>
+  <data name="AlertFamilyNameMissing" xml:space="preserve">
+    <value>family name is missing</value>
+  </data>
+  <data name="AlertGivenNameMissing" xml:space="preserve">
+    <value>given name is missing</value>
+  </data>
+  <data name="AlertHealthcardAssigningAuthorityMissing" xml:space="preserve">
+    <value>healthcard assigning authority is missing</value>
+  </data>
+  <data name="AlertHealthcardIdMissing" xml:space="preserve">
+    <value>healthcard ID is missing</value>
+  </data>
+  <data name="AlertHealthcardMissing" xml:space="preserve">
+    <value>healthcard info is missing</value>
+  </data>
+  <data name="AlertResidentialAddressMissing" xml:space="preserve">
+    <value>a residential address is missing</value>
+  </data>
+  <data name="AlertResidentialTelephoneNumberMissing" xml:space="preserve">
+    <value>a residential telephone number is missing</value>
+  </data>
+  <data name="AmbulatoryStatusEnum" xml:space="preserve">
+    <value>Ambulatory Status</value>
+  </data>
+  <data name="AssigningAuthority" xml:space="preserve">
+    <value>Assigning Authority</value>
+  </data>
+  <data name="CannedText" xml:space="preserve">
+    <value>Canned Text</value>
+  </data>
+  <data name="CannedTextUniqueKey" xml:space="preserve">
+    <value>Name - Category - Owner combination</value>
+  </data>
+  <data name="Code" xml:space="preserve">
+    <value>Code</value>
+  </data>
+  <data name="CompositeIdentifier" xml:space="preserve">
+    <value>Composite Identifier</value>
+  </data>
+  <data name="ContactPerson" xml:space="preserve">
+    <value>Contact Person</value>
+  </data>
+  <data name="Description" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="DiagnosticService" xml:space="preserve">
+    <value>Imaging Service</value>
+  </data>
+  <data name="EmailAddress" xml:space="preserve">
+    <value>E-mail address</value>
+  </data>
+  <data name="EmergencyCancelledWorklist" xml:space="preserve">
+    <value>Cancelled</value>
+  </data>
+  <data name="EmergencyCancelledWorklistDescription" xml:space="preserve">
+    <value>List procedures that have been cancelled.</value>
+  </data>
+  <data name="EmergencyInProgressWorklist" xml:space="preserve">
+    <value>In Progress</value>
+  </data>
+  <data name="EmergencyInProgressWorklistDescription" xml:space="preserve">
+    <value>Lists procedures that are in progress.</value>
+  </data>
+  <data name="EmergencyPerformedWorklist" xml:space="preserve">
+    <value>Performed</value>
+  </data>
+  <data name="EmergencyPerformedWorklistDescription" xml:space="preserve">
+    <value>Lists procedures that have been peformed.</value>
+  </data>
+  <data name="EmergencyScheduledWorklist" xml:space="preserve">
+    <value>Scheduled</value>
+  </data>
+  <data name="EmergencyScheduledWorklistDescription" xml:space="preserve">
+    <value>Lists scheduled procedures.</value>
+  </data>
+  <data name="EnumValueValue" xml:space="preserve">
+    <value>Display Value</value>
+  </data>
+  <data name="ExpiryDate" xml:space="preserve">
+    <value>Expirty Date</value>
+  </data>
+  <data name="ExternalPractitioner" xml:space="preserve">
+    <value>Practitioner</value>
+  </data>
+  <data name="Facility" xml:space="preserve">
+    <value>Facility</value>
+  </data>
+  <data name="FamilyName" xml:space="preserve">
+    <value>Family Name</value>
+  </data>
+  <data name="GivenName" xml:space="preserve">
+    <value>Given Name</value>
+  </data>
+  <data name="HealthcardNumber" xml:space="preserve">
+    <value>Healthcard/Insurance Information</value>
+  </data>
+  <data name="HealthcardNumberAssigningAuthority" xml:space="preserve">
+    <value>Healthcard/Insurance Number source</value>
+  </data>
+  <data name="HealthcardNumberId" xml:space="preserve">
+    <value>Healthcard/Insurance Number</value>
+  </data>
+  <data name="Id" xml:space="preserve">
+    <value>ID</value>
+  </data>
+  <data name="Location" xml:space="preserve">
+    <value>Location</value>
+  </data>
+  <data name="MiddleName" xml:space="preserve">
+    <value>Middle Name</value>
+  </data>
+  <data name="Modality" xml:space="preserve">
+    <value>Modality</value>
+  </data>
+  <data name="Mrn" xml:space="preserve">
+    <value>MRN</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="Note" xml:space="preserve">
+    <value>Note</value>
+  </data>
+  <data name="Order" xml:space="preserve">
+    <value>Order</value>
+  </data>
+  <data name="OrderCancelReasonEnum" xml:space="preserve">
+    <value>Order Cancellation Reason</value>
+  </data>
+  <data name="PatientProfile" xml:space="preserve">
+    <value>Patient Profile</value>
+  </data>
+  <data name="PerformingCancelledWorklist" xml:space="preserve">
+    <value>Cancelled</value>
+  </data>
+  <data name="PerformingCancelledWorklistDescription" xml:space="preserve">
+    <value>Lists modality procedure steps that have been cancelled or discontinued.</value>
+  </data>
+  <data name="PerformingCheckedInWorklist" xml:space="preserve">
+    <value>Checked In</value>
+  </data>
+  <data name="PerformingCheckedInWorklistDescription" xml:space="preserve">
+    <value>Lists modality procedure steps where the patient has checked in.</value>
+  </data>
+  <data name="PerformingGroup" xml:space="preserve">
+    <value>Performing Group</value>
+  </data>
+  <data name="PerformingInProgressWorklist" xml:space="preserve">
+    <value>In Progress</value>
+  </data>
+  <data name="PerformingInProgressWorklistDescription" xml:space="preserve">
+    <value>Lists modality procedure steps that are in progress.</value>
+  </data>
+  <data name="PerformingPerformedWorklist" xml:space="preserve">
+    <value>Performed</value>
+  </data>
+  <data name="PerformingPerformedWorklistDescription" xml:space="preserve">
+    <value>Lists modality procedure steps that have been completed.</value>
+  </data>
+  <data name="PerformingScheduledWorklist" xml:space="preserve">
+    <value>Scheduled</value>
+  </data>
+  <data name="PerformingScheduledWorklistDescription" xml:space="preserve">
+    <value>Lists scheduled modality procedure steps.</value>
+  </data>
+  <data name="PerformingUndocumentedWorklist" xml:space="preserve">
+    <value>Undocumented</value>
+  </data>
+  <data name="PerformingUndocumentedWorklistDescription" xml:space="preserve">
+    <value>Lists procedures where the performing documentation is incomplete.</value>
+  </data>
+  <data name="PersonName" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="PlacerNumber" xml:space="preserve">
+    <value>Placer Number</value>
+  </data>
+  <data name="Procedure" xml:space="preserve">
+    <value>Procedure</value>
+  </data>
+  <data name="ProcedureTypeGroup" xml:space="preserve">
+    <value>Procedure Type Group</value>
+  </data>
+  <data name="ReadingGroup" xml:space="preserve">
+    <value>Reading Group</value>
+  </data>
+  <data name="RegistrationCancelledWorklist" xml:space="preserve">
+    <value>Cancelled</value>
+  </data>
+  <data name="RegistrationCancelledWorklistDescription" xml:space="preserve">
+    <value>Lists procedures that have been cancelled.</value>
+  </data>
+  <data name="RegistrationCheckedInWorklist" xml:space="preserve">
+    <value>Checked In</value>
+  </data>
+  <data name="RegistrationCheckedInWorklistDescription" xml:space="preserve">
+    <value>Lists procedures where the patient has checked in.</value>
+  </data>
+  <data name="RegistrationCompletedProtocolWorklist" xml:space="preserve">
+    <value>Complete Protocol</value>
+  </data>
+  <data name="RegistrationCompletedProtocolWorklistDescription" xml:space="preserve">
+    <value>Lists procedures that have been protocoled but not scheduled.</value>
+  </data>
+  <data name="RegistrationInProgressWorklist" xml:space="preserve">
+    <value>In Progress</value>
+  </data>
+  <data name="RegistrationInProgressWorklistDescription" xml:space="preserve">
+    <value>Lists procedures that are currently being performed.</value>
+  </data>
+  <data name="RegistrationPendingProtocolWorklist" xml:space="preserve">
+    <value>Pending Protocol</value>
+  </data>
+  <data name="RegistrationPendingProtocolWorklistDescription" xml:space="preserve">
+    <value>Lists procedures that need to be protocoled.</value>
+  </data>
+  <data name="RegistrationPerformedWorklist" xml:space="preserve">
+    <value>Performed</value>
+  </data>
+  <data name="RegistrationPerformedWorklistDescription" xml:space="preserve">
+    <value>Lists procedures that have been performed.</value>
+  </data>
+  <data name="RegistrationRejectedProtocolWorklist" xml:space="preserve">
+    <value>Rejected Protocol</value>
+  </data>
+  <data name="RegistrationRejectedProtocolWorklistDescription" xml:space="preserve">
+    <value>Lists procedures that have been rejected by the protocoling radiologist.</value>
+  </data>
+  <data name="RegistrationScheduledWorklist" xml:space="preserve">
+    <value>Scheduled</value>
+  </data>
+  <data name="RegistrationScheduledWorklistDescription" xml:space="preserve">
+    <value>Lists scheduled procedures.</value>
+  </data>
+  <data name="RelevanceGroup" xml:space="preserve">
+    <value>Relevance Group</value>
+  </data>
+  <data name="ReligionEnum" xml:space="preserve">
+    <value>Religion</value>
+  </data>
+  <data name="Report" xml:space="preserve">
+    <value>Report</value>
+  </data>
+  <data name="ReportingAdminAssignedWorklist" xml:space="preserve">
+    <value>Active Reporting Items</value>
+  </data>
+  <data name="ReportingAdminAssignedWorklistDescription" xml:space="preserve">
+    <value>Lists active procedures that are currently in reporting by a radiologist.</value>
+  </data>
+  <data name="ReportingAdminToBeTranscribedWorklist" xml:space="preserve">
+    <value>To Be Transcribed</value>
+  </data>
+  <data name="ReportingAdminToBeTranscribedWorklistDescription" xml:space="preserve">
+    <value>Lists procedures that have been reported but not yet transcribed.</value>
+  </data>
+  <data name="ReportingAdminUnreportedWorklist" xml:space="preserve">
+    <value>Un-reported</value>
+  </data>
+  <data name="ReportingAdminUnreportedWorklistDescription" xml:space="preserve">
+    <value>Lists procedures that have been performed but not yet reported.</value>
+  </data>
+  <data name="ReportingReviewTranscriptionWorklist" xml:space="preserve">
+    <value>Review Transcription</value>
+  </data>
+  <data name="ReportingReviewTranscriptionWorklistDescription" xml:space="preserve">
+    <value>Lists procedures with transcriptions that need to be reviewed.</value>
+  </data>
+  <data name="ReportingToBeReportedWorklist" xml:space="preserve">
+    <value>To be Reported</value>
+  </data>
+  <data name="ReportingToBeReportedWorklistDescription" xml:space="preserve">
+    <value>Lists procedures that need to be reported.</value>
+  </data>
+  <data name="ReportingToBeReviewedReportWorklist" xml:space="preserve">
+    <value>To be Reviewed</value>
+  </data>
+  <data name="ReportingToBeReviewedReportWorklistDescription" xml:space="preserve">
+    <value>Lists procedures with reports that need to be reviewed.</value>
+  </data>
+  <data name="ReportingTrackingActiveWorklist" xml:space="preserve">
+    <value>Active</value>
+  </data>
+  <data name="ReportingTrackingActiveWorklistDescription" xml:space="preserve">
+    <value>Lists active procedures that are currently in reporting by a radiologist.</value>
+  </data>
+  <data name="ReportingTrackingCorrectedWorklist" xml:space="preserve">
+    <value>Corrected</value>
+  </data>
+  <data name="ReportingTrackingCorrectedWorklistDescription" xml:space="preserve">
+    <value>Lists procedures with reports that are corrected.</value>
+  </data>
+  <data name="ReportingTrackingDraftWorklist" xml:space="preserve">
+    <value>Draft</value>
+  </data>
+  <data name="ReportingTrackingDraftWorklistDescription" xml:space="preserve">
+    <value>Lists procedures with reports that are in draft.</value>
+  </data>
+  <data name="ReportingTrackingFinalWorklist" xml:space="preserve">
+    <value>Final</value>
+  </data>
+  <data name="ReportingTrackingFinalWorklistDescription" xml:space="preserve">
+    <value>Lists procedures with reports that are finalized.</value>
+  </data>
+  <data name="ReportingTrackingPreliminaryWorklist" xml:space="preserve">
+    <value>Preliminary</value>
+  </data>
+  <data name="ReportingTrackingPreliminaryWorklistDescription" xml:space="preserve">
+    <value>Lists procedures with reports that are in preliminary status.</value>
+  </data>
+  <data name="ReportPart" xml:space="preserve">
+    <value>Report Part</value>
+  </data>
+  <data name="SexEnum" xml:space="preserve">
+    <value>Sex</value>
+  </data>
+  <data name="SpokenLanguageEnum" xml:space="preserve">
+    <value>Language</value>
+  </data>
+  <data name="Staff" xml:space="preserve">
+    <value>Staff</value>
+  </data>
+  <data name="TelephoneNumber" xml:space="preserve">
+    <value>Telephone Number</value>
+  </data>
+  <data name="TranscriptionToBeTranscribedWorklist" xml:space="preserve">
+    <value>To be Transcribed</value>
+  </data>
+  <data name="TranscriptionToBeTranscribedWorklistDescription" xml:space="preserve">
+    <value>Lists procedures that need to be transcribed.</value>
+  </data>
+  <data name="VersionCode" xml:space="preserve">
+    <value>Version Code</value>
+  </data>
+  <data name="Visit" xml:space="preserve">
+    <value>Visit</value>
+  </data>
+  <data name="WorklistCategoryPerforming" xml:space="preserve">
+    <value>Performing</value>
+  </data>
+  <data name="WorklistCategoryRadiologistAdmin" xml:space="preserve">
+    <value>Radiologist Admin</value>
+  </data>
+  <data name="WorklistCategoryRegistration" xml:space="preserve">
+    <value>Registration</value>
+  </data>
+  <data name="WorklistCategoryReporting" xml:space="preserve">
+    <value>Reporting</value>
+  </data>
+  <data name="WorklistCategoryReportingTracking" xml:space="preserve">
+    <value>Reporting Tracking</value>
+  </data>
+  <data name="WorklistCategoryTranscription" xml:space="preserve">
+    <value>Transcription</value>
+  </data>
+  <data name="WorklistUniqueKey" xml:space="preserve">
+    <value>Worklist Name, Class and Owner</value>
+  </data>
+  <data name="AlertContactPointsMissing" xml:space="preserve">
+    <value>a default contact point is missing</value>
+  </data>
+  <data name="AlertExternalPractitionerBillingNumberMissing" xml:space="preserve">
+    <value>billing number is missing</value>
+  </data>
+  <data name="AlertExternalPractitionerLicenseNumberMissing" xml:space="preserve">
+    <value>license number is missing</value>
+  </data>
+  <data name="AlertWorkAddressMissing" xml:space="preserve">
+    <value>a work address is missing</value>
+  </data>
+  <data name="AlertWorkFaxNumberMissing" xml:space="preserve">
+    <value>a work fax number is missing</value>
+  </data>
+  <data name="AlertWorkTelephoneNumberMissing" xml:space="preserve">
+    <value>a work telephone number is missing</value>
+  </data>
+  <data name="DepartmentNameUniqueKey" xml:space="preserve">
+    <value>Department Name and Facility</value>
+  </data>
+  <data name="MessageValidateOrderPerformingDepartments" xml:space="preserve">
+    <value>All procedures must have the same performing department.</value>
+  </data>
+  <data name="MessageValidateOrderPerformingFacilities" xml:space="preserve">
+    <value>All procedures must have the same performing facility.</value>
+  </data>
+  <data name="MessageValidateWorklistProcedureTypeAndGroupFilters" xml:space="preserve">
+    <value>Procedure type and procedure type group cannot both be used as worklist filters.  Please make sure only one is used.</value>
+  </data>
+  <data name="MessageValidateWorklistTimeFilter" xml:space="preserve">
+    <value>Time Window must be specified and must not span more than {0} days.</value>
+  </data>
+  <data name="MessageValidateExternalPractitionerRequiresExactlyOneDefaultContactPoint" xml:space="preserve">
+    <value>An active external practitioner requires exactly one default contact point.</value>
+  </data>
+  <data name="MessageValidateProcedurePatientProfile" xml:space="preserve">
+    <value>A patient profile for the performing facilty must exist.</value>
+  </data>
+  <data name="MessageValidateProcedurePerformingFacilityAndDepartment" xml:space="preserve">
+    <value>A procedure's performing department must be part of its performing facility.</value>
+  </data>
+  <data name="MessageValidateInformationAuthorityForVisitAndPerformingFacilities" xml:space="preserve">
+    <value>Visit must have the same information authority as the performing facility.</value>
+  </data>
+  <data name="MessageValidateProcedurePerformingFacilityAndModalities" xml:space="preserve">
+    <value>A procedure's performing modalities must belong to its performing facility.</value>
+  </data>
+  <data name="InterpretationStep" xml:space="preserve">
+    <value>Interpretation</value>
+  </data>
+  <data name="MessageValidateVerifiedReportIsNotBlank" xml:space="preserve">
+    <value>Report contents cannot be empty.</value>
+  </data>
+  <data name="PublicationStep" xml:space="preserve">
+    <value>Publication</value>
+  </data>
+  <data name="TranscriptionStep" xml:space="preserve">
+    <value>Transcription</value>
+  </data>
+  <data name="VerificationStep" xml:space="preserve">
+    <value>Verification</value>
+  </data>
+</root>

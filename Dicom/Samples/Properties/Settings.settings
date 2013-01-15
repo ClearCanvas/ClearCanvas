@@ -1,0 +1,27 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="ClearCanvas.Dicom.Samples.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="ScpAETitle" Type="System.String" Scope="User">
+      <Value Profile="(Default)">StorageSCP</Value>
+    </Setting>
+    <Setting Name="ScpStorageFolder" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="ScuRemoteAETitle" Type="System.String" Scope="User">
+      <Value Profile="(Default)">StorageSCP</Value>
+    </Setting>
+    <Setting Name="ScuRemoteHost" Type="System.String" Scope="User">
+      <Value Profile="(Default)">localhost</Value>
+    </Setting>
+    <Setting Name="ScuLocalAETitle" Type="System.String" Scope="User">
+      <Value Profile="(Default)">QuerySCU</Value>
+    </Setting>
+    <Setting Name="ScpPort" Type="System.String" Scope="User">
+      <Value Profile="(Default)">2112</Value>
+    </Setting>
+    <Setting Name="ScuRemotePort" Type="System.String" Scope="User">
+      <Value Profile="(Default)">104</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

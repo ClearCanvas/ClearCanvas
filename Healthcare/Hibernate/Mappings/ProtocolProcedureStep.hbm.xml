@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!-- @codegen: ignore -->
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" assembly="ClearCanvas.Healthcare" namespace="ClearCanvas.Healthcare">
+  <subclass name="ProtocolProcedureStep" proxy="ProtocolProcedureStep" extends="ProcedureStep" discriminator-value="PROTOCOL">
+    <many-to-one name="Protocol" class="Protocol" column="ProtocolOID_"/>
+  </subclass>
+</hibernate-mapping>

@@ -1,0 +1,9 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="ClearCanvas.ImageViewer.Externals.Config" GeneratedClassName="ExternalsConfigurationSettings">
+  <Profiles />
+  <Settings>
+    <Setting Name="Externals" Description="XML document containing all user-configured external applications, which can be launched from within the viewer." Type="ClearCanvas.ImageViewer.Externals.ExternalCollection" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+  </Settings>
+</SettingsFile>

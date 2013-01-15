@@ -1,0 +1,42 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="ClearCanvas.Ris.Shreds.ImageAvailability" GeneratedClassName="ImageAvailabilityShredSettings">
+  <Profiles />
+  <Settings>
+    <Setting Name="DicomCallingAETitle" Description="AE title of this shred" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">ImageAvailabilityScu</Value>
+    </Setting>
+    <Setting Name="DicomServerAETitle" Description="AE title of DICOM server to query" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">serverAE</Value>
+    </Setting>
+    <Setting Name="DicomServerHost" Description="Hostname of DICOM server to query" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">serverHost</Value>
+    </Setting>
+    <Setting Name="DicomServerPort" Description="Port of DICOM server to query" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">4006</Value>
+    </Setting>
+    <Setting Name="BatchSize" Description="Number of items to pull from queue per read" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">20</Value>
+    </Setting>
+    <Setting Name="EmptyQueueSleepTime" Description="Number of seconds to sleep when queue is empty" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">30</Value>
+    </Setting>
+    <Setting Name="ExpirationTime" Description="Queue item expiration time, in hours.  After expiration, image availability for the procedure will no longer be updated" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">24</Value>
+    </Setting>
+    <Setting Name="PollingIntervalForIndeterminate" Description="Specifies how often to poll the DICOM server when image availability is indeterminate (seconds)" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">600</Value>
+    </Setting>
+    <Setting Name="PollingIntervalForZero" Description="Specifies how often to poll the DICOM server when image availability is zero (seconds)" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">600</Value>
+    </Setting>
+    <Setting Name="PollingIntervalForPartial" Description="Specifies how often to poll the DICOM server when image availability is partial (seconds)" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">300</Value>
+    </Setting>
+    <Setting Name="PollingIntervalForComplete" Description="Specifies how often to poll the DICOM server when image availability is complete (seconds)" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">600</Value>
+    </Setting>
+    <Setting Name="PollingIntervalForError" Description="Specifies how often to poll the DICOM server when an error occured last attempt (seconds)" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">600</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

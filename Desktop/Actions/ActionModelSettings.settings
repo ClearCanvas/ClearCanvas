@@ -1,0 +1,10 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="ClearCanvas.Desktop.Actions" GeneratedClassName="ActionModelSettings">
+  <Profiles />
+  <Settings>
+    <Setting Name="ActionModelsXml" Description="Action model XML document." Type="System.Xml.XmlDocument" Scope="User">
+      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;action-models /&gt;</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

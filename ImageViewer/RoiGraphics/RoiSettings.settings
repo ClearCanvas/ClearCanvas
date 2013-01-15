@@ -1,0 +1,12 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="ClearCanvas.ImageViewer.RoiGraphics" GeneratedClassName="RoiSettings">
+  <Profiles />
+  <Settings>
+    <Setting Name="ShowAnalysisByDefault" Description="Controls whether or not ROI stats should be shown on new ROI objects by default." Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="AnalysisUnits" Description="Controls the preferred linear, area and volume units of ROI analysis output. (Pixels, Millimeters, Centimeters)" Type="ClearCanvas.ImageViewer.RoiGraphics.Units" Scope="User">
+      <Value Profile="(Default)">Centimeters</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

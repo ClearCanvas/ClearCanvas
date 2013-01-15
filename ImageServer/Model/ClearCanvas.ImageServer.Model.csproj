@@ -1,0 +1,440 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{2C9126D3-5B73-4539-BBC9-D56E6097D335}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ClearCanvas.ImageServer.Model</RootNamespace>
+    <AssemblyName>ClearCanvas.ImageServer.Model</AssemblyName>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile />
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Alert.cs" />
+    <Compile Include="Alert.gen.cs" />
+    <Compile Include="AlertCategoryEnum.gen.cs" />
+    <Compile Include="AlertLevelEnum.gen.cs" />
+    <Compile Include="ApplicationLog.cs" />
+    <Compile Include="ApplicationLog.gen.cs" />
+    <Compile Include="ArchiveQueue.gen.cs" />
+    <Compile Include="ArchiveQueueStatusEnum.gen.cs" />
+    <Compile Include="ArchiveStudyStorage.cs" />
+    <Compile Include="ArchiveStudyStorage.gen.cs" />
+    <Compile Include="ArchiveTypeEnum.gen.cs" />
+    <Compile Include="Brokers\IPostponeWorkQueue.cs" />
+    <Compile Include="Brokers\IQueryCurrentStudyMove.cs" />
+    <Compile Include="Brokers\IWebResetWorkQueue.cs" />
+    <Compile Include="Brokers\IWorkQueueProcessorIDs.cs" />
+    <Compile Include="Brokers\ICreatePatientForStudy.cs" />
+    <Compile Include="Brokers\IDeleteInstance.cs" />
+    <Compile Include="Brokers\IDeleteSeries.cs" />
+    <Compile Include="Brokers\IInsertDuplicateQueue.cs" />
+    <Compile Include="Brokers\ILockStudy.cs" />
+    <Compile Include="Brokers\IResetStudyStorage.cs" />
+    <Compile Include="Brokers\ISetSeriesRelatedInstanceCount.cs" />
+    <Compile Include="Brokers\ISetStudyRelatedInstanceCount.cs" />
+    <Compile Include="Brokers\IWebQueryReconcileQueue.cs" />
+    <Compile Include="Brokers\IInserReconcileQueue.cs" />
+    <Compile Include="Brokers\IWebQueryRestoreQueue.cs" />
+    <Compile Include="Brokers\IDeleteFilesystemStudyStorage.cs" />
+    <Compile Include="Brokers\IInsertArchiveQueue.cs" />
+    <Compile Include="Brokers\IDeleteServerPartition.cs" />
+    <Compile Include="Brokers\IDeleteWorkQueue.cs" />
+    <Compile Include="Brokers\IInsertRestoreQueue.cs" />
+    <Compile Include="Brokers\IQueryArchiveQueue.cs" />
+    <Compile Include="Brokers\IInsertReconcileQueue.cs" />
+    <Compile Include="Brokers\IQueryRestoreQueue.cs" />
+    <Compile Include="Brokers\IQueryServerPartitionTransferSyntaxes.cs" />
+    <Compile Include="Brokers\IUpdateArchiveQueue.cs" />
+    <Compile Include="Brokers\IUpdateRestoreQueue.cs" />
+    <Compile Include="Brokers\IWebQueryArchiveQueue.cs" />
+    <Compile Include="Brokers\IWebQueryWorkQueue.cs" />
+    <Compile Include="Brokers\IDeleteStudyStorage.cs" />
+    <Compile Include="Brokers\IInsertFilesystemQueue.cs" />
+    <Compile Include="Brokers\IInsertWorkQueueFromFilesystemQueue.cs" />
+    <Compile Include="Brokers\IQueryFilesystemQueue.cs" />
+    <Compile Include="Brokers\IQueryServiceLock.cs" />
+    <Compile Include="Brokers\IResetServiceLock.cs" />
+    <Compile Include="Brokers\IResetWorkQueueItems.cs" />
+    <Compile Include="Brokers\IInsertFilesystem.cs" />
+    <Compile Include="Brokers\IUpdateServiceLock.cs" />
+    <Compile Include="Brokers\IAttachStudyToPatient.cs" />
+    <Compile Include="CannedText.gen.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DataAccessGroup.gen.cs" />
+    <Compile Include="DatabaseVersion.cs" />
+    <Compile Include="DatabaseVersion.gen.cs" />
+    <Compile Include="DataLengthValidation.cs" />
+    <Compile Include="Device.cs" />
+    <Compile Include="Device.gen.cs" />
+    <Compile Include="DevicePreferredTransferSyntax.cs" />
+    <Compile Include="DevicePreferredTransferSyntax.gen.cs" />
+    <Compile Include="DeviceTypeEnum.gen.cs" />
+    <Compile Include="DuplicateSopPolicyEnum.gen.cs" />
+    <Compile Include="DuplicateSopQueueEntry.cs" />
+    <Compile Include="EntityBrokers\AlertSelectCriteria.gen.cs" />
+    <Compile Include="EntityBrokers\AlertUpdateColumns.gen.cs" />
+    <Compile Include="EntityBrokers\ApplicationLogSelectCriteria.gen.cs" />
+    <Compile Include="EntityBrokers\ApplicationLogUpdateColumns.gen.cs" />
+    <Compile Include="EntityBrokers\ArchiveQueueSelectCriteria.gen.cs" />
+    <Compile Include="EntityBrokers\ArchiveQueueUpdateColumns.gen.cs" />
+    <Compile Include="EntityBrokers\ArchiveStudyStorageSelectCriteria.gen.cs" />
+    <Compile Include="EntityBrokers\ArchiveStudyStorageUpdateColumns.gen.cs" />
+    <Compile Include="EntityBrokers\CannedTextSelectCriteria.gen.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="EntityBrokers\CannedTextUpdateColumns.gen.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="EntityBrokers\DataAccessGroupSelectCriteria.cs" />
+    <Compile Include="EntityBrokers\DataAccessGroupSelectCriteria.gen.cs" />
+    <Compile Include="EntityBrokers\DataAccessGroupUpdateColumns.gen.cs" />
+    <Compile Include="EntityBrokers\DatabaseVersionSelectCriteria.gen.cs" />
+    <Compile Include="EntityBrokers\DatabaseVersionUpdateColumns.gen.cs" />
+    <Compile Include="EntityBrokers\DevicePreferredTransferSyntaxSelectCriteria.gen.cs" />
+    <Compile Include="EntityBrokers\DevicePreferredTransferSyntaxUpdateColumns.gen.cs" />
+    <Compile Include="EntityBrokers\DeviceSelectCriteria.gen.cs" />
+    <Compile Include="EntityBrokers\DeviceUpdateColumns.gen.cs" />
+    <Compile Include="EntityBrokers\DuplicateSopReceivedQueueSelectCriteria.cs" />
+    <Compile Include="EntityBrokers\DuplicateSopReceivedQueueUpdateColumns.cs" />
+    <Compile Include="EntityBrokers\FilesystemQueueSelectCriteria.cs" />
+    <Compile Include="EntityBrokers\FilesystemQueueSelectCriteria.gen.cs" />
+    <Compile Include="EntityBrokers\FilesystemQueueUpdateColumns.gen.cs" />
+    <Compile Include="EntityBrokers\FilesystemSelectCriteria.gen.cs" />
+    <Compile Include="EntityBrokers\FilesystemUpdateColumns.gen.cs" />
+    <Compile Include="EntityBrokers\IAlertCategoryEnumBroker.gen.cs" />
+    <Compile Include="EntityBrokers\IAlertEntityBroker.gen.cs" />
+    <Compile Include="EntityBrokers\IAlertLevelEnumBroker.gen.cs" />
+    <Compile Include="EntityBrokers\IApplicationLogEntityBroker.gen.cs" />
+    <Compile Include="EntityBrokers\IArchiveQueueEntityBroker.gen.cs" />
+    <Compile Include="EntityBrokers\IArchiveQueueStatusEnumBroker.gen.cs" />
+    <Compile Include="EntityBrokers\IArchiveStudyStorageEntityBroker.gen.cs" />
+    <Compile Include="EntityBrokers\IArchiveTypeEnumBroker.gen.cs" />
+    <Compile Include="EntityBrokers\ICannedTextEntityBroker.gen.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="EntityBrokers\IDataAccessGroupEntityBroker.gen.cs" />
+    <Compile Include="EntityBrokers\IDatabaseVersionEntityBroker.gen.cs" />
+    <Compile Include="EntityBrokers\IDeviceEntityBroker.gen.cs" />
+    <Compile Include="EntityBrokers\IDevicePreferredTransferSyntaxEntityBroker.gen.cs" />
+    <Compile Include="EntityBrokers\IDeviceTypeEnumBroker.gen.cs" />
+    <Compile Include="EntityBrokers\IDuplicateSopEntryEntityBroker.cs" />
+    <Compile Include="EntityBrokers\IDuplicateSopPolicyEnumBroker.gen.cs" />
+    <Compile Include="EntityBrokers\IFilesystemEntityBroker.gen.cs" />
+    <Compile Include="EntityBrokers\IFilesystemQueueEntityBroker.gen.cs" />
+    <Compile Include="EntityBrokers\IFilesystemQueueTypeEnumBroker.gen.cs" />
+    <Compile Include="EntityBrokers\IFilesystemTierEnumBroker.gen.cs" />
+    <Compile Include="EntityBrokers\IPartitionArchiveEntityBroker.gen.cs" />
+    <Compile Include="EntityBrokers\IPartitionSopClassEntityBroker.gen.cs" />
+    <Compile Include="EntityBrokers\IPartitionTransferSyntaxEntityBroker.gen.cs" />
+    <Compile Include="EntityBrokers\IPatientEntityBroker.gen.cs" />
+    <Compile Include="EntityBrokers\IProcessDuplicateSopWorkQueueEntryBroker.cs" />
+    <Compile Include="EntityBrokers\IQueueStudyStateEnumBroker.gen.cs" />
+    <Compile Include="EntityBrokers\IRequestAttributesEntityBroker.gen.cs" />
+    <Compile Include="EntityBrokers\IRestoreQueueEntityBroker.gen.cs" />
+    <Compile Include="EntityBrokers\IRestoreQueueStatusEnumBroker.gen.cs" />
+    <Compile Include="EntityBrokers\ISeriesEntityBroker.gen.cs" />
+    <Compile Include="EntityBrokers\IServerPartitionDataAccessEntityBroker.gen.cs" />
+    <Compile Include="EntityBrokers\IServerPartitionEntityBroker.gen.cs" />
+    <Compile Include="EntityBrokers\IServerRuleApplyTimeEnumBroker.gen.cs" />
+    <Compile Include="EntityBrokers\IServerRuleEntityBroker.gen.cs" />
+    <Compile Include="EntityBrokers\IServerRuleTypeEnumBroker.gen.cs" />
+    <Compile Include="EntityBrokers\IServerSopClassEntityBroker.gen.cs" />
+    <Compile Include="EntityBrokers\IServerTransferSyntaxEntityBroker.gen.cs" />
+    <Compile Include="EntityBrokers\IServiceLockEntityBroker.gen.cs" />
+    <Compile Include="EntityBrokers\IServiceLockTypeEnumBroker.gen.cs" />
+    <Compile Include="EntityBrokers\IFilesystemStudyStorageEntityBroker.gen.cs" />
+    <Compile Include="EntityBrokers\IStudyDataAccessEntityBroker.gen.cs" />
+    <Compile Include="EntityBrokers\IStudyDeleteRecordEntityBroker.gen.cs" />
+    <Compile Include="EntityBrokers\IStudyEntityBroker.gen.cs" />
+    <Compile Include="EntityBrokers\IStudyHistoryEntityBroker.gen.cs" />
+    <Compile Include="EntityBrokers\IStudyHistoryTypeEnumBroker.gen.cs" />
+    <Compile Include="EntityBrokers\IStudyIntegrityQueueEntityBroker.gen.cs" />
+    <Compile Include="EntityBrokers\IStudyIntegrityQueueUidEntityBroker.gen.cs" />
+    <Compile Include="EntityBrokers\IStudyIntegrityReasonEnumBroker.gen.cs" />
+    <Compile Include="EntityBrokers\IStudyStatusEnumBroker.gen.cs" />
+    <Compile Include="EntityBrokers\IStudyStorageEntityBroker.gen.cs" />
+    <Compile Include="EntityBrokers\IWorkQueueEntityBroker.gen.cs" />
+    <Compile Include="EntityBrokers\IWorkQueuePriorityEnumBroker.gen.cs" />
+    <Compile Include="EntityBrokers\IWorkQueueStatusEnumBroker.gen.cs" />
+    <Compile Include="EntityBrokers\IWorkQueueTypeEnumBroker.gen.cs" />
+    <Compile Include="EntityBrokers\IWorkQueueTypePropertiesEntityBroker.gen.cs" />
+    <Compile Include="EntityBrokers\IWorkQueueUidEntityBroker.gen.cs" />
+    <Compile Include="EntityBrokers\PartitionArchiveSelectCriteria.gen.cs" />
+    <Compile Include="EntityBrokers\PartitionArchiveUpdateColumns.gen.cs" />
+    <Compile Include="EntityBrokers\PartitionSopClassSelectCriteria.gen.cs" />
+    <Compile Include="EntityBrokers\PartitionSopClassUpdateColumns.gen.cs" />
+    <Compile Include="EntityBrokers\PartitionTransferSyntaxSelectCriteria.gen.cs" />
+    <Compile Include="EntityBrokers\PartitionTransferSyntaxUpdateColumns.gen.cs" />
+    <Compile Include="EntityBrokers\PatientSelectCriteria.cs" />
+    <Compile Include="EntityBrokers\PatientSelectCriteria.gen.cs" />
+    <Compile Include="EntityBrokers\PatientUpdateColumns.gen.cs" />
+    <Compile Include="EntityBrokers\RequestAttributesSelectCriteria.gen.cs" />
+    <Compile Include="EntityBrokers\RequestAttributesUpdateColumns.gen.cs" />
+    <Compile Include="EntityBrokers\RestoreQueueSelectCriteria.cs" />
+    <Compile Include="EntityBrokers\RestoreQueueSelectCriteria.gen.cs" />
+    <Compile Include="EntityBrokers\RestoreQueueUpdateColumns.gen.cs" />
+    <Compile Include="EntityBrokers\SeriesSelectCriteria.gen.cs" />
+    <Compile Include="EntityBrokers\SeriesUpdateColumns.gen.cs" />
+    <Compile Include="EntityBrokers\ServerPartitionDataAccessSelectCriteria.gen.cs" />
+    <Compile Include="EntityBrokers\ServerPartitionDataAccessUpdateColumns.gen.cs" />
+    <Compile Include="EntityBrokers\ServerPartitionSelectCriteria.gen.cs" />
+    <Compile Include="EntityBrokers\ServerPartitionUpdateColumns.gen.cs" />
+    <Compile Include="EntityBrokers\ServerRuleSelectCriteria.gen.cs" />
+    <Compile Include="EntityBrokers\ServerRuleUpdateColumns.gen.cs" />
+    <Compile Include="EntityBrokers\ServerSopClassSelectCriteria.gen.cs" />
+    <Compile Include="EntityBrokers\ServerSopClassUpdateColumns.gen.cs" />
+    <Compile Include="EntityBrokers\ServerTransferSyntaxSelectCriteria.gen.cs" />
+    <Compile Include="EntityBrokers\ServerTransferSyntaxUpdateColumns.gen.cs" />
+    <Compile Include="EntityBrokers\ServiceLockSelectCriteria.gen.cs" />
+    <Compile Include="EntityBrokers\ServiceLockUpdateColumns.gen.cs" />
+    <Compile Include="EntityBrokers\FilesystemStudyStorageSelectCriteria.gen.cs" />
+    <Compile Include="EntityBrokers\FilesystemStudyStorageUpdateColumns.gen.cs" />
+    <Compile Include="EntityBrokers\StudyDataAccessSelectCriteria.gen.cs" />
+    <Compile Include="EntityBrokers\StudyDataAccessUpdateColumns.gen.cs" />
+    <Compile Include="EntityBrokers\StudyDeleteRecordSelectCriteria.gen.cs" />
+    <Compile Include="EntityBrokers\StudyDeleteRecordUpdateColumns.gen.cs" />
+    <Compile Include="EntityBrokers\StudyHistorySelectCriteria.gen.cs" />
+    <Compile Include="EntityBrokers\StudyHistoryUpdateColumns.gen.cs" />
+    <Compile Include="EntityBrokers\StudyIntegrityQueueSelectCriteria.cs" />
+    <Compile Include="EntityBrokers\StudyIntegrityQueueSelectCriteria.gen.cs" />
+    <Compile Include="EntityBrokers\StudyIntegrityQueueUidSelectCriteria.gen.cs" />
+    <Compile Include="EntityBrokers\StudyIntegrityQueueUidUpdateColumns.gen.cs" />
+    <Compile Include="EntityBrokers\StudyIntegrityQueueUpdateColumns.gen.cs" />
+    <Compile Include="EntityBrokers\StudySelectCriteria.cs" />
+    <Compile Include="EntityBrokers\StudySelectCriteria.gen.cs" />
+    <Compile Include="EntityBrokers\StudyStorageSelectCriteria.gen.cs" />
+    <Compile Include="EntityBrokers\StudyStorageUpdateColumns.gen.cs" />
+    <Compile Include="EntityBrokers\StudyUpdateColumns.gen.cs" />
+    <Compile Include="EntityBrokers\WorkQueueProcessDuplicateSop.cs" />
+    <Compile Include="EntityBrokers\WorkQueueProcessDuplicateSopUpdateColumns.cs" />
+    <Compile Include="EntityBrokers\WorkQueueSelectCriteria.cs" />
+    <Compile Include="EntityBrokers\WorkQueueSelectCriteria.gen.cs" />
+    <Compile Include="EntityBrokers\WorkQueueTypePropertiesSelectCriteria.gen.cs" />
+    <Compile Include="EntityBrokers\WorkQueueTypePropertiesUpdateColumns.gen.cs" />
+    <Compile Include="EntityBrokers\WorkQueueUidSelectCriteria.gen.cs" />
+    <Compile Include="EntityBrokers\WorkQueueUidUpdateColumns.gen.cs" />
+    <Compile Include="EntityBrokers\WorkQueueUpdateColumns.gen.cs" />
+    <Compile Include="Filesystem.cs" />
+    <Compile Include="Filesystem.gen.cs" />
+    <Compile Include="FilesystemQueue.gen.cs" />
+    <Compile Include="FilesystemQueueTypeEnum.gen.cs" />
+    <Compile Include="FilesystemTierEnum.gen.cs" />
+    <Compile Include="InconsistentDataSIQEntry.cs" />
+    <Compile Include="InstanceKeys.cs" />
+    <Compile Include="Parameters\PostponeWorkQueueParameters.cs" />
+    <Compile Include="Parameters\QueryCurrentStudyMoveParameters.cs" />
+    <Compile Include="Parameters\WebResetWorkQueueParameters.cs" />
+    <Compile Include="Parameters\WorkQueueProcessordIDsParameters.cs" />
+    <Compile Include="Parameters\CreatePatientForStudyParameters.cs" />
+    <Compile Include="Parameters\DeleteInstanceParameters.cs" />
+    <Compile Include="Parameters\DeleteSeriesParameters.cs" />
+    <Compile Include="Parameters\InsertDuplicateSopReceivedQueueParameters.cs" />
+    <Compile Include="Parameters\LockStudyParameters.cs" />
+    <Compile Include="Parameters\AttachStudyToPatientParamaters.cs" />
+    <Compile Include="Parameters\ResetStudyStorageParameters.cs" />
+    <Compile Include="Parameters\SetSeriesRelatedInstanceCountParameters.cs" />
+    <Compile Include="Parameters\SetStudyRelatedInstanceCountParameters.cs" />
+    <Compile Include="Parameters\WebQueryStudyIntegrityQueueParameters.cs" />
+    <Compile Include="Parameters\InsertStudyIntegrityQueueParameters.cs" />
+    <Compile Include="Parameters\WebQueryRestoreQueueParameters.cs" />
+    <Compile Include="Parameters\PartitionArchiveDeleteParameters.cs" />
+    <Compile Include="Parameters\DeleteFilesystemStudyStorageParameters.cs" />
+    <Compile Include="Parameters\InsertArchiveQueueParameters.cs" />
+    <Compile Include="Parameters\InsertRestoreQueueParameters.cs" />
+    <Compile Include="Parameters\QueryArchiveQueueParameters.cs" />
+    <Compile Include="Parameters\QueryRestoreQueueParameters.cs" />
+    <Compile Include="Parameters\UpdateArchiveQueueParameters.cs" />
+    <Compile Include="Parameters\UpdateRestoreQueueParameters.cs" />
+    <Compile Include="Parameters\FilesystemInsertParameters.cs" />
+    <Compile Include="Parameters\PartitionTransferSyntaxQueryParameters.cs" />
+    <Compile Include="Parameters\ServerPartitionDeleteParameters.cs" />
+    <Compile Include="Parameters\WebQueryArchiveQueueParameters.cs" />
+    <Compile Include="Parameters\WebWorkQueueQueryParameters.cs" />
+    <Compile Include="Parameters\WorkQueueDeleteParameters.cs" />
+    <Compile Include="PartitionArchive.gen.cs" />
+    <Compile Include="PartitionSopClass.cs" />
+    <Compile Include="PartitionSopClass.gen.cs" />
+    <Compile Include="PartitionTransferSyntax.cs" />
+    <Compile Include="PartitionTransferSyntax.gen.cs" />
+    <Compile Include="Patient.cs" />
+    <Compile Include="Patient.gen.cs" />
+    <Compile Include="ProcessDuplicateAction.cs" />
+    <Compile Include="ProcessDuplicateQueueEntryQueueData.cs" />
+    <Compile Include="QueueStudyStateEnum.gen.cs" />
+    <Compile Include="ReconcileStudyQueueDescription.cs" />
+    <Compile Include="ReconcileStudyWorkQueue.cs" />
+    <Compile Include="RequestAttributes.gen.cs" />
+    <Compile Include="RestoreQueue.gen.cs" />
+    <Compile Include="RestoreQueueStatusEnum.gen.cs" />
+    <Compile Include="Series.gen.cs" />
+    <Compile Include="ServerEnumDescription.cs" />
+    <Compile Include="ServerPartition.cs" />
+    <Compile Include="ServerPartition.gen.cs" />
+    <Compile Include="ServerPartitionDataAccess.gen.cs" />
+    <Compile Include="ServerRule.gen.cs" />
+    <Compile Include="ServerRuleApplyTimeEnum.gen.cs" />
+    <Compile Include="ServerRuleTypeEnum.gen.cs" />
+    <Compile Include="ServerSopClass.gen.cs" />
+    <Compile Include="ServerTransferSyntax.gen.cs" />
+    <Compile Include="ServiceLock.cs" />
+    <Compile Include="ServiceLock.gen.cs" />
+    <Compile Include="ServiceLockTypeEnum.gen.cs" />
+    <Compile Include="FilesystemStudyStorage.gen.cs" />
+    <Compile Include="Study.cs" />
+    <Compile Include="Study.gen.cs" />
+    <Compile Include="Brokers\IInsertInstance.cs" />
+    <Compile Include="Brokers\IInsertRequestAttributes.cs" />
+    <Compile Include="Brokers\IInsertServerPartition.cs" />
+    <Compile Include="Brokers\IInsertStudyStorage.cs" />
+    <Compile Include="Brokers\IInsertWorkQueue.cs" />
+    <Compile Include="Brokers\IQueryModalitiesInStudy.cs" />
+    <Compile Include="Parameters\FilesystemQueueInsertParameters.cs" />
+    <Compile Include="Parameters\FilesystemQueueQueryParameters.cs" />
+    <Compile Include="Parameters\ServiceLockQueryParameters.cs" />
+    <Compile Include="Parameters\ServiceLockResetParameters.cs" />
+    <Compile Include="Parameters\ServiceLockUpdateParameters.cs" />
+    <Compile Include="Parameters\DeleteStudyStorageParameters.cs" />
+    <Compile Include="Parameters\WorkQueueResetParameters.cs" />
+    <Compile Include="Parameters\InsertWorkQueueFromFilesystemQueueParameters.cs" />
+    <Compile Include="Brokers\IQueryServerPartitionSopClasses.cs" />
+    <Compile Include="Brokers\IQueryStudyStorageLocation.cs" />
+    <Compile Include="Brokers\IUpdateWorkQueue.cs" />
+    <Compile Include="Brokers\IQueryWorkQueue.cs" />
+    <Compile Include="Parameters\InsertInstanceParameters.cs" />
+    <Compile Include="Parameters\ModalitiesInStudyQueryParameters.cs" />
+    <Compile Include="Parameters\RequestAttributesInsertParameters.cs" />
+    <Compile Include="Parameters\UpdateWorkQueueParameters.cs" />
+    <Compile Include="Parameters\PartitionSopClassQueryParameters.cs" />
+    <Compile Include="Parameters\ServerPartitionInsertParameters.cs" />
+    <Compile Include="StudyAlertContextInfo.cs" />
+    <Compile Include="StudyDataAccess.gen.cs" />
+    <Compile Include="StudyDeleteRecord.cs" />
+    <Compile Include="StudyDeleteRecord.gen.cs" />
+    <Compile Include="StudyHistory.gen.cs" />
+    <Compile Include="StudyHistoryTypeEnum.gen.cs" />
+    <Compile Include="StudyIntegrityQueue.cs" />
+    <Compile Include="StudyIntegrityQueue.gen.cs" />
+    <Compile Include="StudyIntegrityQueueUid.gen.cs" />
+    <Compile Include="StudyIntegrityReasonEnum.gen.cs" />
+    <Compile Include="StudyStatusEnum.gen.cs" />
+    <Compile Include="StudyStorage.cs" />
+    <Compile Include="StudyStorage.gen.cs" />
+    <Compile Include="StudyStorageLocation.cs" />
+    <Compile Include="WebDeleteStudyData.cs" />
+    <Compile Include="WorkQueue.cs" />
+    <Compile Include="WorkQueue.gen.cs" />
+    <Compile Include="Parameters\InsertStudyStorageParameters.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Parameters\StudyStorageLocationQueryParameters.cs" />
+    <Compile Include="WorkQueuePriorityEnum.gen.cs" />
+    <Compile Include="WorkQueueProcessDuplicateSop.cs" />
+    <Compile Include="WorkQueueStatusEnum.gen.cs" />
+    <Compile Include="Parameters\WorkQueueQueryParameters.cs" />
+    <Compile Include="Parameters\InsertWorkQueueParameters.cs" />
+    <Compile Include="WorkQueueTypeEnum.gen.cs" />
+    <Compile Include="WorkQueueTypeProperties.gen.cs" />
+    <Compile Include="WorkQueueUid.gen.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Common\ClearCanvas.Common.csproj">
+      <Project>{F6EAD428-E6CF-4DF6-B2F3-D33D532C5343}</Project>
+      <Name>ClearCanvas.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Dicom\ClearCanvas.Dicom.csproj">
+      <Project>{AD9ECE2B-8268-4115-8DC8-860FBD011FFF}</Project>
+      <Name>ClearCanvas.Dicom</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Enterprise\Common\ClearCanvas.Enterprise.Common.csproj">
+      <Project>{B5EBFFD7-6641-4932-91C9-4C4322B41868}</Project>
+      <Name>ClearCanvas.Enterprise.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Enterprise\Core\ClearCanvas.Enterprise.Core.csproj">
+      <Project>{431E9444-9915-4D49-B92D-9B7EC086622A}</Project>
+      <Name>ClearCanvas.Enterprise.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Enterprise\ClearCanvas.ImageServer.Enterprise.csproj">
+      <Project>{86CA6EDB-DE59-45E9-8BD8-832FBB3F8009}</Project>
+      <Name>ClearCanvas.ImageServer.Enterprise</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="ServerEnumDescriptions.resx" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

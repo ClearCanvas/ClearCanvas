@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<discovery xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.xmlsoap.org/disco/">
+  <contractRef ref="http://localhost/ClearCanvas.Distribution.UpdateService/UpdateInformationService.asmx?wsdl" docRef="http://localhost/ClearCanvas.Distribution.UpdateService/UpdateInformationService.asmx" xmlns="http://schemas.xmlsoap.org/disco/scl/" />
+  <soap address="http://localhost/ClearCanvas.Distribution.UpdateService/UpdateInformationService.asmx" xmlns:q1="http://www.clearcanvas.ca/services/update" binding="q1:UpdateInformationServiceSoap" xmlns="http://schemas.xmlsoap.org/disco/soap/" />
+  <soap address="http://localhost/ClearCanvas.Distribution.UpdateService/UpdateInformationService.asmx" xmlns:q2="http://www.clearcanvas.ca/services/update" binding="q2:UpdateInformationServiceSoap12" xmlns="http://schemas.xmlsoap.org/disco/soap/" />
+</discovery>

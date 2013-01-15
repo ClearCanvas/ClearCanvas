@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" assembly="ClearCanvas.Healthcare" namespace="ClearCanvas.Healthcare">
+	<class name="AttachedDocument" proxy="AttachedDocument" table="AttachedDocument_">
+		<id name="OID" column="OID_" type="Guid">
+			<generator class="guid.comb"/>
+		</id>
+		<version name="Version" column="Version_"/>
+
+		<property name="MimeType" column="MimeType_" type="string" length="32" not-null="true"/>
+		<property name="FileExtension" column="FileExtension_" type="string" length="16" not-null="true"/>
+
+		<property name="CreationTime" column="CreationTime_" type="DateTime" not-null="true" access="nosetter.camelcase-underscore"/>
+
+    <property name="ContentUrl" column="ContentUrl_" type="string" length="1024" not-null="true" access="nosetter.camelcase-underscore"/>
+
+    <!-- if this document is a ghost, this references the live document that it is a ghost of -->
+    <many-to-one name="GhostOf" class="AttachedDocument" column="GhostOfOID_"/>
+	</class>
+</hibernate-mapping>

@@ -1,0 +1,68 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title>Prior Report Preview</title>
+		<link href="../css/default.css" rel="stylesheet" type="text/css" />
+		<script type="text/javascript" src="../js/jsx.js"></script>
+		<script type="text/javascript" src="../js/jsml.js"></script>
+		<script type="text/javascript" src="../js/ui.js"></script>
+		<script type="text/javascript" src="../js/ris.js"></script>
+		<script type="text/javascript" src="../js/preview.js"></script>
+		<script type="text/javascript" >
+			var errorProvider = new ErrorProvider();
+			var imagePath = "../images";
+
+			function onBodyLoad()
+			{
+				if(!Ris)
+					return;
+
+				try
+				{
+					var context = Ris.getHealthcareContext();
+					if (context == null)
+					{
+						Field.setValue($("myForm"), "");
+						return;
+					}
+
+					// construct request object
+					var request = {
+						GetOrderDetailRequest:
+						{ 
+							OrderRef: context.OrderRef,
+							IncludeProcedures: true,
+							IncludeNotes: true
+						},
+						GetReportDetailRequest: { ReportRef: context.ReportRef }
+					};
+
+					var service = Ris.getPatientDataService();
+					var data = service.getData(request);
+
+					var report = data.GetReportDetailResponse.Report;
+					Preview.ReportPreview.create($("reportSection"), report);
+
+					var orderDetail = data.GetOrderDetailResponse.Order;
+					var notes = orderDetail.Notes.select(function(note) { return note.Category == "PrelimDiagnosis"; });
+					Preview.OrderNotesTable.create($("prelimDiagnosisNotesSection"), notes, "Preliminary Diagnosis", false);
+
+					notes = orderDetail.Notes.select(function(note) { return note.Category == "General"; });
+					Preview.OrderNotesTable.create($("generalNotesSection"), notes, "Order Notes", true);
+				}
+				catch(e)
+				{
+					var message = "Failed to load preview page.	An exception occurred in the script. Error name: " + e.name + ". Error message: " + e.message;
+					Field.setValue($("myForm"), message);
+				}
+			}
+		</script>
+	</head>
+	<body onload="javascript: onBodyLoad()">
+		<form id="myForm">
+			<div id="prelimDiagnosisNotesSection"></div>
+			<div id="generalNotesSection"></div>
+			<div id="reportSection"></div>
+		</form>
+	</body>
+</html>

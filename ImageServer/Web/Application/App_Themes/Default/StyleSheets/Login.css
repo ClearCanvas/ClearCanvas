@@ -1,0 +1,132 @@
+.LoginBody 
+{
+    min-width: 600px;
+    margin: 0;
+    background-color: #f2fbf2;
+}
+
+#LoginSplash
+{
+    position: relative;
+    margin-top: 175px;
+	margin-left: auto;
+    margin-right: auto;
+    width: 699px;
+    height: 400px;
+	background-image: url("../images/LoginSplash.png");
+}
+
+#LoginCredentials
+{
+    position: absolute;
+    color: #ffffff;
+    font-weight: bold;
+    font-family: Sans-Serif;
+    font-size: 12px;
+    bottom: 18px;
+    right: 20px;
+}
+
+#Copyright
+{
+	position:absolute;
+	right:20px;
+	bottom:5px;	
+	color:#24402E;
+	font-size:x-small;
+	font-family: Sans-Serif;
+}
+
+#WarningLabel
+{
+    position: absolute;
+    right: 20px;
+    top: 55px;
+    font-size:smaller;
+	color:Red;
+	font-weight:bold;
+	font-family: Sans-Serif;
+}
+
+#LoginCredentials .ManifestWarningTextLabel
+{
+	font-size:smaller;
+	color:Red;
+	font-weight:bold
+}
+
+.LoginTextInput
+{
+    font-size: 12px;
+	width: 100px;
+}
+
+.LoginButton
+{
+    font-size: 12px;
+}
+
+.LoginLabel
+{
+    text-align: right;
+    font-family: Arial,sans-serif;
+    font-size: 12px;
+    font-weight: bold;
+    color: #205F87;
+}
+
+.ChangePasswordLabel
+{
+    text-align: right;
+    font-family: Arial,sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+    color: #205F87;
+}
+
+.PasswordExpiredMessage
+{
+    font-family: Arial, Sans-Serif;
+    font-size: 14px;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-top: 10px;
+}
+
+a.LoginLink:link, a.LoginLink:visited
+{
+    color: #E1EFF8;
+    text-decoration: none;
+}
+
+a.LoginLink:hover
+{
+    color: #E1EFF8;
+    text-decoration: underline;
+}
+
+#VersionInfoPanel
+{
+	font-size: 11px;
+	font-family: sans-serif;
+	text-align: right;
+    color: #666666;
+    position: absolute;
+    top: 15px;
+    right: 20px;
+}
+
+.LoginErrorMessagePanel
+{
+    background: #FFFFCC url(../../../PersistantImage.ashx?key=ErrorMessageBackground) repeat-x;
+    padding: 5px 7px 5px 7px;
+    border: solid 1px #ff0000;
+    position: relative; 
+    top: 404px; 
+    left: 0px;   
+    width: 685px;
+    font-size: 14px;
+    font-weight: bold;
+    font-family: Sans-Serif;
+    text-align: center;
+}

@@ -1,0 +1,25 @@
+<VSTemplate Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005" Type="Item">
+  <TemplateData>
+    <DefaultName>EntityName</DefaultName>
+    <Name>CRUD Service Contract</Name>
+    <Description>CRUD Service Contract</Description>
+    <ProjectType>CSharp</ProjectType>
+    <SortOrder>10</SortOrder>
+    <Icon>__TemplateIcon.ico</Icon>
+  </TemplateData>
+  <TemplateContent>
+    <ProjectItem SubType="Code" TargetFileName="I$fileinputname$AdminService.cs" ReplaceParameters="true">IItemService.cs</ProjectItem>
+    <ProjectItem SubType="Code" TargetFileName="$fileinputname$Detail.cs" ReplaceParameters="true">ItemDetail.cs</ProjectItem>
+    <ProjectItem SubType="Code" TargetFileName="$fileinputname$Summary.cs" ReplaceParameters="true">ItemSummary.cs</ProjectItem>
+    <ProjectItem SubType="Code" TargetFileName="List$fileinputname$sRequest.cs" ReplaceParameters="true">ListItemsRequest.cs</ProjectItem>
+    <ProjectItem SubType="Code" TargetFileName="List$fileinputname$sResponse.cs" ReplaceParameters="true">ListItemsResponse.cs</ProjectItem>
+    <ProjectItem SubType="Code" TargetFileName="Load$fileinputname$EditorFormDataRequest.cs" ReplaceParameters="true">LoadItemEditorFormDataRequest.cs</ProjectItem>
+    <ProjectItem SubType="Code" TargetFileName="Load$fileinputname$EditorFormDataResponse.cs" ReplaceParameters="true">LoadItemEditorFormDataResponse.cs</ProjectItem>
+    <ProjectItem SubType="Code" TargetFileName="Load$fileinputname$ForEditRequest.cs" ReplaceParameters="true">LoadItemForEditRequest.cs</ProjectItem>
+    <ProjectItem SubType="Code" TargetFileName="Load$fileinputname$ForEditResponse.cs" ReplaceParameters="true">LoadItemForEditResponse.cs</ProjectItem>
+    <ProjectItem SubType="Code" TargetFileName="Add$fileinputname$Request.cs" ReplaceParameters="true">AddItemRequest.cs</ProjectItem>
+    <ProjectItem SubType="Code" TargetFileName="Add$fileinputname$Response.cs" ReplaceParameters="true">AddItemResponse.cs</ProjectItem>
+    <ProjectItem SubType="Code" TargetFileName="Update$fileinputname$Request.cs" ReplaceParameters="true">UpdateItemRequest.cs</ProjectItem>
+    <ProjectItem SubType="Code" TargetFileName="Update$fileinputname$Response.cs" ReplaceParameters="true">UpdateItemResponse.cs</ProjectItem>
+  </TemplateContent>
+</VSTemplate>

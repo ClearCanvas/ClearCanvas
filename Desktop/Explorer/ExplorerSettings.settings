@@ -1,0 +1,12 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="ClearCanvas.Desktop.Explorer" GeneratedClassName="ExplorerSettings">
+  <Profiles />
+  <Settings>
+    <Setting Name="LaunchAsShelf" Description="User option to specify whether or not the Explorer should be shown in a shelf.  When false, it is shown in a workspace." Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="LaunchAtStartup" Description="User option to launch the Explorer when the application starts up." Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

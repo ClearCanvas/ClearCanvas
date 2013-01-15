@@ -1,0 +1,18 @@
+﻿<!-- 
+This rule instructs the server to use JPEG 2000 lossless and 
+lossy compression on CT, MR, XA and MG studies.
+-->
+<rule>
+  <condition expressionLanguage="dicom">
+	<or>
+	  <equal test="$Modality" refValue="CT" />
+	  <equal test="$Modality" refValue="MR" />
+	  <equal test="$Modality" refValue="XA" />
+	  <equal test="$Modality" refValue="MG" />
+	</or>
+  </condition>
+  <action>
+	<jpeg-2000-lossless time="10" unit="weeks"/>
+	<jpeg-2000-lossy ratio="6.5" time="1" unit="years" refValue="$StudyDate"/>
+  </action>
+</rule>

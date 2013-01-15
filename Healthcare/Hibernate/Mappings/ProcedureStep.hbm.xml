@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!-- @codegen: ignore -->
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" assembly="ClearCanvas.Healthcare" namespace="ClearCanvas.Healthcare">
+  <class name="ProcedureStep" proxy="ProcedureStep" table="ProcedureStep_">
+    <id name="OID" column="OID_" type="Guid">
+      <generator class="guid.comb"/>
+    </id>
+    <discriminator column="Discriminator_"  type="String"/>
+    <version name="Version" column="Version_"/>
+
+    <many-to-one name="Procedure" class="Procedure" column="ProcedureOID_" not-null="true" fetch="join"/>
+    <property name="CreationTime" column="CreationTime_" type="DateTime" not-null="true"/>
+    <property name="State" column="State_" type="ClearCanvas.Workflow.Hibernate.ActivityStatusEnumHbm, ClearCanvas.Workflow.Hibernate" not-null="true"/>
+    <property name="LastStateChangeTime" column="LastStateChangeTime_" type="DateTime" not-null="true"/>
+
+    <component name="Scheduling" class="ClearCanvas.Workflow.ActivityScheduling, ClearCanvas.Workflow">
+      <property name="StartTime" column="ScheduledStartTime_" type="DateTime" not-null="false"/>
+      <property name="EndTime" column="ScheduledEndTime_" type="DateTime" not-null="false"/>
+      <component name="Performer" class="ProcedureStepPerformer">
+        <many-to-one name="Staff" class="Staff" column="ScheduledPerformerStaffOID_" not-null="false"/>
+      </component>
+    </component>
+    <component name="Performer" class="ProcedureStepPerformer">
+      <many-to-one name="Staff" class="Staff" column="PerformerStaffOID_" not-null="false"/>
+    </component>
+    <property name="StartTime" column="StartTime_" type="DateTime" not-null="false"/>
+    <property name="EndTime" column="EndTime_" type="DateTime" not-null="false"/>
+    <many-to-one name="LinkStep" class="ProcedureStep" column="LinkStepOID_"/>
+  </class>
+</hibernate-mapping>

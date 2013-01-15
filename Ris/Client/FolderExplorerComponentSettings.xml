@@ -1,0 +1,87 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<folder-systems>
+  <folder-system id="ClearCanvas.Ris.Client.Workflow.PerformingWorkflowFolderSystem">
+    <folder-class class="CheckedInFolder" />	
+    <folder-class class="InProgressFolder" />
+    <folder-class class="UndocumentedFolder" />
+    <folder-class class="PerformedFolder" />
+    <folder-class class="ScheduledFolder" />
+    <folder-class class="CancelledFolder" />    
+    <folder-class class="SearchFolder" />
+  </folder-system>
+  <folder-system id="ClearCanvas.Ris.Client.Workflow.RegistrationWorkflowFolderSystem">
+    <folder-class class="ScheduledFolder" />
+    <folder-class class="CheckedInFolder" />
+    <folder-class class="InProgressFolder" />
+    <folder-class class="PerformedFolder" />
+    <folder-class class="CancelledFolder" />
+    <folder-class class="RegistrationSearchFolder" />
+  </folder-system>
+  <folder-system id="ClearCanvas.Ris.Client.Workflow.BookingWorkflowFolderSystem">
+    <folder-class class="ToBeScheduledFolder" />
+    <folder-class class="PendingProtocolFolder" />
+    <folder-class class="CompletedProtocolFolder" />
+    <folder-class class="RejectedProtocolFolder" />
+    <folder-class class="BookingSearchFolder" />
+  </folder-system>
+  <folder-system id="ClearCanvas.Ris.Client.Workflow.ReportingWorkflowFolderSystem">
+    <folder-class class="ToBeReportedFolder" />
+    <folder-class class="ToBeReviewedFolder" />
+    <folder-class class="AssignedFolder" />
+    <folder-class class="AssignedForReviewFolder" />
+    <folder-class class="ReviewTranscriptionFolder" />
+    <folder-class class="DraftFolder" />
+    <folder-class class="InTranscriptionFolder" />
+    <folder-class class="TranscriptionReviewFolder" />
+    <folder-class class="AwaitingReviewFolder" />
+    <folder-class class="VerifiedFolder" />
+    <folder-class class="ReportingTrackingActiveFolder" />
+    <folder-class class="ReportingTrackingDraftFolder" />
+    <folder-class class="ReportingTrackingPreliminaryFolder" />
+    <folder-class class="ReportingTrackingFinalFolder" />
+    <folder-class class="ReportingTrackingCorrectedFolder" />
+    <folder-class class="ReportingSearchFolder" />
+  </folder-system>
+  <folder-system id="ClearCanvas.Ris.Client.Workflow.ProtocolWorkflowFolderSystem">
+    <folder-class class="ToBeProtocolledFolder" />
+    <folder-class class="ToBeReviewedProtocolFolder" />
+    <folder-class class="AssignedToBeProtocolFolder" />
+    <folder-class class="AssignedForReviewProtocolFolder" />
+    <folder-class class="DraftProtocolFolder" />
+    <folder-class class="AwaitingApprovalProtocolFolder" />
+    <folder-class class="CompletedProtocolFolder" />
+    <folder-class class="RejectedProtocolFolder" />
+    <folder-class class="ProtocollingSearchFolder" />
+  </folder-system>
+  <folder-system id="ClearCanvas.Ris.Client.Fax.ReceivedFaxWorkflowFolderSystem">
+    <folder-class class="InboxFolder"/>
+    <folder-class class="FaxMachineInboxFolder"/>
+    <folder-class class="ProcessedFolder" />
+    <folder-class class="DeletedFolder" />
+    <folder-class class="SpamFolder" />
+  </folder-system>
+  <folder-system id="ClearCanvas.Ris.Client.Workflow.EmergencyWorkflowFolderSystem">
+    <folder-class class="ScheduledFolder" />
+    <folder-class class="InProgressFolder" />
+    <folder-class class="PerformedFolder" />
+    <folder-class class="CancelledFolder" />
+  </folder-system>
+  <folder-system id="ClearCanvas.Ris.Client.OrderNoteboxFolderSystem" readonly="true">
+    <folder-class class="PersonalInboxFolder" />
+    <folder-class class="GroupInboxFolder"/>
+    <folder-class class="SentItemsFolder" />
+  </folder-system>
+  <folder-system id="ClearCanvas.Ris.Client.Workflow.RadiologistAdminWorkflowFolderSystem">
+    <folder-class class="ReportingAdminUnreportedFolder" />
+    <folder-class class="ReportingAdminAssignedFolder" />
+    <folder-class class="ProtocollingAdminAssignedFolder" />
+    <folder-class class="RadiologistAdminSearchFolder" />
+  </folder-system>
+  <folder-system id="ClearCanvas.Ris.Client.Workflow.TranscriptionWorkflowFolderSystem">
+    <folder-class class="ToBeTranscribedFolder" />
+    <folder-class class="ToBeReviewedFolder" />
+    <folder-class class="DraftFolder" />
+    <folder-class class="AwaitingReviewFolder" />
+    <folder-class class="CompletedFolder" />
+  </folder-system>
+</folder-systems>

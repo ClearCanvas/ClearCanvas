@@ -1,0 +1,69 @@
+using System;
+using System.Collections;
+using System.Text;
+using System.Runtime.Serialization;
+
+using Iesi.Collections;
+using ClearCanvas.Common;
+using ClearCanvas.Enterprise;
+using ClearCanvas.Enterprise.Support;
+
+
+namespace <%= namespace %>.Support {
+
+
+    /// <summary>
+    /// Provides context-independent support for the <see cref="<%= className %>"/> class.
+    /// This file is machine generated - changes will be lost.
+    /// </summary>
+    [DataContract]
+	public partial class <%= supportClassName %> : <%= supportSuperClassName %>
+	{
+       	#region Private fields
+        
+        private EntityRef<<%= className %>> _entityRef;
+        
+		<% fields.each do |f| %>
+	  	private <%= f.supportDataType %> <%= f.fieldName %>;
+	  	<% end %>
+	  	
+	  	#endregion
+	  	
+	  	#region Constructors
+	  	
+	  	/// <summary>
+	  	/// Constructs a new info object
+	  	/// </summary>
+	  	public <%= supportClassName %>()
+	  	{
+		 	<% fields.find_all {|f| f.supportInitialValue}.each do |f| %>
+		  	<%= f.fieldName %> = <%= f.supportInitialValue %>;
+		  	<% end %>
+	  	}
+
+	  	#endregion
+	  	
+	  	#region Public Properties
+	  	
+	  	[DataMember]
+	  	public EntityRef<<%= className %>> EntityRef
+	  	{
+	  		get { return _entityRef; }
+	  		set { _entityRef = value; }
+	  	}
+	  	
+	  	<% fields.each do |f| %>
+	  	/// <summary>
+	  	/// <%= f.accessorName %> property
+	  	/// </summary>
+	  	[DataMember]
+	  	public <%= f.supportDataType %> <%= f.accessorName %>
+	  	{
+			get { return <%= f.fieldName %>; }
+			set { <%= f.fieldName %> = value; }
+	  	}
+	  	<% end %>
+	  	
+	  	#endregion
+	}
+}

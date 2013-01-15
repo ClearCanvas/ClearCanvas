@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<enum class="PatientAttachmentCategory">
+  <enum-value code="X">
+    <value>Unspecified</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="D">
+    <value>Driver's License</value>
+    <description></description>
+  </enum-value>
+</enum>

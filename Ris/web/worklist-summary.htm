@@ -1,0 +1,383 @@
+<!DOCTYPE html "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title>Worklist Summary</title>
+		<link href="css/default.css" rel="stylesheet" type="text/css" />
+		<script type="text/javascript" src="js/jsx.js"></script>
+		<script type="text/javascript" src="js/jsml.js"></script>
+		<script type="text/javascript" src="js/ui.js"></script>
+		<script type="text/javascript" src="js/ris.js"></script>
+		<script type="text/javascript" src="js/preview.js"></script>
+		<script type="text/javascript" src="js/layout.js"></script>
+		<script type="text/javascript" >
+			var rowCycleIndex = 0;
+			var rowCycleClassNames = ["row0", "row1"];
+			
+			function onBodyLoad()
+			{
+				if(!Ris)
+					return;
+
+				try
+				{
+					var context = Ris.getHealthcareContext();
+					if (context == null)
+					{
+						Field.setValue($("myForm"), "");
+						return;
+					}
+					var worklist = context.Worklist;
+					Field.show($("SingleWorklistDetailSection"), !context.HasMultipleWorklists);
+					Field.show($("MultipleWorklistDetailSection"), context.HasMultipleWorklists);
+
+					if (context.HasMultipleWorklists)
+					{
+						Field.setPreFormattedValue($("Category"), context.WorklistClasses[0].CategoryName);
+						MultipleWorklistsTable.create($("MultipleWorklistsTable"), context.WorklistNames, context.WorklistDescriptions, context.WorklistClasses);				
+					}
+					else
+					{
+						Field.setPreFormattedValue($("Name"), worklist.Name);
+						Field.setPreFormattedValue($("Description"), worklist.Description);
+						var formattedClass = worklist.WorklistClass ? worklist.WorklistClass.CategoryName + " - " + worklist.WorklistClass.DisplayName : "";
+						Field.setPreFormattedValue($("Class"), formattedClass);
+						updateOwnerFilter(worklist.OwnerStaff, worklist.OwnerGroup, context.IsAdmin);
+					}
+					
+					// Subscribers
+					rowCycleIndex = 0;
+					var showSubscriberSection = false;
+					showSubscriberSection |= updateFilter(worklist.GroupSubscribers, $("RowGroupSubscribers"), $("GroupSubscribers"), function(staffGroup) { return staffGroup.Name; });
+					showSubscriberSection |= updateFilter(worklist.StaffSubscribers, $("RowStaffSubscribers"), $("StaffSubscribers"), function(staff) { return Ris.formatPersonName(staff.Name); });
+					if (!showSubscriberSection)
+						Field.show($("SubscriberSection"), false);
+					
+					// Filters
+					rowCycleIndex = 0;
+					var showFilterSection = false;
+					showFilterSection |= updateTimeWindow(worklist.StartTime, worklist.EndTime);
+					showFilterSection |= updateFacilityFilter(worklist.Facilities, worklist.FilterByWorkingFacility);
+					showFilterSection |= updateFilter(worklist.Departments, $("RowDepartments"), $("Departments"), function(department) { return department.Name; });
+					showFilterSection |= updateFilter(worklist.PatientClasses, $("RowPatientClasses"), $("PatientClasses"), function(patientClass) { return patientClass.Value; });
+					showFilterSection |= updateFilter(worklist.OrderPriorities, $("RowOrderPriorities"), $("OrderPriorities"), function(orderPriority) { return orderPriority.Value; });
+					showFilterSection |= updatePortableFilter(worklist.Portabilities, $("RowPortable"), $("Portable"));
+					showFilterSection |= updateFilter(worklist.OrderingPractitioners, $("RowOrderingPractitioners"), $("OrderingPractitioners"), function(practitioner) { return Ris.formatPersonName(practitioner.Name); });
+					showFilterSection |= updateFilter(worklist.ProcedureTypes, $("RowProcedureTypes"), $("ProcedureTypes"), function(type) { return type.Name; });
+					showFilterSection |= updateFilter(worklist.ProcedureTypeGroups, $("RowProcedureTypeGroups"), $("ProcedureTypeGroups"), function(group) { return group.Name; });
+					showFilterSection |= updateFilter(worklist.PatientLocations, $("RowPatientLocations"), $("PatientLocations"), function(location) { return location.Name; });
+					showFilterSection |= updateStaffFilter(worklist.InterpretedByStaff, $("RowInterpretedBy"), $("InterpretedBy"));
+					showFilterSection |= updateStaffFilter(worklist.TranscribedByStaff, $("RowTranscribedBy"), $("TranscribedBy"));
+					showFilterSection |= updateStaffFilter(worklist.VerifiedByStaff, $("RowVerifiedBy"), $("VerifiedBy"));
+					showFilterSection |= updateStaffFilter(worklist.SupervisedByStaff, $("RowSupervisedBy"), $("SupervisedBy"));
+					if (!showFilterSection)
+						Field.show($("FilterSection"), false);
+				}
+				catch(e)
+				{
+					var message = "Failed to load editor page.  An exception occurred in the script. Error name: " + e.name + ". Error message: " + e.message;
+					Field.setValue($("myForm"), message);
+				}
+				
+			}
+			
+			function applyRowCycleClassNames(htmlRow)
+			{
+				htmlRow.className = rowCycleClassNames[(rowCycleIndex-1)%(rowCycleClassNames.length)];
+				rowCycleIndex += 1;
+			}
+			
+			// return true if a field is udpated
+			function updateFilter(values, rowField, contentField, formatFunc, separator)
+			{
+				if (!values || values.length == 0)
+				{
+					Field.show(rowField, false);
+					return false;
+				}
+
+				if (separator == null)
+					separator = "<br>";
+					
+				var formattedNames = values.map(formatFunc);
+				Field.setPreFormattedValue(contentField, String.combine(formattedNames, separator));
+				applyRowCycleClassNames(rowField);
+				
+				return true;
+			}
+			
+			// return true if a field is updated
+			function updateOwnerFilter(ownerStaff, ownerGroup, isAdmin)
+			{
+				var ownerName;
+				if (isAdmin)
+					ownerName = "Admin";
+				else if (ownerGroup)
+					ownerName = ownerGroup.Name + " staff group";
+				else
+					ownerName = "me";
+
+				Field.setPreFormattedValue($("Owner"), ownerName);
+			
+				return true;
+			}
+		
+			// return true if a field is udpated
+			function updateFacilityFilter(facilities, filterByWorkingFacility)
+			{
+				var rowField = $("RowFacilities");
+				var noFacilityCollection = !facilities || facilities.length == 0;
+				if (noFacilityCollection && !filterByWorkingFacility)
+				{
+					Field.show(rowField, false);
+					return false;
+				}
+				
+				var formattedNames = facilities.map(function(item) { return item.Code; });
+				if (filterByWorkingFacility)
+					formattedNames.add("Working Facility");
+
+				Field.setPreFormattedValue($("Facilities"), String.combine(formattedNames, "<br>"));
+				applyRowCycleClassNames(rowField);
+				
+				return true;
+			}
+			
+			function updateStaffFilter(filter, rowField, contentField)
+			{
+				var noStaffCollection = !filter || !filter.Staff || filter.Staff.length == 0;
+				if (!filter || (noStaffCollection && !filter.IncludeCurrentUser))
+				{
+					Field.show(rowField, false);
+					return false;
+				}
+
+				var formattedNames = filter.Staff.map(function(staff) { return Ris.formatPersonName(staff.Name) } );
+				if (filter.IncludeCurrentUser)
+					formattedNames.add("[User]", 0);
+
+				Field.setPreFormattedValue(contentField, String.combine(formattedNames, "<br>"));
+				applyRowCycleClassNames(rowField);
+				
+				return true;
+			}
+			
+			function updatePortableFilter(portabilities, rowField, contentField)
+			{
+				// portabilities should only have two possible value.  If both values are provided (i.e. true and false), then it is the same as "All", so don't show field
+				if (!portabilities || portabilities.length == 0 || portabilities.length == 2)
+				{
+					Field.show(rowField, false);
+					return false;
+				}
+				
+				Field.setValue(contentField, portabilities[0] ? "Yes" : "No");
+				applyRowCycleClassNames(rowField);
+				
+				return true;
+			}
+			
+			// return true if a field is udpated
+			function updateTimeWindow(startTime, endTime)
+			{
+				var rowField = $("rowTimeWindow");
+				if (!startTime && !endTime)
+				{
+					Field.show(rowField, false);
+					return false;
+				}
+
+				var formattedTimes = [];
+				if (startTime)
+				{
+					var prefix = startTime.Resolution == 1440 ? "from start of " : "from ";
+					if (startTime.FixedTime)
+						formattedTimes.add(prefix + Ris.formatDate(startTime.FixedTime));
+					else if (startTime.RelativeTime)
+						formattedTimes.add(prefix + Ris.formatRelativeTime(startTime.RelativeTime, startTime.Resolution));
+				}
+				else
+				{
+					formattedTimes.add("anytime");
+				}
+				
+				if (endTime)
+				{
+					var prefix = endTime.Resolution == 1440 ? " to end of " : " to ";
+					if (endTime.FixedTime)
+						formattedTimes.add(prefix + Ris.formatDate(endTime.FixedTime));
+					else if (endTime.RelativeTime)
+						formattedTimes.add(prefix + Ris.formatRelativeTime(endTime.RelativeTime, endTime.Resolution));
+				}
+				else
+				{
+					formattedTimes.add(" to anytime");
+				}
+
+				Field.setPreFormattedValue($("TimeWindow"), String.combine(formattedTimes));
+				applyRowCycleClassNames(rowField);
+
+				return true;
+			}
+
+		MultipleWorklistsTable = function () {
+			return {
+				create: function(htmlTable, names, descriptions, classes)
+				{
+					if(classes.length == 0)
+					{
+						htmlTable.style.display = 'none';
+						return;
+					}
+					
+					var worklists = [];
+					for (var i=0; i<classes.length; i++)
+					{
+						worklists.add(
+							{ 
+								"Name": names[i], 
+								"Description": descriptions[i], 
+								"Class": classes[i]
+							});
+					}
+				
+					htmlTable = Table.createTable(htmlTable, { editInPlace: false, flow: false, addColumnHeadings: true },
+						 [
+							{   label: "Name",
+								cellType: "text",
+								getValue: function(item) { return item.Name; }
+							},
+							{   label: "Description",
+								cellType: "text",
+								getValue: function(item) { return item.Description; }
+							},
+							{   label: "Class",
+								cellType: "text",
+								getValue: function(item) { return item.Class.DisplayName; }
+							}
+						 ]);
+
+					htmlTable.rowCycleClassNames = ["row0", "row1"];
+					htmlTable.bindItems(worklists);
+				}
+			};
+		}();
+			
+			
+		</script>
+	</head>
+	<body onload="javascript: onBodyLoad()">
+		<form id="myForm">
+		
+			<div id="SingleWorklistDetailSection">
+			<p class="sectionheading">Worklist</p>
+			<table border="0" style="width:96%">
+				<tr>
+					<td width="100" class="propertyname" valign="top">Name</td>
+					<td><div id="Name"/></td>
+				</tr>
+				<tr>
+					<td width="100" class="propertyname" valign="top">Description</td>
+					<td><div id="Description"/></td>
+				</tr>
+				<tr>
+					<td width="100" class="propertyname" valign="top">Class</td>
+					<td><div id="Class"/></td>
+				</tr>
+				<tr>
+					<td width="100" class="propertyname" valign="top">Owner</td>
+					<td><div id="Owner"/></td>
+				</tr>
+			</table>
+			</div>
+			
+			<div id="MultipleWorklistDetailSection">
+			<p class="sectionheading">Worklists</p>
+			<table border="0" style="width:96%">
+				<tr>
+					<td width="100" class="propertyname" valign="top">Category</td>
+					<td><div id="Category"/></td>
+				</tr>
+			</table>
+			<table id="MultipleWorklistsTable" style="width:96%">
+			</table>
+			</div>
+			
+			<div id="SubscriberSection">
+			<p class="sectionheading">Subscribers</p>
+			<table border="0" style="width:96%">
+				<tr id="RowGroupSubscribers">
+					<td width="100" class="propertyname" valign="top">Groups</td>
+					<td><div id="GroupSubscribers"/></td>
+				</tr>
+				<tr id="RowStaffSubscribers">
+					<td width="100" class="propertyname" valign="top">Staff</td>
+					<td><div id="StaffSubscribers"/></td>
+				</tr>
+			</table>
+			</div>
+			
+			<div id="FilterSection">
+			<p class="sectionheading">Filters</p>
+			<table border="0" style="width:96%">
+				<tr id="RowTimeWindow">
+					<td width="100" class="propertyname" valign="top">Time</td>
+					<td><div id="TimeWindow"/></td>
+				</tr>
+				<tr id="RowFacilities">
+					<td width="100" class="propertyname" valign="top">Performing Facility</td>
+					<td><div id="Facilities"/></td>
+				</tr>
+				<tr id="RowDepartments">
+					<td width="100" class="propertyname" valign="top">Performing Department</td>
+					<td><div id="Departments"/></td>
+				</tr>
+				<tr id="RowPatientClasses">
+					<td width="100" class="propertyname" valign="top">Patient Classes</td>
+					<td><div id="PatientClasses"/></td>
+				</tr>
+				<tr id="RowOrderPriorities">
+					<td width="100" class="propertyname" valign="top">Order Priorities</td>
+					<td><div id="OrderPriorities"/></td>
+				</tr>
+				<tr id="RowPortable">
+					<td width="100" class="propertyname" valign="top">Portable</td>
+					<td><div id="Portable"/></td>
+				</tr>
+				<tr id="RowOrderingPractitioners">
+					<td width="100" class="propertyname" valign="top">Ordered By</td>
+					<td><div id="OrderingPractitioners"/></td>
+				</tr>
+				<tr id="RowProcedureTypes">
+					<td width="100" class="propertyname" valign="top">Procedure Types</td>
+					<td><div id="ProcedureTypes"/></td>
+				</tr>
+				<tr id="RowProcedureTypeGroups">
+					<td width="100" class="propertyname" valign="top">Procedure Type Groups</td>
+					<td><div id="ProcedureTypeGroups"/></td>
+				</tr>
+				<tr id="RowPatientLocations">
+					<td width="100" class="propertyname" valign="top">Patient Locations</td>
+					<td><div id="PatientLocations"/></td>
+				</tr>
+				<tr id="RowInterpretedBy">
+					<td width="120" class="propertyname" valign="top">Interpreted By</td>
+					<td><div id="InterpretedBy"/></td>
+				</tr>
+				<tr id="RowTranscribedBy">
+					<td width="120" class="propertyname" valign="top">Transcribed By</td>
+					<td><div id="TranscribedBy"/></td>
+				</tr>
+				<tr id="RowVerifiedBy">
+					<td width="120" class="propertyname" valign="top">Verified By</td>
+					<td><div id="VerifiedBy"/></td>
+				</tr>
+				<tr id="RowSupervisedBy">
+					<td width="120" class="propertyname" valign="top">Supervised By</td>
+					<td><div id="SupervisedBy"/></td>
+				</tr>			
+			</table>
+			</div>
+			
+		</form>
+	</body>
+</html>

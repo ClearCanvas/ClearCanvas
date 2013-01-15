@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<enum class="AllergySeverity">
+  <enum-value code="SV">
+    <value>Severe</value>
+    <description></description>
+  </enum-value>
+	<enum-value code="MO">
+		<value>Moderate</value>
+		<description></description>
+	</enum-value>
+	<enum-value code="MI">
+		<value>Mild</value>
+		<description></description>
+	</enum-value>
+	<enum-value code="U">
+		<value>Unknown</value>
+		<description></description>
+	</enum-value>
+</enum>

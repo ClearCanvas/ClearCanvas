@@ -1,0 +1,198 @@
+<%@ Import Namespace="System.Globalization"%>
+<%@ Import Namespace="Resources"%>
+<%@ Master Language="C#" AutoEventWireup="true" Inherits="ClearCanvas.ImageServer.Web.Application.GlobalMasterPage" Codebehind="GlobalMasterPage.master.cs" %>
+
+<%@ Register Src="~/Controls/AlertIndicator.ascx" TagName="AlertIndicator" TagPrefix="ccAsp" %>
+<%@ Register Src="~/Controls/LoginWarningIndicator.ascx" TagName="LoginWarningIndicator" TagPrefix="ccAsp" %>
+<%@ Register Src="~/Controls/SessionTimeout.ascx" TagName="SessionTimeout" TagPrefix="ccAsp" %>
+<%@ Register Src="~/Controls/ApplicationAlertPanel.ascx" TagName="ApplicationAlertPanel" TagPrefix="ccAsp" %>
+<%@ Register TagPrefix="ccAsp" Namespace="ClearCanvas.ImageServer.Web.Application.Controls" Assembly="ClearCanvas.ImageServer.Web.Application.Assembly" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <meta http-equiv="X-UA-Compatible" content="IE=7" />
+    <title></title>
+    <style runat="server" type="text/css" id="IE6PNGBugFixCSS" />
+    <link rel="shortcut icon" type="image/ico" runat="server" href="~/Images/favicon.ico" />   
+    <ccAsp:JQuery ID="MainJQuery" MultiSelect="true" Effects="true" runat="server" />
+    
+</head>
+<body id="MasterBody" class="GlobalBody">
+
+    <script type="text/javascript">
+        function Locale() {
+            this.currentLocale = "<%=CultureInfo.CurrentUICulture%>";
+            this.decimalSeparator = "<%= CultureInfo.CurrentUICulture.NumberFormat.NumberDecimalSeparator %>";
+            this.digitGroupSeparator = "<%= CultureInfo.CurrentUICulture.NumberFormat.NumberGroupSeparator %>";
+        }
+            
+        var SR = new function() {
+            this.Unknown = "<%= SR.Unknown %>";
+            this.SelectAll = "<%= SR.SelectAll %>";
+        };
+
+        var ValidationErrors = new function(){ 
+            this.ThisFieldIsRequired = "<%= InputValidation.ThisFieldIsRequired %>";
+        };
+    </script>
+    
+    <script type="text/javascript" src="<%= ResolveClientUrl("~/Scripts/NumberFormat154.js") %>"></script>
+    <script type="text/javascript" src="<%= ResolveClientUrl("~/Scripts/date.js") %>"></script>  
+
+    
+    
+    <!-- this is special code that web service validation needs -->
+    <div id="service" style="behavior: url(<%= ResolveClientUrl("~/Services/webservice.htc") %>);" />
+    <!-- this is special code that web service validation needs -->
+    <form id="MasterForm" runat="server" submitdisabledcontrols="true">
+              
+        <asp:ScriptManager ID="GlobalScriptManager" runat="server" EnableScriptGlobalization="true"
+            EnableScriptLocalization="true" OnAsyncPostBackError="GlobalScriptManager_AsyncPostBackError" >
+        </asp:ScriptManager>   
+        
+        
+        <script type="text/javascript">
+        $(document).ready(function(){
+            var prm = Sys.WebForms.PageRequestManager.getInstance();
+            prm.add_initializeRequest(StartAsyncRequest);
+            prm.add_endRequest(EndAsyncRequest);
+        });
+        
+        function StartAsyncRequest(){
+            window.status = "Updating...";
+        }
+        
+        function EndAsyncRequest(){
+            window.status = "";
+        }
+        
+        </script>
+
+        <ccAsp:ApplicationAlertPanel runat="server" ID="ApplicationAlertPanel" />
+               
+
+        <asp:UpdatePanel runat="server" ID="MainContentContainerUpdatePanel" UpdateMode="Conditional">
+        <ContentTemplate>
+            <ccAsp:SessionTimeout runat="server" ID="SessionTimeout" />
+            <div class="wrapper">
+            <asp:Panel ID="Panel1" runat="server" CssClass="GlobalContentPanel">
+                <asp:Table ID="Table1" runat="server" Width="100%" CellPadding="0" CellSpacing="0">
+                <asp:TableRow>
+                    <asp:TableCell>
+
+                        <!-- Header Table -->
+                        <asp:Table ID="Table2" runat="server">
+                            <asp:TableRow VerticalAlign="Bottom">
+                                <asp:TableCell HorizontalAlign="Left" RowSpan="3">
+                                    <asp:Image runat="server" ID="LogoImage" SkinID="Logo" />
+                                </asp:TableCell>
+                            </asp:TableRow>
+                            <asp:TableRow>
+                                <asp:TableCell ID="MenuCell" runat="server" Width="50%" VerticalAlign="Bottom" Height="68px">
+                                    <asp:Panel ID="Panel2" runat="server" CssClass="MainMenuPanel">
+                                        <asp:ContentPlaceHolder ID="MainMenuPlaceHolder" runat="server">
+                                            <asp:SiteMapDataSource ID="MainMenuSiteMapDataSource" runat="server" ShowStartingNode="False" />
+                                            <asp:Menu runat="server" ID="MainMenu" SkinID="MainMenu" DataSourceID="MainMenuSiteMapDataSource"
+                                                Style="font-family: Sans-Serif">
+                                            </asp:Menu>
+                                        </asp:ContentPlaceHolder>
+                                    </asp:Panel>
+                                </asp:TableCell>
+
+                                <asp:TableCell runat="server" Width="50%" HorizontalAlign="right" CssClass="MainMenuPanel" VerticalAlign="Bottom" ID="UserInformationCell">
+                                <% if (DisplayUserInformationPanel) {%>
+                                        <asp:Panel ID="UserInformationPanel" runat="server" CssClass="UserInformationPanel">
+                                             <table width="100%">
+                                             <tr><td align="right">
+                                                  <table id="Table3" runat="server"><tr>
+                                                  <td><asp:Label runat="server" Text="<%$Resources: Labels,LoggedInAs%>"></asp:Label><b> <asp:Label ID="Username" runat="server"></asp:Label></b></td>
+                                                  <td id="LoginWarningCell"><asp:PlaceHolder runat="server" ID="LoginIndicatorPlaceHolder"></asp:PlaceHolder></td>
+                                                  <td id="AlertIndicatorCell"><asp:PlaceHolder runat="server" ID="AlertIndicatorPlaceHolder"></asp:PlaceHolder></td>
+                                                  <td>| <asp:LinkButton ID="LogoutButton" runat="server" CssClass="UserInformationLink" OnClick="Logout_Click" Text="<%$Resources: Labels,Logout %>"></asp:LinkButton></td></tr>
+                                                  </table>
+                                             </td></tr>
+                                             </table>
+                                        </asp:Panel>
+                                <%
+                                    }
+                                %>
+                                </asp:TableCell>
+
+                                <asp:TableCell VerticalAlign="Bottom">
+                                    <asp:Image ID="Image1" runat="server" SkinID="MenuEdge" />
+                                </asp:TableCell>
+                            </asp:TableRow>
+                        </asp:Table>
+
+                        <!-- Content Table -->
+                        <asp:Table ID="Table4" runat="server">
+                            <asp:TableRow>
+                                <asp:TableCell CssClass="MainContentLeftEdge"></asp:TableCell>
+                                <asp:TableCell Width="100%">
+                                    <asp:UpdatePanel ID="MainContentUpdatePanel" runat="server" UpdateMode="Conditional">
+                                        <ContentTemplate>                         
+                                            <asp:Panel ID="PageContentPanel" CssClass="MainContentPanel" runat="server">
+                                                <div>
+                                                    <b class="MainContentCorners"><b class="MainContentCorners1"><b></b></b><b class="MainContentCorners2">
+                                                        <b></b></b><b class="MainContentCorners3"></b><b class="MainContentCorners4"></b>
+                                                        <b class="MainContentCorners5"></b></b>
+                                                    <div class="MainContentCornersFG">
+                                                        <asp:Table ID="Table5" runat="server" SkinID="MainContentTable">
+                                                            <asp:tableRow>
+                                                                <asp:tablecell CssClass="MainContentTitle">
+                                                                    <asp:ContentPlaceHolder ID="MainContentTitlePlaceHolder" runat="server">
+                                                                        Main Content Title</asp:ContentPlaceHolder>
+                                                                </asp:tablecell>
+                                                            </asp:tablerow>
+                                                            <asp:tablerow>
+                                                                <asp:tablecell>
+                                                                   <div class="MainContentBorder">
+                                                                        <asp:ContentPlaceHolder ID="MainContentPlaceHolder" runat="server" />
+                                                                   </div>                                                                    
+                                                                </asp:tableCell>
+                                                            </asp:TableRow>
+                                                        </asp:Table>
+                                                    </div>
+                                                    <b class="MainContentCorners"><b class="MainContentCorners5"></b><b class="MainContentCorners4">
+                                                    </b><b class="MainContentCorners3"></b><b class="MainContentCorners2"><b></b></b><b
+                                                        class="MainContentCorners1"><b></b></b></b>
+                                                </div>
+                                            </asp:Panel>
+                                        </ContentTemplate>
+                                    </asp:UpdatePanel>
+                                </asp:TableCell>
+                                <asp:TableCell CssClass="MainContentRightEdge"></asp:TableCell>
+                            </asp:TableRow>
+                            <asp:TableRow VerticalAlign="Top">
+                                <asp:TableCell><asp:Image ID="Image2" runat="server" SkinID="MainContentBottomLeftCorner" /></asp:TableCell>
+                                <asp:TableCell>
+                                    <asp:Panel ID="SpacerPanel" runat="server" CssClass="MainContentBottom">
+                                        <asp:Image ID="Image3" runat="server" SkinID="Spacer" /></asp:Panel>
+                                </asp:TableCell>
+                                <asp:TableCell>
+                        <asp:Image ID="Image4" runat="server" SkinID="MainContentBottomRightCorner" />
+                                </asp:TableCell>
+                            </asp:TableRow>
+                        </asp:Table>
+                    </asp:TableCell></asp:TableRow>
+            </asp:Table>
+            </asp:Panel>
+            </div>
+        <asp:ContentPlaceHolder ID="DialogsPlaceHolder" runat="server" />
+        
+            <ccAsp:LoginWarningsDialog runat="server" ID="LoginWarningsDialog"/>
+        </ContentTemplate>
+        </asp:UpdatePanel>
+        
+    </form>
+    
+    <script type="text/javascript">
+        UserInformationLink_Hover("<%= LogoutButton.ClientID %>");    
+    </script>
+    
+
+    
+</body>
+</html>

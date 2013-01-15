@@ -1,0 +1,51 @@
+// This file is machine generated - changes will be lost.
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+using ClearCanvas.Enterprise.Common;
+using ClearCanvas.Enterprise.Core;
+
+namespace <%= namespace %>
+{
+
+    /// <summary>
+    /// <see cref="<%= className %>"/> class
+    /// </summary>
+	public partial class <%= className %> : <%= superClassName %>
+	{
+		/// <summary>
+		/// Constructor
+		/// </summary>
+		public <%= className %>()
+		{
+		}
+		
+		/// <summary>
+		/// Copy constructor
+		/// </summary>
+		protected <%= className %>(<%= className %> other)
+			:base(other)
+		{
+		}
+		
+		public override object Clone()
+        {
+            return new <%= className %>(this);
+        }
+	
+		<% fields.each do |f| %>
+	  	public <%= f.searchCriteriaReturnType %> <%= f.accessorName %>
+	  	{
+	  		get
+	  		{
+	  			if(!this.SubCriteria.ContainsKey("<%= f.accessorName %>"))
+	  			{
+	  				this.SubCriteria["<%= f.accessorName %>"] = new <%= f.searchCriteriaDataType %>();
+	  			}
+	  			return (<%= f.searchCriteriaReturnType %>)this.SubCriteria["<%= f.accessorName %>"];
+	  		}
+	  	}
+	  	<% end %>
+	}
+}

@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Font Name="Tahoma" Size="8.4" />
+  <Class Name="ClearCanvas.Desktop.Tools.Tool&lt;TContextInterface&gt;">
+    <Position X="5" Y="3" Width="2" />
+    <TypeIdentifier>
+      <FileName>Tools\Tool.cs</FileName>
+      <HashCode>AAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+    <Members>
+      <Method Name="Tool" Hidden="true" />
+    </Members>
+  </Class>
+  <Class Name="ClearCanvas.Desktop.Tools.ToolBase" Collapsed="true">
+    <Position X="5.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Tools\ToolBase.cs</FileName>
+      <HashCode>AAAAAAAAICIABQAAAAAAAAAAAAAABAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="ContextBase" />
+      <Property Name="Actions" />
+    </ShowAsAssociation>
+    <AssociationLine Name="ContextBase" Type="ClearCanvas.Desktop.Tools.IToolContext">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.368" Y="0.06" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Interface Name="ClearCanvas.Desktop.Tools.IToolContext" Collapsed="true">
+    <Position X="8" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Tools\IToolContext.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="ClearCanvas.Desktop.Actions.IActionSet" Collapsed="true">
+    <Position X="2.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Actions\IActionSet.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAQQAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Interface>
+</ClassDiagram>

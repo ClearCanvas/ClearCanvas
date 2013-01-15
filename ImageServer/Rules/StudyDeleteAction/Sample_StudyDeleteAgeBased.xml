@@ -1,0 +1,24 @@
+﻿<!-- 
+This rule instructs the server to do schedule the study for deletion when the patient 
+reaches 21 years of age. The patient must be younger than 21 years for the rule
+to apply.
+
+Note: If 'refValue' attribute in the study-delete node is not specified. The scheduled
+delete time will be 21 years after the study is processed.
+-->
+<rule>
+	<condition
+	  expressionLanguage="dicom">
+		<dicom-age-less-than
+		  test="$PatientsBirthDate"
+		  units="years"
+		  refValue="21" />
+	</condition>
+	<action>
+		<study-delete
+		  time="21"
+		  unit="years"
+		  refValue="$PatientsBirthDate"
+		  />
+	</action>
+</rule>

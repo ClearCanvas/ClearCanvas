@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<enum class="StaffTypeEnum">
+  <enum-value code="X">
+    <value>Unknown</value>
+    <description>Unspecified or unknown or not applicable</description>
+  </enum-value>
+  <enum-value code="PRAD">
+    <value>Radiologist</value>
+    <description>Staff Radiologists</description>
+  </enum-value>
+  <enum-value code="PRAR">
+    <value>Resident</value>
+    <description>Radiology Residents</description>
+  </enum-value>
+  <enum-value code="PEMR">
+    <value>Emergency Physician</value>
+    <description>Emergency Physicians</description>
+  </enum-value>
+  <enum-value code="STEC">
+    <value>Technologist</value>
+    <description>Radiology Technologists</description>
+  </enum-value>
+  <enum-value code="STRA">
+    <value>Transcriptionist</value>
+    <description>Transcriptionists</description>
+  </enum-value>
+  <enum-value code="SCLR">
+    <value>Clerical</value>
+    <description>Clerical staff</description>
+  </enum-value>
+  <enum-value code="SADH">
+    <value>Healthcare Administrator</value>
+    <description>Healthcare Administrative staff</description>
+  </enum-value>
+  <enum-value code="SADS">
+    <value>IT Administrator</value>
+    <description>System/Technical Administrative staff</description>
+  </enum-value>
+  <enum-value code="SSUP">
+    <value>Technical Support</value>
+    <description>Technical Support staff</description>
+  </enum-value>
+</enum>

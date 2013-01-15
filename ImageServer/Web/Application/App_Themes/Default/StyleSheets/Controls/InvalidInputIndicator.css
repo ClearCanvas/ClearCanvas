@@ -1,0 +1,9 @@
+.InvalidIndicatorTooltipPanel
+{
+    background-color: #FFFFCC;
+    border: solid 1px #ff0000;
+    padding: 3px 3px 3px 3px;
+    color: #FF0000;
+	font-size: 14px;
+}
+

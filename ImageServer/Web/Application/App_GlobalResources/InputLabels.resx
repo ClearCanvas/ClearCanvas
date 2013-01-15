@@ -1,0 +1,306 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AETitle" xml:space="preserve">
+    <value>AE Title</value>
+  </data>
+  <data name="DeviceDescription" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="DeviceFeatures_AcceptKOPRFeature" xml:space="preserve">
+    <value>Only Accept Key Objects and Presentation States</value>
+  </data>
+  <data name="DeviceFeatures_AutoRoute" xml:space="preserve">
+    <value>Auto-Route</value>
+  </data>
+  <data name="DeviceFeatures_Query" xml:space="preserve">
+    <value>Query</value>
+  </data>
+  <data name="DeviceFeatures_Retrieve" xml:space="preserve">
+    <value>Retrieve</value>
+  </data>
+  <data name="DeviceFeatures_Storage" xml:space="preserve">
+    <value>Storage</value>
+  </data>
+  <data name="DeviceType" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="DHCP" xml:space="preserve">
+    <value>DHCP</value>
+  </data>
+  <data name="Enabled" xml:space="preserve">
+    <value>Enabled</value>
+  </data>
+  <data name="IPAddress" xml:space="preserve">
+    <value>IP Address</value>
+  </data>
+  <data name="Port" xml:space="preserve">
+    <value>Port</value>
+  </data>
+  <data name="AdminDevices_ThrottleSettings_Limited" xml:space="preserve">
+    <value>Limited</value>
+  </data>
+  <data name="AdminDevices_ThrottleSettings_NumConnectionsAllowed" xml:space="preserve">
+    <value>Number of Connections Allowed:</value>
+  </data>
+  <data name="AdminDevices_ThrottleSettings_Unlimited" xml:space="preserve">
+    <value>Unlimited</value>
+  </data>
+  <data name="FilesystemDescription" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="FilesystemHighWatermark" xml:space="preserve">
+    <value>High Watermark</value>
+  </data>
+  <data name="FilesystemLowWatermark" xml:space="preserve">
+    <value>Low Watermark</value>
+  </data>
+  <data name="FilesystemPath" xml:space="preserve">
+    <value>Path</value>
+  </data>
+  <data name="FilesystemReadPermission" xml:space="preserve">
+    <value>Read</value>
+  </data>
+  <data name="FilesystemTier" xml:space="preserve">
+    <value>Tier</value>
+  </data>
+  <data name="FilesystemWritePermission" xml:space="preserve">
+    <value>Write</value>
+  </data>
+  <data name="PartitionArchiveArchiveDelay" xml:space="preserve">
+    <value>Archive Delay</value>
+  </data>
+  <data name="PartitionArchiveArchiveType" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="PartitionArchiveConfigurationXML" xml:space="preserve">
+    <value>Configuration XML</value>
+  </data>
+  <data name="PartitionArchiveDescription" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="PartitionArchiveReadOnly" xml:space="preserve">
+    <value>Read-only</value>
+  </data>
+  <data name="PartitionArchiveType" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="AcceptAnyDevice" xml:space="preserve">
+    <value>Accept Any Device</value>
+    <comment>add partition </comment>
+  </data>
+  <data name="AutoInsertDevices" xml:space="preserve">
+    <value>Auto Insert Devices</value>
+    <comment>add partition</comment>
+  </data>
+  <data name="DefaultRemotePort" xml:space="preserve">
+    <value>Default Remote Port</value>
+    <comment>add partition</comment>
+  </data>
+  <data name="DuplicateObjectPolicy" xml:space="preserve">
+    <value>Duplicate Object Policy</value>
+  </data>
+  <data name="MaintainCopyOfStudyAfterDeletion" xml:space="preserve">
+    <value>Maintain a copy of each study after deletion</value>
+  </data>
+  <data name="PartitionDescription" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="PartitionFolderName" xml:space="preserve">
+    <value>Folder Name</value>
+  </data>
+  <data name="SelectSampleRule" xml:space="preserve">
+    <value>Select Sample Rule</value>
+  </data>
+  <data name="ServerRuleApplyTime" xml:space="preserve">
+    <value>Apply Time</value>
+  </data>
+  <data name="ServerRuleDefaultRule" xml:space="preserve">
+    <value>Default Rule</value>
+  </data>
+  <data name="ServerRuleExemptRule" xml:space="preserve">
+    <value>Exempt Rule</value>
+  </data>
+  <data name="ServerRuleName" xml:space="preserve">
+    <value>Rule Name</value>
+  </data>
+  <data name="ServerRuleType" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="ServiceDescription" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="ServiceFilesystem" xml:space="preserve">
+    <value>File System</value>
+  </data>
+  <data name="ServiceSchedule" xml:space="preserve">
+    <value>Schedule</value>
+  </data>
+  <data name="ServiceType" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="AdminUserGroups_GroupName" xml:space="preserve">
+    <value>Authority Group Name</value>
+  </data>
+  <data name="AdminUserGroups_Tokens" xml:space="preserve">
+    <value>Tokens</value>
+  </data>
+  <data name="AdminUsers_AddEditDialog_Groups" xml:space="preserve">
+    <value>Authority Groups</value>
+  </data>
+  <data name="AdminUsers_AddEditDialog_Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="AdminUsers_AddEditDialog_UserID" xml:space="preserve">
+    <value>User ID</value>
+  </data>
+  <data name="SIQ_ReconcileDuplicateDialog_DeleteDuplicates" xml:space="preserve">
+    <value>Delete Duplicates</value>
+  </data>
+  <data name="SIQ_ReconcileDuplicateDialog_ReplaceAsIs" xml:space="preserve">
+    <value>Replace As Is</value>
+  </data>
+  <data name="SIQ_ReconcileDuplicateDialog_UseDuplicateDemographics" xml:space="preserve">
+    <value>Use Duplicate Demographics</value>
+  </data>
+  <data name="SIQ_ReconcileDuplicateDialog_UseExistingDemographics" xml:space="preserve">
+    <value>Use Existing Demographics</value>
+  </data>
+  <data name="AuthorityGroupsDataAccess" xml:space="preserve">
+    <value>Authority Groups Granted Access</value>
+  </data>
+  <data name="RuleCheckBoxes" xml:space="preserve">
+    <value>Rule Options</value>
+  </data>
+  <data name="AdminUserGroups_DataGroup" xml:space="preserve">
+    <value>Data Access Authority Group</value>
+  </data>
+  <data name="AdminUserGroups_GroupDescription" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="AdminUsers_AddEditDialog_EmailAddress" xml:space="preserve">
+    <value>Email Address</value>
+  </data>
+  <data name="AcceptLatestReport" xml:space="preserve">
+    <value>Replace Duplicate Reports</value>
+  </data>
+  <data name="AcceptLatestReportLabel" xml:space="preserve">
+    <value>Override Duplicate Object Policy for Reports</value>
+  </data>
+</root>

@@ -1,0 +1,171 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{523EDDC1-7C6E-404D-A8ED-5F043F5E6BE3}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ClearCanvas.ImageServer.Rules</RootNamespace>
+    <AssemblyName>ClearCanvas.ImageServer.Rules</AssemblyName>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AutoRouteAction\AutoRouteActionItem.cs" />
+    <Compile Include="AutoRouteAction\AutoRouteActionOperator.cs" />
+    <Compile Include="AutoRouteAction\AutoRouteSamples.cs" />
+    <Compile Include="AutoRouteAction\InsertAutoRouteCommand.cs" />
+    <Compile Include="GrantAccessAction\GrantAccessActionItem.cs" />
+    <Compile Include="GrantAccessAction\GrantAccessActionOperator.cs" />
+    <Compile Include="GrantAccessAction\GrantAccessSamples.cs" />
+    <Compile Include="GrantAccessAction\InsertStudyDataAccessCommand.cs" />
+    <Compile Include="InsertArchiveQueueCommand.cs" />
+    <Compile Include="InsertFilesystemQueueCommand.cs" />
+    <Compile Include="ISampleRule.cs" />
+    <Compile Include="CompressSamples\CompressSamples.cs" />
+    <Compile Include="NoOp\NoOpActionItem.cs" />
+    <Compile Include="NoOp\NoOpActionOperator.cs" />
+    <Compile Include="OnlineRetentionAction\OnlineRetentionActionItem.cs" />
+    <Compile Include="OnlineRetentionAction\OnlineRetentionActionOperator.cs" />
+    <Compile Include="OnlineRetentionAction\Sample_OnlineRetention.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RuleSettings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>RuleSettings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="SampleRuleBase.cs" />
+    <Compile Include="SampleRuleExtensionPoint.cs" />
+    <Compile Include="ServerActionContext.cs" />
+    <Compile Include="ServerRulesEngine.cs" />
+    <Compile Include="SR.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SR.resx</DependentUpon>
+    </Compile>
+    <Compile Include="StudyDeleteAction\StudyDeleteActionItem.cs" />
+    <Compile Include="StudyDeleteAction\StudyDeleteActionOperator.cs" />
+    <Compile Include="StudyDeleteAction\Sample_StudyDelete.cs" />
+    <Compile Include="StudyRulesEngine.cs" />
+    <Compile Include="Tier1RetentionAction\Sample_Tier1Retention.cs" />
+    <Compile Include="Tier1RetentionAction\Tier1RetentionActionItem.cs" />
+    <Compile Include="Tier1RetentionAction\Tier1RetentionActionOperator.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Common\ClearCanvas.Common.csproj">
+      <Project>{F6EAD428-E6CF-4DF6-B2F3-D33D532C5343}</Project>
+      <Name>ClearCanvas.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Dicom\ClearCanvas.Dicom.csproj">
+      <Project>{AD9ECE2B-8268-4115-8DC8-860FBD011FFF}</Project>
+      <Name>ClearCanvas.Dicom</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Enterprise\Core\ClearCanvas.Enterprise.Core.csproj">
+      <Project>{431E9444-9915-4D49-B92D-9B7EC086622A}</Project>
+      <Name>ClearCanvas.Enterprise.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Common\ClearCanvas.ImageServer.Common.csproj">
+      <Project>{DDFB1D25-75AE-43A6-A7A5-33D173EFFD04}</Project>
+      <Name>ClearCanvas.ImageServer.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Enterprise\ClearCanvas.ImageServer.Enterprise.csproj">
+      <Project>{86CA6EDB-DE59-45E9-8BD8-832FBB3F8009}</Project>
+      <Name>ClearCanvas.ImageServer.Enterprise</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Model\ClearCanvas.ImageServer.Model.csproj">
+      <Project>{2C9126D3-5B73-4539-BBC9-D56E6097D335}</Project>
+      <Name>ClearCanvas.ImageServer.Model</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="AutoRouteAction\Sample_AutoRouteMultiTag.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="AutoRouteAction\Sample_AutoRouteSimple.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="CompressSamples\SampleCompressExempt.xml" />
+    <EmbeddedResource Include="StudyDeleteAction\Sample_StudyDeleteAgeBased.xml" />
+    <EmbeddedResource Include="StudyDeleteAction\Sample_StudyDeleteTagBased.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="RuleSettings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>RuleSettings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="OnlineRetentionAction\Sample_OnlineRetentionSimple.xml" />
+    <EmbeddedResource Include="SR.resx">
+      <SubType>Designer</SubType>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>SR.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Tier1RetentionAction\Sample_StudyDateTier1Retention.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="AutoRouteAction\Sample_AutoRouteSchedule.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="AutoRouteAction\Sample_AutoRouteSourceAe.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="GrantAccessAction\Sample_GrantAccess.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="GrantAccessAction\Sample_GrantAccessSourceAe.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="GrantAccessAction\Sample_GrantAccessTwoDocs.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="GrantAccessAction\Sample_GrantAccessInstitution.xml" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

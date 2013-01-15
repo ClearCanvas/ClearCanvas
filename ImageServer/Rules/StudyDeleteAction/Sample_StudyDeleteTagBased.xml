@@ -1,0 +1,23 @@
+﻿<!-- 
+This rule instructs the server to do schedule MR studies for deletion 
+if the patient ID contains a "1". The deletion will occur
+10 weeks starting from when the rule is applied.
+-->
+<rule>
+	<condition
+	  expressionLanguage="dicom">
+		<and>
+			<equal
+			  test="$Modality"
+			  refValue="MR" />
+			<regex
+			  test="$PatientId"
+			  pattern="1" />
+		</and>
+	</condition>
+	<action>
+		<study-delete
+		  time="10"
+		  unit="weeks" />
+	</action>
+</rule>

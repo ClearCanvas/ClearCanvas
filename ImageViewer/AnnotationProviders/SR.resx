@@ -1,0 +1,996 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AnnotationItemProviders_Dicom_CTImage_DisplayName" xml:space="preserve">
+    <value>Dicom (CT Image)</value>
+  </data>
+  <data name="AnnotationItemProviders_Dicom_GeneralEquipment_DisplayName" xml:space="preserve">
+    <value>Dicom (General Equipment)</value>
+  </data>
+  <data name="AnnotationItemProviders_Dicom_GeneralImage_DisplayName" xml:space="preserve">
+    <value>Dicom (General Image)</value>
+  </data>
+  <data name="AnnotationItemProviders_Dicom_GeneralSeries_DisplayName" xml:space="preserve">
+    <value>Dicom (General Series)</value>
+  </data>
+  <data name="AnnotationItemProviders_Dicom_GeneralStudy_DisplayName" xml:space="preserve">
+    <value>Dicom (General Study)</value>
+  </data>
+  <data name="AnnotationItemProviders_Dicom_ImagePlane_DisplayName" xml:space="preserve">
+    <value>Dicom (Image Plane)</value>
+  </data>
+  <data name="AnnotationItemProviders_Dicom_MRImage_DisplayName" xml:space="preserve">
+    <value>Dicom (MR Image)</value>
+  </data>
+  <data name="AnnotationItemProviders_Dicom_Patient_DisplayName" xml:space="preserve">
+    <value>Dicom (Patient)</value>
+  </data>
+  <data name="AnnotationItemProviders_Dicom_PatientStudy_DisplayName" xml:space="preserve">
+    <value>Dicom (Patient / Study)</value>
+  </data>
+  <data name="AnnotationItemProviders_Presentation_DisplayName" xml:space="preserve">
+    <value>Presentation</value>
+  </data>
+  <data name="Dicom_CTImage_ConvolutionKernel_DisplayName" xml:space="preserve">
+    <value>Convolution Kernel</value>
+  </data>
+  <data name="Dicom_CTImage_ConvolutionKernel_Label" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Dicom_CTImage_ExposureTime_DisplayName" xml:space="preserve">
+    <value>Exposure Time</value>
+  </data>
+  <data name="Dicom_CTImage_ExposureTime_Label" xml:space="preserve">
+    <value>Exp Time</value>
+  </data>
+  <data name="Dicom_CTImage_GantryDetectorTilt_DisplayName" xml:space="preserve">
+    <value>Gantry Tilt</value>
+  </data>
+  <data name="Dicom_CTImage_GantryDetectorTilt_Label" xml:space="preserve">
+    <value>Tilt</value>
+  </data>
+  <data name="Dicom_CTImage_KVP_DisplayName" xml:space="preserve">
+    <value>KVP</value>
+  </data>
+  <data name="Dicom_CTImage_KVP_Label" xml:space="preserve">
+    <value>KVP</value>
+  </data>
+  <data name="Dicom_CTImage_XRayTubeCurrent_DisplayName" xml:space="preserve">
+    <value>Tube Current</value>
+  </data>
+  <data name="Dicom_CTImage_XRayTubeCurrent_Label" xml:space="preserve">
+    <value>Tube Current</value>
+  </data>
+  <data name="Dicom_GeneralEquipment_DateOfLastCalibration_DisplayName" xml:space="preserve">
+    <value>Date Of Last Calibration</value>
+  </data>
+  <data name="Dicom_GeneralEquipment_DateOfLastCalibration_Label" xml:space="preserve">
+    <value>Calibration Date</value>
+  </data>
+  <data name="Dicom_GeneralEquipment_DeviceSerialNumber_DisplayName" xml:space="preserve">
+    <value>Device Serial Number</value>
+  </data>
+  <data name="Dicom_GeneralEquipment_DeviceSerialNumber_Label" xml:space="preserve">
+    <value>Serial</value>
+  </data>
+  <data name="Dicom_GeneralEquipment_InstitutionAddress_DisplayName" xml:space="preserve">
+    <value>Institution Address</value>
+  </data>
+  <data name="Dicom_GeneralEquipment_InstitutionAddress_Label" xml:space="preserve">
+    <value>Inst. Addr.</value>
+  </data>
+  <data name="Dicom_GeneralEquipment_InstitutionalDepartmentName_DisplayName" xml:space="preserve">
+    <value>Institutional Department Name</value>
+  </data>
+  <data name="Dicom_GeneralEquipment_InstitutionalDepartmentName_Label" xml:space="preserve">
+    <value>Inst. Dept. Name</value>
+  </data>
+  <data name="Dicom_GeneralEquipment_InstitutionName_DisplayName" xml:space="preserve">
+    <value>Institution Name</value>
+  </data>
+  <data name="Dicom_GeneralEquipment_InstitutionName_Label" xml:space="preserve">
+    <value>Inst. Name</value>
+  </data>
+  <data name="Dicom_GeneralEquipment_Manufacturer_DisplayName" xml:space="preserve">
+    <value>Manufacturer</value>
+  </data>
+  <data name="Dicom_GeneralEquipment_Manufacturer_Label" xml:space="preserve">
+    <value>Mfr.</value>
+  </data>
+  <data name="Dicom_GeneralEquipment_ManufacturersModelName_DisplayName" xml:space="preserve">
+    <value>Manufacturer's Model Name</value>
+  </data>
+  <data name="Dicom_GeneralEquipment_ManufacturersModelName_Label" xml:space="preserve">
+    <value>Mfr.'s Model</value>
+  </data>
+  <data name="Dicom_GeneralEquipment_SoftwareVersions_DisplayName" xml:space="preserve">
+    <value>Software Version(s)</value>
+  </data>
+  <data name="Dicom_GeneralEquipment_SoftwareVersions_Label" xml:space="preserve">
+    <value>Software Version(s)</value>
+  </data>
+  <data name="Dicom_GeneralEquipment_StationName_DisplayName" xml:space="preserve">
+    <value>Station Name</value>
+  </data>
+  <data name="Dicom_GeneralEquipment_StationName_Label" xml:space="preserve">
+    <value>Station</value>
+  </data>
+  <data name="Dicom_GeneralEquipment_TimeOfLastCalibration_DisplayName" xml:space="preserve">
+    <value>Time Of Last Calibration</value>
+  </data>
+  <data name="Dicom_GeneralEquipment_TimeOfLastCalibration_Label" xml:space="preserve">
+    <value>Calib. Time</value>
+  </data>
+  <data name="Dicom_GeneralImage_AcquisitionDate_DisplayName" xml:space="preserve">
+    <value>Acquisition Date</value>
+  </data>
+  <data name="Dicom_GeneralImage_AcquisitionDate_Label" xml:space="preserve">
+    <value>Acq</value>
+  </data>
+  <data name="Dicom_GeneralImage_AcquisitionDateTime_DisplayName" xml:space="preserve">
+    <value>Acquisition Date / Time</value>
+  </data>
+  <data name="Dicom_GeneralImage_AcquisitionDateTime_Label" xml:space="preserve">
+    <value>Acq</value>
+  </data>
+  <data name="Dicom_GeneralImage_AcquisitionNumber_DisplayName" xml:space="preserve">
+    <value>Acquisition Number</value>
+  </data>
+  <data name="Dicom_GeneralImage_AcquisitionNumber_Label" xml:space="preserve">
+    <value>Acq</value>
+  </data>
+  <data name="Dicom_GeneralImage_AcquisitionTime_DisplayName" xml:space="preserve">
+    <value>Acquisition Time</value>
+  </data>
+  <data name="Dicom_GeneralImage_AcquisitionTime_Label" xml:space="preserve">
+    <value>Acq</value>
+  </data>
+  <data name="Dicom_GeneralImage_Composite_LateralityViewPosition_DisplayName" xml:space="preserve">
+    <value>Image Laterality and View Position</value>
+  </data>
+  <data name="Dicom_GeneralImage_Composite_LateralityViewPosition_Label" xml:space="preserve">
+    <value>Lat/Pos</value>
+  </data>
+  <data name="Dicom_GeneralImage_ContentDate_DisplayName" xml:space="preserve">
+    <value>Content Date</value>
+  </data>
+  <data name="Dicom_GeneralImage_ContentDate_Label" xml:space="preserve">
+    <value>Content Date</value>
+  </data>
+  <data name="Dicom_GeneralImage_ContentTime_DisplayName" xml:space="preserve">
+    <value>Content Time</value>
+  </data>
+  <data name="Dicom_GeneralImage_ContentTime_Label" xml:space="preserve">
+    <value>Content Time</value>
+  </data>
+  <data name="Dicom_GeneralImage_DerivationDescription_DisplayName" xml:space="preserve">
+    <value>Derivation Description</value>
+  </data>
+  <data name="Dicom_GeneralImage_DerivationDescription_Label" xml:space="preserve">
+    <value>Deriv. Desc.</value>
+  </data>
+  <data name="Dicom_GeneralImage_ImageComments_DisplayName" xml:space="preserve">
+    <value>Image Comments</value>
+  </data>
+  <data name="Dicom_GeneralImage_ImageComments_Label" xml:space="preserve">
+    <value>Img. Comm.</value>
+  </data>
+  <data name="Dicom_GeneralImage_ImageLaterality_DisplayName" xml:space="preserve">
+    <value>Image Laterality</value>
+  </data>
+  <data name="Dicom_GeneralImage_ImageLaterality_Label" xml:space="preserve">
+    <value>Lat</value>
+  </data>
+  <data name="Dicom_GeneralImage_ImagesInAcquisition_DisplayName" xml:space="preserve">
+    <value>Images In Acquisition</value>
+  </data>
+  <data name="Dicom_GeneralImage_ImagesInAcquisition_Label" xml:space="preserve">
+    <value>Imgs. in Acq.</value>
+  </data>
+  <data name="Dicom_GeneralImage_ImageType_DisplayName" xml:space="preserve">
+    <value>Image Type</value>
+  </data>
+  <data name="Dicom_GeneralImage_ImageType_Label" xml:space="preserve">
+    <value>Img. Type</value>
+  </data>
+  <data name="Dicom_GeneralImage_InstanceNumber_DisplayName" xml:space="preserve">
+    <value>Instance Number</value>
+  </data>
+  <data name="Dicom_GeneralImage_InstanceNumber_Label" xml:space="preserve">
+    <value>Im</value>
+  </data>
+  <data name="Dicom_GeneralImage_LossyImageCompression_DisplayName" xml:space="preserve">
+    <value>Lossy Image Compression</value>
+  </data>
+  <data name="Dicom_GeneralImage_LossyImageCompression_Label" xml:space="preserve">
+    <value>Lossy</value>
+  </data>
+  <data name="Dicom_GeneralImage_LossyImageCompressionRatio_DisplayName" xml:space="preserve">
+    <value>Lossy Image Compression Ratio</value>
+  </data>
+  <data name="Dicom_GeneralImage_LossyImageCompressionRatio_Label" xml:space="preserve">
+    <value>Lossy Img. Comp. Ratio</value>
+  </data>
+  <data name="Dicom_GeneralImage_QualityControlImage_DisplayName" xml:space="preserve">
+    <value>Quality Control Image</value>
+  </data>
+  <data name="Dicom_GeneralImage_QualityControlImage_Label" xml:space="preserve">
+    <value>Quality Control</value>
+  </data>
+  <data name="Dicom_GeneralImage_ViewPosition_DisplayName" xml:space="preserve">
+    <value>View Position</value>
+  </data>
+  <data name="Dicom_GeneralImage_ViewPosition_Label" xml:space="preserve">
+    <value>Pos</value>
+  </data>
+  <data name="Dicom_GeneralSeries_BodyPartExamined_DisplayName" xml:space="preserve">
+    <value>Body Part Examined</value>
+  </data>
+  <data name="Dicom_GeneralSeries_BodyPartExamined_Label" xml:space="preserve">
+    <value>Body Part</value>
+  </data>
+  <data name="Dicom_GeneralSeries_Laterality_DisplayName" xml:space="preserve">
+    <value>Laterality (Series)</value>
+  </data>
+  <data name="Dicom_GeneralSeries_Laterality_Label" xml:space="preserve">
+    <value>Lat</value>
+  </data>
+  <data name="Dicom_GeneralSeries_Modality_DisplayName" xml:space="preserve">
+    <value>Modality</value>
+  </data>
+  <data name="Dicom_GeneralSeries_Modality_Label" xml:space="preserve">
+    <value>Modality</value>
+  </data>
+  <data name="Dicom_GeneralSeries_OperatorsName_DisplayName" xml:space="preserve">
+    <value>Operator's Name</value>
+  </data>
+  <data name="Dicom_GeneralSeries_OperatorsName_Label" xml:space="preserve">
+    <value>Operator</value>
+  </data>
+  <data name="Dicom_GeneralSeries_PerformedProcedureStepDescription_DisplayName" xml:space="preserve">
+    <value>Performed Procedure Step Description</value>
+  </data>
+  <data name="Dicom_GeneralSeries_PerformedProcedureStepDescription_Label" xml:space="preserve">
+    <value>Perf. Proc.</value>
+  </data>
+  <data name="Dicom_GeneralSeries_PerformingPhysiciansName_DisplayName" xml:space="preserve">
+    <value>Performing Physician's Name</value>
+  </data>
+  <data name="Dicom_GeneralSeries_PerformingPhysiciansName_Label" xml:space="preserve">
+    <value>Perf. Phys.</value>
+  </data>
+  <data name="Dicom_GeneralSeries_ProtocolName_DisplayName" xml:space="preserve">
+    <value>Protocol Name</value>
+  </data>
+  <data name="Dicom_GeneralSeries_ProtocolName_Label" xml:space="preserve">
+    <value>Protocol Name</value>
+  </data>
+  <data name="Dicom_GeneralSeries_SeriesDate_DisplayName" xml:space="preserve">
+    <value>Series Date</value>
+  </data>
+  <data name="Dicom_GeneralSeries_SeriesDate_Label" xml:space="preserve">
+    <value>Series Date</value>
+  </data>
+  <data name="Dicom_GeneralSeries_SeriesDescription_DisplayName" xml:space="preserve">
+    <value>Series Description</value>
+  </data>
+  <data name="Dicom_GeneralSeries_SeriesDescription_Label" xml:space="preserve">
+    <value>Desc.</value>
+  </data>
+  <data name="Dicom_GeneralSeries_SeriesNumber_DisplayName" xml:space="preserve">
+    <value>Series Number</value>
+  </data>
+  <data name="Dicom_GeneralSeries_SeriesNumber_Label" xml:space="preserve">
+    <value>Se</value>
+  </data>
+  <data name="Dicom_GeneralSeries_SeriesTime_DisplayName" xml:space="preserve">
+    <value>Series Time</value>
+  </data>
+  <data name="Dicom_GeneralSeries_SeriesTime_Label" xml:space="preserve">
+    <value>Series Time</value>
+  </data>
+  <data name="Dicom_GeneralStudy_AccessionNumber_DisplayName" xml:space="preserve">
+    <value>Accession Number</value>
+  </data>
+  <data name="Dicom_GeneralStudy_AccessionNumber_Label" xml:space="preserve">
+    <value>Acc</value>
+  </data>
+  <data name="Dicom_GeneralStudy_ReferringPhysiciansName_DisplayName" xml:space="preserve">
+    <value>Referring Physician</value>
+  </data>
+  <data name="Dicom_GeneralStudy_ReferringPhysiciansName_Label" xml:space="preserve">
+    <value>Ref. Phys.</value>
+  </data>
+  <data name="Dicom_GeneralStudy_StudyDate_DisplayName" xml:space="preserve">
+    <value>Study Date</value>
+  </data>
+  <data name="Dicom_GeneralStudy_StudyDate_Label" xml:space="preserve">
+    <value>Study Date</value>
+  </data>
+  <data name="Dicom_GeneralStudy_StudyDescription_DisplayName" xml:space="preserve">
+    <value>Study Description</value>
+  </data>
+  <data name="Dicom_GeneralStudy_StudyDescription_Label" xml:space="preserve">
+    <value>Study Desc.</value>
+  </data>
+  <data name="Dicom_GeneralStudy_StudyId_DisplayName" xml:space="preserve">
+    <value>Study ID</value>
+  </data>
+  <data name="Dicom_GeneralStudy_StudyId_Label" xml:space="preserve">
+    <value>Study ID</value>
+  </data>
+  <data name="Dicom_GeneralStudy_StudyTime_DisplayName" xml:space="preserve">
+    <value>Study Time</value>
+  </data>
+  <data name="Dicom_GeneralStudy_StudyTime_Label" xml:space="preserve">
+    <value>Study Time</value>
+  </data>
+  <data name="Dicom_ImagePlane_SliceLocation_DisplayName" xml:space="preserve">
+    <value>Slice Location</value>
+  </data>
+  <data name="Dicom_ImagePlane_SliceLocation_Label" xml:space="preserve">
+    <value>Loc</value>
+  </data>
+  <data name="Dicom_ImagePlane_SliceThickness_DisplayName" xml:space="preserve">
+    <value>Slice Thickness</value>
+  </data>
+  <data name="Dicom_ImagePlane_SliceThickness_Label" xml:space="preserve">
+    <value>Thk</value>
+  </data>
+  <data name="Dicom_MRImage_AcquisitionMatrix_DisplayName" xml:space="preserve">
+    <value>Acquisition Matrix</value>
+  </data>
+  <data name="Dicom_MRImage_AcquisitionMatrix_Label" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Dicom_MRImage_EchoNumber_DisplayName" xml:space="preserve">
+    <value>Echo Number</value>
+  </data>
+  <data name="Dicom_MRImage_EchoNumber_Label" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Dicom_MRImage_EchoTime_DisplayName" xml:space="preserve">
+    <value>Echo Time</value>
+  </data>
+  <data name="Dicom_MRImage_EchoTime_Label" xml:space="preserve">
+    <value>TE</value>
+  </data>
+  <data name="Dicom_MRImage_EchoTrainLength_DisplayName" xml:space="preserve">
+    <value>Echo Train Length</value>
+  </data>
+  <data name="Dicom_MRImage_EchoTrainLength_Label" xml:space="preserve">
+    <value>ET</value>
+  </data>
+  <data name="Dicom_MRImage_MagneticFieldStrength_DisplayName" xml:space="preserve">
+    <value>Magnetic Field Strength</value>
+  </data>
+  <data name="Dicom_MRImage_MagneticFieldStrength_Label" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Dicom_MRImage_ReceiveCoilName_DisplayName" xml:space="preserve">
+    <value>Receive Coil Name</value>
+  </data>
+  <data name="Dicom_MRImage_ReceiveCoilName_Label" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Dicom_MRImage_RepetitionTime_DisplayName" xml:space="preserve">
+    <value>Repetition Time</value>
+  </data>
+  <data name="Dicom_MRImage_RepetitionTime_Label" xml:space="preserve">
+    <value>TR</value>
+  </data>
+  <data name="Dicom_Patient_EthnicGroup_DisplayName" xml:space="preserve">
+    <value>Ethnic Group</value>
+  </data>
+  <data name="Dicom_Patient_EthnicGroup_Label" xml:space="preserve">
+    <value>Ethnic Group</value>
+  </data>
+  <data name="Dicom_Patient_PatientComments_DisplayName" xml:space="preserve">
+    <value>Patient Comments</value>
+  </data>
+  <data name="Dicom_Patient_PatientComments_Label" xml:space="preserve">
+    <value>Pat. Comm.</value>
+  </data>
+  <data name="Dicom_Patient_PatientId_DisplayName" xml:space="preserve">
+    <value>Patient ID</value>
+  </data>
+  <data name="Dicom_Patient_PatientId_Label" xml:space="preserve">
+    <value>Pat. ID</value>
+  </data>
+  <data name="Dicom_Patient_PatientsBirthDate_DisplayName" xml:space="preserve">
+    <value>Patient's Birth Date</value>
+  </data>
+  <data name="Dicom_Patient_PatientsBirthDate_Label" xml:space="preserve">
+    <value>DOB</value>
+  </data>
+  <data name="Dicom_Patient_PatientsBirthTime_DisplayName" xml:space="preserve">
+    <value>Patient's Birth Time</value>
+  </data>
+  <data name="Dicom_Patient_PatientsBirthTime_Label" xml:space="preserve">
+    <value>Birth Time</value>
+  </data>
+  <data name="Dicom_Patient_PatientsName_DisplayName" xml:space="preserve">
+    <value>Patient's Name</value>
+  </data>
+  <data name="Dicom_Patient_PatientsName_Label" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="Dicom_Patient_PatientsSex_DisplayName" xml:space="preserve">
+    <value>Patient's Sex</value>
+  </data>
+  <data name="Dicom_Patient_PatientsSex_Label" xml:space="preserve">
+    <value>Gender</value>
+  </data>
+  <data name="Dicom_PatientStudy_AdditionalPatientsHistory_DisplayName" xml:space="preserve">
+    <value>Additional Patient's History</value>
+  </data>
+  <data name="Dicom_PatientStudy_AdditionalPatientsHistory_Label" xml:space="preserve">
+    <value>History</value>
+  </data>
+  <data name="Dicom_PatientStudy_Occupation_DisplayName" xml:space="preserve">
+    <value>Occupation</value>
+  </data>
+  <data name="Dicom_PatientStudy_Occupation_Label" xml:space="preserve">
+    <value>Occupation</value>
+  </data>
+  <data name="Dicom_PatientStudy_PatientsAge_DisplayName" xml:space="preserve">
+    <value>Patient's Age</value>
+  </data>
+  <data name="Dicom_PatientStudy_PatientsAge_Label" xml:space="preserve">
+    <value>Age</value>
+  </data>
+  <data name="Dicom_PatientStudy_PatientsSize_DisplayName" xml:space="preserve">
+    <value>Patient's Size</value>
+  </data>
+  <data name="Dicom_PatientStudy_PatientsSize_Label" xml:space="preserve">
+    <value>Size</value>
+  </data>
+  <data name="Dicom_PatientStudy_PatientsWeight_DisplayName" xml:space="preserve">
+    <value>Patient's Weight</value>
+  </data>
+  <data name="Dicom_PatientStudy_PatientsWeight_Label" xml:space="preserve">
+    <value>Weight</value>
+  </data>
+  <data name="ExceptionTransformedEdgeDoesNotMatch" xml:space="preserve">
+    <value>The transformed edge does not have a corresponding value.</value>
+  </data>
+  <data name="FormatDegrees" xml:space="preserve">
+    <value>{0}°</value>
+    <comment>Do not use format specifiers here - inputs are preformatted strings!</comment>
+  </data>
+  <data name="FormatKilovolts" xml:space="preserve">
+    <value>{0} kV</value>
+    <comment>Do not use format specifiers here - inputs are preformatted strings!</comment>
+  </data>
+  <data name="FormatLateralityViewPosition" xml:space="preserve">
+    <value>{0}/{1}</value>
+  </data>
+  <data name="FormatMilliamps" xml:space="preserve">
+    <value>{0} mA</value>
+    <comment>Do not use format specifiers here - inputs are preformatted strings!</comment>
+  </data>
+  <data name="FormatMillimeters" xml:space="preserve">
+    <value>{0} mm</value>
+    <comment>Do not use format specifiers here - inputs are preformatted strings!</comment>
+  </data>
+  <data name="FormatMilliseconds" xml:space="preserve">
+    <value>{0} ms</value>
+    <comment>Do not use format specifiers here - inputs are preformatted strings!</comment>
+  </data>
+  <data name="FormatTeslas" xml:space="preserve">
+    <value>{0} T</value>
+    <comment>Do not use format specifiers here - inputs are preformatted strings!</comment>
+  </data>
+  <data name="Presentation_AppliedLut_DisplayName" xml:space="preserve">
+    <value>Lut (Applied)</value>
+  </data>
+  <data name="Presentation_AppliedLut_Label" xml:space="preserve">
+    <value>Lut</value>
+  </data>
+  <data name="Presentation_DFOV_DisplayName" xml:space="preserve">
+    <value>Displayed Field of View</value>
+  </data>
+  <data name="Presentation_DFOV_Label" xml:space="preserve">
+    <value>DFOV</value>
+  </data>
+  <data name="Presentation_DirectionalMarkers_Bottom_DisplayName" xml:space="preserve">
+    <value>Directional Marker (Bottom)</value>
+  </data>
+  <data name="Presentation_DirectionalMarkers_Bottom_Label" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Presentation_DirectionalMarkers_Left_DisplayName" xml:space="preserve">
+    <value>Directional Marker (Left)</value>
+  </data>
+  <data name="Presentation_DirectionalMarkers_Left_Label" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Presentation_DirectionalMarkers_Right_DisplayName" xml:space="preserve">
+    <value>Directional Marker (Right)</value>
+  </data>
+  <data name="Presentation_DirectionalMarkers_Right_Label" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Presentation_DirectionalMarkers_Top_DisplayName" xml:space="preserve">
+    <value>Directional Marker (Top)</value>
+  </data>
+  <data name="Presentation_DirectionalMarkers_Top_Label" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Presentation_DisplaySetDescription_DisplayName" xml:space="preserve">
+    <value>Display Set Description</value>
+  </data>
+  <data name="Presentation_DisplaySetDescription_Label" xml:space="preserve">
+    <value>Desc.</value>
+  </data>
+  <data name="Presentation_DisplaySetNumber_DisplayName" xml:space="preserve">
+    <value>Display Set Number</value>
+  </data>
+  <data name="Presentation_DisplaySetNumber_Label" xml:space="preserve">
+    <value>Se</value>
+  </data>
+  <data name="Presentation_Zoom_DisplayName" xml:space="preserve">
+    <value>Zoom</value>
+  </data>
+  <data name="Presentation_Zoom_Label" xml:space="preserve">
+    <value>Zoom</value>
+  </data>
+  <data name="ValueDirectionalMarkersAnterior" xml:space="preserve">
+    <value>A</value>
+  </data>
+  <data name="ValueDirectionalMarkersFoot" xml:space="preserve">
+    <value>F</value>
+  </data>
+  <data name="ValueDirectionalMarkersHead" xml:space="preserve">
+    <value>H</value>
+  </data>
+  <data name="ValueDirectionalMarkersLeft" xml:space="preserve">
+    <value>L</value>
+  </data>
+  <data name="ValueDirectionalMarkersPosterior" xml:space="preserve">
+    <value>P</value>
+  </data>
+  <data name="ValueDirectionalMarkersRight" xml:space="preserve">
+    <value>R</value>
+  </data>
+  <data name="ValueLossy" xml:space="preserve">
+    <value>LOSSY</value>
+  </data>
+  <data name="ValueNotApplicable" xml:space="preserve">
+    <value>N/A</value>
+  </data>
+  <data name="Format2Dimensions" xml:space="preserve">
+    <value>{0} x {1}</value>
+    <comment>Do not use format specifiers here - inputs are preformatted strings!</comment>
+  </data>
+  <data name="Dicom_PatientStudy_Composite_PatientsAgeSex_DisplayName" xml:space="preserve">
+    <value>Patient's Age and Sex</value>
+  </data>
+  <data name="Dicom_PatientStudy_Composite_PatientsAgeSex_Label" xml:space="preserve">
+    <value>Age/Sex</value>
+  </data>
+  <data name="AnnotationItemProviders_Dicom_DXImage_DisplayName" xml:space="preserve">
+    <value>Dicom (DX Image)</value>
+  </data>
+  <data name="Dicom_DXImage_AcquisitionDeviceProcessingDescription_DisplayName" xml:space="preserve">
+    <value>Acquisition Device Processing Description</value>
+  </data>
+  <data name="Dicom_DXImage_AcquisitionDeviceProcessingDescription_Label" xml:space="preserve">
+    <value>Processing</value>
+  </data>
+  <data name="Dicom_DXImage_BodyPartThickness_DisplayName" xml:space="preserve">
+    <value>Body Part Thickness</value>
+  </data>
+  <data name="Dicom_DXImage_BodyPartThickness_Label" xml:space="preserve">
+    <value>Body Part Thickness</value>
+  </data>
+  <data name="Dicom_DXImage_CassetteId_DisplayName" xml:space="preserve">
+    <value>Cassette ID</value>
+  </data>
+  <data name="Dicom_DXImage_CassetteId_Label" xml:space="preserve">
+    <value>Cassette</value>
+  </data>
+  <data name="Dicom_DXImage_CompressionForce_DisplayName" xml:space="preserve">
+    <value>Compression Force</value>
+  </data>
+  <data name="Dicom_DXImage_CompressionForce_Label" xml:space="preserve">
+    <value>Compression Force</value>
+  </data>
+  <data name="Dicom_DXImage_DetectorPrimaryAngle_DisplayName" xml:space="preserve">
+    <value>Detector Primary Angle</value>
+  </data>
+  <data name="Dicom_DXImage_DetectorPrimaryAngle_Label" xml:space="preserve">
+    <value>Detector Primary Angle</value>
+  </data>
+  <data name="Dicom_DXImage_Exposure_DisplayName" xml:space="preserve">
+    <value>Exposure (DX)</value>
+  </data>
+  <data name="Dicom_DXImage_Exposure_Label" xml:space="preserve">
+    <value>Exp</value>
+  </data>
+  <data name="Dicom_DXImage_FilterMaterial_DisplayName" xml:space="preserve">
+    <value>Filter Material</value>
+  </data>
+  <data name="Dicom_DXImage_FilterMaterial_Label" xml:space="preserve">
+    <value>Filter</value>
+  </data>
+  <data name="Dicom_DXImage_KVP_DisplayName" xml:space="preserve">
+    <value>KVP (DX)</value>
+  </data>
+  <data name="Dicom_DXImage_KVP_Label" xml:space="preserve">
+    <value>KVP</value>
+  </data>
+  <data name="Dicom_DXImage_PlateId_DisplayName" xml:space="preserve">
+    <value>Plate ID</value>
+  </data>
+  <data name="Dicom_DXImage_PlateId_Label" xml:space="preserve">
+    <value>Plate</value>
+  </data>
+  <data name="Dicom_DXImage_PresentationIntentType_DisplayName" xml:space="preserve">
+    <value>Presentation Intent</value>
+  </data>
+  <data name="Dicom_DXImage_PresentationIntentType_Label" xml:space="preserve">
+    <value>Intent</value>
+  </data>
+  <data name="Dicom_PatientStudy_Composite_PatientsAgeSexBirthDate_DisplayName" xml:space="preserve">
+    <value>Patient's Age, Sex and Birth Date</value>
+  </data>
+  <data name="Dicom_PatientStudy_Composite_PatientsAgeSexBirthDate_Label" xml:space="preserve">
+    <value>Age/Sex/DOB</value>
+  </data>
+  <data name="ValueNil" xml:space="preserve">
+    <value>-</value>
+  </data>
+  <data name="FormatNewtons" xml:space="preserve">
+    <value>{0} N</value>
+    <comment>Do not use format specifiers here - inputs are preformatted strings!</comment>
+  </data>
+  <data name="FormatMilliampSeconds" xml:space="preserve">
+    <value>{0} mAs</value>
+    <comment>Do not use format specifiers here - inputs are preformatted strings!</comment>
+  </data>
+  <data name="FormatCentimeters" xml:space="preserve">
+    <value>{0} cm</value>
+    <comment>Do not use format specifiers here - inputs are preformatted strings!</comment>
+  </data>
+  <data name="FormatDisplaySetNumberAndCount" xml:space="preserve">
+    <value>{0}/{1}</value>
+  </data>
+  <data name="FormatFrameNumberAndCount" xml:space="preserve">
+    <value>Fr: {0}/{1}</value>
+  </data>
+  <data name="FormatImageNumberAndCount" xml:space="preserve">
+    <value>{0}/{1}</value>
+  </data>
+  <data name="FormatKilograms" xml:space="preserve">
+    <value>{0} kg</value>
+    <comment>Do not use format specifiers here - inputs are preformatted strings!</comment>
+  </data>
+  <data name="FormatLossyCompressionRatio" xml:space="preserve">
+    <value>{0}({1})</value>
+  </data>
+  <data name="FormatMeters" xml:space="preserve">
+    <value>{0} m</value>
+    <comment>Do not use format specifiers here - inputs are preformatted strings!</comment>
+  </data>
+  <data name="FormatSeriesNumberAndCount" xml:space="preserve">
+    <value>{0}/{1}</value>
+  </data>
+  <data name="FormatZoomFactor" xml:space="preserve">
+    <value>{0}x</value>
+    <comment>Do not use format specifiers here - inputs are preformatted strings!</comment>
+  </data>
+  <data name="SeparatorLossyCompressionRatio" xml:space="preserve">
+    <value>/</value>
+  </data>
+  <data name="Dicom_Patient_PatientBreed_DisplayName" xml:space="preserve">
+    <value>Patient Breed</value>
+  </data>
+  <data name="Dicom_Patient_PatientBreed_Label" xml:space="preserve">
+    <value>Breed</value>
+  </data>
+  <data name="Dicom_Patient_PatientSpecies_DisplayName" xml:space="preserve">
+    <value>Patient Species</value>
+  </data>
+  <data name="Dicom_Patient_PatientSpecies_Label" xml:space="preserve">
+    <value>Species</value>
+  </data>
+  <data name="Dicom_Patient_ResponsibleOrganization_DisplayName" xml:space="preserve">
+    <value>Responsible Organization</value>
+  </data>
+  <data name="Dicom_Patient_ResponsibleOrganization_Label" xml:space="preserve">
+    <value>Responsible Organization</value>
+  </data>
+  <data name="Dicom_Patient_ResponsiblePerson_DisplayName" xml:space="preserve">
+    <value>Responsible Person</value>
+  </data>
+  <data name="Presentation_ImageCalibration_DisplayName" xml:space="preserve">
+    <value>Image Calibration</value>
+  </data>
+  <data name="Dicom_Patient_ResponsiblePerson_Label" xml:space="preserve">
+    <value>Responsible Person</value>
+  </data>
+  <data name="FormatCodeSequence" xml:space="preserve">
+    <value>{0} ({1})</value>
+  </data>
+  <data name="ValueDirectionalMarkersQuadrupedCaudal" xml:space="preserve">
+    <value>Cd</value>
+  </data>
+  <data name="ValueDirectionalMarkersQuadrupedCranial" xml:space="preserve">
+    <value>Cr</value>
+  </data>
+  <data name="ValueDirectionalMarkersQuadrupedDistal" xml:space="preserve">
+    <value>Di</value>
+  </data>
+  <data name="ValueDirectionalMarkersQuadrupedDorsal" xml:space="preserve">
+    <value>D</value>
+  </data>
+  <data name="ValueDirectionalMarkersQuadrupedLateral" xml:space="preserve">
+    <value>L</value>
+  </data>
+  <data name="ValueDirectionalMarkersQuadrupedLeft" xml:space="preserve">
+    <value>Le</value>
+  </data>
+  <data name="ValueDirectionalMarkersQuadrupedMedial" xml:space="preserve">
+    <value>M</value>
+  </data>
+  <data name="ValueDirectionalMarkersQuadrupedPalmar" xml:space="preserve">
+    <value>Pa</value>
+  </data>
+  <data name="ValueDirectionalMarkersQuadrupedPlantar" xml:space="preserve">
+    <value>Pl</value>
+  </data>
+  <data name="ValueDirectionalMarkersQuadrupedProximal" xml:space="preserve">
+    <value>Pr</value>
+  </data>
+  <data name="ValueDirectionalMarkersQuadrupedRight" xml:space="preserve">
+    <value>Rt</value>
+  </data>
+  <data name="ValueDirectionalMarkersQuadrupedRostral" xml:space="preserve">
+    <value>R</value>
+  </data>
+  <data name="ValueDirectionalMarkersQuadrupedVentral" xml:space="preserve">
+    <value>V</value>
+  </data>
+  <data name="FormatCalibrationDetails" xml:space="preserve">
+    <value>{0} ({1})</value>
+  </data>
+  <data name="Presentation_ImageCalibration_Label" xml:space="preserve">
+    <value>Calibration</value>
+  </data>
+  <data name="ValueActualSpacingCalibration" xml:space="preserve">
+    <value>Actual</value>
+  </data>
+  <data name="ValueDetectorSpacingCalibration" xml:space="preserve">
+    <value>Detector</value>
+  </data>
+  <data name="ValueFiducialCalibration" xml:space="preserve">
+    <value>Fiducial</value>
+  </data>
+  <data name="ValueGeometricCalibration" xml:space="preserve">
+    <value>Geometry</value>
+  </data>
+  <data name="ValueMagnifiedCalibration" xml:space="preserve">
+    <value>Magnification</value>
+  </data>
+  <data name="ValueManualCalibration" xml:space="preserve">
+    <value>User</value>
+  </data>
+  <data name="ValueNoCalibration" xml:space="preserve">
+    <value>None</value>
+  </data>
+  <data name="ValueUnknownCalibration" xml:space="preserve">
+    <value>Unknown</value>
+  </data>
+  <data name="SeparatorSingleLine" xml:space="preserve">
+    <value>\</value>
+  </data>
+  <data name="FormatHertzPerPixel" xml:space="preserve">
+    <value>{0} Hz/px</value>
+    <comment>Do not use format specifiers here - inputs are preformatted strings!</comment>
+  </data>
+  <data name="FormatMillimetersPerSecond" xml:space="preserve">
+    <value>{0} mm/s</value>
+    <comment>Do not use format specifiers here - inputs are preformatted strings!</comment>
+  </data>
+  <data name="Dicom_CTImage_TablePosition_DisplayName" xml:space="preserve">
+    <value>Table Position</value>
+  </data>
+  <data name="Dicom_CTImage_TablePosition_Label" xml:space="preserve">
+    <value>Pos</value>
+  </data>
+  <data name="Dicom_CTImage_TableSpeed_DisplayName" xml:space="preserve">
+    <value>Table Speed</value>
+  </data>
+  <data name="Dicom_CTImage_TableSpeed_Label" xml:space="preserve">
+    <value>Spd</value>
+  </data>
+  <data name="Dicom_DXImage_ContrastBolusAgent_DisplayName" xml:space="preserve">
+    <value>Contrast/Bolus Agent</value>
+  </data>
+  <data name="Dicom_DXImage_ContrastBolusAgent_Label" xml:space="preserve">
+    <value>Contrast/Bolus</value>
+  </data>
+  <data name="Dicom_MRImage_FlipAngle_DisplayName" xml:space="preserve">
+    <value>Flip Angle</value>
+  </data>
+  <data name="Dicom_MRImage_FlipAngle_Label" xml:space="preserve">
+    <value>Flip</value>
+  </data>
+  <data name="Dicom_MRImage_InversionTime_DisplayName" xml:space="preserve">
+    <value>Inverstion Time</value>
+  </data>
+  <data name="Dicom_MRImage_InversionTime_Label" xml:space="preserve">
+    <value>TI</value>
+  </data>
+  <data name="Dicom_MRImage_NumberOfAverages_DisplayName" xml:space="preserve">
+    <value>Number of Averages</value>
+  </data>
+  <data name="Dicom_MRImage_NumberOfAverages_Label" xml:space="preserve">
+    <value>#Avgs</value>
+  </data>
+  <data name="Dicom_MRImage_PixelBandwidth_DisplayName" xml:space="preserve">
+    <value>Pixel Bandwidth</value>
+  </data>
+  <data name="Dicom_MRImage_PixelBandwidth_Label" xml:space="preserve">
+    <value>BW</value>
+  </data>
+  <data name="Dicom_MRImage_TriggerTime_DisplayName" xml:space="preserve">
+    <value>Trigger Time</value>
+  </data>
+  <data name="Dicom_MRImage_TriggerTime_Label" xml:space="preserve">
+    <value>Trig</value>
+  </data>
+  <data name="FormatTablePositionSpeed" xml:space="preserve">
+    <value>{0} ({1})</value>
+  </data>
+  <data name="Dicom_CTImage_Composite_TablePositionSpeed_DisplayName" xml:space="preserve">
+    <value>Table Position/Speed</value>
+  </data>
+  <data name="Dicom_CTImage_Composite_TablePositionSpeed_Label" xml:space="preserve">
+    <value>Table</value>
+  </data>
+  <data name="SeparatorAgeSexBirthDate" xml:space="preserve">
+    <value>/</value>
+  </data>
+  <data name="Dicom_CTImage_Exposure_DisplayName" xml:space="preserve">
+    <value>Exposure (CT)</value>
+  </data>
+  <data name="Dicom_CTImage_Exposure_Label" xml:space="preserve">
+    <value>Exp</value>
+  </data>
+  <data name="Dicom_DXImage_ExposureInMas_DisplayName" xml:space="preserve">
+    <value>Exposure in mAs</value>
+  </data>
+  <data name="Dicom_DXImage_ExposureInMas_Label" xml:space="preserve">
+    <value>Exp</value>
+  </data>
+  <data name="Dicom_DXImage_ExposureTime_DisplayName" xml:space="preserve">
+    <value>Exposure Time (DX)</value>
+  </data>
+  <data name="Dicom_DXImage_ExposureTime_Label" xml:space="preserve">
+    <value>Exp Time</value>
+  </data>
+  <data name="Dicom_DXImage_XRayTubeCurrent_DisplayName" xml:space="preserve">
+    <value>Tube Current (DX)</value>
+  </data>
+  <data name="Dicom_DXImage_XRayTubeCurrent_Label" xml:space="preserve">
+    <value>Tube Current</value>
+  </data>
+</root>

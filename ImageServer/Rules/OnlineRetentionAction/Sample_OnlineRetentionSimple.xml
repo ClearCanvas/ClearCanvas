@@ -1,0 +1,18 @@
+﻿<!-- 
+This rule instructs the server to do schedule MR studies for deletion 
+if the patient ID starts with "1". The deletion will occur
+10 weeks starting from when the rule is applied.
+-->
+<rule>
+	<condition
+	  expressionLanguage="dicom">
+		<equal
+			  test="$Modality"
+			  refValue="MR" />
+	</condition>
+	<action>
+	  <online-retention
+		time="1"
+		  unit="weeks" />
+	</action>
+</rule> 

@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ServiceReference>
+	<ProxyGenerationParameters
+		ServiceReferenceUri="http://localhost:50221/HeaderStreaming"
+		Name="services"
+		NotifyPropertyChange="False"
+		UseObservableCollection="False">
+	</ProxyGenerationParameters>
+	<EndPoints>
+		<EndPoint
+			Address="http://localhost:50221/HeaderStreaming/HeaderStreaming"
+			BindingConfiguration="BasicHttpBinding_IHeaderStreamingService"
+			Contract="HeaderStressTest.services.IHeaderStreamingService"
+			>
+		</EndPoint>
+	</EndPoints>
+</ServiceReference>

@@ -1,0 +1,52 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title>MPPS Details Dispatcher page</title>
+		<link href="../../css/default.css" rel="stylesheet" type="text/css" />
+		<script type="text/javascript" src="../../js/jsx.js"></script>
+		<script type="text/javascript" src="../../js/jsml.js"></script>
+		<script type="text/javascript" src="../../js/ui.js"></script>
+		<script type="text/javascript" src="../../js/ris.js"></script>
+		<script type="text/javascript" src="../../js/layout.js"></script>
+		<script type="text/javascript" >
+		function onBodyLoad()
+		{
+				try
+				{
+					if(!Ris)
+						return;
+
+					var data = JSML.parse(Ris.getTag("Documentation")) || {};
+
+					var mpps = Ris.getHealthcareContext().ModalityPerformedProcedureStep;
+
+					// redirect to appropriate page
+					window.location = mpps ? selectPage(mpps) : "about:blank";
+				}
+				catch(e)
+				{
+					var message = "Failed to load details page.  An exception occurred in the script. Error name: " + e.name + ". Error message: " + e.message;
+					Field.setValue($("errorMsg"), message);
+				}
+		}
+		
+		/*
+		 *  This method can be modified to redirect to a documentation page which is appropriate for the 
+		 *  provided mpps.
+		 *  
+		 *  For example, one might declare 
+		 *		var modalityName = mpps.ModalityProcedureSteps[0].Modality.Name;
+		 *  and redirect based on the modalityName.
+		 *
+		 *  See ClearCanvas.Ris.Application.Common.ModalityWorkflow.ModalityPerformedProcedureStepDetail
+		 */
+		function selectPage(mpps)
+		{
+			return "default-mpps.htm";
+		}
+		</script>
+	</head>
+	<body onload="onBodyLoad()">
+	<div id="errorMsg" />
+	</body>
+</html>

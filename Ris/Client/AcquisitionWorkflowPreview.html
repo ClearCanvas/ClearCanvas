@@ -1,0 +1,78 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title></title>
+        <link href="http://172.16.10.167/RisTemplates/default.css" rel="stylesheet" type="text/css" />
+	</head>
+	<body>
+<% 
+var component = this.Component;
+if(component.WorklistItem != null)
+{%>
+<table width="640" border="0">
+  <tr>
+    <td width="422" class="pageheading"><%= component.Name %></td>
+    <!--<td rowspan="2" width="202"><img src="http://clearcanvas.ca/images/clearcanvas_logo.png" alt="ClearCanvas Inc." width="210" height="64" align="left" /></td>-->
+    <td rowspan="2" width="202"><img src="http://172.16.10.167/RisTemplates/logo.jpg" alt="UHN/MSH" align="left" /></td>
+  </tr>
+  <tr>
+    <td class="pageheading2"><%= component.Mrn %></td>
+  </tr>
+</table>
+<p>&nbsp;</p>
+<table width="640" border="0">
+  <tr class="sectionheading">
+    <td colspan="4">Patient Information </td>
+  </tr>
+  <tr>
+    <td width="120" class="propertyname">Name</td>
+    <td width="200"><%= component.Name %></td>
+    <td width="63" class="propertyname">MRN</td>
+    <td width="229"><%= component.Mrn %></td>
+  </tr>
+  <tr>
+    <td width="120" class="propertyname">Date of Birth</td>
+    <td width="200"><%= component.DateOfBirth %></td>
+    <td width="63" class="propertyname">Sex</td>
+    <td width="229"><%= component.Sex %></td>
+  </tr>
+  <tr>
+    <td class="propertyname">Healthcard # </td>
+    <td><%= component.Healthcard %></td>
+    <td class="propertyname">&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+<p>&nbsp;</p>
+<table width="640" border="0">
+  <tr class="sectionheading">
+    <td colspan="4">Order Information </td>
+  </tr>
+  <tr>
+    <td width="120" class="propertyname">Accession #</td>
+    <td width="200"><%= component.AccessionNumber %></td>
+    <td width="63" class="propertyname">Service</td>
+    <td width="229"><%= component.DiagnosticServiceName %></td>
+  </tr>
+  <tr>
+    <td width="120" class="propertyname">Facility</td>
+    <td width="200"><%= component.OrderingFacility %></td>
+    <td width="63" class="propertyname">Priority</td>
+    <td width="229"><%= component.OrderPriority %></td>
+  </tr>
+</table>
+<table width="640" border="0">
+  <tr class="sectionheading">
+    <td colspan="4">Procedure Information </td>
+  </tr>
+  <tr>
+    <td width="120" class="propertyname">Procedure</td>
+    <td width="200"><%= component.ProcedureType %></td>
+    <td width="63" class="propertyname"></td>
+    <td width="229"></td>
+  </tr>
+</table>
+
+<% } // end-if(component.WorklistItem != null) %>
+	</body>
+</html>

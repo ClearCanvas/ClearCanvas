@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Instance SopClassUID="1.2.840.10008.5.1.4.1.2.2.1">
+  <Attribute Tag="$QueryRetrieveLevel">IMAGE</Attribute>
+  <Attribute Tag="$StudyInstanceUid"></Attribute>
+  <Attribute Tag="$SeriesInstanceUid"></Attribute>
+  <Attribute Tag="$SopInstanceUid"></Attribute>
+  <Attribute Tag="$InstanceNumber"></Attribute>
+  <Attribute Tag="$SopClassUid"></Attribute>
+  <Attribute Tag="$Rows"></Attribute>
+  <Attribute Tag="$Columns"></Attribute>
+  <Attribute Tag="$BitsAllocated"></Attribute>
+  <Attribute Tag="$NumberOfFrames"></Attribute>
+  <Attribute Tag="$ContentLabel"></Attribute>
+  <Attribute Tag="$ContentDescription"></Attribute>
+  <Attribute Tag="$PresentationCreationDate"></Attribute>
+  <Attribute Tag="$PresentationCreationTime"></Attribute>
+  <Attribute Tag="$ReferencedRequestSequence"></Attribute>
+  <Attribute Tag="$ContentDate"></Attribute>
+  <Attribute Tag="$ContentTime"></Attribute>
+  <Attribute Tag="$ConceptNameCodeSequence"></Attribute>
+</Instance>

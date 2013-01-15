@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<validation>
+  <!--
+    WARNING: IF YOU ARE NOT SURE IF YOU SHOULD BE EDITING THIS DOCUMENT, YOU SHOULDN'T BE.
+  
+  
+    USAGE NOTES:
+    
+    A ruleset must specify the entity class to which it applies, hence the class attribute is required.
+    A ruleset may optionally specify an id, although this currently is not used by the application.
+    The default version of this document defines two rulesets for a hypothetical entity named 
+    ClearCanvas.Healthcare.Foo.  These rulesets will have no effect (unless you happen to define such an entity).
+  
+    Each rule-set may define any number of validation-rule entries, and may optionally define a single applicability-rule.
+    For example, the first example ruleset (id = "default") defines 2 validation-rules, nameRequired and ageRequired.
+    The second ruleset (id="active") defines 1 validation-rule, activationDateRequired, and an applicability-rule.
+    The "default" ruleset will always be evaluated, because it does not define an applicability condition.
+    The "active" ruleset will only be evaluated when the applicability condition is true (in this case,
+    the instance of Foo has State == Active).
+  -->
+  
+  
+  <validation-ruleset class="ClearCanvas.Healthcare.Foo" id="default">
+    <validation-rule id="nameRequired">
+      <not-null test="$.Name" failMessage="Name must not be null"/>
+    </validation-rule>
+    <validation-rule id="ageRequired">
+      <greater-than test="$.Age" refValue="0" failMessage="Age must be non-zero"/>
+    </validation-rule>
+  </validation-ruleset>
+  
+  <validation-ruleset class="ClearCanvas.Healthcare.Foo" id="active">
+    <applicability-rule>
+      <equal test="$.State" refValue="'Active'"/>
+    </applicability-rule>
+    <validation-rule id="activationDateRequired">
+      <not-null test="$.ActivationDate" failMessage="Activation date must be specified"/>
+    </validation-rule>
+  </validation-ruleset>
+
+</validation>

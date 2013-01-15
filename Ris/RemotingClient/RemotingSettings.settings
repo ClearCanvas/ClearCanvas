@@ -1,0 +1,9 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="RemotingClient" GeneratedClassName="RemotingSettings">
+  <Profiles />
+  <Settings>
+    <Setting Name="RemoteHostUrl" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">tcp://localhost:8080/echo.rem</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

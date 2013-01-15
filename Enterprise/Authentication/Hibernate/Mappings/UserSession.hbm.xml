@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" assembly="ClearCanvas.Enterprise.Authentication" namespace="ClearCanvas.Enterprise.Authentication">
+  <class name="UserSession" table="UserSession_">
+    <cache usage="read-write"/>
+    <id name="OID" column="OID_" type="Guid">
+      <generator class="guid.comb"/>
+    </id>
+    <!-- Version property is not mapped, because there is really no need to track version -->
+    <many-to-one name="User" class="User" column="UserOID_" not-null="true" fetch="join"/>
+    <property name="HostName" column="HostName_" type="String" not-null="false"/>
+    <property name="Application" column="Application_" type="String" not-null="false"/>
+    <property name="SessionId" column="SessionId_" type="String" not-null="true" unique="true"/>
+    <property name="CreationTime" column="CreationTime_" type="DateTime" not-null="true"/>
+    <property name="ExpiryTime" column="ExpiryTime_" type="DateTime" not-null="true"/>
+  </class>
+</hibernate-mapping>

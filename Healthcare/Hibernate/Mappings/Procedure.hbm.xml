@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" assembly="ClearCanvas.Healthcare" namespace="ClearCanvas.Healthcare">
+  <class name="Procedure" proxy="Procedure" table="Procedure_">
+    <id name="OID" column="OID_" type="Guid">
+      <generator class="guid.comb"/>
+    </id>
+    <version name="Version" column="Version_"/>
+
+    <many-to-one name="Order" class="Order" column="OrderOID_" not-null="true"/>
+    <many-to-one name="Type" class="ProcedureType" column="ProcedureTypeOID_" not-null="true" fetch="join"/>
+    <property name="Number" column="Number_" type="String" length="20" not-null="true"/>
+    <set name="ProcedureSteps" lazy="true" inverse="true" cascade="all-delete-orphan" access="nosetter.camelcase-underscore">
+      <key column="ProcedureOID_"/>
+      <one-to-many class="ProcedureStep"/>
+    </set>
+
+    <property name="ScheduledStartTime" column="ScheduledStartTime_" type="DateTime" not-null="false" access="nosetter.camelcase-underscore"/>
+		<property name="ScheduledDuration" column="ScheduledDuration_" type="int" not-null="true" access="nosetter.camelcase-underscore"/>
+		<property name="ScheduledEndTime" column="ScheduledEndTime_" type="DateTime" not-null="false" access="nosetter.camelcase-underscore"/>
+		<many-to-one name="SchedulingCode" class="SchedulingCodeEnum" column="SchedulingCode_"/>
+    <property name="StartTime" column="StartTime_" type="DateTime" not-null="false" access="nosetter.camelcase-underscore"/>
+    <property name="EndTime" column="EndTime_" type="DateTime" not-null="false" access="nosetter.camelcase-underscore"/>
+    <property name="Status" column="Status_" type="ClearCanvas.Healthcare.Hibernate.ProcedureStatusEnumHbm, ClearCanvas.Healthcare.Hibernate" not-null="true" access="nosetter.camelcase-underscore"/>
+    <many-to-one name="PerformingFacility" class="Facility" column="PerformingFacilityOID_"/>
+    <many-to-one name="PerformingDepartment" class="Department" column="PerformingDepartmentOID_"/>
+    <property name="Laterality" column="Laterality_" type="ClearCanvas.Healthcare.Hibernate.LateralityEnumHbm, ClearCanvas.Healthcare.Hibernate" not-null="true"/>
+    <property name="Portable" type="Boolean" column="Portable_"/>
+    <many-to-one name="ProcedureCheckIn" column="ProcedureCheckInOID_" class="ProcedureCheckIn" cascade="all" fetch="join"/>
+    <property name="ImageAvailability" column="ImageAvailability_" type="ClearCanvas.Healthcare.Hibernate.ImageAvailabilityEnumHbm, ClearCanvas.Healthcare.Hibernate"/>
+
+    <!-- Specifies whether the procedure is currently in downtime recovery mode -->
+    <property name="DowntimeRecoveryMode" column="DowntimeRecoveryMode_" type="Boolean" not-null="true"/>
+
+    <!-- specify the StudyInstanceUID that would be returned to the modality via MWL -->
+    <property name="StudyInstanceUID" column="StudyInstanceUID_" type="String" length="64" not-null="true" access="nosetter.camelcase-underscore"/>
+
+    <!-- Radiology Reports : a Procedure should only ever have one Report in a status other than X.
+          The collection may contain multiple entries, because a report may have been cancelled by the author
+          for whatever reason.
+    -->
+    <set name="Reports" table="ProcedureReport_" inverse="true" lazy="true">
+      <key column="ProcedureOID_"/>
+      <many-to-many column="ReportOID_" class="Report" fetch="join"/>
+    </set>
+
+    <set name="Protocols" table="ProcedureProtocol_" inverse="true" lazy="true">
+      <key column="ProcedureOID_"/>
+      <many-to-many column="ProtocolOID_" class="Protocol" fetch="join"/>
+    </set>
+    <!-- if this procedure is a ghost, this references the live procedure that it is a ghost of -->
+    <many-to-one name="GhostOf" class="Procedure" column="GhostOfOID_"/>
+  </class>
+</hibernate-mapping>

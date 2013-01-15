@@ -1,0 +1,82 @@
+// This file is machine generated - changes will be lost.
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+using Iesi.Collections.Generic;
+using ClearCanvas.Common;
+using ClearCanvas.Enterprise.Core;
+using ClearCanvas.Enterprise.Core.Modelling;
+
+
+namespace <%= namespace %>
+{
+
+
+    /// <summary>
+    /// <%= className %> entity
+    /// </summary>
+	<% attributes.each do |attr| %>
+	[<%= attr %>]<% end %>
+	public <%= isAbstract ? "abstract" : "" %> partial class <%= className %> : <%= @superClassName %>
+	{
+       	#region Private fields
+       	
+		<% fields.each do |f| %>
+	  	private <%= f.dataType %> <%= f.fieldName %>;
+	  	<% end %>
+	  	
+	  	#endregion
+	  	
+	  	#region Constructors
+	  	
+	  	/// <summary>
+	  	/// Default no-args constructor required by NHibernate
+	  	/// </summary>
+	  	public <%= className %>()
+	  	{
+		 	<% initializedFields.each do |f| %>
+		  	<%= f.fieldName %> = <%= f.initialValue %>;
+		  	<% end %>
+		  	
+		  	CustomInitialize();
+	  	}
+                
+		<% if(fields.length > 0) %>
+	  	/// <summary>
+	  	/// All fields constructor
+	  	/// </summary>
+	  	public <%= className %>(<%= (inheritedFields + fields).select {|f| f.accessorName != "Deactivated"}.map {|f| "#{f.dataType} #{f.accessorName.downcase}1"}.join(', ') %>)
+			:base(<%= inheritedFields.select {|f| f.accessorName != "Deactivated"}.map {|f| "#{f.accessorName.downcase}1" }.join(', ') %>)
+	  	{
+		  	CustomInitialize();
+
+			<% fields.select {|f| f.accessorName != "Deactivated"}.each do |f| %>
+		  	<%= f.fieldName %> = <%= f.accessorName.downcase %>1;
+		  	<% end %>
+	  	}
+		<% end %>
+                
+	  	#endregion
+	  	
+	  	#region Public Properties
+	  	
+	  	<% fields.each do |f| %>
+		<% if(f.hasGetter || f.hasSetter) %>
+		<% f.attributes.each do |attr| %>
+		[<%= attr %>]<% end %>
+	  	public virtual <%= f.dataType %> <%= f.accessorName %>
+	  	{
+			<% if(f.hasGetter) %>
+			get { return <%= f.fieldName %>; }
+			<% end %>
+			<% if(f.hasSetter) %>
+			<%= f.setterAccess %> set { <%= f.fieldName %> = value; }
+			<% end %>
+	  	}
+		<%	end %>
+	  	<% end %>
+	  	
+	  	#endregion
+	}
+}

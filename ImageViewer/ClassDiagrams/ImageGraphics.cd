@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Font Name="Tahoma" Size="8.25" />
+  <Class Name="ClearCanvas.ImageViewer.Graphics.ImageGraphic" Collapsed="true">
+    <Position X="2.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Graphics\ImageGraphic.cs</FileName>
+      <HashCode>AAIAAQAAAIBAEUCQAAAggCgAAIAACiBEQAgBABgAQAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ClearCanvas.ImageViewer.Graphics.GrayscaleImageGraphic" Collapsed="true">
+    <Position X="0.75" Y="2.75" Width="2" />
+    <TypeIdentifier>
+      <FileName>Graphics\GrayscaleImageGraphic.cs</FileName>
+      <HashCode>BAoACEwAACQAAYAACACABAEIAIIEgSEAAAEAIAACQAI=</HashCode>
+    </TypeIdentifier>
+    <Lollipop Orientation="Right" Position="0.1" />
+  </Class>
+  <Class Name="ClearCanvas.ImageViewer.Graphics.Graphic" Collapsed="true">
+    <Position X="2.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Graphics\Graphic.cs</FileName>
+      <HashCode>AAKAISEAAKBAggAAAoAAAgQMAAABEgIIAABQAIAAAAA=</HashCode>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ClearCanvas.ImageViewer.Graphics.ColorImageGraphic" Collapsed="true">
+    <Position X="4.25" Y="2.75" Width="1.75" />
+    <TypeIdentifier>
+      <FileName>Graphics\ColorImageGraphic.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAQAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+</ClassDiagram>

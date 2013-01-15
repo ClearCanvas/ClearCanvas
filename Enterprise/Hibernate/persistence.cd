@@ -1,0 +1,86 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Font Name="Tahoma" Size="8.4" />
+  <Class Name="ClearCanvas.Enterprise.Hibernate.PersistentStore" Collapsed="true">
+    <Position X="0.5" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>PersistentStore.cs</FileName>
+      <HashCode>CAAAAAAAAACAAQAAAAQAACAAAAAAAAABgAAAAAAEAAE=</HashCode>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ClearCanvas.Enterprise.Hibernate.PersistenceContext" Collapsed="true">
+    <Position X="3.25" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>PersistenceContext.cs</FileName>
+      <HashCode>AAIQgAABICAAJQwAAAUAEIAkAEACAiEgAACIAAgBIAA=</HashCode>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ClearCanvas.Enterprise.Hibernate.ReadContext" Collapsed="true">
+    <Position X="1.75" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>ReadContext.cs</FileName>
+      <HashCode>AAAQAAAAACAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ClearCanvas.Enterprise.Hibernate.UpdateContext" Collapsed="true">
+    <Position X="4.75" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>UpdateContext.cs</FileName>
+      <HashCode>AAAQAEAAACCAAAAAAAAAAAAAAAAAAAAAAACAAAgAAAA=</HashCode>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ClearCanvas.Enterprise.Hibernate.Broker" Collapsed="true">
+    <Position X="8" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Broker.cs</FileName>
+      <HashCode>AAAAAAAAAgIAAAAAAAQAAAAAAAABAAAAAAAAAAAAAAg=</HashCode>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ClearCanvas.Enterprise.Hibernate.EntityBroker&lt;TEntity, TSearchCriteria&gt;" Collapsed="true">
+    <Position X="9.25" Y="3.25" Width="2.75" />
+    <TypeIdentifier>
+      <FileName>EntityBroker.cs</FileName>
+      <HashCode>AAAAgAAAAAAAAAAAAIARAAQAAAEIAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ClearCanvas.Enterprise.Hibernate.EnumBroker&lt;E, ETable&gt;" Collapsed="true">
+    <Position X="6.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>EnumBroker.cs</FileName>
+      <HashCode>AAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ClearCanvas.Enterprise.Hibernate.Hql.HqlQuery" Collapsed="true">
+    <Position X="0.75" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Hql\HqlQuery.cs</FileName>
+      <HashCode>AAQBAAAAAIAQAAAAAJAAAAJBAAAAIAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Conditions" />
+      <Property Name="Sorts" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="ClearCanvas.Enterprise.Hibernate.Hql.HqlCondition" Collapsed="true">
+    <Position X="3.25" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Hql\HqlCondition.cs</FileName>
+      <HashCode>AAAAAAAAgAAEAAAAAIAAAAAAABAAAAAAAMAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ClearCanvas.Enterprise.Hibernate.Hql.HqlSort" Collapsed="true">
+    <Position X="3.25" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Hql\HqlSort.cs</FileName>
+      <HashCode>AAAAAAAAgAAAAAQgAIAAAAAAABAAAAAAAAAAgAAAAAA=</HashCode>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+</ClassDiagram>

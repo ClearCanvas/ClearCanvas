@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<layout-configuration>
+  <layouts>
+    <layout modality ="CR" image-box-rows="1" image-box-columns="2" tile-rows="1" tile-columns="1" />
+    <layout modality ="CT" image-box-rows="1" image-box-columns="4" tile-rows="1" tile-columns="1" />
+    <layout modality ="DX" image-box-rows="1" image-box-columns="2" tile-rows="1" tile-columns="1" />
+    <layout modality ="ES" image-box-rows="1" image-box-columns="2" tile-rows="1" tile-columns="1" />
+    <layout modality ="MG" image-box-rows="1" image-box-columns="2" tile-rows="1" tile-columns="1" />
+    <layout modality ="MR" image-box-rows="1" image-box-columns="4" tile-rows="1" tile-columns="1" />
+    <layout modality ="NM" image-box-rows="1" image-box-columns="2" tile-rows="1" tile-columns="1" />
+    <layout modality ="PT" image-box-rows="1" image-box-columns="2" tile-rows="1" tile-columns="1" />
+    <layout modality ="RF" image-box-rows="1" image-box-columns="2" tile-rows="1" tile-columns="1" />
+    <layout modality ="XA" image-box-rows="1" image-box-columns="2" tile-rows="1" tile-columns="1" />
+  </layouts>
+</layout-configuration>

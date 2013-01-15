@@ -1,0 +1,22 @@
+<%@ Master Language="C#" AutoEventWireup="true" MasterPageFile="~/GlobalMasterPage.master"
+    Codebehind="MainContentSection.master.cs" Inherits="ClearCanvas.ImageServer.Web.Application.Pages.Common.MainContentSection" %>
+
+<%-- Make the Main Menu available to pages that use this master file. --%>
+<asp:Content runat="server" ContentPlaceHolderID="MainMenuPlaceHolder">
+    <asp:ContentPlaceHolder ID="MainMenuPlaceHolder" runat="server">
+        <asp:SiteMapDataSource ID="MainMenuSiteMapDataSource" runat="server" ShowStartingNode="False" />
+        <asp:Menu runat="server" ID="MainMenu" SkinID="MainMenu" DataSourceID="MainMenuSiteMapDataSource"></asp:Menu>
+    </asp:ContentPlaceHolder>
+</asp:Content>
+
+<asp:Content runat="server" ContentPlaceHolderID="MainContentPlaceHolder">
+            <asp:ContentPlaceHolder runat="server" ID="MainContentSectionPlaceHolder" />   
+</asp:Content>
+
+<asp:Content runat="server" ContentPlaceHolderID="MainContentTitlePlaceHolder">
+            <asp:ContentPlaceHolder runat="server" ID="TitlePlaceHolder" />   
+</asp:Content>
+
+<asp:Content runat="server" ContentPlaceHolderID="DialogsPlaceHolder">
+            <asp:ContentPlaceHolder runat="server" ID="DialogsSectionPlaceHolder" />   
+</asp:Content>

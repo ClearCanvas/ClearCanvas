@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ManifestInput xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.clearcanvas.ca">
+  <Files>
+    <File name="plugins\ClearCanvas.Enterprise.Desktop.dll" checksum="true" />
+    <File name="plugins\ClearCanvas.Enterprise.Desktop.View.WinForms.dll" checksum="true" />
+    <File name="common\Castle.Core.dll" checksum="true" />
+    <File name="common\Castle.DynamicProxy2.dll" checksum="true" />
+    <File name="plugins\ClearCanvas.Enterprise.Common.dll" checksum="true" />
+  </Files>
+</ManifestInput>

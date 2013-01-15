@@ -1,0 +1,58 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Font Name="Tahoma" Size="8.4" />
+  <Class Name="ClearCanvas.Enterprise.Hibernate.Hql.HqlSort" Collapsed="true">
+    <Position X="7" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Hql\HqlSort.cs</FileName>
+      <HashCode>AAAAAAAAgAAAAAQgAIAAAAAAABAAAAAAAAAAgAAAAAA=</HashCode>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ClearCanvas.Enterprise.Hibernate.Hql.HqlAnd" Collapsed="true">
+    <Position X="0.75" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Hql\HqlAnd.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ClearCanvas.Enterprise.Hibernate.Hql.HqlCondition" Collapsed="true">
+    <Position X="2" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Hql\HqlCondition.cs</FileName>
+      <HashCode>AAAAAAAAgAAEAAAAAIAAAAAAABAAAAAAAMAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ClearCanvas.Enterprise.Hibernate.Hql.HqlElement" Collapsed="true">
+    <Position X="4.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Hql\HqlElement.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ClearCanvas.Enterprise.Hibernate.Hql.HqlJunction" Collapsed="true">
+    <Position X="2" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Hql\HqlJunction.cs</FileName>
+      <HashCode>QAAAAAAAAAAAAAAAAJAAAAAAAAAAAAAAAIAAAAAAIAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ClearCanvas.Enterprise.Hibernate.Hql.HqlOr" Collapsed="true">
+    <Position X="3.25" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Hql\HqlOr.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ClearCanvas.Enterprise.Hibernate.Hql.HqlQuery" Collapsed="true">
+    <Position X="4.5" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Hql\HqlQuery.cs</FileName>
+      <HashCode>AAQBAAAAAIAQAAAAAJAAAAJBAAAAIAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Sorts" />
+      <Property Name="Conditions" />
+    </ShowAsCollectionAssociation>
+  </Class>
+</ClassDiagram>

@@ -1,0 +1,245 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="CommandExplodeTile" xml:space="preserve">
+    <value>Explode Tile</value>
+  </data>
+  <data name="CommandLayoutImageBoxes" xml:space="preserve">
+    <value>Layout image boxes</value>
+  </data>
+  <data name="CommandLayoutTiles" xml:space="preserve">
+    <value>Layout tiles</value>
+  </data>
+  <data name="CommandSurveyExplode" xml:space="preserve">
+    <value>Survey/Explode</value>
+  </data>
+  <data name="DisplaySets" xml:space="preserve">
+    <value>(List of Display Sets)</value>
+  </data>
+  <data name="ExceptionImageNotLoaded" xml:space="preserve">
+    <value>The specified image is not currently loaded (SopInstanceUID={0}).</value>
+  </data>
+  <data name="ExceptionSeriesNotLoaded" xml:space="preserve">
+    <value>The specified series is not currently loaded (SeriesInstanceUID={0}).</value>
+  </data>
+  <data name="ExceptionStudyNotLoaded" xml:space="preserve">
+    <value>The specified study is not currently loaded (StudyInstanceUID={0}).</value>
+  </data>
+  <data name="InUse" xml:space="preserve">
+    <value>in use</value>
+  </data>
+  <data name="LabelCreateSingleImageDisplaySets" xml:space="preserve">
+    <value>Create single image display sets</value>
+  </data>
+  <data name="LabelDefault" xml:space="preserve">
+    <value>(Default)</value>
+  </data>
+  <data name="LabelFormatStudyUnavailable" xml:space="preserve">
+    <value>The study is {0}.</value>
+  </data>
+  <data name="LabelLoadingPriors" xml:space="preserve">
+    <value>Loading Priors ...</value>
+  </data>
+  <data name="LabelSplitEchos" xml:space="preserve">
+    <value>Split multi-echo series</value>
+  </data>
+  <data name="LabelSplitMultiframes" xml:space="preserve">
+    <value>Split mixed mult-frame series</value>
+  </data>
+  <data name="LabelStudyCouldNotBeLoaded" xml:space="preserve">
+    <value>The study could not be loaded.</value>
+  </data>
+  <data name="MenuExplodeImageBox" xml:space="preserve">
+    <value>Survey/Explode</value>
+  </data>
+  <data name="MenuLayoutManager" xml:space="preserve">
+    <value>Layout Manager</value>
+  </data>
+  <data name="MenuNextDisplaySet" xml:space="preserve">
+    <value>Next Display Set</value>
+  </data>
+  <data name="MenuPreviousDisplaySet" xml:space="preserve">
+    <value>Previous Display Set</value>
+  </data>
+  <data name="MenuStandard" xml:space="preserve">
+    <value>Standard</value>
+  </data>
+  <data name="MessageLoadPriorsErrorPrefix" xml:space="preserve">
+    <value>The following errors occurred while loading prior studies:</value>
+  </data>
+  <data name="MessagePriorsIncomplete" xml:space="preserve">
+    <value>The search for prior studies did not complete successfully because at least one of your default servers was unreachable.
+Although some priors may be available, please be aware that you may be working with an incomplete patient history.
+
+PLEASE NOTE that you will NOT be notified of this problem again for as long as this problem persists.</value>
+  </data>
+  <data name="MessageSearchForPriorsFailed" xml:space="preserve">
+    <value>The search for prior studies has failed.  Try reopening the study or select a different default server.
+
+PLEASE NOTE that you will NOT be notified of this problem again for as long as this problem persists.</value>
+  </data>
+  <data name="Nearline" xml:space="preserve">
+    <value>nearline</value>
+  </data>
+  <data name="Offline" xml:space="preserve">
+    <value>offline</value>
+  </data>
+  <data name="TitleDisplaySetCreationConfiguration" xml:space="preserve">
+    <value>Display Sets</value>
+  </data>
+  <data name="TitleLayoutConfiguration" xml:space="preserve">
+    <value>Layout</value>
+  </data>
+  <data name="TitleLayoutManager" xml:space="preserve">
+    <value>Layout Manager</value>
+  </data>
+  <data name="ToolbarChangeLayout" xml:space="preserve">
+    <value>Change Layout</value>
+  </data>
+  <data name="ToolbarExplodeImageBox" xml:space="preserve">
+    <value>Survey/Explode</value>
+  </data>
+  <data name="ToolbarLayoutBoxesChooser" xml:space="preserve">
+    <value>Image Box Layout</value>
+  </data>
+  <data name="ToolbarLayoutTilesChooser" xml:space="preserve">
+    <value>Tile Layout</value>
+  </data>
+  <data name="ToolbarNextDisplaySet" xml:space="preserve">
+    <value>Next Display Set</value>
+  </data>
+  <data name="ToolbarPreviousDisplaySet" xml:space="preserve">
+    <value>Previous Display Set</value>
+  </data>
+  <data name="TooltipChangeLayout" xml:space="preserve">
+    <value>Change Layout</value>
+  </data>
+  <data name="TooltipExplodeImageBox" xml:space="preserve">
+    <value>Survey/Explode</value>
+  </data>
+  <data name="TooltipNextDisplaySet" xml:space="preserve">
+    <value>Next Display Set</value>
+  </data>
+  <data name="TooltipPreviousDisplaySet" xml:space="preserve">
+    <value>Previous Display Set</value>
+  </data>
+  <data name="Unavailable" xml:space="preserve">
+    <value>unavailable</value>
+  </data>
+</root>

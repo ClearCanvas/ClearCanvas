@@ -1,0 +1,107 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <Choose>
+    <When Condition=" '$(PROCESSOR_ARCHITEW6432)' == 'IA64' Or '$(PROCESSOR_ARCHITEW6432)' == 'AMD64' Or '$(PROCESSOR_ARCHITECTURE)' == 'IA64' Or '$(PROCESSOR_ARCHITECTURE)' == 'AMD64'">
+      <PropertyGroup>
+        <BuildPlatform>x64</BuildPlatform>
+      </PropertyGroup>
+    </When>
+    <When Condition="'$(PROCESSOR_ARCHITECTURE)' == 'x86' ">
+      <PropertyGroup>
+        <BuildPlatform>x86</BuildPlatform>
+      </PropertyGroup>
+    </When>
+    <Otherwise>
+      <PropertyGroup>
+        <BuildPlatform></BuildPlatform>
+      </PropertyGroup>
+    </Otherwise>
+  </Choose>
+
+  <PropertyGroup>
+    <!-- The 'ProjectOutDir' property is the default output folder of the project and should not be overridden. -->
+    <ProjectOutDir>$(ProjectDir)\$(OutDir)</ProjectOutDir>
+    <DeletePlugins>true</DeletePlugins>
+  </PropertyGroup>
+
+  <!-- If DistributionDirectory were set directly on the command line, we would be unable to override it.-->
+  <!-- Therefore, DistributionDir is the command line variable, and we set DistributionDirectory based on its value. -->
+  <Choose>
+    <When Condition=" '$(DistributionDir)' == ''">
+      <PropertyGroup>
+        <DistributionDirectory>$(ProjectOutDir)</DistributionDirectory>
+        <DeletePlugins>true</DeletePlugins>
+      </PropertyGroup>
+    </When>
+    <When Condition=" '$(DistributionDir)' != '$(ProjectOutDir)' ">
+      <PropertyGroup>
+        <DistributionDirectory>$(DistributionDir)</DistributionDirectory>
+        <DeletePlugins>false</DeletePlugins>
+      </PropertyGroup>
+    </When>
+  </Choose>
+
+  <PropertyGroup>
+    <CommonDirectory>$(DistributionDirectory)\common</CommonDirectory>
+    <PluginsDirectory>$(DistributionDirectory)\plugins</PluginsDirectory>
+    <LogDirectory>$(DistributionDirectory)\logs</LogDirectory>
+    <LoggingConfigFile>$(ProjectDir)\Logging.config</LoggingConfigFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <DestinationDirectories Include="$(DistributionDirectory)" />
+    <DestinationDirectories Include="$(CommonDirectory)" />
+    <DestinationDirectories Include="$(PluginsDirectory)" />
+    <DestinationDirectories Include="$(LogDirectory)" />
+  </ItemGroup>
+
+  <!-- Config files, to be placed in distribution directory -->
+  <ItemGroup>
+    <ConfigFiles Include="$(ProjectDir)\bin\$(Configuration)\ClearCanvas.Executable.exe.config" />
+  </ItemGroup>
+
+  <!-- Shared library files, to be placed in common directory -->
+  <ItemGroup>
+    <SharedLibraryFiles Include="$(ProjectDir)..\Common\bin\$(Configuration)\ClearCanvas.Common.dll" />
+    <SharedLibraryFiles Include="$(ProjectDir)..\ReferencedAssemblies\log4net.dll" />
+  </ItemGroup>
+  <ItemGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <SharedLibraryFiles Include="$(ProjectDir)..\ReferencedAssemblies\nunit.framework.dll" />
+  </ItemGroup>
+
+  <!-- Execution files -->
+  <ItemGroup>
+    <ExecutionFiles Include="$(ProjectDir)\bin\$(Configuration)\ClearCanvas.Executable.exe" />
+  </ItemGroup>
+
+  <!-- Plugin files -->
+  <ItemGroup>
+    <PluginDeleteFiles Include="$(PluginsDirectory)\*.*" />
+  </ItemGroup>
+
+  <Target Name="Copy files">
+
+    <!-- Make required directories -->
+    <MakeDir Directories="@(DestinationDirectories)" ContinueOnError="true" />
+
+    <!-- Delete contents of plugin directory -->
+    <Delete Condition="$(DeletePlugins)" Files="@(PluginDeleteFiles)" ContinueOnError="true" />
+
+    <!-- Copy shared config files -->
+    <Copy SourceFiles="@(ConfigFiles)" Condition="!Exists('$(DistributionDirectory)\%(FileName).%(Extension)')" DestinationFolder="$(DistributionDirectory)" ContinueOnError="true"/>
+
+    <!-- Copy shared libraries -->
+    <Copy SourceFiles="@(SharedLibraryFiles)" DestinationFolder="$(CommonDirectory)" />
+
+    <!-- Copy execution files -->
+    <Copy SkipUnchangedFiles="true" SourceFiles="@(ExecutionFiles)" DestinationFolder="$(DistributionDirectory)" />
+
+    <!-- Override the value of TargetPlatform for this task. -->
+    <CreateProperty Value="$(BuildPlatform)" Condition=" '$(TargetPlatform)' == '' ">
+      <Output TaskParameter="Value" PropertyName="TargetPlatform" />
+    </CreateProperty>
+
+    <!-- Run the solution specific build file -->
+    <MSBuild Projects="$(SolutionDir)\$(SolutionName)_dist.proj" Properties="SolutionDir=$(SolutionDir);SolutionName=$(SolutionName);TargetPlatform=$(TargetPlatform);Configuration=$(Configuration);ProjectName=$(ProjectName);ProjectOutDir=$(ProjectOutDir);StrongNameKeyFile=$(StrongNameKeyFile);DistributionDirectory=$(DistributionDirectory);CommonDirectory=$(CommonDirectory);PluginsDirectory=$(PluginsDirectory);LogDirectory=$(LogDirectory);Options=$(Options);Localizations=$(Localizations);ReleaseType=$(ReleaseType)" />
+  </Target>
+</Project>

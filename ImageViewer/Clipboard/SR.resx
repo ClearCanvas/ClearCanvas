@@ -1,0 +1,324 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ConfigureImageExport" xml:space="preserve">
+    <value>Configure Export</value>
+  </data>
+  <data name="DescriptionBmp" xml:space="preserve">
+    <value>Bitmap Image Format (BMP)</value>
+  </data>
+  <data name="DescriptionGif" xml:space="preserve">
+    <value>Graphics Interchange Format (GIF)</value>
+  </data>
+  <data name="DescriptionJpg" xml:space="preserve">
+    <value>Joint Photographic Experts Group (JPEG)</value>
+  </data>
+  <data name="DescriptionPng" xml:space="preserve">
+    <value>Portable Network Graphics (PNG)</value>
+  </data>
+  <data name="DescriptionSubsetCustom" xml:space="preserve">
+    <value>Subset (Custom)</value>
+  </data>
+  <data name="DescriptionSubsetRange" xml:space="preserve">
+    <value>Subset (Range)</value>
+  </data>
+  <data name="DescriptionTiff" xml:space="preserve">
+    <value>Tagged Image File Format (TIFF)</value>
+  </data>
+  <data name="LabelExportFile" xml:space="preserve">
+    <value>Destination file</value>
+  </data>
+  <data name="LabelExportPath" xml:space="preserve">
+    <value>Destination folder</value>
+  </data>
+  <data name="MenuClipboard" xml:space="preserve">
+    <value>Clipboard</value>
+  </data>
+  <data name="MenuCopyDisplaySetToClipboard" xml:space="preserve">
+    <value>Copy Display Set to Clipboard</value>
+  </data>
+  <data name="MenuCopyImageToClipboard" xml:space="preserve">
+    <value>Copy Image to Clipboard</value>
+  </data>
+  <data name="MenuCopySubsetToClipboard" xml:space="preserve">
+    <value>Copy Range of Images to Clipboard</value>
+  </data>
+  <data name="MenuDeleteAllClipboardItems" xml:space="preserve">
+    <value>Delete All</value>
+  </data>
+  <data name="MenuDeleteClipboardItem" xml:space="preserve">
+    <value>Delete Selected</value>
+  </data>
+  <data name="MenuExportToImage" xml:space="preserve">
+    <value>Export to Image</value>
+  </data>
+  <data name="MenuExportToVideo" xml:space="preserve">
+    <value>Export to Video</value>
+  </data>
+  <data name="MenuShowClipboard" xml:space="preserve">
+    <value>Clipboard</value>
+  </data>
+  <data name="MenuView" xml:space="preserve">
+    <value>View</value>
+  </data>
+  <data name="MessageCancelled" xml:space="preserve">
+    <value>Cancelled.</value>
+  </data>
+  <data name="MessageCreatingVideo" xml:space="preserve">
+    <value>Creating video ...</value>
+  </data>
+  <data name="MessageCustomRangeInvalid" xml:space="preserve">
+    <value>The custom range is invalid.</value>
+  </data>
+  <data name="MessageDirectoryDoesNotExist" xml:space="preserve">
+    <value>The specified directory does not exist.</value>
+  </data>
+  <data name="MessageDisplaySetTooFewImagesForVideo" xml:space="preserve">
+    <value>The display set must have 2 or more images to be exported to video.</value>
+  </data>
+  <data name="MessageEndValueLargerThanStart" xml:space="preserve">
+    <value>The end value must be less than or equal to the start value.</value>
+  </data>
+  <data name="MessageEndValueOutOfRange" xml:space="preserve">
+    <value>The end value is out of range.</value>
+  </data>
+  <data name="MessageErrorLaunchingConfigurationComponent" xml:space="preserve">
+    <value>An error has occurred while attempting to launch the configuration dialog.  Please check the log for more details.</value>
+  </data>
+  <data name="MessageExportComplete" xml:space="preserve">
+    <value>Complete.</value>
+  </data>
+  <data name="MessageExportFailed" xml:space="preserve">
+    <value>Export failed.  Please check the log for more details.</value>
+  </data>
+  <data name="MessageExportingImages" xml:space="preserve">
+    <value>Exporting Images ...</value>
+  </data>
+  <data name="MessageExportToVideoFailed" xml:space="preserve">
+    <value>Export to video failed.  Please see the log for more details.</value>
+  </data>
+  <data name="MessageFormatExportingFrame" xml:space="preserve">
+    <value>Exporting frame #{0} of {1}</value>
+  </data>
+  <data name="MessageImageExportStillRunning" xml:space="preserve">
+    <value>Another export job is currently running.  You must wait until it completes to export more images.</value>
+  </data>
+  <data name="MessageInvalidFilePath" xml:space="preserve">
+    <value>The specified file path is invalid.</value>
+  </data>
+  <data name="MessageNoAcceptableCodecsInstalled" xml:space="preserve">
+    <value>There are no acceptable video codecs installed.</value>
+  </data>
+  <data name="MessageNotApplicable" xml:space="preserve">
+    <value>n/a</value>
+  </data>
+  <data name="MessageRangeIntervalInvalid" xml:space="preserve">
+    <value>The interval value is invalid.</value>
+  </data>
+  <data name="MessageStartValueOutOfRange" xml:space="preserve">
+    <value>The start value is out of range.</value>
+  </data>
+  <data name="MessageUnableToClearClipboardItems" xml:space="preserve">
+    <value>At least one of the items could not be removed from the clipboard because it is in use.</value>
+  </data>
+  <data name="MessageVideoExportStillRunning" xml:space="preserve">
+    <value>Another video is currently being created.  You must wait until it completes to create another.</value>
+  </data>
+  <data name="TitleAdvancedOptions" xml:space="preserve">
+    <value>Advanced Options</value>
+  </data>
+  <data name="TitleClipboard" xml:space="preserve">
+    <value>Clipboard</value>
+  </data>
+  <data name="TitleCopySubsetToClipboard" xml:space="preserve">
+    <value>Copy Images to Clipboard</value>
+  </data>
+  <data name="TitleCreatingVideo" xml:space="preserve">
+    <value>Creating Video</value>
+  </data>
+  <data name="TitleExportImages" xml:space="preserve">
+    <value>Export Images</value>
+  </data>
+  <data name="TitleExportingImages" xml:space="preserve">
+    <value>Exporting Images</value>
+  </data>
+  <data name="TitleExportSingleImage" xml:space="preserve">
+    <value>Export Single Image</value>
+  </data>
+  <data name="TitleExportToVideo" xml:space="preserve">
+    <value>Export to Video</value>
+  </data>
+  <data name="ToolbalDeleteAllClipboardItems" xml:space="preserve">
+    <value>Delete All</value>
+  </data>
+  <data name="ToolbarDeleteClipboardItem" xml:space="preserve">
+    <value>Delete Selected</value>
+  </data>
+  <data name="ToolbarExportToImage" xml:space="preserve">
+    <value>Export to Image</value>
+  </data>
+  <data name="ToolbarExportToVideo" xml:space="preserve">
+    <value>Export to Video</value>
+  </data>
+  <data name="ToolbarShowClipboard" xml:space="preserve">
+    <value>Clipboard</value>
+  </data>
+  <data name="TooltipDeleteAllClipboardItems" xml:space="preserve">
+    <value>Delete All</value>
+  </data>
+  <data name="TooltipDeleteClipboardItem" xml:space="preserve">
+    <value>Delete Selected</value>
+  </data>
+  <data name="TooltipExportToImage" xml:space="preserve">
+    <value>Export to Image</value>
+  </data>
+  <data name="TooltipExportToVideo" xml:space="preserve">
+    <value>Export to Video</value>
+  </data>
+  <data name="TooltipShowClipboard" xml:space="preserve">
+    <value>Show Clipboard</value>
+  </data>
+  <data name="DescriptionAvi" xml:space="preserve">
+    <value>AVI Video Files</value>
+  </data>
+  <data name="MessageClipboardDescription" xml:space="preserve">
+    <value>Patient Id: {0}
+Patient Name: {1}
+Study Date: {2}
+Study Description: {3}
+Accession Number: {4}
+Modality: {5}
+Text Overlay: {6}</value>
+  </data>
+  <data name="MessageClipboardNameMultiframeImage" xml:space="preserve">
+    <value>{0} - Image #{1}, Frame #{2}</value>
+  </data>
+  <data name="MessageClipboardNameSingleImage" xml:space="preserve">
+    <value>{0} - Image #{1}</value>
+  </data>
+  <data name="LabelOff" xml:space="preserve">
+    <value>OFF</value>
+  </data>
+  <data name="LabelOn" xml:space="preserve">
+    <value>ON</value>
+  </data>
+  <data name="MessageClipboardCopyFailed" xml:space="preserve">
+    <value>Failed to add item(s) to clipboard</value>
+  </data>
+</root>

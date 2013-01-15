@@ -1,0 +1,331 @@
+<?xml version="1.0" encoding="utf-8"?>
+<enum class="Religion">
+  <enum-value code="VAR">
+    <value>Unknown</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="AGN">
+    <value>Agnostic</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="ATH">
+    <value>Atheist</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="BAH">
+    <value>Baha'i</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="BMA">
+    <value>Buddhist: Mahayana</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="BUD">
+    <value>Buddhist</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="BTH">
+    <value>Buddhist: Theravada</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="BTA">
+    <value>Buddhist: Tantrayana</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="BOT">
+    <value>Buddhist: Other</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="CFR">
+    <value>Chinese Folk Religionist</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="CHR">
+    <value>Christian</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="ABC">
+    <value>Christian: American Baptist Church</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="AMT">
+    <value>Christian: African Methodist Episcopal</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="AME">
+    <value>Christian: African Methodist Episcopal Zion</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="ANG">
+    <value>Christian: Anglican</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="AOG">
+    <value>Christian: Assembly of God</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="BAP">
+    <value>Christian: Baptist</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="CAT">
+    <value>Christian: Roman Catholic</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="CRR">
+    <value>Christian: Christian Reformed</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="CHS">
+    <value>Christian: Christian Science</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="CMA">
+    <value>Christian: Christian Missionary Alliance</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="COC">
+    <value>Christian: Church of Christ</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="COG">
+    <value>Christian: Church of God</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="COI">
+    <value>Christian: Church of God in Christ</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="COM">
+    <value>Christian: Community</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="COL">
+    <value>Christian: Congregational</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="EOT">
+    <value>Christian: Eastern Orthodox</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="EVC">
+    <value>Christian: Evangelical Church</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="EPI">
+    <value>Christian: Episcopalian</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="FWB">
+    <value>Christian: Free Will Baptist</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="FRQ">
+    <value>Christian: Friends</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="GRE">
+    <value>Christian: Greek Orthodox</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="JWN">
+    <value>Christian: Jehovah's Witness</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="LUT">
+    <value>Christian: Lutheran</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="LMS">
+    <value>Christian: Lutheran Missouri Synod</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="MEN">
+    <value>Christian: Mennonite</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="MET">
+    <value>Christian: Methodist</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="MOM">
+    <value>Christian: Latter-day Saints</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="NAZ">
+    <value>Christian: Church of the Nazarene</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="ORT">
+    <value>Christian: Orthodox</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="COT">
+    <value>Christian: Other</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="PRC">
+    <value>Christian: Other Protestant</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="PEN">
+    <value>Christian: Pentecostal</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="COP">
+    <value>Christian: Other Pentecostal</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="PRE">
+    <value>Christian: Presbyterian</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="PRO">
+    <value>Christian: Protestant</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="REC">
+    <value>Christian: Reformed Church</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="REO">
+    <value>Christian: Reorganized Church of Jesus Christ-LDS</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="SAA">
+    <value>Christian: Salvation Army</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="SEV">
+    <value>Christian: Seventh Day Adventist</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="SOU">
+    <value>Christian: Southern Baptist</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="UCC">
+    <value>Christian: United Church of Christ</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="UMD">
+    <value>Christian: United Methodist</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="UNI">
+    <value>Christian: Unitarian</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="UNU">
+    <value>Christian: Unitarian Universalist</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="WES">
+    <value>Christian: Wesleyan</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="WMC">
+    <value>Christian: Wesleyan Methodist</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="CNF">
+    <value>Confucian</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="ERL">
+    <value>Ethnic Religionist</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="HIN">
+    <value>Hindu</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="HVA">
+    <value>Hindu: Vaishnavites</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="HSH">
+    <value>Hindu: Shaivites</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="HOT">
+    <value>Hindu: Other</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="JAI">
+    <value>Jain</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="JEW">
+    <value>Jewish</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="JCO">
+    <value>Jewish: Conservative</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="JOR">
+    <value>Jewish: Orthodox</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="JOT">
+    <value>Jewish: Other</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="JRC">
+    <value>Jewish: Reconstructionist</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="JRF">
+    <value>Jewish: Reform</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="JRN">
+    <value>Jewish: Renewal</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="MOS">
+    <value>Muslim</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="MSU">
+    <value>Muslim: Sunni</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="MSH">
+    <value>Muslim: Shiite</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="MOT">
+    <value>Muslim: Other</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="NAM">
+    <value>Native American</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="NRL">
+    <value>New Religionist</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="NOE">
+    <value>Nonreligious</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="OTH">
+    <value>Other</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="SHN">
+    <value>Shintoist</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="SIK">
+    <value>Sikh</value>
+    <description></description>
+  </enum-value>
+  <enum-value code="SPI">
+    <value>Spiritist</value>
+    <description></description>
+  </enum-value>
+</enum>

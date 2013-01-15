@@ -1,0 +1,150 @@
+<Project DefaultTargets="BuildSolution" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <UsingTask TaskName="ClearCanvas.Utilities.BuildTasks.CombineStrings" AssemblyFile="$(MSBuildProjectDirectory)\..\ReferencedAssemblies\MSBuild\ClearCanvas.Utilities.BuildTasks.dll" />
+  <UsingTask TaskName="ClearCanvas.Utilities.BuildTasks.XmlInsert" AssemblyFile="$(MSBuildProjectDirectory)\..\ReferencedAssemblies\MSBuild\ClearCanvas.Utilities.BuildTasks.dll"/>
+  <UsingTask TaskName="ClearCanvas.Utilities.BuildTasks.FileReplaceText" AssemblyFile="$(MSBuildProjectDirectory)\..\ReferencedAssemblies\MSBuild\ClearCanvas.Utilities.BuildTasks.dll"/>
+
+  <Choose>
+    <When Condition=" '$(PROCESSOR_ARCHITEW6432)' == 'IA64' Or '$(PROCESSOR_ARCHITEW6432)' == 'AMD64' Or '$(PROCESSOR_ARCHITECTURE)' == 'IA64' Or '$(PROCESSOR_ARCHITECTURE)' == 'AMD64'">
+      <PropertyGroup>
+        <BuildPlatform>x64</BuildPlatform>
+      </PropertyGroup>
+    </When>
+    <When Condition="'$(PROCESSOR_ARCHITECTURE)' == 'x86' ">
+      <PropertyGroup>
+        <BuildPlatform>x86</BuildPlatform>
+      </PropertyGroup>
+    </When>
+    <Otherwise>
+      <PropertyGroup>
+        <BuildPlatform></BuildPlatform>
+      </PropertyGroup>
+    </Otherwise>
+  </Choose>
+
+  <PropertyGroup>
+    <TargetPlatform>$(BuildPlatform)</TargetPlatform>
+    <ThinPackageOptions>ExcludeHttpDesktopServices+ExcludeShredHostService+ExcludeServiceTools+ExcludeDatabase+ExcludeDicomEditor+ExcludeStudyComposer+ExcludeStudyFilters+ExcludeReporting+ExcludeHelpUpdate+ExcludeMpr+ExcludeSeriesDetails</ThinPackageOptions>
+    <DefaultOptions>ExcludeStudyComposer</DefaultOptions>
+    <PackageOption>Normal</PackageOption>
+    <!--<PackageOption>NormalEnterprise</PackageOption>-->
+    <!--<PackageOption>Thin</PackageOption>-->
+    <!--<PackageOption>ThinEnterprise</PackageOption>-->
+  </PropertyGroup>
+  
+  <Choose>
+    <When Condition="'$(TargetPlatform)' == 'x64'">
+      <PropertyGroup>
+        <PlatformName>x64</PlatformName>
+        <PlatformSubFolder>x64</PlatformSubFolder>
+        <PlatformBuildOptions></PlatformBuildOptions>
+      </PropertyGroup>
+    </When>
+    <Otherwise>
+      <!-- assumes Win32 -->
+      <PropertyGroup>
+        <PlatformName>x86</PlatformName>
+        <PlatformSubFolder></PlatformSubFolder>
+        <PlatformBuildOptions>+SetDesktopExecutableX86Flag+SetDesktopExecutableLAAFlag</PlatformBuildOptions>
+      </PropertyGroup>
+    </Otherwise>
+  </Choose>
+
+  <Choose>
+    <When Condition="'$(PackageOption)' == 'ThinEnterprise'">
+      <PropertyGroup>
+        <BuildOptions>$(ThinPackageOptions)</BuildOptions>
+        <ThinBuild>True</ThinBuild>
+      </PropertyGroup>
+    </When>
+    <When Condition="'$(PackageOption)' == 'NormalEnterprise'">
+      <PropertyGroup>
+        <BuildOptions>$(DefaultOptions)</BuildOptions>
+        <ThinBuild>False</ThinBuild>
+      </PropertyGroup>
+    </When>
+    <When Condition="'$(PackageOption)' == 'Thin'">
+      <PropertyGroup>
+        <BuildOptions>ExcludeEnterprise+$(ThinPackageOptions)</BuildOptions>
+        <ThinBuild>True</ThinBuild>
+      </PropertyGroup>
+    </When>
+    <Otherwise>
+      <PropertyGroup>
+        <BuildOptions>ExcludeEnterprise+$(DefaultOptions)</BuildOptions>
+        <ThinBuild>False</ThinBuild>
+      </PropertyGroup>
+    </Otherwise>
+  </Choose>
+
+  <Choose>
+    <When Condition="'$(PackageOption)' == 'Normal'" >
+      <PropertyGroup>
+        <BuildSuffix></BuildSuffix>
+      </PropertyGroup>
+    </When>
+    <Otherwise>
+      <PropertyGroup>
+        <BuildSuffix>_$(PackageOption)</BuildSuffix>
+      </PropertyGroup>
+    </Otherwise>
+  </Choose>
+  
+  <!-- set out some defaults -->
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <DistributionBuild>false</DistributionBuild>
+  </PropertyGroup>
+
+  <Choose>
+    <When Condition="$(DistributionBuild)">
+      <PropertyGroup>
+        <DistributionDir>$(MSBuildProjectDirectory)\..\Distribution\Build\ImageViewer$(BuildSuffix)\$(PlatformSubFolder)\$(Configuration)</DistributionDir>
+      </PropertyGroup>
+    </When>
+    <Otherwise>
+      <PropertyGroup>
+        <DistributionDir></DistributionDir>
+      </PropertyGroup>
+    </Otherwise>
+  </Choose>
+
+  <Choose>
+    <When Condition="$(DistributionBuild) And '$(Configuration)' == 'Release' And '$(KeyFile)' != ''">
+      <PropertyGroup>
+        <ImageViewerProperties>Configuration=$(Configuration);Platform=Any CPU;TargetPlatform=$(TargetPlatform);DistributionDir=$(DistributionDir);SignAssembly=true;DelaySign=false;AssemblyOriginatorKeyFile=$(KeyFile);Options=$(BuildOptions)$(PlatformBuildOptions)</ImageViewerProperties>
+      </PropertyGroup>
+    </When>
+    <Otherwise>
+      <PropertyGroup>
+        <ImageViewerProperties>Configuration=$(Configuration);Platform=Any CPU;TargetPlatform=$(TargetPlatform);DistributionDir=$(DistributionDir);Options=$(BuildOptions)$(PlatformBuildOptions)</ImageViewerProperties>
+      </PropertyGroup>
+    </Otherwise>
+  </Choose>
+
+  <Target Name="CreateNUnitProject">
+    <PropertyGroup>
+      <UnitTestProjectFile>$(DistributionDir)\UnitTests.nunit</UnitTestProjectFile>
+    </PropertyGroup>
+    <ItemGroup>
+      <UnitTestAssemblyFiles Include="$(DistributionDir)\**\ClearCanvas.*.exe" />
+      <UnitTestAssemblyFiles Include="$(DistributionDir)\**\ClearCanvas.*.dll" />
+    </ItemGroup>
+    <Delete Files="$(UnitTestProjectFile)" />
+    <XmlInsert File="$(UnitTestProjectFile)" XPath="/" Type="Element" Name="NUnitProject" />
+    <XmlInsert File="$(UnitTestProjectFile)" XPath="/NUnitProject" Type="Element" Name="Settings" Attribute="activeconfig" Value="Debug" />
+    <XmlInsert File="$(UnitTestProjectFile)" XPath="/NUnitProject" Type="Element" Name="Config" Attribute="name" Value="Debug" />
+    <XmlInsert File="$(UnitTestProjectFile)" XPath="/NUnitProject/Config[@name='Debug']" Type="Element" Name="assembly" Attribute="path" Value="@(UnitTestAssemblyFiles->'%(RecursiveDir)%(Filename)%(Extension)')" />
+    <XmlInsert File="$(UnitTestProjectFile)" XPath="/NUnitProject/Config" Type="Attribute" Name="binpathtype" Value="Auto" />
+  </Target>
+
+  <Target Name="BuildSolution" >
+    <RemoveDir Condition="$(DistributionBuild)" Directories="$(DistributionDir)" />
+
+    <MSBuild Projects="ImageViewer.sln" Properties="$(ImageViewerProperties)" />
+
+    <!-- Create NUnit project file for debug configurations -->
+    <CallTarget Targets="CreateNUnitProject" Condition="'$(Configuration)' == 'Debug'"/>
+  </Target>
+
+</Project>

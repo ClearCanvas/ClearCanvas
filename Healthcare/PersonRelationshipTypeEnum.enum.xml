@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<enum class="PersonRelationshipType">
+	<enum-value code="SEL">
+		<value>Self</value>
+		<description></description>
+	</enum-value>
+	<enum-value code="SPO">
+		<value>Spouse</value>
+		<description></description>
+	</enum-value>
+	<enum-value code="DOM">
+		<value>Life partner</value>
+		<description></description>
+	</enum-value>
+	<enum-value code="CHD">
+		<value>Child</value>
+		<description></description>
+	</enum-value>
+	<enum-value code="GCH">
+		<value>Grandchild</value>
+		<description></description>
+	</enum-value>
+	<enum-value code="NCH">
+		<value>Natural child</value>
+		<description></description>
+	</enum-value>
+	<enum-value code="SCH">
+		<value>Stepchild</value>
+		<description></description>
+	</enum-value>
+	<enum-value code="FCH">
+		<value>Foster child</value>
+		<description></description>
+	</enum-value>
+	<enum-value code="DEP">
+		<value>Handicapped dependent</value>
+		<description></description>
+	</enum-value>
+	<enum-value code="WRD">
+		<value>Ward of court</value>
+		<description></description>
+	</enum-value>
+	<enum-value code="PAR">
+		<value>Parent</value>
+		<description></description>
+	</enum-value>
+	<enum-value code="MTH">
+		<value>Mother</value>
+		<description></description>
+	</enum-value>
+	<enum-value code="FTH">
+		<value>Father</value>
+		<description></description>
+	</enum-value>
+	<enum-value code="CGV">
+		<value>Care giver</value>
+		<description></description>
+	</enum-value>
+	<enum-value code="GRD">
+		<value>Guardian</value>
+		<description></description>
+	</enum-value>
+	<enum-value code="GRP">
+		<value>Grandparent</value>
+		<description></description>
+	</enum-value>
+	<enum-value code="EXF">
+		<value>Extended family</value>
+		<description></description>
+	</enum-value>
+	<enum-value code="SIB">
+		<value>Sibling</value>
+		<description></description>
+	</enum-value>
+	<enum-value code="BRO">
+		<value>Brother</value>
+		<description></description>
+	</enum-value>
+	<enum-value code="SIS">
+		<value>Sister</value>
+		<description></description>
+	</enum-value>
+	<enum-value code="FND">
+		<value>Friend</value>
+		<description></description>
+	</enum-value>
+	<enum-value code="OAD">
+		<value>Other adult</value>
+		<description></description>
+	</enum-value>
+	<enum-value code="EME">
+		<value>Employee</value>
+		<description></description>
+	</enum-value>
+	<enum-value code="EMR">
+		<value>Employer</value>
+		<description></description>
+	</enum-value>
+	<enum-value code="ASC">
+		<value>Associate</value>
+		<description></description>
+	</enum-value>
+	<enum-value code="EMC">
+		<value>Emergency contact</value>
+		<description></description>
+	</enum-value>
+	<enum-value code="OWN">
+		<value>Owner</value>
+		<description></description>
+	</enum-value>
+	<enum-value code="TRA">
+		<value>Trainer</value>
+		<description></description>
+	</enum-value>
+	<enum-value code="MGR">
+		<value>Manager</value>
+		<description></description>
+	</enum-value>
+	<enum-value code="NON">
+		<value>None</value>
+		<description></description>
+	</enum-value>
+	<enum-value code="UNK">
+		<value>Unknown</value>
+		<description></description>
+	</enum-value>
+	<enum-value code="OTH">
+		<value>Other</value>
+		<description></description>
+	</enum-value>
+</enum>

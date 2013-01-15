@@ -1,0 +1,60 @@
+// This file is machine generated - changes will be lost.
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+using ClearCanvas.Enterprise.Common;
+using ClearCanvas.Enterprise.Core;
+
+namespace <%= namespace %>
+{
+
+    /// <summary>
+    /// Search criteria for <see cref="<%= className %>"/> class.
+    /// </summary>
+	public partial class <%= searchCriteriaClassName %> : <%= searchCriteriaSuperClassName %>
+	{
+		/// <summary>
+		/// Constructor for top-level search criteria (no key required)
+		/// </summary>
+		public <%= searchCriteriaClassName %>()
+		{
+		}
+	
+		/// <summary>
+		/// Constructor for sub-criteria (key required)
+		/// </summary>
+		public <%= searchCriteriaClassName %>(string key)
+			:base(key)
+		{
+		}
+		
+		/// <summary>
+		/// Copy constructor
+		/// </summary>
+		protected <%= searchCriteriaClassName %>(<%= searchCriteriaClassName %> other)
+			:base(other)
+		{
+		}
+		
+		public override object Clone()
+        {
+            return new <%= searchCriteriaClassName %>(this);
+        }
+
+
+		<% searchableFields.each do |f| %>
+	  	public <%= f.searchCriteriaReturnType %> <%= f.accessorName %>
+	  	{
+	  		get
+	  		{
+	  			if(!this.SubCriteria.ContainsKey("<%= f.accessorName %>"))
+	  			{
+	  				this.SubCriteria["<%= f.accessorName %>"] = new <%= f.searchCriteriaDataType %>("<%= f.accessorName %>");
+	  			}
+	  			return (<%= f.searchCriteriaReturnType %>)this.SubCriteria["<%= f.accessorName %>"];
+	  		}
+	  	}
+	  	<% end %>
+	}
+}

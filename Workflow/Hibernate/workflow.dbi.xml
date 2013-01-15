@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!--  
+
+This file adds a number of supplementary indexes to the Workflow model.
+Note that all entity and enumeration references are already indexed automatically,
+so the only fields that are explicitly marked for indexing here are generally 
+time-stamps and other value fields that are known to be used in queries, and only
+on key tables that play a central role in the workflow queries.
+
+-->
+<indexes>
+	<!-- WorkQueueItem -->
+	<!-- The first index serves shreds polling the workqueue for items ready for processing -->
+	<index table="WorkQueueItem_" columns="Type_, Status_, ScheduledTime_"/>
+	<!-- The remaining indexes serve the WorkQueue admin component with various filter parameters set -->
+	<index table="WorkQueueItem_" columns="CreationTime_"/>
+	<index table="WorkQueueItem_" columns="ScheduledTime_"/>
+	<index table="WorkQueueItem_" columns="ProcessedTime_"/>
+	<index table="WorkQueueItem_" columns="Type_, ScheduledTime_"/>
+	<index table="WorkQueueItem_" columns="Status_, ScheduledTime_"/>
+	<index table="WorkQueueItem_" columns="Type_, ProcessedTime_"/>
+	<index table="WorkQueueItem_" columns="Status_, ProcessedTime_"/>
+	<index table="WorkQueueItem_" columns="Type_, CreationTime_"/>
+	<index table="WorkQueueItem_" columns="Status_, CreationTime_"/>
+</indexes>

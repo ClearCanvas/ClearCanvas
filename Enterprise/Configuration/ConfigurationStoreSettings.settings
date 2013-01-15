@@ -1,0 +1,18 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="ClearCanvas.Enterprise.Configuration" GeneratedClassName="ConfigurationStoreSettings">
+  <Profiles />
+  <Settings>
+    <Setting Name="ConfigurationCachingEnabled" Description="Specifies whether configuration document caching is enabled." Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="ConfigurationCachingTimeToLiveSeconds" Description="Specifies configuration document cache TTL in seconds." Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">60</Value>
+    </Setting>
+    <Setting Name="SettingsMetadataCachingEnabled" Description="Specifies whether settings meta-data caching is enabled." Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="SettingsMetadataCachingTimeToLiveSeconds" Description="Specifies settings meta-data cache TTL in seconds." Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">180</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

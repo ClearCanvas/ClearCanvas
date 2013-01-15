@@ -1,0 +1,15 @@
+﻿<!-- 
+This rule instructs the server to use JPEG lossless compression
+on CT and MR studies.
+-->
+<rule>
+	<condition  expressionLanguage="dicom">		
+		<or>
+			<equal test="$Modality"  refValue="CT" />
+			<equal test="$Modality"  refValue="MR" />
+		</or>
+	</condition>
+	<action>
+		<jpeg-lossless time="10" unit="weeks" convertFromPalette="true"/>
+	</action>
+</rule>

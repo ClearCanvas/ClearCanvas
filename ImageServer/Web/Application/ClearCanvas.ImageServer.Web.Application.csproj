@@ -1,0 +1,2135 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{2719FA07-F89A-4FE1-A497-5FA4CDD08956}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ClearCanvas.ImageServer.Web.Application</RootNamespace>
+    <AssemblyName>ClearCanvas.ImageServer.Web.Application.Assembly</AssemblyName>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <RunPostBuildEvent>Always</RunPostBuildEvent>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;SILVERLIGHT4</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="AjaxControlToolkit, Version=1.0.10920.32880, Culture=neutral, PublicKeyToken=28f01b0e84b6d53e, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\ReferencedAssemblies\AjaxControls\AjaxControlToolkit.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\ReferencedAssemblies\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.JScript" />
+    <Reference Include="nunit.framework, Version=2.2.7.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\ReferencedAssemblies\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Design" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.Web.Mobile" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App_GlobalResources\ColumnHeaders.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ColumnHeaders.resx</DependentUpon>
+    </Compile>
+    <Compile Include="App_GlobalResources\DetailedViewFieldLabels.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DetailedViewFieldLabels.resx</DependentUpon>
+    </Compile>
+    <Compile Include="App_GlobalResources\ErrorMessages.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ErrorMessages.resx</DependentUpon>
+    </Compile>
+    <Compile Include="App_GlobalResources\GridPager.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>GridPager.resx</DependentUpon>
+    </Compile>
+    <Compile Include="App_GlobalResources\InputLabels.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>InputLabels.resx</DependentUpon>
+    </Compile>
+    <Compile Include="App_GlobalResources\InputValidation.designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>InputValidation.resx</DependentUpon>
+    </Compile>
+    <Compile Include="App_GlobalResources\Labels.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Labels.resx</DependentUpon>
+    </Compile>
+    <Compile Include="App_GlobalResources\SearchFieldLabels.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SearchFieldLabels.resx</DependentUpon>
+    </Compile>
+    <Compile Include="App_GlobalResources\SR.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SR.resx</DependentUpon>
+    </Compile>
+    <Compile Include="App_GlobalResources\Titles.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Titles.resx</DependentUpon>
+    </Compile>
+    <Compile Include="App_GlobalResources\Tooltips.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Tooltips.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\AlertIndicator.ascx.cs">
+      <DependentUpon>AlertIndicator.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\AlertIndicator.ascx.designer.cs">
+      <DependentUpon>AlertIndicator.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ApplicationAlertPanel.ascx.cs">
+      <DependentUpon>ApplicationAlertPanel.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\ApplicationAlertPanel.ascx.designer.cs">
+      <DependentUpon>ApplicationAlertPanel.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\GridViewPanel.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\CheckJavascript.ascx.cs">
+      <DependentUpon>CheckJavascript.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\CheckJavascript.ascx.designer.cs">
+      <DependentUpon>CheckJavascript.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\EmptySearchResultsMessage.ascx.cs">
+      <DependentUpon>EmptySearchResultsMessage.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\EmptySearchResultsMessage.ascx.designer.cs">
+      <DependentUpon>EmptySearchResultsMessage.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\JQuery.ascx.cs">
+      <DependentUpon>JQuery.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\JQuery.ascx.designer.cs">
+      <DependentUpon>JQuery.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\LoginWarningIndicator.ascx.cs">
+      <DependentUpon>LoginWarningIndicator.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\LoginWarningIndicator.ascx.designer.cs">
+      <DependentUpon>LoginWarningIndicator.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\LoginWarningsDialog.ascx.cs">
+      <DependentUpon>LoginWarningsDialog.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\LoginWarningsDialog.ascx.designer.cs">
+      <DependentUpon>LoginWarningsDialog.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\MessageBox.ascx.cs">
+      <DependentUpon>MessageBox.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\MessageBox.ascx.designer.cs">
+      <DependentUpon>MessageBox.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\GridPager.ascx.cs">
+      <DependentUpon>GridPager.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\GridPager.ascx.designer.cs">
+      <DependentUpon>GridPager.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\InvalidInputIndicator.ascx.cs">
+      <DependentUpon>InvalidInputIndicator.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\InvalidInputIndicator.ascx.designer.cs">
+      <DependentUpon>InvalidInputIndicator.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ModalDialog.ascx.cs">
+      <DependentUpon>ModalDialog.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\ModalDialog.ascx.designer.cs">
+      <DependentUpon>ModalDialog.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\PersonNameInputPanel.ascx.cs">
+      <DependentUpon>PersonNameInputPanel.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\PersonNameInputPanel.ascx.designer.cs">
+      <DependentUpon>PersonNameInputPanel.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SectionPanel.ascx.cs">
+      <DependentUpon>SectionPanel.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\SectionPanel.ascx.designer.cs">
+      <DependentUpon>SectionPanel.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ServerPartitionSelector.ascx.cs">
+      <DependentUpon>ServerPartitionSelector.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\ServerPartitionSelector.ascx.designer.cs">
+      <DependentUpon>ServerPartitionSelector.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SessionTimeout.ascx.cs">
+      <DependentUpon>SessionTimeout.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\SessionTimeout.ascx.designer.cs">
+      <DependentUpon>SessionTimeout.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\TimedDialog.ascx.cs">
+      <DependentUpon>TimedDialog.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\TimedDialog.ascx.designer.cs">
+      <DependentUpon>TimedDialog.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\UsersGuideLink.ascx.cs">
+      <DependentUpon>UsersGuideLink.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\UsersGuideLink.ascx.designer.cs">
+      <DependentUpon>UsersGuideLink.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Default.aspx.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Default.aspx.designer.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="GlobalMasterPage.master.cs">
+      <DependentUpon>GlobalMasterPage.master</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="GlobalMasterPage.master.designer.cs">
+      <DependentUpon>GlobalMasterPage.master</DependentUpon>
+    </Compile>
+    <Compile Include="Helpers\DicomValueValidator.cs" />
+    <Compile Include="Helpers\ExceptionTranslator.cs" />
+    <Compile Include="Helpers\SearchHelper.cs" />
+    <Compile Include="KeepSessionAlive.aspx.cs">
+      <DependentUpon>KeepSessionAlive.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="KeepSessionAlive.aspx.designer.cs">
+      <DependentUpon>KeepSessionAlive.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Admin\Alerts\AlertHoverPopupDetails.ascx.cs">
+      <DependentUpon>AlertHoverPopupDetails.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Admin\Alerts\AlertHoverPopupDetails.ascx.designer.cs">
+      <DependentUpon>AlertHoverPopupDetails.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Admin\Alerts\IAlertPopupView.ascx.cs" />
+    <Compile Include="Pages\Admin\Alerts\StudyAlertContextInfoView.ascx.cs">
+      <DependentUpon>StudyAlertContextInfoView.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Admin\Alerts\StudyAlertContextInfoView.ascx.designer.cs">
+      <DependentUpon>StudyAlertContextInfoView.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Admin\Alerts\WorkQueueAlertContextDataView.ascx.cs">
+      <DependentUpon>WorkQueueAlertContextDataView.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Admin\Alerts\WorkQueueAlertContextDataView.ascx.designer.cs">
+      <DependentUpon>WorkQueueAlertContextDataView.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Admin\Configure\DataRules\AddEditDataRuleDialog.ascx.cs">
+      <DependentUpon>AddEditDataRuleDialog.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Admin\Configure\DataRules\AddEditDataRuleDialog.ascx.designer.cs">
+      <DependentUpon>AddEditDataRuleDialog.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Admin\Configure\DataRules\DataRuleGridView.ascx.cs">
+      <DependentUpon>DataRuleGridView.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Admin\Configure\DataRules\DataRuleGridView.ascx.designer.cs">
+      <DependentUpon>DataRuleGridView.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Admin\Configure\DataRules\DataRulePanel.ascx.cs">
+      <DependentUpon>DataRulePanel.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Admin\Configure\DataRules\DataRulePanel.ascx.designer.cs">
+      <DependentUpon>DataRulePanel.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Admin\Configure\DataRules\DataRuleSamples.asmx.cs">
+      <DependentUpon>DataRuleSamples.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Pages\Admin\Configure\DataRules\Default.aspx.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Admin\Configure\DataRules\Default.aspx.designer.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Admin\Configure\Devices\ThrottleSettingsTab.ascx.cs">
+      <DependentUpon>ThrottleSettingsTab.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Admin\Configure\Devices\ThrottleSettingsTab.ascx.designer.cs">
+      <DependentUpon>ThrottleSettingsTab.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Admin\Configure\ServerPartitions\DataAccessGroupPanel.ascx.cs">
+      <DependentUpon>DataAccessGroupPanel.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Admin\Configure\ServerPartitions\DataAccessGroupPanel.ascx.designer.cs">
+      <DependentUpon>DataAccessGroupPanel.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Admin\Dashboard\AlertHoverPopupDetails.ascx.cs">
+      <DependentUpon>AlertHoverPopupDetails.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Admin\Dashboard\AlertHoverPopupDetails.ascx.designer.cs">
+      <DependentUpon>AlertHoverPopupDetails.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Admin\Dashboard\AlertsGridView.ascx.cs">
+      <DependentUpon>AlertsGridView.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Admin\Dashboard\AlertsGridView.ascx.designer.cs">
+      <DependentUpon>AlertsGridView.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Admin\Dashboard\StudiesSummary.ascx.cs">
+      <DependentUpon>StudiesSummary.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Admin\Dashboard\StudiesSummary.ascx.designer.cs">
+      <DependentUpon>StudiesSummary.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Admin\Dashboard\Default.aspx.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Admin\Dashboard\Default.aspx.designer.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Admin\Dashboard\FileSystemsGridView.ascx.cs">
+      <DependentUpon>FileSystemsGridView.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Admin\Dashboard\FileSystemsGridView.ascx.designer.cs">
+      <DependentUpon>FileSystemsGridView.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Admin\Dashboard\ServerPartitionGridView.ascx.cs">
+      <DependentUpon>ServerPartitionGridView.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Admin\Dashboard\ServerPartitionGridView.ascx.designer.cs">
+      <DependentUpon>ServerPartitionGridView.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Admin\Dashboard\StudyIntegrityQueueSummary.ascx.cs">
+      <DependentUpon>StudyIntegrityQueueSummary.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Admin\Dashboard\StudyIntegrityQueueSummary.ascx.designer.cs">
+      <DependentUpon>StudyIntegrityQueueSummary.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Admin\Dashboard\WorkQueueAlertContextDataView.ascx.cs">
+      <DependentUpon>WorkQueueAlertContextDataView.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Admin\Dashboard\WorkQueueAlertContextDataView.ascx.designer.cs">
+      <DependentUpon>WorkQueueAlertContextDataView.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Admin\Dashboard\WorkQueueSummary.ascx.cs">
+      <DependentUpon>WorkQueueSummary.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Admin\Dashboard\WorkQueueSummary.ascx.designer.cs">
+      <DependentUpon>WorkQueueSummary.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Admin\UserManagement\UserGroups\AddEditUserGroupsDialog.ascx.cs">
+      <DependentUpon>AddEditUserGroupsDialog.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Admin\UserManagement\UserGroups\AddEditUserGroupsDialog.ascx.designer.cs">
+      <DependentUpon>AddEditUserGroupsDialog.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Admin\UserManagement\UserGroups\Default.aspx.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Admin\UserManagement\UserGroups\Default.aspx.designer.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Admin\UserManagement\UserGroups\PasswordConfirmDialog.ascx.cs">
+      <DependentUpon>PasswordConfirmDialog.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Admin\UserManagement\UserGroups\PasswordConfirmDialog.ascx.designer.cs">
+      <DependentUpon>PasswordConfirmDialog.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Admin\UserManagement\UserGroups\UserGroupsGridPanel.ascx.cs">
+      <DependentUpon>UserGroupsGridPanel.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Admin\UserManagement\UserGroups\UserGroupsGridPanel.ascx.designer.cs">
+      <DependentUpon>UserGroupsGridPanel.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Admin\UserManagement\UserGroups\UserGroupsPanel.ascx.cs">
+      <DependentUpon>UserGroupsPanel.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Admin\UserManagement\UserGroups\UserGroupsPanel.ascx.designer.cs">
+      <DependentUpon>UserGroupsPanel.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Admin\UserManagement\Users\AddEditUserDialog.ascx.cs">
+      <DependentUpon>AddEditUserDialog.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Admin\UserManagement\Users\AddEditUserDialog.ascx.designer.cs">
+      <DependentUpon>AddEditUserDialog.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Admin\UserManagement\Users\Default.aspx.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Admin\UserManagement\Users\Default.aspx.designer.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Admin\UserManagement\Users\UserGridPanel.ascx.cs">
+      <DependentUpon>UserGridPanel.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Admin\UserManagement\Users\UserGridPanel.ascx.designer.cs">
+      <DependentUpon>UserGridPanel.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Admin\UserManagement\Users\UserPanel.ascx.cs">
+      <DependentUpon>UserPanel.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Admin\UserManagement\Users\UserPanel.ascx.designer.cs">
+      <DependentUpon>UserPanel.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Common\IMasterProperties.cs" />
+    <Compile Include="Pages\Error\CookiesRequired.aspx.cs">
+      <DependentUpon>CookiesRequired.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Error\CookiesRequired.aspx.designer.cs">
+      <DependentUpon>CookiesRequired.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Error\SoftwareExpiredErrorPage.aspx.cs">
+      <DependentUpon>SoftwareExpiredErrorPage.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Error\SoftwareExpiredErrorPage.aspx.designer.cs">
+      <DependentUpon>SoftwareExpiredErrorPage.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Error\LicenseErrorPage.aspx.cs">
+      <DependentUpon>LicenseErrorPage.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Error\LicenseErrorPage.aspx.designer.cs">
+      <DependentUpon>LicenseErrorPage.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Help\Contact.ascx.cs">
+      <DependentUpon>Contact.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Help\Contact.ascx.designer.cs">
+      <DependentUpon>Contact.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Login\ChangePasswordDialog.ascx.cs">
+      <DependentUpon>ChangePasswordDialog.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Login\ChangePasswordDialog.ascx.designer.cs">
+      <DependentUpon>ChangePasswordDialog.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Login\Default.aspx.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Error\AuthorizationErrorPage.aspx.cs">
+      <DependentUpon>AuthorizationErrorPage.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Error\AuthorizationErrorPage.aspx.designer.cs">
+      <DependentUpon>AuthorizationErrorPage.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Error\TimeoutErrorPage.aspx.cs">
+      <DependentUpon>TimeoutErrorPage.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Error\TimeoutErrorPage.aspx.designer.cs">
+      <DependentUpon>TimeoutErrorPage.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Helpers\DialogHelper.cs" />
+    <Compile Include="Helpers\HtmlEncoder.cs" />
+    <Compile Include="Helpers\ScriptHelper.cs" />
+    <Compile Include="Pages\Login\Default.aspx.designer.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Login\PasswordExpiredDialog.ascx.cs">
+      <DependentUpon>PasswordExpiredDialog.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Login\PasswordExpiredDialog.ascx.designer.cs">
+      <DependentUpon>PasswordExpiredDialog.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Queues\ArchiveQueue\ResetArchiveQueueDialog.ascx.cs">
+      <DependentUpon>ResetArchiveQueueDialog.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Queues\ArchiveQueue\ResetArchiveQueueDialog.ascx.designer.cs">
+      <DependentUpon>ResetArchiveQueueDialog.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Queues\StudyIntegrityQueue\DuplicateSopDialog.ascx.cs">
+      <DependentUpon>DuplicateSopDialog.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Queues\StudyIntegrityQueue\DuplicateSopDialog.ascx.designer.cs">
+      <DependentUpon>DuplicateSopDialog.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Queues\StudyIntegrityQueue\SIQEntryTooltip.ascx.cs">
+      <DependentUpon>SIQEntryTooltip.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Queues\StudyIntegrityQueue\SIQEntryTooltip.ascx.designer.cs">
+      <DependentUpon>SIQEntryTooltip.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Queues\WorkQueue\Edit\EditWorkQueueDetailsView.ascx.cs">
+      <DependentUpon>EditWorkQueueDetailsView.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Queues\WorkQueue\Edit\EditWorkQueueDetailsView.ascx.designer.cs">
+      <DependentUpon>EditWorkQueueDetailsView.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Queues\WorkQueue\Edit\ProcessDuplicateWorkQueueDetailsView.ascx.cs">
+      <DependentUpon>ProcessDuplicateWorkQueueDetailsView.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Queues\WorkQueue\Edit\ProcessDuplicateWorkQueueDetailsView.ascx.designer.cs">
+      <DependentUpon>ProcessDuplicateWorkQueueDetailsView.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Queues\WorkQueue\WorkQueueAlertPanel.ascx.cs">
+      <DependentUpon>WorkQueueAlertPanel.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Queues\WorkQueue\WorkQueueAlertPanel.ascx.designer.cs">
+      <DependentUpon>WorkQueueAlertPanel.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Studies\MoveSeries\Default.aspx.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Studies\MoveSeries\Default.aspx.designer.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Studies\MoveSeries\DeviceGridView.ascx.cs">
+      <DependentUpon>DeviceGridView.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Studies\MoveSeries\DeviceGridView.ascx.designer.cs">
+      <DependentUpon>DeviceGridView.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Studies\MoveSeries\MovePanel.ascx.cs">
+      <DependentUpon>MovePanel.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Studies\MoveSeries\MovePanel.ascx.designer.cs">
+      <DependentUpon>MovePanel.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Studies\MoveSeries\PatientSummary.cs" />
+    <Compile Include="Pages\Studies\MoveSeries\PatientSummaryAssembler.cs" />
+    <Compile Include="Pages\Studies\MoveSeries\PatientSummaryPanel.ascx.cs">
+      <DependentUpon>PatientSummaryPanel.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Studies\MoveSeries\PatientSummaryPanel.ascx.designer.cs">
+      <DependentUpon>PatientSummaryPanel.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Studies\MoveSeries\SeriesGridView.ascx.cs">
+      <DependentUpon>SeriesGridView.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Studies\MoveSeries\SeriesGridView.ascx.designer.cs">
+      <DependentUpon>SeriesGridView.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Studies\SeriesDetails\Default.aspx.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Studies\SeriesDetails\Default.aspx.designer.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Studies\SeriesDetails\PatientSummary.cs" />
+    <Compile Include="Pages\Studies\SeriesDetails\PatientSummaryAssembler.cs" />
+    <Compile Include="Pages\Studies\SeriesDetails\PatientSummaryPanel.ascx.cs">
+      <DependentUpon>PatientSummaryPanel.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Studies\SeriesDetails\PatientSummaryPanel.ascx.designer.cs">
+      <DependentUpon>PatientSummaryPanel.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Studies\SeriesDetails\SeriesDetails.cs" />
+    <Compile Include="Pages\Studies\SeriesDetails\SeriesDetailsAssembler.cs" />
+    <Compile Include="Pages\Studies\SeriesDetails\SeriesDetailsPanel.ascx.cs">
+      <DependentUpon>SeriesDetailsPanel.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Studies\SeriesDetails\SeriesDetailsPanel.ascx.designer.cs">
+      <DependentUpon>SeriesDetailsPanel.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Studies\SeriesDetails\SeriesDetailsView.ascx.cs">
+      <DependentUpon>SeriesDetailsView.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Studies\SeriesDetails\SeriesDetailsView.ascx.designer.cs">
+      <DependentUpon>SeriesDetailsView.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Studies\SeriesDetails\StudySummaryPanel.ascx.cs">
+      <DependentUpon>StudySummaryPanel.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Studies\SeriesDetails\StudySummaryPanel.ascx.designer.cs">
+      <DependentUpon>StudySummaryPanel.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Studies\StudyDetails\Controls\AddAuthorityGroupsDialog.ascx.cs">
+      <DependentUpon>AddAuthorityGroupsDialog.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Studies\StudyDetails\Controls\AddAuthorityGroupsDialog.ascx.designer.cs">
+      <DependentUpon>AddAuthorityGroupsDialog.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Studies\StudyDetails\Controls\UpdateAuthorityGroupDialog.ascx.cs">
+      <DependentUpon>UpdateAuthorityGroupDialog.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Studies\StudyDetails\Controls\UpdateAuthorityGroupDialog.ascx.designer.cs">
+      <DependentUpon>UpdateAuthorityGroupDialog.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Studies\StudyDetails\Controls\DataAccessPanel.ascx.cs">
+      <DependentUpon>DataAccessPanel.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Studies\StudyDetails\Controls\DataAccessPanel.ascx.designer.cs">
+      <DependentUpon>DataAccessPanel.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Studies\StudyDetails\Controls\DeleteSeriesConfirmDialog.ascx.cs">
+      <DependentUpon>DeleteSeriesConfirmDialog.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Studies\StudyDetails\Controls\DeleteSeriesConfirmDialog.ascx.designer.cs">
+      <DependentUpon>DeleteSeriesConfirmDialog.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Studies\StudyDetails\Code\DefaultStudyHistoryRendererFactory.cs" />
+    <Compile Include="Pages\Studies\StudyDetails\Code\IStudyHistoryColumnControlFactory.cs" />
+    <Compile Include="Pages\Studies\StudyDetails\Code\ProcessDuplicateChangeLogRendererFactory.cs" />
+    <Compile Include="Pages\Studies\StudyDetails\Code\ReconcileStudyRendererFactory.cs" />
+    <Compile Include="Pages\Studies\StudyDetails\Code\SeriesDeletionChangeLogRendererFactory.cs" />
+    <Compile Include="Pages\Studies\StudyDetails\Code\StudyEditRendererFactory.cs" />
+    <Compile Include="Pages\Studies\StudyDetails\Code\StudyHistoryDecoder.cs" />
+    <Compile Include="Pages\Studies\StudyDetails\Code\StudyReprocessedChangeLogRendererFactory.cs" />
+    <Compile Include="Pages\Studies\StudyDetails\Controls\DuplicateProcessChangeLog.ascx.cs">
+      <DependentUpon>DuplicateProcessChangeLog.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Studies\StudyDetails\Controls\DuplicateProcessChangeLog.ascx.designer.cs">
+      <DependentUpon>DuplicateProcessChangeLog.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Studies\StudyDetails\Controls\EditHistoryDetailsColumn.ascx.cs">
+      <DependentUpon>EditHistoryDetailsColumn.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Studies\StudyDetails\Controls\EditHistoryDetailsColumn.ascx.designer.cs">
+      <DependentUpon>EditHistoryDetailsColumn.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Studies\StudyDetails\Controls\HistoryPanel.ascx.cs">
+      <DependentUpon>HistoryPanel.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Studies\StudyDetails\Controls\HistoryPanel.ascx.designer.cs">
+      <DependentUpon>HistoryPanel.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Studies\StudyDetails\Controls\ReconcileHistoryDetailsColumn.ascx.cs">
+      <DependentUpon>ReconcileHistoryDetailsColumn.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Studies\StudyDetails\Controls\ReconcileHistoryDetailsColumn.ascx.designer.cs">
+      <DependentUpon>ReconcileHistoryDetailsColumn.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Studies\StudyDetails\Controls\SeriesDeleteChangeLog.ascx.cs">
+      <DependentUpon>SeriesDeleteChangeLog.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Studies\StudyDetails\Controls\SeriesDeleteChangeLog.ascx.designer.cs">
+      <DependentUpon>SeriesDeleteChangeLog.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Studies\StudyDetails\Controls\StudyHistoryChangeDescPanel.ascx.cs">
+      <DependentUpon>StudyHistoryChangeDescPanel.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Studies\StudyDetails\Controls\StudyHistoryChangeDescPanel.ascx.designer.cs">
+      <DependentUpon>StudyHistoryChangeDescPanel.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Admin\Alerts\AlertItemCollection.cs" />
+    <Compile Include="Pages\Admin\Alerts\AlertsGridPanel.ascx.cs">
+      <DependentUpon>AlertsGridPanel.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Admin\Alerts\AlertsGridPanel.ascx.designer.cs">
+      <DependentUpon>AlertsGridPanel.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Admin\Alerts\AlertsPanel.ascx.cs">
+      <DependentUpon>AlertsPanel.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Admin\Alerts\AlertsPanel.ascx.designer.cs">
+      <DependentUpon>AlertsPanel.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Admin\Alerts\Default.aspx.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Admin\Alerts\Default.aspx.designer.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Admin\ApplicationLog\ApplicationLogGridView.ascx.cs">
+      <DependentUpon>ApplicationLogGridView.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Admin\ApplicationLog\ApplicationLogGridView.ascx.designer.cs">
+      <DependentUpon>ApplicationLogGridView.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Admin\ApplicationLog\ApplicationLogPanel.ascx.cs">
+      <DependentUpon>ApplicationLogPanel.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Admin\ApplicationLog\ApplicationLogPanel.ascx.designer.cs">
+      <DependentUpon>ApplicationLogPanel.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Admin\ApplicationLog\Default.aspx.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Admin\ApplicationLog\Default.aspx.designer.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Admin\Audit\DeletedStudies\Default.aspx.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Admin\Audit\DeletedStudies\Default.aspx.designer.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Admin\Audit\DeletedStudies\DeletedStudiesSearchPanel.ascx.cs">
+      <DependentUpon>DeletedStudiesSearchPanel.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Admin\Audit\DeletedStudies\DeletedStudiesSearchPanel.ascx.designer.cs">
+      <DependentUpon>DeletedStudiesSearchPanel.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Admin\Audit\DeletedStudies\DeletedStudyArchiveInfoPanel.ascx.cs">
+      <DependentUpon>DeletedStudyArchiveInfoPanel.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Admin\Audit\DeletedStudies\DeletedStudyArchiveInfoPanel.ascx.designer.cs">
+      <DependentUpon>DeletedStudyArchiveInfoPanel.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Admin\Audit\DeletedStudies\DeletedStudyDetailsDialog.ascx.cs">
+      <DependentUpon>DeletedStudyDetailsDialog.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Admin\Audit\DeletedStudies\DeletedStudyDetailsDialog.ascx.designer.cs">
+      <DependentUpon>DeletedStudyDetailsDialog.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Admin\Audit\DeletedStudies\DeletedStudyDetailsDialogGeneralPanel.ascx.cs">
+      <DependentUpon>DeletedStudyDetailsDialogGeneralPanel.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Admin\Audit\DeletedStudies\DeletedStudyDetailsDialogGeneralPanel.ascx.designer.cs">
+      <DependentUpon>DeletedStudyDetailsDialogGeneralPanel.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Admin\Audit\DeletedStudies\DeletedStudyDetailsDialogPanel.ascx.cs">
+      <DependentUpon>DeletedStudyDetailsDialogPanel.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Admin\Audit\DeletedStudies\DeletedStudyDetailsDialogPanel.ascx.designer.cs">
+      <DependentUpon>DeletedStudyDetailsDialogPanel.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Admin\Audit\DeletedStudies\GeneralArchiveInfoPanel.ascx.cs">
+      <DependentUpon>GeneralArchiveInfoPanel.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Admin\Audit\DeletedStudies\GeneralArchiveInfoPanel.ascx.designer.cs">
+      <DependentUpon>GeneralArchiveInfoPanel.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Admin\Audit\DeletedStudies\HsmArchiveInfoPanel.ascx.cs">
+      <DependentUpon>HsmArchiveInfoPanel.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Admin\Audit\DeletedStudies\HsmArchiveInfoPanel.ascx.designer.cs">
+      <DependentUpon>HsmArchiveInfoPanel.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Admin\Audit\DeletedStudies\SearchResultGridView.ascx.cs">
+      <DependentUpon>SearchResultGridView.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Admin\Audit\DeletedStudies\SearchResultGridView.ascx.designer.cs">
+      <DependentUpon>SearchResultGridView.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Common\BarChart.aspx.cs">
+      <DependentUpon>BarChart.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Common\BarChart.aspx.designer.cs">
+      <DependentUpon>BarChart.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Common\BaseAdminPage.aspx.cs">
+      <DependentUpon>BaseAdminPage.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Common\BaseAdminPage.aspx.designer.cs">
+      <DependentUpon>BaseAdminPage.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Common\BasePage.aspx.cs">
+      <DependentUpon>BasePage.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Common\BasePage.aspx.designer.cs">
+      <DependentUpon>BasePage.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Common\Default.aspx.cs">
+      <SubType>ASPXCodeBehind</SubType>
+      <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Common\Default.aspx.designer.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Common\MainContentSection.Master.cs">
+      <DependentUpon>MainContentSection.Master</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Common\MainContentSection.Master.designer.cs">
+      <DependentUpon>MainContentSection.Master</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Admin\Configure\PartitionArchive\AddEditPartitionDialog.ascx.cs">
+      <DependentUpon>AddEditPartitionDialog.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Admin\Configure\PartitionArchive\AddEditPartitionDialog.ascx.designer.cs">
+      <DependentUpon>AddEditPartitionDialog.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Admin\Configure\PartitionArchive\Default.aspx.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Admin\Configure\PartitionArchive\Default.aspx.designer.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Admin\Configure\PartitionArchive\PartitionArchivePanel.ascx.cs">
+      <DependentUpon>PartitionArchivePanel.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Admin\Configure\PartitionArchive\PartitionArchivePanel.ascx.designer.cs">
+      <DependentUpon>PartitionArchivePanel.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Admin\Configure\PartitionArchive\PartitionArchiveGridPanel.ascx.cs">
+      <DependentUpon>PartitionArchiveGridPanel.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Admin\Configure\PartitionArchive\PartitionArchiveGridPanel.ascx.designer.cs">
+      <DependentUpon>PartitionArchiveGridPanel.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Admin\Configure\Devices\AddEditDeviceDialog.ascx.cs">
+      <DependentUpon>AddEditDeviceDialog.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Admin\Configure\Devices\AddEditDeviceDialog.ascx.designer.cs">
+      <DependentUpon>AddEditDeviceDialog.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Admin\Configure\Devices\DeviceGridView.ascx.cs">
+      <DependentUpon>DeviceGridView.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Admin\Configure\Devices\DeviceGridView.ascx.designer.cs">
+      <DependentUpon>DeviceGridView.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Admin\Configure\Devices\Default.aspx.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Admin\Configure\Devices\Default.aspx.designer.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Admin\Configure\Devices\DevicePanel.ascx.cs">
+      <DependentUpon>DevicePanel.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Admin\Configure\Devices\DevicePanel.ascx.designer.cs">
+      <DependentUpon>DevicePanel.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Admin\Configure\FileSystems\AddEditFileSystemDialog.ascx.cs">
+      <DependentUpon>AddEditFileSystemDialog.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Admin\Configure\FileSystems\AddEditFileSystemDialog.ascx.designer.cs">
+      <DependentUpon>AddEditFileSystemDialog.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Admin\Configure\FileSystems\FileSystemsGridView.ascx.cs">
+      <DependentUpon>FileSystemsGridView.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Admin\Configure\FileSystems\FileSystemsGridView.ascx.designer.cs">
+      <DependentUpon>FileSystemsGridView.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Admin\Configure\FileSystems\Default.aspx.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Admin\Configure\FileSystems\Default.aspx.designer.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Admin\Configure\FileSystems\FileSystemsPanel.ascx.cs">
+      <DependentUpon>FileSystemsPanel.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Admin\Configure\FileSystems\FileSystemsPanel.ascx.designer.cs">
+      <DependentUpon>FileSystemsPanel.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Admin\Configure\ServerPartitions\AddEditPartitionDialog.ascx.cs">
+      <DependentUpon>AddEditPartitionDialog.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Admin\Configure\ServerPartitions\AddEditPartitionDialog.ascx.designer.cs">
+      <DependentUpon>AddEditPartitionDialog.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Admin\Configure\ServerPartitions\ServerPartitionGridPanel.ascx.cs">
+      <DependentUpon>ServerPartitionGridPanel.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Admin\Configure\ServerPartitions\ServerPartitionGridPanel.ascx.designer.cs">
+      <DependentUpon>ServerPartitionGridPanel.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Admin\Configure\ServerPartitions\Default.aspx.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Admin\Configure\ServerPartitions\Default.aspx.designer.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Admin\Configure\ServerPartitions\ServerPartitionPanel.ascx.cs">
+      <DependentUpon>ServerPartitionPanel.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Admin\Configure\ServerPartitions\ServerPartitionPanel.ascx.designer.cs">
+      <DependentUpon>ServerPartitionPanel.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Admin\Configure\ServerRules\AddEditServerRuleDialog.ascx.cs">
+      <DependentUpon>AddEditServerRuleDialog.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Admin\Configure\ServerRules\AddEditServerRuleDialog.ascx.designer.cs">
+      <DependentUpon>AddEditServerRuleDialog.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Admin\Configure\ServerRules\ServerRuleGridView.ascx.cs">
+      <DependentUpon>ServerRuleGridView.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Admin\Configure\ServerRules\ServerRuleGridView.ascx.designer.cs">
+      <DependentUpon>ServerRuleGridView.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Admin\Configure\ServerRules\Default.aspx.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Admin\Configure\ServerRules\Default.aspx.designer.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Admin\Configure\ServerRules\ServerRulePanel.ascx.cs">
+      <DependentUpon>ServerRulePanel.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Admin\Configure\ServerRules\ServerRulePanel.ascx.designer.cs">
+      <DependentUpon>ServerRulePanel.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Admin\Configure\ServerRules\ServerRuleSamples.asmx.cs">
+      <DependentUpon>ServerRuleSamples.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Pages\Admin\Configure\ServiceLocks\EditServiceLockDialog.ascx.cs">
+      <DependentUpon>EditServiceLockDialog.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Admin\Configure\ServiceLocks\EditServiceLockDialog.ascx.designer.cs">
+      <DependentUpon>EditServiceLockDialog.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Admin\Configure\ServiceLocks\ServiceLockCollection.cs" />
+    <Compile Include="Pages\Admin\Configure\ServiceLocks\ServiceLockGridView.ascx.cs">
+      <DependentUpon>ServiceLockGridView.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Admin\Configure\ServiceLocks\ServiceLockGridView.ascx.designer.cs">
+      <DependentUpon>ServiceLockGridView.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Admin\Configure\ServiceLocks\Default.aspx.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Admin\Configure\ServiceLocks\Default.aspx.designer.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Admin\Configure\ServiceLocks\ServiceLockPanel.ascx.cs">
+      <DependentUpon>ServiceLockPanel.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Admin\Configure\ServiceLocks\ServiceLockPanel.ascx.designer.cs">
+      <DependentUpon>ServiceLockPanel.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Error\JavascriptRequired.aspx.cs">
+      <DependentUpon>JavascriptRequired.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Error\JavascriptRequired.aspx.designer.cs">
+      <DependentUpon>JavascriptRequired.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Error\Default.aspx.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Error\Default.aspx.designer.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Error\ErrorPage.aspx.cs">
+      <DependentUpon>ErrorPage.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Error\ErrorPage.aspx.designer.cs">
+      <DependentUpon>ErrorPage.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Error\ErrorPageMaster.Master.cs">
+      <DependentUpon>ErrorPageMaster.Master</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Error\ErrorPageMaster.Master.designer.cs">
+      <DependentUpon>ErrorPageMaster.Master</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Help\About.aspx.cs">
+      <DependentUpon>About.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Help\About.aspx.designer.cs">
+      <DependentUpon>About.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Help\Default.aspx.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Help\Default.aspx.designer.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Help\Documentation.aspx.cs">
+      <DependentUpon>Documentation.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Help\Documentation.aspx.designer.cs">
+      <DependentUpon>Documentation.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Queues\ArchiveQueue\Default.aspx.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Queues\ArchiveQueue\Default.aspx.designer.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Queues\ArchiveQueue\SearchPanel.ascx.cs">
+      <DependentUpon>SearchPanel.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Queues\ArchiveQueue\SearchPanel.ascx.designer.cs">
+      <DependentUpon>SearchPanel.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Queues\ArchiveQueue\ArchiveQueueItemList.ascx.cs">
+      <DependentUpon>ArchiveQueueItemList.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Queues\ArchiveQueue\ArchiveQueueItemList.ascx.designer.cs">
+      <DependentUpon>ArchiveQueueItemList.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Queues\StudyIntegrityQueue\Default.aspx.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Queues\StudyIntegrityQueue\Default.aspx.designer.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Queues\StudyIntegrityQueue\ReconcileDetailsAssembler.cs" />
+    <Compile Include="Pages\Queues\StudyIntegrityQueue\ReconcileDialog.ascx.cs">
+      <DependentUpon>ReconcileDialog.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Queues\StudyIntegrityQueue\ReconcileDialog.ascx.designer.cs">
+      <DependentUpon>ReconcileDialog.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Queues\StudyIntegrityQueue\StudyIntegrityQueueItemList.ascx.cs">
+      <DependentUpon>StudyIntegrityQueueItemList.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Queues\StudyIntegrityQueue\StudyIntegrityQueueItemList.ascx.designer.cs">
+      <DependentUpon>StudyIntegrityQueueItemList.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Queues\StudyIntegrityQueue\SearchPanel.ascx.cs">
+      <DependentUpon>SearchPanel.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Queues\StudyIntegrityQueue\SearchPanel.ascx.designer.cs">
+      <DependentUpon>SearchPanel.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Queues\RestoreQueue\RestoreQueueItemList.ascx.cs">
+      <DependentUpon>RestoreQueueItemList.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Queues\RestoreQueue\RestoreQueueItemList.ascx.designer.cs">
+      <DependentUpon>RestoreQueueItemList.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Queues\RestoreQueue\Default.aspx.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Queues\RestoreQueue\Default.aspx.designer.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Queues\RestoreQueue\SearchPanel.ascx.cs">
+      <DependentUpon>SearchPanel.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Queues\RestoreQueue\SearchPanel.ascx.designer.cs">
+      <DependentUpon>SearchPanel.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Queues\WorkQueue\Edit\TierMigrationWorkQueueDetailsView.ascx.cs">
+      <DependentUpon>TierMigrationWorkQueueDetailsView.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Queues\WorkQueue\Edit\TierMigrationWorkQueueDetailsView.ascx.designer.cs">
+      <DependentUpon>TierMigrationWorkQueueDetailsView.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Queues\WorkQueue\Edit\WorkQueueItemDeleted.aspx.cs">
+      <DependentUpon>WorkQueueItemDeleted.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Queues\WorkQueue\Edit\WorkQueueItemDeleted.aspx.designer.cs">
+      <DependentUpon>WorkQueueItemDeleted.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Queues\WorkQueue\Edit\WebEditStudyWorkQueueDetailsView.ascx.cs">
+      <DependentUpon>WebEditStudyWorkQueueDetailsView.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Queues\WorkQueue\Edit\WebEditStudyWorkQueueDetailsView.ascx.designer.cs">
+      <DependentUpon>WebEditStudyWorkQueueDetailsView.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Queues\WorkQueue\Edit\GeneralWorkQueueDetailsView.ascx.cs">
+      <DependentUpon>GeneralWorkQueueDetailsView.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Queues\WorkQueue\Edit\GeneralWorkQueueDetailsView.ascx.designer.cs">
+      <DependentUpon>GeneralWorkQueueDetailsView.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Studies\Default.aspx.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Studies\Default.aspx.designer.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Studies\Move\Default.aspx.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Studies\Move\Default.aspx.designer.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Studies\Move\DeviceGridView.ascx.cs">
+      <DependentUpon>DeviceGridView.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Studies\Move\DeviceGridView.ascx.designer.cs">
+      <DependentUpon>DeviceGridView.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Studies\Move\MovePanel.ascx.cs">
+      <DependentUpon>MovePanel.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Studies\Move\MovePanel.ascx.designer.cs">
+      <DependentUpon>MovePanel.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Studies\Move\StudyGridView.ascx.cs">
+      <DependentUpon>StudyGridView.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Studies\Move\StudyGridView.ascx.designer.cs">
+      <DependentUpon>StudyGridView.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Studies\SearchPanel.ascx.cs">
+      <DependentUpon>SearchPanel.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Studies\SearchPanel.ascx.designer.cs">
+      <DependentUpon>SearchPanel.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Studies\MoveSeries\StudySummaryPanel.ascx.cs">
+      <DependentUpon>StudySummaryPanel.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Studies\MoveSeries\StudySummaryPanel.ascx.designer.cs">
+      <DependentUpon>StudySummaryPanel.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Studies\StudyDetails\Code\PatientSummary.cs" />
+    <Compile Include="Pages\Studies\StudyDetails\Code\PatientSummaryAssembler.cs" />
+    <Compile Include="Pages\Studies\StudyDetails\Controls\ArchivePanel.ascx.cs">
+      <DependentUpon>ArchivePanel.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Studies\StudyDetails\Controls\ArchivePanel.ascx.designer.cs">
+      <DependentUpon>ArchivePanel.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Studies\StudyDetails\Controls\DeleteStudyConfirmDialog.ascx.cs">
+      <DependentUpon>DeleteStudyConfirmDialog.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Studies\StudyDetails\Controls\DeleteStudyConfirmDialog.ascx.designer.cs">
+      <DependentUpon>DeleteStudyConfirmDialog.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Studies\StudyDetails\Controls\EditStudyDetailsDialog.ascx.cs">
+      <DependentUpon>EditStudyDetailsDialog.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Studies\StudyDetails\Controls\EditStudyDetailsDialog.ascx.designer.cs">
+      <DependentUpon>EditStudyDetailsDialog.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Studies\StudyDetails\Controls\FileSystemQueueGridView.ascx.cs">
+      <DependentUpon>FileSystemQueueGridView.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Studies\StudyDetails\Controls\FileSystemQueueGridView.ascx.designer.cs">
+      <DependentUpon>FileSystemQueueGridView.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Studies\StudyDetails\Controls\PatientSummaryPanel.ascx.cs">
+      <DependentUpon>PatientSummaryPanel.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Studies\StudyDetails\Controls\PatientSummaryPanel.ascx.designer.cs">
+      <DependentUpon>PatientSummaryPanel.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Studies\StudyDetails\Controls\SeriesGridView.ascx.cs">
+      <DependentUpon>SeriesGridView.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Studies\StudyDetails\Controls\SeriesGridView.ascx.designer.cs">
+      <DependentUpon>SeriesGridView.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Studies\StudyDetails\Controls\StudyDetailsPanel.ascx.cs">
+      <DependentUpon>StudyDetailsPanel.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Studies\StudyDetails\Controls\StudyDetailsPanel.ascx.designer.cs">
+      <DependentUpon>StudyDetailsPanel.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Studies\StudyDetails\Controls\StudyDetailsTabs.ascx.cs">
+      <DependentUpon>StudyDetailsTabs.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Studies\StudyDetails\Controls\StudyDetailsTabs.ascx.designer.cs">
+      <DependentUpon>StudyDetailsTabs.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Studies\StudyDetails\Controls\StudyDetailsView.ascx.cs">
+      <DependentUpon>StudyDetailsView.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Studies\StudyDetails\Controls\StudyDetailsView.ascx.designer.cs">
+      <DependentUpon>StudyDetailsView.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Studies\StudyDetails\Controls\StudyIntegrityQueueGridView.ascx.cs">
+      <DependentUpon>StudyIntegrityQueueGridView.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Studies\StudyDetails\Controls\StudyIntegrityQueueGridView.ascx.designer.cs">
+      <DependentUpon>StudyIntegrityQueueGridView.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Studies\StudyDetails\Controls\StudyReprocessChangeLog.ascx.cs">
+      <DependentUpon>StudyReprocessChangeLog.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Studies\StudyDetails\Controls\StudyReprocessChangeLog.ascx.designer.cs">
+      <DependentUpon>StudyReprocessChangeLog.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Studies\StudyDetails\Controls\StudyStateAlertPanel.ascx.cs">
+      <DependentUpon>StudyStateAlertPanel.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Studies\StudyDetails\Controls\StudyStateAlertPanel.ascx.designer.cs">
+      <DependentUpon>StudyStateAlertPanel.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Studies\StudyDetails\Controls\StudyStorageView.ascx.cs">
+      <DependentUpon>StudyStorageView.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Studies\StudyDetails\Controls\StudyStorageView.ascx.designer.cs">
+      <DependentUpon>StudyStorageView.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Studies\StudyDetails\Controls\WorkQueueGridView.ascx.cs">
+      <DependentUpon>WorkQueueGridView.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Studies\StudyDetails\Controls\WorkQueueGridView.ascx.designer.cs">
+      <DependentUpon>WorkQueueGridView.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Studies\StudyDetails\Default.aspx.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Studies\StudyDetails\Default.aspx.designer.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Studies\StudyListGridView.ascx.cs">
+      <DependentUpon>StudyListGridView.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Studies\StudyListGridView.ascx.designer.cs">
+      <DependentUpon>StudyListGridView.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Queues\WorkQueue\Edit\AutoRouteWorkQueueDetails.cs" />
+    <Compile Include="Pages\Queues\WorkQueue\Edit\AutoRouteWorkQueueDetailsView.ascx.cs">
+      <DependentUpon>AutoRouteWorkQueueDetailsView.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Queues\WorkQueue\Edit\AutoRouteWorkQueueDetailsView.ascx.designer.cs">
+      <DependentUpon>AutoRouteWorkQueueDetailsView.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Queues\WorkQueue\Edit\DeleteWorkQueueDialog.ascx.cs">
+      <DependentUpon>DeleteWorkQueueDialog.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Queues\WorkQueue\Edit\DeleteWorkQueueDialog.ascx.designer.cs">
+      <DependentUpon>DeleteWorkQueueDialog.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Queues\WorkQueue\Edit\ResetWorkQueueDialog.ascx.cs">
+      <DependentUpon>ResetWorkQueueDialog.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Queues\WorkQueue\Edit\ResetWorkQueueDialog.ascx.designer.cs">
+      <DependentUpon>ResetWorkQueueDialog.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Queues\WorkQueue\Edit\ScheduleWorkQueueDialog.ascx.cs">
+      <DependentUpon>ScheduleWorkQueueDialog.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Queues\WorkQueue\Edit\ScheduleWorkQueueDialog.ascx.designer.cs">
+      <DependentUpon>ScheduleWorkQueueDialog.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Queues\WorkQueue\Edit\StudyDetails.cs" />
+    <Compile Include="Pages\Queues\WorkQueue\Edit\StudyDetailsAssembler.cs" />
+    <Compile Include="Pages\Queues\WorkQueue\Edit\Default.aspx.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Queues\WorkQueue\Edit\Default.aspx.designer.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Queues\WorkQueue\Edit\WebMoveStudyWorkQueueDetails.cs" />
+    <Compile Include="Pages\Queues\WorkQueue\Edit\WebMoveStudyWorkQueueDetailsView.ascx.cs">
+      <DependentUpon>WebMoveStudyWorkQueueDetailsView.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Queues\WorkQueue\Edit\WebMoveStudyWorkQueueDetailsView.ascx.designer.cs">
+      <DependentUpon>WebMoveStudyWorkQueueDetailsView.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Queues\WorkQueue\Edit\WorkQueueDetails.cs" />
+    <Compile Include="Pages\Queues\WorkQueue\Edit\WorkQueueDetailsAssembler.cs" />
+    <Compile Include="Pages\Queues\WorkQueue\Edit\WorkQueueDetailsViewBase.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Queues\WorkQueue\Edit\WorkQueueItemDetailsPanel.ascx.cs">
+      <DependentUpon>WorkQueueItemDetailsPanel.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Queues\WorkQueue\Edit\WorkQueueItemDetailsPanel.ascx.designer.cs">
+      <DependentUpon>WorkQueueItemDetailsPanel.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Queues\WorkQueue\Edit\WorkQueueSettingsPanel.ascx.cs">
+      <DependentUpon>WorkQueueSettingsPanel.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Queues\WorkQueue\Edit\WorkQueueSettingsPanel.ascx.designer.cs">
+      <DependentUpon>WorkQueueSettingsPanel.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Queues\WorkQueue\Default.aspx.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Queues\WorkQueue\Default.aspx.designer.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Queues\WorkQueue\SearchPanel.ascx.cs">
+      <DependentUpon>SearchPanel.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Queues\WorkQueue\SearchPanel.ascx.designer.cs">
+      <DependentUpon>SearchPanel.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Queues\WorkQueue\WorkQueueItemCollection.cs" />
+    <Compile Include="Pages\Queues\WorkQueue\WorkQueueItemList.ascx.cs">
+      <DependentUpon>WorkQueueItemList.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Queues\WorkQueue\WorkQueueItemList.ascx.designer.cs">
+      <DependentUpon>WorkQueueItemList.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Queues\WorkQueue\WorkQueueSettings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>WorkQueueSettings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="PersistantImage.ashx.cs">
+      <DependentUpon>PersistantImage.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\FilesystemInfoService.asmx.cs">
+      <DependentUpon>FilesystemInfoService.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Services\ValidationServices.asmx.cs">
+      <DependentUpon>ValidationServices.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_Themes\Default\Global.skin" />
+    <Content Include="App_Themes\Default\images\AboutBackground.png" />
+    <Content Include="App_Themes\Default\images\Background.png" />
+    <Content Include="App_Themes\Default\images\blank.gif" />
+    <Content Include="App_Themes\Default\images\Buttons\AddDataAccessDisabled.png" />
+    <Content Include="App_Themes\Default\images\Buttons\AddDataAccessEnabled.png" />
+    <Content Include="App_Themes\Default\images\Buttons\AddDataAccessHover.png" />
+    <Content Include="App_Themes\Default\images\Buttons\AddDisabled.png" />
+    <Content Include="App_Themes\Default\images\Buttons\AddEnabled.png" />
+    <Content Include="App_Themes\Default\images\Buttons\AddHover.png" />
+    <Content Include="App_Themes\Default\images\Buttons\ApplyDisabled.png" />
+    <Content Include="App_Themes\Default\images\Buttons\ApplyEnabled.png" />
+    <Content Include="App_Themes\Default\images\Buttons\ApplyHover.png" />
+    <Content Include="App_Themes\Default\images\Buttons\CalendarIcon.png" />
+    <Content Include="App_Themes\Default\images\Buttons\CancelDisabled.png" />
+    <Content Include="App_Themes\Default\images\Buttons\CancelEnabled.png" />
+    <Content Include="App_Themes\Default\images\Buttons\CancelHover.png" />
+    <Content Include="App_Themes\Default\images\Buttons\ClearButtonBackground.png" />
+    <Content Include="App_Themes\Default\images\Buttons\CopyDisabled.png" />
+    <Content Include="App_Themes\Default\images\Buttons\CopyEnabled.png" />
+    <Content Include="App_Themes\Default\images\Buttons\CopyHover.png" />
+    <Content Include="App_Themes\Default\images\Buttons\DeleteAllDisabled.png" />
+    <Content Include="App_Themes\Default\images\Buttons\DeleteAllEnabled.png" />
+    <Content Include="App_Themes\Default\images\Buttons\DeleteAllHover.png" />
+    <Content Include="App_Themes\Default\images\Buttons\DeleteDisabled.png" />
+    <Content Include="App_Themes\Default\images\Buttons\DeleteEnabled.png" />
+    <Content Include="App_Themes\Default\images\Buttons\DeleteHover.png" />
+    <Content Include="App_Themes\Default\images\Buttons\DeleteSeriesDisabled.png" />
+    <Content Include="App_Themes\Default\images\Buttons\DeleteSeriesEnabled.png" />
+    <Content Include="App_Themes\Default\images\Buttons\DeleteSeriesHover.png" />
+    <Content Include="App_Themes\Default\images\Buttons\DeleteStudyDisabled.png" />
+    <Content Include="App_Themes\Default\images\Buttons\DeleteStudyEnabled.png" />
+    <Content Include="App_Themes\Default\images\Buttons\DeleteStudyHover.png" />
+    <Content Include="App_Themes\Default\images\Buttons\DiscardDisabled.png" />
+    <Content Include="App_Themes\Default\images\Buttons\DiscardEnabled.png" />
+    <Content Include="App_Themes\Default\images\Buttons\DiscardHover.png" />
+    <Content Include="App_Themes\Default\images\Buttons\DoneDisabled.png" />
+    <Content Include="App_Themes\Default\images\Buttons\DoneEnabled.png" />
+    <Content Include="App_Themes\Default\images\Buttons\DoneHover.png" />
+    <Content Include="App_Themes\Default\images\Buttons\EditDisabled.png" />
+    <Content Include="App_Themes\Default\images\Buttons\EditEnabled.png" />
+    <Content Include="App_Themes\Default\images\Buttons\EditHover.png" />
+    <Content Include="App_Themes\Default\images\Buttons\EditStudyDisabled.png" />
+    <Content Include="App_Themes\Default\images\Buttons\EditStudyEnabled.png" />
+    <Content Include="App_Themes\Default\images\Buttons\EditStudyHover.png" />
+    <Content Include="App_Themes\Default\images\Buttons\MoveDisabled.png" />
+    <Content Include="App_Themes\Default\images\Buttons\MoveEnabled.png" />
+    <Content Include="App_Themes\Default\images\Buttons\MoveHover.png" />
+    <Content Include="App_Themes\Default\images\Buttons\MoveSeriesDisabled.png" />
+    <Content Include="App_Themes\Default\images\Buttons\MoveSeriesEnabled.png" />
+    <Content Include="App_Themes\Default\images\Buttons\MoveSeriesHover.png" />
+    <Content Include="App_Themes\Default\images\Buttons\NewStudyDisabled.png" />
+    <Content Include="App_Themes\Default\images\Buttons\NewStudyEnabled.png" />
+    <Content Include="App_Themes\Default\images\Buttons\NewStudyHover.png" />
+    <Content Include="App_Themes\Default\images\Buttons\ReprocessStudyDisabled.png" />
+    <Content Include="App_Themes\Default\images\Buttons\ReprocessStudyEnabled.png" />
+    <Content Include="App_Themes\Default\images\Buttons\ReprocessStudyHover.png" />
+    <Content Include="App_Themes\Default\images\Buttons\ResetPasswordDisabled.png" />
+    <Content Include="App_Themes\Default\images\Buttons\ResetPasswordEnabled.png" />
+    <Content Include="App_Themes\Default\images\Buttons\ResetPasswordHover.png" />
+    <Content Include="App_Themes\Default\images\Buttons\ViewImagesDisabled.png" />
+    <Content Include="App_Themes\Default\images\Buttons\ViewImagesEnabled.png" />
+    <Content Include="App_Themes\Default\images\Buttons\ViewImagesHover.png" />
+    <Content Include="App_Themes\Default\images\Buttons\ViewSeriesDisabled.png" />
+    <Content Include="App_Themes\Default\images\Buttons\ViewSeriesEnabled.png" />
+    <Content Include="App_Themes\Default\images\Buttons\ViewSeriesHover.png" />
+    <Content Include="App_Themes\Default\images\Buttons\ViewStudyDisabled.png" />
+    <Content Include="App_Themes\Default\images\Buttons\ViewStudyEnabled.png" />
+    <Content Include="App_Themes\Default\images\Buttons\ViewStudyHover.png" />
+    <Content Include="App_Themes\Default\images\Controls\Dialog\DialogBodyBackgroundTall.png" />
+    <Content Include="App_Themes\Default\images\MainContent\SelectedPartitionTabBackground.png" />
+    <Content Include="Builds\SplashScreen\ClearCanvasWebViewerLogo.png" />
+    <Content Include="Controls\LoginWarningIndicator.ascx" />
+    <Content Include="Controls\LoginWarningsDialog.ascx" />
+    <Content Include="Controls\ServerPartitionSelector.ascx" />
+    <Content Include="Controls\UsersGuideLink.ascx" />
+    <Content Include="Pages\Admin\Alerts\StudyAlertContextInfoView.ascx" />
+    <Content Include="Pages\Admin\Configure\DataRules\AddEditDataRuleDialog.ascx" />
+    <Content Include="Pages\Admin\Configure\DataRules\DataRuleGridView.ascx" />
+    <Content Include="Pages\Admin\Configure\DataRules\DataRulePanel.ascx" />
+    <EmbeddedResource Include="Pages\Admin\Configure\DataRules\DataRulePanel.js" />
+    <Content Include="Pages\Admin\Configure\DataRules\DataRuleSamples.asmx" />
+    <Content Include="Pages\Admin\Configure\DataRules\Default.aspx" />
+    <Content Include="Pages\Admin\Configure\ServerPartitions\DataAccessGroupPanel.ascx" />
+    <Content Include="Pages\Admin\UserManagement\UserGroups\PasswordConfirmDialog.ascx" />
+    <Content Include="Pages\Error\SoftwareExpiredErrorPage.aspx" />
+    <Content Include="Pages\Error\LicenseErrorPage.aspx" />
+    <Content Include="Pages\Help\Contact.ascx" />
+    <Content Include="Pages\Queues\StudyIntegrityQueue\SIQEntryTooltip.ascx" />
+    <Content Include="Pages\Queues\WorkQueue\Edit\EditWorkQueueDetailsView.ascx" />
+    <Content Include="Pages\Studies\StudyDetails\Controls\AddAuthorityGroupsDialog.ascx" />
+    <Content Include="Pages\Studies\StudyDetails\Controls\UpdateAuthorityGroupDialog.ascx" />
+    <Content Include="Pages\Studies\StudyDetails\Controls\DataAccessPanel.ascx" />
+    <EmbeddedResource Include="App_GlobalResources\ColumnHeaders.resx">
+      <Generator>GlobalResourceProxyGenerator</Generator>
+      <LastGenOutput>ColumnHeaders.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="App_GlobalResources\InputLabels.resx">
+      <Generator>GlobalResourceProxyGenerator</Generator>
+      <LastGenOutput>InputLabels.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="App_GlobalResources\SearchFieldLabels.resx">
+      <Generator>GlobalResourceProxyGenerator</Generator>
+      <LastGenOutput>SearchFieldLabels.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="App_GlobalResources\InputValidation.resx">
+      <Generator>GlobalResourceProxyGenerator</Generator>
+      <LastGenOutput>InputValidation.designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="App_GlobalResources\DetailedViewFieldLabels.resx">
+      <Generator>GlobalResourceProxyGenerator</Generator>
+      <LastGenOutput>DetailedViewFieldLabels.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <Content Include="App_Themes\Default\images\Controls\GridView\GridViewPagerFirstDisabled.png" />
+    <Content Include="App_Themes\Default\images\Controls\GridView\GridViewPagerFirstEnabled.png" />
+    <Content Include="App_Themes\Default\images\Controls\GridView\GridViewPagerLastDisabled.png" />
+    <Content Include="App_Themes\Default\images\Controls\GridView\GridViewPagerLastEnabled.png" />
+    <Content Include="App_Themes\Default\images\Controls\GridView\GridViewPagerNextEnabled.png" />
+    <Content Include="App_Themes\Default\images\Buttons\NoDisabled.png" />
+    <Content Include="App_Themes\Default\images\Buttons\NoEnabled.png" />
+    <Content Include="App_Themes\Default\images\Buttons\NoHover.png" />
+    <Content Include="App_Themes\Default\images\Buttons\OKDisabled.png" />
+    <Content Include="App_Themes\Default\images\Buttons\OKEnabled.png" />
+    <Content Include="App_Themes\Default\images\Buttons\OKHover.png" />
+    <Content Include="App_Themes\Default\images\Controls\GridView\GridViewPagerNextDisabled.png" />
+    <Content Include="App_Themes\Default\images\Controls\GridView\GridViewPagerPreviousDisabled.png" />
+    <Content Include="App_Themes\Default\images\Controls\GridView\GridViewPagerTotalStudiesLeft.png" />
+    <Content Include="App_Themes\Default\images\Controls\GridView\GridViewPagerTotalStudiesRight.png" />
+    <Content Include="App_Themes\Default\images\Controls\GridView\GridViewPagerPreviousEnabled.png" />
+    <Content Include="App_Themes\Default\images\Buttons\ReconcileDisabled.png" />
+    <Content Include="App_Themes\Default\images\Buttons\ReconcileEnabled.png" />
+    <Content Include="App_Themes\Default\images\Buttons\ReconcileHover.png" />
+    <Content Include="App_Themes\Default\images\Buttons\ReprocessDisabled.png" />
+    <Content Include="App_Themes\Default\images\Buttons\ReprocessEnabled.png" />
+    <Content Include="App_Themes\Default\images\Buttons\ReprocessHover.png" />
+    <Content Include="App_Themes\Default\images\Buttons\RescheduleHover.png" />
+    <Content Include="App_Themes\Default\images\Buttons\ResetHover.png" />
+    <Content Include="App_Themes\Default\images\Buttons\RestoreDisabled.png" />
+    <Content Include="App_Themes\Default\images\Buttons\RestoreEnabled.png" />
+    <Content Include="App_Themes\Default\images\Buttons\RestoreHover.png" />
+    <Content Include="App_Themes\Default\images\Buttons\RescheduleDisabled.png" />
+    <Content Include="App_Themes\Default\images\Buttons\RescheduleEnabled.png" />
+    <Content Include="App_Themes\Default\images\Buttons\ResetDisabled.png" />
+    <Content Include="App_Themes\Default\images\Buttons\ResetEnabled.png" />
+    <Content Include="App_Themes\Default\images\Buttons\SearchClicked.png" />
+    <Content Include="App_Themes\Default\images\Buttons\SearchDisabled.png" />
+    <Content Include="App_Themes\Default\images\Buttons\SearchEnabled.png" />
+    <Content Include="App_Themes\Default\images\Buttons\SearchHover.png" />
+    <Content Include="App_Themes\Default\images\Buttons\SearchIcon.png" />
+    <Content Include="App_Themes\Default\images\Buttons\SearchIconHover.png" />
+    <Content Include="App_Themes\Default\images\Buttons\UpdateDisabled.png" />
+    <Content Include="App_Themes\Default\images\Buttons\UpdateEnabled.png" />
+    <Content Include="App_Themes\Default\images\Buttons\UpdateHover.png" />
+    <Content Include="App_Themes\Default\images\Buttons\ViewDetailsDisabled.png" />
+    <Content Include="App_Themes\Default\images\Buttons\ViewDetailsEnabled.png" />
+    <Content Include="App_Themes\Default\images\Buttons\ViewDetailsHover.png" />
+    <Content Include="App_Themes\Default\images\Buttons\YesDisabled.png" />
+    <Content Include="App_Themes\Default\images\Buttons\YesEnabled.png" />
+    <Content Include="App_Themes\Default\images\Buttons\YesHover.png" />
+    <Content Include="App_Themes\Default\images\Controls\Calendar\calendar-arrow-left.gif" />
+    <Content Include="App_Themes\Default\images\Controls\Calendar\calendar-arrow-right.gif" />
+    <Content Include="App_Themes\Default\images\Controls\Calendar\TitleBackground.gif" />
+    <Content Include="App_Themes\Default\images\Controls\Dialog\DialogBodyBackground.png" />
+    <Content Include="App_Themes\Default\images\Controls\Dialog\HeadingBackground.png" />
+    <Content Include="App_Themes\Default\images\Controls\Dialog\LinkButtonBackground.png" />
+    <Content Include="App_Themes\Default\images\Controls\Dialog\DialogActiveTabLeft.png" />
+    <Content Include="App_Themes\Default\images\Controls\Dialog\DialogActiveTabMiddle.png" />
+    <Content Include="App_Themes\Default\images\Controls\Dialog\DialogActiveTabRight.png" />
+    <Content Include="App_Themes\Default\images\Controls\Dialog\DialogHoverTabLeft.png" />
+    <Content Include="App_Themes\Default\images\Controls\Dialog\DialogHoverTabMiddle.png" />
+    <Content Include="App_Themes\Default\images\Controls\Dialog\DialogHoverTabRight.png" />
+    <Content Include="App_Themes\Default\images\Controls\Dialog\DialogInactiveTabLeft.png" />
+    <Content Include="App_Themes\Default\images\Controls\Dialog\DialogInactiveTabMiddle.png" />
+    <Content Include="App_Themes\Default\images\Controls\Dialog\DialogInactiveTabRight.png" />
+    <Content Include="App_Themes\Default\images\Controls\Dialog\DialogTabContentBottom.png" />
+    <Content Include="App_Themes\Default\images\Controls\Dialog\ReconcileButtonBackground.png" />
+    <Content Include="App_Themes\Default\images\Controls\Dialog\SubHeadingBackground.png" />
+    <Content Include="App_Themes\Default\images\Controls\GridView\GridViewHeaderBackground.png" />
+    <Content Include="App_Themes\Default\images\Controls\GridView\GridViewPagerTopBackground.png" />
+    <Content Include="App_Themes\Default\images\Controls\GridView\GridViewSelectedBackground.png" />
+    <Content Include="App_Themes\Default\images\Controls\Tabs\TabActiveLeft.png" />
+    <Content Include="App_Themes\Default\images\Controls\Tabs\TabActiveMiddle.png" />
+    <Content Include="App_Themes\Default\images\Controls\Tabs\TabActiveRight.png" />
+    <Content Include="App_Themes\Default\images\Controls\Tabs\TabHeaderBackgroundTop.png" />
+    <Content Include="App_Themes\Default\images\Controls\Tabs\TabHoverLeft.png" />
+    <Content Include="App_Themes\Default\images\Controls\Tabs\TabHoverMiddle.png" />
+    <Content Include="App_Themes\Default\images\Controls\Tabs\TabHoverRight.png" />
+    <Content Include="App_Themes\Default\images\Controls\Tabs\TabInactiveLeft.png" />
+    <Content Include="App_Themes\Default\images\Controls\Tabs\TabInactiveMiddle.png" />
+    <Content Include="App_Themes\Default\images\Controls\Tabs\TabInactiveRight.png" />
+    <Content Include="App_Themes\Default\images\Error\ErrorDescriptionBackground.png" />
+    <Content Include="App_Themes\Default\images\Error\ErrorMessageBackground.png" />
+    <Content Include="App_Themes\Default\images\Error\UserEscapeLinkBackground.png" />
+    <Content Include="App_Themes\Default\images\Header\ClearCanvasLogo.png" />
+    <Content Include="App_Themes\Default\images\Header\LocationEdge.png" />
+    <Content Include="App_Themes\Default\images\Header\MenuHoverBackground.png" />
+    <Content Include="App_Themes\Default\images\Indicators\AcceptKOPRFeature.png" />
+    <Content Include="App_Themes\Default\images\Indicators\ajax-loader-blue.gif" />
+    <Content Include="App_Themes\Default\images\Indicators\ajax-loader-green.gif" />
+    <Content Include="App_Themes\Default\images\Indicators\ajax-loader.gif" />
+    <Content Include="App_Themes\Default\images\Indicators\AlertIndicatorBackground.png" />
+    <Content Include="App_Themes\Default\images\Indicators\IdeographicName.gif" />
+    <Content Include="App_Themes\Default\images\Indicators\AutoRouteFeature.png" />
+    <Content Include="App_Themes\Default\images\Indicators\MenuArrow.gif" />
+    <Content Include="App_Themes\Default\images\Indicators\QueryFeature.png" />
+    <Content Include="App_Themes\Default\images\Indicators\RefreshEnabled.gif" />
+    <Content Include="App_Themes\Default\images\Indicators\RefreshEnabled.png" />
+    <Content Include="App_Themes\Default\images\Indicators\RetrieveFeature.png" />
+    <Content Include="App_Themes\Default\images\Indicators\Searching.gif" />
+    <Content Include="App_Themes\Default\images\Indicators\StoreFeature.png" />
+    <Content Include="App_Themes\Default\images\Indicators\usage.png" />
+    <Content Include="App_Themes\Default\images\Indicators\Warning.png" />
+    <Content Include="App_Themes\Default\images\Indicators\WarningSmall.png" />
+    <Content Include="Builds\SplashScreen\LoginSplash.png" />
+    <Content Include="App_Themes\Default\images\MainContent\dropdown.gif" />
+    <Content Include="App_Themes\Default\images\MainContent\Loading.gif" />
+    <Content Include="App_Themes\Default\images\MainContent\Loading.png" />
+    <Content Include="App_Themes\Default\images\MainContent\MainContentBottom.png" />
+    <Content Include="App_Themes\Default\images\MainContent\MainContentBottomLeftCorner.png" />
+    <Content Include="App_Themes\Default\images\MainContent\MainContentBottomRightCorner.png" />
+    <Content Include="App_Themes\Default\images\MainContent\MainContentLeftEdge.png" />
+    <Content Include="App_Themes\Default\images\MainContent\MainContentRightEdge.png" />
+    <Content Include="App_Themes\Default\images\Header\MenuBackground.png" />
+    <Content Include="App_Themes\Default\images\Header\LocationBackground.png" />
+    <Content Include="App_Themes\Default\images\Header\MenuEdge.png" />
+    <Content Include="App_Themes\Default\images\MainContent\PatientSummaryBackground.png" />
+    <Content Include="App_Themes\Default\images\MainContent\MainContentTitleBackground.png" />
+    <Content Include="App_Themes\Default\images\MainContent\SearchDropDownListBackground.png" />
+    <Content Include="App_Themes\Default\images\MainContent\SearchPanelBackground.png" />
+    <Content Include="App_Themes\Default\images\MainContent\SearchTextBoxBackground.png" />
+    <Content Include="App_Themes\Default\images\MainContent\ToolbarButtonPanelBackground.png" />
+    <Content Include="App_Themes\Default\images\Indicators\Watermark.gif" />
+    <Content Include="App_Themes\Default\images\Pages\About\AboutBackground.png" />
+    <Content Include="App_Themes\Default\images\Pages\Dashboard\SidebarItemBackground.png" />
+    <Content Include="App_Themes\Default\images\Pages\Dashboard\StudiesSummaryTotalBackground.png" />
+    <Content Include="App_Themes\Default\images\Pages\Dashboard\UserOverviewBackground.png" />
+    <Content Include="App_Themes\Default\StyleSheets\Admin.css" />
+    <Content Include="App_Themes\Default\StyleSheets\Controls\PartitionTabs.css" />
+    <Content Include="App_Themes\Default\StyleSheets\Controls\GridView.css" />
+    <Content Include="App_Themes\Default\StyleSheets\Controls\InvalidInputIndicator.css" />
+    <Content Include="App_Themes\Default\StyleSheets\Controls\jqueryMultiSelect.css" />
+    <Content Include="App_Themes\Default\StyleSheets\Controls\ReconcileDialog.css" />
+    <Content Include="App_Themes\Default\StyleSheets\Error.css" />
+    <Content Include="App_Themes\Default\StyleSheets\Global.css" />
+    <Content Include="App_Themes\Default\StyleSheets\Login.css" />
+    <Content Include="App_Themes\Default\StyleSheets\Studies.css" />
+    <Content Include="App_Themes\Default\StyleSheets\Controls\Calendar.css" />
+    <Content Include="App_Themes\Default\StyleSheets\Controls\Dialog.css" />
+    <Content Include="App_Themes\Default\StyleSheets\Controls\Tabs.css" />
+    <EmbeddedResource Include="App_GlobalResources\ErrorMessages.resx">
+      <SubType>Designer</SubType>
+      <Generator>GlobalResourceProxyGenerator</Generator>
+      <LastGenOutput>ErrorMessages.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <Content Include="App_Themes\Default\images\Indicators\checked.png" />
+    <Content Include="App_Themes\Default\images\Indicators\unchecked.png" />
+    <Content Include="App_Themes\Default\images\Controls\Dialog\DialogTitleBarBG-left.png" />
+    <Content Include="App_Themes\Default\images\Controls\Dialog\DialogTitleBarBG-right.png" />
+    <Content Include="App_Themes\Default\images\Controls\Dialog\DialogTitleBarBG.png" />
+    <Content Include="App_Themes\Default\StyleSheets\StudyIntegrityQueue.css" />
+    <Content Include="App_Themes\Default\StyleSheets\WorkQueue.css" />
+    <Content Include="ClientBin\SplashScreen\ClearCanvasWebViewerLogo.png">
+    </Content>
+    <Content Include="Controls\AlertIndicator.ascx" />
+    <Content Include="Controls\ApplicationAlertPanel.ascx" />
+    <Content Include="Controls\CheckJavascript.ascx" />
+    <Content Include="Controls\EmptySearchResultsMessage.ascx" />
+    <Content Include="Controls\JQuery.ascx" />
+    <Content Include="Controls\MessageBox.ascx" />
+    <Content Include="Controls\GridPager.ascx" />
+    <Content Include="Controls\InvalidInputIndicator.ascx" />
+    <Content Include="Controls\ModalDialog.ascx" />
+    <EmbeddedResource Include="App_GlobalResources\Tooltips.resx">
+      <SubType>Designer</SubType>
+      <Generator>GlobalResourceProxyGenerator</Generator>
+      <LastGenOutput>Tooltips.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\PersonNameInputPanel.js" />
+    <Content Include="Controls\PersonNameInputPanel.ascx" />
+    <Content Include="Controls\SectionPanel.ascx" />
+    <Content Include="Controls\SessionTimeout.ascx" />
+    <Content Include="Controls\TimedDialog.ascx" />
+    <Content Include="Global.asax" />
+    <Content Include="KeepSessionAlive.aspx" />
+    <Content Include="Pages\Admin\Alerts\AlertHoverPopupDetails.ascx" />
+    <Content Include="Pages\Admin\Alerts\WorkQueueAlertContextDataView.ascx" />
+    <Content Include="Pages\Admin\Dashboard\AlertHoverPopupDetails.ascx" />
+    <Content Include="Pages\Admin\Dashboard\AlertsGridView.ascx" />
+    <Content Include="Pages\Admin\Dashboard\StudiesSummary.ascx" />
+    <Content Include="Pages\Admin\Dashboard\Default.aspx" />
+    <Content Include="Pages\Admin\Dashboard\FileSystemsGridView.ascx" />
+    <Content Include="Pages\Admin\Dashboard\ServerPartitionGridView.ascx" />
+    <Content Include="Pages\Admin\Dashboard\StudyIntegrityQueueSummary.ascx" />
+    <Content Include="Pages\Admin\Dashboard\WorkQueueAlertContextDataView.ascx" />
+    <Content Include="Pages\Admin\Dashboard\WorkQueueSummary.ascx" />
+    <Content Include="Pages\Error\CookiesRequired.aspx" />
+    <Content Include="Pages\Queues\StudyIntegrityQueue\DuplicateSopDialog.ascx" />
+    <EmbeddedResource Include="Pages\Queues\WorkQueue\Edit\WorkQueueItemDetailsPanel.js" />
+    <Content Include="Pages\Queues\WorkQueue\Edit\ProcessDuplicateWorkQueueDetailsView.ascx" />
+    <Content Include="Pages\Queues\WorkQueue\WorkQueueAlertPanel.ascx" />
+    <Content Include="Pages\Studies\MoveSeries\Default.aspx" />
+    <Content Include="Pages\Studies\MoveSeries\DeviceGridView.ascx" />
+    <Content Include="Pages\Studies\MoveSeries\MovePanel.ascx" />
+    <EmbeddedResource Include="Pages\Studies\MoveSeries\MovePanel.js" />
+    <Content Include="Pages\Studies\MoveSeries\PatientSummaryPanel.ascx" />
+    <Content Include="Pages\Studies\MoveSeries\SeriesGridView.ascx" />
+    <Content Include="Pages\Studies\SeriesDetails\Default.aspx" />
+    <Content Include="Pages\Studies\SeriesDetails\PatientSummaryPanel.ascx" />
+    <Content Include="Pages\Studies\SeriesDetails\SeriesDetailsPanel.ascx" />
+    <Content Include="Pages\Studies\SeriesDetails\SeriesDetailsView.ascx" />
+    <Content Include="Pages\Studies\SeriesDetails\StudySummaryPanel.ascx" />
+    <Content Include="Pages\Studies\StudyDetails\Controls\DeleteSeriesConfirmDialog.ascx" />
+    <Content Include="Pages\Studies\StudyDetails\Controls\DuplicateProcessChangeLog.ascx" />
+    <Content Include="Pages\Studies\StudyDetails\Controls\SeriesDeleteChangeLog.ascx" />
+    <Content Include="Pages\Studies\StudyDetails\Controls\StudyIntegrityQueueGridView.ascx" />
+    <Content Include="Pages\Studies\StudyDetails\Controls\StudyReprocessChangeLog.ascx" />
+    <Content Include="Scripts\date.js" />
+    <Content Include="Users.xml" />
+    <Content Include="Default.aspx" />
+    <Content Include="Images\favicon.ico" />
+    <Content Include="Images\ImageServerLogo.png" />
+    <EmbeddedResource Include="Pages\Admin\Alerts\AlertsPanel.js" />
+    <Content Include="Pages\Admin\Configure\Devices\ThrottleSettingsTab.ascx" />
+    <EmbeddedResource Include="Pages\Admin\Configure\Devices\DevicePanel.js" />
+    <EmbeddedResource Include="Pages\Admin\Configure\FileSystems\FileSystemsPanel.js" />
+    <EmbeddedResource Include="Pages\Admin\Configure\ServerPartitions\ServerPartitionPanel.js" />
+    <EmbeddedResource Include="Pages\Admin\Configure\ServerRules\ServerRulePanel.js" />
+    <EmbeddedResource Include="Pages\Admin\Configure\ServiceLocks\ServiceLockPanel.js" />
+    <EmbeddedResource Include="Pages\Admin\Configure\PartitionArchive\PartitionArchivePanel.js" />
+    <Content Include="Pages\Admin\UserManagement\UserGroups\AddEditUserGroupsDialog.ascx" />
+    <Content Include="Pages\Admin\UserManagement\UserGroups\Default.aspx" />
+    <Content Include="Pages\Admin\UserManagement\UserGroups\UserGroupsGridPanel.ascx" />
+    <Content Include="Pages\Admin\UserManagement\UserGroups\UserGroupsPanel.ascx" />
+    <EmbeddedResource Include="Pages\Admin\UserManagement\UserGroups\UserGroupsPanel.js" />
+    <Content Include="Pages\Admin\UserManagement\Users\AddEditUserDialog.ascx" />
+    <Content Include="Pages\Admin\UserManagement\Users\Default.aspx" />
+    <EmbeddedResource Include="Pages\Admin\UserManagement\Users\UserPanel.js" />
+    <Content Include="Pages\Admin\UserManagement\Users\UserGridPanel.ascx" />
+    <Content Include="Pages\Admin\UserManagement\Users\UserPanel.ascx" />
+    <Content Include="Pages\Login\ChangePasswordDialog.ascx" />
+    <Content Include="Pages\Login\Default.aspx" />
+    <Content Include="Pages\Error\AuthorizationErrorPage.aspx" />
+    <Content Include="Pages\Error\TimeoutErrorPage.aspx" />
+    <EmbeddedResource Include="Pages\Studies\Move\MovePanel.js" />
+    <Content Include="Pages\Login\PasswordExpiredDialog.ascx" />
+    <Content Include="Pages\Queues\ArchiveQueue\ResetArchiveQueueDialog.ascx" />
+    <Content Include="Pages\Studies\StudyDetails\Controls\EditHistoryDetailsColumn.ascx" />
+    <Content Include="Pages\Studies\StudyDetails\Controls\HistoryPanel.ascx" />
+    <Content Include="Pages\Studies\StudyDetails\Controls\ReconcileHistoryDetailsColumn.ascx" />
+    <Content Include="Pages\Studies\StudyDetails\Controls\StudyHistoryChangeDescPanel.ascx" />
+    <Content Include="Pages\Admin\Alerts\AlertsGridPanel.ascx" />
+    <Content Include="Pages\Admin\Alerts\AlertsPanel.ascx" />
+    <Content Include="Pages\Admin\Alerts\Default.aspx" />
+    <Content Include="Pages\Admin\ApplicationLog\ApplicationLogGridView.ascx" />
+    <Content Include="Pages\Admin\ApplicationLog\ApplicationLogPanel.ascx" />
+    <Content Include="Pages\Admin\ApplicationLog\Default.aspx" />
+    <Content Include="Pages\Admin\Audit\DeletedStudies\Default.aspx" />
+    <Content Include="Pages\Admin\Audit\DeletedStudies\DeletedStudiesSearchPanel.ascx" />
+    <Content Include="Pages\Admin\Audit\DeletedStudies\DeletedStudyArchiveInfoPanel.ascx" />
+    <Content Include="Pages\Admin\Audit\DeletedStudies\DeletedStudyDetailsDialog.ascx" />
+    <Content Include="Pages\Admin\Audit\DeletedStudies\DeletedStudyDetailsDialogGeneralPanel.ascx" />
+    <Content Include="Pages\Admin\Audit\DeletedStudies\DeletedStudyDetailsDialogPanel.ascx" />
+    <EmbeddedResource Include="Pages\Admin\Audit\DeletedStudies\DeletedStudySearchPanel.js" />
+    <Content Include="Pages\Admin\Audit\DeletedStudies\GeneralArchiveInfoPanel.ascx" />
+    <Content Include="Pages\Admin\Audit\DeletedStudies\HsmArchiveInfoPanel.ascx" />
+    <Content Include="Pages\Admin\Audit\DeletedStudies\SearchResultGridView.ascx" />
+    <Content Include="Pages\Common\BarChart.aspx" />
+    <Content Include="Pages\Common\BaseAdminPage.aspx" />
+    <Content Include="Pages\Common\BasePage.aspx" />
+    <Content Include="Pages\Common\Default.aspx" />
+    <Content Include="Pages\Admin\Configure\PartitionArchive\AddEditPartitionDialog.ascx" />
+    <Content Include="Pages\Admin\Configure\PartitionArchive\Default.aspx" />
+    <Content Include="Pages\Admin\Configure\PartitionArchive\PartitionArchivePanel.ascx" />
+    <Content Include="Pages\Admin\Configure\PartitionArchive\PartitionArchiveGridPanel.ascx" />
+    <Content Include="Pages\Admin\Configure\Devices\AddEditDeviceDialog.ascx" />
+    <Content Include="Pages\Admin\Configure\Devices\DeviceGridView.ascx" />
+    <Content Include="Pages\Admin\Configure\Devices\Default.aspx" />
+    <Content Include="Pages\Admin\Configure\Devices\DevicePanel.ascx" />
+    <Content Include="Pages\Admin\Configure\FileSystems\AddEditFileSystemDialog.ascx" />
+    <EmbeddedResource Include="App_GlobalResources\GridPager.resx">
+      <SubType>Designer</SubType>
+      <Generator>GlobalResourceProxyGenerator</Generator>
+      <LastGenOutput>GridPager.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="App_GlobalResources\Titles.resx">
+      <SubType>Designer</SubType>
+      <Generator>GlobalResourceProxyGenerator</Generator>
+      <LastGenOutput>Titles.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="App_GlobalResources\Labels.resx">
+      <SubType>Designer</SubType>
+      <Generator>GlobalResourceProxyGenerator</Generator>
+      <LastGenOutput>Labels.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\Admin\Configure\FileSystems\Filesystem.js" />
+    <Content Include="Pages\Admin\Configure\FileSystems\FileSystemsGridView.ascx" />
+    <Content Include="Pages\Admin\Configure\FileSystems\Default.aspx" />
+    <Content Include="Pages\Admin\Configure\FileSystems\FileSystemsPanel.ascx" />
+    <Content Include="Pages\Admin\Configure\ServerPartitions\AddEditPartitionDialog.ascx" />
+    <Content Include="Pages\Admin\Configure\ServerPartitions\ServerPartitionGridPanel.ascx" />
+    <Content Include="Pages\Admin\Configure\ServerPartitions\Default.aspx" />
+    <Content Include="Pages\Admin\Configure\ServerPartitions\ServerPartitionPanel.ascx" />
+    <Content Include="Pages\Admin\Configure\ServerRules\AddEditServerRuleDialog.ascx" />
+    <Content Include="Pages\Admin\Configure\ServerRules\ServerRuleGridView.ascx" />
+    <Content Include="Pages\Admin\Configure\ServerRules\Default.aspx" />
+    <Content Include="Pages\Admin\Configure\ServerRules\ServerRulePanel.ascx" />
+    <Content Include="Pages\Admin\Configure\ServerRules\ServerRuleSamples.asmx" />
+    <Content Include="Pages\Admin\Configure\ServiceLocks\EditServiceLockDialog.ascx" />
+    <Content Include="Pages\Admin\Configure\ServiceLocks\ServiceLockGridView.ascx" />
+    <Content Include="Pages\Admin\Configure\ServiceLocks\Default.aspx" />
+    <Content Include="Pages\Admin\Configure\ServiceLocks\ServiceLockPanel.ascx" />
+    <Content Include="Pages\Error\JavascriptRequired.aspx" />
+    <Content Include="Pages\Error\Default.aspx" />
+    <Content Include="Pages\Error\ErrorPage.aspx" />
+    <Content Include="Pages\Help\About.aspx" />
+    <Content Include="Pages\Help\Default.aspx" />
+    <Content Include="Pages\Help\Documentation.aspx" />
+    <Content Include="Pages\Queues\ArchiveQueue\Default.aspx" />
+    <Content Include="Pages\Queues\ArchiveQueue\SearchPanel.ascx" />
+    <EmbeddedResource Include="Pages\Queues\ArchiveQueue\SearchPanel.js" />
+    <Content Include="Pages\Queues\ArchiveQueue\ArchiveQueueItemList.ascx" />
+    <Content Include="Pages\Queues\StudyIntegrityQueue\Default.aspx" />
+    <Content Include="Pages\Queues\StudyIntegrityQueue\ReconcileDialog.ascx" />
+    <Content Include="Pages\Queues\StudyIntegrityQueue\StudyIntegrityQueueItemList.ascx" />
+    <Content Include="Pages\Queues\StudyIntegrityQueue\SearchPanel.ascx" />
+    <EmbeddedResource Include="Pages\Queues\StudyIntegrityQueue\SearchPanel.js" />
+    <Content Include="Pages\Queues\RestoreQueue\RestoreQueueItemList.ascx" />
+    <EmbeddedResource Include="Pages\Queues\RestoreQueue\SearchPanel.js" />
+    <Content Include="Pages\Queues\RestoreQueue\Default.aspx" />
+    <Content Include="Pages\Queues\RestoreQueue\SearchPanel.ascx" />
+    <Content Include="Pages\Queues\WorkQueue\Edit\TierMigrationWorkQueueDetailsView.ascx" />
+    <Content Include="Pages\Queues\WorkQueue\Edit\WorkQueueItemDeleted.aspx" />
+    <Content Include="Pages\Queues\WorkQueue\Edit\WebEditStudyWorkQueueDetailsView.ascx" />
+    <Content Include="Pages\Queues\WorkQueue\Edit\GeneralWorkQueueDetailsView.ascx" />
+    <Content Include="Pages\Studies\Default.aspx" />
+    <Content Include="Pages\Studies\Move\Default.aspx" />
+    <Content Include="Pages\Studies\Move\DeviceGridView.ascx" />
+    <Content Include="Pages\Studies\Move\MovePanel.ascx" />
+    <Content Include="Pages\Studies\Move\StudyGridView.ascx" />
+    <Content Include="Pages\Studies\SearchPanel.ascx" />
+    <EmbeddedResource Include="Pages\Studies\SearchPanel.js" />
+    <Content Include="Pages\Studies\MoveSeries\StudySummaryPanel.ascx" />
+    <Content Include="Pages\Studies\StudyDetails\Controls\ArchivePanel.ascx" />
+    <Content Include="Pages\Studies\StudyDetails\Controls\DeleteStudyConfirmDialog.ascx" />
+    <Content Include="Pages\Studies\StudyDetails\Controls\EditStudyDetailsDialog.ascx" />
+    <Content Include="Pages\Studies\StudyDetails\Controls\FileSystemQueueGridView.ascx" />
+    <Content Include="Pages\Studies\StudyDetails\Controls\PatientSummaryPanel.ascx" />
+    <Content Include="Pages\Studies\StudyDetails\Controls\SeriesGridView.ascx" />
+    <Content Include="Pages\Studies\StudyDetails\Controls\StudyDetailsPanel.ascx" />
+    <Content Include="Pages\Studies\StudyDetails\Controls\StudyDetailsTabs.ascx" />
+    <Content Include="Pages\Studies\StudyDetails\Controls\StudyDetailsView.ascx" />
+    <Content Include="Pages\Studies\StudyDetails\Controls\StudyStateAlertPanel.ascx" />
+    <Content Include="Pages\Studies\StudyDetails\Controls\StudyStorageView.ascx" />
+    <Content Include="Pages\Studies\StudyDetails\Controls\WorkQueueGridView.ascx" />
+    <Content Include="Pages\Studies\StudyDetails\Default.aspx" />
+    <EmbeddedResource Include="Pages\Studies\StudyDetails\Scripts\FileSystemQueueGridView.js" />
+    <EmbeddedResource Include="Pages\Studies\StudyDetails\Scripts\SeriesGridView.js" />
+    <EmbeddedResource Include="Pages\Studies\StudyDetails\Scripts\StudyDetailsTabs.js" />
+    <EmbeddedResource Include="Pages\Studies\StudyDetails\Scripts\WorkQueueGridView.js" />
+    <Content Include="Pages\Studies\StudyListGridView.ascx" />
+    <Content Include="Pages\Queues\WorkQueue\Edit\AutoRouteWorkQueueDetailsView.ascx" />
+    <Content Include="Pages\Queues\WorkQueue\Edit\DeleteWorkQueueDialog.ascx" />
+    <Content Include="Pages\Queues\WorkQueue\Edit\ResetWorkQueueDialog.ascx" />
+    <Content Include="Pages\Queues\WorkQueue\Edit\ScheduleWorkQueueDialog.ascx" />
+    <Content Include="Pages\Queues\WorkQueue\Edit\Default.aspx" />
+    <Content Include="Pages\Queues\WorkQueue\Edit\WebMoveStudyWorkQueueDetailsView.ascx" />
+    <Content Include="Pages\Queues\WorkQueue\Edit\WorkQueueItemDetailsPanel.ascx" />
+    <Content Include="Pages\Queues\WorkQueue\Edit\WorkQueueSettingsPanel.ascx" />
+    <Content Include="Pages\Queues\WorkQueue\Default.aspx" />
+    <Content Include="Pages\Queues\WorkQueue\SearchPanel.ascx" />
+    <EmbeddedResource Include="Pages\Queues\WorkQueue\SearchPanel.js" />
+    <Content Include="Pages\Queues\WorkQueue\WorkQueueItemList.ascx" />
+    <Content Include="Scripts\ClearCanvas.js" />
+    <Content Include="Scripts\CodeMirror\css\csscolors.css" />
+    <Content Include="Scripts\CodeMirror\css\docs.css" />
+    <Content Include="Scripts\CodeMirror\css\jscolors.css" />
+    <Content Include="Scripts\CodeMirror\css\people.jpg" />
+    <Content Include="Scripts\CodeMirror\css\sparqlcolors.css" />
+    <Content Include="Scripts\CodeMirror\css\xmlcolors.css" />
+    <Content Include="Scripts\CodeMirror\js\codemirror.js" />
+    <Content Include="Scripts\CodeMirror\js\editor.js" />
+    <Content Include="Scripts\CodeMirror\js\mirrorframe.js" />
+    <Content Include="Scripts\CodeMirror\js\parsecss.js" />
+    <Content Include="Scripts\CodeMirror\js\parsehtmlmixed.js" />
+    <Content Include="Scripts\CodeMirror\js\parsejavascript.js" />
+    <Content Include="Scripts\CodeMirror\js\parsesparql.js" />
+    <Content Include="Scripts\CodeMirror\js\parsexml.js" />
+    <Content Include="Scripts\CodeMirror\js\select.js" />
+    <Content Include="Scripts\CodeMirror\js\stringstream.js" />
+    <Content Include="Scripts\CodeMirror\js\tokenize.js" />
+    <Content Include="Scripts\CodeMirror\js\tokenizejavascript.js" />
+    <Content Include="Scripts\CodeMirror\js\undo.js" />
+    <Content Include="Scripts\CodeMirror\js\util.js" />
+    <Content Include="Scripts\ErrorHandling.js" />
+    <Content Include="Scripts\jquery\jquery-1.2.6.min.js" />
+    <Content Include="Scripts\jquery\jquery-1.3.2.min.js" />
+    <Content Include="Scripts\jquery\jquery.dimensions.js" />
+    <Content Include="Scripts\jquery\jquery.dropshadow.js" />
+    <Content Include="Scripts\jquery\jquery.maskedinput-1.2.1.js" />
+    <Content Include="Scripts\jquery\jquery.multiselect.js" />
+    <Content Include="Scripts\NumberFormat154.js" />
+    <Content Include="GlobalMasterPage.master" />
+    <Content Include="Pages\Common\MainContentSection.Master" />
+    <Content Include="Pages\Error\ErrorPageMaster.Master" />
+    <None Include="Pages\Queues\WorkQueue\WorkQueueSettings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>WorkQueueSettings.Designer.cs</LastGenOutput>
+    </None>
+    <Content Include="PersistantImage.ashx" />
+    <None Include="Scripts\CodeMirror\LICENSE" />
+    <Content Include="App_Themes\Default\images\Indicators\HelpSmall.png" />
+    <EmbeddedResource Include="App_GlobalResources\SR.resx">
+      <SubType>Designer</SubType>
+      <LastGenOutput>SR.Designer.cs</LastGenOutput>
+      <Generator>GlobalResourceProxyGenerator</Generator>
+    </EmbeddedResource>
+    <Content Include="Services\FilesystemInfoService.asmx" />
+    <Content Include="Services\ValidationServices.asmx" />
+    <Content Include="Services\webservice.htc" />
+    <Content Include="Web.config" />
+    <Content Include="Web.sitemap" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Common\ClearCanvas.Common.csproj">
+      <Project>{F6EAD428-E6CF-4DF6-B2F3-D33D532C5343}</Project>
+      <Name>ClearCanvas.Common</Name>
+      <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Dicom\ClearCanvas.Dicom.csproj">
+      <Project>{AD9ECE2B-8268-4115-8DC8-860FBD011FFF}</Project>
+      <Name>ClearCanvas.Dicom</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Enterprise\Common\ClearCanvas.Enterprise.Common.csproj">
+      <Project>{B5EBFFD7-6641-4932-91C9-4C4322B41868}</Project>
+      <Name>ClearCanvas.Enterprise.Common</Name>
+      <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Enterprise\Core\ClearCanvas.Enterprise.Core.csproj">
+      <Project>{431E9444-9915-4D49-B92D-9B7EC086622A}</Project>
+      <Name>ClearCanvas.Enterprise.Core</Name>
+      <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Server\ShredHost\ClearCanvas.Server.ShredHost.csproj">
+      <Project>{8347B928-805E-42E7-B980-08D8AF1A0671}</Project>
+      <Name>ClearCanvas.Server.ShredHost</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Web\Enterprise\ClearCanvas.Web.Enterprise.csproj">
+      <Project>{22444EF5-740E-41C2-B6DD-0029BD616338}</Project>
+      <Name>ClearCanvas.Web.Enterprise</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Common\ClearCanvas.ImageServer.Common.csproj">
+      <Project>{DDFB1D25-75AE-43A6-A7A5-33D173EFFD04}</Project>
+      <Name>ClearCanvas.ImageServer.Common</Name>
+      <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Core\ClearCanvas.ImageServer.Core.csproj">
+      <Project>{64DD80D0-2B72-46C0-8F6E-382CA1EAFF9D}</Project>
+      <Name>ClearCanvas.ImageServer.Core</Name>
+      <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Enterprise\ClearCanvas.ImageServer.Enterprise.csproj">
+      <Project>{86CA6EDB-DE59-45E9-8BD8-832FBB3F8009}</Project>
+      <Name>ClearCanvas.ImageServer.Enterprise</Name>
+      <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Model\ClearCanvas.ImageServer.Model.csproj">
+      <Project>{2C9126D3-5B73-4539-BBC9-D56E6097D335}</Project>
+      <Name>ClearCanvas.ImageServer.Model</Name>
+      <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Rules\ClearCanvas.ImageServer.Rules.csproj">
+      <Project>{523EDDC1-7C6E-404D-A8ED-5F043F5E6BE3}</Project>
+      <Name>ClearCanvas.ImageServer.Rules</Name>
+      <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Rules\JpegCodec\ClearCanvas.ImageServer.Rules.JpegCodec.csproj">
+      <Project>{2BAF49AA-F872-4CC5-A3B0-4B7555DC3244}</Project>
+      <Name>ClearCanvas.ImageServer.Rules.JpegCodec</Name>
+      <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Rules\RleCodec\ClearCanvas.ImageServer.Rules.RleCodec.csproj">
+      <Project>{4E4B60EC-FFB9-49A9-A40F-385FC68D798F}</Project>
+      <Name>ClearCanvas.ImageServer.Rules.RleCodec</Name>
+      <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Services\Archiving\ClearCanvas.ImageServer.Services.Archiving.csproj">
+      <Project>{90C91F02-8AD3-43D1-B8C3-C0469213E3E5}</Project>
+      <Name>ClearCanvas.ImageServer.Services.Archiving</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Services\Archiving\Hsm\ClearCanvas.ImageServer.Services.Archiving.Hsm.csproj">
+      <Project>{BE27922C-C8D7-4190-8F24-5D7C1623CAFA}</Project>
+      <Name>ClearCanvas.ImageServer.Services.Archiving.Hsm</Name>
+      <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Services\Common\ClearCanvas.ImageServer.Services.Common.csproj">
+      <Project>{6863F5CE-F1D3-46A7-915C-DE02D1452EED}</Project>
+      <Name>ClearCanvas.ImageServer.Services.Common</Name>
+      <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Services\WorkQueue\ClearCanvas.ImageServer.Services.WorkQueue.csproj">
+      <Project>{65B9B08C-EAE4-4EE2-B164-905B03134443}</Project>
+      <Name>ClearCanvas.ImageServer.Services.WorkQueue</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Common\ClearCanvas.ImageServer.Web.Common.csproj">
+      <Project>{9A4EF57B-2702-4931-9E94-B194707E87FA}</Project>
+      <Name>ClearCanvas.ImageServer.Web.Common</Name>
+      <Private>True</Private>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v9.0\WebApplications\Microsoft.WebApplication.targets" Condition="" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <DistributionBuild>false</DistributionBuild>
+  </PropertyGroup>
+  <Choose>
+    <When Condition="$(DistributionBuild)">
+      <PropertyGroup>
+        <DistributionDir>$(MSBuildProjectDirectory)\..\Distribution\Build\ImageServerWeb$(BuildSuffix)\$(PlatformSubFolder)\$(Configuration)</DistributionDir>
+      </PropertyGroup>
+    </When>
+    <Otherwise>
+      <PropertyGroup>
+        <DistributionDir>
+        </DistributionDir>
+      </PropertyGroup>
+    </Otherwise>
+  </Choose>
+  <Choose>
+    <When Condition="$(DistributionBuild) AND '$(Configuration)'=='Release' And '$(KeyFile)' != ''">
+      <PropertyGroup>
+        <ImageServerWebProperties>SolutionDir=$(SolutionDir);SolutionName=$(SolutionName);ProjectDir=$(ProjectDir);Configuration=$(Configuration);TargetPlatform=$(TargetPlatform);DistributionDir=$(DistributionDir);SignAssembly=true;DelaySign=false;AssemblyOriginatorKeyFile=$(KeyFile);Options=$(BuildOptions);Localizations=$(Localizations)</ImageServerWebProperties>
+      </PropertyGroup>
+    </When>
+    <Otherwise>
+      <PropertyGroup>
+        <ImageServerWebProperties>SolutionDir=$(SolutionDir);SolutionName=$(SolutionName);ProjectDir=$(ProjectDir);Configuration=$(Configuration);TargetPlatform=$(TargetPlatform);DistributionBuild=$(DistributionBuild);DistributionDir=$(DistributionDir);Options=$(BuildOptions);Localizations=$(Localizations)</ImageServerWebProperties>
+      </PropertyGroup>
+    </Otherwise>
+  </Choose>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.  -->
+  <Target Name="BeforeBuild">
+    <MSBuild Projects="$(ProjectDir)\..\..\..\JScript\Build.proj" Properties="Configuration=$(Configuration)" />
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <SaveServerSettingsInUserFile>True</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+    <PostBuildEvent>REM Run PostBuild msbuild project
+
+C:\WINDOWS\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe  "$(SolutionDir)\$(SolutionName)_WebPostBuild.proj" "/property:$(ImageServerWebProperties)"</PostBuildEvent>
+  </PropertyGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
+</Project>

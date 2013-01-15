@@ -1,0 +1,388 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title>Order Additional Info (Readonly)</title>
+		<link href="../css/default.css" rel="stylesheet" type="text/css" />
+		<link href="../css/tabs.css" rel="stylesheet" type="text/css" />
+		<script type="text/javascript" SRC="../js/SparrowScripts/datepicker/ss_datepicker_settings.js"></script>
+		<script type="text/javascript" SRC="../js/SparrowScripts/datepicker/ss_datepicker.js"></script>
+		<script type="text/javascript" SRC="../js/SparrowScripts/timepicker/ss_timepicker_settings.js"></script>
+		<script type="text/javascript" SRC="../js/SparrowScripts/timepicker/ss_timepicker.js"></script>
+		<script type="text/javascript" src="../js/jsx.js"></script>
+		<script type="text/javascript" src="../js/jsml.js"></script>
+		<script type="text/javascript" src="../js/ui.js"></script>
+		<script type="text/javascript" src="../js/ris.js"></script>
+		<script type="text/javascript" src="../js/layout.js"></script>
+		<script type="text/javascript" src="../js/tabs.js"></script>
+		<script type="text/javascript" >
+			var data = {};
+			var errorProvider = new ErrorProvider();
+
+			/*
+				Cells where the value of the specified property is rendered as read-only text.
+			*/
+			function readOnlyCell(label, prop, formatLabelLikeTableHeading)
+			{
+				this.label = formatLabelLikeTableHeading ? "<span class=\"tableheading\">" + label + "</span>" : label;
+				this.prop = prop;
+				this.cellType = "readonly";
+				this.getValue = function(item) { return item[prop] || "Not entered"; };
+				//this.getVisible = function(item) { return item[prop] != null && item[prop] != ""; };
+			}
+
+			/*
+				Cells with value formatted as a date/time
+			*/
+			function readOnlyDateCell(label, prop)
+			{
+				this.label = label;
+				this.prop = prop;
+				this.cellType = "readonly";
+				this.getValue = function(item) { return Ris.formatDate(item[prop]) || "Not entered"; };
+				//this.getVisible = function(item) { return item[prop] != null && item[prop] != ""; };
+			}
+
+			function onBodyLoad()
+			{
+				try
+				{
+					scaleWidth();
+
+					if(Ris)
+					{
+						data = JSML.parse(Ris.getTag("PreExamDetails")) || {};
+					}
+
+					// Vitals Tab
+					data.vitals = data.vitals || {};
+					data.patientScreening = data.patientScreening || {};
+					data.labResults = data.labResults || {};
+					data.translation = data.translation || {};
+
+					data.patientScreening.drugAllergies = data.patientScreening.drugAllergies || [];
+					data.labResults.creatinineLevel = data.labResults.creatinineLevel || [];
+					data.labResults.psa = data.labResults.psa || [];
+
+					initVitalsTable();
+					initPatientScreeningTable();
+					initLabResultsTable();
+					initTranslationTable();
+				}
+				catch(e)
+				{
+					var message = "Failed to load details page.  An exception occurred in the script. Error name: " + e.name + ". Error message: " + e.message;
+					Field.setValue($("myForm"), message);
+				}
+			}
+
+			function initVitalsTable()
+			{
+				var weightTable = Table.createTable($("weightTable"), { editInPlace: true, flow: true, checkBoxes: false },
+					[
+						new readOnlyCell("Weight", "weightValue"),
+						new readOnlyCell("lbs/kg", "weightUnit")
+					]);
+				weightTable.errorProvider = errorProvider;   // share errorProvider with the rest of the form
+				weightTable.bindItems([data.vitals]);
+
+				var heightTable = Table.createTable($("heightTable"), { editInPlace: true, flow: true, checkBoxes: false },
+					[
+						new readOnlyCell("Height", "heightValue"),
+						new readOnlyCell("cm/in", "heightUnit")
+					]);
+				heightTable.errorProvider = errorProvider;   // share errorProvider with the rest of the form
+				heightTable.bindItems([data.vitals]);
+
+				var bloodGlucosLevelTable = Table.createTable($("bloodGlucoseLevelTable"), { editInPlace: true, flow: true, checkBoxes: false },
+					[
+						new readOnlyCell("Blood Glucose Level", "bloodGlucoseLevel"),
+						new readOnlyCell("mmol/L, mg/DL", "bloodGlucoseLevelUnit")
+					]);
+				bloodGlucosLevelTable.errorProvider = errorProvider;   // share errorProvider with the rest of the form
+				bloodGlucosLevelTable.bindItems([data.vitals]);
+
+				var otherVitalsTable = Table.createTable($("otherVitalsTable"), { editInPlace: true, flow: true, checkBoxes: false },
+					[
+						new readOnlyCell("Blood Pressure (BP)", "bloodPressure"),
+						new readOnlyCell("Heart Rate (bpm)", "heartRate"),
+						new readOnlyCell("Temperature (&deg;C)", "temperature"),
+						new readOnlyCell("Body Surface Area", "bodySurfaceArea")
+					]);
+				otherVitalsTable.errorProvider = errorProvider;   // share errorProvider with the rest of the form
+				otherVitalsTable.bindItems([data.vitals]);
+			}
+
+			function initPatientScreeningTable()
+			{
+				var drugAllergiesStatusTable = Table.createTable($("drugAllergiesStatusTable"), { editInPlace: true, flow: true, checkBoxes: false },
+					[
+						new readOnlyCell("Has allergies?", "allergyStatus")
+					]);					
+				drugAllergiesStatusTable.errorProvider = errorProvider;   // share errorProvider with the rest of the form
+				drugAllergiesStatusTable.bindItems([data.patientScreening]);
+
+				Field.show($("drugAllergiesSection"), data.patientScreening.allergyStatus == "Yes");
+
+				var drugAllergiesTable = Table.createTable($("drugAllergiesTable"), { editInPlace: true, flow: true, checkBoxes: false },
+					[
+						new readOnlyCell("Allergy", "allergies")
+					]);
+				drugAllergiesTable.errorProvider = errorProvider;   // share errorProvider with the rest of the form
+				drugAllergiesTable.bindItems(data.patientScreening.drugAllergies);
+
+				var renalDiseaseTable = Table.createTable($("renalDiseaseTable"), { editInPlace: true, flow: true, checkBoxes: false },
+					[
+						new readOnlyCell("Has renal disease?", "renalDiseaseStatus"),
+						new readOnlyCell("Renal Disease", "renalDisease")
+					]);
+				renalDiseaseTable.errorProvider = errorProvider;   // share errorProvider with the rest of the form
+				renalDiseaseTable.bindItems([data.patientScreening]);
+
+				var renalDialysisTable = Table.createTable($("renalDialysisTable"), { editInPlace: true, flow: true, checkBoxes: false },
+					[
+						new readOnlyCell("Has renal dialysis?", "renalDialysisStatus"),
+						new readOnlyCell("Renal Dialysis", "renalDialysis")
+					]);
+				renalDialysisTable.errorProvider = errorProvider;   // share errorProvider with the rest of the form
+				renalDialysisTable.bindItems([data.patientScreening]);
+
+				var medicationsTable = Table.createTable($("medicationsTable"), { editInPlace: true, flow: true, checkBoxes: false },
+					[
+						{	label: "On ASA or Aspirin x1 week",
+							cellType: "bool",
+							readonly: true,
+							getValue: function(item) { return item.onAsaOrAspirint || false; },
+							setValue: function(item, value) { item.onAsaOrAspirint = value; },
+							getError: function(item) { return null; }
+						},
+						{	label: "On Coumadin",
+							cellType: "bool",
+							readonly: true,
+							getValue: function(item) { return item.onCoumadin || false; },
+							setValue: function(item, value) { item.onCoumadin = value; },
+							getError: function(item) { return null; }
+						},
+						{	label: "On Arthritis medication",
+							cellType: "bool",
+							readonly: true,
+							getValue: function(item) { return item.onArthritisMed || false; },
+							setValue: function(item, value) { item.onArthritisMed = value; },
+							getError: function(item) { return null; }
+						},
+						new readOnlyCell("Other medications", "otherMedication")
+					]);
+				medicationsTable.errorProvider = errorProvider;   // share errorProvider with the rest of the form
+				medicationsTable.bindItems([data.patientScreening]);
+
+				var pregnancyTable = Table.createTable($("pregnancyTable"), { editInPlace: true, flow: true, checkBoxes: false },
+					[
+						new readOnlyCell("Is patient pregnant?", "pregnancyStatus"),
+						new readOnlyCell("Pregnancy test performed?", "pregnancyTestPerformed"),
+						new readOnlyCell("Consent obtained by", "pregnancyConsentObtainedBy"),
+						new readOnlyCell("Pregnancy Test Given - Result?", "pregnancyTestResult"),
+						new readOnlyDateCell("LMP", "pregnancyLMP")
+					]);
+				pregnancyTable.errorProvider = errorProvider;   // share errorProvider with the rest of the form
+				pregnancyTable.bindItems([data.patientScreening]);
+
+				var breastFeedingTable = Table.createTable($("breastFeedingTable"), { editInPlace: true, flow: true, checkBoxes: false },
+					[
+						new readOnlyCell("Breast feeding?", "breastFeedingStatus"),
+						new readOnlyCell("Exam cancelled?", "breastFeedingExamCancelledStatus"),
+						new readOnlyCell("Note", "breastFeedingExamNotCancelledNote")
+					]);
+				breastFeedingTable.errorProvider = errorProvider;   // share errorProvider with the rest of the form
+				breastFeedingTable.bindItems([data.patientScreening]);
+
+				var sedationTable = Table.createTable($("sedationTable"), { editInPlace: true, flow: true, checkBoxes: false },
+					[
+						new readOnlyCell("Sedation", "sedationStatus"),
+						new readOnlyCell("Radiologist", "sedationRadiologist"),
+						new readOnlyCell("Type/Amount", "sedationTypeAndAmount"),
+						new readOnlyCell("Who is taking patient home", "patientWillBeTakenHomeBy"),
+						new readOnlyCell("Note", "sedationNote")
+					]);
+				sedationTable.errorProvider = errorProvider;   // share errorProvider with the rest of the form
+				sedationTable.bindItems([data.patientScreening]);
+
+				var cardiacConditionTable = Table.createTable($("cardiacConditionTable"), { editInPlace: true, flow: true, checkBoxes: false },
+					[
+						new readOnlyCell("Has cardiac condition?", "cardiacStatus"),
+						new readOnlyCell("Cardiac Condition", "cardiacCondition")
+					]);
+				cardiacConditionTable.errorProvider = errorProvider;   // share errorProvider with the rest of the form
+				cardiacConditionTable.bindItems([data.patientScreening]);
+			}
+
+			function initLabResultsTable()
+			{
+				var psaStatusTable = Table.createTable($("psaStatusTable"), { editInPlace: true, flow: true, checkBoxes: false },
+					[
+						new readOnlyCell("Has psa results?", "psaStatus")
+					]);
+				psaStatusTable.errorProvider = errorProvider;   // share errorProvider with the rest of the form
+				psaStatusTable.bindItems([data.patientScreening]);
+				Field.show($("psaSection"), data.patientScreening.psaStatus == "Yes");
+
+				var psaTable = Table.createTable($("psaTable"), { editInPlace: true, flow: true, checkBoxes: false },
+					[
+						new readOnlyCell("Level", "level"),
+						new readOnlyCell("Free/Total PSA Ratio", "freeTotalRatio"),
+						new readOnlyDateCell("Date", "date")
+					]);
+				psaTable.errorProvider = errorProvider;   // share errorProvider with the rest of the form
+				psaTable.bindItems(data.labResults.psa);
+
+				var otherResultsTable = Table.createTable($("otherResultsTable"), { editInPlace: true, flow: true, checkBoxes: false },
+					[
+						new readOnlyCell("PT", "pt"),
+						new readOnlyCell("PTT", "ptt"),
+						new readOnlyCell("INR", "inr"),
+						new readOnlyCell("Platelets", "platelets"),
+						new readOnlyCell("Hemoglobin", "hemoglobin"),
+						new readOnlyCell("WBC", "wbc"),
+						new readOnlyDateCell("Date", "date")
+					]);
+				otherResultsTable.errorProvider = errorProvider;   // share errorProvider with the rest of the form
+				otherResultsTable.bindItems([data.labResults]);
+			}
+
+			function initTranslationTable()
+			{
+				var table = Table.createTable($("translationTable"), { editInPlace: true, flow: true, checkBoxes: false },
+					[
+						new readOnlyCell("Translation required?", "translationRequired"),
+						new readOnlyCell("Translator", "translator"),
+						new readOnlyCell("Relationship to patient", "relationship"),
+						new readOnlyCell("Language", "language")
+					]);
+				table.errorProvider = errorProvider;   // share errorProvider with the rest of the form
+				table.bindItems([data.translation]);
+			}
+
+			//////////////////////////////////////////////////////////////////////////
+
+			//////////////////////////////////////////////////////////////////////////
+			// RIS integration API
+			function showValidation(show)
+			{
+				errorProvider.setVisible(show);
+			}
+
+			function hasValidationErrors()
+			{
+				return errorProvider.hasErrors();
+			}
+
+			function saveData()
+			{
+				Ris.setTag("PreExamDetails", JSML.create(data, "data"));
+			}
+			//////////////////////////////////////////////////////////////////////////
+
+		</script>
+	</head>
+	<body onload="javascript: onBodyLoad()" onresize="javascript: scaleWidth()">
+		<form id="myForm">
+		<div id="OptionalAdditionalDetails" class="TabControl">
+			<div class="TabList">
+			<label for="Vitals" class="Tab">Vitals</label>
+			<label for="PatientScreening" class="Tab">Patient Screening</label>
+			<label for="LabResults" class="Tab">Lab Results/Bloodwork</label>
+			<label for="Forms" class="Tab">Forms</label>
+			<label for="Translation" class="Tab">Translation</label>
+			<label for="CallBack" class="Tab">Call back</label>
+			<label for="Research" class="Tab">Research</label>
+			</div>
+			<div id="Vitals" class="TabPage">
+				<p class="sectionheading">Weight</p>
+				<table id="weightTable"  width="100%">
+				<tr><td class="tableheading"></td></tr>
+				</table>
+
+				<p class="sectionheading">Height</p>
+				<table id="heightTable"  width="100%">
+				<tr><td class="tableheading"></td></tr>
+				</table>
+
+				<p class="sectionheading">Blood Glucose Level</p>
+				<table id="bloodGlucoseLevelTable"  width="100%">
+				<tr><td class="tableheading"></td></tr>
+				</table>
+
+				<p class="sectionheading">Other Vitals</p>
+				<table id="otherVitalsTable"  width="100%">
+				<tr><td class="tableheading"></td></tr>
+				</table>
+			</div>
+			<div id="PatientScreening" class="TabPage">
+				<p class="sectionheading">Drug Allergies</p>
+				<table id="drugAllergiesStatusTable"  width="100%">
+					<tr><td class="tableheading"></td></tr>
+				</table>
+				<div id="drugAllergiesSection">
+					<table id="drugAllergiesTable" border="1" width="100%">
+						<tr><td colspan="2"></td></tr>
+					</table>
+				</div>
+
+				<p class="sectionheading">Renal Disease</p>
+				<table id="renalDiseaseTable"  width="100%">
+				<tr><td class="tableheading"></td></tr>
+				</table>
+
+				<p class="sectionheading">Renal Dialysis</p>
+				<table id="renalDialysisTable"  width="100%">
+				<tr><td class="tableheading"></td></tr>
+				</table>
+
+				<p class="sectionheading">Current Medications</p>
+				<table id="medicationsTable"  width="100%">
+				<tr><td class="tableheading"></td></tr>
+				</table>
+
+				<p class="sectionheading">Pregnancy</p>
+				<table id="pregnancyTable"  width="100%">
+				<tr><td class="tableheading"></td></tr>
+				</table>
+
+				<p class="sectionheading">Breast Feeding</p>
+				<table id="breastFeedingTable"  width="100%">
+				<tr><td class="tableheading"></td></tr>
+				</table>
+
+				<p class="sectionheading">Sedation</p>
+				<table id="sedationTable"  width="100%">
+				<tr><td class="tableheading"></td></tr>
+				</table>
+
+				<p class="sectionheading">Cardiac Condition</p>
+				<table id="cardiacConditionTable"  width="100%">
+				<tr><td class="tableheading"></td></tr>
+				</table>
+			</div>
+			<div id="LabResults" class="TabPage">
+				<p class="sectionheading">PSA</p>
+				<table id="psaStatusTable"  width="100%">
+				<tr><td class="tableheading"></td></tr>
+				</table>
+				<div id="psaSection">
+					<table id="psaTable" border="1" width="100%">
+						<tr><td colspan="2"></td></tr>
+					</table>
+				</div>
+
+				<p class="sectionheading">Other results</p>
+				<table id="otherResultsTable"  width="100%">
+				<tr><td class="tableheading"></td></tr>
+				</table>
+			</div>
+			<div id="Translation" class="TabPage">
+				<table id="translationTable"  width="100%">
+				<tr><td class="tableheading"></td></tr>
+				</table>
+			</div>
+		</div>
+      </form>
+	</body>
+</html>

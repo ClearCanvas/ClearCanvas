@@ -1,0 +1,61 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
+    <PropertyGroup>
+        <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+        <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+        <ProductVersion>8.0.30703</ProductVersion>
+        <SchemaVersion>2.0</SchemaVersion>
+        <ProjectGuid>{169CC158-B448-4B92-9860-146CB7AE5CF6}</ProjectGuid>
+        <OutputType>Library</OutputType>
+        <RootNamespace>ClearCanvas.Workstation.Layout.Basic.View.GTK</RootNamespace>
+        <AssemblyName>ClearCanvas.Workstation.Layout.Basic.View.GTK</AssemblyName>
+        <WarningLevel>4</WarningLevel>
+        <StartupObject/>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+        <DebugSymbols>true</DebugSymbols>
+        <DebugType>full</DebugType>
+        <Optimize>false</Optimize>
+        <OutputPath>bin\Debug\</OutputPath>
+        <DefineConstants>DEBUG;TRACE</DefineConstants>
+        <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+        <DebugSymbols>false</DebugSymbols>
+        <Optimize>true</Optimize>
+        <OutputPath>bin\Release\</OutputPath>
+        <DefineConstants>TRACE</DefineConstants>
+        <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    </PropertyGroup>
+    <ItemGroup>
+        <Reference Include="atk-sharp, Version=2.8.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f"/>
+        <Reference Include="gdk-sharp, Version=2.8.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f"/>
+        <Reference Include="gtk-sharp, Version=2.8.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f"/>
+        <Reference Include="System"/>
+        <Reference Include="System.Data"/>
+        <Reference Include="System.Xml"/>
+    </ItemGroup>
+    <Import Project="$(MSBuildBinPath)\Microsoft.CSHARP.Targets"/>
+    <ItemGroup>
+        <Compile Include="AssemblyInfo.cs"/>
+        <Compile Include="LayoutPanel.cs"/>
+        <Compile Include="LayoutToolView.cs"/>
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="../../../../View/GTK/ClearCanvas.Workstation.View.GTK.csproj">
+            <Name>ClearCanvas.Workstation.View.GTK</Name>
+            <Project>{1B8C0C00-F5E4-42B6-A389-B01717AF9460}</Project>
+        </ProjectReference>
+        <ProjectReference Include="../../../../../Common/ClearCanvas.Common.csproj">
+            <Name>ClearCanvas.Common</Name>
+            <Project>{F6EAD428-E6CF-4DF6-B2F3-D33D532C5343}</Project>
+        </ProjectReference>
+        <ProjectReference Include="../../../../Model/ClearCanvas.Workstation.Model.csproj">
+            <Name>ClearCanvas.Workstation.Model</Name>
+            <Project>{85100D3E-471C-47C9-9687-ABF25F617ED7}</Project>
+        </ProjectReference>
+        <ProjectReference Include="../../ClearCanvas.Workstation.Layout.Basic.csproj">
+            <Name>ClearCanvas.Workstation.Layout.Basic</Name>
+            <Project>{EA38C1F1-C4BD-4ED7-9B60-C95DF22D6A72}</Project>
+        </ProjectReference>
+    </ItemGroup>
+</Project>

@@ -1,0 +1,115 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Font Name="Tahoma" Size="8.4" />
+  <Class Name="ClearCanvas.Desktop.Actions.Action" Collapsed="true">
+    <Position X="2.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Actions\Action.cs</FileName>
+      <HashCode>AQAAogAAkIAjgKJAABAAQCEQAIARACBYBAAIIQAAgCA=</HashCode>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ClearCanvas.Desktop.Actions.ClickAction" Collapsed="true">
+    <Position X="3.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Actions\ClickAction.cs</FileName>
+      <HashCode>AAAAAACEAAAAAASAAAIAAAAAKAAAAAQQAAABAAIAAgA=</HashCode>
+    </TypeIdentifier>
+    <Lollipop Position="0.898" />
+  </Class>
+  <Class Name="ClearCanvas.Desktop.Actions.ButtonAction" Collapsed="true">
+    <Position X="1.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Actions\ButtonAction.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ClearCanvas.Desktop.Actions.MenuAction" Collapsed="true">
+    <Position X="3.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Actions\MenuAction.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ClearCanvas.Desktop.Actions.ActionModelNode" Collapsed="true">
+    <Position X="11.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Actions\ActionModelNode.cs</FileName>
+      <HashCode>AAAAIMAAAAAAABIAAAAEAAAAAAAAAQAAAACAAAAAAAQ=</HashCode>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="ChildNodes" />
+    </ShowAsCollectionAssociation>
+    <AssociationLine Name="ChildNodes" Type="ClearCanvas.Desktop.Actions.ActionModelNode" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="12.312" Y="1.014" />
+        <Point X="12.312" Y="1.389" />
+        <Point X="13.75" Y="1.389" />
+        <Point X="13.75" Y="0.75" />
+        <Point X="12.75" Y="0.75" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.214" Y="0.091" />
+      </MemberNameLabel>
+    </AssociationLine>
+  </Class>
+  <Class Name="ClearCanvas.Desktop.Actions.ActionModelRoot" Collapsed="true">
+    <Position X="11.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Actions\ActionModelRoot.cs</FileName>
+      <HashCode>AAAAAAAAAAAAgAIAAAAAAAAQAgAAAAAAIAAIAAAEAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ClearCanvas.Desktop.Actions.DropDownAction" Collapsed="true">
+    <Position X="1.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Actions\DropDownAction.cs</FileName>
+      <HashCode>AAAACAAAAAAAAAAAAAAAAACAAAAAAAAAAABAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+    <InheritanceLine Type="ClearCanvas.Desktop.Actions.Action" FixedFromPoint="true">
+      <Path>
+        <Point X="3" Y="1.009" />
+        <Point X="3" Y="1.375" />
+        <Point X="2" Y="1.375" />
+        <Point X="2" Y="1.75" />
+      </Path>
+    </InheritanceLine>
+    <Lollipop Position="0.908" />
+  </Class>
+  <Class Name="ClearCanvas.Desktop.Actions.DropDownButtonAction" Collapsed="true">
+    <Position X="1" Y="4.5" Width="2" />
+    <TypeIdentifier>
+      <FileName>Actions\DropDownButtonAction.cs</FileName>
+      <HashCode>AAAACAAAAAAAAAAAAAAAAACAAAAAAAAAAABAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+    <Lollipop Position="1.148" />
+  </Class>
+  <Class Name="ClearCanvas.Desktop.Actions.KeyboardAction" Collapsed="true">
+    <Position X="5.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Actions\KeyboardAction.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="ClearCanvas.Desktop.Actions.IAction" Collapsed="true">
+    <Position X="8.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Actions\IAction.cs</FileName>
+      <HashCode>AAAAgAAAkIAhAKJAAAAAQAAAAAAAAABYAAAAIQAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="ClearCanvas.Desktop.Actions.IClickAction" Collapsed="true">
+    <Position X="9.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Actions\IClickAction.cs</FileName>
+      <HashCode>AAAAAAAEAAAAAACAAAAAAAAACAAAAAAQAAABAAAAAgA=</HashCode>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="ClearCanvas.Desktop.Actions.IDropDownAction" Collapsed="true">
+    <Position X="7.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Actions\IDropDownAction.cs</FileName>
+      <HashCode>AAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Interface>
+</ClassDiagram>

@@ -1,0 +1,12 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="ClearCanvas.ImageServer.Enterprise.SqlServer" GeneratedClassName="SqlServerSettings">
+  <Profiles />
+  <Settings>
+    <Setting Name="CommandTimeout" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">120</Value>
+    </Setting>
+    <Setting Name="ConnectionPoolUsageWarningLevel" Type="System.Single" Scope="Application">
+      <Value Profile="(Default)">0.8</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

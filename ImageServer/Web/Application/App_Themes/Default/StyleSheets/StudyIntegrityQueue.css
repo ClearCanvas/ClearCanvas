@@ -1,0 +1,29 @@
+.StudyIntegrityQueueColumn
+{
+	white-space:pre;
+}
+
+.StudyField
+{
+	font-family: Sans-Serif; 
+	white-space:pre;
+	padding:0; margin:0;
+}
+
+.ConflictField
+{
+	color:red;
+	
+}
+
+.SIQItemSummary
+{
+    text-align: left; 
+    padding-top: 3px;
+    padding-bottom: 3px;
+}
+
+.SIQSubItemSummary
+{
+    font-size: 10px;
+}

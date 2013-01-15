@@ -1,0 +1,697 @@
+html {
+	font-size:80%;
+}
+
+body {
+	font-family: Arial;
+	background: #ffffff;
+	margin: 10px 5px 10px 5px;
+}
+
+div#readOnlyHeader {
+	border: thin solid red;
+	color: red;
+	font-size: 1.5em;
+	text-align: center;
+	width: 100%;
+}
+
+pre {
+	font-family: Arial;
+}
+
+p {
+	margin-top: 2px;
+	margin-bottom: 2px;
+}
+
+table {
+	border-collapse:collapse;
+	width:100%;
+	margin-top: 0;
+	margin-left: 0;
+}
+
+table td {
+	padding: 0.2em 0.5em 0.2em 0.5em; 
+}
+
+div.addDeleteButtons {
+	margin-top:0.5em;
+	margin-bottom:0.25em;
+}
+
+.tableheading {
+	vertical-align: top;
+	font-weight: bold;
+	background-color: #E1EFF8;
+	color: #205F87;
+	padding: 2px;
+}
+
+.tableheading td
+{
+	background: #f1f4f8; /* url(../images/PropertyNameBackground.png) repeat-x bottom;*/
+	 /*#EEEEEE url(../images/ProceduresTableHeadingBackground.png) repeat-x bottom;*/
+	border-bottom: solid 1px #99AACC;
+	vertical-align: text-bottom;
+}
+
+.ProceduresTable td
+{
+	padding: 4px 4px 4px 4px;
+}
+
+.ProceduresTableContainer
+{
+	margin-top: 0px;
+}
+
+.NoteEntryTable 
+{
+	margin-left: 5px;
+}
+
+.propertyname {
+	font-weight: bold;
+	color: #205F87;
+	background: #f1f4f8;
+}
+
+.tabledefault {
+	border-top-style: none;
+	border-right-style: none;
+	border-bottom-style: none;
+	border-left-style: none;
+}
+
+.sectionheading , .subsectionheading {
+	font-size: 120%;
+	font-weight: bold;
+	color: #3D98D1;
+	padding-left: 0.15em;
+
+	/* the combination of padding-top and border-bottom works
+	 * to create spacing uniformly when sections are stacked
+	 * on top of one another. Having a top border will not work
+	 * since the padding occurs betwen the text and the border
+	 */
+	margin-top: 1em;
+	border-bottom: thin solid #A8D8F4;
+	/* border-top: thin solid #A8D8F4; */
+	/* background-color: #3D98D1; */
+	/* color: #FFFFFF; */
+	/*background-color: #A8D8F4; */
+}
+
+a.sectionheading  {
+	color: #3D98D1;
+	text-decoration: none;
+}
+
+.subsectionheading {
+	font-size: 95%;
+	border-bottom: 2px solid #A8D8F4;
+	border-bottom: 1px;
+}
+
+.subsectionheading, .subsection {
+	margin-left:2em;
+	margin-right:2em;
+}
+
+.pageheading {
+	font-size: 170%;
+	font-weight: bold;
+}
+
+.pageheading2 {
+	font-size: 130%;
+	font-weight: bold;
+}
+
+.patientnameheading {
+	font-family: Tahoma, Geneva, Arial;
+	font-size: 180%;
+	font-weight: bold;
+	padding-left: 8px;
+	color: #1b4066;
+}
+
+.patientmrnheading {
+	font-family: Tahoma, Geneva, Arial;
+	font-size: 150%;
+	font-weight: bold;
+	padding-left: 8px;
+	color: #1b4066;
+}
+
+.performedprocedureheading {
+	font-family: Tahoma, Geneva, Arial;
+	font-size: 130%;
+	font-weight: bold;
+	color: #3D98D1;
+}
+
+.PatientBannerTable
+{
+	margin: 0px;
+	padding: 0px;
+}
+
+.PatientDemographicsTable
+{
+	margin: 7px 0px 0px 0px;
+	border: solid 1px #BBBBBB;
+	background: #eef5f8 url(../images/PatientDemographicsBackground.png) repeat-x top;
+}
+
+.DemographicsLabel
+{
+	font-weight: bold;
+	font-size: 120%;
+	color: #336699;
+	padding-top: 7px;
+}
+
+.DemographicsCell
+{
+	font-size: 120%;
+	padding-top: 7px;
+}
+
+.ContactInfoDemographicsLabel
+{
+	font-weight: bold;
+	font-size: 110%;
+	color: #336699;
+	padding-top: 7px;
+}
+
+.ContactInfoDemographicsCell
+{
+	font-size: 110%;
+	padding-top: 7px;
+}
+
+
+.discrepancy {
+	background-color: #000080;
+	color: #FFFFFF;
+}
+
+tr.row0 {
+	background-color: #FFFFFF;
+	padding: 12px;
+}
+
+tr.row1 {
+	background-color: #f1f1f1;
+	padding: 12px;	
+}
+
+tr.highlight {
+	background-color: #316ac5;
+	color: #FFFFFF;
+}
+
+tr.attention {
+	background-color: #ffffb0;
+}
+
+tr.attention0 {
+	background-color: #ffffe0;
+}
+
+tr.attention1 {
+	background-color: #ffffb0;
+}
+
+tr.mouseover {
+	background-color: #3d98d1;
+	color: #FFFFFF;
+}
+
+div.alert ul {
+	border: 0;
+	color: #FF0000;
+	font-weight: bold;
+	font-size: 100%;
+	margin: 0;
+	padding: 0;
+	list-style-type: none;
+	margin-left: 0.5em;
+}
+
+div.alert li {
+	background-image: url(alert.gif);
+	background-repeat: no-repeat;
+	background-position: 0 .25em;
+	padding-left: 1em;
+}
+
+div.alert {
+	border: medium solid #FF0000;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	/* width: 630px; */
+	width: 70em;
+}
+
+.additionalentriescount {
+	text-align: right;
+	font-size: 100%;
+}
+
+img.alert 
+{
+	margin-left: 5px;
+}
+
+a.collapsibleHeading {
+	text-decoration:none;
+}
+
+ a.collapsibleHeading span.plusMinus {
+	font-family:monospace;
+	font-weight:normal;
+}
+.collapsibleContent {
+	display:none;
+}
+
+.rowCheckCell {
+	width:1em;
+}
+
+.divCell, .checkedDivCell {
+	float: left;
+	padding: 0;
+	margin: 0;
+	margin-bottom: 0.5em;
+	padding-right: 1.5em;
+}
+
+.divCell {
+	white-space: nowrap;
+}
+
+.divCell textarea {
+	width: 95%;
+}
+
+.divCell input[type="text"] {
+	vertical-align: top;
+}
+
+.checkedDivCell {
+	white-space: wrap;
+}
+
+.readonlyField, .readonlyTextareaField, .readonlyFieldEmpty {
+	font-style: italic;
+	/*padding-top:0.3em;
+    padding-bottom:0.18em;
+	*/
+	padding-top:4px;
+	padding-bottom:4px;
+	white-space: normal;
+}
+
+.readonlyFieldEmpty
+{
+	color: #cccccc;
+}
+
+.readonlyTextareaField {
+	text-align: justify;
+}
+
+#patientNotesTable .checkedDivCell {
+	padding:0;
+	width: 32%;
+}
+
+#medicationsTable .checkedDivCell {
+	padding:0;
+	width: 32%;
+}
+
+.errorProvider {
+	background-position:center center;
+	background-image:url(../images/errorprovider.gif);
+	background-repeat:no-repeat;
+	height:20px;
+	width:20px;
+}
+
+#loadingAnimation {
+	display:none;  /* hide until explicitely shown */
+	background-image:url(../images/loader.gif);
+	background-repeat:no-repeat;
+	height:33px;
+	width:67px;
+	position: fixed;
+	top: 40%;
+	left: 45%;
+}
+
+* html #loadingAnimation { 
+	position: absolute;
+}
+
+.divCell .errorProvider {
+	position:relative;
+	top:-25%;
+}
+
+.lookupButton {
+	margin-left:0.1em;
+	font-size:19px;
+	width:19px;
+	height:19px;
+	padding:0px 0px 0px 0px;
+	cursor:pointer;
+	background-image:url(../images/PractitionerDetail.png);
+	background-repeat:no-repeat; 
+}
+
+.datePickerButton {
+	margin-left:0.1em;
+	font-size:19px;
+	width:19px;
+	height:19px;
+	padding:0px 0px 0px 0px;
+	cursor:pointer;
+	background-image:url(../images/DatePicker.png);
+	background-repeat:no-repeat; 
+}
+
+.timePickerButton {
+	margin-left:0.1em;
+	font-size:19px;
+	width:19px;
+	height:19px;
+	padding:0px 0px 0px 0px;
+	cursor:pointer;
+	background-image:url(../images/DatePicker.png);
+	background-repeat:no-repeat; 
+}
+
+/* Bug #10564: Removed this css as it was the cause of the problem.  Not sure if we even need it anymore, since it was added 
+	a number of years ago when IE6 was the predominant version of IE in use.
+
+img {
+	background-image: expression(
+		this.runtimeStyle.backgroundImage = "none",
+		this.runtimeStyle.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='" + this.src + "', sizingMethod='image')",
+		imagePath = imagePath || "../images",
+		this.src = imagePath + "/blank.gif"
+	);
+}
+*/
+
+textarea.disabled {
+	background:LightGrey;
+}
+
+input.disabled {
+	background:LightGrey;
+}
+
+input.unresolved {
+	background-color: #FFF5C3;
+}
+
+div.reportPreview {
+	width: 93%;
+	margin-left: 1em;
+	padding: 0.0em 0.5em 0.0em 0.5em;
+	text-align: justify;
+}
+
+.SectionContainer
+{
+	width: 100%;
+	margin: 12px 0px 0px 0px;
+	border-spacing: 0;
+	padding: 0
+}
+
+.SectionHeadingBackground
+{
+	background: url(../images/SectionHeaderBackground.png) repeat-x bottom;
+	color: white;
+	font-weight: bold;
+	font-size: 130%;
+	height: 25px;
+	width: 100%;
+}
+
+.SectionHeadingLeft
+{
+	background: url(../images/SectionHeaderLeft.png) no-repeat bottom right;
+	width: 10px;
+	height: 25px;
+}
+
+.SectionHeadingRight
+{
+	background: url(../images/SectionHeaderRight.png) no-repeat bottom left;
+	width: 10px;
+	height: 25px;
+}
+
+.ContentCell
+{
+	margin: 0px;
+	padding: 0px 2px 0px 2px;
+}
+
+.ContentContainer
+{
+	border-left: solid 3px #bbbbbb;
+	border-bottom: solid 3px #bbbbbb;
+	border-right: solid 3px #bbbbbb;
+	background: white; 
+	padding: 1px 0px 0px 0px;
+}
+
+.SectionTableContainer
+{
+	padding-top: 7px;
+	padding-bottom: 7px;
+	padding-left: 10px;
+}
+
+
+/*
+ * PatientBanner - used to display information about the patient on the preview pages (e.g. registration.htm)
+ */
+
+.PatientBanner_topleft {
+	background: url(../images/PatientBanner_tl.png) no-repeat top right;
+	height: 11px;
+	width: 11px;
+}
+
+.PatientBanner_top {
+	background: url(../images/PatientBanner_t.png) repeat-x top;
+	height: 11px;
+	width: 1px;
+}
+
+.PatientBanner_topright {
+	background: url(../images/PatientBanner_tr.png) no-repeat top left;
+	height: 11px;
+	width: 11px;
+}
+
+.PatientBanner_left {
+	background: url(../images/PatientBanner_l.png) no-repeat bottom;
+	width: 11px;
+}
+
+.PatientBanner_right {
+	background: url(../images/PatientBanner_r.png) no-repeat bottom left;
+	width: 11px;
+}
+
+.PatientBanner_bottomleft {
+	background: url(../images/PatientBanner_bl.png) no-repeat bottom right;
+	height: 11px;
+	width: 11px;
+}
+
+.PatientBanner_bottom {
+	background: url(../images/PatientBanner_b.png) repeat-x bottom;
+	height: 11px;
+	width: 1px;
+}
+
+.PatientBanner_bottomright {
+	background: url(../images/PatientBanner_br.png) no-repeat bottom left;
+	height: 11px;
+	width: 11px;
+}
+
+.PatientBanner_content {
+	background: #e3f1f9 url(../images/PatientBannerBackground.png) repeat-x bottom;
+}
+
+a:link {
+ color: #205F87;
+}
+a:visited {
+ color: #205F87;
+}
+a:hover {
+ color: #205F87;
+}
+a:active {
+ color: #205F87;
+}
+
+/*
+ * ConversationNote - A section representing an order note that includes From, Date, acknowledgement and the note itself.
+ */
+
+.ConversationNote_topleft {
+	background: url(../images/ConversationNote_tl.png) no-repeat top right;
+	height: 9px;
+	width: 9px;
+}
+
+.ConversationNote_top {
+	background: url(../images/ConversationNote_t.png) repeat-x top;
+	height: 9px;
+	width: 1px;
+}
+
+.ConversationNote_topright {
+	background: url(../images/ConversationNote_tr.png) no-repeat top left;
+	height: 9px;
+	width: 9px;
+}
+
+.ConversationNote_left_upper {
+	background: url(../images/ConversationNote_ul.png) no-repeat bottom right;
+	width: 9px;
+}
+
+.ConversationNote_right_upper {
+	background: #ffffff url(../images/ConversationNote_ur.png) no-repeat bottom left;
+	width: 9px;
+}
+
+.ConversationNote_content_upper {
+	background: #f3f9fd url(../images/ConversationNoteBackground_u.png) repeat-x bottom;
+}
+
+.ConversationNote_left_lower {
+	background: url(../images/ConversationNote_ll.png) no-repeat bottom right;
+	width: 9px;
+}
+
+.ConversationNote_right_lower {
+	background: url(../images/ConversationNote_rl.png) no-repeat bottom left;
+	width: 9px;
+}
+
+.ConversationNote_content_lower {
+	background: #e5f3f9 url(../images/ConversationNoteBackground_l.png) repeat-x bottom;
+}
+
+.ConversationNote_bottomleft {
+	background: url(../images/ConversationNote_bl.png) no-repeat bottom right;
+	height: 9px;
+	width: 9px;
+}
+
+.ConversationNote_bottom {
+	background: url(../images/ConversationNote_b.png) repeat-x bottom;
+	height: 9px;
+	width: 1px;
+}
+
+.ConversationNote_bottomright {
+	background: url(../images/ConversationNote_br.png) no-repeat bottom left;
+	height: 9px;
+	width: 9px;
+}
+
+#notAcknowledgedRow
+{
+	font-weight: bold;
+	color: red;
+}
+
+.AwaitingAcknowledgement
+{
+	font-weight: bold;
+	color: #205F87;
+}
+
+.ConversationNoteDetails {
+	width:100%;
+	margin-right: 15px;
+	margin-left: 4px;
+}
+
+.ConversationNoteDetails td {
+	padding: 2px;
+}
+
+#conversationHistorySection
+{
+	margin-top: 5px;
+}
+
+.ConversationNoteMessage
+{
+	border: solid 1px #58acdb;
+	padding: 5px 10px 5px 10px;
+	background: #ffffff url(../images/ConversationNoteBackground.png) repeat-x top;
+}
+
+.ConversationHistoryTable td {
+	padding: 4px;
+}
+
+.orderNoteHeading
+{
+	background: #f1f4f8;
+}
+
+.orderNoteHeading td
+{
+	padding-bottom: 3px;
+	padding-top: 3px;
+}
+
+.orderNoteLabel
+{
+	 font-weight: bold;
+	 color: #336699;
+}
+
+.orderNote
+{
+	text-align:justify;
+	padding-bottom: 5px;
+	padding-top: 5px;
+	border-top: dashed 1px #AACCEE;
+}
+
+.urgentTextMark
+{
+	background-color: white;
+	color:red;
+	font-size:75%;
+	font-weight:900;
+	border: 1px solid red;
+	text-align:center;
+	padding: 0 2px;
+}

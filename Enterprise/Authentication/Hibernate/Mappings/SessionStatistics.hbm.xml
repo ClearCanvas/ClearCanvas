@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" assembly="ClearCanvas.Enterprise.Authentication" namespace="ClearCanvas.Enterprise.Authentication">
+  <class name="SessionStatistics" proxy="SessionStatistics" table="SessionStatistics_">
+    <id name="OID" column="OID_" type="Guid">
+      <generator class="guid.comb"/>
+    </id>
+	<!-- Version property is not mapped, because there is really no need to track version -->
+	  <property name="Timestamp" column="Timestamp_" type="DateTime" not-null="true"/>
+	  <property name="Application" column="Application_" type="String" length="255" not-null="true" unique="false"/>
+	  <property name="ActiveSessions" column="ActiveSessions_" type="Int32" not-null="true"/>
+  </class>
+</hibernate-mapping>

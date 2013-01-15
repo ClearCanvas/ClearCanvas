@@ -1,0 +1,24 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="ClearCanvas.Ris.Application.Services" GeneratedClassName="WorklistSettings">
+  <Profiles />
+  <Settings>
+    <Setting Name="MaxPersonalOwnedWorklists" Description="Maximum number of worklists that can be owned by an individual user." Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">2</Value>
+    </Setting>
+    <Setting Name="MaxGroupOwnedWorklists" Description="Maximum number of worklists that can be owned by a staff group." Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">5</Value>
+    </Setting>
+    <Setting Name="UserIndependentWorklistItemCountCachingEnabled" Description="Specifies whether item count caching is enabled for user-independent worklists.  Caching occurs on server and is shared among all users." Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="UserIndependentWorklistItemCountCachingTimeToLiveSeconds" Description="Specifies item count caching time-to-live for user-independent worklists. " Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">30</Value>
+    </Setting>
+    <Setting Name="UserDependentWorklistItemCountCachingEnabled" Description="Specifies whether item count caching is enabled for user-dependent worklists.  Caching occurs on client because it is specific to each user." Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="UserDependentWorklistItemCountCachingTimeToLiveSeconds" Description="Specifies item count caching time-to-live for user-dependent worklists. " Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">30</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

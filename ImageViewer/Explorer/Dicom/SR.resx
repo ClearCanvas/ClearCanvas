@@ -1,0 +1,407 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ColumnHeadingAccessionNumber" xml:space="preserve">
+    <value>Accession Number</value>
+  </data>
+  <data name="ColumnHeadingAttachments" xml:space="preserve">
+    <value>Attachments</value>
+  </data>
+  <data name="ColumnHeadingAvailability" xml:space="preserve">
+    <value>Availability</value>
+  </data>
+  <data name="ColumnHeadingDateOfBirth" xml:space="preserve">
+    <value>DOB</value>
+  </data>
+  <data name="ColumnHeadingFirstName" xml:space="preserve">
+    <value>First Name</value>
+  </data>
+  <data name="ColumnHeadingIdeographicName" xml:space="preserve">
+    <value>Ideographic Name</value>
+  </data>
+  <data name="ColumnHeadingLastName" xml:space="preserve">
+    <value>Last Name</value>
+  </data>
+  <data name="ColumnHeadingModality" xml:space="preserve">
+    <value>Modality</value>
+  </data>
+  <data name="ColumnHeadingNumberOfInstances" xml:space="preserve">
+    <value>Instances</value>
+  </data>
+  <data name="ColumnHeadingPatientId" xml:space="preserve">
+    <value>Patient ID</value>
+  </data>
+  <data name="ColumnHeadingPhoneticName" xml:space="preserve">
+    <value>Phonetic Name</value>
+  </data>
+  <data name="ColumnHeadingReferringPhysician" xml:space="preserve">
+    <value>Referring Physician</value>
+  </data>
+  <data name="ColumnHeadingServer" xml:space="preserve">
+    <value>Server</value>
+  </data>
+  <data name="ColumnHeadingStudyDate" xml:space="preserve">
+    <value>Study Date</value>
+  </data>
+  <data name="ColumnHeadingStudyDescription" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="FormatNeverSearchedReindexing" xml:space="preserve">
+    <value>(Re-indexing) {0}</value>
+  </data>
+  <data name="FormatStudiesFound" xml:space="preserve">
+    <value>{0} studies found on {1}</value>
+  </data>
+  <data name="FormatStudiesFoundReindexing" xml:space="preserve">
+    <value>(Re-indexing) {0} studies found on {1}</value>
+  </data>
+  <data name="FormatUnableToQueryServer" xml:space="preserve">
+    <value>Unable to Query server {0}:  {1}</value>
+  </data>
+  <data name="LinkOpenActivityMonitor" xml:space="preserve">
+    <value>Open Activity Monitor</value>
+  </data>
+  <data name="MenuDeleteStudy" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="MenuOpenStudy" xml:space="preserve">
+    <value>Open</value>
+  </data>
+  <data name="MenuRetrieveStudy" xml:space="preserve">
+    <value>Retrieve</value>
+  </data>
+  <data name="MenuSendStudy" xml:space="preserve">
+    <value>Send</value>
+  </data>
+  <data name="MessageCannotOpenNonStreamingStudy" xml:space="preserve">
+    <value>The selected study is on a non-streaming server and cannot be opened.</value>
+  </data>
+  <data name="MessageConfirmContinueOpenSearch" xml:space="preserve">
+    <value>This query could take a long time to complete because you have not specified any filters.
+Are you sure you want to continue?</value>
+  </data>
+  <data name="MessageConfirmDeleteStudies" xml:space="preserve">
+    <value>Are you sure you want to delete the {0} selected studies?</value>
+  </data>
+  <data name="MessageConfirmDeleteStudy" xml:space="preserve">
+    <value>Are you sure you want to delete the selected study?</value>
+  </data>
+  <data name="MessageConfirmSendToMultipleServers" xml:space="preserve">
+    <value>You have selected multiple servers to send to.  Are you sure you want to continue?</value>
+  </data>
+  <data name="MessageFailedToOpenStudy" xml:space="preserve">
+    <value>Failed to open the selected study.</value>
+  </data>
+  <data name="MessageErrorRetrievingStudies" xml:space="preserve">
+    <value>An error occurred while processing retrieval of the selected items.</value>
+  </data>
+  <data name="MessageErrorSendingStudies" xml:space="preserve">
+    <value>An error occurred while processing sending of the selected items.</value>
+  </data>
+  <data name="MessageFormatXNonStreamingStudiesCannotBeOpened" xml:space="preserve">
+    <value>{0} of the selected studies are on a non-streaming server and cannot be opened.</value>
+  </data>
+  <data name="MessageFromDateCannotBeAfterToDate" xml:space="preserve">
+    <value>From date cannot be after To date.</value>
+  </data>
+  <data name="MessageInvalidPatientsName" xml:space="preserve">
+    <value>Invalid format.  Valid formats are:
+- Partial Name
+- Last, First
+- , First
+- Last,</value>
+  </data>
+  <data name="MessageOneNonStreamingStudyCannotBeOpened" xml:space="preserve">
+    <value>One of the selected studies is on a non-streaming server and cannot be opened.</value>
+  </data>
+  <data name="MessageOneOfSelectedStudiesInUse" xml:space="preserve">
+    <value>One of the selected studies is in use.  Please close all relevant workspaces before deleting.</value>
+  </data>
+  <data name="MessageOpenStudyPermissionDenied" xml:space="preserve">
+    <value>Permission to view a study is denied.</value>
+  </data>
+  <data name="MessageRetrieveDicomServerServiceNotRunning" xml:space="preserve">
+    <value>The Local Server must be running in order to retrieve studies.</value>
+  </data>
+  <data name="MessageSearchStudyPermissionDenied" xml:space="preserve">
+    <value>Permission to search studies is denied.</value>
+  </data>
+  <data name="MessageSelectDestination" xml:space="preserve">
+    <value>You must select a destination to send to.</value>
+  </data>
+  <data name="MessageSelectedStudyInUse" xml:space="preserve">
+    <value>The selected study is currently in use.  Please close all relevant workspaces before deleting.</value>
+  </data>
+  <data name="MessageSendDicomServerServiceNotRunning" xml:space="preserve">
+    <value>The Local Server must be running in order to send studies.</value>
+  </data>
+  <data name="MessageFormatSendStudyScheduled" xml:space="preserve">
+    <value>The send to {0} for {1} [{2}, A#:{3}] has been scheduled.</value>
+  </data>
+  <data name="MessageSomeOfSelectedStudiesInUse" xml:space="preserve">
+    <value>{0} of the selected studies are in use.  Please close all relevant workspaces before deleting.</value>
+  </data>
+  <data name="NotificationDetailsReindexCancelled" xml:space="preserve">
+    <value>The re-index operation has been canceled. You should run another re-index as soon as possible, as studies may be in an unstable state.</value>
+  </data>
+  <data name="NotificationDetailsReindexCompleted" xml:space="preserve">
+    <value>The re-index has completed. It is safe to begin working with studies again.</value>
+  </data>
+  <data name="NotificationDetailsReindexFailed" xml:space="preserve">
+    <value>The re-index has failed. Check the Activity Monitor for more details.</value>
+  </data>
+  <data name="NotificationDetailsReindexRunning" xml:space="preserve">
+    <value>The re-index is currently running. You should avoid working with studies until it completes.</value>
+  </data>
+  <data name="NotificationDetailsReindexScheduled" xml:space="preserve">
+    <value>The re-index has been scheduled and will begin shortly.</value>
+  </data>
+  <data name="NotificationReindexCancelled" xml:space="preserve">
+    <value>Re-index cancelled</value>
+  </data>
+  <data name="NotificationReindexComplete" xml:space="preserve">
+    <value>Re-index complete</value>
+  </data>
+  <data name="NotificationReindexFailed" xml:space="preserve">
+    <value>Re-index failed</value>
+  </data>
+  <data name="NotificationReindexRunning" xml:space="preserve">
+    <value>Re-index running</value>
+  </data>
+  <data name="NotificationReindexScheduled" xml:space="preserve">
+    <value>Re-index scheduled</value>
+  </data>
+  <data name="PathDicom" xml:space="preserve">
+    <value>DICOM</value>
+  </data>
+  <data name="PathExplorer" xml:space="preserve">
+    <value>Explorer</value>
+  </data>
+  <data name="TitleDicomExplorer" xml:space="preserve">
+    <value>DICOM</value>
+  </data>
+  <data name="TitleSearch" xml:space="preserve">
+    <value>Search</value>
+  </data>
+  <data name="TitleSearchPanelPane" xml:space="preserve">
+    <value>Search Panel</value>
+  </data>
+  <data name="TitleSendStudy" xml:space="preserve">
+    <value>Send Study</value>
+  </data>
+  <data name="TitleServerTreePane" xml:space="preserve">
+    <value>Servers</value>
+  </data>
+  <data name="TitleStudyBrowserPane" xml:space="preserve">
+    <value>Study Browser</value>
+  </data>
+  <data name="TitleStudyNavigatorPane" xml:space="preserve">
+    <value>Study Navigator</value>
+  </data>
+  <data name="ToolbarDeleteStudy" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="ToolbarOpenStudy" xml:space="preserve">
+    <value>Open</value>
+  </data>
+  <data name="ToolbarRetrieveStudy" xml:space="preserve">
+    <value>Retrieve</value>
+  </data>
+  <data name="ToolbarSendStudy" xml:space="preserve">
+    <value>Send</value>
+  </data>
+  <data name="TooltipDeleteStudy" xml:space="preserve">
+    <value>Delete study</value>
+  </data>
+  <data name="TooltipHideDuplicateStudies" xml:space="preserve">
+    <value>Hide duplicate studies</value>
+  </data>
+  <data name="TooltipOpenStudy" xml:space="preserve">
+    <value>Open study</value>
+  </data>
+  <data name="TooltipRetrieveStudy" xml:space="preserve">
+    <value>Retrieve study</value>
+  </data>
+  <data name="TooltipSendStudy" xml:space="preserve">
+    <value>Send study</value>
+  </data>
+  <data name="TooltipShowAllStudies" xml:space="preserve">
+    <value>Show all studies</value>
+  </data>
+  <data name="ValidationInvalidCharacters" xml:space="preserve">
+    <value>Contains invalid characters.</value>
+  </data>
+  <data name="ValidationInvalidLastNameSearch" xml:space="preserve">
+    <value>The value contains invalid characters or is incorrectly formatted (Example: Doe, J)</value>
+  </data>
+  <data name="MessageErrorDeletingStudies" xml:space="preserve">
+    <value>An error occurred while processing deletion of the selected items.</value>
+  </data>
+  <data name="MessageFormatDeleteStudyScheduled" xml:space="preserve">
+    <value>A study for {0} [{1}, A#:{2}] has been scheduled for deletion.</value>
+  </data>
+  <data name="ColumnHeadingDeleteOn" xml:space="preserve">
+    <value>Delete On</value>
+  </data>
+  <data name="ColumnHeadingPatientName" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="FormatDueToday" xml:space="preserve">
+    <value>Today {0}</value>
+  </data>
+  <data name="FormatDueTomorrow" xml:space="preserve">
+    <value>Tomorrow {0}</value>
+  </data>
+  <data name="FormatDueYesterday" xml:space="preserve">
+    <value>Yesterday {0}</value>
+  </data>
+  <data name="PastDue" xml:space="preserve">
+    <value>Past Due</value>
+  </data>
+  <data name="MessageFormatDeleteStudiesScheduled" xml:space="preserve">
+    <value>{0} studies have been scheduled for deletion.</value>
+  </data>
+  <data name="MessageFormatSendStudiesScheduled" xml:space="preserve">
+    <value>{0} studies have been scheduled to send.</value>
+  </data>
+  <data name="ColumnHeadingInstitutionName" xml:space="preserve">
+    <value>Institution</value>
+  </data>
+  <data name="ColumnHeadingSourceAETitle" xml:space="preserve">
+    <value>Source AE</value>
+  </data>
+  <data name="ColumnHeadingStationName" xml:space="preserve">
+    <value>Station Name</value>
+  </data>
+  <data name="MessageFormatRetrieveStudiesScheduled" xml:space="preserve">
+    <value>{0} studies have been scheduled for retrieval.</value>
+  </data>
+  <data name="MessageFormatRetrieveStudyScheduled" xml:space="preserve">
+    <value>The retrieve of a study for {0} [{1}, A#:{2}] from {3} has been scheduled.</value>
+  </data>
+  <data name="MessageProcessedItemsProgress" xml:space="preserve">
+    <value>Processed {0} of {1} items...</value>
+  </data>
+  <data name="MessageStudiesAreBeingModified" xml:space="preserve">
+    <value>Some of the selected studies are being modified and may be incomplete. The studies will not be updated once they are opened.  Are you sure you want to continue?</value>
+  </data>
+  <data name="MessageStudyIsBeingModified" xml:space="preserve">
+    <value>The selected study is being modified and may be incomplete. The study will not be updated once it is opened.  Are you sure you want to continue?</value>
+  </data>
+</root>

@@ -1,0 +1,239 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- 
+    This enumeration list is obtained from Dicom Standard PS 3.3 - 2009.  Section  7.3.1.1.1
+    THe enumeration defines values for the Modality (0008,0060)
+-->
+<enum class="DicomModalityEnum">
+  <enum-value code="AR">
+    <value>AR</value>
+    <description>Autorefraction</description>
+  </enum-value>
+  <enum-value code="AU">
+    <value>AU</value>
+    <description>Audio</description>
+  </enum-value>
+  <enum-value code="BDUS">
+    <value>BDUS</value>
+    <description>Bone Densitometry (Ultrasound)</description>
+  </enum-value>
+  <enum-value code="BI">
+    <value>BI</value>
+    <description>Biomagnetic Imaging</description>
+  </enum-value>
+  <enum-value code="BMD">
+    <value>BMD</value>
+    <description>Bone Densitometry (X-Ray)</description>
+  </enum-value>
+  <enum-value code="CR">
+    <value>CR</value>
+    <description>Computed Radiography</description>
+  </enum-value>
+  <enum-value code="CT">
+    <value>CT</value>
+    <description>Computed Tomography</description>
+  </enum-value>
+  <enum-value code="DG">
+    <value>DG</value>
+    <description>Diaphanography</description>
+  </enum-value>
+  <enum-value code="DOC">
+    <value>DOC</value>
+    <description>Document</description>
+  </enum-value>
+  <enum-value code="DX">
+    <value>DX</value>
+    <description>Digital Radiography</description>
+  </enum-value>
+  <enum-value code="ECG">
+    <value>ECG</value>
+    <description>Electrocardiography</description>
+  </enum-value>
+  <enum-value code="EPS">
+    <value>EPS</value>
+    <description>Cardiac Electrophysiology</description>
+  </enum-value>
+  <enum-value code="ES">
+    <value>ES</value>
+    <description>Endoscopy</description>
+  </enum-value>
+  <enum-value code="FID">
+    <value>FID</value>
+    <description>Fiducials</description>
+  </enum-value>
+  <enum-value code="GM">
+    <value>GM</value>
+    <description>General Microscopy</description>
+  </enum-value>
+  <enum-value code="HC">
+    <value>HC</value>
+    <description>Hard Copy</description>
+  </enum-value>
+  <enum-value code="HD">
+    <value>HD</value>
+    <description>Hemodynamic Waveform</description>
+  </enum-value>
+  <enum-value code="IO">
+    <value>IO</value>
+    <description>Intra-oral Radiography</description>
+  </enum-value>
+  <enum-value code="IVUS">
+    <value>IVUS</value>
+    <description>Intravascular Ultrasound</description>
+  </enum-value>
+  <enum-value code="KER">
+    <value>KER</value>
+    <description>Keratometry</description>
+  </enum-value>
+  <enum-value code="KO">
+    <value>KO</value>
+    <description>Key Object Selection</description>
+  </enum-value>
+  <enum-value code="LEN">
+    <value>LEN</value>
+    <description>Lensometry</description>
+  </enum-value>
+  <enum-value code="LS">
+    <value>LS</value>
+    <description>Laser Surface Scan</description>
+  </enum-value>
+  <enum-value code="MG">
+    <value>MG</value>
+    <description>Mammography</description>
+  </enum-value>
+  <enum-value code="MR">
+    <value>MR</value>
+    <description>Magnetic Resonance</description>
+  </enum-value>
+  <enum-value code="NM">
+    <value>NM</value>
+    <description>Nuclear Medicine</description>
+  </enum-value>
+  <enum-value code="OAM">
+    <value>OAM</value>
+    <description>Ophthalmic Axial Measurements</description>
+  </enum-value>
+  <enum-value code="OCT">
+    <value>OCT</value>
+    <description>Optical Coherence Tomography (non-Ophthalmic)</description>
+  </enum-value>
+  <enum-value code="OP">
+    <value>OP</value>
+    <description>Ophthalmic Photography</description>
+  </enum-value>
+  <enum-value code="OPM">
+    <value>OPM</value>
+    <description>Ophthalmic Mapping</description>
+  </enum-value>
+  <enum-value code="OPT">
+    <value>OPT</value>
+    <description>Ophthalmic Tomography</description>
+  </enum-value>
+  <enum-value code="OPV">
+    <value>OPV</value>
+    <description>Ophthalmic Visual Field</description>
+  </enum-value>
+  <enum-value code="OT">
+    <value>OT</value>
+    <description>Other</description>
+  </enum-value>
+  <enum-value code="PR">
+    <value>PR</value>
+    <description>Presentation State</description>
+  </enum-value>
+  <enum-value code="PT">
+    <value>PT</value>
+    <description>Positron Emission Tomography (PET)</description>
+  </enum-value>
+  <enum-value code="PX">
+    <value>PX</value>
+    <description>Panoramic X-Ray</description>
+  </enum-value>
+  <enum-value code="REG">
+    <value>REG</value>
+    <description>Registration</description>
+  </enum-value>
+  <enum-value code="RESP">
+    <value>RESP</value>
+    <description>Respiratory Waveform</description>
+  </enum-value>
+  <enum-value code="RF">
+    <value>RF</value>
+    <description>Radio Fluoroscopy</description>
+  </enum-value>
+  <enum-value code="RG">
+    <value>RG</value>
+    <description>Radiographic Imaging (conventional film/screen)</description>
+  </enum-value>
+  <enum-value code="RT">
+    <value>RT</value>
+    <description>Radiation Therapy</description>
+  </enum-value>
+  <enum-value code="RTDOSE">
+    <value>RTDOSE</value>
+    <description>Radiotherapy Dose</description>
+  </enum-value>
+  <enum-value code="RTIMAGE">
+    <value>RTIMAGE</value>
+    <description>Radiotherapy Image</description>
+  </enum-value>
+  <enum-value code="RTPLAN">
+    <value>RTPLAN</value>
+    <description>Radiotherapy Plan</description>
+  </enum-value>
+  <enum-value code="RTRECORD">
+    <value>RTRECORD</value>
+    <description>RT Treatment Record</description>
+  </enum-value>
+  <enum-value code="RTSTRUCT">
+    <value>RTSTRUCT</value>
+    <description>Radiotherapy Structure Set</description>
+  </enum-value>
+  <enum-value code="SC">
+    <value>SC</value>
+    <description>Secondary Capture</description>
+  </enum-value>
+  <enum-value code="SEG">
+    <value>SEG</value>
+    <description>Segmentation</description>
+  </enum-value>
+  <enum-value code="SM">
+    <value>SM</value>
+    <description>Slide Microscopy</description>
+  </enum-value>
+  <enum-value code="SMR">
+    <value>SMR</value>
+    <description>Stereometric Relationship</description>
+  </enum-value>
+  <enum-value code="SR">
+    <value>SR</value>
+    <description>SR Document</description>
+  </enum-value>
+  <enum-value code="SRF">
+    <value>SRF</value>
+    <description>Subjective Refraction</description>
+  </enum-value>
+  <enum-value code="TG">
+    <value>TG</value>
+    <description>Thermography</description>
+  </enum-value>
+  <enum-value code="US">
+    <value>US</value>
+    <description>Ultrasound</description>
+  </enum-value>
+  <enum-value code="VA">
+    <value>VA</value>
+    <description>Visual Acuity</description>
+  </enum-value>
+  <enum-value code="VL">
+    <value>VL</value>
+    <description>Visible Light</description>
+  </enum-value>
+  <enum-value code="XA">
+    <value>XA</value>
+    <description>X-Ray Angiography</description>
+  </enum-value>
+  <enum-value code="XC">
+    <value>XC</value>
+    <description>External Camera (Photography)</description>
+  </enum-value>
+</enum>

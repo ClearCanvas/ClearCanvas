@@ -1,0 +1,354 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ColumnAbbreviationReconciliation" xml:space="preserve">
+    <value>Rec.</value>
+  </data>
+  <data name="ColumnDateOfBirth" xml:space="preserve">
+    <value>Date Of Birth</value>
+  </data>
+  <data name="ColumnFamilyName" xml:space="preserve">
+    <value>Family Name</value>
+  </data>
+  <data name="ColumnGivenName" xml:space="preserve">
+    <value>Given Name</value>
+  </data>
+  <data name="ColumnHealthcardNumber" xml:space="preserve">
+    <value>Healthcard #</value>
+  </data>
+  <data name="ColumnHomeAddress" xml:space="preserve">
+    <value>Home Address</value>
+  </data>
+  <data name="ColumnHomePhone" xml:space="preserve">
+    <value>Home Phone</value>
+  </data>
+  <data name="ColumnMiddleName" xml:space="preserve">
+    <value>Middle Name</value>
+  </data>
+  <data name="ColumnMRN" xml:space="preserve">
+    <value>MRN</value>
+  </data>
+  <data name="ColumnName" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="ColumnScore" xml:space="preserve">
+    <value>Score</value>
+  </data>
+  <data name="ColumnSex" xml:space="preserve">
+    <value>Sex</value>
+  </data>
+  <data name="ColumnSite" xml:space="preserve">
+    <value>Site</value>
+  </data>
+  <data name="ColumnWorkAddress" xml:space="preserve">
+    <value>Work Address</value>
+  </data>
+  <data name="ColumnWorkPhone" xml:space="preserve">
+    <value>Work Phone</value>
+  </data>
+  <data name="ExceptionCannotStartLinkedProcedures" xml:space="preserve">
+    <value>Unable to link the requested procedure(s).  Skipping to the next worklist item.</value>
+  </data>
+  <data name="ExceptionReconcilePatientProfiles" xml:space="preserve">
+    <value>Unable to reconcile patient profiles</value>
+  </data>
+  <data name="FormatTitleContextDescriptionReviewOrderNoteConversation" xml:space="preserve">
+    <value>Review Preliminary Diagnosis - {0} {1} - {2}</value>
+  </data>
+  <data name="MessageChooseRadiologist" xml:space="preserve">
+    <value>You must choose a supervisor.</value>
+  </data>
+  <data name="MessageConfirmDiscardSelectedProtocol" xml:space="preserve">
+    <value>Discard the selected protocol?</value>
+  </data>
+  <data name="MessageNoReconciliationCandidate" xml:space="preserve">
+    <value>There are no reconciliation candidates for this patient.</value>
+  </data>
+  <data name="MessageProtocollingComponentAlreadyOpened" xml:space="preserve">
+    <value>You are currently editing the protocol for {0}.
+Do you want to save it to your Drafts folder and open the protocol for {1}?</value>
+  </data>
+  <data name="MessageQueryPrelimDiagnosisReviewRequired" xml:space="preserve">
+    <value>You are about to verify a '{0}' procedure.  Do you wish to send a review request for this report?
+Choose "Yes" to open up the Preliminary Diagnosis window and enter your request.
+Choose "No" to verify this report without further action.</value>
+  </data>
+  <data name="TextLinkProtocolHeading" xml:space="preserve">
+    <value>Protocolling:</value>
+  </data>
+  <data name="TextLinkProtocolInstructions" xml:space="preserve">
+    <value>Check any additional procedures that should be linked to this protocol</value>
+  </data>
+  <data name="TitleAdditionalInfo" xml:space="preserve">
+    <value>Additional Info</value>
+  </data>
+  <data name="TitleConfirmReconciliation" xml:space="preserve">
+    <value>Confirm Reconciliation</value>
+  </data>
+  <data name="TitleEmergencyFolderSystem" xml:space="preserve">
+    <value>Emergency</value>
+  </data>
+  <data name="TitleLinkProcedures" xml:space="preserve">
+    <value>Link Procedures</value>
+  </data>
+  <data name="TitleOrder" xml:space="preserve">
+    <value>Order</value>
+  </data>
+  <data name="TitleOrderAttachments" xml:space="preserve">
+    <value>Order Attachments</value>
+  </data>
+  <data name="TitlePatientReconciliation" xml:space="preserve">
+    <value>Patient Reconciliation</value>
+  </data>
+  <data name="TitlePrintWorklist" xml:space="preserve">
+    <value>Print Worklist</value>
+  </data>
+  <data name="TitlePriors" xml:space="preserve">
+    <value>Priors</value>
+  </data>
+  <data name="TitleProtocollingFolderSystem" xml:space="preserve">
+    <value>Protocolling</value>
+  </data>
+  <data name="TitleSelectSupervisor" xml:space="preserve">
+    <value>Select Supervisor</value>
+  </data>
+  <data name="TitleBookingFolderSystem" xml:space="preserve">
+    <value>Booking</value>
+  </data>
+  <data name="ColumnDescription" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="ExceptionSaveProtocolCode" xml:space="preserve">
+    <value>Unable to save Protocol Code</value>
+  </data>
+  <data name="ExceptionSaveProtocolGroup" xml:space="preserve">
+    <value>Unable to savev Protocol Group</value>
+  </data>
+  <data name="FormatTitleContextDescriptionOrderNoteConversation" xml:space="preserve">
+    <value> - {0} {1} - {2}</value>
+  </data>
+  <data name="TitleAddProtocolCode" xml:space="preserve">
+    <value>Add Protocol Code</value>
+  </data>
+  <data name="TitleAddProtocolGroup" xml:space="preserve">
+    <value>Add Protocol Group</value>
+  </data>
+  <data name="TitleEditProtocolGroup" xml:space="preserve">
+    <value>Edit Protocol Group</value>
+  </data>
+  <data name="TitleMoveProtocolCodeDown" xml:space="preserve">
+    <value>Move down</value>
+  </data>
+  <data name="TitleMoveProtocolCodeUp" xml:space="preserve">
+    <value>Move up</value>
+  </data>
+  <data name="TitleNewProtocolCode" xml:space="preserve">
+    <value>New code</value>
+  </data>
+  <data name="TitleProtocolGroups" xml:space="preserve">
+    <value>Protocol Groups</value>
+  </data>
+  <data name="TitleReassignItem" xml:space="preserve">
+    <value>Reassign Item</value>
+  </data>
+  <data name="ColumnFrom" xml:space="preserve">
+    <value>From</value>
+  </data>
+  <data name="ColumnPatientName" xml:space="preserve">
+    <value>Patient Name</value>
+  </data>
+  <data name="ColumnPostTime" xml:space="preserve">
+    <value>Time</value>
+  </data>
+  <data name="ColumnTo" xml:space="preserve">
+    <value>To</value>
+  </data>
+  <data name="ColumnUrgent" xml:space="preserve">
+    <value>Urgent</value>
+  </data>
+  <data name="ExceptionFailedToSave" xml:space="preserve">
+    <value>An error occured while attempting to save changes to this item</value>
+  </data>
+  <data name="FormatFrom" xml:space="preserve">
+    <value>From: {0} - {1}</value>
+  </data>
+  <data name="FormatFromOnBehalf" xml:space="preserve">
+    <value>From: {0} on behalf of {1} - {2}</value>
+  </data>
+  <data name="FormatOrderNoteboxFolderSystemTitle" xml:space="preserve">
+    <value>{0} [{1} item(s)]</value>
+  </data>
+  <data name="FormatTo" xml:space="preserve">
+    <value>To:     {0}</value>
+  </data>
+  <data name="MessageBodyCannotBeEmpty" xml:space="preserve">
+    <value>You must provide a message body when creating a new note.</value>
+  </data>
+  <data name="MessageMustAcknowledge" xml:space="preserve">
+    <value>All unread notes in this conversation must be read and acknowledged by checking off the left-hand side checkbox.</value>
+  </data>
+  <data name="MessageMustAcknowledgeWithPost" xml:space="preserve">
+    <value>All unread notes in this conversation must be read and acknowledged by checking off the left-hand side checkbox before new notes can be posted.</value>
+  </data>
+  <data name="MessageMustSelectTemplate" xml:space="preserve">
+    <value>An action must be selected.</value>
+  </data>
+  <data name="MessageNoRecipientsSelected" xml:space="preserve">
+    <value>At least one recipient must be selected in order to post a note.</value>
+  </data>
+  <data name="MessageSearchNotSupported" xml:space="preserve">
+    <value>Searching is not supported</value>
+  </data>
+  <data name="TitleAcknowledge" xml:space="preserve">
+    <value>Acknowledge</value>
+  </data>
+  <data name="TitleAcknowledgeAndPost" xml:space="preserve">
+    <value>Acknowledge and Post</value>
+  </data>
+  <data name="TitleConversationHistory" xml:space="preserve">
+    <value>Conversation History</value>
+  </data>
+  <data name="TitleConversationHistoryWithCheckBoxes" xml:space="preserve">
+    <value>Conversation History: select all checkboxes to indicate that you have read and acknowledged the notes</value>
+  </data>
+  <data name="TitleOrderNoteboxFolderSystem" xml:space="preserve">
+    <value>Order Notes</value>
+  </data>
+  <data name="TitlePost" xml:space="preserve">
+    <value>Post</value>
+  </data>
+  <data name="TitleStaffOrStaffGroups" xml:space="preserve">
+    <value>Choose a staff or staff group</value>
+  </data>
+  <data name="MessageSearchMessageExternalPractitioner" xml:space="preserve">
+    <value>Enter search criteria (Name, License #, or Billing #)</value>
+  </data>
+  <data name="TitleExternalPractitionerFolderSystem" xml:space="preserve">
+    <value>External Practitioners</value>
+  </data>
+  <data name="TitleMergePractitioner" xml:space="preserve">
+    <value>Merge Practitioners</value>
+  </data>
+  <data name="TitleUpdateExternalPractitioner" xml:space="preserve">
+    <value>Edit Practitioner</value>
+  </data>
+  <data name="MessagePrintWorklist" xml:space="preserve">
+    <value>You are about to print out information that contains confidential patient data.  Do you want to continue?</value>
+  </data>
+</root>

@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" assembly="ClearCanvas.Healthcare" namespace="ClearCanvas.Healthcare">
+  <class name="StaffGroup" table="StaffGroup_">
+    <cache usage="nonstrict-read-write"/>
+    <id name="OID" column="OID_" type="Guid">
+      <generator class="guid.comb"/>
+    </id>
+    <version name="Version" column="Version_"/>
+    <property name="Name" column="Name_" type="String" unique="true" not-null="true"/>
+    <property name="Description" column="Description_" type="String" length="1024"/>
+    <property name="Elective" type="Boolean" column="Elective_" not-null="true"/>
+
+    <set name="Members" table="StaffGroupStaff_" lazy="true">
+      <cache usage="nonstrict-read-write"/>
+      <key column="StaffGroupOID_"/>
+      <many-to-many column="StaffOID_" class="Staff" fetch="join"/>
+    </set>
+    <property name="Deactivated" column="Deactivated_" type="Boolean" not-null="true"/>
+  </class>
+</hibernate-mapping>

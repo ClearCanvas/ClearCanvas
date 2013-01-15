@@ -1,0 +1,93 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Font Name="Tahoma" Size="8.25" />
+  <Class Name="ClearCanvas.ImageViewer.InteractiveGraphics.ControlGraphic" Collapsed="true">
+    <Position X="5.25" Y="0.5" Width="1.75" />
+    <TypeIdentifier>
+      <FileName>InteractiveGraphics\ControlGraphic.cs</FileName>
+      <HashCode>AAAABAgBQGEIAAAAIIgAQAACCASEBAABIUAAgAAAAAA=</HashCode>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ClearCanvas.ImageViewer.InteractiveGraphics.ContextMenuControlGraphic" Collapsed="true">
+    <Position X="1.75" Y="2" Width="2.25" />
+    <TypeIdentifier>
+      <FileName>InteractiveGraphics\ContextMenuControlGraphic.cs</FileName>
+      <HashCode>QAAAAAAAICAAgAAAIAAAAAAAAAAAJAAAAAAIAAAACAA=</HashCode>
+    </TypeIdentifier>
+    <Lollipop Position="1.263" />
+  </Class>
+  <Class Name="ClearCanvas.ImageViewer.InteractiveGraphics.ControlPointsGraphic" Collapsed="true">
+    <Position X="4.25" Y="2" Width="1.75" />
+    <TypeIdentifier>
+      <FileName>InteractiveGraphics\ControlPointGroup.cs</FileName>
+      <HashCode>AANCAAEAQGAEAQQACgAAAQQAgAKsBhAFIAAIEAQAQAA=</HashCode>
+    </TypeIdentifier>
+    <Lollipop Position="0.971" />
+  </Class>
+  <Class Name="ClearCanvas.ImageViewer.InteractiveGraphics.MoveControlGraphic" Collapsed="true">
+    <Position X="6.25" Y="2" Width="1.75" />
+    <TypeIdentifier>
+      <FileName>InteractiveGraphics\MoveControlGraphic.cs</FileName>
+      <HashCode>AAAAIAECQeBAAAAAAAAAQQAAAAIABAABIAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+    <Lollipop Position="0.96" />
+  </Class>
+  <Class Name="ClearCanvas.ImageViewer.InteractiveGraphics.TextEditControlGraphic" Collapsed="true">
+    <Position X="8.25" Y="2" Width="2" />
+    <TypeIdentifier>
+      <FileName>InteractiveGraphics\TextEditControlGraphic.cs</FileName>
+      <HashCode>AgAAAAAAAGAAAAABIJIAQwIAABEQAAIhAgCACJAAAAA=</HashCode>
+    </TypeIdentifier>
+    <Lollipop Position="1.096" />
+  </Class>
+  <Class Name="ClearCanvas.ImageViewer.InteractiveGraphics.AnchorPointControlGraphic" Collapsed="true">
+    <Position X="5.5" Y="3" Width="2.5" />
+    <TypeIdentifier>
+      <FileName>InteractiveGraphics\AnchorPointControlGraphic.cs</FileName>
+      <HashCode>AAACAAAAACAAAQAAAIAQQQCAAAAABIAFAAAAAAAEAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ClearCanvas.ImageViewer.InteractiveGraphics.BoundableResizeControlGraphic" Collapsed="true">
+    <Position X="5.5" Y="3.75" Width="2.5" />
+    <TypeIdentifier>
+      <FileName>InteractiveGraphics\BoundableResizeControlGraphic.cs</FileName>
+      <HashCode>AAACAhAAACAAAQAAEIABQQAIgAAAAAAFAAAAAAAAAIE=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ClearCanvas.ImageViewer.InteractiveGraphics.BoundableStretchControlGraphic" Collapsed="true">
+    <Position X="5.5" Y="4.5" Width="2.5" />
+    <TypeIdentifier>
+      <FileName>InteractiveGraphics\BoundableStretchControlGraphic.cs</FileName>
+      <HashCode>AAACAAAAACACAQAAAIAAQQAAAAAEAQgFAAAAAAAAEAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ClearCanvas.ImageViewer.InteractiveGraphics.LineSegmentStretchControlGraphic" Collapsed="true">
+    <Position X="5.5" Y="5.25" Width="2.5" />
+    <TypeIdentifier>
+      <FileName>InteractiveGraphics\LineSegmentStretchControlGraphic.cs</FileName>
+      <HashCode>AAACAAAAACAAAQAACIAAQQAAAAAAAAAFAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ClearCanvas.ImageViewer.InteractiveGraphics.TextPlaceholderControlGraphic" Collapsed="true">
+    <Position X="5.5" Y="6" Width="2.5" />
+    <TypeIdentifier>
+      <FileName>InteractiveGraphics\TextPlaceholderControlGraphic.cs</FileName>
+      <HashCode>AAACAAAAADAAAQAAAIAAQQAAAAAAAAAFAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ClearCanvas.ImageViewer.InteractiveGraphics.VerticesControlGraphic" Collapsed="true">
+    <Position X="5.5" Y="6.75" Width="2.5" />
+    <TypeIdentifier>
+      <FileName>InteractiveGraphics\VerticesControlGraphic.cs</FileName>
+      <HashCode>AAACQAAAACAAAQACKIQQQUAAAAUQAAAFAAEAAAAEAAI=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ClearCanvas.ImageViewer.InteractiveGraphics.PolygonControlGraphic" Collapsed="true">
+    <Position X="5.5" Y="7.75" Width="2.5" />
+    <TypeIdentifier>
+      <FileName>InteractiveGraphics\PolygonControlGraphic.cs</FileName>
+      <HashCode>AAACAAAAAAAAAAAAEAQQAQAAAAEAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+</ClassDiagram>

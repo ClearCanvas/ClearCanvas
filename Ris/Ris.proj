@@ -1,0 +1,51 @@
+﻿ <Project DefaultTargets="BuildSolutions" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+   <Choose>
+     <When Condition=" '$(PROCESSOR_ARCHITEW6432)' == 'IA64' Or '$(PROCESSOR_ARCHITEW6432)' == 'AMD64' Or '$(PROCESSOR_ARCHITECTURE)' == 'IA64' Or '$(PROCESSOR_ARCHITECTURE)' == 'AMD64'">
+       <PropertyGroup>
+         <BuildPlatform>x64</BuildPlatform>
+       </PropertyGroup>
+     </When>
+     <When Condition="'$(PROCESSOR_ARCHITECTURE)' == 'x86' ">
+       <PropertyGroup>
+         <BuildPlatform>x86</BuildPlatform>
+       </PropertyGroup>
+     </When>
+     <Otherwise>
+       <PropertyGroup>
+         <BuildPlatform></BuildPlatform>
+       </PropertyGroup>
+     </Otherwise>
+   </Choose>
+
+   <PropertyGroup>
+     <TargetPlatform>$(BuildPlatform)</TargetPlatform>
+   </PropertyGroup>
+
+   <Choose>
+    <When Condition="'$(TargetPlatform)' == 'x64'">
+      <PropertyGroup>
+        <PlatformSubFolder>x64</PlatformSubFolder>
+      </PropertyGroup>
+    </When>
+    <Otherwise>
+      <!-- assumes Win32 -->
+      <PropertyGroup>
+        <PlatformSubFolder></PlatformSubFolder>
+      </PropertyGroup>
+    </Otherwise>
+  </Choose>
+
+  <!-- set out some defaults -->
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <DistributionBuild>false</DistributionBuild>
+  </PropertyGroup>
+
+  <Target Name="BuildSolutions" >
+    <MSBuild Projects=".\Client\RisClient.proj" Properties="Platform=Any CPU;Configuration=$(Configuration);TargetPlatform=$(TargetPlatform);DistributionBuild=$(DistributionBuild);KeyFile=$(KeyFile)" />
+    <MSBuild Projects=".\Server\RisServer.proj" Properties="Platform=Any CPU;Configuration=$(Configuration);TargetPlatform=$(TargetPlatform);DistributionBuild=$(DistributionBuild);KeyFile=$(KeyFile)" />
+	<!--<MSBuild Projects=".\Shreds\MwlServer\MwlServer.proj" Properties="Configuration=$(Configuration);TargetPlatform=$(TargetPlatform);DistributionBuild=$(DistributionBuild);KeyFile=$(KeyFile)" />
+    <MSBuild Projects="..\HL7\Server\HL7Server.proj" Properties="Configuration=$(Configuration);TargetPlatform=$(TargetPlatform);DistributionBuild=$(DistributionBuild);KeyFile=$(KeyFile)" />-->
+  </Target>
+</Project>

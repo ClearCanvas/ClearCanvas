@@ -1,0 +1,369 @@
+/*=====================
+ * Study Details
+ *=====================*/
+.StudyDetailsMessage
+{
+    text-align:center; 
+    font-size: 16px; 
+    font-weight: bold; 
+    background: #FFFFCC url(../../../PersistantImage.ashx?key=ErrorMessageBackground) repeat-x;
+    padding: 3px;
+    margin: 4px;
+    color: #FF0000;
+    border: solid 1px #ff0000;
+}
+
+.EditStudyDialogErrorMessage
+{
+    text-align:center; 
+    font-size: 12px; 
+    font-weight: bold; 
+    background: #FFFFCC url(../../../PersistantImage.ashx?key=ErrorMessageBackground) repeat-x;
+    padding: 3px;
+    margin: 4px;
+    color: #FF0000;
+    border: solid 1px #ff0000;
+}
+
+.EditStudyDialogStructureReportWarning
+{
+    text-align:center; 
+    color: #FF0000;
+    font-size: 12px; 
+    font-weight: bold; 
+    background: #FFFAA5;
+    padding: 10px;
+    margin: 5px 5px 10px 5px;
+    border: solid 1px #ff0000;
+}
+
+.PatientName
+{
+    font-size: 24px;
+    font-weight: bold;
+    color: #205F87
+}
+
+.PatientInfo
+{
+    color: #205F87;
+    white-space: nowrap;
+    font-size: 18px;   
+}
+
+.PatientSummaryTable
+{
+    background: #eeeeee url(../../../PersistantImage.ashx?key=PatientSummaryBackground) repeat-x;
+    padding: 2px 1px 2px 1px;
+    border: solid 1px #999999;
+}
+
+.StudyDetailsView
+{
+    font-family: Sans-Serif;
+    font-size: 16px;
+    background-color: White;
+    padding: 1px 1px 1px 1px;
+}
+
+.StudyDetailsViewHeader
+{
+    font-weight: bold;
+    color: #336699;
+    border-right: dashed 1px White;
+    width: 200px;
+}
+
+.StudyDetailsViewHeader td
+{
+    border: solid 1px #cccccc;
+    padding-left: 10px;
+}
+
+.StudyDetailsSubTitle
+{
+    font-size: 14;
+    font-weight: bold;
+    color: #205F87;
+    padding-left: 2px;
+    padding-bottom: 3px;
+}
+
+.CloseButton
+{
+    color: White;
+    font-size: 16px;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.Spacer
+{
+    background-color: #3D98D1;
+}
+
+.StudySummary
+{
+    border: solid 1px #3d98d1;
+    background-color: White;
+    font-size: 12px;
+}
+
+.StudySummaryHeader
+{
+    padding-left: 5px;
+    color: #205F87;
+	font-weight: bold;
+	width: 200px;
+	padding-top: 4px;
+	padding-bottom: 4px;
+}
+
+.StudySummaryRow td
+{
+    border-bottom: solid 2px #eeeeee;
+}
+
+.ContentPanel
+{
+	padding:2px;
+	font-size:12pt;
+}
+
+.StudyListingHeaderRow
+{
+	padding: 8px 4px 8px 4px; 
+    color: #205F87;
+    text-align: center; 
+    font-weight:bold;
+    background: #dddddd url(../../../../PersistantImage.ashx?key=HeadingBackground) repeat-x top;
+}
+
+.DeleteStudyReasonPanel
+{
+    padding: 10px;
+    background: #ffffff url(../images/Controls/Dialog/DialogBodyBackground.png) repeat-x bottom;
+}
+
+.EditStudyReasonPanel
+{
+    border-left: solid 1px #3d98d1;
+    border-bottom: solid 1px #3d98d1;
+    border-right: solid 1px #3d98d1;
+    padding: 10px;
+    background: #ffffff url(../images/Controls/Dialog/DialogBodyBackground.png) repeat-x bottom;
+}
+
+.StudyStatusLink
+{
+    display: inline;
+	color: Blue;
+    text-decoration: underline;
+}
+.StudyStatusLink[disabled], .StudyStatusLink[disabled="true"]
+{
+    display: inline;
+    color:Black;
+    text-decoration: none;
+}
+
+/*============================
+ * Series Details
+ *===========================*/
+
+.SeriesDetailsPanel
+{
+    background: #B8D9EE;
+    height: 28px;
+    padding-top: 4px;
+}
+
+.SeriesDetailsGridView
+{
+    border: solid 1px #3d98d1;
+}
+
+.SeriesDetailsGridViewHeader
+{
+	background-color: White;
+	text-align: left;
+	color: #205F87;
+	font-weight: bold;
+	width: 200px;
+}
+
+/*======================================
+    History tab
+========================================*/
+
+.HistoryDetailsPanel
+{  
+	background: #ffffff url(../images/Controls/Dialog/DialogBodyBackground.png) repeat-x bottom;
+	border: solid 1px #cccccc; 
+	margin-right: 5px; 
+	margin-bottom: 5px; 
+	margin-top: 4px; 
+	padding: 0px;
+}
+
+.TallHistoryDetailsPanel
+{  
+	background: #ffffff url(../images/Controls/Dialog/DialogBodyBackgroundTall.png) repeat-x bottom;
+	border: solid 1px #cccccc; 
+	margin-right: 5px; 
+	margin-bottom: 5px; 
+	margin-top: 4px; 
+	padding: 0px;
+}
+
+.HistoryDetailsLabel
+{
+    color: #205F87;
+    font-weight: bold;
+}
+
+
+.ReasonSummary td
+{
+    border: none;
+    padding-left: 7px;
+}
+
+.ChangeHistorySummary
+{
+    width: 100%;
+}
+
+.ChangeHistorySummary td
+{
+    border: none;
+}
+
+/*======================================
+    Delete Studies Dialog
+========================================*/
+
+div.DeleteStudiesTableContainer {
+	border: 1px solid #618FAD;
+	margin-top: 5px;
+	width: 800px;
+	height: 200px;
+	overflow: auto;
+}
+
+.DeleteStudiesConfirmTable
+{
+    color: Black;
+    font-size: 12px;
+    width: 100%;
+}
+
+.ReasonForDeletionDropDownPanel
+{
+	border-right: gainsboro 1px solid;
+	border-top: gainsboro 1px solid;
+	border-left: gainsboro 1px solid;
+	border-bottom: gainsboro 1px solid;
+	background-color: whitesmoke;
+	padding-right: 5px;
+	padding-left: 5px;
+	padding-bottom: 5px;
+	padding-top: 5px;
+}
+
+/*======================================
+    Edit Study Dialog Tab Control
+========================================*/
+
+.EditStudyDialogTabControl .ajax__tab_header					
+{
+    margin-top: 8px;
+}
+.EditStudyDialogTabControl .ajax__tab_outer
+{
+	background: url(../images/Controls/Dialog/DialogInactiveTabRight.png) no-repeat right;
+	margin-right: 1px;
+}
+.EditStudyDialogTabControl .ajax__tab_inner
+{
+	background: url(../images/Controls/Dialog/DialogInactiveTabLeft.png) no-repeat;
+	padding-left: 3px;
+}
+.EditStudyDialogTabControl .ajax__tab_tab
+{
+	background: url(../../../PersistantImage.ashx?key=DialogInactiveTabMiddle) repeat-x;
+	padding-left: 3px;
+	padding-right: 2px;
+	padding-top: 1px;
+	color: #16425D;
+	font-size: 12px;
+    font-family: Sans-Serif;   	
+}
+.EditStudyDialogTabControl .ajax__tab_hover .ajax__tab_outer
+{
+	background: url(../images/Controls/Dialog/DialogHoverTabRight.png) no-repeat right;
+}
+.EditStudyDialogTabControl .ajax__tab_hover .ajax__tab_inner
+{
+	background: url(../images/Controls/Dialog/DialogHoverTabLeft.png) no-repeat;
+}
+.EditStudyDialogTabControl .ajax__tab_hover .ajax__tab_tab
+{
+	background: url(../../../PersistantImage.ashx?key=DialogHoverTabMiddle) repeat-x;
+    color: #16425D;
+}
+.EditStudyDialogTabControl .ajax__tab_active .ajax__tab_outer
+{
+	background: url(../images/Controls/Dialog/DialogActiveTabRight.png) no-repeat right;
+}
+.EditStudyDialogTabControl .ajax__tab_active .ajax__tab_inner
+{
+	background: url(../images/Controls/Dialog/DialogActiveTabLeft.png) no-repeat;
+	
+}
+.EditStudyDialogTabControl .ajax__tab_active .ajax__tab_tab
+{
+	background: url(../../../PersistantImage.ashx?key=DialogActiveTabMiddle) repeat-x;
+	color: #205F87;
+    font-weight: bold;
+    font-size: 14px; 
+    font-family: Sans-Serif;   
+}
+
+
+
+/*************************************************************************************************
+	Other styles
+*************************************************************************************************/
+
+.EditStudyDialogTabControl .ajax__tab_body
+{
+	margin: 0px;
+	padding: 6px;
+	background: #ffffff;
+	border-left: #618FAD 1px solid;
+	border-right: #618FAD 1px solid;
+	border-top: #618FAD 1px solid;
+	border-bottom: #cccccc 1px solid;
+}
+
+.ModalityListBox
+{
+    width: 85px;
+}
+
+/*************************************************************************************************
+	Move panels
+*************************************************************************************************/
+.MovePanelTd
+{
+	background-color: #3d98d1;
+}
+.MovePanel 
+{
+	border: solid 1px #3d98d1;
+}
+.SeriesDetailsContent 
+{
+	background: url(../../../PersistantImage.ashx?key=ToolbarButtonPanelBackground) repeat;
+}

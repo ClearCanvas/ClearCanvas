@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://www.clearcanvas.ca/imageViewer/automation" elementFormDefault="qualified" targetNamespace="http://www.clearcanvas.ca/imageViewer/automation" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="http://localhost:51124/ClearCanvas/ImageViewer/DicomExplorer/Automation?xsd=xsd2" namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
+  <xs:element name="SearchLocalStudies">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="request" nillable="true" type="tns:SearchLocalStudiesRequest" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:complexType name="SearchLocalStudiesRequest">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:SearchStudiesRequest">
+        <xs:sequence />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="SearchLocalStudiesRequest" nillable="true" type="tns:SearchLocalStudiesRequest" />
+  <xs:complexType name="SearchStudiesRequest">
+    <xs:sequence>
+      <xs:element name="SearchCriteria" nillable="true" type="tns:DicomExplorerSearchCriteria" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="SearchStudiesRequest" nillable="true" type="tns:SearchStudiesRequest" />
+  <xs:complexType name="DicomExplorerSearchCriteria">
+    <xs:sequence>
+      <xs:element name="AccessionNumber" nillable="true" type="xs:string" />
+      <xs:element xmlns:q1="http://schemas.microsoft.com/2003/10/Serialization/Arrays" name="Modalities" nillable="true" type="q1:ArrayOfstring" />
+      <xs:element name="PatientId" nillable="true" type="xs:string" />
+      <xs:element name="PatientsName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="ReferringPhysiciansName" nillable="true" type="xs:string" />
+      <xs:element name="StudyDateFrom" nillable="true" type="xs:dateTime" />
+      <xs:element name="StudyDateTo" nillable="true" type="xs:dateTime" />
+      <xs:element name="StudyDescription" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="DicomExplorerSearchCriteria" nillable="true" type="tns:DicomExplorerSearchCriteria" />
+  <xs:element name="SearchLocalStudiesResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="SearchLocalStudiesResult" nillable="true" type="tns:SearchLocalStudiesResult" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:complexType name="SearchLocalStudiesResult">
+    <xs:sequence />
+  </xs:complexType>
+  <xs:element name="SearchLocalStudiesResult" nillable="true" type="tns:SearchLocalStudiesResult" />
+  <xs:complexType name="NoLocalStoreFault">
+    <xs:sequence />
+  </xs:complexType>
+  <xs:element name="NoLocalStoreFault" nillable="true" type="tns:NoLocalStoreFault" />
+  <xs:complexType name="DicomExplorerNotFoundFault">
+    <xs:sequence />
+  </xs:complexType>
+  <xs:element name="DicomExplorerNotFoundFault" nillable="true" type="tns:DicomExplorerNotFoundFault" />
+  <xs:element name="SearchRemoteStudies">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="request" nillable="true" type="tns:SearchRemoteStudiesRequest" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:complexType name="SearchRemoteStudiesRequest">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:SearchStudiesRequest">
+        <xs:sequence>
+          <xs:element name="AETitle" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="SearchRemoteStudiesRequest" nillable="true" type="tns:SearchRemoteStudiesRequest" />
+  <xs:element name="SearchRemoteStudiesResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="SearchRemoteStudiesResult" nillable="true" type="tns:SearchRemoteStudiesResult" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:complexType name="SearchRemoteStudiesResult">
+    <xs:sequence />
+  </xs:complexType>
+  <xs:element name="SearchRemoteStudiesResult" nillable="true" type="tns:SearchRemoteStudiesResult" />
+  <xs:complexType name="ServerNotFoundFault">
+    <xs:sequence />
+  </xs:complexType>
+  <xs:element name="ServerNotFoundFault" nillable="true" type="tns:ServerNotFoundFault" />
+</xs:schema>

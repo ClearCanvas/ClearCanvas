@@ -1,0 +1,195 @@
+<Project DefaultTargets="Copy Files" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!-- ImageServer specific postbuild step -->
+
+  <!--What files get copied depends on which project we are building.  -->
+
+  <Choose>
+	<When Condition=" '$(TargetPlatform)' != 'x86' ">
+	  <PropertyGroup>
+		<PlatformSubFolder>$(TargetPlatform)</PlatformSubFolder>
+	  </PropertyGroup>
+	</When>
+	<Otherwise>
+	  <!-- assumes Win32 -->
+	  <PropertyGroup>
+		<PlatformSubFolder></PlatformSubFolder>
+	  </PropertyGroup>
+	</Otherwise>
+  </Choose>
+  
+  
+	<PropertyGroup>
+		<XianTrunkDirectory>$(SolutionDir)\..</XianTrunkDirectory>
+	</PropertyGroup>
+
+  <PropertyGroup Condition ="'$(ProjectName)' == 'ClearCanvas.ImageServer.ShredHostService'">
+	<ShredHostBuild>true</ShredHostBuild>
+	<TestAppBuild>false</TestAppBuild>
+	<ExecutableBuild>false</ExecutableBuild>
+  </PropertyGroup>
+
+  <PropertyGroup Condition ="'$(ProjectName)' == 'ClearCanvas.ImageServer.TestApp'">
+	<ShredHostBuild>false</ShredHostBuild>
+	<TestAppBuild>true</TestAppBuild>
+	<ExecutableBuild>false</ExecutableBuild>
+  </PropertyGroup>
+
+  <PropertyGroup Condition ="'$(ProjectName)' == 'ClearCanvas.ImageServer.Executable'">
+	<ShredHostBuild>false</ShredHostBuild>
+	<TestAppBuild>false</TestAppBuild>
+	<ExecutableBuild>true</ExecutableBuild>
+  </PropertyGroup>
+
+  <ItemGroup>
+	<DicomAssemblyFiles Include="$(SolutionDir)\..\Dicom\bin\$(Configuration)\ClearCanvas.Dicom.dll" />
+	<DicomAssemblyFiles Include="$(SolutionDir)\..\Dicom\Codec\Rle\bin\$(Configuration)\ClearCanvas.Dicom.Codec.Rle.dll" />
+	<DicomAssemblyFiles Include="$(SolutionDir)\..\ReferencedAssemblies\Codecs\$(PlatformSubFolder)\ClearCanvas.Dicom.Codec.Jpeg.dll"/>
+  </ItemGroup>
+
+  <ItemGroup>
+	<ExecutableAppConfigCreatorSourceFiles Include="$(XianTrunkDirectory)\ImageServer\Executable\app.config" />
+	<ExecutableAppConfigCreatorSourceFiles Include="$(XianTrunkDirectory)\Dicom\app.config" />
+	<ExecutableAppConfigCreatorSourceFiles Include="$(XianTrunkDirectory)\ImageServer\Enterprise\SqlServer\app.config" />
+	<ExecutableAppCriticalConfigCreatorSourceFiles Include="$(SolutionDir)\$(SolutionName)_Executable_dist.critical.config" />
+  </ItemGroup>
+
+  <ItemGroup>
+	  <ShredHostAppConfigCreatorSourceFiles Include="$(SolutionDir)\ImageServer_ConnectionString_dist.config" />
+	<ShredHostAppConfigCreatorSourceFiles Include="$(XianTrunkDirectory)\ImageServer\ShredHostService\app.config" />
+	<ShredHostAppConfigCreatorSourceFiles Include="$(XianTrunkDirectory)\Dicom\app.config" />
+	<ShredHostAppConfigCreatorSourceFiles Include="$(XianTrunkDirectory)\ImageServer\Common\app.config" />
+	<ShredHostAppConfigCreatorSourceFiles Include="$(XianTrunkDirectory)\ImageServer\Services\Dicom\app.config" />
+	<ShredHostAppConfigCreatorSourceFiles Include="$(XianTrunkDirectory)\ImageServer\Services\ServiceLock\app.config" />
+	<ShredHostAppConfigCreatorSourceFiles Include="$(XianTrunkDirectory)\ImageServer\Services\Streaming\app.config" />
+	<ShredHostAppConfigCreatorSourceFiles Include="$(XianTrunkDirectory)\ImageServer\Services\WorkQueue\app.config" />
+	<ShredHostAppConfigCreatorSourceFiles Include="$(XianTrunkDirectory)\ImageServer\Services\Archiving\Hsm\app.config" />
+	<ShredHostAppConfigCreatorSourceFiles Include="$(XianTrunkDirectory)\ImageServer\Enterprise\SqlServer\app.config" />
+    
+	<ShredHostAppCriticalConfigCreatorSourceFiles Include="$(SolutionDir)\ImageServer_Shreds_dist.critical.config" />
+  </ItemGroup>
+
+  <ItemGroup>
+	<ImageServerCommonFiles Include="$(XianTrunkDirectory)\ReferencedAssemblies\NHibernate2.1\Iesi.Collections.dll" />
+	<ImageServerCommonFiles Include="$(XianTrunkDirectory)\ReferencedAssemblies\NHibernate2.1\Castle.DynamicProxy2.dll" />
+	<ImageServerCommonFiles Include="$(XianTrunkDirectory)\ReferencedAssemblies\NHibernate2.1\Castle.Core.dll" />
+	<ImageServerCommonFiles Include="$(XianTrunkDirectory)\ReferencedAssemblies\log4net.dll" />
+	<ImageServerCommonFiles Include="$(XianTrunkDirectory)\ReferencedAssemblies\nunit.framework.dll" />
+	<ImageServerCommonFiles Include="$(XianTrunkDirectory)\ReferencedAssemblies\ICSharpCode.SharpZipLib.dll" />
+	<ImageServerCommonFiles Include="$(XianTrunkDirectory)\Common\bin\$(Configuration)\ClearCanvas.Common.dll" />
+  </ItemGroup>
+
+  <ItemGroup Condition="$(ExecutableBuild)">
+    <PluginFiles Include="$(XianTrunkDirectory)\Utilities\Manifest\bin\$(Configuration)\ClearCanvas.Utilities.Manifest.dll" />
+  </ItemGroup>
+
+  <ItemGroup Condition="$(ShredHostBuild)">
+	<PluginFiles Include="$(XianTrunkDirectory)\Enterprise\Common\bin\$(Configuration)\ClearCanvas.Enterprise.Common.dll" />
+	<PluginFiles Include="$(XianTrunkDirectory)\ImageServer\Services\Archiving\bin\$(Configuration)\ClearCanvas.ImageServer.Services.Archiving.dll" />
+	<PluginFiles Include="$(XianTrunkDirectory)\ImageServer\Services\Archiving\Hsm\bin\$(Configuration)\ClearCanvas.ImageServer.Services.Archiving.Hsm.dll" />
+	<PluginFiles Include="$(XianTrunkDirectory)\Dicom\Codec\Rle\bin\$(Configuration)\ClearCanvas.Dicom.Codec.Rle.dll" />
+	<PluginFiles Include="$(XianTrunkDirectory)\ReferencedAssemblies\Codecs\$(PlatformSubFolder)\ClearCanvas.Dicom.Codec.Jpeg.dll"/>
+	<PluginFiles Include="$(XianTrunkDirectory)\JScript\bin\$(Configuration)\ClearCanvas.Jscript.dll"/>
+  </ItemGroup>
+
+  <ItemGroup Condition="$(TestAppBuild)">
+    <PluginFiles Include="$(XianTrunkDirectory)\Enterprise\Common\bin\$(Configuration)\ClearCanvas.Enterprise.Common.dll" />
+    <PluginFiles Include="$(XianTrunkDirectory)\Dicom\Codec\Rle\bin\$(Configuration)\ClearCanvas.Dicom.Codec.Rle.dll" />
+    <PluginFiles Include="$(XianTrunkDirectory)\ReferencedAssemblies\Codecs\$(PlatformSubFolder)\ClearCanvas.Dicom.Codec.Jpeg.dll"/>
+    <PluginFiles Include="$(XianTrunkDirectory)\JScript\bin\$(Configuration)\ClearCanvas.Jscript.dll"/>
+  </ItemGroup>
+
+  <ItemGroup>
+	<PluginFiles Include="$(XianTrunkDirectory)\ImageServer\Common\bin\$(Configuration)\ClearCanvas.ImageServer.Common.dll" />
+	<PluginFiles Include="$(XianTrunkDirectory)\ImageServer\Model\bin\$(Configuration)\ClearCanvas.ImageServer.Model.dll" />
+	<PluginFiles Include="$(XianTrunkDirectory)\ImageServer\Model\SqlServer\bin\$(Configuration)\ClearCanvas.ImageServer.Model.SqlServer.dll" />
+	<PluginFiles Include="$(XianTrunkDirectory)\ImageServer\Core\bin\$(Configuration)\ClearCanvas.ImageServer.Core.dll" />
+	<PluginFiles Include="$(XianTrunkDirectory)\ImageServer\Enterprise\SqlServer\bin\$(Configuration)\ClearCanvas.ImageServer.Enterprise.SqlServer.dll" />
+	<PluginFiles Include="$(XianTrunkDirectory)\ImageServer\Services\Common\bin\$(Configuration)\ClearCanvas.ImageServer.Services.Common.dll" />
+	<PluginFiles Include="$(XianTrunkDirectory)\ImageServer\Services\Dicom\bin\$(Configuration)\ClearCanvas.ImageServer.Services.Dicom.dll" />
+	<PluginFiles Include="$(XianTrunkDirectory)\ImageServer\Services\WorkQueue\bin\$(Configuration)\ClearCanvas.ImageServer.Services.WorkQueue.dll" />
+	<PluginFiles Include="$(XianTrunkDirectory)\ImageServer\Services\Streaming\bin\$(Configuration)\ClearCanvas.ImageServer.Services.Streaming.dll" />
+	<PluginFiles Include="$(XianTrunkDirectory)\ImageServer\Services\ServiceLock\bin\$(Configuration)\ClearCanvas.ImageServer.Services.ServiceLock.dll" />
+	<PluginFiles Include="$(XianTrunkDirectory)\ImageServer\Rules\bin\$(Configuration)\ClearCanvas.ImageServer.Rules.dll" />
+	<PluginFiles Include="$(XianTrunkDirectory)\ImageServer\Rules\RleCodec\bin\$(Configuration)\ClearCanvas.ImageServer.Rules.RleCodec.dll" />
+	<PluginFiles Include="$(XianTrunkDirectory)\ImageServer\Rules\JpegCodec\bin\$(Configuration)\ClearCanvas.ImageServer.Rules.JpegCodec.dll" />
+	<PluginFiles Include="$(XianTrunkDirectory)\Enterprise\Core\bin\$(Configuration)\ClearCanvas.Enterprise.Core.dll" />
+	<PluginFiles Include="$(XianTrunkDirectory)\ImageServer\Enterprise\bin\$(Configuration)\ClearCanvas.ImageServer.Enterprise.dll" />
+	<PluginFiles Include="$(XianTrunkDirectory)\ImageServer\Utilities\bin\$(Configuration)\ClearCanvas.ImageServer.Utilities.dll" />
+    <PluginFiles Include="$(XianTrunkDirectory)\Utilities\Manifest\bin\$(Configuration)\ClearCanvas.Utilities.Manifest.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ConfigFiles Include="$(XianTrunkDirectory)\ImageServer\Executable\Logging.config" />
+  </ItemGroup>
+  
+  <!-- License files -->
+  <ItemGroup>
+    <LicenseFiles Include="$(XianTrunkDirectory)\License.rtf" />
+  </ItemGroup>
+  
+  <!-- Setup build tasks for combining app config files -->
+  <Target Name="Build BuildTasks">
+    <MSBuild Projects="$(XianTrunkDirectory)\Utilities\BuildTasks\ClearCanvas.Utilities.BuildTasks.csproj" Properties="Configuration=$(Configuration);Platform=Any CPU;OutputPath=$(XianTrunkDirectory)\Utilities\BuildTasks\bin\$(Configuration)"/>
+  </Target>
+  
+  <UsingTask TaskName="ClearCanvas.Utilities.BuildTasks.FileReplaceText" AssemblyFile="$(XianTrunkDirectory)\Utilities\BuildTasks\bin\$(Configuration)\ClearCanvas.Utilities.BuildTasks.dll"/>
+  <UsingTask TaskName="ClearCanvas.Utilities.BuildTasks.CombineAppConfigs" AssemblyFile="$(XianTrunkDirectory)\Utilities\BuildTasks\bin\$(Configuration)\ClearCanvas.Utilities.BuildTasks.dll"/>
+
+  <!-- ShredHost App Config -->
+  <Target Name="Copy ShredHost App Config">
+    <CombineAppConfigs CheckDependency="false" 
+					   SourceFiles="@(ShredHostAppConfigCreatorSourceFiles)" 
+					   OutputFile="$(DistributionDirectory)\ClearCanvas.ImageServer.ShredHostService.exe.config"/>
+
+	  <CombineAppConfigs CheckDependency="false"
+							 SourceFiles="@(ShredHostAppCriticalConfigCreatorSourceFiles)"
+							 OutputFile="$(DistributionDirectory)\ClearCanvas.ImageServer.ShredHostService.exe.critical.config"/>
+
+	  
+  </Target>
+
+  <!-- ImageServer.Executable App Config -->
+  <Target Name="Copy ImageServer Executable App Config">
+    <CombineAppConfigs CheckDependency="false" SourceFiles="@(ExecutableAppConfigCreatorSourceFiles)" OutputFile="$(DistributionDirectory)\ClearCanvas.ImageServer.Executable.exe.config"/>
+ 	<CombineAppConfigs CheckDependency="false"
+							 SourceFiles="@(ExecutableAppCriticalConfigCreatorSourceFiles)"
+							 OutputFile="$(DistributionDirectory)\ClearCanvas.ImageServer.Executable.exe.critical.config"/>
+ </Target>
+
+  <Target Name="Copy Project Files" >
+
+    <!-- Copy Common files -->
+    <CreateItem Include="@(ImageServerCommonFiles)">
+      <Output ItemName="AllCommonFiles" TaskParameter="Include" />
+    </CreateItem>
+    <Copy SourceFiles="@(AllCommonFiles)" DestinationFolder="$(CommonDirectory)" />
+
+    <!-- Copy DICOM plugins -->
+    <Copy SourceFiles="@(DicomAssemblyFiles)" DestinationFolder="$(PluginsDirectory)" />
+
+    <!-- Copy plugins -->
+    <Copy SourceFiles="@(PluginFiles)" DestinationFolder="$(PluginsDirectory)" />
+
+    <!-- Copy logging.config -->
+    <Copy SourceFiles="@(ConfigFiles)" DestinationFolder="$(DistributionDirectory)" />
+
+    <!-- Copy License.rtf -->
+    <Copy SkipUnchangedFiles="true" SourceFiles="@(LicenseFiles)" DestinationFolder="$(DistributionDirectory)" ContinueOnError="true"/>
+
+    <Copy SourceFiles="$(XianTrunkDirectory)\Docs\PrivacyNotice.rtf" DestinationFolder="$(DistributionDirectory)"  />
+
+    <MakeDir Directories="$(ManifestDirectory)"/>
+  </Target>
+
+  <!-- The actual build task -->
+  <Target Name ="Copy Files" DependsOnTargets="Build BuildTasks">
+
+  <MSBuild Projects="$(XianTrunkDirectory)\JScript\Build.proj" Properties="Configuration=$(Configuration)"/>
+
+  <CallTarget Condition="$(ShredHostBuild)" Targets="Copy Project Files;Copy ShredHost App Config" />
+	<CallTarget Condition="$(TestAppBuild)" Targets="Copy Project Files" />
+	<CallTarget Condition="$(ExecutableBuild)" Targets="Copy Project Files;Copy ImageServer Executable App Config" />
+
+  </Target>
+
+</Project>

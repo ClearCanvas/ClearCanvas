@@ -1,0 +1,281 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{624BC225-49A8-4E92-942D-CDC976292EB9}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ClearCanvas.ImageViewer.StudyManagement.Core</RootNamespace>
+    <AssemblyName>ClearCanvas.ImageViewer.StudyManagement.Core</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <UpgradeBackupLocation />
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;UNIT_TESTS</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="nunit.framework, Version=2.2.7.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\ReferencedAssemblies\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.Linq" />
+    <Reference Include="System.Data.SqlServerCe, Version=4.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\ReferencedAssemblies\SqlCe\v4.0\x64\System.Data.SqlServerCe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization">
+      <RequiredTargetFramework>3.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Command\CompleteWorkItemUidCommand.cs" />
+    <Compile Include="Command\DataAccessCommand.cs" />
+    <Compile Include="Command\InsertOrUpdateStudyCommand.cs" />
+    <Compile Include="Command\InsertStudyXmlCommand.cs" />
+    <Compile Include="Command\InsertWorkItemCommand.cs" />
+    <Compile Include="Command\SaveStudyXmlCommand.cs" />
+    <Compile Include="Command\ViewerCommandProcessor.cs" />
+    <Compile Include="Command\ViewerCommandProcessorContext.cs" />
+    <Compile Include="Configuration\Broker.cs" />
+    <Compile Include="Configuration\ConfigurationDataContext.cs">
+      <DependentUpon>ConfigurationDataContext.dbml</DependentUpon>
+    </Compile>
+    <Compile Include="Configuration\ConfigurationDataContext.designer.cs">
+      <DependentUpon>ConfigurationDataContext.dbml</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Include="Configuration\ConfigurationDocumentBroker.cs" />
+    <Compile Include="Configuration\DataAccessContext.cs" />
+    <Compile Include="Configuration\SystemConfigurationSettingsStore.cs" />
+    <Compile Include="Configuration\Tests\BrokerTests.cs" />
+    <Compile Include="Configuration\Tests\SettingsStoreTest.cs" />
+    <Compile Include="Configuration\Tests\TestSettingsClasses.cs" />
+    <Compile Include="Configuration\VersionUtils.cs" />
+    <Compile Include="DeleteSeriesUtility.cs" />
+    <Compile Include="DeleteStudyUtility.cs" />
+    <Compile Include="DicomFilePublisher.cs" />
+    <Compile Include="ImageViewerMoveScu.cs" />
+    <Compile Include="ImageViewerStorageScu.cs" />
+    <Compile Include="ReapplyRulesUtility.cs" />
+    <Compile Include="RulesEngine.cs" />
+    <Compile Include="ServiceProviders\SystemConfigurationSettingsStore.cs" />
+    <Compile Include="Storage\DicomQuery\DateDicomPropertyFilter.cs" />
+    <Compile Include="Storage\DicomQuery\DicomPropertyFilter.cs" />
+    <Compile Include="Storage\DicomQuery\MultiValuedPropertyRule.cs" />
+    <Compile Include="Storage\DicomQuery\PropertyFilter.cs" />
+    <Compile Include="Storage\DicomQuery\PropertyFilters.cs" />
+    <Compile Include="Storage\DicomQuery\PropertyFilters\Common.cs" />
+    <Compile Include="Storage\DicomQuery\PropertyFilters\Patient.cs" />
+    <Compile Include="Storage\DicomQuery\PropertyFilters\PatientBreed.cs" />
+    <Compile Include="Storage\DicomQuery\PropertyFilters\PatientSpecies.cs" />
+    <Compile Include="Storage\DicomQuery\PropertyFilters\Responsibility.cs" />
+    <Compile Include="Storage\DicomQuery\PropertyFilters\Series.cs" />
+    <Compile Include="Storage\DicomQuery\PropertyFilters\SopInstance.cs" />
+    <Compile Include="Storage\DicomQuery\PropertyFilters\Study.cs" />
+    <Compile Include="Storage\DicomQuery\QueryUtilities.cs" />
+    <Compile Include="Storage\DicomQuery\StringDicomPropertyFilter.cs" />
+    <Compile Include="Storage\DicomQuery\StudyStoreQuery.cs" />
+    <Compile Include="Storage\DicomQuery\Tests\MiscellaneousTests.cs" />
+    <Compile Include="Storage\DicomQuery\Tests\PropertyFilterTests.cs" />
+    <Compile Include="Storage\DicomQuery\Tests\SeriesQueryTests.cs" />
+    <Compile Include="Storage\DicomQuery\Tests\SopInstanceQueryTests.cs" />
+    <Compile Include="Storage\DicomQuery\Tests\StudyRootQueryTests.cs" />
+    <Compile Include="Storage\DicomQuery\Tests\StudyStoreQueryTests.cs" />
+    <Compile Include="Storage\DicomQuery\Tests\TestBase.cs" />
+    <Compile Include="Storage\DicomQuery\TimeDicomPropertyFilter.cs" />
+    <Compile Include="Storage\DicomQuery\UidDicomPropertyFilter.cs" />
+    <Compile Include="IRulesEngine.cs" />
+    <Compile Include="ISopInstance.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReindexUtility.cs" />
+    <Compile Include="ReprocessStudyFolder.cs" />
+    <Compile Include="ImportFilesUtility.cs" />
+    <Compile Include="ProcessStudyUtility.cs" />
+    <Compile Include="ServiceProviders\ServerDirectory.cs" />
+    <Compile Include="ServiceProviders\StudyStore.cs" />
+    <Compile Include="ServiceProviders\Tests\ServerDirectoryTests.cs" />
+    <Compile Include="SR.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SR.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Storage\Broker.cs" />
+    <Compile Include="Storage\DataAccessContext.cs" />
+    <Compile Include="Storage\DeviceBroker.cs" />
+    <Compile Include="Storage\DicomStoreDataContext.designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DicomStoreDataContext.dbml</DependentUpon>
+    </Compile>
+    <Compile Include="ISeries.cs" />
+    <Compile Include="IStudy.cs" />
+    <Compile Include="Storage\Serializer.cs" />
+    <Compile Include="Storage\Series.cs" />
+    <Compile Include="Storage\SopInstance.cs" />
+    <Compile Include="Storage\SqlCeDatabaseHelper.cs" />
+    <Compile Include="Storage\Study.cs" />
+    <Compile Include="Storage\StudyBroker.cs" />
+    <Compile Include="Storage\StudyLocation.cs" />
+    <Compile Include="Storage\Tests\SerializationTests.cs" />
+    <Compile Include="Storage\WorkItemStatusFilter.cs" />
+    <Compile Include="Utilities.cs" />
+    <Compile Include="Storage\WorkItem.cs" />
+    <Compile Include="Storage\WorkItemBroker.cs" />
+    <Compile Include="WorkItemDataHelper.cs" />
+    <Compile Include="Storage\WorkItemUidBroker.cs" />
+    <Compile Include="WorkItemProcessor\BaseItemProcessor.cs" />
+    <Compile Include="WorkItemProcessor\IWorkItemProcessor.cs" />
+    <Compile Include="WorkItemProcessor\IWorkItemProcessorFactory.cs" />
+    <Compile Include="WorkItemProcessor\WorkItemProcessorFactoryExtensionPoint.cs" />
+    <Compile Include="WorkItemProcessor\WorkItemServiceSettings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>WorkItemServiceSettings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="WorkItemProcessor\WorkItemServiceSettings.cs" />
+    <Compile Include="WorkItemProcessor\WorkItemStatusProxy.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Common\ClearCanvas.Common.csproj">
+      <Project>{F6EAD428-E6CF-4DF6-B2F3-D33D532C5343}</Project>
+      <Name>ClearCanvas.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Dicom\ClearCanvas.Dicom.csproj">
+      <Project>{AD9ECE2B-8268-4115-8DC8-860FBD011FFF}</Project>
+      <Name>ClearCanvas.Dicom</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Common\ClearCanvas.ImageViewer.Common.csproj">
+      <Project>{FEFD73C5-8541-47D2-BBDB-FF61DEA28291}</Project>
+      <Name>ClearCanvas.ImageViewer.Common</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Configuration\ConfigurationDataContext.dbml.layout">
+      <DependentUpon>ConfigurationDataContext.dbml</DependentUpon>
+    </None>
+    <EmbeddedResource Include="SR.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>SR.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Configuration\ConfigurationDataContext.dbml">
+      <Generator>MSLinqToSQLGenerator</Generator>
+      <LastGenOutput>ConfigurationDataContext.designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Configuration\dbml_gen.bat" />
+    <None Include="Storage\DicomQuery\Tests\test_store_insert_studies.sqlce" />
+    <None Include="Storage\DicomStoreDataContext.dbml.layout">
+      <DependentUpon>DicomStoreDataContext.dbml</DependentUpon>
+    </None>
+    <None Include="WorkItemProcessor\WorkItemServiceSettings.settings">
+      <Generator>PublicSettingsSingleFileGenerator</Generator>
+      <LastGenOutput>WorkItemServiceSettings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Storage\DicomQuery\Tests\test_store.sdf" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Storage\dbml_gen.bat" />
+    <None Include="Storage\DicomStoreDataContext.dbml">
+      <Generator>MSLinqToSQLGenerator</Generator>
+      <LastGenOutput>DicomStoreDataContext.designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Storage\dicom_store.sqlce" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Storage\dicom_store.sdf" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{3259AA49-8AA1-44D3-9025-A0B520596A8C}" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Configuration\configuration.sdf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

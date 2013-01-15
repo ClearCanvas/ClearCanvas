@@ -1,0 +1,69 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!--  
+
+This file adds a number of supplementary indexes to the Healthcare model.
+Note that all entity and enumeration references are already indexed automatically,
+so the only fields that are explicitly marked for indexing here are generally 
+time-stamps and other value fields that are known to be used in queries, and only
+on key tables that play a central role in the workflow queries.
+
+-->
+<indexes>
+  <!-- ProcedureStep -->
+  <index table="ProcedureStep_" columns="Discriminator_"/>
+  <index table="ProcedureStep_" columns="CreationTime_"/>
+  <index table="ProcedureStep_" columns="ScheduledStartTime_"/>
+  <index table="ProcedureStep_" columns="ScheduledEndTime_"/>
+  <index table="ProcedureStep_" columns="StartTime_"/>
+  <index table="ProcedureStep_" columns="EndTime_"/>
+
+  <!-- Publication Shred query -->
+  <index table="ProcedureStep_" columns="State_, Discriminator_, ScheduledStartTime_"/>
+
+  <!-- Procedure -->
+  <index table="Procedure_" columns="ScheduledStartTime_"/>
+	<index table="Procedure_" columns="ScheduledEndTime_"/>
+	<index table="Procedure_" columns="StartTime_"/>
+  <index table="Procedure_" columns="EndTime_"/>
+  <index table="Procedure_" columns="Portable_"/>
+
+  <!-- Procedure -->
+  <index table="ProcedureCheckIn_" columns="CheckInTime_"/>
+  <index table="ProcedureCheckIn_" columns="CheckOutTime_"/>
+
+  <!-- Order -->
+  <index table="Order_" columns="AccessionNumber_" />
+  <index table="Order_" columns="SchedulingRequestTime_"/>
+  <index table="Order_" columns="ScheduledStartTime_"/>
+  <index table="Order_" columns="StartTime_"/>
+  <index table="Order_" columns="EndTime_"/>
+	<index table="Order_" columns="PlacerNumber_"/>
+
+	<!-- PatientProfile -->
+  <index table="PatientProfile_" columns="MrnId_" />
+  <index table="PatientProfile_" columns="HealthcardId_"/>
+  <index table="PatientProfile_" columns="FamilyName_, GivenName_"/>
+  <index table="PatientProfile_" columns="DateOfBirth_"/>
+
+  <!-- ExternalPractitioner -->
+  <index table="ExternalPractitioner_" columns="FamilyName_"/>
+  <index table="ExternalPractitioner_" columns="GivenName_"/>
+  <index table="ExternalPractitioner_" columns="BillingNumber_"/>
+  <index table="ExternalPractitioner_" columns="LicenseNumber_"/>
+
+  <!-- Staff -->
+  <index table="Staff_" columns="FamilyName_"/>
+  <index table="Staff_" columns="GivenName_"/>
+  <index table="Staff_" columns="UserName_"/>
+  
+  <!-- AttachedDocument -->
+  <index table="AttachedDocument_" columns="CreationTime_"/>
+
+  <!-- OrderNotebox sent items query -->
+  <index table="Note_" columns="IsFullyAcknowledged_, HasPostings_, AuthorOID_, PostTime_"/>
+
+  <!-- OrderNotebox inbox query -->
+  <index table="NotePosting_" columns="IsAcknowledged_, RecipientGroupOID_, CreationTime_"/>
+  <index table="NotePosting_" columns="IsAcknowledged_, RecipientStaffOID_, CreationTime_"/>
+
+</indexes>

@@ -1,0 +1,69 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ManifestInput xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.clearcanvas.ca">
+  <Files>
+    <File name="app.ico" ignore="true"/>
+    <File name="ClearCanvas Workstation.url" ignore="true"/>
+    <File name="install.log" ignore="true" />
+    <File name="uninst.exe" ignore="true" />
+    <File name="uninstall.log" ignore="true" />
+    <File name="EULA.rtf" />
+    <File name="PrivacyNotice.rtf" />
+    <File name="Logging.config" ignore="true" />
+    <File name="logs\" ignore="true" />
+    <File name="filestore\" ignore="true" />
+    <File name="manifest\" ignore="true" />
+    <File name="dicom_interim\" ignore="true" />
+    <File name="badfiles\" ignore="true" />
+    <File name="ClearCanvas.Desktop.Executable.exe" checksum="true" />
+    <File name="ClearCanvas.Desktop.Executable.exe.config" config="true" />
+    <File name="ClearCanvas.Desktop.Executable.exe.critical.config" checksum="true" config="true" />
+    <File name="ClearCanvas.Server.ShredHostService.exe" checksum="true" />
+    <File name="ClearCanvas.Server.ShredHostService.exe.config" config="false" />
+    <File name="ClearCanvas.Server.ShredHostService.exe.critical.config"  checksum="true" config="true" />
+    <File name="ClearCanvas.Executable.exe" checksum="true" />
+    <File name="ClearCanvas.Executable.exe.config" config="false" />
+    <File name="ClearCanvas.Executable.exe.critical.config" checksum="true" config="false" />
+    <File name="DicomAEServers.xml" ignore="true"/>
+    <File name="common\DotNetMagic2005.DLL" />
+    <File name="common\log4net.dll" checksum="true" />
+    <File name="common\sqlceca40.dll" checksum="true" />
+    <File name="common\sqlcecompact40.dll" checksum="true" />
+    <File name="common\sqlceer40EN.dll" checksum="true" />
+    <File name="common\sqlceme40.dll" checksum="true" />
+    <File name="common\sqlceqp40.dll" checksum="true" />
+    <File name="common\sqlcese40.dll" checksum="true" />
+    <File name="common\System.Data.SqlServerCe.dll" checksum="true" />
+    <File name="common\ClearCanvas.Common.dll" checksum="true" />
+    <File name="common\ClearCanvas.Server.ShredHost.dll" checksum="true" />
+    <File name="plugins\BilinearInterpolation.dll" checksum="true" />
+    <File name="plugins\ClearCanvas.Controls.WinForms.dll" checksum="true" />
+    <File name="plugins\ClearCanvas.Desktop.dll" checksum="true" />
+    <File name="plugins\ClearCanvas.Desktop.ExtensionBrowser.dll" checksum="true" />
+    <File name="plugins\ClearCanvas.Desktop.ExtensionBrowser.View.WinForms.dll" checksum="true" />
+    <File name="plugins\ClearCanvas.Desktop.Help.dll" checksum="true" />
+    <File name="plugins\ClearCanvas.Desktop.View.WinForms.dll" checksum="true" />
+    <File name="plugins\ClearCanvas.Dicom.dll" checksum="true" />
+    <File name="plugins\ClearCanvas.Dicom.Codec.Jpeg.dll" checksum="true" />
+    <File name="plugins\ClearCanvas.Dicom.Codec.Rle.dll" checksum="true" />
+    <File name="plugins\ClearCanvas.ImageViewer.AnnotationProviders.dll" checksum="true" />
+    <File name="plugins\ClearCanvas.ImageViewer.Clipboard.dll" checksum="true" />
+    <File name="plugins\ClearCanvas.ImageViewer.Clipboard.View.WinForms.dll" checksum="true" />
+    <File name="plugins\ClearCanvas.ImageViewer.Common.dll" checksum="true" />
+    <File name="plugins\ClearCanvas.ImageViewer.Configuration.dll" checksum="true" />
+    <File name="plugins\ClearCanvas.ImageViewer.Configuration.View.WinForms.dll" checksum="true" />
+    <File name="plugins\ClearCanvas.ImageViewer.dll" checksum="true" />
+    <File name="plugins\ClearCanvas.ImageViewer.Layout.Basic.dll" checksum="true" />
+    <File name="plugins\ClearCanvas.ImageViewer.Layout.Basic.View.WinForms.dll" checksum="true" />
+    <File name="plugins\ClearCanvas.ImageViewer.Shreds.dll" checksum="true" />
+    <File name="plugins\ClearCanvas.ImageViewer.StudyManagement.Core.dll" checksum="true" />
+    <File name="plugins\ClearCanvas.ImageViewer.Thumbnails.dll" checksum="true" />
+    <File name="plugins\ClearCanvas.ImageViewer.Thumbnails.View.WinForms.dll" checksum="true" />
+    <File name="plugins\ClearCanvas.ImageViewer.Tools.Measurement.dll" checksum="true" />
+    <File name="plugins\ClearCanvas.ImageViewer.Tools.Measurement.View.WinForms.dll" checksum="true" />
+    <File name="plugins\ClearCanvas.ImageViewer.Tools.Standard.dll" checksum="true" />
+    <File name="plugins\ClearCanvas.ImageViewer.Tools.Standard.View.WinForms.dll" checksum="true" />
+    <File name="plugins\ClearCanvas.ImageViewer.View.WinForms.dll" checksum="true" />
+    <File name="plugins\ClearCanvas.Jscript.dll" checksum="true" />
+    <File name="plugins\ClearCanvas.Utilities.Manifest.dll" checksum="true" />
+  </Files>
+</ManifestInput>

@@ -1,0 +1,111 @@
+<Project DefaultTargets="CopyServerFiles;AppConfigs;ShredHostAppConfigs" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <UsingTask TaskName="ClearCanvas.Utilities.BuildTasks.FileReplaceText" AssemblyFile="$(TrunkDirectory)\ReferencedAssemblies\MSBuild\ClearCanvas.Utilities.BuildTasks.dll"/>
+  <UsingTask TaskName="ClearCanvas.Utilities.BuildTasks.CombineAppConfigs" AssemblyFile="$(TrunkDirectory)\ReferencedAssemblies\MSBuild\ClearCanvas.Utilities.BuildTasks.dll"/>
+  <UsingTask TaskName="ClearCanvas.Utilities.BuildTasks.RegexIsMatch" AssemblyFile="$(TrunkDirectory)\ReferencedAssemblies\MSBuild\ClearCanvas.Utilities.BuildTasks.dll"/>
+
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+  </PropertyGroup>
+
+  <PropertyGroup Condition ="'$(ProjectName)' == 'ClearCanvas.Ris.Server.Executable'">
+    <RisServerBuild>true</RisServerBuild>
+    <ShredHostBuild>false</ShredHostBuild>
+  </PropertyGroup>
+
+  <PropertyGroup Condition ="'$(ProjectName)' == 'ClearCanvas.Server.ShredHostService'">
+    <RisServerBuild>false</RisServerBuild>
+    <ShredHostBuild>true</ShredHostBuild>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PluginsDirectory>$(DistributionDirectory)\plugins</PluginsDirectory>
+    <DicomDirectory>$(SolutionDir)..\..\Dicom</DicomDirectory>
+    <ManifestUtilityDirectory>$(SolutionDir)..\..\Utilities\Manifest</ManifestUtilityDirectory>
+    <EnterpriseDirectory>$(SolutionDir)..\..\Enterprise</EnterpriseDirectory>
+    <WorkflowDirectory>$(SolutionDir)..\..\Workflow</WorkflowDirectory>
+    <HealthcareDirectory>$(SolutionDir)..\..\Healthcare</HealthcareDirectory>
+    <HL7Directory>$(SolutionDir)..\..\HL7</HL7Directory>
+    <ReferencedAssembliesDirectory>$(SolutionDir)..\..\ReferencedAssemblies</ReferencedAssembliesDirectory>
+    <RisApplicationDirectory>$(SolutionDir)..\Application</RisApplicationDirectory>
+    <ShredHostDirectory>$(SolutionDir)..\..\Server\ShredHost</ShredHostDirectory>
+    <ShredHostServiceDirectory>$(SolutionDir)..\..\Server\ShredHostService</ShredHostServiceDirectory>
+    <RisShredsDirectory>$(SolutionDir)..\Shreds</RisShredsDirectory>
+    <TrunkDirectory>$(SolutionDir)..\..</TrunkDirectory>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <EnterprisePluginFiles Include="$(EnterpriseDirectory)\Common\bin\$(Configuration)\ClearCanvas.Enterprise.Common.dll" />
+    <EnterprisePluginFiles Include="$(EnterpriseDirectory)\Core\bin\$(Configuration)\ClearCanvas.Enterprise.Core.dll" />
+    <EnterprisePluginFiles Include="$(ReferencedAssembliesDirectory)\NHibernate2.1\Iesi.Collections.dll" />
+
+    <EnterprisePluginFiles Include="$(EnterpriseDirectory)\Hibernate\bin\$(Configuration)\ClearCanvas.Enterprise.Hibernate.dll" />
+    <EnterprisePluginFiles Include="$(EnterpriseDirectory)\Hibernate\DdlWriter\bin\$(Configuration)\ClearCanvas.Enterprise.Hibernate.DdlWriter.dll" />
+    <EnterprisePluginFiles Include="$(ReferencedAssembliesDirectory)\NHibernate2.1\Castle.Core.dll" />
+    <EnterprisePluginFiles Include="$(ReferencedAssembliesDirectory)\NHibernate2.1\Castle.DynamicProxy2.dll" />
+    <EnterprisePluginFiles Include="$(ReferencedAssembliesDirectory)\NHibernate2.1\NHibernate.dll" />
+    <EnterprisePluginFiles Include="$(ReferencedAssembliesDirectory)\NHibernate2.1\NHibernate.Caches.SysCache.dll" />
+    <EnterprisePluginFiles Include="$(ReferencedAssembliesDirectory)\NHibernate2.1\Antlr3.Runtime.dll" />
+    <EnterprisePluginFiles Include="$(ReferencedAssembliesDirectory)\NHibernate2.1\NHibernate.ByteCode.Castle.dll" />
+
+    <EnterprisePluginFiles Include="$(EnterpriseDirectory)\Configuration\bin\$(Configuration)\ClearCanvas.Enterprise.Configuration.dll" />
+    <EnterprisePluginFiles Include="$(EnterpriseDirectory)\Configuration\Hibernate\bin\$(Configuration)\ClearCanvas.Enterprise.Configuration.Hibernate.dll" />
+    <EnterprisePluginFiles Include="$(EnterpriseDirectory)\Authentication\bin\$(Configuration)\ClearCanvas.Enterprise.Authentication.dll" />
+    <EnterprisePluginFiles Include="$(EnterpriseDirectory)\Authentication\Hibernate\bin\$(Configuration)\ClearCanvas.Enterprise.Authentication.Hibernate.dll" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(Configuration)'=='DEBUG'">
+    <EnterprisePluginFiles Include="$(ReferencedAssembliesDirectory)\NHProf\HibernatingRhinos.Profiler.Appender.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ModelFiles Include="$(WorkflowDirectory)\bin\$(Configuration)\ClearCanvas.Workflow.dll" />
+    <ModelFiles Include="$(WorkflowDirectory)\Hibernate\bin\$(Configuration)\ClearCanvas.Workflow.Hibernate.dll" />
+    <ModelFiles Include="$(HealthcareDirectory)\bin\$(Configuration)\ClearCanvas.Healthcare.dll" />
+    <ModelFiles Include="$(HealthcareDirectory)\Hibernate\bin\$(Configuration)\ClearCanvas.Healthcare.Hibernate.dll" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <RisFiles Include="$(RisApplicationDirectory)\Common\bin\$(Configuration)\ClearCanvas.Ris.Application.Common.dll" />
+    <RisFiles Include="$(RisApplicationDirectory)\Services\bin\$(Configuration)\ClearCanvas.Ris.Application.Services.dll" />
+    <RisFiles Include="$(SolutionDir)bin\$(Configuration)\ClearCanvas.Ris.Server.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <RisFiles Include="$(ShredHostDirectory)\bin\$(Configuration)\ClearCanvas.Server.ShredHost.dll" />
+    <RisFiles Include="$(DicomDirectory)\bin\$(Configuration)\ClearCanvas.Dicom.dll" />
+    <RisFiles Include="$(RisShredsDirectory)\bin\$(Configuration)\ClearCanvas.Ris.Shreds.dll" />
+    <RisFiles Include="$(ManifestUtilityDirectory)\bin\$(Configuration)\ClearCanvas.Utilities.Manifest.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ShredHostAppConfigSourceFiles  Include="$(SolutionDir)\app.config" />
+    <ShredHostAppConfigSourceFiles  Include="$(ShredHostServiceDirectory)\app.config" />
+    <ShredHostAppConfigSourceFiles Include="$(HealthcareDirectory)\Hibernate\app.config" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AppConfigSourceFiles Include="$(HealthcareDirectory)\Hibernate\app.config" />
+    <AppConfigSourceFiles Include="$(SolutionDir)\app.config" />
+    <AppConfigSourceFiles Include="$(SolutionDir)\Executable\app.config" />
+  </ItemGroup>
+
+  <Target Name="AppConfigs" Condition="!$(ShredHostBuild)">
+    <CombineAppConfigs SourceFiles="@(AppConfigSourceFiles)" OutputFile="$(DistributionDirectory)\ClearCanvas.Ris.Server.Executable.exe.config" />
+  </Target>
+
+  <Target Name="ShredHostAppConfigs" Condition="$(ShredHostBuild)">
+    <CombineAppConfigs SourceFiles="@(ShredHostAppConfigSourceFiles)" OutputFile="$(DistributionDirectory)\ClearCanvas.Server.ShredHostService.exe.config" />
+  </Target>
+
+  <Target Name="CopyServerFiles" >
+    <!-- Copy Server Plugin files -->
+    <MakeDir Condition="!Exists('$(PluginsDirectory)')" Directories="$(PluginsDirectory)" ContinueOnError="true" />
+
+    <Copy SourceFiles="@(EnterprisePluginFiles)" DestinationFolder="$(PluginsDirectory)" ContinueOnError="true" />
+    <Copy SourceFiles="@(ModelFiles)" DestinationFolder="$(PluginsDirectory)" ContinueOnError="true" />
+    <Copy SourceFiles="@(RisFiles)" DestinationFolder="$(PluginsDirectory)" ContinueOnError="true" />
+    
+    <MakeDir Directories="$(DistributionDir)\manifest" ContinueOnError="false" />
+  </Target>
+</Project>

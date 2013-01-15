@@ -1,0 +1,15 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="ClearCanvas.Dicom" GeneratedClassName="DicomSettings">
+  <Profiles />
+  <Settings>
+    <Setting Name="ValidateVrLengths" Description="When set, the lengths of DICOM tags will be validated." Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="ValidateVrValues" Description="When set, the values of DICOM Attributes will be checked." Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="IgnoreOutOfRangeTags" Description="When set, tags that are out of range will be ignored." Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

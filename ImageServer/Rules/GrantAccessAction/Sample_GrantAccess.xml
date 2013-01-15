@@ -1,0 +1,23 @@
+﻿<condition expressionLanguage="dicom">
+	<!-- 
+		Rule for matching on Referring Physician's Name
+		Replace 'LastName' with the Referring Physician's last name 
+		Replace 'FirstName' with the Referring Physician's first name 
+		Replace 'MiddleName' with the Referring Physician's middle name
+
+		Note that these sample patterns may not match how the names are 
+		encoded at a specific site.  The patterns only match common formats
+		know to exist and testing should be done to ensure they work.
+	-->
+	
+	<or>
+		<!-- Matches on LastName^FirstName^MiddleName -->
+		<regex  test="$ReferringPhysiciansName"	 pattern="LastName.FirstName.MiddleName" ignoreCase="true"/>
+		<!-- Matches on LastName^FirstName -->
+		<regex  test="$ReferringPhysiciansName"	 pattern="LastName.FirstName" ignoreCase="true"/>
+		<!-- Matches on LastName, FirstName -->
+		<regex  test="$ReferringPhysiciansName"  pattern="LastName,.FirstName" ignoreCase="true"/>
+		<!-- Matches on 'FirstName LastName' appearing in the name -->
+		<regex  test="$ReferringPhysiciansName"  pattern="FirstName\sLastName" ignoreCase="true"/>
+	</or>
+</condition>

@@ -1,0 +1,19 @@
+using System;
+using System.Collections;
+using System.Text;
+
+using Iesi.Collections;
+using ClearCanvas.Enterprise.Core;
+
+
+namespace <%= namespace %> {
+
+    /// <summary>
+    /// Base interface for service layers that make use of this domain model.
+    /// This file is machine generated - changes will be lost.
+    /// </summary>
+	public partial interface I<%= shortName %>ServiceLayer : IServiceLayer
+	{
+ 	
+	}
+}

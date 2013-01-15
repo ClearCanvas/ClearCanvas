@@ -1,0 +1,69 @@
+<Project DefaultTargets="Copy Files" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <Choose>
+    <When Condition=" '$(ProjectOutDir)' != '$(DistributionDirectory)' ">
+      <PropertyGroup>
+        <DatabaseDirectory>$(DistributionDirectory)\dicom_datastore</DatabaseDirectory>
+        <DatabaseFile>$(DatabaseDirectory)\viewer.sdf</DatabaseFile>
+        <HibernateConfigurationFileDataSource>dicom_datastore\viewer.sdf</HibernateConfigurationFileDataSource>
+      </PropertyGroup>
+    </When>
+    <Otherwise>
+      <PropertyGroup>
+        <DatabaseDirectory>$(SolutionDir)\..\..\..\dicom_datastore</DatabaseDirectory>
+        <DatabaseFile>$(DatabaseDirectory)\viewer.sdf</DatabaseFile>
+        <HibernateConfigurationFileDataSource>$(DatabaseFile)</HibernateConfigurationFileDataSource>
+      </PropertyGroup>
+    </Otherwise>
+  </Choose>
+
+  <!--Hibernate Configuration-->
+  <HibernateConfigurationFileName>ClearCanvas.Dicom.DataStore.cfg.xml</HibernateConfigurationFileName>
+  <HibernateConfigurationFileSource>$(SolutionDir)\..\..\..\Dicom\DataStore\AuxiliaryFiles\$(HibernateConfigurationFileName)</HibernateConfigurationFileSource>
+
+  </PropertyGroup>
+
+  <ItemGroup>
+    <SqlCEFiles Include="$(SolutionDir)\..\..\..\ReferencedAssemblies\SqlCe\$(PlatformSubFolder)\sqlce*.dll" />
+    <SqlCEFiles Include="$(SolutionDir)\..\..\..\ReferencedAssemblies\SqlCe\$(PlatformSubFolder)\System.Data.SqlServerCe.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <HibernateFiles Include="$(SolutionDir)\..\..\..\ReferencedAssemblies\NHibernate1.2\Iesi.Collections.dll" />
+    <HibernateFiles Include="$(SolutionDir)\..\..\..\ReferencedAssemblies\NHibernate1.2\Nhibernate.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <DicomAssemblyFiles Include="$(SolutionDir)\..\..\..\Dicom\bin\$(Configuration)\ClearCanvas.Dicom.dll" />
+    <DicomAssemblyFiles Include="$(SolutionDir)\..\..\..\Dicom\DataStore\bin\$(Configuration)\ClearCanvas.Dicom.DataStore.dll" />
+  </ItemGroup>
+
+  <Target Name="Build BuildTasks">
+    <MSBuild Projects="$(SolutionDir)\..\Utilities\BuildTasks\ClearCanvas.Utilities.BuildTasks.csproj" Properties="Configuration=$(Configuration);Platform=Any CPU;OutputPath=$(SolutionDir)\..\Utilities\BuildTasks\bin\$(Configuration)"/>
+  </Target>
+  <UsingTask TaskName="ClearCanvas.Utilities.BuildTasks.FileReplaceText" AssemblyFile="$(SolutionDir)\..\..\..\Utilities\BuildTasks\bin\$(Configuration)\ClearCanvas.Utilities.BuildTasks.dll"/>
+  <UsingTask TaskName="ClearCanvas.Utilities.BuildTasks.CombineAppConfigs" AssemblyFile="$(SolutionDir)\..\..\..\Utilities\BuildTasks\bin\$(Configuration)\ClearCanvas.Utilities.BuildTasks.dll"/>
+
+  <Target Name="Copy Database Files">
+    <!-- Copy database file -->
+    <MakeDir Condition="!Exists('$(DatabaseDirectory)')" Directories="$(DatabaseDirectory)" />
+    <Copy SkipUnchangedFiles="true" SourceFiles="@(DatabaseFiles)" DestinationFolder="$(DatabaseDirectory)" />
+  </Target>
+
+  <Target Name="Copy Project Files" DependsOnTargets="Copy Database Files">
+
+    <!-- Copy Common files -->
+    <CreateItem Include="@(HibernateFiles);@(SqlCEFiles);@(DicomAssemblyFiles)">
+      <Output ItemName="AllCommonFiles" TaskParameter="Include" />
+    </CreateItem>
+    <Copy SourceFiles="@(AllCommonFiles)" DestinationFolder="$(CommonDirectory)" />
+
+    <!-- Copy Hibernate configuration file -->
+    <Copy SourceFiles="$(HibernateConfigurationFileSource)" DestinationFolder="$(DistributionDirectory)" />
+
+    <!-- Run the replace text task-->
+    <FileReplaceText FilePath="$(DistributionDirectory)\$(HibernateConfigurationFileName)" TextToReplace="!datasource!" ReplacementText="$(HibernateConfigurationFileDataSource)"/>
+
+  </Target>
+
+</Project>

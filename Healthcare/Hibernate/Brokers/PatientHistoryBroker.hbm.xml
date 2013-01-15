@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" assembly="ClearCanvas.Healthcare" namespace="ClearCanvas.Healthcare">
+
+	<!--
+		Obtains the procedure history for a specified patient.
+		Parameters: 1. the patient.
+		-->
+	<query name="procedureHistory">
+    select p, o
+    from Procedure p
+    join p.Order o
+    join fetch p.Order
+    join fetch p.ProcedureCheckIn
+    join fetch o.Visit
+    where o.Patient = ?
+    and p.Status not in ('GH')
+  </query>
+
+	<!--
+		Obtains the order history for a specified patient.
+		Parameters: 1. the patient.
+	-->
+	<query name="orderHistory">
+		select o
+		from Order o
+		join fetch o.Visit
+		where o.Patient = ?
+	</query>
+
+	<!--
+		Obtains the report history for a specified patient.
+		Parameters: 1. the patient.
+	-->
+	<query name="reportHistory">
+		select r
+		from Report r
+		join r.Procedures rp
+		join rp.Order o
+		join fetch r.Procedures
+		where o.Patient = ?
+		and r.Status not in ('X')
+	</query>
+
+	<!--
+		Obtains the reports for a specified order.
+		Parameters: 1. the order.
+	-->
+	<query name="reportsForOrder">
+		select r
+		from Report r
+		join r.Procedures rp
+		join rp.Order o
+		join fetch r.Procedures
+		where o = ?
+		and r.Status not in ('X')
+	</query>
+</hibernate-mapping>

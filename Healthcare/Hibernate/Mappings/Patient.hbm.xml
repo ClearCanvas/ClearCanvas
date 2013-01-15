@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" assembly="ClearCanvas.Healthcare" namespace="ClearCanvas.Healthcare">
+  <class name="Patient" proxy="Patient" table="Patient_">
+    <id name="OID" column="OID_" type="Guid">
+      <generator class="guid.comb"/>
+    </id>
+    <version name="Version" column="Version_"/>
+
+    <set name="Profiles" lazy="true" inverse="true" cascade="all-delete-orphan" access="nosetter.camelcase-underscore">
+      <key column="PatientOID_"/>
+      <one-to-many class="PatientProfile"/>
+    </set>
+
+    <idbag name="Attachments" table="PatientAttachment_" lazy="true" access="nosetter.camelcase-underscore">
+      <collection-id column="OID_" type="Guid">
+        <generator class="guid.comb"/>
+      </collection-id>
+      <key column="PatientOID_"/>
+      <composite-element class="PatientAttachment">
+        <many-to-one name="Category" column="Category_" class="PatientAttachmentCategoryEnum"/>
+        <many-to-one name="AttachedBy" column="AttachedByStaffOID_" class="Staff" not-null="true" fetch="join"/>
+        <property name="AttachedTime" column="AttachedTime_" type="DateTime" not-null="true"/>
+        <many-to-one name="Document" column="AttachedDocumentOID_" class="AttachedDocument" not-null="true" cascade="all" fetch="join"/>
+      </composite-element>
+    </idbag>
+
+    <set name="Notes" lazy="true" inverse="true" cascade="all-delete-orphan">
+      <key column="PatientOID_"/>
+      <one-to-many class="PatientNote"/>
+    </set>
+
+		<idbag name="Allergies" lazy="true" table="PatientAllergy_" access="nosetter.camelcase-underscore">
+			<collection-id column="OID_" type="Guid">
+				<generator class="guid.comb"/>
+			</collection-id>
+			<key column="PatientOID_"/>
+			<composite-element class="Allergy">
+				<many-to-one name="AllergenType"  class="AllergyAllergenTypeEnum" column="AllergenType_" not-null="true"/>
+				<property name="AllergenDescription" column="AllergenDescription_" type="String" length="255" not-null="true"/>
+				<many-to-one name="Severity"  class="AllergySeverityEnum" column="Severity_" not-null="false"/>
+				<property name="Reaction" column="Reaction_" type="String" length="255" not-null="false"/>
+				<many-to-one name="SensitivityType"  class="AllergySensitivityTypeEnum" column="SensitivityType_" not-null="false"/>
+				<property name="OnsetTime" column="OnsetTime_" type="DateTime" not-null="false"/>
+				<property name="ReportedTime" column="ReportedTime_" type="DateTime" not-null="false"/>
+				<nested-composite-element name="Reporter" class="PersonName">
+					<property name="FamilyName" column="ReporterFamilyName_" type="String" length="40" not-null="true"/>
+					<property name="GivenName" column="ReporterGivenName_" type="String" length="40" not-null="true"/>
+					<property name="MiddleName" column="ReporterMiddleName_" type="String" length="40" not-null="false"/>
+					<property name="Prefix" column="ReporterPrefix_" type="String" length="10" not-null="false"/>
+					<property name="Suffix" column="ReporterSuffix_" type="String" length="10" not-null="false"/>
+					<property name="Degree" column="ReporterDegree_" type="String" length="10" not-null="false"/>
+				</nested-composite-element>
+				<many-to-one name="ReporterRelationshipType"  class="PersonRelationshipTypeEnum" column="ReporterRelationshipType_" not-null="false"/>
+			</composite-element>
+		</idbag>
+	</class>
+</hibernate-mapping>

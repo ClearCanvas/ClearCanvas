@@ -1,0 +1,100 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Font Name="Tahoma" Size="8.25" />
+  <Class Name="ClearCanvas.ImageViewer.Tools.Measurement.EllipticalRoiTool" Collapsed="true">
+    <Position X="4.25" Y="1.75" Width="1.75" />
+    <TypeIdentifier>
+      <FileName>EllipticalRoiTool.cs</FileName>
+      <HashCode>AAAAAEAAAAEAAAAAAAAAAQAAAAAAAAAAAAABAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ClearCanvas.ImageViewer.Tools.Measurement.ProtractorTool" Collapsed="true">
+    <Position X="10.25" Y="1.75" Width="1.75" />
+    <TypeIdentifier>
+      <FileName>ProtractorTool.cs</FileName>
+      <HashCode>AAAAAEAAAAEAAAAAAAAAAQAAAAAAAAAAAAABAAAAAgA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ClearCanvas.ImageViewer.Tools.Measurement.RectangularRoiTool" Collapsed="true">
+    <Position X="6.25" Y="1.75" Width="1.75" />
+    <TypeIdentifier>
+      <FileName>RectangularRoiTool.cs</FileName>
+      <HashCode>AAAAAEAAAAEAAAAAAAAAAQAAAAAAAAAAAAABAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ClearCanvas.ImageViewer.Tools.Measurement.RulerTool" Collapsed="true">
+    <Position X="2.25" Y="1.75" Width="1.75" />
+    <TypeIdentifier>
+      <FileName>RulerTool.cs</FileName>
+      <HashCode>AAAAAEAAAAEAAAAAAAAAAQAAAAAAAAAAAAABAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ClearCanvas.ImageViewer.Tools.Measurement.PolygonalRoiTool" Collapsed="true">
+    <Position X="8.25" Y="1.75" Width="1.75" />
+    <TypeIdentifier>
+      <FileName>PolygonalRoiTool.cs</FileName>
+      <HashCode>AAAAAEAAAAEAAAAAAAAAAQAAAAAAAAAAAAABAAAAAgA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ClearCanvas.ImageViewer.Tools.Measurement.ProtractorAngleCalculator" Collapsed="true">
+    <Position X="10.25" Y="5" Width="1.75" />
+    <TypeIdentifier>
+      <FileName>ProtractorAnalyzers.cs</FileName>
+      <HashCode>AAAAAAAAAAIAAEAACAAAAAAAAAAAAAAAAAAAAAAAAgA=</HashCode>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ClearCanvas.ImageViewer.Tools.Measurement.MeasurementTool" Collapsed="true">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>MeasurementTool.cs</FileName>
+      <HashCode>ACAAAEAAQGEAIAAAAIAAAwAAAAAABAAAIQABAAAAEgA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ClearCanvas.ImageViewer.RoiGraphics.Analyzers.RoiAreaAnalyzer" Collapsed="true">
+    <Position X="5.25" Y="5" Width="1.75" />
+    <TypeIdentifier />
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ClearCanvas.ImageViewer.RoiGraphics.Analyzers.RoiLengthAnalyzer" Collapsed="true">
+    <Position X="2.25" Y="5" Width="1.75" />
+    <TypeIdentifier />
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ClearCanvas.ImageViewer.RoiGraphics.Analyzers.RoiStatisticsAnalyzer" Collapsed="true">
+    <Position X="7.25" Y="5" Width="1.75" />
+    <TypeIdentifier />
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ClearCanvas.ImageViewer.RoiGraphics.LinearRoi" Collapsed="true">
+    <Position X="2.25" Y="3.75" Width="1.75" />
+    <TypeIdentifier />
+    <Lollipop Position="0.96" />
+  </Class>
+  <Class Name="ClearCanvas.ImageViewer.RoiGraphics.EllipticalRoi" Collapsed="true">
+    <Position X="4.25" Y="3.75" Width="1.75" />
+    <TypeIdentifier />
+    <Lollipop Position="1.054" />
+  </Class>
+  <Class Name="ClearCanvas.ImageViewer.RoiGraphics.RectangularRoi" Collapsed="true">
+    <Position X="6.25" Y="3.75" Width="1.75" />
+    <TypeIdentifier />
+    <Lollipop Position="1.075" />
+  </Class>
+  <Class Name="ClearCanvas.ImageViewer.Tools.Measurement.ProtractorRoiInfo" Collapsed="true">
+    <Position X="10.25" Y="3.75" Width="1.75" />
+    <TypeIdentifier>
+      <FileName>ProtractorRoiInfo.cs</FileName>
+      <HashCode>AAAAAAAAAAAAgAAAgAAAAAAAAAAAAAAAAAAQAAAQIAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ClearCanvas.ImageViewer.RoiGraphics.Roi" Collapsed="true">
+    <Position X="0.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="ClearCanvas.ImageViewer.RoiGraphics.PolygonalRoi" Collapsed="true">
+    <Position X="8.25" Y="3.75" Width="1.75" />
+    <TypeIdentifier />
+    <Lollipop Position="1.054" />
+  </Class>
+</ClassDiagram>

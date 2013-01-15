@@ -1,0 +1,17 @@
+﻿<!-- 
+This rule instructs the server to do nothing if the studies is already compressed with the specified transfer syntaxes.
+-->
+<rule>
+	<condition
+	  expressionLanguage="dicom">
+		<or>
+			<equal test="$TransferSyntaxUid" refValue="1.2.840.10008.1.2.4.50" />
+			<equal test="$TransferSyntaxUid" refValue="1.2.840.10008.1.2.4.51" />
+			<equal test="$TransferSyntaxUid" refValue="1.2.840.10008.1.2.4.70" />
+			<equal test="$TransferSyntaxUid" refValue="1.2.840.10008.1.2.4.90" />
+		</or>
+	</condition>
+	<action>
+		<no-op />
+	</action>
+</rule>

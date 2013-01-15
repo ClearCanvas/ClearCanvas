@@ -1,0 +1,15 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="ClearCanvas.ImageViewer.Common.WorkItem" GeneratedClassName="DicomSendSettings">
+  <Profiles />
+  <Settings>
+    <Setting Name="RetryCount" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">3</Value>
+    </Setting>
+    <Setting Name="RetryDelayUnits" Type="ClearCanvas.ImageViewer.Common.WorkItem.RetryDelayTimeUnit" Scope="Application">
+      <Value Profile="(Default)">Seconds</Value>
+    </Setting>
+    <Setting Name="RetryDelay" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">10</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

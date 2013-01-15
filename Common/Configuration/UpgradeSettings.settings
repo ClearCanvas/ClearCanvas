@@ -1,0 +1,13 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="ClearCanvas.Common.Configuration" GeneratedClassName="UpgradeSettings">
+  <Profiles />
+  <Settings>
+    <Setting Name="CompletedUserUpgradeStepsXml" Description="User upgrade steps (such as settings) that have already been completed; checked each time the application starts up." Type="System.Xml.XmlDocument" Scope="User">
+      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;completed-user-upgrade-steps /&gt;</Value>
+    </Setting>
+    <Setting Name="UserUpgradeEnabled" Description="Specifies whether or not the application should run the user upgrade on startup." Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

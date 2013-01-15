@@ -1,0 +1,211 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{64DD80D0-2B72-46C0-8F6E-382CA1EAFF9D}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ClearCanvas.ImageServer.Core</RootNamespace>
+    <AssemblyName>ClearCanvas.ImageServer.Core</AssemblyName>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;UNIT_TESTS</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="nunit.framework, Version=2.2.7.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\ReferencedAssemblies\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ApplySopRulesCommand.cs" />
+    <Compile Include="AutoReconciler.cs" />
+    <Compile Include="BasePreprocessor.cs" />
+    <Compile Include="Command\DeleteDirectoryCommand.cs" />
+    <Compile Include="Command\DeleteWorkQueueUidCommand.cs" />
+    <Compile Include="Command\LockStudyCommand.cs" />
+    <Compile Include="Command\SaveDicomFileCommand.cs" />
+    <Compile Include="Command\SaveXmlCommand.cs" />
+    <Compile Include="Command\UpdateStudySizeInDBCommand.cs" />
+    <Compile Include="Command\UpdateWorkQueueCommand.cs" />
+    <Compile Include="Data\ProcessDuplicateChangeLog.cs" />
+    <Compile Include="Data\ReprocessStudyChangeLog.cs" />
+    <Compile Include="Data\ReprocessStudyQueueData.cs" />
+    <Compile Include="Data\UidMapXml.cs" />
+    <Compile Include="Diagnostics\DiagnosticSettings.Designer.cs">
+      <DependentUpon>DiagnosticSettings.settings</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="Diagnostics\RandomError.cs" />
+    <Compile Include="Diagnostics\Settings.cs" />
+    <Compile Include="DicomProcessingResult.cs" />
+    <Compile Include="DicomSopInstanceValidator.cs" />
+    <Compile Include="DuplicatePolicy.cs" />
+    <Compile Include="Edit\BaseImageLevelUpdateCommand.cs" />
+    <Compile Include="Edit\EditStudyWorkQueueData.cs" />
+    <Compile Include="Edit\Extensions\LogHistory\LogHistory.cs" />
+    <Compile Include="Edit\InstanceInfo.cs" />
+    <Compile Include="DicomCharacterSetException.cs" />
+    <Compile Include="Edit\IWebEditStudyCommandCompiler.cs" />
+    <Compile Include="Edit\IWebEditStudyProcessorExtension.cs" />
+    <Compile Include="Edit\PatientInfo.cs" />
+    <Compile Include="Edit\StudyEditorHelper.cs" />
+    <Compile Include="Edit\Test\SetDicomTagTestBase.cs" />
+    <Compile Include="Edit\Test\SetDicomTagTest_UnicodeConversionAllowed.cs" />
+    <Compile Include="Edit\Test\SetDicomTagTest_UnicodeConversionNotAllowed.cs" />
+    <Compile Include="Edit\UpdateStudyCommand.cs" />
+    <Compile Include="Edit\UpdateStudyStatistics.cs" />
+    <Compile Include="Edit\WebDeleteWorkQueueEntryData.cs" />
+    <Compile Include="FilesystemDynamicPath.cs" />
+    <Compile Include="IStudyPreProcessor.cs" />
+    <Compile Include="ModelExtensions\ServerPartitionExtensions.cs" />
+    <Compile Include="ModelExtensions\StudyStorageLocationExtensions.cs" />
+    <Compile Include="ModelExtensions\WorkQueueExtensions.cs" />
+    <Compile Include="PatientNameRules.cs" />
+    <Compile Include="PreProcessors.cs" />
+    <Compile Include="Process\IInsertExtension.cs" />
+    <Compile Include="Query\IExtendedQueryKeys.cs" />
+    <Compile Include="Query\QueryHelper.cs" />
+    <Compile Include="Reconcile\StudyMatchingMap.cs" />
+    <Compile Include="Edit\WebEditStudyCommandCompiler.cs" />
+    <Compile Include="Edit\WebEditStudyContext.cs" />
+    <Compile Include="Edit\WebEditStudyHistoryRecord.cs" />
+    <Compile Include="Process\StudyReprocessor.cs" />
+    <Compile Include="Command\RebuildStudyXmlCommand.cs" />
+    <Compile Include="Rebuild\StudyXmlRebuilder.cs" />
+    <Compile Include="Reconcile\CreateStudy\CreateStudyCommand.cs" />
+    <Compile Include="Reconcile\CreateStudy\CreateStudyCommandProcessor.cs" />
+    <Compile Include="Reconcile\ReconcileProcessorBase.cs" />
+    <Compile Include="Reconcile\CreateStudy\SeriesSopUpdateCommand.cs" />
+    <Compile Include="Reconcile\CreateStudy\UidMapper.cs" />
+    <Compile Include="Reconcile\Discard\DiscardImageCommandProcessor.cs" />
+    <Compile Include="Reconcile\Discard\DiscardImagesCommand.cs" />
+    <Compile Include="Reconcile\InsertOrUpdateEntryCommand.cs" />
+    <Compile Include="Edit\SetTagCommand.cs" />
+    <Compile Include="Data\ImageSetDescriptor.cs" />
+    <Compile Include="Data\ImageSetDetails.cs" />
+    <Compile Include="Data\PatientInformation.cs" />
+    <Compile Include="Data\ReconcileStudyWorkQueueData.cs" />
+    <Compile Include="Data\SeriesInformation.cs" />
+    <Compile Include="Data\ServerEntityAttributeProvider.cs" />
+    <Compile Include="Data\StudyInformation.cs" />
+    <Compile Include="Data\StudyReconcileAction.cs" />
+    <Compile Include="Data\StudyReconcileDescriptor.cs" />
+    <Compile Include="Process\DuplicateSopProcessorHelper.cs" />
+    <Compile Include="Edit\ImageUpdateCommandBuilder.cs" />
+    <Compile Include="Reconcile\ImageReconciler.cs" />
+    <Compile Include="Process\InsertInstanceCommand.cs" />
+    <Compile Include="Process\InsertStudyXmlCommand.cs" />
+    <Compile Include="Process\InstanceStatistics.cs" />
+    <Compile Include="Reconcile\IReconcileProcessor.cs" />
+    <Compile Include="Reconcile\IReconcileServerCommand.cs" />
+    <Compile Include="Reconcile\MergeStudy\MergeStudyCommand.cs" />
+    <Compile Include="Reconcile\MergeStudy\MergeStudyCommandProcessor.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Reconcile\ProcessAsIs\ProcessAsIsCommand.cs" />
+    <Compile Include="Reconcile\ProcessAsIs\ReconcileProcessAsIsProcessor.cs" />
+    <Compile Include="Reconcile\ReconcileCommandBase.cs" />
+    <Compile Include="Reconcile\ReconcileCommandXmlParser.cs" />
+    <Compile Include="Reconcile\ReconcileDescriptionParser.cs" />
+    <Compile Include="Reconcile\ReconcileStudyProcessorContext.cs" />
+    <Compile Include="Reconcile\Test\ImageReconcilerTest.cs" />
+    <Compile Include="Reconcile\UpdateHistoryCommand.cs" />
+    <Compile Include="Reconcile\SaveUidMapXmlCommand.cs" />
+    <Compile Include="ServerHelper.cs" />
+    <Compile Include="SopInstanceImporter.cs" />
+    <Compile Include="SopInstanceProcessor.cs" />
+    <Compile Include="StudyAlertGenerator.cs" />
+    <Compile Include="StudyEditor.cs" />
+    <Compile Include="UpdateStudyStatusCommand.cs" />
+    <Compile Include="Validation\ValidationStudyInfo.cs" />
+    <Compile Include="Validation\StudyIntegrityValidationFailure.cs" />
+    <Compile Include="Validation\StudyIntegrityValidationModes.cs" />
+    <Compile Include="Validation\StudyIntegrityValidator.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Common\ClearCanvas.Common.csproj">
+      <Project>{F6EAD428-E6CF-4DF6-B2F3-D33D532C5343}</Project>
+      <Name>ClearCanvas.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Dicom\ClearCanvas.Dicom.csproj">
+      <Project>{AD9ECE2B-8268-4115-8DC8-860FBD011FFF}</Project>
+      <Name>ClearCanvas.Dicom</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Enterprise\Common\ClearCanvas.Enterprise.Common.csproj">
+      <Project>{B5EBFFD7-6641-4932-91C9-4C4322B41868}</Project>
+      <Name>ClearCanvas.Enterprise.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Enterprise\Core\ClearCanvas.Enterprise.Core.csproj">
+      <Project>{431E9444-9915-4D49-B92D-9B7EC086622A}</Project>
+      <Name>ClearCanvas.Enterprise.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Web\Enterprise\ClearCanvas.Web.Enterprise.csproj">
+      <Project>{22444EF5-740E-41C2-B6DD-0029BD616338}</Project>
+      <Name>ClearCanvas.Web.Enterprise</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Common\ClearCanvas.ImageServer.Common.csproj">
+      <Project>{DDFB1D25-75AE-43A6-A7A5-33D173EFFD04}</Project>
+      <Name>ClearCanvas.ImageServer.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Enterprise\ClearCanvas.ImageServer.Enterprise.csproj">
+      <Project>{86CA6EDB-DE59-45E9-8BD8-832FBB3F8009}</Project>
+      <Name>ClearCanvas.ImageServer.Enterprise</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Model\ClearCanvas.ImageServer.Model.csproj">
+      <Project>{2C9126D3-5B73-4539-BBC9-D56E6097D335}</Project>
+      <Name>ClearCanvas.ImageServer.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Rules\ClearCanvas.ImageServer.Rules.csproj">
+      <Project>{523EDDC1-7C6E-404D-A8ED-5F043F5E6BE3}</Project>
+      <Name>ClearCanvas.ImageServer.Rules</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Diagnostics\DiagnosticSettings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>DiagnosticSettings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

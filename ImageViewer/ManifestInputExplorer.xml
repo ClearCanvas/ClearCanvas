@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ManifestInput xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.clearcanvas.ca">
+  <Files>
+    <File name="plugins\ClearCanvas.Desktop.Explorer.dll" checksum="true" />
+    <File name="plugins\ClearCanvas.Desktop.Explorer.View.WinForms.dll" checksum="true" />
+    <File name="plugins\ClearCanvas.ImageViewer.Explorer.Dicom.dll" checksum="true" />
+    <File name="plugins\ClearCanvas.ImageViewer.Explorer.Dicom.View.WinForms.dll" checksum="true" />
+    <File name="plugins\ClearCanvas.ImageViewer.Explorer.Local.dll" checksum="true" />
+    <File name="plugins\ClearCanvas.ImageViewer.Explorer.Local.View.WinForms.dll" checksum="true" />
+  </Files>
+</ManifestInput>

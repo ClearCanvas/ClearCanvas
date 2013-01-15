@@ -1,0 +1,12 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="ClearCanvas.Healthcare.Alerts" GeneratedClassName="AlertsSettings">
+  <Profiles />
+  <Settings>
+    <Setting Name="CommonSpokenLanguages" Description="Comma separated list of language codes that are considered commonly spoken and understood, and hence do not generate a language alert" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">en</Value>
+    </Setting>
+    <Setting Name="MissingHealthcardInfoTriggersIncompleteDemographicDataAlert" Description="Causes an Incomplete Demographic Data alert to be generated if the healthcard information on a patient profie is incomplete.  Generally useful only in Canada." Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

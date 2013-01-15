@@ -1,0 +1,12 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="ClearCanvas.Ris.Client" GeneratedClassName="PatientProfileLookupSettings">
+  <Profiles />
+  <Settings>
+    <Setting Name="MinQueryStringLength" Description="The minimum length of query string required to obtain suggestions." Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">2</Value>
+    </Setting>
+    <Setting Name="QuerySpecificityThreshold" Description="The maximum number of suggestions that a given query string can return.  A query that would return more suggestions will not return any." Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">100</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

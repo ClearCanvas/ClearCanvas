@@ -1,0 +1,118 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Font Name="Tahoma" Size="8.25" />
+  <Class Name="ClearCanvas.ImageViewer.RoiGraphics.Roi">
+    <Position X="0.5" Y="1" Width="2" />
+    <TypeIdentifier>
+      <FileName>RoiGraphics\Roi.cs</FileName>
+      <HashCode>AAAABAAAAAAAAQCBAAAQwBAAFKAAACAACAAwAAgYIgE=</HashCode>
+    </TypeIdentifier>
+    <Members>
+      <Field Name="_boundingBox" Hidden="true" />
+      <Field Name="_imageColumns" Hidden="true" />
+      <Field Name="_imageRows" Hidden="true" />
+      <Field Name="_modality" Hidden="true" />
+      <Field Name="_modalityLut" Hidden="true" />
+      <Field Name="_normalizedPixelSpacing" Hidden="true" />
+      <Field Name="_pixelAspectRatio" Hidden="true" />
+      <Field Name="_pixelData" Hidden="true" />
+      <Method Name="ComputeBounds" Hidden="true" />
+      <Method Name="ConvertFromSquarePixels" Hidden="true" />
+      <Method Name="CopyTo" Hidden="true" />
+      <Method Name="Roi" Hidden="true" />
+      <Method Name="ValidateUnits" Hidden="true" />
+    </Members>
+    <NestedTypes>
+      <Class Name="ClearCanvas.ImageViewer.RoiGraphics.Roi.IdentityLut" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>RoiGraphics\Roi.cs</NewMemberFileName>
+        </TypeIdentifier>
+        <Lollipop Position="0.2" />
+      </Class>
+    </NestedTypes>
+  </Class>
+  <Class Name="ClearCanvas.ImageViewer.RoiGraphics.LinearRoi" Collapsed="true">
+    <Position X="3.25" Y="1.75" Width="1.75" />
+    <TypeIdentifier>
+      <FileName>RoiGraphics\LinearRoi.cs</FileName>
+      <HashCode>AAAAAAAAAAAAgAAAkAAAAABAAAAAAAAAEAAQAAgQKAI=</HashCode>
+    </TypeIdentifier>
+    <InheritanceLine Type="ClearCanvas.ImageViewer.RoiGraphics.Roi" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="2.5" Y="1.125" />
+        <Point X="4.197" Y="1.125" />
+        <Point X="4.197" Y="1.75" />
+      </Path>
+    </InheritanceLine>
+    <Lollipop Position="0.919" />
+  </Class>
+  <Class Name="ClearCanvas.ImageViewer.RoiGraphics.PolygonalRoi" Collapsed="true">
+    <Position X="10.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>RoiGraphics\PolygonalRoi.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAEAAAABAABAAIAAAEEAAQAQAQICM=</HashCode>
+    </TypeIdentifier>
+    <InheritanceLine Type="ClearCanvas.ImageViewer.RoiGraphics.Roi" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="2.5" Y="1.125" />
+        <Point X="10.812" Y="1.125" />
+        <Point X="10.812" Y="1.75" />
+      </Path>
+    </InheritanceLine>
+    <Lollipop Position="0.877" />
+  </Class>
+  <Class Name="ClearCanvas.ImageViewer.RoiGraphics.RectangularRoi" Collapsed="true">
+    <Position X="7.75" Y="1.75" Width="1.75" />
+    <TypeIdentifier>
+      <FileName>RoiGraphics\RectangularRoi.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAEAAAABAABAQgAAAEEAAQAQAQIAM=</HashCode>
+    </TypeIdentifier>
+    <InheritanceLine Type="ClearCanvas.ImageViewer.RoiGraphics.Roi" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="2.5" Y="1.125" />
+        <Point X="8.375" Y="1.125" />
+        <Point X="8.375" Y="1.75" />
+      </Path>
+    </InheritanceLine>
+    <Lollipop Position="1.023" />
+  </Class>
+  <Class Name="ClearCanvas.ImageViewer.RoiGraphics.Analyzers.RoiLengthAnalyzer" Collapsed="true">
+    <Position X="3.25" Y="3" Width="1.75" />
+    <TypeIdentifier>
+      <FileName>RoiGraphics\Analyzers\RoiLengthAnalyzer.cs</FileName>
+      <HashCode>AAAAAAAAAAIAAEgAAAAAAAAAAAAAAAAAEAAAAAAAAAI=</HashCode>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ClearCanvas.ImageViewer.RoiGraphics.Analyzers.RoiAreaAnalyzer" Collapsed="true">
+    <Position X="6.5" Y="3" Width="1.75" />
+    <TypeIdentifier>
+      <FileName>RoiGraphics\Analyzers\RoiAreaAnalyzer.cs</FileName>
+      <HashCode>AAAAAAAAAAIAAEAAAAAAAAAAAAAAAAAAEAAAAAAAAAI=</HashCode>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ClearCanvas.ImageViewer.RoiGraphics.Analyzers.RoiStatisticsAnalyzer" Collapsed="true">
+    <Position X="9" Y="3" Width="1.75" />
+    <TypeIdentifier>
+      <FileName>RoiGraphics\Analyzers\RoiStatisticsAnalyzer.cs</FileName>
+      <HashCode>AAAAAAAAAAIIAEAAAAAAAAAAAAAAAAAAAAAAAAAAAgA=</HashCode>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ClearCanvas.ImageViewer.RoiGraphics.EllipticalRoi" Collapsed="true">
+    <Position X="5.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>RoiGraphics\EllipticalRoi.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAIAAEAAAABAABABAAgAk0QAQAQAQIAM=</HashCode>
+    </TypeIdentifier>
+    <InheritanceLine Type="ClearCanvas.ImageViewer.RoiGraphics.Roi" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="2.5" Y="1.125" />
+        <Point X="6.25" Y="1.125" />
+        <Point X="6.25" Y="1.75" />
+      </Path>
+    </InheritanceLine>
+    <Lollipop Position="0.867" />
+  </Class>
+</ClassDiagram>

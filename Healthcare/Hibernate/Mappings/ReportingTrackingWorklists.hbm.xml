@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!-- @codegen: ignore -->
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" assembly="ClearCanvas.Healthcare" namespace="ClearCanvas.Healthcare">
+  <!-- abstract intermediate classes -->
+  <subclass name="ReportingTrackingWorklist" extends="ReportingWorklist" discriminator-value="REPORTINGTRACKING"/>
+
+  <!-- concrete classes -->
+  <subclass name="ReportingTrackingActiveWorklist" extends="ReportingTrackingWorklist" discriminator-value="REPORTINGTRACKING_ACTIVE"/>
+  <subclass name="ReportingTrackingDraftWorklist" extends="ReportingTrackingWorklist" discriminator-value="REPORTINGTRACKING_DRAFT"/>
+  <subclass name="ReportingTrackingPreliminaryWorklist" extends="ReportingTrackingWorklist" discriminator-value="REPORTINGTRACKING_PRELIMINARY"/>
+  <subclass name="ReportingTrackingFinalWorklist" extends="ReportingTrackingWorklist" discriminator-value="REPORTINGTRACKING_FINAL"/>
+  <subclass name="ReportingTrackingCorrectedWorklist" extends="ReportingTrackingWorklist" discriminator-value="REPORTINGTRACKING_CORRECTED"/>
+</hibernate-mapping>

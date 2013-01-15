@@ -1,0 +1,106 @@
+.ErrorBody {
+	background-color: #c5dee7;
+	margin: 50px;
+}
+
+.Description {
+	background: #eeeeee url(../../../PersistantImage.ashx?key=ErrorDescriptionBackground) repeat-x top;
+	border: 1px solid #618FAD;
+	padding: 10px 10px 0px 10px;
+	margin-top: 10px;
+	font-size: 16px;
+	font-family: sans-serif;
+	color: #16425D;
+	text-align: left;
+}
+
+.ErrorMessage
+{
+    margin-top: 10px;
+    background: #ffffcc url(../../../PersistantImage.ashx?key=ErrorMessageBackground) repeat-x; 
+    border: solid 1px #ff0000; 
+    font-family: Sans-Serif; 
+    font-size: 18px; 
+    font-weight: bold; 
+    padding: 10px; 
+    color: #ff0000;
+    text-align: center;
+}
+
+.ErrorPanel
+{
+    background-color: #ffffff;
+    border: solid 2px #3D98D1;
+    padding: 10px;
+    width: 65%;
+}
+
+.ErrorTable
+{
+	background-color: #ffffff;
+}
+
+.ErrorLink
+{
+    color: #3D66D1;
+    text-decoration: underline;
+    font-weight: bold;
+    font-family: Sans-Serif;
+}
+
+.UserEscapeContainer
+{
+    text-align: right; 
+    margin-top: 10px; 
+    padding-bottom: 5px; 
+    font-family: sans-serif;
+}
+
+.UserEscapeLink
+{
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 16px;
+    font-family: Sans-Serif;
+    color: White;
+}
+
+.UserEscapeTable
+{
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 16px;
+    font-family: Sans-Serif;
+    color: White;
+    border-left: solid 1px #205F87; 
+    border-right: solid 1px #205F87; 
+    border-bottom: solid 1px #205F87; 
+    background: #eeeeee url(../../../PersistantImage.ashx?key=UserEscapeLinkBackground) repeat-x bottom;
+    text-align: center;
+}
+
+.UserEscapeCell
+{
+    border-right: solid 1px white;
+    width: 30%;
+    height: 30px;
+    text-align: center;
+}
+
+.DialogValidationErrorMessage
+{
+    text-align:center; 
+    font-size: 12px; 
+    font-weight: bold; 
+    background: #FFFFCC url(../../../PersistantImage.ashx?key=ErrorMessageBackground) repeat-x;
+    padding: 3px;
+    margin: 4px;
+    color: #FF0000;
+    border: solid 1px #ff0000;
+}
+
+.InvalidTextEntered
+{
+    background: #FFFF99;
+    border: solid 1px red;
+}

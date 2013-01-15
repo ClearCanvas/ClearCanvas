@@ -1,0 +1,18 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="ClearCanvas.ImageViewer.Layout.Basic" GeneratedClassName="DisplaySetCreationSettings">
+  <Profiles />
+  <Settings>
+    <Setting Name="DisplaySetCreationSettingsXml" Description="XML document storing user options on how DICOM series should be presented in the viewer context menu." Type="System.Xml.XmlDocument" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="SingleImageModalities" Description="&quot;Single Image&quot; (e.g. projection) modalities.  By default, series will be split into single image display sets, meaning each image will have it's own entry in the context menu." Type="System.String" Scope="Application">
+      <Value Profile="(Default)">CR,DX,MG,KO</Value>
+    </Setting>
+    <Setting Name="MixedMultiframeModalities" Description="Modalities where you might encounter &quot;mixed multiframe&quot; series, meaning there are one or more multiframes and/or single images in the same series." Type="System.String" Scope="Application">
+      <Value Profile="(Default)">CT,MR,NM,RF,SC,US,XA</Value>
+    </Setting>
+    <Setting Name="AllImagesModalities" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">CR,DX,ES,MG,RF,US,XA,KO</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

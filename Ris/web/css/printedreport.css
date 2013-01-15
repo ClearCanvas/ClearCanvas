@@ -1,0 +1,104 @@
+#letterhead {
+	margin-bottom: 2em;
+}
+
+#letterheadLogo {
+	background-repeat:no-repeat;
+	float:left;
+}
+
+#letterheadFacility {
+	margin-left:0.5em;
+	float:left;
+}
+
+#letterheadFacility div {
+	margin-left:0;
+	line-height:1em;
+	padding-left:0;
+}
+
+#letterheadFacilityName {
+	font-size: 2em;
+}
+
+#letterheadAddress {
+	float:right;
+}
+
+#letterheadLogo.cth {
+	background-image:url(../images/GenericHospitalLogo.png);
+	height:74px;
+	width:77px;
+}
+
+#letterheadLogo.cch {
+	background-image:url(../images/GenericHospitalLogo.png);
+	height:74px;
+	width:77px;
+}
+
+#recipient {
+	margin-left: 1em;
+	margin-bottom: 1em;
+	font-weight: bold;
+}
+
+#ordersummary {
+	border:thin solid black;
+	padding: 0.5em 1em 0.5em 1em;
+}
+
+#ordersummary table {
+	padding: 0em 0em 0em 0em;
+	margin: 0em 0em 0em 0em;
+}
+
+#ordersummary td,div {
+	margin-left: 0.1em;
+	padding: 0.1em 0.1em 0.1em 0.1em;
+}
+
+#ordersummary .leftcolumn {
+	float:left;
+	width:49%;
+}
+
+#ordersummary .leftcolumn .propertyname {
+	width:8em;
+}
+
+#ordersummary .rightcolumn {
+	float:right;
+	width:49%;
+	margin-left:0.5em;
+}
+
+#ordersummary .rightcolumn .propertyname {
+	width:7em;
+}
+
+#ordersummary table {
+	width:95%;
+}
+
+.clear{
+	visibility:hidden;
+	clear:both;
+}
+
+#ordersummary #proceduresTable  {
+	margin-left:1.5em;
+}
+
+#footer {
+	font-size: 0.8em;
+	font-style: italic;
+	margin-top: 1em;
+}
+
+#endofreport {
+	margin-top:1em;
+	text-align:center;
+}
+

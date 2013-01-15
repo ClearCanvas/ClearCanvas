@@ -1,0 +1,15 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="ClearCanvas.ImageViewer.Explorer.Local.View.WinForms" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="FolderViewMode" Description="Controls the folder view." Type="System.Windows.Forms.View" Scope="User">
+      <Value Profile="(Default)">LargeIcon</Value>
+    </Setting>
+    <Setting Name="ToolbarIconSize" Description="Sets the size of the icons on the toolbar." Type="ClearCanvas.Desktop.IconSize" Scope="User">
+      <Value Profile="(Default)">Medium</Value>
+    </Setting>
+    <Setting Name="HomeLocation" Description="Controls the location to which the Home button maps. Either a System.Environment.SpecialFolder or a full path." Type="System.String" Scope="User">
+      <Value Profile="(Default)">MyComputer</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
