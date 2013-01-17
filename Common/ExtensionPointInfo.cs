@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using ClearCanvas.Common.Utilities;
 
 namespace ClearCanvas.Common
@@ -35,28 +36,37 @@ namespace ClearCanvas.Common
     /// Instances of this class are constructed by the framework when it processes
     /// plugins looking for extension points.
     /// </remarks>
-    public class ExtensionPointInfo : IBrowsable
+	[Serializable]
+	public class ExtensionPointInfo : IBrowsable
     {
-        private Type _extensionPointClass;
-        private Type _extensionInterface;
-        private string _name;
-        private string _description;
+		private readonly TypeRef _extensionPointClass;
+		private readonly TypeRef _extensionInterface;
+        private readonly string _name;
+        private readonly string _description;
 
-        /// <summary>
+		/// <summary>
+		/// Internal constructor.
+		/// </summary>
+		internal ExtensionPointInfo(TypeRef extensionPointClass, TypeRef extensionInterface, string name, string description)
+		{
+			_extensionPointClass = extensionPointClass;
+			_extensionInterface = extensionInterface;
+			_name = name;
+			_description = description;
+		}
+
+		/// <summary>
         /// Internal constructor.
         /// </summary>
         internal ExtensionPointInfo(Type extensionPointClass, Type extensionInterface, string name, string description)
+			:this(new TypeRef(extensionPointClass), new TypeRef(extensionInterface), name, description)
         {
-            _extensionPointClass = extensionPointClass;
-            _extensionInterface = extensionInterface;
-            _name = name;
-            _description = description;
         }
 
         /// <summary>
         /// Gets the class that defines the extension point.
         /// </summary>
-        public Type ExtensionPointClass
+        public TypeRef ExtensionPointClass
         {
             get { return _extensionPointClass; }
         }
@@ -64,7 +74,7 @@ namespace ClearCanvas.Common
         /// <summary>
         /// Gets the interface that an extension must implement.
         /// </summary>
-        public Type ExtensionInteface
+        public TypeRef ExtensionInteface
         {
             get { return _extensionInterface; }
         }
@@ -76,8 +86,7 @@ namespace ClearCanvas.Common
         /// <returns></returns>
         public IList<ExtensionInfo> ListExtensions()
         {
-            return CollectionUtils.Select(Platform.PluginManager.Extensions,
-                delegate(ExtensionInfo ext) { return ext.PointExtended == _extensionPointClass; });
+            return Platform.PluginManager.Extensions.Where(ext => ext.PointExtended == _extensionPointClass).ToList();
         }
 
         #region IBrowsable Members

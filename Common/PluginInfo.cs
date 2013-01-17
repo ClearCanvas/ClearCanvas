@@ -33,6 +33,7 @@ namespace ClearCanvas.Common
     /// Describes a plugin, and provides properties for querying the extension points and extensions defined
     /// in the plugin.
     /// </summary>
+    [Serializable]
     public class PluginInfo : IBrowsable
     {
 		/// <summary>
@@ -114,23 +115,32 @@ namespace ClearCanvas.Common
         private readonly string _name;
         private readonly string _description;
 		private readonly string _icon;
-		private readonly Assembly _assembly;
+		private readonly AssemblyRef _assembly;
 
-        private readonly List<ExtensionPointInfo> _extensionPoints = new List<ExtensionPointInfo>();
-        private readonly List<ExtensionInfo> _extensions = new List<ExtensionInfo>();
+        private readonly List<ExtensionPointInfo> _extensionPoints;
+        private readonly List<ExtensionInfo> _extensions;
 
         /// <summary>
         /// Internal constructor.
         /// </summary>
         internal PluginInfo(Assembly assembly, string name, string description, string icon)
+			:this(new AssemblyRef(assembly), name, description, icon, new List<ExtensionPointInfo>(), new List<ExtensionInfo>())
         {
-            _name = name;
-            _description = description;
-            _assembly = assembly;
-        	_icon = icon;
-
         	DiscoverExtensionPointsAndExtensions(assembly, _extensionPoints, _extensions);
         }
+
+		/// <summary>
+		/// Internal constructor.
+		/// </summary>
+		internal PluginInfo(AssemblyRef assembly, string name, string description, string icon, List<ExtensionPointInfo> extensionPoints, List<ExtensionInfo> extensions)
+		{
+			_name = name;
+			_description = description;
+			_assembly = assembly;
+			_icon = icon;
+			_extensionPoints = extensionPoints;
+			_extensions = extensions;
+		}
 
         /// <summary>
         /// Gets the set of extensions defined in this plugin, including disabled extensions.
@@ -151,7 +161,7 @@ namespace ClearCanvas.Common
         /// <summary>
         /// Gets the assembly that implements this plugin.
         /// </summary>
-        public Assembly Assembly
+        public AssemblyRef Assembly
         {
             get { return _assembly; }
         }
@@ -171,7 +181,7 @@ namespace ClearCanvas.Common
     	/// </summary>
     	public string FormalName
         {
-            get { return Assembly.FullName; }
+            get { return Assembly.Resolve().FullName; }
         }
 
     	/// <summary>

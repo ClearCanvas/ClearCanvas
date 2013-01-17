@@ -24,9 +24,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using ClearCanvas.Common.Utilities;
 
 namespace ClearCanvas.Common
@@ -41,14 +41,15 @@ namespace ClearCanvas.Common
 		private readonly List<ExtensionInfo> _extensions = new List<ExtensionInfo>();
 		private readonly List<ExtensionPointInfo> _extensionPoints = new List<ExtensionPointInfo>();
 		private readonly string _pluginDir;
-		private event EventHandler<PluginLoadedEventArgs> _pluginProgressEvent;
 
 		private readonly object _syncLock = new object();
+		private readonly PluginLoader _loader;
 		private volatile bool _pluginsLoaded;
 
 		internal PluginManager(string pluginDir)
 		{
 			_pluginDir = pluginDir;
+			_loader = new PluginLoader(pluginDir);
 		}
 
 		#region Public API
@@ -108,14 +109,14 @@ namespace ClearCanvas.Common
 			{
 				lock (_syncLock)
 				{
-					_pluginProgressEvent += value;
+					_loader.PluginProgressEvent += value;
 				}
 			}
 			remove
 			{
 				lock (_syncLock)
 				{
-					_pluginProgressEvent -= value;
+					_loader.PluginProgressEvent -= value;
 				}
 			}
 		}
@@ -159,10 +160,14 @@ namespace ClearCanvas.Common
 			if (!Directory.Exists(_pluginDir))
 				throw new PluginException(SR.ExceptionPluginDirectoryNotFound);
 
-			EventsHelper.Fire(_pluginProgressEvent, this, new PluginLoadedEventArgs(SR.MessageFindingPlugins, null));
+			var sw = new Stopwatch();
+			sw.Start();
 
-			// Process the plugin directory
-			FileProcessor.Process(_pluginDir, "*.dll", LoadPlugin, true);
+			Platform.Log(LogLevel.Info, "LoadPlugins:BEGIN {0}", sw.ElapsedMilliseconds);
+
+			_plugins.AddRange(_loader.LoadPlugins());
+
+			Platform.Log(LogLevel.Info, "LoadPlugins:Loader {0}", sw.ElapsedMilliseconds);
 
 			// If no plugins were loaded, nothing else to do
 			if (_plugins.Count == 0)
@@ -171,13 +176,16 @@ namespace ClearCanvas.Common
 			// compile lists of all extension points and extensions
 			var extensions = new List<ExtensionInfo>(_plugins.SelectMany(p => p.Extensions));
 			var points = new List<ExtensionPointInfo>(_plugins.SelectMany(p => p.ExtensionPoints));
+			Platform.Log(LogLevel.Info, "LoadPlugins:SelectMany {0}", sw.ElapsedMilliseconds);
 
 			// hack: add points and extensions from ClearCanvas.Common, which isn't technically a plugin
 			PluginInfo.DiscoverExtensionPointsAndExtensions(GetType().Assembly, points, extensions);
+			Platform.Log(LogLevel.Info, "LoadPlugins:Discover {0}", sw.ElapsedMilliseconds);
 
 			// #742: order the extensions according to the XML configuration
 			List<ExtensionInfo> ordered, remainder;
 			ExtensionSettings.Default.OrderExtensions(extensions, out ordered, out remainder);
+			Platform.Log(LogLevel.Info, "LoadPlugins:Order {0}", sw.ElapsedMilliseconds);
 
 			// create global extension list, with the ordered set appearing first
 			_extensions.AddRange(CollectionUtils.Concat<ExtensionInfo>(ordered, remainder));
@@ -186,57 +194,9 @@ namespace ClearCanvas.Common
 			_extensionPoints.AddRange(points);
 
 			_pluginsLoaded = true;
+			Platform.Log(LogLevel.Info, "LoadPlugins:END {0}", sw.ElapsedMilliseconds);
 		}
 
-
-		/// <summary>
-		/// Attempts to load the DLL at the specified path and determine whether or not it is a plugin.
-		/// </summary>
-		/// <param name="path"></param>
-		public void LoadPlugin(string path)
-		{
-			var pluginName = Path.GetFileName(path);
-			try
-			{
-				// load assembly
-				var asm = Assembly.LoadFrom(path);
-
-				// is it a plugin??
-				var pluginAttr = (PluginAttribute)asm.GetCustomAttributes(typeof(PluginAttribute), false).FirstOrDefault();
-				if (pluginAttr != null)
-				{
-					_plugins.Add(new PluginInfo(asm, pluginAttr.Name, pluginAttr.Description, pluginAttr.Icon));
-					EventsHelper.Fire(_pluginProgressEvent, this,
-						new PluginLoadedEventArgs(String.Format(SR.FormatLoadingPlugin, pluginName), asm));
-				}
-			}
-			catch (BadImageFormatException e)
-			{
-				// unmanaged DLL in the plugin directory
-				Platform.Log(LogLevel.Debug, SR.LogFoundUnmanagedDLL, e.FileName);
-			}
-			catch (ReflectionTypeLoadException e)
-			{
-				// this exception usually means one of the dependencies is missing
-				Platform.Log(LogLevel.Error, SR.LogFailedToProcessPluginAssembly, pluginName);
-
-				// log a detail message for each missing dependency
-				foreach (var loaderException in e.LoaderExceptions)
-				{
-					// just log the message, don't need the full stack trace
-					Platform.Log(LogLevel.Error, loaderException.Message);
-				}
-			}
-			catch (FileNotFoundException e)
-			{
-				Platform.Log(LogLevel.Error, e, "File not found while loading plugin: {0}", path);
-			}
-			catch (Exception e)
-			{
-				// there was a problem processing this assembly
-				Platform.Log(LogLevel.Error, e, SR.LogFailedToProcessPluginAssembly, path);
-			}
-		}
 
 		#endregion
 	}

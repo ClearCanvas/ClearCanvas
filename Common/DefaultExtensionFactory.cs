@@ -37,7 +37,7 @@ namespace ClearCanvas.Common
     /// </remarks>
     internal class DefaultExtensionFactory : IExtensionFactory
     {
-    	private volatile IDictionary<Type, List<ExtensionInfo>> _extensionMap;
+    	private volatile IDictionary<TypeRef, List<ExtensionInfo>> _extensionMap;
 		private readonly object _syncLock = new object();
 
         internal DefaultExtensionFactory()
@@ -69,7 +69,7 @@ namespace ClearCanvas.Common
                 try
                 {
                     // instantiate
-                    var o = Activator.CreateInstance(extension.ExtensionClass);
+                    var o = Activator.CreateInstance(extension.ExtensionClass.Resolve());
                     createdObjects.Add(o);
                 }
                 catch (Exception e)
@@ -104,7 +104,7 @@ namespace ClearCanvas.Common
 			BuildExtensionMapOnce();
 
 			List<ExtensionInfo> extensions;
-			if (_extensionMap.TryGetValue(extensionPoint.GetType(), out extensions))
+			if (_extensionMap.TryGetValue(new TypeRef(extensionPoint.GetType()), out extensions))
 			{
 				return CollectionUtils.Select(extensions,
 					extension => extension.Enabled && extension.Authorized && (filter == null || filter.Test(extension)));

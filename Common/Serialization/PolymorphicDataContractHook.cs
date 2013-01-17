@@ -38,7 +38,7 @@ namespace ClearCanvas.Common.Serialization
 		{
 			// build the contract map by finding all types having a T attribute
 			_contractMap = (from p in Platform.PluginManager.Plugins
-							from t in p.Assembly.GetTypes()
+							from t in p.Assembly.Resolve().GetTypes()
 							let a = AttributeUtils.GetAttribute<T>(t)
 							where (a != null)
 							select new { a.ContractId, Contract = t })

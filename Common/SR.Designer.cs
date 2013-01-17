@@ -520,11 +520,20 @@ namespace ClearCanvas.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Loading plugin: {0}.
+        ///   Looks up a localized string similar to Loaded plugin: {0}.
         /// </summary>
-        public static string FormatLoadingPlugin {
+        public static string FormatLoadedPlugin {
             get {
-                return ResourceManager.GetString("FormatLoadingPlugin", resourceCulture);
+                return ResourceManager.GetString("FormatLoadedPlugin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Processing plugin: {0}.
+        /// </summary>
+        public static string FormatProcessingPlugin {
+            get {
+                return ResourceManager.GetString("FormatProcessingPlugin", resourceCulture);
             }
         }
         

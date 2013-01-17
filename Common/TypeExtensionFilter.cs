@@ -65,7 +65,7 @@ namespace ClearCanvas.Common
         {
             foreach (Type filterType in _types)
             {
-                if (!filterType.IsAssignableFrom(extension.ExtensionClass))
+                if (!filterType.IsAssignableFrom(extension.ExtensionClass.Resolve()))
                 {
                     return false;
                 }

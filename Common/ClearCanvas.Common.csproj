@@ -167,6 +167,8 @@
     </Compile>
     <Compile Include="log4net\FileAppender.cs" />
     <Compile Include="log4net\RollingFileAppender.cs" />
+    <Compile Include="PluginInfoCache.cs" />
+    <Compile Include="PluginLoader.cs" />
     <Compile Include="Specifications\CaseSpecification.cs" />
     <Compile Include="Specifications\NotSpecification.cs" />
     <Compile Include="Specifications\Tests\CompositeSpecificationTests.cs" />
@@ -282,6 +284,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>SR.resx</DependentUpon>
     </Compile>
+    <Compile Include="NamedObjectRef.cs" />
     <Compile Include="UnknownServiceException.cs" />
     <Compile Include="Utilities\BackgroundTask.cs" />
     <Compile Include="Utilities\BlockingQueue.cs" />

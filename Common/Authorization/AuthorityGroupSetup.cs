@@ -50,8 +50,9 @@ namespace ClearCanvas.Common.Authorization
 			// scan all plugins for token definitions
 			foreach (var plugin in Platform.PluginManager.Plugins)
 			{
-				var resolver = new ResourceResolver(plugin.Assembly);
-				foreach (var type in plugin.Assembly.GetTypes())
+				var assembly = plugin.Assembly.Resolve();
+				var resolver = new ResourceResolver(assembly);
+				foreach (var type in plugin.Assembly.Resolve().GetTypes())
 				{
 					// look at public fields
 					foreach (var field in type.GetFields())
@@ -63,7 +64,7 @@ namespace ClearCanvas.Common.Authorization
 							var description = resolver.LocalizeString(attr.Description);
 							var formerIdentities = (attr.Formerly ?? "").Split(';');
 
-							tokens.Add(new AuthorityTokenDefinition(token, plugin.Assembly.FullName, description, formerIdentities));
+							tokens.Add(new AuthorityTokenDefinition(token, assembly.FullName, description, formerIdentities));
 						}
 					}
 				}
