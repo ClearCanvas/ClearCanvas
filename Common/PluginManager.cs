@@ -71,7 +71,7 @@ namespace ClearCanvas.Common
 
 		/// <summary>
 		/// Gets information about the set of extensions defined across all installed plugins,
-		/// including disabled extensions.
+		/// including disabled and unlicensed extensions.
 		/// </summary>
 		/// <remarks>
 		/// If plugins have not yet been loaded into memory, querying this property will cause them to be loaded.

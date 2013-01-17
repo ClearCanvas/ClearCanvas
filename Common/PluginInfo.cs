@@ -103,7 +103,7 @@ namespace ClearCanvas.Common
     	private static bool IsValidExtensionPointClass(Type extensionPointClass)
         {
             var baseType = extensionPointClass.BaseType;
-    		return baseType.IsGenericType && baseType.GetGenericTypeDefinition().Equals(typeof (ExtensionPoint<>));
+    		return baseType != null && baseType.IsGenericType && baseType.GetGenericTypeDefinition() == typeof (ExtensionPoint<>);
         }
 		
 		private static bool IsConcreteClass(Type type)
@@ -143,7 +143,7 @@ namespace ClearCanvas.Common
 		}
 
         /// <summary>
-        /// Gets the set of extensions defined in this plugin, including disabled extensions.
+        /// Gets the set of extensions defined in this plugin, including disabled and unlicensed extensions.
         /// </summary>
         public IList<ExtensionInfo> Extensions
         {
@@ -167,7 +167,7 @@ namespace ClearCanvas.Common
         }
 
         /// <summary>
-        /// The name of an icon resource to associate with the plugin.
+        /// Gets the name of an icon resource to associate with the plugin.
         /// </summary>
         public string Icon
         {
