@@ -49,7 +49,7 @@ namespace ClearCanvas.ImageViewer.Common.ServerDirectory
             ExtensionData = new Dictionary<string, object>();
         }
 
-        internal DicomServiceNode(ServerDirectoryEntry directoryEntry)
+        public DicomServiceNode(ServerDirectoryEntry directoryEntry)
         {
             Platform.CheckForNullReference(directoryEntry, "directoryEntry");
             Server = directoryEntry.Server;
