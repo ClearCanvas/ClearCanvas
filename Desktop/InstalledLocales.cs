@@ -80,6 +80,7 @@ namespace ClearCanvas.Desktop
 		private static void ApplyLocalePolicy(InstalledLocales instance)
 		{
 			var allowed = new List<string>((LocalePolicy.Default.AllowedLocalizationsList ?? string.Empty).Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries));
+//			var allowed = new List<string>((string.Empty).Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries));
 			for (var n = 0; n < allowed.Count; ++n) allowed[n] = allowed[n].Trim(); // trim each code
 			allowed = new List<string>(CollectionUtils.Select(allowed, code => !string.IsNullOrEmpty(code))); // re-remove empty entries
 			if (allowed.Count <= 0) return;

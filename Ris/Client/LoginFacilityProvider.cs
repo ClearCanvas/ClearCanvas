@@ -32,7 +32,8 @@ using ClearCanvas.Ris.Application.Common.Login;
 
 namespace ClearCanvas.Ris.Client
 {
-	[ExtensionOf(typeof (LoginFacilityProviderExtensionPoint), FeatureToken = FeatureTokens.RIS.Core)]
+	//[ExtensionOf(typeof (LoginFacilityProviderExtensionPoint), FeatureToken = FeatureTokens.RIS.Core)]
+	[ExtensionOf(typeof(LoginFacilityProviderExtensionPoint))]
 	internal sealed class LoginFacilityProvider : ILoginFacilityProvider
 	{
 		private readonly object _syncRoot = new object();

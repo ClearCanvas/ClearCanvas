@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Threading;
 using ClearCanvas.Common;
@@ -406,6 +407,17 @@ namespace ClearCanvas.Desktop
         protected virtual bool Initialize(string[] args)
         {
 			// initialize the application UI culture from local setting
+			var sw = new Stopwatch();
+			sw.Start();
+			Platform.Log(LogLevel.Info, "Application.Initialize:BEGIN {0}", sw.ElapsedMilliseconds);
+			var x = InstalledLocales.Instance;
+			Platform.Log(LogLevel.Info, "Application.Initialize:InstalledLocales.Instance {0}", sw.ElapsedMilliseconds);
+			var l = x.Selected;
+			Platform.Log(LogLevel.Info, "Application.Initialize:InstalledLocales.Selected {0}", sw.ElapsedMilliseconds);
+			var c = l.GetCultureInfo();
+			Platform.Log(LogLevel.Info, "Application.Initialize:Locale.GetCultureInfo {0}", sw.ElapsedMilliseconds);
+
+
 			CurrentUICulture = InstalledLocales.Instance.Selected.GetCultureInfo();
 			
 			// initialize session

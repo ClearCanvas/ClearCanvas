@@ -23,6 +23,7 @@
 #endregion
 
 using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using log4net;
@@ -511,7 +512,12 @@ namespace ClearCanvas.Common
         /// <param name="args"></param>
         public static void StartApp(string appRootClassName, string[] args)
         {
+        	var sw = new Stopwatch();
+			sw.Start();
+			Platform.Log(LogLevel.Info, "StartApp:BEGIN {0}", sw.ElapsedMilliseconds);
+
             ExtensionInfo[] appRoots = new ApplicationRootExtensionPoint().ListExtensions();
+			Platform.Log(LogLevel.Info, "StartApp:ApplicationRootExtensionPoint().ListExtensions() {0}", sw.ElapsedMilliseconds);
 
             // try an exact match
             List<ExtensionInfo> matchingRoots = CollectionUtils.Select(appRoots,
@@ -602,6 +608,26 @@ namespace ClearCanvas.Common
             }
         }
 
+
+		class Clocker : IDisposable
+		{
+			private readonly Stopwatch _sw = new Stopwatch();
+			private readonly string _message;
+
+			public Clocker(string message)
+			{
+				_message = message;
+				_sw.Start();
+			}
+
+			public void Dispose()
+			{
+				Platform.Log(LogLevel.Info, _message, _sw.ElapsedMilliseconds);
+				_sw.Stop();
+			}
+		}
+
+
         /// <summary>
         /// Obtains an instance of the specified service for use by the application.
         /// </summary>
@@ -613,31 +639,35 @@ namespace ClearCanvas.Common
         /// <exception cref="UnknownServiceException">The requested service cannot be provided.</exception>
         public static object GetService(Type service)
         {
-            // load all service providers if not yet loaded
-            if (_serviceProviders == null)
-            {
-                lock (_syncRoot)
-                {
-                    if (_serviceProviders == null)
-                        _serviceProviders = new ServiceProviderExtensionPoint().CreateExtensions().Cast<IServiceProvider>().ToArray();
-                }
-            }
+			using (new Clocker("Platform.GetService<" + service.Name + ">: {0}"))
+			{
 
-            // attempt to instantiate the requested service
-            foreach (IServiceProvider sp in _serviceProviders)
-            {
-                // the service provider itself may not be thread-safe, so we need to ensure only one thread will access it
-                // at a time
-                lock (sp)
-                {
-                    object impl = sp.GetService(service);
-                    if (impl != null)
-                        return impl;
-                }
-            }
+				// load all service providers if not yet loaded
+				if (_serviceProviders == null)
+				{
+					lock (_syncRoot)
+					{
+						if (_serviceProviders == null)
+							_serviceProviders = new ServiceProviderExtensionPoint().CreateExtensions().Cast<IServiceProvider>().ToArray();
+					}
+				}
 
-            var message = string.Format("No service provider was found that can provide the service {0}.", service.FullName);
-            throw new UnknownServiceException(message);
+				// attempt to instantiate the requested service
+				foreach (IServiceProvider sp in _serviceProviders)
+				{
+					// the service provider itself may not be thread-safe, so we need to ensure only one thread will access it
+					// at a time
+					lock (sp)
+					{
+						object impl = sp.GetService(service);
+						if (impl != null)
+							return impl;
+					}
+				}
+
+				var message = string.Format("No service provider was found that can provide the service {0}.", service.FullName);
+				throw new UnknownServiceException(message);
+			}
         }
 
         /// <summary>
