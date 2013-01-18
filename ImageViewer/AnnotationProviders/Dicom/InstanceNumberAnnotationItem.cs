@@ -49,12 +49,18 @@ namespace ClearCanvas.ImageViewer.AnnotationProviders.Dicom
 			
 			if (frame.ParentImageSop.ParentSeries != null)
 			{
-				//TODO: figure out how to do this without the parent series!
+				// if the image is part of the study tree, let the image count reflect the number of instances in the parent series
 				str = String.Format(SR.FormatImageNumberAndCount, frame.ParentImageSop.InstanceNumber, frame.ParentImageSop.ParentSeries.Sops.Count);
+			}
+			else if (presentationImage.ParentDisplaySet != null)
+			{
+				// if the image is not part of the study tree, fallback to using the number of images in the display set
+				// this happens particularly when the image is part of a generated display set rather than a stored DICOM SOP instance
+				str = string.Format(SR.FormatImageNumberAndCount, frame.ParentImageSop.InstanceNumber, presentationImage.ParentDisplaySet.PresentationImages.Count);
 			}
 			else
 			{
-				str = frame.ParentImageSop.InstanceNumber.ToString();
+				str = frame.ParentImageSop.InstanceNumber.ToString(System.Globalization.CultureInfo.InvariantCulture);
 			}
 
             if (frame.ParentImageSop.NumberOfFrames > 1)
