@@ -22,7 +22,7 @@
 
 #pragma endregion
 
-#region Inline Attributions
+#pragma region Inline Attributions
 // The source code contained in this file is based on an original work
 // from
 //
@@ -46,7 +46,7 @@
 //
 // Author:
 //    Colby Dillion (colby.dillion@gmail.com)
-#endregion
+#pragma endregion
 
 using namespace System;
 using namespace System::Reflection;
