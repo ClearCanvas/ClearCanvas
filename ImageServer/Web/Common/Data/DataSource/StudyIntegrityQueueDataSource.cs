@@ -517,12 +517,11 @@ namespace ClearCanvas.ImageServer.Web.Common.Data.DataSource
                 {
                     DateTime fromTime = DateTime.Parse(FromInsertTime);
                     DateTime toTime = DateTime.Parse(ToInsertTime);
-                    if (toTime == fromTime) criteria.InsertTime.Between(fromTime, fromTime.AddHours(24));
-                    else criteria.InsertTime.Between(fromTime, toTime.AddHours(24));
+                    criteria.InsertTime.Between(fromTime, toTime.AddHours(24));
                 } else if(!String.IsNullOrEmpty(FromInsertTime))
                 {
                     DateTime fromTime = DateTime.Parse(FromInsertTime);
-                    criteria.InsertTime.MoreThanOrEqualTo(fromTime.AddHours(24));
+                    criteria.InsertTime.MoreThanOrEqualTo(fromTime);
                 } else
                 {
                     DateTime toTime = DateTime.Parse(ToInsertTime);
