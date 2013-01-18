@@ -28,19 +28,39 @@ using System.IO;
 
 namespace ClearCanvas.ImageServer.Common
 {
-    public interface IZipService : IDisposable
+    /// <summary>
+    /// Interface for reading from Zip file.
+    /// </summary>
+    public interface IZipServiceReader : IDisposable
+    {
+        string Comment { get; }
+        string TempFileFolder { get; set; }
+        ICollection<string> EntryFileNames { get; } 
+        void Extract(string sourceFile, string destinationFile, bool overwrite);
+        void ExtractAll(string destinationFolder, bool overwrite);
+    }
+
+    /// <summary>
+    /// Interface for writing to a Zip file.
+    /// </summary>
+    public interface IZipServiceWriter : IDisposable
     {
         bool ForceCompress { get; set; }
         string Comment { get; set; }
         string TempFileFolder { get; set; }
         ICollection<string> EntryFileNames { get; } 
-        void OpenRead(string zipFile);
-        void OpenWrite(string zipFile);
-        void Extract(string sourceFile, string destinationFile, bool overwrite);
-        void ExtractAll(string destinationFolder, bool overwrite);
         void AddFile(string sourceFile, string directoryPathInArchive);
         void AddFileStream(string directoryPathInArchive, Stream sourceFile, string comment);
         void AddDirectory(string sourceDirectory);
         void Save();
+    }
+
+    /// <summary>
+    /// Service for getting an implementation for reading and writing Zip files
+    /// </summary>
+    public interface IZipService
+    {
+        IZipServiceReader OpenRead(string zipFile);
+        IZipServiceWriter OpenWrite(string zipFile);
     }
 }
