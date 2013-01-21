@@ -28,6 +28,7 @@ using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Dicom;
 using ClearCanvas.Dicom.Utilities;
+using ClearCanvas.ImageViewer.AnnotationProviders.Presentation;
 using ClearCanvas.ImageViewer.Annotations;
 using ClearCanvas.ImageViewer.Annotations.Dicom;
 using ClearCanvas.ImageViewer.StudyManagement;
@@ -185,29 +186,10 @@ namespace ClearCanvas.ImageViewer.AnnotationProviders.Dicom
 
 			_annotationItems.Add
 				(
-					new DicomAnnotationItem<string>
+					new LossyImagePresentationAnnotationItem
 					(
 						"Dicom.GeneralImage.LossyImageCompression",
-						resolver,
-						delegate(Frame frame)
-							{
-								if (frame.LossyImageCompressionRatio.Length > 0)
-								{
-									var lossyRatios = StringUtilities.Combine(frame.LossyImageCompressionRatio, SR.SeparatorLossyCompressionRatio, "F1");
-									if (!String.IsNullOrEmpty(lossyRatios))
-										return String.Format(SR.FormatLossyCompressionRatio, SR.ValueLossy, lossyRatios);
-								}
-
-								if (!String.IsNullOrEmpty(frame.LossyImageCompression))
-								{
-									int lossyValue;
-									if (Int32.TryParse(frame.LossyImageCompression, out lossyValue) && lossyValue != 0)
-										return SR.ValueLossy;
-								}
-
-								return "";
-							},
-						DicomDataFormatHelper.RawStringFormat
+						resolver
 					)
 				);
 

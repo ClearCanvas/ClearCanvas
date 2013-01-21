@@ -48,7 +48,8 @@ namespace ClearCanvas.ImageViewer.AnnotationProviders.Presentation
 			                           new DFOVAnnotationItem(),
 			                           new ImageCalibrationAnnotationItem(),
 			                           new DisplaySetDescriptionAnnotationItem(),
-			                           new DisplaySetNumberAnnotationItem()
+			                           new DisplaySetNumberAnnotationItem(),
+									   new LossyImagePresentationAnnotationItem()
 			                       };
 		}
 
