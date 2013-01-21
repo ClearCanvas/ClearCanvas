@@ -24,17 +24,15 @@
 
 using System;
 using System.Collections.Generic;
-using System.Runtime.Serialization;
 using ClearCanvas.Common;
-using ClearCanvas.Common.Serialization;
 
 namespace ClearCanvas.Enterprise.Common
 {
 	public interface ILoginFacilityProvider
 	{
-		IList<FacilityInfo> GetAvailableFacilities();
+		IList<string> GetAvailableFacilities();
 
-		FacilityInfo CurrentFacility { get; set; }
+		string CurrentFacility { get; set; }
 	}
 
 	[ExtensionPoint]
@@ -63,51 +61,18 @@ namespace ClearCanvas.Enterprise.Common
 
 		private class DefaultLoginFacilityProvider : ILoginFacilityProvider
 		{
-			private static readonly FacilityInfo[] _emptyList = new FacilityInfo[0];
+			private static readonly string[] _emptyList = new string[0];
 
-			public IList<FacilityInfo> GetAvailableFacilities()
+			public IList<string> GetAvailableFacilities()
 			{
 				return _emptyList;
 			}
 
-			public FacilityInfo CurrentFacility
+			public string CurrentFacility
 			{
 				get { return null; }
 				set { }
 			}
-		}
-	}
-
-	[DataContract]
-	public class FacilityInfo : DataContractBase, IEquatable<FacilityInfo>
-	{
-		public FacilityInfo() {}
-
-		public FacilityInfo(string code, string name)
-		{
-			Code = code;
-			Name = name;
-		}
-
-		[DataMember]
-		public string Code { get; set; }
-
-		[DataMember]
-		public string Name { get; set; }
-
-		public bool Equals(FacilityInfo facilitySummary)
-		{
-			return facilitySummary != null && Equals(Code, facilitySummary.Code);
-		}
-
-		public override bool Equals(object obj)
-		{
-			return ReferenceEquals(this, obj) || Equals(obj as FacilityInfo);
-		}
-
-		public override int GetHashCode()
-		{
-			return -0x6EBEF583 ^ (string.IsNullOrEmpty(Code) ? 0 : Code.GetHashCode());
 		}
 	}
 }
