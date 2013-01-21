@@ -25,60 +25,107 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using ClearCanvas.Common;
+using ClearCanvas.Desktop;
+using ClearCanvas.Desktop.Tools;
 using ClearCanvas.Enterprise.Common;
 using ClearCanvas.Ris.Application.Common;
 using ClearCanvas.Ris.Application.Common.Login;
 
 namespace ClearCanvas.Ris.Client
 {
-	//[ExtensionOf(typeof (LoginFacilityProviderExtensionPoint), FeatureToken = FeatureTokens.RIS.Core)]
 	[ExtensionOf(typeof(LoginFacilityProviderExtensionPoint))]
 	internal sealed class LoginFacilityProvider : ILoginFacilityProvider
 	{
+		/// <summary>
+		/// The puropse of this tool is to act as a "rescue" in the rare event that the working
+		/// facility was not set via the login process.
+		/// </summary>
+		/// <remarks>
+		/// The very first time the workstation is run with the RIS.Core feature enabled, the facility chooser
+		/// won't be visible in the login dialog.  In this case, the facility will not have been set, so it falls
+		/// to this tool to ensure that a current facility is established.
+		/// </remarks>
+		[ExtensionOf(typeof(ApplicationToolExtensionPoint), FeatureToken = FeatureTokens.RIS.Core)]
+		internal class RescueTool : Tool<IApplicationToolContext>
+		{
+			public override void Initialize()
+			{
+				base.Initialize();
+
+				// if login session has already been established (via login dialog), nothing to do here
+				if (LoginSession.Current != null)
+					return;
+
+				// otherwise, attempt to establish it, using a valid facility value
+				Platform.GetService<ILoginService>(service =>
+				{
+					var facilities = RetrieveFacilityChoices(service);
+					if(facilities.Any())
+						LoginSession.Create(facilities.First());
+				});
+			}
+		}
+
+
 		private readonly object _syncRoot = new object();
-		private IList<FacilityInfo> _listFacilities;
+		private IList<string> _facilities;
 
-		public IList<FacilityInfo> GetAvailableFacilities()
+		public LoginFacilityProvider()
 		{
-			lock (_syncRoot)
+			// check the cache to see if RIS is licensed or not
+			var lastKnownLicenseStatus = LoginFacilityProviderSettings.Default.IsRisCoreFeatureLicensed;
+
+			// if we have a cached value
+			if (lastKnownLicenseStatus.HasValue)
 			{
-				try
-				{
-					Platform.Log(LogLevel.Debug, "Contacting server to obtain facility choices for login dialog...");
-					Platform.GetService<ILoginService>(service => { _listFacilities = RetrieveFacilityChoices(service); });
-					Platform.Log(LogLevel.Debug, "Got facility choices for login dialog.");
-					return _listFacilities;
-				}
-				catch (Exception ex)
-				{
-					Desktop.Application.ShowMessageBox("Unable to connect to RIS server.  The workstation may be configured incorrectly, or the server may be unreachable.", MessageBoxActions.Ok);
-					Platform.Log(LogLevel.Error, ex);
-					return new FacilityInfo[0];
-				}
+				// kick off an asynchronous check, in order to update the cache for next time
+				ThreadPool.QueueUserWorkItem(nothing => CheckFeatureAuthorizedAsync());
+
+				// if the last known value was false, indicate that this extension is not supported
+				if (!lastKnownLicenseStatus.Value)
+					throw new NotSupportedException();
+			}
+			else
+			{
+				// we don't have a cached value, so we need to do a synchronous check
+				// the cached will be updated for next time
+				if (!CheckFeatureAuthorized())
+					throw new NotSupportedException();
 			}
 		}
 
-		private FacilityInfo GetFacility(string code)
+		public IList<string> GetAvailableFacilities()
 		{
+			if (_facilities != null)
+				return _facilities;
+
 			lock (_syncRoot)
 			{
-				return _listFacilities != null ? _listFacilities.FirstOrDefault(fs => fs.Code == code) : null;
+				if (_facilities == null)
+				{
+					try
+					{
+						Platform.Log(LogLevel.Debug, "Contacting server to obtain facility choices for login dialog...");
+						Platform.GetService<ILoginService>(service => { _facilities = RetrieveFacilityChoices(service); });
+						Platform.Log(LogLevel.Debug, "Got facility choices for login dialog.");
+					}
+					catch (Exception ex)
+					{
+						Platform.Log(LogLevel.Error, ex);
+						_facilities = new string[0];
+					}
+				}
 			}
+			return _facilities;
 		}
 
-		private static IList<FacilityInfo> RetrieveFacilityChoices(ILoginService service)
-		{
-			var choices = service.GetWorkingFacilityChoices(new GetWorkingFacilityChoicesRequest()).FacilityChoices;
-			return choices != null ? choices.Select(fs => new FacilityInfo(fs.Code, fs.Name)).ToArray() : new FacilityInfo[0];
-		}
-
-		public FacilityInfo CurrentFacility
+		public string CurrentFacility
 		{
 			get
 			{
-				return LoginSession.Current == null  || LoginSession.Current.WorkingFacility == null ? null
-					: GetFacility(LoginSession.Current.WorkingFacility.Code);
+				return LoginSession.Current == null || LoginSession.Current.WorkingFacility == null ? null : LoginSession.Current.WorkingFacility.Code;
 			}
 			set
 			{
@@ -88,11 +135,40 @@ namespace ClearCanvas.Ris.Client
 				if (LoginSession.Current != null)
 					return;
 
-				if (value != null && !string.IsNullOrEmpty(value.Code))
+				if (value != null && !string.IsNullOrEmpty(value))
 				{
-					LoginSession.Create(value.Code);
+					LoginSession.Create(value);
 				}
 			}
+		}
+
+		private static IList<string> RetrieveFacilityChoices(ILoginService service)
+		{
+			var choices = service.GetWorkingFacilityChoices(new GetWorkingFacilityChoicesRequest()).FacilityChoices;
+			return choices != null ? choices.Select(fs => fs.Code).ToArray() : new string[0];
+		}
+
+		private static void CheckFeatureAuthorizedAsync()
+		{
+			ThreadPool.QueueUserWorkItem(nothing =>
+			{
+				try
+				{
+					CheckFeatureAuthorized();
+				}
+				catch (Exception e)
+				{
+					Platform.Log(LogLevel.Error, e);
+				}
+			});
+		}
+
+		private static bool CheckFeatureAuthorized()
+		{
+			var b = LicenseInformation.IsFeatureAuthorized(FeatureTokens.RIS.Core);
+			LoginFacilityProviderSettings.Default.IsRisCoreFeatureLicensed = b;
+			LoginFacilityProviderSettings.Default.Save();
+			return b;
 		}
 	}
 }
