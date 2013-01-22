@@ -25,6 +25,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
@@ -45,8 +46,6 @@ namespace ClearCanvas.Desktop
 
 		private static InstalledLocales _instance;
 
-		private readonly List<Locale> _installedLocales = new List<Locale>();
-		private string _defaultLocale;
 
 		/// <summary>
 		/// Gets a <see cref="Locale"/> representing the invariant locale.
@@ -65,7 +64,6 @@ namespace ClearCanvas.Desktop
 					try
 					{
 						_instance = LocaleSettings.Default.InstalledLocales;
-						ApplyLocalePolicy(_instance);
 					}
 					catch (Exception ex)
 					{
@@ -77,20 +75,10 @@ namespace ClearCanvas.Desktop
 			}
 		}
 
-		private static void ApplyLocalePolicy(InstalledLocales instance)
-		{
-			var allowed = new List<string>((LocalePolicy.Default.AllowedLocalizationsList ?? string.Empty).Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries));
-//			var allowed = new List<string>((string.Empty).Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries));
-			for (var n = 0; n < allowed.Count; ++n) allowed[n] = allowed[n].Trim(); // trim each code
-			allowed = new List<string>(CollectionUtils.Select(allowed, code => !string.IsNullOrEmpty(code))); // re-remove empty entries
-			if (allowed.Count <= 0) return;
+		private readonly List<Locale> _installedLocales = new List<Locale>();
+		private string _defaultLocale;
 
-			var disallowed = new List<Locale>();
-			foreach (var locale in instance._installedLocales)
-				if (locale != InvariantLocale && locale.Culture != @"en" && !allowed.Contains(locale.Culture)) disallowed.Add(locale);
-			foreach (var locale in disallowed)
-				instance._installedLocales.Remove(locale);
-		}
+		#region Public API
 
 		/// <summary>
 		/// Gets the count of installed localizations.
@@ -101,26 +89,27 @@ namespace ClearCanvas.Desktop
 		}
 
 		/// <summary>
+		/// Enumerates the installed localizations.
+		/// </summary>
+		public IEnumerable<Locale> Locales
+		{
+			get { return _installedLocales.AsReadOnly(); }
+		}
+
+		/// <summary>
+		/// Enumerates the subset of installed localizations that are allowed by the locale policy setting.
+		/// </summary>
+		public IEnumerable<Locale> AllowedLocales
+		{
+			get { return ApplyLocalePolicy(_installedLocales).ToList().AsReadOnly(); }
+		}
+
+		/// <summary>
 		/// Gets the default <see cref="Locale"/> of the installed localizations.
 		/// </summary>
 		public Locale Default
 		{
 			get { return ((!string.IsNullOrEmpty(_defaultLocale) ? Find(_defaultLocale) : null) ?? FindBestMatchSystemLocale(_installedLocales)) ?? InvariantLocale; }
-		}
-
-		private static Locale FindBestMatchSystemLocale(IEnumerable<Locale> locales)
-		{
-			var culture = CultureInfo.CurrentUICulture;
-			while (culture != CultureInfo.InvariantCulture)
-			{
-				var cultureCode = culture.Name;
-				var locale = CollectionUtils.SelectFirst(locales, l => l.Culture == cultureCode);
-				if (locale != null)
-					return locale;
-
-				culture = culture.Parent;
-			}
-			return null;
 		}
 
 		/// <summary>
@@ -164,20 +153,50 @@ namespace ClearCanvas.Desktop
 		}
 
 		/// <summary>
-		/// Enumerates the installed localizations.
-		/// </summary>
-		public IEnumerable<Locale> Locales
-		{
-			get { return _installedLocales; }
-		}
-
-		/// <summary>
 		/// Finds an installed localization with the specified culture code.
 		/// </summary>
 		public Locale Find(string culture)
 		{
-			return CollectionUtils.SelectFirst(_installedLocales, x => string.Equals(culture, x.Culture, StringComparison.InvariantCultureIgnoreCase));
+			return _installedLocales.FirstOrDefault(x => string.Equals(culture, x.Culture, StringComparison.InvariantCultureIgnoreCase));
 		}
+
+		#endregion
+
+		#region Helpers
+
+		private static IEnumerable<Locale> ApplyLocalePolicy(IEnumerable<Locale> locales)
+		{
+			var allowed = (LocalePolicy.Default.AllowedLocalizationsList ?? string.Empty).Split(new[] {','})
+				.Select(i => i.Trim())
+				.Where(i => !string.IsNullOrEmpty(i))
+				.ToList();
+
+			// if nothing is explicitly specified, then everything is allowed
+			if (allowed.Count <= 0)
+				return locales;
+
+			// return a filtered list
+			return from locale in locales
+			       where locale == InvariantLocale || locale.Culture == @"en" || allowed.Contains(locale.Culture)
+			       select locale;
+		}
+
+		private static Locale FindBestMatchSystemLocale(IEnumerable<Locale> locales)
+		{
+			var culture = CultureInfo.CurrentUICulture;
+			while (culture != CultureInfo.InvariantCulture)
+			{
+				var cultureCode = culture.Name;
+				var locale = CollectionUtils.SelectFirst(locales, l => l.Culture == cultureCode);
+				if (locale != null)
+					return locale;
+
+				culture = culture.Parent;
+			}
+			return null;
+		}
+
+		#endregion
 
 		#region IXmlSerializable Members
 

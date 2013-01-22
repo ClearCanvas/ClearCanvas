@@ -27,6 +27,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Globalization;
+using System.Linq;
 using System.Windows.Forms;
 using ClearCanvas.Common.Utilities;
 
@@ -40,6 +41,7 @@ namespace ClearCanvas.Desktop.View.WinForms
 		private static readonly Size _defaultSize = new Size(136, 21);
 		private event EventHandler _selectedLocaleChanged;
 		private readonly ComboBox _dropDown;
+		private bool _availableLocalesInitialized;
 
 		/// <summary>
 		/// Initializes a new instance of a <see cref="LocalePicker"/>.
@@ -62,24 +64,17 @@ namespace ClearCanvas.Desktop.View.WinForms
 			{
 				ResumeLayout(false);
 			}
-
-			// System.Component.DesignMode does not work in control constructors
-			if (LicenseManager.UsageMode != LicenseUsageMode.Designtime)
-			{
-				InitializeLocales();
-			}
 		}
 
-		private void InitializeLocales()
+		protected override void OnLoad(EventArgs e)
 		{
-			AvailableLocales = new List<InstalledLocales.Locale>(InstalledLocales.Instance.Locales).AsReadOnly();
-			AvailableCultures = CollectionUtils.Map<InstalledLocales.Locale, CultureInfo>(AvailableLocales, x => x.GetCultureInfo()).AsReadOnly();
-			DefaultLocale = InstalledLocales.Instance.Default;
-			DefaultCulture = DefaultLocale.GetCultureInfo();
+			base.OnLoad(e);
 
-			foreach (var locale in AvailableLocales)
-				_dropDown.Items.Add(locale);
-			_dropDown.SelectedItem = InstalledLocales.Instance.Selected;
+			// if available locales not yet initialized, default to all allowed locales
+			if (!_availableLocalesInitialized)
+			{
+				this.AvailableLocales = new List<InstalledLocales.Locale>(InstalledLocales.Instance.AllowedLocales);
+			}
 		}
 
 		protected override Size DefaultSize
@@ -110,28 +105,32 @@ namespace ClearCanvas.Desktop.View.WinForms
 		}
 
 		/// <summary>
-		/// Gets a collection of installed locales.
+		/// Gets or sets the list of locales.
 		/// </summary>
 		[Browsable(false)]
-		public ICollection<InstalledLocales.Locale> AvailableLocales { get; private set; }
+		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+		public ICollection<InstalledLocales.Locale> AvailableLocales
+		{
+			get { return _dropDown.Items.Cast<InstalledLocales.Locale>().ToList().AsReadOnly(); }
+			set
+			{
+				var selected = _dropDown.SelectedItem;
+				_dropDown.Items.Clear();
+				if(value != null)
+				{
+					foreach (var locale in AvailableLocales)
+						_dropDown.Items.Add(locale);
+					_dropDown.SelectedItem = selected;
+					_availableLocalesInitialized = true;
+				}
+			}
+		}
 
-		/// <summary>
-		/// Gets a collection of cultures associated with <see cref="AvailableLocales"/>.
-		/// </summary>
-		[Browsable(false)]
-		public ICollection<CultureInfo> AvailableCultures { get; private set; }
-
-		/// <summary>
-		/// Gets the default locale.
-		/// </summary>
-		[Browsable(false)]
-		public InstalledLocales.Locale DefaultLocale { get; private set; }
-
-		/// <summary>
-		/// Gets the culture associated with <see cref="DefaultLocale"/>.
-		/// </summary>
-		[Browsable(false)]
-		public CultureInfo DefaultCulture { get; private set; }
+		// design-time support
+		private bool ShouldSerializeAvailableLocales()
+		{
+			return false;
+		}
 
 		/// <summary>
 		/// Gets or sets the selected locale.
@@ -139,18 +138,29 @@ namespace ClearCanvas.Desktop.View.WinForms
 		[Browsable(false)]
 		public InstalledLocales.Locale SelectedLocale
 		{
-			get { return (InstalledLocales.Locale) _dropDown.SelectedItem; }
+			get { return (InstalledLocales.Locale)_dropDown.SelectedItem; }
 			set
 			{
-				if ((InstalledLocales.Locale) _dropDown.SelectedItem != value)
+				if ((InstalledLocales.Locale)_dropDown.SelectedItem != value)
 					_dropDown.SelectedItem = value;
 			}
 		}
 
+		// design-time support
 		private bool ShouldSerializeSelectedLocale()
 		{
 			return false;
 		}
+
+		/// <summary>
+		/// Gets a collection of cultures associated with <see cref="AvailableLocales"/>.
+		/// </summary>
+		[Browsable(false)]
+		public ICollection<CultureInfo> AvailableCultures
+		{
+			get { return AvailableLocales.Select(x => x.GetCultureInfo()).ToList().AsReadOnly(); }
+		}
+
 
 		/// <summary>
 		/// Gets or sets the culture associated with <see cref="SelectedLocale"/>.
@@ -170,6 +180,7 @@ namespace ClearCanvas.Desktop.View.WinForms
 			}
 		}
 
+		// design-time support
 		private bool ShouldSerializeSelectedCulture()
 		{
 			return false;
