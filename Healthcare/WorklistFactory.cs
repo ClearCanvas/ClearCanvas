@@ -52,7 +52,7 @@ namespace ClearCanvas.Healthcare
 
 		private WorklistFactory()
 		{
-			_worklistClasses = CollectionUtils.Map(new WorklistExtensionPoint().ListExtensions(), (ExtensionInfo info) => info.ExtensionClass);
+			_worklistClasses = CollectionUtils.Map(new WorklistExtensionPoint().ListExtensions(), (ExtensionInfo info) => info.ExtensionClass.Resolve());
 		}
 
 		/// <summary>

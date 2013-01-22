@@ -48,7 +48,7 @@ namespace ClearCanvas.Enterprise.Hibernate.Ddl
 			_mapClassToEnum = new Dictionary<Type, Type>();
 			foreach (PluginInfo plugin in Platform.PluginManager.Plugins)
 			{
-				foreach (Type type in plugin.Assembly.GetTypes())
+				foreach (Type type in plugin.Assembly.Resolve().GetTypes())
 				{
 					if (type.IsEnum)
 					{
