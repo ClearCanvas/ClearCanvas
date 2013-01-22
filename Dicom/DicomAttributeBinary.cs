@@ -48,6 +48,17 @@ namespace ClearCanvas.Dicom
 
 		internal abstract override DicomAttribute Copy(bool copyBinary);
 
+		/// <summary>
+		/// Creates a <see cref="Stream"/> which maps to a view of this <see cref="DicomAttributeBinary"/>, and can be used to read or write to the underlying data.
+		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Each view <see cref="Stream"/> created by this method keeps track of position independently of all other views, although the byte stream is ultimately the same.
+		/// In other words, modifying one view will cause those changes to appear in other views, but each view is still guaranteed that the <see cref="Stream.Position"/>
+		/// will maintain the appropriate state regardless of external changes.
+		/// </para>
+		/// </remarks>
+		/// <returns>A new instance of a <see cref="Stream"/> which maps to a view of this <see cref="DicomAttributeBinary"/>.</returns>
 		public abstract Stream AsStream();
 	}
 

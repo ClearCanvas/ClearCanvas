@@ -115,16 +115,16 @@ namespace ClearCanvas.Dicom
 			var frameSize = UncompressedFrameSize;
 			var frameCount = NumberOfFrames;
 			var padding = ((frameCount*frameSize) & 1) == 1 ? 1 : 0;
-			var pixelData = new byte[frameCount*frameSize + padding];
 
-			var frame = 0;
-			foreach (var frameData in _fd)
+			using (var stream = ((DicomAttributeBinary) _pd).AsStream())
 			{
-				frameData.GetFrame(pixelData, frame*frameSize);
-				++frame;
+				stream.Position = 0;
+				foreach (var frameData in _fd)
+				{
+					stream.Write(frameData.GetFrame(), 0, frameSize);
+				}
+				stream.SetLength(frameCount*frameSize + padding);
 			}
-
-			_pd.Values = pixelData;
 		}
 
 		internal byte[] GetData()
@@ -467,6 +467,49 @@ namespace ClearCanvas.Dicom
 
 		#region Unused Bit Masking
 
+		internal static bool ZeroUnusedBits(Stream stream, int bitsAllocated, int bitsStored, int highBit)
+		{
+			return ZeroUnusedBits(stream, bitsAllocated, bitsStored, highBit, ByteBuffer.LocalMachineEndian);
+		}
+
+		internal static unsafe bool ZeroUnusedBits(Stream stream, int bitsAllocated, int bitsStored, int highBit, Endian endian)
+		{
+			if (bitsAllocated != 8 && bitsAllocated != 16)
+				throw new ArgumentException(String.Format("Invalid value for Bits Allocated ({0})", bitsAllocated));
+
+			stream.Position = 0;
+
+			var buffer = new byte[4096];
+			var anyChanged = false;
+			int bytesRead;
+
+			if (bitsAllocated == 8)
+			{
+				while ((bytesRead = stream.Read(buffer, 0, 4096)) > 0)
+				{
+					var result = ZeroUnusedBits(buffer, bitsStored, highBit);
+					stream.Seek(-bytesRead, SeekOrigin.Current);
+					stream.Write(buffer, 0, bytesRead);
+					if (!anyChanged && result)
+						anyChanged = true;
+				}
+			}
+			else
+			{
+				while ((bytesRead = stream.Read(buffer, 0, 4096)) > 0)
+				{
+					bool result;
+					fixed (byte* p = buffer)
+						result = ZeroUnusedBits((ushort*) p, bitsStored, highBit, buffer.Length/2, endian);
+					stream.Seek(-bytesRead, SeekOrigin.Current);
+					stream.Write(buffer, 0, bytesRead);
+					if (!anyChanged && result)
+						anyChanged = true;
+				}
+			}
+			return anyChanged;
+		}
+
 		/// <summary>
 		/// Masks
 		/// </summary>
@@ -593,6 +636,49 @@ namespace ClearCanvas.Dicom
 		#endregion
 
 		#region Right Align Pixel Data
+
+		internal static bool RightAlign(Stream stream, int bitsAllocated, int bitsStored, int highBit)
+		{
+			return RightAlign(stream, bitsAllocated, bitsStored, highBit, ByteBuffer.LocalMachineEndian);
+		}
+
+		internal static unsafe bool RightAlign(Stream stream, int bitsAllocated, int bitsStored, int highBit, Endian endian)
+		{
+			if (bitsAllocated != 8 && bitsAllocated != 16)
+				throw new ArgumentException(String.Format("Invalid value for Bits Allocated ({0})", bitsAllocated));
+
+			stream.Position = 0;
+
+			var buffer = new byte[4096];
+			var anyChanged = false;
+			int bytesRead;
+
+			if (bitsAllocated == 8)
+			{
+				while ((bytesRead = stream.Read(buffer, 0, 4096)) > 0)
+				{
+					var result = RightAlign(buffer, bitsStored, highBit);
+					stream.Seek(-bytesRead, SeekOrigin.Current);
+					stream.Write(buffer, 0, bytesRead);
+					if (!anyChanged && result)
+						anyChanged = true;
+				}
+			}
+			else
+			{
+				while ((bytesRead = stream.Read(buffer, 0, 4096)) > 0)
+				{
+					bool result;
+					fixed (byte* p = buffer)
+						result = RightAlign((ushort*) p, bitsStored, highBit, buffer.Length/2, endian);
+					stream.Seek(-bytesRead, SeekOrigin.Current);
+					stream.Write(buffer, 0, bytesRead);
+					if (!anyChanged && result)
+						anyChanged = true;
+				}
+			}
+			return anyChanged;
+		}
 
 		public static bool RightAlign(byte[] pixelData, int bitsAllocated, int bitsStored, int highBit)
 		{
