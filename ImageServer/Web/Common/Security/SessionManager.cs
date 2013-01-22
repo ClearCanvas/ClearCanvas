@@ -101,8 +101,8 @@ namespace ClearCanvas.ImageServer.Web.Common.Security
                 SessionToken token = session.Credentials.SessionToken;
                 string[] authorities = session.Credentials.Authorities;                
 
-                String data = String.Format("{0}|{1}|{2}", token.Id, displayName, 
-                    StringUtilities.Combine(session.User.WarningMessages,"@"));
+                String data = String.Format("{0}|{1}|{2}|{3}", token.Id, displayName, 
+                    StringUtilities.Combine(session.User.WarningMessages,"@"), session.User.WarningsDisplayed);
 
                 // the expiry time is determined by the authentication service
                 DateTime expiryTime = token.ExpiryTime; 
@@ -244,9 +244,6 @@ namespace ClearCanvas.ImageServer.Web.Common.Security
                                              session.Credentials.DisplayName));
                 ServerPlatform.LogAuditMessage(audit);
             }
-            
-
-        
         }
 
 
