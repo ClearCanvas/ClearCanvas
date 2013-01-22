@@ -1,6 +1,16 @@
-﻿using System;
+﻿#region License
+
+// Copyright (c) 2011, ClearCanvas Inc.
+// All rights reserved.
+// http://www.clearcanvas.ca
+//
+// This software is licensed under the Open Software License v3.0.
+// For the complete license, see http://www.clearcanvas.ca/OSLv3.0
+
+#endregion
+
+using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Runtime.Serialization.Formatters.Binary;
@@ -25,11 +35,6 @@ namespace ClearCanvas.Common
 
 		public static List<PluginInfo> Read(string file, Func<string, Assembly> assemblyResolver)
 		{
-			var sw = new Stopwatch();
-
-			Platform.Log(LogLevel.Info, "PluginInfoCache.Read:BEGIN {0}", sw.ElapsedMilliseconds);
-			sw.Start();
-
 			// Attempt to open the file for write access, and *non-exclusively*...
 			// This is important because other app domains, or other processes, may need to read the file at the same time.
 			// If we can't get access to the file (e.g. another process is writing to it), an exception will be thrown and this method will fail.
@@ -45,8 +50,6 @@ namespace ClearCanvas.Common
 				{
 					plugin.Assembly.SetResolver(assemblyResolver);
 				}
-
-				Platform.Log(LogLevel.Info, "PluginInfoCache.Read:END {0}", sw.ElapsedMilliseconds);
 				return plugins;
 			}
 		}

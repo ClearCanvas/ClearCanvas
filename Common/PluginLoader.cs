@@ -1,4 +1,15 @@
-﻿using System;
+﻿#region License
+
+// Copyright (c) 2011, ClearCanvas Inc.
+// All rights reserved.
+// http://www.clearcanvas.ca
+//
+// This software is licensed under the Open Software License v3.0.
+// For the complete license, see http://www.clearcanvas.ca/OSLv3.0
+
+#endregion
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -7,19 +18,20 @@ using ClearCanvas.Common.Utilities;
 
 namespace ClearCanvas.Common
 {
+	/// <summary>
+	/// Encapsulates logic for loading plugins from disk.
+	/// </summary>
 	internal class PluginLoader
 	{
 		class PluginFile
 		{
-			public PluginFile(string pluginName, FileInfo fileInfo, PluginAttribute pluginAttribute, Assembly assembly)
+			public PluginFile(FileInfo fileInfo, PluginAttribute pluginAttribute, Assembly assembly)
 			{
-				PluginName = pluginName;
 				FileInfo = fileInfo;
 				PluginAttribute = pluginAttribute;
 				Assembly = assembly;
 			}
 
-			public readonly string PluginName; //todo: this is weird
 			public readonly FileInfo FileInfo;
 			public readonly PluginAttribute PluginAttribute;
 			public readonly Assembly Assembly;
@@ -28,16 +40,16 @@ namespace ClearCanvas.Common
 		private static readonly string _metadataCacheFileName = string.Format("{0}\\pxpxcache", Platform.ApplicationDataDirectory);
 		private readonly string _pluginDir;
 
-		public PluginLoader(string pluginDir)
+		internal PluginLoader(string pluginDir)
 		{
 			_pluginDir = pluginDir;
 		}
 
-		public event EventHandler<PluginLoadedEventArgs> PluginProgressEvent;
+		public event EventHandler<PluginProcessedEventArgs> PluginProcessed;
 
 		public List<PluginInfo> LoadPlugins()
 		{
-			EventsHelper.Fire(PluginProgressEvent, this, new PluginLoadedEventArgs(SR.MessageFindingPlugins, null));
+			EventsHelper.Fire(PluginProcessed, this, new PluginProcessedEventArgs(SR.MessageFindingPlugins, null));
 
 			var pluginFiles = LoadPluginFiles();
 			List<PluginInfo> pluginInfos;
@@ -59,8 +71,8 @@ namespace ClearCanvas.Common
 				if (LoadPlugin(path, out file))
 				{
 					plugins.Add(file);
-					var e = new PluginLoadedEventArgs(string.Format(SR.FormatLoadedPlugin, file.PluginName), file.Assembly);
-					EventsHelper.Fire(PluginProgressEvent, this, e);
+					var e = new PluginProcessedEventArgs(string.Format(SR.FormatLoadedPlugin, file.FileInfo.Name), file.Assembly);
+					EventsHelper.Fire(PluginProcessed, this, e);
 				}
 			}, true);
 
@@ -82,9 +94,7 @@ namespace ClearCanvas.Common
 					// not a big deal, it just means the cache isn't accessible right now
 					// (maybe another app domain or process is writing to it?)
 					// and we need to build meta-data from the binaries
-					// 
-					//todo loc
-					Platform.Log(LogLevel.Debug, "Failed to read metadata cache.");
+					Platform.Log(LogLevel.Debug, "Failed to read plugin metadata cache.");
 				}
 			}
 			pluginInfos = null;
@@ -114,8 +124,8 @@ namespace ClearCanvas.Common
 			var results = new List<PluginInfo>();
 			foreach (var p in pluginFiles)
 			{
-				var e = new PluginLoadedEventArgs(string.Format(SR.FormatProcessingPlugin, p.PluginName), p.Assembly);
-				EventsHelper.Fire(PluginProgressEvent, this, e);
+				var e = new PluginProcessedEventArgs(string.Format(SR.FormatProcessingPlugin, p.FileInfo.Name), p.Assembly);
+				EventsHelper.Fire(PluginProcessed, this, e);
 
 				// the metadata is built in the PluginInfo constructor
 				var pi = new PluginInfo(p.Assembly, p.PluginAttribute.Name, p.PluginAttribute.Description, p.PluginAttribute.Icon);
@@ -134,14 +144,12 @@ namespace ClearCanvas.Common
 			catch (Exception)
 			{
 				// not a big deal, it just means the cache won't be updated this time around
-				//todo loc
-				Platform.Log(LogLevel.Debug, "Failed to write metadata cache.");
+				Platform.Log(LogLevel.Debug, "Failed to write plugin metadata cache.");
 			}
 		}
 
 		private static bool LoadPlugin(string path, out PluginFile pluginFile)
 		{
-			var pluginName = Path.GetFileName(path);
 			try
 			{
 				// load assembly
@@ -151,7 +159,7 @@ namespace ClearCanvas.Common
 				var pluginAttr = (PluginAttribute)asm.GetCustomAttributes(typeof(PluginAttribute), false).FirstOrDefault();
 				if (pluginAttr != null)
 				{
-					pluginFile = new PluginFile(pluginName, new FileInfo(path), pluginAttr, asm);
+					pluginFile = new PluginFile(new FileInfo(path), pluginAttr, asm);
 					return true;
 				}
 			}
@@ -163,7 +171,7 @@ namespace ClearCanvas.Common
 			catch (ReflectionTypeLoadException e)
 			{
 				// this exception usually means one of the dependencies is missing
-				Platform.Log(LogLevel.Error, SR.LogFailedToProcessPluginAssembly, pluginName);
+				Platform.Log(LogLevel.Error, SR.LogFailedToProcessPluginAssembly, Path.GetFileName(path));
 
 				// log a detail message for each missing dependency
 				foreach (var loaderException in e.LoaderExceptions)

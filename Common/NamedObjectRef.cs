@@ -1,4 +1,15 @@
-﻿using System;
+﻿#region License
+
+// Copyright (c) 2011, ClearCanvas Inc.
+// All rights reserved.
+// http://www.clearcanvas.ca
+//
+// This software is licensed under the Open Software License v3.0.
+// For the complete license, see http://www.clearcanvas.ca/OSLv3.0
+
+#endregion
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -6,6 +17,10 @@ using System.Runtime.Serialization;
 
 namespace ClearCanvas.Common
 {
+	/// <summary>
+	/// Base class for <see cref="TypeRef"/> and <see cref="AssemblyRef"/>.
+	/// </summary>
+	/// <typeparam name="T"></typeparam>
 	[Serializable]
 	public abstract class NamedObjectRef<T>: ISerializable
 		where T: class
@@ -40,6 +55,10 @@ namespace ClearCanvas.Common
 			info.AddValue("name", _name, typeof(string));
 		}
 
+		/// <summary>
+		/// Resolve the reference and returns the referenced object.
+		/// </summary>
+		/// <returns></returns>
 		public T Resolve()
 		{
 			if (_obj != null)
@@ -87,6 +106,9 @@ namespace ClearCanvas.Common
 		protected abstract T ResolveObject(string name);
 	}
 
+	/// <summary>
+	/// Represents a reference to a .NET type.
+	/// </summary>
 	[Serializable]
 	public sealed class TypeRef : NamedObjectRef<Type>, IEquatable<TypeRef>
 	{
@@ -107,11 +129,17 @@ namespace ClearCanvas.Common
 		{
 		}
 
+		/// <summary>
+		/// Gets the full name of the referenced type.
+		/// </summary>
 		public string FullName
 		{
 			get { return _typeFullName ?? (_typeFullName = this.Name.Split(',').First()); }
 		}
 
+		/// <summary>
+		/// Converts a <see cref="Type"/> to a <see cref="TypeRef"/>.
+		/// </summary>
 		public static implicit operator TypeRef(Type type)
 		{
 			return new TypeRef(type);

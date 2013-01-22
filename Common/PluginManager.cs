@@ -24,7 +24,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using ClearCanvas.Common.Utilities;
@@ -103,20 +102,20 @@ namespace ClearCanvas.Common
 		/// <summary>
 		/// Occurs when a plugin is loaded.
 		/// </summary>
-		public event EventHandler<PluginLoadedEventArgs> PluginLoaded
+		public event EventHandler<PluginProcessedEventArgs> PluginProcessed
 		{
 			add
 			{
 				lock (_syncLock)
 				{
-					_loader.PluginProgressEvent += value;
+					_loader.PluginProcessed += value;
 				}
 			}
 			remove
 			{
 				lock (_syncLock)
 				{
-					_loader.PluginProgressEvent -= value;
+					_loader.PluginProcessed -= value;
 				}
 			}
 		}
@@ -160,14 +159,7 @@ namespace ClearCanvas.Common
 			if (!Directory.Exists(_pluginDir))
 				throw new PluginException(SR.ExceptionPluginDirectoryNotFound);
 
-			var sw = new Stopwatch();
-			sw.Start();
-
-			Platform.Log(LogLevel.Info, "LoadPlugins:BEGIN {0}", sw.ElapsedMilliseconds);
-
 			_plugins.AddRange(_loader.LoadPlugins());
-
-			Platform.Log(LogLevel.Info, "LoadPlugins:Loader {0}", sw.ElapsedMilliseconds);
 
 			// If no plugins were loaded, nothing else to do
 			if (_plugins.Count == 0)
@@ -176,16 +168,13 @@ namespace ClearCanvas.Common
 			// compile lists of all extension points and extensions
 			var extensions = new List<ExtensionInfo>(_plugins.SelectMany(p => p.Extensions));
 			var points = new List<ExtensionPointInfo>(_plugins.SelectMany(p => p.ExtensionPoints));
-			Platform.Log(LogLevel.Info, "LoadPlugins:SelectMany {0}", sw.ElapsedMilliseconds);
 
 			// hack: add points and extensions from ClearCanvas.Common, which isn't technically a plugin
 			PluginInfo.DiscoverExtensionPointsAndExtensions(GetType().Assembly, points, extensions);
-			Platform.Log(LogLevel.Info, "LoadPlugins:Discover {0}", sw.ElapsedMilliseconds);
 
 			// #742: order the extensions according to the XML configuration
 			List<ExtensionInfo> ordered, remainder;
 			ExtensionSettings.Default.OrderExtensions(extensions, out ordered, out remainder);
-			Platform.Log(LogLevel.Info, "LoadPlugins:Order {0}", sw.ElapsedMilliseconds);
 
 			// create global extension list, with the ordered set appearing first
 			_extensions.AddRange(CollectionUtils.Concat<ExtensionInfo>(ordered, remainder));
@@ -194,7 +183,6 @@ namespace ClearCanvas.Common
 			_extensionPoints.AddRange(points);
 
 			_pluginsLoaded = true;
-			Platform.Log(LogLevel.Info, "LoadPlugins:END {0}", sw.ElapsedMilliseconds);
 		}
 
 
