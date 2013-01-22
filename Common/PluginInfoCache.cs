@@ -16,6 +16,8 @@ namespace ClearCanvas.Common
 			// This is by design.
 			using (var fs = new FileStream(file, FileMode.Create, FileAccess.Write, FileShare.None))
 			{
+				// note: we could have done some custom serialization here, but BinaryFormatter
+				// is easy and actually performs well enough for our purposes
 				var formatter = new BinaryFormatter();
 				formatter.Serialize(fs, plugins);
 			}
@@ -34,6 +36,8 @@ namespace ClearCanvas.Common
 			// This is by design.
 			using (var fs = new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.Read))
 			{
+				// note: we could have done some custom serialization here, but BinaryFormatter
+				// is easy and actually performs well enough for our purposes
 				var formatter = new BinaryFormatter();
 				var plugins = (List<PluginInfo>)formatter.Deserialize(fs);
 

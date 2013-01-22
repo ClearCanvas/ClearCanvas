@@ -25,7 +25,7 @@ namespace ClearCanvas.Common
 			public readonly Assembly Assembly;
 		}
 
-		private static readonly string _metadataCacheFileName = string.Format("{0}\\pyx.cache", Platform.ApplicationDataDirectory);
+		private static readonly string _metadataCacheFileName = string.Format("{0}\\pxpxcache", Platform.ApplicationDataDirectory);
 		private readonly string _pluginDir;
 
 		public PluginLoader(string pluginDir)
@@ -41,7 +41,7 @@ namespace ClearCanvas.Common
 
 			var pluginFiles = LoadPluginFiles();
 			List<PluginInfo> pluginInfos;
-			if (!LoadCachedMetadata(pluginFiles, out pluginInfos))
+			if (!TryLoadCachedMetadata(pluginFiles, out pluginInfos))
 			{
 				pluginInfos = BuildMetadata(pluginFiles);
 				SaveCachedMetadata(pluginInfos);
@@ -67,12 +67,9 @@ namespace ClearCanvas.Common
 			return plugins;
 		}
 
-		private static bool LoadCachedMetadata(List<PluginFile> pluginFiles, out List<PluginInfo> pluginInfos)
+		private static bool TryLoadCachedMetadata(List<PluginFile> pluginFiles, out List<PluginInfo> pluginInfos)
 		{
-			// see if a cache file exists, and has not expired
-			// (it is expired if it is older than any plugin file's last write time)
-			var cacheFile = new FileInfo(_metadataCacheFileName);
-			if (cacheFile.Exists && pluginFiles.All(p => p.FileInfo.LastWriteTime < cacheFile.LastWriteTime))
+			if (IsCachedMetadataValid(pluginFiles))
 			{
 				try
 				{
@@ -92,6 +89,24 @@ namespace ClearCanvas.Common
 			}
 			pluginInfos = null;
 			return false;
+		}
+
+		private static bool IsCachedMetadataValid(IEnumerable<PluginFile> pluginFiles)
+		{
+			var cacheFile = new FileInfo(_metadataCacheFileName);
+			if (!cacheFile.Exists)
+				return false;
+
+			// cache must be newer than last write time of any config file
+			var configFiles = Directory.GetFiles(Platform.InstallDirectory, "*.config", SearchOption.TopDirectoryOnly);
+			if (!configFiles.All(cf => File.GetLastWriteTime(cf) < cacheFile.LastWriteTime))
+				return false;
+
+			// cache must be newer than last write time of any plugin file
+			if (!pluginFiles.All(p => p.FileInfo.LastWriteTime < cacheFile.LastWriteTime))
+				return false;
+
+			return true;
 		}
 
 		private List<PluginInfo> BuildMetadata(IEnumerable<PluginFile> pluginFiles)
