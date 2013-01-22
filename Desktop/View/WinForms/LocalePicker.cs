@@ -74,6 +74,7 @@ namespace ClearCanvas.Desktop.View.WinForms
 			if (!_availableLocalesInitialized)
 			{
 				this.AvailableLocales = new List<InstalledLocales.Locale>(InstalledLocales.Instance.AllowedLocales);
+				this.SelectedLocale = InstalledLocales.Instance.Selected;
 			}
 		}
 
@@ -118,7 +119,7 @@ namespace ClearCanvas.Desktop.View.WinForms
 				_dropDown.Items.Clear();
 				if(value != null)
 				{
-					foreach (var locale in AvailableLocales)
+					foreach (var locale in value)
 						_dropDown.Items.Add(locale);
 					_dropDown.SelectedItem = selected;
 					_availableLocalesInitialized = true;
