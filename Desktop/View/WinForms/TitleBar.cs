@@ -22,6 +22,18 @@
 
 #endregion
 
+#region Additional permission to link with DotNetMagic
+
+// Additional permission under GNU GPL version 3 section 7
+// 
+// If you modify this Program, or any covered work, by linking or combining it
+// with DotNetMagic (or a modified version of that library), containing parts
+// covered by the terms of the Crownwood Software DotNetMagic license, the
+// licensors of this Program grant you additional permission to convey the
+// resulting work.
+
+#endregion
+
 using System;
 using System.ComponentModel;
 using System.Drawing;
