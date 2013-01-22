@@ -70,9 +70,6 @@ namespace ClearCanvas.Desktop
 						Platform.Log(LogLevel.Debug, ex, "Unexpected error reading {0}", typeof (LocaleSettings));
 					}
 					_instance = _instance ?? new InstalledLocales();
-					_instance._installedLocales.Add(new Locale("en", "English"));
-					_instance._installedLocales.Add(new Locale("fr", "French"));
-					_instance._installedLocales.Add(new Locale("es", "Spanish"));
 				}
 				return _instance;
 			}
