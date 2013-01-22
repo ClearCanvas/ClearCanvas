@@ -88,6 +88,14 @@ include their own LICENSE files, and are released under different
 licences.
 
 
+
+DOTNETMAGIC
+Copyright (C) 2004-2006 Crownwood Software Ltd.
+
+Binary-only distribution under Crownwood license terms (see "Licenses" folder).
+
+
+
 FLOAT COMPARER
 Released into the public domain by Shawn Van Ness
 
@@ -219,6 +227,7 @@ JQUERY MULTI-SELECT PLUGIN
 This plugin is dual-licensed under the GNU General Public License and the MIT License and is copyright 2008 A Beautiful Site, LLC. 
 	
 
+	
 JSON.NET
 Copyright (c) 2007 James Newton-King
 
@@ -512,6 +521,13 @@ exception statement from your version.
 
 STRINGDIFF ALGORITHM
 Copyright (C) 1984 by Lloyd Allison, used by permission.
+
+
+
+SQL SERVER COMPACT EDITION
+Copyright (c) 2012 Microsoft Corp.
+
+Binary-only distribution under Microsoft license terms (see "Licenses" folder).
 
 
 
