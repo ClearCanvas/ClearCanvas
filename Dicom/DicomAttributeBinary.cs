@@ -273,7 +273,8 @@ namespace ClearCanvas.Dicom
 		public override Stream AsStream()
 		{
 			var data = Data;
-			return data != null ? data.AsStream() : null;
+			if (data == null) Data = data = new DicomAttributeBinaryData<T>();
+			return data.AsStream();
 		}
 
 		internal override ByteBuffer GetByteBuffer(TransferSyntax syntax, String specificCharacterSet)

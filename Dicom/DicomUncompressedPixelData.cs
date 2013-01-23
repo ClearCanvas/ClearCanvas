@@ -40,7 +40,7 @@ namespace ClearCanvas.Dicom
 	{
 		#region Private Members
 
-		private List<FrameData> _fd = new List<FrameData>();
+		private readonly List<FrameData> _fd = new List<FrameData>();
 		private DicomAttribute _pd;
 
 		#endregion
