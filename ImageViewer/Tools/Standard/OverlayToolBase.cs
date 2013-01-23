@@ -32,7 +32,8 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 {
 	public abstract class OverlayToolBase : Tool<IImageViewerToolContext>
 	{
-		[ThreadStatic]
+        //TODO (Phoenix5): #10730 - remove this when it's fixed.
+        [ThreadStatic]
 		private static IList<OverlayToolBase> _toolRegistry = new List<OverlayToolBase>();
 		private event EventHandler _checkedChanged;
 		private bool _checked;

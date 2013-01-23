@@ -41,16 +41,14 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 		public const string MenuSite = "keyimageclipboard-contextmenu";
 		public const string ToolbarSite = "keyimageclipboard-toolbar";
 
-		private static readonly Dictionary<IImageViewer, KeyImageInformation> _keyImageInformation;
-		private static readonly Dictionary<IDesktopWindow, IShelf> _clipboardShelves;
+        //TODO (Phoenix5): #10730 - remove this when it's fixed.
+        [ThreadStatic] private static Dictionary<IImageViewer, KeyImageInformation> _keyImageInformation;
+        [ThreadStatic] private static Dictionary<IDesktopWindow, IShelf> _clipboardShelves;
 
 		private static IWorkItemActivityMonitor _activityMonitor;
 
 		static KeyImageClipboard()
 		{
-			_keyImageInformation = new Dictionary<IImageViewer, KeyImageInformation>();
-			_clipboardShelves = new Dictionary<IDesktopWindow, IShelf>();
-
 		    try
 		    {
                 HasViewPlugin = ViewFactory.CreateAssociatedView(typeof(KeyImageClipboardComponent)) != null;
@@ -61,7 +59,23 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 		    }
 		}
 
-		#region Event Handling
+	    private static Dictionary<IImageViewer, KeyImageInformation> KeyImageInformation
+	    {
+            get
+            {
+                return _keyImageInformation ?? (_keyImageInformation = new Dictionary<IImageViewer, KeyImageInformation>());
+            }
+	    }
+
+        private static Dictionary<IDesktopWindow, IShelf> ClipboardShelves
+        {
+            get
+            {
+                return _clipboardShelves ?? (_clipboardShelves = new Dictionary<IDesktopWindow, IShelf>());
+            }
+        }
+
+	    #region Event Handling
 
 		private static void OnWorkspaceActivated(object sender, ItemEventArgs<Workspace> e)
 		{
@@ -81,11 +95,11 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 			IShelf clipboardShelf = (IShelf) sender;
 			clipboardShelf.Closed -= OnClipboardShelfClosed;
 
-			foreach (KeyValuePair<IDesktopWindow, IShelf> pair in _clipboardShelves)
+			foreach (KeyValuePair<IDesktopWindow, IShelf> pair in ClipboardShelves)
 			{
 				if (pair.Value == clipboardShelf)
 				{
-					_clipboardShelves.Remove(pair.Key);
+                    ClipboardShelves.Remove(pair.Key);
 					break;
 				}
 			}
@@ -97,15 +111,15 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 
 		private static IShelf GetClipboardShelf(IDesktopWindow desktopWindow)
 		{
-			if (_clipboardShelves.ContainsKey(desktopWindow))
-				return _clipboardShelves[desktopWindow];
+            if (ClipboardShelves.ContainsKey(desktopWindow))
+                return ClipboardShelves[desktopWindow];
 			else 
 				return null;
 		}
 
 		private static void ManageActivityMonitorConnection()
 		{
-            if (_keyImageInformation.Count == 0 && _activityMonitor != null)
+            if (KeyImageInformation.Count == 0 && _activityMonitor != null)
 			{
 				try
 				{
@@ -121,7 +135,7 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
                     _activityMonitor = null;
 				}
 			}
-            else if (_keyImageInformation.Count > 0 && _activityMonitor == null && WorkItemActivityMonitor.IsSupported)
+            else if (KeyImageInformation.Count > 0 && _activityMonitor == null && WorkItemActivityMonitor.IsSupported)
 			{
 				try
 				{
@@ -158,7 +172,7 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 				throw new PolicyException(SR.ExceptionViewKeyImagePermissionDenied);
 
 			if (viewer != null)
-				return _keyImageInformation[viewer];
+                return KeyImageInformation[viewer];
 			else
 				return null;
 		}
@@ -186,19 +200,19 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 		internal static void OnDesktopWindowOpened(IDesktopWindow desktopWindow)
 		{
 			desktopWindow.Workspaces.ItemActivationChanged += OnWorkspaceActivated;
-			_clipboardShelves[desktopWindow] = null;
+            ClipboardShelves[desktopWindow] = null;
 		}
 
 		internal static void OnDesktopWindowClosed(IDesktopWindow desktopWindow)
 		{
 			desktopWindow.Workspaces.ItemActivationChanged -= OnWorkspaceActivated;
-			_clipboardShelves.Remove(desktopWindow);
+            ClipboardShelves.Remove(desktopWindow);
 		}
 
 		internal static void OnViewerOpened(IImageViewer viewer)
 		{
-			if (!_keyImageInformation.ContainsKey(viewer))
-				_keyImageInformation[viewer] = new KeyImageInformation();
+            if (!KeyImageInformation.ContainsKey(viewer))
+                KeyImageInformation[viewer] = new KeyImageInformation();
 
 			ManageActivityMonitorConnection();
 		}
@@ -206,7 +220,7 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 		internal static void OnViewerClosed(IImageViewer viewer)
 		{
 			KeyImageInformation info = GetKeyImageInformation(viewer);
-			_keyImageInformation.Remove(viewer);
+            KeyImageInformation.Remove(viewer);
 
 			if (info != null)
 			{				
@@ -282,7 +296,7 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 				shelf = ApplicationComponent.LaunchAsShelf(desktopWindow, component, SR.TitleKeyImages, displayHint);
 				shelf.Closed += OnClipboardShelfClosed;
 
-				_clipboardShelves[desktopWindow] = shelf;
+                ClipboardShelves[desktopWindow] = shelf;
 			}
 		}
 

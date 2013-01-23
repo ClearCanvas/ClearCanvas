@@ -49,7 +49,8 @@ namespace ClearCanvas.Desktop.Validation
 	/// </remarks>
 	public class ValidationCache
 	{
-		[ThreadStatic]
+        //TODO (Phoenix5): #10730 - remove this when it's fixed.
+        [ThreadStatic]
 		private static ValidationCache _instance;
 
 		/// <summary>

@@ -45,22 +45,19 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
 	[ExtensionOf(typeof(ImageViewerToolExtensionPoint))]
 	public class ExplodeImageBoxTool : MouseImageViewerTool
 	{
-		[ThreadStatic]
-		private static Dictionary<IImageViewer, ExplodeImageBoxTool> _tools;
+	    private class ExtensionDataProxy
+	    {
+	        public ExtensionDataProxy(ExplodeImageBoxTool tool)
+            {
+                Tool = tool;
+            }
 
-		private ListObserver<IImageBox> _imageBoxesObserver;
+            public ExplodeImageBoxTool Tool { get; private set; }
+        }
+
+	    private ListObserver<IImageBox> _imageBoxesObserver;
 		private object _unexplodeMemento;
 		private IImageBox _oldImageBox;
-
-		private static Dictionary<IImageViewer, ExplodeImageBoxTool> Tools
-		{
-			get
-			{
-				if (_tools == null)
-					_tools = new Dictionary<IImageViewer, ExplodeImageBoxTool>();
-				return _tools;
-			}	
-		}
 
 		public ExplodeImageBoxTool()
 		{
@@ -85,7 +82,8 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
 		public override void Initialize()
 		{
 			base.Initialize();
-			Tools[ImageViewer] = this;
+            //Put a non-disposable object in so the tool doesn't get disposed 2x.
+            ImageViewer.ExtensionData[typeof(ExtensionDataProxy)] = new ExtensionDataProxy(this);
 
 			_imageBoxesObserver = new ListObserver<IImageBox>(ImageViewer.PhysicalWorkspace.ImageBoxes, OnImageBoxesChanged);
 
@@ -94,8 +92,6 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
 
 		protected override void Dispose(bool disposing)
 		{
-			Tools.Remove(ImageViewer);
-
 			_imageBoxesObserver.Dispose();
 			
 			base.Dispose(disposing);
@@ -297,10 +293,8 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
 
 		internal static bool IsExploded(IImageViewer viewer)
 		{
-			if (Tools.ContainsKey(viewer))
-				return Tools[viewer].Checked;
-
-			return false;
+            var proxy = viewer.ExtensionData[typeof(ExtensionDataProxy)] as ExtensionDataProxy;
+            return proxy != null && proxy.Tool.Checked;
 		}
 	}
 }

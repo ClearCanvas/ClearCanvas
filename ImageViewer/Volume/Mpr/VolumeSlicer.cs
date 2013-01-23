@@ -239,7 +239,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 
 		private float GetDefaultSpacing()
 		{
-			MprSettings settings = MprSettings.Default;
+            MprSettings settings = MprSettings.DefaultInstance;
 
 			Vector3D spacingVector = ActualSliceSpacingVector;
 			if (settings.AutoSliceSpacing)

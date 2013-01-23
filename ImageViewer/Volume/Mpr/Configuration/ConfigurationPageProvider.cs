@@ -56,10 +56,10 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr.Configuration
 				switch (key)
 				{
 					case "SliceSpacingFactor":
-						MprSettings.Default.SliceSpacingFactor = float.Parse(settings[key]);
+						MprSettings.DefaultInstance.SliceSpacingFactor = float.Parse(settings[key]);
 						break;
 					case "AutoSliceSpacing":
-						MprSettings.Default.AutoSliceSpacing = bool.Parse(settings[key]);
+                        MprSettings.DefaultInstance.AutoSliceSpacing = bool.Parse(settings[key]);
 						break;
 					default:
 						var message = string.Format("{0} with key={1} is not implemented", this.SettingsClassName, key);
@@ -67,7 +67,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr.Configuration
 				}
 			}
 
-			MprSettings.Default.Save();
+            MprSettings.DefaultInstance.Save();
 		}
 
 		#endregion

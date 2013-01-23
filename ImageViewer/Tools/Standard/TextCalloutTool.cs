@@ -128,7 +128,7 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 		/// </summary>
 		protected virtual void InitializeMode()
 		{
-			_settings = ToolSettings.Default;
+            _settings = ToolSettings.DefaultInstance;
 
 			try
 			{

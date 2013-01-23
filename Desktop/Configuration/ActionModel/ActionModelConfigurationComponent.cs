@@ -124,7 +124,7 @@ namespace ClearCanvas.Desktop.Configuration.ActionModel
 					actionSet = actionSet.Union(concreteDesktopWindow.DesktopTools.Actions);
 			}
 
-			_actionModel = ActionModelSettings.Default.BuildAbstractActionModel(_namespace, _site, actionSet.Select(a => a.Path.Site == site));
+			_actionModel = ActionModelSettings.DefaultInstance.BuildAbstractActionModel(_namespace, _site, actionSet.Select(a => a.Path.Site == site));
 			_actionModelTreeRoot = new AbstractActionModelTreeRoot(_site);
 
 			_enforceFlatActionModel = flatActionModel;
@@ -255,7 +255,7 @@ namespace ClearCanvas.Desktop.Configuration.ActionModel
 		public virtual void Save()
 		{
 			ActionModelRoot actionModelRoot = _actionModelTreeRoot.GetAbstractActionModel();
-			ActionModelSettings.Default.PersistAbstractActionModel(_namespace, _site, actionModelRoot);
+            ActionModelSettings.DefaultInstance.PersistAbstractActionModel(_namespace, _site, actionModelRoot);
 
 			if (_desktopWindow is DesktopWindow)
 			{

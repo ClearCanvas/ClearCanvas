@@ -259,7 +259,7 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 			base.Track(mouseInformation);
 
 			float increment = -base.DeltaY*0.025f;
-			increment *= ToolSettings.Default.InvertedZoomToolOperation ? -1f : 1f;
+            increment *= ToolSettings.DefaultInstance.InvertedZoomToolOperation ? -1f : 1f;
 			IncrementScale(increment);
 
 			return true;
@@ -307,7 +307,7 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 				return;
 
 			float increment = -0.1F * this.SelectedSpatialTransformProvider.SpatialTransform.Scale;
-			increment *= ToolSettings.Default.InvertedZoomToolOperation ? -1f : 1f;
+            increment *= ToolSettings.DefaultInstance.InvertedZoomToolOperation ? -1f : 1f;
 			IncrementScale(increment);
 		}
 
@@ -317,7 +317,7 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 				return;
 
 			float increment = 0.1F * this.SelectedSpatialTransformProvider.SpatialTransform.Scale;
-			increment *= ToolSettings.Default.InvertedZoomToolOperation ? -1f : 1f;
+            increment *= ToolSettings.DefaultInstance.InvertedZoomToolOperation ? -1f : 1f;
 			IncrementScale(increment);
 		}
 

@@ -46,7 +46,7 @@ namespace ClearCanvas.Desktop.Actions
         /// <returns>An action model tree.</returns>
         public static ActionModelRoot CreateModel(string @namespace, string site, IActionSet actions)
         {
-			return ActionModelSettings.Default.BuildAndSynchronize(@namespace, site, actions.Select(delegate(IAction action) { return action.Path.Site == site; }));
+            return ActionModelSettings.DefaultInstance.BuildAndSynchronize(@namespace, site, actions.Select(delegate(IAction action) { return action.Path.Site == site; }));
         }
 
         /// <summary>

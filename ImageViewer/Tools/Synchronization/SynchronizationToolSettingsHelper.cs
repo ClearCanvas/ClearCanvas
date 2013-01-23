@@ -31,7 +31,17 @@ namespace ClearCanvas.ImageViewer.Tools.Synchronization
 {
 	public sealed class SynchronizationToolSettingsHelper : INotifyPropertyChanged
 	{
-		public static readonly SynchronizationToolSettingsHelper Default = new SynchronizationToolSettingsHelper(SynchronizationToolSettings.Default);
+        //TODO (Phoenix5): #10730 - remove this when it's fixed.
+        [ThreadStatic]
+        private static SynchronizationToolSettingsHelper _default;
+	    
+        public static SynchronizationToolSettingsHelper Default
+	    {
+	        get
+	        {
+	            return _default ?? (_default = new SynchronizationToolSettingsHelper(SynchronizationToolSettings.DefaultInstance));
+	        }
+	    }
 
 		private event PropertyChangedEventHandler _propertyChanged;
 		private readonly SynchronizationToolSettings _settings;
