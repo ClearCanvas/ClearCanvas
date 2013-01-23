@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using ClearCanvas.Common.Utilities;
@@ -48,7 +49,7 @@ namespace ClearCanvas.Common
 		internal PluginManager(string pluginDir)
 		{
 			_pluginDir = pluginDir;
-			_loader = new PluginLoader(pluginDir);
+			_loader = new PluginLoader(pluginDir, GetMetadataCacheFileName());
 		}
 
 		#region Public API
@@ -185,6 +186,12 @@ namespace ClearCanvas.Common
 			_pluginsLoaded = true;
 		}
 
+		private static string GetMetadataCacheFileName()
+		{
+			var exePath = Process.GetCurrentProcess().MainModule.FileName;
+			var exeName = Path.GetFileNameWithoutExtension(exePath);
+			return string.Format("{0}\\{1}.pxpx", Platform.ApplicationDataDirectory, exeName);
+		}
 
 		#endregion
 	}

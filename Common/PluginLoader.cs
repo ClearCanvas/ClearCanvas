@@ -50,12 +50,13 @@ namespace ClearCanvas.Common
 			public readonly Assembly Assembly;
 		}
 
-		private static readonly string _metadataCacheFileName = string.Format("{0}\\pxpxcache", Platform.ApplicationDataDirectory);
+		private readonly string _metadataCacheFileName;
 		private readonly string _pluginDir;
 
-		internal PluginLoader(string pluginDir)
+		internal PluginLoader(string pluginDir, string metadataCacheFile)
 		{
 			_pluginDir = pluginDir;
+			_metadataCacheFileName = metadataCacheFile;
 		}
 
 		public event EventHandler<PluginProcessedEventArgs> PluginProcessed;
@@ -92,7 +93,7 @@ namespace ClearCanvas.Common
 			return plugins;
 		}
 
-		private static bool TryLoadCachedMetadata(List<PluginFile> pluginFiles, out List<PluginInfo> pluginInfos)
+		private bool TryLoadCachedMetadata(List<PluginFile> pluginFiles, out List<PluginInfo> pluginInfos)
 		{
 			if (IsCachedMetadataValid(pluginFiles))
 			{
@@ -114,7 +115,7 @@ namespace ClearCanvas.Common
 			return false;
 		}
 
-		private static bool IsCachedMetadataValid(IEnumerable<PluginFile> pluginFiles)
+		private bool IsCachedMetadataValid(IEnumerable<PluginFile> pluginFiles)
 		{
 			var cacheFile = new FileInfo(_metadataCacheFileName);
 			if (!cacheFile.Exists)
@@ -148,7 +149,7 @@ namespace ClearCanvas.Common
 		}
 
 
-		private static void SaveCachedMetadata(List<PluginInfo> pluginInfos)
+		private void SaveCachedMetadata(List<PluginInfo> pluginInfos)
 		{
 			try
 			{
