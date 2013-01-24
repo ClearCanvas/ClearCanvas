@@ -25,15 +25,60 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
+using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 
 namespace ClearCanvas.Common
 {
 	internal class PluginInfoCache
 	{
+		#region SurrogateSelector class
+
+		/// <summary>
+		/// This class supports serialization of <see cref="TypeRef"/> and <see cref="AssemblyRef"/> objects,
+		/// via their respective serialization surrogate classes.
+		/// </summary>
+		public class SurrogateSelector : ISurrogateSelector
+		{
+			public void ChainSelector(ISurrogateSelector selector)
+			{
+				throw new NotImplementedException();
+			}
+
+			public ISurrogateSelector GetNextSelector()
+			{
+				throw new NotImplementedException();
+			}
+
+			public ISerializationSurrogate GetSurrogate(Type type, StreamingContext context, out ISurrogateSelector selector)
+			{
+				if (type == typeof(TypeRef))
+				{
+					selector = this;
+					return new TypeRef.SerializationSurrogate();
+				}
+
+				if (type == typeof(AssemblyRef))
+				{
+					selector = this;
+					return new AssemblyRef.SerializationSurrogate();
+				}
+
+				selector = null;
+				return null;
+			}
+
+		}
+
+		#endregion
+
 		public static void Write(string file, List<PluginInfo> plugins)
 		{
+			// ensure the path exists, in case this is the first time we're writing out the file
+			var directory = Path.GetDirectoryName(file);
+			if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
+				Directory.CreateDirectory(directory);
+
 			// Attempt to open the file for write access, and *exclusively*...
 			// If we can't get an exclusive lock on the file, an exception will be thrown and this method will fail.
 			// This is by design.
@@ -41,14 +86,14 @@ namespace ClearCanvas.Common
 			{
 				// note: we could have done some custom serialization here, but BinaryFormatter
 				// is easy and actually performs well enough for our purposes
-				var formatter = new BinaryFormatter();
+				var formatter = new BinaryFormatter {SurrogateSelector = new SurrogateSelector()};
 				formatter.Serialize(fs, plugins);
 			}
 		}
 
-		public static List<PluginInfo> Read(string file, Func<string, Assembly> assemblyResolver)
+		public static List<PluginInfo> Read(string file)
 		{
-			// Attempt to open the file for write access, and *non-exclusively*...
+			// Attempt to open the file for read access, and *non-exclusively*...
 			// This is important because other app domains, or other processes, may need to read the file at the same time.
 			// If we can't get access to the file (e.g. another process is writing to it), an exception will be thrown and this method will fail.
 			// This is by design.
@@ -56,14 +101,8 @@ namespace ClearCanvas.Common
 			{
 				// note: we could have done some custom serialization here, but BinaryFormatter
 				// is easy and actually performs well enough for our purposes
-				var formatter = new BinaryFormatter();
-				var plugins = (List<PluginInfo>)formatter.Deserialize(fs);
-
-				foreach (var plugin in plugins)
-				{
-					plugin.Assembly.SetResolver(assemblyResolver);
-				}
-				return plugins;
+				var formatter = new BinaryFormatter {SurrogateSelector = new SurrogateSelector()};
+				return (List<PluginInfo>)formatter.Deserialize(fs);
 			}
 		}
 

@@ -33,8 +33,11 @@ namespace ClearCanvas.Common
     /// Describes a plugin, and provides properties for querying the extension points and extensions defined
     /// in the plugin.
     /// </summary>
+    /// <remarks>
+	/// Instances of this class are immutable and safe for concurrent access by multiple threads.
+	/// </remarks>
     [Serializable]
-    public class PluginInfo : IBrowsable
+    public sealed class PluginInfo : IBrowsable
     {
 		/// <summary>
 		/// Internal method used by the framework to discover extension points and extensions declared in a plugin.
@@ -95,9 +98,12 @@ namespace ClearCanvas.Common
 			}
 		}
 
-    	private static Type GetExtensionInterface(Type extensionClass)
+    	private static Type GetExtensionInterface(Type extensionPointClass)
     	{
-    		return extensionClass.BaseType.GetGenericArguments()[0];
+			if(!IsValidExtensionPointClass(extensionPointClass))
+				throw new ArgumentException("Specified type does not appear to be a valid extension point class.");
+
+			return extensionPointClass.BaseType.GetGenericArguments()[0];
     	}
 
     	private static bool IsValidExtensionPointClass(Type extensionPointClass)
@@ -123,10 +129,10 @@ namespace ClearCanvas.Common
         /// <summary>
         /// Internal constructor.
         /// </summary>
-        internal PluginInfo(Assembly assembly, string name, string description, string icon)
-			:this(new AssemblyRef(assembly), name, description, icon, new List<ExtensionPointInfo>(), new List<ExtensionInfo>())
+		internal PluginInfo(AssemblyRef assembly, string name, string description, string icon)
+			:this(assembly, name, description, icon, new List<ExtensionPointInfo>(), new List<ExtensionInfo>())
         {
-        	DiscoverExtensionPointsAndExtensions(assembly, _extensionPoints, _extensions);
+        	DiscoverExtensionPointsAndExtensions(assembly.Resolve(), _extensionPoints, _extensions);
         }
 
 		/// <summary>
@@ -201,5 +207,5 @@ namespace ClearCanvas.Common
         }
 
         #endregion
-    }
+	}
 }

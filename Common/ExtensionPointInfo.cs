@@ -25,7 +25,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using ClearCanvas.Common.Utilities;
 
 namespace ClearCanvas.Common
 {
@@ -33,11 +32,10 @@ namespace ClearCanvas.Common
     /// Describes an extension point.  
     /// </summary>
     /// <remarks>
-    /// Instances of this class are constructed by the framework when it processes
-    /// plugins looking for extension points.
-    /// </remarks>
+	/// Instances of this class are immutable and safe for concurrent access by multiple threads.
+	/// </remarks>
 	[Serializable]
-	public class ExtensionPointInfo : IBrowsable
+	public sealed class ExtensionPointInfo : IBrowsable
     {
 		private readonly TypeRef _extensionPointClass;
 		private readonly TypeRef _extensionInterface;
@@ -54,14 +52,6 @@ namespace ClearCanvas.Common
 			_name = name;
 			_description = description;
 		}
-
-		/// <summary>
-        /// Internal constructor.
-        /// </summary>
-        internal ExtensionPointInfo(Type extensionPointClass, Type extensionInterface, string name, string description)
-			:this(new TypeRef(extensionPointClass), new TypeRef(extensionInterface), name, description)
-        {
-        }
 
         /// <summary>
         /// Gets the class that defines the extension point.

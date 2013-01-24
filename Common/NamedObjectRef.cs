@@ -24,7 +24,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
 
@@ -33,13 +32,15 @@ namespace ClearCanvas.Common
 	/// <summary>
 	/// Base class for <see cref="TypeRef"/> and <see cref="AssemblyRef"/>.
 	/// </summary>
-	/// <typeparam name="T"></typeparam>
-	[Serializable]
-	public abstract class NamedObjectRef<T>: ISerializable
+	/// <typeparam name="T">The type of the referenced object.</typeparam>
+	/// <remarks>
+	/// Instances of this class are immutable and safe for concurrent access by multiple threads.
+	/// </remarks>
+	public abstract class NamedObjectRef<T>
 		where T: class
 	{
-		private static readonly Dictionary<string, T> _resolutionCache = new Dictionary<string, T>();
 		private readonly string _name;
+		private readonly object _syncObj = new object();
 		private T _obj;
 
 		protected NamedObjectRef(string name, T obj)
@@ -53,23 +54,21 @@ namespace ClearCanvas.Common
 			_name = name;
 		}
 
-		protected NamedObjectRef(SerializationInfo info, StreamingContext context)
-		{
-			_name = (string)info.GetValue("name", typeof(string));
-		}
-
 		public override string ToString()
 		{
 			return _name;
 		}
 
-		public void GetObjectData(SerializationInfo info, StreamingContext context)
+		/// <summary>
+		/// Gets a value indicating whether the referenced object has been resolved.
+		/// </summary>
+		public bool IsResolved
 		{
-			info.AddValue("name", _name, typeof(string));
+			get { return _obj != null; }
 		}
 
 		/// <summary>
-		/// Resolve the reference and returns the referenced object.
+		/// Resolves the reference and returns the referenced object.
 		/// </summary>
 		/// <returns></returns>
 		public T Resolve()
@@ -77,14 +76,9 @@ namespace ClearCanvas.Common
 			if (_obj != null)
 				return _obj;
 
-			lock (_resolutionCache)
+			lock (_syncObj)
 			{
-				if (_resolutionCache.TryGetValue(_name, out _obj))
-					return _obj;
-
-				_obj = ResolveObject(_name);
-				_resolutionCache.Add(_name, _obj);
-				return _obj;
+				return _obj ?? (_obj = ResolveObject(_name));
 			}
 		}
 
@@ -120,25 +114,94 @@ namespace ClearCanvas.Common
 	}
 
 	/// <summary>
-	/// Represents a reference to a .NET type.
+	/// Represents a reference to a <see cref="Type"/> object.
 	/// </summary>
-	[Serializable]
+	/// <remarks>
+	/// <para>
+	/// To obtain a <see cref="TypeRef"/> instance, use an overload of <see cref="TypeRef.Get"/>.
+	/// Alternatively, an existing <see cref="Type"/> object can be implicitly cast to a
+	/// <see cref="TypeRef"/> instance.
+	/// </para>
+	/// <para>
+	/// Instances of this class are immutable and safe for concurrent access by multiple threads.
+	/// </para>
+	/// </remarks>
 	public sealed class TypeRef : NamedObjectRef<Type>, IEquatable<TypeRef>
 	{
+		#region SerializationSurrogate
+
+		/// <summary>
+		/// Serialization helper class.
+		/// </summary>
+		public class SerializationSurrogate : ISerializationSurrogate
+		{
+			public void GetObjectData(object obj, SerializationInfo info, StreamingContext context)
+			{
+				var r = (TypeRef)obj;
+				info.AddValue("name", r.Name, typeof(string));
+			}
+
+			public object SetObjectData(object obj, SerializationInfo info, StreamingContext context, ISurrogateSelector selector)
+			{
+				var name = (string)info.GetValue("name", typeof(string));
+				return Get(name);
+			}
+		}
+
+		#endregion
+
+		private static readonly Dictionary<string, TypeRef> _interns = new Dictionary<string, TypeRef>(); 
+
+		/// <summary>
+		/// Gets a <see cref="TypeRef"/> corresponding to the specified type.
+		/// </summary>
+		public static TypeRef Get(string assemblyQualifiedTypeName)
+		{
+			lock(_interns)
+			{
+				TypeRef r;
+				if(!_interns.TryGetValue(assemblyQualifiedTypeName, out r))
+				{
+					_interns.Add(assemblyQualifiedTypeName, r = new TypeRef(assemblyQualifiedTypeName));
+				}
+				return r;
+			}
+		}
+
+		/// <summary>
+		/// Gets a <see cref="TypeRef"/> corresponding to the specified type.
+		/// </summary>
+		public static TypeRef Get(Type type)
+		{
+			var name = GetAssemblyQualifiedName(type);
+			lock (_interns)
+			{
+				TypeRef r;
+				if (!_interns.TryGetValue(name, out r))
+				{
+					_interns.Add(name, r = new TypeRef(name, type));
+				}
+				return r;
+			}
+		}
+
+		private readonly object _syncObj = new object();
 		private string _typeFullName;
+		private string _assemblyName;
 
-		public TypeRef(Type type)
-			: base(GetAssemblyQualifiedName(type), type)
+		/// <summary>
+		/// Private constructor.
+		/// </summary>
+		private TypeRef(string assemblyQualifiedTypeName, Type type)
+			: base(assemblyQualifiedTypeName, type)
 		{
 		}
 
-		public TypeRef(string typeName)
-			:base(typeName)
-		{
-		}
-
-		private TypeRef(SerializationInfo info, StreamingContext context)
-			:base(info, context)
+		/// <summary>
+		/// Private constructor.
+		/// </summary>
+		private TypeRef(string assemblyQualifiedTypeName)
+			:base(assemblyQualifiedTypeName)
 		{
 		}
 
@@ -147,7 +210,37 @@ namespace ClearCanvas.Common
 		/// </summary>
 		public string FullName
 		{
-			get { return _typeFullName ?? (_typeFullName = this.Name.Split(',').First()); }
+			get
+			{
+				if (_typeFullName != null)
+					return _typeFullName;
+
+				lock (_syncObj)
+				{
+					if (_typeFullName == null)
+						ParseName();
+					return _typeFullName;
+				}
+			}
+		}
+
+		/// <summary>
+		/// Gets the name of the assembly in which the type is defined.
+		/// </summary>
+		public string AssemblyName
+		{
+			get
+			{
+				if (_assemblyName != null)
+					return _assemblyName;
+
+				lock (_syncObj)
+				{
+					if (_assemblyName == null)
+						ParseName();
+					return _assemblyName;
+				}
+			}
 		}
 
 		/// <summary>
@@ -155,7 +248,7 @@ namespace ClearCanvas.Common
 		/// </summary>
 		public static implicit operator TypeRef(Type type)
 		{
-			return new TypeRef(type);
+			return Get(type);
 		}
 
 		public override bool Equals(object obj)
@@ -185,7 +278,17 @@ namespace ClearCanvas.Common
 
 		protected override Type ResolveObject(string name)
 		{
+			// ensure the assembly is loaded prior to trying to resolve the type
+			AssemblyRef.Get(this.AssemblyName).Resolve();
+
 			return Type.GetType(name, true);
+		}
+
+		private void ParseName()
+		{
+			var parts = this.Name.Split(',');
+			_typeFullName = parts[0].Trim();
+			_assemblyName = parts[1].Trim();
 		}
 
 		private static string GetAssemblyQualifiedName(Type type)
@@ -194,19 +297,113 @@ namespace ClearCanvas.Common
 		}
 	}
 
-	[Serializable]
+	/// <summary>
+	/// Represents a reference to an <see cref="Assembly"/> object.
+	/// </summary>
+	/// <remarks>
+	/// <para>
+	/// To obtain an <see cref="AssemblyRef"/> instance, use an overload of <see cref="AssemblyRef.Get"/>.
+	/// Alternatively, an existing <see cref="Assembly"/> object can be implicitly cast to an
+	/// <see cref="AssemblyRef"/> instance.
+	/// </para>
+	/// <para>
+	/// Instances of this class are immutable and safe for concurrent access by multiple threads.
+	/// </para>
+	/// </remarks>
 	public class AssemblyRef : NamedObjectRef<Assembly>, IEquatable<AssemblyRef>
 	{
-		private Func<string, Assembly> _resolver;
+		#region SerializationSurrogate
 
-		public AssemblyRef(Assembly assembly)
-			: base(assembly.GetName().Name, assembly)
+		/// <summary>
+		/// Serialization helper class.
+		/// </summary>
+		public class SerializationSurrogate : ISerializationSurrogate
+		{
+			public void GetObjectData(object obj, SerializationInfo info, StreamingContext context)
+			{
+				var r = (AssemblyRef)obj;
+				info.AddValue("name", r.Name, typeof(string));
+			}
+
+			public object SetObjectData(object obj, SerializationInfo info, StreamingContext context, ISurrogateSelector selector)
+			{
+				var name = (string)info.GetValue("name", typeof(string));
+				return Get(name);
+			}
+		}
+
+		#endregion
+
+		private static readonly Dictionary<string, AssemblyRef> _interns = new Dictionary<string, AssemblyRef>();
+		private static Func<string, Assembly> _assemblyResolver;
+
+		/// <summary>
+		/// Gets an <see cref="AssemblyRef"/> corresponding to the specified assembly.
+		/// </summary>
+		public static AssemblyRef Get(string assemblyName)
+		{
+			lock (_interns)
+			{
+				AssemblyRef r;
+				if (!_interns.TryGetValue(assemblyName, out r))
+				{
+					_interns.Add(assemblyName, r = new AssemblyRef(assemblyName));
+				}
+				return r;
+			}
+		}
+
+		/// <summary>
+		/// Gets an <see cref="AssemblyRef"/> corresponding to the specified assembly.
+		/// </summary>
+		public static AssemblyRef Get(Assembly assembly)
+		{
+			var name = assembly.GetName().Name;
+			lock (_interns)
+			{
+				AssemblyRef r;
+				if (!_interns.TryGetValue(name, out r))
+				{
+					_interns.Add(name, r = new AssemblyRef(name, assembly));
+				}
+				return r;
+			}
+		}
+
+		/// <summary>
+		/// Sets a global assembly resolver.
+		/// </summary>
+		/// <param name="assemblyResolver"></param>
+		internal static void SetResolver(Func<string, Assembly> assemblyResolver)
+		{
+			if(_assemblyResolver != null)
+				throw new InvalidOperationException("The assembly resolver has already been set.");
+
+			_assemblyResolver = assemblyResolver;
+		}
+
+		/// <summary>
+		/// Private constructor.
+		/// </summary>
+		private AssemblyRef(string assemblyName, Assembly assembly)
+			: base(assemblyName, assembly)
 		{
 		}
 
-		protected AssemblyRef(SerializationInfo info, StreamingContext context)
-			:base(info, context)
+		/// <summary>
+		/// Private constructor.
+		/// </summary>
+		private AssemblyRef(string assemblyName)
+			: base(assemblyName)
 		{
+		}
+
+		/// <summary>
+		/// Converts an <see cref="Assembly"/> to an <see cref="AssemblyRef"/>.
+		/// </summary>
+		public static implicit operator AssemblyRef(Assembly assembly)
+		{
+			return Get(assembly);
 		}
 
 		public override bool Equals(object obj)
@@ -236,12 +433,7 @@ namespace ClearCanvas.Common
 
 		protected override Assembly ResolveObject(string name)
 		{
-			return _resolver(name);
-		}
-
-		internal void SetResolver(Func<string, Assembly> resolver)
-		{
-			_resolver = resolver;
+			return _assemblyResolver(name);
 		}
 	}
 

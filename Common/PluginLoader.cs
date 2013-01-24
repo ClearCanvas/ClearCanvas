@@ -32,75 +32,93 @@ using ClearCanvas.Common.Utilities;
 namespace ClearCanvas.Common
 {
 	/// <summary>
-	/// Encapsulates logic for loading plugins from disk.
+	/// Encapsulates logic for loading plugins and plugin meta-data from disk.
 	/// </summary>
+	/// <remarks>
+	/// This class is used internally by the framework and is not intended for application use.
+	/// </remarks>
 	internal class PluginLoader
 	{
-		class PluginFile
+		class LoadPluginResult
 		{
-			public PluginFile(FileInfo fileInfo, PluginAttribute pluginAttribute, Assembly assembly)
+			public LoadPluginResult(bool isPlugin, Assembly assembly, PluginInfo pluginInfo)
 			{
-				FileInfo = fileInfo;
-				PluginAttribute = pluginAttribute;
+				IsPlugin = isPlugin;
 				Assembly = assembly;
+				PluginInfo = pluginInfo;
 			}
 
-			public readonly FileInfo FileInfo;
-			public readonly PluginAttribute PluginAttribute;
+			public readonly bool IsPlugin;
 			public readonly Assembly Assembly;
+			public readonly PluginInfo PluginInfo;
 		}
 
-		private readonly string _metadataCacheFileName;
+		private readonly string _primaryCacheFile;
+		private readonly string[] _alternateCacheFiles;
 		private readonly string _pluginDir;
 
-		internal PluginLoader(string pluginDir, string metadataCacheFile)
+		internal PluginLoader(string pluginDir, string primaryCacheFile, string[] alternateCacheFiles)
 		{
 			_pluginDir = pluginDir;
-			_metadataCacheFileName = metadataCacheFile;
+			_primaryCacheFile = primaryCacheFile;
+			_alternateCacheFiles = alternateCacheFiles;
 		}
 
-		public event EventHandler<PluginProcessedEventArgs> PluginProcessed;
+		/// <summary>
+		/// Occurs when a plugin assembly was loaded into memory.
+		/// </summary>
+		internal event EventHandler<PluginLoadedEventArgs> PluginLoaded;
 
-		public List<PluginInfo> LoadPlugins()
+		/// <summary>
+		/// Loads plugin meta-data, without necessarily loading the plugin assemblies.
+		/// </summary>
+		/// <remarks>
+		/// Calling this method may load the plugin assemblies into memory, but only if cached meta-data cannot be found.
+		/// </remarks>
+		internal List<PluginInfo> LoadPluginInfo()
 		{
-			EventsHelper.Fire(PluginProcessed, this, new PluginProcessedEventArgs(SR.MessageFindingPlugins, null));
+			// build list of candidate plugin files, and establish assembly load resolver
+			var pluginCandidates = ListPluginCandidateFiles();
+			var pluginPathLookup = pluginCandidates.ToDictionary(Path.GetFileNameWithoutExtension, p => p);
+			AssemblyRef.SetResolver(name => LoadPlugin(pluginPathLookup[name], false).Assembly);
 
-			var pluginFiles = LoadPluginFiles();
+			// see if we can load the meta-data from a cache
 			List<PluginInfo> pluginInfos;
-			if (!TryLoadCachedMetadata(pluginFiles, out pluginInfos))
+			if (!TryLoadCachedMetadata(new[] {_primaryCacheFile}.Concat(_alternateCacheFiles), pluginCandidates, out pluginInfos))
 			{
-				pluginInfos = BuildMetadata(pluginFiles);
+				// No cached meta-data, so we need to load the plugins
+				// and build the meta-data from scratch.
+				LoadPluginFiles(pluginCandidates, true, out pluginInfos);
 				SaveCachedMetadata(pluginInfos);
 			}
 
 			return pluginInfos;
 		}
 
-		private List<PluginFile> LoadPluginFiles()
+		private List<string> ListPluginCandidateFiles()
 		{
-			var plugins = new List<PluginFile>();
-			FileProcessor.Process(_pluginDir, "*.dll", path =>
-			{
-				PluginFile file;
-				if (LoadPlugin(path, out file))
-				{
-					plugins.Add(file);
-					var e = new PluginProcessedEventArgs(string.Format(SR.FormatLoadedPlugin, file.FileInfo.Name), file.Assembly);
-					EventsHelper.Fire(PluginProcessed, this, e);
-				}
-			}, true);
-
+			var plugins = new List<string>();
+			FileProcessor.Process(_pluginDir, "*.dll", plugins.Add, true);
 			return plugins;
 		}
 
-		private bool TryLoadCachedMetadata(List<PluginFile> pluginFiles, out List<PluginInfo> pluginInfos)
+		private void LoadPluginFiles(IEnumerable<string> pluginCandidates, bool processMetadata, out List<PluginInfo> pluginInfos)
 		{
-			if (IsCachedMetadataValid(pluginFiles))
+			EventsHelper.Fire(PluginLoaded, this, new PluginLoadedEventArgs(SR.MessageFindingPlugins, null));
+
+			var loadResults = pluginCandidates.Select(pc => LoadPlugin(pc, processMetadata)).ToList();
+
+			pluginInfos = processMetadata ? loadResults.Where(r => r.IsPlugin).Select(r => r.PluginInfo).ToList() : null;
+		}
+
+		private static bool TryLoadCachedMetadata(IEnumerable<string> cacheFilePaths, IEnumerable<string> pluginCandidates, out List<PluginInfo> pluginInfos)
+		{
+			var validCacheFiles = ValidCacheFiles(cacheFilePaths, pluginCandidates).ToList();
+			if(validCacheFiles.Any())
 			{
 				try
 				{
-					var pluginLookup = pluginFiles.ToDictionary(p => p.Assembly.GetName().Name, p => p.Assembly);
-					pluginInfos = PluginInfoCache.Read(_metadataCacheFileName, name => pluginLookup[name]);
+					pluginInfos = PluginInfoCache.Read(validCacheFiles.First());
 					return true;
 				}
 				catch (Exception)
@@ -115,45 +133,24 @@ namespace ClearCanvas.Common
 			return false;
 		}
 
-		private bool IsCachedMetadataValid(IEnumerable<PluginFile> pluginFiles)
+		private static IEnumerable<string> ValidCacheFiles(IEnumerable<string> cacheFilePaths, IEnumerable<string> pluginCandidates)
 		{
-			var cacheFile = new FileInfo(_metadataCacheFileName);
-			if (!cacheFile.Exists)
-				return false;
-
-			// cache must be newer than last write time of any config file
 			var configFiles = Directory.GetFiles(Platform.InstallDirectory, "*.config", SearchOption.TopDirectoryOnly);
-			if (!configFiles.All(cf => File.GetLastWriteTime(cf) < cacheFile.LastWriteTime))
-				return false;
+			var writeTimes = configFiles.Concat(pluginCandidates).Select(File.GetLastWriteTime).ToList();
 
-			// cache must be newer than last write time of any plugin file
-			if (!pluginFiles.All(p => p.FileInfo.LastWriteTime < cacheFile.LastWriteTime))
-				return false;
-
-			return true;
+			return cacheFilePaths.Where(cacheFilePath =>
+										{
+											// cache must be newer than last write time of any file that might have affected it
+											var cacheFile = new FileInfo(cacheFilePath);
+											return cacheFile.Exists && writeTimes.All(wt => wt < cacheFile.LastWriteTime);
+										});
 		}
-
-		private List<PluginInfo> BuildMetadata(IEnumerable<PluginFile> pluginFiles)
-		{
-			var results = new List<PluginInfo>();
-			foreach (var p in pluginFiles)
-			{
-				var e = new PluginProcessedEventArgs(string.Format(SR.FormatProcessingPlugin, p.FileInfo.Name), p.Assembly);
-				EventsHelper.Fire(PluginProcessed, this, e);
-
-				// the metadata is built in the PluginInfo constructor
-				var pi = new PluginInfo(p.Assembly, p.PluginAttribute.Name, p.PluginAttribute.Description, p.PluginAttribute.Icon);
-				results.Add(pi);
-			}
-			return results;
-		}
-
 
 		private void SaveCachedMetadata(List<PluginInfo> pluginInfos)
 		{
 			try
 			{
-				PluginInfoCache.Write(_metadataCacheFileName, pluginInfos);
+				PluginInfoCache.Write(_primaryCacheFile, pluginInfos);
 			}
 			catch (Exception)
 			{
@@ -162,7 +159,7 @@ namespace ClearCanvas.Common
 			}
 		}
 
-		private static bool LoadPlugin(string path, out PluginFile pluginFile)
+		private LoadPluginResult LoadPlugin(string path, bool processMetadata)
 		{
 			try
 			{
@@ -171,11 +168,17 @@ namespace ClearCanvas.Common
 
 				// is it a plugin??
 				var pluginAttr = (PluginAttribute)asm.GetCustomAttributes(typeof(PluginAttribute), false).FirstOrDefault();
-				if (pluginAttr != null)
-				{
-					pluginFile = new PluginFile(new FileInfo(path), pluginAttr, asm);
-					return true;
-				}
+				if (pluginAttr == null)
+					return new LoadPluginResult(false, asm, null);
+
+				var fileName = Path.GetFileName(path);
+				Platform.Log(LogLevel.Debug, "Loaded plugin {0}", fileName);
+				var e = new PluginLoadedEventArgs(string.Format(SR.FormatLoadedPlugin, fileName), asm);
+				EventsHelper.Fire(PluginLoaded, this, e);
+
+				// do not create a PluginInfo unless explicitly asked for, because it is expensive
+				var pluginInfo = processMetadata ? new PluginInfo(asm, pluginAttr.Name, pluginAttr.Description, pluginAttr.Icon) : null;
+				return new LoadPluginResult(true, asm, pluginInfo);
 			}
 			catch (BadImageFormatException e)
 			{
@@ -204,8 +207,7 @@ namespace ClearCanvas.Common
 				Platform.Log(LogLevel.Error, e, SR.LogFailedToProcessPluginAssembly, path);
 			}
 
-			pluginFile = null;
-			return false;
+			return new LoadPluginResult(false, null, null);
 		}
 	}
 }

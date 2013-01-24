@@ -207,7 +207,7 @@
     <Compile Include="Statistics\TimeSpanStatistics.cs" />
     <Compile Include="Statistics\Statistics.cs" />
     <Compile Include="Statistics\IStatistics.cs" />
-    <Compile Include="PluginProcessedEventArgs.cs" />
+    <Compile Include="PluginLoadedEventArgs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

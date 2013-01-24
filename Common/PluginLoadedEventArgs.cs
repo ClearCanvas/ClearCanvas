@@ -23,30 +23,39 @@
 #endregion
 
 using System;
-using System.Web;
-using ClearCanvas.Common;
+using System.Reflection;
 
-namespace ClearCanvas.ImageServer.Web.Common.Modules
+namespace ClearCanvas.Common
 {
-    public class ApplicationModule : IHttpModule
-    {
-        #region IHttpModule Members
+	/// <summary>
+	/// Conveys information about plugins as they are loaded.
+	/// </summary>
+	/// <remarks>
+	/// This class is used internally by the framework.
+	/// </remarks>
+	/// <see cref="PluginManager"/>
+	public class PluginLoadedEventArgs : EventArgs
+	{
+		internal PluginLoadedEventArgs(string message, Assembly pluginAssembly)
+		{
+			Message = message;
+			PluginAssembly = pluginAssembly;
+		}
 
-        public void Dispose()
-        {
-            
-        }
+		/// <summary>
+		/// Gets a user-friendly message describing the plugin that was loaded.
+		/// </summary>
+		/// <remarks>
+		/// This is typically just the full name of the plugin assembly.
+		/// </remarks>
+		public string Message { get; private set; }
 
-        public void Init(HttpApplication context)
-        {
-			Platform.PluginManager.PluginLoaded += PluginManager_PluginLoaded;
-        }
-
-        #endregion
-
-        void PluginManager_PluginLoaded(object sender, PluginLoadedEventArgs e)
-        {
-            Platform.Log(LogLevel.Info, e.Message);
-        }
-    }
+		/// <summary>
+		/// Gets the plugin assembly that was loaded, if any.
+		/// </summary>
+		/// <remarks>
+		/// Null if no actual assembly was loaded for this particular event.
+		/// </remarks>
+		public Assembly PluginAssembly { get; private set; }
+	}
 }

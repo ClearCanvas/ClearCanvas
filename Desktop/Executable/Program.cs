@@ -45,7 +45,7 @@ namespace ClearCanvas.Desktop.Executable
 #if !MONO
 			SplashScreenManager.DisplaySplashScreen();
 #endif
-			Platform.PluginManager.PluginProcessed += new EventHandler<PluginProcessedEventArgs>(OnPluginProgress);
+			Platform.PluginManager.PluginLoaded += new EventHandler<PluginLoadedEventArgs>(OnPluginProgress);
 
 			// check for command line arguments
             if (args.Length > 0)
@@ -65,7 +65,7 @@ namespace ClearCanvas.Desktop.Executable
             }
 		}
 
-		private static void OnPluginProgress(object sender, PluginProcessedEventArgs e)
+		private static void OnPluginProgress(object sender, PluginLoadedEventArgs e)
 		{
 			Platform.CheckForNullReference(e, "e");
 #if !MONO

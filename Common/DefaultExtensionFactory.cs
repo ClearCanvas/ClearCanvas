@@ -110,7 +110,7 @@ namespace ClearCanvas.Common
 			BuildExtensionMapOnce();
 
 			List<ExtensionInfo> extensions;
-			if (_extensionMap.TryGetValue(new TypeRef(extensionPoint.GetType()), out extensions))
+			if (_extensionMap.TryGetValue(extensionPoint.GetType(), out extensions))
 			{
 				return CollectionUtils.Select(extensions,
 					extension => extension.Enabled && extension.Authorized && (filter == null || filter.Test(extension)));
