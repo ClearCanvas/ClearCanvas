@@ -78,17 +78,21 @@ namespace ClearCanvas.Common
 		internal List<PluginInfo> LoadPluginInfo()
 		{
 			// build list of candidate plugin files, and establish assembly load resolver
-			var pluginCandidates = ListPluginCandidateFiles();
-			var pluginPathLookup = pluginCandidates.ToDictionary(Path.GetFileNameWithoutExtension, p => p);
+		    var pluginCandidates = (from p in ListPluginCandidateFiles()
+		                           group p by Path.GetFileNameWithoutExtension(p)
+		                           into g
+		                           select new {FileName = g.Key, Path = g.First()}).ToList();
+		    var pluginCandidatePaths = pluginCandidates.Select(p => p.Path).ToList();
+            var pluginPathLookup = pluginCandidates.ToDictionary(p => p.FileName, p => p.Path);
 			AssemblyRef.SetResolver(name => LoadPlugin(pluginPathLookup[name], false).Assembly);
 
 			// see if we can load the meta-data from a cache
 			List<PluginInfo> pluginInfos;
-			if (!TryLoadCachedMetadata(new[] {_primaryCacheFile}.Concat(_alternateCacheFiles), pluginCandidates, out pluginInfos))
+            if (!TryLoadCachedMetadata(new[] { _primaryCacheFile }.Concat(_alternateCacheFiles), pluginCandidatePaths, out pluginInfos))
 			{
 				// No cached meta-data, so we need to load the plugins
 				// and build the meta-data from scratch.
-				LoadPluginFiles(pluginCandidates, true, out pluginInfos);
+                LoadPluginFiles(pluginCandidatePaths, true, out pluginInfos);
 				SaveCachedMetadata(pluginInfos);
 			}
 
