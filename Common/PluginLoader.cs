@@ -77,22 +77,29 @@ namespace ClearCanvas.Common
 		/// </remarks>
 		internal List<PluginInfo> LoadPluginInfo()
 		{
-			// build list of candidate plugin files, and establish assembly load resolver
-		    var pluginCandidates = (from p in ListPluginCandidateFiles()
-		                           group p by Path.GetFileNameWithoutExtension(p)
-		                           into g
-		                           select new {FileName = g.Key, Path = g.First()}).ToList();
-		    var pluginCandidatePaths = pluginCandidates.Select(p => p.Path).ToList();
-            var pluginPathLookup = pluginCandidates.ToDictionary(p => p.FileName, p => p.Path);
+			// build list of candidate plugin files
+			// Note: the reason for the "group by" operation is that some non-plugin files
+			// may have the same file name (located in different sub-folders) - e.g. localization satellite assemblies in ASP.NET,
+			// and we need to eliminate these prior to building the pluginPathLookup dictionary below.
+			var pluginCandidates = (from p in ListPluginCandidateFiles()
+									group p by Path.GetFileNameWithoutExtension(p)
+										into g
+										where g.Count() == 1
+										select new { FileName = g.Key, Path = g.First() })
+									.ToList();
+
+			// establish assembly load resolver
+			var pluginPathLookup = pluginCandidates.ToDictionary(p => p.FileName, p => p.Path);
 			AssemblyRef.SetResolver(name => LoadPlugin(pluginPathLookup[name], false).Assembly);
 
 			// see if we can load the meta-data from a cache
+			var pluginCandidatePaths = pluginCandidates.Select(p => p.Path).ToList();
 			List<PluginInfo> pluginInfos;
-            if (!TryLoadCachedMetadata(new[] { _primaryCacheFile }.Concat(_alternateCacheFiles), pluginCandidatePaths, out pluginInfos))
+			if (!TryLoadCachedMetadata(new[] { _primaryCacheFile }.Concat(_alternateCacheFiles), pluginCandidatePaths, out pluginInfos))
 			{
 				// No cached meta-data, so we need to load the plugins
 				// and build the meta-data from scratch.
-                LoadPluginFiles(pluginCandidatePaths, true, out pluginInfos);
+				LoadPluginFiles(pluginCandidatePaths, true, out pluginInfos);
 				SaveCachedMetadata(pluginInfos);
 			}
 
@@ -118,7 +125,7 @@ namespace ClearCanvas.Common
 		private static bool TryLoadCachedMetadata(IEnumerable<string> cacheFilePaths, IEnumerable<string> pluginCandidates, out List<PluginInfo> pluginInfos)
 		{
 			var validCacheFiles = ValidCacheFiles(cacheFilePaths, pluginCandidates).ToList();
-			if(validCacheFiles.Any())
+			if (validCacheFiles.Any())
 			{
 				try
 				{
