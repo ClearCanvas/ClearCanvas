@@ -42,10 +42,10 @@ namespace ClearCanvas.Common
 		private readonly bool _enabled;
 		private readonly string _featureToken;
 
-		internal ExtensionInfo(TypeRef extensionClass, TypeRef pointExtended, string name, string description, bool enabled)
+		public ExtensionInfo(TypeRef extensionClass, TypeRef pointExtended, string name, string description, bool enabled)
 			: this(extensionClass, pointExtended, name, description, enabled, null) {}
 
-		internal ExtensionInfo(TypeRef extensionClass, TypeRef pointExtended, string name, string description, bool enabled, string featureToken)
+		public ExtensionInfo(TypeRef extensionClass, TypeRef pointExtended, string name, string description, bool enabled, string featureToken)
 		{
 			_extensionClass = extensionClass;
 			_pointExtended = pointExtended;
