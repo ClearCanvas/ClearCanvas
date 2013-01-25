@@ -182,6 +182,7 @@
     <Compile Include="UpgradeScripts\UpgradeFrom_5_0_5655_9770.cs" />
     <Compile Include="UpgradeScripts\UpgradeFrom_6_0_6778_10140.cs" />
     <Compile Include="UpgradeScripts\UpgradeFrom_6_1_7081_10268.cs" />
+    <Compile Include="UpgradeScripts\UpgradeFrom_9_0_9561_11723.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Common\ClearCanvas.Common.csproj">
@@ -244,6 +245,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="UpgradeScripts\UpgradeFrom_6_1_7081_10268.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="UpgradeScripts\UpgradeFrom_9_0_9561_11723.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

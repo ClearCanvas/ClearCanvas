@@ -28,11 +28,11 @@ using ClearCanvas.Enterprise.Core.Upgrade;
 
 namespace ClearCanvas.ImageServer.Model.SqlServer.UpgradeScripts
 {
-    [ExtensionOf(typeof(PersistentStoreUpgradeScriptExtensionPoint))]
-    class UpgradeFrom_6_1_7081_10268 : BaseUpgradeScript
+    [ExtensionOf(typeof (PersistentStoreUpgradeScriptExtensionPoint))]
+    internal class UpgradeFrom_9_0_9561_11723 : BaseUpgradeScript
     {
-        public UpgradeFrom_6_1_7081_10268()
-			: base(new Version(6, 1, 7081, 10268), new Version(9,0,9561,11723), "UpgradeFrom_6_1_7081_10268.sql")
+        public UpgradeFrom_9_0_9561_11723()
+            : base(new Version(9, 0, 9561, 11723), null, "UpgradeFrom_6_1_7081_10268.sql")
         {
         }
     }
