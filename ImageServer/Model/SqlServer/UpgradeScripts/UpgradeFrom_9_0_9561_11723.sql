@@ -16,7 +16,7 @@ GO
 PRINT N'Updating ServiceLockTypeEnum description'
 GO
 
-update [ServiceLockTypeEnum] set LongDescription='This service periodically synchronizes the deletion status of Authority Groups on the Enterprise Services with Data Access granted to studies on the ImageServer.' where Enum='SyncDataAccess'
+update [ServiceLockTypeEnum] set LongDescription='This service periodically synchronizes the deletion status of Authority Groups on the Enterprise Services with Data Access granted to studies on the ImageServer.' where Lookup='SyncDataAccess'
 GO
 
 IF @@ERROR<>0 AND @@TRANCOUNT>0 ROLLBACK TRANSACTION
