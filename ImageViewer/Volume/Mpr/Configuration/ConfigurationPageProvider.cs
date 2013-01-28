@@ -36,7 +36,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr.Configuration
 
 		public IEnumerable<IConfigurationPage> GetPages()
 		{
-			if (PermissionsHelper.IsInRole(ImageViewer.AuthorityTokens.ViewerVisible))
+			if (PermissionsHelper.IsInRole(ImageViewer.AuthorityTokens.ViewerClinical))
 				yield return new ConfigurationPage(MprConfigurationComponent.Path, new MprConfigurationComponent());
 		}
 

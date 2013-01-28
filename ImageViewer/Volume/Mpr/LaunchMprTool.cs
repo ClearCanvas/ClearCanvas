@@ -43,6 +43,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 	[IconSet("open", "Icons.LaunchMprToolSmall.png", "Icons.LaunchMprToolMedium.png", "Icons.LaunchMprToolLarge.png")]
 	[EnabledStateObserver("open", "Enabled", "EnabledChanged")]
 	[VisibleStateObserver("open", "Visible", "VisibleChanged")]
+	[ViewerActionPermissionAttribute("open", AuthorityTokens.ViewerClinical)]
 	[GroupHint("open", "Tools.Volume.MPR")]
 	[ExtensionOf(typeof (ImageViewerToolExtensionPoint))]
 	public class LaunchMprTool : ImageViewerTool
