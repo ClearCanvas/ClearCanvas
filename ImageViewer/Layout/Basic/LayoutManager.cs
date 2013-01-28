@@ -197,7 +197,7 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
 					if (layout == null)
 						layout = LayoutSettings.GetMinimumLayout();
 
-					StoredLayout storedLayout = LayoutSettings.Default.GetLayout(displaySet.PresentationImages[0] as IImageSopProvider);
+                    StoredLayout storedLayout = LayoutSettings.DefaultInstance.GetLayout(displaySet.PresentationImages[0] as IImageSopProvider);
 					layout.ImageBoxRows = Math.Max(layout.ImageBoxRows, storedLayout.ImageBoxRows);
 					layout.ImageBoxColumns = Math.Max(layout.ImageBoxColumns, storedLayout.ImageBoxColumns);
 					layout.TileRows = Math.Max(layout.TileRows, storedLayout.TileRows);
@@ -206,7 +206,7 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
 			}
 
 			if (layout == null)
-				layout = LayoutSettings.Default.DefaultLayout;
+                layout = LayoutSettings.DefaultInstance.DefaultLayout;
 
 			PhysicalWorkspace.SetImageBoxGrid(layout.ImageBoxRows, layout.ImageBoxColumns);
 			for (int i = 0; i < PhysicalWorkspace.ImageBoxes.Count; ++i)

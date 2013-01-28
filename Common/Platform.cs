@@ -23,6 +23,7 @@
 #endregion
 
 using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using log4net;
@@ -613,31 +614,31 @@ namespace ClearCanvas.Common
         /// <exception cref="UnknownServiceException">The requested service cannot be provided.</exception>
         public static object GetService(Type service)
         {
-            // load all service providers if not yet loaded
-            if (_serviceProviders == null)
-            {
-                lock (_syncRoot)
-                {
-                    if (_serviceProviders == null)
-                        _serviceProviders = new ServiceProviderExtensionPoint().CreateExtensions().Cast<IServiceProvider>().ToArray();
-                }
-            }
+			// load all service providers if not yet loaded
+			if (_serviceProviders == null)
+			{
+				lock (_syncRoot)
+				{
+					if (_serviceProviders == null)
+						_serviceProviders = new ServiceProviderExtensionPoint().CreateExtensions().Cast<IServiceProvider>().ToArray();
+				}
+			}
 
-            // attempt to instantiate the requested service
-            foreach (IServiceProvider sp in _serviceProviders)
-            {
-                // the service provider itself may not be thread-safe, so we need to ensure only one thread will access it
-                // at a time
-                lock (sp)
-                {
-                    object impl = sp.GetService(service);
-                    if (impl != null)
-                        return impl;
-                }
-            }
+			// attempt to instantiate the requested service
+			foreach (IServiceProvider sp in _serviceProviders)
+			{
+				// the service provider itself may not be thread-safe, so we need to ensure only one thread will access it
+				// at a time
+				lock (sp)
+				{
+					object impl = sp.GetService(service);
+					if (impl != null)
+						return impl;
+				}
+			}
 
-            var message = string.Format("No service provider was found that can provide the service {0}.", service.FullName);
-            throw new UnknownServiceException(message);
+			var message = string.Format("No service provider was found that can provide the service {0}.", service.FullName);
+			throw new UnknownServiceException(message);
         }
 
         /// <summary>

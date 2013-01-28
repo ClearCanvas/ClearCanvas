@@ -25,6 +25,7 @@
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using ClearCanvas.Common;
 using ClearCanvas.Common.Configuration;
 
 namespace ClearCanvas.Desktop
@@ -64,7 +65,18 @@ namespace ClearCanvas.Desktop
 		/// Registers an instance of a settings class.
 		/// </summary>
 		public void RegisterInstance(ApplicationSettingsBase settingsInstance)
-		{ 
+		{
+		    try
+		    {
+                //TODO (Phoenix5): #10730 - remove this when it's fixed.
+                if (Application.GuiToolkitID == GuiToolkitID.Web)
+                    return;
+		    }
+		    catch (Exception)
+		    {
+                //Just let it get added; this can only happen for a setting initialized before the application itself is initialized.
+		    }
+
 			lock(_syncLock)
 			{
 				if (!_registeredSettingsInstances.Contains(settingsInstance))

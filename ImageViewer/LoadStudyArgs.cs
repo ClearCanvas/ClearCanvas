@@ -39,7 +39,7 @@ namespace ClearCanvas.ImageViewer
         /// <param name="studyInstanceUid"></param>
         /// <param name="server"></param>
 		public LoadStudyArgs(string studyInstanceUid, IDicomServiceNode server)
-            : this(studyInstanceUid, server, StudyLoaderCheckOptions.Default)
+            : this(studyInstanceUid, server, null)
         {}
 
 	    /// <summary>
@@ -47,14 +47,14 @@ namespace ClearCanvas.ImageViewer
 	    /// </summary>
 	    /// <param name="studyInstanceUid"></param>
 	    /// <param name="server"></param>
-        /// <param name="studyLoaderCheckOptions"> </param>
-        public LoadStudyArgs(string studyInstanceUid, IDicomServiceNode server, StudyLoaderCheckOptions studyLoaderCheckOptions)
+        /// <param name="studyLoaderOptions"> </param>
+        public LoadStudyArgs(string studyInstanceUid, IDicomServiceNode server, StudyLoaderOptions studyLoaderOptions)
         {
             Platform.CheckForNullReference(studyInstanceUid, "studyInstanceUids");
             Platform.CheckForNullReference(server, "server");
             StudyInstanceUid = studyInstanceUid;
             Server = server;
-            StudyLoaderCheckOptions = studyLoaderCheckOptions;
+            StudyLoaderOptions = studyLoaderOptions ?? StudyLoaderOptions.Default;
         }
 
         /// <summary>
@@ -63,9 +63,9 @@ namespace ClearCanvas.ImageViewer
 	    public string StudyInstanceUid { get; private set; }
 
         /// <summary>
-	    /// Gets the study check options requested by the caller
+	    /// Gets the options requested by the caller.
 	    /// </summary>
-	    public StudyLoaderCheckOptions StudyLoaderCheckOptions { get; private set; }
+	    public StudyLoaderOptions StudyLoaderOptions { get; private set; }
 
         /// <summary>
         /// Gets the server from which the study can be loaded.

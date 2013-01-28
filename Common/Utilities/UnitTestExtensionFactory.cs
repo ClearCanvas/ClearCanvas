@@ -132,7 +132,7 @@ namespace ClearCanvas.Common.Utilities
 			var extensionInfos = ListExtensions(extensionPoint, filter);
 			if (justOne && extensionInfos.Length > 1)
 				extensionInfos = new[] {extensionInfos[0]};
-			return CollectionUtils.Map<ExtensionInfo, object>(extensionInfos, extensionInfo => Activator.CreateInstance(extensionInfo.ExtensionClass)).ToArray();
+			return CollectionUtils.Map<ExtensionInfo, object>(extensionInfos, extensionInfo => Activator.CreateInstance(extensionInfo.ExtensionClass.Resolve())).ToArray();
 		}
 
 		/// <summary>

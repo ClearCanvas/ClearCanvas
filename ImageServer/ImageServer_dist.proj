@@ -103,7 +103,8 @@
 	<PluginFiles Include="$(XianTrunkDirectory)\ImageServer\Model\bin\$(Configuration)\ClearCanvas.ImageServer.Model.dll" />
 	<PluginFiles Include="$(XianTrunkDirectory)\ImageServer\Model\SqlServer\bin\$(Configuration)\ClearCanvas.ImageServer.Model.SqlServer.dll" />
 	<PluginFiles Include="$(XianTrunkDirectory)\ImageServer\Core\bin\$(Configuration)\ClearCanvas.ImageServer.Core.dll" />
-	<PluginFiles Include="$(XianTrunkDirectory)\ImageServer\Enterprise\SqlServer\bin\$(Configuration)\ClearCanvas.ImageServer.Enterprise.SqlServer.dll" />
+    <PluginFiles Include="$(XianTrunkDirectory)\ImageServer\Core\SharpZipLib\bin\$(Configuration)\ClearCanvas.ImageServer.Core.SharpZipLib.dll" />
+    <PluginFiles Include="$(XianTrunkDirectory)\ImageServer\Enterprise\SqlServer\bin\$(Configuration)\ClearCanvas.ImageServer.Enterprise.SqlServer.dll" />
 	<PluginFiles Include="$(XianTrunkDirectory)\ImageServer\Services\Common\bin\$(Configuration)\ClearCanvas.ImageServer.Services.Common.dll" />
 	<PluginFiles Include="$(XianTrunkDirectory)\ImageServer\Services\Dicom\bin\$(Configuration)\ClearCanvas.ImageServer.Services.Dicom.dll" />
 	<PluginFiles Include="$(XianTrunkDirectory)\ImageServer\Services\WorkQueue\bin\$(Configuration)\ClearCanvas.ImageServer.Services.WorkQueue.dll" />

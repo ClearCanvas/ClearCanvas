@@ -71,7 +71,7 @@ namespace ClearCanvas.Common
         {
             foreach (Attribute a in _attributes)
             {
-                object[] candidates = extension.ExtensionClass.GetCustomAttributes(a.GetType(), true);
+                object[] candidates = extension.ExtensionClass.Resolve().GetCustomAttributes(a.GetType(), true);
                 if (!AnyMatch(a, candidates))
                 {
                     return false;

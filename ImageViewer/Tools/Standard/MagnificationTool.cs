@@ -118,7 +118,7 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 		{
 			get
 			{
-				return FloatComparer.AreEqual(ToolSettings.Default.MagnificationFactor, 1.5F);
+				return FloatComparer.AreEqual(ToolSettings.DefaultInstance.MagnificationFactor, 1.5F);
 			}	
 		}
 
@@ -126,7 +126,7 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 		{
 			get
 			{
-				return FloatComparer.AreEqual(ToolSettings.Default.MagnificationFactor, 2.0F);
+                return FloatComparer.AreEqual(ToolSettings.DefaultInstance.MagnificationFactor, 2.0F);
 			}
 		}
 
@@ -134,7 +134,7 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 		{
 			get
 			{
-				return FloatComparer.AreEqual(ToolSettings.Default.MagnificationFactor, 4.0F);
+                return FloatComparer.AreEqual(ToolSettings.DefaultInstance.MagnificationFactor, 4.0F);
 			}
 		}
 
@@ -142,7 +142,7 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 		{
 			get
 			{
-				return FloatComparer.AreEqual(ToolSettings.Default.MagnificationFactor, 6.0F);
+                return FloatComparer.AreEqual(ToolSettings.DefaultInstance.MagnificationFactor, 6.0F);
 			}
 		}
 
@@ -150,7 +150,7 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 		{
 			get
 			{
-				return FloatComparer.AreEqual(ToolSettings.Default.MagnificationFactor, 8.0F);
+                return FloatComparer.AreEqual(ToolSettings.DefaultInstance.MagnificationFactor, 8.0F);
 			}
 		}
 		
@@ -170,45 +170,45 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 		{
 			base.Initialize();
 
-			ToolSettings.Default.PropertyChanged += OnMagnificationSettingChanged;
+            ToolSettings.DefaultInstance.PropertyChanged += OnMagnificationSettingChanged;
 			UpdateEnabled();
 		}
 
 		protected override void Dispose(bool disposing)
 		{
-			ToolSettings.Default.PropertyChanged -= OnMagnificationSettingChanged;
+            ToolSettings.DefaultInstance.PropertyChanged -= OnMagnificationSettingChanged;
 
 			base.Dispose(disposing);
 		}
 
 		public void Set1And1HalfMagnification()
 		{
-			ToolSettings.Default.MagnificationFactor = 1.5F;
-			ToolSettings.Default.Save();
+            ToolSettings.DefaultInstance.MagnificationFactor = 1.5F;
+            ToolSettings.DefaultInstance.Save();
 		}
 
 		public void Set2xMagnification()
 		{
-			ToolSettings.Default.MagnificationFactor = 2F;
-			ToolSettings.Default.Save();
+            ToolSettings.DefaultInstance.MagnificationFactor = 2F;
+            ToolSettings.DefaultInstance.Save();
 		}
 
 		public void Set4xMagnification()
 		{
-			ToolSettings.Default.MagnificationFactor = 4F;
-			ToolSettings.Default.Save();
+            ToolSettings.DefaultInstance.MagnificationFactor = 4F;
+            ToolSettings.DefaultInstance.Save();
 		}
 
 		public void Set6xMagnification()
 		{
-			ToolSettings.Default.MagnificationFactor = 6F;
-			ToolSettings.Default.Save();
+            ToolSettings.DefaultInstance.MagnificationFactor = 6F;
+            ToolSettings.DefaultInstance.Save();
 		}
 
 		public void Set8xMagnification()
 		{
-			ToolSettings.Default.MagnificationFactor = 8F;
-			ToolSettings.Default.Save();
+            ToolSettings.DefaultInstance.MagnificationFactor = 8F;
+            ToolSettings.DefaultInstance.Save();
 		}
 
 		private void UpdateEnabled()

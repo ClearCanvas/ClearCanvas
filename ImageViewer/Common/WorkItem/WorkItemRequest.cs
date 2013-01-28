@@ -50,7 +50,7 @@ namespace ClearCanvas.ImageViewer.Common.WorkItem
                 {
                     // build the contract map by finding all types having a T attribute
                     _knownTypes = (from p in Platform.PluginManager.Plugins
-                                from t in p.Assembly.GetTypes()
+                                from t in p.Assembly.Resolve().GetTypes()
                                 let a = AttributeUtils.GetAttribute<WorkItemKnownTypeAttribute>(t)
                                 where (a != null)
                                 select t).ToList();

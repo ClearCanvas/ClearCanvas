@@ -55,7 +55,7 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
         public DisplaySetCreationOptions()
         {
             _options = new SortedDictionary<string, IModalityDisplaySetCreationOptions>();
-            foreach (var storedSetting in DisplaySetCreationSettings.Default.GetStoredSettings())
+            foreach (var storedSetting in DisplaySetCreationSettings.DefaultInstance.GetStoredSettings())
                 _options[storedSetting.Modality] = storedSetting;
 
         }

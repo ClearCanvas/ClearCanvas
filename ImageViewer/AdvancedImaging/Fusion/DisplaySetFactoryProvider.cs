@@ -22,7 +22,9 @@
 
 #endregion
 
+using System;
 using System.Collections.Generic;
+using System.Threading;
 using ClearCanvas.Common;
 using ClearCanvas.ImageViewer.Layout.Basic;
 
@@ -33,6 +35,12 @@ namespace ClearCanvas.ImageViewer.AdvancedImaging.Fusion
 	[ExtensionOf(typeof (DisplaySetFactoryProviderExtensionPoint))]
 	public class DisplaySetFactoryProvider : IDisplaySetFactoryProvider
 	{
+		public DisplaySetFactoryProvider()
+		{
+			if (!PermissionsHelper.IsInRole(AuthorityTokens.ViewerClinical))
+				throw new NotSupportedException();
+		}
+
 		#region IDisplaySetFactoryProvider Members
 
 		public IEnumerable<IDisplaySetFactory> CreateDisplaySetFactories(IPresentationImageFactory presentationImageFactory)

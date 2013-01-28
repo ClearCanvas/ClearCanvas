@@ -129,6 +129,7 @@
     <ItemGroup>
       <UnitTestAssemblyFiles Include="$(DistributionDir)\**\ClearCanvas.*.exe" />
       <UnitTestAssemblyFiles Include="$(DistributionDir)\**\ClearCanvas.*.dll" />
+      <UnitTestImageViewerFiles Include="$(MSBuildProjectDirectory)\RoiGraphics\Tests\Images\*.*" />
     </ItemGroup>
     <Delete Files="$(UnitTestProjectFile)" />
     <XmlInsert File="$(UnitTestProjectFile)" XPath="/" Type="Element" Name="NUnitProject" />
@@ -136,6 +137,7 @@
     <XmlInsert File="$(UnitTestProjectFile)" XPath="/NUnitProject" Type="Element" Name="Config" Attribute="name" Value="Debug" />
     <XmlInsert File="$(UnitTestProjectFile)" XPath="/NUnitProject/Config[@name='Debug']" Type="Element" Name="assembly" Attribute="path" Value="@(UnitTestAssemblyFiles->'%(RecursiveDir)%(Filename)%(Extension)')" />
     <XmlInsert File="$(UnitTestProjectFile)" XPath="/NUnitProject/Config" Type="Attribute" Name="binpathtype" Value="Auto" />
+    <Copy SourceFiles="@(UnitTestImageViewerFiles)" DestinationFolder="$(DistributionDir)\plugins\TestImages" />
   </Target>
 
   <Target Name="BuildSolution" >

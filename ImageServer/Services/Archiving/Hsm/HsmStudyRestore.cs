@@ -352,11 +352,10 @@ namespace ClearCanvas.ImageServer.Services.Archiving.Hsm
 			{
 				using (var processor = new ServerCommandProcessor("HSM Restore Online Study"))
 				{
-					using (var zipService = Platform.GetService<IZipService>())
+				    var zipService = Platform.GetService<IZipService>();
+					using (var zipWriter = zipService.OpenWrite(zipFile))
 					{
-					    zipService.OpenWrite(zipFile);
-
-                        foreach (string file in zipService.EntryFileNames)
+                        foreach (string file in zipWriter.EntryFileNames)
 						{
 							processor.AddCommand(new ExtractZipFileAndReplaceCommand(zipFile, file, destinationFolder));
 						}

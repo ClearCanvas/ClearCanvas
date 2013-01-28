@@ -355,7 +355,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 
 		private static Matrix CalcRotateMatrixFromOrthogonalBasis(Vector3D xAxis, Vector3D yAxis, Vector3D zAxis)
 		{
-			const float zeroTolerance = 0.0000001f;
+			const float zeroTolerance = 1e-4f;
 			Platform.CheckForNullReference(xAxis, "xAxis");
 			Platform.CheckForNullReference(yAxis, "yAxis");
 			Platform.CheckForNullReference(zAxis, "zAxis");

@@ -40,6 +40,7 @@ namespace ClearCanvas.ImageViewer.Tools.Standard.ImageProperties
 	[ExtensionOf(typeof(ImageViewerToolExtensionPoint))]
 	public class ImagePropertiesTool : ImageViewerTool
 	{
+        //TODO (Phoenix5): #10730 - remove this when it's fixed.
 		[ThreadStatic]
 		private static Dictionary<IDesktopWindow, IShelf> _shelves;
 		

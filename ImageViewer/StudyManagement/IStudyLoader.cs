@@ -27,29 +27,31 @@ using ClearCanvas.Dicom.Iod;
 namespace ClearCanvas.ImageViewer.StudyManagement
 {
     /// <summary>
-    /// Tells the study loader what to check when loading a study.
-    /// Note: it's up to the implementation of the study loader to decide on how to handle the instructions. 
+    /// Basic study loader options; it's up to the implementation of the study loader to decide how to handle the instructions. 
     /// </summary>
-    public class StudyLoaderCheckOptions
+    public class StudyLoaderOptions
     {
-        private static readonly StudyLoaderCheckOptions _default = new StudyLoaderCheckOptions(true);
+        private static readonly StudyLoaderOptions _default = new StudyLoaderOptions(false);
 
-        public static StudyLoaderCheckOptions Default{ get { return _default; }}
+        public static StudyLoaderOptions Default{ get { return _default; }}
 
         /// <summary>
-        /// Create an instance of <see cref="StudyLoaderCheckOptions"/> with the given instructions
+        /// Create an instance of <see cref="StudyLoaderOptions"/> with the given instructions
         /// </summary>
-        /// <param name="checkIfStudyIsInUse"></param>
-        public StudyLoaderCheckOptions(bool checkIfStudyIsInUse)
+        /// <param name="ignoreIfStudyInUse"></param>
+        public StudyLoaderOptions(bool ignoreIfStudyInUse)
         {
-            CheckInUse = checkIfStudyIsInUse;
+            IgnoreInUse = ignoreIfStudyInUse;
         }
 
         /// <summary>
-        /// Indicates if the study loader should check if the study is "in use" when loading the study.
-        /// The study loader will throw <see cref="InUseLoadStudyException"/> if the study is in use.
+        /// Indicates if the study loader should attempt to ignore if the study is in use
+        /// and try to load the study anyway.
         /// </summary>
-        public bool CheckInUse { get; private set; }
+        /// <remarks>Note that it depends on the study loader whether it is even possible to ignore
+        /// the fact that the study is in use and load it anyway. Just because this option is set
+        /// does not mean the loader will not still throw an <see cref="InUseLoadStudyException"/>.</remarks>
+        public bool IgnoreInUse { get; private set; }
 
     }
 
@@ -67,25 +69,25 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		/// <param name="studyInstanceUid">The Study Instance UID of the study to be loaded.</param>
 		/// <param name="server">The server from which the study should be loaded.</param>
 		public StudyLoaderArgs(string studyInstanceUid, IApplicationEntity server)
-            :this(studyInstanceUid, server, StudyLoaderCheckOptions.Default)
+            :this(studyInstanceUid, server, null)
 		{
-		    
 		}
 
-        /// <summary>
-        /// Constructs a new <see cref="StudyLoaderArgs"/> using the specified parameters.
-        /// </summary>
-        /// <param name="studyInstanceUid">The Study Instance UID of the study to be loaded.</param>
-        /// <param name="server">The server from which the study should be loaded.</param>
-        public StudyLoaderArgs(string studyInstanceUid, IApplicationEntity server, StudyLoaderCheckOptions options)
+	    /// <summary>
+	    /// Constructs a new <see cref="StudyLoaderArgs"/> using the specified parameters.
+	    /// </summary>
+	    /// <param name="studyInstanceUid">The Study Instance UID of the study to be loaded.</param>
+	    /// <param name="server">The server from which the study should be loaded.</param>
+	    /// <param name="options"> </param>
+	    public StudyLoaderArgs(string studyInstanceUid, IApplicationEntity server, StudyLoaderOptions options)
         {
             _studyInstanceUid = studyInstanceUid;
             _server = server;
 
-            StudyCheckOptions = options;
+            Options = options ?? StudyLoaderOptions.Default;
         }
 
-        public StudyLoaderCheckOptions StudyCheckOptions { get; private set; }
+        public StudyLoaderOptions Options { get; private set; }
 
 		/// <summary>
 		/// Gets the Study Instance UID of the study to be loaded.

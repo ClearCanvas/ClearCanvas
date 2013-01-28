@@ -60,7 +60,7 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
                 var sourceTransform = (ImageSpatialTransform)((ISpatialTransformProvider)SelectedPresentationImage).SpatialTransform;
                 var transform = (ImageSpatialTransform)((ISpatialTransformProvider)_magnificationImage).SpatialTransform;
 
-                float scale = sourceTransform.Scale * ToolSettings.Default.MagnificationFactor;
+                float scale = sourceTransform.Scale * ToolSettings.DefaultInstance.MagnificationFactor;
                 transform.ScaleToFit = false;
                 transform.Scale = scale;
                 transform.TranslationX = 0;
@@ -150,7 +150,7 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
         {
             if (_magnificationImage is IAnnotationLayoutProvider)
             {
-                string magFactor = String.Format("{0:F1}x", ToolSettings.Default.MagnificationFactor);
+                string magFactor = String.Format("{0:F1}x", ToolSettings.DefaultInstance.MagnificationFactor);
                 AnnotationLayout layout = new AnnotationLayout();
                 BasicTextAnnotationItem item = new BasicTextAnnotationItem("mag", "mag", "mag", magFactor);
                 AnnotationBox box = new AnnotationBox(new RectangleF(0.8F, 0F, .2F, .05F), item);

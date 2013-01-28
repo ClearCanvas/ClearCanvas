@@ -98,14 +98,14 @@ namespace ClearCanvas.ImageViewer.Common.ServerDirectory.Tests
             Initialize1();
 
             var local = ServerDirectory.GetLocalServer();
-            Assert.AreEqual("<local>", local.Name);
+            Assert.AreEqual(SR.LocalServerName, local.Name);
             Assert.AreEqual("AETITLE", local.AETitle); //default value from DicomServerSettings.
             Assert.AreEqual("localhost", local.ScpParameters.HostName);
             Assert.AreEqual(104, local.ScpParameters.Port);
             Assert.IsTrue(local.IsLocal);
 
             var contract = local.ToDataContract();
-            Assert.AreEqual("<local>", contract.Server.Name);
+            Assert.AreEqual(SR.LocalServerName, contract.Server.Name);
             Assert.AreEqual("AETITLE", contract.Server.AETitle);
             Assert.AreEqual("localhost", contract.Server.ScpParameters.HostName);
             Assert.AreEqual(104, contract.Server.ScpParameters.Port);
@@ -114,14 +114,14 @@ namespace ClearCanvas.ImageViewer.Common.ServerDirectory.Tests
                                                             {AETitle = "Local2", HostName = "::1", Port = 104});
 
             local = ServerDirectory.GetLocalServer();
-            Assert.AreEqual("<local>", local.Name);
+            Assert.AreEqual(SR.LocalServerName, local.Name);
             Assert.AreEqual("Local2", local.AETitle);
             Assert.AreEqual("::1", local.ScpParameters.HostName);
             Assert.AreEqual(104, local.ScpParameters.Port);
             Assert.IsTrue(local.IsLocal);
 
             contract = local.ToDataContract();
-            Assert.AreEqual("<local>", contract.Server.Name);
+            Assert.AreEqual(SR.LocalServerName, contract.Server.Name);
             Assert.AreEqual("Local2", contract.Server.AETitle);
             Assert.AreEqual("::1", contract.Server.ScpParameters.HostName);
             Assert.AreEqual(104, contract.Server.ScpParameters.Port);

@@ -161,6 +161,7 @@ namespace ClearCanvas.ImageServer.Services.Streaming.Shreds
 
 			// NOTE: This method is run under different threads for different http requests.
             HttpListenerContext context = args.Context;
+            if (string.IsNullOrEmpty(Thread.CurrentThread.Name))
             Thread.CurrentThread.Name = String.Format("Streaming (client: {0}:{1})", context.Request.RemoteEndPoint.Address, context.Request.RemoteEndPoint.Port);
 
 		    AddContext(context);

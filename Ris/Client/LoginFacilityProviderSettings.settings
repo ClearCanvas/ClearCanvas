@@ -1,0 +1,9 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="ClearCanvas.Ris.Client" GeneratedClassName="LoginFacilityProviderSettings">
+  <Profiles />
+  <Settings>
+    <Setting Name="IsRisCoreFeatureLicensedInternal" Description="This setting acts as a local cache of whether the RIS.Core feature is licensed." Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+  </Settings>
+</SettingsFile>

@@ -292,10 +292,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <UnitTestImages Include="$(TrunkDirectory)\ImageViewer\RoiGraphics\Tests\Images\**\*.*" Exclude=".svn\*.*;_svn\*.*" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ExecutableBootstrapFiles Include="$(TrunkDirectory)\Executable\bin\$(Configuration)\ClearCanvas.Executable.exe" />
   </ItemGroup>
 
@@ -459,9 +455,6 @@
 
     <!-- Always copy database for shred host -->
     <CallTarget Condition="$(ShredHostBuild) Or !$(ExcludeDatabase)" Targets="Copy Database Files" />
-    
-    <!-- If building in debug configuration, copy unit test images -->
-    <Copy Condition="'$(Configuration)' == 'Debug'" SourceFiles="@(UnitTestImages)" DestinationFiles="@(UnitTestImages->'$(PluginsDirectory)/TestImages/%(RecursiveDir)%(Filename)%(Extension)')" />
 
   </Target>
 

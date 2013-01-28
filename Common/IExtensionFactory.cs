@@ -33,22 +33,28 @@ namespace ClearCanvas.Common
 	public interface IExtensionFactory
     {
 		/// <summary>
-		/// Creates one of each type of object that extends the input <paramref name="extensionPoint" />, 
-		/// matching the input <paramref name="filter" />; creates a single extension if <paramref name="justOne"/> is true.
+		/// Creates instances of available extensions that extend the specified extension point and match the specified filter.
 		/// </summary>
-		/// <param name="extensionPoint">The <see cref="ExtensionPoint"/> to create extensions for.</param>
-		/// <param name="filter">The filter used to match each extension that is discovered.</param>
+		/// <param name="extensionPoint">The extension point for which to create extensions.</param>
+		/// <param name="filter">An <see cref="ExtensionFilter"/> used to limit the result set to extensions with particular characteristics.</param>
 		/// <param name="justOne">Indicates whether or not to return only the first matching extension that is found.</param>
-		/// <returns></returns>
+		/// <returns>A set of extension instances.</returns>
+		/// <remarks>
+		/// Available extensions are those which are both enabled and licensed.
+		/// If <paramref name="justOne"/> is true, the first matching extension that is successfully instantiated is returned,
+		/// an no other extensions are instantiated.
+		/// </remarks>
 		object[] CreateExtensions(ExtensionPoint extensionPoint, ExtensionFilter filter, bool justOne);
 
 		/// <summary>
-		/// Gets metadata describing all extensions of the input <paramref name="extensionPoint"/>, 
-		/// matching the given <paramref name="filter"/>.
+		/// Lists all available extensions for the specified <paramref name="extensionPoint"/> that match the specified <paramref name="filter"/>.
 		/// </summary>
-		/// <param name="extensionPoint">The <see cref="ExtensionPoint"/> whose extension metadata is to be retrieved.</param>
-		/// <param name="filter">An <see cref="ExtensionFilter"/> used to filter out extensions with particular characteristics.</param>
-		/// <returns></returns>
-        ExtensionInfo[] ListExtensions(ExtensionPoint extensionPoint, ExtensionFilter filter);
+		/// <param name="extensionPoint">The extension point for which to retrieve a list of extensions.</param>
+		/// <param name="filter">An <see cref="ExtensionFilter"/> used to limit the result set to extensions with particular characteristics.</param>
+		/// <returns>A list of <see cref="ExtensionInfo"/> objects describing available extensions.</returns>
+		/// <remarks>
+		/// Available extensions are those which are both enabled and licensed.
+		/// </remarks>
+		ExtensionInfo[] ListExtensions(ExtensionPoint extensionPoint, ExtensionFilter filter);
     }
 }

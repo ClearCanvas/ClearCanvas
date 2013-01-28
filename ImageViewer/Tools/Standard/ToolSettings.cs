@@ -24,6 +24,7 @@
 
 using System;
 using System.Configuration;
+using ClearCanvas.Common;
 using ClearCanvas.Common.Configuration;
 using ClearCanvas.Desktop;
 using ClearCanvas.ImageViewer.Tools.Standard.Configuration;
@@ -38,9 +39,25 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 
 		public ToolSettings()
 		{
-            // TODO (Phoenix5): Hack for RSNA that must be removed.
-            //ApplicationSettingsRegistry.Instance.RegisterInstance(this);
+            ApplicationSettingsRegistry.Instance.RegisterInstance(this);
         }
+
+        //TODO (Phoenix5): #10730 - remove this when it's fixed.
+        #region WebStation Settings Hack
+        [ThreadStatic]
+        private static ToolSettings _webDefault;
+
+        public static ToolSettings DefaultInstance
+        {
+            get
+            {
+                if (Application.GuiToolkitID == GuiToolkitID.Web)
+                    return _webDefault ?? (_webDefault = new ToolSettings());
+
+                return Default;
+            }
+        }
+        #endregion
 
 		protected override void OnSettingsLoaded(object sender, SettingsLoadedEventArgs e)
 		{

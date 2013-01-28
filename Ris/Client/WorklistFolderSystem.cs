@@ -97,7 +97,7 @@ namespace ClearCanvas.Ris.Client
             {
                 return CollectionUtils.Map(
                     new TFolderExtensionPoint().ListExtensions(),
-                    (ExtensionInfo info) => GetWorklistClassForFolderClass(info.ExtensionClass));
+                    (ExtensionInfo info) => GetWorklistClassForFolderClass(info.ExtensionClass.Resolve()));
             }
         }
 
@@ -238,7 +238,7 @@ namespace ClearCanvas.Ris.Client
         {
             // create an instance of the folder corresponding to the specified worklist class
             var folder = (IWorklistFolder)new TFolderExtensionPoint()
-                .CreateExtension(info => worklist.ClassName == GetWorklistClassForFolderClass(info.ExtensionClass));
+                .CreateExtension(info => worklist.ClassName == GetWorklistClassForFolderClass(info.ExtensionClass.Resolve()));
 
             if (folder == null || !(folder is IInitializeWorklistFolder))
                 return null;

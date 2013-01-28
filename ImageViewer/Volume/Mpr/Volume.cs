@@ -23,6 +23,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using ClearCanvas.Common;
 using ClearCanvas.Dicom;
@@ -104,7 +105,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 		/// Consider using one of the static helpers such as <see cref="Create(ClearCanvas.ImageViewer.IDisplaySet)"/> to construct and automatically fill a <see cref="Volume"/>.
 		/// </remarks>
 		public Volume(short[] data, Size3D dimensions, Vector3D spacing, Vector3D originPatient,
-		              Matrix orientationPatient, IDicomAttributeProvider dicomAttributeModel, int paddingValue, string sourceSeriesInstanceUid)
+					  Matrix orientationPatient, IList<IDicomAttributeProvider> dicomAttributeModel, int paddingValue, string sourceSeriesInstanceUid)
 			: this(data, null, dimensions, spacing, originPatient, orientationPatient,
 			       VolumeSopDataSourcePrototype.Create(dicomAttributeModel, 16, 16, true), paddingValue, sourceSeriesInstanceUid, 0, 0) {}
 
@@ -115,7 +116,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 		/// Consider using one of the static helpers such as <see cref="Create(ClearCanvas.ImageViewer.IDisplaySet)"/> to construct and automatically fill a <see cref="Volume"/>.
 		/// </remarks>
 		public Volume(ushort[] data, Size3D dimensions, Vector3D spacing, Vector3D originPatient,
-		              Matrix orientationPatient, IDicomAttributeProvider dicomAttributeModel, int paddingValue, string sourceSeriesInstanceUid)
+					  Matrix orientationPatient, IList<IDicomAttributeProvider> dicomAttributeModel, int paddingValue, string sourceSeriesInstanceUid)
 			: this(null, data, dimensions, spacing, originPatient, orientationPatient,
 			       VolumeSopDataSourcePrototype.Create(dicomAttributeModel, 16, 16, false), paddingValue, sourceSeriesInstanceUid, 0, 0) {}
 
@@ -514,10 +515,10 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 #if UNIT_TESTS
 
 		public Volume(short[] data, Size3D dimensions, Vector3D spacing, Vector3D originPatient, Matrix orientationPatient, IDicomAttributeProvider attributeProvider, int paddingValue)
-			: this(data, dimensions, spacing, originPatient, orientationPatient, attributeProvider, paddingValue, null) {}
+			: this(data, dimensions, spacing, originPatient, orientationPatient, new[] {attributeProvider}, paddingValue, null) {}
 
 		public Volume(ushort[] data, Size3D dimensions, Vector3D spacing, Vector3D originPatient, Matrix orientationPatient, IDicomAttributeProvider attributeProvider, int paddingValue)
-			: this(data, dimensions, spacing, originPatient, orientationPatient, attributeProvider, paddingValue, null) {}
+			: this(data, dimensions, spacing, originPatient, orientationPatient, new[] {attributeProvider}, paddingValue, null) {}
 
 		internal int this[int x, int y, int z]
 		{

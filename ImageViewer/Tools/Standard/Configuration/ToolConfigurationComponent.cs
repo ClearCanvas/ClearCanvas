@@ -69,14 +69,14 @@ namespace ClearCanvas.ImageViewer.Tools.Standard.Configuration
 		{
 			base.Start();
 
-			var settings = ToolSettings.Default;
+            var settings = ToolSettings.DefaultInstance;
 			_modalityBehavior = settings.CachedToolModalityBehavior;
 			_invertZoomDirection = settings.InvertedZoomToolOperation;
 		}
 
 		public override void Save()
 		{
-			var settings = ToolSettings.Default;
+            var settings = ToolSettings.DefaultInstance;
 			settings.ToolModalityBehavior = _modalityBehavior;
 			settings.InvertedZoomToolOperation = _invertZoomDirection;
 			settings.Save();

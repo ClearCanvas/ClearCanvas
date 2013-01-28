@@ -61,22 +61,22 @@ namespace ClearCanvas.ImageServer.Services.Archiving.Hsm
 		/// </summary>
 		protected override void OnExecute(CommandProcessor theProcessor)
 		{
-			using (var zipService = Platform.GetService<IZipService>())
+		    var zipService = Platform.GetService<IZipService>();
+			using (var zipWriter = zipService.OpenWrite(_zipFile))
 			{
-			    zipService.OpenWrite(_zipFile);
-                zipService.ForceCompress = HsmSettings.Default.CompressZipFiles;
-                zipService.TempFileFolder = _tempFolder;
-                zipService.Comment = String.Format("Archive for study {0}", _studyXml.StudyInstanceUid);
+                zipWriter.ForceCompress = HsmSettings.Default.CompressZipFiles;
+                zipWriter.TempFileFolder = _tempFolder;
+                zipWriter.Comment = String.Format("Archive for study {0}", _studyXml.StudyInstanceUid);
 
 				// Add the studyXml file
-                zipService.AddFile(Path.Combine(_studyFolder, String.Format("{0}.xml", _studyXml.StudyInstanceUid)), String.Empty);
+                zipWriter.AddFile(Path.Combine(_studyFolder, String.Format("{0}.xml", _studyXml.StudyInstanceUid)), String.Empty);
 
 				// Add the studyXml.gz file
-                zipService.AddFile(Path.Combine(_studyFolder, String.Format("{0}.xml.gz", _studyXml.StudyInstanceUid)), String.Empty);
+                zipWriter.AddFile(Path.Combine(_studyFolder, String.Format("{0}.xml.gz", _studyXml.StudyInstanceUid)), String.Empty);
 
 			    string uidMapXmlPath = Path.Combine(_studyFolder, "UidMap.xml");
                 if (File.Exists(uidMapXmlPath))
-                    zipService.AddFile(uidMapXmlPath, String.Empty);
+                    zipWriter.AddFile(uidMapXmlPath, String.Empty);
 
 				// Add each sop from the StudyXmlFile
 				foreach (SeriesXml seriesXml in _studyXml)
@@ -85,10 +85,10 @@ namespace ClearCanvas.ImageServer.Services.Archiving.Hsm
 						string filename = Path.Combine(_studyFolder, seriesXml.SeriesInstanceUid);
 						filename = Path.Combine(filename, String.Format("{0}.dcm", instanceXml.SopInstanceUid));
 
-                        zipService.AddFile(filename, seriesXml.SeriesInstanceUid);
+                        zipWriter.AddFile(filename, seriesXml.SeriesInstanceUid);
 					}
 
-                zipService.Save();
+                zipWriter.Save();
 			}
 		}
 

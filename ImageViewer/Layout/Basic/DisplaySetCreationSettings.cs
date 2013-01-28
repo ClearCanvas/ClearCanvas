@@ -27,6 +27,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
 using System.Xml;
+using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Desktop;
 using System.ComponentModel;
@@ -117,7 +118,7 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
 
         public bool CreateSingleImageDisplaySetsEnabled
         {
-            get { return DisplaySetCreationSettings.Default.GetSingleImageModalities().Contains(_modality); }
+            get { return DisplaySetCreationSettings.DefaultInstance.GetSingleImageModalities().Contains(_modality); }
         }
 
         public bool CreateAllImagesDisplaySet
@@ -148,7 +149,7 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
 
         public bool CreateAllImagesDisplaySetEnabled
         {
-            get { return DisplaySetCreationSettings.Default.GetAllImagesModalities().Contains(_modality); }
+            get { return DisplaySetCreationSettings.DefaultInstance.GetAllImagesModalities().Contains(_modality); }
         }
 
         public bool ShowOriginalSeries
@@ -226,7 +227,7 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
 
 		public bool SplitMixedMultiframesEnabled
 		{
-			get { return DisplaySetCreationSettings.Default.GetMixedMultiframeModalities().Contains(_modality); }
+			get { return DisplaySetCreationSettings.DefaultInstance.GetMixedMultiframeModalities().Contains(_modality); }
 		}
 
 		public bool ShowOriginalMixedMultiframeSeries
@@ -554,5 +555,22 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
 			this.DisplaySetCreationSettingsXml = document;
 			this.Save();
 		}
-	}
+
+        //TODO (Phoenix5): #10730 - remove this when it's fixed.
+        #region WebStation Settings Hack
+        [ThreadStatic]
+        private static DisplaySetCreationSettings _webDefault;
+
+        public static DisplaySetCreationSettings DefaultInstance
+        {
+            get
+            {
+                if (Application.GuiToolkitID == GuiToolkitID.Web)
+                    return _webDefault ?? (_webDefault = new DisplaySetCreationSettings());
+
+                return Default;
+            }
+        }
+        #endregion
+    }
 }

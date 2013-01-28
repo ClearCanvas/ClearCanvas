@@ -49,7 +49,7 @@ namespace ClearCanvas.Enterprise.Hibernate.Ddl
 			// create a resource resolver that will scan all plugins
 			// TODO: we should only scan plugins that are tied to the specified PersistentStore, but there is currently no way to know this
 			IResourceResolver resolver = new ResourceResolver(
-				CollectionUtils.Map(Platform.PluginManager.Plugins, (PluginInfo pi) => pi.Assembly).ToArray());
+				CollectionUtils.Map(Platform.PluginManager.Plugins, (PluginInfo pi) => pi.Assembly.Resolve()).ToArray());
 
 			// find all dbi resources
 			var rx = new Regex("dbi.xml$", RegexOptions.Compiled | RegexOptions.IgnoreCase);

@@ -74,6 +74,7 @@ namespace ClearCanvas.ImageViewer.Tools.Synchronization
 
 		#region Private Fields
 
+        //TODO (Phoenix5): #10730 - remove this when it's fixed.
 		[ThreadStatic]
 		private static Dictionary<IImageViewer, SynchronizationToolCoordinator> _coordinators;
 

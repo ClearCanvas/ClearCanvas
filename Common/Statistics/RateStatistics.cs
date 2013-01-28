@@ -207,7 +207,7 @@ namespace ClearCanvas.Common.Statistics
             Debug.Assert(_stopWatch.IsRunning);
 
             _stopWatch.Stop();
-            Debug.Assert(_stopWatch.ElapsedTicks > 0);
+            //Debug.Assert(_stopWatch.ElapsedTicks > 0);
         }
 
         #endregion

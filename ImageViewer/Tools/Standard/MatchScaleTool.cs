@@ -57,7 +57,7 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 
 		public MatchScaleTool()
 		{
-			_matchScaleNonParallelImages = ToolSettings.Default.MatchScaleForNonParallelImages;
+            _matchScaleNonParallelImages = ToolSettings.DefaultInstance.MatchScaleForNonParallelImages;
 		}
 
 		#region Private Properties

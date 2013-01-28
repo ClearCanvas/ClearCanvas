@@ -28,7 +28,6 @@ using System.Globalization;
 using System.Threading;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
-using ClearCanvas.Desktop.Actions;
 using ClearCanvas.Desktop.Configuration;
 using ClearCanvas.Desktop.Tools;
 
@@ -555,7 +554,7 @@ namespace ClearCanvas.Desktop
     	/// <summary>
     	/// Gets or sets the current application UI culture.
     	/// </summary>
-    	protected CultureInfo CurrentUICultureCore
+    	protected virtual CultureInfo CurrentUICultureCore
     	{
     		get
     		{
@@ -584,7 +583,7 @@ namespace ClearCanvas.Desktop
     	/// <summary>
     	/// Gets or sets the current application UI theme.
     	/// </summary>
-		protected ApplicationTheme CurrentUIThemeCore
+		protected virtual ApplicationTheme CurrentUIThemeCore
     	{
     		get
     		{
@@ -654,7 +653,10 @@ namespace ClearCanvas.Desktop
 				_initialized = true;
 
                 PhoneHome.Startup();
-			
+
+				// now that the desktop is fully initialized, take advantage of idle time to 
+				// load any outstanding plugins
+				Platform.PluginManager.EnableBackgroundAssemblyLoading(true);
             };
 
             // init windows collection

@@ -52,11 +52,8 @@ namespace ClearCanvas.Enterprise.Hibernate
 
         public AssembliesHbmOrderer(IEnumerable plugins)
         {
-            IList<Assembly> assemblies = CollectionUtils.Map<PluginInfo, Assembly, List<Assembly>>(plugins,
-                delegate(PluginInfo plugin)
-                {
-                    return plugin.Assembly;
-                });
+            IList<Assembly> assemblies = CollectionUtils.Map<PluginInfo, Assembly, List<Assembly>>(
+				plugins, plugin => plugin.Assembly.Resolve());
 
             _assemblies.AddRange(assemblies);
         }

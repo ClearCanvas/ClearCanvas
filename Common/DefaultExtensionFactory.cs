@@ -37,7 +37,7 @@ namespace ClearCanvas.Common
     /// </remarks>
     internal class DefaultExtensionFactory : IExtensionFactory
     {
-    	private volatile IDictionary<Type, List<ExtensionInfo>> _extensionMap;
+    	private volatile IDictionary<TypeRef, List<ExtensionInfo>> _extensionMap;
 		private readonly object _syncLock = new object();
 
         internal DefaultExtensionFactory()
@@ -46,15 +46,19 @@ namespace ClearCanvas.Common
 
         #region IExtensionFactory Members
 
-        /// <summary>
-        /// Creates one of each type of object that extends the input <paramref name="extensionPoint" />, 
-        /// matching the input <paramref name="filter" />; creates a single extension if <paramref name="justOne"/> is true.
-        /// </summary>
-        /// <param name="extensionPoint">The <see cref="ExtensionPoint"/> to create extensions for.</param>
-        /// <param name="filter">The filter used to match each extension that is discovered.</param>
-        /// <param name="justOne">Indicates whether or not to return only the first matching extension that is found.</param>
-        /// <returns></returns>
-        public object[] CreateExtensions(ExtensionPoint extensionPoint, ExtensionFilter filter, bool justOne)
+    	/// <summary>
+    	/// Creates instances of available extensions that extend the specified extension point and match the specified filter.
+    	/// </summary>
+    	/// <param name="extensionPoint">The extension point for which to create extensions.</param>
+    	/// <param name="filter">An <see cref="ExtensionFilter"/> used to limit the result set to extensions with particular characteristics.</param>
+    	/// <param name="justOne">Indicates whether or not to return only the first matching extension that is found.</param>
+    	/// <returns>A set of extension instances.</returns>
+    	/// <remarks>
+    	/// Available extensions are those which are both enabled and licensed.
+    	/// If <paramref name="justOne"/> is true, the first matching extension that is successfully instantiated is returned,
+    	/// an no other extensions are instantiated.
+    	/// </remarks>
+    	public object[] CreateExtensions(ExtensionPoint extensionPoint, ExtensionFilter filter, bool justOne)
         {
             // get subset of applicable extensions
             var extensions = ListExtensionsHelper(extensionPoint, filter);
@@ -69,7 +73,7 @@ namespace ClearCanvas.Common
                 try
                 {
                     // instantiate
-                    var o = Activator.CreateInstance(extension.ExtensionClass);
+                    var o = Activator.CreateInstance(extension.ExtensionClass.Resolve());
                     createdObjects.Add(o);
                 }
                 catch (Exception e)
@@ -84,14 +88,16 @@ namespace ClearCanvas.Common
             return createdObjects.ToArray();
         }
 
-        /// <summary>
-        /// Gets metadata describing all enabled extensions of the input <paramref name="extensionPoint"/>, 
-        /// matching the given <paramref name="filter"/>.
-        /// </summary>
-        /// <param name="extensionPoint">The <see cref="ExtensionPoint"/> whose extension metadata is to be retrieved.</param>
-        /// <param name="filter">An <see cref="ExtensionFilter"/> used to filter out extensions with particular characteristics.</param>
-        /// <returns></returns>
-        public ExtensionInfo[] ListExtensions(ExtensionPoint extensionPoint, ExtensionFilter filter)
+    	/// <summary>
+    	/// Lists all available extensions for the specified <paramref name="extensionPoint"/> that match the specified <paramref name="filter"/>.
+    	/// </summary>
+    	/// <param name="extensionPoint">The extension point for which to retrieve a list of extensions.</param>
+    	/// <param name="filter">An <see cref="ExtensionFilter"/> used to limit the result set to extensions with particular characteristics.</param>
+    	/// <returns>A list of <see cref="ExtensionInfo"/> objects describing available extensions.</returns>
+    	/// <remarks>
+    	/// Available extensions are those which are both enabled and licensed.
+    	/// </remarks>
+    	public ExtensionInfo[] ListExtensions(ExtensionPoint extensionPoint, ExtensionFilter filter)
         {
         	return ListExtensionsHelper(extensionPoint, filter).ToArray();
         }

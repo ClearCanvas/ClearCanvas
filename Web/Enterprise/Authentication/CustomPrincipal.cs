@@ -76,6 +76,8 @@ namespace ClearCanvas.Web.Enterprise.Authentication
             get { return _credentials.DisplayName; }
         }
 
+        public bool WarningsDisplayed { get; set; }
+
         #region IUserCredentialsProvider
 
         public string UserName

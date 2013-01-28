@@ -54,7 +54,7 @@ namespace ClearCanvas.Server.ShredHost
 		{
 			var types = new List<Type>();
 
-			List<Assembly> assemblies = CollectionUtils.Map(Platform.PluginManager.Plugins, (PluginInfo p) => p.Assembly);
+			List<Assembly> assemblies = CollectionUtils.Map(Platform.PluginManager.Plugins, (PluginInfo p) => p.Assembly.Resolve());
 			assemblies.Add(typeof(ShredSettingsMigrator).Assembly);
 			foreach (var assembly in assemblies)
 			{

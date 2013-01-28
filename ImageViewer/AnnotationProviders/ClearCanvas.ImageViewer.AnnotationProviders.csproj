@@ -88,6 +88,7 @@
     </Compile>
     <Compile Include="Presentation\DisplaySetAnnotationItems.cs" />
     <Compile Include="Presentation\ImageCalibrationAnnotationItem.cs" />
+    <Compile Include="Presentation\LossyImagePresentationAnnotationItem.cs" />
     <Compile Include="Presentation\PresentationAnnotationItemProvider.cs">
       <SubType>Code</SubType>
     </Compile>

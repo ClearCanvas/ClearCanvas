@@ -117,7 +117,7 @@ namespace ClearCanvas.Desktop.Configuration.Tools
 		{
 			get
 			{
-				var nodes = ActionModelSettings.Default.ActionModelsXml.SelectNodes("/action-models/action-model");
+                var nodes = ActionModelSettings.DefaultInstance.ActionModelsXml.SelectNodes("/action-models/action-model");
 				return nodes == null ? new string[0] : nodes.OfType<XmlElement>().Select(x => x.GetAttribute("id")).ToArray();
 			}
 		}
@@ -157,7 +157,7 @@ namespace ClearCanvas.Desktop.Configuration.Tools
 		private static IActionSet CreateAbstractActionSet(string actionModelId)
 		{
 			var dummyResourceResolver = new ResourceResolver(typeof (ActionModelsTool), false);
-			var actionNodes = ActionModelSettings.Default.ActionModelsXml.SelectNodes(string.Format("/action-models/action-model[@id='{0}']/action", actionModelId));
+			var actionNodes = ActionModelSettings.DefaultInstance.ActionModelsXml.SelectNodes(string.Format("/action-models/action-model[@id='{0}']/action", actionModelId));
 			return actionNodes != null ? new ActionSet((from XmlElement action in actionNodes select AbstractAction.Create(action.GetAttribute("id"), action.GetAttribute("path"), true, dummyResourceResolver)).ToList()) : new ActionSet();
 		}
 

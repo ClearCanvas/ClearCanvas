@@ -98,6 +98,11 @@ namespace ClearCanvas.ImageServer.Web.Common.Security
                             session.User.WarningMessages = warningMessages.Length > 0 
                                 ? new List<string>(warningMessages) : new List<string>();
                         }
+
+                        if (!string.IsNullOrEmpty(fields[3]))
+                        {
+                            session.User.WarningsDisplayed = bool.Parse(fields[3]);
+                        }
                     }
 
                     // Initialize the session. This will throw exception if the session is no longer

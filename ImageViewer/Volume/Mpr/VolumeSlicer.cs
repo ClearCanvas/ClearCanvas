@@ -172,7 +172,8 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 			var throughPointSliceLocation = slicePlaneNormal.Dot(sliceThroughPoint);
 
 			// compute the through point of the first slice
-			var initialThroughPoint = sliceThroughPoint + (startingSliceLocation - throughPointSliceLocation)/sliceSpacing*spacingVector;
+			// (subtract an extra spacing vector, because we're computing from the larger end of the volume voxels, while VTK draws slices from the smaller end of the voxels.
+			var initialThroughPoint = sliceThroughPoint + (startingSliceLocation - throughPointSliceLocation)/sliceSpacing*spacingVector - spacingVector;
 
 			// generate the slice SOPs by computing additional through points 
 			var list = new List<ISopDataSource>();
@@ -238,7 +239,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 
 		private float GetDefaultSpacing()
 		{
-			MprSettings settings = MprSettings.Default;
+            MprSettings settings = MprSettings.DefaultInstance;
 
 			Vector3D spacingVector = ActualSliceSpacingVector;
 			if (settings.AutoSliceSpacing)
