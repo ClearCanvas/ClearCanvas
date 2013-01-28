@@ -248,7 +248,7 @@ namespace ClearCanvas.ImageViewer.InputManagement
 		private uint _clickCount;
 
 		private readonly IViewerShortcutManager _shortcutManager;
-		private readonly DelayedEventPublisher _delayedContextMenuRequestPublisher;
+		private DelayedEventPublisher _delayedContextMenuRequestPublisher;
 
 		#endregion
 
@@ -271,8 +271,16 @@ namespace ClearCanvas.ImageViewer.InputManagement
 
 		public void Dispose()
 		{
+            if (_delayedContextMenuRequestPublisher == null)
+                return;
+
+		    ReleaseCapture(true);
+		    this.CaptureMouseWheelHandler = null;
+
 			_delayedContextMenuRequestPublisher.Dispose();
 		    _tile.ContextMenuRequested -= ProcessExplicitContextMenuRequest;
+
+		    _delayedContextMenuRequestPublisher = null;
 		}
 
 		#region Private Properties
