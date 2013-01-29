@@ -34,6 +34,7 @@ namespace ClearCanvas.ImageServer.Web.Common.Data
         public string AuthorityGroupRef { get; private set; }
         public string Name { get; private set; }
         public string Description { get; set; }
+        public bool IsDataGroup { get; set; }
         public bool HasAccessToCurrentPartition { get; set; }
         public bool CanAccessAllPartitions { get; set; }
         public bool CanAccessAllStudies { get; set; }
@@ -49,7 +50,7 @@ namespace ClearCanvas.ImageServer.Web.Common.Data
             Name = detail.Name;
             Description = detail.Description;
             AuthorityGroupRef = detail.AuthorityGroupRef.ToString(false, false);
-            
+            IsDataGroup = detail.DataGroup;
         }
     }
 
@@ -79,6 +80,7 @@ namespace ClearCanvas.ImageServer.Web.Common.Data
 
             var item = new ListItem(displayContent, info.AuthorityGroupRef);
             item.Attributes["title"] = info.Description;
+            item.Attributes["DataGroup"] = info.IsDataGroup ? "true" : "false";
 
             item.Selected = info.HasAccessToCurrentPartition;
             item.Enabled = !info.CanAccessAllPartitions;

@@ -51,11 +51,12 @@ namespace ClearCanvas.ImageServer.Web.Common.Data
         /// Add a partition in the database.
         /// </summary>
         /// <param name="partition"></param>
-        public bool AddPartition(ServerPartition partition, List<string> groupsWithAccess)
+        /// <param name="groupsWithDataAccess"></param>
+        public bool AddPartition(ServerPartition partition, List<string> groupsWithDataAccess)
         {
             Platform.Log(LogLevel.Info, "Adding new server partition : AETitle = {0}", partition.AeTitle);
 
-            bool result = _serverAdapter.AddServerPartition(partition, groupsWithAccess);
+            bool result = _serverAdapter.AddServerPartition(partition, groupsWithDataAccess);
 
             if (result)
                 Platform.Log(LogLevel.Info, "Server Partition added : AETitle = {0}", partition.AeTitle);
@@ -70,12 +71,13 @@ namespace ClearCanvas.ImageServer.Web.Common.Data
         /// 
         /// </summary>
         /// <param name="partition"></param>
+        /// <param name="groupsWithDataAccess"></param>
         /// <returns></returns>
-        public bool UpdatePartition(ServerPartition partition, List<string> groupsWithAccess)
+        public bool UpdatePartition(ServerPartition partition, List<string> groupsWithDataAccess)
         {
             Platform.Log(LogLevel.Info, "Updating server partition: AETitle = {0}", partition.AeTitle);
 
-            bool result = _serverAdapter.Update(partition, groupsWithAccess);
+            bool result = _serverAdapter.Update(partition, groupsWithDataAccess);
 
             if (result)
                 Platform.Log(LogLevel.Info, "Server Partition updated : AETitle = {0}", partition.AeTitle);
