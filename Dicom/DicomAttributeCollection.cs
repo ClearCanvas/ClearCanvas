@@ -739,6 +739,9 @@ namespace ClearCanvas.Dicom
             {
                 if (item.Tag.Element == 0x0000)
                     continue;
+                if (item.IsEmpty)
+                    continue;
+
                 if (item.Tag.Group != group)
                 {
                     group = item.Tag.Group;
