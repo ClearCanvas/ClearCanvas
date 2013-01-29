@@ -61,6 +61,30 @@ namespace ClearCanvas.ImageViewer.AnnotationProviders.Dicom
 				new DicomAnnotationItem<string>
 					(
 					// this is actually DX Positioning module
+					"Dicom.DXImage.PositionerPrimaryAngle",
+					resolver,
+					f => FormatFloat64(f, DicomTags.PositionerPrimaryAngle, SR.FormatDegrees),
+					DicomDataFormatHelper.RawStringFormat
+					)
+				);
+
+			_annotationItems.Add
+				(
+				new DicomAnnotationItem<string>
+					(
+					// this is actually DX Positioning module
+					"Dicom.DXImage.PositionerSecondaryAngle",
+					resolver,
+					f => FormatFloat64(f, DicomTags.PositionerSecondaryAngle, SR.FormatDegrees),
+					DicomDataFormatHelper.RawStringFormat
+					)
+				);
+
+			_annotationItems.Add
+				(
+				new DicomAnnotationItem<string>
+					(
+					// this is actually DX Positioning module
 					"Dicom.DXImage.BodyPartThickness",
 					resolver,
 					f => string.Format(SR.FormatMillimeters, FormatFloat64(f, DicomTags.BodyPartThickness, "{0:F1}")),
@@ -136,6 +160,30 @@ namespace ClearCanvas.ImageViewer.AnnotationProviders.Dicom
 					"Dicom.DXImage.KVP",
 					resolver,
 					f => FormatFloat64(f, DicomTags.Kvp, SR.FormatKilovolts),
+					DicomDataFormatHelper.RawStringFormat
+					)
+				);
+
+			_annotationItems.Add
+				(
+				new DicomAnnotationItem<string>
+					(
+					// this isn't even a DX module, but other X-Ray related modules
+					"Dicom.DXImage.AveragePulseWidth",
+					resolver,
+					f => FormatFloat64(f, DicomTags.AveragePulseWidth, SR.FormatMilliseconds),
+					DicomDataFormatHelper.RawStringFormat
+					)
+				);
+
+			_annotationItems.Add
+				(
+				new DicomAnnotationItem<string>
+					(
+					// this isn't even a DX module, but other X-Ray related modules
+					"Dicom.DXImage.ImageAndFluoroscopyAreaDoseProduct",
+					resolver,
+					f => FormatFloat64(f, DicomTags.ImageAndFluoroscopyAreaDoseProduct, SR.FormatDecigraySquareCentimeters),
 					DicomDataFormatHelper.RawStringFormat
 					)
 				);

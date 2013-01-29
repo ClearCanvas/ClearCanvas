@@ -993,4 +993,32 @@
   <data name="Dicom_DXImage_XRayTubeCurrent_Label" xml:space="preserve">
     <value>Tube Current</value>
   </data>
+  <data name="Dicom_DXImage_PositionerPrimaryAngle_DisplayName" xml:space="preserve">
+    <value>Positioner Primary Angle</value>
+  </data>
+  <data name="Dicom_DXImage_PositionerPrimaryAngle_Label" xml:space="preserve">
+    <value>Positioner Primary Angle</value>
+  </data>
+  <data name="Dicom_DXImage_PositionerSecondaryAngle_DisplayName" xml:space="preserve">
+    <value>Positioner Secondary Angle</value>
+  </data>
+  <data name="Dicom_DXImage_PositionerSecondaryAngle_Label" xml:space="preserve">
+    <value>Positioner Secondary Angle</value>
+  </data>
+  <data name="Dicom_DXImage_AveragePulseWidth_DisplayName" xml:space="preserve">
+    <value>Average Pulse Width</value>
+  </data>
+  <data name="Dicom_DXImage_AveragePulseWidth_Label" xml:space="preserve">
+    <value>Avg Pulse Width</value>
+  </data>
+  <data name="Dicom_DXImage_ImageAndFluoroscopyAreaDoseProduct_DisplayName" xml:space="preserve">
+    <value>Image and Fluoroscopy Area Dose Product</value>
+  </data>
+  <data name="Dicom_DXImage_ImageAndFluoroscopyAreaDoseProduct_Label" xml:space="preserve">
+    <value>Total DAP</value>
+  </data>
+  <data name="FormatDecigraySquareCentimeters" xml:space="preserve">
+    <value>{0} dGy·cm²</value>
+    <comment>Do not use format specifiers here - inputs are preformatted strings!</comment>
+  </data>
 </root>

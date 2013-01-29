@@ -340,6 +340,24 @@ namespace ClearCanvas.ImageViewer.AnnotationProviders {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Average Pulse Width.
+        /// </summary>
+        public static string Dicom_DXImage_AveragePulseWidth_DisplayName {
+            get {
+                return ResourceManager.GetString("Dicom_DXImage_AveragePulseWidth_DisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Avg Pulse Width.
+        /// </summary>
+        public static string Dicom_DXImage_AveragePulseWidth_Label {
+            get {
+                return ResourceManager.GetString("Dicom_DXImage_AveragePulseWidth_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Body Part Thickness.
         /// </summary>
         public static string Dicom_DXImage_BodyPartThickness_DisplayName {
@@ -502,6 +520,24 @@ namespace ClearCanvas.ImageViewer.AnnotationProviders {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Image and Fluoroscopy Area Dose Product.
+        /// </summary>
+        public static string Dicom_DXImage_ImageAndFluoroscopyAreaDoseProduct_DisplayName {
+            get {
+                return ResourceManager.GetString("Dicom_DXImage_ImageAndFluoroscopyAreaDoseProduct_DisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Total DAP.
+        /// </summary>
+        public static string Dicom_DXImage_ImageAndFluoroscopyAreaDoseProduct_Label {
+            get {
+                return ResourceManager.GetString("Dicom_DXImage_ImageAndFluoroscopyAreaDoseProduct_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to KVP (DX).
         /// </summary>
         public static string Dicom_DXImage_KVP_DisplayName {
@@ -534,6 +570,42 @@ namespace ClearCanvas.ImageViewer.AnnotationProviders {
         public static string Dicom_DXImage_PlateId_Label {
             get {
                 return ResourceManager.GetString("Dicom_DXImage_PlateId_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Positioner Primary Angle.
+        /// </summary>
+        public static string Dicom_DXImage_PositionerPrimaryAngle_DisplayName {
+            get {
+                return ResourceManager.GetString("Dicom_DXImage_PositionerPrimaryAngle_DisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Positioner Primary Angle.
+        /// </summary>
+        public static string Dicom_DXImage_PositionerPrimaryAngle_Label {
+            get {
+                return ResourceManager.GetString("Dicom_DXImage_PositionerPrimaryAngle_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Positioner Secondary Angle.
+        /// </summary>
+        public static string Dicom_DXImage_PositionerSecondaryAngle_DisplayName {
+            get {
+                return ResourceManager.GetString("Dicom_DXImage_PositionerSecondaryAngle_DisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Positioner Secondary Angle.
+        /// </summary>
+        public static string Dicom_DXImage_PositionerSecondaryAngle_Label {
+            get {
+                return ResourceManager.GetString("Dicom_DXImage_PositionerSecondaryAngle_Label", resourceCulture);
             }
         }
         
@@ -1983,6 +2055,15 @@ namespace ClearCanvas.ImageViewer.AnnotationProviders {
         public static string FormatCodeSequence {
             get {
                 return ResourceManager.GetString("FormatCodeSequence", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} dGy·cm².
+        /// </summary>
+        public static string FormatDecigraySquareCentimeters {
+            get {
+                return ResourceManager.GetString("FormatDecigraySquareCentimeters", resourceCulture);
             }
         }
         

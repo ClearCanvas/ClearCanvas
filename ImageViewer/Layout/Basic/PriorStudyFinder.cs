@@ -189,6 +189,10 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
                     {
                         foreach (string patientId in patientIds.Keys)
                         {
+                            // #10807: don't search for priors if patient id is empty
+                            if (string.IsNullOrEmpty(patientId))
+                                continue;
+                    
                             var identifier = new StudyRootStudyIdentifier { PatientId = patientId };
 
                             IList<StudyRootStudyIdentifier> studies = bridge.StudyQuery(identifier);
