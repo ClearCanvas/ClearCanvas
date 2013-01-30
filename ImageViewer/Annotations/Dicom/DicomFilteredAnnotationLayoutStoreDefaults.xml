@@ -60,6 +60,11 @@
         <filter key="Modality" value="PT" />
       </filters>
     </dicom-filtered-annotation-layout>
+    <dicom-filtered-annotation-layout id="Dicom.Filtered.XA" matching-layout-id="Dicom.XA">
+      <filters>
+        <filter key="Modality" value="XA" />
+      </filters>
+    </dicom-filtered-annotation-layout>
     <dicom-filtered-annotation-layout id="Dicom.Filtered.AllMatch" matching-layout-id="Dicom.OT">
       <!-- Everything matches the OT layout, by default -->
       <filters /> 
