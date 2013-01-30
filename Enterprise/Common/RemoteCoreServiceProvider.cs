@@ -26,10 +26,10 @@ using ClearCanvas.Common;
 
 namespace ClearCanvas.Enterprise.Common
 {
-	[ExtensionOf(typeof(ServiceProviderExtensionPoint), Enabled = false)]
+	[ExtensionOf(typeof(ServiceProviderExtensionPoint), Enabled = true)]
 	public partial class RemoteCoreServiceProvider : RemoteServiceProviderBase<EnterpriseCoreServiceAttribute>
 	{
-		public RemoteCoreServiceProvider()
+		public RemoteCoreServiceProvider() 
 			: base(GetSettings())
 		{
 		}
