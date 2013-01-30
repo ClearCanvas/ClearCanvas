@@ -1611,7 +1611,7 @@ namespace ClearCanvas.Dicom.Tests
             test.TestSet();
             test.TestAppend(); 
             test.TestGet();
-           
+            test.TestExtremeValues();
 
         }
         private class AttributeDSTestSuite
@@ -2245,6 +2245,19 @@ namespace ClearCanvas.Dicom.Tests
 
                 #endregion
 
+            }
+
+            /// <summary>
+            /// Test large DS values 
+            /// </summary>
+            public void TestExtremeValues()
+            {
+                DicomAttributeDS attrib = CreateAttribute();
+                attrib.SetString(0, "1.79769313E+308");
+                attrib.SetString(0, "-1.79769313E+308"); 
+
+                attrib.SetString(0, "-1.79769313E-308"); 
+                attrib.SetString(0, "-1.79769313E-308"); 
             }
         }
         #endregion

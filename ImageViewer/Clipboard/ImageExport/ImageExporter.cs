@@ -284,9 +284,9 @@ namespace ClearCanvas.ImageViewer.Clipboard.ImageExport
 					surface.ContextID = contextId;
 					surface.ClipRectangle = new Rectangle(0, 0, bmp.Width, bmp.Height);
 
-					var drawArgs = new DrawArgs(surface, null, DrawMode.Render) {Dpi = dpi};
+					var drawArgs = new DrawArgs(surface, null, DrawMode.Render) {Dpi = dpi, Tag = bmp};
 					image.Draw(drawArgs);
-					drawArgs = new DrawArgs(surface, null, DrawMode.Refresh) {Dpi = dpi};
+                    drawArgs = new DrawArgs(surface, null, DrawMode.Refresh) { Dpi = dpi, Tag = bmp};
 					image.Draw(drawArgs);
 				}
 			}
