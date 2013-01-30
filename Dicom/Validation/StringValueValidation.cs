@@ -85,8 +85,8 @@ namespace ClearCanvas.Dicom.Validation
             string[] temp = stringValue.Split(new[] { '\\' });
             foreach (string s in temp)
             {
-                decimal decVal;
-                if (!string.IsNullOrEmpty(s) && !decimal.TryParse(s, NumberStyles.Number | NumberStyles.AllowExponent, CultureInfo.InvariantCulture, out decVal))
+                double decVal;
+                if (!string.IsNullOrEmpty(s) && !double.TryParse(s, NumberStyles.Number | NumberStyles.AllowExponent, CultureInfo.InvariantCulture, out decVal))
                 {
                     throw new DicomDataException(string.Format("Invalid DS value '{0}' for {1}", stringValue, tag));
                 }
