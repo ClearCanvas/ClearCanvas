@@ -1,4 +1,5 @@
-﻿#region License
+﻿
+#region License
 
 // Copyright (c) 2013, ClearCanvas Inc.
 // All rights reserved.
@@ -28,14 +29,19 @@ using ClearCanvas.Enterprise.Core.Upgrade;
 
 namespace ClearCanvas.ImageServer.Model.SqlServer.UpgradeScripts
 {
+    
     /// <summary>
-    /// Upgrade from the McCoy milestone to the Narwhal milestone
+    /// PesoPlus to Yen milestone upgrade script
     /// </summary>
+    /// <remarks>
+    /// This is the PesoPlus release.  It was built on top of Peso (6.1.7081.10268) and had no database changes.  Adding upgrade from
+    /// PesoPlus to Yen here, which is the same as the upgrade from Peso to Yen, and hence using the Peso to Yen upgrade script. 
+    /// </remarks>
     [ExtensionOf(typeof(PersistentStoreUpgradeScriptExtensionPoint))]
-    class UpgradeFrom_5_0_5655_9770 : BaseUpgradeScript
+    class UpgradeFrom_6_2_10561_12082 : BaseUpgradeScript
     {
-        public UpgradeFrom_5_0_5655_9770()
-            : base(new Version(5, 0, 5655, 9770), new Version(6, 0, 6778, 10140), "UpgradeFrom_5_0_5655_9770.sql")
+        public UpgradeFrom_6_2_10561_12082()
+			: base(new Version(6, 2, 10561, 12082), new Version(9,0,9561,11723), "UpgradeFrom_6_1_7081_10268.sql")
         {
         }
     }
