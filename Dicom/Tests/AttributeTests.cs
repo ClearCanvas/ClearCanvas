@@ -3335,19 +3335,19 @@ namespace ClearCanvas.Dicom.Tests
                 attrib = CreateAttribute();
                 Assert.AreEqual(0, attrib.Count);
                 Assert.IsTrue(attrib.TryGetFloat64(0, out doubleVal) == false);
-                Assert.AreEqual(0.0f, attrib.GetFloat64(0, 0.0f));
+                Assert.AreEqual(0.0, attrib.GetFloat64(0, 0.0f));
 
                 attrib.AppendFloat64(double.MaxValue - 1);
                 Assert.AreEqual(1, attrib.Count);
                 Assert.IsTrue(attrib.TryGetFloat64(10, out doubleVal) == false);
-                Assert.AreEqual(0.0f, attrib.GetFloat64(10, 0.0f));
+                Assert.AreEqual(0.0, attrib.GetFloat64(10, 0.0f));
 
                 // special case: leading/trailing spaces
                 attrib = CreateAttribute();
                 attrib.SetStringValue(" 1.2432 \\ 2.422E+002 ");
                 Assert.AreEqual(2, attrib.Count);
                 Assert.IsTrue(attrib.TryGetFloat64(0, out doubleVal) == true);
-                Assert.AreEqual(1.2432f, attrib.GetFloat64(0, 0.0f));
+                Assert.AreEqual(1.2432, attrib.GetFloat64(0, 0.0f));
                 Assert.IsTrue(attrib.TryGetFloat64(1, out doubleVal) == true);
                 Assert.AreEqual(2.422E+002, attrib.GetFloat64(1, 0.0f));
                 #endregion
@@ -3821,27 +3821,27 @@ namespace ClearCanvas.Dicom.Tests
                 Assert.AreEqual(attrib.Count, 1);
 
                 Assert.IsTrue(attrib.TryGetFloat64(0, out doubleVal));
-                Assert.AreEqual(1000.0f, doubleVal);
-                Assert.AreEqual(1000.0f, attrib.GetFloat64(0, 0.0f));
+                Assert.AreEqual(1000.0, doubleVal);
+                Assert.AreEqual(1000.0, attrib.GetFloat64(0, 0.0f));
 
                 // special case: invalid index
                 attrib = CreateAttribute();
                 attrib.AppendFloat64(float.MaxValue - 1);
                 Assert.AreEqual(attrib.Count, 1);
                 Assert.IsTrue(attrib.TryGetFloat64(10, out doubleVal) == false);
-                Assert.AreEqual(0.0f, attrib.GetFloat64(10, 0.0f));
+                Assert.AreEqual(0.0, attrib.GetFloat64(10, 0.0f));
 
                 // special case: leading/trailing spaces
                 attrib = CreateAttribute();
                 attrib.SetStringValue(" 123 \\ 124.22 ");
                 Assert.AreEqual(2, attrib.Count);
                 Assert.IsTrue(attrib.TryGetFloat64(0, out doubleVal) == true);
-                Assert.AreEqual(123.0f, doubleVal);
-                Assert.AreEqual(123.0f, attrib.GetFloat64(0, 0.0f));
+                Assert.AreEqual(123.0, doubleVal);
+                Assert.AreEqual(123.0, attrib.GetFloat64(0, 0.0f));
 
                 Assert.IsTrue(attrib.TryGetFloat64(1, out doubleVal) == true);
-                Assert.AreEqual(124.22f, doubleVal);
-                Assert.AreEqual(124.22f, attrib.GetFloat64(1, 0.0f));
+                Assert.AreEqual(124.22, doubleVal);
+                Assert.AreEqual(124.22, attrib.GetFloat64(1, 0.0f));
 
                 #endregion
 
