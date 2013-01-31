@@ -285,19 +285,19 @@
     <comment>{0} is the overlay source, {1} is the overlay group index, {2} is the overlay frame index</comment>
   </data>
   <data name="FormatDescriptionBasicLinearLut" xml:space="preserve">
-    <value>W:{0} L:{1}</value>
+    <value>W:{0:0.#} L:{1:0.#}</value>
   </data>
   <data name="FormatDescriptionIdentityVoiLinearLut" xml:space="preserve">
-    <value>W:{0} L:{1} (Identity)</value>
+    <value>W:{0:0.#} L:{1:0.#} (Identity)</value>
   </data>
   <data name="FormatDescriptionMinMaxCalculatedLinearLut" xml:space="preserve">
-    <value>W:{0} L:{1} (Min/Max)</value>
+    <value>W:{0:0.#} L:{1:0.#} (Min/Max)</value>
   </data>
   <data name="FormatDescriptionModalityLutLinear" xml:space="preserve">
     <value>Slope: {0:F2} Int.: {1:F2}</value>
   </data>
   <data name="FormatDescriptionPresentationStateLinearLut" xml:space="preserve">
-    <value>W:{0} L:{1} ({2})</value>
+    <value>W:{0:0.#} L:{1:0.#} ({2})</value>
   </data>
   <data name="FormatExceptionReason" xml:space="preserve">
     <value>Reason: {0}</value>
@@ -522,7 +522,7 @@ Use image with caution.</value>
     <value>-</value>
   </data>
   <data name="FormatDescriptionNamedLinearLut" xml:space="preserve">
-    <value>W:{0} L:{1} ({2})</value>
+    <value>W:{0:0.#} L:{1:0.#} ({2})</value>
   </data>
   <data name="LabelUnknownServer" xml:space="preserve">
     <value>Unknown</value>

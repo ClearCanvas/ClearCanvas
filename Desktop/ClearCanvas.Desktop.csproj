@@ -510,6 +510,7 @@
     <None Include="LocaleSettings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>LocaleSettings.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </None>
     <None Include="ToolStripSettings.settings">
       <Generator>PublicSettingsSingleFileGenerator</Generator>
