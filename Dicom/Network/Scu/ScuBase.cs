@@ -296,6 +296,8 @@ namespace ClearCanvas.Dicom.Network.Scu
                 _dicomClient.Abort(2500);
 				_dicomClient.Dispose();
             	_dicomClient = null;
+                Status = ScuOperationStatus.NetworkError;
+                ProgressEvent.Set();
             }
         }
 
