@@ -259,7 +259,7 @@ namespace ClearCanvas.Dicom
         /// <param name="fileName">Name of the file.</param>
         public void Save(string fileName)
         {
-            DicomWriteOptions options = DicomWriteOptions.None;
+            const DicomWriteOptions options = DicomWriteOptions.Default;
 
             if (_rootRecord == null)
                 throw new InvalidOperationException("No Dicom Files added, cannot save dicom directory");
@@ -274,10 +274,11 @@ namespace ClearCanvas.Dicom
 			if (_dicomDirFile.DataSet.Contains(DicomTags.SopClassUid))
 				_dicomDirFile.DataSet.RemoveAttribute(DicomTags.SopClassUid);
 
-            //Set initial offset of where the directory record sequence tag starts
-            // based on the 128 byte preamble, the DICM characters and the tags themselves.
-            _fileOffset = 128 + 4 + _dicomDirFile.MetaInfo.CalculateWriteLength(_dicomDirFile.TransferSyntax, DicomWriteOptions.Default)
-                + _dicomDirFile.DataSet.CalculateWriteLength(_dicomDirFile.TransferSyntax, DicomWriteOptions.Default);
+            //Calculate the offset in the file to the beginning of the Directory Record Sequence Tag
+            _fileOffset = 128 // Preamble Length
+                + 4 // DICM Characters
+                + _dicomDirFile.MetaInfo.CalculateWriteLength(_dicomDirFile.TransferSyntax, DicomWriteOptions.CalculateGroupLengths) // Must calc including Group lengths for (0002,0000)
+                + _dicomDirFile.DataSet.CalculateWriteLength(_dicomDirFile.TransferSyntax, options); // Length without the Directory Record Sequence Attribute
 
             //Add the offset for the Directory Record sequence tag itself
             _fileOffset += 4; // element tag
@@ -323,7 +324,7 @@ namespace ClearCanvas.Dicom
 
             try
             {
-                _dicomDirFile.Save(fileName, DicomWriteOptions.Default);
+                _dicomDirFile.Save(fileName, options);
 
             }
             catch (Exception ex)
