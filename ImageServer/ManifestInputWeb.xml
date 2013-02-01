@@ -36,7 +36,7 @@
     <File name="Web\bin\ClearCanvas.ImageServer.Rules.JpegCodec.dll" checksum="true" />
     <File name="Web\bin\ClearCanvas.ImageServer.Rules.RleCodec.dll" checksum="true" />
     <File name="Web\bin\ClearCanvas.ImageServer.Services.Archiving.dll" checksum="true" />
-    <File name="Web\bin\ClearCanvas.ImageServer.Services.Archiving.Hsm.dll" checksum="true" />
+    <!--<File name="Web\bin\ClearCanvas.ImageServer.Services.Archiving.Hsm.dll" checksum="true" />-->
     <File name="Web\bin\ClearCanvas.ImageServer.Services.Common.dll" checksum="true" />
     <File name="Web\bin\ClearCanvas.ImageServer.Services.Dicom.dll" checksum="true" />
     <File name="Web\bin\ClearCanvas.ImageServer.Services.WorkQueue.dll" checksum="true" />
@@ -49,7 +49,7 @@
     <File name="Web\bin\ClearCanvas.Server.ShredHost.dll" checksum="true" />
     <File name="Web\bin\ClearCanvas.Utilities.Manifest.dll" checksum="true" />
     <File name="Web\bin\ClearCanvas.Web.Enterprise.dll" checksum="true" />
-    <File name="Web\bin\Ionic.Zip.dll" checksum="true" />
+    <!--<File name="Web\bin\Ionic.Zip.dll" checksum="true" />-->
     <File name="Web\bin\log4net.dll" checksum="true" />
     <File name="Web\bin\nunit.framework.dll" checksum="true" />
     <!--File name="Web\bin\System.Web.Extensions.dll" checksum="true" />
