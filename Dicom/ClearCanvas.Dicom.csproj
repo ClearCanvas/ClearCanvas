@@ -122,6 +122,8 @@
     <Compile Include="Audit\EventReceiptAction.cs" />
     <Compile Include="Audit\EventResult.cs" />
     <Compile Include="Audit\EventSource.cs" />
+    <Compile Include="Codec\Tests\GZipDicomCodec.cs" />
+    <Compile Include="Codec\Tests\NullDicomCodec.cs" />
     <Compile Include="DicomAttribute.cs" />
     <Compile Include="DicomAttributeBinaryData.cs">
       <SubType>Code</SubType>
@@ -169,6 +171,7 @@
       <DependentUpon>SR.resx</DependentUpon>
     </Compile>
     <Compile Include="ServiceModel\Streaming\HeaderStreamingServiceClient.cs" />
+    <Compile Include="Tests\ChangeTransferSyntaxTests.cs" />
     <Compile Include="Tests\DicomAttributeBinaryDataTests.cs" />
     <Compile Include="Tests\DicomUncompressedPixelDataTests.cs" />
     <Compile Include="Utilities\Command\AggregateCommand.cs" />
