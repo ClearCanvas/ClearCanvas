@@ -79,12 +79,14 @@ namespace ClearCanvas.Dicom.Tests
 			where T1 : IDicomCodec, new()
 			where T2 : IDicomCodec, new()
 		{
+			const string filenameReference = "reference.dcm";
+
 			var codec1 = new T1();
 			var codec2 = new T2();
 
 			// create an image
-			var instance = DicomUncompressedPixelDataTests.CreateDicomImage();
-			instance.Save("reference.dcm");
+			var instance = DicomImageTestHelper.CreateDicomImage();
+			instance.Save(filenameReference);
 
 			// compress the image to 1
 			instance.ChangeTransferSyntax(codec1.CodecTransferSyntax, codec1, null);
@@ -106,18 +108,19 @@ namespace ClearCanvas.Dicom.Tests
 
 			// compare results
 			var reference = new DicomFile();
-			reference.Load(DicomReadOptions.Default, "reference.dcm");
+			reference.Load(DicomReadOptions.Default, filenameReference);
 			AssertEquals(reference, instance, message, args);
 		}
 
 		private static void TestRoundtripMemory<T>(string message, params object[] args)
 			where T : IDicomCodec, new()
 		{
+			const string filenameReference = "reference.dcm";
 			var codec = new T();
 
 			// create an image
-			var instance = DicomUncompressedPixelDataTests.CreateDicomImage();
-			instance.Save("reference.dcm");
+			var instance = DicomImageTestHelper.CreateDicomImage();
+			instance.Save(filenameReference);
 
 			// compress the image
 			instance.ChangeTransferSyntax(codec.CodecTransferSyntax, codec, null);
@@ -127,52 +130,56 @@ namespace ClearCanvas.Dicom.Tests
 
 			// compare results
 			var reference = new DicomFile();
-			reference.Load(DicomReadOptions.Default, "reference.dcm");
+			reference.Load(DicomReadOptions.Default, filenameReference);
 			AssertEquals(reference, instance, message, args);
 		}
 
 		private static void TestRoundtripMemoryToFile<T>(string message, params object[] args)
 			where T : IDicomCodec, new()
 		{
+			var filenameReference = string.Format("reference_{0}.dcm", typeof (T).Name);
+			var filenameDecompressed = string.Format("decompressed_{0}.dcm", typeof (T).Name);
 			var codec = new T();
 
 			// create an image
-			var instance = DicomUncompressedPixelDataTests.CreateDicomImage();
-			instance.Save("reference.dcm");
+			var instance = DicomImageTestHelper.CreateDicomImage();
+			instance.Save(filenameReference);
 
 			// compress the image
 			instance.ChangeTransferSyntax(codec.CodecTransferSyntax, codec, null);
 
 			// decompress the image
 			instance.ChangeTransferSyntax(TransferSyntax.ExplicitVrLittleEndian, codec, null);
-			instance.Save("testimage_decompressed.dcm");
+			instance.Save(filenameDecompressed);
 
 			// compare results
 			var reference = new DicomFile();
-			reference.Load(DicomReadOptions.Default, "reference.dcm");
+			reference.Load(DicomReadOptions.Default, filenameReference);
 			var actual = new DicomFile();
-			actual.Load(DicomReadOptions.Default, "testimage_decompressed.dcm");
+			actual.Load(DicomReadOptions.Default, filenameDecompressed);
 			AssertEquals(reference, actual, message, args);
 		}
 
 		private static void TestRoundtripFile<T>(string message, params object[] args)
 			where T : IDicomCodec, new()
 		{
+			var filenameReference = string.Format("reference_{0}.dcm", typeof (T).Name);
+			var filenameCompressed = string.Format("compressed_{0}.dcm", typeof (T).Name);
 			var codec = new T();
 
 			// create an image
-			var original = DicomUncompressedPixelDataTests.CreateDicomImage();
-			original.Save("testimage.dcm");
+			var original = DicomImageTestHelper.CreateDicomImage();
+			original.Save(filenameReference);
 
 			// compress the image
 			var compressed = new DicomFile();
-			compressed.Load(DicomReadOptions.Default | DicomReadOptions.StorePixelDataReferences, "testimage.dcm");
+			compressed.Load(DicomReadOptions.Default | DicomReadOptions.StorePixelDataReferences, filenameReference);
 			compressed.ChangeTransferSyntax(codec.CodecTransferSyntax, codec, null);
-			compressed.Save("testimage_compressed.dcm");
+			compressed.Save(filenameCompressed);
 
 			// decompress the image
 			var decompressed = new DicomFile();
-			decompressed.Load(DicomReadOptions.Default | DicomReadOptions.StorePixelDataReferences, "testimage_compressed.dcm");
+			decompressed.Load(DicomReadOptions.Default | DicomReadOptions.StorePixelDataReferences, filenameCompressed);
 			decompressed.ChangeTransferSyntax(TransferSyntax.ExplicitVrLittleEndian, codec, null);
 
 			// compare results
@@ -182,15 +189,16 @@ namespace ClearCanvas.Dicom.Tests
 		private static void TestRoundtripFileToMemory<T>(string message, params object[] args)
 			where T : IDicomCodec, new()
 		{
+			var filenameReference = string.Format("reference_{0}.dcm", typeof (T).Name);
 			var codec = new T();
 
 			// create an image
-			var reference = DicomUncompressedPixelDataTests.CreateDicomImage();
-			reference.Save("testimage.dcm");
+			var reference = DicomImageTestHelper.CreateDicomImage();
+			reference.Save(filenameReference);
 
 			// compress the image
 			var instance = new DicomFile();
-			instance.Load(DicomReadOptions.Default | DicomReadOptions.StorePixelDataReferences, "testimage.dcm");
+			instance.Load(DicomReadOptions.Default | DicomReadOptions.StorePixelDataReferences, filenameReference);
 			instance.ChangeTransferSyntax(codec.CodecTransferSyntax, codec, null);
 
 			// decompress the image
