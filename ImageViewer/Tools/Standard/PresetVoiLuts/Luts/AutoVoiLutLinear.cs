@@ -136,12 +136,10 @@ namespace ClearCanvas.ImageViewer.Tools.Standard.PresetVoiLuts.Luts
                 Index++;
 		}
 
-	    public override string GetDescription()
+		public override string GetDescription()
 		{
-			if (string.IsNullOrEmpty(Explanation))
-				return String.Format(SR.FormatDescriptionAutoLinearLutNoExplanation, WindowWidth, WindowCenter);
-			else
-				return String.Format(SR.FormatDescriptionAutoLinearLut, WindowWidth, WindowCenter, Explanation);
+			var message = string.IsNullOrEmpty(Explanation) ? SR.FormatDescriptionAutoLinearLutNoExplanation : SR.FormatDescriptionAutoLinearLut;
+			return String.Format(message, WindowWidth, WindowCenter, Explanation);
 		}
 
 		public override sealed object CreateMemento()
@@ -232,10 +230,8 @@ namespace ClearCanvas.ImageViewer.Tools.Standard.PresetVoiLuts.Luts
 
 		public override string GetDescription()
 		{
-			if (string.IsNullOrEmpty(Explanation))
-				return String.Format(SR.FormatDescriptionAutoLinearLut, WindowWidth, WindowCenter, SR.LabelPresentationStateVoiLinearLut);
-			else
-				return String.Format(SR.FormatDescriptionAutoLinearLut, WindowWidth, WindowCenter, Explanation);
+			var explanation = string.IsNullOrEmpty(Explanation) ? SR.LabelPresentationStateVoiLinearLut : Explanation;
+			return String.Format(SR.FormatDescriptionAutoLinearLut, WindowWidth, WindowCenter, explanation);
 		}
 
 		public static bool CanCreateFrom(IDicomVoiLutsProvider provider)
