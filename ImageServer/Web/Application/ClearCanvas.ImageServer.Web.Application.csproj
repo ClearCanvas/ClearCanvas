@@ -673,13 +673,6 @@
     <Compile Include="Pages\Studies\StudyDetails\Controls\UpdateAuthorityGroupDialog.ascx.designer.cs">
       <DependentUpon>UpdateAuthorityGroupDialog.ascx</DependentUpon>
     </Compile>
-    <Compile Include="Pages\Studies\StudyDetails\Controls\DataAccessPanel.ascx.cs">
-      <DependentUpon>DataAccessPanel.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Pages\Studies\StudyDetails\Controls\DataAccessPanel.ascx.designer.cs">
-      <DependentUpon>DataAccessPanel.ascx</DependentUpon>
-    </Compile>
     <Compile Include="Pages\Studies\StudyDetails\Controls\DeleteSeriesConfirmDialog.ascx.cs">
       <DependentUpon>DeleteSeriesConfirmDialog.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -1560,7 +1553,6 @@
     <Content Include="Pages\Queues\WorkQueue\Edit\EditWorkQueueDetailsView.ascx" />
     <Content Include="Pages\Studies\StudyDetails\Controls\AddAuthorityGroupsDialog.ascx" />
     <Content Include="Pages\Studies\StudyDetails\Controls\UpdateAuthorityGroupDialog.ascx" />
-    <Content Include="Pages\Studies\StudyDetails\Controls\DataAccessPanel.ascx" />
     <EmbeddedResource Include="App_GlobalResources\ColumnHeaders.resx">
       <Generator>GlobalResourceProxyGenerator</Generator>
       <LastGenOutput>ColumnHeaders.Designer.cs</LastGenOutput>

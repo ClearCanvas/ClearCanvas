@@ -159,24 +159,6 @@
             </table>
         </ContentTemplate>
     </aspAjax:TabPanel>
-    <aspAjax:TabPanel ID="DataAccessTabPanel" HeaderText="<%$Resources: Titles, DataAccess %>" runat="server">
-        <ContentTemplate>
-            <table width="100%" cellpadding="4" cellspacing="0"  class="StudyDetailsTabContent">
-                <tr>
-                    <td>
-                        <div style="padding-top: 5px; padding-left: 1px;" />
-                        <ccUI:ToolbarButton runat="server" ID="UpdateAuthorityGroupButton" SkinID="<%$Image:UpdateButton%>" OnClick="UpdateAuthorityGroupButton_Click" />&nbsp;
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="2">
-                        <localAsp:DataAccessPanel runat="server" ID="DataAccessPanel" />
-                    </td>
-                </tr>
-            </table>
-        </ContentTemplate>
-    </aspAjax:TabPanel>
 </aspAjax:TabContainer>
 <ccAsp:MessageBox ID="DeleteConfirmation" runat="server" Title="Delete Series Confirmation" />
 <localAsp:UpdateAuthorityGroupDialog ID="UpdateAuthorityGroupDialog" runat="server" />

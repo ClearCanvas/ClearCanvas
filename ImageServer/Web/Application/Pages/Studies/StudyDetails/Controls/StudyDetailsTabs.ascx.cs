@@ -194,7 +194,7 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Studies.StudyDetails.Con
 
         private void UpdateAuthorityGroupDialog_AuthorityGroupsEdited(object sender, EventArgs e)
         {
-            DataAccessPanel.DataBind();
+            
         }
 
         protected override void OnPreRender(EventArgs e)
@@ -262,8 +262,6 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Studies.StudyDetails.Con
                 ArchivePanel.Study = Study.TheStudy;
                 HistoryPanel.TheStudySummary = Study;
                 StudyIntegrityQueueGridView.Study = Study;
-                DataAccessPanel.Study = Study;
-                DataAccessPanel.Partition = Partition;
             }
 
             base.DataBind();
