@@ -87,22 +87,21 @@ namespace ClearCanvas.Common
 									group p by Path.GetFileNameWithoutExtension(p)
 										into g
 										where g.Count() == 1
-										select new { FileName = g.Key, Path = g.First() })
+										select g.First())
 									.ToList();
 
 			// establish assembly load resolver
-			var pluginPathLookup = pluginCandidates.ToDictionary(p => p.FileName, p => p.Path);
+			var pluginPathLookup = BuildAssemblyMap(pluginCandidates);
 			AssemblyRef.SetResolver(name => LoadPlugin(pluginPathLookup[name], false).Assembly);
 
 			// see if we can load the meta-data from a cache
-			var pluginCandidatePaths = pluginCandidates.Select(p => p.Path).ToList();
-			var checkSum = ComputeCheckSum(pluginCandidatePaths);
+			var checkSum = ComputeCheckSum(pluginCandidates);
 			List<PluginInfo> pluginInfos;
 			if (!TryLoadCachedMetadata(new[] { _primaryCacheFile }.Concat(_alternateCacheFiles), checkSum, out pluginInfos))
 			{
 				// No cached meta-data, so we need to load the plugins
 				// and build the meta-data from scratch.
-				LoadPluginFiles(pluginCandidatePaths, true, out pluginInfos);
+				LoadPluginFiles(pluginCandidates, true, out pluginInfos);
 				SaveCachedMetadata(pluginInfos, checkSum);
 			}
 
@@ -242,6 +241,25 @@ namespace ClearCanvas.Common
 				var md5 = new MD5CryptoServiceProvider();
 				return md5.ComputeHash(byteStream.GetBuffer());
 			}
+		}
+
+		private static Dictionary<string, string> BuildAssemblyMap(IEnumerable<string> filePaths)
+		{
+			var result = new Dictionary<string, string>();
+			foreach (var p in filePaths)
+			{
+				try
+				{
+					var name = AssemblyName.GetAssemblyName(p).Name;
+					result.Add(name, p);
+				}
+				catch (Exception)
+				{
+					// not an assembly
+					Platform.Log(LogLevel.Debug, "The file at {0} does not seem to be an assembly.", p);
+				}
+			}
+			return result;
 		}
 	}
 }
