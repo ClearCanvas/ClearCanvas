@@ -759,8 +759,6 @@ namespace ClearCanvas.ImageServer.Services.ServiceLock.FilesystemDelete
                 }
                 else
                 {
-                    Platform.Log(LogLevel.Info, "Filesystem below watermarks: {0} (Current: {1}, High Watermark: {2}",
-                                 fs.Filesystem.Description, fs.UsedSpacePercentage, fs.Filesystem.HighWatermark);
                     scheduledTime = Platform.Time.AddMinutes(settings.FilesystemDeleteCheckInterval);
 
                 }

@@ -71,12 +71,14 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Common
                     {
                         Extensions.Clear();
 
-                        var attrs = ClearCanvas.Common.Utilities.AttributeUtils.GetAttributes<ExtensibleAttribute>(this.GetType(), true);
+                        var attrs = AttributeUtils.GetAttributes<ExtensibleAttribute>(this.GetType(), true);
                         foreach (var attr in attrs)
                         {
                             var xp = Activator.CreateInstance(attr.ExtensionPoint);
                             Extensions.AddRange((xp as ExtensionPoint).CreateExtensions());
                         }
+
+                        _extensionLoaded = true;
                     }
                     catch (Exception ex)
                     {
