@@ -69,8 +69,10 @@ function @@CLIENTID@@_ClientSideEvaluator()
         {
             if (this.ignoreEmptyValue)
                 result.OK = true;
-            else
+            else {
+                result.Message = ValidationErrors.ThisFieldIsRequired; // defined in GlobalMasterPage.. yeah it's not pretty
                 result.OK = false;
+            }
         } 
         else if(isDate(this.input.value, '@@DATE_FORMAT@@') == false)
         {
@@ -87,8 +89,9 @@ function @@CLIENTID@@_ClientSideEvaluator()
         }
     
         if (result.OK == false)
-        {        
-            result.Message = '@@ERROR_MESSAGE@@'.format(this.input.value);
+        {   
+            if (result.Message==null || result.Message=='')
+                result.Message = '@@ERROR_MESSAGE@@'.format(this.input.value);
         }
         
         return  result;
