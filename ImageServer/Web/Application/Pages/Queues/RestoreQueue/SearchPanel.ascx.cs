@@ -183,16 +183,11 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Queues.RestoreQueue
 
 			if (!IsPostBack && !Page.IsAsync)
 			{
-				string patientID = Server.UrlDecode(Request["PatientID"]);
-				string patientName = Server.UrlDecode(Request["PatientName"]);
-				string partitionKey = Request["PartitionKey"];
-
-				if (patientID != null && patientName != null && partitionKey != null)
+				var patientId = Server.UrlDecode(Request["PatientID"]);
+				var patientName = Server.UrlDecode(Request["PatientName"]);
+				if (patientId != null || patientName != null)
 				{
-					var controller = new ServerPartitionConfigController();
-					ServerPartition = controller.GetPartition(new ServerEntityKey("ServerPartition", partitionKey));
-
-					PatientId.Text = patientID;
+					PatientId.Text = patientId;
 					PatientName.Text = patientName;
 
 					RestoreQueueItemList.SetDataSource();

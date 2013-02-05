@@ -48,7 +48,7 @@ img
 
 .MainMenuContent
 {
-	padding: 11px 0px 0px 0px;
+	padding: 0px 0px 0px 0px;
 }
 
 .StaticMenu
@@ -61,7 +61,7 @@ img
 .StaticMenuItem
 {
     color: white;
-    margin: 0px 3px 0px 3px;
+    margin: 11px 3px 0px 3px;
     padding: 0px 1px 0px 1px;
     font-family: Sans-Serif;
     font-size: 16px;
@@ -77,7 +77,7 @@ img
 {
     color: white;
     background: #3482b2 url(../../../PersistantImage.ashx?key=MenuHoverBackground) repeat-x;
-    margin: 0px 3px 0px 3px;
+    margin: 11px 3px 0px 3px;
     padding: 0px 1px 0px 1px;
     font-family: Sans-Serif;
     font-weight: bold;

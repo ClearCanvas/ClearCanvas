@@ -22,6 +22,7 @@
 
 --%>
 
+
 <%@ Control Language="C#" AutoEventWireup="true" Codebehind="ChangePasswordDialog.ascx.cs"
     Inherits="ClearCanvas.ImageServer.Web.Application.Pages.Login.ChangePasswordDialog" %>
 <%@ Import Namespace="Resources"%>
@@ -37,12 +38,12 @@
     
     <asp:Panel ID="Panel1" runat="server" width="100%" CssClass="DialogPanelContent">
     
-        <table style="margin-top: 10px; margin-bottom: 10px;">
+        <table style="margin-top: 10px; margin-bottom: 10px; width:100%">
         <tr><td class="ChangePasswordLabel"><%= Labels.UserID %>:</td><td><asp:TextBox runat="server" Width="150px" ID="ChangePasswordUsername"/></td></tr>
         <tr><td class="ChangePasswordLabel"><%= Labels.OriginalPassword %>:</td><td><asp:TextBox TextMode="Password" runat="server" Width="150px" ID="OriginalPassword"/></td></tr>
         <tr><td class="ChangePasswordLabel"><%= Labels.NewPassword %>:</td><td><asp:TextBox TextMode="Password" runat="server"  Width="150px" ID="NewPassword"/></td></tr>
         <tr><td class="ChangePasswordLabel"><%= Labels.RetypeNewPassword %>:</td><td><asp:TextBox TextMode="Password" runat="server"  Width="150px" ID="ConfirmNewPassword"/></td></tr>
-        <tr><td colspan="2" style="padding-top: 10px; font-family: Arial; font-size: 12px;" align="right"><%= Labels.LoginAfterPasswordChange %>: <asp:CheckBox runat="server" Checked="true" id="LoginPasswordChange"/></td></tr>
+        <tr><td></td><td style="padding-top: 10px;"><%= Labels.LoginAfterPasswordChange %>: <asp:CheckBox runat="server" Checked="true" id="LoginPasswordChange"/></td></tr>
         </table>
            
     </asp:Panel>

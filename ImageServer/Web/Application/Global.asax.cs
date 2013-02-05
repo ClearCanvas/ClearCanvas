@@ -23,16 +23,10 @@
 #endregion
 
 using System;
-using System.Data;
 using System.Configuration;
-using System.Collections;
-using System.Web;
-using System.Web.Security;
-using System.Web.SessionState;
 using ClearCanvas.Common;
 using ClearCanvas.ImageServer.Web.Common.Security;
 using ClearCanvas.ImageServer.Web.Common;
-using System.Reflection;
 
 namespace ClearCanvas.ImageServer.Web.Application
 {

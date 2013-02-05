@@ -21,7 +21,6 @@
 // <http://www.gnu.org/licenses/>.
 
 --%>
-
 <%@ Import Namespace="Resources" %>
 
 <%@ Control Language="C#" AutoEventWireup="true" Codebehind="TimedDialog.ascx.cs"

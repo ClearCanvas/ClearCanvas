@@ -37,9 +37,6 @@ namespace ClearCanvas.ImageServer.Web.Application
 {
     public partial class GlobalMasterPage : MasterPage, IMasterProperties
     {
-        [ThreadStatic]
-        private static bool _warningDisplayed = false;
-
         private bool _displayUserInfo = true;
 
         public bool DisplayUserInformationPanel
@@ -55,9 +52,10 @@ namespace ClearCanvas.ImageServer.Web.Application
             
             if (SessionManager.Current.User.WarningMessages.Count > 0)
             {
-                if (!_warningDisplayed)
+                if (!SessionManager.Current.User.WarningsDisplayed)
                 {
-                    _warningDisplayed = true;
+                    SessionManager.Current.User.WarningsDisplayed = true;
+                    SessionManager.InitializeSession(SessionManager.Current);
                     LoginWarningsDialog.Show();
                 }
             }
@@ -103,7 +101,7 @@ namespace ClearCanvas.ImageServer.Web.Application
                     }
                     catch (Exception)
                     {
-                        //No permissions for Alerts, control won't be displayed
+                        //No permissions for Warning Indicator, control won't be displayed
                         //hide table cell that contains the control.
                         LoginWarningCell.Visible = false;
                     }

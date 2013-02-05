@@ -23,7 +23,6 @@
 #endregion
 
 using System;
-using ClearCanvas.ImageServer.Web.Application.Controls;
 
 namespace ClearCanvas.ImageServer.Web.Application.Controls
 {

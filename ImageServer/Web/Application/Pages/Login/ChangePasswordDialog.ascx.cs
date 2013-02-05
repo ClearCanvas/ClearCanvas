@@ -25,8 +25,10 @@
 using System;
 using System.Globalization;
 using System.ServiceModel;
+using System.Text;
 using System.Web.Security;
 using System.Web.UI;
+using System.Web.UI.WebControls;
 using ClearCanvas.Common;
 using ClearCanvas.Enterprise.Common;
 using ClearCanvas.Web.Enterprise.Authentication;
@@ -44,9 +46,11 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Login
             ErrorMessage.Text = String.Empty;
             ErrorMessagePanel.Visible = false;
             Panel1.DefaultButton = "OKButton";
-            ChangePasswordUsername.Focus();
             ModalDialog1.Show();
+
+            SetInputFocus(ChangePasswordUsername);
             
+
         }
 
         public void Cancel_Click(object sender, EventArgs e)
@@ -130,6 +134,27 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Login
             ErrorMessage.Text = error;
             ErrorMessagePanel.Visible = true;
             ChangePasswordUsername.Focus();
+        }
+
+
+
+        private void SetInputFocus(WebControl control)
+        {
+            //Note: yes, we need to use javascript to set focus because we are using AjaxPopupExtender
+
+            var script = @"           
+                Sys.Application.add_load(function(){
+                    // need a bit of delay, can't set focus on something that's still hidden
+                    setTimeout(function()
+                    {
+                        $get('@@INPUT_ID@@').focus();
+                    },
+                    200);                    
+                });
+            ";
+
+            script = script.Replace("@@INPUT_ID@@", control.ClientID);
+            Page.ClientScript.RegisterStartupScript(GetType(), "SetFocus", script, true);
         }
     }
 }

@@ -21,7 +21,6 @@
 // <http://www.gnu.org/licenses/>.
 
 --%>
-
 <%@ Control Language="C#" AutoEventWireup="true" CodeBehind="AddEditDataRuleDialog.ascx.cs"
     Inherits="ClearCanvas.ImageServer.Web.Application.Pages.Admin.Configure.DataRules.AddEditDataRuleDialog" %>
 <asp:ScriptManagerProxy runat="server">

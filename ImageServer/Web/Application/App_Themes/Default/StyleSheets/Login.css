@@ -130,3 +130,23 @@ a.LoginLink:hover
     font-family: Sans-Serif;
     text-align: center;
 }
+
+.BrowserWarningLabel
+{
+    text-align: center;
+    font-size:smaller;
+	color:Red;
+	font-weight:bold;
+	font-family: Sans-Serif;
+}
+
+.BrowserWarningMessagePanel
+{
+    padding: 5px 7px 5px 7px;
+    width: 685px;
+    font-weight: bold;
+    font-family: Sans-Serif;
+    text-align: center;
+    top: 404px; 
+    position: relative; 
+}
