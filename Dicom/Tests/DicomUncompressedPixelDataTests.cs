@@ -671,7 +671,7 @@ namespace ClearCanvas.Dicom.Tests
 		/// Creates an in-memory DICOM image
 		/// </summary>
 		/// <returns></returns>
-		internal static DicomFile CreateDicomImage(int rows = 20, int columns = 30, bool bitsAllocated16 = true, bool signed = false, int numberOfFrames = 1, Endian endian = Endian.Little, bool useOB = false)
+		private static DicomFile CreateDicomImage(int rows = 20, int columns = 30, bool bitsAllocated16 = true, bool signed = false, int numberOfFrames = 1, Endian endian = Endian.Little, bool useOB = false)
 		{
 			var sopClassUid = bitsAllocated16 ? SopClass.MultiFrameGrayscaleWordSecondaryCaptureImageStorageUid : SopClass.MultiFrameGrayscaleByteSecondaryCaptureImageStorageUid;
 			var sopInstanceUid = DicomUid.GenerateUid().UID;
