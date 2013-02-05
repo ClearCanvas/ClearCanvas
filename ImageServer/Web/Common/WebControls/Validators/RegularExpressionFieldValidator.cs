@@ -69,9 +69,16 @@ namespace ClearCanvas.ImageServer.Web.Common.WebControls.Validators
         protected override bool OnServerSideEvaluate()
         {
             string value = GetControlValidationValue(ControlToValidate);
+
+            if (string.IsNullOrEmpty(value) && IgnoreEmptyValue)
+                return true;
+
+            if (value!=null && value.Trim() == string.Empty && IgnoreEmptyValue)
+                return true;
+
             var regex = new Regex(ValidationExpression);
             
-            return value != null ?  regex.IsMatch(value) : false;
+            return value != null && regex.IsMatch(value);
         }
 
 
