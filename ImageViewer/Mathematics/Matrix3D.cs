@@ -28,16 +28,27 @@ using ClearCanvas.Common;
 
 namespace ClearCanvas.ImageViewer.Mathematics
 {
-    // TODO (CR Phoenix5 - Med): although very similar to Matrix, it should have unit tests.
-
-	public class Matrix3D
+	/// <summary>
+	/// Represents a 3x3 matrix.
+	/// </summary>
+	public sealed class Matrix3D
 	{
 		private readonly float[,] _matrix = new float[3,3];
 
+		/// <summary>
+		/// Constructs a new zero matrix.
+		/// </summary>
 		public Matrix3D() {}
 
+		/// <summary>
+		/// Constructs a new matrix and initializes its values to that of the given 3x3 2-dimensional array.
+		/// </summary>
+		/// <param name="matrix">The 3x3 2-dimensional array (rows, then columns) with which to initialize the matrix.</param>
+		/// <exception cref="ArgumentNullException">Thrown if the supplied matrix is null.</exception>
+		/// <exception cref="ArgumentException">Thrown if the supplied matrix is not 3x3.</exception>
 		public Matrix3D(float[,] matrix)
 		{
+			Platform.CheckForNullReference(matrix, "matrix");
 			Platform.CheckTrue(matrix.GetLength(0) == 3 && matrix.GetLength(1) == 3, "matrix must be 3x3");
 
 			_matrix[0, 0] = matrix[0, 0];
@@ -51,8 +62,15 @@ namespace ClearCanvas.ImageViewer.Mathematics
 			_matrix[2, 2] = matrix[2, 2];
 		}
 
+		/// <summary>
+		/// Constructs a new matrix as a clone of an existing matrix.
+		/// </summary>
+		/// <param name="matrix">The source matrix to clone.</param>
+		/// <exception cref="ArgumentNullException">Thrown if the supplied matrix is null.</exception>
+		/// <exception cref="ArgumentException">Thrown if the supplied matrix is not 3x3.</exception>
 		public Matrix3D(Matrix matrix)
 		{
+			Platform.CheckForNullReference(matrix, "matrix");
 			Platform.CheckTrue(matrix.Rows == 3 && matrix.Columns == 3, "matrix must be 3x3");
 
 			_matrix[0, 0] = matrix[0, 0];
@@ -66,6 +84,9 @@ namespace ClearCanvas.ImageViewer.Mathematics
 			_matrix[2, 2] = matrix[2, 2];
 		}
 
+		/// <summary>
+		/// Gets whether or not this is an identity matrix.
+		/// </summary>
 		public bool IsIdentity
 		{
 			get
@@ -82,6 +103,11 @@ namespace ClearCanvas.ImageViewer.Mathematics
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets the value of the cell at the specified row and column indices.
+		/// </summary>
+		/// <param name="row">The row index</param>
+		/// <param name="column">The column index</param>
 		public float this[int row, int column]
 		{
 			get
@@ -100,21 +126,39 @@ namespace ClearCanvas.ImageViewer.Mathematics
 			}
 		}
 
+		/// <summary>
+		/// Gets all the values in a particular row.
+		/// </summary>
 		public Vector3D GetRow(int row)
 		{
 			return new Vector3D(_matrix[row, 0], _matrix[row, 1], _matrix[row, 2]);
 		}
 
+		/// <summary>
+		/// Gets all the values in a particular column.
+		/// </summary>
 		public Vector3D GetColumn(int column)
 		{
 			return new Vector3D(_matrix[0, column], _matrix[1, column], _matrix[2, column]);
 		}
 
+		/// <summary>
+		/// Sets all the values in a particular row.
+		/// </summary>
+		/// <remarks>
+		/// This is more efficient than setting each value separately.
+		/// </remarks>
 		public void SetRow(int row, Vector3D vector)
 		{
 			SetRow(row, vector.X, vector.Y, vector.Z);
 		}
 
+		/// <summary>
+		/// Sets all the values in a particular row.
+		/// </summary>
+		/// <remarks>
+		/// This is more efficient than setting each value separately.
+		/// </remarks>
 		public void SetRow(int row, float value0, float value1, float value2)
 		{
 			Platform.CheckArgumentRange(row, 0, 2, "row");
@@ -124,11 +168,23 @@ namespace ClearCanvas.ImageViewer.Mathematics
 			_matrix[row, 2] = value2;
 		}
 
+		/// <summary>
+		/// Sets all the values in a particular column.
+		/// </summary>
+		/// <remarks>
+		/// This is more efficient than setting each value separately.
+		/// </remarks>
 		public void SetColumn(int column, Vector3D vector)
 		{
 			SetColumn(column, vector.X, vector.Y, vector.Z);
 		}
 
+		/// <summary>
+		/// Sets all the values in a particular column.
+		/// </summary>
+		/// <remarks>
+		/// This is more efficient than setting each value separately.
+		/// </remarks>
 		public void SetColumn(int column, float value0, float value1, float value2)
 		{
 			Platform.CheckArgumentRange(column, 0, 2, "column");
@@ -138,6 +194,9 @@ namespace ClearCanvas.ImageViewer.Mathematics
 			_matrix[2, column] = value2;
 		}
 
+		/// <summary>
+		/// Clones this matrix and its values.
+		/// </summary>
 		public Matrix3D Clone()
 		{
 			return new Matrix3D(_matrix);
@@ -193,6 +252,9 @@ namespace ClearCanvas.ImageViewer.Mathematics
 			return builder.ToString();
 		}
 
+		/// <summary>
+		/// Gets a 3x3 identity matrix.
+		/// </summary>
 		public static Matrix3D GetIdentity()
 		{
 			return new Matrix3D(new float[,] {{1, 0, 0}, {0, 1, 0}, {0, 0, 1}});
@@ -326,12 +388,28 @@ namespace ClearCanvas.ImageViewer.Mathematics
 		}
 
 		/// <summary>
-		/// Gets a value indicating whether or not the elements of <paramref name="left"/> are equal to <paramref name="right"/> within the given tolerance.
+		/// Gets a value indicating whether or not the elements of <paramref name="left"/> are equal to <paramref name="right"/> within a small tolerance.
 		/// </summary>
 		/// <exception cref="ArgumentException">If the matrices do not have the same dimensions.</exception>
+		public static bool AreEqual(Matrix3D left, Matrix3D right)
+		{
+			for (int row = 0; row < 3; ++row)
+			{
+				for (int column = 0; column < 3; ++column)
+				{
+					if (!FloatComparer.AreEqual(left[row, column], right[row, column]))
+						return false;
+				}
+			}
 
-		// TODO (CR Phoenix5 - High): FloatComparer tolerance for floats is actually a float tolerance, not in units of epsilons. 100 will make this basically say TONS of matrices are equal.
-        public static bool AreEqual(Matrix3D left, Matrix3D right, float tolerance = 100)
+			return true;
+		}
+
+		/// <summary>
+		/// Gets a value indicating whether or not the elements of <paramref name="left"/> are equal to <paramref name="right"/> within the given absolute tolerance.
+		/// </summary>
+		/// <exception cref="ArgumentException">If the matrices do not have the same dimensions.</exception>
+		public static bool AreEqual(Matrix3D left, Matrix3D right, float tolerance)
 		{
 			for (int row = 0; row < 3; ++row)
 			{
@@ -345,11 +423,17 @@ namespace ClearCanvas.ImageViewer.Mathematics
 			return true;
 		}
 
+		/// <summary>
+		/// Casts the input <see cref="Matrix3D"/> as a <see cref="Matrix"/>.
+		/// </summary>
 		public static implicit operator Matrix(Matrix3D matrix)
 		{
 			return new Matrix((float[,]) matrix._matrix.Clone());
 		}
 
+		/// <summary>
+		/// Casts the input <see cref="Matrix"/> as a <see cref="Matrix3D"/>.
+		/// </summary>
 		public static explicit operator Matrix3D(Matrix matrix)
 		{
 			return new Matrix3D(matrix);
