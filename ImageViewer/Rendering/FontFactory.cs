@@ -30,6 +30,9 @@ using ClearCanvas.ImageViewer.Mathematics;
 
 namespace ClearCanvas.ImageViewer.Rendering
 {
+    /// <summary>
+    /// Simple flyweight factory for fonts.
+    /// </summary>
     internal class FontFactory : IDisposable
     {
         private class ItemKey

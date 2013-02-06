@@ -25,13 +25,16 @@
 using System;
 using System.Security.Policy;
 using ClearCanvas.Common;
-using ClearCanvas.Desktop;
 using ClearCanvas.Dicom.ServiceModel.Query;
 using ClearCanvas.ImageViewer.PresentationStates.Dicom;
 using ClearCanvas.ImageViewer.StudyManagement;
 
 namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 {
+    // TODO (CR Phoenix5 - High): I think we should just remove this code because it's not used
+    // and I think this approach has larger architectural implications in terms of how
+    // we synchronize images in the viewer. A display set can be seen by the user, go out of view
+    // change in the logical workspace, and then the user can "Undo" to see the old one, which will be missing an image.
     public class KeyImageDisplaySet
     {
         public static void AddKeyImage(IPresentationImage image)
@@ -39,6 +42,7 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
             Platform.CheckForNullReference(image, "image");
             Platform.CheckForNullReference(image.ImageViewer, "image.ImageViewer");
 
+            // TODO (CR Phoenix5 - Med): Clinical as well
             if (!PermissionsHelper.IsInRole(AuthorityTokens.KeyImages))
                 throw new PolicyException(SR.ExceptionCreateKeyImagePermissionDenied);
 
@@ -121,6 +125,7 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
             Platform.CheckForNullReference(image, "image");
             Platform.CheckForNullReference(image.ImageViewer, "image.ImageViewer");
 
+            // TODO (CR Phoenix5 - Med): Clinical as well
             if (!PermissionsHelper.IsInRole(AuthorityTokens.KeyImages))
                 throw new PolicyException(SR.ExceptionCreateKeyImagePermissionDenied);
             foreach (var imageSet in image.ImageViewer.LogicalWorkspace.ImageSets)

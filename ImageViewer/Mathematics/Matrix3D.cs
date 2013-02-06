@@ -28,6 +28,8 @@ using ClearCanvas.Common;
 
 namespace ClearCanvas.ImageViewer.Mathematics
 {
+    // TODO (CR Phoenix5 - Med): although very similar to Matrix, it should have unit tests.
+
 	public class Matrix3D
 	{
 		private readonly float[,] _matrix = new float[3,3];
@@ -327,7 +329,9 @@ namespace ClearCanvas.ImageViewer.Mathematics
 		/// Gets a value indicating whether or not the elements of <paramref name="left"/> are equal to <paramref name="right"/> within the given tolerance.
 		/// </summary>
 		/// <exception cref="ArgumentException">If the matrices do not have the same dimensions.</exception>
-		public static bool AreEqual(Matrix3D left, Matrix3D right, float tolerance = 100)
+
+		// TODO (CR Phoenix5 - High): FloatComparer tolerance for floats is actually a float tolerance, not in units of epsilons. 100 will make this basically say TONS of matrices are equal.
+        public static bool AreEqual(Matrix3D left, Matrix3D right, float tolerance = 100)
 		{
 			for (int row = 0; row < 3; ++row)
 			{
