@@ -48,12 +48,6 @@ namespace ClearCanvas.ImageServer.Web.Application.Services
         {
             Platform.CheckForEmptyString(path, "requested path is empty or null");
 
-            if (Context.Request.UserLanguages != null && Context.Request.UserLanguages.Length>0)
-            {
-                CultureInfo culture = new CultureInfo(Context.Request.UserLanguages[0]);
-                Thread.CurrentThread.CurrentCulture = culture;
-                Thread.CurrentThread.CurrentUICulture = culture;
-            }
             return ServerUtility.GetFilesystemInfo(path.Trim());
         }
     }

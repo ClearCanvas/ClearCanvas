@@ -64,7 +64,12 @@ function @@CLIENTID@@_ClientSideEvaluator()
         return result;
     }
     
-    if (this.input.value.match(this.regex)) 
+    //trim leading/trailing spaces
+    var valueToTest = this.input.value.replace(/^\s+|\s+$/g, "");
+    if (valueToTest=='' && this.ignoreEmptyValue)
+        return result; //ok
+        
+    if (valueToTest.match(this.regex)) 
     {
         result.OK = true;
     } else {

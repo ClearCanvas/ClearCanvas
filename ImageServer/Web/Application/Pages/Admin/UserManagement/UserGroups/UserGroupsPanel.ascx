@@ -22,6 +22,7 @@
 
 --%>
 
+
 <%@ Control Language="C#" AutoEventWireup="true" CodeBehind="UserGroupsPanel.ascx.cs" Inherits="ClearCanvas.ImageServer.Web.Application.Pages.Admin.UserManagement.UserGroups.UserGroupsPanel" %>
 
 <%@ Register Src="UserGroupsGridPanel.ascx" TagName="UserGroupsGridPanel" TagPrefix="localAsp" %>

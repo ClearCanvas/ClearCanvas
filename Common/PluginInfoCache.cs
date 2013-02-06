@@ -30,6 +30,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 
 namespace ClearCanvas.Common
 {
+	[Serializable]
 	internal class PluginInfoCache
 	{
 		#region SurrogateSelector class
@@ -72,7 +73,41 @@ namespace ClearCanvas.Common
 
 		#endregion
 
-		public static void Write(string file, List<PluginInfo> plugins)
+		private readonly List<PluginInfo> _plugins;
+		private readonly byte[] _checkSum;
+
+		internal PluginInfoCache(List<PluginInfo> plugins, byte[] checkSum)
+		{
+			_plugins = plugins;
+			_checkSum = checkSum;
+		}
+
+		public List<PluginInfo> Plugins
+		{
+			get { return _plugins; }
+		}
+
+		public byte[] CheckSum
+		{
+			get { return _checkSum; }
+		}
+
+		public static PluginInfoCache Read(string file)
+		{
+			// Attempt to open the file for read access, and *non-exclusively*...
+			// This is important because other app domains, or other processes, may need to read the file at the same time.
+			// If we can't get access to the file (e.g. another process is writing to it), an exception will be thrown and this method will fail.
+			// This is by design.
+			using (var fs = new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.Read))
+			{
+				// note: we could have done some custom serialization here, but BinaryFormatter
+				// is easy and actually performs well enough for our purposes
+				var formatter = new BinaryFormatter { SurrogateSelector = new SurrogateSelector() };
+				return (PluginInfoCache)formatter.Deserialize(fs);
+			}
+		}
+
+		public void Write(string file)
 		{
 			// ensure the path exists, in case this is the first time we're writing out the file
 			var directory = Path.GetDirectoryName(file);
@@ -87,24 +122,10 @@ namespace ClearCanvas.Common
 				// note: we could have done some custom serialization here, but BinaryFormatter
 				// is easy and actually performs well enough for our purposes
 				var formatter = new BinaryFormatter {SurrogateSelector = new SurrogateSelector()};
-				formatter.Serialize(fs, plugins);
+				formatter.Serialize(fs, this);
 			}
 		}
 
-		public static List<PluginInfo> Read(string file)
-		{
-			// Attempt to open the file for read access, and *non-exclusively*...
-			// This is important because other app domains, or other processes, may need to read the file at the same time.
-			// If we can't get access to the file (e.g. another process is writing to it), an exception will be thrown and this method will fail.
-			// This is by design.
-			using (var fs = new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.Read))
-			{
-				// note: we could have done some custom serialization here, but BinaryFormatter
-				// is easy and actually performs well enough for our purposes
-				var formatter = new BinaryFormatter {SurrogateSelector = new SurrogateSelector()};
-				return (List<PluginInfo>)formatter.Deserialize(fs);
-			}
-		}
 
 	}
 }

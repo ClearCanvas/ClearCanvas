@@ -22,6 +22,7 @@
 
 --%>
 
+
 <%@ Control Language="C#" AutoEventWireup="true" Inherits="ClearCanvas.ImageServer.Web.Application.Pages.Admin.Configure.ServiceLocks.EditServiceLockDialog"
     Codebehind="EditServiceLockDialog.ascx.cs" %>
 <%@ Import Namespace="Resources"%>    

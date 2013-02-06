@@ -21,7 +21,6 @@
 // <http://www.gnu.org/licenses/>.
 
 --%>
-
 <%@ Import Namespace="Microsoft.JScript" %>
 <%@ Import Namespace="ClearCanvas.ImageServer.Web.Common.Data.DataSource" %>
 <%@ Import Namespace="ClearCanvas.ImageServer.Web.Common.Utilities" %>

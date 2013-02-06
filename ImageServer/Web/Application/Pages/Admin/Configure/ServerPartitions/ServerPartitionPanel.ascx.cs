@@ -151,7 +151,6 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Admin.Configure.ServerPa
             AETitleFilter.Text = string.Empty;
             DescriptionFilter.Text = string.Empty;
             StatusFilter.SelectedIndex = 0;
-            FolderFilter.Text = string.Empty;
         }
 
         protected void LoadData()
@@ -168,12 +167,6 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Admin.Configure.ServerPa
             {
                 QueryHelper.SetGuiStringCondition(criteria.Description,
                                    SearchHelper.TrailingWildCard(DescriptionFilter.Text));
-            }
-
-            if (String.IsNullOrEmpty(FolderFilter.Text) == false)
-            {
-                QueryHelper.SetGuiStringCondition(criteria.PartitionFolder,
-                                   SearchHelper.TrailingWildCard(FolderFilter.Text));
             }
 
             if (StatusFilter.SelectedIndex != 0)

@@ -886,7 +886,7 @@ namespace ClearCanvas.Common
             var sb = new StringBuilder();
             if (isExceptionLog)
             {
-                sb.AppendLine(SR.ExceptionThrown);
+                sb.AppendLine("Exception thrown"); // note: it's log. Keep it in English
                 sb.AppendLine();
             }
 

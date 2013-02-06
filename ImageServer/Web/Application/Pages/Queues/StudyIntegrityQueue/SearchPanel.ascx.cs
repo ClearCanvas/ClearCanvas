@@ -27,8 +27,10 @@ using System.Collections.Generic;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using AjaxControlToolkit;
+using ClearCanvas.ImageServer.Enterprise;
 using ClearCanvas.ImageServer.Enterprise.Authentication;
 using ClearCanvas.ImageServer.Model;
+using ClearCanvas.ImageServer.Web.Common.Data;
 using Resources;
 using ClearCanvas.ImageServer.Web.Application.Helpers;
 using ClearCanvas.ImageServer.Web.Common.Data.DataSource;
@@ -69,14 +71,6 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Queues.StudyIntegrityQue
         /// Gets the <see cref="Model.ServerPartition"/> associated with this search panel.
         /// </summary>
         public ServerPartition ServerPartition { get; set; }
-
-        public string PatientNameFromUrl { get; set; }
-
-        public string PatientIdFromUrl { get; set; }
-
-        public string ReasonFromUrl { get; set; }
-
-        public bool DataBindFromUrl { get; set; }
 
         #endregion Public Properties  
 
@@ -173,24 +167,28 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Queues.StudyIntegrityQue
             List<StudyIntegrityReasonEnum> reasons = StudyIntegrityReasonEnum.GetAll();
             foreach (StudyIntegrityReasonEnum reason in reasons)
             {
-                ReasonListBox.Items.Add(new ListItem(ServerEnumDescription.GetLocalizedDescription( reason), reason.Lookup));
+                ReasonListBox.Items.Add(new ListItem(ServerEnumDescription.GetLocalizedDescription(reason), reason.Lookup));
             }
+        }
 
-            if (!string.IsNullOrEmpty(ReasonFromUrl))
-                ReasonListBox.Items.FindByValue(ReasonFromUrl).Selected = true;
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            if (!IsPostBack && !Page.IsAsync)
+            {
+                var patientId = Server.UrlDecode(Request["PatientID"]);
+                var patientName = Server.UrlDecode(Request["PatientName"]);
+                var reason = Server.UrlDecode(Request["Reason"]);
+                var databind = Server.UrlDecode(Request["Databind"]);
+                if (patientId != null || patientName != null || reason != null || databind != null)
+                {
+                    PatientId.Text = patientId;
+                    PatientName.Text = patientName;
+                    if (reason != null)
+                        ReasonListBox.Items.FindByValue(reason).Selected = true;
 
-            if (!string.IsNullOrEmpty(PatientNameFromUrl) || !string.IsNullOrEmpty(PatientIdFromUrl))
-            {
-                PatientName.Text = PatientNameFromUrl;
-                PatientId.Text = PatientIdFromUrl;
-                
-                StudyIntegrityQueueItemList.SetDataSource();
-                StudyIntegrityQueueItemList.Refresh();
-            }
-            else if (DataBindFromUrl)
-            {
-                StudyIntegrityQueueItemList.SetDataSource();
-                StudyIntegrityQueueItemList.Refresh();
+                    StudyIntegrityQueueItemList.SetDataSource();
+                    StudyIntegrityQueueItemList.Refresh();
+                }
             }
         }
 
@@ -201,8 +199,15 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Queues.StudyIntegrityQue
 
         protected void ReconcileButton_Click(object sender, EventArgs e)
         {
+            var list = StudyIntegrityQueueItemList.SelectedItems;
+            if (list == null || list.Count == 0)
+            {
+                StudyIntegrityQueueItemList.Refresh();
+                return;
+            }
+
             ReconcileDetails details =
-                ReconcileDetailsAssembler.CreateReconcileDetails(StudyIntegrityQueueItemList.SelectedItems[0]);
+                ReconcileDetailsAssembler.CreateReconcileDetails(list[0]);
 
             ((Default) Page).OnReconcileItem(details);
         }
