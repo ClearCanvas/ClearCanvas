@@ -73,9 +73,6 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 		ICachedVolumeReference CreateReference(bool lockVolume = false);
 	}
 
-    // TODO (CR Phoenix5 - Low): Seems like there should be at least one more level of indirection, but not sure what exactly.
-    // I think it's maybe a bit overloaded with the Volume itself, the progress, and the reference all here.
-
 	/// <summary>
 	/// Represents a reference to a cached MPR volume.
 	/// </summary>
@@ -172,17 +169,12 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 	/// </remarks>
 	public sealed class VolumeCache : IDisposable
 	{
-	    // TODO (CR Phoenix5 - Low): Extension method? 
 		/// <summary>
 		/// Gets an instance of a <see cref="VolumeCache"/> whose lifetime is tied to a specific <see cref="IImageViewer"/> instance.
 		/// </summary>
-		public static VolumeCache GetInstance(IImageViewer viewer)
+		public static VolumeCache GetInstance(IImageViewer imageViewer)
 		{
-			Platform.CheckForNullReference(viewer, "viewer");
-			var instance = viewer.ExtensionData[typeof (VolumeCache)] as VolumeCache;
-			if (instance == null)
-				viewer.ExtensionData[typeof (VolumeCache)] = instance = new VolumeCache();
-			return instance;
+			return imageViewer.GetVolumeCache();
 		}
 
 		private readonly object _syncRoot = new object();
