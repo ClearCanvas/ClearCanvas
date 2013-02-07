@@ -60,7 +60,7 @@ namespace ClearCanvas.Controls.WinForms
 
 		public string Path
 		{
-			get { return _path; }
+			get { return _path ?? string.Empty; }
 		}
 	}
 }

@@ -456,13 +456,13 @@ namespace ClearCanvas.Controls.WinForms
 					csidl = Native.CSIDL.CSIDL_DESKTOP;
 					break;
 				default:
-					throw new NotSupportedException("The specified SpecialFolder is not supported.");
+					throw new NotSupportedException(string.Format("The specified SpecialFolder '{0}' is not supported.", folder));
 			}
 
 			IntPtr pidl;
 			int hResult = Native.Shell32.SHGetFolderLocation(IntPtr.Zero, csidl, IntPtr.Zero, 0, out pidl);
 			if (hResult != 0)
-				throw new Exception("SHGetFolderLocation failed to return the PIDL of the specified SpecialFolder.", Marshal.GetExceptionForHR(hResult));
+				throw new Exception(string.Format("SHGetFolderLocation failed to return the PIDL of the specified SpecialFolder '{0}'.", folder), Marshal.GetExceptionForHR(hResult));
 			return pidl;
 		}
 
