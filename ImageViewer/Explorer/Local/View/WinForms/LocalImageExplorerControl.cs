@@ -91,6 +91,7 @@ namespace ClearCanvas.ImageViewer.Explorer.Local.View.WinForms
 		private void OnFolderControlExceptionRaised(object sender, ItemEventArgs<Exception> e)
 		{
 			Exception ex = e.Item;
+			Platform.Log(LogLevel.Debug, "FolderControl exception detected. Last Known Location: {0}", _txtAddress.Text);
 			ExceptionHandler.Report(ex, _component.DesktopWindow);
 		}
 
@@ -289,7 +290,15 @@ namespace ClearCanvas.ImageViewer.Explorer.Local.View.WinForms
 
 		protected override void OnLoad(EventArgs e)
 		{
-			this.BrowseToHome();
+			try
+			{
+				this.BrowseToHome();
+			}
+			catch (Exception ex)
+			{
+				OnFolderControlExceptionRaised(null, new ItemEventArgs<Exception>(ex));
+			}
+
 			base.OnLoad(e);
 		}
 
@@ -341,6 +350,10 @@ namespace ClearCanvas.ImageViewer.Explorer.Local.View.WinForms
 			{
 				_folderCoordinator.BrowseToParent();
 			}
+			catch (Exception ex)
+			{
+				OnFolderControlExceptionRaised(null, new ItemEventArgs<Exception>(ex));
+			}
 			finally
 			{
 				this.ResetCursor();
@@ -353,6 +366,10 @@ namespace ClearCanvas.ImageViewer.Explorer.Local.View.WinForms
 			try
 			{
 				_folderCoordinator.BrowseToPrevious();
+			}
+			catch (Exception ex)
+			{
+				OnFolderControlExceptionRaised(null, new ItemEventArgs<Exception>(ex));
 			}
 			finally
 			{
@@ -367,6 +384,10 @@ namespace ClearCanvas.ImageViewer.Explorer.Local.View.WinForms
 			{
 				_folderCoordinator.BrowseToNext();
 			}
+			catch (Exception ex)
+			{
+				OnFolderControlExceptionRaised(null, new ItemEventArgs<Exception>(ex));
+			}
 			finally
 			{
 				this.ResetCursor();
@@ -380,6 +401,10 @@ namespace ClearCanvas.ImageViewer.Explorer.Local.View.WinForms
 			{
 				this.BrowseToHome();
 			}
+			catch (Exception ex)
+			{
+				OnFolderControlExceptionRaised(null, new ItemEventArgs<Exception>(ex));
+			}
 			finally
 			{
 				this.ResetCursor();
@@ -392,6 +417,10 @@ namespace ClearCanvas.ImageViewer.Explorer.Local.View.WinForms
 			try
 			{
 				_folderCoordinator.Refresh();
+			}
+			catch(Exception ex)
+			{
+				OnFolderControlExceptionRaised(null, new ItemEventArgs<Exception>(ex));
 			}
 			finally
 			{
@@ -429,6 +458,10 @@ namespace ClearCanvas.ImageViewer.Explorer.Local.View.WinForms
 			try
 			{
 				_folderCoordinator.BrowseTo((int) ((ToolStripMenuItem) sender).Tag);
+			}
+			catch (Exception ex)
+			{
+				OnFolderControlExceptionRaised(null, new ItemEventArgs<Exception>(ex));
 			}
 			finally
 			{
@@ -522,14 +555,33 @@ namespace ClearCanvas.ImageViewer.Explorer.Local.View.WinForms
 		#region ExceptionPolicy Class
 
 		[ExceptionPolicyFor(typeof (PathNotFoundException))]
+		[ExceptionPolicyFor(typeof (PathAccessException))]
 		[ExtensionOf(typeof (ExceptionPolicyExtensionPoint))]
 		private class ExceptionPolicy : IExceptionPolicy
 		{
 			public void Handle(Exception ex, IExceptionHandlingContext exceptionHandlingContext)
 			{
-				StringBuilder sb = new StringBuilder();
+				if (ex is PathNotFoundException)
+					Handle((PathNotFoundException) ex, exceptionHandlingContext);
+				else if (ex is PathAccessException)
+					Handle((PathAccessException) ex, exceptionHandlingContext);
+			}
+
+			private static void Handle(PathNotFoundException ex, IExceptionHandlingContext exceptionHandlingContext)
+			{
+				var sb = new StringBuilder();
 				sb.AppendLine(SR.ErrorPathUnavailable);
-				sb.AppendLine(string.Format(SR.FormatPath, ((PathNotFoundException) ex).Path));
+				if (!string.IsNullOrEmpty(ex.Path))
+					sb.AppendLine(string.Format(SR.FormatPath, ex.Path));
+				exceptionHandlingContext.ShowMessageBox(sb.ToString());
+			}
+
+			private static void Handle(PathAccessException ex, IExceptionHandlingContext exceptionHandlingContext)
+			{
+				var sb = new StringBuilder();
+				sb.AppendLine(SR.ErrorPathSecurity);
+				if (!string.IsNullOrEmpty(ex.Path))
+					sb.AppendLine(string.Format(SR.FormatPath, ex.Path));
 				exceptionHandlingContext.ShowMessageBox(sb.ToString());
 			}
 		}

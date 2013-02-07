@@ -555,11 +555,24 @@ namespace ClearCanvas.Controls.WinForms
 				}
 			}
 
+			private static string GetDirectoryRootVolume(string fullPath)
+			{
+				try
+				{
+					return Directory.GetDirectoryRoot(fullPath);
+				}
+				catch (Exception)
+				{
+					// not a standard rooted Windows path
+					return string.Empty;
+				}
+			}
+
 			private static byte GetRootVolumeIndex(string fullPath)
 			{
 				if (string.IsNullOrEmpty(fullPath))
 					return 26;
-				string rootVolume = Directory.GetDirectoryRoot(fullPath);
+				string rootVolume = GetDirectoryRootVolume(fullPath);
 				if (string.IsNullOrEmpty(rootVolume) || !string.Equals(rootVolume, fullPath, StringComparison.InvariantCultureIgnoreCase))
 					return 26;
 				char driveLetter = rootVolume.ToLowerInvariant()[0];
@@ -979,6 +992,10 @@ namespace ClearCanvas.Controls.WinForms
 						pidl.Dispose(); // the enumerator makes relative PIDLs, but the FolderListViewItem needs an absolute one
 					}
 					this.Items.AddRange(items.ToArray());
+				}
+				catch (Exception ex)
+				{
+					HandleBrowseException(ex);
 				}
 				finally
 				{
