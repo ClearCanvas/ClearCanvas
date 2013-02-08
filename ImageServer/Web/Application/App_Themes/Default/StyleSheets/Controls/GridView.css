@@ -3,8 +3,8 @@
     font-family: Sans-Serif;
     font-size: 12px;
     background: #ffffff;
-    border-top: solid 1px #3D98D1;
-    border-bottom: solid 1px #ffffff;
+	border-width:2px;
+	border-color:transparent;
 }
 
 .GridViewBorder
@@ -24,6 +24,7 @@
 	text-align: left;
 	padding-left: 8px;
     color: #205F87;
+	border-color:transparent;
 }
 
 .GlobalGridViewHeader th

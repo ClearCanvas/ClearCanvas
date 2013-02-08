@@ -126,6 +126,8 @@ namespace ClearCanvas.ImageViewer.Mathematics
 				return 0;
 		}
 
+        // TODO (CR Feb 2013 - Med): This is the only method here that doesn't use ULPs - it's easy to assume it does.
+
 		/// <summary>
 		/// Compares two floating point values for equality within a specified absolute tolerance.
 		/// </summary>
@@ -257,6 +259,8 @@ namespace ClearCanvas.ImageViewer.Mathematics
 			else
 				return 0;
 		}
+
+	    // TODO (CR Feb 2013 - Med): This is the only method here that doesn't use ULPs - it's easy to assume it does.
 
 		/// <summary>
 		/// Compares two floating point values for equality within a specified absolute tolerance.

@@ -371,7 +371,8 @@ namespace ClearCanvas.ImageServer.Web.Common.WebControls.Validators
 
                     if (InvalidInputIndicator != null)
                     {
-                        InvalidInputIndicator.Hide();
+                        if (!InvalidInputIndicator.IsVisible)
+                            InvalidInputIndicator.Hide();
                     }
 
                     return true;

@@ -21,7 +21,6 @@
 // <http://www.gnu.org/licenses/>.
 
 --%>
-
 <%@ Control Language="C#" AutoEventWireup="true" CodeBehind="MovePanel.ascx.cs" Inherits="ClearCanvas.ImageServer.Web.Application.Pages.Studies.Move.MovePanel" %>
 <%@ Import Namespace="Resources" %>
 <%@ Register Src="DeviceGridView.ascx" TagName="DeviceGridView" TagPrefix="localAsp" %>

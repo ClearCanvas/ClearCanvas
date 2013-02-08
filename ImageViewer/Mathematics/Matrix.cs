@@ -23,7 +23,6 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
 using System.Text;
 using ClearCanvas.Common;
 
@@ -32,9 +31,9 @@ namespace ClearCanvas.ImageViewer.Mathematics
 	// TODO: Determinant, Inverse, etc are still missing.
 
 	/// <summary>
-	/// A simple matrix class.
+	/// Represents a matrix of arbitrary dimensions.
 	/// </summary>
-	public class Matrix
+	public sealed class Matrix
 	{
 		private readonly int _rows;
 		private readonly int _columns;
@@ -55,7 +54,7 @@ namespace ClearCanvas.ImageViewer.Mathematics
 			_rows = rows;
 			_columns = columns;
 
-			_matrix = new float[rows, columns];
+			_matrix = new float[rows,columns];
 		}
 
 		/// <summary>
@@ -83,7 +82,7 @@ namespace ClearCanvas.ImageViewer.Mathematics
 
 			_rows = matrix._rows;
 			_columns = matrix._columns;
-			_matrix = (float[,])matrix._matrix.Clone();
+			_matrix = (float[,]) matrix._matrix.Clone();
 		}
 
 		/// <summary>
@@ -91,7 +90,7 @@ namespace ClearCanvas.ImageViewer.Mathematics
 		/// </summary>
 		public int Rows
 		{
-			get { return _rows; }	
+			get { return _rows; }
 		}
 
 		/// <summary>
@@ -120,9 +119,9 @@ namespace ClearCanvas.ImageViewer.Mathematics
 				if (!IsSquare)
 					return false;
 
-				for(int row = 0; row < _rows; ++row)
+				for (int row = 0; row < _rows; ++row)
 				{
-					for(int column = 0; column < _columns; ++column)
+					for (int column = 0; column < _columns; ++column)
 					{
 						if (_matrix[row, column] != ((row == column) ? 1F : 0F))
 							return false;
@@ -130,12 +129,14 @@ namespace ClearCanvas.ImageViewer.Mathematics
 				}
 
 				return true;
-			}	
+			}
 		}
 
 		/// <summary>
 		/// Gets or sets the value of the cell at the specified row and column indices.
 		/// </summary>
+		/// <param name="row">The row index</param>
+		/// <param name="column">The column index</param>
 		public float this[int row, int column]
 		{
 			get
@@ -153,13 +154,13 @@ namespace ClearCanvas.ImageViewer.Mathematics
 				_matrix[row, column] = value;
 			}
 		}
-		
+
 		private void Scale(float scale)
 		{
 			for (int row = 0; row < _rows; ++row)
 			{
 				for (int column = 0; column < _columns; ++column)
-					this[row, column] = this[row, column] * scale;
+					this[row, column] = this[row, column]*scale;
 			}
 		}
 
@@ -192,19 +193,19 @@ namespace ClearCanvas.ImageViewer.Mathematics
 			for (int row = 0; row < _rows; ++row)
 				_matrix[row, column] = values[row];
 		}
-		
+
 		/// <summary>
 		/// Clones this matrix and its values.
 		/// </summary>
 		public Matrix Clone()
 		{
-			float[,] matrix = (float[,])_matrix.Clone();
+			float[,] matrix = (float[,]) _matrix.Clone();
 			for (int row = 0; row < _rows; ++row)
 			{
 				for (int column = 0; column < _columns; ++column)
 					matrix[row, column] = _matrix[row, column];
 			}
-			
+
 			return new Matrix(matrix);
 		}
 
@@ -231,10 +232,10 @@ namespace ClearCanvas.ImageViewer.Mathematics
 		{
 			StringBuilder builder = new StringBuilder();
 
-			for(int row = 0; row < _rows; ++row)
+			for (int row = 0; row < _rows; ++row)
 			{
 				builder.Append("( ");
-				for(int column = 0; column < _columns; ++column)
+				for (int column = 0; column < _columns; ++column)
 				{
 					builder.Append(_matrix[row, column].ToString("F4"));
 					if (column < (_columns - 1))
@@ -289,7 +290,7 @@ namespace ClearCanvas.ImageViewer.Mathematics
 					float value = 0F;
 
 					for (int k = 0; k < mutualDimension; ++k)
-						value = value + left[row, k] * right[k, column];
+						value = value + left[row, k]*right[k, column];
 
 					result[row, column] = value;
 				}

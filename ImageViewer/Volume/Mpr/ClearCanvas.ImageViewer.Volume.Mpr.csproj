@@ -136,6 +136,7 @@
     <Compile Include="VolumeCache.cs" />
     <Compile Include="VolumeReference.cs" />
     <Compile Include="VolumeSlicerParams.cs" />
+    <Compile Include="VolumeUtilities.cs" />
     <Compile Include="MprSliceSet.cs" />
     <Compile Include="Tools\MprViewerTool.cs" />
     <Compile Include="LaunchMprTool.cs" />

@@ -91,6 +91,8 @@ namespace ClearCanvas.ImageViewer.Explorer.Dicom
 
 				if (Context.SelectedServers.Count == 1 && Context.SelectedServers[0].IsLocal)
 				{
+                    // TODO (CR Phoenix5 - Medium): Not so sure now about excluding failed items.
+
 					// #10746:  Workstation: the user must be warned when opening studies that are being processed
 					// This implementation does not cover all the possible cases of when a study might be modified.
 					// For example: if a study is being retrieved, WQI failed and deleted, the study is technically

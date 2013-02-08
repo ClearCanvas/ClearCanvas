@@ -44,6 +44,12 @@ namespace ClearCanvas.ImageServer.Core.Edit.Test
             DicomImplementation.UnitTest = true;
         }
 
+        [TestFixtureTearDown]
+        public void TestFixtureTearDown()
+        {
+            DicomImplementation.UnitTest = false;
+        }
+
         public bool UnicodeAllowed
         {
             get

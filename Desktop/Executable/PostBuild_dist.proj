@@ -134,11 +134,11 @@
     <!-- The 64-bit version of editbin can be run directly from VC\bin\amd64 -->
     <Exec Condition="'$(BuildPlatform)' == 'x64'"
           Command="editbin /LARGEADDRESSAWARE &quot;$(DistributionDirectory)\ClearCanvas.Desktop.Executable.exe&quot;"
-          WorkingDirectory="$(VS90COMNTOOLS)\..\..\VC\bin\amd64" />
+          WorkingDirectory="$(VS100COMNTOOLS)\..\..\VC\bin\amd64" />
     <!-- The 32-bit version of editbin has a dependency in Common7\IDE, hence the weird use of both WorkdingDirectory and a full command path -->
     <Exec Condition="'$(BuildPlatform)' != 'x64'"
-          Command="&quot;$(VS90COMNTOOLS)..\..\VC\bin\editbin&quot; /LARGEADDRESSAWARE &quot;$(DistributionDirectory)\ClearCanvas.Desktop.Executable.exe&quot;"
-          WorkingDirectory="$(VS90COMNTOOLS)\..\IDE" />
+          Command="&quot;$(VS100COMNTOOLS)..\..\VC\bin\editbin&quot; /LARGEADDRESSAWARE &quot;$(DistributionDirectory)\ClearCanvas.Desktop.Executable.exe&quot;"
+          WorkingDirectory="$(VS100COMNTOOLS)\..\IDE" />
   </Target>
 
   <Target Name="Copy App Icon">

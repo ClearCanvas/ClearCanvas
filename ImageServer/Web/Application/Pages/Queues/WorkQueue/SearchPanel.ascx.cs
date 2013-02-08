@@ -28,8 +28,10 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using AjaxControlToolkit;
 using ClearCanvas.Common.Utilities;
+using ClearCanvas.ImageServer.Enterprise;
 using ClearCanvas.ImageServer.Model;
 using ClearCanvas.ImageServer.Web.Application.Helpers;
+using ClearCanvas.ImageServer.Web.Common.Data;
 using ClearCanvas.ImageServer.Web.Common.Data.DataSource;
 using ClearCanvas.ImageServer.Web.Common.WebControls.UI;
 using AuthorityTokens=ClearCanvas.ImageServer.Enterprise.Authentication.AuthorityTokens;
@@ -64,23 +66,6 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Queues.WorkQueue
 
         #region Public Properties
 
-        public string PatientNameFromUrl
-        {
-            get; set;
-        }
-
-        public string PatientIDFromUrl
-        {
-            get;
-            set;
-        }
-
-        public string ProcessingServerFromUrl
-        {
-            get;
-            set;
-        }
-        
         /// <summary>
         /// Gets the <see cref="Model.ServerPartition"/> associated with this search panel.
         /// </summary>
@@ -166,66 +151,56 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Queues.WorkQueue
             workQueueItemList.ServerPartition = _serverPartition;
 
             workQueueItemList.DataSourceCreated += delegate(WorkQueueDataSource source)
-                                                            {
-                                                                if (!String.IsNullOrEmpty(PatientName.Text))
+                                                       {
+                                                           if (!String.IsNullOrEmpty(PatientName.Text))
                                                                     source.PatientsName = SearchHelper.NameWildCard(PatientName.Text);
-                                                                
-                                                                source.Partition = ServerPartition;
 
-                                                                if (!String.IsNullOrEmpty(PatientId.Text))
+                                                           source.Partition = ServerPartition;
+
+                                                           if (!String.IsNullOrEmpty(PatientId.Text))
                                                                     source.PatientId = SearchHelper.TrailingWildCard(PatientId.Text);
 
-                                                                if (!String.IsNullOrEmpty(ProcessingServer.Text))
+                                                           if (!String.IsNullOrEmpty(ProcessingServer.Text))
                                                                     source.ProcessingServer = SearchHelper.TrailingWildCard(ProcessingServer.Text);
 
                                                                 source.ScheduledDate = !string.IsNullOrEmpty(ScheduleDate.Text) ? ScheduleDate.Text : string.Empty;                                   
 
-                                                                source.DateFormats = ScheduleCalendarExtender.Format;
+                                                           source.DateFormats = ScheduleCalendarExtender.Format;
 
-                                                                if (TypeListBox.SelectedIndex > -1)
-                                                                {
-                                                                    var types = new List<WorkQueueTypeEnum>();
-                                                                    foreach (ListItem item in TypeListBox.Items)
-                                                                    {
-                                                                        if (item.Selected)
-                                                                        {
-                                                                            types.Add(WorkQueueTypeEnum.GetEnum(item.Value));
-                                                                        }
-                                                                    }
-                                                                    source.TypeEnums = types.ToArray();
-                                                                }
+                                                           if (TypeListBox.SelectedIndex > -1)
+                                                           {
+                                                               var types = new List<WorkQueueTypeEnum>();
+                                                               foreach (ListItem item in TypeListBox.Items)
+                                                               {
+                                                                   if (item.Selected)
+                                                                   {
+                                                                       types.Add(WorkQueueTypeEnum.GetEnum(item.Value));
+                                                                   }
+                                                               }
+                                                               source.TypeEnums = types.ToArray();
+                                                           }
 
-                                                                if (StatusListBox.SelectedIndex > -1)
-                                                                {
-                                                                    var statuses = new List<WorkQueueStatusEnum>();
-                                                                    foreach (ListItem item in StatusListBox.Items)
-                                                                    {
-                                                                        if (item.Selected)
-                                                                        {
+                                                           if (StatusListBox.SelectedIndex > -1)
+                                                           {
+                                                               var statuses = new List<WorkQueueStatusEnum>();
+                                                               foreach (ListItem item in StatusListBox.Items)
+                                                               {
+                                                                   if (item.Selected)
+                                                                   {
                                                                             statuses.Add(WorkQueueStatusEnum.GetEnum(item.Value));
-                                                                        }
-                                                                    }
-                                                                    source.StatusEnums = statuses.ToArray();
-                                                                }
+                                                                   }
+                                                               }
+                                                               source.StatusEnums = statuses.ToArray();
+                                                           }
 
-                                                                if (PriorityDropDownList.SelectedValue != string.Empty)
+                                                           if (PriorityDropDownList.SelectedValue != string.Empty)
                                                                     source.PriorityEnum = WorkQueuePriorityEnum.GetEnum(PriorityDropDownList.SelectedValue);
-                                                            };
+                                                       };
 
             MessageBox.Confirmed += delegate
                                         {
                                             workQueueItemList.RefreshCurrentPage();
                                         };
-
-            if(!string.IsNullOrEmpty(PatientNameFromUrl) || !string.IsNullOrEmpty(PatientIDFromUrl)  || !string.IsNullOrEmpty(ProcessingServerFromUrl))
-            {
-                PatientName.Text = PatientNameFromUrl;
-                PatientId.Text = PatientIDFromUrl;
-                ProcessingServer.Text = ProcessingServerFromUrl;
-
-                workQueueItemList.SetDataSource();
-                workQueueItemList.Refresh();
-            }
         }
 
         /// <summary>
@@ -250,6 +225,22 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Queues.WorkQueue
             ReprocessItemButton.Roles = AuthorityTokens.WorkQueue.Reprocess;
             ResetItemButton.Roles = AuthorityTokens.WorkQueue.Reset; 
             RescheduleItemButton.Roles =AuthorityTokens.WorkQueue.Reschedule;
+
+            if (!IsPostBack && !Page.IsAsync)
+            {
+                var patientId = Server.UrlDecode(Request["PatientID"]);
+                var patientName = Server.UrlDecode(Request["PatientName"]);
+                var processingServer = Server.UrlDecode(Request["ProcessorID"]);
+                if (patientId != null || patientName != null || processingServer != null)
+                {
+                    PatientId.Text = patientId;
+                    PatientName.Text = patientName;
+                    ProcessingServer.Text = processingServer;
+
+                    workQueueItemList.SetDataSource();
+                    workQueueItemList.Refresh();
+                }
+            }
         }
 
         private void PopulateDropdownLists()

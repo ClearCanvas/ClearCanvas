@@ -137,13 +137,6 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Queues.WorkQueue.Edit
             SelectedWorkQueueItemList.WorkQueueItemGridView.SelectedIndexChanged +=
                 WorkQueueListControl_SelectedIndexChanged;
 
-            SelectedWorkQueueItemList.DataSourceCreated += delegate(WorkQueueDataSource source)
-                                                               {
-                                                                   if (WorkQueueKeys == null)
-                                                                       source.SearchKeys = new List<ServerEntityKey>();
-                                                                   else source.SearchKeys = WorkQueueKeys;
-                                                               };
-
             SelectedWorkQueueItemList.TheGrid = SelectedWorkQueueItemList.WorkQueueItemGridView;
         }
 
@@ -376,5 +369,9 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Queues.WorkQueue.Edit
 
         #endregion Public Methods
 
+        protected void SetDataSourceFilter(WorkQueueDataSource thesource)
+        {
+            thesource.SearchKeys = WorkQueueKeys ?? new List<ServerEntityKey>();
+        }
     }
 }

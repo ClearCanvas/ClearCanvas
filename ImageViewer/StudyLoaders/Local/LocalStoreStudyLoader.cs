@@ -95,6 +95,7 @@ namespace ClearCanvas.ImageViewer.StudyLoaders.Local
                 {
                     if (!studyLoaderArgs.Options.IgnoreInUse)
                     {
+                        // TODO (CR Phoenix5 - Med): Not so sure now about excluding failed items.
                         var activeUpdateItems =
                             context.GetWorkItemBroker().GetWorkItems(WorkItemConcurrency.StudyUpdate,
                                                                      WorkItemStatusFilter.Active,

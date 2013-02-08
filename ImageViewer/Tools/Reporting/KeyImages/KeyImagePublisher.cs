@@ -28,12 +28,10 @@ using System.Linq;
 using ClearCanvas.Common;
 using ClearCanvas.Desktop;
 using ClearCanvas.Dicom;
-using ClearCanvas.Dicom.Iod;
 using ClearCanvas.ImageViewer.Clipboard;
 using ClearCanvas.ImageViewer.Common.DicomServer;
 using ClearCanvas.ImageViewer.Common.ServerDirectory;
 using ClearCanvas.ImageViewer.Common.StudyManagement;
-using ClearCanvas.ImageViewer.Common.WorkItem;
 using ClearCanvas.ImageViewer.Configuration;
 using ClearCanvas.ImageViewer.KeyObjects;
 using ClearCanvas.ImageViewer.PresentationStates.Dicom;
@@ -41,6 +39,8 @@ using ClearCanvas.ImageViewer.StudyManagement;
 
 namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 {
+    // TODO (CR Jan 2013): Badly needs to be refactored.
+
 	internal class KeyImagePublisher
 	{
 		private readonly KeyImageInformation _sourceInformation;

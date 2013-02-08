@@ -28,7 +28,9 @@ using ClearCanvas.Enterprise.Core.Upgrade;
 
 namespace ClearCanvas.ImageServer.Model.SqlServer.UpgradeScripts
 {
-
+    /// <summary>
+    /// Upgrade from the USD milestone to the McCoy milestone 
+    /// </summary>
     [ExtensionOf(typeof(PersistentStoreUpgradeScriptExtensionPoint))]
     class UpgradeFrom__4_0_5014_9549 : BaseUpgradeScript
     {

@@ -671,7 +671,7 @@ namespace ClearCanvas.Dicom.Tests
 		/// Creates an in-memory DICOM image
 		/// </summary>
 		/// <returns></returns>
-		private DicomFile CreateDicomImage(int rows = 20, int columns = 30, bool bitsAllocated16 = true, bool signed = false, int numberOfFrames = 1, Endian endian = Endian.Little, bool useOB = false)
+		private static DicomFile CreateDicomImage(int rows = 20, int columns = 30, bool bitsAllocated16 = true, bool signed = false, int numberOfFrames = 1, Endian endian = Endian.Little, bool useOB = false)
 		{
 			var sopClassUid = bitsAllocated16 ? SopClass.MultiFrameGrayscaleWordSecondaryCaptureImageStorageUid : SopClass.MultiFrameGrayscaleByteSecondaryCaptureImageStorageUid;
 			var sopInstanceUid = DicomUid.GenerateUid().UID;
@@ -706,6 +706,7 @@ namespace ClearCanvas.Dicom.Tests
 			pixelDataTag = new DicomTag(pixelDataTag.TagValue, pixelDataTag.Name, pixelDataTag.VariableName, useOB ? DicomVr.OBvr : DicomVr.OWvr, pixelDataTag.MultiVR, pixelDataTag.VMLow, pixelDataTag.VMHigh, pixelDataTag.Retired);
 
 			dcf.DataSet[DicomTags.PhotometricInterpretation].SetStringValue(PhotometricInterpretation.Monochrome2.Code);
+			dcf.DataSet[DicomTags.SamplesPerPixel].SetInt32(0, 1);
 			dcf.DataSet[DicomTags.PixelRepresentation].SetInt32(0, signed ? 1 : 0);
 			dcf.DataSet[DicomTags.BitsAllocated].SetInt32(0, bitsAllocated16 ? 16 : 8);
 			dcf.DataSet[DicomTags.BitsStored].SetInt32(0, bitsAllocated16 ? 16 : 8);

@@ -170,7 +170,7 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Admin.Configure.ServerPa
                     OKClicked(new ServerPartitionInfo()
                                   {
                                       Partition = Partition, 
-                                      GroupsWithAccess = new List<String>(dataAccessPanel.SelectedGroupRefs)
+                                      GroupsWithDataAccess = new List<String>(dataAccessPanel.SelectedDataAccessGroupRefs)
                                   });
                 }
 
@@ -345,6 +345,6 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Admin.Configure.ServerPa
     public class ServerPartitionInfo
     {
         public ServerPartition Partition { get; set; }
-        public List<string> GroupsWithAccess { get; set; }
+        public List<string> GroupsWithDataAccess { get; set; }
     }
 }

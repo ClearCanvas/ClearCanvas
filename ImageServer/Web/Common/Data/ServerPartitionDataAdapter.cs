@@ -80,8 +80,8 @@ namespace ClearCanvas.ImageServer.Web.Common.Data
         /// Creats a new server parition.
         /// </summary>
         /// <param name="partition"></param>
-        /// <param name="groupsWithAccess"> </param>
-        public bool AddServerPartition(ServerPartition partition, List<string> groupsWithAccess)
+        /// <param name="groupsWithDataAccess"> </param>
+        public bool AddServerPartition(ServerPartition partition, List<string> groupsWithDataAccess)
         {
             bool ok;
 
@@ -113,7 +113,7 @@ namespace ClearCanvas.ImageServer.Web.Common.Data
                     ServerPartition insertPartition = insert.FindOne(parms);
 					ok = insertPartition != null;
 
-                    UpdateDataAccess(ctx, insertPartition, groupsWithAccess);
+                    UpdateDataAccess(ctx, insertPartition, groupsWithDataAccess);
                 }
                 catch (Exception e)
                 {
@@ -194,7 +194,7 @@ namespace ClearCanvas.ImageServer.Web.Common.Data
        }
        
 
-       private void UpdateDataAccess(IUpdateContext ctx, ServerPartition partition, List<string> groupsWithAccess)
+       private void UpdateDataAccess(IUpdateContext ctx, ServerPartition partition, List<string> groupsWithDataAccess)
        {
            var broker = ctx.GetBroker<IServerPartitionDataAccessEntityBroker>();
            var criteria = new ServerPartitionDataAccessSelectCriteria();
@@ -205,16 +205,16 @@ namespace ClearCanvas.ImageServer.Web.Common.Data
            {
                foreach(var g in existingGroups)
                {
-                   if (!groupsWithAccess.Contains(g.Key.ToString()))
+                   if (!groupsWithDataAccess.Contains(g.Key.ToString()))
                    {
                        broker.Delete(g.Key);
                    }
                }
            }
 
-           if (groupsWithAccess!=null)
+           if (groupsWithDataAccess!=null)
            {
-               foreach (var g in groupsWithAccess)
+               foreach (var g in groupsWithDataAccess)
                {
                    string g1 = g;
                    if (!CollectionUtils.Contains(existingGroups, group => group.Key.ToString().Equals(g1)))
@@ -235,7 +235,7 @@ namespace ClearCanvas.ImageServer.Web.Common.Data
           
        }
 
-       public bool Update(ServerPartition partition, List<string> groupsWithAccess)
+       public bool Update(ServerPartition partition, List<string> groupsWithDataAccess)
        {
            using (IUpdateContext context = PersistentStore.OpenUpdateContext(UpdateContextSyncMode.Flush))
            {
@@ -264,7 +264,7 @@ namespace ClearCanvas.ImageServer.Web.Common.Data
                if (!broker.Update(partition.Key, parms))
                    return false;
 
-               UpdateDataAccess(context, partition, groupsWithAccess);
+               UpdateDataAccess(context, partition, groupsWithDataAccess);
 
                context.Commit();
                return true;
