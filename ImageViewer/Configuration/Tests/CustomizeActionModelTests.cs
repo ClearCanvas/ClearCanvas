@@ -73,8 +73,8 @@ namespace ClearCanvas.ImageViewer.Configuration.Tests
             var tool = new CustomizeViewerActionModelTool();
             var actions = tool.Actions;
 
-            _mainMenu = actions.Select(a => a.ActionID == CustomizeViewerActionModelTool._mainMenuCustomizeId).First();
-            _contextMenu = actions.Select(a => a.ActionID == CustomizeViewerActionModelTool._contextMenuCustomizeId).First();
+            _mainMenu = actions.Select(a => a.ActionID.EndsWith(CustomizeViewerActionModelTool._mainMenuCustomizeId)).First();
+            _contextMenu = actions.Select(a => a.ActionID.EndsWith(CustomizeViewerActionModelTool._contextMenuCustomizeId)).First();
         }
 
         [Test]

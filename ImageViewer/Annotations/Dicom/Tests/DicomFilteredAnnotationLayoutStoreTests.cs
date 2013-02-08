@@ -37,7 +37,7 @@ namespace ClearCanvas.ImageViewer.Annotations.Dicom.Tests
 	[TestFixture]
 	public class DicomFilteredAnnotationLayoutStoreTests
 	{
-		private const int _countLayoutsInDicomFilteredLayoutStoreXml = 12;
+		private const int _countLayoutsInDicomFilteredLayoutStoreXml = 13;
 
 		public DicomFilteredAnnotationLayoutStoreTests()
 		{ 
