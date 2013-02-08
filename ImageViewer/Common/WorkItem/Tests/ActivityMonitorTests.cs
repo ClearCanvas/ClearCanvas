@@ -54,7 +54,11 @@ namespace ClearCanvas.ImageViewer.Common.WorkItem.Tests
         [TestFixtureSetUp]
         public void Initialize()
         {
-            var factory = new UnitTestExtensionFactory { { typeof(DuplexServiceProviderExtensionPoint), typeof(TestServiceProvider) } };
+            var factory = new UnitTestExtensionFactory
+                              {
+                                  { typeof(DuplexServiceProviderExtensionPoint), typeof(TestServiceProvider) },
+                                  { typeof(ServiceProviderExtensionPoint), typeof(TestServiceProvider) }
+                              };
             Platform.SetExtensionFactory(factory);
 
             RealWorkItemActivityMonitor.ConnectionRetryInterval = TimeSpan.FromMilliseconds(100);
