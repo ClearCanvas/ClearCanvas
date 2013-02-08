@@ -24,6 +24,7 @@
 
 using System;
 using System.Drawing;
+using System.Reflection;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Desktop;
 using ClearCanvas.Desktop.Actions;
@@ -46,6 +47,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr.Tools
 		[LabelValueObserver("activate", "Label", "SliceSetChanged")]
 		[GroupHint("activate", "Tools.Volume.MPR.Reslicing")]
 		[Persistent("activate", false)]
+		[Obfuscation(Exclude = true, Feature = "renaming", ApplyToMembers = false)]
 		[MouseToolButton(XMouseButtons.Left, false)]
 		private class ResliceTool : MprViewerTool, IMemorable
 		{
