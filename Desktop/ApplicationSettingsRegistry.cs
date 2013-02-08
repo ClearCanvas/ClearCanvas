@@ -69,7 +69,7 @@ namespace ClearCanvas.Desktop
 		    try
 		    {
                 //TODO (Phoenix5): #10730 - remove this when it's fixed.
-                if (Application.GuiToolkitID == GuiToolkitID.Web)
+                if (Application.GuiToolkitID == null || Application.GuiToolkitID == GuiToolkitID.Web)
                     return;
 		    }
 		    catch (Exception)
