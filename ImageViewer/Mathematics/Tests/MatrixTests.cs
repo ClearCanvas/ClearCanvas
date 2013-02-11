@@ -61,7 +61,7 @@ namespace ClearCanvas.ImageViewer.Mathematics.Tests
 				new Matrix(new Matrix(4, -5));
 				Assert.Fail("Expected an exception");
 			}
-			catch (ArgumentOutOfRangeException) {}
+            catch (ArgumentException) { }
 
 			try
 			{

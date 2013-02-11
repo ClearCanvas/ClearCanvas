@@ -200,8 +200,8 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Studies.StudyDetails.Con
             }
 
             int hh = String.IsNullOrEmpty(StudyTimeHours.Text)? 0:int.Parse(StudyTimeHours.Text);
-            int mm = int.Parse(StudyTimeMinutes.Text);
-            int ss = int.Parse(StudyTimeSeconds.Text);
+            int mm = String.IsNullOrEmpty(StudyTimeMinutes.Text) ? 0 : int.Parse(StudyTimeMinutes.Text);
+            int ss = String.IsNullOrEmpty(StudyTimeSeconds.Text) ? 0 : int.Parse(StudyTimeSeconds.Text);
             String dicomStudyTime = String.Format("{0:00}{1:00}{2:00}", hh, mm, ss);
 
             if (AreDifferent(Study.StudyTime, dicomStudyTime))

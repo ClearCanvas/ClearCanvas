@@ -47,7 +47,6 @@ namespace ClearCanvas.ImageServer.Web.Application.Controls
  
             ContainerPanel.Style.Add("display", "block");
             ContainerPanel.Style.Add("visibility", "hidden");   
-
         }
                 
 		public bool IsVisible
@@ -55,11 +54,11 @@ namespace ClearCanvas.ImageServer.Web.Application.Controls
             get { return ContainerPanel.Style[HtmlTextWriterStyle.Visibility] == "visible"; }
 		}
            
+           
         public Control Container
         {
             get { return ContainerPanel; }
         }
-
 
         public void Show()
         {

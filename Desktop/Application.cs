@@ -171,7 +171,7 @@ namespace ClearCanvas.Desktop
         /// </summary>
         public static string GuiToolkitID
         {
-            get { return _instance.GuiToolkit != null ? _instance.GuiToolkit.ToolkitID : null; }
+            get { return _instance != null && _instance.GuiToolkit != null ? _instance.GuiToolkit.ToolkitID : null; }
         }
 
         /// <summary>

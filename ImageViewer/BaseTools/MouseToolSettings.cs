@@ -32,9 +32,6 @@ namespace ClearCanvas.ImageViewer.BaseTools
 {
 	[SettingsGroupDescription("Settings for mouse tools in the ImageViewer.")]
 	[SettingsProvider(typeof (StandardSettingsProvider))]
-	//TODO: make "universal" and re-enable for next release.
-	[UserSettingsMigrationDisabled]
-	[SharedSettingsMigrationDisabled]
 	internal partial class MouseToolSettings
 	{
 		public MouseToolSettings()
