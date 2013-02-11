@@ -48,7 +48,7 @@ namespace ClearCanvas.Common.Configuration.Setup
 		{
 			CommandLine commandLine = new CommandLine(args);
 
-			foreach (SettingsGroupDescriptor group in SettingsGroupDescriptor.ListInstalledLocalSettingsGroups())
+			foreach (SettingsGroupDescriptor group in SettingsGroupDescriptor.ListInstalledSettingsGroups(SettingsGroupFilter.LocalStorage))
 			{
 				Type type = Type.GetType(group.AssemblyQualifiedTypeName, true);
 				var settings = ApplicationSettingsHelper.GetSettingsClassInstance(type);

@@ -25,91 +25,103 @@
 using System;
 using System.Collections.Generic;
 using System.Configuration;
-using ClearCanvas.Common.Utilities;
+using System.Linq;
 using System.Runtime.Serialization;
-using System.Reflection;
 
 namespace ClearCanvas.Common.Configuration
 {
+	[Flags]
+	public enum SettingsGroupFilter
+	{
+		/// <summary>
+		/// All settings groups (no filter).
+		/// </summary>
+		All = 0,
+
+		/// <summary>
+		/// Settings groups that will be stored in the enterprise configuration store, if one exists.
+		/// </summary>
+		SupportEnterpriseStorage		= 0x01,
+
+		/// <summary>
+		/// Settings groups that use some form of local storage.
+		/// </summary>
+		LocalStorage					= 0x02,
+
+		/// <summary>
+		/// Settings groups that support editing of the shared profile.
+		/// </summary>
+		SupportsEditingOfSharedProfile	= 0x04,
+	}
+
 	/// <summary>
 	/// Describes a settings group.
 	/// </summary>
 	[DataContract]
 	public class SettingsGroupDescriptor : IEquatable<SettingsGroupDescriptor>
 	{
-		//TODO (CR Sept 2010): get rid of the specialized list methods and just
-		//put properties on this class that say whether or not the settings group is "local"
-	
-		/// <summary>
-		/// Returns a list of <see cref="SettingsGroupDescriptor"/> objects describing each settings class
-		/// that exists in the installed plugin base, and is a locally stored setting.
-		/// </summary>
-		/// <remarks>
-		/// This method is thread-safe.
-		/// </remarks>
-		public static List<SettingsGroupDescriptor> ListInstalledLocalSettingsGroups()
-		{
-			return ListInstalledSettingsGroups(IsLocalSettingsGroup);
-		}
-
 		/// <summary>
 		/// Returns a list of <see cref="SettingsGroupDescriptor"/> objects describing each settings class
 		/// that exists in the installed plugin base.
 		/// </summary>
 		/// <remarks>
-		/// <para>
-		/// If <param name="excludeLocalSettingsGroups"/> is true, this method only returns settings classes
-		/// where:
-		/// <list type="bullet">
-		/// <item>the <see cref="StandardSettingsProvider"/> is used for persistence.</item>
-		/// <item>the <see cref="StandardSettingsProvider"/> is using a valid <see cref="ISettingsStore"/> via
-		/// the <see cref="SettingsStoreExtensionPoint"/>.  When there is no such extension, such settings are
-		/// actually stored locally.</item>
-		/// </list>
-		/// </para>
-		/// <para>
 		/// This method is thread-safe.
-		/// </para>
 		/// </remarks>
-		public static List<SettingsGroupDescriptor> ListInstalledSettingsGroups(bool excludeLocalSettingsGroups)
+		public static List<SettingsGroupDescriptor> ListInstalledSettingsGroups()
 		{
-			return ListInstalledSettingsGroups(t => !excludeLocalSettingsGroups || !IsLocalSettingsGroup(t));
+			return ListInstalledSettingsGroups(SettingsGroupFilter.All);
 		}
 
-		private static bool IsLocalSettingsGroup(Type t)
+		/// <summary>
+		/// Returns a list of <see cref="SettingsGroupDescriptor"/> objects describing each settings class
+		/// that exists in the installed plugin base, applying the specified filter.
+		/// </summary>
+		/// <remarks>
+		/// This method is thread-safe.
+		/// </remarks>
+		public static List<SettingsGroupDescriptor> ListInstalledSettingsGroups(SettingsGroupFilter filter)
 		{
-			return ApplicationSettingsHelper.IsLocal(t);
+			return ListInstalledSettingsGroups(ApplyFilter(filter));
 		}
 
-		private static List<SettingsGroupDescriptor> ListInstalledSettingsGroups(Predicate<Type> includePredicate)
+		private static List<SettingsGroupDescriptor> ListInstalledSettingsGroups(Predicate<Type> filter)
 		{
-			includePredicate = includePredicate ?? (obj => true);
+			var assemblies = Platform.PluginManager.Plugins
+				.Select(p => p.Assembly.Resolve())
+				.Concat(new[] { typeof(SettingsGroupDescriptor).Assembly });
 
-			var groups = new List<SettingsGroupDescriptor>();
+			var q = from assembly in assemblies
+					from t in assembly.GetTypes()
+					where t.IsSubclassOf(typeof(ApplicationSettingsBase)) && !t.IsAbstract && filter(t)
+					select new SettingsGroupDescriptor(t);
 
-			List<Assembly> assemblies = CollectionUtils.Map(Platform.PluginManager.Plugins, (PluginInfo p) => p.Assembly.Resolve());
-			assemblies.Add(typeof(SettingsGroupDescriptor).Assembly);
-
-			foreach (var assembly in assemblies)
-			{
-				foreach (Type t in assembly.GetTypes())
-				{
-					if (t.IsSubclassOf(typeof(ApplicationSettingsBase)) && !t.IsAbstract)
-					{
-						if (includePredicate(t))
-							groups.Add(new SettingsGroupDescriptor(t));
-					}
-				}
-			}
-
-			return groups;
+			return q.ToList();
 		}
 
-		private string _name;
-		private Version _version;
-		private string _description;
-		private string _assemblyQualifiedTypeName;
-		private bool _hasUserScopedSettings;
+		private static Predicate<Type> ApplyFilter(SettingsGroupFilter filter)
+		{
+			if (filter == 0)
+				return type => true;
+
+			Predicate<Type> f = type => false;
+
+			if ((filter & SettingsGroupFilter.SupportEnterpriseStorage) == SettingsGroupFilter.SupportEnterpriseStorage)
+				f = Or(f, type => SettingsClassMetaDataReader.GetSettingsProvider(type) == typeof(StandardSettingsProvider));
+
+			if ((filter & SettingsGroupFilter.LocalStorage) == SettingsGroupFilter.LocalStorage)
+				f = Or(f, ApplicationSettingsHelper.IsLocallyStored);
+
+			if ((filter & SettingsGroupFilter.SupportsEditingOfSharedProfile) == SettingsGroupFilter.SupportsEditingOfSharedProfile)
+				f = Or(f, type => typeof(ISharedApplicationSettingsProvider).IsAssignableFrom(SettingsClassMetaDataReader.GetSettingsProvider(type)));
+
+			return f;
+		}
+
+		private static Predicate<T> Or<T>(Predicate<T> p1, Predicate<T> p2)
+		{
+			return x => p1(x) || p2(x);
+		}
+
 
 		/// <summary>
 		/// Constructor.
@@ -117,11 +129,11 @@ namespace ClearCanvas.Common.Configuration
 		public SettingsGroupDescriptor(string name, Version version, string description, string assemblyQualifiedTypeName,
 			bool hasUserScopedSettings)
 		{
-			_name = name;
-			_version = version;
-			_description = description;
-			_assemblyQualifiedTypeName = assemblyQualifiedTypeName;
-			_hasUserScopedSettings = hasUserScopedSettings;
+			Name = name;
+			Version = version;
+			Description = description;
+			AssemblyQualifiedTypeName = assemblyQualifiedTypeName;
+			HasUserScopedSettings = hasUserScopedSettings;
 		}
 
 		/// <summary>
@@ -129,62 +141,42 @@ namespace ClearCanvas.Common.Configuration
 		/// </summary>
 		public SettingsGroupDescriptor(Type settingsClass)
 		{
-			_name = SettingsClassMetaDataReader.GetGroupName(settingsClass);
-			_version = SettingsClassMetaDataReader.GetVersion(settingsClass);
-			_description = SettingsClassMetaDataReader.GetGroupDescription(settingsClass);
-			_hasUserScopedSettings = SettingsClassMetaDataReader.HasUserScopedSettings(settingsClass);
-			_assemblyQualifiedTypeName = GetSafeClassName(settingsClass);
+			Name = SettingsClassMetaDataReader.GetGroupName(settingsClass);
+			Version = SettingsClassMetaDataReader.GetVersion(settingsClass, true);
+			Description = SettingsClassMetaDataReader.GetGroupDescription(settingsClass);
+			HasUserScopedSettings = SettingsClassMetaDataReader.HasUserScopedSettings(settingsClass);
+			AssemblyQualifiedTypeName = GetSafeClassName(settingsClass);
 		}
 
 		/// <summary>
 		/// Gets the name of the settings group.
 		/// </summary>
 		[DataMember]
-		public string Name
-		{
-			get { return _name; }
-			private set { _name = value; }
-		}
+		public string Name { get; private set; }
 
 		/// <summary>
 		/// Gets the version of the settings group.
 		/// </summary>
 		[DataMember]
-		public Version Version
-		{
-			get { return _version; }
-			private set { _version = value; }
-		}
+		public Version Version { get; private set; }
 
 		/// <summary>
 		/// Gets the description of the settings group.
 		/// </summary>
 		[DataMember]
-		public string Description
-		{
-			get { return _description; }
-			private set { _description = value; }
-		}
+		public string Description { get; private set; }
 
 		/// <summary>
 		/// Gets a value indicating whether this settings class has user-scoped settings.
 		/// </summary>
 		[DataMember]
-		public bool HasUserScopedSettings
-		{
-			get { return _hasUserScopedSettings; }
-			private set { _hasUserScopedSettings = value; }
-		}
+		public bool HasUserScopedSettings { get; private set; }
 
 		/// <summary>
 		/// Gets the assembly-qualified type name of the class that implements the settings group.
 		/// </summary>
 		[DataMember]
-		public string AssemblyQualifiedTypeName
-		{
-			get { return _assemblyQualifiedTypeName; }
-			private set { _assemblyQualifiedTypeName = value; }
-		}
+		public string AssemblyQualifiedTypeName { get; private set; }
 
 		/// <summary>
 		/// Settings groups are considered equal if they have the same name and version.
@@ -199,7 +191,7 @@ namespace ClearCanvas.Common.Configuration
 		/// </summary>
 		public override int GetHashCode()
 		{
-			return _name.GetHashCode() ^ _version.GetHashCode();
+			return Name.GetHashCode() ^ Version.GetHashCode();
 		}
 
 		public override string ToString()
@@ -214,7 +206,7 @@ namespace ClearCanvas.Common.Configuration
 		/// </summary>
 		public bool Equals(SettingsGroupDescriptor other)
 		{
-			return other != null && this._name == other._name && this._version == other._version;
+			return other != null && this.Name == other.Name && this.Version == other.Version;
 		}
 
 		#endregion

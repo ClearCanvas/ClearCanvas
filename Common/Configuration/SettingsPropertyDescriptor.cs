@@ -24,10 +24,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
-using ClearCanvas.Common.Utilities;
 using System.Runtime.Serialization;
-using System.Configuration;
 
 namespace ClearCanvas.Common.Configuration
 {
@@ -52,24 +51,17 @@ namespace ClearCanvas.Common.Configuration
 			Platform.CheckForNullReference(group, "group");
 
 			var settingsClass = Type.GetType(group.AssemblyQualifiedTypeName);
-			if(settingsClass == null)
+			if (settingsClass == null)
 				throw new SettingsException(string.Format("{0} is not a locally installed settings group.", group.Name));
 
-			return CollectionUtils.Map(SettingsClassMetaDataReader.GetSettingsProperties(settingsClass),
-									   (PropertyInfo property) => new SettingsPropertyDescriptor(property));
+			return SettingsClassMetaDataReader.GetSettingsProperties(settingsClass)
+				.Select(property => new SettingsPropertyDescriptor(property)).ToList();
 		}
-
-
-		private string _name;
-		private string _typeName;
-		private string _description;
-		private SettingScope _scope;
-		private string _defaultValue;
 
 		/// <summary>
 		/// Constructor.
 		/// </summary>
-		internal SettingsPropertyDescriptor(PropertyInfo property)
+		public SettingsPropertyDescriptor(PropertyInfo property)
 			: this(SettingsClassMetaDataReader.GetName(property),
 				SettingsClassMetaDataReader.GetType(property).FullName,
 				SettingsClassMetaDataReader.GetDescription(property),
@@ -83,62 +75,42 @@ namespace ClearCanvas.Common.Configuration
 		/// </summary>
 		public SettingsPropertyDescriptor(string name, string typeName, string description, SettingScope scope, string defaultValue)
 		{
-			_name = name;
-			_typeName = typeName;
-			_description = description;
-			_scope = scope;
-			_defaultValue = defaultValue;
+			Name = name;
+			TypeName = typeName;
+			Description = description;
+			Scope = scope;
+			DefaultValue = defaultValue;
 		}
 
 		/// <summary>
 		/// Gets the name of the property.
 		/// </summary>
 		[DataMember]
-		public string Name
-		{
-			get { return _name; }
-			private set { _name = value; }
-		}
+		public string Name { get; private set; }
 
 		/// <summary>
 		/// Gets the name of the type of the property.
 		/// </summary>
 		[DataMember]
-		public string TypeName
-		{
-			get { return _typeName; }
-			private set { _typeName = value; }
-		}
+		public string TypeName { get; private set; }
 
 		/// <summary>
 		/// Gets the description of the property.
 		/// </summary>
 		[DataMember]
-		public string Description
-		{
-			get { return _description; }
-			private set { _description = value; }
-		}
+		public string Description { get; private set; }
 
 		/// <summary>
 		/// Gets the scope of the property.
 		/// </summary>
 		[DataMember]
-		public SettingScope Scope
-		{
-			get { return _scope; }
-			private set { _scope = value; }
-		}
+		public SettingScope Scope { get; private set; }
 
 		/// <summary>
 		/// Gets the serialized default value of the property.
 		/// </summary>
 		[DataMember]
-		public string DefaultValue
-		{
-			get { return _defaultValue; }
-			private set { _defaultValue = value; }
-		}
+		public string DefaultValue { get; private set; }
 
 		public override string ToString()
 		{
