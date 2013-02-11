@@ -602,7 +602,7 @@ namespace ClearCanvas.Desktop.Configuration
 			try
 			{
 				var editor = new SettingEditorComponent(property.DefaultValue, property.Value);
-				var exitCode = LaunchAsDialog(this.Host.DesktopWindow, editor, SR.TitleEditValue);
+				var exitCode = LaunchAsDialog(this.Host.DesktopWindow, new DialogBoxCreationArgs(editor, SR.TitleEditValue, null, true));
 				if (exitCode == ApplicationComponentExitCode.Accepted)
 				{
 					property.Value = editor.CurrentValue;
