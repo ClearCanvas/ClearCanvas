@@ -262,7 +262,7 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Queues.WorkQueue
                 {
                     // #10784: remove Completed status filter
                     if (s != WorkQueueStatusEnum.Completed)
-                    StatusListBox.Items.Add(new ListItem(ServerEnumDescription.GetLocalizedDescription(s), s.Lookup));
+                        StatusListBox.Items.Add(new ListItem(ServerEnumDescription.GetLocalizedDescription(s), s.Lookup));
                 }
             }
 

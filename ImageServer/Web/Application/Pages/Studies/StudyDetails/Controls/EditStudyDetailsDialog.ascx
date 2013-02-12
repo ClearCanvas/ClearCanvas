@@ -238,7 +238,7 @@ EnableClientScript="true" runat="server" ValidationGroup="EditStudyValidationGro
                                                         IgnoreEmptyValue="True"
                                                         Text="<%$Resources: InputValidation, InvalidDate %>"
                                                         ValidationGroup="EditStudyValidationGroup" 
-                                                        InvalidInputIndicatorID="StudyDateHelp"  
+                                                        InvalidInputIndicatorID="StudyDateHelp" 
                                                         Display="None"
                                                         >
                                         </ccValidator:DateValidator>
@@ -266,7 +266,7 @@ EnableClientScript="true" runat="server" ValidationGroup="EditStudyValidationGro
                                             ValidationGroup="EditStudyValidationGroup" InvalidInputIndicatorID="StudyDateHelp"
                                             ValidationExpression="^([0-5][0-9])*$" 
                                             IgnoreEmptyValue="true"
-                                            Text="<%$Resources: InputValidation, InvalidTime %>" 
+                                            Text="<%$Resources: InputValidation, InvalidTime %>"
                                             Display="None" 
                                             >
                                         </ccValidator:RegularExpressionFieldValidator>
