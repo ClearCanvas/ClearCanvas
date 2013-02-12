@@ -95,18 +95,28 @@ namespace ClearCanvas.ImageViewer.StudyLoaders.Local
                 {
                     if (!studyLoaderArgs.Options.IgnoreInUse)
                     {
-                        // TODO (CR Phoenix5 - Med): Not so sure now about excluding failed items.
-                        var activeUpdateItems =
-                            context.GetWorkItemBroker().GetWorkItems(WorkItemConcurrency.StudyUpdate,
-                                                                     WorkItemStatusFilter.Active,
-                                                                     studyLoaderArgs.StudyInstanceUid);
+                        var workItemStatusFilter = WorkItemStatusFilter.StatusIn(
+                            WorkItemStatusEnum.Pending,
+                            WorkItemStatusEnum.InProgress,
+                            WorkItemStatusEnum.Idle,
+                            WorkItemStatusEnum.Failed);
 
-                        var activeDeleteItems =
-                            context.GetWorkItemBroker().GetWorkItems(WorkItemConcurrency.StudyDelete,
-                                                                     WorkItemStatusFilter.Active,
-                                                                     studyLoaderArgs.StudyInstanceUid);
+                        var updateItems = context.GetWorkItemBroker().GetWorkItems(
+                            WorkItemConcurrency.StudyUpdate,
+                            workItemStatusFilter,
+                            studyLoaderArgs.StudyInstanceUid);
 
-                        if (activeUpdateItems.Any() || activeDeleteItems.Any())
+                        var deleteItems = context.GetWorkItemBroker().GetWorkItems(
+                            WorkItemConcurrency.StudyDelete,
+                            workItemStatusFilter,
+                            studyLoaderArgs.StudyInstanceUid);
+
+                        var updateTriggerItems = context.GetWorkItemBroker().GetWorkItems(
+                            WorkItemConcurrency.StudyUpdateTrigger,
+                            workItemStatusFilter,
+                            studyLoaderArgs.StudyInstanceUid);
+
+                        if (updateItems.Any() || deleteItems.Any() || updateTriggerItems.Any())
                         {
                             var message = string.Format("There are work items actively modifying the study with UID '{0}'.", studyLoaderArgs.StudyInstanceUid);
                             throw new InUseLoadStudyException(studyLoaderArgs.StudyInstanceUid, message);

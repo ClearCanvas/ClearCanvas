@@ -91,14 +91,6 @@ namespace ClearCanvas.ImageViewer.Explorer.Dicom
 
 				if (Context.SelectedServers.Count == 1 && Context.SelectedServers[0].IsLocal)
 				{
-                    // TODO (CR Phoenix5 - Medium): Not so sure now about excluding failed items.
-
-					// #10746:  Workstation: the user must be warned when opening studies that are being processed
-					// This implementation does not cover all the possible cases of when a study might be modified.
-					// For example: if a study is being retrieved, WQI failed and deleted, the study is technically
-					// not complete and user should be warned.  The risk of such cases are mitigated by the fact the
-					// user is warned about the failed WQI.  This implementation is only meant to warn user if the
-					// study is "being" or "about to" be modified before opening the study.
 					try
 					{
 						Platform.Log(LogLevel.Debug, "Querying for a StudyUpdate work items that are in progress for the studies that are being opened.");
@@ -109,7 +101,7 @@ namespace ClearCanvas.ImageViewer.Explorer.Dicom
 							IEnumerable<WorkItemData> workItems = null;
 
 							Platform.GetService<IWorkItemService>(s => workItems = s.Query(request).Items);
-							return workItems.Any(IsNonTerminalStudyUpdateItem);
+							return workItems.Any(IsWorkItemInUse);
 						});
 
 						var message = this.Context.SelectedStudies.Count > 1 ? SR.MessageLoadStudiesBeingProcessed : SR.MessageLoadStudyBeingProcessed;
@@ -179,9 +171,15 @@ namespace ClearCanvas.ImageViewer.Explorer.Dicom
 		    return Context.SelectedStudies.Cast<IPatientData>();
 		}
 
-		private static bool IsNonTerminalStudyUpdateItem(WorkItemData item)
+		private static bool IsWorkItemInUse(WorkItemData item)
 		{
-			if (item.Request.ConcurrencyType != WorkItemConcurrency.StudyUpdate)
+			// #10746: Workstation: the user must be warned when opening studies that are being processed
+			// #10860: Workstation should warn user when opening a study with failed work items
+			// We include all 'Active' WQI statuses. We also want to capture any failed items because it is 
+			// likely to result in partial studies.  This should be consistent with the LocalStoreStudyLoader.
+			if (item.Request.ConcurrencyType != WorkItemConcurrency.StudyUpdate &&
+				item.Request.ConcurrencyType != WorkItemConcurrency.StudyDelete &&
+				item.Request.ConcurrencyType != WorkItemConcurrency.StudyUpdateTrigger)
 				return false;
 
 			switch (item.Status)
@@ -190,6 +188,10 @@ namespace ClearCanvas.ImageViewer.Explorer.Dicom
 				case WorkItemStatusEnum.InProgress:
 				case WorkItemStatusEnum.Idle:
 					return true;
+
+				case WorkItemStatusEnum.Failed:
+					return true;
+
 				default:
 					return false;
 			}
