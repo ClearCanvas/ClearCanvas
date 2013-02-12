@@ -81,7 +81,7 @@ namespace ClearCanvas.Common.Configuration
 		/// </remarks>
 		public static List<SettingsGroupDescriptor> ListInstalledSettingsGroups(SettingsGroupFilter filter)
 		{
-			return ListInstalledSettingsGroups(ApplyFilter(filter));
+			return ListInstalledSettingsGroups(type => ApplyFilter(filter, type));
 		}
 
 		private static List<SettingsGroupDescriptor> ListInstalledSettingsGroups(Predicate<Type> filter)
@@ -98,30 +98,26 @@ namespace ClearCanvas.Common.Configuration
 			return q.ToList();
 		}
 
-		private static Predicate<Type> ApplyFilter(SettingsGroupFilter filter)
+		private static bool ApplyFilter(SettingsGroupFilter filter, Type type)
 		{
 			if (filter == 0)
-				return type => true;
+				return true;
 
-			Predicate<Type> f = type => false;
+			var providerClass = SettingsClassMetaDataReader.GetSettingsProvider(type);
+			if ((filter & SettingsGroupFilter.SupportEnterpriseStorage) == SettingsGroupFilter.SupportEnterpriseStorage
+				&& providerClass == typeof(StandardSettingsProvider))
+				return true;
 
-			if ((filter & SettingsGroupFilter.SupportEnterpriseStorage) == SettingsGroupFilter.SupportEnterpriseStorage)
-				f = Or(f, type => SettingsClassMetaDataReader.GetSettingsProvider(type) == typeof(StandardSettingsProvider));
+			if ((filter & SettingsGroupFilter.LocalStorage) == SettingsGroupFilter.LocalStorage
+				&& ApplicationSettingsHelper.IsLocallyStored(type))
+				return true;
 
-			if ((filter & SettingsGroupFilter.LocalStorage) == SettingsGroupFilter.LocalStorage)
-				f = Or(f, ApplicationSettingsHelper.IsLocallyStored);
+			if ((filter & SettingsGroupFilter.SupportsEditingOfSharedProfile) == SettingsGroupFilter.SupportsEditingOfSharedProfile
+				&& typeof(ISharedApplicationSettingsProvider).IsAssignableFrom(providerClass))
+				return true;
 
-			if ((filter & SettingsGroupFilter.SupportsEditingOfSharedProfile) == SettingsGroupFilter.SupportsEditingOfSharedProfile)
-				f = Or(f, type => typeof(ISharedApplicationSettingsProvider).IsAssignableFrom(SettingsClassMetaDataReader.GetSettingsProvider(type)));
-
-			return f;
+			return false;
 		}
-
-		private static Predicate<T> Or<T>(Predicate<T> p1, Predicate<T> p2)
-		{
-			return x => p1(x) || p2(x);
-		}
-
 
 		/// <summary>
 		/// Constructor.
