@@ -17,5 +17,5 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 Portions of this program incorporates software licensed from
 third parties. Those licenses and the software they apply to are
-hereby acknowledged, the details of which are located at 
-<http://www.clearcanvas.ca/eula-scheduleA>.
+hereby acknowledged, the details of which are located in the 
+NOTICE.TXT file and the Licenses directory. 
