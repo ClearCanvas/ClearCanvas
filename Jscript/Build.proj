@@ -43,8 +43,7 @@
     <Exec Command="$(FxPath)\jsc $(EmitDebugInformation) /t:library /lib:..\Common\bin\$(Configuration) /out:bin\$(Configuration)\ClearCanvas.Jscript.dll ClearCanvas.Jscript.js AssemblyInfo.js"/>
   </Target>
 
-  <Target Name="SignAssembly" DependsOnTargets="Compile" Condition="'$(Configuration)' == 'Release' And '$(KeyFile)' != ''">
-    <!-- The JScript compiler doesn't have options for strong naming the assemblies, so we have to reassemble the library here with a strong name -->
+  <Target Name="GetPaths">
     <GetFrameworkPath>
       <Output TaskParameter="Path" PropertyName="FxPath" />
     </GetFrameworkPath>
@@ -52,9 +51,23 @@
       <Output TaskParameter="Path" PropertyName="SdkPath" />
     </GetFrameworkSdkPath>
 
+    <!-- Set SdkWorkingDirectory based on presence of "ildasm.exe"
+      This is required because VisualStudio 2012 added Microsoft SDKs\Windows\v8.0A\bin, but ildasm.exe not found there.  Thus, try bin\NETFX 4.0 Tools\.
+      Flow still allows for VisualStudio 2010 only (since ildasm.exe exists in Microsoft SDKs\Windows\v7.0A\bin).
+    -->
+    <PropertyGroup>
+      <SdkWorkingDirectory Condition="Exists('$(SdkPath)\bin\ildasm.exe')">$(SdkPath)\bin\</SdkWorkingDirectory>
+      <SdkWorkingDirectory Condition="Exists('$(SdkPath)\bin\NETFX 4.0 Tools\ildasm.exe') And '$(SdkWorkingDirectory)' == ''">$(SdkPath)\bin\NETFX 4.0 Tools\</SdkWorkingDirectory>
+    </PropertyGroup>
+  </Target>
+
+  <Target Name="SignAssembly" DependsOnTargets="Compile;GetPaths" Condition="'$(Configuration)' == 'Release' And '$(KeyFile)' != ''">
+    <!-- The JScript compiler doesn't have options for strong naming the assemblies, so we have to reassemble the library here with a strong name -->
+    <!--Message Text="Fx Path = $(FxPath)%0ASDK Path = $(SdkPath)%0ASDK Working Directory = $(SdkWorkingDirectory)"/-->
+
     <MakeDir Directories="obj\$(Configuration)" Condition="!Exists('obj\$(Configuration)')" />
     <Delete Files="obj\$(Configuration)\*.*" />
-    <Exec Command="ildasm /nobar &quot;$(MSBuildProjectDirectory)\bin\$(Configuration)\ClearCanvas.Jscript.dll&quot; &quot;/out:$(MSBuildProjectDirectory)\obj\$(Configuration)\ClearCanvas.Jscript.il&quot;" WorkingDirectory="$(SdkPath)\bin\"/>
+    <Exec Command="ildasm /nobar &quot;$(MSBuildProjectDirectory)\bin\$(Configuration)\ClearCanvas.Jscript.dll&quot; &quot;/out:$(MSBuildProjectDirectory)\obj\$(Configuration)\ClearCanvas.Jscript.il&quot;" WorkingDirectory="$(SdkWorkingDirectory)"/>
     <Exec Command="ilasm /quiet &quot;$(MSBuildProjectDirectory)\obj\$(Configuration)\ClearCanvas.Jscript.il&quot; &quot;/key=$(KeyFile)&quot; /dll &quot;/output=$(MSBuildProjectDirectory)\bin\$(Configuration)\ClearCanvas.Jscript.dll&quot;" WorkingDirectory="$(FxPath)" />
     <Message Text="ClearCanvas.Jscript.dll signed with strong name" />
   </Target>
