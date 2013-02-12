@@ -61,7 +61,7 @@ namespace ClearCanvas.ImageServer.ShredHostService
             }
             else if (!String.IsNullOrEmpty(commandLine.PreviousExeConfigurationFilename))
 			{
-				var groups = SettingsGroupDescriptor.ListInstalledLocalSettingsGroups();
+				var groups = SettingsGroupDescriptor.ListInstalledSettingsGroups(SettingsGroupFilter.LocalStorage);
 				foreach (var group in groups)
 					SettingsMigrator.MigrateSharedSettings(group, commandLine.PreviousExeConfigurationFilename);
 
