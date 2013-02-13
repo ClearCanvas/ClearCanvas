@@ -175,7 +175,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 					if (_framesToProcess.Count == 0)
 					{
 						GetNextRoundOfFrames();
-						if (_framesToProcess.Count == 0)
+						if (_framesToProcess.Count == 0 && _isBlocking)
 						{
 							Platform.Log(LogLevel.Debug, "ViewerFrameEnumerator: no frames left.");
 							Monitor.Wait(_syncLock);
