@@ -148,7 +148,8 @@ namespace ClearCanvas.ImageViewer.StudyLoaders.Streaming
                                    {
                                        StudyInstanceUID = studyLoaderArgs.StudyInstanceUid,
                                        ServerAETitle = _serverAe.AETitle,
-                                       ReferenceID = Guid.NewGuid().ToString()
+                                       ReferenceID = Guid.NewGuid().ToString(),
+                                       IgnoreInUse = studyLoaderArgs.Options != null && studyLoaderArgs.Options.IgnoreInUse
                                    };
 
             HeaderStreamingServiceClient client = null;
