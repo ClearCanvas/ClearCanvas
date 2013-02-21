@@ -28,6 +28,7 @@ using ClearCanvas.Dicom;
 using ClearCanvas.Dicom.Network;
 using ClearCanvas.Dicom.Network.Scp;
 using ClearCanvas.Enterprise.Core;
+using ClearCanvas.ImageServer.Core;
 using ClearCanvas.ImageServer.Model;
 using ClearCanvas.ImageServer.Model.Brokers;
 using ClearCanvas.ImageServer.Model.Parameters;
@@ -77,18 +78,11 @@ namespace ClearCanvas.ImageServer.Services.Dicom
             {
                 // Load from the database the non-image sops that are current configured for this server partition.
                 _list = new List<SupportedSop>();
-
-                // Input parameters
-                PartitionSopClassQueryParameters inputParms = new PartitionSopClassQueryParameters();
-                inputParms.ServerPartitionKey = Partition.GetKey();
-
-                // Do the query
-                using (IReadContext read = _store.OpenReadContext())
+                
+                var partitionSopClassConfig = new PartitionSopClassConfiguration();
+                var sopClasses = partitionSopClassConfig.GetAllPartitionSopClasses(Partition);
+                if (sopClasses != null)
                 {
-                    IQueryServerPartitionSopClasses broker = read.GetBroker<IQueryServerPartitionSopClasses>();
-                    IList<PartitionSopClass> sopClasses = broker.Find(inputParms);
-                    read.Dispose();
-
                     // Now process the SOP Class list
                     foreach (PartitionSopClass partitionSopClass in sopClasses)
                     {
@@ -98,7 +92,15 @@ namespace ClearCanvas.ImageServer.Services.Dicom
                             SupportedSop sop = new SupportedSop();
 
                             sop.SopClass = SopClass.GetSopClass(partitionSopClass.SopClassUid);
-                            sop.SyntaxList.Add(TransferSyntax.ExplicitVrLittleEndian);
+
+                            if (!partitionSopClass.ImplicitOnly)
+                            {
+                                sop.SyntaxList.Add(TransferSyntax.ExplicitVrLittleEndian);
+                            }
+                            else
+                            {
+                                Platform.Log(LogLevel.Info, "Server is configured to only support Implicit VR for {0}", sop.SopClass.Name);
+                            }
                             sop.SyntaxList.Add(TransferSyntax.ImplicitVrLittleEndian);
 
                             _list.Add(sop);

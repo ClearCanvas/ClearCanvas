@@ -52,5 +52,10 @@ namespace ClearCanvas.ImageServer.Model.EntityBrokers
         {
             set { SubParameters["NonImage"] = new EntityUpdateColumn<Boolean>("NonImage", value); }
         }
+        [EntityFieldDatabaseMappingAttribute(TableName="ServerSopClass", ColumnName="ImplicitOnly")]
+        public Boolean ImplicitOnly
+        {
+            set { SubParameters["ImplicitOnly"] = new EntityUpdateColumn<Boolean>("ImplicitOnly", value); }
+        }
     }
 }

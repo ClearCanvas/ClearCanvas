@@ -742,8 +742,8 @@ INSERT INTO [ImageServer].[dbo].[ServerSopClass] ([GUID],[SopClassUid],[Descript
 VALUES (newid(), '1.2.840.10008.5.1.4.1.1.481.5', 'RT Plan Storage', 1)
 GO
 
-INSERT INTO [ImageServer].[dbo].[ServerSopClass] ([GUID],[SopClassUid],[Description],[NonImage])
-VALUES (newid(), '1.2.840.10008.5.1.4.1.1.481.3', 'RT Structure Set Storage', 1)
+INSERT INTO [ImageServer].[dbo].[ServerSopClass] ([GUID],[SopClassUid],[Description],[NonImage], [ImplicitOnly])
+VALUES (newid(), '1.2.840.10008.5.1.4.1.1.481.3', 'RT Structure Set Storage', 1, 1)
 GO
 
 INSERT INTO [ImageServer].[dbo].[ServerSopClass] ([GUID],[SopClassUid],[Description],[NonImage])

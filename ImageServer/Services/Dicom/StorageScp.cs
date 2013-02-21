@@ -67,11 +67,7 @@ namespace ClearCanvas.ImageServer.Services.Dicom
             DicomFile file = new DicomFile(message, filename);
 
             file.SourceApplicationEntityTitle = assocParms.CallingAE;
-            if (message.TransferSyntax.Encapsulated)
-                file.TransferSyntax = message.TransferSyntax;
-            else
-                file.TransferSyntax = TransferSyntax.ExplicitVrLittleEndian;
-
+            file.TransferSyntax = message.TransferSyntax;
             return file;
         }
 

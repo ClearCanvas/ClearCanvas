@@ -477,7 +477,6 @@ namespace ClearCanvas.ImageServer.Core
 						processor.AddCommand(command);
 					}
 				}
-
 				try
 				{
 					// Create a context for applying actions from the rules engine
