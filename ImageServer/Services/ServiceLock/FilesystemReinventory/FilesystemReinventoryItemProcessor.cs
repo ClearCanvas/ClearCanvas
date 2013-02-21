@@ -226,7 +226,7 @@ namespace ClearCanvas.ImageServer.Services.ServiceLock.FilesystemReinventory
                                 }
                                 else
                                 {
-                                    insertParms.TransferSyntaxUid = TransferSyntax.ExplicitVrLittleEndianUid;
+                                    insertParms.TransferSyntaxUid = file.TransferSyntax.UidString;
                                     insertParms.StudyStatusEnum = StudyStatusEnum.Online;
                                 }
 

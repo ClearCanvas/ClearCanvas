@@ -95,6 +95,7 @@
     <Compile Include="ModelExtensions\ServerPartitionExtensions.cs" />
     <Compile Include="ModelExtensions\StudyStorageLocationExtensions.cs" />
     <Compile Include="ModelExtensions\WorkQueueExtensions.cs" />
+    <Compile Include="PartitionSopClassConfiguration.cs" />
     <Compile Include="PatientNameRules.cs" />
     <Compile Include="PreProcessors.cs" />
     <Compile Include="Process\IInsertExtension.cs" />

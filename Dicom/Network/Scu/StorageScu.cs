@@ -717,6 +717,18 @@ namespace ClearCanvas.Dicom.Network.Scu
 
 		#endregion
 
+        /// <summary>
+        /// Gets the list of transfer syntaxes to be proposed by this SCU for uncompressed objects when connecting to a remote device.
+        /// By default, ExplicitLittleEndian and ImplicitVrLittleEndian will be proposed. Derived-classes can override the list if necessary (eg, if it does not support ELE for certain sop classes)
+        /// </summary>
+        /// <param name="sopClassUid"></param>
+        /// <returns></returns>
+        protected virtual IEnumerable<TransferSyntax> GetProposedTransferSyntaxesForUncompressedObjects(string sopClassUid)
+        {
+            return new[] { TransferSyntax.ExplicitVrLittleEndian, TransferSyntax.ImplicitVrLittleEndian };
+        }
+
+
 		#region Protected Overridden Methods...
 		/// <summary>
 		/// Scan the files to send, and create presentation contexts for each abstract syntax to send.
@@ -753,8 +765,10 @@ namespace ClearCanvas.Dicom.Network.Scu
 						{
 							pcid = AssociationParameters.AddPresentationContext(sendStruct.SopClass);
 
-							AssociationParameters.AddTransferSyntax(pcid, TransferSyntax.ExplicitVrLittleEndian);
-							AssociationParameters.AddTransferSyntax(pcid, TransferSyntax.ImplicitVrLittleEndian);
+                            var supportedSyntaxes = GetProposedTransferSyntaxesForUncompressedObjects(sendStruct.SopClass.Uid);
+                            if (supportedSyntaxes!=null)
+                                foreach(var syntax in supportedSyntaxes)
+                                    AssociationParameters.AddTransferSyntax(pcid, syntax);
 						}
 					}
 				}
@@ -767,8 +781,10 @@ namespace ClearCanvas.Dicom.Network.Scu
 					{
 						pcid = AssociationParameters.AddPresentationContext(sendStruct.SopClass);
 
-						AssociationParameters.AddTransferSyntax(pcid, TransferSyntax.ExplicitVrLittleEndian);
-						AssociationParameters.AddTransferSyntax(pcid, TransferSyntax.ImplicitVrLittleEndian);
+                        var supportedSyntaxes = GetProposedTransferSyntaxesForUncompressedObjects(sendStruct.SopClass.Uid);
+                        if (supportedSyntaxes != null)
+                            foreach (var syntax in supportedSyntaxes)
+                                AssociationParameters.AddTransferSyntax(pcid, syntax);
 					}
 				}
 

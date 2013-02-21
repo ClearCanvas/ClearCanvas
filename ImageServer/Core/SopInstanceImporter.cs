@@ -465,8 +465,7 @@ namespace ClearCanvas.ImageServer.Core
             }
 
             file.SourceApplicationEntityTitle = sourceAE;
-            file.TransferSyntax = message.TransferSyntax.Encapsulated ? 
-				message.TransferSyntax : TransferSyntax.ExplicitVrLittleEndian;
+            file.TransferSyntax = message.TransferSyntax;
 
             return file;
         }

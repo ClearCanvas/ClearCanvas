@@ -28,6 +28,7 @@ using ClearCanvas.Dicom;
 using ClearCanvas.Dicom.Network;
 using ClearCanvas.Dicom.Network.Scp;
 using ClearCanvas.Enterprise.Core;
+using ClearCanvas.ImageServer.Core;
 using ClearCanvas.ImageServer.Model;
 using ClearCanvas.ImageServer.Model.Brokers;
 using ClearCanvas.ImageServer.Model.Parameters;
@@ -60,29 +61,23 @@ namespace ClearCanvas.ImageServer.Services.Dicom
                 _list = new List<SupportedSop>();
 
                 // Get the SOP Classes
-                using (IReadContext read = _store.OpenReadContext())
+                var partitionSopClassConfig = new PartitionSopClassConfiguration();
+                var sopClasses = partitionSopClassConfig.GetAllPartitionSopClasses(Partition);
+
+                // Now process the SOP Class List
+                foreach (PartitionSopClass partitionSopClass in sopClasses)
                 {
-                    // Set the input parameters for query
-                    PartitionSopClassQueryParameters inputParms = new PartitionSopClassQueryParameters();
-                    inputParms.ServerPartitionKey = Partition.GetKey();
-
-                    IQueryServerPartitionSopClasses broker = read.GetBroker<IQueryServerPartitionSopClasses>();
-                    IList<PartitionSopClass> sopClasses = broker.Find(inputParms);
-
-                    // Now process the SOP Class List
-                    foreach (PartitionSopClass partitionSopClass in sopClasses)
+                    if (partitionSopClass.Enabled
+                        && !partitionSopClass.NonImage)
                     {
-                        if (partitionSopClass.Enabled
-                            && !partitionSopClass.NonImage)
-                        {
-                            SupportedSop sop = new SupportedSop();
+                        SupportedSop sop = new SupportedSop();
 
-                            sop.SopClass = SopClass.GetSopClass(partitionSopClass.SopClassUid);
+                        sop.SopClass = SopClass.GetSopClass(partitionSopClass.SopClassUid);
+                        if (!partitionSopClass.ImplicitOnly)
                             sop.SyntaxList.Add(TransferSyntax.ExplicitVrLittleEndian);
-                            sop.SyntaxList.Add(TransferSyntax.ImplicitVrLittleEndian);
+                        sop.SyntaxList.Add(TransferSyntax.ImplicitVrLittleEndian);
 
-                            _list.Add(sop);
-                        }
+                        _list.Add(sop);
                     }
                 }
             }
