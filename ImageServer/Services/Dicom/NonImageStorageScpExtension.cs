@@ -98,7 +98,15 @@ namespace ClearCanvas.ImageServer.Services.Dicom
                             SupportedSop sop = new SupportedSop();
 
                             sop.SopClass = SopClass.GetSopClass(partitionSopClass.SopClassUid);
-                            sop.SyntaxList.Add(TransferSyntax.ExplicitVrLittleEndian);
+
+                            if (!partitionSopClass.ImplicitOnly)
+                            {
+                                sop.SyntaxList.Add(TransferSyntax.ExplicitVrLittleEndian);
+                            }
+                            else
+                            {
+                                Platform.Log(LogLevel.Info, "Server is configured to only support Implicit VR for {0}", sop.SopClass.Name);
+                            }
                             sop.SyntaxList.Add(TransferSyntax.ImplicitVrLittleEndian);
 
                             _list.Add(sop);

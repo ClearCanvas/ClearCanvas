@@ -33,6 +33,7 @@ namespace ClearCanvas.ImageServer.Model
         private String _sopClassUid;
         private String _description;
         private bool _nonImage;
+        private bool _implicitOnly;
         #endregion
 
 		[EntityFieldDatabaseMappingAttribute(TableName = "PartitionSopClass", ColumnName = "SopClassUid")]
@@ -52,6 +53,12 @@ namespace ClearCanvas.ImageServer.Model
         {
             get { return _nonImage; }
             set { _nonImage = value; }
+        }
+        [EntityFieldDatabaseMappingAttribute(TableName = "PartitionSopClass", ColumnName = "ImplicitOnly")]
+        public bool ImplicitOnly
+        {
+            get { return _implicitOnly; }
+            set { _implicitOnly = value; }
         }
     }
 }

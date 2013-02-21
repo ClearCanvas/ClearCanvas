@@ -79,5 +79,17 @@ namespace ClearCanvas.ImageServer.Model.EntityBrokers
               return (ISearchCondition<Boolean>)SubCriteria["NonImage"];
             } 
         }
+        [EntityFieldDatabaseMappingAttribute(TableName="ServerSopClass", ColumnName="ImplicitOnly")]
+        public ISearchCondition<Boolean> ImplicitOnly
+        {
+            get
+            {
+              if (!SubCriteria.ContainsKey("ImplicitOnly"))
+              {
+                 SubCriteria["ImplicitOnly"] = new SearchCondition<Boolean>("ImplicitOnly");
+              }
+              return (ISearchCondition<Boolean>)SubCriteria["ImplicitOnly"];
+            } 
+        }
     }
 }
