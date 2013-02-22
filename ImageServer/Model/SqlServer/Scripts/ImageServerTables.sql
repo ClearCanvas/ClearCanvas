@@ -201,7 +201,7 @@ CREATE TABLE [dbo].[ServerSopClass](
 	[SopClassUid] [varchar](64) NOT NULL,
 	[Description] [nvarchar](128) NOT NULL,
 	[NonImage] [bit] NOT NULL,
-	[ImplictOnly] [bit] NULL
+	[ImplicitOnly] [bit] NOT NULL DEFAULT(0)
  CONSTRAINT [PK_SopClass] PRIMARY KEY CLUSTERED 
 (
 	[GUID] ASC
