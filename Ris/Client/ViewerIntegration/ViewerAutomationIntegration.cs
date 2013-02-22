@@ -226,7 +226,7 @@ namespace ClearCanvas.Ris.Client.ViewerIntegration
 
 		public ViewerAutomationIntegration()
 		{
-			_cleanupTimer = new Timer(ignore => RemoveDeadViewerEntries(), null, CleanupPeriod, CleanupPeriod);
+			_cleanupTimer = new Timer(ignore => OnCleanupTimer(), null, CleanupPeriod, CleanupPeriod);
 		}
 
 		#region IViewerIntegration Members
@@ -249,6 +249,18 @@ namespace ClearCanvas.Ris.Client.ViewerIntegration
 		}
 
 		#endregion
+
+		private void OnCleanupTimer()
+		{
+			try
+			{
+				RemoveDeadViewerEntries();
+			}
+			catch (Exception e)
+			{
+				Platform.Log(LogLevel.Error, e);
+			}
+		}
 
 		private IStudyViewer[] ViewStudiesOneInstance(string[] studyInstanceUids)
 		{

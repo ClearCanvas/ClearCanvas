@@ -52,121 +52,37 @@ namespace ClearCanvas.ImageViewer.DesktopServices.Automation
 		[Obsolete("Use GetViewers instead.")]
 		public GetActiveViewersResult GetActiveViewers()
 		{
-			// Done for reasons of speed, as well as the fact that a call to the service from the same thread
-			// that the service is hosted on (the main UI thread) will cause a deadlock.
-			if (SynchronizationContext.Current == ViewerAutomationServiceHostTool.HostSynchronizationContext)
-			{
-				return new ViewerAutomation().GetActiveViewers();
-			}
-			else
-			{
-				using (ViewerAutomationServiceClient client = new ViewerAutomationServiceClient())
-				{
-					return client.GetActiveViewers();
-				}
-			} 
+			return Execute(a => a.GetActiveViewers());
 		}
 
         public GetViewersResult GetViewers(GetViewersRequest request)
         {
-            // Done for reasons of speed, as well as the fact that a call to the service from the same thread
-            // that the service is hosted on (the main UI thread) will cause a deadlock.
-            if (SynchronizationContext.Current == ViewerAutomationServiceHostTool.HostSynchronizationContext)
-            {
-                return new ViewerAutomation().GetViewers(request);
-            }
-            else
-            {
-                using (ViewerAutomationServiceClient client = new ViewerAutomationServiceClient())
-                {
-                    return client.GetViewers(request);
-                }
-            }
+			return Execute(a => a.GetViewers(request));
         }
 
 		public GetViewerInfoResult GetViewerInfo(GetViewerInfoRequest request)
 		{
-			// Done for reasons of speed, as well as the fact that a call to the service from the same thread
-			// that the service is hosted on (the main UI thread) will cause a deadlock.
-			if (SynchronizationContext.Current == ViewerAutomationServiceHostTool.HostSynchronizationContext)
-			{
-				return new ViewerAutomation().GetViewerInfo(request);
-			}
-			else
-			{
-				using (ViewerAutomationServiceClient client = new ViewerAutomationServiceClient())
-				{
-					return client.GetViewerInfo(request);
-				}
-			} 
+			return Execute(a => a.GetViewerInfo(request));
 		}
 
 		public OpenStudiesResult OpenStudies(OpenStudiesRequest request)
 		{
-			// Done for reasons of speed, as well as the fact that a call to the service from the same thread
-			// that the service is hosted on (the main UI thread) will cause a deadlock.
-			if (SynchronizationContext.Current == ViewerAutomationServiceHostTool.HostSynchronizationContext)
-			{
-				return new ViewerAutomation().OpenStudies(request);
-			}
-			else
-			{
-				using (ViewerAutomationServiceClient client = new ViewerAutomationServiceClient())
-				{
-					return client.OpenStudies(request);
-				}
-			} 
+			return Execute(a => a.OpenStudies(request));
 		}
 
         public OpenFilesResult OpenFiles(OpenFilesRequest request)
         {
-            // Done for reasons of speed, as well as the fact that a call to the service from the same thread
-            // that the service is hosted on (the main UI thread) will cause a deadlock.
-            if (SynchronizationContext.Current == ViewerAutomationServiceHostTool.HostSynchronizationContext)
-            {
-                return new ViewerAutomation().OpenFiles(request);
-            }
-            else
-            {
-                using (ViewerAutomationServiceClient client = new ViewerAutomationServiceClient())
-                {
-                    return client.OpenFiles(request);
-                }
-            }
+			return Execute(a => a.OpenFiles(request));
         }
 
 		public void ActivateViewer(ActivateViewerRequest request)
 		{
-			// Done for reasons of speed, as well as the fact that a call to the service from the same thread
-			// that the service is hosted on (the main UI thread) will cause a deadlock.
-			if (SynchronizationContext.Current == ViewerAutomationServiceHostTool.HostSynchronizationContext)
-			{
-				new ViewerAutomation().ActivateViewer(request);
-			}
-			else
-			{
-				using (ViewerAutomationServiceClient client = new ViewerAutomationServiceClient())
-				{
-					client.ActivateViewer(request);
-				}
-			} 
+			Execute(a => a.ActivateViewer(request));
 		}
 
 		public void CloseViewer(CloseViewerRequest request)
 		{
-			// Done for reasons of speed, as well as the fact that a call to the service from the same thread
-			// that the service is hosted on (the main UI thread) will cause a deadlock.
-			if (SynchronizationContext.Current == ViewerAutomationServiceHostTool.HostSynchronizationContext)
-			{
-				new ViewerAutomation().CloseViewer(request);
-			}
-			else
-			{
-				using (ViewerAutomationServiceClient client = new ViewerAutomationServiceClient())
-				{
-					client.CloseViewer(request);
-				}
-			} 
+			Execute(a => a.CloseViewer(request));
 		}
 
 		#endregion
@@ -178,5 +94,38 @@ namespace ClearCanvas.ImageViewer.DesktopServices.Automation
 		}
 
 		#endregion
+
+		private static void Execute(Action<IViewerAutomation> action)
+		{
+			// Done for reasons of speed, as well as the fact that a call to the service from the same thread
+			// that the service is hosted on (the main UI thread) will cause a deadlock.
+			if (SynchronizationContext.Current == ViewerAutomationServiceHostTool.HostSynchronizationContext)
+			{
+				action(new ViewerAutomation());
+			}
+			else
+			{
+				ViewerAutomationServiceHostTool.HostSynchronizationContext.Send(s => action(new ViewerAutomation()), null);
+			}
+		}
+
+		private static TResult Execute<TResult>(Func<IViewerAutomation, TResult> action)
+		{
+			// Done for reasons of speed, as well as the fact that a call to the service from the same thread
+			// that the service is hosted on (the main UI thread) will cause a deadlock.
+			if (SynchronizationContext.Current == ViewerAutomationServiceHostTool.HostSynchronizationContext)
+			{
+				return action(new ViewerAutomation());
+			}
+			else
+			{
+				var response = default(TResult);
+				ViewerAutomationServiceHostTool.HostSynchronizationContext.Send(s =>
+				{
+					response = action(new ViewerAutomation());
+				}, null);
+				return response;
+			}
+		}
 	}
 }
