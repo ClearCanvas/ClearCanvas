@@ -99,7 +99,7 @@ namespace ClearCanvas.ImageServer.Services.Dicom
                             }
                             else
                             {
-                                Platform.Log(LogLevel.Info, "Server is configured to only support Implicit VR for {0}", sop.SopClass.Name);
+                                Platform.Log(LogLevel.Info, "Server is configured to NOT support Explicit VR for {0}", sop.SopClass.Name);
                             }
                             sop.SyntaxList.Add(TransferSyntax.ImplicitVrLittleEndian);
 
