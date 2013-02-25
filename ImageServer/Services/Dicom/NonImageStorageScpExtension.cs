@@ -27,11 +27,8 @@ using ClearCanvas.Common;
 using ClearCanvas.Dicom;
 using ClearCanvas.Dicom.Network;
 using ClearCanvas.Dicom.Network.Scp;
-using ClearCanvas.Enterprise.Core;
 using ClearCanvas.ImageServer.Core;
 using ClearCanvas.ImageServer.Model;
-using ClearCanvas.ImageServer.Model.Brokers;
-using ClearCanvas.ImageServer.Model.Parameters;
 
 namespace ClearCanvas.ImageServer.Services.Dicom
 {
@@ -74,6 +71,10 @@ namespace ClearCanvas.ImageServer.Services.Dicom
         /// <returns></returns>
         public override IList<SupportedSop> GetSupportedSopClasses()
         {
+            // Note: this method is called on startup to set the server's presentation contexts and then on every association.
+            // If the settings change between those calls, the server may either throw an exception (if the sop is removed) or 
+            // does not behave as expected unless the server is restarted.
+
             if (_list == null)
             {
                 // Load from the database the non-image sops that are current configured for this server partition.
@@ -99,7 +100,7 @@ namespace ClearCanvas.ImageServer.Services.Dicom
                             }
                             else
                             {
-                                Platform.Log(LogLevel.Info, "Server is configured to NOT support Explicit VR for {0}", sop.SopClass.Name);
+                                Platform.Log(LogLevel.Info, "{0} is not supported for {1} on {2}", StorageScpType,  sop.SopClass.Name, Partition.AeTitle);
                             }
                             sop.SyntaxList.Add(TransferSyntax.ImplicitVrLittleEndian);
 
