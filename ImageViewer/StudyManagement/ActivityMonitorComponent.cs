@@ -577,10 +577,17 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 				var items = this.SelectedWorkItems.ToList();
 				var nonEmpty = items.Count > 0;
 
-				DeleteAction.Enabled = nonEmpty && items.All(IsDeletable);
-				CancelAction.Enabled = nonEmpty && items.All(IsCancelable);
-				RestartAction.Enabled = nonEmpty && items.All(IsRestartable);
-				StatAction.Enabled = nonEmpty && items.All(IsStatable);
+				if (DeleteAction != null)
+					DeleteAction.Enabled = nonEmpty && items.All(IsDeletable);
+
+				if (CancelAction != null)
+					CancelAction.Enabled = nonEmpty && items.All(IsCancelable);
+
+				if (RestartAction != null)
+					RestartAction.Enabled = nonEmpty && items.All(IsRestartable);
+
+				if (StatAction != null)
+					StatAction.Enabled = nonEmpty && items.All(IsStatable);
 			}
 
 			private bool IsDeletable(WorkItem w)
