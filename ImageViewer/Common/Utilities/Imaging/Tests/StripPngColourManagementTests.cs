@@ -22,6 +22,8 @@
 
 #endregion
 
+#if UNIT_TESTS
+
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
@@ -133,3 +135,5 @@ namespace ClearCanvas.ImageViewer.Common.Utilities.Imaging.Tests
         }
     }
 }
+
+#endif
