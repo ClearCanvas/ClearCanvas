@@ -31,7 +31,7 @@ using System.ServiceModel;
 namespace ClearCanvas.ImageViewer.Common.WorkItem.Tests
 {
     // Use a UnitTestExtensionFactory instead of declaring this an extension, because it will break debug builds that include the UNIT_TESTS symbol. 
-    internal class TestServiceProvider : IDuplexServiceProvider
+    internal class TestServiceProvider : IDuplexServiceProvider, IServiceProvider
     {
         internal static readonly TestWorkItemService ServiceInstance = new TestWorkItemService();
 
@@ -48,6 +48,20 @@ namespace ClearCanvas.ImageViewer.Common.WorkItem.Tests
                 throw new EndpointNotFoundException("Test service not running.");
 
             ServiceInstance.Callback = (IWorkItemActivityCallback)callback;
+            return ServiceInstance;
+        }
+
+        #endregion
+
+        #region Implementation of IServiceProvider
+
+        public object GetService(Type type)
+        {
+            Platform.CheckForNullReference(type, "type");
+            if (type != typeof(IWorkItemActivityMonitorService))
+                return null;
+
+            ServiceInstance.Callback = WorkItemActivityCallback.Nil;
             return ServiceInstance;
         }
 

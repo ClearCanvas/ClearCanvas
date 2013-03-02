@@ -21,7 +21,6 @@
 // <http://www.gnu.org/licenses/>.
 
 --%>
-
 <%@ Import namespace="ClearCanvas.ImageServer.Web.Common.Data.DataSource"%>
 <%@ Import namespace="ClearCanvas.ImageServer.Web.Common.Utilities"%>
 <%@ Import namespace="System.Xml"%>

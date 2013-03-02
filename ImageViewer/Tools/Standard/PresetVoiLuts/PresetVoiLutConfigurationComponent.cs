@@ -282,7 +282,7 @@ namespace ClearCanvas.ImageViewer.Tools.Standard.PresetVoiLuts
 			_availableModalities = new List<string>(StandardModalities.Modalities);
 			_availableModalities.Sort();
 
-			_presetVoiLutGroups = PresetVoiLutSettings.Default.GetPresetGroups().Clone();
+            _presetVoiLutGroups = PresetVoiLutSettings.DefaultInstance.GetPresetGroups().Clone();
 
 			foreach (string modality in _availableModalities)
 			{
@@ -421,7 +421,7 @@ namespace ClearCanvas.ImageViewer.Tools.Standard.PresetVoiLuts
 			try
 			{
 				SynchronizeCurrentSelectedGroup();
-				PresetVoiLutSettings.Default.SetPresetGroups(_presetVoiLutGroups);
+                PresetVoiLutSettings.DefaultInstance.SetPresetGroups(_presetVoiLutGroups);
 			}
 			catch (Exception e)
 			{

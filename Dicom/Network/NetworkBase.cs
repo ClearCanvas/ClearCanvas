@@ -946,7 +946,7 @@ namespace ClearCanvas.Dicom.Network
         public void SendCStoreRequest(byte presentationID, ushort messageID,
                                       DicomPriority priority, string moveAE, ushort moveMessageID, DicomMessage message)
         {
-            SendCStoreRequest(presentationID, messageID, priority, null, 0, message, null);
+            SendCStoreRequest(presentationID, messageID, priority, moveAE, moveMessageID, message, null);
         }
 
         /// <summary>

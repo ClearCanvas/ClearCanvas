@@ -33,7 +33,11 @@ namespace ClearCanvas.Common
     /// Describes a plugin, and provides properties for querying the extension points and extensions defined
     /// in the plugin.
     /// </summary>
-    public class PluginInfo : IBrowsable
+    /// <remarks>
+	/// Instances of this class are immutable and safe for concurrent access by multiple threads.
+	/// </remarks>
+    [Serializable]
+    public sealed class PluginInfo : IBrowsable
     {
 		/// <summary>
 		/// Internal method used by the framework to discover extension points and extensions declared in a plugin.
@@ -94,15 +98,18 @@ namespace ClearCanvas.Common
 			}
 		}
 
-    	private static Type GetExtensionInterface(Type extensionClass)
+    	private static Type GetExtensionInterface(Type extensionPointClass)
     	{
-    		return extensionClass.BaseType.GetGenericArguments()[0];
+			if(!IsValidExtensionPointClass(extensionPointClass))
+				throw new ArgumentException("Specified type does not appear to be a valid extension point class.");
+
+			return extensionPointClass.BaseType.GetGenericArguments()[0];
     	}
 
     	private static bool IsValidExtensionPointClass(Type extensionPointClass)
         {
             var baseType = extensionPointClass.BaseType;
-    		return baseType.IsGenericType && baseType.GetGenericTypeDefinition().Equals(typeof (ExtensionPoint<>));
+    		return baseType != null && baseType.IsGenericType && baseType.GetGenericTypeDefinition() == typeof (ExtensionPoint<>);
         }
 		
 		private static bool IsConcreteClass(Type type)
@@ -114,26 +121,35 @@ namespace ClearCanvas.Common
         private readonly string _name;
         private readonly string _description;
 		private readonly string _icon;
-		private readonly Assembly _assembly;
+		private readonly AssemblyRef _assembly;
 
-        private readonly List<ExtensionPointInfo> _extensionPoints = new List<ExtensionPointInfo>();
-        private readonly List<ExtensionInfo> _extensions = new List<ExtensionInfo>();
+        private readonly List<ExtensionPointInfo> _extensionPoints;
+        private readonly List<ExtensionInfo> _extensions;
 
         /// <summary>
         /// Internal constructor.
         /// </summary>
-        internal PluginInfo(Assembly assembly, string name, string description, string icon)
+		internal PluginInfo(AssemblyRef assembly, string name, string description, string icon)
+			:this(assembly, name, description, icon, new List<ExtensionPointInfo>(), new List<ExtensionInfo>())
         {
-            _name = name;
-            _description = description;
-            _assembly = assembly;
-        	_icon = icon;
-
-        	DiscoverExtensionPointsAndExtensions(assembly, _extensionPoints, _extensions);
+        	DiscoverExtensionPointsAndExtensions(assembly.Resolve(), _extensionPoints, _extensions);
         }
 
+		/// <summary>
+		/// Internal constructor.
+		/// </summary>
+		internal PluginInfo(AssemblyRef assembly, string name, string description, string icon, List<ExtensionPointInfo> extensionPoints, List<ExtensionInfo> extensions)
+		{
+			_name = name;
+			_description = description;
+			_assembly = assembly;
+			_icon = icon;
+			_extensionPoints = extensionPoints;
+			_extensions = extensions;
+		}
+
         /// <summary>
-        /// Gets the set of extensions defined in this plugin, including disabled extensions.
+        /// Gets the set of extensions defined in this plugin, including disabled and unlicensed extensions.
         /// </summary>
         public IList<ExtensionInfo> Extensions
         {
@@ -151,13 +167,13 @@ namespace ClearCanvas.Common
         /// <summary>
         /// Gets the assembly that implements this plugin.
         /// </summary>
-        public Assembly Assembly
+        public AssemblyRef Assembly
         {
             get { return _assembly; }
         }
 
         /// <summary>
-        /// The name of an icon resource to associate with the plugin.
+        /// Gets the name of an icon resource to associate with the plugin.
         /// </summary>
         public string Icon
         {
@@ -171,7 +187,7 @@ namespace ClearCanvas.Common
     	/// </summary>
     	public string FormalName
         {
-            get { return Assembly.FullName; }
+            get { return Assembly.Resolve().FullName; }
         }
 
     	/// <summary>
@@ -191,5 +207,5 @@ namespace ClearCanvas.Common
         }
 
         #endregion
-    }
+	}
 }

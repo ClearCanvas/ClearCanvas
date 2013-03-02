@@ -161,7 +161,7 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 		{
 			Point sourcePointRounded = Point.Truncate(_selectedImageGraphic.SpatialTransform.ConvertToSource(destinationPoint));
 
-			ToolSettings settings = ToolSettings.Default;
+            ToolSettings settings = ToolSettings.DefaultInstance;
 			bool showPixelValue = settings.ShowRawPixelValue;
 			bool showVoiValue = settings.ShowVOIPixelValue;
 
@@ -277,7 +277,7 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 		{
 			base.Initialize();
 
-			_settings = ToolSettings.Default;
+            _settings = ToolSettings.DefaultInstance;
 			_settings.PropertyChanged += OnPropertyChanged;
 		}
 
@@ -285,7 +285,6 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 		{
 
 			_settings.PropertyChanged -= OnPropertyChanged;
-			_settings.Save();
 			_settings = null;
 
 			base.Dispose(disposing);
@@ -332,6 +331,7 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 			set
 			{
 				_settings.ShowRawPixelValue = value;
+                _settings.Save();
 			}
 		}
 
@@ -351,7 +351,8 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 			set
 			{
 				_settings.ShowVOIPixelValue = value;
-			}
+                _settings.Save();
+            }
 		}
 
 		public void ToggleShowRawPix()

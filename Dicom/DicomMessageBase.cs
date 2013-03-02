@@ -95,21 +95,22 @@ namespace ClearCanvas.Dicom
                 	new OverlayPlaneModuleIod(DataSet).ExtractEmbeddedOverlays();
 
 					var pd = new DicomUncompressedPixelData(DataSet);
-                	var rawPixelData = (byte[]) pixelData.Values;
-
-					//Before compression, make the pixel data more "typical", so it's harder to mess up the codecs.
-					//NOTE: Could combine mask and align into one method so we're not iterating twice, but I prefer having the methods separate.
-					if (DicomUncompressedPixelData.RightAlign(rawPixelData, pd.BitsAllocated, pd.BitsStored, pd.HighBit))
+					using (var pixelStream = ((DicomAttributeBinary) pixelData).AsStream())
 					{
-						var newHighBit = (ushort)(pd.HighBit - pd.LowBit);
-						Platform.Log(LogLevel.Debug, "Right aligned pixel data (High Bit: {0}->{1}).", pd.HighBit, newHighBit);
+						//Before compression, make the pixel data more "typical", so it's harder to mess up the codecs.
+						//NOTE: Could combine mask and align into one method so we're not iterating twice, but I prefer having the methods separate.
+						if (DicomUncompressedPixelData.RightAlign(pixelStream, pd.BitsAllocated, pd.BitsStored, pd.HighBit))
+						{
+							var newHighBit = (ushort) (pd.HighBit - pd.LowBit);
+							Platform.Log(LogLevel.Debug, "Right aligned pixel data (High Bit: {0}->{1}).", pd.HighBit, newHighBit);
 
-						pd.HighBit = newHighBit; //correct high bit after right-aligning.
-						DataSet[DicomTags.HighBit].SetUInt16(0, newHighBit);
-					}
-					if (DicomUncompressedPixelData.ZeroUnusedBits(rawPixelData, pd.BitsAllocated, pd.BitsStored, pd.HighBit))
-					{
-						Platform.Log(LogLevel.Debug, "Zeroed some unused bits before compression.");
+							pd.HighBit = newHighBit; //correct high bit after right-aligning.
+							DataSet[DicomTags.HighBit].SetUInt16(0, newHighBit);
+						}
+						if (DicomUncompressedPixelData.ZeroUnusedBits(pixelStream, pd.BitsAllocated, pd.BitsStored, pd.HighBit))
+						{
+							Platform.Log(LogLevel.Debug, "Zeroed some unused bits before compression.");
+						}
 					}
 
                 	// Set transfer syntax before compression, the codecs need it.

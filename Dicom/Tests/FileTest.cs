@@ -445,6 +445,63 @@ namespace ClearCanvas.Dicom.Tests
 			Assert.IsTrue(attrib.IsNull);
 			Assert.AreEqual(attrib.StreamLength, dataSet[DicomTags.PixelData].StreamLength);
 		}
+
+
+        [Test]
+        public void FixedSequenceLengthTest()
+        {
+
+            var file = new DicomFile("FixedSequenceLengthTest.dcm");
+
+            DicomAttributeCollection dataSet = file.DataSet;
+
+            SetupMR(dataSet);
+
+            SetupMetaInfo(file);
+
+            dataSet[DicomTags.StudyDescription].SetNullValue();
+            
+            // Force another empty tag
+            var s = dataSet[DicomTags.ServiceEpisodeId];
+
+            var item = new DicomSequenceItem();
+            item[DicomTags.PhotometricInterpretation].AppendString("MONOCHROME1");
+            item[DicomTags.Rows].AppendUInt16(256);
+            item[DicomTags.Columns].AppendUInt16(256);
+            item[DicomTags.BitsAllocated].AppendUInt16(8);
+            item[DicomTags.BitsStored].AppendUInt16(8);
+            item[DicomTags.HighBit].AppendUInt16(7);
+            item[DicomTags.PixelData].Values = new byte[] { 0x01, 0x02, 0x03, 0x04, 0x05, 0x06 };
+            
+            // Force an empty tag
+            var m = item[DicomTags.LossyImageCompression];
+
+            var privateTagSQ = new DicomTag(0x00091038, "PrivateSQ", "PrivateSQ", DicomVr.SQvr, true, 1, 10, false);
+            dataSet[privateTagSQ].AddSequenceItem(item);
+
+
+            // Little Endian Tests
+            file.TransferSyntax = TransferSyntax.ExplicitVrLittleEndian;
+
+            const DicomReadOptions readOptions = DicomReadOptions.Default;
+            const DicomWriteOptions writeOptions = DicomWriteOptions.ExplicitLengthSequence | DicomWriteOptions.ExplicitLengthSequenceItem;
+
+            bool result = file.Save(writeOptions);
+
+            Assert.AreEqual(result, true);
+
+            var newFile = new DicomFile(file.Filename);
+
+            newFile.Load(readOptions);
+
+            Assert.IsTrue(newFile.DataSet[DicomTags.StudyDescription].IsNull);
+
+            Assert.AreEqual(file.DataSet.Equals(newFile.DataSet), true);
+
+            var dicomAttributeCollection = new DicomAttributeCollection();
+            dicomAttributeCollection[DicomTags.PatientId].SetNullValue();
+            Assert.IsFalse(dicomAttributeCollection[DicomTags.PatientId].IsEmpty, "Dicom Tag is empty, won't be written in DicomStreamWriter.Write()");
+        }
     }
 }
 #endif

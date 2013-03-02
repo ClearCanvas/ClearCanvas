@@ -100,7 +100,7 @@ namespace ClearCanvas.Common.Caching
 			if (extension == null)
 				throw new CacheException("No cache provider extension found, or those that exist do not support all required features.");
 
-			var providerClass = extension.ExtensionClass;
+			var providerClass = extension.ExtensionClass.Resolve();
 
 			// check if we already have an initialized instance of this provider class.
 			ICacheProvider provider;

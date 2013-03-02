@@ -81,7 +81,7 @@ namespace ClearCanvas.ImageViewer.AdvancedImaging.Fusion
 		/// </summary>
 		public override string GetDescription()
 		{
-			return string.Format(@"Fusion Min/Max (W={0} C={1})", WindowWidth, WindowCenter);
+			return string.Format(@"Fusion Min/Max (W={0:0.#} C={1:0.#})", WindowWidth, WindowCenter);
 		}
 
 		/// <summary>

@@ -55,10 +55,10 @@ namespace ClearCanvas.ImageServer.Services.Archiving.Hsm
 		/// </summary>
 		protected override void OnExecute(CommandProcessor theProcessor)
 		{
-			using (var zipService = Platform.GetService<IZipService>())
+		    var zipService = Platform.GetService<IZipService>();
+			using (var zipReader = zipService.OpenRead(_zipFile))
 			{
-			    zipService.OpenRead(_zipFile);
-                zipService.ExtractAll(_destinationFolder,_overwrite);
+                zipReader.ExtractAll(_destinationFolder, _overwrite);
 			}
 		}
 

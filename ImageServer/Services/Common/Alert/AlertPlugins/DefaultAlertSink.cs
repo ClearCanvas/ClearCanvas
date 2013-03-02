@@ -88,7 +88,7 @@ namespace ClearCanvas.ImageServer.Services.Common.Alert.AlertPlugins
             if (alert.ContextData != null)
             {
                 XmlNode contextContainerNode = doc.CreateElement("Context");
-                XmlNode contextNode = doc.ImportNode(XmlUtils.Serialize(alert.ContextData), true);
+                XmlNode contextNode = doc.ImportNode(XmlUtils.Serialize(alert.ContextData, false), true);
 
                 contextContainerNode.AppendChild(contextNode);
                 docElement.AppendChild(contextContainerNode);

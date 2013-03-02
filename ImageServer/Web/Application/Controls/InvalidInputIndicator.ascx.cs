@@ -50,6 +50,10 @@ namespace ClearCanvas.ImageServer.Web.Application.Controls
 
         }
                 
+		public bool IsVisible
+		{
+            get { return ContainerPanel.Style[HtmlTextWriterStyle.Visibility] == "visible"; }
+		}
            
         public Control Container
         {

@@ -131,7 +131,7 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Queues.WorkQueue.Edit
                 Message.Visible = false;
             }
 
-            WorkQueueItemDetailsPanel.AutoRefresh = !DeleteWorkQueueDialog.IsShown;
+            WorkQueueItemDetailsPanel.AutoRefresh = !DeleteWorkQueueDialog.IsShown && !ScheduleWorkQueueDialog.IsShown;
 
             base.OnPreRender(e);
         }

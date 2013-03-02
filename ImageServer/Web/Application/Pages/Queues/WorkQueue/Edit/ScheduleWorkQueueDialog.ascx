@@ -33,11 +33,8 @@
    
     <asp:Panel ID="Panel1" runat="server" CssClass="DialogPanelContent" width="100%">
         
-        <asp:UpdatePanel ID="TestUpdatePanel" runat="server">
-            <ContentTemplate>
-            <localAsp:WorkQueueItemList ID="SelectedWorkQueueItemList" runat="server" />
-            </ContentTemplate>
-        </asp:UpdatePanel>
+        <localAsp:WorkQueueItemList ID="SelectedWorkQueueItemList" runat="server" OnDataSourceCreated="SetDataSourceFilter"/>
+            
         <asp:Panel runat="server" style="border-top: solid 1px #CCCCCC; padding-top: 3px; text-align: center; padding-top: 5px; padding-bottom: 5px;">
             <localAsp:WorkQueueSettingsPanel  ID="WorkQueueSettingsPanel" runat="server" />           
         </asp:Panel>

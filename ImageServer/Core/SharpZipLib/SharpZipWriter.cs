@@ -22,28 +22,17 @@
 
 #endregion
 
-using System;
 using System.Collections.Generic;
 using System.IO;
-using ClearCanvas.Common;
 using ClearCanvas.ImageServer.Common;
 using ICSharpCode.SharpZipLib.Zip;
 
-namespace ClearCanvas.ImageServer.Services.Archiving.Hsm
+namespace ClearCanvas.ImageServer.Core.SharpZipLib
 {
-    [ExtensionOf(typeof(ServiceProviderExtensionPoint))]
-    class SharpZipServiceProvider : IServiceProvider
+    internal class SharpZipWriter : IZipServiceWriter
     {
-        public object GetService(Type serviceType)
-        {
-            if (serviceType != typeof(IZipService))
-                return null;
+        #region Internal Classes
 
-            return new SharpZipService();
-        }
-    }
-    class SharpZipService : IZipService
-    {
         private class FileStreamDataSource : IStaticDataSource
         {
             private readonly Stream _inputStream;
@@ -59,90 +48,73 @@ namespace ClearCanvas.ImageServer.Services.Archiving.Hsm
             }
         }
 
-        private ZipFile _zipFile;
-        
-        public void Dispose()
-        {
-            if (_zipFile != null)
-            {
-                _zipFile.Close();
-                _zipFile = null;
-            }           
-        }
+        #endregion Internal Classes
 
-        public bool ForceCompress { get;set; }
+        #region Private Members
+
+        private ZipFile _zipFile;
+
+        #endregion Private Members
+
+        #region Public Properties
+
+        public bool ForceCompress { get; set; }
+
         public string Comment
         {
             get
             {
                 return _zipFile.ZipFileComment;
             }
-            set 
-            { 
+            set
+            {
                 _zipFile.SetComment(value);
-            } 
+            }
         }
+
         public string TempFileFolder { get; set; }
 
-        public ICollection<string> EntryFileNames {
+        public ICollection<string> EntryFileNames
+        {
             get
             {
                 var list = new List<string>();
                 foreach (var zip in _zipFile)
                 {
                     var zipEntry = zip as ZipEntry;
-                    list.Add(zipEntry.Name);
+                    if (zipEntry != null)
+                        list.Add(zipEntry.Name);
                 }
                 return list;
             }
         }
 
-        public void OpenRead(string zipFile)
+        #endregion Public Properties
+
+        #region Constructors
+
+        internal SharpZipWriter(string zipFile)
         {
-            _zipFile = new ZipFile(zipFile)
+            if (File.Exists(zipFile))
+            {
+                _zipFile = new ZipFile(zipFile)
                 {
                     UseZip64 = UseZip64.Dynamic
                 };
-            _zipFile.BeginUpdate();
-        }
-
-        public void OpenWrite(string zipFile)
-        {
-            _zipFile = ZipFile.Create(zipFile);
-            _zipFile.UseZip64 = UseZip64.Dynamic;        
-            _zipFile.BeginUpdate();
-        }
-
-        public void Extract(string sourceFile, string destinationFile, bool overwrite)
-        {
-            var zipEntry = _zipFile.GetEntry(sourceFile);
-            var byteArray = new byte[1024 * 16];
-            using (var s = _zipFile.GetInputStream(zipEntry))
-            using (var o = new FileStream(destinationFile,overwrite ? FileMode.OpenOrCreate : FileMode.CreateNew))
+                _zipFile.BeginUpdate();
+            }
+            else
             {
-                var bytesRead = s.Read(byteArray, 0, byteArray.Length);
 
-                o.Write(byteArray, 0, bytesRead);
+                _zipFile = ZipFile.Create(zipFile);
+                _zipFile.UseZip64 = UseZip64.Dynamic;
+                _zipFile.BeginUpdate();
             }
         }
 
-        public void ExtractAll(string destinationFolder, bool overwrite)
-        {
-            foreach (var zip in _zipFile)
-            {
-                var zipEntry = zip as ZipEntry;
+        #endregion Constructors
 
-                var byteArray = new byte[1024*16];
-                var destinationFile = Path.Combine(destinationFolder, zipEntry.Name);
-                using (var s = _zipFile.GetInputStream(zipEntry))
-                using (var o = new FileStream(destinationFile, overwrite ? FileMode.OpenOrCreate : FileMode.CreateNew))
-                {
-                    var bytesRead = s.Read(byteArray, 0, byteArray.Length);
-                    o.Write(byteArray, 0, bytesRead);
-                }   
-            }
-            
-        }
+        #region Methods
 
         public void AddFile(string sourceFile, string directoryPathInArchive)
         {
@@ -154,7 +126,7 @@ namespace ClearCanvas.ImageServer.Services.Archiving.Hsm
         public void AddFileStream(string directoryPathInArchive, Stream sourceFile, string comment)
         {
             _zipFile.Add(new FileStreamDataSource(sourceFile), directoryPathInArchive, ForceCompress ? CompressionMethod.Deflated : CompressionMethod.Stored);
-            
+
             var entry = _zipFile.GetEntry(directoryPathInArchive);
             entry.Comment = comment;
         }
@@ -164,9 +136,21 @@ namespace ClearCanvas.ImageServer.Services.Archiving.Hsm
             _zipFile.AddDirectory(sourceDirectory);
         }
 
+
         public void Save()
         {
             _zipFile.CommitUpdate();
         }
+
+        public void Dispose()
+        {
+            if (_zipFile != null)
+            {
+                _zipFile.Close();
+                _zipFile = null;
+            }
+        }
+
+        #endregion Methods
     }
 }

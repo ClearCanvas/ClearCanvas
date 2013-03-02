@@ -83,7 +83,7 @@ namespace ClearCanvas.Desktop.Configuration
 
 			if (!store.IsOnline)
 			{
-				base.Context.DesktopWindow.ShowMessageBox(SR.MessageSettingsStoreOffline, MessageBoxActions.Ok);
+				Context.DesktopWindow.ShowMessageBox(SR.MessageSettingsStoreOffline, MessageBoxActions.Ok);
 				return;
 			}
 
@@ -243,24 +243,24 @@ namespace ClearCanvas.Desktop.Configuration
 
 		//TODO (CR Sept 2010): Change this to use ApplicationSettingsExtensions to set the shared property values.
 		//That way, we can edit enterprise and local settings at the same time.
-		private ISettingsStore _configStore;
+		private readonly ISettingsStore _configStore;
 
-		private Table<SettingsGroupDescriptor> _settingsGroupTable;
+		private readonly Table<SettingsGroupDescriptor> _settingsGroupTable;
 		private SettingsGroupDescriptor _selectedSettingsGroup;
 		private event EventHandler _selectedSettingsGroupChanged;
 
-		private Table<SettingsProperty> _settingsPropertiesTable;
+		private readonly Table<SettingsProperty> _settingsPropertiesTable;
 		private SettingsProperty _selectedSettingsProperty;
 		private event EventHandler _selectedSettingsPropertyChanged;
 
-		private SimpleActionModel _settingsPropertiesActionModel;
-		private ClickAction _saveAllAction;
-		private ClickAction _resetAllAction;
-		private ClickAction _resetAction;
-		private ClickAction _editAction;
+		private readonly SimpleActionModel _settingsPropertiesActionModel;
+		private readonly ClickAction _saveAllAction;
+		private readonly ClickAction _resetAllAction;
+		private readonly ClickAction _resetAction;
+		private readonly ClickAction _editAction;
 
-		private SimpleActionModel _settingsGroupsActionModel;
-		private ClickAction _importAction;
+		private readonly SimpleActionModel _settingsGroupsActionModel;
+		private readonly ClickAction _importAction;
 
 
 		/// <summary>
@@ -272,33 +272,23 @@ namespace ClearCanvas.Desktop.Configuration
 			_configStore = configStore;
 
 			// define the structure of the settings group table
-			ITableColumn _groupNameColumn;
+			ITableColumn groupNameColumn;
 			_settingsGroupTable = new Table<SettingsGroupDescriptor>();
-			_settingsGroupTable.Columns.Add(_groupNameColumn = new TableColumn<SettingsGroupDescriptor, string>(SR.TitleGroup,
-				delegate(SettingsGroupDescriptor t) { return t.Name; }));
-			_settingsGroupTable.Columns.Add(new TableColumn<SettingsGroupDescriptor, string>(SR.TitleVersion,
-				delegate(SettingsGroupDescriptor t) { return t.Version.ToString(); }));
-			_settingsGroupTable.Columns.Add(new TableColumn<SettingsGroupDescriptor, string>(SR.TitleDescription,
-				delegate(SettingsGroupDescriptor t) { return t.Description; }));
-			_settingsGroupTable.Sort(new TableSortParams(_groupNameColumn, true));
+			_settingsGroupTable.Columns.Add(groupNameColumn = new TableColumn<SettingsGroupDescriptor, string>(SR.TitleGroup, t => t.Name));
+			_settingsGroupTable.Columns.Add(new TableColumn<SettingsGroupDescriptor, string>(SR.TitleVersion, t => t.Version.ToString()));
+			_settingsGroupTable.Columns.Add(new TableColumn<SettingsGroupDescriptor, string>(SR.TitleDescription, t => t.Description));
+			_settingsGroupTable.Sort(new TableSortParams(groupNameColumn, true));
 
 			// define the settings properties table
-			ITableColumn _propertyNameColumn;
+			ITableColumn propertyNameColumn;
 			_settingsPropertiesTable = new Table<SettingsProperty>();
-			_settingsPropertiesTable.Columns.Add(_propertyNameColumn = new TableColumn<SettingsProperty, string>(SR.TitleProperty,
-				delegate(SettingsProperty p) { return p.Name; }));
-			_settingsPropertiesTable.Columns.Add(new TableColumn<SettingsProperty, string>(SR.TitleDescription,
-				delegate(SettingsProperty p) { return p.Description; }));
-			_settingsPropertiesTable.Columns.Add(new TableColumn<SettingsProperty, string>(SR.TitleScope,
-				delegate(SettingsProperty p) { return p.Scope.ToString(); }));
-			_settingsPropertiesTable.Columns.Add(new TableColumn<SettingsProperty, string>(SR.TitleType,
-				delegate(SettingsProperty p) { return p.TypeName; }));
-			_settingsPropertiesTable.Columns.Add(new TableColumn<SettingsProperty, string>(SR.TitleDefaultValue,
-				delegate(SettingsProperty p) { return p.DefaultValue; }));
-			_settingsPropertiesTable.Columns.Add(new TableColumn<SettingsProperty, string>(SR.TitleValue,
-				delegate(SettingsProperty p) { return p.Value; },
-				delegate(SettingsProperty p, string text) { p.Value = text; }));
-			_settingsPropertiesTable.Sort(new TableSortParams(_propertyNameColumn, true));
+			_settingsPropertiesTable.Columns.Add(propertyNameColumn = new TableColumn<SettingsProperty, string>(SR.TitleProperty, p => p.Name));
+			_settingsPropertiesTable.Columns.Add(new TableColumn<SettingsProperty, string>(SR.TitleDescription, p => p.Description));
+			_settingsPropertiesTable.Columns.Add(new TableColumn<SettingsProperty, string>(SR.TitleScope, p => p.Scope.ToString()));
+			_settingsPropertiesTable.Columns.Add(new TableColumn<SettingsProperty, string>(SR.TitleType, p => p.TypeName));
+			_settingsPropertiesTable.Columns.Add(new TableColumn<SettingsProperty, string>(SR.TitleDefaultValue, p => p.DefaultValue));
+			_settingsPropertiesTable.Columns.Add(new TableColumn<SettingsProperty, string>(SR.TitleValue, p => p.Value, (p, text) => p.Value = text));
+			_settingsPropertiesTable.Sort(new TableSortParams(propertyNameColumn, true));
 
 			_settingsGroupsActionModel = new SimpleActionModel(new ApplicationThemeResourceResolver(this.GetType().Assembly));
 			_importAction = _settingsGroupsActionModel.AddAction("import", SR.LabelImport, "ImportToolSmall.png",
@@ -307,19 +297,10 @@ namespace ClearCanvas.Desktop.Configuration
 			_importAction.Visible = _configStore.SupportsImport;
 
 			_settingsPropertiesActionModel = new SimpleActionModel(new ApplicationThemeResourceResolver(this.GetType().Assembly));
-
-			_saveAllAction = _settingsPropertiesActionModel.AddAction("saveall", SR.LabelSaveAll, "SaveToolSmall.png",
-				delegate() { SaveModifiedSettings(false); });
-
-			_editAction = _settingsPropertiesActionModel.AddAction("edit", SR.LabelEdit, "EditToolSmall.png",
-			   delegate() { EditProperty(_selectedSettingsProperty); });
-
-			_resetAction = _settingsPropertiesActionModel.AddAction("reset", SR.LabelReset, "ResetToolSmall.png",
-			   delegate() { ResetPropertyValue(_selectedSettingsProperty); });
-
-			_resetAllAction = _settingsPropertiesActionModel.AddAction("resetall", SR.LabelResetAll, "ResetAllToolSmall.png",
-				delegate() { ResetAllPropertyValues(); });
-
+			_saveAllAction = _settingsPropertiesActionModel.AddAction("saveall", SR.LabelSaveAll, "SaveToolSmall.png", () => SaveModifiedSettings(false));
+			_editAction = _settingsPropertiesActionModel.AddAction("edit", SR.LabelEdit, "EditToolSmall.png", () => EditProperty(_selectedSettingsProperty));
+			_resetAction = _settingsPropertiesActionModel.AddAction("reset", SR.LabelReset, "ResetToolSmall.png", () => ResetPropertyValue(_selectedSettingsProperty));
+			_resetAllAction = _settingsPropertiesActionModel.AddAction("resetall", SR.LabelResetAll, "ResetAllToolSmall.png", ResetAllPropertyValues);
 		}
 
 		/// <summary>
@@ -400,7 +381,7 @@ namespace ClearCanvas.Desktop.Configuration
 			get { return new Selection(_selectedSettingsGroup); }
 			set
 			{
-				SettingsGroupDescriptor settingsClass = (SettingsGroupDescriptor)value.Item;
+				var settingsClass = (SettingsGroupDescriptor)value.Item;
 				if (settingsClass != _selectedSettingsGroup)
 				{
 					// save any changes before changing _selectedSettingsGroup
@@ -448,7 +429,7 @@ namespace ClearCanvas.Desktop.Configuration
 			get { return new Selection(_selectedSettingsProperty); }
 			set
 			{
-				SettingsProperty p = (SettingsProperty)value.Item;
+				var p = (SettingsProperty)value.Item;
 				if (p != _selectedSettingsProperty)
 				{
 					_selectedSettingsProperty = p;
@@ -483,7 +464,7 @@ namespace ClearCanvas.Desktop.Configuration
 		private void FillSettingsGroupTable()
 		{
 			_settingsGroupTable.Items.Clear();
-			foreach (SettingsGroupDescriptor group in _configStore.ListSettingsGroups())
+			foreach (var group in _configStore.ListSettingsGroups())
 			{
 				_settingsGroupTable.Items.Add(group);
 			}
@@ -498,7 +479,7 @@ namespace ClearCanvas.Desktop.Configuration
 			{
 				try
 				{
-					Dictionary<string, string> values = _configStore.GetSettingsValues(
+					var values = _configStore.GetSettingsValues(
 							_selectedSettingsGroup,
 							null, null // load the default profile
 							);
@@ -516,8 +497,7 @@ namespace ClearCanvas.Desktop.Configuration
 		{
 			try
 			{
-				DialogBoxAction action = this.Host.ShowMessageBox(SR.MessageConfirmImportSettingsMetaData,
-								 MessageBoxActions.OkCancel);
+				var action = this.Host.ShowMessageBox(SR.MessageConfirmImportSettingsMetaData, MessageBoxActions.OkCancel);
 				if (action == DialogBoxAction.Ok)
 				{
 					DoImport();
@@ -535,11 +515,11 @@ namespace ClearCanvas.Desktop.Configuration
 
 		private void DoImport()
 		{
-			List<SettingsGroupDescriptor> groups = SettingsGroupDescriptor.ListInstalledSettingsGroups(true);
-			BackgroundTask task = new BackgroundTask(
+			var groups = SettingsGroupDescriptor.ListInstalledSettingsGroups(true);
+			var task = new BackgroundTask(
 				delegate(IBackgroundTaskContext context)
 				{
-					for (int i = 0; i < groups.Count; i++)
+					for (var i = 0; i < groups.Count; i++)
 					{
 						if (context.CancelRequested)
 						{
@@ -547,17 +527,17 @@ namespace ClearCanvas.Desktop.Configuration
 							break;
 						}
 
-						SettingsGroupDescriptor group = groups[i];
+						var group = groups[i];
 						context.ReportProgress(new BackgroundTaskProgress(i, groups.Count, string.Format("Importing {0}", group.Name)));
 
-						List<SettingsPropertyDescriptor> props = SettingsPropertyDescriptor.ListSettingsProperties(group);
+						var props = SettingsPropertyDescriptor.ListSettingsProperties(group);
 						_configStore.ImportSettingsGroup(group, props);
 
 					}
 				},
 				true);
 
-			ProgressDialog.Show(task, this.Host.DesktopWindow, true);
+			ProgressDialog.Show(task, this.Host.DesktopWindow);
 		}
 
 		private void SaveModifiedSettings(bool confirmationRequired)
@@ -569,8 +549,8 @@ namespace ClearCanvas.Desktop.Configuration
 					return;
 
 				// fill a dictionary with all dirty values
-				Dictionary<string, string> values = new Dictionary<string, string>();
-				foreach (SettingsProperty p in _settingsPropertiesTable.Items)
+				var values = new Dictionary<string, string>();
+				foreach (var p in _settingsPropertiesTable.Items)
 				{
 					if (p.Dirty)
 					{
@@ -584,7 +564,7 @@ namespace ClearCanvas.Desktop.Configuration
 					_configStore.PutSettingsValues(_selectedSettingsGroup,null, null, values);
 
 					// mark all properties as clean again
-					foreach (SettingsProperty p in _settingsPropertiesTable.Items)
+					foreach (var p in _settingsPropertiesTable.Items)
 						p.MarkClean();
 
 					UpdateActionEnablement();
@@ -602,10 +582,10 @@ namespace ClearCanvas.Desktop.Configuration
 
 		private void ResetAllPropertyValues()
 		{
-			DialogBoxAction action = this.Host.ShowMessageBox(SR.MessageResetAll, MessageBoxActions.YesNo);
+			var action = this.Host.ShowMessageBox(SR.MessageResetAll, MessageBoxActions.YesNo);
 			if (action == DialogBoxAction.Yes)
 			{
-				foreach (SettingsProperty property in _settingsPropertiesTable.Items)
+				foreach (var property in _settingsPropertiesTable.Items)
 				{
 					property.Value = property.DefaultValue;
 					_settingsPropertiesTable.Items.NotifyItemUpdated(property);
@@ -615,7 +595,7 @@ namespace ClearCanvas.Desktop.Configuration
 
 		private void ResetPropertyValue(SettingsProperty property)
 		{
-			DialogBoxAction action = this.Host.ShowMessageBox(SR.MessageReset, MessageBoxActions.YesNo);
+			var action = this.Host.ShowMessageBox(SR.MessageReset, MessageBoxActions.YesNo);
 			if (action == DialogBoxAction.Yes)
 			{
 				property.Value = property.DefaultValue;
@@ -629,8 +609,8 @@ namespace ClearCanvas.Desktop.Configuration
 			{
 				if (property != null)
 				{
-					SettingEditorComponent editor = new SettingEditorComponent(property.DefaultValue, property.Value);
-					ApplicationComponentExitCode exitCode = ApplicationComponent.LaunchAsDialog(this.Host.DesktopWindow, editor, SR.TitleEditValue);
+					var editor = new SettingEditorComponent(property.DefaultValue, property.Value);
+					var exitCode = LaunchAsDialog(this.Host.DesktopWindow, editor, SR.TitleEditValue);
 					if (exitCode == ApplicationComponentExitCode.Accepted)
 					{
 						property.Value = editor.CurrentValue;
@@ -652,17 +632,16 @@ namespace ClearCanvas.Desktop.Configuration
 			_resetAction.Enabled = (_selectedSettingsProperty != null && !_selectedSettingsProperty.UsingDefaultValue);
 			_editAction.Enabled = (_selectedSettingsProperty != null);
 			_saveAllAction.Enabled = (_selectedSettingsGroup != null && IsAnyPropertyDirty());
-			_resetAllAction.Enabled = CollectionUtils.Contains<SettingsProperty>(_settingsPropertiesTable.Items,
-				delegate(SettingsProperty p) { return !p.UsingDefaultValue; });
+			_resetAllAction.Enabled = CollectionUtils.Contains(_settingsPropertiesTable.Items, p => !p.UsingDefaultValue);
 		}
 
 		private void FillSettingsPropertiesTable(IDictionary<string, string> storedValues)
 		{
 			_settingsPropertiesTable.Items.Clear();
-			foreach (SettingsPropertyDescriptor pi in _configStore.ListSettingsProperties(_selectedSettingsGroup))
+			foreach (var pi in _configStore.ListSettingsProperties(_selectedSettingsGroup))
 			{
-				string value = storedValues.ContainsKey(pi.Name) ? storedValues[pi.Name] : pi.DefaultValue;
-				SettingsProperty property = new SettingsProperty(pi, value);
+				var value = storedValues.ContainsKey(pi.Name) ? storedValues[pi.Name] : pi.DefaultValue;
+				var property = new SettingsProperty(pi, value);
 				property.ValueChanged += SettingsPropertyValueChangedEventHandler;
 				_settingsPropertiesTable.Items.Add(property);
 			}
@@ -676,13 +655,12 @@ namespace ClearCanvas.Desktop.Configuration
 
 		private bool IsAnyPropertyDirty()
 		{
-			return CollectionUtils.Contains<SettingsProperty>(_settingsPropertiesTable.Items,
-				delegate(SettingsProperty p) { return p.Dirty; });
+			return CollectionUtils.Contains(_settingsPropertiesTable.Items, p => p.Dirty);
 		}
 
 		private bool ConfirmSave()
 		{
-			DialogBoxAction action = this.Host.ShowMessageBox(SR.MessageSaveModified, MessageBoxActions.YesNo);
+			var action = this.Host.ShowMessageBox(SR.MessageSaveModified, MessageBoxActions.YesNo);
 			return action == DialogBoxAction.Yes;
 		}
 

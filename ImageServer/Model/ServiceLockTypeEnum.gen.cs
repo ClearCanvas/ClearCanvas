@@ -113,7 +113,7 @@ public partial class ServiceLockTypeEnum : ServerEnum
           get { return _ImportFiles; }
       }
       /// <summary>
-      /// This service periodically synchronizes the deletion status of Authority Groups on the Administrative Services with Data Access granted to studies on the ImageServer.
+      /// This service periodically synchronizes the deletion status of Authority Groups on the Enterprise Services with Data Access granted to studies on the ImageServer.
       /// </summary>
       public static ServiceLockTypeEnum SyncDataAccess
       {

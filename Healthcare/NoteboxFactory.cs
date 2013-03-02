@@ -53,8 +53,8 @@ namespace ClearCanvas.Healthcare
 
         private NoteboxFactory()
         {
-            _noteboxClasses = CollectionUtils.Map<ExtensionInfo, Type>(new NoteboxExtensionPoint().ListExtensions(),
-                delegate(ExtensionInfo info) { return info.ExtensionClass; });
+            _noteboxClasses = CollectionUtils.Map<ExtensionInfo, Type>(
+				new NoteboxExtensionPoint().ListExtensions(), info => info.ExtensionClass.Resolve());
         }
 
         /// <summary>

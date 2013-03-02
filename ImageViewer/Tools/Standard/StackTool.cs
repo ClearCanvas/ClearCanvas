@@ -81,7 +81,7 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
                     foreach (var item in ImageComparerList.Items)
                     {
                         var itemVar = item;
-                        var action = _sortMenuModel.AddAction(itemVar.Name, itemVar.Description, null, itemVar.Description, () => Sort(itemVar));
+                        var action = _sortMenuModel.AddAction(GetActionKey(itemVar), itemVar.Description, null, itemVar.Description, () => Sort(itemVar));
                         action.Checked = GetSortMenuItemCheckState(itemVar);
                     }
                 }
@@ -89,6 +89,34 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 			    return _sortMenuModel;
 			}
 		}
+
+        protected override void OnPresentationImageSelected(object sender, PresentationImageSelectedEventArgs e)
+        {
+            base.OnPresentationImageSelected(sender, e);
+            UpdateCheckState();
+        }
+
+        private static string GetActionKey(ImageComparerList.Item item)
+        {
+            return item.IsReverse ? string.Format("{0} (Reverse)", item.Name) : item.Name;
+        }
+
+        private void UpdateCheckState()
+        {
+            if (_sortMenuModel == null)
+                return;
+
+            foreach (var item in ImageComparerList.Items)
+            {
+                var itemVar = item;
+                var actionKey = GetActionKey(itemVar);
+                var action = _sortMenuModel[actionKey] as ClickAction;
+                if (action == null)
+                    continue;
+
+                action.Checked = GetSortMenuItemCheckState(itemVar);
+            }
+        }
 
         private bool GetSortMenuItemCheckState(ImageComparerList.Item item)
 		{
@@ -122,6 +150,8 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 			    historyCommand.Enqueue(command);
 				Context.Viewer.CommandHistory.AddCommand(historyCommand);
 			}
+
+            UpdateCheckState();
 		}
 
 		private void CaptureBeginState(IImageBox imageBox)

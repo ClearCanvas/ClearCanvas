@@ -135,6 +135,9 @@
   <data name="LabelTerabytes" xml:space="preserve">
     <value>TB</value>
   </data>
+  <data name="LocalServerName" xml:space="preserve">
+    <value>Local</value>
+  </data>
   <data name="MessageActivityMonitorServiceUnavailable" xml:space="preserve">
     <value>The Activity Monitor service is currently unavailable</value>
   </data>

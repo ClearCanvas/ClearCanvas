@@ -93,7 +93,8 @@ namespace ClearCanvas.Common.Configuration
 				}
 				catch (NotSupportedException)
 				{
-					Platform.Log(LogLevel.Warn, SR.LogConfigurationStoreNotFound);
+                    //note: it's the log so keep it in English
+                    Platform.Log(LogLevel.Warn, "Configuration store not found - defaulting to LocalFileSettingsProvider" );
 
 					// default to LocalFileSettingsProvider as a last resort
 					_sourceProvider = new ExtendedLocalFileSettingsProvider(new LocalFileSettingsProvider());

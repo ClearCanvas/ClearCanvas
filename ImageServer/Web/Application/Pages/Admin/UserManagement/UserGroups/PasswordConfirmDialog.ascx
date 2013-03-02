@@ -20,8 +20,8 @@
 // the ClearCanvas RIS/PACS open source project.  If not, see
 // <http://www.gnu.org/licenses/>.
 
---%>
 
+--%>
 <%@ Control Language="C#" AutoEventWireup="true" CodeBehind="PasswordConfirmDialog.ascx.cs"
     Inherits="ClearCanvas.ImageServer.Web.Application.Pages.Admin.UserManagement.UserGroups.PasswordConfirmDialog" %>
     <ccAsp:ModalDialog ID="ModalDialog" runat="server"></ccAsp:ModalDialog>

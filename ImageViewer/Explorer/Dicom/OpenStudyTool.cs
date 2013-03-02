@@ -91,6 +91,8 @@ namespace ClearCanvas.ImageViewer.Explorer.Dicom
 
 				if (Context.SelectedServers.Count == 1 && Context.SelectedServers[0].IsLocal)
 				{
+                    // TODO (CR Phoenix5 - Medium): Not so sure now about excluding failed items.
+
 					// #10746:  Workstation: the user must be warned when opening studies that are being processed
 					// This implementation does not cover all the possible cases of when a study might be modified.
 					// For example: if a study is being retrieved, WQI failed and deleted, the study is technically
@@ -101,7 +103,7 @@ namespace ClearCanvas.ImageViewer.Explorer.Dicom
 					{
 						Platform.Log(LogLevel.Debug, "Querying for a StudyUpdate work items that are in progress for the studies that are being opened.");
 
-						var anyStudyBeingModified = Context.SelectedStudies.Any(study =>
+						var isStudyBeingProcessed = Context.SelectedStudies.Any(study =>
 						{
 							var request = new WorkItemQueryRequest { StudyInstanceUid = study.StudyInstanceUid };
 							IEnumerable<WorkItemData> workItems = null;
@@ -110,13 +112,9 @@ namespace ClearCanvas.ImageViewer.Explorer.Dicom
 							return workItems.Any(IsNonTerminalStudyUpdateItem);
 						});
 
-						if (anyStudyBeingModified)
-						{
-							var message = Context.SelectedStudies.Count == 1 ? SR.MessageStudyIsBeingModified : SR.MessageStudiesAreBeingModified;
-
-							if (DialogBoxAction.No == Context.DesktopWindow.ShowMessageBox(message, MessageBoxActions.YesNo))
-								return;
-						}
+						var message = this.Context.SelectedStudies.Count > 1 ? SR.MessageLoadStudiesBeingProcessed : SR.MessageLoadStudyBeingProcessed;
+						if (isStudyBeingProcessed && DialogBoxAction.No == Context.DesktopWindow.ShowMessageBox(message, MessageBoxActions.YesNo))
+							return;
 					}
 					catch (Exception e)
 					{
@@ -127,7 +125,9 @@ namespace ClearCanvas.ImageViewer.Explorer.Dicom
 				var helper = new OpenStudyHelper
 				                 {
 				                     WindowBehaviour = ViewerLaunchSettings.WindowBehaviour,
-				                     AllowEmptyViewer = ViewerLaunchSettings.AllowEmptyViewer
+				                     AllowEmptyViewer = ViewerLaunchSettings.AllowEmptyViewer,
+                                     //The user has elected to ignore "in use" studies.
+                                     StudyLoaderOptions = new StudyLoaderOptions(true)
 				                 };
 
 				foreach (var study in Context.SelectedStudies)

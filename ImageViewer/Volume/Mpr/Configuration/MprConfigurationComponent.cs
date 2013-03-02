@@ -85,7 +85,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr.Configuration
 		{
 			base.Start();
 
-			_settings = MprSettings.Default;
+            _settings = MprSettings.DefaultInstance;
 			_sliceSpacingFactor = _settings.SliceSpacingFactor;
 			_automaticSliceSpacing = _settings.AutoSliceSpacing;
 		}

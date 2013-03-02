@@ -42,10 +42,11 @@ namespace ClearCanvas.ImageViewer.Tools.Synchronization
 	{
 		#region Private Fields
 
+        //TODO (Phoenix5): #10730 - remove this when it's fixed.
 		[ThreadStatic]
 		private static DicomImagePlaneDataCache _imagePlaneDataCache;
 		[ThreadStatic]
-		private static int _referenceCount = 0;
+		private static int _referenceCount;
 
 		private IPresentationImage _sourceImage;
 		private SpatialTransform _sourceImageTransform;

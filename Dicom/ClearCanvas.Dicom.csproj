@@ -122,6 +122,8 @@
     <Compile Include="Audit\EventReceiptAction.cs" />
     <Compile Include="Audit\EventResult.cs" />
     <Compile Include="Audit\EventSource.cs" />
+    <Compile Include="Codec\Tests\GZipDicomCodec.cs" />
+    <Compile Include="Codec\Tests\NullDicomCodec.cs" />
     <Compile Include="DicomAttribute.cs" />
     <Compile Include="DicomAttributeBinaryData.cs">
       <SubType>Code</SubType>
@@ -135,8 +137,28 @@
     <Compile Include="DicomUncompressedPixelData.cs" />
     <Compile Include="FileReference.cs" />
     <Compile Include="Iod\ComponentGroup.cs" />
+    <Compile Include="Iod\CorrectedImage.cs" />
+    <Compile Include="Iod\CountsSource.cs" />
+    <Compile Include="Iod\DecayCorrection.cs" />
+    <Compile Include="Iod\Modules\CrSeriesModuleIod.cs" />
+    <Compile Include="Iod\Modules\CtSeriesModuleIod.cs" />
+    <Compile Include="Iod\Modules\EnhancedMammographySeriesModuleIod.cs" />
+    <Compile Include="Iod\Modules\EnhancedPetSeriesModuleIod.cs" />
+    <Compile Include="Iod\Modules\EnhancedSeriesModuleIod.cs" />
+    <Compile Include="Iod\Modules\EnhancedUsSeriesModuleIod.cs" />
+    <Compile Include="Iod\Modules\MrSeriesModuleIod.cs" />
+    <Compile Include="Iod\Modules\NmPetPatientOrientationModuleIod.cs" />
+    <Compile Include="Iod\Modules\OpthalmicTomographySeriesModuleIod.cs" />
+    <Compile Include="Iod\Modules\PetIsotopeModuleIod.cs" />
+    <Compile Include="Iod\Modules\PetMultiGatedAcquisitionModuleIod.cs" />
+    <Compile Include="Iod\Modules\PetSeriesModuleIod.cs" />
     <Compile Include="Iod\Modules\Tests\FilmSizeTests.cs" />
     <Compile Include="Iod\Modules\Tests\PrintScuTests.cs" />
+    <Compile Include="Iod\Modules\XaXrfSeriesModuleIod.cs" />
+    <Compile Include="Iod\RandomsCorrectionMethod.cs" />
+    <Compile Include="Iod\Sequences\PatientOrientationCodeSequence.cs" />
+    <Compile Include="Iod\SuvType.cs" />
+    <Compile Include="Iod\Units.cs" />
     <Compile Include="IO\IByteBuffer.cs" />
     <Compile Include="IO\Tests\ByteBufferHighCapacityTests.cs" />
     <Compile Include="IO\Tests\ByteBufferPerformanceTest.cs" />
@@ -149,7 +171,9 @@
       <DependentUpon>SR.resx</DependentUpon>
     </Compile>
     <Compile Include="ServiceModel\Streaming\HeaderStreamingServiceClient.cs" />
+    <Compile Include="Tests\ChangeTransferSyntaxTests.cs" />
     <Compile Include="Tests\DicomAttributeBinaryDataTests.cs" />
+    <Compile Include="Tests\DicomImageTestHelper.cs" />
     <Compile Include="Tests\DicomUncompressedPixelDataTests.cs" />
     <Compile Include="Utilities\Command\AggregateCommand.cs" />
     <Compile Include="Utilities\Command\RemoveSeriesFromStudyXml.cs" />

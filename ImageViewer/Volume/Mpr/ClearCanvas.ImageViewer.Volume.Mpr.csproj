@@ -117,8 +117,10 @@
     <Compile Include="Tests\SlicerFidelityTests.cs" />
     <Compile Include="Tests\VolumeFunction.cs" />
     <Compile Include="Tests\MprTestVolumeTool.cs" />
+    <Compile Include="Tests\VolumeSopDataSourcePrototypeTests.cs" />
     <Compile Include="Tools\ResliceToolResetAll.cs" />
     <Compile Include="Tools\ResliceToolGraphic.cs" />
+    <Compile Include="Utilities\DicomAttributeMethods.cs" />
     <Compile Include="Utilities\DicomImagePlane.cs" />
     <Compile Include="Tools\MprLineStretchControlGraphic.cs" />
     <Compile Include="Utilities\MouseImageViewerToolGroup.cs" />
@@ -134,6 +136,7 @@
     <Compile Include="VolumeCache.cs" />
     <Compile Include="VolumeReference.cs" />
     <Compile Include="VolumeSlicerParams.cs" />
+    <Compile Include="VolumeUtilities.cs" />
     <Compile Include="MprSliceSet.cs" />
     <Compile Include="Tools\MprViewerTool.cs" />
     <Compile Include="LaunchMprTool.cs" />

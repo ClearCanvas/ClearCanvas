@@ -112,10 +112,10 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AnnotationItemProviders_Dicom_CTImage_DisplayName" xml:space="preserve">
     <value>Dicom (CT Image)</value>
@@ -992,5 +992,39 @@
   </data>
   <data name="Dicom_DXImage_XRayTubeCurrent_Label" xml:space="preserve">
     <value>Tube Current</value>
+  </data>
+  <data name="Presentation_Lossy_DisplayName" xml:space="preserve">
+    <value>Lossy Image Presentation</value>
+  </data>
+  <data name="Presentation_Lossy_Label" xml:space="preserve">
+    <value>Lossy</value>
+  </data>
+  <data name="Dicom_DXImage_PositionerPrimaryAngle_DisplayName" xml:space="preserve">
+    <value>Positioner Primary Angle</value>
+  </data>
+  <data name="Dicom_DXImage_PositionerPrimaryAngle_Label" xml:space="preserve">
+    <value>Positioner Primary Angle</value>
+  </data>
+  <data name="Dicom_DXImage_PositionerSecondaryAngle_DisplayName" xml:space="preserve">
+    <value>Positioner Secondary Angle</value>
+  </data>
+  <data name="Dicom_DXImage_PositionerSecondaryAngle_Label" xml:space="preserve">
+    <value>Positioner Secondary Angle</value>
+  </data>
+  <data name="Dicom_DXImage_AveragePulseWidth_DisplayName" xml:space="preserve">
+    <value>Average Pulse Width</value>
+  </data>
+  <data name="Dicom_DXImage_AveragePulseWidth_Label" xml:space="preserve">
+    <value>Avg Pulse Width</value>
+  </data>
+  <data name="Dicom_DXImage_ImageAndFluoroscopyAreaDoseProduct_DisplayName" xml:space="preserve">
+    <value>Image and Fluoroscopy Area Dose Product</value>
+  </data>
+  <data name="Dicom_DXImage_ImageAndFluoroscopyAreaDoseProduct_Label" xml:space="preserve">
+    <value>Total DAP</value>
+  </data>
+  <data name="FormatDecigraySquareCentimeters" xml:space="preserve">
+    <value>{0} dGy·cm²</value>
+    <comment>Do not use format specifiers here - inputs are preformatted strings!</comment>
   </data>
 </root>

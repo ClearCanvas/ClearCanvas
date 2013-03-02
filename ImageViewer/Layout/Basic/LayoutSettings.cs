@@ -25,6 +25,7 @@
 using System;
 using System.Configuration;
 using System.IO;
+using ClearCanvas.Common;
 using ClearCanvas.Desktop;
 using System.Xml;
 using System.Collections.Generic;
@@ -49,9 +50,26 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
 
 		private LayoutSettings()
 		{
-            // TODO (Phoenix5): Hack for RSNA that must be removed.
+            //TODO (Phoenix5): #10730 - remove this when it's fixed.
             //ApplicationSettingsRegistry.Instance.RegisterInstance(this);
         }
+
+        //TODO (Phoenix5): #10730 - remove this when it's fixed.
+        #region WebStation Settings Hack
+        [ThreadStatic]
+        private static LayoutSettings _webDefault;
+
+        public static LayoutSettings DefaultInstance
+        {
+            get
+            {
+                if (Application.GuiToolkitID == GuiToolkitID.Web)
+                    return _webDefault ?? (_webDefault = new LayoutSettings());
+
+                return Default;
+            }
+        }
+        #endregion
 
 		public StoredLayout DefaultLayout
 		{

@@ -71,7 +71,7 @@ namespace ClearCanvas.Enterprise.Core.Imex
             List<string> dataClasses = new List<string>();
             foreach (ExtensionInfo info in new XmlDataImexExtensionPoint().ListExtensions())
             {
-                ImexDataClassAttribute a = AttributeUtils.GetAttribute<ImexDataClassAttribute>(info.ExtensionClass);
+                ImexDataClassAttribute a = AttributeUtils.GetAttribute<ImexDataClassAttribute>(info.ExtensionClass.Resolve());
                 if (a != null)
                     dataClasses.Add(a.DataClass);
             }
@@ -89,7 +89,7 @@ namespace ClearCanvas.Enterprise.Core.Imex
             return (IXmlDataImex)new XmlDataImexExtensionPoint().CreateExtension(
                 delegate(ExtensionInfo info)
                 {
-                    return CollectionUtils.Contains(AttributeUtils.GetAttributes<ImexDataClassAttribute>(info.ExtensionClass),
+                    return CollectionUtils.Contains(AttributeUtils.GetAttributes<ImexDataClassAttribute>(info.ExtensionClass.Resolve()),
                         delegate(ImexDataClassAttribute a)
                         {
                             return a != null && a.DataClass.Equals(

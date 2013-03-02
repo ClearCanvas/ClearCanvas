@@ -143,6 +143,7 @@ namespace ClearCanvas.ImageViewer.InteractiveGraphics
 
 					if (_autoClose && _synchronizationContext != null)
 					{
+						Visible = false;
 						_synchronizationContext.Post(s => Close(), null);
 					}
 				}

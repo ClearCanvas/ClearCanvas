@@ -30,6 +30,7 @@ using System.Web.UI.WebControls;
 using ClearCanvas.ImageServer.Enterprise;
 using ClearCanvas.ImageServer.Model;
 using ClearCanvas.ImageServer.Web.Common;
+using ClearCanvas.ImageServer.Web.Common.Data;
 
 namespace ClearCanvas.ImageServer.Web.Application.Controls
 {
@@ -80,10 +81,17 @@ namespace ClearCanvas.ImageServer.Web.Application.Controls
                     else
                     {
                         string aeTitle = Request["AETitle"];
+                        var partitionKey = Request["PartitionKey"];
 
                         if (aeTitle != null)
                         {
                             _selectedPartition = ServerPartitionList.SingleOrDefault(p => p.AeTitle == aeTitle);
+                        }
+
+                        if (_selectedPartition == null && partitionKey != null)
+                        {
+                            var partitionEntityKey = new Guid(partitionKey);
+                            _selectedPartition = ServerPartitionList.SingleOrDefault(p => p.Key.Key.Equals(partitionEntityKey));
                         }
                     }
 

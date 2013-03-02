@@ -36,13 +36,10 @@ namespace ClearCanvas.Common
 	/// <see cref="PluginManager"/>
 	public class PluginLoadedEventArgs : EventArgs
 	{
-		string _message;
-		Assembly _pluginAssembly;
-
 		internal PluginLoadedEventArgs(string message, Assembly pluginAssembly)
 		{
-			_message = message;
-			_pluginAssembly = pluginAssembly;
+			Message = message;
+			PluginAssembly = pluginAssembly;
 		}
 
 		/// <summary>
@@ -51,13 +48,7 @@ namespace ClearCanvas.Common
 		/// <remarks>
 		/// This is typically just the full name of the plugin assembly.
 		/// </remarks>
-		public string Message
-		{
-			get
-			{
-				return _message;
-			}
-		}
+		public string Message { get; private set; }
 
 		/// <summary>
 		/// Gets the plugin assembly that was loaded, if any.
@@ -65,12 +56,6 @@ namespace ClearCanvas.Common
 		/// <remarks>
 		/// Null if no actual assembly was loaded for this particular event.
 		/// </remarks>
-		public Assembly PluginAssembly
-		{
-			get
-			{
-				return _pluginAssembly;
-			}
-		}
+		public Assembly PluginAssembly { get; private set; }
 	}
 }

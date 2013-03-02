@@ -35,8 +35,8 @@ namespace ClearCanvas.ImageServer.Common
 	/// <typeparam name="TLogClass">The class type being written to the log file.</typeparam>
 	class ImageServerLogFile<TLogClass> : IDisposable
 	{
-		private MemoryStream _ms = null;
-		private StreamWriter _sw = null;
+		private MemoryStream _ms;
+		private StreamWriter _sw;
 		private readonly string _logType;
 
 		public DateTime FirstTimestamp;
@@ -201,22 +201,18 @@ namespace ClearCanvas.ImageServer.Common
 			if (!Directory.Exists(_archiveLog.ZipDirectory))
 				Directory.CreateDirectory(_archiveLog.ZipDirectory);
 
-			using ( var zipService = Platform.GetService<IZipService>())
+            var zipService = Platform.GetService<IZipService>();
+			using (var zipServiceWriter = zipService.OpenWrite(_archiveLog.ZipFile))
 			{
-                zipService.ForceCompress = true;
-
-                if (File.Exists(_archiveLog.ZipFile))
-                    zipService.OpenRead(_archiveLog.ZipFile);
-                else
-			        zipService.OpenWrite(_archiveLog.ZipFile);
+                zipServiceWriter.ForceCompress = true;
 
                 var comment = 
 					String.Format("Log of {0} from {1} to {2}", _logType, _archiveLog.FirstTimestamp.ToString("yyyy-MM-dd HH:mm:ss.fff"),
 					              _archiveLog.LastTimestamp.ToString("yyyy-MM-dd HH:mm:ss.fff"));
 
-                zipService.AddFileStream(_archiveLog.LogFileName, _archiveLog.Stream, comment);
+                zipServiceWriter.AddFileStream(_archiveLog.LogFileName, _archiveLog.Stream, comment);
 			    
-                zipService.Save();
+                zipServiceWriter.Save();
 			}
 
 			_archiveLog.Dispose();

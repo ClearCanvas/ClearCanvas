@@ -149,7 +149,7 @@ namespace ClearCanvas.ImageViewer
                     throw new StudyLoaderNotFoundException(e);
 			    }
 
-                var args = new StudyLoaderArgs(StudyInstanceUid, Server, _args != null ? _args.StudyLoaderCheckOptions : StudyLoaderCheckOptions.Default);
+                var args = new StudyLoaderArgs(StudyInstanceUid, Server, _args != null ? _args.StudyLoaderOptions : StudyLoaderOptions.Default);
 				int total;
 				var sops = new List<Sop>();
 				

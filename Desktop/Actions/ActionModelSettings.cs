@@ -50,7 +50,8 @@ namespace ClearCanvas.Desktop.Actions
 
 		private ActionModelSettings()
 		{
-			ApplicationSettingsRegistry.Instance.RegisterInstance(this);
+		    //TODO (Phoenix5): #10730 - remove this when it's fixed.
+            //ApplicationSettingsRegistry.Instance.RegisterInstance(this);
 		}
 
 		#region Public Methods
@@ -228,11 +229,29 @@ namespace ClearCanvas.Desktop.Actions
 			_actionModelXmlDoc.Save(writer);
 		}
 
-		#endregion
+        //TODO (Phoenix5): #10730 - remove this when it's fixed.
+        #region WebStation Settings Hack
+        [ThreadStatic]
+	    private static ActionModelSettings _webDefault;
 
-		#region Overrides
+	    public static ActionModelSettings DefaultInstance
+	    {
+	        get
+	        {
+                if (Application.GuiToolkitID == GuiToolkitID.Web)
+                    return _webDefault ?? (_webDefault = new ActionModelSettings());
 
-		protected override void OnPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+	            return Default;
+	        }
+        }
+
+        #endregion
+
+        #endregion
+
+        #region Overrides
+
+        protected override void OnPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
 		{
 			// in the event settings are re-loaded, need to clear the cached document
 			if (e.PropertyName == "ActionModelsXml")

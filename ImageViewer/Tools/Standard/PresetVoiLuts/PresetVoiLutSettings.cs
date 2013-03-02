@@ -43,9 +43,26 @@ namespace ClearCanvas.ImageViewer.Tools.Standard.PresetVoiLuts
 		private PresetVoiLutSettings()
 		{
 			_xkeysConverter = TypeDescriptor.GetConverter(typeof(XKeys));
-            // TODO (Phoenix5): Hack for RSNA that must be removed.
+            //TODO (Phoenix5): #10730 - remove this when it's fixed.
             //ApplicationSettingsRegistry.Instance.RegisterInstance(this);
         }
+
+        //TODO (Phoenix5): #10730 - remove this when it's fixed.
+        #region WebStation Settings Hack
+        [ThreadStatic]
+        private static PresetVoiLutSettings _webDefault;
+
+        public static PresetVoiLutSettings DefaultInstance
+        {
+            get
+            {
+                if (Application.GuiToolkitID == GuiToolkitID.Web)
+                    return _webDefault ?? (_webDefault = new PresetVoiLutSettings());
+
+                return Default;
+            }
+        }
+        #endregion
 
 		public PresetVoiLutGroupCollection GetPresetGroups()
 		{

@@ -106,7 +106,7 @@ namespace ClearCanvas.Ris.Client.Admin
         {
             foreach (PluginInfo plugin in Platform.PluginManager.Plugins)
             {
-                foreach (Type t in plugin.Assembly.GetExportedTypes())
+                foreach (Type t in plugin.Assembly.Resolve().GetExportedTypes())
                 {
                     try
                     {

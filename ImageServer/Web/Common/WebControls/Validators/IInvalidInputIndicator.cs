@@ -35,6 +35,7 @@ namespace ClearCanvas.ImageServer.Web.Common.WebControls.Validators
 
         Control TooltipLabelContainer { get; }
 
+        bool IsVisible { get; }
 
         void AttachValidator(BaseValidator validator);
 

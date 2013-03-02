@@ -30,22 +30,22 @@ namespace ClearCanvas.Common
 	/// Describes an extension.  
 	/// </summary>
 	/// <remarks>
-	/// Instances of this class are constructed by the framework when it processes
-	/// plugins looking for extensions.
+	/// Instances of this class are immutable and safe for concurrent access by multiple threads.
 	/// </remarks>
-	public class ExtensionInfo : IBrowsable
+	[Serializable]
+	public sealed class ExtensionInfo : IBrowsable
 	{
-		private readonly Type _extensionClass;
-		private readonly Type _pointExtended;
+		private readonly TypeRef _extensionClass;
+		private readonly TypeRef _pointExtended;
 		private readonly string _name;
 		private readonly string _description;
 		private readonly bool _enabled;
 		private readonly string _featureToken;
 
-		public ExtensionInfo(Type extensionClass, Type pointExtended, string name, string description, bool enabled)
+		public ExtensionInfo(TypeRef extensionClass, TypeRef pointExtended, string name, string description, bool enabled)
 			: this(extensionClass, pointExtended, name, description, enabled, null) {}
 
-		public ExtensionInfo(Type extensionClass, Type pointExtended, string name, string description, bool enabled, string featureToken)
+		public ExtensionInfo(TypeRef extensionClass, TypeRef pointExtended, string name, string description, bool enabled, string featureToken)
 		{
 			_extensionClass = extensionClass;
 			_pointExtended = pointExtended;
@@ -58,7 +58,7 @@ namespace ClearCanvas.Common
 		/// <summary>
 		/// Gets the type that implements the extension.
 		/// </summary>
-		public Type ExtensionClass
+		public TypeRef ExtensionClass
 		{
 			get { return _extensionClass; }
 		}
@@ -66,7 +66,7 @@ namespace ClearCanvas.Common
 		/// <summary>
 		/// Gets the extension point type which this extension extends.
 		/// </summary>
-		public Type PointExtended
+		public TypeRef PointExtended
 		{
 			get { return _pointExtended; }
 		}

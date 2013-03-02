@@ -154,12 +154,12 @@ namespace ClearCanvas.ImageViewer.Tools.Synchronization
 		{
 			get
 			{
-				return SynchronizationToolSettings.Default.ShowFirstAndLastReferenceLines;
+                return SynchronizationToolSettings.DefaultInstance.ShowFirstAndLastReferenceLines;
 			}
 			set
 			{
-				SynchronizationToolSettings.Default.ShowFirstAndLastReferenceLines = value;
-				SynchronizationToolSettings.Default.Save();
+                SynchronizationToolSettings.DefaultInstance.ShowFirstAndLastReferenceLines = value;
+                SynchronizationToolSettings.DefaultInstance.Save();
 
 				ClickAction showFirstAndLastAction = (ClickAction)((ActionNode)(ReferenceLineDropDownMenuModel.ChildNodes[0])).Action;
 				showFirstAndLastAction.Checked = ShowFirstAndLastReferenceLines;

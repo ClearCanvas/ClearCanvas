@@ -126,7 +126,12 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		/// </summary>
 		public bool LoadPriors { get; set; }
 
-		/// <summary>
+        /// <summary>
+        /// Options for the study loader.
+        /// </summary>
+        public StudyLoaderOptions StudyLoaderOptions { get; set; }
+		
+        /// <summary>
 		/// Gets or sets whether or not to allow an empty viewer to be opened (e.g. with no studies loaded).
 		/// </summary>
 		public bool AllowEmptyViewer { get; set; }
@@ -156,7 +161,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		/// </summary>
 		public void AddStudy(string studyInstanceUid, IDicomServiceNode server)
 		{
-			_studiesToOpen.Add(new LoadStudyArgs(studyInstanceUid, server));
+            _studiesToOpen.Add(new LoadStudyArgs(studyInstanceUid, server, StudyLoaderOptions));
 		}
 
 		/// <summary>
@@ -212,36 +217,6 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		#endregion
 
 		#region Static Helpers
-
-		#region Public
-
-		/// <summary>
-		/// Launches a new <see cref="ImageViewerComponent"/> with the specified local files.
-		/// </summary>
-		[Obsolete("This method may be removed in a future version.  Please use an instance of OpenFilesHelper instead.")]
-		public static IImageViewer OpenFiles(string[] localFileList, WindowBehaviour windowBehaviour)
-		{
-			return new OpenFilesHelper(localFileList) {WindowBehaviour = windowBehaviour}.OpenFiles();
-		}
-
-		/// <summary>
-		/// Launches a new <see cref="ImageViewerComponent"/> with the specified studies.
-		/// </summary>
-		/// <remarks>
-		/// <para>This method has been deprecated and will be removed in the future. Use an instance of OpenStudyHelper instead.</para>
-		/// </remarks>
-		[Obsolete("This method will be removed in a future version.  Please use an instance of OpenStudyHelper instead.")]
-		public static IImageViewer OpenStudies(OpenStudyArgs openStudyArgs)
-		{
-			OpenStudyHelper helper = new OpenStudyHelper();
-			helper.WindowBehaviour = openStudyArgs.WindowBehaviour;
-			foreach (string studyInstanceUid in openStudyArgs.StudyInstanceUids)
-				helper.AddStudy(studyInstanceUid, openStudyArgs.Server);
-
-			return helper.OpenStudies();
-		}
-
-		#endregion 
 
 		#region Private
 

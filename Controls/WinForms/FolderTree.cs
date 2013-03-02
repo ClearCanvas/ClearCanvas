@@ -256,7 +256,7 @@ namespace ClearCanvas.Controls.WinForms
 				}
 				catch (Exception ex)
 				{
-					throw new IOException("The specified path is inaccessible.", ex);
+					throw new PathAccessException(_shellItem.Path, ex);
 				}
 				finally
 				{

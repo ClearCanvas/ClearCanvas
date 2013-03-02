@@ -79,6 +79,12 @@
     <Compile Include="AttachDocumentComponent.cs" />
     <Compile Include="CancelOrderComponent.cs" />
     <Compile Include="IViewerIntegration.cs" />
+    <Compile Include="LoginFacilityProviderSettings.cs" />
+    <Compile Include="LoginFacilityProviderSettings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>LoginFacilityProviderSettings.settings</DependentUpon>
+    </Compile>
     <Compile Include="UnmergeOrderComponent.cs" />
     <Compile Include="DocumentViewTool.cs" />
     <Compile Include="LoginFacilityProvider.cs" />
@@ -455,6 +461,10 @@
     <None Include="HomePageSettings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>HomePageSettings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="LoginFacilityProviderSettings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>LoginFacilityProviderSettings.Designer.cs</LastGenOutput>
     </None>
     <None Include="OrderEditorComponentSettings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

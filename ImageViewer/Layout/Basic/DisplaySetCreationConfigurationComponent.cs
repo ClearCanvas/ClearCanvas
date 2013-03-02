@@ -53,12 +53,12 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
 
 		public override void Save()
 		{
-			DisplaySetCreationSettings.Default.Save(_settings);
+			DisplaySetCreationSettings.DefaultInstance.Save(_settings);
 		}
 
 		private void Initialize()
 		{
-			List<StoredDisplaySetCreationSetting> sortedSettings = DisplaySetCreationSettings.Default.GetStoredSettings();
+			List<StoredDisplaySetCreationSetting> sortedSettings = DisplaySetCreationSettings.DefaultInstance.GetStoredSettings();
 			sortedSettings = CollectionUtils.Sort(sortedSettings,
 			                                      (setting1, setting2) => setting1.Modality.CompareTo(setting2.Modality));
 

@@ -53,7 +53,7 @@ namespace ClearCanvas.Desktop.Actions
 						using (XmlTextWriter writer = new XmlTextWriter(sw))
 						{
 							writer.Formatting = Formatting.Indented;
-							ActionModelSettings.Default.Export(writer);
+                            ActionModelSettings.DefaultInstance.Export(writer);
 						}
 					}
 				}

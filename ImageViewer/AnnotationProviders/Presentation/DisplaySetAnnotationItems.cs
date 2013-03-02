@@ -24,7 +24,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 using ClearCanvas.ImageViewer.Annotations;
 
 namespace ClearCanvas.ImageViewer.AnnotationProviders.Presentation
@@ -60,10 +60,16 @@ namespace ClearCanvas.ImageViewer.AnnotationProviders.Presentation
 					return String.Format(SR.FormatDisplaySetNumberAndCount, presentationImage.ParentDisplaySet.Number,
 						presentationImage.ParentDisplaySet.ParentImageSet.DisplaySets.Count);
 				}
-				else
+				else if (presentationImage.ImageViewer != null)
 				{
-					return presentationImage.ParentDisplaySet.Number.ToString();
+					// try to find a corresponding display set in the logical workspace with a matching UID, and let display set number reflect that
+					// this happens particularly when the image is part of a generated display set derived from a display set based on stored DICOM SOP instances
+					var displaySetUid = presentationImage.ParentDisplaySet.Uid ?? string.Empty;
+					var sourceDisplaySet = presentationImage.ImageViewer.LogicalWorkspace.ImageSets.SelectMany(s => s.DisplaySets).FirstOrDefault(s => s.Uid == displaySetUid);
+					if (sourceDisplaySet != null)
+						return string.Format(SR.FormatDisplaySetNumberAndCount, sourceDisplaySet.Number, sourceDisplaySet.ParentImageSet.DisplaySets.Count);
 				}
+				return presentationImage.ParentDisplaySet.Number.ToString(System.Globalization.CultureInfo.InvariantCulture);
 			}
 			else
 			{

@@ -38,7 +38,7 @@ namespace ClearCanvas.ImageViewer.Tools.Standard.Configuration
 
 		public ToolModalityBehavior Behavior
 		{
-			get { return ToolSettings.Default.CachedToolModalityBehavior.GetEntryOrDefault(SelectedModality); }
+            get { return ToolSettings.DefaultInstance.CachedToolModalityBehavior.GetEntryOrDefault(SelectedModality); }
 		}
 
 		private string SelectedModality

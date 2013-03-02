@@ -69,7 +69,7 @@ namespace ClearCanvas.ImageViewer.Tools.Synchronization
 		{
 			base.Start();
 
-			_settings = SynchronizationToolSettings.Default;
+            _settings = SynchronizationToolSettings.DefaultInstance;
 			_parallelPlaneToleranceAngle = _settings.ParallelPlanesToleranceAngle;
 		}
 

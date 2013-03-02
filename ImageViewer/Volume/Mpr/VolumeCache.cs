@@ -36,19 +36,56 @@ using ClearCanvas.ImageViewer.StudyManagement;
 namespace ClearCanvas.ImageViewer.Volume.Mpr
 {
 	/// <summary>
+	/// Represents a cached MPR volume.
+	/// </summary>
+	public interface ICachedVolume
+	{
+		/// <summary>
+		/// Gets a GUID uniquely identifying the cached MPR volume.
+		/// </summary>
+		/// <remarks>
+		/// This identifier GUID will remain consistent for the same set of source frames, even if the volume is unloaded and reloaded by the <see cref="MemoryManager"/>.
+		/// </remarks>
+		Guid Identifier { get; }
+
+		/// <summary>
+		/// Gets the MPR volume, synchronously loading the volume if necessary.
+		/// </summary>
+		/// <remarks>
+		/// Client code should not hold on to the <see cref="Mpr.Volume"/> instance returned by this property.
+		/// If a long-term reference is desired, call and store the result from <see cref="CreateReference"/>,
+		/// accessing the <see cref="ICachedVolumeReference.Volume"/> property as necessary.
+		/// This is important, because the <see cref="MemoryManager"/> may decide to unload the actual volume at any time,
+		/// and a direct reference to a specific <see cref="Mpr.Volume"/> can point to a disposed object if held on to
+		/// for any significant period of time.
+		/// </remarks>
+		Volume Volume { get; }
+
+		/// <summary>
+		/// Creates a long-term reference to the cached MPR volume.
+		/// </summary>
+		/// <remarks>
+		/// Calling code should ensure that the <see cref="ICachedVolumeReference"/> instance returned by this method is properly disposed.
+		/// This will ensure that all resources held by the cache object, including the volume itself as well as the references to the source frames,
+		/// can be properly released when no other cache references exist.
+		/// </remarks>
+		ICachedVolumeReference CreateReference();
+	}
+
+	/// <summary>
 	/// Represents a reference to a cached MPR volume.
 	/// </summary>
-	public interface ICachedVolumeReference : IVolumeReference
+	public interface ICachedVolumeReference : ICachedVolume, IVolumeReference
 	{
 		/// <summary>
 		/// Gets the MPR volume, synchronously loading the volume if necessary.
 		/// </summary>
 		/// <remarks>
-		/// Client code should not hold on to the <see cref="Mpr.Volume"/> reference returned by this property.
+		/// Client code should not hold on to the <see cref="Mpr.Volume"/> instance returned by this property.
 		/// If a long-term reference is desired, call and store the result from <see cref="CreateReference"/>,
 		/// accessing the <see cref="ICachedVolumeReference.Volume"/> property as necessary.
 		/// This is important, because the <see cref="MemoryManager"/> may decide to unload the actual volume at any time,
-		/// and a direct reference to the <see cref="Mpr.Volume"/> can point to a disposed object if held on to
+		/// and a direct reference to a specific <see cref="Mpr.Volume"/> can point to a disposed object if held on to
 		/// for any significant period of time.
 		/// </remarks>
 		new Volume Volume { get; }
@@ -61,8 +98,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 		/// This will ensure that all resources held by the cache object, including the volume itself as well as the references to the source frames,
 		/// can be properly released when no other cache references exist.
 		/// </remarks>
-		/// <param name="lockVolume">Specifies whether or not to lock the volume from being memory managed with this reference.</param>
-		ICachedVolumeReference CreateReference(bool lockVolume = false);
+		new ICachedVolumeReference CreateReference();
 
 		/// <summary>
 		/// Gets a value indicating whether or not the MPR volume is loaded.
@@ -82,15 +118,52 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 		/// <summary>
 		/// Starts loading the MPR volume asynchronously.
 		/// </summary>
+		/// <param name="onProgress">Optionally specifies a callback method to be called periodically while the loading the volume.</param>
+		/// <param name="onComplete">Optionally specifies a callback method to be called when the volume has been successfully loaded.</param>
+		/// <param name="onError">Optionally specifies a callback method to be called if an exception was thrown while loading the volume.</param>
 		/// <returns>Returns an <see cref="IAsyncResult"/> which can be used to wait for the MPR volume to finish loading.</returns>
-		IAsyncResult LoadAsync();
+		IAsyncResult LoadAsync(VolumeLoadProgressCallback onProgress = null, VolumeLoadCompletionCallback onComplete = null, VolumeLoadErrorCallback onError = null);
 
 		/// <summary>
 		/// Loads the MPR volume synchronously.
 		/// </summary>
-		/// <param name="callback"></param>
-		void Load(CreateVolumeProgressCallback callback = null);
+		/// <param name="onProgress">Optionally specifies a callback method to be called periodically while the loading the volume.</param>
+		void Load(VolumeLoadProgressCallback onProgress = null);
+
+		/// <summary>
+		/// Locks the MPR volume, preventing it from being unloaded by memory management.
+		/// </summary>
+		/// <remarks>
+		/// The lock will be automatically released if the reference is disposed.
+		/// </remarks>
+		void Lock();
+
+		/// <summary>
+		/// Unlocks the MPR volume, allowing memory management to unload it as necessary.
+		/// </summary>
+		void Unlock();
 	}
+
+	/// <summary>
+	/// Represents the callback method to be called periodically while the loading the volume.
+	/// </summary>
+	/// <param name="volume">A reference to the volume being loaded.</param>
+	/// <param name="completedOperations">The number of suboperations completed.</param>
+	/// <param name="totalOperations">The total number of suboperations.</param>
+	public delegate void VolumeLoadProgressCallback(ICachedVolume volume, int completedOperations, int totalOperations);
+
+	/// <summary>
+	/// Represents the callback method to be called when the volume has been successfully loaded.
+	/// </summary>
+	/// <param name="volume">A reference to the loaded volume.</param>
+	public delegate void VolumeLoadCompletionCallback(ICachedVolume volume);
+
+	/// <summary>
+	/// Represents the callback method to be called if an exception was thrown while loading the volume.
+	/// </summary>
+	/// <param name="volume">A reference to the failed volume.</param>
+	/// <param name="ex">The exception that was thrown.</param>
+	public delegate void VolumeLoadErrorCallback(ICachedVolume volume, Exception ex);
 
 	/// <summary>
 	/// Implementation of a memory-managed MPR volume cache.
@@ -110,13 +183,9 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 		/// <summary>
 		/// Gets an instance of a <see cref="VolumeCache"/> whose lifetime is tied to a specific <see cref="IImageViewer"/> instance.
 		/// </summary>
-		public static VolumeCache GetInstance(IImageViewer viewer)
+		public static VolumeCache GetInstance(IImageViewer imageViewer)
 		{
-			Platform.CheckForNullReference(viewer, "viewer");
-			var instance = viewer.ExtensionData[typeof (VolumeCache)] as VolumeCache;
-			if (instance == null)
-				viewer.ExtensionData[typeof (VolumeCache)] = instance = new VolumeCache();
-			return instance;
+			return imageViewer.GetVolumeCache();
 		}
 
 		private readonly object _syncRoot = new object();
@@ -213,7 +282,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 		/// <summary>
 		/// Cache item acting as a container for the volume and source frames.
 		/// </summary>
-		private class CachedVolume : ILargeObjectContainer
+		private class CachedVolume : ICachedVolume, ILargeObjectContainer
 		{
 			private readonly object _syncRoot = new object();
 			private readonly CacheKey _cacheKey;
@@ -225,7 +294,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 			private event EventHandler _progressChanged;
 			private volatile float _progress = 0;
 
-			public CachedVolume(VolumeCache cacheOwner, CacheKey cacheKey, IList<Frame> frames)
+			public CachedVolume(VolumeCache cacheOwner, CacheKey cacheKey, IEnumerable<Frame> frames)
 			{
 				_cacheOwner = cacheOwner;
 				_cacheKey = cacheKey;
@@ -256,6 +325,11 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 				}
 			}
 
+			public Guid Identifier
+			{
+				get { return _cacheKey.Guid; }
+			}
+
 			public Volume Volume
 			{
 				get
@@ -266,7 +340,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 				}
 			}
 
-			public bool IsLoaded
+			private bool IsLoaded
 			{
 				get
 				{
@@ -275,7 +349,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 				}
 			}
 
-			public void Load(CreateVolumeProgressCallback callback = null)
+			private void Load(VolumeLoadProgressCallback callback = null)
 			{
 				AssertNotDisposed();
 				LoadCore(callback);
@@ -291,7 +365,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 				}
 			}
 
-			private Volume LoadCore(CreateVolumeProgressCallback callback)
+			private Volume LoadCore(VolumeLoadProgressCallback callback)
 			{
 				if (_volumeReference != null) return _volumeReference.Volume;
 
@@ -304,7 +378,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 					using (var volume = Volume.Create(_frames, (n, total) =>
 					                                           	{
 					                                           		Progress = Math.Min(100f, 100f*n/total);
-					                                           		if (callback != null) callback.Invoke(n, total);
+					                                           		if (callback != null) callback.Invoke(this, n, total);
 					                                           	}))
 					{
 						_volumeReference = volume.CreateTransientReference();
@@ -354,10 +428,10 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 			#region Asynchronous Loader
 
 			private readonly object _backgroundLoadSyncRoot = new object();
-			private Func<CreateVolumeProgressCallback, Volume> _backgroundLoadMethod;
+			private Action _backgroundLoadMethod;
 			private IAsyncResult _backgroundLoadMethodAsyncResult;
 
-			public IAsyncResult LoadAsync()
+			private IAsyncResult LoadAsync(VolumeLoadProgressCallback onProgress = null, VolumeLoadCompletionCallback onComplete = null, VolumeLoadErrorCallback onError = null)
 			{
 				AssertNotDisposed();
 
@@ -369,13 +443,29 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 					if (_volumeReference != null) return null;
 					if (_backgroundLoadMethod != null) return _backgroundLoadMethodAsyncResult;
 
-					_backgroundLoadMethod = LoadCore;
-					return _backgroundLoadMethodAsyncResult = _backgroundLoadMethod.BeginInvoke(null, ar =>
-					                                                                                  	{
-					                                                                                  		_backgroundLoadMethod.EndInvoke(ar);
-					                                                                                  		_backgroundLoadMethod = null;
-					                                                                                  		_backgroundLoadMethodAsyncResult = null;
-					                                                                                  	}, null);
+					_backgroundLoadMethod = () =>
+					                        	{
+					                        		try
+					                        		{
+					                        			LoadCore(onProgress);
+
+					                        			if (onComplete != null)
+					                        				onComplete.Invoke(this);
+					                        		}
+					                        		catch (Exception ex)
+					                        		{
+					                        			if (onError != null)
+					                        				onError.Invoke(this, ex);
+					                        			else
+					                        				Platform.Log(LogLevel.Debug, ex, "Unhandled exception thrown in asynchronous volume loader");
+					                        		}
+					                        	};
+					return _backgroundLoadMethodAsyncResult = _backgroundLoadMethod.BeginInvoke(ar =>
+					                                                                            	{
+					                                                                            		_backgroundLoadMethod.EndInvoke(ar);
+					                                                                            		_backgroundLoadMethod = null;
+					                                                                            		_backgroundLoadMethodAsyncResult = null;
+					                                                                            	}, null);
 				}
 			}
 
@@ -435,6 +525,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 			private class CachedVolumeReference : ICachedVolumeReference
 			{
 				private CachedVolume _cachedVolume;
+				private bool _locked;
 
 				public CachedVolumeReference(CachedVolume cachedVolume)
 				{
@@ -443,24 +534,25 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 					_cachedVolume._progressChanged += CachedVolumeOnProgressChanged;
 				}
 
-				public virtual void Dispose()
+				public void Dispose()
 				{
 					if (_cachedVolume != null)
 					{
+						if (_locked) _cachedVolume.Unlock();
 						_cachedVolume._progressChanged -= CachedVolumeOnProgressChanged;
 						_cachedVolume.DecrementReferenceCount();
 						_cachedVolume = null;
 					}
 				}
 
-				protected CachedVolume CachedVolume
-				{
-					get { return _cachedVolume; }
-				}
-
 				private void CachedVolumeOnProgressChanged(object sender, EventArgs eventArgs)
 				{
 					EventsHelper.Fire(ProgressChanged, this, eventArgs);
+				}
+
+				public Guid Identifier
+				{
+					get { return _cachedVolume.Identifier; }
 				}
 
 				public Volume Volume
@@ -480,19 +572,31 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 					get { return _cachedVolume.IsLoaded; }
 				}
 
-				public IAsyncResult LoadAsync()
+				public IAsyncResult LoadAsync(VolumeLoadProgressCallback onProgress = null, VolumeLoadCompletionCallback onComplete = null, VolumeLoadErrorCallback onError = null)
 				{
-					return _cachedVolume.LoadAsync();
+					return _cachedVolume.LoadAsync(onProgress, onComplete, onError);
 				}
 
-				public void Load(CreateVolumeProgressCallback callback = null)
+				public void Load(VolumeLoadProgressCallback callback = null)
 				{
 					_cachedVolume.Load(callback);
 				}
 
-				public ICachedVolumeReference CreateReference(bool lockVolume = false)
+				public void Lock()
 				{
-					return lockVolume ? new LockingCachedVolumeReference(_cachedVolume) : new CachedVolumeReference(_cachedVolume);
+					if (!_locked) _cachedVolume.Lock();
+					_locked = true;
+				}
+
+				public void Unlock()
+				{
+					if (_locked) _cachedVolume.Unlock();
+					_locked = false;
+				}
+
+				public ICachedVolumeReference CreateReference()
+				{
+					return new CachedVolumeReference(_cachedVolume);
 				}
 
 				IVolumeReference IVolumeReference.Clone()
@@ -516,28 +620,13 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 				}
 			}
 
-			private class LockingCachedVolumeReference : CachedVolumeReference
-			{
-				public LockingCachedVolumeReference(CachedVolume cachedVolume)
-					: base(cachedVolume)
-				{
-					cachedVolume.Lock();
-				}
-
-				public override void Dispose()
-				{
-					CachedVolume.Unlock();
-					base.Dispose();
-				}
-			}
-
 			#endregion
 
 			#region Implementation of ILargeObjectContainer
 
 			private readonly LargeObjectContainerData _largeObjectContainerData = new LargeObjectContainerData(Guid.NewGuid()) {RegenerationCost = RegenerationCost.Medium};
 
-			public Guid Identifier
+			Guid ILargeObjectContainer.Identifier
 			{
 				get { return _largeObjectContainerData.Identifier; }
 			}
@@ -607,6 +696,11 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 				}
 			}
 
+			public Guid Guid
+			{
+				get { return _hash; }
+			}
+
 			public override int GetHashCode()
 			{
 				return 0x3351E935 ^ _hash.GetHashCode();
@@ -620,6 +714,11 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 			public override bool Equals(object obj)
 			{
 				return obj is CacheKey && Equals((CacheKey) obj);
+			}
+
+			public override string ToString()
+			{
+				return _hash.ToString();
 			}
 		}
 	}

@@ -52,13 +52,12 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.DeleteStudy.Extensions
 			{
 				Backup();
 			}
-
-		    using (var zipService = Platform.GetService<IZipService>())
+		    var zipService = Platform.GetService<IZipService>();
+		    using (var zipWriter = zipService.OpenWrite(_dest))
 		    {
-		        zipService.OpenWrite(_dest);
-                zipService.Comment =  String.Format("Archive for deleted study from path {0}", _source);
-		        zipService.AddDirectory(_source);
-                zipService.Save();
+                zipWriter.Comment = String.Format("Archive for deleted study from path {0}", _source);
+                zipWriter.AddDirectory(_source);
+                zipWriter.Save();
 			}
 		}
 

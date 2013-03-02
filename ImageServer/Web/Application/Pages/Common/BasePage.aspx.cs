@@ -26,6 +26,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Web.UI.HtmlControls;
 using ClearCanvas.Common;
 using ClearCanvas.ImageServer.Common;
 using ClearCanvas.ImageServer.Web.Common;
@@ -70,12 +71,14 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Common
                     {
                         Extensions.Clear();
 
-                        var attrs = ClearCanvas.Common.Utilities.AttributeUtils.GetAttributes<ExtensibleAttribute>(this.GetType(), true);
+                        var attrs = AttributeUtils.GetAttributes<ExtensibleAttribute>(this.GetType(), true);
                         foreach (var attr in attrs)
                         {
                             var xp = Activator.CreateInstance(attr.ExtensionPoint);
                             Extensions.AddRange((xp as ExtensionPoint).CreateExtensions());
                         }
+
+                        _extensionLoaded = true;
                     }
                     catch (Exception ex)
                     {
@@ -125,7 +128,26 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Common
 
         protected void ForeachExtension<T>(Action<T> action)
         {
-            CollectionUtils.ForEach<T>(Extensions.OfType<T>(), action);
+            if (Extensions!=null)
+            {
+                foreach(var ex in Extensions)
+                {
+                    if (ex is T)
+                    {
+                        action((T) ex);
+                    }
+                }
+            }
+        }
+
+        protected void ForceDocumentMode(string docMode)
+        {
+            if (base.Master == null)
+                return;
+
+            var meta = base.Master.Page.Header.Controls.OfType<HtmlMeta>().First();
+            if (meta != null)
+                meta.Content = docMode;
         }
     }
 }

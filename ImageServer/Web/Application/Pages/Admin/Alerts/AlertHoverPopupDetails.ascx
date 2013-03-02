@@ -21,7 +21,6 @@
 // <http://www.gnu.org/licenses/>.
 
 --%>
-
 <%@ Import Namespace="Resources" %>
 
 <%@ Import namespace="ClearCanvas.ImageServer.Core.Validation"%>

@@ -39,7 +39,7 @@ namespace ClearCanvas.ImageServer.Web.Common.Modules
 
         public void Init(HttpApplication context)
         {
-            Platform.PluginManager.PluginLoaded += new EventHandler<PluginLoadedEventArgs>(PluginManager_PluginLoaded);
+			Platform.PluginManager.PluginLoaded += PluginManager_PluginLoaded;
         }
 
         #endregion

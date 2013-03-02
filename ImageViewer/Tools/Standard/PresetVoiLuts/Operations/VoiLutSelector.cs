@@ -211,7 +211,7 @@ namespace ClearCanvas.ImageViewer.Tools.Standard.PresetVoiLuts.Operations
         public static List<LinearPresetVoiLutSelector> GetAllSelectors()
         {
             var selectors = new List<LinearPresetVoiLutSelector>();
-            var groups = PresetVoiLutSettings.Default.GetPresetGroups();
+            var groups = PresetVoiLutSettings.DefaultInstance.GetPresetGroups();
             foreach (var @group in groups)
             {
                 foreach (var preset in @group.Presets)
@@ -236,7 +236,7 @@ namespace ClearCanvas.ImageViewer.Tools.Standard.PresetVoiLuts.Operations
                 return null;
 
             var imageSop = sopProvider.ImageSop;
-            var groups = PresetVoiLutSettings.Default.GetPresetGroups();
+            var groups = PresetVoiLutSettings.DefaultInstance.GetPresetGroups();
             foreach (var @group in groups)
             {
                 if (!AlwaysApply && !group.AppliesTo(imageSop))
@@ -276,7 +276,7 @@ namespace ClearCanvas.ImageViewer.Tools.Standard.PresetVoiLuts.Operations
             var imageSop = sopProvider.ImageSop;
             modality = imageSop.Modality;
 
-            var groups = PresetVoiLutSettings.Default.GetPresetGroups();
+            var groups = PresetVoiLutSettings.DefaultInstance.GetPresetGroups();
             foreach (var @group in groups)
             {
                 if (!group.AppliesTo(imageSop))

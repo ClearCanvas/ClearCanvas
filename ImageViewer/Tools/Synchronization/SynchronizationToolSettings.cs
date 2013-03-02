@@ -22,7 +22,9 @@
 
 #endregion
 
+using System;
 using System.Configuration;
+using ClearCanvas.Common;
 using ClearCanvas.Common.Configuration;
 using ClearCanvas.Desktop;
 
@@ -32,9 +34,27 @@ namespace ClearCanvas.ImageViewer.Tools.Synchronization
 	[SettingsProvider(typeof (StandardSettingsProvider))]
 	internal sealed partial class SynchronizationToolSettings
 	{
-		public SynchronizationToolSettings()
+        public SynchronizationToolSettings()
 		{
-			ApplicationSettingsRegistry.Instance.RegisterInstance(this);
+            //TODO (Phoenix5): #10730 - remove this when it's fixed.
+			//ApplicationSettingsRegistry.Instance.RegisterInstance(this);
 		}
+
+        //TODO (Phoenix5): #10730 - remove this when it's fixed.
+        #region WebStation Settings Hack
+        [ThreadStatic]
+        private static SynchronizationToolSettings _webDefault;
+
+        public static SynchronizationToolSettings DefaultInstance
+        {
+            get
+            {
+                if (Application.GuiToolkitID == GuiToolkitID.Web)
+                    return _webDefault ?? (_webDefault = new SynchronizationToolSettings());
+
+                return Default;
+            }
+        }
+        #endregion
 	}
 }

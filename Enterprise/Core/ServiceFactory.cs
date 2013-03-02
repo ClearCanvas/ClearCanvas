@@ -94,7 +94,7 @@ namespace ClearCanvas.Enterprise.Core
 		public ICollection<Type> ListServiceClasses()
 		{
 			return CollectionUtils.Map<ExtensionInfo, Type>(_serviceExtensionPoint.ListExtensions(),
-				delegate(ExtensionInfo info) { return info.ExtensionClass; });
+				delegate(ExtensionInfo info) { return info.ExtensionClass.Resolve(); });
 		}
 
 		/// <summary>
@@ -107,7 +107,7 @@ namespace ClearCanvas.Enterprise.Core
 				delegate(ExtensionInfo info)
 				{
 					ServiceImplementsContractAttribute a = CollectionUtils.FirstElement<ServiceImplementsContractAttribute>(
-						info.ExtensionClass.GetCustomAttributes(typeof(ServiceImplementsContractAttribute), false));
+						info.ExtensionClass.Resolve().GetCustomAttributes(typeof(ServiceImplementsContractAttribute), false));
 
 					return a == null ? null : a.ServiceContract;
 				});

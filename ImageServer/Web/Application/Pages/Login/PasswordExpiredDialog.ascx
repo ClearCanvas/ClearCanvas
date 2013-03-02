@@ -22,6 +22,8 @@
 
 --%>
 
+
+
 <%@ Control Language="C#" AutoEventWireup="true" Codebehind="PasswordExpiredDialog.ascx.cs"
     Inherits="ClearCanvas.ImageServer.Web.Application.Pages.Login.PasswordExpiredDialog" %>
 <%@ Import Namespace="Resources"%>
@@ -35,7 +37,7 @@
         <asp:Label runat="server" ID="ErrorMessage" ></asp:Label>
     </asp:Panel>
     
-    <asp:Panel ID="Panel1" runat="server" width="100%" CssClass="DialogPanelContent">
+    <asp:Panel ID="Panel1" runat="server" CssClass="DialogPanelContent" Width="100%">
 
         <asp:Panel runat="server" CssClass="PasswordExpiredMessage">
             <asp:Label runat="server" ID="Label1">
@@ -54,7 +56,7 @@
     
         <table cellpadding="0" cellspacing="0" width="100%">
                     <tr>
-                        <td align="right">
+                        <td align="right" style="padding:10px">
                             <asp:Panel ID="Panel2" runat="server" CssClass="DefaultModalDialogButtonPanel">
                                 <ccUI:ToolbarButton ID="OKButton" runat="server" SkinID="<%$Image:OKButton%>" OnClick="ChangePassword_Click" />
                             </asp:Panel>

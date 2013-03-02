@@ -61,10 +61,6 @@ namespace ClearCanvas.ImageViewer.Tools.Standard.View.WinForms
             _startPointDesktop = Centre = Cursor.Position;
 		}
 
-		#region Unused Code
-
-		#endregion
-
 		public void UpdateMousePosition(Point positionTile)
 		{
 			Size offsetFromStartTile = new Size(positionTile.X - _startPointTile.X, positionTile.Y - _startPointTile.Y);
@@ -99,9 +95,15 @@ namespace ClearCanvas.ImageViewer.Tools.Standard.View.WinForms
             if (_surface != null)
             {
                 _surface.ContextID = e.Graphics.GetHdc();
-                var args = new DrawArgs(_surface, new WinFormsScreenProxy(Screen.FromControl(this)), DrawMode.Refresh);
-                _render(args);
-                e.Graphics.ReleaseHdc(_surface.ContextID);
+                try
+                {
+                    var args = new DrawArgs(_surface, new WinFormsScreenProxy(Screen.FromControl(this)), DrawMode.Refresh);
+                    _render(args);
+                }
+                finally
+                {
+                    e.Graphics.ReleaseHdc(_surface.ContextID);
+                }
             }
 
 		    //base.OnPaint(e);
@@ -131,11 +133,17 @@ namespace ClearCanvas.ImageViewer.Tools.Standard.View.WinForms
             using (var graphics = base.CreateGraphics())
             {
                 _surface.ContextID = graphics.GetHdc();
-                var args = new DrawArgs(_surface, new WinFormsScreenProxy(Screen.FromControl(this)), DrawMode.Render);
-                _render(args);
-                args = new DrawArgs(_surface, new WinFormsScreenProxy(Screen.FromControl(this)), DrawMode.Refresh);
-                _render(args);
-                graphics.ReleaseHdc(_surface.ContextID);
+                try
+                {
+                    var args = new DrawArgs(_surface, new WinFormsScreenProxy(Screen.FromControl(this)), DrawMode.Render);
+                    _render(args);
+                    args = new DrawArgs(_surface, new WinFormsScreenProxy(Screen.FromControl(this)), DrawMode.Refresh);
+                    _render(args);
+                }
+                finally 
+                {
+                    graphics.ReleaseHdc(_surface.ContextID);
+                }
             }
         }
         

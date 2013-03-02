@@ -74,7 +74,7 @@ namespace ClearCanvas.ImageViewer.Clipboard
 		}
 
 		public const string ClipboardToolbarDropdownSite = "clipboard-toolbar-dropdown";
-		private static IShelf _shelf;
+		[ThreadStatic]private static IShelf _shelf;
 		private ToolSet _toolSet;
 
 		/// <summary>

@@ -28,12 +28,10 @@ using System.Linq;
 using ClearCanvas.Common;
 using ClearCanvas.Desktop;
 using ClearCanvas.Dicom;
-using ClearCanvas.Dicom.Iod;
 using ClearCanvas.ImageViewer.Clipboard;
 using ClearCanvas.ImageViewer.Common.DicomServer;
 using ClearCanvas.ImageViewer.Common.ServerDirectory;
 using ClearCanvas.ImageViewer.Common.StudyManagement;
-using ClearCanvas.ImageViewer.Common.WorkItem;
 using ClearCanvas.ImageViewer.Configuration;
 using ClearCanvas.ImageViewer.KeyObjects;
 using ClearCanvas.ImageViewer.PresentationStates.Dicom;
@@ -41,6 +39,8 @@ using ClearCanvas.ImageViewer.StudyManagement;
 
 namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 {
+    // TODO (CR Jan 2013): Badly needs to be refactored.
+
 	internal class KeyImagePublisher
 	{
 		private readonly KeyImageInformation _sourceInformation;
@@ -143,14 +143,25 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
             var service = Platform.GetService<IPublishFiles>();
             while (!service.CanPublish())
             {
-                // TODO CR (Sep 12): convert this to a desktop alert
-                DialogBoxAction result = Application.ActiveDesktopWindow.ShowMessageBox(
-                    SR.MessageCannotPublishKeyImagesServersNotRunning, MessageBoxActions.OkCancel);
-
-                if (result == DialogBoxAction.Cancel)
+                // ActiveDesktopWindow may be null when the study is opened from Webstation
+                // By the time viewer closes, there is no browser window to display the error
+                if (Application.ActiveDesktopWindow == null)
+                {
+                    // Log to file only and return immediately
+                    Platform.Log(LogLevel.Error, SR.MessageKeyImagePublishingFailed);
                     return;
-            }                    
-    
+                }
+                else
+                {
+                    // TODO CR (Sep 12): convert this to a desktop alert
+                    DialogBoxAction result = Application.ActiveDesktopWindow.ShowMessageBox(
+                        SR.MessageCannotPublishKeyImagesServersNotRunning, MessageBoxActions.OkCancel);
+
+                    if (result == DialogBoxAction.Cancel)
+                        return;
+                }
+            }
+
 		    var anyFailed = false;
 		    try
 		    {
@@ -194,7 +205,14 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 
 			// TODO CR (Sep 12): convert this to a desktop alert
 			if (anyFailed)
-				Application.ActiveDesktopWindow.ShowMessageBox(SR.MessageKeyImagePublishingFailed, MessageBoxActions.Ok);
+			{
+				// ActiveDesktopWindow may be null when the study is opened from Webstation
+				// By the time viewer closes, there is no browser window to display the error, so log to file only.
+				if (Application.ActiveDesktopWindow == null)
+					Platform.Log(LogLevel.Error, SR.MessageKeyImagePublishingFailed);
+				else
+					Application.ActiveDesktopWindow.ShowMessageBox(SR.MessageKeyImagePublishingFailed, MessageBoxActions.Ok);
+			}
 		}
 
 		private static T GetValue<T>(IDictionary<string, T> dictionary, string key)

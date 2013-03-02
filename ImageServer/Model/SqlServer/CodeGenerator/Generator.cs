@@ -233,12 +233,25 @@ namespace ClearCanvas.ImageServer.Model.SqlServer.CodeGenerator
             }
             else
             {
-                writer.WriteLine("// Copyright (c) 2011, ClearCanvas Inc.");
+                writer.WriteLine("// Copyright (c) 2013, ClearCanvas Inc.");
                 writer.WriteLine("// All rights reserved.");
                 writer.WriteLine("// http://www.clearcanvas.ca");
                 writer.WriteLine("//");
-                writer.WriteLine("// This software is licensed under the Open Software License v3.0.");
-                writer.WriteLine("// For the complete license, see http://www.clearcanvas.ca/OSLv3.0//");
+                writer.WriteLine("// This file is part of the ClearCanvas RIS/PACS open source project.");
+                writer.WriteLine("//");
+                writer.WriteLine("// The ClearCanvas RIS/PACS open source project is free software: you can");
+                writer.WriteLine("// redistribute it and/or modify it under the terms of the GNU General Public");
+                writer.WriteLine("// License as published by the Free Software Foundation, either version 3 of the");
+                writer.WriteLine("// License, or (at your option) any later version.");
+                writer.WriteLine("//");
+                writer.WriteLine("// The ClearCanvas RIS/PACS open source project is distributed in the hope that it");
+                writer.WriteLine("// will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of");
+                writer.WriteLine("// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General");
+                writer.WriteLine("// Public License for more details.");
+                writer.WriteLine("//");
+                writer.WriteLine("// You should have received a copy of the GNU General Public License along with");
+                writer.WriteLine("// the ClearCanvas RIS/PACS open source project.  If not, see");
+                writer.WriteLine("// <http://www.gnu.org/licenses/>.");
             }
             writer.WriteLine("");
             writer.WriteLine("#endregion");

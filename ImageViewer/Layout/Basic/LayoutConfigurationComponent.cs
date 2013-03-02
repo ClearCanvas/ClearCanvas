@@ -91,7 +91,7 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
 			{
 				if (_layouts == null)
 				{
-					_layouts = new List<StoredLayout>(LayoutSettings.Default.Layouts);
+					_layouts = new List<StoredLayout>(LayoutSettings.DefaultInstance.Layouts);
 
 					StoredLayout defaultLayout = _layouts.Find(delegate(StoredLayout layout) { return layout.IsDefault; });
 
@@ -119,7 +119,7 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
 
 		public override void Save()
 		{
-			LayoutSettings.Default.Layouts = _layouts;
+            LayoutSettings.DefaultInstance.Layouts = _layouts;
 		}
 	}
 }

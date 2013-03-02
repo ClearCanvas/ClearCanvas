@@ -53,7 +53,8 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Queues.StudyIntegrityQue
         // list of studies to display
         private StudyIntegrityQueueDataSource _dataSource;
         private Unit _height;
-
+        private IList<StudyIntegrityQueueSummary> _integrityQueueItems; 
+        private Dictionary<string,StudyIntegrityQueueSummary> _integrityQueueDictionary = new Dictionary<string, StudyIntegrityQueueSummary>(); 
         #endregion Private members
 
         #region Public properties
@@ -103,18 +104,18 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Queues.StudyIntegrityQue
                 if (Items == null || Items.Count == 0)
                     return null;
 
-                int[] rows = StudyIntegrityQueueGridView.SelectedIndices;
+                string[] rows = StudyIntegrityQueueGridView.SelectedDataKeys;
                 if (rows == null || rows.Length == 0)
                     return null;
 
                 IList<StudyIntegrityQueueSummary> queueItems = new List<StudyIntegrityQueueSummary>();
-                for (int i = 0; i < rows.Length; i++)
+                foreach (string t in rows)
                 {
-                    if (rows[i] < Items.Count)
-                    {
-                        queueItems.Add(Items[rows[i]]);
-                    }
+                    if (_integrityQueueDictionary.ContainsKey(t))
+                        queueItems.Add(_integrityQueueDictionary[t]);
                 }
+                if (queueItems.Count == 0)
+                    return null;
 
                 return queueItems;
             }
@@ -123,7 +124,22 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Queues.StudyIntegrityQue
         /// <summary>
         /// Gets/Sets the list of devices rendered on the screen.
         /// </summary>
-        public IList<StudyIntegrityQueueSummary> Items { get; set; }
+        public IList<StudyIntegrityQueueSummary> Items
+        {
+            get
+            {
+                return _integrityQueueItems;
+            }
+            set
+            {
+                _integrityQueueItems = value;
+                _integrityQueueDictionary.Clear();
+                foreach (StudyIntegrityQueueSummary study in _integrityQueueItems)
+                {
+                    _integrityQueueDictionary.Add(study.TheStudyIntegrityQueueItem.Key.ToString(), study);
+                }
+            }
+        }
 
         /// <summary>
         /// Gets/Sets the height of the study list panel

@@ -49,7 +49,6 @@ namespace ClearCanvas.ImageServer.Web.Common.Data
             Name = detail.Name;
             Description = detail.Description;
             AuthorityGroupRef = detail.AuthorityGroupRef.ToString(false, false);
-            
         }
     }
 

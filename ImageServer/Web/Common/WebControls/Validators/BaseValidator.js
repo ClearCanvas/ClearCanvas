@@ -124,8 +124,9 @@ BaseClientValidator.prototype.ShouldSkip = function() {
 
     var val = this.input.value;
 
-    if (val == null || val == '')
+    if (val == null || val == '') {
         return this.ignoreEmptyValue;
+    }        
 
     return false;
 }
@@ -140,13 +141,6 @@ BaseClientValidator.prototype.OnEvaluate = function() {
         return result;
     }
 
-    if (this.input.value == null || this.input.value == '') {
-        if (!this.ignoreEmptyValue) {
-            result.OK = false;
-            result.Message = ValidationErrors.ThisFieldIsRequired;
-        }
-
-    }
 
     return result;
 };

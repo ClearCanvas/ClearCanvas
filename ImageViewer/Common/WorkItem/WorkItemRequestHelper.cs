@@ -61,7 +61,7 @@ namespace ClearCanvas.ImageViewer.Common.WorkItem
         private static Type[] InternalGetRequestRuntimeTypes()
         {
             var types = (from p in Platform.PluginManager.Plugins
-                         from t in p.Assembly.GetTypes()
+                         from t in p.Assembly.Resolve().GetTypes()
                          let a = AttributeUtils.GetAttribute<WorkItemRequestAttribute>(t)
                          where (a != null)
                          select t);

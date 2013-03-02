@@ -445,6 +445,7 @@ namespace ClearCanvas.ImageServer.Model
         /// </summary>
         public bool CanBeUsedForDiagnostics()
         {
+            // TODO (CR Phoenix5 - Med): What if it has a failed entry? Will it be unusable until the work item is removed?
             var allowed = this.QueueStudyStateEnum == QueueStudyStateEnum.Idle;
             if (!allowed)
                 Platform.Log(LogLevel.Error, "Study cannot be used for diagnostic purposes at this time because its state is ", QueueStudyStateEnum);

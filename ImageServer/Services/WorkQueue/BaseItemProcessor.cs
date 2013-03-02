@@ -29,6 +29,7 @@ using System.Threading;
 using System.IO;
 using System.Xml;
 using ClearCanvas.Common;
+using ClearCanvas.Common.Serialization;
 using ClearCanvas.Common.Statistics;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Dicom;
@@ -37,9 +38,7 @@ using ClearCanvas.Enterprise.Core;
 using ClearCanvas.ImageServer.Common;
 using ClearCanvas.ImageServer.Common.Command;
 using ClearCanvas.ImageServer.Common.Exceptions;
-using ClearCanvas.ImageServer.Common.Utilities;
 using ClearCanvas.ImageServer.Core;
-using ClearCanvas.ImageServer.Core.Command;
 using ClearCanvas.ImageServer.Core.Process;
 using ClearCanvas.ImageServer.Core.Validation;
 using ClearCanvas.ImageServer.Model;
@@ -51,7 +50,7 @@ using ClearCanvas.ImageServer.Core.ModelExtensions;
 
 namespace ClearCanvas.ImageServer.Services.WorkQueue
 {
-    public class WorkQueueAlertContextData
+    public class WorkQueueAlertContextData : DataContractBase
     {
         #region Private Members
 
@@ -1298,7 +1297,7 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue
         {
             Platform.CheckForNullReference(item, "item");
 
-            WorkQueueAlertContextData contextData = new WorkQueueAlertContextData
+            var contextData = new WorkQueueAlertContextData
                                                         {
                                                             WorkQueueItemKey = item.Key.ToString()
                                                         };
