@@ -25,6 +25,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using ClearCanvas.Dicom.Iod;
 using ClearCanvas.ImageViewer;
 using ClearCanvas.ImageViewer.Graphics;
@@ -343,24 +344,26 @@ namespace ClearCanvas.ImageViewer.RoiGraphics
 		}
 
 		/// <summary>
+		/// Gets an enumeration of the modality LUT transformed pixel values contained within the region of interest rounded to the nearest integer.
+		/// </summary>
+		/// <remarks>
+		/// If the <see cref="ModalityLut"/> is null, then this method enumerates the same values as <see cref="GetRawPixelValues"/>.
+		/// </remarks>
+		/// <returns>An enumeration of modality LUT transformed pixel values, rounded to the nearest integer.</returns>
+		public IEnumerable<int> GetIntPixelValues()
+		{
+			return GetPixelValues().Select(pixelValue => (int) Math.Round(pixelValue));
+		}
+
+		/// <summary>
 		/// Gets an enumeration of the modality LUT transformed pixel values contained within the region of interest.
 		/// </summary>
 		/// <remarks>
 		/// If the <see cref="ModalityLut"/> is null, then this method enumerates the same values as <see cref="GetRawPixelValues"/>.
 		/// </remarks>
 		/// <returns>An enumeration of modality LUT transformed pixel values.</returns>
-		[Obsolete]
-		// TODO CR (Oct 11): replace entirely with one that returns doubles but without the real world units - breaking existing code is the least of our worries since anyone using this old version might get wrong values
-		public IEnumerable<int> GetPixelValues()
+		public IEnumerable<double> GetPixelValues()
 		{
-			int dummy;
-			foreach (var pixelValue in GetPixelValues(out dummy))
-				yield return (int) Math.Round(pixelValue);
-		}
-
-		public IEnumerable<double> GetPixelValues(out int realWorldUnits)
-		{
-			realWorldUnits = 0;
 			if (this.PixelData == null)
 				return new double[0];
 

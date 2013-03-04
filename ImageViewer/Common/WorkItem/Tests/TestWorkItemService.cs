@@ -121,7 +121,11 @@ namespace ClearCanvas.ImageViewer.Common.WorkItem.Tests
 
         public event EventHandler Closed;
 
-        public event EventHandler Closing;
+        public event EventHandler Closing
+        {
+            add { }
+            remove { }
+        }
 
         public void EndClose(IAsyncResult result)
         {
@@ -148,7 +152,11 @@ namespace ClearCanvas.ImageViewer.Common.WorkItem.Tests
 
         public event EventHandler Opened;
 
-        public event EventHandler Opening;
+        public event EventHandler Opening
+        {
+            add { }
+            remove { }
+        }
 
         public CommunicationState State
         {

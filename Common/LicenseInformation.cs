@@ -40,7 +40,6 @@ namespace ClearCanvas.Common
 
 		private static string _licenseKey;
 		private static string _machineIdentifier;
-		private static int _sessionCount;
 
 		private static void CheckLicenseProvider()
 		{

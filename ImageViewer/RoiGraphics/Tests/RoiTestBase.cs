@@ -32,6 +32,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.IO;
+using System.Linq;
 using System.Text;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.ImageViewer.Graphics;
@@ -188,7 +189,7 @@ namespace ClearCanvas.ImageViewer.RoiGraphics.Tests
 				}
 
 				// enumerate the post modality LUT values and compare with the expected list of values
-				var actualValues = new List<int>(roi.GetPixelValues()).AsReadOnly();
+				var actualValues = new List<int>(roi.GetPixelValues().Select(v => (int) Math.Round(v))).AsReadOnly();
 				try
 				{
 					var list = new List<int>(actualValues);

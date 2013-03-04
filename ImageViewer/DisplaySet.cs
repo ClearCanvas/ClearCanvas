@@ -61,6 +61,11 @@ namespace ClearCanvas.ImageViewer
 
 				return false;
 			}
+
+			public override int GetHashCode()
+			{
+				return Comparer.GetHashCode();
+			}
 		}
 
 		#endregion
