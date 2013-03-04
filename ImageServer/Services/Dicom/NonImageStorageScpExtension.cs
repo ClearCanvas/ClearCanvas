@@ -98,10 +98,7 @@ namespace ClearCanvas.ImageServer.Services.Dicom
                             {
                                 sop.SyntaxList.Add(TransferSyntax.ExplicitVrLittleEndian);
                             }
-                            else
-                            {
-                                Platform.Log(LogLevel.Info, "{0} is not supported for {1} on {2}", StorageScpType,  sop.SopClass.Name, Partition.AeTitle);
-                            }
+          
                             sop.SyntaxList.Add(TransferSyntax.ImplicitVrLittleEndian);
 
                             _list.Add(sop);
