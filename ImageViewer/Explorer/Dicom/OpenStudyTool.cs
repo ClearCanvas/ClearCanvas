@@ -89,37 +89,10 @@ namespace ClearCanvas.ImageViewer.Explorer.Dicom
 					return;
 				}
 
-				if (Context.SelectedServers.Count == 1 && Context.SelectedServers[0].IsLocal)
-				{
-					try
-					{
-						Platform.Log(LogLevel.Debug, "Querying for a StudyUpdate work items that are in progress for the studies that are being opened.");
-
-						var isStudyBeingProcessed = Context.SelectedStudies.Any(study =>
-						{
-							var request = new WorkItemQueryRequest { StudyInstanceUid = study.StudyInstanceUid };
-							IEnumerable<WorkItemData> workItems = null;
-
-							Platform.GetService<IWorkItemService>(s => workItems = s.Query(request).Items);
-							return workItems.Any(IsWorkItemInUse);
-						});
-
-						var message = this.Context.SelectedStudies.Count > 1 ? SR.MessageLoadStudiesBeingProcessed : SR.MessageLoadStudyBeingProcessed;
-						if (isStudyBeingProcessed && DialogBoxAction.No == Context.DesktopWindow.ShowMessageBox(message, MessageBoxActions.YesNo))
-							return;
-					}
-					catch (Exception e)
-					{
-						Platform.Log(LogLevel.Debug, e);
-					}
-				}
-
-				var helper = new OpenStudyHelper
+                var helper = new OpenStudyHelper
 				                 {
 				                     WindowBehaviour = ViewerLaunchSettings.WindowBehaviour,
-				                     AllowEmptyViewer = ViewerLaunchSettings.AllowEmptyViewer,
-                                     //The user has elected to ignore "in use" studies.
-                                     StudyLoaderOptions = new StudyLoaderOptions(true)
+				                     AllowEmptyViewer = ViewerLaunchSettings.AllowEmptyViewer
 				                 };
 
 				foreach (var study in Context.SelectedStudies)
@@ -169,32 +142,6 @@ namespace ClearCanvas.ImageViewer.Explorer.Dicom
 		private IEnumerable<IPatientData> GetSelectedPatients()
 		{
 		    return Context.SelectedStudies.Cast<IPatientData>();
-		}
-
-		private static bool IsWorkItemInUse(WorkItemData item)
-		{
-			// #10746: Workstation: the user must be warned when opening studies that are being processed
-			// #10860: Workstation should warn user when opening a study with failed work items
-			// We include all 'Active' WQI statuses. We also want to capture any failed items because it is 
-			// likely to result in partial studies.  This should be consistent with the LocalStoreStudyLoader.
-			if (item.Request.ConcurrencyType != WorkItemConcurrency.StudyUpdate &&
-				item.Request.ConcurrencyType != WorkItemConcurrency.StudyDelete &&
-				item.Request.ConcurrencyType != WorkItemConcurrency.StudyUpdateTrigger)
-				return false;
-
-			switch (item.Status)
-			{
-				case WorkItemStatusEnum.Pending:
-				case WorkItemStatusEnum.InProgress:
-				case WorkItemStatusEnum.Idle:
-					return true;
-
-				case WorkItemStatusEnum.Failed:
-					return true;
-
-				default:
-					return false;
-			}
 		}
 	}
 }

@@ -91,6 +91,22 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 	/// </summary>
 	public class OpenStudyHelper
 	{
+        /// <summary>
+        /// Decisions made by the user when study is being processed
+        /// </summary>
+        enum StudyInUseUserDecision
+        {
+            /// <summary>
+            /// User elects to continue opening the study
+            /// </summary>
+            Continue,
+
+            /// <summary>
+            /// User elects not to open the study
+            /// </summary>
+            Cancel
+        }
+
 		#region Private Fields
 
 		private readonly List<LoadStudyArgs> _studiesToOpen = new List<LoadStudyArgs>();
@@ -129,7 +145,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
         /// <summary>
         /// Options for the study loader.
         /// </summary>
-        public StudyLoaderOptions StudyLoaderOptions { get; set; }
+        protected StudyLoaderOptions StudyLoaderOptions { get; set; }
 		
         /// <summary>
 		/// Gets or sets whether or not to allow an empty viewer to be opened (e.g. with no studies loaded).
@@ -193,6 +209,31 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 			{
 				viewer.LoadStudies(_studiesToOpen);
 			}
+            catch(InUseLoadStudyException)
+            {
+                if (!HandleStudyInUseError(viewer))
+                {
+                    viewer.Dispose();
+                    return null;
+                }
+            }
+            catch(LoadMultipleStudiesException ex)
+            {
+                // Note: although there may be other errors, we only need to handle exceptions caused by study being processed.
+                // Other errors will (probably) happen again when all studies are reloaded and will be handled in HandleStudyInUseError.
+                if (ex.InUseCount > 0)
+                {
+                    if (!HandleStudyInUseError(viewer))
+                    {
+                        viewer.Dispose();
+                        return null;
+                    }
+                }
+                else
+                {
+                    ExceptionHandler.Report(ex, SR.MessageFailedToOpenStudy, desktopWindow);
+                }
+            }
 			catch (Exception e)
 			{
 				ExceptionHandler.Report(e, SR.MessageFailedToOpenStudy, desktopWindow);
@@ -207,11 +248,74 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 			var args = new LaunchImageViewerArgs(WindowBehaviour) {Title = Title};
 			ImageViewerComponent.Launch(viewer, args);
 
-			codeClock.Stop();
+			codeClock.Stop(); // note: the time will be skewed if the workstation prompts users for action
 			Platform.Log(LogLevel.Debug, string.Format("TTFI: {0}", codeClock));
 
 			return viewer;
 		}
+
+        private void SetStudyLoadOption(bool ignoreInUse)
+        {
+            StudyLoaderOptions.IgnoreInUse = ignoreInUse;
+
+            // Ensure _studiesToOpen is updated
+            foreach (var studyLoadArg in _studiesToOpen)
+            {
+                studyLoadArg.StudyLoaderOptions.IgnoreInUse = ignoreInUse;
+            }
+        }
+
+        /// <summary>
+        /// Prompt user for decision when at least one of the studies opened was being processed on the local or remote server
+        /// </summary>
+        /// <returns></returns>
+        private StudyInUseUserDecision PromptUser()
+        {
+            var desktopWindow = DesktopWindow ?? Application.ActiveDesktopWindow;
+
+            var message = _studiesToOpen.Count > 1 ? SR.MessageLoadStudiesBeingProcessed : SR.MessageLoadStudyBeingProcessed;
+
+            if (desktopWindow.ShowMessageBox(message, MessageBoxActions.YesNo) == DialogBoxAction.No)
+            {
+                return StudyInUseUserDecision.Cancel;
+            }
+
+            return StudyInUseUserDecision.Continue;
+        }
+
+        /// <summary>
+        /// Handle the situation where at least one of the study being loaded is in use. User can decide to continue loading or cancel the operation.
+        /// In former case, all studies will be reloaded. Caller should check the value returned by this method.
+        /// </summary>
+        /// <param name="viewer"></param>
+        /// <returns>False if the operation should be aborted. Caller is responsible for releasing any resource used by the <see cref="ImageViewerComponent"/>.</returns>
+        private bool HandleStudyInUseError(ImageViewerComponent viewer)
+        {
+            var desktopWindow = DesktopWindow ?? Application.ActiveDesktopWindow;
+            var action = PromptUser();
+            switch (action)
+            {
+                case StudyInUseUserDecision.Continue:
+                    try
+                    {
+                        SetStudyLoadOption(true);
+                        viewer.LoadStudies(_studiesToOpen);
+                        return true;
+                    }
+                    catch (Exception e)
+                    {
+                        ExceptionHandler.Report(e, SR.MessageFailedToOpenStudy, desktopWindow);
+                    }
+                    return false;
+
+                case StudyInUseUserDecision.Cancel:
+                    return false;
+
+                default:
+                    throw new NotImplementedException("Implement this action based on user's decision");
+            }
+
+        }
 
 		#endregion
 		#endregion

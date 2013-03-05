@@ -398,10 +398,4 @@ Are you sure you want to continue?</value>
   <data name="MessageProcessedItemsProgress" xml:space="preserve">
     <value>Processed {0} of {1} items...</value>
   </data>
-  <data name="MessageLoadStudiesBeingProcessed" xml:space="preserve">
-    <value>Some of the studies you selected are being processed. They may be incomplete or contain out-of-date information. Do you still want to continue?</value>
-  </data>
-  <data name="MessageLoadStudyBeingProcessed" xml:space="preserve">
-    <value>The study you selected is being processed. It may be incomplete or contain out-of-date information. Do you still want to continue?</value>
-  </data>
 </root>
