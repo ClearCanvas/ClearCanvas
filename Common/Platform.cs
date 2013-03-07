@@ -25,6 +25,7 @@
 using System;
 using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using log4net;
 using ClearCanvas.Common.Utilities;
@@ -405,19 +406,19 @@ namespace ClearCanvas.Common
 			}
 		}
 
-        private static string GetApplicationDataDirectory()
-        {
-            var path = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
-            path = Path.Combine(path, "ClearCanvas_Inc"); //TODO this seems to be derived from the AssemblyCompanyAttribute
-            if (string.IsNullOrEmpty(ProductInformation.FamilyName))
-                path = Path.Combine(path, ProductInformation.GetName(true, false));
-            else
-            {
-                path = Path.Combine(path, string.Format("{0} {1}", ProductInformation.Component, ProductInformation.FamilyName));
-            }
+		private static string GetApplicationDataDirectory()
+		{
+			var path = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
 
-            return path;
-        }
+			var company = Assembly.GetEntryAssembly().GetCustomAttributes(typeof (AssemblyCompanyAttribute), false).OfType<AssemblyCompanyAttribute>().Select(a => a.Company).FirstOrDefault();
+			if (!string.IsNullOrEmpty(company))
+			{
+				company = string.Join("_", company.Split(Path.GetInvalidPathChars().Concat(new[] {' '}).ToArray(), StringSplitOptions.RemoveEmptyEntries)).Trim('_');
+				path = Path.Combine(path, company.Length > 25 ? company.Substring(0, 25) : company);
+			}
+
+			return Path.Combine(path, string.IsNullOrEmpty(ProductInformation.FamilyName) ? ProductInformation.GetName(true, false) : string.Format("{0} {1}", ProductInformation.Component, ProductInformation.FamilyName));
+		}
 
         /// <summary>
         /// Gets the current time from an extension of <see cref="TimeProviderExtensionPoint"/>, if one exists.
