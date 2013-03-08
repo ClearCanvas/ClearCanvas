@@ -191,6 +191,12 @@ make room, or increase the maximum usage.</value>
   <data name="MessageFilestoreDirectoryDoesNotExist" xml:space="preserve">
     <value>The currently configured file store directory does not exist.</value>
   </data>
+  <data name="MessageLoadStudiesBeingProcessed" xml:space="preserve">
+    <value>Some of the studies you selected are being processed. They may be incomplete or contain out-of-date information. Do you still want to continue?</value>
+  </data>
+  <data name="MessageLoadStudyBeingProcessed" xml:space="preserve">
+    <value>The study you selected is being processed. It may be incomplete or contain out-of-date information. Do you still want to continue?</value>
+  </data>
   <data name="MessageLocalServerNotRunning" xml:space="preserve">
     <value>The Local Server must be running in order to complete this operation.</value>
   </data>

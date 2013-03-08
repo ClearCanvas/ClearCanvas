@@ -45,7 +45,7 @@
                                                 <asp:TextBox ID="ComponentFilter" runat="server" CssClass="SearchTextBox"></asp:TextBox>
                                             </td>
                                             <td align="left" valign="bottom">
-                                                <asp:Label ID="Label2" runat="server" Text="<%$Resources: SearchFieldLabels,AlertInsertDate %>" CssClass="SearchTextBoxLabel" />&nbsp;&nbsp;
+                                                <asp:Label ID="Label2" runat="server" Text="<%$Resources: SearchFieldLabels,AlertInsertDate %>" CssClass="SearchTextBoxLabel" />
                                                 <asp:LinkButton ID="ClearInsertDateButton" runat="server" Text="X" CssClass="SmallLink" style="margin-left: 10px;"/><br />
                                                 <ccUI:TextBox ID="InsertDateFilter" runat="server" ReadOnly="true" CssClass="SearchDateBox" />
                                             </td>                                            

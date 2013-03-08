@@ -105,7 +105,7 @@ namespace ClearCanvas.ImageServer.Services.Archiving
 			}
 			else
 			{
-				insertParms.TransferSyntaxUid = TransferSyntax.ExplicitVrLittleEndianUid;
+                insertParms.TransferSyntaxUid = _transfersyntax.UidString;
 				insertParms.StudyStatusEnum = StudyStatusEnum.Online;
 			}
 

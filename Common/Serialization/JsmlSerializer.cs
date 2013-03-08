@@ -657,7 +657,7 @@ namespace ClearCanvas.Common.Serialization
 
 				if (dataType.IsEnum)
 				{
-					return Enum.Parse(dataType, xmlElement.InnerText);
+					return Enum.Parse(dataType, xmlElement.InnerText, true);
 				}
 
 				if (dataType == typeof(DateTime))
@@ -667,7 +667,7 @@ namespace ClearCanvas.Common.Serialization
 
 				if (dataType == typeof(bool))
 				{
-					return xmlElement.InnerText.Equals("true") ? true : false;
+					return xmlElement.InnerText.Equals("true", StringComparison.InvariantCultureIgnoreCase);
 				}
 
 				if (dataType.IsGenericType && dataType.GetGenericTypeDefinition() == typeof(Nullable<>))

@@ -36,7 +36,7 @@ namespace ClearCanvas.Common.Configuration
 
 			if (UpgradeSettings.IsUserUpgradeEnabled())
 			{
-				foreach (var group in SettingsGroupDescriptor.ListInstalledSettingsGroups(false))
+				foreach (var group in SettingsGroupDescriptor.ListInstalledSettingsGroups())
 				{
 					try
 					{

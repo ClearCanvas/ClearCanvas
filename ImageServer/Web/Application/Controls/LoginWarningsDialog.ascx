@@ -24,6 +24,7 @@
 
 <%@ Control Language="C#" AutoEventWireup="true" CodeBehind="LoginWarningsDialog.ascx.cs" 
             Inherits="ClearCanvas.ImageServer.Web.Application.Controls.LoginWarningsDialog" %>
+<%@ Import Namespace="ClearCanvas.ImageServer.Web.Common.Utilities" %>
 <%@ Import Namespace="Resources" %>
 <%@ Register Src="ModalDialog.ascx" TagName="ModalDialog" TagPrefix="localAsp" %>
 

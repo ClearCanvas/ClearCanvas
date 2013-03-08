@@ -52,7 +52,7 @@ GO
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[ResetWorkQueue]') AND type in (N'P', N'PC'))
 DROP PROCEDURE [dbo].[ResetWorkQueue]
 GO
-/****** Object:  StoredProcedure [dbo].[QueryServerPartitionSopClasses]    Script Date: 01/08/2008 16:04:34 ******/
+/****** Object:  StoredProcedure [dbo].[QueryServerPartitionSopClasses]    Script Date: 02/20/2013 16:04:34 ******/
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[QueryServerPartitionSopClasses]') AND type in (N'P', N'PC'))
 DROP PROCEDURE [dbo].[QueryServerPartitionSopClasses]
 GO
@@ -1612,7 +1612,7 @@ END
 ' 
 END
 GO
-/****** Object:  StoredProcedure [dbo].[QueryServerPartitionSopClasses]    Script Date: 01/08/2008 16:04:34 ******/
+/****** Object:  StoredProcedure [dbo].[QueryServerPartitionSopClasses]    Script Date: 02/10/2013 16:04:34 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1640,7 +1640,8 @@ BEGIN
 			PartitionSopClass.Enabled,
 			ServerSopClass.SopClassUid,
 			ServerSopClass.Description,
-			ServerSopClass.NonImage
+			ServerSopClass.NonImage,
+			ServerSopClass.ImplicitOnly
 	FROM PartitionSopClass
 	JOIN ServerSopClass on PartitionSopClass.ServerSopClassGUID = ServerSopClass.GUID
 	WHERE PartitionSopClass.ServerPartitionGUID = @ServerPartitionGUID

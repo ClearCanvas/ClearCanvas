@@ -59,6 +59,7 @@
 		<LogConfigFiles Include="$(ProjectDir)\..\..\..\ImageServer\Executable\Logging.config"/>
 
 		<WebCriticalConfigCreatorSourceFiles Include="$(SolutionDir)\$(SolutionName)_web_critical.config"/>
+    <WebCriticalConfigCreatorSourceFiles Include="$(SolutionDir)\$(SolutionName)_ProductSettings_dist.config"/>
 		<WebConfig Include="$(SolutionDir)\$(SolutionName)_Web.config"/>
 	</ItemGroup>
 

@@ -103,7 +103,9 @@ EnableClientScript="true" runat="server" ValidationGroup="EditStudyValidationGro
                                             <ccAsp:InvalidInputIndicator ID="PatientGenderHelp" runat="server" SkinID="InvalidInputIndicator" />
                                             <ccValidator:RegularExpressionFieldValidator
                                                         ID="RegularExpressionFieldValidator15" runat="server" ControlToValidate="PatientGender"
-                                                        InvalidInputCSS="DialogTextBoxInvalidInput" ValidationGroup="EditStudyValidationGroup" InvalidInputIndicatorID="PatientGenderHelp"
+                                                        InvalidInputCSS="DialogTextBoxInvalidInput" 
+                                                        ValidationGroup="EditStudyValidationGroup" InvalidInputIndicatorID="PatientGenderHelp"
+                                                        IgnoreEmptyValue="True"
                                                         ValidationExpression="M|F|O" Text="<%$Resources: InputValidation, ThisFieldIsRequired %>" Display="None">
                                             </ccValidator:RegularExpressionFieldValidator>
                                         </td>
@@ -233,31 +235,40 @@ EnableClientScript="true" runat="server" ValidationGroup="EditStudyValidationGro
                                         <ccValidator:DateValidator
                                                         ID="StudyDateValidator" runat="server" ControlToValidate="StudyDate" 
                                                         InvalidInputCSS="DialogTextBoxInvalidInput" 
+                                                        IgnoreEmptyValue="True"
                                                         Text="<%$Resources: InputValidation, InvalidDate %>"
                                                         ValidationGroup="EditStudyValidationGroup" 
-                                                        InvalidInputIndicatorID="StudyDateHelp"  
-                                                        Display="None">
+                                                        InvalidInputIndicatorID="StudyDateHelp" 
+                                                        Display="None"
+                                                        >
                                         </ccValidator:DateValidator>
                                         <ccValidator:RegularExpressionFieldValidator
                                             ID="RegularExpressionFieldValidator16" runat="server" ControlToValidate="StudyTimeHours"
-                                            InvalidInputCSS="DialogTextBoxInvalidInput" ValidationGroup="EditStudyValidationGroup" InvalidInputIndicatorID="StudyDateHelp"
-                                            ValidationExpression="^(0[0-9]*|1[0-9]*|2[0-3])$" 
+                                            InvalidInputCSS="DialogTextBoxInvalidInput" ValidationGroup="EditStudyValidationGroup" 
+                                            InvalidInputIndicatorID="StudyDateHelp"
+                                            ValidationExpression="^([0-9]|0[0-9]*|1[0-9]*|2[0-3])$" 
                                             IgnoreEmptyValue="true" 
-                                            Text="<%$Resources: InputValidation, InvalidTime %>" Display="None">
+                                            Text="<%$Resources: InputValidation, InvalidTime %>"
+                                            Display="None">
                                         </ccValidator:RegularExpressionFieldValidator>
                                         <ccValidator:RegularExpressionFieldValidator
                                             ID="RegularExpressionFieldValidator17" runat="server" ControlToValidate="StudyTimeMinutes"
-                                            InvalidInputCSS="DialogTextBoxInvalidInput" ValidationGroup="EditStudyValidationGroup" InvalidInputIndicatorID="StudyDateHelp"
+                                            InvalidInputCSS="DialogTextBoxInvalidInput" ValidationGroup="EditStudyValidationGroup" 
+                                            InvalidInputIndicatorID="StudyDateHelp"
+                                            IgnoreEmptyValue="true"
                                             ValidationExpression="^([0-5][0-9])*$"  
-                                            Text="<%$Resources: InputValidation, InvalidTime %>" Display="None">
+                                            Text="<%$Resources: InputValidation, InvalidTime %>"
+                                            Display="None">
                                         </ccValidator:RegularExpressionFieldValidator>
                                         <ccValidator:RegularExpressionFieldValidator
                                             ID="RegularExpressionFieldValidator18" runat="server" ControlToValidate="StudyTimeSeconds"
                                             InvalidInputCSS="DialogTextBoxInvalidInput" 
                                             ValidationGroup="EditStudyValidationGroup" InvalidInputIndicatorID="StudyDateHelp"
                                             ValidationExpression="^([0-5][0-9])*$" 
-                                            Text="<%$Resources: InputValidation, InvalidTime %>" 
-                                            Display="None">
+                                            IgnoreEmptyValue="true"
+                                            Text="<%$Resources: InputValidation, InvalidTime %>"
+                                            Display="None" 
+                                            >
                                         </ccValidator:RegularExpressionFieldValidator>
                                         </td>
                                         </tr>

@@ -1,6 +1,6 @@
 <%--  License
 
-// Copyright (c) 2013, ClearCanvas Inc.
+/// Copyright (c) 2013, ClearCanvas Inc.
 // All rights reserved.
 // http://www.clearcanvas.ca
 //
@@ -21,6 +21,7 @@
 // <http://www.gnu.org/licenses/>.
 
 --%>
+
 
 <%@ Import namespace="Microsoft.JScript"%>
 <%@ Import namespace="ClearCanvas.ImageServer.Web.Common.Utilities"%>

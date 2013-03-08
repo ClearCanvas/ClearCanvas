@@ -51,6 +51,7 @@
 	<ExecutableAppConfigCreatorSourceFiles Include="$(XianTrunkDirectory)\Dicom\app.config" />
 	<ExecutableAppConfigCreatorSourceFiles Include="$(XianTrunkDirectory)\ImageServer\Enterprise\SqlServer\app.config" />
 	<ExecutableAppCriticalConfigCreatorSourceFiles Include="$(SolutionDir)\$(SolutionName)_Executable_dist.critical.config" />
+  <ExecutableAppCriticalConfigCreatorSourceFiles Include="$(SolutionDir)\ImageServer_ProductSettings_dist.config" />
   </ItemGroup>
 
   <ItemGroup>
@@ -66,6 +67,7 @@
 	<ShredHostAppConfigCreatorSourceFiles Include="$(XianTrunkDirectory)\ImageServer\Enterprise\SqlServer\app.config" />
     
 	<ShredHostAppCriticalConfigCreatorSourceFiles Include="$(SolutionDir)\ImageServer_Shreds_dist.critical.config" />
+    <ShredHostAppCriticalConfigCreatorSourceFiles Include="$(SolutionDir)\ImageServer_ProductSettings_dist.config" />
   </ItemGroup>
 
   <ItemGroup>

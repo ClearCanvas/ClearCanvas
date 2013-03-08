@@ -51,7 +51,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
         /// <remarks>Note that it depends on the study loader whether it is even possible to ignore
         /// the fact that the study is in use and load it anyway. Just because this option is set
         /// does not mean the loader will not still throw an <see cref="InUseLoadStudyException"/>.</remarks>
-        public bool IgnoreInUse { get; private set; }
+        public bool IgnoreInUse { get;  set; }
 
     }
 

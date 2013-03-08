@@ -195,7 +195,8 @@
 <ccValidator:RegularExpressionFieldValidator ID="PersonGivenNameValidator"
     runat="server" ControlToValidate="PersonGivenName" InvalidInputCSS="DialogTextBoxInvalidInput"
     InvalidInputIndicatorID="PersonGivenNameIndicator"
-    ValidationExpression="^([^\\]){1,64}$" Text="<%$Resources: InputValidation,PersonNameInputPanel_InvalidName %>"
+    IgnoreEmptyValue="true" 
+    ValidationExpression="^([^\\]){0,64}$" Text="<%$Resources: InputValidation,PersonNameInputPanel_InvalidName %>"
     Display="None">
 </ccValidator:RegularExpressionFieldValidator>
 <ccValidator:RegularExpressionFieldValidator ID="PersonMiddleNameValidator"

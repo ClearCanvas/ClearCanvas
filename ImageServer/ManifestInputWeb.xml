@@ -77,6 +77,8 @@
     <File name="Web\Controls\GridPager.ascx" />
     <File name="Web\Controls\InvalidInputIndicator.ascx" />
     <File name="Web\Controls\JQuery.ascx" />
+    <File name="Web\Controls\LoginWarningIndicator.ascx" />
+    <File name="Web\Controls\LoginWarningsDialog.ascx" />
     <File name="Web\Controls\MessageBox.ascx" />
     <File name="Web\Controls\ModalDialog.ascx" />
     <File name="Web\Controls\PersonNameInputPanel.ascx" />
@@ -282,6 +284,8 @@
     <File name="Web\Pages\Studies\View\silverlight.js" />
     <File name="Web\Pages\Studies\View\SplashScreen\SplashScreen.js" />
     <File name="Web\Pages\Studies\View\SplashScreen\SplashScreen.xaml" />
+    <File name="Web\Pages\Studies\ViewHtml\Default.aspx" />
+    <File name="Web\Pages\Studies\ViewHtml\EmbeddedDefault.aspx" />
     <File name="Web\Pages\WebViewer\AutomaticLoginDemo.htm" />
     <File name="Web\Pages\WebViewer\Default.aspx" />
     <File name="Web\Pages\WebViewer\GridPager.ascx" />
@@ -340,6 +344,7 @@
     <File name="Web\Scripts\jquery\jquery.dropshadow.js" />
     <File name="Web\Scripts\jquery\jquery.maskedinput-1.2.1.js" />
     <File name="Web\Scripts\jquery\jquery.multiselect.js" />
+    <File name="Web\Scripts\jquery\jsizes.js" />
     <File name="Web\Services\ApplicationService.svc" />
     <File name="Web\Services\FilesystemInfoService.asmx" />
     <File name="Web\Services\ValidationServices.asmx" />

@@ -22,7 +22,10 @@
 
 #endregion
 
+//#define STANDALONE
+
 using System;
+using System.Collections.Generic;
 using System.ServiceModel;
 using System.Web.Security;
 using ClearCanvas.Common;
@@ -31,6 +34,7 @@ using ClearCanvas.Enterprise.Common.Authentication;
 using ClearCanvas.Enterprise.Core;
 using ClearCanvas.ImageServer.Common;
 using ClearCanvas.ImageServer.Enterprise;
+
 
 namespace ClearCanvas.ImageServer.Services.Common.Authentication
 {
@@ -49,6 +53,15 @@ namespace ClearCanvas.ImageServer.Services.Common.Authentication
                 var token = new SessionToken(tokenId.ToString(), Platform.Time + ServerPlatform.WebSessionTimeout);
                 string[] authority = Roles.GetRolesForUser(request.UserName);
                 string displayName = request.UserName;
+
+#if STANDALONE
+                var list = new List<string>();
+                list.AddRange(authority);
+                list.Add(Enterprise.Authentication.AuthorityTokens.Study.ViewImages);
+                list.Add("Viewer/Visible");
+                list.Add("Viewer/Clinical");
+                authority = list.ToArray();
+#endif
 
                 var rsp = new InitiateSessionResponse(token, authority, new Guid[0], displayName,string.Empty);
 
@@ -76,19 +89,30 @@ namespace ClearCanvas.ImageServer.Services.Common.Authentication
 
                 if (Platform.IsLogLevelEnabled(LogLevel.Debug))
                     Platform.Log(LogLevel.Debug, "Session ID {0} is updated. Valid until {1}", session.Id, session.ExpiryTime);
-                return new ValidateSessionResponse(session, Roles.GetRolesForUser(session.Id));
+
+                var authority = Roles.GetRolesForUser(session.Id);
+#if STANDALONE
+                var list = new List<string>();
+                list.AddRange(authority);
+                list.Add(Enterprise.Authentication.AuthorityTokens.Study.ViewImages);
+                list.Add("Viewer/Visible");
+                list.Add("Viewer/Clinical");
+                authority = list.ToArray();
+#endif
+                return new ValidateSessionResponse(session, authority);
             }
 
-#if false
+#if STANDALONE
             return new ValidateSessionResponse(new SessionToken(request.SessionToken.Id,DateTime.Now.AddHours(1)),
                 new[] {AuthorityTokens.DataAccess.AllStudies,
                     AuthorityTokens.DataAccess.AllPartitions,
+                    Enterprise.Authentication.AuthorityTokens.Study.ViewImages,
                     "Viewer/Visible",
                     "Viewer/Clinical"});
-#endif
-
+#else
             Platform.Log(LogLevel.Error, "Session ID {0} does not exist", request.SessionToken.Id);
             throw new FaultException<UserAccessDeniedException>(new UserAccessDeniedException());
+#endif
         }
 
         public TerminateSessionResponse TerminateSession(TerminateSessionRequest request)
@@ -107,6 +131,15 @@ namespace ClearCanvas.ImageServer.Services.Common.Authentication
         public GetAuthorizationsResponse GetAuthorizations(GetAuthorizationsRequest request)
         {
             string[] authorities = Roles.GetRolesForUser(request.UserName);
+#if (STANDALONE)
+            var list = new List<string>();
+            list.AddRange(authorities);
+            list.Add(Enterprise.Authentication.AuthorityTokens.Study.ViewImages);
+            list.Add("Viewer/Visible");
+            list.Add("Viewer/Clinical");
+            authorities = list.ToArray();
+#endif
+
             return new GetAuthorizationsResponse(authorities);
         }
 
