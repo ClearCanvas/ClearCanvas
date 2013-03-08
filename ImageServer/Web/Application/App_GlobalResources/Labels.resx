@@ -635,6 +635,6 @@
     <value>Not for diagnostic use.</value>
   </data>
   <data name="PrivateBrowsing" xml:space="preserve">
-    <value>It is recommended that private browsing mode (e.g. incognito mode) be used or the browser cache be cleared after each use to prevent exposure of protected health information.</value>
+    <value>It is recommended that private browsing mode (e.g. incognito mode) be used or the browser cache be cleared, and the browser tab closed after each use to prevent exposure of protected health information.</value>
   </data>
 </root>
