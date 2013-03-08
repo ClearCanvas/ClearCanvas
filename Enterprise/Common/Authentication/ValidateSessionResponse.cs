@@ -34,10 +34,11 @@ namespace ClearCanvas.Enterprise.Common.Authentication
 	[DataContract]
 	public class ValidateSessionResponse : DataContractBase
 	{
-		public ValidateSessionResponse(SessionToken sessionToken, string[] authorityTokens)
+	    public ValidateSessionResponse(SessionToken sessionToken, string[] authorityTokens, Guid[] dataGroupOids)
 		{
 			this.SessionToken = sessionToken;
 			this.AuthorityTokens = authorityTokens;
+	        DataGroupOids = dataGroupOids;
 		}
 
 		/// <summary>
@@ -51,5 +52,11 @@ namespace ClearCanvas.Enterprise.Common.Authentication
 		/// </summary>
 		[DataMember]
 		public string[] AuthorityTokens;
+
+        /// <summary>
+        /// User data authority group oids, if requested.
+        /// </summary>
+        [DataMember]
+        public Guid[] DataGroupOids;
 	}
 }

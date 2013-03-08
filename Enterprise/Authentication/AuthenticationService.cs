@@ -183,7 +183,12 @@ namespace ClearCanvas.Enterprise.Authentication
 			var authorizations = request.GetAuthorizations ?
 				PersistenceContext.GetBroker<IAuthorityTokenBroker>().FindTokensByUserName(request.UserName) : new string[0];
 
-			return new ValidateSessionResponse(session.GetToken(), authorizations);
+            // Get DataAccess authority groups if requested
+            var groups = request.GetAuthorizations
+                             ? PersistenceContext.GetBroker<IAuthorityGroupBroker>().FindDataGroupsByUserName(request.UserName)
+                             : new Guid[0];
+
+            return new ValidateSessionResponse(session.GetToken(), authorizations, groups);
 		}
 
 		[UpdateOperation(ChangeSetAuditable = false)]

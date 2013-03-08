@@ -99,7 +99,7 @@ namespace ClearCanvas.ImageServer.Services.Common.Authentication
                 list.Add("Viewer/Clinical");
                 authority = list.ToArray();
 #endif
-                return new ValidateSessionResponse(session, authority);
+                return new ValidateSessionResponse(session, authority, new Guid[0]);
             }
 
 #if STANDALONE
