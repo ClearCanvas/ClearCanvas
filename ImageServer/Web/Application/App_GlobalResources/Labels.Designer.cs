@@ -925,7 +925,7 @@ namespace Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to It is recommended that private browsing mode (e.g. incognito mode) be used or the browser cache be cleared after each use to prevent exposure of protected health information..
+        ///   Looks up a localized string similar to It is recommended that private browsing mode (e.g. incognito mode) be used or the browser cache be cleared, and the browser tab closed after each use to prevent exposure of protected health information..
         /// </summary>
         internal static string PrivateBrowsing {
             get {
