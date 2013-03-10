@@ -521,9 +521,9 @@ namespace ClearCanvas.ImageViewer
 					surface.ContextID = contextId;
 					surface.ClipRectangle = new Rectangle(0, 0, bmp.Width, bmp.Height);
 
-					var drawArgs = new DrawArgs(surface, null, DrawMode.Render);
+                    var drawArgs = new DrawArgs(surface, null, DrawMode.Render) { Tag = bmp };
 					DrawNoEvents(drawArgs);
-					drawArgs = new DrawArgs(surface, null, DrawMode.Refresh);
+                    drawArgs = new DrawArgs(surface, null, DrawMode.Refresh) { Tag = bmp };
 					DrawNoEvents(drawArgs);
 				}
 			}

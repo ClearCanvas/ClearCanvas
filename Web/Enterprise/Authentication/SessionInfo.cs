@@ -99,6 +99,7 @@ namespace ClearCanvas.Web.Enterprise.Authentication
                     var sessionInfo = service.Renew(Credentials.SessionToken.Id);
                     _user.Credentials.SessionToken = sessionInfo.Credentials.SessionToken;
                     _user.Credentials.Authorities = sessionInfo.Credentials.Authorities;
+                    _user.Credentials.DataAccessAuthorityGroups = sessionInfo.Credentials.DataAccessAuthorityGroups;
 
                     _valid = true;
                 }

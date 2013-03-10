@@ -26,16 +26,75 @@
 
 #pragma warning disable 1591,0419,1574,1587
 
-using NUnit.Framework;
 using System;
+using NUnit.Framework;
 
 namespace ClearCanvas.ImageViewer.Mathematics.Tests
 {
 	[TestFixture]
 	public class MatrixTests
 	{
-		public MatrixTests()
+		[Test]
+		public void TestConstructor()
 		{
+			var m = new Matrix(3, 3);
+			m.SetColumn(0, 0, 0, 0);
+			m.SetColumn(1, 0, 0, 0);
+			m.SetColumn(2, 0, 0, 0);
+			Assert.IsTrue(Matrix.AreEqual(m, new Matrix(3, 3)));
+
+			m.SetRow(0, 1, 2, 3);
+			m.SetRow(1, 4, 5, 6);
+			m.SetRow(2, 7, 8, 9);
+			Assert.IsTrue(Matrix.AreEqual(m, new Matrix(new float[,] {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}})));
+			Assert.IsTrue(Matrix.AreEqual(m, new Matrix(new Matrix(new float[,] {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}}))));
+
+			try
+			{
+				new Matrix(0, 0);
+				Assert.Fail("Expected an exception");
+			}
+			catch (ArgumentException) {}
+
+			try
+			{
+				new Matrix(new Matrix(4, -5));
+				Assert.Fail("Expected an exception");
+			}
+            catch (ArgumentException) { }
+
+			try
+			{
+				new Matrix((Matrix) null);
+				Assert.Fail("Expected an exception");
+			}
+			catch (ArgumentNullException) {}
+
+			try
+			{
+				new Matrix((float[,]) null);
+				Assert.Fail("Expected an exception");
+			}
+			catch (ArgumentNullException) {}
+		}
+
+		[Test]
+		public void TestAreEqual()
+		{
+			var m1 = new Matrix(3, 3);
+			m1.SetColumn(0, 1, 4, 7);
+			m1.SetColumn(1, 2, 5, 8);
+			m1.SetColumn(2, 3, 6, 9);
+
+			var m2 = new Matrix(3, 3);
+			m2.SetRow(0, 1, 2, 3);
+			m2.SetRow(1, 4, 5, 6);
+			m2.SetRow(2, 7, 8, 9);
+
+			Assert.IsTrue(Matrix.AreEqual(m1, m2));
+
+			m2[1, 1] = 0;
+			Assert.IsFalse(Matrix.AreEqual(m1, m2));
 		}
 
 		[Test]
@@ -81,7 +140,7 @@ namespace ClearCanvas.ImageViewer.Mathematics.Tests
 		}
 
 		[Test]
-		public void TestMultiply()
+		public void TestMultiplyScalar()
 		{
 			Matrix m = new Matrix(3, 3);
 			m.SetRow(0, -1.1F, 2.6F, -7.1F);
@@ -93,11 +152,11 @@ namespace ClearCanvas.ImageViewer.Mathematics.Tests
 			result.SetRow(1, 14.26F, -11.47F, 28.21F);
 			result.SetRow(2, 12.71F, -9.61F, 23.87F);
 
-			Assert.IsTrue(Matrix.AreEqual(m * 3.1F, result));
+			Assert.IsTrue(Matrix.AreEqual(m*3.1F, result));
 		}
 
 		[Test]
-		public void TestDivide()
+		public void TestDivideScalar()
 		{
 			Matrix m = new Matrix(3, 3);
 			m.SetRow(0, -3.41F, 8.06F, -22.01F);
@@ -109,7 +168,49 @@ namespace ClearCanvas.ImageViewer.Mathematics.Tests
 			result.SetRow(1, 4.6F, -3.7F, 9.1F);
 			result.SetRow(2, 4.1F, -3.1F, 7.7F);
 
-			Assert.IsTrue(Matrix.AreEqual(m / 3.1F, result));
+			Assert.IsTrue(Matrix.AreEqual(m/3.1F, result));
+		}
+
+		[Test]
+		public void TestMultipleMatrix()
+		{
+			const float a11 = 1.1f;
+			const float a12 = 2.1f;
+			const float a13 = 3.1f;
+			const float a21 = 1.2f;
+			const float a31 = 1.3f;
+			const float a22 = 2.2f;
+			const float a32 = 2.3f;
+			const float a23 = 3.2f;
+			const float a33 = 3.3f;
+			const float b11 = 9.1f;
+			const float b12 = 8.1f;
+			const float b13 = 7.1f;
+			const float b21 = 9.2f;
+			const float b22 = 8.2f;
+			const float b23 = 7.2f;
+			const float b31 = 9.3f;
+			const float b32 = 8.3f;
+			const float b33 = 7.3f;
+
+			var m1 = new Matrix(new[,] {{a11, a12, a13}, {a21, a22, a23}, {a31, a32, a33}});
+			var m2 = new Matrix(new[,] {{b11, b12, b13}, {b21, b22, b23}, {b31, b32, b33}});
+
+			var result = new Matrix(3, 3);
+			result.SetRow(0,
+			              a11*b11 + a12*b21 + a13*b31,
+			              a11*b12 + a12*b22 + a13*b32,
+			              a11*b13 + a12*b23 + a13*b33);
+			result.SetRow(1,
+			              a21*b11 + a22*b21 + a23*b31,
+			              a21*b12 + a22*b22 + a23*b32,
+			              a21*b13 + a22*b23 + a23*b33);
+			result.SetRow(2,
+			              a31*b11 + a32*b21 + a33*b31,
+			              a31*b12 + a32*b22 + a33*b32,
+			              a31*b13 + a32*b23 + a33*b33);
+
+			Assert.IsTrue(Matrix.AreEqual(m1*m2, result));
 		}
 
 		[Test]
@@ -143,7 +244,6 @@ namespace ClearCanvas.ImageViewer.Mathematics.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof(ArgumentOutOfRangeException))]
 		public void TestAccessor()
 		{
 			Matrix m = new Matrix(4, 4);
@@ -157,29 +257,42 @@ namespace ClearCanvas.ImageViewer.Mathematics.Tests
 			Assert.AreEqual(m[2, 2], 3F);
 			Assert.AreEqual(m[3, 3], 4F);
 
-			float outOfRange = m[0, 4];
+			try
+			{
+				float outOfRange = m[0, 4];
+				Assert.Fail("Expected an exception, but instead for a value of {0}", outOfRange);
+			}
+			catch (ArgumentOutOfRangeException) {}
 		}
 
 		[Test]
-		[ExpectedException(typeof(ArgumentException))]
 		public void TestColumnSetter()
 		{
 			Matrix m = new Matrix(3, 1);
 			m.SetColumn(0, 1F, 2F, 3F);
 
-			//too many.
-			m.SetColumn(0, 1F, 2F, 3F, 4F);
+			try
+			{
+				//too many.
+				m.SetColumn(0, 1F, 2F, 3F, 4F);
+				Assert.Fail("Expected an exception");
+			}
+			catch (ArgumentException) {}
 		}
 
 		[Test]
-		[ExpectedException(typeof(ArgumentException))]
 		public void TestRowSetter()
 		{
 			Matrix m = new Matrix(1, 3);
 			m.SetRow(0, 1F, 2F, 3F);
 
-			//not enough.
-			m.SetRow(0, 1F, 2F);
+			try
+			{
+				//not enough.
+				m.SetRow(0, 1F, 2F);
+				Assert.Fail("Expected an exception");
+			}
+			catch (ArgumentException) {}
 		}
 
 		[Test]
@@ -191,13 +304,6 @@ namespace ClearCanvas.ImageViewer.Mathematics.Tests
 			m.SetRow(2, 12.71F, -9.61F, 23.87F);
 
 			Assert.IsTrue(Matrix.AreEqual(m, m.Clone()));
-		}
-
-		[Test]
-		[ExpectedException(typeof(ArgumentException))]
-		public void TestZeroSize()
-		{
-			Matrix m = new Matrix(0, 0);
 		}
 	}
 }

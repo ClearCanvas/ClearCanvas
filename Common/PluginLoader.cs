@@ -27,6 +27,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Security.Cryptography;
+using System.Text;
 using ClearCanvas.Common.Utilities;
 
 namespace ClearCanvas.Common
@@ -85,22 +87,22 @@ namespace ClearCanvas.Common
 									group p by Path.GetFileNameWithoutExtension(p)
 										into g
 										where g.Count() == 1
-										select new { FileName = g.Key, Path = g.First() })
+										select g.First())
 									.ToList();
 
 			// establish assembly load resolver
-			var pluginPathLookup = pluginCandidates.ToDictionary(p => p.FileName, p => p.Path);
+			var pluginPathLookup = BuildAssemblyMap(pluginCandidates);
 			AssemblyRef.SetResolver(name => LoadPlugin(pluginPathLookup[name], false).Assembly);
 
 			// see if we can load the meta-data from a cache
-			var pluginCandidatePaths = pluginCandidates.Select(p => p.Path).ToList();
+			var checkSum = ComputeCheckSum(pluginCandidates);
 			List<PluginInfo> pluginInfos;
-			if (!TryLoadCachedMetadata(new[] { _primaryCacheFile }.Concat(_alternateCacheFiles), pluginCandidatePaths, out pluginInfos))
+			if (!TryLoadCachedMetadata(new[] { _primaryCacheFile }.Concat(_alternateCacheFiles), checkSum, out pluginInfos))
 			{
 				// No cached meta-data, so we need to load the plugins
 				// and build the meta-data from scratch.
-				LoadPluginFiles(pluginCandidatePaths, true, out pluginInfos);
-				SaveCachedMetadata(pluginInfos);
+				LoadPluginFiles(pluginCandidates, true, out pluginInfos);
+				SaveCachedMetadata(pluginInfos, checkSum);
 			}
 
 			return pluginInfos;
@@ -122,15 +124,19 @@ namespace ClearCanvas.Common
 			pluginInfos = processMetadata ? loadResults.Where(r => r.IsPlugin).Select(r => r.PluginInfo).ToList() : null;
 		}
 
-		private static bool TryLoadCachedMetadata(IEnumerable<string> cacheFilePaths, IEnumerable<string> pluginCandidates, out List<PluginInfo> pluginInfos)
+		private static bool TryLoadCachedMetadata(IEnumerable<string> cacheFilePaths, byte[] checkSum, out List<PluginInfo> pluginInfos)
 		{
-			var validCacheFiles = ValidCacheFiles(cacheFilePaths, pluginCandidates).ToList();
-			if (validCacheFiles.Any())
+			cacheFilePaths = cacheFilePaths.Where(File.Exists).ToList();
+			if (cacheFilePaths.Any())
 			{
 				try
 				{
-					pluginInfos = PluginInfoCache.Read(validCacheFiles.First());
-					return true;
+					var pluginInfoCache = PluginInfoCache.Read(cacheFilePaths.First());
+					if(pluginInfoCache.CheckSum.SequenceEqual(checkSum))
+					{
+						pluginInfos = pluginInfoCache.Plugins;
+						return true;
+					}
 				}
 				catch (Exception)
 				{
@@ -144,24 +150,12 @@ namespace ClearCanvas.Common
 			return false;
 		}
 
-		private static IEnumerable<string> ValidCacheFiles(IEnumerable<string> cacheFilePaths, IEnumerable<string> pluginCandidates)
-		{
-			var configFiles = Directory.GetFiles(Platform.InstallDirectory, "*.config", SearchOption.TopDirectoryOnly);
-			var writeTimes = configFiles.Concat(pluginCandidates).Select(File.GetLastWriteTime).ToList();
-
-			return cacheFilePaths.Where(cacheFilePath =>
-										{
-											// cache must be newer than last write time of any file that might have affected it
-											var cacheFile = new FileInfo(cacheFilePath);
-											return cacheFile.Exists && writeTimes.All(wt => wt < cacheFile.LastWriteTime);
-										});
-		}
-
-		private void SaveCachedMetadata(List<PluginInfo> pluginInfos)
+		private void SaveCachedMetadata(List<PluginInfo> pluginInfos, byte[] checkSum)
 		{
 			try
 			{
-				PluginInfoCache.Write(_primaryCacheFile, pluginInfos);
+				var pluginInfoCache = new PluginInfoCache(pluginInfos, checkSum);
+				pluginInfoCache.Write(_primaryCacheFile);
 			}
 			catch (Exception)
 			{
@@ -219,6 +213,53 @@ namespace ClearCanvas.Common
 			}
 
 			return new LoadPluginResult(false, null, null);
+		}
+
+		private static byte[] ComputeCheckSum(IEnumerable<string> pluginCandidatePaths)
+		{
+			// include config files in the check sum
+			var configFiles = Directory.EnumerateFiles(Platform.InstallDirectory, "*.exe.config", SearchOption.TopDirectoryOnly);
+			configFiles = configFiles.Concat(Directory.EnumerateFiles(Platform.InstallDirectory, "*.exe.critical.config", SearchOption.TopDirectoryOnly));
+
+			var orderedFiles = configFiles.Concat(pluginCandidatePaths).Select(f => new FileInfo(f)).OrderBy(fi => fi.FullName);
+
+			// generate a check sum based on the name, create time, and last write time of each file
+			using (var byteStream = new MemoryStream())
+			{
+				foreach (var fi in orderedFiles)
+				{
+					var name = Encoding.Unicode.GetBytes(fi.Name);
+					byteStream.Write(name, 0, name.Length);
+
+					var createTime = BitConverter.GetBytes(fi.CreationTimeUtc.Ticks);
+					byteStream.Write(createTime, 0, createTime.Length);
+
+					var writeTime = BitConverter.GetBytes(fi.LastWriteTimeUtc.Ticks);
+					byteStream.Write(writeTime, 0, createTime.Length);
+				}
+
+				var md5 = new MD5CryptoServiceProvider();
+				return md5.ComputeHash(byteStream.GetBuffer());
+			}
+		}
+
+		private static Dictionary<string, string> BuildAssemblyMap(IEnumerable<string> filePaths)
+		{
+			var result = new Dictionary<string, string>();
+			foreach (var p in filePaths)
+			{
+				try
+				{
+					var name = AssemblyName.GetAssemblyName(p).Name;
+					result.Add(name, p);
+				}
+				catch (Exception)
+				{
+					// not an assembly
+					Platform.Log(LogLevel.Debug, "The file at {0} does not seem to be an assembly.", p);
+				}
+			}
+			return result;
 		}
 	}
 }

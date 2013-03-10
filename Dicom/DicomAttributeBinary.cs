@@ -88,8 +88,6 @@ namespace ClearCanvas.Dicom
 		{
 			_reference = reference;
 			_values = null;
-
-			SetStreamLength();
 		}
 
 		internal DicomAttributeBinary(DicomTag tag, ByteBuffer item)
@@ -100,8 +98,6 @@ namespace ClearCanvas.Dicom
 
 			_values = new DicomAttributeBinaryData<T>(item);
 			_reference = null;
-
-			SetStreamLength();
 		}
 
 		internal DicomAttributeBinary(DicomAttributeBinary<T> attrib)
@@ -116,13 +112,32 @@ namespace ClearCanvas.Dicom
 			{
 				_values = attrib._values != null ? new DicomAttributeBinaryData<T>(attrib._values) : null;
 			}
-
-			SetStreamLength();
 		}
 
 		#endregion
 
 		#region Properties
+
+		public override sealed long Count
+		{
+			get
+			{
+				if (_reference != null) return _reference.Length/Tag.VR.UnitSize;
+				return _values != null ? _values.Count : 0;
+			}
+			protected set { throw new NotSupportedException(); }
+		}
+
+		public override sealed uint StreamLength
+		{
+			get
+			{
+				// StreamLength always returns the length of the stream padded to an even number of bytes
+				if (_reference != null) return _reference.Length + (_reference.Length%2);
+				return _values != null ? (uint) (_values.Length + (_values.Length%2)) : 0;
+			}
+			protected set { throw new NotSupportedException(); }
+		}
 
 		/// <summary>
 		/// Gets or sets the number style used in parsing and formatting the values of the attribute.
@@ -148,7 +163,6 @@ namespace ClearCanvas.Dicom
 				{
 					_values = Load();
 					_reference = null;
-					SetStreamLength();
 				}
 				return _values;
 			}
@@ -181,32 +195,11 @@ namespace ClearCanvas.Dicom
 
 		#region Private Methods
 
-		protected void SetStreamLength()
-		{
-			if (_reference != null)
-			{
-				Count = _reference.Length/Tag.VR.UnitSize;
-				StreamLength = _reference.Length;
-			}
-			else if (_values == null)
-			{
-				Count = 0;
-				StreamLength = 0;
-			}
-			else
-			{
-				Count = _values.Count;
-				StreamLength = (uint) _values.Length;
-			}
-		}
-
 		protected void AppendValue(T val)
 		{
 			if (Data == null)
 				Data = new DicomAttributeBinaryData<T>();
 			Data.AppendValue(val);
-
-			SetStreamLength();
 		}
 
 		private DicomAttributeBinaryData<T> Load()
@@ -260,14 +253,12 @@ namespace ClearCanvas.Dicom
 		{
 			_reference = null;
 			_values = new DicomAttributeBinaryData<T>();
-			SetStreamLength();
 		}
 
 		public override void SetEmptyValue()
 		{
 			_reference = null;
 			_values = null;
-			SetStreamLength();
 		}
 
 		public override Stream AsStream()
@@ -374,18 +365,14 @@ namespace ClearCanvas.Dicom
 			if (string.IsNullOrEmpty(stringValue))
 			{
 				Data = new DicomAttributeBinaryData<T>();
-				SetStreamLength();
 				return;
 			}
 
 			String[] stringValues = stringValue.Split(new[] {'\\'});
-			Data = new DicomAttributeBinaryData<T>(stringValues.Length);
+			var data = new DicomAttributeBinaryData<T>(stringValues.Length);
 			for (int index = 0; index < stringValues.Length; index++)
-			{
-				Data[index] = ParseNumber(stringValues[index]);
-			}
-
-			SetStreamLength();
+				data[index] = ParseNumber(stringValues[index]);
+			Data = data; // set after, so that we don't get partial state due to a parse exception
 		}
 
 		/// <summary>
@@ -441,7 +428,6 @@ namespace ClearCanvas.Dicom
 			else
 			{
 				Data[index] = value;
-				SetStreamLength();
 			}
 		}
 
@@ -495,7 +481,6 @@ namespace ClearCanvas.Dicom
 				{
 					// JY (2012-12-06): if value is NULL, always null the data as a non-overridable behaviour
 					Data = null;
-					SetStreamLength();
 					return;
 				}
 
@@ -510,7 +495,6 @@ namespace ClearCanvas.Dicom
 					{
 						var parsedValue = ParseNumber(value.ToString(), CultureInfo.CurrentCulture);
 						Data = new DicomAttributeBinaryData<T>(new[] {parsedValue}, false);
-						SetStreamLength();
 					}
 					catch (Exception)
 					{
@@ -525,18 +509,15 @@ namespace ClearCanvas.Dicom
 			if (value is T[])
 			{
 				Data = new DicomAttributeBinaryData<T>((T[]) value);
-				SetStreamLength();
 			}
 			else if (value is T)
 			{
 				Data = new DicomAttributeBinaryData<T>(1);
 				Data.SetValue(0, (T) value);
-				SetStreamLength();
 			}
 			else if (value is string)
 			{
 				SetStringValue((string) value);
-				SetStreamLength();
 			}
 			else
 			{
@@ -585,8 +566,6 @@ namespace ClearCanvas.Dicom
 				Buffer.BlockCopy(buffer, i*tag.VR.UnitSize + 2, values, i*tag.VR.UnitSize, 2);
 			}
 			Data = new DicomAttributeBinaryData<uint>(values, false);
-
-			SetStreamLength();
 		}
 
 		internal DicomAttributeAT(DicomAttributeAT attrib)
@@ -1406,7 +1385,6 @@ namespace ClearCanvas.Dicom
 			if (values != null)
 			{
 				Data = new DicomAttributeBinaryData<byte>(values);
-				SetStreamLength();
 				return true;
 			}
 			return false;
@@ -1530,7 +1508,6 @@ namespace ClearCanvas.Dicom
 			if (values != null)
 			{
 				Data = new DicomAttributeBinaryData<float>(values);
-				SetStreamLength();
 				return true;
 			}
 			return false;
@@ -1606,7 +1583,6 @@ namespace ClearCanvas.Dicom
 			if (value is byte[])
 			{
 				Data = new DicomAttributeBinaryData<byte>((byte[]) value);
-				SetStreamLength();
 				return true;
 			}
 			else if (value is ushort[])
@@ -1615,7 +1591,6 @@ namespace ClearCanvas.Dicom
 				var buffer = new byte[values.Length*Tag.VR.UnitSize];
 				Buffer.BlockCopy(values, 0, buffer, 0, buffer.Length);
 				Data = new DicomAttributeBinaryData<byte>(buffer, false);
-				SetStreamLength();
 			}
 			else if (value is short[])
 			{
@@ -1623,7 +1598,6 @@ namespace ClearCanvas.Dicom
 				var buffer = new byte[values.Length*Tag.VR.UnitSize];
 				Buffer.BlockCopy(values, 0, buffer, 0, buffer.Length);
 				Data = new DicomAttributeBinaryData<byte>(buffer, false);
-				SetStreamLength();
 			}
 			return false;
 		}
@@ -2916,7 +2890,6 @@ namespace ClearCanvas.Dicom
 			: base(tag)
 		{
 			Data = new DicomAttributeBinaryData<byte>(item);
-			SetStreamLength();
 		}
 
 		internal DicomAttributeUN(DicomAttributeUN attrib)
@@ -2947,7 +2920,6 @@ namespace ClearCanvas.Dicom
 			if (values != null)
 			{
 				Data = new DicomAttributeBinaryData<byte>(values);
-				SetStreamLength();
 				return true;
 			}
 			return false;

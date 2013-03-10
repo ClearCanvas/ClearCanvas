@@ -22,6 +22,7 @@
 
 #endregion
 
+
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -37,7 +38,6 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Admin.Configure.ServerPa
 {
     public partial class DataAccessGroupPanel : System.Web.UI.UserControl
     {
-
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!Page.IsPostBack)
@@ -158,13 +158,13 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Admin.Configure.ServerPa
             }
         }
 
-        public IEnumerable<string> SelectedGroupRefs
+        public IEnumerable<string> SelectedDataAccessGroupRefs
         {
             get
             {
                 foreach (ListItem item in DataAccessGroupCheckBoxList.Items)
                 {
-                    if (item.Selected)
+                    if (item.Selected && item.Enabled)
                         yield return item.Value;
                 }
 

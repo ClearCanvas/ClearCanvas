@@ -716,7 +716,7 @@ namespace ClearCanvas.Dicom
             uint length = 0;
             foreach (DicomAttribute item in this)
             {
-                if (item.Tag.Group < group || item.Tag.Element == 0x0000)
+                if (item.Tag.Group < group || item.IsEmpty || item.Tag.Element == 0x0000) // skip Group Length elements and empty elements
                     continue;
                 if (item.Tag.Group > group)
                     return length;
@@ -733,26 +733,43 @@ namespace ClearCanvas.Dicom
         /// <returns></returns>
         internal uint CalculateWriteLength(TransferSyntax syntax, DicomWriteOptions options)
         {
+            return CalculateWriteLength(uint.MinValue, uint.MaxValue, syntax, options);
+        }
+
+        /// <summary>
+        /// Used to calculate the write length of the collection.
+        /// </summary>
+        /// <param name="startTag"></param>
+        /// <param name="stopTag"></param>
+        /// <param name="syntax"></param>
+        /// <param name="options"></param>
+        /// <returns></returns>
+        internal uint CalculateWriteLength(uint startTag, uint stopTag, TransferSyntax syntax, DicomWriteOptions options)
+        {
             uint length = 0;
             ushort group = 0xffff;
+
             foreach (DicomAttribute item in this)
             {
-                if (item.Tag.Element == 0x0000)
+                if (item.Tag.TagValue < startTag || item.IsEmpty || item.Tag.Element == 0x0000) // skip Group Length elements and empty elements
                     continue;
-                if (item.IsEmpty)
-                    continue;
+                if (item.Tag.TagValue > stopTag)
+                    return length;
 
+                // once for each group, add on the length of the Group Length element if the option was specified
                 if (item.Tag.Group != group)
                 {
                     group = item.Tag.Group;
                     if (Flags.IsSet(options, DicomWriteOptions.CalculateGroupLengths))
                     {
-                        if (syntax.ExplicitVr)
-                            length += 4 + 2 + 2 + 4;
-                        else
-                            length += 4 + 4 + 4;
+                        // Group Length (gggg,0000) is VR=UL, VM=1
+                        // under explicit VR encoding, the length of the element is 4 (tag) + 2 (VR) + 2 (length) + 4 (value) = 12
+                        // under implicit VR encoding, the length of the element is 4 (tag) + 4 (length) + 4 (value) = 12
+                        length += 12;
                     }
                 }
+
+                // add on the actual length of the element
                 length += item.CalculateWriteLength(syntax, options);
             }
             return length;

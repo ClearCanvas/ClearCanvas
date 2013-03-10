@@ -175,6 +175,11 @@ namespace ClearCanvas.ImageServer.Web.Common.Data.DataSource
 
 		#region Public Properties
 
+	    public ServerEntityKey Key
+	    {
+	        get { return TheStudyIntegrityQueueItem != null ? TheStudyIntegrityQueueItem.Key : null; }
+	    }
+
 	    public bool StudyExists
 	    {
             get { return StudySummary != null; }

@@ -22,6 +22,7 @@
 
 --%>
 
+
 <%@ Control Language="C#" AutoEventWireup="true" Codebehind="ServerPartitionPanel.ascx.cs"
     Inherits="ClearCanvas.ImageServer.Web.Application.Pages.Admin.Configure.ServerPartitions.ServerPartitionPanel" %>
 
@@ -49,10 +50,6 @@
                                             <td align="left">
                                                 <asp:Label ID="Label2" runat="server" Text="<%$Resources: SearchFieldLabels, ServerPartitionDescription %>" CssClass="SearchTextBoxLabel"></asp:Label><br />
                                                 <asp:TextBox ID="DescriptionFilter" runat="server" CssClass="SearchTextBox"></asp:TextBox>
-                                            </td>
-                                            <td align="left">
-                                                <asp:Label ID="Label3" runat="server" Text="<%$Resources: SearchFieldLabels, ServerPartitionFolder %>" CssClass="SearchTextBoxLabel"></asp:Label><br />
-                                                <asp:TextBox ID="FolderFilter" runat="server" CssClass="SearchTextBox"></asp:TextBox>
                                             </td>
                                             <td align="left" valign="bottom">
                                                 <asp:Label ID="Label4" runat="server" Text="<%$Resources: SearchFieldLabels, ServerPartitionStatus %>" CssClass="SearchTextBoxLabel"></asp:Label><br />

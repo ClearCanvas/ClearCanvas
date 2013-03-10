@@ -87,7 +87,7 @@ namespace ClearCanvas.ImageViewer.AdvancedImaging.Fusion.Utilities
 
 		public override string GetDescription()
 		{
-			return string.Format(@"Normalization Function Inverse of m={0} b={1}", _rescaleSlope, _rescaleIntercept);
+			return string.Format(@"Normalization Function Inverse of m={0:0.#} b={1:0.#}", _rescaleSlope, _rescaleIntercept);
 		}
 	}
 }

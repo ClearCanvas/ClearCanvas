@@ -120,25 +120,6 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Queues.WorkQueue
                 RefreshRateTextBox.Text = TimeSpan.FromMilliseconds(RefreshTimer.Interval).TotalSeconds.ToString(CultureInfo.InvariantCulture);
             }
 
-            string patientID = string.Empty;
-            string patientName = string.Empty;
-            string processorID = string.Empty;
-            ServerPartition activePartition = null;
-
-            if (!IsPostBack && !Page.IsAsync)
-            {
-                patientID = Server.UrlDecode(Request["PatientID"]);
-                patientName = Server.UrlDecode(Request["PatientName"]);
-                string partitionKey = Request["PartitionKey"];
-                processorID = Request["ProcessorID"];
-
-                if (!string.IsNullOrEmpty(partitionKey))
-                {
-                    var controller = new ServerPartitionConfigController();
-                    activePartition = controller.GetPartition(new ServerEntityKey("ServerPartition", partitionKey));
-                }
-            }
-
             ServerPartitionSelector.PartitionChanged += delegate(ServerPartition partition)
             {
                 SearchPanel.ServerPartition = partition;
@@ -146,16 +127,6 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Queues.WorkQueue
             };
 
             ServerPartitionSelector.SetUpdatePanel(PageContent);
-
-            SearchPanel.PatientNameFromUrl = patientName;
-            SearchPanel.PatientIDFromUrl = patientID;
-            SearchPanel.ProcessingServerFromUrl = processorID;
-
-
-            if (activePartition != null)
-            {
-                ServerPartitionSelector.SelectedPartition = activePartition;
-            }
 
             SetPageTitle(Titles.WorkQueuePageTitle);
         }

@@ -41,34 +41,6 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Queues.StudyIntegrityQue
         {
             base.OnInit(e);
 
-            ServerPartition activePartition = null;
-
-            if (!IsPostBack && !Page.IsAsync)
-            {
-                string patientID = Request["PatientID"];
-                string patientName = Request["PatientName"];
-                string partitionKey = Request["PartitionKey"];
-                string reason = Request["Reason"];
-
-                if (!string.IsNullOrEmpty(patientID) && !string.IsNullOrEmpty(patientName) &&
-                    !string.IsNullOrEmpty(partitionKey))
-                {
-                    if (!string.IsNullOrEmpty(partitionKey))
-                    {
-                        var controller = new ServerPartitionConfigController();
-                        activePartition = controller.GetPartition(new ServerEntityKey("ServerPartition", partitionKey));
-                    }
-                }
-                if (string.IsNullOrEmpty(reason))
-                {
-                    if (!string.IsNullOrEmpty(partitionKey))
-                    {
-                        var controller = new ServerPartitionConfigController();
-                        activePartition = controller.GetPartition(new ServerEntityKey("ServerPartition", partitionKey));
-                    }
-                }
-            }
-
             ServerPartitionSelector.PartitionChanged += delegate(ServerPartition partition)
             {
                 SearchPanel.ServerPartition = partition;
@@ -76,11 +48,6 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Queues.StudyIntegrityQue
             };
 
             ServerPartitionSelector.SetUpdatePanel(PageContent);
-
-            if (activePartition != null)
-            {
-                ServerPartitionSelector.SelectedPartition = activePartition;
-            }
 
             SetPageTitle(Titles.StudyIntegrityQueuePageTitle);
         }

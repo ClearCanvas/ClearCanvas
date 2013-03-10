@@ -76,14 +76,16 @@ function EnableWatermarkInput() {
     $("#@@HW_PERCENTAGE_INPUT_CLIENTID@@").removeAttr('disabled');
 }
 
-
+function FormatFloatNumber(x) {
+    return x.toFixed(5);
+}
 
 // Returns a string containing a percentage value formatted to 
 // the number of decimal places specified by "decimalpoints"
 function FormatPercentage(value, decimalpoints)
 {
-    var pct = value * 100.0
-    return pct.toLocaleString() + '%';
+    var pct = value * 100.0;
+    return pct.toFixed(decimalpoints) + '%';
 }
 
 // Returns a string formatted to the appropriate size (MB, GB, TB)
@@ -92,26 +94,26 @@ function FormatSize(sizeInKB)
 {
         MB = 1024; //kb
         GB = 1024*MB;
-        TB = 1024*GB;
+        TB = 1024 * GB;
         
         if (sizeInKB > TB)
         {
             var num = sizeInKB / TB;
-            return num.toLocaleString() + ' TB';
+            return FormatFloatNumber(num)  + ' TB';
         }
         else if (sizeInKB > GB)
         {
-            var num = (sizeInKB/GB);
-            return num.toLocaleString() + ' GB';
+            var num = (sizeInKB / GB);
+            return FormatFloatNumber(num) + ' GB';
         }
         else if (sizeInKB > MB)
         {
-            var num = sizeInKB/MB;
-            return num.toLocaleString() + ' MB';
+            var num = sizeInKB / MB;
+            return FormatFloatNumber(num) + ' MB';
         }
-        else
-        {
-            return  '' + sizeInKB.toLocaleString() + ' KB';
+        else {
+            
+            return '' + FormatFloatNumber(num)  + ' KB';
         }
 }
 

@@ -22,6 +22,7 @@
 
 // End License
 
+
 Sys.Application.add_load(AppLoad);
  
 function AppLoad()

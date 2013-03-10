@@ -102,6 +102,7 @@
     <Compile Include="Native\TV.cs" />
     <Compile Include="Native\User32.cs" />
     <Compile Include="Native\WIN32_FIND_DATA.cs" />
+    <Compile Include="PathAccessException.cs" />
     <Compile Include="PathNotFoundException.cs" />
     <Compile Include="Pidl.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

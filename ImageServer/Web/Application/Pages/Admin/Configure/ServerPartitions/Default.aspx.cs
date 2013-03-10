@@ -93,7 +93,7 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Admin.Configure.ServerPa
             if (AddEditPartitionDialog.EditMode)
             {
                 // Add partition into db and refresh the list
-                if (_controller.UpdatePartition(info.Partition, info.GroupsWithAccess))
+                if (_controller.UpdatePartition(info.Partition, info.GroupsWithDataAccess))
                 {
                     UpdateUI();
                 }
@@ -101,7 +101,7 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Admin.Configure.ServerPa
             else
             {
                 // Add partition into db and refresh the list
-                if (_controller.AddPartition(info.Partition, info.GroupsWithAccess))
+                if (_controller.AddPartition(info.Partition, info.GroupsWithDataAccess))
                 {
                     UpdateUI();
                 }

@@ -39,7 +39,8 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 
 		public ToolSettings()
 		{
-            ApplicationSettingsRegistry.Instance.RegisterInstance(this);
+            //TODO (Phoenix5): #10730 - remove this when it's fixed.
+            //ApplicationSettingsRegistry.Instance.RegisterInstance(this);
         }
 
         //TODO (Phoenix5): #10730 - remove this when it's fixed.

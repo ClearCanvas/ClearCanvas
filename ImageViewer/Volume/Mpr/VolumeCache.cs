@@ -69,8 +69,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 		/// This will ensure that all resources held by the cache object, including the volume itself as well as the references to the source frames,
 		/// can be properly released when no other cache references exist.
 		/// </remarks>
-		/// <param name="lockVolume">Specifies whether or not to lock the volume from being memory managed with this reference.</param>
-		ICachedVolumeReference CreateReference(bool lockVolume = false);
+		ICachedVolumeReference CreateReference();
 	}
 
 	/// <summary>
@@ -99,8 +98,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 		/// This will ensure that all resources held by the cache object, including the volume itself as well as the references to the source frames,
 		/// can be properly released when no other cache references exist.
 		/// </remarks>
-		/// <param name="lockVolume">Specifies whether or not to lock the volume from being memory managed with this reference.</param>
-		new ICachedVolumeReference CreateReference(bool lockVolume = false);
+		new ICachedVolumeReference CreateReference();
 
 		/// <summary>
 		/// Gets a value indicating whether or not the MPR volume is loaded.
@@ -131,6 +129,19 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 		/// </summary>
 		/// <param name="onProgress">Optionally specifies a callback method to be called periodically while the loading the volume.</param>
 		void Load(VolumeLoadProgressCallback onProgress = null);
+
+		/// <summary>
+		/// Locks the MPR volume, preventing it from being unloaded by memory management.
+		/// </summary>
+		/// <remarks>
+		/// The lock will be automatically released if the reference is disposed.
+		/// </remarks>
+		void Lock();
+
+		/// <summary>
+		/// Unlocks the MPR volume, allowing memory management to unload it as necessary.
+		/// </summary>
+		void Unlock();
 	}
 
 	/// <summary>
@@ -172,13 +183,9 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 		/// <summary>
 		/// Gets an instance of a <see cref="VolumeCache"/> whose lifetime is tied to a specific <see cref="IImageViewer"/> instance.
 		/// </summary>
-		public static VolumeCache GetInstance(IImageViewer viewer)
+		public static VolumeCache GetInstance(IImageViewer imageViewer)
 		{
-			Platform.CheckForNullReference(viewer, "viewer");
-			var instance = viewer.ExtensionData[typeof (VolumeCache)] as VolumeCache;
-			if (instance == null)
-				viewer.ExtensionData[typeof (VolumeCache)] = instance = new VolumeCache();
-			return instance;
+			return imageViewer.GetVolumeCache();
 		}
 
 		private readonly object _syncRoot = new object();
@@ -469,10 +476,10 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 			private readonly object _referenceSyncRoot = new object();
 			private int _referenceCount = 0;
 
-			public ICachedVolumeReference CreateReference(bool lockVolume = false)
+			public ICachedVolumeReference CreateReference()
 			{
 				AssertNotDisposed();
-				return lockVolume ? new LockingCachedVolumeReference(this) : new CachedVolumeReference(this);
+				return new CachedVolumeReference(this);
 			}
 
 			public bool IsDisposed
@@ -518,6 +525,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 			private class CachedVolumeReference : ICachedVolumeReference
 			{
 				private CachedVolume _cachedVolume;
+				private bool _locked;
 
 				public CachedVolumeReference(CachedVolume cachedVolume)
 				{
@@ -526,19 +534,15 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 					_cachedVolume._progressChanged += CachedVolumeOnProgressChanged;
 				}
 
-				public virtual void Dispose()
+				public void Dispose()
 				{
 					if (_cachedVolume != null)
 					{
+						if (_locked) _cachedVolume.Unlock();
 						_cachedVolume._progressChanged -= CachedVolumeOnProgressChanged;
 						_cachedVolume.DecrementReferenceCount();
 						_cachedVolume = null;
 					}
-				}
-
-				protected CachedVolume CachedVolume
-				{
-					get { return _cachedVolume; }
 				}
 
 				private void CachedVolumeOnProgressChanged(object sender, EventArgs eventArgs)
@@ -578,9 +582,21 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 					_cachedVolume.Load(callback);
 				}
 
-				public ICachedVolumeReference CreateReference(bool lockVolume = false)
+				public void Lock()
 				{
-					return lockVolume ? new LockingCachedVolumeReference(_cachedVolume) : new CachedVolumeReference(_cachedVolume);
+					if (!_locked) _cachedVolume.Lock();
+					_locked = true;
+				}
+
+				public void Unlock()
+				{
+					if (_locked) _cachedVolume.Unlock();
+					_locked = false;
+				}
+
+				public ICachedVolumeReference CreateReference()
+				{
+					return new CachedVolumeReference(_cachedVolume);
 				}
 
 				IVolumeReference IVolumeReference.Clone()
@@ -601,21 +617,6 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 				public override bool Equals(object obj)
 				{
 					return obj is CachedVolumeReference && Equals((CachedVolumeReference) obj);
-				}
-			}
-
-			private class LockingCachedVolumeReference : CachedVolumeReference
-			{
-				public LockingCachedVolumeReference(CachedVolume cachedVolume)
-					: base(cachedVolume)
-				{
-					cachedVolume.Lock();
-				}
-
-				public override void Dispose()
-				{
-					CachedVolume.Unlock();
-					base.Dispose();
 				}
 			}
 

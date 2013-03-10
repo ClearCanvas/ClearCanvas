@@ -33,7 +33,9 @@ using ClearCanvas.ImageViewer.Common.StudyManagement;
 
 namespace ClearCanvas.ImageViewer.Configuration
 {
-	/// <summary>
+    // TODO (CR Jan 2013): Badly needs to be refactored.
+    
+    /// <summary>
 	/// Helper class for publishing DICOM files to update existing studies using the configured publishing settings.
 	/// </summary>
 	/// <remarks>
@@ -120,6 +122,8 @@ namespace ClearCanvas.ImageViewer.Configuration
 			if (PermissionsHelper.IsInRole(AuthorityTokens.Publishing))
 			{
 				var servers = new List<IDicomServiceNode>();
+
+			    // TODO (CR Jan 2013 - Low): How files are published and to where should be an independent strategy. Will enter an SDK ticket.
 
 				// if configured to publish to the original server, resolve the origin and add to list of destinations
 				if (DicomPublishingSettings.Default.SendLocalToStudySourceAE)

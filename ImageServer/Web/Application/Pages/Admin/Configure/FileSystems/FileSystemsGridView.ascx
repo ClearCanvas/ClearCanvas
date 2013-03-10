@@ -21,7 +21,6 @@
 // <http://www.gnu.org/licenses/>.
 
 --%>
-
 <%@ Import Namespace="Resources" %>
 
 <%@ Control Language="C#" AutoEventWireup="true" Inherits="ClearCanvas.ImageServer.Web.Application.Pages.Admin.Configure.FileSystems.FileSystemsGridView"

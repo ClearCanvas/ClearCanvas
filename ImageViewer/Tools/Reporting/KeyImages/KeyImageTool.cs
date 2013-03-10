@@ -38,13 +38,15 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 	[Tooltip("create", "TooltipCreateKeyImage")]
 	[IconSet("create", "Icons.CreateKeyImageToolSmall.png", "Icons.CreateKeyImageToolMedium.png", "Icons.CreateKeyImageToolLarge.png")]
 	[EnabledStateObserver("create", "Enabled", "EnabledChanged")]
+	// TODO (CR Phoenix5 - Med): Clinical as well
 	[ViewerActionPermission("create", AuthorityTokens.KeyImages)]
 
 	[ButtonAction("show", "global-toolbars/ToolbarStandard/ToolbarShowKeyImages", "Show")]
 	[Tooltip("show", "TooltipShowKeyImages")]
 	[IconSet("show", "Icons.ShowKeyImagesToolSmall.png", "Icons.ShowKeyImagesToolMedium.png", "Icons.ShowKeyImagesToolLarge.png")]
 	[EnabledStateObserver("show", "ShowEnabled", "ShowEnabledChanged")]
-	[ViewerActionPermission("show", AuthorityTokens.KeyImages)]
+    // TODO (CR Phoenix5 - Med): Clinical as well
+    [ViewerActionPermission("show", AuthorityTokens.KeyImages)]
 
 	[ExtensionOf(typeof(ImageViewerToolExtensionPoint))]
 	internal class KeyImageTool : ImageViewerTool
@@ -102,6 +104,7 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
             {
                 foreach (var a in Actions)
                 {
+                    // TODO (CR Phoenix5 - High): use the ID, which doesn't change; this will change with language.
                     if (a.Path.LocalizedPath == "global-toolbars/ToolbarStandard/Show Key Images")
                     {
                         var buttonAction = a as ButtonAction;
@@ -133,10 +136,13 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 		{
             // TODO  Better way to address Webstation usage?
 			base.Enabled = KeyImagePublisher.IsSupportedImage(base.SelectedPresentationImage) &&
-					  PermissionsHelper.IsInRole(AuthorityTokens.KeyImages) &&
+                // TODO (CR Phoenix5 - Med): Clinical as well	  
+                        PermissionsHelper.IsInRole(AuthorityTokens.KeyImages) &&
+			               // TODO (CR Phoenix5 - Low): KeyImagePublisher.IsSupportedImage?
                       !(SelectedPresentationImage.ParentDisplaySet.Descriptor is KeyImageDisplaySetDescriptor) &&
                       (WorkItemActivityMonitor.IsRunning || !KeyImageClipboard.HasViewPlugin);
 
+            // TODO (CR Phoenix5 - Med): Clinical as well
             this.ShowEnabled = WorkItemActivityMonitor.IsRunning &&
 					  PermissionsHelper.IsInRole(AuthorityTokens.KeyImages);
 		}
@@ -157,6 +163,7 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
                 {
                     foreach (ClearCanvas.Desktop.Actions.Action a in this.Actions)
                     {
+                        // TODO (CR Phoenix5 - High): use the ID, which doesn't change; this will change with language.
                         if (a.Path.LocalizedPath.Equals("imageviewer-contextmenu/MenuCreateKeyImage")
                           | a.Path.LocalizedPath.Equals("global-toolbars/ToolbarStandard/Create Key Image"))
                         {
@@ -168,6 +175,7 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
                 {
                     foreach (ClearCanvas.Desktop.Actions.Action a in this.Actions)
                     {
+                        // TODO (CR Phoenix5 - High): use the ID, which doesn't change; this will change with language.
                         if (a.Path.LocalizedPath.Equals("imageviewer-contextmenu/MenuCreateKeyImage")
                          || a.Path.LocalizedPath.Equals("global-toolbars/ToolbarStandard/Create Key Image"))
                         {
@@ -177,7 +185,7 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
                 }
             }
             */
-		}
+        }
 
 		protected override void OnTileSelected(object sender, TileSelectedEventArgs e)
 		{

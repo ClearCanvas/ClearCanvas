@@ -43,15 +43,16 @@ namespace ClearCanvas.ImageServer.Common.Utilities
         /// </summary>
         public static string GetXmlDocumentAsString(XmlDocument doc, bool escapeChars)
         {
-            StringWriter sw = new StringWriter();
-            XmlWriterSettings xmlSettings = new XmlWriterSettings();
-
-            xmlSettings.Encoding = Encoding.UTF8;
-            xmlSettings.ConformanceLevel = ConformanceLevel.Fragment;
-            xmlSettings.Indent = true;
-            xmlSettings.NewLineOnAttributes = false;
-            xmlSettings.CheckCharacters = true;
-            xmlSettings.IndentChars = "  ";
+            var sw = new StringWriter();
+            var xmlSettings = new XmlWriterSettings
+                {
+                    Encoding = Encoding.UTF8,
+                    ConformanceLevel = ConformanceLevel.Fragment,
+                    Indent = true,
+                    NewLineOnAttributes = false,
+                    CheckCharacters = true,
+                    IndentChars = "  "
+                };
 
             XmlWriter xw = XmlWriter.Create(sw, xmlSettings);
 
@@ -74,7 +75,7 @@ namespace ClearCanvas.ImageServer.Common.Utilities
             if (node == null)
                 return null;
 
-            MemoryStream stream = new MemoryStream();
+            var stream = new MemoryStream();
             XmlWriter sw = new XmlTextWriter(stream, Encoding.Unicode);
             node.WriteTo(sw);
             sw.Flush();
@@ -95,7 +96,7 @@ namespace ClearCanvas.ImageServer.Common.Utilities
         {
             Platform.CheckForNullReference(reader, "reader");
 
-            XmlSerializer serializer = new XmlSerializer(typeof(T));
+            var serializer = new XmlSerializer(typeof(T));
             return (T)serializer.Deserialize(reader);
         }
 
@@ -108,7 +109,7 @@ namespace ClearCanvas.ImageServer.Common.Utilities
         /// <returns></returns>
         public static T Deserialize<T>(string xmlContent) where T : class
         {
-            XmlDocument doc = new XmlDocument();
+            var doc = new XmlDocument();
             doc.LoadXml(xmlContent);
             return Deserialize<T>(doc);
         }
@@ -117,18 +118,36 @@ namespace ClearCanvas.ImageServer.Common.Utilities
         /// Serializes an object into an XML format.
         /// </summary>
         /// <param name="obj">Object to be serialized</param>
+        /// <param name="includeAssemblyVersion">Flag whether the assembly version is included in the serialized XML.</param>
         /// <returns>An XmlNode that contains the serialized object</returns>
         /// <remarks>
         /// To use the returned <see cref="XmlNode"/> in an <see cref="XmlDocument"/>, <see cref="XmlDocument.ImportNode"/> must be used.
         /// </remarks>
-        public static XmlNode Serialize(Object obj)
+        public static XmlNode Serialize(Object obj, bool includeAssemblyVersion=true)
         {
             XmlDocument doc = SerializeAsXmlDoc(obj);
             XmlNode node = doc.DocumentElement;
             // add "type" attribute to the context node for deserialization purpose
+            if (includeAssemblyVersion)
+            {
             XmlAttribute attr = doc.CreateAttribute("type");
             attr.Value = obj.GetType().AssemblyQualifiedName;
+                if (node != null) 
             node.Attributes.Append(attr);
+            }
+            else
+            {
+                XmlAttribute attr = doc.CreateAttribute("type");
+                Type t = obj.GetType();
+
+                string[] list = t.Assembly.ToString().Split(new[] {','});
+                if (list.Length > 0)
+                {
+                    attr.Value = string.Format("{0}, {1}", t.FullName, list[0]);
+                    if (node != null)
+                        node.Attributes.Append(attr);
+                }
+            }
             return node;
         }
         
@@ -137,13 +156,13 @@ namespace ClearCanvas.ImageServer.Common.Utilities
             if (obj == null)
                 return null;
 
-            StringWriter sw = new StringWriter();
-            CustomXmlTextWriter xmlTextWriter = new CustomXmlTextWriter(sw);
+            var sw = new StringWriter();
+            var xmlTextWriter = new CustomXmlTextWriter(sw);
 
-            XmlSerializer serializer = new XmlSerializer(obj.GetType());
+            var serializer = new XmlSerializer(obj.GetType());
             serializer.Serialize(xmlTextWriter, obj);
             
-            XmlDocument doc = new XmlDocument();
+            var doc = new XmlDocument();
             doc.LoadXml(sw.ToString());
 
             return doc;
@@ -153,12 +172,14 @@ namespace ClearCanvas.ImageServer.Common.Utilities
         {
             Platform.CheckForNullReference(obj, "obj");
 
-            StringWriter sw = new StringWriter();
-            XmlWriterSettings settings = new XmlWriterSettings();
-			settings.Indent = true;
-			settings.NewLineOnAttributes = false;
-			settings.OmitXmlDeclaration = true;
-			settings.Encoding = Encoding.UTF8;
+            var sw = new StringWriter();
+            var settings = new XmlWriterSettings
+                {
+                    Indent = true,
+                    NewLineOnAttributes = false,
+                    OmitXmlDeclaration = true,
+                    Encoding = Encoding.UTF8
+                };
 
 
 			using(XmlWriter writer = XmlWriter.Create(sw, settings))

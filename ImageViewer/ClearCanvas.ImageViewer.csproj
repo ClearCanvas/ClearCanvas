@@ -461,6 +461,7 @@
     <Compile Include="LoadStudyArgs.cs" />
     <Compile Include="Mathematics\PolygonF.cs" />
     <Compile Include="Mathematics\Tests\MatrixTests.cs" />
+    <Compile Include="Mathematics\Tests\Matrix3DTests.cs" />
     <Compile Include="Mathematics\Tests\Vector3DTests.cs" />
     <Compile Include="Graphics\GraphicToolContext.cs" />
     <Compile Include="Comparers\Tests\SortTests.cs" />

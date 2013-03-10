@@ -28,6 +28,9 @@ using ClearCanvas.Enterprise.Core.Upgrade;
 
 namespace ClearCanvas.ImageServer.Model.SqlServer.UpgradeScripts
 {
+    /// <summary>
+    /// Upgrade from the Peso milestone to the Yen milestone
+    /// </summary>
     [ExtensionOf(typeof(PersistentStoreUpgradeScriptExtensionPoint))]
     class UpgradeFrom_6_1_7081_10268 : BaseUpgradeScript
     {

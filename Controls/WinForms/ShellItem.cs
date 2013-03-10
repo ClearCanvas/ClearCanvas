@@ -158,6 +158,17 @@ namespace ClearCanvas.Controls.WinForms
 				_isVirtual = (attributeFlags & Native.SFGAO.SFGAO_FILESYSTEM) == 0;
 				_hasSubFolders = (attributeFlags & Native.SFGAO.SFGAO_HASSUBFOLDER) != 0;
 			}
+			catch (UnauthorizedAccessException ex)
+			{
+				// if an exception happens during construction, we must release the PIDL now (remember, it's a pointer!)
+				var path = string.Empty;
+				if (_pidl != null)
+				{
+					path = _pidl.Path;
+					_pidl.Dispose();
+				}
+				throw new PathAccessException(path, ex);
+			}
 			catch (Exception ex)
 			{
 				// if an exception happens during construction, we must release the PIDL now (remember, it's a pointer!)
@@ -290,9 +301,21 @@ namespace ClearCanvas.Controls.WinForms
 
 			// Get the IEnumIDList interface pointer.
 			Native.IEnumIDList pEnum = null;
-			uint hRes = _shellFolder.EnumObjects(IntPtr.Zero, flags, out pEnum);
-			if (hRes != 0)
-				throw new Exception("IShellFolder::EnumObjects failed to enumerate child objects.", Marshal.GetExceptionForHR((int) hRes));
+
+			try
+			{
+				uint hRes = _shellFolder.EnumObjects(IntPtr.Zero, flags, out pEnum);
+				if (hRes != 0)
+					Marshal.ThrowExceptionForHR((int) hRes);
+			}
+			catch (UnauthorizedAccessException ex)
+			{
+				throw new PathAccessException(_pidl.Path, ex);
+			}
+			catch (Exception ex)
+			{
+				throw new Exception("IShellFolder::EnumObjects failed to enumerate child objects.", ex);
+			}
 
 			try
 			{
