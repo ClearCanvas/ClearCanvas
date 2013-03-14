@@ -557,6 +557,10 @@ namespace ClearCanvas.Common.Serialization
 				{
 					_writer.WriteValue(((Guid)obj).ToString("N"));
 				}
+				else if (obj is IConvertible)
+				{
+					_writer.WriteValue(Convert.ToString(obj, CultureInfo.InvariantCulture));
+				}
 				else
 				{
 					_writer.WriteValue(obj.ToString());
