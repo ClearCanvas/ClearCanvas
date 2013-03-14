@@ -23,6 +23,7 @@
 #endregion
 
 using System;
+using System.Globalization;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Actions;
 using ClearCanvas.Common.Specifications;
@@ -189,32 +190,32 @@ namespace ClearCanvas.Dicom.Utilities.Rules
             }
             if (typeof(T) == typeof(int))
             {
-                int result = int.Parse(value.ToString());
+                int result = int.Parse(value.ToString(), CultureInfo.InvariantCulture);
                 return (T)(object)result;
             }
             if (typeof(T) == typeof(uint))
             {
-                uint result = uint.Parse(value.ToString());
+                uint result = uint.Parse(value.ToString(), CultureInfo.InvariantCulture);
                 return (T)(object)result;
             }
             if (typeof(T) == typeof(long))
             {
-                long result = long.Parse(value.ToString());
+                long result = long.Parse(value.ToString(), CultureInfo.InvariantCulture);
                 return (T)(object)result;
             }
             if (typeof(T) == typeof(ulong))
             {
-                ulong result = ulong.Parse(value.ToString());
+                ulong result = ulong.Parse(value.ToString(), CultureInfo.InvariantCulture);
                 return (T)(object)result;
             }
             if (typeof(T) == typeof(float))
             {
-                float result = float.Parse(value.ToString());
+                float result = float.Parse(value.ToString(), CultureInfo.InvariantCulture);
                 return (T)(object)result;
             }
             if (typeof(T) == typeof(double))
             {
-                double result = double.Parse(value.ToString());
+                double result = double.Parse(value.ToString(), CultureInfo.InvariantCulture);
                 return (T)(object)result;
             }
             if (typeof(T) == typeof(DateTime))
