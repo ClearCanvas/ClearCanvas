@@ -116,8 +116,8 @@ namespace ClearCanvas.Common.UsageTracking
 			}
 		}
 
-		private const string _trackingServerHost = "4rf";
-		private const string _trackingServerIp = "10.19.20.122";
+		private const string _trackingServerHost = "cc-blackmesa";
+		private const string _trackingServerIp = "10.19.20.245";
 		private const string _trackingServiceEndpoint = "https://{0}/Tracking/Service.svc";
 
 		private static string TrackingServerHost
@@ -148,7 +148,7 @@ namespace ClearCanvas.Common.UsageTracking
 					if (_first)
 					{
 #if DEBUG_SERVER
-						// Note, this is required when in debug mode and communicating with 4rf,
+						// Note, this is required when in debug mode and communicating with the test server,
 						// which doesn't have an official cert, it isn't required for communicating with
 						// the production server.
 						ServicePointManager.ServerCertificateValidationCallback +=
