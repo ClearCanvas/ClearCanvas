@@ -25,6 +25,8 @@
 #pragma warning disable 1591
 
 using System;
+using System.Globalization;
+
 namespace ClearCanvas.Common.Specifications
 {
     public abstract class ComparisonSpecification : PrimitiveSpecification
@@ -77,7 +79,7 @@ namespace ClearCanvas.Common.Specifications
 		{
 			try
 			{
-				value = Convert.ChangeType(value, type);
+				value = Convert.ChangeType(value, type, CultureInfo.InvariantCulture);
 				return true;
 			}
 			catch (InvalidCastException)
