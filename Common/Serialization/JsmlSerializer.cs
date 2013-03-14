@@ -25,6 +25,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
@@ -730,7 +731,7 @@ namespace ClearCanvas.Common.Serialization
 
 				if (dataType.GetInterface("IConvertible") == typeof(IConvertible))
 				{
-					return Convert.ChangeType(xmlElement.InnerText, dataType);
+					return Convert.ChangeType(xmlElement.InnerText, dataType, CultureInfo.InvariantCulture);
 				}
 
 				return xmlElement.InnerText;
