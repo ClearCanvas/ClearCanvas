@@ -109,7 +109,7 @@ namespace ClearCanvas.ImageServer.Rules
 			if (files.Count == 0)
 			{
 				string message =
-					String.Format("Unexectedly unable to find SOP instances for rules engine in each series in study: {0}",
+					String.Format("Unexpectedly unable to find SOP instances for rules engine in each series in study: {0}",
 					              _location.StudyInstanceUid);
 				Platform.Log(LogLevel.Error, message);
 				throw new ApplicationException(message);
