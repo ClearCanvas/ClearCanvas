@@ -19,10 +19,9 @@
     <File name="Web\bin\App_GlobalResources.compiled" ignore="true"/>
     <File name="Web\bin\Castle.Core.dll" checksum="true" />
     <File name="Web\bin\Castle.DynamicProxy2.dll" checksum="true" />
+    <File name="Web\bin\Iesi.Collections.dll" checksum="true" />
     <File name="Web\bin\ClearCanvas.Common.dll" checksum="true" />
     <File name="Web\bin\ClearCanvas.Common.Core.dll" checksum="true" />
-    <File name="Web\bin\ClearCanvas.Dicom.Codec.Jpeg.dll" checksum="true" />
-    <File name="Web\bin\ClearCanvas.Dicom.Codec.Rle.dll" checksum="true" />
     <File name="Web\bin\ClearCanvas.Dicom.dll" checksum="true" />
     <File name="Web\bin\ClearCanvas.Enterprise.Common.dll" checksum="true" />
     <File name="Web\bin\ClearCanvas.Enterprise.Core.dll" checksum="true" />
