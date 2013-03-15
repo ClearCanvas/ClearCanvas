@@ -26,6 +26,7 @@ using System;
 using System.Web;
 using ClearCanvas.Common;
 using System.Text;
+using ClearCanvas.ImageServer.Web.Common.Security;
 
 namespace ClearCanvas.ImageServer.Web.Common.Exceptions
 {
@@ -44,6 +45,8 @@ namespace ClearCanvas.ImageServer.Web.Common.Exceptions
         {
             context = HttpContext.Current;
         }
+
+        
 
 		public static void ThrowException(Exception e)
 		{
@@ -70,7 +73,7 @@ namespace ClearCanvas.ImageServer.Web.Common.Exceptions
 
                 context.Server.ClearError();
 
-                string logMessage = string.Format("<Error>\n\t<CustomMessage>{0}</CustomMessage>\n\t<SystemMessage>{1}</SystemMessage>\n\t<Source>{2}</Source>\n\t<StackTrace>{3}</StackTrace>", e.LogMessage, e.Message, e.Source, e.StackTrace);
+                string logMessage = string.Format("<Error>\n\t<CustomMessage>{0}</CustomMessage>\n\t<SystemMessage>{1}</SystemMessage>\n\t<Source>{2}</Source>\n\t<StackTrace>{3}</StackTrace>\n<Error>", e.LogMessage, e.Message, e.Source, e.StackTrace);
                 Platform.Log(LogLevel.Error, logMessage);
                 
                 context.Items.Add(ImageServerConstants.ContextKeys.StackTrace, logMessage);
@@ -105,6 +108,8 @@ namespace ClearCanvas.ImageServer.Web.Common.Exceptions
                 if (e.ErrorDescription != null && !e.ErrorDescription.Equals(string.Empty))
                     context.Items.Add(ImageServerConstants.ContextKeys.ErrorDescription, e.ErrorDescription);
 
+
+                Platform.Log(LogLevel.Error, "{0} is not authorized to view {1}", SessionManager.Current.User.DisplayName, context.Request.RawUrl);
                 context.Server.Transfer(ImageServerConstants.PageURLs.AuthorizationErrorPage);
         }
 
