@@ -25,6 +25,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.ServiceModel;
 using System.Threading;
 using ClearCanvas.Common;
 using ClearCanvas.Desktop;
@@ -59,12 +60,20 @@ namespace ClearCanvas.Ris.Client
 					return;
 
 				// otherwise, attempt to establish it, using a valid facility value
-				Platform.GetService<ILoginService>(service =>
+				try
 				{
-					var facilities = RetrieveFacilityChoices(service);
-					if(facilities.Any())
-						LoginSession.Create(facilities.First());
-				});
+					Platform.GetService<ILoginService>(service =>
+					{
+						var facilities = RetrieveFacilityChoices(service);
+						if (facilities.Any())
+							LoginSession.Create(facilities.First());
+					});
+				}
+				catch (EndpointNotFoundException e)
+				{
+					Platform.Log(LogLevel.Error, SR.ExceptionFailedToRetrieveFacilitiesFromRisServer);
+					Platform.Log(LogLevel.Debug, e);
+				}
 			}
 		}
 

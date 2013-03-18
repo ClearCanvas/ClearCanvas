@@ -116,8 +116,8 @@ namespace ClearCanvas.Common.UsageTracking
 			}
 		}
 
-		private const string _trackingServerHost = "4rf";
-		private const string _trackingServerIp = "10.19.20.122";
+		private const string _trackingServerHost = "cc-blackmesa";
+		private const string _trackingServerIp = "10.19.20.245";
 		private const string _trackingServiceEndpoint = "https://{0}/Tracking/Service.svc";
 
 		private static string TrackingServerHost
