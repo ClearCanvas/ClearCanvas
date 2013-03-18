@@ -160,7 +160,6 @@ namespace ClearCanvas.Common.Specifications.Tests
 		}
 
 		[Test]
-		// This test is currently failing because coercion code hasn't been merged to trunk yet
 		public void Test_NotEqual_CoerceTypes()
 		{
 			NotEqualSpecification s = new NotEqualSpecification();
@@ -186,6 +185,59 @@ namespace ClearCanvas.Common.Specifications.Tests
 			// this should pass because in strict mode we don't do type coercion,
 			// and Object.Equals(x, y) returns false when comparing different types
 			Assert.IsTrue(s.Test(1).Success);
+		}
+
+		[Test]
+		public void Test_Equal_CoerceFloat1()
+		{
+			EqualSpecification s = new EqualSpecification();
+			s.RefValueExpression = new ConstantExpression("1.0");
+
+			Assert.IsTrue(s.Test(1.0f).Success);
+			Assert.IsTrue(s.Test(1.0d).Success);
+			Assert.IsTrue(s.Test((decimal)1.0).Success);
+			Assert.IsTrue(s.Test(1).Success);
+
+			Assert.IsFalse(s.Test("1").Success);
+			Assert.IsFalse(s.Test("1.00").Success);
+			Assert.IsFalse(s.Test(null).Success);
+			Assert.IsFalse(s.Test(0.0).Success);
+			Assert.IsFalse(s.Test("0").Success);
+			Assert.IsFalse(s.Test(0).Success);
+		}
+
+		[Test]
+		public void Test_Equal_CoerceFloat2()
+		{
+			EqualSpecification s = new EqualSpecification();
+			s.RefValueExpression = new ConstantExpression(1.0);
+
+			Assert.IsTrue(s.Test(1).Success);
+			Assert.IsTrue(s.Test(1.0).Success);
+			Assert.IsTrue(s.Test("1").Success);
+			Assert.IsTrue(s.Test("1.0").Success);
+			Assert.IsTrue(s.Test("1.000").Success);
+			Assert.IsFalse(s.Test(null).Success);
+			Assert.IsFalse(s.Test(0).Success);
+			Assert.IsFalse(s.Test(0.0).Success);
+			Assert.IsFalse(s.Test("0").Success);
+		}
+
+		[Test]
+		public void Test_Equal_CoerceFloat3()
+		{
+			EqualSpecification s = new EqualSpecification();
+			s.RefValueExpression = new ConstantExpression(1);
+
+			Assert.IsTrue(s.Test(1).Success);
+			Assert.IsTrue(s.Test(1.0).Success);
+			Assert.IsTrue(s.Test("1").Success);
+			Assert.IsTrue(s.Test("1.0").Success);
+
+			Assert.IsFalse(s.Test(null).Success);
+			Assert.IsFalse(s.Test(0).Success);
+			Assert.IsFalse(s.Test(0.0).Success);
+			Assert.IsFalse(s.Test("0").Success);
 		}
 
 	}
