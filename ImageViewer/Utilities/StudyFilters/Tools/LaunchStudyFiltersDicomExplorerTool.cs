@@ -54,7 +54,7 @@ namespace ClearCanvas.ImageViewer.Utilities.StudyFilters.Tools
 
 			    var loader = studyItem.Server.GetService<IStudyLoader>();
                 studyLoaders.Add(loader);
-			    sopCount += loader.Start(new StudyLoaderArgs(studyItem.StudyInstanceUid, studyItem.Server));
+				sopCount += loader.Start(new StudyLoaderArgs(studyItem.StudyInstanceUid, studyItem.Server, new StudyLoaderOptions(true)));
 			}
 
 			bool success = false;

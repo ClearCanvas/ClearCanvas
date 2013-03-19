@@ -63,16 +63,6 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		private readonly string _studyInstanceUid;
         private readonly IApplicationEntity _server;
 
-		/// <summary>
-		/// Constructs a new <see cref="StudyLoaderArgs"/> using the specified parameters.
-		/// </summary>
-		/// <param name="studyInstanceUid">The Study Instance UID of the study to be loaded.</param>
-		/// <param name="server">The server from which the study should be loaded.</param>
-		public StudyLoaderArgs(string studyInstanceUid, IApplicationEntity server)
-            :this(studyInstanceUid, server, null)
-		{
-		}
-
 	    /// <summary>
 	    /// Constructs a new <see cref="StudyLoaderArgs"/> using the specified parameters.
 	    /// </summary>
