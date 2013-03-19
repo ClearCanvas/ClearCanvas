@@ -58,6 +58,15 @@ namespace ClearCanvas.ImageServer.Web.Common.WebControls.UI
             }
         }
 
+        /// <summary>
+        /// Sets or gets the text.  The text is trimmed of whitespace.
+        /// </summary>
+        public string TrimText
+        {
+            get { return base.Text == null ? null : base.Text.Trim(); }
+            set { base.Text = value == null ? null : value.Trim(); }
+        }
+
         #endregion Public Properties
 
     }
