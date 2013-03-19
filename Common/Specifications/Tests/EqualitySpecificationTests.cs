@@ -108,6 +108,7 @@ namespace ClearCanvas.Common.Specifications.Tests
 			Assert.IsTrue(s.Test("Red").Success);
 			Assert.IsFalse(s.Test(null).Success);
 			Assert.IsFalse(s.Test("").Success);
+			Assert.IsFalse(s.Test("Silver").Success);
 			Assert.IsFalse(s.Test(Color.Blue).Success);
 		}
 

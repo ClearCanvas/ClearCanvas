@@ -77,22 +77,7 @@ namespace ClearCanvas.Common.Specifications
 			if (x.GetType() == y.GetType())
 				return;
 
-			// if either value is a string, we must to coerce the string value to the non-string type
-			// for example, if comparing float 1.0 to string "1.00", it does not make sense to
-			// convert both to strings and compare strings, because the strings "1.0" and "1.00" are not equal.
-			if (x is string)
-			{
-				TryCoerce(ref x, y.GetType());
-				return;
-			}
-			if (y is string)
-			{
-				TryCoerce(ref y, x.GetType());
-				return;
-			}
-
-			// if neither value is a string, we can try the coercion both ways, and hope that
-			// one of the two will succeed
+			// try coercion both ways, and hope that one of the two will succeed
 			if (TryCoerce(ref x, y.GetType()))
 				return;
 
@@ -115,6 +100,12 @@ namespace ClearCanvas.Common.Specifications
 					return false;
 				}
 			}
+
+			// special case: prohibit converting a non-string to a string
+			// for example, if comparing float 1.0 to string "1.00", it does not make sense to
+			// convert both to strings and compare strings, because the strings "1.0" and "1.00" are not equal.
+			if (type == typeof(string) && !(value is string))
+				return false;
 
 			// special case: prohibit lossy casts, which Convert.ChangeType will happily do
 			if (IsIntegralType(type) && IsFloatingPointType(value.GetType()))
