@@ -312,7 +312,7 @@ namespace ClearCanvas.Desktop.Actions
 		/// Gets or sets whether or not the action is available as controlled by the user.
 		/// </summary>
 		/// <remarks>
-		/// The value of <see cref="Available"/> should override both <see cref="Visible"/> and <see cref="Enabled"/>
+		/// The value of <see cref="Available"/> should override <see cref="Visible"/>
 		/// as it represents the user's desire to see the action at all, rather than tool logic.
 		/// </remarks>
     	public virtual bool Available

@@ -121,12 +121,26 @@ namespace ClearCanvas.Desktop.Actions
         /// <summary>
         /// Called by the UI when the user clicks on the action.
         /// </summary>
+        /// <remarks>This method will do nothing when <see cref="CanClick"/> returns false.</remarks>
         public void Click()
         {
-            if (_clickHandler != null && Enabled && Permissible)
+            if (_clickHandler != null && CanClick())
                 _clickHandler();
         }
 
         #endregion
+
+        /// <summary>
+        /// Determines whether or not the internal "click handler" can be called,
+        /// based on the <see cref="IAction.Visible"/>, <see cref="IAction.Enabled"/>
+        /// and <see cref="IAction.Permissible"/> properties.
+        /// </summary>
+        private bool CanClick()
+        {
+            //Although Visible doesn't technically apply to a KeyboardAction, it's always true
+            //by default, and there is little reason for anybody to ever set it to false; hence,
+            //why this method is not overridden in KeyboardAction.
+            return Visible && Enabled && Permissible;
+        }
 	}
 }
