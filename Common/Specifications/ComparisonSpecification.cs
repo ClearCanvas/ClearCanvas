@@ -80,16 +80,14 @@ namespace ClearCanvas.Common.Specifications
 			// if either value is a string, we must to coerce the string value to the non-string type
 			// for example, if comparing float 1.0 to string "1.00", it does not make sense to
 			// convert both to strings and compare strings, because the strings "1.0" and "1.00" are not equal.
-			if (x is string || y is string)
+			if (x is string)
 			{
-				if (x is string)
-				{
-					TryCoerce(ref x, y.GetType());
-				}
-				else
-				{
-					TryCoerce(ref y, x.GetType());
-				}
+				TryCoerce(ref x, y.GetType());
+				return;
+			}
+			if (y is string)
+			{
+				TryCoerce(ref y, x.GetType());
 				return;
 			}
 
@@ -118,8 +116,12 @@ namespace ClearCanvas.Common.Specifications
 				}
 			}
 
-			// special case: in order to be able to coerce a string such as "1.0" or "1.1" to an integral data type,
-			// we need to first explicitly parse it into a number object (double).
+			// special case: prohibit lossy casts, which Convert.ChangeType will happily do
+			if (IsIntegralType(type) && IsFloatingPointType(value.GetType()))
+				return false;
+
+			// special case: in order to be able to coerce a string such as "1.0" to an integral data type,
+			// we need to first explicitly parse it into a integral value
 			if(IsIntegralType(type) && value is string)
 			{
 				// try to parse value as a number... 
@@ -149,16 +151,28 @@ namespace ClearCanvas.Common.Specifications
 			if (!(x is string))
 				return;
 
-			// convert to "double", since it is the broadest of all number types
-			double result;
-			if (double.TryParse((string)x, NumberStyles.Any, CultureInfo.InvariantCulture, out result))
-				x = result;
+			long l;
+			if (long.TryParse((string)x, NumberStyles.Any, CultureInfo.InvariantCulture, out l))
+			{
+				x = l;
+				return;
+			}
+
+			ulong ul;
+			if (ulong.TryParse((string)x, NumberStyles.Any, CultureInfo.InvariantCulture, out ul))
+				x = ul;
 		}
 
 		private static bool IsIntegralType(Type type)
 		{
 			return type == typeof (short) || type == typeof (int) || type == typeof (long)
-			       || type == typeof (ushort) || type == typeof (uint) || type == typeof (ulong);
+			       || type == typeof (ushort) || type == typeof (uint) || type == typeof (ulong)
+				   || type == typeof (byte) || type == typeof (sbyte);
+		}
+
+		private static bool IsFloatingPointType(Type type)
+		{
+			return type == typeof (float) || type == typeof (double) || type == typeof (decimal);
 		}
 	}
 }
