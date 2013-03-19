@@ -240,6 +240,79 @@ namespace ClearCanvas.Common.Specifications.Tests
 			Assert.IsFalse(s.Test("0").Success);
 		}
 
+		[Test]
+		public void Test_Equal_CoerceFloat4()
+		{
+			EqualSpecification s = new EqualSpecification();
+			s.RefValueExpression = new ConstantExpression("1.1");
+
+			Assert.IsTrue(s.Test(1.1f).Success);
+			Assert.IsTrue(s.Test(1.1d).Success);
+			Assert.IsTrue(s.Test((decimal)1.1).Success);
+			Assert.IsTrue(s.Test("1.1").Success);
+
+			Assert.IsFalse(s.Test(1).Success);
+			Assert.IsFalse(s.Test("1").Success);
+			Assert.IsFalse(s.Test("1.10").Success);
+			Assert.IsFalse(s.Test(null).Success);
+			Assert.IsFalse(s.Test(0.0).Success);
+			Assert.IsFalse(s.Test("0").Success);
+			Assert.IsFalse(s.Test(0).Success);
+		}
+
+		[Test]
+		public void Test_Equal_CoerceFloat5()
+		{
+			EqualSpecification s = new EqualSpecification();
+			s.RefValueExpression = new ConstantExpression(1.1);
+
+			Assert.IsTrue(s.Test(1.1f).Success);
+			Assert.IsTrue(s.Test(1.1d).Success);
+			Assert.IsTrue(s.Test((decimal)1.1).Success);
+			Assert.IsTrue(s.Test("1.1").Success);
+			Assert.IsTrue(s.Test("1.10").Success);
+			Assert.IsTrue(s.Test("1.100").Success);
+
+			Assert.IsFalse(s.Test(1).Success);
+			Assert.IsFalse(s.Test(1.0).Success);
+			Assert.IsFalse(s.Test(null).Success);
+			Assert.IsFalse(s.Test(0).Success);
+			Assert.IsFalse(s.Test(0.0).Success);
+			Assert.IsFalse(s.Test("0").Success);
+		}
+
+		[Test]
+		public void Test_Equal_CoerceChar1()
+		{
+			EqualSpecification s = new EqualSpecification();
+			s.RefValueExpression = new ConstantExpression('x');
+
+			Assert.IsTrue(s.Test('x').Success);
+			Assert.IsTrue(s.Test("x").Success);
+
+			Assert.IsFalse(s.Test('\0').Success);
+			Assert.IsFalse(s.Test('y').Success);
+			Assert.IsFalse(s.Test("").Success);
+			Assert.IsFalse(s.Test("xy").Success);
+			Assert.IsFalse(s.Test("yx").Success);
+		}
+
+		[Test]
+		public void Test_Equal_CoerceChar2()
+		{
+			EqualSpecification s = new EqualSpecification();
+			s.RefValueExpression = new ConstantExpression("x");
+
+			Assert.IsTrue(s.Test("x").Success);
+			Assert.IsTrue(s.Test('x').Success);
+
+			Assert.IsFalse(s.Test('\0').Success);
+			Assert.IsFalse(s.Test('y').Success);
+			Assert.IsFalse(s.Test("").Success);
+			Assert.IsFalse(s.Test("xy").Success);
+			Assert.IsFalse(s.Test("yx").Success);
+		}
+
 	}
 }
 
