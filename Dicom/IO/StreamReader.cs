@@ -121,6 +121,11 @@ namespace ClearCanvas.Dicom.IO
 
         public DicomReadStatus Read(DicomTag stopAtTag, DicomReadOptions options)
         {
+            return Read(stopAtTag, options, false);
+        }
+
+        public DicomReadStatus Read(DicomTag stopAtTag, DicomReadOptions options, bool stopAfterFileMetaInfo)
+        {
         	if (stopAtTag == null)
                 stopAtTag = new DicomTag(0xFFFFFFFF, "Bogus Tag", "BogusTag", DicomVr.UNvr, false, 1, 1, false);
 
@@ -148,6 +153,9 @@ namespace ClearCanvas.Dicom.IO
                                 throw new DicomException("Unsupported transfer syntax in group 2 elements");
                             TransferSyntax = group2Syntax;
                         }
+
+						// just detected that end of group 2 was reached - stop now if option was set
+						if (stopAfterFileMetaInfo) return DicomReadStatus.Success;
                     }
                     uint tagValue;
 					if (LastTagRead == null)
@@ -354,7 +362,7 @@ namespace ClearCanvas.Dicom.IO
 							if (_remain < _len)
 								return NeedMoreData(_remain - _len);
 
-							if (Flags.IsSet(options, DicomReadOptions.StorePixelDataReferences)
+							if (_stream is FileStream && Flags.IsSet(options, DicomReadOptions.StorePixelDataReferences)
 							    && _fragment.HasOffsetTable)
 							{
 								FileReference reference = new FileReference(Filename, _stream.Position, _len, _endian, DicomVr.OBvr);
@@ -579,7 +587,7 @@ namespace ClearCanvas.Dicom.IO
 									_remain -= _len;
 									BytesRead += _len;
 								}
-								else if ((LastTagRead.TagValue == DicomTags.PixelData) &&
+								else if ((LastTagRead.TagValue == DicomTags.PixelData) && _stream is FileStream &&
 								         Flags.IsSet(options, DicomReadOptions.StorePixelDataReferences))
 								{
 									FileReference reference =
