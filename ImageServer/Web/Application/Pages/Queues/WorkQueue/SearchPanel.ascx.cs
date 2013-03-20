@@ -152,16 +152,16 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Queues.WorkQueue
 
             workQueueItemList.DataSourceCreated += delegate(WorkQueueDataSource source)
                                                        {
-                                                           if (!String.IsNullOrEmpty(PatientName.Text))
-                                                                    source.PatientsName = SearchHelper.NameWildCard(PatientName.Text);
+                                                           if (!String.IsNullOrEmpty(PatientName.TrimText))
+                                                                    source.PatientsName = SearchHelper.NameWildCard(PatientName.TrimText);
 
                                                            source.Partition = ServerPartition;
 
-                                                           if (!String.IsNullOrEmpty(PatientId.Text))
-                                                                    source.PatientId = SearchHelper.TrailingWildCard(PatientId.Text);
+                                                           if (!String.IsNullOrEmpty(PatientId.TrimText))
+                                                                    source.PatientId = SearchHelper.TrailingWildCard(PatientId.TrimText);
 
-                                                           if (!String.IsNullOrEmpty(ProcessingServer.Text))
-                                                                    source.ProcessingServer = SearchHelper.TrailingWildCard(ProcessingServer.Text);
+                                                           if (!String.IsNullOrEmpty(ProcessingServer.TrimText))
+                                                                    source.ProcessingServer = SearchHelper.TrailingWildCard(ProcessingServer.TrimText);
 
                                                                 source.ScheduledDate = !string.IsNullOrEmpty(ScheduleDate.Text) ? ScheduleDate.Text : string.Empty;                                   
 
@@ -233,9 +233,9 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Queues.WorkQueue
                 var processingServer = Server.UrlDecode(Request["ProcessorID"]);
                 if (patientId != null || patientName != null || processingServer != null)
                 {
-                    PatientId.Text = patientId;
-                    PatientName.Text = patientName;
-                    ProcessingServer.Text = processingServer;
+                    PatientId.TrimText = patientId;
+                    PatientName.TrimText = patientName;
+                    ProcessingServer.TrimText = processingServer;
 
                     workQueueItemList.SetDataSource();
                     workQueueItemList.Refresh();

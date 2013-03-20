@@ -46,7 +46,7 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Queues.StudyIntegrityQue
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox PatientName;
+        protected global::ClearCanvas.ImageServer.Web.Common.WebControls.UI.TextBox PatientName;
         
         /// <summary>
         /// Label4 control.
@@ -64,7 +64,7 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Queues.StudyIntegrityQue
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox PatientId;
+        protected global::ClearCanvas.ImageServer.Web.Common.WebControls.UI.TextBox PatientId;
         
         /// <summary>
         /// Label3 control.
@@ -82,7 +82,7 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Queues.StudyIntegrityQue
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox AccessionNumber;
+        protected global::ClearCanvas.ImageServer.Web.Common.WebControls.UI.TextBox AccessionNumber;
         
         /// <summary>
         /// Label2 control.

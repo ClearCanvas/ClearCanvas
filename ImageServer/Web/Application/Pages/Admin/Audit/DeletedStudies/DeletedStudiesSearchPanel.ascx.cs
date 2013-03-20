@@ -125,11 +125,11 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Admin.Audit.DeletedStudi
             var dataSource = e.ObjectInstance as DeletedStudyDataSource;
             if (dataSource != null)
             {
-                dataSource.AccessionNumber = SearchHelper.TrailingWildCard(AccessionNumber.Text);
-                dataSource.PatientsName = SearchHelper.NameWildCard(PatientName.Text);
-                dataSource.PatientId = SearchHelper.TrailingWildCard(PatientId.Text);
-                dataSource.StudyDescription = SearchHelper.LeadingAndTrailingWildCard(StudyDescription.Text);
-                dataSource.DeletedBy = DeletedBy.Text;
+                dataSource.AccessionNumber = SearchHelper.TrailingWildCard(AccessionNumber.TrimText);
+                dataSource.PatientsName = SearchHelper.NameWildCard(PatientName.TrimText);
+                dataSource.PatientId = SearchHelper.TrailingWildCard(PatientId.TrimText);
+                dataSource.StudyDescription = SearchHelper.LeadingAndTrailingWildCard(StudyDescription.TrimText);
+                dataSource.DeletedBy = DeletedBy.TrimText;
                 if (!String.IsNullOrEmpty(StudyDate.Text))
                 {
                     DateTime value;

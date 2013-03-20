@@ -112,7 +112,7 @@ namespace ClearCanvas.ImageServer.Web.Application.Services
             {
                 result.Success = false;
                 result.ErrorCode = -1;
-                result.ErrorText = ValidationErrors.UsernameCannotBeEmpty;
+                result.ErrorText = ValidationErrors.UserIDCannotBeEmpty;
                 return result;
             }
 

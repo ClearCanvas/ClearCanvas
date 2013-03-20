@@ -55,7 +55,7 @@
 										<tr>
 											<td align="left" valign="bottom">
 												<asp:Label ID="Label2" runat="server" Text="<%$Resources: SearchFieldLabels,AppLogHost%>" CssClass="SearchTextBoxLabel"></asp:Label><br />
-												<asp:TextBox ID="HostFilter" runat="server" CssClass="SearchTextBox" ToolTip="<%$Resources: Tooltips,SearchByHostname %>"></asp:TextBox></td>
+												<ccUI:TextBox ID="HostFilter" runat="server" CssClass="SearchTextBox" ToolTip="<%$Resources: Tooltips,SearchByHostname %>"></ccUI:TextBox></td>
 
                                             <td align="left" valign="bottom">
                                                 <asp:Label ID="Label7" runat="server" Text="<%$Resources: SearchFieldLabels,AppLogFromDate%>" CssClass="SearchTextBoxLabel" EnableViewState="false"/>
@@ -88,7 +88,7 @@
                                             </td>                                            
 											<td align="left" valign="bottom">
 												<asp:Label ID="Label3" runat="server" Text="<%$Resources: SearchFieldLabels,AppLogThread%>" CssClass="SearchTextBoxLabel"></asp:Label><br />
-												<asp:TextBox ID="ThreadFilter" runat="server" CssClass="SearchTextBox" ToolTip="<%$Resources: Tooltips,SearchByThread %>"></asp:TextBox></td>
+												<ccUI:TextBox ID="ThreadFilter" runat="server" CssClass="SearchTextBox" ToolTip="<%$Resources: Tooltips,SearchByThread %>"></ccUI:TextBox></td>
 											<td align="left" valign="bottom">
 												<asp:Label ID="Label6" runat="server" Text="<%$Resources: SearchFieldLabels,AppLogLogLevel%>" CssClass="SearchTextBoxLabel"
 													EnableViewState="False" /><br />
@@ -101,7 +101,7 @@
 											</td>
 											<td align="left" valign="bottom">
 												<asp:Label ID="Label1" runat="server" Text="<%$Resources:SearchFieldLabels,AppLogLogMessages %>" CssClass="SearchTextBoxLabel"></asp:Label><br />
-												<asp:TextBox ID="MessageFilter" runat="server" CssClass="SearchTextBox" ToolTip="<%$Resources: Tooltips,SearchByLogContent %>"></asp:TextBox></td>
+												<ccUI:TextBox ID="MessageFilter" runat="server" CssClass="SearchTextBox" ToolTip="<%$Resources: Tooltips,SearchByLogContent %>"></ccUI:TextBox></td>
 											<td valign="bottom">
 												<asp:Panel ID="Panel1" runat="server" CssClass="SearchButtonPanel">
 													<ccUI:ToolbarButton ID="SearchButton" runat="server" SkinID="<%$Image:SearchIcon%>" OnClick="SearchButton_Click" CausesValidation="true" ValidationGroup="AppLogValidationGroup" /></asp:Panel>
