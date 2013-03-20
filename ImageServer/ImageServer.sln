@@ -33,11 +33,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build-Manifest", "Build-Man
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build-Scripts", "Build-Scripts", "{B7B23D6D-2EF9-4FBD-A2E5-9420305E033F}"
 	ProjectSection(SolutionItems) = preProject
-		ImageServer.proj = ImageServer.proj
 		ImageServer_dist.proj = ImageServer_dist.proj
 		ImageServer_WebPostBuild.proj = ImageServer_WebPostBuild.proj
 		ImageServerManifest.proj = ImageServerManifest.proj
-		Web\ApplicationDeployment\WebApplicationDeployment.wdproj = Web\ApplicationDeployment\WebApplicationDeployment.wdproj
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.ImageServer.TestApp", "TestApp\ClearCanvas.ImageServer.TestApp.csproj", "{7462F6BA-5634-4ED5-A4E1-707F3F43D113}"

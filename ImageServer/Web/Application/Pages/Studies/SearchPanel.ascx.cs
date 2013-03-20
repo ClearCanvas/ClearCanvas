@@ -176,8 +176,8 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Studies
         {
             get
             {
-                if (!Thread.CurrentPrincipal.IsInRole(ClearCanvas.ImageViewer.AuthorityTokens.ViewerClinical))
-                    return Page.ResolveClientUrl(ImageServerConstants.PageURLs.EmbeddedViewImagesPage);
+                //if (!Thread.CurrentPrincipal.IsInRole(ClearCanvas.ImageViewer.AuthorityTokens.ViewerClinical))
+                //    return Page.ResolveClientUrl(ImageServerConstants.PageURLs.EmbeddedViewImagesPage);
 
                 return Page.ResolveClientUrl(ConfigurationManager.AppSettings["WebViewerPage"] ?? ImageServerConstants.PageURLs.ViewImagesPage);
             }
@@ -194,7 +194,7 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Studies
         [ClientPropertyName("OpenNewWindow")]
         public bool OpenNewWindow
         {
-            get { return Thread.CurrentPrincipal.IsInRole(ClearCanvas.ImageViewer.AuthorityTokens.ViewerClinical); }
+            get { return true; }
         }
 
 

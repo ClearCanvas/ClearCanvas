@@ -23,6 +23,7 @@
 --%>
 
 <%@ Control Language="C#" AutoEventWireup="true" CodeBehind="TierMigrationWorkQueueDetailsView.ascx.cs" Inherits="ClearCanvas.ImageServer.Web.Application.Pages.Queues.WorkQueue.Edit.TierMigrationWorkQueueDetailsView" %>
+<%@ Import Namespace="ClearCanvas.ImageServer.Web.Common.Utilities" %>
 
 <asp:DetailsView ID="TierMigrationStudyDetailsView" runat="server" AutoGenerateRows="False" CellPadding="2"
     GridLines="Horizontal" CssClass="GlobalGridView" Width="100%">
