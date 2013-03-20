@@ -47,7 +47,7 @@ namespace ClearCanvas.Web.Enterprise.Authentication
         public SessionInfo Login(string userName, string password, string appName)
         {
             if (string.IsNullOrEmpty(userName))
-                throw new ArgumentException(SR.UsernameIsEmpty);
+                throw new ArgumentException(SR.UserIDIsEmpty);
 
             if (string.IsNullOrEmpty(password))
                 throw new ArgumentException(SR.PasswordIsEmpty);
