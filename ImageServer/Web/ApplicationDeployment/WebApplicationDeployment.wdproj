@@ -27,14 +27,14 @@
     <SourceWebVirtualPath>/ClearCanvas.ImageServer.Web.Application.csproj</SourceWebVirtualPath>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|Any CPU' ">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>..\..\$(DeploymentOutputPath)</OutputPath>
     <EnableUpdateable>true</EnableUpdateable>
     <UseMerge>true</UseMerge>
     <SingleAssemblyName>ClearCanvas.ImageServer.Web.Application.Deployment</SingleAssemblyName>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|Any CPU' ">
     <DebugSymbols>false</DebugSymbols>
     <OutputPath>..\..\$(DeploymentOutputPath)</OutputPath>
     <EnableUpdateable>true</EnableUpdateable>
