@@ -39,11 +39,9 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Error
             } 
             if (Context.Items[ImageServerConstants.ContextKeys.StackTrace] != null)
             {
-                var errorMessage = Context.Items[ImageServerConstants.ContextKeys.ErrorMessage];
-
                 StringBuilder stack = new StringBuilder();
-                stack.AppendLine(Server.HtmlEncode(ErrorMessageLabel.Text));
-                stack.AppendLine(Server.HtmlEncode(Context.Items[ImageServerConstants.ContextKeys.StackTrace].ToString()));
+                stack.AppendLine(ErrorMessageLabel.Text);
+                stack.AppendLine(Context.Items[ImageServerConstants.ContextKeys.StackTrace].ToString());
 
                 StackTraceTextBox.Text = stack.ToString();
                 StackTraceTextBox.Visible = true;

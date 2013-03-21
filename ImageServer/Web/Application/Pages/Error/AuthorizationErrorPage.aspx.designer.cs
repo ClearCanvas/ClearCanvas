@@ -13,42 +13,6 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Error {
     public partial class AuthorizationErrorPage {
         
         /// <summary>
-        /// ErrorMessageLabel control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label ErrorMessageLabel;
-        
-        /// <summary>
-        /// DescriptionLabel control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label DescriptionLabel;
-        
-        /// <summary>
-        /// StackTraceMessage control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl StackTraceMessage;
-        
-        /// <summary>
-        /// StackTraceTextBox control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox StackTraceTextBox;
-        
-        /// <summary>
         /// LinkButton1 control.
         /// </summary>
         /// <remarks>
@@ -56,14 +20,5 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Error {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.LinkButton LinkButton1;
-        
-        /// <summary>
-        /// LogoutButton control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.LinkButton LogoutButton;
     }
 }
