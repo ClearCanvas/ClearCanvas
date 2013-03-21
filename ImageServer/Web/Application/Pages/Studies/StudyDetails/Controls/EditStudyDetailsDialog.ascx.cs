@@ -24,7 +24,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Web.UI.WebControls;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
@@ -204,7 +203,14 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Studies.StudyDetails.Con
             int ss = String.IsNullOrEmpty(StudyTimeSeconds.Text) ? 0 : int.Parse(StudyTimeSeconds.Text);
             String dicomStudyTime = String.Format("{0:00}{1:00}{2:00}", hh, mm, ss);
 
-            if (AreDifferent(Study.StudyTime, dicomStudyTime))
+            // #9475 : if fraction is in the original time, it should be preserved unless the hours, minutes or seconds are modified.
+            var originalTime = Study.StudyTime;
+            if (!string.IsNullOrEmpty(originalTime) && originalTime.Contains("."))
+            {
+                originalTime = originalTime.Substring(0, originalTime.IndexOf(".", StringComparison.InvariantCultureIgnoreCase));
+            }
+
+            if (AreDifferent(originalTime, dicomStudyTime))
             {
                 var item = new UpdateItem(DicomTags.StudyTime, Study.StudyTime, dicomStudyTime);
                 changes.Add(item);
