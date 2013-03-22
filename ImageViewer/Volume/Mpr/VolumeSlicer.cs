@@ -48,7 +48,6 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 	{
 		private readonly IVolumeReference _volume;
 		private readonly IVolumeSlicerParams _slicerParams;
-		private readonly string _seriesInstanceUid;
 
 		private float _sliceSpacing;
 
@@ -62,20 +61,6 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 		{
 			_volume = volumeReference.Clone();
 			_slicerParams = slicerParams;
-		}
-
-		[Obsolete("Series Instance UID is now only assigned when creating actual slice SOPs and is not necessary as a property of the VolumeSlicer.")]
-		public VolumeSlicer(Volume volume, IVolumeSlicerParams slicerParams, string seriesInstanceUid)
-			: this(volume, slicerParams)
-		{
-			_seriesInstanceUid = seriesInstanceUid;
-		}
-
-		[Obsolete("Series Instance UID is now only assigned when creating actual slice SOPs and is not necessary as a property of the VolumeSlicer.")]
-		public VolumeSlicer(IVolumeReference volumeReference, IVolumeSlicerParams slicerParams, string seriesInstanceUid)
-			: this(volumeReference, slicerParams)
-		{
-			_seriesInstanceUid = seriesInstanceUid;
 		}
 
 		public Volume Volume
@@ -124,19 +109,18 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 			return _sliceSpacing;
 		}
 
-		[Obsolete("For pizza slices, call 9671111")]
-		public IEnumerable<ISopDataSource> CreateSlices()
+		public IEnumerable<ISopDataSource> CreateSliceSops()
 		{
-			return CreateSliceSops(_seriesInstanceUid);
+			return CreateSliceSops(null);
 		}
 
 		public IEnumerable<ISopDataSource> CreateSliceSops(string seriesInstanceUid)
 		{
-			if (string.IsNullOrEmpty(seriesInstanceUid))
+			if (string.IsNullOrWhiteSpace(seriesInstanceUid))
 				seriesInstanceUid = DicomUid.GenerateUid().UID;
 
 			var n = 0;
-			foreach (var sop in CreateSlices2().Select(s => new VolumeSliceSopDataSource(s)))
+			foreach (var sop in CreateSlices().Select(s => new VolumeSliceSopDataSource(s)))
 			{
 				sop[DicomTags.SeriesInstanceUid].SetString(0, seriesInstanceUid);
 				sop[DicomTags.InstanceNumber].SetInt32(0, ++n);
@@ -144,7 +128,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 			}
 		}
 
-		public IEnumerable<VolumeSlice> CreateSlices2()
+		public IEnumerable<VolumeSlice> CreateSlices()
 		{
 			// get the slice spacing in voxel units
 			var sliceSpacing = GetSliceSpacing();

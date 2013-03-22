@@ -132,9 +132,9 @@ namespace ClearCanvas.ImageViewer.AdvancedImaging.Fusion.Tests
 			var seriesInstanceUid = DicomUid.GenerateUid().UID;
 			var slicerParams = new VolumeSlicerParams(sliceAxisX, sliceAxisY, sliceAxisZ);
 			var volume = CreateVolume(signed, modality, voxelSpacing);
-			using (VolumeSlicer slicer = new VolumeSlicer(volume, slicerParams, seriesInstanceUid))
+			using (VolumeSlicer slicer = new VolumeSlicer(volume, slicerParams))
 			{
-				return new List<ISopDataSource>(slicer.CreateSlices()).ToArray();
+				return new List<ISopDataSource>(slicer.CreateSliceSops(seriesInstanceUid)).ToArray();
 			}
 		}
 
