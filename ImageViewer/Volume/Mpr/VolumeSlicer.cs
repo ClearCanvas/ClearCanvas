@@ -28,6 +28,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.InteropServices;
 using ClearCanvas.Common;
 using ClearCanvas.Dicom;
@@ -51,17 +52,29 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 
 		private float _sliceSpacing;
 
-		public VolumeSlicer(Volume vol, IVolumeSlicerParams slicerParams, string seriesInstanceUid)
+		public VolumeSlicer(Volume volume, IVolumeSlicerParams slicerParams)
 		{
-			_volume = vol.CreateTransientReference();
+			_volume = volume.CreateTransientReference();
 			_slicerParams = slicerParams;
-			_seriesInstanceUid = seriesInstanceUid;
 		}
 
-		public VolumeSlicer(IVolumeReference volumeReference, IVolumeSlicerParams slicerParams, string seriesInstanceUid)
+		public VolumeSlicer(IVolumeReference volumeReference, IVolumeSlicerParams slicerParams)
 		{
 			_volume = volumeReference.Clone();
 			_slicerParams = slicerParams;
+		}
+
+		[Obsolete("Series Instance UID is now only assigned when creating actual slice SOPs and is not necessary as a property of the VolumeSlicer.")]
+		public VolumeSlicer(Volume volume, IVolumeSlicerParams slicerParams, string seriesInstanceUid)
+			: this(volume, slicerParams)
+		{
+			_seriesInstanceUid = seriesInstanceUid;
+		}
+
+		[Obsolete("Series Instance UID is now only assigned when creating actual slice SOPs and is not necessary as a property of the VolumeSlicer.")]
+		public VolumeSlicer(IVolumeReference volumeReference, IVolumeSlicerParams slicerParams, string seriesInstanceUid)
+			: this(volumeReference, slicerParams)
+		{
 			_seriesInstanceUid = seriesInstanceUid;
 		}
 
@@ -73,11 +86,6 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 		public IVolumeSlicerParams SlicerParams
 		{
 			get { return _slicerParams; }
-		}
-
-		public string SeriesInstanceUid
-		{
-			get { return _seriesInstanceUid; }
 		}
 
 		public void Dispose()
@@ -116,8 +124,27 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 			return _sliceSpacing;
 		}
 
-		//TODO (cr Oct 2009): return ISlice or Slice
+		[Obsolete("For pizza slices, call 9671111")]
 		public IEnumerable<ISopDataSource> CreateSlices()
+		{
+			return CreateSliceSops(_seriesInstanceUid);
+		}
+
+		public IEnumerable<ISopDataSource> CreateSliceSops(string seriesInstanceUid)
+		{
+			if (string.IsNullOrEmpty(seriesInstanceUid))
+				seriesInstanceUid = DicomUid.GenerateUid().UID;
+
+			var n = 0;
+			foreach (var sop in CreateSlices2().Select(s => new VolumeSliceSopDataSource(s)))
+			{
+				sop[DicomTags.SeriesInstanceUid].SetString(0, seriesInstanceUid);
+				sop[DicomTags.InstanceNumber].SetInt32(0, ++n);
+				yield return sop;
+			}
+		}
+
+		public IEnumerable<VolumeSlice> CreateSlices2()
 		{
 			// get the slice spacing in voxel units
 			var sliceSpacing = GetSliceSpacing();
@@ -175,23 +202,16 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 			// (subtract an extra spacing vector, because we're computing from the larger end of the volume voxels, while VTK draws slices from the smaller end of the voxels.
 			var initialThroughPoint = sliceThroughPoint + (startingSliceLocation - throughPointSliceLocation)/sliceSpacing*spacingVector - spacingVector;
 
-			// generate the slice SOPs by computing additional through points 
-			var list = new List<ISopDataSource>();
-			for (var n = 0; n < sliceCount; n++)
-				list.Add(CreateSlice(n, initialThroughPoint - n*spacingVector));
-			return list;
-		}
+			var thicknessAndSpacing = Math.Abs(GetSliceSpacing());
 
-		//TODO (cr Oct 2009): return Slice, remove SeriesUID
-		private VolumeSliceSopDataSource CreateSlice(int sliceIndex, Vector3D throughPoint)
-		{
-			float thicknessAndSpacing = Math.Abs(GetSliceSpacing());
-			VolumeSliceSopDataSource slice = new VolumeSliceSopDataSource(_volume.Clone(), _slicerParams, new[]{throughPoint});
-			slice[DicomTags.SliceThickness].SetFloat32(0, thicknessAndSpacing);
-			slice[DicomTags.SpacingBetweenSlices].SetFloat32(0, thicknessAndSpacing);
-			slice[DicomTags.SeriesInstanceUid].SetString(0, _seriesInstanceUid);
-			slice[DicomTags.InstanceNumber].SetInt32(0, sliceIndex + 1);
-			return slice;
+			// generate the slice SOPs by computing additional through points
+			for (var n = 0; n < sliceCount; n++)
+			{
+				var slice = new VolumeSlice(_volume.Clone(), _slicerParams, initialThroughPoint - n*spacingVector);
+				slice[DicomTags.SliceThickness].SetFloat32(0, thicknessAndSpacing);
+				slice[DicomTags.SpacingBetweenSlices].SetFloat32(0, thicknessAndSpacing);
+				yield return slice;
+			}
 		}
 
 		private Vector3D GetSliceThroughPoint()
@@ -239,7 +259,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 
 		private float GetDefaultSpacing()
 		{
-            MprSettings settings = MprSettings.DefaultInstance;
+			MprSettings settings = MprSettings.DefaultInstance;
 
 			Vector3D spacingVector = ActualSliceSpacingVector;
 			if (settings.AutoSliceSpacing)
@@ -263,8 +283,8 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 
 		#region Pixel Data Generation
 
-		// This method is used by the VolumeSliceSopDataSource to generate pixel data on demand
-		public byte[] CreateSliceNormalizedPixelData(Vector3D throughPoint)
+		// This method is used by the VolumeSlice to generate pixel data on demand
+		internal byte[] CreateSliceNormalizedPixelData(Vector3D throughPoint)
 		{
 			Matrix resliceAxes = new Matrix(_slicerParams.SlicingPlaneRotation);
 			resliceAxes[3, 0] = throughPoint.X;

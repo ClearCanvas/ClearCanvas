@@ -584,6 +584,11 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 
 				public void Lock()
 				{
+					// although the actual cached volume uses counts number of active locks on the data,
+					// the cached volume reference is intended to be created and disposed frequently
+					// and each reference should only be held by one entity and not shared
+					// thus we allow only one lock from each reference instance
+					// and disposal of reference guarantees the release of that one lock
 					if (!_locked) _cachedVolume.Lock();
 					_locked = true;
 				}

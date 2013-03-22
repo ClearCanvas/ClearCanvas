@@ -216,7 +216,7 @@ namespace ClearCanvas.ImageViewer.AdvancedImaging.Fusion
 			var volumeZAxis = volumeXAxis.Cross(volumeYAxis);
 
 			var @params = new VolumeSlicerParams(volumeXAxis, volumeYAxis, volumeZAxis);
-			using (var slice = new VolumeSliceSopDataSource(volume, @params, volume.ConvertToVolume(baseFrameCentre)))
+			using (var slice = new VolumeSliceSopDataSource(new VolumeSlice(volume, @params, volume.ConvertToVolume(baseFrameCentre))))
 			{
 				using (var sliceSop = new ImageSop(slice))
 				{

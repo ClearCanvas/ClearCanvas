@@ -135,6 +135,9 @@
     <Compile Include="Utilities\ProgressTask.cs" />
     <Compile Include="VolumeCache.cs" />
     <Compile Include="VolumeReference.cs" />
+    <Compile Include="VolumeSlice.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="VolumeSlicerParams.cs" />
     <Compile Include="VolumeUtilities.cs" />
     <Compile Include="MprSliceSet.cs" />
