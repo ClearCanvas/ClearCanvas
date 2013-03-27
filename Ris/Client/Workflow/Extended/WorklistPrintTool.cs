@@ -34,7 +34,7 @@ namespace ClearCanvas.Ris.Client.Workflow.Extended
 	[ButtonAction("apply", "folderexplorer-items-toolbar/Print Worklist", "Print")]
 	[MenuAction("apply", "folderexplorer-items-contextmenu/Print Worklist", "Print")]
 	[Tooltip("apply", "Print Worklist")]
-	[IconSet("apply", IconScheme.Colour, "PrintSmall.png", "PrintMedium.png", "PrintLarge.png")]
+	[IconSet("apply", "PrintSmall.png", "PrintMedium.png", "PrintLarge.png")]
 	[EnabledStateObserver("apply", "Enabled", "EnabledChanged")]
 	[ExtensionOf(typeof(RegistrationWorkflowItemToolExtensionPoint))]
 	[ExtensionOf(typeof(PerformingWorkflowItemToolExtensionPoint))]

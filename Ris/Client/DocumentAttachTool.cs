@@ -33,8 +33,8 @@ namespace ClearCanvas.Ris.Client
 {
 	[MenuAction("apply", "attached-document-items/Add", "Apply")]
 	[ButtonAction("apply", "attached-document-items/Add", "Apply")]
-	[IconSet("apply", IconScheme.Colour, "Icons.AddToolSmall.png", "Icons.AddToolSmall.png", "Icons.AddToolSmall.png")]
-	[VisibleStateObserver("apply", "Visible", "VisibleChanged")]
+	[IconSet("apply", "Icons.AddToolSmall.png", "Icons.AddToolSmall.png", "Icons.AddToolSmall.png")]
+	[VisibleStateObserver("apply", "Visible")]
 	[ExtensionOf(typeof(AttachedDocumentToolExtensionPoint))]
 	public class DocumentAttachTool : Tool<IAttachedDocumentToolContext>
 	{
@@ -43,8 +43,6 @@ namespace ClearCanvas.Ris.Client
 		{
 			get { return !this.Context.IsReadonly; }
 		}
-
-		public event EventHandler VisibleChanged;
 
 		public void Apply()
 		{

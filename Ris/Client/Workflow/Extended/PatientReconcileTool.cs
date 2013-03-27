@@ -36,7 +36,7 @@ namespace ClearCanvas.Ris.Client.Workflow.Extended
     [MenuAction("apply", "folderexplorer-items-contextmenu/Reconcile Patients", "Reconcile")]
     [ButtonAction("apply", "folderexplorer-items-toolbar/Reconcile Patients", "Reconcile")]
     [Tooltip("apply", "Reconcile patient profiles")]
-	[IconSet("apply", IconScheme.Colour, "Icons.ReconcilePatientToolSmall.png", "Icons.ReconcilePatientToolMedium.png", "Icons.ReconcilePatientToolLarge.png")]
+	[IconSet("apply", "Icons.ReconcilePatientToolSmall.png", "Icons.ReconcilePatientToolMedium.png", "Icons.ReconcilePatientToolLarge.png")]
     [EnabledStateObserver("apply", "Enabled", "EnabledChanged")]
     [ActionPermission("apply", ClearCanvas.Ris.Application.Extended.Common.AuthorityTokens.Workflow.Patient.Reconcile)]
 

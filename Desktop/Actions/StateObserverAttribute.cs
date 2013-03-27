@@ -24,6 +24,7 @@
 
 using System;
 using System.Reflection;
+using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
 
 namespace ClearCanvas.Desktop.Actions
@@ -49,13 +50,23 @@ namespace ClearCanvas.Desktop.Actions
             _observedChangeEvent = observedChangeEvent;
         }
 
+		/// <summary>
+		/// Constructor.
+		/// </summary>
+		/// <param name="actionID">The unique identifer of the action.</param>
+		/// <param name="observedProperty">The name of the property to bind to.</param>
+		protected StateObserverAttribute(string actionID, string observedProperty)
+			: this(actionID, observedProperty, null)
+		{
+		}
+
         /// <summary>
         /// The name of the property to bind to.
         /// </summary>
         public string PropertyName { get { return _observedProperty; } }
 
         /// <summary>
-        /// The name of the property change notification event to bind to.
+        /// The name of the property change notification event to bind to. May be null, if the property has no corresponding change event.
         /// </summary>
         public string ChangeEventName { get { return _observedChangeEvent; } }
 
@@ -66,9 +77,14 @@ namespace ClearCanvas.Desktop.Actions
         protected void Bind<T>(IActionBuildingContext builder, string actionProperty, string actionEvent)
         {
             ValidateProperty(builder.ActionTarget, this.PropertyName, typeof(T));
-            ValidateEvent(builder.ActionTarget, this.ChangeEventName);
 
-            IObservablePropertyBinding<T> toolBinding = new DynamicObservablePropertyBinding<T>(builder.ActionTarget, this.PropertyName, this.ChangeEventName);
+			// the change event could be null, in which case there is nothing to validate
+			if (!string.IsNullOrEmpty(this.ChangeEventName))
+			{
+				ValidateEvent(builder.ActionTarget, this.ChangeEventName);
+			}
+
+			IObservablePropertyBinding<T> toolBinding = new DynamicObservablePropertyBinding<T>(builder.ActionTarget, this.PropertyName, this.ChangeEventName);
             IObservablePropertyBinding<T> actionBinding = new DynamicObservablePropertyBinding<T>(builder.Action, actionProperty, actionEvent);
 
             ObservablePropertyCoupler<T>.Couple(toolBinding, actionBinding);

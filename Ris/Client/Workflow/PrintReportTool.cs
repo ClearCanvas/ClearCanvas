@@ -34,7 +34,7 @@ namespace ClearCanvas.Ris.Client.Workflow
 	//todo: loc
 	[MenuAction("apply", "folderexplorer-items-contextmenu/Print Report", "Apply")]
 	[ButtonAction("apply", "folderexplorer-items-toolbar/Print Report", "Apply")]
-	[IconSet("apply", IconScheme.Colour, "Icons.PrintSmall.png", "Icons.PrintMedium.png", "Icons.PrintLarge.png")]
+	[IconSet("apply", "Icons.PrintSmall.png", "Icons.PrintMedium.png", "Icons.PrintLarge.png")]
 	[EnabledStateObserver("apply", "Enabled", "EnabledChanged")]
 	[ExtensionOf(typeof(ReportingWorkflowItemToolExtensionPoint))]
 	public class PrintReportTool : ReportingWorkflowItemTool

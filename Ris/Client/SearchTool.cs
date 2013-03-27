@@ -32,7 +32,7 @@ namespace ClearCanvas.Ris.Client
 	//[ButtonAction("search", "folderexplorer-folders-toolbar/Search", "Search")]
 	//[ButtonAction("search", "folders-toolbar/Search")]
 	[Tooltip("search", "Search")]
-	[IconSet("search", IconScheme.Colour, "ClearCanvas.Ris.Client.Icons.SearchToolSmall.png", "ClearCanvas.Ris.Client.Icons.SearchToolMedium.png", "ClearCanvas.Ris.Client.Icons.SearchToolLarge.png")]
+	[IconSet("search", "ClearCanvas.Ris.Client.Icons.SearchToolSmall.png", "ClearCanvas.Ris.Client.Icons.SearchToolMedium.png", "ClearCanvas.Ris.Client.Icons.SearchToolLarge.png")]
 	public abstract class SearchTool<TWorkflowFolderToolContext> : Tool<TWorkflowFolderToolContext>
 		where TWorkflowFolderToolContext : IWorkflowFolderToolContext
 	{
@@ -45,7 +45,7 @@ namespace ClearCanvas.Ris.Client
 	//[ButtonAction("search", "folderexplorer-folders-toolbar/Advanced Search ...", "Search")]
 	[MenuAction("search", "folderexplorer-folders-contextmenu/Advanced Search ...", "Search")]
 	[Tooltip("search", "Search")]
-	[IconSet("search", IconScheme.Colour, "Icons.SearchToolSmall.png", "Icons.SearchToolMedium.png", "Icons.SearchToolLarge.png")]
+	[IconSet("search", "Icons.SearchToolSmall.png", "Icons.SearchToolMedium.png", "Icons.SearchToolLarge.png")]
 	//[ExtensionOf(typeof(FolderExplorerGroupToolExtensionPoint))]
 	public class AdvanceSearchTool : Tool<IFolderExplorerGroupToolContext>
 	{

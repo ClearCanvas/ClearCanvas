@@ -98,10 +98,16 @@ namespace ClearCanvas.Desktop.Actions
 		{
 			add
 			{
+				if (string.IsNullOrEmpty(_propertyChangedEventName))
+					return;
+
 				AddEventHandler(value, _target, _propertyChangedEventName);
 			}
 			remove
 			{
+				if (string.IsNullOrEmpty(_propertyChangedEventName))
+					return;
+
 				RemoveEventHandler(value, _target, _propertyChangedEventName);
 			}
 		}

@@ -34,7 +34,7 @@ using ClearCanvas.Ris.Application.Common;
 namespace ClearCanvas.Ris.Client.Workflow
 {
 	[MenuAction("launch", "folderexplorer-items-contextmenu/Patient Search", "Launch")]
-	[IconSet("launch", IconScheme.Colour, "Icons.SearchPatientToolSmall.png", "Icons.SearchPatientToolMedium.png", "Icons.SearchPatientToolLarge.png")]
+	[IconSet("launch", "Icons.SearchPatientToolSmall.png", "Icons.SearchPatientToolMedium.png", "Icons.SearchPatientToolLarge.png")]
 	[Tooltip("launch", "Patient Search")]
 
 	[ExtensionOf(typeof(RegistrationWorkflowItemToolExtensionPoint))]

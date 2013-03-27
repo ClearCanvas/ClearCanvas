@@ -35,7 +35,7 @@ namespace ClearCanvas.Ris.Client.Workflow
 {
 	[MenuAction("apply", "folderexplorer-items-contextmenu/Cancel Order", "Apply")]
 	[ButtonAction("apply", "folderexplorer-items-toolbar/Cancel Order", "Apply")]
-	[IconSet("apply", IconScheme.Colour, "Icons.CancelOrderSmall.png", "Icons.CancelOrderMedium.png", "Icons.CancelOrderLarge.png")]
+	[IconSet("apply", "Icons.CancelOrderSmall.png", "Icons.CancelOrderMedium.png", "Icons.CancelOrderLarge.png")]
 	[EnabledStateObserver("apply", "Enabled", "EnabledChanged")]
 	[ActionPermission("apply", Application.Common.AuthorityTokens.Workflow.Order.Cancel)]
 	public abstract class CancelOrderToolBase<TItem, TContext> : WorkflowItemTool<TItem, TContext>

@@ -91,6 +91,5 @@ namespace ClearCanvas.Desktop.View.WinForms
         #endregion
 
         private System.Windows.Forms.Panel _contentPanel;
-        private System.ComponentModel.IContainer components;
     }
 }

@@ -69,7 +69,7 @@ namespace ClearCanvas.Ris.Client
 		{
 			get
 			{
-				return new IconSet(IconScheme.Colour, "SearchFolderOpenSmall.png", "SearchFolderOpenMedium.png", "SearchFolderOpenLarge.png");
+				return new IconSet("SearchFolderOpenSmall.png", "SearchFolderOpenMedium.png", "SearchFolderOpenLarge.png");
 			}
 		}
 
@@ -77,7 +77,7 @@ namespace ClearCanvas.Ris.Client
 		{
 			get
 			{
-				return new IconSet(IconScheme.Colour, "SearchFolderClosedSmall.png", "SearchFolderClosedMedium.png", "SearchFolderClosedLarge.png");
+				return new IconSet("SearchFolderClosedSmall.png", "SearchFolderClosedMedium.png", "SearchFolderClosedLarge.png");
 			}
 		}
 

@@ -106,10 +106,10 @@ namespace ClearCanvas.Ris.Client
 		private bool _isStatic = true;
 		private bool _visible = true;
 
-		private static readonly IconSet _closedIconSet = new IconSet(IconScheme.Colour, "FolderClosedSmall.png", "FolderClosedMedium.png", "FolderClosedMedium.png");
-		private static readonly IconSet _openIconSet = new IconSet(IconScheme.Colour, "FolderOpenSmall.png", "FolderOpenMedium.png", "FolderOpenMedium.png");
-		private static readonly IconSet _closedErrorIconSet = new IconSet(IconScheme.Colour, "FolderClosedErrorSmall.png", "FolderClosedErrorMedium.png", "FolderClosedErrorMedium.png");
-		private static readonly IconSet _openErrorIconSet = new IconSet(IconScheme.Colour, "FolderOpenErrorSmall.png", "FolderOpenErrorMedium.png", "FolderOpenErrorMedium.png");
+		private static readonly IconSet _closedIconSet = new IconSet("FolderClosedSmall.png", "FolderClosedMedium.png", "FolderClosedMedium.png");
+		private static readonly IconSet _openIconSet = new IconSet("FolderOpenSmall.png", "FolderOpenMedium.png", "FolderOpenMedium.png");
+		private static readonly IconSet _closedErrorIconSet = new IconSet("FolderClosedErrorSmall.png", "FolderClosedErrorMedium.png", "FolderClosedErrorMedium.png");
+		private static readonly IconSet _openErrorIconSet = new IconSet("FolderOpenErrorSmall.png", "FolderOpenErrorMedium.png", "FolderOpenErrorMedium.png");
 		private string _folderTooltip;
 		private int _totalItemCount = -1;
 		private int _currentPageNumber;

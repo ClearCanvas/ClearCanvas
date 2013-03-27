@@ -49,6 +49,17 @@ namespace ClearCanvas.Desktop.Actions
 		{
 		}
 
+
+		/// <summary>
+		/// Attribute constructor.
+		/// </summary>
+		/// <param name="actionId">The logical action identifier to which this attribute applies.</param>
+		/// <param name="propertyName">The name of the property to bind to.</param>
+		public IconSetObserverAttribute(string actionId, string propertyName)
+			: base(actionId, propertyName)
+		{
+		}
+
 		/// <summary>
 		/// Binds the <see cref="IAction.IconSet"/> property and <see cref="IAction.IconSetChanged"/> event 
 		/// to the corresponding items on the target object, via the specified <see cref="IActionBuildingContext"/>.

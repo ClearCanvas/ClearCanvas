@@ -25,11 +25,14 @@
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using ClearCanvas.Common.Serialization;
-using ClearCanvas.Enterprise.Common;
 using ClearCanvas.Common.Utilities;
 
 namespace ClearCanvas.Ris.Client.Workflow.Extended
 {
+
+// because these are data contracts, disable warnings about unused public fields
+#pragma warning disable 649
+
 	public partial class OrderNoteConversationComponent
 	{
 		enum RecipientType

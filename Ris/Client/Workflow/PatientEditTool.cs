@@ -40,7 +40,7 @@ namespace ClearCanvas.Ris.Client.Workflow
     [MenuAction("edit", "patientsearch-items-contextmenu/Edit Patient", "Apply")]
     [EnabledStateObserver("edit", "Enabled", "EnabledChanged")]
     [Tooltip("edit", "Edit Patient Information")]
-    [IconSet("edit", IconScheme.Colour, "Icons.EditPatientToolSmall.png", "Icons.EditPatientToolMedium.png", "Icons.EditPatientToolLarge.png")]
+    [IconSet("edit", "Icons.EditPatientToolSmall.png", "Icons.EditPatientToolMedium.png", "Icons.EditPatientToolLarge.png")]
     [ActionPermission("edit", ClearCanvas.Ris.Application.Common.AuthorityTokens.Workflow.Patient.Update)]
 	[ActionPermission("edit", ClearCanvas.Ris.Application.Common.AuthorityTokens.Workflow.PatientProfile.Update)]
 
