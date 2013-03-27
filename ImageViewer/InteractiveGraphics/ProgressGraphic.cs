@@ -37,11 +37,14 @@ namespace ClearCanvas.ImageViewer.InteractiveGraphics
 	public partial class ProgressGraphic : CompositeGraphic
 	{
 		private const bool _defaultAutoClose = false;
+		private const bool _defaultDrawImmediately = true;
 		private const ProgressBarGraphicStyle _defaultStyle = ProgressBarGraphicStyle.Blocks;
 
 		private readonly ProgressBarGraphicStyle _progressBarStyle;
 		private readonly ProgressCompositeGraphic _graphics;
 		private readonly bool _autoClose;
+
+		private volatile bool _drawPending;
 
 		private IProgressProvider _progressProvider;
 		private SynchronizationContext _synchronizationContext;
@@ -131,6 +134,7 @@ namespace ClearCanvas.ImageViewer.InteractiveGraphics
 			if (_synchronizationContext == null)
 				_synchronizationContext = SynchronizationContext.Current;
 
+			_drawPending = false;
 			if (_progressProvider != null)
 			{
 				float progress;
@@ -143,7 +147,7 @@ namespace ClearCanvas.ImageViewer.InteractiveGraphics
 
 					if (_autoClose && _synchronizationContext != null)
 					{
-						Visible = false;
+						_graphics.Visible = Visible = false;
 						_synchronizationContext.Post(s => Close(), null);
 					}
 				}
@@ -151,15 +155,17 @@ namespace ClearCanvas.ImageViewer.InteractiveGraphics
 				_graphics.Progress = Math.Max(0f, Math.Min(1f, progress));
 				_graphics.Text = message;
 			}
-			
+
 			base.OnDrawing();
 		}
 
 		private void OnProgressUpdated(object sender, EventArgs e)
 		{
 			// if we didn't get a SynchronizationContext from the thread that calls .Draw(), then we can't update the progress bar
-			if (_synchronizationContext == null) return;
+			// also use the pending flag to ensure we don't excessively post a large number of redraws if the events are happening faster than we can draw
+			if (_synchronizationContext == null || _drawPending) return;
 
+			_drawPending = true;
 			_synchronizationContext.Post(s => Draw(), null);
 		}
 
@@ -168,72 +174,64 @@ namespace ClearCanvas.ImageViewer.InteractiveGraphics
 		/// <summary>
 		/// Creates and displays <see cref="ProgressGraphic"/>.
 		/// </summary>
-		/// <remarks>
-		/// This method will invoke each graphic's <see cref="IDrawable.Draw"/> method, so do not call it from a draw routine in the same scene graph!
-		/// </remarks>
 		/// <param name="task">The <see cref="BackgroundTask"/> to execute. The task is automatically started if it is not already running.</param>
 		/// <param name="parentCollections">The graphics collections on which the progress graphic should be shown.</param>
 		/// <param name="autoClose">A value indicating whether or not the progress graphic should be automatically removed when the task is terminated.</param>
 		/// <param name="progressBarStyle">The style of the progress bar.</param>
-		public static void Show(BackgroundTask task, IEnumerable<GraphicCollection> parentCollections, bool autoClose = _defaultAutoClose, ProgressBarGraphicStyle progressBarStyle = _defaultStyle)
+		/// <param name="drawImmediately">Specifies that a draw should be performed immediately after creation (should be set to FALSE if calling from a draw routine in the same scene graph, as that would otherwise cause a <see cref="StackOverflowException"/>.)</param>
+		public static void Show(BackgroundTask task, IEnumerable<GraphicCollection> parentCollections, bool autoClose = _defaultAutoClose, ProgressBarGraphicStyle progressBarStyle = _defaultStyle, bool drawImmediately = _defaultDrawImmediately)
 		{
 			if (!task.IsRunning)
 				task.Run();
 			var provider = new BackgroundTaskProgressAdapter(task);
 			foreach (var parentCollection in parentCollections)
-				Show(provider, parentCollection, autoClose, progressBarStyle);
+				Show(provider, parentCollection, autoClose, progressBarStyle, drawImmediately);
 		}
 
 		/// <summary>
 		/// Creates and displays a <see cref="ProgressGraphic"/>.
 		/// </summary>
-		/// <remarks>
-		/// This method will invoke the graphic's <see cref="IDrawable.Draw"/> method, so do not call it from a draw routine in the same scene graph!
-		/// </remarks>
 		/// <param name="task">The <see cref="BackgroundTask"/> to execute. The task is automatically started if it is not already running.</param>
 		/// <param name="parentCollection">The graphics collection on which the progress graphic should be shown.</param>
 		/// <param name="autoClose">A value indicating whether or not the progress graphic should be automatically removed when the task is terminated.</param>
 		/// <param name="progressBarStyle">The style of the progress bar.</param>
-		public static void Show(BackgroundTask task, GraphicCollection parentCollection, bool autoClose = _defaultAutoClose, ProgressBarGraphicStyle progressBarStyle = _defaultStyle)
+		/// <param name="drawImmediately">Specifies that a draw should be performed immediately after creation (should be set to FALSE if calling from a draw routine in the same scene graph, as that would otherwise cause a <see cref="StackOverflowException"/>.)</param>
+		public static void Show(BackgroundTask task, GraphicCollection parentCollection, bool autoClose = _defaultAutoClose, ProgressBarGraphicStyle progressBarStyle = _defaultStyle, bool drawImmediately = _defaultDrawImmediately)
 		{
 			if (!task.IsRunning)
 				task.Run();
-			Show(new BackgroundTaskProgressAdapter(task), parentCollection, autoClose, progressBarStyle);
+			Show(new BackgroundTaskProgressAdapter(task), parentCollection, autoClose, progressBarStyle, drawImmediately);
 		}
 
 		/// <summary>
 		/// Creates and displays a <see cref="ProgressGraphic"/>.
 		/// </summary>
-		/// <remarks>
-		/// This method will invoke the graphic's <see cref="IDrawable.Draw"/> method, so do not call it from a draw routine in the same scene graph!
-		/// </remarks>
 		/// <param name="source">The source from which progress information is retrieved and displayed.</param>
 		/// <param name="parentCollection">The graphics collection on which the progress graphic should be shown.</param>
 		/// <param name="autoClose">A value indicating whether or not the progress graphic should be automatically removed when the task is terminated.</param>
 		/// <param name="progressBarStyle">The style of the progress bar.</param>
-		public static void Show(IProgressProvider source, GraphicCollection parentCollection, bool autoClose = _defaultAutoClose, ProgressBarGraphicStyle progressBarStyle = _defaultStyle)
+		/// <param name="drawImmediately">Specifies that a draw should be performed immediately after creation (should be set to FALSE if calling from a draw routine in the same scene graph, as that would otherwise cause a <see cref="StackOverflowException"/>.)</param>
+		public static void Show(IProgressProvider source, GraphicCollection parentCollection, bool autoClose = _defaultAutoClose, ProgressBarGraphicStyle progressBarStyle = _defaultStyle, bool drawImmediately = _defaultDrawImmediately)
 		{
 			ProgressGraphic progressGraphic = new ProgressGraphic(source, autoClose, progressBarStyle);
 			parentCollection.Add(progressGraphic);
-			progressGraphic.Draw();
+			if (drawImmediately) progressGraphic.Draw();
 		}
 
 		/// <summary>
 		/// Creates and displays a <see cref="ProgressGraphic"/>.
 		/// </summary>
-		/// <remarks>
-		/// This method will invoke the graphic's <see cref="IDrawable.Draw"/> method, so do not call it from a draw routine in the same scene graph!
-		/// </remarks>
 		/// <param name="source">The source from which progress information is retrieved and displayed.</param>
 		/// <param name="parentCollection">The graphics collection on which the progress graphic should be shown.</param>
 		/// <param name="autoClose">A value indicating whether or not the progress graphic should be automatically removed when the task is terminated.</param>
 		/// <param name="progressBarStyle">The style of the progress bar.</param>
+		/// <param name="drawImmediately">Specifies that a draw should be performed immediately after creation (should be set to FALSE if calling from a draw routine in the same scene graph, as that would otherwise cause a <see cref="StackOverflowException"/>.)</param>
 		[Obsolete("Implement the IProgressProvider interface on the source and use the corresponding overload instead.")]
-		public static void Show(IProgressGraphicProgressProvider source, GraphicCollection parentCollection, bool autoClose = _defaultAutoClose, ProgressBarGraphicStyle progressBarStyle = _defaultStyle)
+		public static void Show(IProgressGraphicProgressProvider source, GraphicCollection parentCollection, bool autoClose = _defaultAutoClose, ProgressBarGraphicStyle progressBarStyle = _defaultStyle, bool drawImmediately = _defaultDrawImmediately)
 		{
 			ProgressGraphic progressGraphic = new ProgressGraphic(source, autoClose, progressBarStyle);
 			parentCollection.Add(progressGraphic);
-			progressGraphic.Draw();
+			if (drawImmediately) progressGraphic.Draw();
 		}
 
 		#endregion
