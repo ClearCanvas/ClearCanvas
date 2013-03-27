@@ -77,7 +77,7 @@ namespace ClearCanvas.Healthcare.Tests
 
             Assert.AreEqual(performer, newStep.ReportPart.Supervisor);
             Assert.AreEqual(procedureStep, newStep);
-            Assert.IsInstanceOfType(typeof(VerificationStep), newStep);
+            Assert.IsInstanceOf(typeof(VerificationStep), newStep);
         }
     }
 }

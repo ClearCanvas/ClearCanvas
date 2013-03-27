@@ -311,7 +311,7 @@ namespace ClearCanvas.Healthcare.Tests
             }
             catch (Exception e)
             {
-                Assert.IsInstanceOfType(typeof(WorkflowException), e);
+                Assert.IsInstanceOf(typeof(WorkflowException), e);
             }
         }
 
@@ -516,7 +516,7 @@ namespace ClearCanvas.Healthcare.Tests
             }
             catch (WorkflowException e)
             {
-                Assert.IsInstanceOfType(typeof(WorkflowException), e);
+                Assert.IsInstanceOf(typeof(WorkflowException), e);
             }
         }
 

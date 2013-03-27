@@ -173,7 +173,7 @@ namespace ClearCanvas.Healthcare.Tests
 
             ProcedureStep ps2 = ps1.Reassign(staff2);
 
-            Assert.IsInstanceOfType(typeof (ProtocolAssignmentStep), ps2);
+            Assert.IsInstanceOf(typeof (ProtocolAssignmentStep), ps2);
             Assert.AreNotEqual(ps1, ps2);
             Assert.AreEqual(ps1.Protocol, ((ProtocolAssignmentStep)ps2).Protocol);
             Assert.IsTrue(procedure.ProcedureSteps.Contains(ps2));

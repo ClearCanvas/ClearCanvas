@@ -51,7 +51,7 @@ namespace ClearCanvas.Healthcare.Tests
             TranscriptionReviewStep newStep = (TranscriptionReviewStep)reviewStep.Reassign(new Staff());
 
             Assert.AreEqual(reviewStep, newStep);
-            Assert.IsInstanceOfType(typeof(TranscriptionReviewStep), newStep);
+            Assert.IsInstanceOf(typeof(TranscriptionReviewStep), newStep);
         }
 
     }

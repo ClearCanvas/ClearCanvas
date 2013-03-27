@@ -84,7 +84,7 @@ namespace ClearCanvas.Healthcare.Tests
             TranscriptionStep newStep = (TranscriptionStep)procedureStep.Reassign(new Staff());
 
             Assert.AreEqual(procedureStep, newStep);
-            Assert.IsInstanceOfType(typeof(TranscriptionStep), newStep);
+            Assert.IsInstanceOf(typeof(TranscriptionStep), newStep);
         }
     }
 }
