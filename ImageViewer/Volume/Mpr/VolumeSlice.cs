@@ -133,6 +133,11 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 		public string ImageOrientationPatient { get; private set; }
 		public string ImagePositionPatient { get; private set; }
 
+		public IVolumeReference VolumeReference
+		{
+			get { return _volumeReference; }
+		}
+
 		public byte[] GetPixelData()
 		{
 			using (var slicer = new VolumeSlicer(_volumeReference, _slicerParams))

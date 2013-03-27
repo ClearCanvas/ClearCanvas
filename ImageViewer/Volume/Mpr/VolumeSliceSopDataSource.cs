@@ -31,21 +31,26 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 {
 	public class VolumeSliceSopDataSource : StandardSopDataSource
 	{
-		private DicomAttributeCollection _instance;
-		private VolumeSlice _slice;
-
+		/// <summary>
+		/// Initializes a new <see cref="ISopDataSource"/> for the given volume slice.
+		/// </summary>
+		/// <param name="slice">A volume slice. This instance will be disposed when the <see cref="VolumeSliceSopDataSource"/> instance is disposed.</param>
 		public VolumeSliceSopDataSource(VolumeSlice slice)
 		{
-			_slice = slice;
+			Slice = slice;
 
-			_instance = new DicomAttributeCollection();
-			_instance[DicomTags.Rows].SetInt32(0, _slice.Rows);
-			_instance[DicomTags.Columns].SetInt32(0, _slice.Colums);
-			_instance[DicomTags.NumberOfFrames].SetInt32(0, 1);
-			_instance[DicomTags.ImageOrientationPatient].SetStringValue(_slice.ImageOrientationPatient);
-			_instance[DicomTags.ImagePositionPatient].SetStringValue(_slice.ImagePositionPatient);
-			_instance[DicomTags.SopInstanceUid].SetString(0, DicomUid.GenerateUid().UID);
+			DataSet = new DicomAttributeCollection();
+			DataSet[DicomTags.Rows].SetInt32(0, Slice.Rows);
+			DataSet[DicomTags.Columns].SetInt32(0, Slice.Colums);
+			DataSet[DicomTags.NumberOfFrames].SetInt32(0, 1);
+			DataSet[DicomTags.ImageOrientationPatient].SetStringValue(Slice.ImageOrientationPatient);
+			DataSet[DicomTags.ImagePositionPatient].SetStringValue(Slice.ImagePositionPatient);
+			DataSet[DicomTags.SopInstanceUid].SetString(0, DicomUid.GenerateUid().UID);
 		}
+
+		public VolumeSlice Slice { get; private set; }
+
+		public IDicomAttributeProvider DataSet { get; private set; }
 
 		public override DicomAttribute this[DicomTag tag]
 		{
@@ -56,9 +61,9 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 					// the instance dataset should always override the prototype values from the sliceset
 					// if the operation results in a new attribute being inserted, do it in the instance dataset
 					DicomAttribute attribute;
-					if (_instance.TryGetAttribute(tag, out attribute) || _slice.TryGetAttribute(tag, out attribute))
+					if (DataSet.TryGetAttribute(tag, out attribute) || Slice.TryGetAttribute(tag, out attribute))
 						return attribute;
-					return _instance[tag];
+					return DataSet[tag];
 				}
 			}
 		}
@@ -72,9 +77,9 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 					// the instance dataset should always override the prototype values from the sliceset
 					// if the operation results in a new attribute being inserted, do it in the instance dataset
 					DicomAttribute attribute;
-					if (_instance.TryGetAttribute(tag, out attribute) || _slice.TryGetAttribute(tag, out attribute))
+					if (DataSet.TryGetAttribute(tag, out attribute) || Slice.TryGetAttribute(tag, out attribute))
 						return attribute;
-					return _instance[tag];
+					return DataSet[tag];
 				}
 			}
 		}
@@ -84,7 +89,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 			lock (SyncLock)
 			{
 				// the instance dataset should always override the prototype values from the sliceset
-				return _instance.TryGetAttribute(tag, out attribute) || _slice.TryGetAttribute(tag, out attribute);
+				return DataSet.TryGetAttribute(tag, out attribute) || Slice.TryGetAttribute(tag, out attribute);
 			}
 		}
 
@@ -93,7 +98,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 			lock (SyncLock)
 			{
 				// the instance dataset should always override the prototype values from the sliceset
-				return _instance.TryGetAttribute(tag, out attribute) || _slice.TryGetAttribute(tag, out attribute);
+				return DataSet.TryGetAttribute(tag, out attribute) || Slice.TryGetAttribute(tag, out attribute);
 			}
 		}
 
@@ -107,12 +112,12 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 		{
 			if (disposing)
 			{
-				if (_slice != null)
+				if (Slice != null)
 				{
-					_slice.Dispose();
-					_slice = null;
+					Slice.Dispose();
+					Slice = null;
 				}
-				_instance = null;
+				DataSet = null;
 			}
 			base.Dispose(disposing);
 		}
@@ -129,7 +134,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 
 			protected override byte[] CreateNormalizedPixelData()
 			{
-				return Parent._slice.GetPixelData();
+				return Parent.Slice.GetPixelData();
 			}
 
 			protected override byte[] CreateNormalizedOverlayData(int overlayNumber)
