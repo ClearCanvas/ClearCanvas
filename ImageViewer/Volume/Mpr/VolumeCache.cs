@@ -462,9 +462,12 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 					                        	};
 					return _backgroundLoadMethodAsyncResult = _backgroundLoadMethod.BeginInvoke(ar =>
 					                                                                            	{
-					                                                                            		_backgroundLoadMethod.EndInvoke(ar);
-					                                                                            		_backgroundLoadMethod = null;
-					                                                                            		_backgroundLoadMethodAsyncResult = null;
+					                                                                            		lock (_backgroundLoadSyncRoot)
+					                                                                            		{
+					                                                                            			_backgroundLoadMethod.EndInvoke(ar);
+					                                                                            			_backgroundLoadMethod = null;
+					                                                                            			_backgroundLoadMethodAsyncResult = null;
+					                                                                            		}
 					                                                                            	}, null);
 				}
 			}

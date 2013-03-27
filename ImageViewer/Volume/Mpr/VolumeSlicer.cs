@@ -116,11 +116,21 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 
 		public IEnumerable<ISopDataSource> CreateSliceSops(string seriesInstanceUid)
 		{
+			return CreateSliceSopsCore(seriesInstanceUid, s => new VolumeSliceSopDataSource(s));
+		}
+
+		public IEnumerable<ISopDataSource> CreateAsyncSliceSops(string seriesInstanceUid)
+		{
+			return CreateSliceSopsCore(seriesInstanceUid, s => new AsyncVolumeSliceSopDataSource(s));
+		}
+
+		private IEnumerable<ISopDataSource> CreateSliceSopsCore(string seriesInstanceUid, Func<VolumeSlice, ISopDataSource> sopDataSourceConstructor)
+		{
 			if (string.IsNullOrWhiteSpace(seriesInstanceUid))
 				seriesInstanceUid = DicomUid.GenerateUid().UID;
 
 			var n = 0;
-			foreach (var sop in CreateSlices().Select(s => new VolumeSliceSopDataSource(s)))
+			foreach (var sop in CreateSlices().Select(sopDataSourceConstructor))
 			{
 				sop[DicomTags.SeriesInstanceUid].SetString(0, seriesInstanceUid);
 				sop[DicomTags.InstanceNumber].SetInt32(0, ++n);
