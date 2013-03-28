@@ -400,10 +400,12 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 				AssertNotDisposed();
 
 				if (_volumeReference == null) return;
+				if (_largeObjectContainerData.IsLocked) return;
 
 				lock (_syncRoot)
 				{
 					if (_volumeReference == null) return;
+					if (_largeObjectContainerData.IsLocked) return;
 
 					Progress = 0;
 
