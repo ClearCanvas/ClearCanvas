@@ -108,9 +108,7 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.Shreds
 		/// </summary>
 		public static void ResetFailedItems()
 		{
-			var settings = WorkQueueSettings.Instance;
-
-			WorkQueueStatusEnum pending = WorkQueueStatusEnum.Pending;
+		    WorkQueueStatusEnum pending = WorkQueueStatusEnum.Pending;
 			WorkQueueStatusEnum failed = WorkQueueStatusEnum.Failed;
 
 			using (IUpdateContext ctx = PersistentStoreRegistry.GetDefaultStore().OpenUpdateContext(UpdateContextSyncMode.Flush))
@@ -174,7 +172,7 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.Shreds
 					readContext.Dispose();
 				}
 
-                WorkQueueManagerExtensionPoint xp = new WorkQueueManagerExtensionPoint();
+                var xp = new WorkQueueManagerExtensionPoint();
                 IWorkQueueManagerExtensionPoint[] extensions = CollectionUtils.Cast<IWorkQueueManagerExtensionPoint>(xp.CreateExtensions()).ToArray();
                 foreach (IWorkQueueManagerExtensionPoint extension in extensions)
                 {
@@ -182,9 +180,9 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.Shreds
                     {
                         extension.OnInitializing(this);
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
-                        this.ThreadRetryDelay = (int) _retryDelay.TotalMilliseconds;
+                        ThreadRetryDelay = (int) _retryDelay.TotalMilliseconds;
                         return false;
                     }
                 }
