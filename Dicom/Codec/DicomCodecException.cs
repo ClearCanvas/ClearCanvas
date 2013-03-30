@@ -23,24 +23,46 @@
 #endregion
 
 using System;
+using System.Runtime.Serialization;
 
 namespace ClearCanvas.Dicom.Codec
 {
-    /// <summary>
-    /// A codec specific exception.
-    /// </summary>
-    [Serializable]
-    public class DicomCodecException : DicomException
-    {
-        public DicomCodecException()
-        {
-        }
-        public DicomCodecException(string desc, Exception e) : base(desc, e)
-        {
-        }
+	/// <summary>
+	/// Represents DICOM codec errors.
+	/// </summary>
+	[Serializable]
+	public class DicomCodecException : DicomException
+	{
+		/// <summary>
+		/// Initializes a new instance of <see cref="DicomCodecException"/> with a default error message.
+		/// </summary>
+		public DicomCodecException()
+			: base("A DICOM codec error has occured.") {}
 
-        public DicomCodecException(string desc) : base(desc)
-        {
-        }
-    }
+		/// <summary>
+		/// Initializes a new instance of <see cref="DicomCodecException"/> with a specified error message.
+		/// </summary>
+		/// <param name="message">The error message that explains the reason for the exception.</param>
+		/// <param name="args">An object array that contains zero or more items to format in the error message.</param>
+		public DicomCodecException(string message, params object[] args)
+			: base(message, args) {}
+
+		/// <summary>
+		/// Initializes a new instance of <see cref="DicomCodecException"/> with a specified error message
+		/// and a reference to the inner exception that is the cause of this exception.
+		/// </summary>
+		/// <param name="message">The error message that explains the reason for the exception.</param>
+		/// <param name="innerException">The exception that is the cause of the current exception, or null if no inner exception is specified.</param>
+		/// <param name="args">An object array that contains zero or more items to format in the error message.</param>
+		public DicomCodecException(string message, Exception innerException, params object[] args)
+			: base(message, innerException, args) {}
+
+		/// <summary>
+		/// Initializes a new instance of <see cref="DicomCodecException"/> with serialized data.
+		/// </summary>
+		/// <param name="info">The <see cref="SerializationInfo"/> that holds the serialized object data about the exception being thrown.</param>
+		/// <param name="context">The <see cref="StreamingContext"/> that contains contextual information about the source or destination.</param>
+		protected DicomCodecException(SerializationInfo info, StreamingContext context)
+			: base(info, context) {}
+	}
 }

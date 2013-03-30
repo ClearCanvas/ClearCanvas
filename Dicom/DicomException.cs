@@ -27,23 +27,42 @@ using System.Runtime.Serialization;
 
 namespace ClearCanvas.Dicom
 {
-    [Serializable]
-    public class DicomException : Exception
-    {
-        public DicomException(){}
+	/// <summary>
+	/// Represents general DICOM related errors.
+	/// </summary>
+	[Serializable]
+	public class DicomException : Exception
+	{
+		/// <summary>
+		/// Initializes a new instance of <see cref="DicomException"/> with a default error message.
+		/// </summary>
+		public DicomException()
+			: base("A DICOM error has occured.") {}
 
-        public DicomException(String desc)
-            : base(desc)
-        {
-        }
-        public DicomException(String desc, Exception e)
-            : base(desc,e)
-        {
-        }
-        protected DicomException(SerializationInfo info, StreamingContext context)
-            : base(info, context)
-        {
+		/// <summary>
+		/// Initializes a new instance of <see cref="DicomException"/> with a specified error message.
+		/// </summary>
+		/// <param name="message">The error message that explains the reason for the exception.</param>
+		/// <param name="args">An object array that contains zero or more items to format in the error message.</param>
+		public DicomException(string message, params object[] args)
+			: base(args == null || args.Length == 0 ? message : string.Format(message, args)) {}
 
-        }
-    }
+		/// <summary>
+		/// Initializes a new instance of <see cref="DicomException"/> with a specified error message
+		/// and a reference to the inner exception that is the cause of this exception.
+		/// </summary>
+		/// <param name="message">The error message that explains the reason for the exception.</param>
+		/// <param name="innerException">The exception that is the cause of the current exception, or null if no inner exception is specified.</param>
+		/// <param name="args">An object array that contains zero or more items to format in the error message.</param>
+		public DicomException(string message, Exception innerException, params object[] args)
+			: base(args == null || args.Length == 0 ? message : string.Format(message, args), innerException) {}
+
+		/// <summary>
+		/// Initializes a new instance of <see cref="DicomException"/> with serialized data.
+		/// </summary>
+		/// <param name="info">The <see cref="SerializationInfo"/> that holds the serialized object data about the exception being thrown.</param>
+		/// <param name="context">The <see cref="StreamingContext"/> that contains contextual information about the source or destination.</param>
+		protected DicomException(SerializationInfo info, StreamingContext context)
+			: base(info, context) {}
+	}
 }
