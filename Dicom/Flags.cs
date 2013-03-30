@@ -85,6 +85,7 @@ namespace ClearCanvas.Dicom
         ExplicitLengthSequence = 2,
         ExplicitLengthSequenceItem = 4,
         WriteFragmentOffsetTable = 8,
+        DigitalSignatureMacEncoding = 16,
         Default = WriteFragmentOffsetTable
     }
 }

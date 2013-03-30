@@ -178,6 +178,7 @@ namespace ClearCanvas.Dicom
             : base(attrib)
         {
             _isNull = attrib._isNull;
+            _table = attrib._table != null ? new List<uint>(attrib._table) : null;
             foreach (DicomFragment fragment in attrib._fragments)
             {
                 _fragments.Add(new DicomFragment(fragment));

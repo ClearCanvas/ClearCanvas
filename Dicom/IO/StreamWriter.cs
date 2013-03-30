@@ -117,7 +117,11 @@ namespace ClearCanvas.Dicom.IO
                     if (_syntax.ExplicitVr)
                         _writer.Write((ushort)0x0000);
 
-                    if (Flags.IsSet(options, DicomWriteOptions.ExplicitLengthSequence))
+                    if (Flags.IsSet(options, DicomWriteOptions.DigitalSignatureMacEncoding))
+                    {
+                        // length field is not written when generating digital signature MAC
+                    }
+                    else if (Flags.IsSet(options, DicomWriteOptions.ExplicitLengthSequence))
                     {
                         int hl = _syntax.ExplicitVr ? 12 : 8;
                         _writer.Write((uint)sq.CalculateWriteLength(_syntax, options & ~DicomWriteOptions.CalculateGroupLengths) - (uint)hl);
@@ -132,7 +136,11 @@ namespace ClearCanvas.Dicom.IO
                         _writer.Write((ushort)DicomTag.Item.Group);
                         _writer.Write((ushort)DicomTag.Item.Element);
 
-                        if (Flags.IsSet(options, DicomWriteOptions.ExplicitLengthSequenceItem))
+                        if (Flags.IsSet(options, DicomWriteOptions.DigitalSignatureMacEncoding))
+                        {
+                            // length field is not written when generating digital signature MAC
+                        }
+                        else if (Flags.IsSet(options, DicomWriteOptions.ExplicitLengthSequenceItem))
                         {
                             _writer.Write((uint)ids.CalculateWriteLength(_syntax, options & ~DicomWriteOptions.CalculateGroupLengths));
                         }
@@ -143,7 +151,8 @@ namespace ClearCanvas.Dicom.IO
 
                         Write(this.TransferSyntax, ids, options & ~DicomWriteOptions.CalculateGroupLengths);
 
-                        if (!Flags.IsSet(options, DicomWriteOptions.ExplicitLengthSequenceItem))
+                        if (!Flags.IsSet(options, DicomWriteOptions.ExplicitLengthSequenceItem)
+                            && !Flags.IsSet(options, DicomWriteOptions.DigitalSignatureMacEncoding))
                         {
                             _writer.Write((ushort)DicomTag.ItemDelimitationItem.Group);
                             _writer.Write((ushort)DicomTag.ItemDelimitationItem.Element);
@@ -151,7 +160,12 @@ namespace ClearCanvas.Dicom.IO
                         }
                     }
 
-                    if (!Flags.IsSet(options, DicomWriteOptions.ExplicitLengthSequence))
+                    if (Flags.IsSet(options, DicomWriteOptions.DigitalSignatureMacEncoding))
+                    {
+                        _writer.Write((ushort)DicomTag.SequenceDelimitationItem.Group);
+                        _writer.Write((ushort)DicomTag.SequenceDelimitationItem.Element);
+                    }
+                    else if (!Flags.IsSet(options, DicomWriteOptions.ExplicitLengthSequence))
                     {
                         _writer.Write((ushort)DicomTag.SequenceDelimitationItem.Group);
                         _writer.Write((ushort)DicomTag.SequenceDelimitationItem.Element);
@@ -165,12 +179,25 @@ namespace ClearCanvas.Dicom.IO
 
                     if (_syntax.ExplicitVr)
                         _writer.Write((ushort)0x0000);
-                    _writer.Write((uint)UndefinedLength);
+
+                    if (Flags.IsSet(options, DicomWriteOptions.DigitalSignatureMacEncoding))
+                    {
+                        // length field is not written when generating digital signature MAC
+                    }
+                    else
+                    {
+                        _writer.Write((uint)UndefinedLength);
+                    }
 
                     _writer.Write((ushort)DicomTag.Item.Group);
                     _writer.Write((ushort)DicomTag.Item.Element);
 
-                    if (Flags.IsSet(options, DicomWriteOptions.WriteFragmentOffsetTable) && fs.HasOffsetTable)
+                    if (Flags.IsSet(options, DicomWriteOptions.DigitalSignatureMacEncoding))
+                    {
+                        // length field is not written when generating digital signature MAC
+                        if (fs.HasOffsetTable) fs.OffsetTableBuffer.CopyTo(_writer);
+                    }
+                    else if (Flags.IsSet(options, DicomWriteOptions.WriteFragmentOffsetTable) && fs.HasOffsetTable)
                     {
                         _writer.Write((uint)fs.OffsetTableBuffer.Length);
                         fs.OffsetTableBuffer.CopyTo(_writer);
@@ -184,13 +211,29 @@ namespace ClearCanvas.Dicom.IO
                     {
                         _writer.Write((ushort)DicomTag.Item.Group);
                         _writer.Write((ushort)DicomTag.Item.Element);
-                        _writer.Write((uint)bb.Length);
+
+                        if (Flags.IsSet(options, DicomWriteOptions.DigitalSignatureMacEncoding))
+                        {
+                            // length field is not written when generating digital signature MAC
+                        }
+                        else
+                        {
+                            _writer.Write((uint)bb.Length);
+                        }
                         bb.GetByteBuffer(_syntax).CopyTo(_writer);
                     }
 
-                    _writer.Write((ushort)DicomTag.SequenceDelimitationItem.Group);
-                    _writer.Write((ushort)DicomTag.SequenceDelimitationItem.Element);
-                    _writer.Write((uint)0x00000000);
+                    if (Flags.IsSet(options, DicomWriteOptions.DigitalSignatureMacEncoding))
+                    {
+                        _writer.Write((ushort)DicomTag.SequenceDelimitationItem.Group);
+                        _writer.Write((ushort)DicomTag.SequenceDelimitationItem.Element);
+                    }
+                    else
+                    {
+                        _writer.Write((ushort)DicomTag.SequenceDelimitationItem.Group);
+                        _writer.Write((ushort)DicomTag.SequenceDelimitationItem.Element);
+                        _writer.Write((uint)0x00000000);
+                    }
                 }
                 else
                 {
