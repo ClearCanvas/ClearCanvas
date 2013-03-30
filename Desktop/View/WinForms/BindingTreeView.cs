@@ -295,6 +295,38 @@ namespace ClearCanvas.Desktop.View.WinForms
 			return false;
 		}
 
+    	public Size MenuIconScalingSize
+    	{
+    		get { return _contextMenu.ImageScalingSize; }
+    		set { _contextMenu.ImageScalingSize = value; }
+    	}
+
+    	private bool ShouldSerializeMenuIconScalingSize()
+    	{
+    		return !MenuIconScalingSize.Equals(new Size(24, 24));
+    	}
+
+    	private void ResetMenuIconScalingSize()
+    	{
+    		MenuIconScalingSize = new Size(24, 24);
+    	}
+
+    	public Size ToolbarIconScalingSize
+    	{
+    		get { return _toolStrip.ImageScalingSize; }
+    		set { _toolStrip.ImageScalingSize = value; }
+    	}
+
+    	private bool ShouldSerializeToolbarIconScalingSize()
+    	{
+    		return !ToolbarIconScalingSize.Equals(new Size(24, 24));
+    	}
+
+    	private void ResetToolbarIconScalingSize()
+    	{
+    		ToolbarIconScalingSize = new Size(24, 24);
+    	}
+
     	[DefaultValue(false)]
     	public bool AllowDropToIndex
     	{
