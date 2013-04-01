@@ -65,10 +65,10 @@ namespace ClearCanvas.Desktop.Validation
         /// </summary>
         /// <param name="success">Indicates whether the validation succeeded.</param>
         /// <param name="messages">When validation fails, a set of messages indicating why the validation failed.</param>
-        public ValidationResult(bool success, string[] messages)
+        public ValidationResult(bool success, params string[] messages)
         {
             _success = success;
-            _messages = messages;
+            _messages = messages ?? new string[0];
         }
 
         /// <summary>

@@ -47,7 +47,7 @@ namespace ClearCanvas.Desktop.Validation
 	/// via the decorated method.  The method must match the signature of
 	/// <see cref="ValidationMethod"/>.
 	/// </remarks>
-	[AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
+	[AttributeUsage(AttributeTargets.Method, AllowMultiple = true, Inherited = false)]
 	public class ValidationMethodForAttribute : Attribute
 	{
 		/// <summary>
