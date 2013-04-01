@@ -50,12 +50,12 @@
                                             <td align="left" valign="bottom">
                                                 <asp:Label ID="Label1" runat="server" Text="<%$Resources: SearchFieldLabels, PatientName %>" CssClass="SearchTextBoxLabel"
                                                     EnableViewState="False" /><br />
-                                                <asp:TextBox ID="PatientName" runat="server" CssClass="SearchTextBox" ToolTip="<%$Resources: Tooltips, SearchByPatientName %>" />
+                                                <ccUI:TextBox ID="PatientName" runat="server" CssClass="SearchTextBox" ToolTip="<%$Resources: Tooltips, SearchByPatientName %>" />
                                             </td>
                                             <td align="left" valign="bottom">
                                                 <asp:Label ID="Label2" runat="server" Text="<%$Resources: SearchFieldLabels, PatientID %>" CssClass="SearchTextBoxLabel"
                                                     EnableViewState="False" /><br />
-                                                <asp:TextBox ID="PatientId" runat="server" CssClass="SearchTextBox" ToolTip="<%$Resources: Tooltips, SearchByPatientID %>" />
+                                                <ccUI:TextBox ID="PatientId" runat="server" CssClass="SearchTextBox" ToolTip="<%$Resources: Tooltips, SearchByPatientID %>" />
                                             </td>
                                             <td align="left" valign="bottom">
                                                 <asp:Label ID="Label5" runat="server" Text="<%$Resources: SearchFieldLabels, ArchiveQueueSchedule%>" CssClass="SearchTextBoxLabel" EnableViewState="false"/>

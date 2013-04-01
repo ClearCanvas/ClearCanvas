@@ -73,7 +73,7 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Studies {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox ResponsibleOrganization;
+        protected global::ClearCanvas.ImageServer.Web.Common.WebControls.UI.TextBox ResponsibleOrganization;
         
         /// <summary>
         /// ResponsiblePersonFilter control.
@@ -100,7 +100,7 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Studies {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox ResponsiblePerson;
+        protected global::ClearCanvas.ImageServer.Web.Common.WebControls.UI.TextBox ResponsiblePerson;
         
         /// <summary>
         /// Label1 control.
@@ -118,7 +118,7 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Studies {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox PatientName;
+        protected global::ClearCanvas.ImageServer.Web.Common.WebControls.UI.TextBox PatientName;
         
         /// <summary>
         /// Label2 control.
@@ -136,7 +136,7 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Studies {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox PatientId;
+        protected global::ClearCanvas.ImageServer.Web.Common.WebControls.UI.TextBox PatientId;
         
         /// <summary>
         /// Label3 control.
@@ -154,7 +154,7 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Studies {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox AccessionNumber;
+        protected global::ClearCanvas.ImageServer.Web.Common.WebControls.UI.TextBox AccessionNumber;
         
         /// <summary>
         /// Label5 control.
@@ -226,7 +226,7 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Studies {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox StudyDescription;
+        protected global::ClearCanvas.ImageServer.Web.Common.WebControls.UI.TextBox StudyDescription;
         
         /// <summary>
         /// Label9 control.
@@ -244,7 +244,7 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Studies {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox ReferringPhysiciansName;
+        protected global::ClearCanvas.ImageServer.Web.Common.WebControls.UI.TextBox ReferringPhysiciansName;
         
         /// <summary>
         /// Label6 control.

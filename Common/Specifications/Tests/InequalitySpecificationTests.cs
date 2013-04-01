@@ -63,7 +63,6 @@ namespace ClearCanvas.Common.Specifications.Tests
 		}
 
 		[Test]
-		// This test is currently failing because coercion code hasn't been merged to trunk yet
 		public void Test_GreaterThan_CoerceTypes()
 		{
 			GreaterThanSpecification s = new GreaterThanSpecification();
@@ -72,8 +71,16 @@ namespace ClearCanvas.Common.Specifications.Tests
 			Assert.IsFalse(s.Test(0).Success);
 			Assert.IsFalse(s.Test(1).Success);
 			Assert.IsTrue(s.Test(2).Success);
-			//Assert.IsTrue(s.Test(null).Success);
-			//Assert.IsTrue(s.Test(1).Success);
+
+			Assert.IsFalse(s.Test(0.5).Success);
+			Assert.IsTrue(s.Test(2.1).Success);
+
+			// these will do string comparison, not numeric comparison
+			Assert.IsFalse(s.Test("0.5").Success);
+			Assert.IsTrue(s.Test("2.1").Success);
+
+			// null is less than any other value
+			Assert.IsFalse(s.Test(null).Success);
 		}
 
 		[Test]
@@ -118,17 +125,24 @@ namespace ClearCanvas.Common.Specifications.Tests
 		}
 
 		[Test]
-		// This test is currently failing because coercion code hasn't been merged to trunk yet
 		public void Test_LessThan_CoerceTypes()
 		{
 			LessThanSpecification s = new LessThanSpecification();
 			s.RefValueExpression = new ConstantExpression("1");
 
 			Assert.IsTrue(s.Test(0).Success);
-			//Assert.IsTrue(s.Test(1).Success);
 			Assert.IsFalse(s.Test(2).Success);
-			//Assert.IsFalse(s.Test(null).Success);
 			Assert.IsFalse(s.Test(1).Success);
+
+			Assert.IsTrue(s.Test(0.5).Success);
+			Assert.IsFalse(s.Test(2.1).Success);
+
+			// these will do string comparison, not numeric comparison
+			Assert.IsTrue(s.Test("0.5").Success);
+			Assert.IsFalse(s.Test("2.1").Success);
+
+			// null is less than any other value
+			Assert.IsTrue(s.Test(null).Success);
 		}
 
 		[Test]

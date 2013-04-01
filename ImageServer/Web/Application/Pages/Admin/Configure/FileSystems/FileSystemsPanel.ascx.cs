@@ -154,10 +154,10 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Admin.Configure.FileSyst
             FilesystemSelectCriteria criteria = new FilesystemSelectCriteria();
 
 
-            if (String.IsNullOrEmpty(DescriptionFilter.Text) == false)
+            if (String.IsNullOrEmpty(DescriptionFilter.TrimText) == false)
             {
                 QueryHelper.SetGuiStringCondition(criteria.Description,
-                                      SearchHelper.TrailingWildCard(DescriptionFilter.Text));
+                                      SearchHelper.TrailingWildCard(DescriptionFilter.TrimText));
             }
 
             if (TiersDropDownList.SelectedIndex >= 1) /* 0 = "All" */

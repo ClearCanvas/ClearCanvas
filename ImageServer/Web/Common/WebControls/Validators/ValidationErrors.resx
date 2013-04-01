@@ -112,10 +112,10 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="ServerRuleXMLIsMissing" xml:space="preserve">
     <value>Server Rule XML must be specified</value>
@@ -129,8 +129,8 @@
   <data name="UsernameAlreadyExists" xml:space="preserve">
     <value>Username '{0}' already exists.</value>
   </data>
-  <data name="UsernameCannotBeEmpty" xml:space="preserve">
-    <value>Username cannot be empty</value>
+  <data name="UserIDCannotBeEmpty" xml:space="preserve">
+    <value>User ID cannot be empty</value>
   </data>
   <data name="UserGroupAlreadyExists" xml:space="preserve">
     <value>Usergroup '{0}' already exists.</value>

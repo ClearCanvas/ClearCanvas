@@ -64,7 +64,7 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Admin.ApplicationLog {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox HostFilter;
+        protected global::ClearCanvas.ImageServer.Web.Common.WebControls.UI.TextBox HostFilter;
         
         /// <summary>
         /// Label7 control.
@@ -208,7 +208,7 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Admin.ApplicationLog {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox ThreadFilter;
+        protected global::ClearCanvas.ImageServer.Web.Common.WebControls.UI.TextBox ThreadFilter;
         
         /// <summary>
         /// Label6 control.
@@ -244,7 +244,7 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Admin.ApplicationLog {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox MessageFilter;
+        protected global::ClearCanvas.ImageServer.Web.Common.WebControls.UI.TextBox MessageFilter;
         
         /// <summary>
         /// Panel1 control.

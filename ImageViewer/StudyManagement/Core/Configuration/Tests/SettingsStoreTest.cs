@@ -97,7 +97,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement.Core.Configuration.Tests
 
             store.PutSettingsValues(group, null, null, dic);
 
-            var oldGroup = new SettingsGroupDescriptor(group.Name, new Version(group.Version.Major -1,group.Version.Minor, group.Version.Build,group.Version.Revision), group.Description,
+            var oldGroup = new SettingsGroupDescriptor(group.Name, new Version(group.Version.Major -1,group.Version.Minor), group.Description,
                                                        group.AssemblyQualifiedTypeName, group.HasUserScopedSettings);
             dic[AppSettings.PropertyApp] = testValOld;
 

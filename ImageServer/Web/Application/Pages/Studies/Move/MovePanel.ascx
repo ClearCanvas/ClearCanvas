@@ -81,15 +81,15 @@
                             <tr>
                                 <td style="padding-top: 5px; vertical-align: bottom;">
                                     <asp:Label runat="server" Text="<%$Resources: SearchFieldLabels, AETitle%>" CssClass="SearchTextBoxLabel" /><br />
-                                    <asp:TextBox ID="AETitleFilter" runat="server" CssClass="SearchTextBox" ToolTip="<%$ Resources: Tooltips, SearchByAETitle %>" />
+                                    <ccUI:TextBox ID="AETitleFilter" runat="server" CssClass="SearchTextBox" ToolTip="<%$ Resources: Tooltips, SearchByAETitle %>" />
                                 </td>
                                 <td style="vertical-align: bottom;">
                                     <asp:Label runat="server" Text="<%$Resources: SearchFieldLabels, DeviceDescription %>" CssClass="SearchTextBoxLabel" /><br />
-                                    <asp:TextBox ID="DescriptionFilter" runat="server" CssClass="SearchTextBox" ToolTip="<%$ Resources: Tooltips, SearchByAeDescription %>" />
+                                    <ccUI:TextBox ID="DescriptionFilter" runat="server" CssClass="SearchTextBox" ToolTip="<%$ Resources: Tooltips, SearchByAeDescription %>" />
                                 </td>
                                 <td style="vertical-align: bottom;">
                                     <asp:Label runat="server" Text="<%$Resources: SearchFieldLabels, IPAddress %>" CssClass="SearchTextBoxLabel" /><br />
-                                    <asp:TextBox ID="IPAddressFilter" runat="server" CssClass="SearchTextBox" ToolTip="<%$Resources: Tooltips, SearchByIpAddress %>" />
+                                    <ccUI:TextBox ID="IPAddressFilter" runat="server" CssClass="SearchTextBox" ToolTip="<%$Resources: Tooltips, SearchByIpAddress %>" />
                                 </td>
                                 <td style="vertical-align: bottom;">
                                     <asp:Label runat="server" Text="<%$Resources: SearchFieldLabels, DHCP%>" CssClass="SearchTextBoxLabel" /><br />

@@ -20,6 +20,10 @@
 
   <PropertyGroup>
     <TargetPlatform>$(BuildPlatform)</TargetPlatform>
+    <EditionName>Community</EditionName>
+    <BuildSuffix>_$(EditionName)</BuildSuffix>
+    <BuildOptions></BuildOptions>
+    <ReleaseTypeString Condition="'$(ReleaseType)' != 'Official'">$(ReleaseType)</ReleaseTypeString>
   </PropertyGroup>
 
   <Choose>
@@ -45,11 +49,13 @@
   <Choose>
     <When Condition="$(DistributionBuild)">
       <PropertyGroup>
-        <DistributionDir>$(MSBuildProjectDirectory)\..\Distribution\Build\ImageServer\$(PlatformSubFolder)\$(Configuration)</DistributionDir>
+        <DeploymentOutputPath>..\Distribution\Build\ImageServer$(BuildSuffix)\$(PlatformSubFolder)\$(Configuration)\Web</DeploymentOutputPath>
+        <DistributionDir>$(MSBuildProjectDirectory)\$(DeploymentOutputPath)</DistributionDir>
       </PropertyGroup>
     </When>
     <Otherwise>
       <PropertyGroup>
+        <DeploymentOutputPath>Web\Application\Deployment\Output</DeploymentOutputPath>
         <DistributionDir></DistributionDir>
       </PropertyGroup>
     </Otherwise>
@@ -58,12 +64,12 @@
   <Choose>
     <When Condition="$(DistributionBuild) And '$(Configuration)' == 'Release' And '$(KeyFile)' != ''">
       <PropertyGroup>
-        <ImageServerProperties>Configuration=$(Configuration);TargetPlatform=$(TargetPlatform);DistributionBuild=$(DistributionBuild);DistributionDir=$(DistributionDir);SignAssembly=true;DelaySign=false;AssemblyOriginatorKeyFile=$(KeyFile)</ImageServerProperties>
+        <ImageServerProperties>Platform=Any CPU;Configuration=$(Configuration);TargetPlatform=$(TargetPlatform);DistributionBuild=$(DistributionBuild);DistributionDir=$(DistributionDir);BuildSuffix=$(BuildSuffix);Options=$(BuildOptions);ReleaseType=$(ReleaseType);EditionName=$(EditionName)</ImageServerProperties>
       </PropertyGroup>
     </When>
     <Otherwise>
       <PropertyGroup>
-        <ImageServerProperties>Configuration=$(Configuration);TargetPlatform=$(TargetPlatform);DistributionBuild=$(DistributionBuild);DistributionDir=$(DistributionDir)</ImageServerProperties>
+        <ImageServerProperties>Platform=Any CPU;Configuration=$(Configuration);TargetPlatform=$(TargetPlatform);DistributionBuild=$(DistributionBuild);DistributionDir=$(DistributionDir);BuildSuffix=$(BuildSuffix);Options=$(BuildOptions);ReleaseType=$(ReleaseType);EditionName=$(EditionName)</ImageServerProperties>
       </PropertyGroup>
     </Otherwise>
   </Choose>
@@ -75,7 +81,7 @@
   <Target Name="BuildSolution" DependsOnTargets="Build JScript">
     <RemoveDir Condition="$(DistributionBuild)" Directories="$(DistributionDir)" />
     <MSBuild Projects="ImageServer.sln" Properties="$(ImageServerProperties)" />
-	<MSBuild Projects="$(MSBuildProjectDirectory)\Web\ApplicationDeployment\WebApplicationDeployment.wdproj" Properties="$(ImageServerProperties)" Condition="$(DistributionBuild)" />
+    <MSBuild Projects="$(MSBuildProjectDirectory)\Web\ApplicationDeployment\WebApplicationDeployment.wdproj" Properties="$(ImageServerProperties);DeploymentOutputPath=$(DeploymentOutputPath)" Condition="$(DistributionBuild)" />
   </Target>
 
 </Project>

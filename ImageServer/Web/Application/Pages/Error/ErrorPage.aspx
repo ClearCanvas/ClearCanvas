@@ -26,17 +26,15 @@
 
 <asp:Content runat="server" ContentPlaceHolderID="ErrorMessagePlaceHolder">
 	    <asp:label ID="ErrorMessageLabel" runat="server">
-	        <%= ErrorMessages.UnexpectedError %>
 	    </asp:label>
 </asp:Content>
 
 <asp:Content ID="Content1" runat="server" ContentPlaceHolderID="DescriptionPlaceHolder">
    <asp:Label ID = "DescriptionLabel" runat="server">
-        <%= ClearCanvas.ImageServer.Web.Common.Utilities.HtmlUtility.Encode(ErrorMessages.GeneralErrorMessage)%>
-        <div ID="StackTraceMessage" runat="server" Visible="false" onclick="javascript:toggleLayer('StackTrace');" style="margin-top:20px">
+    </asp:Label>
+    <div ID="StackTraceMessage" runat="server" Visible="false" onclick="javascript:toggleLayer('StackTrace');" style="margin-top:20px">
                 <%= ClearCanvas.ImageServer.Web.Common.Utilities.HtmlUtility.Encode(ErrorMessages.ErrorShowStackTraceMessage)%>
         </div>
-    </asp:Label>
     <div id="StackTrace" style="margin-top: 15px" visible="false">
         <asp:TextBox runat="server" ID="StackTraceTextBox" Visible="false" Rows="5" Width="90%" TextMode="MultiLine" ReadOnly="true"></asp:TextBox>
     </div>

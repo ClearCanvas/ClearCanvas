@@ -42,7 +42,7 @@
                                             </td>
                                             <td align="left">
                                                 <asp:Label ID="Label3" runat="server" Text="<%$Resources: SearchFieldLabels,AlertComponent %>" CssClass="SearchTextBoxLabel"></asp:Label><br />
-                                                <asp:TextBox ID="ComponentFilter" runat="server" CssClass="SearchTextBox"></asp:TextBox>
+                                                <ccUI:TextBox ID="ComponentFilter" runat="server" CssClass="SearchTextBox"></ccUI:TextBox>
                                             </td>
                                             <td align="left" valign="bottom">
                                                 <asp:Label ID="Label2" runat="server" Text="<%$Resources: SearchFieldLabels,AlertInsertDate %>" CssClass="SearchTextBoxLabel" />

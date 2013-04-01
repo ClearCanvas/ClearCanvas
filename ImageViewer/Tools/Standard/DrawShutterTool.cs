@@ -300,34 +300,7 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 				return true;
 			}
 
-			if (_graphicBuilder == null && _primitiveGraphic != null)
-			{
-				bool boundingBoxTooSmall = false;
-				_primitiveGraphic.CoordinateSystem = CoordinateSystem.Destination;
-				if (_primitiveGraphic.BoundingBox.Width < 50 || _primitiveGraphic.BoundingBox.Height < 50)
-					boundingBoxTooSmall = true;
-				_primitiveGraphic.ResetCoordinateSystem();
-
-				if (boundingBoxTooSmall)
-				{
-					RemoveDrawShutterGraphic();
-					base.SelectedPresentationImage.Draw();
-				}
-				else
-				{
-					GeometricShutter shutter = ConvertToGeometricShutter();
-					GeometricShuttersGraphic shuttersGraphic =
-						GetGeometricShuttersGraphic((IDicomPresentationImage) base.SelectedPresentationImage);
-					DrawableUndoableCommand command = new DrawableUndoableCommand(shuttersGraphic);
-					command.Name = SR.CommandDrawShutter;
-					command.Enqueue(new AddGeometricShutterUndoableCommand(shuttersGraphic, shutter));
-					command.Execute();
-
-					base.ImageViewer.CommandHistory.AddCommand(command);
-				}
-			}
-
-				return false;
+			return false;
 		}
 
 		public override void Cancel()
@@ -390,6 +363,34 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 			_graphicBuilder.GraphicCancelled -= OnGraphicCancelled;
 			_graphicBuilder.GraphicComplete -= OnGraphicComplete;
 			_graphicBuilder = null;
+
+			if (_primitiveGraphic != null)
+			{
+				bool boundingBoxTooSmall = false;
+				_primitiveGraphic.CoordinateSystem = CoordinateSystem.Destination;
+				if (_primitiveGraphic.BoundingBox.Width < 50 || _primitiveGraphic.BoundingBox.Height < 50)
+					boundingBoxTooSmall = true;
+				_primitiveGraphic.ResetCoordinateSystem();
+
+				if (boundingBoxTooSmall)
+				{
+					RemoveDrawShutterGraphic();
+					base.SelectedPresentationImage.Draw();
+				}
+				else
+				{
+					GeometricShutter shutter = ConvertToGeometricShutter();
+					GeometricShuttersGraphic shuttersGraphic =
+						GetGeometricShuttersGraphic((IDicomPresentationImage)base.SelectedPresentationImage);
+					DrawableUndoableCommand command = new DrawableUndoableCommand(shuttersGraphic);
+					command.Name = SR.CommandDrawShutter;
+					command.Enqueue(new AddGeometricShutterUndoableCommand(shuttersGraphic, shutter));
+					command.Execute();
+
+					base.ImageViewer.CommandHistory.AddCommand(command);
+				}
+			}
+
 		}
 
 		private void OnGraphicCancelled(object sender, GraphicEventArgs e)

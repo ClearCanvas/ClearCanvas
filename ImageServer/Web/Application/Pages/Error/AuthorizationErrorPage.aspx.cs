@@ -23,47 +23,18 @@
 #endregion
 
 using System;
-using ClearCanvas.ImageServer.Web.Application.Pages.Common;
 using ClearCanvas.ImageServer.Web.Common;
-using ClearCanvas.ImageServer.Web.Common.Security;
 using Resources;
 
 namespace ClearCanvas.ImageServer.Web.Application.Pages.Error
 {
-    public partial class AuthorizationErrorPage : BasePage
+    public partial class AuthorizationErrorPage : ErrorPage
     {
-        protected void Page_Load(object sender, EventArgs e)
+
+        protected override void OnLoad(EventArgs e)
         {
-            if(Context.Items[ImageServerConstants.ContextKeys.ErrorMessage] != null) {
-                ErrorMessageLabel.Text = Context.Items[ImageServerConstants.ContextKeys.ErrorMessage].ToString();
-            } 
-            if (Context.Items[ImageServerConstants.ContextKeys.StackTrace] != null)
-            {
-                StackTraceTextBox.Text = Context.Items[ImageServerConstants.ContextKeys.StackTrace].ToString();
-                StackTraceTextBox.Visible = true;
-                StackTraceMessage.Visible = true;
-            }
-            if (Context.Items[ImageServerConstants.ContextKeys.ErrorDescription] != null)
-            {
-                DescriptionLabel.Text = Context.Items[ImageServerConstants.ContextKeys.ErrorDescription].ToString();
-            }
-
-            #region UnitTest
-            if (false==String.IsNullOrEmpty(Page.Request.QueryString["test"]))
-            {
-                StackTraceMessage.Visible = true;
-                StackTraceTextBox.Visible = true;
-                StackTraceTextBox.Text = "Dummy stack trace";
-            }
-            #endregion
-
+            base.OnLoad(e);
             SetPageTitle(Titles.AuthorizationErrorPageTitle);
-        }
-
-        protected void Logout_Click(Object sender, EventArgs e)
-        {
-            SessionManager.SignOut();
-            Response.Redirect(ImageServerConstants.PageURLs.LoginPage);
         }
 
         protected void DefaultPage_Click(Object sender, EventArgs e)

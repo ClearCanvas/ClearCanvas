@@ -62,7 +62,7 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Admin.ApplicationLog
                     ToDateCalendarExtender.SelectedDate = DateTime.Parse(end[0]);
                     FromTimeFilter.Text = start[1] + ".000";
                     ToTimeFilter.Text = end[1] + ".000";
-                    HostFilter.Text = hostname;
+                    HostFilter.TrimText = hostname;
                     ApplicationLogGridView.SetDataSource();
                     ApplicationLogGridView.Refresh();
                 }
@@ -83,12 +83,12 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Admin.ApplicationLog
 
 			ApplicationLogGridView.DataSourceCreated += delegate(ApplicationLogDataSource source)
 			                                       	{
-														if (!String.IsNullOrEmpty(HostFilter.Text))
-															source.Host = SearchHelper.LeadingAndTrailingWildCard(HostFilter.Text);
-														if (!String.IsNullOrEmpty(ThreadFilter.Text))
-															source.Thread = SearchHelper.LeadingAndTrailingWildCard(ThreadFilter.Text);
-														if (!String.IsNullOrEmpty(MessageFilter.Text))
-															source.Message = SearchHelper.LeadingAndTrailingWildCard(MessageFilter.Text);
+														if (!String.IsNullOrEmpty(HostFilter.TrimText))
+															source.Host = SearchHelper.LeadingAndTrailingWildCard(HostFilter.TrimText);
+														if (!String.IsNullOrEmpty(ThreadFilter.TrimText))
+															source.Thread = SearchHelper.LeadingAndTrailingWildCard(ThreadFilter.TrimText);
+														if (!String.IsNullOrEmpty(MessageFilter.TrimText))
+															source.Message = SearchHelper.LeadingAndTrailingWildCard(MessageFilter.TrimText);
 														if (!String.IsNullOrEmpty(LogLevelListBox.SelectedValue))
 															if (!LogLevelListBox.SelectedValue.Equals("ANY"))
 																source.LogLevel = LogLevelListBox.SelectedValue;

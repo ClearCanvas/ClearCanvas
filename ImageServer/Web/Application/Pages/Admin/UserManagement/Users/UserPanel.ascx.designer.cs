@@ -55,7 +55,7 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Admin.UserManagement.Use
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox UserNameTextBox;
+        protected global::ClearCanvas.ImageServer.Web.Common.WebControls.UI.TextBox UserNameTextBox;
         
         /// <summary>
         /// Label1 control.
@@ -73,7 +73,7 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Admin.UserManagement.Use
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox DisplayNameTextBox;
+        protected global::ClearCanvas.ImageServer.Web.Common.WebControls.UI.TextBox DisplayNameTextBox;
         
         /// <summary>
         /// Panel1 control.

@@ -59,17 +59,17 @@ function MultiSelect() {
                                             <td align="left" valign="bottom">
                                                 <asp:Label ID="Label1" runat="server" Text="<%$Resources: SearchFieldLabels,PatientName %>" CssClass="SearchTextBoxLabel"
                                                     EnableViewState="False" /><br />
-                                                <asp:TextBox ID="PatientName" runat="server" CssClass="SearchTextBox" />
+                                                <ccUI:TextBox ID="PatientName" runat="server" CssClass="SearchTextBox" />
                                             </td>
                                              <td align="left" valign="bottom">
                                                 <asp:Label ID="Label4" runat="server" Text="<%$Resources: SearchFieldLabels,PatientID %>" CssClass="SearchTextBoxLabel"
                                                     EnableViewState="False" /><br />
-                                                <asp:TextBox ID="PatientId" runat="server" CssClass="SearchTextBox" ToolTip="<%$Resources: Tooltips,SearchByPatientID %>" />
+                                                <ccUI:TextBox ID="PatientId" runat="server" CssClass="SearchTextBox" ToolTip="<%$Resources: Tooltips,SearchByPatientID %>" />
                                             </td>
                                             <td align="left" valign="bottom">
                                                 <asp:Label ID="Label3" runat="server" Text="<%$Resources: SearchFieldLabels,AccessionNumber%>" CssClass="SearchTextBoxLabel"
                                                     EnableViewState="False" /><br />
-                                                <asp:TextBox ID="AccessionNumber" runat="server" CssClass="SearchTextBox" />
+                                                <ccUI:TextBox ID="AccessionNumber" runat="server" CssClass="SearchTextBox" />
                                             </td>
                                             <td align="left" valign="bottom">
                                                 <asp:Label ID="Label2" runat="server" Text="<%$Resources: SearchFieldLabels,FromDate%>" CssClass="SearchTextBoxLabel"
