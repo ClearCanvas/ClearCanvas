@@ -167,7 +167,8 @@ namespace ClearCanvas.Utilities.Manifest
                     if (!File.Exists(fullPath))
                     {
                         if (!Directory.Exists(fullPath) && !inputFile.Ignore)
-                            throw new ApplicationException("File in manifest not in distribution: " + inputFile.Name + " (" + fullPath +")");
+                            throw new ApplicationException("File in manifest not in distribution: " + inputFile.Name + " (" + fullPath +")" + ". Referenced in " + 
+                                input.InputFilename);
 
                         ManifestFile directory = new ManifestFile
                                                      {

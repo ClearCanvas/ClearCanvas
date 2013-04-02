@@ -37,6 +37,8 @@ namespace ClearCanvas.Utilities.Manifest
     [XmlRoot("ManifestInput", Namespace = "http://www.clearcanvas.ca")]
     public class ManifestInput
     {
+        public string InputFilename;
+
         #region Class definitions
 
         [XmlRoot("File")]
@@ -92,7 +94,7 @@ namespace ClearCanvas.Utilities.Manifest
             using (FileStream fs = new FileStream(filename, FileMode.Open))
             {
                 ManifestInput input = (ManifestInput) theSerializer.Deserialize(fs);
-
+                input.InputFilename = filename;
                 return input;
             }
         }

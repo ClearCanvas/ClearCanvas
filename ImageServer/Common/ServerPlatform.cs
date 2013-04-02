@@ -380,40 +380,7 @@ namespace ClearCanvas.ImageServer.Common
 
 	    public static bool IsManifestVerified
 	    {
-	        get
-	        {
-                // Because this code is used in ASP.NET, we need to recheck the manifest every now.
-                // Otherwise, the manifest will remain valid until IIS is restarted.
-                if (_manifestVerified == null || _lastManifestCheckTimestamp == null || DateTime.Now - _lastManifestCheckTimestamp.Value > ManifestRecheckTimeSpan)
-                {
-                    lock (_syncLock)
-                    {
-                        if (_manifestVerified == null || _lastManifestCheckTimestamp == null || DateTime.Now - _lastManifestCheckTimestamp.Value > ManifestRecheckTimeSpan)
-                        {
-                            _lastManifestCheckTimestamp = DateTime.Now;
-                            _manifestVerified = null;
-
-                            try
-                            {
-                                Platform.GetService(delegate(IProductVerificationService service)
-                                {
-                                    var result = service.Verify(new ProductVerificationRequest());
-                                    _manifestVerified = result.IsManifestValid;
-                                }
-                                    );
-                            }
-                            catch (Exception ex)
-                            {
-                                // This is called on every page. We don't want to fill up the log.
-                                if (Platform.IsLogLevelEnabled(LogLevel.Debug))
-                                    Platform.Log(LogLevel.Error, "Error occurred when trying to communicate with shred host manifest service :{0}", ex.Message);
-                            }
-                        }
-                    }
-                }
-
-                return _manifestVerified.HasValue ? _manifestVerified.Value : false;
-	        }
+	        get { return new ProductManifestChecker().VerifyManifest(); }
 	    }
 
 	    public static StudyHistory CreateStudyHistoryRecord(IUpdateContext updateContext,
