@@ -27,12 +27,22 @@ using System.Threading;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Desktop;
+using ClearCanvas.Desktop.Actions;
 using ClearCanvas.Desktop.Tools;
-using Timer=System.Threading.Timer;
 
 namespace ClearCanvas.ImageViewer
 {
-	// This tool is basically a cheap hack to make sure that the garbage collector
+    [KeyboardAction("forcegc", "imageviewer-keyboard/ForceFullGarbageCollection", "ForceGC", KeyStroke = XKeys.G)]
+    [ExtensionOf(typeof(ImageViewerToolExtensionPoint))]
+    internal class ManualGarbageCollectionTool : Tool<IImageViewerToolContext>
+    {
+        public void ForceGC()
+        {
+            GarbageCollectionTool.ForceGC();
+        }
+    }
+
+    // This tool is basically a cheap hack to make sure that the garbage collector
 	// runs a few times after a workspace is closed.  Performing a single GC 
 	// when listening for a workspace removed event doesn't work since DotNetMagic
 	// is still holding on to certain references at that point.  We have to wait
@@ -40,15 +50,9 @@ namespace ClearCanvas.ImageViewer
 	// before we do the GC.  The easiest way to do that without hooking into 
 	// the UI code itself is to get a timer to perform a GC a few times after
 	// the workspace has been closed.
-
-
 	[ExtensionOf(typeof(DesktopToolExtensionPoint))]
 	internal class GarbageCollectionTool : Tool<IDesktopToolContext>
 	{
-		public GarbageCollectionTool()
-		{
-		}
-
 		public override void Initialize()
 		{
 			base.Initialize();
@@ -61,21 +65,23 @@ namespace ClearCanvas.ImageViewer
 			base.Dispose(disposing);
 		}
 
-		void OnWorkspaceClosed(object sender, ItemEventArgs<Workspace> e)
+		private void OnWorkspaceClosed(object sender, ItemEventArgs<Workspace> e)
 		{
-			// When a workspace has been closed, we want the GC to run
-			// a few times to release what is often a significant amount of managed memory.
-
-			WaitCallback del = delegate
-			                   	{
-									for (int i = 0; i < 5; ++i)
-									{
-										Thread.Sleep(500);
-										GC.Collect();
-									}
-			                   	};
-
-			ThreadPool.QueueUserWorkItem(del);
+            ForceGC();
 		}
+
+        internal static void ForceGC()
+        {
+            Platform.Log(LogLevel.Info, "Forcing full garbage collection.");
+
+            ThreadPool.QueueUserWorkItem(delegate
+                                             {
+                                                 for (int i = 0; i < 5; ++i)
+                                                 {
+                                                     Thread.Sleep(500);
+                                                     GC.Collect();
+                                                 }
+                                             });
+        }
 	}
 }

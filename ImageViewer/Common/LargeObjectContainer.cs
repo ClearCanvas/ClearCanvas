@@ -194,7 +194,7 @@ namespace ClearCanvas.ImageViewer.Common
 		/// </remarks>
 		public void Unload()
 		{
-			throw new Exception("The method or operation is not implemented.");
+			throw new NotSupportedException("The method or operation is not implemented.");
 		}
 
 		#endregion

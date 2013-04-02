@@ -2,11 +2,23 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="ClearCanvas.ImageViewer.Common" GeneratedClassName="MemoryManagementSettings">
   <Profiles />
   <Settings>
-    <Setting Name="HighWatermarkMegaBytes" Description="The high watermark for process virtual memory.  When the high watermark is hit, memory management will unload objects until it reaches the low watermark.  A value of -1 means this value is computed automatically." Type="System.Int64" Scope="Application">
+    <Setting Name="HighWatermarkMegaBytes" Description="The high watermark for process memory.  When the high watermark is hit, memory management will unload objects until it reaches the low watermark.  A value of -1 means this value is computed automatically. Applies to both 32 and 64 bit processes, and overrides all 64-bit specific settings." Type="System.Int64" Scope="Application">
       <Value Profile="(Default)">-1</Value>
     </Setting>
-    <Setting Name="LowWatermarkMegaBytes" Description="The low watermark for process virtual memory.  When the high watermark is hit, memory management will unload objects until it reaches the low watermark.  A value of -1 means this value is computed automatically." Type="System.Int64" Scope="Application">
+    <Setting Name="LowWatermarkMegaBytes" Description="The low watermark for process virtual memory.  When the high watermark is hit, memory management will unload objects until it reaches the low watermark.  A value of -1 means this value is computed automatically. Applies to both 32 and 64 bit processes, and overrides all 64-bit specific settings." Type="System.Int64" Scope="Application">
       <Value Profile="(Default)">-1</Value>
+    </Setting>
+    <Setting Name="HeldMemoryToCollectPercent" Description="The amount of held (large object) memory to collect, as a percentage of the total in use by the process." Type="System.Double" Scope="Application">
+      <Value Profile="(Default)">25</Value>
+    </Setting>
+    <Setting Name="x64MinimumFreeSystemMemoryMegabytes" Description="When calculating the maximum memory usage based on the amount of free system memory, this amount is excluded from the calculation." Type="System.Int64" Scope="Application">
+      <Value Profile="(Default)">1000</Value>
+    </Setting>
+    <Setting Name="x64MaxMemoryUsagePercent" Description="The high watermark for process memory, as a percentage of an approximate maximum (process used + system free)." Type="System.Double" Scope="Application">
+      <Value Profile="(Default)">85</Value>
+    </Setting>
+    <Setting Name="x64MaxMemoryToCollectMegabytes" Description="A maximum amount of memory to collect at once. Important on systems with a lot of memory, as collecting too much at once can slow the process down." Type="System.Int64" Scope="Application">
+      <Value Profile="(Default)">2000</Value>
     </Setting>
   </Settings>
 </SettingsFile>

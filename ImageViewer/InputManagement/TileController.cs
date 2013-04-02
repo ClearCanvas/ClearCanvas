@@ -196,6 +196,8 @@ namespace ClearCanvas.ImageViewer.InputManagement
                 
 				if (_captureMouseWheelHandler == null)
 				{
+                    //This is only needed when the capture mouse wheel handler is not null.
+				    _captureTileController = null;
                     if (_delayedStop != null)
                     {
                         _delayedStop.Dispose();

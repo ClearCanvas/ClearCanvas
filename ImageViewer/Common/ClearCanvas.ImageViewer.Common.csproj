@@ -186,6 +186,7 @@
     <Compile Include="Tests\DiskspaceTests.cs" />
     <Compile Include="StudyManagement\TimeOrigin.cs" />
     <Compile Include="StudyManagement\TimeUnit.cs" />
+    <Compile Include="Tests\MemoryManagementTests.cs" />
     <Compile Include="Utilities\Imaging\JpegCompressor.cs" />
     <Compile Include="Utilities\Imaging\PngEncoder.cs" />
     <Compile Include="Utilities\Imaging\Tests\StripPngColourManagementTests.cs" />
