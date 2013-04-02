@@ -75,6 +75,11 @@
     <Compile Include="Command\ServerDatabaseCommand.cs" />
     <Compile Include="Command\ServerExecutionContext.cs" />
     <Compile Include="ConstantResourceManager.cs" />
+    <Compile Include="ProductManifestServiceSettings.Designer.cs">
+      <DependentUpon>ProductManifestServiceSettings.settings</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
     <Compile Include="ExceptionLogAdviceAttribute.cs" />
     <Compile Include="Exceptions\AutoReconcileException.cs" />
     <Compile Include="EnumInfoAttribute.cs" />
@@ -91,6 +96,7 @@
     <Compile Include="FilesystemSelector.cs" />
     <Compile Include="InProcessImageServerServiceProvider.cs" />
     <Compile Include="IZipService.cs" />
+    <Compile Include="ProductManifestServiceProvider.cs" />
     <Compile Include="WorkQueueManagerExtensionPoint.cs" />
     <Compile Include="ServerAuditHelper.cs" />
     <Compile Include="ServiceModel\IFilesystemService.cs" />
@@ -171,6 +177,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="ProductManifestServiceSettings.settings">
+      <Generator>PublicSettingsSingleFileGenerator</Generator>
+      <LastGenOutput>ProductManifestServiceSettings.Designer.cs</LastGenOutput>
+    </None>
     <None Include="RemoteImageServerServiceSettings.settings">
       <Generator>PublicSettingsSingleFileGenerator</Generator>
       <LastGenOutput>RemoteImageServerServiceSettings.Designer.cs</LastGenOutput>
