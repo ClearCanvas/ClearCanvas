@@ -40,9 +40,8 @@ namespace ClearCanvas.Desktop.Actions
     {
 		private readonly ClickActionFlags _flags;
         private ClickHandlerDelegate _clickHandler;
-		private XKeys _keyStroke;
 
-        private bool _checked = false;
+	    private bool _checked;
         private event EventHandler _checkedChanged;
 
         /// <summary>
@@ -69,21 +68,17 @@ namespace ClearCanvas.Desktop.Actions
 
         #region IClickAction members
 
-		/// <summary>
-		/// Gets the keystroke that the UI should attempt to intercept to invoke the action.
-		/// </summary>
-		public XKeys KeyStroke
-		{
-			get { return _keyStroke; }
-			set { _keyStroke = value; }
-		}
-		
-		/// <summary>
+	    /// <summary>
+	    /// Gets the keystroke that the UI should attempt to intercept to invoke the action.
+	    /// </summary>
+	    public XKeys KeyStroke { get; set; }
+
+	    /// <summary>
         /// Gets a value indicating whether this action is a "check" action, that is, an action that behaves as a toggle.
         /// </summary>
         public bool IsCheckAction
         {
-            get { return (_flags & ClickActionFlags.CheckAction) == 0 ? false : true; }
+            get { return (_flags & ClickActionFlags.CheckAction) != 0; }
         }
 
         /// <summary>
@@ -126,14 +121,26 @@ namespace ClearCanvas.Desktop.Actions
         /// <summary>
         /// Called by the UI when the user clicks on the action.
         /// </summary>
+        /// <remarks>This method will do nothing when <see cref="CanClick"/> returns false.</remarks>
         public void Click()
         {
-            if (_clickHandler != null)
-            {
+            if (_clickHandler != null && CanClick())
                 _clickHandler();
-            }
         }
 
         #endregion
+
+        /// <summary>
+        /// Determines whether or not the internal "click handler" can be called,
+        /// based on the <see cref="IAction.Visible"/>, <see cref="IAction.Enabled"/>
+        /// and <see cref="IAction.Permissible"/> properties.
+        /// </summary>
+        private bool CanClick()
+        {
+            //Although Visible doesn't technically apply to a KeyboardAction, it's always true
+            //by default, and there is little reason for anybody to ever set it to false; hence,
+            //why this method is not overridden in KeyboardAction.
+            return Visible && Enabled && Permissible;
+        }
 	}
 }

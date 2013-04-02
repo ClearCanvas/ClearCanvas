@@ -120,6 +120,13 @@
     <Compile Include="Tests\VolumeSopDataSourcePrototypeTests.cs" />
     <Compile Include="Tools\ResliceToolResetAll.cs" />
     <Compile Include="Tools\ResliceToolGraphic.cs" />
+    <Compile Include="Trial\AsyncDicomGrayscalePresentationImage.cs" />
+    <Compile Include="Trial\AsyncFrame.cs" />
+    <Compile Include="Trial\AsyncImageSop.cs" />
+    <Compile Include="Trial\AsyncPresentationImageFactory.cs" />
+    <Compile Include="Trial\AsyncSopDataSource.cs" />
+    <Compile Include="Trial\AsyncVolumeSliceSopDataSource.cs" />
+    <Compile Include="Trial\IAsyncSopFrameData.cs" />
     <Compile Include="Utilities\DicomAttributeMethods.cs" />
     <Compile Include="Utilities\DicomImagePlane.cs" />
     <Compile Include="Tools\MprLineStretchControlGraphic.cs" />
@@ -135,6 +142,9 @@
     <Compile Include="Utilities\ProgressTask.cs" />
     <Compile Include="VolumeCache.cs" />
     <Compile Include="VolumeReference.cs" />
+    <Compile Include="VolumeSlice.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="VolumeSlicerParams.cs" />
     <Compile Include="VolumeUtilities.cs" />
     <Compile Include="MprSliceSet.cs" />

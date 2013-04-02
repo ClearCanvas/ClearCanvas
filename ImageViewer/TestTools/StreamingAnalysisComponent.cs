@@ -271,7 +271,7 @@ namespace ClearCanvas.ImageViewer.TestTools
 			List<IFrameReference> frames = new List<IFrameReference>();
 
 		    var loader = study.Server.GetService<IStudyLoader>();
-			loader.Start(new StudyLoaderArgs(study.StudyInstanceUid, study.Server));
+			loader.Start(new StudyLoaderArgs(study.StudyInstanceUid, study.Server, StudyLoaderOptions.Default));
 			Sop sop;
 			while ((sop = loader.LoadNextSop()) != null)
 			{

@@ -288,4 +288,7 @@
   <data name="MessageSourceDataSetImagesMustBe16BitGreyscale" xml:space="preserve">
     <value>MPR only supports 16-bit greyscale images.</value>
   </data>
+  <data name="MessageFormatReloading" xml:space="preserve">
+    <value>Reloading... ({0:f0}%)</value>
+  </data>
 </root>

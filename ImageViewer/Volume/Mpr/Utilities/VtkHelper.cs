@@ -24,6 +24,7 @@
 
 using System;
 using System.Diagnostics;
+using System.IO;
 using System.Runtime.InteropServices;
 using ClearCanvas.Common;
 using ClearCanvas.ImageViewer.Mathematics;
@@ -33,12 +34,19 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr.Utilities
 {
 	internal static class VtkHelper
 	{
+		static VtkHelper()
+		{
+			var fileOutputWindow = new vtkFileOutputWindow();
+			fileOutputWindow.SetFileName(Path.Combine(Platform.LogDirectory, "vtk.log"));
+			vtkOutputWindow.SetInstance(fileOutputWindow);
+		}
+
 		#region Error Handling helpers
 
 		public static void RegisterVtkErrorEvents(vtkObject obj)
 		{
-			obj.AddObserver((uint)EventIds.ErrorEvent, VtkEventCallback);
-			obj.AddObserver((uint)EventIds.WarningEvent, VtkEventCallback);
+			obj.AddObserver((uint) EventIds.ErrorEvent, VtkEventCallback);
+			obj.AddObserver((uint) EventIds.WarningEvent, VtkEventCallback);
 		}
 
 		public static void VtkEventCallback(vtkObject vtkObj, uint eventId, object obj, IntPtr ptr)
@@ -91,14 +99,14 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr.Utilities
 		public static vtkShortArray ConvertToVtkShortArray(short[] shortArray)
 		{
 			vtkShortArray vtkShortArray = new vtkShortArray();
-			vtkShortArray.SetArray(shortArray, (VtkIdType)shortArray.Length, 1);
+			vtkShortArray.SetArray(shortArray, (VtkIdType) shortArray.Length, 1);
 			return vtkShortArray;
 		}
 
 		public static vtkUnsignedShortArray ConvertToVtkUnsignedShortArray(ushort[] ushortArray)
 		{
 			vtkUnsignedShortArray vtkUnsignedShortArray = new vtkUnsignedShortArray();
-			vtkUnsignedShortArray.SetArray(ushortArray, (VtkIdType)ushortArray.Length, 1);
+			vtkUnsignedShortArray.SetArray(ushortArray, (VtkIdType) ushortArray.Length, 1);
 			return vtkUnsignedShortArray;
 		}
 

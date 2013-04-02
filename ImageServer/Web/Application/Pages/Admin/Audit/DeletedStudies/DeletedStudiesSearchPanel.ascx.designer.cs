@@ -64,7 +64,7 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Admin.Audit.DeletedStudi
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox PatientName;
+        protected global::ClearCanvas.ImageServer.Web.Common.WebControls.UI.TextBox PatientName;
         
         /// <summary>
         /// Label2 control.
@@ -82,7 +82,7 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Admin.Audit.DeletedStudi
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox PatientId;
+        protected global::ClearCanvas.ImageServer.Web.Common.WebControls.UI.TextBox PatientId;
         
         /// <summary>
         /// Label3 control.
@@ -100,7 +100,7 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Admin.Audit.DeletedStudi
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox AccessionNumber;
+        protected global::ClearCanvas.ImageServer.Web.Common.WebControls.UI.TextBox AccessionNumber;
         
         /// <summary>
         /// Label5 control.
@@ -145,7 +145,7 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Admin.Audit.DeletedStudi
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox StudyDescription;
+        protected global::ClearCanvas.ImageServer.Web.Common.WebControls.UI.TextBox StudyDescription;
         
         /// <summary>
         /// Label6 control.
@@ -163,7 +163,7 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Admin.Audit.DeletedStudi
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox DeletedBy;
+        protected global::ClearCanvas.ImageServer.Web.Common.WebControls.UI.TextBox DeletedBy;
         
         /// <summary>
         /// Panel1 control.

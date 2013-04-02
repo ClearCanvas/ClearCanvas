@@ -590,5 +590,25 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 				}
 			}
 		}
+
+		/// <summary>
+		/// Checks whether or not the specified SOP Class indicates a supported image type.
+		/// </summary>
+		/// <param name="sopClass">The SOP Class UID to be checked.</param>
+		/// <returns>True if the SOP Class is a supported image type; False otherwise.</returns>
+		public static bool IsSupportedSopClass(string sopClass)
+		{
+			return IsImageSop(sopClass);
+		}
+
+		/// <summary>
+		/// Checks whether or not the specified SOP Class indicates a supported image type.
+		/// </summary>
+		/// <param name="sopClass">The SOP Class to be checked.</param>
+		/// <returns>True if the SOP Class is a supported image type; False otherwise.</returns>
+		public static bool IsSupportedSopClass(SopClass sopClass)
+		{
+			return IsImageSop(sopClass);
+		}
 	}
 }

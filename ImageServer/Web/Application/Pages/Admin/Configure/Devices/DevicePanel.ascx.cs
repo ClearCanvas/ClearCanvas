@@ -136,7 +136,7 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Admin.Configure.Devices
         /// <returns></returns>
         protected bool HasFilters()
         {
-            return AETitleFilter.Text.Length > 0 || IPAddressFilter.Text.Length > 0 || StatusFilter.SelectedIndex > 0 ||
+            return AETitleFilter.TrimText.Length > 0 || IPAddressFilter.TrimText.Length > 0 || StatusFilter.SelectedIndex > 0 ||
                    DHCPFilter.SelectedIndex > 0;
         }
 
@@ -206,22 +206,22 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Admin.Configure.Devices
             // only query for device in this partition
             criteria.ServerPartitionKey.EqualTo(ServerPartition.GetKey());
 
-            if (!String.IsNullOrEmpty(AETitleFilter.Text))
+            if (!String.IsNullOrEmpty(AETitleFilter.TrimText))
             {
                 QueryHelper.SetGuiStringCondition(criteria.AeTitle,
-                                                  SearchHelper.LeadingAndTrailingWildCard(AETitleFilter.Text));
+                                                  SearchHelper.LeadingAndTrailingWildCard(AETitleFilter.TrimText));
             }
 
-            if (!String.IsNullOrEmpty(DescriptionFilter.Text))
+            if (!String.IsNullOrEmpty(DescriptionFilter.TrimText))
             {
                 QueryHelper.SetGuiStringCondition(criteria.Description,
-                                                  SearchHelper.LeadingAndTrailingWildCard(DescriptionFilter.Text));
+                                                  SearchHelper.LeadingAndTrailingWildCard(DescriptionFilter.TrimText));
             }
 
-            if (!String.IsNullOrEmpty(IPAddressFilter.Text))
+            if (!String.IsNullOrEmpty(IPAddressFilter.TrimText))
             {
                 QueryHelper.SetGuiStringCondition(criteria.IpAddress,
-                                                  SearchHelper.TrailingWildCard(IPAddressFilter.Text));
+                                                  SearchHelper.TrailingWildCard(IPAddressFilter.TrimText));
             }
 
             if (StatusFilter.SelectedIndex != 0)

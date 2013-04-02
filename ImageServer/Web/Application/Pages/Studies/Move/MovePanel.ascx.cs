@@ -237,25 +237,25 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Studies.Move
             // only query for device in this partition
             criteria.ServerPartitionKey.EqualTo(Partition.GetKey());
 
-            if (!String.IsNullOrEmpty(AETitleFilter.Text))
+            if (!String.IsNullOrEmpty(AETitleFilter.TrimText))
             {
-                string key = AETitleFilter.Text + "%";
+                string key = AETitleFilter.TrimText + "%";
                 key = key.Replace("*", "%");
                 key = key.Replace("?", "_");
                 criteria.AeTitle.Like(key);
             }
 
-            if (!String.IsNullOrEmpty(DescriptionFilter.Text))
+            if (!String.IsNullOrEmpty(DescriptionFilter.TrimText))
             {
-                string key = DescriptionFilter.Text + "%";
+                string key = DescriptionFilter.TrimText + "%";
                 key = key.Replace("*", "%");
                 key = key.Replace("?", "_");
                 criteria.Description.Like(key);
             }
 
-            if (!String.IsNullOrEmpty(IPAddressFilter.Text))
+            if (!String.IsNullOrEmpty(IPAddressFilter.TrimText))
             {
-                string key = IPAddressFilter.Text + "%";
+                string key = IPAddressFilter.TrimText + "%";
                 key = key.Replace("*", "%");
                 key = key.Replace("?", "_");
                 criteria.IpAddress.Like(key);

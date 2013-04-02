@@ -541,7 +541,14 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 
 		~Volume()
 		{
-			this.Dispose(false);
+			try
+			{
+				Dispose(false);
+			}
+			catch (Exception ex)
+			{
+				Platform.Log(LogLevel.Warn, ex);
+			}
 		}
 
 		protected void Dispose(bool disposing)

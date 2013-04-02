@@ -55,7 +55,7 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Admin.Configure.Devices 
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox AETitleFilter;
+        protected global::ClearCanvas.ImageServer.Web.Common.WebControls.UI.TextBox AETitleFilter;
         
         /// <summary>
         /// Label6 control.
@@ -73,7 +73,7 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Admin.Configure.Devices 
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox DescriptionFilter;
+        protected global::ClearCanvas.ImageServer.Web.Common.WebControls.UI.TextBox DescriptionFilter;
         
         /// <summary>
         /// Label2 control.
@@ -91,7 +91,7 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Admin.Configure.Devices 
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox IPAddressFilter;
+        protected global::ClearCanvas.ImageServer.Web.Common.WebControls.UI.TextBox IPAddressFilter;
         
         /// <summary>
         /// Label3 control.

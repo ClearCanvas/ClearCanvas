@@ -84,9 +84,9 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr.Tests
 				foreach (IVolumeSlicerParams slicing in slicerParams)
 				{
 					List<double> list = new List<double>();
-					using (VolumeSlicer slicer = new VolumeSlicer(volume, slicing, DicomUid.GenerateUid().UID))
+					using (VolumeSlicer slicer = new VolumeSlicer(volume, slicing))
 					{
-						foreach (ISopDataSource slice in slicer.CreateSlices())
+						foreach (ISopDataSource slice in slicer.CreateSliceSops())
 						{
 							using (ImageSop imageSop = new ImageSop(slice))
 							{

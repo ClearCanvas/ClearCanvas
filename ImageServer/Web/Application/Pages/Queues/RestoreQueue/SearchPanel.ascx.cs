@@ -158,10 +158,10 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Queues.RestoreQueue
 
                                             if (!String.IsNullOrEmpty(StatusFilter.SelectedValue) && StatusFilter.SelectedIndex > 0)
                                                 source.StatusEnum = RestoreQueueStatusEnum.GetEnum(StatusFilter.SelectedValue);
-                                            if (!String.IsNullOrEmpty(PatientId.Text))
-												source.PatientId = SearchHelper.TrailingWildCard(PatientId.Text);
-											if (!String.IsNullOrEmpty(PatientName.Text))
-												source.PatientName = SearchHelper.NameWildCard(PatientName.Text);
+                                            if (!String.IsNullOrEmpty(PatientId.TrimText))
+												source.PatientId = SearchHelper.TrailingWildCard(PatientId.TrimText);
+											if (!String.IsNullOrEmpty(PatientName.TrimText))
+												source.PatientName = SearchHelper.NameWildCard(PatientName.TrimText);
 											if (!String.IsNullOrEmpty(ScheduleDate.Text))
 												source.ScheduledDate = ScheduleDate.Text;
 										};
@@ -187,8 +187,8 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Queues.RestoreQueue
 				var patientName = Server.UrlDecode(Request["PatientName"]);
 				if (patientId != null || patientName != null)
 				{
-					PatientId.Text = patientId;
-					PatientName.Text = patientName;
+					PatientId.TrimText = patientId;
+					PatientName.TrimText = patientName;
 
 					RestoreQueueItemList.SetDataSource();
 					RestoreQueueItemList.Refresh();

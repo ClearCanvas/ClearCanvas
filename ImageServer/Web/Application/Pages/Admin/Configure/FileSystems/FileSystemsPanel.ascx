@@ -39,7 +39,7 @@
                                         <tr>
                                             <td align="left">
                                                 <asp:Label ID="Label1" runat="server" Text="<%$Resources: SearchFieldLabels, FileSystemDescription %>" CssClass="SearchTextBoxLabel"></asp:Label><br />
-                                                <asp:TextBox ID="DescriptionFilter" runat="server" CssClass="SearchTextBox" ToolTip="Search by description"></asp:TextBox></td>
+                                                <ccUI:TextBox ID="DescriptionFilter" runat="server" CssClass="SearchTextBox" ToolTip="Search by description"></ccUI:TextBox></td>
                                             <td align="left">
                                                 <asp:Label ID="Label2" runat="server" Text="<%$Resources: SearchFieldLabels, FileSystemTiers %>" CssClass="SearchTextBoxLabel"></asp:Label><br />
                                                 <asp:DropDownList ID="TiersDropDownList" runat="server" CssClass="SearchDropDownList">

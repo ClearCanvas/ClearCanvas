@@ -27,7 +27,6 @@ using System.ServiceModel;
 using System.Threading;
 using System.Web;
 using System.Web.Security;
-using System.Xml;
 using ClearCanvas.Common;
 using ClearCanvas.Dicom.Audit;
 using ClearCanvas.Enterprise.Common;
@@ -48,6 +47,8 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Login
         {
             base.OnInit(e);
             ForeachExtension<ILoginPageExtension>(ext => ext.OnLoginPageInit(this));
+
+            SplashScreen.ImageUrl = "~/App_Themes/" + Theme + "/images/LoginSplash.png";
         }
 
         protected void Page_Load(object sender, EventArgs e)
@@ -72,6 +73,17 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Login
             SetPageTitle(Titles.LoginPageTitle);
 
             UserName.Focus();
+
+            // Set the size of LoginSplash panel to be the same as the splash screen image
+            // This (together with setting margin to auto in the css) will center the image
+            using(System.Drawing.Image image = System.Drawing.Image.FromFile(this.Server.MapPath(SplashScreen.ImageUrl)))
+            {
+                LoginSplash.Width = image.Width;
+                LoginSplash.Height = image.Height;
+
+                ErrorMessagePanel.Width = image.Width;
+            }
+           
         }
 
         protected void LoginClicked(object sender, EventArgs e)
@@ -103,7 +115,8 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Login
 			}
             catch (UserAccessDeniedException ex)
             {
-                Platform.Log(LogLevel.Error, ex, ex.Message);
+                Platform.Log(LogLevel.Warn, "Login unsuccessful for {0}.  {1}", UserName.Text, ErrorMessages.UserAccessDenied);
+                Platform.Log(LogLevel.Debug, ex, ex.Message);
                 ShowError(ErrorMessages.UserAccessDenied);
                 UserName.Focus();
 
@@ -122,6 +135,17 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Login
 				audit.AddUserParticipant(new AuditPersonActiveParticipant(UserName.Text, null, null));
 				ServerPlatform.LogAuditMessage(audit);
 			}
+            catch (ArgumentException ex)
+            {
+                Platform.Log(LogLevel.Warn, ex.Message);
+                Platform.Log(LogLevel.Debug, ex, "Login error:");
+                ShowError(ex.Message);
+
+                UserAuthenticationAuditHelper audit = new UserAuthenticationAuditHelper(ServerPlatform.AuditSource,
+                    EventIdentificationContentsEventOutcomeIndicator.MajorFailureActionMadeUnavailable, UserAuthenticationEventType.Login);
+                audit.AddUserParticipant(new AuditPersonActiveParticipant(UserName.Text, null, null));
+                ServerPlatform.LogAuditMessage(audit);
+            }
             catch (Exception ex)
             {
                 Platform.Log(LogLevel.Error, ex, "Login error:");

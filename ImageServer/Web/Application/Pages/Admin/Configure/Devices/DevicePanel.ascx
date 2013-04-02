@@ -50,17 +50,17 @@
                                 <td align="left">
                                     <asp:Label ID="Label1" runat="server" Text="<%$Resources: SearchFieldLabels, AETitle %>" CssClass="SearchTextBoxLabel"
                                         EnableViewState="False"></asp:Label><br />
-                                    <asp:TextBox ID="AETitleFilter" runat="server" CssClass="SearchTextBox" ToolTip="Search the list by AE Title"></asp:TextBox>
+                                    <ccUI:TextBox ID="AETitleFilter" runat="server" CssClass="SearchTextBox" ToolTip="Search the list by AE Title"></ccUI:TextBox>
                                 </td>
                                 <td align="left" valign="bottom">
                                     <asp:Label ID="Label6" runat="server" Text="<%$Resources: SearchFieldLabels, DeviceDescription %>" CssClass="SearchTextBoxLabel"
                                         EnableViewState="False"></asp:Label><br />
-                                    <asp:TextBox ID="DescriptionFilter" runat="server" CssClass="SearchTextBox" ToolTip="Search the list by Description"></asp:TextBox>
+                                    <ccUI:TextBox ID="DescriptionFilter" runat="server" CssClass="SearchTextBox" ToolTip="Search the list by Description"></ccUI:TextBox>
                                 </td>
                                 <td align="left">
                                     <asp:Label ID="Label2" runat="server" Text="<%$Resources: SearchFieldLabels, IPAddress %>" CssClass="SearchTextBoxLabel"
                                         EnableViewState="False"></asp:Label><br />
-                                    <asp:TextBox ID="IPAddressFilter" runat="server" CssClass="SearchTextBox" ToolTip="Search the list by IP Address"></asp:TextBox>
+                                    <ccUI:TextBox ID="IPAddressFilter" runat="server" CssClass="SearchTextBox" ToolTip="Search the list by IP Address"></ccUI:TextBox>
                                 </td>
                                 <td align="left" valign="bottom">
                                     <asp:Label ID="Label3" runat="server" Text="<%$Resources: SearchFieldLabels, DeviceStatus %>" CssClass="SearchTextBoxLabel"></asp:Label><br />

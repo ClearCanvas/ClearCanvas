@@ -765,7 +765,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		/// <remarks>
 		/// See <see cref="ISopFrameData.GetNormalizedPixelData"/> for a detailed explanation.
 		/// </remarks>
-		public byte[] GetNormalizedPixelData()
+		public virtual byte[] GetNormalizedPixelData()
 		{
 			return _parentImageSop.DataSource.GetFrameData(FrameNumber).GetNormalizedPixelData();
 		}
@@ -776,7 +776,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		/// <remarks>
 		/// <see cref="ISopFrameData.Unload"/> for a detailed explanation.
 		/// </remarks>
-		public void UnloadPixelData()
+		public virtual void UnloadPixelData()
 		{
 			_parentImageSop.DataSource.GetFrameData(FrameNumber).Unload();
 		}

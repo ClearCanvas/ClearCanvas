@@ -81,17 +81,11 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Admin.UserManagement.Use
 
             UserGridPanel.DataSourceCreated += delegate(UserDataSource source)
                             {
-                                source.UserName = UserNameTextBox.Text;
-                                source.DisplayName = DisplayNameTextBox.Text;
+                                source.UserName = UserNameTextBox.TrimText;
+                                source.DisplayName = DisplayNameTextBox.TrimText;
                             };
 
             
-        }
-
-        protected override void OnPreRender(EventArgs e)
-        {
-            base.OnPreRender(e);
-            UpdateUI();
         }
 
         public void UpdateUI()

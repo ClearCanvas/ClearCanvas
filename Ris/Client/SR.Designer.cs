@@ -1168,6 +1168,15 @@ namespace ClearCanvas.Ris.Client {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Failed to retrieve the list of facilities from the RISServer.  Please make sure the RISServer service is running and configured properly..
+        /// </summary>
+        internal static string ExceptionFailedToRetrieveFacilitiesFromRisServer {
+            get {
+                return ResourceManager.GetString("ExceptionFailedToRetrieveFacilitiesFromRisServer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to An error occured while attempting to save changes to this item.
         /// </summary>
         internal static string ExceptionFailedToSave {
