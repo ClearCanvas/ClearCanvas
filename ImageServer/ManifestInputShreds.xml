@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ManifestInput xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.clearcanvas.ca">
+	
+  <!-- List of files distributed in ImageServerShreds.targets -->
+  <Files>
+	  <File name="common\Ionic.Zip.dll" checksum="true" />
+		  
+	  <File name="plugins\ClearCanvas.Dicom.dll" checksum="true" />
+	  <File name="plugins\ClearCanvas.ImageServer.Model.dll" checksum="true" />
+	  <File name="plugins\ClearCanvas.Dicom.Codec.Jpeg.dll" checksum="true" />
+	  <File name="plugins\ClearCanvas.Dicom.Codec.Rle.dll" checksum="true" />
+	  <File name="plugins\ClearCanvas.Enterprise.Common.dll" checksum="true" />
+	  <File name="plugins\ClearCanvas.Enterprise.Core.dll" checksum="true" />
+	  <File name="plugins\ClearCanvas.ImageServer.Common.dll" checksum="true" />
+	  <File name="plugins\ClearCanvas.ImageServer.Core.dll" checksum="true" />
+	  <File name="plugins\ClearCanvas.ImageServer.Enterprise.dll" checksum="true" />
+	  <File name="plugins\ClearCanvas.ImageServer.Enterprise.SqlServer.dll" checksum="true" />
+	  <File name="plugins\ClearCanvas.ImageServer.Model.SqlServer.dll" checksum="true" />
+	  <File name="plugins\ClearCanvas.ImageServer.Rules.dll" checksum="true" />
+	  <File name="plugins\ClearCanvas.ImageServer.Rules.JpegCodec.dll" checksum="true" />
+	  <File name="plugins\ClearCanvas.ImageServer.Rules.RleCodec.dll" checksum="true" />
+	  <File name="plugins\ClearCanvas.ImageServer.Services.Archiving.dll" checksum="true" />
+	  <File name="plugins\ClearCanvas.ImageServer.Services.Archiving.Hsm.dll" checksum="true" />
+	  <File name="plugins\ClearCanvas.ImageServer.Services.Dicom.dll" checksum="true" />
+	  <File name="plugins\ClearCanvas.ImageServer.Services.ServiceLock.dll" checksum="true" />
+	  <File name="plugins\ClearCanvas.ImageServer.Services.Streaming.dll" checksum="true" />
+	  <File name="plugins\ClearCanvas.ImageServer.Services.WorkQueue.dll" checksum="true" />
+	  <File name="plugins\ClearCanvas.ImageServer.Utilities.dll" checksum="true" />
+  </Files>
+</ManifestInput>

@@ -151,19 +151,27 @@ namespace ClearCanvas.ImageViewer.AdvancedImaging.Fusion
 				if (_overlayPixelData != null)
 					return _overlayPixelData;
 
-				// load the pixel data
-				_overlayPixelData = _overlayDataReference.FusionOverlayData.GetOverlay(_baseFrameReference.Frame, out _overlayFrameParams);
+				_overlayDataReference.FusionOverlayData.Lock();
+				try
+				{
+					// load the pixel data
+					_overlayPixelData = _overlayDataReference.FusionOverlayData.GetOverlay(_baseFrameReference.Frame, out _overlayFrameParams);
 
-				// update our stats
-				_largeObjectData.BytesHeldCount = _overlayPixelData.Length;
-				_largeObjectData.LargeObjectCount = 1;
-				_largeObjectData.UpdateLastAccessTime();
+					// update our stats
+					_largeObjectData.BytesHeldCount = _overlayPixelData.Length;
+					_largeObjectData.LargeObjectCount = 1;
+					_largeObjectData.UpdateLastAccessTime();
 
-				// regenerating the volume data is easy when the source frames are already in memory!
-				_largeObjectData.RegenerationCost = RegenerationCost.Low;
+					// regenerating the volume data is easy when the source frames are already in memory!
+					_largeObjectData.RegenerationCost = RegenerationCost.Low;
 
-				// register with memory manager
-				MemoryManager.Add(this);
+					// register with memory manager
+					MemoryManager.Add(this);
+				}
+				finally
+				{
+					_overlayDataReference.FusionOverlayData.Unlock();
+				}
 
 				return _overlayPixelData;
 			}
@@ -174,6 +182,8 @@ namespace ClearCanvas.ImageViewer.AdvancedImaging.Fusion
 			// wait for synchronized access
 			lock (_syncPixelDataLock)
 			{
+				if (IsLocked) return;
+
 				// dump our data
 				_overlayPixelData = null;
 
@@ -388,7 +398,9 @@ namespace ClearCanvas.ImageViewer.AdvancedImaging.Fusion
 
 				protected override void UpdateScaleParameters()
 				{
-					var overlayFrameParams = OwnerGraphic._overlayFrameData.FusionOverlayFrameData._overlayFrameParams;
+					var ownerGraphic = OwnerGraphic;
+					if (ownerGraphic == null) return;
+					var overlayFrameParams = ownerGraphic._overlayFrameData.FusionOverlayFrameData._overlayFrameParams;
 					ScaleX = overlayFrameParams.CoregistrationScale.X;
 					ScaleY = overlayFrameParams.CoregistrationScale.Y;
 					TranslationX = overlayFrameParams.CoregistrationOffset.X;

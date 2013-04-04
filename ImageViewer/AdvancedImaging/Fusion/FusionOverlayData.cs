@@ -54,6 +54,9 @@ namespace ClearCanvas.ImageViewer.AdvancedImaging.Fusion
 		private IList<IFrameReference> _frames;
 		private VolumeData _volume;
 
+		private int? _minVolumeValue;
+		private int? _maxVolumeValue;
+
 		public FusionOverlayData(IEnumerable<Frame> overlaySource)
 		{
 			var frames = new List<IFrameReference>();
@@ -62,7 +65,12 @@ namespace ClearCanvas.ImageViewer.AdvancedImaging.Fusion
 			_frames = frames.AsReadOnly();
 
 			if (frames.Count > 0)
+			{
 				_voiWindows = new List<VoiWindow>(VoiWindow.GetWindows(frames[0].Sop.DataSource)).AsReadOnly();
+				SourceSeriesInstanceUid = frames[0].Frame.SeriesInstanceUid;
+				FrameOfReferenceUid = frames[0].Frame.FrameOfReferenceUid;
+				Modality = frames[0].Sop.Modality;
+			}
 		}
 
 		protected virtual void Dispose(bool disposing)
@@ -87,29 +95,20 @@ namespace ClearCanvas.ImageViewer.AdvancedImaging.Fusion
 			}
 		}
 
-		public string SourceSeriesInstanceUid
-		{
-			get { return Volume.SourceSeriesInstanceUid; }
-		}
+		public string SourceSeriesInstanceUid { get; private set; }
 
-		public string FrameOfReferenceUid
-		{
-			get { return this.Volume.FrameOfReferenceUid; }
-		}
+		public string FrameOfReferenceUid { get; private set; }
 
-		public string Modality
-		{
-			get { return Volume.Modality; }
-		}
+		public string Modality { get; private set; }
 
 		public int MinVolumeValue
 		{
-			get { return Volume.MinimumVolumeValue; }
+			get { return (_minVolumeValue ?? (_minVolumeValue = Volume.MinimumVolumeValue)).Value; }
 		}
 
 		public int MaxVolumeValue
 		{
-			get { return Volume.MaximumVolumeValue; }
+			get { return (_maxVolumeValue ?? (_maxVolumeValue = Volume.MaximumVolumeValue)).Value; }
 		}
 
 		/// <summary>
@@ -146,29 +145,37 @@ namespace ClearCanvas.ImageViewer.AdvancedImaging.Fusion
 			// wait for synchronized access
 			lock (_syncVolumeDataLock)
 			{
-				// if the data is now available, return it immediately
-				// (i.e. we were blocked because we were already reading the data)
-				if (_volume != null)
+				_largeObjectData.Lock();
+				try
+				{
+					// if the data is now available, return it immediately
+					// (i.e. we were blocked because we were already reading the data)
+					if (_volume != null)
+						return _volume;
+
+					// load the volume data
+					if (context == null)
+						_volume = VolumeData.Create(_frames);
+					else
+						_volume = VolumeData.Create(_frames, (n, count) => context.ReportProgress(new BackgroundTaskProgress(n, count, SR.MessageFusionInProgress)));
+
+					// update our stats
+					_largeObjectData.BytesHeldCount = 2*_volume.SizeInVoxels;
+					_largeObjectData.LargeObjectCount = 1;
+					_largeObjectData.UpdateLastAccessTime();
+
+					// regenerating the volume data is easy when the source frames are already in memory!
+					_largeObjectData.RegenerationCost = RegenerationCost.Low;
+
+					// register with memory manager
+					MemoryManager.Add(this);
+
 					return _volume;
-
-				// load the volume data
-				if (context == null)
-					_volume = VolumeData.Create(_frames);
-				else
-					_volume = VolumeData.Create(_frames, (n, count) => context.ReportProgress(new BackgroundTaskProgress(n, count, SR.MessageFusionInProgress)));
-
-				// update our stats
-				_largeObjectData.BytesHeldCount = 2*_volume.SizeInVoxels;
-				_largeObjectData.LargeObjectCount = 1;
-				_largeObjectData.UpdateLastAccessTime();
-
-				// regenerating the volume data is easy when the source frames are already in memory!
-				_largeObjectData.RegenerationCost = RegenerationCost.Low;
-
-				// register with memory manager
-				MemoryManager.Add(this);
-
-				return _volume;
+				}
+				finally
+				{
+					_largeObjectData.Unlock();
+				}
 			}
 		}
 
@@ -238,9 +245,8 @@ namespace ClearCanvas.ImageViewer.AdvancedImaging.Fusion
 						var scale = new PointF(baseResolutionX/overlayResolutionX, baseResolutionY/overlayResolutionY);
 						var offset = new PointF(overlayOffset.X*overlayResolutionX, overlayOffset.Y*overlayResolutionY);
 
-						//TODO (CR Sept 2010): could this be negative?
 						// validate computed transform parameters
-						Platform.CheckTrue(overlayOffset.Z < 0.5f, "Compute OffsetZ != 0");
+						Platform.CheckTrue(Math.Abs(overlayOffset.Z) < 0.5f, "Compute OffsetZ != 0");
 
 						overlayFrameParams = new OverlayFrameParams(
 							overlayFrame.Rows, overlayFrame.Columns,
@@ -333,23 +339,24 @@ namespace ClearCanvas.ImageViewer.AdvancedImaging.Fusion
 			get { return _largeObjectData.RegenerationCost; }
 		}
 
-		bool ILargeObjectContainer.IsLocked
+		public bool IsLocked
 		{
 			get { return _largeObjectData.IsLocked; }
 		}
 
-		void ILargeObjectContainer.Lock()
+		public void Lock()
 		{
 			_largeObjectData.Lock();
 		}
 
-		void ILargeObjectContainer.Unlock()
+		public void Unlock()
 		{
 			_largeObjectData.Unlock();
 		}
 
 		void ILargeObjectContainer.Unload()
 		{
+			if (_largeObjectData.IsLocked) return;
 			this.UnloadVolume();
 		}
 
@@ -447,6 +454,7 @@ namespace ClearCanvas.ImageViewer.AdvancedImaging.Fusion
 		/// </summary>
 		public void Unload()
 		{
+			if (IsLocked) return;
 			this.UnloadVolume();
 		}
 
