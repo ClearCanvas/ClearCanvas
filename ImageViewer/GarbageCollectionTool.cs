@@ -23,22 +23,76 @@
 #endregion
 
 using System;
+using System.Linq;
 using System.Threading;
 using ClearCanvas.Common;
+using ClearCanvas.Common.Configuration;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Desktop;
 using ClearCanvas.Desktop.Actions;
 using ClearCanvas.Desktop.Tools;
+using ClearCanvas.ImageViewer.Common;
 
 namespace ClearCanvas.ImageViewer
 {
     [KeyboardAction("forcegc", "imageviewer-keyboard/ForceFullGarbageCollection", "ForceGC", KeyStroke = XKeys.G)]
+    [KeyboardAction("reloadSettings", "imageviewer-keyboard/ReloadMemorySettings", "ReloadSettings", KeyStroke = XKeys.Control | XKeys.R)]
+    [KeyboardAction("collectLargeObjects", "imageviewer-keyboard/CollectAllLargeObjects", "CollectAll", KeyStroke = XKeys.Control | XKeys.C)]
     [ExtensionOf(typeof(ImageViewerToolExtensionPoint))]
     internal class ManualGarbageCollectionTool : Tool<IImageViewerToolContext>
     {
         public void ForceGC()
         {
             GarbageCollectionTool.ForceGC();
+        }
+
+        public void CollectAll()
+        {
+            Platform.Log(LogLevel.Info, "Forcing collection of all large objects.");
+            
+            bool keepGoing = true;
+            EventHandler<MemoryCollectedEventArgs> del = delegate(object sender, MemoryCollectedEventArgs args)
+            {
+                if (args.IsLast)
+                    keepGoing = args.BytesCollectedCount > 0;
+            };
+
+            MemoryManager.MemoryCollected += del;
+
+            try
+            {
+                MemoryManager.Execute(delegate
+                {
+                    if (keepGoing)
+                        throw new OutOfMemoryException();
+                }, TimeSpan.FromSeconds(30));
+            }
+            catch (Exception)
+            {
+            }
+            finally
+            {
+                MemoryManager.MemoryCollected -= del;
+            }
+
+            ForceGC();
+        }
+
+        public void ReloadSettings()
+        {
+            try
+            {
+                Platform.Log(LogLevel.Info, "Forcing reload of MemoryManagementSettings.");
+
+                var groups = SettingsGroupDescriptor.ListInstalledSettingsGroups(SettingsGroupFilter.LocalStorage);
+                var settingsGroups = groups.First(g => g.Name == "ClearCanvas.ImageViewer.Common.MemoryManagementSettings");
+                var instance = ApplicationSettingsHelper.GetSettingsClassInstance(Type.GetType(settingsGroups.AssemblyQualifiedTypeName));
+                instance.Reload();
+            }
+            catch (Exception e)
+            {
+                ExceptionHandler.Report(e, Context.DesktopWindow);
+            }
         }
     }
 
