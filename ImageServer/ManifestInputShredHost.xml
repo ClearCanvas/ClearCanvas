@@ -1,7 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ManifestInput xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.clearcanvas.ca">
   <Files>
-    <File name="scripts" ignore="true" />
     <File name="ClearCanvas.ImageServer.Executable.exe" checksum="true" />
     <File name="ClearCanvas.ImageServer.Executable.exe.config" config="true" />
     <File name="ClearCanvas.ImageServer.Executable.exe.critical.config" checksum="true" config="true" />
