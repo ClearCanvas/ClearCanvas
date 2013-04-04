@@ -283,7 +283,7 @@ namespace ClearCanvas.ImageViewer.AdvancedImaging.Fusion
 
 		RegenerationCost ILargeObjectContainer.RegenerationCost
 		{
-			get { return _largeObjectData.RegenerationCost; }
+			get { return _overlayDataReference.FusionOverlayData.IsLoaded ? _largeObjectData.RegenerationCost : RegenerationCost.High; }
 		}
 
 		public bool IsLocked

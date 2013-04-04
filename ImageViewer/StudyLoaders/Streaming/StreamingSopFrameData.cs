@@ -69,8 +69,8 @@ namespace ClearCanvas.ImageViewer.StudyLoaders.Streaming
 			private readonly FramePixelData _framePixelData;
 			private readonly byte[][] _overlayData;
 
-			public StreamingSopFrameData(int frameNumber, StreamingSopDataSource parent) 
-				: base(frameNumber, parent, RegenerationCost.High)
+			public StreamingSopFrameData(int frameNumber, StreamingSopDataSource parent)
+				: base(frameNumber, parent, LargeObjectContainerData.PresetNetworkLoadedData)
 			{
 				_framePixelData = new FramePixelData(this.Parent, frameNumber);
 				_overlayData = new byte[16][];

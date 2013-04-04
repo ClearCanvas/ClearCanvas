@@ -634,7 +634,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 
 			#region Implementation of ILargeObjectContainer
 
-			private readonly LargeObjectContainerData _largeObjectContainerData = new LargeObjectContainerData(Guid.NewGuid()) {RegenerationCost = RegenerationCost.Medium};
+			private readonly LargeObjectContainerData _largeObjectContainerData = new LargeObjectContainerData(Guid.NewGuid()) {RegenerationCost = LargeObjectContainerData.PresetComputedData};
 
 			Guid ILargeObjectContainer.Identifier
 			{
