@@ -162,7 +162,7 @@ namespace ClearCanvas.ImageViewer.AdvancedImaging.Fusion
 					_largeObjectData.LargeObjectCount = 1;
 					_largeObjectData.UpdateLastAccessTime();
 
-					// regenerating the volume data is easy when the source frames are already in memory!
+					// regenerating the slice pixel data is relatively easy to do if the volume is in memory
 					_largeObjectData.RegenerationCost = RegenerationCost.Low;
 
 					// register with memory manager

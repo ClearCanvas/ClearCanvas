@@ -152,14 +152,17 @@ namespace ClearCanvas.ImageViewer.AdvancedImaging.Fusion
 
 		public override void OnDrawing()
 		{
-			//TODO (CR Sept 2010): we already uncovered a bug related to this class and the MemoryManager.
-			//We need to figure out a way to synchronize the functionality in this class along with the
-			//volume/frame data being loaded and unloaded.
+			// if the remove graphic flag was set, we need to remove the old graphic because it is no longer valid, and create a new one
+			if (_removeGraphic)
+			{
+				OverlayImageGraphic = null;
+				_removeGraphic = false;
+			}
 
 			_overlayFrameDataReference.FusionOverlayFrameData.Lock();
 			try
 			{
-				if (_overlayImageGraphic == null && !_removeGraphic)
+				if (_overlayImageGraphic == null)
 				{
 					if (this.ParentPresentationImage == null || !this.ParentPresentationImage.Visible)
 					{
@@ -188,11 +191,6 @@ namespace ClearCanvas.ImageViewer.AdvancedImaging.Fusion
 						this.Graphics.Add(new ProgressGraphic(_overlayFrameDataReference.FusionOverlayFrameData, true, ProgressBarGraphicStyle.Continuous));
 					}
 				}
-				else if (_overlayImageGraphic != null && _removeGraphic)
-				{
-					OverlayImageGraphic = null;
-				}
-				_removeGraphic = false;
 				base.OnDrawing();
 			}
 			finally
