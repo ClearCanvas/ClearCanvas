@@ -25,6 +25,7 @@
 using System;
 using ClearCanvas.Common;
 using ClearCanvas.Dicom;
+using ClearCanvas.ImageViewer.Common;
 using ClearCanvas.ImageViewer.StudyManagement;
 
 namespace ClearCanvas.ImageViewer.Volume.Mpr
@@ -133,6 +134,12 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 			public new AsyncVolumeSliceSopDataSource Parent
 			{
 				get { return (AsyncVolumeSliceSopDataSource) base.Parent; }
+			}
+
+			protected override RegenerationCost RegenerationCost
+			{
+				get { return (Parent.Slice.VolumeReference is ICachedVolumeReference && !((ICachedVolumeReference) Parent.Slice.VolumeReference).IsLoaded) ? RegenerationCost.High : base.RegenerationCost; }
+				set { base.RegenerationCost = value; }
 			}
 
 			protected override byte[] CreateNormalizedPixelData()

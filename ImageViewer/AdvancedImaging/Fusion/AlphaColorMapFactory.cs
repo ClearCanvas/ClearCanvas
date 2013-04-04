@@ -348,7 +348,7 @@ namespace ClearCanvas.ImageViewer.AdvancedImaging.Fusion
 		private class CacheItem : ILargeObjectContainer
 		{
 			private readonly object _syncLock = new object();
-			private readonly LargeObjectContainerData _largeObjectData = new LargeObjectContainerData(Guid.NewGuid()) {RegenerationCost = RegenerationCost.Low};
+			private readonly LargeObjectContainerData _largeObjectData = new LargeObjectContainerData(Guid.NewGuid()) {RegenerationCost = LargeObjectContainerData.PresetGeneratedData};
 			private volatile IColorMap _realColorMap;
 
 			private readonly ICachedColorMapKey _key;

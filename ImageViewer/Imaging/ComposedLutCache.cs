@@ -233,7 +233,7 @@ namespace ClearCanvas.ImageViewer.Imaging
 			internal CacheItem(string key)
 			{
 				_key = key;
-				_largeObjectData = new LargeObjectContainerData(Guid.NewGuid()){RegenerationCost = RegenerationCost.Low};
+				_largeObjectData = new LargeObjectContainerData(Guid.NewGuid()){RegenerationCost = LargeObjectContainerData.PresetGeneratedData};
 			}
 
 			~CacheItem()

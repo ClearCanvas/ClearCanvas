@@ -149,7 +149,7 @@ namespace ClearCanvas.ImageViewer.Imaging
 
 			protected CacheItem()
 			{
-				_largeObjectData = new LargeObjectContainerData(Guid.NewGuid()) { RegenerationCost = RegenerationCost.Low };
+				_largeObjectData = new LargeObjectContainerData(Guid.NewGuid()) { RegenerationCost = LargeObjectContainerData.PresetGeneratedData };
 			}
 
 			protected abstract TLut CreateLut();

@@ -164,8 +164,8 @@ namespace ClearCanvas.ImageViewer.AdvancedImaging.Fusion
 					_largeObjectData.LargeObjectCount = 1;
 					_largeObjectData.UpdateLastAccessTime();
 
-					// regenerating the volume data is easy when the source frames are already in memory!
-					_largeObjectData.RegenerationCost = RegenerationCost.Low;
+					// regenerating the volume data takes a few seconds
+					_largeObjectData.RegenerationCost = LargeObjectContainerData.PresetComputedData;
 
 					// register with memory manager
 					MemoryManager.Add(this);

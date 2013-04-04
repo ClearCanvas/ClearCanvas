@@ -170,7 +170,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 			/// <summary>
 			/// Gets or sets the approximate cost to regenerate the pixel and/or overlay data.
 			/// </summary>
-			protected RegenerationCost RegenerationCost
+			protected virtual RegenerationCost RegenerationCost
 			{
 				get { return _largeObjectContainerData.RegenerationCost; }
 				set { _largeObjectContainerData.RegenerationCost = value; }
@@ -414,7 +414,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 
 			RegenerationCost ILargeObjectContainer.RegenerationCost
 			{
-				get { return _largeObjectContainerData.RegenerationCost; }
+				get { return RegenerationCost; }
 			}
 
 			bool ILargeObjectContainer.IsLocked

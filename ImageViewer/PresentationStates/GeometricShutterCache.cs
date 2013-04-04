@@ -134,7 +134,7 @@ namespace ClearCanvas.ImageViewer.PresentationStates
 			{
 				_key = key;
 				_pixelData = new ColorPixelData(key.ImageRectangle.Height, key.ImageRectangle.Width, GetPixelData);
-				_largeObjectData = new LargeObjectContainerData(Guid.NewGuid()) { RegenerationCost = RegenerationCost.Low };
+				_largeObjectData = new LargeObjectContainerData(Guid.NewGuid()) { RegenerationCost = LargeObjectContainerData.PresetGeneratedData };
 			}
 
 			public ColorPixelData PixelData
