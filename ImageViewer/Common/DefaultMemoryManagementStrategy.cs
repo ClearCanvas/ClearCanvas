@@ -215,34 +215,6 @@ namespace ClearCanvas.ImageViewer.Common
 		}
 
 		#endregion
-/*
-        private long Get32BitMemoryHighWatermarkExperimental()
-        {
-            //On 32-bit systems, a process cannot have more than 2GB of virtual address space,
-            //unless the /3GB switch is set and the process is "large address aware".
-            //On 64-bit systems, a 32-bit process *can* actually have 4GB of virtual address space, but there are all sorts
-            //of exceptions to that, depending on whether the process is "large address aware", etc.
-            //So, because a lot of these things are hard or impossible to figure out, we just assume 32-bit processes
-            //max out at 2GB of virtual memory, and if you need more than that, buy an x64 machine :)
-
-            //We want to keep process memory well below the max of 2GB to avoid the process becoming unstable.
-            const long minFreeProcessMemory = 500 * OneMegabyte;
-            var maxAvailableProcessMemory = TwoGigabytes - _processVirtualMemoryBytes;
-            maxAvailableProcessMemory = Math.Max(0, maxAvailableProcessMemory - minFreeProcessMemory);
-
-            //We don't want to exhaust system memory so the machine is strapped.
-            const long minFreeSystemMemory = 500 * OneMegabyte;
-            long maxAvailableSystemMemory = _systemFreeMemory;
-            maxAvailableSystemMemory = Math.Max(0, maxAvailableSystemMemory - minFreeSystemMemory);
-
-            //Take the minimum of the available system memory and what's theoretically available to the process.
-            maxAvailableProcessMemory = Math.Min(maxAvailableProcessMemory, maxAvailableSystemMemory);
-
-            var theoreticalMax = _processPrivateBytes + maxAvailableProcessMemory;
-            var highWatermark = (long)(EightyFivePercent * theoreticalMax);
-            return highWatermark;
-        }
-        */
 
         internal long Get32BitMemoryHighWatermark()
         {

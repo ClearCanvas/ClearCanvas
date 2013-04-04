@@ -177,8 +177,14 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 		protected override void Dispose(bool disposing)
 		{
             ToolSettings.DefaultInstance.PropertyChanged -= OnMagnificationSettingChanged;
+		    var view = _view as IDisposable;
+            if (view != null)
+            {
+                view.Dispose();
+                _view = null;
+            }
 
-			base.Dispose(disposing);
+		    base.Dispose(disposing);
 		}
 
 		public void Set1And1HalfMagnification()
