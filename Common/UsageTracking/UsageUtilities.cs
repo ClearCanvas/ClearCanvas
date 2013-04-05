@@ -67,6 +67,11 @@ namespace ClearCanvas.Common.UsageTracking
 
 		#region Public Static Properties
 
+	    public static bool IsEnabled
+	    {
+	        get { return UsageTrackingSettings.Default.Enabled; }
+	    }
+
 		/// <summary>
 		/// Event which can receive display messages from the UsageTracking server
 		/// </summary>
@@ -96,7 +101,7 @@ namespace ClearCanvas.Common.UsageTracking
 		{
 			try
 			{
-				RegisterResponse response;
+                RegisterResponse response;
 				using (UsageTrackingServiceClient client = new UsageTrackingServiceClient(binding, endpointAddress))
 				{
 					response = client.Register(message);
@@ -261,7 +266,7 @@ namespace ClearCanvas.Common.UsageTracking
 				      	{
 				      		Version = ProductInformation.GetVersion(true, true),
 				      		Product = ProductInformation.Product,
-				      		Component = ProductInformation.Component,
+				      		Component = GetComponentName(),
 				      		Edition = ProductInformation.Edition,
 				      		Release = ProductInformation.Release,
 				      		AllowDiagnosticUse = LicenseInformation.DiagnosticUse != LicenseDiagnosticUse.None,
@@ -280,6 +285,17 @@ namespace ClearCanvas.Common.UsageTracking
 
 			return msg;
 		}
+
+        private static string GetComponentName()
+        {
+            if (string.IsNullOrEmpty(ProductInformation.SubComponent))
+                return ProductInformation.Component;
+            else
+            {
+                //TODO Phoenix5 - separate these fields
+                return string.Format("{0} ({1})", ProductInformation.Component, ProductInformation.SubComponent);
+            }
+        }
 
 		public static IEnumerable<UsageApplicationData> GetApplicationData(UsageType type)
 		{
