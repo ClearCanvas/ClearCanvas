@@ -288,7 +288,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 			private readonly CacheKey _cacheKey;
 			private readonly VolumeCache _cacheOwner;
 			private IList<IFrameReference> _frames;
-			private IVolumeReference _volumeReference;
+			private volatile IVolumeReference _volumeReference;
 			private bool _isDisposed = false;
 
 			private event EventHandler _progressChanged;
@@ -367,8 +367,6 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 
 			private Volume LoadCore(VolumeLoadProgressCallback callback)
 			{
-				if (_volumeReference != null) return _volumeReference.Volume;
-
 				lock (_syncRoot)
 				{
 					if (_volumeReference != null) return _volumeReference.Volume;

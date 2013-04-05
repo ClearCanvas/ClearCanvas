@@ -30,7 +30,7 @@ using ClearCanvas.ImageViewer.InteractiveGraphics;
 using ClearCanvas.ImageViewer.Rendering;
 using ClearCanvas.ImageViewer.StudyManagement;
 
-namespace ClearCanvas.ImageViewer
+namespace ClearCanvas.ImageViewer.Volume.Mpr
 {
 	/// <remarks>
 	/// This type is part of a trial API and is not intended for general use.
@@ -175,7 +175,7 @@ namespace ClearCanvas.ImageViewer
 				{
 					var messageFormat = _owner.LoadingMessageFormat;
 					if (string.IsNullOrEmpty(messageFormat))
-						messageFormat = Volume.Mpr.SR.MessageFormatReloading;
+						messageFormat = SR.MessageFormatReloading;
 
 					progress = asyncFrame.AsyncProgressPercent/100f;
 					message = string.Format(messageFormat, asyncFrame.AsyncProgressPercent);

@@ -24,12 +24,14 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.ImageViewer.Common;
+using ClearCanvas.ImageViewer.StudyManagement;
 
-namespace ClearCanvas.ImageViewer.StudyManagement
+namespace ClearCanvas.ImageViewer.Volume.Mpr
 {
 	/// <summary>
 	/// Base implementation of a <see cref="SopDataSource"/> with pixel data that must be loaded and refined asynchronously.
@@ -229,14 +231,21 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 								                  	{
 								                  		try
 								                  		{
-								                  			var pd = _pixelData = t.Result;
-								                  			if (pd != null)
-								                  			{
-								                  				UpdateLargeObjectInfo();
-								                  				MemoryManager.Add(this);
-								                  				Diagnostics.OnLargeObjectAllocated(pd.Length);
-								                  				UpdateProgress(100, true, pd);
-								                  			}
+                                                            _largeObjectContainerData.UpdateLastAccessTime();
+
+								                  		    if (t.Result != null)
+								                  		    {
+                                                                lock (SyncLock)
+                                                                {
+                                                                    Monitor.Pulse(SyncLock);
+                                                                    _pixelData = t.Result;
+                                                                    UpdateLargeObjectInfo();
+                                                                    MemoryManager.Add(this);
+                                                                }
+                                                            
+                                                                Diagnostics.OnLargeObjectAllocated(t.Result.Length);
+                                                                UpdateProgress(100, true, t.Result);
+                                                            }
 								                  		}
 								                  		catch (Exception ex)
 								                  		{
@@ -246,7 +255,9 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 								                  	});
 								UpdateProgress(0, false, null);
 								task.Start();
-								task.Wait(150);
+							    
+                                //Use Monitor.Wait instead of Task.Wait so we can use the lock inside the task without deadlocking.
+                                Monitor.Wait(SyncLock, 150);
 							}
 							catch (Exception ex)
 							{
@@ -362,10 +373,10 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 			/// </remarks>
 			public override sealed void Unload()
 			{
-				lock (SyncLock)
+                _largeObjectContainerData.UpdateLastAccessTime();
+                
+                lock (SyncLock)
 				{
-					_largeObjectContainerData.UpdateLastAccessTime();
-
 					ReportLargeObjectsUnloaded();
 
 					_pixelData = null;
@@ -437,6 +448,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 
 			public float ProgressPercent { get; private set; }
 
+		    // TODO (CR Apr 2013): subscriptions and firing should be synchronized because 
 			public event AsyncPixelDataProgressEventHandler ProgressChanged;
 
 			public bool IsLoaded { get; private set; }

@@ -269,6 +269,20 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 				_frameIndex = frameNumber - 1;
 			}
 
+            /// <summary>
+            /// Constructs a new <see cref="DicomMessageSopFrameData"/>
+            /// </summary>
+            /// <param name="frameNumber">The 1-based number of this frame.</param>
+            /// <param name="parent">The parent <see cref="DicomMessageSopDataSource"/> that this frame belongs to.</param>
+            /// <exception cref="ArgumentNullException">Thrown if <paramref name="parent"/> is null.</exception>
+            /// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="frameNumber"/> is zero or negative.</exception>
+            /// <param name="regenerationCost">The approximate cost to regenerate the pixel and/or overlay data.</param>
+            public DicomMessageSopFrameData(int frameNumber, DicomMessageSopDataSource parent, RegenerationCost regenerationCost)
+                : base(frameNumber, parent, regenerationCost)
+            {
+                _frameIndex = frameNumber - 1;
+            }
+
 			/// <summary>
 			/// Gets the parent <see cref="DicomMessageSopDataSource"/> to which this frame belongs.
 			/// </summary>

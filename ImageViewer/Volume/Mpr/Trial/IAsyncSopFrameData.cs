@@ -23,8 +23,9 @@
 #endregion
 
 using System;
+using ClearCanvas.ImageViewer.StudyManagement;
 
-namespace ClearCanvas.ImageViewer.StudyManagement
+namespace ClearCanvas.ImageViewer.Volume.Mpr
 {
 	/// <remarks>
 	/// This type is part of a trial API and is not intended for general use.

@@ -30,6 +30,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Threading;
 using ClearCanvas.Common;
 using ClearCanvas.Dicom;
 using ClearCanvas.ImageViewer.Common;
@@ -309,7 +310,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 		{
 			using (vtkImageReslice reslicer = new vtkImageReslice())
 			{
-				VtkHelper.RegisterVtkErrorEvents(reslicer);
+			    VtkHelper.RegisterVtkErrorEvents(reslicer);
 
 				// Obtain a pinned VTK volume for the reslicer. We'll release this when
 				//	VTK is done reslicing.
@@ -329,44 +330,50 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 					//	Effective spacing is the minimum of these three.
 					reslicer.SetOutputSpacing(_volume.Volume.VoxelSpacing.X, _volume.Volume.VoxelSpacing.Y, _volume.Volume.VoxelSpacing.Z);
 
-					reslicer.SetResliceAxes(VtkHelper.ConvertToVtkMatrix(resliceAxes));
+                    using (vtkMatrix4x4 resliceAxesMatrix = VtkHelper.ConvertToVtkMatrix(resliceAxes))
+                    {
+                        reslicer.SetResliceAxes(resliceAxesMatrix);
 
-					// Clamp the output based on the slice extent
-					int sliceExtentX = GetSliceExtentX();
-					int sliceExtentY = GetSliceExtentY();
-					reslicer.SetOutputExtent(0, sliceExtentX - 1, 0, sliceExtentY - 1, 0, 0);
+                        // Clamp the output based on the slice extent
+                        int sliceExtentX = GetSliceExtentX();
+                        int sliceExtentY = GetSliceExtentY();
+                        reslicer.SetOutputExtent(0, sliceExtentX - 1, 0, sliceExtentY - 1, 0, 0);
 
-					// Set the output origin to reflect the slice through point. The slice extent is
-					//	centered on the slice through point.
-					// VTK output origin is derived from the center image being 0,0
-					float originX = -sliceExtentX*EffectiveSpacing/2;
-					float originY = -sliceExtentY*EffectiveSpacing/2;
-					reslicer.SetOutputOrigin(originX, originY, 0);
+                        // Set the output origin to reflect the slice through point. The slice extent is
+                        //	centered on the slice through point.
+                        // VTK output origin is derived from the center image being 0,0
+                        float originX = -sliceExtentX*EffectiveSpacing/2;
+                        float originY = -sliceExtentY*EffectiveSpacing/2;
+                        reslicer.SetOutputOrigin(originX, originY, 0);
 
-					switch (_slicerParams.InterpolationMode)
-					{
-						case VolumeSlicerInterpolationMode.NearestNeighbor:
-							reslicer.SetInterpolationModeToNearestNeighbor();
-							break;
-						case VolumeSlicerInterpolationMode.Linear:
-							reslicer.SetInterpolationModeToLinear();
-							break;
-						case VolumeSlicerInterpolationMode.Cubic:
-							reslicer.SetInterpolationModeToCubic();
-							break;
-					}
+                        switch (_slicerParams.InterpolationMode)
+                        {
+                            case VolumeSlicerInterpolationMode.NearestNeighbor:
+                                reslicer.SetInterpolationModeToNearestNeighbor();
+                                break;
+                            case VolumeSlicerInterpolationMode.Linear:
+                                reslicer.SetInterpolationModeToLinear();
+                                break;
+                            case VolumeSlicerInterpolationMode.Cubic:
+                                reslicer.SetInterpolationModeToCubic();
+                                break;
+                        }
 
-					using (vtkExecutive exec = reslicer.GetExecutive())
-					{
-						VtkHelper.RegisterVtkErrorEvents(exec);
-						exec.Update();
-					}
-				}
+                        using (vtkExecutive exec = reslicer.GetExecutive())
+                        {
+                            VtkHelper.RegisterVtkErrorEvents(exec);
+                            exec.Update();
+                        }
+
+                        var output = reslicer.GetOutput();
+                        //Just in case VTK uses the matrix internally.
+                        return output;
+                    }
+                }
 				finally
 				{
 					_volume.Volume.ReleasePinnedVtkVolume();
 				}
-				return reslicer.GetOutput();
 			}
 		}
 
