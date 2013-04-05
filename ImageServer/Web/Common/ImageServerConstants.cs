@@ -225,7 +225,7 @@ public class ImageServerConstants
             public const string DefaultTimeoutPage = "~/Pages/Error/TimeoutErrorPage.aspx";
             public const string WebViewerTimeoutErrorPage = "~/Pages/Error/WebViewerTimeoutErrorPage.aspx";
             public const string WebViewerAuthorizationErrorPage = "~/Pages/Error/WebViewerAuthorizationErrorPage.aspx";
-            public const string WebViewerErrorPage = "~/Pages/Error/WebViewerAuthorizationErrorPage.aspx";
+            public const string WebViewerErrorPage = "~/Pages/Error/WebViewerErrorPage.aspx";
             public const string WebViewerSilverlightDefaultPage = "~/Pages/WebViewer/Default.aspx";
             public const string WebViewerHtml5DefaultPage = "~/Pages/WebViewer/ViewHtml/EmbeddedDefault.aspx";
             public const string WebViewerHTML5ClinicalDefaultPage = "~/Pages/WebViewer/ViewHtml/Default.aspx";
