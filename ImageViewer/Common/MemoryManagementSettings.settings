@@ -15,7 +15,7 @@
       <Value Profile="(Default)">1000</Value>
     </Setting>
     <Setting Name="x64MaxMemoryUsagePercent" Description="The high watermark for process memory, as a percentage of an approximate maximum (process used + system free)." Type="System.Double" Scope="Application">
-      <Value Profile="(Default)">85</Value>
+      <Value Profile="(Default)">70</Value>
     </Setting>
     <Setting Name="x64MaxMemoryToCollectMegabytes" Description="A maximum amount of memory to collect at once. Important on systems with a lot of memory, as collecting too much at once can slow the process down." Type="System.Int64" Scope="Application">
       <Value Profile="(Default)">2000</Value>

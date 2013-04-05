@@ -84,7 +84,7 @@ namespace ClearCanvas.ImageViewer.Common {
         [global::System.Configuration.SettingsDescriptionAttribute("The high watermark for process memory, as a percentage of an approximate maximum " +
             "(process used + system free).")]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("85")]
+        [global::System.Configuration.DefaultSettingValueAttribute("70")]
         public double x64MaxMemoryUsagePercent {
             get {
                 return ((double)(this["x64MaxMemoryUsagePercent"]));
