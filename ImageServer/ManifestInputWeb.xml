@@ -185,7 +185,6 @@
     <File name="Web\Pages\Error\WebViewerAuthorizationErrorPage.aspx" />
     <File name="Web\Pages\Error\WebViewerErrorPage.aspx" />
     <File name="Web\Pages\Error\WebViewerErrorPageMaster.Master" />
-    <File name="Web\Pages\Error\WebViewerMultipleStudiesTimeoutErrorPage.aspx" />
     <File name="Web\Pages\Error\WebViewerTimeoutErrorPage.aspx" />
     <File name="Web\Pages\Help\Default.aspx" />
     <File name="Web\Pages\Help\Documentation.aspx" />
