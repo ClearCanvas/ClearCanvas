@@ -150,7 +150,7 @@ namespace ClearCanvas.ImageViewer.Tools.ImageProcessing.RoiAnalysis
 				return false;
 			}
 
-			int[] roiPixelData = new List<int>(roi.GetPixelValues()).ToArray();
+			int[] roiPixelData = new List<int>(roi.GetIntPixelValues()).ToArray();
 
 			Histogram histogram = new Histogram(
 				_minBin, _maxBin, _numBins, roiPixelData);

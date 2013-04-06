@@ -2,38 +2,37 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8F43070C-E31A-4CEC-92AD-F2AA0B65475B}"
 	ProjectSection(SolutionItems) = preProject
-		Desktop.HelpUpdate_dist.config = Desktop.HelpUpdate_dist.config
-		ImageViewer.DesktopServices_dist.config = ImageViewer.DesktopServices_dist.config
-		ImageViewer.DicomExplorer_dist.config = ImageViewer.DicomExplorer_dist.config
-		ImageViewer.EnterpriseCommon_dist.config = ImageViewer.EnterpriseCommon_dist.config
-		ImageViewer.Streaming_dist.config = ImageViewer.Streaming_dist.config
-		ImageViewer_critical.config = ImageViewer_critical.config
-		ImageViewer_dist.config = ImageViewer_dist.config
-		ImageViewer_dist.proj = ImageViewer_dist.proj
-		ImageViewer_Shreds_critical.config = ImageViewer_Shreds_critical.config
-		ImageViewer_Shreds_dist.config = ImageViewer_Shreds_dist.config
-		ImageViewerManifest.proj = ImageViewerManifest.proj
+		..\ImageViewer\Desktop.HelpUpdate_dist.config = ..\ImageViewer\Desktop.HelpUpdate_dist.config
+		..\ImageViewer\ImageViewer.DesktopServices_dist.config = ..\ImageViewer\ImageViewer.DesktopServices_dist.config
+		..\ImageViewer\ImageViewer.DicomExplorer_dist.config = ..\ImageViewer\ImageViewer.DicomExplorer_dist.config
+		..\ImageViewer\ImageViewer.EnterpriseCommon_dist.config = ..\ImageViewer\ImageViewer.EnterpriseCommon_dist.config
+		..\ImageViewer\ImageViewer.Streaming_dist.config = ..\ImageViewer\ImageViewer.Streaming_dist.config
+		..\ImageViewer\ImageViewer_critical.config = ..\ImageViewer\ImageViewer_critical.config
+		..\ImageViewer\ImageViewer_dist.config = ..\ImageViewer\ImageViewer_dist.config
+		..\ImageViewer\ImageViewer_dist.proj = ..\ImageViewer\ImageViewer_dist.proj
+		..\ImageViewer\ImageViewer_Shreds_critical.config = ..\ImageViewer\ImageViewer_Shreds_critical.config
+		..\ImageViewer\ImageViewer_Shreds_dist.config = ..\ImageViewer\ImageViewer_Shreds_dist.config
+		..\ImageViewer\ImageViewerManifest.proj = ..\ImageViewer\ImageViewerManifest.proj
 		ImageViewerSamples_dist.proj = ImageViewerSamples_dist.proj
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Manifest Items", "Manifest Items", "{1662BA41-9AFC-481B-9511-911D770E3D5B}"
 	ProjectSection(SolutionItems) = preProject
-		ManifestInputDatabase.xml = ManifestInputDatabase.xml
-		ManifestInputDesktop.xml = ManifestInputDesktop.xml
-		ManifestInputDesktopServices.xml = ManifestInputDesktopServices.xml
-		ManifestInputDicomEditor.xml = ManifestInputDicomEditor.xml
-		ManifestInputDicomRemote.xml = ManifestInputDicomRemote.xml
-		ManifestInputExternals.xml = ManifestInputExternals.xml
-		ManifestInputFusion.xml = ManifestInputFusion.xml
-		ManifestInputHelpFiles.xml = ManifestInputHelpFiles.xml
-		ManifestInputHelpUpdate.xml = ManifestInputHelpUpdate.xml
-		ManifestInputMpr.xml = ManifestInputMpr.xml
-		ManifestInputReporting.xml = ManifestInputReporting.xml
-		ManifestInputStreaming.xml = ManifestInputStreaming.xml
-		ManifestInputStudyBrowser.xml = ManifestInputStudyBrowser.xml
-		ManifestInputStudyComposer.xml = ManifestInputStudyComposer.xml
-		ManifestInputStudyFilters.xml = ManifestInputStudyFilters.xml
-		ManifestInputSynchronizationTools.xml = ManifestInputSynchronizationTools.xml
+		..\ImageViewer\ManifestInputDatabase.xml = ..\ImageViewer\ManifestInputDatabase.xml
+		..\ImageViewer\ManifestInputDesktop.xml = ..\ImageViewer\ManifestInputDesktop.xml
+		..\ImageViewer\ManifestInputDesktopServices.xml = ..\ImageViewer\ManifestInputDesktopServices.xml
+		..\ImageViewer\ManifestInputDicomEditor.xml = ..\ImageViewer\ManifestInputDicomEditor.xml
+		..\ImageViewer\ManifestInputDicomRemote.xml = ..\ImageViewer\ManifestInputDicomRemote.xml
+		..\ImageViewer\ManifestInputExplorer.xml = ..\ImageViewer\ManifestInputExplorer.xml
+		..\ImageViewer\ManifestInputExternals.xml = ..\ImageViewer\ManifestInputExternals.xml
+		..\ImageViewer\ManifestInputFusion.xml = ..\ImageViewer\ManifestInputFusion.xml
+		..\ImageViewer\ManifestInputHelpFiles.xml = ..\ImageViewer\ManifestInputHelpFiles.xml
+		..\ImageViewer\ManifestInputHelpUpdate.xml = ..\ImageViewer\ManifestInputHelpUpdate.xml
+		..\ImageViewer\ManifestInputMpr.xml = ..\ImageViewer\ManifestInputMpr.xml
+		..\ImageViewer\ManifestInputReporting.xml = ..\ImageViewer\ManifestInputReporting.xml
+		..\ImageViewer\ManifestInputStreaming.xml = ..\ImageViewer\ManifestInputStreaming.xml
+		..\ImageViewer\ManifestInputStudyFilters.xml = ..\ImageViewer\ManifestInputStudyFilters.xml
+		..\ImageViewer\ManifestInputSynchronizationTools.xml = ..\ImageViewer\ManifestInputSynchronizationTools.xml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{03A72338-B6AB-4BD4-9BF9-58033CF28B20}"
@@ -100,6 +99,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.Desktop.Executa
 		{89DF567B-A0D1-456A-A28F-043FD57D7F9A} = {89DF567B-A0D1-456A-A28F-043FD57D7F9A}
 		{89DF567B-A0D1-456A-A28F-043FD57D7F9A} = {89DF567B-A0D1-456A-A28F-043FD57D7F9A}
 		{CE23C27D-3A1C-492F-8201-5C4295DAC46B} = {CE23C27D-3A1C-492F-8201-5C4295DAC46B}
+		{AB89527E-B1B6-49A4-B3A0-D07948FC23E0} = {AB89527E-B1B6-49A4-B3A0-D07948FC23E0}
 		{D780A782-15DA-4E46-B642-7EA60F2D1A0A} = {D780A782-15DA-4E46-B642-7EA60F2D1A0A}
 		{D780A782-15DA-4E46-B642-7EA60F2D1A0A} = {D780A782-15DA-4E46-B642-7EA60F2D1A0A}
 		{2C610983-DDA8-4BA3-AB78-2FBF4DABF57E} = {2C610983-DDA8-4BA3-AB78-2FBF4DABF57E}
@@ -136,6 +136,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.Desktop.Executa
 		{AD8F67CF-0F30-412D-ACCD-80BACA332F22} = {AD8F67CF-0F30-412D-ACCD-80BACA332F22}
 		{AD9F87CF-0F30-442D-ACCD-80FACC339F22} = {AD9F87CF-0F30-442D-ACCD-80FACC339F22}
 		{AD9F87CF-0F30-442D-ACCD-80FACC339F22} = {AD9F87CF-0F30-442D-ACCD-80FACC339F22}
+		{E2F1A5D4-73A4-4BA6-AA5A-87BBDEC727F8} = {E2F1A5D4-73A4-4BA6-AA5A-87BBDEC727F8}
 		{ED15F4D4-F464-4640-AEA0-9FC3D3F19CDD} = {ED15F4D4-F464-4640-AEA0-9FC3D3F19CDD}
 		{1BC2A9D5-E0F6-4ACC-876B-C219E0EA2561} = {1BC2A9D5-E0F6-4ACC-876B-C219E0EA2561}
 		{1BC2A9D5-E0F6-4ACC-876B-C219E0EA2561} = {1BC2A9D5-E0F6-4ACC-876B-C219E0EA2561}
@@ -154,17 +155,17 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.Desktop.Extensi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.Desktop.ExtensionBrowser.View.WinForms", "..\Desktop\ExtensionBrowser\View\WinForms\ClearCanvas.Desktop.ExtensionBrowser.View.WinForms.csproj", "{BA5FDA96-AFD6-4546-A294-24D6BC77E808}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.ImageViewer", "ClearCanvas.ImageViewer.csproj", "{85100D3E-471C-47C9-9687-ABF25F617ED7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.ImageViewer", "..\ImageViewer\ClearCanvas.ImageViewer.csproj", "{85100D3E-471C-47C9-9687-ABF25F617ED7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.ImageViewer.Tools.Measurement", "Tools\Measurement\ClearCanvas.ImageViewer.Tools.Measurement.csproj", "{76E7A94E-5DCB-4B12-8D9E-7BD5084CE073}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.ImageViewer.Tools.Measurement", "..\ImageViewer\Tools\Measurement\ClearCanvas.ImageViewer.Tools.Measurement.csproj", "{76E7A94E-5DCB-4B12-8D9E-7BD5084CE073}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.ImageViewer.Tools.Standard", "Tools\Standard\ClearCanvas.ImageViewer.Tools.Standard.csproj", "{9AF0770C-7E9F-483F-8429-D7894F06EB6C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.ImageViewer.Tools.Standard", "..\ImageViewer\Tools\Standard\ClearCanvas.ImageViewer.Tools.Standard.csproj", "{9AF0770C-7E9F-483F-8429-D7894F06EB6C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.ImageViewer.Layout.Basic", "Layout\Basic\ClearCanvas.ImageViewer.Layout.Basic.csproj", "{EA38C1F1-C4BD-4ED7-9B60-C95DF22D6A72}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.ImageViewer.Layout.Basic", "..\ImageViewer\Layout\Basic\ClearCanvas.ImageViewer.Layout.Basic.csproj", "{EA38C1F1-C4BD-4ED7-9B60-C95DF22D6A72}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.ImageViewer.Layout.Basic.View.WinForms", "Layout\Basic\View\WinForms\ClearCanvas.ImageViewer.Layout.Basic.View.WinForms.csproj", "{152F7337-3DA3-4047-9E59-01989EEB7030}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.ImageViewer.Layout.Basic.View.WinForms", "..\ImageViewer\Layout\Basic\View\WinForms\ClearCanvas.ImageViewer.Layout.Basic.View.WinForms.csproj", "{152F7337-3DA3-4047-9E59-01989EEB7030}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.ImageViewer.StudyFinders.Remote", "StudyFinders\Remote\ClearCanvas.ImageViewer.StudyFinders.Remote.csproj", "{4454D96D-8E43-44CB-987B-FCAFCD98BCC0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.ImageViewer.StudyFinders.Remote", "..\ImageViewer\StudyFinders\Remote\ClearCanvas.ImageViewer.StudyFinders.Remote.csproj", "{4454D96D-8E43-44CB-987B-FCAFCD98BCC0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.Desktop.View.WinForms", "..\Desktop\View\WinForms\ClearCanvas.Desktop.View.WinForms.csproj", "{BB434EC3-A580-4744-A635-A2B4029C66DE}"
 EndProject
@@ -172,32 +173,32 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.Desktop.Help", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.Desktop.Explorer", "..\Desktop\Explorer\ClearCanvas.Desktop.Explorer.csproj", "{085823EA-DDAE-4DAF-A99D-17F75A03CF23}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.ImageViewer.Explorer.Local", "Explorer\Local\ClearCanvas.ImageViewer.Explorer.Local.csproj", "{AD9F87CF-0F30-442D-ACCD-80FACC339F22}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.ImageViewer.Explorer.Local", "..\ImageViewer\Explorer\Local\ClearCanvas.ImageViewer.Explorer.Local.csproj", "{AD9F87CF-0F30-442D-ACCD-80FACC339F22}"
 	ProjectSection(ProjectDependencies) = postProject
 		{085823EA-DDAE-4DAF-A99D-17F75A03CF23} = {085823EA-DDAE-4DAF-A99D-17F75A03CF23}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.ImageViewer.Explorer.Local.View.WinForms", "Explorer\Local\View\WinForms\ClearCanvas.ImageViewer.Explorer.Local.View.WinForms.csproj", "{9DD80D93-472E-4B9B-B896-24CF36C3C956}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.ImageViewer.Explorer.Local.View.WinForms", "..\ImageViewer\Explorer\Local\View\WinForms\ClearCanvas.ImageViewer.Explorer.Local.View.WinForms.csproj", "{9DD80D93-472E-4B9B-B896-24CF36C3C956}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.ImageViewer.Explorer.Dicom", "Explorer\Dicom\ClearCanvas.ImageViewer.Explorer.Dicom.csproj", "{14111EC7-C62E-4483-8573-7C04986D048F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.ImageViewer.Explorer.Dicom", "..\ImageViewer\Explorer\Dicom\ClearCanvas.ImageViewer.Explorer.Dicom.csproj", "{14111EC7-C62E-4483-8573-7C04986D048F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.ImageViewer.Explorer.Dicom.View.WinForms", "Explorer\Dicom\View\WinForms\ClearCanvas.ImageViewer.Explorer.Dicom.View.WinForms.csproj", "{4822272B-D8B3-43DE-A55D-8A04720DE181}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.ImageViewer.Explorer.Dicom.View.WinForms", "..\ImageViewer\Explorer\Dicom\View\WinForms\ClearCanvas.ImageViewer.Explorer.Dicom.View.WinForms.csproj", "{4822272B-D8B3-43DE-A55D-8A04720DE181}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.ImageViewer.AnnotationProviders", "AnnotationProviders\ClearCanvas.ImageViewer.AnnotationProviders.csproj", "{A7C78084-947E-4955-9473-9F186B760AEC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.ImageViewer.AnnotationProviders", "..\ImageViewer\AnnotationProviders\ClearCanvas.ImageViewer.AnnotationProviders.csproj", "{A7C78084-947E-4955-9473-9F186B760AEC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.Utilities.DicomEditor", "..\Utilities\DicomEditor\ClearCanvas.Utilities.DicomEditor.csproj", "{ACCD054F-5788-4747-959A-551E6E4B477C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.Utilities.DicomEditor.View.WinForms", "..\Utilities\DicomEditor\View\WinForms\ClearCanvas.Utilities.DicomEditor.View.WinForms.csproj", "{513239F1-2B18-4E53-8D5D-B0CD223E707B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.ImageViewer.View.WinForms", "View\WinForms\ClearCanvas.ImageViewer.View.WinForms.csproj", "{1B8C0C00-F5E4-42B6-A389-B01717AF9460}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.ImageViewer.View.WinForms", "..\ImageViewer\View\WinForms\ClearCanvas.ImageViewer.View.WinForms.csproj", "{1B8C0C00-F5E4-42B6-A389-B01717AF9460}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.ImageViewer.Configuration", "Configuration\ClearCanvas.ImageViewer.Configuration.csproj", "{89DF567B-A0D1-456A-A28F-043FD57D7F9A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.ImageViewer.Configuration", "..\ImageViewer\Configuration\ClearCanvas.ImageViewer.Configuration.csproj", "{89DF567B-A0D1-456A-A28F-043FD57D7F9A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.ImageViewer.Configuration.View.WinForms", "Configuration\View\WinForms\ClearCanvas.ImageViewer.Configuration.View.WinForms.csproj", "{9929C5B6-C13B-4436-9326-955EDE2CA102}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.ImageViewer.Configuration.View.WinForms", "..\ImageViewer\Configuration\View\WinForms\ClearCanvas.ImageViewer.Configuration.View.WinForms.csproj", "{9929C5B6-C13B-4436-9326-955EDE2CA102}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.ImageViewer.Tools.Standard.View.WinForms", "Tools\Standard\View\WinForms\ClearCanvas.ImageViewer.Tools.Standard.View.WinForms.csproj", "{D3E9C1B7-2CC5-42AD-A26A-46162F23BFD1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.ImageViewer.Tools.Standard.View.WinForms", "..\ImageViewer\Tools\Standard\View\WinForms\ClearCanvas.ImageViewer.Tools.Standard.View.WinForms.csproj", "{D3E9C1B7-2CC5-42AD-A26A-46162F23BFD1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.ImageViewer.Shreds", "Shreds\ClearCanvas.ImageViewer.Shreds.csproj", "{E991CF00-A0E1-490C-A0D1-2BD77FAECF06}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.ImageViewer.Shreds", "..\ImageViewer\Shreds\ClearCanvas.ImageViewer.Shreds.csproj", "{E991CF00-A0E1-490C-A0D1-2BD77FAECF06}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.Server.ShredHost", "..\Server\ShredHost\ClearCanvas.Server.ShredHost.csproj", "{8347B928-805E-42E7-B980-08D8AF1A0671}"
 EndProject
@@ -208,64 +209,65 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.Server.ShredHos
 		{8347B928-805E-42E7-B980-08D8AF1A0671} = {8347B928-805E-42E7-B980-08D8AF1A0671}
 		{F6EAD428-E6CF-4DF6-B2F3-D33D532C5343} = {F6EAD428-E6CF-4DF6-B2F3-D33D532C5343}
 		{AD9ECE2B-8268-4115-8DC8-860FBD011FFF} = {AD9ECE2B-8268-4115-8DC8-860FBD011FFF}
+		{AB89527E-B1B6-49A4-B3A0-D07948FC23E0} = {AB89527E-B1B6-49A4-B3A0-D07948FC23E0}
 		{FEFD73C5-8541-47D2-BBDB-FF61DEA28291} = {FEFD73C5-8541-47D2-BBDB-FF61DEA28291}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.ImageViewer.Tools.Synchronization", "Tools\Synchronization\ClearCanvas.ImageViewer.Tools.Synchronization.csproj", "{86CD94ED-BB4C-46C0-B54D-5F1EAE5A18D7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.ImageViewer.Tools.Synchronization", "..\ImageViewer\Tools\Synchronization\ClearCanvas.ImageViewer.Tools.Synchronization.csproj", "{86CD94ED-BB4C-46C0-B54D-5F1EAE5A18D7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.ImageViewer.Tools.Measurement.View.WinForms", "Tools\Measurement\View\WinForms\ClearCanvas.ImageViewer.Tools.Measurement.View.WinForms.csproj", "{5C17A246-C4AB-4D66-8715-425192D88D6E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.ImageViewer.Tools.Measurement.View.WinForms", "..\ImageViewer\Tools\Measurement\View\WinForms\ClearCanvas.ImageViewer.Tools.Measurement.View.WinForms.csproj", "{5C17A246-C4AB-4D66-8715-425192D88D6E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.ImageViewer.Clipboard", "Clipboard\ClearCanvas.ImageViewer.Clipboard.csproj", "{8517089B-809E-4A62-9AB2-CFF8C72E1AEB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.ImageViewer.Clipboard", "..\ImageViewer\Clipboard\ClearCanvas.ImageViewer.Clipboard.csproj", "{8517089B-809E-4A62-9AB2-CFF8C72E1AEB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.ImageViewer.Clipboard.View.WinForms", "Clipboard\View\WinForms\ClearCanvas.ImageViewer.Clipboard.View.WinForms.csproj", "{98FE0932-F1F6-4125-BD0B-A8F781179AE9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.ImageViewer.Clipboard.View.WinForms", "..\ImageViewer\Clipboard\View\WinForms\ClearCanvas.ImageViewer.Clipboard.View.WinForms.csproj", "{98FE0932-F1F6-4125-BD0B-A8F781179AE9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.ImageViewer.Thumbnails", "Thumbnails\ClearCanvas.ImageViewer.Thumbnails.csproj", "{4741DBA1-D9EC-443F-BF37-C3AAE89B1913}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.ImageViewer.Thumbnails", "..\ImageViewer\Thumbnails\ClearCanvas.ImageViewer.Thumbnails.csproj", "{4741DBA1-D9EC-443F-BF37-C3AAE89B1913}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.ImageViewer.Thumbnails.View.WinForms", "Thumbnails\View\WinForms\ClearCanvas.ImageViewer.Thumbnails.View.WinForms.csproj", "{44755126-5B83-43D1-AC83-621F5FCFBA67}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.ImageViewer.Thumbnails.View.WinForms", "..\ImageViewer\Thumbnails\View\WinForms\ClearCanvas.ImageViewer.Thumbnails.View.WinForms.csproj", "{44755126-5B83-43D1-AC83-621F5FCFBA67}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.ImageViewer.StudyLoaders.Streaming", "StudyLoaders\Streaming\ClearCanvas.ImageViewer.StudyLoaders.Streaming.csproj", "{7F89848A-B05C-4FF5-93D4-9B59A1A36F5E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.ImageViewer.StudyLoaders.Streaming", "..\ImageViewer\StudyLoaders\Streaming\ClearCanvas.ImageViewer.StudyLoaders.Streaming.csproj", "{7F89848A-B05C-4FF5-93D4-9B59A1A36F5E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.ImageViewer.DesktopServices", "DesktopServices\ClearCanvas.ImageViewer.DesktopServices.csproj", "{9144D03E-C4A2-4B34-B3B2-89A8834B3F02}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.ImageViewer.DesktopServices", "..\ImageViewer\DesktopServices\ClearCanvas.ImageViewer.DesktopServices.csproj", "{9144D03E-C4A2-4B34-B3B2-89A8834B3F02}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.Desktop.Help.UpdateTools", "..\Desktop\Help\UpdateTools\ClearCanvas.Desktop.Help.UpdateTools.csproj", "{D780A782-15DA-4E46-B642-7EA60F2D1A0A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.ImageViewer.Tools.Reporting", "Tools\Reporting\ClearCanvas.ImageViewer.Tools.Reporting.csproj", "{7DE2AD68-75E5-44D0-B94D-7549D3AE7CC3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.ImageViewer.Tools.Reporting", "..\ImageViewer\Tools\Reporting\ClearCanvas.ImageViewer.Tools.Reporting.csproj", "{7DE2AD68-75E5-44D0-B94D-7549D3AE7CC3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.ImageViewer.Tools.Reporting.View.WinForms", "Tools\Reporting\View\WinForms\ClearCanvas.ImageViewer.Tools.Reporting.View.WinForms.csproj", "{D4305B6F-2BA6-47F3-A4BF-D18A93BDF622}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.ImageViewer.Tools.Reporting.View.WinForms", "..\ImageViewer\Tools\Reporting\View\WinForms\ClearCanvas.ImageViewer.Tools.Reporting.View.WinForms.csproj", "{D4305B6F-2BA6-47F3-A4BF-D18A93BDF622}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.ImageViewer.Volume.Mpr", "Volume\Mpr\ClearCanvas.ImageViewer.Volume.Mpr.csproj", "{AD8F67CF-0F30-412D-ACCD-80BACA332F22}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.ImageViewer.Volume.Mpr", "..\ImageViewer\Volume\Mpr\ClearCanvas.ImageViewer.Volume.Mpr.csproj", "{AD8F67CF-0F30-412D-ACCD-80BACA332F22}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.ImageViewer.Utilities.StudyFilters", "Utilities\StudyFilters\ClearCanvas.ImageViewer.Utilities.StudyFilters.csproj", "{49A47B83-BC95-4E1D-96A8-3DF05673797F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.ImageViewer.Utilities.StudyFilters", "..\ImageViewer\Utilities\StudyFilters\ClearCanvas.ImageViewer.Utilities.StudyFilters.csproj", "{49A47B83-BC95-4E1D-96A8-3DF05673797F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.ImageViewer.Utilities.StudyFilters.View.WinForms", "Utilities\StudyFilters\View\WinForms\ClearCanvas.ImageViewer.Utilities.StudyFilters.View.WinForms.csproj", "{DBBB259C-EACC-425D-991B-265A0CE93446}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.ImageViewer.Utilities.StudyFilters.View.WinForms", "..\ImageViewer\Utilities\StudyFilters\View\WinForms\ClearCanvas.ImageViewer.Utilities.StudyFilters.View.WinForms.csproj", "{DBBB259C-EACC-425D-991B-265A0CE93446}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.ImageViewer.Tools.Synchronization.View.WinForms", "Tools\Synchronization\View\WinForms\ClearCanvas.ImageViewer.Tools.Synchronization.View.WinForms.csproj", "{ED15F4D4-F464-4640-AEA0-9FC3D3F19CDD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.ImageViewer.Tools.Synchronization.View.WinForms", "..\ImageViewer\Tools\Synchronization\View\WinForms\ClearCanvas.ImageViewer.Tools.Synchronization.View.WinForms.csproj", "{ED15F4D4-F464-4640-AEA0-9FC3D3F19CDD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.Desktop.Explorer.View.WinForms", "..\Desktop\Explorer\View\WinForms\ClearCanvas.Desktop.Explorer.View.WinForms.csproj", "{D47B5106-BB29-4D63-88DD-82073A5B1CA0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.ImageViewer.Volume.Mpr.View.WinForms", "Volume\Mpr\View\WinForms\ClearCanvas.ImageViewer.Volume.Mpr.View.WinForms.csproj", "{CE23C27D-3A1C-492F-8201-5C4295DAC46B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.ImageViewer.Volume.Mpr.View.WinForms", "..\ImageViewer\Volume\Mpr\View\WinForms\ClearCanvas.ImageViewer.Volume.Mpr.View.WinForms.csproj", "{CE23C27D-3A1C-492F-8201-5C4295DAC46B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.ImageViewer.Externals", "Externals\ClearCanvas.ImageViewer.Externals.csproj", "{B33560E9-4B0C-4B8A-AF6B-721A06DD407B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.ImageViewer.Externals", "..\ImageViewer\Externals\ClearCanvas.ImageViewer.Externals.csproj", "{B33560E9-4B0C-4B8A-AF6B-721A06DD407B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.ImageViewer.Externals.View.WinForms", "Externals\View\WinForms\ClearCanvas.ImageViewer.Externals.View.WinForms.csproj", "{14243C4C-F3D9-4A7A-83D5-B09EB79686AC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.ImageViewer.Externals.View.WinForms", "..\ImageViewer\Externals\View\WinForms\ClearCanvas.ImageViewer.Externals.View.WinForms.csproj", "{14243C4C-F3D9-4A7A-83D5-B09EB79686AC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.Controls.WinForms", "..\Controls\WinForms\ClearCanvas.Controls.WinForms.csproj", "{A5B36F78-7CA7-4C46-ABD7-E8DF1517B64C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.ImageViewer.Utilities.StudyFilters.Tools", "Utilities\StudyFilters\Tools\ClearCanvas.ImageViewer.Utilities.StudyFilters.Tools.csproj", "{FC609751-68F8-4A87-87E1-D1BF366C350F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.ImageViewer.Utilities.StudyFilters.Tools", "..\ImageViewer\Utilities\StudyFilters\Tools\ClearCanvas.ImageViewer.Utilities.StudyFilters.Tools.csproj", "{FC609751-68F8-4A87-87E1-D1BF366C350F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.ImageViewer.AdvancedImaging.Fusion", "AdvancedImaging\Fusion\ClearCanvas.ImageViewer.AdvancedImaging.Fusion.csproj", "{BD56AC53-F4B2-46AA-9371-D0E6F569A9D2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.ImageViewer.AdvancedImaging.Fusion", "..\ImageViewer\AdvancedImaging\Fusion\ClearCanvas.ImageViewer.AdvancedImaging.Fusion.csproj", "{BD56AC53-F4B2-46AA-9371-D0E6F569A9D2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.Utilities.Manifest", "..\Utilities\Manifest\ClearCanvas.Utilities.Manifest.csproj", "{E2F1A5D4-73A4-4BA6-AA5A-87BBDEC727F8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.Executable", "..\Executable\ClearCanvas.Executable.csproj", "{EA26AAB0-85FE-4ECC-BB9A-D99374869AA5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.ImageViewer.Common", "Common\ClearCanvas.ImageViewer.Common.csproj", "{FEFD73C5-8541-47D2-BBDB-FF61DEA28291}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.ImageViewer.Common", "..\ImageViewer\Common\ClearCanvas.ImageViewer.Common.csproj", "{FEFD73C5-8541-47D2-BBDB-FF61DEA28291}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.ImageViewer.StudyFinders.Local", "StudyFinders\Local\ClearCanvas.ImageViewer.StudyFinders.Local.csproj", "{754BE725-D211-4114-A2AA-D64D8AABB7CE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.ImageViewer.StudyFinders.Local", "..\ImageViewer\StudyFinders\Local\ClearCanvas.ImageViewer.StudyFinders.Local.csproj", "{754BE725-D211-4114-A2AA-D64D8AABB7CE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.ImageViewer.StudyLoaders.Local", "StudyLoaders\Local\ClearCanvas.ImageViewer.StudyLoaders.Local.csproj", "{DB155C43-8966-4AB5-AE4F-40489FA33ABA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.ImageViewer.StudyLoaders.Local", "..\ImageViewer\StudyLoaders\Local\ClearCanvas.ImageViewer.StudyLoaders.Local.csproj", "{DB155C43-8966-4AB5-AE4F-40489FA33ABA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.ImageViewer.StudyManagement.Core", "StudyManagement\Core\ClearCanvas.ImageViewer.StudyManagement.Core.csproj", "{624BC225-49A8-4E92-942D-CDC976292EB9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.ImageViewer.StudyManagement.Core", "..\ImageViewer\StudyManagement\Core\ClearCanvas.ImageViewer.StudyManagement.Core.csproj", "{624BC225-49A8-4E92-942D-CDC976292EB9}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ImageViewer-Samples", "ImageViewer-Samples", "{58B3DB7F-3288-44CC-B1A9-9C71B930597D}"
 EndProject
@@ -273,23 +275,25 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.Desktop.Applets
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.Desktop.Applets.WebBrowser.View.WinForms", "..\Desktop\Applets\WebBrowser\View\WinForms\ClearCanvas.Desktop.Applets.WebBrowser.View.WinForms.csproj", "{7689F968-523F-4737-A72C-DB7507A3C68A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.ImageViewer.Tools.ImageProcessing.Filter", "Tools\ImageProcessing\Filter\ClearCanvas.ImageViewer.Tools.ImageProcessing.Filter.csproj", "{04FC1910-7D92-4FAF-8D90-B034A4702981}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.ImageViewer.Tools.ImageProcessing.Filter", "..\ImageViewer\Tools\ImageProcessing\Filter\ClearCanvas.ImageViewer.Tools.ImageProcessing.Filter.csproj", "{04FC1910-7D92-4FAF-8D90-B034A4702981}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.ImageViewer.Tools.ImageProcessing.RoiAnalysis", "Tools\ImageProcessing\RoiAnalysis\ClearCanvas.ImageViewer.Tools.ImageProcessing.RoiAnalysis.csproj", "{98ED6589-126D-44A0-8B35-A1A6CF88B25C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.ImageViewer.Tools.ImageProcessing.RoiAnalysis", "..\ImageViewer\Tools\ImageProcessing\RoiAnalysis\ClearCanvas.ImageViewer.Tools.ImageProcessing.RoiAnalysis.csproj", "{98ED6589-126D-44A0-8B35-A1A6CF88B25C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.ImageViewer.Tools.ImageProcessing.RoiAnalysis.View.WinForms", "Tools\ImageProcessing\RoiAnalysis\View\WinForms\ClearCanvas.ImageViewer.Tools.ImageProcessing.RoiAnalysis.View.WinForms.csproj", "{70E8362C-3185-4E62-9016-14B4EE2C2883}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.ImageViewer.Tools.ImageProcessing.RoiAnalysis.View.WinForms", "..\ImageViewer\Tools\ImageProcessing\RoiAnalysis\View\WinForms\ClearCanvas.ImageViewer.Tools.ImageProcessing.RoiAnalysis.View.WinForms.csproj", "{70E8362C-3185-4E62-9016-14B4EE2C2883}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.ImageViewer.Tools.Volume.VTK", "Tools\Volume\VTK\ClearCanvas.ImageViewer.Tools.Volume.VTK.csproj", "{92F4583D-D856-4B71-9D44-4785CDBA5301}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.ImageViewer.Tools.Volume.VTK", "..\ImageViewer\Tools\Volume\VTK\ClearCanvas.ImageViewer.Tools.Volume.VTK.csproj", "{92F4583D-D856-4B71-9D44-4785CDBA5301}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.ImageViewer.Tools.Volume.VTK.View.WinForms", "Tools\Volume\VTK\View\WinForms\ClearCanvas.ImageViewer.Tools.Volume.VTK.View.WinForms.csproj", "{85696CBB-7BB6-48D0-BCF1-8377F4799A8A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.ImageViewer.Tools.Volume.VTK.View.WinForms", "..\ImageViewer\Tools\Volume\VTK\View\WinForms\ClearCanvas.ImageViewer.Tools.Volume.VTK.View.WinForms.csproj", "{85696CBB-7BB6-48D0-BCF1-8377F4799A8A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.ImageViewer.VtkItkAdapters", "VtkItkAdapters\ClearCanvas.ImageViewer.VtkItkAdapters.csproj", "{9C04C2BC-BB87-4286-A2A6-49523B677060}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.ImageViewer.VtkItkAdapters", "..\ImageViewer\VtkItkAdapters\ClearCanvas.ImageViewer.VtkItkAdapters.csproj", "{9C04C2BC-BB87-4286-A2A6-49523B677060}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.ImageViewer.TestTools", "TestTools\ClearCanvas.ImageViewer.TestTools.csproj", "{2C610983-DDA8-4BA3-AB78-2FBF4DABF57E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.ImageViewer.TestTools", "..\ImageViewer\TestTools\ClearCanvas.ImageViewer.TestTools.csproj", "{2C610983-DDA8-4BA3-AB78-2FBF4DABF57E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.ImageViewer.TestTools.Rendering.TestApp", "TestTools\Rendering\TestApp\ClearCanvas.ImageViewer.TestTools.Rendering.TestApp.csproj", "{E06AC03E-2D3A-43E6-B679-A4C69179B102}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.ImageViewer.TestTools.Rendering.TestApp", "..\ImageViewer\TestTools\Rendering\TestApp\ClearCanvas.ImageViewer.TestTools.Rendering.TestApp.csproj", "{E06AC03E-2D3A-43E6-B679-A4C69179B102}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.ImageViewer.DesktopServices.Automation.TestClient", "DesktopServices\Automation\TestClient\ClearCanvas.ImageViewer.DesktopServices.Automation.TestClient.csproj", "{2E7D2857-B9BE-496D-A9DD-78C4C56124CE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.ImageViewer.DesktopServices.Automation.TestClient", "..\ImageViewer\DesktopServices\Automation\TestClient\ClearCanvas.ImageViewer.DesktopServices.Automation.TestClient.csproj", "{2E7D2857-B9BE-496D-A9DD-78C4C56124CE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.Dicom.Codec.Rle", "..\Dicom\Codec\Rle\ClearCanvas.Dicom.Codec.Rle.csproj", "{AB89527E-B1B6-49A4-B3A0-D07948FC23E0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -980,6 +984,16 @@ Global
 		{2E7D2857-B9BE-496D-A9DD-78C4C56124CE}.Release|Any CPU.Build.0 = Release|Any CPU
 		{2E7D2857-B9BE-496D-A9DD-78C4C56124CE}.UNIT_TESTS_USAGE_TRACKING|Any CPU.ActiveCfg = Release ASP|Any CPU
 		{2E7D2857-B9BE-496D-A9DD-78C4C56124CE}.UNIT_TESTS_USAGE_TRACKING|Any CPU.Build.0 = Release ASP|Any CPU
+		{AB89527E-B1B6-49A4-B3A0-D07948FC23E0}.Debug ASP|Any CPU.ActiveCfg = Debug|Any CPU
+		{AB89527E-B1B6-49A4-B3A0-D07948FC23E0}.Debug ASP|Any CPU.Build.0 = Debug|Any CPU
+		{AB89527E-B1B6-49A4-B3A0-D07948FC23E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AB89527E-B1B6-49A4-B3A0-D07948FC23E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AB89527E-B1B6-49A4-B3A0-D07948FC23E0}.Release ASP|Any CPU.ActiveCfg = Release|Any CPU
+		{AB89527E-B1B6-49A4-B3A0-D07948FC23E0}.Release ASP|Any CPU.Build.0 = Release|Any CPU
+		{AB89527E-B1B6-49A4-B3A0-D07948FC23E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AB89527E-B1B6-49A4-B3A0-D07948FC23E0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AB89527E-B1B6-49A4-B3A0-D07948FC23E0}.UNIT_TESTS_USAGE_TRACKING|Any CPU.ActiveCfg = Release|Any CPU
+		{AB89527E-B1B6-49A4-B3A0-D07948FC23E0}.UNIT_TESTS_USAGE_TRACKING|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -990,6 +1004,7 @@ Global
 		{E2F1A5D4-73A4-4BA6-AA5A-87BBDEC727F8} = {03A72338-B6AB-4BD4-9BF9-58033CF28B20}
 		{EA26AAB0-85FE-4ECC-BB9A-D99374869AA5} = {03A72338-B6AB-4BD4-9BF9-58033CF28B20}
 		{FEFD73C5-8541-47D2-BBDB-FF61DEA28291} = {03A72338-B6AB-4BD4-9BF9-58033CF28B20}
+		{AB89527E-B1B6-49A4-B3A0-D07948FC23E0} = {03A72338-B6AB-4BD4-9BF9-58033CF28B20}
 		{26E9A01A-64B5-42C5-8252-FBB30DF9CEC7} = {86F0F125-9303-4827-9D11-025716E802EC}
 		{9CA6A6B8-2E7A-4D2C-AC35-D369F6B15AC8} = {86F0F125-9303-4827-9D11-025716E802EC}
 		{1BC2A9D5-E0F6-4ACC-876B-C219E0EA2561} = {86F0F125-9303-4827-9D11-025716E802EC}

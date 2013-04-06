@@ -12,7 +12,7 @@
     </When>
     <Otherwise>
       <PropertyGroup>
-        <BuildPlatform></BuildPlatform>
+        <BuildPlatform>x86</BuildPlatform>
       </PropertyGroup>
     </Otherwise>
   </Choose>
@@ -81,7 +81,13 @@
     <GetFrameworkSdkPath>
       <Output TaskParameter="Path" PropertyName="SdkPath" />
     </GetFrameworkSdkPath>
-    <Exec Command="corflags /32BIT+ &quot;$(DistributionDirectory)\ClearCanvas.Desktop.Executable.exe&quot;" WorkingDirectory="$(SdkPath)\bin\" />
+    <CreateProperty Value="$(registry:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Microsoft SDKs\Windows\@CurrentInstallFolder)" Condition="'$(SdkPath)' == ''">
+      <Output TaskParameter="Value" PropertyName="SdkPath" />
+    </CreateProperty>
+    <CreateProperty Value="$(SdkPath)\" Condition="!HasTrailingSlash('$(SdkPath)')">
+      <Output TaskParameter="Value" PropertyName="SdkPath" />
+    </CreateProperty>
+    <Exec Command="corflags /32BIT+ &quot;$(DistributionDirectory)\ClearCanvas.Desktop.Executable.exe&quot;" WorkingDirectory="$(SdkPath)bin\" />
   </Target>
 
   <!-- Flags the CIL desktop executable as capable of handling extended process memory space ("large addresses") if the OS is configured to do so -->
@@ -89,11 +95,11 @@
     <!-- The 64-bit version of editbin can be run directly from VC\bin\amd64 -->
     <Exec Condition="'$(BuildPlatform)' == 'x64'"
           Command="editbin /LARGEADDRESSAWARE &quot;$(DistributionDirectory)\ClearCanvas.Desktop.Executable.exe&quot;"
-          WorkingDirectory="$(VS90COMNTOOLS)\..\..\VC\bin\amd64" />
+          WorkingDirectory="$(VS100COMNTOOLS)\..\..\VC\bin\amd64" />
     <!-- The 32-bit version of editbin has a dependency in Common7\IDE, hence the weird use of both WorkdingDirectory and a full command path -->
     <Exec Condition="'$(BuildPlatform)' != 'x64'"
-          Command="&quot;$(VS90COMNTOOLS)..\..\VC\bin\editbin&quot; /LARGEADDRESSAWARE &quot;$(DistributionDirectory)\ClearCanvas.Desktop.Executable.exe&quot;"
-          WorkingDirectory="$(VS90COMNTOOLS)\..\IDE" />
+          Command="&quot;$(VS100COMNTOOLS)..\..\VC\bin\editbin&quot; /LARGEADDRESSAWARE &quot;$(DistributionDirectory)\ClearCanvas.Desktop.Executable.exe&quot;"
+          WorkingDirectory="$(VS100COMNTOOLS)\..\IDE" />
   </Target>
 
 
