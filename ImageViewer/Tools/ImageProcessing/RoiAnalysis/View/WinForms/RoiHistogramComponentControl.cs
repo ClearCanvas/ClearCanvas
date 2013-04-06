@@ -23,35 +23,31 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
-using System.Data;
-using System.Text;
 using System.Windows.Forms;
-
 using ClearCanvas.Desktop.View.WinForms;
 using NPlot;
+using Application = ClearCanvas.Desktop.Application;
 
 namespace ClearCanvas.ImageViewer.Tools.ImageProcessing.RoiAnalysis.View.WinForms
 {
-    /// <summary>
-    /// Provides a Windows Forms user-interface for <see cref="RoiHistogramComponent"/>
-    /// </summary>
-    public partial class RoiHistogramComponentControl : ApplicationComponentUserControl
-    {
-        private RoiHistogramComponent _component;
+	/// <summary>
+	/// Provides a Windows Forms user-interface for <see cref="RoiHistogramComponent"/>
+	/// </summary>
+	public partial class RoiHistogramComponentControl : ApplicationComponentUserControl
+	{
+		private RoiHistogramComponent _component;
 		private BindingSource _bindingSource;
 
 		/// <summary>
-        /// Constructor
-        /// </summary>
-        public RoiHistogramComponentControl(RoiHistogramComponent component)
-            :base(component)
-        {
-            InitializeComponent();
+		/// Constructor
+		/// </summary>
+		public RoiHistogramComponentControl(RoiHistogramComponent component)
+			: base(component)
+		{
+			InitializeComponent();
 
-            _component = component;
+			_component = component;
 			_bindingSource = new BindingSource();
 			_bindingSource.DataSource = _component;
 
@@ -80,9 +76,9 @@ namespace ClearCanvas.ImageViewer.Tools.ImageProcessing.RoiAnalysis.View.WinForm
 
 			Refresh(null, EventArgs.Empty);
 			_component.AllPropertiesChanged += new EventHandler(Refresh);
-        }
+		}
 
-		void Refresh(object sender, EventArgs e)
+		private void Refresh(object sender, EventArgs e)
 		{
 			_plotSurface.Clear();
 			_plotSurface.BackColor = Color.Black;
@@ -99,8 +95,8 @@ namespace ClearCanvas.ImageViewer.Tools.ImageProcessing.RoiAnalysis.View.WinForm
 			histogram.Center = false;
 			histogram.BaseWidth = 1.0f;
 			histogram.Filled = true;
-			histogram.Pen = new Pen(ClearCanvasStyle.ClearCanvasBlue);
-			histogram.RectangleBrush = new RectangleBrushes.Solid(ClearCanvasStyle.ClearCanvasBlue);
+			histogram.Pen = new Pen(Application.CurrentUITheme.Colors.StandardColorBase);
+			histogram.RectangleBrush = new RectangleBrushes.Solid(Application.CurrentUITheme.Colors.StandardColorBase);
 
 			_plotSurface.Add(histogram);
 			_plotSurface.PlotBackColor = Color.Black;
@@ -108,5 +104,5 @@ namespace ClearCanvas.ImageViewer.Tools.ImageProcessing.RoiAnalysis.View.WinForm
 			_plotSurface.YAxis1.Color = Color.White;
 			_plotSurface.Refresh();
 		}
-    }
+	}
 }

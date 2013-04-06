@@ -22,27 +22,19 @@
 
 #endregion
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 using ClearCanvas.Common;
 using ClearCanvas.Desktop;
-using ClearCanvas.Desktop.Tools;
 using ClearCanvas.Desktop.Actions;
-using ClearCanvas.ImageViewer;
-using ClearCanvas.ImageViewer.Imaging;
-using ClearCanvas.Common.Utilities;
 using ClearCanvas.ImageViewer.BaseTools;
 
 namespace ClearCanvas.ImageViewer.Tools.Volume.VTK
 {
 	[ButtonAction("show", "global-toolbars/ToolbarsVolume/CreateVolumeTool", "Show")]
 	[Tooltip("show", "Create Volume")]
-	[IconSet("show", IconScheme.Colour, "Icons.CreateVolumeToolSmall.png", "Icons.CreateVolumeToolMedium.png", "Icons.CreateVolumeToolLarge.png")]
+	[IconSet("show", "Icons.CreateVolumeToolSmall.png", "Icons.CreateVolumeToolMedium.png", "Icons.CreateVolumeToolLarge.png")]
 	[GroupHint("show", "Tools.VolumeImage.Create")]
-
-	[ExtensionOf(typeof(ImageViewerToolExtensionPoint))]
+	//
+	[ExtensionOf(typeof (ImageViewerToolExtensionPoint))]
 	public class CreateVolumeTool : ImageViewerTool
 	{
 		private static VolumeComponent _volumeComponent;
@@ -52,9 +44,7 @@ namespace ClearCanvas.ImageViewer.Tools.Volume.VTK
 		/// Default constructor.  A no-args constructor is required by the
 		/// framework.  Do not remove.
 		/// </summary>
-		public CreateVolumeTool()
-		{
-		}
+		public CreateVolumeTool() {}
 
 		/// <summary>
 		/// Called by the framework to initialize this tool.
@@ -82,7 +72,8 @@ namespace ClearCanvas.ImageViewer.Tools.Volume.VTK
 			}
 		}
 
-		private static void VolumeShelf_Closed(object sender, ClosedEventArgs e) {
+		private static void VolumeShelf_Closed(object sender, ClosedEventArgs e)
+		{
 			// note that the component is thrown away when the shelf is closed by the user
 			_volumeShelf.Closed -= VolumeShelf_Closed;
 			_volumeShelf = null;

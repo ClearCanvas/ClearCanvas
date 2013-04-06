@@ -22,37 +22,32 @@
 
 #endregion
 
-using System;
-using System.Drawing;
-using System.Diagnostics;
 using ClearCanvas.Common;
-using ClearCanvas.ImageViewer.Imaging;
 using ClearCanvas.Desktop;
-using ClearCanvas.Desktop.Tools;
 using ClearCanvas.Desktop.Actions;
-using vtk;
-using ClearCanvas.ImageViewer.InputManagement;
 using ClearCanvas.ImageViewer.BaseTools;
+using ClearCanvas.ImageViewer.InputManagement;
+using vtk;
 
 namespace ClearCanvas.ImageViewer.Tools.Volume.VTK
 {
 	[MouseToolButton(XMouseButtons.Left, false)]
 	[MenuAction("activate", "imageviewer-contextmenu/Rotate Volume", "Select", Flags = ClickActionFlags.CheckAction)]
 	[ButtonAction("activate", "global-toolbars/ToolbarsVolume/RotateVolume", "Select", Flags = ClickActionFlags.CheckAction)]
-    [CheckedStateObserver("activate", "Active", "ActivationChanged")]
-    [Tooltip("activate", "Rotate Volume")]
-	[IconSet("activate", IconScheme.Colour, "Icons.CreateVolumeToolSmall.png", "Icons.CreateVolumeToolLarge.png", "Icons.CreateVolumeToolLarge.png")]
+	[CheckedStateObserver("activate", "Active", "ActivationChanged")]
+	[Tooltip("activate", "Rotate Volume")]
+	[IconSet("activate", "Icons.CreateVolumeToolSmall.png", "Icons.CreateVolumeToolLarge.png", "Icons.CreateVolumeToolLarge.png")]
 	[GroupHint("activate", "Tools.VolumeImage.Manipulation.Rotate")]
-
-	[ExtensionOf(typeof(ImageViewerToolExtensionPoint))]
+	//
+	[ExtensionOf(typeof (ImageViewerToolExtensionPoint))]
 	public class RotateVolumeTool : MouseImageViewerTool
 	{
 		public RotateVolumeTool()
-  		{
+		{
 			this.CursorToken = new CursorToken("Icons.CreateVolumeToolSmall.png", this.GetType().Assembly);
 		}
 
-		vtkGenericRenderWindowInteractor GetInteractor(IPresentationImage selectedImage)
+		private vtkGenericRenderWindowInteractor GetInteractor(IPresentationImage selectedImage)
 		{
 			if (selectedImage == null)
 				return null;

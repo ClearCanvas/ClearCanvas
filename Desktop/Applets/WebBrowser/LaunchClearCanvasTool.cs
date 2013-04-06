@@ -22,44 +22,33 @@
 
 #endregion
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 using ClearCanvas.Common;
-using ClearCanvas.Desktop;
-using ClearCanvas.Desktop.Tools;
 using ClearCanvas.Desktop.Actions;
-
+using ClearCanvas.Desktop.Tools;
 
 namespace ClearCanvas.Desktop.Applets.WebBrowser
 {
 	[ButtonAction("activate1", "webbrowser-toolbar/ClearCanvas", "LaunchClearCanvas")]
 	[Tooltip("activate1", "Launch ClearCanvas")]
-	[IconSet("activate1", IconScheme.Colour, "Icons.ClearCanvasToolSmall.png", "Icons.ClearCanvasToolSmall.png", "Icons.ClearCanvasToolSmall.png")]
-
-	[ButtonAction("activate2", "webbrowser-toolbar/Discussion Forum", "LaunchDiscussionForum")]
-	[Tooltip("activate2", "Launch ClearCanvas Discussion Forum")]
-	[IconSet("activate2", IconScheme.Colour, "Icons.ClearCanvasToolSmall.png", "Icons.ClearCanvasToolSmall.png", "Icons.ClearCanvasToolSmall.png")]
-
-	[ExtensionOf(typeof(WebBrowserToolExtensionPoint))]
+	[IconSet("activate1", "Icons.ClearCanvasToolSmall.png", "Icons.ClearCanvasToolSmall.png", "Icons.ClearCanvasToolSmall.png")]
+	//
+	[ButtonAction("activate2", "webbrowser-toolbar/ClearCanvas on GitHub", "LaunchGitHub")]
+	[Tooltip("activate2", "Launch ClearCanvas on GitHub")]
+	[IconSet("activate2", "Icons.ClearCanvasToolSmall.png", "Icons.ClearCanvasToolSmall.png", "Icons.ClearCanvasToolSmall.png")]
+	//
+	[ExtensionOf(typeof (WebBrowserToolExtensionPoint))]
 	public class LaunchClearCanvasTool : Tool<IWebBrowserToolContext>
 	{
-		public LaunchClearCanvasTool()
+		public void LaunchClearCanvas()
 		{
-
+			Context.Url = "http://www.clearcanvas.ca";
+			Context.Go();
 		}
 
-		private void LaunchClearCanvas()
+		public void LaunchGitHub()
 		{
-			this.Context.Url = "http://www.clearcanvas.ca";
-			this.Context.Go();
-		}
-
-		private void LaunchDiscussionForum()
-		{
-			this.Context.Url = "http://www.clearcanvas.ca/dnn/Community/Forums/tabid/69/Default.aspx";
-			this.Context.Go();
+			Context.Url = "https://github.com/ClearCanvas";
+			Context.Go();
 		}
 	}
 }
