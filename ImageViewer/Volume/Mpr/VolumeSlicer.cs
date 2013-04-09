@@ -30,7 +30,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Threading;
 using ClearCanvas.Common;
 using ClearCanvas.Dicom;
 using ClearCanvas.ImageViewer.Common;
@@ -310,11 +309,11 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 		{
 			using (vtkImageReslice reslicer = new vtkImageReslice())
 			{
-			    VtkHelper.RegisterVtkErrorEvents(reslicer);
+				VtkHelper.RegisterVtkErrorEvents(reslicer);
 
 				// Obtain a pinned VTK volume for the reslicer. We'll release this when
 				//	VTK is done reslicing.
-				using (var x = _volume.Volume.GetVtkVolumeHandle())
+				using (var x = _volume.Volume.CreateVtkVolumeHandle())
 				{
 					reslicer.SetInput(x.vtkImageData);
 					reslicer.SetInformationInput(x.vtkImageData);
@@ -329,52 +328,52 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 					//	Effective spacing is the minimum of these three.
 					reslicer.SetOutputSpacing(_volume.Volume.VoxelSpacing.X, _volume.Volume.VoxelSpacing.Y, _volume.Volume.VoxelSpacing.Z);
 
-                    using (vtkMatrix4x4 resliceAxesMatrix = VtkHelper.ConvertToVtkMatrix(resliceAxes))
-                    {
-                        reslicer.SetResliceAxes(resliceAxesMatrix);
+					using (vtkMatrix4x4 resliceAxesMatrix = VtkHelper.ConvertToVtkMatrix(resliceAxes))
+					{
+						reslicer.SetResliceAxes(resliceAxesMatrix);
 
-                        // Clamp the output based on the slice extent
-                        int sliceExtentX = GetSliceExtentX();
-                        int sliceExtentY = GetSliceExtentY();
-                        reslicer.SetOutputExtent(0, sliceExtentX - 1, 0, sliceExtentY - 1, 0, 0);
+						// Clamp the output based on the slice extent
+						int sliceExtentX = GetSliceExtentX();
+						int sliceExtentY = GetSliceExtentY();
+						reslicer.SetOutputExtent(0, sliceExtentX - 1, 0, sliceExtentY - 1, 0, 0);
 
-                        // Set the output origin to reflect the slice through point. The slice extent is
-                        //	centered on the slice through point.
-                        // VTK output origin is derived from the center image being 0,0
-                        float originX = -sliceExtentX*EffectiveSpacing/2;
-                        float originY = -sliceExtentY*EffectiveSpacing/2;
-                        reslicer.SetOutputOrigin(originX, originY, 0);
+						// Set the output origin to reflect the slice through point. The slice extent is
+						//	centered on the slice through point.
+						// VTK output origin is derived from the center image being 0,0
+						float originX = -sliceExtentX*EffectiveSpacing/2;
+						float originY = -sliceExtentY*EffectiveSpacing/2;
+						reslicer.SetOutputOrigin(originX, originY, 0);
 
-                        switch (_slicerParams.InterpolationMode)
-                        {
-                            case VolumeSlicerInterpolationMode.NearestNeighbor:
-                                reslicer.SetInterpolationModeToNearestNeighbor();
-                                break;
-                            case VolumeSlicerInterpolationMode.Linear:
-                                reslicer.SetInterpolationModeToLinear();
-                                break;
-                            case VolumeSlicerInterpolationMode.Cubic:
-                                reslicer.SetInterpolationModeToCubic();
-                                break;
-                        }
+						switch (_slicerParams.InterpolationMode)
+						{
+							case VolumeSlicerInterpolationMode.NearestNeighbor:
+								reslicer.SetInterpolationModeToNearestNeighbor();
+								break;
+							case VolumeSlicerInterpolationMode.Linear:
+								reslicer.SetInterpolationModeToLinear();
+								break;
+							case VolumeSlicerInterpolationMode.Cubic:
+								reslicer.SetInterpolationModeToCubic();
+								break;
+						}
 
-                        using (vtkExecutive exec = reslicer.GetExecutive())
-                        {
-                            VtkHelper.RegisterVtkErrorEvents(exec);
-                            exec.Update();
-                        }
+						using (vtkExecutive exec = reslicer.GetExecutive())
+						{
+							VtkHelper.RegisterVtkErrorEvents(exec);
+							exec.Update();
+						}
 
-                        var output = reslicer.GetOutput();
-                        //Just in case VTK uses the matrix internally.
-                        return output;
-                    }
-                }
+						var output = reslicer.GetOutput();
+						//Just in case VTK uses the matrix internally.
+						return output;
+					}
+				}
 			}
 		}
 
 		private static byte[] CreatePixelDataFromVtkSlice(vtkImageData sliceImageData)
 		{
-            int[] sliceDimensions = sliceImageData.GetDimensions();
+			int[] sliceDimensions = sliceImageData.GetDimensions();
 			int sliceDataSize = sliceDimensions[0]*sliceDimensions[1];
 			IntPtr sliceDataPtr = sliceImageData.GetScalarPointer();
 
@@ -385,8 +384,6 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 			Marshal.Copy(sliceDataPtr, pixelData, 0, sliceDataSize*sizeof (short));
 			return pixelData;
 		}
-
-
 
 		#region Slabbing Code
 
@@ -526,9 +523,9 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 		}
 #endif
 
-        #endregion
+		#endregion
 
-        // Derived frome either a specified extent in millimeters or from the volume dimensions (default)
+		// Derived frome either a specified extent in millimeters or from the volume dimensions (default)
 		private int GetSliceExtentX()
 		{
 			if (_slicerParams.SliceExtentXMillimeters != 0f)

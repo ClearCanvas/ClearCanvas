@@ -90,6 +90,12 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 
 		#region Constructors
 
+		static Volume()
+		{
+			// Volume is the root of all VTK use through the API, so this is the place to initialize it
+			VtkHelper.StaticInitializationHack();
+		}
+
 		/// <summary>
 		/// Constructs a <see cref="Volume"/> using a volume data array of signed 16-bit words.
 		/// </summary>
@@ -97,7 +103,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 		/// Consider using one of the static helpers such as <see cref="Create(ClearCanvas.ImageViewer.IDisplaySet)"/> to construct and automatically fill a <see cref="Volume"/>.
 		/// </remarks>
 		public Volume(short[] data, Size3D dimensions, Vector3D spacing, Vector3D originPatient,
-					  Matrix orientationPatient, IList<IDicomAttributeProvider> dicomAttributeModel, int paddingValue, string sourceSeriesInstanceUid)
+		              Matrix orientationPatient, IList<IDicomAttributeProvider> dicomAttributeModel, int paddingValue, string sourceSeriesInstanceUid)
 			: this(data, null, dimensions, spacing, originPatient, orientationPatient,
 			       VolumeSopDataSourcePrototype.Create(dicomAttributeModel, 16, 16, true), paddingValue, sourceSeriesInstanceUid, 0, 0) {}
 
@@ -108,14 +114,12 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 		/// Consider using one of the static helpers such as <see cref="Create(ClearCanvas.ImageViewer.IDisplaySet)"/> to construct and automatically fill a <see cref="Volume"/>.
 		/// </remarks>
 		public Volume(ushort[] data, Size3D dimensions, Vector3D spacing, Vector3D originPatient,
-					  Matrix orientationPatient, IList<IDicomAttributeProvider> dicomAttributeModel, int paddingValue, string sourceSeriesInstanceUid)
+		              Matrix orientationPatient, IList<IDicomAttributeProvider> dicomAttributeModel, int paddingValue, string sourceSeriesInstanceUid)
 			: this(null, data, dimensions, spacing, originPatient, orientationPatient,
 			       VolumeSopDataSourcePrototype.Create(dicomAttributeModel, 16, 16, false), paddingValue, sourceSeriesInstanceUid, 0, 0) {}
 
 		private Volume(short[] dataInt16, ushort[] dataUInt16, Size3D dimensions, Vector3D spacing, Vector3D originPatient, Matrix orientationPatient, VolumeSopDataSourcePrototype sopDataSourcePrototype, int paddingValue, string sourceSeriesInstanceUid, int minVolumeValue, int maxVolumeValue)
 		{
-            VtkHelper.StaticInitializationHack();
-
 			Platform.CheckTrue(dataInt16 != null ^ dataUInt16 != null, "Exactly one of dataInt16 and dataUInt16 must be non-null.");
 			_volumeDataInt16 = dataInt16;
 			_volumeDataUInt16 = dataUInt16;
@@ -434,8 +438,9 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 			get { return _arrayDimensions; }
 		}
 
-		#region VTK volume wrapper
+		#endregion
 
+		#region VTK volume wrapper
 
 		private vtkImageData CreateVtkVolume()
 		{
@@ -447,7 +452,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 			vtkVolume.SetOrigin(Origin.X, Origin.Y, Origin.Z);
 			vtkVolume.SetSpacing(VoxelSpacing.X, VoxelSpacing.Y, VoxelSpacing.Z);
 
-			if (!this.Signed)
+			if (!Signed)
 			{
 				using (vtkUnsignedShortArray array = VtkHelper.ConvertToVtkUnsignedShortArray(_volumeDataUInt16))
 				{
@@ -464,6 +469,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 				{
 					vtkVolume.SetScalarTypeToShort();
 					vtkVolume.GetPointData().SetScalars(array);
+
 					// This call is necessary to ensure vtkImageData data's info is correct (e.g. updates WholeExtent values)
 					vtkVolume.UpdateInformation();
 				}
@@ -472,77 +478,13 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 			return vtkVolume;
 		}
 
-		internal VtkVolumeHandle GetVtkVolumeHandle()
+		internal VtkVolumeHandle CreateVtkVolumeHandle()
 		{
-            //Technically, the volume should be pinned before creating the "volume" because it stores a pointer to the array.
-            GCHandle volumeArrayPinned = !Signed 
-                ? GCHandle.Alloc(_volumeDataUInt16, GCHandleType.Pinned) 
-                : GCHandle.Alloc(_volumeDataInt16, GCHandleType.Pinned);
-
-            var vtkVolume = CreateVtkVolume();
-            return new VtkVolumeHandle(vtkVolume, volumeArrayPinned);
+			// Technically, the volume should be pinned before creating the "volume" because it stores a pointer to the array.
+			var volumeArrayPinned = GCHandle.Alloc(!Signed ? (Array) _volumeDataUInt16 : _volumeDataInt16, GCHandleType.Pinned);
+			var vtkVolume = CreateVtkVolume();
+			return new VtkVolumeHandle(vtkVolume, volumeArrayPinned);
 		}
-
-		internal class VtkVolumeHandle : IDisposable
-		{
-		    private bool _disposed = false;
-			private GCHandle _volumeArrayPinned;
-			private vtkImageData _vtkVolume;
-
-			public VtkVolumeHandle(vtkImageData vtkVolume, GCHandle volumeArrayPinned)
-			{
-				_vtkVolume = vtkVolume;
-			    _volumeArrayPinned = volumeArrayPinned;
-			}
-
-			~VtkVolumeHandle()
-			{
-				try
-				{
-					Dispose(false);
-				}
-				catch (Exception ex)
-				{
-					Platform.Log(LogLevel.Debug, ex);
-				}
-			}
-
-			public void Dispose()
-			{
-				try
-				{
-					Dispose(true);
-					GC.SuppressFinalize(this);
-				}
-				catch (Exception ex)
-				{
-					Platform.Log(LogLevel.Debug, ex);
-				}
-			}
-
-			private void Dispose(bool disposing)
-			{
-				if (_disposed)
-                    return;
-
-                if (disposing && _vtkVolume != null)
-				{
-					_vtkVolume.GetPointData().Dispose();
-					_vtkVolume.Dispose();
-					_vtkVolume = null;
-				}
-
-			    _volumeArrayPinned.Free();
-                _disposed = true;
-            }
-
-			public vtkImageData vtkImageData
-			{
-				get { return _vtkVolume; }
-			}
-		}
-
-		#endregion
 
 		#endregion
 
@@ -560,12 +502,12 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 		{
 			get
 			{
-				if (!this.Contains(x,y,z))
+				if (!this.Contains(x, y, z))
 					throw new ArgumentOutOfRangeException();
 				if (this.Signed)
 					return _volumeDataInt16[x + _arrayDimensions.Width*(y + _arrayDimensions.Height*z)];
 				else
-					return _volumeDataUInt16[x + _arrayDimensions.Width * (y + _arrayDimensions.Height * z)];
+					return _volumeDataUInt16[x + _arrayDimensions.Width*(y + _arrayDimensions.Height*z)];
 			}
 		}
 

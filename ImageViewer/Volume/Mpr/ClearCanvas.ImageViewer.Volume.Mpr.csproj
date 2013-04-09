@@ -166,6 +166,7 @@
     <Compile Include="VolumeSliceSopDataSource.cs" />
     <Compile Include="VolumeSopDataSourcePrototype.cs" />
     <Compile Include="Utilities\VtkHelper.cs" />
+    <Compile Include="VtkVolumeHandle.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Common\ClearCanvas.Common.csproj">

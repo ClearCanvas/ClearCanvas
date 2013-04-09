@@ -54,15 +54,15 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr.Utilities
         private static readonly object _initializationLock = new object();
         private static volatile bool _initialized;
 
-        internal static void StaticInitializationHack()
-        {
-           if (_initialized)
-               return;
+		internal static void StaticInitializationHack()
+		{
+			if (_initialized)
+				return;
 
-            lock (_initializationLock)
-            {
+			lock (_initializationLock)
+			{
                 if (_initialized)
-                    return;
+					return;
 
                 //Set _initialized right away, just in case there are recursive calls on the same thread.
                 _initialized = true;
@@ -70,129 +70,129 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr.Utilities
                 //Create one signed and one unsigned, just to make sure.
                 CreateAndResliceVolume(false);
                 CreateAndResliceVolume(true);
-            }
-        }
+			}
+		}
 
         private static void CreateAndResliceVolume(bool signed)
-        {
-            const int width = 512;
-            const int height = 512;
-            const int depth = 200;
+		{
+			const int width = 10;
+			const int height = 10;
+			const int depth = 10;
 
-            if (signed)
-            {
-                var data = new short[width * height * depth];
-                using (var vtk = CreateVtkVolume(data, width, height, depth))
-                {
-                    ResliceVolume(vtk);
-                    vtk.GetPointData().Dispose();
-                }
-            }
-            else
-            {
-                var data = new ushort[width * height * depth];
-                using (var vtk = CreateVtkVolume(data, width, height, depth))
-                {
-                    ResliceVolume(vtk);
-                    vtk.GetPointData().Dispose();
-                }
-            }
-        }
+			if (signed)
+			{
+				var data = new short[width*height*depth];
+				using (var vtk = CreateVtkVolume(data, width, height, depth))
+				{
+					ResliceVolume(vtk);
+					vtk.GetPointData().Dispose();
+				}
+			}
+			else
+			{
+				var data = new ushort[width*height*depth];
+				using (var vtk = CreateVtkVolume(data, width, height, depth))
+				{
+					ResliceVolume(vtk);
+					vtk.GetPointData().Dispose();
+				}
+			}
+		}
 
-        private static void ResliceVolume(vtkImageData volume)
-        {
+		private static void ResliceVolume(vtkImageData volume)
+		{
             using (var reslicer = new vtkImageReslice())
-            {
-                RegisterVtkErrorEvents(reslicer);
-                reslicer.SetInput(volume);
-                reslicer.SetInformationInput(volume);
+			{
+				RegisterVtkErrorEvents(reslicer);
+				reslicer.SetInput(volume);
+				reslicer.SetInformationInput(volume);
 
-                // Must instruct reslicer to output 2D images
-                reslicer.SetOutputDimensionality(2);
+				// Must instruct reslicer to output 2D images
+				reslicer.SetOutputDimensionality(2);
 
-                // Use the volume's padding value for all pixels that are outside the volume
-                reslicer.SetBackgroundLevel(0);
+				// Use the volume's padding value for all pixels that are outside the volume
+				reslicer.SetBackgroundLevel(0);
 
-                // This ensures VTK obeys the real spacing, results in all VTK slices being isotropic.
-                //	Effective spacing is the minimum of these three.
-                reslicer.SetOutputSpacing(1.0, 1.0, 1.0);
+				// This ensures VTK obeys the real spacing, results in all VTK slices being isotropic.
+				//	Effective spacing is the minimum of these three.
+				reslicer.SetOutputSpacing(1.0, 1.0, 1.0);
 
                 using (vtkMatrix4x4 resliceAxesMatrix = ConvertToVtkMatrix(new double[,] {{1, 0, 0, 0}, {0, 1, 0, 0}, {0, 0, 1, 0}, {0, 0, 0, 1}}))
-                {
-                    reslicer.SetResliceAxes(resliceAxesMatrix);
+				{
+					reslicer.SetResliceAxes(resliceAxesMatrix);
 
-                    // Clamp the output based on the slice extent
-                    const int sliceExtentX = 50;
-                    const int sliceExtentY = 50;
-                    reslicer.SetOutputExtent(0, sliceExtentX - 1, 0, sliceExtentY - 1, 0, 0);
+					// Clamp the output based on the slice extent
+					const int sliceExtentX = 50;
+					const int sliceExtentY = 50;
+					reslicer.SetOutputExtent(0, sliceExtentX - 1, 0, sliceExtentY - 1, 0, 0);
 
-                    // Set the output origin to reflect the slice through point. The slice extent is
-                    //	centered on the slice through point.
-                    // VTK output origin is derived from the center image being 0,0
-                    const float originX = -sliceExtentX*1f/2;
-                    const float originY = -sliceExtentY*1f/2;
-                    reslicer.SetOutputOrigin(originX, originY, 0);
+					// Set the output origin to reflect the slice through point. The slice extent is
+					//	centered on the slice through point.
+					// VTK output origin is derived from the center image being 0,0
+					const float originX = -sliceExtentX*1f/2;
+					const float originY = -sliceExtentY*1f/2;
+					reslicer.SetOutputOrigin(originX, originY, 0);
 
-                    reslicer.SetInterpolationModeToLinear();
+					reslicer.SetInterpolationModeToLinear();
 
-                    using (vtkExecutive exec = reslicer.GetExecutive())
-                    {
-                        RegisterVtkErrorEvents(exec);
-                        exec.Update();
-                    }
+					using (vtkExecutive exec = reslicer.GetExecutive())
+					{
+						RegisterVtkErrorEvents(exec);
+						exec.Update();
+					}
 
-                    using (var output = reslicer.GetOutput())
-                    {
-                        // just to give it something to do with the output
+					using (var output = reslicer.GetOutput())
+					{
+						// just to give it something to do with the output
                         GC.KeepAlive(output);
-                    }
-                }
-            }
-        }
+					}
+				}
+			}
+		}
 
-        private static vtkImageData CreateVtkVolume(ushort[] data, int width, int height, int depth)
-        {
-            var vtkVolume = new vtkImageData();
+		private static vtkImageData CreateVtkVolume(ushort[] data, int width, int height, int depth)
+		{
+			var vtkVolume = new vtkImageData();
 
-            RegisterVtkErrorEvents(vtkVolume);
+			RegisterVtkErrorEvents(vtkVolume);
 
-            vtkVolume.SetDimensions(width, height, depth);
-            vtkVolume.SetOrigin(0, 0, 0);
-            vtkVolume.SetSpacing(1.0, 1.0, 1.0);
+			vtkVolume.SetDimensions(width, height, depth);
+			vtkVolume.SetOrigin(0, 0, 0);
+			vtkVolume.SetSpacing(1.0, 1.0, 1.0);
 
-            using (var array = ConvertToVtkUnsignedShortArray(data))
-            {
-                vtkVolume.SetScalarTypeToUnsignedShort();
-                vtkVolume.GetPointData().SetScalars(array);
+			using (var array = ConvertToVtkUnsignedShortArray(data))
+			{
+				vtkVolume.SetScalarTypeToUnsignedShort();
+				vtkVolume.GetPointData().SetScalars(array);
 
-                // This call is necessary to ensure vtkImageData data's info is correct (e.g. updates WholeExtent values)
-                vtkVolume.UpdateInformation();
-            }
+				// This call is necessary to ensure vtkImageData data's info is correct (e.g. updates WholeExtent values)
+				vtkVolume.UpdateInformation();
+			}
 
-            return vtkVolume;
-        }
+			return vtkVolume;
+		}
 
-        private static vtkImageData CreateVtkVolume(short[] data, int width, int height, int depth)
-        {
-            var vtkVolume = new vtkImageData();
+		private static vtkImageData CreateVtkVolume(short[] data, int width, int height, int depth)
+		{
+			var vtkVolume = new vtkImageData();
 
-            RegisterVtkErrorEvents(vtkVolume);
+			RegisterVtkErrorEvents(vtkVolume);
 
-            vtkVolume.SetDimensions(width, height, depth);
-            vtkVolume.SetOrigin(0, 0, 0);
-            vtkVolume.SetSpacing(1.0, 1.0, 1.0);
+			vtkVolume.SetDimensions(width, height, depth);
+			vtkVolume.SetOrigin(0, 0, 0);
+			vtkVolume.SetSpacing(1.0, 1.0, 1.0);
 
-            using (var array = ConvertToVtkShortArray(data))
-            {
-                vtkVolume.SetScalarTypeToShort();
-                vtkVolume.GetPointData().SetScalars(array);
+			using (var array = ConvertToVtkShortArray(data))
+			{
+				vtkVolume.SetScalarTypeToShort();
+				vtkVolume.GetPointData().SetScalars(array);
 
-                // This call is necessary to ensure vtkImageData data's info is correct (e.g. updates WholeExtent values)
-                vtkVolume.UpdateInformation();
-            }
+				// This call is necessary to ensure vtkImageData data's info is correct (e.g. updates WholeExtent values)
+				vtkVolume.UpdateInformation();
+			}
 
-            return vtkVolume;
-        }
+			return vtkVolume;
+		}
 
         private static vtkMatrix4x4 ConvertToVtkMatrix(double[,] matrix)
         {
@@ -205,11 +205,11 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr.Utilities
             return vtkMatrix;
         }
 
-	    #endregion
+		#endregion
 
-        #region Error Handling helpers
+		#region Error Handling helpers
 
-        public static void RegisterVtkErrorEvents(vtkObject obj)
+		public static void RegisterVtkErrorEvents(vtkObject obj)
 		{
 			obj.AddObserver((uint) EventIds.ErrorEvent, VtkEventCallback);
 			obj.AddObserver((uint) EventIds.WarningEvent, VtkEventCallback);
@@ -277,5 +277,5 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr.Utilities
 		}
 
 		#endregion
-    }
+	}
 }
