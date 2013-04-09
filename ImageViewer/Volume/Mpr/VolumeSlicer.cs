@@ -281,8 +281,6 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 		// This method is used by the VolumeSlice to generate pixel data on demand
 		internal byte[] CreateSliceNormalizedPixelData(Vector3D throughPoint)
 		{
-            VtkHelper.StaticInitializationHack();
-
 			Matrix resliceAxes = new Matrix(_slicerParams.SlicingPlaneRotation);
 			resliceAxes[3, 0] = throughPoint.X;
 			resliceAxes[3, 1] = throughPoint.Y;
@@ -310,8 +308,6 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 		// Extract slice in specified orientation
 		private vtkImageData GenerateVtkSlice(Matrix resliceAxes)
 		{
-            VtkHelper.StaticInitializationHack();
-
 			using (vtkImageReslice reslicer = new vtkImageReslice())
 			{
 			    VtkHelper.RegisterVtkErrorEvents(reslicer);
@@ -378,8 +374,6 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 
 		private static byte[] CreatePixelDataFromVtkSlice(vtkImageData sliceImageData)
 		{
-            VtkHelper.StaticInitializationHack();
-            
             int[] sliceDimensions = sliceImageData.GetDimensions();
 			int sliceDataSize = sliceDimensions[0]*sliceDimensions[1];
 			IntPtr sliceDataPtr = sliceImageData.GetScalarPointer();

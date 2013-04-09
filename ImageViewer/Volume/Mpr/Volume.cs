@@ -439,8 +439,6 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 
 		private vtkImageData CreateVtkVolume()
 		{
-            VtkHelper.StaticInitializationHack();
-
 			vtkImageData vtkVolume = new vtkImageData();
 
 			VtkHelper.RegisterVtkErrorEvents(vtkVolume);
@@ -476,8 +474,6 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 
 		internal VtkVolumeHandle GetVtkVolumeHandle()
 		{
-            VtkHelper.StaticInitializationHack();
-
             //Technically, the volume should be pinned before creating the "volume" because it stores a pointer to the array.
             GCHandle volumeArrayPinned = !Signed 
                 ? GCHandle.Alloc(_volumeDataUInt16, GCHandleType.Pinned) 
