@@ -29,6 +29,32 @@ GO
 UPDATE [ServerSopClass] SET [ImplicitOnly]=1 WHERE [SopClassUid]='1.2.840.10008.5.1.4.1.1.481.3'
 GO
 
+PRINT N'Adding Support for Breast Tomosynthesis Image Storage'
+GO
+DECLARE @SopClassGUID uniqueidentifier
+DECLARE @ServerPartitionGUID uniqueidentifier
+
+SET @SopClassGUID = NEWID()
+
+INSERT INTO [ImageServer].[dbo].[ServerSopClass] ([GUID],[SopClassUid],[Description],[NonImage])
+VALUES (@SopClassGUID, '1.2.840.10008.5.1.4.1.1.13.1.3', 'Breast Tomosynthesis Image Storage', 1);
+
+DECLARE partition_cursor CURSOR FOR SELECT GUID From ServerPartition
+OPEN partition_cursor
+FETCH NEXT FROM partition_cursor INTO @ServerPartitionGUID
+WHILE @@FETCH_STATUS = 0
+BEGIN
+    INSERT INTO [ImageServer].[dbo].[PartitionSopClass]
+			([GUID],[ServerPartitionGUID],[ServerSopClassGUID],[Enabled])
+		VALUES (newid(), @ServerPartitionGUID, @SopClassGUID, 1)
+    
+    FETCH NEXT FROM partition_cursor INTO @ServerPartitionGUID
+END 
+CLOSE partition_cursor;
+DEALLOCATE partition_cursor;
+
+
+
 IF @@ERROR<>0 AND @@TRANCOUNT>0 ROLLBACK TRANSACTION
 GO
 IF @@TRANCOUNT=0 BEGIN INSERT INTO #tmpErrors (Error) SELECT 1 BEGIN TRANSACTION END

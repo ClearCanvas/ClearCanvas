@@ -52,8 +52,8 @@ namespace ClearCanvas.ImageServer.Services.Common.Misc
 
         public void Start()
         {
+            Platform.Log(LogLevel.Info, "Statistics Collection: {0}", UsageUtilities.IsEnabled? "ON":"OFF");
             _startTimestamp = DateTime.Now; // don't need to use Platform.Time
-
             _timer = new Timer(OnTimer, null, _repeatEvery24Hours, _repeatEvery24Hours);
 
             OnStartup();
