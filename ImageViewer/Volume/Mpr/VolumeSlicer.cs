@@ -30,6 +30,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Threading;
 using ClearCanvas.Common;
 using ClearCanvas.Dicom;
 using ClearCanvas.ImageViewer.Common;
@@ -280,6 +281,8 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 		// This method is used by the VolumeSlice to generate pixel data on demand
 		internal byte[] CreateSliceNormalizedPixelData(Vector3D throughPoint)
 		{
+            VtkHelper.StaticInitializationHack();
+
 			Matrix resliceAxes = new Matrix(_slicerParams.SlicingPlaneRotation);
 			resliceAxes[3, 0] = throughPoint.X;
 			resliceAxes[3, 1] = throughPoint.Y;
@@ -307,6 +310,8 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 		// Extract slice in specified orientation
 		private vtkImageData GenerateVtkSlice(Matrix resliceAxes)
 		{
+            VtkHelper.StaticInitializationHack();
+
 			using (vtkImageReslice reslicer = new vtkImageReslice())
 			{
 			    VtkHelper.RegisterVtkErrorEvents(reslicer);
@@ -373,6 +378,8 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 
 		private static byte[] CreatePixelDataFromVtkSlice(vtkImageData sliceImageData)
 		{
+            VtkHelper.StaticInitializationHack();
+            
             int[] sliceDimensions = sliceImageData.GetDimensions();
 			int sliceDataSize = sliceDimensions[0]*sliceDimensions[1];
 			IntPtr sliceDataPtr = sliceImageData.GetScalarPointer();
@@ -396,6 +403,8 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 	// TODO: Tie into Dicom for slice, will need to adjust thickness at least
 		private vtkImageData GenerateVtkSlab(Matrix resliceAxes, int slabThicknessInVoxels)
 		{
+            VtkHelper.StaticInitializationHack();
+
 			// Thickness should be at least 1
 			if (slabThicknessInVoxels < 1)
 				slabThicknessInVoxels = 1;
@@ -464,6 +473,8 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 
 		private static byte[] MipPixelDataFromVtkSlab(vtkImageData slabImageData)
 		{
+            VtkHelper.StaticInitializationHack();
+
 #if true // Do our own MIP, albeit slowly
 			int[] sliceDimensions = slabImageData.GetDimensions();
 			int sliceDataSize = sliceDimensions[0] * sliceDimensions[1];

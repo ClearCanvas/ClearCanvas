@@ -114,6 +114,8 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 
 		private Volume(short[] dataInt16, ushort[] dataUInt16, Size3D dimensions, Vector3D spacing, Vector3D originPatient, Matrix orientationPatient, VolumeSopDataSourcePrototype sopDataSourcePrototype, int paddingValue, string sourceSeriesInstanceUid, int minVolumeValue, int maxVolumeValue)
 		{
+            VtkHelper.StaticInitializationHack();
+
 			Platform.CheckTrue(dataInt16 != null ^ dataUInt16 != null, "Exactly one of dataInt16 and dataUInt16 must be non-null.");
 			_volumeDataInt16 = dataInt16;
 			_volumeDataUInt16 = dataUInt16;
@@ -437,6 +439,8 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 
 		private vtkImageData CreateVtkVolume()
 		{
+            VtkHelper.StaticInitializationHack();
+
 			vtkImageData vtkVolume = new vtkImageData();
 
 			VtkHelper.RegisterVtkErrorEvents(vtkVolume);
@@ -472,6 +476,8 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 
 		internal VtkVolumeHandle GetVtkVolumeHandle()
 		{
+            VtkHelper.StaticInitializationHack();
+
             //Technically, the volume should be pinned before creating the "volume" because it stores a pointer to the array.
             GCHandle volumeArrayPinned = !Signed 
                 ? GCHandle.Alloc(_volumeDataUInt16, GCHandleType.Pinned) 

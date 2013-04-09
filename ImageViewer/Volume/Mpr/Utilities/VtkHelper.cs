@@ -26,6 +26,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Threading;
 using ClearCanvas.Common;
 using ClearCanvas.ImageViewer.Mathematics;
 using vtk;
@@ -41,6 +42,182 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr.Utilities
 			vtkOutputWindow.SetInstance(fileOutputWindow);
 		}
 
+        private static readonly object _initializationLock = false;
+        private static volatile bool _initializing = false;
+        private static volatile bool _initialized = false;
+
+        internal static void StaticInitializationHack()
+        {
+           if (_initialized)
+               return;
+
+            lock (_initializationLock)
+            {
+                if (_initialized || _initializing)
+                    return;
+
+                _initializing = true;
+                //Create one signed and one unsigned.
+                CreateAndResliceVolume();
+                CreateAndResliceVolume();
+            }
+        }
+
+	    private static int _count = 0;
+        private static void CreateAndResliceVolume()
+        {
+            var width = 512;
+            var height = 512;
+            var depth = 200;
+
+            var count = Interlocked.Increment(ref _count);
+            var signed = count % 2 > 0;
+            if (signed)
+            {
+                var data = new short[width * height * depth];
+                using (var vtk = CreateVtkVolume(data, width, height, depth))
+                {
+                    ResliceVolume(vtk);
+                    vtk.GetPointData().Dispose();
+                }
+            }
+            else
+            {
+                var data = new ushort[width * height * depth];
+                using (var vtk = CreateVtkVolume(data, width, height, depth))
+                {
+                    ResliceVolume(vtk);
+                    vtk.GetPointData().Dispose();
+                }
+            }
+        }
+
+        private static void ResliceVolume(vtkImageData volume)
+        {
+            using (vtkImageReslice reslicer = new vtkImageReslice())
+            {
+                VtkHelper.RegisterVtkErrorEvents(reslicer);
+                {
+                    reslicer.SetInput(volume);
+                    reslicer.SetInformationInput(volume);
+
+                    // Must instruct reslicer to output 2D images
+                    reslicer.SetOutputDimensionality(2);
+
+                    // Use the volume's padding value for all pixels that are outside the volume
+                    reslicer.SetBackgroundLevel(0);
+
+                    // This ensures VTK obeys the real spacing, results in all VTK slices being isotropic.
+                    //	Effective spacing is the minimum of these three.
+                    reslicer.SetOutputSpacing(1.0, 1.0, 1.0);
+
+                    using (vtkMatrix4x4 resliceAxesMatrix = VtkHelper.ConvertToVtkMatrix(new double[,] { { 1, 0, 0, 0 }, { 0, 1, 0, 0 }, { 0, 0, 1, 0 }, { 0, 0, 0, 1 } }))
+                    {
+                        reslicer.SetResliceAxes(resliceAxesMatrix);
+
+                        // Clamp the output based on the slice extent
+                        int sliceExtentX = 50;
+                        int sliceExtentY = 50;
+                        reslicer.SetOutputExtent(0, sliceExtentX - 1, 0, sliceExtentY - 1, 0, 0);
+
+                        // Set the output origin to reflect the slice through point. The slice extent is
+                        //	centered on the slice through point.
+                        // VTK output origin is derived from the center image being 0,0
+                        float originX = -sliceExtentX * 1f / 2;
+                        float originY = -sliceExtentY * 1f / 2;
+                        reslicer.SetOutputOrigin(originX, originY, 0);
+
+                        reslicer.SetInterpolationModeToLinear();
+
+                        //lock (_lock0)
+                        {
+                            using (vtkExecutive exec = reslicer.GetExecutive())
+                            {
+                                VtkHelper.RegisterVtkErrorEvents(exec);
+                                exec.Update();
+                            }
+                        }
+
+                        using (var output = reslicer.GetOutput())
+                        {
+                            // just to give it something to do with the output
+                            if (output == null) ;
+                        }
+
+                        //tput.
+                        //Just in case VTK uses the matrix internally.
+                        //return output;
+                    }
+                }
+            }
+
+        }
+
+        private static vtkImageData CreateVtkVolume(ushort[] data, int width, int height, int depth)
+        {
+            //lock (_lock3)
+            {
+                vtkImageData vtkVolume = new vtkImageData();
+
+                VtkHelper.RegisterVtkErrorEvents(vtkVolume);
+
+                vtkVolume.SetDimensions(width, height, depth);
+                vtkVolume.SetOrigin(0, 0, 0);
+                vtkVolume.SetSpacing(1.0, 1.0, 1.0);
+
+                {
+                    using (var array = VtkHelper.ConvertToVtkUnsignedShortArray(data))
+                    {
+                        //lock (_lock2)
+                        {
+                            vtkVolume.SetScalarTypeToUnsignedShort();
+                        }
+                        vtkVolume.GetPointData().SetScalars(array);
+
+                        // This call is necessary to ensure vtkImageData data's info is correct (e.g. updates WholeExtent values)
+                        //lock (_lock1)
+                        {
+                            vtkVolume.UpdateInformation();
+                        }
+                    }
+                }
+
+                return vtkVolume;
+            }
+        }
+
+        private static vtkImageData CreateVtkVolume(short[] data, int width, int height, int depth)
+        {
+            //lock (_lock3)
+            {
+                vtkImageData vtkVolume = new vtkImageData();
+
+                VtkHelper.RegisterVtkErrorEvents(vtkVolume);
+
+                vtkVolume.SetDimensions(width, height, depth);
+                vtkVolume.SetOrigin(0, 0, 0);
+                vtkVolume.SetSpacing(1.0, 1.0, 1.0);
+
+                {
+                    using (var array = VtkHelper.ConvertToVtkShortArray(data))
+                    {
+                        //lock (_lock2)
+                        {
+                            vtkVolume.SetScalarTypeToShort();
+                        }
+                        vtkVolume.GetPointData().SetScalars(array);
+
+                        // This call is necessary to ensure vtkImageData data's info is correct (e.g. updates WholeExtent values)
+                        //lock (_lock1)
+                        {
+                            vtkVolume.UpdateInformation();
+                        }
+                    }
+                }
+
+                return vtkVolume;
+            }
+        }
 		#region Error Handling helpers
 
 		public static void RegisterVtkErrorEvents(vtkObject obj)
@@ -74,6 +251,17 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr.Utilities
 		#endregion
 
 		#region Convert to VTK helpers
+
+        private static vtkMatrix4x4 ConvertToVtkMatrix(double[,] matrix)
+        {
+            vtkMatrix4x4 vtkMatrix = new vtkMatrix4x4();
+
+            for (int row = 0; row < 4; row++)
+                for (int column = 0; column < 4; column++)
+                    vtkMatrix.SetElement(column, row, matrix[row, column]);
+
+            return vtkMatrix;
+        }
 
 		/// <summary>
 		/// Converts a <see cref="Matrix"/> to a <see cref="vtkMatrix4x4"/>.
@@ -111,5 +299,5 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr.Utilities
 		}
 
 		#endregion
-	}
+    }
 }
