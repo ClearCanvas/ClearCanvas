@@ -30,7 +30,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Threading;
 using ClearCanvas.Common;
 using ClearCanvas.Dicom;
 using ClearCanvas.ImageViewer.Common;
@@ -314,11 +313,10 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 
 				// Obtain a pinned VTK volume for the reslicer. We'll release this when
 				//	VTK is done reslicing.
-				vtkImageData volumeVtkWrapper = _volume.Volume.ObtainPinnedVtkVolume();
-				try
+				using (var x = _volume.Volume.GetVtkVolumeHandle())
 				{
-					reslicer.SetInput(volumeVtkWrapper);
-					reslicer.SetInformationInput(volumeVtkWrapper);
+					reslicer.SetInput(x.vtkImageData);
+					reslicer.SetInformationInput(x.vtkImageData);
 
 					// Must instruct reslicer to output 2D images
 					reslicer.SetOutputDimensionality(2);
@@ -370,16 +368,12 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
                         return output;
                     }
                 }
-				finally
-				{
-					_volume.Volume.ReleasePinnedVtkVolume();
-				}
 			}
 		}
 
 		private static byte[] CreatePixelDataFromVtkSlice(vtkImageData sliceImageData)
 		{
-			int[] sliceDimensions = sliceImageData.GetDimensions();
+            int[] sliceDimensions = sliceImageData.GetDimensions();
 			int sliceDataSize = sliceDimensions[0]*sliceDimensions[1];
 			IntPtr sliceDataPtr = sliceImageData.GetScalarPointer();
 
@@ -390,6 +384,8 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 			Marshal.Copy(sliceDataPtr, pixelData, 0, sliceDataSize*sizeof (short));
 			return pixelData;
 		}
+
+
 
 		#region Slabbing Code
 
@@ -525,9 +521,9 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 		}
 #endif
 
-		#endregion
+        #endregion
 
-		// Derived frome either a specified extent in millimeters or from the volume dimensions (default)
+        // Derived frome either a specified extent in millimeters or from the volume dimensions (default)
 		private int GetSliceExtentX()
 		{
 			if (_slicerParams.SliceExtentXMillimeters != 0f)
