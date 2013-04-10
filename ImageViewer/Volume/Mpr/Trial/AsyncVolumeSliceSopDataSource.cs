@@ -129,6 +129,8 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 		protected class AsyncVolumeSliceSopFrameData : AsyncSopFrameData
 		{
 			private ICachedVolumeReference _cachedVolumeReference;
+			private readonly object _lockSync = new object();
+			private volatile int _lockCount;
 
 			public AsyncVolumeSliceSopFrameData(int frameNumber, AsyncVolumeSliceSopDataSource parent)
 				: base(frameNumber, parent)
@@ -170,7 +172,11 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 			{
 				if (_cachedVolumeReference != null)
 				{
-					_cachedVolumeReference.Lock();
+					lock (_lockSync)
+					{
+						if (_lockCount++ == 0)
+							_cachedVolumeReference.Lock();
+					}
 				}
 			}
 
@@ -178,18 +184,22 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 			{
 				if (_cachedVolumeReference != null)
 				{
-					_cachedVolumeReference.Unlock();
+					lock (_lockSync)
+					{
+						if (--_lockCount == 0)
+							_cachedVolumeReference.Unlock();
+					}
 				}
 			}
 
 			private ICachedVolumeReference _asyncVolumeLoaderReference;
 
-			protected override void AsyncCreateNormalizedPixelData(Action<byte[]> onComplete)
+			protected override void AsyncCreateNormalizedPixelData(Action<byte[], Exception> onComplete)
 			{
 				// only ICachedVolumeReference provides for dynamic loading of the volume - a standard IVolumeReference is a hard reference to a loaded volume
 				if (_cachedVolumeReference == null)
 				{
-					onComplete.Invoke(Parent.Slice.GetPixelData());
+					onComplete.Invoke(Parent.Slice.GetPixelData(), null);
 				}
 				else if (_asyncVolumeLoaderReference == null)
 				{
@@ -197,28 +207,36 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 					volume.Lock();
 					if (!volume.IsLoaded)
 					{
-						volume.ProgressChanged += (s, e) =>
-						                          	{
-						                          		if (volume.IsLoaded)
-						                          		{
-						                          			UpdateProgress(100, null);
-						                          			var pixelData = Parent.Slice.GetPixelData();
-						                          			UpdateProgress(100, pixelData);
-
-						                          			volume.Unlock();
-						                          			volume.Dispose();
-
-						                          			onComplete.Invoke(pixelData);
-
-						                          			_asyncVolumeLoaderReference = null;
-						                          		}
-						                          		else
-						                          		{
-						                          			UpdateProgress((int) volume.Progress, null);
-						                          		}
-						                          	};
+						volume.ProgressChanged += (s, e) => UpdateProgress((int) volume.Progress, null);
 						InitializeProgress((int) volume.Progress);
-						volume.LoadAsync();
+
+						var task = volume.LoadAsync();
+						task.ContinueWith(t =>
+						                  	{
+						                  		try
+						                  		{
+						                  			if (t.IsFaulted)
+						                  			{
+						                  				onComplete.Invoke(null, t.Exception);
+						                  			}
+						                  			else
+						                  			{
+						                  				var pixelData = Parent.Slice.GetPixelData();
+						                  				UpdateProgress(100, pixelData);
+						                  				onComplete.Invoke(pixelData, null);
+						                  			}
+						                  		}
+						                  		catch (Exception ex)
+						                  		{
+						                  			onComplete.Invoke(null, ex);
+						                  		}
+						                  		finally
+						                  		{
+						                  			volume.Unlock();
+						                  			volume.Dispose();
+						                  			_asyncVolumeLoaderReference = null;
+						                  		}
+						                  	});
 					}
 				}
 			}

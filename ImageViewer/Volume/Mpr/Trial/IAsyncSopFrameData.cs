@@ -32,10 +32,14 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 	/// </remarks>
 	public interface IAsyncSopFrameData : ISopFrameData
 	{
+		Exception LastException { get; }
 		int ProgressPercent { get; }
 		event AsyncPixelDataProgressEventHandler ProgressChanged;
 		bool IsLoaded { get; }
 		event AsyncPixelDataEventHandler Loaded;
+		bool IsFaulted { get; }
+		event AsyncPixelDataFaultEventHandler Faulted;
+		IDisposable AcquireLock();
 	}
 
 	/// <remarks>
@@ -53,6 +57,25 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 		public AsyncPixelDataEventArgs(byte[] pixelData)
 		{
 			PixelData = pixelData;
+		}
+	}
+
+	/// <remarks>
+	/// This type is part of a trial API and is not intended for general use.
+	/// </remarks>
+	public delegate void AsyncPixelDataFaultEventHandler(object sender, AsyncPixelDataFaultEventArgs e);
+
+	/// <remarks>
+	/// This type is part of a trial API and is not intended for general use.
+	/// </remarks>
+	public class AsyncPixelDataFaultEventArgs : AsyncPixelDataEventArgs
+	{
+		public Exception Exception { get; private set; }
+
+		public AsyncPixelDataFaultEventArgs(byte[] pixelData, Exception exception)
+			: base(pixelData)
+		{
+			Exception = exception;
 		}
 	}
 

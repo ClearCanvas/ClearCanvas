@@ -127,6 +127,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 			private readonly object _progressEventSyncLock = new object();
 			private event AsyncPixelDataProgressEventHandler _progressChanged;
 			private event AsyncPixelDataEventHandler _loaded;
+			private event AsyncPixelDataFaultEventHandler _faulted;
 			private volatile bool _isLoading;
 
 			private readonly Dictionary<int, byte[]> _overlayData = new Dictionary<int, byte[]>(16);
@@ -234,7 +235,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 									MemoryManager.Add(this);
 
 									Diagnostics.OnLargeObjectAllocated(pixelData.Length);
-									UpdateProgress(100, true, pixelData, false);
+									UpdateProgress(100, true, pixelData, null, false);
 
 									return pixelData;
 								}
@@ -243,7 +244,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 								ProgressPercent = 0;
 								IsLoaded = false;
 
-								AsyncCreateNormalizedPixelData(pd =>
+								AsyncCreateNormalizedPixelData((pd, e) =>
 								                               	{
 								                               		try
 								                               		{
@@ -261,11 +262,14 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 								                               				}
 
 								                               				Diagnostics.OnLargeObjectAllocated(pd.Length);
-								                               				UpdateProgress(100, true, pd, true);
 								                               			}
+
+								                               			// we have to update progress no matter how it finished (success/failed)
+								                               			UpdateProgress(100, true, pd, e, true);
 								                               		}
 								                               		catch (Exception ex)
 								                               		{
+								                               			UpdateProgress(100, true, pd, ex, true);
 								                               			Platform.Log(LogLevel.Error, ex, "Encountered error while asynchronously loading SOP frame data.");
 								                               		}
 								                               	});
@@ -317,7 +321,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 			/// See <see cref="GetNormalizedPixelData"/> for details on the expected format of the byte buffer.
 			/// </remarks>
 			/// <returns>A new byte buffer containing the normalized pixel data.</returns>
-			protected abstract void AsyncCreateNormalizedPixelData(Action<byte[]> onComplete);
+			protected abstract void AsyncCreateNormalizedPixelData(Action<byte[], Exception> onComplete);
 
 			/// <summary>
 			/// Called to determine whether or not the underlying source is ready synchronously
@@ -338,6 +342,11 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 			/// Called to release the lock on the underlying source, thus once again allowing interaction from other threads.
 			/// </summary>
 			protected virtual void UnlockSource() {}
+
+			public IDisposable AcquireLock()
+			{
+				return new Lock(this);
+			}
 
 			/// <summary>
 			/// Gets the normalized overlay data buffer for a particular overlay group (8-bit grayscale).
@@ -472,22 +481,24 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 
 			protected void InitializeProgress(int progressPercent)
 			{
-				UpdateProgress(progressPercent, false, null, false);
+				UpdateProgress(progressPercent, false, null, null, false);
 			}
 
 			protected void UpdateProgress(int progressPercent, byte[] pixelData)
 			{
 				// ensures that the Loaded event only fires once (beacuse we fire it automatically on task completion)
-				UpdateProgress(progressPercent, false, pixelData, true);
+				UpdateProgress(progressPercent, false, pixelData, null, true);
 			}
 
-			private void UpdateProgress(int progressPercent, bool isComplete, byte[] pixelData, bool fireEvents)
+			private void UpdateProgress(int progressPercent, bool isComplete, byte[] pixelData, Exception exception, bool fireEvents)
 			{
 				if (!isComplete && progressPercent == ProgressPercent)
 					return; // ignore this update request if progress hasn't changed and we're not notifying that loading is complete
 
 				ProgressPercent = Math.Min(100, Math.Max(0, progressPercent));
 				IsLoaded = isComplete;
+				IsFaulted = isComplete && exception != null;
+				LastException = exception;
 
 				if (!fireEvents)
 					return;
@@ -497,11 +508,14 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 					var e = new AsyncPixelDataProgressEventArgs(progressPercent, isComplete, pixelData);
 					EventsHelper.Fire(_progressChanged, this, e);
 					if (isComplete) EventsHelper.Fire(_loaded, this, e);
+					if (isComplete && exception != null) EventsHelper.Fire(_faulted, this, new AsyncPixelDataFaultEventArgs(pixelData, exception));
 				}
 			}
 
+			public Exception LastException { get; private set; }
 			public int ProgressPercent { get; private set; }
 			public bool IsLoaded { get; private set; }
+			public bool IsFaulted { get; private set; }
 
 			public event AsyncPixelDataProgressEventHandler ProgressChanged
 			{
@@ -513,6 +527,12 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 			{
 				add { lock (_progressEventSyncLock) _loaded += value; }
 				remove { lock (_progressEventSyncLock) _loaded -= value; }
+			}
+
+			public event AsyncPixelDataFaultEventHandler Faulted
+			{
+				add { lock (_progressEventSyncLock) _faulted += value; }
+				remove { lock (_progressEventSyncLock) _faulted -= value; }
 			}
 
 			#region ILargeObjectContainer Members
@@ -555,6 +575,30 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 			void ILargeObjectContainer.Unlock()
 			{
 				_largeObjectContainerData.Unlock();
+			}
+
+			#endregion
+
+			#region Lock Class
+
+			private class Lock : IDisposable
+			{
+				private AsyncSopFrameData _owner;
+
+				public Lock(AsyncSopFrameData owner)
+				{
+					_owner = owner;
+					_owner.LockSource();
+				}
+
+				public void Dispose()
+				{
+					if (_owner != null)
+					{
+						_owner.UnlockSource();
+						_owner = null;
+					}
+				}
 			}
 
 			#endregion

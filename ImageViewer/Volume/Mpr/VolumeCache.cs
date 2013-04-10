@@ -28,6 +28,7 @@ using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Threading;
+using System.Threading.Tasks;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.ImageViewer.Common;
@@ -121,8 +122,8 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 		/// <param name="onProgress">Optionally specifies a callback method to be called periodically while the loading the volume.</param>
 		/// <param name="onComplete">Optionally specifies a callback method to be called when the volume has been successfully loaded.</param>
 		/// <param name="onError">Optionally specifies a callback method to be called if an exception was thrown while loading the volume.</param>
-		/// <returns>Returns an <see cref="IAsyncResult"/> which can be used to wait for the MPR volume to finish loading.</returns>
-		IAsyncResult LoadAsync(VolumeLoadProgressCallback onProgress = null, VolumeLoadCompletionCallback onComplete = null, VolumeLoadErrorCallback onError = null);
+		/// <returns>Returns a <see cref="Task"/> which can be used to wait for the MPR volume to finish loading.</returns>
+		Task LoadAsync(VolumeLoadProgressCallback onProgress = null, VolumeLoadCompletionCallback onComplete = null, VolumeLoadErrorCallback onError = null);
 
 		/// <summary>
 		/// Loads the MPR volume synchronously.
@@ -428,47 +429,47 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 			#region Asynchronous Loader
 
 			private readonly object _backgroundLoadSyncRoot = new object();
-			private Action _backgroundLoadMethod;
-			private IAsyncResult _backgroundLoadMethodAsyncResult;
+			private Task _backgroundLoadTask;
 
-			private IAsyncResult LoadAsync(VolumeLoadProgressCallback onProgress = null, VolumeLoadCompletionCallback onComplete = null, VolumeLoadErrorCallback onError = null)
+			private Task LoadAsync(VolumeLoadProgressCallback onProgress = null, VolumeLoadCompletionCallback onComplete = null, VolumeLoadErrorCallback onError = null)
 			{
 				AssertNotDisposed();
 
 				if (_volumeReference != null) return null;
-				if (_backgroundLoadMethod != null) return _backgroundLoadMethodAsyncResult;
+				if (_backgroundLoadTask != null) return _backgroundLoadTask;
 
 				lock (_backgroundLoadSyncRoot)
 				{
 					if (_volumeReference != null) return null;
-					if (_backgroundLoadMethod != null) return _backgroundLoadMethodAsyncResult;
+					if (_backgroundLoadTask != null) return _backgroundLoadTask;
 
-					_backgroundLoadMethod = () =>
-					                        	{
-					                        		try
-					                        		{
-					                        			LoadCore(onProgress);
+					_backgroundLoadTask = new Task(() => LoadCore(onProgress));
+					_backgroundLoadTask.ContinueWith(t =>
+					                                 	{
+					                                 		lock (_backgroundLoadSyncRoot)
+					                                 		{
+					                                 			if (t.IsFaulted)
+					                                 			{
+					                                 				if (onError != null)
+					                                 					onError.Invoke(this, t.Exception);
+					                                 				else
+					                                 					Platform.Log(LogLevel.Debug, t.Exception, "Unhandled exception thrown in asynchronous volume loader");
+					                                 			}
+					                                 			else
+					                                 			{
+					                                 				if (onComplete != null)
+					                                 					onComplete.Invoke(this);
+					                                 			}
 
-					                        			if (onComplete != null)
-					                        				onComplete.Invoke(this);
-					                        		}
-					                        		catch (Exception ex)
-					                        		{
-					                        			if (onError != null)
-					                        				onError.Invoke(this, ex);
-					                        			else
-					                        				Platform.Log(LogLevel.Debug, ex, "Unhandled exception thrown in asynchronous volume loader");
-					                        		}
-					                        	};
-					return _backgroundLoadMethodAsyncResult = _backgroundLoadMethod.BeginInvoke(ar =>
-					                                                                            	{
-					                                                                            		lock (_backgroundLoadSyncRoot)
-					                                                                            		{
-					                                                                            			_backgroundLoadMethod.EndInvoke(ar);
-					                                                                            			_backgroundLoadMethod = null;
-					                                                                            			_backgroundLoadMethodAsyncResult = null;
-					                                                                            		}
-					                                                                            	}, null);
+					                                 			if (ReferenceEquals(t, _backgroundLoadTask))
+					                                 			{
+					                                 				_backgroundLoadTask.Dispose();
+					                                 				_backgroundLoadTask = null;
+					                                 			}
+					                                 		}
+					                                 	});
+					_backgroundLoadTask.Start();
+					return _backgroundLoadTask;
 				}
 			}
 
@@ -575,7 +576,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 					get { return _cachedVolume.IsLoaded; }
 				}
 
-				public IAsyncResult LoadAsync(VolumeLoadProgressCallback onProgress = null, VolumeLoadCompletionCallback onComplete = null, VolumeLoadErrorCallback onError = null)
+				public Task LoadAsync(VolumeLoadProgressCallback onProgress = null, VolumeLoadCompletionCallback onComplete = null, VolumeLoadErrorCallback onError = null)
 				{
 					return _cachedVolume.LoadAsync(onProgress, onComplete, onError);
 				}

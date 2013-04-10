@@ -22,6 +22,7 @@
 
 #endregion
 
+using System;
 using ClearCanvas.ImageViewer.StudyManagement;
 
 namespace ClearCanvas.ImageViewer.Volume.Mpr
@@ -64,6 +65,22 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 		{
 			add { if (SupportsAsync) ((IAsyncSopFrameData) ParentImageSop.DataSource.GetFrameData(FrameNumber)).Loaded += value; }
 			remove { if (SupportsAsync) ((IAsyncSopFrameData) ParentImageSop.DataSource.GetFrameData(FrameNumber)).Loaded -= value; }
+		}
+
+		public bool IsAsyncFaulted
+		{
+			get { return !SupportsAsync || ((IAsyncSopFrameData) ParentImageSop.DataSource.GetFrameData(FrameNumber)).IsFaulted; }
+		}
+
+		public event AsyncPixelDataFaultEventHandler AsyncFaulted
+		{
+			add { if (SupportsAsync) ((IAsyncSopFrameData) ParentImageSop.DataSource.GetFrameData(FrameNumber)).Faulted += value; }
+			remove { if (SupportsAsync) ((IAsyncSopFrameData) ParentImageSop.DataSource.GetFrameData(FrameNumber)).Faulted -= value; }
+		}
+
+		public IDisposable AcquireLock()
+		{
+			return SupportsAsync ? ((IAsyncSopFrameData) ParentImageSop.DataSource.GetFrameData(FrameNumber)).AcquireLock() : null;
 		}
 	}
 }

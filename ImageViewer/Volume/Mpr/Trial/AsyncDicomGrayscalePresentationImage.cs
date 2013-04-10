@@ -129,36 +129,47 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 				_delayedEventPublisher = new DelayedEventPublisher(OnDelayedProgressChanged, 1000, DelayedEventPublisherTriggerMode.Periodic);
 
 			var asyncFrame = Frame;
-
-			if (!asyncFrame.IsAsyncLoaded)
+			using (asyncFrame.AcquireLock())
 			{
-				if (!Visible) // if this is an off-screen draw, wait for data to be loaded
+				if (!asyncFrame.IsAsyncLoaded)
 				{
-					lock (_waitPixelData)
+					if (!Visible) // if this is an off-screen draw, wait for data to be loaded
 					{
-						if (!asyncFrame.IsAsyncLoaded)
+						lock (_waitPixelData)
 						{
-							var onFrameAsyncLoaded = new AsyncPixelDataEventHandler((s, e) =>
-							                                                        	{
-							                                                        		lock (_waitPixelData)
-							                                                        		{
-							                                                        			Monitor.Pulse(_waitPixelData);
-							                                                        		}
-							                                                        	});
-							asyncFrame.AsyncLoaded += onFrameAsyncLoaded;
-							asyncFrame.GetNormalizedPixelData();
-							Monitor.Wait(_waitPixelData);
-							asyncFrame.AsyncLoaded -= onFrameAsyncLoaded;
+							if (!asyncFrame.IsAsyncLoaded)
+							{
+								var completionHandler = new EventHandler((s, e) =>
+								                                         	{
+								                                         		lock (_waitPixelData)
+								                                         		{
+								                                         			Monitor.Pulse(_waitPixelData);
+								                                         		}
+								                                         	});
+								var onFrameAsyncLoaded = new AsyncPixelDataEventHandler(completionHandler);
+								var onFrameAsyncFaulted = new AsyncPixelDataFaultEventHandler(completionHandler);
+
+								asyncFrame.AsyncLoaded += onFrameAsyncLoaded;
+								asyncFrame.AsyncFaulted += onFrameAsyncFaulted;
+								asyncFrame.GetNormalizedPixelData();
+
+								// check the flag again, in case the event actually fired before we hooked up the handler
+								if (!asyncFrame.IsAsyncLoaded)
+									Monitor.Wait(_waitPixelData);
+
+								asyncFrame.AsyncLoaded -= onFrameAsyncLoaded;
+								asyncFrame.AsyncFaulted -= onFrameAsyncFaulted;
+							}
 						}
 					}
+					else if (!ApplicationGraphics.OfType<ProgressGraphic>().Any())
+					{
+						ProgressGraphic.Show(this, ApplicationGraphics, true, ProgressBarGraphicStyle.Continuous, false);
+					}
 				}
-				else if (!ApplicationGraphics.OfType<ProgressGraphic>().Any())
-				{
-					ProgressGraphic.Show(this, ApplicationGraphics, true, ProgressBarGraphicStyle.Continuous, false);
-				}
-			}
 
-			base.Draw(drawArgs);
+				base.Draw(drawArgs);
+			}
 		}
 	}
 }
