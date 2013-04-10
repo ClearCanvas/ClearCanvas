@@ -38,7 +38,8 @@ namespace ClearCanvas.ImageViewer.AdvancedImaging.Fusion
 	public class WindowLevelSynchronicityTool : ImageViewerTool
 	{
 		private readonly IList<IDisplaySet> _fusionDisplaySets = new List<IDisplaySet>();
-		private IVoiLutLinear _previousLut;
+		private double _previousWindowWidth;
+		private double _previousWindowCenter;
 		private DelayedEventPublisher _publisher;
 		private SynchronizationContext _synchronizationContext;
 
@@ -158,12 +159,12 @@ namespace ClearCanvas.ImageViewer.AdvancedImaging.Fusion
 			if (sourceVoiLut == null)
 				return;
 
-			if (_previousLut != null &&
-				Equals(_previousLut.WindowCenter, sourceVoiLut.WindowCenter) &&
-				Equals(_previousLut.WindowWidth, sourceVoiLut.WindowWidth))
+			if (Equals(_previousWindowCenter, sourceVoiLut.WindowCenter) &&
+				Equals(_previousWindowWidth, sourceVoiLut.WindowWidth))
 				return;
 
-			_previousLut = (IVoiLutLinear)sourceVoiLut.Clone();
+			_previousWindowCenter = sourceVoiLut.WindowCenter;
+			_previousWindowWidth = sourceVoiLut.WindowWidth;
 
 			_publisher.Publish(e.PresentationImage, EventArgs.Empty);
 		}
