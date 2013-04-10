@@ -313,10 +313,10 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 
 				// Obtain a pinned VTK volume for the reslicer. We'll release this when
 				//	VTK is done reslicing.
-				using (var x = _volume.Volume.CreateVtkVolumeHandle())
+				using (var volume = _volume.Volume.CreateVtkVolumeHandle())
 				{
-					reslicer.SetInput(x.vtkImageData);
-					reslicer.SetInformationInput(x.vtkImageData);
+					reslicer.SetInput(volume.vtkImageData);
+					reslicer.SetInformationInput(volume.vtkImageData);
 
 					// Must instruct reslicer to output 2D images
 					reslicer.SetOutputDimensionality(2);
