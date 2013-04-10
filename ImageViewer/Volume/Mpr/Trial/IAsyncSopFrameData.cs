@@ -32,7 +32,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 	/// </remarks>
 	public interface IAsyncSopFrameData : ISopFrameData
 	{
-		float ProgressPercent { get; }
+		int ProgressPercent { get; }
 		event AsyncPixelDataProgressEventHandler ProgressChanged;
 		bool IsLoaded { get; }
 		event AsyncPixelDataEventHandler Loaded;
@@ -66,10 +66,10 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 	/// </remarks>
 	public class AsyncPixelDataProgressEventArgs : AsyncPixelDataEventArgs
 	{
-		public float ProgressPercent { get; private set; }
+		public int ProgressPercent { get; private set; }
 		public bool IsComplete { get; private set; }
 
-		public AsyncPixelDataProgressEventArgs(float progressPercent, bool isComplete, byte[] pixelData)
+		public AsyncPixelDataProgressEventArgs(int progressPercent, bool isComplete, byte[] pixelData)
 			: base(pixelData)
 		{
 			ProgressPercent = progressPercent;

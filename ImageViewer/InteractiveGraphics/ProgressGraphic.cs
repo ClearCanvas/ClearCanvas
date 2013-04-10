@@ -126,6 +126,12 @@ namespace ClearCanvas.ImageViewer.InteractiveGraphics
 			Dispose();
 		}
 
+		public override bool Visible
+		{
+			get { return base.Visible && ParentPresentationImage != null && ParentPresentationImage.Tile != null; }
+			set { base.Visible = value; }
+		}
+
 		/// <summary>
 		/// Called by the framework just before the <see cref="ProgressGraphic"/> is rendered.
 		/// </summary>
@@ -163,7 +169,7 @@ namespace ClearCanvas.ImageViewer.InteractiveGraphics
 		{
 			// if we didn't get a SynchronizationContext from the thread that calls .Draw(), then we can't update the progress bar
 			// also use the pending flag to ensure we don't excessively post a large number of redraws if the events are happening faster than we can draw
-			if (_synchronizationContext == null || _drawPending) return;
+			if (_synchronizationContext == null || _drawPending || !Visible) return;
 
 			_drawPending = true;
 			_synchronizationContext.Post(s => Draw(), null);
@@ -304,7 +310,7 @@ namespace ClearCanvas.ImageViewer.InteractiveGraphics
 
 					if (_delayedProgressEventPublisher == null)
 					{
-						_delayedProgressEventPublisher = new DelayedEventPublisher<BackgroundTaskProgressEventArgs>(NotifyProgressUpdated, trigger : DelayedEventPublisherTriggerMode.Periodic);
+						_delayedProgressEventPublisher = new DelayedEventPublisher<BackgroundTaskProgressEventArgs>(NotifyProgressUpdated, 1000, DelayedEventPublisherTriggerMode.Periodic);
 						_backgroundTask.ProgressUpdated += _delayedProgressEventPublisher.Publish;
 						_backgroundTask.Terminated += OnTaskTerminated;
 					}

@@ -45,7 +45,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 			IDicomPresentationImage image;
 
 			if (!frame.PhotometricInterpretation.IsColor)
-				image = new AsyncDicomGrayscalePresentationImage(frame);
+				image = frame is AsyncFrame ? new AsyncDicomGrayscalePresentationImage((AsyncFrame) frame) : new DicomGrayscalePresentationImage(frame);
 			else
 				image = new DicomColorPresentationImage(frame);
 

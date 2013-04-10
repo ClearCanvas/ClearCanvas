@@ -28,7 +28,6 @@ using System.Threading;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.ImageViewer.InteractiveGraphics;
 using ClearCanvas.ImageViewer.Rendering;
-using ClearCanvas.ImageViewer.StudyManagement;
 
 namespace ClearCanvas.ImageViewer.Volume.Mpr
 {
@@ -36,25 +35,16 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 	/// This type is part of a trial API and is not intended for general use.
 	/// </remarks>
 	[Cloneable(false)]
-	public class AsyncDicomGrayscalePresentationImage : DicomGrayscalePresentationImage
+	public class AsyncDicomGrayscalePresentationImage : DicomGrayscalePresentationImage, IProgressProvider
 	{
 		[CloneIgnore]
 		private readonly object _waitPixelData = new object();
 
 		[CloneIgnore]
-		private SynchronizationContext _synchronizationContext;
+		private DelayedEventPublisher _delayedEventPublisher;
 
-		[CloneIgnore]
-		private ProgressProvider _progressProvider;
-
-		public AsyncDicomGrayscalePresentationImage(Frame frame)
+		public AsyncDicomGrayscalePresentationImage(AsyncFrame frame)
 			: base(frame)
-		{
-			Initialize();
-		}
-
-		public AsyncDicomGrayscalePresentationImage(IFrameReference frameReference)
-			: base(frameReference)
 		{
 			Initialize();
 		}
@@ -69,127 +59,106 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 
 		private void Initialize()
 		{
-			_progressProvider = new ProgressProvider(this);
-
-			var asyncFrame = Frame as AsyncFrame;
-			if (asyncFrame != null) asyncFrame.AsyncLoaded += AsyncDicomGrayscalePresentationImage_AsyncLoaded;
+			var asyncFrame = Frame;
+			asyncFrame.AsyncProgressChanged += OnAsyncProgressChanged;
 		}
 
 		protected override void Dispose(bool disposing)
 		{
 			if (disposing)
 			{
-				if (_progressProvider != null)
-				{
-					_progressProvider.Dispose();
-					_progressProvider = null;
-				}
+				var asyncFrame = Frame;
+				asyncFrame.AsyncProgressChanged -= OnAsyncProgressChanged;
 
-				var asyncFrame = Frame as AsyncFrame;
-				if (asyncFrame != null) asyncFrame.AsyncLoaded -= AsyncDicomGrayscalePresentationImage_AsyncLoaded;
+				if (_delayedEventPublisher != null)
+				{
+					_delayedEventPublisher.Dispose();
+					_delayedEventPublisher = null;
+				}
 			}
 			base.Dispose(disposing);
 		}
 
 		public string LoadingMessageFormat { get; set; }
 
-		private void AsyncDicomGrayscalePresentationImage_AsyncLoaded(object sender, AsyncPixelDataEventArgs e)
+		public new AsyncFrame Frame
 		{
-			if (Tile != null && _synchronizationContext != null)
-			{
-				//_synchronizationContext.Post(s=>Tile.Draw(), null);
-			}
+			get { return (AsyncFrame) base.Frame; }
 		}
+
+		#region Progress Provider Implementation
+
+		private event EventHandler _progressUpdated;
+
+		private void OnAsyncProgressChanged(object sender, AsyncPixelDataProgressEventArgs e)
+		{
+			if (_delayedEventPublisher != null)
+				_delayedEventPublisher.Publish(sender, e);
+		}
+
+		private void OnDelayedProgressChanged(object sender, EventArgs e)
+		{
+			if (Visible)
+				EventsHelper.Fire(_progressUpdated, this, new EventArgs());
+		}
+
+		event EventHandler IProgressProvider.ProgressUpdated
+		{
+			add { _progressUpdated += value; }
+			remove { _progressUpdated -= value; }
+		}
+
+		bool IProgressProvider.GetProgress(out float progress, out string message)
+		{
+			var asyncFrame = Frame;
+
+			var messageFormat = LoadingMessageFormat;
+			if (string.IsNullOrEmpty(messageFormat))
+				messageFormat = SR.MessageFormatReloading;
+
+			progress = asyncFrame.AsyncProgressPercent/100f;
+			message = string.Format(messageFormat, asyncFrame.AsyncProgressPercent);
+			return !asyncFrame.IsAsyncLoaded;
+		}
+
+		#endregion
 
 		public override void Draw(DrawArgs drawArgs)
 		{
-			var asyncFrame = Frame as AsyncFrame;
-			if (asyncFrame != null)
-			{
-				if (_synchronizationContext == null)
-					_synchronizationContext = SynchronizationContext.Current;
+			if (_delayedEventPublisher == null && SynchronizationContext.Current != null)
+				_delayedEventPublisher = new DelayedEventPublisher(OnDelayedProgressChanged, 1000, DelayedEventPublisherTriggerMode.Periodic);
 
-				if (!asyncFrame.IsAsyncLoaded)
+			var asyncFrame = Frame;
+
+			if (!asyncFrame.IsAsyncLoaded)
+			{
+				if (!Visible) // if this is an off-screen draw, wait for data to be loaded
 				{
-					if (Tile == null)
+					lock (_waitPixelData)
 					{
-						lock (_waitPixelData)
+						if (!asyncFrame.IsAsyncLoaded)
 						{
-							if (!asyncFrame.IsAsyncLoaded)
-							{
-								var onFrameAsyncLoaded = new AsyncPixelDataEventHandler((s, e) =>
-								                                                        	{
-								                                                        		lock (_waitPixelData)
-								                                                        		{
-								                                                        			Monitor.Pulse(_waitPixelData);
-								                                                        		}
-								                                                        	});
-								asyncFrame.AsyncLoaded += onFrameAsyncLoaded;
-								asyncFrame.GetNormalizedPixelData();
-								Monitor.Wait(_waitPixelData);
-								asyncFrame.AsyncLoaded -= onFrameAsyncLoaded;
-							}
+							var onFrameAsyncLoaded = new AsyncPixelDataEventHandler((s, e) =>
+							                                                        	{
+							                                                        		lock (_waitPixelData)
+							                                                        		{
+							                                                        			Monitor.Pulse(_waitPixelData);
+							                                                        		}
+							                                                        	});
+							asyncFrame.AsyncLoaded += onFrameAsyncLoaded;
+							asyncFrame.GetNormalizedPixelData();
+							Monitor.Wait(_waitPixelData);
+							asyncFrame.AsyncLoaded -= onFrameAsyncLoaded;
 						}
 					}
-					else if (!ApplicationGraphics.OfType<ProgressGraphic>().Any())
-					{
-						ProgressGraphic.Show(_progressProvider, ApplicationGraphics, true, ProgressBarGraphicStyle.Continuous, false);
-					}
+				}
+				else if (!ApplicationGraphics.OfType<ProgressGraphic>().Any())
+				{
+					ProgressGraphic.Show(this, ApplicationGraphics, true, ProgressBarGraphicStyle.Continuous, false);
 				}
 			}
 
 			base.Draw(drawArgs);
-		}
-
-		private class ProgressProvider : IProgressProvider, IDisposable
-		{
-			private readonly AsyncDicomGrayscalePresentationImage _owner;
-
-			public ProgressProvider(AsyncDicomGrayscalePresentationImage owner)
-			{
-				_owner = owner;
-
-				var asyncFrame = _owner.Frame as AsyncFrame;
-				if (asyncFrame != null) asyncFrame.AsyncProgressChanged += OnAsyncProgressChanged;
-			}
-
-			public void Dispose()
-			{
-				var asyncFrame = _owner.Frame as AsyncFrame;
-				if (asyncFrame != null) asyncFrame.AsyncProgressChanged -= OnAsyncProgressChanged;
-			}
-
-			private void OnAsyncProgressChanged(object sender, AsyncPixelDataProgressEventArgs e)
-			{
-				EventsHelper.Fire(ProgressUpdated, this, new EventArgs());
-			}
-
-			#region Implementation of IProgressProvider
-
-			public event EventHandler ProgressUpdated;
-
-			public bool GetProgress(out float progress, out string message)
-			{
-				var asyncFrame = _owner.Frame as AsyncFrame;
-				if (asyncFrame != null)
-				{
-					var messageFormat = _owner.LoadingMessageFormat;
-					if (string.IsNullOrEmpty(messageFormat))
-						messageFormat = SR.MessageFormatReloading;
-
-					progress = asyncFrame.AsyncProgressPercent/100f;
-					message = string.Format(messageFormat, asyncFrame.AsyncProgressPercent);
-					return !asyncFrame.IsAsyncLoaded;
-				}
-				else
-				{
-					progress = 100f;
-					message = string.Empty;
-					return false;
-				}
-			}
-
-			#endregion
 		}
 	}
 }

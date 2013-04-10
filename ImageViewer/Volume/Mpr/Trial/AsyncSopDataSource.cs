@@ -25,7 +25,6 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
-using System.Threading.Tasks;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.ImageViewer.Common;
@@ -47,11 +46,6 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 		protected readonly object SyncLock = new object();
 
 		private volatile ISopFrameData[] _frameData;
-
-		/// <summary>
-		/// Constructs a new <see cref="AsyncSopDataSource"/>.
-		/// </summary>
-		protected AsyncSopDataSource() {}
 
 		/// <summary>
 		/// Gets a value indicating whether or not the SOP instance is an image.
@@ -130,9 +124,13 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 			/// </summary>
 			protected readonly object SyncLock = new object();
 
+			private readonly object _progressEventSyncLock = new object();
+			private event AsyncPixelDataProgressEventHandler _progressChanged;
+			private event AsyncPixelDataEventHandler _loaded;
+			private volatile bool _isLoading;
+
 			private readonly Dictionary<int, byte[]> _overlayData = new Dictionary<int, byte[]>(16);
 			private volatile byte[] _pixelData = null;
-			private volatile Task<byte[]> _task;
 
 			private readonly LargeObjectContainerData _largeObjectContainerData = new LargeObjectContainerData(Guid.NewGuid());
 
@@ -217,51 +215,68 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 				_largeObjectContainerData.UpdateLastAccessTime();
 
 				var pixelData = _pixelData;
-				if (pixelData == null && _task == null)
+				if (pixelData == null && !_isLoading)
 				{
 					lock (SyncLock)
 					{
 						pixelData = _pixelData;
-						if (pixelData == null && _task == null)
+						if (pixelData == null && !_isLoading)
 						{
+							LockSource();
 							try
 							{
-								var task = _task = new Task<byte[]>(CreateNormalizedPixelData);
-								task.ContinueWith(t =>
-								                  	{
-								                  		try
-								                  		{
-                                                            _largeObjectContainerData.UpdateLastAccessTime();
+								if (IsReadySynchronously())
+								{
+									_pixelData = pixelData = SyncCreateNormalizedPixelData();
+									_largeObjectContainerData.UpdateLastAccessTime();
 
-								                  		    if (t.Result != null)
-								                  		    {
-                                                                lock (SyncLock)
-                                                                {
-                                                                    Monitor.Pulse(SyncLock);
-                                                                    _pixelData = t.Result;
-                                                                    UpdateLargeObjectInfo();
-                                                                    MemoryManager.Add(this);
-                                                                }
-                                                            
-                                                                Diagnostics.OnLargeObjectAllocated(t.Result.Length);
-                                                                UpdateProgress(100, true, t.Result);
-                                                            }
-								                  		}
-								                  		catch (Exception ex)
-								                  		{
-								                  			Platform.Log(LogLevel.Error, ex, "Encountered error while asynchronously loading SOP frame data.");
-								                  		}
-								                  		_task = null;
-								                  	});
-								UpdateProgress(0, false, null);
-								task.Start();
-							    
-                                //Use Monitor.Wait instead of Task.Wait so we can use the lock inside the task without deadlocking.
-                                Monitor.Wait(SyncLock, 150);
+									UpdateLargeObjectInfo();
+									MemoryManager.Add(this);
+
+									Diagnostics.OnLargeObjectAllocated(pixelData.Length);
+									UpdateProgress(100, true, pixelData, false);
+
+									return pixelData;
+								}
+
+								_isLoading = true;
+								ProgressPercent = 0;
+								IsLoaded = false;
+
+								AsyncCreateNormalizedPixelData(pd =>
+								                               	{
+								                               		try
+								                               		{
+								                               			_largeObjectContainerData.UpdateLastAccessTime();
+
+								                               			if (pd != null)
+								                               			{
+								                               				lock (SyncLock)
+								                               				{
+								                               					Monitor.Pulse(SyncLock);
+								                               					_isLoading = false;
+								                               					_pixelData = pd;
+								                               					UpdateLargeObjectInfo();
+								                               					MemoryManager.Add(this);
+								                               				}
+
+								                               				Diagnostics.OnLargeObjectAllocated(pd.Length);
+								                               				UpdateProgress(100, true, pd, true);
+								                               			}
+								                               		}
+								                               		catch (Exception ex)
+								                               		{
+								                               			Platform.Log(LogLevel.Error, ex, "Encountered error while asynchronously loading SOP frame data.");
+								                               		}
+								                               	});
 							}
 							catch (Exception ex)
 							{
 								Platform.Log(LogLevel.Error, ex, "Encountered error while asynchronously loading SOP frame data.");
+							}
+							finally
+							{
+								UnlockSource();
 							}
 							pixelData = _pixelData;
 						}
@@ -292,15 +307,37 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 				}
 			}
 
+			protected abstract byte[] SyncCreateNormalizedPixelData();
+
 			/// <summary>
-			/// Called by <see cref="GetNormalizedPixelData"/> to create a new byte buffer
+			/// Called by <see cref="GetNormalizedPixelData"/> to start asynchronously creating a new byte buffer
 			/// containing normalized pixel data for this frame (8 or 16-bit grayscale, or 32-bit ARGB).
 			/// </summary>
 			/// <remarks>
 			/// See <see cref="GetNormalizedPixelData"/> for details on the expected format of the byte buffer.
 			/// </remarks>
 			/// <returns>A new byte buffer containing the normalized pixel data.</returns>
-			protected abstract byte[] CreateNormalizedPixelData();
+			protected abstract void AsyncCreateNormalizedPixelData(Action<byte[]> onComplete);
+
+			/// <summary>
+			/// Called to determine whether or not the underlying source is ready synchronously
+			/// and thus does can be executed on the UI thread.
+			/// </summary>
+			/// <returns></returns>
+			protected virtual bool IsReadySynchronously()
+			{
+				return false;
+			}
+
+			/// <summary>
+			/// Called to lock the underlying source, preventing its status from changing due to interaction from other threads.
+			/// </summary>
+			protected virtual void LockSource() {}
+
+			/// <summary>
+			/// Called to release the lock on the underlying source, thus once again allowing interaction from other threads.
+			/// </summary>
+			protected virtual void UnlockSource() {}
 
 			/// <summary>
 			/// Gets the normalized overlay data buffer for a particular overlay group (8-bit grayscale).
@@ -330,7 +367,10 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 				_largeObjectContainerData.UpdateLastAccessTime();
 
 				if (overlayNumber < 1)
-					throw new ArgumentOutOfRangeException("overlayNumber", overlayNumber, "Overlay number must be a positive, non-zero number.");
+				{
+					const string msg = "Overlay number must be a positive, non-zero number.";
+					throw new ArgumentOutOfRangeException("overlayNumber", overlayNumber, msg);
+				}
 
 				lock (SyncLock)
 				{
@@ -373,9 +413,9 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 			/// </remarks>
 			public override sealed void Unload()
 			{
-                _largeObjectContainerData.UpdateLastAccessTime();
-                
-                lock (SyncLock)
+				_largeObjectContainerData.UpdateLastAccessTime();
+
+				lock (SyncLock)
 				{
 					ReportLargeObjectsUnloaded();
 
@@ -393,7 +433,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 			/// </summary>
 			protected virtual void OnUnloaded()
 			{
-				UpdateProgress(0, false, null);
+				InitializeProgress(0);
 			}
 
 			/// <summary>
@@ -430,30 +470,50 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 				}
 			}
 
-			protected void UpdateProgress(float progressPercent, byte[] pixelData)
+			protected void InitializeProgress(int progressPercent)
 			{
-				// ensures that the Loaded event only fires once (beacuse we fire it automatically on task completion)
-				UpdateProgress(progressPercent, false, pixelData);
+				UpdateProgress(progressPercent, false, null, false);
 			}
 
-			private void UpdateProgress(float progressPercent, bool isComplete, byte[] pixelData)
+			protected void UpdateProgress(int progressPercent, byte[] pixelData)
 			{
+				// ensures that the Loaded event only fires once (beacuse we fire it automatically on task completion)
+				UpdateProgress(progressPercent, false, pixelData, true);
+			}
+
+			private void UpdateProgress(int progressPercent, bool isComplete, byte[] pixelData, bool fireEvents)
+			{
+				if (!isComplete && progressPercent == ProgressPercent)
+					return; // ignore this update request if progress hasn't changed and we're not notifying that loading is complete
+
 				ProgressPercent = Math.Min(100, Math.Max(0, progressPercent));
 				IsLoaded = isComplete;
 
-				var e = new AsyncPixelDataProgressEventArgs(progressPercent, isComplete, pixelData);
-				EventsHelper.Fire(ProgressChanged, this, e);
-				if (isComplete) EventsHelper.Fire(Loaded, this, e);
+				if (!fireEvents)
+					return;
+
+				lock (_progressEventSyncLock)
+				{
+					var e = new AsyncPixelDataProgressEventArgs(progressPercent, isComplete, pixelData);
+					EventsHelper.Fire(_progressChanged, this, e);
+					if (isComplete) EventsHelper.Fire(_loaded, this, e);
+				}
 			}
 
-			public float ProgressPercent { get; private set; }
-
-		    // TODO (CR Apr 2013): subscriptions and firing should be synchronized because 
-			public event AsyncPixelDataProgressEventHandler ProgressChanged;
-
+			public int ProgressPercent { get; private set; }
 			public bool IsLoaded { get; private set; }
 
-			public event AsyncPixelDataEventHandler Loaded;
+			public event AsyncPixelDataProgressEventHandler ProgressChanged
+			{
+				add { lock (_progressEventSyncLock) _progressChanged += value; }
+				remove { lock (_progressEventSyncLock) _progressChanged -= value; }
+			}
+
+			public event AsyncPixelDataEventHandler Loaded
+			{
+				add { lock (_progressEventSyncLock) _loaded += value; }
+				remove { lock (_progressEventSyncLock) _loaded -= value; }
+			}
 
 			#region ILargeObjectContainer Members
 

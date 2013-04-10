@@ -128,8 +128,27 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 
 		protected class AsyncVolumeSliceSopFrameData : AsyncSopFrameData
 		{
+			private ICachedVolumeReference _cachedVolumeReference;
+
 			public AsyncVolumeSliceSopFrameData(int frameNumber, AsyncVolumeSliceSopDataSource parent)
-				: base(frameNumber, parent) {}
+				: base(frameNumber, parent)
+			{
+				if (Parent.Slice.VolumeReference is ICachedVolumeReference)
+				{
+					_cachedVolumeReference = (ICachedVolumeReference) Parent.Slice.VolumeReference.Clone();
+				}
+			}
+
+			protected override void Dispose(bool disposing)
+			{
+				if (disposing && _cachedVolumeReference != null)
+				{
+					_cachedVolumeReference.Dispose();
+					_cachedVolumeReference = null;
+				}
+
+				base.Dispose(disposing);
+			}
 
 			public new AsyncVolumeSliceSopDataSource Parent
 			{
@@ -142,36 +161,83 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 				set { base.RegenerationCost = value; }
 			}
 
-			protected override byte[] CreateNormalizedPixelData()
+			protected override bool IsReadySynchronously()
+			{
+				return _cachedVolumeReference == null || _cachedVolumeReference.IsLoaded;
+			}
+
+			protected override void LockSource()
+			{
+				if (_cachedVolumeReference != null)
+				{
+					_cachedVolumeReference.Lock();
+				}
+			}
+
+			protected override void UnlockSource()
+			{
+				if (_cachedVolumeReference != null)
+				{
+					_cachedVolumeReference.Unlock();
+				}
+			}
+
+			private ICachedVolumeReference _asyncVolumeLoaderReference;
+
+			protected override void AsyncCreateNormalizedPixelData(Action<byte[]> onComplete)
 			{
 				// only ICachedVolumeReference provides for dynamic loading of the volume - a standard IVolumeReference is a hard reference to a loaded volume
-				if (Parent.Slice.VolumeReference is ICachedVolumeReference)
+				if (_cachedVolumeReference == null)
 				{
-					using (var volume = (ICachedVolumeReference) Parent.Slice.VolumeReference.Clone())
+					onComplete.Invoke(Parent.Slice.GetPixelData());
+				}
+				else if (_asyncVolumeLoaderReference == null)
+				{
+					var volume = _asyncVolumeLoaderReference = (ICachedVolumeReference) _cachedVolumeReference.Clone();
+					volume.Lock();
+					if (!volume.IsLoaded)
 					{
-						volume.Lock();
+						volume.ProgressChanged += (s, e) =>
+						                          	{
+						                          		if (volume.IsLoaded)
+						                          		{
+						                          			UpdateProgress(100, null);
+						                          			var pixelData = Parent.Slice.GetPixelData();
+						                          			UpdateProgress(100, pixelData);
 
-						if (!volume.IsLoaded)
-						{
-							UpdateProgress(0, null);
-							var ar = volume.LoadAsync();
-							while (!ar.IsCompleted)
-							{
-								UpdateProgress(volume.Progress, null);
-								ar.AsyncWaitHandle.WaitOne(100);
-							}
-						}
+						                          			volume.Unlock();
+						                          			volume.Dispose();
 
-						UpdateProgress(100, null);
-						var pixelData = Parent.Slice.GetPixelData();
-						UpdateProgress(100, pixelData);
+						                          			onComplete.Invoke(pixelData);
 
-						volume.Unlock();
-
-						return pixelData;
+						                          			_asyncVolumeLoaderReference = null;
+						                          		}
+						                          		else
+						                          		{
+						                          			UpdateProgress((int) volume.Progress, null);
+						                          		}
+						                          	};
+						InitializeProgress((int) volume.Progress);
+						volume.LoadAsync();
 					}
 				}
-				return Parent.Slice.GetPixelData();
+			}
+
+			protected override byte[] SyncCreateNormalizedPixelData()
+			{
+				// only ICachedVolumeReference provides for dynamic loading of the volume - a standard IVolumeReference is a hard reference to a loaded volume
+				if (_cachedVolumeReference == null)
+				{
+					return Parent.Slice.GetPixelData();
+				}
+				else
+				{
+					using (var volume = (ICachedVolumeReference) _cachedVolumeReference.Clone())
+					{
+						volume.Lock();
+						return Parent.Slice.GetPixelData();
+					}
+				}
 			}
 
 			protected override byte[] CreateNormalizedOverlayData(int overlayNumber)
