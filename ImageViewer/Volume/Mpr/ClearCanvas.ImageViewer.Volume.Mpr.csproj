@@ -115,6 +115,7 @@
     <Compile Include="Tests\Statistics.cs" />
     <Compile Include="Tests\VolumeBuilderTest.cs" />
     <Compile Include="Tests\SlicerFidelityTests.cs" />
+    <Compile Include="Tests\VolumeCacheTestTool.cs" />
     <Compile Include="Tests\VolumeFunction.cs" />
     <Compile Include="Tests\MprTestVolumeTool.cs" />
     <Compile Include="Tests\VolumeSopDataSourcePrototypeTests.cs" />

@@ -23,6 +23,7 @@
 #endregion
 
 using System;
+using System.Linq;
 using ClearCanvas.Common;
 using ClearCanvas.Dicom;
 using ClearCanvas.ImageViewer.Common;
@@ -215,9 +216,9 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 						                  	{
 						                  		try
 						                  		{
-						                  			if (t.IsFaulted)
+						                  			if (t.IsFaulted && t.Exception != null)
 						                  			{
-						                  				onComplete.Invoke(null, t.Exception);
+						                  				onComplete.Invoke(null, t.Exception.Flatten().InnerExceptions.FirstOrDefault());
 						                  			}
 						                  			else
 						                  			{

@@ -276,6 +276,8 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 			return _cache.ContainsKey(new CacheKey(frames.ToList()));
 		}
 
+		internal static volatile bool ThrowAsyncVolumeLoadException;
+
 #endif
 
 		#endregion
@@ -378,6 +380,14 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 					                                           	{
 					                                           		Progress = Math.Min(100f, 100f*n/total);
 					                                           		if (callback != null) callback.Invoke(this, n, total);
+
+#if UNIT_TESTS
+					                                           		if (ThrowAsyncVolumeLoadException)
+					                                           		{
+					                                           			ThrowAsyncVolumeLoadException = false;
+					                                           			throw new CreateVolumeException("User manually triggered exception");
+					                                           		}
+#endif
 					                                           	}))
 					{
 						_volumeReference = volume.CreateTransientReference();
@@ -448,12 +458,13 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 					                                 	{
 					                                 		lock (_backgroundLoadSyncRoot)
 					                                 		{
-					                                 			if (t.IsFaulted)
+					                                 			if (t.IsFaulted && t.Exception != null)
 					                                 			{
+					                                 				var ex = t.Exception.Flatten().InnerExceptions.FirstOrDefault();
 					                                 				if (onError != null)
-					                                 					onError.Invoke(this, t.Exception);
+					                                 					onError.Invoke(this, ex);
 					                                 				else
-					                                 					Platform.Log(LogLevel.Debug, t.Exception, "Unhandled exception thrown in asynchronous volume loader");
+					                                 					Platform.Log(LogLevel.Warn, ex, "Unhandled exception thrown in background volume loader");
 					                                 			}
 					                                 			else
 					                                 			{
