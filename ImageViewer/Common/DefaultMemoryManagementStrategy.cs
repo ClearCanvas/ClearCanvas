@@ -113,7 +113,7 @@ namespace ClearCanvas.ImageViewer.Common
 
     internal partial class DefaultMemoryManagementStrategy : MemoryManagementStrategy
 	{
-        private const LogLevel _debugLogLevel = LogLevel.Info;
+        private const LogLevel _debugLogLevel = LogLevel.Debug;
 
 		private const long OneKilobyte = 1024;
 		private const long OneMegabyte = 1024 * OneKilobyte;

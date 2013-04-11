@@ -35,6 +35,7 @@ using ClearCanvas.ImageViewer.Common;
 
 namespace ClearCanvas.ImageViewer
 {
+#if DEBUG
     [KeyboardAction("forcegc", "imageviewer-keyboard/ForceFullGarbageCollection", "ForceGC", KeyStroke = XKeys.G)]
     [KeyboardAction("reloadSettings", "imageviewer-keyboard/ReloadMemorySettings", "ReloadSettings", KeyStroke = XKeys.Control | XKeys.R)]
     [KeyboardAction("collectLargeObjects", "imageviewer-keyboard/CollectAllLargeObjects", "CollectAll", KeyStroke = XKeys.Control | XKeys.C)]
@@ -95,6 +96,7 @@ namespace ClearCanvas.ImageViewer
             }
         }
     }
+#endif
 
     // This tool is basically a cheap hack to make sure that the garbage collector
 	// runs a few times after a workspace is closed.  Performing a single GC 
