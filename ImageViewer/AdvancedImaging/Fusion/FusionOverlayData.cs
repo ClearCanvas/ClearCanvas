@@ -80,11 +80,8 @@ namespace ClearCanvas.ImageViewer.AdvancedImaging.Fusion
 				// this will unload _volume
 				this.UnloadVolume();
 
-				if (_volumeLoaderTask != null)
-				{
-					_volumeLoaderTask.RequestCancel();
-					_volumeLoaderTask = null;
-				}
+				// just clear the task field, and let the task run to completion whereupon it will dispose itself
+				_volumeLoaderTask = null;
 
 				if (_frames != null)
 				{
