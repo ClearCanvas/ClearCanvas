@@ -313,10 +313,16 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 			{
 				MemoryManager.Remove(this);
 
-				if (_volumeReference != null)
+				// this method is executed on a worker thread after no one else has a reference to this except maybe the memory manager
+				// so we lock it so that we don't accidentally dispose the real volume simultaneously from different threads
+				// blocking here isn't a big deal since we're also on a worker thread
+				lock (_syncRoot)
 				{
-					_volumeReference.Dispose();
-					_volumeReference = null;
+					if (_volumeReference != null)
+					{
+						_volumeReference.Dispose();
+						_volumeReference = null;
+					}
 				}
 
 				if (_frames != null)
@@ -406,8 +412,6 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 
 			public void Unload()
 			{
-				AssertNotDisposed();
-
 				if (_volumeReference == null) return;
 				if (_largeObjectContainerData.IsLocked) return;
 

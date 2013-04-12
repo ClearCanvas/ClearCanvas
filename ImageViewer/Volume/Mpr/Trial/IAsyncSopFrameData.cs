@@ -32,13 +32,40 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 	/// </remarks>
 	public interface IAsyncSopFrameData : ISopFrameData
 	{
-		Exception LastException { get; }
+		/// <summary>
+		/// Gets the current loading progress of the asynchronous data source as a percent between 0 and 100.
+		/// </summary>
 		int ProgressPercent { get; }
+
+		/// <summary>
+		/// Event raised when progress of the asynchronous data source has changed.
+		/// </summary>
 		event AsyncPixelDataProgressEventHandler ProgressChanged;
+
+		/// <summary>
+		/// Gets whether or not the asynchronous data source is loaded and ready for use.
+		/// </summary>
 		bool IsLoaded { get; }
+
+		/// <summary>
+		/// Event raised when the asynchronous data source becomes loaded and ready for use.
+		/// </summary>
 		event AsyncPixelDataEventHandler Loaded;
+
+		/// <summary>
+		/// Gets whether or not the asynchronous data source is in a faulted state.
+		/// </summary>
 		bool IsFaulted { get; }
+
+		/// <summary>
+		/// Event raised when the asynchronous data source encounters an error in the background loading operation and enters a faulted state.
+		/// </summary>
 		event AsyncPixelDataFaultEventHandler Faulted;
+
+		/// <summary>
+		/// Gets an <see cref="IDisposable"/> lock on the asynchronous data source, ensuring it will not become unloaded until the lock is disposed.
+		/// </summary>
+		/// <returns></returns>
 		IDisposable AcquireLock();
 	}
 
@@ -98,5 +125,14 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 			ProgressPercent = progressPercent;
 			IsComplete = isComplete;
 		}
+	}
+
+	/// <summary>
+	/// Represents errors that are encountered by an asynchronous data source during the background loading operation.
+	/// </summary>
+	public class AsyncSopDataSourceException : Exception
+	{
+		public AsyncSopDataSourceException(Exception innerException)
+			: base(innerException.Message, innerException) {}
 	}
 }

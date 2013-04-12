@@ -130,6 +130,8 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 			private event AsyncPixelDataFaultEventHandler _faulted;
 			private volatile bool _isLoading;
 
+			private Exception _lastAsyncException;
+
 			private readonly Dictionary<int, byte[]> _overlayData = new Dictionary<int, byte[]>(16);
 			private volatile byte[] _pixelData = null;
 
@@ -220,6 +222,14 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 				{
 					lock (SyncLock)
 					{
+						// if an asynchronous exception was thrown, throw it now and reset the field
+						if (_lastAsyncException != null)
+						{
+							var ex = _lastAsyncException;
+							_lastAsyncException = null;
+							throw new AsyncSopDataSourceException(ex);
+						}
+
 						pixelData = _pixelData;
 						if (pixelData == null && !_isLoading)
 						{
@@ -255,7 +265,6 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 								                               				lock (SyncLock)
 								                               				{
 								                               					Monitor.Pulse(SyncLock);
-								                               					_isLoading = false;
 								                               					_pixelData = pd;
 								                               					UpdateLargeObjectInfo();
 								                               					MemoryManager.Add(this);
@@ -271,6 +280,10 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 								                               		{
 								                               			UpdateProgress(100, true, pd, ex, true);
 								                               			Platform.Log(LogLevel.Error, ex, "Encountered error while asynchronously loading SOP frame data.");
+								                               		}
+								                               		finally
+								                               		{
+								                               			_isLoading = false;
 								                               		}
 								                               	});
 							}
@@ -479,26 +492,40 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 				}
 			}
 
+			/// <summary>
+			/// Initializes the current progress properties of the background load operation. Does not fire events.
+			/// </summary>
+			/// <param name="progressPercent">Current progress percent, as a value between 0 and 100.</param>
 			protected void InitializeProgress(int progressPercent)
 			{
 				UpdateProgress(progressPercent, false, null, null, false);
 			}
 
+			/// <summary>
+			/// Updates the current progress properties of the background load operation. This does fire events.
+			/// </summary>
+			/// <param name="progressPercent">Current progress percent, as a value between 0 and 100.</param>
+			/// <param name="pixelData">Intermediate result pixel data, if any.</param>
 			protected void UpdateProgress(int progressPercent, byte[] pixelData)
 			{
 				// ensures that the Loaded event only fires once (beacuse we fire it automatically on task completion)
 				UpdateProgress(progressPercent, false, pixelData, null, true);
 			}
 
-			private void UpdateProgress(int progressPercent, bool isComplete, byte[] pixelData, Exception exception, bool fireEvents)
+			private void UpdateProgress(int progressPercent, bool isComplete, byte[] pixelData, Exception faultException, bool fireEvents)
 			{
 				if (!isComplete && progressPercent == ProgressPercent)
 					return; // ignore this update request if progress hasn't changed and we're not notifying that loading is complete
 
 				ProgressPercent = Math.Min(100, Math.Max(0, progressPercent));
 				IsLoaded = isComplete;
-				IsFaulted = isComplete && exception != null;
-				LastException = exception;
+				IsFaulted = isComplete && faultException != null;
+
+				lock (SyncLock)
+				{
+					// setting the exception needs to be synchronized with the GetNormalizedPixelData method because that's where we check it
+					_lastAsyncException = faultException;
+				}
 
 				if (!fireEvents)
 					return;
@@ -508,11 +535,10 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 					var e = new AsyncPixelDataProgressEventArgs(progressPercent, isComplete, pixelData);
 					EventsHelper.Fire(_progressChanged, this, e);
 					if (isComplete) EventsHelper.Fire(_loaded, this, e);
-					if (isComplete && exception != null) EventsHelper.Fire(_faulted, this, new AsyncPixelDataFaultEventArgs(pixelData, exception));
+					if (isComplete && faultException != null) EventsHelper.Fire(_faulted, this, new AsyncPixelDataFaultEventArgs(pixelData, faultException));
 				}
 			}
 
-			public Exception LastException { get; private set; }
 			public int ProgressPercent { get; private set; }
 			public bool IsLoaded { get; private set; }
 			public bool IsFaulted { get; private set; }
