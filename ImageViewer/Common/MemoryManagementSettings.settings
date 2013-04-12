@@ -18,7 +18,7 @@
       <Value Profile="(Default)">70</Value>
     </Setting>
     <Setting Name="x64MaxMemoryToCollectMegabytes" Description="A maximum amount of memory to collect at once. Important on systems with a lot of memory, as collecting too much at once can slow the process down." Type="System.Int64" Scope="Application">
-      <Value Profile="(Default)">2000</Value>
+      <Value Profile="(Default)">800</Value>
     </Setting>
   </Settings>
 </SettingsFile>

@@ -98,7 +98,7 @@ namespace ClearCanvas.ImageViewer.Common {
         [global::System.Configuration.SettingsDescriptionAttribute("A maximum amount of memory to collect at once. Important on systems with a lot of" +
             " memory, as collecting too much at once can slow the process down.")]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("2000")]
+        [global::System.Configuration.DefaultSettingValueAttribute("800")]
         public long x64MaxMemoryToCollectMegabytes {
             get {
                 return ((long)(this["x64MaxMemoryToCollectMegabytes"]));
