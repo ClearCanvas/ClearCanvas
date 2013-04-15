@@ -132,7 +132,7 @@ namespace ClearCanvas.ImageViewer
 
             ThreadPool.QueueUserWorkItem(delegate
                                              {
-                                                Thread.Sleep(2000);
+                                                Thread.Sleep(5000);
                                                 GC.Collect();
                                              });
         }
