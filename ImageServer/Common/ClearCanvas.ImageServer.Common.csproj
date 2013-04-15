@@ -97,6 +97,8 @@
     <Compile Include="InProcessImageServerServiceProvider.cs" />
     <Compile Include="IZipService.cs" />
     <Compile Include="ProductManifestServiceProvider.cs" />
+    <Compile Include="Helpers\HeuristicTypeResolver.cs" />
+    <Compile Include="Helpers\TypeExtension.cs" />
     <Compile Include="WorkQueueManagerExtensionPoint.cs" />
     <Compile Include="ServerAuditHelper.cs" />
     <Compile Include="ServiceModel\IFilesystemService.cs" />

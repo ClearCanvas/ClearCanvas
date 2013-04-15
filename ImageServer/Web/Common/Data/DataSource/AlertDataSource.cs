@@ -27,6 +27,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
+using ClearCanvas.ImageServer.Common.Helpers;
 using ClearCanvas.ImageServer.Core.Query;
 using ClearCanvas.ImageServer.Enterprise;
 using ClearCanvas.ImageServer.Model;
@@ -84,9 +85,9 @@ namespace ClearCanvas.ImageServer.Web.Common.Data.DataSource
                 {
                     XmlNode node = contextNode.FirstChild;
                     // Cast the Data back from the Abstract Type.
-                    if (node.Attributes["type"] != null)
+                    if (node != null && node.Attributes!=null && node.Attributes["type"] != null)
                     {
-                        Type type = Type.GetType(node.Attributes["type"].Value);
+                        Type type = HeuristicTypeResolver.GetType(node.Attributes["type"].Value);
                         if (type == null)
                             return contextNode; // don't know how to decode it
 
