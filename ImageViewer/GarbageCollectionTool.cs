@@ -128,15 +128,12 @@ namespace ClearCanvas.ImageViewer
 
         internal static void ForceGC()
         {
-            Platform.Log(LogLevel.Info, "Forcing full garbage collection.");
+            Platform.Log(LogLevel.Debug, "Forcing full garbage collection.");
 
             ThreadPool.QueueUserWorkItem(delegate
                                              {
-                                                 for (int i = 0; i < 5; ++i)
-                                                 {
-                                                     Thread.Sleep(500);
-                                                     GC.Collect();
-                                                 }
+                                                Thread.Sleep(2000);
+                                                GC.Collect();
                                              });
         }
 	}
