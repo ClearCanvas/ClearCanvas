@@ -103,6 +103,7 @@ namespace ClearCanvas.ImageViewer
     internal class GarbageCollectionTool : Tool<IImageViewerToolContext>
     {
         private static int _count;
+        private static volatile bool _isRunning;
         private bool _initialized;
         private bool _disposed;
 
@@ -138,6 +139,8 @@ namespace ClearCanvas.ImageViewer
 
         internal static void ForceGC()
         {
+            if (_isRunning) return;
+            _isRunning = true;
             ThreadPool.QueueUserWorkItem((ignore) =>
             {
                 //Sleep for a couple seconds to let things settle.
@@ -152,7 +155,7 @@ namespace ClearCanvas.ImageViewer
                     GC.Collect();
                     Thread.Sleep(1000);
                 }
-
+                _isRunning = false;
             }, null);
         }
 
@@ -161,8 +164,6 @@ namespace ClearCanvas.ImageViewer
             base.Dispose(disposing);
 
             InternalDispose();
-            if (disposing)
-                GC.SuppressFinalize(this);
         }
     }
 }
