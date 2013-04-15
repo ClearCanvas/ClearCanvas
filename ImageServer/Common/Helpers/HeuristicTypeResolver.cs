@@ -32,11 +32,16 @@ namespace ClearCanvas.ImageServer.Common.Helpers
     /// <summary>
     /// Helper class to resolve a type based on a name (either partial or Assembly fully-qualified). Unlike Type.GetType(), this class is more tolerant to assembly-version and sign-key changes.
     /// </summary>
-    static class HeuristicTypeResolver
+    static public class HeuristicTypeResolver
     {
         private static readonly Dictionary<string, Type> _cache = new Dictionary<string, Type>();
 
-        internal static Type GetType(string typeName)
+        /// <summary>
+        /// Returns a type that's best match for the specified typeName.
+        /// </summary>
+        /// <param name="typeName"></param>
+        /// <returns></returns>
+        public static Type GetType(string typeName)
         {
             Type type = null;
                 
