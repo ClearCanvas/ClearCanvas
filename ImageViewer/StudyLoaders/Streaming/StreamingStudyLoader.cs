@@ -25,6 +25,7 @@
 using System;
 using System.Collections.Generic;
 using System.ServiceModel;
+using System.Threading;
 using ClearCanvas.Common;
 using ClearCanvas.Dicom.Iod;
 using ClearCanvas.Dicom.ServiceModel.Streaming;
@@ -67,9 +68,16 @@ namespace ClearCanvas.ImageViewer.StudyLoaders.Streaming
         private IEnumerator<InstanceXml> _instances;
         private IApplicationEntity _serverAe;
 
+        /// <summary>
+        /// Get the <see cref="EventSource"/> representing the current user for the purpose of audit logging
+        /// </summary>
+        private readonly EventSource _auditSourceCurrentUser;
+        
+
         public StreamingStudyLoader()
             : this(_loaderName)
         {
+            _auditSourceCurrentUser = EventSource.GetUserEventSource(Thread.CurrentPrincipal.Identity.Name);
         }
 
         public StreamingStudyLoader(string name):
@@ -113,7 +121,7 @@ namespace ClearCanvas.ImageViewer.StudyLoaders.Streaming
             }
             finally
             {
-                AuditHelper.LogOpenStudies(new string[] { _serverAe.AETitle }, loadedInstances, AuditSourceCurrentUser, result);
+                AuditHelper.LogOpenStudies(new string[] { _serverAe.AETitle }, loadedInstances, _auditSourceCurrentUser, result);
             }
         }
 
