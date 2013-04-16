@@ -280,6 +280,17 @@ namespace ClearCanvas.ImageViewer.Common
             }
         }
 
+        // CR (JY 2013-APR-15): There is an interesting (read: obscure) unaccounted for scenario here that perhaps makes memory collection not as efficient as it could be
+        // It is possible that the regeneration cost of a container is tied to the data held by another container
+        // - e.g. MPR cached volumes - if a volume is unloaded, its derived frames elevate their regeneration cost
+        // - Hypothetically, you could also have the reverse - a container has data that *must* be reloaded if its parent container is unloaded
+        //   (and the actual unload is expensive, so rather than doing it immediately, it lowers the cost so that the memmgr can unload it at leisure)
+        // - It is also possible that the regeneration cost of a container just changes due to some other unrelated event, after it has already been evaluated on the pass for that cost value
+        //   e.g. on the 'low' cost pass, the objet is medium, but before the 'medium' cost pass executes, it changes to low.
+        // - to account for these dynamically assessed costs, the condition should be 'container.RegenerationCost <= _regenerationCost'
+        // - further, because of these dynamically assessed costs, it is possible that the same container could be yielded multiple times throughout the process of one collect
+        //   which would actually be desirable if the container still held on to objects (perhaps because it refused to unload it the first time around)
+        // - a check for container.BytesHeld > 0 would alleviate the number of 'already empty' containers yielded in each batch, making each pass able to collect more real objects and not ghosts
         private IEnumerable<ILargeObjectContainer> GetNextBatchOfContainersToCollect(int batchSize)
 		{
 			int i = 0;

@@ -24,6 +24,7 @@
 
 using System;
 using System.Linq;
+using System.Reflection;
 using System.Threading;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Configuration;
@@ -98,43 +99,71 @@ namespace ClearCanvas.ImageViewer
     }
 #endif
 
-    // This tool is basically a cheap hack to make sure that the garbage collector
-	// runs a few times after a workspace is closed.  Performing a single GC 
-	// when listening for a workspace removed event doesn't work since DotNetMagic
-	// is still holding on to certain references at that point.  We have to wait
-	// until the workspace is completely closed and all UI resources released
-	// before we do the GC.  The easiest way to do that without hooking into 
-	// the UI code itself is to get a timer to perform a GC a few times after
-	// the workspace has been closed.
-	[ExtensionOf(typeof(DesktopToolExtensionPoint))]
-	internal class GarbageCollectionTool : Tool<IDesktopToolContext>
-	{
-		public override void Initialize()
-		{
-			base.Initialize();
-			this.Context.DesktopWindow.Workspaces.ItemClosed += OnWorkspaceClosed;
-		}
+    [ExtensionOf(typeof(ImageViewerToolExtensionPoint))]
+    internal class GarbageCollectionTool : Tool<IImageViewerToolContext>
+    {
+        private static int _count;
+        private static volatile bool _isRunning;
+        private bool _initialized;
+        private bool _disposed;
 
-		protected override void Dispose(bool disposing)
-		{
-			this.Context.DesktopWindow.Workspaces.ItemClosed -= OnWorkspaceClosed;
-			base.Dispose(disposing);
-		}
+        ~GarbageCollectionTool()
+        {
+            InternalDispose();
+        }
 
-		private void OnWorkspaceClosed(object sender, ItemEventArgs<Workspace> e)
-		{
-            ForceGC();
-		}
+        public override void Initialize()
+        {
+            base.Initialize();
+
+            if (!_initialized)
+            {
+                Interlocked.Increment(ref _count);
+                _initialized = true;
+            }
+        }
+
+        private void InternalDispose()
+        {
+            if (_disposed)
+                return;
+
+            _disposed = true;
+
+            //When there are viewers actively open, and even when there are active "large objects" outside the viewer(s) (e.g. clipboard),
+            //the MemoryManager is looking after garbage collection. However, when all viewers have closed, it makes sense to just force
+            //garbage collection to bring us back to "zero".
+            if (Interlocked.Decrement(ref _count) <= 0)
+                ForceGC();
+        }
 
         internal static void ForceGC()
         {
-            Platform.Log(LogLevel.Debug, "Forcing full garbage collection.");
+            if (_isRunning) return;
+            _isRunning = true;
+            ThreadPool.QueueUserWorkItem((ignore) =>
+            {
+                //Sleep for a couple seconds to let things settle.
+                Thread.Sleep(2000);
 
-            ThreadPool.QueueUserWorkItem(delegate
-                                             {
-                                                Thread.Sleep(5000);
-                                                GC.Collect();
-                                             });
+                for (int i = 0; i < 3; ++i)
+                {
+                    //Sometimes the first GC doesn't get everything, so as long as there's no new viewers open yet, we collect a couple extra times.
+                    if (Thread.VolatileRead(ref _count) > 0)
+                        break;
+
+                    GC.Collect();
+                    Thread.Sleep(1000);
+                }
+                _isRunning = false;
+            }, null);
         }
-	}
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+
+            InternalDispose();
+        }
+    }
 }
