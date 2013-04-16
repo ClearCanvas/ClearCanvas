@@ -25,7 +25,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using ClearCanvas.ImageViewer.Common;
+using ClearCanvas.ImageViewer.Common.Auditing;
 
 namespace ClearCanvas.ImageViewer.StudyManagement
 {
@@ -37,12 +39,19 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		private readonly string _name;
         private IDicomServiceNode _currentServer;
 
+        /// <summary>
+        /// Get the <see cref="EventSource"/> representing the current user for the purpose of audit logging
+        /// </summary>
+        protected EventSource AuditSourceCurrentUser { private set; get; }
+
 		/// <summary>
 		/// Constructs a new <see cref="StudyLoader"/> with the given <paramref name="name"/>.
 		/// </summary>
 		protected StudyLoader(string name)
 		{
 			_name = name;
+
+            AuditSourceCurrentUser = EventSource.GetUserEventSource(Thread.CurrentPrincipal.Identity.Name);
 		}
 
 		#region IStudyLoader Members

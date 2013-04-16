@@ -24,10 +24,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.IO.Compression;
 using System.ServiceModel;
-using System.Text;
 using ClearCanvas.Common;
 using ClearCanvas.Dicom.Iod;
 using ClearCanvas.Dicom.ServiceModel.Streaming;
@@ -36,7 +33,6 @@ using ClearCanvas.ImageViewer.Common;
 using ClearCanvas.ImageViewer.Common.Auditing;
 using ClearCanvas.ImageViewer.Common.ServerDirectory;
 using ClearCanvas.ImageViewer.StudyManagement;
-using System.Xml;
 
 namespace ClearCanvas.ImageViewer.StudyLoaders.Streaming
 {
@@ -117,7 +113,7 @@ namespace ClearCanvas.ImageViewer.StudyLoaders.Streaming
             }
             finally
             {
-                AuditHelper.LogOpenStudies(new string[] { _serverAe.AETitle }, loadedInstances, EventSource.CurrentUser, result);
+                AuditHelper.LogOpenStudies(new string[] { _serverAe.AETitle }, loadedInstances, AuditSourceCurrentUser, result);
             }
         }
 
