@@ -183,6 +183,7 @@
     <Compile Include="UpgradeScripts\UpgradeFrom_6_0_6778_10140.cs" />
     <Compile Include="UpgradeScripts\UpgradeFrom_6_1_7081_10268.cs" />
     <Compile Include="UpgradeScripts\UpgradeFrom_6_2_10561_12082.cs" />
+    <Compile Include="UpgradeScripts\UpgradeFrom_6_2_10943_12112.cs" />
     <Compile Include="UpgradeScripts\UpgradeFrom_9_0_9561_11723.cs" />
   </ItemGroup>
   <ItemGroup>
