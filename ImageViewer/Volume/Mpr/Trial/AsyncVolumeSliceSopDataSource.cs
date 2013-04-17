@@ -193,7 +193,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 				}
 			}
 
-			private ICachedVolumeReference _asyncVolumeLoaderReference;
+			private volatile ICachedVolumeReference _asyncVolumeLoaderReference;
 
 			protected override void AsyncCreateNormalizedPixelData(Action<byte[], Exception> onComplete)
 			{
@@ -211,8 +211,13 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 						volume.ProgressChanged += (s, e) => UpdateProgress((int) volume.Progress, null);
 						InitializeProgress((int) volume.Progress);
 
-					    // TODO (CR Apr 2013): LoadAsync can return null.
 						var task = volume.LoadAsync();
+						if (task == null)
+						{
+							var pixelData = Parent.Slice.GetPixelData();
+							onComplete.Invoke(pixelData, null);
+							return;
+						}
 						task.ContinueWith(t =>
 						                  	{
 						                  		try
@@ -237,7 +242,6 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 						                  			volume.Unlock();
 						                  			volume.Dispose();
 
-						                  		    // TODO (CR Apr 2013): volatile? Only synchronized by the underlying SyncLock.
 						                  			_asyncVolumeLoaderReference = null;
 						                  		}
 						                  	});

@@ -73,10 +73,10 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 		ICachedVolumeReference CreateReference();
 	}
 
-    // TODO (CR Apr 2013): Not sure what the answer is right now, but I feel like the IsLoaded, Volume, Lock/Unlock is unnecessary
-    // and can cause confusion - people might not know they have to lock in order to guarantee that Load succeeds, or what
-    // the behaviour of accessing the Volume property is. Perhaps the answer is to have only Load and LoadAsync,
-    // but internally lock and guarantee that Load and Load Async always result in successfully loading the volume to completion.
+	// TODO (CR Apr 2013): Not sure what the answer is right now, but I feel like the IsLoaded, Volume, Lock/Unlock is unnecessary
+	// and can cause confusion - people might not know they have to lock in order to guarantee that Load succeeds, or what
+	// the behaviour of accessing the Volume property is. Perhaps the answer is to have only Load and LoadAsync,
+	// but internally lock and guarantee that Load and Load Async always result in successfully loading the volume to completion.
 
 	/// <summary>
 	/// Represents a reference to a cached MPR volume.
@@ -299,7 +299,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 			private volatile IVolumeReference _volumeReference;
 			private bool _isDisposed = false;
 
-			private event EventHandler _progressChanged;
+			private readonly SynchronizedEventHelper _progressChanged = new SynchronizedEventHelper();
 			private volatile float _progress = 0;
 
 			public CachedVolume(VolumeCache cacheOwner, CacheKey cacheKey, IEnumerable<Frame> frames)
@@ -375,19 +375,17 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 				set
 				{
 					_progress = value;
-				    // TODO (CR Apr 2013): ProgressChanged should be synchronized.
-                    // See RealWorkItemActivityMonitor for a good way to synchronize events with minimal locking.
-					EventsHelper.Fire(_progressChanged, this, EventArgs.Empty);
+					_progressChanged.Fire(this, new EventArgs());
 				}
 			}
 
 			private Volume LoadCore(VolumeLoadProgressCallback callback)
 			{
-			    // TODO (CR Apr 2013): Same comment as with Fusion - shouldn't actually need to lock for
-                // the duration of volume creation. Should be enough to set a _loading flag, exit the lock,
-                // then re-enter the lock to reset the _loading flag and set any necessary fields.
-                // Locking for the duration means the memory manager could get hung up while trying to unload
-                // a big volume that is in the process of being created.
+				// TODO (CR Apr 2013): Same comment as with Fusion - shouldn't actually need to lock for
+				// the duration of volume creation. Should be enough to set a _loading flag, exit the lock,
+				// then re-enter the lock to reset the _loading flag and set any necessary fields.
+				// Locking for the duration means the memory manager could get hung up while trying to unload
+				// a big volume that is in the process of being created.
 
 				lock (_syncRoot)
 				{
@@ -399,6 +397,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 					                                           	{
 					                                           		Progress = Math.Min(100f, 100f*n/total);
 					                                           		if (callback != null) callback.Invoke(this, n, total);
+					                                           		_largeObjectContainerData.UpdateLastAccessTime();
 
 #if UNIT_TESTS
 					                                           		if (ThrowAsyncVolumeLoadException)
@@ -458,13 +457,13 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 			private readonly object _backgroundLoadSyncRoot = new object();
 			private Task _backgroundLoadTask;
 
-		    // TODO (CR Apr 2013): the reason this is overloaded is because there's not always a task to return. Would be better
-            // to return some other object, possibly with the task as a property, but also with the volume itself, if it's available.
+			// TODO (CR Apr 2013): the reason this is overloaded is because there's not always a task to return. Would be better
+			// to return some other object, possibly with the task as a property, but also with the volume itself, if it's available.
 			private Task LoadAsync(VolumeLoadProgressCallback onProgress = null, VolumeLoadCompletionCallback onComplete = null, VolumeLoadErrorCallback onError = null)
 			{
 				AssertNotDisposed();
 
-			    // TODO (CR Apr 2013): Not a good idea to return nothing; why not return a struct with the volume in it?
+				// TODO (CR Apr 2013): Not a good idea to return nothing; why not return a struct with the volume in it?
 				if (_volumeReference != null) return null;
 				if (_backgroundLoadTask != null) return _backgroundLoadTask;
 
@@ -476,8 +475,8 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 					_backgroundLoadTask = new Task(() => LoadCore(onProgress));
 					_backgroundLoadTask.ContinueWith(t =>
 					                                 	{
-					                                 	    // TODO (CR Apr 2013): Can probably just lock the part that
-                                                            // changes the _backgroundLoadTask variable.
+					                                 		// TODO (CR Apr 2013): Can probably just lock the part that
+					                                 		// changes the _backgroundLoadTask variable.
 					                                 		lock (_backgroundLoadSyncRoot)
 					                                 		{
 					                                 			if (t.IsFaulted && t.Exception != null)
@@ -568,8 +567,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 				{
 					cachedVolume.IncrementReferenceCount();
 					_cachedVolume = cachedVolume;
-				    // TODO (CR Apr 2013): event handler should be synced.
-					_cachedVolume._progressChanged += CachedVolumeOnProgressChanged;
+					_cachedVolume._progressChanged.AddHandler(CachedVolumeOnProgressChanged);
 				}
 
 				public void Dispose()
@@ -577,7 +575,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 					if (_cachedVolume != null)
 					{
 						if (_locked) _cachedVolume.Unlock();
-						_cachedVolume._progressChanged -= CachedVolumeOnProgressChanged;
+						_cachedVolume._progressChanged.RemoveHandler(CachedVolumeOnProgressChanged);
 						_cachedVolume.DecrementReferenceCount();
 						_cachedVolume = null;
 					}
@@ -610,8 +608,8 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 					get { return _cachedVolume.IsLoaded; }
 				}
 
-			    // TODO (CR Apr 2013): API is a bit overloaded; the task provides completion and error info already
-                // so probably all that is needed is the progress callback argument.
+				// TODO (CR Apr 2013): API is a bit overloaded; the task provides completion and error info already
+				// so probably all that is needed is the progress callback argument.
 				public Task LoadAsync(VolumeLoadProgressCallback onProgress = null, VolumeLoadCompletionCallback onComplete = null, VolumeLoadErrorCallback onError = null)
 				{
 					return _cachedVolume.LoadAsync(onProgress, onComplete, onError);
@@ -717,6 +715,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 		private struct CacheKey : IEquatable<CacheKey>
 		{
 			private readonly Guid _hash;
+			private readonly long _length;
 
 			public CacheKey(IList<Frame> frames)
 				: this()
@@ -735,9 +734,9 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 						foreach (var f in frames)
 							writer.WriteLine("{0}:{1}", f.SopInstanceUid, f.FrameNumber);
 					}
+					_length = stream.Length;
 
 					stream.Position = 0;
-				    // TODO (CR Apr 2013): Guaranteed unique?
 					_hash = new Guid(md5.ComputeHash(stream));
 				}
 			}
@@ -754,7 +753,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 
 			public bool Equals(CacheKey other)
 			{
-				return _hash.Equals(other._hash);
+				return _hash.Equals(other._hash) && _length.Equals(other._length);
 			}
 
 			public override bool Equals(object obj)
