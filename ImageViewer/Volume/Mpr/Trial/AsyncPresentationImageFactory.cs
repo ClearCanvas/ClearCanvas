@@ -44,6 +44,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 
 			IDicomPresentationImage image;
 
+		    // TODO (CR Apr 2013): Since it's the "async" factory, it probably should only deal in AsyncFrames. Just throw NotSupportedException?
 			if (!frame.PhotometricInterpretation.IsColor)
 				image = frame is AsyncFrame ? new AsyncDicomGrayscalePresentationImage((AsyncFrame) frame) : new DicomGrayscalePresentationImage(frame);
 			else

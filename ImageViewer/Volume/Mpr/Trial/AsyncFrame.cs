@@ -47,6 +47,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 
 		public float AsyncProgressPercent
 		{
+		    // TODO (CR Apr 2013): 100 implies it's loaded
 			get { return SupportsAsync ? ((IAsyncSopFrameData) ParentImageSop.DataSource.GetFrameData(FrameNumber)).ProgressPercent : 100; }
 		}
 
@@ -72,6 +73,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 			get { return !SupportsAsync || ((IAsyncSopFrameData) ParentImageSop.DataSource.GetFrameData(FrameNumber)).IsFaulted; }
 		}
 
+	    // TODO (CR Apr 2013): AsyncError? Fault is more service-ish.
 		public event AsyncPixelDataFaultEventHandler AsyncFaulted
 		{
 			add { if (SupportsAsync) ((IAsyncSopFrameData) ParentImageSop.DataSource.GetFrameData(FrameNumber)).Faulted += value; }

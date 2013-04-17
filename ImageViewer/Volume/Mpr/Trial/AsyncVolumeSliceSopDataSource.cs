@@ -211,6 +211,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 						volume.ProgressChanged += (s, e) => UpdateProgress((int) volume.Progress, null);
 						InitializeProgress((int) volume.Progress);
 
+					    // TODO (CR Apr 2013): LoadAsync can return null.
 						var task = volume.LoadAsync();
 						task.ContinueWith(t =>
 						                  	{
@@ -235,6 +236,8 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 						                  		{
 						                  			volume.Unlock();
 						                  			volume.Dispose();
+
+						                  		    // TODO (CR Apr 2013): volatile? Only synchronized by the underlying SyncLock.
 						                  			_asyncVolumeLoaderReference = null;
 						                  		}
 						                  	});

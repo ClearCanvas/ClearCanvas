@@ -110,6 +110,8 @@ namespace ClearCanvas.ImageViewer.AdvancedImaging.Fusion
 		{
 			get
 			{
+                // TODO (CR Apr 2013): This property is accessed synchronously on the UI thread from WindowLevelSynchronicityTool
+                // and the SUV data validator.
 				Load();
 				return _overlayFrameParams.RescaleSlope;
 			}
