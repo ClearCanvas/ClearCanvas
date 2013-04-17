@@ -73,6 +73,11 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 		ICachedVolumeReference CreateReference();
 	}
 
+    // TODO (CR Apr 2013): Not sure what the answer is right now, but I feel like the IsLoaded, Volume, Lock/Unlock is unnecessary
+    // and can cause confusion - people might not know they have to lock in order to guarantee that Load succeeds, or what
+    // the behaviour of accessing the Volume property is. Perhaps the answer is to have only Load and LoadAsync,
+    // but internally lock and guarantee that Load and Load Async always result in successfully loading the volume to completion.
+
 	/// <summary>
 	/// Represents a reference to a cached MPR volume.
 	/// </summary>
@@ -370,12 +375,20 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 				set
 				{
 					_progress = value;
+				    // TODO (CR Apr 2013): ProgressChanged should be synchronized.
+                    // See RealWorkItemActivityMonitor for a good way to synchronize events with minimal locking.
 					EventsHelper.Fire(_progressChanged, this, EventArgs.Empty);
 				}
 			}
 
 			private Volume LoadCore(VolumeLoadProgressCallback callback)
 			{
+			    // TODO (CR Apr 2013): Same comment as with Fusion - shouldn't actually need to lock for
+                // the duration of volume creation. Should be enough to set a _loading flag, exit the lock,
+                // then re-enter the lock to reset the _loading flag and set any necessary fields.
+                // Locking for the duration means the memory manager could get hung up while trying to unload
+                // a big volume that is in the process of being created.
+
 				lock (_syncRoot)
 				{
 					if (_volumeReference != null) return _volumeReference.Volume;
@@ -445,10 +458,13 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 			private readonly object _backgroundLoadSyncRoot = new object();
 			private Task _backgroundLoadTask;
 
+		    // TODO (CR Apr 2013): the reason this is overloaded is because there's not always a task to return. Would be better
+            // to return some other object, possibly with the task as a property, but also with the volume itself, if it's available.
 			private Task LoadAsync(VolumeLoadProgressCallback onProgress = null, VolumeLoadCompletionCallback onComplete = null, VolumeLoadErrorCallback onError = null)
 			{
 				AssertNotDisposed();
 
+			    // TODO (CR Apr 2013): Not a good idea to return nothing; why not return a struct with the volume in it?
 				if (_volumeReference != null) return null;
 				if (_backgroundLoadTask != null) return _backgroundLoadTask;
 
@@ -460,6 +476,8 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 					_backgroundLoadTask = new Task(() => LoadCore(onProgress));
 					_backgroundLoadTask.ContinueWith(t =>
 					                                 	{
+					                                 	    // TODO (CR Apr 2013): Can probably just lock the part that
+                                                            // changes the _backgroundLoadTask variable.
 					                                 		lock (_backgroundLoadSyncRoot)
 					                                 		{
 					                                 			if (t.IsFaulted && t.Exception != null)
@@ -550,6 +568,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 				{
 					cachedVolume.IncrementReferenceCount();
 					_cachedVolume = cachedVolume;
+				    // TODO (CR Apr 2013): event handler should be synced.
 					_cachedVolume._progressChanged += CachedVolumeOnProgressChanged;
 				}
 
@@ -591,6 +610,8 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 					get { return _cachedVolume.IsLoaded; }
 				}
 
+			    // TODO (CR Apr 2013): API is a bit overloaded; the task provides completion and error info already
+                // so probably all that is needed is the progress callback argument.
 				public Task LoadAsync(VolumeLoadProgressCallback onProgress = null, VolumeLoadCompletionCallback onComplete = null, VolumeLoadErrorCallback onError = null)
 				{
 					return _cachedVolume.LoadAsync(onProgress, onComplete, onError);
@@ -716,6 +737,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 					}
 
 					stream.Position = 0;
+				    // TODO (CR Apr 2013): Guaranteed unique?
 					_hash = new Guid(md5.ComputeHash(stream));
 				}
 			}
