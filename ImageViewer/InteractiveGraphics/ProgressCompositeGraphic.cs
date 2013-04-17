@@ -82,14 +82,17 @@ namespace ClearCanvas.ImageViewer.InteractiveGraphics
 			{
 				if (_background == null)
 				{
-					byte[] pixelData = new byte[4*_size.Width*_size.Height];
-					for (int n = 0; n < pixelData.Length; n += 4)
+					var pixelCount = _size.Width*_size.Height;
+					var pixelData = new byte[4*pixelCount];
+					var fillColor = Color.FromArgb(196, 85, 85, 85).ToArgb();
+					unsafe
 					{
-						byte[] pixel = BitConverter.GetBytes(Color.FromArgb(196, 85, 85, 85).ToArgb());
-						pixelData[n + 0] = pixel[0];
-						pixelData[n + 1] = pixel[1];
-						pixelData[n + 2] = pixel[2];
-						pixelData[n + 3] = pixel[3];
+						fixed (byte* pPixelBytes = pixelData)
+						{
+							var pPixels = (int*) pPixelBytes;
+							for (var n = 0; n < pixelCount; ++n)
+								pPixels[n] = fillColor;
+						}
 					}
 					base.Graphics.Add(_background = new ColorImageGraphic(_size.Height, _size.Width, pixelData));
 				}

@@ -43,6 +43,8 @@ namespace ClearCanvas.ImageViewer.AdvancedImaging.Fusion
 		private VoiLutManagerProxy _voiLutManagerProxy;
 		private ColorMapManagerProxy _colorMapManagerProxy;
 
+		private volatile bool _removeGraphic;
+
 		public FusionOverlayCompositeGraphic(FusionOverlayFrameData overlayFrameData)
 		{
 			_overlayFrameDataReference = overlayFrameData.CreateTransientReference();
@@ -150,14 +152,17 @@ namespace ClearCanvas.ImageViewer.AdvancedImaging.Fusion
 
 		public override void OnDrawing()
 		{
-			//TODO (CR Sept 2010): we already uncovered a bug related to this class and the MemoryManager.
-			//We need to figure out a way to synchronize the functionality in this class along with the
-			//volume/frame data being loaded and unloaded.
-
-			if (_overlayImageGraphic == null)
+			// if the remove graphic flag was set, we need to remove the old graphic because it is no longer valid, and create a new one
+			if (_removeGraphic)
 			{
-				_overlayFrameDataReference.FusionOverlayFrameData.Lock();
-				try
+				OverlayImageGraphic = null;
+				_removeGraphic = false;
+			}
+
+			_overlayFrameDataReference.FusionOverlayFrameData.Lock();
+			try
+			{
+				if (_overlayImageGraphic == null)
 				{
 					if (this.ParentPresentationImage == null || !this.ParentPresentationImage.Visible)
 					{
@@ -186,51 +191,18 @@ namespace ClearCanvas.ImageViewer.AdvancedImaging.Fusion
 						this.Graphics.Add(new ProgressGraphic(_overlayFrameDataReference.FusionOverlayFrameData, true, ProgressBarGraphicStyle.Continuous));
 					}
 				}
-				finally
-				{
-					_overlayFrameDataReference.FusionOverlayFrameData.Unlock();
-				}
-			}
-			base.OnDrawing();
-		}
-
-		private void HandleOverlayFrameDataUnloaded(object sender, EventArgs e)
-		{
-			OverlayImageGraphic = null;
-		}
-
-		//TODO (CR Sept 2010): Remove if unused.
-		public GrayscaleImageGraphic CreateStaticOverlayImageGraphic(bool forceLoad)
-		{
-			_overlayFrameDataReference.FusionOverlayFrameData.Lock();
-			try
-			{
-				if (!_overlayFrameDataReference.FusionOverlayFrameData.IsLoaded)
-				{
-					if (!forceLoad)
-						return null;
-
-					_overlayFrameDataReference.FusionOverlayFrameData.Load();
-				}
-
-				if (OverlayImageGraphic == null)
-					OverlayImageGraphic = _overlayFrameDataReference.FusionOverlayFrameData.CreateImageGraphic();
-
-				var staticClone = new GrayscaleImageGraphic(
-					OverlayImageGraphic.Rows, OverlayImageGraphic.Columns,
-					OverlayImageGraphic.BitsPerPixel, OverlayImageGraphic.BitsStored, OverlayImageGraphic.HighBit,
-					OverlayImageGraphic.IsSigned, OverlayImageGraphic.Invert,
-					OverlayImageGraphic.RescaleSlope, OverlayImageGraphic.RescaleIntercept,
-					OverlayImageGraphic.PixelData.Raw);
-				staticClone.VoiLutManager.SetMemento(OverlayImageGraphic.VoiLutManager.CreateMemento());
-				staticClone.ColorMapManager.SetMemento(OverlayImageGraphic.ColorMapManager.CreateMemento());
-				staticClone.SpatialTransform.SetMemento(OverlayImageGraphic.SpatialTransform.CreateMemento());
-				return staticClone;
+				base.OnDrawing();
 			}
 			finally
 			{
 				_overlayFrameDataReference.FusionOverlayFrameData.Unlock();
 			}
+		}
+
+		private void HandleOverlayFrameDataUnloaded(object sender, EventArgs e)
+		{
+			// cannot directly remove the image graphic because this event may come from another thread (i.e. while a draw is in progress)
+			_removeGraphic = true;
 		}
 	}
 }

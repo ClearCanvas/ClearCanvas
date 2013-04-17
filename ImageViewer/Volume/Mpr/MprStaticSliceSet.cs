@@ -74,9 +74,9 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 			{
 				base.ClearAndDisposeSops();
 
-				using (VolumeSlicer slicer = new VolumeSlicer(base.Volume, _slicerParams, base.Uid))
+				using (VolumeSlicer slicer = new VolumeSlicer(base.Volume, _slicerParams))
 				{
-					foreach (ISopDataSource dataSource in slicer.CreateSlices())
+					foreach (ISopDataSource dataSource in slicer.CreateSliceSops(Uid))
 					{
 						base.SliceSops.Add(new MprSliceSop(dataSource));
 					}

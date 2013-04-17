@@ -24,11 +24,14 @@
 
 using System;
 using System.IO;
+using System.Reflection;
 using System.Security;
 using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
 using ClearCanvas.Common;
+using ClearCanvas.Common.Utilities;
+using ClearCanvas.ImageServer.Common.Helpers;
 
 namespace ClearCanvas.ImageServer.Common.Utilities
 {
@@ -331,7 +334,7 @@ namespace ClearCanvas.ImageServer.Common.Utilities
                 throw new ArgumentNullException("Unable to Read Xml Data for Abstract Type '" + typeof(AbstractType).Name +
                     "' because no 'type' attribute was specified in the XML.");
 
-            Type type = Type.GetType(typeAttrib);
+            var type = HeuristicTypeResolver.GetType(typeAttrib);
 
             // Check the Type is Found.
             if (type == null)
@@ -351,15 +354,14 @@ namespace ClearCanvas.ImageServer.Common.Utilities
 
         public void WriteXml(XmlWriter writer)
         {
-            // Write the Type Name to the XML Element as an Attrib and Serialize
-            Type type = _data.GetType();
-
-            // BugFix: Assembly must be FQN since Types can/are external to current.
-            writer.WriteAttributeString("type", type.AssemblyQualifiedName);
+            var type = _data.GetType();
+            var typeName = type.FullName + ", " + type.GetAssemblyName(false);
+                
+            writer.WriteAttributeString("type", typeName);
             new XmlSerializer(type).Serialize(writer, _data);
         }
+        
 
         #endregion
     }
-
 }

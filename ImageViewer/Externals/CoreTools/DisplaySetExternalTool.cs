@@ -95,6 +95,12 @@ namespace ClearCanvas.ImageViewer.Externals.CoreTools
 			}
 		}
 
+		protected override void Dispose(bool disposing)
+		{
+			_selectedDisplaySet = null;
+			base.Dispose(disposing);
+		}
+
 		protected override void OnPresentationImageSelected(object sender, PresentationImageSelectedEventArgs e)
 		{
 			base.OnPresentationImageSelected(sender, e);

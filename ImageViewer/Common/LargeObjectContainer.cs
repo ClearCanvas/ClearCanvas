@@ -194,8 +194,32 @@ namespace ClearCanvas.ImageViewer.Common
 		/// </remarks>
 		public void Unload()
 		{
-			throw new Exception("The method or operation is not implemented.");
+			throw new NotSupportedException("The method or operation is not implemented.");
 		}
+
+		#endregion
+
+		#region Regeneration Cost Presets
+
+		/// <summary>
+		/// Preset cost for data that is generated and not computed from other data sources.
+		/// </summary>
+		public static readonly RegenerationCost PresetGeneratedData = RegenerationCost.Low;
+
+		/// <summary>
+		/// Preset cost for data that is loaded from disk (or other low latency sources) with little or no additional processing.
+		/// </summary>
+		public static readonly RegenerationCost PresetDiskLoadedData = RegenerationCost.Medium;
+
+		/// <summary>
+		/// Preset cost for data that is loaded over network (or other high latency sources) with little or no additional processing.
+		/// </summary>
+		public static readonly RegenerationCost PresetNetworkLoadedData = RegenerationCost.Medium;
+
+		/// <summary>
+		/// Preset cost for data that is computed from other data sources, or loaded directly from a source but requires additional processing.
+		/// </summary>
+		public static readonly RegenerationCost PresetComputedData = RegenerationCost.High;
 
 		#endregion
 	}

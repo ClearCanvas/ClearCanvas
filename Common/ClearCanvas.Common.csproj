@@ -419,6 +419,7 @@
     <Compile Include="Shreds\QueueProcessorShred.cs" />
     <Compile Include="Shreds\Shred.cs" />
     <Compile Include="Shreds\ShredExtensionPoint.cs" />
+    <Compile Include="Specifications\Tests\CultureSpecificationTests.cs" />
     <Compile Include="Tests\UsageTrackingTest.cs" />
     <Compile Include="UsageTracking\DisplayMessage.cs" />
     <Compile Include="UsageTracking\IUsageTracking.cs" />

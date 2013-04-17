@@ -113,6 +113,7 @@ namespace ClearCanvas.Dicom.Audit
 
 		private class CurrentUserEventSource : EventSource
 		{
+            //TODO CR April 2013: change to ThreadStatic (see defect #11019)
 			private static DicomAuditSource _currentUserAuditSource;
 			private static AuditActiveParticipant _currentUserActiveParticipant;
 

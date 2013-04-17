@@ -109,6 +109,8 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 			}
 		}
 
+	    // TODO (CR Apr 2013): Now that there's no VTK objects being held, we should be able to get rid of these "references" and also get rid of the IDisposable implementation.
+
 		/// <summary>
 		/// Creates a new 'transient reference' to this <see cref="Volume"/>.
 		/// </summary>

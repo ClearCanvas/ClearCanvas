@@ -123,6 +123,7 @@ namespace ClearCanvas.Desktop.View.WinForms
         /// Gets or sets the current selection in the <see cref="TextField"/> control.
         /// </summary>
         /// <seealso cref="TextBoxBase.SelectedText"/>
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public string SelectedText
         {
             get { return _textBox.SelectedText; }
@@ -133,6 +134,7 @@ namespace ClearCanvas.Desktop.View.WinForms
         /// Gets or sets the starting point of text selected in the <see cref="TextField"/> control.
         /// </summary>
         /// <seealso cref="TextBoxBase.SelectionStart"/>
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public int SelectionStart
         {
             get { return _textBox.SelectionStart; }
@@ -143,6 +145,7 @@ namespace ClearCanvas.Desktop.View.WinForms
         /// Gets or sets the number of characters selected in the <see cref="TextField"/> control.
         /// </summary>
         /// <seealso cref="TextBoxBase.SelectionLength"/>
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public int SelectionLength
         {
             get { return _textBox.SelectionLength; }

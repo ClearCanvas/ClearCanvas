@@ -27,7 +27,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Runtime.Serialization;
+using System.Threading;
 using System.Xml;
 using System.Text;
 using ClearCanvas.Common.Utilities;
@@ -431,6 +433,42 @@ namespace ClearCanvas.Common.Serialization.Tests
 			DeserializeHelper(1.5E-8, "<Tag>1.5E-08</Tag>");
 			DeserializeHelper(1.5E-8, "<Tag>1.5e-8</Tag>");
 			DeserializeHelper(1.5E-8, "<Tag>1.5e-08</Tag>");
+		}
+
+		[Test]
+		public void Test_Double_French()
+		{
+			var originalCulture = Thread.CurrentThread.CurrentCulture;
+			try
+			{
+				Thread.CurrentThread.CurrentCulture = CultureInfo.CreateSpecificCulture("fr-CA");
+				Test_Double();
+
+				Thread.CurrentThread.CurrentCulture = CultureInfo.CreateSpecificCulture("fr-FR");
+				Test_Double();
+			}
+			finally
+			{
+				Thread.CurrentThread.CurrentCulture = originalCulture;
+			}
+		}
+
+		[Test]
+		public void Test_Double_English()
+		{
+			var originalCulture = Thread.CurrentThread.CurrentCulture;
+			try
+			{
+				Thread.CurrentThread.CurrentCulture = CultureInfo.CreateSpecificCulture("en-CA");
+				Test_Double();
+
+				Thread.CurrentThread.CurrentCulture = CultureInfo.CreateSpecificCulture("en-US");
+				Test_Double();
+			}
+			finally
+			{
+				Thread.CurrentThread.CurrentCulture = originalCulture;
+			}
 		}
 
 		[Test]

@@ -22,9 +22,11 @@
 
 #endregion
 
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using ClearCanvas.Common;
+using ClearCanvas.Common.Utilities;
 using ClearCanvas.ImageViewer.BaseTools;
 using ClearCanvas.ImageViewer.Graphics;
 using ClearCanvas.ImageViewer.Imaging;
@@ -36,6 +38,9 @@ namespace ClearCanvas.ImageViewer.AdvancedImaging.Fusion
 	public class WindowLevelSynchronicityTool : ImageViewerTool
 	{
 		private readonly IList<IDisplaySet> _fusionDisplaySets = new List<IDisplaySet>();
+		private double _previousWindowWidth;
+		private double _previousWindowCenter;
+		private DelayedEventPublisher _publisher;
 		private SynchronizationContext _synchronizationContext;
 
 		public override void Initialize()
@@ -45,6 +50,7 @@ namespace ClearCanvas.ImageViewer.AdvancedImaging.Fusion
 			ImageViewer.EventBroker.ImageDrawing += OnImageDrawing;
 			ImageViewer.EventBroker.DisplaySetChanged += OnDisplaySetChanged;
 
+			_publisher = new DelayedEventPublisher((o, args) => UpdateFusion((IPresentationImage)o));
 			_synchronizationContext = SynchronizationContext.Current;
 		}
 
@@ -52,10 +58,24 @@ namespace ClearCanvas.ImageViewer.AdvancedImaging.Fusion
 		{
 			_synchronizationContext = null;
 
+			if (_publisher != null)
+			{
+				_publisher.Dispose();
+				_publisher = null;
+			}
+
 			ImageViewer.EventBroker.DisplaySetChanged -= OnDisplaySetChanged;
 			ImageViewer.EventBroker.ImageDrawing -= OnImageDrawing;
 
 			base.Dispose(disposing);
+		}
+
+		protected override void OnPresentationImageSelected(object sender, PresentationImageSelectedEventArgs e)
+		{
+			base.OnPresentationImageSelected(sender, e);
+
+			if (_publisher != null)
+				_publisher.PublishNow();
 		}
 
 		private void OnDisplaySetChanged(object sender, DisplaySetChangedEventArgs e)
@@ -128,50 +148,65 @@ namespace ClearCanvas.ImageViewer.AdvancedImaging.Fusion
 			if (_fusionDisplaySets.Count == 0)
 				return;
 
-			if (!(e.PresentationImage is FusionPresentationImage))
+			if ((e.PresentationImage is FusionPresentationImage))
+				return;
+
+			if (!(e.PresentationImage is IImageSopProvider) || !(e.PresentationImage is IVoiLutProvider))
+				return;
+
+			// only synchronize the VOI LUTs if the source LUT is linear - otherwise, leave it alone
+			var sourceVoiLut = ((IVoiLutProvider) e.PresentationImage).VoiLutManager.VoiLut as IVoiLutLinear;
+			if (sourceVoiLut == null)
+				return;
+
+			if (Equals(_previousWindowCenter, sourceVoiLut.WindowCenter) &&
+				Equals(_previousWindowWidth, sourceVoiLut.WindowWidth))
+				return;
+
+			_previousWindowCenter = sourceVoiLut.WindowCenter;
+			_previousWindowWidth = sourceVoiLut.WindowWidth;
+
+			_publisher.Publish(e.PresentationImage, EventArgs.Empty);
+		}
+
+		private void UpdateFusion(IPresentationImage sourceImage)
+		{
+			var sourceVoiLut = ((IVoiLutProvider)sourceImage).VoiLutManager.VoiLut as IVoiLutLinear;
+			var imageSopProvider = (IImageSopProvider) sourceImage;
+
+			// find any available display set containing the same series as the individual layers and capture its VOI LUT
+			var seriesInstanceUid = imageSopProvider.ImageSop.SeriesInstanceUid;
+			foreach (IDisplaySet displaySet in _fusionDisplaySets)
 			{
-				if (e.PresentationImage is IImageSopProvider && e.PresentationImage is IVoiLutProvider)
+				var anyVisibleChange = false;
+
+				var descriptor = (PETFusionDisplaySetDescriptor)displaySet.Descriptor;
+				if (descriptor.SourceSeries.SeriesInstanceUid == seriesInstanceUid)
 				{
-					// only synchronize the VOI LUTs if the source LUT is linear - otherwise, leave it alone
-					var sourceVoiLut = ((IVoiLutProvider) e.PresentationImage).VoiLutManager.VoiLut as IVoiLutLinear;
-					if (sourceVoiLut == null)
-						return;
-
-					// find any available display set containing the same series as the individual layers and capture its VOI LUT
-					var seriesInstanceUid = ((IImageSopProvider) e.PresentationImage).ImageSop.SeriesInstanceUid;
-					foreach (IDisplaySet displaySet in _fusionDisplaySets)
+					// replicate the captured VOI LUT to the fusion images
+					foreach (FusionPresentationImage image in displaySet.PresentationImages)
 					{
-						var anyVisibleChange = false;
-
-						var descriptor = (PETFusionDisplaySetDescriptor) displaySet.Descriptor;
-						if (descriptor.SourceSeries.SeriesInstanceUid == seriesInstanceUid)
-						{
-							// replicate the captured VOI LUT to the fusion images
-							foreach (FusionPresentationImage image in displaySet.PresentationImages)
-							{
-								InstallVoiLut(image, sourceVoiLut, ((IImageSopProvider)e.PresentationImage).Frame, false);
-								anyVisibleChange |= (image.Visible);
-							}
-						}
-						else if (descriptor.PETSeries.SeriesInstanceUid == seriesInstanceUid)
-						{
-							// replicate the captured VOI LUT to the fusion images
-							foreach (FusionPresentationImage image in displaySet.PresentationImages)
-							{
-								InstallVoiLut(image, sourceVoiLut, ((IImageSopProvider)e.PresentationImage).Frame, true);
-								anyVisibleChange |= (image.Visible);
-							}
-						}
-
-						// force a draw only if we replicated the VOI LUT to a visible image somewhere
-						if (anyVisibleChange)
-						{
-							if (_synchronizationContext != null)
-								_synchronizationContext.Post(s => ((IDisplaySet) s).Draw(), displaySet);
-							else
-								displaySet.Draw();
-						}
+						InstallVoiLut(image, sourceVoiLut, imageSopProvider.Frame, false);
+						anyVisibleChange |= (image.Visible);
 					}
+				}
+				else if (descriptor.PETSeries.SeriesInstanceUid == seriesInstanceUid)
+				{
+					// replicate the captured VOI LUT to the fusion images
+					foreach (FusionPresentationImage image in displaySet.PresentationImages)
+					{
+						InstallVoiLut(image, sourceVoiLut, imageSopProvider.Frame, true);
+						anyVisibleChange |= (image.Visible);
+					}
+				}
+
+				// force a draw only if we replicated the VOI LUT to a visible image somewhere
+				if (anyVisibleChange)
+				{
+					if (_synchronizationContext != null)
+						_synchronizationContext.Post(s => ((IDisplaySet)s).Draw(), displaySet);
+					else
+						displaySet.Draw();
 				}
 			}
 		}

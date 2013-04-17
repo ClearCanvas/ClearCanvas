@@ -49,6 +49,7 @@ namespace ClearCanvas.Common
 			Console.WriteLine(@"Family: {0}", settings.FamilyName);
 			Console.WriteLine(@"Product: {0}", settings.Product);
 			Console.WriteLine(@"Component: {0}", settings.Component);
+            Console.WriteLine(@"SubComponent: {0}", settings.SubComponent);
 			Console.WriteLine(@"Edition: {0}", settings.Edition);
 			Console.WriteLine(@"Version: {0}", settings.Version);
 			Console.WriteLine(@"VersionSuffix: {0}", settings.VersionSuffix);
@@ -69,6 +70,7 @@ namespace ClearCanvas.Common
         private string _family;
 		private string _product;
 		private string _component;
+        private string _subComponent;
 		private string _edition;
 		private string _release;
 		private Version _version;
@@ -123,6 +125,20 @@ namespace ClearCanvas.Common
 				return _component;
 			}
 		}
+
+        /// <summary>
+        /// Gets the Subcomponent name.
+        /// </summary>
+        public string SubComponent
+        {
+            get
+            {
+                if (_subComponent == null)
+                    _subComponent = Decrypt(_settings.SubComponent);
+                return _subComponent;
+            }
+        }
+
 
 		/// <summary>
 		/// Gets the product name.
@@ -308,6 +324,14 @@ namespace ClearCanvas.Common
 		{
 			get { return _settings.Component; }
 		}
+
+        /// <summary>
+        /// Gets the subcomponent name.
+        /// </summary>
+        public static string SubComponent
+        {
+            get { return _settings.SubComponent; }
+        }
 
 		/// <summary>
 		/// Gets the product name.

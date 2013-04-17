@@ -114,9 +114,9 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr.Tests
 			}
 
 			Trace.WriteLine(string.Format("Using slice plane: {0}", slicerParams.Description));
-			using (VolumeSlicer slicer = new VolumeSlicer(volume, slicerParams, DicomUid.GenerateUid().UID))
+			using (VolumeSlicer slicer = new VolumeSlicer(volume, slicerParams))
 			{
-				foreach (ISopDataSource slice in slicer.CreateSlices())
+				foreach (ISopDataSource slice in slicer.CreateSliceSops())
 				{
 					using (ImageSop imageSop = new ImageSop(slice))
 					{

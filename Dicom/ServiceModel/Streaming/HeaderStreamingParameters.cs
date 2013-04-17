@@ -82,7 +82,7 @@ namespace ClearCanvas.Dicom.ServiceModel.Streaming
         /// Indicates if the study loader should attempt to ignore if the study is in use
         /// and try to load the study anyway.
         /// </summary>
-        [DataMember(IsRequired = true)]
+        [DataMember(IsRequired = false /* For backward-compatibility */)]
         public bool IgnoreInUse
         {
             get { return _ignoreInUse; }

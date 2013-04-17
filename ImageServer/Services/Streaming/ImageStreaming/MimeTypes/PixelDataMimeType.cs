@@ -23,6 +23,7 @@
 #endregion
 
 using System;
+using System.Globalization;
 using System.Net;
 using ClearCanvas.Common;
 using ClearCanvas.Dicom;
@@ -85,21 +86,21 @@ namespace ClearCanvas.ImageServer.Services.Streaming.ImageStreaming.MimeTypes
                 context.Response.Headers.Add("Compressed", "true");
                 context.Response.Headers.Add("TransferSyntaxUid", pd.TransferSyntax.UidString);
 
-                context.Response.Headers.Add("BitsAllocated", pd.BitsAllocated.ToString());
-                context.Response.Headers.Add("BitsStored", pd.BitsStored.ToString());
+                context.Response.Headers.Add("BitsAllocated", pd.BitsAllocated.ToString(CultureInfo.InvariantCulture));
+                context.Response.Headers.Add("BitsStored", pd.BitsStored.ToString(CultureInfo.InvariantCulture));
                 context.Response.Headers.Add("DerivationDescription", pd.DerivationDescription);
 
-                context.Response.Headers.Add("HighBit", pd.HighBit.ToString());
-                context.Response.Headers.Add("ImageHeight", pd.ImageHeight.ToString());
-                context.Response.Headers.Add("ImageWidth", pd.ImageWidth.ToString());
+                context.Response.Headers.Add("HighBit", pd.HighBit.ToString(CultureInfo.InvariantCulture));
+                context.Response.Headers.Add("ImageHeight", pd.ImageHeight.ToString(CultureInfo.InvariantCulture));
+                context.Response.Headers.Add("ImageWidth", pd.ImageWidth.ToString(CultureInfo.InvariantCulture));
                 context.Response.Headers.Add("LossyImageCompression", pd.LossyImageCompression);
                 context.Response.Headers.Add("LossyImageCompressionMethod", pd.LossyImageCompressionMethod);
-                context.Response.Headers.Add("LossyImageCompressionRatio", pd.LossyImageCompressionRatio.ToString());
-                context.Response.Headers.Add("NumberOfFrames", pd.NumberOfFrames.ToString());
+                context.Response.Headers.Add("LossyImageCompressionRatio", pd.LossyImageCompressionRatio.ToString(CultureInfo.InvariantCulture));
+                context.Response.Headers.Add("NumberOfFrames", pd.NumberOfFrames.ToString(CultureInfo.InvariantCulture));
                 context.Response.Headers.Add("PhotometricInterpretation", pd.PhotometricInterpretation);
-                context.Response.Headers.Add("PixelRepresentation", pd.PixelRepresentation.ToString());
-                context.Response.Headers.Add("PlanarConfiguration", pd.PlanarConfiguration.ToString());
-                context.Response.Headers.Add("SamplesPerPixel", pd.SamplesPerPixel.ToString());
+                context.Response.Headers.Add("PixelRepresentation", pd.PixelRepresentation.ToString(CultureInfo.InvariantCulture));
+                context.Response.Headers.Add("PlanarConfiguration", pd.PlanarConfiguration.ToString(CultureInfo.InvariantCulture));
+                context.Response.Headers.Add("SamplesPerPixel", pd.SamplesPerPixel.ToString(CultureInfo.InvariantCulture));
 
             }
 
