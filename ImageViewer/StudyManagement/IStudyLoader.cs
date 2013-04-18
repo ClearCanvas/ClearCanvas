@@ -22,6 +22,7 @@
 
 #endregion
 
+using System;
 using ClearCanvas.Dicom.Iod;
 
 namespace ClearCanvas.ImageViewer.StudyManagement
@@ -31,9 +32,13 @@ namespace ClearCanvas.ImageViewer.StudyManagement
     /// </summary>
     public class StudyLoaderOptions
     {
-        private static readonly StudyLoaderOptions _default = new StudyLoaderOptions(false);
-
-        public static StudyLoaderOptions Default{ get { return _default; }}
+        /// <summary>
+        /// Create an instance of <see cref="StudyLoaderOptions"/> with the default instructions
+        /// </summary>
+        public StudyLoaderOptions()
+            : this(false)
+        {
+        }
 
         /// <summary>
         /// Create an instance of <see cref="StudyLoaderOptions"/> with the given instructions
@@ -52,7 +57,6 @@ namespace ClearCanvas.ImageViewer.StudyManagement
         /// the fact that the study is in use and load it anyway. Just because this option is set
         /// does not mean the loader will not still throw an <see cref="InUseLoadStudyException"/>.</remarks>
         public bool IgnoreInUse { get;  set; }
-
     }
 
 	/// <summary>
@@ -74,7 +78,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
             _studyInstanceUid = studyInstanceUid;
             _server = server;
 
-            Options = options ?? StudyLoaderOptions.Default;
+            Options = options ?? new StudyLoaderOptions();
         }
 
         public StudyLoaderOptions Options { get; private set; }

@@ -120,6 +120,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		{
 			LoadPriors = true;
 			WindowBehaviour = WindowBehaviour.Auto;
+		    StudyLoaderOptions = new StudyLoaderOptions();
 		}
 
 		#region Launch Options

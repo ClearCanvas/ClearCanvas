@@ -54,7 +54,7 @@ namespace ClearCanvas.ImageViewer
             Platform.CheckForNullReference(server, "server");
             StudyInstanceUid = studyInstanceUid;
             Server = server;
-            StudyLoaderOptions = studyLoaderOptions ?? StudyLoaderOptions.Default;
+            StudyLoaderOptions = studyLoaderOptions ?? new StudyLoaderOptions();
         }
 
         /// <summary>
