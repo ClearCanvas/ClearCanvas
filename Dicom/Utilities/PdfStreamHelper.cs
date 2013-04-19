@@ -88,7 +88,10 @@ namespace ClearCanvas.Dicom.Utilities
 
             if (bytesRemain == 1)
             {
-                // Should be the single-byte EOL marker, but we're checking that, return the original buffer
+                // Should be the single-byte EOL marker, but we're not checking that and just return the original buffer.
+                // Note, some PDF generator (e.g MSWord) does not put an EOL marker at the end. There's a possibilty that
+                // this is a padding byte. It is also possible that the first byte of next chunk happens to be 0x00. 
+                // Test with Adobe PDF Reader and it seems to be ok even if we don't strip this extra byte.
                 return rawPDFBuffer;
             }
 
