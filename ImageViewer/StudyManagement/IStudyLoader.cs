@@ -73,6 +73,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 	    /// <param name="studyInstanceUid">The Study Instance UID of the study to be loaded.</param>
 	    /// <param name="server">The server from which the study should be loaded.</param>
 	    /// <param name="options"> </param>
+        /// TODO (CR Apr 2013): create constructor overload withtout the 'options' and update the code where null is passed in
 	    public StudyLoaderArgs(string studyInstanceUid, IApplicationEntity server, StudyLoaderOptions options)
         {
             _studyInstanceUid = studyInstanceUid;
