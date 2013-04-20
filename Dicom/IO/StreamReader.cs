@@ -637,6 +637,11 @@ namespace ClearCanvas.Dicom.IO
 
 									bb.CopyFrom(_stream, (int) _len);
 
+                                    // TODO (CR Apr 2013): This is not the best way to add the pad character.  This attribute may be a text based attribute that
+                                    // requires a space character for padding, as opposed to a NULL character, which would be invalid.  Better solution would be
+                                    // to go to the  internal DicomAttributeBinary(DicomTag tag, ByteBuffer item) contructor and deal with it there.  This would
+                                    // then only apply to UN/OB tags, where adding is valid.  Text based attribute padding should be automatically handled by us
+                                    // already.
                                     if (_len % 2 == 1)
                                         bb.Append(new byte[1], 0, 1);
 

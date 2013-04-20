@@ -92,6 +92,13 @@ namespace ClearCanvas.Dicom.Utilities
                 // Note, some PDF generator (e.g MSWord) does not put an EOL marker at the end. There's a possibilty that
                 // this is a padding byte. It is also possible that the first byte of next chunk happens to be 0x00. 
                 // Test with Adobe PDF Reader and it seems to be ok even if we don't strip this extra byte.
+
+                // TODO (CR Apr 2013): There's a single byte after an EOF marker.  Since the EOF marker exists, its definitely 
+                // the end of the file.  if you detect the NULL/0x0 byte, why not just delete it to be safe?  If its a CR or LN, 
+                // you can just leave it then...  I'm not sure if I understand the "first byte of the next chunk" comment here.  
+                // Isn't the buffer passed in here the entire PDF contained in the file?  Seems like if there's an EOF marker, 
+                // followed by a single NULL byte, you should be able to just delete off the NULL byte to be safe.
+                                  
                 return rawPDFBuffer;
             }
 

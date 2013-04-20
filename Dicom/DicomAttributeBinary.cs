@@ -277,6 +277,7 @@ namespace ClearCanvas.Dicom
                     fs.Close();
                 }
 
+                // TODO (CR Apr 2013): Why not just create the byte buffer 1 byte longer in the constructor above so extra copy of data not required?
                 if (_reference.Length % 2 == 1)
                 {
                     // pad it
@@ -290,6 +291,7 @@ namespace ClearCanvas.Dicom
             {
                 bb = _values.CreateByteBuffer(syntax.Endian);
 
+                // TODO (CR Apr 2013): Better solution would be to create new _values.CreateEvenLengthByteBuffer() routine, so extra copy of data not required.
                 if (_values.Length % 2 == 1)
                     bb.Append(new byte[1], 0, 1);
 
@@ -2939,12 +2941,14 @@ namespace ClearCanvas.Dicom
                     bb.CopyFrom(fs, (int)Reference.Length);
                     fs.Close();
                 }
+                // TODO (CR Apr 2013): Why not just create the byte buffer 1 byte longer in the constructor above so extra copy of data not required?
                 if (Reference.Length % 2 == 1)
                     bb.Append(new byte[1], 0, 1);
             }
             else if (Data != null)
             {
                 bb = Data.CreateByteBuffer(syntax.Endian);
+                // TODO (CR Apr 2013): Better solution would be to create new Data.CreateEvenLengthByteBuffer() routine, so extra copy of data not required.
                 if (Data.Length % 2 == 1)
                     bb.Append(new byte[1], 0, 1);
             }
