@@ -178,6 +178,7 @@
     <Compile Include="Tests\DicomAttributeBinaryDataTests.cs" />
     <Compile Include="Tests\DicomImageTestHelper.cs" />
     <Compile Include="Tests\DicomUncompressedPixelDataTests.cs" />
+    <Compile Include="IO\Tests\StreamWriterTest.cs" />
     <Compile Include="Utilities\Command\AggregateCommand.cs" />
     <Compile Include="Utilities\Command\RemoveSeriesFromStudyXml.cs" />
     <Compile Include="Utilities\Command\Tests\CommandTests.cs" />
@@ -223,6 +224,8 @@
     <Compile Include="Utilities\Tests\DicomStringHelperTests.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Utilities\Tests\PdfStreamHelperTests.cs" />
+    <Compile Include="Utilities\Tests\PdfTestSamples.cs" />
     <Compile Include="Utilities\TimeParser.cs" />
     <Compile Include="TransferSyntax.cs" />
     <Compile Include="Iod\Window.cs" />

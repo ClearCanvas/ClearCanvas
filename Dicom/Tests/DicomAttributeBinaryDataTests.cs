@@ -652,6 +652,24 @@ namespace ClearCanvas.Dicom.Tests
 			_rng.NextBytes(bytes);
 			return bytes;
 		}
+
+        [Test]
+        public void TestCreateByteBuffer_OddLength()
+        {
+            const int testSize = 101;
+            var array0 = GenerateValues(testSize);
+            var buffer0 = new byte[testSize * SizeOfT];
+            Buffer.BlockCopy(array0, 0, buffer0, 0, buffer0.Length);
+
+            var data0 = new DicomAttributeBinaryData<byte>(array0, true);
+
+            var bb = data0.CreateEvenLengthByteBuffer(ByteBuffer.LocalMachineEndian);
+            Assert.AreEqual(102, bb.Length);
+
+            var buffer1 = bb.GetChunk(0, testSize);
+            Assert.AreEqual(buffer0, buffer1);
+            
+        }
 	}
 
 	[TestFixture]

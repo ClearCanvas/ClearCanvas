@@ -272,15 +272,17 @@ namespace ClearCanvas.Dicom
                 {
                     fs.Seek(_reference.Offset, SeekOrigin.Begin);
 
-                    bb = new ByteBuffer(_reference.Length);
+                    // Note: the length passed in the constructor is used for determinining whether "highCapacityMode" is used.
+					// It is NOT used to allocate the internal buffer.
+					bb = new ByteBuffer(_reference.Length);
                     bb.CopyFrom(fs, (int)_reference.Length);
                     fs.Close();
                 }
 
-                // TODO (CR Apr 2013): Why not just create the byte buffer 1 byte longer in the constructor above so extra copy of data not required?
                 if (_reference.Length % 2 == 1)
                 {
-                    // pad it
+                    // Note: Because the buffer is initialized using ByteBuffer.CopyFrom(), internal Stream object is created to store the data. Calling Append() will only append to the stream.
+					// If the buffer is initialized in other ways, calling Append() may cause an extra copy of the data created.
                     bb.Append(new byte[1], 0, 1);
                 }
 
@@ -289,11 +291,7 @@ namespace ClearCanvas.Dicom
             }
             else if (_values != null)
             {
-                bb = _values.CreateByteBuffer(syntax.Endian);
-
-                // TODO (CR Apr 2013): Better solution would be to create new _values.CreateEvenLengthByteBuffer() routine, so extra copy of data not required.
-                if (_values.Length % 2 == 1)
-                    bb.Append(new byte[1], 0, 1);
+                bb = _values.CreateEvenLengthByteBuffer(syntax.Endian);
 
                 if (syntax.Endian != ByteBuffer.LocalMachineEndian)
                     bb.Swap(Tag.VR.UnitSize);
@@ -2941,16 +2939,15 @@ namespace ClearCanvas.Dicom
                     bb.CopyFrom(fs, (int)Reference.Length);
                     fs.Close();
                 }
-                // TODO (CR Apr 2013): Why not just create the byte buffer 1 byte longer in the constructor above so extra copy of data not required?
+                
+				// Note: Because the buffer is initialized using ByteBuffer.CopyFrom(), internal Stream object is created to store the data. Calling Append() will only append to the stream.
+				// If the buffer is initialized in other ways, calling Append() may cause an extra copy of the data created.
                 if (Reference.Length % 2 == 1)
                     bb.Append(new byte[1], 0, 1);
             }
             else if (Data != null)
             {
-                bb = Data.CreateByteBuffer(syntax.Endian);
-                // TODO (CR Apr 2013): Better solution would be to create new Data.CreateEvenLengthByteBuffer() routine, so extra copy of data not required.
-                if (Data.Length % 2 == 1)
-                    bb.Append(new byte[1], 0, 1);
+                bb = Data.CreateEvenLengthByteBuffer(syntax.Endian);
             }
             else
             {

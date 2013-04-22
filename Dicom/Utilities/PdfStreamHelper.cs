@@ -40,6 +40,11 @@ namespace ClearCanvas.Dicom.Utilities
         /// Removes extra byte that may have been added to the PDF stream for DICOM compliance. See remarks for more details.
         /// </summary>
         /// <remarks>
+        /// 
+        /// 
+        /// 
+        /// Extra-Byte Stripping:
+        /// 
         /// Per PDF 1.4:
         /// The trailer of an FDF ﬁle enables an application reading the ﬁle to ﬁnd signiﬁcant
         /// objects quickly within the body of the ﬁle. The last line of the ﬁle contains only
@@ -50,13 +55,15 @@ namespace ClearCanvas.Dicom.Utilities
         ///
         /// That means, a valid PDF will end with {0D 0A 25 25 45 4F 46 0D 0A} or {0D 25 25 45 4F 46 0D} or or {0A 25 25 45 4F 46 0A}.
         /// 
+        /// Note: PDF exported using MS Word does not contain EOL marker(s).
+        /// 
         /// To make the file DICOM-compliant, the DICOM encoder may have added an extra NULL byte at the end to make the length even.
         /// Although not necessary (because there's no additional "line" inserted and most populate PDF readers can handle extra bytes after the last EOF),
 		/// when extracted, the extra byte should still be removed because it was not part of the original PDF content. 
         /// 
         /// </remarks>
-        /// <param name="rawPDFBuffer"></param>
-        /// <returns></returns>
+        /// <param name="rawPDFBuffer">The buffer containing the entire PDF document</param>
+        /// <returns>A buffer containing the entire PDF document with extra DICOM padding byte removed if it is present</returns>
         internal static byte[] StripDicomPaddingBytes(byte[] rawPDFBuffer)
         {
             if (rawPDFBuffer == null)
@@ -80,25 +87,19 @@ namespace ClearCanvas.Dicom.Utilities
             int bytesRemain = rawPDFBuffer.Length - eofIndex - EOFMarkers.Length;
             if (bytesRemain <= 0)
             {
-                // Note: Should not be <0. Otherwise, FindLastIndex() is wrong.
-                // Anyway, there's no EOL marker, may be invalid unless there's another chuck... 
-                // Since we don't know, just return the original buffer
+                // Note: Should not be <0. Otherwise, FindLastIndex() is wrong. Anyway, there's no EOL marker.
+                // This happens when the pdf is created using MS Word. In any case, just return the original buffer.
                 return rawPDFBuffer;
             }
 
             if (bytesRemain == 1)
             {
-                // Should be the single-byte EOL marker, but we're not checking that and just return the original buffer.
-                // Note, some PDF generator (e.g MSWord) does not put an EOL marker at the end. There's a possibilty that
-                // this is a padding byte. It is also possible that the first byte of next chunk happens to be 0x00. 
-                // Test with Adobe PDF Reader and it seems to be ok even if we don't strip this extra byte.
+                // Should be the single-byte EOL marker or padding byte (MSWord case). In latter case, just remove the padding byte.
+                if (rawPDFBuffer.ContainSequenceAt(eofIndex + EOFMarkers.Length, new byte[] { 0x0 }))
+                {
+                    return RemoveTrailingBytes(rawPDFBuffer, 1);
+                }
 
-                // TODO (CR Apr 2013): There's a single byte after an EOF marker.  Since the EOF marker exists, its definitely 
-                // the end of the file.  if you detect the NULL/0x0 byte, why not just delete it to be safe?  If its a CR or LN, 
-                // you can just leave it then...  I'm not sure if I understand the "first byte of the next chunk" comment here.  
-                // Isn't the buffer passed in here the entire PDF contained in the file?  Seems like if there's an EOF marker, 
-                // followed by a single NULL byte, you should be able to just delete off the NULL byte to be safe.
-                                  
                 return rawPDFBuffer;
             }
 
