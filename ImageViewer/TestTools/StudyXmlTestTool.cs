@@ -73,7 +73,7 @@ namespace ClearCanvas.ImageViewer.TestTools
 
 				var selected = base.Context.SelectedStudy;
 
-				loader.Start(new StudyLoaderArgs(selected.StudyInstanceUid, selected.Server, StudyLoaderOptions.Default));
+				loader.Start(new StudyLoaderArgs(selected.StudyInstanceUid, selected.Server, null));
 				StudyXml xml = new StudyXml();
 				Sop sop;
 				

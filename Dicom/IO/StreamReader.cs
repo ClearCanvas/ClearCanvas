@@ -637,6 +637,7 @@ namespace ClearCanvas.Dicom.IO
 
 									bb.CopyFrom(_stream, (int) _len);
 
+
 									DicomAttribute elem = LastTagRead.CreateDicomAttribute(bb);
 
 									_remain -= _len;

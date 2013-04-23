@@ -77,12 +77,12 @@ namespace ClearCanvas.ImageViewer.StudyLoaders.Streaming
         public StreamingStudyLoader()
             : this(_loaderName)
         {
-            _auditSourceCurrentUser = EventSource.GetUserEventSource(Thread.CurrentPrincipal.Identity.Name);
         }
 
         public StreamingStudyLoader(string name):
             base(name)
         {
+            _auditSourceCurrentUser = EventSource.GetUserEventSource(Thread.CurrentPrincipal.Identity.Name); 
             InitStrategy();
         }
 

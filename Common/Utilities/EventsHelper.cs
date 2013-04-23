@@ -29,7 +29,7 @@ namespace ClearCanvas.Common.Utilities
 	/// <summary>
 	/// Helper class for raising events.
 	/// </summary>
-	public class EventsHelper
+	public static class EventsHelper
 	{
 		/// <summary>
 		/// Helper method for raising events safely.
@@ -58,12 +58,14 @@ namespace ClearCanvas.Common.Utilities
 		/// </example>
 		public static void Fire(Delegate del, object sender, EventArgs e)
 		{
+			// TODO CR (Apr 13): del should really be EventHandler (and an overload added for EventHandler<T>) since this method won't work with any other kind of delegate
+			//                   and a strongly typed API would help programmers from putting in the wrong arguments
 			if (del == null)
 				return;
 
-			Delegate[] delegates = del.GetInvocationList();
+			var delegates = del.GetInvocationList();
 
-			foreach(Delegate sink in delegates)
+			foreach (var sink in delegates)
 			{
 				try
 				{
@@ -71,7 +73,7 @@ namespace ClearCanvas.Common.Utilities
 				}
 				catch (Exception ex)
 				{
-                    Platform.Log(LogLevel.Error, ex);
+					Platform.Log(LogLevel.Error, ex);
 					throw;
 				}
 			}
