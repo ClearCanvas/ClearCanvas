@@ -23,7 +23,7 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
+using System.Linq;
 using NUnit.Framework;
 
 #if UNIT_TESTS
@@ -64,13 +64,13 @@ namespace ClearCanvas.Dicom.Utilities.Tests
 			path = new DicomTagPath("(0054,0220)\\(0054,0222)\\(0010,0022)");
 			Assert.AreEqual(path.ToString(), "(0054,0220)\\(0054,0222)\\(0010,0022)");
 
-			path = new DicomTagPath((new List<DicomTag>(new[] { NewDicomTag(0x00540220) })));
+			path = new DicomTagPath((new[] { NewDicomTag(0x00540220) }));
 			Assert.AreEqual(path.ToString(), "(0054,0220)");
 
-			path = new DicomTagPath((new List<DicomTag>(new[] { NewDicomTag(0x00540220), NewDicomTag(0x00540222) })));
+			path = new DicomTagPath((new[] { NewDicomTag(0x00540220), NewDicomTag(0x00540222) }));
 			Assert.AreEqual(path.ToString(), "(0054,0220)\\(0054,0222)");
 
-			path = new DicomTagPath((new List<DicomTag>(new[] { NewDicomTag(0x00540220), NewDicomTag(0x00540222), NewDicomTag(0x00100022) })));
+			path = new DicomTagPath((new[] { NewDicomTag(0x00540220), NewDicomTag(0x00540222), NewDicomTag(0x00100022) }));
 			Assert.AreEqual(path.ToString(), "(0054,0220)\\(0054,0222)\\(0010,0022)");
 
 			path = new DicomTagPath(new uint[] { 0x00540220, 0x00540222 });
@@ -79,6 +79,57 @@ namespace ClearCanvas.Dicom.Utilities.Tests
 			path = new DicomTagPath(new uint[] { 0x00540220, 0x00540222, 0x00100010 });
 			Assert.AreEqual(path.ToString(), "(0054,0220)\\(0054,0222)\\(0010,0010)");
 		}
+
+        [Test]
+        public void TestSetVr()
+        {
+            var path = new DicomTagPath(new[] { DicomTags.ViewCodeSequence, DicomTags.CodeMeaning });
+            Assert.AreEqual(DicomVr.SQvr, path.TagsInPath[0].VR);
+            Assert.AreNotEqual(DicomVr.UNvr, path.TagsInPath[1].VR);
+
+            path = new DicomTagPath(new[] { DicomTags.ViewCodeSequence, DicomTags.CodeMeaning }, DicomVr.UNvr);
+            Assert.AreEqual(DicomVr.SQvr, path.TagsInPath[0].VR);
+            Assert.AreEqual(DicomVr.UNvr, path.TagsInPath[1].VR);
+        }
+
+        [Test]
+        public void TestGetAttributes()
+        {
+            var collection = new DicomAttributeCollection();
+            collection[DicomTags.PatientId].SetStringValue("Test^Patient");
+            var viewCodeSequence1 = new DicomSequenceItem();
+            var viewCodeSequence2 = new DicomSequenceItem();
+            collection[DicomTags.ViewCodeSequence].Values = new[] {viewCodeSequence1, viewCodeSequence2};
+            viewCodeSequence1[DicomTags.CodeMeaning].SetStringValue("It's");
+            viewCodeSequence2[DicomTags.CodeMeaning].SetStringValue("The Bomb");
+
+            var path = new DicomTagPath(new[] { DicomTags.PatientId});
+            var attributes = path.SelectAttributesFrom(collection).ToList();
+            Assert.AreEqual(1, attributes.Count);
+            Assert.AreEqual(attributes[0].ToString(), "Test^Patient");
+
+            path = new DicomTagPath(new[] { DicomTags.PatientsName });
+            attributes = path.SelectAttributesFrom(collection).ToList();
+            Assert.AreEqual(1, attributes.Count);
+            Assert.IsTrue(attributes[0].IsEmpty);
+
+            path = new DicomTagPath(new[] { DicomTags.ViewCodeSequence, DicomTags.CodeMeaning });
+            attributes = path.SelectAttributesFrom(collection).ToList();
+            Assert.AreEqual(2, attributes.Count);
+            Assert.AreEqual(attributes[0].ToString(), "It's");
+            Assert.AreEqual(attributes[1].ToString(), "The Bomb");
+
+            attributes[1].SetEmptyValue();
+            attributes = path.SelectAttributesFrom(collection).ToList();
+            Assert.AreEqual(2, attributes.Count);
+            Assert.AreEqual(attributes[0].ToString(), "It's");
+            Assert.IsTrue(attributes[1].IsEmpty);
+
+            path = new DicomTagPath(new[] { DicomTags.AcquisitionDeviceTypeCodeSequence, DicomTags.CodeMeaning });
+            attributes = path.SelectAttributesFrom(collection, true).ToList();
+            Assert.AreEqual(1, attributes.Count);
+            Assert.IsTrue(attributes[0].IsEmpty);
+        }
 
         [Test]
         public void TestAdd()
@@ -118,7 +169,7 @@ namespace ClearCanvas.Dicom.Utilities.Tests
 
 		private DicomTag NewDicomTag(uint tag)
 		{
-			return new DicomTag(tag, "Throwaway Tag", "ThrowawayTag", DicomVr.UNvr, false, 1, uint.MaxValue, false);
+		    return DicomTagPath.NewTag(tag, null);
 		}
     }
 }
