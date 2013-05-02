@@ -22,6 +22,7 @@
 
 #endregion
 
+using System;
 using System.Collections.Generic;
 using NUnit.Framework;
 
@@ -29,28 +30,9 @@ using NUnit.Framework;
 
 namespace ClearCanvas.Dicom.Utilities.Tests
 {
-	internal class PathTest : DicomTagPath
-	{
-		public PathTest()
-			: base()
-		{ 
-		}
-
-		public void SetPath(string path)
-		{
-			base.Path = path;
-		}
-
-		public void SetPath(IList<DicomTag> tags)
-		{
-			base.TagsInPath = tags;
-		}
-	}
-
     [TestFixture]
     public class DicomTagPathTests
     {
-
         [TestFixtureSetUp]
         public void Init()
         {
@@ -64,33 +46,31 @@ namespace ClearCanvas.Dicom.Utilities.Tests
 		[Test]
 		public void Test()
 		{
-			DicomTagPath path = new PathTest();
-			((PathTest)path).SetPath("(0010,0010)");
+            var path = new DicomTagPath("(0010,0010)");
 
 			Assert.AreEqual(path, "(0010,0010)"); 
 			Assert.AreEqual(path, (uint)0x00100010);
 			Assert.AreEqual(path, NewDicomTag(0x00100010));
 			Assert.IsTrue(path.Equals("(0010,0010)"));
-			Assert.IsTrue(path.Equals((uint)0x00100010));
+			Assert.IsTrue(path.Equals(0x00100010));
 			Assert.IsTrue(path.Equals(NewDicomTag(0x00100010)));
 
-			((PathTest)path).SetPath("(0054,0220)\\(0054,0222)");
+			path = new DicomTagPath("(0054,0220)\\(0054,0222)");
 			Assert.AreEqual(path, "(0054,0220)\\(0054,0222)"); 
 			Assert.IsFalse(path.Equals("(0054,0220)"));
-			Assert.IsFalse(path.Equals((uint)0x00540220));
+			Assert.IsFalse(path.Equals(0x00540220));
 			Assert.IsFalse(path.Equals(NewDicomTag(0x00540220)));
 
-			((PathTest)path).SetPath("(0054,0220)\\(0054,0222)\\(0010,0022)");
+			path = new DicomTagPath("(0054,0220)\\(0054,0222)\\(0010,0022)");
 			Assert.AreEqual(path.ToString(), "(0054,0220)\\(0054,0222)\\(0010,0022)");
 
-			path = new PathTest();
-			((PathTest)path).SetPath(new List<DicomTag>(new DicomTag[] { NewDicomTag(0x00540220) }));
+			path = new DicomTagPath((new List<DicomTag>(new[] { NewDicomTag(0x00540220) })));
 			Assert.AreEqual(path.ToString(), "(0054,0220)");
 
-			((PathTest)path).SetPath(new List<DicomTag>(new DicomTag[] { NewDicomTag(0x00540220), NewDicomTag(0x00540222) }));
+			path = new DicomTagPath((new List<DicomTag>(new[] { NewDicomTag(0x00540220), NewDicomTag(0x00540222) })));
 			Assert.AreEqual(path.ToString(), "(0054,0220)\\(0054,0222)");
 
-			((PathTest)path).SetPath(new List<DicomTag>(new DicomTag[] { NewDicomTag(0x00540220), NewDicomTag(0x00540222), NewDicomTag(0x00100022) }));
+			path = new DicomTagPath((new List<DicomTag>(new[] { NewDicomTag(0x00540220), NewDicomTag(0x00540222), NewDicomTag(0x00100022) })));
 			Assert.AreEqual(path.ToString(), "(0054,0220)\\(0054,0222)\\(0010,0022)");
 
 			path = new DicomTagPath(new uint[] { 0x00540220, 0x00540222 });
@@ -100,10 +80,41 @@ namespace ClearCanvas.Dicom.Utilities.Tests
 			Assert.AreEqual(path.ToString(), "(0054,0220)\\(0054,0222)\\(0010,0010)");
 		}
 
-		private DicomTag NewDicomTag(ushort group, ushort element)
-		{
-			return new DicomTag(DicomTag.GetTagValue(group, element), "Throwaway Tag", "ThrowawayTag", DicomVr.UNvr, false, 1, uint.MaxValue, false);
-		}
+        [Test]
+        public void TestAdd()
+        {
+            var tag = DicomTagPath.Nil;
+            tag = tag + DicomTags.PatientId;
+            Assert.AreEqual(tag, NewDicomTag(DicomTags.PatientId));
+
+            tag = tag + DicomTagPath.Nil;
+            Assert.AreEqual(tag, NewDicomTag(DicomTags.PatientId));
+        }
+
+        [ExpectedException(typeof(ArgumentException))]
+        [Test]
+        public void AssertBadPath1()
+        {
+            var tag = new DicomTagPath(DicomTags.PatientId);
+            tag = tag + DicomTags.PatientsName;
+        }
+
+        [ExpectedException(typeof(ArgumentException))]
+        [Test]
+        public void AssertBadPath2()
+        {
+            var tag = new DicomTagPath(DicomTags.ViewCodeSequence);
+            try
+            {
+                tag = tag + DicomTags.CodeMeaning;
+            }
+            catch (Exception)
+            {
+                Assert.Fail("This is a valid path");
+            }
+
+            tag += DicomTags.PatientId;
+        }
 
 		private DicomTag NewDicomTag(uint tag)
 		{
