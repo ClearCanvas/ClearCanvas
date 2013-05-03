@@ -35,6 +35,7 @@ using ClearCanvas.ImageServer.Common.Utilities;
 using ClearCanvas.ImageServer.Core.Command;
 using ClearCanvas.ImageServer.Core.Data;
 using ClearCanvas.ImageServer.Core.Edit;
+using ClearCanvas.ImageServer.Core.Helpers;
 using ClearCanvas.ImageServer.Core.Reconcile;
 using ClearCanvas.ImageServer.Core.Reconcile.CreateStudy;
 using ClearCanvas.ImageServer.Enterprise;
@@ -372,7 +373,7 @@ namespace ClearCanvas.ImageServer.Core
             ImageSetDescriptor fileDesc = new ImageSetDescriptor(file.DataSet);
 
             List<StudyHistory> studyHistoryList = new List<StudyHistory>(
-                ServerHelper.FindStudyHistories(storageLocation.StudyStorage,
+                StudyHistoryHelper.FindStudyHistories(storageLocation.StudyStorage,
                                                 new[] { StudyHistoryTypeEnum.StudyReconciled }));
 
             IList<StudyHistory> reconcileHistories = studyHistoryList.FindAll(
@@ -386,7 +387,7 @@ namespace ClearCanvas.ImageServer.Core
             {
                 // no history found in cache... reload the list and search again one more time
                 studyHistoryList = new List<StudyHistory>(
-                    ServerHelper.FindStudyHistories(storageLocation.StudyStorage,
+                    StudyHistoryHelper.FindStudyHistories(storageLocation.StudyStorage,
                                                     new[] { StudyHistoryTypeEnum.StudyReconciled }));
 
                 reconcileHistories = studyHistoryList.FindAll(

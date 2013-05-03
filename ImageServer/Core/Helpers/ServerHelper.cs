@@ -24,11 +24,14 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Threading;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Dicom;
 using ClearCanvas.Enterprise.Core;
+using ClearCanvas.ImageServer.Common;
 using ClearCanvas.ImageServer.Common.Command;
 using ClearCanvas.ImageServer.Enterprise;
 using ClearCanvas.ImageServer.Model;
@@ -37,13 +40,19 @@ using ClearCanvas.ImageServer.Model.EntityBrokers;
 using ClearCanvas.ImageServer.Model.Parameters;
 using ClearCanvas.Web.Enterprise.Authentication;
 
-namespace ClearCanvas.ImageServer.Core
+namespace ClearCanvas.ImageServer.Core.Helpers
 {
     /// <summary>
     /// Helper class shared by all code.
     /// </summary>
     public static class ServerHelper
     {
+        #region Private Fields
+        private static readonly object _syncLock = new object();
+        private static DateTime? _systemModeLastCheckTimestamp;
+        private static ServerOperatingMode _serverMode;
+        #endregion
+
      
     	/// <summary>
         /// Insert a request to restore the specified <seealso cref="StudyStorage"/>
@@ -137,94 +146,9 @@ namespace ClearCanvas.ImageServer.Core
 			}
 		}
 
-        /// <summary>
-        /// Finds a list of <see cref="WorkQueue"/> related to the specified <see cref="studyStorageKey"/>.
-        /// </summary>
-		/// <param name="studyStorageKey"></param>
-        /// <param name="filter">A delegate that will be used to filter the returned list. Pass in Null to get the entire list.</param>
-        /// <returns>A list of  <see cref="WorkQueue"/></returns>
-        static public IList<WorkQueue> FindWorkQueueEntries(ServerEntityKey studyStorageKey, Predicate<WorkQueue> filter)
-        {
-			Platform.CheckForNullReference(studyStorageKey, "studyStorageKey");
 
-            using (ServerExecutionContext scope = new ServerExecutionContext())
-            {
-                IWorkQueueEntityBroker broker = scope.PersistenceContext.GetBroker<IWorkQueueEntityBroker>();
-                WorkQueueSelectCriteria criteria = new WorkQueueSelectCriteria();
-                criteria.StudyStorageKey.EqualTo(studyStorageKey);
-                criteria.InsertTime.SortDesc(0);
-                IList<WorkQueue> list = broker.Find(criteria);
-                if (filter != null)
-                {
-                    CollectionUtils.Remove(list, filter);
-                }
-                return list;
-            }
-        }
 
-		/// <summary>
-		/// Checks for the existinance of a SOP for a given Study in the <see cref="WorkQueue"/> for a <see cref="WorkQueueTypeEnum.ReconcileStudy"/>.
-		/// </summary>
-		/// <param name="studyStorageKey">The StudyStorage primary key</param>
-		/// <param name="seriesInstanceUid">The Series Instance Uid of the Sop</param>
-		/// <param name="sopInstanceUid">The Sop Instance to look for</param>
-		/// <returns>true if an entry exists, false if it doesn't</returns>
-		static public bool WorkQueueUidExists(ServerEntityKey studyStorageKey, string seriesInstanceUid, string sopInstanceUid)
-		{
-			Platform.CheckForNullReference(studyStorageKey, "studyStorageKey");
 
-			using (ServerExecutionContext scope = new ServerExecutionContext())
-			{
-				IWorkQueueEntityBroker broker = scope.PersistenceContext.GetBroker<IWorkQueueEntityBroker>();
-				WorkQueueUidSelectCriteria uidSelectCriteria = new WorkQueueUidSelectCriteria();
-				uidSelectCriteria.SeriesInstanceUid.EqualTo(seriesInstanceUid);
-				uidSelectCriteria.SopInstanceUid.EqualTo(sopInstanceUid);
-				WorkQueueSelectCriteria selectCriteria = new WorkQueueSelectCriteria();
-				selectCriteria.StudyStorageKey.EqualTo(studyStorageKey);
-				selectCriteria.WorkQueueTypeEnum.EqualTo(WorkQueueTypeEnum.ReconcileStudy);
-				selectCriteria.WorkQueueUidRelatedEntityCondition.Exists(uidSelectCriteria);
-
-				return broker.Count(selectCriteria) > 0;
-			}
-		}
-
-        /// <summary>
-        /// Finds a list of <see cref="StudyHistory"/> records of the specified <see cref="StudyHistoryTypeEnum"/> 
-        /// for the specified <see cref="StudyStorage"/>.
-        /// </summary>
-        /// <param name="studyStorage"></param>
-        /// <returns></returns>
-        /// <param name="types"></param>
-        static public IList<StudyHistory> FindStudyHistories(StudyStorage studyStorage, IEnumerable<StudyHistoryTypeEnum> types)
-        {
-            // Use of ExecutionContext to re-use db connection if possible
-            using (ServerExecutionContext scope = new ServerExecutionContext())
-            {
-                IStudyHistoryEntityBroker broker = scope.PersistenceContext.GetBroker<IStudyHistoryEntityBroker>();
-                StudyHistorySelectCriteria criteria = new StudyHistorySelectCriteria();
-                criteria.StudyStorageKey.EqualTo(studyStorage.Key);
-                criteria.StudyHistoryTypeEnum.EqualTo(StudyHistoryTypeEnum.StudyReconciled);
-
-                if (types!=null)
-                {
-                    criteria.StudyHistoryTypeEnum.In(types);
-                }
-
-                criteria.InsertTime.SortAsc(0);
-                IList<StudyHistory> historyList = broker.Find(criteria);
-                return historyList;
-            } 
-        }
-
-        /// <summary>
-        /// Finds all <see cref="StudyHistory"/> records for the specified <see cref="StudyStorage"/>.
-        /// </summary>
-        /// <param name="studyStorage"></param>
-        /// <returns></returns>
-        static public IList<StudyHistory> FindStudyHistories(StudyStorage studyStorage)
-        {
-            return FindStudyHistories(studyStorage, null);
-        }
 
         /// <summary>
         /// Gets a string value that represents the group ID for a <see cref="DicomFile"/> based on
@@ -322,6 +246,150 @@ namespace ClearCanvas.ImageServer.Core
             	return Thread.CurrentPrincipal.Identity.Name;
             }
         }
-        
+
+        /// <summary>
+        /// Helper method to return the path to the duplicate image (in the Reconcile folder)
+        /// </summary>
+        /// <param name="studyStorage"></param>
+        /// <param name="sop"></param>
+        /// <returns></returns>
+        public static String GetDuplicateUidPath(StudyStorageLocation studyStorage, WorkQueueUid sop)
+        {
+            string dupPath = GetDuplicateGroupPath(studyStorage, sop);
+            dupPath = string.IsNullOrEmpty(sop.RelativePath)
+                        ? Path.Combine(dupPath,
+                                       Path.Combine(studyStorage.StudyInstanceUid, sop.SopInstanceUid + "." + sop.Extension))
+                        : Path.Combine(dupPath, sop.RelativePath);
+
+            #region BACKWARD_COMPATIBILTY_CODE
+
+            if (string.IsNullOrEmpty(sop.RelativePath) && !File.Exists(dupPath))
+            {
+                string basePath = Path.Combine(studyStorage.GetStudyPath(), sop.SeriesInstanceUid);
+                basePath = Path.Combine(basePath, sop.SopInstanceUid);
+                if (sop.Extension != null)
+                    dupPath = basePath + "." + sop.Extension;
+                else
+                    dupPath = basePath + ".dcm";
+            }
+
+            #endregion
+
+            return dupPath;
+        }
+
+        /// <summary>
+        /// Helper method to return the path to the folder containing the duplicate images (in the Reconcile folder)
+        /// </summary>
+        /// <param name="studyStorage"></param>
+        /// <param name="sop"></param>
+        /// <returns></returns>
+        public static String GetDuplicateGroupPath(StudyStorageLocation studyStorage, WorkQueueUid sop)
+        {
+            String groupFolderPath = Path.Combine(studyStorage.FilesystemPath, studyStorage.PartitionFolder);
+            groupFolderPath = Path.Combine(groupFolderPath, ServerPlatform.ReconcileStorageFolder);
+            groupFolderPath = Path.Combine(groupFolderPath, sop.GroupID);
+
+            return groupFolderPath;
+        }
+
+        /// <summary>
+        /// Helper method to return the path to the root folder under which duplicates are stored.
+        /// </summary>
+        /// <param name="studyStorage"></param>
+        /// <returns></returns>
+        public static String GetDuplicateFolderRootPath(StudyStorageLocation studyStorage)
+        {
+            String path = Path.Combine(studyStorage.FilesystemPath, studyStorage.PartitionFolder);
+            path = Path.Combine(path, ServerPlatform.ReconcileStorageFolder);
+
+            return path;
+        }
+
+        /// <summary>
+        /// Helper method to return the path to the folder containing the duplicate images (in the Reconcile folder)
+        /// </summary>
+        /// <param name="storageLocation"></param>
+        /// <param name="queueItem"></param>
+        /// <returns></returns>
+        public static string GetDuplicateGroupPath(StudyStorageLocation storageLocation, WorkQueue queueItem)
+        {
+            string path = Path.Combine(storageLocation.FilesystemPath, storageLocation.PartitionFolder);
+            path = Path.Combine(path, ServerPlatform.ReconcileStorageFolder);
+            path = Path.Combine(path, queueItem.GroupID);
+            return path;
+        }
+
+        /// <summary>
+        /// Indicates if the ImageServer is operating as a temporary cache mode 
+        /// (i.e., images will not be archived and will be deleted per delete rule)
+        /// </summary>
+        public static ServerOperatingMode ServerOperatingMode
+        {
+            get
+            {
+                CheckSystemMode();
+                return _serverMode;
+            }
+        }
+
+        private static void CheckSystemMode()
+        {
+            var now = Platform.Time;
+
+            if (!_systemModeLastCheckTimestamp.HasValue || now - _systemModeLastCheckTimestamp > TimeSpan.FromSeconds(15))
+            {
+                lock (_syncLock)
+                {
+                    if (!_systemModeLastCheckTimestamp.HasValue || now - _systemModeLastCheckTimestamp > TimeSpan.FromSeconds(15))
+                    {
+                        try
+                        {
+                            IPersistentStore store = PersistentStoreRegistry.GetDefaultStore();
+                            using (IReadContext ctx = store.OpenReadContext())
+                            {
+                                var deleteRuleBroker = ctx.GetBroker<IServerRuleEntityBroker>();
+                                var deleteRuleSearchCriteria = new ServerRuleSelectCriteria();
+                                deleteRuleSearchCriteria.ServerRuleTypeEnum.EqualTo(ServerRuleTypeEnum.StudyDelete);
+                                deleteRuleSearchCriteria.Enabled.EqualTo(true);
+                                var deleteRules = deleteRuleBroker.Find(deleteRuleSearchCriteria);
+
+                                if (deleteRules == null || deleteRules.Count == 0)
+                                    _serverMode = ServerOperatingMode.Archive;
+
+                                var defaultDeleteRuleExists = deleteRules.Any(r => r.RuleName.Equals("Default Delete"));
+                                var customDeleteRuleExists = deleteRules.Any(r => !r.RuleName.Equals("Default Delete"));
+
+                                if (defaultDeleteRuleExists)
+                                    _serverMode = ServerOperatingMode.TemporaryCache;
+                                else
+                                {
+                                    if (customDeleteRuleExists)
+                                        _serverMode = ServerOperatingMode.MixedMode;
+                                    else
+                                        _serverMode = ServerOperatingMode.Archive;
+                                }
+
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Platform.Log(LogLevel.Error, ex);
+                        }
+                        finally
+                        {
+                            _systemModeLastCheckTimestamp = now;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public enum ServerOperatingMode
+    {
+        Archive,
+        TemporaryCache,
+        MixedMode
     }
 }

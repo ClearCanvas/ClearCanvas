@@ -30,6 +30,8 @@ using ClearCanvas.Dicom.Audit;
 using ClearCanvas.Dicom.Network.Scp;
 using ClearCanvas.Enterprise.Core;
 using ClearCanvas.ImageServer.Common;
+using ClearCanvas.ImageServer.Common.Helpers;
+using ClearCanvas.ImageServer.Core;
 using ClearCanvas.ImageServer.Model;
 
 namespace ClearCanvas.ImageServer.Services.Dicom.Shreds
@@ -94,7 +96,7 @@ namespace ClearCanvas.ImageServer.Services.Dicom.Shreds
 											EventIdentificationContentsEventOutcomeIndicator.Success, 
 											ApplicationActivityType.ApplicationStarted, 
 											new AuditProcessActiveParticipant(ipV4Scp.AeTitle));
-					ServerPlatform.LogAuditMessage(helper);
+                    ServerAuditHelper.LogAuditMessage(helper);
 				}
 				else
 				{
@@ -103,7 +105,7 @@ namespace ClearCanvas.ImageServer.Services.Dicom.Shreds
 											EventIdentificationContentsEventOutcomeIndicator.MajorFailureActionMadeUnavailable,
 											ApplicationActivityType.ApplicationStarted,
 											new AuditProcessActiveParticipant(ipV4Scp.AeTitle));
-					ServerPlatform.LogAuditMessage(helper);
+                    ServerAuditHelper.LogAuditMessage(helper);
 					Platform.Log(LogLevel.Error, "Unable to add IPv4 SCP handler for server partition {0}",
 								 part.Description);
 					Platform.Log(LogLevel.Error,
@@ -130,7 +132,7 @@ namespace ClearCanvas.ImageServer.Services.Dicom.Shreds
 											EventIdentificationContentsEventOutcomeIndicator.Success,
 											ApplicationActivityType.ApplicationStarted,
 											new AuditProcessActiveParticipant(ipV6Scp.AeTitle));
-					ServerPlatform.LogAuditMessage(helper);
+                    ServerAuditHelper.LogAuditMessage(helper);
 				}
 				else
 				{
@@ -139,7 +141,7 @@ namespace ClearCanvas.ImageServer.Services.Dicom.Shreds
 						EventIdentificationContentsEventOutcomeIndicator.MajorFailureActionMadeUnavailable,
 						ApplicationActivityType.ApplicationStarted,
 						new AuditProcessActiveParticipant(ipV6Scp.AeTitle));
-					ServerPlatform.LogAuditMessage(helper);
+                    ServerAuditHelper.LogAuditMessage(helper);
 
 					Platform.Log(LogLevel.Error, "Unable to add IPv6 SCP handler for server partition {0}",
 								 part.Description);
@@ -183,7 +185,7 @@ namespace ClearCanvas.ImageServer.Services.Dicom.Shreds
 												EventIdentificationContentsEventOutcomeIndicator.Success,
 												ApplicationActivityType.ApplicationStopped,
 												new AuditProcessActiveParticipant(scp.AeTitle));
-						ServerPlatform.LogAuditMessage(helper);
+                        ServerAuditHelper.LogAuditMessage(helper);
 					}
 				}
 
@@ -281,7 +283,7 @@ namespace ClearCanvas.ImageServer.Services.Dicom.Shreds
 								EventIdentificationContentsEventOutcomeIndicator.Success,
 								ApplicationActivityType.ApplicationStopped,
 								new AuditProcessActiveParticipant(scp.AeTitle));
-					ServerPlatform.LogAuditMessage(helper);
+                    ServerAuditHelper.LogAuditMessage(helper);
 	
 				}
 				ServerPartitionMonitor.Instance.Changed -= _changedEvent;

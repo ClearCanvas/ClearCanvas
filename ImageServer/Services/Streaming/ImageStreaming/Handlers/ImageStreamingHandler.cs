@@ -28,6 +28,7 @@ using System.Collections.Specialized;
 using System.Net;
 using ClearCanvas.Common;
 using ClearCanvas.ImageServer.Common;
+using ClearCanvas.ImageServer.Core;
 using ClearCanvas.ImageServer.Model;
 using ClearCanvas.ImageServer.Services.Streaming.Shreds;
 

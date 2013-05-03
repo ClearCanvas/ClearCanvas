@@ -26,7 +26,8 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using ClearCanvas.Enterprise.Core;
-using ClearCanvas.ImageServer.Common;
+using ClearCanvas.ImageServer.Core;
+using ClearCanvas.ImageServer.Core.Helpers;
 using ClearCanvas.ImageServer.Core.Query;
 using ClearCanvas.ImageServer.Enterprise;
 using ClearCanvas.ImageServer.Model;
@@ -157,7 +158,7 @@ namespace ClearCanvas.ImageServer.Web.Common.Data.DataSource
                     IList<WorkQueue> workqueueItems = controller.GetWorkQueueItems(TheStudy);
                     foreach (WorkQueue item in workqueueItems)
                     {
-                        if (!ServerPlatform.IsActiveWorkQueue(item))
+                        if (!WorkQueueHelper.IsActiveWorkQueue(item))
                         {
                             _requiresWorkQueueAttention = true;
                             break;

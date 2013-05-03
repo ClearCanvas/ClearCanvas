@@ -28,6 +28,7 @@ using ClearCanvas.Common;
 using ClearCanvas.Dicom;
 using ClearCanvas.ImageServer.Common.Helpers;
 using ClearCanvas.ImageServer.Core;
+using ClearCanvas.ImageServer.Core.Helpers;
 using ClearCanvas.ImageServer.Core.Validation;
 using ClearCanvas.ImageServer.Services.WorkQueue.StudyProcess;
 

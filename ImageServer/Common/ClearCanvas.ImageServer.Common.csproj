@@ -75,6 +75,7 @@
     <Compile Include="Command\ServerDatabaseCommand.cs" />
     <Compile Include="Command\ServerExecutionContext.cs" />
     <Compile Include="ConstantResourceManager.cs" />
+    <Compile Include="HttpServer.cs" />
     <Compile Include="ProductManifestServiceSettings.Designer.cs">
       <DependentUpon>ProductManifestServiceSettings.settings</DependentUpon>
       <AutoGen>True</AutoGen>
@@ -91,22 +92,19 @@
     <Compile Include="Exceptions\StudyIsInInvalidStateException.cs" />
     <Compile Include="Exceptions\StudyIsNearlineException.cs" />
     <Compile Include="Exceptions\StudyNotFoundException.cs" />
-    <Compile Include="FileSystemMonitor.cs" />
     <Compile Include="Helpers\DicomTagPath.cs" />
-    <Compile Include="FilesystemSelector.cs" />
     <Compile Include="InProcessImageServerServiceProvider.cs" />
     <Compile Include="IZipService.cs" />
     <Compile Include="ProductManifestServiceProvider.cs" />
     <Compile Include="Helpers\HeuristicTypeResolver.cs" />
     <Compile Include="Helpers\TypeExtension.cs" />
+    <Compile Include="ServerPlatform.cs" />
     <Compile Include="WorkQueueManagerExtensionPoint.cs" />
-    <Compile Include="ServerAuditHelper.cs" />
+    <Compile Include="Helpers\ServerAuditHelper.cs" />
     <Compile Include="ServiceModel\IFilesystemService.cs" />
     <Compile Include="ServiceModel\IProductVerificationService.cs" />
     <Compile Include="ServiceModel\ProductVerificationResponse.cs" />
     <Compile Include="ServiceMount.cs" />
-    <Compile Include="Helpers\StudyComparer.cs" />
-    <Compile Include="HttpServer.cs" />
     <Compile Include="ServiceModel\IAlertService.cs" />
     <Compile Include="ICancelable.cs" />
     <Compile Include="ImageServerCommonConfiguration.cs" />
@@ -121,16 +119,12 @@
     </Compile>
     <Compile Include="ServerAddress.cs" />
     <Compile Include="ServerCache.cs" />
-    <Compile Include="ServerFilesystemInfo.cs" />
-    <Compile Include="ServerPartitionMonitor.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="ServerPlatform.cs" />
-    <Compile Include="StorageLocationCache.cs" />
     <Compile Include="ThreadedService.cs" />
     <Compile Include="Utilities\CustomXmlTextWriter.cs" />
     <Compile Include="Utilities\DicomNameUtils.cs" />
@@ -171,10 +165,6 @@
     <ProjectReference Include="..\Enterprise\ClearCanvas.ImageServer.Enterprise.csproj">
       <Project>{86CA6EDB-DE59-45E9-8BD8-832FBB3F8009}</Project>
       <Name>ClearCanvas.ImageServer.Enterprise</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Model\ClearCanvas.ImageServer.Model.csproj">
-      <Project>{2C9126D3-5B73-4539-BBC9-D56E6097D335}</Project>
-      <Name>ClearCanvas.ImageServer.Model</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -27,7 +27,8 @@ using System.Text;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Dicom;
-namespace ClearCanvas.ImageServer.Common
+
+namespace ClearCanvas.ImageServer.Core
 {
     /// <summary>
     /// Provide sorting function on <see cref="ServerFilesystemInfo"/>

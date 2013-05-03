@@ -91,6 +91,11 @@
     <Compile Include="Edit\UpdateStudyStatistics.cs" />
     <Compile Include="Edit\WebDeleteWorkQueueEntryData.cs" />
     <Compile Include="FilesystemDynamicPath.cs" />
+    <Compile Include="FileSystemMonitor.cs" />
+    <Compile Include="FilesystemSelector.cs" />
+    <Compile Include="Helpers\StudyComparer.cs" />
+    <Compile Include="Helpers\StudyHistoryHelper.cs" />
+    <Compile Include="Helpers\WorkQueueHelper.cs" />
     <Compile Include="IStudyPreProcessor.cs" />
     <Compile Include="ModelExtensions\ServerPartitionExtensions.cs" />
     <Compile Include="ModelExtensions\StudyStorageLocationExtensions.cs" />
@@ -146,9 +151,12 @@
     <Compile Include="Reconcile\Test\ImageReconcilerTest.cs" />
     <Compile Include="Reconcile\UpdateHistoryCommand.cs" />
     <Compile Include="Reconcile\SaveUidMapXmlCommand.cs" />
-    <Compile Include="ServerHelper.cs" />
+    <Compile Include="ServerFilesystemInfo.cs" />
+    <Compile Include="Helpers\ServerHelper.cs" />
+    <Compile Include="ServerPartitionMonitor.cs" />
     <Compile Include="SopInstanceImporter.cs" />
     <Compile Include="SopInstanceProcessor.cs" />
+    <Compile Include="StorageLocationCache.cs" />
     <Compile Include="StudyAlertGenerator.cs" />
     <Compile Include="StudyEditor.cs" />
     <Compile Include="UpdateStudyStatusCommand.cs" />
@@ -201,6 +209,7 @@
       <LastGenOutput>DiagnosticSettings.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

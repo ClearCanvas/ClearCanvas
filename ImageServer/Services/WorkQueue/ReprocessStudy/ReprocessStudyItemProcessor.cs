@@ -37,6 +37,7 @@ using ClearCanvas.ImageServer.Common;
 using ClearCanvas.ImageServer.Common.Utilities;
 using ClearCanvas.ImageServer.Core;
 using ClearCanvas.ImageServer.Core.Data;
+using ClearCanvas.ImageServer.Core.Helpers;
 using ClearCanvas.ImageServer.Core.Validation;
 using ClearCanvas.ImageServer.Model;
 using ClearCanvas.ImageServer.Model.Brokers;
@@ -663,7 +664,7 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.ReprocessStudy
                                         User = _queueData.ChangeLog != null ? _queueData.ChangeLog.User : "Unknown"
                                     };
 
-                StudyHistory history = ServerPlatform.CreateStudyHistoryRecord(ctx, StorageLocation, null, StudyHistoryTypeEnum.Reprocessed, null, changeLog);
+                StudyHistory history = StudyHistoryHelper.CreateStudyHistoryRecord(ctx, StorageLocation, null, StudyHistoryTypeEnum.Reprocessed, null, changeLog);
                 if (history != null)
                     ctx.Commit();
             }

@@ -38,6 +38,7 @@ using ClearCanvas.ImageServer.Common.Command;
 using ClearCanvas.ImageServer.Common.Exceptions;
 using ClearCanvas.ImageServer.Core;
 using ClearCanvas.ImageServer.Core.Command;
+using ClearCanvas.ImageServer.Core.Helpers;
 using ClearCanvas.ImageServer.Core.Process;
 using ClearCanvas.ImageServer.Core.Reconcile;
 using ClearCanvas.ImageServer.Core.Validation;
@@ -175,7 +176,7 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.StudyProcess
             var result = new ProcessDuplicateResult();
 
 
-            string duplicateSopPath = ServerPlatform.GetDuplicateUidPath(StorageLocation, uid);
+            string duplicateSopPath = ServerHelper.GetDuplicateUidPath(StorageLocation, uid);
             string basePath = StorageLocation.GetSopInstancePath(uid.SeriesInstanceUid, uid.SopInstanceUid);
 			if (!File.Exists(basePath))
 			{
@@ -271,7 +272,7 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.StudyProcess
             {
                 var insertCommand = new InsertOrUpdateEntryCommand(
                     uid.GroupID, StorageLocation, file,
-                    ServerPlatform.GetDuplicateGroupPath(StorageLocation, uid),
+                    ServerHelper.GetDuplicateGroupPath(StorageLocation, uid),
                     string.IsNullOrEmpty(uid.RelativePath)
                         ? Path.Combine(StorageLocation.StudyInstanceUid, uid.SopInstanceUid + "." + uid.Extension)
                         : uid.RelativePath,
@@ -378,7 +379,7 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.StudyProcess
             {
                 if (sop.Duplicate && sop.Extension != null)
                 {
-                    path = ServerPlatform.GetDuplicateUidPath(StorageLocation, sop);
+                    path = ServerHelper.GetDuplicateUidPath(StorageLocation, sop);
                     var file = new DicomFile(path);
                     file.Load();
 
@@ -397,7 +398,7 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.StudyProcess
                             // make sure the folder is also deleted if it's empty
                             string folder = Path.GetDirectoryName(path);
 
-                            String reconcileRootFolder = ServerPlatform.GetDuplicateFolderRootPath(StorageLocation);
+                            String reconcileRootFolder = ServerHelper.GetDuplicateFolderRootPath(StorageLocation);
                             DirectoryUtility.DeleteIfEmpty(folder, reconcileRootFolder);
                         }
                     }
@@ -555,13 +556,13 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.StudyProcess
 
             if (uid.Duplicate)
             {
-                String dupPath = ServerPlatform.GetDuplicateUidPath(StorageLocation, uid);
+                String dupPath = ServerHelper.GetDuplicateUidPath(StorageLocation, uid);
                 // Delete the container if it's empty
                 var f = new FileInfo(dupPath);
 
                 if (f.Directory!=null && DirectoryUtility.DeleteIfEmpty(f.Directory.FullName))
                 {
-                    DirectoryUtility.DeleteIfEmpty(ServerPlatform.GetDuplicateGroupPath(StorageLocation, uid));
+                    DirectoryUtility.DeleteIfEmpty(ServerHelper.GetDuplicateGroupPath(StorageLocation, uid));
                 }
             }
         }

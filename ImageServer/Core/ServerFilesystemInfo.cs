@@ -27,9 +27,10 @@ using System.Runtime.InteropServices;
 using System.Text;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Statistics;
+using ClearCanvas.ImageServer.Common;
 using ClearCanvas.ImageServer.Model;
 
-namespace ClearCanvas.ImageServer.Common
+namespace ClearCanvas.ImageServer.Core
 {
     public class ServerFilesystemInfo
     {

@@ -34,6 +34,7 @@ using ClearCanvas.ImageServer.Common;
 using ClearCanvas.ImageServer.Common.Command;
 using ClearCanvas.ImageServer.Core.Data;
 using ClearCanvas.ImageServer.Core.Edit;
+using ClearCanvas.ImageServer.Core.Helpers;
 using ClearCanvas.ImageServer.Model;
 using ClearCanvas.ImageServer.Rules;
 

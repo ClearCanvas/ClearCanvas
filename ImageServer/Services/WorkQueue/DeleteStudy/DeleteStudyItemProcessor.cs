@@ -31,7 +31,9 @@ using ClearCanvas.Dicom.Audit;
 using ClearCanvas.Enterprise.Core;
 using ClearCanvas.ImageServer.Common;
 using ClearCanvas.ImageServer.Common.Command;
+using ClearCanvas.ImageServer.Common.Helpers;
 using ClearCanvas.ImageServer.Common.Utilities;
+using ClearCanvas.ImageServer.Core;
 using ClearCanvas.ImageServer.Core.Command;
 using ClearCanvas.ImageServer.Core.Data;
 using ClearCanvas.ImageServer.Core.Validation;
@@ -371,7 +373,7 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.DeleteStudy
             helper.AddStudyParticipantObject(new AuditStudyParticipantObject(
                                                     StorageLocation.StudyInstanceUid,
                                                     Study == null ? string.Empty : Study.AccessionNumber));
-            ServerPlatform.LogAuditMessage(helper);
+            ServerAuditHelper.LogAuditMessage(helper);
 
 
             IList<IDeleteStudyProcessorExtension> extensions = LoadExtensions();
