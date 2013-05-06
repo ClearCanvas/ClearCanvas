@@ -81,52 +81,27 @@ namespace ClearCanvas.ImageServer.Enterprise.SqlServer
             return broker;
         }
 
-        public void Lock(Entity entity)
+        public void Lock(object domainObject)
         {
             throw new Exception("The method or operation is not implemented.");
         }
 
-        public void Lock(Entity entity, DirtyState state)
+		public void Lock(object domainObject, DirtyState state)
         {
             throw new Exception("The method or operation is not implemented.");
         }
 		
-        public void Lock(EnumValue enumValue)
+		public object Load(EntityRef entityRef, EntityLoadFlags flags)
         {
             throw new Exception("The method or operation is not implemented.");
         }
 
-        public Entity Load(EntityRef entityRef, EntityLoadFlags flags)
+    	public TEntity Load<TEntity>(EntityRef entityRef)// where TEntity : Entity
         {
             throw new Exception("The method or operation is not implemented.");
         }
 
-        public TEntity Load<TEntity>(EntityRef entityRef) where TEntity : Entity
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public TEntity Load<TEntity>(EntityRef entityRef, EntityLoadFlags flags) where TEntity : Entity
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public bool IsProxyLoaded(Entity entity)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public bool IsCollectionLoaded(System.Collections.IEnumerable collection)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public virtual void Suspend()
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public virtual void Resume()
+        public TEntity Load<TEntity>(EntityRef entityRef, EntityLoadFlags flags)// where TEntity : Entity
         {
             throw new Exception("The method or operation is not implemented.");
         }

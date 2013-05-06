@@ -60,16 +60,6 @@ namespace ClearCanvas.ImageServer.Enterprise.SqlServer
         }
         #endregion
 
-        #region PersistenceContext Overrides
-        public override void Suspend()
-        {
-        }
-
-        public override void Resume()
-        { 
-        }
-        #endregion
-
         #region IUpdateContext Members
 
         void IUpdateContext.Commit()

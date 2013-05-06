@@ -77,34 +77,22 @@ namespace ClearCanvas.Enterprise.Hibernate
 		}
 
 		/// <summary>
-		/// Locks the specified entity into this context.
+		/// Locks the specified domain object into this context.
 		/// </summary>
-		/// <param name="entity"></param>
-		public void Lock(Entity entity)
+		/// <param name="domainObject"> </param>
+		public void Lock(object domainObject)
 		{
-			LockCore(entity, DirtyState.Clean);
+			LockCore((DomainObject)domainObject, DirtyState.Clean);
 		}
 
 		/// <summary>
-		/// Locks the specified entity into this context with the specified dirty state.
+		/// Locks the specified domain object into this context with the specified dirty state.
 		/// </summary>
-		/// <param name="entity"></param>
+		/// <param name="domainObject"> </param>
 		/// <param name="dirtyState"></param>
-		public void Lock(Entity entity, DirtyState dirtyState)
+		public void Lock(object domainObject, DirtyState dirtyState)
 		{
-			LockCore(entity, dirtyState);
-		}
-
-		/// <summary>
-		/// Locks the specified enum value into the context. 
-		/// </summary>
-		/// <remarks>
-		/// Call this method to re-associate an enum value instance with this context,
-		/// in order for an entity to be able to reference the instance.
-		/// </remarks>
-		public void Lock(EnumValue enumValue)
-		{
-			LockCore(enumValue, DirtyState.Clean);
+			LockCore((DomainObject)domainObject, dirtyState);
 		}
 
 		/// <summary>
@@ -113,7 +101,7 @@ namespace ClearCanvas.Enterprise.Hibernate
 		/// <param name="entityRef"></param>
 		/// <returns></returns>
 		public TEntity Load<TEntity>(EntityRef entityRef)
-			where TEntity : Entity
+			//where TEntity : Entity
 		{
 			return this.Load<TEntity>(entityRef, this.DefaultEntityLoadFlags);
 		}
@@ -126,7 +114,7 @@ namespace ClearCanvas.Enterprise.Hibernate
 		/// <param name="flags"></param>
 		/// <returns></returns>
 		public TEntity Load<TEntity>(EntityRef entityRef, EntityLoadFlags flags)
-			where TEntity : Entity
+			//where TEntity : Entity
 		{
 			return (TEntity)Load(entityRef, flags);
 		}
@@ -134,7 +122,7 @@ namespace ClearCanvas.Enterprise.Hibernate
 		/// <summary>
 		/// Loads the specified entity into this context.
 		/// </summary>
-		public Entity Load(EntityRef entityRef, EntityLoadFlags flags)
+		public object Load(EntityRef entityRef, EntityLoadFlags flags)
 		{
 			try
 			{
