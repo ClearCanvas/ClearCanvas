@@ -222,6 +222,9 @@ namespace ClearCanvas.ImageServer.Core
                 if (!p1.DuplicateSopPolicyEnum.Equals(p2.DuplicateSopPolicyEnum))
             		return true;
 
+                if (!p1.ServerPartitionTypeEnum.Equals(p2.ServerPartitionTypeEnum))
+                    return true;
+
 				if (p1.MatchAccessionNumber != p2.MatchAccessionNumber
 					|| p1.MatchIssuerOfPatientId != p2.MatchIssuerOfPatientId
 					|| p1.MatchPatientId != p2.MatchPatientId

@@ -1417,6 +1417,9 @@ namespace ClearCanvas.ImageServer.Services.Dicom
         /// <returns></returns>
         public override IList<SupportedSop> GetSupportedSopClasses()
         {
+            if (!Context.AllowQuery)
+                return new List<SupportedSop>();
+
             return _list;
         }
 
