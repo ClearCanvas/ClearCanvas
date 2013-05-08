@@ -71,6 +71,9 @@ namespace ClearCanvas.ImageServer.Services.Dicom
         /// <returns></returns>
         public override IList<SupportedSop> GetSupportedSopClasses()
         {
+            if (!Context.AllowStorage)
+                return new List<SupportedSop>();
+
             // Note: this method is called on startup to set the server's presentation contexts and then on every association.
             // If the settings change between those calls, the server may either throw an exception (if the sop is removed) or 
             // does not behave as expected unless the server is restarted.
@@ -90,9 +93,10 @@ namespace ClearCanvas.ImageServer.Services.Dicom
                         if (partitionSopClass.Enabled
                             && partitionSopClass.NonImage)
                         {
-                            SupportedSop sop = new SupportedSop();
-
-                            sop.SopClass = SopClass.GetSopClass(partitionSopClass.SopClassUid);
+                            var sop = new SupportedSop
+                                {
+                                    SopClass = SopClass.GetSopClass(partitionSopClass.SopClassUid)
+                                };
 
                             if (!partitionSopClass.ImplicitOnly)
                             {

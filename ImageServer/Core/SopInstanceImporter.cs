@@ -36,6 +36,7 @@ using ClearCanvas.ImageServer.Common.Exceptions;
 using ClearCanvas.ImageServer.Common.Utilities;
 using ClearCanvas.ImageServer.Core.Command;
 using ClearCanvas.ImageServer.Core.Diagnostics;
+using ClearCanvas.ImageServer.Core.Helpers;
 using ClearCanvas.ImageServer.Core.Process;
 using ClearCanvas.ImageServer.Enterprise;
 using ClearCanvas.ImageServer.Model;
@@ -52,6 +53,7 @@ namespace ClearCanvas.ImageServer.Core
         private readonly String _contextID;
         private readonly string _sourceAE;
         private readonly ServerPartition _partition;
+        private ServerPartitionAlternateAeTitle _alternateAe;
         #endregion
 
         #region Constructors
@@ -67,6 +69,7 @@ namespace ClearCanvas.ImageServer.Core
             :
             this(id, sourceAE, ServerPartitionMonitor.Instance.GetPartition(serverAE))
         {
+            _alternateAe = ServerPartitionMonitor.Instance.GetPartitionAlternateAe(serverAE);
         }
 
         /// <summary>
@@ -82,7 +85,7 @@ namespace ClearCanvas.ImageServer.Core
             Platform.CheckForNullReference(partition, "partition");
             _contextID = contextID;
             _sourceAE = sourceAE;
-            _partition = partition;
+            _partition = partition;            
         }
         
         #endregion
@@ -109,6 +112,11 @@ namespace ClearCanvas.ImageServer.Core
         public ServerPartition Partition
         {
             get { return _partition; }
+        }
+
+        public ServerPartitionAlternateAeTitle AlternateAe
+        {
+            get { return _alternateAe; }
         }
     }
 
@@ -472,7 +480,7 @@ namespace ClearCanvas.ImageServer.Core
 
         static private bool HasUnprocessedCopy(ServerEntityKey storageLocationKey, string seriesUid, string sopUid)
         {
-			if (ServerHelper.WorkQueueUidExists(storageLocationKey, seriesUid, sopUid))
+			if (WorkQueueHelper.WorkQueueUidExists(storageLocationKey, seriesUid, sopUid))
 				return true;
 
 			return ServerHelper.StudyIntegrityUidExists(storageLocationKey, seriesUid, sopUid);

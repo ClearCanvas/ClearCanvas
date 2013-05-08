@@ -628,7 +628,7 @@ BEGIN
 EXEC dbo.sp_executesql @statement = N'-- =============================================
 -- Author:		Steve Wranovsky
 -- Create date: August 13, 2007
--- Modify date: Aug 17, 2012
+-- Modify date: May 6, 2013
 -- Description:	Insert a ServerPartition row
 -- =============================================
 CREATE PROCEDURE [dbo].[InsertServerPartition] 
@@ -649,7 +649,8 @@ CREATE PROCEDURE [dbo].[InsertServerPartition]
     @MatchIssuerOfPatientId bit = 1,
     @MatchPatientsSex bit = 1,
 	@AuditDeleteStudy bit = 0,
-	@AcceptLatestReport bit = 1
+	@AcceptLatestReport bit = 1,
+	@ServerPartitionTypeEnum smallint = 100
 AS
 BEGIN
 	-- SET NOCOUNT ON added to prevent extra result sets from
@@ -669,9 +670,9 @@ BEGIN
 
 	INSERT INTO [ImageServer].[dbo].[ServerPartition] 
 			([GUID],[Enabled],[Description],[AeTitle],[Port],[PartitionFolder],[AcceptAnyDevice],[AutoInsertDevice],[DefaultRemotePort],[DuplicateSopPolicyEnum],
-			[MatchPatientsName], [MatchPatientId], [MatchAccessionNumber], [MatchPatientsBirthDate], [MatchIssuerOfPatientId], [MatchPatientsSex], [AuditDeleteStudy], [AcceptLatestReport])
+			[MatchPatientsName], [MatchPatientId], [MatchAccessionNumber], [MatchPatientsBirthDate], [MatchIssuerOfPatientId], [MatchPatientsSex], [AuditDeleteStudy], [AcceptLatestReport],[ServerPartitionTypeEnum])
 	VALUES (@ServerPartitionGUID, @Enabled, @Description, @AeTitle, @Port, @PartitionFolder, @AcceptAnyDevice, @AutoInsertDevice, @DefaultRemotePort, @DuplicateSopPolicyEnum,
-			@MatchPatientsName, @MatchPatientId, @MatchAccessionNumber, @MatchPatientsBirthDate, @MatchIssuerOfPatientId, @MatchPatientsSex, @AuditDeleteStudy, @AcceptLatestReport)
+			@MatchPatientsName, @MatchPatientId, @MatchAccessionNumber, @MatchPatientsBirthDate, @MatchIssuerOfPatientId, @MatchPatientsSex, @AuditDeleteStudy, @AcceptLatestReport, @ServerPartitionTypeEnum)
 
 	-- Populate PartitionSopClass
 	DECLARE cur_sopclass CURSOR FOR 
@@ -720,6 +721,8 @@ BEGIN
 	DECLARE  @OnlineRetentionServerRuleTypeEnum smallint
 	DECLARE  @StudyRestoreServerRuleApplyTimeEnum smallint
 	DECLARE  @StudyCompressServerRuleTypeEnum smallint
+	DECLARE  @StandardServerPartitionTypeEnum smallint
+	DECLARE  @ResearchServerPartitionTypeEnum smallint
 
 	-- Get the Study Processed Rule Apply Time
 	SELECT @StudyServerRuleApplyTimeEnum = Enum FROM ServerRuleApplyTimeEnum WHERE Lookup = ''StudyProcessed''
@@ -732,16 +735,56 @@ BEGIN
 	SELECT @OnlineRetentionServerRuleTypeEnum = Enum FROM ServerRuleTypeEnum WHERE Lookup = ''OnlineRetention''
 	SELECT @StudyCompressServerRuleTypeEnum = Enum FROM ServerRuleTypeEnum WHERE Lookup = ''StudyCompress''
 
+	SELECT @StandardServerPartitionTypeEnum = Enum FROM ServerPartitionTypeEnum WHERE Lookup = ''Standard''
+	SELECT @ResearchServerPartitionTypeEnum = Enum FROM ServerPartitionTypeEnum WHERE Lookup = ''Research''
+
 	-- Insert a default StudyDelete rule
-	INSERT INTO [ImageServer].[dbo].[ServerRule]
-			   ([GUID],[RuleName],[ServerPartitionGUID],[ServerRuleApplyTimeEnum],[ServerRuleTypeEnum],[Enabled],[DefaultRule],[RuleXml])
-		 VALUES
-			   (newid(),''Default Delete'',@ServerPartitionGUID, @StudyServerRuleApplyTimeEnum, @StudyDeleteServerRuleTypeEnum, 0, 0,
-				''<rule id="Default Delete">
-					<condition>
-					</condition>
-					<action><study-delete time="10" unit="days"/></action>
-				</rule>'' )
+	if @ServerPartitionTypeEnum = @StandardServerPartitionTypeEnum
+	BEGIN
+		INSERT INTO [ImageServer].[dbo].[ServerRule]
+				   ([GUID],[RuleName],[ServerPartitionGUID],[ServerRuleApplyTimeEnum],[ServerRuleTypeEnum],[Enabled],[DefaultRule],[RuleXml])
+			 VALUES
+				   (newid(),''Default Delete'',@ServerPartitionGUID, @StudyServerRuleApplyTimeEnum, @StudyDeleteServerRuleTypeEnum, 0, 0,
+					''<rule id="Default Delete">
+						<condition>
+						</condition>
+						<action><study-delete time="10" unit="days"/></action>
+					</rule>'' )
+
+		-- Insert a default Tier1Retention rule for restores
+		INSERT INTO [ImageServer].[dbo].[ServerRule]
+				   ([GUID],[RuleName],[ServerPartitionGUID],[ServerRuleApplyTimeEnum],[ServerRuleTypeEnum],[Enabled],[DefaultRule],[RuleXml])
+			 VALUES
+				   (newid(),''Default Restore Tier1 Retention'',@ServerPartitionGUID, @StudyRestoreServerRuleApplyTimeEnum, @Tier1RetentionServerRuleTypeEnum, 1, 1,
+					''<rule id="Default Tier1 Retention">
+						<condition>
+						</condition>
+						<action><tier1-retention time="1" unit="weeks" refValue="$StudyDate"/></action>
+					</rule>'' )
+
+		-- Insert a default Online Retention Rule for study processed
+		INSERT INTO [ImageServer].[dbo].[ServerRule]
+				   ([GUID],[RuleName],[ServerPartitionGUID],[ServerRuleApplyTimeEnum],[ServerRuleTypeEnum],[Enabled],[DefaultRule],[RuleXml])
+			 VALUES
+				   (newid(),''Default Online Retention'',@ServerPartitionGUID, @StudyArchiveServerRuleApplyTimeEnum, @OnlineRetentionServerRuleTypeEnum, 1, 1,
+					''<rule id="Default Online Retention">
+						<condition>
+						</condition>
+						<action><online-retention time="4" unit="weeks"/></action>
+					</rule>'' )
+
+		-- Insert a default Online Retention Rule for restores
+		INSERT INTO [ImageServer].[dbo].[ServerRule]
+				   ([GUID],[RuleName],[ServerPartitionGUID],[ServerRuleApplyTimeEnum],[ServerRuleTypeEnum],[Enabled],[DefaultRule],[RuleXml])
+			 VALUES
+				   (newid(),''Default Restore Online Retention'',@ServerPartitionGUID, @StudyRestoreServerRuleApplyTimeEnum, @OnlineRetentionServerRuleTypeEnum, 1, 1,
+					''<rule id="Default Restore Online Retention">
+						<condition>
+						</condition>
+						<action><online-retention time="1" unit="weeks"/></action>
+					</rule>'' )
+
+	END
 
 	-- Insert a default Tier1Retention rule
 	INSERT INTO [ImageServer].[dbo].[ServerRule]
@@ -754,38 +797,7 @@ BEGIN
 					<action><tier1-retention time="3" unit="weeks" refValue="$StudyDate"/></action>
 				</rule>'' )
 
-	-- Insert a default Tier1Retention rule for restores
-	INSERT INTO [ImageServer].[dbo].[ServerRule]
-			   ([GUID],[RuleName],[ServerPartitionGUID],[ServerRuleApplyTimeEnum],[ServerRuleTypeEnum],[Enabled],[DefaultRule],[RuleXml])
-		 VALUES
-			   (newid(),''Default Restore Tier1 Retention'',@ServerPartitionGUID, @StudyRestoreServerRuleApplyTimeEnum, @Tier1RetentionServerRuleTypeEnum, 1, 1,
-				''<rule id="Default Tier1 Retention">
-					<condition>
-					</condition>
-					<action><tier1-retention time="1" unit="weeks" refValue="$StudyDate"/></action>
-				</rule>'' )
 
-	-- Insert a default Online Retention Rule for study processed
-	INSERT INTO [ImageServer].[dbo].[ServerRule]
-			   ([GUID],[RuleName],[ServerPartitionGUID],[ServerRuleApplyTimeEnum],[ServerRuleTypeEnum],[Enabled],[DefaultRule],[RuleXml])
-		 VALUES
-			   (newid(),''Default Online Retention'',@ServerPartitionGUID, @StudyArchiveServerRuleApplyTimeEnum, @OnlineRetentionServerRuleTypeEnum, 1, 1,
-				''<rule id="Default Online Retention">
-					<condition>
-					</condition>
-					<action><online-retention time="4" unit="weeks"/></action>
-				</rule>'' )
-
-	-- Insert a default Online Retention Rule for restores
-	INSERT INTO [ImageServer].[dbo].[ServerRule]
-			   ([GUID],[RuleName],[ServerPartitionGUID],[ServerRuleApplyTimeEnum],[ServerRuleTypeEnum],[Enabled],[DefaultRule],[RuleXml])
-		 VALUES
-			   (newid(),''Default Restore Online Retention'',@ServerPartitionGUID, @StudyRestoreServerRuleApplyTimeEnum, @OnlineRetentionServerRuleTypeEnum, 1, 1,
-				''<rule id="Default Restore Online Retention">
-					<condition>
-					</condition>
-					<action><online-retention time="1" unit="weeks"/></action>
-				</rule>'' )
 
 	-- Insert an exempt rule for Compression
 	INSERT INTO [ImageServer].[dbo].[ServerRule]
@@ -2614,6 +2626,9 @@ BEGIN
 
 	-- PRINT ''Deleting ServerPartitionDataAccess''
 	delete dbo.ServerPartitionDataAccess where ServerPartitionGUID= @ServerPartitionGUID
+
+	-- PRINT ''Deleting ServerPartitionAlternateAeTitle''
+	delete dbo.ServerPartitionAlternateAeTitle where ServerPartitionGUID= @ServerPartitionGUID
 
 	IF @DeleteStudies=1
 	BEGIN

@@ -31,6 +31,7 @@ using ClearCanvas.Common.Utilities;
 using ClearCanvas.Dicom.Audit;
 using ClearCanvas.Enterprise.Common;
 using ClearCanvas.ImageServer.Common;
+using ClearCanvas.ImageServer.Common.Helpers;
 using ClearCanvas.ImageServer.Web.Common.Utilities;
 using ClearCanvas.Web.Enterprise.Authentication;
 
@@ -242,7 +243,7 @@ namespace ClearCanvas.ImageServer.Web.Common.Security
                                              session.Credentials.UserName,
                                              null,
                                              session.Credentials.DisplayName));
-                ServerPlatform.LogAuditMessage(audit);
+                ServerAuditHelper.LogAuditMessage(audit);
             }
         }
 

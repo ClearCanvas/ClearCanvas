@@ -28,12 +28,13 @@ using System.Collections.Generic;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Enterprise.Core;
+using ClearCanvas.ImageServer.Common;
 using ClearCanvas.ImageServer.Enterprise;
 using ClearCanvas.ImageServer.Model;
 using ClearCanvas.ImageServer.Model.EntityBrokers;
-using Timer=System.Threading.Timer;
+using Timer = System.Threading.Timer;
 
-namespace ClearCanvas.ImageServer.Common
+namespace ClearCanvas.ImageServer.Core
 {
 	/// <summary>
 	/// Event args for partition monitor
@@ -55,11 +56,12 @@ namespace ClearCanvas.ImageServer.Common
 	/// <summary>
 	/// Singleton class that monitors the currently loaded server partitions.
 	/// </summary>
-    public class ServerPartitionMonitor :  IEnumerable<ServerPartition>, IDisposable
+    public class ServerPartitionMonitor : IDisposable
 	{
 		#region Private Members
 		private readonly object _partitionsLock = new Object();
         private Dictionary<string, ServerPartition> _partitions = new Dictionary<string,ServerPartition>();
+        private Dictionary<string, ServerPartitionAlternateAeTitle> _alternateAeTitles = new Dictionary<string, ServerPartitionAlternateAeTitle>(); 
         private EventHandler<ServerPartitionChangedEventArgs> _changedListener;
         private readonly Timer _timer;
         private static readonly ServerPartitionMonitor _instance = new ServerPartitionMonitor();
@@ -101,38 +103,65 @@ namespace ClearCanvas.ImageServer.Common
 		}
 		#endregion
 
-		#region Public Methods
-		/// <summary>
+        #region Public Properties
+	    public IEnumerable<ServerPartition> Partitions
+	    {
+            get { lock (_partitionsLock) return _partitions.Values; }
+	    }
+
+        public IEnumerable<ServerPartitionAlternateAeTitle> PartitionAeTitles
+        {
+            get { lock (_partitionsLock) return _alternateAeTitles.Values; }
+        }
+        #endregion
+
+        #region Public Methods
+        /// <summary>
 		/// Get a partition based on an AE Title.
 		/// </summary>
-		/// <param name="serverAE"></param>
+		/// <param name="serverAe"></param>
 		/// <returns></returns>
-		public ServerPartition GetPartition(string serverAE)
+		public ServerPartition GetPartition(string serverAe)
         {
-            if (String.IsNullOrEmpty(serverAE))
+            if (String.IsNullOrEmpty(serverAe))
                 return null;
 
             lock(_partitionsLock)
             {
-                if (_partitions.ContainsKey(serverAE))
-                    return _partitions[serverAE];
-                else
-                    return null;
+                if (_partitions.ContainsKey(serverAe))
+                    return _partitions[serverAe];
+
+                if (_alternateAeTitles.ContainsKey(serverAe))
+                {
+                    var altAe = _alternateAeTitles[serverAe];
+                    return FindPartition(altAe.ServerPartitionKey);
+                }
+                return null;
             }
-		}
+        }
 
         public ServerPartition FindPartition(ServerEntityKey key)
         {
             lock(_partitionsLock)
             {
                 return CollectionUtils.SelectFirst(
-                           this,
-                           delegate(ServerPartition partition)
-                           {
-                               return partition.GetKey().Equals(key);
-                           });    
+                           _partitions.Values,
+                           partition => partition.Key.Equals(key));    
             }
             
+        }
+
+        public ServerPartitionAlternateAeTitle GetPartitionAlternateAe(string serverAe)
+        {
+            if (String.IsNullOrEmpty(serverAe))
+                return null;
+
+            lock (_partitionsLock)
+            {
+                if (_alternateAeTitles.ContainsKey(serverAe))
+                    return _alternateAeTitles[serverAe];
+                return null;
+            }
         }
 		#endregion
 
@@ -147,12 +176,14 @@ namespace ClearCanvas.ImageServer.Common
             {
                 try
                 {
-                    Dictionary<string, ServerPartition> templist = new Dictionary<string, ServerPartition>();
+                    var templist = new Dictionary<string, ServerPartition>();
+                    var tempAeList = new Dictionary<string, ServerPartitionAlternateAeTitle>();
+
                     IPersistentStore store = PersistentStoreRegistry.GetDefaultStore();
                     using (IReadContext ctx = store.OpenReadContext())
                     {
-                        IServerPartitionEntityBroker broker = ctx.GetBroker<IServerPartitionEntityBroker>();
-                        ServerPartitionSelectCriteria criteria = new ServerPartitionSelectCriteria();
+                        var broker = ctx.GetBroker<IServerPartitionEntityBroker>();
+                        var criteria = new ServerPartitionSelectCriteria();
                         IList<ServerPartition> list = broker.Find(criteria);
                         foreach (ServerPartition partition in list)
                         {
@@ -163,9 +194,28 @@ namespace ClearCanvas.ImageServer.Common
 
                             templist.Add(partition.AeTitle, partition);
                         }
+
+                        var aeBroker = ctx.GetBroker<IServerPartitionAlternateAeTitleEntityBroker>();
+                        var aeCriteria = new ServerPartitionAlternateAeTitleSelectCriteria();
+                        IList<ServerPartitionAlternateAeTitle> aeList = aeBroker.Find(aeCriteria);
+                        foreach (ServerPartitionAlternateAeTitle partitionAe in aeList)
+                        {
+                            if (IsChanged(partitionAe))
+                            {
+                                changed = true;
+                            }
+
+                            tempAeList.Add(partitionAe.AeTitle, partitionAe);
+                        }
                     }
 
+                    if (_partitions.Count != templist.Count)
+                        changed = true;
+                    if (_alternateAeTitles.Count != tempAeList.Count)
+                        changed = true;
+
                     _partitions = templist;
+                    _alternateAeTitles = tempAeList;
 
                     if (changed && _changedListener != null)
                     {
@@ -225,6 +275,9 @@ namespace ClearCanvas.ImageServer.Common
                 if (!p1.DuplicateSopPolicyEnum.Equals(p2.DuplicateSopPolicyEnum))
             		return true;
 
+                if (!p1.ServerPartitionTypeEnum.Equals(p2.ServerPartitionTypeEnum))
+                    return true;
+
 				if (p1.MatchAccessionNumber != p2.MatchAccessionNumber
 					|| p1.MatchIssuerOfPatientId != p2.MatchIssuerOfPatientId
 					|| p1.MatchPatientId != p2.MatchPatientId
@@ -257,33 +310,40 @@ namespace ClearCanvas.ImageServer.Common
                 return false;
 
             }
-            else
+		    // this is new partition
+		    return true;
+        }
+
+        private bool IsChanged(ServerPartitionAlternateAeTitle p2)
+        {
+            if (_alternateAeTitles.ContainsKey(p2.AeTitle))
             {
-                // this is new partition
-                return true;
+                ServerPartitionAlternateAeTitle p1 = _alternateAeTitles[p2.AeTitle];
+                if (p1.Port != p2.Port)
+                    return true;
+                if (p1.AllowKOPR != p2.AllowKOPR)
+                    return true;
+
+                if (p1.AllowQuery != p2.AllowQuery)
+                    return true;
+
+                if (p1.AllowRetrieve != p2.AllowRetrieve)
+                    return true;
+
+                if (p1.Enabled != p2.Enabled)
+                    return true;
+
+                if (!p1.ServerPartitionKey.Key.Equals(p2.ServerPartitionKey.Key))
+                    return true;
+
+                // nothing has changed
+                return false;
             }
 
+            // this is new ServerPartitionAlternateAeTitle
+            return true;
         }
 		#endregion
-
-        #region IEnumerable<ServerPartition> Members
-
-        public IEnumerator<ServerPartition> GetEnumerator()
-        {
-            return _partitions.Values.GetEnumerator();
-        }
-
-        #endregion
-
-
-        #region IEnumerable Members
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return _partitions.Values.GetEnumerator();
-        }
-
-        #endregion
 
     	public void Dispose()
     	{

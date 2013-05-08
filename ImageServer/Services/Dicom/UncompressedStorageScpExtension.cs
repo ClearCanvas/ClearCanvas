@@ -57,6 +57,9 @@ namespace ClearCanvas.ImageServer.Services.Dicom
             // If the settings change between those calls, the server may either throw an exception (if the sop is removed) or 
             // does not behave as expected unless the server is restarted.
 
+            if (!Context.AllowStorage)
+                return new List<SupportedSop>();
+
             if (_list == null)
             {
                 _list = new List<SupportedSop>();
@@ -71,9 +74,11 @@ namespace ClearCanvas.ImageServer.Services.Dicom
                     if (partitionSopClass.Enabled
                         && !partitionSopClass.NonImage)
                     {
-                        SupportedSop sop = new SupportedSop();
+                        var sop = new SupportedSop
+                            {
+                                SopClass = SopClass.GetSopClass(partitionSopClass.SopClassUid)
+                            };
 
-                        sop.SopClass = SopClass.GetSopClass(partitionSopClass.SopClassUid);
                         if (!partitionSopClass.ImplicitOnly)
                             sop.SyntaxList.Add(TransferSyntax.ExplicitVrLittleEndian);
              

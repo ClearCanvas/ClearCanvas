@@ -25,20 +25,11 @@
 using System;
 using System.Configuration;
 using System.Diagnostics;
-using System.IO;
 using System.Net;
-using System.Text;
-using System.Xml;
-using System.Linq;
 using ClearCanvas.Common;
-using ClearCanvas.Common.Audit;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Dicom.Audit;
-using ClearCanvas.Enterprise.Core;
 using ClearCanvas.ImageServer.Common.ServiceModel;
-using ClearCanvas.ImageServer.Common.Utilities;
-using ClearCanvas.ImageServer.Model;
-using ClearCanvas.ImageServer.Model.EntityBrokers;
 
 namespace ClearCanvas.ImageServer.Common
 {
@@ -49,23 +40,12 @@ namespace ClearCanvas.ImageServer.Common
     {
         #region Private Fields
         private static string _version;
-        private static string _tempDir;
         private static readonly object _syncLock = new object();
-    	private static DicomAuditSource _auditSource;
-    	private static AuditLog _log;
-    	private static string _hostId;
+        private static DicomAuditSource _auditSource;
+        private static string _hostId;
     	private static string _serverInstanceId;
     	private static string _processorId;
-
-        private static bool? _manifestVerified;
-        private static readonly TimeSpan ManifestRecheckTimeSpan = TimeSpan.FromMinutes(15);
-        private static DateTime? _lastManifestCheckTimestamp;
-
-
-        private static DateTime? _systemModeLastCheckTimestamp;
-        private static ServerOperatingMode _serverMode;
-
-    	#endregion
+	    #endregion
 
         /// <summary>
         /// Generates an alert message with an expiration time.
@@ -87,7 +67,7 @@ namespace ClearCanvas.ImageServer.Common
             IAlertService service = Platform.GetService<IAlertService>();
             if (service != null)
             {
-                AlertSource src = new AlertSource(source) {Host = ServerInstanceId};
+                AlertSource src = new AlertSource(source, ServerInstanceId) { Host = ServerInstanceId };
             	Alert alert = new Alert
                               	{
                               		Category = category,
@@ -103,23 +83,23 @@ namespace ClearCanvas.ImageServer.Common
             }
         }
 
-		/// <summary>
-		/// A well known AuditSource for ImageServer audit logging.
-		/// </summary>
-    	public static DicomAuditSource AuditSource
-    	{
-    		get
-    		{
-    			lock (_syncLock)
-    			{
-    				if (_auditSource == null)
-    				{
-    					_auditSource = new DicomAuditSource("ImageServer");
-    				}
-    				return _auditSource;
-    			}
-    		}
-    	}
+        /// <summary>
+        /// A well known AuditSource for ImageServer audit logging.
+        /// </summary>
+        public static DicomAuditSource AuditSource
+        {
+            get
+            {
+                lock (_syncLock)
+                {
+                    if (_auditSource == null)
+                    {
+                        _auditSource = new DicomAuditSource("ImageServer");
+                    }
+                    return _auditSource;
+                }
+            }
+        }
 
 		/// <summary>
 		/// Returns the duration of the user session based on the application settings
@@ -140,35 +120,6 @@ namespace ClearCanvas.ImageServer.Common
             }
 	    }
 
-		/// <summary>
-		/// Log an Audit message.
-		/// </summary>
-		/// <param name="helper"></param>
-		public static void LogAuditMessage(DicomAuditHelper helper)
-		{
-			lock (_syncLock)
-			{
-				if (_log == null)
-					_log = new AuditLog(ProductInformation.Component,"DICOM");
-
-                string serializeText = null;
-                try
-                {
-                    serializeText = helper.Serialize(false);
-                    _log.WriteEntry(helper.Operation, serializeText);
-                }
-                catch(Exception ex)
-                {
-                    Platform.Log(LogLevel.Error, ex, "Error occurred when writing audit log");
-
-                    StringBuilder sb = new StringBuilder();
-                    sb.AppendLine("Audit Log failed to save:");
-                    sb.AppendLine(String.Format("Operation: {0}", helper.Operation));
-                    sb.AppendLine(String.Format("Details: {0}", serializeText));
-                    Platform.Log(LogLevel.Info, sb.ToString());
-                }
-			}
-		}
 
 		/// <summary>
 		/// The Reconcile folder.    DO NOT CHANGE!
@@ -189,41 +140,6 @@ namespace ClearCanvas.ImageServer.Common
 		/// </remarks>
 		public const string DuplicateFileExtension = "dup";
 
-        /// <summary>
-        /// Gets the path to the temporary folder.
-        /// </summary>
-        public static String TempDirectory
-        {
-            get
-            {
-                if (String.IsNullOrEmpty(_tempDir) || !Directory.Exists(_tempDir))
-                {
-                    lock(_syncLock)
-                    {
-                        // if specified in the config, use it
-                        if (!String.IsNullOrEmpty(ImageServerCommonConfiguration.TemporaryPath))
-                        {
-                            _tempDir = ImageServerCommonConfiguration.TemporaryPath;
-                        }
-                        else
-                        {
-                            // Use the OS temp folder instead, assuming it's not too long.
-                            // Avoid creating a temp folder under the installation directory because it could
-                            // lead to PathTooLongException.
-                            _tempDir = Path.Combine(Path.GetTempPath(), "ImageServer");
-                        }
-
-                        // make sure it exists
-                        if (!Directory.Exists(_tempDir))
-                        {
-                            Directory.CreateDirectory(_tempDir);
-                        }
-                    }
-                }
-
-                return _tempDir;
-            }
-        }
 
         /// <summary>
         /// Returns the version number (including the suffix and the release type)
@@ -377,221 +293,9 @@ namespace ClearCanvas.ImageServer.Common
     		}
     	}
 
-
 	    public static bool IsManifestVerified
 	    {
 	        get { return new ProductManifestChecker().VerifyManifest(); }
-	    }
-
-	    public static StudyHistory CreateStudyHistoryRecord(IUpdateContext updateContext,
-			StudyStorageLocation primaryStudyLocation, StudyStorageLocation secondaryStudyLocation,
-			StudyHistoryTypeEnum type, object entryInfo, object changeLog)
-		{
-			StudyHistoryUpdateColumns columns = new StudyHistoryUpdateColumns
-			                                    	{
-			                                    		InsertTime = Platform.Time,
-			                                    		StudyHistoryTypeEnum = type,
-			                                    		StudyStorageKey = primaryStudyLocation.GetKey(),
-			                                    		DestStudyStorageKey =
-			                                    			secondaryStudyLocation != null
-			                                    				? secondaryStudyLocation.GetKey()
-			                                    				: primaryStudyLocation.GetKey(),
-			                                    		StudyData = XmlUtils.SerializeAsXmlDoc(entryInfo) ?? new XmlDocument(),
-			                                    		ChangeDescription = XmlUtils.SerializeAsXmlDoc(changeLog) ?? new XmlDocument()
-			                                    	};
-
-			IStudyHistoryEntityBroker broker = updateContext.GetBroker<IStudyHistoryEntityBroker>();
-			return broker.Insert(columns);
-		}
-
-        /// <summary>
-        /// Returns a boolean indicating whether the entry is still "active"
-        /// </summary>
-        /// <remarks>
-        /// </remarks>
-        static public bool IsActiveWorkQueue(WorkQueue item)
-        {
-        	// The following code assumes InactiveWorkQueueMinTime is set appropirately
-        	
-            if (item.WorkQueueStatusEnum.Equals(WorkQueueStatusEnum.Failed))
-                return false;
-
-            if (item.WorkQueueStatusEnum.Equals(WorkQueueStatusEnum.Pending) || 
-                item.WorkQueueStatusEnum.Equals(WorkQueueStatusEnum.Idle))
-            {
-                // Assuming that if the entry is picked up and rescheduled recently (the ScheduledTime would have been updated), 
-                // the item is inactive if its ScheduledTime still indicated it was scheduled long time ago.
-                // Note: this logic still works if the entry has never been processed (new). It will be
-                // considered as "inactive" if it was scheduled long time ago and had never been updated.
-
-                DateTime time = item.LastUpdatedTime!=DateTime.MinValue? item.LastUpdatedTime:item.ScheduledTime;
-                if (time < Platform.Time - Settings.Default.InactiveWorkQueueMinTime)
-                    return false;
-            }
-            else if (item.WorkQueueStatusEnum.Equals(WorkQueueStatusEnum.InProgress))
-            {
-                if (String.IsNullOrEmpty(item.ProcessorID))
-                {
-                    // This is a special case, the item is not assigned but is set to InProgress. 
-                    // It's definitely stuck cause it won't be picked up by any servers.
-                    return false; 
-                }
-            	// TODO: Need more elaborate logic to detect if it's stuck when the status is InProgress.
-            	// Ideally, we can assume item is stuck if it has not been updated for a while. 
-            	// Howerver, some operations were designed to process everything in a single run 
-            	// instead of batches.One example is the StudyProcess, research studies may take days to process 
-            	// and the item stays in "InProgress" for the entire period without any update 
-            	// (eventhough the WorkQueueUid records are removed)
-            	// For now, we assume it's stucked if it is not updated for long time.
-            	if (item.ScheduledTime < Platform.Time - Settings.Default.InactiveWorkQueueMinTime)
-            		return false;
-            }
-
-            return true;
-        }
-
-        /// <summary>
-        /// Helper method to return the path to the duplicate image (in the Reconcile folder)
-        /// </summary>
-        /// <param name="studyStorage"></param>
-        /// <param name="sop"></param>
-        /// <returns></returns>
-        public static String GetDuplicateUidPath(StudyStorageLocation studyStorage, WorkQueueUid sop)
-        {
-            string dupPath = GetDuplicateGroupPath(studyStorage, sop);
-            dupPath = string.IsNullOrEmpty(sop.RelativePath)
-                        ? Path.Combine(dupPath,
-                                       Path.Combine(studyStorage.StudyInstanceUid, sop.SopInstanceUid + "." + sop.Extension))
-                        : Path.Combine(dupPath, sop.RelativePath);
-
-            #region BACKWARD_COMPATIBILTY_CODE
-
-            if (string.IsNullOrEmpty(sop.RelativePath) && !File.Exists(dupPath))
-            {
-                string basePath = Path.Combine(studyStorage.GetStudyPath(), sop.SeriesInstanceUid);
-                basePath = Path.Combine(basePath, sop.SopInstanceUid);
-                if (sop.Extension != null)
-                    dupPath = basePath + "." + sop.Extension;
-                else
-                    dupPath = basePath + ".dcm";
-            }
-
-            #endregion
-
-            return dupPath;
-        }
-
-        /// <summary>
-        /// Helper method to return the path to the folder containing the duplicate images (in the Reconcile folder)
-        /// </summary>
-        /// <param name="studyStorage"></param>
-        /// <param name="sop"></param>
-        /// <returns></returns>
-        public static String GetDuplicateGroupPath(StudyStorageLocation studyStorage, WorkQueueUid sop)
-        {
-            String groupFolderPath = Path.Combine(studyStorage.FilesystemPath, studyStorage.PartitionFolder);
-            groupFolderPath = Path.Combine(groupFolderPath, ServerPlatform.ReconcileStorageFolder);
-            groupFolderPath = Path.Combine(groupFolderPath, sop.GroupID);
-
-            return groupFolderPath;
-        }
-
-        /// <summary>
-        /// Helper method to return the path to the root folder under which duplicates are stored.
-        /// </summary>
-        /// <param name="studyStorage"></param>
-        /// <returns></returns>
-        public static String GetDuplicateFolderRootPath(StudyStorageLocation studyStorage)
-        {
-            String path = Path.Combine(studyStorage.FilesystemPath, studyStorage.PartitionFolder);
-            path = Path.Combine(path, ReconcileStorageFolder);
-
-            return path;
-        }
-
-        /// <summary>
-        /// Helper method to return the path to the folder containing the duplicate images (in the Reconcile folder)
-        /// </summary>
-        /// <param name="storageLocation"></param>
-        /// <param name="queueItem"></param>
-        /// <returns></returns>
-        public static string GetDuplicateGroupPath(StudyStorageLocation storageLocation, WorkQueue queueItem)
-	    {
-            string path = Path.Combine(storageLocation.FilesystemPath, storageLocation.PartitionFolder);
-            path = Path.Combine(path, ServerPlatform.ReconcileStorageFolder);
-            path = Path.Combine(path, queueItem.GroupID);
-            return path;
-	    }
-
-        /// <summary>
-        /// Indicates if the ImageServer is operating as a temporary cache mode 
-        /// (i.e., images will not be archived and will be deleted per delete rule)
-        /// </summary>
-        public static ServerOperatingMode ServerOperatingMode
-        {
-            get
-            {
-                CheckSystemMode();
-                return _serverMode;
-            }
-        }
-
-        private static void CheckSystemMode()
-        {
-            var now= Platform.Time;
-
-            if (!_systemModeLastCheckTimestamp.HasValue || now - _systemModeLastCheckTimestamp  > TimeSpan.FromSeconds(15))
-            {
-                lock (_syncLock)
-                {
-                    if (!_systemModeLastCheckTimestamp.HasValue || now - _systemModeLastCheckTimestamp > TimeSpan.FromSeconds(15))
-                    {
-                        try
-                        {
-                            IPersistentStore store = PersistentStoreRegistry.GetDefaultStore();
-                            using (IReadContext ctx = store.OpenReadContext())
-                            {
-                                var deleteRuleBroker = ctx.GetBroker<IServerRuleEntityBroker>();
-                                var deleteRuleSearchCriteria = new ServerRuleSelectCriteria();
-                                deleteRuleSearchCriteria.ServerRuleTypeEnum.EqualTo(ServerRuleTypeEnum.StudyDelete);
-                                deleteRuleSearchCriteria.Enabled.EqualTo(true);
-                                var deleteRules = deleteRuleBroker.Find(deleteRuleSearchCriteria);
-
-                                if (deleteRules==null || deleteRules.Count==0)
-                                    _serverMode = Common.ServerOperatingMode.Archive;
-
-                                var defaultDeleteRuleExists = deleteRules.Any(r=>r.RuleName.Equals("Default Delete"));
-                                var customDeleteRuleExists = deleteRules.Any(r=>!r.RuleName.Equals("Default Delete"));
-
-                                if (defaultDeleteRuleExists)
-                                    _serverMode = Common.ServerOperatingMode.TemporaryCache;
-                                else {
-                                    if (customDeleteRuleExists)
-                                        _serverMode = Common.ServerOperatingMode.MixedMode;
-                                    else
-                                        _serverMode = Common.ServerOperatingMode.Archive;
-                                }
-                                    
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            Platform.Log(LogLevel.Error, ex);
-                        }
-                        finally
-                        {
-                            _systemModeLastCheckTimestamp = now;
-                        }
-                    }
-                }
-            }       
-        }
-    }
-
-    public enum ServerOperatingMode
-    {
-        Archive,
-        TemporaryCache,
-        MixedMode
+	    }   
     }
 }

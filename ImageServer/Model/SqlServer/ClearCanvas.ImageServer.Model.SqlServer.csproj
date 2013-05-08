@@ -131,8 +131,10 @@
     <Compile Include="EntityBrokers\RestoreQueueEntityBroker.gen.cs" />
     <Compile Include="EntityBrokers\RestoreQueueStatusEnumBroker.gen.cs" />
     <Compile Include="EntityBrokers\SeriesEntityBroker.gen.cs" />
+    <Compile Include="EntityBrokers\ServerPartitionAlternateAeTitleEntityBroker.gen.cs" />
     <Compile Include="EntityBrokers\ServerPartitionDataAccessEntityBroker.gen.cs" />
     <Compile Include="EntityBrokers\ServerPartitionEntityBroker.gen.cs" />
+    <Compile Include="EntityBrokers\ServerPartitionTypeEnumBroker.gen.cs" />
     <Compile Include="EntityBrokers\ServerRuleApplyTimeEnumBroker.gen.cs" />
     <Compile Include="EntityBrokers\ServerRuleEntityBroker.gen.cs" />
     <Compile Include="EntityBrokers\ServerRuleTypeEnumBroker.gen.cs" />
@@ -165,6 +167,7 @@
     <Compile Include="Brokers\UpdateWorkQueue.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RunSqlScriptApplication.cs" />
+    <Compile Include="UpgradeScripts\UpgradeFrom_10_0_11128_314.cs" />
     <Compile Include="UpgradeScripts\UpgradeFrom_4_0_5014_9549.cs" />
     <Compile Include="UpgradeScripts\UpgradeFrom_1_3_8146_27242.cs" />
     <Compile Include="UpgradeScripts\UpgradeFrom_1_4_9277_29698.cs" />
@@ -250,6 +253,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="UpgradeScripts\UpgradeFrom_9_0_9561_11723.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="UpgradeScripts\UpgradeFrom_10_0_11128_314.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

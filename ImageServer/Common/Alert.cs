@@ -128,10 +128,11 @@ namespace ClearCanvas.ImageServer.Common
         /// Creates an instance of <see cref="Alert"/> for the specified source.
         /// </summary>
         /// <param name="name">Name of the source associated with alerts</param>
-        public AlertSource(string name)
+        /// <param name="host">The host for the alert.</param>
+        public AlertSource(string name, string host)
         {
             _name = name;
-            _host = ServerPlatform.ServerInstanceId;
+            _host = host;
         }
 
         #endregion

@@ -1163,3 +1163,15 @@ INSERT INTO [ImageServer].[dbo].[DeviceTypeEnum]
      VALUES
            (newid(),104,'PriorsServer','Priors Server','Server with Prior Studies for the Web Viewer')
 GO
+
+-- ServerPartitionTypeEnum
+INSERT INTO [ImageServer].[dbo].[ServerPartitionTypeEnum]
+           ([GUID],[Enum],[Lookup],[Description],[LongDescription])
+     VALUES
+           (newid(),100,'Standard','Standard','A standard ImageServer Partition')
+GO
+INSERT INTO [ImageServer].[dbo].[ServerPartitionTypeEnum]
+           ([GUID],[Enum],[Lookup],[Description],[LongDescription])
+     VALUES
+           (newid(),101,'Research','Research','An ImageServer research Partition')
+GO

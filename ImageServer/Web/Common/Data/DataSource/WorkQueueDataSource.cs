@@ -24,16 +24,13 @@
 
 using System;
 using System.Collections.Generic;
-using System.Security.Principal;
 using System.Threading;
 using ClearCanvas.Common.Utilities;
-using ClearCanvas.ImageServer.Common;
-using ClearCanvas.ImageServer.Common.Utilities;
+using ClearCanvas.ImageServer.Core.Helpers;
 using ClearCanvas.ImageServer.Enterprise;
 using ClearCanvas.ImageServer.Model;
 using ClearCanvas.ImageServer.Model.EntityBrokers;
 using ClearCanvas.ImageServer.Model.Parameters;
-using ClearCanvas.ImageServer.Web.Common.Utilities;
 using ClearCanvas.Web.Enterprise.Authentication;
 
 namespace ClearCanvas.ImageServer.Web.Common.Data.DataSource
@@ -176,7 +173,7 @@ namespace ClearCanvas.ImageServer.Web.Common.Data.DataSource
 		        return workQueueList;
 		    }
 
-		    WebWorkQueueQueryParameters parameters = new WebWorkQueueQueryParameters
+		    var parameters = new WebWorkQueueQueryParameters
 		                                                 {
 		                                                     StartIndex = startRowIndex,
 		                                                     MaxRowCount = maximumRows
@@ -372,7 +369,7 @@ namespace ClearCanvas.ImageServer.Web.Common.Data.DataSource
 					summary.Notes = item.FailureDescription;
 			}
 
-            summary.RequiresAttention = item.WorkQueueStatusEnum.Equals(WorkQueueStatusEnum.Failed) || !ServerPlatform.IsActiveWorkQueue(item);
+            summary.RequiresAttention = item.WorkQueueStatusEnum.Equals(WorkQueueStatusEnum.Failed) || !WorkQueueHelper.IsActiveWorkQueue(item);
 			return summary;
 		}
 		#endregion

@@ -25,11 +25,14 @@
 using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Net.Sockets;
 using ClearCanvas.Common;
 using ClearCanvas.Dicom.Audit;
 using ClearCanvas.Dicom.Network.Scp;
 using ClearCanvas.Enterprise.Core;
 using ClearCanvas.ImageServer.Common;
+using ClearCanvas.ImageServer.Common.Helpers;
+using ClearCanvas.ImageServer.Core;
 using ClearCanvas.ImageServer.Model;
 
 namespace ClearCanvas.ImageServer.Services.Dicom.Shreds
@@ -41,10 +44,13 @@ namespace ClearCanvas.ImageServer.Services.Dicom.Shreds
 	{
 		#region Private Members
 		private readonly List<DicomScp<DicomScpContext>> _listenerList = new List<DicomScp<DicomScpContext>>();
-		private readonly object _syncLock = new object();
+        private readonly List<DicomScp<DicomScpContext>> _alternateAeListenerList = new List<DicomScp<DicomScpContext>>();
+        private readonly object _syncLock = new object();
 		private static DicomServerManager _instance;
 		IList<ServerPartition> _partitions;
-		private EventHandler<ServerPartitionChangedEventArgs> _changedEvent;
+        IList<ServerPartitionAlternateAeTitle> _alternateAes;
+
+        private EventHandler<ServerPartitionChangedEventArgs> _changedEvent;
 		#endregion
 
 		#region Constructor
@@ -58,14 +64,8 @@ namespace ClearCanvas.ImageServer.Services.Dicom.Shreds
 		/// </summary>
 		public static DicomServerManager Instance
 		{
-			get
-			{
-				if (_instance == null)
-					_instance = new DicomServerManager("DICOM Service Manager");
-
-				return _instance;
-			}
-			set
+			get { return _instance ?? (_instance = new DicomServerManager("DICOM Service Manager")); }
+		    set
 			{
 				_instance = value;
 			}
@@ -74,146 +74,285 @@ namespace ClearCanvas.ImageServer.Services.Dicom.Shreds
 
 		#region Private Methods
 
-		private void StartListeners(ServerPartition part)
-		{
-			DicomScpContext parms =
-				new DicomScpContext(part);
+	    private void StartPartitionListener(ServerPartition part)
+	    {
+			var parms = new DicomScpContext(part);
 
-			if (DicomSettings.Default.ListenIPV4)
-			{
-				DicomScp<DicomScpContext> ipV4Scp = new DicomScp<DicomScpContext>(parms, AssociationVerifier.Verify, AssociationAuditLogger.InstancesTransferredAuditLogger);
+	        if (DicomSettings.Default.ListenIPV4)
+	        {
+	            var ipV4Scp = new DicomScp<DicomScpContext>(parms, AssociationVerifier.Verify,
+	                                                        AssociationAuditLogger.InstancesTransferredAuditLogger)
+	                {
+	                    ListenPort = part.Port,
+	                    AeTitle = part.AeTitle,
+	                    ListenAddress = IPAddress.Any
+	                };
 
-				ipV4Scp.ListenPort = part.Port;
-				ipV4Scp.AeTitle = part.AeTitle;
+	            StartScp(ipV4Scp, _listenerList);
+	        }
 
-				if (ipV4Scp.Start(IPAddress.Any))
-				{
-					_listenerList.Add(ipV4Scp);
-					ApplicationActivityAuditHelper helper = new ApplicationActivityAuditHelper(
-											ServerPlatform.AuditSource, 
-											EventIdentificationContentsEventOutcomeIndicator.Success, 
-											ApplicationActivityType.ApplicationStarted, 
-											new AuditProcessActiveParticipant(ipV4Scp.AeTitle));
-					ServerPlatform.LogAuditMessage(helper);
-				}
-				else
-				{
-					ApplicationActivityAuditHelper helper = new ApplicationActivityAuditHelper(
-											ServerPlatform.AuditSource,
-											EventIdentificationContentsEventOutcomeIndicator.MajorFailureActionMadeUnavailable,
-											ApplicationActivityType.ApplicationStarted,
-											new AuditProcessActiveParticipant(ipV4Scp.AeTitle));
-					ServerPlatform.LogAuditMessage(helper);
-					Platform.Log(LogLevel.Error, "Unable to add IPv4 SCP handler for server partition {0}",
-								 part.Description);
-					Platform.Log(LogLevel.Error,
-								 "Partition {0} will not accept IPv4 incoming DICOM associations.",
-								 part.Description);
-					ServerPlatform.Alert(AlertCategory.Application, AlertLevel.Critical, "DICOM Listener",
-                                         AlertTypeCodes.UnableToStart, null, TimeSpan.Zero, "Unable to start IPv4 DICOM listener on {0} : {1}",
-					                     ipV4Scp.AeTitle, ipV4Scp.ListenPort);
-				}
+	        if (DicomSettings.Default.ListenIPV6)
+	        {
+	            var ipV6Scp = new DicomScp<DicomScpContext>(parms, AssociationVerifier.Verify,
+	                                                        AssociationAuditLogger.InstancesTransferredAuditLogger)
+	                {
+	                    ListenPort = part.Port,
+	                    AeTitle = part.AeTitle,
+	                    ListenAddress = IPAddress.IPv6Any
+	                };
+	            StartScp(ipV6Scp, _listenerList);
+	        }
+	    }
+	    private void StartAlternateAeTitleListener(ServerPartition part, ServerPartitionAlternateAeTitle alternateAe)
+	    {
+	        var context = new DicomScpContext(part)
+	            {
+	                AlternateAeTitle = alternateAe
+	            };
+
+	        if (DicomSettings.Default.ListenIPV4)
+	        {
+	            var ipV4Scp = new DicomScp<DicomScpContext>(context, AssociationVerifier.Verify,
+	                                                        AssociationAuditLogger.InstancesTransferredAuditLogger)
+	                {
+	                    ListenPort = alternateAe.Port,
+	                    AeTitle = alternateAe.AeTitle,
+	                    ListenAddress = IPAddress.Any
+	                };
+	            StartScp(ipV4Scp, _alternateAeListenerList);
 			}
 
-			if (DicomSettings.Default.ListenIPV6)
-			{
-				DicomScp<DicomScpContext> ipV6Scp = new DicomScp<DicomScpContext>(parms, AssociationVerifier.Verify, AssociationAuditLogger.InstancesTransferredAuditLogger);
+	        if (DicomSettings.Default.ListenIPV6)
+	        {
+	            var ipV6Scp = new DicomScp<DicomScpContext>(context, AssociationVerifier.Verify,
+	                                                        AssociationAuditLogger.InstancesTransferredAuditLogger)
+	                {
+	                    ListenPort = alternateAe.Port,
+	                    AeTitle = alternateAe.AeTitle,
+	                    ListenAddress = IPAddress.IPv6Any
+	                };
 
-				ipV6Scp.ListenPort = part.Port;
-				ipV6Scp.AeTitle = part.AeTitle;
-
-				if (ipV6Scp.Start(IPAddress.IPv6Any))
-				{
-					_listenerList.Add(ipV6Scp);
-					ApplicationActivityAuditHelper helper = new ApplicationActivityAuditHelper(
-											ServerPlatform.AuditSource,
-											EventIdentificationContentsEventOutcomeIndicator.Success,
-											ApplicationActivityType.ApplicationStarted,
-											new AuditProcessActiveParticipant(ipV6Scp.AeTitle));
-					ServerPlatform.LogAuditMessage(helper);
-				}
-				else
-				{
-					ApplicationActivityAuditHelper helper = new ApplicationActivityAuditHelper(
-						ServerPlatform.AuditSource,
-						EventIdentificationContentsEventOutcomeIndicator.MajorFailureActionMadeUnavailable,
-						ApplicationActivityType.ApplicationStarted,
-						new AuditProcessActiveParticipant(ipV6Scp.AeTitle));
-					ServerPlatform.LogAuditMessage(helper);
-
-					Platform.Log(LogLevel.Error, "Unable to add IPv6 SCP handler for server partition {0}",
-								 part.Description);
-					Platform.Log(LogLevel.Error,
-								 "Partition {0} will not accept IPv6 incoming DICOM associations.",
-								 part.Description);
-					ServerPlatform.Alert(AlertCategory.Application, AlertLevel.Critical, "DICOM Listener",
-                                         AlertTypeCodes.UnableToStart, null, TimeSpan.Zero, "Unable to start IPv6 DICOM listener on {0} : {1}",
-										 ipV6Scp.AeTitle, ipV6Scp.ListenPort);
-				}
-			}
+	            StartScp(ipV6Scp, _alternateAeListenerList);
+	        }
 		}
 
-		private void CheckPartitions()
+	    private void StartScp(DicomScp<DicomScpContext> listener, List<DicomScp<DicomScpContext>> list)
+        {
+            if (listener.Start())
+            {
+                list.Add(listener);
+                var helper = new ApplicationActivityAuditHelper(
+                                        ServerPlatform.AuditSource,
+                                        EventIdentificationContentsEventOutcomeIndicator.Success,
+                                        ApplicationActivityType.ApplicationStarted,
+                                        new AuditProcessActiveParticipant(listener.AeTitle));
+                ServerAuditHelper.LogAuditMessage(helper);
+            }
+            else
+            {
+                var helper = new ApplicationActivityAuditHelper(
+                    ServerPlatform.AuditSource,
+                    EventIdentificationContentsEventOutcomeIndicator.MajorFailureActionMadeUnavailable,
+                    ApplicationActivityType.ApplicationStarted,
+                    new AuditProcessActiveParticipant(listener.AeTitle));
+                ServerAuditHelper.LogAuditMessage(helper);
+
+                Platform.Log(LogLevel.Error, "Unable to add {1} SCP handler for server partition {0}",
+                             listener.Context.Partition.Description,
+                             listener.ListenAddress.AddressFamily == AddressFamily.InterNetworkV6
+                                 ? "IPv6"
+                                 : "IPv4");
+                Platform.Log(LogLevel.Error,
+                             "Partition {0} will not accept IPv6 incoming DICOM associations.",
+                             listener.Context.Partition.Description);
+
+                ServerPlatform.Alert(AlertCategory.Application, AlertLevel.Critical, "DICOM Listener",
+                                     AlertTypeCodes.UnableToStart, null, TimeSpan.Zero,
+                                     "Unable to start {2} DICOM listener on {0} : {1}",
+                                     listener.AeTitle, listener.ListenPort,
+                                     listener.ListenAddress.AddressFamily == AddressFamily.InterNetworkV6
+                                         ? "IPv6"
+                                         : "IPv4");
+            }
+        }
+
+	    private void RemoveDisabledPartitions()
+	    {
+	        var scpsToDelete = new List<DicomScp<DicomScpContext>>();
+	        var alternateAeScpsToDelete = new List<DicomScp<DicomScpContext>>();
+
+	        // First, search for removed ServerPartitions, then remove all related ServerPartitionAlternateAeTitles
+	        foreach (DicomScp<DicomScpContext> scp in _listenerList)
+	        {
+	            bool bFound = false;
+	            foreach (ServerPartition part in _partitions)
+	            {
+	                if (part.Port == scp.ListenPort && part.AeTitle.Equals(scp.AeTitle) && part.Enabled)
+	                {
+	                    bFound = true;
+	                    break;
+	                }
+	            }
+
+	            if (!bFound)
+	            {
+	                Platform.Log(LogLevel.Info, "Partition was deleted, shutting down listener {0}:{1}", scp.AeTitle,
+	                             scp.ListenPort);
+	                scp.Stop();
+	                scpsToDelete.Add(scp);
+
+	                ServerAuditHelper.LogAuditMessage(new ApplicationActivityAuditHelper(
+	                                                      ServerPlatform.AuditSource,
+	                                                      EventIdentificationContentsEventOutcomeIndicator.Success,
+	                                                      ApplicationActivityType.ApplicationStopped,
+	                                                      new AuditProcessActiveParticipant(scp.AeTitle)));
+
+	                // Cleanup any alternate AEs for the partition
+	                foreach (DicomScp<DicomScpContext> alternateAeScp in _alternateAeListenerList)
+	                {
+	                    if (scp.Context.Partition.Key.Equals(alternateAeScp.Context.AlternateAeTitle.ServerPartitionKey))
+	                    {
+	                        Platform.Log(LogLevel.Info,
+	                                     "Partition was deleted, shutting down Alternate AE listener {0}:{1}",
+	                                     alternateAeScp.AeTitle, alternateAeScp.ListenPort);
+
+	                        alternateAeScp.Stop();
+	                        alternateAeScpsToDelete.Add(alternateAeScp);
+
+	                        ServerAuditHelper.LogAuditMessage(new ApplicationActivityAuditHelper(
+	                                                              ServerPlatform.AuditSource,
+	                                                              EventIdentificationContentsEventOutcomeIndicator.Success,
+	                                                              ApplicationActivityType.ApplicationStopped,
+	                                                              new AuditProcessActiveParticipant(alternateAeScp.AeTitle)));
+	                    }
+	                }
+	            }
+	        }
+
+	        foreach (DicomScp<DicomScpContext> scp in scpsToDelete)
+	            _listenerList.Remove(scp);
+	        foreach (DicomScp<DicomScpContext> scp in alternateAeScpsToDelete)
+	            _alternateAeListenerList.Remove(scp);	      
+	    }
+
+        private void RemoveDisabledAlternateAes()
+        {
+            var alternateAeScpsToDelete = new List<DicomScp<DicomScpContext>>();
+
+    	    // Now search for any alternate AEs that are disabled/missing
+            foreach (DicomScp<DicomScpContext> alternateAeScp in _alternateAeListenerList)
+            {
+                bool bFound = false;
+                foreach (ServerPartitionAlternateAeTitle altAe in _alternateAes)
+                {
+                    if (altAe.Port == alternateAeScp.ListenPort && altAe.AeTitle.Equals(alternateAeScp.AeTitle) && altAe.Enabled
+                        && (altAe.AllowKOPR || altAe.AllowQuery || altAe.AllowRetrieve || altAe.AllowStorage))
+                    {
+                        bFound = true;
+                        break;
+                    }
+                }
+
+                if (!bFound)
+                {
+                    Platform.Log(LogLevel.Info, "Shutting down Alternate AE listener {0}:{1}", alternateAeScp.AeTitle, alternateAeScp.ListenPort);
+                    alternateAeScp.Stop();
+                    alternateAeScpsToDelete.Add(alternateAeScp);
+
+                    ServerAuditHelper.LogAuditMessage(new ApplicationActivityAuditHelper(
+                                                          ServerPlatform.AuditSource,
+                                                          EventIdentificationContentsEventOutcomeIndicator.Success,
+                                                          ApplicationActivityType.ApplicationStopped,
+                                                          new AuditProcessActiveParticipant(alternateAeScp.AeTitle)));
+                }
+            }
+
+            foreach (DicomScp<DicomScpContext> scp in alternateAeScpsToDelete)
+                _alternateAeListenerList.Remove(scp);
+        }
+
+	    private void AddNewPartitions()
+	    {
+	        foreach (ServerPartition part in _partitions)
+	        {
+	            if (!part.Enabled)
+	                continue;
+
+	            bool bFound = false;
+	            foreach (DicomScp<DicomScpContext> scp in _listenerList)
+	            {
+	                if (part.Port != scp.ListenPort || !part.AeTitle.Equals(scp.AeTitle))
+	                    continue;
+
+	                // Reset the context partition, incase its changed.
+	                scp.Context.Partition = part;
+
+	                bFound = true;
+	                break;
+	            }
+
+	            if (!bFound)
+	            {
+	                Platform.Log(LogLevel.Info, "Starting ServerPartition listener {0}:{1}", part.AeTitle,
+	                             part.Port);
+	                StartPartitionListener(part);
+	            }
+	        }
+	    }
+
+	    private void AddNewAlternateAes()
+	    {
+	        foreach (ServerPartitionAlternateAeTitle altAe in _alternateAes)
+	        {
+	            bool bFound = false;
+	            foreach (DicomScp<DicomScpContext> scp in _alternateAeListenerList)
+	            {
+	                if (altAe.Port != scp.ListenPort || !altAe.AeTitle.Equals(scp.AeTitle))
+	                    continue;
+
+	                // Reset the context partition, incase its changed.
+	                scp.Context.AlternateAeTitle = altAe;
+
+	                bFound = true;
+	                break;
+	            }
+
+	            if (bFound) continue;
+
+	            if ((!altAe.AllowKOPR && !altAe.AllowStorage && !altAe.AllowQuery && !altAe.AllowRetrieve) ||
+	                !altAe.Enabled)
+	                continue;
+
+	            ServerPartition theAePartition = null;
+	            foreach (var p in _partitions)
+	                if (p.Key.Equals(altAe.ServerPartitionKey))
+	                    theAePartition = p;
+
+	            if (theAePartition == null || !theAePartition.Enabled)
+	                continue;
+
+	            Platform.Log(LogLevel.Info, "Starting Alternate AE Title listener {0}:{1} for Partition {2}",
+	                         altAe.AeTitle, altAe.Port, theAePartition.AeTitle);
+
+	            StartAlternateAeTitleListener(theAePartition, altAe);
+	        }
+	    }
+
+	    private void CheckPartitions()
 		{
-    	
 			lock (_syncLock)
 			{
-				_partitions = new List<ServerPartition>(ServerPartitionMonitor.Instance);
-				IList<DicomScp<DicomScpContext>> scpsToDelete = new List<DicomScp<DicomScpContext>>();
+                // Reload the current Partition information
+				_partitions = new List<ServerPartition>(ServerPartitionMonitor.Instance.Partitions);
+                _alternateAes = new List<ServerPartitionAlternateAeTitle>(ServerPartitionMonitor.Instance.PartitionAeTitles);
 
-				foreach (DicomScp<DicomScpContext> scp in _listenerList)
-				{
-					bool bFound = false;
-					foreach (ServerPartition part in _partitions)
-					{
-						if (part.Port == scp.ListenPort && part.AeTitle.Equals(scp.AeTitle) && part.Enabled)
-						{
-							bFound = true;
-							break;
-						}
-					}
+			    RemoveDisabledPartitions();
 
-					if (!bFound)
-					{
-						Platform.Log(LogLevel.Info, "Partition was deleted, shutting down listener {0}:{1}", scp.AeTitle, scp.ListenPort);
-						scp.Stop();
-						scpsToDelete.Add(scp);
-						ApplicationActivityAuditHelper helper = new ApplicationActivityAuditHelper(
-												ServerPlatform.AuditSource,
-												EventIdentificationContentsEventOutcomeIndicator.Success,
-												ApplicationActivityType.ApplicationStopped,
-												new AuditProcessActiveParticipant(scp.AeTitle));
-						ServerPlatform.LogAuditMessage(helper);
-					}
-				}
+                RemoveDisabledAlternateAes();
 
-				foreach (DicomScp<DicomScpContext> scp in scpsToDelete)
-					_listenerList.Remove(scp);
+			    AddNewPartitions();
 
-				foreach (ServerPartition part in _partitions)
-				{
-					if (!part.Enabled)
-						continue;
-
-					bool bFound = false;
-					foreach (DicomScp<DicomScpContext> scp in _listenerList)
-					{
-						if (part.Port != scp.ListenPort || !part.AeTitle.Equals(scp.AeTitle))
-							continue;
-
-						// Reset the context partition, incase its changed.
-						scp.Context.Partition = part;
-
-						bFound = true;
-						break;
-					}
-
-					if (!bFound)
-					{
-						Platform.Log(LogLevel.Info, "Detected partition was added, starting listener {0}:{1}", part.AeTitle, part.Port);
-						StartListeners(part);
-					}
-				}
+			    AddNewAlternateAes();
 			}
 		}
 		#endregion
@@ -239,52 +378,59 @@ namespace ClearCanvas.ImageServer.Services.Dicom.Shreds
 				                	};
 				ServerPartitionMonitor.Instance.Changed += _changedEvent;
 
-				_partitions = new List<ServerPartition>(ServerPartitionMonitor.Instance);
+				_partitions = new List<ServerPartition>(ServerPartitionMonitor.Instance.Partitions);
+                _alternateAes = new List<ServerPartitionAlternateAeTitle>(ServerPartitionMonitor.Instance.PartitionAeTitles);
 			}
 
             return true;
 		}
 
-		/// <summary>
-		/// Method called when starting the DICOM SCP.
-		/// </summary>
-		/// <remarks>
-		/// <para>
-		/// The method starts a <see cref="DicomScp{DicomScpParameters}"/> instance for each server partition configured in
-		/// the database.  It assumes that the combination of the configured AE Title and Port for the 
-		/// partition is unique.  
-		/// </para>
-		/// </remarks>
-		protected override void Run()
-		{
-			foreach (ServerPartition part in _partitions)
-			{
-				if (part.Enabled)
-				{
-					StartListeners(part);
-				}
-			}
-		}
+	    /// <summary>
+	    /// Method called when starting the DICOM SCP.
+	    /// </summary>
+	    /// <remarks>
+	    /// <para>
+	    /// The method starts a <see cref="DicomScp{DicomScpParameters}"/> instance for each server partition configured in
+	    /// the database.  It assumes that the combination of the configured AE Title and Port for the 
+	    /// partition is unique.  
+	    /// </para>
+	    /// </remarks>
+	    protected override void Run()
+	    {
+	        AddNewPartitions();
+	        AddNewAlternateAes();
+	    }
 
-		/// <summary>
+	    /// <summary>
 		/// Method called when stopping the DICOM SCP.
 		/// </summary>
 		protected override void Stop()
 		{
 			lock (_syncLock)
 			{
+                ServerPartitionMonitor.Instance.Changed -= _changedEvent;
+
 				foreach (DicomScp<DicomScpContext> scp in _listenerList)
 				{
 					scp.Stop();
-					ApplicationActivityAuditHelper helper = new ApplicationActivityAuditHelper(
+					var helper = new ApplicationActivityAuditHelper(
 								ServerPlatform.AuditSource,
 								EventIdentificationContentsEventOutcomeIndicator.Success,
 								ApplicationActivityType.ApplicationStopped,
 								new AuditProcessActiveParticipant(scp.AeTitle));
-					ServerPlatform.LogAuditMessage(helper);
-	
+                    ServerAuditHelper.LogAuditMessage(helper);
 				}
-				ServerPartitionMonitor.Instance.Changed -= _changedEvent;
+
+                foreach (DicomScp<DicomScpContext> scp in _alternateAeListenerList)
+                {
+                    scp.Stop();
+                    var helper = new ApplicationActivityAuditHelper(
+                                ServerPlatform.AuditSource,
+                                EventIdentificationContentsEventOutcomeIndicator.Success,
+                                ApplicationActivityType.ApplicationStopped,
+                                new AuditProcessActiveParticipant(scp.AeTitle));
+                    ServerAuditHelper.LogAuditMessage(helper);
+                }		
 			}
 		}
 		#endregion

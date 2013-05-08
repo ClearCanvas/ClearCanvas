@@ -41,6 +41,7 @@ using ClearCanvas.ImageServer.Core;
 using ClearCanvas.ImageServer.Core.Command;
 using ClearCanvas.ImageServer.Core.Data;
 using ClearCanvas.ImageServer.Core.Edit;
+using ClearCanvas.ImageServer.Core.Helpers;
 using ClearCanvas.ImageServer.Core.Reconcile;
 using ClearCanvas.ImageServer.Core.Validation;
 using ClearCanvas.ImageServer.Model;
@@ -68,7 +69,7 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.ProcessDuplicate
         {
             get
             {
-                return ServerPlatform.GetDuplicateGroupPath(StorageLocation, WorkQueueItem);
+                return ServerHelper.GetDuplicateGroupPath(StorageLocation, WorkQueueItem);
             }
         }
 

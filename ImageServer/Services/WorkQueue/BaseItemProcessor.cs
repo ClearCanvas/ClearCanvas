@@ -39,6 +39,7 @@ using ClearCanvas.ImageServer.Common;
 using ClearCanvas.ImageServer.Common.Command;
 using ClearCanvas.ImageServer.Common.Exceptions;
 using ClearCanvas.ImageServer.Core;
+using ClearCanvas.ImageServer.Core.Helpers;
 using ClearCanvas.ImageServer.Core.Process;
 using ClearCanvas.ImageServer.Core.Validation;
 using ClearCanvas.ImageServer.Model;
@@ -1176,7 +1177,7 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue
 
         private static bool AppearsStuck(Model.WorkQueue item, out string reason)
         {
-            IList<Model.WorkQueue> allItems = ServerHelper.FindWorkQueueEntries(item.StudyStorageKey, null);
+            IList<Model.WorkQueue> allItems = WorkQueueHelper.FindWorkQueueEntries(item.StudyStorageKey, null);
             bool updatedBefore = item.LastUpdatedTime > DateTime.MinValue;
             reason = null;
 
@@ -1197,7 +1198,7 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue
                 {
                     if (anotherItem.Key.Equals(item.Key)) continue;
 
-                    if (!ServerPlatform.IsActiveWorkQueue(anotherItem))
+                    if (!WorkQueueHelper.IsActiveWorkQueue(anotherItem))
                     {
                         reason = "Another work queue entry for the same study appears stuck.";
                         return true;
@@ -1265,7 +1266,7 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue
         protected static IList<Model.WorkQueue> FindRelatedWorkQueueItems(Model.WorkQueue workQueueItem,
             IEnumerable<WorkQueueTypeEnum> types, IEnumerable<WorkQueueStatusEnum> status)
         {
-            IList<Model.WorkQueue> list = ServerHelper.FindWorkQueueEntries(workQueueItem.StudyStorageKey, null);
+            IList<Model.WorkQueue> list = WorkQueueHelper.FindWorkQueueEntries(workQueueItem.StudyStorageKey, null);
 
             if (list==null)
                 return null;
