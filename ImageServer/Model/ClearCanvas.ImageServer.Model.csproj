@@ -185,8 +185,10 @@
     <Compile Include="EntityBrokers\IRestoreQueueEntityBroker.gen.cs" />
     <Compile Include="EntityBrokers\IRestoreQueueStatusEnumBroker.gen.cs" />
     <Compile Include="EntityBrokers\ISeriesEntityBroker.gen.cs" />
+    <Compile Include="EntityBrokers\IServerPartitionAlternateAeTitleEntityBroker.gen.cs" />
     <Compile Include="EntityBrokers\IServerPartitionDataAccessEntityBroker.gen.cs" />
     <Compile Include="EntityBrokers\IServerPartitionEntityBroker.gen.cs" />
+    <Compile Include="EntityBrokers\IServerPartitionTypeEnumBroker.gen.cs" />
     <Compile Include="EntityBrokers\IServerRuleApplyTimeEnumBroker.gen.cs" />
     <Compile Include="EntityBrokers\IServerRuleEntityBroker.gen.cs" />
     <Compile Include="EntityBrokers\IServerRuleTypeEnumBroker.gen.cs" />
@@ -227,6 +229,8 @@
     <Compile Include="EntityBrokers\RestoreQueueUpdateColumns.gen.cs" />
     <Compile Include="EntityBrokers\SeriesSelectCriteria.gen.cs" />
     <Compile Include="EntityBrokers\SeriesUpdateColumns.gen.cs" />
+    <Compile Include="EntityBrokers\ServerPartitionAlternateAeTitleSelectCriteria.gen.cs" />
+    <Compile Include="EntityBrokers\ServerPartitionAlternateAeTitleUpdateColumns.gen.cs" />
     <Compile Include="EntityBrokers\ServerPartitionDataAccessSelectCriteria.gen.cs" />
     <Compile Include="EntityBrokers\ServerPartitionDataAccessUpdateColumns.gen.cs" />
     <Compile Include="EntityBrokers\ServerPartitionSelectCriteria.gen.cs" />
@@ -322,7 +326,9 @@
     <Compile Include="ServerEnumDescription.cs" />
     <Compile Include="ServerPartition.cs" />
     <Compile Include="ServerPartition.gen.cs" />
+    <Compile Include="ServerPartitionAlternateAeTitle.gen.cs" />
     <Compile Include="ServerPartitionDataAccess.gen.cs" />
+    <Compile Include="ServerPartitionTypeEnum.gen.cs" />
     <Compile Include="ServerRule.gen.cs" />
     <Compile Include="ServerRuleApplyTimeEnum.gen.cs" />
     <Compile Include="ServerRuleTypeEnum.gen.cs" />
@@ -396,13 +402,13 @@
       <Project>{AD9ECE2B-8268-4115-8DC8-860FBD011FFF}</Project>
       <Name>ClearCanvas.Dicom</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Enterprise\Common\ClearCanvas.Enterprise.Common.csproj">
-      <Project>{B5EBFFD7-6641-4932-91C9-4C4322B41868}</Project>
-      <Name>ClearCanvas.Enterprise.Common</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\Enterprise\Core\ClearCanvas.Enterprise.Core.csproj">
       <Project>{431E9444-9915-4D49-B92D-9B7EC086622A}</Project>
       <Name>ClearCanvas.Enterprise.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Common\ClearCanvas.ImageServer.Common.csproj">
+      <Project>{DDFB1D25-75AE-43A6-A7A5-33D173EFFD04}</Project>
+      <Name>ClearCanvas.ImageServer.Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\Enterprise\ClearCanvas.ImageServer.Enterprise.csproj">
       <Project>{86CA6EDB-DE59-45E9-8BD8-832FBB3F8009}</Project>

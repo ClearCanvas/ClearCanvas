@@ -35,19 +35,15 @@ namespace ClearCanvas.ImageServer.Services.Dicom
         #region Constructors
         public DicomScpContext(ServerPartition partition)
         {
-            _partition = partition;
+            Partition = partition;
         }
         #endregion
 
         #region Private Members
-        private ServerPartition _partition;
+
         #endregion
 
         #region Properties
-        public ServerPartition Partition
-        {
-            get { return _partition; }
-			set { _partition = value; }
 
         public ServerPartition Partition { get; set; }
 
@@ -86,6 +82,15 @@ namespace ClearCanvas.ImageServer.Services.Dicom
             }
         }
 
+        public bool AllowKOPR
+        {
+            get
+            {
+                if (AlternateAeTitle != null)
+                    return AlternateAeTitle.AllowKOPR;
+
+                return true;
+            }
         public bool AllowKOPR
         {
             get

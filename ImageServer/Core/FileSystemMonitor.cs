@@ -30,6 +30,7 @@ using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Dicom;
 using ClearCanvas.Enterprise.Core;
+using ClearCanvas.ImageServer.Common;
 using ClearCanvas.ImageServer.Common.Command;
 using ClearCanvas.ImageServer.Common.Exceptions;
 using ClearCanvas.ImageServer.Enterprise;
@@ -37,9 +38,9 @@ using ClearCanvas.ImageServer.Model;
 using ClearCanvas.ImageServer.Model.Brokers;
 using ClearCanvas.ImageServer.Model.EntityBrokers;
 using ClearCanvas.ImageServer.Model.Parameters;
-using Timer=System.Threading.Timer;
+using Timer = System.Threading.Timer;
 
-namespace ClearCanvas.ImageServer.Common
+namespace ClearCanvas.ImageServer.Core
 {
 	public enum StudyRestore
 	{

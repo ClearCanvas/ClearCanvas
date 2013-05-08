@@ -117,6 +117,66 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="ArchiveTypeEnum_HsmArchive_Description" xml:space="preserve">
+    <value>HSM Archive</value>
+  </data>
+  <data name="ArchiveTypeEnum_HsmArchive_LongDescription" xml:space="preserve">
+    <value>Hierarchical storage management archive such as StorageTek QFS</value>
+  </data>
+  <data name="ArchiveQueueStatusEnum_Pending_Description" xml:space="preserve">
+    <value>Pending</value>
+  </data>
+  <data name="ArchiveQueueStatusEnum_Pending_LongDescription" xml:space="preserve">
+    <value>Pending</value>
+  </data>
+  <data name="ArchiveQueueStatusEnum_In Progress_Description" xml:space="preserve">
+    <value>In Progress</value>
+  </data>
+  <data name="ArchiveQueueStatusEnum_In Progress_LongDescription" xml:space="preserve">
+    <value>In Progress</value>
+  </data>
+  <data name="ArchiveQueueStatusEnum_Completed_Description" xml:space="preserve">
+    <value>Completed</value>
+  </data>
+  <data name="ArchiveQueueStatusEnum_Completed_LongDescription" xml:space="preserve">
+    <value>The Queue entry is completed.</value>
+  </data>
+  <data name="ArchiveQueueStatusEnum_Failed_Description" xml:space="preserve">
+    <value>Failed</value>
+  </data>
+  <data name="ArchiveQueueStatusEnum_Failed_LongDescription" xml:space="preserve">
+    <value>The Queue entry has failed.</value>
+  </data>
+  <data name="RestoreQueueStatusEnum_Pending_Description" xml:space="preserve">
+    <value>Pending</value>
+  </data>
+  <data name="RestoreQueueStatusEnum_Pending_LongDescription" xml:space="preserve">
+    <value>Pending</value>
+  </data>
+  <data name="RestoreQueueStatusEnum_In Progress_Description" xml:space="preserve">
+    <value>In Progress</value>
+  </data>
+  <data name="RestoreQueueStatusEnum_In Progress_LongDescription" xml:space="preserve">
+    <value>In Progress</value>
+  </data>
+  <data name="RestoreQueueStatusEnum_Completed_Description" xml:space="preserve">
+    <value>Completed</value>
+  </data>
+  <data name="RestoreQueueStatusEnum_Completed_LongDescription" xml:space="preserve">
+    <value>The Queue entry is completed.</value>
+  </data>
+  <data name="RestoreQueueStatusEnum_Failed_Description" xml:space="preserve">
+    <value>Failed</value>
+  </data>
+  <data name="RestoreQueueStatusEnum_Failed_LongDescription" xml:space="preserve">
+    <value>The Queue entry has failed.</value>
+  </data>
+  <data name="RestoreQueueStatusEnum_Restoring_Description" xml:space="preserve">
+    <value>Restoring</value>
+  </data>
+  <data name="RestoreQueueStatusEnum_Restoring_LongDescription" xml:space="preserve">
+    <value>The Queue entry is waiting for the study to be restored by the archive.</value>
+  </data>
   <data name="DuplicateSopPolicyEnum_SendSuccess_Description" xml:space="preserve">
     <value>Send Success</value>
   </data>
@@ -717,64 +777,16 @@
   <data name="WorkQueuePriorityEnum_Stat_LongDescription" xml:space="preserve">
     <value>Stat priority</value>
   </data>
-  <data name="ArchiveTypeEnum_HsmArchive_Description" xml:space="preserve">
-    <value>HSM Archive</value>
+  <data name="ServerPartitionTypeEnum_Standard_Description" xml:space="preserve">
+    <value>Standard</value>
   </data>
-  <data name="ArchiveTypeEnum_HsmArchive_LongDescription" xml:space="preserve">
-    <value>Hierarchical storage management archive such as StorageTek QFS</value>
+  <data name="ServerPartitionTypeEnum_Standard_LongDescription" xml:space="preserve">
+    <value>A standard ImageServer Partition</value>
   </data>
-  <data name="ArchiveQueueStatusEnum_Pending_Description" xml:space="preserve">
-    <value>Pending</value>
+  <data name="ServerPartitionTypeEnum_Research_Description" xml:space="preserve">
+    <value>Research</value>
   </data>
-  <data name="ArchiveQueueStatusEnum_Pending_LongDescription" xml:space="preserve">
-    <value>Pending</value>
-  </data>
-  <data name="ArchiveQueueStatusEnum_In Progress_Description" xml:space="preserve">
-    <value>In Progress</value>
-  </data>
-  <data name="ArchiveQueueStatusEnum_In Progress_LongDescription" xml:space="preserve">
-    <value>In Progress</value>
-  </data>
-  <data name="ArchiveQueueStatusEnum_Completed_Description" xml:space="preserve">
-    <value>Completed</value>
-  </data>
-  <data name="ArchiveQueueStatusEnum_Completed_LongDescription" xml:space="preserve">
-    <value>The Queue entry is completed.</value>
-  </data>
-  <data name="ArchiveQueueStatusEnum_Failed_Description" xml:space="preserve">
-    <value>Failed</value>
-  </data>
-  <data name="ArchiveQueueStatusEnum_Failed_LongDescription" xml:space="preserve">
-    <value>The Queue entry has failed.</value>
-  </data>
-  <data name="RestoreQueueStatusEnum_Pending_Description" xml:space="preserve">
-    <value>Pending</value>
-  </data>
-  <data name="RestoreQueueStatusEnum_Pending_LongDescription" xml:space="preserve">
-    <value>Pending</value>
-  </data>
-  <data name="RestoreQueueStatusEnum_In Progress_Description" xml:space="preserve">
-    <value>In Progress</value>
-  </data>
-  <data name="RestoreQueueStatusEnum_In Progress_LongDescription" xml:space="preserve">
-    <value>In Progress</value>
-  </data>
-  <data name="RestoreQueueStatusEnum_Completed_Description" xml:space="preserve">
-    <value>Completed</value>
-  </data>
-  <data name="RestoreQueueStatusEnum_Completed_LongDescription" xml:space="preserve">
-    <value>The Queue entry is completed.</value>
-  </data>
-  <data name="RestoreQueueStatusEnum_Failed_Description" xml:space="preserve">
-    <value>Failed</value>
-  </data>
-  <data name="RestoreQueueStatusEnum_Failed_LongDescription" xml:space="preserve">
-    <value>The Queue entry has failed.</value>
-  </data>
-  <data name="RestoreQueueStatusEnum_Restoring_Description" xml:space="preserve">
-    <value>Restoring</value>
-  </data>
-  <data name="RestoreQueueStatusEnum_Restoring_LongDescription" xml:space="preserve">
-    <value>The Queue entry is waiting for the study to be restored by the archive.</value>
+  <data name="ServerPartitionTypeEnum_Research_LongDescription" xml:space="preserve">
+    <value>An ImageServer research Partition</value>
   </data>
 </root>

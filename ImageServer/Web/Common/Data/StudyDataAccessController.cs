@@ -28,6 +28,7 @@ using ClearCanvas.Common.Utilities;
 using ClearCanvas.Enterprise.Common.Admin.AuthorityGroupAdmin;
 using ClearCanvas.Enterprise.Core;
 using ClearCanvas.ImageServer.Common;
+using ClearCanvas.ImageServer.Common.Helpers;
 using ClearCanvas.ImageServer.Enterprise;
 using ClearCanvas.ImageServer.Model;
 using ClearCanvas.ImageServer.Model.EntityBrokers;

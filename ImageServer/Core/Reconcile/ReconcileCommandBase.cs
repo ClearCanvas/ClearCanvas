@@ -151,7 +151,7 @@ namespace ClearCanvas.ImageServer.Core.Reconcile
 	    {
 	        string reason;
 	        if (!location.CanUpdate(out reason))
-	            throw new StudyIsInInvalidStateException(location, reason);
+	            throw new StudyIsInInvalidStateException(location.StudyStatusEnum.Description, location.StudyInstanceUid, reason);
 	    }
 	}
 }

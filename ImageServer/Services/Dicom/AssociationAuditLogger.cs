@@ -27,6 +27,7 @@ using ClearCanvas.Dicom.Audit;
 using ClearCanvas.Dicom.Network;
 using ClearCanvas.Dicom.Network.Scu;
 using ClearCanvas.ImageServer.Common;
+using ClearCanvas.ImageServer.Common.Helpers;
 
 namespace ClearCanvas.ImageServer.Services.Dicom
 {
@@ -64,7 +65,7 @@ namespace ClearCanvas.ImageServer.Services.Dicom
 					}
 				}
 
-				ServerPlatform.LogAuditMessage(audit);
+				ServerAuditHelper.LogAuditMessage(audit);
 			}
 		}
 
@@ -101,7 +102,7 @@ namespace ClearCanvas.ImageServer.Services.Dicom
 					}
 				}
 
-				ServerPlatform.LogAuditMessage(helper);
+                ServerAuditHelper.LogAuditMessage(helper);
 			}
 		}
 	}

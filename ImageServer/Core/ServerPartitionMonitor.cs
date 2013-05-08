@@ -28,12 +28,13 @@ using System.Collections.Generic;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Enterprise.Core;
+using ClearCanvas.ImageServer.Common;
 using ClearCanvas.ImageServer.Enterprise;
 using ClearCanvas.ImageServer.Model;
 using ClearCanvas.ImageServer.Model.EntityBrokers;
-using Timer=System.Threading.Timer;
+using Timer = System.Threading.Timer;
 
-namespace ClearCanvas.ImageServer.Common
+namespace ClearCanvas.ImageServer.Core
 {
 	/// <summary>
 	/// Event args for partition monitor
@@ -105,21 +106,20 @@ namespace ClearCanvas.ImageServer.Common
 		/// <summary>
 		/// Get a partition based on an AE Title.
 		/// </summary>
-		/// <param name="serverAE"></param>
+		/// <param name="serverAe"></param>
 		/// <returns></returns>
-		public ServerPartition GetPartition(string serverAE)
+		public ServerPartition GetPartition(string serverAe)
         {
-            if (String.IsNullOrEmpty(serverAE))
+            if (String.IsNullOrEmpty(serverAe))
                 return null;
 
             lock(_partitionsLock)
             {
-                if (_partitions.ContainsKey(serverAE))
-                    return _partitions[serverAE];
-                else
-                    return null;
+                if (_partitions.ContainsKey(serverAe))
+                    return _partitions[serverAe];
+                return null;
             }
-		}
+        }
 
         public ServerPartition FindPartition(ServerEntityKey key)
         {
@@ -127,10 +127,7 @@ namespace ClearCanvas.ImageServer.Common
             {
                 return CollectionUtils.SelectFirst(
                            this,
-                           delegate(ServerPartition partition)
-                           {
-                               return partition.GetKey().Equals(key);
-                           });    
+                           partition => partition.GetKey().Equals(key));    
             }
             
         }
@@ -147,12 +144,12 @@ namespace ClearCanvas.ImageServer.Common
             {
                 try
                 {
-                    Dictionary<string, ServerPartition> templist = new Dictionary<string, ServerPartition>();
+                    var templist = new Dictionary<string, ServerPartition>();
                     IPersistentStore store = PersistentStoreRegistry.GetDefaultStore();
                     using (IReadContext ctx = store.OpenReadContext())
                     {
-                        IServerPartitionEntityBroker broker = ctx.GetBroker<IServerPartitionEntityBroker>();
-                        ServerPartitionSelectCriteria criteria = new ServerPartitionSelectCriteria();
+                        var broker = ctx.GetBroker<IServerPartitionEntityBroker>();
+                        var criteria = new ServerPartitionSelectCriteria();
                         IList<ServerPartition> list = broker.Find(criteria);
                         foreach (ServerPartition partition in list)
                         {
@@ -225,6 +222,9 @@ namespace ClearCanvas.ImageServer.Common
                 if (!p1.DuplicateSopPolicyEnum.Equals(p2.DuplicateSopPolicyEnum))
             		return true;
 
+                if (!p1.ServerPartitionTypeEnum.Equals(p2.ServerPartitionTypeEnum))
+                    return true;
+
 				if (p1.MatchAccessionNumber != p2.MatchAccessionNumber
 					|| p1.MatchIssuerOfPatientId != p2.MatchIssuerOfPatientId
 					|| p1.MatchPatientId != p2.MatchPatientId
@@ -257,12 +257,8 @@ namespace ClearCanvas.ImageServer.Common
                 return false;
 
             }
-            else
-            {
-                // this is new partition
-                return true;
-            }
-
+		    // this is new partition
+		    return true;
         }
 		#endregion
 

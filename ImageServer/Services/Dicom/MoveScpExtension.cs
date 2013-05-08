@@ -35,6 +35,7 @@ using ClearCanvas.Dicom.Utilities.Xml;
 using ClearCanvas.Enterprise.Core;
 using ClearCanvas.ImageServer.Common;
 using ClearCanvas.ImageServer.Common.Exceptions;
+using ClearCanvas.ImageServer.Core;
 using ClearCanvas.ImageServer.Model;
 using ClearCanvas.ImageServer.Model.EntityBrokers;
 
@@ -537,6 +538,9 @@ namespace ClearCanvas.ImageServer.Services.Dicom
         /// <returns></returns>
         public override IList<SupportedSop> GetSupportedSopClasses()
         {
+            if (!Context.AllowRetrieve)
+                return new List<SupportedSop>();
+
             return _list;
         }
 
@@ -545,7 +549,7 @@ namespace ClearCanvas.ImageServer.Services.Dicom
         #region Overridden BaseSCP methods
 
         protected override DicomPresContextResult OnVerifyAssociation(AssociationParameters association, byte pcid)
-        {
+        {            
             
             if (!Device.AllowRetrieve)
             {

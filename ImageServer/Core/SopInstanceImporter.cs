@@ -36,6 +36,7 @@ using ClearCanvas.ImageServer.Common.Exceptions;
 using ClearCanvas.ImageServer.Common.Utilities;
 using ClearCanvas.ImageServer.Core.Command;
 using ClearCanvas.ImageServer.Core.Diagnostics;
+using ClearCanvas.ImageServer.Core.Helpers;
 using ClearCanvas.ImageServer.Core.Process;
 using ClearCanvas.ImageServer.Enterprise;
 using ClearCanvas.ImageServer.Model;
@@ -479,7 +480,7 @@ namespace ClearCanvas.ImageServer.Core
 
         static private bool HasUnprocessedCopy(ServerEntityKey storageLocationKey, string seriesUid, string sopUid)
         {
-			if (ServerHelper.WorkQueueUidExists(storageLocationKey, seriesUid, sopUid))
+			if (WorkQueueHelper.WorkQueueUidExists(storageLocationKey, seriesUid, sopUid))
 				return true;
 
 			return ServerHelper.StudyIntegrityUidExists(storageLocationKey, seriesUid, sopUid);

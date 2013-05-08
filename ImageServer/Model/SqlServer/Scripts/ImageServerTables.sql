@@ -76,6 +76,8 @@ CREATE TABLE [dbo].[ServerPartition](
 	[MatchPatientsName] bit NOT NULL CONSTRAINT [DF_ServerPartition_MatchPatientsName]  DEFAULT ((1)),
 	[MatchPatientsSex] bit NOT NULL CONSTRAINT [DF_ServerPartition_MatchPatientsSex]  DEFAULT ((1)),
 	[AcceptLatestReport] bit NOT NULL CONSTRAINT [DF_ServerPartition_AcceptLatestReport] DEFAULT ((1)),
+	[ServerPartitionTypeEnum] [smallint] NOT NULL CONSTRAINT [DF_ServerPartition_ServerPartitionTypeEnum] DEFAULT ((100))
+
  CONSTRAINT [PK_ServerPartition] PRIMARY KEY CLUSTERED 
 (
 	[GUID] ASC
@@ -91,6 +93,69 @@ CREATE UNIQUE NONCLUSTERED INDEX [IX_ServerPartition] ON [dbo].[ServerPartition]
 	[AeTitle] ASC
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [INDEXES]
 GO
+/****** Object:  Table [dbo].[ServerPartitionAlternateAeTitle]    Script Date: 5/6/2013 12:49:12 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+CREATE TABLE [dbo].[ServerPartitionAlternateAeTitle](
+	[GUID] [uniqueidentifier] ROWGUIDCOL  NOT NULL,
+	[ServerPartitionGUID] [uniqueidentifier] NOT NULL,
+	[AeTitle] [varchar](16) NOT NULL,
+	[Port] [int] NOT NULL,
+	[Enabled] [bit] NOT NULL,
+	[AllowStorage] [bit] NOT NULL,
+	[AllowKOPR] [bit] NOT NULL,
+	[AllowRetrieve] [bit] NOT NULL,
+	[AllowQuery] [bit] NOT NULL,
+ CONSTRAINT [PK_ServerPartitionAlternateAeTitle] PRIMARY KEY CLUSTERED 
+(
+	[GUID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_PADDING OFF
+GO
+/****** Object:  Table [dbo].[ServerPartitionTypeEnum]    Script Date: 5/6/2013 12:49:12 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+CREATE TABLE [dbo].[ServerPartitionTypeEnum](
+	[GUID] [uniqueidentifier] ROWGUIDCOL  NOT NULL,
+	[Enum] [smallint] NOT NULL,
+	[Lookup] [varchar](32) NOT NULL,
+	[Description] [nvarchar](32) NOT NULL,
+	[LongDescription] [nvarchar](512) NOT NULL,
+ CONSTRAINT [PK_ServerPartitionTypeEnum] PRIMARY KEY CLUSTERED 
+(
+	[Enum] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [STATIC]
+) ON [STATIC]
+
+GO
+SET ANSI_PADDING OFF
+GO
+ALTER TABLE [dbo].[ServerPartitionAlternateAeTitle] ADD  CONSTRAINT [DF_ServerPartitionAlternateAeTitle_GUID]  DEFAULT (newid()) FOR [GUID]
+GO
+ALTER TABLE [dbo].[ServerPartitionTypeEnum] ADD  CONSTRAINT [DF_ServerPartitionTypeEnum_GUID]  DEFAULT (newid()) FOR [GUID]
+GO
+ALTER TABLE [dbo].[ServerPartition]  WITH CHECK ADD  CONSTRAINT [FK_ServerPartition_ServerPartitionTypeEnum] FOREIGN KEY([ServerPartitionTypeEnum])
+REFERENCES [dbo].[ServerPartitionTypeEnum] ([Enum])
+GO
+ALTER TABLE [dbo].[ServerPartition] CHECK CONSTRAINT [FK_ServerPartition_ServerPartitionTypeEnum]
+GO
+ALTER TABLE [dbo].[ServerPartitionAlternateAeTitle]  WITH CHECK ADD  CONSTRAINT [FK_ServerPartitionAlternateAeTitle_ServerPartition] FOREIGN KEY([ServerPartitionGUID])
+REFERENCES [dbo].[ServerPartition] ([GUID])
+GO
+ALTER TABLE [dbo].[ServerPartitionAlternateAeTitle] CHECK CONSTRAINT [FK_ServerPartitionAlternateAeTitle_ServerPartition]
+GO
+
 /****** Object:  Table [dbo].[WorkQueueStatusEnum]    Script Date: 07/16/2008 23:49:42 ******/
 SET ANSI_NULLS ON
 GO

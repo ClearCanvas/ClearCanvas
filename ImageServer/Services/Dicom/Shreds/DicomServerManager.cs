@@ -25,11 +25,14 @@
 using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Net.Sockets;
 using ClearCanvas.Common;
 using ClearCanvas.Dicom.Audit;
 using ClearCanvas.Dicom.Network.Scp;
 using ClearCanvas.Enterprise.Core;
 using ClearCanvas.ImageServer.Common;
+using ClearCanvas.ImageServer.Common.Helpers;
+using ClearCanvas.ImageServer.Core;
 using ClearCanvas.ImageServer.Model;
 
 namespace ClearCanvas.ImageServer.Services.Dicom.Shreds
@@ -61,14 +64,8 @@ namespace ClearCanvas.ImageServer.Services.Dicom.Shreds
 		/// </summary>
 		public static DicomServerManager Instance
 		{
-			get
-			{
-				if (_instance == null)
-					_instance = new DicomServerManager("DICOM Service Manager");
-
-				return _instance;
-			}
-			set
+			get { return _instance ?? (_instance = new DicomServerManager("DICOM Service Manager")); }
+		    set
 			{
 				_instance = value;
 			}
@@ -80,7 +77,6 @@ namespace ClearCanvas.ImageServer.Services.Dicom.Shreds
 	    private void StartPartitionListener(ServerPartition part)
 	    {
 			var parms = new DicomScpContext(part);
-				new DicomScpContext(part);
 
 	        if (DicomSettings.Default.ListenIPV4)
 	        {
@@ -107,7 +103,6 @@ namespace ClearCanvas.ImageServer.Services.Dicom.Shreds
 	            StartScp(ipV6Scp, _listenerList);
 	        }
 	    }
-				else
 	    private void StartAlternateAeTitleListener(ServerPartition part, ServerPartitionAlternateAeTitle alternateAe)
 	    {
 	        var context = new DicomScpContext(part)
@@ -124,17 +119,30 @@ namespace ClearCanvas.ImageServer.Services.Dicom.Shreds
 	                    AeTitle = alternateAe.AeTitle,
 	                    ListenAddress = IPAddress.Any
 	                };
-											new AuditProcessActiveParticipant(ipV4Scp.AeTitle));
 	            StartScp(ipV4Scp, _alternateAeListenerList);
-					Platform.Log(LogLevel.Error, "Unable to add IPv4 SCP handler for server partition {0}",
-								 part.Description);
-					Platform.Log(LogLevel.Error,
-								 "Partition {0} will not accept IPv4 incoming DICOM associations.",
-								 part.Description);
-					ServerPlatform.Alert(AlertCategory.Application, AlertLevel.Critical, "DICOM Listener",
-                                         AlertTypeCodes.UnableToStart, null, TimeSpan.Zero, "Unable to start IPv4 DICOM listener on {0} : {1}",
-					                     ipV4Scp.AeTitle, ipV4Scp.ListenPort);
-				}
+			}
+
+            // Now check for alternate Ae Titles
+            foreach (var alternateAe in part.RelatedServerPartitionAlternateAeTitles)
+            {
+                if (!alternateAe.AllowKOPR && !alternateAe.AllowStorage && !alternateAe.AllowQuery && !alternateAe.AllowRetrieve && alternateAe.Enabled) 
+                    continue;
+                
+                var context = new DicomScpContext(part)
+                    {
+                        AlternateAeTitle = alternateAe
+                    };
+                
+                if (DicomSettings.Default.ListenIPV4)
+                {
+                    var ipV4Scp = new DicomScp<DicomScpContext>(context, AssociationVerifier.Verify, AssociationAuditLogger.InstancesTransferredAuditLogger)
+                    {
+                        ListenPort = alternateAe.Port,
+                        AeTitle = alternateAe.AeTitle,
+                        ListenAddress = IPAddress.Any
+                    };
+
+                    StartListener(ipV4Scp);
 	        }
 
 	        if (DicomSettings.Default.ListenIPV6)
@@ -150,41 +158,47 @@ namespace ClearCanvas.ImageServer.Services.Dicom.Shreds
 	            StartScp(ipV6Scp, _alternateAeListenerList);
 	        }
 	    }
+		}
 
 	    private void StartScp(DicomScp<DicomScpContext> listener, List<DicomScp<DicomScpContext>> list)
-				{
-					_listenerList.Add(ipV6Scp);
-					ApplicationActivityAuditHelper helper = new ApplicationActivityAuditHelper(
+        {
+            if (listener.Start())
+            {
                 list.Add(listener);
-											ServerPlatform.AuditSource,
-											EventIdentificationContentsEventOutcomeIndicator.Success,
-											ApplicationActivityType.ApplicationStarted,
-											new AuditProcessActiveParticipant(ipV6Scp.AeTitle));
-					ServerPlatform.LogAuditMessage(helper);
-				}
-				else
-				{
-					ApplicationActivityAuditHelper helper = new ApplicationActivityAuditHelper(
-						ServerPlatform.AuditSource,
-						EventIdentificationContentsEventOutcomeIndicator.MajorFailureActionMadeUnavailable,
-						ApplicationActivityType.ApplicationStarted,
-						new AuditProcessActiveParticipant(ipV6Scp.AeTitle));
-					ServerPlatform.LogAuditMessage(helper);
+                var helper = new ApplicationActivityAuditHelper(
+                                        ServerPlatform.AuditSource,
+                                        EventIdentificationContentsEventOutcomeIndicator.Success,
+                                        ApplicationActivityType.ApplicationStarted,
+                                        new AuditProcessActiveParticipant(listener.AeTitle));
+                ServerAuditHelper.LogAuditMessage(helper);
+            }
+            else
+            {
+                var helper = new ApplicationActivityAuditHelper(
+                    ServerPlatform.AuditSource,
+                    EventIdentificationContentsEventOutcomeIndicator.MajorFailureActionMadeUnavailable,
+                    ApplicationActivityType.ApplicationStarted,
+                    new AuditProcessActiveParticipant(listener.AeTitle));
+                ServerAuditHelper.LogAuditMessage(helper);
 
-					Platform.Log(LogLevel.Error, "Unable to add IPv6 SCP handler for server partition {0}",
+                Platform.Log(LogLevel.Error, "Unable to add {1} SCP handler for server partition {0}",
                              listener.Context.Partition.Description,
                              listener.ListenAddress.AddressFamily == AddressFamily.InterNetworkV6
                                  ? "IPv6"
                                  : "IPv4");
-					Platform.Log(LogLevel.Error,
-								 "Partition {0} will not accept IPv6 incoming DICOM associations.",
-								 part.Description);
-					ServerPlatform.Alert(AlertCategory.Application, AlertLevel.Critical, "DICOM Listener",
-                                         AlertTypeCodes.UnableToStart, null, TimeSpan.Zero, "Unable to start IPv6 DICOM listener on {0} : {1}",
-										 ipV6Scp.AeTitle, ipV6Scp.ListenPort);
-				}
-			}
-		}
+                Platform.Log(LogLevel.Error,
+                             "Partition {0} will not accept IPv6 incoming DICOM associations.",
+                             listener.Context.Partition.Description);
+
+                ServerPlatform.Alert(AlertCategory.Application, AlertLevel.Critical, "DICOM Listener",
+                                     AlertTypeCodes.UnableToStart, null, TimeSpan.Zero,
+                                     "Unable to start {2} DICOM listener on {0} : {1}",
+                                     listener.AeTitle, listener.ListenPort,
+                                     listener.ListenAddress.AddressFamily == AddressFamily.InterNetworkV6
+                                         ? "IPv6"
+                                         : "IPv4");
+            }
+        }
 
 	    private void RemoveDisabledPartitions()
 	    {
@@ -423,12 +437,12 @@ namespace ClearCanvas.ImageServer.Services.Dicom.Shreds
 				foreach (DicomScp<DicomScpContext> scp in _listenerList)
 				{
 					scp.Stop();
-					ApplicationActivityAuditHelper helper = new ApplicationActivityAuditHelper(
+					var helper = new ApplicationActivityAuditHelper(
 								ServerPlatform.AuditSource,
 								EventIdentificationContentsEventOutcomeIndicator.Success,
 								ApplicationActivityType.ApplicationStopped,
 								new AuditProcessActiveParticipant(scp.AeTitle));
-					ServerPlatform.LogAuditMessage(helper);
+                    ServerAuditHelper.LogAuditMessage(helper);
 				}
 
                 foreach (DicomScp<DicomScpContext> scp in _alternateAeListenerList)

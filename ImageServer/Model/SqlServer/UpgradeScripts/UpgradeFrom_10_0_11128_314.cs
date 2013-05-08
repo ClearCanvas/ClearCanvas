@@ -1,3 +1,4 @@
+﻿
 #region License
 
 // Copyright (c) 2013, ClearCanvas Inc.
@@ -23,27 +24,20 @@
 #endregion
 
 using System;
+using ClearCanvas.Common;
+using ClearCanvas.Enterprise.Core.Upgrade;
 
-namespace ClearCanvas.ImageServer.Common.Exceptions
+namespace ClearCanvas.ImageServer.Model.SqlServer.UpgradeScripts
 {
     /// <summary>
-    /// Represents the exception thrown when the study is in invalid state.
+    /// Upgrade from the Yen milestone to the Phoenix5 milestone.
     /// </summary>
-    public class StudyIsInInvalidStateException: Exception
+    [ExtensionOf(typeof (PersistentStoreUpgradeScriptExtensionPoint))]
+    internal class UpgradeFrom_10_0_11128_314 : BaseUpgradeScript
     {
-        public StudyIsInInvalidStateException(string state, string studyInstanceUid, string message)
-            :base(message)
+        public UpgradeFrom_10_0_11128_314()
+            : base(new Version(10, 0, 11128, 314), null, "UpgradeFrom_10_0_11128_314.sql")
         {
-            CurrentState = state;
-            StudyInstanceUid = studyInstanceUid;
-            //   CurrentState = location.StudyStatusEnum.Description;
-            // StudyInstanceUid = location.StudyInstanceUid;
         }
-
-        public string CurrentState { get; set; }
-        /// <summary>
-        /// The study instance UID of the study that is nearline.
-        /// </summary>		
-        public string StudyInstanceUid { get; set; }
     }
 }

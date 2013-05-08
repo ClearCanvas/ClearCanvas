@@ -26,6 +26,7 @@ using System;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Statistics;
 using ClearCanvas.ImageServer.Common;
+using ClearCanvas.ImageServer.Core;
 using ClearCanvas.ImageServer.Model;
 using ClearCanvas.ImageServer.Common.Exceptions;
 

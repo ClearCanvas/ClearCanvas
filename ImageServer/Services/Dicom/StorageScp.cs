@@ -117,7 +117,7 @@ namespace ClearCanvas.ImageServer.Services.Dicom
                 return DicomPresContextResult.RejectUser;
             }
 
-			if (Device.AcceptKOPR)
+			if (Device.AcceptKOPR || Context.AllowKOPR)
 			{
 				DicomPresContext context = association.GetPresentationContext(pcid);
 				if (context.AbstractSyntax.Equals(SopClass.KeyObjectSelectionDocumentStorage)

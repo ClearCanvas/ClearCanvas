@@ -24,15 +24,39 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text;
 using System.Threading;
 using ClearCanvas.Common;
+using ClearCanvas.Common.Audit;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Dicom.Audit;
 
-namespace ClearCanvas.ImageServer.Common
+namespace ClearCanvas.ImageServer.Common.Helpers
 {
     public static class ServerAuditHelper
     {
+        private static readonly object _syncLock = new object();
+        private static DicomAuditSource _auditSource;
+        private static AuditLog _log;
+    
+
+        /// <summary>
+        /// A well known AuditSource for ImageServer audit logging.
+        /// </summary>
+        public static DicomAuditSource AuditSource
+        {
+            get
+            {
+                lock (_syncLock)
+                {
+                    if (_auditSource == null)
+                    {
+                        _auditSource = new DicomAuditSource("ImageServer");
+                    }
+                    return _auditSource;
+                }
+            }
+        }
 
         public static void AddAuthorityGroupAccess(string studyInstanceUid, string accessionNumber, IList<string> assignedGroups)
         {
@@ -40,7 +64,7 @@ namespace ClearCanvas.ImageServer.Common
             Platform.CheckForNullReference(assignedGroups, "assignedGroups");
 
             var helper =
-                new DicomInstancesAccessedAuditHelper(ServerPlatform.AuditSource,
+                new DicomInstancesAccessedAuditHelper(AuditSource,
                                                       EventIdentificationContentsEventOutcomeIndicator.Success,
                                                       EventIdentificationContentsEventActionCode.U,
                                                       EventTypeCode.ObjectSecurityAttributesChanged);
@@ -62,7 +86,7 @@ namespace ClearCanvas.ImageServer.Common
             helper.AddStudyParticipantObject(participant);
 
 
-            ServerPlatform.LogAuditMessage(helper);
+            LogAuditMessage(helper);
         }
 
         public static void RemoveAuthorityGroupAccess(string studyInstanceUid, string accessionNumber, IList<string> assignedGroups)
@@ -71,7 +95,7 @@ namespace ClearCanvas.ImageServer.Common
             Platform.CheckForNullReference(assignedGroups, "assignedGroups");
 
             var helper =
-                new DicomInstancesAccessedAuditHelper(ServerPlatform.AuditSource,
+                new DicomInstancesAccessedAuditHelper(AuditSource,
                                                       EventIdentificationContentsEventOutcomeIndicator.Success,
                                                       EventIdentificationContentsEventActionCode.U,
                                                       EventTypeCode.ObjectSecurityAttributesChanged);
@@ -93,7 +117,37 @@ namespace ClearCanvas.ImageServer.Common
             participant.ParticipantObjectDetailString = updateDescription;
             helper.AddStudyParticipantObject(participant);
 
-            ServerPlatform.LogAuditMessage(helper);
+            LogAuditMessage(helper);
+        }
+
+        /// <summary>
+        /// Log an Audit message.
+        /// </summary>
+        /// <param name="helper"></param>
+        public static void LogAuditMessage(DicomAuditHelper helper)
+        {
+            lock (_syncLock)
+            {
+                if (_log == null)
+                    _log = new AuditLog(ProductInformation.Component, "DICOM");
+
+                string serializeText = null;
+                try
+                {
+                    serializeText = helper.Serialize(false);
+                    _log.WriteEntry(helper.Operation, serializeText);
+                }
+                catch (Exception ex)
+                {
+                    Platform.Log(LogLevel.Error, ex, "Error occurred when writing audit log");
+
+                    StringBuilder sb = new StringBuilder();
+                    sb.AppendLine("Audit Log failed to save:");
+                    sb.AppendLine(String.Format("Operation: {0}", helper.Operation));
+                    sb.AppendLine(String.Format("Details: {0}", serializeText));
+                    Platform.Log(LogLevel.Info, sb.ToString());
+                }
+            }
         }
     }
 }

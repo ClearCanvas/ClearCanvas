@@ -24,10 +24,11 @@
 
 using System;
 using System.Collections.Generic;
+using ClearCanvas.ImageServer.Common;
 using ClearCanvas.ImageServer.Enterprise;
 using ClearCanvas.ImageServer.Model;
 
-namespace ClearCanvas.ImageServer.Common
+namespace ClearCanvas.ImageServer.Core
 {
 	/// <summary>
 	/// A cache of <see cref="StudyStorageLocation"/> objects.

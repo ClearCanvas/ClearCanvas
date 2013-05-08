@@ -25,6 +25,7 @@
 using System;
 using ClearCanvas.Common;
 using ClearCanvas.ImageServer.Common;
+using ClearCanvas.ImageServer.Core;
 using ClearCanvas.ImageServer.Model;
 
 namespace ClearCanvas.ImageServer.Services.WorkQueue.DeleteStudy
