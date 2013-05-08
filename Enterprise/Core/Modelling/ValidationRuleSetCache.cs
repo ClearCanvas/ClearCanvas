@@ -98,7 +98,8 @@ namespace ClearCanvas.Enterprise.Core.Modelling
 			// which should be relatively short (a few minutes).
 			// This ensures that changes made to these rules will be applied eventually, when the cache expires.
 			ValidationRuleSet customRules;
-			if (Cache.IsSupported())
+			//if (Cache.IsSupported())
+			if(false)
 			{
 				using (var cacheClient = Cache.CreateClient(CacheId))
 				{
