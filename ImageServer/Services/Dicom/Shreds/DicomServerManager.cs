@@ -122,29 +122,6 @@ namespace ClearCanvas.ImageServer.Services.Dicom.Shreds
 	            StartScp(ipV4Scp, _alternateAeListenerList);
 			}
 
-            // Now check for alternate Ae Titles
-            foreach (var alternateAe in part.RelatedServerPartitionAlternateAeTitles)
-            {
-                if (!alternateAe.AllowKOPR && !alternateAe.AllowStorage && !alternateAe.AllowQuery && !alternateAe.AllowRetrieve && alternateAe.Enabled) 
-                    continue;
-                
-                var context = new DicomScpContext(part)
-                    {
-                        AlternateAeTitle = alternateAe
-                    };
-                
-                if (DicomSettings.Default.ListenIPV4)
-                {
-                    var ipV4Scp = new DicomScp<DicomScpContext>(context, AssociationVerifier.Verify, AssociationAuditLogger.InstancesTransferredAuditLogger)
-                    {
-                        ListenPort = alternateAe.Port,
-                        AeTitle = alternateAe.AeTitle,
-                        ListenAddress = IPAddress.Any
-                    };
-
-                    StartListener(ipV4Scp);
-	        }
-
 	        if (DicomSettings.Default.ListenIPV6)
 	        {
 	            var ipV6Scp = new DicomScp<DicomScpContext>(context, AssociationVerifier.Verify,
@@ -157,7 +134,6 @@ namespace ClearCanvas.ImageServer.Services.Dicom.Shreds
 
 	            StartScp(ipV6Scp, _alternateAeListenerList);
 	        }
-	    }
 		}
 
 	    private void StartScp(DicomScp<DicomScpContext> listener, List<DicomScp<DicomScpContext>> list)
