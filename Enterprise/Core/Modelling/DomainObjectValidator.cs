@@ -43,19 +43,19 @@ namespace ClearCanvas.Enterprise.Core.Modelling
 		{
 			#region Implementation of IDomainObjectValidator
 
-			public void Validate(DomainObject obj)
+			public void Validate(object obj)
 			{
 			}
 
-			public void ValidateRequiredFieldsPresent(DomainObject obj)
+			public void ValidateRequiredFieldsPresent(object obj)
 			{
 			}
 
-			public void ValidateLowLevel(DomainObject obj, Predicate<ISpecification> ruleFilter)
+			public void ValidateLowLevel(object obj, Predicate<ISpecification> ruleFilter)
 			{
 			}
 
-			public void ValidateHighLevel(DomainObject obj)
+			public void ValidateHighLevel(object obj)
 			{
 			}
 
@@ -101,7 +101,7 @@ namespace ClearCanvas.Enterprise.Core.Modelling
 		/// </summary>
 		/// <param name="obj"></param>
 		/// <exception cref="EntityValidationException">Validation failed.</exception>
-		public void Validate(DomainObject obj)
+		public void Validate(object obj)
 		{
 			// validate all rules
 			Validate(obj, RuleLevel.Low|RuleLevel.High, rule => true);
@@ -111,7 +111,7 @@ namespace ClearCanvas.Enterprise.Core.Modelling
 		/// Validates only that the specified object has required fields set.
 		/// </summary>
 		/// <param name="obj"></param>
-		public void ValidateRequiredFieldsPresent(DomainObject obj)
+		public void ValidateRequiredFieldsPresent(object obj)
 		{
 			ValidateLowLevel(obj, rule => rule is RequiredSpecification);
 		}
@@ -128,7 +128,7 @@ namespace ClearCanvas.Enterprise.Core.Modelling
 		/// </remarks>
 		/// <param name="obj"></param>
 		/// <param name="ruleFilter"></param>
-		public void ValidateLowLevel(DomainObject obj, Predicate<ISpecification> ruleFilter)
+		public void ValidateLowLevel(object obj, Predicate<ISpecification> ruleFilter)
 		{
 			Validate(obj, RuleLevel.Low, ruleFilter);
 		}
@@ -140,7 +140,7 @@ namespace ClearCanvas.Enterprise.Core.Modelling
 		/// High-level rules include any rules that are not low-level rules.
 		/// </remarks>
 		/// <param name="obj"></param>
-		public void ValidateHighLevel(DomainObject obj)
+		public void ValidateHighLevel(object obj)
 		{
 			Validate(obj, RuleLevel.High, r => true);
 		}
@@ -154,7 +154,7 @@ namespace ClearCanvas.Enterprise.Core.Modelling
 		/// <param name="level"></param>
 		/// <param name="ruleFilter"></param>
 		/// <exception cref="EntityValidationException">Validation failed.</exception>
-		private void Validate(DomainObject obj, RuleLevel level, Predicate<ISpecification> ruleFilter)
+		private void Validate(object obj, RuleLevel level, Predicate<ISpecification> ruleFilter)
 		{
 			var domainClass = obj.GetClass();
 
