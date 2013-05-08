@@ -70,7 +70,7 @@ namespace ClearCanvas.ImageServer.TestApp
             InitializeComponent();
             _buttonCancel.Enabled = false;
             bool first = true;
-            foreach (ServerPartition partition in ServerPartitionMonitor.Instance)
+            foreach (ServerPartition partition in ServerPartitionMonitor.Instance.Partitions)
             {
                 _comboBoxServerPartition.Items.Add(partition);
                 if (first)

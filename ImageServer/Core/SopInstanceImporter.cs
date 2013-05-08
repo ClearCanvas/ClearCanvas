@@ -52,6 +52,7 @@ namespace ClearCanvas.ImageServer.Core
         private readonly String _contextID;
         private readonly string _sourceAE;
         private readonly ServerPartition _partition;
+        private ServerPartitionAlternateAeTitle _alternateAe;
         #endregion
 
         #region Constructors
@@ -67,6 +68,7 @@ namespace ClearCanvas.ImageServer.Core
             :
             this(id, sourceAE, ServerPartitionMonitor.Instance.GetPartition(serverAE))
         {
+            _alternateAe = ServerPartitionMonitor.Instance.GetPartitionAlternateAe(serverAE);
         }
 
         /// <summary>
@@ -82,7 +84,7 @@ namespace ClearCanvas.ImageServer.Core
             Platform.CheckForNullReference(partition, "partition");
             _contextID = contextID;
             _sourceAE = sourceAE;
-            _partition = partition;
+            _partition = partition;            
         }
         
         #endregion
@@ -109,6 +111,11 @@ namespace ClearCanvas.ImageServer.Core
         public ServerPartition Partition
         {
             get { return _partition; }
+        }
+
+        public ServerPartitionAlternateAeTitle AlternateAe
+        {
+            get { return _alternateAe; }
         }
     }
 

@@ -2615,6 +2615,9 @@ BEGIN
 	-- PRINT ''Deleting ServerPartitionDataAccess''
 	delete dbo.ServerPartitionDataAccess where ServerPartitionGUID= @ServerPartitionGUID
 
+	-- PRINT ''Deleting ServerPartitionAlternateAeTitle''
+	delete dbo.ServerPartitionAlternateAeTitle where ServerPartitionGUID= @ServerPartitionGUID
+
 	IF @DeleteStudies=1
 	BEGIN
 		/* DELETE STUDY, PATIENT AND RELATED TABLES */

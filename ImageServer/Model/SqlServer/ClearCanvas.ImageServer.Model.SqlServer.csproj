@@ -131,8 +131,10 @@
     <Compile Include="EntityBrokers\RestoreQueueEntityBroker.gen.cs" />
     <Compile Include="EntityBrokers\RestoreQueueStatusEnumBroker.gen.cs" />
     <Compile Include="EntityBrokers\SeriesEntityBroker.gen.cs" />
+    <Compile Include="EntityBrokers\ServerPartitionAlternateAeTitleEntityBroker.gen.cs" />
     <Compile Include="EntityBrokers\ServerPartitionDataAccessEntityBroker.gen.cs" />
     <Compile Include="EntityBrokers\ServerPartitionEntityBroker.gen.cs" />
+    <Compile Include="EntityBrokers\ServerPartitionTypeEnumBroker.gen.cs" />
     <Compile Include="EntityBrokers\ServerRuleApplyTimeEnumBroker.gen.cs" />
     <Compile Include="EntityBrokers\ServerRuleEntityBroker.gen.cs" />
     <Compile Include="EntityBrokers\ServerRuleTypeEnumBroker.gen.cs" />

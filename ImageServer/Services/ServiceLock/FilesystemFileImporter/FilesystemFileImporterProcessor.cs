@@ -75,7 +75,7 @@ namespace ClearCanvas.ImageServer.Services.ServiceLock.FilesystemFileImporter
             {
                 Platform.Log(LogLevel.Debug, "Start importing dicom files from {0}", filesystem.Filesystem.FilesystemPath);
 
-                foreach (ServerPartition partition in ServerPartitionMonitor.Instance)
+                foreach (ServerPartition partition in ServerPartitionMonitor.Instance.Partitions)
                 {
                     if (partition.Enabled)
                     {

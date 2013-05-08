@@ -64,10 +64,12 @@ namespace ClearCanvas.ImageServer.Services.Dicom
         protected static DicomFile ConvertToDicomFile(DicomMessage message, string filename, AssociationParameters assocParms)
         {
             // This routine sets some of the group 0x0002 elements.
-            DicomFile file = new DicomFile(message, filename);
+            var file = new DicomFile(message, filename)
+                {
+                    SourceApplicationEntityTitle = assocParms.CallingAE,
+                    TransferSyntax = message.TransferSyntax
+                };
 
-            file.SourceApplicationEntityTitle = assocParms.CallingAE;
-            file.TransferSyntax = message.TransferSyntax;
             return file;
         }
 
@@ -80,18 +82,17 @@ namespace ClearCanvas.ImageServer.Services.Dicom
         /// <returns>The list of syntaxes</returns>
 		protected static IList<PartitionTransferSyntax> LoadTransferSyntaxes(IReadContext read, ServerEntityKey partitionKey, bool encapsulated)
         {
-            IList<PartitionTransferSyntax> list;
+            var broker = read.GetBroker<IQueryServerPartitionTransferSyntaxes>();
 
-			IQueryServerPartitionTransferSyntaxes broker = read.GetBroker<IQueryServerPartitionTransferSyntaxes>();
+			var criteria = new PartitionTransferSyntaxQueryParameters
+			    {
+			        ServerPartitionKey = partitionKey
+			    };
 
-			PartitionTransferSyntaxQueryParameters criteria = new PartitionTransferSyntaxQueryParameters();
-
-            criteria.ServerPartitionKey = partitionKey;
-
-            list = broker.Find(criteria);
+            IList<PartitionTransferSyntax> list = broker.Find(criteria);
 
 
-			List<PartitionTransferSyntax> returnList = new List<PartitionTransferSyntax>();
+			var returnList = new List<PartitionTransferSyntax>();
 			foreach (PartitionTransferSyntax syntax in list)
             {
 				if (!syntax.Enabled) continue;
@@ -140,11 +141,11 @@ namespace ClearCanvas.ImageServer.Services.Dicom
         {
             try
             {
-                SopInstanceImporterContext context = new SopInstanceImporterContext(
+                var context = new SopInstanceImporterContext(
                     String.Format("{0}_{1}", association.CallingAE, association.TimeStamp.ToString("yyyyMMddhhmmss")),
                     association.CallingAE, association.CalledAE);
 
-                SopInstanceImporter importer = new SopInstanceImporter(context);
+                var importer = new SopInstanceImporter(context);
                 DicomProcessingResult result = importer.Import(message);
 
                 if (result.Successful)
