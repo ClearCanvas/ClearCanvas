@@ -75,7 +75,10 @@
     <Compile Include="Command\ServerDatabaseCommand.cs" />
     <Compile Include="Command\ServerExecutionContext.cs" />
     <Compile Include="ConstantResourceManager.cs" />
+    <Compile Include="DataContracts.cs" />
     <Compile Include="HttpServer.cs" />
+    <Compile Include="ImageServerKnownTypeAttribute.cs" />
+    <Compile Include="ImageServerKnownTypeProvider.cs" />
     <Compile Include="ProductManifestServiceSettings.Designer.cs">
       <DependentUpon>ProductManifestServiceSettings.settings</DependentUpon>
       <AutoGen>True</AutoGen>
