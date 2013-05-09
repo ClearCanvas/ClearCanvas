@@ -43,22 +43,23 @@ namespace ClearCanvas.Enterprise.Hibernate
 		/// <summary>
 		/// Tests whether the specified object satisfies the specified unique constraint.
 		/// </summary>
-		/// <param name="obj">The object to test.</param>
+		/// <param name="domainObject">The object to test.</param>
 		/// <param name="entityClass">The class of entity to which the constraint applies.</param>
 		/// <param name="uniqueConstraintMembers">The properties of the object that form the unique key.
 		/// These may be compound property expressions (e.g. Name.FirstName, Name.LastName).
 		/// </param>
 		/// <returns></returns>
-		public bool IsUnique(DomainObject obj, Type entityClass, string[] uniqueConstraintMembers)
+		public bool IsUnique(object domainObject, Type entityClass, string[] uniqueConstraintMembers)
         {
-            Platform.CheckForNullReference(obj, "obj");
+			Platform.CheckForNullReference(domainObject, "domainObject");
 			Platform.CheckForNullReference(entityClass, "entityClass");
 			Platform.CheckForNullReference(uniqueConstraintMembers, "uniqueConstraintMembers");
+			Platform.CheckExpectedType(domainObject, typeof(DomainObject));
 
             if (uniqueConstraintMembers.Length == 0)
                 throw new InvalidOperationException("uniqueConstraintMembers must contain at least one entry.");
 
-            var hqlQuery = BuildQuery(obj, entityClass, uniqueConstraintMembers);
+			var hqlQuery = BuildQuery((DomainObject)domainObject, entityClass, uniqueConstraintMembers);
 
             // create a new session to do the validation query
             // this is a bit of a HACK, but we know that this may occur during an interceptor callback

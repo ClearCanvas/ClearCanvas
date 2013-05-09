@@ -121,6 +121,7 @@
     <Compile Include="Modelling\ValidationRule.cs" />
     <Compile Include="Modelling\ValidationAttribute.cs" />
     <Compile Include="Modelling\XmlValidationRuleSetSource.cs" />
+    <Compile Include="ObjectExtensions.cs" />
     <Compile Include="Ping\PingService.cs" />
     <Compile Include="Printing\IPageModel.cs" />
     <Compile Include="Printing\Print.cs" />
