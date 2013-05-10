@@ -22,12 +22,19 @@
 
 #endregion
 
-using System;
+using System.Runtime.Serialization;
+using ClearCanvas.Common.Serialization;
 
-namespace ClearCanvas.ImageServer.Common
+namespace ClearCanvas.ImageServer.Common.ExternalRequest
 {
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
-    public class ImageServerKnownTypeAttribute : Attribute
+    [ImageServerExternalRequestType]
+    [DataContract]
+    public abstract class ImageServerExternalRequest : DataContractBase
     {
+        /// <summary>
+        /// Specifies if the operation must run synchronously or asynchronously
+        /// </summary>
+        [DataMember]
+        public ExecutionModeEnum ExecutionMode { get; set; }
     }
 }

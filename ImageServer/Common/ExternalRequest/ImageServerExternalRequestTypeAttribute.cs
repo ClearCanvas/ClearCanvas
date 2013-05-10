@@ -23,25 +23,14 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using ClearCanvas.Common;
-using ClearCanvas.Common.Utilities;
 
-namespace ClearCanvas.ImageServer.Common
+namespace ClearCanvas.ImageServer.Common.ExternalRequest
 {
-    public static class ImageServerKnownTypeProvider
+    /// <summary>
+    /// Attribute to define a class is part of the ImageServer's RequestItem infrastructure.
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
+    public class ImageServerExternalRequestTypeAttribute : Attribute
     {
-        private static readonly List<Type> KnownTypes = (from p in Platform.PluginManager.Plugins
-                                                         from t in p.Assembly.Resolve().GetTypes()
-                                                         let a = AttributeUtils.GetAttribute<ImageServerKnownTypeAttribute>(t)
-                                                         where (a != null)
-                                                         select t).ToList();
-
-        public static IEnumerable<Type> GetKnownTypes(ICustomAttributeProvider ignored)
-        {
-            return KnownTypes;
-        }
     }
 }

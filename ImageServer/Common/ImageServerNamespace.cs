@@ -22,10 +22,6 @@
 
 #endregion
 
-using System;
-using System.Runtime.Serialization;
-using ClearCanvas.Common.Serialization;
-
 namespace ClearCanvas.ImageServer.Common
 {
     public static class ImageServerNamespace
@@ -33,24 +29,4 @@ namespace ClearCanvas.ImageServer.Common
         public const string Value = "http://www.clearcanvas.ca/imageserver";
     }
 
-    public abstract class ImageServerRequestItem : DataContractBase
-    {
-
-
-    }
-
-    public abstract class ImageServerProgressItem : DataContractBase
-    {
-        public virtual string Status { get { return string.Empty; } }
-
-        [DataMember(IsRequired = false)]
-        public string StatusDetails { get; set; }
-
-        public virtual Decimal PercentComplete { get { return new decimal(0.0); } }
-
-        public virtual Decimal PercentFailed { get { return new decimal(0.0); } }
-
-        [DataMember(IsRequired = true)]
-        public bool IsCancelable { get; set; }
-    }
 }
