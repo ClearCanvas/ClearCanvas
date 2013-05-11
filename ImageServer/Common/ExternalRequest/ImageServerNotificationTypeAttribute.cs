@@ -23,35 +23,20 @@
 #endregion
 
 using System;
-using System.Runtime.Serialization;
 using ClearCanvas.Common.Serialization;
 
 namespace ClearCanvas.ImageServer.Common.ExternalRequest
 {
-    [DataContract(Namespace = ImageServerExternalRequestNamespace.Value)]
-    [ImageServerExternalRequestType("345B8F2C-4A3B-44B4-93C3-C865277ABA35")]
-    public abstract class ImageServerExternalRequestState : DataContractBase
-    {
-        [DataMember]
-        public ImageServerExternalRequest TheExternalRequest { get; set; }
-
-        [DataMember]
-        public ExternalRequestStateEnum ExternalRequestState { get; set; }
-
-        public virtual string Status { get { return string.Empty; } }
-
-        [DataMember(IsRequired = false)]
-        public string StatusDetails { get; set; }
-
-        public virtual Decimal PercentComplete { get { return new decimal(0.0); } }
-
-        public virtual Decimal PercentFailed { get { return new decimal(0.0); } }
-
-        [DataMember(IsRequired = true)]
-        public bool IsCancelable { get; set; }
-
-        [DataMember]
-        public DateTime? CompletionTime { get; set; }
-
+     
+     /// <summary>
+    /// Attribute to define a class is part of the ImageServer's Notification infrastructure.
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
+    public class ImageServerNotificationTypeAttribute : PolymorphicDataContractAttribute
+	{
+        public ImageServerNotificationTypeAttribute(string dataContractGuid)
+			: base(dataContractGuid)
+		{
+		}    
     }
 }

@@ -23,6 +23,7 @@
 #endregion
 
 using System;
+using ClearCanvas.Common.Serialization;
 
 namespace ClearCanvas.ImageServer.Common.ExternalRequest
 {
@@ -30,7 +31,11 @@ namespace ClearCanvas.ImageServer.Common.ExternalRequest
     /// Attribute to define a class is part of the ImageServer's RequestItem infrastructure.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
-    public class ImageServerExternalRequestTypeAttribute : Attribute
-    {
+    public class ImageServerExternalRequestTypeAttribute : PolymorphicDataContractAttribute
+	{
+		public ImageServerExternalRequestTypeAttribute(string dataContractGuid)
+			: base(dataContractGuid)
+		{
+		}    
     }
 }

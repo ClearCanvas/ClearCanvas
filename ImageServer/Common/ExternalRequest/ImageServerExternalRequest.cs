@@ -27,8 +27,8 @@ using ClearCanvas.Common.Serialization;
 
 namespace ClearCanvas.ImageServer.Common.ExternalRequest
 {
-    [ImageServerExternalRequestType]
-    [DataContract]
+    [DataContract(Namespace = ImageServerExternalRequestNamespace.Value)]
+    [ImageServerExternalRequestType("42C5B5E3-8874-4399-972C-35878C579D89")]
     public abstract class ImageServerExternalRequest : DataContractBase
     {
         /// <summary>

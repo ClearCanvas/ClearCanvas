@@ -75,6 +75,9 @@
     <Compile Include="Command\ServerDatabaseCommand.cs" />
     <Compile Include="Command\ServerExecutionContext.cs" />
     <Compile Include="ConstantResourceManager.cs" />
+    <Compile Include="ExternalRequest\ImageServerNotification.cs" />
+    <Compile Include="ExternalRequest\ImageServerNotificationTypeAttribute.cs" />
+    <Compile Include="ExternalRequest\ImageServerSerializer.cs" />
     <Compile Include="ExternalRequest\InvalidExecutionModeRequestedException.cs" />
     <Compile Include="ImageServerNamespace.cs" />
     <Compile Include="HttpServer.cs" />
