@@ -22,34 +22,13 @@
 
 #endregion
 
-using System.Runtime.Serialization;
-using ClearCanvas.Common.Serialization;
+using System;
 
 namespace ClearCanvas.ImageServer.Common.ExternalRequest
 {
-    [DataContract(Namespace = ImageServerExternalRequestNamespace.Value)]
-    [ImageServerExternalRequestType("42C5B5E3-8874-4399-972C-35878C579D89")]
-    public abstract class ImageServerExternalRequest : DataContractBase
+    public class UnknownExternalRequestTypeException : ApplicationException
     {
-        /// <summary>
-        /// Specifies if the operation must run synchronously or asynchronously
-        /// </summary>
-        [DataMember]
-        public ExecutionModeEnum ExecutionMode { get; set; }
-
-        /// <summary>
-        /// A string uniquely identifying the request type
-        /// </summary>
-        [DataMember]
-        public string ExternalRequestType { get; set; }
-
-        /// <summary>
-        /// A string uniquely identifying the operation.  Can be null.
-        /// </summary>
-        /// <remarks>
-        /// The OperationToken is passed in notification messages if they resulted from a request.
-        /// </remarks>
-        [DataMember]
-        public string OperationToken { get; set; }
+        public UnknownExternalRequestTypeException(string message) : base(message)
+        {}
     }
 }

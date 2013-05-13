@@ -28,5 +28,11 @@ namespace ClearCanvas.ImageServer.Common.ExternalRequest
 {
     public class InvalidExecutionModeRequestedException : ApplicationException
     {
+        public InvalidExecutionModeRequestedException()
+        { }
+
+        public InvalidExecutionModeRequestedException(string message)
+            : base(message)
+        { }
     }
 }
