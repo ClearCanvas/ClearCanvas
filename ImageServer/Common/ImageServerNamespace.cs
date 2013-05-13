@@ -22,12 +22,11 @@
 
 #endregion
 
-using System;
-
 namespace ClearCanvas.ImageServer.Common
 {
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
-    public class ImageServerKnownTypeAttribute : Attribute
+    public static class ImageServerNamespace
     {
+        public const string Value = "http://www.clearcanvas.ca/imageserver";
     }
+
 }

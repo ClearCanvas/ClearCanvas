@@ -22,35 +22,34 @@
 
 #endregion
 
-using System;
 using System.Runtime.Serialization;
 using ClearCanvas.Common.Serialization;
 
-namespace ClearCanvas.ImageServer.Common
+namespace ClearCanvas.ImageServer.Common.ExternalRequest
 {
-    public static class ImageServerNamespace
+    [DataContract(Namespace = ImageServerExternalRequestNamespace.Value)]
+    [ImageServerExternalRequestType("42C5B5E3-8874-4399-972C-35878C579D89")]
+    public abstract class ImageServerExternalRequest : DataContractBase
     {
-        public const string Value = "http://www.clearcanvas.ca/imageserver";
-    }
+        /// <summary>
+        /// Specifies if the operation must run synchronously or asynchronously
+        /// </summary>
+        [DataMember]
+        public ExecutionModeEnum ExecutionMode { get; set; }
 
-    public abstract class ImageServerRequestItem : DataContractBase
-    {
+        /// <summary>
+        /// A string uniquely identifying the request type
+        /// </summary>
+        [DataMember]
+        public string ExternalRequestType { get; set; }
 
-
-    }
-
-    public abstract class ImageServerProgressItem : DataContractBase
-    {
-        public virtual string Status { get { return string.Empty; } }
-
-        [DataMember(IsRequired = false)]
-        public string StatusDetails { get; set; }
-
-        public virtual Decimal PercentComplete { get { return new decimal(0.0); } }
-
-        public virtual Decimal PercentFailed { get { return new decimal(0.0); } }
-
-        [DataMember(IsRequired = true)]
-        public bool IsCancelable { get; set; }
+        /// <summary>
+        /// A string uniquely identifying the operation.  Can be null.
+        /// </summary>
+        /// <remarks>
+        /// The OperationToken is passed in notification messages if they resulted from a request.
+        /// </remarks>
+        [DataMember]
+        public string OperationToken { get; set; }
     }
 }

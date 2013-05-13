@@ -75,10 +75,15 @@
     <Compile Include="Command\ServerDatabaseCommand.cs" />
     <Compile Include="Command\ServerExecutionContext.cs" />
     <Compile Include="ConstantResourceManager.cs" />
-    <Compile Include="DataContracts.cs" />
+    <Compile Include="ExternalRequest\ImageServerNotification.cs" />
+    <Compile Include="ExternalRequest\ImageServerNotificationTypeAttribute.cs" />
+    <Compile Include="ExternalRequest\ImageServerSerializer.cs" />
+    <Compile Include="ExternalRequest\InvalidExecutionModeRequestedException.cs" />
+    <Compile Include="ExternalRequest\UnknownExternalRequestTypeException.cs" />
+    <Compile Include="ImageServerNamespace.cs" />
     <Compile Include="HttpServer.cs" />
-    <Compile Include="ImageServerKnownTypeAttribute.cs" />
-    <Compile Include="ImageServerKnownTypeProvider.cs" />
+    <Compile Include="ExternalRequest\ImageServerExternalRequestTypeAttribute.cs" />
+    <Compile Include="ExternalRequest\ImageServerExternalRequestTypeProvider.cs" />
     <Compile Include="ProductManifestServiceSettings.Designer.cs">
       <DependentUpon>ProductManifestServiceSettings.settings</DependentUpon>
       <AutoGen>True</AutoGen>
@@ -101,6 +106,15 @@
     <Compile Include="ProductManifestServiceProvider.cs" />
     <Compile Include="Helpers\HeuristicTypeResolver.cs" />
     <Compile Include="Helpers\TypeExtension.cs" />
+    <Compile Include="ExternalRequest\ImageServerExternalRequest.cs" />
+    <Compile Include="ExternalRequest\ImageServerExternalRequestNamespace.cs" />
+    <Compile Include="ExternalRequest\ImageServerExternalRequestState.cs" />
+    <Compile Include="ExternalRequest\ExternalRequestEnums.cs" />
+    <Compile Include="ExternalRequest\SR.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SR.resx</DependentUpon>
+    </Compile>
     <Compile Include="ServerPlatform.cs" />
     <Compile Include="WorkQueueManagerExtensionPoint.cs" />
     <Compile Include="Helpers\ServerAuditHelper.cs" />
@@ -209,6 +223,12 @@
   <ItemGroup>
     <Folder Include="Edit\" />
     <Folder Include="Reconcile\" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="ExternalRequest\SR.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>SR.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
