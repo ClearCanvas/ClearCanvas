@@ -55,29 +55,32 @@ namespace ClearCanvas.Dicom.Utilities.Tests
 			Assert.IsTrue(path.Equals(0x00100010));
 			Assert.IsTrue(path.Equals(NewDicomTag(0x00100010)));
 
-			path = new DicomTagPath("(0054,0220)\\(0054,0222)");
-			Assert.AreEqual(path, "(0054,0220)\\(0054,0222)"); 
+            //Test old separator - "backslash"
+            path = new DicomTagPath(@"(0054,0220)\(0054,0222)");
+
+			path = new DicomTagPath("(0054,0220)/(0054,0222)");
+			Assert.AreEqual(path, "(0054,0220)/(0054,0222)"); 
 			Assert.IsFalse(path.Equals("(0054,0220)"));
 			Assert.IsFalse(path.Equals(0x00540220));
 			Assert.IsFalse(path.Equals(NewDicomTag(0x00540220)));
 
-			path = new DicomTagPath("(0054,0220)\\(0054,0222)\\(0010,0022)");
-			Assert.AreEqual(path.ToString(), "(0054,0220)\\(0054,0222)\\(0010,0022)");
+			path = new DicomTagPath("(0054,0220)/(0054,0222)/(0010,0022)");
+			Assert.AreEqual(path.ToString(), "(0054,0220)/(0054,0222)/(0010,0022)");
 
 			path = new DicomTagPath((new[] { NewDicomTag(0x00540220) }));
 			Assert.AreEqual(path.ToString(), "(0054,0220)");
 
 			path = new DicomTagPath((new[] { NewDicomTag(0x00540220), NewDicomTag(0x00540222) }));
-			Assert.AreEqual(path.ToString(), "(0054,0220)\\(0054,0222)");
+			Assert.AreEqual(path.ToString(), "(0054,0220)/(0054,0222)");
 
 			path = new DicomTagPath((new[] { NewDicomTag(0x00540220), NewDicomTag(0x00540222), NewDicomTag(0x00100022) }));
-			Assert.AreEqual(path.ToString(), "(0054,0220)\\(0054,0222)\\(0010,0022)");
+			Assert.AreEqual(path.ToString(), "(0054,0220)/(0054,0222)/(0010,0022)");
 
 			path = new DicomTagPath(new uint[] { 0x00540220, 0x00540222 });
-			Assert.AreEqual(path.ToString(), "(0054,0220)\\(0054,0222)");
+			Assert.AreEqual(path.ToString(), "(0054,0220)/(0054,0222)");
 
 			path = new DicomTagPath(new uint[] { 0x00540220, 0x00540222, 0x00100010 });
-			Assert.AreEqual(path.ToString(), "(0054,0220)\\(0054,0222)\\(0010,0010)");
+			Assert.AreEqual(path.ToString(), "(0054,0220)/(0054,0222)/(0010,0010)");
 		}
 
         [Test]

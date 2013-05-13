@@ -36,7 +36,7 @@ namespace ClearCanvas.Dicom.Utilities
 
 		private static readonly string _exceptionFormatInvalidTagPath = "The specified Dicom Tag Path is invalid: {0}.";
 
-		private static readonly char[] _pathSeparator = new char[] { '\\' };
+		private static readonly char[] _pathSeparators = new char[] { '\\' , '/'};
 		private static readonly char[] _tagSeparator = new char[] { ',' };
 
 		private readonly List<DicomTag> _tags;
@@ -91,7 +91,7 @@ namespace ClearCanvas.Dicom.Utilities
 		{
             Platform.CheckForNullReference(tags, "tags");
             _tags = new List<DicomTag>(tags);
-            _path = StringUtilities.Combine(_tags, "\\", tag => String.Format("({0:x4},{1:x4})", tag.Group, tag.Element));
+            _path = StringUtilities.Combine(_tags, "/", tag => String.Format("({0:x4},{1:x4})", tag.Group, tag.Element));
             ValidatePath(_tags);
 		}
 
@@ -292,7 +292,7 @@ namespace ClearCanvas.Dicom.Utilities
 
             var dicomTags = new List<DicomTag>();
 
-			string[] groupElementValues = path.Split(_pathSeparator);
+			string[] groupElementValues = path.Split(_pathSeparators);
 
             for (int i = 0; i < groupElementValues.Length; ++i)
             {
