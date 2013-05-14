@@ -51,4 +51,11 @@ namespace ClearCanvas.ImageServer.Common.ExternalRequest
         [EnumMember]
         Active
     }
+
+    [DataContract(Name = "RestMessageFormat", Namespace = ImageServerExternalRequestNamespace.Value)]
+    public enum RestMessageFormatEnum
+    {
+        [EnumMember]
+        Xml = 0,
+    }
 }
