@@ -43,5 +43,10 @@ namespace ClearCanvas.ImageServer.Common.ExternalRequest
         {
             return KnownTypes;
         }
+
+        public static Type[] GetTypeArray()
+        {
+            return KnownTypes.ToArray();
+        }
     }
 }
