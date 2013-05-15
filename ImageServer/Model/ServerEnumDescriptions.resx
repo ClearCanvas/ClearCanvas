@@ -195,6 +195,36 @@
   <data name="DuplicateSopPolicyEnum_CompareDuplicates_LongDescription" xml:space="preserve">
     <value>Process duplicate objects received and compare them to originals flagging any differences as a failure.</value>
   </data>
+  <data name="ExternalRequestQueueStatusEnum_Notification_Description" xml:space="preserve">
+    <value>Notification</value>
+  </data>
+  <data name="ExternalRequestQueueStatusEnum_Notification_LongDescription" xml:space="preserve">
+    <value>The request is a permanent notification request</value>
+  </data>
+  <data name="ExternalRequestQueueStatusEnum_Pending_Description" xml:space="preserve">
+    <value>Pending</value>
+  </data>
+  <data name="ExternalRequestQueueStatusEnum_Pending_LongDescription" xml:space="preserve">
+    <value>Pending</value>
+  </data>
+  <data name="ExternalRequestQueueStatusEnum_In Progress_Description" xml:space="preserve">
+    <value>In Progress</value>
+  </data>
+  <data name="ExternalRequestQueueStatusEnum_In Progress_LongDescription" xml:space="preserve">
+    <value>In Progress</value>
+  </data>
+  <data name="ExternalRequestQueueStatusEnum_Completed_Description" xml:space="preserve">
+    <value>Completed</value>
+  </data>
+  <data name="ExternalRequestQueueStatusEnum_Completed_LongDescription" xml:space="preserve">
+    <value>The Queue entry is completed.</value>
+  </data>
+  <data name="ExternalRequestQueueStatusEnum_Failed_Description" xml:space="preserve">
+    <value>Failed</value>
+  </data>
+  <data name="ExternalRequestQueueStatusEnum_Failed_LongDescription" xml:space="preserve">
+    <value>The Queue entry has failed.</value>
+  </data>
   <data name="AlertCategoryEnum_System_Description" xml:space="preserve">
     <value>System alert</value>
   </data>

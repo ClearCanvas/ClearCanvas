@@ -1175,3 +1175,34 @@ INSERT INTO [ImageServer].[dbo].[ServerPartitionTypeEnum]
      VALUES
            (newid(),101,'Research','Research','An ImageServer research Partition')
 GO
+
+-- ExternalRequestQueueStatusEnum inserts
+INSERT INTO [ImageServer].[dbo].[ExternalRequestQueueStatusEnum]
+           ([GUID],[Enum],[Lookup],[Description],[LongDescription])
+     VALUES
+           (newid(),100,'Notification','Notification','The request is a permanent notification request')
+GO
+
+INSERT INTO [ImageServer].[dbo].[ExternalRequestQueueStatusEnum]
+           ([GUID],[Enum],[Lookup],[Description],[LongDescription])
+     VALUES
+           (newid(),200,'Pending','Pending','Pending')
+GO
+
+INSERT INTO [ImageServer].[dbo].[ExternalRequestQueueStatusEnum]
+           ([GUID],[Enum],[Lookup],[Description],[LongDescription])
+     VALUES
+           (newid(),201,'In Progress','In Progress','In Progress')
+GO
+
+INSERT INTO [ImageServer].[dbo].[ExternalRequestQueueStatusEnum]
+           ([GUID],[Enum],[Lookup],[Description],[LongDescription])
+     VALUES
+           (newid(),202,'Completed','Completed','The Queue entry is completed.')
+GO
+
+INSERT INTO [ImageServer].[dbo].[ExternalRequestQueueStatusEnum]
+           ([GUID],[Enum],[Lookup],[Description],[LongDescription])
+     VALUES
+           (newid(),203,'Failed','Failed','The Queue entry has failed.')
+GO

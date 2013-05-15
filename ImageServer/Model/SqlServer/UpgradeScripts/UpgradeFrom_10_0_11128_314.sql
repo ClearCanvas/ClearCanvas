@@ -120,6 +120,194 @@ GO
 IF @@TRANCOUNT=0 BEGIN INSERT INTO #tmpErrors (Error) SELECT 1 BEGIN TRANSACTION END
 GO
 
+PRINT N'Adding ExternalRequestQueueStatusEnum and ExternalRequestQueue tables'
+
+CREATE TABLE dbo.ExternalRequestQueueStatusEnum
+	(
+	GUID uniqueidentifier NOT NULL ROWGUIDCOL,
+	Enum smallint NOT NULL,
+	Lookup varchar(32) NOT NULL,
+	Description nvarchar(32) NOT NULL,
+	LongDescription nvarchar(512) NOT NULL
+	)  ON STATIC
+GO
+ALTER TABLE dbo.ExternalRequestQueueStatusEnum ADD CONSTRAINT
+	DF_ExternalRequestQueueStatusEnum_GUID DEFAULT (newid()) FOR GUID
+GO
+ALTER TABLE dbo.ExternalRequestQueueStatusEnum ADD CONSTRAINT
+	PK_ExternalRequestQueueStatusEnum PRIMARY KEY CLUSTERED 
+	(
+	Enum
+	) WITH( STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON STATIC
+
+GO
+
+CREATE TABLE dbo.ExternalRequestQueue
+	(
+	GUID uniqueidentifier NOT NULL ROWGUIDCOL,
+	ExternalRequestQueueStatusEnum smallint NULL,
+	RequestType varchar(32) NOT NULL,
+	OperationToken varchar(64) NULL,
+	RequestXml xml NOT NULL,
+	StateXml xml NULL,
+	RestNotificationUrl nvarchar(128) NULL,
+	InsertTime datetime NOT NULL,
+	DeletionTime datetime NULL
+	)  ON QUEUES
+	 TEXTIMAGE_ON QUEUES
+GO
+ALTER TABLE dbo.ExternalRequestQueue ADD CONSTRAINT
+	DF_ExternalRequestQueue_GUID DEFAULT (newid()) FOR GUID
+GO
+ALTER TABLE dbo.ExternalRequestQueue ADD CONSTRAINT
+	DF_ExternalRequestQueue_InsertTime DEFAULT getdate() FOR InsertTime
+GO
+ALTER TABLE dbo.ExternalRequestQueue ADD CONSTRAINT
+	PK_ExternalRequestQueue PRIMARY KEY NONCLUSTERED 
+	(
+	GUID
+	) WITH( STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON INDEXES
+
+GO
+CREATE NONCLUSTERED INDEX IX_ExternalRequestQueue_OperationToken ON dbo.ExternalRequestQueue
+	(
+	OperationToken
+	) WITH( STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON INDEXES
+GO
+CREATE CLUSTERED INDEX IXC_ExternalRequestQueue_InsertTime ON dbo.ExternalRequestQueue
+	(
+	InsertTime DESC
+	) WITH( STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON QUEUES
+GO
+CREATE NONCLUSTERED INDEX IX_ExternalRequestQueue_RequestType ON dbo.ExternalRequestQueue
+	(
+	RequestType
+	) WITH( STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON INDEXES
+GO
+ALTER TABLE dbo.ExternalRequestQueue ADD CONSTRAINT
+	FK_ExternalRequestQueue_ExternalRequestQueueStatusEnum FOREIGN KEY
+	(
+	ExternalRequestQueueStatusEnum
+	) REFERENCES dbo.ExternalRequestQueueStatusEnum
+	(
+	Enum
+	) ON UPDATE  NO ACTION 
+	 ON DELETE  NO ACTION 
+	
+GO
+
+
+IF @@ERROR<>0 AND @@TRANCOUNT>0 ROLLBACK TRANSACTION
+GO
+IF @@TRANCOUNT=0 BEGIN INSERT INTO #tmpErrors (Error) SELECT 1 BEGIN TRANSACTION END
+GO
+
+PRINT N'Inserting new  ExternalRequestQueueStatusEnum records'
+
+INSERT INTO [ImageServer].[dbo].[ExternalRequestQueueStatusEnum]
+           ([GUID],[Enum],[Lookup],[Description],[LongDescription])
+     VALUES
+           (newid(),100,'Notification','Notification','The request is a permanent notification request')
+GO
+
+INSERT INTO [ImageServer].[dbo].[ExternalRequestQueueStatusEnum]
+           ([GUID],[Enum],[Lookup],[Description],[LongDescription])
+     VALUES
+           (newid(),200,'Pending','Pending','Pending')
+GO
+
+INSERT INTO [ImageServer].[dbo].[ExternalRequestQueueStatusEnum]
+           ([GUID],[Enum],[Lookup],[Description],[LongDescription])
+     VALUES
+           (newid(),201,'In Progress','In Progress','In Progress')
+GO
+
+INSERT INTO [ImageServer].[dbo].[ExternalRequestQueueStatusEnum]
+           ([GUID],[Enum],[Lookup],[Description],[LongDescription])
+     VALUES
+           (newid(),202,'Completed','Completed','The Queue entry is completed.')
+GO
+
+INSERT INTO [ImageServer].[dbo].[ExternalRequestQueueStatusEnum]
+           ([GUID],[Enum],[Lookup],[Description],[LongDescription])
+     VALUES
+           (newid(),203,'Failed','Failed','The Queue entry has failed.')
+
+IF @@ERROR<>0 AND @@TRANCOUNT>0 ROLLBACK TRANSACTION
+GO
+IF @@TRANCOUNT=0 BEGIN INSERT INTO #tmpErrors (Error) SELECT 1 BEGIN TRANSACTION END
+GO
+
+PRINT N'Create NotificationQueue table'
+
+/****** Object:  Table [dbo].[NotificationQueue]    Script Date: 5/14/2013 6:17:07 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[NotificationQueue]') AND type in (N'U'))
+BEGIN
+CREATE TABLE [dbo].[NotificationQueue](
+	[GUID] [uniqueidentifier] ROWGUIDCOL  NOT NULL,
+	[ExternalRequestQueueGUID] [uniqueidentifier] NOT NULL,
+	[RestNotificationUrl] [nvarchar](128) NOT NULL,
+	[NotificationXml] [xml] NOT NULL,
+	[InsertTime] [datetime] NOT NULL,
+	[LastTryTime] [datetime] NOT NULL,
+	[Failed] [bit] NOT NULL,
+	[RetryCount] [int] NOT NULL,
+ CONSTRAINT [PK_NotificationQueue] PRIMARY KEY NONCLUSTERED 
+(
+	[GUID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [INDEXES]
+) ON [QUEUES] TEXTIMAGE_ON [QUEUES]
+END
+GO
+/****** Object:  Index [IXC_NotificationQueue_InsertTime]    Script Date: 5/14/2013 6:17:07 PM ******/
+IF NOT EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[NotificationQueue]') AND name = N'IXC_NotificationQueue_InsertTime')
+CREATE CLUSTERED INDEX [IXC_NotificationQueue_InsertTime] ON [dbo].[NotificationQueue]
+(
+	[InsertTime] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [QUEUES]
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = OBJECT_ID(N'[dbo].[DF_NotificationQueue_GUID]') AND type = 'D')
+BEGIN
+ALTER TABLE [dbo].[NotificationQueue] ADD  CONSTRAINT [DF_NotificationQueue_GUID]  DEFAULT (newid()) FOR [GUID]
+END
+
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = OBJECT_ID(N'[dbo].[DF_NotificationQueue_InsertTime]') AND type = 'D')
+BEGIN
+ALTER TABLE [dbo].[NotificationQueue] ADD  CONSTRAINT [DF_NotificationQueue_InsertTime]  DEFAULT (getdate()) FOR [InsertTime]
+END
+
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = OBJECT_ID(N'[dbo].[DF_NotificationQueue_LastTryTime]') AND type = 'D')
+BEGIN
+ALTER TABLE [dbo].[NotificationQueue] ADD  CONSTRAINT [DF_NotificationQueue_LastTryTime]  DEFAULT (getdate()) FOR [LastTryTime]
+END
+
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = OBJECT_ID(N'[dbo].[DF_NotificationQueue_Failed]') AND type = 'D')
+BEGIN
+ALTER TABLE [dbo].[NotificationQueue] ADD  CONSTRAINT [DF_NotificationQueue_Failed]  DEFAULT ((0)) FOR [Failed]
+END
+
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = OBJECT_ID(N'[dbo].[DF_NotificationQueue_RetryCount]') AND type = 'D')
+BEGIN
+ALTER TABLE [dbo].[NotificationQueue] ADD  CONSTRAINT [DF_NotificationQueue_RetryCount]  DEFAULT ((0)) FOR [RetryCount]
+END
+
+GO
+
+
+IF @@ERROR<>0 AND @@TRANCOUNT>0 ROLLBACK TRANSACTION
+GO
+IF @@TRANCOUNT=0 BEGIN INSERT INTO #tmpErrors (Error) SELECT 1 BEGIN TRANSACTION END
+GO
+
+
 IF EXISTS (SELECT * FROM #tmpErrors) ROLLBACK TRANSACTION
 GO
 IF @@TRANCOUNT>0 BEGIN

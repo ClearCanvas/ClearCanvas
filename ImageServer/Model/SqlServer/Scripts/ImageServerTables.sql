@@ -1855,6 +1855,166 @@ CREATE NONCLUSTERED INDEX [IX_ServerPartitionDataAccess_ServerPartitionGUID] ON 
 )WITH (SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF) ON [PRIMARY]
 
 
+/****** Object:  Table [dbo].[ExternalRequestQueue]    Script Date: 5/14/2013 4:36:19 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[ExternalRequestQueue]') AND type in (N'U'))
+BEGIN
+CREATE TABLE [dbo].[ExternalRequestQueue](
+	[GUID] [uniqueidentifier] ROWGUIDCOL  NOT NULL,
+	[ExternalRequestQueueStatusEnum] [smallint] NULL,
+	[RequestType] [varchar](32) NOT NULL,
+	[OperationToken] [varchar](64) NULL,
+	[RequestXml] [xml] NOT NULL,
+	[StateXml] [xml] NULL,
+	[RestNotificationUrl] [nvarchar](128) NULL,
+	[InsertTime] [datetime] NOT NULL,
+	[DeletionTime] [datetime] NULL,
+ CONSTRAINT [PK_ExternalRequestQueue] PRIMARY KEY NONCLUSTERED 
+(
+	[GUID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [INDEXES]
+) ON [QUEUES] TEXTIMAGE_ON [QUEUES]
+END
+GO
+SET ANSI_PADDING OFF
+GO
+/****** Object:  Table [dbo].[ExternalRequestQueueStatusEnum]    Script Date: 5/14/2013 4:36:19 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[ExternalRequestQueueStatusEnum]') AND type in (N'U'))
+BEGIN
+CREATE TABLE [dbo].[ExternalRequestQueueStatusEnum](
+	[GUID] [uniqueidentifier] ROWGUIDCOL  NOT NULL,
+	[Enum] [smallint] NOT NULL,
+	[Lookup] [varchar](32) NOT NULL,
+	[Description] [nvarchar](32) NOT NULL,
+	[LongDescription] [nvarchar](512) NOT NULL,
+ CONSTRAINT [PK_ExternalRequestQueueStatusEnum] PRIMARY KEY CLUSTERED 
+(
+	[Enum] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [STATIC]
+) ON [STATIC]
+END
+GO
+SET ANSI_PADDING OFF
+GO
+/****** Object:  Index [IXC_ExternalRequestQueue_InsertTime]    Script Date: 5/14/2013 4:36:19 PM ******/
+IF NOT EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[ExternalRequestQueue]') AND name = N'IXC_ExternalRequestQueue_InsertTime')
+CREATE CLUSTERED INDEX [IXC_ExternalRequestQueue_InsertTime] ON [dbo].[ExternalRequestQueue]
+(
+	[InsertTime] DESC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [QUEUES]
+GO
+SET ANSI_PADDING ON
+
+GO
+/****** Object:  Index [IX_ExternalRequestQueue_OperationToken]    Script Date: 5/14/2013 4:36:19 PM ******/
+IF NOT EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[ExternalRequestQueue]') AND name = N'IX_ExternalRequestQueue_OperationToken')
+CREATE NONCLUSTERED INDEX [IX_ExternalRequestQueue_OperationToken] ON [dbo].[ExternalRequestQueue]
+(
+	[OperationToken] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [INDEXES]
+GO
+SET ANSI_PADDING ON
+
+GO
+/****** Object:  Index [IX_ExternalRequestQueue_RequestType]    Script Date: 5/14/2013 4:36:19 PM ******/
+IF NOT EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[ExternalRequestQueue]') AND name = N'IX_ExternalRequestQueue_RequestType')
+CREATE NONCLUSTERED INDEX [IX_ExternalRequestQueue_RequestType] ON [dbo].[ExternalRequestQueue]
+(
+	[RequestType] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [INDEXES]
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = OBJECT_ID(N'[dbo].[DF_ExternalRequestQueue_GUID]') AND type = 'D')
+BEGIN
+ALTER TABLE [dbo].[ExternalRequestQueue] ADD  CONSTRAINT [DF_ExternalRequestQueue_GUID]  DEFAULT (newid()) FOR [GUID]
+END
+
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = OBJECT_ID(N'[dbo].[DF_ExternalRequestQueue_InsertTime]') AND type = 'D')
+BEGIN
+ALTER TABLE [dbo].[ExternalRequestQueue] ADD  CONSTRAINT [DF_ExternalRequestQueue_InsertTime]  DEFAULT (getdate()) FOR [InsertTime]
+END
+
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = OBJECT_ID(N'[dbo].[DF_ExternalRequestQueueStatusEnum_GUID]') AND type = 'D')
+BEGIN
+ALTER TABLE [dbo].[ExternalRequestQueueStatusEnum] ADD  CONSTRAINT [DF_ExternalRequestQueueStatusEnum_GUID]  DEFAULT (newid()) FOR [GUID]
+END
+GO
+
+
+/****** Object:  Table [dbo].[NotificationQueue]    Script Date: 5/14/2013 6:17:07 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[NotificationQueue]') AND type in (N'U'))
+BEGIN
+CREATE TABLE [dbo].[NotificationQueue](
+	[GUID] [uniqueidentifier] ROWGUIDCOL  NOT NULL,
+	[ExternalRequestQueueGUID] [uniqueidentifier] NOT NULL,
+	[RestNotificationUrl] [nvarchar](128) NOT NULL,
+	[NotificationXml] [xml] NOT NULL,
+	[InsertTime] [datetime] NOT NULL,
+	[LastTryTime] [datetime] NOT NULL,
+	[Failed] [bit] NOT NULL,
+	[RetryCount] [int] NOT NULL,
+ CONSTRAINT [PK_NotificationQueue] PRIMARY KEY NONCLUSTERED 
+(
+	[GUID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [INDEXES]
+) ON [QUEUES] TEXTIMAGE_ON [QUEUES]
+END
+GO
+/****** Object:  Index [IXC_NotificationQueue_InsertTime]    Script Date: 5/14/2013 6:17:07 PM ******/
+IF NOT EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[NotificationQueue]') AND name = N'IXC_NotificationQueue_InsertTime')
+CREATE CLUSTERED INDEX [IXC_NotificationQueue_InsertTime] ON [dbo].[NotificationQueue]
+(
+	[InsertTime] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [QUEUES]
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = OBJECT_ID(N'[dbo].[DF_NotificationQueue_GUID]') AND type = 'D')
+BEGIN
+ALTER TABLE [dbo].[NotificationQueue] ADD  CONSTRAINT [DF_NotificationQueue_GUID]  DEFAULT (newid()) FOR [GUID]
+END
+
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = OBJECT_ID(N'[dbo].[DF_NotificationQueue_InsertTime]') AND type = 'D')
+BEGIN
+ALTER TABLE [dbo].[NotificationQueue] ADD  CONSTRAINT [DF_NotificationQueue_InsertTime]  DEFAULT (getdate()) FOR [InsertTime]
+END
+
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = OBJECT_ID(N'[dbo].[DF_NotificationQueue_LastTryTime]') AND type = 'D')
+BEGIN
+ALTER TABLE [dbo].[NotificationQueue] ADD  CONSTRAINT [DF_NotificationQueue_LastTryTime]  DEFAULT (getdate()) FOR [LastTryTime]
+END
+
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = OBJECT_ID(N'[dbo].[DF_NotificationQueue_Failed]') AND type = 'D')
+BEGIN
+ALTER TABLE [dbo].[NotificationQueue] ADD  CONSTRAINT [DF_NotificationQueue_Failed]  DEFAULT ((0)) FOR [Failed]
+END
+
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = OBJECT_ID(N'[dbo].[DF_NotificationQueue_RetryCount]') AND type = 'D')
+BEGIN
+ALTER TABLE [dbo].[NotificationQueue] ADD  CONSTRAINT [DF_NotificationQueue_RetryCount]  DEFAULT ((0)) FOR [RetryCount]
+END
+
+GO
+
+
 
 /****** Object:  ForeignKey [FK_ArchiveQueue_ArchiveQueueStatusEnum]    Script Date: 07/17/2008 00:49:15 ******/
 IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_ArchiveQueue_ArchiveQueueStatusEnum]') AND parent_object_id = OBJECT_ID(N'[dbo].[ArchiveQueue]'))
@@ -2321,4 +2481,12 @@ GO
 IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_ServerPartitionDataAccess_ServerPartition]') AND parent_object_id = OBJECT_ID(N'[dbo].[ServerPartitionDataAccess]'))
 ALTER TABLE [dbo].[ServerPartitionDataAccess]  WITH CHECK ADD  CONSTRAINT [FK_ServerPartitionDataAccess_ServerPartition] FOREIGN KEY([ServerPartitionGUID])
 REFERENCES [dbo].[ServerPartition] ([GUID])
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_ExternalRequestQueue_ExternalRequestQueueStatusEnum]') AND parent_object_id = OBJECT_ID(N'[dbo].[ExternalRequestQueue]'))
+ALTER TABLE [dbo].[ExternalRequestQueue]  WITH CHECK ADD  CONSTRAINT [FK_ExternalRequestQueue_ExternalRequestQueueStatusEnum] FOREIGN KEY([ExternalRequestQueueStatusEnum])
+REFERENCES [dbo].[ExternalRequestQueueStatusEnum] ([Enum])
+GO
+IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_ExternalRequestQueue_ExternalRequestQueueStatusEnum]') AND parent_object_id = OBJECT_ID(N'[dbo].[ExternalRequestQueue]'))
+ALTER TABLE [dbo].[ExternalRequestQueue] CHECK CONSTRAINT [FK_ExternalRequestQueue_ExternalRequestQueueStatusEnum]
 GO
