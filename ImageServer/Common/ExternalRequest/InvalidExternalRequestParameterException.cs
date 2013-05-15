@@ -22,40 +22,20 @@
 
 #endregion
 
-using System.Runtime.Serialization;
+using System;
 
 namespace ClearCanvas.ImageServer.Common.ExternalRequest
 {
-    [DataContract(Name = "ExecutionMode", Namespace = ImageServerExternalRequestNamespace.Value)]
-    public enum ExecutionModeEnum
+    public class InvalidExternalRequestParameterException : ApplicationException
     {
-        [EnumMember]
-        AsynchronousOnly = 0,
-        [EnumMember]
-        SynchronousOnly,
-        [EnumMember]
-        Both
-    }
+        public string Parameter { get; set; }
+        public string Error { get; set; }
 
-    [DataContract(Name = "ExternalRequestState", Namespace = ImageServerExternalRequestNamespace.Value)]
-    public enum ExternalRequestStateEnum
-    {
-        [EnumMember]
-        Pending = 0,
-        [EnumMember]
-        Complete,
-        [EnumMember]
-        Canceled,
-        [EnumMember]
-        Failed,
-        [EnumMember]
-        Active
-    }
-
-    [DataContract(Name = "RestMessageFormat", Namespace = ImageServerExternalRequestNamespace.Value)]
-    public enum RestMessageFormatEnum
-    {
-        [EnumMember]
-        Xml = 0,
+        public InvalidExternalRequestParameterException(string parameter, string error)
+            : base(string.Format("Parameter: {0}, Error: {1}", parameter, error))
+        {
+            Parameter = parameter;
+            Error = error;
+        }
     }
 }

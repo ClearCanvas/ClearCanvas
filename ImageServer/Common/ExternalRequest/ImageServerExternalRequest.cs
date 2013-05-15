@@ -22,6 +22,7 @@
 
 #endregion
 
+using System;
 using System.Runtime.Serialization;
 using ClearCanvas.Common.Serialization;
 
@@ -29,8 +30,8 @@ namespace ClearCanvas.ImageServer.Common.ExternalRequest
 {
     [DataContract(Namespace = ImageServerExternalRequestNamespace.Value)]
     [ImageServerExternalRequestType("42C5B5E3-8874-4399-972C-35878C579D89")]
-    public abstract class ImageServerExternalRequest : DataContractBase
-    {
+    public abstract class ImageServerExternalRequest : DataContractBase, IEquatable<ImageServerExternalRequest>
+    {        
         /// <summary>
         /// Specifies if the operation must run synchronously or asynchronously
         /// </summary>
@@ -51,5 +52,20 @@ namespace ClearCanvas.ImageServer.Common.ExternalRequest
         /// </remarks>
         [DataMember]
         public string OperationToken { get; set; }
+
+        public bool Equals(ImageServerExternalRequest other)
+        {
+            if (other == null)
+                return false;
+
+            if (ExecutionMode != other.ExecutionMode)
+                return false;
+            if (!string.Equals(ExternalRequestType, other.ExternalRequestType))
+                return false;
+            if (!string.Equals(OperationToken, other.OperationToken))
+                return false;
+
+            return true;
+        }
     }
 }

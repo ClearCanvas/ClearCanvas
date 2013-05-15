@@ -89,6 +89,14 @@ namespace ClearCanvas.ImageServer.Enterprise.SqlServer
                 SqlConnectionStringBuilder sb = new SqlConnectionStringBuilder(_connectionString);
                 _maxPoolSize = sb.MaxPoolSize;
             }
+#if UNIT_TESTS
+            else 
+            {
+                _connectionString = "Data Source=127.0.0.1;Integrated Security=True;Persist Security Info=True;Initial Catalog=ImageServer";
+                SqlConnectionStringBuilder sb = new SqlConnectionStringBuilder(_connectionString);
+                _maxPoolSize = sb.MaxPoolSize;
+            }
+#endif
         }
 
         public void SetTransactionNotifier(ITransactionNotifier transactionNotifier)

@@ -30,7 +30,7 @@ namespace ClearCanvas.ImageServer.Common.ExternalRequest
 {
     [DataContract(Namespace = ImageServerExternalRequestNamespace.Value)]
     [ImageServerExternalRequestType("345B8F2C-4A3B-44B4-93C3-C865277ABA35")]
-    public abstract class ImageServerExternalRequestState : DataContractBase
+    public abstract class ImageServerExternalRequestState : DataContractBase, IEquatable<ImageServerExternalRequestState>
     {
         [DataMember]
         public ImageServerExternalRequest TheExternalRequest { get; set; }
@@ -53,5 +53,27 @@ namespace ClearCanvas.ImageServer.Common.ExternalRequest
         [DataMember]
         public DateTime? CompletionTime { get; set; }
 
+        public bool Equals(ImageServerExternalRequestState other)
+        {
+            if (other == null)
+                return false;
+
+            if (ExternalRequestState != other.ExternalRequestState)
+                return false;
+            if (!string.Equals(Status, other.Status))
+                return false;
+            if (!Decimal.Equals(PercentComplete, other.PercentComplete))
+                return false;
+            if (!Decimal.Equals(PercentFailed, other.PercentFailed))
+                return false;
+            if (IsCancelable != other.IsCancelable)
+                return false;
+            if (CompletionTime.HasValue && other.CompletionTime.HasValue && !CompletionTime.Value.Equals(other.CompletionTime.Value))
+                return false;
+            if (CompletionTime.HasValue != other.CompletionTime.HasValue)
+                return false;
+
+            return true;
+        }
     }
 }
