@@ -36,6 +36,7 @@ using ClearCanvas.ImageServer.Common.Command;
 using ClearCanvas.ImageServer.Common.Helpers;
 using ClearCanvas.ImageServer.Core.Command;
 using ClearCanvas.ImageServer.Core.Edit;
+using ClearCanvas.ImageServer.Core.Events;
 using ClearCanvas.ImageServer.Core.Process;
 using ClearCanvas.ImageServer.Core.Reconcile;
 using ClearCanvas.ImageServer.Model;
@@ -531,6 +532,9 @@ namespace ClearCanvas.ImageServer.Core
 						throw new ApplicationException("Unexpected failure (" + processor.FailureReason + ") executing command for SOP: " + file.MediaStorageSopInstanceUid, processor.FailureException);
 					}
 				    Platform.Log(ServerPlatform.InstanceLogLevel, "Processed SOP: {0} for Patient {1}", file.MediaStorageSopInstanceUid, patientsName);
+
+                    // Fire NewSopEventArgs Event
+                    EventManager.FireEvent(this,new NewSopEventArgs {TheFile = file,ThePartition = _context.Partition});
 				}
 				catch (Exception e)
 				{
