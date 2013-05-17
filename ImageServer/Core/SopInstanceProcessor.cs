@@ -56,6 +56,7 @@ namespace ClearCanvas.ImageServer.Core
 
 	    private readonly object _syncLock = new object();
         private readonly StudyStorageLocation _storageLocation;
+	    private readonly WorkQueue _workQueue;
 		private Study _study;
 		private ServerRulesEngine _sopProcessedRulesEngine;
 		private ServerRulesEngine _sopCompressionRulesEngine;
@@ -64,11 +65,19 @@ namespace ClearCanvas.ImageServer.Core
 
 		#region Constructors
 
-		public StudyProcessorContext(StudyStorageLocation storageLocation)
+		public StudyProcessorContext(StudyStorageLocation storageLocation, WorkQueue queue)
 		{
 		    Platform.CheckForNullReference(storageLocation, "storageLocation");
 		    _storageLocation = storageLocation;
+		    _workQueue = queue;
 		}
+
+        public StudyProcessorContext(StudyStorageLocation storageLocation)
+        {
+            Platform.CheckForNullReference(storageLocation, "storageLocation");
+            _storageLocation = storageLocation;
+            _workQueue = null;
+        }
 
 		#endregion
 
@@ -153,6 +162,11 @@ namespace ClearCanvas.ImageServer.Core
 	    {
 	        get { return _storageLocation; }
 	    }
+
+        public WorkQueue WorkQueueEntry
+        {
+            get { return _workQueue; }
+        }
 
 		public List<BaseImageLevelUpdateCommand> UpdateCommands
 		{
@@ -534,7 +548,7 @@ namespace ClearCanvas.ImageServer.Core
 				    Platform.Log(ServerPlatform.InstanceLogLevel, "Processed SOP: {0} for Patient {1}", file.MediaStorageSopInstanceUid, patientsName);
 
                     // Fire NewSopEventArgs Event
-                    EventManager.FireEvent(this,new NewSopEventArgs {TheFile = file,ThePartition = _context.Partition});
+                    EventManager.FireEvent(this,new NewSopEventArgs {File = file,ServerPartitionEntry = _context.Partition,WorkQueueUidEntry = uid, WorkQueueEntry = _context.WorkQueueEntry});
 				}
 				catch (Exception e)
 				{

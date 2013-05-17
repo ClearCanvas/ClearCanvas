@@ -214,7 +214,7 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.ReprocessStudy
             Platform.CheckForNullReference(item, "item");
             Platform.CheckForNullReference(item.StudyStorageKey, "item.StudyStorageKey");
 
-            var context = new StudyProcessorContext(StorageLocation);
+            var context = new StudyProcessorContext(StorageLocation, WorkQueueItem);
             
             // TODO: Should we enforce the patient's name rule?
             // If we do, the Study record will have the new patient's name 

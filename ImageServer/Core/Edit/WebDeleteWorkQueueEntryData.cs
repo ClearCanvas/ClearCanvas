@@ -25,6 +25,7 @@
 using System;
 using System.Collections.Generic;
 using System.Xml.Serialization;
+using ClearCanvas.ImageServer.Common.WorkQueue;
 
 namespace ClearCanvas.ImageServer.Core.Edit
 {
@@ -50,7 +51,8 @@ namespace ClearCanvas.ImageServer.Core.Edit
     /// Encapsulate the object stored in the Data column of the "WebDeleteStudy" WorkQueue entry
     /// </summary>
     [XmlRoot("WebDeleteWorkQueueEntry")]
-    public class WebDeleteWorkQueueEntryData
+    [WorkQueueDataType("CA9B7077-01AC-4889-8499-B13F9041DED0")]
+    public class WebDeleteWorkQueueEntryData : WorkQueueData
     {
         #region Constructors
 
@@ -95,7 +97,8 @@ namespace ClearCanvas.ImageServer.Core.Edit
     /// used for study level deletion.
     /// </summary>
     [XmlRoot("WebMoveWorkQueueEntry")]
-    public class WebMoveWorkQueueEntryData
+    [WorkQueueDataType("B9B1C2EB-3BFC-43DE-8DA5-0B0018B9C50A")]
+    public class WebMoveWorkQueueEntryData : WorkQueueData
     {
     	public string Reason { get; set; }
 
@@ -112,6 +115,7 @@ namespace ClearCanvas.ImageServer.Core.Edit
     }
 
     [XmlRoot("WebDeleteWorkQueueEntry")]
+    [WorkQueueDataType("21CA3197-3F41-48EA-ABDE-35BF5E9F27D0")]
     public class WebDeleteStudyLevelQueueData : WebDeleteWorkQueueEntryData
     {
         public WebDeleteStudyLevelQueueData()
@@ -125,6 +129,7 @@ namespace ClearCanvas.ImageServer.Core.Edit
     /// used for series level deletion.
     /// </summary>
     [XmlRoot("WebDeleteWorkQueueEntry")]
+    [WorkQueueDataType("40E53536-E448-43B8-A823-024719994373")]
     public class WebDeleteSeriesLevelQueueData : WebDeleteWorkQueueEntryData
     {
         public WebDeleteSeriesLevelQueueData()
@@ -137,6 +142,7 @@ namespace ClearCanvas.ImageServer.Core.Edit
     /// Encapsulate the object stored in the Data column of the "MoveSeries" WorkQueue entry.
     /// </summary>
     [XmlRoot("WebMoveWorkQueueEntry")]
+    [WorkQueueDataType("8538C0E7-BA54-4B56-8E54-F58A3AA154B7")]
     public class WebMoveSeriesLevelQueueData : WebMoveWorkQueueEntryData
     {
 		public WebMoveSeriesLevelQueueData()

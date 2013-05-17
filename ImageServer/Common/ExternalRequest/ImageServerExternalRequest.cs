@@ -35,12 +35,12 @@ namespace ClearCanvas.ImageServer.Common.ExternalRequest
         /// <summary>
         /// Specifies if the operation must run synchronously or asynchronously
         /// </summary>        
-        public ExecutionModeEnum ExecutionMode { get; set; }
+        public abstract ExecutionModeEnum ExecutionMode { get; }
 
         /// <summary>
         /// A string uniquely identifying the request type
         /// </summary>
-        public string ExternalRequestType { get; set; }
+        public abstract string ExternalRequestType { get; }
 
         /// <summary>
         /// A string uniquely identifying the operation.  Can be null.

@@ -23,7 +23,6 @@
 #endregion
 
 using System;
-using System.Linq;
 using System.IO;
 using ClearCanvas.Common;
 using ClearCanvas.Dicom;
@@ -32,6 +31,7 @@ using ClearCanvas.Dicom.Utilities.Command;
 using ClearCanvas.Enterprise.Core;
 using ClearCanvas.ImageServer.Common;
 using ClearCanvas.ImageServer.Common.Command;
+using ClearCanvas.ImageServer.Common.WorkQueue;
 using ClearCanvas.ImageServer.Core.Command;
 using ClearCanvas.ImageServer.Model;
 using ClearCanvas.ImageServer.Model.EntityBrokers;
@@ -107,6 +107,7 @@ namespace ClearCanvas.ImageServer.Core.Process
         /// </summary>
         /// <param name="context">The processing context.</param>
         /// <param name="file">Thje duplicate DICOM file being processed.</param>
+        /// <param name="data">Extra data to insert for the WorkQueue item.</param>
         /// <returns>A <see cref="DicomProcessingResult"/> that contains the result of the processing.</returns>
         /// <remarks>
         /// This method inserts <see cref="ServerCommand"/> into <paramref name="context.CommandProcessor"/>.
@@ -114,7 +115,7 @@ namespace ClearCanvas.ImageServer.Core.Process
         /// If it is set to <see cref="DuplicateSopPolicyEnum.CompareDuplicates"/>, the duplicate file will be
         /// inserted into the <see cref="WorkQueue"/> for processing.
         /// </remarks>
-        static public DicomProcessingResult Process(SopProcessingContext context, DicomFile file)
+        static public DicomProcessingResult Process(SopProcessingContext context, DicomFile file, StudyProcessWorkQueueData data)
         {
             Platform.CheckForNullReference(file, "file");
             Platform.CheckForNullReference(context, "context");
@@ -140,7 +141,7 @@ namespace ClearCanvas.ImageServer.Core.Process
                 Platform.Log(LogLevel.Info, "Duplicate Report received, overwriting {0}", result.SopInstanceUid);
                 SaveDuplicate(context, file);
                 context.CommandProcessor.AddCommand(
-                    new UpdateWorkQueueCommand(file, context.StudyLocation, true, ServerPlatform.DuplicateFileExtension, context.Group));
+                    new UpdateWorkQueueCommand(file, context.StudyLocation, true, ServerPlatform.DuplicateFileExtension, context.Group, data));
                 return result;
             }
 
@@ -149,7 +150,7 @@ namespace ClearCanvas.ImageServer.Core.Process
                 Platform.Log(LogLevel.Warn, "Duplicate instance received for study {0} on Partition {1}. Duplicate policy overridden. Will overwrite {2}", 
                                 result.StudyInstanceUid, context.StudyLocation.ServerPartition.AeTitle, result.SopInstanceUid);
                 SaveDuplicate(context, file);
-                context.CommandProcessor.AddCommand(new UpdateWorkQueueCommand(file, context.StudyLocation, true, ServerPlatform.DuplicateFileExtension, context.Group));
+                context.CommandProcessor.AddCommand(new UpdateWorkQueueCommand(file, context.StudyLocation, true, ServerPlatform.DuplicateFileExtension, context.Group, data));
                 return result;
             }
             else
@@ -171,7 +172,7 @@ namespace ClearCanvas.ImageServer.Core.Process
                 {
                     SaveDuplicate(context, file);
                     context.CommandProcessor.AddCommand(
-                        new UpdateWorkQueueCommand(file, context.StudyLocation, true, ServerPlatform.DuplicateFileExtension, context.Group));
+                        new UpdateWorkQueueCommand(file, context.StudyLocation, true, ServerPlatform.DuplicateFileExtension, context.Group, data));
                 }
                 else
                 {
@@ -193,7 +194,7 @@ namespace ClearCanvas.ImageServer.Core.Process
 		/// <param name="sourcePath"></param>
 		/// <param name="queue"></param>
 		/// <param name="uid"></param>
-		public static void CreateDuplicateSIQEntry(DicomFile file, StudyStorageLocation location, string sourcePath, WorkQueue queue, WorkQueueUid uid)
+        public static void CreateDuplicateSIQEntry(DicomFile file, StudyStorageLocation location, string sourcePath, WorkQueue queue, WorkQueueUid uid, StudyProcessWorkQueueData data)
 		{
 			Platform.Log(LogLevel.Info, "Creating Work Queue Entry for duplicate...");
 			String uidGroup = queue.GroupID ?? queue.GetKey().Key.ToString();
@@ -202,7 +203,7 @@ namespace ClearCanvas.ImageServer.Core.Process
 				commandProcessor.AddCommand(new FileDeleteCommand(sourcePath, true));
 
 				var sopProcessingContext = new SopProcessingContext(commandProcessor, location, uidGroup);
-				DicomProcessingResult result = Process(sopProcessingContext, file);
+				DicomProcessingResult result = Process(sopProcessingContext, file, data);
 				if (!result.Successful)
 				{
 					FailUid(uid, true);

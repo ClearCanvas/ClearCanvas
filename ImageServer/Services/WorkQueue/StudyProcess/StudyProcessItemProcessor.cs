@@ -627,7 +627,7 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.StudyProcess
             {
                 try
                 {
-                    Context = new StudyProcessorContext(StorageLocation);
+                    Context = new StudyProcessorContext(StorageLocation, WorkQueueItem);
 
                     // Load the rules engine
                     _sopProcessedRulesEngine = new ServerRulesEngine(ServerRuleApplyTimeEnum.SopProcessed, item.ServerPartitionKey);

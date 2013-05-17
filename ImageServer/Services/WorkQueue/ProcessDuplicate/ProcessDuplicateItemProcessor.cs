@@ -465,8 +465,8 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.ProcessDuplicate
         private void AddDuplicateToStudy(DicomFile duplicateDicomFile, WorkQueueUid uid, ProcessDuplicateAction action)
         {
             
-            StudyProcessorContext context = new StudyProcessorContext(StorageLocation);
-            SopInstanceProcessor sopInstanceProcessor = new SopInstanceProcessor(context) { EnforceNameRules = true };
+            var context = new StudyProcessorContext(StorageLocation, WorkQueueItem);
+            var sopInstanceProcessor = new SopInstanceProcessor(context) { EnforceNameRules = true };
             string group = uid.GroupID ?? ServerHelper.GetUidGroup(duplicateDicomFile, ServerPartition, WorkQueueItem.InsertTime);
 
             StudyXml studyXml = StorageLocation.LoadStudyXml();
