@@ -183,13 +183,13 @@ namespace ClearCanvas.Common.Shreds
 		/// Implementation is expected to run indefinitely but must poll the
 		/// StopRequested property and exit in a timely manner when true.
 		/// </remarks>
-		protected override void RunCore()
+		protected sealed override void RunCore()
 		{
 			while (!StopRequested)
 			{
 				try
 				{
-					IList<TItem> items = GetNextBatch(_batchSize);
+					var items = GetNextBatch(_batchSize);
 
 					// if no items, sleep
 					if (items.Count == 0 && !StopRequested)
@@ -199,7 +199,7 @@ namespace ClearCanvas.Common.Shreds
 					else
 					{
 						// process each item
-						foreach (TItem item in items)
+						foreach (var item in items)
 						{
 							// break if stop requested
 							// (unprocessed items will remain in queue and be picked up next time)
