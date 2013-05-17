@@ -47,7 +47,9 @@ namespace ClearCanvas.ImageServer.Core.Events
     /// </remarks>
     public class NewSopEventArgs : ImageServerEventArgs
     {
-        public DicomFile TheFile { get; set; }
-        public ServerPartition ThePartition { get; set; }
+        public DicomFile File { get; set; }
+        public ServerPartition ServerPartitionEntry { get; set; }
+        public WorkQueueUid WorkQueueUidEntry { get; set; }
+        public WorkQueue WorkQueueEntry { get; set; }
     }
 }

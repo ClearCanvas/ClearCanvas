@@ -146,8 +146,9 @@ namespace ClearCanvas.ImageServer.Core.Reconcile.ProcessAsIs
                     if (e is InstanceAlreadyExistsException
                         || e.InnerException != null && e.InnerException is InstanceAlreadyExistsException)
                     {
+                        // TODO (Rigel) - Check if we should include the WorkQueueData field here
                         DuplicateSopProcessorHelper.CreateDuplicateSIQEntry(file, _destinationStudyStorage, GetReconcileUidPath(uid),
-                                                                           Context.WorkQueueItem, uid);
+                                                                           Context.WorkQueueItem, uid, null);
                     }
                     else
                     {

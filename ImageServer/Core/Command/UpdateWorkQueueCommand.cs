@@ -27,7 +27,10 @@ using ClearCanvas.Common;
 using ClearCanvas.Dicom;
 using ClearCanvas.Dicom.Utilities.Command;
 using ClearCanvas.Enterprise.Core;
+using ClearCanvas.ImageServer.Common;
 using ClearCanvas.ImageServer.Common.Command;
+using ClearCanvas.ImageServer.Common.Utilities;
+using ClearCanvas.ImageServer.Common.WorkQueue;
 using ClearCanvas.ImageServer.Model;
 using ClearCanvas.ImageServer.Model.Brokers;
 using ClearCanvas.ImageServer.Model.Parameters;
@@ -43,17 +46,18 @@ namespace ClearCanvas.ImageServer.Core.Command
         private readonly bool _duplicate;
         private readonly string _extension;
     	private readonly string _uidGroupId;
-
+        private readonly WorkQueueData _data;
         #endregion
 
         public UpdateWorkQueueCommand(DicomMessageBase message,
                         StudyStorageLocation location,
-                        bool duplicate)
-            : this(message, location, duplicate, null, null)
+                        bool duplicate, WorkQueueData data = null)
+            : this(message, location, duplicate, null, null, data)
         {
+
         }
 
-        public UpdateWorkQueueCommand(DicomMessageBase message, StudyStorageLocation location, bool duplicate, string extension, string uidGroupId)
+        public UpdateWorkQueueCommand(DicomMessageBase message, StudyStorageLocation location, bool duplicate, string extension, string uidGroupId, WorkQueueData data)
             : base("Update/Insert a WorkQueue Entry")
         {
             Platform.CheckForNullReference(message, "Dicom Message object");
@@ -64,6 +68,7 @@ namespace ClearCanvas.ImageServer.Core.Command
             _duplicate = duplicate;
             _extension = extension;
             _uidGroupId = uidGroupId;
+            _data = data;
         }
 
         public WorkQueue InsertedWorkQueue
@@ -84,8 +89,11 @@ namespace ClearCanvas.ImageServer.Core.Command
                                 ScheduledTime = Platform.Time,
                                 WorkQueueGroupID = _uidGroupId
                             };
-
-        	if (_duplicate)
+            if (_data != null)
+            {
+                parms.WorkQueueData = ImageServerSerializer.SerializeWorkQueueDataToXmlDocument(_data);
+            }
+            if (_duplicate)
             {
                 parms.Duplicate = _duplicate;
                 parms.Extension = _extension;

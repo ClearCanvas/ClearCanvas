@@ -28,12 +28,15 @@ using System.Globalization;
 using System.Xml;
 using System.Xml.Serialization;
 using ClearCanvas.Common;
+using ClearCanvas.Common.Serialization;
 using ClearCanvas.Dicom;
 using ClearCanvas.ImageServer.Common.Utilities;
+using ClearCanvas.ImageServer.Common.WorkQueue;
 
 namespace ClearCanvas.ImageServer.Core.Edit
 {
-    public class UpdateItem
+    [WorkQueueDataType("67DC30CA-F0A9-4A93-84DD-2E4B6C7F92C1")]
+    public class UpdateItem : DataContractBase
     {
         private DicomTag _dicomTag;
 
@@ -98,7 +101,8 @@ namespace ClearCanvas.ImageServer.Core.Edit
 	/// <summary>
 	/// Edit request descriptor
 	/// </summary>
-    public class EditRequest
+    [WorkQueueDataType("FCBD6C6F-9D34-4CAB-A852-1158E6BBE9B2")]
+    public class EditRequest : DataContractBase
     {
     	public List<UpdateItem> UpdateEntries { get; set; }
 
@@ -111,7 +115,8 @@ namespace ClearCanvas.ImageServer.Core.Edit
         public EditType EditType { get; set; }
     }
 
-    public class EditStudyWorkQueueData
+    [WorkQueueDataType("6CC69CE1-AE40-4C18-9A4D-F40C1EED38C6")]
+    public class EditStudyWorkQueueData : WorkQueueData
     {
     	public EditStudyWorkQueueData()
     	{
@@ -136,9 +141,9 @@ namespace ClearCanvas.ImageServer.Core.Edit
 
         private static EditStudyWorkQueueData ParseOldXml(XmlElement element)
         {
-            EditStudyWorkQueueData data = new EditStudyWorkQueueData();
+            var data = new EditStudyWorkQueueData();
 
-            WebEditStudyCommandCompiler compiler = new WebEditStudyCommandCompiler();
+            var compiler = new WebEditStudyCommandCompiler();
             List<BaseImageLevelUpdateCommand> updateCommands = compiler.Compile(element);
 
             foreach (BaseImageLevelUpdateCommand command in updateCommands)

@@ -34,6 +34,7 @@ using ClearCanvas.ImageServer.Common;
 using ClearCanvas.ImageServer.Common.Command;
 using ClearCanvas.ImageServer.Common.Exceptions;
 using ClearCanvas.ImageServer.Common.Utilities;
+using ClearCanvas.ImageServer.Common.WorkQueue;
 using ClearCanvas.ImageServer.Core.Command;
 using ClearCanvas.ImageServer.Core.Diagnostics;
 using ClearCanvas.ImageServer.Core.Helpers;
@@ -63,28 +64,28 @@ namespace ClearCanvas.ImageServer.Core
         /// by <see cref="SopInstanceImporter"/> 
         /// </summary>
         /// <param name="id"></param>
-        /// <param name="sourceAE">Source AE title where the image(s) are imported from</param>
-        /// <param name="serverAE">Target AE title where the image(s) will be imported to</param>
-        public SopInstanceImporterContext(string id, string sourceAE, string serverAE)
+        /// <param name="sourceAe">Source AE title where the image(s) are imported from</param>
+        /// <param name="serverAe">Target AE title where the image(s) will be imported to</param>
+        public SopInstanceImporterContext(string id, string sourceAe, string serverAe)
             :
-            this(id, sourceAE, ServerPartitionMonitor.Instance.GetPartition(serverAE))
+            this(id, sourceAe, ServerPartitionMonitor.Instance.GetPartition(serverAe))
         {
-            _alternateAe = ServerPartitionMonitor.Instance.GetPartitionAlternateAe(serverAE);
+            _alternateAe = ServerPartitionMonitor.Instance.GetPartitionAlternateAe(serverAe);
         }
 
         /// <summary>
         /// Creates an instance of <see cref="SopInstanceImporterContext"/> to be used
         /// by <see cref="SopInstanceImporter"/> 
         /// </summary>
-        /// <param name="contextID">The ID assigned to the context. This will be used as the name of storage folder in case of duplicate.</param>
-        /// <param name="sourceAE">Source AE title of the image(s) to be imported</param>
+        /// <param name="contextId">The ID assigned to the context. This will be used as the name of storage folder in case of duplicate.</param>
+        /// <param name="sourceAe">Source AE title of the image(s) to be imported</param>
         /// <param name="partition">The <see cref="ServerPartition"/> which the image(s) will be imported to</param>
-        public SopInstanceImporterContext(string contextID, string sourceAE, ServerPartition partition)
+        public SopInstanceImporterContext(string contextId, string sourceAe, ServerPartition partition)
         {
-            Platform.CheckForEmptyString(contextID, "contextID");
+            Platform.CheckForEmptyString(contextId, "contextID");
             Platform.CheckForNullReference(partition, "partition");
-            _contextID = contextID;
-            _sourceAE = sourceAE;
+            _contextID = contextId;
+            _sourceAE = sourceAe;
             _partition = partition;            
         }
         
@@ -234,7 +235,6 @@ namespace ClearCanvas.ImageServer.Core
                 	}
 
                 	String path = studyLocation.FilesystemPath;
-                	const string extension = null;
                     String finalDest = studyLocation.GetSopInstancePath(seriesInstanceUid, sopInstanceUid);
                     file = ConvertToDicomFile(message, finalDest, _context.SourceAE);
 
@@ -257,15 +257,23 @@ namespace ClearCanvas.ImageServer.Core
                         }
                     }
 
+                    var data = new StudyProcessWorkQueueData
+                        {
+                            ReceivingAeTitle = _context.AlternateAe == null
+                                                  ? _context.Partition.AeTitle
+                                                  : _context.AlternateAe.AeTitle
+                        };
+
                 	if (File.Exists(finalDest))
                 	{
-                		result = HandleDuplicate(sopInstanceUid, studyLocation, commandProcessor, file);
+                		result = HandleDuplicate(sopInstanceUid, studyLocation, commandProcessor, file, data);
                 		if (!result.Successful)
                 			return result;
                 	}
                 	else
                 	{
-                		HandleNonDuplicate(seriesInstanceUid, sopInstanceUid, studyLocation, commandProcessor, file, path, false, extension);
+                	    HandleNonDuplicate(seriesInstanceUid, sopInstanceUid, studyLocation, commandProcessor, file, path,
+                	                       false, data);
                 	}
 
                 	if (commandProcessor.Execute())
@@ -376,7 +384,7 @@ namespace ClearCanvas.ImageServer.Core
             return studyLocation;
         }
 
-        private static void HandleNonDuplicate(string seriesInstanceUid, string sopInstanceUid, StudyStorageLocation studyLocation, ServerCommandProcessor commandProcessor, DicomFile file, string path, bool dupImage, string extension)
+        private static void HandleNonDuplicate(string seriesInstanceUid, string sopInstanceUid, StudyStorageLocation studyLocation, ServerCommandProcessor commandProcessor, DicomFile file, string path, bool dupImage, StudyProcessWorkQueueData data)
         {
             commandProcessor.AddCommand(new CreateDirectoryCommand(path));
 
@@ -398,7 +406,7 @@ namespace ClearCanvas.ImageServer.Core
             commandProcessor.AddCommand(new SaveDicomFileCommand(path, file, true));
 
             commandProcessor.AddCommand(
-                new UpdateWorkQueueCommand(file, studyLocation, dupImage));
+                new UpdateWorkQueueCommand(file, studyLocation, dupImage, data));
 
             #region SPECIAL CODE FOR TESTING
             if (Diagnostics.Settings.SimulateFileCorruption)
@@ -410,7 +418,7 @@ namespace ClearCanvas.ImageServer.Core
 
 		private static bool SaveToFolder(string folder, string sopInstanceUid, string studyInstanceUid, DicomFile file)
 		{
-			using (ServerCommandProcessor commandProcessor =
+			using (var commandProcessor =
 				new ServerCommandProcessor(String.Format("Saving Sop Instance to Incoming {0}", sopInstanceUid)))
 			{
 				string path = Path.Combine(folder, studyInstanceUid);
@@ -428,7 +436,7 @@ namespace ClearCanvas.ImageServer.Core
 			}
 		}
 
-    	private DicomProcessingResult HandleDuplicate(string sopInstanceUid, StudyStorageLocation studyLocation, ServerCommandProcessor commandProcessor, DicomFile file)
+    	private DicomProcessingResult HandleDuplicate(string sopInstanceUid, StudyStorageLocation studyLocation, ServerCommandProcessor commandProcessor, DicomFile file, StudyProcessWorkQueueData data)
         {
         	Study study = studyLocation.Study ??
                           studyLocation.LoadStudy(ServerExecutionContext.Current.PersistenceContext);
@@ -442,20 +450,19 @@ namespace ClearCanvas.ImageServer.Core
                              "Received duplicate SOP {0} (StudyUid:{1}). Existing files haven't been processed.",
                              sopInstanceUid, studyLocation.StudyInstanceUid);
 
-            SopProcessingContext sopProcessingContext = new SopProcessingContext(commandProcessor, studyLocation, _context.ContextID);
-            DicomProcessingResult result = DuplicateSopProcessorHelper.Process(sopProcessingContext, file);
+            var sopProcessingContext = new SopProcessingContext(commandProcessor, studyLocation, _context.ContextID);
+            DicomProcessingResult result = DuplicateSopProcessorHelper.Process(sopProcessingContext, file, data);
             return result;
         }
 
        
         private static void Validate(DicomMessageBase message)
         {
-            DicomSopInstanceValidator validator = new DicomSopInstanceValidator();
+            var validator = new DicomSopInstanceValidator();
             validator.Validate(message);
-
         }
 
-        static private DicomFile ConvertToDicomFile(DicomMessageBase message, string filename, string sourceAE)
+        static private DicomFile ConvertToDicomFile(DicomMessageBase message, string filename, string sourceAe)
         {
             // This routine sets some of the group 0x0002 elements.
             DicomFile file;
@@ -472,7 +479,7 @@ namespace ClearCanvas.ImageServer.Core
                 throw new NotSupportedException(String.Format("Cannot convert {0} to DicomFile", message.GetType()));
             }
 
-            file.SourceApplicationEntityTitle = sourceAE;
+            file.SourceApplicationEntityTitle = sourceAe;
             file.TransferSyntax = message.TransferSyntax;
 
             return file;
@@ -513,7 +520,7 @@ namespace ClearCanvas.ImageServer.Core
 					String.Format("Corrupting the file {0}", _path),
 					delegate
 						{
-							FileInfo f = new FileInfo(_path);
+							var f = new FileInfo(_path);
 							long size = rand.Next(0, (int) f.Length/2);
 							if (size <= 0)
 							{
@@ -524,7 +531,7 @@ namespace ClearCanvas.ImageServer.Core
 							else
 							{
 								FileStream s = FileStreamOpener.OpenForRead(_path, FileMode.Open);
-								byte[] buffer = new byte[size];
+								var buffer = new byte[size];
 								int bytesRead = s.Read(buffer, 0, buffer.Length);
 								s.Close();
 

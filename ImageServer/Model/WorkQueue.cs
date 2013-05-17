@@ -26,6 +26,9 @@ using System;
 using System.Collections.Generic;
 using ClearCanvas.Common;
 using ClearCanvas.Enterprise.Core;
+using ClearCanvas.ImageServer.Common;
+using ClearCanvas.ImageServer.Common.Utilities;
+using ClearCanvas.ImageServer.Common.WorkQueue;
 using ClearCanvas.ImageServer.Model.EntityBrokers;
 
 namespace ClearCanvas.ImageServer.Model
@@ -133,6 +136,24 @@ namespace ClearCanvas.ImageServer.Model
                 return _study;
             }
             set { _study = value; }
+        }
+
+        public WorkQueueData DeserializedData
+        {
+            get
+            {
+                if (Data == null)
+                    return null;
+
+                try
+                {
+                    return ImageServerSerializer.DeserializeWorkQueueData(Data);
+                }
+                catch (Exception)
+                {
+                    return null;
+                }
+            }
         }
     }
 }

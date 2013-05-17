@@ -1,4 +1,4 @@
-#region License
+﻿#region License
 
 // Copyright (c) 2013, ClearCanvas Inc.
 // All rights reserved.
@@ -22,29 +22,10 @@
 
 #endregion
 
-using System;
-using ClearCanvas.Common.Serialization;
-using ClearCanvas.ImageServer.Common.WorkQueue;
-
-namespace ClearCanvas.ImageServer.Core.Data
+namespace ClearCanvas.ImageServer.Common.WorkQueue
 {
-    [WorkQueueDataType("0579EBC2-44EA-4C0F-B30B-2B2D9647B1E1")]
-    public class ReprocessStudyChangeLog : DataContractBase
+    public static class WorkQueueNamespace
     {
-        #region Private Members
-
-    	#endregion
-
-        #region Public Properties
-
-    	public DateTime TimeStamp { get; set; }
-
-    	public string Reason { get; set; }
-
-    	public string User { get; set; }
-
-    	public string StudyInstanceUid { get; set; }
-
-    	#endregion
+        public const string Value = ImageServerNamespace.Value + "/workqueue";
     }
 }
