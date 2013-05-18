@@ -48,6 +48,7 @@ namespace ClearCanvas.ImageServer.Common
     /// <summary>
     /// Represents a http server that accepts and processes http requests.
     /// </summary>
+    // TODO (Rigel) - Move this to CC.ImageServer.Core to remove dependency on ClearCanvas.Server.ShredHost    
     public abstract class HttpServer : HttpListenerShred
     {
 

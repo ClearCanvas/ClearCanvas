@@ -29,6 +29,7 @@ using ClearCanvas.ImageServer.Enterprise;
 
 namespace ClearCanvas.ImageServer.Common
 {
+    // TODO (Rigel) - Move this to CC.ImageServer.Enterprise to remove dependency on CC.ImageServer.Enterprise here
     [ExtensionOf(typeof(ServiceProviderExtensionPoint))]
     public class InProcessImageServerServiceProvider : IServiceProvider
     {

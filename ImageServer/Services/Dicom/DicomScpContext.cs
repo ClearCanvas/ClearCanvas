@@ -89,7 +89,7 @@ namespace ClearCanvas.ImageServer.Services.Dicom
                 if (AlternateAeTitle != null)
                     return AlternateAeTitle.AllowKOPR;
 
-                return true;
+                return false;
             }
         }
 
