@@ -44,7 +44,6 @@ namespace ClearCanvas.ImageServer.Model
             ,DateTime _insertTime_
             ,DateTime _deletionTime_
             ,XmlDocument _stateXml_
-            ,String _restNotificationUrl_
             ,String _operationToken_
             ,ExternalRequestQueueStatusEnum _externalRequestQueueStatusEnum_
             ):base("ExternalRequestQueue")
@@ -54,7 +53,6 @@ namespace ClearCanvas.ImageServer.Model
             InsertTime = _insertTime_;
             DeletionTime = _deletionTime_;
             StateXml = _stateXml_;
-            RestNotificationUrl = _restNotificationUrl_;
             OperationToken = _operationToken_;
             ExternalRequestQueueStatusEnum = _externalRequestQueueStatusEnum_;
         }
@@ -80,9 +78,6 @@ namespace ClearCanvas.ImageServer.Model
         { get { return _StateXml; } set { _StateXml = value; } }
         [NonSerialized]
         private XmlDocument _StateXml;
-        [EntityFieldDatabaseMappingAttribute(TableName="ExternalRequestQueue", ColumnName="RestNotificationUrl")]
-        public String RestNotificationUrl
-        { get; set; }
         [EntityFieldDatabaseMappingAttribute(TableName="ExternalRequestQueue", ColumnName="OperationToken")]
         public String OperationToken
         { get; set; }
@@ -123,7 +118,6 @@ namespace ClearCanvas.ImageServer.Model
             updateColumns.InsertTime = entity.InsertTime;
             updateColumns.DeletionTime = entity.DeletionTime;
             updateColumns.StateXml = entity.StateXml;
-            updateColumns.RestNotificationUrl = entity.RestNotificationUrl;
             updateColumns.OperationToken = entity.OperationToken;
             updateColumns.ExternalRequestQueueStatusEnum = entity.ExternalRequestQueueStatusEnum;
             ExternalRequestQueue newEntity = broker.Insert(updateColumns);

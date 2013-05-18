@@ -103,18 +103,6 @@ namespace ClearCanvas.ImageServer.Model.EntityBrokers
               return (ISearchCondition<XmlDocument>)SubCriteria["StateXml"];
             } 
         }
-        [EntityFieldDatabaseMappingAttribute(TableName="ExternalRequestQueue", ColumnName="RestNotificationUrl")]
-        public ISearchCondition<String> RestNotificationUrl
-        {
-            get
-            {
-              if (!SubCriteria.ContainsKey("RestNotificationUrl"))
-              {
-                 SubCriteria["RestNotificationUrl"] = new SearchCondition<String>("RestNotificationUrl");
-              }
-              return (ISearchCondition<String>)SubCriteria["RestNotificationUrl"];
-            } 
-        }
         [EntityFieldDatabaseMappingAttribute(TableName="ExternalRequestQueue", ColumnName="OperationToken")]
         public ISearchCondition<String> OperationToken
         {

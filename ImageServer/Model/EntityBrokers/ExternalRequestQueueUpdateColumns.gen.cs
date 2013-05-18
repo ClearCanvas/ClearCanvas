@@ -60,11 +60,6 @@ namespace ClearCanvas.ImageServer.Model.EntityBrokers
         {
             set { SubParameters["StateXml"] = new EntityUpdateColumn<XmlDocument>("StateXml", value); }
         }
-        [EntityFieldDatabaseMappingAttribute(TableName="ExternalRequestQueue", ColumnName="RestNotificationUrl")]
-        public String RestNotificationUrl
-        {
-            set { SubParameters["RestNotificationUrl"] = new EntityUpdateColumn<String>("RestNotificationUrl", value); }
-        }
         [EntityFieldDatabaseMappingAttribute(TableName="ExternalRequestQueue", ColumnName="OperationToken")]
         public String OperationToken
         {

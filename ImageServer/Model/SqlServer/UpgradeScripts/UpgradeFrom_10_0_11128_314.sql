@@ -150,7 +150,6 @@ CREATE TABLE dbo.ExternalRequestQueue
 	OperationToken varchar(64) NULL,
 	RequestXml xml NOT NULL,
 	StateXml xml NULL,
-	RestNotificationUrl nvarchar(128) NULL,
 	InsertTime datetime NOT NULL,
 	DeletionTime datetime NULL
 	)  ON QUEUES
