@@ -29,21 +29,33 @@ using System.Xml.Serialization;
 using ClearCanvas.Common.Serialization;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.ImageServer.Common.ExternalRequest;
-using ClearCanvas.ImageServer.Common.Utilities;
 using ClearCanvas.ImageServer.Common.WorkQueue;
 
 namespace ClearCanvas.ImageServer.Common
 {
     public class ImageServerSerializer
     {
+        #region Private Static Members
         private static readonly IJsmlSerializerHook ExternalRequestHook = new PolymorphicDataContractHook<ImageServerExternalRequestTypeAttribute>();
         private static readonly IJsmlSerializerHook NotificationHook = new PolymorphicDataContractHook<ImageServerNotificationTypeAttribute>();
         private static readonly IJsmlSerializerHook WorkItemDataHook = new PolymorphicDataContractHook<WorkQueueDataTypeAttribute>();
+        #endregion
 
+        #region ImageServerExternalRequest
         public static string SerializeExternalRequest(ImageServerExternalRequest data)
         {
             return JsmlSerializer.Serialize(data, "ImageServerExternalRequest",
                 new JsmlSerializer.SerializeOptions { Hook = ExternalRequestHook, DataContractTest = IsImageServerExternalRequestContract });
+        }
+
+        public static XmlDocument SerializeExternalRequestToXmlDocument(ImageServerExternalRequest data)
+        {
+            var s = JsmlSerializer.Serialize(data, "ImageServerExternalRequest",
+                new JsmlSerializer.SerializeOptions { Hook = ExternalRequestHook, DataContractTest = IsImageServerExternalRequestContract });
+
+            var d = new XmlDocument();
+            d.LoadXml(s);
+            return d;
         }
 
         public static ImageServerExternalRequest DeserializeExternalRequest(string data)
@@ -52,10 +64,27 @@ namespace ClearCanvas.ImageServer.Common
                 new JsmlSerializer.DeserializeOptions { Hook = ExternalRequestHook, DataContractTest = IsImageServerExternalRequestContract });
         }
 
+        public static ImageServerExternalRequest DeserializeExternalRequest(XmlDocument data)
+        {
+            return JsmlSerializer.Deserialize<ImageServerExternalRequest>(data,
+                new JsmlSerializer.DeserializeOptions { Hook = ExternalRequestHook, DataContractTest = IsImageServerExternalRequestContract });
+        }
+        #endregion
+
+        #region ImageServerExternalRequestState
         public static string SerializeExternalRequestState(ImageServerExternalRequestState data)
         {
             return JsmlSerializer.Serialize(data, "ImageServerExternalRequestState",
                 new JsmlSerializer.SerializeOptions { Hook = ExternalRequestHook, DataContractTest = IsImageServerExternalRequestContract });
+        }
+        public static XmlDocument SerializeExternalRequestStateToXmlDocument(ImageServerExternalRequestState data)
+        {
+            var s = JsmlSerializer.Serialize(data, "ImageServerExternalRequestState",
+                new JsmlSerializer.SerializeOptions { Hook = ExternalRequestHook, DataContractTest = IsImageServerExternalRequestContract });
+
+            var d = new XmlDocument();
+            d.LoadXml(s);
+            return d;
         }
 
         public static ImageServerExternalRequestState DeserializeExternalRequestState(string data)
@@ -64,46 +93,72 @@ namespace ClearCanvas.ImageServer.Common
                 new JsmlSerializer.DeserializeOptions { Hook = ExternalRequestHook, DataContractTest = IsImageServerExternalRequestContract });
         }
 
+        public static ImageServerExternalRequestState DeserializeExternalRequestState(XmlDocument data)
+        {
+            return JsmlSerializer.Deserialize<ImageServerExternalRequestState>(data,
+                new JsmlSerializer.DeserializeOptions { Hook = ExternalRequestHook, DataContractTest = IsImageServerExternalRequestContract });
+        }
+        #endregion
+
+        #region ImageServerNotification
         public static string SerializeNotification(ImageServerNotification data)
         {
             return JsmlSerializer.Serialize(data, "ImageServerNotification",
                 new JsmlSerializer.SerializeOptions { Hook = NotificationHook, DataContractTest = IsImageServerNotificationContract });
         }
+        public static XmlDocument SerializeNotificationToXmlDocument(ImageServerNotification data)
+        {
+            var s = JsmlSerializer.Serialize(data, "ImageServerNotification",
+                new JsmlSerializer.SerializeOptions { Hook = NotificationHook, DataContractTest = IsImageServerNotificationContract });
+
+            var d = new XmlDocument();
+            d.LoadXml(s);
+            return d;
+        }
+
         public static ImageServerNotification DeserializeNotification(string data)
         {
             return JsmlSerializer.Deserialize<ImageServerNotification>(data,
                 new JsmlSerializer.DeserializeOptions { Hook = NotificationHook, DataContractTest = IsImageServerNotificationContract });
         }
 
+        public static ImageServerNotification DeserializeNotification(XmlDocument data)
+        {
+            return JsmlSerializer.Deserialize<ImageServerNotification>(data,
+                new JsmlSerializer.DeserializeOptions { Hook = NotificationHook, DataContractTest = IsImageServerNotificationContract });
+        }
+        #endregion
+
+        #region WorkQueueData
         public static string SerializeWorkQueueData(WorkQueueData data)
         {
             return JsmlSerializer.Serialize(data, "WorkQueueData",
                 new JsmlSerializer.SerializeOptions { Hook = WorkItemDataHook, DataContractTest = IsWorkQueueDataContract, DataMemberTest = IsXmlSerializationDataMember });
         }
+
         public static XmlDocument SerializeWorkQueueDataToXmlDocument(WorkQueueData data)
         {
             var s = JsmlSerializer.Serialize(data, "WorkQueueData",
-                                             new JsmlSerializer.SerializeOptions
-                                                 {
-                                                     Hook = WorkItemDataHook,
-                                                     DataContractTest = IsWorkQueueDataContract,
-                                                     DataMemberTest = IsXmlSerializationDataMember
-                                                 });
+                      new JsmlSerializer.SerializeOptions { Hook = WorkItemDataHook, DataContractTest = IsWorkQueueDataContract, DataMemberTest = IsXmlSerializationDataMember });
             var d = new XmlDocument();
             d.LoadXml(s);
             return d;
         }
+
         public static WorkQueueData DeserializeWorkQueueData(string data)
         {
             return JsmlSerializer.Deserialize<WorkQueueData>(data,
                 new JsmlSerializer.DeserializeOptions { Hook = WorkItemDataHook, DataContractTest = IsWorkQueueDataContract, DataMemberTest = IsXmlSerializationDataMember });
         }
+
         public static WorkQueueData DeserializeWorkQueueData(XmlDocument data)
-        {            
-            return JsmlSerializer.Deserialize<WorkQueueData>(XmlUtils.GetXmlDocumentAsString(data, false),
+        {
+            return JsmlSerializer.Deserialize<WorkQueueData>(data,
                 new JsmlSerializer.DeserializeOptions { Hook = WorkItemDataHook, DataContractTest = IsWorkQueueDataContract, DataMemberTest = IsXmlSerializationDataMember });
         }
+        #endregion
 
+        #region Private Static Methods
         private static bool IsImageServerNotificationContract(Type t)
         {
             return AttributeUtils.HasAttribute<ImageServerNotificationTypeAttribute>(t);
@@ -133,5 +188,6 @@ namespace ClearCanvas.ImageServer.Common
 
             return true;
         }
+        #endregion
     }
 }

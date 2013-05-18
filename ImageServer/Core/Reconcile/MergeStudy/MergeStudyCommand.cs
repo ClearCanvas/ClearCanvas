@@ -238,7 +238,7 @@ namespace ClearCanvas.ImageServer.Core.Reconcile.MergeStudy
                     if (e is InstanceAlreadyExistsException
 						|| e.InnerException != null && e.InnerException is InstanceAlreadyExistsException)
 					{
-                        // TODO (Rigel) - Check if we should include the WorkItemData here.
+                        // TODO (Rigel) - Check if we should include the WorkItemData to insert into the WorkQueue here.
 						DuplicateSopProcessorHelper.CreateDuplicateSIQEntry(file, _destinationStudyStorage, GetReconcileUidPath(uid),
 												   Context.WorkQueueItem, uid, null);
 					}

@@ -56,6 +56,6 @@ namespace ClearCanvas.ImageServer.Common.ExternalRequest
     public enum RestMessageFormatEnum
     {
         [EnumMember]
-        Xml = 0,
+        Xml,
     }
 }

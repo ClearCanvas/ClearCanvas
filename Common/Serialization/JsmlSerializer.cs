@@ -300,6 +300,14 @@ namespace ClearCanvas.Common.Serialization
 			return (T)Deserialize(typeof(T), jsml, options);
 		}
 
+        /// <summary>
+        /// Deserializes the specified XML Document into an object of the specified type.
+        /// </summary>
+        public static T Deserialize<T>(XmlDocument xmlDoc, DeserializeOptions options)
+        {
+            return (T)Deserialize(typeof(T), xmlDoc, options);
+        }
+
 		/// <summary>
 		/// Deserializes the specified JSML text into an object of the specified type.
 		/// </summary>
@@ -322,6 +330,21 @@ namespace ClearCanvas.Common.Serialization
 			var deserializer = new Deserializer(options);
 			return deserializer.Do(dataContract, xmlDoc.DocumentElement);
 		}
+
+        /// <summary>
+        /// Deserializes the specified XML document into an object of the specified type.
+        /// </summary>
+        /// 
+        public static object Deserialize(Type dataContract, XmlDocument xmlDoc, DeserializeOptions options)
+        {
+            if (xmlDoc == null)
+                return null;
+
+            xmlDoc.PreserveWhitespace = true;
+
+            var deserializer = new Deserializer(options);
+            return deserializer.Do(dataContract, xmlDoc.DocumentElement);
+        }
 
 		/// <summary>
 		/// Deserializes the specified JSML text into an object of the specified type.
