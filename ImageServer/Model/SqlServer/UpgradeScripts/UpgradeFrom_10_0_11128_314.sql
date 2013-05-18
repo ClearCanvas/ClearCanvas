@@ -209,6 +209,11 @@ INSERT INTO [ImageServer].[dbo].[ExternalRequestQueueStatusEnum]
      VALUES
            (newid(),100,'Notification','Notification','The request is a permanent notification request')
 GO
+INSERT INTO [ImageServer].[dbo].[ExternalRequestQueueStatusEnum]
+           ([GUID],[Enum],[Lookup],[Description],[LongDescription])
+     VALUES
+           (newid(),101,'Authorization','Authorization','The request is a transient authorization request')
+GO
 
 INSERT INTO [ImageServer].[dbo].[ExternalRequestQueueStatusEnum]
            ([GUID],[Enum],[Lookup],[Description],[LongDescription])

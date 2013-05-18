@@ -37,6 +37,7 @@ public partial class ExternalRequestQueueStatusEnum : ServerEnum
 {
       #region Private Static Members
       private static readonly ExternalRequestQueueStatusEnum _Notification = GetEnum("Notification");
+      private static readonly ExternalRequestQueueStatusEnum _Authorization = GetEnum("Authorization");
       private static readonly ExternalRequestQueueStatusEnum _Pending = GetEnum("Pending");
       private static readonly ExternalRequestQueueStatusEnum _InProgress = GetEnum("In Progress");
       private static readonly ExternalRequestQueueStatusEnum _Completed = GetEnum("Completed");
@@ -50,6 +51,13 @@ public partial class ExternalRequestQueueStatusEnum : ServerEnum
       public static ExternalRequestQueueStatusEnum Notification
       {
           get { return _Notification; }
+      }
+      /// <summary>
+      /// The request is a transient authorization request
+      /// </summary>
+      public static ExternalRequestQueueStatusEnum Authorization
+      {
+          get { return _Authorization; }
       }
       /// <summary>
       /// Pending

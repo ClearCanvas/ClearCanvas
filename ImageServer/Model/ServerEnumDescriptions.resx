@@ -201,6 +201,12 @@
   <data name="ExternalRequestQueueStatusEnum_Notification_LongDescription" xml:space="preserve">
     <value>The request is a permanent notification request</value>
   </data>
+  <data name="ExternalRequestQueueStatusEnum_Authorization_Description" xml:space="preserve">
+    <value>Authorization</value>
+  </data>
+  <data name="ExternalRequestQueueStatusEnum_Authorization_LongDescription" xml:space="preserve">
+    <value>The request is a transient authorization request</value>
+  </data>
   <data name="ExternalRequestQueueStatusEnum_Pending_Description" xml:space="preserve">
     <value>Pending</value>
   </data>
