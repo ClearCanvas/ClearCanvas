@@ -1216,7 +1216,8 @@ CREATE PROCEDURE [dbo].[InsertWorkQueue]
 	@Extension varchar(10) = null,
 	@WorkQueueGroupID varchar(64) = null,
 	@UidGroupID varchar(64) = null,
-	@UidRelativePath varchar(256) = null
+	@UidRelativePath varchar(256) = null,
+	@ExternalRequestQueueGUID uniqueidentifier = null
 AS
 BEGIN
 	-- SET NOCOUNT ON added to prevent extra result sets from
@@ -1262,8 +1263,8 @@ BEGIN
 	if @WorkQueueGUID is null
 	BEGIN
 		set @WorkQueueGUID = NEWID();
-		INSERT into WorkQueue (GUID, ServerPartitionGUID, StudyStorageGUID, DeviceGUID, StudyHistoryGUID, Data, WorkQueueTypeEnum, WorkQueueStatusEnum, WorkQueuePriorityEnum, ExpirationTime, ScheduledTime, GroupID)
-			values  (@WorkQueueGUID, @ServerPartitionGUID, @StudyStorageGUID, @DeviceGUID, @StudyHistoryGUID, @Data, @WorkQueueTypeEnum, @PendingStatusEnum, @WorkQueuePriorityEnum, @ExpirationTime, @ScheduledTime, @WorkQueueGroupID)
+		INSERT into WorkQueue (GUID, ServerPartitionGUID, StudyStorageGUID, DeviceGUID, StudyHistoryGUID, Data, WorkQueueTypeEnum, WorkQueueStatusEnum, WorkQueuePriorityEnum, ExpirationTime, ScheduledTime, GroupID, ExternalRequestQueueGUID)
+			values  (@WorkQueueGUID, @ServerPartitionGUID, @StudyStorageGUID, @DeviceGUID, @StudyHistoryGUID, @Data, @WorkQueueTypeEnum, @PendingStatusEnum, @WorkQueuePriorityEnum, @ExpirationTime, @ScheduledTime, @WorkQueueGroupID, @ExternalRequestQueueGUID)
 	END
 	ELSE
 	BEGIN

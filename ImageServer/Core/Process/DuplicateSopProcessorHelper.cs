@@ -49,7 +49,7 @@ namespace ClearCanvas.ImageServer.Core.Process
         private readonly ServerCommandProcessor _commandProcessor;
         private readonly StudyStorageLocation _studyLocation;
         private readonly string _group;
-
+        private readonly ExternalRequestQueue _request;
     	#endregion
 
         #region Constructors
@@ -60,11 +60,13 @@ namespace ClearCanvas.ImageServer.Core.Process
         /// <param name="commandProcessor">The <see cref="ServerCommandProcessor"/> used in the context</param>
         /// <param name="studyLocation">The <see cref="StudyStorageLocation"/> of the study being processed</param>
         /// <param name="uidGroup">A String value respresenting the group of SOP instances which are being processed.</param>
-        public SopProcessingContext(ServerCommandProcessor commandProcessor, StudyStorageLocation studyLocation, string uidGroup)
+        /// <param name="request">An external request that may have triggered this item.</param>
+        public SopProcessingContext(ServerCommandProcessor commandProcessor, StudyStorageLocation studyLocation, string uidGroup, ExternalRequestQueue request=null)
         {
             _commandProcessor = commandProcessor;
             _studyLocation = studyLocation;
             _group = uidGroup;
+            _request = request;
         }
         
         #endregion
@@ -84,6 +86,11 @@ namespace ClearCanvas.ImageServer.Core.Process
         public string Group
         {
             get { return _group; }
+        }
+
+        public ExternalRequestQueue Request
+        {
+            get { return _request; }
         }
 
         #endregion
@@ -141,7 +148,7 @@ namespace ClearCanvas.ImageServer.Core.Process
                 Platform.Log(LogLevel.Info, "Duplicate Report received, overwriting {0}", result.SopInstanceUid);
                 SaveDuplicate(context, file);
                 context.CommandProcessor.AddCommand(
-                    new UpdateWorkQueueCommand(file, context.StudyLocation, true, ServerPlatform.DuplicateFileExtension, context.Group, data));
+                    new UpdateWorkQueueCommand(file, context.StudyLocation, true, ServerPlatform.DuplicateFileExtension, context.Group, data, context.Request));
                 return result;
             }
 
@@ -150,7 +157,7 @@ namespace ClearCanvas.ImageServer.Core.Process
                 Platform.Log(LogLevel.Warn, "Duplicate instance received for study {0} on Partition {1}. Duplicate policy overridden. Will overwrite {2}", 
                                 result.StudyInstanceUid, context.StudyLocation.ServerPartition.AeTitle, result.SopInstanceUid);
                 SaveDuplicate(context, file);
-                context.CommandProcessor.AddCommand(new UpdateWorkQueueCommand(file, context.StudyLocation, true, ServerPlatform.DuplicateFileExtension, context.Group, data));
+                context.CommandProcessor.AddCommand(new UpdateWorkQueueCommand(file, context.StudyLocation, true, ServerPlatform.DuplicateFileExtension, context.Group, data, context.Request));
                 return result;
             }
             else
@@ -172,7 +179,7 @@ namespace ClearCanvas.ImageServer.Core.Process
                 {
                     SaveDuplicate(context, file);
                     context.CommandProcessor.AddCommand(
-                        new UpdateWorkQueueCommand(file, context.StudyLocation, true, ServerPlatform.DuplicateFileExtension, context.Group, data));
+                        new UpdateWorkQueueCommand(file, context.StudyLocation, true, ServerPlatform.DuplicateFileExtension, context.Group, data, context.Request));
                 }
                 else
                 {

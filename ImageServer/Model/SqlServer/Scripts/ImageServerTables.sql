@@ -504,6 +504,7 @@ CREATE TABLE [dbo].[WorkQueue](
 	[FailureCount] [int] NOT NULL CONSTRAINT [DF_WorkQueue_FailureCount]  DEFAULT ((0)),
 	[FailureDescription] [nvarchar](512) NULL,
 	[Data] [xml] NULL,
+	[ExternalRequestQueueGUID] [uniqueidentifier] NULL,
  CONSTRAINT [PK_WorkQueue] PRIMARY KEY CLUSTERED 
 (
 	[GUID] ASC
@@ -2357,6 +2358,10 @@ IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo
 ALTER TABLE [dbo].[WorkQueue]  WITH CHECK ADD  CONSTRAINT [FK_WorkQueue_StudyHistory] FOREIGN KEY([StudyHistoryGUID])
 REFERENCES [dbo].[StudyHistory] ([GUID])
 GO
+/****** Object:  ForeignKey [FK_WorkQueue_ExternalRequestQueue]    Script Date: 05/21/2013 11:50:21 ******/
+IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_WorkQueue_ExternalRequestQueue]') AND parent_object_id = OBJECT_ID(N'[dbo].[WorkQueue]'))
+ALTER TABLE dbo.WorkQueue ADD CONSTRAINT [FK_WorkQueue_ExternalRequestQueue] FOREIGN KEY ([ExternalRequestQueueGUID]) 
+REFERENCES [dbo].[ExternalRequestQueue]	([GUID]) 
 
 /****** Object:  ForeignKey [FK_WorkQueue_WorkQueueTypeEnum]    Script Date: 07/17/2008 00:50:21 ******/
 IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_WorkQueue_WorkQueueTypeEnum]') AND parent_object_id = OBJECT_ID(N'[dbo].[WorkQueue]'))

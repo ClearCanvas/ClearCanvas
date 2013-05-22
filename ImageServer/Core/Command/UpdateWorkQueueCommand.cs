@@ -47,17 +47,18 @@ namespace ClearCanvas.ImageServer.Core.Command
         private readonly string _extension;
     	private readonly string _uidGroupId;
         private readonly WorkQueueData _data;
+        private readonly ExternalRequestQueue _request;
         #endregion
 
         public UpdateWorkQueueCommand(DicomMessageBase message,
                         StudyStorageLocation location,
-                        bool duplicate, WorkQueueData data = null)
-            : this(message, location, duplicate, null, null, data)
+                        bool duplicate, WorkQueueData data = null, ExternalRequestQueue request=null)
+            : this(message, location, duplicate, null, null, data, request)
         {
 
         }
 
-        public UpdateWorkQueueCommand(DicomMessageBase message, StudyStorageLocation location, bool duplicate, string extension, string uidGroupId, WorkQueueData data)
+        public UpdateWorkQueueCommand(DicomMessageBase message, StudyStorageLocation location, bool duplicate, string extension, string uidGroupId, WorkQueueData data, ExternalRequestQueue request)
             : base("Update/Insert a WorkQueue Entry")
         {
             Platform.CheckForNullReference(message, "Dicom Message object");
@@ -69,6 +70,7 @@ namespace ClearCanvas.ImageServer.Core.Command
             _extension = extension;
             _uidGroupId = uidGroupId;
             _data = data;
+            _request = request;
         }
 
         public WorkQueue InsertedWorkQueue
@@ -93,6 +95,11 @@ namespace ClearCanvas.ImageServer.Core.Command
             {
                 parms.WorkQueueData = ImageServerSerializer.SerializeWorkQueueDataToXmlDocument(_data);
             }
+            if (_request != null)
+            {
+                parms.ExternalRequestQueueKey = _request.Key;
+            }
+
             if (_duplicate)
             {
                 parms.Duplicate = _duplicate;

@@ -54,7 +54,8 @@ namespace ClearCanvas.ImageServer.Core
         private readonly String _contextID;
         private readonly string _sourceAE;
         private readonly ServerPartition _partition;
-        private ServerPartitionAlternateAeTitle _alternateAe;
+        private readonly ServerPartitionAlternateAeTitle _alternateAe;
+        private readonly ExternalRequestQueue _request;
         #endregion
 
         #region Constructors
@@ -80,13 +81,15 @@ namespace ClearCanvas.ImageServer.Core
         /// <param name="contextId">The ID assigned to the context. This will be used as the name of storage folder in case of duplicate.</param>
         /// <param name="sourceAe">Source AE title of the image(s) to be imported</param>
         /// <param name="partition">The <see cref="ServerPartition"/> which the image(s) will be imported to</param>
-        public SopInstanceImporterContext(string contextId, string sourceAe, ServerPartition partition)
+        /// <param name="request">An external request that triggered this operation.</param>
+        public SopInstanceImporterContext(string contextId, string sourceAe, ServerPartition partition, ExternalRequestQueue request=null)
         {
             Platform.CheckForEmptyString(contextId, "contextID");
             Platform.CheckForNullReference(partition, "partition");
             _contextID = contextId;
             _sourceAE = sourceAe;
-            _partition = partition;            
+            _partition = partition;
+            _request = request;
         }
         
         #endregion
@@ -118,6 +121,11 @@ namespace ClearCanvas.ImageServer.Core
         public ServerPartitionAlternateAeTitle AlternateAe
         {
             get { return _alternateAe; }
+        }
+
+        public ExternalRequestQueue Request
+        {
+            get { return _request; }
         }
     }
 
@@ -384,7 +392,7 @@ namespace ClearCanvas.ImageServer.Core
             return studyLocation;
         }
 
-        private static void HandleNonDuplicate(string seriesInstanceUid, string sopInstanceUid, StudyStorageLocation studyLocation, ServerCommandProcessor commandProcessor, DicomFile file, string path, bool dupImage, StudyProcessWorkQueueData data)
+        private void HandleNonDuplicate(string seriesInstanceUid, string sopInstanceUid, StudyStorageLocation studyLocation, ServerCommandProcessor commandProcessor, DicomFile file, string path, bool dupImage, StudyProcessWorkQueueData data)
         {
             commandProcessor.AddCommand(new CreateDirectoryCommand(path));
 
@@ -406,7 +414,7 @@ namespace ClearCanvas.ImageServer.Core
             commandProcessor.AddCommand(new SaveDicomFileCommand(path, file, true));
 
             commandProcessor.AddCommand(
-                new UpdateWorkQueueCommand(file, studyLocation, dupImage, data));
+                new UpdateWorkQueueCommand(file, studyLocation, dupImage, data, _context.Request));
 
             #region SPECIAL CODE FOR TESTING
             if (Diagnostics.Settings.SimulateFileCorruption)
@@ -450,7 +458,8 @@ namespace ClearCanvas.ImageServer.Core
                              "Received duplicate SOP {0} (StudyUid:{1}). Existing files haven't been processed.",
                              sopInstanceUid, studyLocation.StudyInstanceUid);
 
-            var sopProcessingContext = new SopProcessingContext(commandProcessor, studyLocation, _context.ContextID);
+    	    var sopProcessingContext = new SopProcessingContext(commandProcessor, studyLocation, _context.ContextID,
+    	                                                        _context.Request);
             DicomProcessingResult result = DuplicateSopProcessorHelper.Process(sopProcessingContext, file, data);
             return result;
         }

@@ -46,6 +46,7 @@ public partial class ServiceLockTypeEnum : ServerEnum
       private static readonly ServiceLockTypeEnum _PurgeAlerts = GetEnum("PurgeAlerts");
       private static readonly ServiceLockTypeEnum _ImportFiles = GetEnum("ImportFiles");
       private static readonly ServiceLockTypeEnum _SyncDataAccess = GetEnum("SyncDataAccess");
+      private static readonly ServiceLockTypeEnum _ExternalRequestProcess = GetEnum("ExternalRequestProcess");
       #endregion
 
       #region Public Static Properties
@@ -118,6 +119,13 @@ public partial class ServiceLockTypeEnum : ServerEnum
       public static ServiceLockTypeEnum SyncDataAccess
       {
           get { return _SyncDataAccess; }
+      }
+      /// <summary>
+      /// This service processes requests made to the ImageServer from external applications.
+      /// </summary>
+      public static ServiceLockTypeEnum ExternalRequestProcess
+      {
+          get { return _ExternalRequestProcess; }
       }
 
       #endregion

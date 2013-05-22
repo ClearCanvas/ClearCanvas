@@ -311,6 +311,32 @@ GO
 IF @@TRANCOUNT=0 BEGIN INSERT INTO #tmpErrors (Error) SELECT 1 BEGIN TRANSACTION END
 GO
 
+PRINT N'Create new ServiceLockTypeEnum for External Request Processor table'
+
+INSERT INTO [ImageServer].[dbo].[ServiceLockTypeEnum]
+           ([GUID],[Enum],[Lookup],[Description],[LongDescription])
+     VALUES
+           (newid(),301,'ExternalRequestProcess','Process External Requests','This service processes requests made to the ImageServer from external applications.')
+GO
+
+IF @@ERROR<>0 AND @@TRANCOUNT>0 ROLLBACK TRANSACTION
+GO
+IF @@TRANCOUNT=0 BEGIN INSERT INTO #tmpErrors (Error) SELECT 1 BEGIN TRANSACTION END
+GO
+
+PRINT N'Add new ExternalRequestQueueGUID column to WorkQueue and add Foreign Key'
+
+ALTER TABLE dbo.WorkQueue ADD
+	ExternalRequestQueueGUID uniqueidentifier NULL
+GO
+ALTER TABLE dbo.WorkQueue ADD CONSTRAINT	FK_WorkQueue_ExternalRequestQueue FOREIGN KEY	(	ExternalRequestQueueGUID	) 
+REFERENCES dbo.ExternalRequestQueue	(	GUID	) 
+
+IF @@ERROR<>0 AND @@TRANCOUNT>0 ROLLBACK TRANSACTION
+GO
+IF @@TRANCOUNT=0 BEGIN INSERT INTO #tmpErrors (Error) SELECT 1 BEGIN TRANSACTION END
+GO
+
 
 IF EXISTS (SELECT * FROM #tmpErrors) ROLLBACK TRANSACTION
 GO

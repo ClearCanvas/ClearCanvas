@@ -515,6 +515,13 @@ INSERT INTO [ImageServer].[dbo].[ServiceLockTypeEnum]
            (newid(),300,'SyncDataAccess','Synchronize Data Access','This service periodically synchronizes the deletion status of Authority Groups on the Enterprise Services with Data Access granted to studies on the ImageServer.')
 GO
 
+INSERT INTO [ImageServer].[dbo].[ServiceLockTypeEnum]
+           ([GUID],[Enum],[Lookup],[Description],[LongDescription])
+     VALUES
+           (newid(),301,'ExternalRequestProcess','Process External Requests','This service processes requests made to the ImageServer from external applications.')
+GO
+
+
 -- ServiceLock Entries not associated with a Filesystem
 INSERT INTO [ImageServer].[dbo].ServiceLock
 	([GUID],[ServiceLockTypeEnum],[Lock],[ScheduledTime],[FilesystemGUID],[Enabled])

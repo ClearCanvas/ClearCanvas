@@ -627,6 +627,12 @@
   <data name="ServiceLockTypeEnum_SyncDataAccess_LongDescription" xml:space="preserve">
     <value>This service periodically synchronizes the deletion status of Authority Groups on the Enterprise Services with Data Access granted to studies on the ImageServer.</value>
   </data>
+  <data name="ServiceLockTypeEnum_ExternalRequestProcess_Description" xml:space="preserve">
+    <value>Process External Requests</value>
+  </data>
+  <data name="ServiceLockTypeEnum_ExternalRequestProcess_LongDescription" xml:space="preserve">
+    <value>This service processes requests made to the ImageServer from external applications.</value>
+  </data>
   <data name="ServerRuleTypeEnum_AutoRoute_Description" xml:space="preserve">
     <value>Auto Routing</value>
   </data>

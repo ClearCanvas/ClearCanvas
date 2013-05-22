@@ -99,5 +99,10 @@ namespace ClearCanvas.ImageServer.Model.Parameters
         {
             set { SubCriteria["UidGroupID"] = new ProcedureParameter<string>("UidGroupID", value); }
         }
+        public ServerEntityKey ExternalRequestQueueKey
+        {
+            set { SubCriteria["ExternalRequestQueueKey"] = new ProcedureParameter<ServerEntityKey>("ExternalRequestQueueKey", value); }
+        }
+		
     }
 }

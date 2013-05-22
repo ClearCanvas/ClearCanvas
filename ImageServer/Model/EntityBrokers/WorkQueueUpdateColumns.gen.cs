@@ -60,6 +60,11 @@ namespace ClearCanvas.ImageServer.Model.EntityBrokers
         {
             set { SubParameters["WorkQueuePriorityEnum"] = new EntityUpdateColumn<WorkQueuePriorityEnum>("WorkQueuePriorityEnum", value); }
         }
+        [EntityFieldDatabaseMappingAttribute(TableName="WorkQueue", ColumnName="FailureCount")]
+        public Int32 FailureCount
+        {
+            set { SubParameters["FailureCount"] = new EntityUpdateColumn<Int32>("FailureCount", value); }
+        }
         [EntityFieldDatabaseMappingAttribute(TableName="WorkQueue", ColumnName="ScheduledTime")]
         public DateTime ScheduledTime
         {
@@ -70,10 +75,10 @@ namespace ClearCanvas.ImageServer.Model.EntityBrokers
         {
             set { SubParameters["InsertTime"] = new EntityUpdateColumn<DateTime>("InsertTime", value); }
         }
-        [EntityFieldDatabaseMappingAttribute(TableName="WorkQueue", ColumnName="FailureCount")]
-        public Int32 FailureCount
+        [EntityFieldDatabaseMappingAttribute(TableName="WorkQueue", ColumnName="LastUpdatedTime")]
+        public DateTime LastUpdatedTime
         {
-            set { SubParameters["FailureCount"] = new EntityUpdateColumn<Int32>("FailureCount", value); }
+            set { SubParameters["LastUpdatedTime"] = new EntityUpdateColumn<DateTime>("LastUpdatedTime", value); }
         }
         [EntityFieldDatabaseMappingAttribute(TableName="WorkQueue", ColumnName="FailureDescription")]
         public String FailureDescription
@@ -85,10 +90,10 @@ namespace ClearCanvas.ImageServer.Model.EntityBrokers
         {
             set { SubParameters["Data"] = new EntityUpdateColumn<XmlDocument>("Data", value); }
         }
-        [EntityFieldDatabaseMappingAttribute(TableName="WorkQueue", ColumnName="LastUpdatedTime")]
-        public DateTime LastUpdatedTime
+        [EntityFieldDatabaseMappingAttribute(TableName="WorkQueue", ColumnName="ExternalRequestQueueGUID")]
+        public ServerEntityKey ExternalRequestQueueKey
         {
-            set { SubParameters["LastUpdatedTime"] = new EntityUpdateColumn<DateTime>("LastUpdatedTime", value); }
+            set { SubParameters["ExternalRequestQueueKey"] = new EntityUpdateColumn<ServerEntityKey>("ExternalRequestQueueKey", value); }
         }
         [EntityFieldDatabaseMappingAttribute(TableName="WorkQueue", ColumnName="ProcessorID")]
         public String ProcessorID

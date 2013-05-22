@@ -402,6 +402,59 @@ namespace ClearCanvas.ImageServer.Model
         }
 
         /// <summary>
+        /// Acquires a read lock on the study
+        /// </summary>
+        /// <returns>
+        /// <b>true</b> if the study is successfully locked.
+        /// <b>false</b> if the study cannot be locked or is being locked by another process.
+        /// </returns>
+        /// <remarks>
+        /// This method is non-blocking. Caller must check the return value to ensure the study has been
+        /// successfully locked.
+        /// </remarks>
+        public bool AcquireReadLock()
+        {
+            IUpdateContext context =
+                PersistentStoreRegistry.GetDefaultStore().OpenUpdateContext(UpdateContextSyncMode.Flush);
+            using (context)
+            {
+                var lockStudyBroker = context.GetBroker<ILockStudy>();
+                var parms = new LockStudyParameters { StudyStorageKey = GetKey(), ReadLock = true };
+                if (!lockStudyBroker.Execute(parms))
+                    return false;
+
+                context.Commit();
+                return parms.Successful;
+            }
+        }
+
+        /// <summary>
+        /// Releases a lock acquired via <see cref="AcquireReadLock"/>
+        /// </summary>
+        /// <returns>
+        /// <b>true</b> if the study is successfully unlocked.
+        /// </returns>
+        /// <remarks>
+        /// This method is non-blocking. Caller must check the return value to ensure the study has been
+        /// successfully unlocked.
+        /// </remarks>
+        public bool ReleaseReadLock()
+        {
+            IUpdateContext context =
+                PersistentStoreRegistry.GetDefaultStore().OpenUpdateContext(UpdateContextSyncMode.Flush);
+            using (context)
+            {
+                var lockStudyBroker = context.GetBroker<ILockStudy>();
+                var parms = new LockStudyParameters { StudyStorageKey = GetKey(), ReadLock = false };
+                if (!lockStudyBroker.Execute(parms))
+                    return false;
+
+                context.Commit();
+                return parms.Successful;
+            }
+        }
+
+        /// <summary>
         /// Return snapshot of all related items in the Study Integrity Queue.
         /// </summary>
         /// <returns></returns>
