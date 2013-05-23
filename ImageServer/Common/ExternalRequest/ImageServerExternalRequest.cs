@@ -43,6 +43,11 @@ namespace ClearCanvas.ImageServer.Common.ExternalRequest
         public abstract string ExternalRequestType { get; }
 
         /// <summary>
+        /// A localized string description of the request type
+        /// </summary>
+        public abstract string RequestTypeDescription { get; }
+
+        /// <summary>
         /// A string uniquely identifying the operation.  Can be null.
         /// </summary>
         /// <remarks>

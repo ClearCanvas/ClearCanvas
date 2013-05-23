@@ -84,8 +84,9 @@ namespace ClearCanvas.ImageServer.Web.Common.Data.DataSource
 
         public string RequestType
         {
-            get { return _request.ExternalRequestType; }
+            get { return _request.RequestTypeDescription; }
         }
+
         public ImageServerExternalRequest Request
         {
             get { return _request; }
