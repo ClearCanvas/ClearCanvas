@@ -1868,7 +1868,7 @@ BEGIN
 CREATE TABLE [dbo].[ExternalRequestQueue](
 	[GUID] [uniqueidentifier] ROWGUIDCOL  NOT NULL,
 	[ExternalRequestQueueStatusEnum] [smallint] NULL,
-	[RequestType] [varchar](32) NOT NULL,
+	[RequestType] [varchar](48) NOT NULL,
 	[OperationToken] [varchar](64) NULL,
 	[RequestXml] [xml] NOT NULL,
 	[StateXml] [xml] NULL,
