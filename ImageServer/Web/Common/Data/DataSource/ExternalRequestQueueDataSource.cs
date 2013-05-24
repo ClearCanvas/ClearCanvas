@@ -84,7 +84,12 @@ namespace ClearCanvas.ImageServer.Web.Common.Data.DataSource
 
         public string RequestType
         {
-            get { return _request.RequestTypeDescription; }
+            get { return _request.RequestTypeString; }
+        }
+
+        public string RequestDescription
+        {
+            get { return _request.RequestDescription; }
         }
 
         public ImageServerExternalRequest Request
@@ -166,6 +171,8 @@ namespace ClearCanvas.ImageServer.Web.Common.Data.DataSource
 
             if (StatusEnum != null)
                 criteria.ExternalRequestQueueStatusEnum.EqualTo(StatusEnum);
+
+            criteria.InsertTime.SortDesc(0);
 
             IList<ExternalRequestQueue> list = _searchController.FindExternalRequestQueue(criteria, startRowIndex,
                                                                                           maximumRows);
