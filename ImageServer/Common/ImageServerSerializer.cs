@@ -37,7 +37,6 @@ namespace ClearCanvas.ImageServer.Common
     {
         #region Private Static Members
         private static readonly IJsmlSerializerHook ExternalRequestHook = new PolymorphicDataContractHook<ImageServerExternalRequestTypeAttribute>();
-        private static readonly IJsmlSerializerHook NotificationHook = new PolymorphicDataContractHook<ImageServerNotificationTypeAttribute>();
         private static readonly IJsmlSerializerHook WorkItemDataHook = new PolymorphicDataContractHook<WorkQueueDataTypeAttribute>();
         #endregion
 
@@ -104,12 +103,12 @@ namespace ClearCanvas.ImageServer.Common
         public static string SerializeNotification(ImageServerNotification data)
         {
             return JsmlSerializer.Serialize(data, "ImageServerNotification",
-                new JsmlSerializer.SerializeOptions { Hook = NotificationHook, DataContractTest = IsImageServerNotificationContract });
+                new JsmlSerializer.SerializeOptions { Hook = ExternalRequestHook, DataContractTest = IsImageServerExternalRequestContract });
         }
         public static XmlDocument SerializeNotificationToXmlDocument(ImageServerNotification data)
         {
             var s = JsmlSerializer.Serialize(data, "ImageServerNotification",
-                new JsmlSerializer.SerializeOptions { Hook = NotificationHook, DataContractTest = IsImageServerNotificationContract });
+                new JsmlSerializer.SerializeOptions { Hook = ExternalRequestHook, DataContractTest = IsImageServerExternalRequestContract });
 
             var d = new XmlDocument();
             d.LoadXml(s);
@@ -119,13 +118,13 @@ namespace ClearCanvas.ImageServer.Common
         public static ImageServerNotification DeserializeNotification(string data)
         {
             return JsmlSerializer.Deserialize<ImageServerNotification>(data,
-                new JsmlSerializer.DeserializeOptions { Hook = NotificationHook, DataContractTest = IsImageServerNotificationContract });
+                new JsmlSerializer.DeserializeOptions { Hook = ExternalRequestHook, DataContractTest = IsImageServerExternalRequestContract });
         }
 
         public static ImageServerNotification DeserializeNotification(XmlDocument data)
         {
             return JsmlSerializer.Deserialize<ImageServerNotification>(data,
-                new JsmlSerializer.DeserializeOptions { Hook = NotificationHook, DataContractTest = IsImageServerNotificationContract });
+                new JsmlSerializer.DeserializeOptions { Hook = ExternalRequestHook, DataContractTest = IsImageServerExternalRequestContract });
         }
         #endregion
 
@@ -159,11 +158,7 @@ namespace ClearCanvas.ImageServer.Common
         #endregion
 
         #region Private Static Methods
-        private static bool IsImageServerNotificationContract(Type t)
-        {
-            return AttributeUtils.HasAttribute<ImageServerNotificationTypeAttribute>(t);
-        }
-
+     
         private static bool IsImageServerExternalRequestContract(Type t)
         {
             return AttributeUtils.HasAttribute<ImageServerExternalRequestTypeAttribute>(t);

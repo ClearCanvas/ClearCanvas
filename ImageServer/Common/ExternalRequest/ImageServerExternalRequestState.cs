@@ -24,13 +24,12 @@
 
 using System;
 using System.Runtime.Serialization;
-using ClearCanvas.Common.Serialization;
 
 namespace ClearCanvas.ImageServer.Common.ExternalRequest
 {
     [DataContract(Namespace = ImageServerExternalRequestNamespace.Value)]
     [ImageServerExternalRequestType("345B8F2C-4A3B-44B4-93C3-C865277ABA35")]
-    public abstract class ImageServerExternalRequestState : DataContractBase, IEquatable<ImageServerExternalRequestState>
+    public abstract class ImageServerExternalRequestState : ImageServerNotification, IEquatable<ImageServerExternalRequestState>
     {
         [DataMember]
         public ImageServerExternalRequest TheExternalRequest { get; set; }

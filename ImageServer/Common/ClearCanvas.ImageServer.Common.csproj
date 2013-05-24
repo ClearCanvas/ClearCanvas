@@ -78,7 +78,6 @@
     <Compile Include="ExternalRequest\ExternalRequestDelayProcessingException.cs" />
     <Compile Include="ExternalRequest\ExternalRequestProcessingException.cs" />
     <Compile Include="ExternalRequest\ImageServerNotification.cs" />
-    <Compile Include="ExternalRequest\ImageServerNotificationTypeAttribute.cs" />
     <Compile Include="ImageServerSerializer.cs" />
     <Compile Include="ExternalRequest\InvalidExecutionModeRequestedException.cs" />
     <Compile Include="ExternalRequest\InvalidExternalRequestParameterException.cs" />
