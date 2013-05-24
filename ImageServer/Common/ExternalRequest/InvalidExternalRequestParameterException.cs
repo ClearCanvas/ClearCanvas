@@ -26,6 +26,7 @@ using System;
 
 namespace ClearCanvas.ImageServer.Common.ExternalRequest
 {
+    [Serializable]
     public class InvalidExternalRequestParameterException : ApplicationException
     {
         public string Parameter { get; set; }

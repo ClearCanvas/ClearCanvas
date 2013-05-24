@@ -26,6 +26,7 @@ using System;
 
 namespace ClearCanvas.ImageServer.Common.ExternalRequest
 {
+    [Serializable]
     public class ExternalRequestProcessingException : ApplicationException
     {
         public ExternalRequestProcessingException()

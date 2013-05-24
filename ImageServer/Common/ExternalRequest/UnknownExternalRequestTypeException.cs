@@ -26,6 +26,7 @@ using System;
 
 namespace ClearCanvas.ImageServer.Common.ExternalRequest
 {
+    [Serializable]
     public class UnknownExternalRequestTypeException : ApplicationException
     {
         public UnknownExternalRequestTypeException(string message) : base(message)
