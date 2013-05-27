@@ -553,7 +553,15 @@ namespace ClearCanvas.Common.Serialization
 				{
 					_writer.WriteValue(DateTimeUtils.FormatISO(((DateTime?)obj).Value));
 				}
-				else if (obj is bool)
+                else if (obj is TimeSpan)
+                {
+                    _writer.WriteValue(DateTimeUtils.FormatTimeSpan((TimeSpan)obj));
+                }
+                else if (obj is TimeSpan?)
+                {
+                    _writer.WriteValue(DateTimeUtils.FormatTimeSpan(((TimeSpan?)obj).Value));
+                }
+                else if (obj is bool)
 				{
 					_writer.WriteValue((bool)obj ? "true" : "false");
 				}
@@ -692,6 +700,10 @@ namespace ClearCanvas.Common.Serialization
 				{
 					return DateTimeUtils.ParseISO(xmlElement.InnerText);
 				}
+                if (dataType == typeof(TimeSpan))
+                {
+                    return DateTimeUtils.ParseTimeSpan(xmlElement.InnerText);
+                }
 
 				if (dataType == typeof(bool))
 				{

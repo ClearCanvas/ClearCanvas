@@ -23,11 +23,15 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Xml;
 using System.Xml.Serialization;
+using ClearCanvas.Common;
 using ClearCanvas.Common.Serialization;
 using ClearCanvas.Common.Utilities;
+using ClearCanvas.Dicom.Editing.Common.Commands;
 using ClearCanvas.ImageServer.Common.ExternalRequest;
 using ClearCanvas.ImageServer.Common.WorkQueue;
 
@@ -35,9 +39,104 @@ namespace ClearCanvas.ImageServer.Common
 {
     public class ImageServerSerializer
     {
+        private class CustomHook : IJsmlSerializerHook
+        {
+            private readonly Dictionary<string, Type> _contractMap;
+
+            public CustomHook()
+            {
+                _contractMap = (from p in Platform.PluginManager.Plugins
+                                from t in p.Assembly.Resolve().GetTypes()
+                                let a = AttributeUtils.GetAttribute<ImageServerExternalRequestTypeAttribute>(t)
+                                where (a != null)
+                                select new { a.ContractId, Contract = t })
+                    .ToDictionary(entry => entry.ContractId, entry => entry.Contract);
+
+                EditTypeAttribute attribute;
+                foreach (var type in Condition.GetConditionTypes().Where(AttributeUtils.HasAttribute<EditTypeAttribute>))
+                {
+                    attribute = AttributeUtils.GetAttribute<EditTypeAttribute>(type);
+                    _contractMap.Add(attribute.ContractId, type);
+                }
+                foreach (var type in Edit.GetEditTypes().Where(AttributeUtils.HasAttribute<EditTypeAttribute>))
+                {
+                    attribute = AttributeUtils.GetAttribute<EditTypeAttribute>(type);
+                    _contractMap.Add(attribute.ContractId, type);
+                }
+
+                var pathAndVr = typeof (PathAndVr);
+                attribute = AttributeUtils.GetAttribute<EditTypeAttribute>(pathAndVr);
+                _contractMap.Add(attribute.ContractId, pathAndVr);
+
+                var dateTimePair = typeof(DateTimePair);
+                attribute = AttributeUtils.GetAttribute<EditTypeAttribute>(dateTimePair);
+                _contractMap.Add(attribute.ContractId, dateTimePair);
+            }
+
+            #region IJsmlSerializerHook
+
+            bool IJsmlSerializerHook.Serialize(IJsmlSerializationContext context)
+            {
+                var data = context.Data;
+                if (data != null)
+                {
+                    // if we have an attribute, write out the contract ID as an XML attribute
+                    var a = AttributeUtils.GetAttribute<ImageServerExternalRequestTypeAttribute>(data.GetType());
+                    if (a != null)
+                    {
+                        context.Attributes.Add("contract", a.ContractId);
+                    }
+                    else
+                    {
+                        var b = AttributeUtils.GetAttribute<EditTypeAttribute>(data.GetType());
+                        if (b != null)
+                        {
+                            context.Attributes.Add("contract", b.ContractId);
+                        }
+                    }
+                }
+
+                // always return false - we don't handle serialization ourselves
+                return false;
+            }
+
+            bool IJsmlSerializerHook.Deserialize(IJsmlDeserializationContext context)
+            {
+                // if we have an XML attribute for the contract ID, change the data type to use the correct contract
+                var contract = context.XmlElement.GetAttribute("contract");
+                if (!string.IsNullOrEmpty(contract))
+                {
+                    // constrain the data type by the contract id
+                    context.DataType = GetDataContract(contract);
+                }
+
+                // always return false - we don't handle serialization ourselves
+                return false;
+            }
+
+            #endregion
+
+            private Type GetDataContract(string contractId)
+            {
+                Type contract;
+                if (!_contractMap.TryGetValue(contractId, out contract))
+                    throw new ArgumentException("Invalid data contract ID.");
+
+                return contract;
+            }
+        }
+
         #region Private Static Members
-        private static readonly IJsmlSerializerHook ExternalRequestHook = new PolymorphicDataContractHook<ImageServerExternalRequestTypeAttribute>();
-        private static readonly IJsmlSerializerHook WorkItemDataHook = new PolymorphicDataContractHook<WorkQueueDataTypeAttribute>();
+
+        private static readonly IJsmlSerializerHook ExternalRequestHook;
+        private static readonly IJsmlSerializerHook WorkItemDataHook;
+
+        static ImageServerSerializer()
+        {
+            ExternalRequestHook = new CustomHook();
+            WorkItemDataHook = new PolymorphicDataContractHook<WorkQueueDataTypeAttribute>();
+        }
+
         #endregion
 
         #region ImageServerExternalRequest
@@ -161,7 +260,8 @@ namespace ClearCanvas.ImageServer.Common
      
         private static bool IsImageServerExternalRequestContract(Type t)
         {
-            return AttributeUtils.HasAttribute<ImageServerExternalRequestTypeAttribute>(t);
+            return AttributeUtils.HasAttribute<ImageServerExternalRequestTypeAttribute>(t) ||
+                   AttributeUtils.HasAttribute<EditTypeAttribute>(t);
         }
 
         private static bool IsWorkQueueDataContract(Type t)
