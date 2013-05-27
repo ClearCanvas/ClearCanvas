@@ -139,11 +139,10 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
                 // TODO (CR Phoenix5 - Med): Clinical as well	  
                         PermissionsHelper.IsInRole(AuthorityTokens.KeyImages) &&
 			               // TODO (CR Phoenix5 - Low): KeyImagePublisher.IsSupportedImage?
-                      !(SelectedPresentationImage.ParentDisplaySet.Descriptor is KeyImageDisplaySetDescriptor) &&
-                      (WorkItemActivityMonitor.IsRunning || !KeyImageClipboard.HasViewPlugin);
+                      !(SelectedPresentationImage.ParentDisplaySet.Descriptor is KeyImageDisplaySetDescriptor) ;
 
             // TODO (CR Phoenix5 - Med): Clinical as well
-            this.ShowEnabled = WorkItemActivityMonitor.IsRunning &&
+            this.ShowEnabled = 
 					  PermissionsHelper.IsInRole(AuthorityTokens.KeyImages);
 		}
 
