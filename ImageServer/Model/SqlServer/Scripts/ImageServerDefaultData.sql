@@ -521,6 +521,11 @@ INSERT INTO [ImageServer].[dbo].[ServiceLockTypeEnum]
            (newid(),301,'ExternalRequestProcess','Process External Requests','This service processes requests made to the ImageServer from external applications.')
 GO
 
+INSERT INTO [ImageServer].[dbo].[ServiceLockTypeEnum]
+           ([GUID],[Enum],[Lookup],[Description],[LongDescription])
+     VALUES
+           (newid(),302,'ExternalNotificationProcess','Process External Notifications','This service processes notifications to send to external applications.')
+GO
 
 -- ServiceLock Entries not associated with a Filesystem
 INSERT INTO [ImageServer].[dbo].ServiceLock

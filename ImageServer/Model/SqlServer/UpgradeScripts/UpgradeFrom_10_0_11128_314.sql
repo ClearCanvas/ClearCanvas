@@ -319,6 +319,13 @@ INSERT INTO [ImageServer].[dbo].[ServiceLockTypeEnum]
            (newid(),301,'ExternalRequestProcess','Process External Requests','This service processes requests made to the ImageServer from external applications.')
 GO
 
+INSERT INTO [ImageServer].[dbo].[ServiceLockTypeEnum]
+           ([GUID],[Enum],[Lookup],[Description],[LongDescription])
+     VALUES
+           (newid(),302,'ExternalNotificationProcess','Process External Notifications','This service processes notifications to send to external applications.')
+GO
+
+
 IF @@ERROR<>0 AND @@TRANCOUNT>0 ROLLBACK TRANSACTION
 GO
 IF @@TRANCOUNT=0 BEGIN INSERT INTO #tmpErrors (Error) SELECT 1 BEGIN TRANSACTION END

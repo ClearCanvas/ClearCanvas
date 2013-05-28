@@ -47,6 +47,7 @@ public partial class ServiceLockTypeEnum : ServerEnum
       private static readonly ServiceLockTypeEnum _ImportFiles = GetEnum("ImportFiles");
       private static readonly ServiceLockTypeEnum _SyncDataAccess = GetEnum("SyncDataAccess");
       private static readonly ServiceLockTypeEnum _ExternalRequestProcess = GetEnum("ExternalRequestProcess");
+      private static readonly ServiceLockTypeEnum _ExternalNotificationProcess = GetEnum("ExternalNotificationProcess");
       #endregion
 
       #region Public Static Properties
@@ -126,6 +127,13 @@ public partial class ServiceLockTypeEnum : ServerEnum
       public static ServiceLockTypeEnum ExternalRequestProcess
       {
           get { return _ExternalRequestProcess; }
+      }
+      /// <summary>
+      /// This service processes notifications to send to external applications.
+      /// </summary>
+      public static ServiceLockTypeEnum ExternalNotificationProcess
+      {
+          get { return _ExternalNotificationProcess; }
       }
 
       #endregion

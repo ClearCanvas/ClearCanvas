@@ -633,6 +633,12 @@
   <data name="ServiceLockTypeEnum_ExternalRequestProcess_LongDescription" xml:space="preserve">
     <value>This service processes requests made to the ImageServer from external applications.</value>
   </data>
+  <data name="ServiceLockTypeEnum_ExternalNotificationProcess_Description" xml:space="preserve">
+    <value>Process External Notifications</value>
+  </data>
+  <data name="ServiceLockTypeEnum_ExternalNotificationProcess_LongDescription" xml:space="preserve">
+    <value>This service processes notifications to send to external applications.</value>
+  </data>
   <data name="ServerRuleTypeEnum_AutoRoute_Description" xml:space="preserve">
     <value>Auto Routing</value>
   </data>
