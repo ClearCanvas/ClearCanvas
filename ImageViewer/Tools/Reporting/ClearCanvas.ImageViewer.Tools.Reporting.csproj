@@ -65,6 +65,8 @@
     <Compile Include="AuthorityTokens.cs" />
     <Compile Include="KeyImages\DesktopWindowTool.cs" />
     <Compile Include="KeyImages\EditKeyImageInformationTool.cs" />
+    <Compile Include="KeyImages\IKeyImageClipboard.cs" />
+    <Compile Include="KeyImages\IKeyObjectSelectionDocumentInformation.cs" />
     <Compile Include="KeyImages\KeyImageClipboardComponent.cs" />
     <Compile Include="KeyImages\KeyImageDisplaySet.cs" />
     <Compile Include="KeyImages\KeyImagePublisher.cs" />

@@ -113,6 +113,7 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 		private void CreateKeyObjectDocuments()
 		{
 			KeyImageSerializer serializer = new KeyImageSerializer();
+			serializer.Author = _sourceInformation.Author;
 			serializer.Description = _sourceInformation.Description;
 			serializer.DocumentTitle = _sourceInformation.DocumentTitle;
 			serializer.SeriesDescription = _sourceInformation.SeriesDescription;

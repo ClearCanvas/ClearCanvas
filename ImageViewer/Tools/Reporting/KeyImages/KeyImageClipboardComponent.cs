@@ -22,13 +22,17 @@
 
 #endregion
 
+using System;
+using System.ComponentModel;
+using ClearCanvas.Common.Utilities;
 using ClearCanvas.ImageViewer.Clipboard;
 
 namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 {
 	// TODO: Make Key Image Clipboard use KeyImageClipboardItems that cannot be Locked?
-	internal class KeyImageClipboardComponent : ClipboardComponent
+	internal class KeyImageClipboardComponent : ClipboardComponent, IKeyImageClipboard
 	{
+		private event EventHandler _keyImageInformationChanged;
 		private KeyImageInformation _keyImageInformation;
 
 		public KeyImageClipboardComponent(KeyImageInformation keyImageInformation)
@@ -40,11 +44,42 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 		public KeyImageInformation KeyImageInformation
 		{
 			get { return _keyImageInformation; }
-			set
+			internal set
 			{
-				_keyImageInformation = value;
-				DataSource = _keyImageInformation.ClipboardItems;
+				if (_keyImageInformation != value)
+				{
+					_keyImageInformation = value;
+					DataSource = _keyImageInformation.ClipboardItems;
+
+					EventsHelper.Fire(_keyImageInformationChanged, this, new EventArgs());
+				}
 			}
 		}
+
+		public event EventHandler KeyImageInformationChanged
+		{
+			add { _keyImageInformationChanged += value; }
+			remove { _keyImageInformationChanged -= value; }
+		}
+
+		#region IKeyImageClipboard Implementation
+
+		IKeyObjectSelectionDocumentInformation IKeyImageClipboard.DocumentInformation
+		{
+			get { return KeyImageInformation; }
+		}
+
+		event EventHandler IKeyImageClipboard.DocumentInformationChanged
+		{
+			add { KeyImageInformationChanged += value; }
+			remove { KeyImageInformationChanged -= value; }
+		}
+
+		BindingList<IClipboardItem> IKeyImageClipboard.Items
+		{
+			get { return DataSource; }
+		}
+
+		#endregion
 	}
 }
