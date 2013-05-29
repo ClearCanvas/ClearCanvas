@@ -110,7 +110,7 @@ namespace ClearCanvas.ImageServer.Enterprise.Authentication
             /// </summary>
             public static class Research
             {
-                [AuthorityToken(Description = "Allow configuration of research partitionses.")]
+                [AuthorityToken(Description = "Allow viewing of research partitions.")]
                 public const string ViewPartitions = "PACS/Research/View Partitions";
             }
         }
