@@ -58,7 +58,6 @@ namespace ClearCanvas.ImageServer.Enterprise.Authentication
 
                 [AuthorityToken(Description = "Allow configuration of data access rules.")]
                 public const string DataAccessRules = "PACS/Configure/Data Access Rules";
-
             }
 
             /// <summary>
@@ -106,6 +105,14 @@ namespace ClearCanvas.ImageServer.Enterprise.Authentication
                 public const string Delete = "PACS/StudyDeleteHistory/Delete";
             }
 
+            /// <summary>
+            /// Tokens related to research functionality.
+            /// </summary>
+            public static class Research
+            {
+                [AuthorityToken(Description = "Allow configuration of research partitionses.")]
+                public const string ViewPartitions = "PACS/Research/View Partitions";
+            }
         }
         
         /// <summary>

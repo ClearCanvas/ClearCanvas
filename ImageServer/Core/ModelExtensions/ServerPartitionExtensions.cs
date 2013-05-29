@@ -23,14 +23,12 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using ClearCanvas.ImageServer.Model;
-using ClearCanvas.ImageServer.Common;
 using System.IO;
 using ClearCanvas.Web.Enterprise.Authentication;
 using ClearCanvas.Common;
+using ClearCanvas.ImageServer.Enterprise.Authentication;
 
 namespace ClearCanvas.ImageServer.Core.ModelExtensions
 {
@@ -75,10 +73,14 @@ namespace ClearCanvas.ImageServer.Core.ModelExtensions
         {
             Platform.CheckForNullReference(user, "user cannot be null");
 
+            if (partition.ServerPartitionTypeEnum.Equals(ServerPartitionTypeEnum.Research) 
+                && !user.IsInRole(AuthorityTokens.Admin.Research.ViewPartitions))
+                return false;
+
             // If user has the "access all" token, return true
             if (user.IsInRole(ClearCanvas.Enterprise.Common.AuthorityTokens.DataAccess.AllPartitions))
                 return true;
-
+            
             // If user belongs to any data access authority group which can access the partition, return true
             var isAllowed = user.Credentials.DataAccessAuthorityGroups != null
                 && user.Credentials.DataAccessAuthorityGroups.Any(g => partition.IsAuthorityGroupAllowed(g.ToString()));
