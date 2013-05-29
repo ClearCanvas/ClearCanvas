@@ -169,6 +169,7 @@
     <Compile Include="log4net\RollingFileAppender.cs" />
     <Compile Include="PluginInfoCache.cs" />
     <Compile Include="PluginLoader.cs" />
+    <Compile Include="Rest\RestClient.cs" />
     <Compile Include="Specifications\CaseSpecification.cs" />
     <Compile Include="Specifications\NotSpecification.cs" />
     <Compile Include="Specifications\Tests\CompositeSpecificationTests.cs" />
