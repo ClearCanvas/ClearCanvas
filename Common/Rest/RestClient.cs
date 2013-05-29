@@ -10,6 +10,11 @@ using System.Web;
 
 namespace ClearCanvas.Common.Rest
 {
+	#region RestClientException
+
+	/// <summary>
+	/// Represents an exception resulting from a request.
+	/// </summary>
 	public class RestClientException : Exception
 	{
 		internal RestClientException(WebException e)
@@ -24,53 +29,149 @@ namespace ClearCanvas.Common.Rest
 			}
 		}
 
+		/// <summary>
+		/// Gets the status of the request.
+		/// </summary>
 		public WebExceptionStatus RequestStatus { get; private set; }
+
+		/// <summary>
+		/// Gets the HTTP Status code returned in the response, if a response was obtained.
+		/// </summary>
 		public HttpStatusCode HttpStatus { get; private set; }
+
+		/// <summary>
+		/// Gets the response object, if a response was obtained.
+		/// </summary>
 		public RestClient.Response Response { get; private set; }
 	}
 
+	#endregion
+
 
 	/// <summary>
-	/// 
+	/// Utility class for interacting with HTTP REST style web services.
 	/// </summary>
 	public class RestClient
 	{
-		public class Response
+		#region Response class
+
+		/// <summary>
+		/// Represents the response to an HTTP request.
+		/// </summary>
+		public class Response : IDisposable
 		{
-			private readonly HttpWebResponse _response;
+			private HttpWebResponse _response;
+			private Stream _responseStream;
+
 			internal Response(HttpWebResponse response)
 			{
 				_response = response;
 			}
 
+			/// <summary>
+			/// Writes the body of the response to the specified stream, and closes the response.
+			/// </summary>
+			/// <param name="stream"></param>
 			public void WriteToStream(Stream stream)
 			{
-				using (_response)
-				using (var responseStream = _response.GetResponseStream())
+				try
 				{
-					if (responseStream == null)
-						return;
+					using (_response)
+					{
+						using (_responseStream = _response.GetResponseStream())
+						{
+							if (_responseStream == null)
+								return;
 
-					responseStream.CopyTo(stream);
+							_responseStream.CopyTo(stream);
+						}
+						_responseStream = null;
+					}
+				}
+				finally
+				{
+					EnsureCleanUp();
 				}
 			}
 
+			/// <summary>
+			/// Obtains the body of the response as a string, and closes the response.
+			/// </summary>
 			public string AsString()
 			{
-				using (_response)
-				using (var stream = _response.GetResponseStream())
+				try
 				{
-					if (stream == null)
-						return null;
-
-					using (var reader = new StreamReader(stream))
+					using (_response)
 					{
-						return reader.ReadToEnd();
+						using (_responseStream = _response.GetResponseStream())
+						{
+							if (_responseStream == null)
+								return null;
+
+							string result;
+							using (var reader = new StreamReader(_responseStream))
+							{
+								result = reader.ReadToEnd();
+							}
+
+							_responseStream = null;
+							return result;
+						}
 					}
+				}
+				finally
+				{
+					EnsureCleanUp();
+				}
+			}
+
+			/// <summary>
+			/// Closes the response.
+			/// </summary>
+			public void Dispose()
+			{
+				EnsureCleanUp();
+			}
+
+			private void EnsureCleanUp()
+			{
+				try
+				{
+					if(_responseStream != null)
+					{
+						_responseStream.Close();
+						_responseStream = null;
+					}
+				}
+				catch (Exception e)
+				{
+					/* suppress any possible errors here e.g. already closed */
+					Platform.Log(LogLevel.Debug, e, "Error closing HttpWebResponse Stream object.");
+				}
+
+				try
+				{
+					if(_response != null)
+					{
+						_response.Close();
+						_response = null;
+					}
+				}
+				catch (Exception e)
+				{
+					/* suppress any possible errors here e.g. already closed */
+					Platform.Log(LogLevel.Warn, e, "Error closing HttpWebResponse response object.");
 				}
 			}
 		}
 
+		#endregion
+
+		#region Request class
+
+		/// <summary>
+		/// Represents an HTTP request for a specified resource.
+		/// </summary>
 		public class Request
 		{
 			private readonly RestClient _rc;
@@ -79,18 +180,26 @@ namespace ClearCanvas.Common.Rest
 			private Stream _contentStream;
 			private string _contentType;
 
-			public Request(RestClient rc, string resource, string args)
+			internal Request(RestClient rc, string resource, string args)
 			{
 				_rc = rc;
 				Initialize(resource, args);
 			}
 
+			/// <summary>
+			/// Sends this request using the GET verb and returns the response.
+			/// </summary>
+			/// <returns></returns>
 			public Response Get()
 			{
 				_request.Method = "GET";
 				return GetResponse(_request);
 			}
 
+			/// <summary>
+			/// Sends this request using the POST verb and returns the response.
+			/// </summary>
+			/// <returns></returns>
 			public Response Post()
 			{
 				_request.Method = "POST";
@@ -98,6 +207,10 @@ namespace ClearCanvas.Common.Rest
 				return GetResponse(_request);
 			}
 
+			/// <summary>
+			/// Sends this request using the PUT verb and returns the response.
+			/// </summary>
+			/// <returns></returns>
 			public Response Put()
 			{
 				_request.Method = "PUT";
@@ -105,12 +218,22 @@ namespace ClearCanvas.Common.Rest
 				return GetResponse(_request);
 			}
 
+			/// <summary>
+			/// Sends this request using the DELETE verb and returns the response.
+			/// </summary>
+			/// <returns></returns>
 			public Response Delete()
 			{
 				_request.Method = "DELETE";
 				return GetResponse(_request);
 			}
 
+			/// <summary>
+			/// Sets the request body for this request, and returns itself.
+			/// </summary>
+			/// <param name="data"></param>
+			/// <param name="contentType"></param>
+			/// <returns></returns>
 			public Request SetData(Stream data, string contentType)
 			{
 				if (data == null)
@@ -126,6 +249,12 @@ namespace ClearCanvas.Common.Rest
 				return this;
 			}
 
+			/// <summary>
+			/// Sets the request body for this request, and returns itself.
+			/// </summary>
+			/// <param name="data"></param>
+			/// <param name="contentType"></param>
+			/// <returns></returns>
 			public Request SetData(string data, string contentType)
 			{
 				if (string.IsNullOrEmpty(data))
@@ -210,47 +339,97 @@ namespace ClearCanvas.Common.Rest
 			}
 		}
 
+		#endregion
+
 		private const int DefaultTimeout = 30000;	// default 30 sec time-out
 
 		private readonly Uri _baseUrl;
 
+		/// <summary>
+		/// Constructs a REST client for the specified base URL.
+		/// </summary>
+		/// <param name="baseUrl"></param>
 		public RestClient(string baseUrl)
 		{
 			_baseUrl = new Uri(baseUrl);
-			this.Timeout = TimeSpan.FromMilliseconds(DefaultTimeout);
-			this.Headers = new Dictionary<HttpRequestHeader, string>();
+			Timeout = TimeSpan.FromMilliseconds(DefaultTimeout);
+			Headers = new Dictionary<HttpRequestHeader, string>();
 		}
 
+		#region Public API
+
+		/// <summary>
+		/// Gets or sets the user agent string.
+		/// </summary>
 		public string UserAgent { get; set; }
 
+		/// <summary>
+		/// Gets or sets the time-out.
+		/// </summary>
 		public TimeSpan Timeout { get; set; }
 
+		/// <summary>
+		/// Gets the collection of request headers.
+		/// </summary>
 		public IDictionary<HttpRequestHeader, string> Headers { get; private set; }
 
+		/// <summary>
+		/// Convenience method for issuing an HTTP GET request.
+		/// </summary>
+		/// <param name="resource"></param>
+		/// <param name="args"></param>
+		/// <returns></returns>
 		public Response Get(string resource, Dictionary<string, object> args)
 		{
 			return CreateRequest(resource, args).Get();
 		}
 
+		/// <summary>
+		/// Convenience method for issuing an HTTP GET request.
+		/// </summary>
+		/// <param name="resource"></param>
+		/// <param name="args"></param>
+		/// <returns></returns>
 		public Response Get(string resource, string args)
 		{
 			return CreateRequest(resource, args).Get();
 		}
 
+		/// <summary>
+		/// Creates a request for the specified resource.
+		/// </summary>
+		/// <param name="resource"></param>
+		/// <returns></returns>
 		public Request CreateRequest(string resource)
 		{
 			return new Request(this, resource, null);
 		}
 
+		/// <summary>
+		/// Creates a request for the specified resource, with the specified query string arguments.
+		/// </summary>
+		/// <param name="resource"></param>
+		/// <param name="args"></param>
+		/// <returns></returns>
 		public Request CreateRequest(string resource, string args)
 		{
 			return new Request(this, resource, args);
 		}
 
+		/// <summary>
+		/// Creates a request for the specified resource, with the specified query string arguments.
+		/// </summary>
+		/// <param name="resource"></param>
+		/// <param name="args"></param>
+		/// <returns></returns>
 		public Request CreateRequest(string resource, Dictionary<string, object> args)
 		{
 			return new Request(this, resource, QueryString(args));
 		}
+
+		#endregion
+
+		#region Helpers
 
 		private string QueryString(Dictionary<string, object> args)
 		{
@@ -258,5 +437,7 @@ namespace ClearCanvas.Common.Rest
 				args.Select(kvp => string.Format("{0}={1}", kvp.Key, HttpUtility.UrlEncode(kvp.Value.ToString()))
 				).ToArray());
 		}
+
+		#endregion
 	}
 }
