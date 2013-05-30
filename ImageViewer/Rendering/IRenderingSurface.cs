@@ -101,5 +101,9 @@ namespace ClearCanvas.ImageViewer.Rendering
 			set;
 		}
 
+		/// <summary>
+		/// Fired to notify that the contents of the surface have updated independently of the contents of the <see cref="ITile"/>.
+		/// </summary>
+		event EventHandler Invalidated;
 	}
 }

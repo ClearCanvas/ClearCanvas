@@ -105,6 +105,8 @@ namespace ClearCanvas.ImageViewer.Rendering
 			set { _clipRectangle = value; }
 		}
 
+		public event EventHandler Invalidated;
+
 		#endregion
 
 		public ImageBuffer ImageBuffer

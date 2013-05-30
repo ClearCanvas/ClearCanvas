@@ -141,10 +141,16 @@ namespace ClearCanvas.ImageViewer.View.WinForms
 						throw new Exception(SR.ExceptionPresentationImageNotAssociatedWithARenderer);
 
 					_surface = renderer.GetRenderingSurface(this.Handle, this.Width, this.Height);
+					_surface.Invalidated += OnSurfaceInvalidated;
 				}
 
 				return _surface;
 			}
+		}
+
+		private void OnSurfaceInvalidated(object sender, EventArgs e)
+		{
+			Invalidate();
 		}
 
 		public void SetParentImageBoxRectangle(Rectangle parentImageBoxRectangle, int parentImageBoxBorderWidth, bool suppressDraw)
@@ -245,7 +251,10 @@ namespace ClearCanvas.ImageViewer.View.WinForms
 			try
 			{
 				if (_surface != null)
+				{
+					_surface.Invalidated -= OnSurfaceInvalidated;
 					_surface.Dispose();
+				}
 			}
 			finally
 			{
