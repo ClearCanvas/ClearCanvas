@@ -22,6 +22,8 @@
 
 #endregion
 
+#if UNIT_TESTS
+
 using System;
 using NUnit.Framework;
 
@@ -71,3 +73,5 @@ namespace ClearCanvas.ImageServer.Common.Utilities.Test
         }
     }
 }
+
+#endif
