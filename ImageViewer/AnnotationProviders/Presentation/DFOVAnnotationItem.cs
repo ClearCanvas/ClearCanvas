@@ -52,7 +52,7 @@ namespace ClearCanvas.ImageViewer.AnnotationProviders.Presentation
 			if (spatialTransformProvider == null)
 				return String.Empty;
 
-			ImageSpatialTransform transform = spatialTransformProvider.SpatialTransform as ImageSpatialTransform;
+			IImageSpatialTransform transform = spatialTransformProvider.SpatialTransform as IImageSpatialTransform;
 			if (transform == null)
 				return String.Empty;
 

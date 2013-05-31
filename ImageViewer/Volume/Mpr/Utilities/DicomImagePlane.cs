@@ -49,7 +49,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr.Utilities
 		private static int _referenceCount;
 
 		private IPresentationImage _sourceImage;
-		private SpatialTransform _sourceImageTransform;
+		private ISpatialTransform _sourceImageTransform;
 		private Frame _sourceFrame;
 
 		private Vector3D _normal;
@@ -98,7 +98,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr.Utilities
 				return null;
 
 			Frame frame = GetFrame(sourceImage);
-			SpatialTransform transform = GetSpatialTransform(sourceImage);
+			ISpatialTransform transform = GetSpatialTransform(sourceImage);
 
 			if (transform == null || frame == null)
 				return null;
@@ -126,10 +126,10 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr.Utilities
 
 		#region Private Methods
 
-		private static SpatialTransform GetSpatialTransform(IPresentationImage image)
+		private static ISpatialTransform GetSpatialTransform(IPresentationImage image)
 		{
 			if (image is ISpatialTransformProvider)
-				return ((ISpatialTransformProvider)image).SpatialTransform as SpatialTransform;
+				return ((ISpatialTransformProvider)image).SpatialTransform;
 
 			return null;
 		}
@@ -212,7 +212,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr.Utilities
 			get { return _sourceImage; }
 		}
 
-		public SpatialTransform SourceImageTransform
+		public ISpatialTransform SourceImageTransform
 		{
 			get { return _sourceImageTransform; }
 		}

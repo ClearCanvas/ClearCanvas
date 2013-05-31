@@ -22,23 +22,19 @@
 
 #endregion
 
-using ClearCanvas.Desktop;
-
 namespace ClearCanvas.ImageViewer.Graphics
 {
 	/// <summary>
 	/// A specialization of the <see cref="BasicImageOperation"/> where the
 	/// originator is an <see cref="ISpatialTransform"/>.
 	/// </summary>
-	public class SpatialTransformImageOperation : BasicImageOperation
+	public class SpatialTransformImageOperation : BasicImageOperation<ISpatialTransform>
 	{
 		/// <summary>
 		/// Mandatory constructor.
 		/// </summary>
 		public SpatialTransformImageOperation(ApplyDelegate applyDelegate)
-			: base(GetTransform, applyDelegate)
-		{
-		}
+			: base(GetTransform, applyDelegate) {}
 
 		/// <summary>
 		/// Returns the <see cref="ISpatialTransform"/> associated with the 
@@ -50,15 +46,15 @@ namespace ClearCanvas.ImageViewer.Graphics
 		/// without checking for null from within the <see cref="BasicImageOperation.ApplyDelegate"/> 
 		/// specified in the constructor.
 		/// </remarks>
-		public override IMemorable GetOriginator(IPresentationImage image)
+		public override ISpatialTransform GetOriginator(IPresentationImage image)
 		{
-			return base.GetOriginator(image) as ISpatialTransform;
+			return base.GetOriginator(image);
 		}
 
-		private static IMemorable GetTransform(IPresentationImage image)
+		private static ISpatialTransform GetTransform(IPresentationImage image)
 		{
 			if (image is ISpatialTransformProvider)
-				return ((ISpatialTransformProvider)image).SpatialTransform;
+				return ((ISpatialTransformProvider) image).SpatialTransform;
 
 			return null;
 		}

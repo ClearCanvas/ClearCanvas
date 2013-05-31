@@ -53,7 +53,7 @@ namespace ClearCanvas.ImageViewer.Graphics
 		public override void Validate(ISpatialTransform transform)
 		{
 			PointF xVector = new PointF(100, 0);
-			SizeF xVectorTransformed = ((SpatialTransform)transform).ConvertToDestination(new SizeF(xVector));
+			SizeF xVectorTransformed = transform.ConvertToDestination(new SizeF(xVector));
 
 			//figure out where the source x-axis went in destination
 			int rotation = (int) Math.Round(Vector.SubtendedAngle(xVectorTransformed.ToPointF(), PointF.Empty, xVector));

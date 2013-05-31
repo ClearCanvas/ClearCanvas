@@ -94,7 +94,7 @@ namespace ClearCanvas.ImageViewer.Clipboard.ImageExport
 					throw new ArgumentException("The image does not contain pixel spacing information.  TrueSize export is not possible.");
 			}
 
-			ImageSpatialTransform transform = ((ISpatialTransformProvider) image).SpatialTransform as ImageSpatialTransform;
+			IImageSpatialTransform transform = ((ISpatialTransformProvider) image).SpatialTransform as IImageSpatialTransform;
 			if (transform == null)
 				throw new ArgumentException("The image must have a valid ImageSpatialTransform in order to be exported.");
 
@@ -167,7 +167,7 @@ namespace ClearCanvas.ImageViewer.Clipboard.ImageExport
 
 		private static Bitmap DrawCompleteImageToBitmap(IPresentationImage image, float scale, float dpi)
 		{
-			ImageSpatialTransform transform = (ImageSpatialTransform)((ISpatialTransformProvider)image).SpatialTransform;
+			IImageSpatialTransform transform = (IImageSpatialTransform)((ISpatialTransformProvider)image).SpatialTransform;
 			object restoreMemento = transform.CreateMemento();
 			try
 			{
@@ -192,7 +192,7 @@ namespace ClearCanvas.ImageViewer.Clipboard.ImageExport
 
 		private static Bitmap DrawWysiwygImageToBitmap(IPresentationImage image, Rectangle displayRectangle, float scale, float dpi)
 		{
-			ImageSpatialTransform transform = (ImageSpatialTransform) ((ISpatialTransformProvider) image).SpatialTransform;
+			IImageSpatialTransform transform = (IImageSpatialTransform) ((ISpatialTransformProvider) image).SpatialTransform;
 			object restoreMemento = transform.CreateMemento();
 			try
 			{
@@ -219,7 +219,7 @@ namespace ClearCanvas.ImageViewer.Clipboard.ImageExport
 			const double mmPerInch = 25.4;
 			const int pxLength = 100;
 
-			var transform = (ImageSpatialTransform) ((ISpatialTransformProvider) image).SpatialTransform;
+			var transform = (IImageSpatialTransform) ((ISpatialTransformProvider) image).SpatialTransform;
 			var restoreMemento = transform.CreateMemento();
 			try
 			{

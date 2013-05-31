@@ -53,7 +53,7 @@ namespace ClearCanvas.ImageViewer.Graphics
 		/// Gets or sets the scale.
 		/// </summary>
 		float Scale { get; set; }
-		
+
 		/// <summary>
 		/// Gets or sets the translation in the x-direction.
 		/// </summary>
@@ -80,5 +80,58 @@ namespace ClearCanvas.ImageViewer.Graphics
 		/// Gets the scale relative to the root of the scene graph.
 		/// </remarks>
 		float CumulativeScale { get; }
+
+		/// <summary>
+		/// Resets all transform parameters to their defaults.
+		/// </summary>
+		void Initialize();
+
+		/// <summary>
+		/// Converts a <see cref="PointF"/> from source to destination coordinates.
+		/// </summary>
+		/// <param name="sourcePoint"></param>
+		/// <returns></returns>
+		PointF ConvertToDestination(PointF sourcePoint);
+
+		/// <summary>
+		/// Converts a <see cref="PointF"/> from destination to source coordinates.
+		/// </summary>
+		/// <param name="destinationPoint"></param>
+		/// <returns></returns>
+		PointF ConvertToSource(PointF destinationPoint);
+
+		/// <summary>
+		/// Converts a <see cref="RectangleF"/> from source to destination coordinates.
+		/// </summary>
+		/// <param name="sourceRectangle"></param>
+		/// <returns></returns>
+		RectangleF ConvertToDestination(RectangleF sourceRectangle);
+
+		/// <summary>
+		/// Converts a <see cref="RectangleF"/> from destination to source coordinates.
+		/// </summary>
+		/// <param name="destinationRectangle"></param>
+		/// <returns></returns>
+		RectangleF ConvertToSource(RectangleF destinationRectangle);
+
+		/// <summary>
+		/// Converts a <see cref="SizeF"/> from source to destination coordinates.
+		/// </summary>
+		/// <remarks>
+		/// Only scale and rotation are applied when converting sizes; this is equivalent
+		/// to converting a direction vector, as direction vectors have only magnitude
+		/// and direction information, but no position.
+		/// </remarks>
+		SizeF ConvertToDestination(SizeF sourceDimensions);
+
+		/// <summary>
+		/// Converts a <see cref="SizeF"/> from destination to source coordinates.
+		/// </summary>
+		/// <remarks>
+		/// Only scale and rotation are applied when converting sizes; this is equivalent
+		/// to converting a direction vector, as direction vectors have only magnitude
+		/// and direction information, but no position.
+		/// </remarks>
+		SizeF ConvertToSource(SizeF destinationDimensions);
 	}
 }

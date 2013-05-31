@@ -32,7 +32,7 @@ namespace ClearCanvas.ImageViewer
 	// For now, though, just leave it, since it's code that's already been released.
 
 	/// <summary>
-	/// A simple way to implement an ImageOperation, using delegates.
+	/// A simple way to implement an <see cref="ImageOperation"/>, using delegates.
 	/// </summary>
 	public class BasicImageOperation : ImageOperation
 	{
@@ -72,9 +72,32 @@ namespace ClearCanvas.ImageViewer
 		/// <summary>
 		/// Applies the operation to the input <see cref="IPresentationImage"/>.
 		/// </summary>
-		public sealed override void Apply(IPresentationImage image)
+		public override sealed void Apply(IPresentationImage image)
 		{
 			_applyDelegate(image);
+		}
+	}
+
+	/// <summary>
+	/// A simple way to implement a strongly-typed <see cref="ImageOperation"/>, using delegates.
+	/// </summary>
+	public class BasicImageOperation<TOriginator> : BasicImageOperation
+		where TOriginator : IMemorable
+	{
+		/// <summary>
+		/// Defines a delegate used to get the originator for a given <see cref="IPresentationImage"/>.
+		/// </summary>
+		public new delegate TOriginator GetOriginatorDelegate(IPresentationImage image);
+
+		public BasicImageOperation(GetOriginatorDelegate getOriginatorDelegate, ApplyDelegate applyDelegate)
+			: base(i => getOriginatorDelegate(i), applyDelegate) {}
+
+		/// <summary>
+		/// Gets the originator for the input <see cref="IPresentationImage"/>.
+		/// </summary>
+		public new virtual TOriginator GetOriginator(IPresentationImage image)
+		{
+			return (TOriginator) base.GetOriginator(image);
 		}
 	}
 }

@@ -750,11 +750,11 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 							break;
 					}
 
-					if (centerDisplay && spatialTransform is SpatialTransform)
+					if (centerDisplay)
 					{
 						// compute translation so that the displayRect is centered in the clientRect
 						var displayCentre = GetRectangleCenter(displayRect);
-						var clientCentre = ((SpatialTransform) spatialTransform).ConvertToSource(GetRectangleCenter(image.ClientRectangle));
+						var clientCentre = spatialTransform.ConvertToSource(GetRectangleCenter(image.ClientRectangle));
 						spatialTransform.TranslationX = clientCentre.X - displayCentre.X;
 						spatialTransform.TranslationY = clientCentre.Y - displayCentre.Y;
 					}

@@ -129,10 +129,10 @@ namespace ClearCanvas.ImageViewer.AdvancedImaging.Fusion.Utilities
 
 		#region Private Methods
 
-		private static SpatialTransform GetSpatialTransform(IPresentationImage image)
+		private static ISpatialTransform GetSpatialTransform(IPresentationImage image)
 		{
 			if (image is ISpatialTransformProvider)
-				return ((ISpatialTransformProvider)image).SpatialTransform as SpatialTransform;
+				return ((ISpatialTransformProvider)image).SpatialTransform;
 
 			return null;
 		}

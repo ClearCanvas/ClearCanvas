@@ -221,7 +221,7 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 		{
 			if (base.SelectedSpatialTransformProvider != null && base.SelectedPresentationImage is PresentationImage)
 			{
-				if (base.SelectedSpatialTransformProvider.SpatialTransform is ImageSpatialTransform)
+				if (base.SelectedSpatialTransformProvider.SpatialTransform is IImageSpatialTransform)
 				{
 					Enabled = true;
 					return;

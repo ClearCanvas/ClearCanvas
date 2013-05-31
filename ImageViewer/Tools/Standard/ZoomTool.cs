@@ -102,9 +102,9 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
             }	
 		}
 
-		private ImageSpatialTransform GetSelectedImageTransform()
+		private IImageSpatialTransform GetSelectedImageTransform()
 		{
-			return _operation.GetOriginator(this.SelectedPresentationImage) as ImageSpatialTransform;
+			return _operation.GetOriginator(this.SelectedPresentationImage) as IImageSpatialTransform;
 		}
 
 		private bool CanZoom()
@@ -123,7 +123,7 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 			if (!CanZoom())
 				return;
 
-			ImageSpatialTransform originator = GetSelectedImageTransform();
+			IImageSpatialTransform originator = GetSelectedImageTransform();
 			_applicator = new ImageOperationApplicator(this.SelectedPresentationImage, _operation);
 			_memorableCommand = new MemorableUndoableCommand(originator);
 			_memorableCommand.BeginState = originator.CreateMemento();

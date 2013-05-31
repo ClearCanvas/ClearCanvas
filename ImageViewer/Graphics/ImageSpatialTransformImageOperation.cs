@@ -22,8 +22,6 @@
 
 #endregion
 
-using ClearCanvas.Desktop;
-
 namespace ClearCanvas.ImageViewer.Graphics
 {
 	/// <summary>
@@ -36,9 +34,7 @@ namespace ClearCanvas.ImageViewer.Graphics
 		/// Mandatory constructor.
 		/// </summary>
 		public ImageSpatialTransformImageOperation(ApplyDelegate applyDelegate)
-			: base(applyDelegate)
-		{
-		}
+			: base(applyDelegate) {}
 
 		/// <summary>
 		/// Returns the <see cref="IImageSpatialTransform"/> associated with the 
@@ -46,13 +42,13 @@ namespace ClearCanvas.ImageViewer.Graphics
 		/// </summary>
 		/// <remarks>
 		/// When used in conjunction with an <see cref="ImageOperationApplicator"/>,
-		/// it is always safe to cast the return value directly to <see cref="ImageSpatialTransform"/>
+		/// it is always safe to cast the return value directly to <see cref="IImageSpatialTransform"/>
 		/// without checking for null from within the <see cref="BasicImageOperation.ApplyDelegate"/> 
 		/// specified in the constructor.
 		/// </remarks>
-		public override IMemorable GetOriginator(IPresentationImage image)
+		public override ISpatialTransform GetOriginator(IPresentationImage image)
 		{
-			return base.GetOriginator(image) as ImageSpatialTransform;
+			return base.GetOriginator(image) as IImageSpatialTransform;
 		}
 	}
 }
