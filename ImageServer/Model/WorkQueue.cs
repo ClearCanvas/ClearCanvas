@@ -24,10 +24,8 @@
 
 using System;
 using System.Collections.Generic;
-using ClearCanvas.Common;
 using ClearCanvas.Enterprise.Core;
 using ClearCanvas.ImageServer.Common;
-using ClearCanvas.ImageServer.Common.Utilities;
 using ClearCanvas.ImageServer.Common.WorkQueue;
 using ClearCanvas.ImageServer.Model.EntityBrokers;
 
@@ -59,7 +57,6 @@ namespace ClearCanvas.ImageServer.Model
 
                 }    
             }
-            
         }
 
 
@@ -70,12 +67,12 @@ namespace ClearCanvas.ImageServer.Model
         /// <returns></returns>
         public bool Delete(IPersistenceContext context)
         {
-            IWorkQueueUidEntityBroker workQueueUidBroker = context.GetBroker<IWorkQueueUidEntityBroker>();
-            WorkQueueUidSelectCriteria criteria = new WorkQueueUidSelectCriteria();
+            var workQueueUidBroker = context.GetBroker<IWorkQueueUidEntityBroker>();
+            var criteria = new WorkQueueUidSelectCriteria();
             criteria.WorkQueueKey.EqualTo(GetKey());
             workQueueUidBroker.Delete(criteria);
 
-            IWorkQueueEntityBroker workQueueBroker = context.GetBroker<IWorkQueueEntityBroker>();
+            var workQueueBroker = context.GetBroker<IWorkQueueEntityBroker>();
             return workQueueBroker.Delete(GetKey());
         }
 
@@ -138,7 +135,7 @@ namespace ClearCanvas.ImageServer.Model
             set { _study = value; }
         }
 
-        public WorkQueueData DeserializedData
+        public WorkQueueData SerializeData
         {
             get
             {
@@ -154,6 +151,7 @@ namespace ClearCanvas.ImageServer.Model
                     return null;
                 }
             }
+            set { Data = ImageServerSerializer.SerializeWorkQueueDataToXmlDocument(value); }
         }
     }
 }

@@ -24,29 +24,48 @@
 
 using System;
 using ClearCanvas.ImageServer.Common;
-using ClearCanvas.ImageServer.Common.WorkQueue;
+using ClearCanvas.ImageServer.Common.ExternalRequest;
 
 namespace ClearCanvas.ImageServer.Model
 {
-    public partial class WorkQueueUid
+    public partial class ExternalRequestQueue
     {
-        public WorkQueueUidData SerializeWorkQueueUidData
+        public ImageServerExternalRequestState SerializeState
         {
             get
             {
-                if (WorkQueueUidData == null)
+                if (StateXml == null)
                     return null;
 
                 try
                 {
-                    return ImageServerSerializer.DeserializeWorkQueueUidData(WorkQueueUidData);
+                    return ImageServerSerializer.DeserializeExternalRequestState(StateXml);
                 }
                 catch (Exception)
                 {
                     return null;
                 }
             }
-            set { WorkQueueUidData = ImageServerSerializer.SerializeWorkQueueUidDataToXmlDocument(value); }
+            set { StateXml = ImageServerSerializer.SerializeExternalRequestStateToXmlDocument(value); }
+        }
+
+        public ImageServerExternalRequest SerializeRequest
+        {
+            get
+            {
+                if (RequestXml == null)
+                    return null;
+
+                try
+                {
+                    return ImageServerSerializer.DeserializeExternalRequest(RequestXml);
+                }
+                catch (Exception)
+                {
+                    return null;
+                }
+            }
+            set { RequestXml = ImageServerSerializer.SerializeExternalRequestToXmlDocument(value); }
         }
     }
 }

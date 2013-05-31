@@ -278,6 +278,7 @@
     <Compile Include="EntityBrokers\WorkQueueUidSelectCriteria.gen.cs" />
     <Compile Include="EntityBrokers\WorkQueueUidUpdateColumns.gen.cs" />
     <Compile Include="EntityBrokers\WorkQueueUpdateColumns.gen.cs" />
+    <Compile Include="ExternalRequestQueue.cs" />
     <Compile Include="ExternalRequestQueue.gen.cs" />
     <Compile Include="ExternalRequestQueueStatusEnum.gen.cs" />
     <Compile Include="Filesystem.cs" />
