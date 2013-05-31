@@ -147,8 +147,15 @@ namespace ClearCanvas.ImageServer.Core.Process
             {
                 Platform.Log(LogLevel.Info, "Duplicate Report received, overwriting {0}", result.SopInstanceUid);
                 SaveDuplicate(context, file);
+                var uidData = new WorkQueueUidData
+                    {
+                        Extension = ServerPlatform.DuplicateFileExtension,
+                        GroupId = context.Group
+                    };
+                if (context.Request != null)
+                    uidData.OperationToken = context.Request.OperationToken;
                 context.CommandProcessor.AddCommand(
-                    new UpdateWorkQueueCommand(file, context.StudyLocation, true, ServerPlatform.DuplicateFileExtension, context.Group, data, context.Request));
+                    new UpdateWorkQueueCommand(file, context.StudyLocation, true, data, uidData, context.Request));
                 return result;
             }
 
@@ -157,7 +164,15 @@ namespace ClearCanvas.ImageServer.Core.Process
                 Platform.Log(LogLevel.Warn, "Duplicate instance received for study {0} on Partition {1}. Duplicate policy overridden. Will overwrite {2}", 
                                 result.StudyInstanceUid, context.StudyLocation.ServerPartition.AeTitle, result.SopInstanceUid);
                 SaveDuplicate(context, file);
-                context.CommandProcessor.AddCommand(new UpdateWorkQueueCommand(file, context.StudyLocation, true, ServerPlatform.DuplicateFileExtension, context.Group, data, context.Request));
+                var uidData = new WorkQueueUidData
+                {
+                    Extension = ServerPlatform.DuplicateFileExtension,
+                    GroupId = context.Group
+                };
+                if (context.Request != null)
+                    uidData.OperationToken = context.Request.OperationToken;
+
+                context.CommandProcessor.AddCommand(new UpdateWorkQueueCommand(file, context.StudyLocation, true, data, uidData, context.Request));
                 return result;
             }
             else
@@ -178,8 +193,16 @@ namespace ClearCanvas.ImageServer.Core.Process
                 if (context.StudyLocation.ServerPartition.DuplicateSopPolicyEnum.Equals(DuplicateSopPolicyEnum.CompareDuplicates))
                 {
                     SaveDuplicate(context, file);
+                    var uidData = new WorkQueueUidData
+                        {
+                            Extension = ServerPlatform.DuplicateFileExtension,
+                            GroupId = context.Group
+                        };
+                if (context.Request != null)
+                    uidData.OperationToken = context.Request.OperationToken;
+
                     context.CommandProcessor.AddCommand(
-                        new UpdateWorkQueueCommand(file, context.StudyLocation, true, ServerPlatform.DuplicateFileExtension, context.Group, data, context.Request));
+                        new UpdateWorkQueueCommand(file, context.StudyLocation, true, data, uidData, context.Request));
                 }
                 else
                 {

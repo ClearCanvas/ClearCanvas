@@ -946,6 +946,7 @@ CREATE TABLE [dbo].[WorkQueueUid](
 	[FailureCount] [smallint] NOT NULL CONSTRAINT [DF_WorkQueueUid_FailureCount]  DEFAULT ((0)),
 	[GroupID] [varchar] (64) NULL,
 	[RelativePath] [varchar] (256) NULL,
+	[WorkQueueUidData] [xml] NULL
  CONSTRAINT [PK_WorkQueueUid] PRIMARY KEY NONCLUSTERED 
 (
 	[GUID] ASC

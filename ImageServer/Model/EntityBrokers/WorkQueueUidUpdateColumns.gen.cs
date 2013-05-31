@@ -41,6 +41,11 @@ namespace ClearCanvas.ImageServer.Model.EntityBrokers
         {
             set { SubParameters["WorkQueueKey"] = new EntityUpdateColumn<ServerEntityKey>("WorkQueueKey", value); }
         }
+        [EntityFieldDatabaseMappingAttribute(TableName="WorkQueueUid", ColumnName="FailureCount")]
+        public Int16 FailureCount
+        {
+            set { SubParameters["FailureCount"] = new EntityUpdateColumn<Int16>("FailureCount", value); }
+        }
         [EntityFieldDatabaseMappingAttribute(TableName="WorkQueueUid", ColumnName="Failed")]
         public Boolean Failed
         {
@@ -51,10 +56,10 @@ namespace ClearCanvas.ImageServer.Model.EntityBrokers
         {
             set { SubParameters["Duplicate"] = new EntityUpdateColumn<Boolean>("Duplicate", value); }
         }
-        [EntityFieldDatabaseMappingAttribute(TableName="WorkQueueUid", ColumnName="FailureCount")]
-        public Int16 FailureCount
+        [EntityFieldDatabaseMappingAttribute(TableName="WorkQueueUid", ColumnName="Extension")]
+        public String Extension
         {
-            set { SubParameters["FailureCount"] = new EntityUpdateColumn<Int16>("FailureCount", value); }
+            set { SubParameters["Extension"] = new EntityUpdateColumn<String>("Extension", value); }
         }
         [EntityFieldDatabaseMappingAttribute(TableName="WorkQueueUid", ColumnName="GroupID")]
         public String GroupID
@@ -66,10 +71,10 @@ namespace ClearCanvas.ImageServer.Model.EntityBrokers
         {
             set { SubParameters["RelativePath"] = new EntityUpdateColumn<String>("RelativePath", value); }
         }
-        [EntityFieldDatabaseMappingAttribute(TableName="WorkQueueUid", ColumnName="Extension")]
-        public String Extension
+        [EntityFieldDatabaseMappingAttribute(TableName="WorkQueueUid", ColumnName="WorkQueueUidData")]
+        public XmlDocument WorkQueueUidData
         {
-            set { SubParameters["Extension"] = new EntityUpdateColumn<String>("Extension", value); }
+            set { SubParameters["WorkQueueUidData"] = new EntityUpdateColumn<XmlDocument>("WorkQueueUidData", value); }
         }
        [DicomField(DicomTags.SeriesInstanceUid, DefaultValue = DicomFieldDefault.Null)]
         [EntityFieldDatabaseMappingAttribute(TableName="WorkQueueUid", ColumnName="SeriesInstanceUid")]

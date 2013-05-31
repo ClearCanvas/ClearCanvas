@@ -402,6 +402,7 @@
     <Compile Include="Parameters\InsertWorkQueueParameters.cs" />
     <Compile Include="WorkQueueTypeEnum.gen.cs" />
     <Compile Include="WorkQueueTypeProperties.gen.cs" />
+    <Compile Include="WorkQueueUid.cs" />
     <Compile Include="WorkQueueUid.gen.cs" />
   </ItemGroup>
   <ItemGroup>

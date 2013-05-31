@@ -23,16 +23,30 @@
 #endregion
 
 using System;
-using ClearCanvas.Common.Serialization;
+using ClearCanvas.ImageServer.Common;
+using ClearCanvas.ImageServer.Common.WorkQueue;
 
-namespace ClearCanvas.ImageServer.Common.WorkQueue
+namespace ClearCanvas.ImageServer.Model
 {
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
-    public class WorkQueueDataTypeAttribute : PolymorphicDataContractAttribute
+    public partial class WorkQueueUid
     {
-        public WorkQueueDataTypeAttribute(string dataContractGuid)
-            : base(dataContractGuid)
+        public WorkQueueUidData DeserializedWorkQueueUidData
         {
+            get
+            {
+                if (WorkQueueUidData == null)
+                    return null;
+
+                try
+                {
+                    return ImageServerSerializer.DeserializeWorkQueueUidData(WorkQueueUidData);
+                }
+                catch (Exception)
+                {
+                    return null;
+                }
+            }
+            set { WorkQueueUidData = ImageServerSerializer.SerializeWorkQueueUidDataToXmlDocument(value); }
         }
     }
 }

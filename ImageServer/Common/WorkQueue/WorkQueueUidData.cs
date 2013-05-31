@@ -22,17 +22,20 @@
 
 #endregion
 
-using System;
 using ClearCanvas.Common.Serialization;
 
 namespace ClearCanvas.ImageServer.Common.WorkQueue
 {
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
-    public class WorkQueueDataTypeAttribute : PolymorphicDataContractAttribute
+
+    [WorkQueueDataType("947CA259-E3A7-409F-B51D-12D358D01B13")]
+    public class WorkQueueUidData : DataContractBase
     {
-        public WorkQueueDataTypeAttribute(string dataContractGuid)
-            : base(dataContractGuid)
-        {
-        }
+        public string OperationToken { get; set; }
+
+        public string GroupId { get; set; }
+
+        public string RelativePath { get; set; }
+
+        public string Extension { get; set; }
     }
 }

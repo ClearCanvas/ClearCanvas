@@ -1217,7 +1217,8 @@ CREATE PROCEDURE [dbo].[InsertWorkQueue]
 	@WorkQueueGroupID varchar(64) = null,
 	@UidGroupID varchar(64) = null,
 	@UidRelativePath varchar(256) = null,
-	@ExternalRequestQueueGUID uniqueidentifier = null
+	@ExternalRequestQueueGUID uniqueidentifier = null,
+	@WorkQueueUidData xml = null
 AS
 BEGIN
 	-- SET NOCOUNT ON added to prevent extra result sets from
@@ -1276,8 +1277,8 @@ BEGIN
 
 	if @SeriesInstanceUid is not null or @SopInstanceUid is not null
 	BEGIN
-		INSERT into WorkQueueUid(GUID, WorkQueueGUID, SeriesInstanceUid, SopInstanceUid, Duplicate, Extension, GroupID, RelativePath)
-			values	(newid(), @WorkQueueGUID, @SeriesInstanceUid, @SopInstanceUid, @Duplicate, @Extension, @UidGroupID, @UidRelativePath)
+		INSERT into WorkQueueUid(GUID, WorkQueueGUID, SeriesInstanceUid, SopInstanceUid, Duplicate, Extension, GroupID, RelativePath, WorkQueueUidData)
+			values	(newid(), @WorkQueueGUID, @SeriesInstanceUid, @SopInstanceUid, @Duplicate, @Extension, @UidGroupID, @UidRelativePath, @WorkQueueUidData)
 	END
 
 	COMMIT TRANSACTION

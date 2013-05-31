@@ -44,21 +44,12 @@ namespace ClearCanvas.ImageServer.Core.Command
         private readonly StudyStorageLocation _storageLocation;
         private WorkQueue _insertedWorkQueue;
         private readonly bool _duplicate;
-        private readonly string _extension;
-    	private readonly string _uidGroupId;
         private readonly WorkQueueData _data;
+        private readonly WorkQueueUidData _uidData;
         private readonly ExternalRequestQueue _request;
         #endregion
 
-        public UpdateWorkQueueCommand(DicomMessageBase message,
-                        StudyStorageLocation location,
-                        bool duplicate, WorkQueueData data = null, ExternalRequestQueue request=null)
-            : this(message, location, duplicate, null, null, data, request)
-        {
-
-        }
-
-        public UpdateWorkQueueCommand(DicomMessageBase message, StudyStorageLocation location, bool duplicate, string extension, string uidGroupId, WorkQueueData data, ExternalRequestQueue request)
+        public UpdateWorkQueueCommand(DicomMessageBase message, StudyStorageLocation location, bool duplicate, WorkQueueData data=null, WorkQueueUidData uidData=null, ExternalRequestQueue request=null)
             : base("Update/Insert a WorkQueue Entry")
         {
             Platform.CheckForNullReference(message, "Dicom Message object");
@@ -67,10 +58,9 @@ namespace ClearCanvas.ImageServer.Core.Command
             _message = message;
             _storageLocation = location;
             _duplicate = duplicate;
-            _extension = extension;
-            _uidGroupId = uidGroupId;
             _data = data;
             _request = request;
+            _uidData = uidData;
         }
 
         public WorkQueue InsertedWorkQueue
@@ -89,7 +79,7 @@ namespace ClearCanvas.ImageServer.Core.Command
                                 SeriesInstanceUid = _message.DataSet[DicomTags.SeriesInstanceUid].GetString(0, String.Empty),
                                 SopInstanceUid = _message.DataSet[DicomTags.SopInstanceUid].GetString(0, String.Empty),
                                 ScheduledTime = Platform.Time,
-                                WorkQueueGroupID = _uidGroupId
+                                
                             };
             if (_data != null)
             {
@@ -99,12 +89,17 @@ namespace ClearCanvas.ImageServer.Core.Command
             {
                 parms.ExternalRequestQueueKey = _request.Key;
             }
+            if (_uidData != null)
+            {
+                parms.WorkQueueUidData = _uidData;
+                parms.Extension = _uidData.Extension;
+                parms.UidGroupID = _uidData.GroupId;
+                parms.WorkQueueGroupID = _uidData.GroupId;
+            }
 
             if (_duplicate)
             {
                 parms.Duplicate = _duplicate;
-                parms.Extension = _extension;
-                parms.UidGroupID = _uidGroupId;
             }
 
             _insertedWorkQueue = insert.FindOne(parms);
