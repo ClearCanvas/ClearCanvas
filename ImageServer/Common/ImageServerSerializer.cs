@@ -256,6 +256,35 @@ namespace ClearCanvas.ImageServer.Common
         }
         #endregion
 
+        #region WorkQueueData
+        public static string SerializeWorkQueueUidData(WorkQueueUidData data)
+        {
+            return JsmlSerializer.Serialize(data, "WorkQueueUidData",
+                new JsmlSerializer.SerializeOptions { Hook = WorkItemDataHook, DataContractTest = IsWorkQueueDataContract, DataMemberTest = IsXmlSerializationDataMember });
+        }
+
+        public static XmlDocument SerializeWorkQueueUidDataToXmlDocument(WorkQueueUidData data)
+        {
+            var s = JsmlSerializer.Serialize(data, "WorkQueueUidData",
+                      new JsmlSerializer.SerializeOptions { Hook = WorkItemDataHook, DataContractTest = IsWorkQueueDataContract, DataMemberTest = IsXmlSerializationDataMember });
+            var d = new XmlDocument();
+            d.LoadXml(s);
+            return d;
+        }
+
+        public static WorkQueueUidData DeserializeWorkQueueUidData(string data)
+        {
+            return JsmlSerializer.Deserialize<WorkQueueUidData>(data,
+                new JsmlSerializer.DeserializeOptions { Hook = WorkItemDataHook, DataContractTest = IsWorkQueueDataContract, DataMemberTest = IsXmlSerializationDataMember });
+        }
+
+        public static WorkQueueUidData DeserializeWorkQueueUidData(XmlDocument data)
+        {
+            return JsmlSerializer.Deserialize<WorkQueueUidData>(data,
+                new JsmlSerializer.DeserializeOptions { Hook = WorkItemDataHook, DataContractTest = IsWorkQueueDataContract, DataMemberTest = IsXmlSerializationDataMember });
+        }
+        #endregion
+
         #region Private Static Methods
      
         private static bool IsImageServerExternalRequestContract(Type t)

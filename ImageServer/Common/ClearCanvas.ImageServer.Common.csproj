@@ -158,6 +158,7 @@
     <Compile Include="WorkQueue\WorkQueueDataTypeAttribute.cs" />
     <Compile Include="WorkQueue\WorkQueueDataTypeProvider.cs" />
     <Compile Include="WorkQueue\WorkQueueNamespace.cs" />
+    <Compile Include="WorkQueue\WorkQueueUidData.cs" />
     <Compile Include="WSHttpConfiguration.cs" />
     <Compile Include="WebServicesSettings.Designer.cs">
       <AutoGen>True</AutoGen>

@@ -41,23 +41,25 @@ namespace ClearCanvas.ImageServer.Model
         {}
         public WorkQueueUid(
              ServerEntityKey _workQueueKey_
+            ,Int16 _failureCount_
             ,Boolean _failed_
             ,Boolean _duplicate_
-            ,Int16 _failureCount_
+            ,String _extension_
             ,String _groupID_
             ,String _relativePath_
-            ,String _extension_
+            ,XmlDocument _workQueueUidData_
             ,String _seriesInstanceUid_
             ,String _sopInstanceUid_
             ):base("WorkQueueUid")
         {
             WorkQueueKey = _workQueueKey_;
+            FailureCount = _failureCount_;
             Failed = _failed_;
             Duplicate = _duplicate_;
-            FailureCount = _failureCount_;
+            Extension = _extension_;
             GroupID = _groupID_;
             RelativePath = _relativePath_;
-            Extension = _extension_;
+            WorkQueueUidData = _workQueueUidData_;
             SeriesInstanceUid = _seriesInstanceUid_;
             SopInstanceUid = _sopInstanceUid_;
         }
@@ -67,14 +69,17 @@ namespace ClearCanvas.ImageServer.Model
         [EntityFieldDatabaseMappingAttribute(TableName="WorkQueueUid", ColumnName="WorkQueueGUID")]
         public ServerEntityKey WorkQueueKey
         { get; set; }
+        [EntityFieldDatabaseMappingAttribute(TableName="WorkQueueUid", ColumnName="FailureCount")]
+        public Int16 FailureCount
+        { get; set; }
         [EntityFieldDatabaseMappingAttribute(TableName="WorkQueueUid", ColumnName="Failed")]
         public Boolean Failed
         { get; set; }
         [EntityFieldDatabaseMappingAttribute(TableName="WorkQueueUid", ColumnName="Duplicate")]
         public Boolean Duplicate
         { get; set; }
-        [EntityFieldDatabaseMappingAttribute(TableName="WorkQueueUid", ColumnName="FailureCount")]
-        public Int16 FailureCount
+        [EntityFieldDatabaseMappingAttribute(TableName="WorkQueueUid", ColumnName="Extension")]
+        public String Extension
         { get; set; }
         [EntityFieldDatabaseMappingAttribute(TableName="WorkQueueUid", ColumnName="GroupID")]
         public String GroupID
@@ -82,9 +87,11 @@ namespace ClearCanvas.ImageServer.Model
         [EntityFieldDatabaseMappingAttribute(TableName="WorkQueueUid", ColumnName="RelativePath")]
         public String RelativePath
         { get; set; }
-        [EntityFieldDatabaseMappingAttribute(TableName="WorkQueueUid", ColumnName="Extension")]
-        public String Extension
-        { get; set; }
+        [EntityFieldDatabaseMappingAttribute(TableName="WorkQueueUid", ColumnName="WorkQueueUidData")]
+        public XmlDocument WorkQueueUidData
+        { get { return _WorkQueueUidData; } set { _WorkQueueUidData = value; } }
+        [NonSerialized]
+        private XmlDocument _WorkQueueUidData;
         [DicomField(DicomTags.SeriesInstanceUid, DefaultValue = DicomFieldDefault.Null)]
         [EntityFieldDatabaseMappingAttribute(TableName="WorkQueueUid", ColumnName="SeriesInstanceUid")]
         public String SeriesInstanceUid
@@ -123,12 +130,13 @@ namespace ClearCanvas.ImageServer.Model
             var broker = update.GetBroker<IWorkQueueUidEntityBroker>();
             var updateColumns = new WorkQueueUidUpdateColumns();
             updateColumns.WorkQueueKey = entity.WorkQueueKey;
+            updateColumns.FailureCount = entity.FailureCount;
             updateColumns.Failed = entity.Failed;
             updateColumns.Duplicate = entity.Duplicate;
-            updateColumns.FailureCount = entity.FailureCount;
+            updateColumns.Extension = entity.Extension;
             updateColumns.GroupID = entity.GroupID;
             updateColumns.RelativePath = entity.RelativePath;
-            updateColumns.Extension = entity.Extension;
+            updateColumns.WorkQueueUidData = entity.WorkQueueUidData;
             updateColumns.SeriesInstanceUid = entity.SeriesInstanceUid;
             updateColumns.SopInstanceUid = entity.SopInstanceUid;
             WorkQueueUid newEntity = broker.Insert(updateColumns);

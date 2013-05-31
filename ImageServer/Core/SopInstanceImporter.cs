@@ -413,8 +413,17 @@ namespace ClearCanvas.ImageServer.Core
 
             commandProcessor.AddCommand(new SaveDicomFileCommand(path, file, true));
 
+            WorkQueueUidData uidData = null;
+            if (_context.Request != null && !string.IsNullOrEmpty(_context.Request.OperationToken))
+            {
+                uidData = new WorkQueueUidData
+                {
+                    OperationToken = _context.Request.OperationToken
+                };
+            }
+
             commandProcessor.AddCommand(
-                new UpdateWorkQueueCommand(file, studyLocation, dupImage, data, _context.Request));
+                new UpdateWorkQueueCommand(file, studyLocation, dupImage, data, uidData, _context.Request));
 
             #region SPECIAL CODE FOR TESTING
             if (Diagnostics.Settings.SimulateFileCorruption)
