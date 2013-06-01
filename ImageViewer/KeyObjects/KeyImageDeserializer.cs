@@ -75,46 +75,59 @@ namespace ClearCanvas.ImageViewer.KeyObjects
 			List<IKeyObjectContentItem> contentItems = new List<IKeyObjectContentItem>();
 
 			SrDocumentContentModuleIod srDocument = _document.SrDocumentContent;
-			foreach (IContentSequence contentItem in srDocument.ContentSequence)
-			{
-				if (contentItem.RelationshipType == RelationshipType.Contains)
-				{
-					if (contentItem.ValueType == ValueType.Image)
-					{
-						IImageReferenceMacro imageReference = contentItem;
-						string referencedSopInstanceUid = imageReference.ReferencedSopSequence.ReferencedSopInstanceUid;
-						string presentationStateSopInstanceUid = null;
+            if (srDocument.ContentSequence != null)
+            {
+                foreach (IContentSequence contentItem in srDocument.ContentSequence)
+                {
+                    if (contentItem.RelationshipType == RelationshipType.Contains)
+                    {
+                        if (contentItem.ValueType == ValueType.Image)
+                        {
+                            IImageReferenceMacro imageReference = contentItem;
+                            if (imageReference.ReferencedSopSequence == null)
+                            {
+                                Platform.Log(LogLevel.Warn, "Invalid Key Object Selection document has no Referenced SOP Sequence.");
+                                continue;
+                            }
 
-						if(imageReference.ReferencedSopSequence.ReferencedSopSequence != null)
-						{
-							presentationStateSopInstanceUid = imageReference.ReferencedSopSequence.ReferencedSopSequence.ReferencedSopInstanceUid;
-						}
+                            string referencedSopInstanceUid = imageReference.ReferencedSopSequence.ReferencedSopInstanceUid;
+                            string presentationStateSopInstanceUid = null;
 
-						string referencedFrameNumbers = imageReference.ReferencedSopSequence.ReferencedFrameNumber;
-						int[] frameNumbers;
-						if (!string.IsNullOrEmpty(referencedFrameNumbers)
-							&& DicomStringHelper.TryGetIntArray(referencedFrameNumbers, out frameNumbers) && frameNumbers.Length > 0)
-						{
-							foreach (int frameNumber in frameNumbers)
-							{
-								KeyImageContentItem item = new KeyImageContentItem(referencedSopInstanceUid, frameNumber, presentationStateSopInstanceUid, _document);
-								contentItems.Add(item);
-							}
-						}
-						else
-						{
-							KeyImageContentItem item = new KeyImageContentItem(referencedSopInstanceUid, presentationStateSopInstanceUid, _document);
-							contentItems.Add(item);
-						}
-					}
-					else
-					{
-						Platform.Log(LogLevel.Warn, "Unsupported key object selection content item of value type {0}.", contentItem.ValueType);
-						continue;
-					}
+                            if (imageReference.ReferencedSopSequence.ReferencedSopSequence != null)
+                            {
+                                presentationStateSopInstanceUid = imageReference.ReferencedSopSequence.ReferencedSopSequence.ReferencedSopInstanceUid;
+                            }
 
-				}
-			}
+                            string referencedFrameNumbers = imageReference.ReferencedSopSequence.ReferencedFrameNumber;
+                            int[] frameNumbers;
+                            if (!string.IsNullOrEmpty(referencedFrameNumbers)
+                                && DicomStringHelper.TryGetIntArray(referencedFrameNumbers, out frameNumbers) && frameNumbers.Length > 0)
+                            {
+                                foreach (int frameNumber in frameNumbers)
+                                {
+                                    KeyImageContentItem item = new KeyImageContentItem(referencedSopInstanceUid, frameNumber, presentationStateSopInstanceUid, _document);
+                                    contentItems.Add(item);
+                                }
+                            }
+                            else
+                            {
+                                KeyImageContentItem item = new KeyImageContentItem(referencedSopInstanceUid, presentationStateSopInstanceUid, _document);
+                                contentItems.Add(item);
+                            }
+                        }
+                        else
+                        {
+                            Platform.Log(LogLevel.Warn, "Unsupported key object selection content item of value type {0}.", contentItem.ValueType);
+                            continue;
+                        }
+
+                    }
+                }
+            }
+            else
+            {
+                Platform.Log(LogLevel.Warn, "Invalid Key Object Selection document has no Content Sequence.");
+            }
 
 			return contentItems.AsReadOnly();
 		}
