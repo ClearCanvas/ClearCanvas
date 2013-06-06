@@ -23,12 +23,20 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
+using System.Net;
 
 namespace ClearCanvas.ImageServer.Services.Streaming.ImageStreaming.Handlers
 {
+    public class MimeTypeProcessorError:Exception
+    {
+        public HttpStatusCode HttpError { get; private set; }
+
+        public MimeTypeProcessorError(HttpStatusCode errorCode, string message):base(message)
+        {
+            HttpError = errorCode;
+        }
+    }
+
     public class MimeTypeProcessorOutput
     {
         private string _contentType;
