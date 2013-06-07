@@ -99,5 +99,26 @@ namespace ClearCanvas.ImageServer.Common.ExternalRequest
             : base(c)
         {
         }
+
+        /// <summary>
+        /// Gets or sets the Photometric Interpretation of the identified sop instance.
+        /// </summary>
+        [DicomField(DicomTags.PhotometricInterpretation, CreateEmptyElement = false, SetNullValueIfEmpty = false)]
+        [DataMember(IsRequired = true)]
+        public string PhotometricInterpretation { get; set; }
+
+        /// <summary>
+        /// Gets or sets the Rows of the identified sop instance.
+        /// </summary>
+        [DicomField(DicomTags.Rows, CreateEmptyElement = false, SetNullValueIfEmpty = false)]
+        [DataMember(IsRequired = true)]
+        public int? Rows { get; set; }
+
+        /// <summary>
+        /// Gets or sets the Columns of the identified sop instance.
+        /// </summary>
+        [DicomField(DicomTags.Columns, CreateEmptyElement = false, SetNullValueIfEmpty = false)]
+        [DataMember(IsRequired = true)]
+        public int? Columns { get; set; }
     }
 }
