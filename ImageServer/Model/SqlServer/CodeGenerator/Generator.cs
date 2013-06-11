@@ -693,7 +693,7 @@ namespace ClearCanvas.ImageServer.Model.SqlServer.CodeGenerator
             writer.WriteLine("    using ClearCanvas.ImageServer.Enterprise;");
             writer.WriteLine("");
 
-            writer.WriteLine("   public class {0}UpdateColumns : EntityUpdateColumns", table.TableName);
+            writer.WriteLine("   public partial class {0}UpdateColumns : EntityUpdateColumns", table.TableName);
             writer.WriteLine("   {");
             writer.WriteLine("       public {0}UpdateColumns()", table.TableName);
             writer.WriteLine("       : base(\"{0}\")", table.DatabaseTableName);
