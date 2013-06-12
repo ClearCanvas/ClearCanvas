@@ -83,7 +83,6 @@
     <Compile Include="ExternalRequest\InvalidExternalRequestParameterException.cs" />
     <Compile Include="ExternalRequest\UnknownExternalRequestTypeException.cs" />
     <Compile Include="ImageServerNamespace.cs" />
-    <Compile Include="HttpServer.cs" />
     <Compile Include="ExternalRequest\ImageServerExternalRequestTypeAttribute.cs" />
     <Compile Include="ExternalRequest\ImageServerExternalRequestTypeProvider.cs" />
     <Compile Include="ProductManifestServiceSettings.Designer.cs">
@@ -186,10 +185,6 @@
     <ProjectReference Include="..\..\Enterprise\Core\ClearCanvas.Enterprise.Core.csproj">
       <Project>{431E9444-9915-4D49-B92D-9B7EC086622A}</Project>
       <Name>ClearCanvas.Enterprise.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Server\ShredHost\ClearCanvas.Server.ShredHost.csproj">
-      <Project>{8347B928-805E-42E7-B980-08D8AF1A0671}</Project>
-      <Name>ClearCanvas.Server.ShredHost</Name>
     </ProjectReference>
     <ProjectReference Include="..\Enterprise\ClearCanvas.ImageServer.Enterprise.csproj">
       <Project>{86CA6EDB-DE59-45E9-8BD8-832FBB3F8009}</Project>

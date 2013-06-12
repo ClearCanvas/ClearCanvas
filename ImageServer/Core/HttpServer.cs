@@ -27,9 +27,10 @@ using System.Net;
 using System.Web;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
+using ClearCanvas.ImageServer.Common;
 using ClearCanvas.Server.ShredHost;
 
-namespace ClearCanvas.ImageServer.Common
+namespace ClearCanvas.ImageServer.Core
 {
     /// <summary>
     /// Represents the argument associated with the event fired when a http request is received.
