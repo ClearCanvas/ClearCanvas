@@ -25,6 +25,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Dicom.Network.Scu;
@@ -66,6 +67,7 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.WebMoveStudy
             StudyXml studyXml = LoadStudyXml(StorageLocation);
             foreach (SeriesXml seriesXml in studyXml)
             {
+                var matchingSops = new List<string>();
                 // FOR SERIES LEVEL Move,
                 // Check if the series is in the WorkQueueUid list. If it is not in the list then don't include it.
 				if (seriesList.Count > 0)
@@ -77,7 +79,13 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.WebMoveStudy
 							if (uid.SeriesInstanceUid.Equals(seriesXml.SeriesInstanceUid))
 							{
 								found = true;
-								break;
+							    if (!string.IsNullOrEmpty(uid.SopInstanceUid))
+							        matchingSops.Add(uid.SopInstanceUid);
+							    else
+							    {
+                                    matchingSops.Clear();
+							        break;
+							    }
 							}
 					}
 					if (!found) continue; // don't send this series
@@ -85,18 +93,24 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.WebMoveStudy
 
             	foreach (InstanceXml instanceXml in seriesXml)
                 {
+                    if (matchingSops.Count > 0)
+                    {
+                        bool found = matchingSops.Any(uid => uid.Equals(instanceXml.SopInstanceUid));
+                        if (!found) continue; // don't send this sop
+                    }
+
                     string seriesPath = Path.Combine(studyPath, seriesXml.SeriesInstanceUid);
                     string instancePath = Path.Combine(seriesPath, instanceXml.SopInstanceUid + ServerPlatform.DicomFileExtension);
-                    StorageInstance instance = new StorageInstance(instancePath)
-                                               	{
-                                               		SopClass = instanceXml.SopClass,
-                                               		TransferSyntax = instanceXml.TransferSyntax,
-                                               		SopInstanceUid = instanceXml.SopInstanceUid,
-                                               		StudyInstanceUid = studyXml.StudyInstanceUid,
-													SeriesInstanceUid = seriesXml.SeriesInstanceUid,
-                                               		PatientId = studyXml.PatientId,
-                                               		PatientsName = studyXml.PatientsName
-                                               	};
+                    var instance = new StorageInstance(instancePath)
+                        {
+                            SopClass = instanceXml.SopClass,
+                            TransferSyntax = instanceXml.TransferSyntax,
+                            SopInstanceUid = instanceXml.SopInstanceUid,
+                            StudyInstanceUid = studyXml.StudyInstanceUid,
+                            SeriesInstanceUid = seriesXml.SeriesInstanceUid,
+                            PatientId = studyXml.PatientId,
+                            PatientsName = studyXml.PatientsName
+                        };
 
                 	list.Add(instance);
                 }
