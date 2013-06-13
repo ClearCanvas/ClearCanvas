@@ -290,7 +290,7 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.WebDeleteStudy
                         if (studyXml.Contains(uid.SeriesInstanceUid, uid.SopInstanceUid))
                         {
                             //Note: DeleteDirectoryCommand  doesn't throw exception if the folder doesn't exist
-                            var xmlUpdate = new RemoveInstanceFromStudyXmlCommand(studyXml, uid.SeriesInstanceUid, uid.SopInstanceUid);
+                            var xmlUpdate = new RemoveInstanceFromStudyXmlCommand(StorageLocation, studyXml, uid.SeriesInstanceUid, uid.SopInstanceUid);
                             processor.AddCommand(xmlUpdate);
                         }
 
