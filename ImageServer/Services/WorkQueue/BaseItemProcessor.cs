@@ -1444,8 +1444,8 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue
 
         		using (IUpdateContext updateContext = PersistentStoreRegistry.GetDefaultStore().OpenUpdateContext(UpdateContextSyncMode.Flush))
         		{
-        			ISetStudyRelatedInstanceCount broker = updateContext.GetBroker<ISetStudyRelatedInstanceCount>();
-        			SetStudyRelatedInstanceCountParameters criteria = new SetStudyRelatedInstanceCountParameters(storageLocation.GetKey())
+        			var broker = updateContext.GetBroker<ISetStudyRelatedInstanceCount>();
+        			var criteria = new SetStudyRelatedInstanceCountParameters(storageLocation.GetKey())
         			                                                      {
         			                                                          StudyRelatedSeriesCount = numStudyRelatedSeriesInXml,
         			                                                          StudyRelatedInstanceCount = numStudyRelatedInstancesInXml
@@ -1531,13 +1531,10 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue
                                 if (broker.Update(theStudy.Key, parameters))
                                     ctx.Commit();
                             }
-
                         }
                     }
                 }
-                
             }
-            
         }
 
         protected abstract void ProcessItem(Model.WorkQueue item);
@@ -1641,7 +1638,7 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue
                                                                         true);
                     if (attributes != null && attributes.Length > 0)
                     {
-                        StudyIntegrityValidationAttribute att = attributes[0] as StudyIntegrityValidationAttribute;
+                        var att = attributes[0] as StudyIntegrityValidationAttribute;
                         if (!ProcessorsRecoverySettings.ContainsKey(GetType()))
                         {
                             ProcessorsRecoverySettings.Add(GetType(), att.Recovery);
@@ -1665,7 +1662,7 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue
                     object[] attributes = GetType().GetCustomAttributes(typeof (StudyIntegrityValidationAttribute), true);
                     if (attributes != null && attributes.Length > 0)
                     {
-                        StudyIntegrityValidationAttribute att = attributes[0] as StudyIntegrityValidationAttribute;
+                        var att = attributes[0] as StudyIntegrityValidationAttribute;
                         ProcessorsValidationSettings.Add(GetType(), att.ValidationTypes);
                         return att.ValidationTypes;
                     }
@@ -1678,24 +1675,22 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue
         private void VerifyStudy(StudyStorageLocation studyStorage)
         {
             Platform.CheckForNullReference(studyStorage, "studyStorage");
-			// Only verify if the Study record exists
+
+            // Only verify if the Study record exists
+            // Explicitly load the study entry again, if a deletion happened, the counts will not be accurate.
             if (studyStorage.Study != null)
             {
                 StudyIntegrityValidationModes mode = GetValidationMode();
                 if (mode != StudyIntegrityValidationModes.None)
                 {
                     Platform.Log(LogLevel.Info, "Verifying study {0}", studyStorage.StudyInstanceUid);
-                    using (new ServerExecutionContext())
-                    {
-                        StudyIntegrityValidator validator = new StudyIntegrityValidator();
-                        validator.ValidateStudyState(WorkQueueItem.WorkQueueTypeEnum.ToString(), studyStorage, mode);
-                    }
+
+                    var validator = new StudyIntegrityValidator();
+                    validator.ValidateStudyState(WorkQueueItem.WorkQueueTypeEnum.ToString(), studyStorage, mode);
+
                     Platform.Log(LogLevel.Info, "Study {0} has been verified", studyStorage.StudyInstanceUid);
                 }
-            
             }
-            
-            
         }
 
         #endregion

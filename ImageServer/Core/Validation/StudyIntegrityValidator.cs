@@ -44,10 +44,11 @@ namespace ClearCanvas.ImageServer.Core.Validation
             if (modes == StudyIntegrityValidationModes.None)
                 return;
 
-            using (ServerExecutionContext scope = new ServerExecutionContext())
+            using (var scope = new ServerExecutionContext())
             {
+                // Force a re-load, the study may have changed if a delete happened.
+                Study study = Study.Find(scope.PersistenceContext, studyStorage.Key);
 
-                Study study = studyStorage.LoadStudy(scope.PersistenceContext);
                 if (study!=null)
                 {
                     StudyXml studyXml = studyStorage.LoadStudyXml();
@@ -57,7 +58,7 @@ namespace ClearCanvas.ImageServer.Core.Validation
                     {
                         if (studyXml != null && studyXml.NumberOfStudyRelatedInstances != study.NumberOfStudyRelatedInstances)
                         {
-                            ValidationStudyInfo validationStudyInfo = new ValidationStudyInfo(study, studyStorage.ServerPartition);
+                            var validationStudyInfo = new ValidationStudyInfo(study, studyStorage.ServerPartition);
                             
                             throw new StudyIntegrityValidationFailure(
                                 ValidationErrors.InconsistentObjectCount, validationStudyInfo,
@@ -67,11 +68,8 @@ namespace ClearCanvas.ImageServer.Core.Validation
                                 ));
                         }
                     }
-
                 }
-                
             }
         }
-        
     }
 }
