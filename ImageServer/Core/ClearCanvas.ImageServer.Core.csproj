@@ -85,6 +85,7 @@
     <Compile Include="Edit\IWebEditStudyCommandCompiler.cs" />
     <Compile Include="Edit\IWebEditStudyProcessorExtension.cs" />
     <Compile Include="Edit\PatientInfo.cs" />
+    <Compile Include="Edit\StudyDeleteHelper.cs" />
     <Compile Include="Edit\StudyEditorHelper.cs" />
     <Compile Include="Edit\Test\SetDicomTagTestBase.cs" />
     <Compile Include="Edit\Test\SetDicomTagTest_UnicodeConversionAllowed.cs" />

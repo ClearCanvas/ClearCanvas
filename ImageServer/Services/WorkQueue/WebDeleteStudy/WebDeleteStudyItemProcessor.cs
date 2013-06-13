@@ -170,7 +170,7 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.WebDeleteStudy
 
 				// Go through the list of series and add commands
 				// to delete each of them. It's all or nothing.                
-                using (ServerCommandProcessor processor = new ServerCommandProcessor(String.Format("Deleting Series from study {0}, A#:{1}, Patient: {2}, ID:{3}", study.StudyInstanceUid, study.AccessionNumber, study.PatientsName, study.PatientId)))
+                using (var processor = new ServerCommandProcessor(String.Format("Deleting Series from study {0}, A#:{1}, Patient: {2}, ID:{3}", study.StudyInstanceUid, study.AccessionNumber, study.PatientsName, study.PatientId)))
                 {
                     StudyXml studyXml = StorageLocation.LoadStudyXml();
                     IDictionary<string, Series> existingSeries = StorageLocation.Study.Series;
@@ -265,10 +265,9 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.WebDeleteStudy
             Study study = StorageLocation.Study;
             Platform.CheckForNullReference(study, "Study record doesn't exist");
 
-            Platform.Log(LogLevel.Info, "Processing Series Level Deletion for Study {0}, A#: {1}",
+            Platform.Log(LogLevel.Info, "Processing Instance Level Deletion for Study {0}, A#: {1}",
                                          study.StudyInstanceUid, study.AccessionNumber);
 
-            _seriesToDelete = new List<Series>();
             bool completed = false;
             try
             {
@@ -277,7 +276,7 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.WebDeleteStudy
 
                 // Go through the list of series and add commands
                 // to delete each of them. It's all or nothing.                
-                using (ServerCommandProcessor processor = new ServerCommandProcessor(String.Format("Deleting Series from study {0}, A#:{1}, Patient: {2}, ID:{3}", study.StudyInstanceUid, study.AccessionNumber, study.PatientsName, study.PatientId)))
+                using (var processor = new ServerCommandProcessor(String.Format("Deleting Series from study {0}, A#:{1}, Patient: {2}, ID:{3}", study.StudyInstanceUid, study.AccessionNumber, study.PatientsName, study.PatientId)))
                 {
                     StudyXml studyXml = StorageLocation.LoadStudyXml();
                     IDictionary<string, Series> existingSeries = StorageLocation.Study.Series;
@@ -311,18 +310,16 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.WebDeleteStudy
                     foreach (WorkQueueUid uid in WorkQueueUidList)
                     {
                         // Delete from DB
-                        WorkQueueUid queueUid = uid;
-                        Series theSeries = existingSeries[queueUid.SeriesInstanceUid];
-                        if (theSeries != null)
+                        if (studyXml.Contains(uid.SeriesInstanceUid, uid.SopInstanceUid))
                         {
                             var delInstance = new UpdateInstanceCountCommand(StorageLocation, uid.SeriesInstanceUid, uid.SopInstanceUid);
                             processor.AddCommand(delInstance);
                             delInstance.Executing += DeleteSeriesFromDbExecuting;
-                        }
+                        }                       
                         else
                         {
-                            // Series doesn't exist 
-                            Platform.Log(LogLevel.Info, "Series {0} is invalid or no longer exists", uid.SeriesInstanceUid);
+                            // SOP doesn't exist 
+                            Platform.Log(LogLevel.Info, "SOP {0} is invalid or no longer exists", uid.SopInstanceUid);
                         }
 
                         // The WorkQueueUid must be cleared before the entry can be removed from the queue
@@ -336,14 +333,7 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.WebDeleteStudy
                     if (!processor.Execute())
                         throw new ApplicationException(
                             String.Format("Error occurred when series from Study {0}, A#: {1}",
-                                         study.StudyInstanceUid, study.AccessionNumber), processor.FailureException);
-                    else
-                    {
-                        foreach (Series series in _seriesToDelete)
-                        {
-                            OnSeriesDeleted(series);
-                        }
-                    }
+                                         study.StudyInstanceUid, study.AccessionNumber), processor.FailureException);                  
                 }
 
                 completed = true;
@@ -360,7 +350,6 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.WebDeleteStudy
                     PostProcessing(item, WorkQueueProcessorStatus.Pending, WorkQueueProcessorDatabaseUpdate.None);
                 }
             }
-
         }
 
         private void OnCompleted()
@@ -380,10 +369,9 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.WebDeleteStudy
             }
         }
 
-
         private void DeleteSeriesFromDbExecuting(object sender, EventArgs e)
         {
-            DeleteSeriesFromDBCommand cmd = sender as DeleteSeriesFromDBCommand;
+            var cmd = sender as DeleteSeriesFromDBCommand;
 			if (cmd!=null)
 				OnDeletingSeriesInDatabase(cmd.Series);
         }
@@ -395,7 +383,7 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.WebDeleteStudy
             {
                 try
                 {
-                    WebDeleteProcessorContext context = new WebDeleteProcessorContext(this, Level, StorageLocation, _reason, _userId, _userName);
+                    var context = new WebDeleteProcessorContext(this, Level, StorageLocation, _reason, _userId, _userName);
                     extension.OnSeriesDeleting(context, series);
                 }   
                 catch(Exception ex)
@@ -405,6 +393,7 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.WebDeleteStudy
             }
 
         }
+
         private void OnSeriesDeleted(Series seriesUid)
         {
             EnsureWebDeleteExtensionsLoaded();
@@ -412,7 +401,7 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.WebDeleteStudy
             {
                 try
                 {
-                    WebDeleteProcessorContext context = new WebDeleteProcessorContext(this, Level, StorageLocation, _reason, _userId, _userName);
+                    var context = new WebDeleteProcessorContext(this, Level, StorageLocation, _reason, _userId, _userName);
                     extension.OnSeriesDeleted(context, seriesUid);
                 }
                 catch (Exception ex)
@@ -426,7 +415,7 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.WebDeleteStudy
         {
             if (_extensions==null)
             {
-                WebDeleteProcessorExtensionPoint xp = new WebDeleteProcessorExtensionPoint();
+                var xp = new WebDeleteProcessorExtensionPoint();
                 _extensions = CollectionUtils.Cast<IWebDeleteProcessorExtension>(xp.CreateExtensions());    
             }
         }

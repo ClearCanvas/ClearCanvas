@@ -86,7 +86,7 @@ namespace ClearCanvas.ImageServer.Model
     	private IList<StudyIntegrityQueue> _integrityQueueItems;
 
         private ServerPartition _partition;
-        private Study _study;
+        private volatile Study _study;
         private StudyXml _studyXml;
         private string _studyUidFolder;
         private string _studyFolderRelativePath;
