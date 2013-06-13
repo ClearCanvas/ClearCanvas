@@ -227,23 +227,21 @@ namespace ClearCanvas.ImageViewer.Mathematics
 			return transpose;
 		}
 
+		/// <summary>
+		/// Computes the determinant of this matrix.
+		/// </summary>
 		public float GetDeterminant()
 		{
-			return _matrix[0, 0]*(_matrix[1, 1]*_matrix[2, 2] - _matrix[1, 2]*_matrix[2, 1])
-			       - _matrix[0, 1]*(_matrix[1, 0]*_matrix[2, 2] - _matrix[1, 2]*_matrix[2, 0])
-			       + _matrix[0, 2]*(_matrix[1, 0]*_matrix[2, 1] - _matrix[1, 1]*_matrix[2, 0]);
+			return Matrix.Determinant3(_matrix);
 		}
 
+		/// <summary>
+		/// Returns a matrix that is the inverse of this matrix.
+		/// </summary>
+		/// <returns></returns>
 		public Matrix3D Invert()
 		{
-			var determinant = GetDeterminant();
-			Platform.CheckFalse(FloatComparer.AreEqual(0, determinant), "Matrix is not invertible!");
-			return new Matrix3D(new[,]
-			                    	{
-			                    		{(_matrix[1, 1]*_matrix[2, 2] - _matrix[1, 2]*_matrix[2, 1]), -(_matrix[0, 1]*_matrix[2, 2] - _matrix[0, 2]*_matrix[2, 1]), (_matrix[0, 1]*_matrix[1, 2] - _matrix[0, 2]*_matrix[1, 1])},
-			                    		{-(_matrix[1, 0]*_matrix[2, 2] - _matrix[1, 2]*_matrix[2, 0]), (_matrix[0, 0]*_matrix[2, 2] - _matrix[0, 2]*_matrix[2, 0]), -(_matrix[0, 0]*_matrix[1, 2] - _matrix[0, 2]*_matrix[1, 0])},
-			                    		{(_matrix[1, 0]*_matrix[2, 1] - _matrix[1, 1]*_matrix[2, 0]), -(_matrix[0, 0]*_matrix[2, 1] - _matrix[0, 1]*_matrix[2, 0]), (_matrix[0, 0]*_matrix[1, 1] - _matrix[0, 1]*_matrix[1, 0])}
-			                    	})/determinant;
+			return new Matrix3D(Matrix.Invert3(_matrix));
 		}
 
 		/// <summary>
