@@ -359,7 +359,7 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.ProcessDuplicate
 
         private StudyHistoryUpdateColumns CreateStudyHistoryRecord(ImageSetDetails details)
         {
-            StudyHistoryUpdateColumns columns = new StudyHistoryUpdateColumns
+            var columns = new StudyHistoryUpdateColumns
                                                 	{
                                                 		InsertTime = Platform.Time,
                                                 		StudyHistoryTypeEnum = StudyHistoryTypeEnum.Duplicate,
@@ -368,7 +368,7 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.ProcessDuplicate
                                                 		StudyData = XmlUtils.SerializeAsXmlDoc(_currentStudyInfo)
                                                 	};
 
-        	ProcessDuplicateChangeLog changeLog = new ProcessDuplicateChangeLog
+            var changeLog = new ProcessDuplicateChangeLog
                                                   	{
                                                   		Action = _processDuplicateEntry.QueueData.Action,
                                                         DuplicateDetails = details,
@@ -494,7 +494,7 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.ProcessDuplicate
                 return;
 
             StudyXml studyXml = StorageLocation.LoadStudyXml();
-            DicomFile file = new DicomFile(path);
+            var file = new DicomFile(path);
             file.Load(DicomReadOptions.DoNotStorePixelDataInDataSet | DicomReadOptions.Default); // don't need to load pixel data cause we will delete it
 
             #if DEBUG
@@ -503,11 +503,14 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.ProcessDuplicate
             int originalSeriesInstanceCount = Study.Series[uid.SeriesInstanceUid].NumberOfSeriesRelatedInstances;
             #endif
 
-            using (ServerCommandProcessor processor = new ServerCommandProcessor("Delete Existing Image"))
+            using (var processor = new ServerCommandProcessor("Delete Existing Image"))
             {
+                var seriesInstanceUid = file.DataSet[DicomTags.SeriesInstanceUid].ToString();
+                var sopInstanceUid = file.DataSet[DicomTags.SopInstanceUid].ToString();
+
                 processor.AddCommand(new FileDeleteCommand(path,true));
-                processor.AddCommand(new RemoveInstanceFromStudyXmlCommand(StorageLocation, studyXml, file));
-                processor.AddCommand(new UpdateInstanceCountCommand(StorageLocation, file));
+                processor.AddCommand(new RemoveInstanceFromStudyXmlCommand(StorageLocation, studyXml, seriesInstanceUid, sopInstanceUid));
+                processor.AddCommand(new UpdateInstanceCountCommand(StorageLocation, seriesInstanceUid,sopInstanceUid));
 
                 if (!processor.Execute())
                 {

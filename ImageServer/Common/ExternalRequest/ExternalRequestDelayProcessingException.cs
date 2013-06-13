@@ -28,5 +28,11 @@ namespace ClearCanvas.ImageServer.Common.ExternalRequest
 {
     public class ExternalRequestDelayProcessingException : ApplicationException
     {
+        public ExternalRequestDelayProcessingException()
+        { }
+
+        public ExternalRequestDelayProcessingException(string message)
+            : base(message)
+        { }
     }
 }

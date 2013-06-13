@@ -35,7 +35,8 @@ namespace ClearCanvas.ImageServer.Core.Edit
     public enum DeletionLevel
     {
         Study,
-        Series
+        Series,
+        Instance
     }
 
     /// <summary>
@@ -44,7 +45,8 @@ namespace ClearCanvas.ImageServer.Core.Edit
     public enum MoveLevel
     {
         Study,
-        Series
+        Series,
+        Instance
     }
 
     /// <summary>
@@ -138,6 +140,21 @@ namespace ClearCanvas.ImageServer.Core.Edit
         }
     }
 
+
+    /// <summary>
+    /// Encapsulate the object stored in the Data column of the "WebDeleteStudy" WorkQueue entry
+    /// used for series level deletion.
+    /// </summary>
+    [XmlRoot("WebDeleteWorkQueueEntry")]
+    [WorkQueueDataType("B0CC1DF3-BFEB-4288-AF3D-6E1534530E03")]
+    public class WebDeleteInstanceLevelQueueData : WebDeleteWorkQueueEntryData
+    {
+        public WebDeleteInstanceLevelQueueData()
+        {
+            Level = DeletionLevel.Instance;
+        }
+    }
+
     /// <summary>
     /// Encapsulate the object stored in the Data column of the "MoveSeries" WorkQueue entry.
     /// </summary>
@@ -150,13 +167,23 @@ namespace ClearCanvas.ImageServer.Core.Edit
 			Level = MoveLevel.Series;
 		}
 
-        private List<string> _seriesInstanceUids;
-
-        public List<string> SeriesInstanceUids
-        {
-            get { return _seriesInstanceUids; }
-            set { _seriesInstanceUids = value; }
+        public List<string> SeriesInstanceUids { get; set; }
         }
 
+    /// <summary>
+    /// Encapsulate the object stored in the Data column of the "MoveSeries" WorkQueue entry.
+    /// </summary>
+    [XmlRoot("WebMoveWorkQueueEntry")]
+    [WorkQueueDataType("5EC2D085-7F98-4C3F-AB50-50C43C102121")]
+    public class WebMoveInstanceLevelQueueData : WebMoveWorkQueueEntryData
+    {
+        public WebMoveInstanceLevelQueueData()
+        {
+            Level = MoveLevel.Instance;
+        }
+
+        public string SeriesInstanceUid { get; set; }
+
+        public List<string> SopInstanceUids { get; set; }
     }
 }

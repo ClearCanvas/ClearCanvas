@@ -23,35 +23,46 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Xml;
 using ClearCanvas.Common.Utilities;
-using ClearCanvas.Dicom;
 using ClearCanvas.Dicom.Utilities.Command;
 using ClearCanvas.Dicom.Utilities.Xml;
 using ClearCanvas.ImageServer.Common;
+using ClearCanvas.ImageServer.Core.Command;
 using ClearCanvas.ImageServer.Model;
 
 namespace ClearCanvas.ImageServer.Services.WorkQueue.ProcessDuplicate
 {
-    internal class RemoveInstanceFromStudyXmlCommand : CommandBase
+    internal class RemoveInstanceFromStudyXmlCommand : CommandBase, IAggregateCommand
     {
         #region Private Members
 
         private readonly StudyStorageLocation _studyLocation;
-        private readonly DicomFile _file;
+        private readonly string _seriesInstanceUid;
+        private readonly string _sopInstanceUid;
         private readonly StudyXml _studyXml;
+        private InstanceXml _instanceXml;
+        private readonly Stack<ICommand> _aggregateCommands = new Stack<ICommand>();
+
+        #endregion
+
+        #region Public Properties
+
+        public Stack<ICommand> AggregateCommands { get { return _aggregateCommands; } }
 
         #endregion
 
         #region Constructors
 
-        public RemoveInstanceFromStudyXmlCommand(StudyStorageLocation location, StudyXml studyXml, DicomFile file)
-            :base("Remove Instance From Study Xml", true)
+        public RemoveInstanceFromStudyXmlCommand(StudyStorageLocation location, StudyXml studyXml, string seriesInstanceUid, string sopInstanceUid)
+            : base("RemoveInstanceFromStudyXmlCommand", true)
         {
             _studyLocation = location;
-            _file = file;
+            _seriesInstanceUid = seriesInstanceUid;
+            _sopInstanceUid = sopInstanceUid;
             _studyXml = studyXml;
         }
 
@@ -61,76 +72,22 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.ProcessDuplicate
 
         protected override void OnExecute(CommandProcessor commandProcessor)
         {
-            _studyXml.RemoveFile(_file);
+            _instanceXml = _studyXml.FindInstanceXml(_seriesInstanceUid, _sopInstanceUid);
+
+            _studyXml.RemoveInstance(_seriesInstanceUid, _sopInstanceUid);
 
             // flush it into disk
             // Write it back out.  We flush it out with every added image so that if a failure happens,
             // we can recover properly.
-            string streamFile = _studyLocation.GetStudyXmlPath();
-            string gzStreamFile = streamFile + ".gz";
-
-            WriteStudyStream(streamFile, gzStreamFile, _studyXml);
-            
+            if (!commandProcessor.ExecuteSubCommand(this, new SaveXmlCommand(_studyXml, _studyLocation)))
+                throw new ApplicationException(commandProcessor.FailureReason);
         }
 
         protected override void OnUndo()
         {
-            _studyXml.AddFile(_file);
-
-            string streamFile = _studyLocation.GetStudyXmlPath();
-            string gzStreamFile = streamFile + ".gz";
-            WriteStudyStream(streamFile, gzStreamFile, _studyXml);
+            // No specific undo, rollback of the sub-commands handles it.
         }
 
         #endregion
-
-        #region Private Methods
-
-        private static void WriteStudyStream(string streamFile, string gzStreamFile, StudyXml theStream)
-        {
-            XmlDocument doc = theStream.GetMemento(ImageServerCommonConfiguration.DefaultStudyXmlOutputSettings);
-
-            // allocate the random number generator here, in case we need it below
-            Random rand = new Random();
-            string tmpStreamFile = streamFile + "_tmp";
-            string tmpGzStreamFile = gzStreamFile + "_tmp";
-            for (int i = 0; ; i++)
-                try
-                {
-                    if (File.Exists(tmpStreamFile))
-                        File.Delete(tmpStreamFile);
-                    if (File.Exists(tmpGzStreamFile))
-                        File.Delete(tmpGzStreamFile);
-
-                    using (FileStream xmlStream = FileStreamOpener.OpenForSoleUpdate(tmpStreamFile, FileMode.CreateNew),
-                                      gzipStream = FileStreamOpener.OpenForSoleUpdate(tmpGzStreamFile, FileMode.CreateNew))
-                    {
-                        StudyXmlIo.WriteXmlAndGzip(doc, xmlStream, gzipStream);
-                        xmlStream.Close();
-                        gzipStream.Close();
-                    }
-
-                    if (File.Exists(streamFile))
-                        File.Delete(streamFile);
-                    File.Move(tmpStreamFile, streamFile);
-                    if (File.Exists(gzStreamFile))
-                        File.Delete(gzStreamFile);
-                    File.Move(tmpGzStreamFile, gzStreamFile);
-                    return;
-                }
-                catch (IOException)
-                {
-                    if (i < 5)
-                    {
-                        Thread.Sleep(rand.Next(5, 50)); // Sleep 5-50 milliseconds
-                        continue;
-                    }
-
-                    throw;
-                }
-        }
-
-        #endregion
-
     }
 }

@@ -493,7 +493,7 @@ namespace ClearCanvas.ImageServer.Core
 		/// <returns></returns>
 		public void GetWritableStudyStorageLocation(ServerEntityKey partitionKey, string studyInstanceUid, StudyRestore restore, StudyCache cache, out StudyStorageLocation location)
 		{
-			using (ServerExecutionContext context = new ServerExecutionContext())
+			using (var context = new ServerExecutionContext())
 			{
 				string reason;
 

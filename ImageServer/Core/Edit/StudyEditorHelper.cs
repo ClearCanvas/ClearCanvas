@@ -28,6 +28,7 @@ using System.Diagnostics;
 using ClearCanvas.Common;
 using ClearCanvas.Enterprise.Core;
 using ClearCanvas.ImageServer.Common.Exceptions;
+using ClearCanvas.ImageServer.Common.ExternalRequest;
 using ClearCanvas.ImageServer.Common.Utilities;
 using ClearCanvas.ImageServer.Core.Helpers;
 using ClearCanvas.ImageServer.Enterprise;
@@ -74,7 +75,54 @@ namespace ClearCanvas.ImageServer.Core.Edit
                     }
                     else
                     {
-                        throw new ApplicationException(String.Format("Unable to lock storage location {0} for deletion : {1}", location.Key, failureReason));
+                        throw new ExternalRequestDelayProcessingException(String.Format("Unable to lock storage location {0} for deletion : {1}", location.Key, failureReason));
+                    }
+                }
+                catch(Exception ex)
+                {
+                    Platform.Log(LogLevel.Error, ex, "Errors occurred when trying to insert delete request");
+                    if (!ServerHelper.UnlockStudy(location.Key))
+                        throw new ApplicationException("Unable to unlock the study");
+                }
+            }
+
+            return entries;
+        }
+
+        /// <summary>
+        /// Inserts delete request(s) to delete a sop instance in a study.
+        /// </summary>
+        /// <param name="context">The persistence context used for database connection.</param>
+        /// <param name="partition">The <see cref="ServerPartition"/> where the study resides</param>
+        /// <param name="studyInstanceUid">The Study Instance Uid of the study</param>
+        /// <param name="seriesInstanceUid">The Series Instance Uid of the study</param>
+        /// <param name="sopInstanceUids">The SOP Instance Uid of the instances to be deleted.</param>
+        /// <param name="reason">The reason for deleting the sops.</param>
+        /// <param name="externalRequest">If applicable, the <see cref="ExternalRequestQueue"/> that triggered the delete.</param>
+        /// <returns>A list of DeleteStudy <see cref="WorkQueue"/> entries inserted into the system.</returns>
+        /// <exception cref="InvalidStudyStateOperationException"></exception>
+        /// <exception cref="ExternalRequestDelayProcessingException"></exception>
+        public static IList<WorkQueue> DeleteInstances(IUpdateContext context, ServerPartition partition, string studyInstanceUid, string seriesInstanceUid, List<string> sopInstanceUids, string reason, ExternalRequestQueue externalRequest = null)
+        {
+            // Find all location of the study in the system and insert series delete request
+            IList<StudyStorageLocation> storageLocations = StudyStorageLocation.FindStorageLocations(partition.Key, studyInstanceUid);
+            IList<WorkQueue> entries = new List<WorkQueue>();
+
+            foreach (StudyStorageLocation location in storageLocations)
+            {
+                try
+                {
+                    string failureReason;
+                    if (ServerHelper.LockStudy(location.Key, QueueStudyStateEnum.WebDeleteScheduled, out failureReason))
+                    {
+                        // insert a delete series request
+                        WorkQueue request = InsertDeleteInstancesRequest(context, location, seriesInstanceUid, sopInstanceUids, reason, externalRequest);
+                        Debug.Assert(request.WorkQueueTypeEnum.Equals(WorkQueueTypeEnum.WebDeleteStudy));
+                        entries.Add(request);
+                    }
+                    else
+                    {
+                        throw new ExternalRequestDelayProcessingException(String.Format("Unable to lock storage location {0} for deletion : {1}", location.Key, failureReason));
                     }
                 }
                 catch(Exception ex)
@@ -350,6 +398,40 @@ namespace ClearCanvas.ImageServer.Core.Edit
         }
 
         /// <summary>
+        /// Inserts a DeleteSeries work queue entry
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="location"></param>
+        /// <param name="seriesInstanceUid"></param>
+        /// <param name="sopInstanceUids"></param>
+        /// <param name="reason"></param>
+        /// <param name="externalRequest"></param>
+        /// <exception cref="ApplicationException">If the "DeleteSeries" Work Queue entry cannot be inserted.</exception>
+        private static WorkQueue InsertDeleteInstancesRequest(IUpdateContext context, StudyStorageLocation location, string seriesInstanceUid, IEnumerable<string> sopInstanceUids, string reason, ExternalRequestQueue externalRequest)
+        {
+            // Create a work queue entry and append the series instance uid into the WorkQueueUid table
+
+            WorkQueue deleteSeriesEntry = null;
+            foreach (string uid in sopInstanceUids)
+            {
+                var broker = context.GetBroker<IInsertWorkQueue>();
+                InsertWorkQueueParameters criteria = new DeleteInstanceWorkQueueParameters(location, seriesInstanceUid, uid, reason);
+                if (externalRequest != null)
+                    criteria.ExternalRequestQueueKey = externalRequest.Key;
+
+                deleteSeriesEntry = broker.FindOne(criteria);
+                if (deleteSeriesEntry == null)
+                {
+                    throw new ApplicationException(
+                        String.Format("Unable to insert a Delete Series request for series {0} in study {1}",
+                                      uid, location.StudyInstanceUid));
+                }
+            }
+
+            return deleteSeriesEntry;
+        }
+
+        /// <summary>
         /// Inserts a MoveSeries work queue entry
         /// </summary>
         /// <param name="context"></param>
@@ -461,6 +543,29 @@ namespace ClearCanvas.ImageServer.Core.Edit
         }
     }
 
+    class DeleteInstanceWorkQueueParameters : InsertWorkQueueParameters
+    {
+        public DeleteInstanceWorkQueueParameters(StudyStorageLocation studyStorageLocation, string seriesInstanceUid, string sopInstanceUid, string reason)
+        {
+            DateTime now = Platform.Time;
+            var data = new WebDeleteInstanceLevelQueueData
+                           {
+                               Reason = reason,
+                               Timestamp = now,
+                               UserId = ServerHelper.CurrentUserName
+                           };
+
+        	WorkQueueTypeEnum = WorkQueueTypeEnum.WebDeleteStudy;
+            StudyStorageKey = studyStorageLocation.Key;
+            ServerPartitionKey = studyStorageLocation.ServerPartitionKey;
+            ScheduledTime = now;
+            SeriesInstanceUid = seriesInstanceUid;
+            SopInstanceUid = sopInstanceUid;
+            WorkQueueData = XmlUtils.SerializeAsXmlDoc(data);
+        }
+    }
+    
+
     class MoveSeriesWorkQueueParameters : InsertWorkQueueParameters
     {
         public MoveSeriesWorkQueueParameters(StudyStorageLocation studyStorageLocation, string seriesInstanceUid, ServerEntityKey deviceKey)
@@ -488,12 +593,13 @@ namespace ClearCanvas.ImageServer.Core.Edit
         public MoveInstanceWorkQueueParameters(StudyStorageLocation studyStorageLocation, string seriesInstanceUid, string sopInstanceUid, ServerEntityKey deviceKey)
         {
             DateTime now = Platform.Time;
-            var data = new WebMoveSeriesLevelQueueData
+            var data = new WebMoveInstanceLevelQueueData
             {
                 Timestamp = now,
                 UserId = ServerHelper.CurrentUserName
             };
-            //data.SeriesInstanceUids = new List<string> {seriesInstanceUid};
+            //data.SeriesInstanceUid = seriesInstanceUid;
+            //data.SopInstanceUids = new List<string>{sopInstanceUid};
 
             WorkQueueTypeEnum = WorkQueueTypeEnum.WebMoveStudy;
             StudyStorageKey = studyStorageLocation.Key;
