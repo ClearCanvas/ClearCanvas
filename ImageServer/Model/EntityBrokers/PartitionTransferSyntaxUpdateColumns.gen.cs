@@ -30,7 +30,7 @@ namespace ClearCanvas.ImageServer.Model.EntityBrokers
     using System.Xml;
     using ClearCanvas.ImageServer.Enterprise;
 
-   public class PartitionTransferSyntaxUpdateColumns : EntityUpdateColumns
+   public partial class PartitionTransferSyntaxUpdateColumns : EntityUpdateColumns
    {
        public PartitionTransferSyntaxUpdateColumns()
        : base("PartitionTransferSyntax")

@@ -30,7 +30,7 @@ namespace ClearCanvas.ImageServer.Model.EntityBrokers
     using System.Xml;
     using ClearCanvas.ImageServer.Enterprise;
 
-   public class WorkQueueTypePropertiesUpdateColumns : EntityUpdateColumns
+   public partial class WorkQueueTypePropertiesUpdateColumns : EntityUpdateColumns
    {
        public WorkQueueTypePropertiesUpdateColumns()
        : base("WorkQueueTypeProperties")

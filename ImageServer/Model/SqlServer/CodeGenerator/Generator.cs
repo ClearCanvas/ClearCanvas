@@ -224,7 +224,7 @@ namespace ClearCanvas.ImageServer.Model.SqlServer.CodeGenerator
             writer.WriteLine("");
             if (Proprietary)
             {
-                writer.WriteLine("// Copyright (c) 2011, ClearCanvas Inc.");
+                writer.WriteLine("// Copyright (c) 2013, ClearCanvas Inc.");
                 writer.WriteLine("// All rights reserved.");
                 writer.WriteLine("// http://www.clearcanvas.ca");
                 writer.WriteLine("//");
@@ -492,6 +492,7 @@ namespace ClearCanvas.ImageServer.Model.SqlServer.CodeGenerator
                 writer.WriteLine("    using ClearCanvas.Dicom;");
             writer.WriteLine("    using ClearCanvas.Enterprise.Core;");
             writer.WriteLine("    using ClearCanvas.ImageServer.Enterprise;");
+            writer.WriteLine("    using ClearCanvas.ImageServer.Common.Command;");
             writer.WriteLine("    using {0};", EntityInterfaceNamespace);
             writer.WriteLine("");
 
@@ -565,9 +566,9 @@ namespace ClearCanvas.ImageServer.Model.SqlServer.CodeGenerator
             writer.WriteLine("        #region Static Methods");
             writer.WriteLine("        static public {0} Load(ServerEntityKey key)", table.TableName);
             writer.WriteLine("        {");
-            writer.WriteLine("            using (var read = PersistentStoreRegistry.GetDefaultStore().OpenReadContext())");
+            writer.WriteLine("            using (var context = new ServerExecutionContext())");
             writer.WriteLine("            {");
-            writer.WriteLine("                return Load(read, key);");
+            writer.WriteLine("                return Load(context.ReadContext, key);");
             writer.WriteLine("            }");
             writer.WriteLine("        }");
             writer.WriteLine("        static public {0} Load(IPersistenceContext read, ServerEntityKey key)", table.TableName);

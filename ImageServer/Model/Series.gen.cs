@@ -31,6 +31,7 @@ namespace ClearCanvas.ImageServer.Model
     using ClearCanvas.Dicom;
     using ClearCanvas.Enterprise.Core;
     using ClearCanvas.ImageServer.Enterprise;
+    using ClearCanvas.ImageServer.Common.Command;
     using ClearCanvas.ImageServer.Model.EntityBrokers;
 
     [Serializable]
@@ -109,9 +110,9 @@ namespace ClearCanvas.ImageServer.Model
         #region Static Methods
         static public Series Load(ServerEntityKey key)
         {
-            using (var read = PersistentStoreRegistry.GetDefaultStore().OpenReadContext())
+            using (var context = new ServerExecutionContext())
             {
-                return Load(read, key);
+                return Load(context.ReadContext, key);
             }
         }
         static public Series Load(IPersistenceContext read, ServerEntityKey key)

@@ -31,7 +31,7 @@ namespace ClearCanvas.ImageServer.Model.EntityBrokers
     using ClearCanvas.Dicom;
     using ClearCanvas.ImageServer.Enterprise;
 
-   public class WorkQueueUidUpdateColumns : EntityUpdateColumns
+   public partial class WorkQueueUidUpdateColumns : EntityUpdateColumns
    {
        public WorkQueueUidUpdateColumns()
        : base("WorkQueueUid")

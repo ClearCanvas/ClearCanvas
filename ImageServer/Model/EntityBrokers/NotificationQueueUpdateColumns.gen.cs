@@ -30,7 +30,7 @@ namespace ClearCanvas.ImageServer.Model.EntityBrokers
     using System.Xml;
     using ClearCanvas.ImageServer.Enterprise;
 
-   public class NotificationQueueUpdateColumns : EntityUpdateColumns
+   public partial class NotificationQueueUpdateColumns : EntityUpdateColumns
    {
        public NotificationQueueUpdateColumns()
        : base("NotificationQueue")

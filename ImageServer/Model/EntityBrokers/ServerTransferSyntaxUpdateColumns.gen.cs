@@ -31,7 +31,7 @@ namespace ClearCanvas.ImageServer.Model.EntityBrokers
     using ClearCanvas.Dicom;
     using ClearCanvas.ImageServer.Enterprise;
 
-   public class ServerTransferSyntaxUpdateColumns : EntityUpdateColumns
+   public partial class ServerTransferSyntaxUpdateColumns : EntityUpdateColumns
    {
        public ServerTransferSyntaxUpdateColumns()
        : base("ServerTransferSyntax")

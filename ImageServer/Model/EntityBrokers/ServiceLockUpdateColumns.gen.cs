@@ -30,7 +30,7 @@ namespace ClearCanvas.ImageServer.Model.EntityBrokers
     using System.Xml;
     using ClearCanvas.ImageServer.Enterprise;
 
-   public class ServiceLockUpdateColumns : EntityUpdateColumns
+   public partial class ServiceLockUpdateColumns : EntityUpdateColumns
    {
        public ServiceLockUpdateColumns()
        : base("ServiceLock")
