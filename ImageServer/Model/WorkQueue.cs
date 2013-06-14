@@ -26,6 +26,7 @@ using System;
 using System.Collections.Generic;
 using ClearCanvas.Enterprise.Core;
 using ClearCanvas.ImageServer.Common;
+using ClearCanvas.ImageServer.Common.Command;
 using ClearCanvas.ImageServer.Common.WorkQueue;
 using ClearCanvas.ImageServer.Model.EntityBrokers;
 
@@ -38,23 +39,20 @@ namespace ClearCanvas.ImageServer.Model
         private Study _study;
         #endregion
 
-        
-
         private void LoadRelatedEntities()
         {
             if (_study==null || _studyStorage==null)
             {
-                using (IReadContext context = PersistentStoreRegistry.GetDefaultStore().OpenReadContext())
+                using (var context = new ServerExecutionContext())
                 {
                     lock (SyncRoot)
                     {
                         if (_study == null)
-                            _study = LoadStudy(context);
+                            _study = LoadStudy(context.ReadContext);
 
                         if (_studyStorage == null)
-                            _studyStorage = LoadStudyStorage(context);
+                            _studyStorage = LoadStudyStorage(context.ReadContext);
                     }
-
                 }    
             }
         }

@@ -345,10 +345,9 @@ namespace ClearCanvas.ImageServer.Core.Helpers
                     {
                         try
                         {
-                            IPersistentStore store = PersistentStoreRegistry.GetDefaultStore();
-                            using (IReadContext ctx = store.OpenReadContext())
+                            using (var context = new ServerExecutionContext())
                             {
-                                var deleteRuleBroker = ctx.GetBroker<IServerRuleEntityBroker>();
+                                var deleteRuleBroker = context.ReadContext.GetBroker<IServerRuleEntityBroker>();
                                 var deleteRuleSearchCriteria = new ServerRuleSelectCriteria();
                                 deleteRuleSearchCriteria.ServerRuleTypeEnum.EqualTo(ServerRuleTypeEnum.StudyDelete);
                                 deleteRuleSearchCriteria.Enabled.EqualTo(true);
@@ -369,7 +368,6 @@ namespace ClearCanvas.ImageServer.Core.Helpers
                                     else
                                         _serverMode = ServerOperatingMode.Archive;
                                 }
-
                             }
                         }
                         catch (Exception ex)

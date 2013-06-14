@@ -156,8 +156,8 @@ namespace ClearCanvas.ImageServer.Core.Edit
 
 		private void Initialize()
 		{
-			using (IPersistenceContext readContext = PersistentStoreRegistry.GetDefaultStore().OpenReadContext())
-			{
+            using (var context = new ServerExecutionContext())
+            {
 				_backupDir = ServerExecutionContext.Current.BackupDirectory;
 
 				_oldStudyPath = _oldStudyLocation.GetStudyPath();
@@ -165,9 +165,9 @@ namespace ClearCanvas.ImageServer.Core.Edit
 				_oldStudyFolder = _oldStudyLocation.StudyFolder;
 				_newStudyInstanceUid = _oldStudyInstanceUid;
 
-				_study = _oldStudyLocation.LoadStudy(readContext);
+				_study = _oldStudyLocation.LoadStudy(context.ReadContext);
 				_totalSopCount = _study.NumberOfStudyRelatedInstances;
-				_curPatient = _study.LoadPatient(readContext);
+				_curPatient = _study.LoadPatient(context.ReadContext);
 				_oldPatientInfo = new PatientInfo
 				                  	{
 				                  		Name = _curPatient.PatientsName,
@@ -208,7 +208,7 @@ namespace ClearCanvas.ImageServer.Core.Edit
 				NewStudyPath = Path.Combine(NewStudyPath, _oldStudyFolder);
 				NewStudyPath = Path.Combine(NewStudyPath, _newStudyInstanceUid);
 
-				_newPatient = FindPatient(_newPatientInfo, readContext);
+				_newPatient = FindPatient(_newPatientInfo, context.ReadContext);
 				_patientInfoIsNotChanged = _newPatientInfo.Equals(_oldPatientInfo);
 
 				Statistics.InstanceCount = _study.NumberOfStudyRelatedInstances;

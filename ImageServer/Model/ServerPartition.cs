@@ -24,12 +24,11 @@
 
 using System.Linq;
 using System.Collections.Generic;
-using System.Threading;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Enterprise.Core;
+using ClearCanvas.ImageServer.Common.Command;
 using ClearCanvas.ImageServer.Enterprise;
 using ClearCanvas.ImageServer.Model.EntityBrokers;
-using System;
 
 namespace ClearCanvas.ImageServer.Model
 {
@@ -112,9 +111,9 @@ namespace ClearCanvas.ImageServer.Model
             {
                 if (_dataAccessGroups == null)
                 {
-                    using (var ctx = PersistentStoreRegistry.GetDefaultStore().OpenReadContext())
+                    using (var context = new ServerExecutionContext())
                     {
-                        LoadDataAcessInformation(ctx);
+                        LoadDataAcessInformation(context.ReadContext);
                     }
 
                 }
@@ -137,10 +136,9 @@ namespace ClearCanvas.ImageServer.Model
             {
                 if (_mapDataAccessGroupsAuthorityGroups == null)
                 {
-                    using (var ctx = PersistentStoreRegistry.GetDefaultStore().OpenReadContext())
+                    using (var context = new ServerExecutionContext())
                     {
-
-                        LoadAuthorityGroup(ctx);
+                        LoadAuthorityGroup(context.ReadContext);
                     }
 
                 }
@@ -191,9 +189,9 @@ namespace ClearCanvas.ImageServer.Model
                 {
                     if (!_rulesLoaded)
                     {
-                        using (var ctx = PersistentStoreRegistry.GetDefaultStore().OpenReadContext())
+                        using (var context = new ServerExecutionContext())
                         {
-                            var broker = ctx.GetBroker<IServerRuleEntityBroker>();
+                            var broker = context.ReadContext.GetBroker<IServerRuleEntityBroker>();
                             var criteria = new ServerRuleSelectCriteria();
                             criteria.ServerPartitionKey.EqualTo(this.Key);
                             _rules = broker.Find(criteria);
@@ -213,9 +211,9 @@ namespace ClearCanvas.ImageServer.Model
                 {
                     if (!_archiveLoaded)
                     {
-                        using (var ctx = PersistentStoreRegistry.GetDefaultStore().OpenReadContext())
+                        using (var context = new ServerExecutionContext())
                         {
-                            var broker = ctx.GetBroker<IPartitionArchiveEntityBroker>();
+                            var broker = context.ReadContext.GetBroker<IPartitionArchiveEntityBroker>();
                             var criteria = new PartitionArchiveSelectCriteria();
                             criteria.ServerPartitionKey.EqualTo(this.Key);
                             _archives = broker.Find(criteria);
@@ -235,9 +233,9 @@ namespace ClearCanvas.ImageServer.Model
                 {
                     if (!_aeTitlesLoaded)
                     {
-                        using (var ctx = PersistentStoreRegistry.GetDefaultStore().OpenReadContext())
+                        using (var context = new ServerExecutionContext())
                         {
-                            var broker = ctx.GetBroker<IServerPartitionAlternateAeTitleEntityBroker>();
+                            var broker = context.ReadContext.GetBroker<IServerPartitionAlternateAeTitleEntityBroker>();
                             var criteria = new ServerPartitionAlternateAeTitleSelectCriteria();
                             criteria.ServerPartitionKey.EqualTo(this.Key);
                             _alternateAeTitles = broker.Find(criteria);

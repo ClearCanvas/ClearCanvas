@@ -26,6 +26,7 @@ using System;
 using System.Collections.Generic;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Enterprise.Core;
+using ClearCanvas.ImageServer.Common.Command;
 using ClearCanvas.ImageServer.Enterprise;
 using ClearCanvas.ImageServer.Model.EntityBrokers;
 
@@ -34,9 +35,8 @@ namespace ClearCanvas.ImageServer.Model
     public partial class Study
     {
         #region Private Fields
-        static private readonly IPersistentStore _store = PersistentStoreRegistry.GetDefaultStore();
-        private IDictionary<string, Series> _series = null;
-        private Patient _patient=null;
+        private IDictionary<string, Series> _series;
+        private volatile Patient _patient;
         #endregion
 
         #region Public Properties
@@ -45,11 +45,11 @@ namespace ClearCanvas.ImageServer.Model
         {
             get
             {
-                if (this.Series==null)
+                if (Series==null)
                     return false;
 
-                return CollectionUtils.Contains(this.Series.Values, 
-                    (series)=> !String.IsNullOrEmpty(series.Modality) && (series.Modality.Equals("SR") || series.Modality.Equals("DOC")));
+                return CollectionUtils.Contains(Series.Values, 
+                    series=> !String.IsNullOrEmpty(series.Modality) && (series.Modality.Equals("SR") || series.Modality.Equals("DOC")));
             }
         }
 
@@ -64,11 +64,11 @@ namespace ClearCanvas.ImageServer.Model
                 {
                     lock (SyncRoot)
                     {
-                        using (IReadContext readContext = _store.OpenReadContext())
+                        using (var context = new ServerExecutionContext())
                         {
-                            ISeriesEntityBroker broker = readContext.GetBroker<ISeriesEntityBroker>();
-                            SeriesSelectCriteria criteria = new SeriesSelectCriteria();
-                            criteria.StudyKey.EqualTo(this.GetKey());
+                            var broker = context.ReadContext.GetBroker<ISeriesEntityBroker>();
+                            var criteria = new SeriesSelectCriteria();
+                            criteria.StudyKey.EqualTo(Key);
                             IList<Series> list = broker.Find(criteria);
 
                             _series = new Dictionary<string, Series>();
@@ -95,10 +95,7 @@ namespace ClearCanvas.ImageServer.Model
                 {
                     lock (SyncRoot)
                     {
-                        using (IReadContext readContext = _store.OpenReadContext())
-                        {
-                            _patient = Model.Patient.Load(this.PatientKey);
-                        }
+                        _patient = Patient.Load(PatientKey);
                     }
                 }
                 return _patient;
@@ -110,14 +107,14 @@ namespace ClearCanvas.ImageServer.Model
         /// <summary>
         /// Find a <see cref="Study"/> with the specified study instance uid on the given partition.
         /// </summary>
+        /// <param name="context"></param>
         /// <param name="studyInstanceUid"></param>
         /// <param name="partition"></param>
         /// <returns></returns>
-        /// 
         static public Study Find(IPersistenceContext context, String studyInstanceUid, ServerPartition partition)
         {
-            IStudyEntityBroker broker = context.GetBroker<IStudyEntityBroker>();
-            StudySelectCriteria criteria = new StudySelectCriteria();
+            var broker = context.GetBroker<IStudyEntityBroker>();
+            var criteria = new StudySelectCriteria();
             criteria.ServerPartitionKey.EqualTo(partition.GetKey());
             criteria.StudyInstanceUid.EqualTo(studyInstanceUid);
             Study study = broker.FindOne(criteria);
@@ -143,13 +140,13 @@ namespace ClearCanvas.ImageServer.Model
 
         public StudyStorage LoadStudyStorage(IPersistenceContext context)
         {
-            return StudyStorage.Load(this.StudyStorageKey);
+            return StudyStorage.Load(StudyStorageKey);
         }
 
         static public Study Find(IPersistenceContext context, ServerEntityKey studyStorageKey)
         {
-            IStudyEntityBroker broker = context.GetBroker<IStudyEntityBroker>();
-            StudySelectCriteria criteria = new StudySelectCriteria();
+            var broker = context.GetBroker<IStudyEntityBroker>();
+            var criteria = new StudySelectCriteria();
             criteria.StudyStorageKey.EqualTo( studyStorageKey);
             return broker.FindOne(criteria);
         }
