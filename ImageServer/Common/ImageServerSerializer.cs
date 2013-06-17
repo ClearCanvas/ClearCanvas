@@ -71,6 +71,10 @@ namespace ClearCanvas.ImageServer.Common
                 var dateTimePair = typeof(DateTimePair);
                 attribute = AttributeUtils.GetAttribute<EditTypeAttribute>(dateTimePair);
                 _contractMap.Add(attribute.ContractId, dateTimePair);
+
+                var safePrivate = typeof(SafePrivateAttributes);
+                attribute = AttributeUtils.GetAttribute<EditTypeAttribute>(safePrivate);
+                _contractMap.Add(attribute.ContractId, safePrivate);
             }
 
             #region IJsmlSerializerHook
