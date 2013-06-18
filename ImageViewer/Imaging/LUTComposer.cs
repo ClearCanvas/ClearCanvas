@@ -24,6 +24,7 @@
 
 using System;
 using ClearCanvas.Common;
+using ClearCanvas.Common.Utilities;
 
 namespace ClearCanvas.ImageViewer.Imaging
 {
@@ -57,6 +58,8 @@ namespace ClearCanvas.ImageViewer.Imaging
 	public class LutComposer : IComposedLut, IDisposable
 	{
 		#region Private Fields
+
+		private event EventHandler _lutChanged;
 
 		private LutCollection _lutCollection;
 		private IComposableLut _normalizationLut;
@@ -127,6 +130,15 @@ namespace ClearCanvas.ImageViewer.Imaging
 		#region Public Properties
 
 		/// <summary>
+		/// Fired when the composed LUT data has been invalidated due to upstream changes.
+		/// </summary>
+		public event EventHandler LutChanged
+		{
+			add { _lutChanged += value; }
+			remove { _lutChanged -= value; }
+		}
+
+		/// <summary>
 		/// Gets or sets the modality LUT in the grayscale image display pipeline, which transforms stored pixel values to manufacturer-independent values.
 		/// </summary>
 		/// <seealso cref="LutComposer"/>
@@ -189,6 +201,8 @@ namespace ClearCanvas.ImageViewer.Imaging
 
 			SyncMinMaxValues();
 			_recalculate = true;
+
+			EventsHelper.Fire(_lutChanged, this, new EventArgs());
 		}
 
 		private void SyncMinMaxValues()
@@ -235,11 +249,7 @@ namespace ClearCanvas.ImageViewer.Imaging
 					DisposeCachedLut();
 					_recalculate = false;
 				}
-
-				if (_cachedLut == null)
-					_cachedLut = ComposedLutCache.GetLut(LutCollection);
-
-				return _cachedLut;
+				return _cachedLut ?? (_cachedLut = ComposedLutCache.GetLut(LutCollection));
 			}
 		}
 

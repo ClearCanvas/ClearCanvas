@@ -31,7 +31,7 @@ using System.Xml.Serialization;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Serialization;
 using ClearCanvas.Common.Utilities;
-using ClearCanvas.Dicom.Editing.Common.Commands;
+using ClearCanvas.Dicom.ServiceModel.Editing;
 using ClearCanvas.ImageServer.Common.ExternalRequest;
 using ClearCanvas.ImageServer.Common.WorkQueue;
 
@@ -52,25 +52,20 @@ namespace ClearCanvas.ImageServer.Common
                                 select new { a.ContractId, Contract = t })
                     .ToDictionary(entry => entry.ContractId, entry => entry.Contract);
 
-                EditTypeAttribute attribute;
-                foreach (var type in Condition.GetConditionTypes().Where(AttributeUtils.HasAttribute<EditTypeAttribute>))
+                foreach (var type in Edit.GetKnownTypes().Where(AttributeUtils.HasAttribute<EditTypeAttribute>))
                 {
-                    attribute = AttributeUtils.GetAttribute<EditTypeAttribute>(type);
-                    _contractMap.Add(attribute.ContractId, type);
+                    var attribute = AttributeUtils.GetAttribute<EditTypeAttribute>(type);
+                    Type existing;
+                    if (_contractMap.TryGetValue(attribute.ContractId, out existing))
+                    {
+                        if (type != existing)
+                            Platform.Log(LogLevel.Debug, "Ignoring duplicate contract with ID={0}; keeping {1}, ignoring {2}", attribute.ContractId, existing, type);
+                    }
+                    else
+                    {
+                        _contractMap.Add(attribute.ContractId, type);
+                    }
                 }
-                foreach (var type in Edit.GetEditTypes().Where(AttributeUtils.HasAttribute<EditTypeAttribute>))
-                {
-                    attribute = AttributeUtils.GetAttribute<EditTypeAttribute>(type);
-                    _contractMap.Add(attribute.ContractId, type);
-                }
-
-                var pathAndVr = typeof (PathAndVr);
-                attribute = AttributeUtils.GetAttribute<EditTypeAttribute>(pathAndVr);
-                _contractMap.Add(attribute.ContractId, pathAndVr);
-
-                var dateTimePair = typeof(DateTimePair);
-                attribute = AttributeUtils.GetAttribute<EditTypeAttribute>(dateTimePair);
-                _contractMap.Add(attribute.ContractId, dateTimePair);
             }
 
             #region IJsmlSerializerHook

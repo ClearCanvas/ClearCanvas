@@ -166,10 +166,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Dicom\Editing\Common\ClearCanvas.Dicom.Editing.Common.csproj">
-      <Project>{D54FF9CA-AD09-438F-BDE5-99364272AD97}</Project>
-      <Name>ClearCanvas.Dicom.Editing.Common</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\Common\ClearCanvas.Common.csproj">
       <Project>{F6EAD428-E6CF-4DF6-B2F3-D33D532C5343}</Project>
       <Name>ClearCanvas.Common</Name>
@@ -228,7 +224,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Edit\" />
     <Folder Include="Reconcile\" />
   </ItemGroup>
   <ItemGroup>

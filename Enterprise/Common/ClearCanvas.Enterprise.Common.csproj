@@ -165,6 +165,8 @@
     <Compile Include="Manifest\IManifestService.cs" />
     <Compile Include="Manifest\ServerManifestVerification.cs" />
     <Compile Include="NullOfflineCache.cs" />
+    <Compile Include="PagedResults.cs" />
+    <Compile Include="PageRange.cs" />
     <Compile Include="PagedDataContractBase.cs" />
     <Compile Include="Ping\IPingService.cs" />
     <Compile Include="RemoteCoreServiceProvider2.cs" />
