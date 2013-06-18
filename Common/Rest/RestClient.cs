@@ -94,6 +94,14 @@ namespace ClearCanvas.Common.Rest
 				}
 			}
 
+            /// <summary>
+            /// Writes the body of the response to the specified stream, and closes the response.
+            /// </summary>
+            public Stream GetResponseStream()
+            {            
+                return _response.GetResponseStream();
+            }
+
 			/// <summary>
 			/// Obtains the body of the response as a string, and closes the response.
 			/// </summary>
@@ -163,6 +171,13 @@ namespace ClearCanvas.Common.Rest
 					Platform.Log(LogLevel.Warn, e, "Error closing HttpWebResponse response object.");
 				}
 			}
+
+		    public bool IsContentMultipartRelated()
+		    {
+		        var s = _response.Headers["Content-Type"];
+
+                return s == "multipart/related";       
+		    }
 		}
 
 		#endregion
@@ -294,8 +309,11 @@ namespace ClearCanvas.Common.Rest
 				// copy headers
 				foreach (var kvp in _rc.Headers)
 				{
-					_request.Headers[kvp.Key] = kvp.Value;
-				}
+				    if (kvp.Key == HttpRequestHeader.Accept)
+				        _request.Accept = kvp.Value;
+                    else
+					    _request.Headers[kvp.Key] = kvp.Value;
+				}      
 			}
 
 			private void WriteRequestBody()
