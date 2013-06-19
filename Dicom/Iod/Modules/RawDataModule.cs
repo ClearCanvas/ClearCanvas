@@ -1,0 +1,181 @@
+﻿#region License
+
+// Copyright (c) 2013, ClearCanvas Inc.
+// All rights reserved.
+// http://www.clearcanvas.ca
+//
+// This file is part of the ClearCanvas RIS/PACS open source project.
+//
+// The ClearCanvas RIS/PACS open source project is free software: you can
+// redistribute it and/or modify it under the terms of the GNU General Public
+// License as published by the Free Software Foundation, either version 3 of the
+// License, or (at your option) any later version.
+//
+// The ClearCanvas RIS/PACS open source project is distributed in the hope that it
+// will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
+// Public License for more details.
+//
+// You should have received a copy of the GNU General Public License along with
+// the ClearCanvas RIS/PACS open source project.  If not, see
+// <http://www.gnu.org/licenses/>.
+
+#endregion
+
+using System;
+using System.Collections.Generic;
+using ClearCanvas.Dicom.Iod.Sequences;
+using ClearCanvas.Dicom.Utilities;
+
+namespace ClearCanvas.Dicom.Iod.Modules
+{
+
+    /// <summary>
+	/// RawData Module
+	/// </summary>
+	/// <remarks>As defined in the DICOM Standard 2011, Part 3, Section C.19.1 (Table C.19-1)</remarks>
+	public class RawDataModule : IodBase
+	{
+		/// <summary>
+        /// Initializes a new instance of the <see cref="RawDataModule"/> class.
+		/// </summary>	
+		public RawDataModule() {}
+
+		/// <summary>
+        /// Initializes a new instance of the <see cref="RawDataModule"/> class.
+		/// </summary>
+        public RawDataModule(IDicomAttributeProvider dicomAttributeProvider) : base(dicomAttributeProvider) { }
+
+
+
+        #region Public Properties
+        /// <summary>
+        /// Gets or sets the value of InstanceNumber in the underlying collection. Type 3.
+        /// </summary>
+        /// <value>The instance number.</value>
+        public int? InstanceNumber
+        {
+            get
+            {
+                int result;
+                if (DicomAttributeProvider[DicomTags.InstanceNumber].TryGetInt32(0, out result))
+                    return result;
+                return null;
+            }
+            set
+            {
+                if (!value.HasValue)
+                {
+                    DicomAttributeProvider[DicomTags.InstanceNumber] = null;
+                    return;
+                }
+                DicomAttributeProvider[DicomTags.InstanceNumber].SetInt32(0, value.Value);
+            }
+        }
+
+
+        /// <summary>
+        /// Gets or sets the content date.
+        /// </summary>
+        /// <value>The content date.</value>
+        public DateTime? ContentDate
+        {
+            get
+            {
+                return DateTimeParser.ParseDateAndTime(DicomAttributeProvider, 0, DicomTags.ContentDate,
+                                                       DicomTags.ContentTime);
+            }
+            set
+            {
+                DateTimeParser.SetDateTimeAttributeValues(value, DicomAttributeProvider, 0, DicomTags.ContentDate,
+                                                          DicomTags.ContentTime);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the acquisition date.  Checks both the AcquisitionDatetime tag and the AcquisitionDate/AcquisitionTime tags.
+        /// </summary>
+        /// <value>The acquisition date.</value>
+        public DateTime? AcquisitionDate
+        {
+            get { return DateTimeParser.ParseDateAndTime(DicomAttributeProvider, DicomTags.AcquisitionDatetime, DicomTags.AcquisitionDate, DicomTags.AcquisitionTime); }
+
+            set { DateTimeParser.SetDateTimeAttributeValues(value, DicomAttributeProvider, DicomTags.AcquisitionDatetime, DicomTags.AcquisitionDate, DicomTags.AcquisitionTime); }
+        }
+
+        /// <summary>
+        /// Laterality of (possibly paired) body part examined.
+        /// </summary>
+        /// <value>
+        /// Enumerated values:
+        /// R = right
+        /// L = Left
+        /// U = unpaired
+        /// B = both left and right
+        /// </value>
+        public string ImageLaterality
+        {
+            get { return DicomAttributeProvider[DicomTags.ImageLaterality].ToString(); }
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                {
+                    DicomAttributeProvider[DicomTags.ImageLaterality].SetNullValue();
+                    return;
+                }
+                DicomAttributeProvider[DicomTags.ImageLaterality].SetStringValue(value);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the Creator Version UID.  Unique identification of the equipment and version fo the software that has created the Raw Data information.
+        /// The UID allows one to avoid attempting to interpret raw data with an unknown format.
+        /// </summary>
+        /// <value>The UID.</value>
+        public string CreatorVersionUid
+        {
+            get { return DicomAttributeProvider[DicomTags.CreatorVersionUid].GetString(0, String.Empty); }
+            set { DicomAttributeProvider[DicomTags.CreatorVersionUid].SetString(0, value); }
+        }
+
+
+        /// <summary>
+        ///Other instances significantly related to this instance.  One or more items are permitted in this sequence.
+        /// </summary>
+        /// <value>The referenced instance sequence list.</value>
+        public SequenceIodList<ReferencedInstanceSequenceIod> ReferencedInstanceSequenceList
+        {
+            get
+            {
+                return new SequenceIodList<ReferencedInstanceSequenceIod>(DicomAttributeProvider[DicomTags.ReferencedInstanceSequence] as DicomAttributeSQ);
+            }
+        }
+
+        #endregion
+
+
+		/// <summary>
+		/// Initializes the attributes of the module to their default values.
+		/// </summary>
+		public void InitializeAttributes()
+		{			
+		}
+
+		/// <summary>
+		/// Gets an enumeration of <see cref="DicomTag"/>s used by this module.
+		/// </summary>
+		public static IEnumerable<uint> DefinedTags
+		{
+			get
+			{
+				yield return DicomTags.InstanceNumber;
+				yield return DicomTags.ContentDate;
+				yield return DicomTags.ContentTime;
+				yield return DicomTags.AcquisitionDatetime;
+				yield return DicomTags.ImageLaterality;
+				yield return DicomTags.CreatorVersionUid;
+				yield return DicomTags.ReferencedImageSequence;
+			}
+		}
+	}
+}

@@ -335,8 +335,76 @@ namespace ClearCanvas.Dicom.Iod.Modules
 
 		// TODO: Include Digital Signatures Macro
 		// TODO: Implement Encrypted Attributes Sequence
-		// TODO: Implement Original Attributes Sequence
+
+        /// <summary>
+        /// Gets or sets the value of OriginalAttributesSequence in the underlying collection. Type 3.
+        /// </summary>
+        /// <remarks>
+        /// Sequence of items containing all attributes that were removed or replaced by other values in the main dataset.
+        /// One or more items are permitted in this sequence.
+        /// </remarks>
+        public OriginalAttributesSequence[] OriginalAttributesSequence
+        {
+            get
+            {
+                DicomAttribute dicomAttribute;
+                if (!DicomAttributeProvider.TryGetAttribute(DicomTags.OriginalAttributesSequence, out dicomAttribute))
+                {
+                    return null;
+                }
+
+                var result = new OriginalAttributesSequence[dicomAttribute.Count];
+                var items = (DicomSequenceItem[])dicomAttribute.Values;
+                for (int n = 0; n < items.Length; n++)
+                    result[n] = new OriginalAttributesSequence(items[n]);
+
+                return result;
+            }
+            set
+            {
+                if (value == null || value.Length == 0)
+                {
+                    DicomAttributeProvider[DicomTags.OriginalAttributesSequence].SetNullValue();
+                    return;
+                }
+
+                var result = new DicomSequenceItem[value.Length];
+                for (int n = 0; n < value.Length; n++)
+                    result[n] = value[n].DicomSequenceItem;
+
+                DicomAttributeProvider[DicomTags.OriginalAttributesSequence].Values = result;
+            }
+        }
+
+
 		// TODO: Implement HL7 Structured Document Reference Sequence
+
+        /// <summary>
+        /// Gets or sets the value of LongitudinalTemporalInformationModified in the underlying collection. Type 3.
+        /// </summary>
+        /// <remarks>
+        /// Indicates whether or not the date and time attributes in the instance have been modified during
+        /// de-dentification
+        /// </remarks>
+        /// <value>
+        /// Enumerated values:
+        /// UNMODIFIED
+        /// MODIFIED
+        /// REMOVED
+        /// </value>
+        public string LongitudinalTemporalInformationModified
+        {
+            get { return DicomAttributeProvider[DicomTags.LongitudinalTemporalInformationModified].ToString(); }
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                {
+                    DicomAttributeProvider[DicomTags.AuthorizationEquipmentCertificationNumber] = null;
+                    return;
+                }
+                DicomAttributeProvider[DicomTags.AuthorizationEquipmentCertificationNumber].SetStringValue(value);
+            }
+        }
 
 		/// <summary>
 		/// Initializes the attributes in this module to their default values.
@@ -372,6 +440,7 @@ namespace ClearCanvas.Dicom.Iod.Modules
 				yield return DicomTags.EncryptedAttributesSequence;
 				yield return DicomTags.OriginalAttributesSequence;
 				yield return DicomTags.Hl7StructuredDocumentReferenceSequence;
+			    yield return DicomTags.LongitudinalTemporalInformationModified;
 			}
 		}
 	}
