@@ -178,6 +178,15 @@ namespace ClearCanvas.Common.Rest
 
                 return s == "multipart/related";       
 		    }
+
+
+            public string GetFilename()
+            {
+                var s = _response.Headers["Content-Disposition"];
+                var i = s.IndexOf("filename=");
+                s = s.Substring(i + "filename=".Length);
+                return s;
+            }
 		}
 
 		#endregion
