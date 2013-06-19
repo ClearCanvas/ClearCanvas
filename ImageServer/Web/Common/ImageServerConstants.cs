@@ -37,7 +37,7 @@ public class ImageServerConstants
 
         #endregion
 
-        public const string CookieDateTimeFormat = "yyyy-M-d H:m:s";
+        public const string CookieDateTimeFormat = "yyyy-M-d H:m:s"; //TODO: get rid of this, use epoch instead
         public const string DefaultApplicationName = "ImageServer";
         public const string Default = "Default";
         public const string DefaultConfigurationXml = "<HsmArchive><RootDir>e:\\Archive</RootDir></HsmArchive>";
