@@ -488,7 +488,7 @@ namespace ClearCanvas.Desktop.View.WinForms
 		public int MaxRows
 		{
 			get { return this.MaxDimensions.Height; }
-			set { this.MaxDimensions = new Size(value, this.MaxColumns); }
+			set { this.MaxDimensions = new Size(this.MaxColumns, value); }
 		}
 
 		/// <summary>
@@ -499,7 +499,7 @@ namespace ClearCanvas.Desktop.View.WinForms
 		public int MaxColumns
 		{
 			get { return this.MaxDimensions.Width; }
-			set { this.MaxDimensions = new Size(this.MaxRows, value); }
+            set { this.MaxDimensions = new Size(value, this.MaxRows); }
 		}
 
 		/// <summary>
