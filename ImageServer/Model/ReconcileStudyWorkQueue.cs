@@ -26,7 +26,7 @@ using System;
 using System.IO;
 using System.Xml;
 using ClearCanvas.Common;
-using ClearCanvas.Enterprise.Core;
+using ClearCanvas.ImageServer.Common.Command;
 
 namespace ClearCanvas.ImageServer.Model
 {
@@ -65,9 +65,9 @@ namespace ClearCanvas.ImageServer.Model
             {
                 if (_studyStorage == null)
                 {
-                    using (IReadContext context = PersistentStoreRegistry.GetDefaultStore().OpenReadContext())
+                    using (var context = new ServerExecutionContext())
                     {
-                        _studyStorage = StudyStorage.Load(context, this.StudyStorageKey);
+                        _studyStorage = StudyStorage.Load(context.ReadContext, this.StudyStorageKey);
                     }
                 }
 

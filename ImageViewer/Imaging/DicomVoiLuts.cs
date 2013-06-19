@@ -81,11 +81,11 @@ namespace ClearCanvas.ImageViewer.Imaging
 		string PresentationStateSopInstanceUid { get; }
 	}
 
-	internal sealed class DicomVoiLuts : IDicomVoiLuts
+	public sealed class DicomVoiLuts : IDicomVoiLuts
 	{
 		private readonly IImageSopProvider _image;
 
-		internal DicomVoiLuts(IImageSopProvider image)
+		public DicomVoiLuts(IImageSopProvider image)
 		{
 			_image = image;
 		}
