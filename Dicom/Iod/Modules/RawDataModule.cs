@@ -36,6 +36,18 @@ namespace ClearCanvas.Dicom.Iod.Modules
 	/// <remarks>As defined in the DICOM Standard 2011, Part 3, Section C.19.1 (Table C.19-1)</remarks>
 	public class RawDataModule : IodBase
 	{
+        public const string ClearCanvasStudyAttachmentSeriesDescription = "ClearCanvas Attachment Series";
+        public static DicomTag ClearCanvasRawDataGroupTag = new DicomTag(0x7FD10010, "ClearCanvas Raw Data Group", "ClearCanvasRawDataGroup",
+                                                      DicomVr.LOvr, false, 1, 1, false);
+        public static DicomTag ClearCanvasRawDataFilenameTag = new DicomTag(0x7FD11010, "ClearCanvas Raw Data Filename", "ClearCanvasRawDataFilename",
+                                                              DicomVr.STvr, false, 1, 1, false);
+        public static DicomTag ClearCanvasRawDataMimeTypeTag = new DicomTag(0x7FD11012, "ClearCanvas Raw Data Mime Type", "ClearCanvasRawDataMimeType",
+                                                              DicomVr.LOvr, false, 1, 1, false);
+        public static DicomTag ClearCanvasRawDataPaddingAddedTag = new DicomTag(0x7FD11014, "ClearCanvas Raw Data Padding Added", "ClearCanvasRawDataPaddingAdded",
+                                                              DicomVr.LOvr, false, 1, 1, false);
+        public static DicomTag ClearCanvasRawDataTag = new DicomTag(0x7FD11016, "ClearCanvas Raw Data", "ClearCanvasRawData",
+                                                              DicomVr.OBvr, false, 1, 1, false);
+
 		/// <summary>
         /// Initializes a new instance of the <see cref="RawDataModule"/> class.
 		/// </summary>	
@@ -151,6 +163,104 @@ namespace ClearCanvas.Dicom.Iod.Modules
             }
         }
 
+        public byte[] ClearCanvasRawData
+        {
+            get
+            {
+                DicomAttribute attribute;
+                if (!DicomAttributeProvider.TryGetAttribute(ClearCanvasRawDataTag, out attribute))
+                    return null;
+
+                return attribute.Values as byte[];
+            }
+            set
+            {
+                DicomAttribute attribute;
+
+                if (!DicomAttributeProvider.TryGetAttribute(ClearCanvasRawDataGroupTag, out attribute))
+                    DicomAttributeProvider[ClearCanvasRawDataGroupTag].SetString(0, ClearCanvasRawDataGroupTag.Name);
+
+                if (value == null)
+                {
+                    DicomAttributeProvider[ClearCanvasRawDataTag].SetEmptyValue();
+                    ClearCanvasRawDataPaddingAdded = false;
+                }
+                else
+                {
+                    DicomAttributeProvider[ClearCanvasRawDataTag].Values = value;
+                    ClearCanvasRawDataPaddingAdded = (value.Length & 0x00000001) == 0x00000001;
+                }
+            }
+        }
+        
+        public bool ClearCanvasRawDataPaddingAdded
+        {
+            get
+            {
+                DicomAttribute attribute;
+                if (!DicomAttributeProvider.TryGetAttribute(ClearCanvasRawDataPaddingAddedTag, out attribute))
+                    return false;
+
+                return attribute.ToString().Equals("TRUE");
+            }
+            set
+            {
+                DicomAttribute attribute;
+
+                if (!DicomAttributeProvider.TryGetAttribute(ClearCanvasRawDataGroupTag, out attribute))
+                    DicomAttributeProvider[ClearCanvasRawDataGroupTag].SetString(0, ClearCanvasRawDataGroupTag.Name);
+
+                DicomAttributeProvider[ClearCanvasRawDataPaddingAddedTag].SetStringValue(value ? "TRUE" : "FALSE");
+            }
+        }
+
+        public string ClearCanvasRawDataMimeType
+        {
+            get
+            {
+                DicomAttribute attribute;
+                if (!DicomAttributeProvider.TryGetAttribute(ClearCanvasRawDataMimeTypeTag, out attribute))
+                    return null;
+
+                return attribute.ToString();
+            }
+            set
+            {
+                DicomAttribute attribute;
+
+                if (!DicomAttributeProvider.TryGetAttribute(ClearCanvasRawDataGroupTag, out attribute))
+                    DicomAttributeProvider[ClearCanvasRawDataGroupTag].SetString(0, ClearCanvasRawDataGroupTag.Name);
+
+                if (value == null)
+                    DicomAttributeProvider[ClearCanvasRawDataMimeTypeTag].SetEmptyValue();
+                else
+                    DicomAttributeProvider[ClearCanvasRawDataMimeTypeTag].Values = value;
+            }
+        }
+
+        public string ClearCanvasRawDataFilename
+        {
+            get
+            {
+                DicomAttribute attribute;
+                if (!DicomAttributeProvider.TryGetAttribute(ClearCanvasRawDataFilenameTag, out attribute))
+                    return null;
+
+                return attribute.ToString();
+            }
+            set
+            {
+                DicomAttribute attribute;
+
+                if (!DicomAttributeProvider.TryGetAttribute(ClearCanvasRawDataGroupTag, out attribute))
+                    DicomAttributeProvider[ClearCanvasRawDataGroupTag].SetString(0, ClearCanvasRawDataGroupTag.Name);
+
+                if (value == null)
+                    DicomAttributeProvider[ClearCanvasRawDataFilenameTag].SetEmptyValue();
+                else
+                    DicomAttributeProvider[ClearCanvasRawDataFilenameTag].SetStringValue(value);
+            }
+        }
         #endregion
 
 

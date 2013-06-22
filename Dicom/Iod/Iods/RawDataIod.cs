@@ -26,7 +26,7 @@ using ClearCanvas.Dicom.Iod.Modules;
 
 namespace ClearCanvas.Dicom.Iod.Iods
 {
-    class RawDataIod
+    public class RawDataIod
     {
         private readonly IDicomAttributeProvider _dicomAttributeProvider;
 		private readonly PatientModuleIod _patientModule;
