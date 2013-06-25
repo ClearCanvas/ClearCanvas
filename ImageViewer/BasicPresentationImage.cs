@@ -29,6 +29,7 @@ using ClearCanvas.ImageViewer.Annotations;
 using ClearCanvas.ImageViewer.Graphics;
 using ClearCanvas.ImageViewer.PresentationStates;
 using ClearCanvas.ImageViewer.Rendering;
+using ClearCanvas.ImageViewer.Rendering.GDI;
 
 namespace ClearCanvas.ImageViewer
 {

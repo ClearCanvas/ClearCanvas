@@ -40,7 +40,7 @@ namespace ClearCanvas.ImageViewer.Rendering
 		/// <summary>
 		/// Gets an <see cref="IRenderingSurface"/>.
 		/// </summary>
-		/// <param name="windowID">The window ID.  On Windows systems, this is the window handle
+		/// <param name="windowId">The window ID.  On Windows systems, this is the window handle
 		/// or "hwnd".</param>
 		/// <param name="width">The width of the surface.</param>
 		/// <param name="height">The height of the surface.</param>
@@ -53,7 +53,7 @@ namespace ClearCanvas.ImageViewer.Rendering
 		/// that same surface (passed in via the <see cref="DrawArgs"/>) irrespective 
 		/// of the <see cref="IPresentationImage"/> being rendered.
 		/// </remarks>
-		IRenderingSurface GetRenderingSurface(IntPtr windowID, int width, int height);
+		IRenderingSurface GetRenderingSurface(IntPtr windowId, int width, int height);
 
 		/// <summary>
 		/// Renders the specified scene graph to the graphics surface.

@@ -53,6 +53,8 @@ namespace ClearCanvas.ImageViewer.Rendering
 		where TRenderingSurface : class, IRenderingSurface
 		where TPresentationImage : class, IPresentationImage
 	{
+		private readonly string _rendererTypeId;
+
 		/// <summary>
 		/// Constructor.
 		/// </summary>
@@ -60,6 +62,8 @@ namespace ClearCanvas.ImageViewer.Rendering
 		{
 			DrawMode = DrawMode.Render;
 			Dpi = 96;
+
+			_rendererTypeId = GetType().Name;
 		}
 
 		/// <summary>
@@ -240,7 +244,7 @@ namespace ClearCanvas.ImageViewer.Rendering
 			}
 
 			clock.Stop();
-			PerformanceReportBroker.PublishReport("RendererBase2", "DrawTextOverlay", clock.Seconds);
+			PerformanceReportBroker.PublishReport(_rendererTypeId, "DrawTextOverlay", clock.Seconds);
 		}
 
 		/// <summary>

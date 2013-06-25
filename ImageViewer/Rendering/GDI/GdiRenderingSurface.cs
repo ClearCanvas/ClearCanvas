@@ -28,42 +28,42 @@ using System;
 using System.Drawing;
 using ClearCanvas.Common;
 
-namespace ClearCanvas.ImageViewer.Rendering
+namespace ClearCanvas.ImageViewer.Rendering.GDI
 {
 	internal sealed class GdiRenderingSurface : IRenderingSurface
 	{
-		private ImageBuffer _imageBuffer;
+		private BitmapBuffer _imageBuffer;
 		private BackBuffer _finalBuffer;
 
-		private IntPtr _windowID;
-		private IntPtr _contextID;
+		private IntPtr _windowId;
+		private IntPtr _contextId;
 		private Rectangle _clientRectangle;
 		private Rectangle _clipRectangle;
 
-		public GdiRenderingSurface(IntPtr windowID, int width, int height)
+		public GdiRenderingSurface(IntPtr windowId, int width, int height)
 		{
-			_imageBuffer = new ImageBuffer();
+			_imageBuffer = new BitmapBuffer();
 			_finalBuffer = new BackBuffer();
 
-			_windowID = windowID;
-			this.ClientRectangle = new Rectangle(0, 0, width, height);
+			_windowId = windowId;
+			ClientRectangle = new Rectangle(0, 0, width, height);
 		}
 
 		#region IRenderingSurface Members
 
 		public IntPtr WindowID
 		{
-			get { return _windowID; }
-			set { _windowID = value; }
+			get { return _windowId; }
+			set { _windowId = value; }
 		}
 
-		public IntPtr ContextID 
+		public IntPtr ContextID
 		{
-			get { return _contextID; }
-			set 
-			{ 
-				_contextID = value;
-				FinalBuffer.ContextID = _contextID;
+			get { return _contextId; }
+			set
+			{
+				_contextId = value;
+				FinalBuffer.ContextId = _contextId;
 			}
 		}
 
@@ -109,7 +109,7 @@ namespace ClearCanvas.ImageViewer.Rendering
 
 		#endregion
 
-		public ImageBuffer ImageBuffer
+		public BitmapBuffer ImageBuffer
 		{
 			get { return _imageBuffer; }
 		}

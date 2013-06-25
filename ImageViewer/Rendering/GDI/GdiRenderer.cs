@@ -26,37 +26,15 @@ using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
-using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.ImageViewer.Annotations;
 using ClearCanvas.ImageViewer.Graphics;
 using ClearCanvas.ImageViewer.Mathematics;
 
-namespace ClearCanvas.ImageViewer.Rendering
+namespace ClearCanvas.ImageViewer.Rendering.GDI
 {
 	/// <summary>
-	/// A factory for <see cref="GdiRenderer"/>s.
-	/// </summary>
-	internal sealed class GdiRendererFactory : RendererFactoryBase
-	{
-		/// <summary>
-		/// Default constructor.
-		/// </summary>
-		public GdiRendererFactory()
-		{
-		}
-
-		/// <summary>
-		/// Allocates a new <see cref="GdiRenderer"/>.
-		/// </summary>
-		protected override RendererBase GetNewRenderer()
-		{
-			return new GdiRenderer();
-		}
-	}
-
-	/// <summary>
-	/// A 2D Renderer that uses GDI.
+	/// A 2D Renderer that uses GDI+.
 	/// </summary>
 	public class GdiRenderer : RendererBase
 	{
@@ -72,22 +50,21 @@ namespace ClearCanvas.ImageViewer.Rendering
 		private Pen _pen;
 		private SolidBrush _brush;
 
-	    private FontFactory _fontFactory;
+		private FontFactory _fontFactory;
 
 		/// <summary>
 		/// Default constructor.
 		/// </summary>
 		public GdiRenderer()
-			: base()
 		{
 			_pen = new Pen(Color.White);
 			_brush = new SolidBrush(Color.Black);
-            _fontFactory = new FontFactory();
+			_fontFactory = new FontFactory();
 		}
 
 		private new GdiRenderingSurface Surface
 		{
-			get { return (GdiRenderingSurface) base.Surface; }	
+			get { return (GdiRenderingSurface) base.Surface; }
 		}
 
 		#region Disposal
@@ -111,11 +88,11 @@ namespace ClearCanvas.ImageViewer.Rendering
 					_brush.Dispose();
 					_brush = null;
 				}
-                if (_fontFactory != null)
-                {
-                    _fontFactory.Dispose();
-                    _fontFactory = null;
-                }
+				if (_fontFactory != null)
+				{
+					_fontFactory.Dispose();
+					_fontFactory = null;
+				}
 			}
 		}
 
@@ -289,7 +266,6 @@ namespace ClearCanvas.ImageViewer.Rendering
 
 			SetDashStyle(arc);
 
-			
 			Surface.FinalBuffer.Graphics.DrawArc(
 				_pen,
 				rectangle.Left + dropShadowOffset.Width,
@@ -360,7 +336,7 @@ namespace ClearCanvas.ImageViewer.Rendering
 			// We adjust the font size depending on the scale so that it's the same size
 			// irrespective of the zoom
 			var fontSize = CalculateScaledFontPoints(textPrimitive.SizeInPoints, Dpi);
-			Font font = _fontFactory.CreateFont(textPrimitive.Font, fontSize, FontStyle.Regular, GraphicsUnit.Point, _defaultFont);
+			Font font = _fontFactory.GetFont(textPrimitive.Font, fontSize, FontStyle.Regular, GraphicsUnit.Point, _defaultFont);
 
 			// Calculate how big the text will be so we can set the bounding box
 			textPrimitive.Dimensions = Surface.FinalBuffer.Graphics.MeasureString(textPrimitive.Text, font);
@@ -392,102 +368,102 @@ namespace ClearCanvas.ImageViewer.Rendering
 		/// <summary>
 		/// Draws an <see cref="AnnotationBox"/>.
 		/// </summary>
-        protected override void DrawAnnotationBox(string annotationText, AnnotationBox annotationBox)
+		protected override void DrawAnnotationBox(string annotationText, AnnotationBox annotationBox)
 		{
-		    // if there's nothing to draw, there's nothing to do. go figure.
-		    if (string.IsNullOrEmpty(annotationText))
-		        return;
+			// if there's nothing to draw, there's nothing to do. go figure.
+			if (string.IsNullOrEmpty(annotationText))
+				return;
 
-		    Rectangle clientRectangle = RectangleUtilities.CalculateSubRectangle(Surface.ClientRectangle, annotationBox.NormalizedRectangle);
-		    //Deflate the client rectangle by 4 pixels to allow some space 
-		    //between neighbouring rectangles whose borders coincide.
-		    Rectangle.Inflate(clientRectangle, -4, -4);
+			Rectangle clientRectangle = RectangleUtilities.CalculateSubRectangle(Surface.ClientRectangle, annotationBox.NormalizedRectangle);
+			//Deflate the client rectangle by 4 pixels to allow some space 
+			//between neighbouring rectangles whose borders coincide.
+			Rectangle.Inflate(clientRectangle, -4, -4);
 
-		    int fontSize = (clientRectangle.Height/annotationBox.NumberOfLines) - 1;
+			int fontSize = (clientRectangle.Height/annotationBox.NumberOfLines) - 1;
 
-		    //don't draw it if it's too small to read, anyway.
-		    if (fontSize < MinimumFontSizeInPixels)
-		        return;
+			//don't draw it if it's too small to read, anyway.
+			if (fontSize < MinimumFontSizeInPixels)
+				return;
 
-		    StringFormat format = new StringFormat();
+			StringFormat format = new StringFormat();
 
-		    if (annotationBox.Truncation == AnnotationBox.TruncationBehaviour.Truncate)
-		        format.Trimming = StringTrimming.Character;
-		    else
-		        format.Trimming = StringTrimming.EllipsisCharacter;
+			if (annotationBox.Truncation == AnnotationBox.TruncationBehaviour.Truncate)
+				format.Trimming = StringTrimming.Character;
+			else
+				format.Trimming = StringTrimming.EllipsisCharacter;
 
-		    if (annotationBox.FitWidth)
-		        format.Trimming = StringTrimming.None;
+			if (annotationBox.FitWidth)
+				format.Trimming = StringTrimming.None;
 
-		    if (annotationBox.Justification == AnnotationBox.JustificationBehaviour.Right)
-		        format.Alignment = StringAlignment.Far;
-		    else if (annotationBox.Justification == AnnotationBox.JustificationBehaviour.Center)
-		        format.Alignment = StringAlignment.Center;
-		    else
-		        format.Alignment = StringAlignment.Near;
+			if (annotationBox.Justification == AnnotationBox.JustificationBehaviour.Right)
+				format.Alignment = StringAlignment.Far;
+			else if (annotationBox.Justification == AnnotationBox.JustificationBehaviour.Center)
+				format.Alignment = StringAlignment.Center;
+			else
+				format.Alignment = StringAlignment.Near;
 
-		    if (annotationBox.VerticalAlignment == AnnotationBox.VerticalAlignmentBehaviour.Top)
-		        format.LineAlignment = StringAlignment.Near;
-		    else if (annotationBox.VerticalAlignment == AnnotationBox.VerticalAlignmentBehaviour.Center)
-		        format.LineAlignment = StringAlignment.Center;
-		    else
-		        format.LineAlignment = StringAlignment.Far;
+			if (annotationBox.VerticalAlignment == AnnotationBox.VerticalAlignmentBehaviour.Top)
+				format.LineAlignment = StringAlignment.Near;
+			else if (annotationBox.VerticalAlignment == AnnotationBox.VerticalAlignmentBehaviour.Center)
+				format.LineAlignment = StringAlignment.Center;
+			else
+				format.LineAlignment = StringAlignment.Far;
 
-		    //allow p's and q's, etc to extend slightly beyond the bounding rectangle.  Only completely visible lines are shown.
-		    format.FormatFlags = StringFormatFlags.NoClip;
+			//allow p's and q's, etc to extend slightly beyond the bounding rectangle.  Only completely visible lines are shown.
+			format.FormatFlags = StringFormatFlags.NoClip;
 
-		    if (annotationBox.NumberOfLines == 1)
-		        format.FormatFlags |= StringFormatFlags.NoWrap;
+			if (annotationBox.NumberOfLines == 1)
+				format.FormatFlags |= StringFormatFlags.NoWrap;
 
-		    FontStyle style = FontStyle.Regular;
-		    if (annotationBox.Bold)
-		        style |= FontStyle.Bold;
-		    if (annotationBox.Italics)
-		        style |= FontStyle.Italic;
+			FontStyle style = FontStyle.Regular;
+			if (annotationBox.Bold)
+				style |= FontStyle.Bold;
+			if (annotationBox.Italics)
+				style |= FontStyle.Italic;
 
-		    //don't draw it if it's too small to read, anyway.
-		    if (fontSize < MinimumFontSizeInPixels)
-		        return;
+			//don't draw it if it's too small to read, anyway.
+			if (fontSize < MinimumFontSizeInPixels)
+				return;
 
-		    Font font = _fontFactory.CreateFont(annotationBox.Font, fontSize, style, GraphicsUnit.Pixel,
-		                                        AnnotationBox.DefaultFont);
-		    SizeF layoutArea = new SizeF(clientRectangle.Width, clientRectangle.Height);
-		    SizeF size = Surface.FinalBuffer.Graphics.MeasureString(annotationText, font, layoutArea, format);
-		    if (annotationBox.FitWidth && size.Width > clientRectangle.Width)
-		    {
-		        fontSize = (int) (Math.Round(fontSize*clientRectangle.Width/(double) size.Width - 0.5));
+			Font font = _fontFactory.GetFont(annotationBox.Font, fontSize, style, GraphicsUnit.Pixel,
+			                                 AnnotationBox.DefaultFont);
+			SizeF layoutArea = new SizeF(clientRectangle.Width, clientRectangle.Height);
+			SizeF size = Surface.FinalBuffer.Graphics.MeasureString(annotationText, font, layoutArea, format);
+			if (annotationBox.FitWidth && size.Width > clientRectangle.Width)
+			{
+				fontSize = (int) (Math.Round(fontSize*clientRectangle.Width/(double) size.Width - 0.5));
 
-		        //don't draw it if it's too small to read, anyway.
-		        if (fontSize < MinimumFontSizeInPixels)
-		            return;
+				//don't draw it if it's too small to read, anyway.
+				if (fontSize < MinimumFontSizeInPixels)
+					return;
 
-		        font = _fontFactory.CreateFont(annotationBox.Font, fontSize, style, GraphicsUnit.Pixel,
-		                                       AnnotationBox.DefaultFont);
-		    }
+				font = _fontFactory.GetFont(annotationBox.Font, fontSize, style, GraphicsUnit.Pixel,
+				                            AnnotationBox.DefaultFont);
+			}
 
-		    // Draw drop shadow
-		    _brush.Color = Color.Black;
-		    clientRectangle.Offset(1, 1);
+			// Draw drop shadow
+			_brush.Color = Color.Black;
+			clientRectangle.Offset(1, 1);
 
-		    Surface.FinalBuffer.Graphics.DrawString(
-		        annotationText,
-		        font,
-		        _brush,
-		        clientRectangle,
-		        format);
+			Surface.FinalBuffer.Graphics.DrawString(
+				annotationText,
+				font,
+				_brush,
+				clientRectangle,
+				format);
 
-		    _brush.Color = Color.FromName(annotationBox.Color);
-		    clientRectangle.Offset(-1, -1);
+			_brush.Color = Color.FromName(annotationBox.Color);
+			clientRectangle.Offset(-1, -1);
 
-		    Surface.FinalBuffer.Graphics.DrawString(
-		        annotationText,
-		        font,
-		        _brush,
-		        clientRectangle,
-		        format);
+			Surface.FinalBuffer.Graphics.DrawString(
+				annotationText,
+				font,
+				_brush,
+				clientRectangle,
+				format);
 		}
 
-	    /// <summary>
+		/// <summary>
 		/// Draws an error message in the Scene Graph's client area of the screen.
 		/// </summary>
 		[Obsolete("Renderer implementations are no longer responsible for handling render pipeline errors.")]
@@ -505,7 +481,8 @@ namespace ClearCanvas.ImageViewer.Rendering
 			Surface.FinalBuffer.Graphics.DrawString(message, font, _brush, Surface.ClipRectangle, format);
 		}
 
-		private void InternalDrawLinePrimitive(ILineSegmentGraphic line) {
+		private void InternalDrawLinePrimitive(ILineSegmentGraphic line)
+		{
 			Surface.FinalBuffer.Graphics.Transform = line.SpatialTransform.CumulativeTransform;
 			line.CoordinateSystem = CoordinateSystem.Source;
 
@@ -624,9 +601,9 @@ namespace ClearCanvas.ImageViewer.Rendering
 				_pen.DashStyle = DashStyle.Custom;
 
 				if (graphic.LineStyle == LineStyle.Dash)
-					_pen.DashPattern = new float[] { 4.0F, 4.0F };
+					_pen.DashPattern = new[] {4.0F, 4.0F};
 				else
-					_pen.DashPattern = new float[] { 2.0F, 4.0F };
+					_pen.DashPattern = new[] {2.0F, 4.0F};
 			}
 		}
 
@@ -657,9 +634,22 @@ namespace ClearCanvas.ImageViewer.Rendering
 		/// <summary>
 		/// Factory method for an <see cref="IRenderingSurface"/>.
 		/// </summary>
-		public sealed override IRenderingSurface GetRenderingSurface(IntPtr windowID, int width, int height)
+		public override sealed IRenderingSurface GetRenderingSurface(IntPtr windowId, int width, int height)
 		{
-			return new GdiRenderingSurface(windowID, width, height);
+			return new GdiRenderingSurface(windowId, width, height);
 		}
 	}
+}
+
+namespace ClearCanvas.ImageViewer.Rendering
+{
+	/// <summary>
+	/// A 2D Renderer that uses GDI+.
+	/// </summary>
+	/// <remarks>
+	/// The default 2D GDI+ <see cref="IRenderer"/> has moved to <see cref="GDI.GdiRenderer"/>.
+	/// This class exists solely to provide backward compatibility for code that referenced the GdiRenderer in this namespace.
+	/// </remarks>
+	[Obsolete("The default GdiRenderer has moved to the ClearCanvas.ImageViewer.Rendering.GDI namespace.")]
+	public class GdiRenderer : GDI.GdiRenderer {}
 }
