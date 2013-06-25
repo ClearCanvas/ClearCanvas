@@ -32,16 +32,19 @@ namespace ClearCanvas.ImageViewer.Graphics
 	/// </summary>
 	public class PointChangedEventArgs : EventArgs
 	{
-		private PointF _point;
+		private readonly PointF _point;
+		private readonly CoordinateSystem _coordinateSystem;
 
 		/// <summary>
 		/// Initializes a new instance of <see cref="PointChangedEventArgs"/>
 		/// with the specified point.
 		/// </summary>
 		/// <param name="point"></param>
-		public PointChangedEventArgs(PointF point)
+		/// <param name="coordinateSystem"></param>
+		public PointChangedEventArgs(PointF point, CoordinateSystem coordinateSystem)
 		{
 			_point = point;
+			_coordinateSystem = coordinateSystem;
 		}
 
 		/// <summary>
@@ -50,6 +53,14 @@ namespace ClearCanvas.ImageViewer.Graphics
 		public PointF Point
 		{
 			get { return _point; }
+		}
+
+		/// <summary>
+		/// Gets the coordinate system in which the value of <see cref="Point"/> is expressed.
+		/// </summary>
+		public CoordinateSystem CoordinateSystem
+		{
+			get { return _coordinateSystem; }
 		}
 	}
 }

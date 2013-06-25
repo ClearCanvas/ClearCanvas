@@ -49,9 +49,7 @@ namespace ClearCanvas.ImageViewer.Graphics
 		/// <summary>
 		/// Constructor.
 		/// </summary>
-		protected BoundableGraphic()
-		{
-		}
+		protected BoundableGraphic() {}
 
 		/// <summary>
 		/// Gets or sets the top-left corner of the rectangle
@@ -75,7 +73,7 @@ namespace ClearCanvas.ImageViewer.Graphics
 			}
 			set
 			{
-				if (FloatComparer.AreEqual(this.TopLeft, value))
+				if (FloatComparer.AreEqual(TopLeft, value))
 					return;
 
 				if (base.CoordinateSystem == CoordinateSystem.Source)
@@ -86,8 +84,8 @@ namespace ClearCanvas.ImageViewer.Graphics
 					_topLeft = base.SpatialTransform.ConvertToSource(value);
 				}
 
-				EventsHelper.Fire(_topLeftChangedEvent, this, new PointChangedEventArgs(this.TopLeft));
-				base.NotifyVisualStateChanged("TopLeft");
+				OnTopLeftChanged(new PointChangedEventArgs(TopLeft, CoordinateSystem));
+				NotifyVisualStateChanged("TopLeft");
 			}
 		}
 
@@ -113,7 +111,7 @@ namespace ClearCanvas.ImageViewer.Graphics
 			}
 			set
 			{
-				if (FloatComparer.AreEqual(this.BottomRight, value))
+				if (FloatComparer.AreEqual(BottomRight, value))
 					return;
 
 				if (base.CoordinateSystem == CoordinateSystem.Source)
@@ -124,8 +122,8 @@ namespace ClearCanvas.ImageViewer.Graphics
 					_bottomRight = base.SpatialTransform.ConvertToSource(value);
 				}
 
-				EventsHelper.Fire(_bottomRightChangedEvent, this, new PointChangedEventArgs(this.BottomRight));
-				base.NotifyVisualStateChanged("BottomRight");
+				OnBottomRightChanged(new PointChangedEventArgs(BottomRight, CoordinateSystem));
+				NotifyVisualStateChanged("BottomRight");
 			}
 		}
 
@@ -206,7 +204,7 @@ namespace ClearCanvas.ImageViewer.Graphics
 		/// </remarks>
 		public override RectangleF BoundingBox
 		{
-			get { return RectangleUtilities.ConvertToPositiveRectangle(this.Rectangle); }
+			get { return RectangleUtilities.ConvertToPositiveRectangle(Rectangle); }
 		}
 
 		/// <summary>
@@ -225,6 +223,24 @@ namespace ClearCanvas.ImageViewer.Graphics
 		{
 			add { _bottomRightChangedEvent += value; }
 			remove { _bottomRightChangedEvent -= value; }
+		}
+
+		/// <summary>
+		/// Called to notify that the <see cref="TopLeft"/> property has changed.
+		/// </summary>
+		/// <param name="e"></param>
+		protected virtual void OnTopLeftChanged(PointChangedEventArgs e)
+		{
+			EventsHelper.Fire(_topLeftChangedEvent, this, e);
+		}
+
+		/// <summary>
+		/// Called to notify that the <see cref="BottomRight"/> property has changed.
+		/// </summary>
+		/// <param name="e"></param>
+		protected virtual void OnBottomRightChanged(PointChangedEventArgs e)
+		{
+			EventsHelper.Fire(_bottomRightChangedEvent, this, e);
 		}
 
 		/// <summary>

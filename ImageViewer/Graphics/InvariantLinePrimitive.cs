@@ -110,7 +110,7 @@ namespace ClearCanvas.ImageViewer.Graphics
 		/// </summary>
 		protected override void OnTopLeftChanged()
 		{
-			EventsHelper.Fire(_point1Changed, this, new PointChangedEventArgs(this.TopLeft));
+			EventsHelper.Fire(_point1Changed, this, new PointChangedEventArgs(this.TopLeft, CoordinateSystem));
 			base.OnTopLeftChanged();
 		}
 
@@ -119,7 +119,7 @@ namespace ClearCanvas.ImageViewer.Graphics
 		/// </summary>
 		protected override void OnBottomRightChanged()
 		{
-			EventsHelper.Fire(_point2Changed, this, new PointChangedEventArgs(this.BottomRight));
+			EventsHelper.Fire(_point2Changed, this, new PointChangedEventArgs(this.BottomRight, CoordinateSystem));
 			base.OnBottomRightChanged();
 		}
 

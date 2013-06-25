@@ -272,7 +272,7 @@ namespace ClearCanvas.ImageViewer.Graphics
 		/// </summary>
 		protected virtual void OnTopLeftChanged()
 		{
-			EventsHelper.Fire(_topLeftChanged, this, new PointChangedEventArgs(this.TopLeft));
+			EventsHelper.Fire(_topLeftChanged, this, new PointChangedEventArgs(this.TopLeft, CoordinateSystem));
 		}
 
 		/// <summary>
@@ -280,7 +280,7 @@ namespace ClearCanvas.ImageViewer.Graphics
 		/// </summary>
 		protected virtual void OnBottomRightChanged()
 		{
-			EventsHelper.Fire(_bottomRightChanged, this, new PointChangedEventArgs(this.BottomRight));
+			EventsHelper.Fire(_bottomRightChanged, this, new PointChangedEventArgs(this.BottomRight, CoordinateSystem));
 		}
 
 		#region IBoundableGraphic Members

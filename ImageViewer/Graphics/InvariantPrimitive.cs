@@ -112,7 +112,7 @@ namespace ClearCanvas.ImageViewer.Graphics
 		/// </summary>
 		protected virtual void OnLocationChanged()
 		{
-			EventsHelper.Fire(_locationChangedEvent, this, new PointChangedEventArgs(this.Location));
+			EventsHelper.Fire(_locationChangedEvent, this, new PointChangedEventArgs(this.Location, CoordinateSystem));
 		}
 
 		/// <summary>
