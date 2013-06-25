@@ -23,8 +23,10 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Common;
+using ClearCanvas.ImageViewer.Mathematics;
 
 namespace ClearCanvas.ImageViewer.Imaging
 {
@@ -62,8 +64,8 @@ namespace ClearCanvas.ImageViewer.Imaging
 				IComposableLut curLut = this[i];
 				IComposableLut prevLut = this[i - 1];
 
-				if (prevLut.MinOutputValue != curLut.MinInputValue ||
-					prevLut.MaxOutputValue != curLut.MaxInputValue)
+				if (!FloatComparer.AreEqual(prevLut.MinOutputValue, curLut.MinInputValue) ||
+					!FloatComparer.AreEqual(prevLut.MaxOutputValue, curLut.MaxInputValue))
 					throw new InvalidOperationException(SR.ExceptionLUTInputOutputRange);
 			}
 		}

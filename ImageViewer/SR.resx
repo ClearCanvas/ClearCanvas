@@ -714,4 +714,7 @@ Alternately, the study can be brought back online by a PACS administrator.</valu
   <data name="SuffixFormatKeyImageDisplaySet" xml:space="preserve">
     <value>Key Images</value>
   </data>
+  <data name="DescriptionPresentationLut" xml:space="preserve">
+    <value>Presentation Lut</value>
+  </data>
 </root>

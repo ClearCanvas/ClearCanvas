@@ -36,9 +36,9 @@ namespace ClearCanvas.ImageViewer.Imaging
 	{
 		public abstract double MinInputValue { get; set; }
 		public abstract double MaxInputValue { get; set; }
-		public abstract int MinOutputValue { get; protected set; }
-		public abstract int MaxOutputValue { get; protected set; }
-		public abstract int this[double input] { get; }
+		public abstract double MinOutputValue { get; protected set; }
+        public abstract double MaxOutputValue { get; protected set; }
+        public abstract double this[double input] { get; }
 
 		internal override sealed double MinInputValueCore
 		{

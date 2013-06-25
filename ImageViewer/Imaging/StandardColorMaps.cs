@@ -22,6 +22,7 @@
 
 #endregion
 
+using System;
 using System.Drawing;
 
 namespace ClearCanvas.ImageViewer.Imaging
@@ -79,27 +80,28 @@ namespace ClearCanvas.ImageViewer.Imaging
 		/// <summary>
 		/// Generates the Lut.
 		/// </summary>
-		protected override void Create()
+        protected override void Create()
 		{
-			Color color;
+		    int j = 0;
+		    double maxGrayLevel = Length - 1;
+		    int min = MinInputValue;
+		    int max = MaxInputValue;
 
-			int j = 0;
-			int maxGrayLevel = this.Length - 1;
-			int min = MinInputValue;
-			int max = MaxInputValue;
-
-			for (int i = min; i <= max; i++)
-			{
-				float scale = j / (float)maxGrayLevel;
-				j++;
-
-				int value = (int)(byte.MaxValue * scale);
-				color = Color.FromArgb(255, value, value, value);
-				this[i] = color.ToArgb();
-			}
+            unchecked
+		    {
+                const int alphaMask = (int)0xFF000000; 
+                
+                for (int i = min; i <= max; i++)
+		        {
+		            double scale = j++/maxGrayLevel;
+		            byte value = (byte) Math.Round(byte.MaxValue*scale);
+		            int color = alphaMask| (value << 16) | (value << 8) | value;
+		            this[i] = color;
+		        }
+		    }
 		}
 
-		/// <summary>
+	    /// <summary>
 		/// Returns an abbreviated description of the Lut.
 		/// </summary>
 		public override string GetDescription()

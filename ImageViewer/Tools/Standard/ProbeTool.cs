@@ -262,8 +262,12 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 		{
 			if (grayscaleImage.VoiLut != null)
 			{
-				var voiLutValue = grayscaleImage.OutputLut[pixelValue];
-				voiLutString = String.Format(SR.FormatProbeInfo, SR.LabelVOILut, voiLutValue);
+			    var value = grayscaleImage.ModalityLut[pixelValue];
+                if (grayscaleImage.NormalizationLut != null)
+                    value = grayscaleImage.NormalizationLut[value];
+
+                var voiLutValue = grayscaleImage.VoiLut[value];
+				voiLutString = String.Format(SR.FormatProbeInfo, SR.LabelVOILut, voiLutValue.ToString("F1"));
 			}
 		}
 

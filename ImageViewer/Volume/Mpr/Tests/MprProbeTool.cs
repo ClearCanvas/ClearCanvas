@@ -144,7 +144,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr.Tests
 
 						int pixelValue = 0;
 						double modalityLutValue = 0;
-						int voiLutValue = 0;
+						double voiLutValue = 0;
 
 						GetPixelValue(image, sourcePointRounded, ref pixelValue, ref pixelValueString);
 						GetModalityLutValue(image, pixelValue, ref modalityLutValue, ref modalityLutString);
@@ -216,7 +216,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr.Tests
 		private void GetVoiLutValue(
 			GrayscaleImageGraphic grayscaleImage,
 			double modalityLutValue,
-			ref int voiLutValue,
+			ref double voiLutValue,
 			ref string voiLutString)
 		{
 			if (grayscaleImage.VoiLut != null)

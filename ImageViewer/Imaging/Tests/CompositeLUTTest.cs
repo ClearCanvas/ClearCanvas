@@ -91,19 +91,23 @@ namespace ClearCanvas.ImageViewer.Imaging.Tests
 			Assert.AreEqual(10, voiLUT.MinInputValue, _tolerance);
 			Assert.AreEqual(137.5, voiLUT.MaxInputValue, _tolerance);
 			Assert.AreEqual(10, voiLUT.MinOutputValue);
-			Assert.AreEqual(138, voiLUT.MaxOutputValue);
-			Assert.AreEqual(10, voiLUT[10]);
-			Assert.AreEqual(138, voiLUT[138]);
-			Assert.AreEqual(73, voiLUT[73]);
+			Assert.AreEqual(137.5, voiLUT.MaxOutputValue);
+            Assert.AreEqual(10, voiLUT[10], _tolerance);
+			Assert.AreEqual(137.5, voiLUT[138], _tolerance);
+            Assert.AreEqual(73.24803, voiLUT[73], _tolerance);
 
 			Assert.AreEqual(0, lutComposer.MinInputValue);
 			Assert.AreEqual(255, lutComposer.MaxInputValue);
-			Assert.AreEqual(10, lutComposer.MinOutputValue);
-			Assert.AreEqual(138, lutComposer.MaxOutputValue);
 
-			Assert.AreEqual(10, lutComposer[0]);
-			Assert.AreEqual(138, lutComposer[255]);
-			Assert.AreEqual(74, lutComposer[127]);
+            //For this, we want the output range to be the same as the VOI.
+		    var output = lutComposer.GetOutputLut((int)Math.Round(voiLUT.MinOutputValue), (int)Math.Round(voiLUT.MaxOutputValue));
+
+            Assert.AreEqual(10, output.MinOutputValue);
+            Assert.AreEqual(138, output.MaxOutputValue);
+
+            Assert.AreEqual(10, output[0], _tolerance);
+            Assert.AreEqual(138, output[255], _tolerance);
+            Assert.AreEqual(74, output[127], _tolerance);
 		}
 
 		[Test]
@@ -139,15 +143,18 @@ namespace ClearCanvas.ImageViewer.Imaging.Tests
 
 			Assert.AreEqual(200, voiLUT.MinInputValue, _tolerance);
 			Assert.AreEqual(3000, voiLUT.MaxInputValue, _tolerance);
-			Assert.AreEqual(200, voiLUT.MinOutputValue);
-			Assert.AreEqual(3000, voiLUT.MaxOutputValue);
-			Assert.AreEqual(200, voiLUT[200]);
-			Assert.AreEqual(3000, voiLUT[3000]);
-			Assert.AreEqual(1601, voiLUT[1600]);
+			Assert.AreEqual(200, voiLUT.MinOutputValue, _tolerance);
+            Assert.AreEqual(3000, voiLUT.MaxOutputValue, _tolerance);
+            Assert.AreEqual(200, voiLUT[200], _tolerance);
+            Assert.AreEqual(3000, voiLUT[3000], _tolerance);
+            Assert.AreEqual(1600.50018, voiLUT[1600], _tolerance);
 
-			Assert.AreEqual(200, lutComposer.Data[0]);
-			Assert.AreEqual(3000, lutComposer.Data[4095]);
-			Assert.AreEqual(1601, lutComposer.Data[2048]);
+            //For this, we want the output range to be the same as the VOI.
+            var output = lutComposer.GetOutputLut((int)Math.Round(voiLUT.MinOutputValue), (int)Math.Round(voiLUT.MaxOutputValue));
+
+            Assert.AreEqual(200, output.Data[0]);
+            Assert.AreEqual(3000, output.Data[4095]);
+            Assert.AreEqual(1601, output.Data[2048]);
 		}
 
 		[Test]
@@ -186,21 +193,24 @@ namespace ClearCanvas.ImageViewer.Imaging.Tests
 
 			Assert.AreEqual(-1024, voiLUT.MinInputValue, _tolerance);
 			Assert.AreEqual(64511, voiLUT.MaxInputValue, _tolerance);
-			Assert.AreEqual(-1024, voiLUT.MinOutputValue);
-			Assert.AreEqual(64511, voiLUT.MaxOutputValue);
+            Assert.AreEqual(-1024, voiLUT.MinOutputValue, _tolerance);
+            Assert.AreEqual(64511, voiLUT.MaxOutputValue, _tolerance);
 
 			// Left Window
-			Assert.AreEqual(-1024, voiLUT[-135]);
+			Assert.AreEqual(-1024, voiLUT[-135], _tolerance);
 			// Right Window
-			Assert.AreEqual(64511, voiLUT[215]);
+            Assert.AreEqual(64511, voiLUT[215], _tolerance);
 			// Window center
 			// 31837 is correct according to DICOM: See PS 3.3 C.11.2.1.2 for the calculation.
 			// Although you might think it should be 31744 (65535/2 - 1024), it is not.
-			Assert.AreEqual(31837, voiLUT[40]);
-			
-			Assert.AreEqual(-1024, lutComposer.Data[0]);
-			Assert.AreEqual(64511, lutComposer.Data[65535]);
-			Assert.AreEqual(31837, lutComposer.Data[1064]);
+            Assert.AreEqual(31837.38968, voiLUT[40], _tolerance);
+
+            //For this, we want the output range to be the same as the VOI.
+            var output = lutComposer.GetOutputLut((int)Math.Round(voiLUT.MinOutputValue), (int)Math.Round(voiLUT.MaxOutputValue));
+            
+            Assert.AreEqual(-1024, output.Data[0]);
+            Assert.AreEqual(64511, output.Data[65535]);
+            Assert.AreEqual(31837, output.Data[1064]);
 		}
 
 		[Test]
@@ -237,15 +247,18 @@ namespace ClearCanvas.ImageViewer.Imaging.Tests
 
 			Assert.AreEqual(-54, voiLUT.MinInputValue, _tolerance);
 			Assert.AreEqual(73.5, voiLUT.MaxInputValue, _tolerance);
-			Assert.AreEqual(-54, voiLUT.MinOutputValue);
-			Assert.AreEqual(74, voiLUT.MaxOutputValue);
-			Assert.AreEqual(-54, voiLUT[-1]);
-			Assert.AreEqual(74, voiLUT[0]);
+            Assert.AreEqual(-54, voiLUT.MinOutputValue, _tolerance);
+            Assert.AreEqual(73.5, voiLUT.MaxOutputValue, _tolerance);
+            Assert.AreEqual(-54, voiLUT[-1], _tolerance);
+            Assert.AreEqual(73.5, voiLUT[0], _tolerance);
 
-			Assert.AreEqual(-54, lutComposer.Data[0]);
-			Assert.AreEqual(-54, lutComposer.Data[106]);
-			Assert.AreEqual(-54, lutComposer.Data[107]); // stored pixel -21 which, if you don't round off the modality LUT, is actually -0.5 and therefore has a VOI value of -54
-			Assert.AreEqual(74, lutComposer.Data[108]);
+            //For this, we want the output range to be the same as the VOI.
+            var output = lutComposer.GetOutputLut((int)Math.Round(voiLUT.MinOutputValue), (int)Math.Round(voiLUT.MaxOutputValue));
+            
+            Assert.AreEqual(-54, output.Data[0]);
+            Assert.AreEqual(-54, output.Data[106]);
+            Assert.AreEqual(-54, output.Data[107]); // stored pixel -21 which, if you don't round off the modality LUT, is actually -0.5 and therefore has a VOI value of -54
+            Assert.AreEqual(74, output.Data[108]);
 		}
 
 		[Test]
@@ -283,17 +296,31 @@ namespace ClearCanvas.ImageViewer.Imaging.Tests
 			Assert.AreEqual(2047, voiLUT.MaxInputValue, _tolerance);
 			Assert.AreEqual(-2048, voiLUT.MinOutputValue);
 			Assert.AreEqual(2047, voiLUT.MaxOutputValue);
-			Assert.AreEqual(-1536, voiLUT[-2047]);
-			Assert.AreEqual(-1024, voiLUT[0]);
-			Assert.AreEqual(-513, voiLUT[2047]);
 
-			//This test is a little different from the others, it tests the output using a grayscale color map.
+            Assert.AreEqual(-1535.84380, voiLUT[-2047], _tolerance);
+            Assert.AreEqual(-1024.18751, voiLUT[0], _tolerance);
+            Assert.AreEqual(-512.53122, voiLUT[2047], _tolerance);
+
+            //For this, we want the output range to be the same as the VOI.
+            var output = lutComposer.GetOutputLut((int)Math.Round(voiLUT.MinOutputValue), (int)Math.Round(voiLUT.MaxOutputValue));
+
+            Assert.AreEqual(-1536, output[-2047]);
+            Assert.AreEqual(-1024, output[0]);
+            Assert.AreEqual(-513, output[2047]);
+
+            Assert.AreEqual(voiLUT.MinOutputValue, output.MinInputValue);
+            Assert.AreEqual(voiLUT.MaxOutputValue, output.MaxInputValue);
+            Assert.AreEqual(voiLUT.MinOutputValue, output.MinOutputValue);
+            Assert.AreEqual(voiLUT.MaxOutputValue, output.MaxOutputValue);
+
+            //This test is a little different from the others, it tests the output using a grayscale color map.
 			var colorMap = _lutFactory.GetGrayscaleColorMap();
-			colorMap.MaxInputValue = lutComposer.MaxOutputValue;
-			colorMap.MinInputValue = lutComposer.MinOutputValue;
-			Assert.AreEqual(31, 0x000000ff & colorMap[lutComposer.Data[0]]);
-			Assert.AreEqual(63, 0x000000ff & colorMap[lutComposer.Data[2048]]);
-			Assert.AreEqual(95, 0x000000ff & colorMap[lutComposer.Data[4095]]);
+			colorMap.MaxInputValue = output.MaxOutputValue;
+            colorMap.MinInputValue = output.MinOutputValue;
+
+            Assert.AreEqual(32, 0x000000ff & colorMap[output.Data[0]]);
+            Assert.AreEqual(64, 0x000000ff & colorMap[output.Data[2048]]);
+            Assert.AreEqual(96, 0x000000ff & colorMap[output.Data[4095]]);
 		}
 
 		[Test]
@@ -329,15 +356,15 @@ namespace ClearCanvas.ImageViewer.Imaging.Tests
 
 			Assert.AreEqual(-33792, voiLUT.MinInputValue, _tolerance);
 			Assert.AreEqual(31743, voiLUT.MaxInputValue, _tolerance);
-			Assert.AreEqual(-33792, voiLUT.MinOutputValue);
-			Assert.AreEqual(31743, voiLUT.MaxOutputValue);
+            Assert.AreEqual(-33792, voiLUT.MinOutputValue, _tolerance);
+            Assert.AreEqual(31743, voiLUT.MaxOutputValue, _tolerance);
 
 			// Left Window
-			Assert.AreEqual(-33792, voiLUT[-135]);
+			Assert.AreEqual(-33792, voiLUT[-135], _tolerance);
 			// Right Window
-			Assert.AreEqual(31743, voiLUT[215]);
+            Assert.AreEqual(31743, voiLUT[215], _tolerance);
 			// Window center
-			Assert.AreEqual(-931, voiLUT[40]);
+            Assert.AreEqual(-930.610315, voiLUT[40], _tolerance);
 		}
 
 		[Test]
@@ -371,16 +398,18 @@ namespace ClearCanvas.ImageViewer.Imaging.Tests
 
 			Assert.AreEqual(-16384, voiLut.MinInputValue, _tolerance);
 			Assert.AreEqual(16383, voiLut.MaxInputValue, _tolerance);
-			Assert.AreEqual(-16384, voiLut.MinOutputValue);
-			Assert.AreEqual(16383, voiLut.MaxOutputValue);
+            Assert.AreEqual(-16384, voiLut.MinOutputValue, _tolerance);
+            Assert.AreEqual(16383, voiLut.MaxOutputValue, _tolerance);
 
-			Assert.AreEqual(-13543, voiLut[-13543]);
-			Assert.AreEqual(12564, voiLut[12564]);
-			Assert.AreEqual(-4074, voiLut[-4074]);
+			Assert.AreEqual(-13543, voiLut[-13543], _tolerance);
+            Assert.AreEqual(12564, voiLut[12564], _tolerance);
+            Assert.AreEqual(-4074, voiLut[-4074], _tolerance);
 
-			Assert.AreEqual(-13543, lutComposer.Data[-13543 + 16384]);
-			Assert.AreEqual(12564, lutComposer.Data[12564 + 16384]);
-			Assert.AreEqual(-4074, lutComposer.Data[-4074 + 16384]);
+            //For this, we want the output range to be the same as the VOI.
+            var output = lutComposer.GetOutputLut((int)Math.Round(voiLut.MinOutputValue), (int)Math.Round(voiLut.MaxOutputValue));
+            Assert.AreEqual(-13543, output.Data[-13543 + 16384]);
+            Assert.AreEqual(12564, output.Data[12564 + 16384]);
+            Assert.AreEqual(-4074, output.Data[-4074 + 16384]);
 		}
 
 		[Test]
@@ -414,16 +443,18 @@ namespace ClearCanvas.ImageViewer.Imaging.Tests
 
 			Assert.AreEqual(0, voiLut.MinInputValue, _tolerance);
 			Assert.AreEqual(8191, voiLut.MaxInputValue, _tolerance);
-			Assert.AreEqual(0, voiLut.MinOutputValue);
-			Assert.AreEqual(8191, voiLut.MaxOutputValue);
+            Assert.AreEqual(0, voiLut.MinOutputValue, _tolerance);
+            Assert.AreEqual(8191, voiLut.MaxOutputValue, _tolerance);
 
-			Assert.AreEqual(1543, voiLut[1543]);
-			Assert.AreEqual(5164, voiLut[5164]);
-			Assert.AreEqual(7074, voiLut[7074]);
+            Assert.AreEqual(1543, voiLut[1543], _tolerance);
+            Assert.AreEqual(5164, voiLut[5164], _tolerance);
+            Assert.AreEqual(7074, voiLut[7074], _tolerance);
 
-			Assert.AreEqual(1543, lutComposer.Data[1543]);
-			Assert.AreEqual(5164, lutComposer.Data[5164]);
-			Assert.AreEqual(7074, lutComposer.Data[7074]);
+            //For this, we want the output range to be the same as the VOI.
+            var output = lutComposer.GetOutputLut((int)Math.Round(voiLut.MinOutputValue), (int)Math.Round(voiLut.MaxOutputValue));
+			Assert.AreEqual(1543, output.Data[1543]);
+            Assert.AreEqual(5164, output.Data[5164]);
+            Assert.AreEqual(7074, output.Data[7074]);
 		}
 
 		[Test]
@@ -441,7 +472,9 @@ namespace ClearCanvas.ImageViewer.Imaging.Tests
 
 			LutComposer lutComposer = new LutComposer(0, 4095);
 			lutComposer.VoiLut = voiLUT;
-			int[] data = lutComposer.Data;
+
+            //For this, we want the output range to be the same as the VOI.
+            var output = lutComposer.GetOutputLut(0, 255);
 		}
 
 		[Test]
@@ -449,8 +482,9 @@ namespace ClearCanvas.ImageViewer.Imaging.Tests
 		public void NoLUTsAdded()
 		{
 			LutComposer lutComposer = new LutComposer();
-			int[] data = lutComposer.Data;
-		}
+            //For this, we want the output range to be the same as the VOI.
+            var output = lutComposer.GetOutputLut(0, 255);
+        }
 	}
 }
 

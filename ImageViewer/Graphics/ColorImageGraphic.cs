@@ -217,7 +217,7 @@ namespace ClearCanvas.ImageViewer.Graphics
 			get
 			{
 				InitializeNecessaryLuts(Luts.Voi);
-				return this.LutComposer;
+				return this.LutComposer.GetOutputLut(0, byte.MaxValue);
 			}
 		}
 

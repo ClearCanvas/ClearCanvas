@@ -48,15 +48,23 @@ namespace ClearCanvas.ImageViewer.Imaging.Tests
 			Assert.IsTrue(colorMap.Length == 4096);
 
 			Color color = Color.FromArgb(colorMap.Data[0]);
-			Assert.IsTrue(255 == color.A && 0 == color.R && color.R == color.G && color.G == color.B);
+		    Assert.AreEqual(255, color.A);
+            Assert.AreEqual(0, color.R);
+            Assert.IsTrue(color.R == color.G && color.G == color.B);
 
 			color = Color.FromArgb(colorMap.Data[2047]);
-			Assert.IsTrue(127 == color.R && color.R == color.G && color.G == color.B);
+            Assert.AreEqual(255, color.A);
+            //Halfway is exactly 127.5, but it could round up or down depending on floating point error.
+            Assert.IsTrue(color.R == 127 || color.R == 128);
+            Assert.IsTrue(color.R == color.G && color.G == color.B);
 
 			color = Color.FromArgb(colorMap.Data[4095]);
-			Assert.IsTrue(255 == color.R && color.R == color.G && color.G == color.B);
-		}
+            Assert.AreEqual(255, color.A);
+            Assert.AreEqual(255, color.R);
+            Assert.IsTrue(color.R == color.G && color.G == color.B);
+        }
 
+        [Test]
 		public void Test12Signed()
 		{
 			GrayscaleColorMap colorMap = new GrayscaleColorMap();
@@ -66,17 +74,24 @@ namespace ClearCanvas.ImageViewer.Imaging.Tests
 			Assert.IsTrue(colorMap.Length == 4096);
 
 			Assert.AreEqual(colorMap.Data[0], colorMap[-2048]);
-			Color color = Color.FromArgb(colorMap.Data[0]);
-			Assert.IsTrue(255 == color.A && 0 == color.R && color.R == color.G && color.G == color.B);
+            Color color = Color.FromArgb(colorMap.Data[0]);
+            Assert.AreEqual(255, color.A);
+            Assert.AreEqual(0, color.R);
+            Assert.IsTrue(color.R == color.G && color.G == color.B);
 
 			Assert.AreEqual(colorMap.Data[2048], colorMap[0]);
-			color = Color.FromArgb(colorMap.Data[2048]);
-			Assert.IsTrue(127 == color.R && color.R == color.G && color.G == color.B);
+            color = Color.FromArgb(colorMap.Data[2048]);
+            Assert.AreEqual(255, color.A);
+            //Halfway is exactly 127.5, but it could round up or down depending on floating point error.
+            Assert.IsTrue(color.R == 127 || color.R == 128);
+            Assert.IsTrue(color.R == color.G && color.G == color.B);
 
 			Assert.AreEqual(colorMap.Data[4095], colorMap[2047]);
-			color = Color.FromArgb(colorMap.Data[4095]);
-			Assert.IsTrue(255 == color.R && color.R == color.G && color.G == color.B);
-		}
+            color = Color.FromArgb(colorMap.Data[4095]);
+            Assert.AreEqual(255, color.A);
+            Assert.AreEqual(255, color.R);
+            Assert.IsTrue(color.R == color.G && color.G == color.B);
+        }
 	}
 }
 
