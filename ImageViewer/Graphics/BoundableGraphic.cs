@@ -228,7 +228,7 @@ namespace ClearCanvas.ImageViewer.Graphics
 		}
 
 		/// <summary>
-		/// Moves the <see cref="RectanglePrimitive"/> by a specified delta.
+		/// Moves the <see cref="BoundableGraphic"/> by a specified delta.
 		/// </summary>
 		/// <param name="delta">The distance to move.</param>
 		/// <remarks>
@@ -238,8 +238,8 @@ namespace ClearCanvas.ImageViewer.Graphics
 		/// </remarks>
 		public override void Move(SizeF delta)
 		{
-			this.TopLeft += delta;
-			this.BottomRight += delta;
+			TopLeft += delta;
+			BottomRight += delta;
 		}
 
 		/// <summary>

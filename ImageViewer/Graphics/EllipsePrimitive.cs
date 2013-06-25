@@ -178,7 +178,7 @@ namespace ClearCanvas.ImageViewer.Graphics
 			 * substituting (1) and (2) into (3) gives:
 			 * 
 			 * m^2*xt^2/a^2 + m^2*yt^2/b^2 = 1
-			 * m^2*(xt^2*b^2 + yt^2*a^2) = a*b
+			 * m^2*(xt^2*b^2 + yt^2*a^2) = (a*b)^2
 			 * 
 			 * finally,
 			 * 

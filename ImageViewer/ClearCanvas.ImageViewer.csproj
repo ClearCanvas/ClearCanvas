@@ -166,7 +166,26 @@
       <DependentUpon>MouseToolSettings.settings</DependentUpon>
     </Compile>
     <Compile Include="BaseTools\MouseToolSettingsProfile.cs" />
+    <Compile Include="BasicPresentationImage3D.cs" />
+    <Compile Include="Graphics3D\BoundableGraphic3D.cs" />
+    <Compile Include="Graphics3D\CompositeGraphic3D.cs" />
+    <Compile Include="Graphics3D\CompositeRootModel3D.cs" />
+    <Compile Include="Graphics3D\Graphic3D.cs" />
+    <Compile Include="Graphics3D\GraphicCollection3D.cs" />
+    <Compile Include="Graphics3D\IGraphic3D.cs" />
+    <Compile Include="Graphics3D\IOverlayGraphics3DProvider.cs" />
+    <Compile Include="Graphics3D\ISpatialTransform3D.cs" />
+    <Compile Include="Graphics3D\ISpatialTransform3DProvider.cs" />
+    <Compile Include="Graphics3D\PointChanged3DEventArgs.cs" />
+    <Compile Include="Graphics3D\RootModelSpatialTransform.cs" />
+    <Compile Include="Graphics3D\SpatialTransform3D.cs" />
+    <Compile Include="Graphics3D\SpatialTransform3DImageOperation.cs" />
+    <Compile Include="Graphics3D\EllipsoidPrimitive.cs" />
+    <Compile Include="Graphics3D\TransformMatrixHelpers.cs" />
+    <Compile Include="Graphics3D\VectorGraphic3D.cs" />
+    <Compile Include="Graphics3D\VisualStateChanged3DEventArgs.cs" />
     <Compile Include="Graphics\Tests\ImageGraphicTests.cs" />
+    <Compile Include="Imaging\MinMaxPixelLinearLut.cs" />
     <Compile Include="InputManagement\MouseWheelCaptureChangedEventArgs.cs" />
     <Compile Include="InputManagement\Tests\ViewerShortcutManagerTests.cs" />
     <Compile Include="CloningExceptions.cs" />
@@ -209,12 +228,14 @@
     <Compile Include="Layout\RectangularGrid.cs" />
     <Compile Include="Layout\Tests\HpApplicabilityResultTests.cs" />
     <Compile Include="Mathematics\Matrix3D.cs" />
+    <Compile Include="Mathematics\Rectangle3D.cs" />
     <Compile Include="PermissionsHelper.cs" />
     <Compile Include="PresentationStates\Dicom\DicomOverlayDeserializationException.cs" />
     <Compile Include="PresentationStates\Dicom\Tests\GeneratedOverlayTestImages.cs" />
     <Compile Include="PresentationStates\Dicom\Tests\OverlayPlanePresentationTests.cs" />
     <Compile Include="PresentationStates\GeometricShutterCache.cs" />
     <Compile Include="Rendering\FontFactory.cs" />
+    <Compile Include="Rendering\RendererBase2.cs" />
     <Compile Include="Services\LocalServiceProcess.cs" />
     <Compile Include="Services\ServiceControlSettings.cs" />
     <Compile Include="Services\ServiceControlSettings.Designer.cs">

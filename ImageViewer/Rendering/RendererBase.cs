@@ -39,6 +39,8 @@ namespace ClearCanvas.ImageViewer.Rendering
 	/// use this class in tandem with the <see cref="RendererFactoryBase"/>, although it
 	/// is not required that you do so.
 	/// </remarks>
+	/// <seealso cref="RendererBase2{TRenderingSurface,TPresentationImage}"/>
+	/// <seealso cref="RendererFactoryBase"/>
 	public abstract class RendererBase : IRenderer
 	{
 		private DrawMode _drawMode;

@@ -189,6 +189,7 @@
     <Compile Include="PresetVoiLuts\LutHelper.cs" />
     <Compile Include="PresetVoiLuts\Operations\VoiLutSelector.cs" />
     <Compile Include="PresetVoiLuts\PresetVoiLutReservedActionModelKeyStrokesProvider.cs" />
+    <Compile Include="Rotate3DTool.cs" />
     <Compile Include="ScaleGraphic.cs" />
     <Compile Include="ScaleOverlayTool.cs" />
     <Compile Include="ShowHideOverlaysTool.cs" />
@@ -495,6 +496,11 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Configuration\ToolModalityBehaviorCollectionDefault.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\Rotate3DToolLarge.png" />
+    <EmbeddedResource Include="Icons\Rotate3DToolMedium.png" />
+    <EmbeddedResource Include="Icons\Rotate3DToolSmall.png" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
