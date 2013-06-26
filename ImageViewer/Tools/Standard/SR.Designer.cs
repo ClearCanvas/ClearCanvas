@@ -232,6 +232,15 @@ namespace ClearCanvas.ImageViewer.Tools.Standard {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Rotate 3D.
+        /// </summary>
+        internal static string CommandRotate3D {
+            get {
+                return ResourceManager.GetString("CommandRotate3D", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Rotate Left.
         /// </summary>
         internal static string CommandRotateLeft {
@@ -1044,6 +1053,15 @@ namespace ClearCanvas.ImageViewer.Tools.Standard {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Rotate 3D.
+        /// </summary>
+        internal static string MenuRotate3D {
+            get {
+                return ResourceManager.GetString("MenuRotate3D", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Rotate &amp;Left.
         /// </summary>
         internal static string MenuRotateLeft {
@@ -1675,6 +1693,15 @@ namespace ClearCanvas.ImageViewer.Tools.Standard {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Rotate 3D.
+        /// </summary>
+        internal static string ToolbarRotate3D {
+            get {
+                return ResourceManager.GetString("ToolbarRotate3D", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Rotate Counterclockwise 90 Degrees.
         /// </summary>
         internal static string ToolbarRotateLeft {
@@ -1941,6 +1968,15 @@ namespace ClearCanvas.ImageViewer.Tools.Standard {
         internal static string TooltipReset {
             get {
                 return ResourceManager.GetString("TooltipReset", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rotate 3D.
+        /// </summary>
+        internal static string TooltipRotate3D {
+            get {
+                return ResourceManager.GetString("TooltipRotate3D", resourceCulture);
             }
         }
         

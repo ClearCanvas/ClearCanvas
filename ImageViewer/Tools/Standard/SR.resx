@@ -795,4 +795,16 @@ Please check the log for more details.</value>
   <data name="None" xml:space="preserve">
     <value>None</value>
   </data>
+  <data name="CommandRotate3D" xml:space="preserve">
+    <value>Rotate 3D</value>
+  </data>
+  <data name="MenuRotate3D" xml:space="preserve">
+    <value>Rotate 3D</value>
+  </data>
+  <data name="ToolbarRotate3D" xml:space="preserve">
+    <value>Rotate 3D</value>
+  </data>
+  <data name="TooltipRotate3D" xml:space="preserve">
+    <value>Rotate 3D</value>
+  </data>
 </root>
