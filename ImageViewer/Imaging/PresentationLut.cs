@@ -35,10 +35,10 @@ namespace ClearCanvas.ImageViewer.Imaging
     [Cloneable(true)]
     public abstract class PresentationLut : ComposableLutBase, IPresentationLut
     {
-        private double _minInputValue;
-        private double _maxInputValue;
-        private int _minOutputValue;
-        private int _maxOutputValue;
+        private double _minInputValue = double.MinValue;
+        private double _maxInputValue = double.MaxValue;
+        private int _minOutputValue = int.MinValue;
+        private int _maxOutputValue = int.MaxValue;
 
         protected PresentationLut()
         {
@@ -156,16 +156,15 @@ namespace ClearCanvas.ImageViewer.Imaging
                 var minOutput = MinOutputValue;
                 var maxOutput = MaxOutputValue;
 
+                //Optimization.
                 if (value <= minInput)
                     return minOutput;
                 if (value >= maxInput)
                     return maxOutput;
 
                 var inputRange = maxInput - minInput;
-                var outputRange = maxOutput - minOutput;
-
-                var output = outputRange*(value-minInput)/inputRange + minOutput;
-                return (int)Math.Round(output);
+                double outputRange = maxOutput - minOutput;
+                return Math.Min(maxOutput, Math.Max(minOutput, (int)Math.Round(outputRange*(value - minInput)/inputRange + minOutput)));
             }
         }
 

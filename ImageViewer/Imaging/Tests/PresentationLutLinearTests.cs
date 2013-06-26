@@ -43,9 +43,9 @@ namespace ClearCanvas.ImageViewer.Imaging.Tests
             lut.MaxOutputValue = 255;
 
             Assert.AreEqual(0, lut[-1]);
-            Assert.AreEqual(0, lut[0]);
-            Assert.AreEqual(128, lut[128]);
-            Assert.AreEqual(255, lut[255]);
+            for (int i = 0; i < 256; ++i)
+                Assert.AreEqual(i, lut[i]);
+                
             Assert.AreEqual(255, lut[256]);
         }
 
@@ -59,6 +59,7 @@ namespace ClearCanvas.ImageViewer.Imaging.Tests
             lut.MaxOutputValue = 255;
 
             Assert.AreEqual(-255, lut[-256]);
+            Assert.AreEqual(-128, lut[-128]);
             Assert.AreEqual(0, lut[0]);
             Assert.AreEqual(128, lut[128]);
             Assert.AreEqual(255, lut[255]);
@@ -94,7 +95,7 @@ namespace ClearCanvas.ImageViewer.Imaging.Tests
         }
 
         [Test]
-        public void TestPipelinUnsigned16()
+        public void TestPipelineUnsigned16()
         {
             var composer = new LutComposer(16, false);
             composer.ModalityLut = new ModalityLutLinear(16, false, 1, 0);
@@ -109,9 +110,9 @@ namespace ClearCanvas.ImageViewer.Imaging.Tests
             Assert.AreEqual(65535, voiLUT[65536], _tolerance);
 
             var output = composer.GetOutputLut(0, byte.MaxValue);
-            Assert.AreEqual(0, output[0], _tolerance);
-            Assert.AreEqual(128, output[32768], _tolerance);
-            Assert.AreEqual(255, output[65535], _tolerance);
+            Assert.AreEqual(0, output[0]);
+            Assert.AreEqual(128, output[32768]);
+            Assert.AreEqual(255, output[65535]);
 
             //Make sure the output of the grayscale color map works with all the different "display" output ranges.
             var colorMap = LutFactory.Create().GetGrayscaleColorMap();
@@ -123,9 +124,9 @@ namespace ClearCanvas.ImageViewer.Imaging.Tests
 
             //10-bit display
             output = composer.GetOutputLut(0, 1023);
-            Assert.AreEqual(0, output[0], _tolerance);
-            Assert.AreEqual(512, output[32768], _tolerance);
-            Assert.AreEqual(1023, output[65535], _tolerance);
+            Assert.AreEqual(0, output[0]);
+            Assert.AreEqual(512, output[32768]);
+            Assert.AreEqual(1023, output[65535]);
 
             colorMap.MinInputValue = output.MinOutputValue;
             colorMap.MaxInputValue = output.MaxOutputValue;
@@ -135,9 +136,9 @@ namespace ClearCanvas.ImageViewer.Imaging.Tests
 
             //Theoretical 12-bit display with signed output
             output = composer.GetOutputLut(-2048, 2047);
-            Assert.AreEqual(-2048, output[0], _tolerance);
-            Assert.AreEqual(0, output[32768], _tolerance);
-            Assert.AreEqual(2047, output[65535], _tolerance);
+            Assert.AreEqual(-2048, output[0]);
+            Assert.AreEqual(0, output[32768]);
+            Assert.AreEqual(2047, output[65535]);
 
             colorMap.MinInputValue = output.MinOutputValue;
             colorMap.MaxInputValue = output.MaxOutputValue;
@@ -159,21 +160,21 @@ namespace ClearCanvas.ImageViewer.Imaging.Tests
             Assert.AreEqual(2047, voiLUT[2047], _tolerance);
 
             var output = composer.GetOutputLut(0, byte.MaxValue);
-            Assert.AreEqual(0, output[-2048], _tolerance);
-            Assert.AreEqual(128, output[0], _tolerance);
-            Assert.AreEqual(255, output[2047], _tolerance);
+            Assert.AreEqual(0, output[-2048]);
+            Assert.AreEqual(128, output[0]);
+            Assert.AreEqual(255, output[2047]);
 
             //10-bit display
             output = composer.GetOutputLut(0, 1023);
-            Assert.AreEqual(0, output[-2048], _tolerance);
-            Assert.AreEqual(512, output[0], _tolerance);
-            Assert.AreEqual(1023, output[2047], _tolerance);
+            Assert.AreEqual(0, output[-2048]);
+            Assert.AreEqual(512, output[0]);
+            Assert.AreEqual(1023, output[2047]);
 
             //Theoretical 12-bit display with signed output
             output = composer.GetOutputLut(-2048, 2047);
-            Assert.AreEqual(-2048, output[-2048], _tolerance);
-            Assert.AreEqual(0, output[0], _tolerance);
-            Assert.AreEqual(2047, output[2047], _tolerance);
+            Assert.AreEqual(-2048, output[-2048]);
+            Assert.AreEqual(0, output[0]);
+            Assert.AreEqual(2047, output[2047]);
         }
     }
 }

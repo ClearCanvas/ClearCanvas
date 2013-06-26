@@ -87,17 +87,14 @@ namespace ClearCanvas.ImageViewer.Imaging
 		    int min = MinInputValue;
 		    int max = MaxInputValue;
 
-            unchecked
+		    const int alphaMask = 0xFF << 24;
+
+		    for (int i = min; i <= max; i++)
 		    {
-                const int alphaMask = (int)0xFF000000; 
-                
-                for (int i = min; i <= max; i++)
-		        {
-		            double scale = j++/maxGrayLevel;
-		            byte value = (byte) Math.Round(byte.MaxValue*scale);
-		            int color = alphaMask| (value << 16) | (value << 8) | value;
-		            this[i] = color;
-		        }
+		        double scale = j++/maxGrayLevel;
+		        byte value = (byte) Math.Round(byte.MaxValue*scale);
+		        int color = alphaMask | (value << 16) | (value << 8) | value;
+		        this[i] = color;
 		    }
 		}
 

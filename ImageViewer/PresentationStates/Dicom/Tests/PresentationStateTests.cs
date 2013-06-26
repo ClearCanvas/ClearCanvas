@@ -26,7 +26,6 @@
 #pragma warning disable 1591,0419,1574,1587
 
 using System.Diagnostics;
-using System.Drawing;
 using System.IO;
 using ClearCanvas.Dicom.Iod.Modules;
 using ClearCanvas.ImageViewer.Tests;
@@ -40,18 +39,18 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom.Tests
         [Test]
         public void TestGrayscaleColorMap()
         {
-            var colorMap = new OverlayPlaneGraphic.GrayscaleColorMap(128);
-            colorMap.MinInputValue = 0;
-            colorMap.MaxInputValue = 255;
+            var colorMap = new OverlayPlaneGraphic.GrayscaleColorMap(128) {MinInputValue = 0, MaxInputValue = 255};
 
-            Assert.AreEqual(0x00000000, colorMap[0]);
-            Assert.AreEqual(0xFD7F7F7F, (uint)colorMap[127]);
-            var midColor = Color.FromArgb(colorMap[128]);
-            Assert.AreEqual(255, midColor.A);
-            Assert.IsTrue(midColor.R == 127 || midColor.R == 128);
-            Assert.IsTrue(midColor.R == midColor.G && midColor.G == midColor.B);
-            Assert.AreEqual(0xFF818181, (uint)colorMap[129]);
-            Assert.AreEqual(0xFFFFFFFF, (uint)colorMap[255]);
+            Assert.AreEqual(colorMap.Data.Length, 256);
+
+            //If the input is 0-255 (e.g. presentation LUT output range),
+            //then the color map has to be a no-op.
+
+            for (int i = 0; i < colorMap.Data.Length; ++i)
+            {
+                var value = 0xFF000000 | (i << 16) | (i << 8) | i;
+                Assert.AreEqual((uint)value, (uint)(0xFF000000 | colorMap.Data[i]));
+            }
         }
 
 		[Test]

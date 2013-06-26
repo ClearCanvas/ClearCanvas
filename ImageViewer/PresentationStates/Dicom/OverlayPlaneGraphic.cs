@@ -507,10 +507,10 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 			protected override void Create()
 			{
 				int j = 0;
-				double maxGrayLevel = this.Length - 1;
-                double alphaRange = _presentationValue - this.MinInputValue;
                 int min = MinInputValue;
                 int max = MaxInputValue;
+                double maxGrayLevel = this.Length - 1;
+                double alphaRange = _presentationValue - min;
 
 				for (int i = min; i <= max; i++)
 				{

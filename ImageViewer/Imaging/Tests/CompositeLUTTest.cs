@@ -457,7 +457,7 @@ namespace ClearCanvas.ImageViewer.Imaging.Tests
             Assert.AreEqual(7074, output.Data[7074]);
 		}
 
-		[Test]
+	    [Test]
 		public void ComposeSingleLUT()
 		{
 			double windowWidth = 350;
@@ -473,7 +473,6 @@ namespace ClearCanvas.ImageViewer.Imaging.Tests
 			LutComposer lutComposer = new LutComposer(0, 4095);
 			lutComposer.VoiLut = voiLUT;
 
-            //For this, we want the output range to be the same as the VOI.
             var output = lutComposer.GetOutputLut(0, 255);
 		}
 
@@ -482,7 +481,6 @@ namespace ClearCanvas.ImageViewer.Imaging.Tests
 		public void NoLUTsAdded()
 		{
 			LutComposer lutComposer = new LutComposer();
-            //For this, we want the output range to be the same as the VOI.
             var output = lutComposer.GetOutputLut(0, 255);
         }
 	}
