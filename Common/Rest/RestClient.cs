@@ -69,6 +69,14 @@ namespace ClearCanvas.Common.Rest
 			}
 
 			/// <summary>
+			/// Gets the HTTP status code returned from the server.
+			/// </summary>
+			public HttpStatusCode StatusCode
+			{
+				get { return _response.StatusCode; }
+			}
+
+			/// <summary>
 			/// Writes the body of the response to the specified stream, and closes the response.
 			/// </summary>
 			/// <param name="stream"></param>
@@ -460,7 +468,7 @@ namespace ClearCanvas.Common.Rest
 
 		private string QueryString(Dictionary<string, object> args)
 		{
-			return string.Join("&",
+			return args == null ? null : string.Join("&",
 				args.Select(kvp => string.Format("{0}={1}", kvp.Key, HttpUtility.UrlEncode(kvp.Value.ToString()))
 				).ToArray());
 		}
