@@ -53,10 +53,7 @@ namespace ClearCanvas.ImageViewer.Graphics
 
 		private static ISpatialTransform GetTransform(IPresentationImage image)
 		{
-			if (image is ISpatialTransformProvider)
-				return ((ISpatialTransformProvider) image).SpatialTransform;
-
-			return null;
+			return image is ISpatialTransformProvider ? ((ISpatialTransformProvider) image).SpatialTransform : null;
 		}
 	}
 }

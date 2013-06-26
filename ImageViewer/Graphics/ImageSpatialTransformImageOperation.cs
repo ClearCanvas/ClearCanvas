@@ -46,7 +46,7 @@ namespace ClearCanvas.ImageViewer.Graphics
 		/// without checking for null from within the <see cref="BasicImageOperation.ApplyDelegate"/> 
 		/// specified in the constructor.
 		/// </remarks>
-		public override ISpatialTransform GetOriginator(IPresentationImage image)
+		public new IImageSpatialTransform GetOriginator(IPresentationImage image)
 		{
 			return base.GetOriginator(image) as IImageSpatialTransform;
 		}

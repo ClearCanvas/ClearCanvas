@@ -44,6 +44,8 @@ namespace ClearCanvas.ImageViewer.Graphics
 		/// </summary>
 		bool FlipY { get; set; }
 
+		// ReSharper disable InconsistentNaming
+
 		/// <summary>
 		/// Gets or sets the rotation.
 		/// </summary>
@@ -72,6 +74,8 @@ namespace ClearCanvas.ImageViewer.Graphics
 		/// of the parent graphic, i.e. source coordinates.
 		/// </remarks>
 		PointF CenterOfRotationXY { get; set; }
+
+		// ReSharper restore InconsistentNaming
 
 		/// <summary>
 		/// Gets the cumulative scale.

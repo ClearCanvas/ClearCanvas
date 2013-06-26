@@ -92,5 +92,56 @@ namespace ClearCanvas.ImageViewer.Graphics3D
 		/// Gets the scale relative to the root of the scene graph.
 		/// </remarks>
 		float CumulativeScale { get; }
+
+		/// <summary>
+		/// Resets all transform parameters to their defaults.
+		/// </summary>
+		void Initialize();
+
+		/// <summary>
+		/// Converts a <see cref="Vector3D"/> point from source to destination coordinates.
+		/// </summary>
+		/// <param name="sourcePoint"></param>
+		/// <returns></returns>
+		Vector3D ConvertPointToDestination(Vector3D sourcePoint);
+
+		/// <summary>
+		/// Converts a <see cref="Vector3D"/> point from destination to source coordinates.
+		/// </summary>
+		/// <param name="destinationPoint"></param>
+		/// <returns></returns>
+		Vector3D ConvertPointToSource(Vector3D destinationPoint);
+
+		/// <summary>
+		/// Converts a <see cref="Rectangle3D"/> region from source to destination coordinates.
+		/// </summary>
+		/// <param name="sourceRectangle"></param>
+		/// <returns></returns>
+		Rectangle3D ConvertRectToDestination(Rectangle3D sourceRectangle);
+
+		/// <summary>
+		/// Converts a <see cref="Rectangle3D"/> region from destination to source coordinates.
+		/// </summary>
+		/// <param name="destinationRectangle"></param>
+		/// <returns></returns>
+		Rectangle3D ConvertRectToSource(Rectangle3D destinationRectangle);
+
+		/// <summary>
+		/// Converts a <see cref="Vector3D"/> vector from source to destination coordinates.
+		/// </summary>
+		/// <remarks>
+		/// Only scale and rotation are applied when converting vectors, as direction vectors have only magnitude
+		/// and direction information, but no position.
+		/// </remarks>
+		Vector3D ConvertVectorToDestination(Vector3D sourceVector);
+
+		/// <summary>
+		/// Converts a <see cref="Vector3D"/> vector from destination to source coordinates.
+		/// </summary>
+		/// <remarks>
+		/// Only scale and rotation are applied when converting vectors, as direction vectors have only magnitude
+		/// and direction information, but no position.
+		/// </remarks>
+		Vector3D ConvertVectorToSource(Vector3D destinationVector);
 	}
 }

@@ -82,7 +82,7 @@ namespace ClearCanvas.ImageViewer
 	/// A simple way to implement a strongly-typed <see cref="ImageOperation"/>, using delegates.
 	/// </summary>
 	public class BasicImageOperation<TOriginator> : BasicImageOperation
-		where TOriginator : IMemorable
+		where TOriginator : class, IMemorable
 	{
 		/// <summary>
 		/// Defines a delegate used to get the originator for a given <see cref="IPresentationImage"/>.
@@ -97,7 +97,7 @@ namespace ClearCanvas.ImageViewer
 		/// </summary>
 		public new virtual TOriginator GetOriginator(IPresentationImage image)
 		{
-			return (TOriginator) base.GetOriginator(image);
+			return base.GetOriginator(image) as TOriginator;
 		}
 	}
 }

@@ -22,15 +22,13 @@
 
 #endregion
 
-using ClearCanvas.Desktop;
-
 namespace ClearCanvas.ImageViewer.Graphics3D
 {
 	/// <summary>
 	/// A specialization of the <see cref="BasicImageOperation"/> where the
 	/// originator is an <see cref="ISpatialTransform3D"/>.
 	/// </summary>
-	public class SpatialTransform3DImageOperation : BasicImageOperation
+	public class SpatialTransform3DImageOperation : BasicImageOperation<ISpatialTransform3D>
 	{
 		/// <summary>
 		/// Mandatory constructor.
@@ -48,12 +46,12 @@ namespace ClearCanvas.ImageViewer.Graphics3D
 		/// without checking for null from within the <see cref="BasicImageOperation.ApplyDelegate"/> 
 		/// specified in the constructor.
 		/// </remarks>
-		public override IMemorable GetOriginator(IPresentationImage image)
+		public override ISpatialTransform3D GetOriginator(IPresentationImage image)
 		{
-			return base.GetOriginator(image) as ISpatialTransform3D;
+			return base.GetOriginator(image);
 		}
 
-		private static IMemorable GetTransform(IPresentationImage image)
+		private static ISpatialTransform3D GetTransform(IPresentationImage image)
 		{
 			return image is ISpatialTransform3DProvider ? ((ISpatialTransform3DProvider) image).SpatialTransform3D : null;
 		}
