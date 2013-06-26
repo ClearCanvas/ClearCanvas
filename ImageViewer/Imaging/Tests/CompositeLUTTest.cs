@@ -26,6 +26,7 @@
 #pragma warning disable 1591,0419,1574,1587
 
 using System;
+using System.Diagnostics;
 using NUnit.Framework;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
@@ -475,6 +476,37 @@ namespace ClearCanvas.ImageViewer.Imaging.Tests
 
             var output = lutComposer.GetOutputLut(0, 255);
 		}
+
+        [Test]
+        public void TestEquivalentLuts()
+        {
+            var composer1 = new LutComposer
+                                        {
+                                            ModalityLut = new ModalityLutLinear(16, true, 1, 0), 
+                                            VoiLut = new IdentityVoiLinearLut(16, true)
+                                        };
+            var composer2 = new LutComposer
+            {
+                ModalityLut = new ModalityLutLinear(16, false, 1, -32768),
+                VoiLut = new IdentityVoiLinearLut(16, false)
+            };
+
+            //Compare 2 composed LUTs whose output should be the same.
+            var output1 = composer1.GetOutputLut(0, 255);
+            var output2 = composer2.GetOutputLut(0, 255);
+
+            Assert.AreEqual(0, output1[-32768]);
+            Assert.AreEqual(128, output1[0]);
+            Assert.AreEqual(255, output1[32767]);
+
+            Assert.AreEqual(0, output2[0]);
+            Assert.AreEqual(128, output2[32768]);
+            Assert.AreEqual(255, output2[65535]);
+
+            Assert.AreEqual(output1.Data.Length, output2.Data.Length);
+            for(int i = 0; i < output1.Data.Length; ++i)
+                Assert.AreEqual(output1.Data[i], output2.Data[i]);
+        }
 
 		[Test]
 		[ExpectedException(typeof(InvalidOperationException))]
