@@ -38,14 +38,12 @@ namespace ClearCanvas.ImageViewer.Rendering.GDI
 	/// </summary>
 	public class GdiRenderer : RendererBase
 	{
-#pragma warning disable 1591
-
+		/// <summary>
+		/// The minimum font size for rendered text. If the specified font size is less than this value, the text will not be rendered at all.
+		/// </summary>
 		protected static readonly ushort MinimumFontSizeInPixels = 4;
 
-#pragma warning restore 1591
-
 		private const float _nominalScreenDpi = 96;
-		private const string _defaultFont = "Arial";
 
 		private Pen _pen;
 		private SolidBrush _brush;
@@ -83,11 +81,13 @@ namespace ClearCanvas.ImageViewer.Rendering.GDI
 					_pen.Dispose();
 					_pen = null;
 				}
+
 				if (_brush != null)
 				{
 					_brush.Dispose();
 					_brush = null;
 				}
+
 				if (_fontFactory != null)
 				{
 					_fontFactory.Dispose();
@@ -129,6 +129,14 @@ namespace ClearCanvas.ImageViewer.Rendering.GDI
 		}
 
 		/// <summary>
+		/// Factory method for an <see cref="IRenderingSurface"/>.
+		/// </summary>
+		public override sealed IRenderingSurface GetRenderingSurface(IntPtr windowId, int width, int height)
+		{
+			return new GdiRenderingSurface(windowId, width, height);
+		}
+
+		/// <summary>
 		/// Draws an <see cref="ImageGraphic"/>.
 		/// </summary>
 		protected override void DrawImageGraphic(ImageGraphic imageGraphic)
@@ -136,22 +144,9 @@ namespace ClearCanvas.ImageViewer.Rendering.GDI
 			CodeClock clock = new CodeClock();
 			clock.Start();
 
-			const int bytesPerPixel = 4;
-
 			Surface.ImageBuffer.Graphics.Clear(Color.FromArgb(0x0, 0xFF, 0xFF, 0xFF));
 
-			BitmapData bitmapData = Surface.ImageBuffer.Bitmap.LockBits(
-				new Rectangle(0, 0, Surface.ImageBuffer.Bitmap.Width, Surface.ImageBuffer.Bitmap.Height),
-				ImageLockMode.ReadWrite, PixelFormat.Format32bppArgb);
-
-			try
-			{
-				ImageRenderer.Render(imageGraphic, bitmapData.Scan0, bitmapData.Width, bytesPerPixel, Surface.ClientRectangle);
-			}
-			finally
-			{
-				Surface.ImageBuffer.Bitmap.UnlockBits(bitmapData);
-			}
+			DrawImageGraphic(Surface.ImageBuffer, imageGraphic);
 
 			Surface.FinalBuffer.RenderImage(Surface.ImageBuffer);
 
@@ -164,7 +159,7 @@ namespace ClearCanvas.ImageViewer.Rendering.GDI
 		/// </summary>
 		protected override void DrawLinePrimitive(LinePrimitive line)
 		{
-			InternalDrawLinePrimitive(line);
+			DrawLinePrimitive(Surface.FinalBuffer, _pen, line, Dpi);
 		}
 
 		/// <summary>
@@ -172,7 +167,7 @@ namespace ClearCanvas.ImageViewer.Rendering.GDI
 		/// </summary>
 		protected override void DrawInvariantLinePrimitive(InvariantLinePrimitive line)
 		{
-			InternalDrawLinePrimitive(line);
+			DrawLinePrimitive(Surface.FinalBuffer, _pen, line, Dpi);
 		}
 
 		/// <summary>
@@ -180,38 +175,7 @@ namespace ClearCanvas.ImageViewer.Rendering.GDI
 		/// </summary>
 		protected override void DrawCurvePrimitive(CurvePrimitive curve)
 		{
-			Surface.FinalBuffer.Graphics.Transform = curve.SpatialTransform.CumulativeTransform;
-			curve.CoordinateSystem = CoordinateSystem.Source;
-
-			Surface.FinalBuffer.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
-
-			// Draw drop shadow
-			_pen.Color = Color.Black;
-			_pen.Width = CalculateScaledPenWidth(curve, 1, Dpi);
-
-			SetDashStyle(curve);
-
-			SizeF dropShadowOffset = GetDropShadowOffset(curve, Dpi);
-			PointF[] pathPoints = GetCurvePoints(curve.Points, dropShadowOffset);
-
-			if (curve.Points.IsClosed)
-				Surface.FinalBuffer.Graphics.DrawClosedCurve(_pen, pathPoints);
-			else
-				Surface.FinalBuffer.Graphics.DrawCurve(_pen, pathPoints);
-
-			// Draw line
-			_pen.Color = curve.Color;
-			pathPoints = GetCurvePoints(curve.Points, SizeF.Empty);
-
-			if (curve.Points.IsClosed)
-				Surface.FinalBuffer.Graphics.DrawClosedCurve(_pen, pathPoints);
-			else
-				Surface.FinalBuffer.Graphics.DrawCurve(_pen, pathPoints);
-
-			Surface.FinalBuffer.Graphics.SmoothingMode = SmoothingMode.None;
-
-			curve.ResetCoordinateSystem();
-			Surface.FinalBuffer.Graphics.ResetTransform();
+			DrawCurvePrimitive(Surface.FinalBuffer, _pen, curve, Dpi);
 		}
 
 		/// <summary>
@@ -219,7 +183,7 @@ namespace ClearCanvas.ImageViewer.Rendering.GDI
 		/// </summary>
 		protected override void DrawRectanglePrimitive(RectanglePrimitive rect)
 		{
-			InternalDrawRectanglePrimitive(rect);
+			DrawRectanglePrimitive(Surface.FinalBuffer, _pen, rect, Dpi);
 		}
 
 		/// <summary>
@@ -227,7 +191,7 @@ namespace ClearCanvas.ImageViewer.Rendering.GDI
 		/// </summary>
 		protected override void DrawInvariantRectanglePrimitive(InvariantRectanglePrimitive rect)
 		{
-			InternalDrawRectanglePrimitive(rect);
+			DrawRectanglePrimitive(Surface.FinalBuffer, _pen, rect, Dpi);
 		}
 
 		/// <summary>
@@ -235,7 +199,7 @@ namespace ClearCanvas.ImageViewer.Rendering.GDI
 		/// </summary>
 		protected override void DrawEllipsePrimitive(EllipsePrimitive ellipse)
 		{
-			InternalDrawEllipsePrimitive(ellipse);
+			DrawEllipsePrimitive(Surface.FinalBuffer, _pen, ellipse, Dpi);
 		}
 
 		/// <summary>
@@ -243,7 +207,7 @@ namespace ClearCanvas.ImageViewer.Rendering.GDI
 		/// </summary>
 		protected override void DrawInvariantEllipsePrimitive(InvariantEllipsePrimitive ellipse)
 		{
-			InternalDrawEllipsePrimitive(ellipse);
+			DrawEllipsePrimitive(Surface.FinalBuffer, _pen, ellipse, Dpi);
 		}
 
 		/// <summary>
@@ -251,44 +215,7 @@ namespace ClearCanvas.ImageViewer.Rendering.GDI
 		/// </summary>
 		protected override void DrawArcPrimitive(IArcGraphic arc)
 		{
-			Surface.FinalBuffer.Graphics.Transform = arc.SpatialTransform.CumulativeTransform;
-			arc.CoordinateSystem = CoordinateSystem.Source;
-
-			Surface.FinalBuffer.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
-
-			RectangleF rectangle = new RectangleF(arc.TopLeft.X, arc.TopLeft.Y, arc.Width, arc.Height);
-			rectangle = RectangleUtilities.ConvertToPositiveRectangle(rectangle);
-			SizeF dropShadowOffset = GetDropShadowOffset(arc, Dpi);
-
-			// Draw drop shadow
-			_pen.Color = Color.Black;
-			_pen.Width = CalculateScaledPenWidth(arc, 1, Dpi);
-
-			SetDashStyle(arc);
-
-			Surface.FinalBuffer.Graphics.DrawArc(
-				_pen,
-				rectangle.Left + dropShadowOffset.Width,
-				rectangle.Top + dropShadowOffset.Height,
-				rectangle.Width,
-				rectangle.Height,
-				arc.StartAngle,
-				arc.SweepAngle);
-
-			// Draw rectangle
-			_pen.Color = arc.Color;
-
-			Surface.FinalBuffer.Graphics.DrawArc(
-				_pen,
-				rectangle.Left,
-				rectangle.Top,
-				rectangle.Width,
-				rectangle.Height,
-				arc.StartAngle,
-				arc.SweepAngle);
-
-			arc.ResetCoordinateSystem();
-			Surface.FinalBuffer.Graphics.ResetTransform();
+			DrawArcPrimitive(Surface.FinalBuffer, _pen, arc, Dpi);
 		}
 
 		/// <summary>
@@ -296,34 +223,7 @@ namespace ClearCanvas.ImageViewer.Rendering.GDI
 		/// </summary>
 		protected override void DrawPointPrimitive(PointPrimitive pointPrimitive)
 		{
-			Surface.FinalBuffer.Graphics.Transform = pointPrimitive.SpatialTransform.CumulativeTransform;
-			pointPrimitive.CoordinateSystem = CoordinateSystem.Source;
-
-			SizeF dropShadowOffset = GetDropShadowOffset(pointPrimitive, Dpi);
-			var width = CalculateScaledPenWidth(pointPrimitive, 1, Dpi);
-
-			// Draw drop shadow
-			_brush.Color = Color.Black;
-
-			Surface.FinalBuffer.Graphics.FillRectangle(
-				_brush,
-				pointPrimitive.Point.X + dropShadowOffset.Width,
-				pointPrimitive.Point.Y + dropShadowOffset.Height,
-				width,
-				width);
-
-			// Draw point
-			_brush.Color = pointPrimitive.Color;
-
-			Surface.FinalBuffer.Graphics.FillRectangle(
-				_brush,
-				pointPrimitive.Point.X,
-				pointPrimitive.Point.Y,
-				width,
-				width);
-
-			pointPrimitive.ResetCoordinateSystem();
-			Surface.FinalBuffer.Graphics.ResetTransform();
+			DrawPointPrimitive(Surface.FinalBuffer, _brush, pointPrimitive, Dpi);
 		}
 
 		/// <summary>
@@ -331,38 +231,7 @@ namespace ClearCanvas.ImageViewer.Rendering.GDI
 		/// </summary>
 		protected override void DrawTextPrimitive(InvariantTextPrimitive textPrimitive)
 		{
-			textPrimitive.CoordinateSystem = CoordinateSystem.Destination;
-
-			// We adjust the font size depending on the scale so that it's the same size
-			// irrespective of the zoom
-			var fontSize = CalculateScaledFontPoints(textPrimitive.SizeInPoints, Dpi);
-			Font font = _fontFactory.GetFont(textPrimitive.Font, fontSize, FontStyle.Regular, GraphicsUnit.Point, _defaultFont);
-
-			// Calculate how big the text will be so we can set the bounding box
-			textPrimitive.Dimensions = Surface.FinalBuffer.Graphics.MeasureString(textPrimitive.Text, font);
-
-			// Draw drop shadow
-			_brush.Color = Color.Black;
-
-			SizeF dropShadowOffset = new SizeF(1, 1);
-			PointF boundingBoxTopLeft = new PointF(textPrimitive.BoundingBox.Left, textPrimitive.BoundingBox.Top);
-
-			Surface.FinalBuffer.Graphics.DrawString(
-				textPrimitive.Text,
-				font,
-				_brush,
-				boundingBoxTopLeft + dropShadowOffset);
-
-			// Draw text
-			_brush.Color = textPrimitive.Color;
-
-			Surface.FinalBuffer.Graphics.DrawString(
-				textPrimitive.Text,
-				font,
-				_brush,
-				boundingBoxTopLeft);
-
-			textPrimitive.ResetCoordinateSystem();
+			DrawTextPrimitive(Surface.FinalBuffer, _brush, _fontFactory, textPrimitive, Dpi);
 		}
 
 		/// <summary>
@@ -370,97 +239,7 @@ namespace ClearCanvas.ImageViewer.Rendering.GDI
 		/// </summary>
 		protected override void DrawAnnotationBox(string annotationText, AnnotationBox annotationBox)
 		{
-			// if there's nothing to draw, there's nothing to do. go figure.
-			if (string.IsNullOrEmpty(annotationText))
-				return;
-
-			Rectangle clientRectangle = RectangleUtilities.CalculateSubRectangle(Surface.ClientRectangle, annotationBox.NormalizedRectangle);
-			//Deflate the client rectangle by 4 pixels to allow some space 
-			//between neighbouring rectangles whose borders coincide.
-			Rectangle.Inflate(clientRectangle, -4, -4);
-
-			int fontSize = (clientRectangle.Height/annotationBox.NumberOfLines) - 1;
-
-			//don't draw it if it's too small to read, anyway.
-			if (fontSize < MinimumFontSizeInPixels)
-				return;
-
-			StringFormat format = new StringFormat();
-
-			if (annotationBox.Truncation == AnnotationBox.TruncationBehaviour.Truncate)
-				format.Trimming = StringTrimming.Character;
-			else
-				format.Trimming = StringTrimming.EllipsisCharacter;
-
-			if (annotationBox.FitWidth)
-				format.Trimming = StringTrimming.None;
-
-			if (annotationBox.Justification == AnnotationBox.JustificationBehaviour.Right)
-				format.Alignment = StringAlignment.Far;
-			else if (annotationBox.Justification == AnnotationBox.JustificationBehaviour.Center)
-				format.Alignment = StringAlignment.Center;
-			else
-				format.Alignment = StringAlignment.Near;
-
-			if (annotationBox.VerticalAlignment == AnnotationBox.VerticalAlignmentBehaviour.Top)
-				format.LineAlignment = StringAlignment.Near;
-			else if (annotationBox.VerticalAlignment == AnnotationBox.VerticalAlignmentBehaviour.Center)
-				format.LineAlignment = StringAlignment.Center;
-			else
-				format.LineAlignment = StringAlignment.Far;
-
-			//allow p's and q's, etc to extend slightly beyond the bounding rectangle.  Only completely visible lines are shown.
-			format.FormatFlags = StringFormatFlags.NoClip;
-
-			if (annotationBox.NumberOfLines == 1)
-				format.FormatFlags |= StringFormatFlags.NoWrap;
-
-			FontStyle style = FontStyle.Regular;
-			if (annotationBox.Bold)
-				style |= FontStyle.Bold;
-			if (annotationBox.Italics)
-				style |= FontStyle.Italic;
-
-			//don't draw it if it's too small to read, anyway.
-			if (fontSize < MinimumFontSizeInPixels)
-				return;
-
-			Font font = _fontFactory.GetFont(annotationBox.Font, fontSize, style, GraphicsUnit.Pixel,
-			                                 AnnotationBox.DefaultFont);
-			SizeF layoutArea = new SizeF(clientRectangle.Width, clientRectangle.Height);
-			SizeF size = Surface.FinalBuffer.Graphics.MeasureString(annotationText, font, layoutArea, format);
-			if (annotationBox.FitWidth && size.Width > clientRectangle.Width)
-			{
-				fontSize = (int) (Math.Round(fontSize*clientRectangle.Width/(double) size.Width - 0.5));
-
-				//don't draw it if it's too small to read, anyway.
-				if (fontSize < MinimumFontSizeInPixels)
-					return;
-
-				font = _fontFactory.GetFont(annotationBox.Font, fontSize, style, GraphicsUnit.Pixel,
-				                            AnnotationBox.DefaultFont);
-			}
-
-			// Draw drop shadow
-			_brush.Color = Color.Black;
-			clientRectangle.Offset(1, 1);
-
-			Surface.FinalBuffer.Graphics.DrawString(
-				annotationText,
-				font,
-				_brush,
-				clientRectangle,
-				format);
-
-			_brush.Color = Color.FromName(annotationBox.Color);
-			clientRectangle.Offset(-1, -1);
-
-			Surface.FinalBuffer.Graphics.DrawString(
-				annotationText,
-				font,
-				_brush,
-				clientRectangle,
-				format);
+			DrawAnnotationBox(Surface.FinalBuffer, _brush, _fontFactory, annotationText, annotationBox, Dpi);
 		}
 
 		/// <summary>
@@ -469,141 +248,489 @@ namespace ClearCanvas.ImageViewer.Rendering.GDI
 		[Obsolete("Renderer implementations are no longer responsible for handling render pipeline errors.")]
 		protected override void ShowErrorMessage(string message)
 		{
-			Font font = new Font(_defaultFont, 12.0f);
+			using (var format = new StringFormat())
+			{
+				format.Trimming = StringTrimming.EllipsisCharacter;
+				format.Alignment = StringAlignment.Center;
+				format.LineAlignment = StringAlignment.Center;
+				format.FormatFlags = StringFormatFlags.NoClip;
 
-			StringFormat format = new StringFormat();
-			format.Trimming = StringTrimming.EllipsisCharacter;
-			format.Alignment = StringAlignment.Center;
-			format.LineAlignment = StringAlignment.Center;
-			format.FormatFlags = StringFormatFlags.NoClip;
-
-			_brush.Color = Color.WhiteSmoke;
-			Surface.FinalBuffer.Graphics.DrawString(message, font, _brush, Surface.ClipRectangle, format);
+				var font = _fontFactory.GetFont(FontFactory.GenericSansSerif, 12, FontStyle.Regular, GraphicsUnit.Point, FontFactory.GenericSansSerif);
+				_brush.Color = Color.WhiteSmoke;
+				Surface.FinalBuffer.Graphics.DrawString(message, font, _brush, Surface.ClipRectangle, format);
+			}
 		}
 
-		private void InternalDrawLinePrimitive(ILineSegmentGraphic line)
+		#region Static Draw Helpers
+
+		/// <summary>
+		/// Draws an image graphic to the specified destination buffer.
+		/// </summary>
+		/// <param name="buffer">The destination buffer.</param>
+		/// <param name="imageGraphic">The image graphic to be drawn.</param>
+		public static void DrawImageGraphic(BitmapBuffer buffer, ImageGraphic imageGraphic)
 		{
-			Surface.FinalBuffer.Graphics.Transform = line.SpatialTransform.CumulativeTransform;
+			const int bytesPerPixel = 4;
+
+			var bounds = ((IGdiBuffer) buffer).Bounds;
+			var bitmapData = buffer.Bitmap.LockBits(bounds, ImageLockMode.ReadWrite, PixelFormat.Format32bppArgb);
+			try
+			{
+				ImageRenderer.Render(imageGraphic, bitmapData.Scan0, bitmapData.Width, bytesPerPixel, bounds);
+			}
+			finally
+			{
+				buffer.Bitmap.UnlockBits(bitmapData);
+			}
+		}
+
+		/// <summary>
+		/// Draws an annotation box to the specified destination buffer.
+		/// </summary>
+		/// <param name="buffer">The destination buffer.</param>
+		/// <param name="brush">A GDI brush to use for drawing.</param>
+		/// <param name="fontFactory">A GDI font factory to use for drawing.</param>
+		/// <param name="annotationText">The annotation text to be drawn.</param>
+		/// <param name="annotationBox">The annotation box to be drawn.</param>
+		/// <param name="dpi">The intended output DPI.</param>
+		public static void DrawAnnotationBox(IGdiBuffer buffer, SolidBrush brush, FontFactory fontFactory, string annotationText, AnnotationBox annotationBox, float dpi = _nominalScreenDpi)
+		{
+			// if there's nothing to draw, there's nothing to do. go figure.
+			if (string.IsNullOrEmpty(annotationText))
+				return;
+
+			var clientRectangle = RectangleUtilities.CalculateSubRectangle(buffer.Bounds, annotationBox.NormalizedRectangle);
+
+			//Deflate the client rectangle by 4 pixels to allow some space 
+			//between neighbouring rectangles whose borders coincide.
+			Rectangle.Inflate(clientRectangle, -4, -4);
+
+			var fontSize = (clientRectangle.Height/annotationBox.NumberOfLines) - 1;
+
+			//don't draw it if it's too small to read, anyway.
+			if (fontSize < MinimumFontSizeInPixels)
+				return;
+
+			using (var format = new StringFormat())
+			{
+				if (annotationBox.Truncation == AnnotationBox.TruncationBehaviour.Truncate)
+					format.Trimming = StringTrimming.Character;
+				else
+					format.Trimming = StringTrimming.EllipsisCharacter;
+
+				if (annotationBox.FitWidth)
+					format.Trimming = StringTrimming.None;
+
+				if (annotationBox.Justification == AnnotationBox.JustificationBehaviour.Right)
+					format.Alignment = StringAlignment.Far;
+				else if (annotationBox.Justification == AnnotationBox.JustificationBehaviour.Center)
+					format.Alignment = StringAlignment.Center;
+				else
+					format.Alignment = StringAlignment.Near;
+
+				if (annotationBox.VerticalAlignment == AnnotationBox.VerticalAlignmentBehaviour.Top)
+					format.LineAlignment = StringAlignment.Near;
+				else if (annotationBox.VerticalAlignment == AnnotationBox.VerticalAlignmentBehaviour.Center)
+					format.LineAlignment = StringAlignment.Center;
+				else
+					format.LineAlignment = StringAlignment.Far;
+
+				//allow p's and q's, etc to extend slightly beyond the bounding rectangle.  Only completely visible lines are shown.
+				format.FormatFlags = StringFormatFlags.NoClip;
+
+				if (annotationBox.NumberOfLines == 1)
+					format.FormatFlags |= StringFormatFlags.NoWrap;
+
+				var style = FontStyle.Regular;
+				if (annotationBox.Bold)
+					style |= FontStyle.Bold;
+				if (annotationBox.Italics)
+					style |= FontStyle.Italic;
+
+				//don't draw it if it's too small to read, anyway.
+				if (fontSize < MinimumFontSizeInPixels)
+					return;
+
+				var font = fontFactory.GetFont(annotationBox.Font, fontSize, style, GraphicsUnit.Pixel, AnnotationBox.DefaultFont);
+				var layoutArea = new SizeF(clientRectangle.Width, clientRectangle.Height);
+				var size = buffer.Graphics.MeasureString(annotationText, font, layoutArea, format);
+				if (annotationBox.FitWidth && size.Width > clientRectangle.Width)
+				{
+					fontSize = (int) (Math.Round(fontSize*clientRectangle.Width/(double) size.Width - 0.5));
+
+					//don't draw it if it's too small to read, anyway.
+					if (fontSize < MinimumFontSizeInPixels)
+						return;
+
+					font = fontFactory.GetFont(annotationBox.Font, fontSize, style, GraphicsUnit.Pixel, AnnotationBox.DefaultFont);
+				}
+
+				// Draw drop shadow
+				brush.Color = Color.Black;
+				clientRectangle.Offset(1, 1);
+
+				buffer.Graphics.DrawString(
+					annotationText,
+					font,
+					brush,
+					clientRectangle,
+					format);
+
+				brush.Color = Color.FromName(annotationBox.Color);
+				clientRectangle.Offset(-1, -1);
+
+				buffer.Graphics.DrawString(
+					annotationText,
+					font,
+					brush,
+					clientRectangle,
+					format);
+			}
+		}
+
+		/// <summary>
+		/// Draws a text primitive to the specified destination buffer.
+		/// </summary>
+		/// <param name="buffer">The destination buffer.</param>
+		/// <param name="brush">A GDI brush to use for drawing.</param>
+		/// <param name="fontFactory">A GDI font factory to use for drawing.</param>
+		/// <param name="text">The text primitive to be drawn.</param>
+		/// <param name="dpi">The intended output DPI.</param>
+		public static void DrawTextPrimitive(IGdiBuffer buffer, SolidBrush brush, FontFactory fontFactory, InvariantTextPrimitive text, float dpi = _nominalScreenDpi)
+		{
+			text.CoordinateSystem = CoordinateSystem.Destination;
+			try
+			{
+				// We adjust the font size depending on the scale so that it's the same size
+				// irrespective of the zoom
+				var fontSize = CalculateScaledFontPoints(text.SizeInPoints, dpi);
+				var font = fontFactory.GetFont(text.Font, fontSize, FontStyle.Regular, GraphicsUnit.Point, FontFactory.GenericSansSerif);
+
+				// Calculate how big the text will be so we can set the bounding box
+				text.Dimensions = buffer.Graphics.MeasureString(text.Text, font);
+
+				// Draw drop shadow
+				brush.Color = Color.Black;
+
+				var dropShadowOffset = new SizeF(1, 1);
+				var boundingBoxTopLeft = new PointF(text.BoundingBox.Left, text.BoundingBox.Top);
+
+				buffer.Graphics.DrawString(
+					text.Text,
+					font,
+					brush,
+					boundingBoxTopLeft + dropShadowOffset);
+
+				// Draw text
+				brush.Color = text.Color;
+
+				buffer.Graphics.DrawString(
+					text.Text,
+					font,
+					brush,
+					boundingBoxTopLeft);
+			}
+			finally
+			{
+				text.ResetCoordinateSystem();
+			}
+		}
+
+		/// <summary>
+		/// Draws a point primitive to the specified destination buffer.
+		/// </summary>
+		/// <param name="buffer">The destination buffer.</param>
+		/// <param name="brush">A GDI brush to use for drawing.</param>
+		/// <param name="point">The point primitive to be drawn.</param>
+		/// <param name="dpi">The intended output DPI.</param>
+		public static void DrawPointPrimitive(IGdiBuffer buffer, SolidBrush brush, PointPrimitive point, float dpi = _nominalScreenDpi)
+		{
+			buffer.Graphics.Transform = point.SpatialTransform.CumulativeTransform;
+			point.CoordinateSystem = CoordinateSystem.Source;
+			try
+			{
+				var dropShadowOffset = GetDropShadowOffset(point, dpi);
+				var width = CalculateScaledPenWidth(point, 1, dpi);
+
+				// Draw drop shadow
+				brush.Color = Color.Black;
+
+				buffer.Graphics.FillRectangle(
+					brush,
+					point.Point.X + dropShadowOffset.Width,
+					point.Point.Y + dropShadowOffset.Height,
+					width,
+					width);
+
+				// Draw point
+				brush.Color = point.Color;
+
+				buffer.Graphics.FillRectangle(
+					brush,
+					point.Point.X,
+					point.Point.Y,
+					width,
+					width);
+			}
+			finally
+			{
+				point.ResetCoordinateSystem();
+				buffer.Graphics.ResetTransform();
+			}
+		}
+
+		/// <summary>
+		/// Draws an arc primitive to the specified destination buffer.
+		/// </summary>
+		/// <param name="buffer">The destination buffer.</param>
+		/// <param name="pen">A GDI pen to use for drawing.</param>
+		/// <param name="arc">The arc primitive to be drawn.</param>
+		/// <param name="dpi">The intended output DPI.</param>
+		public static void DrawArcPrimitive(IGdiBuffer buffer, Pen pen, IArcGraphic arc, float dpi = _nominalScreenDpi)
+		{
+			buffer.Graphics.Transform = arc.SpatialTransform.CumulativeTransform;
+			arc.CoordinateSystem = CoordinateSystem.Source;
+			buffer.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+			try
+			{
+				var rectangle = new RectangleF(arc.TopLeft.X, arc.TopLeft.Y, arc.Width, arc.Height);
+				rectangle = RectangleUtilities.ConvertToPositiveRectangle(rectangle);
+				var dropShadowOffset = GetDropShadowOffset(arc, dpi);
+
+				// Draw drop shadow
+				pen.Color = Color.Black;
+				pen.Width = CalculateScaledPenWidth(arc, 1, dpi);
+
+				SetDashStyle(pen, arc);
+
+				buffer.Graphics.DrawArc(
+					pen,
+					rectangle.Left + dropShadowOffset.Width,
+					rectangle.Top + dropShadowOffset.Height,
+					rectangle.Width,
+					rectangle.Height,
+					arc.StartAngle,
+					arc.SweepAngle);
+
+				// Draw rectangle
+				pen.Color = arc.Color;
+
+				buffer.Graphics.DrawArc(
+					pen,
+					rectangle.Left,
+					rectangle.Top,
+					rectangle.Width,
+					rectangle.Height,
+					arc.StartAngle,
+					arc.SweepAngle);
+			}
+			finally
+			{
+				buffer.Graphics.SmoothingMode = SmoothingMode.None;
+				arc.ResetCoordinateSystem();
+				buffer.Graphics.ResetTransform();
+			}
+		}
+
+		/// <summary>
+		/// Draws a line primitive to the specified destination buffer.
+		/// </summary>
+		/// <param name="buffer">The destination buffer.</param>
+		/// <param name="pen">A GDI pen to use for drawing.</param>
+		/// <param name="line">The line primitive to be drawn.</param>
+		/// <param name="dpi">The intended output DPI.</param>
+		public static void DrawLinePrimitive(IGdiBuffer buffer, Pen pen, ILineSegmentGraphic line, float dpi = _nominalScreenDpi)
+		{
+			buffer.Graphics.Transform = line.SpatialTransform.CumulativeTransform;
 			line.CoordinateSystem = CoordinateSystem.Source;
+			buffer.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+			try
+			{
+				// Draw drop shadow
+				pen.Color = Color.Black;
+				pen.Width = CalculateScaledPenWidth(line, 1, dpi);
 
-			Surface.FinalBuffer.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+				SetDashStyle(pen, line);
 
-			// Draw drop shadow
-			_pen.Color = Color.Black;
-			_pen.Width = CalculateScaledPenWidth(line, 1, Dpi);
+				var dropShadowOffset = GetDropShadowOffset(line, dpi);
+				buffer.Graphics.DrawLine(
+					pen,
+					line.Point1 + dropShadowOffset,
+					line.Point2 + dropShadowOffset);
 
-			SetDashStyle(line);
+				// Draw line
+				pen.Color = line.Color;
 
-			SizeF dropShadowOffset = GetDropShadowOffset(line, Dpi);
-			Surface.FinalBuffer.Graphics.DrawLine(
-				_pen,
-				line.Point1 + dropShadowOffset,
-				line.Point2 + dropShadowOffset);
-
-			// Draw line
-			_pen.Color = line.Color;
-
-			Surface.FinalBuffer.Graphics.DrawLine(
-				_pen,
-				line.Point1,
-				line.Point2);
-
-			Surface.FinalBuffer.Graphics.SmoothingMode = SmoothingMode.None;
-
-			line.ResetCoordinateSystem();
-			Surface.FinalBuffer.Graphics.ResetTransform();
+				buffer.Graphics.DrawLine(
+					pen,
+					line.Point1,
+					line.Point2);
+			}
+			finally
+			{
+				buffer.Graphics.SmoothingMode = SmoothingMode.None;
+				line.ResetCoordinateSystem();
+				buffer.Graphics.ResetTransform();
+			}
 		}
 
-		private void InternalDrawRectanglePrimitive(IBoundableGraphic rect)
+		/// <summary>
+		/// Draws a curve primitive to the specified destination buffer.
+		/// </summary>
+		/// <param name="buffer">The destination buffer.</param>
+		/// <param name="pen">A GDI pen to use for drawing.</param>
+		/// <param name="curve">The curve primitive to be drawn.</param>
+		/// <param name="dpi">The intended output DPI.</param>
+		public static void DrawCurvePrimitive(IGdiBuffer buffer, Pen pen, CurvePrimitive curve, float dpi = _nominalScreenDpi)
 		{
-			Surface.FinalBuffer.Graphics.Transform = rect.SpatialTransform.CumulativeTransform;
+			buffer.Graphics.Transform = curve.SpatialTransform.CumulativeTransform;
+			curve.CoordinateSystem = CoordinateSystem.Source;
+			buffer.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+			try
+			{
+				// Draw drop shadow
+				pen.Color = Color.Black;
+				pen.Width = CalculateScaledPenWidth(curve, 1, dpi);
+
+				SetDashStyle(pen, curve);
+
+				var dropShadowOffset = GetDropShadowOffset(curve, dpi);
+				var pathPoints = GetCurvePoints(curve.Points, dropShadowOffset);
+
+				if (curve.Points.IsClosed)
+					buffer.Graphics.DrawClosedCurve(pen, pathPoints);
+				else
+					buffer.Graphics.DrawCurve(pen, pathPoints);
+
+				// Draw line
+				pen.Color = curve.Color;
+				pathPoints = GetCurvePoints(curve.Points, SizeF.Empty);
+
+				if (curve.Points.IsClosed)
+					buffer.Graphics.DrawClosedCurve(pen, pathPoints);
+				else
+					buffer.Graphics.DrawCurve(pen, pathPoints);
+			}
+			finally
+			{
+				buffer.Graphics.SmoothingMode = SmoothingMode.None;
+				curve.ResetCoordinateSystem();
+				buffer.Graphics.ResetTransform();
+			}
+		}
+
+		/// <summary>
+		/// Draws a rectangle primitive to the specified destination buffer.
+		/// </summary>
+		/// <param name="buffer">The destination buffer.</param>
+		/// <param name="pen">A GDI pen to use for drawing.</param>
+		/// <param name="rect">The rectangle primitive to be drawn.</param>
+		/// <param name="dpi">The intended output DPI.</param>
+		public static void DrawRectanglePrimitive(IGdiBuffer buffer, Pen pen, IBoundableGraphic rect, float dpi = _nominalScreenDpi)
+		{
+			buffer.Graphics.Transform = rect.SpatialTransform.CumulativeTransform;
 			rect.CoordinateSystem = CoordinateSystem.Source;
+			buffer.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+			try
+			{
+				var rectangle = new RectangleF(rect.TopLeft.X, rect.TopLeft.Y, rect.Width, rect.Height);
+				rectangle = RectangleUtilities.ConvertToPositiveRectangle(rectangle);
+				var dropShadowOffset = GetDropShadowOffset(rect, dpi);
 
-			Surface.FinalBuffer.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+				// Draw drop shadow
+				pen.Color = Color.Black;
+				pen.Width = CalculateScaledPenWidth(rect, 1, dpi);
 
-			RectangleF rectangle = new RectangleF(rect.TopLeft.X, rect.TopLeft.Y, rect.Width, rect.Height);
-			rectangle = RectangleUtilities.ConvertToPositiveRectangle(rectangle);
-			SizeF dropShadowOffset = GetDropShadowOffset(rect, Dpi);
+				SetDashStyle(pen, rect);
 
-			// Draw drop shadow
-			_pen.Color = Color.Black;
-			_pen.Width = CalculateScaledPenWidth(rect, 1, Dpi);
+				buffer.Graphics.DrawRectangle(
+					pen,
+					rectangle.Left + dropShadowOffset.Width,
+					rectangle.Top + dropShadowOffset.Height,
+					rectangle.Width,
+					rectangle.Height);
 
-			SetDashStyle(rect);
+				// Draw rectangle
+				pen.Color = rect.Color;
 
-			Surface.FinalBuffer.Graphics.DrawRectangle(
-				_pen,
-				rectangle.Left + dropShadowOffset.Width,
-				rectangle.Top + dropShadowOffset.Height,
-				rectangle.Width,
-				rectangle.Height);
-
-			// Draw rectangle
-			_pen.Color = rect.Color;
-
-			Surface.FinalBuffer.Graphics.DrawRectangle(
-				_pen,
-				rectangle.Left,
-				rectangle.Top,
-				rectangle.Width,
-				rectangle.Height);
-
-			rect.ResetCoordinateSystem();
-			Surface.FinalBuffer.Graphics.ResetTransform();
+				buffer.Graphics.DrawRectangle(
+					pen,
+					rectangle.Left,
+					rectangle.Top,
+					rectangle.Width,
+					rectangle.Height);
+			}
+			finally
+			{
+				buffer.Graphics.SmoothingMode = SmoothingMode.None;
+				rect.ResetCoordinateSystem();
+				buffer.Graphics.ResetTransform();
+			}
 		}
 
-		private void InternalDrawEllipsePrimitive(IBoundableGraphic ellipse)
+		/// <summary>
+		/// Draws an ellipse primitive to the specified destination buffer.
+		/// </summary>
+		/// <param name="buffer">The destination buffer.</param>
+		/// <param name="pen">A GDI pen to use for drawing.</param>
+		/// <param name="ellipse">The ellipse primitive to be drawn.</param>
+		/// <param name="dpi">The intended output DPI.</param>
+		public static void DrawEllipsePrimitive(IGdiBuffer buffer, Pen pen, IBoundableGraphic ellipse, float dpi = _nominalScreenDpi)
 		{
-			Surface.FinalBuffer.Graphics.Transform = ellipse.SpatialTransform.CumulativeTransform;
+			buffer.Graphics.Transform = ellipse.SpatialTransform.CumulativeTransform;
 			ellipse.CoordinateSystem = CoordinateSystem.Source;
+			buffer.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+			try
+			{
+				var rectangle = new RectangleF(ellipse.TopLeft.X, ellipse.TopLeft.Y, ellipse.Width, ellipse.Height);
+				rectangle = RectangleUtilities.ConvertToPositiveRectangle(rectangle);
+				var dropShadowOffset = GetDropShadowOffset(ellipse, dpi);
 
-			Surface.FinalBuffer.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+				// Draw drop shadow
+				pen.Color = Color.Black;
+				pen.Width = CalculateScaledPenWidth(ellipse, 1, dpi);
 
-			RectangleF rectangle = new RectangleF(ellipse.TopLeft.X, ellipse.TopLeft.Y, ellipse.Width, ellipse.Height);
-			rectangle = RectangleUtilities.ConvertToPositiveRectangle(rectangle);
-			SizeF dropShadowOffset = GetDropShadowOffset(ellipse, Dpi);
+				SetDashStyle(pen, ellipse);
 
-			// Draw drop shadow
-			_pen.Color = Color.Black;
-			_pen.Width = CalculateScaledPenWidth(ellipse, 1, Dpi);
+				buffer.Graphics.DrawEllipse(
+					pen,
+					rectangle.Left + dropShadowOffset.Width,
+					rectangle.Top + dropShadowOffset.Height,
+					rectangle.Width,
+					rectangle.Height);
 
-			SetDashStyle(ellipse);
+				// Draw rectangle
+				pen.Color = ellipse.Color;
 
-			Surface.FinalBuffer.Graphics.DrawEllipse(
-				_pen,
-				rectangle.Left + dropShadowOffset.Width,
-				rectangle.Top + dropShadowOffset.Height,
-				rectangle.Width,
-				rectangle.Height);
-
-			// Draw rectangle
-			_pen.Color = ellipse.Color;
-
-			Surface.FinalBuffer.Graphics.DrawEllipse(
-				_pen,
-				rectangle.Left,
-				rectangle.Top,
-				rectangle.Width,
-				rectangle.Height);
-
-			ellipse.ResetCoordinateSystem();
-			Surface.FinalBuffer.Graphics.ResetTransform();
+				buffer.Graphics.DrawEllipse(
+					pen,
+					rectangle.Left,
+					rectangle.Top,
+					rectangle.Width,
+					rectangle.Height);
+			}
+			finally
+			{
+				buffer.Graphics.SmoothingMode = SmoothingMode.None;
+				ellipse.ResetCoordinateSystem();
+				buffer.Graphics.ResetTransform();
+			}
 		}
 
-		private void SetDashStyle(IVectorGraphic graphic)
+		private static void SetDashStyle(Pen pen, IVectorGraphic graphic)
 		{
 			if (graphic.LineStyle == LineStyle.Solid)
 			{
-				_pen.DashStyle = DashStyle.Solid;
+				pen.DashStyle = DashStyle.Solid;
 			}
 			else
 			{
-				_pen.DashStyle = DashStyle.Custom;
+				pen.DashStyle = DashStyle.Custom;
 
 				if (graphic.LineStyle == LineStyle.Dash)
-					_pen.DashPattern = new[] {4.0F, 4.0F};
+					pen.DashPattern = new[] {4.0F, 4.0F};
 				else
-					_pen.DashPattern = new[] {2.0F, 4.0F};
+					pen.DashPattern = new[] {2.0F, 4.0F};
 			}
 		}
 
@@ -631,13 +758,7 @@ namespace ClearCanvas.ImageViewer.Rendering.GDI
 			return result;
 		}
 
-		/// <summary>
-		/// Factory method for an <see cref="IRenderingSurface"/>.
-		/// </summary>
-		public override sealed IRenderingSurface GetRenderingSurface(IntPtr windowId, int width, int height)
-		{
-			return new GdiRenderingSurface(windowId, width, height);
-		}
+		#endregion
 	}
 }
 

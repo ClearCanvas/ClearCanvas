@@ -67,6 +67,7 @@
     <Compile Include="BasicVtkSceneGraph.cs" />
     <Compile Include="IVtkPresentationImage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Rendering\IVtkRenderingSurface.cs" />
     <Compile Include="Rendering\VtkPresentationImageRenderer.cs" />
     <Compile Include="Rendering\Win32VtkRenderingSurface.cs" />
     <Compile Include="Tests\VtkRendererTestTool.cs" />

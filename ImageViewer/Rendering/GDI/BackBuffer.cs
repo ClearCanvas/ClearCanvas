@@ -84,6 +84,11 @@ namespace ClearCanvas.ImageViewer.Rendering.GDI
 			}
 		}
 
+		Rectangle IGdiBuffer.Bounds
+		{
+			get { return _clientRectangle; }
+		}
+
 		/// <summary>
 		/// Gets the <see cref="System.Drawing.Graphics"/> object that outputs to the back buffer.
 		/// </summary>

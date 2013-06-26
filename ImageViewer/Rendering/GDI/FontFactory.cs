@@ -75,6 +75,21 @@ namespace ClearCanvas.ImageViewer.Rendering.GDI
 		private readonly Dictionary<ItemKey, Font> _fonts = new Dictionary<ItemKey, Font>();
 
 		/// <summary>
+		/// Gets the font name for a generic serif font (e.g. Times New Roman) available on the system.
+		/// </summary>
+		public static readonly string GenericSerif = FontFamily.GenericSerif.Name;
+
+		/// <summary>
+		/// Gets the font name for a generic sans serif font (e.g. MS Sans Serif) available on the system.
+		/// </summary>
+		public static readonly string GenericSansSerif = FontFamily.GenericSansSerif.Name;
+
+		/// <summary>
+		/// Gets the font name for a generic monospace font (e.g. Courier New) available on the system.
+		/// </summary>
+		public static readonly string GenericMonospace = FontFamily.GenericMonospace.Name;
+
+		/// <summary>
 		/// Gets a <see cref="Font"/> object for the specified typeface, size, style and unit.
 		/// </summary>
 		/// <param name="fontName">The name of the typeface.</param>
@@ -83,10 +98,10 @@ namespace ClearCanvas.ImageViewer.Rendering.GDI
 		/// <param name="graphicsUnit">The units in which <paramref name="fontSize"/> is expressed.</param>
 		/// <param name="defaultFontName">The name of a default typeface, in case the font referred to by <paramref name="fontName"/> does not exist.</param>
 		/// <returns></returns>
-		public Font GetFont(string fontName, float fontSize, FontStyle fontStyle, GraphicsUnit graphicsUnit, string defaultFontName)
+		public Font GetFont(string fontName, float fontSize, FontStyle fontStyle = FontStyle.Regular, GraphicsUnit graphicsUnit = GraphicsUnit.Point, string defaultFontName = null)
 		{
 			var key = new ItemKey(fontName, fontSize, fontStyle, graphicsUnit);
-			return GetFont(key, defaultFontName);
+			return GetFont(key, !string.IsNullOrEmpty(defaultFontName) ? defaultFontName : GenericSansSerif);
 		}
 
 		private Font GetFont(ItemKey key, string defaultFontName)

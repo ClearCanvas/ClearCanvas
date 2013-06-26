@@ -104,6 +104,11 @@ namespace ClearCanvas.ImageViewer.Rendering.GDI
 			}
 		}
 
+		Rectangle IGdiBuffer.Bounds
+		{
+			get { return new Rectangle(new Point(), _size); }
+		}
+
 		/// <summary>
 		/// Gets the pixel format of the memory bitmap.
 		/// </summary>

@@ -22,23 +22,17 @@
 
 #endregion
 
-using System.Drawing;
+using ClearCanvas.ImageViewer.Rendering;
+using ClearCanvas.ImageViewer.Rendering.GDI;
 
-namespace ClearCanvas.ImageViewer.Rendering.GDI
+namespace ClearCanvas.ImageViewer.Vtk.Rendering
 {
-	/// <summary>
-	/// Represents a GDI buffer.
-	/// </summary>
-	public interface IGdiBuffer
+	public interface IVtkRenderingSurface : IRenderingSurface
 	{
-		/// <summary>
-		/// Gets the <see cref="System.Drawing.Graphics"/> object that outputs to the buffer.
-		/// </summary>
-		System.Drawing.Graphics Graphics { get; }
+		BitmapBuffer OverlayBuffer { get; }
 
-		/// <summary>
-		/// Gets the rectangle bounds of the buffer.
-		/// </summary>
-		Rectangle Bounds { get; }
+		void SetSceneRoot(VtkSceneGraph sceneGraphRoot);
+		void Refresh();
+		void Render();
 	}
 }
