@@ -23,9 +23,9 @@
 #endregion
 
 using System;
+using System.Threading;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Desktop.Tools;
-using ClearCanvas.Utilities.DicomEditor;
 
 namespace ClearCanvas.Utilities.DicomEditor.Tools
 {
@@ -118,6 +118,24 @@ namespace ClearCanvas.Utilities.DicomEditor.Tools
 
 			base.Dispose(disposing);
 		}
+
+		public void Activate()
+		{
+			Context.EnsureChangesCommitted();
+
+			// ensures any pending updates have a chance to resolve before the tool action is performed
+			var synchronizationContext = SynchronizationContext.Current;
+			if (synchronizationContext != null)
+			{
+				synchronizationContext.Post(s => ActivateCore(), null);
+			}
+			else
+			{
+				ActivateCore();
+			}
+		}
+
+		protected abstract void ActivateCore();
 
 		protected virtual void OnDisplayedDumpChanged(object sender, DisplayedDumpChangedEventArgs e) {}
 

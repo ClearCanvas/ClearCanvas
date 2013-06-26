@@ -580,6 +580,17 @@ namespace ClearCanvas.Desktop.View.WinForms
 			return BeginEdit(colIndex, selectAll);
 		}
 
+    	/// <summary>
+    	/// Immediately commits any outstanding edits in progress.
+    	/// </summary>
+    	public bool EndEdit()
+    	{
+    		if (_dataGridView.IsCurrentCellInEditMode)
+    		{
+    			return _dataGridView.EndEdit();
+    		}
+    		return true;
+    	}
 
         #endregion
 

@@ -42,21 +42,26 @@ namespace ClearCanvas.Utilities.DicomEditor.Tools
 
 		public void Create()
 		{
+			Activate();
+		}
+
+		protected override void ActivateCore()
+		{
 			var creator = new DicomEditorCreateToolComponent();
 			var result = ApplicationComponent.LaunchAsDialog(this.Context.DesktopWindow, creator, SR.TitleCreateTag);
-		    if (result != ApplicationComponentExitCode.Accepted)
-                return;
-		    
-            try
-		    {
-                //We can only edit tags in the DicomTagDictionary, currently.
-		        Context.DumpManagement.EditTag(creator.TagId, creator.Value, false);
-                Context.UpdateDisplay();
-            }
-		    catch (DicomException)
-		    {
-		        Context.DesktopWindow.ShowMessageBox(SR.MessageTagCannotBeCreated, MessageBoxActions.Ok);
-		    }
+			if (result != ApplicationComponentExitCode.Accepted)
+				return;
+
+			try
+			{
+				//We can only edit tags in the DicomTagDictionary, currently.
+				Context.DumpManagement.EditTag(creator.TagId, creator.Value, false);
+				Context.UpdateDisplay();
+			}
+			catch (DicomException)
+			{
+				Context.DesktopWindow.ShowMessageBox(SR.MessageTagCannotBeCreated, MessageBoxActions.Ok);
+			}
 		}
 
 		protected override void OnSelectedTagChanged(object sender, EventArgs e)

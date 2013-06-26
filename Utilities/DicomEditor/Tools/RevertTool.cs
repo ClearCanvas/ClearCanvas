@@ -24,7 +24,6 @@
 
 using System;
 using ClearCanvas.Common;
-using ClearCanvas.Desktop;
 using ClearCanvas.Desktop.Actions;
 
 namespace ClearCanvas.Utilities.DicomEditor.Tools
@@ -42,6 +41,11 @@ namespace ClearCanvas.Utilities.DicomEditor.Tools
 		public RevertTool() : base(true) {}
 
 		public void Revert()
+		{
+			Activate();
+		}
+
+		protected override void ActivateCore()
 		{
 			if (this.Context.DesktopWindow.ShowMessageBox(SR.MessageConfirmRevert, MessageBoxActions.YesNo) == DialogBoxAction.Yes)
 			{

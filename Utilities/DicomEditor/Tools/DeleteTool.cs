@@ -24,7 +24,6 @@
 
 using System;
 using ClearCanvas.Common;
-using ClearCanvas.Desktop;
 using ClearCanvas.Desktop.Actions;
 
 namespace ClearCanvas.Utilities.DicomEditor.Tools
@@ -42,6 +41,11 @@ namespace ClearCanvas.Utilities.DicomEditor.Tools
 		public DeleteTool() : base(true) {}
 
 		public void Delete()
+		{
+			Activate();
+		}
+
+		protected override void ActivateCore()
 		{
 			if (this.Context.DesktopWindow.ShowMessageBox(SR.MessageConfirmDeleteSelectedTags, MessageBoxActions.YesNo) == DialogBoxAction.Yes)
 			{

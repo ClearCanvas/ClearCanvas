@@ -24,7 +24,6 @@
 
 using System;
 using ClearCanvas.Common;
-using ClearCanvas.Desktop;
 using ClearCanvas.Desktop.Actions;
 
 namespace ClearCanvas.Utilities.DicomEditor.Tools
@@ -46,6 +45,11 @@ namespace ClearCanvas.Utilities.DicomEditor.Tools
 		public QuickAnonymizeTool() : base(true) {}
 
 		public void Apply()
+		{
+			Activate();
+		}
+
+		protected override void ActivateCore()
 		{
 			bool applyToAll = false;
 

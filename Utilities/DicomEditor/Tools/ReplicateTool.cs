@@ -25,7 +25,6 @@
 using System;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
-using ClearCanvas.Desktop;
 using ClearCanvas.Desktop.Actions;
 
 namespace ClearCanvas.Utilities.DicomEditor.Tools
@@ -41,6 +40,11 @@ namespace ClearCanvas.Utilities.DicomEditor.Tools
 		public ReplicateTool() : base(true) {}
 
 		public void Replicate()
+		{
+			Activate();
+		}
+
+		protected override void ActivateCore()
 		{
 			// if it's not a root level tag, it's part of a sequence. if it's not editable, it's SQ or OB or OW or UN or ?? and thus cannot be set by string value
 			if (CollectionUtils.Contains(Context.SelectedTags, t => !t.IsRootLevelTag || !t.IsEditable()))
