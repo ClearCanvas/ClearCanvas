@@ -24,7 +24,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
@@ -146,6 +145,14 @@ namespace ClearCanvas.ImageViewer.Utilities.StudyFilters
 			_table.Filter();
 
 			base.Stop();
+
+			// dispose any remaining study items now
+			if (_masterList.Count > 0)
+			{
+				foreach (var item in _masterList)
+					item.Dispose();
+				_masterList.Clear();
+			}
 		}
 
 		#endregion
@@ -485,7 +492,7 @@ namespace ClearCanvas.ImageViewer.Utilities.StudyFilters
 
 		public event EventHandler FilterPredicatesChanged
 		{
-			add { _filterPredicatesChanged += value; }	
+			add { _filterPredicatesChanged += value; }
 			remove { _filterPredicatesChanged -= value; }
 		}
 

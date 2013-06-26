@@ -45,44 +45,62 @@ namespace ClearCanvas.ImageViewer.Utilities.StudyFilters.Tools
 	{
 		public void Open()
 		{
-		    var studyLoaders = new List<IStudyLoader>();
+			var studyLoaders = new List<IStudyLoader>();
 			int sopCount = 0;
 			foreach (var studyItem in base.Context.SelectedStudies)
 			{
-                if (!studyItem.Server.IsSupported<IStudyLoader>())
-                    return;
+				if (!studyItem.Server.IsSupported<IStudyLoader>())
+					return;
 
-			    var loader = studyItem.Server.GetService<IStudyLoader>();
-                studyLoaders.Add(loader);
+				var loader = studyItem.Server.GetService<IStudyLoader>();
+				studyLoaders.Add(loader);
 				sopCount += loader.Start(new StudyLoaderArgs(studyItem.StudyInstanceUid, studyItem.Server, new StudyLoaderOptions(true)));
 			}
 
 			bool success = false;
-		    var component = new StudyFilterComponent {BulkOperationsMode = true};
-		    var task = new BackgroundTask(c =>
-			                                         	{
-			                                         		c.ReportProgress(new BackgroundTaskProgress(0, sopCount, SR.MessageLoading));
-			                                         		if (c.CancelRequested)
-			                                         			c.Cancel();
+			var component = new StudyFilterComponent {BulkOperationsMode = true};
+			var task = new BackgroundTask(c =>
+			                              	{
+			                              		c.ReportProgress(new BackgroundTaskProgress(0, sopCount, SR.MessageLoading));
+			                              		if (c.CancelRequested)
+			                              			c.Cancel();
 
-			                                         		int progress = 0;
-			                                         		foreach (IStudyLoader localStudyLoader in studyLoaders)
-			                                         		{
-			                                         			Sop sop;
-			                                         			while ((sop = localStudyLoader.LoadNextSop()) != null)
-			                                         			{
-			                                         				component.Items.Add(new SopDataSourceStudyItem(sop));
-																	c.ReportProgress(new BackgroundTaskProgress(Math.Min(sopCount, ++progress) - 1, sopCount, SR.MessageLoading));
-			                                         				if (c.CancelRequested)
-			                                         					c.Cancel();
-			                                         				sop.Dispose();
-			                                         			}
-			                                         		}
+			                              		int progress = 0;
+			                              		var studyItems = new List<IStudyItem>();
+			                              		foreach (IStudyLoader localStudyLoader in studyLoaders)
+			                              		{
+			                              			Sop sop;
+			                              			while ((sop = localStudyLoader.LoadNextSop()) != null)
+			                              			{
+			                              				try
+			                              				{
+			                              					studyItems.Add(new SopDataSourceStudyItem(sop));
+			                              					c.ReportProgress(new BackgroundTaskProgress(Math.Min(sopCount, ++progress) - 1, sopCount, SR.MessageLoading));
+			                              					if (c.CancelRequested)
+			                              						c.Cancel();
+			                              				}
+			                              				finally
+			                              				{
+			                              					sop.Dispose();
+			                              				}
+			                              			}
+			                              		}
 
-			                                         		success = true;
-			                                         		component.Refresh(true);
-			                                         		c.Complete();
-			                                         	}, true);
+			                              		try
+			                              		{
+			                              			foreach (var item in studyItems)
+			                              				component.Items.Add(item);
+			                              			component.Refresh(true);
+			                              		}
+			                              		catch (Exception)
+			                              		{
+			                              			foreach (var item in studyItems)
+			                              				item.Dispose();
+			                              		}
+
+			                              		success = true;
+			                              		c.Complete();
+			                              	}, true);
 			ProgressDialog.Show(task, this.Context.DesktopWindow, true, ProgressBarStyle.Continuous);
 
 			if (success)
@@ -111,14 +129,12 @@ namespace ClearCanvas.ImageViewer.Utilities.StudyFilters.Tools
 
 		private void UpdateEnabled()
 		{
-            base.Enabled = Context.SelectedStudies.Count > 0
-                //TODO (Marmot):Not sure why it was restricted to local, but I'm leaving it.
-                && base.Context.SelectedServers.IsLocalServer
-                && base.Context.SelectedServers.AllSupport<IStudyLoader>();
+			// N.B.: Must restrict to local files only, because study filters (and some of its tools) require file paths
+			base.Enabled = Context.SelectedStudies.Count > 0
+			               && base.Context.SelectedServers.IsLocalServer
+			               && base.Context.SelectedServers.AllSupport<IStudyLoader>();
 
-            //TODO (Marmot): Not sure why Enabled is restricted to local. Check here too for consistency.
-            Visible = Context.SelectedServers.IsLocalServer && Context.SelectedServers.AllSupport<IStudyLoader>();
-		    
+			Visible = Context.SelectedServers.IsLocalServer && Context.SelectedServers.AllSupport<IStudyLoader>();
 		}
 	}
 }

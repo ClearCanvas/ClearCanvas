@@ -29,7 +29,6 @@ using ClearCanvas.ImageViewer.StudyManagement;
 
 namespace ClearCanvas.ImageViewer.Utilities.StudyFilters
 {
-	//TODO (CR February 2011) - High: These don't get disposed - causes caching problems.
 	public class SopDataSourceStudyItem : StudyItem
 	{
 		private readonly string _filename;
@@ -37,7 +36,7 @@ namespace ClearCanvas.ImageViewer.Utilities.StudyFilters
 
 		public SopDataSourceStudyItem(Sop sop)
 		{
-			if (sop.DataSource is ILocalSopDataSource)
+			Platform.CheckTrue(sop.DataSource is ILocalSopDataSource, "Sop must be local");
 			{
 				_filename = ((ILocalSopDataSource) sop.DataSource).Filename;
 				_sopReference = sop.CreateTransientReference();
@@ -109,13 +108,23 @@ namespace ClearCanvas.ImageViewer.Utilities.StudyFilters
 		}
 	}
 
-	public abstract class StudyItem : IStudyItem
+	public abstract partial class StudyItem : IStudyItem
 	{
-		protected StudyItem() {}
+		protected StudyItem()
+		{
+			IncrementInstanceCount();
+		}
 
 		~StudyItem()
 		{
-			this.Dispose(false);
+			try
+			{
+				Dispose(false);
+			}
+			catch (Exception e)
+			{
+				Platform.Log(LogLevel.Warn, e);
+			}
 		}
 
 		public abstract string Filename { get; }
@@ -128,13 +137,18 @@ namespace ClearCanvas.ImageViewer.Utilities.StudyFilters
 		{
 			try
 			{
-				this.Dispose(true);
+				Dispose(true);
 				GC.SuppressFinalize(this);
 			}
 			catch (Exception e)
 			{
 				Platform.Log(LogLevel.Warn, e);
 			}
+
+			DecrementInstanceCount();
 		}
+
+		static partial void IncrementInstanceCount();
+		static partial void DecrementInstanceCount();
 	}
 }
