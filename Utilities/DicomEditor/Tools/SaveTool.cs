@@ -32,7 +32,7 @@ namespace ClearCanvas.Utilities.DicomEditor.Tools
 	[Tooltip("activate", "TooltipSave")]
 	[IconSet("activate", "Icons.SaveToolSmall.png", "Icons.SaveToolSmall.png", "Icons.SaveToolSmall.png")]
 	[EnabledStateObserver("activate", "Enabled", "EnabledChanged")]
-	[ExtensionOf(typeof (DicomEditorToolExtensionPoint))]
+	[ExtensionOf(typeof (DicomEditorToolExtensionPoint), FeatureToken = FeatureTokens.DicomEditing)]
 	public class SaveTool : DicomEditorTool
 	{
 		/// <summary>
@@ -46,6 +46,9 @@ namespace ClearCanvas.Utilities.DicomEditor.Tools
 		/// </summary>
 		public void Save()
 		{
+			if (!LicenseInformation.IsFeatureAuthorized(FeatureTokens.DicomEditing))
+				return;
+
 			Activate();
 		}
 

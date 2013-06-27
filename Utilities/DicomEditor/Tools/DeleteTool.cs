@@ -33,7 +33,7 @@ namespace ClearCanvas.Utilities.DicomEditor.Tools
 	[EnabledStateObserver("activate", "Enabled", "EnabledChanged")]
 	[Tooltip("activate", "TooltipDelete")]
 	[IconSet("activate", "Icons.DeleteToolSmall.png", "Icons.DeleteToolSmall.png", "Icons.DeleteToolSmall.png")]
-	[ExtensionOf(typeof (DicomEditorToolExtensionPoint))]
+	[ExtensionOf(typeof (DicomEditorToolExtensionPoint), FeatureToken = FeatureTokens.DicomEditing)]
 	public class DeleteTool : DicomEditorTool
 	{
 		private bool _promptForAll;
@@ -42,6 +42,9 @@ namespace ClearCanvas.Utilities.DicomEditor.Tools
 
 		public void Delete()
 		{
+			if (!LicenseInformation.IsFeatureAuthorized(FeatureTokens.DicomEditing))
+				return;
+
 			Activate();
 		}
 

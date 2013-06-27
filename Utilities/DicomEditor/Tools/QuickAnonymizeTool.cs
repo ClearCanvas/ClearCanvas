@@ -33,7 +33,7 @@ namespace ClearCanvas.Utilities.DicomEditor.Tools
 	[Tooltip("activate", "TooltipQuickAnonymize")]
 	[IconSet("activate", "Icons.AnonymizeToolSmall.png", "Icons.AnonymizeToolSmall.png", "Icons.AnonymizeToolSmall.png")]
 	[EnabledStateObserver("activate", "Enabled", "EnabledChanged")]
-	[ExtensionOf(typeof (DicomEditorToolExtensionPoint))]
+	[ExtensionOf(typeof (DicomEditorToolExtensionPoint), FeatureToken = FeatureTokens.DicomEditing)]
 	public class QuickAnonymizeTool : DicomEditorTool
 	{
 		private bool _promptForAll;
@@ -46,6 +46,9 @@ namespace ClearCanvas.Utilities.DicomEditor.Tools
 
 		public void Apply()
 		{
+			if (!LicenseInformation.IsFeatureAuthorized(FeatureTokens.DicomEditing))
+				return;
+
 			Activate();
 		}
 

@@ -33,7 +33,7 @@ namespace ClearCanvas.Utilities.DicomEditor.Tools
 	[EnabledStateObserver("activate", "Enabled", "EnabledChanged")]
 	[Tooltip("activate", "TooltipRevert")]
 	[IconSet("activate", "Icons.UndoToolSmall.png", "Icons.UndoToolSmall.png", "Icons.UndoToolSmall.png")]
-	[ExtensionOf(typeof (DicomEditorToolExtensionPoint))]
+	[ExtensionOf(typeof (DicomEditorToolExtensionPoint), FeatureToken = FeatureTokens.DicomEditing)]
 	public class RevertTool : DicomEditorTool
 	{
 		private bool _promptForAll;
@@ -42,6 +42,9 @@ namespace ClearCanvas.Utilities.DicomEditor.Tools
 
 		public void Revert()
 		{
+			if (!LicenseInformation.IsFeatureAuthorized(FeatureTokens.DicomEditing))
+				return;
+
 			Activate();
 		}
 

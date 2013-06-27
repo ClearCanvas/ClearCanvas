@@ -68,6 +68,7 @@
     <Compile Include="AuthorityTokens.cs" />
     <Compile Include="DicomEditorTag.cs" />
     <Compile Include="DisplayedDumpChangedEventArgs.cs" />
+    <Compile Include="FeatureTokens.cs" />
     <Compile Include="ShowDicomEditorTool.cs" />
     <Compile Include="DicomEditorComponent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

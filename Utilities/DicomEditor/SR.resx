@@ -325,4 +325,10 @@ NOTE: the edited file is from the local store so it should be re-indexed, otherw
   <data name="MessageConfirmSaveReportsOrAttachments" xml:space="preserve">
     <value>One or more of the edited files are reports and/or other documents. If you have modified any patient information, this tool cannot modify the document to match your changes. Are you sure you want to continue?</value>
   </data>
+  <data name="MenuDicomDump" xml:space="preserve">
+    <value>DICOM Dump</value>
+  </data>
+  <data name="TitleDicomDump" xml:space="preserve">
+    <value>DICOM Dump</value>
+  </data>
 </root>

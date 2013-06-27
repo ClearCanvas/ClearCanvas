@@ -34,13 +34,16 @@ namespace ClearCanvas.Utilities.DicomEditor.Tools
 	[EnabledStateObserver("activate", "Enabled", "EnabledChanged")]
 	[Tooltip("activate", "TooltipReplicate")]
 	[IconSet("activate", "Icons.CopyToolSmall.png", "Icons.CopyToolSmall.png", "Icons.CopyToolSmall.png")]
-	[ExtensionOf(typeof (DicomEditorToolExtensionPoint))]
+	[ExtensionOf(typeof (DicomEditorToolExtensionPoint), FeatureToken = FeatureTokens.DicomEditing)]
 	public class ReplicateTool : DicomEditorTool
 	{
 		public ReplicateTool() : base(true) {}
 
 		public void Replicate()
 		{
+			if (!LicenseInformation.IsFeatureAuthorized(FeatureTokens.DicomEditing))
+				return;
+
 			Activate();
 		}
 

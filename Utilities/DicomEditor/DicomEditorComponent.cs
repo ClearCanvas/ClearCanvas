@@ -379,20 +379,23 @@ namespace ClearCanvas.Utilities.DicomEditor
 
 		public DicomEditorComponent()
 		{
+			var setTagValueDelegate = new TableColumn<DicomEditorTag, string>.SetColumnValueDelegate<DicomEditorTag, string>((d, value) =>
+			                                                                                                                 	{
+			                                                                                                                 		if (d.IsEditable())
+			                                                                                                                 		{
+			                                                                                                                 			d.Value = value;
+			                                                                                                                 			_dirtyFlags[_position] = true;
+			                                                                                                                 			EventsHelper.Fire(_tagEditedEvent, this, EventArgs.Empty);
+			                                                                                                                 		}
+			                                                                                                                 	});
+			if (!LicenseInformation.IsFeatureAuthorized(FeatureTokens.DicomEditing)) setTagValueDelegate = null;
+
 			_dicomTagData = new Table<DicomEditorTag>();
 			_dicomTagData.Columns.Add(new TableColumn<DicomEditorTag, string>(SR.ColumnHeadingGroupElement, delegate(DicomEditorTag d) { return d.DisplayKey; }, null, 1.0f, delegate(DicomEditorTag one, DicomEditorTag two) { return DicomEditorTag.TagCompare(one, two, SortType.GroupElement); }));
 			_dicomTagData.Columns.Add(new TableColumn<DicomEditorTag, string>(SR.ColumnHeadingTagName, delegate(DicomEditorTag d) { return d.TagName; }, null, 1.0f, delegate(DicomEditorTag one, DicomEditorTag two) { return DicomEditorTag.TagCompare(one, two, SortType.TagName); }));
 			_dicomTagData.Columns.Add(new TableColumn<DicomEditorTag, string>(SR.ColumnHeadingVR, delegate(DicomEditorTag d) { return d.Vr; }, null, 1.0f, delegate(DicomEditorTag one, DicomEditorTag two) { return DicomEditorTag.TagCompare(one, two, SortType.Vr); }));
 			_dicomTagData.Columns.Add(new TableColumn<DicomEditorTag, string>(SR.ColumnHeadingLength, delegate(DicomEditorTag d) { return d.Length; }, null, 1.0f, delegate(DicomEditorTag one, DicomEditorTag two) { return DicomEditorTag.TagCompare(one, two, SortType.Length); }));
-			_dicomTagData.Columns.Add(new TableColumn<DicomEditorTag, string>(SR.ColumnHeadingValue, delegate(DicomEditorTag d) { return d.Value; }, delegate(DicomEditorTag d, string value)
-			                                                                                                                                         	{
-			                                                                                                                                         		if (d.IsEditable())
-			                                                                                                                                         		{
-			                                                                                                                                         			d.Value = value;
-			                                                                                                                                         			_dirtyFlags[_position] = true;
-			                                                                                                                                         			EventsHelper.Fire(_tagEditedEvent, this, EventArgs.Empty);
-			                                                                                                                                         		}
-			                                                                                                                                         	}, 1.0f, delegate(DicomEditorTag one, DicomEditorTag two) { return DicomEditorTag.TagCompare(one, two, SortType.Value); }));
+			_dicomTagData.Columns.Add(new TableColumn<DicomEditorTag, string>(SR.ColumnHeadingValue, delegate(DicomEditorTag d) { return d.Value; }, setTagValueDelegate, 1.0f, delegate(DicomEditorTag one, DicomEditorTag two) { return DicomEditorTag.TagCompare(one, two, SortType.Value); }));
 			_title = "";
 			_loadedFiles = new List<DicomFile>();
 			_position = 0;
