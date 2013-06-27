@@ -33,6 +33,8 @@ using ClearCanvas.Desktop.Actions;
 using ClearCanvas.Desktop.Tables;
 using ClearCanvas.Desktop.Tools;
 using ClearCanvas.Dicom;
+using ClearCanvas.Dicom.Iod;
+using ClearCanvas.Dicom.ServiceModel.Query;
 using ClearCanvas.Dicom.Utilities.Anonymization;
 using ClearCanvas.ImageViewer.Common.Auditing;
 
@@ -50,6 +52,7 @@ namespace ClearCanvas.Utilities.DicomEditor
 		void RevertEdits(bool revertAll);
 
 		void Anonymize(bool applyToAll);
+		void Anonymize(bool applyToAll, IStudyRootData studyPrototype);
 
 		int LoadedFileCount { get; }
 		void SaveAll();
@@ -87,14 +90,16 @@ namespace ClearCanvas.Utilities.DicomEditor
 		event EventHandler IsLocalFileChanged;
 
 		void EnsureChangesCommitted();
+
+		IStudyRootData GetStudyRootData();
 	}
 
 	[AssociateView(typeof (DicomEditorComponentViewExtensionPoint))]
 	public class DicomEditorComponent : ApplicationComponent, IDicomEditorDumpManagement
 	{
-		public class DicomEditorToolContext : ToolContext, IDicomEditorToolContext
+		private class DicomEditorToolContext : ToolContext, IDicomEditorToolContext
 		{
-			private DicomEditorComponent _component;
+			private readonly DicomEditorComponent _component;
 
 			public DicomEditorToolContext(DicomEditorComponent component)
 			{
@@ -192,6 +197,11 @@ namespace ClearCanvas.Utilities.DicomEditor
 				_component.EnsureChangesCommitted();
 			}
 
+			public IStudyRootData GetStudyRootData()
+			{
+				return new StudyRootStudyIdentifier(_component._loadedFiles[_component._position].DataSet);
+			}
+
 			#endregion
 		}
 
@@ -234,6 +244,13 @@ namespace ClearCanvas.Utilities.DicomEditor
 
 		public void Anonymize(bool applyToAll)
 		{
+			Anonymize(applyToAll, null);
+		}
+
+		public void Anonymize(bool applyToAll, IStudyRootData studyPrototype)
+		{
+			_anonymizer.StudyDataPrototype = new StudyData(studyPrototype);
+
 			if (applyToAll == false)
 			{
 				if (!WarnReportOrAttachmentAnonymization(_loadedFiles[_position]))
@@ -402,7 +419,7 @@ namespace ClearCanvas.Utilities.DicomEditor
 			_dirtyFlags = new List<bool>();
 
 			_anonymizer = new DicomAnonymizer();
-			_anonymizer.ValidationOptions = ValidationOptions.RelaxAllChecks;
+			_anonymizer.ValidationOptions = ValidationOptions.RelaxAllChecks | ValidationOptions.AllowUnchangedValues;
 		}
 
 		public ActionModelRoot ToolbarModel

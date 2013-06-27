@@ -112,6 +112,9 @@ namespace ClearCanvas.Utilities.DicomEditor
 		    _anonymized = _original.Clone();
 
 			_validator = new DicomAnonymizer.ValidationStrategy();
+
+			ShowKeepReportsAndAttachments = true;
+			ShowPreserveSeriesData = true;
 		}
 
 		internal StudyData OriginalData
@@ -216,6 +219,8 @@ namespace ClearCanvas.Utilities.DicomEditor
 			}
 		}
 
+		public bool ShowPreserveSeriesData { get; set; }
+
 		public bool KeepReportsAndAttachments
 		{
 			get { return _keepReportsAndAttachments; }
@@ -231,6 +236,8 @@ namespace ClearCanvas.Utilities.DicomEditor
 				NotifyPropertyChanged("KeepReportsAndAttachments");
 			}
 		}
+
+		public bool ShowKeepReportsAndAttachments { get; set; }
 
 		public override void Start()
 		{

@@ -267,7 +267,7 @@ NOTE: if any of the edited files are from the local store, it should be re-index
     <value>Previous image</value>
   </data>
   <data name="TooltipQuickAnonymize" xml:space="preserve">
-    <value>Anonymize all loaded files with one click</value>
+    <value>Anonymize all loaded files</value>
   </data>
   <data name="TooltipReplicate" xml:space="preserve">
     <value>Replicates selected tag to all loaded files</value>
@@ -330,5 +330,8 @@ NOTE: the edited file is from the local store so it should be re-indexed, otherw
   </data>
   <data name="TitleDicomDump" xml:space="preserve">
     <value>DICOM Dump</value>
+  </data>
+  <data name="TitleQuickAnonymize" xml:space="preserve">
+    <value>Quick Anonymize</value>
   </data>
 </root>

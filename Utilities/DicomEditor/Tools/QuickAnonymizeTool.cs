@@ -24,6 +24,7 @@
 
 using System;
 using ClearCanvas.Common;
+using ClearCanvas.Desktop;
 using ClearCanvas.Desktop.Actions;
 
 namespace ClearCanvas.Utilities.DicomEditor.Tools
@@ -54,6 +55,10 @@ namespace ClearCanvas.Utilities.DicomEditor.Tools
 
 		protected override void ActivateCore()
 		{
+			var component = new AnonymizeStudyComponent(Context.GetStudyRootData()) {ShowKeepReportsAndAttachments = false, ShowPreserveSeriesData = false};
+			if (ApplicationComponent.LaunchAsDialog(Context.DesktopWindow, component, SR.TitleQuickAnonymize) != ApplicationComponentExitCode.Accepted)
+				return;
+
 			bool applyToAll = false;
 
 			if (_promptForAll)
@@ -62,15 +67,8 @@ namespace ClearCanvas.Utilities.DicomEditor.Tools
 					applyToAll = true;
 			}
 
-			this.Anonymize(applyToAll);
+			this.Context.DumpManagement.Anonymize(applyToAll, component.AnonymizedData);
 			this.Context.UpdateDisplay();
-		}
-
-		private void Anonymize(bool applyToAll)
-		{
-			IDicomEditorDumpManagement dump = this.Context.DumpManagement;
-
-			dump.Anonymize(applyToAll);
 		}
 
 		protected override void OnDisplayedDumpChanged(object sender, DisplayedDumpChangedEventArgs e)

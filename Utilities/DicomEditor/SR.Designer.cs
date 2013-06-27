@@ -533,6 +533,15 @@ namespace ClearCanvas.Utilities.DicomEditor {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Quick Anonymize.
+        /// </summary>
+        internal static string TitleQuickAnonymize {
+            get {
+                return ResourceManager.GetString("TitleQuickAnonymize", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Anonymize.
         /// </summary>
         internal static string ToolbarAnonymizeStudy {
@@ -659,7 +668,7 @@ namespace ClearCanvas.Utilities.DicomEditor {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Anonymize all loaded files with one click.
+        ///   Looks up a localized string similar to Anonymize all loaded files.
         /// </summary>
         internal static string TooltipQuickAnonymize {
             get {

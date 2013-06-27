@@ -25,6 +25,7 @@
 using System;
 using System.Threading;
 using ClearCanvas.Common.Utilities;
+using ClearCanvas.Desktop;
 using ClearCanvas.Desktop.Tools;
 
 namespace ClearCanvas.Utilities.DicomEditor.Tools
@@ -32,7 +33,7 @@ namespace ClearCanvas.Utilities.DicomEditor.Tools
 	/// <summary>
 	/// Base class for <see cref="DicomEditorComponent"/> tools.
 	/// </summary>
-	public abstract class DicomEditorTool : Tool<DicomEditorComponent.DicomEditorToolContext>
+	public abstract class DicomEditorTool : Tool<IDicomEditorToolContext>
 	{
 		private readonly bool _isLocalOnly;
 		private event EventHandler _enabledChanged;
@@ -127,11 +128,23 @@ namespace ClearCanvas.Utilities.DicomEditor.Tools
 			var synchronizationContext = SynchronizationContext.Current;
 			if (synchronizationContext != null)
 			{
-				synchronizationContext.Post(s => ActivateCore(), null);
+				synchronizationContext.Post(s => DoActivate(), null);
 			}
 			else
 			{
+				DoActivate();
+			}
+		}
+
+		private void DoActivate()
+		{
+			try
+			{
 				ActivateCore();
+			}
+			catch (Exception ex)
+			{
+				ExceptionHandler.Report(ex, Context.DesktopWindow);
 			}
 		}
 
