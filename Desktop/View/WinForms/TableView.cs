@@ -793,6 +793,15 @@ namespace ClearCanvas.Desktop.View.WinForms
 			}
         }
 
+		protected virtual void OnDataError(DataGridViewDataErrorEventArgs e)
+		{
+			if (e.Exception != null)
+			{
+				System.Windows.Forms.MessageBox.Show(this, e.Exception.Message, Application.Name, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+				e.ThrowException = false;
+			}
+		}
+
     	private void OnColumnsChanged(object sender, ItemChangedEventArgs e)
     	{
     		this.Table = this.Table;
@@ -1324,6 +1333,11 @@ namespace ClearCanvas.Desktop.View.WinForms
 
 			// prevent editing on read-only columns, or if this particular item is not editable
 			e.Cancel = column.ReadOnly || !column.IsEditable(item);
+		}
+
+		private void _dataGridView_DataError(object sender, DataGridViewDataErrorEventArgs e)
+		{
+			OnDataError(e);
 		}
 	}
 }
