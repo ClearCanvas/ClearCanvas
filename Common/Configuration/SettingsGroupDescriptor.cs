@@ -98,7 +98,8 @@ namespace ClearCanvas.Common.Configuration
 			return q.ToList();
 		}
 
-		private static bool ApplyFilter(SettingsGroupFilter filter, Type type)
+		//Internal for unit tests
+		internal static bool ApplyFilter(SettingsGroupFilter filter, Type type)
 		{
 			if (filter == 0)
 				return true;

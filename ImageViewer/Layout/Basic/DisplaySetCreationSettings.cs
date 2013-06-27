@@ -288,8 +288,6 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
 	{
 		private DisplaySetCreationSettings()
 		{
-            //TODO (Phoenix5): #10730 - remove this when it's fixed.
-            //ApplicationSettingsRegistry.Instance.RegisterInstance(this);
         }
 
 		#region IMigrateSettings Members

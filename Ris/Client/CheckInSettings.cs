@@ -44,7 +44,6 @@ namespace ClearCanvas.Ris.Client
 		
 		public CheckInSettings()
 		{
-			ApplicationSettingsRegistry.Instance.RegisterInstance(this);
 		}
 
 		public static CheckInSettings Default {

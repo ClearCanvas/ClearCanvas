@@ -29,10 +29,19 @@ namespace ClearCanvas.Common.Configuration
     public class ExtendedLocalFileSettingsProvider : SettingsProvider, IApplicationSettingsProvider, ISharedApplicationSettingsProvider
     {
         private readonly LocalFileSettingsProvider _provider;
+        private readonly bool _ownProvider;
+        private string _appName;
+
+        public ExtendedLocalFileSettingsProvider()
+            : this(new LocalFileSettingsProvider())
+        {
+            _ownProvider = true;
+        }
 
         public ExtendedLocalFileSettingsProvider(LocalFileSettingsProvider provider)
         {
             _provider = provider;
+            _appName = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name;
         }
 
         /// <summary>
@@ -42,21 +51,8 @@ namespace ClearCanvas.Common.Configuration
 
         public override string ApplicationName
         {
-            get { return _provider.ApplicationName; }
-            set { _provider.ApplicationName = value; }
-        }
-
-        public override string Name
-        {
-            get
-            {
-                return _provider.Name;
-            }
-        }
-
-        public override string Description
-        {
-            get { return _provider.Description; }
+            get { return _appName; }
+            set { _appName = value; }
         }
 
         public override SettingsPropertyValueCollection GetPropertyValues(SettingsContext context, SettingsPropertyCollection collection)
@@ -66,7 +62,16 @@ namespace ClearCanvas.Common.Configuration
 
         public override void Initialize(string name, System.Collections.Specialized.NameValueCollection config)
         {
-            _provider.Initialize(name, config);
+            if (string.IsNullOrEmpty(name))
+                name = ApplicationName;
+
+            if (_ownProvider)
+            {
+                //Otherwise it's already been initialized and we're just temporarily wrapping it.
+                _provider.Initialize(null, null);
+            }
+
+            base.Initialize(name, config);
         }
 
         public override void SetPropertyValues(SettingsContext context, SettingsPropertyValueCollection collection)

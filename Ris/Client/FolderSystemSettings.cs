@@ -33,7 +33,6 @@ namespace ClearCanvas.Ris.Client
 	{
 		private FolderSystemSettings()
 		{
-			ApplicationSettingsRegistry.Instance.RegisterInstance(this);
 		}
 	}
 }

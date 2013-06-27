@@ -34,7 +34,6 @@ namespace ClearCanvas.ImageViewer.Tools.Measurement
 	{
 		public Settings()
 		{
-			ApplicationSettingsRegistry.Instance.RegisterInstance(this);
 		}
 	}
 }

@@ -34,7 +34,6 @@ namespace ClearCanvas.ImageViewer.Clipboard.ImageExport
 	{
 		private ImageExportSettings()
 		{
-			ApplicationSettingsRegistry.Instance.RegisterInstance(this);
 		}
 	}
 }

@@ -118,17 +118,17 @@ namespace ClearCanvas.Desktop.Configuration
 			try
 			{
 				store = SettingsStore.Create();
-			}
+                //If there is a store, and it is not online, then settings can't be edited.
+                if (!store.IsOnline)
+                {
+                    Context.DesktopWindow.ShowMessageBox(SR.MessageSettingsStoreOffline, MessageBoxActions.Ok);
+                    return;
+                }
+            }
 			catch (NotSupportedException)
 			{
-				// there is no central settings store
+				// There is no central settings store; all settings will be treated as though they were local.
 				store = new NullSettingsStore();
-			}
-
-			if (!store.IsOnline)
-			{
-				Context.DesktopWindow.ShowMessageBox(SR.MessageSettingsStoreOffline, MessageBoxActions.Ok);
-				return;
 			}
 
 			_workspace = ApplicationComponent.LaunchAsWorkspace(

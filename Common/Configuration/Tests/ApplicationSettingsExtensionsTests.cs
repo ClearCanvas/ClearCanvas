@@ -36,16 +36,16 @@ namespace ClearCanvas.Common.Configuration.Tests
 	[TestFixture]
 	public class ApplicationSettingsExtensionsTests : SettingsTestBase
 	{
-		private static readonly Type _settingsClass = typeof(LocalMixedScopeSettings);
+	    private static readonly Type[] _settingsClasses = new[] {typeof (LocalMixedScopeSettings), typeof (ExtendedLocalMixedScopeSettings)};
 
 		private static System.Configuration.Configuration GetExeConfiguration()
 		{
 			return SystemConfigurationHelper.GetExeConfiguration();
 		}
 
-		private static void RemoveSettings()
+		private static void RemoveSettings(Type settingsClass)
 		{
-			SystemConfigurationHelper.RemoveSettingsValues(GetExeConfiguration(), _settingsClass);
+			GetExeConfiguration().RemoveSettingsValues(settingsClass);
 		}
 
 		[TestFixtureSetUp]
@@ -57,77 +57,143 @@ namespace ClearCanvas.Common.Configuration.Tests
 		[TestFixtureTearDown]
 		public void TearDown()
 		{
-			RemoveSettings();
+            foreach (var settingsClass in _settingsClasses)
+                RemoveSettings(settingsClass);
 		}
 
 		[Test]
 		public void TestGetSharedSettings_NoneExist()
 		{
-			RemoveSettings();
+            foreach (var settingsClass in _settingsClasses)
+                TestGetSharedSettings_NoneExist(settingsClass);
+        }
 
-			var settings = ApplicationSettingsHelper.GetSettingsClassInstance(_settingsClass);
-			settings.Reload();
-
-			foreach (SettingsProperty property in settings.Properties)
-			{
-				var shared = ApplicationSettingsExtensions.GetSharedPropertyValue(settings, property.Name);
-				Assert.AreEqual(property.DefaultValue, shared);
-
-				if (SettingsPropertyExtensions.IsAppScoped(property))
-					Assert.AreEqual(property.DefaultValue, settings[property.Name]);
-			}
-		}
-
-		[Test]
+	    [Test]
 		public void TestGetSharedSettings_Exists()
 		{
-			RemoveSettings();
+            foreach (var settingsClass in _settingsClasses)
+                TestGetSharedSettings_Exists(settingsClass);
+        }
+        [Test]
+        public void TestSetSharedSettings()
+        {
+            foreach (var settingsClass in _settingsClasses)
+                TestSetSharedSettings(settingsClass);
+        }
 
-			SystemConfigurationHelperTests.WriteSharedValuesToConfig(_settingsClass, SettingValue.Current);
-			var settings = ApplicationSettingsHelper.GetSettingsClassInstance(_settingsClass);
-			settings.Reload();
-
-			foreach (SettingsProperty property in settings.Properties)
-			{
-				var shared = ApplicationSettingsExtensions.GetSharedPropertyValue(settings, property.Name);
-				string expected = CreateSettingValue(property, MigrationScope.Shared, SettingValue.Current);
-				Assert.AreEqual(expected, shared);
-
-				if (SettingsPropertyExtensions.IsAppScoped(property))
-					Assert.AreEqual(expected, settings[property.Name]);
-			}
-		}
-
-		[Test]
+	    [Test]
 		public void TestGetPreviousSharedValues_NoneExist()
 		{
-			ResetAllSettingsClasses();
+            ResetAllSettingsClasses();
+            foreach (var settingsClass in _settingsClasses)
+                TestGetPreviousSharedValues_NoneExist(settingsClass);
+        }
 
-			var settings = ApplicationSettingsHelper.GetSettingsClassInstance(_settingsClass);
-			settings.Reload();
-			foreach (SettingsProperty property in settings.Properties)
-			{
-				var previous = ApplicationSettingsExtensions.GetPreviousSharedPropertyValue(settings, property.Name, null);
-				Assert.IsNull(previous);
-			}
-		}
-
-		[Test]
+	    [Test]
 		public void TestGetPreviousSharedValues_Exists()
 		{
-			ResetAllSettingsClasses();
+            ResetAllSettingsClasses();
+            foreach (var settingsClass in _settingsClasses)
+                TestGetPreviousSharedValues_Exists(settingsClass);
+        }
 
+        private void TestSetSharedSettings(Type settingsClass)
+        {
+            if (!settingsClass.IsSubclassOf(typeof(MixedScopeSettingsBase)))
+                throw new ArgumentException();
+
+            RemoveSettings(settingsClass);
+            var settings = ApplicationSettingsHelper.GetSettingsClassInstance(settingsClass);
+            
+            Assert.AreEqual(MixedScopeSettingsBase.PropertyApp1, settings[MixedScopeSettingsBase.PropertyApp1]);
+            Assert.AreEqual(MixedScopeSettingsBase.PropertyApp2, settings[MixedScopeSettingsBase.PropertyApp2]);
+            Assert.AreEqual(MixedScopeSettingsBase.PropertyUser1, settings[MixedScopeSettingsBase.PropertyUser1]);
+            Assert.AreEqual(MixedScopeSettingsBase.PropertyUser2, settings[MixedScopeSettingsBase.PropertyUser2]);
+
+            settings.SetSharedPropertyValue(MixedScopeSettingsBase.PropertyApp1, "TestApp1");
+            settings.SetSharedPropertyValue(MixedScopeSettingsBase.PropertyApp2, "TestApp2");
+            settings.SetSharedPropertyValue(MixedScopeSettingsBase.PropertyUser1, "TestUser1");
+            settings.SetSharedPropertyValue(MixedScopeSettingsBase.PropertyUser2, "TestUser2");
+
+            //There is no default, so this is a new instance.
+            settings = ApplicationSettingsHelper.GetSettingsClassInstance(settingsClass);
+
+            Assert.AreEqual("TestApp1", settings[MixedScopeSettingsBase.PropertyApp1]);
+            Assert.AreEqual("TestApp2", settings[MixedScopeSettingsBase.PropertyApp2]);
+            Assert.AreEqual("TestUser1", settings.GetSharedPropertyValue(MixedScopeSettingsBase.PropertyUser1));
+            Assert.AreEqual("TestUser2", settings.GetSharedPropertyValue(MixedScopeSettingsBase.PropertyUser2));
+/*
+            //Just because ... test setting a user value.
+            settings[MixedScopeSettings.PropertyUser1] = "TestUserblah";
+            settings.Save();
+
+            settings = ApplicationSettingsHelper.GetSettingsClassInstance(settingsClass);
+            Assert.AreEqual("TestUserblah", settings[MixedScopeSettings.PropertyUser1]);
+            Assert.AreEqual("TestUser1", settings.GetSharedPropertyValue(MixedScopeSettingsBase.PropertyUser1));
+            settings.Reset();
+*/
+        }
+
+	    private void TestGetSharedSettings_Exists(Type settingsClass)
+	    {
+	        RemoveSettings(settingsClass);
+
+	        SystemConfigurationHelperTests.WriteSharedValuesToConfig(settingsClass, SettingValue.Current);
+	        var settings = ApplicationSettingsHelper.GetSettingsClassInstance(settingsClass);
+	        settings.Reload();
+
+	        foreach (SettingsProperty property in settings.Properties)
+	        {
+	            var shared = settings.GetSharedPropertyValue(property.Name);
+	            string expected = CreateSettingValue(property, MigrationScope.Shared, SettingValue.Current);
+	            Assert.AreEqual(expected, shared);
+
+	            if (SettingsPropertyExtensions.IsAppScoped(property))
+	                Assert.AreEqual(expected, settings[property.Name]);
+	        }
+	    }
+
+	    private void TestGetSharedSettings_NoneExist(Type settingsClass)
+	    {
+	        RemoveSettings(settingsClass);
+
+	        var settings = ApplicationSettingsHelper.GetSettingsClassInstance(settingsClass);
+	        settings.Reload();
+
+	        foreach (SettingsProperty property in settings.Properties)
+	        {
+	            var shared = settings.GetSharedPropertyValue(property.Name);
+	            Assert.AreEqual(property.DefaultValue, shared);
+
+	            if (SettingsPropertyExtensions.IsAppScoped(property))
+	                Assert.AreEqual(property.DefaultValue, settings[property.Name]);
+	        }
+	    }
+
+	    private void TestGetPreviousSharedValues_NoneExist(Type settingsClass)
+	    {
+	        var settings = ApplicationSettingsHelper.GetSettingsClassInstance(settingsClass);
+	        settings.Reload();
+	        foreach (SettingsProperty property in settings.Properties)
+	        {
+	            var previous = settings.GetPreviousSharedPropertyValue(property.Name, null);
+	            Assert.IsNull(previous);
+	        }
+	    }
+
+	    private void TestGetPreviousSharedValues_Exists(Type settingsClass)
+        {
 			string path = Path.GetDirectoryName(ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None).FilePath);
 			string fileName = String.Format("{0}{1}TestPrevious.exe.config", path, System.IO.Path.DirectorySeparatorChar);
 			TestConfigResourceToFile(fileName);
 
 			try
 			{
-				var settings = ApplicationSettingsHelper.GetSettingsClassInstance(_settingsClass);
+				var settings = ApplicationSettingsHelper.GetSettingsClassInstance(settingsClass);
 				settings.Reload();
 				foreach (SettingsProperty property in settings.Properties)
 				{
-					var actual = ApplicationSettingsExtensions.GetPreviousSharedPropertyValue(settings, property.Name, fileName);
+					var actual = settings.GetPreviousSharedPropertyValue(property.Name, fileName);
 					var expected = CreateSettingValue(property, MigrationScope.Shared, SettingValue.Previous);
 					Assert.AreEqual(expected, actual);
 				}

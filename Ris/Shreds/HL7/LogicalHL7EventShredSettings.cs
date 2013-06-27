@@ -36,7 +36,6 @@ namespace ClearCanvas.Ris.Shreds.HL7
 		///</summary>
 		public LogicalHL7EventShredSettings()
 		{
-			// Note: server-side settings classes do not register in the <see cref="ApplicationSettingsRegistry"/>
 		}
 	}
 }

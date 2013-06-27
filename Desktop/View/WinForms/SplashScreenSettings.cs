@@ -34,7 +34,6 @@ namespace ClearCanvas.Desktop.View.WinForms
 	{
 		private SplashScreenSettings()
 		{
-			ApplicationSettingsRegistry.Instance.RegisterInstance(this);
 		}
 	}
 }

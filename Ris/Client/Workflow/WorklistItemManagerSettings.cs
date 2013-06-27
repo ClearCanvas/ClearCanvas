@@ -34,7 +34,6 @@ namespace ClearCanvas.Ris.Client.Workflow
 	{
 		private WorklistItemManagerSettings()
 		{
-			ApplicationSettingsRegistry.Instance.RegisterInstance(this);
 		}
 	}
 }

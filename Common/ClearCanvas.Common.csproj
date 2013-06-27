@@ -154,6 +154,7 @@
     <Compile Include="Configuration\SettingsClassMetaDataReader.cs" />
     <Compile Include="Configuration\SettingsGroupDescriptor.cs" />
     <Compile Include="Configuration\SettingsPropertyDescriptor.cs" />
+    <Compile Include="Configuration\Tests\SettingsGroupTests.cs" />
     <Compile Include="DefaultExtensionFactory.cs" />
     <Compile Include="ExtensionPoint.cs" />
     <Compile Include="IExtensionFactory.cs" />

@@ -122,7 +122,6 @@
     <Compile Include="AlertLevel.cs" />
     <Compile Include="AlertLog.cs" />
     <Compile Include="AlertNotificationArgs.cs" />
-    <Compile Include="ApplicationSettingsRegistry.cs" />
     <Compile Include="ApplicationTheme.cs" />
     <Compile Include="ApplicationThemeManager.cs" />
     <Compile Include="Actions\AbstractAction.cs" />
@@ -159,7 +158,6 @@
     <Compile Include="Configuration\IConfigurationPage.cs" />
     <Compile Include="Configuration\IConfigurationPageProvider.cs" />
     <Compile Include="Configuration\IConfigurationProvider.cs" />
-    <Compile Include="Configuration\LocalSettingsStore.cs" />
     <Compile Include="Configuration\SettingEditorComponent.cs" />
     <Compile Include="Configuration\ConfigurationDialogSettings.cs" />
     <Compile Include="Configuration\ConfigurationDialogSettings.Designer.cs">

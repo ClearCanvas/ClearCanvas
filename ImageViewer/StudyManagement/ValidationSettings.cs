@@ -35,7 +35,6 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 	{
 		private ValidationSettings()
 		{
-			ApplicationSettingsRegistry.Instance.RegisterInstance(this);
 		}
 	}
 }

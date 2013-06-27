@@ -36,7 +36,6 @@ namespace ClearCanvas.ImageViewer
 	{
 		private StandardModalitySettings()
 		{
-			ApplicationSettingsRegistry.Instance.RegisterInstance(this);
 		}
 
 		private static List<string> GetModalities(string modalities)

@@ -75,7 +75,17 @@ namespace ClearCanvas.Desktop.Configuration
 				_settingsClass = ApplicationSettingsHelper.GetSettingsClass(this.Descriptor);
 			}
 
-			protected override IEnumerable<Property> LoadProperties()
+            private Property CreateProperty(PropertyInfo property, SettingsProperty settingsProperty, SettingsPropertyValueCollection settingsPropertyValues)
+            {
+                var descriptor = new SettingsPropertyDescriptor(property);
+                var settingsPropertyValue = settingsPropertyValues[settingsProperty.Name];
+                var defaultValue = settingsProperty.DefaultValue;
+                var serializedValue = settingsPropertyValue == null ? null : settingsPropertyValue.SerializedValue;
+
+                return new Property(descriptor, (serializedValue ?? defaultValue).ToString());
+            }
+            
+            protected override IEnumerable<Property> LoadProperties()
 			{
 				var properties = (from p in SettingsClassMetaDataReader.GetSettingsProperties(_settingsClass)
 								  select new { Property = p, Setting = CreateSettingsProperty(p) })
@@ -91,12 +101,10 @@ namespace ClearCanvas.Desktop.Configuration
 				var settingsPropertiesColl = properties.Select(p => p.Setting).ToSettingsPropertyCollection();
 				var values = provider.GetSharedPropertyValues(GetSettingsContext(), settingsPropertiesColl);
 
-				return from p in properties
-					   select new Property(
-						   new SettingsPropertyDescriptor(p.Property), values[p.Setting.Name].SerializedValue.ToString());
+				return from p in properties select CreateProperty(p.Property, p.Setting, values);
 			}
 
-			protected override void SaveProperties(IList<Property> properties)
+		    protected override void SaveProperties(IList<Property> properties)
 			{
 				var q = from p in properties
 						where p.Dirty

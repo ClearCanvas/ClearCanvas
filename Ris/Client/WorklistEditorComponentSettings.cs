@@ -33,7 +33,6 @@ namespace ClearCanvas.Ris.Client
 	{
 		private WorklistEditorComponentSettings()
 		{
-			ApplicationSettingsRegistry.Instance.RegisterInstance(this);
 		}
 	}
 }

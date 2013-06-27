@@ -34,7 +34,6 @@ namespace ClearCanvas.ImageViewer.StudyLoaders.Streaming.WebStation
     {
         internal WebStationStreamingSettings()
         {
-            ApplicationSettingsRegistry.Instance.RegisterInstance(this);
         }
     }
 }

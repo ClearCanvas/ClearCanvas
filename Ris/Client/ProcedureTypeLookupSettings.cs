@@ -34,7 +34,6 @@ namespace ClearCanvas.Ris.Client
 	{
 		private ProcedureTypeLookupSettings()
 		{
-			ApplicationSettingsRegistry.Instance.RegisterInstance(this);
 		}
 	}
 }
