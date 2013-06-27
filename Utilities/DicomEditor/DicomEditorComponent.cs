@@ -443,9 +443,23 @@ namespace ClearCanvas.Utilities.DicomEditor
 			_contextMenuModel = ActionModelRoot.CreateModel(this.GetType().FullName, "dicomeditor-contextmenu", _toolSet.Actions);
 		}
 
-		public override void Stop()
+		public override bool CanExit()
 		{
-			base.Stop();
+			return !_dirtyFlags.Any(f => f);
+		}
+
+		public override bool PrepareExit()
+		{
+			if (_dirtyFlags.Any(f => f) && LicenseInformation.IsFeatureAuthorized(FeatureTokens.DicomEditing))
+			{
+				// sanity check - if dirty flag was flipped for some reason, but user cannot save, don't let that stop user from closing application
+				if (Host.ShowMessageBox(SR.MessageConfirmDiscardChangesBeforeClosing, MessageBoxActions.OkCancel) == DialogBoxAction.Cancel)
+				{
+					// user has cancelled the "close" operation, therefore we can't exit
+					return false;
+				}
+			}
+			return true;
 		}
 
 		#endregion

@@ -295,6 +295,15 @@ namespace ClearCanvas.Utilities.DicomEditor {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Data has been modified and changes will be lost. Discard changes and close?.
+        /// </summary>
+        internal static string MessageConfirmDiscardChangesBeforeClosing {
+            get {
+                return ResourceManager.GetString("MessageConfirmDiscardChangesBeforeClosing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Reports and other documents attached to a DICOM study often contain patient information that cannot be completely cleaned by this tool. Are you sure you want to keep these files?.
         /// </summary>
         internal static string MessageConfirmKeepReportsAndAttachments {
@@ -304,7 +313,9 @@ namespace ClearCanvas.Utilities.DicomEditor {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The selected tag(s) and their values will be replicated in *all* loaded files.  Are you sure you want to continue?.
+        ///   Looks up a localized string similar to The selected tag(s) and their values will be replicated in *all* loaded files.  Are you sure you want to continue?
+        ///
+        ///NOTE: This will not automatically save the files. You must still click the Save tool to save the files..
         /// </summary>
         internal static string MessageConfirmReplicateTagsInAllFiles {
             get {
@@ -333,7 +344,7 @@ namespace ClearCanvas.Utilities.DicomEditor {
         /// <summary>
         ///   Looks up a localized string similar to The changes will be saved to *all* loaded files and the original files will be overwritten.  Are you sure you want to continue?
         ///
-        ///NOTE: if any of the edited files are from the local store, it should be re-indexed, otherwise the edited values may appear unchanged..
+        ///NOTE: If any of the edited files are from the local store, it should be re-indexed. If any of the edited files are open in the Study Filters, it should be closed. Otherwise, the edited values may appear unchanged..
         /// </summary>
         internal static string MessageConfirmSaveAllFiles {
             get {
