@@ -105,6 +105,31 @@ namespace ClearCanvas.Utilities.DicomEditor
 
         private void Dump()
         {
+        	try
+        	{
+        		DumpCore();
+        	}
+        	catch (Exception ex)
+        	{
+        		if (_desktopWindow == null)
+        		{
+					if (ContextBase is IImageViewerToolContext)
+					{
+						var context = ContextBase as IImageViewerToolContext;
+						_desktopWindow = context.DesktopWindow;
+					}
+					else if (ContextBase is ILocalImageExplorerToolContext)
+					{
+						var context = ContextBase as ILocalImageExplorerToolContext;
+						_desktopWindow = context.DesktopWindow;
+					}
+				}
+				ExceptionHandler.Report(ex, _desktopWindow ?? Application.ActiveDesktopWindow);
+        	}
+        }
+
+        private void DumpCore()
+        {
             if (this.ContextBase is IImageViewerToolContext)
             {
                 IImageViewerToolContext context = this.ContextBase as IImageViewerToolContext;
