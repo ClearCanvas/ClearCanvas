@@ -24,17 +24,15 @@
 
 using System;
 using ClearCanvas.Common;
-using ClearCanvas.Desktop;
 using ClearCanvas.Desktop.Actions;
 
 namespace ClearCanvas.Utilities.DicomEditor.Tools
 {
-	//[MenuAction("activate", "global-menus/MenuTools/MenuToolsMyTools/SaveTool")]
 	[ButtonAction("activate", "dicomeditor-toolbar/ToolbarSave", "Save")]
 	[Tooltip("activate", "TooltipSave")]
 	[IconSet("activate", "Icons.SaveToolSmall.png", "Icons.SaveToolSmall.png", "Icons.SaveToolSmall.png")]
 	[EnabledStateObserver("activate", "Enabled", "EnabledChanged")]
-	[ExtensionOf(typeof (DicomEditorToolExtensionPoint))]
+	[ExtensionOf(typeof (DicomEditorToolExtensionPoint), FeatureToken = FeatureTokens.DicomEditing)]
 	public class SaveTool : DicomEditorTool
 	{
 		/// <summary>
@@ -48,11 +46,19 @@ namespace ClearCanvas.Utilities.DicomEditor.Tools
 		/// </summary>
 		public void Save()
 		{
-			var message = this.Context.DumpManagement.LoadedFileCount > 1 
-				? SR.MessageConfirmSaveAllFiles
-				: this.Context.IsLocalFile
-					? SR.MessageConfirmSaveSingleLocalFile
-					: SR.MessageConfirmSaveSingleRemoteFile;
+			if (!LicenseInformation.IsFeatureAuthorized(FeatureTokens.DicomEditing))
+				return;
+
+			Activate();
+		}
+
+		protected override void ActivateCore()
+		{
+			var message = this.Context.DumpManagement.LoadedFileCount > 1
+			              	? SR.MessageConfirmSaveAllFiles
+			              	: this.Context.IsLocalFile
+			              	  	? SR.MessageConfirmSaveSingleLocalFile
+			              	  	: SR.MessageConfirmSaveSingleRemoteFile;
 
 			if (this.Context.DesktopWindow.ShowMessageBox(message, MessageBoxActions.YesNo) == DialogBoxAction.Yes)
 			{

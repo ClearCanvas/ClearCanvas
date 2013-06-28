@@ -25,34 +25,38 @@
 using System;
 using System.Windows.Forms;
 using ClearCanvas.Common;
-using ClearCanvas.Desktop.View.WinForms;
 
 namespace ClearCanvas.Utilities.DicomEditor.View.WinForms
 {
-    public partial class DicomEditorControl : UserControl
-    {
-        private ClearCanvas.Utilities.DicomEditor.DicomEditorComponent _dicomEditorComponent;
+	public partial class DicomEditorControl : UserControl
+	{
+		private readonly DicomEditorComponent _dicomEditorComponent;
 
-        public DicomEditorControl(DicomEditorComponent component)
-        {
-            Platform.CheckForNullReference(component, "component");
-            InitializeComponent();
+		public DicomEditorControl(DicomEditorComponent component)
+		{
+			Platform.CheckForNullReference(component, "component");
+			InitializeComponent();
 
-            _dicomEditorComponent = component;
+			_dicomEditorComponent = component;
+			_dicomEditorComponent.CommitChangesRequested += OnDicomEditorComponentCommitChangesRequested;
 
-            _dicomTagTable.Table = _dicomEditorComponent.DicomTagData;
-            _dicomTagTable.ToolbarModel = _dicomEditorComponent.ToolbarModel;
-            _dicomTagTable.MenuModel = _dicomEditorComponent.ContextMenuModel;
-            _dicomTagTable.SelectionChanged +=new EventHandler(OnDicomTagTableSelectionChanged);          
-            _dicomTagTable.MultiLine = true;
-            
-            _dicomEditorTitleBar.DataBindings.Add("Text", _dicomEditorComponent, "DicomFileTitle", true, DataSourceUpdateMode.OnPropertyChanged);
-            
-        }
+			_dicomTagTable.Table = _dicomEditorComponent.DicomTagData;
+			_dicomTagTable.ToolbarModel = _dicomEditorComponent.ToolbarModel;
+			_dicomTagTable.MenuModel = _dicomEditorComponent.ContextMenuModel;
+			_dicomTagTable.SelectionChanged += OnDicomTagTableSelectionChanged;
+			_dicomTagTable.MultiLine = true;
 
-        void OnDicomTagTableSelectionChanged(object sender, EventArgs e)
-        {
-            _dicomEditorComponent.SetSelection(_dicomTagTable.Selection);
-        }
-    }
+			_dicomEditorTitleBar.DataBindings.Add("Text", _dicomEditorComponent, "DicomFileTitle", true, DataSourceUpdateMode.OnPropertyChanged);
+		}
+
+		private void OnDicomEditorComponentCommitChangesRequested(object sender, EventArgs e)
+		{
+			_dicomTagTable.EndEdit();
+		}
+
+		private void OnDicomTagTableSelectionChanged(object sender, EventArgs e)
+		{
+			_dicomEditorComponent.SetSelection(_dicomTagTable.Selection);
+		}
+	}
 }

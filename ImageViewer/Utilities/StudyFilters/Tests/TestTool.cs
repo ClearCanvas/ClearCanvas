@@ -1,4 +1,4 @@
-#region License
+﻿#region License
 
 // Copyright (c) 2013, ClearCanvas Inc.
 // All rights reserved.
@@ -22,34 +22,22 @@
 
 #endregion
 
+#if UNIT_TESTS
+
 using ClearCanvas.Common;
 using ClearCanvas.Desktop.Actions;
 
-namespace ClearCanvas.Utilities.DicomEditor.Tools
+namespace ClearCanvas.ImageViewer.Utilities.StudyFilters.Tests
 {
-	[ButtonAction("activate", "dicomeditor-toolbar/ToolbarNext", "Next")]
-	[EnabledStateObserver("activate", "Enabled", "EnabledChanged")]
-	[Tooltip("activate", "TooltipNext")]
-	[IconSet("activate", "Icons.NextToolSmall.png", "Icons.NextToolSmall.png", "Icons.NextToolSmall.png")]
-	[ExtensionOf(typeof (DicomEditorToolExtensionPoint))]
-	public class NextTool : DicomEditorTool
+	[MenuAction("assertSopRefs", "global-menus/&Debug/Study Filters - Assert SopRefs held", "AssertSopRefs")]
+	[ExtensionOf(typeof (StudyFilterToolExtensionPoint))]
+	internal class TestTool : StudyFilterTool
 	{
-		public NextTool() {}
-
-		public void Next()
+		public void AssertSopRefs()
 		{
-			Activate();
-		}
-
-		protected override void ActivateCore()
-		{
-			this.Context.DumpManagement.LoadedFileDumpIndex += 1;
-			this.Context.UpdateDisplay();
-		}
-
-		protected override void OnDisplayedDumpChanged(object sender, DisplayedDumpChangedEventArgs e)
-		{
-			this.Enabled = !(e.IsCurrentTheOnly || e.IsCurrentLast);
+			Context.DesktopWindow.ShowMessageBox(string.Format("Sop References Held: {0}", StudyItem.CountInstances()), "Study Filters", MessageBoxActions.Ok);
 		}
 	}
 }
+
+#endif

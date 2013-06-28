@@ -175,7 +175,9 @@
     <value>Do you want to delete the selected tags from *all* the other loaded files in addition to the one selected?</value>
   </data>
   <data name="MessageConfirmReplicateTagsInAllFiles" xml:space="preserve">
-    <value>The selected tag(s) and their values will be replicated in *all* loaded files.  Are you sure you want to continue?</value>
+    <value>The selected tag(s) and their values will be replicated in *all* loaded files.  Are you sure you want to continue?
+
+NOTE: This will not automatically save the files. You must still click the Save tool to save the files.</value>
   </data>
   <data name="MessageConfirmRevert" xml:space="preserve">
     <value>The edits will be reverted to the last saved state.  Are you sure you want to continue?</value>
@@ -186,7 +188,7 @@
   <data name="MessageConfirmSaveAllFiles" xml:space="preserve">
     <value>The changes will be saved to *all* loaded files and the original files will be overwritten.  Are you sure you want to continue?
 
-NOTE: if any of the edited files are from the local store, it should be re-indexed, otherwise the edited values may appear unchanged.</value>
+NOTE: If any of the edited files are from the local store, it should be re-indexed. If any of the edited files are open in the Study Filters, it should be closed. Otherwise, the edited values may appear unchanged.</value>
   </data>
   <data name="MessageDumpProgressBar" xml:space="preserve">
     <value>Processing Files...</value>
@@ -267,7 +269,7 @@ NOTE: if any of the edited files are from the local store, it should be re-index
     <value>Previous image</value>
   </data>
   <data name="TooltipQuickAnonymize" xml:space="preserve">
-    <value>Anonymize all loaded files with one click</value>
+    <value>Anonymize all loaded files</value>
   </data>
   <data name="TooltipReplicate" xml:space="preserve">
     <value>Replicates selected tag to all loaded files</value>
@@ -324,5 +326,17 @@ NOTE: the edited file is from the local store so it should be re-indexed, otherw
   </data>
   <data name="MessageConfirmSaveReportsOrAttachments" xml:space="preserve">
     <value>One or more of the edited files are reports and/or other documents. If you have modified any patient information, this tool cannot modify the document to match your changes. Are you sure you want to continue?</value>
+  </data>
+  <data name="MenuDicomDump" xml:space="preserve">
+    <value>DICOM Dump</value>
+  </data>
+  <data name="TitleDicomDump" xml:space="preserve">
+    <value>DICOM Dump</value>
+  </data>
+  <data name="TitleQuickAnonymize" xml:space="preserve">
+    <value>Quick Anonymize</value>
+  </data>
+  <data name="MessageConfirmDiscardChangesBeforeClosing" xml:space="preserve">
+    <value>Data has been modified and changes will be lost. Discard changes and close?</value>
   </data>
 </root>

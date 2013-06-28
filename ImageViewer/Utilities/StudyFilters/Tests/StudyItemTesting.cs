@@ -22,34 +22,35 @@
 
 #endregion
 
-using ClearCanvas.Common;
-using ClearCanvas.Desktop.Actions;
+#if UNIT_TESTS
 
-namespace ClearCanvas.Utilities.DicomEditor.Tools
+using System.Threading;
+
+// ReSharper disable CheckNamespace
+
+namespace ClearCanvas.ImageViewer.Utilities.StudyFilters
 {
-	[ButtonAction("activate", "dicomeditor-toolbar/ToolbarNext", "Next")]
-	[EnabledStateObserver("activate", "Enabled", "EnabledChanged")]
-	[Tooltip("activate", "TooltipNext")]
-	[IconSet("activate", "Icons.NextToolSmall.png", "Icons.NextToolSmall.png", "Icons.NextToolSmall.png")]
-	[ExtensionOf(typeof (DicomEditorToolExtensionPoint))]
-	public class NextTool : DicomEditorTool
+	partial class StudyItem
 	{
-		public NextTool() {}
+		private static int _count = 0;
 
-		public void Next()
+		internal static int CountInstances()
 		{
-			Activate();
+			return _count;
 		}
 
-		protected override void ActivateCore()
+		static partial void IncrementInstanceCount()
 		{
-			this.Context.DumpManagement.LoadedFileDumpIndex += 1;
-			this.Context.UpdateDisplay();
+			Interlocked.Increment(ref _count);
 		}
 
-		protected override void OnDisplayedDumpChanged(object sender, DisplayedDumpChangedEventArgs e)
+		static partial void DecrementInstanceCount()
 		{
-			this.Enabled = !(e.IsCurrentTheOnly || e.IsCurrentLast);
+			Interlocked.Decrement(ref _count);
 		}
 	}
 }
+
+// ReSharper restore CheckNamespace
+
+#endif

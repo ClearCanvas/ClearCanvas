@@ -253,16 +253,18 @@ namespace ClearCanvas.ImageViewer.View.WinForms
 			/// </summary>
 			public void DrawTrackBar(System.Drawing.Graphics g, int alpha)
 			{
+				// if the alpha value is 0, we don't need to draw anything!
+				if (alpha <= 0) return;
+
+				Bitmap source = this.Buffer;
+
 				if (alpha >= 255)
 				{
 					// if the alpha value is 255, skip the secondary buffer since the primary buffer has exactly what we need!
-					g.DrawImageUnscaled(this.Buffer, _clientBounds.Location);
+					g.DrawImageUnscaled(source, _clientBounds.Location);
 				}
-				else if (alpha > 0)
+				else
 				{
-					// if the alpha value is 0, we don't need to draw anything!
-
-					Bitmap source = this.Buffer;
 					Bitmap buffer = new Bitmap(source.Width, source.Height, PixelFormat.Format32bppArgb);
 					Rectangle rectangle = new Rectangle(Point.Empty, source.Size);
 
@@ -273,15 +275,14 @@ namespace ClearCanvas.ImageViewer.View.WinForms
 					{
 						unsafe
 						{
-							int length = sourceData.Height*sourceData.Stride;
-							byte* sourceDataArray = (byte*) sourceData.Scan0.ToPointer();
-							byte* bufferDataArray = (byte*) bufferData.Scan0.ToPointer();
-							for (int n = 0; n < length; n += 4)
+							float sAlpha = alpha/255f;
+							int length = sourceData.Height*sourceData.Stride/4;
+							int* sourceDataArray = (int*)sourceData.Scan0.ToPointer();
+							int* bufferDataArray = (int*)bufferData.Scan0.ToPointer();
+							for (int n = 0; n < length; ++n)
 							{
-								bufferDataArray[n + 0] = sourceDataArray[n + 0];
-								bufferDataArray[n + 1] = sourceDataArray[n + 1];
-								bufferDataArray[n + 2] = sourceDataArray[n + 2];
-								bufferDataArray[n + 3] = (byte) (alpha*(sourceDataArray[n + 3]/255f));
+								int value = *(sourceDataArray++);
+								*(bufferDataArray++) = (value & 0x00FFFFFF) | ((byte) (((value >> 24) & 0x0FF)*sAlpha) << 24);
 							}
 						}
 					}
