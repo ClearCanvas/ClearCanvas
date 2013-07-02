@@ -542,7 +542,7 @@ namespace ClearCanvas.Dicom.Utilities.Anonymization
 			}
 			else
 			{
-				//remove it altogether.
+				// blank the value
 				attribute.SetNullValue();
 			}
 		}
@@ -602,7 +602,7 @@ namespace ClearCanvas.Dicom.Utilities.Anonymization
 
 		private static bool IsUidAttributeToRemap(DicomAttribute attribute)
 		{
-			return UidsToRemap.Contains(attribute.Tag.TagValue);
+			return UidTagsToRemap.Contains(attribute.Tag.TagValue);
 		}
 
 		private static bool IsDateTimeAttributeToAdjust(DicomAttribute attribute)
