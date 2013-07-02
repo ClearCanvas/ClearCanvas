@@ -33,6 +33,7 @@ using ClearCanvas.Desktop.Tools;
 using ClearCanvas.ImageViewer.Automation;
 using ClearCanvas.ImageViewer.BaseTools;
 using ClearCanvas.ImageViewer.Graphics;
+using ClearCanvas.ImageViewer.Imaging;
 using ClearCanvas.ImageViewer.InputManagement;
 using ClearCanvas.ImageViewer.StudyManagement;
 using System.ComponentModel;
@@ -66,7 +67,7 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 	#endregion
 
 	[ExtensionOf(typeof(ImageViewerToolExtensionPoint))]
-	public partial class ProbeTool : MouseImageViewerTool
+	public class ProbeTool : MouseImageViewerTool, IProbe
 	{
 		private Tile _selectedTile;
 		private ImageGraphic _selectedImageGraphic;
@@ -183,15 +184,14 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 				{
 					coordinateString = String.Format(SR.FormatProbeInfo, SR.LabelLocation, string.Format(SR.FormatCoordinates, sourcePointRounded.X, sourcePointRounded.Y));
 
-					if (_selectedImageGraphic is GrayscaleImageGraphic)
+					if (_selectedImageGraphic is ILutPipelineProvider)
 					{
-						GrayscaleImageGraphic image = _selectedImageGraphic as GrayscaleImageGraphic;
+						var luts = _selectedImageGraphic as ILutPipelineProvider;
+						var pixelValue = _selectedImageGraphic.PixelData.GetPixel(sourcePointRounded.X, sourcePointRounded.Y);
 
-						int pixelValue = 0;
-
-						GetPixelValue(image, sourcePointRounded, ref pixelValue, ref pixelValueString);
-						GetModalityLutValue(image, pixelValue, ref modalityLutString);
-						GetVoiLutValue(image, pixelValue, ref voiLutString);
+						GetPixelValue(luts, pixelValue, ref pixelValueString);
+						GetModalityLutValue(luts, pixelValue, ref modalityLutString);
+						GetVoiLutValue(luts, pixelValue, ref voiLutString);
 
 						// the modality LUT value is always shown
 						displayString.AppendLine(modalityLutString);
@@ -225,23 +225,22 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 		}
 
 		private void GetPixelValue(
-			GrayscaleImageGraphic grayscaleImage,
-			Point sourcePointRounded,
-			ref int pixelValue,
+			ILutPipelineProvider luts,
+			int pixelValue,
 			ref string pixelValueString)
 		{
-			pixelValue = grayscaleImage.PixelData.GetPixel(sourcePointRounded.X, sourcePointRounded.Y);
-			pixelValueString = String.Format(SR.FormatProbeInfo, SR.LabelRawPixel, pixelValue);
+			var value = luts.LookupPixelValue(pixelValue, LutPipelineStage.Source);
+			pixelValueString = String.Format(SR.FormatProbeInfo, SR.LabelRawPixel, value);
 		}
 
 		private void GetModalityLutValue(
-			GrayscaleImageGraphic grayscaleImage,
+			ILutPipelineProvider luts,
 			int pixelValue,
 			ref string modalityLutString)
 		{
-			if (grayscaleImage.ModalityLut != null)
+			if (luts.ModalityLut != null)
 			{
-				var modalityLutValue = grayscaleImage.ModalityLut[pixelValue];
+				var modalityLutValue = luts.LookupPixelValue(pixelValue, LutPipelineStage.Modality);
 				
 				var modalityLutValueDisplay = modalityLutValue.ToString(_selectedFrame != null && _selectedFrame.IsSubnormalRescale ? @"G3" : @"F1");
 				if (_selectedFrame != null)
@@ -256,13 +255,13 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 		}
 
 		private void GetVoiLutValue(
-			GrayscaleImageGraphic grayscaleImage,
+			ILutPipelineProvider luts,
 			int pixelValue,
 			ref string voiLutString)
 		{
-			if (grayscaleImage.VoiLut != null)
+			if (luts.VoiLut != null)
 			{
-				var voiLutValue = grayscaleImage.OutputLut[pixelValue];
+				var voiLutValue = luts.LookupPixelValue(pixelValue, LutPipelineStage.Voi);
 				voiLutString = String.Format(SR.FormatProbeInfo, SR.LabelVOILut, voiLutValue);
 			}
 		}
@@ -366,10 +365,9 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 		}
 
 		#endregion
-	}
 
-	partial class ProbeTool : IProbe
-	{
+		#region IProbe Implementation
+
 		void IProbe.Probe(PointF coordinate, CoordinateSystem coordinateSystem)
 		{
 			if (Context.Viewer.SelectedTile == null)
@@ -396,5 +394,7 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 		{
 			Cancel();
 		}
+
+		#endregion
 	}
 }

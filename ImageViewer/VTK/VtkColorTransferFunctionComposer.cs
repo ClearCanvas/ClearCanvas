@@ -65,6 +65,7 @@ namespace ClearCanvas.ImageViewer.Vtk
 		  IModalityLutProvider,
 		  IVoiLutProvider,
 		  IColorMapProvider,
+		  ILutPipelineProvider,
 		  IDisposable
 	{
 		private enum Luts
@@ -344,6 +345,39 @@ namespace ClearCanvas.ImageViewer.Vtk
 			_colorMap = colorMap;
 
 			Modified();
+		}
+
+		#endregion
+
+		#region ILutPipelineProvider Members
+
+		public double LookupPixelValue(int rawPixelValue, LutPipelineStage outStage)
+		{
+			double value = rawPixelValue;
+
+			if (outStage == LutPipelineStage.Source)
+				return value;
+
+			var modalityLut = ModalityLut;
+			if (modalityLut != null)
+				value = modalityLut[value];
+
+			if (outStage == LutPipelineStage.Modality)
+				return value;
+
+			var normalizationLut = NormalizationLut;
+			if (normalizationLut != null)
+				value = normalizationLut[value];
+
+			var voiLut = VoiLut;
+			if (voiLut != null)
+				value = voiLut[value];
+
+			if (outStage == LutPipelineStage.Voi)
+				return value;
+
+			Platform.Log(LogLevel.Debug, "Unrecognized LUT pipeline stage");
+			return value;
 		}
 
 		#endregion

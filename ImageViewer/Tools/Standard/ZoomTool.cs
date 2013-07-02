@@ -24,13 +24,12 @@
 
 using System;
 using ClearCanvas.Common;
-using ClearCanvas.Common.Utilities;
 using ClearCanvas.Desktop;
 using ClearCanvas.Desktop.Actions;
 using ClearCanvas.ImageViewer.Automation;
-using ClearCanvas.ImageViewer.InputManagement;
 using ClearCanvas.ImageViewer.BaseTools;
 using ClearCanvas.ImageViewer.Graphics;
+using ClearCanvas.ImageViewer.InputManagement;
 using ClearCanvas.ImageViewer.Layout;
 using ClearCanvas.ImageViewer.Tools.Standard.Configuration;
 
@@ -43,25 +42,25 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 	[TooltipValueObserver("activate", "Tooltip", "TooltipChanged")]
 	[MouseButtonIconSet("activate", "Icons.ZoomToolSmall.png", "Icons.ZoomToolMedium.png", "Icons.ZoomToolLarge.png")]
 	[GroupHint("activate", "Tools.Image.Manipulation.Zoom")]
-
+	//
 	[KeyboardAction("zoomin", "imageviewer-keyboard/ToolsStandardZoom/ZoomIn", "ZoomIn", KeyStroke = XKeys.OemPeriod)]
 	[KeyboardAction("zoomout", "imageviewer-keyboard/ToolsStandardZoom/ZoomOut", "ZoomOut", KeyStroke = XKeys.OemComma)]
-
+	//
 	[MouseWheelHandler(ModifierFlags.Control)]
 	[MouseToolButton(XMouseButtons.Right, false)]
-
-	[ExtensionOf(typeof(ImageViewerToolExtensionPoint))]
-	public partial class ZoomTool : MouseImageViewerTool
+	//
+	[ExtensionOf(typeof (ImageViewerToolExtensionPoint))]
+	public class ZoomTool : MouseImageViewerTool, IZoom
 	{
 		internal static readonly float DefaultMinimumZoom = 0.25F;
 		internal static readonly float DefaultMaximumZoom = 64F;
 
-		private readonly ImageSpatialTransformImageOperation _operation; 
+		private readonly ImageSpatialTransformImageOperation _operation;
 		private MemorableUndoableCommand _memorableCommand;
 		private ImageOperationApplicator _applicator;
 		private ToolModalityBehaviorHelper _toolBehavior;
 
-	    private SimpleActionModel _dropDownModel;
+		private SimpleActionModel _dropDownModel;
 
 		public ZoomTool()
 			: base(SR.TooltipZoom)
@@ -87,19 +86,19 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 		{
 			get
 			{
-                if (_dropDownModel == null)
-                {
-                    _dropDownModel = new SimpleActionModel(new ApplicationThemeResourceResolver(this.GetType().Assembly));
+				if (_dropDownModel == null)
+				{
+					_dropDownModel = new SimpleActionModel(new ApplicationThemeResourceResolver(this.GetType().Assembly));
 
-                    _dropDownModel.AddAction("fit", SR.LabelZoomFit, null, SR.LabelZoomFit, delegate { SetScale(0); });
-                    AddFixedZoomAction(_dropDownModel, 1);
-                    AddFixedZoomAction(_dropDownModel, 2);
-                    AddFixedZoomAction(_dropDownModel, 4);
-                    AddFixedZoomAction(_dropDownModel, 8);
-                }
+					_dropDownModel.AddAction("fit", SR.LabelZoomFit, null, SR.LabelZoomFit, delegate { SetScale(0); });
+					AddFixedZoomAction(_dropDownModel, 1);
+					AddFixedZoomAction(_dropDownModel, 2);
+					AddFixedZoomAction(_dropDownModel, 4);
+					AddFixedZoomAction(_dropDownModel, 8);
+				}
 
-                return _dropDownModel;
-            }	
+				return _dropDownModel;
+			}
 		}
 
 		private IImageSpatialTransform GetSelectedImageTransform()
@@ -151,7 +150,7 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 
 			_memorableCommand = null;
 		}
-		
+
 		private void ZoomIn()
 		{
 			if (this.SelectedPresentationImage == null)
@@ -159,7 +158,7 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 
 			CaptureBeginState();
 
-			float increment = 0.1F * this.SelectedSpatialTransformProvider.SpatialTransform.Scale;
+			float increment = 0.1F*this.SelectedSpatialTransformProvider.SpatialTransform.Scale;
 			IncrementScale(increment);
 
 			CaptureEndState();
@@ -172,7 +171,7 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 
 			CaptureBeginState();
 
-			float increment = -0.1F * this.SelectedSpatialTransformProvider.SpatialTransform.Scale;
+			float increment = -0.1F*this.SelectedSpatialTransformProvider.SpatialTransform.Scale;
 			IncrementScale(increment);
 
 			CaptureEndState();
@@ -203,7 +202,7 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 
 			this.SelectedSpatialTransformProvider.Draw();
 		}
-		
+
 		private void IncrementScale(float scaleIncrement)
 		{
 			if (!CanZoom())
@@ -216,10 +215,10 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 			// Use the 'to fit' scale value to calculate a minimum scale value.
 			transform.ScaleToFit = true;
 			float minimum = transform.Scale;
-			
+
 			// in the case of ridiculously small client rectangles, don't allow the scale to get any smaller than it is.
-			if (base.SelectedPresentationImage.ClientRectangle.Width > 32 && 
-				base.SelectedPresentationImage.ClientRectangle.Height > 32)
+			if (base.SelectedPresentationImage.ClientRectangle.Width > 32 &&
+			    base.SelectedPresentationImage.ClientRectangle.Height > 32)
 				minimum /= 2;
 
 			// Set the minimum scale to 1/2 the size of the 'to fit' scale value, or the default, whichever is smaller.
@@ -259,7 +258,7 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 			base.Track(mouseInformation);
 
 			float increment = -base.DeltaY*0.025f;
-            increment *= ToolSettings.DefaultInstance.InvertedZoomToolOperation ? -1f : 1f;
+			increment *= ToolSettings.DefaultInstance.InvertedZoomToolOperation ? -1f : 1f;
 			IncrementScale(increment);
 
 			return true;
@@ -273,7 +272,7 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 			base.Stop(mouseInformation);
 
 			CaptureEndState();
-			
+
 			return false;
 		}
 
@@ -306,8 +305,8 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 			if (this.SelectedPresentationImage == null)
 				return;
 
-			float increment = -0.1F * this.SelectedSpatialTransformProvider.SpatialTransform.Scale;
-            increment *= ToolSettings.DefaultInstance.InvertedZoomToolOperation ? -1f : 1f;
+			float increment = -0.1F*this.SelectedSpatialTransformProvider.SpatialTransform.Scale;
+			increment *= ToolSettings.DefaultInstance.InvertedZoomToolOperation ? -1f : 1f;
 			IncrementScale(increment);
 		}
 
@@ -316,57 +315,52 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 			if (this.SelectedPresentationImage == null)
 				return;
 
-			float increment = 0.1F * this.SelectedSpatialTransformProvider.SpatialTransform.Scale;
-            increment *= ToolSettings.DefaultInstance.InvertedZoomToolOperation ? -1f : 1f;
+			float increment = 0.1F*this.SelectedSpatialTransformProvider.SpatialTransform.Scale;
+			increment *= ToolSettings.DefaultInstance.InvertedZoomToolOperation ? -1f : 1f;
 			IncrementScale(increment);
 		}
 
 		public void Apply(IPresentationImage image)
 		{
-			IImageSpatialTransform transform = (IImageSpatialTransform)_operation.GetOriginator(image);
-			IImageSpatialTransform referenceTransform = (IImageSpatialTransform)this.SelectedSpatialTransformProvider.SpatialTransform;
+			IImageSpatialTransform transform = (IImageSpatialTransform) _operation.GetOriginator(image);
+			IImageSpatialTransform referenceTransform = (IImageSpatialTransform) this.SelectedSpatialTransformProvider.SpatialTransform;
 
 			transform.Scale = referenceTransform.Scale;
 			transform.ScaleToFit = referenceTransform.ScaleToFit;
 		}
-    }
 
-    #region Oto
-    public partial class ZoomTool : IZoom
-    {
-        #region IViewerZoomService Members
+		#region IZoom Members
 
-        void IZoom.SetZoom(double zoom)
-        {
-            SetScale((float)zoom);
-        }
+		void IZoom.SetZoom(double zoom)
+		{
+			SetScale((float) zoom);
+		}
 
-        double IZoom.GetZoomAt(RectangularGrid.Location tileLocation)
-        {
-            var imageBoxLocation = tileLocation.ParentGridLocation;
-            IImageBox imageBox;
-            if (imageBoxLocation == null)
-                imageBox = Context.Viewer.PhysicalWorkspace.SelectedImageBox;
-            else
-                imageBox = Context.Viewer.PhysicalWorkspace[imageBoxLocation.Row, imageBoxLocation.Column];
+		double IZoom.GetZoomAt(RectangularGrid.Location tileLocation)
+		{
+			var imageBoxLocation = tileLocation.ParentGridLocation;
+			IImageBox imageBox;
+			if (imageBoxLocation == null)
+				imageBox = Context.Viewer.PhysicalWorkspace.SelectedImageBox;
+			else
+				imageBox = Context.Viewer.PhysicalWorkspace[imageBoxLocation.Row, imageBoxLocation.Column];
 
-            var tile = imageBox[tileLocation.Row, tileLocation.Column];
+			var tile = imageBox[tileLocation.Row, tileLocation.Column];
 
-            //Rather than change the class, we'll just select temporarily.
-            var oldSelectedTile = Context.Viewer.SelectedTile;
-            tile.Select();
+			//Rather than change the class, we'll just select temporarily.
+			var oldSelectedTile = Context.Viewer.SelectedTile;
+			tile.Select();
 
-            var transform = GetSelectedImageTransform();
-            if (transform == null)
-                throw new InvalidOperationException("The tile must contain a valid image.");
-            
-            if (oldSelectedTile != null)
-                oldSelectedTile.Select();
+			var transform = GetSelectedImageTransform();
+			if (transform == null)
+				throw new InvalidOperationException("The tile must contain a valid image.");
 
-            return transform.Scale;
-        }
+			if (oldSelectedTile != null)
+				oldSelectedTile.Select();
 
-        #endregion
-    }
-    #endregion
+			return transform.Scale;
+		}
+
+		#endregion
+	}
 }
