@@ -149,6 +149,7 @@
     <Compile Include="EntityBrokers\DeviceUpdateColumns.gen.cs" />
     <Compile Include="EntityBrokers\DuplicateSopReceivedQueueSelectCriteria.cs" />
     <Compile Include="EntityBrokers\DuplicateSopReceivedQueueUpdateColumns.cs" />
+    <Compile Include="EntityBrokers\ExternalRequestQueueSelectCriteria.cs" />
     <Compile Include="EntityBrokers\ExternalRequestQueueSelectCriteria.gen.cs" />
     <Compile Include="EntityBrokers\ExternalRequestQueueUpdateColumns.cs" />
     <Compile Include="EntityBrokers\ExternalRequestQueueUpdateColumns.gen.cs" />
