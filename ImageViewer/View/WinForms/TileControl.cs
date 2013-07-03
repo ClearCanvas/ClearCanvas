@@ -140,7 +140,7 @@ namespace ClearCanvas.ImageViewer.View.WinForms
 					if (renderer == null)
 						throw new Exception(SR.ExceptionPresentationImageNotAssociatedWithARenderer);
 
-					_surface = renderer.GetRenderingSurface(this.Handle, this.Width, this.Height);
+					_surface = renderer.CreateRenderingSurface(this.Handle, this.Width, this.Height, RenderingSurfaceType.Onscreen);
 					_surface.Invalidated += OnSurfaceInvalidated;
 				}
 

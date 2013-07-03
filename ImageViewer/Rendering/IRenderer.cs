@@ -38,12 +38,13 @@ namespace ClearCanvas.ImageViewer.Rendering
 	public interface IRenderer : IDisposable
 	{
 		/// <summary>
-		/// Gets an <see cref="IRenderingSurface"/>.
+		/// Creates an instance of <see cref="IRenderingSurface"/> suitable for this renderer.
 		/// </summary>
 		/// <param name="windowId">The window ID.  On Windows systems, this is the window handle
-		/// or "hwnd".</param>
+		/// or "HWND".</param>
 		/// <param name="width">The width of the surface.</param>
 		/// <param name="height">The height of the surface.</param>
+		/// <param name="type">A value indicating the type of rendering surface requested.</param>
 		/// <returns></returns>
 		/// <remarks>
 		/// This method is called by <b>TileControl</b> (i.e., the <see cref="ITile"/> view)
@@ -53,7 +54,7 @@ namespace ClearCanvas.ImageViewer.Rendering
 		/// that same surface (passed in via the <see cref="DrawArgs"/>) irrespective 
 		/// of the <see cref="IPresentationImage"/> being rendered.
 		/// </remarks>
-		IRenderingSurface GetRenderingSurface(IntPtr windowId, int width, int height);
+		IRenderingSurface CreateRenderingSurface(IntPtr windowId, int width, int height, RenderingSurfaceType type);
 
 		/// <summary>
 		/// Renders the specified scene graph to the graphics surface.

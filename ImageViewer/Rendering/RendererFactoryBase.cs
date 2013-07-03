@@ -67,9 +67,9 @@ namespace ClearCanvas.ImageViewer.Rendering
 				Wrapper.Item.Draw(drawArgs);
 			}
 
-			public IRenderingSurface GetRenderingSurface(IntPtr windowId, int width, int height)
+			public IRenderingSurface CreateRenderingSurface(IntPtr windowId, int width, int height, RenderingSurfaceType type)
 			{
-				return Wrapper.Item.GetRenderingSurface(windowId, width, height);
+				return Wrapper.Item.CreateRenderingSurface(windowId, width, height, type);
 			}
 
 			#endregion

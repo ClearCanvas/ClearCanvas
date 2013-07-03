@@ -152,7 +152,7 @@ namespace ClearCanvas.ImageViewer.Thumbnails
 
 			    try
 			    {
-			        using (var surface = image.ImageRenderer.GetRenderingSurface(IntPtr.Zero, bmp.Width, bmp.Height))
+			        using (var surface = image.ImageRenderer.CreateRenderingSurface(IntPtr.Zero, bmp.Width, bmp.Height, RenderingSurfaceType.Offscreen))
 			        {
 			            surface.ContextID = contextId;
 			            surface.ClipRectangle = new Rectangle(0, 0, bmp.Width, bmp.Height);

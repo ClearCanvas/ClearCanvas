@@ -56,7 +56,7 @@ namespace ClearCanvas.ImageViewer.Tools.Standard.View.WinForms
 			_startPointTile = startPointTile;
             _render = render;
 
-            _surface = image.ImageRenderer.GetRenderingSurface(Handle, ClientRectangle.Width, ClientRectangle.Height);
+            _surface = image.ImageRenderer.CreateRenderingSurface(Handle, ClientRectangle.Width, ClientRectangle.Height, RenderingSurfaceType.Onscreen);
 
             _startPointDesktop = Centre = Cursor.Position;
 		}

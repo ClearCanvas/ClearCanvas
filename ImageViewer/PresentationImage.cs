@@ -516,7 +516,7 @@ namespace ClearCanvas.ImageViewer
 			var contextId = graphics.GetHdc();
 			try
 			{
-				using (var surface = ImageRenderer.GetRenderingSurface(IntPtr.Zero, bmp.Width, bmp.Height))
+				using (var surface = ImageRenderer.CreateRenderingSurface(IntPtr.Zero, bmp.Width, bmp.Height, RenderingSurfaceType.Offscreen))
 				{
 					surface.ContextID = contextId;
 					surface.ClipRectangle = new Rectangle(0, 0, bmp.Width, bmp.Height);

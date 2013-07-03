@@ -74,13 +74,13 @@ namespace ClearCanvas.ImageViewer.Vtk.Rendering
 			base.Dispose(disposing);
 		}
 
-		public override IVtkRenderingSurface CreateRenderingSurface(IntPtr windowId, int width, int height)
+		public override IVtkRenderingSurface CreateRenderingSurface(IntPtr windowId, int width, int height, RenderingSurfaceType type)
 		{
 			var clientRectangle = new Rectangle(0, 0, width, height);
 			switch (Environment.OSVersion.Platform)
 			{
 				case PlatformID.Win32NT:
-					return new Win32VtkRenderingSurface(windowId) {ClientRectangle = clientRectangle};
+					return new Win32VtkRenderingSurface(windowId, type == RenderingSurfaceType.Offscreen) {ClientRectangle = clientRectangle};
 				case PlatformID.Unix:
 				case PlatformID.Xbox:
 				case PlatformID.MacOSX:

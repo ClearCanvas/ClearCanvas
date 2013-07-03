@@ -43,6 +43,17 @@ namespace ClearCanvas.ImageViewer.Rendering
 	public interface IRenderingSurface : IDisposable
 	{
 		/// <summary>
+		/// Gets the type of rendering surface.
+		/// </summary>
+		/// <remarks>
+		/// Advanced <see cref="IRenderer"/> implementations may need to provide different implementations of <see cref="IRenderingSurface"/>
+		/// depending on whether the intended rendering destination is an onscreen window or an offscreen bitmap.
+		/// For example, the onscreen surface may use a dynamic level-of-detail rendering in order to provide an update rate suitable for user interactivity.
+		/// In contrast, the offscreen surface would always render at the highest level-of-detail in order to export the image to a memory bitmap.
+		/// </remarks>
+		RenderingSurfaceType Type { get; }
+
+		/// <summary>
 		/// Gets or sets the window ID.
 		/// </summary>
 		/// <remarks>
@@ -91,6 +102,34 @@ namespace ClearCanvas.ImageViewer.Rendering
 		/// Fired to notify that the contents of the surface have updated independently of the contents of the <see cref="ITile"/>.
 		/// </summary>
 		event EventHandler Invalidated;
+	}
+
+	/// <summary>
+	/// Describes the type of <see cref="IRenderingSurface"/>.
+	/// </summary>
+	public enum RenderingSurfaceType
+	{
+		/// <summary>
+		/// Indicates that the <see cref="IRenderingSurface"/> is suitable for onscreen use, and may have behaviours that only function correctly onscreen.
+		/// </summary>
+		/// <remarks>
+		/// Advanced <see cref="IRenderer"/> implementations may need to provide different implementations of <see cref="IRenderingSurface"/>
+		/// depending on whether the intended rendering destination is an onscreen window or an offscreen bitmap.
+		/// For example, the onscreen surface may use a dynamic level-of-detail rendering in order to provide an update rate suitable for user interactivity.
+		/// In contrast, the offscreen surface would always render at the highest level-of-detail in order to export the image to a memory bitmap.
+		/// </remarks>
+		Onscreen,
+
+		/// <summary>
+		/// Indicates that the <see cref="IRenderingSurface"/> is suitable for general purpose (offscreen) use.
+		/// </summary>
+		/// <remarks>
+		/// Advanced <see cref="IRenderer"/> implementations may need to provide different implementations of <see cref="IRenderingSurface"/>
+		/// depending on whether the intended rendering destination is an onscreen window or an offscreen bitmap.
+		/// For example, the onscreen surface may use a dynamic level-of-detail rendering in order to provide an update rate suitable for user interactivity.
+		/// In contrast, the offscreen surface would always render at the highest level-of-detail in order to export the image to a memory bitmap.
+		/// </remarks>
+		Offscreen
 	}
 }
 

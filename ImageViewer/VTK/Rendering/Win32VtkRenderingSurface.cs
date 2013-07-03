@@ -29,6 +29,7 @@ using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
+using ClearCanvas.ImageViewer.Rendering;
 using ClearCanvas.ImageViewer.Rendering.GDI;
 using vtk;
 
@@ -70,7 +71,7 @@ namespace ClearCanvas.ImageViewer.Vtk.Rendering
 		private DelayedEventPublisher _dynamicRenderEventPublisher;
 		private VtkSceneGraph _sceneGraphRoot;
 
-		public Win32VtkRenderingSurface(IntPtr windowId)
+		public Win32VtkRenderingSurface(IntPtr windowId, bool offscreen)
 		{
 			_imageBuffer = new BitmapBuffer(PixelFormat.Format32bppRgb);
 			_overlayBuffer = new BitmapBuffer(PixelFormat.Format32bppArgb);
@@ -87,7 +88,7 @@ namespace ClearCanvas.ImageViewer.Vtk.Rendering
 			_vtkRenderWindow.SetDesiredUpdateRate(_dynamicFrameRate);
 			_vtkRenderWindow.AddRenderer(_vtkRenderer);
 
-			_dynamicRenderEventPublisher = new DelayedEventPublisher((s, e) => Render(true));
+			_dynamicRenderEventPublisher = !offscreen ? new DelayedEventPublisher((s, e) => Render(true)) : null;
 
 			WindowID = windowId;
 		}
@@ -209,6 +210,11 @@ namespace ClearCanvas.ImageViewer.Vtk.Rendering
 		public BackBuffer FinalBuffer
 		{
 			get { return _finalBuffer; }
+		}
+
+		public RenderingSurfaceType Type
+		{
+			get { return _dynamicRenderEventPublisher != null ? RenderingSurfaceType.Onscreen : RenderingSurfaceType.Offscreen; }
 		}
 
 		public Rectangle ClipRectangle { get; set; }
@@ -385,7 +391,7 @@ namespace ClearCanvas.ImageViewer.Vtk.Rendering
 
 		internal static string ReportCapabilities()
 		{
-			using (var surface = new Win32VtkRenderingSurface(IntPtr.Zero))
+			using (var surface = new Win32VtkRenderingSurface(IntPtr.Zero, true))
 			{
 				return surface._vtkRenderWindow.ReportCapabilities();
 			}

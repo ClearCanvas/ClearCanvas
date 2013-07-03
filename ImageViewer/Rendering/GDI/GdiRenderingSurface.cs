@@ -22,92 +22,36 @@
 
 #endregion
 
-#pragma warning disable 1591,0419,1574,1587
-
 using System;
 using System.Drawing;
-using ClearCanvas.Common;
 
 namespace ClearCanvas.ImageViewer.Rendering.GDI
 {
-	internal sealed class GdiRenderingSurface : IRenderingSurface
+	internal sealed class GdiRenderingSurface : RenderingSurfaceBase
 	{
 		private BitmapBuffer _imageBuffer;
 		private BackBuffer _finalBuffer;
 
-		private IntPtr _windowId;
-		private IntPtr _contextId;
-		private Rectangle _clientRectangle;
-		private Rectangle _clipRectangle;
-
 		public GdiRenderingSurface(IntPtr windowId, int width, int height)
+			: base(RenderingSurfaceType.Offscreen)
 		{
 			_imageBuffer = new BitmapBuffer();
 			_finalBuffer = new BackBuffer();
 
-			_windowId = windowId;
+			WindowID = windowId;
 			ClientRectangle = new Rectangle(0, 0, width, height);
 		}
 
-		#region IRenderingSurface Members
-
-		public IntPtr WindowID
+		protected override void OnContextIDChanged(IntPtr value)
 		{
-			get { return _windowId; }
-			set { _windowId = value; }
+			FinalBuffer.ContextId = value;
 		}
 
-		public IntPtr ContextID
+		protected override void OnClientRectangleChanged(Rectangle value)
 		{
-			get { return _contextId; }
-			set
-			{
-				_contextId = value;
-				FinalBuffer.ContextId = _contextId;
-			}
+			_imageBuffer.Size = new Size(value.Width, value.Height);
+			_finalBuffer.ClientRectangle = value;
 		}
-
-		/// <summary>
-		/// Gets or sets the rectangle of the surface.
-		/// </summary>
-		/// <remarks>
-		/// This is the rectangle of the view onto the <see cref="ITile"/>.
-		/// The top-left corner is always (0,0).  This rectangle changes as the
-		/// view (i.e., the hosting window) changes size.
-		/// </remarks>
-		public Rectangle ClientRectangle
-		{
-			get { return _clientRectangle; }
-			set
-			{
-				if (value.Width == 0 || value.Height == 0)
-					return;
-
-				if (_clientRectangle != value)
-				{
-					_clientRectangle = value;
-					_imageBuffer.Size = new Size(_clientRectangle.Width, _clientRectangle.Height);
-					_finalBuffer.ClientRectangle = _clientRectangle;
-				}
-			}
-		}
-
-		/// <summary>
-		/// Gets or sets the rectangle that requires repainting.
-		/// </summary>
-		/// <remarks>
-		/// The implementer of <see cref="IRenderer"/> should use this rectangle
-		/// to intelligently perform the <see cref="DrawMode.Refresh"/> operation.
-		/// </remarks>
-		public Rectangle ClipRectangle
-		{
-			get { return _clipRectangle; }
-			set { _clipRectangle = value; }
-		}
-
-		public event EventHandler Invalidated;
-
-		#endregion
 
 		public BitmapBuffer ImageBuffer
 		{
@@ -119,29 +63,11 @@ namespace ClearCanvas.ImageViewer.Rendering.GDI
 			get { return _finalBuffer; }
 		}
 
-		#region IDisposable Members
-
-		public void Dispose()
-		{
-			try
-			{
-				Dispose(true);
-				GC.SuppressFinalize(this);
-			}
-			catch (Exception e)
-			{
-				// shouldn't throw anything from inside Dispose()
-				Platform.Log(LogLevel.Error, e);
-			}
-		}
-
-		#endregion
-
 		/// <summary>
 		/// Implementation of the <see cref="IDisposable"/> pattern
 		/// </summary>
 		/// <param name="disposing">True if this object is being disposed, false if it is being finalized</param>
-		private void Dispose(bool disposing)
+		protected override void Dispose(bool disposing)
 		{
 			if (disposing)
 			{

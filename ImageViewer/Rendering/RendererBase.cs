@@ -143,6 +143,11 @@ namespace ClearCanvas.ImageViewer.Rendering
 		/// </summary>
 		public abstract IRenderingSurface GetRenderingSurface(IntPtr windowId, int width, int height);
 
+		public virtual IRenderingSurface CreateRenderingSurface(IntPtr windowId, int width, int height, RenderingSurfaceType type)
+		{
+			return GetRenderingSurface(windowId, width, height);
+		}
+
 		/// <summary>
 		/// Initializes the member variables before calling <see cref="Render"/> or <see cref="Refresh"/>.
 		/// </summary>

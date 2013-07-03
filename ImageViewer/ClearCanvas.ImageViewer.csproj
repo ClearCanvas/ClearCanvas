@@ -239,6 +239,7 @@
     <Compile Include="Rendering\GDI\GdiRendererFactory.cs" />
     <Compile Include="Rendering\GDI\IGdiBuffer.cs" />
     <Compile Include="Rendering\RendererBase2.cs" />
+    <Compile Include="Rendering\RenderingSurfaceBase.cs" />
     <Compile Include="Services\LocalServiceProcess.cs" />
     <Compile Include="Services\ServiceControlSettings.cs" />
     <Compile Include="Services\ServiceControlSettings.Designer.cs">

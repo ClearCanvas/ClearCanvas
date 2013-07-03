@@ -173,11 +173,11 @@ namespace ClearCanvas.ImageViewer.Rendering
 		/// <summary>
 		/// Factory method to create an <see cref="IRenderingSurface"/> instance appropriate for this renderer.
 		/// </summary>
-		public abstract TRenderingSurface CreateRenderingSurface(IntPtr windowId, int width, int height);
+		public abstract TRenderingSurface CreateRenderingSurface(IntPtr windowId, int width, int height, RenderingSurfaceType type);
 
-		IRenderingSurface IRenderer.GetRenderingSurface(IntPtr windowId, int width, int height)
+		IRenderingSurface IRenderer.CreateRenderingSurface(IntPtr windowId, int width, int height, RenderingSurfaceType type)
 		{
-			return CreateRenderingSurface(windowId, width, height);
+			return CreateRenderingSurface(windowId, width, height, type);
 		}
 
 		/// <summary>
