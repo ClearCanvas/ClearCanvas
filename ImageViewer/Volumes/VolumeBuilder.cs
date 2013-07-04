@@ -218,7 +218,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 
 				int minVolumeValue, maxVolumeValue;
 				var volumeArray = BuildVolumeArray(pixelPaddingValue, normalizedSlope, normalizedIntercept, out minVolumeValue, out maxVolumeValue);
-				var volume = new Volume(null, volumeArray, VolumeSize, VoxelSpacing, ImagePositionPatient, ImageOrientationPatient, sopDataSourcePrototype, pixelPaddingValue, _frames[0].Frame.SeriesInstanceUid, minVolumeValue, maxVolumeValue);
+				var volume = new U16Volume(volumeArray, VolumeSize, VoxelSpacing, ImagePositionPatient, ImageOrientationPatient, sopDataSourcePrototype, pixelPaddingValue, _frames[0].Frame.SeriesInstanceUid, minVolumeValue, maxVolumeValue);
 				return volume;
 			}
 

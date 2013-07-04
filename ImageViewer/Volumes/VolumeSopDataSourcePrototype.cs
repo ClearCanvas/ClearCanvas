@@ -40,7 +40,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 		/// For now, we will have this prototype shared between each SOP (a single slice of any plane)
 		/// Ideally, we should have a single multiframe SOP for each plane, and then this prototype is shared between those SOPs
 		/// </remarks>
-		private class VolumeSopDataSourcePrototype : IDicomAttributeProvider
+		internal class VolumeSopDataSourcePrototype : IDicomAttributeProvider
 		{
 			private readonly DicomAttributeCollection _collection = new DicomAttributeCollection();
 

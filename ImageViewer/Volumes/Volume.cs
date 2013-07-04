@@ -23,7 +23,6 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
 using ClearCanvas.Common;
 using ClearCanvas.Dicom;
 using ClearCanvas.ImageViewer.Mathematics;
@@ -31,189 +30,207 @@ using ClearCanvas.ImageViewer.Mathematics;
 namespace ClearCanvas.ImageViewer.Volumes
 {
 	/// <summary>
-	/// Represents a 3-dimensional volume.
+	/// Represents a 3-dimensional raster volume.
 	/// </summary>
 	/// <remarks>
-	/// <para>
-	/// The <see cref="Volume"/> class encapsulates 3 dimensional voxel data and currently supports short and unsigned short types.
-	/// You will typically use a <see cref="VolumeBuilder"/> object to create a Volume.
-	/// A volume has two coordinate spaces of interest: volume and patient. Naming convention is to use Patient
-	/// suffix if in patient space, Volume suffix in volume space, if not specified then in volume space.
-	/// </para>
-	/// <para>
-	/// The spaces currently only differ (potentially) by origin and orientation. The volume origin is 
-	/// fixed to 0,0,0 and the patient origin is derived from the first image's DICOM image position (patient).
-	/// The volume orientation is consistently defined by the input images and is irrespective of the actual
-	/// patient orientation (i.e. axial, sagittal, coronal captured images are all normalized in volume space).
-	/// The patient orientation is derived from the DICOM image orientation.
-	/// </para>
+	/// The <see cref="Volume"/> class encapsulates 3-dimensional raster data (i.e. a volume defined by a block of voxels).
+	/// Typically, an instance of <see cref="Volume"/> is created from a set of DICOM images by calling
+	/// <see cref="Create(IDisplaySet)"/> or any of its overloads. Alternatively, the <see cref="VolumeCache"/>
+	/// may be used to obtain a wrapper object that allows access to a shared, cached and memory-managed
+	/// instance of <see cref="Volume"/>.
 	/// </remarks>
-	public partial class Volume : IDisposable
+	public abstract partial class Volume : IDisposable
 	{
 		#region Private fields
 
-		// CR (Oct 2009): Ideally, Volume should be a base class with specialized signed and unsigned 16-bit volume subclasses
-		// The volume arrays that contain the voxel values. Constructors ensure that only one of these 
-		//	arrays is set, which defines whether the data for this volume is signed or unsigned.
-		private short[] _volumeDataInt16;
-		private ushort[] _volumeDataUInt16;
-
-		// Size of each of the volume array dimensions
 		private readonly Size3D _arrayDimensions;
-
-		// The spacing between pixels (X,Y) and slices (Z) as defined by the DICOM images for this volume
 		private readonly Vector3D _voxelSpacing;
-		// The DICOM image position (patient) of the first slice in the volume, used to convert between Volume and Patient spaces
-		private readonly Vector3D _originPatient;
-		// The DICOM image orientation (patient) of all slices, used to convert between Volume and Patient spaces
-		private readonly Matrix _orientationPatientMatrix;
-		// Used as pixel value for any data not derived from voxel values (e.g. when slice extends beyond volume)
+		private readonly Rectangle3D _volumeBounds;
+		private readonly Vector3D _volumeOriginPatient;
+		private readonly Vector3D _volumeCenter;
+		private readonly Vector3D _volumeCenterPatient;
+		private readonly Matrix _volumeOrientationPatient;
+
 		private readonly int _paddingValue;
-		// Decided to keep the volume origin at 0,0,0 and translate to patient coordinates
-		//	when needed. This makes dealing with non axial datasets easier. It also mimics 
-		//	the typical image to patient coordintate transform.
-		private readonly Vector3D _origin = new Vector3D(0, 0, 0);
-
-		private bool _disposed = false;
-
-		private readonly string _sourceSeriesInstanceUid;
 		private readonly int _minVolumeValue;
 		private readonly int _maxVolumeValue;
-		private readonly VolumeSopDataSourcePrototype _modelDicom;
+
+		private readonly string _sourceSeriesInstanceUid;
+		private readonly VolumeSopDataSourcePrototype _dataSourcePrototype;
 
 		#endregion
 
 		#region Constructors
 
 		/// <summary>
-		/// Constructs a <see cref="Volume"/> using a volume data array of signed 16-bit words.
+		/// Initializes the <see cref="Volume"/>.
 		/// </summary>
-		/// <remarks>
-		/// Consider using one of the static helpers such as <see cref="Create(ClearCanvas.ImageViewer.IDisplaySet)"/> to construct and automatically fill a <see cref="Volume"/>.
-		/// </remarks>
-		public Volume(short[] data, Size3D dimensions, Vector3D spacing, Vector3D originPatient,
-		              Matrix orientationPatient, IList<IDicomAttributeProvider> dicomAttributeModel, int paddingValue, string sourceSeriesInstanceUid)
-			: this(data, null, dimensions, spacing, originPatient, orientationPatient,
-			       VolumeSopDataSourcePrototype.Create(dicomAttributeModel, 16, 16, true), paddingValue, sourceSeriesInstanceUid, 0, 0) {}
-
-		/// <summary>
-		/// Constructs a <see cref="Volume"/> using a volume data array of unsigned 16-bit words.
-		/// </summary>
-		/// <remarks>
-		/// Consider using one of the static helpers such as <see cref="Create(ClearCanvas.ImageViewer.IDisplaySet)"/> to construct and automatically fill a <see cref="Volume"/>.
-		/// </remarks>
-		public Volume(ushort[] data, Size3D dimensions, Vector3D spacing, Vector3D originPatient,
-		              Matrix orientationPatient, IList<IDicomAttributeProvider> dicomAttributeModel, int paddingValue, string sourceSeriesInstanceUid)
-			: this(null, data, dimensions, spacing, originPatient, orientationPatient,
-			       VolumeSopDataSourcePrototype.Create(dicomAttributeModel, 16, 16, false), paddingValue, sourceSeriesInstanceUid, 0, 0) {}
-
-		private Volume(short[] dataInt16, ushort[] dataUInt16, Size3D dimensions, Vector3D spacing, Vector3D originPatient, Matrix orientationPatient, VolumeSopDataSourcePrototype sopDataSourcePrototype, int paddingValue, string sourceSeriesInstanceUid, int minVolumeValue, int maxVolumeValue)
+		/// <param name="arrayDimensions"></param>
+		/// <param name="voxelSpacing"></param>
+		/// <param name="volumeOriginPatient"></param>
+		/// <param name="volumeOrientationPatient"></param>
+		/// <param name="dataSourcePrototype"></param>
+		/// <param name="paddingValue"></param>
+		/// <param name="sourceSeriesInstanceUid"></param>
+		/// <param name="minVolumeValue"></param>
+		/// <param name="maxVolumeValue"></param>
+		internal Volume(Size3D arrayDimensions, Vector3D voxelSpacing, Vector3D volumeOriginPatient, Matrix volumeOrientationPatient, VolumeSopDataSourcePrototype dataSourcePrototype, int paddingValue, string sourceSeriesInstanceUid, int minVolumeValue, int maxVolumeValue)
 		{
-			Platform.CheckTrue(dataInt16 != null ^ dataUInt16 != null, "Exactly one of dataInt16 and dataUInt16 must be non-null.");
-			_volumeDataInt16 = dataInt16;
-			_volumeDataUInt16 = dataUInt16;
-			_sourceSeriesInstanceUid = sourceSeriesInstanceUid;
+			Platform.CheckForNullReference(arrayDimensions, "arrayDimensions");
+			Platform.CheckForNullReference(voxelSpacing, "voxelSpacing");
+			Platform.CheckForNullReference(volumeOriginPatient, "originPatient");
+			Platform.CheckForNullReference(volumeOrientationPatient, "orientationPatient");
+			Platform.CheckForNullReference(dataSourcePrototype, "sopDataSourcePrototype");
+
+			_arrayDimensions = arrayDimensions;
+			_voxelSpacing = voxelSpacing;
+			_volumeOriginPatient = volumeOriginPatient;
+			_volumeOrientationPatient = volumeOrientationPatient;
+			_dataSourcePrototype = dataSourcePrototype;
+			_paddingValue = paddingValue;
+			_sourceSeriesInstanceUid = sourceSeriesInstanceUid ?? string.Empty;
 			_minVolumeValue = minVolumeValue;
 			_maxVolumeValue = maxVolumeValue;
-			_arrayDimensions = dimensions;
-			_voxelSpacing = spacing;
-			_originPatient = originPatient;
-			_orientationPatientMatrix = orientationPatient;
-			_modelDicom = sopDataSourcePrototype;
-			_paddingValue = paddingValue;
+
+			_volumeBounds = new Rectangle3D(0, 0, 0, _arrayDimensions.Width*_voxelSpacing.X, _arrayDimensions.Height*_voxelSpacing.Y, _arrayDimensions.Depth*_voxelSpacing.Z);
+			_volumeCenter = 0.5f*_volumeBounds.Size;
+			_volumeCenterPatient = ConvertToPatient(_volumeCenter);
 		}
 
 		#endregion
 
-		#region Public properties
+		#region Indexers
 
-		public ushort[] DataU16
+		/// <summary>
+		/// Gets the value in the volume data at the specified array index.
+		/// </summary>
+		public int this[int i]
 		{
-			get { return _volumeDataUInt16; }
+			get { return GetArrayValue(i); }
 		}
 
-		public short[] DataS16
-		{
-			get { return _volumeDataInt16; }
-		}
-
-		public string Modality
+		/// <summary>
+		/// Gets the value in the volume data at the specified array indices.
+		/// </summary>
+		public int this[int x, int y, int z]
 		{
 			get
 			{
-				DicomAttribute attribute;
-				return _modelDicom.TryGetAttribute(DicomTags.Modality, out attribute) ? attribute.ToString() : string.Empty;
+				const string message = "Specified {0}-index exceeds array bounds.";
+				if (!(x >= 0 && x < _arrayDimensions.Width))
+					throw new ArgumentOutOfRangeException("x", x, string.Format(message, "X"));
+				else if (!(y >= 0 && y < _arrayDimensions.Height))
+					throw new ArgumentOutOfRangeException("y", y, string.Format(message, "Y"));
+				else if (!(z >= 0 && z < _arrayDimensions.Depth))
+					throw new ArgumentOutOfRangeException("z", z, string.Format(message, "Z"));
+				return GetArrayValue(x + _arrayDimensions.Width*(y + _arrayDimensions.Height*z));
 			}
 		}
 
 		/// <summary>
-		/// Gets the Series Instance UID of that identifies the source images from which the volume was created.
+		/// Called to get the value in the volume data at the specified array index.
 		/// </summary>
-		public string SourceSeriesInstanceUid
+		protected abstract int GetArrayValue(int i);
+
+		#endregion
+
+		#region Public Properties
+
+		/// <summary>
+		/// Gets the array containing the volume data.
+		/// </summary>
+		public abstract Array Array { get; }
+
+		/// <summary>
+		/// Gets the total number of voxels in the volume.
+		/// </summary>
+		public int ArrayLength
 		{
-			get { return _sourceSeriesInstanceUid; }
+			get { return Array.Length; }
 		}
 
 		/// <summary>
-		/// Gets the Frame of Reference UID (0020,0052) that identifies the volume's coordinate system.
+		/// Gets the dimensions of the volume data.
 		/// </summary>
-		public string FrameOfReferenceUid
+		public Size3D ArrayDimensions
 		{
-			get
-			{
-				DicomAttribute attribute;
-				if (_modelDicom.TryGetAttribute(DicomTags.FrameOfReferenceUid, out attribute))
-					return attribute.ToString();
-				return string.Empty;
-			}
+			get { return _arrayDimensions; }
 		}
 
 		/// <summary>
-		/// The effective volume dimensions in Volume space.
+		/// Gets whether or not the values of the volume data are signed.
 		/// </summary>
-		public Vector3D Dimensions
+		public abstract bool Signed { get; }
+
+		/// <summary>
+		/// Gets the number of bits per voxel of the volume data.
+		/// </summary>
+		public abstract int BitsPerVoxel { get; }
+
+		/// <summary>
+		/// Gets the effective size of the volume (that is, the <see cref="ArrayDimensions"/> multiplied by the <see cref="VoxelSpacing"/> in each respective dimension).
+		/// </summary>
+		public Vector3D VolumeSize
 		{
-			get
-			{
-				return new Vector3D(ArrayDimensions.Width*VoxelSpacing.X, ArrayDimensions.Height*VoxelSpacing.Y,
-				                    ArrayDimensions.Depth*VoxelSpacing.Z);
-			}
+			get { return _volumeBounds.Size; }
 		}
 
 		/// <summary>
-		/// Spacing in millimeters along respective axes in Volume space.
+		/// Gets the effective bounds of the volume (that is, the 3-dimensional region occupied by the volume after accounting for <see cref="VoxelSpacing"/>).
 		/// </summary>
+		public Rectangle3D VolumeBounds
+		{
+			get { return _volumeBounds; }
+		}
+
+		/// <summary>
+		/// Gets the spacing between voxels in millimetres (mm).
+		/// </summary>
+		/// <remarks>
+		/// Equivalently, this is the size of a single voxel in millimetres along each dimension, and is the volumetric analogue of an image's Pixel Spacing.
+		/// </remarks>
 		public Vector3D VoxelSpacing
 		{
 			get { return _voxelSpacing; }
 		}
 
 		/// <summary>
-		/// The origin of the volume in Patient space.
+		/// Gets the origin of the volume in the patient coordinate system.
 		/// </summary>
-		public Vector3D OriginPatient
+		/// <remarks>
+		/// This is the volumetric analogue of the Image Position (Patient) concept in DICOM.
+		/// </remarks>
+		public Vector3D VolumeOriginPatient
 		{
-			get { return _originPatient; }
+			get { return _volumeOriginPatient; }
 		}
 
 		/// <summary>
-		/// The orientation of the volume in Patient space.
+		/// Gets the centre of the volume in the volume coordinate system.
 		/// </summary>
-		public Matrix OrientationPatientMatrix
+		public Vector3D VolumeCenter
 		{
-			get { return _orientationPatientMatrix; }
+			get { return _volumeCenter; }
 		}
 
 		/// <summary>
-		/// Gets a value indicating whether this volume contains signed or unsigned data.
+		/// Gets the centre of the volume in the patient coordinate system.
 		/// </summary>
-		public bool Signed
+		public Vector3D VolumeCenterPatient
 		{
-			get { return _volumeDataInt16 != null; }
+			get { return _volumeCenterPatient; }
 		}
 
 		/// <summary>
-		/// Gets the minimum value in the volume data.
+		/// Gets the value used for padding empty regions of the volume.
+		/// </summary>
+		public int PaddingValue
+		{
+			get { return _paddingValue; }
+		}
+
+		/// <summary>
+		/// Gets the minimum voxel value in the volume data.
 		/// </summary>
 		public int MinimumVolumeValue
 		{
@@ -221,7 +238,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 		}
 
 		/// <summary>
-		/// Gets the maximum value in the volume data.
+		/// Gets the maximum voxel value in the volume data.
 		/// </summary>
 		public int MaximumVolumeValue
 		{
@@ -229,232 +246,133 @@ namespace ClearCanvas.ImageViewer.Volumes
 		}
 
 		/// <summary>
-		/// The number of voxels represented by this volume (and in the volume array).
+		/// Gets the Modality of the source images from which the volume was created.
 		/// </summary>
-		public int SizeInVoxels
-		{
-			get { return ArrayDimensions.Volume; }
-		}
-
-		public float MinimumXCoodinate
-		{
-			get { return Origin.X; }
-		}
-
-		public float MaximumXCoordinate
-		{
-			get { return (Origin.X + VoxelSpacing.X*ArrayDimensions.Width); }
-		}
-
-		public float MinimumYCoordinate
-		{
-			get { return Origin.Y; }
-		}
-
-		public float MaximumYCoordinate
-		{
-			get { return (Origin.Y + VoxelSpacing.Y*ArrayDimensions.Height); }
-		}
-
-		public float MinimumZCoordinate
-		{
-			get { return Origin.Z; }
-		}
-
-		public float MaximumZCoordinate
-		{
-			get { return (Origin.Z + VoxelSpacing.Z*ArrayDimensions.Depth); }
-		}
-
-		public float MinimumSpacing
-		{
-			get { return Math.Min(Math.Min(VoxelSpacing.X, VoxelSpacing.Y), VoxelSpacing.Z); }
-		}
-
-		public float MaximumSpacing
-		{
-			get { return Math.Max(Math.Max(VoxelSpacing.X, VoxelSpacing.Y), VoxelSpacing.Z); }
-		}
-
-		public Vector3D Origin
-		{
-			get { return _origin; }
-		}
-
-		public int PaddingValue
-		{
-			get { return _paddingValue; }
-		}
-
-		public float LongAxisMagnitude
-		{
-			get { return Math.Max(Math.Max(Dimensions.X, Dimensions.Y), Dimensions.Z); }
-		}
-
-		public float ShortAxisMagnitude
-		{
-			get { return Math.Min(Math.Min(Dimensions.X, Dimensions.Y), Dimensions.Z); }
-		}
-
-		public float DiagonalMagnitude
+		public string Modality
 		{
 			get
 			{
-				return (float) Math.Sqrt(Dimensions.X*Dimensions.X +
-				                         Dimensions.Y*Dimensions.Y +
-				                         Dimensions.Z*Dimensions.Z);
+				DicomAttribute attribute;
+				return _dataSourcePrototype.TryGetAttribute(DicomTags.Modality, out attribute) ? attribute.ToString() : string.Empty;
 			}
 		}
 
 		/// <summary>
-		/// Volume center point in volume coordinates
+		/// Gets the Series Instance UID that identifies the source images from which the volume was created.
 		/// </summary>
-		public Vector3D CenterPoint
+		public string SourceSeriesInstanceUid
+		{
+			get { return _sourceSeriesInstanceUid; }
+		}
+
+		/// <summary>
+		/// Gets the Frame of Reference UID that correlates the patient coordinate system with other data sources.
+		/// </summary>
+		public string FrameOfReferenceUid
 		{
 			get
 			{
-				Vector3D center = new Vector3D(Origin.X + VoxelSpacing.X*0.5f*ArrayDimensions.Width,
-				                               Origin.Y + VoxelSpacing.Y*0.5f*ArrayDimensions.Height,
-				                               Origin.Z + VoxelSpacing.Z*0.5f*ArrayDimensions.Depth);
-				return center;
+				DicomAttribute attribute;
+				return _dataSourcePrototype.TryGetAttribute(DicomTags.FrameOfReferenceUid, out attribute) ? attribute.ToString() : string.Empty;
 			}
 		}
 
 		/// <summary>
-		/// Volume center point in patient coordinates
+		/// Gets the DICOM data set containing the common values in the source images from which the volume was created.
 		/// </summary>
-		public Vector3D CenterPointPatient
+		public IDicomAttributeProvider DataSet
 		{
-			get { return ConvertToPatient(CenterPoint); }
-		}
-
-		public bool Contains(Vector3D point)
-		{
-			return this.Contains(point.X, point.Y, point.Z);
-		}
-
-		public bool Contains(float x, float y, float z)
-		{
-			return x >= MinimumXCoodinate && x <= MaximumXCoordinate &&
-			       y >= MinimumYCoordinate && y <= MaximumYCoordinate &&
-			       z >= MinimumZCoordinate && z <= MaximumZCoordinate;
+			get { return _dataSourcePrototype; }
 		}
 
 		#endregion
 
 		#region Coordinate Transforms
 
+		/// <summary>
+		/// Converts the specified volume position into the patient coordinate system.
+		/// </summary>
 		public Vector3D ConvertToPatient(Vector3D volumePosition)
 		{
 			// Set orientation transform
-			Matrix volumePatientTransform = new Matrix(OrientationPatientMatrix);
+			var volumePatientTransform = new Matrix(_volumeOrientationPatient);
+
 			// Set origin translation
-			volumePatientTransform.SetRow(3, OriginPatient.X, OriginPatient.Y, OriginPatient.Z, 1);
+			volumePatientTransform.SetRow(3, VolumeOriginPatient.X, VolumeOriginPatient.Y, VolumeOriginPatient.Z, 1);
 
 			// Transform volume position to patient position
-			Matrix imagePositionMatrix = new Matrix(1, 4);
+			var imagePositionMatrix = new Matrix(1, 4);
 			imagePositionMatrix.SetRow(0, volumePosition.X, volumePosition.Y, volumePosition.Z, 1F);
-			Matrix patientPositionMatrix = imagePositionMatrix*volumePatientTransform;
+			var patientPositionMatrix = imagePositionMatrix*volumePatientTransform;
 
-			Vector3D patientPosition = new Vector3D(patientPositionMatrix[0, 0], patientPositionMatrix[0, 1],
-			                                        patientPositionMatrix[0, 2]);
+			var patientPosition = new Vector3D(patientPositionMatrix[0, 0], patientPositionMatrix[0, 1], patientPositionMatrix[0, 2]);
 			return patientPosition;
 		}
 
+		/// <summary>
+		/// Converts the specified patient position into the volume coordinate system.
+		/// </summary>
 		public Vector3D ConvertToVolume(Vector3D patientPosition)
 		{
 			// Set orientation transform
-			Matrix patientVolumeTransform = new Matrix(OrientationPatientMatrix.Transpose());
+			var patientVolumeTransform = new Matrix(_volumeOrientationPatient.Transpose());
+
 			// Set origin translation
-			Vector3D rotatedOrigin = RotateToVolumeOrientation(OriginPatient);
+			var rotatedOrigin = RotateToVolumeOrientation(VolumeOriginPatient);
 			patientVolumeTransform.SetRow(3, -rotatedOrigin.X, -rotatedOrigin.Y, -rotatedOrigin.Z, 1);
 
 			// Transform patient position to volume position
-			Matrix patientPositionMatrix = new Matrix(1, 4);
+			var patientPositionMatrix = new Matrix(1, 4);
 			patientPositionMatrix.SetRow(0, patientPosition.X, patientPosition.Y, patientPosition.Z, 1F);
-			Matrix imagePositionMatrix = patientPositionMatrix*patientVolumeTransform;
+			var imagePositionMatrix = patientPositionMatrix*patientVolumeTransform;
 
-			Vector3D imagePosition = new Vector3D(imagePositionMatrix[0, 0], imagePositionMatrix[0, 1],
-			                                      imagePositionMatrix[0, 2]);
+			var imagePosition = new Vector3D(imagePositionMatrix[0, 0], imagePositionMatrix[0, 1], imagePositionMatrix[0, 2]);
 			return imagePosition;
 		}
 
-		public Matrix RotateToPatientOrientation(Matrix orientationVolume)
+		/// <summary>
+		/// Rotates the specified volume orientation matrix into the patient coordinate system.
+		/// </summary>
+		public Matrix RotateToPatientOrientation(Matrix volumeOrientation)
 		{
-			Matrix orientationPatient = orientationVolume*OrientationPatientMatrix;
+			var orientationPatient = volumeOrientation*_volumeOrientationPatient;
 			return orientationPatient;
 		}
 
-		public Matrix RotateToVolumeOrientation(Matrix orientationPatient)
+		/// <summary>
+		/// Rotates the specified patient orientation matrix into the volume coordinate system.
+		/// </summary>
+		public Matrix RotateToVolumeOrientation(Matrix patientOrientation)
 		{
-			Matrix orientationVolume = orientationPatient*OrientationPatientMatrix.Transpose();
+			var orientationVolume = patientOrientation*_volumeOrientationPatient.Transpose();
 			return orientationVolume;
 		}
 
-		public Vector3D RotateToPatientOrientation(Vector3D volumeVec)
+		/// <summary>
+		/// Rotates the specified volume vector into the patient coordinate system.
+		/// </summary>
+		public Vector3D RotateToPatientOrientation(Vector3D volumeVector)
 		{
-			Matrix volumePos = new Matrix(1, 4);
-			volumePos.SetRow(0, volumeVec.X, volumeVec.Y, volumeVec.Z, 1F);
-			Matrix patientPos = volumePos*OrientationPatientMatrix;
+			var volumePos = new Matrix(1, 4);
+			volumePos.SetRow(0, volumeVector.X, volumeVector.Y, volumeVector.Z, 1F);
+			Matrix patientPos = volumePos*_volumeOrientationPatient;
 			return new Vector3D(patientPos[0, 0], patientPos[0, 1], patientPos[0, 2]);
 		}
 
-		public Vector3D RotateToVolumeOrientation(Vector3D patientVec)
+		/// <summary>
+		/// Rotates the specified patient vector into the volume coordinate system.
+		/// </summary>
+		public Vector3D RotateToVolumeOrientation(Vector3D patientVector)
 		{
-			Matrix patientPos = new Matrix(1, 4);
-			patientPos.SetRow(0, patientVec.X, patientVec.Y, patientVec.Z, 1F);
-			Matrix volumePos = patientPos*OrientationPatientMatrix.Transpose();
+			var patientPos = new Matrix(1, 4);
+			patientPos.SetRow(0, patientVector.X, patientVector.Y, patientVector.Z, 1F);
+			var volumePos = patientPos*_volumeOrientationPatient.Transpose();
 			return new Vector3D(volumePos[0, 0], volumePos[0, 1], volumePos[0, 2]);
 		}
 
 		#endregion
 
-		#region Implementation
-
-		public IDicomAttributeProvider DataSet
-		{
-			get { return _modelDicom; }
-		}
-
-		// Decided to keep private for now, shouldn't be interesting to the outside world, and helps 
-		//	avoid confusion with dimensions that take spacing into account (which is useful to the outside world)
-		public Size3D ArrayDimensions
-		{
-			get { return _arrayDimensions; }
-		}
-
-		#endregion
-
-
-
-		#region Unit Test Accessors
-
-#if UNIT_TESTS
-
-		public Volume(short[] data, Size3D dimensions, Vector3D spacing, Vector3D originPatient, Matrix orientationPatient, IDicomAttributeProvider attributeProvider, int paddingValue)
-			: this(data, dimensions, spacing, originPatient, orientationPatient, new[] {attributeProvider}, paddingValue, null) {}
-
-		public Volume(ushort[] data, Size3D dimensions, Vector3D spacing, Vector3D originPatient, Matrix orientationPatient, IDicomAttributeProvider attributeProvider, int paddingValue)
-			: this(data, dimensions, spacing, originPatient, orientationPatient, new[] {attributeProvider}, paddingValue, null) {}
-
-		internal int this[int x, int y, int z]
-		{
-			get
-			{
-				if (!this.Contains(x, y, z))
-					throw new ArgumentOutOfRangeException();
-				if (this.Signed)
-					return _volumeDataInt16[x + _arrayDimensions.Width*(y + _arrayDimensions.Height*z)];
-				else
-					return _volumeDataUInt16[x + _arrayDimensions.Width*(y + _arrayDimensions.Height*z)];
-			}
-		}
-
-#endif
-
-		#endregion
-
-		#region Destructor and Disposal
+		#region Finalizer and Disposal
 
 		~Volume()
 		{
@@ -468,15 +386,18 @@ namespace ClearCanvas.ImageViewer.Volumes
 			}
 		}
 
-		protected void Dispose(bool disposing)
-		{
-			if (!_disposed)
-			{
-				_volumeDataInt16 = null;
-				_volumeDataUInt16 = null;
+		/// <summary>
+		/// Gets a value indicating whether or not the object has already been disposed.
+		/// </summary>
+		protected bool Disposed { get; private set; }
 
-				_disposed = true;
-			}
+		/// <summary>
+		/// Called to release any resources held by this object.
+		/// </summary>
+		/// <param name="disposing">True if the object is being disposed; False if the object is being finalized.</param>
+		protected virtual void Dispose(bool disposing)
+		{
+			Disposed = true;
 		}
 
 		#endregion

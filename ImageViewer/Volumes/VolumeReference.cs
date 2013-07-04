@@ -117,7 +117,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 		/// <remarks>See <see cref="IVolumeReference"/> for a detailed explanation of 'transient references'.</remarks>
 		public IVolumeReference CreateTransientReference()
 		{
-			if (_disposed) throw new ObjectDisposedException(typeof (Volume).FullName);
+			if (Disposed) throw new ObjectDisposedException(typeof (Volume).FullName);
 			return new VolumeReference(this);
 		}
 

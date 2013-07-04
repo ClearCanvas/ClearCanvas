@@ -27,6 +27,7 @@ using System.Drawing;
 using ClearCanvas.Common;
 using ClearCanvas.Dicom;
 using ClearCanvas.ImageViewer.Mathematics;
+using ClearCanvas.ImageViewer.Volume.Mpr.Utilities;
 using ClearCanvas.ImageViewer.Volumes;
 
 namespace ClearCanvas.ImageViewer.Volume.Mpr
@@ -205,8 +206,8 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 		private static Size GetSliceExtent(Volumes.Volume volume, IVolumeSlicerParams slicerParams)
 		{
 			var effectiveSpacing = GetEffectiveSpacing(volume);
-			var longOutputDimension = volume.LongAxisMagnitude/effectiveSpacing;
-			var shortOutputDimenstion = volume.ShortAxisMagnitude/effectiveSpacing;
+			var longOutputDimension = volume.GetLongAxisMagnitude()/effectiveSpacing;
+			var shortOutputDimenstion = volume.GetShortAxisMagnitude()/effectiveSpacing;
 			var diagonalDimension = (int) Math.Sqrt(longOutputDimension*longOutputDimension + shortOutputDimenstion*shortOutputDimenstion);
 
 			var columns = diagonalDimension;
@@ -228,7 +229,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 			// Because we supply the real spacing to the VTK reslicer, the slices are interpolated
 			//	as if the volume were isotropic. This results in an effective spacing that is the
 			//	minimum spacing for the volume.
-			return volume.MinimumSpacing;
+			return volume.GetMinimumSpacing();
 		}
 
 		#endregion

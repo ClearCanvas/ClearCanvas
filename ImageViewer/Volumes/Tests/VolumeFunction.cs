@@ -126,12 +126,12 @@ namespace ClearCanvas.ImageViewer.Volumes.Tests
 			if (signed)
 			{
 				short[] data = CreateSignedArray(width, height, depth);
-				return new Volume(data, dimensions, spacing, originPatient, orientationPatient, dataset, short.MinValue);
+				return new S16Volume(data, dimensions, spacing, originPatient, orientationPatient, dataset, short.MinValue, null);
 			}
 			else
 			{
 				ushort[] data = CreateUnsignedArray(width, height, depth);
-				return new Volume(data, dimensions, spacing, originPatient, orientationPatient, dataset, ushort.MinValue);
+				return new U16Volume(data, dimensions, spacing, originPatient, orientationPatient, dataset, ushort.MinValue, null);
 			}
 		}
 

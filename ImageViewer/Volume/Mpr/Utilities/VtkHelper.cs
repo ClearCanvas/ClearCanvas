@@ -262,17 +262,17 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr.Utilities
 			return vtkMatrix;
 		}
 
-		public static vtkShortArray ConvertToVtkShortArray(short[] shortArray)
+		public static vtkShortArray ConvertToVtkShortArray(Array shortArray)
 		{
 			vtkShortArray vtkShortArray = new vtkShortArray();
-			vtkShortArray.SetArray(shortArray, (VtkIdType) shortArray.Length, 1);
+			vtkShortArray.SetArray((short[]) shortArray, (VtkIdType) shortArray.Length, 1);
 			return vtkShortArray;
 		}
 
-		public static vtkUnsignedShortArray ConvertToVtkUnsignedShortArray(ushort[] ushortArray)
+		public static vtkUnsignedShortArray ConvertToVtkUnsignedShortArray(Array ushortArray)
 		{
 			vtkUnsignedShortArray vtkUnsignedShortArray = new vtkUnsignedShortArray();
-			vtkUnsignedShortArray.SetArray(ushortArray, (VtkIdType) ushortArray.Length, 1);
+			vtkUnsignedShortArray.SetArray((ushort[])ushortArray, (VtkIdType) ushortArray.Length, 1);
 			return vtkUnsignedShortArray;
 		}
 

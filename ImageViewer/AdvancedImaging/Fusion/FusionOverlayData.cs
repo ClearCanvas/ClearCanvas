@@ -164,7 +164,7 @@ namespace ClearCanvas.ImageViewer.AdvancedImaging.Fusion
 						_volume = VolumeData.Create(_frames, (n, count) => context.ReportProgress(new BackgroundTaskProgress(n, count, SR.MessageFusionInProgress)));
 
 					// update our stats
-					_largeObjectData.BytesHeldCount = 2*_volume.SizeInVoxels;
+					_largeObjectData.BytesHeldCount = 2*_volume.ArrayLength;
 					_largeObjectData.LargeObjectCount = 1;
 					_largeObjectData.UpdateLastAccessTime();
 

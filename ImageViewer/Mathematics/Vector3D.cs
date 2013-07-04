@@ -44,6 +44,8 @@ namespace ClearCanvas.ImageViewer.Mathematics
 		/// </summary>
 		public static readonly Vector3D Null = new Vector3D(0F, 0F, 0F);
 
+// ReSharper disable InconsistentNaming
+
 		/// <summary>
 		/// Represents the unit vector in the direction of the positive X axis.
 		/// </summary>
@@ -58,6 +60,8 @@ namespace ClearCanvas.ImageViewer.Mathematics
 		/// Represents the unit vector in the direction of the positive Z axis.
 		/// </summary>
 		public static readonly Vector3D zUnit = new Vector3D(0F, 0F, 1F);
+
+// ReSharper restore InconsistentNaming
 
 		/// <summary>
 		/// Constructor.
@@ -108,7 +112,9 @@ namespace ClearCanvas.ImageViewer.Mathematics
 		/// </summary>
 		public bool IsNull
 		{
+// ReSharper disable CompareOfFloatsByEqualityOperator
 			get { return _x == 0F && _y == 0F && _z == 0F; }
+// ReSharper restore CompareOfFloatsByEqualityOperator
 		}
 
 		/// <summary>
@@ -116,10 +122,7 @@ namespace ClearCanvas.ImageViewer.Mathematics
 		/// </summary>
 		public float Magnitude
 		{
-			get
-			{
-				return (float)Math.Sqrt(_x * _x + _y * _y + _z * _z);
-			}
+			get { return (float) Math.Sqrt(_x*_x + _y*_y + _z*_z); }
 		}
 
 		/// <summary>
@@ -127,7 +130,7 @@ namespace ClearCanvas.ImageViewer.Mathematics
 		/// </summary>
 		public Vector3D Normalize()
 		{
-			return this / Magnitude;
+			return this/Magnitude;
 		}
 
 		/// <summary>
@@ -135,7 +138,7 @@ namespace ClearCanvas.ImageViewer.Mathematics
 		/// </summary>
 		public float Dot(Vector3D right)
 		{
-			return _x * right.X + _y * right.Y + _z * right.Z;
+			return _x*right.X + _y*right.Y + _z*right.Z;
 		}
 
 		/// <summary>
@@ -143,32 +146,32 @@ namespace ClearCanvas.ImageViewer.Mathematics
 		/// </summary>
 		public Vector3D Cross(Vector3D right)
 		{
-			float x = _y * right.Z - _z * right.Y;
-			float y = -_x * right.Z + _z * right.X;
-			float z = _x * right.Y - _y * right.X;
+			float x = _y*right.Z - _z*right.Y;
+			float y = -_x*right.Z + _z*right.X;
+			float z = _x*right.Y - _y*right.X;
 
 			return new Vector3D(x, y, z);
 		}
 
 		/// <summary>
-		/// Determines whether or not this vector is parallel to <paramref name="other"/> within a certain <paramref name="angleTolerance"/>.
+		/// Determines whether or not this vector is parallel to <paramref name="other"/> within a certain <paramref name="angleToleranceRadians"/>.
 		/// </summary>
 		public bool IsParallelTo(Vector3D other, float angleToleranceRadians)
 		{
 			angleToleranceRadians = Math.Abs(angleToleranceRadians);
 			float angle = GetAngleBetween(other);
 			return FloatComparer.AreEqual(angle, 0, angleToleranceRadians) ||
-			       FloatComparer.AreEqual(angle, (float)Math.PI, angleToleranceRadians);
+			       FloatComparer.AreEqual(angle, (float) Math.PI, angleToleranceRadians);
 		}
 
 		/// <summary>
-		/// Determines whether or not this vector is orthogonal to <paramref name="other"/> within a certain <paramref name="angleTolerance"/>.
+		/// Determines whether or not this vector is orthogonal to <paramref name="other"/> within a certain <paramref name="angleToleranceRadians"/>.
 		/// </summary>
 		public bool IsOrthogonalTo(Vector3D other, float angleToleranceRadians)
 		{
 			angleToleranceRadians = Math.Abs(angleToleranceRadians);
 			float angle = GetAngleBetween(other);
-			const float halfPi = (float)Math.PI/2;
+			const float halfPi = (float) Math.PI/2;
 			return FloatComparer.AreEqual(angle, halfPi, angleToleranceRadians);
 		}
 
@@ -177,7 +180,7 @@ namespace ClearCanvas.ImageViewer.Mathematics
 		/// </summary>
 		public float GetAngleBetween(Vector3D other)
 		{
-			Vector3D normal1 = this.Normalize();
+			Vector3D normal1 = Normalize();
 			Vector3D normal2 = other.Normalize();
 
 			// the vectors are already normalized, so we don't need to divide by the magnitudes.
@@ -188,7 +191,7 @@ namespace ClearCanvas.ImageViewer.Mathematics
 			if (dot > 1F)
 				dot = 1F;
 
-			return Math.Abs((float)Math.Acos(dot));
+			return Math.Abs((float) Math.Acos(dot));
 		}
 
 		/// <summary>
@@ -211,7 +214,7 @@ namespace ClearCanvas.ImageViewer.Mathematics
 			Vector3D linePoint2,
 			bool isLineSegment)
 		{
-			if (Vector3D.AreEqual(planeNormal, Vector3D.Null))
+			if (AreEqual(planeNormal, Null))
 				return null;
 
 			Vector3D line = linePoint2 - linePoint1;
@@ -222,12 +225,12 @@ namespace ClearCanvas.ImageViewer.Mathematics
 			if (FloatComparer.AreEqual(0F, lineDotPlaneNormal))
 				return null;
 
-			float ratio = planeNormal.Dot(planeToLineStart) / lineDotPlaneNormal;
+			float ratio = planeNormal.Dot(planeToLineStart)/lineDotPlaneNormal;
 
 			if (isLineSegment && (ratio < 0F || ratio > 1F))
 				return null;
 
-			return linePoint1 + ratio * line;
+			return linePoint1 + ratio*line;
 		}
 
 		/// <summary>
@@ -243,7 +246,7 @@ namespace ClearCanvas.ImageViewer.Mathematics
 		/// </summary>
 		public static Vector3D operator *(float scale, Vector3D vector)
 		{
-			return vector * scale;
+			return vector*scale;
 		}
 
 		/// <summary>
@@ -251,7 +254,7 @@ namespace ClearCanvas.ImageViewer.Mathematics
 		/// </summary>
 		public static Vector3D operator *(Vector3D vector, float scale)
 		{
-			return new Vector3D(vector.X * scale, vector.Y * scale, vector.Z * scale);
+			return new Vector3D(vector.X*scale, vector.Y*scale, vector.Z*scale);
 		}
 
 		/// <summary>
@@ -259,7 +262,7 @@ namespace ClearCanvas.ImageViewer.Mathematics
 		/// </summary>
 		public static Vector3D operator /(float scale, Vector3D vector)
 		{
-			return vector / scale;
+			return vector/scale;
 		}
 
 		/// <summary>
@@ -267,7 +270,7 @@ namespace ClearCanvas.ImageViewer.Mathematics
 		/// </summary>
 		public static Vector3D operator /(Vector3D vector, float scale)
 		{
-			return new Vector3D(vector.X / scale, vector.Y / scale, vector.Z / scale);
+			return new Vector3D(vector.X/scale, vector.Y/scale, vector.Z/scale);
 		}
 
 		/// <summary>
@@ -291,7 +294,7 @@ namespace ClearCanvas.ImageViewer.Mathematics
 		/// </summary>
 		public static Vector3D operator -(Vector3D vector)
 		{
-			return -1 * vector;
+			return -1*vector;
 		}
 
 		/// <summary>
@@ -299,12 +302,12 @@ namespace ClearCanvas.ImageViewer.Mathematics
 		/// </summary>
 		public static bool AreEqual(Vector3D left, Vector3D right, float tolerance)
 		{
-            if (left == null || right == null)
-                return ReferenceEquals(left, right);
-            
-            return FloatComparer.AreEqual(left.X, right.X, tolerance) &&
-					FloatComparer.AreEqual(left.Y, right.Y, tolerance) &&
-					FloatComparer.AreEqual(left.Z, right.Z, tolerance);
+			if (left == null || right == null)
+				return ReferenceEquals(left, right);
+
+			return FloatComparer.AreEqual(left.X, right.X, tolerance) &&
+			       FloatComparer.AreEqual(left.Y, right.Y, tolerance) &&
+			       FloatComparer.AreEqual(left.Z, right.Z, tolerance);
 		}
 
 		/// <summary>
@@ -312,12 +315,12 @@ namespace ClearCanvas.ImageViewer.Mathematics
 		/// </summary>
 		public static bool AreEqual(Vector3D left, Vector3D right)
 		{
-            if (left == null || right == null)
-                return ReferenceEquals(left, right);
+			if (left == null || right == null)
+				return ReferenceEquals(left, right);
 
 			return FloatComparer.AreEqual(left.X, right.X) &&
-					FloatComparer.AreEqual(left.Y, right.Y) &&
-					FloatComparer.AreEqual(left.Z, right.Z);
+			       FloatComparer.AreEqual(left.Y, right.Y) &&
+			       FloatComparer.AreEqual(left.Z, right.Z);
 		}
 
 		/// <summary>
@@ -325,7 +328,7 @@ namespace ClearCanvas.ImageViewer.Mathematics
 		/// </summary>
 		public override int GetHashCode()
 		{
-			return 3 * _x.GetHashCode() + 5 * _y.GetHashCode() + 7 * _z.GetHashCode();
+			return -0x760F6FAB ^ _x.GetHashCode() ^ _y.GetHashCode() ^ _z.GetHashCode();
 		}
 
 		/// <summary>
@@ -333,13 +336,8 @@ namespace ClearCanvas.ImageViewer.Mathematics
 		/// </summary>
 		public override bool Equals(object obj)
 		{
-			if (obj == this)
-				return true;
-
-			return this.Equals(obj as Vector3D);
+			return obj == this || Equals(obj as Vector3D);
 		}
-
-		#region IEquatable<Vector3D> Members
 
 		/// <summary>
 		/// Gets whether or not this object equals <paramref name="other"/>.
@@ -349,9 +347,14 @@ namespace ClearCanvas.ImageViewer.Mathematics
 			if (other == null)
 				return false;
 
+// ReSharper disable CompareOfFloatsByEqualityOperator
 			return (X == other.X && Y == other.Y && Z == other.Z);
+// ReSharper restore CompareOfFloatsByEqualityOperator
 		}
 
-		#endregion
+		public static implicit operator Vector3D(Size3D size3D)
+		{
+			return new Vector3D(size3D.Width, size3D.Height, size3D.Depth);
+		}
 	}
 }

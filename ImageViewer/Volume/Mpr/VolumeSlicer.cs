@@ -161,7 +161,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 				var minSliceLocation = float.MaxValue;
 				var maxSliceLocation = float.MinValue;
 
-				var volumeDimensions = _volume.Volume.Dimensions;
+				var volumeDimensions = _volume.Volume.VolumeSize;
 				foreach (var corner in new[]
 				                       	{
 				                       		new Vector3D(0, 0, 0),
@@ -215,7 +215,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 			if (_slicerParams.SliceThroughPointPatient != null)
 				throughPoint = _volume.Volume.ConvertToVolume(_slicerParams.SliceThroughPointPatient);
 			else
-				throughPoint = _volume.Volume.CenterPoint;
+				throughPoint = _volume.Volume.VolumeCenter;
 			return throughPoint;
 		}
 
@@ -260,9 +260,9 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 			if (settings.AutoSliceSpacing)
 			{
 				// adjust magnitude of vector by whole factor based on max volume spacing
-				if (spacingVector.Magnitude < _volume.Volume.MaximumSpacing/2f)
+				if (spacingVector.Magnitude < _volume.Volume.GetMaximumSpacing()/2f)
 				{
-					int spacingFactor = (int) (_volume.Volume.MaximumSpacing/spacingVector.Magnitude);
+					int spacingFactor = (int) (_volume.Volume.GetMaximumSpacing()/spacingVector.Magnitude);
 					spacingVector *= spacingFactor;
 				}
 			}
@@ -550,8 +550,8 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 			{
 				// This doesn't give us enough extra room, so I decided to use the diagonal along long and short dimensions
 				//return (int)(LongAxisMagnitude / EffectiveSpacing + 0.5f);
-				float longOutputDimension = _volume.Volume.LongAxisMagnitude/EffectiveSpacing;
-				float shortOutputDimenstion = _volume.Volume.ShortAxisMagnitude/EffectiveSpacing;
+				float longOutputDimension = _volume.Volume.GetLongAxisMagnitude()/EffectiveSpacing;
+				float shortOutputDimenstion = _volume.Volume.GetShortAxisMagnitude()/EffectiveSpacing;
 				return (int) Math.Sqrt(longOutputDimension*longOutputDimension + shortOutputDimenstion*shortOutputDimenstion);
 			}
 		}
@@ -564,7 +564,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 			// Because we supply the real spacing to the VTK reslicer, the slices are interpolated
 			//	as if the volume were isotropic. This results in an effective spacing that is the
 			//	minimum spacing for the volume.
-			get { return _volume.Volume.MinimumSpacing; }
+			get { return _volume.Volume.GetMinimumSpacing(); }
 		}
 
 		#endregion

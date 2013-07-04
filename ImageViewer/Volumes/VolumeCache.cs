@@ -411,7 +411,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 						_volumeReference = volume.CreateTransientReference();
 
 						_largeObjectContainerData.LargeObjectCount = 1;
-						_largeObjectContainerData.BytesHeldCount = 2*volume.SizeInVoxels;
+						_largeObjectContainerData.BytesHeldCount = 2*volume.ArrayLength;
 						_largeObjectContainerData.UpdateLastAccessTime();
 						MemoryManager.Add(this);
 					}

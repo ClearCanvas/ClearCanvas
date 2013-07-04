@@ -806,6 +806,7 @@
     <Compile Include="Volumes\Volume.cs" />
     <Compile Include="Volumes\VolumeBuilder.cs" />
     <Compile Include="Volumes\VolumeCache.cs" />
+    <Compile Include="Volumes\VolumeClasses.cs" />
     <Compile Include="Volumes\VolumeLoader.cs" />
     <Compile Include="Volumes\VolumeMethods.cs" />
     <Compile Include="Volumes\VolumeReference.cs" />

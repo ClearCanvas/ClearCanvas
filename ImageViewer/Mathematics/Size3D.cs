@@ -30,8 +30,7 @@ namespace ClearCanvas.ImageViewer.Mathematics
 	/// A simple 3D size class.
 	/// </summary>
 	/// <remarks>
-	/// The Size3D class is immutable.  All necessary operations
-	/// can be done via the operator overloads.
+	/// The Size3D class is immutable.
 	/// </remarks>
 	public class Size3D : IEquatable<Size3D>
 	{
@@ -88,11 +87,18 @@ namespace ClearCanvas.ImageViewer.Mathematics
 		/// </summary>
 		public int Volume
 		{
-			get { return Width * Height * Depth; }
+			get { return Width*Height*Depth; }
 		}
 
-	    /// TODO (CR Oct 2011): Need to override base Equals and GetHashCode, or make this a struct.
-		#region IEquatable<Vector3D> Members
+		public override int GetHashCode()
+		{
+			return 0x4175BF53 ^ _width.GetHashCode() ^ _height.GetHashCode() ^ _depth.GetHashCode();
+		}
+
+		public override bool Equals(object obj)
+		{
+			return obj is Size3D && Equals((Size3D) obj);
+		}
 
 		/// <summary>
 		/// Gets whether or not this object equals <paramref name="other"/>.
@@ -104,7 +110,5 @@ namespace ClearCanvas.ImageViewer.Mathematics
 
 			return (Width == other.Width && Height == other.Height && Depth == other.Depth);
 		}
-
-		#endregion
 	}
 }
