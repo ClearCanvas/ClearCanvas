@@ -194,16 +194,12 @@ namespace ClearCanvas.ImageViewer.Tools.Synchronization
 				Coordinators.Add(viewer, coordinator);
 			}
 
-			DicomImagePlane.InitializeCache();
-
 			++Coordinators[viewer]._referenceCount;
 			return Coordinators[viewer];
 		}
 
 		public void Release()
 		{
-			DicomImagePlane.ReleaseCache();
-
 			--_referenceCount;
 			if (_referenceCount <= 0)
 			{

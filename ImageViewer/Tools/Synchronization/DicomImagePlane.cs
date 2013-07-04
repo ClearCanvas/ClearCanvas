@@ -23,71 +23,32 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
 using System.Drawing;
-using ClearCanvas.Common.Utilities;
 using ClearCanvas.ImageViewer.Graphics;
 using ClearCanvas.ImageViewer.Mathematics;
 using ClearCanvas.ImageViewer.StudyManagement;
 
 namespace ClearCanvas.ImageViewer.Tools.Synchronization
 {
-	using DicomImagePlaneDataCache = Dictionary<string, DicomImagePlane>;
-
 	/// <summary>
 	/// An adapter to unify the interface of dicom presentation images
 	/// that have valid slice information (e.g. in 3D patient coordinate system).
 	/// </summary>
-	internal class DicomImagePlane
+	internal sealed class DicomImagePlane
 	{
 		#region Private Fields
 
-        //TODO (Phoenix5): #10730 - remove this when it's fixed.
-		[ThreadStatic]
-		private static DicomImagePlaneDataCache _imagePlaneDataCache;
-		[ThreadStatic]
-		private static int _referenceCount;
-
-		private IPresentationImage _sourceImage;
-		private ISpatialTransform _sourceImageTransform;
-		private Frame _sourceFrame;
-
-		private Vector3D _normal;
-		private Vector3D _positionPatientTopLeft;
-		private Vector3D _positionPatientTopRight;
-		private Vector3D _positionPatientBottomLeft;
-		private Vector3D _positionPatientBottomRight;
-		private Vector3D _positionPatientCenterOfImage;
-		private Vector3D _positionImagePlaneTopLeft;
+		private readonly IPresentationImage _sourceImage;
+		private readonly ISpatialTransform _sourceImageTransform;
+		private readonly Frame _sourceFrame;
 
 		#endregion
 
-		private DicomImagePlane()
+		private DicomImagePlane(IPresentationImage sourceImage, ISpatialTransform sourceImageTransform, Frame sourceFrame)
 		{
-		}
-
-		private static DicomImagePlaneDataCache ImagePlaneDataCache
-		{
-			get
-			{
-				if (_imagePlaneDataCache == null)
-					_imagePlaneDataCache = new DicomImagePlaneDataCache();
-				return _imagePlaneDataCache;
-			}
-		}
-
-		public static void InitializeCache()
-		{
-			++_referenceCount;
-		}
-
-		public static void ReleaseCache()
-		{
-			if (_referenceCount > 0)
-				--_referenceCount;
-
-			if (_referenceCount == 0)
-				ImagePlaneDataCache.Clear();
+			_sourceImage = sourceImage;
+			_sourceImageTransform = sourceImageTransform;
+			_sourceFrame = sourceFrame;
 		}
 
 		#region Factory Method
@@ -106,20 +67,7 @@ namespace ClearCanvas.ImageViewer.Tools.Synchronization
 			if (String.IsNullOrEmpty(frame.FrameOfReferenceUid) || String.IsNullOrEmpty(frame.ParentImageSop.StudyInstanceUid))
 				return null;
 
-			DicomImagePlane plane;
-			if (_referenceCount > 0)
-				plane = CreateFromCache(frame);
-			else
-				plane = CreateFromFrame(frame);
-
-			if (plane != null)
-			{
-				plane._sourceImage = sourceImage;
-				plane._sourceImageTransform = transform;
-				plane._sourceFrame = frame;
-			}
-
-			return plane;
+			return new DicomImagePlane(sourceImage, transform, frame);
 		}
 
 		#endregion
@@ -128,79 +76,12 @@ namespace ClearCanvas.ImageViewer.Tools.Synchronization
 
 		private static ISpatialTransform GetSpatialTransform(IPresentationImage image)
 		{
-			if (image is ISpatialTransformProvider)
-				return ((ISpatialTransformProvider)image).SpatialTransform;
-
-			return null;
+			return image is ISpatialTransformProvider ? ((ISpatialTransformProvider) image).SpatialTransform : null;
 		}
 
 		private static Frame GetFrame(IPresentationImage image)
 		{
-			if (image is IImageSopProvider)
-				return ((IImageSopProvider)image).Frame;
-
-			return null;
-		}
-
-		private static DicomImagePlane CreateFromCache(Frame frame)
-		{
-			string key = String.Format("{0}:{1}", frame.ParentImageSop.SopInstanceUid, frame.FrameNumber);
-
-			DicomImagePlane cachedData;
-			if (ImagePlaneDataCache.ContainsKey(key))
-			{
-				cachedData = ImagePlaneDataCache[key];
-			}
-			else
-			{
-				cachedData = CreateFromFrame(frame);
-				if (cachedData != null)
-					ImagePlaneDataCache[key] = cachedData;
-			}
-
-			if (cachedData != null)
-			{
-				DicomImagePlane plane = new DicomImagePlane();
-				plane.InitializeWithCachedData(cachedData);
-				return plane;
-			}
-
-			return null;
-		}
-
-		private static DicomImagePlane CreateFromFrame(Frame frame)
-		{
-			int height = frame.Rows - 1;
-			int width = frame.Columns - 1;
-
-			DicomImagePlane plane = new DicomImagePlane();
-			plane.PositionPatientTopLeft = frame.ImagePlaneHelper.ConvertToPatient(new PointF(0, 0));
-			plane.PositionPatientTopRight = frame.ImagePlaneHelper.ConvertToPatient(new PointF(width, 0));
-			plane.PositionPatientBottomLeft = frame.ImagePlaneHelper.ConvertToPatient(new PointF(0, height));
-			plane.PositionPatientBottomRight = frame.ImagePlaneHelper.ConvertToPatient(new PointF(width, height));
-			plane.PositionPatientCenterOfImage = frame.ImagePlaneHelper.ConvertToPatient(new PointF(width / 2F, height / 2F));
-
-			plane.Normal = frame.ImagePlaneHelper.GetNormalVector();
-
-			if (plane.Normal == null || plane.PositionPatientCenterOfImage == null)
-				return null;
-
-			// here, we want the position in the coordinate system of the image plane, 
-			// without moving the origin (e.g. leave it at the patient origin).
-			plane.PositionImagePlaneTopLeft = frame.ImagePlaneHelper.ConvertToImagePlane(plane.PositionPatientTopLeft, Vector3D.Null);
-
-			return plane;
-		}
-
-		private void InitializeWithCachedData(DicomImagePlane cachedData)
-		{
-			Normal = cachedData.Normal;
-			PositionPatientTopLeft = cachedData.PositionPatientTopLeft;
-			PositionPatientTopRight = cachedData.PositionPatientTopRight;
-			PositionPatientBottomLeft = cachedData.PositionPatientBottomLeft;
-			PositionPatientBottomRight = cachedData.PositionPatientBottomRight;
-			PositionPatientCenterOfImage = cachedData.PositionPatientCenterOfImage;
-			PositionImagePlaneTopLeft = cachedData.PositionImagePlaneTopLeft;
+			return image is IImageSopProvider ? ((IImageSopProvider) image).Frame : null;
 		}
 
 		#endregion
@@ -249,54 +130,47 @@ namespace ClearCanvas.ImageViewer.Tools.Synchronization
 
 		public float Thickness
 		{
-			get { return (float)_sourceFrame.SliceThickness; }
+			get { return (float) _sourceFrame.SliceThickness; }
 		}
 
 		public float Spacing
 		{
-			get { return (float)_sourceFrame.SpacingBetweenSlices; }
+			get { return (float) _sourceFrame.SpacingBetweenSlices; }
 		}
 
 		public Vector3D Normal
 		{
-			get { return _normal; }
-			private set { _normal = value; }
+			get { return _sourceFrame.ImagePlaneHelper.ImageNormalPatient; }
 		}
 
 		public Vector3D PositionPatientTopLeft
 		{
-			get { return _positionPatientTopLeft; }
-			private set { _positionPatientTopLeft = value; }
+			get { return _sourceFrame.ImagePlaneHelper.ImageTopLeftPatient; }
 		}
 
 		public Vector3D PositionPatientTopRight
 		{
-			get { return _positionPatientTopRight; }
-			private set { _positionPatientTopRight = value; }
+			get { return _sourceFrame.ImagePlaneHelper.ImageTopRightPatient; }
 		}
 
 		public Vector3D PositionPatientBottomLeft
 		{
-			get { return _positionPatientBottomLeft; }
-			private set { _positionPatientBottomLeft = value; }
+			get { return _sourceFrame.ImagePlaneHelper.ImageBottomLeftPatient; }
 		}
 
 		public Vector3D PositionPatientBottomRight
 		{
-			get { return _positionPatientBottomRight; }
-			private set { _positionPatientBottomRight = value; }
+			get { return _sourceFrame.ImagePlaneHelper.ImageBottomRightPatient; }
 		}
 
 		public Vector3D PositionPatientCenterOfImage
 		{
-			get { return _positionPatientCenterOfImage; }
-			private set { _positionPatientCenterOfImage = value; }
+			get { return _sourceFrame.ImagePlaneHelper.ImageCenterPatient; }
 		}
 
 		public Vector3D PositionImagePlaneTopLeft
 		{
-			get { return _positionImagePlaneTopLeft; }
-			private set { _positionImagePlaneTopLeft = value; }
+			get { return _sourceFrame.ImagePlaneHelper.TopLeftImagePlane; }
 		}
 
 		#endregion
@@ -320,7 +194,7 @@ namespace ClearCanvas.ImageViewer.Tools.Synchronization
 
 		public PointF ConvertToImage(PointF positionMillimetres)
 		{
-			return (PointF)_sourceFrame.ImagePlaneHelper.ConvertToImage(positionMillimetres);
+			return _sourceFrame.ImagePlaneHelper.ConvertToImage2(positionMillimetres);
 		}
 
 		public bool IsInSameFrameOfReference(DicomImagePlane other)
@@ -330,60 +204,27 @@ namespace ClearCanvas.ImageViewer.Tools.Synchronization
 			if (_sourceFrame.ParentImageSop.StudyInstanceUid != otherFrame.ParentImageSop.StudyInstanceUid)
 				return false;
 
-			return this._sourceFrame.FrameOfReferenceUid == otherFrame.FrameOfReferenceUid;
+			return _sourceFrame.FrameOfReferenceUid == otherFrame.FrameOfReferenceUid;
 		}
 
 		public bool IsParallelTo(DicomImagePlane other, float angleTolerance)
 		{
-			return Normal.IsParallelTo(other.Normal, angleTolerance);
+			return _sourceFrame.ImagePlaneHelper.IsParallelTo(other._sourceFrame.ImagePlaneHelper, angleTolerance);
 		}
 
 		public bool IsOrthogonalTo(DicomImagePlane other, float angleTolerance)
 		{
-			return Normal.IsOrthogonalTo(other.Normal, angleTolerance);
+			return _sourceFrame.ImagePlaneHelper.IsOrthogonalTo(other._sourceFrame.ImagePlaneHelper, angleTolerance);
 		}
 
 		public float GetAngleBetween(DicomImagePlane other)
 		{
-			return Normal.GetAngleBetween(other.Normal);
+			return _sourceFrame.ImagePlaneHelper.GetAngleBetween(other._sourceFrame.ImagePlaneHelper);
 		}
 
 		public bool GetIntersectionPoints(DicomImagePlane other, out Vector3D intersectionPointPatient1, out Vector3D intersectionPointPatient2)
 		{
-			intersectionPointPatient1 = intersectionPointPatient2 = null;
-
-			Vector3D[,] lineSegmentsImagePlaneBounds = new Vector3D[,]
-				{
-					// Bounding line segments of this (reference) image plane.
-					{ PositionPatientTopLeft, PositionPatientTopRight },
-					{ PositionPatientTopLeft, PositionPatientBottomLeft },
-					{ PositionPatientBottomRight, PositionPatientTopRight  },
-					{ PositionPatientBottomRight, PositionPatientBottomLeft}
-				};
-
-			List<Vector3D> planeIntersectionPoints = new List<Vector3D>();
-
-			for (int i = 0; i < 4; ++i)
-			{
-				// Intersect the bounding line segments of the reference image with the plane of the target image.
-				Vector3D intersectionPoint = Vector3D.GetLinePlaneIntersection(other.Normal, other.PositionPatientCenterOfImage,
-																		lineSegmentsImagePlaneBounds[i, 0],
-																		lineSegmentsImagePlaneBounds[i, 1], true);
-				if (intersectionPoint != null)
-					planeIntersectionPoints.Add(intersectionPoint);
-			}
-
-			if (planeIntersectionPoints.Count < 2)
-				return false;
-
-			intersectionPointPatient1 = planeIntersectionPoints[0];
-			intersectionPointPatient2 = CollectionUtils.SelectFirst(planeIntersectionPoints,
-				delegate(Vector3D point)
-				{
-					return !planeIntersectionPoints[0].Equals(point);
-				});
-
-			return intersectionPointPatient1 != null && intersectionPointPatient2 != null;
+			return _sourceFrame.ImagePlaneHelper.IntersectsWith(other._sourceFrame.ImagePlaneHelper, out intersectionPointPatient1, out intersectionPointPatient2);
 		}
 
 		#endregion

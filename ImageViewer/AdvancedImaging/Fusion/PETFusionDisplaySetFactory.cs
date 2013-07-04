@@ -344,23 +344,17 @@ namespace ClearCanvas.ImageViewer.AdvancedImaging.Fusion
 		{
 			try
 			{
-				using (IPresentationImage firstImage = ImageViewer.PresentationImageFactory.Create(frames[0]))
+				// neither of these should return null since we already checked for image orientation and position (patient)
+				var firstImagePlane = frames[0].ImagePlaneHelper;
+				var lastImagePlane = frames[frames.Count - 1].ImagePlaneHelper;
+
+				Vector3D stackZ = lastImagePlane.ImageTopLeftPatient - firstImagePlane.ImageTopLeftPatient;
+				Vector3D imageX = firstImagePlane.ImageTopRightPatient - firstImagePlane.ImageTopLeftPatient;
+
+				if (!stackZ.IsOrthogonalTo(imageX, _gantryTiltTolerance))
 				{
-					using (IPresentationImage lastImage = ImageViewer.PresentationImageFactory.Create(frames[frames.Count - 1]))
-					{
-						// neither of these should return null since we already checked for image orientation and position (patient)
-						DicomImagePlane firstImagePlane = DicomImagePlane.FromImage(firstImage);
-						DicomImagePlane lastImagePlane = DicomImagePlane.FromImage(lastImage);
-
-						Vector3D stackZ = lastImagePlane.PositionPatientTopLeft - firstImagePlane.PositionPatientTopLeft;
-						Vector3D imageX = firstImagePlane.PositionPatientTopRight - firstImagePlane.PositionPatientTopLeft;
-
-						if (!stackZ.IsOrthogonalTo(imageX, _gantryTiltTolerance))
-						{
-							// this is a gantry slew (gantry tilt about Y axis)
-							return false;
-						}
-					}
+					// this is a gantry slew (gantry tilt about Y axis)
+					return false;
 				}
 				return true;
 			}

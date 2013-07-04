@@ -31,14 +31,14 @@ namespace ClearCanvas.Dicom.Iod
 	/// Represents the pixel spacing of an image.
 	/// </summary>
 	public class PixelSpacing : IEquatable<PixelSpacing>
-    {
+	{
 		#region Private Members
-		
-		double _row;
-		double _column;
+
+		private double _row;
+		private double _column;
 
 		#endregion
-		
+
 		/// <summary>
 		/// Constructor.
 		/// </summary>
@@ -51,9 +51,7 @@ namespace ClearCanvas.Dicom.Iod
 		/// <summary>
 		/// Protected constructor.
 		/// </summary>
-		protected PixelSpacing()
-		{
-		}
+		protected PixelSpacing() {}
 
 		#region Public Properties
 
@@ -69,17 +67,17 @@ namespace ClearCanvas.Dicom.Iod
 		/// Gets the spacing of the rows in the image, in millimetres.
 		/// </summary>
 		public virtual double Row
-        {
-            get { return _row; }
+		{
+			get { return _row; }
 			protected set { _row = value; }
-        }
+		}
 
 		/// <summary>
 		/// Gets the spacing of the columns in the image, in millimetres.
 		/// </summary>
 		public virtual double Column
-        {
-            get { return _column; }
+		{
+			get { return _column; }
 			protected set { _column = value; }
 		}
 
@@ -96,8 +94,8 @@ namespace ClearCanvas.Dicom.Iod
 			{
 				if (IsNull)
 					return 0;
-				
-				return Row / Column;
+
+				return Row/Column;
 			}
 		}
 
@@ -117,7 +115,7 @@ namespace ClearCanvas.Dicom.Iod
 		{
 			double[] values;
 			if (DicomStringHelper.TryGetDoubleArray(multiValuedString, out values) && values.Length == 2)
-					return new PixelSpacing(values[0], values[1]);
+				return new PixelSpacing(values[0], values[1]);
 
 			return null;
 		}
@@ -136,10 +134,7 @@ namespace ClearCanvas.Dicom.Iod
 
 		public override bool Equals(object obj)
 		{
-			if (obj == null)
-				return false;
-
-			return this.Equals(obj as PixelSpacing);
+			return obj != null && Equals(obj as PixelSpacing);
 		}
 
 		/// <summary>
@@ -150,7 +145,7 @@ namespace ClearCanvas.Dicom.Iod
 		/// </returns>
 		public override int GetHashCode()
 		{
-			return base.GetHashCode();
+			return -0x649CC600; // use a constant value because the real values are mutable and otherwise certain equality comparisons won't work
 		}
 
 		#endregion

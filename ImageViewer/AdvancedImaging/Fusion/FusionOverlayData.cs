@@ -291,9 +291,9 @@ namespace ClearCanvas.ImageViewer.AdvancedImaging.Fusion
 			var distance = float.MaxValue;
 			foreach (var frame in _frames)
 			{
-				var targetImagePlane = DicomImagePlane.FromFrame(frame.Frame);
-				var halfThickness = Math.Abs(targetImagePlane.Thickness/2);
-				var halfSpacing = Math.Abs(targetImagePlane.Spacing/2);
+				var targetImagePlane = frame.Frame.ImagePlaneHelper;
+				var halfThickness = Math.Abs(frame.Frame.SliceThickness/2);
+				var halfSpacing = Math.Abs(frame.Frame.SpacingBetweenSlices/2);
 				var toleranceDistanceToImagePlane = Math.Max(halfThickness, halfSpacing);
 
 				if (toleranceDistanceToImagePlane > 0)
@@ -305,7 +305,7 @@ namespace ClearCanvas.ImageViewer.AdvancedImaging.Fusion
 					{
 						distance = distanceToTargetImagePlane;
 						//The coordinates need to be converted to pixel coordinates because right now they are in mm.
-						sourceImagePosition = targetImagePlane.ConvertToImage(new PointF(positionTargetImagePlane.X, positionTargetImagePlane.Y));
+						sourceImagePosition = targetImagePlane.ConvertToImage2(new PointF(positionTargetImagePlane.X, positionTargetImagePlane.Y));
 						closestFrame = frame.Frame;
 					}
 				}

@@ -53,22 +53,31 @@ namespace ClearCanvas.Dicom.Iod
 		/// <summary>
 		/// Defines the direction of the axes in the patient coordinate system.
 		/// </summary>
-		public enum Directions { None = 0, Left = 1, Right = -1, Posterior = 2, Anterior = -2, Head = 3, Foot = -3 };
+		public enum Directions
+		{
+			None = 0,
+			Left = 1,
+			Right = -1,
+			Posterior = 2,
+			Anterior = -2,
+			Head = 3,
+			Foot = -3
+		};
 
-        private static readonly int[] _left = new [] { 1, 0, 0 };
-        private static readonly int[] _right = new[] { -1, 0, 0 };
-        private static readonly int[] _posterior = new[] { 0, 1, 0 };
-        private static readonly int[] _anterior = new[] { 0, -1, 0 };
-        private static readonly int[] _head = new[] { 0, 0, 1 };
-        private static readonly int[] _foot = new[] { 0, 0, -1 };
+		private static readonly int[] _left = new[] {1, 0, 0};
+		private static readonly int[] _right = new[] {-1, 0, 0};
+		private static readonly int[] _posterior = new[] {0, 1, 0};
+		private static readonly int[] _anterior = new[] {0, -1, 0};
+		private static readonly int[] _head = new[] {0, 0, 1};
+		private static readonly int[] _foot = new[] {0, 0, -1};
 
-        public static ImageOrientationPatient Empty = new ImageOrientationPatient();
-        public static ImageOrientationPatient AxialRight = new ImageOrientationPatient(_right, _posterior);
-        public static ImageOrientationPatient AxialLeft = new ImageOrientationPatient(_left, _posterior);
-        public static ImageOrientationPatient SaggittalPosterior = new ImageOrientationPatient(_posterior, _foot);
-        public static ImageOrientationPatient SaggittalAnterior = new ImageOrientationPatient(_anterior, _foot);
-        public static ImageOrientationPatient CoronalRight = new ImageOrientationPatient(_right, _foot);
-        public static ImageOrientationPatient CoronalLeft = new ImageOrientationPatient(_left, _foot);
+		public static ImageOrientationPatient Empty = new ImageOrientationPatient();
+		public static ImageOrientationPatient AxialRight = new ImageOrientationPatient(_right, _posterior);
+		public static ImageOrientationPatient AxialLeft = new ImageOrientationPatient(_left, _posterior);
+		public static ImageOrientationPatient SaggittalPosterior = new ImageOrientationPatient(_posterior, _foot);
+		public static ImageOrientationPatient SaggittalAnterior = new ImageOrientationPatient(_anterior, _foot);
+		public static ImageOrientationPatient CoronalRight = new ImageOrientationPatient(_right, _foot);
+		public static ImageOrientationPatient CoronalLeft = new ImageOrientationPatient(_left, _foot);
 
 		#region Private Members
 
@@ -93,21 +102,21 @@ namespace ClearCanvas.Dicom.Iod
 			Recalculate();
 		}
 
-        /// <summary>
-        /// Private constructor.
-        /// </summary>
+		/// <summary>
+		/// Private constructor.
+		/// </summary>
 		private ImageOrientationPatient(int[] rowCosines, int[] columnCosines)
 		{
-		    RowX = rowCosines[0];
-		    RowY = rowCosines[1];
-		    RowZ = rowCosines[2];
+			RowX = rowCosines[0];
+			RowY = rowCosines[1];
+			RowZ = rowCosines[2];
 
-            ColumnX = columnCosines[0];
-		    ColumnY = columnCosines[1];
-		    ColumnZ = columnCosines[2];
-        }
+			ColumnX = columnCosines[0];
+			ColumnY = columnCosines[1];
+			ColumnZ = columnCosines[2];
+		}
 
-	    /// <summary>
+		/// <summary>
 		/// private constructor.
 		/// </summary>
 		private ImageOrientationPatient()
@@ -123,8 +132,11 @@ namespace ClearCanvas.Dicom.Iod
 		/// </summary>
 		public bool IsNull
 		{
-			get { return	(RowX == 0 && RowY == 0 && RowZ == 0) || 
-							(ColumnX == 0 && ColumnY == 0 && ColumnZ == 0) ; }
+			get
+			{
+				return (RowX == 0 && RowY == 0 && RowZ == 0) ||
+				       (ColumnX == 0 && ColumnY == 0 && ColumnZ == 0);
+			}
 		}
 
 		/// <summary>
@@ -161,7 +173,7 @@ namespace ClearCanvas.Dicom.Iod
 
 		#region Public Methods
 
-	    /// <summary>
+		/// <summary>
 		/// Gets a string suitable for direct insertion into a <see cref="DicomAttributeMultiValueText"/> attribute.
 		/// </summary>
 		public override string ToString()
@@ -184,25 +196,25 @@ namespace ClearCanvas.Dicom.Iod
 			return null;
 		}
 
-        public Directions PrimaryRow
-	    {
-            get { return (Directions)_primaryRowDirection; }    
-	    }
+		public Directions PrimaryRow
+		{
+			get { return (Directions) _primaryRowDirection; }
+		}
 
-        public Directions PrimaryColumn
-        {
-            get { return (Directions)_primaryColumnDirection; }
-        }
+		public Directions PrimaryColumn
+		{
+			get { return (Directions) _primaryColumnDirection; }
+		}
 
-        public Directions SecondaryRow
-        {
-            get { return (Directions)_secondaryRowDirection; }
-        }
+		public Directions SecondaryRow
+		{
+			get { return (Directions) _secondaryRowDirection; }
+		}
 
-        public Directions SecondaryColumn
-        {
-            get { return (Directions)_secondaryColumnDirection; }
-        }
+		public Directions SecondaryColumn
+		{
+			get { return (Directions) _secondaryColumnDirection; }
+		}
 
 		/// <summary>
 		/// Gets the primary direction, in terms of the Patient based coordinate system, of the first row of the Image (increasing x).
@@ -212,7 +224,7 @@ namespace ClearCanvas.Dicom.Iod
 		/// <returns>the direction, in terms of the Patient based coordinate system</returns>
 		public Directions GetPrimaryRowDirection(bool opposingDirection)
 		{
-			return (Directions)(_primaryRowDirection * (opposingDirection ? -1 : 1));
+			return (Directions) (_primaryRowDirection*(opposingDirection ? -1 : 1));
 		}
 
 		/// <summary>
@@ -223,20 +235,20 @@ namespace ClearCanvas.Dicom.Iod
 		/// <returns>the direction, in terms of the Patient based coordinate system</returns>
 		public Directions GetPrimaryColumnDirection(bool opposingDirection)
 		{
-			return (Directions)(_primaryColumnDirection * (opposingDirection ? -1 : 1));
+			return (Directions) (_primaryColumnDirection*(opposingDirection ? -1 : 1));
 		}
 
 		public Directions GetSecondaryRowDirection()
 		{
-            return GetSecondaryRowDirection(false);
-        }
+			return GetSecondaryRowDirection(false);
+		}
 
-        public Directions GetSecondaryRowDirection(double degreesTolerance)
-        {
-            return GetSecondaryRowDirection(false, degreesTolerance);
-        }
+		public Directions GetSecondaryRowDirection(double degreesTolerance)
+		{
+			return GetSecondaryRowDirection(false, degreesTolerance);
+		}
 
-	    /// <summary>
+		/// <summary>
 		/// Gets the secondary direction, in terms of the Patient based coordinate system, of the first row of the Image (increasing x).
 		/// </summary>
 		/// <param name="opposingDirection">indicates the opposite direction to the secondary direction should be returned.
@@ -244,10 +256,10 @@ namespace ClearCanvas.Dicom.Iod
 		/// <returns>the direction, in terms of the Patient based coordinate system</returns>
 		public Directions GetSecondaryRowDirection(bool opposingDirection)
 		{
-			return (Directions)(_secondaryRowDirection * (opposingDirection ? -1 : 1));
+			return (Directions) (_secondaryRowDirection*(opposingDirection ? -1 : 1));
 		}
 
-	    //TODO (CR June 2011): Need tertiary?
+		//TODO (CR June 2011): Need tertiary?
 
 		/// <summary>
 		/// Gets the secondary direction, in terms of the Patient based coordinate system, of the first row of the Image (increasing x).
@@ -260,13 +272,13 @@ namespace ClearCanvas.Dicom.Iod
 		public Directions GetSecondaryRowDirection(bool opposingDirection, double degreesTolerance)
 		{
 			// JY: Note that the same tolerance functionality is purposefully not available to the primary direction
-		    //TODO (CR June 2011): why 10?
+			//TODO (CR June 2011): why 10?
 			if (degreesTolerance < 0 || degreesTolerance > 10)
 				throw new ArgumentOutOfRangeException("degreesTolerance", degreesTolerance, "Value must be between 0 and 10.");
 			if (_secondaryRowDirection == 0)
 				return Directions.None;
 
-		    var rowCosines = GetRowCosines();
+			var rowCosines = GetRowCosines();
 			double secondaryCosine = rowCosines[Math.Abs(_secondaryRowDirection) - 1];
 
 			// report no secondary direction if the secondary cosine is within degrees of 90 - that is, nearly perpendicular to the given direction
@@ -275,15 +287,15 @@ namespace ClearCanvas.Dicom.Iod
 			return GetSecondaryRowDirection(opposingDirection);
 		}
 
-        public Directions GetSecondaryColumnDirection()
-        {
-            return GetSecondaryColumnDirection(false);
-        }
+		public Directions GetSecondaryColumnDirection()
+		{
+			return GetSecondaryColumnDirection(false);
+		}
 
-        public Directions GetSecondaryColumnDirection(double degreesTolerance)
-        {
-            return GetSecondaryColumnDirection(false, degreesTolerance);
-        }
+		public Directions GetSecondaryColumnDirection(double degreesTolerance)
+		{
+			return GetSecondaryColumnDirection(false, degreesTolerance);
+		}
 
 		/// <summary>
 		/// Gets the secondary direction, in terms of the Patient based coordinate system, of the first column of the Image (increasing y).
@@ -293,10 +305,10 @@ namespace ClearCanvas.Dicom.Iod
 		/// <returns>the direction, in terms of the Patient based coordinate system</returns>
 		public Directions GetSecondaryColumnDirection(bool opposingDirection)
 		{
-			return (Directions)(_secondaryColumnDirection * (opposingDirection ? -1 : 1));
+			return (Directions) (_secondaryColumnDirection*(opposingDirection ? -1 : 1));
 		}
 
-        //TODO (CR June 2011): Need tertiary?
+		//TODO (CR June 2011): Need tertiary?
 
 		/// <summary>
 		/// Gets the secondary direction, in terms of the Patient based coordinate system, of the first column of the Image (increasing y).
@@ -310,16 +322,16 @@ namespace ClearCanvas.Dicom.Iod
 		{
 			// JY: Note that the same tolerance functionality is purposefully not available to the primary direction
 			//TODO (CR June 2011): why 10?
-            if (degreesTolerance < 0 || degreesTolerance > 10)
+			if (degreesTolerance < 0 || degreesTolerance > 10)
 				throw new ArgumentOutOfRangeException("degreesTolerance", degreesTolerance, "Value must be between 0 and 10.");
 			if (_secondaryColumnDirection == 0)
-			    return Directions.None;
+				return Directions.None;
 
-		    var columnCosines = GetColumnCosines();
+			var columnCosines = GetColumnCosines();
 			double secondaryCosine = columnCosines[Math.Abs(_secondaryColumnDirection) - 1];
 
 			// report no secondary direction if the secondary cosine is within degrees of 90 - that is, nearly perpendicular to the given direction
-			if (90 - 180 * Math.Acos(Math.Abs(secondaryCosine)) / Math.PI < degreesTolerance)
+			if (90 - 180*Math.Acos(Math.Abs(secondaryCosine))/Math.PI < degreesTolerance)
 				return Directions.None;
 			return GetSecondaryColumnDirection(opposingDirection);
 		}
@@ -331,18 +343,17 @@ namespace ClearCanvas.Dicom.Iod
 			if (other == null)
 				return false;
 
+// ReSharper disable CompareOfFloatsByEqualityOperator
 			return other.RowX == RowX && other.RowY == RowY && other.RowZ == RowZ &&
 			       other.ColumnX == ColumnX && other.ColumnY == ColumnY && other.ColumnZ == ColumnZ;
+// ReSharper restore CompareOfFloatsByEqualityOperator
 		}
 
 		#endregion
 
 		public override bool Equals(object obj)
 		{
-			if (obj == null)
-				return false;
-
-			return Equals(obj as ImageOrientationPatient);
+			return obj != null && Equals(obj as ImageOrientationPatient);
 		}
 
 		public bool EqualsWithinTolerance(ImageOrientationPatient other, float withinTolerance)
@@ -350,12 +361,12 @@ namespace ClearCanvas.Dicom.Iod
 			if (other == null)
 				return false;
 
-			return EqualsWithinTolerance(other.RowX, RowX, withinTolerance) && 
-					EqualsWithinTolerance(other.RowY, RowY, withinTolerance) &&
-					EqualsWithinTolerance(other.RowZ, RowZ, withinTolerance) &&
-					EqualsWithinTolerance(other.ColumnX, ColumnX, withinTolerance) &&
-					EqualsWithinTolerance(other.ColumnY, ColumnY, withinTolerance) &&
-					EqualsWithinTolerance(other.ColumnZ, ColumnZ, withinTolerance);
+			return EqualsWithinTolerance(other.RowX, RowX, withinTolerance) &&
+			       EqualsWithinTolerance(other.RowY, RowY, withinTolerance) &&
+			       EqualsWithinTolerance(other.RowZ, RowZ, withinTolerance) &&
+			       EqualsWithinTolerance(other.ColumnX, ColumnX, withinTolerance) &&
+			       EqualsWithinTolerance(other.ColumnY, ColumnY, withinTolerance) &&
+			       EqualsWithinTolerance(other.ColumnZ, ColumnZ, withinTolerance);
 		}
 
 		private static bool EqualsWithinTolerance(double d1, double d2, float tolerance)
@@ -365,34 +376,34 @@ namespace ClearCanvas.Dicom.Iod
 
 		public override int GetHashCode()
 		{
-			return base.GetHashCode();
+			return 0x6033CEC7; // use a constant value because the real values are mutable and otherwise certain equality comparisons won't work
 		}
 
 		#endregion
 
-        /// <summary>
-        /// Gets the row cosines as an array of doubles (x,y,z).
-        /// </summary>
-        private double[] GetRowCosines()
-        {
-            return new[] { RowX, RowY, RowZ };
-        }
+		/// <summary>
+		/// Gets the row cosines as an array of doubles (x,y,z).
+		/// </summary>
+		private double[] GetRowCosines()
+		{
+			return new[] {RowX, RowY, RowZ};
+		}
 
-        /// <summary>
-        /// Gets the column cosines as an array of doubles (x,y,z).
-        /// </summary>
-        private double[] GetColumnCosines()
-        {
-            return new[] { ColumnX, ColumnY, ColumnZ };
-        }
+		/// <summary>
+		/// Gets the column cosines as an array of doubles (x,y,z).
+		/// </summary>
+		private double[] GetColumnCosines()
+		{
+			return new[] {ColumnX, ColumnY, ColumnZ};
+		}
 
-        /// <summary>
+		/// <summary>
 		/// Recalculates the primary/secondary directions (in patient based system) for the first row and first column.
 		/// </summary>
 		private void Recalculate()
 		{
-		    var rowCosines = GetRowCosines();
-		    var columnCosines = GetColumnCosines();
+			var rowCosines = GetRowCosines();
+			var columnCosines = GetColumnCosines();
 
 			int[] rowCosineSortedIndices = BubbleSortCosineIndices(rowCosines);
 			int[] columnCosineSortedIndices = BubbleSortCosineIndices(columnCosines);
@@ -413,7 +424,7 @@ namespace ClearCanvas.Dicom.Iod
 		{
 			member = 0;
 			if (Math.Abs(cosineValue) > float.Epsilon)
-				member = (cosineIndex + 1) * Math.Sign(cosineValue);
+				member = (cosineIndex + 1)*Math.Sign(cosineValue);
 		}
 
 		/// <summary>
@@ -424,7 +435,7 @@ namespace ClearCanvas.Dicom.Iod
 		/// <returns>an array of indices into the input array (cosineArray), that when applied would sort the cosines appropriately.</returns>
 		private static int[] BubbleSortCosineIndices(double[] cosineArray)
 		{
-			var indexArray = new[] { 0, 1, 2 };
+			var indexArray = new[] {0, 1, 2};
 
 			for (int i = 2; i > 0; --i)
 			{
