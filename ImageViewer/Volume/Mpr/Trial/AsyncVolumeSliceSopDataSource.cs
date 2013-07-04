@@ -28,6 +28,7 @@ using ClearCanvas.Common;
 using ClearCanvas.Dicom;
 using ClearCanvas.ImageViewer.Common;
 using ClearCanvas.ImageViewer.StudyManagement;
+using ClearCanvas.ImageViewer.Volumes;
 
 namespace ClearCanvas.ImageViewer.Volume.Mpr
 {

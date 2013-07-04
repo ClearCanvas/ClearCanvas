@@ -688,4 +688,52 @@ Alternately, the study can be brought back online by a PACS administrator.</valu
   <data name="SuffixFormatKeyImageDisplaySet" xml:space="preserve">
     <value>Key Images</value>
   </data>
+  <data name="MessageVolumeSourceAreNotSupported" xml:space="preserve">
+    <value>The selected images are of an unsupported type. MPR only supports DICOM image SOPs.</value>
+  </data>
+  <data name="MessageVolumeSourceMayBotBeGantrySlewed" xml:space="preserve">
+    <value>The selected images have a gantry slew. MPR only supports gantry tilts.</value>
+  </data>
+  <data name="MessageVolumeSourceMayNotHaveAnisotropicPixels" xml:space="preserve">
+    <value>The selected images have an anisotropic pixel aspect ratio. MPR only supports 1:1 isotropic aspect ratios.</value>
+  </data>
+  <data name="MessageVolumeSourceMinimumThreeImages" xml:space="preserve">
+    <value>Source dataset must contain at least three frames.</value>
+  </data>
+  <data name="MessageVolumeSourceMultiFrameImagesAreNotSupported" xml:space="preserve">
+    <value>The selected multiframe images are of an unsupported type.</value>
+  </data>
+  <data name="MessageVolumeSourceMustBe16BitGreyscale" xml:space="preserve">
+    <value>MPR only supports 16-bit greyscale images.</value>
+  </data>
+  <data name="MessageVolumeSourceMustBeCalibrated" xml:space="preserve">
+    <value>The selected images must be calibrated.</value>
+  </data>
+  <data name="MessageVolumeSourceMustBeEvenlySpacedForMpr" xml:space="preserve">
+    <value>Inconsistent spacing between images. MPR requires evenly spaced images.</value>
+  </data>
+  <data name="MessageVolumeSourceMustBeSameImageOrientationPatient" xml:space="preserve">
+    <value>Each frame in the source dataset must have the same image orientation (Patient).</value>
+  </data>
+  <data name="MessageVolumeSourceMustBeSingleFrameOfReference" xml:space="preserve">
+    <value>Each frame in the source dataset must have the same frame of reference.</value>
+  </data>
+  <data name="MessageVolumeSourceMustBeSingleSeries" xml:space="preserve">
+    <value>Each frame in the source dataset must be from the same series.</value>
+  </data>
+  <data name="MessageVolumeSourceMustBeSingleStudy" xml:space="preserve">
+    <value>Each frame in the source dataset must be from the same study.</value>
+  </data>
+  <data name="MessageVolumeSourceMustBeUniquelyLocatedForMpr" xml:space="preserve">
+    <value>Two images are at same patient location. MPR requires evenly spaced images.</value>
+  </data>
+  <data name="MessageVolumeSourceMustDefineImageOrientationPatient" xml:space="preserve">
+    <value>Each frame in the source dataset must have a defined image orientation (Patient).</value>
+  </data>
+  <data name="MessageVolumeSourceMustSpecifyFrameOfReference" xml:space="preserve">
+    <value>Each frame in the source dataset must specify a frame of reference.</value>
+  </data>
+  <data name="MessageVolumeSourceUnexpectedException" xml:space="preserve">
+    <value>An unexpected exception was encountered while creating the volume.</value>
+  </data>
 </root>

@@ -34,13 +34,13 @@ using ClearCanvas.ImageViewer.Mathematics;
 using ClearCanvas.ImageViewer.StudyManagement;
 using NUnit.Framework;
 
-namespace ClearCanvas.ImageViewer.Volume.Mpr.Tests
+namespace ClearCanvas.ImageViewer.Volumes.Tests
 {
 	/// <summary>
 	/// These unit tests exercise the VolumeBuilder and the constraints on acceptable frame data sources for MPR
 	/// </summary>
 	[TestFixture]
-	public class VolumeBuilderTest : AbstractMprTest
+	public class VolumeBuilderTest : AbstractVolumeTest
 	{
 		[Test]
 		public void TestWellBehavedSource()
@@ -360,7 +360,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr.Tests
 			           		s[DicomTags.SmallestImagePixelValue].SetInt32(0, 787);
 			           	},
 			           volume => Assert.AreEqual(767, Rescale(volume, volume.PaddingValue), "Volume padding value should be Smallest Pixel Value In Series (0028,0108)"
-			                                                               + " if Pixel Padding Value (0028,0120) is not available."));
+			                                                                                + " if Pixel Padding Value (0028,0120) is not available."));
 
 			Trace.WriteLine("Testing Smallest Image Pixel Value (0028,0106)");
 			TestVolume(VolumeFunction.Void,
@@ -371,7 +371,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr.Tests
 			           		s[DicomTags.SmallestImagePixelValue].SetInt32(0, 787);
 			           	},
 			           volume => Assert.AreEqual(787, Rescale(volume, volume.PaddingValue), "Volume padding value should be Smallest Image Pixel Value (0028,0106)"
-			                                                               + " if Pixel Padding Value (0028,0120) and Smallest Pixel Value In Series (0028,0108) are not available."));
+			                                                                                + " if Pixel Padding Value (0028,0120) and Smallest Pixel Value In Series (0028,0108) are not available."));
 		}
 
 		[Test]
@@ -421,7 +421,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr.Tests
 			           		s[DicomTags.PixelRepresentation].SetInt32(0, 0);
 			           		s[DicomTags.BitsStored].SetInt32(0, 16);
 			           	},
-					   volume => Assert.AreEqual(65535, Rescale(volume, volume.PaddingValue), "Volume padding value should be 65535 if images are 16-bit unsigned MONOCHROME1."));
+			           volume => Assert.AreEqual(65535, Rescale(volume, volume.PaddingValue), "Volume padding value should be 65535 if images are 16-bit unsigned MONOCHROME1."));
 		}
 
 		[Test]
@@ -490,7 +490,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr.Tests
 				           		s[DicomTags.BitsStored].SetInt32(0, 17);
 				           	},
 				           volume => Assert.IsTrue(ushort.TryParse(Rescale(volume, volume.PaddingValue).ToString("d"), out dummyUnsigned16),
-												   "Volume padding value should still be a valid UInt16 if images are purportedly 17-bit unsigned (GIGO)."));
+				                                   "Volume padding value should still be a valid UInt16 if images are purportedly 17-bit unsigned (GIGO)."));
 
 				Trace.WriteLine("Testing 17-bit signed");
 				TestVolume(VolumeFunction.Void,
@@ -500,7 +500,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr.Tests
 				           		s[DicomTags.BitsStored].SetInt32(0, 17);
 				           	},
 				           volume => Assert.IsTrue(short.TryParse(Rescale(volume, volume.PaddingValue).ToString("d"), out dummySigned16),
-												   "Volume padding value should still be a valid Int16 if images are purportedly 17-bit signed (GIGO)."));
+				                                   "Volume padding value should still be a valid Int16 if images are purportedly 17-bit signed (GIGO)."));
 
 				Trace.WriteLine("Testing 1-bit signed");
 				TestVolume(VolumeFunction.Void,
@@ -510,7 +510,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr.Tests
 				           		s[DicomTags.BitsStored].SetInt32(0, 1);
 				           	},
 				           volume => Assert.IsTrue(short.TryParse(Rescale(volume, volume.PaddingValue).ToString("d"), out dummySigned16),
-												   "Volume padding value should still be a valid Int16 if images are purportedly 1-bit signed (GIGO)."));
+				                                   "Volume padding value should still be a valid Int16 if images are purportedly 1-bit signed (GIGO)."));
 			}
 			catch (Exception)
 			{

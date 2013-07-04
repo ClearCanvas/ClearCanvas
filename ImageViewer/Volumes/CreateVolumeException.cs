@@ -26,85 +26,105 @@ using System;
 using ClearCanvas.Common;
 using ClearCanvas.Desktop;
 
-namespace ClearCanvas.ImageViewer.Volume.Mpr
+namespace ClearCanvas.ImageViewer.Volumes
 {
 	public class CreateVolumeException : Exception
 	{
-		public CreateVolumeException() : base("An unexpected exception was encountered while creating the volume.") {}
-		public CreateVolumeException(string message) : base(message) {}
-		public CreateVolumeException(string message, Exception innerException) : base(message, innerException) {}
+		public CreateVolumeException()
+			: base("An unexpected exception was encountered while creating the volume.") {}
+
+		public CreateVolumeException(string message)
+			: base(message) {}
+
+		public CreateVolumeException(string message, Exception innerException)
+			: base(message, innerException) {}
 	}
 
 	public class UnsupportedSourceImagesException : CreateVolumeException
 	{
-		public UnsupportedSourceImagesException() : base("Source images are of an unsupported type.") {}
+		public UnsupportedSourceImagesException()
+			: base("Source images are of an unsupported type.") {}
 	}
 
 	public class UnsupportedPixelFormatSourceImagesException : CreateVolumeException
 	{
-		public UnsupportedPixelFormatSourceImagesException() : base("Source images must be 16-bit monochrome images.") {}
+		public UnsupportedPixelFormatSourceImagesException()
+			: base("Source images must be 16-bit monochrome images.") {}
 	}
 
 	public class UnsupportedMultiFrameSourceImagesException : CreateVolumeException
 	{
-		public UnsupportedMultiFrameSourceImagesException() : this(null) {}
+		public UnsupportedMultiFrameSourceImagesException()
+			: this(null) {}
 
-		public UnsupportedMultiFrameSourceImagesException(Exception innerException) : base("Multiframe source images are currently not supported.", innerException) {}
+		public UnsupportedMultiFrameSourceImagesException(Exception innerException)
+			: base("Multiframe source images are currently not supported.", innerException) {}
 	}
 
 	public class InsufficientFramesException : CreateVolumeException
 	{
-		public InsufficientFramesException() : base("Insufficient frames from which to create a volume. At least three are required.") {}
+		public InsufficientFramesException()
+			: base("Insufficient frames from which to create a volume. At least three are required.") {}
 	}
 
 	public class NullSourceSeriesException : CreateVolumeException
 	{
-		public NullSourceSeriesException() : base("One or more source frames are missing study and/or series information.") {}
+		public NullSourceSeriesException()
+			: base("One or more source frames are missing study and/or series information.") {}
 	}
 
 	public class MultipleSourceSeriesException : CreateVolumeException
 	{
-		public MultipleSourceSeriesException() : base("Multiple studies/series were found in the source frames. All source frames must be from the same study and series.") {}
+		public MultipleSourceSeriesException()
+			: base("Multiple studies/series were found in the source frames. All source frames must be from the same study and series.") {}
 	}
 
 	public class NullFrameOfReferenceException : CreateVolumeException
 	{
-		public NullFrameOfReferenceException() : base("One or more source frames do not specify the frame of reference.") {}
+		public NullFrameOfReferenceException()
+			: base("One or more source frames do not specify the frame of reference.") {}
 	}
 
 	public class MultipleFramesOfReferenceException : CreateVolumeException
 	{
-		public MultipleFramesOfReferenceException() : base("Multiple frames of reference were found in the source frames. All source frames must have the same frame of reference.") {}
+		public MultipleFramesOfReferenceException()
+			: base("Multiple frames of reference were found in the source frames. All source frames must have the same frame of reference.") {}
 	}
 
 	public class NullImageOrientationException : CreateVolumeException
 	{
-		public NullImageOrientationException() : base("One or more source frames do not have the image orientation defined.") {}
+		public NullImageOrientationException()
+			: base("One or more source frames do not have the image orientation defined.") {}
 	}
 
 	public class MultipleImageOrientationsException : CreateVolumeException
 	{
-		public MultipleImageOrientationsException() : base("Mulitple image orientations were found in the source frames. All source frames must have the same image orientation.") {}
+		public MultipleImageOrientationsException()
+			: base("Mulitple image orientations were found in the source frames. All source frames must have the same image orientation.") {}
 	}
 
 	public class UnevenlySpacedFramesException : CreateVolumeException
 	{
-		public UnevenlySpacedFramesException() : base("Source frames must be evenly spaced.") {}
+		public UnevenlySpacedFramesException()
+			: base("Source frames must be evenly spaced.") {}
 	}
 
 	public class UncalibratedFramesException : CreateVolumeException
 	{
-		public UncalibratedFramesException() : base("Source frames must be calibrated.") {}
+		public UncalibratedFramesException()
+			: base("Source frames must be calibrated.") {}
 	}
 
 	public class AnisotropicPixelAspectRatioException : CreateVolumeException
 	{
-		public AnisotropicPixelAspectRatioException() : base("Source frames must have isotropic pixel aspect ratio.") {}
+		public AnisotropicPixelAspectRatioException()
+			: base("Source frames must have isotropic pixel aspect ratio.") {}
 	}
 
 	public class UnsupportedGantryTiltAxisException : CreateVolumeException
 	{
-		public UnsupportedGantryTiltAxisException() : base("Source frames have a gantry tilt about an unsupported axis.") {}
+		public UnsupportedGantryTiltAxisException()
+			: base("Source frames have a gantry tilt about an unsupported axis.") {}
 	}
 
 	[ExceptionPolicyFor(typeof (CreateVolumeException))]
@@ -113,35 +133,35 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 	{
 		public void Handle(Exception ex, IExceptionHandlingContext exceptionHandlingContext)
 		{
-			string message = SR.MessageUnexpectedCreateVolumeException;
+			var message = SR.MessageVolumeSourceUnexpectedException;
 			if (ex is InsufficientFramesException)
-				message = SR.MessageSourceDataSetNeedsThreeImagesForMpr;
+				message = SR.MessageVolumeSourceMinimumThreeImages;
 			else if (ex is UnsupportedSourceImagesException)
-				message = SR.MessageSourceDataSetImagesAreNotSupported;
+				message = SR.MessageVolumeSourceAreNotSupported;
 			else if (ex is UnsupportedPixelFormatSourceImagesException)
-				message = SR.MessageSourceDataSetImagesMustBe16BitGreyscale;
+				message = SR.MessageVolumeSourceMustBe16BitGreyscale;
 			else if (ex is UnsupportedMultiFrameSourceImagesException)
-				message = SR.MessageSourceDataSetMultiFrameImagesAreNotSupported;
+				message = SR.MessageVolumeSourceMultiFrameImagesAreNotSupported;
 			else if (ex is MultipleFramesOfReferenceException)
-				message = SR.MessageSourceDataSetMustBeSingleFrameOfReference;
+				message = SR.MessageVolumeSourceMustBeSingleFrameOfReference;
 			else if (ex is MultipleImageOrientationsException)
-				message = SR.MessageSourceDataSetMustBeSameImageOrientationPatient;
+				message = SR.MessageVolumeSourceMustBeSameImageOrientationPatient;
 			else if (ex is MultipleSourceSeriesException)
-				message = SR.MessageSourceDataSetMustBeSingleSeries;
+				message = SR.MessageVolumeSourceMustBeSingleSeries;
 			else if (ex is NullFrameOfReferenceException)
-				message = SR.MessageSourceDataSetMustSpecifyFrameOfReference;
+				message = SR.MessageVolumeSourceMustSpecifyFrameOfReference;
 			else if (ex is NullImageOrientationException)
-				message = SR.MessageSourceDataSetMustDefineImageOrientationPatient;
+				message = SR.MessageVolumeSourceMustDefineImageOrientationPatient;
 			else if (ex is NullSourceSeriesException)
-				message = SR.MessageSourceDataSetMustBeSingleSeries;
+				message = SR.MessageVolumeSourceMustBeSingleSeries;
 			else if (ex is UnevenlySpacedFramesException)
-				message = SR.MessageSourceDataSetImagesMustBeEvenlySpacedForMpr;
+				message = SR.MessageVolumeSourceMustBeEvenlySpacedForMpr;
 			else if (ex is UncalibratedFramesException)
-				message = SR.MessageSourceDataSetImagesMustBeCalibrated;
+				message = SR.MessageVolumeSourceMustBeCalibrated;
 			else if (ex is AnisotropicPixelAspectRatioException)
-				message = SR.MessageSourceDataSetImagesMayNotHaveAnisotropicPixels;
+				message = SR.MessageVolumeSourceMayNotHaveAnisotropicPixels;
 			else if (ex is UnsupportedGantryTiltAxisException)
-				message = SR.MessageSourceDataSetImagesMayBotBeGantrySlewed;
+				message = SR.MessageVolumeSourceMayBotBeGantrySlewed;
 			exceptionHandlingContext.ShowMessageBox(message);
 		}
 	}

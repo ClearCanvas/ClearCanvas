@@ -24,15 +24,11 @@
 
 using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
 using ClearCanvas.Common;
 using ClearCanvas.Dicom;
-using ClearCanvas.Dicom.Iod;
 using ClearCanvas.ImageViewer.Mathematics;
-using ClearCanvas.ImageViewer.Volume.Mpr.Utilities;
-using vtk;
 
-namespace ClearCanvas.ImageViewer.Volume.Mpr
+namespace ClearCanvas.ImageViewer.Volumes
 {
 	/// <summary>
 	/// Represents a 3-dimensional volume.
@@ -80,7 +76,6 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 
 		private bool _disposed = false;
 
-		private readonly string _description;
 		private readonly string _sourceSeriesInstanceUid;
 		private readonly int _minVolumeValue;
 		private readonly int _maxVolumeValue;
@@ -89,12 +84,6 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 		#endregion
 
 		#region Constructors
-
-		static Volume()
-		{
-			// Volume is the root of all VTK use through the API, so this is the place to initialize it
-			VtkHelper.StaticInitializationHack();
-		}
 
 		/// <summary>
 		/// Constructs a <see cref="Volume"/> using a volume data array of signed 16-bit words.
@@ -132,24 +121,20 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 			_orientationPatientMatrix = orientationPatient;
 			_modelDicom = sopDataSourcePrototype;
 			_paddingValue = paddingValue;
-
-			// Generate a descriptive name for the volume
-			PersonName patientName = new PersonName(sopDataSourcePrototype[DicomTags.PatientsName].ToString());
-			string patientId = sopDataSourcePrototype[DicomTags.PatientId].ToString();
-			string seriesDescription = sopDataSourcePrototype[DicomTags.SeriesDescription].ToString();
-			if (string.IsNullOrEmpty(seriesDescription))
-				_description = string.Format(SR.FormatVolumeLabel, patientName.FormattedName, patientId, seriesDescription);
-			else
-				_description = string.Format(SR.FormatVolumeLabelWithSeries, patientName.FormattedName, patientId, seriesDescription);
 		}
 
 		#endregion
 
 		#region Public properties
 
-		public string Description
+		public ushort[] DataU16
 		{
-			get { return _description; }
+			get { return _volumeDataUInt16; }
+		}
+
+		public short[] DataS16
+		{
+			get { return _volumeDataInt16; }
 		}
 
 		public string Modality
@@ -426,67 +411,21 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 
 		#region Implementation
 
-		internal IDicomAttributeProvider DataSet
+		public IDicomAttributeProvider DataSet
 		{
 			get { return _modelDicom; }
 		}
 
 		// Decided to keep private for now, shouldn't be interesting to the outside world, and helps 
 		//	avoid confusion with dimensions that take spacing into account (which is useful to the outside world)
-		private Size3D ArrayDimensions
+		public Size3D ArrayDimensions
 		{
 			get { return _arrayDimensions; }
 		}
 
 		#endregion
 
-		#region VTK volume wrapper
 
-		private vtkImageData CreateVtkVolume()
-		{
-			vtkImageData vtkVolume = new vtkImageData();
-
-			VtkHelper.RegisterVtkErrorEvents(vtkVolume);
-
-			vtkVolume.SetDimensions(ArrayDimensions.Width, ArrayDimensions.Height, ArrayDimensions.Depth);
-			vtkVolume.SetOrigin(Origin.X, Origin.Y, Origin.Z);
-			vtkVolume.SetSpacing(VoxelSpacing.X, VoxelSpacing.Y, VoxelSpacing.Z);
-
-			if (!Signed)
-			{
-				using (vtkUnsignedShortArray array = VtkHelper.ConvertToVtkUnsignedShortArray(_volumeDataUInt16))
-				{
-					vtkVolume.SetScalarTypeToUnsignedShort();
-					vtkVolume.GetPointData().SetScalars(array);
-
-					// This call is necessary to ensure vtkImageData data's info is correct (e.g. updates WholeExtent values)
-					vtkVolume.UpdateInformation();
-				}
-			}
-			else
-			{
-				using (var array = VtkHelper.ConvertToVtkShortArray(_volumeDataInt16))
-				{
-					vtkVolume.SetScalarTypeToShort();
-					vtkVolume.GetPointData().SetScalars(array);
-
-					// This call is necessary to ensure vtkImageData data's info is correct (e.g. updates WholeExtent values)
-					vtkVolume.UpdateInformation();
-				}
-			}
-
-			return vtkVolume;
-		}
-
-		internal VtkVolumeHandle CreateVtkVolumeHandle()
-		{
-			// Technically, the volume should be pinned before creating the "volume" because it stores a pointer to the array.
-			var volumeArrayPinned = GCHandle.Alloc(!Signed ? (Array) _volumeDataUInt16 : _volumeDataInt16, GCHandleType.Pinned);
-			var vtkVolume = CreateVtkVolume();
-			return new VtkVolumeHandle(vtkVolume, volumeArrayPinned);
-		}
-
-		#endregion
 
 		#region Unit Test Accessors
 

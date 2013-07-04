@@ -37,6 +37,7 @@ using ClearCanvas.ImageViewer.Imaging;
 using ClearCanvas.ImageViewer.Mathematics;
 using ClearCanvas.ImageViewer.StudyManagement;
 using ClearCanvas.ImageViewer.Volume.Mpr.Utilities;
+using ClearCanvas.ImageViewer.Volumes.Tests;
 using NUnit.Framework;
 
 namespace ClearCanvas.ImageViewer.Volume.Mpr.Tests
@@ -78,7 +79,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr.Tests
 			const int FULL_SCALE = 65535;
 			VolumeFunction normalizedFunction = f.Normalize(100);
 
-			using (Volume volume = normalizedFunction.CreateVolume(100, signed))
+			using (Volumes.Volume volume = normalizedFunction.CreateVolume(100, signed))
 			{
 				float offset = signed ? -32768 : 0;
 				foreach (IVolumeSlicerParams slicing in slicerParams)

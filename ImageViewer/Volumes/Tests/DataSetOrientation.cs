@@ -30,7 +30,7 @@ using ClearCanvas.Dicom;
 using ClearCanvas.ImageViewer.Mathematics;
 using ClearCanvas.ImageViewer.StudyManagement;
 
-namespace ClearCanvas.ImageViewer.Volume.Mpr.Tests
+namespace ClearCanvas.ImageViewer.Volumes.Tests
 {
 	public class DataSetOrientation
 	{

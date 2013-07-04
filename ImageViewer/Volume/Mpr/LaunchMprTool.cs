@@ -34,6 +34,7 @@ using ClearCanvas.ImageViewer.BaseTools;
 using ClearCanvas.ImageViewer.Configuration;
 using ClearCanvas.ImageViewer.StudyManagement;
 using ClearCanvas.ImageViewer.Volume.Mpr.Utilities;
+using ClearCanvas.ImageViewer.Volumes;
 
 namespace ClearCanvas.ImageViewer.Volume.Mpr
 {
@@ -222,7 +223,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 				context.ReportProgress(new BackgroundTaskProgress(mainTask.IntPercent, string.Format(SR.MessageInitializingMpr, mainTask.Progress)));
 
 				BackgroundTaskParams @params = (BackgroundTaskParams) context.UserState;
-				Volume volume = Volume.Create(@params.Frames,
+				Volumes.Volume volume = Volumes.Volume.Create(@params.Frames,
 				                                    delegate(int i, int count)
 				                                    	{
 				                                    		if (context.CancelRequested)

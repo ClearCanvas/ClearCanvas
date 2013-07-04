@@ -1,4 +1,4 @@
-#region License
+﻿#region License
 
 // Copyright (c) 2013, ClearCanvas Inc.
 // All rights reserved.
@@ -22,121 +22,76 @@
 
 #endregion
 
-#if	UNIT_TESTS
-#pragma warning disable 1591,0419,1574,1587
+#if UNIT_TESTS
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using ClearCanvas.ImageViewer.Mathematics;
-using ClearCanvas.ImageViewer.StudyManagement;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using ClearCanvas.ImageViewer.Volumes.Tests;
+using NUnit.Framework;
 
 namespace ClearCanvas.ImageViewer.Volume.Mpr.Tests
 {
-	public abstract class AbstractMprTest
+	public abstract class AbstractMprTest : AbstractVolumeTest
 	{
-		protected delegate void InitializeSopDataSourceDelegate(ISopDataSource sopDataSource);
-
-		protected delegate void TestVolumeDelegate(Volume volume);
+		protected AbstractMprTest()
+		{
+			// assert that the correct VTK assemblies have been copied to the unit testing directory, to aid in diagnosing nonsensical test failures
+			AssertAssemblyLoadable("vtkCommonDotNet", "vtkCommon.dll");
+			AssertAssemblyLoadable("vtkFilteringDotNet", "vtkFiltering.dll");
+			AssertAssemblyLoadable("vtkImagingDotNet", "vtkImaging.dll");
+		}
 
 		/// <summary>
-		/// Creates a 100x100x100 volume using the specified volume function using 100 frames of dimensions 100x100.
+		/// Asserts the presence of referenced assemblies and/or additional dependencies.
 		/// </summary>
-		/// <param name="function">The function with which to generate frame data - 0-99 in each dimension.</param>
-		/// <param name="initializer">A delegate to initialize additional SOP attributes for each of the 100 frames.</param>
-		/// <param name="testMethod">A test routine with which to exercise the volume. The volume is disposed automatically afterwards.</param>
-		protected static void TestVolume(VolumeFunction function, InitializeSopDataSourceDelegate initializer, TestVolumeDelegate testMethod)
+		/// <param name="assemblyName">Name of the assembly (e.g. vtkCommonDotNet)</param>
+		/// <param name="dependencies">File names of additional dependencies to find at the location of the assembly (e.g. vtkCommon.dll)</param>
+		protected static void AssertAssemblyLoadable(string assemblyName, params string[] dependencies)
 		{
-			function = function.Normalize(100);
-			List<ImageSop> images = new List<ImageSop>();
+			Assembly assembly = null;
+
 			try
 			{
-				foreach (ISopDataSource sopDataSource in function.CreateSops(100, 100, 100, false))
-				{
-					if (initializer != null)
-						initializer.Invoke(sopDataSource);
-					images.Add(new ImageSop(sopDataSource));
-				}
-
-				using (Volume volume = Volume.Create(EnumerateFrames(images)))
-				{
-					if (testMethod != null)
-						testMethod.Invoke(volume);
-				}
+				// check if .NET will be able to load the assembly
+				if (!string.IsNullOrEmpty(assemblyName))
+					assembly = Assembly.ReflectionOnlyLoad(assemblyName);
 			}
 			catch (Exception ex)
 			{
-				Trace.WriteLine(string.Format("Thrown: {0}", ex.GetType().Name));
-				throw;
+				Assert.Fail("The assembly '{0}' could not be loaded: {1}", assemblyName, ex.Message);
 			}
-			finally
+
+			if (assembly != null)
 			{
-				DisposeAll(images);
-			}
-		}
-
-		protected static IEnumerable<Frame> EnumerateFrames(IEnumerable<ImageSop> imageSops)
-		{
-			foreach (ImageSop imageSop in imageSops)
-				foreach (Frame frame in imageSop.Frames)
-					yield return frame;
-		}
-
-		protected static void DisposeAll<T>(IEnumerable<T> disposables) where T : class, IDisposable
-		{
-			foreach (T disposable in disposables)
-				if (disposable != null)
-					disposable.Dispose();
-		}
-
-		private static IList<KnownSample> _starsKnownSamples;
-
-		/// <summary>
-		/// Gets a list of known points and expected values for the <see cref="VolumeFunction.Stars"/> test volume.
-		/// </summary>
-		protected static IList<KnownSample> StarsKnownSamples
-		{
-			get
-			{
-				if (_starsKnownSamples == null)
+				// check processor architecture of the assembly matches unit test process
+				var name = assembly.GetName();
+				switch (name.ProcessorArchitecture)
 				{
-					List<KnownSample> samplePoints = new List<KnownSample>();
-					samplePoints.Add(new KnownSample(new Vector3D(15, 15, 15), (int) (65535/3f))); // The sphere at (15,15,15) is coloured 1/3 of full scale
-					samplePoints.Add(new KnownSample(new Vector3D(75, 25, 50), (int) (65535*2/3f))); // The sphere at (75,25,50) is coloured 2/3 of full scale
-					samplePoints.Add(new KnownSample(new Vector3D(15, 85, 15), 65535)); // The sphere at (15,85,15) is coloured 3/3 of full scale
-					samplePoints.Add(new KnownSample(new Vector3D(50, 50, 50), 0)); // anything else should be 0
-					samplePoints.Add(new KnownSample(new Vector3D(75, 75, 75), 0)); // anything else should be 0
-					samplePoints.Add(new KnownSample(new Vector3D(25, 25, 25), 0)); // anything else should be 0
-					samplePoints.Add(new KnownSample(new Vector3D(25, 50, 75), 0)); // anything else should be 0
-					samplePoints.Add(new KnownSample(new Vector3D(15, 50, 75), 0)); // anything else should be 0
-					samplePoints.Add(new KnownSample(new Vector3D(25, 15, 75), 0)); // anything else should be 0
-					samplePoints.Add(new KnownSample(new Vector3D(25, 50, 15), 0)); // anything else should be 0
-					samplePoints.Add(new KnownSample(new Vector3D(25, 85, 75), 0)); // anything else should be 0
-					samplePoints.Add(new KnownSample(new Vector3D(85, 50, 15), 0)); // anything else should be 0
-					samplePoints.Add(new KnownSample(new Vector3D(15, 50, 85), 0)); // anything else should be 0
-					_starsKnownSamples = samplePoints.AsReadOnly();
+					case ProcessorArchitecture.MSIL:
+						break;
+					case ProcessorArchitecture.X86:
+						Assert.True(IntPtr.Size == 4, "The assembly '{0}' is architecture={1} but the unit test process is running as {2}-bit", assemblyName, name.ProcessorArchitecture, IntPtr.Size*8);
+						break;
+					case ProcessorArchitecture.Amd64:
+					case ProcessorArchitecture.IA64:
+						Assert.True(IntPtr.Size == 8, "The assembly '{0}' is architecture={1} but the unit test process is running as {2}-bit", assemblyName, name.ProcessorArchitecture, IntPtr.Size*8);
+						break;
+					case ProcessorArchitecture.None:
+					default:
+						Trace.WriteLine(string.Format("The assembly '{0}' is architecture={1}", assembly, name.ProcessorArchitecture));
+						break;
 				}
-				return _starsKnownSamples;
 			}
-		}
 
-		protected struct KnownSample
-		{
-			public readonly Vector3D Point;
-			public readonly int Value;
-
-			public KnownSample(Vector3D point, int value)
+			// check for additional dependencies at the location of the assembly
+			var baseDir = Path.GetDirectoryName(new Uri((assembly ?? Assembly.GetCallingAssembly()).CodeBase).AbsolutePath) ?? string.Empty;
+			foreach (var dependency in dependencies ?? Enumerable.Empty<string>())
 			{
-				this.Point = point;
-				this.Value = value;
+				Assert.True(File.Exists(Path.Combine(baseDir, dependency)), "The dependency '{0}' could not be found next to assembly {1} ({2})", dependency, assemblyName, baseDir);
 			}
-		}
-
-		protected static string FormatVector(Vector3D vector)
-		{
-			if (vector == null)
-				return "(null)";
-			return string.Format("({0:f1},{1:f1},{2:f1})", vector.X, vector.Y, vector.Z);
 		}
 	}
 }

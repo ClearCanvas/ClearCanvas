@@ -28,9 +28,8 @@ using ClearCanvas.Common;
 using ClearCanvas.Dicom;
 using ClearCanvas.Dicom.Iod.Macros;
 using ClearCanvas.Dicom.Iod.Modules;
-using ClearCanvas.ImageViewer.Volume.Mpr.Utilities;
 
-namespace ClearCanvas.ImageViewer.Volume.Mpr
+namespace ClearCanvas.ImageViewer.Volumes
 {
 	partial class Volume
 	{

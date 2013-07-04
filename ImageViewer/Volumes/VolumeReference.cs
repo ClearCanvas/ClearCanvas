@@ -25,7 +25,7 @@
 using System;
 using ClearCanvas.Common;
 
-namespace ClearCanvas.ImageViewer.Volume.Mpr
+namespace ClearCanvas.ImageViewer.Volumes
 {
 	public interface IVolumeReference : IDisposable
 	{

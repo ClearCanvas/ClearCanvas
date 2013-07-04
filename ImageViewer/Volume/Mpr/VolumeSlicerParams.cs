@@ -26,6 +26,7 @@ using System;
 using ClearCanvas.Common;
 using ClearCanvas.ImageViewer.Mathematics;
 using ClearCanvas.ImageViewer.Volume.Mpr.Utilities;
+using ClearCanvas.ImageViewer.Volumes;
 
 namespace ClearCanvas.ImageViewer.Volume.Mpr
 {
@@ -255,7 +256,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 		/// <summary>
 		/// Allows specification of the slice plane, through point, and extent via two points in patient space
 		/// </summary>
-		public static VolumeSlicerParams Create(Volume volume, Vector3D sourceOrientationColumnPatient, Vector3D sourceOrientationRowPatient,
+		public static VolumeSlicerParams Create(Volumes.Volume volume, Vector3D sourceOrientationColumnPatient, Vector3D sourceOrientationRowPatient,
 		                                               Vector3D startPointPatient, Vector3D endPointPatient)
 		{
 			Vector3D sourceOrientationNormalPatient = sourceOrientationColumnPatient.Cross(sourceOrientationRowPatient);

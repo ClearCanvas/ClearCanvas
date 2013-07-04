@@ -25,9 +25,9 @@
 using System;
 using ClearCanvas.Dicom;
 
-namespace ClearCanvas.ImageViewer.Volume.Mpr.Utilities
+namespace ClearCanvas.ImageViewer.Volumes
 {
-	internal static class DicomAttributeMethods
+	internal static class HelperMethods
 	{
 		public static bool? GetBoolean(this DicomAttribute attribute, int i, string trueString, string falseString)
 		{

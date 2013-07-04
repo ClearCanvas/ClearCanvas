@@ -32,7 +32,7 @@ using ClearCanvas.Dicom;
 using ClearCanvas.ImageViewer.Mathematics;
 using ClearCanvas.ImageViewer.StudyManagement;
 using ClearCanvas.ImageViewer.Volume.Mpr;
-using VolumeData = ClearCanvas.ImageViewer.Volume.Mpr.Volume;
+using VolumeData = ClearCanvas.ImageViewer.Volumes.Volume;
 
 namespace ClearCanvas.ImageViewer.AdvancedImaging.Fusion.Tests
 {

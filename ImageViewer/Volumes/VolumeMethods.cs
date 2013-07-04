@@ -24,12 +24,12 @@
 
 using ClearCanvas.Common;
 
-namespace ClearCanvas.ImageViewer.Volume.Mpr
+namespace ClearCanvas.ImageViewer.Volumes
 {
 	/// <summary>
 	/// Useful extension methods for working with volumes.
 	/// </summary>
-	public static class VolumeUtilities
+	public static class VolumeMethods
 	{
 		/// <summary>
 		/// Gets the <see cref="VolumeCache"/> for the specified <see cref="IImageViewer"/> instance.

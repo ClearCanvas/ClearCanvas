@@ -27,7 +27,7 @@ using System.Collections.Generic;
 using ClearCanvas.Common;
 using ClearCanvas.ImageViewer.StudyManagement;
 
-namespace ClearCanvas.ImageViewer.Volume.Mpr
+namespace ClearCanvas.ImageViewer.Volumes
 {
 	public delegate void CreateVolumeProgressCallback(int currentFrame, int totalFrames);
 

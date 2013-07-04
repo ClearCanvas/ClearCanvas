@@ -33,6 +33,7 @@ using ClearCanvas.Desktop;
 using ClearCanvas.Desktop.Actions;
 using ClearCanvas.Desktop.Tools;
 using ClearCanvas.ImageViewer.StudyManagement;
+using ClearCanvas.ImageViewer.Volumes.Tests;
 
 namespace ClearCanvas.ImageViewer.Volume.Mpr.Tests
 {
@@ -115,7 +116,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr.Tests
 						images.Add(new ImageSop(sopDataSource));
 					}
 
-					MprViewerComponent component = new MprViewerComponent(Volume.Create(EnumerateFrames(images)));
+					MprViewerComponent component = new MprViewerComponent(Volumes.Volume.Create(EnumerateFrames(images)));
 					component.Layout();
 					LaunchImageViewerArgs args = new LaunchImageViewerArgs(WindowBehaviour.Auto);
 					args.Title = component.Title;

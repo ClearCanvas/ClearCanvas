@@ -37,6 +37,7 @@ using ClearCanvas.ImageViewer.Mathematics;
 using ClearCanvas.ImageViewer.StudyManagement;
 using ClearCanvas.ImageViewer.Volume.Mpr.Configuration;
 using ClearCanvas.ImageViewer.Volume.Mpr.Utilities;
+using ClearCanvas.ImageViewer.Volumes;
 using vtk;
 
 namespace ClearCanvas.ImageViewer.Volume.Mpr
@@ -51,7 +52,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 
 		private float _sliceSpacing;
 
-		public VolumeSlicer(Volume volume, IVolumeSlicerParams slicerParams)
+		public VolumeSlicer(Volumes.Volume volume, IVolumeSlicerParams slicerParams)
 		{
 			_volume = volume.CreateTransientReference();
 			_slicerParams = slicerParams;
@@ -63,7 +64,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 			_slicerParams = slicerParams;
 		}
 
-		public Volume Volume
+		public Volumes.Volume Volume
 		{
 			get { return _volume.Volume; }
 		}

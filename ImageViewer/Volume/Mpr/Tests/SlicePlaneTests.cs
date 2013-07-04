@@ -33,6 +33,7 @@ using ClearCanvas.ImageViewer.Graphics;
 using ClearCanvas.ImageViewer.Mathematics;
 using ClearCanvas.ImageViewer.StudyManagement;
 using ClearCanvas.ImageViewer.Volume.Mpr.Utilities;
+using ClearCanvas.ImageViewer.Volumes.Tests;
 using NUnit.Framework;
 
 namespace ClearCanvas.ImageViewer.Volume.Mpr.Tests
@@ -99,12 +100,12 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr.Tests
 			           	});
 		}
 
-		protected static void ValidateVolumeSlicePoints(Volume volume, IVolumeSlicerParams slicerParams, IList<KnownSample> expectedPoints)
+		protected static void ValidateVolumeSlicePoints(Volumes.Volume volume, IVolumeSlicerParams slicerParams, IList<KnownSample> expectedPoints)
 		{
 			ValidateVolumeSlicePoints(volume, slicerParams, expectedPoints, 0, 0, false);
 		}
 
-		protected static void ValidateVolumeSlicePoints(Volume volume, IVolumeSlicerParams slicerParams, IList<KnownSample> expectedPoints,
+		protected static void ValidateVolumeSlicePoints(Volumes.Volume volume, IVolumeSlicerParams slicerParams, IList<KnownSample> expectedPoints,
 		                                                double xAxialGantryTilt, double yAxialGantryTilt, bool gantryTiltInDegrees)
 		{
 			if (gantryTiltInDegrees)

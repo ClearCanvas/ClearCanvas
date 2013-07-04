@@ -28,7 +28,7 @@ using System.Collections.Generic;
 using ClearCanvas.Dicom;
 using NUnit.Framework;
 
-namespace ClearCanvas.ImageViewer.Volume.Mpr.Tests
+namespace ClearCanvas.ImageViewer.Volumes.Tests
 {
 	[TestFixture]
 	public class VolumeSopDataSourcePrototypeTests

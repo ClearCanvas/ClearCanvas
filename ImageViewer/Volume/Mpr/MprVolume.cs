@@ -27,6 +27,7 @@ using System.Collections.Generic;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Dicom;
+using ClearCanvas.Dicom.Iod;
 using ClearCanvas.ImageViewer.Volume.Mpr.Utilities;
 
 namespace ClearCanvas.ImageViewer.Volume.Mpr
@@ -35,7 +36,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 	{
 		string Uid { get; }
 		string Description { get; }
-		Volume Volume { get; }
+		Volumes.Volume Volume { get; }
 		IList<IMprSliceSet> SliceSets { get; }
 	}
 
@@ -43,14 +44,16 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 	{
 		private readonly string _uid = DicomUid.GenerateUid().UID;
 
-		private Volume _volume;
+		private readonly string _description;
+
+		private Volumes.Volume _volume;
 		private ObservableDisposableList<IMprSliceSet> _sliceSets;
 
-		public MprVolume(Volume volume) : this(volume, CreateDefaultSliceSets(volume)) {}
+		public MprVolume(Volumes.Volume volume) : this(volume, CreateDefaultSliceSets(volume)) {}
 
-		public MprVolume(Volume volume, IEnumerable<IVolumeSlicerParams> slicerParams) : this(volume, CreateStandardSliceSets(volume, slicerParams)) {}
+		public MprVolume(Volumes.Volume volume, IEnumerable<IVolumeSlicerParams> slicerParams) : this(volume, CreateStandardSliceSets(volume, slicerParams)) {}
 
-		public MprVolume(Volume volume, IEnumerable<IMprSliceSet> sliceSets)
+		public MprVolume(Volumes.Volume volume, IEnumerable<IMprSliceSet> sliceSets)
 		{
 			Platform.CheckForNullReference(volume, "volume");
 
@@ -73,9 +76,18 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 			_sliceSets.ItemChanged += OnItemAdded;
 			_sliceSets.ItemChanging += OnItemRemoved;
 			_sliceSets.ItemRemoved += OnItemRemoved;
+
+			// Generate a descriptive name for the volume
+			PersonName patientName = new PersonName(_volume.DataSet[DicomTags.PatientsName].ToString());
+			string patientId = _volume.DataSet[DicomTags.PatientId].ToString();
+			string seriesDescription = _volume.DataSet[DicomTags.SeriesDescription].ToString();
+			if (string.IsNullOrEmpty(seriesDescription))
+				_description = string.Format(SR.FormatVolumeLabel, patientName.FormattedName, patientId, seriesDescription);
+			else
+				_description = string.Format(SR.FormatVolumeLabelWithSeries, patientName.FormattedName, patientId, seriesDescription);
 		}
 
-		public Volume Volume
+		public Volumes.Volume Volume
 		{
 			get { return _volume; }
 		}
@@ -92,10 +104,10 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 
 		public string Description
 		{
-			get { return _volume.Description; }
+			get { return _description; }
 		}
 
-		private static IEnumerable<IMprSliceSet> CreateDefaultSliceSets(Volume volume)
+		private static IEnumerable<IMprSliceSet> CreateDefaultSliceSets(Volumes.Volume volume)
 		{
 			// The default slice sets consist of a fixed view of the original image plane,
 			// and three mutable slice sets showing the other two planes perpendicular to the original
@@ -109,7 +121,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 			}
 		}
 
-		private static IEnumerable<IMprSliceSet> CreateStandardSliceSets(Volume volume, IEnumerable<IVolumeSlicerParams> slicerParams)
+		private static IEnumerable<IMprSliceSet> CreateStandardSliceSets(Volumes.Volume volume, IEnumerable<IVolumeSlicerParams> slicerParams)
 		{
 			if (volume != null && slicerParams != null)
 			{

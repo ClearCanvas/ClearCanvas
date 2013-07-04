@@ -34,7 +34,7 @@ using ClearCanvas.Common.Utilities;
 using ClearCanvas.ImageViewer.Common;
 using ClearCanvas.ImageViewer.StudyManagement;
 
-namespace ClearCanvas.ImageViewer.Volume.Mpr
+namespace ClearCanvas.ImageViewer.Volumes
 {
 	/// <summary>
 	/// Represents a cached MPR volume.
@@ -53,11 +53,11 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 		/// Gets the MPR volume, synchronously loading the volume if necessary.
 		/// </summary>
 		/// <remarks>
-		/// Client code should not hold on to the <see cref="Mpr.Volume"/> instance returned by this property.
+		/// Client code should not hold on to the <see cref="Volumes.Volume"/> instance returned by this property.
 		/// If a long-term reference is desired, call and store the result from <see cref="CreateReference"/>,
 		/// accessing the <see cref="ICachedVolumeReference.Volume"/> property as necessary.
 		/// This is important, because the <see cref="MemoryManager"/> may decide to unload the actual volume at any time,
-		/// and a direct reference to a specific <see cref="Mpr.Volume"/> can point to a disposed object if held on to
+		/// and a direct reference to a specific <see cref="Volumes.Volume"/> can point to a disposed object if held on to
 		/// for any significant period of time.
 		/// </remarks>
 		Volume Volume { get; }
@@ -87,11 +87,11 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 		/// Gets the MPR volume, synchronously loading the volume if necessary.
 		/// </summary>
 		/// <remarks>
-		/// Client code should not hold on to the <see cref="Mpr.Volume"/> instance returned by this property.
+		/// Client code should not hold on to the <see cref="Volumes.Volume"/> instance returned by this property.
 		/// If a long-term reference is desired, call and store the result from <see cref="CreateReference"/>,
 		/// accessing the <see cref="ICachedVolumeReference.Volume"/> property as necessary.
 		/// This is important, because the <see cref="MemoryManager"/> may decide to unload the actual volume at any time,
-		/// and a direct reference to a specific <see cref="Mpr.Volume"/> can point to a disposed object if held on to
+		/// and a direct reference to a specific <see cref="Volumes.Volume"/> can point to a disposed object if held on to
 		/// for any significant period of time.
 		/// </remarks>
 		new Volume Volume { get; }
@@ -178,11 +178,11 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 	/// The <see cref="ICachedVolumeReference"/> items returned by this cache are container objects that hold the MPR volume,
 	/// references to the source frames, as well as implement memory management. Direct references to this object
 	/// (and the actual MPR Volume exposed by <see cref="ICachedVolumeReference.Volume"/>) should not be held on to by client code
-	/// for any significant period of time, as the underlying instance of <see cref="Mpr.Volume"/> may be disposed of
+	/// for any significant period of time, as the underlying instance of <see cref="Volume"/> may be disposed of
 	/// at any time by the <see cref="MemoryManager"/>. Instead, if a long-term reference is desired, create a reference
 	/// with <see cref="ICachedVolumeReference.CreateReference"/>. When all outstanding references to the <see cref="ICachedVolumeReference"/>
 	/// have been disposed, the item will itself be removed from the cache, releasing the references to the source frames
-	/// as well as the <see cref="Mpr.Volume"/> instance.
+	/// as well as the <see cref="Volume"/> instance.
 	/// </remarks>
 	public sealed class VolumeCache : IDisposable
 	{

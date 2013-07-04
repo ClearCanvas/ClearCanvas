@@ -35,9 +35,8 @@ using ClearCanvas.ImageViewer.Comparers;
 using ClearCanvas.ImageViewer.Imaging;
 using ClearCanvas.ImageViewer.Mathematics;
 using ClearCanvas.ImageViewer.StudyManagement;
-using ClearCanvas.ImageViewer.Volume.Mpr.Utilities;
 
-namespace ClearCanvas.ImageViewer.Volume.Mpr
+namespace ClearCanvas.ImageViewer.Volumes
 {
 	partial class Volume
 	{
@@ -618,23 +617,17 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 			{
 				try
 				{
-					using (IPresentationImage firstImage = PresentationImageFactory.Create(frames[0].Frame))
+					// neither of these should return null since we already checked for image orientation and position (patient)
+					var firstImagePlane = frames[0].Frame.ImagePlaneHelper;
+					var lastImagePlane = frames[frames.Count - 1].Frame.ImagePlaneHelper;
+
+					Vector3D stackZ = lastImagePlane.ImageTopLeftPatient - firstImagePlane.ImageTopLeftPatient;
+					Vector3D imageX = firstImagePlane.ImageTopRightPatient - firstImagePlane.ImageTopLeftPatient;
+
+					if (!stackZ.IsOrthogonalTo(imageX, _gantryTiltTolerance))
 					{
-						using (IPresentationImage lastImage = PresentationImageFactory.Create(frames[frames.Count - 1].Frame))
-						{
-							// neither of these should return null since we already checked for image orientation and position (patient)
-							DicomImagePlane firstImagePlane = DicomImagePlane.FromImage(firstImage);
-							DicomImagePlane lastImagePlane = DicomImagePlane.FromImage(lastImage);
-
-							Vector3D stackZ = lastImagePlane.PositionPatientTopLeft - firstImagePlane.PositionPatientTopLeft;
-							Vector3D imageX = firstImagePlane.PositionPatientTopRight - firstImagePlane.PositionPatientTopLeft;
-
-							if (!stackZ.IsOrthogonalTo(imageX, _gantryTiltTolerance))
-							{
-								// this is a gantry slew (gantry tilt about Y axis)
-								return false;
-							}
-						}
+						// this is a gantry slew (gantry tilt about Y axis)
+						return false;
 					}
 					return true;
 				}
@@ -688,7 +681,14 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 				Vector3D yOrient = new Vector3D((float) orientation.ColumnX, (float) orientation.ColumnY, (float) orientation.ColumnZ);
 				Vector3D zOrient = xOrient.Cross(yOrient);
 
-				Matrix orientationMatrix = Math3D.OrientationMatrixFromVectors(xOrient, yOrient, zOrient);
+				Matrix orientationMatrix = new Matrix
+					(new[,]
+					 	{
+					 		{xOrient.X, xOrient.Y, xOrient.Z, 0},
+					 		{yOrient.X, yOrient.Y, yOrient.Z, 0},
+					 		{zOrient.X, zOrient.Y, zOrient.Z, 0},
+					 		{0, 0, 0, 1}
+					 	});
 				return orientationMatrix;
 			}
 
