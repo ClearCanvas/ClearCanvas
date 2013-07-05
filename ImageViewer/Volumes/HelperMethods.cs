@@ -24,6 +24,7 @@
 
 using System;
 using ClearCanvas.Dicom;
+using ClearCanvas.ImageViewer.Mathematics;
 
 namespace ClearCanvas.ImageViewer.Volumes
 {
@@ -41,6 +42,11 @@ namespace ClearCanvas.ImageViewer.Volumes
 		{
 			if (!value.HasValue) attribute.SetStringValue(string.Empty);
 			else attribute.SetStringValue(value.Value ? trueString : falseString);
+		}
+
+		public static Vector3D GetRow(this Matrix matrix4X4, int row)
+		{
+			return new Vector3D(matrix4X4[row, 0], matrix4X4[row, 1], matrix4X4[row, 2]);
 		}
 	}
 }

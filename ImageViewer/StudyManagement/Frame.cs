@@ -735,6 +735,17 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		}
 
 		/// <summary>
+		/// Invalidates the cached <see cref="ImagePlaneHelper"/>, forcing it to be recalculated the next time it is accessed.
+		/// </summary>
+		protected void InvalidateImagePlaneHelper()
+		{
+			lock (_syncLock)
+			{
+				_imagePlaneHelper = null;
+			}
+		}
+
+		/// <summary>
 		/// Gets the pixel spacing appropriate to the modality.
 		/// </summary>
 		/// <remarks>

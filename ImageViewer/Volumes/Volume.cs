@@ -46,7 +46,10 @@ namespace ClearCanvas.ImageViewer.Volumes
 		private readonly Size3D _arrayDimensions;
 		private readonly Vector3D _voxelSpacing;
 		private readonly Rectangle3D _volumeBounds;
-		private readonly Vector3D _volumeOriginPatient;
+		private readonly Vector3D _volumePositionPatient;
+		private readonly Vector3D _volumeOrientationPatientX;
+		private readonly Vector3D _volumeOrientationPatientY;
+		private readonly Vector3D _volumeOrientationPatientZ;
 		private readonly Vector3D _volumeCenter;
 		private readonly Vector3D _volumeCenterPatient;
 		private readonly Matrix _volumeOrientationPatient;
@@ -67,25 +70,28 @@ namespace ClearCanvas.ImageViewer.Volumes
 		/// </summary>
 		/// <param name="arrayDimensions"></param>
 		/// <param name="voxelSpacing"></param>
-		/// <param name="volumeOriginPatient"></param>
+		/// <param name="volumePositionPatient"></param>
 		/// <param name="volumeOrientationPatient"></param>
 		/// <param name="dataSourcePrototype"></param>
 		/// <param name="paddingValue"></param>
 		/// <param name="sourceSeriesInstanceUid"></param>
 		/// <param name="minVolumeValue"></param>
 		/// <param name="maxVolumeValue"></param>
-		internal Volume(Size3D arrayDimensions, Vector3D voxelSpacing, Vector3D volumeOriginPatient, Matrix volumeOrientationPatient, VolumeSopDataSourcePrototype dataSourcePrototype, int paddingValue, string sourceSeriesInstanceUid, int minVolumeValue, int maxVolumeValue)
+		internal Volume(Size3D arrayDimensions, Vector3D voxelSpacing, Vector3D volumePositionPatient, Matrix volumeOrientationPatient, VolumeSopDataSourcePrototype dataSourcePrototype, int paddingValue, string sourceSeriesInstanceUid, int minVolumeValue, int maxVolumeValue)
 		{
 			Platform.CheckForNullReference(arrayDimensions, "arrayDimensions");
 			Platform.CheckForNullReference(voxelSpacing, "voxelSpacing");
-			Platform.CheckForNullReference(volumeOriginPatient, "originPatient");
+			Platform.CheckForNullReference(volumePositionPatient, "originPatient");
 			Platform.CheckForNullReference(volumeOrientationPatient, "orientationPatient");
 			Platform.CheckForNullReference(dataSourcePrototype, "sopDataSourcePrototype");
 
 			_arrayDimensions = arrayDimensions;
 			_voxelSpacing = voxelSpacing;
-			_volumeOriginPatient = volumeOriginPatient;
+			_volumePositionPatient = volumePositionPatient;
 			_volumeOrientationPatient = volumeOrientationPatient;
+			_volumeOrientationPatientX = volumeOrientationPatient.GetRow(0);
+			_volumeOrientationPatientY = volumeOrientationPatient.GetRow(1);
+			_volumeOrientationPatientZ = volumeOrientationPatient.GetRow(2);
 			_dataSourcePrototype = dataSourcePrototype;
 			_paddingValue = paddingValue;
 			_sourceSeriesInstanceUid = sourceSeriesInstanceUid ?? string.Empty;
@@ -200,9 +206,42 @@ namespace ClearCanvas.ImageViewer.Volumes
 		/// <remarks>
 		/// This is the volumetric analogue of the Image Position (Patient) concept in DICOM.
 		/// </remarks>
-		public Vector3D VolumeOriginPatient
+		public Vector3D VolumePositionPatient
 		{
-			get { return _volumeOriginPatient; }
+			get { return _volumePositionPatient; }
+		}
+
+		/// <summary>
+		/// Gets the direction cosines describing the orientation of the volume X-axis relative to the patient coordinate system.
+		/// </summary>
+		/// <remarks>
+		/// This is the volumetric analogue of the Image Orientation (Patient) concept in DICOM.
+		/// </remarks>
+		public Vector3D VolumeOrientationPatientX
+		{
+			get { return _volumeOrientationPatientX; }
+		}
+
+		/// <summary>
+		/// Gets the direction cosines describing the orientation of the volume Y-axis relative to the patient coordinate system.
+		/// </summary>
+		/// <remarks>
+		/// This is the volumetric analogue of the Image Orientation (Patient) concept in DICOM.
+		/// </remarks>
+		public Vector3D VolumeOrientationPatientY
+		{
+			get { return _volumeOrientationPatientY; }
+		}
+
+		/// <summary>
+		/// Gets the direction cosines describing the orientation of the volume Z-axis relative to the patient coordinate system.
+		/// </summary>
+		/// <remarks>
+		/// This is the volumetric analogue of the Image Orientation (Patient) concept in DICOM.
+		/// </remarks>
+		public Vector3D VolumeOrientationPatientZ
+		{
+			get { return _volumeOrientationPatientZ; }
 		}
 
 		/// <summary>
@@ -303,7 +342,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 			var volumePatientTransform = new Matrix(_volumeOrientationPatient);
 
 			// Set origin translation
-			volumePatientTransform.SetRow(3, VolumeOriginPatient.X, VolumeOriginPatient.Y, VolumeOriginPatient.Z, 1);
+			volumePatientTransform.SetRow(3, VolumePositionPatient.X, VolumePositionPatient.Y, VolumePositionPatient.Z, 1);
 
 			// Transform volume position to patient position
 			var imagePositionMatrix = new Matrix(1, 4);
@@ -323,7 +362,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 			var patientVolumeTransform = new Matrix(_volumeOrientationPatient.Transpose());
 
 			// Set origin translation
-			var rotatedOrigin = RotateToVolumeOrientation(VolumeOriginPatient);
+			var rotatedOrigin = RotateToVolumeOrientation(VolumePositionPatient);
 			patientVolumeTransform.SetRow(3, -rotatedOrigin.X, -rotatedOrigin.Y, -rotatedOrigin.Z, 1);
 
 			// Transform patient position to volume position

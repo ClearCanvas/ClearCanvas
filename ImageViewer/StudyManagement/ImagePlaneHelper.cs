@@ -44,7 +44,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		private readonly int _rows;
 		private readonly int _columns;
 
-		private Matrix _rotationMatrix;
+		private Matrix3D _rotationMatrix;
 		private Matrix _pixelToPatientTransform;
 		private Vector3D _imageNormalPatient;
 		private Vector3D _imageTopLeftPatient;
@@ -247,25 +247,11 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 
 			// Calculation of position in patient coordinates using 
 			// the matrix method described in Dicom PS 3.3 C.7.6.2.1.1.
-
-			if (_pixelToPatientTransform == null)
-			{
-				_pixelToPatientTransform = new Matrix(4, 4);
-
-				_pixelToPatientTransform.SetColumn(0, (float) (ImageOrientationPatient.RowX*PixelSpacing.Column),
-				                                   (float) (ImageOrientationPatient.RowY*PixelSpacing.Column),
-				                                   (float) (ImageOrientationPatient.RowZ*PixelSpacing.Column), 0F);
-
-				_pixelToPatientTransform.SetColumn(1, (float) (ImageOrientationPatient.ColumnX*PixelSpacing.Row),
-				                                   (float) (ImageOrientationPatient.ColumnY*PixelSpacing.Row),
-				                                   (float) (ImageOrientationPatient.ColumnZ*PixelSpacing.Row), 0F);
-
-				_pixelToPatientTransform.SetColumn(3, ImagePositionPatientVector.X, ImagePositionPatientVector.Y, ImagePositionPatientVector.Z, 1F);
-			}
+			var imageToPatientTransform = GetImageToPatientTransform();
 
 			Matrix columnMatrix = new Matrix(4, 1);
 			columnMatrix.SetColumn(0, positionPixels.X, positionPixels.Y, 0F, 1F);
-			Matrix result = _pixelToPatientTransform*columnMatrix;
+			Matrix result = imageToPatientTransform*columnMatrix;
 
 			return new Vector3D(result[0, 0], result[1, 0], result[2, 0]);
 		}
@@ -285,20 +271,16 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		{
 			Platform.CheckForNullReference(positionPatient, "positionPatient");
 
-			Vector3D translated = positionPatient;
+			var translated = positionPatient;
 			if (originPatient != null)
 				translated -= originPatient;
 
-			Matrix rotationMatrix = GetRotationMatrix();
+			var rotationMatrix = GetRotationMatrix();
 			if (rotationMatrix == null)
 				return null;
 
-			Matrix translatedMatrix = new Matrix(3, 1);
-			translatedMatrix.SetColumn(0, translated.X, translated.Y, translated.Z);
-
 			// Rotate coordinate system to match that of the image plane.
-			Matrix rotated = rotationMatrix*translatedMatrix;
-			return new Vector3D(rotated[0, 0], rotated[1, 0], rotated[2, 0]);
+			return rotationMatrix*translated;
 		}
 
 		/// <summary>
@@ -500,24 +482,43 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		/// into a coordinate system matching that of the image plane.
 		/// </summary>
 		/// <returns>The rotation matrix, or null if the <see cref="Frame"/>'s position information is invalid.</returns>
-		private Matrix GetRotationMatrix()
+		private Matrix3D GetRotationMatrix()
 		{
 			if (_rotationMatrix == null)
 			{
 				if (ImageOrientationPatient.IsNull)
 					return null;
 
-				Vector3D normal = GetNormalVector();
+				var normal = GetNormalVector();
 				if (normal == null || normal.IsNull)
 					return null;
 
-				_rotationMatrix = new Matrix(3, 3);
+				_rotationMatrix = new Matrix3D();
 				_rotationMatrix.SetRow(0, (float) ImageOrientationPatient.RowX, (float) ImageOrientationPatient.RowY, (float) ImageOrientationPatient.RowZ);
 				_rotationMatrix.SetRow(1, (float) ImageOrientationPatient.ColumnX, (float) ImageOrientationPatient.ColumnY, (float) ImageOrientationPatient.ColumnZ);
-				_rotationMatrix.SetRow(2, normal.X, normal.Y, normal.Z);
+				_rotationMatrix.SetRow(2, normal);
 			}
 
 			return _rotationMatrix;
+		}
+
+		private Matrix GetImageToPatientTransform()
+		{
+			if (_pixelToPatientTransform == null)
+			{
+				_pixelToPatientTransform = new Matrix(4, 4);
+
+				_pixelToPatientTransform.SetColumn(0, (float) (ImageOrientationPatient.RowX*PixelSpacing.Column),
+				                                   (float) (ImageOrientationPatient.RowY*PixelSpacing.Column),
+				                                   (float) (ImageOrientationPatient.RowZ*PixelSpacing.Column), 0F);
+
+				_pixelToPatientTransform.SetColumn(1, (float) (ImageOrientationPatient.ColumnX*PixelSpacing.Row),
+				                                   (float) (ImageOrientationPatient.ColumnY*PixelSpacing.Row),
+				                                   (float) (ImageOrientationPatient.ColumnZ*PixelSpacing.Row), 0F);
+
+				_pixelToPatientTransform.SetColumn(3, ImagePositionPatientVector.X, ImagePositionPatientVector.Y, ImagePositionPatientVector.Z, 1F);
+			}
+			return _pixelToPatientTransform;
 		}
 	}
 }
