@@ -76,6 +76,8 @@
     <Compile Include="VtkColorTransferFunctionComposer.cs" />
     <Compile Include="VtkHelper.cs" />
     <Compile Include="VtkSceneGraph.cs" />
+    <Compile Include="VtkImageDataHandle.cs" />
+    <Compile Include="VtkVolumeMethods.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Common\ClearCanvas.Common.csproj">

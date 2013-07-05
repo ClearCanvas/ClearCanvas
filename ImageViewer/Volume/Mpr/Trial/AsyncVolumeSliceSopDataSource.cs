@@ -44,14 +44,8 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 		public AsyncVolumeSliceSopDataSource(VolumeSlice slice)
 		{
 			Slice = slice;
-
 			DataSet = new DicomAttributeCollection();
-			DataSet[DicomTags.Rows].SetInt32(0, Slice.Rows);
-			DataSet[DicomTags.Columns].SetInt32(0, Slice.Colums);
-			DataSet[DicomTags.NumberOfFrames].SetInt32(0, 1);
-			DataSet[DicomTags.ImageOrientationPatient].SetStringValue(Slice.ImageOrientationPatient);
-			DataSet[DicomTags.ImagePositionPatient].SetStringValue(Slice.ImagePositionPatient);
-			DataSet[DicomTags.SopInstanceUid].SetString(0, DicomUid.GenerateUid().UID);
+			VolumeSliceSopDataSource.FillDataSet(DataSet);
 		}
 
 		public VolumeSlice Slice { get; private set; }

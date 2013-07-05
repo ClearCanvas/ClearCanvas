@@ -280,7 +280,12 @@ namespace ClearCanvas.ImageViewer.Volumes
 		/// <summary>
 		/// Gets the DICOM data set containing the common values in the source images from which the volume was created.
 		/// </summary>
-		public IDicomAttributeProvider DataSet
+		/// <remarks>
+		/// In general, this data set should be considered read only. This is especially true if you are using the <see cref="Volume"/>
+		/// in conjunction with the <see cref="VolumeCache"/>, as any changes are only temporary and will be lost if the volume
+		/// instance were unloaded by the memory manager and subsequently reloaded on demand.
+		/// </remarks>
+		public IVolumeDataSet DataSet
 		{
 			get { return _dataSourcePrototype; }
 		}

@@ -25,6 +25,7 @@
 using System;
 using ClearCanvas.Common;
 using ClearCanvas.Dicom;
+using ClearCanvas.Dicom.Iod.Modules;
 using ClearCanvas.ImageViewer.StudyManagement;
 
 namespace ClearCanvas.ImageViewer.Volume.Mpr
@@ -38,14 +39,8 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 		public VolumeSliceSopDataSource(VolumeSlice slice)
 		{
 			Slice = slice;
-
 			DataSet = new DicomAttributeCollection();
-			DataSet[DicomTags.Rows].SetInt32(0, Slice.Rows);
-			DataSet[DicomTags.Columns].SetInt32(0, Slice.Colums);
-			DataSet[DicomTags.NumberOfFrames].SetInt32(0, 1);
-			DataSet[DicomTags.ImageOrientationPatient].SetStringValue(Slice.ImageOrientationPatient);
-			DataSet[DicomTags.ImagePositionPatient].SetStringValue(Slice.ImagePositionPatient);
-			DataSet[DicomTags.SopInstanceUid].SetString(0, DicomUid.GenerateUid().UID);
+			FillDataSet(DataSet);
 		}
 
 		public VolumeSlice Slice { get; private set; }
@@ -120,6 +115,23 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 				DataSet = null;
 			}
 			base.Dispose(disposing);
+		}
+
+		internal static void FillDataSet(IDicomAttributeProvider dataSet)
+		{
+			// generate values for SC Equipment Module
+			var scEquipment = new ScEquipmentModuleIod(dataSet);
+			scEquipment.ConversionType = @"WSD";
+			scEquipment.SecondaryCaptureDeviceManufacturer = @"ClearCanvas Inc.";
+			scEquipment.SecondaryCaptureDeviceManufacturersModelName = ProductInformation.GetName(true, false);
+			scEquipment.SecondaryCaptureDeviceSoftwareVersions = new[] {ProductInformation.GetVersion(true, true, true)};
+
+			// generate values for Multi-Frame Module
+			dataSet[DicomTags.NumberOfFrames].SetInt32(0, 1);
+
+			// generate values for SOP Common Module
+			dataSet[DicomTags.SopClassUid].SetStringValue(SopClass.SecondaryCaptureImageStorageUid);
+			dataSet[DicomTags.SopInstanceUid].SetStringValue(DicomUid.GenerateUid().UID);
 		}
 
 		protected class VolumeSliceSopFrameData : StandardSopFrameData

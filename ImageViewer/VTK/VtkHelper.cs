@@ -40,7 +40,7 @@ namespace ClearCanvas.ImageViewer.Vtk
 			return new Size(sz[0], sz[1]);
 		}
 
-		public static void RegisterVtkErrorEvents(vtkObject obj)
+		public static void RegisterVtkErrorEvents(this vtkObject obj)
 		{
 			obj.AddObserver((uint) EventIds.ErrorEvent, VtkEventCallback);
 			obj.AddObserver((uint) EventIds.WarningEvent, VtkEventCallback);
@@ -100,8 +100,6 @@ namespace ClearCanvas.ImageViewer.Vtk
 			}
 		}
 
-		#region Convert to VTK helpers
-
 		/// <summary>
 		/// Converts a <see cref="Matrix"/> to a <see cref="vtkMatrix4x4"/>.
 		/// </summary>
@@ -132,21 +130,5 @@ namespace ClearCanvas.ImageViewer.Vtk
 				vtkMatrix.SetElement(row, column, matrix[row, column]);
 			}
 		}
-
-		public static vtkShortArray ConvertToVtkShortArray(short[] shortArray)
-		{
-			vtkShortArray vtkShortArray = new vtkShortArray();
-			vtkShortArray.SetArray(shortArray, (VtkIdType) shortArray.Length, 1);
-			return vtkShortArray;
-		}
-
-		public static vtkUnsignedShortArray ConvertToVtkUnsignedShortArray(ushort[] ushortArray)
-		{
-			vtkUnsignedShortArray vtkUnsignedShortArray = new vtkUnsignedShortArray();
-			vtkUnsignedShortArray.SetArray(ushortArray, (VtkIdType) ushortArray.Length, 1);
-			return vtkUnsignedShortArray;
-		}
-
-		#endregion
 	}
 }

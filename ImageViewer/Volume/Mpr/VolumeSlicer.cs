@@ -35,6 +35,7 @@ using ClearCanvas.Dicom;
 using ClearCanvas.ImageViewer.Common;
 using ClearCanvas.ImageViewer.Mathematics;
 using ClearCanvas.ImageViewer.StudyManagement;
+using ClearCanvas.ImageViewer.VTK;
 using ClearCanvas.ImageViewer.Volume.Mpr.Configuration;
 using ClearCanvas.ImageViewer.Volume.Mpr.Utilities;
 using ClearCanvas.ImageViewer.Volumes;
@@ -325,8 +326,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 					// Use the volume's padding value for all pixels that are outside the volume
 					reslicer.SetBackgroundLevel(_volume.Volume.PaddingValue);
 
-					// This ensures VTK obeys the real spacing, results in all VTK slices being isotropic.
-					//	Effective spacing is the minimum of these three.
+					// This effectively ensures that the image reslicer uses the original spacing in the output images
 					reslicer.SetOutputSpacing(_volume.Volume.VoxelSpacing.X, _volume.Volume.VoxelSpacing.Y, _volume.Volume.VoxelSpacing.Z);
 
 					using (vtkMatrix4x4 resliceAxesMatrix = VtkHelper.ConvertToVtkMatrix(resliceAxes))

@@ -26,7 +26,6 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
-using System.Threading;
 using ClearCanvas.Common;
 using ClearCanvas.ImageViewer.Mathematics;
 using vtk;
@@ -42,17 +41,17 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr.Utilities
 			vtkOutputWindow.SetInstance(fileOutputWindow);
 		}
 
-        #region VTK Static Initialization Hack
+		#region VTK Static Initialization Hack
 
-        //VTK initializes some static variables (collections, actually) internally in a way that is not thread safe.
-        //It seems that, at least for the code we use to do reslicing, the collections are fully initialized after 
-        //the first slice is created from the first volume. Problems arise, however, if 2 slices are being created
-        //simultaneously on different threads.
-        //For the record, individual VTK objects are not thread-safe and should never be shared across threads.
-        //This hack exists only to workaround the static collections issue. Note also, that this hack is not future-proof;
-        //if we start using different parts of VTK in the future, we need to make sure this hack still works.
-        private static readonly object _initializationLock = new object();
-        private static volatile bool _initialized;
+		//VTK initializes some static variables (collections, actually) internally in a way that is not thread safe.
+		//It seems that, at least for the code we use to do reslicing, the collections are fully initialized after 
+		//the first slice is created from the first volume. Problems arise, however, if 2 slices are being created
+		//simultaneously on different threads.
+		//For the record, individual VTK objects are not thread-safe and should never be shared across threads.
+		//This hack exists only to workaround the static collections issue. Note also, that this hack is not future-proof;
+		//if we start using different parts of VTK in the future, we need to make sure this hack still works.
+		private static readonly object _initializationLock = new object();
+		private static volatile bool _initialized;
 
 		internal static void StaticInitializationHack()
 		{
@@ -61,19 +60,19 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr.Utilities
 
 			lock (_initializationLock)
 			{
-                if (_initialized)
+				if (_initialized)
 					return;
 
-                //Set _initialized right away, just in case there are recursive calls on the same thread.
-                _initialized = true;
+				//Set _initialized right away, just in case there are recursive calls on the same thread.
+				_initialized = true;
 
-                //Create one signed and one unsigned, just to make sure.
-                CreateAndResliceVolume(false);
-                CreateAndResliceVolume(true);
+				//Create one signed and one unsigned, just to make sure.
+				CreateAndResliceVolume(false);
+				CreateAndResliceVolume(true);
 			}
 		}
 
-        private static void CreateAndResliceVolume(bool signed)
+		private static void CreateAndResliceVolume(bool signed)
 		{
 			const int width = 10;
 			const int height = 10;
@@ -101,7 +100,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr.Utilities
 
 		private static void ResliceVolume(vtkImageData volume)
 		{
-            using (var reslicer = new vtkImageReslice())
+			using (var reslicer = new vtkImageReslice())
 			{
 				RegisterVtkErrorEvents(reslicer);
 				reslicer.SetInput(volume);
@@ -117,7 +116,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr.Utilities
 				//	Effective spacing is the minimum of these three.
 				reslicer.SetOutputSpacing(1.0, 1.0, 1.0);
 
-                using (vtkMatrix4x4 resliceAxesMatrix = ConvertToVtkMatrix(new double[,] {{1, 0, 0, 0}, {0, 1, 0, 0}, {0, 0, 1, 0}, {0, 0, 0, 1}}))
+				using (vtkMatrix4x4 resliceAxesMatrix = ConvertToVtkMatrix(new double[,] {{1, 0, 0, 0}, {0, 1, 0, 0}, {0, 0, 1, 0}, {0, 0, 0, 1}}))
 				{
 					reslicer.SetResliceAxes(resliceAxesMatrix);
 
@@ -144,7 +143,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr.Utilities
 					using (var output = reslicer.GetOutput())
 					{
 						// just to give it something to do with the output
-                        GC.KeepAlive(output);
+						GC.KeepAlive(output);
 					}
 				}
 			}
@@ -160,8 +159,10 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr.Utilities
 			vtkVolume.SetOrigin(0, 0, 0);
 			vtkVolume.SetSpacing(1.0, 1.0, 1.0);
 
-			using (var array = ConvertToVtkUnsignedShortArray(data))
+			using (var array = new vtkUnsignedShortArray())
 			{
+				array.SetArray(data, (VtkIdType) data.Length, 1);
+
 				vtkVolume.SetScalarTypeToUnsignedShort();
 				vtkVolume.GetPointData().SetScalars(array);
 
@@ -182,8 +183,10 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr.Utilities
 			vtkVolume.SetOrigin(0, 0, 0);
 			vtkVolume.SetSpacing(1.0, 1.0, 1.0);
 
-			using (var array = ConvertToVtkShortArray(data))
+			using (var array = new vtkShortArray())
 			{
+				array.SetArray(data, (VtkIdType) data.Length, 1);
+
 				vtkVolume.SetScalarTypeToShort();
 				vtkVolume.GetPointData().SetScalars(array);
 
@@ -194,16 +197,16 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr.Utilities
 			return vtkVolume;
 		}
 
-        private static vtkMatrix4x4 ConvertToVtkMatrix(double[,] matrix)
-        {
-            vtkMatrix4x4 vtkMatrix = new vtkMatrix4x4();
+		private static vtkMatrix4x4 ConvertToVtkMatrix(double[,] matrix)
+		{
+			vtkMatrix4x4 vtkMatrix = new vtkMatrix4x4();
 
-            for (int row = 0; row < 4; row++)
-                for (int column = 0; column < 4; column++)
-                    vtkMatrix.SetElement(column, row, matrix[row, column]);
+			for (int row = 0; row < 4; row++)
+				for (int column = 0; column < 4; column++)
+					vtkMatrix.SetElement(column, row, matrix[row, column]);
 
-            return vtkMatrix;
-        }
+			return vtkMatrix;
+		}
 
 		#endregion
 
@@ -239,8 +242,6 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr.Utilities
 
 		#endregion
 
-		#region Convert to VTK helpers
-
 		/// <summary>
 		/// Converts a <see cref="Matrix"/> to a <see cref="vtkMatrix4x4"/>.
 		/// </summary>
@@ -261,21 +262,5 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr.Utilities
 
 			return vtkMatrix;
 		}
-
-		public static vtkShortArray ConvertToVtkShortArray(Array shortArray)
-		{
-			vtkShortArray vtkShortArray = new vtkShortArray();
-			vtkShortArray.SetArray((short[]) shortArray, (VtkIdType) shortArray.Length, 1);
-			return vtkShortArray;
-		}
-
-		public static vtkUnsignedShortArray ConvertToVtkUnsignedShortArray(Array ushortArray)
-		{
-			vtkUnsignedShortArray vtkUnsignedShortArray = new vtkUnsignedShortArray();
-			vtkUnsignedShortArray.SetArray((ushort[])ushortArray, (VtkIdType) ushortArray.Length, 1);
-			return vtkUnsignedShortArray;
-		}
-
-		#endregion
 	}
 }

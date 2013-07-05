@@ -24,13 +24,39 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using ClearCanvas.Common;
 using ClearCanvas.Dicom;
-using ClearCanvas.Dicom.Iod.Macros;
 using ClearCanvas.Dicom.Iod.Modules;
 
 namespace ClearCanvas.ImageViewer.Volumes
 {
+	/// <summary>
+	/// Represents the DICOM data set common to the volume.
+	/// </summary>
+	public interface IVolumeDataSet : IDicomAttributeProvider
+	{
+		/// <summary>
+		/// Enumerates the DICOM tags in the data set.
+		/// </summary>
+		IEnumerable<uint> Tags { get; }
+
+		/// <summary>
+		/// Enumerates the DICOM attributes in the data set.
+		/// </summary>
+		IEnumerable<DicomAttribute> Attributes { get; }
+
+		/// <summary>
+		/// Creates a deep copy of the contents of the data set.
+		/// </summary>
+		/// <returns>A new <see cref="DicomAttributeCollection"/> containing the contents of the data set.</returns>
+		DicomAttributeCollection Copy();
+
+		/// <summary>
+		/// Copies the contents of the data set to another collection.
+		/// </summary>
+		/// <param name="destinationCollection">The destination collection.</param>
+		void CopyTo(IDicomAttributeProvider destinationCollection);
+	}
+
 	partial class Volume
 	{
 		/// <summary>
@@ -40,9 +66,19 @@ namespace ClearCanvas.ImageViewer.Volumes
 		/// For now, we will have this prototype shared between each SOP (a single slice of any plane)
 		/// Ideally, we should have a single multiframe SOP for each plane, and then this prototype is shared between those SOPs
 		/// </remarks>
-		internal class VolumeSopDataSourcePrototype : IDicomAttributeProvider
+		internal class VolumeSopDataSourcePrototype : IVolumeDataSet
 		{
 			private readonly DicomAttributeCollection _collection = new DicomAttributeCollection();
+
+			public IEnumerable<uint> Tags
+			{
+				get { return _collection.Select(a => a.Tag.TagValue); }
+			}
+
+			public IEnumerable<DicomAttribute> Attributes
+			{
+				get { return _collection.Select(a => a); }
+			}
 
 			public DicomAttribute this[DicomTag tag]
 			{
@@ -66,6 +102,19 @@ namespace ClearCanvas.ImageViewer.Volumes
 				return _collection.TryGetAttribute(tag, out attribute);
 			}
 
+			public DicomAttributeCollection Copy()
+			{
+				var collection = new DicomAttributeCollection();
+				CopyTo(collection);
+				return collection;
+			}
+
+			public void CopyTo(IDicomAttributeProvider destinationCollection)
+			{
+				foreach (var attribute in _collection)
+					destinationCollection[attribute.Tag] = attribute.Copy();
+			}
+
 			public static VolumeSopDataSourcePrototype Create(IList<IDicomAttributeProvider> sourceSops, int bitsAllocated, int bitsStored, bool isSigned)
 			{
 				const string enumYes = "YES";
@@ -73,9 +122,9 @@ namespace ClearCanvas.ImageViewer.Volumes
 				const string enumLossy = "01";
 				const string enumLossless = "00";
 
-				VolumeSopDataSourcePrototype prototype = new VolumeSopDataSourcePrototype();
-				DicomAttributeCollection volumeDataSet = prototype._collection;
-				IDicomAttributeProvider source = sourceSops[0];
+				var prototype = new VolumeSopDataSourcePrototype();
+				var volumeDataSet = prototype._collection;
+				var source = sourceSops[0];
 
 				// perform exact copy on the Patient Module
 				foreach (uint tag in PatientModuleIod.DefinedTags)
@@ -113,17 +162,10 @@ namespace ClearCanvas.ImageViewer.Volumes
 				foreach (uint tag in GeneralEquipmentModuleIod.DefinedTags)
 					volumeDataSet[tag] = source[tag].Copy();
 
-				// generate values for SC Equipment Module
-				var scEquipment = new ScEquipmentModuleIod(volumeDataSet);
-				scEquipment.ConversionType = @"WSD";
-				scEquipment.SecondaryCaptureDeviceManufacturer = @"ClearCanvas Inc.";
-				scEquipment.SecondaryCaptureDeviceManufacturersModelName = ProductInformation.GetName(true, false);
-				scEquipment.SecondaryCaptureDeviceSoftwareVersions = new[] {ProductInformation.GetVersion(true, true, true)};
-
-				// fill series-consistent values for the Frame of Reference Module
+				// copy volume-consistent values for the Frame of Reference Module
 				volumeDataSet[DicomTags.FrameOfReferenceUid] = source[DicomTags.FrameOfReferenceUid].Copy();
 
-				// generate values for the General Image Module
+				// generate volume-consistent values for the General Image Module
 				var burnedInAnnotationValues = sourceSops.Select(s => s[DicomTags.BurnedInAnnotation].GetBoolean(0, enumYes, enumNo)).ToList();
 				var burnedInAnnotation = burnedInAnnotationValues.Any(v => v.GetValueOrDefault(false)) ? true : (burnedInAnnotationValues.All(v => !v.GetValueOrDefault(true)) ? false : (bool?) null);
 				var recognizableVisualFeaturesValues = sourceSops.Select(s => s[DicomTags.RecognizableVisualFeatures].GetBoolean(0, enumYes, enumNo)).ToList();
@@ -132,9 +174,6 @@ namespace ClearCanvas.ImageViewer.Volumes
 				var lossyImageCompression = lossyImageCompressionValues.Any(v => v.GetValueOrDefault(false)) ? true : (lossyImageCompressionValues.All(v => !v.GetValueOrDefault(true)) ? false : (bool?) null);
 				var lossyImageCompressionRatioValues = sourceSops.Select(s => s[DicomTags.LossyImageCompressionRatio].GetFloat32(0, 0)).ToList();
 				var lossyImageCompressionRatio = lossyImageCompressionRatioValues.Max();
-				volumeDataSet[DicomTags.ImageType].SetStringValue(@"DERIVED\SECONDARY");
-				volumeDataSet[DicomTags.DerivationDescription].SetStringValue(@"Multiplanar Reformatting");
-				volumeDataSet[DicomTags.DerivationCodeSequence].Values = new[] {new CodeSequenceMacro {CodingSchemeDesignator = "DCM", CodeValue = "113072", CodeMeaning = "Multiplanar reformatting"}.DicomSequenceItem};
 				volumeDataSet[DicomTags.BurnedInAnnotation].SetBoolean(0, burnedInAnnotation, enumYes, enumNo);
 				volumeDataSet[DicomTags.RecognizableVisualFeatures].SetBoolean(0, recognizableVisualFeatures, enumYes, enumNo);
 				volumeDataSet[DicomTags.LossyImageCompression].SetBoolean(0, lossyImageCompression, enumLossy, enumLossless);
@@ -142,10 +181,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 					volumeDataSet[DicomTags.LossyImageCompressionRatio].SetFloat32(0, lossyImageCompressionRatio);
 				// TODO: there's a SourceImageSequence here that we should probably fill out
 
-				// fill series-consistent values for the Image Plane Module
-				volumeDataSet[DicomTags.PixelSpacing] = source[DicomTags.PixelSpacing].Copy();
-
-				// fill series-consistent values for the Image Pixel Module
+				// generate volume-consistent values for the Image Pixel Module
 				volumeDataSet[DicomTags.SamplesPerPixel] = source[DicomTags.SamplesPerPixel].Copy();
 				volumeDataSet[DicomTags.PhotometricInterpretation] = source[DicomTags.PhotometricInterpretation].Copy();
 				volumeDataSet[DicomTags.BitsAllocated].SetInt32(0, bitsAllocated);
@@ -153,41 +189,29 @@ namespace ClearCanvas.ImageViewer.Volumes
 				volumeDataSet[DicomTags.HighBit].SetInt32(0, bitsStored - 1);
 				volumeDataSet[DicomTags.PixelRepresentation].SetInt32(0, isSigned ? 1 : 0);
 
-				// fill series-consistent values for the SOP Common Module
-				volumeDataSet[DicomTags.SopClassUid].SetStringValue(SopClass.SecondaryCaptureImageStorageUid);
-
 				return prototype;
 			}
 
-			private static IList<uint> _seriesModuleTags;
-
-			private static IEnumerable<uint> ModalitySpecificSeriesModuleTags
-			{
-				get
-				{
-					if (_seriesModuleTags == null)
-					{
-						// only need to list modules for logically reformattable IODs (e.g. CT, MR, NM, PET)
-						// and enhanced/tomography versions of nominally non-reformattable modalities (e.g. Enh US, Enh MG)
-						_seriesModuleTags = EnhancedSeriesModuleIod.DefinedTags
-							.Union(EnhancedPetSeriesModuleIod.DefinedTags)
-							.Union(EnhancedUsSeriesModuleIod.DefinedTags)
-							.Union(CtSeriesModuleIod.DefinedTags)
-							.Union(EnhancedMammographySeriesModuleIod.DefinedTags)
-							.Union(OpthalmicTomographySeriesModuleIod.DefinedTags)
-							.Union(MrSeriesModuleIod.DefinedTags)
-							.Union(NmPetPatientOrientationModuleIod.DefinedTags)
-							.Union(PetSeriesModuleIod.DefinedTags)
-							.Union(PetIsotopeModuleIod.DefinedTags)
-							.Union(PetMultiGatedAcquisitionModuleIod.DefinedTags)
-							.Union(XaXrfSeriesModuleIod.DefinedTags)
-							.Distinct()
-							.Except(new[] {DicomTags.LargestPixelValueInSeries, DicomTags.SmallestPixelValueInSeries, DicomTags.SeriesInstanceUid})
-							.ToList().AsReadOnly();
-					}
-					return _seriesModuleTags;
-				}
-			}
+			/// <summary>
+			/// Gets a list of modality-specific series-level tags that would logically be volume-consistent.
+			/// </summary>
+			internal static readonly IList<uint> ModalitySpecificSeriesModuleTags
+				// only need to list modules for cross sectional modality IODs (e.g. CT, MR, NM, PET)
+				// and enhanced/tomography versions of typically projectional modalities (e.g. Enh US, Enh MG)
+				= EnhancedSeriesModuleIod.DefinedTags
+					.Union(EnhancedPetSeriesModuleIod.DefinedTags)
+					.Union(EnhancedUsSeriesModuleIod.DefinedTags)
+					.Union(CtSeriesModuleIod.DefinedTags)
+					.Union(EnhancedMammographySeriesModuleIod.DefinedTags)
+					.Union(OpthalmicTomographySeriesModuleIod.DefinedTags)
+					.Union(MrSeriesModuleIod.DefinedTags)
+					.Union(NmPetPatientOrientationModuleIod.DefinedTags)
+					.Union(PetSeriesModuleIod.DefinedTags)
+					.Union(PetIsotopeModuleIod.DefinedTags)
+					.Union(PetMultiGatedAcquisitionModuleIod.DefinedTags)
+					.Union(XaXrfSeriesModuleIod.DefinedTags)
+					.Except(new[] {DicomTags.LargestPixelValueInSeries, DicomTags.SmallestPixelValueInSeries, DicomTags.SeriesInstanceUid})
+					.ToList().AsReadOnly();
 		}
 
 		#region Unit Test Support

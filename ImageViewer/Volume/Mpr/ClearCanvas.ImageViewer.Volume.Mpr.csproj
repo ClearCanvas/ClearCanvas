@@ -139,7 +139,6 @@
     <Compile Include="Tools\MprMoveControlGraphic.cs" />
     <Compile Include="Utilities\ObservableDisposableList.cs" />
     <Compile Include="Utilities\ProgressTask.cs" />
-    <Compile Include="VtkVolumeMethods.cs" />
     <Compile Include="VolumeSlice.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -158,7 +157,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VolumeSliceSopDataSource.cs" />
     <Compile Include="Utilities\VtkHelper.cs" />
-    <Compile Include="VtkVolumeHandle.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Common\ClearCanvas.Common.csproj">
@@ -184,6 +182,10 @@
     <ProjectReference Include="..\..\Configuration\ClearCanvas.ImageViewer.Configuration.csproj">
       <Project>{89DF567B-A0D1-456A-A28F-043FD57D7F9A}</Project>
       <Name>ClearCanvas.ImageViewer.Configuration</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\VTK\ClearCanvas.ImageViewer.VTK.csproj">
+      <Project>{14FE088A-252E-4214-94B6-FC9D62C9BF0E}</Project>
+      <Name>ClearCanvas.ImageViewer.VTK</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
