@@ -52,9 +52,9 @@ namespace ClearCanvas.ImageViewer.Volumes
 		/// Consider using <see cref="Volume.Create(IDisplaySet)"/> or one of its overloads to automatically construct and fill a <see cref="Volume"/> of the appropriate type.
 		/// </remarks>
 		public U16Volume(ushort[] array, Size3D arrayDimensions, Vector3D voxelSpacing, Vector3D volumePositionPatient, Matrix volumeOrientationPatient, IList<IDicomAttributeProvider> dicomAttributeModel, int paddingValue, string sourceSeriesInstanceUid)
-			: this(array, arrayDimensions, voxelSpacing, volumePositionPatient, volumeOrientationPatient, VolumeSopDataSourcePrototype.Create(dicomAttributeModel, 16, 16, false), paddingValue, sourceSeriesInstanceUid, 0, 0) {}
+			: this(array, arrayDimensions, voxelSpacing, volumePositionPatient, volumeOrientationPatient, VolumeSopDataSourcePrototype.Create(dicomAttributeModel, 16, 16, false), paddingValue, sourceSeriesInstanceUid, null, null) {}
 
-		internal U16Volume(ushort[] array, Size3D arrayDimensions, Vector3D voxelSpacing, Vector3D volumePositionPatient, Matrix volumeOrientationPatient, VolumeSopDataSourcePrototype dataSourcePrototype, int paddingValue, string sourceSeriesInstanceUid, int minVolumeValue, int maxVolumeValue)
+		internal U16Volume(ushort[] array, Size3D arrayDimensions, Vector3D voxelSpacing, Vector3D volumePositionPatient, Matrix volumeOrientationPatient, VolumeSopDataSourcePrototype dataSourcePrototype, int paddingValue, string sourceSeriesInstanceUid, int? minVolumeValue, int? maxVolumeValue)
 			: base(arrayDimensions, voxelSpacing, volumePositionPatient, volumeOrientationPatient, dataSourcePrototype, paddingValue, sourceSeriesInstanceUid, minVolumeValue, maxVolumeValue)
 		{
 			_array = array;
@@ -67,7 +67,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 		}
 
 		/// <summary>
-		/// Gets the underlying data array.
+		/// Gets the array containing the volume data.
 		/// </summary>
 		public ushort[] ArrayData
 		{
@@ -92,6 +92,25 @@ namespace ClearCanvas.ImageViewer.Volumes
 		protected override int GetArrayValue(int i)
 		{
 			return _array[i];
+		}
+
+		protected override unsafe void GetMinMaxVolumeValue(out int minValue, out int maxValue)
+		{
+			fixed (ushort* pArray = _array)
+			{
+				var ptr = pArray;
+				var len = _array.Length;
+				var max = ushort.MinValue;
+				var min = ushort.MaxValue;
+				for (var i = 0; i < len; ++i)
+				{
+					var v = *(ptr++);
+					if (max < v) max = v;
+					if (v < min) min = v;
+				}
+				minValue = min;
+				maxValue = max;
+			}
 		}
 	}
 
@@ -118,9 +137,9 @@ namespace ClearCanvas.ImageViewer.Volumes
 		/// Consider using <see cref="Volume.Create(IDisplaySet)"/> or one of its overloads to automatically construct and fill a <see cref="Volume"/> of the appropriate type.
 		/// </remarks>
 		public S16Volume(short[] array, Size3D arrayDimensions, Vector3D voxelSpacing, Vector3D volumePositionPatient, Matrix volumeOrientationPatient, IList<IDicomAttributeProvider> dicomAttributeModel, int paddingValue, string sourceSeriesInstanceUid)
-			: this(array, arrayDimensions, voxelSpacing, volumePositionPatient, volumeOrientationPatient, VolumeSopDataSourcePrototype.Create(dicomAttributeModel, 16, 16, true), paddingValue, sourceSeriesInstanceUid, 0, 0) {}
+			: this(array, arrayDimensions, voxelSpacing, volumePositionPatient, volumeOrientationPatient, VolumeSopDataSourcePrototype.Create(dicomAttributeModel, 16, 16, true), paddingValue, sourceSeriesInstanceUid, null, null) {}
 
-		internal S16Volume(short[] array, Size3D arrayDimensions, Vector3D voxelSpacing, Vector3D volumePositionPatient, Matrix volumeOrientationPatient, VolumeSopDataSourcePrototype dataSourcePrototype, int paddingValue, string sourceSeriesInstanceUid, int minVolumeValue, int maxVolumeValue)
+		internal S16Volume(short[] array, Size3D arrayDimensions, Vector3D voxelSpacing, Vector3D volumePositionPatient, Matrix volumeOrientationPatient, VolumeSopDataSourcePrototype dataSourcePrototype, int paddingValue, string sourceSeriesInstanceUid, int? minVolumeValue, int? maxVolumeValue)
 			: base(arrayDimensions, voxelSpacing, volumePositionPatient, volumeOrientationPatient, dataSourcePrototype, paddingValue, sourceSeriesInstanceUid, minVolumeValue, maxVolumeValue)
 		{
 			_array = array;
@@ -133,7 +152,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 		}
 
 		/// <summary>
-		/// Gets the underlying data array.
+		/// Gets the array containing the volume data.
 		/// </summary>
 		public short[] ArrayData
 		{
@@ -158,6 +177,25 @@ namespace ClearCanvas.ImageViewer.Volumes
 		protected override int GetArrayValue(int i)
 		{
 			return _array[i];
+		}
+
+		protected override unsafe void GetMinMaxVolumeValue(out int minValue, out int maxValue)
+		{
+			fixed (short* pArray = _array)
+			{
+				var ptr = pArray;
+				var len = _array.Length;
+				var max = short.MinValue;
+				var min = short.MaxValue;
+				for (var i = 0; i < len; ++i)
+				{
+					var v = *(ptr++);
+					if (max < v) max = v;
+					if (v < min) min = v;
+				}
+				minValue = min;
+				maxValue = max;
+			}
 		}
 	}
 
@@ -184,9 +222,9 @@ namespace ClearCanvas.ImageViewer.Volumes
 		/// Consider using <see cref="Volume.Create(IDisplaySet)"/> or one of its overloads to automatically construct and fill a <see cref="Volume"/> of the appropriate type.
 		/// </remarks>
 		public U8Volume(byte[] array, Size3D arrayDimensions, Vector3D voxelSpacing, Vector3D volumePositionPatient, Matrix volumeOrientationPatient, IList<IDicomAttributeProvider> dicomAttributeModel, int paddingValue, string sourceSeriesInstanceUid)
-			: this(array, arrayDimensions, voxelSpacing, volumePositionPatient, volumeOrientationPatient, VolumeSopDataSourcePrototype.Create(dicomAttributeModel, 8, 8, false), paddingValue, sourceSeriesInstanceUid, 0, 0) {}
+			: this(array, arrayDimensions, voxelSpacing, volumePositionPatient, volumeOrientationPatient, VolumeSopDataSourcePrototype.Create(dicomAttributeModel, 8, 8, false), paddingValue, sourceSeriesInstanceUid, null, null) {}
 
-		internal U8Volume(byte[] array, Size3D arrayDimensions, Vector3D voxelSpacing, Vector3D volumePositionPatient, Matrix volumeOrientationPatient, VolumeSopDataSourcePrototype dataSourcePrototype, int paddingValue, string sourceSeriesInstanceUid, int minVolumeValue, int maxVolumeValue)
+		internal U8Volume(byte[] array, Size3D arrayDimensions, Vector3D voxelSpacing, Vector3D volumePositionPatient, Matrix volumeOrientationPatient, VolumeSopDataSourcePrototype dataSourcePrototype, int paddingValue, string sourceSeriesInstanceUid, int? minVolumeValue, int? maxVolumeValue)
 			: base(arrayDimensions, voxelSpacing, volumePositionPatient, volumeOrientationPatient, dataSourcePrototype, paddingValue, sourceSeriesInstanceUid, minVolumeValue, maxVolumeValue)
 		{
 			_array = array;
@@ -199,7 +237,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 		}
 
 		/// <summary>
-		/// Gets the underlying data array.
+		/// Gets the array containing the volume data.
 		/// </summary>
 		public byte[] ArrayData
 		{
@@ -224,6 +262,25 @@ namespace ClearCanvas.ImageViewer.Volumes
 		protected override int GetArrayValue(int i)
 		{
 			return _array[i];
+		}
+
+		protected override unsafe void GetMinMaxVolumeValue(out int minValue, out int maxValue)
+		{
+			fixed (byte* pArray = _array)
+			{
+				var ptr = pArray;
+				var len = _array.Length;
+				var max = byte.MinValue;
+				var min = byte.MaxValue;
+				for (var i = 0; i < len; ++i)
+				{
+					var v = *(ptr++);
+					if (max < v) max = v;
+					if (v < min) min = v;
+				}
+				minValue = min;
+				maxValue = max;
+			}
 		}
 	}
 
@@ -250,9 +307,9 @@ namespace ClearCanvas.ImageViewer.Volumes
 		/// Consider using <see cref="Volume.Create(IDisplaySet)"/> or one of its overloads to automatically construct and fill a <see cref="Volume"/> of the appropriate type.
 		/// </remarks>
 		public S8Volume(sbyte[] array, Size3D arrayDimensions, Vector3D voxelSpacing, Vector3D volumePositionPatient, Matrix volumeOrientationPatient, IList<IDicomAttributeProvider> dicomAttributeModel, int paddingValue, string sourceSeriesInstanceUid)
-			: this(array, arrayDimensions, voxelSpacing, volumePositionPatient, volumeOrientationPatient, VolumeSopDataSourcePrototype.Create(dicomAttributeModel, 8, 8, true), paddingValue, sourceSeriesInstanceUid, 0, 0) {}
+			: this(array, arrayDimensions, voxelSpacing, volumePositionPatient, volumeOrientationPatient, VolumeSopDataSourcePrototype.Create(dicomAttributeModel, 8, 8, true), paddingValue, sourceSeriesInstanceUid, null, null) {}
 
-		internal S8Volume(sbyte[] array, Size3D arrayDimensions, Vector3D voxelSpacing, Vector3D volumePositionPatient, Matrix volumeOrientationPatient, VolumeSopDataSourcePrototype dataSourcePrototype, int paddingValue, string sourceSeriesInstanceUid, int minVolumeValue, int maxVolumeValue)
+		internal S8Volume(sbyte[] array, Size3D arrayDimensions, Vector3D voxelSpacing, Vector3D volumePositionPatient, Matrix volumeOrientationPatient, VolumeSopDataSourcePrototype dataSourcePrototype, int paddingValue, string sourceSeriesInstanceUid, int? minVolumeValue, int? maxVolumeValue)
 			: base(arrayDimensions, voxelSpacing, volumePositionPatient, volumeOrientationPatient, dataSourcePrototype, paddingValue, sourceSeriesInstanceUid, minVolumeValue, maxVolumeValue)
 		{
 			_array = array;
@@ -265,7 +322,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 		}
 
 		/// <summary>
-		/// Gets the underlying data array.
+		/// Gets the array containing the volume data.
 		/// </summary>
 		public sbyte[] ArrayData
 		{
@@ -290,6 +347,25 @@ namespace ClearCanvas.ImageViewer.Volumes
 		protected override int GetArrayValue(int i)
 		{
 			return _array[i];
+		}
+
+		protected override unsafe void GetMinMaxVolumeValue(out int minValue, out int maxValue)
+		{
+			fixed (sbyte* pArray = _array)
+			{
+				var ptr = pArray;
+				var len = _array.Length;
+				var max = sbyte.MinValue;
+				var min = sbyte.MaxValue;
+				for (var i = 0; i < len; ++i)
+				{
+					var v = *(ptr++);
+					if (max < v) max = v;
+					if (v < min) min = v;
+				}
+				minValue = min;
+				maxValue = max;
+			}
 		}
 	}
 }

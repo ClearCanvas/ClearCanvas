@@ -803,6 +803,7 @@
     <Compile Include="Volumes\Tests\VolumeCacheTestTool.cs" />
     <Compile Include="Volumes\Tests\VolumeFunction.cs" />
     <Compile Include="Volumes\Tests\VolumeSopDataSourcePrototypeTests.cs" />
+    <Compile Include="Volumes\Tests\VolumeTests.cs" />
     <Compile Include="Volumes\Volume.cs" />
     <Compile Include="Volumes\VolumeBuilder.cs" />
     <Compile Include="Volumes\VolumeCache.cs" />

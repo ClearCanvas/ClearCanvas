@@ -59,8 +59,8 @@ namespace ClearCanvas.ImageViewer.Volumes
 		private readonly Matrix _volumeOrientationPatient;
 
 		private readonly int _paddingValue;
-		private readonly int _minVolumeValue;
-		private readonly int _maxVolumeValue;
+		private int? _minVolumeValue;
+		private int? _maxVolumeValue;
 
 		private readonly string _sourceSeriesInstanceUid;
 		private readonly VolumeSopDataSourcePrototype _dataSourcePrototype;
@@ -81,7 +81,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 		/// <param name="sourceSeriesInstanceUid"></param>
 		/// <param name="minVolumeValue"></param>
 		/// <param name="maxVolumeValue"></param>
-		internal Volume(Size3D arrayDimensions, Vector3D voxelSpacing, Vector3D volumePositionPatient, Matrix volumeOrientationPatient, VolumeSopDataSourcePrototype dataSourcePrototype, int paddingValue, string sourceSeriesInstanceUid, int minVolumeValue, int maxVolumeValue)
+		internal Volume(Size3D arrayDimensions, Vector3D voxelSpacing, Vector3D volumePositionPatient, Matrix volumeOrientationPatient, VolumeSopDataSourcePrototype dataSourcePrototype, int paddingValue, string sourceSeriesInstanceUid, int? minVolumeValue, int? maxVolumeValue)
 		{
 			Platform.CheckForNullReference(arrayDimensions, "arrayDimensions");
 			Platform.CheckForNullReference(voxelSpacing, "voxelSpacing");
@@ -277,7 +277,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 		/// </summary>
 		public int MinimumVolumeValue
 		{
-			get { return _minVolumeValue; }
+			get { return _minVolumeValue.HasValue ? _minVolumeValue.Value : DoGetMinMaxVolumeValue(true); }
 		}
 
 		/// <summary>
@@ -285,7 +285,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 		/// </summary>
 		public int MaximumVolumeValue
 		{
-			get { return _maxVolumeValue; }
+			get { return _maxVolumeValue.HasValue ? _maxVolumeValue.Value : DoGetMinMaxVolumeValue(false); }
 		}
 
 		/// <summary>
@@ -332,6 +332,24 @@ namespace ClearCanvas.ImageViewer.Volumes
 		{
 			get { return _dataSourcePrototype; }
 		}
+
+		#endregion
+
+		#region Other Protected Methods
+
+		private int DoGetMinMaxVolumeValue(bool returnMin)
+		{
+			int min, max;
+			GetMinMaxVolumeValue(out min, out max);
+			_minVolumeValue = min;
+			_maxVolumeValue = max;
+			return returnMin ? min : max;
+		}
+
+		/// <summary>
+		/// Called to determine the minimum and maximum voxel values in the volume data.
+		/// </summary>
+		protected abstract void GetMinMaxVolumeValue(out int minValue, out int maxValue);
 
 		#endregion
 
