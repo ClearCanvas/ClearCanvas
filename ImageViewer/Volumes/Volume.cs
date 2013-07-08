@@ -212,7 +212,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 		}
 
 		/// <summary>
-		/// Gets the direction cosines describing the orientation of the volume X-axis relative to the patient coordinate system.
+		/// Gets the direction of the volume X-axis in the patient coordinate system.
 		/// </summary>
 		/// <remarks>
 		/// This is the volumetric analogue of the Image Orientation (Patient) concept in DICOM.
@@ -223,7 +223,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 		}
 
 		/// <summary>
-		/// Gets the direction cosines describing the orientation of the volume Y-axis relative to the patient coordinate system.
+		/// Gets the direction of the volume Y-axis in the patient coordinate system.
 		/// </summary>
 		/// <remarks>
 		/// This is the volumetric analogue of the Image Orientation (Patient) concept in DICOM.
@@ -234,7 +234,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 		}
 
 		/// <summary>
-		/// Gets the direction cosines describing the orientation of the volume Z-axis relative to the patient coordinate system.
+		/// Gets the direction of the volume Z-axis in the patient coordinate system.
 		/// </summary>
 		/// <remarks>
 		/// This is the volumetric analogue of the Image Orientation (Patient) concept in DICOM.

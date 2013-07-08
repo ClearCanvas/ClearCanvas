@@ -64,8 +64,8 @@ namespace ClearCanvas.ImageViewer.Volumes
 			private readonly List<IFrameReference> _frames;
 			private readonly CreateVolumeProgressCallback _callback;
 
-			private Matrix _imageOrientationPatient;
-			private Vector3D _imagePositionPatient;
+			private Matrix _volumeOrientationPatient;
+			private Vector3D _volumePositionPatient;
 			private Vector3D _voxelSpacing;
 			private Size3D _volumeSize;
 			private double? _gantryTilt;
@@ -96,23 +96,23 @@ namespace ClearCanvas.ImageViewer.Volumes
 				_frames.Clear();
 			}
 
-			private Matrix ImageOrientationPatient
+			private Matrix VolumeOrientationPatient
 			{
 				get
 				{
-					if (_imageOrientationPatient == null)
-						_imageOrientationPatient = ImageOrientationPatientToMatrix(_frames[0].Frame.ImageOrientationPatient);
-					return _imageOrientationPatient;
+					if (_volumeOrientationPatient == null)
+						_volumeOrientationPatient = ImageOrientationPatientToMatrix(_frames[0].Frame.ImageOrientationPatient);
+					return _volumeOrientationPatient;
 				}
 			}
 
-			private Vector3D ImagePositionPatient
+			private Vector3D VolumePositionPatient
 			{
 				get
 				{
-					if (_imagePositionPatient == null)
-						_imagePositionPatient = ImagePositionPatientToVector(_frames[0].Frame.ImagePositionPatient);
-					return _imagePositionPatient;
+					if (_volumePositionPatient == null)
+						_volumePositionPatient = ImagePositionPatientToVector(_frames[0].Frame.ImagePositionPatient);
+					return _volumePositionPatient;
 				}
 			}
 
@@ -146,10 +146,10 @@ namespace ClearCanvas.ImageViewer.Volumes
 
 						if (aboutXradians != 0)
 							// This flips euler sign in prone position, so that tilt is correctly signed
-							_gantryTilt = aboutXradians*this.ImageOrientationPatient[0, 0];
+							_gantryTilt = aboutXradians*this.VolumeOrientationPatient[0, 0];
 						else if (aboutYradians != 0)
 							// This flips euler sign in Decubitus Left position
-							_gantryTilt = aboutYradians*this.ImageOrientationPatient[0, 1];
+							_gantryTilt = aboutYradians*this.VolumeOrientationPatient[0, 1];
 						else
 							_gantryTilt = 0;
 					}
@@ -218,7 +218,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 
 				int minVolumeValue, maxVolumeValue;
 				var volumeArray = BuildVolumeArray(pixelPaddingValue, normalizedSlope, normalizedIntercept, out minVolumeValue, out maxVolumeValue);
-				var volume = new U16Volume(volumeArray, VolumeSize, VoxelSpacing, ImagePositionPatient, ImageOrientationPatient, sopDataSourcePrototype, pixelPaddingValue, _frames[0].Frame.SeriesInstanceUid, minVolumeValue, maxVolumeValue);
+				var volume = new U16Volume(volumeArray, VolumeSize, VoxelSpacing, VolumePositionPatient, VolumeOrientationPatient, sopDataSourcePrototype, pixelPaddingValue, _frames[0].Frame.SeriesInstanceUid, minVolumeValue, maxVolumeValue);
 				return volume;
 			}
 
@@ -501,7 +501,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 
 			private double ComputeTiltAboutX()
 			{
-				float aboutXradians = (float) GetXRotation(this.ImageOrientationPatient);
+				float aboutXradians = (float) GetXRotation(this.VolumeOrientationPatient);
 
 				// If within specified tolerance of 0, Pi/2, -Pi/2, then treat as no tilt (return 0)
 				if (FloatComparer.AreEqual(aboutXradians, 0f, _gantryTiltTolerance) ||
@@ -513,7 +513,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 
 			private double ComputeTiltAboutY()
 			{
-				float aboutYradians = (float) GetYRotation(this.ImageOrientationPatient);
+				float aboutYradians = (float) GetYRotation(this.VolumeOrientationPatient);
 
 				// If within specified tolerance of 0, Pi/2, -Pi/2, then treat as no tilt (return 0)
 				if (FloatComparer.AreEqual(aboutYradians, 0f, _gantryTiltTolerance) ||

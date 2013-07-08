@@ -30,7 +30,7 @@ using ClearCanvas.ImageViewer.BaseTools;
 
 namespace ClearCanvas.ImageViewer.Volumes.Tests
 {
-	[MenuAction("asyncLoadException", "global-menus/Debug/Throw AsyncVolumeLoadException", "ThrowAsyncVolumeLoadException")]
+	[MenuAction("asyncLoadException", "global-menus/&Debug/Volume Cache - Throw Async Exception", "ThrowAsyncVolumeLoadException")]
 	[ExtensionOf(typeof (ImageViewerToolExtensionPoint))]
 	internal class VolumeCacheTestTool : ImageViewerTool
 	{

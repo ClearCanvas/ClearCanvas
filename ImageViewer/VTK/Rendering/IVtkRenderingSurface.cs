@@ -27,12 +27,14 @@ using ClearCanvas.ImageViewer.Rendering.GDI;
 
 namespace ClearCanvas.ImageViewer.Vtk.Rendering
 {
+	public delegate void UpdateOverlayCallback();
+
 	public interface IVtkRenderingSurface : IRenderingSurface
 	{
 		BitmapBuffer OverlayBuffer { get; }
 
 		void SetSceneRoot(VtkSceneGraph sceneGraphRoot);
 		void Refresh();
-		void Render();
+		void Render(UpdateOverlayCallback updateOverlayCallback);
 	}
 }

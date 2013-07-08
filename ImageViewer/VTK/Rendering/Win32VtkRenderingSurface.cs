@@ -88,7 +88,7 @@ namespace ClearCanvas.ImageViewer.Vtk.Rendering
 			_vtkRenderWindow.SetDesiredUpdateRate(_dynamicFrameRate);
 			_vtkRenderWindow.AddRenderer(_vtkRenderer);
 
-			_dynamicRenderEventPublisher = !offscreen ? new DelayedEventPublisher((s, e) => Render(true)) : null;
+			_dynamicRenderEventPublisher = !offscreen ? new DelayedEventPublisher((s, e) => Render(true, null)) : null;
 
 			WindowID = windowId;
 		}
@@ -252,17 +252,17 @@ namespace ClearCanvas.ImageViewer.Vtk.Rendering
 			}
 		}
 
-		public void Render()
+		public void Render(UpdateOverlayCallback updateOverlayCallback)
 		{
 			if (_dynamicRenderEventPublisher != null)
 			{
 				_dynamicRenderEventPublisher.Publish(null, null);
 
-				Render(false);
+				Render(false, updateOverlayCallback);
 			}
 			else
 			{
-				Render(true);
+				Render(true, updateOverlayCallback);
 			}
 		}
 
@@ -281,7 +281,7 @@ namespace ClearCanvas.ImageViewer.Vtk.Rendering
 			}
 		}
 
-		private void Render(bool fullQuality)
+		private void Render(bool fullQuality, UpdateOverlayCallback updateOverlayCallback)
 		{
 			lock (_lockRender)
 			{
@@ -342,10 +342,13 @@ namespace ClearCanvas.ImageViewer.Vtk.Rendering
 					if (VtkPresentationImageRenderer.ShowFps && renderTime >= 0)
 					{
 						var font = _gdiFont ?? (_gdiFont = new Font(FontFamily.GenericMonospace, 12, FontStyle.Bold, GraphicsUnit.Point));
-						var msg = string.Format("FPS: {0,5:f1}", 1/renderTime);
+						var msg = string.Format("FPS: {0,5}", renderTime >= 0.000001 ? (1/renderTime).ToString("f1") : "-----");
 						ImageBuffer.Graphics.DrawString(msg, font, Brushes.Black, 11, 11);
 						ImageBuffer.Graphics.DrawString(msg, font, Brushes.White, 10, 10);
 					}
+
+					if (updateOverlayCallback != null)
+						updateOverlayCallback.Invoke();
 
 					FinalBuffer.RenderImage(ImageBuffer);
 					FinalBuffer.RenderImage(OverlayBuffer);

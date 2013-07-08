@@ -97,9 +97,6 @@ namespace ClearCanvas.ImageViewer.Vtk.Rendering
 
 		protected override void Render()
 		{
-			// normally we draw 2D overlay over the image, but since they're rendered to separate buffers, we actually need to render the overlay first
-			DrawOverlay2D(PresentationImage);
-
 			DrawSceneGraph(PresentationImage);
 		}
 
@@ -111,7 +108,12 @@ namespace ClearCanvas.ImageViewer.Vtk.Rendering
 		protected override void DrawSceneGraph(IVtkPresentationImage image)
 		{
 			Surface.SetSceneRoot(image.CreateSceneGraph());
-			Surface.Render();
+			Surface.Render(DrawOverlay2D);
+		}
+
+		private void DrawOverlay2D()
+		{
+			DrawOverlay2D(PresentationImage);
 		}
 
 		protected void DrawOverlay2D(IVtkPresentationImage image)
