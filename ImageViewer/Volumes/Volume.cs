@@ -39,6 +39,10 @@ namespace ClearCanvas.ImageViewer.Volumes
 	/// may be used to obtain a wrapper object that allows access to a shared, cached and memory-managed
 	/// instance of <see cref="Volume"/>.
 	/// </remarks>
+	/// <seealso cref="U16Volume"/>
+	/// <seealso cref="S16Volume"/>
+	/// <seealso cref="U8Volume"/>
+	/// <seealso cref="S8Volume"/>
 	public abstract partial class Volume : IDisposable
 	{
 		#region Private fields

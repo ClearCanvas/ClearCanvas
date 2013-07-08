@@ -408,7 +408,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 #endif
 					                                           	}))
 					{
-						_volumeReference = volume.CreateTransientReference();
+						_volumeReference = volume.CreateReference();
 
 						_largeObjectContainerData.LargeObjectCount = 1;
 						_largeObjectContainerData.BytesHeldCount = 2*volume.ArrayLength;

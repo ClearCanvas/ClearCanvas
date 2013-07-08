@@ -56,7 +56,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 		protected MprSliceSet(Volumes.Volume volume)
 		{
 			Platform.CheckForNullReference(volume, "volume");
-			_volume = volume.CreateTransientReference();
+			_volume = volume.CreateReference();
 
 			_sliceSops = new ObservableDisposableList<MprSliceSop>();
 			_sliceSops.EnableEvents = true;

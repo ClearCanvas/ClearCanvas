@@ -41,7 +41,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 		private Vector3D _throughPoint;
 
 		public VolumeSlice(Volumes.Volume volume, IVolumeSlicerParams slicerParams, Vector3D throughPoint)
-			: this(volume.CreateTransientReference(), slicerParams, throughPoint) {}
+			: this(volume.CreateReference(), slicerParams, throughPoint) {}
 
 		internal VolumeSlice(IVolumeReference volumeReference, IVolumeSlicerParams slicerParams, Vector3D throughPoint)
 		{

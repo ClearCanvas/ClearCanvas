@@ -27,18 +27,39 @@ using ClearCanvas.Common;
 
 namespace ClearCanvas.ImageViewer.Volumes
 {
+	/// <summary>
+	/// Represents a reference to a <see cref="Volumes.Volume"/>.
+	/// </summary>
+	/// <remarks>
+	/// Although you can simply hold an instance of <see cref="Volumes.Volume"/> directly, it is recommended
+	/// practice to indirectly reference the <see cref="Volumes.Volume"/> by holding a <see cref="IVolumeReference"/>
+	/// instead, as this allows code to be written in such a way that would support the use of cached,
+	/// memory-managed volumes using the <see cref="VolumeCache"/> mechanism (where you must use indirect
+	/// references as the underlying <see cref="Volumes.Volume"/> instance may change unexpectedly).
+	/// </remarks>
 	public interface IVolumeReference : IDisposable
 	{
+		/// <summary>
+		/// Gets the referenced <see cref="Volumes.Volume"/> instance.
+		/// </summary>
 		Volume Volume { get; }
 
 		/// <summary>
-		/// Clones an existing <see cref="IVolumeReference"/>, creating a new transient reference.
+		/// Clones an existing <see cref="IVolumeReference"/> to create a new reference instance.
 		/// </summary>
 		IVolumeReference Clone();
 	}
 
 	partial class Volume
 	{
+		/// <summary>
+		/// Implements <see cref="IVolumeReference"/>
+		/// </summary>
+		/// <remarks>
+		/// Although the volume itself no longer holds any unmanaged resources, and thus we can rely on the finalizer to appropriately handle cleanup,
+		/// we encourage client code to use references rather hold the volume directly, since then the code is theoretically capable of
+		/// using the volume cache and memory management system, which uses references by necessity.
+		/// </remarks>
 		private class VolumeReference : IVolumeReference
 		{
 			private Volume _volume;
@@ -56,7 +77,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 
 			public IVolumeReference Clone()
 			{
-				return _volume.CreateTransientReference();
+				return _volume.CreateReference();
 			}
 
 			public void Dispose()
@@ -70,17 +91,17 @@ namespace ClearCanvas.ImageViewer.Volumes
 		}
 
 		private readonly object _syncLock = new object();
-		private int _transientReferenceCount = 0;
+		private int _referenceCount = 0;
 		private bool _selfDisposed = false;
 
 		private void OnReferenceDisposed()
 		{
 			lock (_syncLock)
 			{
-				if (_transientReferenceCount > 0)
-					--_transientReferenceCount;
+				if (_referenceCount > 0)
+					--_referenceCount;
 
-				if (_transientReferenceCount == 0 && _selfDisposed)
+				if (_referenceCount == 0 && _selfDisposed)
 					DisposeInternal();
 			}
 		}
@@ -89,10 +110,10 @@ namespace ClearCanvas.ImageViewer.Volumes
 		{
 			lock (_syncLock)
 			{
-				if (_transientReferenceCount == 0 && _selfDisposed)
-					throw new ObjectDisposedException("The underlying sop data source has already been disposed.");
+				if (_referenceCount == 0 && _selfDisposed)
+					throw new ObjectDisposedException("The Volume has already been disposed.");
 
-				++_transientReferenceCount;
+				++_referenceCount;
 			}
 		}
 
@@ -109,13 +130,10 @@ namespace ClearCanvas.ImageViewer.Volumes
 			}
 		}
 
-	    // TODO (CR Apr 2013): Now that there's no VTK objects being held, we should be able to get rid of these "references" and also get rid of the IDisposable implementation.
-
 		/// <summary>
-		/// Creates a new 'transient reference' to this <see cref="Volume"/>.
+		/// Creates a reference to this <see cref="Volume"/>.
 		/// </summary>
-		/// <remarks>See <see cref="IVolumeReference"/> for a detailed explanation of 'transient references'.</remarks>
-		public IVolumeReference CreateTransientReference()
+		public IVolumeReference CreateReference()
 		{
 			if (Disposed) throw new ObjectDisposedException(typeof (Volume).FullName);
 			return new VolumeReference(this);
@@ -130,8 +148,8 @@ namespace ClearCanvas.ImageViewer.Volumes
 			{
 				_selfDisposed = true;
 
-				//Only dispose for real when self has been disposed and all the transient references have been disposed.
-				if (_transientReferenceCount == 0)
+				//Only dispose for real when self has been disposed and all the references have been disposed.
+				if (_referenceCount == 0)
 					DisposeInternal();
 			}
 		}

@@ -55,7 +55,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 
 		public VolumeSlicer(Volumes.Volume volume, IVolumeSlicerParams slicerParams)
 		{
-			_volume = volume.CreateTransientReference();
+			_volume = volume.CreateReference();
 			_slicerParams = slicerParams;
 		}
 
