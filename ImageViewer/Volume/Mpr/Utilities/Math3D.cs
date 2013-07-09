@@ -24,6 +24,7 @@
 
 using System;
 using ClearCanvas.ImageViewer.Mathematics;
+using ClearCanvas.ImageViewer.Volumes;
 
 namespace ClearCanvas.ImageViewer.Volume.Mpr.Utilities
 {
@@ -39,22 +40,22 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr.Utilities
 			return Math.Max(Math.Max(vector3D.X, vector3D.Y), vector3D.Z);
 		}
 
-		public static float GetMinimumSpacing(this Volumes.Volume volume)
+		public static float GetMinimumSpacing(this IVolumeHeader volume)
 		{
 			return volume.VoxelSpacing.Min();
 		}
 
-		public static float GetMaximumSpacing(this Volumes.Volume volume)
+		public static float GetMaximumSpacing(this IVolumeHeader volume)
 		{
 			return volume.VoxelSpacing.Max();
 		}
 
-		public static float GetLongAxisMagnitude(this Volumes.Volume volume)
+		public static float GetLongAxisMagnitude(this IVolumeHeader volume)
 		{
 			return volume.VolumeSize.Max();
 		}
 
-		public static float GetShortAxisMagnitude(this Volumes.Volume volume)
+		public static float GetShortAxisMagnitude(this IVolumeHeader volume)
 		{
 			return volume.VolumeSize.Min();
 		}

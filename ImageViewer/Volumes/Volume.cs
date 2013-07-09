@@ -42,11 +42,11 @@ namespace ClearCanvas.ImageViewer.Volumes
 	/// <seealso cref="S16Volume"/>
 	/// <seealso cref="U8Volume"/>
 	/// <seealso cref="S8Volume"/>
-	public abstract partial class Volume : IDisposable
+	public abstract partial class Volume : IVolumeHeader, IDisposable
 	{
 		#region Private fields
 
-		private readonly VolumeHeader _volumeHeader;
+		private readonly VolumeHeaderData _volumeHeaderData;
 
 		private int? _minVolumeValue;
 		private int? _maxVolumeValue;
@@ -58,14 +58,14 @@ namespace ClearCanvas.ImageViewer.Volumes
 		/// <summary>
 		/// Initializes the <see cref="Volume"/>.
 		/// </summary>
-		/// <param name="volumeHeader"></param>
+		/// <param name="volumeHeaderData"></param>
 		/// <param name="minVolumeValue"></param>
 		/// <param name="maxVolumeValue"></param>
-		internal Volume(VolumeHeader volumeHeader, int? minVolumeValue, int? maxVolumeValue)
+		internal Volume(VolumeHeaderData volumeHeaderData, int? minVolumeValue, int? maxVolumeValue)
 		{
-			Platform.CheckForNullReference(volumeHeader, "volumeHeader");
+			Platform.CheckForNullReference(volumeHeaderData, "volumeHeader");
 
-			_volumeHeader = volumeHeader;
+			_volumeHeaderData = volumeHeaderData;
 			_minVolumeValue = minVolumeValue;
 			_maxVolumeValue = maxVolumeValue;
 		}
@@ -128,7 +128,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 		/// </summary>
 		public Size3D ArrayDimensions
 		{
-			get { return _volumeHeader.ArrayDimensions; }
+			get { return _volumeHeaderData.ArrayDimensions; }
 		}
 
 		/// <summary>
@@ -146,7 +146,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 		/// </summary>
 		public Vector3D VolumeSize
 		{
-			get { return _volumeHeader.VolumeSize; }
+			get { return _volumeHeaderData.VolumeSize; }
 		}
 
 		/// <summary>
@@ -154,7 +154,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 		/// </summary>
 		public Rectangle3D VolumeBounds
 		{
-			get { return _volumeHeader.VolumeBounds; }
+			get { return _volumeHeaderData.VolumeBounds; }
 		}
 
 		/// <summary>
@@ -165,7 +165,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 		/// </remarks>
 		public Vector3D VoxelSpacing
 		{
-			get { return _volumeHeader.VoxelSpacing; }
+			get { return _volumeHeaderData.VoxelSpacing; }
 		}
 
 		/// <summary>
@@ -176,7 +176,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 		/// </remarks>
 		public Vector3D VolumePositionPatient
 		{
-			get { return _volumeHeader.VolumePositionPatient; }
+			get { return _volumeHeaderData.VolumePositionPatient; }
 		}
 
 		/// <summary>
@@ -187,7 +187,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 		/// </remarks>
 		public Vector3D VolumeOrientationPatientX
 		{
-			get { return _volumeHeader.VolumeOrientationPatientX; }
+			get { return _volumeHeaderData.VolumeOrientationPatientX; }
 		}
 
 		/// <summary>
@@ -198,7 +198,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 		/// </remarks>
 		public Vector3D VolumeOrientationPatientY
 		{
-			get { return _volumeHeader.VolumeOrientationPatientY; }
+			get { return _volumeHeaderData.VolumeOrientationPatientY; }
 		}
 
 		/// <summary>
@@ -209,7 +209,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 		/// </remarks>
 		public Vector3D VolumeOrientationPatientZ
 		{
-			get { return _volumeHeader.VolumeOrientationPatientZ; }
+			get { return _volumeHeaderData.VolumeOrientationPatientZ; }
 		}
 
 		/// <summary>
@@ -217,7 +217,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 		/// </summary>
 		public Vector3D VolumeCenter
 		{
-			get { return _volumeHeader.VolumeCenter; }
+			get { return _volumeHeaderData.VolumeCenter; }
 		}
 
 		/// <summary>
@@ -225,7 +225,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 		/// </summary>
 		public Vector3D VolumeCenterPatient
 		{
-			get { return _volumeHeader.VolumeCenterPatient; }
+			get { return _volumeHeaderData.VolumeCenterPatient; }
 		}
 
 		/// <summary>
@@ -233,7 +233,31 @@ namespace ClearCanvas.ImageViewer.Volumes
 		/// </summary>
 		public int PaddingValue
 		{
-			get { return _volumeHeader.PaddingValue; }
+			get { return _volumeHeaderData.PaddingValue; }
+		}
+
+		/// <summary>
+		/// Gets the Rescale Slope of the linear modality LUT used to transform the values of the volume.
+		/// </summary>
+		/// <remarks>
+		/// If the source frames have different rescale function parameters per frame, the volume data
+		/// will be normalized such that they are defined by this one single rescale function.
+		/// </remarks>
+		public double RescaleSlope
+		{
+			get { return _volumeHeaderData.RescaleSlope; }
+		}
+
+		/// <summary>
+		/// Gets the Rescale Intercept of the linear modality LUT used to transform the values of the volume.
+		/// </summary>
+		/// <remarks>
+		/// If the source frames have different rescale function parameters per frame, the volume data
+		/// will be normalized such that they are defined by this one single rescale function.
+		/// </remarks>
+		public double RescaleIntercept
+		{
+			get { return _volumeHeaderData.RescaleIntercept; }
 		}
 
 		/// <summary>
@@ -257,7 +281,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 		/// </summary>
 		public string Modality
 		{
-			get { return _volumeHeader.Modality; }
+			get { return _volumeHeaderData.Modality; }
 		}
 
 		/// <summary>
@@ -265,7 +289,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 		/// </summary>
 		public string SourceSeriesInstanceUid
 		{
-			get { return _volumeHeader.SourceSeriesInstanceUid; }
+			get { return _volumeHeaderData.SourceSeriesInstanceUid; }
 		}
 
 		/// <summary>
@@ -273,7 +297,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 		/// </summary>
 		public string FrameOfReferenceUid
 		{
-			get { return _volumeHeader.FrameOfReferenceUid; }
+			get { return _volumeHeaderData.FrameOfReferenceUid; }
 		}
 
 		/// <summary>
@@ -286,7 +310,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 		/// </remarks>
 		public IVolumeDataSet DataSet
 		{
-			get { return _volumeHeader; }
+			get { return _volumeHeaderData; }
 		}
 
 		#endregion
@@ -316,7 +340,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 		/// </summary>
 		public Vector3D ConvertToPatient(Vector3D volumePosition)
 		{
-			return _volumeHeader.ConvertToPatient(volumePosition);
+			return _volumeHeaderData.ConvertToPatient(volumePosition);
 		}
 
 		/// <summary>
@@ -324,7 +348,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 		/// </summary>
 		public Vector3D ConvertToVolume(Vector3D patientPosition)
 		{
-			return _volumeHeader.ConvertToVolume(patientPosition);
+			return _volumeHeaderData.ConvertToVolume(patientPosition);
 		}
 
 		/// <summary>
@@ -332,7 +356,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 		/// </summary>
 		public Matrix RotateToPatientOrientation(Matrix volumeOrientation)
 		{
-			return _volumeHeader.RotateToPatientOrientation(volumeOrientation);
+			return _volumeHeaderData.RotateToPatientOrientation(volumeOrientation);
 		}
 
 		/// <summary>
@@ -340,7 +364,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 		/// </summary>
 		public Matrix RotateToVolumeOrientation(Matrix patientOrientation)
 		{
-			return _volumeHeader.RotateToVolumeOrientation(patientOrientation);
+			return _volumeHeaderData.RotateToVolumeOrientation(patientOrientation);
 		}
 
 		/// <summary>
@@ -348,7 +372,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 		/// </summary>
 		public Vector3D RotateToPatientOrientation(Vector3D volumeVector)
 		{
-			return _volumeHeader.RotateToPatientOrientation(volumeVector);
+			return _volumeHeaderData.RotateToPatientOrientation(volumeVector);
 		}
 
 		/// <summary>
@@ -356,7 +380,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 		/// </summary>
 		public Vector3D RotateToVolumeOrientation(Vector3D patientVector)
 		{
-			return _volumeHeader.RotateToVolumeOrientation(patientVector);
+			return _volumeHeaderData.RotateToVolumeOrientation(patientVector);
 		}
 
 		#endregion

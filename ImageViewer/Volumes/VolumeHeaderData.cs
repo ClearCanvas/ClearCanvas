@@ -67,12 +67,12 @@ namespace ClearCanvas.ImageViewer.Volumes
 	/// throughout the volume, as well as various other volume-specific properties that can be computed
 	/// once for the volume.
 	/// </remarks>
-	internal sealed class VolumeHeader : IVolumeDataSet
+	internal sealed class VolumeHeaderData : IVolumeDataSet
 	{
 		private readonly DicomAttributeCollection _collection = new DicomAttributeCollection();
 		private readonly Matrix _volumeOrientationPatient;
 
-		public VolumeHeader(IList<IDicomAttributeProvider> sourceSops,
+		public VolumeHeaderData(IList<IDicomAttributeProvider> sourceSops,
 		                    Size3D arrayDimensions,
 		                    Vector3D voxelSpacing,
 		                    Vector3D volumePositionPatient,
@@ -103,6 +103,8 @@ namespace ClearCanvas.ImageViewer.Volumes
 			Modality = firstSop[DicomTags.Modality].ToString();
 			SourceSeriesInstanceUid = firstSop[DicomTags.SeriesInstanceUid].ToString();
 			FrameOfReferenceUid = firstSop[DicomTags.FrameOfReferenceUid].ToString();
+			BitsPerVoxel = bitsAllocated;
+			Signed = isSigned;
 			PaddingValue = paddingValue;
 			RescaleSlope = rescaleSlope;
 			RescaleIntercept = rescaleIntercept;
@@ -125,6 +127,8 @@ namespace ClearCanvas.ImageViewer.Volumes
 		public readonly Vector3D VolumeOrientationPatientZ;
 		public readonly Vector3D VolumeCenter;
 		public readonly Vector3D VolumeCenterPatient;
+		public readonly int BitsPerVoxel;
+		public readonly bool Signed;
 		public readonly int PaddingValue;
 		public readonly string Modality;
 		public readonly string SourceSeriesInstanceUid;
@@ -356,9 +360,9 @@ namespace ClearCanvas.ImageViewer.Volumes
 
 #if UNIT_TESTS
 
-		internal static VolumeHeader TestCreate(IList<IDicomAttributeProvider> sourceSops, int bitsAllocated = 16, int bitsStored = 16, bool isSigned = false)
+		internal static VolumeHeaderData TestCreate(IList<IDicomAttributeProvider> sourceSops, int bitsAllocated = 16, int bitsStored = 16, bool isSigned = false)
 		{
-			return new VolumeHeader(sourceSops, new Size3D(0, 0, 0), new Vector3D(0, 0, 0), new Vector3D(0, 0, 0), new Matrix(4, 4), bitsAllocated, bitsStored, isSigned, DicomPixelData.GetMinPixelValue(bitsAllocated, isSigned), 1, 0);
+			return new VolumeHeaderData(sourceSops, new Size3D(0, 0, 0), new Vector3D(0, 0, 0), new Vector3D(0, 0, 0), new Matrix(4, 4), bitsAllocated, bitsStored, isSigned, DicomPixelData.GetMinPixelValue(bitsAllocated, isSigned), 1, 0);
 		}
 
 #endif

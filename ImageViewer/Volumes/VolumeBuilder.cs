@@ -64,6 +64,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 			private readonly List<IFrameReference> _frames;
 			private readonly CreateVolumeProgressCallback _callback;
 
+			private VolumeHeaderData _volumeHeaderData;
 			private Matrix _volumeOrientationPatient;
 			private Vector3D _volumePositionPatient;
 			private Vector3D _voxelSpacing;
@@ -193,10 +194,13 @@ namespace ClearCanvas.ImageViewer.Volumes
 			#region Builder
 
 			/// <summary>
-			/// Creates and populates a <see cref="Volume"/> from the builder's source frames.
+			/// Creates the <see cref="VolumeHeaderData"/> for the builder's source frames.
 			/// </summary>
-			public Volume Build()
+			/// <returns></returns>
+			public VolumeHeaderData BuildVolumeHeader()
 			{
+				if (_volumeHeaderData != null) return _volumeHeaderData;
+
 				PrepareFrames(_frames); // this also sorts the frames into order by slice location
 
 				// compute modality LUT parameters normalized for all frames
@@ -207,13 +211,23 @@ namespace ClearCanvas.ImageViewer.Volumes
 				var pixelPaddingValue = ComputePixelPaddingValue(_frames, normalizedSlope, normalizedIntercept);
 
 				// Construct a model SOP data source based on the first frame's DICOM header
-				var header = new VolumeHeader(_frames.Select(f => (IDicomAttributeProvider) f.Sop.DataSource).ToList(), VolumeSize, VoxelSpacing, VolumePositionPatient, VolumeOrientationPatient, 16, 16, false, pixelPaddingValue, normalizedSlope, normalizedIntercept);
+				var header = new VolumeHeaderData(_frames.Select(f => (IDicomAttributeProvider) f.Sop.DataSource).ToList(), VolumeSize, VoxelSpacing, VolumePositionPatient, VolumeOrientationPatient, 16, 16, false, pixelPaddingValue, normalizedSlope, normalizedIntercept);
 
 				// determine how the normalized modality LUT affects VOI windows and update the header
 				VoiWindow.SetWindows(ComputeNormalizedVoiWindows(_frames, normalizedSlope, normalizedIntercept), header);
 
+				return _volumeHeaderData = header;
+			}
+
+			/// <summary>
+			/// Creates and populates a <see cref="Volume"/> from the builder's source frames.
+			/// </summary>
+			public Volume Build()
+			{
+				var header = BuildVolumeHeader();
+
 				int minVolumeValue, maxVolumeValue;
-				var volumeArray = BuildVolumeArray(pixelPaddingValue, normalizedSlope, normalizedIntercept, out minVolumeValue, out maxVolumeValue);
+				var volumeArray = BuildVolumeArray((ushort) header.PaddingValue, header.RescaleSlope, header.RescaleIntercept, out minVolumeValue, out maxVolumeValue);
 				var volume = new U16Volume(volumeArray, header, minVolumeValue, maxVolumeValue);
 				return volume;
 			}
@@ -694,6 +708,20 @@ namespace ClearCanvas.ImageViewer.Volumes
 			}
 
 			#endregion
+		}
+
+		/// <summary>
+		/// Builds only the header for a volume of the given frames without loading the volume itself.
+		/// </summary>
+		/// <param name="frames"></param>
+		/// <returns></returns>
+		internal static VolumeHeaderData BuildHeader(IEnumerable<IFrameReference> frames)
+		{
+			Platform.CheckForNullReference(frames, "frames");
+			using (var builder = new VolumeBuilder(frames.ToList(), null))
+			{
+				return builder.BuildVolumeHeader();
+			}
 		}
 
 		/// <summary>

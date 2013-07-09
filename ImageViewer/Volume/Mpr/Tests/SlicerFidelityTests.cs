@@ -91,6 +91,12 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr.Tests
 						{
 							using (ImageSop imageSop = new ImageSop(slice))
 							{
+								// assert tags inserted by slicer
+								AssertAreEqual("WSD", imageSop.DataSource, DicomTags.ConversionType);
+								AssertAreEqual("ClearCanvas Inc.", imageSop.DataSource, DicomTags.SecondaryCaptureDeviceManufacturer);
+								AssertAreEqual(@"DERIVED\SECONDARY", imageSop.DataSource, DicomTags.ImageType);
+								AssertAreEqual("Multiplanar Reformatting", imageSop.DataSource, DicomTags.DerivationDescription);
+
 								foreach (IPresentationImage image in PresentationImageFactory.Create(imageSop))
 								{
 									IImageSopProvider imageSopProvider = (IImageSopProvider) image;
@@ -130,6 +136,12 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr.Tests
 					Assert.Less(stats.StandardDeviation, FULL_SCALE*0.05, "StdDev delta exceeds 5% of full scale ({0})", FULL_SCALE);
 				}
 			}
+		}
+
+		private static void AssertAreEqual(string value, IDicomAttributeProvider actualDataSource, uint dicomTag, string message = "", params object[] args)
+		{
+			var tag = DicomTagDictionary.GetDicomTag(dicomTag);
+			Assert.AreEqual(value, actualDataSource[dicomTag].ToString(), "@{1}: {0}", string.Format(message, args), tag != null ? tag.Name : dicomTag.ToString("X8"));
 		}
 
 		private static bool Between(double value, double min, double max)

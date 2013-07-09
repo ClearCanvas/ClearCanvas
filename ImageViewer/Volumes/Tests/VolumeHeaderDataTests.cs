@@ -31,14 +31,14 @@ using NUnit.Framework;
 namespace ClearCanvas.ImageViewer.Volumes.Tests
 {
 	[TestFixture]
-	public class VolumeHeaderTests
+	public class VolumeHeaderDataTests
 	{
 		[Test]
 		public void TestBasicTags()
 		{
 			var sourceSops = CreateSourceSops();
 
-			var prototype =  VolumeHeader.TestCreate(sourceSops);
+			var prototype =  VolumeHeaderData.TestCreate(sourceSops);
 
 			AssertAreEqual(sourceSops[0], prototype, DicomTags.PatientId);
 			AssertAreEqual(sourceSops[0], prototype, DicomTags.PatientsName);
@@ -56,11 +56,6 @@ namespace ClearCanvas.ImageViewer.Volumes.Tests
 			AssertAreEqual(sourceSops[0], prototype, DicomTags.Manufacturer);
 			AssertAreEqual(sourceSops[0], prototype, DicomTags.ManufacturersModelName);
 			AssertAreEqual(sourceSops[0], prototype, DicomTags.FrameOfReferenceUid);
-
-			AssertAreEqual("WSD", prototype, DicomTags.ConversionType);
-			AssertAreEqual("ClearCanvas Inc.", prototype, DicomTags.SecondaryCaptureDeviceManufacturer);
-			AssertAreEqual(@"DERIVED\SECONDARY", prototype, DicomTags.ImageType);
-			AssertAreEqual("Multiplanar Reformatting", prototype, DicomTags.DerivationDescription);
 		}
 
 		[Test]
@@ -82,7 +77,7 @@ namespace ClearCanvas.ImageViewer.Volumes.Tests
 					x[DicomTags.RecognizableVisualFeatures].SetEmptyValue();
 				}
 
-				var prototype =  VolumeHeader.TestCreate(sourceSops);
+				var prototype =  VolumeHeaderData.TestCreate(sourceSops);
 				AssertAreEqual("", prototype, DicomTags.BurnedInAnnotation, "All Undefined");
 				AssertAreEqual("", prototype, DicomTags.RecognizableVisualFeatures, "All Undefined");
 			}
@@ -96,7 +91,7 @@ namespace ClearCanvas.ImageViewer.Volumes.Tests
 					x[DicomTags.RecognizableVisualFeatures].SetStringValue(enumYes);
 				}
 
-				var prototype =  VolumeHeader.TestCreate(sourceSops);
+				var prototype =  VolumeHeaderData.TestCreate(sourceSops);
 				AssertAreEqual(enumYes, prototype, DicomTags.BurnedInAnnotation, "All YES");
 				AssertAreEqual(enumYes, prototype, DicomTags.RecognizableVisualFeatures, "All YES");
 			}
@@ -110,7 +105,7 @@ namespace ClearCanvas.ImageViewer.Volumes.Tests
 					x[DicomTags.RecognizableVisualFeatures].SetStringValue(enumNo);
 				}
 
-				var prototype =  VolumeHeader.TestCreate(sourceSops);
+				var prototype =  VolumeHeaderData.TestCreate(sourceSops);
 				AssertAreEqual(enumNo, prototype, DicomTags.BurnedInAnnotation, "All NO");
 				AssertAreEqual(enumNo, prototype, DicomTags.RecognizableVisualFeatures, "All NO");
 			}
@@ -130,7 +125,7 @@ namespace ClearCanvas.ImageViewer.Volumes.Tests
 				sourceSops[7][DicomTags.RecognizableVisualFeatures].SetStringValue(enumYes);
 				sourceSops[8][DicomTags.RecognizableVisualFeatures].SetStringValue("");
 
-				var prototype =  VolumeHeader.TestCreate(sourceSops);
+				var prototype =  VolumeHeaderData.TestCreate(sourceSops);
 				AssertAreEqual(enumYes, prototype, DicomTags.BurnedInAnnotation, "At Least One YES");
 				AssertAreEqual(enumYes, prototype, DicomTags.RecognizableVisualFeatures, "At Least One YES");
 			}
@@ -146,7 +141,7 @@ namespace ClearCanvas.ImageViewer.Volumes.Tests
 				sourceSops[3][DicomTags.BurnedInAnnotation].SetStringValue("ASDF");
 				sourceSops[8][DicomTags.RecognizableVisualFeatures].SetStringValue("");
 
-				var prototype =  VolumeHeader.TestCreate(sourceSops);
+				var prototype =  VolumeHeaderData.TestCreate(sourceSops);
 				AssertAreEqual("", prototype, DicomTags.BurnedInAnnotation, "At Least One Undefined");
 				AssertAreEqual("", prototype, DicomTags.RecognizableVisualFeatures, "At Least One Undefined");
 			}
@@ -170,7 +165,7 @@ namespace ClearCanvas.ImageViewer.Volumes.Tests
 					x[DicomTags.LossyImageCompression].SetEmptyValue();
 				}
 
-				var prototype = VolumeHeader.TestCreate(sourceSops);
+				var prototype = VolumeHeaderData.TestCreate(sourceSops);
 				AssertAreEqual("", prototype, DicomTags.LossyImageCompression, "All Undefined");
 			}
 
@@ -182,7 +177,7 @@ namespace ClearCanvas.ImageViewer.Volumes.Tests
 					x[DicomTags.LossyImageCompression].SetStringValue(enumLossy);
 				}
 
-				var prototype =  VolumeHeader.TestCreate(sourceSops);
+				var prototype =  VolumeHeaderData.TestCreate(sourceSops);
 				AssertAreEqual(enumLossy, prototype, DicomTags.LossyImageCompression, "All LOSSY");
 			}
 
@@ -194,7 +189,7 @@ namespace ClearCanvas.ImageViewer.Volumes.Tests
 					x[DicomTags.LossyImageCompression].SetStringValue(enumLossless);
 				}
 
-				var prototype =  VolumeHeader.TestCreate(sourceSops);
+				var prototype =  VolumeHeaderData.TestCreate(sourceSops);
 				AssertAreEqual(enumLossless, prototype, DicomTags.LossyImageCompression, "All LOSSLESS");
 			}
 
@@ -209,7 +204,7 @@ namespace ClearCanvas.ImageViewer.Volumes.Tests
 				sourceSops[4][DicomTags.LossyImageCompression].SetStringValue(enumLossy);
 				sourceSops[5][DicomTags.LossyImageCompression].SetStringValue(enumLossless);
 
-				var prototype =  VolumeHeader.TestCreate(sourceSops);
+				var prototype =  VolumeHeaderData.TestCreate(sourceSops);
 				AssertAreEqual(enumLossy, prototype, DicomTags.LossyImageCompression, "At Least One LOSSY");
 			}
 
@@ -222,7 +217,7 @@ namespace ClearCanvas.ImageViewer.Volumes.Tests
 				}
 				sourceSops[3][DicomTags.LossyImageCompression].SetStringValue("ASDF");
 
-				var prototype =  VolumeHeader.TestCreate(sourceSops);
+				var prototype =  VolumeHeaderData.TestCreate(sourceSops);
 				AssertAreEqual("", prototype, DicomTags.LossyImageCompression, "At Least One Undefined");
 			}
 		}

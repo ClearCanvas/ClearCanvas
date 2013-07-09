@@ -39,7 +39,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 	/// <summary>
 	/// Represents a cached MPR volume.
 	/// </summary>
-	public interface ICachedVolume
+	public interface ICachedVolume : IVolumeHeader
 	{
 		/// <summary>
 		/// Gets a GUID uniquely identifying the cached MPR volume.
@@ -290,11 +290,12 @@ namespace ClearCanvas.ImageViewer.Volumes
 		/// <summary>
 		/// Cache item acting as a container for the volume and source frames.
 		/// </summary>
-		private class CachedVolume : ICachedVolume, ILargeObjectContainer
+		private class CachedVolume : VolumeHeaderBase, ICachedVolume, ILargeObjectContainer
 		{
 			private readonly object _syncRoot = new object();
 			private readonly CacheKey _cacheKey;
 			private readonly VolumeCache _cacheOwner;
+			private readonly VolumeHeaderData _volumeHeaderData;
 			private IList<IFrameReference> _frames;
 			private volatile IVolumeReference _volumeReference;
 			private bool _isDisposed = false;
@@ -307,8 +308,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 				_cacheOwner = cacheOwner;
 				_cacheKey = cacheKey;
 				_frames = frames.Select(f => f.CreateTransientReference()).ToList();
-
-				Volume.Validate(_frames);
+				_volumeHeaderData = Volume.BuildHeader(_frames);
 			}
 
 			/// <summary>
@@ -352,6 +352,11 @@ namespace ClearCanvas.ImageViewer.Volumes
 					_largeObjectContainerData.UpdateLastAccessTime();
 					return LoadCore(null);
 				}
+			}
+
+			protected override VolumeHeaderData VolumeHeaderData
+			{
+				get { return _volumeHeaderData; }
 			}
 
 			private bool IsLoaded
@@ -558,7 +563,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 				}
 			}
 
-			private class CachedVolumeReference : ICachedVolumeReference
+			private class CachedVolumeReference : VolumeHeaderBase, ICachedVolumeReference
 			{
 				private CachedVolume _cachedVolume;
 				private bool _locked;
@@ -579,6 +584,11 @@ namespace ClearCanvas.ImageViewer.Volumes
 						_cachedVolume.DecrementReferenceCount();
 						_cachedVolume = null;
 					}
+				}
+
+				protected override VolumeHeaderData VolumeHeaderData
+				{
+					get { return _cachedVolume._volumeHeaderData; }
 				}
 
 				private void CachedVolumeOnProgressChanged(object sender, EventArgs eventArgs)

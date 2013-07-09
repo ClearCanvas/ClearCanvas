@@ -37,7 +37,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 	/// memory-managed volumes using the <see cref="VolumeCache"/> mechanism (where you must use indirect
 	/// references as the underlying <see cref="Volumes.Volume"/> instance may change unexpectedly).
 	/// </remarks>
-	public interface IVolumeReference : IDisposable
+	public interface IVolumeReference : IVolumeHeader, IDisposable
 	{
 		/// <summary>
 		/// Gets the referenced <see cref="Volumes.Volume"/> instance.
@@ -60,7 +60,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 		/// we encourage client code to use references rather hold the volume directly, since then the code is theoretically capable of
 		/// using the volume cache and memory management system, which uses references by necessity.
 		/// </remarks>
-		private class VolumeReference : IVolumeReference
+		private class VolumeReference : VolumeHeaderBase, IVolumeReference
 		{
 			private Volume _volume;
 
@@ -73,6 +73,11 @@ namespace ClearCanvas.ImageViewer.Volumes
 			public Volume Volume
 			{
 				get { return _volume; }
+			}
+
+			protected override VolumeHeaderData VolumeHeaderData
+			{
+				get { return _volume._volumeHeaderData; }
 			}
 
 			public IVolumeReference Clone()

@@ -52,10 +52,10 @@ namespace ClearCanvas.ImageViewer.Volumes
 		/// Consider using <see cref="Volume.Create(IDisplaySet)"/> or one of its overloads to automatically construct and fill a <see cref="Volume"/> of the appropriate type.
 		/// </remarks>
 		public U16Volume(ushort[] array, Size3D arrayDimensions, Vector3D voxelSpacing, Vector3D volumePositionPatient, Matrix3D volumeOrientationPatient, IList<IDicomAttributeProvider> dicomAttributeModel, int paddingValue, double rescaleSlope, double rescaleIntercept)
-			: this(array, new VolumeHeader(dicomAttributeModel, arrayDimensions, voxelSpacing, volumePositionPatient, volumeOrientationPatient.Augment(), 16, 16, false, paddingValue, rescaleSlope, rescaleIntercept), null, null) {}
+			: this(array, new VolumeHeaderData(dicomAttributeModel, arrayDimensions, voxelSpacing, volumePositionPatient, volumeOrientationPatient.Augment(), 16, 16, false, paddingValue, rescaleSlope, rescaleIntercept), null, null) {}
 
-		internal U16Volume(ushort[] array, VolumeHeader volumeHeader, int? minVolumeValue, int? maxVolumeValue)
-			: base(volumeHeader, minVolumeValue, maxVolumeValue)
+		internal U16Volume(ushort[] array, VolumeHeaderData volumeHeaderData, int? minVolumeValue, int? maxVolumeValue)
+			: base(volumeHeaderData, minVolumeValue, maxVolumeValue)
 		{
 			_array = array;
 		}
@@ -137,10 +137,10 @@ namespace ClearCanvas.ImageViewer.Volumes
 		/// Consider using <see cref="Volume.Create(IDisplaySet)"/> or one of its overloads to automatically construct and fill a <see cref="Volume"/> of the appropriate type.
 		/// </remarks>
 		public S16Volume(short[] array, Size3D arrayDimensions, Vector3D voxelSpacing, Vector3D volumePositionPatient, Matrix3D volumeOrientationPatient, IList<IDicomAttributeProvider> dicomAttributeModel, int paddingValue, double rescaleSlope, double rescaleIntercept)
-			: this(array, new VolumeHeader(dicomAttributeModel, arrayDimensions, voxelSpacing, volumePositionPatient, volumeOrientationPatient.Augment(), 16, 16, true, paddingValue, rescaleSlope, rescaleIntercept), null, null) {}
+			: this(array, new VolumeHeaderData(dicomAttributeModel, arrayDimensions, voxelSpacing, volumePositionPatient, volumeOrientationPatient.Augment(), 16, 16, true, paddingValue, rescaleSlope, rescaleIntercept), null, null) {}
 
-		internal S16Volume(short[] array, VolumeHeader volumeHeader, int? minVolumeValue, int? maxVolumeValue)
-			: base(volumeHeader, minVolumeValue, maxVolumeValue)
+		internal S16Volume(short[] array, VolumeHeaderData volumeHeaderData, int? minVolumeValue, int? maxVolumeValue)
+			: base(volumeHeaderData, minVolumeValue, maxVolumeValue)
 		{
 			_array = array;
 		}
@@ -222,10 +222,10 @@ namespace ClearCanvas.ImageViewer.Volumes
 		/// Consider using <see cref="Volume.Create(IDisplaySet)"/> or one of its overloads to automatically construct and fill a <see cref="Volume"/> of the appropriate type.
 		/// </remarks>
 		public U8Volume(byte[] array, Size3D arrayDimensions, Vector3D voxelSpacing, Vector3D volumePositionPatient, Matrix3D volumeOrientationPatient, IList<IDicomAttributeProvider> dicomAttributeModel, int paddingValue, double rescaleSlope, double rescaleIntercept)
-			: this(array, new VolumeHeader(dicomAttributeModel, arrayDimensions, voxelSpacing, volumePositionPatient, volumeOrientationPatient.Augment(), 8, 8, false, paddingValue, rescaleSlope, rescaleIntercept), null, null) {}
+			: this(array, new VolumeHeaderData(dicomAttributeModel, arrayDimensions, voxelSpacing, volumePositionPatient, volumeOrientationPatient.Augment(), 8, 8, false, paddingValue, rescaleSlope, rescaleIntercept), null, null) {}
 
-		internal U8Volume(byte[] array, VolumeHeader volumeHeader, int? minVolumeValue, int? maxVolumeValue)
-			: base(volumeHeader, minVolumeValue, maxVolumeValue)
+		internal U8Volume(byte[] array, VolumeHeaderData volumeHeaderData, int? minVolumeValue, int? maxVolumeValue)
+			: base(volumeHeaderData, minVolumeValue, maxVolumeValue)
 		{
 			_array = array;
 		}
@@ -307,10 +307,10 @@ namespace ClearCanvas.ImageViewer.Volumes
 		/// Consider using <see cref="Volume.Create(IDisplaySet)"/> or one of its overloads to automatically construct and fill a <see cref="Volume"/> of the appropriate type.
 		/// </remarks>
 		public S8Volume(sbyte[] array, Size3D arrayDimensions, Vector3D voxelSpacing, Vector3D volumePositionPatient, Matrix3D volumeOrientationPatient, IList<IDicomAttributeProvider> dicomAttributeModel, int paddingValue, double rescaleSlope, double rescaleIntercept)
-			: this(array, new VolumeHeader(dicomAttributeModel, arrayDimensions, voxelSpacing, volumePositionPatient, volumeOrientationPatient.Augment(), 8, 8, true, paddingValue, rescaleSlope, rescaleIntercept), null, null) {}
+			: this(array, new VolumeHeaderData(dicomAttributeModel, arrayDimensions, voxelSpacing, volumePositionPatient, volumeOrientationPatient.Augment(), 8, 8, true, paddingValue, rescaleSlope, rescaleIntercept), null, null) {}
 
-		internal S8Volume(sbyte[] array, VolumeHeader volumeHeader, int? minVolumeValue, int? maxVolumeValue)
-			: base(volumeHeader, minVolumeValue, maxVolumeValue)
+		internal S8Volume(sbyte[] array, VolumeHeaderData volumeHeaderData, int? minVolumeValue, int? maxVolumeValue)
+			: base(volumeHeaderData, minVolumeValue, maxVolumeValue)
 		{
 			_array = array;
 		}
