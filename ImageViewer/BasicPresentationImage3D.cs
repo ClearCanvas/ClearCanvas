@@ -298,7 +298,7 @@ namespace ClearCanvas.ImageViewer
 		[OnCloneComplete]
 		private void OnCloneComplete()
 		{
-			_compositeImageGraphic = (CompositeRootModel3D) CollectionUtils.SelectFirst(SceneGraph.Graphics, test => test is CompositeImageGraphic);
+			_compositeImageGraphic = (CompositeRootModel3D) CollectionUtils.SelectFirst(SceneGraph.Graphics, test => test is CompositeRootModel3D);
 
 			Platform.CheckForNullReference(_compositeImageGraphic, "_compositeImageGraphic");
 
