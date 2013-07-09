@@ -256,7 +256,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 		/// <summary>
 		/// Allows specification of the slice plane, through point, and extent via two points in patient space
 		/// </summary>
-		public static VolumeSlicerParams Create(Volumes.Volume volume, Vector3D sourceOrientationColumnPatient, Vector3D sourceOrientationRowPatient,
+		public static VolumeSlicerParams Create(IVolumeHeader volume, Vector3D sourceOrientationColumnPatient, Vector3D sourceOrientationRowPatient,
 		                                               Vector3D startPointPatient, Vector3D endPointPatient)
 		{
 			Vector3D sourceOrientationNormalPatient = sourceOrientationColumnPatient.Cross(sourceOrientationRowPatient);

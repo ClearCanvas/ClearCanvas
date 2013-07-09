@@ -26,7 +26,9 @@ using System.Collections.Generic;
 using System.Linq;
 using ClearCanvas.Common;
 using ClearCanvas.Dicom;
+using ClearCanvas.Dicom.Iod.Macros;
 using ClearCanvas.Dicom.Iod.Modules;
+using ClearCanvas.Dicom.Iod.Sequences;
 using ClearCanvas.ImageViewer.Mathematics;
 
 namespace ClearCanvas.ImageViewer.Volumes
@@ -73,16 +75,16 @@ namespace ClearCanvas.ImageViewer.Volumes
 		private readonly Matrix _volumeOrientationPatient;
 
 		public VolumeHeaderData(IList<IDicomAttributeProvider> sourceSops,
-		                    Size3D arrayDimensions,
-		                    Vector3D voxelSpacing,
-		                    Vector3D volumePositionPatient,
-		                    Matrix volumeOrientationPatient,
-		                    int bitsAllocated,
-		                    int bitsStored,
-		                    bool isSigned,
-		                    int paddingValue,
-		                    double rescaleSlope,
-		                    double rescaleIntercept)
+		                        Size3D arrayDimensions,
+		                        Vector3D voxelSpacing,
+		                        Vector3D volumePositionPatient,
+		                        Matrix volumeOrientationPatient,
+		                        int bitsAllocated,
+		                        int bitsStored,
+		                        bool isSigned,
+		                        int paddingValue,
+		                        double rescaleSlope,
+		                        double rescaleIntercept)
 		{
 			Platform.CheckForNullReference(sourceSops, "sourceSops");
 			Platform.CheckTrue(sourceSops.Count > 0, "At least one sourceSop is required");
@@ -322,7 +324,9 @@ namespace ClearCanvas.ImageViewer.Volumes
 			volumeDataSet[DicomTags.LossyImageCompression].SetBoolean(0, lossyImageCompression, enumLossy, enumLossless);
 			if (lossyImageCompressionRatio > 0)
 				volumeDataSet[DicomTags.LossyImageCompressionRatio].SetFloat32(0, lossyImageCompressionRatio);
-			// TODO: there's a SourceImageSequence here that we should probably fill out 
+
+			// record the source images for the General Image Module
+			volumeDataSet[DicomTags.SourceImageSequence].Values = CreateSourceImageSequence(sourceSops);
 
 			// generate volume-consistent values for the Image Pixel Module
 			volumeDataSet[DicomTags.SamplesPerPixel] = source[DicomTags.SamplesPerPixel].Copy();
@@ -331,6 +335,25 @@ namespace ClearCanvas.ImageViewer.Volumes
 			volumeDataSet[DicomTags.BitsStored].SetInt32(0, bitsStored);
 			volumeDataSet[DicomTags.HighBit].SetInt32(0, bitsStored - 1);
 			volumeDataSet[DicomTags.PixelRepresentation].SetInt32(0, isSigned ? 1 : 0);
+		}
+
+		private static DicomSequenceItem[] CreateSourceImageSequence(IEnumerable<IDicomAttributeProvider> sourceSops)
+		{
+			return sourceSops.GroupBy(s => s[DicomTags.SopInstanceUid].ToString())
+				.Select(s => s.First())
+				.Select(s => new SourceImageSequence
+				             	{
+				             		ReferencedSopInstanceUid = s[DicomTags.SopInstanceUid].ToString(),
+				             		ReferencedSopClassUid = s[DicomTags.SopClassUid].ToString(),
+				             		SpatialLocationsPreserved = SpatialLocationsPreserved.Yes,
+				             		PurposeOfReferenceCodeSequence = new CodeSequenceMacro
+				             		                                 	{
+				             		                                 		CodingSchemeDesignator = "DCM",
+				             		                                 		CodeValue = "121322",
+				             		                                 		CodeMeaning = "Source image for image processing operation"
+				             		                                 	}
+				             	})
+				.Select(s => s.DicomSequenceItem).ToArray();
 		}
 
 		/// <summary>

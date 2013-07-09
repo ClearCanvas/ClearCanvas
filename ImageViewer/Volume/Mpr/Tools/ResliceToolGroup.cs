@@ -374,7 +374,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr.Tools
 			if (sliceSet != null && !sliceSet.IsReadOnly)
 			{
 				IImageBox imageBox = FindImageBox(sliceSet, sourceImage.ImageViewer as MprViewerComponent);
-				sliceSet.SlicerParams = VolumeSlicerParams.Create(sliceSet.Volume, orientationColumn, orientationRow, startPoint, endPoint);
+				sliceSet.SlicerParams = VolumeSlicerParams.Create(sliceSet.VolumeHeader, orientationColumn, orientationRow, startPoint, endPoint);
 
 				IPresentationImage closestImage = GetClosestSlice(startPoint + (endPoint - startPoint) * 2, imageBox.DisplaySet);
 				if (closestImage == null)

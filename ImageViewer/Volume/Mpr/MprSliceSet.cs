@@ -38,6 +38,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 		string Uid { get; }
 		string Description { get; }
 		Volumes.Volume Volume { get; }
+		IVolumeHeader VolumeHeader { get; }
 		IMprVolume Parent { get; }
 		IList<MprSliceSop> SliceSops { get; }
 		event EventHandler SliceSopsChanged;
@@ -80,6 +81,11 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 		public Volumes.Volume Volume
 		{
 			get { return _volume.Volume; }
+		}
+
+		public IVolumeHeader VolumeHeader
+		{
+			get { return _volume; }
 		}
 
 		public IList<MprSliceSop> SliceSops

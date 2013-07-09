@@ -23,11 +23,13 @@
 #endregion
 
 using System;
+using System.Runtime.Serialization;
 using ClearCanvas.Common;
 using ClearCanvas.Desktop;
 
 namespace ClearCanvas.ImageViewer.Volumes
 {
+	[Serializable]
 	public class CreateVolumeException : Exception
 	{
 		public CreateVolumeException()
@@ -38,20 +40,32 @@ namespace ClearCanvas.ImageViewer.Volumes
 
 		public CreateVolumeException(string message, Exception innerException)
 			: base(message, innerException) {}
+
+		protected CreateVolumeException(SerializationInfo info, StreamingContext context)
+			: base(info, context) {}
 	}
 
+	[Serializable]
 	public class UnsupportedSourceImagesException : CreateVolumeException
 	{
 		public UnsupportedSourceImagesException()
 			: base("Source images are of an unsupported type.") {}
+
+		protected UnsupportedSourceImagesException(SerializationInfo info, StreamingContext context)
+			: base(info, context) {}
 	}
 
+	[Serializable]
 	public class UnsupportedPixelFormatSourceImagesException : CreateVolumeException
 	{
 		public UnsupportedPixelFormatSourceImagesException()
 			: base("Source images must be 16-bit monochrome images.") {}
+
+		protected UnsupportedPixelFormatSourceImagesException(SerializationInfo info, StreamingContext context)
+			: base(info, context) {}
 	}
 
+	[Serializable]
 	public class UnsupportedMultiFrameSourceImagesException : CreateVolumeException
 	{
 		public UnsupportedMultiFrameSourceImagesException()
@@ -59,72 +73,119 @@ namespace ClearCanvas.ImageViewer.Volumes
 
 		public UnsupportedMultiFrameSourceImagesException(Exception innerException)
 			: base("Multiframe source images are currently not supported.", innerException) {}
+
+		protected UnsupportedMultiFrameSourceImagesException(SerializationInfo info, StreamingContext context)
+			: base(info, context) {}
 	}
 
+	[Serializable]
 	public class InsufficientFramesException : CreateVolumeException
 	{
 		public InsufficientFramesException()
 			: base("Insufficient frames from which to create a volume. At least three are required.") {}
+
+		protected InsufficientFramesException(SerializationInfo info, StreamingContext context)
+			: base(info, context) {}
 	}
 
+	[Serializable]
 	public class NullSourceSeriesException : CreateVolumeException
 	{
 		public NullSourceSeriesException()
 			: base("One or more source frames are missing study and/or series information.") {}
+
+		protected NullSourceSeriesException(SerializationInfo info, StreamingContext context)
+			: base(info, context) {}
 	}
 
+	[Serializable]
 	public class MultipleSourceSeriesException : CreateVolumeException
 	{
 		public MultipleSourceSeriesException()
 			: base("Multiple studies/series were found in the source frames. All source frames must be from the same study and series.") {}
+
+		protected MultipleSourceSeriesException(SerializationInfo info, StreamingContext context)
+			: base(info, context) {}
 	}
 
+	[Serializable]
 	public class NullFrameOfReferenceException : CreateVolumeException
 	{
 		public NullFrameOfReferenceException()
 			: base("One or more source frames do not specify the frame of reference.") {}
+
+		protected NullFrameOfReferenceException(SerializationInfo info, StreamingContext context)
+			: base(info, context) {}
 	}
 
+	[Serializable]
 	public class MultipleFramesOfReferenceException : CreateVolumeException
 	{
 		public MultipleFramesOfReferenceException()
 			: base("Multiple frames of reference were found in the source frames. All source frames must have the same frame of reference.") {}
+
+		protected MultipleFramesOfReferenceException(SerializationInfo info, StreamingContext context)
+			: base(info, context) {}
 	}
 
+	[Serializable]
 	public class NullImageOrientationException : CreateVolumeException
 	{
 		public NullImageOrientationException()
 			: base("One or more source frames do not have the image orientation defined.") {}
+
+		protected NullImageOrientationException(SerializationInfo info, StreamingContext context)
+			: base(info, context) {}
 	}
 
+	[Serializable]
 	public class MultipleImageOrientationsException : CreateVolumeException
 	{
 		public MultipleImageOrientationsException()
 			: base("Mulitple image orientations were found in the source frames. All source frames must have the same image orientation.") {}
+
+		protected MultipleImageOrientationsException(SerializationInfo info, StreamingContext context)
+			: base(info, context) {}
 	}
 
+	[Serializable]
 	public class UnevenlySpacedFramesException : CreateVolumeException
 	{
 		public UnevenlySpacedFramesException()
 			: base("Source frames must be evenly spaced.") {}
+
+		protected UnevenlySpacedFramesException(SerializationInfo info, StreamingContext context)
+			: base(info, context) {}
 	}
 
+	[Serializable]
 	public class UncalibratedFramesException : CreateVolumeException
 	{
 		public UncalibratedFramesException()
 			: base("Source frames must be calibrated.") {}
+
+		protected UncalibratedFramesException(SerializationInfo info, StreamingContext context)
+			: base(info, context) {}
 	}
 
+	[Serializable]
 	public class AnisotropicPixelAspectRatioException : CreateVolumeException
 	{
 		public AnisotropicPixelAspectRatioException()
 			: base("Source frames must have isotropic pixel aspect ratio.") {}
+
+		protected AnisotropicPixelAspectRatioException(SerializationInfo info, StreamingContext context)
+			: base(info, context) {}
 	}
 
+	[Serializable]
 	public class UnsupportedGantryTiltAxisException : CreateVolumeException
 	{
 		public UnsupportedGantryTiltAxisException()
 			: base("Source frames have a gantry tilt about an unsupported axis.") {}
+
+		protected UnsupportedGantryTiltAxisException(SerializationInfo info, StreamingContext context)
+			: base(info, context) {}
 	}
 
 	[ExceptionPolicyFor(typeof (CreateVolumeException))]

@@ -25,6 +25,7 @@
 using System;
 using ClearCanvas.Common;
 using ClearCanvas.Dicom;
+using ClearCanvas.Dicom.Iod.Macros;
 using ClearCanvas.Dicom.Iod.Modules;
 using ClearCanvas.ImageViewer.StudyManagement;
 
@@ -40,7 +41,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 		{
 			Slice = slice;
 			DataSet = new DicomAttributeCollection();
-			FillDataSet(DataSet);
+			FillDataSet(DataSet, slice);
 		}
 
 		public VolumeSlice Slice { get; private set; }
@@ -117,7 +118,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 			base.Dispose(disposing);
 		}
 
-		internal static void FillDataSet(IDicomAttributeProvider dataSet)
+		internal static void FillDataSet(IDicomAttributeProvider dataSet, VolumeSlice slice)
 		{
 			// generate values for SC Equipment Module
 			var scEquipment = new ScEquipmentModuleIod(dataSet);
@@ -125,6 +126,20 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 			scEquipment.SecondaryCaptureDeviceManufacturer = @"ClearCanvas Inc.";
 			scEquipment.SecondaryCaptureDeviceManufacturersModelName = ProductInformation.GetName(true, false);
 			scEquipment.SecondaryCaptureDeviceSoftwareVersions = new[] {ProductInformation.GetVersion(true, true, true)};
+
+			// generate values for the General Image Module
+			dataSet[DicomTags.ImageType].SetStringValue(@"DERIVED\SECONDARY");
+			dataSet[DicomTags.DerivationDescription].SetStringValue(@"Multiplanar Reformatting");
+			dataSet[DicomTags.DerivationCodeSequence].Values = new[] {new CodeSequenceMacro {CodingSchemeDesignator = "DCM", CodeValue = "113072", CodeMeaning = "Multiplanar reformatting"}.DicomSequenceItem};
+
+			// update the Image Plane Module
+			dataSet[DicomTags.PixelSpacing].SetStringValue(slice.PixelSpacing);
+			dataSet[DicomTags.ImageOrientationPatient].SetStringValue(slice.ImageOrientationPatient);
+			dataSet[DicomTags.ImagePositionPatient].SetStringValue(slice.ImagePositionPatient);
+
+			// update the Image Pixel Module
+			dataSet[DicomTags.Rows].SetInt32(0, slice.Rows);
+			dataSet[DicomTags.Columns].SetInt32(0, slice.Columns);
 
 			// generate values for Multi-Frame Module
 			dataSet[DicomTags.NumberOfFrames].SetInt32(0, 1);

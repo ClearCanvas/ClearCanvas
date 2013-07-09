@@ -160,8 +160,11 @@
     <Compile Include="Iod\Modules\XaXrfSeriesModuleIod.cs" />
     <Compile Include="Iod\RandomsCorrectionMethod.cs" />
     <Compile Include="Iod\Sequences\AcquisitionContextSequence.cs" />
+    <Compile Include="Iod\Sequences\IconImageSequence.cs" />
     <Compile Include="Iod\Sequences\OriginalAttributesSequence.cs" />
     <Compile Include="Iod\Sequences\PatientOrientationCodeSequence.cs" />
+    <Compile Include="Iod\Sequences\ReferencedImageSequence.cs" />
+    <Compile Include="Iod\Sequences\SourceImageSequence.cs" />
     <Compile Include="Iod\SuvType.cs" />
     <Compile Include="Iod\Tests\EncapsulatedPdfIodTests.cs" />
     <Compile Include="Iod\Units.cs" />

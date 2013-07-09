@@ -44,7 +44,7 @@ using vtk;
 namespace ClearCanvas.ImageViewer.Volume.Mpr
 {
 	/// <summary>
-	/// Factory for slices of a <see cref="Volume"/>.
+	/// Factory for slices of a <see cref="Volumes.Volume"/>.
 	/// </summary>
 	public class VolumeSlicer : IDisposable
 	{
