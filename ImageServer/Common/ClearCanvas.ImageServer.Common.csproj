@@ -75,6 +75,7 @@
     <Compile Include="Command\ServerDatabaseCommand.cs" />
     <Compile Include="Command\ServerExecutionContext.cs" />
     <Compile Include="ConstantResourceManager.cs" />
+    <Compile Include="ExternalRequest\ConflictingRequestIdException.cs" />
     <Compile Include="ExternalRequest\ExternalRequestDelayProcessingException.cs" />
     <Compile Include="ExternalRequest\ExternalRequestProcessingException.cs" />
     <Compile Include="ExternalRequest\ImageServerNotification.cs" />
