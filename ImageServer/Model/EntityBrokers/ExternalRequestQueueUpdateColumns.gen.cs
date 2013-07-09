@@ -65,6 +65,11 @@ namespace ClearCanvas.ImageServer.Model.EntityBrokers
         {
             set { SubParameters["OperationToken"] = new EntityUpdateColumn<String>("OperationToken", value); }
         }
+        [EntityFieldDatabaseMappingAttribute(TableName="ExternalRequestQueue", ColumnName="RequestId")]
+        public String RequestId
+        {
+            set { SubParameters["RequestId"] = new EntityUpdateColumn<String>("RequestId", value); }
+        }
         [EntityFieldDatabaseMappingAttribute(TableName="ExternalRequestQueue", ColumnName="ExternalRequestQueueStatusEnum")]
         public ExternalRequestQueueStatusEnum ExternalRequestQueueStatusEnum
         {

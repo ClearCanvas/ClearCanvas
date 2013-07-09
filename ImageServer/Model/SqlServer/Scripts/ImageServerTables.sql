@@ -1871,6 +1871,7 @@ CREATE TABLE [dbo].[ExternalRequestQueue](
 	[ExternalRequestQueueStatusEnum] [smallint] NULL,
 	[RequestType] [varchar](48) NOT NULL,
 	[OperationToken] [varchar](64) NULL,
+	[RequestId] [varchar](64) NULL,
 	[RequestXml] [xml] NOT NULL,
 	[StateXml] [xml] NULL,
 	[InsertTime] [datetime] NOT NULL,
@@ -1927,6 +1928,12 @@ CREATE NONCLUSTERED INDEX [IX_ExternalRequestQueue_OperationToken] ON [dbo].[Ext
 GO
 SET ANSI_PADDING ON
 
+GO
+/****** Object:  Index [IX_ExternalRequestQueue_RequestId]    Script Date: 7/9/2013 4:36:19 PM ******/
+CREATE NONCLUSTERED INDEX IX_ExternalRequestQueue_RequestId ON dbo.ExternalRequestQueue
+(
+	[RequestId] ASC
+) WITH( PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON INDEXES
 GO
 /****** Object:  Index [IX_ExternalRequestQueue_RequestType]    Script Date: 5/14/2013 4:36:19 PM ******/
 IF NOT EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[ExternalRequestQueue]') AND name = N'IX_ExternalRequestQueue_RequestType')

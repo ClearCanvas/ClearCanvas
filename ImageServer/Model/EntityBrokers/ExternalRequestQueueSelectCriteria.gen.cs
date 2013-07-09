@@ -115,6 +115,18 @@ namespace ClearCanvas.ImageServer.Model.EntityBrokers
               return (ISearchCondition<String>)SubCriteria["OperationToken"];
             } 
         }
+        [EntityFieldDatabaseMappingAttribute(TableName="ExternalRequestQueue", ColumnName="RequestId")]
+        public ISearchCondition<String> RequestId
+        {
+            get
+            {
+              if (!SubCriteria.ContainsKey("RequestId"))
+              {
+                 SubCriteria["RequestId"] = new SearchCondition<String>("RequestId");
+              }
+              return (ISearchCondition<String>)SubCriteria["RequestId"];
+            } 
+        }
         [EntityFieldDatabaseMappingAttribute(TableName="ExternalRequestQueue", ColumnName="ExternalRequestQueueStatusEnum")]
         public ISearchCondition<ExternalRequestQueueStatusEnum> ExternalRequestQueueStatusEnum
         {

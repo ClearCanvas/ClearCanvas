@@ -148,6 +148,7 @@ CREATE TABLE dbo.ExternalRequestQueue
 	ExternalRequestQueueStatusEnum smallint NULL,
 	RequestType varchar(48) NOT NULL,
 	OperationToken varchar(64) NULL,
+	RequestId varchar(64) NULL,
 	RequestXml xml NOT NULL,
 	StateXml xml NULL,
 	InsertTime datetime NOT NULL,
@@ -172,6 +173,11 @@ CREATE NONCLUSTERED INDEX IX_ExternalRequestQueue_OperationToken ON dbo.External
 	(
 	OperationToken
 	) WITH( STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON INDEXES
+GO
+CREATE NONCLUSTERED INDEX IX_ExternalRequestQueue_RequestId ON dbo.ExternalRequestQueue
+(
+	RequestId ASC
+) WITH( PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON INDEXES
 GO
 CREATE CLUSTERED INDEX IXC_ExternalRequestQueue_InsertTime ON dbo.ExternalRequestQueue
 	(
