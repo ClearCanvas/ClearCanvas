@@ -34,9 +34,8 @@ namespace ClearCanvas.ImageViewer.RoiGraphics.Analyzers
 	public class RoiAreaAnalyzer : IRoiAnalyzer
 	{
 		private Units _units = Units.Centimeters;
-	    private RoiAnalyzerUpdateCallback _updateCallback;
 
-	    /// <summary>
+		/// <summary>
 		/// Gets or sets the base unit of measurement in which analysis is performed.
 		/// </summary>
 		public Units Units
@@ -62,95 +61,44 @@ namespace ClearCanvas.ImageViewer.RoiGraphics.Analyzers
 		/// <param name="mode">The analysis mode.</param>
 		/// <returns>A string containing the analysis results, which can be appended to the analysis
 		/// callout of the associated <see cref="RoiGraphic"/>, if one exists.</returns>
-        //public string Analyze(Roi roi, RoiAnalysisMode mode)
-        //{
-        //    if (!SupportsRoi(roi))
-        //        return null;
+		public IRoiAnalyzerResult Analyze(Roi roi, RoiAnalysisMode mode)
+		{
+			if (!SupportsRoi(roi))
+				return null;
 
-        //    // performance enhancement to restrict excessive computation of polygon area.
-        //    if (mode == RoiAnalysisMode.Responsive)
-        //    {
-        //        if (_units == Units.Pixels)
-        //            return String.Format(SR.FormatAreaPixels, SR.StringNoValue);
-        //        else if (_units == Units.Millimeters)
-        //            return String.Format(SR.FormatAreaSquareMm, SR.StringNoValue);
-        //        else
-        //            return String.Format(SR.FormatAreaSquareCm, SR.StringNoValue);
-        //    }
+			// performance enhancement to restrict excessive computation of polygon area.
+			if (mode == RoiAnalysisMode.Responsive)
+			{
+				if (_units == Units.Pixels)
+					return new RoiAnalyzerResultNoValue("Area", String.Format(SR.LabelUnitsPixels, SR.StringNoValue));
+				if (_units == Units.Millimeters)
+					return new RoiAnalyzerResultNoValue("Area", String.Format(SR.LabelUnitsMm2, SR.StringNoValue));
+				return
+					new RoiAnalyzerResultNoValue("Area", String.Format(SR.LabelUnitsCm2, SR.StringNoValue));
+			}
 
-        //    IRoiAreaProvider areaProvider = (IRoiAreaProvider) roi;
+			IRoiAreaProvider areaProvider = (IRoiAreaProvider) roi;
 
-        //    string text;
+			IRoiAnalyzerResult result;
 
-        //    Units oldUnits = areaProvider.Units;
-        //    areaProvider.Units = areaProvider.IsCalibrated ? _units : Units.Pixels;
+			Units oldUnits = areaProvider.Units;
+			areaProvider.Units = areaProvider.IsCalibrated ? _units : Units.Pixels;
 
-        //    if (!areaProvider.IsCalibrated || _units == Units.Pixels)
-        //        text = String.Format(SR.FormatAreaPixels, areaProvider.Area);
-        //    else if (_units == Units.Millimeters)
-        //        text = String.Format(SR.FormatAreaSquareMm, areaProvider.Area);
-        //    else
-        //        text = String.Format(SR.FormatAreaSquareCm, areaProvider.Area);
+			if (!areaProvider.IsCalibrated || _units == Units.Pixels)
+				result = new SingleValueRoiAnalyzerResult("Area", SR.LabelUnitsPixels, areaProvider.Area,
+				                                          String.Format(SR.FormatAreaPixels, areaProvider.Area));
 
-        //    areaProvider.Units = oldUnits;
+			else if (_units == Units.Millimeters)
+				result = new SingleValueRoiAnalyzerResult("Area", SR.LabelUnitsMm2, areaProvider.Area,
+				                                          String.Format(SR.FormatAreaSquareMm, areaProvider.Area));
 
-        //    return text;
-        //}
+			else
+				result = new SingleValueRoiAnalyzerResult("Area", SR.LabelUnitsCm2, areaProvider.Area,
+				                                          String.Format(SR.FormatAreaSquareCm, areaProvider.Area));
 
-        /// <summary>
-        /// Analyzes the given ROI.
-        /// </summary>
-        /// <param name="roi">The ROI being analyzed.</param>
-        /// <param name="mode">The analysis mode.</param>
-        /// <returns>A string containing the analysis results, which can be appended to the analysis
-        /// callout of the associated <see cref="RoiGraphic"/>, if one exists.</returns>
-        public IRoiAnalyzerResult Analyze(Roi roi, RoiAnalysisMode mode)
-        {
-            if (!SupportsRoi(roi))
-                return null;
+			areaProvider.Units = oldUnits;
 
-            // performance enhancement to restrict excessive computation of polygon area.
-            if (mode == RoiAnalysisMode.Responsive)
-            {
-                if (_units == Units.Pixels)
-                    return new RoiAnalyzerResultNoValue("Area", String.Format(SR.LabelUnitsPixels, SR.StringNoValue));
-                if (_units == Units.Millimeters)
-                    return new RoiAnalyzerResultNoValue("Area", String.Format(SR.LabelUnitsMm2, SR.StringNoValue));
-                return 
-                    new RoiAnalyzerResultNoValue("Area", String.Format(SR.LabelUnitsCm2, SR.StringNoValue));
-            }
-
-		    IRoiAreaProvider areaProvider = (IRoiAreaProvider)roi;
-
-
-		    IRoiAnalyzerResult result;
-
-            Units oldUnits = areaProvider.Units;
-            areaProvider.Units = areaProvider.IsCalibrated ? _units : Units.Pixels;
-
-            if (!areaProvider.IsCalibrated || _units == Units.Pixels)
-                result = new SingleValueRoiAnalyzerResult("Area", SR.LabelUnitsPixels, areaProvider.Area,
-                                                          String.Format(SR.FormatAreaPixels, areaProvider.Area));
-
-            else if (_units == Units.Millimeters)
-                result = new SingleValueRoiAnalyzerResult("Area", SR.LabelUnitsMm2, areaProvider.Area,
-                                                          String.Format(SR.FormatAreaSquareMm, areaProvider.Area));
-
-            else
-                result = new SingleValueRoiAnalyzerResult("Area", SR.LabelUnitsCm2, areaProvider.Area,
-                                                          String.Format(SR.FormatAreaSquareCm, areaProvider.Area));
-
-
-            areaProvider.Units = oldUnits;
-
-            
-            return result;
-        }
-
-	    /// TODO (CR Nov 2011): remove
-        public void SetRoiAnalyzerUpdateCallback(RoiAnalyzerUpdateCallback callback)
-        {
-            _updateCallback = callback;
-        }
+			return result;
+		}
 	}
 }

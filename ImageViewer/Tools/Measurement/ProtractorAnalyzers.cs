@@ -32,53 +32,35 @@ using ClearCanvas.ImageViewer.RoiGraphics.Analyzers;
 
 namespace ClearCanvas.ImageViewer.Tools.Measurement
 {
-	[ExtensionOf(typeof(RoiAnalyzerExtensionPoint))]
+	[ExtensionOf(typeof (RoiAnalyzerExtensionPoint))]
 	public class ProtractorAngleCalculator : IRoiAnalyzer
 	{
-	    private RoiAnalyzerUpdateCallback _updateCallback;
-
-	    Units IRoiAnalyzer.Units
+		Units IRoiAnalyzer.Units
 		{
 			get { return Units.Centimeters; }
 			set { }
 		}
 
-        ////TODO (cr Feb 2010): All the analysis should really be done in the ProtractorRoiInfo.
-        //public string Analyze(ProtractorRoiInfo roiInfo, RoiAnalysisMode mode)
-        //{
-        //    // Don't show the callout until the second ray is drawn
-        //    if (roiInfo.Points.Count < 3)
-        //        return SR.ToolsMeasurementSetVertex;
+		//TODO (cr Feb 2010): All the analysis should really be done in the ProtractorRoiInfo.
+		public IRoiAnalyzerResult Analyze(Roi roi, RoiAnalysisMode mode)
+		{
+			return Analyze((ProtractorRoiInfo) roi, mode);
+		}
 
-        //    List<PointF> normalizedPoints = NormalizePoints(roiInfo);
+		private IRoiAnalyzerResult Analyze(ProtractorRoiInfo roiInfo, RoiAnalysisMode mode)
+		{
+			// Don't show the callout until the second ray is drawn
+			if (roiInfo.Points.Count < 3)
+			{
+				return new RoiAnalyzerResultNoValue("Protactor", SR.ToolsMeasurementSetVertex);
+			}
 
-        //    double angle = Vector.SubtendedAngle(normalizedPoints[0], normalizedPoints[1], normalizedPoints[2]);
+			List<PointF> normalizedPoints = NormalizePoints(roiInfo);
 
-        //    return String.Format(SR.ToolsMeasurementFormatDegrees, Math.Abs(angle));
-        //}
+			double angle = Vector.SubtendedAngle(normalizedPoints[0], normalizedPoints[1], normalizedPoints[2]);
 
-        //TODO (cr Feb 2010): All the analysis should really be done in the ProtractorRoiInfo.
-        public IRoiAnalyzerResult Analyze(Roi roi, RoiAnalysisMode mode)
-        {
-            return Analyze((ProtractorRoiInfo) roi, mode);
-        }
-
-        private IRoiAnalyzerResult Analyze(ProtractorRoiInfo roiInfo, RoiAnalysisMode mode)
-        {
-            // Don't show the callout until the second ray is drawn
-            if (roiInfo.Points.Count < 3)
-            {
-                //return SR.ToolsMeasurementSetVertex;
-                return new RoiAnalyzerResultNoValue("Protactor", SR.ToolsMeasurementSetVertex);
-            }
-
-            List<PointF> normalizedPoints = NormalizePoints(roiInfo);
-
-            double angle = Vector.SubtendedAngle(normalizedPoints[0], normalizedPoints[1], normalizedPoints[2]);
-
-            //return String.Format(SR.ToolsMeasurementFormatDegrees, Math.Abs(angle));
-            return new SingleValueRoiAnalyzerResult("Protactor", SR.ToolsMeasurementFormatDegrees, Math.Abs(angle),String.Format(SR.ToolsMeasurementFormatDegrees, Math.Abs(angle)));
-        }
+			return new SingleValueRoiAnalyzerResult("Protactor", SR.ToolsMeasurementFormatDegrees, Math.Abs(angle), String.Format(SR.ToolsMeasurementFormatDegrees, Math.Abs(angle)));
+		}
 
 		private List<PointF> NormalizePoints(ProtractorRoiInfo roiInfo)
 		{
@@ -87,7 +69,7 @@ namespace ClearCanvas.ImageViewer.Tools.Measurement
 			if (roiInfo.PixelAspectRatio.IsNull)
 			{
 				if (!roiInfo.NormalizedPixelSpacing.IsNull)
-					aspectRatio = (float)roiInfo.NormalizedPixelSpacing.AspectRatio;
+					aspectRatio = (float) roiInfo.NormalizedPixelSpacing.AspectRatio;
 			}
 			else
 			{
@@ -96,18 +78,12 @@ namespace ClearCanvas.ImageViewer.Tools.Measurement
 
 			List<PointF> normalized = new List<PointF>();
 			foreach (PointF point in roiInfo.Points)
-				normalized.Add(new PointF(point.X, point.Y * aspectRatio));
+				normalized.Add(new PointF(point.X, point.Y*aspectRatio));
 
 			return normalized;
 		}
 
-	    
-        public void SetRoiAnalyzerUpdateCallback(RoiAnalyzerUpdateCallback callback)
-	    {
-	        _updateCallback = callback;
-	    }
-
-	    public bool SupportsRoi(Roi roi)
+		public bool SupportsRoi(Roi roi)
 		{
 			return roi is ProtractorRoiInfo;
 		}
