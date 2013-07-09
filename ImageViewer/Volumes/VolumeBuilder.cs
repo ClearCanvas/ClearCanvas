@@ -199,26 +199,22 @@ namespace ClearCanvas.ImageViewer.Volumes
 			{
 				PrepareFrames(_frames); // this also sorts the frames into order by slice location
 
-				// Construct a model SOP data source based on the first frame's DICOM header
-				var sopDataSourcePrototype = VolumeSopDataSourcePrototype.Create(_frames.Select(f => (IDicomAttributeProvider) f.Sop.DataSource).ToList(), 16, 16, false);
-
-				// compute normalized modality LUT
+				// compute modality LUT parameters normalized for all frames
 				double normalizedSlope, normalizedIntercept;
 				ComputeNormalizedModalityLut(_frames, out normalizedSlope, out normalizedIntercept);
-				sopDataSourcePrototype[DicomTags.RescaleSlope].SetFloat64(0, normalizedSlope);
-				sopDataSourcePrototype[DicomTags.RescaleIntercept].SetFloat64(0, normalizedIntercept);
-				sopDataSourcePrototype[DicomTags.RescaleType] = _frames[0].Sop.DataSource[DicomTags.RescaleType].Copy();
-				sopDataSourcePrototype[DicomTags.Units] = _frames[0].Sop.DataSource[DicomTags.Units].Copy(); // PET series use this attribute to designate rescale units
 
-				// compute normalized VOI windows
-				VoiWindow.SetWindows(ComputeNormalizedVoiWindows(_frames, normalizedSlope, normalizedIntercept), sopDataSourcePrototype);
-
-				// compute the volume padding value
+				// determine an appropriate pixel padding value
 				var pixelPaddingValue = ComputePixelPaddingValue(_frames, normalizedSlope, normalizedIntercept);
+
+				// Construct a model SOP data source based on the first frame's DICOM header
+				var header = new VolumeHeader(_frames.Select(f => (IDicomAttributeProvider) f.Sop.DataSource).ToList(), VolumeSize, VoxelSpacing, VolumePositionPatient, VolumeOrientationPatient, 16, 16, false, pixelPaddingValue, normalizedSlope, normalizedIntercept);
+
+				// determine how the normalized modality LUT affects VOI windows and update the header
+				VoiWindow.SetWindows(ComputeNormalizedVoiWindows(_frames, normalizedSlope, normalizedIntercept), header);
 
 				int minVolumeValue, maxVolumeValue;
 				var volumeArray = BuildVolumeArray(pixelPaddingValue, normalizedSlope, normalizedIntercept, out minVolumeValue, out maxVolumeValue);
-				var volume = new U16Volume(volumeArray, VolumeSize, VoxelSpacing, VolumePositionPatient, VolumeOrientationPatient, sopDataSourcePrototype, pixelPaddingValue, _frames[0].Frame.SeriesInstanceUid, minVolumeValue, maxVolumeValue);
+				var volume = new U16Volume(volumeArray, header, minVolumeValue, maxVolumeValue);
 				return volume;
 			}
 

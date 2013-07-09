@@ -24,7 +24,6 @@
 
 using System;
 using ClearCanvas.Common;
-using ClearCanvas.Dicom;
 using ClearCanvas.ImageViewer.Mathematics;
 
 namespace ClearCanvas.ImageViewer.Volumes
@@ -47,23 +46,10 @@ namespace ClearCanvas.ImageViewer.Volumes
 	{
 		#region Private fields
 
-		private readonly Size3D _arrayDimensions;
-		private readonly Vector3D _voxelSpacing;
-		private readonly Rectangle3D _volumeBounds;
-		private readonly Vector3D _volumePositionPatient;
-		private readonly Vector3D _volumeOrientationPatientX;
-		private readonly Vector3D _volumeOrientationPatientY;
-		private readonly Vector3D _volumeOrientationPatientZ;
-		private readonly Vector3D _volumeCenter;
-		private readonly Vector3D _volumeCenterPatient;
-		private readonly Matrix _volumeOrientationPatient;
+		private readonly VolumeHeader _volumeHeader;
 
-		private readonly int _paddingValue;
 		private int? _minVolumeValue;
 		private int? _maxVolumeValue;
-
-		private readonly string _sourceSeriesInstanceUid;
-		private readonly VolumeSopDataSourcePrototype _dataSourcePrototype;
 
 		#endregion
 
@@ -72,39 +58,16 @@ namespace ClearCanvas.ImageViewer.Volumes
 		/// <summary>
 		/// Initializes the <see cref="Volume"/>.
 		/// </summary>
-		/// <param name="arrayDimensions"></param>
-		/// <param name="voxelSpacing"></param>
-		/// <param name="volumePositionPatient"></param>
-		/// <param name="volumeOrientationPatient"></param>
-		/// <param name="dataSourcePrototype"></param>
-		/// <param name="paddingValue"></param>
-		/// <param name="sourceSeriesInstanceUid"></param>
+		/// <param name="volumeHeader"></param>
 		/// <param name="minVolumeValue"></param>
 		/// <param name="maxVolumeValue"></param>
-		internal Volume(Size3D arrayDimensions, Vector3D voxelSpacing, Vector3D volumePositionPatient, Matrix volumeOrientationPatient, VolumeSopDataSourcePrototype dataSourcePrototype, int paddingValue, string sourceSeriesInstanceUid, int? minVolumeValue, int? maxVolumeValue)
+		internal Volume(VolumeHeader volumeHeader, int? minVolumeValue, int? maxVolumeValue)
 		{
-			Platform.CheckForNullReference(arrayDimensions, "arrayDimensions");
-			Platform.CheckForNullReference(voxelSpacing, "voxelSpacing");
-			Platform.CheckForNullReference(volumePositionPatient, "originPatient");
-			Platform.CheckForNullReference(volumeOrientationPatient, "orientationPatient");
-			Platform.CheckForNullReference(dataSourcePrototype, "sopDataSourcePrototype");
+			Platform.CheckForNullReference(volumeHeader, "volumeHeader");
 
-			_arrayDimensions = arrayDimensions;
-			_voxelSpacing = voxelSpacing;
-			_volumePositionPatient = volumePositionPatient;
-			_volumeOrientationPatient = volumeOrientationPatient;
-			_volumeOrientationPatientX = volumeOrientationPatient.GetRow(0);
-			_volumeOrientationPatientY = volumeOrientationPatient.GetRow(1);
-			_volumeOrientationPatientZ = volumeOrientationPatient.GetRow(2);
-			_dataSourcePrototype = dataSourcePrototype;
-			_paddingValue = paddingValue;
-			_sourceSeriesInstanceUid = sourceSeriesInstanceUid ?? string.Empty;
+			_volumeHeader = volumeHeader;
 			_minVolumeValue = minVolumeValue;
 			_maxVolumeValue = maxVolumeValue;
-
-			_volumeBounds = new Rectangle3D(0, 0, 0, _arrayDimensions.Width*_voxelSpacing.X, _arrayDimensions.Height*_voxelSpacing.Y, _arrayDimensions.Depth*_voxelSpacing.Z);
-			_volumeCenter = 0.5f*_volumeBounds.Size;
-			_volumeCenterPatient = ConvertToPatient(_volumeCenter);
 		}
 
 		#endregion
@@ -127,13 +90,14 @@ namespace ClearCanvas.ImageViewer.Volumes
 			get
 			{
 				const string message = "Specified {0}-index exceeds array bounds.";
-				if (!(x >= 0 && x < _arrayDimensions.Width))
+				var arrayDimensions = ArrayDimensions;
+				if (!(x >= 0 && x < arrayDimensions.Width))
 					throw new ArgumentOutOfRangeException("x", x, string.Format(message, "X"));
-				else if (!(y >= 0 && y < _arrayDimensions.Height))
+				else if (!(y >= 0 && y < arrayDimensions.Height))
 					throw new ArgumentOutOfRangeException("y", y, string.Format(message, "Y"));
-				else if (!(z >= 0 && z < _arrayDimensions.Depth))
+				else if (!(z >= 0 && z < arrayDimensions.Depth))
 					throw new ArgumentOutOfRangeException("z", z, string.Format(message, "Z"));
-				return GetArrayValue(x + _arrayDimensions.Width*(y + _arrayDimensions.Height*z));
+				return GetArrayValue(x + arrayDimensions.Width*(y + arrayDimensions.Height*z));
 			}
 		}
 
@@ -164,7 +128,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 		/// </summary>
 		public Size3D ArrayDimensions
 		{
-			get { return _arrayDimensions; }
+			get { return _volumeHeader.ArrayDimensions; }
 		}
 
 		/// <summary>
@@ -182,7 +146,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 		/// </summary>
 		public Vector3D VolumeSize
 		{
-			get { return _volumeBounds.Size; }
+			get { return _volumeHeader.VolumeSize; }
 		}
 
 		/// <summary>
@@ -190,7 +154,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 		/// </summary>
 		public Rectangle3D VolumeBounds
 		{
-			get { return _volumeBounds; }
+			get { return _volumeHeader.VolumeBounds; }
 		}
 
 		/// <summary>
@@ -201,7 +165,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 		/// </remarks>
 		public Vector3D VoxelSpacing
 		{
-			get { return _voxelSpacing; }
+			get { return _volumeHeader.VoxelSpacing; }
 		}
 
 		/// <summary>
@@ -212,7 +176,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 		/// </remarks>
 		public Vector3D VolumePositionPatient
 		{
-			get { return _volumePositionPatient; }
+			get { return _volumeHeader.VolumePositionPatient; }
 		}
 
 		/// <summary>
@@ -223,7 +187,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 		/// </remarks>
 		public Vector3D VolumeOrientationPatientX
 		{
-			get { return _volumeOrientationPatientX; }
+			get { return _volumeHeader.VolumeOrientationPatientX; }
 		}
 
 		/// <summary>
@@ -234,7 +198,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 		/// </remarks>
 		public Vector3D VolumeOrientationPatientY
 		{
-			get { return _volumeOrientationPatientY; }
+			get { return _volumeHeader.VolumeOrientationPatientY; }
 		}
 
 		/// <summary>
@@ -245,7 +209,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 		/// </remarks>
 		public Vector3D VolumeOrientationPatientZ
 		{
-			get { return _volumeOrientationPatientZ; }
+			get { return _volumeHeader.VolumeOrientationPatientZ; }
 		}
 
 		/// <summary>
@@ -253,7 +217,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 		/// </summary>
 		public Vector3D VolumeCenter
 		{
-			get { return _volumeCenter; }
+			get { return _volumeHeader.VolumeCenter; }
 		}
 
 		/// <summary>
@@ -261,7 +225,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 		/// </summary>
 		public Vector3D VolumeCenterPatient
 		{
-			get { return _volumeCenterPatient; }
+			get { return _volumeHeader.VolumeCenterPatient; }
 		}
 
 		/// <summary>
@@ -269,7 +233,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 		/// </summary>
 		public int PaddingValue
 		{
-			get { return _paddingValue; }
+			get { return _volumeHeader.PaddingValue; }
 		}
 
 		/// <summary>
@@ -293,11 +257,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 		/// </summary>
 		public string Modality
 		{
-			get
-			{
-				DicomAttribute attribute;
-				return _dataSourcePrototype.TryGetAttribute(DicomTags.Modality, out attribute) ? attribute.ToString() : string.Empty;
-			}
+			get { return _volumeHeader.Modality; }
 		}
 
 		/// <summary>
@@ -305,7 +265,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 		/// </summary>
 		public string SourceSeriesInstanceUid
 		{
-			get { return _sourceSeriesInstanceUid; }
+			get { return _volumeHeader.SourceSeriesInstanceUid; }
 		}
 
 		/// <summary>
@@ -313,11 +273,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 		/// </summary>
 		public string FrameOfReferenceUid
 		{
-			get
-			{
-				DicomAttribute attribute;
-				return _dataSourcePrototype.TryGetAttribute(DicomTags.FrameOfReferenceUid, out attribute) ? attribute.ToString() : string.Empty;
-			}
+			get { return _volumeHeader.FrameOfReferenceUid; }
 		}
 
 		/// <summary>
@@ -330,7 +286,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 		/// </remarks>
 		public IVolumeDataSet DataSet
 		{
-			get { return _dataSourcePrototype; }
+			get { return _volumeHeader; }
 		}
 
 		#endregion
@@ -360,19 +316,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 		/// </summary>
 		public Vector3D ConvertToPatient(Vector3D volumePosition)
 		{
-			// Set orientation transform
-			var volumePatientTransform = new Matrix(_volumeOrientationPatient);
-
-			// Set origin translation
-			volumePatientTransform.SetRow(3, VolumePositionPatient.X, VolumePositionPatient.Y, VolumePositionPatient.Z, 1);
-
-			// Transform volume position to patient position
-			var imagePositionMatrix = new Matrix(1, 4);
-			imagePositionMatrix.SetRow(0, volumePosition.X, volumePosition.Y, volumePosition.Z, 1F);
-			var patientPositionMatrix = imagePositionMatrix*volumePatientTransform;
-
-			var patientPosition = new Vector3D(patientPositionMatrix[0, 0], patientPositionMatrix[0, 1], patientPositionMatrix[0, 2]);
-			return patientPosition;
+			return _volumeHeader.ConvertToPatient(volumePosition);
 		}
 
 		/// <summary>
@@ -380,20 +324,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 		/// </summary>
 		public Vector3D ConvertToVolume(Vector3D patientPosition)
 		{
-			// Set orientation transform
-			var patientVolumeTransform = new Matrix(_volumeOrientationPatient.Transpose());
-
-			// Set origin translation
-			var rotatedOrigin = RotateToVolumeOrientation(VolumePositionPatient);
-			patientVolumeTransform.SetRow(3, -rotatedOrigin.X, -rotatedOrigin.Y, -rotatedOrigin.Z, 1);
-
-			// Transform patient position to volume position
-			var patientPositionMatrix = new Matrix(1, 4);
-			patientPositionMatrix.SetRow(0, patientPosition.X, patientPosition.Y, patientPosition.Z, 1F);
-			var imagePositionMatrix = patientPositionMatrix*patientVolumeTransform;
-
-			var imagePosition = new Vector3D(imagePositionMatrix[0, 0], imagePositionMatrix[0, 1], imagePositionMatrix[0, 2]);
-			return imagePosition;
+			return _volumeHeader.ConvertToVolume(patientPosition);
 		}
 
 		/// <summary>
@@ -401,8 +332,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 		/// </summary>
 		public Matrix RotateToPatientOrientation(Matrix volumeOrientation)
 		{
-			var orientationPatient = volumeOrientation*_volumeOrientationPatient;
-			return orientationPatient;
+			return _volumeHeader.RotateToPatientOrientation(volumeOrientation);
 		}
 
 		/// <summary>
@@ -410,8 +340,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 		/// </summary>
 		public Matrix RotateToVolumeOrientation(Matrix patientOrientation)
 		{
-			var orientationVolume = patientOrientation*_volumeOrientationPatient.Transpose();
-			return orientationVolume;
+			return _volumeHeader.RotateToVolumeOrientation(patientOrientation);
 		}
 
 		/// <summary>
@@ -419,10 +348,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 		/// </summary>
 		public Vector3D RotateToPatientOrientation(Vector3D volumeVector)
 		{
-			var volumePos = new Matrix(1, 4);
-			volumePos.SetRow(0, volumeVector.X, volumeVector.Y, volumeVector.Z, 1F);
-			Matrix patientPos = volumePos*_volumeOrientationPatient;
-			return new Vector3D(patientPos[0, 0], patientPos[0, 1], patientPos[0, 2]);
+			return _volumeHeader.RotateToPatientOrientation(volumeVector);
 		}
 
 		/// <summary>
@@ -430,10 +356,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 		/// </summary>
 		public Vector3D RotateToVolumeOrientation(Vector3D patientVector)
 		{
-			var patientPos = new Matrix(1, 4);
-			patientPos.SetRow(0, patientVector.X, patientVector.Y, patientVector.Z, 1F);
-			var volumePos = patientPos*_volumeOrientationPatient.Transpose();
-			return new Vector3D(volumePos[0, 0], volumePos[0, 1], volumePos[0, 2]);
+			return _volumeHeader.RotateToVolumeOrientation(patientVector);
 		}
 
 		#endregion
@@ -453,18 +376,10 @@ namespace ClearCanvas.ImageViewer.Volumes
 		}
 
 		/// <summary>
-		/// Gets a value indicating whether or not the object has already been disposed.
-		/// </summary>
-		protected bool Disposed { get; private set; }
-
-		/// <summary>
 		/// Called to release any resources held by this object.
 		/// </summary>
 		/// <param name="disposing">True if the object is being disposed; False if the object is being finalized.</param>
-		protected virtual void Dispose(bool disposing)
-		{
-			Disposed = true;
-		}
+		protected virtual void Dispose(bool disposing) {}
 
 		#endregion
 	}

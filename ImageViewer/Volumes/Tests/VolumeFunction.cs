@@ -122,16 +122,16 @@ namespace ClearCanvas.ImageViewer.Volumes.Tests
 			Size3D dimensions = new Size3D(width, height, depth);
 			Vector3D spacing = new Vector3D(1, 1, 1);
 			Vector3D originPatient = new Vector3D(0, 0, 0);
-			Matrix orientationPatient = Matrix.GetIdentity(4);
+			Matrix3D orientationPatient = Matrix3D.GetIdentity();
 			if (signed)
 			{
 				short[] data = CreateSignedArray(width, height, depth);
-				return new S16Volume(data, dimensions, spacing, originPatient, orientationPatient, dataset, short.MinValue, null);
+				return new S16Volume(data, dimensions, spacing, originPatient, orientationPatient, dataset, short.MinValue, 1, 0);
 			}
 			else
 			{
 				ushort[] data = CreateUnsignedArray(width, height, depth);
-				return new U16Volume(data, dimensions, spacing, originPatient, orientationPatient, dataset, ushort.MinValue, null);
+				return new U16Volume(data, dimensions, spacing, originPatient, orientationPatient, dataset, ushort.MinValue, 1, 0);
 			}
 		}
 

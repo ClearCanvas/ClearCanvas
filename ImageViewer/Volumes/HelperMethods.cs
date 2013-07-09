@@ -48,5 +48,19 @@ namespace ClearCanvas.ImageViewer.Volumes
 		{
 			return new Vector3D(matrix4X4[row, 0], matrix4X4[row, 1], matrix4X4[row, 2]);
 		}
+
+		public static Matrix Augment(this Matrix3D orientationMatrix)
+		{
+			var x = orientationMatrix.GetRow(0);
+			var y = orientationMatrix.GetRow(1);
+			var z = orientationMatrix.GetRow(2);
+			return new Matrix(new[,]
+			                  	{
+			                  		{x.X, x.Y, x.Z, 0},
+			                  		{y.X, y.Y, y.Z, 0},
+			                  		{z.X, z.Y, z.Z, 0},
+			                  		{0, 0, 0, 1}
+			                  	});
+		}
 	}
 }

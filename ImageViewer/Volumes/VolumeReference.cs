@@ -111,7 +111,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 			lock (_syncLock)
 			{
 				if (_referenceCount == 0 && _selfDisposed)
-					throw new ObjectDisposedException("The Volume has already been disposed.");
+					throw new ObjectDisposedException(typeof (Volume).FullName);
 
 				++_referenceCount;
 			}
@@ -122,6 +122,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 			try
 			{
 				Dispose(true);
+				Disposed = true;
 				GC.SuppressFinalize(this);
 			}
 			catch (Exception e)
@@ -129,6 +130,11 @@ namespace ClearCanvas.ImageViewer.Volumes
 				Platform.Log(LogLevel.Warn, e);
 			}
 		}
+
+		/// <summary>
+		/// Gets a value indicating whether or not the object has already been disposed.
+		/// </summary>
+		protected bool Disposed { get; private set; }
 
 		/// <summary>
 		/// Creates a reference to this <see cref="Volume"/>.

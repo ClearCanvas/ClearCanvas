@@ -802,7 +802,7 @@
     <Compile Include="Volumes\Tests\VolumeBuilderTest.cs" />
     <Compile Include="Volumes\Tests\VolumeCacheTestTool.cs" />
     <Compile Include="Volumes\Tests\VolumeFunction.cs" />
-    <Compile Include="Volumes\Tests\VolumeSopDataSourcePrototypeTests.cs" />
+    <Compile Include="Volumes\Tests\VolumeHeaderTests.cs" />
     <Compile Include="Volumes\Tests\VolumeTests.cs" />
     <Compile Include="Volumes\Volume.cs" />
     <Compile Include="Volumes\VolumeBuilder.cs" />
@@ -811,7 +811,7 @@
     <Compile Include="Volumes\VolumeLoader.cs" />
     <Compile Include="Volumes\VolumeMethods.cs" />
     <Compile Include="Volumes\VolumeReference.cs" />
-    <Compile Include="Volumes\VolumeSopDataSourcePrototype.cs" />
+    <Compile Include="Volumes\VolumeHeader.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\ClearCanvas.Common.csproj">
