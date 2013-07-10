@@ -807,4 +807,19 @@ Please check the log for more details.</value>
   <data name="TooltipRotate3D" xml:space="preserve">
     <value>Rotate 3D</value>
   </data>
+  <data name="FormatCoordinates3D" xml:space="preserve">
+    <value>x={0}, y={1}, z={2}</value>
+  </data>
+  <data name="LabelPatientLocation" xml:space="preserve">
+    <value>PAT</value>
+  </data>
+  <data name="ViewAxial" xml:space="preserve">
+    <value>&amp;Axial</value>
+  </data>
+  <data name="ViewCoronal" xml:space="preserve">
+    <value>&amp;Coronal</value>
+  </data>
+  <data name="ViewSagittal" xml:space="preserve">
+    <value>&amp;Sagittal</value>
+  </data>
 </root>

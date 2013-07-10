@@ -540,6 +540,15 @@ namespace ClearCanvas.ImageViewer.Tools.Standard {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to x={0}, y={1}, z={2}.
+        /// </summary>
+        internal static string FormatCoordinates3D {
+            get {
+                return ResourceManager.GetString("FormatCoordinates3D", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to W:{0:0.#} L:{1:0.#} ({2}).
         /// </summary>
         internal static string FormatDescriptionAutoLinearLut {
@@ -734,6 +743,15 @@ namespace ClearCanvas.ImageViewer.Tools.Standard {
         internal static string LabelNotApplicable {
             get {
                 return ResourceManager.GetString("LabelNotApplicable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to PAT.
+        /// </summary>
+        internal static string LabelPatientLocation {
+            get {
+                return ResourceManager.GetString("LabelPatientLocation", resourceCulture);
             }
         }
         
@@ -2121,6 +2139,33 @@ namespace ClearCanvas.ImageViewer.Tools.Standard {
         internal static string TooltipZoom {
             get {
                 return ResourceManager.GetString("TooltipZoom", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &amp;Axial.
+        /// </summary>
+        internal static string ViewAxial {
+            get {
+                return ResourceManager.GetString("ViewAxial", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &amp;Coronal.
+        /// </summary>
+        internal static string ViewCoronal {
+            get {
+                return ResourceManager.GetString("ViewCoronal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &amp;Sagittal.
+        /// </summary>
+        internal static string ViewSagittal {
+            get {
+                return ResourceManager.GetString("ViewSagittal", resourceCulture);
             }
         }
     }

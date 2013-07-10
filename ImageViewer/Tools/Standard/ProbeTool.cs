@@ -170,7 +170,6 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 		private void Probe(Point sourcePointRounded, bool showPixelValue, bool showVoiValue)
 		{
 			string probeString;
-			string coordinateString = String.Format(SR.FormatProbeInfo, SR.LabelLocation, string.Format(SR.FormatCoordinates, SR.LabelNotApplicable, SR.LabelNotApplicable));
 			string pixelValueString = String.Format(SR.FormatProbeInfo, SR.LabelRawPixel, SR.LabelNotApplicable);
 			string modalityLutString = String.Format(SR.FormatProbeInfo, SR.LabelModalityLut, SR.LabelNotApplicable);
 			string voiLutString = String.Format(SR.FormatProbeInfo, SR.LabelVOILut, SR.LabelNotApplicable);
@@ -178,7 +177,6 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 			try
 			{
 				var displayString = new StringBuilder();
-				coordinateString = String.Format(SR.FormatProbeInfo, SR.LabelLocation, string.Format(SR.FormatCoordinates, sourcePointRounded.X, sourcePointRounded.Y));
 
 				if (_selectedImageGraphic != null && _selectedImageGraphic.BoundingBox.Contains(sourcePointRounded))
 				{
@@ -207,8 +205,13 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 					}
 				}
 
-				// show the coordinate last, cause it's probably the least interesting information
+				// show the coordinates last, cause it's probably the least interesting information
+				var coordinateString = String.Format(SR.FormatProbeInfo, SR.LabelLocation, string.Format(SR.FormatCoordinates, sourcePointRounded.X, sourcePointRounded.Y));
 				displayString.AppendLine(coordinateString);
+
+				var patientPoint = _selectedFrame.ImagePlaneHelper.ConvertToPatient(sourcePointRounded);
+				var patientString = String.Format(SR.FormatProbeInfo, SR.LabelPatientLocation, string.Format(SR.FormatCoordinates3D, patientPoint.X.ToString("f3"), patientPoint.Y.ToString("f3"), patientPoint.Z.ToString("f3")));
+				displayString.AppendLine(patientString);
 
 				probeString = displayString.ToString().Trim();
 			}
