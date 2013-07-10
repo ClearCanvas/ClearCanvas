@@ -57,6 +57,7 @@ namespace ClearCanvas.ImageViewer.Tools.Standard.View.WinForms
             _render = render;
 
             _surface = image.ImageRenderer.CreateRenderingSurface(Handle, ClientRectangle.Width, ClientRectangle.Height, RenderingSurfaceType.Onscreen);
+			_surface.Invalidated += OnSurfaceInvalidated;
 
             _startPointDesktop = Centre = Cursor.Position;
 		}
@@ -83,6 +84,11 @@ namespace ClearCanvas.ImageViewer.Tools.Standard.View.WinForms
 				if (value != Location)
 					base.Location = value;
 			}
+		}
+
+		private void OnSurfaceInvalidated(object sender, EventArgs e)
+		{
+			Invalidate();
 		}
 
 		protected override void OnPaintBackground(PaintEventArgs e)
@@ -151,6 +157,7 @@ namespace ClearCanvas.ImageViewer.Tools.Standard.View.WinForms
 		{
 			if (_surface != null)
 			{
+				_surface.Invalidated -= OnSurfaceInvalidated;
                 _surface.Dispose();
                 _surface = null;
 			}

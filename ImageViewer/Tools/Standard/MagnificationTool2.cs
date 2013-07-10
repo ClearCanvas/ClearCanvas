@@ -157,7 +157,7 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
                 box.Justification = AnnotationBox.JustificationBehaviour.Right;
                 box.VerticalAlignment = AnnotationBox.VerticalAlignmentBehaviour.Top;
                 layout.AnnotationBoxes.Add(box);
-                ((BasicPresentationImage)_magnificationImage).AnnotationLayout = layout;
+				((IAnnotationLayoutProvider)_magnificationImage).AnnotationLayout = layout;
             }
 
             if (_magnificationImage is IOverlayGraphicsProvider)
