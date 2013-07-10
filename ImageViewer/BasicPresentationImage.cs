@@ -23,6 +23,7 @@
 #endregion
 
 using System;
+using System.Drawing;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.ImageViewer.Annotations;
@@ -127,6 +128,14 @@ namespace ClearCanvas.ImageViewer
 		}
 
 		#region Public properties
+
+		/// <summary>
+		/// Gets the dimensions of the image.
+		/// </summary>
+		public override Size SceneSize
+		{
+			get { return new Size(_imageGraphic.Columns, _imageGraphic.Rows); }
+		}
 
 		#region IImageGraphicProvider
 

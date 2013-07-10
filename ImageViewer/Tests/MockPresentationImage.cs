@@ -26,12 +26,18 @@
 
 #pragma warning disable 1591,0419,1574,1587
 
+using System.Drawing;
 using ClearCanvas.ImageViewer.Rendering;
 
 namespace ClearCanvas.ImageViewer.Tests
 {
 	public class MockPresentationImage : PresentationImage
 	{
+		public override Size SceneSize
+		{
+			get { return new Size(100, 100); }
+		}
+
 		public override IRenderer ImageRenderer
 		{
 			get { return null; }
@@ -39,7 +45,7 @@ namespace ClearCanvas.ImageViewer.Tests
 
 		public override IPresentationImage CreateFreshCopy()
 		{
-			return null;
+			return new MockPresentationImage();
 		}
 	}
 }

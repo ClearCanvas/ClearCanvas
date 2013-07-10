@@ -22,6 +22,7 @@
 
 #endregion
 
+using System.Drawing;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.ImageViewer.Annotations;
@@ -105,6 +106,17 @@ namespace ClearCanvas.ImageViewer
 		}
 
 		#region Public properties
+
+		/// <summary>
+		/// Gets the dimensions of the scene.
+		/// </summary>
+		/// <remarks>
+		/// The dimensions of the scene effectively define the boundaries of the <see cref="IPresentationImage"/>.
+		/// </remarks>
+		public override Size SceneSize
+		{
+			get { return new Size((int) _modelDimensions.X, (int) _modelDimensions.Y); }
+		}
 
 		public Vector3D Dimensions
 		{

@@ -29,6 +29,7 @@
 using NUnit.Framework;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
+using TestPresentationImage = ClearCanvas.ImageViewer.Tests.MockPresentationImage;
 
 namespace ClearCanvas.ImageViewer.Tests
 {
