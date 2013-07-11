@@ -819,6 +819,15 @@ namespace ClearCanvas.ImageViewer.Tools.Standard {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to &amp;Axial View.
+        /// </summary>
+        internal static string MenuAxialView {
+            get {
+                return ResourceManager.GetString("MenuAxialView", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cine.
         /// </summary>
         internal static string MenuCine {
@@ -851,6 +860,15 @@ namespace ClearCanvas.ImageViewer.Tools.Standard {
         internal static string MenuColorBar {
             get {
                 return ResourceManager.GetString("MenuColorBar", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &amp;Coronal View.
+        /// </summary>
+        internal static string MenuCoronalView {
+            get {
+                return ResourceManager.GetString("MenuCoronalView", resourceCulture);
             }
         }
         
@@ -1094,6 +1112,15 @@ namespace ClearCanvas.ImageViewer.Tools.Standard {
         internal static string MenuRotateRight {
             get {
                 return ResourceManager.GetString("MenuRotateRight", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &amp;Sagittal View.
+        /// </summary>
+        internal static string MenuSagittalView {
+            get {
+                return ResourceManager.GetString("MenuSagittalView", resourceCulture);
             }
         }
         
@@ -2139,33 +2166,6 @@ namespace ClearCanvas.ImageViewer.Tools.Standard {
         internal static string TooltipZoom {
             get {
                 return ResourceManager.GetString("TooltipZoom", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to &amp;Axial.
-        /// </summary>
-        internal static string ViewAxial {
-            get {
-                return ResourceManager.GetString("ViewAxial", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to &amp;Coronal.
-        /// </summary>
-        internal static string ViewCoronal {
-            get {
-                return ResourceManager.GetString("ViewCoronal", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to &amp;Sagittal.
-        /// </summary>
-        internal static string ViewSagittal {
-            get {
-                return ResourceManager.GetString("ViewSagittal", resourceCulture);
             }
         }
     }

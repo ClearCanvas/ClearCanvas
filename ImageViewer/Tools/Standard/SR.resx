@@ -813,13 +813,13 @@ Please check the log for more details.</value>
   <data name="LabelPatientLocation" xml:space="preserve">
     <value>PAT</value>
   </data>
-  <data name="ViewAxial" xml:space="preserve">
-    <value>&amp;Axial</value>
+  <data name="MenuAxialView" xml:space="preserve">
+    <value>&amp;Axial View</value>
   </data>
-  <data name="ViewCoronal" xml:space="preserve">
-    <value>&amp;Coronal</value>
+  <data name="MenuCoronalView" xml:space="preserve">
+    <value>&amp;Coronal View</value>
   </data>
-  <data name="ViewSagittal" xml:space="preserve">
-    <value>&amp;Sagittal</value>
+  <data name="MenuSagittalView" xml:space="preserve">
+    <value>&amp;Sagittal View</value>
   </data>
 </root>

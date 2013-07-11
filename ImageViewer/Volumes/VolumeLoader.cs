@@ -29,15 +29,35 @@ using ClearCanvas.ImageViewer.StudyManagement;
 
 namespace ClearCanvas.ImageViewer.Volumes
 {
-	public delegate void CreateVolumeProgressCallback(int currentFrame, int totalFrames);
+	/// <summary>
+	/// Represents the callback method to receive progress notification when loading a <see cref="Volume"/>.
+	/// </summary>
+	/// <param name="completedSubOperations">The number of suboperations completed.</param>
+	/// <param name="totalSubOperations">The total number of suboperations.</param>
+	public delegate void CreateVolumeProgressCallback(int completedSubOperations, int totalSubOperations);
 
 	partial class Volume
 	{
+		/// <summary>
+		/// Creates a <see cref="Volume"/> from the images of the specified <see cref="IDisplaySet"/>.
+		/// </summary>
+		/// <param name="displaySet">The <see cref="IDisplaySet"/> from which to create the <see cref="Volume"/>.</param>
+		/// <returns>A <see cref="Volume"/> constructed from the specified inputs.</returns>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="displaySet"/> is NULL.</exception>
+		/// <exception cref="CreateVolumeException">Thrown if the specified inputs cannot be constructed into a <see cref="Volume"/>.</exception>
 		public static Volume Create(IDisplaySet displaySet)
 		{
 			return Create(displaySet, null);
 		}
 
+		/// <summary>
+		/// Creates a <see cref="Volume"/> from the images of the specified <see cref="IDisplaySet"/>.
+		/// </summary>
+		/// <param name="displaySet">The <see cref="IDisplaySet"/> from which to create the <see cref="Volume"/>.</param>
+		/// <param name="callback">A <see cref="CreateVolumeProgressCallback"/> to receive progress notification while the <see cref="Volume"/> is being loaded.</param>
+		/// <returns>A <see cref="Volume"/> constructed from the specified inputs.</returns>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="displaySet"/> is NULL.</exception>
+		/// <exception cref="CreateVolumeException">Thrown if the specified inputs cannot be constructed into a <see cref="Volume"/>.</exception>
 		public static Volume Create(IDisplaySet displaySet, CreateVolumeProgressCallback callback)
 		{
 			Platform.CheckForNullReference(displaySet, "displaySet");
@@ -53,11 +73,26 @@ namespace ClearCanvas.ImageViewer.Volumes
 			return Create(frames, callback);
 		}
 
+		/// <summary>
+		/// Creates a <see cref="Volume"/> from the specified <see cref="Frame"/>s.
+		/// </summary>
+		/// <param name="frames">The <see cref="Frame"/>s from which to create the <see cref="Volume"/>.</param>
+		/// <returns>A <see cref="Volume"/> constructed from the specified inputs.</returns>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="frames"/> is NULL.</exception>
+		/// <exception cref="CreateVolumeException">Thrown if the specified inputs cannot be constructed into a <see cref="Volume"/>.</exception>
 		public static Volume Create(IEnumerable<Frame> frames)
 		{
 			return Create(frames, null);
 		}
 
+		/// <summary>
+		/// Creates a <see cref="Volume"/> from the specified <see cref="Frame"/>s.
+		/// </summary>
+		/// <param name="frames">The <see cref="Frame"/>s from which to create the <see cref="Volume"/>.</param>
+		/// <param name="callback">A <see cref="CreateVolumeProgressCallback"/> to receive progress notification while the <see cref="Volume"/> is being loaded.</param>
+		/// <returns>A <see cref="Volume"/> constructed from the specified inputs.</returns>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="frames"/> is NULL.</exception>
+		/// <exception cref="CreateVolumeException">Thrown if the specified inputs cannot be constructed into a <see cref="Volume"/>.</exception>
 		public static Volume Create(IEnumerable<Frame> frames, CreateVolumeProgressCallback callback)
 		{
 			Platform.CheckForNullReference(frames, "frames");
@@ -67,11 +102,32 @@ namespace ClearCanvas.ImageViewer.Volumes
 			}
 		}
 
+		/// <summary>
+		/// Creates a <see cref="Volume"/> from the <see cref="Frame"/>s referenced by the specified <see cref="IFrameReference"/>s.
+		/// </summary>
+		/// <remarks>
+		/// This method does not take ownership of the <see cref="IFrameReference"/>s. The calling code is still responsible for disposing the frames.
+		/// </remarks>
+		/// <param name="frames">The <see cref="IFrameReference"/> from which to create the <see cref="Volume"/>. Does <b>NOT</b> take ownership of the references.</param>
+		/// <returns>A <see cref="Volume"/> constructed from the specified inputs.</returns>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="frames"/> is NULL.</exception>
+		/// <exception cref="CreateVolumeException">Thrown if the specified inputs cannot be constructed into a <see cref="Volume"/>.</exception>
 		public static Volume Create(IEnumerable<IFrameReference> frames)
 		{
 			return Create(frames, null);
 		}
 
+		/// <summary>
+		/// Creates a <see cref="Volume"/> from the <see cref="Frame"/>s referenced by the specified <see cref="IFrameReference"/>s.
+		/// </summary>
+		/// <remarks>
+		/// This method does not take ownership of the <see cref="IFrameReference"/>s. The calling code is still responsible for disposing the frames.
+		/// </remarks>
+		/// <param name="frames">The <see cref="IFrameReference"/> from which to create the <see cref="Volume"/>. Does <b>NOT</b> take ownership of the references.</param>
+		/// <param name="callback">A <see cref="CreateVolumeProgressCallback"/> to receive progress notification while the <see cref="Volume"/> is being loaded.</param>
+		/// <returns>A <see cref="Volume"/> constructed from the specified inputs.</returns>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="frames"/> is NULL.</exception>
+		/// <exception cref="CreateVolumeException">Thrown if the specified inputs cannot be constructed into a <see cref="Volume"/>.</exception>
 		public static Volume Create(IEnumerable<IFrameReference> frames, CreateVolumeProgressCallback callback)
 		{
 			Platform.CheckForNullReference(frames, "frames");
@@ -81,11 +137,26 @@ namespace ClearCanvas.ImageViewer.Volumes
 			}
 		}
 
+		/// <summary>
+		/// Creates a <see cref="Volume"/> from the specified DICOM files.
+		/// </summary>
+		/// <param name="filenames">The DICOM files from which to create the <see cref="Volume"/>.</param>
+		/// <returns>A <see cref="Volume"/> constructed from the specified inputs.</returns>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="filenames"/> is NULL.</exception>
+		/// <exception cref="CreateVolumeException">Thrown if the specified inputs cannot be constructed into a <see cref="Volume"/>.</exception>
 		public static Volume Create(IEnumerable<string> filenames)
 		{
 			return Create(filenames, null);
 		}
 
+		/// <summary>
+		/// Creates a <see cref="Volume"/> from the specified DICOM files.
+		/// </summary>
+		/// <param name="filenames">The DICOM files from which to create the <see cref="Volume"/>.</param>
+		/// <param name="callback">A <see cref="CreateVolumeProgressCallback"/> to receive progress notification while the <see cref="Volume"/> is being loaded.</param>
+		/// <returns>A <see cref="Volume"/> constructed from the specified inputs.</returns>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="filenames"/> is NULL.</exception>
+		/// <exception cref="CreateVolumeException">Thrown if the specified inputs cannot be constructed into a <see cref="Volume"/>.</exception>
 		public static Volume Create(IEnumerable<string> filenames, CreateVolumeProgressCallback callback)
 		{
 			Platform.CheckForNullReference(filenames, "filenames");

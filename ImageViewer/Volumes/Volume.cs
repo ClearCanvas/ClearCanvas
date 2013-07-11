@@ -285,6 +285,14 @@ namespace ClearCanvas.ImageViewer.Volumes
 		}
 
 		/// <summary>
+		/// Gets the Study Instance UID that identifies the source images from which the volume was created.
+		/// </summary>
+		public string SourceStudyInstanceUid
+		{
+			get { return _volumeHeaderData.SourceStudyInstanceUid; }
+		}
+
+		/// <summary>
 		/// Gets the Series Instance UID that identifies the source images from which the volume was created.
 		/// </summary>
 		public string SourceSeriesInstanceUid

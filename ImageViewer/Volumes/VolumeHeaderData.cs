@@ -71,6 +71,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 	/// </remarks>
 	internal sealed class VolumeHeaderData : IVolumeDataSet
 	{
+		private readonly object _syncRoot = new object();
 		private readonly DicomAttributeCollection _collection = new DicomAttributeCollection();
 		private readonly Matrix _volumeOrientationPatient;
 
@@ -103,6 +104,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 			VolumeOrientationPatientY = volumeOrientationPatient.GetRow(1);
 			VolumeOrientationPatientZ = volumeOrientationPatient.GetRow(2);
 			Modality = firstSop[DicomTags.Modality].ToString();
+			SourceStudyInstanceUid = firstSop[DicomTags.StudyInstanceUid].ToString();
 			SourceSeriesInstanceUid = firstSop[DicomTags.SeriesInstanceUid].ToString();
 			FrameOfReferenceUid = firstSop[DicomTags.FrameOfReferenceUid].ToString();
 			BitsPerVoxel = bitsAllocated;
@@ -133,6 +135,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 		public readonly bool Signed;
 		public readonly int PaddingValue;
 		public readonly string Modality;
+		public readonly string SourceStudyInstanceUid;
 		public readonly string SourceSeriesInstanceUid;
 		public readonly string FrameOfReferenceUid;
 		public readonly double RescaleSlope;
@@ -142,34 +145,76 @@ namespace ClearCanvas.ImageViewer.Volumes
 
 		public IEnumerable<uint> Tags
 		{
-			get { return _collection.Select(a => a.Tag.TagValue); }
+			get
+			{
+				lock (_syncRoot)
+				{
+					return _collection.Select(a => a.Tag.TagValue).ToList();
+				}
+			}
 		}
 
 		public IEnumerable<DicomAttribute> Attributes
 		{
-			get { return _collection.Select(a => a); }
+			get
+			{
+				lock (_syncRoot)
+				{
+					return _collection.Select(a => a).ToList();
+				}
+			}
 		}
 
 		public DicomAttribute this[DicomTag tag]
 		{
-			get { return _collection[tag]; }
-			set { _collection[tag] = value; }
+			get
+			{
+				lock (_syncRoot)
+				{
+					return _collection[tag];
+				}
+			}
+			set
+			{
+				lock (_syncRoot)
+				{
+					_collection[tag] = value;
+				}
+			}
 		}
 
 		public DicomAttribute this[uint tag]
 		{
-			get { return _collection[tag]; }
-			set { _collection[tag] = value; }
+			get
+			{
+				lock (_syncRoot)
+				{
+					return _collection[tag];
+				}
+			}
+			set
+			{
+				lock (_syncRoot)
+				{
+					_collection[tag] = value;
+				}
+			}
 		}
 
 		public bool TryGetAttribute(uint tag, out DicomAttribute attribute)
 		{
-			return _collection.TryGetAttribute(tag, out attribute);
+			lock (_syncRoot)
+			{
+				return _collection.TryGetAttribute(tag, out attribute);
+			}
 		}
 
 		public bool TryGetAttribute(DicomTag tag, out DicomAttribute attribute)
 		{
-			return _collection.TryGetAttribute(tag, out attribute);
+			lock (_syncRoot)
+			{
+				return _collection.TryGetAttribute(tag, out attribute);
+			}
 		}
 
 		public DicomAttributeCollection Copy()
@@ -181,8 +226,11 @@ namespace ClearCanvas.ImageViewer.Volumes
 
 		public void CopyTo(IDicomAttributeProvider destinationCollection)
 		{
-			foreach (var attribute in _collection)
-				destinationCollection[attribute.Tag] = attribute.Copy();
+			lock (_syncRoot)
+			{
+				foreach (var attribute in _collection)
+					destinationCollection[attribute.Tag] = attribute.Copy();
+			}
 		}
 
 		#endregion
