@@ -48,7 +48,7 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
 
         public abstract void SetOverlayVisible(IPresentationImage image, bool visible);
 
-        public static IList<IOverlaySelector> CreateAll()
+        internal static List<IOverlaySelector> CreateAll()
         {
             return new List<IOverlaySelector>
                        {

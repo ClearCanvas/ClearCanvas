@@ -102,7 +102,7 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
 				ShowOriginalMultiEchoSeries = false;
 			}
 
-            OverlaySelectionOptions = OverlaySelector.CreateAll().Select(s => new OverlaySelectionOption(s.Name, s.DisplayName) { IsSelected = s.IsSelectedByDefault(_modality)}).ToList();
+            OverlaySelectionOptions = OverlayManager.Selectors.Select(s => new OverlaySelectionOption(s.Name, s.DisplayName) { IsSelected = s.IsSelectedByDefault(_modality)}).ToList();
         }
 
 		public string Modality

@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
+using ClearCanvas.Common.Utilities;
 using ClearCanvas.ImageViewer.StudyManagement;
 
 namespace ClearCanvas.ImageViewer.Layout.Basic
@@ -28,6 +30,8 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
     public static class OverlayManager
     {
         private class Key{}
+
+        [Cloneable(false)]
         private class OverlayState : IOverlaySelection
         {
             private readonly IOverlaySelection _setting;
@@ -39,6 +43,18 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
                 IsSelected = _isSelectedByDefault = isSelected;
             }
 
+            public OverlayState(OverlayState original)
+            {
+                _setting = original._setting;
+                _isSelectedByDefault = original._isSelectedByDefault;
+                IsSelected = original.IsSelected;
+            }
+
+            private OverlayState(OverlayState original, ICloningContext context)
+                : this(original)
+            {
+            }
+
             #region IOverlaySelection Members
 
             public string Name { get { return _setting.Name; } }
@@ -47,6 +63,8 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
 
             #endregion
         }
+
+        public static IList<IOverlaySelector> Selectors = new ReadOnlyCollection<IOverlaySelector>(OverlaySelector.CreateAll());
 
         public static string GetModality(IPresentationImage image)
         {
@@ -101,11 +119,10 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
         public static void ShowSelectedOverlays(IPresentationImage image)
         {
             var selections = GetOverlaySelections(image);
-            var selectors = OverlaySelector.CreateAll();
             foreach (var selection in selections)
             {
                 var n = selection;
-                var selector = selectors.FirstOrDefault(s => s.Name == n.Name);
+                var selector = Selectors.FirstOrDefault(s => s.Name == n.Name);
                 if (selector == null)continue;
 
                 if (selection.IsSelected)
@@ -118,11 +135,10 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
         public static void HideOverlays(IPresentationImage image)
         {
             var selections = GetOverlaySelections(image);
-            var selectors = OverlaySelector.CreateAll();
             foreach (var selection in selections)
             {
                 var n = selection;
-                var selector = selectors.FirstOrDefault(s => s.Name == n.Name);
+                var selector = Selectors.FirstOrDefault(s => s.Name == n.Name);
                 if (selector != null)
                     selector.HideOverlay(image);
             }

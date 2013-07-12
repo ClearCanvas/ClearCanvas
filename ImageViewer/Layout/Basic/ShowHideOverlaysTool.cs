@@ -55,7 +55,6 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
 	public class ShowHideOverlaysTool : ImageViewerTool
 	{
 	    private ActionModelNode _mainDropDownActionModel;
-        private IList<IOverlaySelector> _overlaySelectors = OverlaySelector.CreateAll();
         private IconSet _selectedOverlaysVisible = new IconSet("Icons.ShowHideOverlaysToolSmall.png", "Icons.ShowHideOverlaysToolMedium.png", "Icons.ShowHideOverlaysToolLarge.png");
         private IconSet _selectedOverlaysHidden = new IconSet("Icons.ShowHideOverlaysToolSmall.png", "Icons.ShowHideOverlaysToolMedium.png", "Icons.ShowHideOverlaysToolLarge.png");
 
