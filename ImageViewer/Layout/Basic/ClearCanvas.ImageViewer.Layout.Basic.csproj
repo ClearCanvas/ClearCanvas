@@ -120,12 +120,22 @@
     <Reference Include="System.Data">
       <Name>System.Data</Name>
     </Reference>
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml">
       <Name>System.XML</Name>
     </Reference>
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
+    <EmbeddedResource Include="OverlaySelectors\Icons\TextOverlayToolLarge.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="OverlayManager.cs" />
+    <Compile Include="OverlaySelector.cs" />
+    <Compile Include="OverlaySelectors\ColorBarSelector.cs" />
+    <Compile Include="OverlaySelectors\CompositeScaleGraphic.cs" />
+    <Compile Include="OverlaySelectors\DicomOverlaySelector.cs" />
+    <Compile Include="OverlaySelectors\ScaleGraphic.cs" />
+    <Compile Include="OverlaySelectors\ShutterOverlaySelector.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -169,6 +179,8 @@
     </EmbeddedResource>
     <Compile Include="DefaultPatientReconciliationStrategy.cs" />
     <Compile Include="PriorStudyFinder.cs" />
+    <Compile Include="OverlaySelectors\ScaleOverlaySelector.cs" />
+    <Compile Include="ShowHideOverlaysTool.cs" />
     <Compile Include="SR.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -181,6 +193,7 @@
     <Compile Include="Tests\ImageSetFillerTests.cs" />
     <Compile Include="Tests\LayoutManagerTests.cs" />
     <Compile Include="Tests\PriorStudyFinderTests.cs" />
+    <Compile Include="OverlaySelectors\TextOverlaySelector.cs" />
     <Compile Include="XmlActionsApplicator.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -266,7 +279,60 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="DisplaySetCreationSettingsDefaults.xml" />
+    <EmbeddedResource Include="DisplaySetCreationSettingsDefaults.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="OverlaySelectors\Icons\TextOverlayToolSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="OverlaySelectors\Icons\TextOverlayToolMedium.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="OverlaySelectors\Icons\ShutterOverlayToolLarge.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="OverlaySelectors\Icons\ShutterOverlayToolSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="OverlaySelectors\Icons\ShutterOverlayToolMedium.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="OverlaySelectors\Icons\DicomOverlaysToolLarge.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="OverlaySelectors\Icons\DicomOverlaysToolSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="OverlaySelectors\Icons\DicomOverlaysToolMedium.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="OverlaySelectors\Icons\ColorBarToolLarge.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="OverlaySelectors\Icons\ColorBarToolSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="OverlaySelectors\Icons\ColorBarToolMedium.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="OverlaySelectors\Icons\ScaleOverlayToolSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="OverlaySelectors\Icons\ScaleOverlayToolLarge.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="OverlaySelectors\Icons\ScaleOverlayToolMedium.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="OverlaySelectors\Icons\ShowHideOverlaysToolLarge.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="OverlaySelectors\Icons\ShowHideOverlaysToolSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="OverlaySelectors\Icons\ShowHideOverlaysToolMedium.png" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="..\..\..\Common\ClearCanvas.Strings.targets" />

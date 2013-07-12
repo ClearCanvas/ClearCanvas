@@ -26,6 +26,7 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
+using System.Linq;
 using System.Xml;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
@@ -35,7 +36,24 @@ using ClearCanvas.Common.Configuration;
 
 namespace ClearCanvas.ImageViewer.Layout.Basic
 {
-	public class StoredDisplaySetCreationSetting : INotifyPropertyChanged, IModalityDisplaySetCreationOptions
+    public class OverlaySelectionOption : IOverlaySelection
+    {
+        internal OverlaySelectionOption(string name, string displayName)
+        {
+            Name = name;
+            DisplayName = displayName;
+        }
+
+        #region Implementation of IOverlaySelectionOption
+
+        public string Name { get; private set; }
+        public string DisplayName { get; private set; }
+        public bool IsSelected { get; set; }
+
+        #endregion
+    }
+
+    public class StoredDisplaySetCreationSetting : INotifyPropertyChanged, IModalityDisplaySetCreationOptions
 	{
 		private readonly string _modality;
 
@@ -83,7 +101,9 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
 				SplitMultiEchoSeries = true;
 				ShowOriginalMultiEchoSeries = false;
 			}
-		}
+
+            OverlaySelectionOptions = OverlaySelector.CreateAll().Select(s => new OverlaySelectionOption(s.Name, s.DisplayName) { IsSelected = s.IsSelectedByDefault(_modality)}).ToList();
+        }
 
 		public string Modality
 		{
@@ -261,10 +281,18 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
 			}
 		}
 
-		public bool ShowGrayscaleInvertedEnabled
+        public bool ShowGrayscaleInvertedEnabled
 		{
 			get { return true; }
 		}
+
+        public List<OverlaySelectionOption> OverlaySelectionOptions { get; private set; }
+
+        public bool? IsOverlaySelected(string name)
+        {
+            var option = OverlaySelectionOptions.FirstOrDefault(o => o.Name == name);
+            return option == null ? (bool?)null : option.IsSelected;
+        }
 
 		private void NotifyPropertyChanged(string propertyName)
 		{
@@ -390,6 +418,10 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
 					SetOptions(setting, optionNodes);
 					storedDisplaySetSettings.Add(setting);
 
+                    XmlNodeList overlaySelectionOptions = settingsNode.SelectNodes("overlay-selection-options/overlay-selection-option");
+                    if (overlaySelectionOptions != null)
+                        SetOverlaySelectionOptions(setting, overlaySelectionOptions);
+
 					XmlNode presentationIntentNode = settingsNode.SelectSingleNode("presentation-intent");
 					if (presentationIntentNode != null)
 					{
@@ -476,6 +508,26 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
 			}
 		}
 
+        private void SetOverlaySelectionOptions(StoredDisplaySetCreationSetting setting, XmlNodeList overlaySelectionOptions)
+        {
+            if (overlaySelectionOptions == null)
+                return;
+
+            foreach (XmlNode overlaySelectionOption in overlaySelectionOptions)
+            {
+                var overlayName = overlaySelectionOption.Attributes["name"];
+                if (overlayName == null)
+                    continue;
+
+                var option = setting.OverlaySelectionOptions.FirstOrDefault(o => o.Name == overlayName.Value);
+                if (option == null)
+                    continue;
+
+                var isSelected = overlaySelectionOption.Attributes["selected"];
+                option.IsSelected = isSelected != null && isSelected.Value == "True";
+            }
+        }
+
 		public void Save(IEnumerable<StoredDisplaySetCreationSetting> storedSettings)
 		{
 			XmlDocument document = new XmlDocument();
@@ -538,7 +590,19 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
 					optionsElement.AppendChild(splitMultiframesElement);
 				}
 
-				if (storedSetting.ShowGrayscaleInverted)
+                if (storedSetting.OverlaySelectionOptions != null && storedSetting.OverlaySelectionOptions.Count > 0)
+                {
+                    XmlElement overlaySelectionOptionsElement = document.CreateElement("overlay-selection-options");
+                    settingElement.AppendChild(overlaySelectionOptionsElement);
+                    foreach (var overlaySelectionOption in storedSetting.OverlaySelectionOptions)
+                    {
+                        XmlElement overlaySelectionOptionElement = document.CreateElement("overlay-selection-option");
+                        overlaySelectionOptionElement.SetAttribute("name", overlaySelectionOption.Name);
+                        overlaySelectionOptionElement.SetAttribute("selected", overlaySelectionOption.IsSelected ? "True" : "False");
+                    }
+                }
+
+			    if (storedSetting.ShowGrayscaleInverted)
 				{
 					append = true;
 					XmlElement presentationIntentElement = document.CreateElement("presentation-intent");

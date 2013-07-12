@@ -112,10 +112,10 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="CommandExplodeTile" xml:space="preserve">
     <value>Explode Tile</value>
@@ -177,6 +177,21 @@
   <data name="MenuPreviousDisplaySet" xml:space="preserve">
     <value>Previous Display Set</value>
   </data>
+  <data name="MenuShowHideColorBar" xml:space="preserve">
+    <value>Show/Hide &amp;Colour Bar</value>
+  </data>
+  <data name="MenuShowHideDicomOverlay" xml:space="preserve">
+    <value>Show/Hide DICOM Overlay(s)</value>
+  </data>
+  <data name="MenuShowHideScaleOverlay" xml:space="preserve">
+    <value>Show/Hide Scale Overlay</value>
+  </data>
+  <data name="MenuShowHideShutterOverlay" xml:space="preserve">
+    <value>Show/Hide Shutter Overlay</value>
+  </data>
+  <data name="MenuShowHideTextOverlay" xml:space="preserve">
+    <value>Show/Hide Text Overlay</value>
+  </data>
   <data name="MenuStandard" xml:space="preserve">
     <value>Standard</value>
   </data>
@@ -193,6 +208,21 @@ PLEASE NOTE that you will NOT be notified of this problem again for as long as t
     <value>The search for prior studies has failed.  Try reopening the study or select a different default server.
 
 PLEASE NOTE that you will NOT be notified of this problem again for as long as this problem persists.</value>
+  </data>
+  <data name="NameColourBarOverlay" xml:space="preserve">
+    <value>Colour Bar</value>
+  </data>
+  <data name="NameDicomOverlay" xml:space="preserve">
+    <value>DICOM</value>
+  </data>
+  <data name="NameScaleOverlay" xml:space="preserve">
+    <value>Scale</value>
+  </data>
+  <data name="NameShutterOverlay" xml:space="preserve">
+    <value>Shutter</value>
+  </data>
+  <data name="NameTextOverlay" xml:space="preserve">
+    <value>Text</value>
   </data>
   <data name="Nearline" xml:space="preserve">
     <value>nearline</value>
@@ -212,6 +242,12 @@ PLEASE NOTE that you will NOT be notified of this problem again for as long as t
   <data name="ToolbarChangeLayout" xml:space="preserve">
     <value>Change Layout</value>
   </data>
+  <data name="ToolbarColorBar" xml:space="preserve">
+    <value>Colour Bar</value>
+  </data>
+  <data name="ToolbarDicomOverlay" xml:space="preserve">
+    <value>DICOM Overlay(s)</value>
+  </data>
   <data name="ToolbarExplodeImageBox" xml:space="preserve">
     <value>Survey/Explode</value>
   </data>
@@ -227,8 +263,26 @@ PLEASE NOTE that you will NOT be notified of this problem again for as long as t
   <data name="ToolbarPreviousDisplaySet" xml:space="preserve">
     <value>Previous Display Set</value>
   </data>
+  <data name="ToolbarScaleOverlay" xml:space="preserve">
+    <value>Scale Overlay</value>
+  </data>
+  <data name="ToolbarShowHideOverlays" xml:space="preserve">
+    <value>Show/Hide Overlays</value>
+  </data>
+  <data name="ToolbarShutterOverlay" xml:space="preserve">
+    <value>Shutter Overlay</value>
+  </data>
+  <data name="ToolbarTextOverlay" xml:space="preserve">
+    <value>Text Overlay</value>
+  </data>
   <data name="TooltipChangeLayout" xml:space="preserve">
     <value>Change Layout</value>
+  </data>
+  <data name="TooltipColorBar" xml:space="preserve">
+    <value>Colour Bar</value>
+  </data>
+  <data name="TooltipDicomOverlay" xml:space="preserve">
+    <value>DICOM Overlay(s)</value>
   </data>
   <data name="TooltipExplodeImageBox" xml:space="preserve">
     <value>Survey/Explode</value>
@@ -238,6 +292,27 @@ PLEASE NOTE that you will NOT be notified of this problem again for as long as t
   </data>
   <data name="TooltipPreviousDisplaySet" xml:space="preserve">
     <value>Previous Display Set</value>
+  </data>
+  <data name="TooltipScaleOverlay" xml:space="preserve">
+    <value>Scale Overlay</value>
+  </data>
+  <data name="TooltipShowHideColorBar" xml:space="preserve">
+    <value>Show/Hide Colour Bar</value>
+  </data>
+  <data name="TooltipShowHideDicomOverlay" xml:space="preserve">
+    <value>Show/Hide DICOM Overlay(s)</value>
+  </data>
+  <data name="TooltipShowHideOverlays" xml:space="preserve">
+    <value>Show/Hide Overlays</value>
+  </data>
+  <data name="TooltipShowHideScaleOverlay" xml:space="preserve">
+    <value>Show/Hide Scale Overlay</value>
+  </data>
+  <data name="TooltipShowHideShutterOverlay" xml:space="preserve">
+    <value>Show/Hide Shutter Overlay</value>
+  </data>
+  <data name="TooltipShowHideTextOverlay" xml:space="preserve">
+    <value>Show/Hide Text Overlay</value>
   </data>
   <data name="Unavailable" xml:space="preserve">
     <value>unavailable</value>
