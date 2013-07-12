@@ -23,6 +23,7 @@
 #endregion
 
 using System;
+using System.Runtime.Serialization;
 
 namespace ClearCanvas.ImageServer.Common.ExternalRequest
 {
@@ -35,5 +36,10 @@ namespace ClearCanvas.ImageServer.Common.ExternalRequest
         public InvalidExecutionModeRequestedException(string message)
             : base(message)
         { }
+
+		public InvalidExecutionModeRequestedException(SerializationInfo info, StreamingContext context)
+            : base(info, context)
+        {
+        }
     }
 }

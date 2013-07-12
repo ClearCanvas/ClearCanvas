@@ -23,6 +23,7 @@
 #endregion
 
 using System;
+using System.Runtime.Serialization;
 
 namespace ClearCanvas.ImageServer.Common.ExternalRequest
 {    
@@ -35,6 +36,11 @@ namespace ClearCanvas.ImageServer.Common.ExternalRequest
             : base(string.Format("Conflicting RequestId : {0}", requestId))
         {
             RequestId = requestId;
-        }        
-    }
+        }
+
+		public ConflictingRequestIdException(SerializationInfo info, StreamingContext context)
+            : base(info, context)
+        {
+        }
+   }
 }
