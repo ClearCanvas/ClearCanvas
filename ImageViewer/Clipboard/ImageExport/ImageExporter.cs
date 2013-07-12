@@ -83,8 +83,8 @@ namespace ClearCanvas.ImageViewer.Clipboard.ImageExport
 			Platform.CheckForNullReference(image, "image");
 			Platform.CheckForNullReference(exportParams, "exportParams");
 
-			if (!(image is ISpatialTransformProvider) || !(image is IImageGraphicProvider))
-				throw new ArgumentException("The image must implement IImageGraphicProvider and have a valid ImageSpatialTransform in order to be exported.");
+			if (!(image is ISpatialTransformProvider))
+				throw new ArgumentException("The image must have a valid ImageSpatialTransform in order to be exported.");
 
 			if (exportParams.ExportOption == ExportOption.TrueSize)
 			{
@@ -128,8 +128,7 @@ namespace ClearCanvas.ImageViewer.Clipboard.ImageExport
 				}
 				else
 				{
-					var sourceImage = (IImageGraphicProvider) image;
-						var scale = ScaleToFit(new Size(sourceImage.ImageGraphic.Columns, sourceImage.ImageGraphic.Rows), exportParams.OutputSize);
+					var scale = ScaleToFit(image.SceneSize, exportParams.OutputSize);
 					return DrawCompleteImageToBitmap(image, scale, exportParams.Dpi);
 				}
 			}
@@ -153,8 +152,7 @@ namespace ClearCanvas.ImageViewer.Clipboard.ImageExport
 					}
 					else
 					{
-						IImageGraphicProvider sourceImage = (IImageGraphicProvider) image;
-							float scale = ScaleToFit(new Size(sourceImage.ImageGraphic.Columns, sourceImage.ImageGraphic.Rows), exportParams.OutputSize);
+						float scale = ScaleToFit(image.SceneSize, exportParams.OutputSize);
 						bmp = DrawCompleteImageToBitmap(image, scale, exportParams.Dpi);
 					}
 						graphics.DrawImageUnscaledAndClipped(bmp, new Rectangle(CenterRectangles(bmp.Size, exportParams.OutputSize), bmp.Size));
@@ -171,13 +169,12 @@ namespace ClearCanvas.ImageViewer.Clipboard.ImageExport
 			object restoreMemento = transform.CreateMemento();
 			try
 			{
-				ImageGraphic imageGraphic = ((IImageGraphicProvider) image).ImageGraphic;
-				Rectangle imageRectangle = new Rectangle(0, 0, imageGraphic.Columns, imageGraphic.Rows);
+				Rectangle imageRectangle = new Rectangle(new Point(0, 0), image.SceneSize);
 
 				transform.Initialize();
 				transform.ScaleToFit = false;
 				transform.Scale = scale;
-				RectangleF displayRectangle = imageGraphic.SpatialTransform.ConvertToDestination(imageRectangle);
+				RectangleF displayRectangle = transform.ConvertToDestination(imageRectangle);
 				int width = (int) Math.Round(displayRectangle.Width);
 				int height = (int) Math.Round(displayRectangle.Height);
 

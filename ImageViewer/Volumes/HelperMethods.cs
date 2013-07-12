@@ -30,6 +30,9 @@ namespace ClearCanvas.ImageViewer.Volumes
 {
 	internal static class HelperMethods
 	{
+		/// <summary>
+		/// Parses the value of a CS attribute as a boolean.
+		/// </summary>
 		public static bool? GetBoolean(this DicomAttribute attribute, int i, string trueString, string falseString)
 		{
 			var value = attribute.GetString(i, string.Empty);
@@ -38,17 +41,26 @@ namespace ClearCanvas.ImageViewer.Volumes
 			return null;
 		}
 
+		/// <summary>
+		/// Sets the boolean value of a CS attribute.
+		/// </summary>
 		public static void SetBoolean(this DicomAttribute attribute, int i, bool? value, string trueString, string falseString)
 		{
 			if (!value.HasValue) attribute.SetStringValue(string.Empty);
 			else attribute.SetStringValue(value.Value ? trueString : falseString);
 		}
 
+		/// <summary>
+		/// Gets the specified orientation row vector from a 4x4 affine transformation matrix.
+		/// </summary>
 		public static Vector3D GetRow(this Matrix matrix4X4, int row)
 		{
 			return new Vector3D(matrix4X4[row, 0], matrix4X4[row, 1], matrix4X4[row, 2]);
 		}
 
+		/// <summary>
+		/// Augments the 3D orientation matrix as a 4x4 affine transformation matrix.
+		/// </summary>
 		public static Matrix Augment(this Matrix3D orientationMatrix)
 		{
 			var x = orientationMatrix.GetRow(0);

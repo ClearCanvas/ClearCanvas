@@ -84,6 +84,14 @@ namespace ClearCanvas.ImageViewer
 		#region Public Properties
 
 		/// <summary>
+		/// Gets the dimensions of the scene.
+		/// </summary>
+		/// <remarks>
+		/// The dimensions of the scene effectively define the boundaries of the <see cref="IPresentationImage"/>.
+		/// </remarks>
+		public abstract Size SceneSize { get; }
+
+		/// <summary>
 		/// Gets the parent <see cref="IImageViewer"/>.
 		/// </summary>
 		/// <value>The associated <see cref="IImageViewer"/> or <b>null</b> if the 

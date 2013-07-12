@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.ImageViewer.Graphics;
@@ -63,6 +64,8 @@ namespace ClearCanvas.ImageViewer.Graphics3D
 		[CloneCopyReference]
 		private readonly Vector3D _aspectRatio;
 
+		private readonly Size _sceneSize;
+
 		private event VisualStateChanged3DEventHandler _visualStateChanged3D;
 
 		#endregion
@@ -71,19 +74,25 @@ namespace ClearCanvas.ImageViewer.Graphics3D
 		/// Initializes a new instance of <see cref="CompositeRootModel3D"/> with
 		/// the specified dimensions.
 		/// </summary>
+		/// <param name="sceneWidth"></param>
+		/// <param name="sceneHeight"></param>
 		/// <param name="dimensionX"></param>
 		/// <param name="dimensionY"></param>
 		/// <param name="dimensionZ"></param>
 		public CompositeRootModel3D(
+			int sceneWidth,
+			int sceneHeight,
 			float dimensionX,
 			float dimensionY,
 			float dimensionZ)
-			: this(dimensionX, dimensionY, dimensionZ, 0, 0, 0) {}
+			: this(sceneWidth, sceneHeight, dimensionX, dimensionY, dimensionZ, 0, 0, 0) {}
 
 		/// <summary>
 		/// Initializes a new instance of <see cref="CompositeRootModel3D"/> with
 		/// the specified dimensions and spacing.
 		/// </summary>
+		/// <param name="sceneWidth"></param>
+		/// <param name="sceneHeight"></param>
 		/// <param name="dimensionX"></param>
 		/// <param name="dimensionY"></param>
 		/// <param name="dimensionZ"></param>
@@ -91,18 +100,22 @@ namespace ClearCanvas.ImageViewer.Graphics3D
 		/// <param name="spacingY"></param>
 		/// <param name="spacingZ"></param>
 		public CompositeRootModel3D(
+			int sceneWidth,
+			int sceneHeight,
 			float dimensionX,
 			float dimensionY,
 			float dimensionZ,
 			float spacingX,
 			float spacingY,
 			float spacingZ)
-			: this(dimensionX, dimensionY, dimensionZ, spacingX, spacingY, spacingZ, 0, 0, 0) {}
+			: this(sceneWidth, sceneHeight, dimensionX, dimensionY, dimensionZ, spacingX, spacingY, spacingZ, 0, 0, 0) {}
 
 		/// <summary>
 		/// Initializes a new instance of <see cref="CompositeRootModel3D"/> with
 		/// the specified dimensions, spacing and aspect ratio.
 		/// </summary>
+		/// <param name="sceneWidth"></param>
+		/// <param name="sceneHeight"></param>
 		/// <param name="dimensionX"></param>
 		/// <param name="dimensionY"></param>
 		/// <param name="dimensionZ"></param>
@@ -113,6 +126,8 @@ namespace ClearCanvas.ImageViewer.Graphics3D
 		/// <param name="aspectRatioY"></param>
 		/// <param name="aspectRatioZ"></param>
 		public CompositeRootModel3D(
+			int sceneWidth,
+			int sceneHeight,
 			float dimensionX,
 			float dimensionY,
 			float dimensionZ,
@@ -123,6 +138,7 @@ namespace ClearCanvas.ImageViewer.Graphics3D
 			float aspectRatioY,
 			float aspectRatioZ)
 		{
+			_sceneSize = new Size(sceneWidth, sceneHeight);
 			_dimensions = new Vector3D(dimensionX, dimensionY, dimensionZ);
 			_spacing = new Vector3D(spacingX, spacingY, spacingZ);
 			_aspectRatio = new Vector3D(aspectRatioX, aspectRatioY, aspectRatioZ);
@@ -161,6 +177,14 @@ namespace ClearCanvas.ImageViewer.Graphics3D
 		public Guid Uid
 		{
 			get { return _uid; }
+		}
+
+		/// <summary>
+		/// Gets the dimensions of the scene represented by this graphic.
+		/// </summary>
+		public Size SceneSize
+		{
+			get { return _sceneSize; }
 		}
 
 		/// <summary>
@@ -227,7 +251,7 @@ namespace ClearCanvas.ImageViewer.Graphics3D
 		/// <returns></returns>
 		protected override SpatialTransform CreateSpatialTransform()
 		{
-			return new RootModelSpatialTransform(this, _dimensions, _spacing, _aspectRatio);
+			return new RootModelSpatialTransform(this, _sceneSize, _dimensions, _spacing, _aspectRatio);
 		}
 
 		public override void ResetCoordinateSystem()

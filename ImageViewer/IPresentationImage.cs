@@ -23,9 +23,9 @@
 #endregion
 
 using System;
+using System.Drawing;
 using ClearCanvas.ImageViewer.Common;
 using ClearCanvas.ImageViewer.Graphics;
-using System.Drawing;
 
 namespace ClearCanvas.ImageViewer
 {
@@ -46,6 +46,14 @@ namespace ClearCanvas.ImageViewer
 	/// <seealso cref="IDisplaySet">for more information on disposal of <see cref="IDisplaySet"/>s and <see cref="IPresentationImage"/>s.</seealso>
 	public interface IPresentationImage : IDrawable, IDisposable
 	{
+		/// <summary>
+		/// Gets the dimensions of the scene.
+		/// </summary>
+		/// <remarks>
+		/// The dimensions of the scene effectively define the boundaries of the <see cref="IPresentationImage"/>.
+		/// </remarks>
+		Size SceneSize { get; }
+
 		/// <summary>
 		/// Gets the associated <see cref="IImageViewer"/>.
 		/// </summary>
@@ -162,6 +170,6 @@ namespace ClearCanvas.ImageViewer
 		/// </remarks>
 		void DrawToBitmap(Bitmap bmp);
 
-        ExtensionData ExtensionData { get; }
+		ExtensionData ExtensionData { get; }
 	}
 }

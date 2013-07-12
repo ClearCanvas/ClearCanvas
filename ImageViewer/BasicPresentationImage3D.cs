@@ -22,6 +22,8 @@
 
 #endregion
 
+using System;
+using System.Drawing;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.ImageViewer.Annotations;
@@ -66,6 +68,8 @@ namespace ClearCanvas.ImageViewer
 		[CloneCopyReference]
 		private readonly Vector3D _voxelSpacing;
 
+		private readonly Size _sceneSize;
+
 		private IAnnotationLayout _annotationLayout;
 
 		#endregion
@@ -82,29 +86,57 @@ namespace ClearCanvas.ImageViewer
 		/// Initializes a new instance of <see cref="BasicPresentationImage3D"/>.
 		/// </summary>
 		protected BasicPresentationImage3D(float dimensionX, float dimensionY, float dimensionZ)
-			: this(new Vector3D(dimensionX, dimensionY, dimensionZ), null) {}
+			: this(new Vector3D(dimensionX, dimensionY, dimensionZ), null, Size.Empty) {}
+
+		/// <summary>
+		/// Initializes a new instance of <see cref="BasicPresentationImage3D"/>.
+		/// </summary>
+		protected BasicPresentationImage3D(float dimensionX, float dimensionY, float dimensionZ, int sceneWidth, int sceneHeight)
+			: this(new Vector3D(dimensionX, dimensionY, dimensionZ), null, new Size(sceneWidth, sceneHeight)) {}
 
 		/// <summary>
 		/// Initializes a new instance of <see cref="BasicPresentationImage3D"/>.
 		/// </summary>
 		protected BasicPresentationImage3D(Vector3D modelDimensions)
-			: this(modelDimensions, null) {}
+			: this(modelDimensions, null, Size.Empty) {}
 
 		/// <summary>
 		/// Initializes a new instance of <see cref="BasicPresentationImage3D"/>.
 		/// </summary>
-		protected BasicPresentationImage3D(
-			Vector3D modelDimensions,
-			Vector3D voxelSpacing)
+		protected BasicPresentationImage3D(Vector3D modelDimensions, Size sceneSize)
+			: this(modelDimensions, null, sceneSize) {}
+
+		/// <summary>
+		/// Initializes a new instance of <see cref="BasicPresentationImage3D"/>.
+		/// </summary>
+		protected BasicPresentationImage3D(Vector3D modelDimensions, Vector3D voxelSpacing, Size sceneSize)
 		{
 			Platform.CheckForNullReference(modelDimensions, "modelDimensions");
 			_modelDimensions = modelDimensions;
 			_voxelSpacing = voxelSpacing ?? new Vector3D(1, 1, 1);
+			_sceneSize = sceneSize;
 
-			InitializeSceneGraph((int) _modelDimensions.X, (int) _modelDimensions.Y, (int) _modelDimensions.Z, _voxelSpacing.X, _voxelSpacing.Y, _voxelSpacing.Z);
+			if (_sceneSize.IsEmpty)
+			{
+				var diagonal = (int) Math.Ceiling(new Vector3D(_modelDimensions.X*_voxelSpacing.X, _modelDimensions.Y*_voxelSpacing.Y, _modelDimensions.Z*_voxelSpacing.Z).Magnitude);
+				_sceneSize = new Size(diagonal, diagonal);
+			}
+
+			InitializeSceneGraph(_sceneSize.Width, _sceneSize.Height, _modelDimensions.X, _modelDimensions.Y, _modelDimensions.Z, _voxelSpacing.X, _voxelSpacing.Y, _voxelSpacing.Z);
 		}
 
 		#region Public properties
+
+		/// <summary>
+		/// Gets the dimensions of the scene.
+		/// </summary>
+		/// <remarks>
+		/// The dimensions of the scene effectively define the boundaries of the <see cref="IPresentationImage"/>.
+		/// </remarks>
+		public override Size SceneSize
+		{
+			get { return _sceneSize; }
+		}
 
 		public Vector3D Dimensions
 		{
@@ -267,6 +299,8 @@ namespace ClearCanvas.ImageViewer
 		}
 
 		private void InitializeSceneGraph(
+			int sceneWidth,
+			int sceneHeight,
 			float dimensionX,
 			float dimensionY,
 			float dimensionZ,
@@ -274,7 +308,7 @@ namespace ClearCanvas.ImageViewer
 			float pixelSpacingY,
 			float pixelSpacingZ)
 		{
-			_compositeImageGraphic = new CompositeRootModel3D(dimensionX, dimensionY, dimensionZ, pixelSpacingX, pixelSpacingY, pixelSpacingZ)
+			_compositeImageGraphic = new CompositeRootModel3D(sceneWidth, sceneHeight, dimensionX, dimensionY, dimensionZ, pixelSpacingX, pixelSpacingY, pixelSpacingZ)
 			                         	{
 			                         		Origin = new Vector3D(-dimensionX/2, -dimensionY/2, -dimensionZ/2)
 			                         	};

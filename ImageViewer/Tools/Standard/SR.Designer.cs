@@ -540,6 +540,15 @@ namespace ClearCanvas.ImageViewer.Tools.Standard {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to x={0}, y={1}, z={2}.
+        /// </summary>
+        internal static string FormatCoordinates3D {
+            get {
+                return ResourceManager.GetString("FormatCoordinates3D", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to W:{0:0.#} L:{1:0.#} ({2}).
         /// </summary>
         internal static string FormatDescriptionAutoLinearLut {
@@ -738,6 +747,15 @@ namespace ClearCanvas.ImageViewer.Tools.Standard {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to PAT.
+        /// </summary>
+        internal static string LabelPatientLocation {
+            get {
+                return ResourceManager.GetString("LabelPatientLocation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to PRES. STATE.
         /// </summary>
         internal static string LabelPresentationStateVoiDataLut {
@@ -801,6 +819,15 @@ namespace ClearCanvas.ImageViewer.Tools.Standard {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to &amp;Axial View.
+        /// </summary>
+        internal static string MenuAxialView {
+            get {
+                return ResourceManager.GetString("MenuAxialView", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cine.
         /// </summary>
         internal static string MenuCine {
@@ -833,6 +860,15 @@ namespace ClearCanvas.ImageViewer.Tools.Standard {
         internal static string MenuColorBar {
             get {
                 return ResourceManager.GetString("MenuColorBar", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &amp;Coronal View.
+        /// </summary>
+        internal static string MenuCoronalView {
+            get {
+                return ResourceManager.GetString("MenuCoronalView", resourceCulture);
             }
         }
         
@@ -1076,6 +1112,15 @@ namespace ClearCanvas.ImageViewer.Tools.Standard {
         internal static string MenuRotateRight {
             get {
                 return ResourceManager.GetString("MenuRotateRight", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &amp;Sagittal View.
+        /// </summary>
+        internal static string MenuSagittalView {
+            get {
+                return ResourceManager.GetString("MenuSagittalView", resourceCulture);
             }
         }
         

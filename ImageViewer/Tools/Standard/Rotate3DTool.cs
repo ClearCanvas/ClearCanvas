@@ -31,17 +31,22 @@ using ClearCanvas.ImageViewer.BaseTools;
 using ClearCanvas.ImageViewer.Graphics3D;
 using ClearCanvas.ImageViewer.InputManagement;
 using ClearCanvas.ImageViewer.Mathematics;
+using ClearCanvas.ImageViewer.StudyManagement;
 using ClearCanvas.ImageViewer.Tools.Standard.Configuration;
 
 namespace ClearCanvas.ImageViewer.Tools.Standard
 {
 	[MenuAction("activate", "imageviewer-contextmenu/MenuRotate3D", "Select", Flags = ClickActionFlags.CheckAction)]
 	[MenuAction("activate", "global-menus/MenuTools/MenuStandard/MenuRotate3D", "Select", Flags = ClickActionFlags.CheckAction)]
-	[ButtonAction("activate", "global-toolbars/ToolbarStandard/ToolbarRotate3D", "Select", Flags = ClickActionFlags.CheckAction)]
+	[DropDownButtonAction("activate", "global-toolbars/ToolbarStandard/ToolbarRotate3D", "Select", "DropDownMenuModel", Flags = ClickActionFlags.CheckAction)]
 	[CheckedStateObserver("activate", "Active", "ActivationChanged")]
 	[TooltipValueObserver("activate", "Tooltip", "TooltipChanged")]
 	[MouseButtonIconSet("activate", "Icons.Rotate3DToolSmall.png", "Icons.Rotate3DToolMedium.png", "Icons.Rotate3DToolLarge.png")]
 	[GroupHint("activate", "Tools.Image.Manipulation.Orientation.3D.Rotate")]
+	//
+	[MenuAction("axial", _dropDownMenuActionSite + "/MenuAxialView", "ViewAxial")]
+	[MenuAction("coronal", _dropDownMenuActionSite + "/MenuCoronalView", "ViewCoronal")]
+	[MenuAction("sagittal", _dropDownMenuActionSite + "/MenuSagittalView", "ViewSagittal")]
 	//
 	[KeyboardAction("rotatereset", "imageviewer-keyboard/ToolsStandardRotate/RotateReset", "RotateReset", KeyStroke = XKeys.NumPad5)]
 	[KeyboardAction("rotateleft", "imageviewer-keyboard/ToolsStandardRotate/RotateLeft", "RotateLeft", KeyStroke = XKeys.NumPad4)]
@@ -53,7 +58,9 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 	[ExtensionOf(typeof (ImageViewerToolExtensionPoint))]
 	public class Rotate3DTool : MouseImageViewerTool
 	{
+		private const string _dropDownMenuActionSite = "rotate3d-dropdown";
 		private readonly SpatialTransform3DImageOperation _operation;
+		private ActionModelRoot _dropDownMenuModel;
 		private MemorableUndoableCommand _memorableCommand;
 		private ImageOperationApplicator _applicator;
 		private ToolModalityBehaviorHelper _toolBehavior;
@@ -76,6 +83,11 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 		{
 			add { base.TooltipChanged += value; }
 			remove { base.TooltipChanged -= value; }
+		}
+
+		public ActionModelNode DropDownMenuModel
+		{
+			get { return _dropDownMenuModel ?? (_dropDownMenuModel = ActionModelRoot.CreateModel(GetType().FullName, _dropDownMenuActionSite, Actions)); }
 		}
 
 		private ISpatialTransform3D GetSelectedImageTransform()
@@ -120,6 +132,46 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 			}
 
 			_memorableCommand = null;
+		}
+
+		private void ViewAxial()
+		{
+			SetOrientationWithUndo(Vector3D.xUnit, Vector3D.yUnit);
+		}
+
+		private void ViewCoronal()
+		{
+			SetOrientationWithUndo(Vector3D.xUnit, Vector3D.zUnit);
+		}
+
+		private void ViewSagittal()
+		{
+			SetOrientationWithUndo(Vector3D.yUnit, Vector3D.zUnit);
+		}
+
+		private void SetOrientationWithUndo(Vector3D rowDirection, Vector3D columnDirection)
+		{
+			if (!CanRotate())
+				return;
+
+			CaptureBeginState();
+			SetOrientation(rowDirection, columnDirection);
+			CaptureEndState();
+		}
+
+		private void SetOrientation(Vector3D rowDirection, Vector3D columnDirection)
+		{
+			if (!CanRotate())
+				return;
+
+			if (rowDirection == null || columnDirection == null)
+				return;
+
+			var transform = _operation.GetOriginator(SelectedPresentationImage);
+
+			transform.Rotation = Matrix3D.FromRows(rowDirection, columnDirection, rowDirection.Cross(columnDirection));
+
+			SelectedPresentationImage.Draw();
 		}
 
 		private void RotateReset()

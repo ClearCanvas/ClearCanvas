@@ -468,23 +468,19 @@ namespace ClearCanvas.ImageViewer.Clipboard.ImageExport
 			if (clipboardItems.Count > 0)
 			{
 				object item = clipboardItems[0].Item;
-				if (item is IImageGraphicProvider)
+				if (item is IPresentationImage)
 				{
-					IImageGraphicProvider imageGraphicProvider = (IImageGraphicProvider) item;
-					component.Height = imageGraphicProvider.ImageGraphic.Rows;
-					component.Width = imageGraphicProvider.ImageGraphic.Columns;
+					var image = (IPresentationImage)item;
+					component.Height = image.SceneSize.Height;
+					component.Width = image.SceneSize.Width;
 				}
 				else if (item is IDisplaySet)
 				{
 					foreach (IPresentationImage image in ((IDisplaySet) item).PresentationImages)
 					{
-						if (image is IImageGraphicProvider)
-						{
-							IImageGraphicProvider imageGraphicProvider = (IImageGraphicProvider) image;
-							component.Height = imageGraphicProvider.ImageGraphic.Rows;
-							component.Width = imageGraphicProvider.ImageGraphic.Columns;
-							break;
-						}
+						component.Height = image.SceneSize.Height;
+						component.Width = image.SceneSize.Width;
+						break;
 					}
 				}
 			}

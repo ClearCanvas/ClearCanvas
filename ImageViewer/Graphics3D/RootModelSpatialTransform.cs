@@ -43,14 +43,16 @@ namespace ClearCanvas.ImageViewer.Graphics3D
 	internal class RootModelSpatialTransform : SpatialTransform, IImageSpatialTransform
 	{
 		private readonly RootSpatialTransform3D _rootTransform3D;
+		private readonly Size _sceneSize;
 		private Rectangle _clientRectangle;
 		private float _effectiveZ;
 		private bool _scaleToFit = true;
 		private Matrix _cumulativeTransform3D;
 
-		public RootModelSpatialTransform(IGraphic ownerGraphic, Vector3D dimensions, Vector3D spacing, Vector3D aspectRatio)
+		public RootModelSpatialTransform(IGraphic ownerGraphic, Size sceneSize, Vector3D dimensions, Vector3D spacing, Vector3D aspectRatio)
 			: base(ownerGraphic)
 		{
+			_sceneSize = sceneSize;
 			_rootTransform3D = new RootSpatialTransform3D(this, dimensions, spacing, aspectRatio);
 		}
 
@@ -158,7 +160,7 @@ namespace ClearCanvas.ImageViewer.Graphics3D
 				var destinationHeight = Math.Max(10, ClientRectangle.Height);
 
 				// compute the correct scale to fit based on current view rotation
-				var dimensions = _rootTransform3D.AdjustedSourceDimensions;
+				var dimensions = new PointF(_sceneSize.Width, _sceneSize.Height);
 				if (RotationXY == 90 || RotationXY == 270)
 				{
 					var imageAspectRatio = dimensions.X/dimensions.Y;

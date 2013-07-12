@@ -135,6 +135,11 @@ namespace ClearCanvas.ImageViewer.Volumes
 		string Modality { get; }
 
 		/// <summary>
+		/// Gets the Study Instance UID that identifies the source images from which the volume was created.
+		/// </summary>
+		string SourceStudyInstanceUid { get; }
+
+		/// <summary>
 		/// Gets the Series Instance UID that identifies the source images from which the volume was created.
 		/// </summary>
 		string SourceSeriesInstanceUid { get; }
@@ -260,6 +265,11 @@ namespace ClearCanvas.ImageViewer.Volumes
 		public string Modality
 		{
 			get { return VolumeHeaderData.Modality; }
+		}
+
+		public string SourceStudyInstanceUid
+		{
+			get { return VolumeHeaderData.SourceStudyInstanceUid; }
 		}
 
 		public string SourceSeriesInstanceUid
