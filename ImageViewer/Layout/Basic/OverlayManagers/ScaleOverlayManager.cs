@@ -1,4 +1,4 @@
-﻿#region License
+#region License
 
 // Copyright (c) 2013, ClearCanvas Inc.
 // All rights reserved.
@@ -22,45 +22,47 @@
 
 #endregion
 
-using System.Collections.Generic;
 using ClearCanvas.Common.Utilities;
-using ClearCanvas.ImageViewer.PresentationStates.Dicom;
+using ClearCanvas.ImageViewer.Graphics;
+using ClearCanvas.ImageViewer.Layout.Basic.OverlaySelectors;
 
-namespace ClearCanvas.ImageViewer.Layout.Basic.OverlaySelectors
+namespace ClearCanvas.ImageViewer.Layout.Basic.OverlayManagers
 {
-    public class DicomOverlaySelector : OverlaySelector
+    internal class ScaleOverlayManager : OverlayManager
     {
-        public DicomOverlaySelector()
-            : base(SR.NameDicomOverlay, SR.NameDicomOverlay)
+        public ScaleOverlayManager()
+            : base(SR.NameScaleOverlay, SR.NameScaleOverlay)
         {
-            IsConfigurable = false;
         }
 
         public override bool IsSelectedByDefault(string modality)
         {
-            return true;
+            return modality != "MG";
         }
 
         public override void SetOverlayVisible(IPresentationImage image, bool visible)
         {
-            if (image is IDicomPresentationImage)
-            {
-                foreach (OverlayPlaneGraphic overlayGraphic in GetOverlayPlanesGraphic(image as IDicomPresentationImage))
-                    overlayGraphic.Visible = visible;
-            }
+            CompositeScaleGraphic scale = GetCompositeScaleGraphic(image, visible);
+            if (scale != null)
+                scale.Visible = visible;
         }
 
-        private static IEnumerable<OverlayPlaneGraphic> GetOverlayPlanesGraphic(IDicomPresentationImage image)
+        private static CompositeScaleGraphic GetCompositeScaleGraphic(IPresentationImage image, bool createIfNull)
         {
-            DicomGraphicsPlane dicomGraphicsPlane = DicomGraphicsPlane.GetDicomGraphicsPlane(image, false);
-            if (dicomGraphicsPlane != null)
+            var applicationGraphicsProvider = image as IApplicationGraphicsProvider;
+            if (applicationGraphicsProvider != null)
             {
-                foreach (ILayer layer in (IEnumerable<ILayer>)dicomGraphicsPlane.Layers)
-                {
-                    foreach (OverlayPlaneGraphic overlayGraphic in CollectionUtils.Select(layer.Graphics, graphic => graphic is OverlayPlaneGraphic))
-                        yield return overlayGraphic;
-                }
+                var overlayGraphics = applicationGraphicsProvider.ApplicationGraphics;
+                var scale = CollectionUtils.SelectFirst(overlayGraphics, graphic => graphic is CompositeScaleGraphic
+                                ) as CompositeScaleGraphic;
+
+                if (scale == null && createIfNull)
+                    overlayGraphics.Insert(0, scale = new CompositeScaleGraphic());
+
+                return scale;
             }
+
+            return null;
         }
     }
 }

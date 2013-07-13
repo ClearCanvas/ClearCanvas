@@ -92,7 +92,20 @@
       <DependentUpon>LayoutConfigurationComponentControl.cs</DependentUpon>
     </Compile>
     <Compile Include="LayoutConfigurationComponentView.cs" />
+    <Compile Include="SelectOverlaysActionView.cs" />
+    <Compile Include="OverlaySelectionControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="OverlaySelectionControl.Designer.cs">
+      <DependentUpon>OverlaySelectionControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SelectOverlaysToolstripItem.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="SelectOverlaysToolstripItem.Designer.cs">
+      <DependentUpon>SelectOverlaysToolstripItem.cs</DependentUpon>
+    </Compile>
     <Compile Include="SR.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -132,6 +145,9 @@
     <EmbeddedResource Include="LayoutControl.resx">
       <DependentUpon>LayoutControl.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OverlaySelectionControl.resx">
+      <DependentUpon>OverlaySelectionControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SR.resx">
       <SubType>Designer</SubType>

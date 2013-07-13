@@ -24,11 +24,11 @@
 
 using ClearCanvas.ImageViewer.PresentationStates.Dicom;
 
-namespace ClearCanvas.ImageViewer.Layout.Basic.OverlaySelectors
+namespace ClearCanvas.ImageViewer.Layout.Basic.OverlayManagers
 {
-    internal class ShutterOverlaySelector : OverlaySelector
+    internal class ShutterOverlayManager : OverlayManager
     {
-        public ShutterOverlaySelector()
+        public ShutterOverlayManager()
             : base(SR.NameShutterOverlay, SR.NameShutterOverlay)
         {
         }

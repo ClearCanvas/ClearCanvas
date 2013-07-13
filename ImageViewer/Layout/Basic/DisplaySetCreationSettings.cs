@@ -36,26 +36,24 @@ using ClearCanvas.Common.Configuration;
 
 namespace ClearCanvas.ImageViewer.Layout.Basic
 {
-    public class OverlaySelectionOption : IOverlaySelection
-    {
-        internal OverlaySelectionOption(string name, string displayName)
-        {
-            Name = name;
-            DisplayName = displayName;
-        }
-
-        #region Implementation of IOverlaySelectionOption
-
-        public string Name { get; private set; }
-        public string DisplayName { get; private set; }
-        public bool IsSelected { get; set; }
-
-        #endregion
-    }
-
     public class StoredDisplaySetCreationSetting : INotifyPropertyChanged, IModalityDisplaySetCreationOptions
 	{
-		private readonly string _modality;
+        private class OverlaySelection : IOverlaySelection
+        {
+            internal OverlaySelection(string name)
+            {
+                Name = name;
+            }
+
+            #region Implementation of IOverlaySelectionOption
+
+            public string Name { get; private set; }
+            public bool IsSelected { get; set; }
+
+            #endregion
+        }
+        
+        private readonly string _modality;
 
         private bool _createSingleImageDisplaySets;
         private bool _createAllImagesDisplaySet;
@@ -102,7 +100,8 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
 				ShowOriginalMultiEchoSeries = false;
 			}
 
-            OverlaySelectionOptions = OverlayManager.Selectors.Select(s => new OverlaySelectionOption(s.Name, s.DisplayName) { IsSelected = s.IsSelectedByDefault(_modality)}).ToList();
+            OverlaySelections = OverlayHelper.OverlayManagers.Select(
+                s => (IOverlaySelection)new OverlaySelection(s.Name) { IsSelected = s.IsSelectedByDefault(_modality)}).ToList();
         }
 
 		public string Modality
@@ -286,11 +285,11 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
 			get { return true; }
 		}
 
-        public List<OverlaySelectionOption> OverlaySelectionOptions { get; private set; }
+        public List<IOverlaySelection> OverlaySelections { get; private set; }
 
         public bool? IsOverlaySelected(string name)
         {
-            var option = OverlaySelectionOptions.FirstOrDefault(o => o.Name == name);
+            var option = OverlaySelections.FirstOrDefault(o => o.Name == name);
             return option == null ? (bool?)null : option.IsSelected;
         }
 
@@ -519,7 +518,7 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
                 if (overlayName == null)
                     continue;
 
-                var option = setting.OverlaySelectionOptions.FirstOrDefault(o => o.Name == overlayName.Value);
+                var option = setting.OverlaySelections.FirstOrDefault(o => o.Name == overlayName.Value);
                 if (option == null)
                     continue;
 
@@ -590,11 +589,11 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
 					optionsElement.AppendChild(splitMultiframesElement);
 				}
 
-                if (storedSetting.OverlaySelectionOptions != null && storedSetting.OverlaySelectionOptions.Count > 0)
+                if (storedSetting.OverlaySelections != null && storedSetting.OverlaySelections.Count > 0)
                 {
                     XmlElement overlaySelectionOptionsElement = document.CreateElement("overlay-selection-options");
                     settingElement.AppendChild(overlaySelectionOptionsElement);
-                    foreach (var overlaySelectionOption in storedSetting.OverlaySelectionOptions)
+                    foreach (var overlaySelectionOption in storedSetting.OverlaySelections)
                     {
                         XmlElement overlaySelectionOptionElement = document.CreateElement("overlay-selection-option");
                         overlaySelectionOptionElement.SetAttribute("name", overlaySelectionOption.Name);

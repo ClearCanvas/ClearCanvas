@@ -27,11 +27,11 @@ using ClearCanvas.Common.Utilities;
 using ClearCanvas.ImageViewer.Graphics;
 using ClearCanvas.ImageViewer.Imaging;
 
-namespace ClearCanvas.ImageViewer.Layout.Basic.OverlaySelectors
+namespace ClearCanvas.ImageViewer.Layout.Basic.OverlayManagers
 {
-    internal class ColorBarSelector : OverlaySelector
+    internal class ColorBarManager : OverlayManager
     {
-        public ColorBarSelector()
+        public ColorBarManager()
             : base(SR.NameColourBarOverlay, SR.NameColourBarOverlay)
         {
         }

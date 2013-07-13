@@ -23,7 +23,6 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Desktop;
@@ -33,17 +32,21 @@ using Action = ClearCanvas.Desktop.Actions.Action;
 
 namespace ClearCanvas.ImageViewer.Layout.Basic
 {
-    public class CustomActionViewExtensionPoint : ExtensionPoint<IActionView>
+    public class SelectOverlaysActionViewExtensionPoint : ExtensionPoint<IActionView>
     {
     }
 
-    [AssociateView(typeof(CustomActionViewExtensionPoint))]
+    [AssociateView(typeof(SelectOverlaysActionViewExtensionPoint))]
     public class SelectOverlaysAction : Action
     {
-        public SelectOverlaysAction(string actionID, ActionPath path, IResourceResolver resourceResolver)
+        public SelectOverlaysAction(IImageViewer viewer, string actionID, ActionPath path, IResourceResolver resourceResolver)
             : base(actionID, path, resourceResolver)
         {
+
+            Overlays = viewer.SelectedImageBox.GetOverlays();
         }
+
+        public IOverlays Overlays { get; private set; }
     }
 
     [DropDownButtonAction("dropdown", "global-toolbars/ToolbarStandard/ToolbarShowHideOverlays", "ToggleAll", "DropDownActionModel", KeyStroke = XKeys.O)]
@@ -70,7 +73,7 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
 				if (_mainDropDownActionModel == null)
 				{
                     var resolver = new ActionResourceResolver(typeof(SelectOverlaysAction));
-                    IAction action = new SelectOverlaysAction("selectOverlays", new ActionPath("overlays-dropdown/SelectOverlays", resolver), resolver);
+				    IAction action = new SelectOverlaysAction(Context.Viewer, "selectOverlays", new ActionPath("overlays-dropdown/SelectOverlays", resolver), resolver);
 				    var actionSet = new ActionSet(new[] {action});
 				    return ActionModelRoot.CreateModel(typeof (ShowHideOverlaysTool).Namespace, "overlays-dropdown", actionSet);
 				}
@@ -110,10 +113,11 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
                 var tile = imageBox.SelectedTile;
                 if (tile == null || tile.PresentationImage == null)continue;
 
+                var overlays = tile.PresentationImage.GetOverlays();
                 if (show)
-                    tile.PresentationImage.ShowSelectedOverlays();
+                    overlays.ShowSelected(false);
                 else
-                    tile.PresentationImage.HideOverlays();
+                    overlays.Hide(false);
             }
 
 			Context.Viewer.PhysicalWorkspace.Draw();
@@ -122,9 +126,9 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
         private void OnImageDrawing(object sender, ImageDrawingEventArgs args)
         {
             if (SelectedOverlaysVisible)
-                args.PresentationImage.ShowSelectedOverlays();
+                args.PresentationImage.GetOverlays().ShowSelected(false);
             else
-                args.PresentationImage.HideOverlays();
+                args.PresentationImage.GetOverlays().Hide(false);
         }
 	}
 }

@@ -24,11 +24,11 @@
 
 using ClearCanvas.ImageViewer.Annotations;
 
-namespace ClearCanvas.ImageViewer.Layout.Basic.OverlaySelectors
+namespace ClearCanvas.ImageViewer.Layout.Basic.OverlayManagers
 {
-    internal class TextOverlaySelector : OverlaySelector
+    internal class TextOverlayManager : OverlayManager
     {
-        public TextOverlaySelector()
+        public TextOverlayManager()
             : base(SR.NameTextOverlay, SR.NameTextOverlay)
         {
         }
