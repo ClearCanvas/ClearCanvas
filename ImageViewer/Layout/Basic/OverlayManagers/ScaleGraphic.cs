@@ -30,7 +30,7 @@ using ClearCanvas.ImageViewer.Graphics;
 using ClearCanvas.ImageViewer.Mathematics;
 using ClearCanvas.ImageViewer.StudyManagement;
 
-namespace ClearCanvas.ImageViewer.Layout.Basic.OverlaySelectors
+namespace ClearCanvas.ImageViewer.Layout.Basic.OverlayManagers
 {
     //TODO (cr Feb 2010): This class is difficult to follow the logic and we're certain that it only works
 	//in the horizontal and vertical scale cases, even though it tries to cover the general case of a diagonal line.

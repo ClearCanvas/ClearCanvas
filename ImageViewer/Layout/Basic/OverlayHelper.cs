@@ -29,7 +29,7 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
             var setting = settings.FirstOrDefault(s => s.Modality == modality);
             return setting == null ? 
                 new List<IOverlaySelection>()
-                : setting.OverlaySelections.Cast<IOverlaySelection>().ToList();
+                : setting.OverlaySelections.ToList();
         }
 
         public static IOverlays GetOverlays(this IPresentationImage image)
@@ -37,21 +37,11 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
             return new ImageOverlays(image);
         }
 
-        internal static IOverlays GetOverlays(this IImageBox imageBox)
-        {
-            return new ImageBoxOverlays(imageBox);    
-        }
-
-        private static IList<OverlayState> GetOverlaySelectionStates(IPresentationImage image)
+        private static IEnumerable<OverlayState> GetOverlaySelectionStates(IPresentationImage image)
         {
             var data = image.ExtensionData[typeof(Key)] as IList<OverlayState>;
             if (data == null)
             {
-                //var parentDisplaySet = image.ParentDisplaySet;
-                //if (parentDisplaySet != null)
-                //{
-                //}
-
                 data = GetOverlaySettings(GetModality(image)).Select(s => new OverlayState(s.Name, s.IsSelected)).ToList();
                 image.ExtensionData[typeof(Key)] = data;
             }

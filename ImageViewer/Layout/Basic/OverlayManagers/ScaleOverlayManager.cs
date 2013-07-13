@@ -24,7 +24,6 @@
 
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.ImageViewer.Graphics;
-using ClearCanvas.ImageViewer.Layout.Basic.OverlaySelectors;
 
 namespace ClearCanvas.ImageViewer.Layout.Basic.OverlayManagers
 {

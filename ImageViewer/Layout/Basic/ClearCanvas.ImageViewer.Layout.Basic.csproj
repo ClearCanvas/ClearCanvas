@@ -181,6 +181,7 @@
     <Compile Include="DefaultPatientReconciliationStrategy.cs" />
     <Compile Include="PriorStudyFinder.cs" />
     <Compile Include="OverlayManagers\ScaleOverlayManager.cs" />
+    <Compile Include="SelectOverlaysAction.cs" />
     <Compile Include="ShowHideOverlaysTool.cs" />
     <Compile Include="SR.Designer.cs">
       <AutoGen>True</AutoGen>

@@ -28,27 +28,9 @@ using ClearCanvas.Common.Utilities;
 using ClearCanvas.Desktop;
 using ClearCanvas.Desktop.Actions;
 using ClearCanvas.ImageViewer.BaseTools;
-using Action = ClearCanvas.Desktop.Actions.Action;
 
 namespace ClearCanvas.ImageViewer.Layout.Basic
 {
-    public class SelectOverlaysActionViewExtensionPoint : ExtensionPoint<IActionView>
-    {
-    }
-
-    [AssociateView(typeof(SelectOverlaysActionViewExtensionPoint))]
-    public class SelectOverlaysAction : Action
-    {
-        public SelectOverlaysAction(IImageViewer viewer, string actionID, ActionPath path, IResourceResolver resourceResolver)
-            : base(actionID, path, resourceResolver)
-        {
-
-            Overlays = viewer.SelectedImageBox.GetOverlays();
-        }
-
-        public IOverlays Overlays { get; private set; }
-    }
-
     [DropDownButtonAction("dropdown", "global-toolbars/ToolbarStandard/ToolbarShowHideOverlays", "ToggleAll", "DropDownActionModel", KeyStroke = XKeys.O)]
     [Tooltip("dropdown", "TooltipShowHideOverlays")]
 	[GroupHint("dropdown", "Tools.Image.Overlays.Text.ShowHide")]
