@@ -1206,4 +1206,7 @@
   <data name="ExceptionFailedToRetrieveFacilitiesFromRisServer" xml:space="preserve">
     <value>Failed to retrieve the list of facilities from the RISServer.  Please make sure the RISServer service is running and configured properly.</value>
   </data>
+  <data name="MessageHomeDescription" xml:space="preserve">
+    <value>Shows the RIS user homepage.</value>
+  </data>
 </root>

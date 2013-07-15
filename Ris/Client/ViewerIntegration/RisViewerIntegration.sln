@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.Enterprise.Desk
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.Ris.Application.Common", "..\..\Application\Common\ClearCanvas.Ris.Application.Common.csproj", "{09F49217-CD98-4773-8CFB-594F189EEE3B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.Desktop.Explorer", "..\..\..\Desktop\Explorer\ClearCanvas.Desktop.Explorer.csproj", "{085823EA-DDAE-4DAF-A99D-17F75A03CF23}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -88,6 +90,12 @@ Global
 		{09F49217-CD98-4773-8CFB-594F189EEE3B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{09F49217-CD98-4773-8CFB-594F189EEE3B}.UNIT_TESTS_USAGE_TRACKING|Any CPU.ActiveCfg = Release|Any CPU
 		{09F49217-CD98-4773-8CFB-594F189EEE3B}.UNIT_TESTS_USAGE_TRACKING|Any CPU.Build.0 = Release|Any CPU
+		{085823EA-DDAE-4DAF-A99D-17F75A03CF23}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{085823EA-DDAE-4DAF-A99D-17F75A03CF23}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{085823EA-DDAE-4DAF-A99D-17F75A03CF23}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{085823EA-DDAE-4DAF-A99D-17F75A03CF23}.Release|Any CPU.Build.0 = Release|Any CPU
+		{085823EA-DDAE-4DAF-A99D-17F75A03CF23}.UNIT_TESTS_USAGE_TRACKING|Any CPU.ActiveCfg = Release|Any CPU
+		{085823EA-DDAE-4DAF-A99D-17F75A03CF23}.UNIT_TESTS_USAGE_TRACKING|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
