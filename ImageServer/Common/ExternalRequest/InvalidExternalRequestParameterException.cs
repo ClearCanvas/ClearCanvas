@@ -23,6 +23,7 @@
 #endregion
 
 using System;
+using System.Runtime.Serialization;
 
 namespace ClearCanvas.ImageServer.Common.ExternalRequest
 {
@@ -38,5 +39,9 @@ namespace ClearCanvas.ImageServer.Common.ExternalRequest
             Parameter = parameter;
             Error = error;
         }
-    }
+		public InvalidExternalRequestParameterException(SerializationInfo info, StreamingContext context)
+            : base(info, context)
+        {
+        }
+   }
 }
