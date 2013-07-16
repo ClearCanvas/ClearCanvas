@@ -19,6 +19,7 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
         string DisplayName { get; }
 
         bool IsEnabled { get; }
+        new bool IsSelected { get; set; }
 
         void ShowIfSelected();
         void Hide();

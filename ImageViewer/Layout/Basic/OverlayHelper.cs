@@ -10,7 +10,7 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
     public interface IOverlaySelection
     {
         string Name { get; }
-        bool IsSelected { get; set; }
+        bool IsSelected { get; }
     }
 
     public static partial class OverlayHelper
