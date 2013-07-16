@@ -548,7 +548,7 @@ namespace ClearCanvas.ImageServer.Core
 				    Platform.Log(ServerPlatform.InstanceLogLevel, "Processed SOP: {0} for Patient {1}", file.MediaStorageSopInstanceUid, patientsName);
 
                     // Fire NewSopEventArgs Event
-                    EventManager.FireEvent(this,new NewSopEventArgs {File = file,ServerPartitionEntry = _context.Partition,WorkQueueUidEntry = uid, WorkQueueEntry = _context.WorkQueueEntry});
+                    EventManager.FireEvent(this,new NewSopEventArgs {File = file,ServerPartitionEntry = _context.Partition,WorkQueueUidEntry = uid, WorkQueueEntry = _context.WorkQueueEntry, FileLength = InstanceStats.FileSize});
 				}
 				catch (Exception e)
 				{

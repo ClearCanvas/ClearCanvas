@@ -51,5 +51,6 @@ namespace ClearCanvas.ImageServer.Core.Events
         public ServerPartition ServerPartitionEntry { get; set; }
         public WorkQueueUid WorkQueueUidEntry { get; set; }
         public WorkQueue WorkQueueEntry { get; set; }
+        public ulong FileLength { get; set; }
     }
 }
