@@ -27,6 +27,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Data;
+using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Windows.Forms.Design;
@@ -80,37 +81,60 @@ namespace ClearCanvas.ImageViewer.Layout.Basic.View.WinForms
 			_invertImages.DataBindings.Add("Checked", _bindingSource, "ShowGrayscaleInverted", false, DataSourceUpdateMode.OnPropertyChanged);
 			_invertImages.DataBindings.Add("Enabled", _bindingSource, "ShowGrayscaleInvertedEnabled", false, DataSourceUpdateMode.OnPropertyChanged);
 
+            for (int i = 0; i < 10; i++)
+                AddOverlayCheckBox();
+            
             SetOverlayItems();
             _bindingSource.CurrentItemChanged += (sender, args) =>
                                                      {
                                                          SetOverlayItems();
                                                      };
-
-            _listOverlays.ItemChecked += ListOverlaysOnItemChecked;
 		}
 
-        private void ListOverlaysOnItemChecked(object sender, ItemCheckedEventArgs itemCheckedEventArgs)
+        private CheckBox AddOverlayCheckBox()
         {
-            if (itemCheckedEventArgs.Item == null)return;
-
-            var item = itemCheckedEventArgs.Item.Tag as OverlaySelectionSetting;
-            if (item != null)
-                item.IsSelected = itemCheckedEventArgs.Item.Checked;
+            var check = new CheckBox();
+            check.CheckedChanged += (sender, args) => ((OverlaySelectionSetting)check.Tag).IsSelected = check.Checked;
+            _overlaysPanel.Controls.Add(check);
+            return check;
         }
 
         private void SetOverlayItems()
         {
-            _listOverlays.Items.Clear();
+            _overlaysPanel.SuspendLayout();
 
             var item = _bindingSource.Current as StoredDisplaySetCreationSetting;
-            if (item == null)
-                return;
-
-            foreach (var overlaySelection in item.OverlaySelections)
+            if (item != null)
             {
-                var listItem = new ListViewItem(overlaySelection.DisplayName){Tag = overlaySelection, Checked = overlaySelection.IsSelected};
-                _listOverlays.Items.Add(listItem);
+                var applicableOverlays = item.OverlaySelections;
+                while (_overlaysPanel.Controls.Count > applicableOverlays.Count)
+                {
+                    var last = _overlaysPanel.Controls[_overlaysPanel.Controls.Count - 1];
+                    last.Dispose();
+                }
+
+                for(int i = 0; i < applicableOverlays.Count; ++i)
+                {
+                    CheckBox checkBox;
+                    if (_overlaysPanel.Controls.Count > i)
+                        checkBox = (CheckBox) _overlaysPanel.Controls[i];
+                    else
+                        checkBox = AddOverlayCheckBox();
+
+                    var overlay = applicableOverlays[i];
+                    checkBox.Tag = overlay;
+                    checkBox.Name = overlay.Name;
+                    checkBox.Text = overlay.DisplayName;
+                    checkBox.Enabled = overlay.IsConfigurable;
+                    checkBox.Checked = overlay.IsSelected;
+                }
             }
+            else
+            {
+                _overlaysPanel.Controls.Clear();
+            }
+
+            _overlaysPanel.ResumeLayout(true);
         }
     }
 }

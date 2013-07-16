@@ -76,7 +76,7 @@ namespace ClearCanvas.ImageViewer.Layout.Basic.View.WinForms
             this._showOriginalMultiEchoSeries = new System.Windows.Forms.CheckBox();
             this._splittingGroup = new System.Windows.Forms.GroupBox();
             this._selectedOverlaysGroupBox = new System.Windows.Forms.GroupBox();
-            this._listOverlays = new System.Windows.Forms.ListView();
+            this._overlaysPanel = new System.Windows.Forms.FlowLayoutPanel();
             this._creationGroup.SuspendLayout();
             this._presentationGroupBox.SuspendLayout();
             this._splittingGroup.SuspendLayout();
@@ -179,22 +179,16 @@ namespace ClearCanvas.ImageViewer.Layout.Basic.View.WinForms
             // 
             // _selectedOverlaysGroupBox
             // 
-            this._selectedOverlaysGroupBox.Controls.Add(this._listOverlays);
+            this._selectedOverlaysGroupBox.Controls.Add(this._overlaysPanel);
             resources.ApplyResources(this._selectedOverlaysGroupBox, "_selectedOverlaysGroupBox");
             this._selectedOverlaysGroupBox.Name = "_selectedOverlaysGroupBox";
             this._selectedOverlaysGroupBox.TabStop = false;
+            this._tooltip.SetToolTip(this._selectedOverlaysGroupBox, resources.GetString("_selectedOverlaysGroupBox.ToolTip"));
             // 
-            // _listOverlays
+            // _overlaysPanel
             // 
-            this._listOverlays.Activation = System.Windows.Forms.ItemActivation.OneClick;
-            this._listOverlays.AutoArrange = false;
-            this._listOverlays.CheckBoxes = true;
-            resources.ApplyResources(this._listOverlays, "_listOverlays");
-            this._listOverlays.MultiSelect = false;
-            this._listOverlays.Name = "_listOverlays";
-            this._listOverlays.ShowGroups = false;
-            this._listOverlays.UseCompatibleStateImageBehavior = false;
-            this._listOverlays.View = System.Windows.Forms.View.SmallIcon;
+            resources.ApplyResources(this._overlaysPanel, "_overlaysPanel");
+            this._overlaysPanel.Name = "_overlaysPanel";
             // 
             // DisplaySetCreationConfigurationComponentControl
             // 
@@ -236,6 +230,6 @@ namespace ClearCanvas.ImageViewer.Layout.Basic.View.WinForms
         private System.Windows.Forms.CheckBox _showOriginalMultiEchoSeries;
         private System.Windows.Forms.GroupBox _splittingGroup;
         private System.Windows.Forms.GroupBox _selectedOverlaysGroupBox;
-        private System.Windows.Forms.ListView _listOverlays;
+        private System.Windows.Forms.FlowLayoutPanel _overlaysPanel;
     }
 }

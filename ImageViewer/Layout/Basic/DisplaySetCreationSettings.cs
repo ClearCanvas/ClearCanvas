@@ -39,6 +39,7 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
     public class OverlaySelectionSetting : IOverlaySelection
     {
         private readonly IOverlayManager _manager;
+        private bool _isSelected;
 
         internal OverlaySelectionSetting(IOverlayManager manager)
         {
@@ -50,9 +51,20 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
         public string Name { get { return _manager.Name; } }
         public string DisplayName { get { return _manager.DisplayName; } }
         public bool IsConfigurable { get { return _manager.IsConfigurable; } }
-        public bool IsSelected { get; set; }
+        public bool IsSelected
+        {
+            get { return _isSelected; }
+            set
+            {
+                if (_isSelected == value)return;
+                _isSelected = value;
+                EventsHelper.Fire(IsSelectedChanged, this, EventArgs.Empty);
+            }
+        }
 
         #endregion
+
+        public event EventHandler IsSelectedChanged;
     }
         
 

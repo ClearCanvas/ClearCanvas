@@ -54,8 +54,8 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
                        {
                            new TextOverlayManager(),
                            new ScaleOverlayManager(),
-                           new ShutterOverlayManager(),
                            new DicomOverlayManager(),
+                           new ShutterOverlayManager(),
                            new ColorBarManager()
                        };
         } 

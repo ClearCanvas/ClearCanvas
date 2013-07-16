@@ -540,25 +540,31 @@
   <data name="&gt;&gt;_splittingGroup.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
-  <data name="_listOverlays.Location" type="System.Drawing.Point, System.Drawing">
-    <value>15, 19</value>
+  <data name="_overlaysPanel.AutoScroll" type="System.Boolean, mscorlib">
+    <value>True</value>
   </data>
-  <data name="_listOverlays.Size" type="System.Drawing.Size, System.Drawing">
-    <value>386, 52</value>
+  <data name="_overlaysPanel.FlowDirection" type="System.Windows.Forms.FlowDirection, System.Windows.Forms">
+    <value>TopDown</value>
   </data>
-  <data name="_listOverlays.TabIndex" type="System.Int32, mscorlib">
+  <data name="_overlaysPanel.Location" type="System.Drawing.Point, System.Drawing">
+    <value>6, 14</value>
+  </data>
+  <data name="_overlaysPanel.Size" type="System.Drawing.Size, System.Drawing">
+    <value>404, 64</value>
+  </data>
+  <data name="_overlaysPanel.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
   </data>
-  <data name="&gt;&gt;_listOverlays.Name" xml:space="preserve">
-    <value>_listOverlays</value>
+  <data name="&gt;&gt;_overlaysPanel.Name" xml:space="preserve">
+    <value>_overlaysPanel</value>
   </data>
-  <data name="&gt;&gt;_listOverlays.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ListView, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="&gt;&gt;_overlaysPanel.Type" xml:space="preserve">
+    <value>System.Windows.Forms.FlowLayoutPanel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;_listOverlays.Parent" xml:space="preserve">
+  <data name="&gt;&gt;_overlaysPanel.Parent" xml:space="preserve">
     <value>_selectedOverlaysGroupBox</value>
   </data>
-  <data name="&gt;&gt;_listOverlays.ZOrder" xml:space="preserve">
+  <data name="&gt;&gt;_overlaysPanel.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
   <data name="_selectedOverlaysGroupBox.Location" type="System.Drawing.Point, System.Drawing">
@@ -572,6 +578,9 @@
   </data>
   <data name="_selectedOverlaysGroupBox.Text" xml:space="preserve">
     <value>Overlays</value>
+  </data>
+  <data name="_selectedOverlaysGroupBox.ToolTip" xml:space="preserve">
+    <value>Selected overlays will appear on images in the viewer; others will never appear.</value>
   </data>
   <data name="&gt;&gt;_selectedOverlaysGroupBox.Name" xml:space="preserve">
     <value>_selectedOverlaysGroupBox</value>
