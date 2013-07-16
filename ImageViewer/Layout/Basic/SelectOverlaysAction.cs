@@ -23,6 +23,11 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
 
         public IOverlays Overlays { get; private set; }
 
+        public void ApplyEverywhere()
+        {
+                
+        }
+
         private class ImageBoxOverlay : IOverlay
         {
             private readonly IImageBox _imageBox;
@@ -67,6 +72,8 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
             {
                 get { return _manager.DisplayName; }
             }
+
+            public bool IsEnabled { get { return _imageBox != null && _imageBox.DisplaySet != null; } }
 
             public void ShowIfSelected()
             {

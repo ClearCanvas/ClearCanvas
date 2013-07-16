@@ -18,6 +18,8 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
     {
         string DisplayName { get; }
 
+        bool IsEnabled { get; }
+
         void ShowIfSelected();
         void Hide();
     }
@@ -58,6 +60,8 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
             {
                 get { return _manager.DisplayName; }
             }
+
+            public bool IsEnabled { get { return true; } }
 
             public void ShowIfSelected()
             {

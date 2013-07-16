@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -6,37 +7,47 @@ namespace ClearCanvas.ImageViewer.Layout.Basic.View.WinForms
 {
     public partial class SelectOverlaysToolstripItem : ToolStripControlHost
     {
-        private Panel _panel;
         private ToolStrip _owner;
+        private Panel _panel;
+        private SelectOverlaysControl _control;
+        private Size _defaultSize;
+        private Size _preferredSize;
 
         public SelectOverlaysToolstripItem(SelectOverlaysAction action)
             : base(new Panel())
         {
-            InitializeComponent();
+            AutoSize = false;
+
             _panel = (Panel)Control;
-            _panel.BackColor = Color.Transparent;
-            var table = new TableLayoutPanel {AutoSize = true, AutoSizeMode = AutoSizeMode.GrowAndShrink, BackColor = Color.Transparent};
-            table.RowStyles.Clear();
-            table.ColumnStyles.Clear();
-            table.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
 
-            foreach (var overlay in action.Overlays)
-            {
-                table.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-                var theOverlay = overlay;
+            _panel.AutoSize = false;
+            _panel.Padding = new Padding(0);
+            _panel.Margin = new Padding(0);
 
-                var check = new CheckBox { Text = theOverlay.DisplayName, Checked = theOverlay.IsSelected };
-                check.CheckedChanged += (sender, args) => theOverlay.IsSelected = check.Checked;
-                table.Controls.Add(check);
-            }
+            _control = new SelectOverlaysControl(action, PerformClick);
+            _control.SizeChanged += (o, args) => SetPanelSize();
 
-            _panel.Controls.Add(table);
+            _panel.Controls.Add(_control);
+
+            SetPanelSize();
+            SetSize();
+            _defaultSize = _preferredSize = Size;
+            base.ControlAlign = ContentAlignment.TopCenter;
+            this.MyOwner = base.Owner;
+
+            InitializeComponent();
         }
 
-        /// <remarks>
-        /// Yes, this is an incredibly convoluted way to determine max width of toolstripitems in the same menu at runtime
-        /// However, it is the only one that seems to work.
-        /// </remarks>
+        private void SetPanelSize()
+        {
+            _panel.Size = _panel.MinimumSize = _control.Size + _control.Margin.Size;
+        }
+
+        private void SetSize()
+        {
+            _preferredSize = base.Size = _panel.Size + new Size(5, 5);
+        }
+
         private ToolStrip MyOwner
         {
             get { return _owner; }
@@ -57,22 +68,43 @@ namespace ClearCanvas.ImageViewer.Layout.Basic.View.WinForms
 
         private void OnOwnerResize(object sender, EventArgs e)
         {
-            int maxWidth = _panel.Width;
-            foreach (ToolStripItem item in this.MyOwner.Items)
+            SetPanelSize();
+        }
+
+        protected override void OnOwnerChanged(EventArgs e)
+        {
+            this.MyOwner = base.Owner;
+            base.OnOwnerChanged(e);
+        }
+        
+        protected override Size DefaultSize
+        {
+            get
             {
-                maxWidth = Math.Max(item.Width, maxWidth);
+                return _defaultSize;
             }
-            _panel.Size = new Size(maxWidth, _panel.Height);
+        }
+
+        protected override void OnHostedControlResize(EventArgs e)
+        {
+            SetSize();
+
+            base.OnHostedControlResize(e);
+            
+            Trace.WriteLine(String.Format("Control       : {0}", _control.Size));
+            Trace.WriteLine(String.Format("Outer Panel   : {0}", _panel.Size));
+            Trace.WriteLine(String.Format("Host          : {0}", Size));
+            Trace.WriteLine(String.Format("Host (default): {0}", DefaultSize));
+        }
+
+        public override Size GetPreferredSize(Size constrainingSize)
+        {
+            return _preferredSize;
         }
 
         protected override bool DismissWhenClicked
         {
             get { return true; }
-        }
-
-        public override System.Drawing.Size GetPreferredSize(System.Drawing.Size constrainingSize)
-        {
-            return base.GetPreferredSize(constrainingSize);
         }
     }
 }
