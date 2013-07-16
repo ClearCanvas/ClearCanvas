@@ -75,9 +75,12 @@ namespace ClearCanvas.ImageViewer.Layout.Basic.View.WinForms
             this._splitEchos = new System.Windows.Forms.CheckBox();
             this._showOriginalMultiEchoSeries = new System.Windows.Forms.CheckBox();
             this._splittingGroup = new System.Windows.Forms.GroupBox();
+            this._selectedOverlaysGroupBox = new System.Windows.Forms.GroupBox();
+            this._listOverlays = new System.Windows.Forms.ListView();
             this._creationGroup.SuspendLayout();
             this._presentationGroupBox.SuspendLayout();
             this._splittingGroup.SuspendLayout();
+            this._selectedOverlaysGroupBox.SuspendLayout();
             this.SuspendLayout();
             // 
             // _createSingleImageDisplaySets
@@ -174,10 +177,30 @@ namespace ClearCanvas.ImageViewer.Layout.Basic.View.WinForms
             this._splittingGroup.Name = "_splittingGroup";
             this._splittingGroup.TabStop = false;
             // 
+            // _selectedOverlaysGroupBox
+            // 
+            this._selectedOverlaysGroupBox.Controls.Add(this._listOverlays);
+            resources.ApplyResources(this._selectedOverlaysGroupBox, "_selectedOverlaysGroupBox");
+            this._selectedOverlaysGroupBox.Name = "_selectedOverlaysGroupBox";
+            this._selectedOverlaysGroupBox.TabStop = false;
+            // 
+            // _listOverlays
+            // 
+            this._listOverlays.Activation = System.Windows.Forms.ItemActivation.OneClick;
+            this._listOverlays.AutoArrange = false;
+            this._listOverlays.CheckBoxes = true;
+            resources.ApplyResources(this._listOverlays, "_listOverlays");
+            this._listOverlays.MultiSelect = false;
+            this._listOverlays.Name = "_listOverlays";
+            this._listOverlays.ShowGroups = false;
+            this._listOverlays.UseCompatibleStateImageBehavior = false;
+            this._listOverlays.View = System.Windows.Forms.View.SmallIcon;
+            // 
             // DisplaySetCreationConfigurationComponentControl
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this._selectedOverlaysGroupBox);
             this.Controls.Add(this._splittingGroup);
             this.Controls.Add(this._presentationGroupBox);
             this.Controls.Add(this._creationGroup);
@@ -190,6 +213,7 @@ namespace ClearCanvas.ImageViewer.Layout.Basic.View.WinForms
             this._presentationGroupBox.PerformLayout();
             this._splittingGroup.ResumeLayout(false);
             this._splittingGroup.PerformLayout();
+            this._selectedOverlaysGroupBox.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -211,5 +235,7 @@ namespace ClearCanvas.ImageViewer.Layout.Basic.View.WinForms
         private System.Windows.Forms.CheckBox _splitEchos;
         private System.Windows.Forms.CheckBox _showOriginalMultiEchoSeries;
         private System.Windows.Forms.GroupBox _splittingGroup;
+        private System.Windows.Forms.GroupBox _selectedOverlaysGroupBox;
+        private System.Windows.Forms.ListView _listOverlays;
     }
 }

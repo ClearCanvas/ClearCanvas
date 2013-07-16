@@ -79,6 +79,38 @@ namespace ClearCanvas.ImageViewer.Layout.Basic.View.WinForms
 
 			_invertImages.DataBindings.Add("Checked", _bindingSource, "ShowGrayscaleInverted", false, DataSourceUpdateMode.OnPropertyChanged);
 			_invertImages.DataBindings.Add("Enabled", _bindingSource, "ShowGrayscaleInvertedEnabled", false, DataSourceUpdateMode.OnPropertyChanged);
+
+            SetOverlayItems();
+            _bindingSource.CurrentItemChanged += (sender, args) =>
+                                                     {
+                                                         SetOverlayItems();
+                                                     };
+
+            _listOverlays.ItemChecked += ListOverlaysOnItemChecked;
 		}
+
+        private void ListOverlaysOnItemChecked(object sender, ItemCheckedEventArgs itemCheckedEventArgs)
+        {
+            if (itemCheckedEventArgs.Item == null)return;
+
+            var item = itemCheckedEventArgs.Item.Tag as OverlaySelectionSetting;
+            if (item != null)
+                item.IsSelected = itemCheckedEventArgs.Item.Checked;
+        }
+
+        private void SetOverlayItems()
+        {
+            _listOverlays.Items.Clear();
+
+            var item = _bindingSource.Current as StoredDisplaySetCreationSetting;
+            if (item == null)
+                return;
+
+            foreach (var overlaySelection in item.OverlaySelections)
+            {
+                var listItem = new ListViewItem(overlaySelection.DisplayName){Tag = overlaySelection, Checked = overlaySelection.IsSelected};
+                _listOverlays.Items.Add(listItem);
+            }
+        }
     }
 }

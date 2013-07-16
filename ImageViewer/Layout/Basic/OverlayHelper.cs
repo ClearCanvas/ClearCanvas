@@ -29,7 +29,7 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
             var setting = settings.FirstOrDefault(s => s.Modality == modality);
             return setting == null ? 
                 new List<IOverlaySelection>()
-                : setting.OverlaySelections.ToList();
+                : setting.OverlaySelections.Cast<IOverlaySelection>().ToList();
         }
 
         public static IOverlays GetOverlays(this IPresentationImage image)
