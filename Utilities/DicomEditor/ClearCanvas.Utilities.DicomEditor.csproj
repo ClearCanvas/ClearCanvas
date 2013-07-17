@@ -87,6 +87,7 @@
     <Compile Include="Tools\QuickAnonymizeTool.cs" />
     <Compile Include="Tools\ReplicateTool.cs" />
     <Compile Include="Tools\RevertTool.cs" />
+    <Compile Include="Tools\SaveAsTool.cs" />
     <Compile Include="Tools\SaveTool.cs" />
     <Compile Include="AnonymizeStudyTool.cs" />
   </ItemGroup>
@@ -147,6 +148,7 @@
     <EmbeddedResource Include="Icons\DeleteToolSmall.png" />
     <EmbeddedResource Include="Icons\NextToolSmall.png" />
     <EmbeddedResource Include="Icons\PreviousToolSmall.png" />
+    <EmbeddedResource Include="Icons\SaveAsToolSmall.png" />
     <EmbeddedResource Include="Icons\SaveToolSmall.png" />
     <EmbeddedResource Include="Icons\UndoToolSmall.png" />
   </ItemGroup>

@@ -37,6 +37,8 @@ using ClearCanvas.Dicom.Iod;
 using ClearCanvas.Dicom.ServiceModel.Query;
 using ClearCanvas.Dicom.Utilities.Anonymization;
 using ClearCanvas.ImageViewer.Common.Auditing;
+using ClearCanvas.ImageViewer.Common.StudyManagement;
+using Path = System.IO.Path;
 
 namespace ClearCanvas.Utilities.DicomEditor
 {
@@ -55,7 +57,7 @@ namespace ClearCanvas.Utilities.DicomEditor
 		void Anonymize(bool applyToAll, IStudyRootData studyPrototype);
 
 		int LoadedFileCount { get; }
-		void SaveAll();
+		bool SaveAll(bool promptForLocation);
 
 		bool TagExists(uint tag);
 
@@ -277,10 +279,20 @@ namespace ClearCanvas.Utilities.DicomEditor
 			get { return _loadedFiles.Count; }
 		}
 
-		public void SaveAll()
+		public bool SaveAll(bool promptForLocation)
 		{
+			// warn if there appear to be any reports or attachments in the files being edited
 			if (!WarnSaveEditedReportsOrAttachments())
-				return;
+				return false;
+
+			// prompt for destination if requested or any files are from local data store
+			var filenameMap = (Dictionary<string, string>) null;
+			if ((promptForLocation || AnyFilesFromLocalStore()) && !PromptSaveDestination(out filenameMap))
+				return false;
+
+			// if destination was not prompted, warn user that files will be overwritten
+			if (filenameMap == null && !WarnOverwriteFiles())
+				return false;
 
 			var modifiedInstances = new AuditedInstances();
 			var failureCount = 0;
@@ -294,7 +306,8 @@ namespace ClearCanvas.Utilities.DicomEditor
 					var patientId = file.DataSet[DicomTags.PatientId].ToString();
 					var patientsName = file.DataSet[DicomTags.PatientsName].ToString();
 
-					file.Save(DicomWriteOptions.Default);
+					var filename = filenameMap != null ? filenameMap[file.Filename] : file.Filename;
+					file.Save(filename, DicomWriteOptions.Default);
 					_dirtyFlags[i] = false;
 
 					modifiedInstances.AddInstance(patientId, patientsName, studyInstanceUid);
@@ -314,6 +327,7 @@ namespace ClearCanvas.Utilities.DicomEditor
 				Host.DesktopWindow.ShowMessageBox(SR.MessageErrorUpdatingSomeFiles, MessageBoxActions.Ok);
 
 			AuditHelper.LogUpdateInstances(new string[0], modifiedInstances, EventSource.CurrentUser, EventResult.Success);
+			return true;
 		}
 
 		public bool TagExists(uint tag)
@@ -519,6 +533,7 @@ namespace ClearCanvas.Utilities.DicomEditor
 
 		public void Clear()
 		{
+			_anonymizer = new DicomAnonymizer {ValidationOptions = ValidationOptions.RelaxAllChecks | ValidationOptions.AllowUnchangedValues};
 			_loadedFiles.Clear();
 			_position = 0;
 			_dirtyFlags.Clear();
@@ -626,6 +641,92 @@ namespace ClearCanvas.Utilities.DicomEditor
 					EventsHelper.Fire(_isLocalFileChanged, this, new EventArgs());
 				}
 			}
+		}
+
+		private static string GetCanonicalPath(string path)
+		{
+			return string.IsNullOrEmpty(path) ? string.Empty : path.ToLowerInvariant().Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
+		}
+
+		private bool AnyFilesFromLocalStore()
+		{
+			var storeLocation = GetCanonicalPath(StudyStore.FileStoreDirectory) + Path.DirectorySeparatorChar;
+			return _loadedFiles.Any(f => GetCanonicalPath(f.Filename).StartsWith(storeLocation));
+		}
+
+		private bool PromptSaveDestination(out Dictionary<string, string> filenames)
+		{
+			var storeLocation = GetCanonicalPath(StudyStore.FileStoreDirectory) + Path.DirectorySeparatorChar;
+			filenames = null;
+
+			if (_loadedFiles.Count > 1)
+			{
+				string selectedPath;
+				var args = new SelectFolderDialogCreationArgs {AllowCreateNewFolder = true, Prompt = SR.MessageSelectDestinationFolder};
+				do
+				{
+					// show select folder dialog
+					var result = Host.DesktopWindow.ShowSelectFolderDialogBox(args);
+					if (result.Action != DialogBoxAction.Ok || string.IsNullOrWhiteSpace(result.FileName)) return false;
+					args.Path = selectedPath = result.FileName;
+
+					if ((GetCanonicalPath(selectedPath) + Path.DirectorySeparatorChar).StartsWith(storeLocation))
+					{
+						// if selected path is under the filestore location, make user choose another one
+						var message = SR.MessageFileStoreNotValidSaveLocation;
+						Host.DesktopWindow.ShowMessageBox(message, MessageBoxActions.Ok);
+						selectedPath = string.Empty;
+					}
+					else if (Directory.Exists(selectedPath) && Directory.EnumerateFiles(selectedPath).Any())
+					{
+						// if selected path contains files, confirm that operation will overwrite files, or let user choose another one
+						var message = SR.MessageOutputFolderNotEmptyConfirmOverwriteFiles;
+						if (Host.DesktopWindow.ShowMessageBox(message, MessageBoxActions.YesNo) != DialogBoxAction.Yes) selectedPath = string.Empty;
+					}
+				} while (string.IsNullOrWhiteSpace(selectedPath));
+
+				// create the file map using new filenames in the selected path
+				var n = 0;
+				filenames = _loadedFiles.ToDictionary(f => f.Filename, f => Path.Combine(selectedPath, string.Format("{0:D8}.dcm", ++n)));
+				return true;
+			}
+			else
+			{
+				string targetFilename;
+				var originalFilename = _loadedFiles[0].Filename;
+				var args = new FileDialogCreationArgs(originalFilename) {PreventSaveToInstallPath = true, Title = SR.TitleSaveAs};
+				args.Filters.Add(new FileExtensionFilter("*.*", SR.LabelAllFiles));
+
+				do
+				{
+					// show save file dialog
+					var result = Host.DesktopWindow.ShowSaveFileDialogBox(args);
+					if (result.Action != DialogBoxAction.Ok || string.IsNullOrWhiteSpace(result.FileName)) return false;
+					targetFilename = result.FileName;
+
+					if (GetCanonicalPath(targetFilename).StartsWith(storeLocation))
+					{
+						// if destination file is in filestore, make user choose another one
+						var message = SR.MessageFileStoreNotValidSaveLocation;
+						Host.DesktopWindow.ShowMessageBox(message, MessageBoxActions.Ok);
+						targetFilename = string.Empty;
+					}
+					// save dialog handles prompting if destination file already exists
+				} while (string.IsNullOrWhiteSpace(targetFilename));
+
+				// create file map with the one single entry
+				filenames = new Dictionary<string, string> {{originalFilename, targetFilename}};
+				return true;
+			}
+		}
+
+		private bool WarnOverwriteFiles()
+		{
+			var message = _loadedFiles.Count > 1
+			              	? SR.MessageConfirmSaveAllFiles
+			              	: SR.MessageConfirmSaveSingleFile;
+
+			return Host.DesktopWindow.ShowMessageBox(message, MessageBoxActions.YesNo) == DialogBoxAction.Yes;
 		}
 
 		private bool WarnSaveEditedReportsOrAttachments()

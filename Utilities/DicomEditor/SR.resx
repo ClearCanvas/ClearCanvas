@@ -188,7 +188,7 @@ NOTE: This will not automatically save the files. You must still click the Save 
   <data name="MessageConfirmSaveAllFiles" xml:space="preserve">
     <value>The changes will be saved to *all* loaded files and the original files will be overwritten.  Are you sure you want to continue?
 
-NOTE: If any of the edited files are from the local store, it should be re-indexed. If any of the edited files are open in the Study Filters, it should be closed. Otherwise, the edited values may appear unchanged.</value>
+NOTE: If any of the edited files are open in the Study Filters, it should be closed. Otherwise, the edited values may appear unchanged.</value>
   </data>
   <data name="MessageDumpProgressBar" xml:space="preserve">
     <value>Processing Files...</value>
@@ -278,7 +278,7 @@ NOTE: If any of the edited files are from the local store, it should be re-index
     <value>Revert changes</value>
   </data>
   <data name="TooltipSave" xml:space="preserve">
-    <value>Saves edits</value>
+    <value>Save changes, overwriting the original files</value>
   </data>
   <data name="MessageNoFilesSelected" xml:space="preserve">
     <value>DICOM Dump operation failed.  The selected path did not contain any files.</value>
@@ -292,10 +292,8 @@ NOTE: If any of the edited files are from the local store, it should be re-index
   <data name="MessageAccessionNumberInvalidLength" xml:space="preserve">
     <value>The Accession Number must be between 0 and 16 characters.</value>
   </data>
-  <data name="MessageConfirmSaveSingleLocalFile" xml:space="preserve">
-    <value>The changes will be saved to the loaded file and the original file will be overwritten. Are you sure you want to continue?
-
-NOTE: the edited file is from the local store so it should be re-indexed, otherwise the edited values may appear unchanged.</value>
+  <data name="MessageConfirmSaveSingleFile" xml:space="preserve">
+    <value>The changes will be saved to the loaded file and the original file will be overwritten. Are you sure you want to continue?</value>
   </data>
   <data name="MessageConfirmSaveSingleRemoteFile" xml:space="preserve">
     <value>The changes will be saved to the loaded file and the original file will be overwritten. Are you sure you want to continue?</value>
@@ -338,5 +336,26 @@ NOTE: the edited file is from the local store so it should be re-indexed, otherw
   </data>
   <data name="MessageConfirmDiscardChangesBeforeClosing" xml:space="preserve">
     <value>Data has been modified and changes will be lost. Discard changes and close?</value>
+  </data>
+  <data name="LabelAllFiles" xml:space="preserve">
+    <value>All Files (*.*)</value>
+  </data>
+  <data name="MessageFileStoreNotValidSaveLocation" xml:space="preserve">
+    <value>Invalid destination. You cannot save directly to the Local File Store. Please save to another directory, then import the file(s) from that location.</value>
+  </data>
+  <data name="MessageOutputFolderNotEmptyConfirmOverwriteFiles" xml:space="preserve">
+    <value>The selected directory is not empty. Any existing files with conflicting filenames will be overwritten. Do you wish to continue?</value>
+  </data>
+  <data name="MessageSelectDestinationFolder" xml:space="preserve">
+    <value>Select destination folder.</value>
+  </data>
+  <data name="TitleSaveAs" xml:space="preserve">
+    <value>Save As</value>
+  </data>
+  <data name="ToolbarSaveAs" xml:space="preserve">
+    <value>Save As</value>
+  </data>
+  <data name="TooltipSaveAs" xml:space="preserve">
+    <value>Save changes as new files</value>
   </data>
 </root>
