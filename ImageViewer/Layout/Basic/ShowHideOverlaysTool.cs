@@ -35,7 +35,7 @@ using ClearCanvas.ImageViewer.BaseTools;
 namespace ClearCanvas.ImageViewer.Layout.Basic
 {
     [DropDownButtonAction("dropdown", "global-toolbars/ToolbarStandard/ToolbarShowHideOverlays", "ToggleAll", "DropDownActionModel", KeyStroke = XKeys.O)]
-    [Tooltip("dropdown", "TooltipShowHideOverlays")]
+    [TooltipValueObserver("dropdown", "Tooltip", "TooltipChanged")]
 	[GroupHint("dropdown", "Tools.Image.Overlays.Text.ShowHide")]
     [IconSetObserver("dropdown", "IconSet", "IconSetChanged")]
     [ActionFormerly("dropdown", "ClearCanvas.ImageViewer.Tools.Standard.ShowHideOverlaysTool")]
@@ -67,12 +67,29 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
 		}
 
         public IconSet IconSet { get; private set; }
-        public event EventHandler IconSetChanged;
+        public event EventHandler IconSetChanged
+        {
+            add { SelectedOverlaysVisibleChanged += value; }
+            remove { SelectedOverlaysVisibleChanged -= value; }
+        }
+
+        public string Tooltip
+        {
+            get { return SelectedOverlaysVisible ? SR.TooltipHideOverlays : SR.TooltipShowOverlays; }
+        }
+
+        public event EventHandler TooltipChanged
+        {
+            add { SelectedOverlaysVisibleChanged += value; }
+            remove { SelectedOverlaysVisibleChanged -= value; }
+        }
 
         public bool SelectedOverlaysVisible
         {
             get { return ReferenceEquals(IconSet, _selectedOverlaysVisible); }
         }
+
+        public event EventHandler SelectedOverlaysVisibleChanged;
 
         public override void Initialize()
         {
@@ -92,7 +109,7 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
         public void ToggleAll()
         {
             IconSet = SelectedOverlaysVisible ? _selectedOverlaysHidden : _selectedOverlaysVisible;
-            EventsHelper.Fire(IconSetChanged, this, EventArgs.Empty);
+            EventsHelper.Fire(SelectedOverlaysVisibleChanged, this, EventArgs.Empty);
 
             var selectedOverlaysVisible = SelectedOverlaysVisible;
             foreach (var imageBox in base.Context.Viewer.PhysicalWorkspace.ImageBoxes.Where(i => i.DisplaySet != null))
