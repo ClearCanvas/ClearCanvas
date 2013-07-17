@@ -7,23 +7,23 @@ namespace ClearCanvas.ImageViewer.Layout.Basic.View.WinForms
     {
         private class Item
         {
-            private readonly IOverlay _overlay;
+            private readonly SelectOverlaysAction.Item _overlayItem;
 
-            public Item(IOverlay overlay)
+            public Item(SelectOverlaysAction.Item overlayItem)
             {
-                _overlay = overlay;
+                _overlayItem = overlayItem;
             }
 
-            public string Name { get { return _overlay.Name; } }
+            public string Name { get { return _overlayItem.Name; } }
             public bool IsSelected
             {
-                get { return _overlay.IsSelected; }
-                set { _overlay.IsSelected = value; }
+                get { return _overlayItem.IsSelected; }
+                set { _overlayItem.IsSelected = value; }
             }
 
             public override string ToString()
             {
-                return _overlay.DisplayName;
+                return _overlayItem.DisplayName;
             }
         }
 
@@ -33,23 +33,28 @@ namespace ClearCanvas.ImageViewer.Layout.Basic.View.WinForms
 
             _listOverlays.Sorted = false;
 
-            _close.Click += (sender, args) => close();
+            _close.Click += (sender, args) =>
+                                {
+                                    action.Apply();
+                                    close();
+                                };
             _applyToAll.Click += (sender, args) =>
                                      {
                                          action.ApplyEverywhere();
                                          close();
                                      };
 
-            foreach (var overlay in action.Overlays)
-                _listOverlays.Items.Add(new Item(overlay), overlay.IsSelected);
+            foreach (var overlayItem in action.Items)
+                _listOverlays.Items.Add(new Item(overlayItem), overlayItem.IsSelected);
 
-            _listOverlays.ItemCheck += ListOverlaysOnItemCheck;
-        }
-
-        private void ListOverlaysOnItemCheck(object sender, ItemCheckEventArgs itemCheckEventArgs)
-        {
-            var item = (Item)_listOverlays.Items[itemCheckEventArgs.Index];
-            item.IsSelected = itemCheckEventArgs.NewValue == CheckState.Checked;
+            _listOverlays.ItemCheck += (s, args) =>
+            {
+                var item = (Item)_listOverlays.Items[args.Index];
+                item.IsSelected = args.NewValue == CheckState.Checked;
+                
+                //Apply for each check
+                action.Apply();
+            };
         }
     }
 }

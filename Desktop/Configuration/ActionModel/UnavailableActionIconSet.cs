@@ -31,7 +31,7 @@ namespace ClearCanvas.Desktop.Configuration.ActionModel
 	/// <summary>
 	/// Represents a set of icon resources that specify the same logical icon in different sizes with an overlay to indicate that the action is unavailable.
 	/// </summary>
-	internal sealed class UnavailableActionIconSet : IconSet
+	public sealed class UnavailableActionIconSet : IconSet
 	{
 		/// <summary>
 		/// Constructor.

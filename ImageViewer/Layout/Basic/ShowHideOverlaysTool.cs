@@ -23,10 +23,13 @@
 #endregion
 
 using System;
+using System.ComponentModel;
+using System.Linq;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Desktop;
 using ClearCanvas.Desktop.Actions;
+using ClearCanvas.Desktop.Configuration.ActionModel;
 using ClearCanvas.ImageViewer.BaseTools;
 
 namespace ClearCanvas.ImageViewer.Layout.Basic
@@ -39,28 +42,27 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
     [ExtensionOf(typeof(ImageViewerToolExtensionPoint))]
 	public class ShowHideOverlaysTool : ImageViewerTool
 	{
-	    private ActionModelNode _mainDropDownActionModel;
-        private IconSet _selectedOverlaysVisible = new IconSet("Icons.ShowHideOverlaysToolSmall.png", "Icons.ShowHideOverlaysToolMedium.png", "Icons.ShowHideOverlaysToolLarge.png");
-        private IconSet _selectedOverlaysHidden = new IconSet("Icons.ShowHideOverlaysToolSmall.png", "Icons.ShowHideOverlaysToolMedium.png", "Icons.ShowHideOverlaysToolLarge.png");
+        private readonly IconSet _selectedOverlaysVisible;
+        private readonly IconSet _selectedOverlaysHidden;
 
-		public ShowHideOverlaysTool()
-		{
-		    IconSet = _selectedOverlaysVisible;
+        public ShowHideOverlaysTool()
+        {
+            _selectedOverlaysVisible = new IconSet("Icons.ShowHideOverlaysToolSmall.png", "Icons.ShowHideOverlaysToolMedium.png", "Icons.ShowHideOverlaysToolLarge.png");
+            _selectedOverlaysHidden = new UnavailableActionIconSet(_selectedOverlaysVisible);
+            IconSet = _selectedOverlaysVisible;
 		}
+
+        internal IImageViewer Viewer { get { return Context.Viewer; } }
 
 		public ActionModelNode DropDownActionModel
 		{
 			get
 			{
-				if (_mainDropDownActionModel == null)
-				{
-                    var resolver = new ActionResourceResolver(typeof(SelectOverlaysAction));
-				    IAction action = new SelectOverlaysAction(Context.Viewer, "selectOverlays", new ActionPath("overlays-dropdown/SelectOverlays", resolver), resolver);
-				    var actionSet = new ActionSet(new[] {action});
-				    return ActionModelRoot.CreateModel(typeof (ShowHideOverlaysTool).Namespace, "overlays-dropdown", actionSet);
-				}
-
-			    return _mainDropDownActionModel;
+                //Take advantage of the fact that the drop-down model is requested each time it's going to be shown.
+                var resolver = new ActionResourceResolver(typeof(SelectOverlaysAction));
+                var action = new SelectOverlaysAction(this, "selectOverlays", new ActionPath("overlays-dropdown/SelectOverlays", resolver), resolver);
+                var actionSet = new ActionSet(new[] { action });
+				return ActionModelRoot.CreateModel(typeof (ShowHideOverlaysTool).Namespace, "overlays-dropdown", actionSet);
 			}
 		}
 
@@ -75,12 +77,15 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
         public override void Initialize()
         {
             base.Initialize();
-            Context.Viewer.EventBroker.ImageDrawing += OnImageDrawing;
+
+            DisplaySetCreationSettings.DefaultInstance.PropertyChanged += SettingsChanged;
+            Context.Viewer.EventBroker.DisplaySetChanged += OnDisplaySetChanged;
         }
 
         protected override void Dispose(bool disposing)
         {
-            Context.Viewer.EventBroker.ImageDrawing -= OnImageDrawing;
+            DisplaySetCreationSettings.DefaultInstance.PropertyChanged -= SettingsChanged;
+            Context.Viewer.EventBroker.DisplaySetChanged -= OnDisplaySetChanged;
             base.Dispose(disposing);
         }
 
@@ -89,28 +94,47 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
             IconSet = SelectedOverlaysVisible ? _selectedOverlaysHidden : _selectedOverlaysVisible;
             EventsHelper.Fire(IconSetChanged, this, EventArgs.Empty);
 
-            var show = SelectedOverlaysVisible;
-            foreach (var imageBox in base.Context.Viewer.PhysicalWorkspace.ImageBoxes)
-            {
-                var tile = imageBox.SelectedTile;
-                if (tile == null || tile.PresentationImage == null)continue;
-
-                var overlays = tile.PresentationImage.GetOverlays();
-                if (show)
-                    overlays.ShowSelected(false);
-                else
-                    overlays.Hide(false);
-            }
+            var selectedOverlaysVisible = SelectedOverlaysVisible;
+            foreach (var imageBox in base.Context.Viewer.PhysicalWorkspace.ImageBoxes.Where(i => i.DisplaySet != null))
+                UpdateVisibility(imageBox.DisplaySet, selectedOverlaysVisible);
 
 			Context.Viewer.PhysicalWorkspace.Draw();
 		}
 
-        private void OnImageDrawing(object sender, ImageDrawingEventArgs args)
+        private void OnDisplaySetChanged(object sender, DisplaySetChangedEventArgs e)
         {
-            if (SelectedOverlaysVisible)
-                args.PresentationImage.GetOverlays().ShowSelected(false);
-            else
-                args.PresentationImage.GetOverlays().Hide(false);
+            if (e.NewDisplaySet == null)
+                return;
+
+            var clock = new CodeClock();
+            clock.Start();
+
+            UpdateVisibility(e.NewDisplaySet, SelectedOverlaysVisible);
+
+            clock.Stop();
+            Platform.Log(LogLevel.Debug, "{0} - UpdateVisibility took {1}", GetType().FullName, clock.Seconds);
+        }
+
+        private static void UpdateVisibility(IDisplaySet displaySet, bool selectedOverlaysVisible)
+        {
+            if (displaySet == null)
+                return;
+
+            //Have to update all images each time so that even ones that haven't been drawn are correct.
+            //That way, even ones that are exported to the clipboard look right.
+            foreach (var image in displaySet.PresentationImages)
+            {
+                if (selectedOverlaysVisible)
+                    image.GetOverlays().ShowSelected(false);
+                else
+                    image.GetOverlays().Hide(false);
+            }
+        }
+
+        private void SettingsChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
+        {
+            //OverlayHelper caches the modality defaults in the viewer extension data for efficiency.
+            OverlayHelper.OverlaySettingsChanged(Context.Viewer);
         }
 	}
 }

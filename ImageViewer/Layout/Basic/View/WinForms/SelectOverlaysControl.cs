@@ -12,16 +12,21 @@ namespace ClearCanvas.ImageViewer.Layout.Basic.View.WinForms
             SuspendLayout();
 
             _itemsTable.ColumnCount = 1;
-            _itemsTable.RowCount = action.Overlays.Count;
+            _itemsTable.RowCount = action.Items.Count;
             _itemsTable.RowStyles.Clear();
             _itemsTable.ColumnStyles.Clear();
             _itemsTable.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute) {Width= 100});
 
-            foreach (var overlay in action.Overlays)
+            _itemsTable.Enabled = action.Enabled;
+            _applyToAll.Enabled = action.Enabled;
+
+            foreach (var overlay in action.Items)
             {
                 _itemsTable.RowStyles.Add(new RowStyle(SizeType.Percent) {Height = 100});
                 var theOverlay = overlay;
-                var check = new CheckBox {AutoSize = true, Text = theOverlay.DisplayName, Checked = theOverlay.IsSelected, Enabled = theOverlay.IsEnabled};
+                var check = new CheckBox {
+                    AutoSize = true, Text = theOverlay.DisplayName, Checked = theOverlay.IsSelected
+                };
                 check.CheckedChanged += (sender, args) => theOverlay.IsSelected = check.Checked;
                 _itemsTable.Controls.Add(check);
             }

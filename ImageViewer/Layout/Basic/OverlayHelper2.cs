@@ -1,24 +1,21 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace ClearCanvas.ImageViewer.Layout.Basic
 {
-    public interface IOverlays : IEnumerable<IOverlay>
+    public interface IImageOverlays : IEnumerable<IImageOverlay>
     {
         int Count { get; }
-        IOverlay this[string name] { get; }
+        IImageOverlay this[string name] { get; }
 
         void ShowSelected(bool draw);
         void Hide(bool draw);
     }
 
-    public interface IOverlay : IOverlaySelection
+    public interface IImageOverlay : IOverlaySelection
     {
         string DisplayName { get; }
-
-        bool IsEnabled { get; }
         new bool IsSelected { get; set; }
 
         void ShowIfSelected();
@@ -27,7 +24,7 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
     
     public static partial class OverlayHelper
     {
-        private class ImageOverlay : IOverlay
+        private class ImageOverlay : IImageOverlay
         {
             private readonly IPresentationImage _image;
             private readonly IOverlayManager _manager;
@@ -62,10 +59,10 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
                 get { return _manager.DisplayName; }
             }
 
-            public bool IsEnabled { get { return true; } }
-
             public void ShowIfSelected()
             {
+                if (_image == null)return;
+
                 if (IsSelected)
                     _manager.ShowOverlay(_image);
                 else
@@ -74,23 +71,23 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
 
             public void Hide()
             {
-                _manager.HideOverlay(_image);
+                if (_image != null)
+                    _manager.HideOverlay(_image);
             }
 
             #endregion
         }
 
-        public class ImageOverlays : IOverlays
+        public class ImageOverlays : IImageOverlays
         {
             private readonly IPresentationImage _image;
-            private readonly IList<IOverlay> _overlays;
+            private readonly IList<IImageOverlay> _overlays;
 
             internal ImageOverlays(IPresentationImage image)
             {
                 _image = image;
-                _overlays = GetOverlaySelectionStates(image).Select(state => (IOverlay)new ImageOverlay(image, state)).ToList();
+                _overlays = GetOverlaySelectionStates(image).Select(state => (IImageOverlay)new ImageOverlay(image, state)).ToList();
             }
-
 
             #region Implementation of IImageOverlays
 
@@ -99,7 +96,7 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
                 get { return _overlays.Count; }
             }
 
-            public IOverlay this[string name]
+            public IImageOverlay this[string name]
             {
                 get { return _overlays.FirstOrDefault(o => o.Name == name); }
             }
@@ -126,7 +123,7 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
 
             #region Implementation of IEnumerable
 
-            public IEnumerator<IOverlay> GetEnumerator()
+            public IEnumerator<IImageOverlay> GetEnumerator()
             {
                 return _overlays.GetEnumerator();
             }

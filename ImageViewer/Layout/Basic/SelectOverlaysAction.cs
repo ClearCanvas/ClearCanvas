@@ -1,10 +1,10 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Desktop;
 using ClearCanvas.Desktop.Actions;
+using Action = ClearCanvas.Desktop.Actions.Action;
 
 namespace ClearCanvas.ImageViewer.Layout.Basic
 {
@@ -15,168 +15,101 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
     [AssociateView(typeof(SelectOverlaysActionViewExtensionPoint))]
     public class SelectOverlaysAction : Action
     {
-        public SelectOverlaysAction(IImageViewer viewer, string actionID, ActionPath path, IResourceResolver resourceResolver)
-            : base(actionID, path, resourceResolver)
+        public class Item
         {
-            Overlays = new ImageBoxOverlays(viewer.SelectedImageBox);
+            public Item(IImageOverlay source)
+            {
+                Name = source.Name;
+                DisplayName = source.DisplayName;
+                IsSelected = source.IsSelected;
+            }
+
+            public string Name { get; private set; }
+            public string DisplayName { get; private set; }
+            public bool IsSelected { get; set; }
         }
 
-        public IOverlays Overlays { get; private set; }
+        private readonly ShowHideOverlaysTool _parent;
+
+        public SelectOverlaysAction(ShowHideOverlaysTool parent, string actionID, ActionPath path, IResourceResolver resourceResolver)
+            : base(actionID, path, resourceResolver)
+        {
+            _parent = parent;
+            var image = GetImage(_parent.Viewer.SelectedImageBox);
+
+            //ApplicableModality = image.GetModality();
+            Enabled = image != null;
+
+            var overlays = image.GetOverlays();
+            Items = overlays.Select(o => new Item(o)).ToList();
+        }
+
+        public bool Enabled { get; private set; }
+        public IList<Item> Items { get; private set; }
+
+        //private string ApplicableModality { get; set; }
+
+        public void Apply()
+        {
+            //Apply to all images in current display set
+            Apply(_parent.Viewer.SelectedImageBox);
+        }
 
         public void ApplyEverywhere()
         {
-                
+            //Apply to all images in all visible display sets
+            foreach (var imageBox in _parent.Viewer.PhysicalWorkspace.ImageBoxes)
+                Apply(imageBox);
         }
 
-        private class ImageBoxOverlay : IOverlay
+        private void Apply(IImageBox imageBox)
         {
-            private readonly IImageBox _imageBox;
-            private readonly IOverlayManager _manager;
-            private bool _isSelected;
+            if (imageBox == null || imageBox.DisplaySet == null)
+                return;
 
-            public ImageBoxOverlay(IImageBox imageBox, string name, bool isSelected)
+            //foreach (var presentationImage in imageBox.DisplaySet.PresentationImages.Where(i => i.GetModality() == ApplicableModality))
+
+            foreach (var presentationImage in imageBox.DisplaySet.PresentationImages)
             {
-                _imageBox = imageBox;
-                _manager = OverlayHelper.OverlayManagers.First(m => m.Name == name);
-                _isSelected = isSelected;
-            }
-
-            #region Implementation of IOverlaySelection
-
-            public string Name
-            {
-                get { return _manager.Name; }
-            }
-
-            public bool IsSelected
-            {
-                get { return _isSelected; }
-                set
+                var imageOverlays = presentationImage.GetOverlays();
+                foreach (var imageOverlay in imageOverlays)
                 {
-                    if (_isSelected == value) return;
+                    var source = Items.FirstOrDefault(i => i.Name == imageOverlay.Name);
+                    if (source != null)
+                        imageOverlay.IsSelected = source.IsSelected;
 
-                    _isSelected = value;
-
-                    if (_isSelected)
-                        ShowIfSelected();
+                    if (_parent.SelectedOverlaysVisible)
+                        imageOverlay.ShowIfSelected();
                     else
-                        Hide();
+                        imageOverlay.Hide();
                 }
             }
 
-            #endregion
-
-            #region Implementation of IOverlay
-
-            public string DisplayName
-            {
-                get { return _manager.DisplayName; }
-            }
-
-            public bool IsEnabled { get { return _imageBox != null && _imageBox.DisplaySet != null; } }
-
-            public void ShowIfSelected()
-            {
-                foreach (var image in _imageBox.DisplaySet.PresentationImages)
-                {
-                    var overlay = image.GetOverlays()[Name];
-                    overlay.IsSelected = _isSelected;
-                    overlay.ShowIfSelected();
-                }
-
-                _imageBox.Draw();
-            }
-
-            public void Hide()
-            {
-                foreach (var image in _imageBox.DisplaySet.PresentationImages)
-                {
-                    var overlay = image.GetOverlays()[Name];
-                    overlay.IsSelected = _isSelected;
-                    overlay.Hide();
-                }
-
-                _imageBox.Draw();
-            }
-
-            #endregion
+            imageBox.Draw();
         }
 
-        private class ImageBoxOverlays : IOverlays
+        private static IPresentationImage GetImage(IImageBox imageBox)
         {
-            private readonly IImageBox _imageBox;
-            private readonly IList<IOverlay> _overlays;
+            if (imageBox == null)
+                return null;
 
-            public ImageBoxOverlays(IImageBox imageBox)
+            IPresentationImage image;
+            if (imageBox.SelectedTile != null && imageBox.SelectedTile.PresentationImage != null)
             {
-                _imageBox = imageBox;
-                IPresentationImage image;
-                if (imageBox.SelectedTile != null && imageBox.SelectedTile.PresentationImage != null)
-                {
-                    image = imageBox.SelectedTile.PresentationImage;
-                }
-                else if (imageBox.Tiles.Count > 0 && imageBox.Tiles[0].PresentationImage != null)
-                {
-                    image = imageBox.Tiles[0].PresentationImage;
-                }
-                else if (imageBox.DisplaySet != null && imageBox.DisplaySet.PresentationImages.Count > 0)
-                    image = imageBox.DisplaySet.PresentationImages[0];
-                else
-                {
-                    image = null;
-                }
-
-                _overlays = image != null
-                    ? image.GetOverlays().Select(o => (IOverlay)new ImageBoxOverlay(_imageBox, o.Name, o.IsSelected)).ToList()
-                    : new List<IOverlay>();
+                image = imageBox.SelectedTile.PresentationImage;
+            }
+            else if (imageBox.Tiles.Count > 0 && imageBox.Tiles[0].PresentationImage != null)
+            {
+                image = imageBox.Tiles[0].PresentationImage;
+            }
+            else if (imageBox.DisplaySet != null && imageBox.DisplaySet.PresentationImages.Count > 0)
+                image = imageBox.DisplaySet.PresentationImages[0];
+            else
+            {
+                image = null;
             }
 
-            #region IOverlays Members
-
-            public int Count
-            {
-                get { return _overlays.Count; }
-            }
-
-            public IOverlay this[string name]
-            {
-                get { return _overlays.FirstOrDefault(o => o.Name == name); }
-            }
-
-            public void ShowSelected(bool draw)
-            {
-                foreach (var overlay in _overlays)
-                    overlay.ShowIfSelected();
-
-                if (draw)
-                    _imageBox.Draw();
-            }
-
-            public void Hide(bool draw)
-            {
-                foreach (var overlay in _overlays)
-                    overlay.Hide();
-
-                if (draw)
-                    _imageBox.Draw();
-            }
-
-            #endregion
-
-            #region Implementation of IEnumerable
-
-            public IEnumerator<IOverlay> GetEnumerator()
-            {
-                return _overlays.GetEnumerator();
-            }
-
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                return GetEnumerator();
-            }
-
-            #endregion
+            return image;
         }
-
     }
 }
