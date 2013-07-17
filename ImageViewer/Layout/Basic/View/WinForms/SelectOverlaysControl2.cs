@@ -31,7 +31,7 @@ namespace ClearCanvas.ImageViewer.Layout.Basic.View.WinForms
         {
             InitializeComponent();
 
-            _listOverlays.Sorted = true;
+            _listOverlays.Sorted = false;
 
             _close.Click += (sender, args) => close();
             _applyToAll.Click += (sender, args) =>

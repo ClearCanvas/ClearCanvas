@@ -37,6 +37,28 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
             return new ImageOverlays(image);
         }
 
+        public static IOverlays GetOverlays(IDisplaySet displaySet)
+        {
+            if (displaySet == null || displaySet.PresentationImages.Count == 0)
+                return null;
+
+            return GetOverlays(displaySet.PresentationImages.First());
+        }
+
+        public static IOverlays GetOverlays(IImageBox imageBox)
+        {
+            if (imageBox.DisplaySet == null || imageBox.DisplaySet.PresentationImages.Count == 0)
+                return null;
+
+            if (imageBox.SelectedTile != null && imageBox.SelectedTile.PresentationImage != null)
+                return GetOverlays(imageBox.SelectedTile.PresentationImage);
+
+            if (imageBox.Tiles.Count > 0 && imageBox.Tiles[0].PresentationImage != null)
+            return GetOverlays(imageBox.Tiles[0].PresentationImage);
+
+            return GetOverlays(imageBox.DisplaySet.PresentationImages[0]);
+        }
+
         private static IEnumerable<OverlayState> GetOverlaySelectionStates(IPresentationImage image)
         {
             var data = image.ExtensionData[typeof(Key)] as IList<OverlayState>;
