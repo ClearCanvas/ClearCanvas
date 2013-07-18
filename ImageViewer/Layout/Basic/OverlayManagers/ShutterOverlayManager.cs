@@ -22,6 +22,7 @@
 
 #endregion
 
+using ClearCanvas.Desktop;
 using ClearCanvas.ImageViewer.PresentationStates.Dicom;
 
 namespace ClearCanvas.ImageViewer.Layout.Basic.OverlayManagers
@@ -31,6 +32,7 @@ namespace ClearCanvas.ImageViewer.Layout.Basic.OverlayManagers
         public ShutterOverlayManager()
             : base(SR.NameShutterOverlay, SR.NameShutterOverlay)
         {
+            IconSet = new IconSet("Icons.ShutterOverlayToolSmall.png", "Icons.ShutterOverlayToolMedium.png", "Icons.ShutterOverlayToolLarge.png");
         }
 
         public override bool IsSelectedByDefault(string modality)
@@ -44,7 +46,7 @@ namespace ClearCanvas.ImageViewer.Layout.Basic.OverlayManagers
             if (dicomImage == null)
                 return;
 
-            var dicomGraphics = DicomGraphicsPlane.GetDicomGraphicsPlane(dicomImage, false);
+            var dicomGraphics = DicomGraphicsPlane.GetDicomGraphicsPlane(dicomImage, true);
             if (dicomGraphics != null)
                 dicomGraphics.Shutters.Enabled = visible;
         }

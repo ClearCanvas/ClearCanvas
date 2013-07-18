@@ -24,6 +24,7 @@
 
 using System.Collections.Generic;
 using ClearCanvas.Common.Utilities;
+using ClearCanvas.Desktop;
 using ClearCanvas.ImageViewer.PresentationStates.Dicom;
 
 namespace ClearCanvas.ImageViewer.Layout.Basic.OverlayManagers
@@ -34,6 +35,8 @@ namespace ClearCanvas.ImageViewer.Layout.Basic.OverlayManagers
             : base(SR.NameDicomOverlay, SR.NameDicomOverlay)
         {
             IsConfigurable = false;
+            IconSet = new IconSet("Icons.DicomOverlaysToolSmall.png", "Icons.DicomOverlaysToolMedium.png", "Icons.DicomOverlaysToolLarge.png");
+
         }
 
         public override bool IsSelectedByDefault(string modality)
@@ -43,24 +46,12 @@ namespace ClearCanvas.ImageViewer.Layout.Basic.OverlayManagers
 
         public override void SetOverlayVisible(IPresentationImage image, bool visible)
         {
-            if (image is IDicomPresentationImage)
-            {
-                foreach (OverlayPlaneGraphic overlayGraphic in GetOverlayPlanesGraphic(image as IDicomPresentationImage))
-                    overlayGraphic.Visible = visible;
-            }
-        }
-
-        private static IEnumerable<OverlayPlaneGraphic> GetOverlayPlanesGraphic(IDicomPresentationImage image)
-        {
-            DicomGraphicsPlane dicomGraphicsPlane = DicomGraphicsPlane.GetDicomGraphicsPlane(image, false);
+            var dicomPresentationImage = image as IDicomPresentationImage;
+            if (dicomPresentationImage == null) return;
+            
+            DicomGraphicsPlane dicomGraphicsPlane = DicomGraphicsPlane.GetDicomGraphicsPlane(dicomPresentationImage, true);
             if (dicomGraphicsPlane != null)
-            {
-                foreach (ILayer layer in (IEnumerable<ILayer>)dicomGraphicsPlane.Layers)
-                {
-                    foreach (OverlayPlaneGraphic overlayGraphic in CollectionUtils.Select(layer.Graphics, graphic => graphic is OverlayPlaneGraphic))
-                        yield return overlayGraphic;
-                }
-            }
+                dicomGraphicsPlane.Layers.Enabled = visible;
         }
     }
 }

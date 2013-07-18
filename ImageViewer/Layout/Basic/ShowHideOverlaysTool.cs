@@ -48,7 +48,7 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
         public ShowHideOverlaysTool()
         {
             _selectedOverlaysVisible = new IconSet("Icons.ShowHideOverlaysToolSmall.png", "Icons.ShowHideOverlaysToolMedium.png", "Icons.ShowHideOverlaysToolLarge.png");
-            _selectedOverlaysHidden = new UnavailableActionIconSet(_selectedOverlaysVisible);
+            _selectedOverlaysHidden = new UnavailableActionIconSet(_selectedOverlaysVisible){GrayMode = true};
             IconSet = _selectedOverlaysVisible;
 		}
 

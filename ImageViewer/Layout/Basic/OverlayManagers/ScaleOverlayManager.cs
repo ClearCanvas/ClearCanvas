@@ -23,6 +23,7 @@
 #endregion
 
 using ClearCanvas.Common.Utilities;
+using ClearCanvas.Desktop;
 using ClearCanvas.ImageViewer.Graphics;
 
 namespace ClearCanvas.ImageViewer.Layout.Basic.OverlayManagers
@@ -32,6 +33,7 @@ namespace ClearCanvas.ImageViewer.Layout.Basic.OverlayManagers
         public ScaleOverlayManager()
             : base(SR.NameScaleOverlay, SR.NameScaleOverlay)
         {
+            IconSet = new IconSet("Icons.ScaleOverlayToolSmall.png", "Icons.ScaleOverlayToolMedium.png", "Icons.ScaleOverlayToolLarge.png");
         }
 
         public override bool IsSelectedByDefault(string modality)

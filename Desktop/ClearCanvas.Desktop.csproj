@@ -148,7 +148,7 @@
     <Compile Include="Configuration\ActionModel\NodePropertiesComponent.cs" />
     <Compile Include="Configuration\ActionModel\BasicActionModelConfigurationComponentTools.cs" />
     <Compile Include="Configuration\ActionModel\ClickActionKeystrokePropertyComponent.cs" />
-    <Compile Include="Configuration\ActionModel\UnavailableActionIconSet.cs" />
+    <Compile Include="Actions\UnavailableActionIconSet.cs" />
     <Compile Include="Configuration\AuthorityTokens.cs" />
     <Compile Include="Configuration\ConfigurationApplicationComponent.cs" />
     <Compile Include="Configuration\ConfigurationDialog.cs" />
@@ -624,6 +624,11 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Tools\Tests\" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\UnavailableToolOverlayGrayLarge.png" />
+    <EmbeddedResource Include="Icons\UnavailableToolOverlayGrayMedium.png" />
+    <EmbeddedResource Include="Icons\UnavailableToolOverlayGraySmall.png" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="..\Common\ClearCanvas.Strings.targets" />

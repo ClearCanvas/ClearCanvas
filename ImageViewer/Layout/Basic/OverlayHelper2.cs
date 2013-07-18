@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using ClearCanvas.Desktop;
 
 namespace ClearCanvas.ImageViewer.Layout.Basic
 {
@@ -17,6 +18,7 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
     {
         string DisplayName { get; }
         new bool IsSelected { get; set; }
+        IconSet IconSet { get; }
 
         void ShowIfSelected();
         void Hide();
@@ -57,6 +59,11 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
             public string DisplayName
             {
                 get { return _manager.DisplayName; }
+            }
+
+            public IconSet IconSet
+            {
+                get { return _manager.IconSet; }
             }
 
             public void ShowIfSelected()

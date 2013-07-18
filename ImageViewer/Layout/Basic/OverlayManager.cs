@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using ClearCanvas.Common.Utilities;
+using ClearCanvas.Desktop;
 using ClearCanvas.ImageViewer.Layout.Basic.OverlayManagers;
 
 namespace ClearCanvas.ImageViewer.Layout.Basic
@@ -10,6 +12,9 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
 
         bool IsConfigurable { get; }
 
+        IconSet IconSet { get; }
+        IResourceResolver ResourceResolver { get; }
+
         bool IsSelectedByDefault(string modality);
 
         void ShowOverlay(IPresentationImage image);
@@ -18,6 +23,8 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
 
     public abstract class OverlayManager : IOverlayManager
     {
+        private IResourceResolver _resolver;
+
         protected OverlayManager(string name, string displayName)
         {
             Name = name;
@@ -31,6 +38,17 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
         public string DisplayName { get; private set; }
 
         public bool IsConfigurable { get; protected set; }
+
+        public IconSet IconSet { get; protected set; }
+
+        public IResourceResolver ResourceResolver
+        {
+            get
+            {
+                return _resolver ?? (_resolver = new ApplicationThemeResourceResolver(this.GetType().Assembly));
+            }
+            protected set { _resolver = value; }
+        }
 
         public abstract bool IsSelectedByDefault(string modality);
 

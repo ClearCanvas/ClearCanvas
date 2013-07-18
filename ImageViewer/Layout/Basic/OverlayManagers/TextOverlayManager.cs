@@ -22,6 +22,7 @@
 
 #endregion
 
+using ClearCanvas.Desktop;
 using ClearCanvas.ImageViewer.Annotations;
 
 namespace ClearCanvas.ImageViewer.Layout.Basic.OverlayManagers
@@ -31,6 +32,7 @@ namespace ClearCanvas.ImageViewer.Layout.Basic.OverlayManagers
         public TextOverlayManager()
             : base(SR.NameTextOverlay, SR.NameTextOverlay)
         {
+            IconSet = new IconSet("Icons.TextOverlayToolSmall.png", "Icons.TextOverlayToolMedium.png", "Icons.TextOverlayToolLarge.png");
         }
 
         public override bool IsSelectedByDefault(string modality)

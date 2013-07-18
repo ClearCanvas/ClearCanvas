@@ -24,6 +24,7 @@
 
 using System.Drawing;
 using ClearCanvas.Common.Utilities;
+using ClearCanvas.Desktop;
 using ClearCanvas.ImageViewer.Graphics;
 using ClearCanvas.ImageViewer.Imaging;
 
@@ -34,6 +35,7 @@ namespace ClearCanvas.ImageViewer.Layout.Basic.OverlayManagers
         public ColorBarManager()
             : base(SR.NameColourBarOverlay, SR.NameColourBarOverlay)
         {
+            IconSet = new IconSet("Icons.ColorBarToolSmall.png", "Icons.ColorBarToolMedium.png", "Icons.ColorBarToolLarge.png");
         }
 
         public override bool IsSelectedByDefault(string modality)

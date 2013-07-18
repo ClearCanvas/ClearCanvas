@@ -22,8 +22,10 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
                 Name = source.Name;
                 DisplayName = source.DisplayName;
                 IsSelected = source.IsSelected;
+                IconSet = source.IconSet;
             }
 
+            public IconSet IconSet { get; private set; }
             public string Name { get; private set; }
             public string DisplayName { get; private set; }
             public bool IsSelected { get; set; }

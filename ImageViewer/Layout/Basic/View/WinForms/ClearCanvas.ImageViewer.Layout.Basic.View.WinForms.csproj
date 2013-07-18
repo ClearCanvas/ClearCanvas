@@ -105,6 +105,12 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>SR.resx</DependentUpon>
     </Compile>
+    <Compile Include="IconCheckBox.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="IconCheckBox.Designer.cs">
+      <DependentUpon>IconCheckBox.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\..\Common\ClearCanvas.Common.csproj">
@@ -147,6 +153,9 @@
       <SubType>Designer</SubType>
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>SR.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="IconCheckBox.resx">
+      <DependentUpon>IconCheckBox.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

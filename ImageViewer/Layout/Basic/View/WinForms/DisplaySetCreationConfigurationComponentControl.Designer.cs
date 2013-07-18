@@ -74,13 +74,13 @@ namespace ClearCanvas.ImageViewer.Layout.Basic.View.WinForms
             this._showOriginalMixedMultiframeSeries = new System.Windows.Forms.CheckBox();
             this._splitEchos = new System.Windows.Forms.CheckBox();
             this._showOriginalMultiEchoSeries = new System.Windows.Forms.CheckBox();
-            this._splittingGroup = new System.Windows.Forms.GroupBox();
             this._selectedOverlaysGroupBox = new System.Windows.Forms.GroupBox();
             this._overlaysPanel = new System.Windows.Forms.FlowLayoutPanel();
+            this._splittingGroup = new System.Windows.Forms.GroupBox();
             this._creationGroup.SuspendLayout();
             this._presentationGroupBox.SuspendLayout();
-            this._splittingGroup.SuspendLayout();
             this._selectedOverlaysGroupBox.SuspendLayout();
+            this._splittingGroup.SuspendLayout();
             this.SuspendLayout();
             // 
             // _createSingleImageDisplaySets
@@ -167,16 +167,6 @@ namespace ClearCanvas.ImageViewer.Layout.Basic.View.WinForms
             this._tooltip.SetToolTip(this._showOriginalMultiEchoSeries, resources.GetString("_showOriginalMultiEchoSeries.ToolTip"));
             this._showOriginalMultiEchoSeries.UseVisualStyleBackColor = true;
             // 
-            // _splittingGroup
-            // 
-            this._splittingGroup.Controls.Add(this._showOriginalMultiEchoSeries);
-            this._splittingGroup.Controls.Add(this._splitEchos);
-            this._splittingGroup.Controls.Add(this._showOriginalMixedMultiframeSeries);
-            this._splittingGroup.Controls.Add(this._splitMixedMultiframeSeries);
-            resources.ApplyResources(this._splittingGroup, "_splittingGroup");
-            this._splittingGroup.Name = "_splittingGroup";
-            this._splittingGroup.TabStop = false;
-            // 
             // _selectedOverlaysGroupBox
             // 
             this._selectedOverlaysGroupBox.Controls.Add(this._overlaysPanel);
@@ -189,6 +179,16 @@ namespace ClearCanvas.ImageViewer.Layout.Basic.View.WinForms
             // 
             resources.ApplyResources(this._overlaysPanel, "_overlaysPanel");
             this._overlaysPanel.Name = "_overlaysPanel";
+            // 
+            // _splittingGroup
+            // 
+            this._splittingGroup.Controls.Add(this._showOriginalMultiEchoSeries);
+            this._splittingGroup.Controls.Add(this._splitEchos);
+            this._splittingGroup.Controls.Add(this._showOriginalMixedMultiframeSeries);
+            this._splittingGroup.Controls.Add(this._splitMixedMultiframeSeries);
+            resources.ApplyResources(this._splittingGroup, "_splittingGroup");
+            this._splittingGroup.Name = "_splittingGroup";
+            this._splittingGroup.TabStop = false;
             // 
             // DisplaySetCreationConfigurationComponentControl
             // 
@@ -205,9 +205,9 @@ namespace ClearCanvas.ImageViewer.Layout.Basic.View.WinForms
             this._creationGroup.PerformLayout();
             this._presentationGroupBox.ResumeLayout(false);
             this._presentationGroupBox.PerformLayout();
+            this._selectedOverlaysGroupBox.ResumeLayout(false);
             this._splittingGroup.ResumeLayout(false);
             this._splittingGroup.PerformLayout();
-            this._selectedOverlaysGroupBox.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 

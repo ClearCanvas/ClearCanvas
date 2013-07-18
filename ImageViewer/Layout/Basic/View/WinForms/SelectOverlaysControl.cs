@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using ClearCanvas.Desktop;
 
 namespace ClearCanvas.ImageViewer.Layout.Basic.View.WinForms
 {
@@ -25,7 +26,19 @@ namespace ClearCanvas.ImageViewer.Layout.Basic.View.WinForms
             foreach (var overlayItem in action.Items)
             {
                 var item = overlayItem;
-                var check = new CheckBox {Checked = overlayItem.IsSelected, Enabled = action.Enabled, Text = item.DisplayName};
+                var check = new IconCheckBox
+                                {
+                                    Checked = overlayItem.IsSelected, 
+                                    Enabled = action.Enabled, 
+                                    Text = item.DisplayName
+                                };
+
+                if (item.IconSet != null)
+                {
+                    var icon = item.IconSet.CreateIcon(IconSize.Small, action.ResourceResolver);
+                    check.Image = icon;
+                }
+
                 check.CheckedChanged += (sender, args) =>
                                             {
                                                 item.IsSelected = check.Checked;

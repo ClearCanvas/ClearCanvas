@@ -26,38 +26,35 @@ using System;
 using System.Drawing;
 using ClearCanvas.Common.Utilities;
 
-namespace ClearCanvas.Desktop.Configuration.ActionModel
+namespace ClearCanvas.Desktop.Actions
 {
 	/// <summary>
 	/// Represents a set of icon resources that specify the same logical icon in different sizes with an overlay to indicate that the action is unavailable.
 	/// </summary>
 	public sealed class UnavailableActionIconSet : IconSet
 	{
-		/// <summary>
+	    private readonly IconSet _grayIconSet = new IconSet("Icons.UnavailableToolOverlayGraySmall.png", "Icons.UnavailableToolOverlayGrayMedium.png", "Icons.UnavailableToolOverlayGrayLarge.png");
+	    private readonly IconSet _redIconSet = new IconSet("Icons.UnavailableToolOverlaySmall.png", "Icons.UnavailableToolOverlayMedium.png", "Icons.UnavailableToolOverlayLarge.png");
+		
+        /// <summary>
 		/// Constructor.
 		/// </summary>
 		/// <param name="baseIconSet">A template <see cref="IconSet"/> from which to copy resource names.</param>
 		public UnavailableActionIconSet(IconSet baseIconSet)
-			: base(baseIconSet.SmallIcon, baseIconSet.MediumIcon, baseIconSet.LargeIcon) {}
+			: base(baseIconSet.SmallIcon, baseIconSet.MediumIcon, baseIconSet.LargeIcon)
+		{
+		}
 
-		/// <summary>
-		/// Gets the appropriate icon overlay resource name to indicate an unavailable action.
-		/// </summary>
-		/// <param name="iconSize">The desired version of the icon overlay.</param>
-		/// <returns>The requested icon overlay as an <see cref="Image"/>.</returns>
+        /// <summary>
+        /// Specifies whether or not to render the "unavailable" overlay gray, rather than the default red.
+        /// </summary>
+        public bool GrayMode { get; set; }
+
 		private Image GetOverlayIcon(IconSize iconSize)
 		{
 			var resourceResolver = new ApplicationThemeResourceResolver(GetType().Assembly);
-			switch (iconSize)
-			{
-				case IconSize.Small:
-					return new Bitmap(resourceResolver.OpenResource("Icons.UnavailableToolOverlaySmall.png"));
-				case IconSize.Medium:
-					return new Bitmap(resourceResolver.OpenResource("Icons.UnavailableToolOverlayMedium.png"));
-				case IconSize.Large:
-				default:
-					return new Bitmap(resourceResolver.OpenResource("Icons.UnavailableToolOverlayLarge.png"));
-			}
+		    var overlayIconSet = GrayMode ? _grayIconSet : _redIconSet;
+            return overlayIconSet.CreateIcon(iconSize, resourceResolver);
 		}
 
 		/// <summary>
@@ -97,4 +94,4 @@ namespace ClearCanvas.Desktop.Configuration.ActionModel
 			return string.Format("{0}:unavailable", baseIconKey);
 		}
 	}
-}
+};

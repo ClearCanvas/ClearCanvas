@@ -22,15 +22,10 @@
 
 #endregion
 
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
-using System.Data;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
-using System.Windows.Forms.Design;
+using ClearCanvas.Desktop;
 using ClearCanvas.Desktop.View.WinForms;
 
 namespace ClearCanvas.ImageViewer.Layout.Basic.View.WinForms
@@ -80,20 +75,14 @@ namespace ClearCanvas.ImageViewer.Layout.Basic.View.WinForms
 
 			_invertImages.DataBindings.Add("Checked", _bindingSource, "ShowGrayscaleInverted", false, DataSourceUpdateMode.OnPropertyChanged);
 			_invertImages.DataBindings.Add("Enabled", _bindingSource, "ShowGrayscaleInvertedEnabled", false, DataSourceUpdateMode.OnPropertyChanged);
-
-            for (int i = 0; i < 10; i++)
-                AddOverlayCheckBox();
             
             SetOverlayItems();
-            _bindingSource.CurrentItemChanged += (sender, args) =>
-                                                     {
-                                                         SetOverlayItems();
-                                                     };
+            _bindingSource.CurrentItemChanged += (sender, args) => SetOverlayItems();
 		}
 
-        private CheckBox AddOverlayCheckBox()
+        private IconCheckBox AddOverlayCheckBox()
         {
-            var check = new CheckBox();
+            var check = new IconCheckBox(){Margin = new Padding(3,2,3,2)};
             check.CheckedChanged += (sender, args) => ((OverlaySelectionSetting)check.Tag).IsSelected = check.Checked;
             _overlaysPanel.Controls.Add(check);
             return check;
@@ -110,18 +99,24 @@ namespace ClearCanvas.ImageViewer.Layout.Basic.View.WinForms
                 while (_overlaysPanel.Controls.Count > applicableOverlays.Count)
                 {
                     var last = _overlaysPanel.Controls[_overlaysPanel.Controls.Count - 1];
-                    last.Dispose();
+                    last.Dispose(); //automatically removes itself.
                 }
 
                 for(int i = 0; i < applicableOverlays.Count; ++i)
                 {
-                    CheckBox checkBox;
+                    IconCheckBox checkBox;
                     if (_overlaysPanel.Controls.Count > i)
-                        checkBox = (CheckBox) _overlaysPanel.Controls[i];
+                        checkBox = (IconCheckBox)_overlaysPanel.Controls[i];
                     else
                         checkBox = AddOverlayCheckBox();
 
                     var overlay = applicableOverlays[i];
+                    Image icon = null;
+                    var manager = OverlayHelper.OverlayManagers.FirstOrDefault(m => m.Name == overlay.Name);
+                    if (manager != null && manager.IconSet != null)
+                        icon = manager.IconSet.CreateIcon(IconSize.Small, manager.ResourceResolver);
+
+                    checkBox.Image = icon;
                     checkBox.Tag = overlay;
                     checkBox.Name = overlay.Name;
                     checkBox.Text = overlay.DisplayName;
