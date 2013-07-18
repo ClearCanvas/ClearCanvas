@@ -5,34 +5,10 @@ namespace ClearCanvas.ImageViewer.Layout.Basic.View.WinForms
 {
     public partial class SelectOverlaysControl2 : UserControl
     {
-        private class Item
-        {
-            private readonly SelectOverlaysAction.Item _overlayItem;
-
-            public Item(SelectOverlaysAction.Item overlayItem)
-            {
-                _overlayItem = overlayItem;
-            }
-
-            public string Name { get { return _overlayItem.Name; } }
-            public bool IsSelected
-            {
-                get { return _overlayItem.IsSelected; }
-                set { _overlayItem.IsSelected = value; }
-            }
-
-            public override string ToString()
-            {
-                return _overlayItem.DisplayName;
-            }
-        }
-
         public SelectOverlaysControl2(SelectOverlaysAction action, Action close)
         {
             InitializeComponent();
 
-            _listOverlays.Sorted = false;
-            _listOverlays.Enabled = action.Enabled;
             _applyToAll.Enabled = action.Enabled;
 
             _close.Click += (sender, args) =>
@@ -47,16 +23,17 @@ namespace ClearCanvas.ImageViewer.Layout.Basic.View.WinForms
                                      };
 
             foreach (var overlayItem in action.Items)
-                _listOverlays.Items.Add(new Item(overlayItem), overlayItem.IsSelected);
-
-            _listOverlays.ItemCheck += (s, args) =>
             {
-                var item = (Item)_listOverlays.Items[args.Index];
-                item.IsSelected = args.NewValue == CheckState.Checked;
+                var item = overlayItem;
+                var check = new CheckBox {Checked = overlayItem.IsSelected, Enabled = action.Enabled, Text = item.DisplayName};
+                check.CheckedChanged += (sender, args) =>
+                                            {
+                                                item.IsSelected = check.Checked;
+                                                action.Apply();
+                                            };
                 
-                //Apply for each check
-                action.Apply();
-            };
+                _overlaysPanel.Controls.Add(check);
+            }
         }
     }
 }
