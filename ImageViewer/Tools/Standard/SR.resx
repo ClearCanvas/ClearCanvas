@@ -604,9 +604,6 @@ Please check the log for more details.</value>
   <data name="TooltipTextArea" xml:space="preserve">
     <value>Text Area</value>
   </data>
-  <data name="TooltipTextOverlay" xml:space="preserve">
-    <value>Text Overlay</value>
-  </data>
   <data name="CommandDeleteAllAnnotations" xml:space="preserve">
     <value>Delete All Annotations</value>
   </data>
@@ -725,9 +722,6 @@ Please check the log for more details.</value>
   <data name="MenuWindowLevelPresetList" xml:space="preserve">
     <value>(List of Window/Level Presets)</value>
     <comment>Window (W) and Level (L), i.e. the width and center of the window used to enhance the contrast of a subrange of pixel values</comment>
-  </data>
-  <data name="MenuColorBar" xml:space="preserve">
-    <value>&amp;Colour Bar</value>
   </data>
   <data name="FormatCoordinates" xml:space="preserve">
     <value>x={0}, y={1}</value>

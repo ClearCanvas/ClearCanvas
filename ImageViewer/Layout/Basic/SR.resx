@@ -195,7 +195,7 @@ PLEASE NOTE that you will NOT be notified of this problem again for as long as t
 PLEASE NOTE that you will NOT be notified of this problem again for as long as this problem persists.</value>
   </data>
   <data name="NameColourBarOverlay" xml:space="preserve">
-    <value>Colour Bar</value>
+    <value>Color Bar</value>
   </data>
   <data name="NameDicomOverlay" xml:space="preserve">
     <value>DICOM</value>
