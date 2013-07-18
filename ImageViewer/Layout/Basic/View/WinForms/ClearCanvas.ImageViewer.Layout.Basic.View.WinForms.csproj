@@ -100,18 +100,6 @@
     <Compile Include="SelectOverlaysControl.Designer.cs">
       <DependentUpon>SelectOverlaysControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="SelectOverlaysControl2.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="SelectOverlaysControl2.Designer.cs">
-      <DependentUpon>SelectOverlaysControl2.cs</DependentUpon>
-    </Compile>
-    <Compile Include="SelectOverlaysToolstripItem.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="SelectOverlaysToolstripItem.Designer.cs">
-      <DependentUpon>SelectOverlaysToolstripItem.cs</DependentUpon>
-    </Compile>
     <Compile Include="SR.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -154,9 +142,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="SelectOverlaysControl.resx">
       <DependentUpon>SelectOverlaysControl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="SelectOverlaysControl2.resx">
-      <DependentUpon>SelectOverlaysControl2.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SR.resx">
       <SubType>Designer</SubType>
