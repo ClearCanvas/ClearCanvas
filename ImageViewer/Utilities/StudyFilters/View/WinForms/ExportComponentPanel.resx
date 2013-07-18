@@ -151,7 +151,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;_studyDescription.ZOrder" xml:space="preserve">
-    <value>4</value>
+    <value>5</value>
   </data>
   <data name="_patientId.LabelText" xml:space="preserve">
     <value>Patient ID</value>
@@ -184,7 +184,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;_patientId.ZOrder" xml:space="preserve">
-    <value>5</value>
+    <value>6</value>
   </data>
   <data name="_accessionNumber.LabelText" xml:space="preserve">
     <value>Accession Number</value>
@@ -217,7 +217,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;_accessionNumber.ZOrder" xml:space="preserve">
-    <value>6</value>
+    <value>7</value>
   </data>
   <data name="_patientsName.LabelText" xml:space="preserve">
     <value>Patient's Name</value>
@@ -250,7 +250,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;_patientsName.ZOrder" xml:space="preserve">
-    <value>7</value>
+    <value>8</value>
   </data>
   <data name="_dateOfBirth.LabelText" xml:space="preserve">
     <value>Date of Birth</value>
@@ -277,7 +277,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;_dateOfBirth.ZOrder" xml:space="preserve">
-    <value>8</value>
+    <value>9</value>
   </data>
   <data name="_studyDate.LabelText" xml:space="preserve">
     <value>Study Date</value>
@@ -304,13 +304,10 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;_studyDate.ZOrder" xml:space="preserve">
-    <value>9</value>
-  </data>
-  <data name="_cancelButton.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
-    <value>Bottom, Right</value>
+    <value>10</value>
   </data>
   <data name="_cancelButton.Location" type="System.Drawing.Point, System.Drawing">
-    <value>172, 463</value>
+    <value>169, 3</value>
   </data>
   <data name="_cancelButton.Size" type="System.Drawing.Size, System.Drawing">
     <value>75, 23</value>
@@ -328,16 +325,13 @@
     <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;_cancelButton.Parent" xml:space="preserve">
-    <value>$this</value>
+    <value>_lyoButtonPane</value>
   </data>
   <data name="&gt;&gt;_cancelButton.ZOrder" xml:space="preserve">
-    <value>10</value>
-  </data>
-  <data name="_okButton.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
-    <value>Bottom, Right</value>
+    <value>0</value>
   </data>
   <data name="_okButton.Location" type="System.Drawing.Point, System.Drawing">
-    <value>91, 463</value>
+    <value>88, 3</value>
   </data>
   <data name="_okButton.Size" type="System.Drawing.Size, System.Drawing">
     <value>75, 23</value>
@@ -355,10 +349,10 @@
     <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;_okButton.Parent" xml:space="preserve">
-    <value>$this</value>
+    <value>_lyoButtonPane</value>
   </data>
   <data name="&gt;&gt;_okButton.ZOrder" xml:space="preserve">
-    <value>11</value>
+    <value>1</value>
   </data>
   <data name="_studyId.LabelText" xml:space="preserve">
     <value>Study ID</value>
@@ -391,7 +385,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;_studyId.ZOrder" xml:space="preserve">
-    <value>3</value>
+    <value>4</value>
   </data>
   <data name="_browse.Location" type="System.Drawing.Point, System.Drawing">
     <value>186, 365</value>
@@ -415,7 +409,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;_browse.ZOrder" xml:space="preserve">
-    <value>2</value>
+    <value>3</value>
   </data>
   <data name="_outputPath.Location" type="System.Drawing.Point, System.Drawing">
     <value>17, 365</value>
@@ -436,7 +430,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;_outputPath.ZOrder" xml:space="preserve">
-    <value>1</value>
+    <value>2</value>
   </data>
   <data name="label1.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -463,7 +457,52 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;label1.ZOrder" xml:space="preserve">
-    <value>12</value>
+    <value>11</value>
+  </data>
+  <data name="&gt;&gt;label2.Name" xml:space="preserve">
+    <value>label2</value>
+  </data>
+  <data name="&gt;&gt;label2.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;label2.Parent" xml:space="preserve">
+    <value>panel1</value>
+  </data>
+  <data name="&gt;&gt;label2.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;panel2.Name" xml:space="preserve">
+    <value>panel2</value>
+  </data>
+  <data name="&gt;&gt;panel2.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;panel2.Parent" xml:space="preserve">
+    <value>panel1</value>
+  </data>
+  <data name="&gt;&gt;panel2.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="panel1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>15, 391</value>
+  </data>
+  <data name="panel1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>229, 66</value>
+  </data>
+  <data name="panel1.TabIndex" type="System.Int32, mscorlib">
+    <value>13</value>
+  </data>
+  <data name="&gt;&gt;panel1.Name" xml:space="preserve">
+    <value>panel1</value>
+  </data>
+  <data name="&gt;&gt;panel1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;panel1.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;panel1.ZOrder" xml:space="preserve">
+    <value>1</value>
   </data>
   <data name="label2.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Fill</value>
@@ -519,25 +558,34 @@
   <data name="&gt;&gt;panel2.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
-  <data name="panel1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>15, 391</value>
+  <data name="_lyoButtonPane.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Bottom</value>
   </data>
-  <data name="panel1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>229, 66</value>
+  <data name="_lyoButtonPane.FlowDirection" type="System.Windows.Forms.FlowDirection, System.Windows.Forms">
+    <value>RightToLeft</value>
   </data>
-  <data name="panel1.TabIndex" type="System.Int32, mscorlib">
-    <value>13</value>
+  <data name="_lyoButtonPane.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 460</value>
   </data>
-  <data name="&gt;&gt;panel1.Name" xml:space="preserve">
-    <value>panel1</value>
+  <data name="_lyoButtonPane.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 0, 17, 0</value>
   </data>
-  <data name="&gt;&gt;panel1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="_lyoButtonPane.Size" type="System.Drawing.Size, System.Drawing">
+    <value>264, 40</value>
   </data>
-  <data name="&gt;&gt;panel1.Parent" xml:space="preserve">
+  <data name="_lyoButtonPane.TabIndex" type="System.Int32, mscorlib">
+    <value>14</value>
+  </data>
+  <data name="&gt;&gt;_lyoButtonPane.Name" xml:space="preserve">
+    <value>_lyoButtonPane</value>
+  </data>
+  <data name="&gt;&gt;_lyoButtonPane.Type" xml:space="preserve">
+    <value>System.Windows.Forms.FlowLayoutPanel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_lyoButtonPane.Parent" xml:space="preserve">
     <value>$this</value>
   </data>
-  <data name="&gt;&gt;panel1.ZOrder" xml:space="preserve">
+  <data name="&gt;&gt;_lyoButtonPane.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
