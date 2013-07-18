@@ -22,6 +22,7 @@ namespace ClearCanvas.ImageViewer.Layout.Basic.View.WinForms
                 {
                     var action = (SelectOverlaysAction)base.Context.Action;
                     var control = new SelectOverlaysControl(action, CloseToolstrip){BackColor = Color.Transparent};
+                    //Seems we have to put the control inside a panel in order for it to be sized properly.
                     var panel = new Panel
                     { 
                         AutoSize = false,

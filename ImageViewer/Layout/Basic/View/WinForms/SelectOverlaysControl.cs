@@ -10,6 +10,8 @@ namespace ClearCanvas.ImageViewer.Layout.Basic.View.WinForms
         {
             InitializeComponent();
 
+            SuspendLayout();
+
             _applyToAll.Enabled = action.Enabled;
 
             _close.Click += (sender, args) =>
@@ -47,6 +49,8 @@ namespace ClearCanvas.ImageViewer.Layout.Basic.View.WinForms
                 
                 _overlaysPanel.Controls.Add(check);
             }
+
+            ResumeLayout();
         }
     }
 }
