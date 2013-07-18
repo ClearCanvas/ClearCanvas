@@ -128,9 +128,6 @@
   <data name="_studyDescription.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>2, 2, 2, 2</value>
   </data>
-  <data name="_studyDescription.Mask" xml:space="preserve">
-    <value />
-  </data>
   <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="_studyDescription.PasswordChar" type="System.Char, mscorlib" xml:space="preserve">
     <value />
@@ -165,9 +162,6 @@
   <data name="_patientId.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>2, 2, 2, 2</value>
   </data>
-  <data name="_patientId.Mask" xml:space="preserve">
-    <value />
-  </data>
   <data name="_patientId.PasswordChar" type="System.Char, mscorlib" xml:space="preserve">
     <value />
   </data>
@@ -201,9 +195,6 @@
   <data name="_accessionNumber.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>2, 2, 2, 2</value>
   </data>
-  <data name="_accessionNumber.Mask" xml:space="preserve">
-    <value />
-  </data>
   <data name="_accessionNumber.PasswordChar" type="System.Char, mscorlib" xml:space="preserve">
     <value />
   </data>
@@ -236,9 +227,6 @@
   </data>
   <data name="_patientsName.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>2, 2, 2, 2</value>
-  </data>
-  <data name="_patientsName.Mask" xml:space="preserve">
-    <value />
   </data>
   <data name="_patientsName.PasswordChar" type="System.Char, mscorlib" xml:space="preserve">
     <value />
@@ -318,6 +306,9 @@
   <data name="&gt;&gt;_studyDate.ZOrder" xml:space="preserve">
     <value>9</value>
   </data>
+  <data name="_cancelButton.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Bottom, Right</value>
+  </data>
   <data name="_cancelButton.Location" type="System.Drawing.Point, System.Drawing">
     <value>172, 463</value>
   </data>
@@ -341,6 +332,9 @@
   </data>
   <data name="&gt;&gt;_cancelButton.ZOrder" xml:space="preserve">
     <value>10</value>
+  </data>
+  <data name="_okButton.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Bottom, Right</value>
   </data>
   <data name="_okButton.Location" type="System.Drawing.Point, System.Drawing">
     <value>91, 463</value>
@@ -374,9 +368,6 @@
   </data>
   <data name="_studyId.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>2, 2, 2, 2</value>
-  </data>
-  <data name="_studyId.Mask" xml:space="preserve">
-    <value />
   </data>
   <data name="_studyId.PasswordChar" type="System.Char, mscorlib" xml:space="preserve">
     <value />
