@@ -68,7 +68,10 @@ namespace ClearCanvas.Ris.Shreds.Publication
 			var actionType = item.ExtendedProperties["ActionType"];
 			var action = (IPublicationAction)new PublicationActionExtensionPoint().CreateExtension(new ClassNameExtensionFilter(actionType));
 
-			if (error == null || item.FailureCount > action.RetryCount)
+			if (error == null)
+				return base.ShouldReschedule(item, null, out rescheduleTime);
+
+			if (action.RetryCount >= 0 && item.FailureCount > action.RetryCount)
 				return base.ShouldReschedule(item, null, out rescheduleTime);
 
 			//todo: should we retry? things might end up being processed out of order
