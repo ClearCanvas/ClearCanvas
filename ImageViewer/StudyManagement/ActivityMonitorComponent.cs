@@ -549,6 +549,8 @@ namespace ClearCanvas.ImageViewer.StudyManagement
                 
                 if (PermissionsHelper.IsInRole(AuthorityTokens.ActivityMonitor.WorkItems.Prioritize))
                     this.StatAction = AddAction("stat", SR.MenuStatWorkItem, "StatToolSmall.png", SR.TooltipStatWorkItem, StatSelectedWorkItems);
+
+				UpdateActionEnablement();
 			}
 
 			public IList<long> SelectedWorkItemIDs
