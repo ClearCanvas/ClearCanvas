@@ -77,10 +77,10 @@ namespace ClearCanvas.Ris.Shreds.Publication {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("5")]
-        public int FailedItemRetryCount {
+        [global::System.Configuration.DefaultSettingValueAttribute("-1")]
+        public int HL7FailedItemRetryCount {
             get {
-                return ((int)(this["FailedItemRetryCount"]));
+                return ((int)(this["HL7FailedItemRetryCount"]));
             }
         }
     }

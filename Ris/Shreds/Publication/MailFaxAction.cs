@@ -45,6 +45,11 @@ namespace ClearCanvas.Ris.Shreds.Publication
 			get { return false; }
 		}
 
+		public int RetryCount
+		{
+			get { return -1; }
+		}
+
 		public void Execute(ReportPart reportPart, IPersistenceContext context)
 		{
 			var order = reportPart.Report.Procedures.First().Order;

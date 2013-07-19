@@ -37,20 +37,17 @@ namespace ClearCanvas.Ris.Shreds.Publication
 	public class PublicationActionProcessor : WorkQueueProcessor
 	{
 		private readonly TimeSpan _failedItemRetryDelay;
-		private readonly int _failedItemRetryCount;
 
 		internal PublicationActionProcessor(PublicationShredSettings settings)
 			: base(settings.BatchSize, TimeSpan.FromSeconds(settings.EmptyQueueSleepTime))
 		{
 			_failedItemRetryDelay = TimeSpan.FromSeconds(settings.FailedItemRetryDelay);
-			_failedItemRetryCount = settings.FailedItemRetryCount;
 		}
 
 		#region WorkQueueProcessor overrides
 
 		protected override void ActOnItem(WorkQueueItem item)
 		{
-
 			var actionType = item.ExtendedProperties["ActionType"];
 			var action = (IPublicationAction)new PublicationActionExtensionPoint().CreateExtension(new ClassNameExtensionFilter(actionType));
 			var reportPartRef = new EntityRef(item.ExtendedProperties["ReportPartRef"]);
@@ -68,7 +65,10 @@ namespace ClearCanvas.Ris.Shreds.Publication
 
 		protected override bool ShouldReschedule(WorkQueueItem item, Exception error, out DateTime rescheduleTime)
 		{
-			if (error == null || item.FailureCount > _failedItemRetryCount)
+			var actionType = item.ExtendedProperties["ActionType"];
+			var action = (IPublicationAction)new PublicationActionExtensionPoint().CreateExtension(new ClassNameExtensionFilter(actionType));
+
+			if (error == null || item.FailureCount > action.RetryCount)
 				return base.ShouldReschedule(item, null, out rescheduleTime);
 
 			//todo: should we retry? things might end up being processed out of order

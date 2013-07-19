@@ -41,6 +41,7 @@ namespace ClearCanvas.Ris.Shreds.Publication
 	public interface IPublicationAction
 	{
 		bool Enabled { get; }
+		int RetryCount { get; }
 		void Execute(ReportPart reportPart, IPersistenceContext context);
 	}
 
