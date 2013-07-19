@@ -425,7 +425,7 @@ namespace ClearCanvas.Utilities.DicomEditor {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Invalid destination. You cannot save directly to the Local File Store. Please save to another directory, then import the file(s) from that location..
+        ///   Looks up a localized string similar to Invalid destination. You cannot save directly to the file store. Please save to another directory, then import the file(s) from that location..
         /// </summary>
         internal static string MessageFileStoreNotValidSaveLocation {
             get {

@@ -341,7 +341,7 @@ NOTE: If any of the edited files are open in the Study Filters, it should be clo
     <value>All Files (*.*)</value>
   </data>
   <data name="MessageFileStoreNotValidSaveLocation" xml:space="preserve">
-    <value>Invalid destination. You cannot save directly to the Local File Store. Please save to another directory, then import the file(s) from that location.</value>
+    <value>Invalid destination. You cannot save directly to the file store. Please save to another directory, then import the file(s) from that location.</value>
   </data>
   <data name="MessageOutputFolderNotEmptyConfirmOverwriteFiles" xml:space="preserve">
     <value>The selected directory is not empty. Any existing files with conflicting filenames will be overwritten. Do you wish to continue?</value>
