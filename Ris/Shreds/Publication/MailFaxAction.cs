@@ -40,6 +40,11 @@ namespace ClearCanvas.Ris.Shreds.Publication
 	{
 		#region IPublicationAction Members
 
+		public bool Enabled
+		{
+			get { return false; }
+		}
+
 		public void Execute(ReportPart reportPart, IPersistenceContext context)
 		{
 			var order = reportPart.Report.Procedures.First().Order;
