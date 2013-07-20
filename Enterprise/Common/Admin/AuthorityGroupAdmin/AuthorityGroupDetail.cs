@@ -59,5 +59,10 @@ namespace ClearCanvas.Enterprise.Common.Admin.AuthorityGroupAdmin
 
         [DataMember]
         public bool DataGroup;
+
+    	public AuthorityGroupSummary GetSummary()
+    	{
+    		return new AuthorityGroupSummary(AuthorityGroupRef, Name, Description, DataGroup);
+    	}
     }
 }
