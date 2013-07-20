@@ -88,5 +88,23 @@ namespace ClearCanvas.Enterprise.Common.Admin.UserAdmin
 
         [DataMember]
         public string EmailAddress;
+
+		[DataMember]
+		public int SessionCount;
+
+    	public UserSummary GetSummary()
+    	{
+    		return new UserSummary(
+				UserName,
+				DisplayName,
+				EmailAddress,
+				CreationTime,
+				ValidFrom,
+				ValidUntil,
+				LastLoginTime,
+				PasswordExpiryTime,
+				Enabled,
+				SessionCount);
+    	}
     }
 }

@@ -86,7 +86,8 @@ namespace ClearCanvas.Enterprise.Common.Admin.UserAdmin
         /// <param name="request"><see cref="LoadUserForEditRequest"/></param>
         /// <returns><see cref="LoadUserForEditResponse"/></returns>
         [OperationContract]
-        LoadUserForEditResponse LoadUserForEdit(LoadUserForEditRequest request);
+		[FaultContract(typeof(RequestValidationException))]
+		LoadUserForEditResponse LoadUserForEdit(LoadUserForEditRequest request);
 
 		/// <summary>
 		/// List active sessions for a specified user account.
