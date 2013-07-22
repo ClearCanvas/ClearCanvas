@@ -29,30 +29,63 @@ using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Desktop;
 using ClearCanvas.Desktop.Actions;
-using ClearCanvas.Desktop.Configuration.ActionModel;
 using ClearCanvas.ImageViewer.BaseTools;
 
 namespace ClearCanvas.ImageViewer.Layout.Basic
 {
+    [ActionFormerly("dropdown", "ClearCanvas.ImageViewer.Tools.Standard.ShowHideOverlaysTool:dropdown")]
     [DropDownButtonAction("dropdown", "global-toolbars/ToolbarStandard/ToolbarShowHideOverlays", "ToggleAll", "DropDownActionModel", KeyStroke = XKeys.O)]
     [TooltipValueObserver("dropdown", "Tooltip", "TooltipChanged")]
 	[GroupHint("dropdown", "Tools.Image.Overlays.Text.ShowHide")]
     [IconSetObserver("dropdown", "IconSet", "IconSetChanged")]
-    [ActionFormerly("dropdown", "ClearCanvas.ImageViewer.Tools.Standard.ShowHideOverlaysTool")]
     [ExtensionOf(typeof(ImageViewerToolExtensionPoint))]
 	public class ShowHideOverlaysTool : ImageViewerTool
 	{
         private readonly IconSet _selectedOverlaysVisible;
         private readonly IconSet _selectedOverlaysHidden;
+        private ActionSet _nilActions;
 
         public ShowHideOverlaysTool()
         {
             _selectedOverlaysVisible = new IconSet("Icons.ShowHideOverlaysToolSmall.png", "Icons.ShowHideOverlaysToolMedium.png", "Icons.ShowHideOverlaysToolLarge.png");
             _selectedOverlaysHidden = new UnavailableActionIconSet(_selectedOverlaysVisible){GrayMode = true};
             IconSet = _selectedOverlaysVisible;
+
+            try
+            {
+                new SelectOverlaysActionViewExtensionPoint().CreateExtension();
+                IsViewSupported = true;
+            }
+            catch (NotSupportedException)
+            {
+                IsViewSupported = false;
+            }
 		}
 
+        public static bool IsViewSupported { get; private set; }
+
         internal IImageViewer Viewer { get { return Context.Viewer; } }
+
+        public override IActionSet Actions
+        {
+            get
+            {
+                if (!IsViewSupported)
+                {
+                    if (_nilActions == null)
+                    {
+                        _nilActions = new ActionSet();
+                        base.Actions = _nilActions;
+                    }
+                }
+
+                return base.Actions;
+            }
+            protected set
+            {
+                base.Actions = value;
+            }
+        }
 
 		public ActionModelNode DropDownActionModel
 		{

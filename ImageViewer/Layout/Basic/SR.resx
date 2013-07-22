@@ -177,6 +177,21 @@
   <data name="MenuPreviousDisplaySet" xml:space="preserve">
     <value>Previous Display Set</value>
   </data>
+  <data name="MenuShowHideColorBar" xml:space="preserve">
+    <value>Show/Hide &amp;Colour Bar</value>
+  </data>
+  <data name="MenuShowHideDicomOverlay" xml:space="preserve">
+    <value>Show/Hide DICOM Overlay(s)</value>
+  </data>
+  <data name="MenuShowHideScaleOverlay" xml:space="preserve">
+    <value>Show/Hide Scale Overlay</value>
+  </data>
+  <data name="MenuShowHideShutterOverlay" xml:space="preserve">
+    <value>Show/Hide Shutter Overlay</value>
+  </data>
+  <data name="MenuShowHideTextOverlay" xml:space="preserve">
+    <value>Show/Hide Text Overlay</value>
+  </data>
   <data name="MenuStandard" xml:space="preserve">
     <value>Standard</value>
   </data>
@@ -227,6 +242,12 @@ PLEASE NOTE that you will NOT be notified of this problem again for as long as t
   <data name="ToolbarChangeLayout" xml:space="preserve">
     <value>Change Layout</value>
   </data>
+  <data name="ToolbarColorBar" xml:space="preserve">
+    <value>Colour Bar</value>
+  </data>
+  <data name="ToolbarDicomOverlay" xml:space="preserve">
+    <value>DICOM Overlay(s)</value>
+  </data>
   <data name="ToolbarExplodeImageBox" xml:space="preserve">
     <value>Survey/Explode</value>
   </data>
@@ -242,8 +263,17 @@ PLEASE NOTE that you will NOT be notified of this problem again for as long as t
   <data name="ToolbarPreviousDisplaySet" xml:space="preserve">
     <value>Previous Display Set</value>
   </data>
+  <data name="ToolbarScaleOverlay" xml:space="preserve">
+    <value>Scale Overlay</value>
+  </data>
   <data name="ToolbarShowHideOverlays" xml:space="preserve">
     <value>Show/Hide Overlays</value>
+  </data>
+  <data name="ToolbarShutterOverlay" xml:space="preserve">
+    <value>Shutter Overlay</value>
+  </data>
+  <data name="ToolbarTextOverlay" xml:space="preserve">
+    <value>Text Overlay</value>
   </data>
   <data name="TooltipChangeLayout" xml:space="preserve">
     <value>Change Layout</value>
@@ -259,6 +289,27 @@ PLEASE NOTE that you will NOT be notified of this problem again for as long as t
   </data>
   <data name="TooltipPreviousDisplaySet" xml:space="preserve">
     <value>Previous Display Set</value>
+  </data>
+  <data name="TooltipScaleOverlay" xml:space="preserve">
+    <value>Scale Overlay</value>
+  </data>
+  <data name="TooltipShowHideColorBar" xml:space="preserve">
+    <value>Show/Hide Colour Bar</value>
+  </data>
+  <data name="TooltipShowHideDicomOverlay" xml:space="preserve">
+    <value>Show/Hide DICOM Overlay(s)</value>
+  </data>
+  <data name="TooltipShowHideOverlays" xml:space="preserve">
+    <value>Show/Hide Overlays</value>
+  </data>
+  <data name="TooltipShowHideScaleOverlay" xml:space="preserve">
+    <value>Show/Hide Scale Overlay</value>
+  </data>
+  <data name="TooltipShowHideShutterOverlay" xml:space="preserve">
+    <value>Show/Hide Shutter Overlay</value>
+  </data>
+  <data name="TooltipShowHideTextOverlay" xml:space="preserve">
+    <value>Show/Hide Text Overlay</value>
   </data>
   <data name="TooltipShowOverlays" xml:space="preserve">
     <value>Show selected overlays</value>
