@@ -75,7 +75,12 @@ namespace ClearCanvas.Ris.Shreds.Publication {
             }
         }
         
+        /// <summary>
+        /// Number of retries before an item is marked as failed. Set to -1 to retry indefinitely.
+        /// </summary>
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.SettingsDescriptionAttribute("Number of retries before an item is marked as failed. Set to -1 to retry indefini" +
+            "tely.")]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("-1")]
         public int HL7FailedItemRetryCount {
