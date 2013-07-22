@@ -464,13 +464,20 @@ namespace ClearCanvas.Utilities.DicomEditor
 
 		public override bool PrepareExit()
 		{
+			// sanity check - if dirty flag was flipped for some reason, but user cannot save, don't let that stop user from closing application
 			if (_dirtyFlags.Any(f => f) && LicenseInformation.IsFeatureAuthorized(FeatureTokens.DicomEditing))
 			{
-				// sanity check - if dirty flag was flipped for some reason, but user cannot save, don't let that stop user from closing application
-				if (Host.ShowMessageBox(SR.MessageConfirmDiscardChangesBeforeClosing, MessageBoxActions.OkCancel) == DialogBoxAction.Cancel)
+				//BUG: #11343, #11344 - returning false from this doesn't work when the entire Workstation is being closed
+				//  so we'll just do Yes/No for now, and change back to Y/N/Cancel when it's fixed
+				switch (Host.ShowMessageBox(SR.MessageConfirmSaveChangesBeforeClosing, MessageBoxActions.YesNo))
 				{
-					// user has cancelled the "close" operation, therefore we can't exit
-					return false;
+					case DialogBoxAction.Yes:
+						return SaveAll(false);
+					case DialogBoxAction.No:
+						return true;
+					case DialogBoxAction.Cancel:
+					default:
+						return false;
 				}
 			}
 			return true;

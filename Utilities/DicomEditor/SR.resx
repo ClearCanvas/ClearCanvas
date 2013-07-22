@@ -334,8 +334,8 @@ NOTE: If any of the edited files are open in the Study Filters, it should be clo
   <data name="TitleQuickAnonymize" xml:space="preserve">
     <value>Quick Anonymize</value>
   </data>
-  <data name="MessageConfirmDiscardChangesBeforeClosing" xml:space="preserve">
-    <value>Data has been modified and changes will be lost. Discard changes and close?</value>
+  <data name="MessageConfirmSaveChangesBeforeClosing" xml:space="preserve">
+    <value>One or more files have been modified. Do you want to save the files now?</value>
   </data>
   <data name="LabelAllFiles" xml:space="preserve">
     <value>All Files (*.*)</value>
