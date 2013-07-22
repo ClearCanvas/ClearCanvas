@@ -14,5 +14,8 @@
     <Setting Name="HL7PublicationEnabled" Description="Specifies whether publication of reports to HL7 peers is enabled." Type="System.Boolean" Scope="Application">
       <Value Profile="(Default)">True</Value>
     </Setting>
+    <Setting Name="HL7FailedItemRetryCount" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">-1</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

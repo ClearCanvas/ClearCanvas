@@ -48,7 +48,6 @@ namespace ClearCanvas.Ris.Shreds.Publication
 
 		protected override void ActOnItem(WorkQueueItem item)
 		{
-
 			var actionType = item.ExtendedProperties["ActionType"];
 			var action = (IPublicationAction)new PublicationActionExtensionPoint().CreateExtension(new ClassNameExtensionFilter(actionType));
 			var reportPartRef = new EntityRef(item.ExtendedProperties["ReportPartRef"]);
@@ -66,7 +65,13 @@ namespace ClearCanvas.Ris.Shreds.Publication
 
 		protected override bool ShouldReschedule(WorkQueueItem item, Exception error, out DateTime rescheduleTime)
 		{
+			var actionType = item.ExtendedProperties["ActionType"];
+			var action = (IPublicationAction)new PublicationActionExtensionPoint().CreateExtension(new ClassNameExtensionFilter(actionType));
+
 			if (error == null)
+				return base.ShouldReschedule(item, null, out rescheduleTime);
+
+			if (action.RetryCount >= 0 && item.FailureCount > action.RetryCount)
 				return base.ShouldReschedule(item, null, out rescheduleTime);
 
 			//todo: should we retry? things might end up being processed out of order

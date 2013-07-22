@@ -38,9 +38,9 @@ namespace ClearCanvas.Ris.Client
 	/// <remarks>
 	/// Subclasses of this class should specify a <see cref="MenuActionAttribute"/> attribute with the Launch method as the clickHandler
 	/// </remarks>
-	public abstract class HomeTool : Tool<IDesktopToolContext> 
+	public abstract class HomeTool : Tool<IDesktopToolContext>
 	{
-		private IWorkspace _workspace;
+		protected virtual IWorkspace Workspace { get; set; }
 
 		/// <summary>
 		/// Title displayed when the home page is active
@@ -67,13 +67,13 @@ namespace ClearCanvas.Ris.Client
 		/// </summary>
 		public void Launch()
 		{
-			if (_workspace == null)
+			if (Workspace == null)
 			{
 				Open();
 			}
 			else
 			{
-				_workspace.Activate();
+				Workspace.Activate();
 			}
 		}
 
@@ -82,10 +82,10 @@ namespace ClearCanvas.Ris.Client
 		/// </summary>
 		protected void Restart()
 		{
-			if (_workspace != null)
+			if (Workspace != null)
 			{
-				_workspace.Close();
-				_workspace = null;
+				Workspace.Close();
+				Workspace = null;
 			}
 
 			Open();
@@ -101,10 +101,10 @@ namespace ClearCanvas.Ris.Client
 				{
 					WorkspaceCreationArgs args = new WorkspaceCreationArgs(component, this.Title, null);
 					args.UserClosable = this.IsUserClosableWorkspace;
-					_workspace = ApplicationComponent.LaunchAsWorkspace(this.Context.DesktopWindow, args);
-					_workspace.Closed += delegate
+					Workspace = ApplicationComponent.LaunchAsWorkspace(this.Context.DesktopWindow, args);
+					Workspace.Closed += delegate
 						{
-							_workspace = null;
+							Workspace = null;
 							FolderExplorerComponentSettings.Default.UserConfigurationSaved -= OnUserConfigurationSaved;
 						};
 

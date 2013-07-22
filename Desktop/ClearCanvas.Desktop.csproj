@@ -134,6 +134,7 @@
     <Compile Include="Configuration\SettingsManagementLaunchTool.cs" />
     <Compile Include="Configuration\Tools\ActionModelsTool.cs" />
     <Compile Include="IDesktopAlertContext.cs" />
+    <Compile Include="StockStartupActionTool.cs" />
     <Compile Include="Tables\ComboBoxCellEditor.cs" />
     <Compile Include="Configuration\ActionModel\AbstractActionModelTreeBranch.cs" />
     <Compile Include="Configuration\ActionModel\AbstractActionModelTreeLeafAction.cs" />

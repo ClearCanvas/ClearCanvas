@@ -115,6 +115,15 @@ namespace ClearCanvas.Utilities.DicomEditor {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to All Files (*.*).
+        /// </summary>
+        internal static string LabelAllFiles {
+            get {
+                return ResourceManager.GetString("LabelAllFiles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Anonymize.
         /// </summary>
         internal static string MenuAnonymizeStudy {
@@ -344,7 +353,7 @@ namespace ClearCanvas.Utilities.DicomEditor {
         /// <summary>
         ///   Looks up a localized string similar to The changes will be saved to *all* loaded files and the original files will be overwritten.  Are you sure you want to continue?
         ///
-        ///NOTE: If any of the edited files are from the local store, it should be re-indexed. If any of the edited files are open in the Study Filters, it should be closed. Otherwise, the edited values may appear unchanged..
+        ///NOTE: If any of the edited files are open in the Study Filters, it should be closed. Otherwise, the edited values may appear unchanged..
         /// </summary>
         internal static string MessageConfirmSaveAllFiles {
             get {
@@ -371,13 +380,11 @@ namespace ClearCanvas.Utilities.DicomEditor {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The changes will be saved to the loaded file and the original file will be overwritten. Are you sure you want to continue?
-        ///
-        ///NOTE: the edited file is from the local store so it should be re-indexed, otherwise the edited values may appear unchanged..
+        ///   Looks up a localized string similar to The changes will be saved to the loaded file and the original file will be overwritten. Are you sure you want to continue?.
         /// </summary>
-        internal static string MessageConfirmSaveSingleLocalFile {
+        internal static string MessageConfirmSaveSingleFile {
             get {
-                return ResourceManager.GetString("MessageConfirmSaveSingleLocalFile", resourceCulture);
+                return ResourceManager.GetString("MessageConfirmSaveSingleFile", resourceCulture);
             }
         }
         
@@ -418,6 +425,15 @@ namespace ClearCanvas.Utilities.DicomEditor {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Invalid destination. You cannot save directly to the file store. Please save to another directory, then import the file(s) from that location..
+        /// </summary>
+        internal static string MessageFileStoreNotValidSaveLocation {
+            get {
+                return ResourceManager.GetString("MessageFileStoreNotValidSaveLocation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to DICOM Dump operation failed.  The selected path did not contain any files..
         /// </summary>
         internal static string MessageNoFilesSelected {
@@ -432,6 +448,15 @@ namespace ClearCanvas.Utilities.DicomEditor {
         internal static string MessageNoTagsWereDeleted {
             get {
                 return ResourceManager.GetString("MessageNoTagsWereDeleted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The selected directory is not empty. Any existing files with conflicting filenames will be overwritten. Do you wish to continue?.
+        /// </summary>
+        internal static string MessageOutputFolderNotEmptyConfirmOverwriteFiles {
+            get {
+                return ResourceManager.GetString("MessageOutputFolderNotEmptyConfirmOverwriteFiles", resourceCulture);
             }
         }
         
@@ -459,6 +484,15 @@ namespace ClearCanvas.Utilities.DicomEditor {
         internal static string MessagePleaseSelectAnImage {
             get {
                 return ResourceManager.GetString("MessagePleaseSelectAnImage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select destination folder..
+        /// </summary>
+        internal static string MessageSelectDestinationFolder {
+            get {
+                return ResourceManager.GetString("MessageSelectDestinationFolder", resourceCulture);
             }
         }
         
@@ -553,6 +587,15 @@ namespace ClearCanvas.Utilities.DicomEditor {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Save As.
+        /// </summary>
+        internal static string TitleSaveAs {
+            get {
+                return ResourceManager.GetString("TitleSaveAs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Anonymize.
         /// </summary>
         internal static string ToolbarAnonymizeStudy {
@@ -634,6 +677,15 @@ namespace ClearCanvas.Utilities.DicomEditor {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Save As.
+        /// </summary>
+        internal static string ToolbarSaveAs {
+            get {
+                return ResourceManager.GetString("ToolbarSaveAs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Anonymize Selected Study.
         /// </summary>
         internal static string TooltipAnonymizeStudy {
@@ -706,11 +758,20 @@ namespace ClearCanvas.Utilities.DicomEditor {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Saves edits.
+        ///   Looks up a localized string similar to Save changes, overwriting the original files.
         /// </summary>
         internal static string TooltipSave {
             get {
                 return ResourceManager.GetString("TooltipSave", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Save changes as new files.
+        /// </summary>
+        internal static string TooltipSaveAs {
+            get {
+                return ResourceManager.GetString("TooltipSaveAs", resourceCulture);
             }
         }
     }

@@ -85,6 +85,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>LoginFacilityProviderSettings.settings</DependentUpon>
     </Compile>
+    <Compile Include="GlobalHomeStartupActionProvider.cs" />
     <Compile Include="UnmergeOrderComponent.cs" />
     <Compile Include="DocumentViewTool.cs" />
     <Compile Include="LoginFacilityProvider.cs" />

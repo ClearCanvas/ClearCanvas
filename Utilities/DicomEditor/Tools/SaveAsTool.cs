@@ -1,4 +1,4 @@
-#region License
+﻿#region License
 
 // Copyright (c) 2013, ClearCanvas Inc.
 // All rights reserved.
@@ -28,23 +28,23 @@ using ClearCanvas.Desktop.Actions;
 
 namespace ClearCanvas.Utilities.DicomEditor.Tools
 {
-	[ButtonAction("activate", "dicomeditor-toolbar/ToolbarSave", "Save")]
-	[Tooltip("activate", "TooltipSave")]
-	[IconSet("activate", "Icons.SaveToolSmall.png", "Icons.SaveToolSmall.png", "Icons.SaveToolSmall.png")]
+	[ButtonAction("activate", "dicomeditor-toolbar/ToolbarSaveAs", "SaveAs")]
+	[Tooltip("activate", "TooltipSaveAs")]
+	[IconSet("activate", "Icons.SaveAsToolSmall.png", "Icons.SaveAsToolSmall.png", "Icons.SaveAsToolSmall.png")]
 	[EnabledStateObserver("activate", "Enabled", "EnabledChanged")]
 	[ExtensionOf(typeof (DicomEditorToolExtensionPoint), FeatureToken = FeatureTokens.DicomEditing)]
-	public class SaveTool : DicomEditorTool
+	public class SaveAsTool : DicomEditorTool
 	{
 		/// <summary>
 		/// Default constructor.  A no-args constructor is required by the
 		/// framework.  Do not remove.
 		/// </summary>
-		public SaveTool() : base(true) {}
+		public SaveAsTool() : base(true) {}
 
 		/// <summary>
 		/// Called by the framework when the user clicks the "apply" menu item or toolbar button.
 		/// </summary>
-		public void Save()
+		public void SaveAs()
 		{
 			if (!LicenseInformation.IsFeatureAuthorized(FeatureTokens.DicomEditing))
 				return;
@@ -54,7 +54,7 @@ namespace ClearCanvas.Utilities.DicomEditor.Tools
 
 		protected override void ActivateCore()
 		{
-			if (Context.DumpManagement.SaveAll(false))
+			if (Context.DumpManagement.SaveAll(true))
 				Context.UpdateDisplay();
 		}
 
