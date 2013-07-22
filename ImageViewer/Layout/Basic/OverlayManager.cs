@@ -7,17 +7,49 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
 {
     public interface IOverlayManager
     {
+        /// <summary>
+        /// Gets a unique name for the manager.
+        /// </summary>
         string Name { get; }
+
+        /// <summary>
+        /// Gets a name for display to the user.
+        /// </summary>
         string DisplayName { get; }
 
+        /// <summary>
+        /// Gets whether or not "selection" of this overlay is configurable.
+        /// </summary>
+        /// <remarks>
+        /// If false, it is expected that <see cref="IsSelectedByDefault"/> will always return true,
+        /// since the only reason for not allowing configuration is that it's important for the
+        /// user to see it, at least initially.
+        /// </remarks>
         bool IsConfigurable { get; }
 
+        /// <summary>
+        /// Gets an <see cref="IconSet"/> for display to the user.
+        /// </summary>
         IconSet IconSet { get; }
+
+        /// <summary>
+        /// An <see cref="IResourceResolver"/> for resolving the <see cref="IconSet"/> resources.
+        /// </summary>
         IResourceResolver ResourceResolver { get; }
 
+        /// <summary>
+        /// Gets whether or not the overlay is to be "selected" by default for the given modality.
+        /// </summary>
         bool IsSelectedByDefault(string modality);
 
+        /// <summary>
+        /// Shows the overlay on the given image.
+        /// </summary>
         void ShowOverlay(IPresentationImage image);
+
+        /// <summary>
+        /// Hides the overlay on the given image.
+        /// </summary>
         void HideOverlay(IPresentationImage image);
     }
 

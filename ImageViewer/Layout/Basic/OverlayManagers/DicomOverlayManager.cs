@@ -22,8 +22,6 @@
 
 #endregion
 
-using System.Collections.Generic;
-using ClearCanvas.Common.Utilities;
 using ClearCanvas.Desktop;
 using ClearCanvas.ImageViewer.PresentationStates.Dicom;
 
@@ -36,7 +34,6 @@ namespace ClearCanvas.ImageViewer.Layout.Basic.OverlayManagers
         {
             IsConfigurable = false;
             IconSet = new IconSet("Icons.DicomOverlaysToolSmall.png", "Icons.DicomOverlaysToolMedium.png", "Icons.DicomOverlaysToolLarge.png");
-
         }
 
         public override bool IsSelectedByDefault(string modality)

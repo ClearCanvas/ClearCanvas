@@ -25,7 +25,7 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
             return provider != null ? provider.ImageSop.Modality : String.Empty;
         }
 
-        public static IList<IOverlaySelection> GetOverlaySettings(this string modality)
+        public static IList<IOverlaySelection> GetOverlaySettings(string modality)
         {
             return GetDefaultOverlayStates()[modality].Cast<IOverlaySelection>().ToList();
         }
@@ -33,6 +33,11 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
         public static IImageOverlays GetOverlays(this IPresentationImage image)
         {
             return new ImageOverlays(image);
+        }
+
+        public static IOverlayManager GetManager(this IOverlaySelection selection)
+        {
+            return OverlayManagers.First(m => m.Name == selection.Name);
         }
 
         private static IEnumerable<OverlayState> GetOverlaySelectionStates(IPresentationImage image)
