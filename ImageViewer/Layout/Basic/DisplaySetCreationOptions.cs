@@ -41,8 +41,6 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
         bool ShowOriginalMixedMultiframeSeries { get; }
 
         bool ShowGrayscaleInverted { get; }
-
-        bool? IsOverlaySelected(string name);
     }
 
     public interface IDisplaySetCreationOptions : IEnumerable<IModalityDisplaySetCreationOptions>
