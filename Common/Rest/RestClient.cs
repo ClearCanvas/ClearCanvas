@@ -23,7 +23,7 @@ namespace ClearCanvas.Common.Rest
 			this.RequestStatus = e.Status;
 			if (e.Status == WebExceptionStatus.ProtocolError && e.Response != null)
 			{
-				var httpResponse = (HttpWebResponse) e.Response;
+				var httpResponse = (HttpWebResponse)e.Response;
 				this.HttpStatus = httpResponse.StatusCode;
 				this.Response = new RestClient.Response(httpResponse);
 			}
@@ -102,13 +102,14 @@ namespace ClearCanvas.Common.Rest
 				}
 			}
 
-            /// <summary>
-            /// Writes the body of the response to the specified stream, and closes the response.
-            /// </summary>
-            public Stream GetResponseStream()
-            {            
-                return _response.GetResponseStream();
-            }
+			/// <summary>
+			/// Gets the response stream. It is the responsibility of the consumer to dispose
+			/// of the stream when finished.
+			/// </summary>
+			public Stream GetResponseStream()
+			{
+				return _response.GetResponseStream();
+			}
 
 			/// <summary>
 			/// Obtains the body of the response as a string, and closes the response.
@@ -153,7 +154,7 @@ namespace ClearCanvas.Common.Rest
 			{
 				try
 				{
-					if(_responseStream != null)
+					if (_responseStream != null)
 					{
 						_responseStream.Close();
 						_responseStream = null;
@@ -167,7 +168,7 @@ namespace ClearCanvas.Common.Rest
 
 				try
 				{
-					if(_response != null)
+					if (_response != null)
 					{
 						_response.Close();
 						_response = null;
@@ -180,21 +181,21 @@ namespace ClearCanvas.Common.Rest
 				}
 			}
 
-		    public bool IsContentMultipartRelated()
-		    {
-		        var s = _response.Headers["Content-Type"];
+			public bool IsContentMultipartRelated()
+			{
+				var s = _response.Headers["Content-Type"];
 
-                return s == "multipart/related";       
-		    }
+				return s == "multipart/related";
+			}
 
 
-            public string GetFilename()
-            {
-                var s = _response.Headers["Content-Disposition"];
-                var i = s.IndexOf("filename=");
-                s = s.Substring(i + "filename=".Length);
-                return s;
-            }
+			public string GetFilename()
+			{
+				var s = _response.Headers["Content-Disposition"];
+				var i = s.IndexOf("filename=");
+				s = s.Substring(i + "filename=".Length);
+				return s;
+			}
 		}
 
 		#endregion
@@ -272,7 +273,7 @@ namespace ClearCanvas.Common.Rest
 					throw new ArgumentNullException("data");
 				if (string.IsNullOrEmpty(contentType))
 					throw new ArgumentNullException("contentType");
-				if(!string.IsNullOrEmpty(_contentString) || _contentStream != null)
+				if (!string.IsNullOrEmpty(_contentString) || _contentStream != null)
 					throw new InvalidOperationException("content already specified");
 
 				_contentStream = data;
@@ -326,16 +327,16 @@ namespace ClearCanvas.Common.Rest
 				// copy headers
 				foreach (var kvp in _rc.Headers)
 				{
-				    if (kvp.Key == HttpRequestHeader.Accept)
-				        _request.Accept = kvp.Value;
-                    else
-					    _request.Headers[kvp.Key] = kvp.Value;
-				}      
+					if (kvp.Key == HttpRequestHeader.Accept)
+						_request.Accept = kvp.Value;
+					else
+						_request.Headers[kvp.Key] = kvp.Value;
+				}
 			}
 
 			private void WriteRequestBody()
 			{
-				if(_contentStream != null)
+				if (_contentStream != null)
 				{
 					// set content type/length
 					_request.ContentType = _contentType;
