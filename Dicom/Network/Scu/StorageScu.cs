@@ -96,6 +96,8 @@ namespace ClearCanvas.Dicom.Network.Scu
 		#endregion
 
 		#region Private Variables...
+
+		private readonly object _storageListSyncLock = new object();
 		private readonly List<StorageInstance> _storageInstanceList = new List<StorageInstance>();
         private Dictionary<string, SupportedSop> _preferredSyntaxes;
 		private int _fileListIndex;
@@ -106,6 +108,7 @@ namespace ClearCanvas.Dicom.Network.Scu
 		private int _successSubOperations = 0;
 		private int _totalSubOperations = 0;
 		private int _remainingSubOperations = 0;
+
 		#endregion
 
 		#region Constructors...
@@ -420,23 +423,25 @@ namespace ClearCanvas.Dicom.Network.Scu
 		/// </summary>
 		private void FailRemaining(DicomStatus status)
 		{
-
-			while (_fileListIndex < _storageInstanceList.Count)
+			lock (_storageListSyncLock)
 			{
-				StorageInstance fileToSend = _storageInstanceList[_fileListIndex];
+				while (_fileListIndex < _storageInstanceList.Count)
+				{
+					StorageInstance fileToSend = _storageInstanceList[_fileListIndex];
 
-				OnImageStoreStarted(fileToSend);
+					OnImageStoreStarted(fileToSend);
 
-				fileToSend.SendStatus = status;
+					fileToSend.SendStatus = status;
 
-				_failureSubOperations++;
-				_remainingSubOperations--;
+					_failureSubOperations++;
+					_remainingSubOperations--;
 
-				fileToSend.ExtendedFailureDescription = "The association was aborted.";
+					fileToSend.ExtendedFailureDescription = "The association was aborted.";
 
-				OnImageStoreCompleted(fileToSend);
+					OnImageStoreCompleted(fileToSend);
 
-				_fileListIndex++;
+					_fileListIndex++;
+				}
 			}
 		}
 
@@ -841,11 +846,19 @@ namespace ClearCanvas.Dicom.Network.Scu
 		/// <param name="message">The message.</param>
 		public override void OnReceiveResponseMessage(DicomClient client, ClientAssociationParameters association, byte presentationID, DicomMessage message)
 		{
-            if (_storageInstanceList.Count > 0)
-            {
-                _storageInstanceList[_fileListIndex].SendStatus = message.Status;
-                _storageInstanceList[_fileListIndex].ExtendedFailureDescription = message.ErrorComment;
-            }
+			lock (_storageListSyncLock)
+			{
+				if (_fileListIndex >= _storageInstanceList.Count)
+				{
+					Platform.Log(LogLevel.Debug, "Received unexpected response for already finished C-STORE to {0}", association.CalledAE);
+					return;
+				}
+				if (_storageInstanceList.Count > 0)
+				{
+					_storageInstanceList[_fileListIndex].SendStatus = message.Status;
+					_storageInstanceList[_fileListIndex].ExtendedFailureDescription = message.ErrorComment;
+				}
+			}
 
 		    if (message.Status.Status != DicomState.Success)
 			{
