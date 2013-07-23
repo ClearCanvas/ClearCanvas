@@ -18,14 +18,12 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
         string DisplayName { get; }
 
         /// <summary>
-        /// Gets whether or not "selection" of this overlay is configurable.
+        /// Gets whether or not this overlay is "important", meaning the user must see it initially, regardless of selection.
         /// </summary>
         /// <remarks>
-        /// If false, it is expected that <see cref="IsSelectedByDefault"/> will always return true,
-        /// since the only reason for not allowing configuration is that it's important for the
-        /// user to see it, at least initially.
+        /// If true, it is expected that <see cref="IsSelectedByDefault"/> will always return true.
         /// </remarks>
-        bool IsConfigurable { get; }
+        bool IsImportant { get; }
 
         /// <summary>
         /// Gets an <see cref="IconSet"/> for display to the user.
@@ -40,6 +38,7 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
         /// <summary>
         /// Gets whether or not the overlay is to be "selected" by default for the given modality.
         /// </summary>
+        /// <remarks>If <see cref="IsImportant"/> is true, then this must return true for all modalities.</remarks>
         bool IsSelectedByDefault(string modality);
 
         /// <summary>
@@ -61,7 +60,7 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
         {
             Name = name;
             DisplayName = displayName;
-            IsConfigurable = true;
+            IsImportant = false;
         }
 
         #region Implementation of IOverlaySelection
@@ -69,7 +68,7 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
         public string Name { get; private set; }
         public string DisplayName { get; private set; }
 
-        public bool IsConfigurable { get; protected set; }
+        public bool IsImportant { get; protected set; }
 
         public IconSet IconSet { get; protected set; }
 

@@ -50,7 +50,7 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
 
         public string Name { get { return _manager.Name; } }
         public string DisplayName { get { return _manager.DisplayName; } }
-        public bool IsConfigurable { get { return _manager.IsConfigurable; } }
+        public bool IsConfigurable { get { return !_manager.IsImportant; } }
         public bool IsSelected
         {
             get { return _isSelected; }

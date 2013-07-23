@@ -11,16 +11,19 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
         IImageOverlay this[string name] { get; }
 
         void ShowSelected(bool draw);
-        void Hide(bool draw);
+        void HideUnimportant(bool draw);
+        void HideAll(bool draw);
     }
 
     public interface IImageOverlay : IOverlaySelection
     {
         string DisplayName { get; }
+        bool IsImportant { get; }
         new bool IsSelected { get; set; }
         IconSet IconSet { get; }
 
         void ShowIfSelected();
+        void Show();
         void Hide();
     }
     
@@ -56,6 +59,11 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
 
             #region Implementation of IOverlay
 
+            public bool IsImportant
+            {
+                get { return _manager.IsImportant; }
+            }
+
             public string DisplayName
             {
                 get { return _manager.DisplayName; }
@@ -74,6 +82,12 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
                     _manager.ShowOverlay(_image);
                 else
                     _manager.HideOverlay(_image);
+            }
+
+            public void Show()
+            {
+                if (_image != null) 
+                    _manager.ShowOverlay(_image);
             }
 
             public void Hide()
@@ -117,7 +131,21 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
                     _image.Draw();
             }
 
-            public void Hide(bool draw)
+            public void HideUnimportant(bool draw)
+            {
+                foreach (ImageOverlay overlay in _overlays)
+                {
+                    if (!overlay.IsImportant)
+                        overlay.Hide();
+                    else
+                        overlay.Show();
+                }
+
+                if (draw)
+                    _image.Draw();
+            }
+
+            public void HideAll(bool draw)
             {
                 foreach (ImageOverlay overlay in _overlays)
                     overlay.Hide();

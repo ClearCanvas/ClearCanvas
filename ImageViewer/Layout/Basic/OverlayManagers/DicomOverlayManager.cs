@@ -32,7 +32,7 @@ namespace ClearCanvas.ImageViewer.Layout.Basic.OverlayManagers
         public DicomOverlayManager()
             : base(SR.NameDicomOverlay, SR.NameDicomOverlay)
         {
-            IsConfigurable = false;
+            IsImportant = true;
             IconSet = new IconSet("Icons.DicomOverlaysToolSmall.png", "Icons.DicomOverlaysToolMedium.png", "Icons.DicomOverlaysToolLarge.png");
         }
 

@@ -24,6 +24,7 @@
 
 using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
@@ -41,6 +42,13 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
     [ExtensionOf(typeof(ImageViewerToolExtensionPoint))]
 	public class ShowHideOverlaysTool : ImageViewerTool
 	{
+        private enum ShowHideOption
+        {
+            ShowSelected,
+            HideAll,
+            HideUnimportant
+        }
+
         private readonly IconSet _selectedOverlaysVisible;
         private readonly IconSet _selectedOverlaysHidden;
         private ActionSet _nilActions;
@@ -146,7 +154,7 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
 
             var selectedOverlaysVisible = SelectedOverlaysVisible;
             foreach (var imageBox in base.Context.Viewer.PhysicalWorkspace.ImageBoxes.Where(i => i.DisplaySet != null))
-                UpdateVisibility(imageBox.DisplaySet, selectedOverlaysVisible);
+                UpdateVisibility(imageBox.DisplaySet, selectedOverlaysVisible ? ShowHideOption.ShowSelected : ShowHideOption.HideAll);
 
 			Context.Viewer.PhysicalWorkspace.Draw();
 		}
@@ -159,25 +167,33 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
             var clock = new CodeClock();
             clock.Start();
 
-            UpdateVisibility(e.NewDisplaySet, SelectedOverlaysVisible);
+            UpdateVisibility(e.NewDisplaySet, SelectedOverlaysVisible ? ShowHideOption.ShowSelected : ShowHideOption.HideUnimportant);
 
             clock.Stop();
-            Platform.Log(LogLevel.Debug, "{0} - UpdateVisibility took {1}", GetType().FullName, clock.Seconds);
+            Trace.WriteLine(String.Format("{0} - UpdateVisibility took {1}", GetType().FullName, clock.Seconds));
         }
 
-        private static void UpdateVisibility(IDisplaySet displaySet, bool selectedOverlaysVisible)
+        private static void UpdateVisibility(IDisplaySet displaySet, ShowHideOption option)
         {
             if (displaySet == null)
                 return;
 
             //Have to update all images each time so that even ones that haven't been drawn are correct.
             //That way, even ones that are exported to the clipboard look right.
-            foreach (var image in displaySet.PresentationImages)
+            switch (option)
             {
-                if (selectedOverlaysVisible)
-                    image.GetOverlays().ShowSelected(false);
-                else
-                    image.GetOverlays().Hide(false);
+                case ShowHideOption.HideUnimportant:
+                    foreach (var image in displaySet.PresentationImages)
+                        image.GetOverlays().HideUnimportant(false);
+                    break;
+                case ShowHideOption.ShowSelected:
+                    foreach (var image in displaySet.PresentationImages)
+                        image.GetOverlays().ShowSelected(false);
+                    break;
+                case ShowHideOption.HideAll:
+                    foreach (var image in displaySet.PresentationImages)
+                        image.GetOverlays().HideAll(false);
+                    break;
             }
         }
 
