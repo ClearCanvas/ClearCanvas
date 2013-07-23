@@ -320,6 +320,9 @@ namespace ClearCanvas.ImageViewer.Clipboard.ImageExport
 		{
 			using (Bitmap bmp = DrawToBitmap(image, exportParams))
 			{
+				// try to save the dpi in the meta header for image types that support it (the GDI+ implementation of TIFF encoder doesn't even though TIFF itself supports it)
+				bmp.SetResolution(exportParams.Dpi, exportParams.Dpi);
+
 				Export(bmp, filePath, imageFormat);
 			}
 		}
@@ -328,6 +331,9 @@ namespace ClearCanvas.ImageViewer.Clipboard.ImageExport
 		{
 			using (Bitmap bmp = DrawToBitmap(image, exportParams))
 			{
+				// try to save the dpi in the meta header for image types that support it (the GDI+ implementation of TIFF encoder doesn't even though TIFF itself supports it)
+				bmp.SetResolution(exportParams.Dpi, exportParams.Dpi);
+
 				Export(bmp, filePath, encoder, encoderParameters);
 			}
 		}

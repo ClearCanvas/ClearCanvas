@@ -368,7 +368,7 @@ namespace ClearCanvas.ImageViewer.Rendering
 			// Draw drop shadow
 			_brush.Color = Color.Black;
 
-			SizeF dropShadowOffset = new SizeF(1, 1);
+			SizeF dropShadowOffset = GetScaledFontDropShadowOffset(Dpi);
 			PointF boundingBoxTopLeft = new PointF(textPrimitive.BoundingBox.Left, textPrimitive.BoundingBox.Top);
 
 			Surface.FinalBuffer.Graphics.DrawString(
@@ -633,6 +633,12 @@ namespace ClearCanvas.ImageViewer.Rendering
 		private static float CalculateScaledFontPoints(float fontPoints, float dpi)
 		{
 			return fontPoints*dpi/_nominalScreenDpi;
+		}
+
+		private static SizeF GetScaledFontDropShadowOffset(float dpi)
+		{
+			float offset = CalculateScaledFontPoints(1, dpi);
+			return new SizeF(offset, offset);
 		}
 
 		private static float CalculateScaledPenWidth(IGraphic graphic, int penWidth, float dpi)
