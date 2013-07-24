@@ -33,8 +33,9 @@ using ClearCanvas.ImageServer.Model;
 
 namespace ClearCanvas.ImageServer.Rules.JpegCodec.JpegExtendedAction
 {
-	[ExtensionOf(typeof(XmlActionCompilerOperatorExtensionPoint<ServerActionContext, ServerRuleTypeEnum>))]
-	public class JpegExtendedActionOperator : ActionOperatorCompilerBase, IXmlActionCompilerOperator<ServerActionContext, ServerRuleTypeEnum>
+	[ExtensionOf(typeof(ServerRuleActionCompilerOperatorExtensionPoint))]
+	[ActionApplicability(ApplicableRuleType.StudyCompress)]
+	public class JpegExtendedActionOperator : ActionOperatorCompilerBase, IXmlActionCompilerOperator<ServerActionContext>
 	{
 		public JpegExtendedActionOperator()
 			: base("jpeg-extended")
@@ -90,11 +91,8 @@ namespace ClearCanvas.ImageServer.Rules.JpegCodec.JpegExtendedAction
 			return new JpegExtendedActionItem(time, unit, quality, convertFromPalette);
 		}
 
-		public XmlSchemaElement GetSchema(ServerRuleTypeEnum ruleType)
+		public XmlSchemaElement GetSchema()
 		{
-			if (!ruleType.Equals(ServerRuleTypeEnum.StudyCompress))
-				return null;
-
 			XmlSchemaElement element = GetTimeSchema(OperatorTag);
 
 			XmlSchemaAttribute attrib = new XmlSchemaAttribute

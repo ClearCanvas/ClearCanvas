@@ -27,17 +27,17 @@ namespace ClearCanvas.Common.Actions
     /// <summary>
     /// Performs an action using an implementation specific context.
     /// </summary>
-    public interface IActionItem<T>
+    public interface IActionItem<TActionContext>
     {
         /// <summary>
         /// Executes the action.
         /// </summary>
         /// <param name="context">An implementation specific context for the action.</param>
         /// <returns>true on success, false on failure.</returns>
-        bool Execute(T context);
+        bool Execute(TActionContext context);
 
         /// <summary>
-        /// A descriptive reason for a failure of the action.  This property is populated when <see cref="IActionItem{T}.Execute"/> returns false.
+        /// A descriptive reason for a failure of the action.  This property is populated when <see cref="IActionItem{TActionContext}.Execute"/> returns false.
         /// </summary>
         string FailureReason { get; }
     }

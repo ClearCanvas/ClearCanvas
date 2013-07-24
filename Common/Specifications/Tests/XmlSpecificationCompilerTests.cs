@@ -45,10 +45,8 @@ namespace ClearCanvas.Common.Specifications.Tests
 			public object[] CreateExtensions(ExtensionPoint extensionPoint, ExtensionFilter filter, bool justOne)
 			{
 				Console.WriteLine(extensionPoint);
-				if (extensionPoint.GetType() == typeof(ExpressionFactoryExtensionPoint))
+				if (extensionPoint is ExpressionFactoryExtensionPoint)
 					return new object[] { new ConstantExpressionFactory() };
-				if (extensionPoint.GetType() == typeof(XmlSpecificationCompilerOperatorExtensionPoint))
-					return new object[]{};
 
 				return new object[0];
 			}
@@ -56,10 +54,8 @@ namespace ClearCanvas.Common.Specifications.Tests
 			public ExtensionInfo[] ListExtensions(ExtensionPoint extensionPoint, ExtensionFilter filter)
 			{
 				Console.WriteLine(extensionPoint);
-				if (extensionPoint.GetType() == typeof(ExpressionFactoryExtensionPoint))
-					return new ExtensionInfo[] { new ExtensionInfo(typeof(ConstantExpressionFactory), extensionPoint.GetType(), null, null, true),  };
-				if (extensionPoint.GetType() == typeof(XmlSpecificationCompilerOperatorExtensionPoint))
-					return new ExtensionInfo[] { };
+				if (extensionPoint is ExpressionFactoryExtensionPoint)
+					return new[] { new ExtensionInfo(typeof(ConstantExpressionFactory), extensionPoint.GetType(), null, null, true),  };
 
 				return new ExtensionInfo[0];
 			}

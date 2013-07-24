@@ -32,10 +32,11 @@ using ClearCanvas.ImageServer.Model;
 namespace ClearCanvas.ImageServer.Rules.JpegCodec.JpegBaselineAction
 {
 	/// <summary>
-	/// Jpeg Baseline SOP Compress Action Operator, for use with <see cref="IXmlActionCompilerOperator{ServerActionContext,ServerRuleTypeEnum}"/>
+	/// Jpeg Baseline SOP Compress Action Operator, for use with <see cref="IXmlActionCompilerOperator{ServerActionContext}"/>
 	/// </summary>
-	[ExtensionOf(typeof(XmlActionCompilerOperatorExtensionPoint<ServerActionContext, ServerRuleTypeEnum>))]
-	public class JpegBaselineSopActionOperator : ActionOperatorCompilerBase, IXmlActionCompilerOperator<ServerActionContext, ServerRuleTypeEnum>
+	[ExtensionOf(typeof(ServerRuleActionCompilerOperatorExtensionPoint))]
+	[ActionApplicability(ApplicableRuleType.SopCompress)]
+	public class JpegBaselineSopActionOperator : ActionOperatorCompilerBase, IXmlActionCompilerOperator<ServerActionContext>
 	{
 		public JpegBaselineSopActionOperator()
 			: base("jpeg-baseline-sop")
@@ -58,11 +59,8 @@ namespace ClearCanvas.ImageServer.Rules.JpegCodec.JpegBaselineAction
 			return new JpegBaselineSopActionItem(quality, convertFromPalette);
 		}
 
-		public XmlSchemaElement GetSchema(ServerRuleTypeEnum ruleType)
+		public XmlSchemaElement GetSchema()
 		{
-			if (!ruleType.Equals(ServerRuleTypeEnum.SopCompress))
-				return null;
-
 			XmlSchemaElement element = GetBaseSchema(OperatorTag);
 
 			XmlSchemaAttribute attrib = new XmlSchemaAttribute();

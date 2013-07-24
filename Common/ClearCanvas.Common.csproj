@@ -182,6 +182,7 @@
     <Compile Include="Specifications\Tests\TestsBase.cs" />
     <Compile Include="Specifications\Tests\XmlSpecificationCompilerTests.cs" />
     <Compile Include="Specifications\WhenThenPair.cs" />
+    <Compile Include="Specifications\XmlSpecificationSchema.cs" />
     <Compile Include="Statistics\AverageByteCountStatistics.cs" />
     <Compile Include="Statistics\AverageCountStatistics.cs" />
     <Compile Include="Statistics\AverageMessageCountStatistics.cs" />

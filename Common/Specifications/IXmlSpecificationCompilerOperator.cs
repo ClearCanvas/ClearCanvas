@@ -38,6 +38,7 @@ namespace ClearCanvas.Common.Specifications
         /// The XML Tag for the operator.
         /// </summary>
         string OperatorTag { get; }
+
         /// <summary>
         /// Compile the operator.
         /// </summary>
@@ -45,6 +46,7 @@ namespace ClearCanvas.Common.Specifications
         /// <param name="context">A context for the compiler.</param>
         /// <returns>A compiled <see cref="Specification"/>.</returns>
         Specification Compile(XmlElement xmlNode, IXmlSpecificationCompilerContext context);
+
         /// <summary>
         /// Get an XmlSchema element that describes the schema for the operator element.
         /// </summary>

@@ -31,8 +31,9 @@ using ClearCanvas.ImageServer.Model;
 
 namespace ClearCanvas.ImageServer.Rules.GrantAccessAction
 {
-	[ExtensionOf(typeof(XmlActionCompilerOperatorExtensionPoint<ServerActionContext, ServerRuleTypeEnum>))]
-	public class GrantAccessActionOperator : ActionOperatorCompilerBase, IXmlActionCompilerOperator<ServerActionContext, ServerRuleTypeEnum>
+	[ExtensionOf(typeof(ServerRuleActionCompilerOperatorExtensionPoint))]
+	[ActionApplicability(ApplicableRuleType.DataAccess)]
+	public class GrantAccessActionOperator : ActionOperatorCompilerBase, IXmlActionCompilerOperator<ServerActionContext>
     {
         public GrantAccessActionOperator()
             : base("grant-access")
@@ -51,11 +52,8 @@ namespace ClearCanvas.ImageServer.Rules.GrantAccessAction
             return new GrantAccessActionItem(authorityGroup);
         }
 
-		public XmlSchemaElement GetSchema(ServerRuleTypeEnum ruleType)
+		public XmlSchemaElement GetSchema()
 		{
-			if (!ruleType.Equals(ServerRuleTypeEnum.DataAccess))
-				return null;
-
             XmlSchemaComplexType type = new XmlSchemaComplexType();
 
             XmlSchemaAttribute attrib = new XmlSchemaAttribute

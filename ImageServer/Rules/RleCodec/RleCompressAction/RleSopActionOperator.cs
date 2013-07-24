@@ -32,10 +32,11 @@ using ClearCanvas.ImageServer.Model;
 namespace ClearCanvas.ImageServer.Rules.RleCodec.RleCompressAction
 {
 	/// <summary>
-	/// RLE SOP Compress Action Operator, for use with <see cref="IXmlActionCompilerOperator{ServerActionContext,ServerRuleTypeEnum}"/>
+	/// RLE SOP Compress Action Operator, for use with <see cref="IXmlActionCompilerOperator{ServerActionContext}"/>
 	/// </summary>
-	[ExtensionOf(typeof(XmlActionCompilerOperatorExtensionPoint<ServerActionContext, ServerRuleTypeEnum>))]
-	public class RleSopActionOperator : ActionOperatorCompilerBase, IXmlActionCompilerOperator<ServerActionContext, ServerRuleTypeEnum>
+	[ExtensionOf(typeof(ServerRuleActionCompilerOperatorExtensionPoint))]
+	[ActionApplicability(ApplicableRuleType.SopCompress)]
+	public class RleSopActionOperator : ActionOperatorCompilerBase, IXmlActionCompilerOperator<ServerActionContext>
 	{
 		public RleSopActionOperator()
 			: base("rle-sop")
@@ -54,11 +55,8 @@ namespace ClearCanvas.ImageServer.Rules.RleCodec.RleCompressAction
 			return new RleSopActionItem(convertFromPalette);
 		}
 
-		public XmlSchemaElement GetSchema(ServerRuleTypeEnum ruleType)
+		public XmlSchemaElement GetSchema()
 		{
-			if (!ruleType.Equals(ServerRuleTypeEnum.SopCompress))
-				return null;
-
 			XmlSchemaElement element = GetBaseSchema(OperatorTag);
 
 			XmlSchemaAttribute attrib = new XmlSchemaAttribute

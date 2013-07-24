@@ -27,15 +27,15 @@ using ClearCanvas.Common.Specifications;
 namespace ClearCanvas.Common.Actions
 {
     /// <summary>
-	/// Interface representing a compiled set of actions returned by <see cref="XmlActionCompiler{TActionContext, TSchemaContext}"/>.
+	/// Interface representing a compiled set of actions returned by <see cref="XmlActionCompiler{TActionContext}"/>.
     /// </summary>
-    public interface IActionSet<T>
+    public interface IActionSet<TActionContext>
     {
         /// <summary>
         /// Execute a set of actions.
         /// </summary>
 		/// <param name="context">An implementation specific context for the actions.</param>
         /// <returns>A <see cref="TestResult"/> object describing the results.</returns>
-        TestResult Execute(T context);
+        TestResult Execute(TActionContext context);
     }
 }

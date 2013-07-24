@@ -108,7 +108,7 @@ namespace ClearCanvas.Common.Specifications
 
         public SpecificationFactory(ISpecificationXmlSource xmlSource)
         {
-            _builder = new XmlSpecificationCompiler(this, xmlSource.DefaultExpressionLanguage);
+            _builder = new XmlSpecificationCompiler(xmlSource.DefaultExpressionLanguage, this);
             _cache = new Dictionary<string, ISpecification>();
             _xmlSource = xmlSource;
         }
