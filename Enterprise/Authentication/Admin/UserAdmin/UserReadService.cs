@@ -22,12 +22,9 @@
 
 #endregion
 
-using System.Security.Permissions;
-
 using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Enterprise.Authentication.Brokers;
-using ClearCanvas.Enterprise.Common;
 using ClearCanvas.Enterprise.Common.Admin.UserAdmin;
 using ClearCanvas.Enterprise.Core;
 
@@ -40,7 +37,6 @@ namespace ClearCanvas.Enterprise.Authentication.Admin.UserAdmin
 		#region IUserReadService Members
 
 		[ReadOperation]
-		[PrincipalPermission(SecurityAction.Demand, Role = AuthorityTokens.Admin.Security.User)]
 		public ListUsersResponse ListUsers(ListUsersRequest request)
 		{
 			var criteria = new UserSearchCriteria();
