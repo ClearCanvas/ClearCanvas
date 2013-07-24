@@ -120,6 +120,7 @@
     <Compile Include="Tests\UserTests.cs" />
     <Compile Include="User.cs" />
     <Compile Include="UserInfo.cs" />
+    <Compile Include="UserName.cs" />
     <Compile Include="UserSession.cs" />
   </ItemGroup>
   <ItemGroup>

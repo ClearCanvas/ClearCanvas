@@ -180,6 +180,20 @@ namespace ClearCanvas.Enterprise.Authentication.Tests
 		}
 
 		[Test]
+		[ExpectedException(typeof(ArgumentException))]
+		public void Test_CreateNewUser_IllegalUserName()
+		{
+			UserInfo userInfo = new UserInfo(
+				"foo>foo",
+				"Mr. Foo",
+				"test@clearcanvas.ca",
+				null,
+				null);
+
+			User.CreateNewUser(userInfo, DefaultPassword);
+		}
+
+		[Test]
 		public void Test_CreateNewUser_NullDisplayName()
 		{
 			UserInfo userInfo = new UserInfo(

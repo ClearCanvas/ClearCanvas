@@ -91,6 +91,10 @@ namespace ClearCanvas.Enterprise.Authentication.Admin.UserAdmin
 			Platform.CheckMemberIsSet(request.UserDetail, "UserDetail");
 
 			var userDetail = request.UserDetail;
+
+			if(!UserName.IsLegalUserName(userDetail.UserName))
+				throw new RequestValidationException("Illegal user name.");
+
 			var settings = new AuthenticationSettings();
 
 			// create new user
@@ -239,5 +243,6 @@ namespace ClearCanvas.Enterprise.Authentication.Admin.UserAdmin
 				return (Thread.CurrentPrincipal as DefaultPrincipal).SessionToken.Id;
 			}
 		}
+
 	}
 }

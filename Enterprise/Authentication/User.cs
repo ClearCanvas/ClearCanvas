@@ -55,6 +55,9 @@ namespace ClearCanvas.Enterprise.Authentication {
 			Platform.CheckForNullReference(initialPassword, "initialPassword");
 			Platform.CheckForEmptyString(userInfo.UserName, "UserName");
 
+			if(!Authentication.UserName.IsLegalUserName(userInfo.UserName))
+				throw new ArgumentException("Illegal UserName.");
+
             return new User(
                 userInfo.UserName,
                 initialPassword,
