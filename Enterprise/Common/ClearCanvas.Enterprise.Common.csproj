@@ -105,6 +105,7 @@
     <Compile Include="Admin\AuthorityGroupAdmin\ImportAuthorityGroupsResponse.cs" />
     <Compile Include="Admin\AuthorityGroupAdmin\ImportAuthorityTokensRequest.cs" />
     <Compile Include="Admin\AuthorityGroupAdmin\ImportAuthorityTokensResponse.cs" />
+    <Compile Include="Admin\UserAdmin\IUserReadService.cs" />
     <Compile Include="Admin\UserAdmin\IUserAdminService.cs" />
     <Compile Include="Admin\AuthorityGroupAdmin\ListAuthorityGroupsRequest.cs" />
     <Compile Include="Admin\AuthorityGroupAdmin\ListAuthorityGroupsResponse.cs" />

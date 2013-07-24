@@ -31,7 +31,20 @@ namespace ClearCanvas.Enterprise.Common.Admin.UserAdmin
     [DataContract]
     public class UserSummary : DataContractBase
     {
-        public UserSummary(string userId, string displayName, string emailAddress, DateTime creationTime, DateTime? validFrom, DateTime? validUntil,
+		/// <summary>
+		/// Constructor for returning only the most basic information about a user.
+		/// </summary>
+		public UserSummary(string userId, string displayName, string emailAddress)
+		{
+			UserName = userId;
+			DisplayName = displayName;
+			EmailAddress = emailAddress;
+		}
+
+		/// <summary>
+		/// Constructor for returning full user summary.
+		/// </summary>
+		public UserSummary(string userId, string displayName, string emailAddress, DateTime creationTime, DateTime? validFrom, DateTime? validUntil,
             DateTime? lastLoginTime, DateTime? passwordExpiry, bool enabled, int sessionCount)
         {
             UserName = userId;

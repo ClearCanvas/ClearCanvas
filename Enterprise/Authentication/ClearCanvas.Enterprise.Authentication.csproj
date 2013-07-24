@@ -79,6 +79,7 @@
     <Compile Include="Admin\AuthorityGroupAdmin\AuthorityGroupReadService.cs" />
     <Compile Include="Admin\AuthorityGroupAssembler.cs" />
     <Compile Include="Admin\AuthorityTokenAssembler.cs" />
+    <Compile Include="Admin\UserAdmin\UserReadService.cs" />
     <Compile Include="Admin\UserAdmin\UserAdminService.cs" />
     <Compile Include="Admin\UserAdmin\UserAssembler.cs" />
     <Compile Include="AuthenticationService.cs" />

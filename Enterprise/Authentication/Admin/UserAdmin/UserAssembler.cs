@@ -34,9 +34,23 @@ namespace ClearCanvas.Enterprise.Authentication.Admin.UserAdmin
     {
         internal UserSummary GetUserSummary(User user)
         {
-            return new UserSummary(user.UserName, user.DisplayName, user.EmailAddress, user.CreationTime, user.ValidFrom, user.ValidUntil,
-                                   user.LastLoginTime, user.Password.ExpiryTime, user.Enabled, user.ActiveSessions.Count());
+            return new UserSummary(
+				user.UserName,
+				user.DisplayName,
+				user.EmailAddress,
+				user.CreationTime,
+				user.ValidFrom,
+				user.ValidUntil,
+				user.LastLoginTime,
+				user.Password.ExpiryTime,
+				user.Enabled,
+				user.ActiveSessions.Count());
         }
+
+		internal UserSummary GetUserSummaryMinimal(User user)
+		{
+			return new UserSummary(user.UserName, user.DisplayName, user.EmailAddress);
+		}
 
         internal UserDetail GetUserDetail(User user)
         {
