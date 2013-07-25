@@ -29,13 +29,13 @@ using ClearCanvas.Desktop.View.WinForms;
 
 namespace ClearCanvas.Desktop.Executable
 {
-	class Program
+	internal class Program
 	{
 		/// <summary>
 		/// The main entry point for the application.
 		/// </summary>
 		[STAThread]
-		static void Main(string[] args)
+		private static void Main(string[] args)
 		{
 			//Always at least try to let our application code handle the exception.
 			//Setting this to "catch" means the Application.ThreadException event
@@ -48,21 +48,21 @@ namespace ClearCanvas.Desktop.Executable
 			Platform.PluginManager.PluginLoaded += new EventHandler<PluginLoadedEventArgs>(OnPluginProgress);
 
 			// check for command line arguments
-            if (args.Length > 0)
-            {
-                // for the sake of simplicity, this is a naive implementation (probably needs to change in future)
-                // if there is > 0 arguments, assume the first argument is a class name
-                // and bundle the subsequent arguments into a secondary array which is 
-                // forwarded to the application root class
-                string[] args1 = new string[args.Length - 1];
-                Array.Copy(args, 1, args1, 0, args1.Length);
+			if (args.Length > 0)
+			{
+				// for the sake of simplicity, this is a naive implementation (probably needs to change in future)
+				// if there is > 0 arguments, assume the first argument is a class name
+				// and bundle the subsequent arguments into a secondary array which is 
+				// forwarded to the application root class
+				string[] args1 = new string[args.Length - 1];
+				Array.Copy(args, 1, args1, 0, args1.Length);
 
-                Platform.StartApp(args[0], args1);
-            }
-            else
-            {
-                Platform.StartApp(@"ClearCanvas.Desktop.Application", new string[0]);
-            }
+				Platform.StartApp(args[0], args1);
+			}
+			else
+			{
+				Platform.StartApp(@"ClearCanvas.Desktop.Application", new string[0]);
+			}
 		}
 
 		private static void OnPluginProgress(object sender, PluginLoadedEventArgs e)
@@ -74,6 +74,6 @@ namespace ClearCanvas.Desktop.Executable
 			if (e.PluginAssembly != null)
 				SplashScreenManager.AddAssemblyIcon(e.PluginAssembly);
 #endif
-        }
+		}
 	}
 }
