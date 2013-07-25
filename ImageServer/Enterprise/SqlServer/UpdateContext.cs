@@ -26,6 +26,7 @@ using System;
 using System.Data;
 using System.Data.SqlClient;
 using ClearCanvas.Common;
+using ClearCanvas.Common.Utilities;
 using ClearCanvas.Enterprise.Core;
 
 namespace ClearCanvas.ImageServer.Enterprise.SqlServer
@@ -66,6 +67,8 @@ namespace ClearCanvas.ImageServer.Enterprise.SqlServer
         {
             if (_transaction != null && _transaction.Connection != null)
             {
+				EventsHelper.Fire(PreCommit, this, EventArgs.Empty);
+
                 try
                 {
                     _transaction.Commit();
@@ -98,7 +101,9 @@ namespace ClearCanvas.ImageServer.Enterprise.SqlServer
             }
         }
 
-        #endregion
+    	public event EventHandler PreCommit;
+
+    	#endregion
 
         #region IDisposable Members
 
