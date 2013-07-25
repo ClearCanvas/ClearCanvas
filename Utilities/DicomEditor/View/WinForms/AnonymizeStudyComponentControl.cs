@@ -56,6 +56,9 @@ namespace ClearCanvas.Utilities.DicomEditor.View.WinForms
 			_dateOfBirth.DataBindings.Add("Value", _component, "PatientsBirthDate", true, DataSourceUpdateMode.OnPropertyChanged);
 			_preserveSeriesData.DataBindings.Add("Checked", _component, "PreserveSeriesData", true, DataSourceUpdateMode.OnPropertyChanged);
 
+			_keepPrivateTags.Checked = _component.KeepPrivateTags;
+			_keepPrivateTags.CheckedChanged += _keepPrivateTags_CheckedChanged;
+
 			_keepReportsAndAttachments.Checked = _component.KeepReportsAndAttachments;
 			_keepReportsAndAttachments.CheckedChanged += _keepReportsAndAttachments_CheckedChanged;
 
@@ -71,6 +74,24 @@ namespace ClearCanvas.Utilities.DicomEditor.View.WinForms
 		private void OnCancelButtonClicked(object sender, EventArgs e)
 		{
 			_component.Cancel();
+		}
+
+		private void _keepPrivateTags_CheckedChanged(object sender, EventArgs e)
+		{
+			if (_updating)
+				return;
+
+			_updating = true;
+			try
+			{
+				_component.KeepPrivateTags = _keepPrivateTags.Checked;
+				_keepPrivateTags.Checked = _component.KeepPrivateTags;
+				_warningProvider.SetError(_keepPrivateTags, _keepPrivateTags.Checked ? SR.WarningKeepingPrivateTagsIsPotentialPatientPrivacyIssue : string.Empty);
+			}
+			finally
+			{
+				_updating = false;
+			}
 		}
 
 		private void _keepReportsAndAttachments_CheckedChanged(object sender, EventArgs e)

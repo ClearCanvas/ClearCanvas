@@ -40,8 +40,11 @@ namespace ClearCanvas.ImageViewer.Utilities.StudyFilters.View.WinForms {
 			this.label2 = new System.Windows.Forms.Label();
 			this.panel2 = new System.Windows.Forms.Panel();
 			this._lyoButtonPane = new System.Windows.Forms.FlowLayoutPanel();
+			this._pnlOutputOptions = new System.Windows.Forms.Panel();
+			this._keepPrivateTags = new System.Windows.Forms.CheckBox();
 			this.panel1.SuspendLayout();
 			this._lyoButtonPane.SuspendLayout();
+			this._pnlOutputOptions.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// _studyDescription
@@ -153,14 +156,28 @@ namespace ClearCanvas.ImageViewer.Utilities.StudyFilters.View.WinForms {
 			resources.ApplyResources(this._lyoButtonPane, "_lyoButtonPane");
 			this._lyoButtonPane.Name = "_lyoButtonPane";
 			// 
+			// _pnlOutputOptions
+			// 
+			this._pnlOutputOptions.Controls.Add(this.panel1);
+			this._pnlOutputOptions.Controls.Add(this._outputPath);
+			this._pnlOutputOptions.Controls.Add(this._browse);
+			this._pnlOutputOptions.Controls.Add(this.label1);
+			resources.ApplyResources(this._pnlOutputOptions, "_pnlOutputOptions");
+			this._pnlOutputOptions.Name = "_pnlOutputOptions";
+			// 
+			// _keepPrivateTags
+			// 
+			resources.ApplyResources(this._keepPrivateTags, "_keepPrivateTags");
+			this._keepPrivateTags.Name = "_keepPrivateTags";
+			this._keepPrivateTags.UseVisualStyleBackColor = true;
+			// 
 			// ExportComponentPanel
 			// 
 			resources.ApplyResources(this, "$this");
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+			this.Controls.Add(this._keepPrivateTags);
+			this.Controls.Add(this._pnlOutputOptions);
 			this.Controls.Add(this._lyoButtonPane);
-			this.Controls.Add(this.panel1);
-			this.Controls.Add(this._outputPath);
-			this.Controls.Add(this._browse);
 			this.Controls.Add(this._studyId);
 			this.Controls.Add(this._studyDescription);
 			this.Controls.Add(this._patientId);
@@ -168,10 +185,11 @@ namespace ClearCanvas.ImageViewer.Utilities.StudyFilters.View.WinForms {
 			this.Controls.Add(this._patientsName);
 			this.Controls.Add(this._dateOfBirth);
 			this.Controls.Add(this._studyDate);
-			this.Controls.Add(this.label1);
 			this.Name = "ExportComponentPanel";
 			this.panel1.ResumeLayout(false);
 			this._lyoButtonPane.ResumeLayout(false);
+			this._pnlOutputOptions.ResumeLayout(false);
+			this._pnlOutputOptions.PerformLayout();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -195,5 +213,7 @@ namespace ClearCanvas.ImageViewer.Utilities.StudyFilters.View.WinForms {
 		private System.Windows.Forms.Panel panel2;
 		private System.Windows.Forms.Label label2;
 		private System.Windows.Forms.FlowLayoutPanel _lyoButtonPane;
+		private System.Windows.Forms.Panel _pnlOutputOptions;
+		private System.Windows.Forms.CheckBox _keepPrivateTags;
 	}
 }

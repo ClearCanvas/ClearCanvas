@@ -67,7 +67,7 @@ namespace ClearCanvas.Utilities.DicomEditor.Tools
 					applyToAll = true;
 			}
 
-			this.Context.DumpManagement.Anonymize(applyToAll, component.AnonymizedData);
+			this.Context.DumpManagement.Anonymize(applyToAll, component.AnonymizedData, component.KeepPrivateTags);
 			this.Context.UpdateDisplay();
 		}
 

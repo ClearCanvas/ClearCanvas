@@ -54,7 +54,7 @@ namespace ClearCanvas.Utilities.DicomEditor
 		void RevertEdits(bool revertAll);
 
 		void Anonymize(bool applyToAll);
-		void Anonymize(bool applyToAll, IStudyRootData studyPrototype);
+		void Anonymize(bool applyToAll, IStudyRootData studyPrototype, bool keepPrivateTags);
 
 		int LoadedFileCount { get; }
 		bool SaveAll(bool promptForLocation);
@@ -246,12 +246,13 @@ namespace ClearCanvas.Utilities.DicomEditor
 
 		public void Anonymize(bool applyToAll)
 		{
-			Anonymize(applyToAll, null);
+			Anonymize(applyToAll, null, false);
 		}
 
-		public void Anonymize(bool applyToAll, IStudyRootData studyPrototype)
+		public void Anonymize(bool applyToAll, IStudyRootData studyPrototype, bool keepPrivateTags)
 		{
 			_anonymizer.StudyDataPrototype = new StudyData(studyPrototype);
+			_anonymizer.KeepPrivateTags = keepPrivateTags;
 
 			if (applyToAll == false)
 			{
