@@ -45,20 +45,23 @@ namespace ClearCanvas.Enterprise.Authentication.Admin.AuthorityGroupAdmin
             if (request.DataGroup.HasValue)
                 criteria.DataGroup.EqualTo(request.DataGroup.Value);
 
+        	var broker = PersistenceContext.GetBroker<IAuthorityGroupBroker>();
             var assembler = new AuthorityGroupAssembler();
             if (request.Details.HasValue && request.Details.Value)
             {
                 var authorityGroups = CollectionUtils.Map(
-                 PersistenceContext.GetBroker<IAuthorityGroupBroker>().Find(criteria, request.Page),
+				 broker.Find(criteria, request.Page),
                  (AuthorityGroup authorityGroup) => assembler.CreateAuthorityGroupDetail(authorityGroup));
-                return new ListAuthorityGroupsResponse(authorityGroups);
+            	var total = broker.Count(criteria);
+                return new ListAuthorityGroupsResponse(authorityGroups, (int)total);
             }
             else
             {
                 var authorityGroups = CollectionUtils.Map(
-                    PersistenceContext.GetBroker<IAuthorityGroupBroker>().Find(criteria, request.Page),
+					broker.Find(criteria, request.Page),
                     (AuthorityGroup authorityGroup) => assembler.CreateAuthorityGroupSummary(authorityGroup));
-                return new ListAuthorityGroupsResponse(authorityGroups);
+				var total = broker.Count(criteria);
+				return new ListAuthorityGroupsResponse(authorityGroups, (int)total);
             }
         }
 

@@ -59,11 +59,13 @@ namespace ClearCanvas.Enterprise.Authentication.Admin.UserAdmin
 			}
 
 			var assembler = new UserAssembler();
+			var broker = PersistenceContext.GetBroker<IUserBroker>();
 			var userSummaries = CollectionUtils.Map(
-				PersistenceContext.GetBroker<IUserBroker>().Find(criteria, request.Page),
+				broker.Find(criteria, request.Page),
 				(User user) => assembler.GetUserSummaryMinimal(user));
+			var total = broker.Count(criteria);
 
-			return new ListUsersResponse(userSummaries);
+			return new ListUsersResponse(userSummaries, (int)total);
 		}
 
 		#endregion

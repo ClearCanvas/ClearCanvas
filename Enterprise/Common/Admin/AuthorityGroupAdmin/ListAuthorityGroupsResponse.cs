@@ -31,20 +31,25 @@ namespace ClearCanvas.Enterprise.Common.Admin.AuthorityGroupAdmin
     [DataContract]
     public class ListAuthorityGroupsResponse : DataContractBase
     {
-        public ListAuthorityGroupsResponse(List<AuthorityGroupSummary> authorityGroups)
+        public ListAuthorityGroupsResponse(List<AuthorityGroupSummary> authorityGroups, int totalCount)
         {
             AuthorityGroups = authorityGroups;
+        	TotalCount = totalCount;
         }
 
-        public ListAuthorityGroupsResponse(List<AuthorityGroupDetail> authorityGroups)
+		public ListAuthorityGroupsResponse(List<AuthorityGroupDetail> authorityGroups, int totalCount)
         {
             AuthorityGroupDetails = authorityGroups;
-        }
+			TotalCount = totalCount;
+		}
 
         [DataMember]
         public List<AuthorityGroupSummary> AuthorityGroups;
 
         [DataMember] 
         public List<AuthorityGroupDetail> AuthorityGroupDetails;
+
+		[DataMember]
+		public int TotalCount;
     }
 }
