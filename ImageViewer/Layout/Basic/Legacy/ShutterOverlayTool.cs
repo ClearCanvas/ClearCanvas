@@ -29,14 +29,12 @@ using ClearCanvas.ImageViewer.PresentationStates.Dicom;
 
 namespace ClearCanvas.ImageViewer.Tools.Standard
 {
-    [ActionFormerly("showHide", "ClearCanvas.ImageViewer.Tools.Standard.ShutterOverlayTool:showHide")]
     [MenuAction("showHide", "imageviewer-contextmenu/MenuShowHideShutterOverlay", "ShowHide", InitiallyAvailable = false)]
 	[MenuAction("showHide", "global-menus/MenuTools/MenuStandard/MenuShowHideShutterOverlay", "ShowHide")]
 	[Tooltip("showHide", "TooltipShowHideShutterOverlay")]
 	[GroupHint("showHide", "Tools.Image.Overlays.Shutter.ShowHide")]
 	[IconSet("showHide", "Icons.ShutterOverlayToolSmall.png", "Icons.ShutterOverlayToolMedium.png", "Icons.ShutterOverlayToolLarge.png")]
 	//
-    [ActionFormerly("toggle", "ClearCanvas.ImageViewer.Tools.Standard.ShutterOverlayTool:toggle")]
     [ButtonAction("toggle", "overlays-dropdown/ToolbarShutterOverlay", "ShowHide")]
 	[CheckedStateObserver("toggle", "Checked", "CheckedChanged")]
 	[Tooltip("toggle", "TooltipShutterOverlay")]

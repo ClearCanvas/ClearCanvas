@@ -29,14 +29,12 @@ using ClearCanvas.ImageViewer.Annotations;
 
 namespace ClearCanvas.ImageViewer.Tools.Standard
 {
-    [ActionFormerly("showHide", "ClearCanvas.ImageViewer.Tools.Standard.TextOverlayTool:showHide")]
 	[MenuAction("showHide", "imageviewer-contextmenu/MenuShowHideTextOverlay", "ShowHide", InitiallyAvailable = false)]
 	[MenuAction("showHide", "global-menus/MenuTools/MenuStandard/MenuShowHideTextOverlay", "ShowHide")]
 	[Tooltip("showHide", "TooltipShowHideTextOverlay")]
 	[GroupHint("showHide", "Tools.Image.Overlays.Text.ShowHide")]
 	[IconSet("showHide", "Icons.TextOverlayToolSmall.png", "Icons.TextOverlayToolMedium.png", "Icons.TextOverlayToolLarge.png")]
 	//
-    [ActionFormerly("showHide", "ClearCanvas.ImageViewer.Tools.Standard.TextOverlayTool:toggle")]
     [ButtonAction("toggle", "overlays-dropdown/ToolbarTextOverlay", "ShowHide")]
 	[CheckedStateObserver("toggle", "Checked", "CheckedChanged")]
 	[Tooltip("toggle", "TooltipTextOverlay")]

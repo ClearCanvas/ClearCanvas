@@ -39,6 +39,8 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
             _parent = parent;
             var image = GetImage(_parent.Viewer.SelectedImageBox);
 
+            Persistent = false;
+
             //ApplicableModality = image.GetModality();
             Enabled = image != null && _parent.SelectedOverlaysVisible;
 

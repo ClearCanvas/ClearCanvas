@@ -32,14 +32,12 @@ using ClearCanvas.ImageViewer.PresentationStates.Dicom;
 
 namespace ClearCanvas.ImageViewer.Tools.Standard
 {
-    [ActionFormerly("showHide", "ClearCanvas.ImageViewer.Tools.Standard.DicomOverlaysTool:showHide")]
     [MenuAction("showHide", "imageviewer-contextmenu/MenuShowHideDicomOverlay", "ShowHide", InitiallyAvailable = false)]
     [MenuAction("showHide", "global-menus/MenuTools/MenuStandard/MenuShowHideDicomOverlay", "ShowHide")]
 	[Tooltip("showHide", "TooltipShowHideDicomOverlay")]
 	[GroupHint("showHide", "Tools.Image.Overlays.DicomOverlay.ShowHide")]
 	[IconSet("showHide", "Icons.DicomOverlaysToolSmall.png", "Icons.DicomOverlaysToolMedium.png", "Icons.DicomOverlaysToolLarge.png")]
 	//
-    [ActionFormerly("toggle", "ClearCanvas.ImageViewer.Tools.Standard.DicomOverlaysTool:toggle")]
     [ButtonAction("toggle", "overlays-dropdown/ToolbarDicomOverlay", "ShowHide")]
 	[CheckedStateObserver("toggle", "Checked", "CheckedChanged")]
 	[Tooltip("toggle", "TooltipDicomOverlay")]

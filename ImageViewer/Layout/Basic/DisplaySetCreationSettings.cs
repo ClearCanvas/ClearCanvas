@@ -304,12 +304,6 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
 
         public List<OverlaySelectionSetting> OverlaySelections { get; private set; }
 
-        public bool? IsOverlaySelected(string name)
-        {
-            var option = OverlaySelections.FirstOrDefault(o => o.Name == name);
-            return option == null ? (bool?)null : option.IsSelected;
-        }
-
 		private void NotifyPropertyChanged(string propertyName)
 		{
 			EventsHelper.Fire(_propertyChanged, this, new PropertyChangedEventArgs(propertyName));
@@ -546,8 +540,8 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
 
 		public void Save(IEnumerable<StoredDisplaySetCreationSetting> storedSettings)
 		{
-			XmlDocument document = new XmlDocument();
-			XmlElement root = document.CreateElement("display-set-creation-settings");
+			var document = new XmlDocument();
+			var root = document.CreateElement("display-set-creation-settings");
 			document.AppendChild(root);
 
 			foreach (StoredDisplaySetCreationSetting storedSetting in storedSettings)
@@ -558,10 +552,8 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
 				XmlElement optionsElement = document.CreateElement("options");
 				settingElement.AppendChild(optionsElement);
 
-				bool append = false;
 				if (storedSetting.CreateSingleImageDisplaySetsEnabled)
 				{
-					append = true;
 					XmlElement createSingleImageDisplaySetsElement = document.CreateElement("option");
 					createSingleImageDisplaySetsElement.SetAttribute("identifier", "CreateSingleImageDisplaySets");
 					createSingleImageDisplaySetsElement.SetAttribute("value", storedSetting.CreateSingleImageDisplaySets ? "True" : "False");
@@ -570,7 +562,6 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
 
                 if (storedSetting.CreateAllImagesDisplaySetEnabled)
                 {
-                    append = true;
                     XmlElement createAllImagesDisplaySetElement = document.CreateElement("option");
                     createAllImagesDisplaySetElement.SetAttribute("identifier", "CreateAllImagesDisplaySet");
                     createAllImagesDisplaySetElement.SetAttribute("value", storedSetting.CreateAllImagesDisplaySet ? "True" : "False");
@@ -579,7 +570,6 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
 
                 if (storedSetting.ShowOriginalSeriesEnabled)
                 {
-                    append = true;
                     XmlElement showOriginalSeriesElement = document.CreateElement("option");
                     showOriginalSeriesElement.SetAttribute("identifier", "ShowOriginalSeries");
                     showOriginalSeriesElement.SetAttribute("value", storedSetting.ShowOriginalSeries ? "True" : "False");
@@ -588,7 +578,6 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
 
 				if (storedSetting.SplitMultiEchoSeriesEnabled)
 				{
-					append = true;
 					XmlElement splitEchosElement = document.CreateElement("option");
 					splitEchosElement.SetAttribute("identifier", "SplitEchos");
 					splitEchosElement.SetAttribute("value", storedSetting.SplitMultiEchoSeries ? "True" : "False");
@@ -598,7 +587,6 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
 
 				if (storedSetting.SplitMixedMultiframesEnabled)
 				{
-					append = true;
 					XmlElement splitMultiframesElement = document.CreateElement("option");
 					splitMultiframesElement.SetAttribute("identifier", "SplitMixedMultiframes");
 					splitMultiframesElement.SetAttribute("value", storedSetting.SplitMixedMultiframes ? "True" : "False");
@@ -621,14 +609,12 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
 
 			    if (storedSetting.ShowGrayscaleInverted)
 				{
-					append = true;
 					XmlElement presentationIntentElement = document.CreateElement("presentation-intent");
 					presentationIntentElement.SetAttribute("show-grayscale-inverted", "True");
 					settingElement.AppendChild(presentationIntentElement);
 				}
 
-				if (append)
-					root.AppendChild(settingElement);
+				root.AppendChild(settingElement);
 			}
 
 			this.DisplaySetCreationSettingsXml = document;

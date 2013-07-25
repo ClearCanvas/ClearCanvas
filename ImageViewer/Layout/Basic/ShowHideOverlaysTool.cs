@@ -31,6 +31,7 @@ using ClearCanvas.Common.Utilities;
 using ClearCanvas.Desktop;
 using ClearCanvas.Desktop.Actions;
 using ClearCanvas.ImageViewer.BaseTools;
+using ClearCanvas.ImageViewer.Tools.Standard;
 
 namespace ClearCanvas.ImageViewer.Layout.Basic
 {
@@ -49,65 +50,67 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
             HideUnimportant
         }
 
-        private readonly IconSet _selectedOverlaysVisible;
-        private readonly IconSet _selectedOverlaysHidden;
-        private ActionSet _nilActions;
+        private readonly IconSet _selectedOverlaysVisibleIconSet;
+        private readonly IconSet _selectedOverlaysHiddenIconSet;
 
-        public ShowHideOverlaysTool()
+        private ActionModelRoot _legacyDropDownActionModel;
+
+        static ShowHideOverlaysTool()
         {
-            _selectedOverlaysVisible = new IconSet("Icons.ShowHideOverlaysToolSmall.png", "Icons.ShowHideOverlaysToolMedium.png", "Icons.ShowHideOverlaysToolLarge.png");
-            _selectedOverlaysHidden = new UnavailableActionIconSet(_selectedOverlaysVisible){GrayMode = true};
-            IconSet = _selectedOverlaysVisible;
-
             try
             {
                 new SelectOverlaysActionViewExtensionPoint().CreateExtension();
-                IsViewSupported = true;
+                LegacyMode = false;
             }
             catch (NotSupportedException)
             {
-                IsViewSupported = false;
-            }
-		}
-
-        public static bool IsViewSupported { get; private set; }
-
-        internal IImageViewer Viewer { get { return Context.Viewer; } }
-
-        public override IActionSet Actions
-        {
-            get
-            {
-                if (!IsViewSupported)
-                {
-                    if (_nilActions == null)
-                    {
-                        _nilActions = new ActionSet();
-                        base.Actions = _nilActions;
-                    }
-                }
-
-                return base.Actions;
-            }
-            protected set
-            {
-                base.Actions = value;
+                LegacyMode = true;
             }
         }
+
+        public ShowHideOverlaysTool()
+        {
+            _selectedOverlaysVisibleIconSet = new IconSet("Icons.ShowHideOverlaysToolSmall.png", "Icons.ShowHideOverlaysToolMedium.png", "Icons.ShowHideOverlaysToolLarge.png");
+            _selectedOverlaysHiddenIconSet = new UnavailableActionIconSet(_selectedOverlaysVisibleIconSet){GrayMode = true};
+            IconSet = _selectedOverlaysVisibleIconSet;
+		}
+
+        internal static bool LegacyMode { get; set; }
+
+        internal IImageViewer Viewer { get { return Context.Viewer; } }
 
 		public ActionModelNode DropDownActionModel
 		{
 			get
 			{
+                if (LegacyMode)
+                    return LegacyDropDownActionModel;
+                
                 //Take advantage of the fact that the drop-down model is requested each time it's going to be shown.
                 var resolver = new ActionResourceResolver(typeof(SelectOverlaysAction));
-                var action = new SelectOverlaysAction(this, "selectOverlays", new ActionPath("overlays-dropdown/SelectOverlays", resolver), resolver);
+			    var actionId = typeof (ShowHideOverlaysTool).Namespace + ":selectOverlays";
+                var action = new SelectOverlaysAction(this, actionId, new ActionPath("overlays-dropdown/SelectOverlays", resolver), resolver);
                 var actionSet = new ActionSet(new[] { action });
 				return ActionModelRoot.CreateModel(typeof (ShowHideOverlaysTool).Namespace, "overlays-dropdown", actionSet);
 			}
 		}
 
+
+        private ActionModelNode LegacyDropDownActionModel
+        {
+            get
+            {
+                if (_legacyDropDownActionModel == null)
+                {
+                    //Leave the drop-down action model namespace the same so that old action models will continue to work.
+                    _legacyDropDownActionModel = ActionModelRoot.CreateModel("ClearCanvas.ImageViewer.Tools.Standard", "overlays-dropdown", this.ImageViewer.ExportedActions);
+                }
+                return _legacyDropDownActionModel;
+            }    
+        }
+
         public IconSet IconSet { get; private set; }
+
         public event EventHandler IconSetChanged
         {
             add { SelectedOverlaysVisibleChanged += value; }
@@ -116,7 +119,13 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
 
         public string Tooltip
         {
-            get { return SelectedOverlaysVisible ? SR.TooltipHideOverlays : SR.TooltipShowOverlays; }
+            get
+            {
+                if (LegacyMode)
+                    return SR.TooltipShowHideOverlays;
+
+                return SelectedOverlaysVisible ? SR.TooltipHideOverlays : SR.TooltipShowOverlays;
+            }
         }
 
         public event EventHandler TooltipChanged
@@ -127,7 +136,7 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
 
         public bool SelectedOverlaysVisible
         {
-            get { return ReferenceEquals(IconSet, _selectedOverlaysVisible); }
+            get { return ReferenceEquals(IconSet, _selectedOverlaysVisibleIconSet); }
         }
 
         public event EventHandler SelectedOverlaysVisibleChanged;
@@ -136,20 +145,34 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
         {
             base.Initialize();
 
-            DisplaySetCreationSettings.DefaultInstance.PropertyChanged += SettingsChanged;
-            Context.Viewer.EventBroker.DisplaySetChanged += OnDisplaySetChanged;
+            if (!LegacyMode)
+            {
+                //Don't apply the settings when there's no view, as it conflicts with the behaviour of the "legacy" tool.
+                DisplaySetCreationSettings.DefaultInstance.PropertyChanged += SettingsChanged;
+                Context.Viewer.EventBroker.DisplaySetChanged += OnDisplaySetChanged;
+            }
         }
 
         protected override void Dispose(bool disposing)
         {
-            DisplaySetCreationSettings.DefaultInstance.PropertyChanged -= SettingsChanged;
-            Context.Viewer.EventBroker.DisplaySetChanged -= OnDisplaySetChanged;
+            if (!LegacyMode)
+            {
+                DisplaySetCreationSettings.DefaultInstance.PropertyChanged -= SettingsChanged;
+                Context.Viewer.EventBroker.DisplaySetChanged -= OnDisplaySetChanged;
+            }
+
             base.Dispose(disposing);
         }
 
         public void ToggleAll()
         {
-            IconSet = SelectedOverlaysVisible ? _selectedOverlaysHidden : _selectedOverlaysVisible;
+            if (LegacyMode)
+            {
+                LegacyToggleAll();
+                return;
+            }
+
+            IconSet = SelectedOverlaysVisible ? _selectedOverlaysHiddenIconSet : _selectedOverlaysVisibleIconSet;
             EventsHelper.Fire(SelectedOverlaysVisibleChanged, this, EventArgs.Empty);
 
             var selectedOverlaysVisible = SelectedOverlaysVisible;
@@ -158,6 +181,30 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
 
 			Context.Viewer.PhysicalWorkspace.Draw();
 		}
+
+        //Taken from the old Show/Hide overlays implementation.
+        private void LegacyToggleAll()
+        {
+			// get the current check state
+			bool currentCheckState = true;
+			foreach (OverlayToolBase tool in OverlayToolBase.EnumerateTools(this.ImageViewer))
+			{
+				if (!tool.Checked)
+				{
+					currentCheckState = false;
+					break;
+				}
+			}
+
+			// invert the check state
+			currentCheckState = !currentCheckState;
+
+			// apply new check state to all
+			foreach (OverlayToolBase tool in OverlayToolBase.EnumerateTools(this.ImageViewer))
+				tool.Checked = currentCheckState;
+
+			this.Context.Viewer.PhysicalWorkspace.Draw();
+        }
 
         private void OnDisplaySetChanged(object sender, DisplaySetChangedEventArgs e)
         {

@@ -131,7 +131,6 @@
   <ItemGroup>
     <Compile Include="Legacy\ColorBarTool.cs" />
     <Compile Include="Legacy\DicomOverlaysTool.cs" />
-    <Compile Include="Legacy\LegacyShowHideOverlaysTool.cs" />
     <Compile Include="Legacy\OverlayToolBase.cs" />
     <Compile Include="Legacy\ScaleOverlayTool.cs" />
     <Compile Include="Legacy\ShutterOverlayTool.cs" />

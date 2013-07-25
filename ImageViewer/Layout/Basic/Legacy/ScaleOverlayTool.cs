@@ -30,14 +30,12 @@ using ClearCanvas.ImageViewer.Layout.Basic.OverlayManagers;
 
 namespace ClearCanvas.ImageViewer.Tools.Standard
 {
-    [ActionFormerly("showHide", "ClearCanvas.ImageViewer.Tools.Standard.ScaleOverlayTool:showHide")]
 	[MenuAction("showHide", "imageviewer-contextmenu/MenuShowHideScaleOverlay", "ShowHide", InitiallyAvailable = false)]
 	[MenuAction("showHide", "global-menus/MenuTools/MenuStandard/MenuShowHideScaleOverlay", "ShowHide")]
 	[Tooltip("showHide", "TooltipShowHideScaleOverlay")]
 	[GroupHint("showHide", "Tools.Image.Overlays.Scale.ShowHide")]
 	[IconSet("showHide", "Icons.ScaleOverlayToolSmall.png", "Icons.ScaleOverlayToolMedium.png", "Icons.ScaleOverlayToolLarge.png")]
 	//
-    [ActionFormerly("toggle", "ClearCanvas.ImageViewer.Tools.Standard.ScaleOverlayTool:toggle")]
     [ButtonAction("toggle", "overlays-dropdown/ToolbarScaleOverlay", "ShowHide")]
 	[CheckedStateObserver("toggle", "Checked", "CheckedChanged")]
 	[Tooltip("toggle", "TooltipScaleOverlay")]

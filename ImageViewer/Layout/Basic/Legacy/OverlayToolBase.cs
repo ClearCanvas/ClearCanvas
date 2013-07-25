@@ -65,7 +65,8 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
         {
             get
             {
-                if (Layout.Basic.ShowHideOverlaysTool.IsViewSupported)
+                //These actions only exist in "legacy" mode.
+                if (!Layout.Basic.ShowHideOverlaysTool.LegacyMode)
                 {
                     if (_nilActions == null)
                     {
