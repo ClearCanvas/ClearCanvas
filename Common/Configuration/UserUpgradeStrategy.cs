@@ -201,16 +201,24 @@ namespace ClearCanvas.Common.Configuration
 		/// </summary>
 		private static string GetAlternateAppSettingsFolder()
 		{
+			var appDomainEvidence = AppDomain.CurrentDomain.Evidence;
+			var configurationFilePath = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal).FilePath;
+			var previousInstallDir = UpgradeSettings.Default.PreviousInstallDir;
+			return GetAlternateAppSettingsFolder(previousInstallDir, appDomainEvidence, configurationFilePath);
+		}
+
+		/// <summary>
+		/// Determines an alternate application settings folder for the provided details. (This overload really only exists for unit test purposes)
+		/// </summary>
+		internal static string GetAlternateAppSettingsFolder(string previousInstallDir, Evidence appDomainEvidence, string configurationFilePath)
+		{
 			try
 			{
-				var appDomainEvidence = AppDomain.CurrentDomain.Evidence;
-
 				// if the strong name evidence is available for the appdomain, it would've been used and there wouldn't be an 'alternate'
 				if (appDomainEvidence.GetHostEvidence<StrongName>() != null) return null;
 
 				// get the current app settings folder name
-				var configuration = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal);
-				var currentAppConfigFolder = Path.GetFileName(Path.GetDirectoryName(Path.GetDirectoryName(configuration.FilePath)));
+				var currentAppConfigFolder = Path.GetFileName(Path.GetDirectoryName(Path.GetDirectoryName(configurationFilePath)));
 				if (string.IsNullOrWhiteSpace(currentAppConfigFolder) || currentAppConfigFolder.Length <= 32) return null;
 
 				// check that it uses the 'Url' type and strip off the hash
@@ -223,7 +231,6 @@ namespace ClearCanvas.Common.Configuration
 
 				// if a previous install directory is known, figure out what the url evidence would have looked like for the same executable in that directory
 				// otherwise, just assume it would be same as the current url evidence
-				var previousInstallDir = UpgradeSettings.Default.PreviousInstallDir;
 				var evidenceInfo = string.IsNullOrWhiteSpace(previousInstallDir) ? urlEvidence.Value : "file:///" + previousInstallDir.TrimEnd('/', '\\') + '/' + Path.GetFileName(new Uri(urlEvidence.Value).LocalPath);
 
 				// normalize the evidence info: this is what changed between CLR 2.0 and 4.0 - the choice of slash type!
