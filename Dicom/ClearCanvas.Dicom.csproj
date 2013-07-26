@@ -234,6 +234,7 @@
     </Compile>
     <Compile Include="Tests\DateTimeTests.cs" />
     <Compile Include="Iod\Tests\ImageOrientationPatientTests.cs" />
+    <Compile Include="Iod\IStudy.cs" />
     <Compile Include="Utilities\PdfStreamHelper.cs" />
     <Compile Include="Utilities\SopInstanceFactory.cs" />
     <Compile Include="Utilities\Tests\DicomStringHelperTests.cs">
@@ -574,6 +575,9 @@
     <Compile Include="Utilities\StudyBuilder\StudyNodeCollection.cs" />
     <Compile Include="Utilities\Tests\DicomTagPathTests.cs" />
     <Compile Include="Utilities\Xml\InstanceXmlDicomAttributeCollection.cs" />
+    <Compile Include="Utilities\Xml\Series.cs" />
+    <Compile Include="Utilities\Xml\SopInstance.cs" />
+    <Compile Include="Utilities\Xml\Study.cs" />
     <Compile Include="Utilities\Xml\Tests\InstanceXmlTests.cs" />
     <Compile Include="Utilities\Xml\Tests\StudyXmlTests.cs" />
     <Compile Include="Validation\DicomValidator.cs" />
