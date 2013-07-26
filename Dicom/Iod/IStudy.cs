@@ -139,5 +139,7 @@ namespace ClearCanvas.Dicom.Iod
 
         DicomAttribute GetAttribute(uint dicomTag);
         DicomAttribute GetAttribute(DicomTag dicomTag);
+
+        DicomFile GetHeader(bool forceComplete);
     }
 }

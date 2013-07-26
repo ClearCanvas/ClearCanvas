@@ -27,7 +27,7 @@ using System.Collections.Generic;
 using System.Linq;
 using ClearCanvas.Dicom.Iod;
 
-namespace ClearCanvas.Dicom.Utilities.Xml
+namespace ClearCanvas.Dicom.Utilities.Xml.Study
 {
     /// <summary>
     /// Represents an <see cref="IStudy"/> whose main source of data is a <see cref="StudyXml"/> document.

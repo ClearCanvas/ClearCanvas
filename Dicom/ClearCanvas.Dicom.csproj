@@ -575,9 +575,9 @@
     <Compile Include="Utilities\StudyBuilder\StudyNodeCollection.cs" />
     <Compile Include="Utilities\Tests\DicomTagPathTests.cs" />
     <Compile Include="Utilities\Xml\InstanceXmlDicomAttributeCollection.cs" />
-    <Compile Include="Utilities\Xml\Series.cs" />
-    <Compile Include="Utilities\Xml\SopInstance.cs" />
-    <Compile Include="Utilities\Xml\Study.cs" />
+    <Compile Include="Utilities\Xml\Study\Series.cs" />
+    <Compile Include="Utilities\Xml\Study\SopInstance.cs" />
+    <Compile Include="Utilities\Xml\Study\Study.cs" />
     <Compile Include="Utilities\Xml\Tests\InstanceXmlTests.cs" />
     <Compile Include="Utilities\Xml\Tests\StudyXmlTests.cs" />
     <Compile Include="Validation\DicomValidator.cs" />
