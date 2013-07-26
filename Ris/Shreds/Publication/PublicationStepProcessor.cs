@@ -121,6 +121,8 @@ namespace ClearCanvas.Ris.Shreds.Publication
 			var procedure = reportPart.Report.Procedures.First();
 			workQueueItem.ExtendedProperties.Add("ProcedureType", procedure.Type.Name);
 			workQueueItem.ExtendedProperties.Add("AccessionNumber", procedure.Order.AccessionNumber);
+			workQueueItem.ExtendedProperties.Add("StudyInstanceUID", procedure.StudyInstanceUID);
+			
 
 			PersistenceScope.CurrentContext.Lock(workQueueItem, DirtyState.New);
 		}
