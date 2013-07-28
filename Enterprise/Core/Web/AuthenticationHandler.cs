@@ -21,13 +21,18 @@ namespace ClearCanvas.Enterprise.Core.Web
 		{
 		}
 
-		protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+		protected sealed override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
 		{
 			try
 			{
+				// try to authenticate
 				var authHeader = request.Headers.Authorization;
-				TryAuthenticate(authHeader);
+				IPrincipal principal;
+				if(TryAuthenticate(authHeader, out principal))
+					SetPrincipal(principal);
 
+				// call base method (i.e. continue down pipeline) but add a continuation that,
+				// in case of an Unauthorized result, sets the "Authenticate" response header
 				return base.SendAsync(request, cancellationToken).ContinueWith(
 					task =>
 					{
@@ -53,16 +58,18 @@ namespace ClearCanvas.Enterprise.Core.Web
 			}
 		}
 
-		private static void TryAuthenticate(AuthenticationHeaderValue authHeader)
+		protected virtual bool TryAuthenticate(AuthenticationHeaderValue authHeader, out IPrincipal principal)
 		{
+			principal = null;
+
 			if (authHeader == null)
-				return;
+				return false;
 
 			if (authHeader.Scheme != CustomScheme)
-				return;
+				return false;
 
 			if (string.IsNullOrEmpty(authHeader.Parameter))
-				return;
+				return false;
 
 			var parameterParts = authHeader.Parameter.Split(':');
 			var userId = parameterParts[0];
@@ -75,17 +82,17 @@ namespace ClearCanvas.Enterprise.Core.Web
 					service => { response = service.ValidateSession(new ValidateSessionRequest(userId, sessionToken) {GetAuthorizations = true}); });
 
 				var identity = new GenericIdentity(userId);
-				var principal = DefaultPrincipal.CreatePrincipal(
+				principal = DefaultPrincipal.CreatePrincipal(
 					identity,
 					response.SessionToken,
 					response.AuthorityTokens);
-
-				SetPrincipal(principal);
+				return true;
 			}
 			catch (FaultException<InvalidUserSessionException>)
 			{
 				// if authentication fails, we simply do not set a principle
 				// the request is treated as anonymous
+				return false;
 			}
 		}
 

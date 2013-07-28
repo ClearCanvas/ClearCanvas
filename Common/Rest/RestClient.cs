@@ -212,6 +212,7 @@ namespace ClearCanvas.Common.Rest
 			private string _contentString;
 			private Stream _contentStream;
 			private string _contentType;
+			private bool _bufferRequest = true;	// because that is the .net default
 
 			internal Request(RestClient rc, string resource, string args)
 			{
@@ -266,8 +267,9 @@ namespace ClearCanvas.Common.Rest
 			/// </summary>
 			/// <param name="data"></param>
 			/// <param name="contentType"></param>
+			/// <param name="buffer">Specifies whether the request should buffer the data.</param>
 			/// <returns></returns>
-			public Request SetData(Stream data, string contentType)
+			public Request SetData(Stream data, string contentType, bool buffer = true)
 			{
 				if (data == null)
 					throw new ArgumentNullException("data");
@@ -278,6 +280,7 @@ namespace ClearCanvas.Common.Rest
 
 				_contentStream = data;
 				_contentType = contentType;
+				_bufferRequest = buffer;
 
 				return this;
 			}
@@ -287,8 +290,9 @@ namespace ClearCanvas.Common.Rest
 			/// </summary>
 			/// <param name="data"></param>
 			/// <param name="contentType"></param>
+			/// <param name="buffer">Specifies whether the request should buffer the data.</param>
 			/// <returns></returns>
-			public Request SetData(string data, string contentType)
+			public Request SetData(string data, string contentType, bool buffer = true)
 			{
 				if (string.IsNullOrEmpty(data))
 					return this;
@@ -299,6 +303,7 @@ namespace ClearCanvas.Common.Rest
 
 				_contentString = data;
 				_contentType = contentType;
+				_bufferRequest = buffer;
 
 				return this;
 			}
@@ -318,6 +323,7 @@ namespace ClearCanvas.Common.Rest
 				// initialize the request
 				_request = (HttpWebRequest)WebRequest.Create(url.ToString());
 				_request.Timeout = (int)_rc.Timeout.TotalMilliseconds;
+				_request.AllowWriteStreamBuffering = _bufferRequest;
 
 				if (!string.IsNullOrEmpty(_rc.UserAgent))
 				{
