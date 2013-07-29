@@ -453,6 +453,23 @@ namespace ClearCanvas.Dicom.Utilities.Anonymization.Tests
 		}
 
 		[Test]
+		public void PrintTagActions2()
+		{
+			// prints a list of tags processed by the anonymizer, and the action taken, in a CSV format suitable for spreadsheet applications
+			// Hint: if you're using MS Excel, open the data through "Import Text" function (e.g. Data -> Import Text) to force the tag value column to Text mode
+			var list = DicomAnonymizer.TagsToRemove.Select(t => new {Tag = t, Action = 'X', DicomTagDictionary.GetDicomTag(t).Name})
+				.Union(DicomAnonymizer.TagsToNull.Select(t => new {Tag = t, Action = 'Z', DicomTagDictionary.GetDicomTag(t).Name}))
+				.Union(DicomAnonymizer.UidTagsToRemap.Select(t => new {Tag = t, Action = 'U', DicomTagDictionary.GetDicomTag(t).Name}))
+				.Union(DicomAnonymizer.DateTimeTagsToAdjust.Select(t => new {Tag = t, Action = 'D', DicomTagDictionary.GetDicomTag(t).Name}))
+				.OrderBy(t => t.Name).ToList();
+
+			foreach (var tag in list)
+			{
+				Debug.WriteLine(string.Format("\"{0}\",\"({1:X4},{2:X4})\",\"{3}\"", tag.Name.Trim(), (tag.Tag >> 16) & 0x0FFFF, tag.Tag & 0x0FFFF, tag.Action));
+			}
+		}
+
+		[Test]
 		public void EnsureUniqueTags()
 		{
 			var failed = false;
