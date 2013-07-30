@@ -201,10 +201,19 @@ namespace ClearCanvas.Common.Configuration
 		/// </summary>
 		private static string GetAlternateAppSettingsFolder()
 		{
-			var appDomainEvidence = AppDomain.CurrentDomain.Evidence;
-			var configurationFilePath = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal).FilePath;
-			var previousInstallDir = UpgradeSettings.Default.PreviousInstallDir;
-			return GetAlternateAppSettingsFolder(previousInstallDir, appDomainEvidence, configurationFilePath);
+			try
+			{
+				var appDomainEvidence = AppDomain.CurrentDomain.Evidence;
+				var configurationFilePath = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal).FilePath;
+				var previousInstallDir = UpgradeSettings.Default.PreviousInstallDir;
+				return GetAlternateAppSettingsFolder(previousInstallDir, appDomainEvidence, configurationFilePath);
+			}
+			catch (Exception ex)
+			{
+				// if any exception is thrown, just log and continue
+				Platform.Log(LogLevel.Debug, ex, "Failure while attempting to determine an alternate application settings directory");
+				return null;
+			}
 		}
 
 		/// <summary>
