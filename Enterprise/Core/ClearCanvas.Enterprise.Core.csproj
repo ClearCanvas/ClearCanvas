@@ -87,7 +87,6 @@
       <HintPath>..\..\..\..\..\Program Files\Reference Assemblies\Microsoft\Framework\v3.0\System.ServiceModel.dll</HintPath>
     </Reference>
     <Reference Include="System.Web" />
-    <Reference Include="System.Web.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -268,31 +267,12 @@
     <Compile Include="ValueObject.cs" />
     <Compile Include="ValueObjectSearchCriteria.cs" />
     <Compile Include="VersionService.cs" />
-    <Compile Include="Web\AuthenticationHandler.cs" />
-    <Compile Include="Web\DefaultExceptionFilter.cs" />
-    <Compile Include="Web\ErrorType.cs" />
-    <Compile Include="Web\IPersistenceEnabledController.cs" />
-    <Compile Include="Web\PersistenceContextActionFilter.cs" />
-    <Compile Include="Web\RawXmlMediaTypeFormatter.cs" />
-    <Compile Include="Web\RequestValidationFilter.cs" />
-    <Compile Include="Web\ResourceNotFoundException.cs" />
-    <Compile Include="Web\SecurityExceptionFilter.cs" />
-    <Compile Include="Web\SR.Designer.cs">
-      <DependentUpon>SR.resx</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="SR.resx">
       <SubType>Designer</SubType>
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>SR.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Web\SR.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>SR.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
@@ -348,6 +328,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Caching\" />
+    <Folder Include="Web\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
