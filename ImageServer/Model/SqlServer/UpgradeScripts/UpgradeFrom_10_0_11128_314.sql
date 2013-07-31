@@ -21,7 +21,7 @@ DECLARE @ServerPartitionGUID uniqueidentifier
 SET @SopClassGUID = NEWID()
 
 INSERT INTO [ImageServer].[dbo].[ServerSopClass] ([GUID],[SopClassUid],[Description],[NonImage])
-VALUES (@SopClassGUID, '1.2.840.10008.5.1.4.1.1.6.2', 'Enhanced US Volume Storage', 1);
+VALUES (@SopClassGUID, '1.2.840.10008.5.1.4.1.1.6.2', 'Enhanced US Volume Storage', 0);
 
 DECLARE partition_cursor CURSOR FOR SELECT GUID From ServerPartition
 OPEN partition_cursor
