@@ -38,7 +38,7 @@ namespace ClearCanvas.Enterprise.Common
 	#region RemoteServiceProviderArgs class
 
 	/// <summary>
-	/// Encapsulates options that confgiure a <see cref="RemoteServiceProviderBase{T}"/>.
+	/// Encapsulates options that configure a <see cref="RemoteServiceProviderBase{T}"/>.
 	/// </summary>
 	public class RemoteServiceProviderArgs
 	{
