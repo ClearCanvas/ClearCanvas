@@ -194,6 +194,15 @@ namespace ClearCanvas.Common.Serialization
 			public Predicate<MemberInfo> DataMemberTest { get; set; }
 
 			/// <summary>
+			/// Gets or sets a value that indicates whether non-public members should be included.
+			/// </summary>
+			/// <remarks>
+			/// This value is set to true by default for backwards compatibility with the behaviour of
+			/// previous versions of <see cref="JsmlSerializer"/>.
+			/// </remarks>
+			public bool IncludeNonPublicMembers { get; set; }
+
+			/// <summary>
 			/// Gets or sets a predicate that determines whether a type is considered a data-contract.
 			/// </summary>
 			/// <remarks>
@@ -400,12 +409,12 @@ namespace ClearCanvas.Common.Serialization
 			/// <summary>
 			/// Get a list of properties and fields from a data contract that satisfy the predicate.
 			/// </summary>
-			protected static IEnumerable<IObjectMemberContext> GetDataMemberFields(object dataObject, Predicate<MemberInfo> memberTest)
+			protected static IEnumerable<IObjectMemberContext> GetDataMemberFields(object dataObject, Predicate<MemberInfo> memberTest, bool includeNonPublicMembers)
 			{
 				var walker = new ObjectWalker(memberTest)
 				{
-					IncludeNonPublicFields = true,
-					IncludeNonPublicProperties = true
+					IncludeNonPublicFields = includeNonPublicMembers,
+					IncludeNonPublicProperties = includeNonPublicMembers
 				};
 
 				return walker.Walk(dataObject);
@@ -513,7 +522,7 @@ namespace ClearCanvas.Common.Serialization
 
 				if (IsDataContract(obj.GetType()))
 				{
-					var dataMemberFields = new List<IObjectMemberContext>(GetDataMemberFields(obj, this.Options.DataMemberTest));
+					var dataMemberFields = new List<IObjectMemberContext>(GetDataMemberFields(obj, this.Options.DataMemberTest, this.Options.IncludeNonPublicMembers));
 					if (dataMemberFields.Count > 0)
 					{
 						_writer.WriteAttributeString("type", "hash");
@@ -651,7 +660,7 @@ namespace ClearCanvas.Common.Serialization
 				{
 					var dataObject = Activator.CreateInstance(dataType, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance, null, null, null);
 
-					foreach (var context in GetDataMemberFields(dataObject, this.Options.DataMemberTest))
+					foreach (var context in GetDataMemberFields(dataObject, this.Options.DataMemberTest, this.Options.IncludeNonPublicMembers))
 					{
 						var memberElement = GetFirstElementWithTagName(xmlElement, context.Member.Name);
 						if (memberElement != null)
