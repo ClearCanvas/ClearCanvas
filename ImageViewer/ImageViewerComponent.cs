@@ -894,10 +894,7 @@ namespace ClearCanvas.ImageViewer
         public static void Launch(ImageViewerComponent imageViewer, IDesktopWindow window, string title)
         {
             IWorkspace workspace = LaunchAsWorkspace(window, imageViewer, title);
-
-            workspace.Closed += delegate {
-                imageViewer.Dispose();
-            };
+            imageViewer.ParentDesktopObject = workspace;
             try
             {
                 imageViewer.Layout();
@@ -997,6 +994,8 @@ namespace ClearCanvas.ImageViewer
 		{
 			if (disposing)
 			{
+				ParentDesktopObject = null;
+
 				if (_toolSet != null)
 				{
 					_toolSet.Dispose();
@@ -1055,6 +1054,32 @@ namespace ClearCanvas.ImageViewer
 		{
 			if (_priorStudyLoader != null)
 				_priorStudyLoader.Stop();
+		}
+
+		#endregion
+
+		#region Desktop Host Closed Event Handling
+
+		private IDesktopObject _parentDesktopObject;
+
+		/// <summary>
+		/// Sets the parent desktop object for the sole purpose of hooking up an event handler to perform disposal on ourself.
+		/// </summary>
+		private IDesktopObject ParentDesktopObject
+		{
+			set
+			{
+				if (ReferenceEquals(_parentDesktopObject, value)) return;
+				if (_parentDesktopObject != null) _parentDesktopObject.Closed -= OnParentDesktopObjectClosed;
+				_parentDesktopObject = value;
+				if (_parentDesktopObject != null) _parentDesktopObject.Closed += OnParentDesktopObjectClosed;
+			}
+		}
+
+		private void OnParentDesktopObjectClosed(object sender, ClosedEventArgs e)
+		{
+			ParentDesktopObject = null;
+			Dispose();
 		}
 
 		#endregion
