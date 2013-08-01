@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="WarningKeepingPrivateTagsIsPotentialPatientPrivacyIssue" xml:space="preserve">
-    <value>Private tags may contain patient information. Please review files after anonymization to ensure they are properly deidentified.</value>
+    <value>Private tags may contain patient information. Please review files after anonymization to ensure they are de-identified.</value>
   </data>
   <data name="WarningKeepReportsAndAttachmentsIsPotentialPatientPrivacyIssue" xml:space="preserve">
     <value>Reports and attachments may still contain patient information after anonymization!</value>

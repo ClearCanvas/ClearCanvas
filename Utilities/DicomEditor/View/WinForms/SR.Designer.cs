@@ -61,7 +61,7 @@ namespace ClearCanvas.Utilities.DicomEditor.View.WinForms {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Private tags may contain patient information. Please review files after anonymization to ensure they are properly deidentified..
+        ///   Looks up a localized string similar to Private tags may contain patient information. Please review files after anonymization to ensure they are de-identified..
         /// </summary>
         internal static string WarningKeepingPrivateTagsIsPotentialPatientPrivacyIssue {
             get {
