@@ -875,7 +875,7 @@ VALUES (newid(), '1.2.840.10008.5.1.4.1.1.13.1.3', 'Breast Tomosynthesis Image S
 GO
 
 INSERT INTO [ImageServer].[dbo].[ServerSopClass] ([GUID],[SopClassUid],[Description],[NonImage])
-VALUES (@SopClassGUID, '1.2.840.10008.5.1.4.1.1.6.2', 'Enhanced US Volume Storage', 0);
+VALUES (newid(), '1.2.840.10008.5.1.4.1.1.6.2', 'Enhanced US Volume Storage', 0);
 GO
 
 -- ServerTransferSyntax inserts
