@@ -27,28 +27,28 @@ using ClearCanvas.ImageViewer.PresentationStates.Dicom;
 
 namespace ClearCanvas.ImageViewer.Layout.Basic.OverlayManagers
 {
-    public class DicomOverlayManager : OverlayManager
-    {
-        public DicomOverlayManager()
-            : base(SR.NameDicomOverlay, SR.NameDicomOverlay)
-        {
-            IsImportant = true;
-            IconSet = new IconSet("Icons.DicomOverlaysToolSmall.png", "Icons.DicomOverlaysToolMedium.png", "Icons.DicomOverlaysToolLarge.png");
-        }
+	public class DicomOverlayManager : OverlayManager
+	{
+		public DicomOverlayManager()
+			: base("DicomOverlay", "NameDicomOverlay")
+		{
+			IsImportant = true;
+			IconSet = new IconSet("Icons.DicomOverlaysToolSmall.png", "Icons.DicomOverlaysToolMedium.png", "Icons.DicomOverlaysToolLarge.png");
+		}
 
-        public override bool IsSelectedByDefault(string modality)
-        {
-            return true;
-        }
+		public override bool IsSelectedByDefault(string modality)
+		{
+			return true;
+		}
 
-        public override void SetOverlayVisible(IPresentationImage image, bool visible)
-        {
-            var dicomPresentationImage = image as IDicomPresentationImage;
-            if (dicomPresentationImage == null) return;
-            
-            DicomGraphicsPlane dicomGraphicsPlane = DicomGraphicsPlane.GetDicomGraphicsPlane(dicomPresentationImage, true);
-            if (dicomGraphicsPlane != null)
-                dicomGraphicsPlane.Layers.Enabled = visible;
-        }
-    }
+		public override void SetOverlayVisible(IPresentationImage image, bool visible)
+		{
+			var dicomPresentationImage = image as IDicomPresentationImage;
+			if (dicomPresentationImage == null) return;
+
+			DicomGraphicsPlane dicomGraphicsPlane = DicomGraphicsPlane.GetDicomGraphicsPlane(dicomPresentationImage, true);
+			if (dicomGraphicsPlane != null)
+				dicomGraphicsPlane.Layers.Enabled = visible;
+		}
+	}
 }

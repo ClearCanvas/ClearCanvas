@@ -24,57 +24,72 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Xml;
 using ClearCanvas.Common;
+using ClearCanvas.Common.Configuration;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Desktop;
-using System.ComponentModel;
-using ClearCanvas.Common.Configuration;
 
 namespace ClearCanvas.ImageViewer.Layout.Basic
 {
-    public class OverlaySelectionSetting : IOverlaySelection
-    {
-        private readonly IOverlayManager _manager;
-        private bool _isSelected;
-
-        internal OverlaySelectionSetting(IOverlayManager manager)
-        {
-            _manager = manager;
-        }
-
-        #region Implementation of IOverlaySelectionOption
-
-        public string Name { get { return _manager.Name; } }
-        public string DisplayName { get { return _manager.DisplayName; } }
-        public bool IsConfigurable { get { return !_manager.IsImportant; } }
-        public bool IsSelected
-        {
-            get { return _isSelected; }
-            set
-            {
-                if (_isSelected == value)return;
-                _isSelected = value;
-                EventsHelper.Fire(IsSelectedChanged, this, EventArgs.Empty);
-            }
-        }
-
-        #endregion
-
-        public event EventHandler IsSelectedChanged;
-    }
-        
-
-    public class StoredDisplaySetCreationSetting : INotifyPropertyChanged, IModalityDisplaySetCreationOptions
+	public class OverlaySelectionSetting : IOverlaySelection
 	{
-        private readonly string _modality;
+		private readonly IOverlayManager _manager;
+		private bool _isSelected;
 
-        private bool _createSingleImageDisplaySets;
-        private bool _createAllImagesDisplaySet;
-        private bool _showOriginalSeries;
+		internal OverlaySelectionSetting(IOverlayManager manager)
+		{
+			_manager = manager;
+		}
+
+		#region Implementation of IOverlaySelectionOption
+
+		public string Name
+		{
+			get { return _manager.Name; }
+		}
+
+		public string DisplayName
+		{
+			get
+			{
+				var resourceResolver = _manager.ResourceResolver;
+				return resourceResolver != null ? resourceResolver.LocalizeString(_manager.DisplayName) : _manager.DisplayName;
+			}
+		}
+
+		public bool IsConfigurable
+		{
+			get { return !_manager.IsImportant; }
+		}
+
+		public bool IsSelected
+		{
+			get { return _isSelected; }
+			set
+			{
+				if (_isSelected == value) return;
+				_isSelected = value;
+				EventsHelper.Fire(IsSelectedChanged, this, EventArgs.Empty);
+			}
+		}
+
+		#endregion
+
+		public event EventHandler IsSelectedChanged;
+	}
+
+	public class StoredDisplaySetCreationSetting : INotifyPropertyChanged, IModalityDisplaySetCreationOptions
+	{
+		private readonly string _modality;
+
+		private bool _createSingleImageDisplaySets;
+		private bool _createAllImagesDisplaySet;
+		private bool _showOriginalSeries;
 		private bool _splitMultiEchoSeries;
 		private bool _showOriginalMultiEchoSeries;
 
@@ -93,16 +108,16 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
 
 		private void SetDefaults()
 		{
-            CreateAllImagesDisplaySet = false;
-            
-            if (CreateSingleImageDisplaySetsEnabled)
+			CreateAllImagesDisplaySet = false;
+
+			if (CreateSingleImageDisplaySetsEnabled)
 			{
-			    CreateSingleImageDisplaySets = true;
-			    ShowOriginalSeries = false;
+				CreateSingleImageDisplaySets = true;
+				ShowOriginalSeries = false;
 			}
 			else
 			{
-			    ShowOriginalSeries = true;
+				ShowOriginalSeries = true;
 			}
 
 			if (SplitMixedMultiframesEnabled)
@@ -117,9 +132,9 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
 				ShowOriginalMultiEchoSeries = false;
 			}
 
-            OverlaySelections = OverlayHelper.OverlayManagers.Select(
-                s => new OverlaySelectionSetting(s) { IsSelected = s.IsSelectedByDefault(_modality)}).ToList();
-        }
+			OverlaySelections = OverlayHelper.OverlayManagers.Select(
+				s => new OverlaySelectionSetting(s) {IsSelected = s.IsSelectedByDefault(_modality)}).ToList();
+		}
 
 		public string Modality
 		{
@@ -135,80 +150,79 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
 				{
 					_createSingleImageDisplaySets = value;
 					NotifyPropertyChanged("CreateSingleImageDisplaySets");
-                    if (!value && !_createAllImagesDisplaySet)
-                    {
-                        //Check show original if both other options are now false.
-                        ShowOriginalSeries = true;
-                    }
-                    else if (!_createAllImagesDisplaySet)
-                    {
-                        //Uncheck show original if one option just became true.
-                        ShowOriginalSeries = false;
-                    }
+					if (!value && !_createAllImagesDisplaySet)
+					{
+						//Check show original if both other options are now false.
+						ShowOriginalSeries = true;
+					}
+					else if (!_createAllImagesDisplaySet)
+					{
+						//Uncheck show original if one option just became true.
+						ShowOriginalSeries = false;
+					}
 
-
-                    NotifyPropertyChanged("ShowOriginalSeriesEnabled");
+					NotifyPropertyChanged("ShowOriginalSeriesEnabled");
 				}
 			}
 		}
 
-        public bool CreateSingleImageDisplaySetsEnabled
-        {
-            get { return DisplaySetCreationSettings.DefaultInstance.GetSingleImageModalities().Contains(_modality); }
-        }
+		public bool CreateSingleImageDisplaySetsEnabled
+		{
+			get { return DisplaySetCreationSettings.DefaultInstance.GetSingleImageModalities().Contains(_modality); }
+		}
 
-        public bool CreateAllImagesDisplaySet
-        {
-            get { return _createAllImagesDisplaySet; }
-            set
-            {
-                if (_createAllImagesDisplaySet != value)
-                {
-                    _createAllImagesDisplaySet = value;
-                    NotifyPropertyChanged("CreateAllImagesDisplaySet");
+		public bool CreateAllImagesDisplaySet
+		{
+			get { return _createAllImagesDisplaySet; }
+			set
+			{
+				if (_createAllImagesDisplaySet != value)
+				{
+					_createAllImagesDisplaySet = value;
+					NotifyPropertyChanged("CreateAllImagesDisplaySet");
 
-                    if (!value && !_createSingleImageDisplaySets)
-                    {
-                        //Check show original if both other options are now false.
-                        ShowOriginalSeries = true;
-                    }
-                    else if (!_createSingleImageDisplaySets)
-                    {
-                        //Uncheck show original if one option just became true.
-                        ShowOriginalSeries = false;
-                    }
+					if (!value && !_createSingleImageDisplaySets)
+					{
+						//Check show original if both other options are now false.
+						ShowOriginalSeries = true;
+					}
+					else if (!_createSingleImageDisplaySets)
+					{
+						//Uncheck show original if one option just became true.
+						ShowOriginalSeries = false;
+					}
 
-                    NotifyPropertyChanged("ShowOriginalSeriesEnabled");
-                }
-            }
-        }
+					NotifyPropertyChanged("ShowOriginalSeriesEnabled");
+				}
+			}
+		}
 
-        public bool CreateAllImagesDisplaySetEnabled
-        {
-            get { return DisplaySetCreationSettings.DefaultInstance.GetAllImagesModalities().Contains(_modality); }
-        }
+		public bool CreateAllImagesDisplaySetEnabled
+		{
+			get { return DisplaySetCreationSettings.DefaultInstance.GetAllImagesModalities().Contains(_modality); }
+		}
 
-        public bool ShowOriginalSeries
-        {
-            get { return _showOriginalSeries; }
-            set
-            {
-                if (_showOriginalSeries != value)
-                {
-                    _showOriginalSeries = value;
-                    NotifyPropertyChanged("ShowOriginalSeries");
-                }
-            }
-        }
+		public bool ShowOriginalSeries
+		{
+			get { return _showOriginalSeries; }
+			set
+			{
+				if (_showOriginalSeries != value)
+				{
+					_showOriginalSeries = value;
+					NotifyPropertyChanged("ShowOriginalSeries");
+				}
+			}
+		}
 
-        public bool ShowOriginalSeriesEnabled
-        {
-            get 
-            {
-                return (CreateAllImagesDisplaySetEnabled || CreateSingleImageDisplaySetsEnabled)
-                       && (CreateAllImagesDisplaySet || CreateSingleImageDisplaySets);
-            }
-        }
+		public bool ShowOriginalSeriesEnabled
+		{
+			get
+			{
+				return (CreateAllImagesDisplaySetEnabled || CreateSingleImageDisplaySetsEnabled)
+				       && (CreateAllImagesDisplaySet || CreateSingleImageDisplaySets);
+			}
+		}
 
 		public bool SplitMultiEchoSeries
 		{
@@ -244,7 +258,7 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
 
 		public bool ShowOriginalMultiEchoSeriesEnabled
 		{
-			get { return SplitMultiEchoSeries && SplitMultiEchoSeriesEnabled; }	
+			get { return SplitMultiEchoSeries && SplitMultiEchoSeriesEnabled; }
 		}
 
 		public bool SplitMixedMultiframes
@@ -297,12 +311,12 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
 			}
 		}
 
-        public bool ShowGrayscaleInvertedEnabled
+		public bool ShowGrayscaleInvertedEnabled
 		{
 			get { return true; }
 		}
 
-        public List<OverlaySelectionSetting> OverlaySelections { get; private set; }
+		public List<OverlaySelectionSetting> OverlaySelections { get; private set; }
 
 		private void NotifyPropertyChanged(string propertyName)
 		{
@@ -321,12 +335,10 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
 	}
 
 	[SettingsGroupDescription("Stores user options for how display sets are created.")]
-	[SettingsProvider(typeof(StandardSettingsProvider))]
+	[SettingsProvider(typeof (StandardSettingsProvider))]
 	public sealed partial class DisplaySetCreationSettings : IMigrateSettings
 	{
-		private DisplaySetCreationSettings()
-		{
-        }
+		private DisplaySetCreationSettings() {}
 
 		#region IMigrateSettings Members
 
@@ -342,15 +354,16 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
 				case "SingleImageModalities":
 				case "MixedMultiframeModalities":
 					migrationValues.CurrentValue = CombineModalities(
-						migrationValues.CurrentValue as string, 
+						migrationValues.CurrentValue as string,
 						migrationValues.PreviousValue as string);
 					break;
-                case "AllImagesModalities":
-                    migrationValues.CurrentValue = CombineModalities(
-                        migrationValues.CurrentValue as string,
-                        migrationValues.PreviousValue as string);
-                    break;
-                default: break;
+				case "AllImagesModalities":
+					migrationValues.CurrentValue = CombineModalities(
+						migrationValues.CurrentValue as string,
+						migrationValues.PreviousValue as string);
+					break;
+				default:
+					break;
 			}
 		}
 
@@ -377,10 +390,10 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
 			return GetModalities(SingleImageModalities);
 		}
 
-        public List<string> GetAllImagesModalities()
-        {
-            return GetModalities(AllImagesModalities);
-        }
+		public List<string> GetAllImagesModalities()
+		{
+			return GetModalities(AllImagesModalities);
+		}
 
 		public List<string> GetMixedMultiframeModalities()
 		{
@@ -399,7 +412,7 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
 			}
 
 			XmlNodeList settingsNodes = document.SelectNodes("//display-set-creation-settings/setting");
-			if (settingsNodes== null || settingsNodes.Count == 0)
+			if (settingsNodes == null || settingsNodes.Count == 0)
 			{
 				document = new XmlDocument();
 				Stream stream = new ResourceResolver(this.GetType(), false).OpenResource("DisplaySetCreationSettingsDefaults.xml");
@@ -428,9 +441,9 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
 					SetOptions(setting, optionNodes);
 					storedDisplaySetSettings.Add(setting);
 
-                    XmlNodeList overlaySelectionOptions = settingsNode.SelectNodes("overlay-selection-options/overlay-selection-option");
-                    if (overlaySelectionOptions != null)
-                        SetOverlaySelectionOptions(setting, overlaySelectionOptions);
+					XmlNodeList overlaySelectionOptions = settingsNode.SelectNodes("overlay-selection-options/overlay-selection-option");
+					if (overlaySelectionOptions != null)
+						SetOverlaySelectionOptions(setting, overlaySelectionOptions);
 
 					XmlNode presentationIntentNode = settingsNode.SelectSingleNode("presentation-intent");
 					if (presentationIntentNode != null)
@@ -470,23 +483,23 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
 										setting.CreateSingleImageDisplaySets = valueAttribute.Value == "True";
 								}
 								break;
-                            case "CreateAllImagesDisplaySet":
-                                if (setting.CreateAllImagesDisplaySetEnabled)
-                                {
-                                    valueAttribute = optionNode.Attributes["value"];
-                                    if (valueAttribute != null)
-                                        setting.CreateAllImagesDisplaySet = valueAttribute.Value == "True";
-                                }
-                                break;
-                            case "ShowOriginalSeries":
-                                if (setting.ShowOriginalSeriesEnabled)
-                                {
-                                    valueAttribute = optionNode.Attributes["value"];
-                                    if (valueAttribute != null)
-                                        setting.ShowOriginalSeries = valueAttribute.Value == "True";
-                                }
-                                break;
-                            case "SplitEchos":
+							case "CreateAllImagesDisplaySet":
+								if (setting.CreateAllImagesDisplaySetEnabled)
+								{
+									valueAttribute = optionNode.Attributes["value"];
+									if (valueAttribute != null)
+										setting.CreateAllImagesDisplaySet = valueAttribute.Value == "True";
+								}
+								break;
+							case "ShowOriginalSeries":
+								if (setting.ShowOriginalSeriesEnabled)
+								{
+									valueAttribute = optionNode.Attributes["value"];
+									if (valueAttribute != null)
+										setting.ShowOriginalSeries = valueAttribute.Value == "True";
+								}
+								break;
+							case "SplitEchos":
 								if (setting.SplitMultiEchoSeriesEnabled)
 								{
 									valueAttribute = optionNode.Attributes["value"];
@@ -510,33 +523,34 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
 										setting.ShowOriginalMixedMultiframeSeries = showOriginalAttribute.Value == "True";
 								}
 								break;
-							
-							default:break;
+
+							default:
+								break;
 						}
 					}
 				}
 			}
 		}
 
-        private void SetOverlaySelectionOptions(StoredDisplaySetCreationSetting setting, XmlNodeList overlaySelectionOptions)
-        {
-            if (overlaySelectionOptions == null)
-                return;
+		private void SetOverlaySelectionOptions(StoredDisplaySetCreationSetting setting, XmlNodeList overlaySelectionOptions)
+		{
+			if (overlaySelectionOptions == null)
+				return;
 
-            foreach (XmlNode overlaySelectionOption in overlaySelectionOptions)
-            {
-                var overlayName = overlaySelectionOption.Attributes["name"];
-                if (overlayName == null)
-                    continue;
+			foreach (XmlNode overlaySelectionOption in overlaySelectionOptions)
+			{
+				var overlayName = overlaySelectionOption.Attributes["name"];
+				if (overlayName == null)
+					continue;
 
-                var option = setting.OverlaySelections.FirstOrDefault(o => o.Name == overlayName.Value);
-                if (option == null)
-                    continue;
+				var option = setting.OverlaySelections.FirstOrDefault(o => o.Name == overlayName.Value);
+				if (option == null)
+					continue;
 
-                var isSelected = overlaySelectionOption.Attributes["selected"];
-                option.IsSelected = isSelected != null && isSelected.Value == "True";
-            }
-        }
+				var isSelected = overlaySelectionOption.Attributes["selected"];
+				option.IsSelected = isSelected != null && isSelected.Value == "True";
+			}
+		}
 
 		public void Save(IEnumerable<StoredDisplaySetCreationSetting> storedSettings)
 		{
@@ -548,7 +562,7 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
 			{
 				XmlElement settingElement = document.CreateElement("setting");
 				settingElement.SetAttribute("modality", storedSetting.Modality);
-				
+
 				XmlElement optionsElement = document.CreateElement("options");
 				settingElement.AppendChild(optionsElement);
 
@@ -560,21 +574,21 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
 					optionsElement.AppendChild(createSingleImageDisplaySetsElement);
 				}
 
-                if (storedSetting.CreateAllImagesDisplaySetEnabled)
-                {
-                    XmlElement createAllImagesDisplaySetElement = document.CreateElement("option");
-                    createAllImagesDisplaySetElement.SetAttribute("identifier", "CreateAllImagesDisplaySet");
-                    createAllImagesDisplaySetElement.SetAttribute("value", storedSetting.CreateAllImagesDisplaySet ? "True" : "False");
-                    optionsElement.AppendChild(createAllImagesDisplaySetElement);
-                }
+				if (storedSetting.CreateAllImagesDisplaySetEnabled)
+				{
+					XmlElement createAllImagesDisplaySetElement = document.CreateElement("option");
+					createAllImagesDisplaySetElement.SetAttribute("identifier", "CreateAllImagesDisplaySet");
+					createAllImagesDisplaySetElement.SetAttribute("value", storedSetting.CreateAllImagesDisplaySet ? "True" : "False");
+					optionsElement.AppendChild(createAllImagesDisplaySetElement);
+				}
 
-                if (storedSetting.ShowOriginalSeriesEnabled)
-                {
-                    XmlElement showOriginalSeriesElement = document.CreateElement("option");
-                    showOriginalSeriesElement.SetAttribute("identifier", "ShowOriginalSeries");
-                    showOriginalSeriesElement.SetAttribute("value", storedSetting.ShowOriginalSeries ? "True" : "False");
-                    optionsElement.AppendChild(showOriginalSeriesElement);
-                }
+				if (storedSetting.ShowOriginalSeriesEnabled)
+				{
+					XmlElement showOriginalSeriesElement = document.CreateElement("option");
+					showOriginalSeriesElement.SetAttribute("identifier", "ShowOriginalSeries");
+					showOriginalSeriesElement.SetAttribute("value", storedSetting.ShowOriginalSeries ? "True" : "False");
+					optionsElement.AppendChild(showOriginalSeriesElement);
+				}
 
 				if (storedSetting.SplitMultiEchoSeriesEnabled)
 				{
@@ -594,20 +608,20 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
 					optionsElement.AppendChild(splitMultiframesElement);
 				}
 
-                if (storedSetting.OverlaySelections != null && storedSetting.OverlaySelections.Count > 0)
-                {
-                    XmlElement overlaySelectionOptionsElement = document.CreateElement("overlay-selection-options");
-                    settingElement.AppendChild(overlaySelectionOptionsElement);
-                    foreach (var overlaySelectionOption in storedSetting.OverlaySelections)
-                    {
-                        XmlElement overlaySelectionOptionElement = document.CreateElement("overlay-selection-option");
-                        overlaySelectionOptionsElement.AppendChild(overlaySelectionOptionElement);
-                        overlaySelectionOptionElement.SetAttribute("name", overlaySelectionOption.Name);
-                        overlaySelectionOptionElement.SetAttribute("selected", overlaySelectionOption.IsSelected ? "True" : "False");
-                    }
-                }
+				if (storedSetting.OverlaySelections != null && storedSetting.OverlaySelections.Count > 0)
+				{
+					XmlElement overlaySelectionOptionsElement = document.CreateElement("overlay-selection-options");
+					settingElement.AppendChild(overlaySelectionOptionsElement);
+					foreach (var overlaySelectionOption in storedSetting.OverlaySelections)
+					{
+						XmlElement overlaySelectionOptionElement = document.CreateElement("overlay-selection-option");
+						overlaySelectionOptionsElement.AppendChild(overlaySelectionOptionElement);
+						overlaySelectionOptionElement.SetAttribute("name", overlaySelectionOption.Name);
+						overlaySelectionOptionElement.SetAttribute("selected", overlaySelectionOption.IsSelected ? "True" : "False");
+					}
+				}
 
-			    if (storedSetting.ShowGrayscaleInverted)
+				if (storedSetting.ShowGrayscaleInverted)
 				{
 					XmlElement presentationIntentElement = document.CreateElement("presentation-intent");
 					presentationIntentElement.SetAttribute("show-grayscale-inverted", "True");
@@ -621,21 +635,24 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
 			this.Save();
 		}
 
-        //TODO (Phoenix5): #10730 - remove this when it's fixed.
-        #region WebStation Settings Hack
-        [ThreadStatic]
-        private static DisplaySetCreationSettings _webDefault;
+		//TODO (Phoenix5): #10730 - remove this when it's fixed.
 
-        public static DisplaySetCreationSettings DefaultInstance
-        {
-            get
-            {
-                if (Application.GuiToolkitID == GuiToolkitID.Web)
-                    return _webDefault ?? (_webDefault = new DisplaySetCreationSettings());
+		#region WebStation Settings Hack
 
-                return Default;
-            }
-        }
-        #endregion
-    }
+		[ThreadStatic]
+		private static DisplaySetCreationSettings _webDefault;
+
+		public static DisplaySetCreationSettings DefaultInstance
+		{
+			get
+			{
+				if (Application.GuiToolkitID == GuiToolkitID.Web)
+					return _webDefault ?? (_webDefault = new DisplaySetCreationSettings());
+
+				return Default;
+			}
+		}
+
+		#endregion
+	}
 }

@@ -28,42 +28,42 @@ using ClearCanvas.ImageViewer.Graphics;
 
 namespace ClearCanvas.ImageViewer.Layout.Basic.OverlayManagers
 {
-    internal class ScaleOverlayManager : OverlayManager
-    {
-        public ScaleOverlayManager()
-            : base(SR.NameScaleOverlay, SR.NameScaleOverlay)
-        {
-            IconSet = new IconSet("Icons.ScaleOverlayToolSmall.png", "Icons.ScaleOverlayToolMedium.png", "Icons.ScaleOverlayToolLarge.png");
-        }
+	internal class ScaleOverlayManager : OverlayManager
+	{
+		public ScaleOverlayManager()
+			: base("ScaleOverlay", "NameScaleOverlay")
+		{
+			IconSet = new IconSet("Icons.ScaleOverlayToolSmall.png", "Icons.ScaleOverlayToolMedium.png", "Icons.ScaleOverlayToolLarge.png");
+		}
 
-        public override bool IsSelectedByDefault(string modality)
-        {
-            return modality != "MG";
-        }
+		public override bool IsSelectedByDefault(string modality)
+		{
+			return modality != "MG";
+		}
 
-        public override void SetOverlayVisible(IPresentationImage image, bool visible)
-        {
-            CompositeScaleGraphic scale = GetCompositeScaleGraphic(image, visible);
-            if (scale != null)
-                scale.Visible = visible;
-        }
+		public override void SetOverlayVisible(IPresentationImage image, bool visible)
+		{
+			CompositeScaleGraphic scale = GetCompositeScaleGraphic(image, visible);
+			if (scale != null)
+				scale.Visible = visible;
+		}
 
-        private static CompositeScaleGraphic GetCompositeScaleGraphic(IPresentationImage image, bool createIfNull)
-        {
-            var applicationGraphicsProvider = image as IApplicationGraphicsProvider;
-            if (applicationGraphicsProvider != null)
-            {
-                var overlayGraphics = applicationGraphicsProvider.ApplicationGraphics;
-                var scale = CollectionUtils.SelectFirst(overlayGraphics, graphic => graphic is CompositeScaleGraphic
-                                ) as CompositeScaleGraphic;
+		private static CompositeScaleGraphic GetCompositeScaleGraphic(IPresentationImage image, bool createIfNull)
+		{
+			var applicationGraphicsProvider = image as IApplicationGraphicsProvider;
+			if (applicationGraphicsProvider != null)
+			{
+				var overlayGraphics = applicationGraphicsProvider.ApplicationGraphics;
+				var scale = CollectionUtils.SelectFirst(overlayGraphics, graphic => graphic is CompositeScaleGraphic
+				            	) as CompositeScaleGraphic;
 
-                if (scale == null && createIfNull)
-                    overlayGraphics.Insert(0, scale = new CompositeScaleGraphic());
+				if (scale == null && createIfNull)
+					overlayGraphics.Insert(0, scale = new CompositeScaleGraphic());
 
-                return scale;
-            }
+				return scale;
+			}
 
-            return null;
-        }
-    }
+			return null;
+		}
+	}
 }

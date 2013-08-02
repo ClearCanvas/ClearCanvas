@@ -27,28 +27,28 @@ using ClearCanvas.ImageViewer.PresentationStates.Dicom;
 
 namespace ClearCanvas.ImageViewer.Layout.Basic.OverlayManagers
 {
-    internal class ShutterOverlayManager : OverlayManager
-    {
-        public ShutterOverlayManager()
-            : base(SR.NameShutterOverlay, SR.NameShutterOverlay)
-        {
-            IconSet = new IconSet("Icons.ShutterOverlayToolSmall.png", "Icons.ShutterOverlayToolMedium.png", "Icons.ShutterOverlayToolLarge.png");
-        }
+	internal class ShutterOverlayManager : OverlayManager
+	{
+		public ShutterOverlayManager()
+			: base("ShutterOverlay", "NameShutterOverlay")
+		{
+			IconSet = new IconSet("Icons.ShutterOverlayToolSmall.png", "Icons.ShutterOverlayToolMedium.png", "Icons.ShutterOverlayToolLarge.png");
+		}
 
-        public override bool IsSelectedByDefault(string modality)
-        {
-            return true;
-        }
+		public override bool IsSelectedByDefault(string modality)
+		{
+			return true;
+		}
 
-        public override void SetOverlayVisible(IPresentationImage image, bool visible)
-        {
-            var dicomImage = image as IDicomPresentationImage;
-            if (dicomImage == null)
-                return;
+		public override void SetOverlayVisible(IPresentationImage image, bool visible)
+		{
+			var dicomImage = image as IDicomPresentationImage;
+			if (dicomImage == null)
+				return;
 
-            var dicomGraphics = DicomGraphicsPlane.GetDicomGraphicsPlane(dicomImage, true);
-            if (dicomGraphics != null)
-                dicomGraphics.Shutters.Enabled = visible;
-        }
-    }
+			var dicomGraphics = DicomGraphicsPlane.GetDicomGraphicsPlane(dicomImage, true);
+			if (dicomGraphics != null)
+				dicomGraphics.Shutters.Enabled = visible;
+		}
+	}
 }

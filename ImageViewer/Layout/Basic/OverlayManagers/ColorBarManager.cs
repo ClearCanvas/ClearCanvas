@@ -30,91 +30,91 @@ using ClearCanvas.ImageViewer.Imaging;
 
 namespace ClearCanvas.ImageViewer.Layout.Basic.OverlayManagers
 {
-    internal class ColorBarManager : OverlayManager
-    {
-        public ColorBarManager()
-            : base(SR.NameColourBarOverlay, SR.NameColourBarOverlay)
-        {
-            IconSet = new IconSet("Icons.ColorBarToolSmall.png", "Icons.ColorBarToolMedium.png", "Icons.ColorBarToolLarge.png");
-        }
+	internal class ColorBarManager : OverlayManager
+	{
+		public ColorBarManager()
+			: base("ColorBar", "NameColourBarOverlay")
+		{
+			IconSet = new IconSet("Icons.ColorBarToolSmall.png", "Icons.ColorBarToolMedium.png", "Icons.ColorBarToolLarge.png");
+		}
 
-        public override bool IsSelectedByDefault(string modality)
-        {
-            return false;
-        }
+		public override bool IsSelectedByDefault(string modality)
+		{
+			return false;
+		}
 
-        public override void SetOverlayVisible(IPresentationImage image, bool visible)
-        {
-            ColorBarCompositeGraphic graphic = GetCompositeScaleGraphic(image, visible);
-            if (graphic != null)
-                graphic.Visible = visible;
-        }
+		public override void SetOverlayVisible(IPresentationImage image, bool visible)
+		{
+			ColorBarCompositeGraphic graphic = GetCompositeScaleGraphic(image, visible);
+			if (graphic != null)
+				graphic.Visible = visible;
+		}
 
-        //TODO (CR Sept 2010): GetCompositeColorBarGraphic?
-        private static ColorBarCompositeGraphic GetCompositeScaleGraphic(IPresentationImage image, bool createIfNull)
-        {
-            if (image is IColorMapProvider && image is IApplicationGraphicsProvider)
-            {
-                GraphicCollection applicationGraphics = ((IApplicationGraphicsProvider)image).ApplicationGraphics;
-                ColorBarCompositeGraphic graphic = (ColorBarCompositeGraphic)CollectionUtils.SelectFirst(applicationGraphics, g => g is ColorBarCompositeGraphic);
+		//TODO (CR Sept 2010): GetCompositeColorBarGraphic?
+		private static ColorBarCompositeGraphic GetCompositeScaleGraphic(IPresentationImage image, bool createIfNull)
+		{
+			if (image is IColorMapProvider && image is IApplicationGraphicsProvider)
+			{
+				GraphicCollection applicationGraphics = ((IApplicationGraphicsProvider) image).ApplicationGraphics;
+				ColorBarCompositeGraphic graphic = (ColorBarCompositeGraphic) CollectionUtils.SelectFirst(applicationGraphics, g => g is ColorBarCompositeGraphic);
 
-                if (graphic == null && createIfNull)
-                    applicationGraphics.Add(graphic = new ColorBarCompositeGraphic());
+				if (graphic == null && createIfNull)
+					applicationGraphics.Add(graphic = new ColorBarCompositeGraphic());
 
-                return graphic;
-            }
+				return graphic;
+			}
 
-            return null;
-        }
+			return null;
+		}
 
-        [Cloneable(false)]
-        private class ColorBarCompositeGraphic : CompositeGraphic
-        {
-            [CloneIgnore]
-            private ColorBarGraphic _colorBarGraphic;
+		[Cloneable(false)]
+		private class ColorBarCompositeGraphic : CompositeGraphic
+		{
+			[CloneIgnore]
+			private ColorBarGraphic _colorBarGraphic;
 
-            public ColorBarCompositeGraphic()
-            {
-                base.Graphics.Add(_colorBarGraphic = new ColorBarGraphic());
-            }
+			public ColorBarCompositeGraphic()
+			{
+				base.Graphics.Add(_colorBarGraphic = new ColorBarGraphic());
+			}
 
-            /// <summary>
-            /// Cloning constructor.
-            /// </summary>
-            /// <param name="source">The source object from which to clone.</param>
-            /// <param name="context">The cloning context object.</param>
-            protected ColorBarCompositeGraphic(ColorBarCompositeGraphic source, ICloningContext context)
-            {
-                context.CloneFields(source, this);
-            }
+			/// <summary>
+			/// Cloning constructor.
+			/// </summary>
+			/// <param name="source">The source object from which to clone.</param>
+			/// <param name="context">The cloning context object.</param>
+			protected ColorBarCompositeGraphic(ColorBarCompositeGraphic source, ICloningContext context)
+			{
+				context.CloneFields(source, this);
+			}
 
-            [OnCloneComplete]
-            private void OnCloneComplete()
-            {
-                _colorBarGraphic = (ColorBarGraphic)CollectionUtils.SelectFirst(base.Graphics, g => g is ColorBarGraphic);
-            }
+			[OnCloneComplete]
+			private void OnCloneComplete()
+			{
+				_colorBarGraphic = (ColorBarGraphic) CollectionUtils.SelectFirst(base.Graphics, g => g is ColorBarGraphic);
+			}
 
-            public override void OnDrawing()
-            {
-                // ensure the color bar uses the same color map as the underlying image
-                if (base.ParentPresentationImage is IColorMapProvider)
-                    _colorBarGraphic.ColorMapManager.SetMemento(((IColorMapProvider)base.ParentPresentationImage).ColorMapManager.CreateMemento());
-                if (base.ParentPresentationImage != null)
-                {
-                    _colorBarGraphic.CoordinateSystem = CoordinateSystem.Destination;
-                    try
-                    {
-                        _colorBarGraphic.Length = (int)(base.ParentPresentationImage.ClientRectangle.Height * 0.3f);
-                        _colorBarGraphic.Location = new PointF(25, (base.ParentPresentationImage.ClientRectangle.Height - _colorBarGraphic.Length) / 2f);
-                    }
-                    finally
-                    {
-                        _colorBarGraphic.ResetCoordinateSystem();
-                    }
-                }
+			public override void OnDrawing()
+			{
+				// ensure the color bar uses the same color map as the underlying image
+				if (base.ParentPresentationImage is IColorMapProvider)
+					_colorBarGraphic.ColorMapManager.SetMemento(((IColorMapProvider) base.ParentPresentationImage).ColorMapManager.CreateMemento());
+				if (base.ParentPresentationImage != null)
+				{
+					_colorBarGraphic.CoordinateSystem = CoordinateSystem.Destination;
+					try
+					{
+						_colorBarGraphic.Length = (int) (base.ParentPresentationImage.ClientRectangle.Height*0.3f);
+						_colorBarGraphic.Location = new PointF(25, (base.ParentPresentationImage.ClientRectangle.Height - _colorBarGraphic.Length)/2f);
+					}
+					finally
+					{
+						_colorBarGraphic.ResetCoordinateSystem();
+					}
+				}
 
-                base.OnDrawing();
-            }
-        }
-    }
+				base.OnDrawing();
+			}
+		}
+	}
 }

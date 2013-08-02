@@ -27,27 +27,27 @@ using ClearCanvas.ImageViewer.Annotations;
 
 namespace ClearCanvas.ImageViewer.Layout.Basic.OverlayManagers
 {
-    internal class TextOverlayManager : OverlayManager
-    {
-        public TextOverlayManager()
-            : base(SR.NameTextOverlay, SR.NameTextOverlay)
-        {
-            IconSet = new IconSet("Icons.TextOverlayToolSmall.png", "Icons.TextOverlayToolMedium.png", "Icons.TextOverlayToolLarge.png");
-        }
+	internal class TextOverlayManager : OverlayManager
+	{
+		public TextOverlayManager()
+			: base("TextOverlay", "NameTextOverlay")
+		{
+			IconSet = new IconSet("Icons.TextOverlayToolSmall.png", "Icons.TextOverlayToolMedium.png", "Icons.TextOverlayToolLarge.png");
+		}
 
-        public override bool IsSelectedByDefault(string modality)
-        {
-            return modality != "US";
-        }
+		public override bool IsSelectedByDefault(string modality)
+		{
+			return modality != "US";
+		}
 
-        public override void  SetOverlayVisible(IPresentationImage image, bool visible)
-        {
-            var annotationLayoutProvider = image as IAnnotationLayoutProvider;
-            if (annotationLayoutProvider == null)
-                return;
-            
-            foreach (AnnotationBox box in annotationLayoutProvider.AnnotationLayout.AnnotationBoxes)
-                box.Visible = visible;
-        }
-    }
+		public override void SetOverlayVisible(IPresentationImage image, bool visible)
+		{
+			var annotationLayoutProvider = image as IAnnotationLayoutProvider;
+			if (annotationLayoutProvider == null)
+				return;
+
+			foreach (AnnotationBox box in annotationLayoutProvider.AnnotationLayout.AnnotationBoxes)
+				box.Visible = visible;
+		}
+	}
 }

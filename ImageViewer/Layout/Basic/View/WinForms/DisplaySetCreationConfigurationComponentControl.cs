@@ -120,7 +120,7 @@ namespace ClearCanvas.ImageViewer.Layout.Basic.View.WinForms
                     checkBox.Tag = overlay;
                     checkBox.Name = overlay.Name;
                     checkBox.Text = overlay.DisplayName;
-                    checkBox.Enabled = overlay.IsConfigurable;
+                    checkBox.CheckEnabled = overlay.IsConfigurable;
                     checkBox.Checked = overlay.IsSelected;
                 }
             }
