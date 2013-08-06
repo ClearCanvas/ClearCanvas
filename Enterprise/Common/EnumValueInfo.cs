@@ -26,7 +26,7 @@ using System;
 using System.Runtime.Serialization;
 using ClearCanvas.Common.Serialization;
 
-namespace ClearCanvas.Ris.Application.Common
+namespace ClearCanvas.Enterprise.Common
 {
     [DataContract]
     public class EnumValueInfo : DataContractBase, ICloneable, IEquatable<EnumValueInfo>

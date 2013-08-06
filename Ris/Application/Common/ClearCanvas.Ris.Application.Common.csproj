@@ -516,7 +516,6 @@
     <Compile Include="PatientNoteCategorySummary.cs" />
     <Compile Include="EnablementMethodNotFoundException.cs" />
     <Compile Include="EmailAddressDetail.cs" />
-    <Compile Include="EnumValueInfo.cs" />
     <Compile Include="HealthcardDetail.cs" />
     <Compile Include="ImportException.cs" />
     <Compile Include="Login\ILoginService.cs" />

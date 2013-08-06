@@ -23,6 +23,7 @@
 #endregion
 
 using System.Collections.Generic;
+using ClearCanvas.Enterprise.Common;
 using ClearCanvas.Enterprise.Core;
 using ClearCanvas.Healthcare;
 using ClearCanvas.Ris.Application.Common;
