@@ -25,6 +25,7 @@
 using System;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Text;
 using ClearCanvas.Dicom.IO;
 
@@ -1451,6 +1452,86 @@ namespace ClearCanvas.Dicom
 				length += (uint) values.Length;
 			}
 			return length;
+		}
+
+		#endregion
+	}
+
+	#endregion
+
+	#region DicomAttributeOD
+
+	/// <summary>
+	/// <see cref="DicomAttributeBinary"/> derived class for storing OD value representation tags.
+	/// </summary>
+	public class DicomAttributeOD : DicomAttributeBinary<double>
+	{
+		public DicomAttributeOD(uint tag)
+			: base(tag) {}
+
+		public DicomAttributeOD(DicomTag tag)
+			: base(tag)
+		{
+			if (!tag.VR.Equals(DicomVr.ODvr)
+			    && !tag.MultiVR)
+				throw new DicomException(SR.InvalidVR);
+		}
+
+		internal DicomAttributeOD(DicomTag tag, ByteBuffer item)
+			: base(tag, item) {}
+
+		internal DicomAttributeOD(DicomAttributeOD attrib)
+			: base(attrib) {}
+
+		internal DicomAttributeOD(DicomTag tag, FileReference reference)
+			: base(tag, reference) {}
+
+		#region Abstract Method Implementation
+
+		public override string ToString()
+		{
+			return Tag + " of length " + base.StreamLength;
+		}
+
+		public override DicomAttribute Copy()
+		{
+			return new DicomAttributeOD(this);
+		}
+
+		internal override DicomAttribute Copy(bool copyBinary)
+		{
+			return new DicomAttributeOD(this);
+		}
+
+		protected override bool SetValuesCore(object value)
+		{
+			if (value is double[])
+			{
+				Data = new DicomAttributeBinaryData<double>((double[]) value);
+				return true;
+			}
+			if (value is float[])
+			{
+				Data = new DicomAttributeBinaryData<double>(((float[]) value).Cast<double>().ToArray(), false);
+				return true;
+			}
+			return false;
+		}
+
+		protected override double ParseNumber(string val, CultureInfo culture)
+		{
+			if (string.IsNullOrEmpty(val))
+				throw new DicomDataException("Null values invalid for OD VR");
+
+			double parseVal;
+			if (!double.TryParse(val.Trim(), NumberStyle, culture, out parseVal))
+				throw new DicomDataException(String.Format("Invalid double format value for tag {0}: {1}", Tag, val));
+			return parseVal;
+		}
+
+		protected override string FormatNumber(double val, CultureInfo culture)
+		{
+			return val.ToString(culture);
 		}
 
 		#endregion

@@ -362,6 +362,7 @@ namespace ClearCanvas.Dicom.Utilities.Xml
 			if ((attribute is DicomAttributeOB)
 			 || (attribute is DicomAttributeOW)
 			 || (attribute is DicomAttributeOF)
+			 || (attribute is DicomAttributeOD)
 			 || (attribute is DicomFragmentSequence))
 				return StudyXmlTagInclusion.IncludeTagExclusion;
 
@@ -645,6 +646,7 @@ namespace ClearCanvas.Dicom.Utilities.Xml
 								if (!(attribute is DicomAttributeOB)
 								    && !(attribute is DicomAttributeOW)
 								    && !(attribute is DicomAttributeOF)
+								    && !(attribute is DicomAttributeOD)
 								    && !(attribute is DicomFragmentSequence))
 								{
 									if (attribute.Equals(baseIterator.Current))
@@ -714,6 +716,20 @@ namespace ClearCanvas.Dicom.Utilities.Xml
 
 					StringBuilder str = null;
 					foreach (byte i in val)
+					{
+						if (str == null)
+							str = new StringBuilder(i.ToString());
+						else
+							str.AppendFormat("\\{0}", i);
+					}
+					if (str != null)
+						instanceElement.InnerText = str.ToString();
+				}
+				else if (attribute is DicomAttributeOD)
+				{
+					double[] val = (double[])attribute.Values;
+					StringBuilder str = null;
+					foreach (double i in val)
 					{
 						if (str == null)
 							str = new StringBuilder(i.ToString());

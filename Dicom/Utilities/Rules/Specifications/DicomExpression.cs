@@ -143,7 +143,8 @@ namespace ClearCanvas.Dicom.Utilities.Rules.Specifications
 				        return attrib.GetInt32(0, 0);
 				    if (attrib.Tag.VR.Equals(DicomVr.OBvr)
 				        || attrib.Tag.VR.Equals(DicomVr.OWvr)
-				        || attrib.Tag.VR.Equals(DicomVr.OFvr))
+				        || attrib.Tag.VR.Equals(DicomVr.OFvr)
+				        || attrib.Tag.VR.Equals(DicomVr.ODvr))
 				        return attrib.StreamLength.ToString(CultureInfo.InvariantCulture);
 				    return attrib.ToString().Trim();
 				}

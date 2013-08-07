@@ -66,6 +66,7 @@ namespace ClearCanvas.Dicom.Utilities.Xml
 				if ((attrib1 is DicomAttributeOB)
 					|| (attrib1 is DicomAttributeOW)
 					|| (attrib1 is DicomAttributeOF)
+					|| (attrib1 is DicomAttributeOD)
 					|| (attrib1 is DicomFragmentSequence))
 				{
 					if (collect2.TryGetAttribute(attrib1.Tag, out attrib2))
