@@ -35,11 +35,11 @@ namespace ClearCanvas.Dicom.Utilities.Rules
     /// <summary>
     /// Representation of a rule.
     /// </summary>
-    /// <typeparam name="TActionContext">The context passed to the <see cref="IActionSet{TActionContext}"/> when executing the action.</typeparam>
+    /// <typeparam name="TActionContext">The context passed to the <see cref="IActionList{TActionContext}"/> when executing the action.</typeparam>
     public class Rule<TActionContext>
         where TActionContext : ActionContext
     {
-        private IActionSet<TActionContext> _actions;
+        private IActionList<TActionContext> _actions;
         private ISpecification _conditions;
 
         #region Public Properties
@@ -96,7 +96,7 @@ namespace ClearCanvas.Dicom.Utilities.Rules
             else if (!IsExempt)
                 throw new ApplicationException("No action element defined for the rule.");
             else
-                _actions = new ActionSet<TActionContext>(new List<IActionItem<TActionContext>>());
+                _actions = new ActionList<TActionContext>(new List<IActionItem<TActionContext>>());
         }
 
         /// <summary>
@@ -130,12 +130,12 @@ namespace ClearCanvas.Dicom.Utilities.Rules
             {
                 ruleApplied = true;
                 Platform.Log(LogLevel.Debug, "Applying rule {0}", Name);
-                TestResult actionResult = _actions.Execute(context);
+                var actionResult = _actions.Execute(context);
                 if (actionResult.Fail)
                 {
-                    foreach (TestResultReason reason in actionResult.Reasons)
+                    foreach (var reason in actionResult.FailureReasons)
                     {
-                        Platform.Log(LogLevel.Error, "Unexpected error performing action {0}: {1}", Name, reason.Message);
+						Platform.Log(LogLevel.Error, "Unexpected error performing action {0}: {1}", Name, reason);
                     }
                     ruleSuccess = false;
                 }

@@ -89,13 +89,13 @@ namespace ClearCanvas.Common.Actions
         /// This method will parse the child <see cref="XmlElement"/>s of <paramref name="containingNode"/>.
 		/// Based on the name of the element, the the compiler will look for an action that handles the element type.
 		/// A list is constructed of all actions to perform, and a class implementing the 
-        /// <see cref="IActionSet{TActionContext}"/> interface is returned which can be called to exectute the actions based on input data.
+        /// <see cref="IActionList{TActionContext}"/> interface is returned which can be called to exectute the actions based on input data.
         /// </para>
         /// </remarks>
         /// <param name="containingNode">The input XML containg actions to perform.</param>
         /// <param name="checkSchema">Check the schema when compiling.</param>
-        /// <returns>A class instance that implements the <see cref="IActionSet{TActionContext}"/> interface.</returns>
-        public IActionSet<TActionContext> Compile(XmlElement containingNode, bool checkSchema)
+        /// <returns>A class instance that implements the <see cref="IActionList{TActionContext}"/> interface.</returns>
+        public IActionList<TActionContext> Compile(XmlElement containingNode, bool checkSchema)
         {
             // Note, recursive calls are made to this method to compile.  The schema is not
             // checked on recursive calls, but should be checked once on an initial compile.
@@ -120,7 +120,7 @@ namespace ClearCanvas.Common.Actions
                 }
             }
 
-			return new ActionSet<TActionContext>(actions);
+			return new ActionList<TActionContext>(actions);
         }
 
     	private void CheckSchema(XmlElement containingNode)

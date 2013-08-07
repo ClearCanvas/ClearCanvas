@@ -132,9 +132,10 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <Compile Include="Actions\ActionSet.cs" />
+    <Compile Include="Actions\ActionExecuteResult.cs" />
+    <Compile Include="Actions\ActionList.cs" />
     <Compile Include="Actions\IActionItem.cs" />
-    <Compile Include="Actions\IActionSet.cs" />
+    <Compile Include="Actions\IActionList.cs" />
     <Compile Include="Actions\IXmlActionCompilerOperator.cs" />
     <Compile Include="Actions\XmlActionCompiler.cs" />
     <Compile Include="Actions\XmlActionCompilerException.cs" />

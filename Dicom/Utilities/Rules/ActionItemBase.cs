@@ -83,26 +83,25 @@ namespace ClearCanvas.Dicom.Utilities.Rules
         /// <summary>
         /// Gets or sets the description of the failure when the action execution fails.
         /// </summary>
-        public string FailureReason
-        {
-            get { return _failureReason; }
-            set { _failureReason = value; }
-        }
+		//public string FailureReason
+		//{
+		//    get { return _failureReason; }
+		//    set { _failureReason = value; }
+		//}
 
         #endregion
 
         #region IActionItem<ServerActionContext> Members
 
-        public bool Execute(TActionContext context)
+		public ActionExecuteResult Execute(TActionContext context)
         {
             try
             {
-                return OnExecute(context);
+				return new ActionExecuteResult(OnExecute(context));
             }
             catch (Exception e)
             {
-                FailureReason = String.Format("{0} {1}", e.Message, e.StackTrace);
-                return false;
+                return new ActionExecuteResult(false, String.Format("{0} {1}", e.Message, e.StackTrace));
             }
         }
 

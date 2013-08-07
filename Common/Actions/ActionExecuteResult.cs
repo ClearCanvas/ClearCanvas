@@ -1,4 +1,4 @@
-#region License
+﻿#region License
 
 // Copyright (c) 2013, ClearCanvas Inc.
 // All rights reserved.
@@ -22,20 +22,42 @@
 
 #endregion
 
-using ClearCanvas.Common.Specifications;
-
 namespace ClearCanvas.Common.Actions
 {
-    /// <summary>
-	/// Interface representing a compiled set of actions returned by <see cref="XmlActionCompiler{TActionContext}"/>.
-    /// </summary>
-    public interface IActionSet<TActionContext>
-    {
-        /// <summary>
-        /// Execute a set of actions.
-        /// </summary>
-		/// <param name="context">An implementation specific context for the actions.</param>
-        /// <returns>A <see cref="TestResult"/> object describing the results.</returns>
-        TestResult Execute(TActionContext context);
-    }
+	public class ActionExecuteResult
+	{
+		private readonly bool _success;
+		private readonly string[] _failureReasons;
+
+		public ActionExecuteResult(bool success)
+			: this(success, new string[0])
+		{
+		}
+
+		public ActionExecuteResult(bool success, string failureReason)
+			: this(success, new[] { failureReason })
+		{
+		}
+
+		public ActionExecuteResult(bool success, string[] failureReasons)
+		{
+			_success = success;
+			_failureReasons = failureReasons;
+		}
+
+		public bool Success
+		{
+			get { return _success; }
+		}
+
+		public bool Fail
+		{
+			get { return !_success; }
+		}
+
+		public string[] FailureReasons
+		{
+			get { return _failureReasons; }
+		}
+	}
 }

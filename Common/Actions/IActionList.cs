@@ -22,18 +22,21 @@
 
 #endregion
 
+using System.Collections.Generic;
+using ClearCanvas.Common.Specifications;
+
 namespace ClearCanvas.Common.Actions
 {
     /// <summary>
-    /// Performs an action using an implementation specific context.
+	/// Interface representing a compiled set of actions returned by <see cref="XmlActionCompiler{TActionContext}"/>.
     /// </summary>
-    public interface IActionItem<TActionContext>
+    public interface IActionList<TActionContext> : IEnumerable<IActionItem<TActionContext>> 
     {
         /// <summary>
-        /// Executes the action.
+        /// Execute a set of actions.
         /// </summary>
-        /// <param name="context">An implementation specific context for the action.</param>
-        /// <returns>true on success, false on failure.</returns>
+		/// <param name="context">An implementation specific context for the actions.</param>
+        /// <returns>A <see cref="TestResult"/> object describing the results.</returns>
 		ActionExecuteResult Execute(TActionContext context);
     }
 }
