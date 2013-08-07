@@ -53,6 +53,10 @@ namespace ClearCanvas.Common.Serialization
 			_contractMap.Add(a.ContractId, type);
 		}
 
+		public static IEnumerable<Type> DataContracts
+		{
+			get { return _contractMap.Values; }
+		}
 
 		#region IJsmlSerializerHook
 
