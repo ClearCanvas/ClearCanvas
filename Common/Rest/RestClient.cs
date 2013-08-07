@@ -17,9 +17,11 @@ namespace ClearCanvas.Common.Rest
 	/// </summary>
 	public class RestClientException : Exception
 	{
-		internal RestClientException(WebException e)
+		internal RestClientException(string url, string method, WebException e)
 			: base(e.Message, e)
 		{
+			this.Url = url;
+			this.Method = method;
 			this.RequestStatus = e.Status;
 			if (e.Status == WebExceptionStatus.ProtocolError && e.Response != null)
 			{
@@ -28,6 +30,16 @@ namespace ClearCanvas.Common.Rest
 				this.Response = new RestClient.Response(httpResponse);
 			}
 		}
+
+		/// <summary>
+		/// Gets the URL for the request.
+		/// </summary>
+		public string Url { get; private set; }
+
+		/// <summary>
+		/// Gets the method (HTTP verb) used for the request.
+		/// </summary>
+		public string Method { get; private set; }
 
 		/// <summary>
 		/// Gets the status of the request.
@@ -376,7 +388,7 @@ namespace ClearCanvas.Common.Rest
 				}
 				catch (WebException e)
 				{
-					throw new RestClientException(e);
+					throw new RestClientException(request.RequestUri.ToString(), request.Method, e);
 				}
 			}
 		}
