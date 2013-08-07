@@ -41,7 +41,7 @@ namespace ClearCanvas.Common
 	/// </remarks>
 	internal class PluginLoader
 	{
-		class LoadPluginResult
+		private class LoadPluginResult
 		{
 			public LoadPluginResult(bool isPlugin, Assembly assembly, PluginInfo pluginInfo)
 			{
@@ -84,11 +84,11 @@ namespace ClearCanvas.Common
 			// may have the same file name (located in different sub-folders) - e.g. localization satellite assemblies in ASP.NET,
 			// and we need to eliminate these prior to building the pluginPathLookup dictionary below.
 			var pluginCandidates = (from p in ListPluginCandidateFiles()
-									group p by Path.GetFileNameWithoutExtension(p)
-										into g
-										where g.Count() == 1
-										select g.First())
-									.ToList();
+			                        group p by Path.GetFileNameWithoutExtension(p)
+			                        into g
+			                        where g.Count() == 1
+			                        select g.First())
+				.ToList();
 
 			// establish assembly load resolver
 			var pluginPathLookup = BuildAssemblyMap(pluginCandidates);
@@ -97,7 +97,7 @@ namespace ClearCanvas.Common
 			// see if we can load the meta-data from a cache
 			var checkSum = ComputeCheckSum(pluginCandidates);
 			List<PluginInfo> pluginInfos;
-			if (!TryLoadCachedMetadata(new[] { _primaryCacheFile }.Concat(_alternateCacheFiles), checkSum, out pluginInfos))
+			if (!TryLoadCachedMetadata(new[] {_primaryCacheFile}.Concat(_alternateCacheFiles), checkSum, out pluginInfos))
 			{
 				// No cached meta-data, so we need to load the plugins
 				// and build the meta-data from scratch.
@@ -132,7 +132,7 @@ namespace ClearCanvas.Common
 				try
 				{
 					var pluginInfoCache = PluginInfoCache.Read(cacheFilePaths.First());
-					if(pluginInfoCache.CheckSum.SequenceEqual(checkSum))
+					if (pluginInfoCache.CheckSum.SequenceEqual(checkSum))
 					{
 						pluginInfos = pluginInfoCache.Plugins;
 						return true;
@@ -172,7 +172,7 @@ namespace ClearCanvas.Common
 				var asm = Assembly.LoadFrom(path);
 
 				// is it a plugin??
-				var pluginAttr = (PluginAttribute)asm.GetCustomAttributes(typeof(PluginAttribute), false).FirstOrDefault();
+				var pluginAttr = (PluginAttribute) asm.GetCustomAttributes(typeof (PluginAttribute), false).FirstOrDefault();
 				if (pluginAttr == null)
 					return new LoadPluginResult(false, asm, null);
 
@@ -223,8 +223,9 @@ namespace ClearCanvas.Common
 
 			var orderedFiles = configFiles.Concat(pluginCandidatePaths).Select(f => new FileInfo(f)).OrderBy(fi => fi.FullName);
 
-			// generate a check sum based on the name, create time, and last write time of each file
+			// generate a checksum based on the name, create time, and last write time of each file
 			using (var byteStream = new MemoryStream())
+			using (var hash = new SHA256CryptoServiceProvider())
 			{
 				foreach (var fi in orderedFiles)
 				{
@@ -237,9 +238,7 @@ namespace ClearCanvas.Common
 					var writeTime = BitConverter.GetBytes(fi.LastWriteTimeUtc.Ticks);
 					byteStream.Write(writeTime, 0, createTime.Length);
 				}
-
-				var md5 = new MD5CryptoServiceProvider();
-				return md5.ComputeHash(byteStream.GetBuffer());
+				return hash.ComputeHash(byteStream.GetBuffer());
 			}
 		}
 

@@ -28,6 +28,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
+using System.Text;
 using System.Threading;
 using ClearCanvas.Common.Utilities;
 
@@ -41,7 +42,7 @@ namespace ClearCanvas.Common
 	{
 		#region BackgroundAssemblyLoader
 
-		class BackgroundAssemblyLoader
+		private class BackgroundAssemblyLoader
 		{
 			private readonly PluginManager _owner;
 			private bool _running;
@@ -98,7 +99,6 @@ namespace ClearCanvas.Common
 
 		#endregion
 
-
 		private readonly List<PluginInfo> _plugins = new List<PluginInfo>();
 		private readonly List<ExtensionInfo> _extensions = new List<ExtensionInfo>();
 		private readonly List<ExtensionPointInfo> _extensionPoints = new List<ExtensionPointInfo>();
@@ -109,7 +109,6 @@ namespace ClearCanvas.Common
 		private volatile bool _pluginsLoaded;
 
 		private readonly BackgroundAssemblyLoader _backgroundAssemblyLoader;
-
 
 		internal PluginManager(string pluginDir)
 		{
@@ -194,15 +193,14 @@ namespace ClearCanvas.Common
 		/// </summary>
 		public void EnableBackgroundAssemblyLoading(bool enable)
 		{
-			lock(_syncLock)
+			lock (_syncLock)
 			{
-				if(enable)
+				if (enable)
 					_backgroundAssemblyLoader.Run();
 				else
 					_backgroundAssemblyLoader.Cancel();
 			}
 		}
-
 
 		#endregion
 
@@ -256,18 +254,19 @@ namespace ClearCanvas.Common
 		private static string GetMetadataCacheFilePath(out string[] alternates)
 		{
 			var exePath = Process.GetCurrentProcess().MainModule.FileName;
+			using (var sha = new SHA256CryptoServiceProvider())
+			{
+				// since this is used to generate a file path, we must limit the length of the generated name so it doesn't exceed max path length
+				// we don't simply use MD5 because it throws an exception if the OS has strict cryptographic policies in place (e.g. FIPS)
+				// note: truncation of SHA256 seems to be an accepted method of producing a shorter hash - see notes in HashUtilities
+				var hash = StringUtilities.ToHexString(sha.ComputeHash(Encoding.Unicode.GetBytes(exePath)), 0, 16);
 
-			var sha = new MD5CryptoServiceProvider();
-			var hash = BitConverter.ToString(sha.ComputeHash(System.Text.Encoding.Unicode.GetBytes(exePath))).Replace("-", string.Empty);
+				// alternate locations are treated as read-only pre-generated cache files (e.g. for Portable workstation)
+				alternates = new[] {Path.Combine(Platform.PluginDirectory, "pxpx", hash)};
 
-			// alternate locations are treated as read-only pre-generated cache files (e.g. for Portable workstation)
-			alternates = new[]
-			       			{	
-								string.Format("{0}\\pxpx\\{1}", Platform.PluginDirectory, hash)
-			       			};
-
-			// return the main location, which must be writable
-			return string.Format("{0}\\pxpx\\{1}", Platform.ApplicationDataDirectory, hash);
+				// return the main location, which must be writable
+				return Path.Combine(Platform.ApplicationDataDirectory, "pxpx", hash);
+			}
 		}
 
 		#endregion

@@ -299,6 +299,7 @@
     <Compile Include="Utilities\DateTimeUtils.cs" />
     <Compile Include="Utilities\DelayedEventPublisher.cs" />
     <Compile Include="Utilities\ExclusiveLock.cs" />
+    <Compile Include="Utilities\HashUtilities.cs" />
     <Compile Include="Utilities\LargeMemoryStream.cs" />
     <Compile Include="Utilities\ListEventArgs.cs" />
     <Compile Include="Utilities\CollectionUtils.cs" />
@@ -319,6 +320,7 @@
     <Compile Include="Utilities\Tests\DateTimeUtilsTests.cs" />
     <Compile Include="Utilities\Tests\ExclusiveLockTestApplication.cs" />
     <Compile Include="Utilities\Tests\ExclusiveLockTests.cs" />
+    <Compile Include="Utilities\Tests\HashUtilitiesTests.cs" />
     <Compile Include="Utilities\Tests\LargeMemoryStreamTests.cs" />
     <Compile Include="Utilities\Tests\ObjectWalkerTests.cs" />
     <Compile Include="Utilities\Tests\PseudoRandom.cs" />

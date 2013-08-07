@@ -26,117 +26,139 @@ using System;
 using System.ComponentModel;
 using System.IO;
 using System.Security.Cryptography;
-using System.Text;
 using System.Xml.Serialization;
+using ClearCanvas.Common.Utilities;
 
 namespace ClearCanvas.Utilities.Manifest
 {
-    /// <summary>
-    /// Represents a file contained in a <see cref="ClearCanvasManifest"/>.
-    /// </summary>
-    [XmlRoot("File")]
-    public class ManifestFile
-    {
-        /// <summary>
-        /// The relative path of the file or directory in the manifest.
-        /// </summary>
-        public string Filename { get; set; }
+	/// <summary>
+	/// Represents a file contained in a <see cref="ClearCanvasManifest"/>.
+	/// </summary>
+	[XmlRoot("File")]
+	public class ManifestFile
+	{
+		/// <summary>
+		/// The relative path of the file or directory in the manifest.
+		/// </summary>
+		public string Filename { get; set; }
 
-        /// <summary>
-        /// The Version of the file.
-        /// </summary>
-        public string Version { get; set; }
+		/// <summary>
+		/// The Version of the file.
+		/// </summary>
+		public string Version { get; set; }
 
-        /// <summary>
-        /// The LegalCopyright of the file.
-        /// </summary>
-        public string Copyright { get; set; }
+		/// <summary>
+		/// The LegalCopyright of the file.
+		/// </summary>
+		public string Copyright { get; set; }
 
-        /// <summary>
-        /// The class used to generate the Checksum.
-        /// </summary>
-        public string ChecksumType { get; set; }
+		/// <summary>
+		/// The class used to generate the Checksum.
+		/// </summary>
+		public string ChecksumType { get; set; }
 
-        /// <summary>
-        /// The generated checksum.
-        /// </summary>
-        public string Checksum { get; set; }
+		/// <summary>
+		/// The generated checksum.
+		/// </summary>
+		public string Checksum { get; set; }
 
-        /// <summary>
-        /// The CreatedDate of the file.
-        /// </summary>
-        [DefaultValue(null)]
-        public DateTime? Timestamp { get; set; }
+		/// <summary>
+		/// The CreatedDate of the file.
+		/// </summary>
+		[DefaultValue(null)]
+		public DateTime? Timestamp { get; set; }
 
-        /// <summary>
-        /// An attribute telling if the file is optional.
-        /// </summary>
-        [XmlAttribute(AttributeName = "optional", DataType = "boolean")]
-        [DefaultValue(false)]
-        public Boolean Optional { get; set; }
+		/// <summary>
+		/// An attribute telling if the file is optional.
+		/// </summary>
+		[XmlAttribute(AttributeName = "optional", DataType = "boolean")]
+		[DefaultValue(false)]
+		public Boolean Optional { get; set; }
 
-        /// <summary>
-        /// An attribute telling if the file should be ignored.
-        /// </summary>
-        [XmlAttribute(AttributeName = "ignore", DataType = "boolean")]
-        [DefaultValue(false)]
-        public Boolean Ignore { get; set; }
+		/// <summary>
+		/// An attribute telling if the file should be ignored.
+		/// </summary>
+		[XmlAttribute(AttributeName = "ignore", DataType = "boolean")]
+		[DefaultValue(false)]
+		public Boolean Ignore { get; set; }
 
-        [XmlIgnore]
-        public Boolean IsDirectory { get; set; }
+		[XmlIgnore]
+		public Boolean IsDirectory { get; set; }
 
-        /// <summary>
-        /// Generate a checksum.
-        /// </summary>
-        /// <param name="fullPath">The full path of the file to generate a checksum for.</param>
-        public void GenerateChecksum(string fullPath)
-        {
-            using (FileStream file = new FileStream(fullPath, FileMode.Open,FileAccess.Read,FileShare.Read))
-            {
-                MD5 md5 = new MD5CryptoServiceProvider();
-                byte[] retVal = md5.ComputeHash(file);
-                file.Close();
+		/// <summary>
+		/// Generate a checksum.
+		/// </summary>
+		/// <param name="fullPath">The full path of the file to generate a checksum for.</param>
+		public void GenerateChecksum(string fullPath)
+		{
+			string type;
+			Checksum = GenerateChecksum<SHA256CryptoServiceProvider>(fullPath, out type);
+			ChecksumType = type;
+		}
 
-                StringBuilder sb = new StringBuilder();
-                for (int i = 0; i < retVal.Length; i++)
-                {
-                    sb.Append(retVal[i].ToString("x2"));
-                }
+		private static string GenerateChecksum<T>(string fullPath, out string checksumType)
+			where T : HashAlgorithm, new()
+		{
+			using (var hash = new T())
+			using (var file = new FileStream(fullPath, FileMode.Open, FileAccess.Read, FileShare.Read))
+			{
+				var hashBytes = hash.ComputeHash(file);
+				file.Close();
 
-                Checksum = sb.ToString();
-                ChecksumType = md5.GetType().ToString();
-            }
-        }
+				checksumType = typeof (T).ToString();
+				return StringUtilities.ToHexString(hashBytes, true);
+			}
+		}
 
-        /// <summary>
-        /// Verify a checksum.
-        /// </summary>
-        /// <param name="fullPath">The path to the file.</param>
-        public void VerifyChecksum(string fullPath)
-        {
-            MD5 md5 = new MD5CryptoServiceProvider();
-            if (md5.GetType().ToString().Equals(ChecksumType))
-            {
-                using (FileStream file = new FileStream(fullPath, FileMode.Open, FileAccess.Read, FileShare.Read))
-                {
+		/// <summary>
+		/// Verify a checksum.
+		/// </summary>
+		/// <param name="fullPath">The path to the file.</param>
+		public void VerifyChecksum(string fullPath)
+		{
+			if (TryVerifyChecksum<SHA256CryptoServiceProvider>(fullPath, Checksum, ChecksumType))
+			{
+				// exception is thrown if checksum fails verification
+			}
+			else if (TryVerifyChecksum<MD5CryptoServiceProvider>(fullPath, Checksum, ChecksumType))
+			{
+				// exception is thrown if checksum fails verification
+			}
+			else
+			{
+				throw new ApplicationException("Unknown checksum type: " + ChecksumType);
+			}
+		}
 
-                    byte[] retVal = md5.ComputeHash(file);
-                    file.Close();
+		private static bool TryVerifyChecksum<T>(string fullPath, string checksum, string checksumType)
+			where T : HashAlgorithm, new()
+		{
+			if (typeof (T).ToString().Equals(checksumType))
+			{
+				string hashString;
 
-                    StringBuilder sb = new StringBuilder();
-                    for (int i = 0; i < retVal.Length; i++)
-                    {
-                        sb.Append(retVal[i].ToString("x2"));
-                    }
+				try
+				{
+					using (var hash = new T())
+					using (var file = new FileStream(fullPath, FileMode.Open, FileAccess.Read, FileShare.Read))
+					{
+						var hashBytes = hash.ComputeHash(file);
+						file.Close();
 
-                    if (!Checksum.Equals(sb.ToString()))
-                        throw new ApplicationException("Checksum does not match for file " + fullPath);
-                }
-            }
-            else
-            {
-                throw new ApplicationException("Unknown checksum type: " + ChecksumType);
-            }
-        }
-    }
+						hashString = StringUtilities.ToHexString(hashBytes, true);
+					}
+				}
+				catch (Exception ex)
+				{
+					throw new ApplicationException("Checksum could not be verified for file " + fullPath, ex);
+				}
+
+				if (!string.Equals(checksum, hashString, StringComparison.InvariantCultureIgnoreCase))
+					throw new ApplicationException("Checksum does not match for file " + fullPath);
+
+				return true;
+			}
+			return false;
+		}
+	}
 }
