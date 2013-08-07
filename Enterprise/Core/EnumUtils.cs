@@ -25,10 +25,9 @@
 using System;
 using System.Collections.Generic;
 using ClearCanvas.Enterprise.Common;
-using ClearCanvas.Enterprise.Core;
 using ClearCanvas.Common.Utilities;
 
-namespace ClearCanvas.Ris.Application.Services
+namespace ClearCanvas.Enterprise.Core
 {
     public class EnumUtils
     {

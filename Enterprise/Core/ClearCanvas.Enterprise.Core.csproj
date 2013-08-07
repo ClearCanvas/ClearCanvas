@@ -99,6 +99,7 @@
     <Compile Include="DeadlockRetryAdvice.cs" />
     <Compile Include="DeadlockRetryManager.cs" />
     <Compile Include="EntityChangeSetRecorderSettings.cs" />
+    <Compile Include="EnumUtils.cs" />
     <Compile Include="LooseEnumPropertyChangeSetListener.cs" />
     <Compile Include="EqualityUtils.cs" />
     <Compile Include="ExtendedPropertiesSearchCriteria.cs" />
