@@ -174,6 +174,135 @@ namespace ClearCanvas.Common.Specifications.Tests
 		}
 
 		[Test]
+		public void Test_StartsWith_Default()
+		{
+			var s = _factory.GetSpecification("startsWith_default");
+			Assert.IsInstanceOf(typeof(StartsWithSpecification), s);
+
+			var s1 = (StartsWithSpecification)s;
+			Assert.AreEqual("XXX", s1.Pattern);
+			Assert.AreEqual(false, s1.NullMatches);
+			Assert.AreEqual(true, s1.IgnoreCase);
+		}
+
+		[Test]
+		public void Test_StartsWith_Options1()
+		{
+			var s = _factory.GetSpecification("startsWith_options1");
+			Assert.IsInstanceOf(typeof(StartsWithSpecification), s);
+
+			var s1 = (StartsWithSpecification)s;
+			Assert.AreEqual("XXX", s1.Pattern);
+			Assert.AreEqual(false, s1.NullMatches);
+			Assert.AreEqual(false, s1.IgnoreCase);
+		}
+
+		[Test]
+		public void Test_StartsWith_Options2()
+		{
+			var s = _factory.GetSpecification("startsWith_options2");
+			Assert.IsInstanceOf(typeof(StartsWithSpecification), s);
+
+			var s1 = (StartsWithSpecification)s;
+			Assert.AreEqual("XXX", s1.Pattern);
+			Assert.AreEqual(true, s1.NullMatches);
+			Assert.AreEqual(true, s1.IgnoreCase);
+		}
+
+		[Test]
+		[ExpectedException(typeof(XmlSpecificationCompilerException))]
+		public void Test_StartsWith_MissingPattern()
+		{
+			var s = _factory.GetSpecification("startsWith_missingPattern");
+		}
+
+		[Test]
+		public void Test_EndsWith_Default()
+		{
+			var s = _factory.GetSpecification("endsWith_default");
+			Assert.IsInstanceOf(typeof(EndsWithSpecification), s);
+
+			var s1 = (EndsWithSpecification)s;
+			Assert.AreEqual("XXX", s1.Pattern);
+			Assert.AreEqual(false, s1.NullMatches);
+			Assert.AreEqual(true, s1.IgnoreCase);
+		}
+
+		[Test]
+		public void Test_EndsWith_Options1()
+		{
+			var s = _factory.GetSpecification("endsWith_options1");
+			Assert.IsInstanceOf(typeof(EndsWithSpecification), s);
+
+			var s1 = (EndsWithSpecification)s;
+			Assert.AreEqual("XXX", s1.Pattern);
+			Assert.AreEqual(false, s1.NullMatches);
+			Assert.AreEqual(false, s1.IgnoreCase);
+		}
+
+		[Test]
+		public void Test_EndsWith_Options2()
+		{
+			var s = _factory.GetSpecification("endsWith_options2");
+			Assert.IsInstanceOf(typeof(EndsWithSpecification), s);
+
+			var s1 = (EndsWithSpecification)s;
+			Assert.AreEqual("XXX", s1.Pattern);
+			Assert.AreEqual(true, s1.NullMatches);
+			Assert.AreEqual(true, s1.IgnoreCase);
+		}
+
+		[Test]
+		[ExpectedException(typeof(XmlSpecificationCompilerException))]
+		public void Test_EndsWith_MissingPattern()
+		{
+			var s = _factory.GetSpecification("endsWith_missingPattern");
+		}
+
+		[Test]
+		public void Test_Contains_Default()
+		{
+			var s = _factory.GetSpecification("contains_default");
+			Assert.IsInstanceOf(typeof(ContainsSpecification), s);
+
+			var s1 = (ContainsSpecification)s;
+			Assert.AreEqual("XXX", s1.Pattern);
+			Assert.AreEqual(false, s1.NullMatches);
+			Assert.AreEqual(true, s1.IgnoreCase);
+		}
+
+		[Test]
+		public void Test_Contains_Options1()
+		{
+			var s = _factory.GetSpecification("contains_options1");
+			Assert.IsInstanceOf(typeof(ContainsSpecification), s);
+
+			var s1 = (ContainsSpecification)s;
+			Assert.AreEqual("XXX", s1.Pattern);
+			Assert.AreEqual(false, s1.NullMatches);
+			Assert.AreEqual(false, s1.IgnoreCase);
+		}
+
+		[Test]
+		public void Test_Contains_Options2()
+		{
+			var s = _factory.GetSpecification("contains_options2");
+			Assert.IsInstanceOf(typeof(ContainsSpecification), s);
+
+			var s1 = (ContainsSpecification)s;
+			Assert.AreEqual("XXX", s1.Pattern);
+			Assert.AreEqual(true, s1.NullMatches);
+			Assert.AreEqual(true, s1.IgnoreCase);
+		}
+
+		[Test]
+		[ExpectedException(typeof(XmlSpecificationCompilerException))]
+		public void Test_Contains_MissingPattern()
+		{
+			var s = _factory.GetSpecification("contains_missingPattern");
+		}
+
+		[Test]
 		public void Test_Equal_Default()
 		{
 			ISpecification s = _factory.GetSpecification("equal_default");

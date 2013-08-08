@@ -187,8 +187,11 @@ namespace ClearCanvas.Common.Specifications
             AddOperator(new BuiltInOperator("and", CreateAnd, XmlSpecificationSchema.AndSchema));
             AddOperator(new BuiltInOperator("or", CreateOr, XmlSpecificationSchema.OrSchema));
 			AddOperator(new BuiltInOperator("not", CreateNot, XmlSpecificationSchema.NotSchema));
-			AddOperator(new BuiltInOperator("regex", CreateRegex, XmlSpecificationSchema.RegexSchema));
-            AddOperator(new BuiltInOperator("null", CreateIsNull, XmlSpecificationSchema.IsNullSchema));
+			AddOperator(new BuiltInOperator("regex", CreateRegex, XmlSpecificationSchema.StringMatchingSchema));
+			AddOperator(new BuiltInOperator("starts-with", CreateStartsWith, XmlSpecificationSchema.StringMatchingSchema));
+			AddOperator(new BuiltInOperator("ends-with", CreateEndsWith, XmlSpecificationSchema.StringMatchingSchema));
+			AddOperator(new BuiltInOperator("contains", CreateContains, XmlSpecificationSchema.StringMatchingSchema));
+			AddOperator(new BuiltInOperator("null", CreateIsNull, XmlSpecificationSchema.IsNullSchema));
             AddOperator(new BuiltInOperator("not-null", CreateNotNull, XmlSpecificationSchema.NotNullSchema));
             AddOperator(new BuiltInOperator("count", CreateCount, XmlSpecificationSchema.CountSchema));
             AddOperator(new BuiltInOperator("each", CreateEach, XmlSpecificationSchema.EachSchema));
@@ -203,9 +206,7 @@ namespace ClearCanvas.Common.Specifications
             }
         }
 
-
-
-        #endregion
+    	#endregion
 
         #region Public API
 
@@ -303,21 +304,41 @@ namespace ClearCanvas.Common.Specifications
 
         private static Specification CreateRegex(XmlElement node)
         {
-            var stringIgnoreCase = node.GetAttribute("ignoreCase");
+			return CreateStringComparison(node, (pattern, ignoreCase, nullMatches) => new RegexSpecification(pattern, ignoreCase, nullMatches));
+        }
 
-            var ignoreCase = !stringIgnoreCase.Equals("false", StringComparison.InvariantCultureIgnoreCase);
+		private static Specification CreateStartsWith(XmlElement node)
+		{
+			return CreateStringComparison(node, (pattern, ignoreCase, nullMatches) => new StartsWithSpecification(pattern, ignoreCase, nullMatches));
+		}
 
-            var pattern = GetAttributeOrNull(node, "pattern");
-            if (pattern == null)
-                throw new XmlSpecificationCompilerException("Xml attribute 'pattern' is required for regex.");
+		private static Specification CreateEndsWith(XmlElement node)
+		{
+			return CreateStringComparison(node, (pattern, ignoreCase, nullMatches) => new EndsWithSpecification(pattern, ignoreCase, nullMatches));
+		}
 
-        	var nullMatches = false;
+		private static Specification CreateContains(XmlElement node)
+		{
+			return CreateStringComparison(node, (pattern, ignoreCase, nullMatches) => new ContainsSpecification(pattern, ignoreCase, nullMatches));
+		}
+
+		private static Specification CreateStringComparison(XmlElement node, Func<string, bool, bool, StringMatchingSpecification> factoryFunc)
+		{
+			var stringIgnoreCase = node.GetAttribute("ignoreCase");
+
+			var ignoreCase = !stringIgnoreCase.Equals("false", StringComparison.InvariantCultureIgnoreCase);
+
+			var pattern = GetAttributeOrNull(node, "pattern");
+			if (pattern == null)
+				throw new XmlSpecificationCompilerException("Xml attribute 'pattern' is required.");
+
+			var nullMatches = false;
 			var stringNullMatches = GetAttributeOrNull(node, "nullMatches");
 			if (stringNullMatches != null)
 				nullMatches = stringNullMatches.Equals("true", StringComparison.InvariantCultureIgnoreCase);
 
-            return new RegexSpecification(pattern, ignoreCase, nullMatches);
-        }
+			return factoryFunc(pattern, ignoreCase, nullMatches);
+		}
 
         private static Specification CreateNotNull(XmlElement node)
         {

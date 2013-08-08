@@ -164,7 +164,7 @@ namespace ClearCanvas.Common.Specifications
 			return element;
 		}
 
-		public static XmlSchemaElement RegexSchema()
+		public static XmlSchemaElement StringMatchingSchema()
 		{
 			XmlSchemaComplexType type = new XmlSchemaComplexType();
 
