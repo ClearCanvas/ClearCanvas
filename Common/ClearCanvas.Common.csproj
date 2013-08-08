@@ -328,6 +328,7 @@
     <Compile Include="Utilities\Tests\StringUtilitiesTests.cs" />
     <Compile Include="Utilities\Tests\TempFileStream.cs" />
     <Compile Include="Utilities\Tests\ThreadPoolTests.cs" />
+    <Compile Include="Utilities\Tests\XorCryptoServiceProviderTests.cs" />
     <Compile Include="Utilities\ThreadPoolBase.cs" />
     <Compile Include="Utilities\Timer.cs" />
     <Compile Include="Utilities\TypeSafeComparerWrapper.cs" />
@@ -343,6 +344,7 @@
     <Compile Include="Utilities\ResourceResolver.cs" />
     <Compile Include="Utilities\AttributeUtils.cs" />
     <Compile Include="Utilities\NullExtensionFactory.cs" />
+    <Compile Include="Utilities\XorCryptoServiceProvider.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Audit\AuditLog.cs" />
