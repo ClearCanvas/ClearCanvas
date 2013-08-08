@@ -50,7 +50,7 @@ namespace ClearCanvas.Common.Utilities
 				if (_machineIdentifier == null)
 				{
 					var input = string.Format("CLEARCANVASRTW::{0}::{1}::{2}::{3}::{4}", GetProcessorId(), GetMotherboardSerial(), GetSystemVolumeSerial(), GetBiosSerial(), GetSystemUuid());
-					using (var sha256 = new SHA256Managed())
+					using (var sha256 = new SHA256CryptoServiceProvider())
 					{
 						_machineIdentifier = Convert.ToBase64String(sha256.ComputeHash(Encoding.UTF8.GetBytes(input)));
 					}
