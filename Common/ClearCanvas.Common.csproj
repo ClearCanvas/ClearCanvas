@@ -307,6 +307,7 @@
     <Compile Include="Utilities\DictionaryEventArgs.cs" />
     <Compile Include="Utilities\ItemEventArgs.cs" />
     <Compile Include="Utilities\PerformanceReportBroker.cs" />
+    <Compile Include="Utilities\CryptoServiceFallbackHelper.cs" />
     <Compile Include="Utilities\SynchronizedEventHelper.cs" />
     <Compile Include="Utilities\SystemResources.cs" />
     <Compile Include="Utilities\ObjectWalker.cs" />

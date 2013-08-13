@@ -254,7 +254,7 @@ namespace ClearCanvas.Common
 		private static string GetMetadataCacheFilePath(out string[] alternates)
 		{
 			var exePath = Process.GetCurrentProcess().MainModule.FileName;
-			using (var sha = new SHA256CryptoServiceProvider())
+			using (var sha = new SHA256CryptoServiceProvider2())
 			{
 				// since this is used to generate a file path, we must limit the length of the generated name so it doesn't exceed max path length
 				// we don't simply use MD5 because it throws an exception if the OS has strict cryptographic policies in place (e.g. FIPS)

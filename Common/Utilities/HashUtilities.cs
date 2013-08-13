@@ -74,7 +74,7 @@ namespace ClearCanvas.Common.Utilities
 			// * RFC4868 describes HMAC, a scheme for origin authentication and integrity verification which incorporates truncated SHA256 hashes
 			// * Altman M. {A Fingerprint Method for Scientific Data Verification}. In: Sobh T Proceedings of the International Conference on Systems Computing Sciences and Software Engineering 2007. New York: Springer Netherlands; 2008. p. 311–316.
 			// * a discussion of truncating SHA512 to 256 at http://crypto.stackexchange.com/questions/3153/sha-256-vs-any-256-bits-of-sha-512-which-is-more-secure
-			using (var sha256 = new SHA256CryptoServiceProvider())
+			using (var sha256 = new SHA256CryptoServiceProvider2())
 			{
 				var hash = sha256.ComputeHash(bytes, offset, length);
 				var result = new byte[16];
@@ -96,7 +96,7 @@ namespace ClearCanvas.Common.Utilities
 		{
 			// we don't simply use MD5 because it throws an exception if the OS has strict cryptographic policies in place (e.g. FIPS)
 			// note: truncation of SHA256 seems to be an accepted method of producing a shorter hash - see other overload
-			using (var sha256 = new SHA256CryptoServiceProvider())
+			using (var sha256 = new SHA256CryptoServiceProvider2())
 			{
 				var hash = sha256.ComputeHash(stream);
 				var result = new byte[16];
@@ -136,7 +136,7 @@ namespace ClearCanvas.Common.Utilities
 		/// <returns>A byte array containing the hash (32 bytes).</returns>
 		public static byte[] ComputeHash256(byte[] bytes, int offset, int length)
 		{
-			using (var sha256 = new SHA256CryptoServiceProvider())
+			using (var sha256 = new SHA256CryptoServiceProvider2())
 			{
 				return sha256.ComputeHash(bytes, offset, length);
 			}
@@ -153,7 +153,7 @@ namespace ClearCanvas.Common.Utilities
 		/// <returns>A byte array containing the hash (32 bytes).</returns>
 		public static byte[] ComputeHash256(Stream stream)
 		{
-			using (var sha256 = new SHA256CryptoServiceProvider())
+			using (var sha256 = new SHA256CryptoServiceProvider2())
 			{
 				return sha256.ComputeHash(stream);
 			}

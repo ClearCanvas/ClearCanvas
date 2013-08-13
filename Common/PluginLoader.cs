@@ -225,7 +225,7 @@ namespace ClearCanvas.Common
 
 			// generate a checksum based on the name, create time, and last write time of each file
 			using (var byteStream = new MemoryStream())
-			using (var hash = new SHA256CryptoServiceProvider())
+			using (var hash = new SHA256CryptoServiceProvider2())
 			{
 				foreach (var fi in orderedFiles)
 				{

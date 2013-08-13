@@ -753,7 +753,7 @@ namespace ClearCanvas.Common.Utilities.Tests
 				Assert.AreEqual(sArray.Length, Read(s, sArray, 0, sArray.Length), "Bytes Read while dumping stream contents");
 				//AssertAreEqual(rArray, sArray, "Dump of Stream Contents");
 
-				using (var hashProvider = new SHA256CryptoServiceProvider())
+				using (var hashProvider = new SHA256CryptoServiceProvider2())
 				{
 					var rHash = hashProvider.ComputeHash(rArray);
 					var sHash = hashProvider.ComputeHash(sArray);

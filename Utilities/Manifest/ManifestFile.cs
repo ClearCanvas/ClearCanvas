@@ -37,6 +37,9 @@ namespace ClearCanvas.Utilities.Manifest
 	[XmlRoot("File")]
 	public class ManifestFile
 	{
+		private static readonly string _checksumTypeMd5 = typeof (MD5CryptoServiceProvider).ToString();
+		private const string _checksumTypeSha256 = "SHA256";
+
 		/// <summary>
 		/// The relative path of the file or directory in the manifest.
 		/// </summary>
@@ -91,12 +94,11 @@ namespace ClearCanvas.Utilities.Manifest
 		/// <param name="fullPath">The full path of the file to generate a checksum for.</param>
 		public void GenerateChecksum(string fullPath)
 		{
-			string type;
-			Checksum = GenerateChecksum<SHA256CryptoServiceProvider>(fullPath, out type);
-			ChecksumType = type;
+			Checksum = GenerateChecksum<SHA256CryptoServiceProvider2>(fullPath);
+			ChecksumType = _checksumTypeSha256;
 		}
 
-		private static string GenerateChecksum<T>(string fullPath, out string checksumType)
+		private static string GenerateChecksum<T>(string fullPath)
 			where T : HashAlgorithm, new()
 		{
 			using (var hash = new T())
@@ -105,7 +107,6 @@ namespace ClearCanvas.Utilities.Manifest
 				var hashBytes = hash.ComputeHash(file);
 				file.Close();
 
-				checksumType = typeof (T).ToString();
 				return StringUtilities.ToHexString(hashBytes, true);
 			}
 		}
@@ -116,13 +117,15 @@ namespace ClearCanvas.Utilities.Manifest
 		/// <param name="fullPath">The path to the file.</param>
 		public void VerifyChecksum(string fullPath)
 		{
-			if (TryVerifyChecksum<SHA256CryptoServiceProvider>(fullPath, Checksum, ChecksumType))
+			if (ChecksumType == _checksumTypeSha256)
 			{
 				// exception is thrown if checksum fails verification
+				TryVerifyChecksum<SHA256CryptoServiceProvider2>(fullPath, Checksum);
 			}
-			else if (TryVerifyChecksum<MD5CryptoServiceProvider>(fullPath, Checksum, ChecksumType))
+			else if (ChecksumType == _checksumTypeMd5)
 			{
 				// exception is thrown if checksum fails verification
+				TryVerifyChecksum<MD5CryptoServiceProvider>(fullPath, Checksum);
 			}
 			else
 			{
@@ -130,35 +133,29 @@ namespace ClearCanvas.Utilities.Manifest
 			}
 		}
 
-		private static bool TryVerifyChecksum<T>(string fullPath, string checksum, string checksumType)
+		private static void TryVerifyChecksum<T>(string fullPath, string checksum)
 			where T : HashAlgorithm, new()
 		{
-			if (typeof (T).ToString().Equals(checksumType))
+			string hashString;
+
+			try
 			{
-				string hashString;
-
-				try
+				using (var hash = new T())
+				using (var file = new FileStream(fullPath, FileMode.Open, FileAccess.Read, FileShare.Read))
 				{
-					using (var hash = new T())
-					using (var file = new FileStream(fullPath, FileMode.Open, FileAccess.Read, FileShare.Read))
-					{
-						var hashBytes = hash.ComputeHash(file);
-						file.Close();
+					var hashBytes = hash.ComputeHash(file);
+					file.Close();
 
-						hashString = StringUtilities.ToHexString(hashBytes, true);
-					}
+					hashString = StringUtilities.ToHexString(hashBytes, true);
 				}
-				catch (Exception ex)
-				{
-					throw new ApplicationException("Checksum could not be verified for file " + fullPath, ex);
-				}
-
-				if (!string.Equals(checksum, hashString, StringComparison.InvariantCultureIgnoreCase))
-					throw new ApplicationException("Checksum does not match for file " + fullPath);
-
-				return true;
 			}
-			return false;
+			catch (Exception ex)
+			{
+				throw new ApplicationException("Checksum could not be verified for file " + fullPath, ex);
+			}
+
+			if (!string.Equals(checksum, hashString, StringComparison.InvariantCultureIgnoreCase))
+				throw new ApplicationException("Checksum does not match for file " + fullPath);
 		}
 	}
 }
