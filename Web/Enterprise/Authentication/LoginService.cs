@@ -150,7 +150,9 @@ namespace ClearCanvas.Web.Enterprise.Authentication
             SessionInfo sessionInfo = SessionCache.Instance.Find(sessionTokenId);
             if (sessionInfo != null) return sessionInfo;
 
-            // go to the server to see if the session exists (it's likely that the session was created by another app)
+            // Session does not exist in the cache.
+            // Go to the server to see if the session exists
+            // It may 
             var request = new ValidateSessionRequest(userId, new SessionToken(sessionTokenId))
             {
                 GetAuthorizations = true,
