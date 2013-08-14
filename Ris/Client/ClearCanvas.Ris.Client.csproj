@@ -254,6 +254,12 @@
     <Compile Include="UserLookupHandler.cs" />
     <Compile Include="UserWorklistTool.cs" />
     <Compile Include="ViewImagesHelper.cs" />
+    <Compile Include="ViewImagesSettings.cs" />
+    <Compile Include="ViewImagesSettings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>ViewImagesSettings.settings</DependentUpon>
+    </Compile>
     <Compile Include="VisitDetailsEditorComponent.cs" />
     <Compile Include="VisitDetailViewComponent.cs" />
     <Compile Include="VisitEditorComponent.cs" />
@@ -499,6 +505,10 @@
     <None Include="SearchComponentSettings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>SearchComponentSettings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="ViewImagesSettings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>ViewImagesSettings.Designer.cs</LastGenOutput>
     </None>
     <None Include="WebServicesSettings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
