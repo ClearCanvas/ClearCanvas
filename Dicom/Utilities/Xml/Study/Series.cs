@@ -56,7 +56,17 @@ namespace ClearCanvas.Dicom.Utilities.Xml.Study
             }
         }
 
-        #endregion
+    	public string StationName
+    	{
+			get { return SopInstances.First().GetAttribute(DicomTags.StationName).ToString(); }
+    	}
+
+    	public string InstitutionName
+    	{
+			get { return SopInstances.First().GetAttribute(DicomTags.InstitutionName).ToString(); }
+    	}
+
+    	#endregion
 
         #region ISeriesData Members
 

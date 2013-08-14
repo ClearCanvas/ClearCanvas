@@ -61,7 +61,12 @@ namespace ClearCanvas.Dicom.Utilities.Xml.Study
 
         internal Series ParentSeries { get; private set; }
 
-        ISeries ISopInstance.ParentSeries { get { return ParentSeries; } }
+    	public string SourceApplicationEntityTitle
+    	{
+			get { return GetAttribute(DicomTags.SourceApplicationEntityTitle).ToString(); }
+    	}
+
+    	ISeries ISopInstance.ParentSeries { get { return ParentSeries; } }
 
         private bool IsStoredTag(uint tag)
         {

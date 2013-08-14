@@ -128,6 +128,9 @@ namespace ClearCanvas.Dicom.Iod
     {
         IStudy ParentStudy { get; }
         IList<ISopInstance> SopInstances { get; }
+
+    	string StationName { get; }
+    	string InstitutionName { get; }
     }
 
     /// <summary>
@@ -136,6 +139,8 @@ namespace ClearCanvas.Dicom.Iod
     public interface ISopInstance : ISopInstanceData, ISopDicomFileLoader /*, IDicomAttributeProvider*/
     {
         ISeries ParentSeries { get; }
+
+    	string SourceApplicationEntityTitle { get; }
 
         DicomAttribute GetAttribute(uint dicomTag);
         DicomAttribute GetAttribute(DicomTag dicomTag);
