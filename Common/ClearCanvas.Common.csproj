@@ -172,8 +172,13 @@
     <Compile Include="PluginLoader.cs" />
     <Compile Include="Rest\RestClient.cs" />
     <Compile Include="Specifications\CaseSpecification.cs" />
+    <Compile Include="Specifications\ContainsSpecification.cs" />
+    <Compile Include="Specifications\EndsWithSpecification.cs" />
+    <Compile Include="Specifications\StartsWithSpecification.cs" />
+    <Compile Include="Specifications\StringMatchingSpecification.cs" />
     <Compile Include="Specifications\NotSpecification.cs" />
     <Compile Include="Specifications\Tests\CompositeSpecificationTests.cs" />
+    <Compile Include="Specifications\Tests\StringMatchingSpecificationTests.cs" />
     <Compile Include="Specifications\Tests\CountSpecificationTests.cs" />
     <Compile Include="Specifications\Tests\EnumerableSpecificationTests.cs" />
     <Compile Include="Specifications\Tests\EqualitySpecificationTests.cs" />
