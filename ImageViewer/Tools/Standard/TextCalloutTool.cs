@@ -391,7 +391,7 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 				graphicBuilder.GraphicFinalCancelled -= OnGraphicFinalCancelled;
 			}
 
-			e.Graphic.ImageViewer.CommandHistory.AddCommand(_undoableCommand);
+			ImageViewer.CommandHistory.AddCommand(_undoableCommand);
 			_undoableCommand = null;
 		}
 
