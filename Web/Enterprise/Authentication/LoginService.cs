@@ -133,18 +133,72 @@ namespace ClearCanvas.Web.Enterprise.Authentication
         }
 
         [Obfuscation(Exclude = true)]
-        public SessionInfo ValidateSession(string tokenId)
-        {
-            return CheckSession(tokenId, false);
-        }
-
-        [Obfuscation(Exclude = true)]
         public SessionInfo Renew(string tokenId)
         {
-            return CheckSession(tokenId, true);
+            return RenewSession(tokenId);
         }
 
-        private SessionInfo CheckSession(string tokenId, bool renew)
+        /// <summary>
+        /// Verifies that the session exists
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="sessionTokenId"></param>
+        /// <returns></returns>
+        [Obfuscation(Exclude = true)]
+        public SessionInfo VerifySession(string userId, string sessionTokenId)
+        {
+            SessionInfo sessionInfo = SessionCache.Instance.Find(sessionTokenId);
+            if (sessionInfo != null) return sessionInfo;
+
+            // Session does not exist in the cache.
+            // Go to the server to see if the session exists
+            // It may 
+            var request = new ValidateSessionRequest(userId, new SessionToken(sessionTokenId))
+            {
+                GetAuthorizations = true,
+                ValidateOnly = false // load the tokens too since we don't know anything about session yet
+            };
+
+            try
+            {
+                using (new ResponseCacheBypassScope()) //bypass the response cache
+                {
+                    Platform.GetService(
+                    delegate(IAuthenticationService service)
+                    {
+
+                        ValidateSessionResponse response = service.ValidateSession(request);
+                        sessionInfo = new SessionInfo(userId, userId, response.SessionToken);
+
+                        SessionCache.Instance.AddSession(sessionTokenId, sessionInfo);
+                        sessionInfo.Validate();
+
+                    });
+
+                }
+                
+                return sessionInfo;
+            }
+            catch (FaultException<InvalidUserSessionException> ex)
+            {
+                SessionCache.Instance.RemoveSession(sessionTokenId);
+                throw new SessionValidationException(ex.Detail);
+            }
+            catch (FaultException<UserAccessDeniedException> ex)
+            {
+                SessionCache.Instance.RemoveSession(sessionTokenId);
+                throw new SessionValidationException(ex.Detail);
+            }
+            catch (Exception ex)
+            {
+                //TODO: for now we can't distinguish communicate errors and credential validation errors.
+                // All exceptions are treated the same: we can't verify the session.
+                var e = new SessionValidationException(ex);
+                throw e;
+            }         
+        }
+
+        private SessionInfo RenewSession(string tokenId)
         {
             SessionInfo sessionInfo = SessionCache.Instance.Find(tokenId);
             if (sessionInfo == null)
@@ -156,7 +210,7 @@ namespace ClearCanvas.Web.Enterprise.Authentication
                                                      sessionInfo.Credentials.SessionToken)
                               {
                                   GetAuthorizations = true,
-                                  ValidateOnly = !renew
+                                  ValidateOnly = false
                               };
             try
             {
@@ -170,15 +224,13 @@ namespace ClearCanvas.Web.Enterprise.Authentication
                             //If we're renewing, might as well renew well before expiry. If we're only validating,
                             //we don't want to force a call to the server unless it's actually expired.
                             var addSeconds = 0.0;
-                            if (renew)
-                            {
-                                //Minor hack - the ImageServer client shows a little bar at the top of the page counting down to session timeout,
-                                //and allowing the user to cancel. This timeout value determines when that bar shows up. If, however, the 
-                                //validate response is being cached, we need to make sure we hit the server - otherwise the bar doesn't go away.
-                                double.TryParse(ConfigurationManager.AppSettings.Get("ClientTimeoutWarningMinDuration"), out addSeconds);
-                                addSeconds = Math.Max(addSeconds, 30);
-                            }
 
+                            //Minor hack - the ImageServer client shows a little bar at the top of the page counting down to session timeout,
+                            //and allowing the user to cancel. This timeout value determines when that bar shows up. If, however, the 
+                            //validate response is being cached, we need to make sure we hit the server - otherwise the bar doesn't go away.
+                            double.TryParse(ConfigurationManager.AppSettings.Get("ClientTimeoutWarningMinDuration"), out addSeconds);
+                            addSeconds = Math.Max(addSeconds, 30);
+                            
                             if (Platform.Time.AddSeconds(addSeconds) >= response.SessionToken.ExpiryTime)
                             {
                                 Platform.Log(LogLevel.Debug, "Session is at or near expiry; bypassing cache.");
