@@ -151,8 +151,11 @@ namespace ClearCanvas.Ris.Client.Workflow
 
 				// HACK: update the active ReportPart object with the structured report
 				// (this is solely for the benefit of the Preview component, it does not have any affect on what is ultimately saved)
-				var activePart = _context.Report.GetPart(_context.ActiveReportPartIndex);
-				activePart.Content = _reportContent.ToJsml();
+				if (_context.Report != null)
+				{
+					var activePart = _context.Report.GetPart(_context.ActiveReportPartIndex);
+					activePart.Content = _reportContent.ToJsml();
+				}
 			}
 
 			// Reset component validation since we just reloaded the report content
