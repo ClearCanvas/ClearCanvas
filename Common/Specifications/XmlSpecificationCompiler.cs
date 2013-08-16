@@ -194,8 +194,10 @@ namespace ClearCanvas.Common.Specifications
 			AddOperator(new BuiltInOperator("null", CreateIsNull, XmlSpecificationSchema.IsNullSchema));
             AddOperator(new BuiltInOperator("not-null", CreateNotNull, XmlSpecificationSchema.NotNullSchema));
             AddOperator(new BuiltInOperator("count", CreateCount, XmlSpecificationSchema.CountSchema));
-            AddOperator(new BuiltInOperator("each", CreateEach, XmlSpecificationSchema.EachSchema));
-            AddOperator(new BuiltInOperator("any", CreateAny, XmlSpecificationSchema.AnySchema));
+			AddOperator(new BuiltInOperator("all", CreateAll, XmlSpecificationSchema.AllSchema));
+			//note: "each" is a synonym for "all" - "each" is deprecated, but is still supported for backward compatibility
+			AddOperator(new BuiltInOperator("each", CreateAll, XmlSpecificationSchema.EachSchema));
+			AddOperator(new BuiltInOperator("any", CreateAny, XmlSpecificationSchema.AnySchema));
             AddOperator(new BuiltInOperator("case", CreateCase, XmlSpecificationSchema.CaseSchema));
             AddOperator(new BuiltInOperator("defined", CreateDefined, XmlSpecificationSchema.DefinedSchema));
 
@@ -363,10 +365,10 @@ namespace ClearCanvas.Common.Specifications
             return new CountSpecification(min, max, elementSpec);
         }
 
-        private Specification CreateEach(XmlElement node)
+        private Specification CreateAll(XmlElement node)
         {
             var elementSpec = CreateImplicitAnd(GetChildElements(node));
-            return new EachSpecification(elementSpec);
+            return new AllSpecification(elementSpec);
         }
 
         private Specification CreateAny(XmlElement node)

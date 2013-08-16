@@ -347,6 +347,39 @@ namespace ClearCanvas.Common.Specifications
 			return element;
 		}
 
+		public static XmlSchemaElement AllSchema()
+		{
+			XmlSchemaComplexType type = new XmlSchemaComplexType();
+
+			XmlSchemaAttribute attrib = new XmlSchemaAttribute();
+			attrib.Name = "expressionLanguage";
+			attrib.Use = XmlSchemaUse.Optional;
+			attrib.SchemaTypeName = new XmlQualifiedName("string", "http://www.w3.org/2001/XMLSchema");
+			type.Attributes.Add(attrib);
+
+			attrib = new XmlSchemaAttribute();
+			attrib.Name = "failMessage";
+			attrib.Use = XmlSchemaUse.Optional;
+			attrib.SchemaTypeName = new XmlQualifiedName("string", "http://www.w3.org/2001/XMLSchema");
+			type.Attributes.Add(attrib);
+
+			XmlSchemaAny any = new XmlSchemaAny();
+			any.MinOccurs = 1;
+			any.MaxOccursString = "unbounded";
+			any.ProcessContents = XmlSchemaContentProcessing.Strict;
+			any.Namespace = "##local";
+
+			XmlSchemaSequence sequence = new XmlSchemaSequence();
+			type.Particle = sequence;
+			sequence.Items.Add(any);
+
+			XmlSchemaElement element = new XmlSchemaElement();
+			element.Name = "all";
+			element.SchemaType = type;
+
+			return element;
+		}
+
 		public static XmlSchemaElement AnySchema()
 		{
 			XmlSchemaComplexType type = new XmlSchemaComplexType();

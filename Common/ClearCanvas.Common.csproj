@@ -244,7 +244,7 @@
     <Compile Include="Specifications\CompositeSpecification.cs" />
     <Compile Include="Specifications\CountSpecification.cs" />
     <Compile Include="Specifications\DefinedSpecification.cs" />
-    <Compile Include="Specifications\EachSpecification.cs" />
+    <Compile Include="Specifications\AllSpecification.cs" />
     <Compile Include="Specifications\EnumerableSpecification.cs" />
     <Compile Include="Specifications\EqualSpecification.cs" />
     <Compile Include="Specifications\Expression.cs" />
