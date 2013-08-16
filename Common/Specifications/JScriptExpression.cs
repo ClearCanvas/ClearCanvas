@@ -77,7 +77,7 @@ namespace ClearCanvas.Common.Specifications
 			}
 			catch (Exception e)
 			{
-				throw new SpecificationException(string.Format(SR.ExceptionJScriptEvaluation, this.Text), e);
+				throw new SpecificationException(string.Format(SR.ExceptionJScriptEvaluation, this.Text, e.Message), e);
 			}
 		}
 
