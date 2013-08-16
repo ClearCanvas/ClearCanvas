@@ -29,15 +29,15 @@ using ClearCanvas.Enterprise.Core.Upgrade;
 
 namespace ClearCanvas.ImageServer.Model.SqlServer.UpgradeScripts
 {
-    /// <summary>
-    /// Upgrade from the Yen milestone to the Phoenix5 milestone.
-    /// </summary>
-    [ExtensionOf(typeof (PersistentStoreUpgradeScriptExtensionPoint))]
-    internal class UpgradeFrom_10_0_11128_314 : BaseUpgradeScript
-    {
-        public UpgradeFrom_10_0_11128_314()
-            : base(new Version(10, 0, 11128, 314), null, "UpgradeFrom_10_0_11128_314.sql")
-        {
-        }
-    }
+	/// <summary>
+	/// Upgrade from the Bennu milestone to the Rigel milestone.
+	/// </summary>
+	[ExtensionOf(typeof (PersistentStoreUpgradeScriptExtensionPoint))]
+	internal class UpgradeFrom_10_1_00000_000 : BaseUpgradeScript
+	{
+		public UpgradeFrom_10_1_00000_000()
+			: base(new Version(10, 0, 11128, 314), null, "UpgradeFrom_10_1_00000_000.sql")
+		{
+		}
+	}
 }
