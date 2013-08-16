@@ -28,28 +28,28 @@ using System.Collections;
 
 namespace ClearCanvas.Common.Specifications
 {
-    public abstract class EnumerableSpecification : Specification
-    {
-        private readonly ISpecification _elementSpecification;
+	public abstract class EnumerableSpecification : Specification
+	{
+		private readonly ISpecification _elementSpecification;
 
-        public EnumerableSpecification(ISpecification elementSpecification)
-        {
+		protected EnumerableSpecification(ISpecification elementSpecification)
+		{
 			Platform.CheckForNullReference(elementSpecification, "elementSpecification");
-            _elementSpecification = elementSpecification;
-        }
+			_elementSpecification = elementSpecification;
+		}
 
-        protected internal ISpecification ElementSpec
-        {
-            get { return _elementSpecification; }
-        }
+		protected internal ISpecification ElementSpec
+		{
+			get { return _elementSpecification; }
+		}
 
-        protected static IEnumerable AsEnumerable(object obj)
-        {
-            IEnumerable enumerable = obj as IEnumerable;
-            if (enumerable == null)
+		protected static IEnumerable AsEnumerable(object obj)
+		{
+			var enumerable = obj as IEnumerable;
+			if (enumerable == null)
 				throw new SpecificationException(SR.ExceptionCastExpressionEnumerable);
 
-            return enumerable;
-        }
-    }
+			return enumerable;
+		}
+	}
 }

@@ -88,14 +88,7 @@ namespace ClearCanvas.Common.Specifications
 
 		private static IScriptEngine ScriptEngine
 		{
-			get
-			{
-				if (_scriptEngine == null)
-				{
-					_scriptEngine = ScriptEngineFactory.GetEngine("jscript");
-				}
-				return _scriptEngine;
-			}
+			get { return _scriptEngine ?? (_scriptEngine = ScriptEngineFactory.GetEngine("jscript")); }
 		}
 	}
 }

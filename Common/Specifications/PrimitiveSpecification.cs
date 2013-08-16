@@ -26,16 +26,16 @@
 
 namespace ClearCanvas.Common.Specifications
 {
-    public abstract class PrimitiveSpecification : Specification
-    {
-        public PrimitiveSpecification()
-        {
+	public abstract class PrimitiveSpecification : Specification
+	{
+		protected PrimitiveSpecification()
+		{
 
-        }
+		}
 
-        protected TestResult DefaultTestResult(bool success)
-        {
-            return new TestResult(success, success ? null : new TestResultReason(this.FailureMessage));
-        }
-    }
+		protected TestResult DefaultTestResult(bool success)
+		{
+			return new TestResult(success, success ? null : new TestResultReason(this.FailureMessage));
+		}
+	}
 }

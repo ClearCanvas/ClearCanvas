@@ -66,19 +66,19 @@ namespace ClearCanvas.Common.Specifications
 
 		public static XmlSchemaElement AndSchema()
 		{
-			XmlSchemaComplexType type = new XmlSchemaComplexType();
+			var type = new XmlSchemaComplexType();
 
-			XmlSchemaAny any = new XmlSchemaAny();
+			var any = new XmlSchemaAny();
 			any.MinOccurs = 1;
 			any.MaxOccursString = "unbounded";
 			any.ProcessContents = XmlSchemaContentProcessing.Strict;
 			any.Namespace = "##local";
 
-			XmlSchemaSequence sequence = new XmlSchemaSequence();
+			var sequence = new XmlSchemaSequence();
 			type.Particle = sequence;
 			sequence.Items.Add(any);
 
-			XmlSchemaAttribute attrib = new XmlSchemaAttribute();
+			var attrib = new XmlSchemaAttribute();
 			attrib.Name = "expressionLanguage";
 			attrib.Use = XmlSchemaUse.Optional;
 			attrib.SchemaTypeName = new XmlQualifiedName("string", "http://www.w3.org/2001/XMLSchema");
@@ -90,7 +90,7 @@ namespace ClearCanvas.Common.Specifications
 			attrib.SchemaTypeName = new XmlQualifiedName("string", "http://www.w3.org/2001/XMLSchema");
 			type.Attributes.Add(attrib);
 
-			XmlSchemaElement element = new XmlSchemaElement();
+			var element = new XmlSchemaElement();
 			element.Name = "and";
 			element.SchemaType = type;
 
@@ -99,19 +99,19 @@ namespace ClearCanvas.Common.Specifications
 
 		public static XmlSchemaElement OrSchema()
 		{
-			XmlSchemaComplexType type = new XmlSchemaComplexType();
+			var type = new XmlSchemaComplexType();
 
-			XmlSchemaAny any = new XmlSchemaAny();
+			var any = new XmlSchemaAny();
 			any.MinOccurs = 1;
 			any.MaxOccursString = "unbounded";
 			any.ProcessContents = XmlSchemaContentProcessing.Strict;
 			any.Namespace = "##local";
 
-			XmlSchemaSequence sequence = new XmlSchemaSequence();
+			var sequence = new XmlSchemaSequence();
 			type.Particle = sequence;
 			sequence.Items.Add(any);
 
-			XmlSchemaAttribute attrib = new XmlSchemaAttribute();
+			var attrib = new XmlSchemaAttribute();
 			attrib.Name = "expressionLanguage";
 			attrib.Use = XmlSchemaUse.Optional;
 			attrib.SchemaTypeName = new XmlQualifiedName("string", "http://www.w3.org/2001/XMLSchema");
@@ -124,7 +124,7 @@ namespace ClearCanvas.Common.Specifications
 			type.Attributes.Add(attrib);
 
 
-			XmlSchemaElement element = new XmlSchemaElement();
+			var element = new XmlSchemaElement();
 			element.Name = "or";
 			element.SchemaType = type;
 
@@ -133,19 +133,19 @@ namespace ClearCanvas.Common.Specifications
 
 		public static XmlSchemaElement NotSchema()
 		{
-			XmlSchemaComplexType type = new XmlSchemaComplexType();
+			var type = new XmlSchemaComplexType();
 
-			XmlSchemaAny any = new XmlSchemaAny();
+			var any = new XmlSchemaAny();
 			any.MinOccurs = 1;
 			any.MaxOccursString = "unbounded";
 			any.ProcessContents = XmlSchemaContentProcessing.Strict;
 			any.Namespace = "##local";
 
-			XmlSchemaSequence sequence = new XmlSchemaSequence();
+			var sequence = new XmlSchemaSequence();
 			type.Particle = sequence;
 			sequence.Items.Add(any);
 
-			XmlSchemaAttribute attrib = new XmlSchemaAttribute();
+			var attrib = new XmlSchemaAttribute();
 			attrib.Name = "expressionLanguage";
 			attrib.Use = XmlSchemaUse.Optional;
 			attrib.SchemaTypeName = new XmlQualifiedName("string", "http://www.w3.org/2001/XMLSchema");
@@ -157,7 +157,7 @@ namespace ClearCanvas.Common.Specifications
 			attrib.SchemaTypeName = new XmlQualifiedName("string", "http://www.w3.org/2001/XMLSchema");
 			type.Attributes.Add(attrib);
 
-			XmlSchemaElement element = new XmlSchemaElement();
+			var element = new XmlSchemaElement();
 			element.Name = "not";
 			element.SchemaType = type;
 
@@ -166,9 +166,9 @@ namespace ClearCanvas.Common.Specifications
 
 		public static XmlSchemaElement StringMatchingSchema()
 		{
-			XmlSchemaComplexType type = new XmlSchemaComplexType();
+			var type = new XmlSchemaComplexType();
 
-			XmlSchemaAttribute attrib = new XmlSchemaAttribute();
+			var attrib = new XmlSchemaAttribute();
 			attrib.Name = "test";
 			attrib.Use = XmlSchemaUse.Optional;
 			attrib.SchemaTypeName = new XmlQualifiedName("string", "http://www.w3.org/2001/XMLSchema");
@@ -204,7 +204,7 @@ namespace ClearCanvas.Common.Specifications
 			attrib.SchemaTypeName = new XmlQualifiedName("string", "http://www.w3.org/2001/XMLSchema");
 			type.Attributes.Add(attrib);
 
-			XmlSchemaElement element = new XmlSchemaElement();
+			var element = new XmlSchemaElement();
 			element.Name = "regex";
 			element.SchemaType = type;
 
@@ -213,9 +213,9 @@ namespace ClearCanvas.Common.Specifications
 
 		public static XmlSchemaElement NotNullSchema()
 		{
-			XmlSchemaComplexType type = new XmlSchemaComplexType();
+			var type = new XmlSchemaComplexType();
 
-			XmlSchemaAttribute attrib = new XmlSchemaAttribute();
+			var attrib = new XmlSchemaAttribute();
 			attrib.Name = "test";
 			attrib.Use = XmlSchemaUse.Optional;
 			attrib.SchemaTypeName = new XmlQualifiedName("string", "http://www.w3.org/2001/XMLSchema");
@@ -233,7 +233,7 @@ namespace ClearCanvas.Common.Specifications
 			attrib.SchemaTypeName = new XmlQualifiedName("string", "http://www.w3.org/2001/XMLSchema");
 			type.Attributes.Add(attrib);
 
-			XmlSchemaElement element = new XmlSchemaElement();
+			var element = new XmlSchemaElement();
 			element.Name = "not-null";
 			element.SchemaType = type;
 
@@ -242,9 +242,9 @@ namespace ClearCanvas.Common.Specifications
 
 		public static XmlSchemaElement IsNullSchema()
 		{
-			XmlSchemaComplexType type = new XmlSchemaComplexType();
+			var type = new XmlSchemaComplexType();
 
-			XmlSchemaAttribute attrib = new XmlSchemaAttribute();
+			var attrib = new XmlSchemaAttribute();
 			attrib.Name = "test";
 			attrib.Use = XmlSchemaUse.Optional;
 			attrib.SchemaTypeName = new XmlQualifiedName("string", "http://www.w3.org/2001/XMLSchema");
@@ -262,7 +262,7 @@ namespace ClearCanvas.Common.Specifications
 			attrib.SchemaTypeName = new XmlQualifiedName("string", "http://www.w3.org/2001/XMLSchema");
 			type.Attributes.Add(attrib);
 
-			XmlSchemaElement element = new XmlSchemaElement();
+			var element = new XmlSchemaElement();
 			element.Name = "null";
 			element.SchemaType = type;
 
@@ -271,9 +271,9 @@ namespace ClearCanvas.Common.Specifications
 
 		public static XmlSchemaElement CountSchema()
 		{
-			XmlSchemaComplexType type = new XmlSchemaComplexType();
+			var type = new XmlSchemaComplexType();
 
-			XmlSchemaAttribute attrib = new XmlSchemaAttribute();
+			var attrib = new XmlSchemaAttribute();
 			attrib.Name = "min";
 			attrib.Use = XmlSchemaUse.Optional;
 			attrib.SchemaTypeName = new XmlQualifiedName("positiveInteger", "http://www.w3.org/2001/XMLSchema");
@@ -297,17 +297,17 @@ namespace ClearCanvas.Common.Specifications
 			attrib.SchemaTypeName = new XmlQualifiedName("string", "http://www.w3.org/2001/XMLSchema");
 			type.Attributes.Add(attrib);
 
-			XmlSchemaAny any = new XmlSchemaAny();
+			var any = new XmlSchemaAny();
 			any.MinOccurs = 1;
 			any.MaxOccursString = "unbounded";
 			any.ProcessContents = XmlSchemaContentProcessing.Strict;
 			any.Namespace = "##local";
 
-			XmlSchemaSequence sequence = new XmlSchemaSequence();
+			var sequence = new XmlSchemaSequence();
 			type.Particle = sequence;
 			sequence.Items.Add(any);
 
-			XmlSchemaElement element = new XmlSchemaElement();
+			var element = new XmlSchemaElement();
 			element.Name = "count";
 			element.SchemaType = type;
 
@@ -316,9 +316,9 @@ namespace ClearCanvas.Common.Specifications
 
 		public static XmlSchemaElement EachSchema()
 		{
-			XmlSchemaComplexType type = new XmlSchemaComplexType();
+			var type = new XmlSchemaComplexType();
 
-			XmlSchemaAttribute attrib = new XmlSchemaAttribute();
+			var attrib = new XmlSchemaAttribute();
 			attrib.Name = "expressionLanguage";
 			attrib.Use = XmlSchemaUse.Optional;
 			attrib.SchemaTypeName = new XmlQualifiedName("string", "http://www.w3.org/2001/XMLSchema");
@@ -330,17 +330,17 @@ namespace ClearCanvas.Common.Specifications
 			attrib.SchemaTypeName = new XmlQualifiedName("string", "http://www.w3.org/2001/XMLSchema");
 			type.Attributes.Add(attrib);
 
-			XmlSchemaAny any = new XmlSchemaAny();
+			var any = new XmlSchemaAny();
 			any.MinOccurs = 1;
 			any.MaxOccursString = "unbounded";
 			any.ProcessContents = XmlSchemaContentProcessing.Strict;
 			any.Namespace = "##local";
 
-			XmlSchemaSequence sequence = new XmlSchemaSequence();
+			var sequence = new XmlSchemaSequence();
 			type.Particle = sequence;
 			sequence.Items.Add(any);
 
-			XmlSchemaElement element = new XmlSchemaElement();
+			var element = new XmlSchemaElement();
 			element.Name = "each";
 			element.SchemaType = type;
 
@@ -349,9 +349,9 @@ namespace ClearCanvas.Common.Specifications
 
 		public static XmlSchemaElement AllSchema()
 		{
-			XmlSchemaComplexType type = new XmlSchemaComplexType();
+			var type = new XmlSchemaComplexType();
 
-			XmlSchemaAttribute attrib = new XmlSchemaAttribute();
+			var attrib = new XmlSchemaAttribute();
 			attrib.Name = "expressionLanguage";
 			attrib.Use = XmlSchemaUse.Optional;
 			attrib.SchemaTypeName = new XmlQualifiedName("string", "http://www.w3.org/2001/XMLSchema");
@@ -363,17 +363,17 @@ namespace ClearCanvas.Common.Specifications
 			attrib.SchemaTypeName = new XmlQualifiedName("string", "http://www.w3.org/2001/XMLSchema");
 			type.Attributes.Add(attrib);
 
-			XmlSchemaAny any = new XmlSchemaAny();
+			var any = new XmlSchemaAny();
 			any.MinOccurs = 1;
 			any.MaxOccursString = "unbounded";
 			any.ProcessContents = XmlSchemaContentProcessing.Strict;
 			any.Namespace = "##local";
 
-			XmlSchemaSequence sequence = new XmlSchemaSequence();
+			var sequence = new XmlSchemaSequence();
 			type.Particle = sequence;
 			sequence.Items.Add(any);
 
-			XmlSchemaElement element = new XmlSchemaElement();
+			var element = new XmlSchemaElement();
 			element.Name = "all";
 			element.SchemaType = type;
 
@@ -382,9 +382,9 @@ namespace ClearCanvas.Common.Specifications
 
 		public static XmlSchemaElement AnySchema()
 		{
-			XmlSchemaComplexType type = new XmlSchemaComplexType();
+			var type = new XmlSchemaComplexType();
 
-			XmlSchemaAttribute attrib = new XmlSchemaAttribute();
+			var attrib = new XmlSchemaAttribute();
 			attrib.Name = "expressionLanguage";
 			attrib.Use = XmlSchemaUse.Optional;
 			attrib.SchemaTypeName = new XmlQualifiedName("string", "http://www.w3.org/2001/XMLSchema");
@@ -396,17 +396,17 @@ namespace ClearCanvas.Common.Specifications
 			attrib.SchemaTypeName = new XmlQualifiedName("string", "http://www.w3.org/2001/XMLSchema");
 			type.Attributes.Add(attrib);
 
-			XmlSchemaAny any = new XmlSchemaAny();
+			var any = new XmlSchemaAny();
 			any.MinOccurs = 1;
 			any.MaxOccursString = "unbounded";
 			any.ProcessContents = XmlSchemaContentProcessing.Strict;
 			any.Namespace = "##local";
 
-			XmlSchemaSequence sequence = new XmlSchemaSequence();
+			var sequence = new XmlSchemaSequence();
 			type.Particle = sequence;
 			sequence.Items.Add(any);
 
-			XmlSchemaElement element = new XmlSchemaElement();
+			var element = new XmlSchemaElement();
 			element.Name = "any";
 			element.SchemaType = type;
 
@@ -415,19 +415,19 @@ namespace ClearCanvas.Common.Specifications
 
 		public static XmlSchemaElement CaseSchema()
 		{
-			XmlSchemaComplexType type = new XmlSchemaComplexType();
+			var type = new XmlSchemaComplexType();
 			XmlSchemaAll allSchema = new XmlSchemaAll();
 			type.Particle = allSchema;
 
 			//When
 			XmlSchemaComplexType subType = new XmlSchemaComplexType();
-			XmlSchemaAny any = new XmlSchemaAny();
+			var any = new XmlSchemaAny();
 			any.MinOccurs = 1;
 			any.MaxOccursString = "unbounded";
 			any.ProcessContents = XmlSchemaContentProcessing.Strict;
 			any.Namespace = "##local";
 
-			XmlSchemaSequence sequence = new XmlSchemaSequence();
+			var sequence = new XmlSchemaSequence();
 			subType.Particle = sequence;
 			sequence.Items.Add(any);
 
@@ -470,7 +470,7 @@ namespace ClearCanvas.Common.Specifications
 			subElement.SchemaType = subType;
 			allSchema.Items.Add(subElement);
 
-			XmlSchemaAttribute attrib = new XmlSchemaAttribute();
+			var attrib = new XmlSchemaAttribute();
 			attrib.Name = "expressionLanguage";
 			attrib.Use = XmlSchemaUse.Optional;
 			attrib.SchemaTypeName = new XmlQualifiedName("string", "http://www.w3.org/2001/XMLSchema");
@@ -482,7 +482,7 @@ namespace ClearCanvas.Common.Specifications
 			attrib.SchemaTypeName = new XmlQualifiedName("string", "http://www.w3.org/2001/XMLSchema");
 			type.Attributes.Add(attrib);
 
-			XmlSchemaElement element = new XmlSchemaElement();
+			var element = new XmlSchemaElement();
 			element.Name = "case";
 			element.SchemaType = type;
 
@@ -491,9 +491,9 @@ namespace ClearCanvas.Common.Specifications
 
 		public static XmlSchemaElement TrueSchema()
 		{
-			XmlSchemaComplexType type = new XmlSchemaComplexType();
+			var type = new XmlSchemaComplexType();
 
-			XmlSchemaAttribute attrib = new XmlSchemaAttribute();
+			var attrib = new XmlSchemaAttribute();
 			attrib.Name = "test";
 			attrib.Use = XmlSchemaUse.Optional;
 			attrib.SchemaTypeName = new XmlQualifiedName("string", "http://www.w3.org/2001/XMLSchema");
@@ -511,7 +511,7 @@ namespace ClearCanvas.Common.Specifications
 			attrib.SchemaTypeName = new XmlQualifiedName("string", "http://www.w3.org/2001/XMLSchema");
 			type.Attributes.Add(attrib);
 
-			XmlSchemaElement element = new XmlSchemaElement();
+			var element = new XmlSchemaElement();
 			element.Name = "true";
 			element.SchemaType = type;
 
@@ -520,9 +520,9 @@ namespace ClearCanvas.Common.Specifications
 
 		public static XmlSchemaElement FalseSchema()
 		{
-			XmlSchemaComplexType type = new XmlSchemaComplexType();
+			var type = new XmlSchemaComplexType();
 
-			XmlSchemaAttribute attrib = new XmlSchemaAttribute();
+			var attrib = new XmlSchemaAttribute();
 			attrib.Name = "test";
 			attrib.Use = XmlSchemaUse.Optional;
 			attrib.SchemaTypeName = new XmlQualifiedName("string", "http://www.w3.org/2001/XMLSchema");
@@ -540,7 +540,7 @@ namespace ClearCanvas.Common.Specifications
 			attrib.SchemaTypeName = new XmlQualifiedName("string", "http://www.w3.org/2001/XMLSchema");
 			type.Attributes.Add(attrib);
 
-			XmlSchemaElement element = new XmlSchemaElement();
+			var element = new XmlSchemaElement();
 			element.Name = "false";
 			element.SchemaType = type;
 
@@ -549,9 +549,9 @@ namespace ClearCanvas.Common.Specifications
 
 		public static XmlSchemaElement EqualSchema()
 		{
-			XmlSchemaComplexType type = new XmlSchemaComplexType();
+			var type = new XmlSchemaComplexType();
 
-			XmlSchemaAttribute attrib = new XmlSchemaAttribute();
+			var attrib = new XmlSchemaAttribute();
 			attrib.Name = "refValue";
 			attrib.Use = XmlSchemaUse.Required;
 			attrib.SchemaTypeName = new XmlQualifiedName("string", "http://www.w3.org/2001/XMLSchema");
@@ -575,7 +575,7 @@ namespace ClearCanvas.Common.Specifications
 			attrib.SchemaTypeName = new XmlQualifiedName("string", "http://www.w3.org/2001/XMLSchema");
 			type.Attributes.Add(attrib);
 
-			XmlSchemaElement element = new XmlSchemaElement();
+			var element = new XmlSchemaElement();
 			element.Name = "equal";
 			element.SchemaType = type;
 
@@ -585,9 +585,9 @@ namespace ClearCanvas.Common.Specifications
 
 		public static XmlSchemaElement NotEqualSchema()
 		{
-			XmlSchemaComplexType type = new XmlSchemaComplexType();
+			var type = new XmlSchemaComplexType();
 
-			XmlSchemaAttribute attrib = new XmlSchemaAttribute();
+			var attrib = new XmlSchemaAttribute();
 			attrib.Name = "refValue";
 			attrib.Use = XmlSchemaUse.Required;
 			attrib.SchemaTypeName = new XmlQualifiedName("string", "http://www.w3.org/2001/XMLSchema");
@@ -611,7 +611,7 @@ namespace ClearCanvas.Common.Specifications
 			attrib.SchemaTypeName = new XmlQualifiedName("string", "http://www.w3.org/2001/XMLSchema");
 			type.Attributes.Add(attrib);
 
-			XmlSchemaElement element = new XmlSchemaElement();
+			var element = new XmlSchemaElement();
 			element.Name = "not-equal";
 			element.SchemaType = type;
 
@@ -620,9 +620,9 @@ namespace ClearCanvas.Common.Specifications
 
 		public static XmlSchemaElement GreaterThanSchema()
 		{
-			XmlSchemaComplexType type = new XmlSchemaComplexType();
+			var type = new XmlSchemaComplexType();
 
-			XmlSchemaAttribute attrib = new XmlSchemaAttribute();
+			var attrib = new XmlSchemaAttribute();
 			attrib.Name = "refValue";
 			attrib.Use = XmlSchemaUse.Required;
 			attrib.SchemaTypeName = new XmlQualifiedName("string", "http://www.w3.org/2001/XMLSchema");
@@ -652,7 +652,7 @@ namespace ClearCanvas.Common.Specifications
 			attrib.SchemaTypeName = new XmlQualifiedName("boolean", "http://www.w3.org/2001/XMLSchema");
 			type.Attributes.Add(attrib);
 
-			XmlSchemaElement element = new XmlSchemaElement();
+			var element = new XmlSchemaElement();
 			element.Name = "greater-than";
 			element.SchemaType = type;
 
@@ -661,9 +661,9 @@ namespace ClearCanvas.Common.Specifications
 
 		public static XmlSchemaElement LessThanSchema()
 		{
-			XmlSchemaComplexType type = new XmlSchemaComplexType();
+			var type = new XmlSchemaComplexType();
 
-			XmlSchemaAttribute attrib = new XmlSchemaAttribute();
+			var attrib = new XmlSchemaAttribute();
 			attrib.Name = "refValue";
 			attrib.Use = XmlSchemaUse.Required;
 			attrib.SchemaTypeName = new XmlQualifiedName("string", "http://www.w3.org/2001/XMLSchema");
@@ -693,7 +693,7 @@ namespace ClearCanvas.Common.Specifications
 			attrib.SchemaTypeName = new XmlQualifiedName("boolean", "http://www.w3.org/2001/XMLSchema");
 			type.Attributes.Add(attrib);
 
-			XmlSchemaElement element = new XmlSchemaElement();
+			var element = new XmlSchemaElement();
 			element.Name = "less-than";
 			element.SchemaType = type;
 
@@ -702,9 +702,9 @@ namespace ClearCanvas.Common.Specifications
 
 		public static XmlSchemaElement DefinedSchema()
 		{
-			XmlSchemaComplexType type = new XmlSchemaComplexType();
+			var type = new XmlSchemaComplexType();
 
-			XmlSchemaAttribute attrib = new XmlSchemaAttribute();
+			var attrib = new XmlSchemaAttribute();
 			attrib.Name = "spec";
 			attrib.Use = XmlSchemaUse.Required;
 			attrib.SchemaTypeName = new XmlQualifiedName("string", "http://www.w3.org/2001/XMLSchema");
@@ -722,7 +722,7 @@ namespace ClearCanvas.Common.Specifications
 			attrib.SchemaTypeName = new XmlQualifiedName("string", "http://www.w3.org/2001/XMLSchema");
 			type.Attributes.Add(attrib);
 
-			XmlSchemaElement element = new XmlSchemaElement();
+			var element = new XmlSchemaElement();
 			element.Name = "defined";
 			element.SchemaType = type;
 

@@ -26,11 +26,11 @@
 
 namespace ClearCanvas.Common.Specifications
 {
-    public class LessThanSpecification : InequalitySpecification
-    {
-        public LessThanSpecification()
-            :base(-1)
-        {
-        }
-    }
+	public class LessThanSpecification : InequalitySpecification
+	{
+		public LessThanSpecification()
+			: base(-1)
+		{
+		}
+	}
 }
