@@ -111,7 +111,6 @@
     <Compile Include="Exceptions\StudyIsNearlineException.cs" />
     <Compile Include="Exceptions\StudyNotFoundException.cs" />
     <Compile Include="Helpers\DicomTagPath.cs" />
-    <Compile Include="InProcessImageServerServiceProvider.cs" />
     <Compile Include="IZipService.cs" />
     <Compile Include="ProductManifestServiceProvider.cs" />
     <Compile Include="Helpers\HeuristicTypeResolver.cs" />
@@ -190,10 +189,6 @@
     <ProjectReference Include="..\..\Enterprise\Core\ClearCanvas.Enterprise.Core.csproj">
       <Project>{431E9444-9915-4D49-B92D-9B7EC086622A}</Project>
       <Name>ClearCanvas.Enterprise.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Enterprise\ClearCanvas.ImageServer.Enterprise.csproj">
-      <Project>{86CA6EDB-DE59-45E9-8BD8-832FBB3F8009}</Project>
-      <Name>ClearCanvas.ImageServer.Enterprise</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

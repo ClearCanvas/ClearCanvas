@@ -25,34 +25,33 @@
 using System;
 using ClearCanvas.Common;
 using ClearCanvas.Enterprise.Core;
-using ClearCanvas.ImageServer.Enterprise;
 
-namespace ClearCanvas.ImageServer.Common
+namespace ClearCanvas.ImageServer.Enterprise
 {
-    [ExtensionOf(typeof(ServiceProviderExtensionPoint))]
-    public class InProcessImageServerServiceProvider : IServiceProvider
-    {
-        private readonly IServiceFactory _serviceFactory;
+	[ExtensionOf(typeof (ServiceProviderExtensionPoint))]
+	public class InProcessImageServerServiceProvider : IServiceProvider
+	{
+		private readonly IServiceFactory _serviceFactory;
 
-        public InProcessImageServerServiceProvider()
-        {
-            _serviceFactory = new ServiceFactory(new ApplicationServiceExtensionPoint());
-        }
+		public InProcessImageServerServiceProvider()
+		{
+			_serviceFactory = new ServiceFactory(new ApplicationServiceExtensionPoint());
+		}
 
-        #region IServiceProvider Members
+		#region IServiceProvider Members
 
-        public object GetService(Type serviceType)
-        {
-            if (_serviceFactory.HasService(serviceType))
-            {
-                return _serviceFactory.GetService(serviceType);
-            }
-            else
-            {
-                return null;    // as per MSDN
-            }
-        }
+		public object GetService(Type serviceType)
+		{
+			if (_serviceFactory.HasService(serviceType))
+			{
+				return _serviceFactory.GetService(serviceType);
+			}
+			else
+			{
+				return null; // as per MSDN
+			}
+		}
 
-        #endregion
-    }
+		#endregion
+	}
 }

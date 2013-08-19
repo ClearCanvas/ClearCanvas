@@ -66,6 +66,7 @@
     <Compile Include="IApplicationServiceLayer.cs" />
     <Compile Include="IEntityBroker.cs" />
     <Compile Include="IEnumBroker.cs" />
+    <Compile Include="InProcessImageServerServiceProvider.cs" />
     <Compile Include="IProcedureQueryBroker.cs" />
     <Compile Include="IProcedureUpdateBroker.cs" />
     <Compile Include="EntitySelectCriteria.cs" />
