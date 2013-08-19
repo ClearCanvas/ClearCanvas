@@ -32,281 +32,496 @@ using ClearCanvas.Common;
 using ClearCanvas.Common.Serialization;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Dicom.ServiceModel.Editing;
+using ClearCanvas.ImageServer.Common.ExternalQuery;
 using ClearCanvas.ImageServer.Common.ExternalRequest;
 using ClearCanvas.ImageServer.Common.WorkQueue;
 
 namespace ClearCanvas.ImageServer.Common
 {
-    public class ImageServerSerializer
-    {
-        private class CustomHook : IJsmlSerializerHook
-        {
-            private readonly Dictionary<string, Type> _contractMap;
+	/// <summary>
+	/// JsmlSerializer helper class for ImageServer data contracts.
+	/// </summary>
+	public class ImageServerSerializer
+	{
+		private class CustomHook : IJsmlSerializerHook
+		{
+			private readonly Dictionary<string, Type> _contractMap;
 
-            public CustomHook()
-            {
-                _contractMap = (from p in Platform.PluginManager.Plugins
-                                from t in p.Assembly.Resolve().GetTypes()
-                                let a = AttributeUtils.GetAttribute<ImageServerExternalRequestTypeAttribute>(t)
-                                where (a != null)
-                                select new { a.ContractId, Contract = t })
-                    .ToDictionary(entry => entry.ContractId, entry => entry.Contract);
+			public CustomHook()
+			{
+				_contractMap = (from p in Platform.PluginManager.Plugins
+				                from t in p.Assembly.Resolve().GetTypes()
+				                let a = AttributeUtils.GetAttribute<ImageServerExternalRequestTypeAttribute>(t)
+				                where (a != null)
+				                select new {a.ContractId, Contract = t})
+					.ToDictionary(entry => entry.ContractId, entry => entry.Contract);
 
-                foreach (var type in Edit.GetKnownTypes().Where(AttributeUtils.HasAttribute<EditTypeAttribute>))
-                {
-                    var attribute = AttributeUtils.GetAttribute<EditTypeAttribute>(type);
-                    Type existing;
-                    if (_contractMap.TryGetValue(attribute.ContractId, out existing))
-                    {
-                        if (type != existing)
-                            Platform.Log(LogLevel.Debug, "Ignoring duplicate contract with ID={0}; keeping {1}, ignoring {2}", attribute.ContractId, existing, type);
-                    }
-                    else
-                    {
-                        _contractMap.Add(attribute.ContractId, type);
-                    }
-                }
-            }
+				foreach (var type in Edit.GetKnownTypes().Where(AttributeUtils.HasAttribute<EditTypeAttribute>))
+				{
+					var attribute = AttributeUtils.GetAttribute<EditTypeAttribute>(type);
+					Type existing;
+					if (_contractMap.TryGetValue(attribute.ContractId, out existing))
+					{
+						if (type != existing)
+							Platform.Log(LogLevel.Debug, "Ignoring duplicate contract with ID={0}; keeping {1}, ignoring {2}",
+							             attribute.ContractId, existing, type);
+					}
+					else
+					{
+						_contractMap.Add(attribute.ContractId, type);
+					}
+				}
+			}
 
-            #region IJsmlSerializerHook
+			#region IJsmlSerializerHook
 
-            bool IJsmlSerializerHook.Serialize(IJsmlSerializationContext context)
-            {
-                var data = context.Data;
-                if (data != null)
-                {
-                    // if we have an attribute, write out the contract ID as an XML attribute
-                    var a = AttributeUtils.GetAttribute<ImageServerExternalRequestTypeAttribute>(data.GetType());
-                    if (a != null)
-                    {
-                        context.Attributes.Add("contract", a.ContractId);
-                    }
-                    else
-                    {
-                        var b = AttributeUtils.GetAttribute<EditTypeAttribute>(data.GetType());
-                        if (b != null)
-                        {
-                            context.Attributes.Add("contract", b.ContractId);
-                        }
-                    }
-                }
+			bool IJsmlSerializerHook.Serialize(IJsmlSerializationContext context)
+			{
+				var data = context.Data;
+				if (data != null)
+				{
+					// if we have an attribute, write out the contract ID as an XML attribute
+					var a = AttributeUtils.GetAttribute<ImageServerExternalRequestTypeAttribute>(data.GetType());
+					if (a != null)
+					{
+						context.Attributes.Add("contract", a.ContractId);
+					}
+					else
+					{
+						var b = AttributeUtils.GetAttribute<EditTypeAttribute>(data.GetType());
+						if (b != null)
+						{
+							context.Attributes.Add("contract", b.ContractId);
+						}
+					}
+				}
 
-                // always return false - we don't handle serialization ourselves
-                return false;
-            }
+				// always return false - we don't handle serialization ourselves
+				return false;
+			}
 
-            bool IJsmlSerializerHook.Deserialize(IJsmlDeserializationContext context)
-            {
-                // if we have an XML attribute for the contract ID, change the data type to use the correct contract
-                var contract = context.XmlElement.GetAttribute("contract");
-                if (!string.IsNullOrEmpty(contract))
-                {
-                    // constrain the data type by the contract id
-                    context.DataType = GetDataContract(contract);
-                }
+			bool IJsmlSerializerHook.Deserialize(IJsmlDeserializationContext context)
+			{
+				// if we have an XML attribute for the contract ID, change the data type to use the correct contract
+				var contract = context.XmlElement.GetAttribute("contract");
+				if (!string.IsNullOrEmpty(contract))
+				{
+					// constrain the data type by the contract id
+					context.DataType = GetDataContract(contract);
+				}
 
-                // always return false - we don't handle serialization ourselves
-                return false;
-            }
+				// always return false - we don't handle serialization ourselves
+				return false;
+			}
 
-            #endregion
+			#endregion
 
-            private Type GetDataContract(string contractId)
-            {
-                Type contract;
-                if (!_contractMap.TryGetValue(contractId, out contract))
-                    throw new ArgumentException("Invalid data contract ID.");
+			private Type GetDataContract(string contractId)
+			{
+				Type contract;
+				if (!_contractMap.TryGetValue(contractId, out contract))
+					throw new ArgumentException("Invalid data contract ID.");
 
-                return contract;
-            }
-        }
+				return contract;
+			}
+		}
 
-        #region Private Static Members
+		#region Private Static Members
 
-        private static readonly IJsmlSerializerHook ExternalRequestHook;
-        private static readonly IJsmlSerializerHook WorkItemDataHook;
+		private static readonly IJsmlSerializerHook ExternalQueryHook;
+		private static readonly IJsmlSerializerHook ExternalRequestHook;
+		private static readonly IJsmlSerializerHook WorkItemDataHook;
 
-        static ImageServerSerializer()
-        {
-            ExternalRequestHook = new CustomHook();
-            WorkItemDataHook = new PolymorphicDataContractHook<WorkQueueDataTypeAttribute>();
-        }
+		static ImageServerSerializer()
+		{
+			ExternalRequestHook = new CustomHook();
+			ExternalQueryHook = new PolymorphicDataContractHook<ImageServerExternalQueryTypeAttribute>();
+			WorkItemDataHook = new PolymorphicDataContractHook<WorkQueueDataTypeAttribute>();
+		}
 
-        #endregion
+		#endregion
 
-        #region ImageServerExternalRequest
-        public static string SerializeExternalRequest(ImageServerExternalRequest data)
-        {
-            return JsmlSerializer.Serialize(data, "ImageServerExternalRequest",
-                new JsmlSerializer.SerializeOptions { Hook = ExternalRequestHook, DataContractTest = IsImageServerExternalRequestContract });
-        }
+		#region ImageServerExternalRequest
 
-        public static XmlDocument SerializeExternalRequestToXmlDocument(ImageServerExternalRequest data)
-        {
-            var s = JsmlSerializer.Serialize(data, "ImageServerExternalRequest",
-                new JsmlSerializer.SerializeOptions { Hook = ExternalRequestHook, DataContractTest = IsImageServerExternalRequestContract });
+		public static string SerializeExternalRequest(ImageServerExternalRequest data)
+		{
+			return JsmlSerializer.Serialize(data, "ImageServerExternalRequest",
+			                                new JsmlSerializer.SerializeOptions
+				                                {
+					                                Hook = ExternalRequestHook,
+					                                DataContractTest = IsImageServerExternalRequestContract
+				                                });
+		}
 
-            var d = new XmlDocument();
-            d.LoadXml(s);
-            return d;
-        }
+		public static XmlDocument SerializeExternalRequestToXmlDocument(ImageServerExternalRequest data)
+		{
+			var s = JsmlSerializer.Serialize(data, "ImageServerExternalRequest",
+			                                 new JsmlSerializer.SerializeOptions
+				                                 {
+					                                 Hook = ExternalRequestHook,
+					                                 DataContractTest = IsImageServerExternalRequestContract
+				                                 });
 
-        public static ImageServerExternalRequest DeserializeExternalRequest(string data)
-        {
-            return JsmlSerializer.Deserialize<ImageServerExternalRequest>(data,
-                new JsmlSerializer.DeserializeOptions { Hook = ExternalRequestHook, DataContractTest = IsImageServerExternalRequestContract });
-        }
+			var d = new XmlDocument();
+			d.LoadXml(s);
+			return d;
+		}
 
-        public static ImageServerExternalRequest DeserializeExternalRequest(XmlDocument data)
-        {
-            return JsmlSerializer.Deserialize<ImageServerExternalRequest>(data,
-                new JsmlSerializer.DeserializeOptions { Hook = ExternalRequestHook, DataContractTest = IsImageServerExternalRequestContract });
-        }
-        #endregion
+		public static ImageServerExternalRequest DeserializeExternalRequest(string data)
+		{
+			return JsmlSerializer.Deserialize<ImageServerExternalRequest>(data,
+			                                                              new JsmlSerializer.DeserializeOptions
+				                                                              {
+					                                                              Hook = ExternalRequestHook,
+					                                                              DataContractTest =
+						                                                              IsImageServerExternalRequestContract
+				                                                              });
+		}
 
-        #region ImageServerExternalRequestState
-        public static string SerializeExternalRequestState(ImageServerExternalRequestState data)
-        {
-            return JsmlSerializer.Serialize(data, "ImageServerExternalRequestState",
-                new JsmlSerializer.SerializeOptions { Hook = ExternalRequestHook, DataContractTest = IsImageServerExternalRequestContract });
-        }
-        public static XmlDocument SerializeExternalRequestStateToXmlDocument(ImageServerExternalRequestState data)
-        {
-            var s = JsmlSerializer.Serialize(data, "ImageServerExternalRequestState",
-                new JsmlSerializer.SerializeOptions { Hook = ExternalRequestHook, DataContractTest = IsImageServerExternalRequestContract });
+		public static ImageServerExternalRequest DeserializeExternalRequest(XmlDocument data)
+		{
+			return JsmlSerializer.Deserialize<ImageServerExternalRequest>(data,
+			                                                              new JsmlSerializer.DeserializeOptions
+				                                                              {
+					                                                              Hook = ExternalRequestHook,
+					                                                              DataContractTest =
+						                                                              IsImageServerExternalRequestContract
+				                                                              });
+		}
 
-            var d = new XmlDocument();
-            d.LoadXml(s);
-            return d;
-        }
+		#endregion
 
-        public static ImageServerExternalRequestState DeserializeExternalRequestState(string data)
-        {
-            return JsmlSerializer.Deserialize<ImageServerExternalRequestState>(data,
-                new JsmlSerializer.DeserializeOptions { Hook = ExternalRequestHook, DataContractTest = IsImageServerExternalRequestContract });
-        }
+		#region ImageServerExternalRequestState
 
-        public static ImageServerExternalRequestState DeserializeExternalRequestState(XmlDocument data)
-        {
-            return JsmlSerializer.Deserialize<ImageServerExternalRequestState>(data,
-                new JsmlSerializer.DeserializeOptions { Hook = ExternalRequestHook, DataContractTest = IsImageServerExternalRequestContract });
-        }
-        #endregion
+		public static string SerializeExternalRequestState(ImageServerExternalRequestState data)
+		{
+			return JsmlSerializer.Serialize(data, "ImageServerExternalRequestState",
+			                                new JsmlSerializer.SerializeOptions
+				                                {
+					                                Hook = ExternalRequestHook,
+					                                DataContractTest = IsImageServerExternalRequestContract
+				                                });
+		}
 
-        #region ImageServerNotification
-        public static string SerializeNotification(ImageServerNotification data)
-        {
-            return JsmlSerializer.Serialize(data, "ImageServerNotification",
-                new JsmlSerializer.SerializeOptions { Hook = ExternalRequestHook, DataContractTest = IsImageServerExternalRequestContract });
-        }
-        public static XmlDocument SerializeNotificationToXmlDocument(ImageServerNotification data)
-        {
-            var s = JsmlSerializer.Serialize(data, "ImageServerNotification",
-                new JsmlSerializer.SerializeOptions { Hook = ExternalRequestHook, DataContractTest = IsImageServerExternalRequestContract });
+		public static XmlDocument SerializeExternalRequestStateToXmlDocument(ImageServerExternalRequestState data)
+		{
+			var s = JsmlSerializer.Serialize(data, "ImageServerExternalRequestState",
+			                                 new JsmlSerializer.SerializeOptions
+				                                 {
+					                                 Hook = ExternalRequestHook,
+					                                 DataContractTest = IsImageServerExternalRequestContract
+				                                 });
 
-            var d = new XmlDocument();
-            d.LoadXml(s);
-            return d;
-        }
+			var d = new XmlDocument();
+			d.LoadXml(s);
+			return d;
+		}
 
-        public static ImageServerNotification DeserializeNotification(string data)
-        {
-            return JsmlSerializer.Deserialize<ImageServerNotification>(data,
-                new JsmlSerializer.DeserializeOptions { Hook = ExternalRequestHook, DataContractTest = IsImageServerExternalRequestContract });
-        }
+		public static ImageServerExternalRequestState DeserializeExternalRequestState(string data)
+		{
+			return JsmlSerializer.Deserialize<ImageServerExternalRequestState>(data,
+			                                                                   new JsmlSerializer.DeserializeOptions
+				                                                                   {
+					                                                                   Hook = ExternalRequestHook,
+					                                                                   DataContractTest =
+						                                                                   IsImageServerExternalRequestContract
+				                                                                   });
+		}
 
-        public static ImageServerNotification DeserializeNotification(XmlDocument data)
-        {
-            return JsmlSerializer.Deserialize<ImageServerNotification>(data,
-                new JsmlSerializer.DeserializeOptions { Hook = ExternalRequestHook, DataContractTest = IsImageServerExternalRequestContract });
-        }
-        #endregion
+		public static ImageServerExternalRequestState DeserializeExternalRequestState(XmlDocument data)
+		{
+			return JsmlSerializer.Deserialize<ImageServerExternalRequestState>(data,
+			                                                                   new JsmlSerializer.DeserializeOptions
+				                                                                   {
+					                                                                   Hook = ExternalRequestHook,
+					                                                                   DataContractTest =
+						                                                                   IsImageServerExternalRequestContract
+				                                                                   });
+		}
 
-        #region WorkQueueData
-        public static string SerializeWorkQueueData(WorkQueueData data)
-        {
-            return JsmlSerializer.Serialize(data, "WorkQueueData",
-                new JsmlSerializer.SerializeOptions { Hook = WorkItemDataHook, DataContractTest = IsWorkQueueDataContract, DataMemberTest = IsXmlSerializationDataMember });
-        }
+		#endregion
 
-        public static XmlDocument SerializeWorkQueueDataToXmlDocument(WorkQueueData data)
-        {
-            var s = JsmlSerializer.Serialize(data, "WorkQueueData",
-                      new JsmlSerializer.SerializeOptions { Hook = WorkItemDataHook, DataContractTest = IsWorkQueueDataContract, DataMemberTest = IsXmlSerializationDataMember });
-            var d = new XmlDocument();
-            d.LoadXml(s);
-            return d;
-        }
+		#region ImageServerNotification
 
-        public static WorkQueueData DeserializeWorkQueueData(string data)
-        {
-            return JsmlSerializer.Deserialize<WorkQueueData>(data,
-                new JsmlSerializer.DeserializeOptions { Hook = WorkItemDataHook, DataContractTest = IsWorkQueueDataContract, DataMemberTest = IsXmlSerializationDataMember });
-        }
+		public static string SerializeNotification(ImageServerNotification data)
+		{
+			return JsmlSerializer.Serialize(data, "ImageServerNotification",
+			                                new JsmlSerializer.SerializeOptions
+				                                {
+					                                Hook = ExternalRequestHook,
+					                                DataContractTest = IsImageServerExternalRequestContract
+				                                });
+		}
 
-        public static WorkQueueData DeserializeWorkQueueData(XmlDocument data)
-        {
-            return JsmlSerializer.Deserialize<WorkQueueData>(data,
-                new JsmlSerializer.DeserializeOptions { Hook = WorkItemDataHook, DataContractTest = IsWorkQueueDataContract, DataMemberTest = IsXmlSerializationDataMember });
-        }
-        #endregion
+		public static XmlDocument SerializeNotificationToXmlDocument(ImageServerNotification data)
+		{
+			var s = JsmlSerializer.Serialize(data, "ImageServerNotification",
+			                                 new JsmlSerializer.SerializeOptions
+				                                 {
+					                                 Hook = ExternalRequestHook,
+					                                 DataContractTest = IsImageServerExternalRequestContract
+				                                 });
 
-        #region WorkQueueData
-        public static string SerializeWorkQueueUidData(WorkQueueUidData data)
-        {
-            return JsmlSerializer.Serialize(data, "WorkQueueUidData",
-                new JsmlSerializer.SerializeOptions { Hook = WorkItemDataHook, DataContractTest = IsWorkQueueDataContract, DataMemberTest = IsXmlSerializationDataMember });
-        }
+			var d = new XmlDocument();
+			d.LoadXml(s);
+			return d;
+		}
 
-        public static XmlDocument SerializeWorkQueueUidDataToXmlDocument(WorkQueueUidData data)
-        {
-            var s = JsmlSerializer.Serialize(data, "WorkQueueUidData",
-                      new JsmlSerializer.SerializeOptions { Hook = WorkItemDataHook, DataContractTest = IsWorkQueueDataContract, DataMemberTest = IsXmlSerializationDataMember });
-            var d = new XmlDocument();
-            d.LoadXml(s);
-            return d;
-        }
+		public static ImageServerNotification DeserializeNotification(string data)
+		{
+			return JsmlSerializer.Deserialize<ImageServerNotification>(data,
+			                                                           new JsmlSerializer.DeserializeOptions
+				                                                           {
+					                                                           Hook = ExternalRequestHook,
+					                                                           DataContractTest = IsImageServerExternalRequestContract
+				                                                           });
+		}
 
-        public static WorkQueueUidData DeserializeWorkQueueUidData(string data)
-        {
-            return JsmlSerializer.Deserialize<WorkQueueUidData>(data,
-                new JsmlSerializer.DeserializeOptions { Hook = WorkItemDataHook, DataContractTest = IsWorkQueueDataContract, DataMemberTest = IsXmlSerializationDataMember });
-        }
+		public static ImageServerNotification DeserializeNotification(XmlDocument data)
+		{
+			return JsmlSerializer.Deserialize<ImageServerNotification>(data,
+			                                                           new JsmlSerializer.DeserializeOptions
+				                                                           {
+					                                                           Hook = ExternalRequestHook,
+					                                                           DataContractTest = IsImageServerExternalRequestContract
+				                                                           });
+		}
 
-        public static WorkQueueUidData DeserializeWorkQueueUidData(XmlDocument data)
-        {
-            return JsmlSerializer.Deserialize<WorkQueueUidData>(data,
-                new JsmlSerializer.DeserializeOptions { Hook = WorkItemDataHook, DataContractTest = IsWorkQueueDataContract, DataMemberTest = IsXmlSerializationDataMember });
-        }
-        #endregion
+		#endregion
 
-        #region Private Static Methods
-     
-        private static bool IsImageServerExternalRequestContract(Type t)
-        {
-            return AttributeUtils.HasAttribute<ImageServerExternalRequestTypeAttribute>(t) ||
-                   AttributeUtils.HasAttribute<EditTypeAttribute>(t);
-        }
+		#region ImageServerExternalQuery
 
-        private static bool IsWorkQueueDataContract(Type t)
-        {
-            return AttributeUtils.HasAttribute<WorkQueueDataTypeAttribute>(t);
-        }
+		public static string SerializeExternalQuery(ImageServerExternalQuery data)
+		{
+			return JsmlSerializer.Serialize(data, "ImageServerExternalQuery",
+			                                new JsmlSerializer.SerializeOptions
+				                                {
+					                                Hook = ExternalQueryHook,
+					                                DataContractTest = IsImageServerExternalQueryContract
+				                                });
+		}
 
-        private static bool IsXmlSerializationDataMember(MemberInfo t)
-        {
-            if (t.IsDefined(typeof(XmlIgnoreAttribute), false))
-                return false;
+		public static XmlDocument SerializeExternalQueryToXmlDocument(ImageServerExternalQuery data)
+		{
+			var s = JsmlSerializer.Serialize(data, "ImageServerExternalQuery",
+			                                 new JsmlSerializer.SerializeOptions
+				                                 {
+					                                 Hook = ExternalQueryHook,
+					                                 DataContractTest = IsImageServerExternalQueryContract
+				                                 });
 
-            if (t.MemberType != MemberTypes.Property)
-                return false;            
+			var d = new XmlDocument();
+			d.LoadXml(s);
+			return d;
+		}
 
-            var pi = t as PropertyInfo;
-            if (pi != null && (!pi.CanRead || !pi.CanWrite))
-                return false;
+		public static ImageServerExternalQuery DeserializeExternalQuery(string data)
+		{
+			return JsmlSerializer.Deserialize<ImageServerExternalQuery>(data,
+			                                                            new JsmlSerializer.DeserializeOptions
+				                                                            {
+					                                                            Hook = ExternalQueryHook,
+					                                                            DataContractTest = IsImageServerExternalQueryContract
+				                                                            });
+		}
 
-            return true;
-        }
-        #endregion
-    }
+		public static ImageServerExternalQuery DeserializeExternalQuery(XmlDocument data)
+		{
+			return JsmlSerializer.Deserialize<ImageServerExternalQuery>(data,
+			                                                            new JsmlSerializer.DeserializeOptions
+				                                                            {
+					                                                            Hook = ExternalQueryHook,
+					                                                            DataContractTest = IsImageServerExternalQueryContract
+				                                                            });
+		}
+
+		#endregion
+
+		#region ImageServerExternalQueryResult
+
+		public static string SerializeExternalQueryResult(ImageServerExternalQueryResult data)
+		{
+			return JsmlSerializer.Serialize(data, "ImageServerExternalQueryResult",
+			                                new JsmlSerializer.SerializeOptions
+				                                {
+					                                Hook = ExternalQueryHook,
+					                                DataContractTest = IsImageServerExternalQueryContract
+				                                });
+		}
+
+		public static XmlDocument SerializeExternalQueryResultToXmlDocument(ImageServerExternalQueryResult data)
+		{
+			var s = JsmlSerializer.Serialize(data, "ImageServerExternalQueryResult",
+			                                 new JsmlSerializer.SerializeOptions
+				                                 {
+					                                 Hook = ExternalQueryHook,
+					                                 DataContractTest = IsImageServerExternalQueryContract
+				                                 });
+
+			var d = new XmlDocument();
+			d.LoadXml(s);
+			return d;
+		}
+
+		public static ImageServerExternalQueryResult DeserializeExternalQueryResult(string data)
+		{
+			return JsmlSerializer.Deserialize<ImageServerExternalQueryResult>(data,
+			                                                                  new JsmlSerializer.DeserializeOptions
+				                                                                  {
+					                                                                  Hook = ExternalQueryHook,
+					                                                                  DataContractTest =
+						                                                                  IsImageServerExternalQueryContract
+				                                                                  });
+		}
+
+		public static ImageServerExternalQueryResult DeserializeExternalQueryResult(XmlDocument data)
+		{
+			return JsmlSerializer.Deserialize<ImageServerExternalQueryResult>(data,
+			                                                                  new JsmlSerializer.DeserializeOptions
+				                                                                  {
+					                                                                  Hook = ExternalQueryHook,
+					                                                                  DataContractTest =
+						                                                                  IsImageServerExternalQueryContract
+				                                                                  });
+		}
+
+		#endregion
+
+		#region WorkQueueData
+
+		public static string SerializeWorkQueueData(WorkQueueData data)
+		{
+			return JsmlSerializer.Serialize(data, "WorkQueueData",
+			                                new JsmlSerializer.SerializeOptions
+				                                {
+					                                Hook = WorkItemDataHook,
+					                                DataContractTest = IsWorkQueueDataContract,
+					                                DataMemberTest = IsXmlSerializationDataMember
+				                                });
+		}
+
+		public static XmlDocument SerializeWorkQueueDataToXmlDocument(WorkQueueData data)
+		{
+			var s = JsmlSerializer.Serialize(data, "WorkQueueData",
+			                                 new JsmlSerializer.SerializeOptions
+				                                 {
+					                                 Hook = WorkItemDataHook,
+					                                 DataContractTest = IsWorkQueueDataContract,
+					                                 DataMemberTest = IsXmlSerializationDataMember
+				                                 });
+			var d = new XmlDocument();
+			d.LoadXml(s);
+			return d;
+		}
+
+		public static WorkQueueData DeserializeWorkQueueData(string data)
+		{
+			return JsmlSerializer.Deserialize<WorkQueueData>(data,
+			                                                 new JsmlSerializer.DeserializeOptions
+				                                                 {
+					                                                 Hook = WorkItemDataHook,
+					                                                 DataContractTest = IsWorkQueueDataContract,
+					                                                 DataMemberTest = IsXmlSerializationDataMember
+				                                                 });
+		}
+
+		public static WorkQueueData DeserializeWorkQueueData(XmlDocument data)
+		{
+			return JsmlSerializer.Deserialize<WorkQueueData>(data,
+			                                                 new JsmlSerializer.DeserializeOptions
+				                                                 {
+					                                                 Hook = WorkItemDataHook,
+					                                                 DataContractTest = IsWorkQueueDataContract,
+					                                                 DataMemberTest = IsXmlSerializationDataMember
+				                                                 });
+		}
+
+		#endregion
+
+		#region WorkQueueUidData
+
+		public static string SerializeWorkQueueUidData(WorkQueueUidData data)
+		{
+			return JsmlSerializer.Serialize(data, "WorkQueueUidData",
+			                                new JsmlSerializer.SerializeOptions
+				                                {
+					                                Hook = WorkItemDataHook,
+					                                DataContractTest = IsWorkQueueDataContract,
+					                                DataMemberTest = IsXmlSerializationDataMember
+				                                });
+		}
+
+		public static XmlDocument SerializeWorkQueueUidDataToXmlDocument(WorkQueueUidData data)
+		{
+			var s = JsmlSerializer.Serialize(data, "WorkQueueUidData",
+			                                 new JsmlSerializer.SerializeOptions
+				                                 {
+					                                 Hook = WorkItemDataHook,
+					                                 DataContractTest = IsWorkQueueDataContract,
+					                                 DataMemberTest = IsXmlSerializationDataMember
+				                                 });
+			var d = new XmlDocument();
+			d.LoadXml(s);
+			return d;
+		}
+
+		public static WorkQueueUidData DeserializeWorkQueueUidData(string data)
+		{
+			return JsmlSerializer.Deserialize<WorkQueueUidData>(data,
+			                                                    new JsmlSerializer.DeserializeOptions
+				                                                    {
+					                                                    Hook = WorkItemDataHook,
+					                                                    DataContractTest = IsWorkQueueDataContract,
+					                                                    DataMemberTest = IsXmlSerializationDataMember
+				                                                    });
+		}
+
+		public static WorkQueueUidData DeserializeWorkQueueUidData(XmlDocument data)
+		{
+			return JsmlSerializer.Deserialize<WorkQueueUidData>(data,
+			                                                    new JsmlSerializer.DeserializeOptions
+				                                                    {
+					                                                    Hook = WorkItemDataHook,
+					                                                    DataContractTest = IsWorkQueueDataContract,
+					                                                    DataMemberTest = IsXmlSerializationDataMember
+				                                                    });
+		}
+
+		#endregion
+
+		#region Private Static Methods
+
+		private static bool IsImageServerExternalRequestContract(Type t)
+		{
+			return AttributeUtils.HasAttribute<ImageServerExternalRequestTypeAttribute>(t) ||
+			       AttributeUtils.HasAttribute<EditTypeAttribute>(t);
+		}
+
+		private static bool IsImageServerExternalQueryContract(Type t)
+		{
+			return AttributeUtils.HasAttribute<ImageServerExternalQueryTypeAttribute>(t);
+		}
+
+		private static bool IsWorkQueueDataContract(Type t)
+		{
+			return AttributeUtils.HasAttribute<WorkQueueDataTypeAttribute>(t);
+		}
+
+		private static bool IsXmlSerializationDataMember(MemberInfo t)
+		{
+			if (t.IsDefined(typeof (XmlIgnoreAttribute), false))
+				return false;
+
+			if (t.MemberType != MemberTypes.Property)
+				return false;
+
+			var pi = t as PropertyInfo;
+			if (pi != null && (!pi.CanRead || !pi.CanWrite))
+				return false;
+
+			return true;
+		}
+
+		#endregion
+	}
 }

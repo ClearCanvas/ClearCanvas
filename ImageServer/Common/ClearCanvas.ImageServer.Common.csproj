@@ -75,6 +75,14 @@
     <Compile Include="Command\ServerDatabaseCommand.cs" />
     <Compile Include="Command\ServerExecutionContext.cs" />
     <Compile Include="ConstantResourceManager.cs" />
+    <Compile Include="ExternalQuery\ExternalQueryProcessingException.cs" />
+    <Compile Include="ExternalQuery\ImageServerExternalQuery.cs" />
+    <Compile Include="ExternalQuery\ImageServerExternalQueryNamespace.cs" />
+    <Compile Include="ExternalQuery\ImageServerExternalQueryResult.cs" />
+    <Compile Include="ExternalQuery\ImageServerExternalQueryTypeAttribute.cs" />
+    <Compile Include="ExternalQuery\ImageServerExternalQueryTypeProvider.cs" />
+    <Compile Include="ExternalQuery\InvalidExternalQueryParameterException.cs" />
+    <Compile Include="ExternalQuery\UnknownExternalQueryTypeException.cs" />
     <Compile Include="ExternalRequest\ConflictingRequestIdException.cs" />
     <Compile Include="ExternalRequest\ExternalRequestDelayProcessingException.cs" />
     <Compile Include="ExternalRequest\ExternalRequestProcessingException.cs" />
