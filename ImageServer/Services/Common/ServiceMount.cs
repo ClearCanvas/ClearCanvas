@@ -26,7 +26,7 @@ using System;
 using System.Collections.Generic;
 using ClearCanvas.Enterprise.Common;
 
-namespace ClearCanvas.ImageServer.Common
+namespace ClearCanvas.ImageServer.Services.Common
 {
     /// <summary>
     /// Creates or stop web services.
