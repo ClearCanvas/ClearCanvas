@@ -1,3 +1,4 @@
+﻿
 #region License
 
 // Copyright (c) 2013, ClearCanvas Inc.
@@ -22,27 +23,21 @@
 
 #endregion
 
-#pragma warning disable 1591
+using System;
+using ClearCanvas.Common;
+using ClearCanvas.Enterprise.Core.Upgrade;
 
-namespace ClearCanvas.Common.Specifications
+namespace ClearCanvas.ImageServer.Model.SqlServer.UpgradeScripts
 {
-    public class EachSpecification : EnumerableSpecification
-    {
-        public EachSpecification(ISpecification elementSpecification)
-            :base(elementSpecification)
-        {
-        }
-
-        protected override TestResult InnerTest(object exp, object root)
-        {
-            foreach (object element in AsEnumerable(exp))
-            {
-                TestResult r = this.ElementSpec.Test(element);
-                if (r.Fail)
-                    return new TestResult(false, new TestResultReason(this.FailureMessage, r.Reasons));
-            }
-
-            return new TestResult(true);
-        }
-   }
+	/// <summary>
+	/// Upgrade from the Bennu milestone to the Rigel milestone.
+	/// </summary>
+	[ExtensionOf(typeof (PersistentStoreUpgradeScriptExtensionPoint))]
+	internal class UpgradeFrom_10_1_00000_000 : BaseUpgradeScript
+	{
+		public UpgradeFrom_10_1_00000_000()
+			: base(new Version(10, 0, 11128, 314), null, "UpgradeFrom_10_1_00000_000.sql")
+		{
+		}
+	}
 }

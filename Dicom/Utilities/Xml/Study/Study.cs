@@ -45,7 +45,7 @@ namespace ClearCanvas.Dicom.Utilities.Xml.Study
 
         internal IDicomFileLoader HeaderProvider { get; private set; }
 
-        private ISopInstance FirstSopInstance
+		public ISopInstance FirstSopInstance
         {
             get { return Series.First().SopInstances.First(); }
         }

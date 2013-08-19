@@ -35,29 +35,29 @@ namespace ClearCanvas.Common.Specifications.Tests
 	public class EnumerableSpecificationTests : TestsBase
 	{
 		[Test]
-		public void Test_Each_Empty()
+		public void Test_All_Empty()
 		{
-			EachSpecification s1 = new EachSpecification(AlwaysFalse);
+			AllSpecification s1 = new AllSpecification(AlwaysFalse);
 			Assert.IsTrue(s1.Test(new object[0]).Success);
 
-			EachSpecification s2 = new EachSpecification(AlwaysTrue);
+			AllSpecification s2 = new AllSpecification(AlwaysTrue);
 			Assert.IsTrue(s2.Test(new object[0]).Success);
 		}
 
 		[Test]
-		public void Test_Each_Normal()
+		public void Test_All_Normal()
 		{
-			EachSpecification s = new EachSpecification(new PredicateSpecification<int>(delegate(int i) { return i > 0; }));
+			AllSpecification s = new AllSpecification(new PredicateSpecification<int>(delegate(int i) { return i > 0; }));
 			Assert.IsFalse(s.Test(new int[] { 0, 1, 2 }).Success);
 			Assert.IsTrue(s.Test(new int[] { 1, 2, 3 }).Success);
 		}
 
 		[Test]
 		[ExpectedException(typeof(SpecificationException))]
-		public void Test_Each_InvalidType()
+		public void Test_All_InvalidType()
 		{
 			// cannot test a non-enumerable object
-			EachSpecification s = new EachSpecification(AlwaysTrue);
+			AllSpecification s = new AllSpecification(AlwaysTrue);
 			s.Test(new object());
 		}
 

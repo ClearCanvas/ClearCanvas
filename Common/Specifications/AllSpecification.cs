@@ -1,4 +1,3 @@
-﻿
 #region License
 
 // Copyright (c) 2013, ClearCanvas Inc.
@@ -23,21 +22,27 @@
 
 #endregion
 
-using System;
-using ClearCanvas.Common;
-using ClearCanvas.Enterprise.Core.Upgrade;
+#pragma warning disable 1591
 
-namespace ClearCanvas.ImageServer.Model.SqlServer.UpgradeScripts
+namespace ClearCanvas.Common.Specifications
 {
-    /// <summary>
-    /// Upgrade from the Yen milestone to the Phoenix5 milestone.
-    /// </summary>
-    [ExtensionOf(typeof (PersistentStoreUpgradeScriptExtensionPoint))]
-    internal class UpgradeFrom_10_0_11128_314 : BaseUpgradeScript
-    {
-        public UpgradeFrom_10_0_11128_314()
-            : base(new Version(10, 0, 11128, 314), null, "UpgradeFrom_10_0_11128_314.sql")
-        {
-        }
-    }
+	public class AllSpecification : EnumerableSpecification
+	{
+		public AllSpecification(ISpecification elementSpecification)
+			: base(elementSpecification)
+		{
+		}
+
+		protected override TestResult InnerTest(object exp, object root)
+		{
+			foreach (var element in AsEnumerable(exp))
+			{
+				var r = this.ElementSpec.Test(element);
+				if (r.Fail)
+					return new TestResult(false, new TestResultReason(this.FailureMessage, r.Reasons));
+			}
+
+			return new TestResult(true);
+		}
+	}
 }

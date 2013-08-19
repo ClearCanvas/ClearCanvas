@@ -26,23 +26,15 @@
 
 namespace ClearCanvas.Common.Specifications
 {
-    public class TrueSpecification : PrimitiveSpecification
-    {
-        public TrueSpecification()
-        {
-
-        }
-
-        protected override TestResult InnerTest(object exp, object root)
-        {
-            if (exp is bool)
-            {
-                return DefaultTestResult((bool)exp);
-            }
-            else
-            {
-                throw new SpecificationException(SR.ExceptionCastExpressionBoolean);
-            }
-        }
-    }
+	public class TrueSpecification : PrimitiveSpecification
+	{
+		protected override TestResult InnerTest(object exp, object root)
+		{
+			if (exp is bool)
+			{
+				return DefaultTestResult((bool)exp);
+			}
+			throw new SpecificationException(SR.ExceptionCastExpressionBoolean);
+		}
+	}
 }

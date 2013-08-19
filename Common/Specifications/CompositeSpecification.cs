@@ -28,32 +28,32 @@ using System.Collections.Generic;
 
 namespace ClearCanvas.Common.Specifications
 {
-    public abstract class CompositeSpecification : Specification
-    {
-        private List<ISpecification> _childSpecs = new List<ISpecification>();
+	public abstract class CompositeSpecification : Specification
+	{
+		private readonly List<ISpecification> _childSpecs = new List<ISpecification>();
 
-        public CompositeSpecification()
-        {
-        }
+		protected CompositeSpecification()
+		{
+		}
 
-        public void Add(ISpecification spec)
-        {
-            _childSpecs.Add(spec);
-        }
+		public void Add(ISpecification spec)
+		{
+			_childSpecs.Add(spec);
+		}
 
-        public void AddRange(IEnumerable<ISpecification> specs)
-        {
-            _childSpecs.AddRange(specs);
-        }
+		public void AddRange(IEnumerable<ISpecification> specs)
+		{
+			_childSpecs.AddRange(specs);
+		}
 
-        public bool IsEmpty
-        {
-            get { return _childSpecs.Count == 0; }
-        }
+		public bool IsEmpty
+		{
+			get { return _childSpecs.Count == 0; }
+		}
 
-        public IEnumerable<ISpecification> Elements
-        {
-            get { return _childSpecs; }
-        }
-    }
+		public IEnumerable<ISpecification> Elements
+		{
+			get { return _childSpecs; }
+		}
+	}
 }

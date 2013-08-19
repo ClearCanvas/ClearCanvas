@@ -220,7 +220,7 @@
     <value>{0} is not a valid specification id.</value>
   </data>
   <data name="ExceptionJScriptEvaluation" xml:space="preserve">
-    <value>JScript evaluation error on: {0}</value>
+    <value>JScript evaluation error on {0}: {1}</value>
   </data>
   <data name="ExceptionResourceNotFound" xml:space="preserve">
     <value>Resource {0}  not found.</value>
