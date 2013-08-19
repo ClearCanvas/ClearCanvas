@@ -62,6 +62,9 @@
     <Compile Include="Audit\ApplicationLogAuditSink.cs" />
     <Compile Include="Authentication\AuthorityTokens.cs" />
     <Compile Include="Authentication\DefaultAuthorityGroups.cs" />
+    <Compile Include="Command\ServerCommandProcessor.cs" />
+    <Compile Include="Command\ServerDatabaseCommand.cs" />
+    <Compile Include="Command\ServerExecutionContext.cs" />
     <Compile Include="EntityField.cs" />
     <Compile Include="IApplicationServiceLayer.cs" />
     <Compile Include="IEntityBroker.cs" />
@@ -97,6 +100,10 @@
     <ProjectReference Include="..\..\Enterprise\Core\ClearCanvas.Enterprise.Core.csproj">
       <Project>{431E9444-9915-4D49-B92D-9B7EC086622A}</Project>
       <Name>ClearCanvas.Enterprise.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Common\ClearCanvas.ImageServer.Common.csproj">
+      <Project>{DDFB1D25-75AE-43A6-A7A5-33D173EFFD04}</Project>
+      <Name>ClearCanvas.ImageServer.Common</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

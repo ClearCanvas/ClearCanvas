@@ -25,7 +25,7 @@
 using System;
 using ClearCanvas.Common;
 using ClearCanvas.Dicom.Utilities.Xml;
-using ClearCanvas.ImageServer.Common.Command;
+using ClearCanvas.ImageServer.Enterprise.Command;
 using ClearCanvas.ImageServer.Model;
 
 namespace ClearCanvas.ImageServer.Core.Validation

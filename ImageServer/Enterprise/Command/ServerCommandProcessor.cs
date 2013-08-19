@@ -27,7 +27,7 @@ using ClearCanvas.Common;
 using ClearCanvas.Enterprise.Core;
 using ClearCanvas.Dicom.Utilities.Command;
 
-namespace ClearCanvas.ImageServer.Common.Command
+namespace ClearCanvas.ImageServer.Enterprise.Command
 {
     /// <summary>
 	/// This class is used to execute and undo a series of <see cref="ICommand"/> instances.

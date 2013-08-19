@@ -25,11 +25,11 @@
 using System;
 using ClearCanvas.Common;
 using ClearCanvas.Dicom.Utilities.Xml;
-using ClearCanvas.ImageServer.Common.Command;
 using ClearCanvas.ImageServer.Common.Exceptions;
 using ClearCanvas.ImageServer.Core.Command;
 using ClearCanvas.ImageServer.Core.Process;
 using ClearCanvas.ImageServer.Core.Validation;
+using ClearCanvas.ImageServer.Enterprise.Command;
 using ClearCanvas.ImageServer.Model;
 using UpdateStudySizeInDBCommand = ClearCanvas.ImageServer.Core.Command.UpdateStudySizeInDBCommand;
 
