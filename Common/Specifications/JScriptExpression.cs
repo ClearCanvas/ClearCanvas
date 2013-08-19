@@ -77,7 +77,7 @@ namespace ClearCanvas.Common.Specifications
 			}
 			catch (Exception e)
 			{
-				throw new SpecificationException(string.Format(SR.ExceptionJScriptEvaluation, this.Text), e);
+				throw new SpecificationException(string.Format(SR.ExceptionJScriptEvaluation, this.Text, e.Message), e);
 			}
 		}
 
@@ -88,14 +88,7 @@ namespace ClearCanvas.Common.Specifications
 
 		private static IScriptEngine ScriptEngine
 		{
-			get
-			{
-				if (_scriptEngine == null)
-				{
-					_scriptEngine = ScriptEngineFactory.GetEngine("jscript");
-				}
-				return _scriptEngine;
-			}
+			get { return _scriptEngine ?? (_scriptEngine = ScriptEngineFactory.GetEngine("jscript")); }
 		}
 	}
 }

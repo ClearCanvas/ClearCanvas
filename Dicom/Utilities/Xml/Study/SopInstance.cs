@@ -31,7 +31,8 @@ namespace ClearCanvas.Dicom.Utilities.Xml.Study
     /// <summary>
     /// Represents an <see cref="ISopInstance"/> whose main source of data is a <see cref="StudyXml"/> document.
     /// </summary>
-    internal class SopInstance : ISopInstance
+    //JR: made this class public so that Specifications using Jscript.NET can operate on it (JScript.NET can't see members on internal classes)
+	public class SopInstance : ISopInstance
     {
         private DicomAttributeCollection _metaInfo;
         private readonly InstanceXml _xml;

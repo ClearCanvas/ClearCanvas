@@ -28,17 +28,17 @@ using System;
 
 namespace ClearCanvas.Common.Specifications
 {
-    public class SpecificationException : Exception
-    {
-        public SpecificationException(string message)
-            :base(message)
-        {
+	public class SpecificationException : Exception
+	{
+		public SpecificationException(string message)
+			: base(message)
+		{
 
-        }
+		}
 
-        public SpecificationException(string message, Exception inner)
-            : base(message, inner)
-        {
-        }
-    }
+		public SpecificationException(string message, Exception inner)
+			: base(message, inner)
+		{
+		}
+	}
 }

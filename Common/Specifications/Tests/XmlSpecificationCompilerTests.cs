@@ -545,9 +545,9 @@ namespace ClearCanvas.Common.Specifications.Tests
 		public void Test_Each_Default()
 		{
 			ISpecification s = _factory.GetSpecification("each_default");
-            Assert.IsInstanceOf(typeof(EachSpecification), s);
+            Assert.IsInstanceOf(typeof(AllSpecification), s);
 
-			var s1 = (EachSpecification)s;
+			var s1 = (AllSpecification)s;
 			Assert.IsNotNull(s1.ElementSpec);
             Assert.IsInstanceOf(typeof(TrueSpecification), s1.ElementSpec);
 		}
@@ -557,7 +557,26 @@ namespace ClearCanvas.Common.Specifications.Tests
 		{
 			//TODO: this scenario does not currently throw an exception - should it?
 			ISpecification s = _factory.GetSpecification("each_missingElement");
-            Assert.IsInstanceOf(typeof(EachSpecification), s);
+            Assert.IsInstanceOf(typeof(AllSpecification), s);
+		}
+
+		[Test]
+		public void Test_All_Default()
+		{
+			ISpecification s = _factory.GetSpecification("all_default");
+			Assert.IsInstanceOf(typeof(AllSpecification), s);
+
+			var s1 = (AllSpecification)s;
+			Assert.IsNotNull(s1.ElementSpec);
+			Assert.IsInstanceOf(typeof(TrueSpecification), s1.ElementSpec);
+		}
+
+		[Test]
+		public void Test_All_MissingElement()
+		{
+			//TODO: this scenario does not currently throw an exception - should it?
+			ISpecification s = _factory.GetSpecification("all_missingElement");
+			Assert.IsInstanceOf(typeof(AllSpecification), s);
 		}
 
 		[Test]

@@ -26,26 +26,19 @@
 
 namespace ClearCanvas.Common.Specifications
 {
-    public class OrSpecification : CompositeSpecification
-    {
-        public OrSpecification()
-        {
+	public class OrSpecification : CompositeSpecification
+	{
+		protected override TestResult InnerTest(object exp, object root)
+		{
+			foreach (var subSpec in this.Elements)
+			{
+				var r = subSpec.Test(exp);
+				if (r.Success)
+					return new TestResult(true);
+			}
 
-        }
-
-        protected override TestResult InnerTest(object exp, object root)
-        {
-            TestResult r;
-
-            foreach (ISpecification subSpec in this.Elements)
-            {
-                r = subSpec.Test(exp);
-                if (r.Success)
-                    return new TestResult(true);
-            }
-
-            // note that we can only return the immediate reason - there is no sensible way to return sub-reasons 
-            return new TestResult(false, new TestResultReason(this.FailureMessage));
-        }
-    }
+			// note that we can only return the immediate reason - there is no sensible way to return sub-reasons 
+			return new TestResult(false, new TestResultReason(this.FailureMessage));
+		}
+	}
 }

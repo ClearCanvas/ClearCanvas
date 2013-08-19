@@ -29,7 +29,10 @@
     <each test="XXX">
       <true/>
     </each>
-    <any test="XXX">
+		<all test="XXX">
+			<true/>
+		</all>
+		<any test="XXX">
       <true/>
     </any>
     <case test="XXX">
@@ -67,7 +70,10 @@
     <each failMessage="XXX">
       <true/>
     </each>
-    <any failMessage="XXX">
+		<all failMessage="XXX">
+			<true/>
+		</all>
+		<any failMessage="XXX">
       <true/>
     </any>
     <case failMessage="XXX">
@@ -258,8 +264,18 @@
   <spec id="each_missingElement">
     <each/>
   </spec>
-  
-  <!-- any -->
+	
+	<!-- all -->
+	<spec id="all_default">
+		<all>
+			<true/>
+		</all>
+	</spec>
+	<spec id="all_missingElement">
+		<all/>
+	</spec>
+
+	<!-- any -->
   <spec id="any_default">
     <any>
       <true/>

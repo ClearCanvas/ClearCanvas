@@ -31,7 +31,8 @@ namespace ClearCanvas.Dicom.Utilities.Xml.Study
     /// <summary>
     /// Represents an <see cref="ISeries"/> whose main source of data is a <see cref="StudyXml"/> document.
     /// </summary>
-    internal class Series : ISeries
+	//JR: made this class public so that Specifications using Jscript.NET can operate on it (JScript.NET can't see members on internal classes)
+	public class Series : ISeries
     {
         private readonly SeriesXml _xml;
         private IList<ISopInstance> _sopInstances;

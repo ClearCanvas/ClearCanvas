@@ -27,15 +27,11 @@ namespace ClearCanvas.Common.Specifications
 {
 	public class NotSpecification : CompositeSpecification
 	{
-		public NotSpecification()
-		{
-		}
-
 		protected override TestResult InnerTest(object exp, object root)
 		{
-			foreach (ISpecification subSpec in this.Elements)
+			foreach (var subSpec in this.Elements)
 			{
-				TestResult r = subSpec.Test(exp);
+				var r = subSpec.Test(exp);
 				if (r.Fail)
 					return new TestResult(true);
 			}
