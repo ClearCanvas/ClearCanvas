@@ -28,7 +28,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Management;
-using System.Security.Cryptography;
 using System.Text;
 
 namespace ClearCanvas.Common.Utilities
@@ -152,7 +151,7 @@ namespace ClearCanvas.Common.Utilities
 			try
 			{
 				// read the volume serial of the system drive
-				var systemDrive = (Path.GetPathRoot(Environment.GetFolderPath(Environment.SpecialFolder.System)) ?? string.Empty).TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar).ToUpperInvariant();
+				var systemDrive = (Path.GetPathRoot(Environment.GetFolderPath(Environment.SpecialFolder.System)) ?? "C:").TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar).ToUpperInvariant();
 				using (var searcher = new ManagementObjectSearcher(string.Format("SELECT VolumeSerialNumber FROM Win32_LogicalDisk WHERE DeviceID='{0}'", WqlEscape(systemDrive))))
 				using (var results = new ManagementObjectSearcherResults(searcher))
 				{
