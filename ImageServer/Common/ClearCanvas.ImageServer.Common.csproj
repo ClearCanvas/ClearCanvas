@@ -70,6 +70,13 @@
     <Compile Include="Authentication\AuthorityTokens.cs" />
     <Compile Include="Authentication\DefaultAuthorityGroups.cs" />
     <Compile Include="ConstantResourceManager.cs" />
+    <Compile Include="EnterpriseImageServerServiceProvider.cs" />
+    <Compile Include="EnterpriseImageServerServiceSettings.cs" />
+    <Compile Include="EnterpriseImageServerServiceSettings.Designer.cs">
+      <DependentUpon>EnterpriseImageServerServiceSettings.settings</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
     <Compile Include="ExternalQuery\ExternalQueryProcessingException.cs" />
     <Compile Include="ExternalQuery\ImageServerExternalQuery.cs" />
     <Compile Include="ExternalQuery\ImageServerExternalQueryNamespace.cs" />
@@ -183,6 +190,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="EnterpriseImageServerServiceSettings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>EnterpriseImageServerServiceSettings.Designer.cs</LastGenOutput>
+    </None>
     <None Include="ProductManifestServiceSettings.settings">
       <Generator>PublicSettingsSingleFileGenerator</Generator>
       <LastGenOutput>ProductManifestServiceSettings.Designer.cs</LastGenOutput>
