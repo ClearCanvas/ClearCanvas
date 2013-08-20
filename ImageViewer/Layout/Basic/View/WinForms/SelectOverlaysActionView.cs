@@ -62,7 +62,8 @@ namespace ClearCanvas.ImageViewer.Layout.Basic.View.WinForms
 					                               		AutoSize = false,
 					                               		ControlAlign = ContentAlignment.TopLeft,
 					                               		Margin = new Padding(0),
-					                               		Padding = new Padding(0)
+					                               		Padding = new Padding(0),
+					                               		Size = panel.Size
 					                               	};
 				}
 
