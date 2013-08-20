@@ -67,6 +67,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Alert.cs" />
+    <Compile Include="Authentication\AuthorityTokens.cs" />
+    <Compile Include="Authentication\DefaultAuthorityGroups.cs" />
     <Compile Include="ConstantResourceManager.cs" />
     <Compile Include="ExternalQuery\ExternalQueryProcessingException.cs" />
     <Compile Include="ExternalQuery\ImageServerExternalQuery.cs" />

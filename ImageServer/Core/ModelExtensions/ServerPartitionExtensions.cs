@@ -24,11 +24,11 @@
 
 using System;
 using System.Linq;
+using ClearCanvas.ImageServer.Common.Authentication;
 using ClearCanvas.ImageServer.Model;
 using System.IO;
 using ClearCanvas.Web.Enterprise.Authentication;
 using ClearCanvas.Common;
-using ClearCanvas.ImageServer.Enterprise.Authentication;
 
 namespace ClearCanvas.ImageServer.Core.ModelExtensions
 {

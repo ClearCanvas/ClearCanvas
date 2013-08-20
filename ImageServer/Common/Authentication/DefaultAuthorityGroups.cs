@@ -28,7 +28,7 @@ using ClearCanvas.Common;
 using ClearCanvas.Common.Authorization;
 using ClearCanvas.Common.Utilities;
 
-namespace ClearCanvas.ImageServer.Enterprise.Authentication
+namespace ClearCanvas.ImageServer.Common.Authentication
 {
     class UserGroupDefinitionAttribute : Attribute
     {
@@ -37,13 +37,13 @@ namespace ClearCanvas.ImageServer.Enterprise.Authentication
 
     enum DefaultUserGroup
     {
-        [UserGroupDefinitionAttribute(Name = "PACS Administrators")]
+        [UserGroupDefinition(Name = "PACS Administrators")]
         PACSAdministrators,
 
-        [UserGroupDefinitionAttribute(Name = "PACS Technologists")]
+        [UserGroupDefinition(Name = "PACS Technologists")]
         PACSTechnologists,
 
-        [UserGroupDefinitionAttribute(Name = "PACS Read-only Users")]
+        [UserGroupDefinition(Name = "PACS Read-only Users")]
         PACSUsers
     }
 

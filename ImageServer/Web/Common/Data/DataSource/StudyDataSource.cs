@@ -26,13 +26,13 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using ClearCanvas.Enterprise.Core;
+using ClearCanvas.ImageServer.Common.Authentication;
 using ClearCanvas.ImageServer.Core;
 using ClearCanvas.ImageServer.Core.Helpers;
 using ClearCanvas.ImageServer.Core.Query;
 using ClearCanvas.ImageServer.Enterprise;
 using ClearCanvas.ImageServer.Model;
 using ClearCanvas.ImageServer.Model.EntityBrokers;
-using ClearCanvas.ImageServer.Enterprise.Authentication;
 
 namespace ClearCanvas.ImageServer.Web.Common.Data.DataSource
 {

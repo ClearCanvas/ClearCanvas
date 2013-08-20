@@ -60,8 +60,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Audit\ApplicationLogAuditSink.cs" />
-    <Compile Include="Authentication\AuthorityTokens.cs" />
-    <Compile Include="Authentication\DefaultAuthorityGroups.cs" />
     <Compile Include="Command\ServerCommandProcessor.cs" />
     <Compile Include="Command\ServerDatabaseCommand.cs" />
     <Compile Include="Command\ServerExecutionContext.cs" />

@@ -24,7 +24,7 @@
 
 using ClearCanvas.Common.Authorization;
 
-namespace ClearCanvas.ImageServer.Enterprise.Authentication
+namespace ClearCanvas.ImageServer.Common.Authentication
 {
     public class AuthorityTokens
     {
