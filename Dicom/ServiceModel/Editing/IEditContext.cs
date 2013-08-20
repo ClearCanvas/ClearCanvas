@@ -22,10 +22,34 @@
 
 #endregion
 
+using System;
+using ClearCanvas.Dicom.Iod;
+
 namespace ClearCanvas.Dicom.ServiceModel.Editing
 {
-	public static class DicomEditNamespace
+	public interface IEditContext : IDisposable
 	{
-		public const string Value = DicomNamespace.Value + "/edit";
+		DicomAttributeCollection DataSet { get; }
+		bool Excluded { get; }
+		void Exclude();
+
+		int NumberOfFrames { get; }
+		IEditPixelDataContext GetPixelDataContext(int frameNumber);
+	}
+
+	public interface IEditPixelDataContext
+	{
+		DicomAttributeCollection DataSet { get; }
+		int FrameNumber { get; }
+		byte[] PixelData { get; }
+		int Rows { get; }
+		int Columns { get; }
+		int BitsAllocated { get; }
+		int BitsStored { get; }
+		int HighBit { get; }
+		int PixelRepresentation { get; }
+		
+		PhotometricInterpretation PhotometricInterpretation { get; }
+		int PlanarConfiguration { get; }
 	}
 }
