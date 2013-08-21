@@ -30,9 +30,17 @@ namespace ClearCanvas.Common
 	{
 		#region ITimeProvider Members
 
-		public DateTime CurrentTime
+		public DateTime GetCurrentTime(DateTimeKind kind)
 		{
-			get { return DateTime.Now; }
+			switch (kind)
+			{
+				case DateTimeKind.Utc:
+					return DateTime.UtcNow;
+				case DateTimeKind.Local:
+					return DateTime.Now;
+				default:
+					throw new ArgumentOutOfRangeException("kind");
+			}
 		}
 
 		#endregion

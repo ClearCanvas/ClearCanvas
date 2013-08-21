@@ -418,12 +418,14 @@ namespace ClearCanvas.Common
 			return path;
 		}
 
+		#region Time
+
 		/// <summary>
 		/// Gets the current time from an extension of <see cref="TimeProviderExtensionPoint"/>, if one exists.
 		/// </summary>
 		/// <remarks>
 		/// <para>
-		/// The time returned may differ from the current time on the local machine, because the provider may choose
+		/// The time returned may differ from the current time on this machine, because the provider may choose
 		/// to obtain the time from another source (i.e. a server).
 		/// </para>
 		/// <para>
@@ -432,39 +434,62 @@ namespace ClearCanvas.Common
 		/// </remarks>
 		public static DateTime Time
 		{
-			get
-			{
-				if (_timeProvider == null)
-				{
-					lock (_syncRoot)
-					{
-						if (_timeProvider == null)
-						{
-							try
-							{
-								// check for a time provider extension
-								TimeProviderExtensionPoint xp = new TimeProviderExtensionPoint();
-								_timeProvider = (ITimeProvider)xp.CreateExtension();
-							}
-							catch (NotSupportedException)
-							{
-								// can't find time provider, default to local time
-								Log(LogLevel.Debug, SR.LogTimeProviderNotFound);
+			get { return GetCurrentTime(DateTimeKind.Local); }
+		}
 
-								_timeProvider = new LocalTimeProvider();
-							}
+		/// <summary>
+		/// Gets the current time in UTC from an extension of <see cref="TimeProviderExtensionPoint"/>, if one exists.
+		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// The time returned may differ from the current time on this machine, because the provider may choose
+		/// to obtain the time from another source (i.e. a server).
+		/// </para>
+		/// <para>
+		/// This method is thread-safe.
+		/// </para>
+		/// </remarks>
+		public static DateTime UtcTime
+		{
+			get { return GetCurrentTime(DateTimeKind.Utc); }
+		}
+
+		private static DateTime GetCurrentTime(DateTimeKind kind)
+		{
+			if (_timeProvider == null)
+			{
+				lock (_syncRoot)
+				{
+					if (_timeProvider == null)
+					{
+						try
+						{
+							// check for a time provider extension
+							var xp = new TimeProviderExtensionPoint();
+							_timeProvider = (ITimeProvider)xp.CreateExtension();
+						}
+						catch (NotSupportedException)
+						{
+							// can't find time provider, default to local time
+							Log(LogLevel.Debug, SR.LogTimeProviderNotFound);
+
+							_timeProvider = new LocalTimeProvider();
 						}
 					}
 				}
+			}
 
-				// need to lock here, as the time provider itself may not be thread-safe
-				// note: lock on _timeProvider rather than _syncRoot, so _syncRoot remains free for other methods
-				lock (_timeProvider)
-				{
-					return _timeProvider.CurrentTime;
-				}
+			// need to lock here, as the time provider itself may not be thread-safe
+			// note: lock on _timeProvider rather than _syncRoot, so _syncRoot remains free for other methods
+			lock (_timeProvider)
+			{
+				return _timeProvider.GetCurrentTime(kind);
 			}
 		}
+
+		#endregion
+
+		#region Application start-up
 
 		/// <summary>
 		/// Starts the application.
@@ -481,14 +506,12 @@ namespace ClearCanvas.Common
 		{
 			FatalExceptionHandler.Initialize();
 
-			ApplicationRootExtensionPoint xp = new ApplicationRootExtensionPoint();
+			var xp = new ApplicationRootExtensionPoint();
 			_applicationRoot = (applicationRootFilter == null) ?
 				(IApplicationRoot)xp.CreateExtension() :
 				(IApplicationRoot)xp.CreateExtension(applicationRootFilter);
 			_applicationRoot.RunApplication(args);
 		}
-
-		// Public methods
 
 		/// <summary>
 		/// Starts the application.
@@ -511,21 +534,16 @@ namespace ClearCanvas.Common
 		/// <param name="args"></param>
 		public static void StartApp(string appRootClassName, string[] args)
 		{
-			ExtensionInfo[] appRoots = new ApplicationRootExtensionPoint().ListExtensions();
+			var appRoots = new ApplicationRootExtensionPoint().ListExtensions();
 
 			// try an exact match
-			List<ExtensionInfo> matchingRoots = CollectionUtils.Select(appRoots,
-				delegate(ExtensionInfo info) { return info.ExtensionClass.FullName == appRootClassName; });
+			var matchingRoots = CollectionUtils.Select(appRoots, info => info.ExtensionClass.FullName == appRootClassName);
 
 			if (matchingRoots.Count == 0)
 			{
 				// try a partial match
 				matchingRoots = CollectionUtils.Select(appRoots,
-					delegate(ExtensionInfo info)
-					{
-						return info.ExtensionClass.FullName.EndsWith(
-							appRootClassName, StringComparison.InvariantCultureIgnoreCase);
-					});
+					info => info.ExtensionClass.FullName.EndsWith(appRootClassName, StringComparison.InvariantCultureIgnoreCase));
 			}
 
 			if (matchingRoots.Count == 0)
@@ -538,6 +556,10 @@ namespace ClearCanvas.Common
 			// start app
 			StartApp(new ClassNameExtensionFilter(CollectionUtils.FirstElement(matchingRoots).ExtensionClass.FullName), args);
 		}
+
+		#endregion
+
+		#region Service Provision
 
 		/// <summary>
 		/// Obtains an instance of the specified service for use by the application.
@@ -696,6 +718,8 @@ namespace ClearCanvas.Common
 			var message = string.Format("No duplex service provider was found that can provide the service {0}.", service.FullName);
 			throw new UnknownServiceException(message);
 		}
+
+		#endregion
 
 		#region Logging
 
@@ -921,6 +945,8 @@ namespace ClearCanvas.Common
 
 		#endregion
 
+		#region Message Boxes (obsolete)
+
 		/// <summary>
 		/// Displays a message box with the specified message.
 		/// </summary>
@@ -967,6 +993,9 @@ namespace ClearCanvas.Common
 			}
 		}
 
+		#endregion
+
+		#region Validation Helpers
 
 		/// <summary>
 		/// Checks if a string is empty.
@@ -1230,5 +1259,7 @@ namespace ClearCanvas.Common
 			if (variable == null)
 				throw new InvalidOperationException(String.Format(SR.ExceptionMemberNotSetVerbose, variableName, detailedMessage));
 		}
+
+		#endregion
 	}
 }
