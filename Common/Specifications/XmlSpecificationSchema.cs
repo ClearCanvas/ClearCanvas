@@ -164,7 +164,27 @@ namespace ClearCanvas.Common.Specifications
 			return element;
 		}
 
-		public static XmlSchemaElement StringMatchingSchema()
+		public static XmlSchemaElement RegexStringMatchingSchema()
+		{
+			return StringMatchingSchema("regex");
+		}
+
+		public static XmlSchemaElement StartsWithStringMatchingSchema()
+		{
+			return StringMatchingSchema("starts-with");
+		}
+
+		public static XmlSchemaElement EndsWithStringMatchingSchema()
+		{
+			return StringMatchingSchema("ends-with");
+		}
+
+		public static XmlSchemaElement ContainsStringMatchingSchema()
+		{
+			return StringMatchingSchema("contains");
+		}
+
+		public static XmlSchemaElement StringMatchingSchema(string elementName)
 		{
 			var type = new XmlSchemaComplexType();
 
@@ -205,7 +225,7 @@ namespace ClearCanvas.Common.Specifications
 			type.Attributes.Add(attrib);
 
 			var element = new XmlSchemaElement();
-			element.Name = "regex";
+			element.Name = elementName;
 			element.SchemaType = type;
 
 			return element;
