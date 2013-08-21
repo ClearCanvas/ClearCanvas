@@ -23,7 +23,6 @@
 #endregion
 
 using System;
-using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using log4net;
@@ -68,70 +67,70 @@ namespace ClearCanvas.Common
 	}
 
 
-    /// <summary>
-    /// An extension point for <see cref="IMessageBox"/>es.
-    /// </summary>
-    [ExtensionPoint()]
-    public sealed class MessageBoxExtensionPoint : ExtensionPoint<IMessageBox>
-    {
-    }
+	/// <summary>
+	/// An extension point for <see cref="IMessageBox"/>es.
+	/// </summary>
+	[ExtensionPoint()]
+	public sealed class MessageBoxExtensionPoint : ExtensionPoint<IMessageBox>
+	{
+	}
 
-    /// <summary>
-    /// Defines the Application Root extension point.
-    /// </summary>
-    /// <remarks>
+	/// <summary>
+	/// Defines the Application Root extension point.
+	/// </summary>
+	/// <remarks>
 	/// When one of the <b>Platform.StartApp</b> methods are called,
 	/// the platform creates an application root extension and executes it by calling
 	/// <see cref="IApplicationRoot.RunApplication" />.
 	/// </remarks>
-    [ExtensionPoint()]
-    public sealed class ApplicationRootExtensionPoint : ExtensionPoint<IApplicationRoot>
-    {
-    }
-
-    /// <summary>
-    /// An extension point for <see cref="ITimeProvider"/>s.
-    /// </summary>
-    /// <remarks>
-    /// Used internally by the framework to create a <see cref="ITimeProvider"/> for
-    /// use by the application (see <see cref="Platform.Time"/>).
-    /// </remarks>
 	[ExtensionPoint()]
-    public sealed class TimeProviderExtensionPoint : ExtensionPoint<ITimeProvider>
-    {
-    }
+	public sealed class ApplicationRootExtensionPoint : ExtensionPoint<IApplicationRoot>
+	{
+	}
 
-    /// <summary>
-    /// Defines an extension point for service providers.
-    /// </summary>
-    /// <remarks>
-    /// <para>
+	/// <summary>
+	/// An extension point for <see cref="ITimeProvider"/>s.
+	/// </summary>
+	/// <remarks>
+	/// Used internally by the framework to create a <see cref="ITimeProvider"/> for
+	/// use by the application (see <see cref="Platform.Time"/>).
+	/// </remarks>
+	[ExtensionPoint()]
+	public sealed class TimeProviderExtensionPoint : ExtensionPoint<ITimeProvider>
+	{
+	}
+
+	/// <summary>
+	/// Defines an extension point for service providers.
+	/// </summary>
+	/// <remarks>
+	/// <para>
 	/// A service provider is a class that knows how to provide a specific set of services to the 
 	/// application.  A given service should be provided exclusively by one provider 
 	/// (i.e. no two providers should provide the same service).  The application obtains
 	/// services through the <see cref="Platform.GetService"/> method.
 	/// </para>
 	/// <para>
-    /// A service provider may be accessed by multiple threads.  For reasons of thread-safety, a service provider
-    /// should return a new instance of the service class for each call to <see cref="IServiceProvider.GetService"/>,
-    /// so that each thread receives its own copy of the service.
-    /// If the provider returns the same object (singleton), then the service object itself must be thread-safe.
+	/// A service provider may be accessed by multiple threads.  For reasons of thread-safety, a service provider
+	/// should return a new instance of the service class for each call to <see cref="IServiceProvider.GetService"/>,
+	/// so that each thread receives its own copy of the service.
+	/// If the provider returns the same object (singleton), then the service object itself must be thread-safe.
 	/// </para>
-    /// </remarks>
-    [ExtensionPoint]
-    public sealed class ServiceProviderExtensionPoint : ExtensionPoint<IServiceProvider>
-    {
-    }
+	/// </remarks>
+	[ExtensionPoint]
+	public sealed class ServiceProviderExtensionPoint : ExtensionPoint<IServiceProvider>
+	{
+	}
 
-    public interface IDuplexServiceProvider
-    {
-        object GetService(Type type, object callback);
-    }
+	public interface IDuplexServiceProvider
+	{
+		object GetService(Type type, object callback);
+	}
 
-    [ExtensionPoint]
-    public sealed class DuplexServiceProviderExtensionPoint : ExtensionPoint<IDuplexServiceProvider>
-    {
-    }
+	[ExtensionPoint]
+	public sealed class DuplexServiceProviderExtensionPoint : ExtensionPoint<IDuplexServiceProvider>
+	{
+	}
 
 	/// <summary>
 	/// A collection of useful utility functions.
@@ -142,55 +141,55 @@ namespace ClearCanvas.Common
 
 		private static object _syncRoot = new Object();
 
-    	private static readonly ILog _log = LogManager.GetLogger(typeof(Platform));
-        private static readonly object _namedLogLock = new object();
-        private static readonly Dictionary<string, ILog> _namedLogs = new Dictionary<string, ILog>();
+		private static readonly ILog _log = LogManager.GetLogger(typeof(Platform));
+		private static readonly object _namedLogLock = new object();
+		private static readonly Dictionary<string, ILog> _namedLogs = new Dictionary<string, ILog>();
 
 		private static string _pluginSubFolder = "plugins";
-        private static string _commonSubFolder = "common";
-        private static string _logSubFolder = "logs";
-        private static string _manifestSubFolder = "manifest";
+		private static string _commonSubFolder = "common";
+		private static string _logSubFolder = "logs";
+		private static string _manifestSubFolder = "manifest";
 
 		private static volatile string _installDirectory = null;
 		private static volatile string _pluginsDirectory = null;
-        private static volatile string _commonDirectory = null;
-        private static volatile string _logDirectory = null;
-        private static volatile string _manifestDirectory = null;
+		private static volatile string _commonDirectory = null;
+		private static volatile string _logDirectory = null;
+		private static volatile string _manifestDirectory = null;
 		private static volatile string _applicationDataDirectory = null;
 
 		private static volatile PluginManager _pluginManager;
 		private static volatile IApplicationRoot _applicationRoot;
 		private static volatile IMessageBox _messageBox;
 		private static volatile ITimeProvider _timeProvider;
-        private static volatile IServiceProvider[] _serviceProviders;
-        private static volatile IDuplexServiceProvider[] _duplexServiceProviders;
+		private static volatile IServiceProvider[] _serviceProviders;
+		private static volatile IDuplexServiceProvider[] _duplexServiceProviders;
 
 		#endregion
 
 #if UNIT_TESTS
 
 		/// <summary>
-        /// Sets the extension factory that is used to instantiate extensions.
-        /// </summary>
-        /// <remarks>
-        /// This purpose of this method is to facilitate unit testing by allowing the creation of extensions
-        /// to be controlled by the testing code.
-        /// </remarks>
-        /// <param name="factory"></param>
-        public static void SetExtensionFactory(IExtensionFactory factory)
-        {
-            lock (_syncRoot)
-            {
-                //I'm sure there are other places where this might be a problem, but if
-                //you use an extension factory that creates service provider extensions,
-                //you can get UnknownServiceException problems in unit tests unless
-                //these 2 variables are repopulated.
-                _serviceProviders = null;
-                _duplexServiceProviders = null;
-            }
+		/// Sets the extension factory that is used to instantiate extensions.
+		/// </summary>
+		/// <remarks>
+		/// This purpose of this method is to facilitate unit testing by allowing the creation of extensions
+		/// to be controlled by the testing code.
+		/// </remarks>
+		/// <param name="factory"></param>
+		public static void SetExtensionFactory(IExtensionFactory factory)
+		{
+			lock (_syncRoot)
+			{
+				//I'm sure there are other places where this might be a problem, but if
+				//you use an extension factory that creates service provider extensions,
+				//you can get UnknownServiceException problems in unit tests unless
+				//these 2 variables are repopulated.
+				_serviceProviders = null;
+				_duplexServiceProviders = null;
+			}
 
-		    ExtensionPoint.SetExtensionFactory(factory);
-        }
+			ExtensionPoint.SetExtensionFactory(factory);
+		}
 #endif
 
 		/// <summary>
@@ -213,12 +212,12 @@ namespace ClearCanvas.Common
 			}
 		}
 
-        /// <summary>
-        /// Gets whether the application is executing on a Win32 operating system
-        /// </summary>
-        /// <remarks>
-        /// This method is thread-safe.
-        /// </remarks>
+		/// <summary>
+		/// Gets whether the application is executing on a Win32 operating system
+		/// </summary>
+		/// <remarks>
+		/// This method is thread-safe.
+		/// </remarks>
 		public static bool IsWin32Platform
 		{
 			get
@@ -228,13 +227,13 @@ namespace ClearCanvas.Common
 			}
 		}
 
-        /// <summary>
-        /// Gets whether the application is executing on a Unix operating systems
-        /// </summary>
-        /// <remarks>
-        /// This method is thread-safe.
-        /// </remarks>
-        public static bool IsUnixPlatform
+		/// <summary>
+		/// Gets whether the application is executing on a Unix operating systems
+		/// </summary>
+		/// <remarks>
+		/// This method is thread-safe.
+		/// </remarks>
+		public static bool IsUnixPlatform
 		{
 			get
 			{
@@ -243,35 +242,35 @@ namespace ClearCanvas.Common
 			}
 		}
 
-        /// <summary>
-        /// Gets the file-system path separator character for the current operating system
-        /// </summary>
-        /// <remarks>
-        /// This method is thread-safe.
-        /// </remarks>
-        public static char PathSeparator
-        {
-            get { return IsWin32Platform ? '\\' : '/'; }
-        }
-		
+		/// <summary>
+		/// Gets the file-system path separator character for the current operating system
+		/// </summary>
+		/// <remarks>
+		/// This method is thread-safe.
+		/// </remarks>
+		public static char PathSeparator
+		{
+			get { return IsWin32Platform ? '\\' : '/'; }
+		}
+
 		/// <summary>
 		/// Gets the ClearCanvas installation directory.
 		/// </summary>
-        /// <remarks>
-        /// This method is thread-safe.
-        /// </remarks>
-        public static string InstallDirectory
+		/// <remarks>
+		/// This method is thread-safe.
+		/// </remarks>
+		public static string InstallDirectory
 		{
 			get
 			{
-                if (_installDirectory == null)
-                {
-                    lock (_syncRoot)
-                    {
-                        if (_installDirectory == null)
-                            _installDirectory = AppDomain.CurrentDomain.BaseDirectory;
-                    }
-                }
+				if (_installDirectory == null)
+				{
+					lock (_syncRoot)
+					{
+						if (_installDirectory == null)
+							_installDirectory = AppDomain.CurrentDomain.BaseDirectory;
+					}
+				}
 
 				return _installDirectory;
 			}
@@ -280,17 +279,17 @@ namespace ClearCanvas.Common
 		/// <summary>
 		/// Gets the fully qualified plugin directory.
 		/// </summary>
-        /// <remarks>
-        /// This method is thread-safe.
-        /// </remarks>
-        public static string PluginDirectory
+		/// <remarks>
+		/// This method is thread-safe.
+		/// </remarks>
+		public static string PluginDirectory
 		{
 			get
 			{
-                if (_pluginsDirectory == null)
-                {
-                    lock (_syncRoot)
-                    {
+				if (_pluginsDirectory == null)
+				{
+					lock (_syncRoot)
+					{
 						if (_pluginsDirectory == null)
 						{
 							string pluginsDirectory = Path.Combine(Platform.InstallDirectory, _pluginSubFolder);
@@ -298,29 +297,29 @@ namespace ClearCanvas.Common
 							if (Directory.Exists(pluginsDirectory))
 								_pluginsDirectory = pluginsDirectory;
 							else
-							    _pluginsDirectory = InstallDirectory;
+								_pluginsDirectory = InstallDirectory;
 						}
-                    }
-                }
+					}
+				}
 
-                return _pluginsDirectory;
+				return _pluginsDirectory;
 			}
 		}
 
-        /// <summary>
-        /// Gets the fully qualified common directory.
-        /// </summary>
-        /// <remarks>
-        /// This method is thread-safe.
-        /// </remarks>
-        public static string CommonDirectory
-        {
-            get
-            {
-                if (_commonDirectory == null)
-                {
-                    lock (_syncRoot)
-                    {
+		/// <summary>
+		/// Gets the fully qualified common directory.
+		/// </summary>
+		/// <remarks>
+		/// This method is thread-safe.
+		/// </remarks>
+		public static string CommonDirectory
+		{
+			get
+			{
+				if (_commonDirectory == null)
+				{
+					lock (_syncRoot)
+					{
 						if (_commonDirectory == null)
 						{
 							string commonDirectory =
@@ -331,58 +330,58 @@ namespace ClearCanvas.Common
 							else
 								_commonDirectory = InstallDirectory;
 						}
-                    }
-                }
+					}
+				}
 
-                return _commonDirectory;
-            }
-        }
-        
-        /// <summary>
-		/// Gets the fully qualified log directory.
-		/// </summary>
-        /// <remarks>
-        /// This method is thread-safe.
-        /// </remarks>
-        public static string LogDirectory
-		{
-			get
-			{
-                if (_logDirectory == null)
-                {
-                    lock (_syncRoot)
-                    {
-						if (_logDirectory == null)
-							_logDirectory = System.IO.Path.Combine(Platform.InstallDirectory, _logSubFolder);
-                    }
-                }
-
-                return _logDirectory;
+				return _commonDirectory;
 			}
 		}
 
-        /// <summary>
-        /// Gets the fully qualified Manifest directory.
-        /// </summary>
-        /// <remarks>
-        /// This method is thread-safe.
-        /// </remarks>
-        public static string ManifestDirectory
-        {
-            get
-            {
-                if (_manifestDirectory == null)
-                {
-                    lock (_syncRoot)
-                    {
-                        if (_manifestDirectory == null)
-                            _manifestDirectory = Path.Combine(InstallDirectory, _manifestSubFolder);
-                    }
-                }
+		/// <summary>
+		/// Gets the fully qualified log directory.
+		/// </summary>
+		/// <remarks>
+		/// This method is thread-safe.
+		/// </remarks>
+		public static string LogDirectory
+		{
+			get
+			{
+				if (_logDirectory == null)
+				{
+					lock (_syncRoot)
+					{
+						if (_logDirectory == null)
+							_logDirectory = System.IO.Path.Combine(Platform.InstallDirectory, _logSubFolder);
+					}
+				}
 
-                return _manifestDirectory;
-            }
-        }
+				return _logDirectory;
+			}
+		}
+
+		/// <summary>
+		/// Gets the fully qualified Manifest directory.
+		/// </summary>
+		/// <remarks>
+		/// This method is thread-safe.
+		/// </remarks>
+		public static string ManifestDirectory
+		{
+			get
+			{
+				if (_manifestDirectory == null)
+				{
+					lock (_syncRoot)
+					{
+						if (_manifestDirectory == null)
+							_manifestDirectory = Path.Combine(InstallDirectory, _manifestSubFolder);
+					}
+				}
+
+				return _manifestDirectory;
+			}
+		}
 
 		/// <summary>
 		/// Gets the fully qualified application data directory.
@@ -394,100 +393,100 @@ namespace ClearCanvas.Common
 		{
 			get
 			{
-                if (_applicationDataDirectory == null)
-                {
-                    lock (_syncRoot)
-                    {
-                        _applicationDataDirectory = GetApplicationDataDirectory();
-                    }
-                }
-			    return _applicationDataDirectory;
+				if (_applicationDataDirectory == null)
+				{
+					lock (_syncRoot)
+					{
+						_applicationDataDirectory = GetApplicationDataDirectory();
+					}
+				}
+				return _applicationDataDirectory;
 			}
 		}
 
-        private static string GetApplicationDataDirectory()
-        {
-            var path = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
-            path = Path.Combine(path, "ClearCanvas_Inc"); //TODO this seems to be derived from the AssemblyCompanyAttribute
-            if (string.IsNullOrEmpty(ProductInformation.FamilyName))
-                path = Path.Combine(path, ProductInformation.GetName(true, false));
-            else
-            {
-                path = Path.Combine(path, string.Format("{0} {1}", ProductInformation.Component, ProductInformation.FamilyName));
-            }
+		private static string GetApplicationDataDirectory()
+		{
+			var path = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
+			path = Path.Combine(path, "ClearCanvas_Inc"); //TODO this seems to be derived from the AssemblyCompanyAttribute
+			if (string.IsNullOrEmpty(ProductInformation.FamilyName))
+				path = Path.Combine(path, ProductInformation.GetName(true, false));
+			else
+			{
+				path = Path.Combine(path, string.Format("{0} {1}", ProductInformation.Component, ProductInformation.FamilyName));
+			}
 
-            return path;
-        }
+			return path;
+		}
 
-        /// <summary>
-        /// Gets the current time from an extension of <see cref="TimeProviderExtensionPoint"/>, if one exists.
-        /// </summary>
-        /// <remarks>
-        /// <para>
-        /// The time returned may differ from the current time on the local machine, because the provider may choose
-        /// to obtain the time from another source (i.e. a server).
+		/// <summary>
+		/// Gets the current time from an extension of <see cref="TimeProviderExtensionPoint"/>, if one exists.
+		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// The time returned may differ from the current time on the local machine, because the provider may choose
+		/// to obtain the time from another source (i.e. a server).
 		/// </para>
 		/// <para>
-        /// This method is thread-safe.
+		/// This method is thread-safe.
 		/// </para>
-        /// </remarks>
-        public static DateTime Time
-        {
-            get
-            {
-                if (_timeProvider == null)
-                {
-                    lock (_syncRoot)
-                    {
-                        if (_timeProvider == null)
-                        {
-                            try
-                            {
-                                // check for a time provider extension
-                                TimeProviderExtensionPoint xp = new TimeProviderExtensionPoint();
-                                _timeProvider = (ITimeProvider)xp.CreateExtension();
-                            }
-                            catch (NotSupportedException)
-                            {
-                                // can't find time provider, default to local time
-                                Log(LogLevel.Debug, SR.LogTimeProviderNotFound);
+		/// </remarks>
+		public static DateTime Time
+		{
+			get
+			{
+				if (_timeProvider == null)
+				{
+					lock (_syncRoot)
+					{
+						if (_timeProvider == null)
+						{
+							try
+							{
+								// check for a time provider extension
+								TimeProviderExtensionPoint xp = new TimeProviderExtensionPoint();
+								_timeProvider = (ITimeProvider)xp.CreateExtension();
+							}
+							catch (NotSupportedException)
+							{
+								// can't find time provider, default to local time
+								Log(LogLevel.Debug, SR.LogTimeProviderNotFound);
 
-                                _timeProvider = new LocalTimeProvider();
-                            }
-                        }
-                    }
-                }
+								_timeProvider = new LocalTimeProvider();
+							}
+						}
+					}
+				}
 
-                // need to lock here, as the time provider itself may not be thread-safe
-                // note: lock on _timeProvider rather than _syncRoot, so _syncRoot remains free for other methods
-                lock (_timeProvider)
-                {
-                    return _timeProvider.CurrentTime;
-                }
-            }
-        }
+				// need to lock here, as the time provider itself may not be thread-safe
+				// note: lock on _timeProvider rather than _syncRoot, so _syncRoot remains free for other methods
+				lock (_timeProvider)
+				{
+					return _timeProvider.CurrentTime;
+				}
+			}
+		}
 
-        /// <summary>
-        /// Starts the application.
-        /// </summary>
-        /// <param name="applicationRootFilter">An extension filter that selects the application root extension to execute.</param>
-        /// <param name="args">The set of arguments passed from the command line.</param>
-        /// <remarks>
-        /// A ClearCanvas based application is started by calling this convenience method from
-        /// a bootstrap executable of some kind.  Calling this method results in the loading
+		/// <summary>
+		/// Starts the application.
+		/// </summary>
+		/// <param name="applicationRootFilter">An extension filter that selects the application root extension to execute.</param>
+		/// <param name="args">The set of arguments passed from the command line.</param>
+		/// <remarks>
+		/// A ClearCanvas based application is started by calling this convenience method from
+		/// a bootstrap executable of some kind.  Calling this method results in the loading
 		/// of all plugins and creation of an <see cref="IApplicationRoot"/> extension.  
 		/// This method is not thread-safe as it should only ever be invoked once per execution, by a single thread.
-        /// </remarks>
-        public static void StartApp(ExtensionFilter applicationRootFilter, string[] args)
-        {
-        	FatalExceptionHandler.Initialize();
+		/// </remarks>
+		public static void StartApp(ExtensionFilter applicationRootFilter, string[] args)
+		{
+			FatalExceptionHandler.Initialize();
 
 			ApplicationRootExtensionPoint xp = new ApplicationRootExtensionPoint();
 			_applicationRoot = (applicationRootFilter == null) ?
 				(IApplicationRoot)xp.CreateExtension() :
 				(IApplicationRoot)xp.CreateExtension(applicationRootFilter);
 			_applicationRoot.RunApplication(args);
-        }
+		}
 
 		// Public methods
 
@@ -502,118 +501,118 @@ namespace ClearCanvas.Common
 		/// </remarks>
 		public static void StartApp()
 		{
-            StartApp((ExtensionFilter)null, new string[] { });
+			StartApp((ExtensionFilter)null, new string[] { });
 		}
 
-        /// <summary>
-        /// Starts the application matching the specified fully or partially qualified class name.
-        /// </summary>
-        /// <param name="appRootClassName">The name of an application root class, which need not be fully qualified.</param>
-        /// <param name="args"></param>
-        public static void StartApp(string appRootClassName, string[] args)
-        {
-            ExtensionInfo[] appRoots = new ApplicationRootExtensionPoint().ListExtensions();
+		/// <summary>
+		/// Starts the application matching the specified fully or partially qualified class name.
+		/// </summary>
+		/// <param name="appRootClassName">The name of an application root class, which need not be fully qualified.</param>
+		/// <param name="args"></param>
+		public static void StartApp(string appRootClassName, string[] args)
+		{
+			ExtensionInfo[] appRoots = new ApplicationRootExtensionPoint().ListExtensions();
 
-            // try an exact match
-            List<ExtensionInfo> matchingRoots = CollectionUtils.Select(appRoots,
-                delegate(ExtensionInfo info) { return info.ExtensionClass.FullName == appRootClassName; });
+			// try an exact match
+			List<ExtensionInfo> matchingRoots = CollectionUtils.Select(appRoots,
+				delegate(ExtensionInfo info) { return info.ExtensionClass.FullName == appRootClassName; });
 
-            if (matchingRoots.Count == 0)
-            {
-                // try a partial match
-                matchingRoots = CollectionUtils.Select(appRoots,
-                    delegate(ExtensionInfo info)
-                    {
-                         return info.ExtensionClass.FullName.EndsWith(
-                             appRootClassName, StringComparison.InvariantCultureIgnoreCase);
-                    });
-            }
+			if (matchingRoots.Count == 0)
+			{
+				// try a partial match
+				matchingRoots = CollectionUtils.Select(appRoots,
+					delegate(ExtensionInfo info)
+					{
+						return info.ExtensionClass.FullName.EndsWith(
+							appRootClassName, StringComparison.InvariantCultureIgnoreCase);
+					});
+			}
 
-            if(matchingRoots.Count == 0)
-                throw new NotSupportedException(
-                    string.Format(SR.ExceptionApplicationRootNoMatches, appRootClassName));
-            if (matchingRoots.Count > 1)
-                throw new NotSupportedException(
-                    string.Format(SR.ExceptionApplicationRootMultipleMatches, appRootClassName));
+			if (matchingRoots.Count == 0)
+				throw new NotSupportedException(
+					string.Format(SR.ExceptionApplicationRootNoMatches, appRootClassName));
+			if (matchingRoots.Count > 1)
+				throw new NotSupportedException(
+					string.Format(SR.ExceptionApplicationRootMultipleMatches, appRootClassName));
 
-            // start app
-            StartApp(new ClassNameExtensionFilter(CollectionUtils.FirstElement(matchingRoots).ExtensionClass.FullName), args);
-        }
+			// start app
+			StartApp(new ClassNameExtensionFilter(CollectionUtils.FirstElement(matchingRoots).ExtensionClass.FullName), args);
+		}
 
-	    /// <summary>
-        /// Obtains an instance of the specified service for use by the application.
-        /// </summary>
-        /// <remarks>
-        /// This method is thread-safe.
-        /// </remarks>
-        /// <typeparam name="TService">The type of service to obtain.</typeparam>
-        /// <returns>An instance of the specified service.</returns>
-        /// <exception cref="UnknownServiceException">The requested service cannot be provided.</exception>
-        public static TService GetService<TService>()
-        {
-            return (TService)GetService(typeof(TService));
-        }
+		/// <summary>
+		/// Obtains an instance of the specified service for use by the application.
+		/// </summary>
+		/// <remarks>
+		/// This method is thread-safe.
+		/// </remarks>
+		/// <typeparam name="TService">The type of service to obtain.</typeparam>
+		/// <returns>An instance of the specified service.</returns>
+		/// <exception cref="UnknownServiceException">The requested service cannot be provided.</exception>
+		public static TService GetService<TService>()
+		{
+			return (TService)GetService(typeof(TService));
+		}
 
-        /// <summary>
+		/// <summary>
 		/// For use with the <see cref="GetService{TService}(WithServiceDelegate{TService})"/> method.
-        /// </summary>
+		/// </summary>
 		public delegate void WithServiceDelegate<T>(T service);
 
-        /// <summary>
-        /// Obtains an instance of the specified service for use by the application.  
-        /// </summary>
-        /// <remarks>
-        /// <para>
+		/// <summary>
+		/// Obtains an instance of the specified service for use by the application.  
+		/// </summary>
+		/// <remarks>
+		/// <para>
 		/// Instead of returning the service directly, this overload passes the service to the specified delegate for use.
 		/// When the delegate returns, this method automatically takes care of determing whether the service implements <see cref="IDisposable"/>
 		/// and calling <see cref="IDisposable.Dispose"/> if it does.  The delegate must not cache the returned service
 		/// because it may be disposed as soon as the delegate returns.  For the single-use scenario, this overload is preferred
 		/// to the other overloads because it automatically manages the lifecycle of the service object.
 		/// </para>
-        /// <para>
-        /// This method is thread-safe.
+		/// <para>
+		/// This method is thread-safe.
 		/// </para>
-        /// </remarks>
-        /// <typeparam name="TService">The service to obtain.</typeparam>
-        /// <param name="proc">A delegate that will receive the service for one-time use.</param>
-        public static void GetService<TService>(WithServiceDelegate<TService> proc)
-        {
-            var service = GetService<TService>();
+		/// </remarks>
+		/// <typeparam name="TService">The service to obtain.</typeparam>
+		/// <param name="proc">A delegate that will receive the service for one-time use.</param>
+		public static void GetService<TService>(WithServiceDelegate<TService> proc)
+		{
+			var service = GetService<TService>();
 
-            try
-            {
-                proc(service);
-            }
-            finally
-            {
-                if (service is IDisposable)
-                {
-                    try
-                    {
-                        (service as IDisposable).Dispose();
-                    }
-                    catch (Exception e)
-                    {
-                        // do not allow exceptions thrown from Dispose() because it may have the effect of
-                        // hiding an exception that was thrown from the service itself
-                        // if the service fails to dispose properly, we don't care, just log it and move on
-                        Platform.Log(LogLevel.Error, e);
-                    }
-                }
-            }
-        }
+			try
+			{
+				proc(service);
+			}
+			finally
+			{
+				if (service is IDisposable)
+				{
+					try
+					{
+						(service as IDisposable).Dispose();
+					}
+					catch (Exception e)
+					{
+						// do not allow exceptions thrown from Dispose() because it may have the effect of
+						// hiding an exception that was thrown from the service itself
+						// if the service fails to dispose properly, we don't care, just log it and move on
+						Platform.Log(LogLevel.Error, e);
+					}
+				}
+			}
+		}
 
-        /// <summary>
-        /// Obtains an instance of the specified service for use by the application.
-        /// </summary>
-        /// <remarks>
-        /// This method is thread-safe.
-        /// </remarks>
-        /// <param name="service">The type of service to obtain.</param>
-        /// <returns>An instance of the specified service.</returns>
-        /// <exception cref="UnknownServiceException">The requested service cannot be provided.</exception>
-        public static object GetService(Type service)
-        {
+		/// <summary>
+		/// Obtains an instance of the specified service for use by the application.
+		/// </summary>
+		/// <remarks>
+		/// This method is thread-safe.
+		/// </remarks>
+		/// <param name="service">The type of service to obtain.</param>
+		/// <returns>An instance of the specified service.</returns>
+		/// <exception cref="UnknownServiceException">The requested service cannot be provided.</exception>
+		public static object GetService(Type service)
+		{
 			// load all service providers if not yet loaded
 			if (_serviceProviders == null)
 			{
@@ -639,334 +638,334 @@ namespace ClearCanvas.Common
 
 			var message = string.Format("No service provider was found that can provide the service {0}.", service.FullName);
 			throw new UnknownServiceException(message);
-        }
+		}
 
-        /// <summary>
-        /// Obtains an instance of the specified duplex service for use by the application.
-        /// </summary>
-        /// <remarks>
-        /// This method is thread-safe.
-        /// </remarks>
-        /// <typeparam name="TService">The type of service to obtain.</typeparam>
-        /// <typeparam name="TCallback">The type of the callback contract.</typeparam>
-        /// <param name="callback">An object that implements the callback contract.</param>
-        /// <returns>An instance of the specified service.</returns>
-        /// <exception cref="UnknownServiceException">The requested service cannot be provided.</exception>
-        public static TService GetDuplexService<TService, TCallback>(TCallback callback)
-        {
-            return (TService)GetDuplexService(typeof(TService), callback);
-        }
+		/// <summary>
+		/// Obtains an instance of the specified duplex service for use by the application.
+		/// </summary>
+		/// <remarks>
+		/// This method is thread-safe.
+		/// </remarks>
+		/// <typeparam name="TService">The type of service to obtain.</typeparam>
+		/// <typeparam name="TCallback">The type of the callback contract.</typeparam>
+		/// <param name="callback">An object that implements the callback contract.</param>
+		/// <returns>An instance of the specified service.</returns>
+		/// <exception cref="UnknownServiceException">The requested service cannot be provided.</exception>
+		public static TService GetDuplexService<TService, TCallback>(TCallback callback)
+		{
+			return (TService)GetDuplexService(typeof(TService), callback);
+		}
 
-        /// <summary>
-        /// Obtains an instance of the specified duplex service for use by the application.
-        /// </summary>
-        /// <remarks>
-        /// This method is thread-safe.
-        /// </remarks>
-        /// <param name="service">The type of service to obtain.</param>
-        /// <param name="callback">An object implementing the callback service contract.</param>
-        /// <returns>An instance of the specified service.</returns>
-        /// <exception cref="UnknownServiceException">The requested service cannot be provided.</exception>
-        public static object GetDuplexService(Type service, object callback)
-        {
-            CheckForNullReference(callback, "callback");
+		/// <summary>
+		/// Obtains an instance of the specified duplex service for use by the application.
+		/// </summary>
+		/// <remarks>
+		/// This method is thread-safe.
+		/// </remarks>
+		/// <param name="service">The type of service to obtain.</param>
+		/// <param name="callback">An object implementing the callback service contract.</param>
+		/// <returns>An instance of the specified service.</returns>
+		/// <exception cref="UnknownServiceException">The requested service cannot be provided.</exception>
+		public static object GetDuplexService(Type service, object callback)
+		{
+			CheckForNullReference(callback, "callback");
 
-            // load all service providers if not yet loaded
-            if (_duplexServiceProviders == null)
-            {
-                lock (_syncRoot)
-                {
-                    if (_duplexServiceProviders == null)
-                        _duplexServiceProviders = (new DuplexServiceProviderExtensionPoint()).CreateExtensions().Cast<IDuplexServiceProvider>().ToArray();
-                }
-            }
+			// load all service providers if not yet loaded
+			if (_duplexServiceProviders == null)
+			{
+				lock (_syncRoot)
+				{
+					if (_duplexServiceProviders == null)
+						_duplexServiceProviders = (new DuplexServiceProviderExtensionPoint()).CreateExtensions().Cast<IDuplexServiceProvider>().ToArray();
+				}
+			}
 
-            // attempt to instantiate the requested service
-            foreach (IDuplexServiceProvider sp in _duplexServiceProviders)
-            {
-                // the service provider itself may not be thread-safe, so we need to ensure only one thread will access it
-                // at a time
-                lock (sp)
-                {
-                    object impl = sp.GetService(service, callback);
-                    if (impl != null)
-                        return impl;
-                }
-            }
+			// attempt to instantiate the requested service
+			foreach (IDuplexServiceProvider sp in _duplexServiceProviders)
+			{
+				// the service provider itself may not be thread-safe, so we need to ensure only one thread will access it
+				// at a time
+				lock (sp)
+				{
+					object impl = sp.GetService(service, callback);
+					if (impl != null)
+						return impl;
+				}
+			}
 
-            var message = string.Format("No duplex service provider was found that can provide the service {0}.", service.FullName);
-            throw new UnknownServiceException(message);
-        }
+			var message = string.Format("No duplex service provider was found that can provide the service {0}.", service.FullName);
+			throw new UnknownServiceException(message);
+		}
 
-        #region Logging
+		#region Logging
 
-        /// <summary>
+		/// <summary>
 		/// Determines if the specified <see cref="LogLevel"/> is enabled.
 		/// </summary>
 		/// <param name="category">The logging level to check.</param>
 		/// <returns>true if the <see cref="LogLevel"/> is enabled, or else false.</returns>
 		public static bool IsLogLevelEnabled(LogLevel category)
-        {
-            return IsLogLevelEnabled(null, category);
-        }
+		{
+			return IsLogLevelEnabled(null, category);
+		}
 
-	    /// <summary>
-	    /// Determines if the specified <see cref="LogLevel"/> is enabled for the named log.
-	    /// </summary>
-	    /// <param name="logName">The name of the log.</param>
-	    /// <param name="category">The logging level to check.</param>
-	    /// <returns>true if the <see cref="LogLevel"/> is enabled, or else false.</returns>
-	    public static bool IsLogLevelEnabled(string logName, LogLevel category)
-	    {
-	        var log = GetLog(logName);
-            switch (category)
-            {
-                case LogLevel.Debug:
-                    return log.IsDebugEnabled;
-                case LogLevel.Info:
-                    return log.IsInfoEnabled;
-                case LogLevel.Warn:
-                    return log.IsWarnEnabled;
-                case LogLevel.Error:
-                    return log.IsErrorEnabled;
-                case LogLevel.Fatal:
-                    return log.IsFatalEnabled;
-            }
+		/// <summary>
+		/// Determines if the specified <see cref="LogLevel"/> is enabled for the named log.
+		/// </summary>
+		/// <param name="logName">The name of the log.</param>
+		/// <param name="category">The logging level to check.</param>
+		/// <returns>true if the <see cref="LogLevel"/> is enabled, or else false.</returns>
+		public static bool IsLogLevelEnabled(string logName, LogLevel category)
+		{
+			var log = GetLog(logName);
+			switch (category)
+			{
+				case LogLevel.Debug:
+					return log.IsDebugEnabled;
+				case LogLevel.Info:
+					return log.IsInfoEnabled;
+				case LogLevel.Warn:
+					return log.IsWarnEnabled;
+				case LogLevel.Error:
+					return log.IsErrorEnabled;
+				case LogLevel.Fatal:
+					return log.IsFatalEnabled;
+			}
 
-            return false;
-        }
+			return false;
+		}
 
-        /// <summary>
-        /// Logs the specified message at the specified <see cref="LogLevel"/>.
-        /// </summary>
-        /// <remarks>This method is thread-safe.</remarks>
-        /// <param name="category">The logging level.</param>
+		/// <summary>
+		/// Logs the specified message at the specified <see cref="LogLevel"/>.
+		/// </summary>
+		/// <remarks>This method is thread-safe.</remarks>
+		/// <param name="category">The logging level.</param>
 		/// <param name="message">The message to be logged.</param>
 		public static void Log(LogLevel category, object message)
-        {
+		{
 			// Just return without formatting if the log level isn't enabled
 			if (!IsLogLevelEnabled(category)) return;
 
-            var ex = message as Exception;
-            if (ex != null)
-            {
-                Log(_log, category, ex, null, null);
-            }
-            else
-            {
-                switch (category)
-                {
-                    case LogLevel.Debug:
-                        _log.Debug(message);
-                        break;
-                    case LogLevel.Info:
-                        _log.Info(message);
-                        break;
-                    case LogLevel.Warn:
-                        _log.Warn(message);
-                        break;
-                    case LogLevel.Error:
-                        _log.Error(message);
-                        break;
-                    case LogLevel.Fatal:
-                        _log.Fatal(message);
-                        break;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Logs the specified message at the specified <see cref="LogLevel"/>.
-        /// </summary>
-        /// <remarks>This method is thread-safe.</remarks>
-        /// <param name="category">The log level.</param>
-        /// <param name="message">Format message, as used with <see cref="System.Text.StringBuilder"/>.</param>
-        /// <param name="args">Optional arguments used with <paramref name="message"/>.</param>
-        public static void Log(LogLevel category,String message, params object[] args)
-        {
-            Log(_log, category, null, message, args);
-        }
-
-        /// <summary>
-        /// Logs the specified exception at the specified <see cref="LogLevel"/>.
-        /// </summary>
-        /// <remarks>This method is thread-safe.</remarks>
-        /// <param name="ex">The exception to log.</param>
-        /// <param name="category">The log level.</param>
-        /// <param name="message">Format message, as used with <see cref="System.Text.StringBuilder"/>.</param>
-        /// <param name="args">Optional arguments used with <paramref name="message"/>.</param>
-        public static void Log(LogLevel category, Exception ex, String message, params object[] args)
-        {
-            Log(_log, category, ex, message, args);
-        }
-
-	    /// <summary>
-	    /// Logs the specified message at the specified <see cref="LogLevel"/>, to the log with the specified name.
-	    /// </summary>
-	    /// <remarks>This method is thread-safe.</remarks>
-	    /// <param name="logName"> </param>
-	    /// <param name="category">The log level.</param>
-	    /// <param name="message">Format message, as used with <see cref="System.Text.StringBuilder"/>.</param>
-	    /// <param name="args">Optional arguments used with <paramref name="message"/>.</param>
-	    public static void Log(string logName, LogLevel category, String message, params object[] args)
-        {
-            Log(logName, category, null, message, args);
-        }
-
-	    /// <summary>
-	    /// Logs the specified exception at the specified <see cref="LogLevel"/>, to the log with the specified name.
-	    /// </summary>
-	    /// <remarks>This method is thread-safe.</remarks>
-	    /// <param name="ex">The exception to log.</param>
-	    /// <param name="logName">A named log.</param>
-	    /// <param name="category">The log level.</param>
-	    /// <param name="message">Format message, as used with <see cref="System.Text.StringBuilder"/>.</param>
-	    /// <param name="args">Optional arguments used with <paramref name="message"/>.</param>
-	    public static void Log(string logName, LogLevel category, Exception ex, String message, params object[] args)
-        {
-            Log(GetLog(logName), category, ex, message, args);
-        }
-
-	    private static void Log(ILog log, LogLevel category, Exception ex, String message, object[] args)
-	    {
-            if (IsLogLevelEnabled(category))
-                Log(log, category, ex, GetLogMessage(ex != null, message, args));
-	    }
-
-	    private static void Log(ILog log, LogLevel category, Exception ex, string message)
-        {
-            if (log == null) return;
-
-            if (ex == null)
-            {
-                switch (category)
-                {
-                    case LogLevel.Debug:
-                        log.Debug(message);
-                        break;
-                    case LogLevel.Info:
-                        log.Info(message);
-                        break;
-                    case LogLevel.Warn:
-                        log.Warn(message);
-                        break;
-                    case LogLevel.Error:
-                        log.Error(message);
-                        break;
-                    case LogLevel.Fatal:
-                        log.Fatal(message);
-                        break;
-                }
-            }
-            else
-            {
-                switch (category)
-                {
-                    case LogLevel.Debug:
-                        log.Debug(message, ex);
-                        break;
-                    case LogLevel.Info:
-                        log.Info(message, ex);
-                        break;
-                    case LogLevel.Warn:
-                        log.Warn(message, ex);
-                        break;
-                    case LogLevel.Error:
-                        log.Error(message, ex);
-                        break;
-                    case LogLevel.Fatal:
-                        log.Fatal(message, ex);
-                        break;
-                }
-            }
-        }
-
-        private static string GetLogMessage(bool isExceptionLog, string message, params object[] args)
-        {
-            var sb = new StringBuilder();
-            if (isExceptionLog)
-            {
-                sb.AppendLine("Exception thrown"); // note: it's log. Keep it in English
-                sb.AppendLine();
-            }
-
-            if (!String.IsNullOrEmpty(message))
-            {
-                if (args == null || args.Length == 0)
-                    sb.Append(message);
-                else
-                    sb.AppendFormat(message, args);
-            }
-
-            return sb.ToString();
-        }
-
-        private static ILog GetLog(string name)
-        {
-            if (String.IsNullOrEmpty(name))
-                return _log;
-
-            lock (_namedLogLock)
-            {
-                ILog log;
-                if (!_namedLogs.TryGetValue(name, out log))
-                {
-                    log = LogManager.GetLogger(name);
-                    if (log != null)
-                        _namedLogs[name] = log;
-                }
-
-                return log ?? _log;
-            }
-        }
-
-        #endregion
-
-        /// <summary>
-        /// Displays a message box with the specified message.
-        /// </summary>
-        /// <remarks>
-        /// This method is thread-safe, however displaying message boxes from a thread other than a UI
-        /// thread is not a recommended practice.
-        /// </remarks>
-        [Obsolete("Use DesktopWindow.ShowMessageBox instead", false)]
-        public static void ShowMessageBox(string message)
-		{
-            ShowMessageBox(message, MessageBoxActions.Ok);
+			var ex = message as Exception;
+			if (ex != null)
+			{
+				Log(_log, category, ex, null, null);
+			}
+			else
+			{
+				switch (category)
+				{
+					case LogLevel.Debug:
+						_log.Debug(message);
+						break;
+					case LogLevel.Info:
+						_log.Info(message);
+						break;
+					case LogLevel.Warn:
+						_log.Warn(message);
+						break;
+					case LogLevel.Error:
+						_log.Error(message);
+						break;
+					case LogLevel.Fatal:
+						_log.Fatal(message);
+						break;
+				}
+			}
 		}
 
-        /// <summary>
-        /// Displays a message box with the specified message and buttons, and returns a value indicating the action
-        /// taken by the user.
-        /// </summary>
-        /// <remarks>
-        /// This method is thread-safe, however displaying message boxes from a thread other than a UI
-        /// thread is not a recommended practice.
-        /// </remarks>
-        [Obsolete("Use DesktopWindow.ShowMessageBox instead", false)]
-        public static DialogBoxAction ShowMessageBox(string message, MessageBoxActions buttons)
-        {
-            // create message box if does not exist
-            if (_messageBox == null)
-            {
-                lock (_syncRoot)
-                {
-                    if (_messageBox == null)
-                    {
-                        MessageBoxExtensionPoint xp = new MessageBoxExtensionPoint();
-                        _messageBox = (IMessageBox)xp.CreateExtension();
-                    }
-                }
-            }
+		/// <summary>
+		/// Logs the specified message at the specified <see cref="LogLevel"/>.
+		/// </summary>
+		/// <remarks>This method is thread-safe.</remarks>
+		/// <param name="category">The log level.</param>
+		/// <param name="message">Format message, as used with <see cref="System.Text.StringBuilder"/>.</param>
+		/// <param name="args">Optional arguments used with <paramref name="message"/>.</param>
+		public static void Log(LogLevel category, String message, params object[] args)
+		{
+			Log(_log, category, null, message, args);
+		}
 
-            // must lock here, because we have no guarantee that the underlying _messageBox object is thread-safe
-            // lock on the _messageBox itself, rather than _syncRoot, so that _syncRoot is free for other threads to lock on
-            // (i.e the message box may block this thread for a long time, and all other threads would halt if we locked on _syncRoot)
-            lock (_messageBox)
-            {
-                return _messageBox.Show(message, buttons);
-            }
-        }
+		/// <summary>
+		/// Logs the specified exception at the specified <see cref="LogLevel"/>.
+		/// </summary>
+		/// <remarks>This method is thread-safe.</remarks>
+		/// <param name="ex">The exception to log.</param>
+		/// <param name="category">The log level.</param>
+		/// <param name="message">Format message, as used with <see cref="System.Text.StringBuilder"/>.</param>
+		/// <param name="args">Optional arguments used with <paramref name="message"/>.</param>
+		public static void Log(LogLevel category, Exception ex, String message, params object[] args)
+		{
+			Log(_log, category, ex, message, args);
+		}
+
+		/// <summary>
+		/// Logs the specified message at the specified <see cref="LogLevel"/>, to the log with the specified name.
+		/// </summary>
+		/// <remarks>This method is thread-safe.</remarks>
+		/// <param name="logName"> </param>
+		/// <param name="category">The log level.</param>
+		/// <param name="message">Format message, as used with <see cref="System.Text.StringBuilder"/>.</param>
+		/// <param name="args">Optional arguments used with <paramref name="message"/>.</param>
+		public static void Log(string logName, LogLevel category, String message, params object[] args)
+		{
+			Log(logName, category, null, message, args);
+		}
+
+		/// <summary>
+		/// Logs the specified exception at the specified <see cref="LogLevel"/>, to the log with the specified name.
+		/// </summary>
+		/// <remarks>This method is thread-safe.</remarks>
+		/// <param name="ex">The exception to log.</param>
+		/// <param name="logName">A named log.</param>
+		/// <param name="category">The log level.</param>
+		/// <param name="message">Format message, as used with <see cref="System.Text.StringBuilder"/>.</param>
+		/// <param name="args">Optional arguments used with <paramref name="message"/>.</param>
+		public static void Log(string logName, LogLevel category, Exception ex, String message, params object[] args)
+		{
+			Log(GetLog(logName), category, ex, message, args);
+		}
+
+		private static void Log(ILog log, LogLevel category, Exception ex, String message, object[] args)
+		{
+			if (IsLogLevelEnabled(category))
+				Log(log, category, ex, GetLogMessage(ex != null, message, args));
+		}
+
+		private static void Log(ILog log, LogLevel category, Exception ex, string message)
+		{
+			if (log == null) return;
+
+			if (ex == null)
+			{
+				switch (category)
+				{
+					case LogLevel.Debug:
+						log.Debug(message);
+						break;
+					case LogLevel.Info:
+						log.Info(message);
+						break;
+					case LogLevel.Warn:
+						log.Warn(message);
+						break;
+					case LogLevel.Error:
+						log.Error(message);
+						break;
+					case LogLevel.Fatal:
+						log.Fatal(message);
+						break;
+				}
+			}
+			else
+			{
+				switch (category)
+				{
+					case LogLevel.Debug:
+						log.Debug(message, ex);
+						break;
+					case LogLevel.Info:
+						log.Info(message, ex);
+						break;
+					case LogLevel.Warn:
+						log.Warn(message, ex);
+						break;
+					case LogLevel.Error:
+						log.Error(message, ex);
+						break;
+					case LogLevel.Fatal:
+						log.Fatal(message, ex);
+						break;
+				}
+			}
+		}
+
+		private static string GetLogMessage(bool isExceptionLog, string message, params object[] args)
+		{
+			var sb = new StringBuilder();
+			if (isExceptionLog)
+			{
+				sb.AppendLine("Exception thrown"); // note: it's log. Keep it in English
+				sb.AppendLine();
+			}
+
+			if (!String.IsNullOrEmpty(message))
+			{
+				if (args == null || args.Length == 0)
+					sb.Append(message);
+				else
+					sb.AppendFormat(message, args);
+			}
+
+			return sb.ToString();
+		}
+
+		private static ILog GetLog(string name)
+		{
+			if (String.IsNullOrEmpty(name))
+				return _log;
+
+			lock (_namedLogLock)
+			{
+				ILog log;
+				if (!_namedLogs.TryGetValue(name, out log))
+				{
+					log = LogManager.GetLogger(name);
+					if (log != null)
+						_namedLogs[name] = log;
+				}
+
+				return log ?? _log;
+			}
+		}
+
+		#endregion
+
+		/// <summary>
+		/// Displays a message box with the specified message.
+		/// </summary>
+		/// <remarks>
+		/// This method is thread-safe, however displaying message boxes from a thread other than a UI
+		/// thread is not a recommended practice.
+		/// </remarks>
+		[Obsolete("Use DesktopWindow.ShowMessageBox instead", false)]
+		public static void ShowMessageBox(string message)
+		{
+			ShowMessageBox(message, MessageBoxActions.Ok);
+		}
+
+		/// <summary>
+		/// Displays a message box with the specified message and buttons, and returns a value indicating the action
+		/// taken by the user.
+		/// </summary>
+		/// <remarks>
+		/// This method is thread-safe, however displaying message boxes from a thread other than a UI
+		/// thread is not a recommended practice.
+		/// </remarks>
+		[Obsolete("Use DesktopWindow.ShowMessageBox instead", false)]
+		public static DialogBoxAction ShowMessageBox(string message, MessageBoxActions buttons)
+		{
+			// create message box if does not exist
+			if (_messageBox == null)
+			{
+				lock (_syncRoot)
+				{
+					if (_messageBox == null)
+					{
+						MessageBoxExtensionPoint xp = new MessageBoxExtensionPoint();
+						_messageBox = (IMessageBox)xp.CreateExtension();
+					}
+				}
+			}
+
+			// must lock here, because we have no guarantee that the underlying _messageBox object is thread-safe
+			// lock on the _messageBox itself, rather than _syncRoot, so that _syncRoot is free for other threads to lock on
+			// (i.e the message box may block this thread for a long time, and all other threads would halt if we locked on _syncRoot)
+			lock (_messageBox)
+			{
+				return _messageBox.Show(message, buttons);
+			}
+		}
 
 
 		/// <summary>
@@ -1079,36 +1078,36 @@ namespace ClearCanvas.Common
 		}
 
 
-        /// <summary>
-        /// Checks if a value is true.
-        /// </summary>
-        /// <param name="testTrueCondition">The value to check.</param>
-        /// <param name="conditionName">The name of the condition to check.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="conditionName"/> is <b>null</b>.</exception>
-        /// <exception cref="ArgumentException"><paramref name="testTrueCondition"/> is  <b>false</b>.</exception>
-        public static void CheckTrue(bool testTrueCondition, string conditionName)
-        {
-            Platform.CheckForNullReference(conditionName, "conditionName");
+		/// <summary>
+		/// Checks if a value is true.
+		/// </summary>
+		/// <param name="testTrueCondition">The value to check.</param>
+		/// <param name="conditionName">The name of the condition to check.</param>
+		/// <exception cref="ArgumentNullException"><paramref name="conditionName"/> is <b>null</b>.</exception>
+		/// <exception cref="ArgumentException"><paramref name="testTrueCondition"/> is  <b>false</b>.</exception>
+		public static void CheckTrue(bool testTrueCondition, string conditionName)
+		{
+			Platform.CheckForNullReference(conditionName, "conditionName");
 
-            if (testTrueCondition != true)
-                throw new ArgumentException(String.Format(SR.ExceptionConditionIsNotMet, conditionName));
-        }
-
-
-        /// <summary>
-        /// Checks if a value is false.
-        /// </summary>
-        /// <param name="testFalseCondition">The value to check.</param>
-        /// <param name="conditionName">The name of the condition to check.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="conditionName"/> is <b>null</b>.</exception>
-        /// <exception cref="ArgumentException"><paramref name="testFalseCondition"/> is  <b>true</b>.</exception>
-        public static void CheckFalse(bool testFalseCondition, string conditionName)
-        {
-            Platform.CheckForNullReference(conditionName, "conditionName");
-
-            if (testFalseCondition != false)
+			if (testTrueCondition != true)
 				throw new ArgumentException(String.Format(SR.ExceptionConditionIsNotMet, conditionName));
-        }
+		}
+
+
+		/// <summary>
+		/// Checks if a value is false.
+		/// </summary>
+		/// <param name="testFalseCondition">The value to check.</param>
+		/// <param name="conditionName">The name of the condition to check.</param>
+		/// <exception cref="ArgumentNullException"><paramref name="conditionName"/> is <b>null</b>.</exception>
+		/// <exception cref="ArgumentException"><paramref name="testFalseCondition"/> is  <b>true</b>.</exception>
+		public static void CheckFalse(bool testFalseCondition, string conditionName)
+		{
+			Platform.CheckForNullReference(conditionName, "conditionName");
+
+			if (testFalseCondition != false)
+				throw new ArgumentException(String.Format(SR.ExceptionConditionIsNotMet, conditionName));
+		}
 
 		/// <summary>
 		/// Checks if a value is positive.
@@ -1231,5 +1230,5 @@ namespace ClearCanvas.Common
 			if (variable == null)
 				throw new InvalidOperationException(String.Format(SR.ExceptionMemberNotSetVerbose, variableName, detailedMessage));
 		}
-    }
+	}
 }

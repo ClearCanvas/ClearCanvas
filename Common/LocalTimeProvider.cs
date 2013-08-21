@@ -26,15 +26,15 @@ using System;
 
 namespace ClearCanvas.Common
 {
-    internal class LocalTimeProvider : ITimeProvider
-    {
-        #region ITimeProvider Members
+	internal class LocalTimeProvider : ITimeProvider
+	{
+		#region ITimeProvider Members
 
-        public DateTime CurrentTime
-        {
-            get { return DateTime.Now; }
-        }
+		public DateTime CurrentTime
+		{
+			get { return DateTime.Now; }
+		}
 
-        #endregion
-    }
+		#endregion
+	}
 }
