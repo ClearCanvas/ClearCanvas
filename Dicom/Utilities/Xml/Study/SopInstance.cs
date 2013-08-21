@@ -118,6 +118,12 @@ namespace ClearCanvas.Dicom.Utilities.Xml.Study
             _metaInfo = null;
         }
 
+		private byte[] LoadFramePixelData(int frameNumber)
+		{
+			var args = new LoadFramePixelDataArgs(this.StudyInstanceUid, this.SeriesInstanceUid, this.SopInstanceUid, frameNumber);
+			return ParentSeries.ParentStudy.HeaderProvider.LoadFramePixelData(args);
+		}
+
         private DicomAttributeCollection MetaInfo
         {
             get
@@ -200,7 +206,12 @@ namespace ClearCanvas.Dicom.Utilities.Xml.Study
             return LoadDicomFile(new LoadSopDicomFileArgs(forceComplete, false));
         }
 
-        #endregion
+		public byte[] GetFramePixelData(int frameNumber)
+    	{
+    		return LoadFramePixelData(frameNumber);
+    	}
+
+    	#endregion
         #region IHeaderProvider Members
 
         public bool CanLoadCompleteHeader
@@ -213,7 +224,12 @@ namespace ClearCanvas.Dicom.Utilities.Xml.Study
             get { return ParentSeries.ParentStudy.HeaderProvider.CanLoadPixelData; }
         }
 
-        public DicomFile LoadDicomFile(LoadSopDicomFileArgs args)
+    	public bool CanLoadFramePixelData
+    	{
+			get { return ParentSeries.ParentStudy.HeaderProvider.CanLoadFramePixelData; }
+    	}
+
+    	public DicomFile LoadDicomFile(LoadSopDicomFileArgs args)
         {
             if (args.ForceCompleteHeader)
                 LoadFullHeader(args.IncludePixelData);
@@ -221,6 +237,11 @@ namespace ClearCanvas.Dicom.Utilities.Xml.Study
             return new DicomFile(null, MetaInfo.Copy(), DataSet.Copy());
         }
 
-        #endregion
+		public byte[] LoadFramePixelData(LoadSopFramePixelDataArgs args)
+    	{
+    		return LoadFramePixelData(args.FrameNumber);
+    	}
+
+    	#endregion
     }
 }

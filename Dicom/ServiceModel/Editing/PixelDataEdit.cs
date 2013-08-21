@@ -1,0 +1,72 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Runtime.Serialization;
+using ClearCanvas.Common.Serialization;
+using ClearCanvas.Dicom.Iod;
+
+namespace ClearCanvas.Dicom.ServiceModel.Editing
+{
+	public interface IEditPixelDataContext
+	{
+		DicomAttributeCollection DataSet { get; }
+
+		int FrameNumber { get; }
+		int Rows { get; }
+		int Columns { get; }
+		int BitsAllocated { get; }
+		int BitsStored { get; }
+		int HighBit { get; }
+		int PixelRepresentation { get; }
+
+		PhotometricInterpretation PhotometricInterpretation { get; }
+		int PlanarConfiguration { get; }
+
+		byte[] PixelData { get; }
+
+		//ushort ToDicomUShort(int value);
+		//short ToDicomShort(int value);
+		//byte ToDicomByte(int value);
+		//sbyte ToDicomSByte(int value);
+	}
+
+	[DataContract(Namespace = DicomEditNamespace.Value)]
+	[EditType("3636399C-B2CF-404F-9D7C-E695E40E1C75")]
+	public class PixelDataEditSet : PixelDataEdit
+	{
+		private List<PixelDataEdit> _edits;
+
+		[DataMember(IsRequired = true)]
+		public List<PixelDataEdit> Edits
+		{
+			get { return _edits ?? (_edits = new List<PixelDataEdit>()); }
+			set { _edits = value; }
+		}
+
+		public override void Apply(IEditPixelDataContext context)
+		{
+			foreach (var edit in Edits)
+				edit.Apply(context);
+		}
+
+		public override string ToString()
+		{
+			if (Edits.Count == 0)
+				return "No Pixel Data Edits";
+
+			if (Edits.Count == 1)
+				return "1 Pixel Data Edit";
+
+			return String.Format("{0} Pixel Data Edits", Edits.Count);
+		}
+	}
+
+	[DataContract(Namespace = DicomEditNamespace.Value)]
+	public abstract class PixelDataEdit : DataContractBase
+	{
+		/// <summary>
+		/// Applies edits to pixel data.
+		/// </summary>
+		/// <remarks>It is expected that all input pixel data contains no embedded overlays, is right aligned, but remains in "DICOM" numeric format.</remarks>
+		public abstract void Apply(IEditPixelDataContext context);
+	}
+}

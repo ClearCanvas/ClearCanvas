@@ -40,6 +40,13 @@ namespace ClearCanvas.Dicom.ServiceModel.Editing
 		}
 	}
 
+	public interface IEditContext
+	{
+		DicomAttributeCollection DataSet { get; }
+		bool Excluded { get; }
+		void Exclude();
+	}
+
 	[KnownType("GetKnownTypes")]
 	[DataContract(Namespace = DicomEditNamespace.Value)]
 	public abstract class Edit : DataContractBase

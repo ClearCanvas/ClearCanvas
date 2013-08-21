@@ -180,8 +180,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>SR.resx</DependentUpon>
     </Compile>
-    <Compile Include="ServiceModel\Editing\IEditContext.cs" />
     <Compile Include="ServiceModel\Editing\EditSet.cs" />
+    <Compile Include="ServiceModel\Editing\PixelDataEdit.cs" />
     <Compile Include="ServiceModel\Editing\TypeHelper.cs" />
     <Compile Include="ServiceModel\Editing\Condition.cs" />
     <Compile Include="ServiceModel\Editing\Edit.cs" />
