@@ -187,10 +187,10 @@ namespace ClearCanvas.Common.Specifications
 			AddOperator(new BuiltInOperator("and", CreateAnd, XmlSpecificationSchema.AndSchema));
 			AddOperator(new BuiltInOperator("or", CreateOr, XmlSpecificationSchema.OrSchema));
 			AddOperator(new BuiltInOperator("not", CreateNot, XmlSpecificationSchema.NotSchema));
-			AddOperator(new BuiltInOperator("regex", CreateRegex, XmlSpecificationSchema.StringMatchingSchema));
-			AddOperator(new BuiltInOperator("starts-with", CreateStartsWith, XmlSpecificationSchema.StringMatchingSchema));
-			AddOperator(new BuiltInOperator("ends-with", CreateEndsWith, XmlSpecificationSchema.StringMatchingSchema));
-			AddOperator(new BuiltInOperator("contains", CreateContains, XmlSpecificationSchema.StringMatchingSchema));
+			AddOperator(new BuiltInOperator("regex", CreateRegex, XmlSpecificationSchema.RegexStringMatchingSchema));
+			AddOperator(new BuiltInOperator("starts-with", CreateStartsWith, XmlSpecificationSchema.StartsWithStringMatchingSchema));
+			AddOperator(new BuiltInOperator("ends-with", CreateEndsWith, XmlSpecificationSchema.EndsWithStringMatchingSchema));
+			AddOperator(new BuiltInOperator("contains", CreateContains, XmlSpecificationSchema.ContainsStringMatchingSchema));
 			AddOperator(new BuiltInOperator("null", CreateIsNull, XmlSpecificationSchema.IsNullSchema));
 			AddOperator(new BuiltInOperator("not-null", CreateNotNull, XmlSpecificationSchema.NotNullSchema));
 			AddOperator(new BuiltInOperator("count", CreateCount, XmlSpecificationSchema.CountSchema));
