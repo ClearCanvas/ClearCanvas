@@ -26,7 +26,7 @@ using System;
 using System.IO;
 using System.Xml;
 using ClearCanvas.Common;
-using ClearCanvas.ImageServer.Common.Command;
+using ClearCanvas.ImageServer.Enterprise.Command;
 
 namespace ClearCanvas.ImageServer.Model
 {

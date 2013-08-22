@@ -25,7 +25,7 @@
 using System.Web.Security;
 using ClearCanvas.Enterprise.Common;
 using ClearCanvas.ImageServer.Web.Common.Security;
-using ImageServerAuthorityTokens = ClearCanvas.ImageServer.Enterprise.Authentication.AuthorityTokens;
+using ImageServerAuthorityTokens = ClearCanvas.ImageServer.Common.Authentication.AuthorityTokens;
 namespace ClearCanvas.ImageServer.Web.Common
 {
     public static class UserProfile

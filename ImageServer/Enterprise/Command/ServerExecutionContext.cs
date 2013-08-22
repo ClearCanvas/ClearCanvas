@@ -28,8 +28,9 @@ using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Dicom.Utilities.Command;
 using ClearCanvas.Enterprise.Core;
+using ClearCanvas.ImageServer.Common;
 
-namespace ClearCanvas.ImageServer.Common.Command
+namespace ClearCanvas.ImageServer.Enterprise.Command
 {
     /// <summary>
     /// Represents the execution context of the current operation.

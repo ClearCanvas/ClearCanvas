@@ -26,8 +26,8 @@ using System;
 using System.IO;
 using ClearCanvas.Common;
 using ClearCanvas.ImageServer.Common;
-using ClearCanvas.ImageServer.Common.Command;
 using ClearCanvas.ImageServer.Core;
+using ClearCanvas.ImageServer.Enterprise.Command;
 
 namespace ClearCanvas.ImageServer.Services.ServiceLock
 {

@@ -53,10 +53,6 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Castle.Core, Version=1.1.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\ReferencedAssemblies\NHibernate2.1\Castle.Core.dll</HintPath>
-    </Reference>
     <Reference Include="nunit.framework, Version=2.2.7.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\ReferencedAssemblies\nunit.framework.dll</HintPath>
@@ -71,10 +67,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Alert.cs" />
-    <Compile Include="Command\ServerCommandProcessor.cs" />
-    <Compile Include="Command\ServerDatabaseCommand.cs" />
-    <Compile Include="Command\ServerExecutionContext.cs" />
+    <Compile Include="Authentication\AuthorityTokens.cs" />
+    <Compile Include="Authentication\DefaultAuthorityGroups.cs" />
     <Compile Include="ConstantResourceManager.cs" />
+    <Compile Include="EnterpriseImageServerServiceProvider.cs" />
+    <Compile Include="EnterpriseImageServerServiceSettings.cs" />
+    <Compile Include="EnterpriseImageServerServiceSettings.Designer.cs">
+      <DependentUpon>EnterpriseImageServerServiceSettings.settings</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
     <Compile Include="ExternalQuery\ExternalQueryProcessingException.cs" />
     <Compile Include="ExternalQuery\ImageServerExternalQuery.cs" />
     <Compile Include="ExternalQuery\ImageServerExternalQueryNamespace.cs" />
@@ -111,7 +113,6 @@
     <Compile Include="Exceptions\StudyIsNearlineException.cs" />
     <Compile Include="Exceptions\StudyNotFoundException.cs" />
     <Compile Include="Helpers\DicomTagPath.cs" />
-    <Compile Include="InProcessImageServerServiceProvider.cs" />
     <Compile Include="IZipService.cs" />
     <Compile Include="ProductManifestServiceProvider.cs" />
     <Compile Include="Helpers\HeuristicTypeResolver.cs" />
@@ -131,7 +132,6 @@
     <Compile Include="ServiceModel\IFilesystemService.cs" />
     <Compile Include="ServiceModel\IProductVerificationService.cs" />
     <Compile Include="ServiceModel\ProductVerificationResponse.cs" />
-    <Compile Include="ServiceMount.cs" />
     <Compile Include="ServiceModel\IAlertService.cs" />
     <Compile Include="ICancelable.cs" />
     <Compile Include="ImageServerCommonConfiguration.cs" />
@@ -187,17 +187,13 @@
       <Project>{B5EBFFD7-6641-4932-91C9-4C4322B41868}</Project>
       <Name>ClearCanvas.Enterprise.Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Enterprise\Core\ClearCanvas.Enterprise.Core.csproj">
-      <Project>{431E9444-9915-4D49-B92D-9B7EC086622A}</Project>
-      <Name>ClearCanvas.Enterprise.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Enterprise\ClearCanvas.ImageServer.Enterprise.csproj">
-      <Project>{86CA6EDB-DE59-45E9-8BD8-832FBB3F8009}</Project>
-      <Name>ClearCanvas.ImageServer.Enterprise</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="EnterpriseImageServerServiceSettings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>EnterpriseImageServerServiceSettings.Designer.cs</LastGenOutput>
+    </None>
     <None Include="ProductManifestServiceSettings.settings">
       <Generator>PublicSettingsSingleFileGenerator</Generator>
       <LastGenOutput>ProductManifestServiceSettings.Designer.cs</LastGenOutput>

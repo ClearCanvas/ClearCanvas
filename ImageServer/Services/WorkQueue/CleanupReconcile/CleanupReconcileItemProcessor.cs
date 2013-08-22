@@ -29,11 +29,11 @@ using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Dicom.Utilities.Command;
 using ClearCanvas.ImageServer.Common;
-using ClearCanvas.ImageServer.Common.Command;
 using ClearCanvas.ImageServer.Common.Utilities;
 using ClearCanvas.ImageServer.Core.Command;
 using ClearCanvas.ImageServer.Core.Data;
 using ClearCanvas.ImageServer.Core.Validation;
+using ClearCanvas.ImageServer.Enterprise.Command;
 using ClearCanvas.ImageServer.Model;
 
 namespace ClearCanvas.ImageServer.Services.WorkQueue.CleanupReconcile

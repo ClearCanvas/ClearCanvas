@@ -31,7 +31,7 @@ using System.Web.Hosting;
 using System.Web.Security;
 using System.Xml;
 using ClearCanvas.Common;
-using ClearCanvas.ImageServer.Enterprise.Authentication;
+using ClearCanvas.ImageServer.Common.Authentication;
 
 namespace ClearCanvas.ImageServer.Web.Common.Security
 {

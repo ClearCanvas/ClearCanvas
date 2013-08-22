@@ -492,7 +492,7 @@ namespace ClearCanvas.ImageServer.Model.SqlServer.CodeGenerator
                 writer.WriteLine("    using ClearCanvas.Dicom;");
             writer.WriteLine("    using ClearCanvas.Enterprise.Core;");
             writer.WriteLine("    using ClearCanvas.ImageServer.Enterprise;");
-            writer.WriteLine("    using ClearCanvas.ImageServer.Common.Command;");
+            writer.WriteLine("    using ClearCanvas.ImageServer.Enterprise.Command;");
             writer.WriteLine("    using {0};", EntityInterfaceNamespace);
             writer.WriteLine("");
 

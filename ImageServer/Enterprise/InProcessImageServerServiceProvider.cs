@@ -23,29 +23,35 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
-using ClearCanvas.Enterprise.Common;
+using ClearCanvas.Common;
+using ClearCanvas.Enterprise.Core;
 
-namespace ClearCanvas.ImageServer.Common
+namespace ClearCanvas.ImageServer.Enterprise
 {
-    /// <summary>
-    /// Creates or stop web services.
-    /// </summary>
-    public class ServiceMount : ClearCanvas.Enterprise.Core.ServiceModel.ServiceMount
-    {
-        public ServiceMount(Uri baseAddress, IServiceHostConfiguration configuration) 
-            : base(baseAddress, configuration)
-        {
-        }
+	[ExtensionOf(typeof (ServiceProviderExtensionPoint))]
+	public class InProcessImageServerServiceProvider : IServiceProvider
+	{
+		private readonly IServiceFactory _serviceFactory;
 
-        public ServiceMount(Uri baseAddress, string serviceHostConfigurationClass) 
-            : base(baseAddress, serviceHostConfigurationClass)
-        {
-        }
+		public InProcessImageServerServiceProvider()
+		{
+			_serviceFactory = new ServiceFactory(new ApplicationServiceExtensionPoint());
+		}
 
-        protected override void ApplyInterceptors(IList<Castle.Core.Interceptor.IInterceptor> interceptors)
-        {
-            // NO-OP
-        }
-    }
+		#region IServiceProvider Members
+
+		public object GetService(Type serviceType)
+		{
+			if (_serviceFactory.HasService(serviceType))
+			{
+				return _serviceFactory.GetService(serviceType);
+			}
+			else
+			{
+				return null; // as per MSDN
+			}
+		}
+
+		#endregion
+	}
 }

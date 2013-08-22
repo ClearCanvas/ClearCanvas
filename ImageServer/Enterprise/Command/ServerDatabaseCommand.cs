@@ -25,7 +25,7 @@
 using ClearCanvas.Dicom.Utilities.Command;
 using ClearCanvas.Enterprise.Core;
 
-namespace ClearCanvas.ImageServer.Common.Command
+namespace ClearCanvas.ImageServer.Enterprise.Command
 {
 	/// <summary>
 	/// <see cref="CommandBase"/> derived class for implementing commands that interact with the database.

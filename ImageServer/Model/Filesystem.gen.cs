@@ -30,7 +30,7 @@ namespace ClearCanvas.ImageServer.Model
     using System.Xml;
     using ClearCanvas.Enterprise.Core;
     using ClearCanvas.ImageServer.Enterprise;
-    using ClearCanvas.ImageServer.Common.Command;
+    using ClearCanvas.ImageServer.Enterprise.Command;
     using ClearCanvas.ImageServer.Model.EntityBrokers;
 
     [Serializable]

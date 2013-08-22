@@ -26,8 +26,8 @@ using System.Linq;
 using System.Collections.Generic;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Enterprise.Core;
-using ClearCanvas.ImageServer.Common.Command;
 using ClearCanvas.ImageServer.Enterprise;
+using ClearCanvas.ImageServer.Enterprise.Command;
 using ClearCanvas.ImageServer.Model.EntityBrokers;
 
 namespace ClearCanvas.ImageServer.Model

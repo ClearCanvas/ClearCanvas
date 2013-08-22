@@ -1,4 +1,4 @@
-#region License
+﻿#region License
 
 // Copyright (c) 2013, ClearCanvas Inc.
 // All rights reserved.
@@ -22,27 +22,13 @@
 
 #endregion
 
-using System;
+using System.Configuration;
 
-namespace ClearCanvas.Common
+namespace ClearCanvas.ImageServer.Common
 {
-	internal class LocalTimeProvider : ITimeProvider
+	[SettingsGroupDescription("Settings that configure web service communication with the ImageServer.")]
+	[SettingsProvider(typeof (ClearCanvas.Common.Configuration.StandardSettingsProvider))]
+	internal sealed partial class EnterpriseImageServerServiceSettings
 	{
-		#region ITimeProvider Members
-
-		public DateTime GetCurrentTime(DateTimeKind kind)
-		{
-			switch (kind)
-			{
-				case DateTimeKind.Utc:
-					return DateTime.UtcNow;
-				case DateTimeKind.Local:
-					return DateTime.Now;
-				default:
-					throw new ArgumentOutOfRangeException("kind");
-			}
-		}
-
-		#endregion
 	}
 }
