@@ -66,7 +66,9 @@ namespace ClearCanvas.Dicom.ServiceModel.Editing
 		/// <summary>
 		/// Applies edits to pixel data.
 		/// </summary>
-		/// <remarks>It is expected that all input pixel data contains no embedded overlays, is right aligned, but remains in "DICOM" numeric format.</remarks>
+		/// <remarks>It is expected that all input pixel data contains no embedded overlays, 
+		/// is right aligned, and is "normalized" such that it is properly represented (numerically)
+		/// using the correct corresponding value type (e.g. byte, sbyte, ushort, short).</remarks>
 		public abstract void Apply(IEditPixelDataContext context);
 	}
 }
