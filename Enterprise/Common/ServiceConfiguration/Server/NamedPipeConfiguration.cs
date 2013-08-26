@@ -23,14 +23,14 @@
 #endregion
 
 using System.ServiceModel;
-using System.ServiceModel.Description;
 
 namespace ClearCanvas.Enterprise.Common.ServiceConfiguration.Server
 {
 	/// <summary>
-	/// Configures a WS-HTTP service host.
+	/// Configures a named-pipe service host.
 	/// </summary>
-	public class WSHttpConfiguration : IServiceHostConfiguration
+	//todo: this code is still experimental = doesn't currently work!
+	public class NamedPipeConfiguration : IServiceHostConfiguration
 	{
 		#region IServiceHostConfiguration Members
 
@@ -41,30 +41,18 @@ namespace ClearCanvas.Enterprise.Common.ServiceConfiguration.Server
 		/// <param name="args"></param>
 		public void ConfigureServiceHost(ServiceHost host, ServiceHostConfigurationArgs args)
 		{
-			var binding = new WSHttpBinding();
-			binding.MaxReceivedMessageSize = args.MaxReceivedMessageSize;
-			binding.ReaderQuotas.MaxStringContentLength = args.MaxReceivedMessageSize;
-			binding.ReaderQuotas.MaxArrayLength = args.MaxReceivedMessageSize;
-			binding.Security.Mode = SecurityMode.Message;
-			binding.Security.Message.ClientCredentialType = args.Authenticated ?
-				MessageCredentialType.UserName : MessageCredentialType.None;
+			var binding = new NetNamedPipeBinding();
+			//binding.MaxReceivedMessageSize = args.MaxReceivedMessageSize;
+			//binding.ReaderQuotas.MaxStringContentLength = args.MaxReceivedMessageSize;
+			//binding.ReaderQuotas.MaxArrayLength = args.MaxReceivedMessageSize;
+			//binding.Security.Mode = args.AuthenticationRequired ? NetNamedPipeSecurityMode.Transport : NetNamedPipeSecurityMode.None;
+			//binding.Security.Transport.ProtectionLevel = args.AuthenticationRequired ? ProtectionLevel.EncryptAndSign : ProtectionLevel.None;
+
+			// turn off transport security altogether
+			//binding.Security.Transport.ClientCredentialType = TcpClientCredentialType.None;
 
 			// establish endpoint
 			host.AddServiceEndpoint(args.ServiceContract, binding, "");
-
-			// expose meta-data via HTTP GET
-			var metadataBehavior = host.Description.Behaviors.Find<ServiceMetadataBehavior>();
-			if (metadataBehavior == null)
-			{
-				metadataBehavior = new ServiceMetadataBehavior();
-				metadataBehavior.HttpGetEnabled = true;
-				host.Description.Behaviors.Add(metadataBehavior);
-			}
-
-			// set up the certificate - required for WSHttpBinding
-			host.Credentials.ServiceCertificate.SetCertificate(
-				args.CertificateSearchDirective.StoreLocation, args.CertificateSearchDirective.StoreName,
-				args.CertificateSearchDirective.FindType, args.CertificateSearchDirective.FindValue);
 		}
 
 		#endregion
