@@ -78,15 +78,13 @@ namespace ClearCanvas.Common.Rest
 			internal Response(HttpWebResponse response)
 			{
 				_response = response;
+				HttpStatus = response.StatusCode;
 			}
 
 			/// <summary>
 			/// Gets the HTTP status code returned from the server.
 			/// </summary>
-			public HttpStatusCode StatusCode
-			{
-				get { return _response.StatusCode; }
-			}
+			public HttpStatusCode HttpStatus { get; private set; }
 
 			/// <summary>
 			/// Writes the body of the response to the specified stream, and closes the response.
@@ -271,6 +269,16 @@ namespace ClearCanvas.Common.Rest
 			public Response Delete()
 			{
 				_request.Method = "DELETE";
+				return GetResponse(_request);
+			}
+
+			public Response Do(string verb)
+			{
+				_request.Method = verb;
+
+				// If no request body has been set (via SetData) this is a no-op
+				WriteRequestBody();
+
 				return GetResponse(_request);
 			}
 
