@@ -35,6 +35,7 @@ using ClearCanvas.Dicom.Utilities.Xml;
 using ClearCanvas.Enterprise.Core;
 using ClearCanvas.ImageServer.Common;
 using ClearCanvas.ImageServer.Core.Command;
+using ClearCanvas.ImageServer.Core.Events;
 using ClearCanvas.ImageServer.Core.Validation;
 using ClearCanvas.ImageServer.Enterprise.Command;
 using ClearCanvas.ImageServer.Model;
@@ -281,6 +282,8 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.CompressStudy
                     	_instanceStats.CompressTime.Add(compressCommand.CompressTime);
                     	Platform.Log(ServerPlatform.InstanceLogLevel, "Compress SOP: {0} for Patient {1}", file.MediaStorageSopInstanceUid,
                     	             patientsName);
+
+						EventManager.FireEvent(this, new UpdateSopEventArgs { File = file, ServerPartitionEntry = context.ServerPartition, WorkQueueUidEntry = sop, WorkQueueEntry = WorkQueueItem, FileLength = (ulong)insertStudyXmlCommand.FileSize });
                     }
                     
                 }

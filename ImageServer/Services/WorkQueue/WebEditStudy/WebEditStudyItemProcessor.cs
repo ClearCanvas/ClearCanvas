@@ -65,7 +65,7 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.WebEditStudy
 		{
 			LoadAdditionalEntities();
 
-			using (StudyEditor editor = new StudyEditor(ServerPartition, StorageLocation, _patient, Study))
+			using (StudyEditor editor = new StudyEditor(ServerPartition, StorageLocation, _patient, Study, item))
 			{
 				if (!editor.Edit(item.Data.DocumentElement))
 				{

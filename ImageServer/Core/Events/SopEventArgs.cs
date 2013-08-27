@@ -22,27 +22,17 @@
 
 #endregion
 
+using ClearCanvas.Dicom;
+using ClearCanvas.ImageServer.Model;
+
 namespace ClearCanvas.ImageServer.Core.Events
 {
-	/// <summary>
-	/// EventArgs for when a new SOP Instance has been processed
-	/// </summary>
-	/// <remarks>
-	/// The following example code shows how to define an extension that wil receive NewSopEventArgs events.
-	/// Just create a class that implements <see cref="IEventHandler{TImageServerEventArgs}"/> and add
-	/// the appropriate ExtensionOf attribute as shown below.  In this event case, it will be called each
-	/// time a new SOP Instance UID is processed by the ImageServer.
-	/// <code>
-	/// [ExtensionOf(typeof(EventExtensionPoint<NewSopEventArgs>))]
-	/// public class NewSopEventHandler : IEventHandler<NewSopEventArgs> 
-	/// {
-	///    public void EventHandler(object sender, NewSopEventArgs e)
-	///    {
-	///    }
-	/// }
-	/// </code>
-	/// </remarks>
-	public class NewSopEventArgs : SopEventArgs
+	public abstract class SopEventArgs : ImageServerEventArgs
 	{
+		public DicomFile File { get; set; }
+		public ServerPartition ServerPartitionEntry { get; set; }
+		public WorkQueueUid WorkQueueUidEntry { get; set; }
+		public WorkQueue WorkQueueEntry { get; set; }
+		public ulong FileLength { get; set; }
 	}
 }

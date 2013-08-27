@@ -174,7 +174,7 @@ namespace ClearCanvas.ImageServer.Core.Reconcile.MergeStudy
 			Platform.Log(LogLevel.Info, "Updating existing study...");
 			using(ServerCommandProcessor updateProcessor = new ServerCommandProcessor("Update Study"))
 			{
-				UpdateStudyCommand studyUpdateCommand = new UpdateStudyCommand(Context.Partition, _destinationStudyStorage, _commands, ServerRuleApplyTimeEnum.SopProcessed);
+				UpdateStudyCommand studyUpdateCommand = new UpdateStudyCommand(Context.Partition, _destinationStudyStorage, _commands, ServerRuleApplyTimeEnum.SopProcessed, Context.WorkQueueItem);
 				updateProcessor.AddCommand(studyUpdateCommand);
 				if (!updateProcessor.Execute())
 				{

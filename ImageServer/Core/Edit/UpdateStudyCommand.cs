@@ -36,6 +36,7 @@ using ClearCanvas.Enterprise.Core;
 using ClearCanvas.ImageServer.Common;
 using ClearCanvas.ImageServer.Core.Command;
 using ClearCanvas.ImageServer.Core.Diagnostics;
+using ClearCanvas.ImageServer.Core.Events;
 using ClearCanvas.ImageServer.Enterprise;
 using ClearCanvas.ImageServer.Enterprise.Command;
 using ClearCanvas.ImageServer.Model;
@@ -76,6 +77,7 @@ namespace ClearCanvas.ImageServer.Core.Edit
 		private Patient _curPatient;
 		private Patient _newPatient;
 		private StudyStorage _storage;
+		private WorkQueue _workQueue;
 
 		private readonly UpdateStudyStatistics _statistics;
 		private int _totalSopCount;
@@ -93,12 +95,14 @@ namespace ClearCanvas.ImageServer.Core.Edit
 		public UpdateStudyCommand(ServerPartition partition, 
 		                          StudyStorageLocation studyLocation,
 		                          IList<BaseImageLevelUpdateCommand> imageLevelCommands,
-								  ServerRuleApplyTimeEnum applyTime) 
+								  ServerRuleApplyTimeEnum applyTime,
+								  WorkQueue workQueue) 
 			: base("Update existing study")
 		{
 			_partition = partition;
 			_oldStudyLocation = studyLocation;
 			_commands = imageLevelCommands;
+			_workQueue = workQueue;
 			_statistics = new UpdateStudyStatistics(_oldStudyLocation.StudyInstanceUid);
 			// Load the engine for editing rules.
 			_rulesEngine = new ServerRulesEngine(applyTime, _partition.Key);
@@ -539,6 +543,9 @@ namespace ClearCanvas.ImageServer.Core.Edit
                         
                         _updatedSopList.Add(instance);
                         Platform.Log(ServerPlatform.InstanceLogLevel, "SOP {0} has been updated [{1} of {2}].", instance.SopInstanceUid, _updatedSopList.Count, _totalSopCount);
+
+						EventManager.FireEvent(this, new UpdateSopEventArgs { File = file, ServerPartitionEntry = _partition, WorkQueueUidEntry = null, WorkQueueEntry = _workQueue, FileLength = (ulong)fileSize });
+
                     }
                     catch (Exception)
                     {

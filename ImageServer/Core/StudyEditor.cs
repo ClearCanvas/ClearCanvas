@@ -96,7 +96,7 @@ namespace ClearCanvas.ImageServer.Core
 		private EventHandler<StudyEditingEventArgs> _edittingHandlers;
 		private EventHandler<StudyEditedEventArgs> _editedHandlers;
 		private IList<IWebEditStudyProcessorExtension> _plugins;
-
+		private readonly WorkQueue _workQueue;
 		#endregion
 
 		#region Properties
@@ -126,7 +126,7 @@ namespace ClearCanvas.ImageServer.Core
 		/// <param name="location"></param>
 		/// <param name="thePatient"></param>
 		/// <param name="theStudy"></param>
-		public StudyEditor(ServerPartition thePartition, StudyStorageLocation location, Patient thePatient, Study theStudy)
+		public StudyEditor(ServerPartition thePartition, StudyStorageLocation location, Patient thePatient, Study theStudy, WorkQueue workQueue)
 		{
 			FailureReason = string.Empty;
 			Platform.CheckForNullReference(thePartition, "thePartition");
@@ -139,7 +139,8 @@ namespace ClearCanvas.ImageServer.Core
 			
             Patient = thePatient;
             Study = theStudy;
-            
+			_workQueue = workQueue;
+
             // Scrub for invalid characters that may cause a failure when the Xml is generated for the history
 		    Patient.PatientId = XmlUtils.XmlCharacterScrub(Patient.PatientId);
             Patient.PatientsName = XmlUtils.XmlCharacterScrub(Patient.PatientsName);
@@ -199,10 +200,10 @@ namespace ClearCanvas.ImageServer.Core
 
 			LoadExtensions();
 
-            EditStudyWorkQueueDataParser parser = new EditStudyWorkQueueDataParser();
+            var parser = new EditStudyWorkQueueDataParser();
 		    EditStudyWorkQueueData data = parser.Parse(actionXml);
 
-			using (ServerCommandProcessor processor = new ServerCommandProcessor("Web Edit Study"))
+			using (var processor = new ServerCommandProcessor("Web Edit Study"))
 			{
 				// Convert UpdateItem in the request into BaseImageLevelUpdateCommand
 				List<BaseImageLevelUpdateCommand> updateCommands = null;
@@ -218,9 +219,9 @@ namespace ClearCanvas.ImageServer.Core
 						);
 				}
 
-				UpdateStudyCommand updateStudyCommand =
+				var updateStudyCommand =
 					new UpdateStudyCommand(ServerPartition, StorageLocation, updateCommands, 
-						ServerRuleApplyTimeEnum.SopEdited);
+						ServerRuleApplyTimeEnum.SopEdited, _workQueue);
 				processor.AddCommand(updateStudyCommand);
 
 				// Note, this command will only insert the ArchiveQueue command if a delete doesn't exist

@@ -545,10 +545,14 @@ namespace ClearCanvas.ImageServer.Core
 						Platform.Log(LogLevel.Error, "File that failed processing: {0}", file.Filename);
 						throw new ApplicationException("Unexpected failure (" + processor.FailureReason + ") executing command for SOP: " + file.MediaStorageSopInstanceUid, processor.FailureException);
 					}
-				    Platform.Log(ServerPlatform.InstanceLogLevel, "Processed SOP: {0} for Patient {1}", file.MediaStorageSopInstanceUid, patientsName);
+					Platform.Log(ServerPlatform.InstanceLogLevel, "Processed SOP: {0} for Patient {1}", file.MediaStorageSopInstanceUid, patientsName);
 
-                    // Fire NewSopEventArgs Event
-                    EventManager.FireEvent(this,new NewSopEventArgs {File = file,ServerPartitionEntry = _context.Partition,WorkQueueUidEntry = uid, WorkQueueEntry = _context.WorkQueueEntry, FileLength = InstanceStats.FileSize});
+					// Fire NewSopEventArgs or UpdateSopEventArgs Event
+					// Know its a duplicate if we have to delete the duplicate object
+					if (string.IsNullOrEmpty(deleteFile))
+						EventManager.FireEvent(this, new NewSopEventArgs { File = file, ServerPartitionEntry = _context.Partition, WorkQueueUidEntry = uid, WorkQueueEntry = _context.WorkQueueEntry, FileLength = InstanceStats.FileSize });
+					else
+						EventManager.FireEvent(this, new UpdateSopEventArgs {File = file,ServerPartitionEntry = _context.Partition,WorkQueueUidEntry = uid, WorkQueueEntry = _context.WorkQueueEntry, FileLength = InstanceStats.FileSize});
 				}
 				catch (Exception e)
 				{
