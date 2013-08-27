@@ -76,6 +76,28 @@ namespace ClearCanvas.ImageServer.Web.Common.Security
         
         }
 
+		/// <summary>
+		/// Gets the redirect url for the current session
+		/// </summary>
+		/// <param name="session"></param>
+		/// <returns></returns>
+		public static String GetRedirectUrl(SessionInfo session)
+		{
+			Platform.CheckForNullReference(session, "session");
+
+			var redirectUrl = FormsAuthentication.GetRedirectUrl(session.User.Identity.Name, false);
+			if (VirtualPathUtility.IsAbsolute(redirectUrl) || VirtualPathUtility.IsAppRelative(redirectUrl))
+			{
+				return redirectUrl;
+			}
+
+			var tokenParam = "userId=" + session.User.Identity.Name + "&sessionId=" + session.Credentials.SessionToken.Id;
+			var uri = new UriBuilder(redirectUrl);
+			uri.Query = string.IsNullOrEmpty(uri.Query) ? tokenParam : "&" + tokenParam;
+			
+			return uri.ToString();
+		}
+
         /// <summary>
         /// Sets up the principal for the thread and save the authentiction ticket.
         /// </summary>
@@ -150,7 +172,7 @@ namespace ClearCanvas.ImageServer.Web.Common.Security
         /// <param name="appName"></param>
         public static SessionInfo InitializeSession(string username, string password, string appName)
         {
-                return InitializeSession(username, password, ImageServerConstants.DefaultApplicationName, true);
+			return InitializeSession(username, password, appName, true);
         }
 
         /// <summary>
@@ -168,7 +190,10 @@ namespace ClearCanvas.ImageServer.Web.Common.Security
                 InitializeSession(session);
                 Platform.Log(LogLevel.Info, "[{0}]: {1} has successfully logged in.", appName, username);
 
-                if(redirect) HttpContext.Current.Response.Redirect(FormsAuthentication.GetRedirectUrl(username, false), false);
+                if(redirect)
+                {
+					HttpContext.Current.Response.Redirect(GetRedirectUrl(session), false);
+                }
                 return session;
             }
         }
@@ -284,8 +309,7 @@ namespace ClearCanvas.ImageServer.Web.Common.Security
 			// other pages to redirect to the login page instead. (see SessionTimeout.ascx)
             HttpCookie expiryCookie = new HttpCookie(GetExpiryTimeCookieName(session))
             {
-                Expires = Platform.Time.AddMinutes(5),
-                Value = string.Empty
+				Expires = Platform.Time.AddSeconds(-1)
             };
 
             HttpContext.Current.Response.Cookies.Set(expiryCookie);
