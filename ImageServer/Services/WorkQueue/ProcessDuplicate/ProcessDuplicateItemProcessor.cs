@@ -475,7 +475,7 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.ProcessDuplicate
             bool compare = action != ProcessDuplicateAction.OverwriteAsIs;
             // NOTE: "compare" has no effect for OverwriteUseExisting or OverwriteUseDuplicate
             // because in both cases, the study and the duplicates are modified to be the same.
-            ProcessingResult result = sopInstanceProcessor.ProcessFile(group, duplicateDicomFile, studyXml, compare, true, uid, duplicateDicomFile.Filename);
+            ProcessingResult result = sopInstanceProcessor.ProcessFile(group, duplicateDicomFile, studyXml, compare, true, uid, duplicateDicomFile.Filename, SopInstanceProcessorSopType.UpdatedSop);
             if (result.Status == ProcessingStatus.Reconciled)
             {
                 throw new ApplicationException("Unexpected status of Reconciled image in duplicate handling!");

@@ -46,6 +46,15 @@ using SaveDicomFileCommand = ClearCanvas.ImageServer.Core.Command.SaveDicomFileC
 
 namespace ClearCanvas.ImageServer.Core
 {
+	/// <summary>
+	/// Enum for telling the processor if a NewSop or UpdatedSop is being imported
+	/// </summary>
+	public enum SopInstanceProcessorSopType
+	{
+		NewSop,
+		UpdatedSop,
+		ReprocessedSop
+	}
 
 	/// <summary>
 	/// Encapsulates the context of the 'StudyProcess' operation.
@@ -267,9 +276,10 @@ namespace ClearCanvas.ImageServer.Core
 		/// <param name="retry">Flag telling if the item should be retried on failure.  Note that if the item is a duplicate, the WorkQueueUid item is not failed. </param>
 		/// <param name="uid">An optional WorkQueueUid associated with the entry, that will be deleted upon success or failed on failure.</param>
 		/// <param name="deleteFile">An option file to delete as part of the process</param>
+		/// <param name="sopType">Flag telling if the SOP is a new or updated SOP</param>
         /// <exception cref="Exception"/>
         /// <exception cref="DicomDataException"/>
-        public  ProcessingResult ProcessFile(string group, DicomFile file, StudyXml stream, bool compare, bool retry, WorkQueueUid uid, string deleteFile)
+		public  ProcessingResult ProcessFile(string group, DicomFile file, StudyXml stream, bool compare, bool retry, WorkQueueUid uid, string deleteFile, SopInstanceProcessorSopType sopType)
 		{
 		    Platform.CheckForNullReference(file, "file");
 
@@ -300,7 +310,7 @@ namespace ClearCanvas.ImageServer.Core
                     }
                     else
                     {
-                        InsertInstance(file, stream, uid, deleteFile);
+                        InsertInstance(file, stream, uid, deleteFile,sopType);
                         result.Status = ProcessingStatus.Success;
                     }
                 }
@@ -323,7 +333,7 @@ namespace ClearCanvas.ImageServer.Core
             {
                 // If its a duplicate, ignore the exception, and just throw it
                 if (deleteFile != null && (e is InstanceAlreadyExistsException
-                        || e.InnerException != null && e.InnerException is InstanceAlreadyExistsException))
+                        || e.InnerException is InstanceAlreadyExistsException))
                     throw;
 
                 if (uid != null)
@@ -472,9 +482,9 @@ namespace ClearCanvas.ImageServer.Core
 		}
 
        
-		private void InsertInstance(DicomFile file, StudyXml stream, WorkQueueUid uid, string deleteFile)
+		private void InsertInstance(DicomFile file, StudyXml stream, WorkQueueUid uid, string deleteFile, SopInstanceProcessorSopType sopType)
 		{
-			using (ServerCommandProcessor processor = new ServerCommandProcessor("Processing WorkQueue DICOM file"))
+			using (var processor = new ServerCommandProcessor("Processing WorkQueue DICOM file"))
 			{
 			    EventsHelper.Fire(OnInsertingSop, this, new SopInsertingEventArgs {Processor = processor });
 
@@ -549,9 +559,9 @@ namespace ClearCanvas.ImageServer.Core
 
 					// Fire NewSopEventArgs or UpdateSopEventArgs Event
 					// Know its a duplicate if we have to delete the duplicate object
-					if (string.IsNullOrEmpty(deleteFile))
+					if (sopType == SopInstanceProcessorSopType.NewSop)
 						EventManager.FireEvent(this, new NewSopEventArgs { File = file, ServerPartitionEntry = _context.Partition, WorkQueueUidEntry = uid, WorkQueueEntry = _context.WorkQueueEntry, FileLength = InstanceStats.FileSize });
-					else
+					else if (sopType == SopInstanceProcessorSopType.UpdatedSop)
 						EventManager.FireEvent(this, new UpdateSopEventArgs {File = file,ServerPartitionEntry = _context.Partition,WorkQueueUidEntry = uid, WorkQueueEntry = _context.WorkQueueEntry, FileLength = InstanceStats.FileSize});
 				}
 				catch (Exception e)
