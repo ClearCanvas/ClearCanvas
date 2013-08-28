@@ -63,7 +63,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 			Platform.CheckForNullReference(args, "args");
 
 			_volumeReference = volumeReference;
-			_args = args.Clone();
+			_args = args;
 		}
 
 		~VolumeSlicerCore()

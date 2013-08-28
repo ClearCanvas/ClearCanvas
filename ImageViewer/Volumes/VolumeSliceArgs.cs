@@ -22,47 +22,76 @@
 
 #endregion
 
-using System;
 using ClearCanvas.ImageViewer.Mathematics;
 
 namespace ClearCanvas.ImageViewer.Volumes
 {
-	public class VolumeSliceArgs : ICloneable
+	public sealed class VolumeSliceArgs
 	{
-		public Vector3D RowOrientationPatient { get; set; }
+		private readonly Vector3D _rowOrientationPatient;
+		private readonly Vector3D _columnOrientationPatient;
+		private readonly int _columns;
+		private readonly int _rows;
+		private readonly float _sliceThickness;
+		private readonly float _rowSpacing;
+		private readonly float _columnSpacing;
+		private readonly VolumeInterpolationMode _interpolation;
 
-		public Vector3D ColumnOrientationPatient { get; set; }
-
-		public int Columns { get; set; }
-
-		public int Rows { get; set; }
-
-		public float SliceThickness { get; set; }
-
-		public float RowSpacing { get; set; }
-
-		public float ColumnSpacing { get; set; }
-
-		public VolumeInterpolationMode Interpolation { get; set; }
-
-		public VolumeSliceArgs Clone()
+		public VolumeSliceArgs(int rows, int columns,
+		                       float rowSpacing, float columnSpacing,
+		                       Vector3D rowOrientationPatient,
+		                       Vector3D columnOrientationPatient,
+		                       float sliceThickness,
+		                       VolumeInterpolationMode interpolation)
 		{
-			return new VolumeSliceArgs
-			       	{
-			       		RowOrientationPatient = RowOrientationPatient,
-			       		ColumnOrientationPatient = ColumnOrientationPatient,
-			       		Columns = Columns,
-			       		Rows = Rows,
-			       		SliceThickness = SliceThickness,
-			       		RowSpacing = RowSpacing,
-			       		ColumnSpacing = ColumnSpacing,
-			       		Interpolation = Interpolation
-			       	};
+			_rows = rows;
+			_columns = columns;
+			_rowSpacing = rowSpacing;
+			_columnSpacing = columnSpacing;
+			_rowOrientationPatient = rowOrientationPatient;
+			_columnOrientationPatient = columnOrientationPatient;
+			_sliceThickness = sliceThickness;
+			_interpolation = interpolation;
 		}
 
-		object ICloneable.Clone()
+		public Vector3D RowOrientationPatient
 		{
-			return Clone();
+			get { return _rowOrientationPatient; }
+		}
+
+		public Vector3D ColumnOrientationPatient
+		{
+			get { return _columnOrientationPatient; }
+		}
+
+		public int Columns
+		{
+			get { return _columns; }
+		}
+
+		public int Rows
+		{
+			get { return _rows; }
+		}
+
+		public float SliceThickness
+		{
+			get { return _sliceThickness; }
+		}
+
+		public float RowSpacing
+		{
+			get { return _rowSpacing; }
+		}
+
+		public float ColumnSpacing
+		{
+			get { return _columnSpacing; }
+		}
+
+		public VolumeInterpolationMode Interpolation
+		{
+			get { return _interpolation; }
 		}
 	}
 }

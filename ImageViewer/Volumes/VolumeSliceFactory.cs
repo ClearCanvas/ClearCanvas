@@ -208,17 +208,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 			var sliceRows = Rows ?? (int) (Math.Abs(1.0*stackHeight/pixelSpacing.Height) + 0.5);
 
 			// capture all the slicer parameters in an args object
-			var args = new VolumeSliceArgs
-			           	{
-			           		RowOrientationPatient = slicerAxisX,
-			           		ColumnOrientationPatient = slicerAxisY,
-			           		Rows = sliceRows,
-			           		Columns = sliceColumns,
-			           		RowSpacing = pixelSpacing.Height,
-			           		ColumnSpacing = pixelSpacing.Width,
-			           		SliceThickness = sliceThickness,
-			           		Interpolation = Interpolation
-			           	};
+			var args = new VolumeSliceArgs(sliceRows, sliceColumns, pixelSpacing.Height, pixelSpacing.Width, slicerAxisX, slicerAxisY, sliceThickness, Interpolation);
 
 			// get the number of slices in the output
 			var sliceCount = (int) (Math.Abs(1.0*stackDepth/sliceSpacing) + 0.5);

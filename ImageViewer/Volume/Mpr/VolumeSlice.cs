@@ -32,11 +32,13 @@ using ClearCanvas.ImageViewer.Volumes;
 
 namespace ClearCanvas.ImageViewer.Volume.Mpr
 {
-	public class VolumeSlice : IDicomAttributeProvider, IDisposable, IVolumeSlice
+	/// <remarks>
+	/// This type has been deprecated in favour of its equivalent in the core volume framework (<see cref="VolumeSlice2"/>).
+	/// </remarks>
+	[Obsolete("Use VolumeSlice2 instead.")]
+	public class VolumeSlice : IVolumeSlice
 	{
-		private IVolumeReference _volumeReference;
-		private IVolumeSlicerParams _slicerParams;
-		private Vector3D _throughPoint;
+		private VolumeSlice2 _volumeSlice;
 
 		public VolumeSlice(Volumes.Volume volume, IVolumeSlicerParams slicerParams, Vector3D throughPoint)
 			: this(volume.CreateReference(), slicerParams, throughPoint) {}
@@ -45,52 +47,28 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 		{
 			Platform.CheckForNullReference(throughPoint, "throughPoint");
 
-			_volumeReference = volumeReference;
-			_slicerParams = slicerParams;
-			_throughPoint = throughPoint;
-
-			// JY: ideally, each slicing plane is represented by a single multiframe SOP where the individual slices are the frames.
-			// We need to support multi-valued Slice Location in the base viewer first.
-			// When that is implemented, the SOPs should be created on the first frame of the slicing (i.e. one of the end slices)
-			// and the Slice Location Vector will simply store the slice locations relative to that defined in these attributes.
-			// Also, the rows and columns will have to be computed to be the MAX possible size (all frames must have same size)
-
 			// compute Rows and Columns to reflect actual output size
 			var frameSize = GetSliceExtent(volumeReference, slicerParams);
-			Columns = frameSize.Width;
-			Rows = frameSize.Height;
 
 			// compute Pixel Spacing
-			var effectiveSpacing = GetEffectiveSpacing(_volumeReference);
-			var spacing = new DicomAttributeDS(DicomTags.PixelSpacing);
-			spacing.SetFloat32(0, effectiveSpacing);
-			spacing.SetFloat32(1, effectiveSpacing);
-			PixelSpacing = spacing.ToString();
-
-			SliceThickness = SpacingBetweenSlices = new DicomAttributeDS(DicomTags.SliceThickness) {Values = slicerParams.SliceSpacing}.ToString();
+			var effectiveSpacing = GetEffectiveSpacing(volumeReference);
 
 			// compute Image Orientation (Patient)
 			var matrix = new Matrix(slicerParams.SlicingPlaneRotation);
-			matrix[3, 0] = _throughPoint.X;
-			matrix[3, 1] = _throughPoint.Y;
-			matrix[3, 2] = _throughPoint.Z;
-			var resliceAxesPatientOrientation = _volumeReference.RotateToPatientOrientation(matrix);
-			var orientation = new DicomAttributeDS(DicomTags.ImageOrientationPatient);
-			orientation.SetFloat32(0, resliceAxesPatientOrientation[0, 0]);
-			orientation.SetFloat32(1, resliceAxesPatientOrientation[0, 1]);
-			orientation.SetFloat32(2, resliceAxesPatientOrientation[0, 2]);
-			orientation.SetFloat32(3, resliceAxesPatientOrientation[1, 0]);
-			orientation.SetFloat32(4, resliceAxesPatientOrientation[1, 1]);
-			orientation.SetFloat32(5, resliceAxesPatientOrientation[1, 2]);
-			ImageOrientationPatient = orientation.ToString();
+			matrix[3, 0] = throughPoint.X;
+			matrix[3, 1] = throughPoint.Y;
+			matrix[3, 2] = throughPoint.Z;
+			var resliceAxesPatientOrientation = volumeReference.RotateToPatientOrientation(matrix);
 
 			// compute Image Position (Patient)
-			var topLeftOfSlicePatient = GetTopLeftOfSlicePatient(frameSize, _throughPoint, volumeReference, slicerParams);
-			var position = new DicomAttributeDS(DicomTags.ImagePositionPatient);
-			position.SetFloat32(0, topLeftOfSlicePatient.X);
-			position.SetFloat32(1, topLeftOfSlicePatient.Y);
-			position.SetFloat32(2, topLeftOfSlicePatient.Z);
-			ImagePositionPatient = position.ToString();
+			var topLeftOfSlicePatient = GetTopLeftOfSlicePatient(frameSize, throughPoint, volumeReference, slicerParams);
+
+			var args = new VolumeSliceArgs(frameSize.Height, frameSize.Width, effectiveSpacing, effectiveSpacing,
+			                               new Vector3D(resliceAxesPatientOrientation[0, 0], resliceAxesPatientOrientation[0, 1], resliceAxesPatientOrientation[0, 2]),
+			                               new Vector3D(resliceAxesPatientOrientation[1, 0], resliceAxesPatientOrientation[1, 1], resliceAxesPatientOrientation[1, 2]),
+			                               slicerParams.SliceSpacing, Convert(slicerParams.InterpolationMode));
+
+			_volumeSlice = new VolumeSlice2(volumeReference, true, args, topLeftOfSlicePatient, slicerParams.SliceSpacing);
 		}
 
 		~VolumeSlice()
@@ -122,64 +100,101 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 		{
 			if (!disposing) return;
 
-			if (_volumeReference != null)
+			if (_volumeSlice != null)
 			{
-				_volumeReference.Dispose();
-				_volumeReference = null;
+				_volumeSlice.Dispose();
+				_volumeSlice = null;
 			}
-
-			_slicerParams = null;
-			_throughPoint = null;
 		}
 
-		public int Rows { get; private set; }
-		public int Columns { get; private set; }
-		public string PixelSpacing { get; private set; }
-		public string ImageOrientationPatient { get; private set; }
-		public string ImagePositionPatient { get; private set; }
-		public string SliceThickness { get; private set; }
-		public string SpacingBetweenSlices { get; private set; }
+		public int Rows
+		{
+			get { return _volumeSlice.Rows; }
+		}
+
+		public int Columns
+		{
+			get { return _volumeSlice.Columns; }
+		}
+
+		public string PixelSpacing
+		{
+			get { return _volumeSlice.PixelSpacing; }
+		}
+
+		public string ImageOrientationPatient
+		{
+			get { return _volumeSlice.ImageOrientationPatient; }
+		}
+
+		public string ImagePositionPatient
+		{
+			get { return _volumeSlice.ImagePositionPatient; }
+		}
+
+		public string SliceThickness
+		{
+			get { return _volumeSlice.SliceThickness; }
+		}
+
+		public string SpacingBetweenSlices
+		{
+			get { return _volumeSlice.SpacingBetweenSlices; }
+		}
 
 		public IVolumeReference VolumeReference
 		{
-			get { return _volumeReference; }
+			get { return _volumeSlice.VolumeReference; }
 		}
 
 		public byte[] GetPixelData()
 		{
-			using (var slicer = new VolumeSlicer(_volumeReference, _slicerParams))
-			{
-				return slicer.CreateSliceNormalizedPixelData(_throughPoint);
-			}
+			return _volumeSlice.GetPixelData();
 		}
 
 		#region Implementation of IDicomAttributeProvider
 
 		public DicomAttribute this[DicomTag tag]
 		{
-			get { return _volumeReference.DataSet[tag]; }
-			set { _volumeReference.DataSet[tag] = value; }
+			get { return _volumeSlice[tag]; }
+			set { _volumeSlice[tag] = value; }
 		}
 
 		public DicomAttribute this[uint tag]
 		{
-			get { return _volumeReference.DataSet[tag]; }
-			set { _volumeReference.DataSet[tag] = value; }
+			get { return _volumeSlice[tag]; }
+			set { _volumeSlice[tag] = value; }
 		}
 
 		public bool TryGetAttribute(uint tag, out DicomAttribute attribute)
 		{
-			return _volumeReference.DataSet.TryGetAttribute(tag, out attribute);
+			return _volumeSlice.TryGetAttribute(tag, out attribute);
 		}
 
 		public bool TryGetAttribute(DicomTag tag, out DicomAttribute attribute)
 		{
-			return _volumeReference.DataSet.TryGetAttribute(tag, out attribute);
+			return _volumeSlice.TryGetAttribute(tag, out attribute);
 		}
 
 		#endregion
 
 		#region Misc Helpers for computing SOP attribute values
+
+		private static VolumeInterpolationMode Convert(VolumeSlicerInterpolationMode mode)
+		{
+			switch (mode)
+			{
+				case VolumeSlicerInterpolationMode.NearestNeighbor:
+					return VolumeInterpolationMode.NearestNeighbor;
+
+				case VolumeSlicerInterpolationMode.Linear:
+					return VolumeInterpolationMode.Linear;
+				case VolumeSlicerInterpolationMode.Cubic:
+					return VolumeInterpolationMode.Cubic;
+				default:
+					throw new ArgumentOutOfRangeException("mode");
+			}
+		}
 
 		// VTK treats the reslice point as the center of the output image. Given the plane orientation
 		//	and size of the output image, we can derive the top left of the output image in patient space

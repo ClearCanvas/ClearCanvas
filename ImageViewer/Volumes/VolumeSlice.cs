@@ -51,6 +51,9 @@ namespace ClearCanvas.ImageViewer.Volumes
 		public VolumeSlice2(Volume volume, VolumeSliceArgs sliceArgs, Vector3D imagePositionPatient, float? spacingBetweenSlices = null)
 			: this(volume.CreateReference(), sliceArgs, imagePositionPatient, spacingBetweenSlices) {}
 
+		public VolumeSlice2(IVolumeReference volumeReference, bool ownReference, VolumeSliceArgs sliceArgs, Vector3D imagePositionPatient, float? spacingBetweenSlices = null)
+			: this(ownReference ? volumeReference : volumeReference.Clone(), sliceArgs, imagePositionPatient, spacingBetweenSlices) {}
+
 		internal VolumeSlice2(IVolumeReference volumeReference, VolumeSliceArgs sliceArgs, Vector3D imagePositionPatient, float? spacingBetweenSlices)
 		{
 			Platform.CheckForNullReference(volumeReference, "volumeReference");
@@ -58,7 +61,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 			Platform.CheckForNullReference(imagePositionPatient, "imagePositionPatient");
 
 			_volumeReference = volumeReference;
-			_sliceArgs = sliceArgs.Clone();
+			_sliceArgs = sliceArgs;
 			_imagePositionPatient = imagePositionPatient;
 
 			// compute Rows and Columns to reflect actual output size
