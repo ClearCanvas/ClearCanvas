@@ -28,6 +28,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using ClearCanvas.Common;
 using ClearCanvas.Dicom;
@@ -203,9 +204,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 			// generate the slice SOPs by computing additional through points
 			for (var n = 0; n < sliceCount; n++)
 			{
-				var slice = new VolumeSlice(_volume.Clone(), _slicerParams, initialThroughPoint - n*spacingVector);
-				slice[DicomTags.SliceThickness].SetFloat32(0, thicknessAndSpacing);
-				slice[DicomTags.SpacingBetweenSlices].SetFloat32(0, thicknessAndSpacing);
+				var slice = CreateSlice(_volume.Clone(), _slicerParams, initialThroughPoint - n*spacingVector);
 				yield return slice;
 			}
 		}
@@ -230,6 +229,113 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 		{
 			get { return ActualSliceSpacingVector.Magnitude; }
 		}
+
+		#region VolumeSlice helper methods
+
+		private static VolumeSlice CreateSlice(IVolumeReference volumeReference, IVolumeSlicerParams slicerParams, Vector3D throughPoint)
+		{
+			// compute Rows and Columns to reflect actual output size
+			var frameSize = GetSliceExtent(volumeReference, slicerParams);
+
+			// compute Pixel Spacing
+			var effectiveSpacing = GetEffectiveSpacing(volumeReference);
+
+			// compute Image Orientation (Patient)
+			var matrix = new Matrix(slicerParams.SlicingPlaneRotation);
+			matrix[3, 0] = throughPoint.X;
+			matrix[3, 1] = throughPoint.Y;
+			matrix[3, 2] = throughPoint.Z;
+			var resliceAxesPatientOrientation = volumeReference.RotateToPatientOrientation(matrix);
+
+			// compute Image Position (Patient)
+			var topLeftOfSlicePatient = GetTopLeftOfSlicePatient(frameSize, throughPoint, volumeReference, slicerParams);
+
+			var args = new VolumeSliceArgs(frameSize.Height, frameSize.Width, effectiveSpacing, effectiveSpacing,
+			                               new Vector3D(resliceAxesPatientOrientation[0, 0], resliceAxesPatientOrientation[0, 1], resliceAxesPatientOrientation[0, 2]),
+			                               new Vector3D(resliceAxesPatientOrientation[1, 0], resliceAxesPatientOrientation[1, 1], resliceAxesPatientOrientation[1, 2]),
+			                               slicerParams.SliceSpacing, Convert(slicerParams.InterpolationMode));
+
+			return new VolumeSlice(volumeReference, true, args, topLeftOfSlicePatient, slicerParams.SliceSpacing);
+		}
+
+		private static VolumeInterpolationMode Convert(VolumeSlicerInterpolationMode mode)
+		{
+			switch (mode)
+			{
+				case VolumeSlicerInterpolationMode.NearestNeighbor:
+					return VolumeInterpolationMode.NearestNeighbor;
+
+				case VolumeSlicerInterpolationMode.Linear:
+					return VolumeInterpolationMode.Linear;
+				case VolumeSlicerInterpolationMode.Cubic:
+					return VolumeInterpolationMode.Cubic;
+				default:
+					throw new ArgumentOutOfRangeException("mode");
+			}
+		}
+
+		// VTK treats the reslice point as the center of the output image. Given the plane orientation
+		//	and size of the output image, we can derive the top left of the output image in patient space
+		private static Vector3D GetTopLeftOfSlicePatient(Size frameSize, Vector3D throughPoint, IVolumeHeader volume, IVolumeSlicerParams slicerParams)
+		{
+			// This is the center of the output image
+			var centerImageCoord = new PointF(frameSize.Width/2f, frameSize.Height/2f);
+
+			// These offsets define the x and y vector magnitudes to arrive at our point
+			var effectiveSpacing = GetEffectiveSpacing(volume);
+			var offsetX = centerImageCoord.X*effectiveSpacing;
+			var offsetY = centerImageCoord.Y*effectiveSpacing;
+
+			// To determine top left of slice in volume, subtract offset vectors along x and y
+			//
+			// Our reslice plane x and y vectors
+			var resliceAxes = slicerParams.SlicingPlaneRotation;
+			var xVec = new Vector3D(resliceAxes[0, 0], resliceAxes[0, 1], resliceAxes[0, 2]);
+			var yVec = new Vector3D(resliceAxes[1, 0], resliceAxes[1, 1], resliceAxes[1, 2]);
+
+			// Offset along x and y from reslicePoint
+			var topLeftOfSliceVolume = throughPoint - (offsetX*xVec + offsetY*yVec);
+
+			// Convert volume point to patient space
+			return volume.ConvertToPatient(topLeftOfSliceVolume);
+		}
+
+		// Derived from either a specified extent in millimeters or from the volume dimensions (default)
+		private static Size GetSliceExtent(IVolumeHeader volume, IVolumeSlicerParams slicerParams)
+		{
+			var effectiveSpacing = GetEffectiveSpacing(volume);
+			var longOutputDimension = volume.GetLongAxisMagnitude()/effectiveSpacing;
+			var shortOutputDimenstion = volume.GetShortAxisMagnitude()/effectiveSpacing;
+			var diagonalDimension = (int) Math.Sqrt(longOutputDimension*longOutputDimension + shortOutputDimenstion*shortOutputDimenstion);
+
+			var columns = diagonalDimension;
+			if (!FloatComparer.AreEqual(slicerParams.SliceExtentXMillimeters, 0f))
+				columns = (int) (slicerParams.SliceExtentXMillimeters/effectiveSpacing + 0.5f);
+
+			var rows = diagonalDimension;
+			if (!FloatComparer.AreEqual(slicerParams.SliceExtentYMillimeters, 0f))
+				rows = (int) (slicerParams.SliceExtentYMillimeters/effectiveSpacing + 0.5f);
+
+			return new Size(columns, rows);
+		}
+
+		/// <summary>
+		/// The effective spacing defines output pixel spacing for slices generated by the VolumeSlicer.
+		/// </summary>
+		private static float GetEffectiveSpacing(IVolumeHeader volume)
+		{
+			// Because we supply the real spacing to the VTK reslicer, the slices are interpolated
+			//	as if the volume were isotropic. This results in an effective spacing that is the
+			//	minimum spacing for the volume.
+			//
+			// N.B.: this behaviour is different than if had asked VTK to render it, because we are
+			//  asking directly for pixel data out. If VTK renders it, then we scrape the rendering
+			//  for the pixel data, the spacing would be exactly 1mm because the interpolation would
+			//  happened during rendering.
+			return volume.GetMinimumSpacing();
+		}
+
+		#endregion
 
 		#endregion
 

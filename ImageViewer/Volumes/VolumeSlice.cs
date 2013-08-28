@@ -29,32 +29,19 @@ using ClearCanvas.ImageViewer.Mathematics;
 
 namespace ClearCanvas.ImageViewer.Volumes
 {
-	public interface IVolumeSlice : IDicomAttributeProvider, IDisposable
-	{
-		int Rows { get; }
-		int Columns { get; }
-		string PixelSpacing { get; }
-		string ImageOrientationPatient { get; }
-		string ImagePositionPatient { get; }
-		string SliceThickness { get; }
-		string SpacingBetweenSlices { get; }
-		IVolumeReference VolumeReference { get; }
-		byte[] GetPixelData();
-	}
-
-	public sealed class VolumeSlice2 : IDicomAttributeProvider, IDisposable, IVolumeSlice
+	public sealed class VolumeSlice : IDicomAttributeProvider, IDisposable
 	{
 		private IVolumeReference _volumeReference;
 		private VolumeSliceArgs _sliceArgs;
 		private Vector3D _imagePositionPatient;
 
-		public VolumeSlice2(Volume volume, VolumeSliceArgs sliceArgs, Vector3D imagePositionPatient, float? spacingBetweenSlices = null)
+		public VolumeSlice(Volume volume, VolumeSliceArgs sliceArgs, Vector3D imagePositionPatient, float? spacingBetweenSlices = null)
 			: this(volume.CreateReference(), sliceArgs, imagePositionPatient, spacingBetweenSlices) {}
 
-		public VolumeSlice2(IVolumeReference volumeReference, bool ownReference, VolumeSliceArgs sliceArgs, Vector3D imagePositionPatient, float? spacingBetweenSlices = null)
+		public VolumeSlice(IVolumeReference volumeReference, bool ownReference, VolumeSliceArgs sliceArgs, Vector3D imagePositionPatient, float? spacingBetweenSlices = null)
 			: this(ownReference ? volumeReference : volumeReference.Clone(), sliceArgs, imagePositionPatient, spacingBetweenSlices) {}
 
-		internal VolumeSlice2(IVolumeReference volumeReference, VolumeSliceArgs sliceArgs, Vector3D imagePositionPatient, float? spacingBetweenSlices)
+		internal VolumeSlice(IVolumeReference volumeReference, VolumeSliceArgs sliceArgs, Vector3D imagePositionPatient, float? spacingBetweenSlices)
 		{
 			Platform.CheckForNullReference(volumeReference, "volumeReference");
 			Platform.CheckForNullReference(sliceArgs, "slicerArgs");
@@ -99,7 +86,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 			ImagePositionPatient = position.ToString();
 		}
 
-		~VolumeSlice2()
+		~VolumeSlice()
 		{
 			try
 			{

@@ -31,7 +31,7 @@ using ClearCanvas.ImageViewer.Mathematics;
 namespace ClearCanvas.ImageViewer.Volumes
 {
 	/// <summary>
-	/// Factory class for creating <see cref="VolumeSlice2"/> instances representing 2-dimensional slices of a <see cref="Volume"/>.
+	/// Factory class for creating <see cref="VolumeSlice"/> instances representing 2-dimensional slices of a <see cref="Volume"/>.
 	/// </summary>
 	public sealed class VolumeSliceFactory
 	{
@@ -135,22 +135,27 @@ namespace ClearCanvas.ImageViewer.Volumes
 			set { _interpolation = value; }
 		}
 
-		public IList<VolumeSlice2> CreateSlices(IVolumeReference volumeReference)
+		public VolumeSlice CreateSlice(IVolumeReference volumeReference, Vector3D startPosition)
 		{
-			return CreateSlicesCore(volumeReference, null, null);
+			return CreateSlicesCore(volumeReference, startPosition, null, 1).Single();
 		}
 
-		public IList<VolumeSlice2> CreateSlices(IVolumeReference volumeReference, Vector3D startPosition)
+		public IList<VolumeSlice> CreateSlices(IVolumeReference volumeReference)
 		{
-			return CreateSlicesCore(volumeReference, startPosition, null);
+			return CreateSlicesCore(volumeReference, null, null, 0);
 		}
 
-		public IList<VolumeSlice2> CreateSlices(IVolumeReference volumeReference, Vector3D startPosition, Vector3D endPosition)
+		public IList<VolumeSlice> CreateSlices(IVolumeReference volumeReference, Vector3D startPosition)
 		{
-			return CreateSlicesCore(volumeReference, startPosition, endPosition);
+			return CreateSlicesCore(volumeReference, startPosition, null, 0);
 		}
 
-		private IList<VolumeSlice2> CreateSlicesCore(IVolumeReference volumeReference, Vector3D startPosition, Vector3D endPosition)
+		public IList<VolumeSlice> CreateSlices(IVolumeReference volumeReference, Vector3D startPosition, Vector3D endPosition)
+		{
+			return CreateSlicesCore(volumeReference, startPosition, endPosition, 0);
+		}
+
+		private IList<VolumeSlice> CreateSlicesCore(IVolumeReference volumeReference, Vector3D startPosition, Vector3D endPosition, int count)
 		{
 			// get the pixel spacing (defaults to isotropic spacing based on smallest volume spacing dimension)
 			var pixelSpacing = GetPixelSpacing(volumeReference);
@@ -243,14 +248,21 @@ namespace ClearCanvas.ImageViewer.Volumes
 					var stackRange = slicerAxisZ.Dot(endPosition - slicerOrigin) - offsetZ;
 					sliceCount = (int) (Math.Abs(1.0*stackRange/sliceSpacing) + 0.5);
 				}
+				else if (count > 0)
+				{
+					var offsetZ = slicerAxisZ.Dot(slicerStart);
+					firstSlicePosition += offsetZ*slicerAxisZ;
+
+					sliceCount = count;
+				}
 			}
 
 			// create the output slices
-			var list = new List<VolumeSlice2>();
+			var list = new List<VolumeSlice>();
 			for (var n = 0; n < sliceCount; ++n)
 			{
 				var imagePositionPatient = firstSlicePosition + n*slicePositionIncrement;
-				list.Add(new VolumeSlice2(volumeReference.Clone(), args, imagePositionPatient, sliceSpacing));
+				list.Add(new VolumeSlice(volumeReference.Clone(), args, imagePositionPatient, sliceSpacing));
 			}
 			return list;
 		}

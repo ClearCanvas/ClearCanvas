@@ -41,14 +41,14 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 		/// Initializes a new <see cref="ISopDataSource"/> for the given volume slice.
 		/// </summary>
 		/// <param name="slice">A volume slice. This instance will be disposed when the <see cref="VolumeSliceSopDataSource"/> instance is disposed.</param>
-		public AsyncVolumeSliceSopDataSource(IVolumeSlice slice)
+		public AsyncVolumeSliceSopDataSource(VolumeSlice slice)
 		{
 			Slice = slice;
 			DataSet = new DicomAttributeCollection();
 			VolumeSliceSopDataSource.FillDataSet(DataSet, slice);
 		}
 
-		public IVolumeSlice Slice { get; private set; }
+		public VolumeSlice Slice { get; private set; }
 
 		public IDicomAttributeProvider DataSet { get; private set; }
 

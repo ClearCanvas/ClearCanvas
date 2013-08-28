@@ -140,9 +140,6 @@
     <Compile Include="Utilities\ObservableDisposableList.cs" />
     <Compile Include="Utilities\ProgressTask.cs" />
     <Compile Include="Utilities\TransitionalHelper.cs" />
-    <Compile Include="VolumeSlice.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="VolumeSlicerParams.cs" />
     <Compile Include="MprSliceSet.cs" />
     <Compile Include="Tools\MprViewerTool.cs" />

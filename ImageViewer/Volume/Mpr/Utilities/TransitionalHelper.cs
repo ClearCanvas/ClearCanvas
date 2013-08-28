@@ -33,17 +33,17 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr.Utilities
 {
 	public static class TransitionalHelper
 	{
-		public static IEnumerable<ISopDataSource> CreateSliceSops(this IEnumerable<VolumeSlice2> slices, string seriesInstanceUid)
+		public static IEnumerable<ISopDataSource> CreateSliceSops(this IEnumerable<VolumeSlice> slices, string seriesInstanceUid)
 		{
 			return CreateSliceSopsCore(slices, seriesInstanceUid, s => new VolumeSliceSopDataSource(s));
 		}
 
-		public static IEnumerable<ISopDataSource> CreateAsyncSliceSops(this IEnumerable<VolumeSlice2> slices, string seriesInstanceUid)
+		public static IEnumerable<ISopDataSource> CreateAsyncSliceSops(this IEnumerable<VolumeSlice> slices, string seriesInstanceUid)
 		{
 			return CreateSliceSopsCore(slices, seriesInstanceUid, s => new AsyncVolumeSliceSopDataSource(s));
 		}
 
-		private static IEnumerable<ISopDataSource> CreateSliceSopsCore(IEnumerable<VolumeSlice2> slices, string seriesInstanceUid, Func<VolumeSlice2, ISopDataSource> sopDataSourceConstructor)
+		private static IEnumerable<ISopDataSource> CreateSliceSopsCore(IEnumerable<VolumeSlice> slices, string seriesInstanceUid, Func<VolumeSlice, ISopDataSource> sopDataSourceConstructor)
 		{
 			if (string.IsNullOrWhiteSpace(seriesInstanceUid))
 				seriesInstanceUid = DicomUid.GenerateUid().UID;
