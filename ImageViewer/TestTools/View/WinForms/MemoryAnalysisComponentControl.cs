@@ -53,22 +53,43 @@ namespace ClearCanvas.ImageViewer.TestTools.View.WinForms
             BindingSource bindingSource = new BindingSource();
 			bindingSource.DataSource = _component;
 
-        	_memoryIncrement.DataBindings.Add("Value", _component, "MemoryIncrementKB", true,
+            _systemFreeMemory.DataBindings.Add("Value", _component, "SystemFreeMemoryMB", true,
+                                               DataSourceUpdateMode.OnPropertyChanged);
+
+            _processVirtualMemory.DataBindings.Add("Value", _component, "ProcessVirtualMemoryMB", true,
+                                               DataSourceUpdateMode.OnPropertyChanged);
+
+            _processPrivateBytes.DataBindings.Add("Value", _component, "ProcessPrivateBytesMB", true,
+                                               DataSourceUpdateMode.OnPropertyChanged);
+
+            _processWorkingSet.DataBindings.Add("Value", _component, "ProcessWorkingSetMB", true,
+                                               DataSourceUpdateMode.OnPropertyChanged);
+
+            _largeObjectBufferSize.DataBindings.Add("Value", _component, "LargeObjectBufferSizeKB", true,
+                                               DataSourceUpdateMode.OnPropertyChanged);
+
+            _largeObjectRepeatCount.DataBindings.Add("Value", _component, "LargeObjectRepeatCount", true,
+                                   DataSourceUpdateMode.OnPropertyChanged);
+
+            _largeObjectsHeldMemory.DataBindings.Add("Value", _component, "TotalLargeObjectMemoryMB", true,
+                                                     DataSourceUpdateMode.OnPropertyChanged);
+
+            _heldMemoryIncrement.DataBindings.Add("Value", _component, "MemoryIncrementKB", true,
         	                                   DataSourceUpdateMode.OnPropertyChanged);
 
-        	_heapMemory.DataBindings.Add("Value", _component, "HeapMemoryKB", true, 
+            _heldMemoryRepeatCount.DataBindings.Add("Value", _component, "MemoryRepeatCount", true,
+                                         DataSourceUpdateMode.OnPropertyChanged);
+
+        	_heapMemory.DataBindings.Add("Value", _component, "HeapMemoryMB", true, 
 				DataSourceUpdateMode.OnPropertyChanged);
 
-			_heldMemory.DataBindings.Add("Value", _component, "HeldMemoryKB", true,
+			_heldMemory.DataBindings.Add("Value", _component, "HeldMemoryMB", true,
 				DataSourceUpdateMode.OnPropertyChanged);
 
-			_markedMemory.DataBindings.Add("Value", _component, "MemoryMarkKB", true,
+			_markedMemory.DataBindings.Add("Value", _component, "MemoryMarkMB", true,
 				DataSourceUpdateMode.OnPropertyChanged);
 
-			_memoryDifference.DataBindings.Add("Value", _component, "MemoryDifferenceKB", true,
-				DataSourceUpdateMode.OnPropertyChanged);
-
-			_largeObjectMemory.DataBindings.Add("Value", _component, "TotalLargeObjectMemoryKB", true,
+			_memoryDifference.DataBindings.Add("Value", _component, "MemoryDifferenceMB", true,
 				DataSourceUpdateMode.OnPropertyChanged);
 		}
 
@@ -100,9 +121,24 @@ namespace ClearCanvas.ImageViewer.TestTools.View.WinForms
 			_component.MarkMemory();
 		}
 
-		private void _unloadPixelData_Click(object sender, EventArgs e)
-		{
-			_component.UnloadPixelData();
-		}
+        private void _consumeLarge_Click(object sender, EventArgs e)
+        {
+            _component.AddLargeObjects();
+        }
+
+        private void _releaseLarge_Click(object sender, EventArgs e)
+        {
+            _component.ReleaseHeldLargeObjects();
+        }
+
+        private void _useHeldMemory_Click(object sender, EventArgs e)
+        {
+            _component.UseHeldMemory();
+        }
+
+        private void _useLargeObjects_Click(object sender, EventArgs e)
+        {
+            _component.ReleaseAllLargeObjects();
+        }
     }
 }

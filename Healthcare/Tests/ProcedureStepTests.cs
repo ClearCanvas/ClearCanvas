@@ -148,7 +148,7 @@ namespace ClearCanvas.Healthcare.Tests
 
             Assert.IsNotNull(procedureStep.Scheduling);
             Assert.IsNotNull(procedureStep.Scheduling.Performer);
-            Assert.IsInstanceOfType(typeof(ProcedureStepPerformer), procedureStep.Scheduling.Performer);
+            Assert.IsInstanceOf(typeof(ProcedureStepPerformer), procedureStep.Scheduling.Performer);
             Assert.AreEqual(performer, ((ProcedureStepPerformer)procedureStep.Scheduling.Performer).Staff);
         }
 
@@ -193,7 +193,7 @@ namespace ClearCanvas.Healthcare.Tests
             // Make assertions
             Assert.IsNotNull(newStep.Scheduling);
             Assert.IsNotNull(newStep.Scheduling.Performer);
-            Assert.IsInstanceOfType(typeof(ProcedureStepPerformer), newStep.Scheduling.Performer);
+            Assert.IsInstanceOf(typeof(ProcedureStepPerformer), newStep.Scheduling.Performer);
             Assert.AreEqual(performer, ((ProcedureStepPerformer)newStep.Scheduling.Performer).Staff);
         }
 
@@ -218,7 +218,7 @@ namespace ClearCanvas.Healthcare.Tests
             Assert.AreEqual(end, newStep.Scheduling.EndTime);
             Assert.IsNotNull(newStep.Scheduling);
             Assert.IsNotNull(newStep.Scheduling.Performer);
-            Assert.IsInstanceOfType(typeof(ProcedureStepPerformer), newStep.Scheduling.Performer);
+            Assert.IsInstanceOf(typeof(ProcedureStepPerformer), newStep.Scheduling.Performer);
             Assert.AreEqual(performer, ((ProcedureStepPerformer)newStep.Scheduling.Performer).Staff);
         }
 
@@ -276,7 +276,7 @@ namespace ClearCanvas.Healthcare.Tests
             // Make assertions
             Assert.AreEqual(ActivityStatus.IP, procedureStep.State);
             Assert.AreEqual(later, procedureStep.StartTime);
-            Assert.IsInstanceOfType(typeof(ProcedureStepPerformer), procedureStep.Performer);
+            Assert.IsInstanceOf(typeof(ProcedureStepPerformer), procedureStep.Performer);
             Assert.AreEqual(performer, ((ProcedureStepPerformer)procedureStep.Performer).Staff);
         }
 
@@ -293,7 +293,7 @@ namespace ClearCanvas.Healthcare.Tests
             // Make assertions
             Assert.AreEqual(ActivityStatus.IP, procedureStep.State);
             Assert.IsTrue(RoughlyEqual(Platform.Time, procedureStep.StartTime));
-            Assert.IsInstanceOfType(typeof(ProcedureStepPerformer), procedureStep.Performer);
+            Assert.IsInstanceOf(typeof(ProcedureStepPerformer), procedureStep.Performer);
             Assert.AreEqual(performer, ((ProcedureStepPerformer)procedureStep.Performer).Staff);
         }
 
@@ -310,7 +310,7 @@ namespace ClearCanvas.Healthcare.Tests
             // Make assertions
             Assert.AreEqual(ActivityStatus.IP, procedureStep.State);
             Assert.IsTrue(RoughlyEqual(Platform.Time, procedureStep.StartTime));
-            Assert.IsInstanceOfType(typeof(ProcedureStepPerformer), procedureStep.Performer);
+            Assert.IsInstanceOf(typeof(ProcedureStepPerformer), procedureStep.Performer);
             Assert.AreEqual(performer, ((ProcedureStepPerformer)procedureStep.Performer).Staff);
         }
 
@@ -337,7 +337,7 @@ namespace ClearCanvas.Healthcare.Tests
             // Make assertions
             Assert.AreEqual(ActivityStatus.CM, procedureStep.State);
             Assert.IsTrue(RoughlyEqual(Platform.Time, procedureStep.EndTime));
-            Assert.IsInstanceOfType(typeof(ProcedureStepPerformer), procedureStep.Performer);
+            Assert.IsInstanceOf(typeof(ProcedureStepPerformer), procedureStep.Performer);
             Assert.AreEqual(performer, ((ProcedureStepPerformer)procedureStep.Performer).Staff);
         }
 

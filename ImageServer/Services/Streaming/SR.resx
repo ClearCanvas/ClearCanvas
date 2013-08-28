@@ -112,16 +112,22 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AlertHeaderMaxConnectionsReached" xml:space="preserve">
     <value>Maximum number of simultaneous connections {0} has been reached. ServiceThrottling should be increased.</value>
   </data>
   <data name="AlertUnableToStart" xml:space="preserve">
     <value>Unable to start : {0}</value>
+  </data>
+  <data name="DicomImportServerDescription" xml:space="preserve">
+    <value>Provide DICOM Import services</value>
+  </data>
+  <data name="DicomImportServerDisplayName" xml:space="preserve">
+    <value>DICOM Import Server</value>
   </data>
   <data name="DicomServer" xml:space="preserve">
     <value>Dicom Server</value>

@@ -243,7 +243,8 @@ namespace ClearCanvas.ImageViewer.InteractiveGraphics
 
 		#region Image Resource Sharing
 
-		private static readonly Dictionary<string, Image> _cachedImageResources = new Dictionary<string, Image>();
+		[ThreadStatic]
+		private static Dictionary<string, Image> _cachedImageResources;
 
 		/// <summary>
 		/// Gets a statically cached image resource.
@@ -251,6 +252,7 @@ namespace ClearCanvas.ImageViewer.InteractiveGraphics
 		internal static Image GetImageResource(string resourceName)
 		{
 			// simple static resource caching - the progress bar graphical elements only total about 6 kilobytes
+			if (_cachedImageResources == null) _cachedImageResources = new Dictionary<string, Image>();
 			if (!_cachedImageResources.ContainsKey(resourceName))
 			{
 				var resourceResolver = new ApplicationThemeResourceResolver(Assembly.GetExecutingAssembly());

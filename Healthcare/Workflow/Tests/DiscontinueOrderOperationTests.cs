@@ -30,6 +30,9 @@ using System.Text;
 using NUnit.Framework;
 using ClearCanvas.Workflow;
 
+// disable warnings about DiscontinueOrderOperation being obsolete
+#pragma warning disable 618
+
 namespace ClearCanvas.Healthcare.Workflow.Tests
 {
     [TestFixture]

@@ -32,6 +32,7 @@ namespace ClearCanvas.ImageViewer.AdvancedImaging.Fusion
 {
 	public static class AlphaColorMapFactory
 	{
+	    // TODO (CR Apr 2013): I'm not sure this is necessary, and it causes basically a permanent memory leak.
 		private static readonly Dictionary<ICachedColorMapKey, CacheItem> _cache = new Dictionary<ICachedColorMapKey, CacheItem>();
 		private static readonly object _syncLock = new object();
 
@@ -348,7 +349,7 @@ namespace ClearCanvas.ImageViewer.AdvancedImaging.Fusion
 		private class CacheItem : ILargeObjectContainer
 		{
 			private readonly object _syncLock = new object();
-			private readonly LargeObjectContainerData _largeObjectData = new LargeObjectContainerData(Guid.NewGuid()) {RegenerationCost = RegenerationCost.Low};
+			private readonly LargeObjectContainerData _largeObjectData = new LargeObjectContainerData(Guid.NewGuid()) {RegenerationCost = LargeObjectContainerData.PresetGeneratedData};
 			private volatile IColorMap _realColorMap;
 
 			private readonly ICachedColorMapKey _key;

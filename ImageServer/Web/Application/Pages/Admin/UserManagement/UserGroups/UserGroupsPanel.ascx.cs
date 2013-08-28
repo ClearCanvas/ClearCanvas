@@ -75,7 +75,7 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Admin.UserManagement.Use
 
             UserGroupsGridPanel.DataSourceCreated += delegate(UserGroupDataSource source)
                             {
-                                source.GroupName = GroupName.Text;
+                                source.GroupName = GroupName.TrimText;
                             };
 
         }

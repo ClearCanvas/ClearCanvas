@@ -127,7 +127,7 @@ namespace ClearCanvas.Healthcare.Tests
             InterpretationStep newStep = (InterpretationStep)procedureStep.Reassign(new Staff());
 
             Assert.AreEqual(procedureStep, newStep);
-            Assert.IsInstanceOfType(typeof (InterpretationStep), newStep);
+            Assert.IsInstanceOf(typeof (InterpretationStep), newStep);
         }
         #endregion
     }

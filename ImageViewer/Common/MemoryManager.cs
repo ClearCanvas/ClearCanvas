@@ -287,6 +287,7 @@ namespace ClearCanvas.ImageViewer.Common
 			if (!Enabled)
 				return;
 #endif
+			// CR (JY 2013-APR-15): Assert container != null
 			lock(_syncLock)
 			{
 				_containersToRemove.Remove(container);
@@ -303,6 +304,7 @@ namespace ClearCanvas.ImageViewer.Common
 		/// </summary>
 		public static void Remove(ILargeObjectContainer container)
 		{
+			// CR (JY 2013-APR-15): Assert container != null
 			lock (_syncLock)
 			{
 				_containersToAdd.Remove(container);

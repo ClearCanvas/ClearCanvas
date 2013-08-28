@@ -121,6 +121,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>SR.resx</DependentUpon>
     </Compile>
+    <Compile Include="UpgradeScripts\BaseUpgradeScript.cs" />
+    <Compile Include="UpgradeScripts\UpgradeFrom_9_0_9561_11723.cs" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{B4F97281-0DBD-4835-9ED8-7DFB966E87FF}" />
@@ -224,6 +226,7 @@
     <EmbeddedResource Include="Mappings\ProcedureCheckIn.hbm.xml" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="UpgradeScripts\UpgradeFrom_NoOp.sql" />
     <EmbeddedResource Include="Mappings\OrderCancelReasonEnum.hbm.xml" />
     <EmbeddedResource Include="Mappings\OrderStatusEnum.hbm.xml" />
     <EmbeddedResource Include="Mappings\Report.hbm.xml" />

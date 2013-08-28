@@ -91,7 +91,7 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Studies.MoveSeries {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox AETitleFilter;
+        protected global::ClearCanvas.ImageServer.Web.Common.WebControls.UI.TextBox AETitleFilter;
         
         /// <summary>
         /// DescriptionFilter control.
@@ -100,7 +100,7 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Studies.MoveSeries {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox DescriptionFilter;
+        protected global::ClearCanvas.ImageServer.Web.Common.WebControls.UI.TextBox DescriptionFilter;
         
         /// <summary>
         /// IPAddressFilter control.
@@ -109,7 +109,7 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Studies.MoveSeries {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox IPAddressFilter;
+        protected global::ClearCanvas.ImageServer.Web.Common.WebControls.UI.TextBox IPAddressFilter;
         
         /// <summary>
         /// DHCPFilter control.

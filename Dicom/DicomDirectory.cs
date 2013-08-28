@@ -313,9 +313,6 @@ namespace ClearCanvas.Dicom
                 _dicomDirFile.DataSet[DicomTags.OffsetOfTheLastDirectoryRecordOfTheRootDirectoryEntity].Values = 0;
             }
 
-            // Add this at the end so it does not mess up offset value...
-            _dicomDirFile.DataSet[DicomTags.SopClassUid].Values = DicomUids.MediaStorageDirectoryStorage.UID;
-
             try
             {
                 _dicomDirFile.Save(fileName, options);

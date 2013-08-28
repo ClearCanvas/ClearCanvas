@@ -304,6 +304,7 @@
     <Compile Include="Utilities\DictionaryEventArgs.cs" />
     <Compile Include="Utilities\ItemEventArgs.cs" />
     <Compile Include="Utilities\PerformanceReportBroker.cs" />
+    <Compile Include="Utilities\SynchronizedEventHelper.cs" />
     <Compile Include="Utilities\SystemResources.cs" />
     <Compile Include="Utilities\ObjectWalker.cs" />
     <Compile Include="Utilities\SimpleSerializer.cs" />
@@ -419,6 +420,7 @@
     <Compile Include="Shreds\QueueProcessorShred.cs" />
     <Compile Include="Shreds\Shred.cs" />
     <Compile Include="Shreds\ShredExtensionPoint.cs" />
+    <Compile Include="Specifications\Tests\CultureSpecificationTests.cs" />
     <Compile Include="Tests\UsageTrackingTest.cs" />
     <Compile Include="UsageTracking\DisplayMessage.cs" />
     <Compile Include="UsageTracking\IUsageTracking.cs" />

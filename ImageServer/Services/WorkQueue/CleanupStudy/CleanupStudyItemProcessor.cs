@@ -236,7 +236,7 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.CleanupStudy
                         ClearCanvas.ImageServer.Core.Command.DeleteDirectoryCommand deleteDir = new ClearCanvas.ImageServer.Core.Command.DeleteDirectoryCommand(fileInfo.Directory.FullName, false, true);
                         processor.AddCommand(deleteDir);
                     }
-                    catch (DirectoryNotFoundException ex)
+                    catch (DirectoryNotFoundException)
                     {
                         // ignore
                     }

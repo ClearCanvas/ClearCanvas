@@ -46,20 +46,19 @@ namespace ClearCanvas.ImageServer.Web.Application.Controls
             ContainerPanel.Attributes.Add("numberofinvalidfields", "0");
  
             ContainerPanel.Style.Add("display", "block");
-            ContainerPanel.Style.Add("visibility", "hidden");   
+            ContainerPanel.Style.Add("visibility", "hidden");
+        }
 
+        public bool IsVisible
+        {
+            get { return ContainerPanel.Style[HtmlTextWriterStyle.Visibility] == "visible"; }
         }
                 
-		public bool IsVisible
-		{
-            get { return ContainerPanel.Style[HtmlTextWriterStyle.Visibility] == "visible"; }
-		}
            
         public Control Container
         {
             get { return ContainerPanel; }
         }
-
 
         public void Show()
         {

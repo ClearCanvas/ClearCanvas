@@ -243,6 +243,11 @@ namespace ClearCanvas.Dicom.IO
                     {
                         if (de.Tag.VR.Is16BitLengthField)
                         {
+                            // #10890: Can't encode the value length if the length of the data exceeds max value for a 16-bit field
+                            if (theData.Length > ushort.MaxValue -1 /* must be even length so max allowed = 65534 */)
+                                throw new DicomDataException(string.Format(
+                                        "Value for {0} exceeds maximum stream length allowed for a {1} VR attribute encoded using {2}",
+                                        de.Tag, de.Tag.VR, _syntax));
 							_writer.Write((ushort)theData.Length);
                         }
                         else

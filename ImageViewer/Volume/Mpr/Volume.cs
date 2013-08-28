@@ -78,14 +78,6 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 		//	the typical image to patient coordintate transform.
 		private readonly Vector3D _origin = new Vector3D(0, 0, 0);
 
-		// As pertinent volume fields are currently readonly, we only have to create the
-		//	VTK volume wrapper once for each volume.
-		private vtkImageData _cachedVtkVolume;
-
-		// This handle is used to pin the volume array. Whenever VTK operates on the volume,
-		//	the volume array must be pinned.
-		private GCHandle? _volumeArrayPinnedHandle;
-
 		private bool _disposed = false;
 
 		private readonly string _description;
@@ -98,6 +90,12 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 
 		#region Constructors
 
+		static Volume()
+		{
+			// Volume is the root of all VTK use through the API, so this is the place to initialize it
+			VtkHelper.StaticInitializationHack();
+		}
+
 		/// <summary>
 		/// Constructs a <see cref="Volume"/> using a volume data array of signed 16-bit words.
 		/// </summary>
@@ -105,7 +103,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 		/// Consider using one of the static helpers such as <see cref="Create(ClearCanvas.ImageViewer.IDisplaySet)"/> to construct and automatically fill a <see cref="Volume"/>.
 		/// </remarks>
 		public Volume(short[] data, Size3D dimensions, Vector3D spacing, Vector3D originPatient,
-					  Matrix orientationPatient, IList<IDicomAttributeProvider> dicomAttributeModel, int paddingValue, string sourceSeriesInstanceUid)
+		              Matrix orientationPatient, IList<IDicomAttributeProvider> dicomAttributeModel, int paddingValue, string sourceSeriesInstanceUid)
 			: this(data, null, dimensions, spacing, originPatient, orientationPatient,
 			       VolumeSopDataSourcePrototype.Create(dicomAttributeModel, 16, 16, true), paddingValue, sourceSeriesInstanceUid, 0, 0) {}
 
@@ -116,7 +114,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 		/// Consider using one of the static helpers such as <see cref="Create(ClearCanvas.ImageViewer.IDisplaySet)"/> to construct and automatically fill a <see cref="Volume"/>.
 		/// </remarks>
 		public Volume(ushort[] data, Size3D dimensions, Vector3D spacing, Vector3D originPatient,
-					  Matrix orientationPatient, IList<IDicomAttributeProvider> dicomAttributeModel, int paddingValue, string sourceSeriesInstanceUid)
+		              Matrix orientationPatient, IList<IDicomAttributeProvider> dicomAttributeModel, int paddingValue, string sourceSeriesInstanceUid)
 			: this(null, data, dimensions, spacing, originPatient, orientationPatient,
 			       VolumeSopDataSourcePrototype.Create(dicomAttributeModel, 16, 16, false), paddingValue, sourceSeriesInstanceUid, 0, 0) {}
 
@@ -440,6 +438,8 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 			get { return _arrayDimensions; }
 		}
 
+		#endregion
+
 		#region VTK volume wrapper
 
 		private vtkImageData CreateVtkVolume()
@@ -452,61 +452,39 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 			vtkVolume.SetOrigin(Origin.X, Origin.Y, Origin.Z);
 			vtkVolume.SetSpacing(VoxelSpacing.X, VoxelSpacing.Y, VoxelSpacing.Z);
 
-			if (!this.Signed)
+			if (!Signed)
 			{
-				vtkVolume.SetScalarTypeToUnsignedShort();
-				vtkVolume.GetPointData().SetScalars(
-					VtkHelper.ConvertToVtkUnsignedShortArray(_volumeDataUInt16));
+				using (vtkUnsignedShortArray array = VtkHelper.ConvertToVtkUnsignedShortArray(_volumeDataUInt16))
+				{
+					vtkVolume.SetScalarTypeToUnsignedShort();
+					vtkVolume.GetPointData().SetScalars(array);
+
+					// This call is necessary to ensure vtkImageData data's info is correct (e.g. updates WholeExtent values)
+					vtkVolume.UpdateInformation();
+				}
 			}
 			else
 			{
-				vtkVolume.SetScalarTypeToShort();
-				vtkVolume.GetPointData().SetScalars(
-					VtkHelper.ConvertToVtkShortArray(_volumeDataInt16));
-			}
+				using (var array = VtkHelper.ConvertToVtkShortArray(_volumeDataInt16))
+				{
+					vtkVolume.SetScalarTypeToShort();
+					vtkVolume.GetPointData().SetScalars(array);
 
-			// This call is necessary to ensure vtkImageData data's info is correct (e.g. updates WholeExtent values)
-			vtkVolume.UpdateInformation();
+					// This call is necessary to ensure vtkImageData data's info is correct (e.g. updates WholeExtent values)
+					vtkVolume.UpdateInformation();
+				}
+			}
 
 			return vtkVolume;
 		}
 
-		/// <summary>
-		/// Call to obtain a VTK volume structure that is safe for VTK to operate on. When done
-		/// operating on the volume, call <see cref="ReleasePinnedVtkVolume"/>.
-		/// </summary>
-		/// <returns></returns>
-		internal vtkImageData ObtainPinnedVtkVolume()
+		internal VtkVolumeHandle CreateVtkVolumeHandle()
 		{
-			//TODO: Wrap with disposable object and have released on Dispose
-
-			// Create the VTK volume wrapper if it doesn't exist
-			if (_cachedVtkVolume == null)
-				_cachedVtkVolume = CreateVtkVolume();
-
-			// Pin the managed volume array. If not null, then already pinned so we do not re-pin.
-			if (_volumeArrayPinnedHandle == null)
-			{
-				if (!this.Signed)
-					_volumeArrayPinnedHandle = GCHandle.Alloc(_volumeDataUInt16, GCHandleType.Pinned);
-				else
-					_volumeArrayPinnedHandle = GCHandle.Alloc(_volumeDataInt16, GCHandleType.Pinned);
-			}
-
-			return _cachedVtkVolume;
+			// Technically, the volume should be pinned before creating the "volume" because it stores a pointer to the array.
+			var volumeArrayPinned = GCHandle.Alloc(!Signed ? (Array) _volumeDataUInt16 : _volumeDataInt16, GCHandleType.Pinned);
+			var vtkVolume = CreateVtkVolume();
+			return new VtkVolumeHandle(vtkVolume, volumeArrayPinned);
 		}
-
-		internal void ReleasePinnedVtkVolume()
-		{
-			if (_volumeArrayPinnedHandle != null)
-			{
-				// Check for null avoids calling this twice
-				_volumeArrayPinnedHandle.Value.Free();
-				_volumeArrayPinnedHandle = null;
-			}
-		}
-
-		#endregion
 
 		#endregion
 
@@ -524,12 +502,12 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 		{
 			get
 			{
-				if (!this.Contains(x,y,z))
+				if (!this.Contains(x, y, z))
 					throw new ArgumentOutOfRangeException();
 				if (this.Signed)
 					return _volumeDataInt16[x + _arrayDimensions.Width*(y + _arrayDimensions.Height*z)];
 				else
-					return _volumeDataUInt16[x + _arrayDimensions.Width * (y + _arrayDimensions.Height * z)];
+					return _volumeDataUInt16[x + _arrayDimensions.Width*(y + _arrayDimensions.Height*z)];
 			}
 		}
 
@@ -541,26 +519,20 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 
 		~Volume()
 		{
-			this.Dispose(false);
+			try
+			{
+				Dispose(false);
+			}
+			catch (Exception ex)
+			{
+				Platform.Log(LogLevel.Warn, ex);
+			}
 		}
 
 		protected void Dispose(bool disposing)
 		{
 			if (!_disposed)
 			{
-				if (disposing)
-				{
-					if (_cachedVtkVolume != null)
-					{
-						_cachedVtkVolume.GetPointData().Dispose();
-						_cachedVtkVolume.Dispose();
-						_cachedVtkVolume = null;
-					}
-				}
-
-				// This should have been taken care of by caller of Obtain, release here just to be safe.
-				ReleasePinnedVtkVolume();
-
 				_volumeDataInt16 = null;
 				_volumeDataUInt16 = null;
 

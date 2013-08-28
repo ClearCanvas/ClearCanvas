@@ -89,12 +89,12 @@ namespace ClearCanvas.Ris.Client
 
 			protected override IconSet OpenIconSet
 			{
-				get { return new IconSet(IconScheme.Colour, "ContainerFolderOpenSmall.png", "ContainerFolderOpenMedium.png", "ContainerFolderOpenMedium.png"); }
+				get { return new IconSet("ContainerFolderOpenSmall.png", "ContainerFolderOpenMedium.png", "ContainerFolderOpenMedium.png"); }
 			}
 
 			protected override IconSet ClosedIconSet
 			{
-				get { return new IconSet(IconScheme.Colour, "ContainerFolderClosedSmall.png", "ContainerFolderClosedMedium.png", "ContainerFolderClosedMedium.png"); }
+				get { return new IconSet("ContainerFolderClosedSmall.png", "ContainerFolderClosedMedium.png", "ContainerFolderClosedMedium.png"); }
 			}
 		}
 

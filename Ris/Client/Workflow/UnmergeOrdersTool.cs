@@ -36,7 +36,7 @@ namespace ClearCanvas.Ris.Client.Workflow
 {
 	[MenuAction("apply", "folderexplorer-items-contextmenu/Undo Merge Orders", "Apply")]
 	[Tooltip("apply", "Undo Merge Orders")]
-	[IconSet("apply", IconScheme.Colour, "UnmergeOrdersSmall.png", "UnmergeOrdersMedium.png", "UnmergeOrdersLarge.png")]
+	[IconSet("apply", "UnmergeOrdersSmall.png", "UnmergeOrdersMedium.png", "UnmergeOrdersLarge.png")]
 	[EnabledStateObserver("apply", "Enabled", "EnabledChanged")]
 	[ActionPermission("apply", Application.Common.AuthorityTokens.Workflow.Order.Unmerge)]
 	public abstract class UnmergeOrdersToolBase<TItem, TContext> : WorkflowItemTool<TItem, TContext>

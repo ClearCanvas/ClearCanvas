@@ -151,7 +151,7 @@ namespace ClearCanvas.Healthcare.Tests
             PublicationStep newStep = (PublicationStep)procedureStep.Reassign(new Staff());
 
             Assert.AreEqual(procedureStep, newStep);
-            Assert.IsInstanceOfType(typeof(PublicationStep), newStep);
+            Assert.IsInstanceOf(typeof(PublicationStep), newStep);
         }
 
         #endregion

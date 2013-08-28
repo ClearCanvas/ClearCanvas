@@ -223,12 +223,6 @@ namespace ClearCanvas.Dicom
 
 		internal override sealed uint CalculateWriteLength(TransferSyntax syntax, DicomWriteOptions options)
 		{
-			return CalculateWriteLength(syntax, options, _values);
-		}
-
-		internal virtual uint CalculateWriteLength(TransferSyntax syntax, DicomWriteOptions options, DicomAttributeBinaryData<T> values)
-		{
-			// for some reason, OB attribute has a special override of this that isn't just a special case of the base implementation
 			return base.CalculateWriteLength(syntax, options);
 		}
 
@@ -278,9 +272,18 @@ namespace ClearCanvas.Dicom
 				{
 					fs.Seek(_reference.Offset, SeekOrigin.Begin);
 
+					// Note: the length passed in the constructor is used for determinining whether "highCapacityMode" is used.
+					// It is NOT used to allocate the internal buffer.
 					bb = new ByteBuffer(_reference.Length);
 					bb.CopyFrom(fs, (int) _reference.Length);
 					fs.Close();
+				}
+
+				if (_reference.Length%2 == 1)
+				{
+					// Note: Because the buffer is initialized using ByteBuffer.CopyFrom(), internal Stream object is created to store the data. Calling Append() will only append to the stream.
+					// If the buffer is initialized in other ways, calling Append() may cause an extra copy of the data created.
+					bb.Append(new byte[1], 0, 1);
 				}
 
 				if (syntax.Endian != _reference.Endian)
@@ -288,7 +291,7 @@ namespace ClearCanvas.Dicom
 			}
 			else if (_values != null)
 			{
-				bb = _values.CreateByteBuffer(syntax.Endian);
+				bb = _values.CreateEvenLengthByteBuffer(syntax.Endian);
 
 				if (syntax.Endian != ByteBuffer.LocalMachineEndian)
 					bb.Swap(Tag.VR.UnitSize);
@@ -1397,7 +1400,7 @@ namespace ClearCanvas.Dicom
 				throw new DicomDataException("Null values invalid for OB VR");
 
 			byte parseVal;
-			if (! byte.TryParse(val.Trim(), NumberStyle, culture, out parseVal))
+			if (!byte.TryParse(val.Trim(), NumberStyle, culture, out parseVal))
 				throw new DicomDataException(String.Format("Invalid byte format value for tag {0}: {1}", Tag, val));
 			return parseVal;
 		}
@@ -1432,26 +1435,6 @@ namespace ClearCanvas.Dicom
 
 			// accessing Data property will force the values to be loaded from disk, if only a reference is stored
 			return Data.CompareValues(other.Data);
-		}
-
-		internal override uint CalculateWriteLength(TransferSyntax syntax, DicomWriteOptions options, DicomAttributeBinaryData<byte> values)
-		{
-			uint length = 0;
-			length += 4; // element tag
-			if (syntax.ExplicitVr)
-			{
-				length += 2; // vr
-				length += 6; // length
-			}
-			else
-			{
-				length += 4; // length
-			}
-			if (values != null)
-			{
-				length += (uint) values.Length;
-			}
-			return length;
 		}
 
 		#endregion
@@ -2595,7 +2578,7 @@ namespace ClearCanvas.Dicom
 				throw new DicomDataException("Null values invalid for UL VR");
 
 			uint parseVal;
-			if (! uint.TryParse(val.Trim(), NumberStyle, culture, out parseVal))
+			if (!uint.TryParse(val.Trim(), NumberStyle, culture, out parseVal))
 				throw new DicomDataException(String.Format("Invalid uint format value for tag {0}: {1}", Tag, val));
 			return parseVal;
 		}
@@ -3035,15 +3018,21 @@ namespace ClearCanvas.Dicom
 					bb.CopyFrom(fs, (int) Reference.Length);
 					fs.Close();
 				}
+
+				// Note: Because the buffer is initialized using ByteBuffer.CopyFrom(), internal Stream object is created to store the data. Calling Append() will only append to the stream.
+				// If the buffer is initialized in other ways, calling Append() may cause an extra copy of the data created.
+				if (Reference.Length%2 == 1)
+					bb.Append(new byte[1], 0, 1);
 			}
 			else if (Data != null)
 			{
-				bb = Data.CreateByteBuffer(syntax.Endian);
+				bb = Data.CreateEvenLengthByteBuffer(syntax.Endian);
 			}
 			else
 			{
 				bb = new ByteBuffer(syntax.Endian);
 			}
+
 			return bb;
 		}
 

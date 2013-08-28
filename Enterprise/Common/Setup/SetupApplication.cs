@@ -82,7 +82,7 @@ namespace ClearCanvas.Enterprise.Common.Setup
 
 		private static void MigrateSharedSettings(string previousExeConfigFilename)
 		{
-			foreach (var group in SettingsGroupDescriptor.ListInstalledSettingsGroups(false))
+			foreach (var group in SettingsGroupDescriptor.ListInstalledSettingsGroups())
 			{
 			    try
 			    {
@@ -103,7 +103,7 @@ namespace ClearCanvas.Enterprise.Common.Setup
 		/// </summary>
 		private static void ImportSettingsGroups()
 		{
-			var groups = SettingsGroupDescriptor.ListInstalledSettingsGroups(true);
+			var groups = SettingsGroupDescriptor.ListInstalledSettingsGroups(SettingsGroupFilter.SupportEnterpriseStorage);
 
 			foreach (var g in groups)
 			{

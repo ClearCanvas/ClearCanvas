@@ -115,11 +115,19 @@
     <Compile Include="Tests\Statistics.cs" />
     <Compile Include="Tests\VolumeBuilderTest.cs" />
     <Compile Include="Tests\SlicerFidelityTests.cs" />
+    <Compile Include="Tests\VolumeCacheTestTool.cs" />
     <Compile Include="Tests\VolumeFunction.cs" />
     <Compile Include="Tests\MprTestVolumeTool.cs" />
     <Compile Include="Tests\VolumeSopDataSourcePrototypeTests.cs" />
     <Compile Include="Tools\ResliceToolResetAll.cs" />
     <Compile Include="Tools\ResliceToolGraphic.cs" />
+    <Compile Include="Trial\AsyncDicomGrayscalePresentationImage.cs" />
+    <Compile Include="Trial\AsyncFrame.cs" />
+    <Compile Include="Trial\AsyncImageSop.cs" />
+    <Compile Include="Trial\AsyncPresentationImageFactory.cs" />
+    <Compile Include="Trial\AsyncSopDataSource.cs" />
+    <Compile Include="Trial\AsyncVolumeSliceSopDataSource.cs" />
+    <Compile Include="Trial\IAsyncSopFrameData.cs" />
     <Compile Include="Utilities\DicomAttributeMethods.cs" />
     <Compile Include="Utilities\DicomImagePlane.cs" />
     <Compile Include="Tools\MprLineStretchControlGraphic.cs" />
@@ -135,6 +143,9 @@
     <Compile Include="Utilities\ProgressTask.cs" />
     <Compile Include="VolumeCache.cs" />
     <Compile Include="VolumeReference.cs" />
+    <Compile Include="VolumeSlice.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="VolumeSlicerParams.cs" />
     <Compile Include="VolumeUtilities.cs" />
     <Compile Include="MprSliceSet.cs" />
@@ -156,6 +167,7 @@
     <Compile Include="VolumeSliceSopDataSource.cs" />
     <Compile Include="VolumeSopDataSourcePrototype.cs" />
     <Compile Include="Utilities\VtkHelper.cs" />
+    <Compile Include="VtkVolumeHandle.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Common\ClearCanvas.Common.csproj">

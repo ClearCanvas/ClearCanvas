@@ -82,6 +82,11 @@ namespace ClearCanvas.Enterprise.Common.Tests
 				var other = obj as TestContract1;
 				return Equals(this.EntityRef, other.EntityRef);
 			}
+
+			public override int GetHashCode()
+			{
+				return 0;	// this isn't used by unit tests, but we want to silence the compiler warning
+			}
 		}
 
 		[TestFixtureSetUp]

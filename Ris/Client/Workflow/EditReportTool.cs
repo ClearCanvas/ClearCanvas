@@ -153,8 +153,8 @@ namespace ClearCanvas.Ris.Client.Workflow
 			false,
 			SR.TitleCreateReport,
 			SR.TitleEditReport,
-			new IconSet(IconScheme.Colour, "Icons.CreateReportSmall.png", "Icons.CreateReportMedium.png", "Icons.CreateReportMedium.png"),
-			new IconSet(IconScheme.Colour, "Icons.EditReportToolSmall.png", "Icons.EditReportToolMedium.png", "Icons.EditReportToolLarge.png"))
+			new IconSet("Icons.CreateReportSmall.png", "Icons.CreateReportMedium.png", "Icons.CreateReportMedium.png"),
+			new IconSet("Icons.EditReportToolSmall.png", "Icons.EditReportToolMedium.png", "Icons.EditReportToolLarge.png"))
 		{
 		}
 	}
@@ -172,8 +172,8 @@ namespace ClearCanvas.Ris.Client.Workflow
 			true,
 			SR.TitleCreateReportWithImages,
 			SR.TitleEditReportWithImages,
-			new IconSet(IconScheme.Colour, "Icons.CreateReportWithImagesSmall.png", "Icons.CreateReportWithImagesMedium.png", "Icons.CreateReportWithImagesMedium.png"),
-			new IconSet(IconScheme.Colour, "Icons.EditReportWithImagesToolSmall.png", "Icons.EditReportWithImagesToolMedium.png", "Icons.EditReportWithImagesToolLarge.png"))
+			new IconSet("Icons.CreateReportWithImagesSmall.png", "Icons.CreateReportWithImagesMedium.png", "Icons.CreateReportWithImagesMedium.png"),
+			new IconSet("Icons.EditReportWithImagesToolSmall.png", "Icons.EditReportWithImagesToolMedium.png", "Icons.EditReportWithImagesToolLarge.png"))
 		{
 		}
 	}

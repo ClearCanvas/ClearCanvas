@@ -27,6 +27,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -36,6 +37,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="nunit.framework, Version=2.2.7.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
@@ -184,8 +186,10 @@
     <Compile Include="Tests\DiskspaceTests.cs" />
     <Compile Include="StudyManagement\TimeOrigin.cs" />
     <Compile Include="StudyManagement\TimeUnit.cs" />
+    <Compile Include="Tests\MemoryManagementTests.cs" />
     <Compile Include="Utilities\Imaging\JpegCompressor.cs" />
     <Compile Include="Utilities\Imaging\PngEncoder.cs" />
+    <Compile Include="Utilities\Imaging\Tests\StripPngColourManagementTests.cs" />
     <Compile Include="WorkItem\RetryDelayTimeUnit.cs" />
     <Compile Include="WorkItem\DicomSendSettings.cs" />
     <Compile Include="WorkItem\DicomSendSettings.Designer.cs">

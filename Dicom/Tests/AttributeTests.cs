@@ -6891,6 +6891,7 @@ namespace ClearCanvas.Dicom.Tests
 
         #endregion
 
+
 		[Test]
 		public void TestCopy()
 		{

@@ -141,10 +141,11 @@
     <File name="Web\App_Themes\Default\images\Controls\GridView\GridViewPagerTopBackground.png" checksum="true" />
     <File name="Web\App_Themes\Default\images\Controls\GridView\GridViewPagerTotalStudiesLeft.png" checksum="true" />
     <File name="Web\App_Themes\Default\images\Controls\GridView\GridViewPagerTotalStudiesRight.png" checksum="true" />
-    <File name="Web\App_Themes\Default\images\Controls\GridView\GridViewSelectedBackground.png" checksum="true" />
-    <File name="Web\App_Themes\Default\images\Controls\GridView\WebViewerPagerFirstEnabled.png" checksum="true" />
+	<File name="Web\App_Themes\Default\images\Controls\GridView\GridViewSelectedBackground.png" checksum="true" />
+	<File name="Web\App_Themes\Default\images\Controls\GridView\WebViewerPagerBackground.png" checksum="true"/>
+	<File name="Web\App_Themes\Default\images\Controls\GridView\WebViewerPagerFirstEnabled.png" checksum="true" />
     <File name="Web\App_Themes\Default\images\Controls\GridView\WebViewerPagerLastEnabled.png" checksum="true" />
-    <File name="Web\App_Themes\Default\images\Controls\Tabs\TabActiveLeft.png" checksum="true" />
+	<File name="Web\App_Themes\Default\images\Controls\Tabs\TabActiveLeft.png" checksum="true" />
     <File name="Web\App_Themes\Default\images\Controls\Tabs\TabActiveMiddle.png" checksum="true" />
     <File name="Web\App_Themes\Default\images\Controls\Tabs\TabActiveRight.png" checksum="true" />
     <File name="Web\App_Themes\Default\images\Controls\Tabs\TabHeaderBackgroundTop.png" checksum="true" />

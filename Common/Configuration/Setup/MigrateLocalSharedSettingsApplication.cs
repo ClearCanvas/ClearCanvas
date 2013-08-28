@@ -48,7 +48,7 @@ namespace ClearCanvas.Common.Configuration.Setup
         {
 			var commandLine = new CommandLine(args);
 
-        	var groups = SettingsGroupDescriptor.ListInstalledLocalSettingsGroups();
+        	var groups = SettingsGroupDescriptor.ListInstalledSettingsGroups(SettingsGroupFilter.LocalStorage);
 			foreach (var group in groups)
 				SettingsMigrator.MigrateSharedSettings(group, commandLine.PreviousExeConfigurationFilename);
         }

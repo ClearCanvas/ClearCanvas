@@ -85,7 +85,7 @@ namespace ClearCanvas.ImageServer.Web.Common.WebControls.Validators
 
             if (String.IsNullOrEmpty(username))
             {
-                ErrorMessage = ValidationErrors.UsernameCannotBeEmpty;
+                ErrorMessage = ValidationErrors.UserIDCannotBeEmpty;
                 return false;
             }
 

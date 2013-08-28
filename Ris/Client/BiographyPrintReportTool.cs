@@ -32,7 +32,7 @@ using ClearCanvas.Desktop.Tools;
 namespace ClearCanvas.Ris.Client
 {
 	[ButtonAction("apply", "biography-reports-toolbar/Print'/Fax Report", "Apply")]
-	[IconSet("apply", IconScheme.Colour, "Icons.PrintSmall.png", "Icons.PrintMedium.png", "Icons.PrintLarge.png")]
+	[IconSet("apply", "Icons.PrintSmall.png", "Icons.PrintMedium.png", "Icons.PrintLarge.png")]
 	[EnabledStateObserver("apply", "Enabled", "EnabledChanged")]
 	[ExtensionOf(typeof(BiographyOrderReportsToolExtensionPoint))]
 	public class BiographyPrintReportTool : Tool<IBiographyOrderReportsToolContext>

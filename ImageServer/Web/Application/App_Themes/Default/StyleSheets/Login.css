@@ -11,10 +11,9 @@
     margin-top: 175px;
 	margin-left: auto;
     margin-right: auto;
-    width: 699px;
-    height: 400px;
-	background-image: url("../images/LoginSplash.png");
+	
 }
+
 
 #LoginCredentials
 {
@@ -118,13 +117,10 @@ a.LoginLink:hover
 
 .LoginErrorMessagePanel
 {
+	margin-left: auto;
+	margin-right: auto;
     background: #FFFFCC url(../../../PersistantImage.ashx?key=ErrorMessageBackground) repeat-x;
-    padding: 5px 7px 5px 7px;
     border: solid 1px #ff0000;
-    position: relative; 
-    top: 404px; 
-    left: 0px;   
-    width: 685px;
     font-size: 14px;
     font-weight: bold;
     font-family: Sans-Serif;
@@ -147,6 +143,6 @@ a.LoginLink:hover
     font-weight: bold;
     font-family: Sans-Serif;
     text-align: center;
-    top: 404px; 
-    position: relative; 
+	margin-left: auto;/* center */
+	margin-right: auto; /* center */
 }

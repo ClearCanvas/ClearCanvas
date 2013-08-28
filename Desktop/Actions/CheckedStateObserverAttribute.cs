@@ -48,6 +48,16 @@ namespace ClearCanvas.Desktop.Actions
         }
 
 		/// <summary>
+		/// Attribute constructor.
+		/// </summary>
+		/// <param name="actionID">The logical action identifier to which this attribute applies.</param>
+		/// <param name="propertyName">The name of the property to bind to.</param>
+		public CheckedStateObserverAttribute(string actionID, string propertyName)
+			: base(actionID, propertyName)
+		{
+		}
+
+		/// <summary>
 		/// Binds the <see cref="IClickAction.Checked"/> property and <see cref="IClickAction.CheckedChanged"/> event 
 		/// to the corresponding items on the target object, via the specified <see cref="IActionBuildingContext"/>.
 		/// </summary>

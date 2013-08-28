@@ -28,7 +28,9 @@ using System.ServiceModel;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Statistics;
 using ClearCanvas.Dicom.ServiceModel.Streaming;
+using ClearCanvas.ImageServer.Common;
 using ClearCanvas.ImageServer.Common.Exceptions;
+using ClearCanvas.ImageServer.Model;
 using ClearCanvas.ImageServer.Services.Streaming.ImageStreaming.Handlers;
 
 namespace ClearCanvas.ImageServer.Services.Streaming.HeaderStreaming
@@ -88,6 +90,13 @@ namespace ClearCanvas.ImageServer.Services.Streaming.HeaderStreaming
                 // TODO: perform permission check on callingAETitle
 
                 loader = new HeaderLoader(context);
+
+                if (!parameters.IgnoreInUse)
+                {
+                    if (!loader.StudyLocation.CanBeUsedForDiagnostics())
+                        throw new StudyAccessException(SR.FaultFaultStudyTemporarilyNotAccessible, loader.StudyLocation.QueueStudyStateEnum, null);
+                }
+
                 Stream stream = loader.Load();
                 if (stream == null)
                     throw new FaultException(loader.FaultDescription);

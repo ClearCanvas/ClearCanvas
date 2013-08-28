@@ -23,9 +23,11 @@
 #endregion
 
 using System;
+using System.Security.Permissions;
 using System.Web;
 using ClearCanvas.Common;
 using ClearCanvas.ImageServer.Web.Common.Exceptions;
+using System.Security;
 
 namespace ClearCanvas.ImageServer.Web.Common.Modules
 {
@@ -77,8 +79,7 @@ namespace ClearCanvas.ImageServer.Web.Common.Modules
         {
             HttpContext ctx = HttpContext.Current;
             Exception theException;
-            Platform.Log(LogLevel.Error, ctx.Error);
-
+            
             for (theException = ctx.Server.GetLastError();
                  theException != null && theException.InnerException != null;
                  theException = theException.InnerException)
@@ -87,9 +88,16 @@ namespace ClearCanvas.ImageServer.Web.Common.Modules
 
             ctx.Server.ClearError();
 
-            if(theException != null && (theException.Message.Equals("Access is denied.") || theException.Message.Equals("Request for principal permission failed.") || theException.GetType().Name.Equals("SecurityException")))
+            
+            if(theException is SecurityException)
             {
-                ExceptionHandler.ThrowException(new AuthorizationException());
+                var ex = theException as SecurityException;
+                if (ex.PermissionType == typeof(PrincipalPermission))
+                {
+                    ExceptionHandler.ThrowException(new AuthorizationException());
+                    return;
+                }
+                
             } 
             else if (theException is HttpException)
             {
@@ -100,6 +108,8 @@ namespace ClearCanvas.ImageServer.Web.Common.Modules
             {
                 Platform.Log(LogLevel.Error, "Unhandled exception: {0}", theException);
             }
+
+            Platform.Log(LogLevel.Error, theException);
 
             if (theException != null)
                 ExceptionHandler.ThrowException(theException);

@@ -106,7 +106,7 @@ namespace ClearCanvas.Desktop.Configuration
         /// <returns></returns>
         public IList<SettingsGroupDescriptor> ListSettingsGroups()
         {
-            return SettingsGroupDescriptor.ListInstalledSettingsGroups(false);
+            return SettingsGroupDescriptor.ListInstalledSettingsGroups();
         }
 
 		public SettingsGroupDescriptor GetPreviousSettingsGroup(SettingsGroupDescriptor group)

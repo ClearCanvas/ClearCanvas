@@ -77,6 +77,13 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 			_toolBehavior = new ToolModalityBehaviorHelper(ImageViewer);
 		}
 
+		protected override void Dispose(bool disposing)
+		{
+			_memorableCommand = null;
+			_applicator = null;
+			base.Dispose(disposing);
+		}
+
 		public override event EventHandler TooltipChanged
 		{
 			add { base.TooltipChanged += value; }

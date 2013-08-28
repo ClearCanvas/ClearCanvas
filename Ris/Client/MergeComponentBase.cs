@@ -98,7 +98,6 @@ namespace ClearCanvas.Ris.Client
 	{
 		private TSummary _selectedDuplicate;
 		private TSummary _selectedOriginal;
-		private string _mergeReport;
 		private readonly IList<TSummary> _items;
 
 		protected MergeComponentBase(IList<TSummary> items)

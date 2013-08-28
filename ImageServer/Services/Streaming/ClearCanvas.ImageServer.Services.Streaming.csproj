@@ -68,6 +68,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DicomImport\DicomImportService.cs" />
     <Compile Include="HeaderStreaming\ConnectionMonitor.cs" />
     <Compile Include="ImageStreaming\Handlers\DicomPixelDataCache.cs" />
     <Compile Include="ImageStreaming\Handlers\IImageMimeTypeProcessor.cs" />
@@ -106,6 +107,7 @@
     <Compile Include="ImageStreaming\WADORequestProcessor.cs" />
     <Compile Include="ImageStreaming\StandardWADORequestTypeHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Shreds\DicomImportServer.cs" />
     <Compile Include="Shreds\HeaderStreamingServer.cs" />
     <Compile Include="Shreds\HeaderStreamingServerSettings.cs" />
     <Compile Include="Shreds\HeaderStreamingServerSettings.Designer.cs">

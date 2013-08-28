@@ -42,6 +42,8 @@ namespace ClearCanvas.Dicom.ServiceModel.Streaming
         private string _serverAETitle;
         private string _studyInstanceUID;
         private string _referenceID;        
+        private bool _ignoreInUse;
+
         #endregion Private members
 
         #region Public Properties
@@ -74,6 +76,17 @@ namespace ClearCanvas.Dicom.ServiceModel.Streaming
         {
             get { return _referenceID; }
             set { _referenceID = value; }
+        }
+
+        /// <summary>
+        /// Indicates if the study loader should attempt to ignore if the study is in use
+        /// and try to load the study anyway.
+        /// </summary>
+        [DataMember(IsRequired = false /* For backward-compatibility */)]
+        public bool IgnoreInUse
+        {
+            get { return _ignoreInUse; }
+            set { _ignoreInUse = value; }
         }
 
         #endregion Public Properties

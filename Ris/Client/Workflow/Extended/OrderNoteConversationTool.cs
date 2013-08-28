@@ -149,7 +149,7 @@ namespace ClearCanvas.Ris.Client.Workflow.Extended
 	[ButtonAction("pd", "folderexplorer-items-toolbar/Open Conversation", "Open")]
 	[Tooltip("pd", "Review/reply to the selected note.")]
 	[EnabledStateObserver("pd", "Enabled", "EnabledChanged")]
-	[IconSet("pd", IconScheme.Colour, "Icons.OrderNoteConversationSmall.png", "Icons.OrderNoteConversationMedium.png", "Icons.OrderNoteConversationLarge.png")]
+	[IconSet("pd", "Icons.OrderNoteConversationSmall.png", "Icons.OrderNoteConversationMedium.png", "Icons.OrderNoteConversationLarge.png")]
 	[ExtensionOf(typeof(OrderNoteboxItemToolExtensionPoint))]
 	public class OrderNoteConversationTool : OrderNoteConversationToolBase<OrderNoteboxItemSummary, IOrderNoteboxItemToolContext>
 	{

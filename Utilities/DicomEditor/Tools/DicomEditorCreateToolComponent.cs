@@ -46,42 +46,29 @@ namespace ClearCanvas.Utilities.DicomEditor.Tools
     [AssociateView(typeof(DicomEditorCreateToolComponentViewExtensionPoint))]
     public class DicomEditorCreateToolComponent : ApplicationComponent
     {
-        private bool _vrEnabled;
-        private bool _acceptEnabled;
         private ushort _group;
         private ushort _element;
-        private string _tagName;
-        private string _vr;
-        private int _length;
-        private string _value;
-
-        public DicomEditorCreateToolComponent()
-        {
-            _vrEnabled = false;
-            _acceptEnabled = false;
-        }        
-
-        public override void Start()
-        {
-            base.Start();
-        }
-
-        public override void Stop()
-        {
-            base.Stop();
-        }
 
         public uint TagId
         {
-            get { return DicomTagDictionary.GetDicomTag(_group, _element).TagValue; }
+            get
+            {
+                var tag = DicomTagDictionary.GetDicomTag(_group, _element);
+                if (tag == null)
+                    return 0;
+
+                return tag.TagValue;
+            }
         }
 
         public string Group
         {
             get { return String.Format("{0:x4}", _group); }
-            set 
+            set
             {
-                _group = ushort.Parse(value, System.Globalization.NumberStyles.HexNumber);
+                if (!ushort.TryParse(value, System.Globalization.NumberStyles.HexNumber, System.Globalization.CultureInfo.InvariantCulture, out _group))
+                    _group = 0;
+
                 UpdateDialog();
             }
         }
@@ -91,62 +78,35 @@ namespace ClearCanvas.Utilities.DicomEditor.Tools
             get { return String.Format("{0:x4}", _element); }
             set 
             {
-                _element = ushort.Parse(value, System.Globalization.NumberStyles.HexNumber);
+                if (!ushort.TryParse(value, System.Globalization.NumberStyles.HexNumber, System.Globalization.CultureInfo.InvariantCulture, out _element))
+                    _element = 0;
+                
                 UpdateDialog();
             }
         }
 
-        public string TagName
-        {
-            get { return _tagName; }
-            set { _tagName = value; }
-        }
+        public string TagName { get; private set; }
 
-        public string Vr
-        {
-            get { return _vr; }
-            set { _vr = value; }
-        }
+        public string Vr { get; private set; }
 
-        public string Value
-        {
-            get { return _value; }
-            set 
-            {
-                _value = value;
-                if (_vr != "US" && _vr != "UL")
-                {
-                    _length = _value.Length % 2 == 0 ? _value.Length : _value.Length + 1;
-                }
-                else if (_vr == "US")
-                {
-                    _length = 2;
-                }
-                else if (_vr == "UL")
-                {
-                    _length = 4;
-                }
-            }
-        }
+        //This component used to allow the user to enter the VR, but it was unused and, therefore misleading.
+        //Also, it used to allow tags to be entered/accepted that aren't in the DICOM tag dictionary, but the
+        //DicomEditorComponent itself can't do that, and it would cause the application to crash. One of these
+        //days, we should write a more complete DICOM Editor.
+        public bool VrEnabled { get { return false; } }
 
-        public bool VrEnabled
-        {
-            get { return _vrEnabled; }
-            set { _vrEnabled = value; }
-        }
+        public string Value { get; set; }
 
         public void Accept()
         {
-            //check if exists
+            if (!AcceptEnabled)
+                return;
+
             this.ExitCode = ApplicationComponentExitCode.Accepted;
             this.Host.Exit();            
         }
 
-        public bool AcceptEnabled
-        {
-            get { return _acceptEnabled; }
-            set { _acceptEnabled = value; }
-        }
+        public bool AcceptEnabled { get; private set; }
 
         public void Cancel()
         {
@@ -156,31 +116,41 @@ namespace ClearCanvas.Utilities.DicomEditor.Tools
         private void UpdateDialog()
         {       
             DicomTag entry = DicomTagDictionary.GetDicomTag(_group, _element);
-
             if (entry != null)
             {
-                this.TagName = entry.Name;
-                this.Vr = entry.VR.ToString();
-                this.VrEnabled = false;
+                TagName = entry.Name;
+                Vr = entry.VR.ToString();
             }
             else
             {
-                this.TagName = "Unknown";
-                this.Vr = "";
-                this.VrEnabled = true;
+                TagName = "Unknown";
+                Vr = "";
             }
       
-            this.AcceptEnabled = this.AllowTagAddition();                        
+            AcceptEnabled = AllowTagAddition();
+
+            NotifyPropertyChanged("Group");
+            NotifyPropertyChanged("Element");
+
+            NotifyPropertyChanged("TagName");
+            NotifyPropertyChanged("Vr");
+            NotifyPropertyChanged("AcceptEnabled");
         }
 
         private bool AllowTagAddition()
         {
-            ICollection<string> badGroups = new string[] {"0000", "0001", "0003"};
+            var isInDicomTagDictionary = TagId > 0;
+            if (!isInDicomTagDictionary)
+                return false; 
+
+            ICollection<string> badGroups = new [] { "0000", "0001", "0003" };
 
             // if the group number is odd, then it's a private tag and we 
             // cannot handle private tags yet at this point, so we fail out
             // the validation
-			return !(badGroups.Contains(this.Group) || this.TagName.StartsWith("Illegal") || this.Element == "0000" || (_group % 2 > 0));
+
+            var isbad = badGroups.Contains(Group) || Element == "0000";
+            return !isbad;
         }
     }
 }

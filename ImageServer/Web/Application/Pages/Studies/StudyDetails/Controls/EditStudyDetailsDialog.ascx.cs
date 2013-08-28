@@ -24,7 +24,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Web.UI.WebControls;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
@@ -200,11 +199,18 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Studies.StudyDetails.Con
             }
 
             int hh = String.IsNullOrEmpty(StudyTimeHours.Text)? 0:int.Parse(StudyTimeHours.Text);
-            int mm = int.Parse(StudyTimeMinutes.Text);
-            int ss = int.Parse(StudyTimeSeconds.Text);
+            int mm = String.IsNullOrEmpty(StudyTimeMinutes.Text) ? 0 : int.Parse(StudyTimeMinutes.Text);
+            int ss = String.IsNullOrEmpty(StudyTimeSeconds.Text) ? 0 : int.Parse(StudyTimeSeconds.Text);
             String dicomStudyTime = String.Format("{0:00}{1:00}{2:00}", hh, mm, ss);
 
-            if (AreDifferent(Study.StudyTime, dicomStudyTime))
+            // #9475 : if fraction is in the original time, it should be preserved unless the hours, minutes or seconds are modified.
+            var originalTime = Study.StudyTime;
+            if (!string.IsNullOrEmpty(originalTime) && originalTime.Contains("."))
+            {
+                originalTime = originalTime.Substring(0, originalTime.IndexOf(".", StringComparison.InvariantCultureIgnoreCase));
+            }
+
+            if (AreDifferent(originalTime, dicomStudyTime))
             {
                 var item = new UpdateItem(DicomTags.StudyTime, Study.StudyTime, dicomStudyTime);
                 changes.Add(item);
@@ -433,7 +439,7 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Studies.StudyDetails.Con
             } else
             {
                 //Hide/Disable the "Save As Reason" textbox/validation depending on whether the user is using a custom reason or not.
-                ReasonListBox.Attributes.Add("onchange", "if(document.getElementById('" + ReasonListBox.ClientID + "').options[document.getElementById('" + ReasonListBox.ClientID + "').selectedIndex].text != '" + SR.CustomReason + "') { document.getElementById('" + ReasonSavePanel.ClientID + "').style.display = 'none'; document.getElementById('" + SaveReasonAsName.ClientID + "').style.display = 'none'; } else { document.getElementById('" + ReasonSavePanel.ClientID + "').style.display = 'inline'; document.getElementById('" + SaveReasonAsName.ClientID + "').style.display = 'inline'; }");
+                ReasonListBox.Attributes.Add("onchange", "if(document.getElementById('" + ReasonListBox.ClientID + "').options[document.getElementById('" + ReasonListBox.ClientID + "').selectedIndex].text != '" + SR.CustomReason + "') { document.getElementById('" + ReasonSavePanel.ClientID + "').style.display = 'none'; document.getElementById('" + SaveReasonAsName.ClientID + "').style.display = 'none'; } else { document.getElementById('" + ReasonSavePanel.ClientID + "').style.display = 'table-row'; document.getElementById('" + SaveReasonAsName.ClientID + "').style.display = 'table-cell'; }");
                 ReasonListBox.TextChanged += delegate
                 {
                     if (ReasonListBox.SelectedItem.Text == SR.CustomReason) SaveReasonAsNameValidator.Enabled = true;

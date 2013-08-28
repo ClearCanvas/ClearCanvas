@@ -24,10 +24,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.IO.Compression;
 using System.ServiceModel;
-using System.Text;
+using System.Threading;
 using ClearCanvas.Common;
 using ClearCanvas.Dicom.Iod;
 using ClearCanvas.Dicom.ServiceModel.Streaming;
@@ -36,7 +34,6 @@ using ClearCanvas.ImageViewer.Common;
 using ClearCanvas.ImageViewer.Common.Auditing;
 using ClearCanvas.ImageViewer.Common.ServerDirectory;
 using ClearCanvas.ImageViewer.StudyManagement;
-using System.Xml;
 
 namespace ClearCanvas.ImageViewer.StudyLoaders.Streaming
 {
@@ -71,6 +68,12 @@ namespace ClearCanvas.ImageViewer.StudyLoaders.Streaming
         private IEnumerator<InstanceXml> _instances;
         private IApplicationEntity _serverAe;
 
+        /// <summary>
+        /// Get the <see cref="EventSource"/> representing the current user for the purpose of audit logging
+        /// </summary>
+        private readonly EventSource _auditSourceCurrentUser;
+        
+
         public StreamingStudyLoader()
             : this(_loaderName)
         {
@@ -79,6 +82,7 @@ namespace ClearCanvas.ImageViewer.StudyLoaders.Streaming
         public StreamingStudyLoader(string name):
             base(name)
         {
+            _auditSourceCurrentUser = EventSource.GetUserEventSource(Thread.CurrentPrincipal.Identity.Name); 
             InitStrategy();
         }
 
@@ -117,7 +121,7 @@ namespace ClearCanvas.ImageViewer.StudyLoaders.Streaming
             }
             finally
             {
-                AuditHelper.LogOpenStudies(new string[] { _serverAe.AETitle }, loadedInstances, EventSource.CurrentUser, result);
+                AuditHelper.LogOpenStudies(new string[] { _serverAe.AETitle }, loadedInstances, _auditSourceCurrentUser, result);
             }
         }
 
@@ -148,7 +152,8 @@ namespace ClearCanvas.ImageViewer.StudyLoaders.Streaming
                                    {
                                        StudyInstanceUID = studyLoaderArgs.StudyInstanceUid,
                                        ServerAETitle = _serverAe.AETitle,
-                                       ReferenceID = Guid.NewGuid().ToString()
+                                       ReferenceID = Guid.NewGuid().ToString(),
+                                       IgnoreInUse = studyLoaderArgs.Options != null && studyLoaderArgs.Options.IgnoreInUse
                                    };
 
             HeaderStreamingServiceClient client = null;

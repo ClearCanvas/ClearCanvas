@@ -294,6 +294,7 @@ namespace ClearCanvas.Dicom.Iod.Modules
 		/// <summary>
 		/// Gets or sets the value of EncapsulatedDocument in the underlying collection. Type 1.
 		/// </summary>
+		/// </remarks>
 		public byte[] EncapsulatedDocument
 		{
 			get
@@ -301,15 +302,21 @@ namespace ClearCanvas.Dicom.Iod.Modules
 				var attribute = DicomAttributeProvider[DicomTags.EncapsulatedDocument];
 				if (attribute.IsNull || attribute.IsEmpty)
 					return null;
-				return (byte[]) attribute.Values;
+
+                if (MimeTypeOfEncapsulatedDocument.Equals(@"application/pdf", StringComparison.InvariantCultureIgnoreCase))
+			        return PdfStreamHelper.StripDicomPaddingBytes((byte[]) attribute.Values);
+			    
+                return (byte[]) attribute.Values;
 			}
 			set
 			{
 				if (value == null)
 					throw new ArgumentOutOfRangeException("value", "EncapsulatedDocument is Type 1 Required.");
-				DicomAttributeProvider[DicomTags.EncapsulatedDocument].Values = value;
+
+                DicomAttributeProvider[DicomTags.EncapsulatedDocument].Values = PadToEvenLength(value);
 			}
 		}
+
 
 		/// <summary>
 		/// Initializes the attributes in this module to their default values.
@@ -351,5 +358,22 @@ namespace ClearCanvas.Dicom.Iod.Modules
 				yield return DicomTags.EncapsulatedDocument;
 			}
 		}
-	}
+
+        #region Private Methods
+
+        private static byte[] PadToEvenLength(byte[] data)
+        {
+            if (data.Length % 2 == 1)
+            {
+                // pad data to even length
+                var buffer = new byte[data.Length + 1];
+                Buffer.BlockCopy(data, 0, buffer, 0, data.Length);
+                buffer[buffer.Length - 1] = 0;
+                return buffer;
+            }
+            return data;
+        }
+
+        #endregion
+    }
 }

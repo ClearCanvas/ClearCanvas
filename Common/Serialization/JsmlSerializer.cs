@@ -25,6 +25,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
@@ -556,6 +557,10 @@ namespace ClearCanvas.Common.Serialization
 				{
 					_writer.WriteValue(((Guid)obj).ToString("N"));
 				}
+				else if (obj is IConvertible)
+				{
+					_writer.WriteValue(Convert.ToString(obj, CultureInfo.InvariantCulture));
+				}
 				else
 				{
 					_writer.WriteValue(obj.ToString());
@@ -657,7 +662,7 @@ namespace ClearCanvas.Common.Serialization
 
 				if (dataType.IsEnum)
 				{
-					return Enum.Parse(dataType, xmlElement.InnerText);
+					return Enum.Parse(dataType, xmlElement.InnerText, true);
 				}
 
 				if (dataType == typeof(DateTime))
@@ -667,7 +672,7 @@ namespace ClearCanvas.Common.Serialization
 
 				if (dataType == typeof(bool))
 				{
-					return xmlElement.InnerText.Equals("true") ? true : false;
+					return xmlElement.InnerText.Equals("true", StringComparison.InvariantCultureIgnoreCase);
 				}
 
 				if (dataType.IsGenericType && dataType.GetGenericTypeDefinition() == typeof(Nullable<>))
@@ -730,7 +735,7 @@ namespace ClearCanvas.Common.Serialization
 
 				if (dataType.GetInterface("IConvertible") == typeof(IConvertible))
 				{
-					return Convert.ChangeType(xmlElement.InnerText, dataType);
+					return Convert.ChangeType(xmlElement.InnerText, dataType, CultureInfo.InvariantCulture);
 				}
 
 				return xmlElement.InnerText;

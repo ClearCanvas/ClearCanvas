@@ -44,7 +44,7 @@
                                             </td>
                                             <td align="left">
                                                 <asp:Label ID="Label2" runat="server" Text="<%$Resources: SearchFieldLabels, PartitionArchiveDescription %>" CssClass="SearchTextBoxLabel"></asp:Label><br />
-                                                <asp:TextBox ID="DescriptionFilter" runat="server" CssClass="SearchTextBox"></asp:TextBox>
+                                                <ccUI:TextBox ID="DescriptionFilter" runat="server" CssClass="SearchTextBox"></ccUI:TextBox>
                                             </td>
                                             <td align="left" valign="bottom">
                                                 <asp:Label ID="Label1" runat="server" Text="<%$Resources: SearchFieldLabels, PartitionArchiveType %>" CssClass="SearchTextBoxLabel"></asp:Label><br />

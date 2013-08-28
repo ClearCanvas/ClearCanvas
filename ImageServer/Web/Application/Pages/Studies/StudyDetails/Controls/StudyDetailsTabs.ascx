@@ -32,7 +32,6 @@
 <%@ Register Src="ArchivePanel.ascx" TagName="ArchivePanel" TagPrefix="localAsp" %>
 <%@ Register Src="HistoryPanel.ascx" TagName="HistoryPanel" TagPrefix="localAsp" %>
 <%@ Register Src="StudyIntegrityQueueGridView.ascx" TagName="StudyIntegrityQueueGridView" TagPrefix="localAsp" %>
-<%@ Register Src="DataAccessPanel.ascx" TagName="DataAccessPanel" TagPrefix="localAsp" %>
 <%@ Register Src="UpdateAuthorityGroupDialog.ascx" TagName="UpdateAuthorityGroupDialog" TagPrefix="localAsp" %>
 
 <aspAjax:TabContainer ID="StudyDetailsTabContainer" runat="server" ActiveTabIndex="0"

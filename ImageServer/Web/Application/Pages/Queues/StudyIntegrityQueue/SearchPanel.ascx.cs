@@ -131,12 +131,12 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Queues.StudyIntegrityQue
                                                                  {
                                                                      source.Partition = ServerPartition;
 
-                                                                     if (!String.IsNullOrEmpty(PatientName.Text))
-                                                                         source.PatientName = SearchHelper.NameWildCard(PatientName.Text);
-                                                                     if (!String.IsNullOrEmpty(PatientId.Text))
-                                                                         source.PatientId = SearchHelper.TrailingWildCard(PatientId.Text);
-                                                                     if (!String.IsNullOrEmpty(AccessionNumber.Text))
-                                                                         source.AccessionNumber = SearchHelper.TrailingWildCard(AccessionNumber.Text);
+                                                                     if (!String.IsNullOrEmpty(PatientName.TrimText))
+                                                                         source.PatientName = SearchHelper.NameWildCard(PatientName.TrimText);
+                                                                     if (!String.IsNullOrEmpty(PatientId.TrimText))
+                                                                         source.PatientId = SearchHelper.TrailingWildCard(PatientId.TrimText);
+                                                                     if (!String.IsNullOrEmpty(AccessionNumber.TrimText))
+                                                                         source.AccessionNumber = SearchHelper.TrailingWildCard(AccessionNumber.TrimText);
                                                                      if (!String.IsNullOrEmpty(FromDate.Text))
                                                                          source.FromInsertTime = FromDate.Text;
 
@@ -181,8 +181,8 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Queues.StudyIntegrityQue
                 var databind = Server.UrlDecode(Request["Databind"]);
                 if (patientId != null || patientName != null || reason != null || databind != null)
                 {
-                    PatientId.Text = patientId;
-                    PatientName.Text = patientName;
+                    PatientId.TrimText = patientId;
+                    PatientName.TrimText = patientName;
                     if (reason != null)
                         ReasonListBox.Items.FindByValue(reason).Selected = true;
 

@@ -24,91 +24,15 @@
 
 using System;
 using System.Collections.Generic;
-
+using System.Linq;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Common.Configuration;
 using ClearCanvas.Desktop.Tables;
 using ClearCanvas.Desktop.Actions;
-using ClearCanvas.Desktop.Tools;
 
 namespace ClearCanvas.Desktop.Configuration
 {
-	/// <summary>
-	/// Launches the <see cref="SettingsManagementComponent"/>.
-	/// </summary>
-	[MenuAction("activate", "global-menus/MenuTools/MenuUtilities/MenuConfigureSettings", "Activate")]
-	[ActionPermission("activate", AuthorityTokens.Desktop.SettingsManagement)]
-	[ExtensionOf(typeof(DesktopToolExtensionPoint))]
-	public class SettingsManagementLaunchTool : Tool<IDesktopToolContext>
-	{
-		private IWorkspace _workspace;
-
-		/// <summary>
-		/// Constructor.
-		/// </summary>
-		public SettingsManagementLaunchTool()
-		{
-		}
-
-		/// <summary>
-		/// Launches the <see cref="SettingsManagementComponent"/> or activates it if it's already open.
-		/// </summary>
-		/// <remarks>
-		/// This method first looks for a valid extension of <see cref="SettingsStoreExtensionPoint"/> and
-		/// with which to initialize the <see cref="SettingsManagementComponent"/>.  If one is not found,
-		/// an instance of <see cref="LocalSettingsStore"/> is instantiated and passed to the
-		/// <see cref="SettingsManagementComponent"/>.  The <see cref="LocalSettingsStore"/> allows
-		/// the local application settings to be modified, where by default they cannot be.
-		/// </remarks>
-		public void Activate()
-		{
-			if (_workspace != null)
-			{
-				_workspace.Activate();
-				return;
-			}
-
-			ISettingsStore store;
-			try
-			{
-				// if this throws an exception, only the default LocalFileSettingsProvider can be used.
-				store = SettingsStore.Create();
-			}
-			catch (NotSupportedException)
-			{
-				//allow editing of the app.config file via the LocalSettingsStore.
-				store = new LocalSettingsStore();
-			}
-
-			if (!store.IsOnline)
-			{
-				Context.DesktopWindow.ShowMessageBox(SR.MessageSettingsStoreOffline, MessageBoxActions.Ok);
-				return;
-			}
-
-			_workspace = ApplicationComponent.LaunchAsWorkspace(
-				this.Context.DesktopWindow,
-				new SettingsManagementComponent(store),
-				SR.TitleSettingsEditor,
-				"Settings Management");
-
-			_workspace.Closed += OnWorkspaceClosed;
-		}
-
-		private void OnWorkspaceClosed(object sender, ClosedEventArgs e)
-		{
-			_workspace = null;
-		}
-
-		protected override void Dispose(bool disposing)
-		{
-			if (_workspace != null)
-				_workspace.Closed -= OnWorkspaceClosed;
-
-			base.Dispose(disposing);
-		}
-	}
 
 	/// <summary>
 	/// Extension point for views onto <see cref="SettingsManagementComponent"/>.
@@ -123,27 +47,116 @@ namespace ClearCanvas.Desktop.Configuration
 	/// the application and default user profile settings through a generic UI.
 	/// </summary>
 	[AssociateView(typeof(SettingsManagementComponentViewExtensionPoint))]
-	public class SettingsManagementComponent : ApplicationComponent
+	public partial class SettingsManagementComponent : ApplicationComponent
 	{
-		#region SettingsProperty class
+		#region Group class
 
 		/// <summary>
-		/// Defines a settings property for presentation in the <see cref="SettingsManagementComponent"/> view.
+		/// Base class for entries in the settings group table.
 		/// </summary>
-		public class SettingsProperty
+		internal abstract class Group
 		{
-			private SettingsPropertyDescriptor _descriptor;
+			private List<Property> _properties;
+
+			protected Group(SettingsGroupDescriptor descriptor)
+			{
+				Descriptor = descriptor;
+			}
+
+			public SettingsGroupDescriptor Descriptor { get; private set; }
+
+			public string Name
+			{
+				get { return Descriptor.Name; }
+			}
+
+			public Version Version
+			{
+				get { return Descriptor.Version; }
+			}
+
+			public string Description
+			{
+				get { return Descriptor.Description; }
+			}
+
+			public IList<Property> Properties
+			{
+				get { return _properties ?? (_properties = LoadProperties().ToList()); }
+			}
+
+			public void Save()
+			{
+				if (_properties == null)
+					return;
+
+				SaveProperties(_properties);
+
+				// mark all properties as clean again
+				foreach (var p in _properties)
+					p.MarkClean();
+			}
+
+			protected abstract IEnumerable<Property> LoadProperties();
+
+			protected abstract void SaveProperties(IList<Property> properties);
+		}
+
+		#endregion
+
+		#region SettingsStoreGroup class
+
+		/// <summary>
+		/// Represents a settings group that was retrieved from a settings store and 
+		/// may not exist in the locally installed plugins.
+		/// </summary>
+		internal class SettingsStoreGroup : Group
+		{
+			private readonly ISettingsStore _store;
+
+			internal SettingsStoreGroup(SettingsGroupDescriptor descriptor, ISettingsStore store)
+				: base(descriptor)
+			{
+				_store = store;
+			}
+
+			protected override IEnumerable<Property> LoadProperties()
+			{
+				var values = _store.GetSettingsValues(this.Descriptor, null, null);
+
+				return from pi in _store.ListSettingsProperties(this.Descriptor)
+					   select new Property(pi, values.ContainsKey(pi.Name) ? values[pi.Name] : pi.DefaultValue);
+			}
+
+			protected override void SaveProperties(IList<Property> properties)
+			{
+				// fill a dictionary with all dirty values
+				var values = properties.Where(p => p.Dirty).ToDictionary(p => p.Name, p => p.Value);
+
+				// save to the default profile
+				_store.PutSettingsValues(this.Descriptor, null, null, values);
+			}
+		}
+
+		#endregion
+
+		#region Property class
+
+		/// <summary>
+		/// Defines a settings property for presentation in properties table.
+		/// </summary>
+		internal class Property
+		{
+			private readonly SettingsPropertyDescriptor _descriptor;
 			private string _value;
 			private string _startingValue;
-
-			private event EventHandler _valueChanged;
 
 			/// <summary>
 			/// Constructor.
 			/// </summary>
 			/// <param name="descriptor">The descriptor for the property.</param>
 			/// <param name="value">The current value of the property.</param>
-			public SettingsProperty(SettingsPropertyDescriptor descriptor, string value)
+			public Property(SettingsPropertyDescriptor descriptor, string value)
 			{
 				_descriptor = descriptor;
 				_startingValue = _value = value;
@@ -200,7 +213,7 @@ namespace ClearCanvas.Desktop.Configuration
 					if (value != _value)
 					{
 						_value = value;
-						EventsHelper.Fire(_valueChanged, this, EventArgs.Empty);
+						EventsHelper.Fire(ValueChanged, this, EventArgs.Empty);
 					}
 				}
 			}
@@ -208,10 +221,14 @@ namespace ClearCanvas.Desktop.Configuration
 			/// <summary>
 			/// Raised when <see cref="Value"/> has changed.
 			/// </summary>
-			public event EventHandler ValueChanged
+			public event EventHandler ValueChanged;
+
+			/// <summary>
+			/// Resets the value to the default value.
+			/// </summary>
+			public void ResetValue()
 			{
-				add { _valueChanged += value; }
-				remove { _valueChanged -= value; }
+				this.Value = this.DefaultValue;
 			}
 
 			/// <summary>
@@ -241,17 +258,13 @@ namespace ClearCanvas.Desktop.Configuration
 
 		#endregion
 
-		//TODO (CR Sept 2010): Change this to use ApplicationSettingsExtensions to set the shared property values.
-		//That way, we can edit enterprise and local settings at the same time.
-		private readonly ISettingsStore _configStore;
+		private readonly ISettingsStore _settingsStore;
 
-		private readonly Table<SettingsGroupDescriptor> _settingsGroupTable;
-		private SettingsGroupDescriptor _selectedSettingsGroup;
-		private event EventHandler _selectedSettingsGroupChanged;
+		private readonly Table<Group> _settingsGroupTable;
+		private Group _selectedSettingsGroup;
 
-		private readonly Table<SettingsProperty> _settingsPropertiesTable;
-		private SettingsProperty _selectedSettingsProperty;
-		private event EventHandler _selectedSettingsPropertyChanged;
+		private readonly Table<Property> _settingsPropertiesTable;
+		private Property _selectedSettingsProperty;
 
 		private readonly SimpleActionModel _settingsPropertiesActionModel;
 		private readonly ClickAction _saveAllAction;
@@ -266,35 +279,34 @@ namespace ClearCanvas.Desktop.Configuration
 		/// <summary>
 		/// Constructor.
 		/// </summary>
-		/// <param name="configStore">The <see cref="ISettingsStore"/> for which the default values will be modified.</param>
-		public SettingsManagementComponent(ISettingsStore configStore)
+		public SettingsManagementComponent(ISettingsStore settingsStore)
 		{
-			_configStore = configStore;
+			_settingsStore = settingsStore;
 
 			// define the structure of the settings group table
 			ITableColumn groupNameColumn;
-			_settingsGroupTable = new Table<SettingsGroupDescriptor>();
-			_settingsGroupTable.Columns.Add(groupNameColumn = new TableColumn<SettingsGroupDescriptor, string>(SR.TitleGroup, t => t.Name));
-			_settingsGroupTable.Columns.Add(new TableColumn<SettingsGroupDescriptor, string>(SR.TitleVersion, t => t.Version.ToString()));
-			_settingsGroupTable.Columns.Add(new TableColumn<SettingsGroupDescriptor, string>(SR.TitleDescription, t => t.Description));
+			_settingsGroupTable = new Table<Group>();
+			_settingsGroupTable.Columns.Add(groupNameColumn = new TableColumn<Group, string>(SR.TitleGroup, t => t.Name, 0.4f));
+			_settingsGroupTable.Columns.Add(new TableColumn<Group, string>(SR.TitleVersion, t => t.Version.ToString(), 0.1f));
+			_settingsGroupTable.Columns.Add(new TableColumn<Group, string>(SR.TitleDescription, t => t.Description, 0.5f));
 			_settingsGroupTable.Sort(new TableSortParams(groupNameColumn, true));
 
 			// define the settings properties table
 			ITableColumn propertyNameColumn;
-			_settingsPropertiesTable = new Table<SettingsProperty>();
-			_settingsPropertiesTable.Columns.Add(propertyNameColumn = new TableColumn<SettingsProperty, string>(SR.TitleProperty, p => p.Name));
-			_settingsPropertiesTable.Columns.Add(new TableColumn<SettingsProperty, string>(SR.TitleDescription, p => p.Description));
-			_settingsPropertiesTable.Columns.Add(new TableColumn<SettingsProperty, string>(SR.TitleScope, p => p.Scope.ToString()));
-			_settingsPropertiesTable.Columns.Add(new TableColumn<SettingsProperty, string>(SR.TitleType, p => p.TypeName));
-			_settingsPropertiesTable.Columns.Add(new TableColumn<SettingsProperty, string>(SR.TitleDefaultValue, p => p.DefaultValue));
-			_settingsPropertiesTable.Columns.Add(new TableColumn<SettingsProperty, string>(SR.TitleValue, p => p.Value, (p, text) => p.Value = text));
+			_settingsPropertiesTable = new Table<Property>();
+			_settingsPropertiesTable.Columns.Add(propertyNameColumn = new TableColumn<Property, string>(SR.TitleProperty, p => p.Name));
+			_settingsPropertiesTable.Columns.Add(new TableColumn<Property, string>(SR.TitleDescription, p => p.Description));
+			_settingsPropertiesTable.Columns.Add(new TableColumn<Property, string>(SR.TitleScope, p => p.Scope.ToString()));
+			_settingsPropertiesTable.Columns.Add(new TableColumn<Property, string>(SR.TitleType, p => p.TypeName));
+			_settingsPropertiesTable.Columns.Add(new TableColumn<Property, string>(SR.TitleDefaultValue, p => p.DefaultValue));
+			_settingsPropertiesTable.Columns.Add(new TableColumn<Property, string>(SR.TitleValue, p => p.Value, (p, text) => p.Value = text));
 			_settingsPropertiesTable.Sort(new TableSortParams(propertyNameColumn, true));
 
 			_settingsGroupsActionModel = new SimpleActionModel(new ApplicationThemeResourceResolver(this.GetType().Assembly));
 			_importAction = _settingsGroupsActionModel.AddAction("import", SR.LabelImport, "ImportToolSmall.png",
 				SR.TooltipImportSettingsMetaData,
 				Import);
-			_importAction.Visible = _configStore.SupportsImport;
+			_importAction.Visible = _settingsStore.SupportsImport;
 
 			_settingsPropertiesActionModel = new SimpleActionModel(new ApplicationThemeResourceResolver(this.GetType().Assembly));
 			_saveAllAction = _settingsPropertiesActionModel.AddAction("saveall", SR.LabelSaveAll, "SaveToolSmall.png", () => SaveModifiedSettings(false));
@@ -324,24 +336,13 @@ namespace ClearCanvas.Desktop.Configuration
 		}
 
 		/// <summary>
-		/// Called by the host when the application component is being terminated.
-		/// </summary>
-		/// <remarks>
-		/// Override this method to implement custom termination logic.  Overrides must be sure to call the base implementation.
-		/// </remarks>
-		public override void Stop()
-		{
-			base.Stop();
-		}
-
-		/// <summary>
 		/// Determines whether the component can exit without any user interaction.
 		/// </summary>
 		/// <returns>True if no properties are dirty, otherwise false.</returns>
 		public override bool CanExit()
 		{
 			// return false if anything modified
-			return _selectedSettingsGroup == null || !IsAnyPropertyDirty();
+			return _selectedSettingsGroup == null || !_selectedSettingsGroup.Properties.Any(p => p.Dirty);
 		}
 
 		/// <summary>
@@ -381,16 +382,14 @@ namespace ClearCanvas.Desktop.Configuration
 			get { return new Selection(_selectedSettingsGroup); }
 			set
 			{
-				var settingsClass = (SettingsGroupDescriptor)value.Item;
-				if (settingsClass != _selectedSettingsGroup)
+				var group = (Group)value.Item;
+				if (group != _selectedSettingsGroup)
 				{
 					// save any changes before changing _selectedSettingsGroup
 					SaveModifiedSettings(true);
 
-					_selectedSettingsGroup = settingsClass;
-					LoadSettingsProperties();
-					UpdateActionEnablement();
-					EventsHelper.Fire(_selectedSettingsGroupChanged, this, EventArgs.Empty);
+					SelectGroup(group);
+					EventsHelper.Fire(SelectedSettingsGroupChanged, this, EventArgs.Empty);
 				}
 			}
 		}
@@ -398,14 +397,10 @@ namespace ClearCanvas.Desktop.Configuration
 		/// <summary>
 		/// Raised when <see cref="SelectedSettingsGroup"/> has changed.
 		/// </summary>
-		public event EventHandler SelectedSettingsGroupChanged
-		{
-			add { _selectedSettingsGroupChanged += value; }
-			remove { _selectedSettingsGroupChanged -= value; }
-		}
+		public event EventHandler SelectedSettingsGroupChanged;
 
 		/// <summary>
-		/// Gets a table of settings properties (<see cref="SettingsProperty"/>) for the
+		/// Gets a table of settings properties (<see cref="Property"/>) for the
 		/// currently selected settings group.
 		/// </summary>
 		public ITable SettingsPropertiesTable
@@ -422,19 +417,19 @@ namespace ClearCanvas.Desktop.Configuration
 		}
 
 		/// <summary>
-		/// Gets or sets the currently selected <see cref="SettingsProperty"/> as an <see cref="ISelection"/>.
+		/// Gets or sets the currently selected <see cref="Property"/> as an <see cref="ISelection"/>.
 		/// </summary>
 		public ISelection SelectedSettingsProperty
 		{
 			get { return new Selection(_selectedSettingsProperty); }
 			set
 			{
-				var p = (SettingsProperty)value.Item;
+				var p = (Property)value.Item;
 				if (p != _selectedSettingsProperty)
 				{
 					_selectedSettingsProperty = p;
 					UpdateActionEnablement();
-					EventsHelper.Fire(_selectedSettingsPropertyChanged, this, EventArgs.Empty);
+					EventsHelper.Fire(SelectedSettingsPropertyChanged, this, EventArgs.Empty);
 				}
 			}
 		}
@@ -442,11 +437,7 @@ namespace ClearCanvas.Desktop.Configuration
 		/// <summary>
 		/// Raised when <see cref="SelectedSettingsProperty"/> has changed.
 		/// </summary>
-		public event EventHandler SelectedSettingsPropertyChanged
-		{
-			add { _selectedSettingsPropertyChanged += value; }
-			remove { _selectedSettingsPropertyChanged -= value; }
-		}
+		public event EventHandler SelectedSettingsPropertyChanged;
 
 		/// <summary>
 		/// Executed when the <see cref="SelectedSettingsProperty"/> has been double-clicked in the view.
@@ -464,33 +455,47 @@ namespace ClearCanvas.Desktop.Configuration
 		private void FillSettingsGroupTable()
 		{
 			_settingsGroupTable.Items.Clear();
-			foreach (var group in _configStore.ListSettingsGroups())
+			foreach (var group in GetSettingsGroups())
 			{
 				_settingsGroupTable.Items.Add(group);
 			}
 			_settingsGroupTable.Sort();
 		}
 
-		private void LoadSettingsProperties()
+		private void SelectGroup(Group group)
 		{
-			_settingsPropertiesTable.Items.Clear();
-
+			// unsubscribe from pervious Property objects
 			if (_selectedSettingsGroup != null)
 			{
-				try
+				foreach (var property in _selectedSettingsGroup.Properties)
 				{
-					var values = _configStore.GetSettingsValues(
-							_selectedSettingsGroup,
-							null, null // load the default profile
-							);
-
-					FillSettingsPropertiesTable(values);
-				}
-				catch (Exception e)
-				{
-					ExceptionHandler.Report(e, this.Host.DesktopWindow);
+					property.ValueChanged -= SettingsPropertyValueChangedEventHandler;
 				}
 			}
+
+			_settingsPropertiesTable.Items.Clear();
+
+			_selectedSettingsGroup = group;
+
+			if (_selectedSettingsGroup == null)
+				return;
+
+			try
+			{
+				// the call to _selectedSettingsGroup.Properties can throw
+				foreach (var property in _selectedSettingsGroup.Properties)
+				{
+					property.ValueChanged += SettingsPropertyValueChangedEventHandler; //todo
+					_settingsPropertiesTable.Items.Add(property);
+				}
+				_settingsPropertiesTable.Sort();
+			}
+			catch (Exception e)
+			{
+				ExceptionHandler.Report(e, this.Host.DesktopWindow);
+			}
+
+			UpdateActionEnablement();
 		}
 
 		private void Import()
@@ -515,7 +520,7 @@ namespace ClearCanvas.Desktop.Configuration
 
 		private void DoImport()
 		{
-			var groups = SettingsGroupDescriptor.ListInstalledSettingsGroups(true);
+			var groups = SettingsGroupDescriptor.ListInstalledSettingsGroups(SettingsGroupFilter.SupportEnterpriseStorage);
 			var task = new BackgroundTask(
 				delegate(IBackgroundTaskContext context)
 				{
@@ -531,8 +536,7 @@ namespace ClearCanvas.Desktop.Configuration
 						context.ReportProgress(new BackgroundTaskProgress(i, groups.Count, string.Format("Importing {0}", group.Name)));
 
 						var props = SettingsPropertyDescriptor.ListSettingsProperties(group);
-						_configStore.ImportSettingsGroup(group, props);
-
+						_settingsStore.ImportSettingsGroup(group, props);
 					}
 				},
 				true);
@@ -543,81 +547,68 @@ namespace ClearCanvas.Desktop.Configuration
 		private void SaveModifiedSettings(bool confirmationRequired)
 		{
 			// if no dirty properties, nothing to save
-			if (_selectedSettingsGroup != null && IsAnyPropertyDirty())
+			if (_selectedSettingsGroup == null || !_selectedSettingsGroup.Properties.Any(p => p.Dirty))
+				return;
+
+			if (confirmationRequired && !ConfirmSave())
+				return;
+
+			try
 			{
-				if (confirmationRequired && !ConfirmSave())
-					return;
+				_selectedSettingsGroup.Save();
 
-				// fill a dictionary with all dirty values
-				var values = new Dictionary<string, string>();
-				foreach (var p in _settingsPropertiesTable.Items)
-				{
-					if (p.Dirty)
-					{
-						values[p.Name] = p.Value;
-					}
-				}
+				UpdateActionEnablement();
 
-				try
-				{
-					// save to the default profile
-					_configStore.PutSettingsValues(_selectedSettingsGroup,null, null, values);
-
-					// mark all properties as clean again
-					foreach (var p in _settingsPropertiesTable.Items)
-						p.MarkClean();
-
-					UpdateActionEnablement();
-
-					// update any loaded instances
-					ApplicationSettingsRegistry.Instance.Reload(_selectedSettingsGroup);
-
-				}
-				catch (Exception e)
-				{
-					ExceptionHandler.Report(e, SR.MessageSaveSettingFailed, this.Host.DesktopWindow);
-				}
+				// update any loaded instances
+				ApplicationSettingsRegistry.Instance.Reload(_selectedSettingsGroup.Descriptor);
+			}
+			catch (Exception e)
+			{
+				ExceptionHandler.Report(e, SR.MessageSaveSettingFailed, this.Host.DesktopWindow);
 			}
 		}
 
 		private void ResetAllPropertyValues()
 		{
+			if (_selectedSettingsGroup == null)
+				return;
+
 			var action = this.Host.ShowMessageBox(SR.MessageResetAll, MessageBoxActions.YesNo);
 			if (action == DialogBoxAction.Yes)
 			{
-				foreach (var property in _settingsPropertiesTable.Items)
+				foreach (var property in _selectedSettingsGroup.Properties)
 				{
-					property.Value = property.DefaultValue;
+					property.ResetValue();
 					_settingsPropertiesTable.Items.NotifyItemUpdated(property);
 				}
 			}
 		}
 
-		private void ResetPropertyValue(SettingsProperty property)
+		private void ResetPropertyValue(Property property)
 		{
 			var action = this.Host.ShowMessageBox(SR.MessageReset, MessageBoxActions.YesNo);
 			if (action == DialogBoxAction.Yes)
 			{
-				property.Value = property.DefaultValue;
+				property.ResetValue();
 				_settingsPropertiesTable.Items.NotifyItemUpdated(property);
 			}
 		}
 
-		private void EditProperty(SettingsProperty property)
+		private void EditProperty(Property property)
 		{
+			if (property == null)
+				return;
+
 			try
 			{
-				if (property != null)
+				var editor = new SettingEditorComponent(property.DefaultValue, property.Value);
+				var exitCode = LaunchAsDialog(this.Host.DesktopWindow, new DialogBoxCreationArgs(editor, SR.TitleEditValue, null, true));
+				if (exitCode == ApplicationComponentExitCode.Accepted)
 				{
-					var editor = new SettingEditorComponent(property.DefaultValue, property.Value);
-					var exitCode = LaunchAsDialog(this.Host.DesktopWindow, editor, SR.TitleEditValue);
-					if (exitCode == ApplicationComponentExitCode.Accepted)
-					{
-						property.Value = editor.CurrentValue;
+					property.Value = editor.CurrentValue;
 
-						// update the table to reflect the changed value
-						_settingsPropertiesTable.Items.NotifyItemUpdated(property);
-					}
+					// update the table to reflect the changed value
+					_settingsPropertiesTable.Items.NotifyItemUpdated(property);
 				}
 			}
 			catch (Exception e)
@@ -631,21 +622,23 @@ namespace ClearCanvas.Desktop.Configuration
 		{
 			_resetAction.Enabled = (_selectedSettingsProperty != null && !_selectedSettingsProperty.UsingDefaultValue);
 			_editAction.Enabled = (_selectedSettingsProperty != null);
-			_saveAllAction.Enabled = (_selectedSettingsGroup != null && IsAnyPropertyDirty());
-			_resetAllAction.Enabled = CollectionUtils.Contains(_settingsPropertiesTable.Items, p => !p.UsingDefaultValue);
+			_saveAllAction.Enabled = (_selectedSettingsGroup != null && _selectedSettingsGroup.Properties.Any(p => p.Dirty));
+			_resetAllAction.Enabled = _selectedSettingsGroup != null && _selectedSettingsGroup.Properties.Any(p => !p.UsingDefaultValue);
 		}
 
-		private void FillSettingsPropertiesTable(IDictionary<string, string> storedValues)
+		private IEnumerable<Group> GetSettingsGroups()
 		{
-			_settingsPropertiesTable.Items.Clear();
-			foreach (var pi in _configStore.ListSettingsProperties(_selectedSettingsGroup))
-			{
-				var value = storedValues.ContainsKey(pi.Name) ? storedValues[pi.Name] : pi.DefaultValue;
-				var property = new SettingsProperty(pi, value);
-				property.ValueChanged += SettingsPropertyValueChangedEventHandler;
-				_settingsPropertiesTable.Items.Add(property);
-			}
-			_settingsPropertiesTable.Sort();
+			var groups = new List<Group>();
+
+			// add all groups from the enterprise settings store
+			groups.AddRange(_settingsStore.ListSettingsGroups().Select(d => new SettingsStoreGroup(d, _settingsStore)));
+
+			// add locally installed groups that support editing of shared profiles
+			// note that many groups may be both locally installed and in the settings store, so we need to filter duplicates
+			var locals = SettingsGroupDescriptor.ListInstalledSettingsGroups(SettingsGroupFilter.SupportsEditingOfSharedProfile);
+			groups.AddRange(locals.Where(l => !groups.Any(g => Equals(g.Descriptor, l))).Select(d => new LocallyInstalledGroup(d)));
+
+			return groups;
 		}
 
 		private void SettingsPropertyValueChangedEventHandler(object sender, EventArgs args)
@@ -653,16 +646,10 @@ namespace ClearCanvas.Desktop.Configuration
 			UpdateActionEnablement();
 		}
 
-		private bool IsAnyPropertyDirty()
-		{
-			return CollectionUtils.Contains(_settingsPropertiesTable.Items, p => p.Dirty);
-		}
-
 		private bool ConfirmSave()
 		{
 			var action = this.Host.ShowMessageBox(SR.MessageSaveModified, MessageBoxActions.YesNo);
 			return action == DialogBoxAction.Yes;
 		}
-
 	}
 }

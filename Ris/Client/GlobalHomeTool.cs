@@ -38,7 +38,7 @@ namespace ClearCanvas.Ris.Client
 
 	[MenuAction("launch", "global-menus/MenuFile/MenuHome", "Launch")]
 	[Tooltip("launch", "Go to home page")]
-	[IconSet("launch", IconScheme.Colour, "Icons.GlobalHomeToolSmall.png", "Icons.GlobalHomeToolMedium.png", "Icons.GlobalHomeToolLarge.png")]
+	[IconSet("launch", "Icons.GlobalHomeToolSmall.png", "Icons.GlobalHomeToolMedium.png", "Icons.GlobalHomeToolLarge.png")]
 	[VisibleStateObserver("launch", "Visible", "VisibleChanged")]
 	[ActionPermission("launch", ClearCanvas.Ris.Application.Common.AuthorityTokens.Workflow.HomePage.View)]
 

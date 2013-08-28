@@ -23,24 +23,19 @@
 --%>
 
 <%@ Page Language="C#" AutoEventWireup="true" CodeBehind="AuthorizationErrorPage.aspx.cs" MasterPageFile="ErrorPageMaster.Master" Inherits="ClearCanvas.ImageServer.Web.Application.Pages.Error.AuthorizationErrorPage" %>
-<%@ Import namespace="System.Threading"%>
-
-
 
 <asp:Content runat="server" ContentPlaceHolderID="ErrorMessagePlaceHolder">
 	    <asp:label ID="ErrorMessageLabel" runat="server">
-	        <%= ErrorMessages.AuthorizationError%>
 	    </asp:label>
 </asp:Content>
 
 <asp:Content ID="Content1" runat="server" ContentPlaceHolderID="DescriptionPlaceHolder">
 
-    <asp:Label ID = "DescriptionLabel" runat="server">
-        <%= ClearCanvas.ImageServer.Web.Common.Utilities.HtmlUtility.Encode(ErrorMessages.GeneralErrorMessage)%>
-        <div ID="StackTraceMessage" runat="server" Visible="false" onclick="javascript:toggleLayer('StackTrace');" style="margin-top:20px">
-                <%= ClearCanvas.ImageServer.Web.Common.Utilities.HtmlUtility.Encode(ErrorMessages.ErrorShowStackTraceMessage)%>
+    <asp:Label ID = "DescriptionLabel" runat="server"></asp:Label>
+    
+    <div ID="StackTraceMessage" runat="server" Visible="false" onclick="javascript:toggleLayer('StackTrace');" style="margin-top:20px">
+                <%= HtmlUtility.Encode(ErrorMessages.ErrorShowStackTraceMessage)%>
         </div>
-    </asp:Label>
     <div id="StackTrace" style="margin-top: 15px" visible="false">
         <asp:TextBox runat="server" ID="StackTraceTextBox" Visible="false" Rows="5" Width="90%" TextMode="MultiLine" ReadOnly="true"></asp:TextBox>
     </div>

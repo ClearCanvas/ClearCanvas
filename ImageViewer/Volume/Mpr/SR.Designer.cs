@@ -268,6 +268,15 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Reloading... ({0:f0}%).
+        /// </summary>
+        public static string MessageFormatReloading {
+            get {
+                return ResourceManager.GetString("MessageFormatReloading", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Initializing MPR....
         /// </summary>
         public static string MessageInitializingMpr {

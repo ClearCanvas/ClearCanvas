@@ -34,7 +34,7 @@ namespace ClearCanvas.Ris.Client.Workflow
 {
 	[MenuAction("apply", "folderexplorer-items-contextmenu/Revise Report", "Apply")]
 	[ButtonAction("apply", "folderexplorer-items-toolbar/Revise Report", "Apply")]
-	[IconSet("apply", IconScheme.Colour, "Icons.EditReportToolSmall.png", "Icons.EditReportToolMedium.png", "Icons.EditReportToolLarge.png")]
+	[IconSet("apply","Icons.EditReportToolSmall.png", "Icons.EditReportToolMedium.png", "Icons.EditReportToolLarge.png")]
 	[EnabledStateObserver("apply", "Enabled", "EnabledChanged")]
 	[ActionPermission("apply", ClearCanvas.Ris.Application.Common.AuthorityTokens.Workflow.Report.Create)]
 	[ExtensionOf(typeof(ReportingWorkflowItemToolExtensionPoint))]
@@ -96,8 +96,8 @@ namespace ClearCanvas.Ris.Client.Workflow
 
 	[MenuAction("apply", "folderexplorer-items-contextmenu/Return to Interpreter", "Apply")]
 	[ButtonAction("apply", "folderexplorer-items-toolbar/Return to Interpreter", "Apply")]
-	[IconSet("apply", IconScheme.Colour, "Icons.AssignSmall.png", "Icons.AssignMedium.png", "Icons.AssignLarge.png")]
-	[VisibleStateObserver("apply", "Visible", "VisibleChanged")]
+	[IconSet("apply", "Icons.AssignSmall.png", "Icons.AssignMedium.png", "Icons.AssignLarge.png")]
+	[VisibleStateObserver("apply", "Visible")]
 	[EnabledStateObserver("apply", "Enabled", "EnabledChanged")]
 	[ActionPermission("apply", ClearCanvas.Ris.Application.Common.AuthorityTokens.Workflow.Report.Verify)]
 	[ExtensionOf(typeof(ReportingWorkflowItemToolExtensionPoint))]
@@ -109,7 +109,6 @@ namespace ClearCanvas.Ris.Client.Workflow
 		{
 		}
 
-		public event EventHandler VisibleChanged;
 		public bool Visible
 		{
 			get { return new WorkflowConfigurationReader().EnableInterpretationReviewWorkflow; }

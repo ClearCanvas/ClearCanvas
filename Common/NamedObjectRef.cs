@@ -105,7 +105,7 @@ namespace ClearCanvas.Common
 			return _name.GetHashCode();
 		}
 
-		protected string Name
+		public string Name
 		{
 			get { return _name; }
 		}

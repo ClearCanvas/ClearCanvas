@@ -90,7 +90,7 @@ namespace ClearCanvas.Healthcare.Tests
             // everything else has been covered in base class tests
             Assert.IsNotNull(newStep);
             Assert.AreNotEqual(this, newStep);
-            Assert.IsInstanceOfType(typeof(DocumentationProcedureStep), newStep);
+            Assert.IsInstanceOf(typeof(DocumentationProcedureStep), newStep);
             Assert.AreEqual(procedure, newStep.Procedure);
         }
 

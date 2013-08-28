@@ -47,7 +47,7 @@
            $("#nUnitLicense").hide();
            $("#jQueryPlugins").hide();
            $("#offis").hide();
-           $("#msdn").hide();
+           $("#sharpziplib").hide();
        });
 
        function showLicense(divName) {
@@ -111,61 +111,20 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 Author:
    Colby Dillion (colby.dillion@gmail.com)
 </pre></div>
-<div class="LicenseLink"><a href="#" onclick="showLicense('ajaxLicense')"><b>AJAX Control Toolkit</b>, <b>Silverlight Toolkit</b>, <b>Silverlight (SL3) Menu</b>, and <b>DotNetZip Library</b></a></div>
+<div class="LicenseLink"><a href="#" onclick="showLicense('ajaxLicense')"><b>AJAX Control Toolkit</b></a></div>
 <div id="ajaxLicense" class="License"><pre>
-License: Microsoft Public License (Ms-PL)
-Microsoft Public License (Ms-PL)
+Copyright (c) 2009, CodePlex Foundation
+All rights reserved.
 
-This license governs use of the accompanying software. If you use the software, 
-you accept this license. If you do not accept the license, do not use the software.
+Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
-1. Definitions
+* Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
 
-The terms "reproduce," "reproduction," "derivative works," and "distribution" have 
-the same meaning here as under U.S. copyright law.
+* Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 
-A "contribution" is the original software, or any additions or changes to the software.
+* Neither the name of CodePlex Foundation nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 
-A "contributor" is any person that distributes its contribution under this license.
-
-"Licensed patents" are a contributor's patent claims that read directly on its contribution.
-
-2. Grant of Rights
-
-(A) Copyright Grant- Subject to the terms of this license, including the license 
-conditions and limitations in section 3, each contributor grants you a non-exclusive, 
-worldwide, royalty-free copyright license to reproduce its contribution, prepare derivative 
-works of its contribution, and distribute its contribution or any derivative works that 
-you create.
-
-(B) Patent Grant- Subject to the terms of this license, including the license conditions 
-and limitations in section 3, each contributor grants you a non-exclusive, worldwide, 
-royalty-free license under its licensed patents to make, have made, use, sell, offer for 
-sale, import, and/or otherwise dispose of its contribution in the software or derivative 
-works of the contribution in the software.
-
-3. Conditions and Limitations
-
-(A) No Trademark License- This license does not grant you rights to use any contributors' 
-name, logo, or trademarks.
-
-(B) If you bring a patent claim against any contributor over patents that you claim are 
-infringed by the software, your patent license from such contributor to the software 
-ends automatically.
-
-(C) If you distribute any portion of the software, you must retain all copyright, patent, 
-trademark, and attribution notices that are present in the software.
-
-(D) If you distribute any portion of the software in source code form, you may do so only 
-under this license by including a complete copy of this license with your distribution. If 
-you distribute any portion of the software in compiled or object code form, you may only do 
-so under a license that complies with this license.
-
-(E) The software is licensed "as-is." You bear the risk of using it. The contributors give
-no express warranties, guarantees or conditions. You may have additional consumer rights 
-under your local laws which this license cannot change. To the extent permitted under 
-your local laws, the contributors exclude the implied warranties of merchantability, fitness 
-for a particular purpose and non-infringement.
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 </pre></div>
 
 <div class="LicenseLink"><a href="#" onclick="showLicense('jpegLicense')"><b>Independent JPEG Group Toolkit Version 6b</b></a></div>
@@ -430,7 +389,6 @@ Apache License
 </pre></div>   
    
 <div class="LicenseLink"><a href="#" onclick="showLicense('codeMirrorLicense')"><b>Code Mirror</b></a></div>
-
 <div id="codeMirrorLicense" class="License">
 <pre>
  Copyright (c) 2007-2009 Marijn Haverbeke
@@ -1034,9 +992,6 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
-
-
-
 </pre></div>
   
 <div class="LicenseLink"><a href="#" onclick="showLicense('offis')"><b>Offis GetJpegBitDepth Method</b></a></div>
@@ -1060,80 +1015,43 @@ ITS CONFORMITY TO ANY SPECIFICATION. THE ENTIRE RISK AS TO QUALITY AND
 PERFORMANCE OF THE SOFTWARE IS WITH THE USER.
 </pre></div>
   
-<div class="LicenseLink"><a href="#" onclick="showLicense('msdn')"><b>MSDN Derived Code</b></a></div>
-<div id="msdn" class="License">
+<div class="LicenseLink"><a href="#" onclick="showLicense('sharpziplib')"><b>SharpZipLib</b></a></div>
+<div id="sharpziplib" class="License">
 <pre>
 
-MSDN Derived code including SilverlightFaultBehavior, BlockingQueue, 
-and PersistenceScope.
+SharpZipLib
+Copyright (C) 2001 Mike Krueger
 
-Microsoft Limited Public License.
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
 
-This license governs use of code marked as “sample” or “example” available 
-on this web site without a license agreement, as provided under the section 
-above titled “NOTICE SPECIFIC TO SOFTWARE AVAILABLE ON THIS WEB SITE.” If 
-you use such code (the “software”), you accept this license. If you do not 
-accept the license, do not use the software.
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
 
-1. Definitions
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
-The terms “reproduce,” “reproduction,” “derivative works,” and “distribution”
- have the same meaning here as under U.S. copyright law.
+Linking this library statically or dynamically with other modules is
+making a combined work based on this library.  Thus, the terms and
+conditions of the GNU General Public License cover the whole
+combination.
 
-A “contribution” is the original software, or any additions or changes to 
-the software.
-
-A “contributor” is any person that distributes its contribution under this 
-license.
-
-“Licensed patents” are a contributor’s patent claims that read directly on 
-its contribution.
-
-2. Grant of Rights
-
-(A) Copyright Grant - Subject to the terms of this license, including the 
-    license conditions and limitations in section 3, each contributor grants you
-    a non-exclusive, worldwide, royalty-free copyright license to reproduce its 
-    contribution, prepare derivative works of its contribution, and distribute 
-    its contribution or any derivative works that you create.
-
-(B) Patent Grant - Subject to the terms of this license, including the license 
-    conditions and limitations in section 3, each contributor grants you a
-    non-exclusive, worldwide, royalty-free license under its licensed patents 
-    to make, have made, use, sell, offer for sale, import, and/or otherwise 
-    dispose of its contribution in the software or derivative works of the 
-    contribution in the software.
-
-3. Conditions and Limitations
-
-(A) No Trademark License- This license does not grant you rights to use any 
-    contributors’ name, logo, or trademarks.
-
-(B) If you bring a patent claim against any contributor over patents that 
-    you claim are infringed by the software, your patent license from such 
-    contributor to the software ends automatically.
-
-(C) If you distribute any portion of the software, you must retain all 
-    copyright, patent, trademark, and attribution notices that are present in 
-    the software.
-
-(D) If you distribute any portion of the software in source code form, you may
-    do so only under this license by including a complete copy of this license 
-    with your distribution. If you distribute any portion of the software in 
-    compiled or object code form, you may only do so under a license that 
-    complies with this license.
-
-(E) The software is licensed “as-is.” You bear the risk of using it. The
-    contributors give no express warranties, guarantees or conditions. You may 
-    have additional consumer rights under your local laws which this license 
-    cannot change. To the extent permitted under your local laws, the 
-    contributors exclude the implied warranties of merchantability, fitness for
-    a particular purpose and non-infringement.
-
-(F) Platform Limitation - The licenses granted in sections 2(A) and 2(B) extend 
-    only to the software or derivative works that you create that run on a 
-    Microsoft Windows operating system product.
-
+As a special exception, the copyright holders of this library give you
+permission to link this library with independent modules to produce an
+executable, regardless of the license terms of these independent
+modules, and to copy and distribute the resulting executable under
+terms of your choice, provided that you also meet, for each linked
+independent module, the terms and conditions of the license of that
+module.  An independent module is a module which is not derived from
+or based on this library.  If you modify this library, you may extend
+this exception to your version of the library, but you are not
+obligated to do so.  If you do not wish to do so, delete this
+exception statement from your version.
 </pre></div>
 
   </asp:Panel>
@@ -1149,7 +1067,7 @@ its contribution.
      { %>
   <div class="MarketingName"><%= ProductInformation.Name%></div>
   <%}    %>
-  <span style="font-weight: bold; "><%=ProductInformation.Component %> v<%=String.IsNullOrEmpty(ServerPlatform.VersionString) ? "Unknown Version" : ServerPlatform.VersionString %><span><br /> 
+  <span style="font-weight: bold; "><%=ProductInformation.Component %> v<%=String.IsNullOrEmpty(ServerPlatform.VersionString) ? "Unknown Version" : ServerPlatform.VersionString %></span><br /> 
   <span style="font-weight: bold; "><%=ProductInformation.Edition %> <%=ProductInformation.Release %></span><br /> 
   
   <div style="font-weight: bold; ">Part of the ClearCanvas RIS/PACS</div>

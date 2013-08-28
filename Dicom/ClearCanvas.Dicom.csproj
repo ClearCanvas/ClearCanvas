@@ -158,6 +158,7 @@
     <Compile Include="Iod\RandomsCorrectionMethod.cs" />
     <Compile Include="Iod\Sequences\PatientOrientationCodeSequence.cs" />
     <Compile Include="Iod\SuvType.cs" />
+    <Compile Include="Iod\Tests\EncapsulatedPdfIodTests.cs" />
     <Compile Include="Iod\Units.cs" />
     <Compile Include="IO\IByteBuffer.cs" />
     <Compile Include="IO\Tests\ByteBufferHighCapacityTests.cs" />
@@ -170,11 +171,14 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>SR.resx</DependentUpon>
     </Compile>
+    <Compile Include="ServiceModel\Streaming\DicomImportServiceClient.cs" />
     <Compile Include="ServiceModel\Streaming\HeaderStreamingServiceClient.cs" />
+    <Compile Include="ServiceModel\Streaming\IDicomImportService.cs" />
     <Compile Include="Tests\ChangeTransferSyntaxTests.cs" />
     <Compile Include="Tests\DicomAttributeBinaryDataTests.cs" />
     <Compile Include="Tests\DicomImageTestHelper.cs" />
     <Compile Include="Tests\DicomUncompressedPixelDataTests.cs" />
+    <Compile Include="IO\Tests\StreamWriterTest.cs" />
     <Compile Include="Utilities\Command\AggregateCommand.cs" />
     <Compile Include="Utilities\Command\RemoveSeriesFromStudyXml.cs" />
     <Compile Include="Utilities\Command\Tests\CommandTests.cs" />
@@ -215,7 +219,13 @@
     </Compile>
     <Compile Include="Tests\DateTimeTests.cs" />
     <Compile Include="Iod\Tests\ImageOrientationPatientTests.cs" />
+    <Compile Include="Utilities\PdfStreamHelper.cs" />
     <Compile Include="Utilities\SopInstanceFactory.cs" />
+    <Compile Include="Utilities\Tests\DicomStringHelperTests.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Utilities\Tests\PdfStreamHelperTests.cs" />
+    <Compile Include="Utilities\Tests\PdfTestSamples.cs" />
     <Compile Include="Utilities\TimeParser.cs" />
     <Compile Include="TransferSyntax.cs" />
     <Compile Include="Iod\Window.cs" />
@@ -577,7 +587,6 @@
     <Compile Include="Utilities\DicomStringHelper.cs" />
     <Compile Include="Utilities\Statistics\AssociationStatisticsRecorder.cs" />
     <Compile Include="Utilities\Statistics\TransmissionStatistics.cs" />
-    <Compile Include="Utilities\Tests\DicomStringHelperTests.cs" />
     <Compile Include="Utilities\Xml\BaseInstanceXml.cs" />
     <Compile Include="Utilities\Xml\InstanceXml.cs" />
     <Compile Include="Utilities\Xml\SeriesXml.cs" />

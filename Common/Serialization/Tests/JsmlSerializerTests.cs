@@ -27,7 +27,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Runtime.Serialization;
+using System.Threading;
 using System.Xml;
 using System.Text;
 using ClearCanvas.Common.Utilities;
@@ -434,6 +436,42 @@ namespace ClearCanvas.Common.Serialization.Tests
 		}
 
 		[Test]
+		public void Test_Double_French()
+		{
+			var originalCulture = Thread.CurrentThread.CurrentCulture;
+			try
+			{
+				Thread.CurrentThread.CurrentCulture = CultureInfo.CreateSpecificCulture("fr-CA");
+				Test_Double();
+
+				Thread.CurrentThread.CurrentCulture = CultureInfo.CreateSpecificCulture("fr-FR");
+				Test_Double();
+			}
+			finally
+			{
+				Thread.CurrentThread.CurrentCulture = originalCulture;
+			}
+		}
+
+		[Test]
+		public void Test_Double_English()
+		{
+			var originalCulture = Thread.CurrentThread.CurrentCulture;
+			try
+			{
+				Thread.CurrentThread.CurrentCulture = CultureInfo.CreateSpecificCulture("en-CA");
+				Test_Double();
+
+				Thread.CurrentThread.CurrentCulture = CultureInfo.CreateSpecificCulture("en-US");
+				Test_Double();
+			}
+			finally
+			{
+				Thread.CurrentThread.CurrentCulture = originalCulture;
+			}
+		}
+
+		[Test]
 		public void Test_NullableDouble()
 		{
 			double? n = null;
@@ -462,6 +500,20 @@ namespace ClearCanvas.Common.Serialization.Tests
 		}
 
 		[Test]
+		public void Test_Bool_deserialize_case_insensitive()
+		{
+			DeserializeHelper(true, "<Tag>true</Tag>");
+			DeserializeHelper(true, "<Tag>True</Tag>");
+			DeserializeHelper(true, "<Tag>TRUE</Tag>");
+			DeserializeHelper(true, "<Tag>trUE</Tag>");
+
+			DeserializeHelper(false, "<Tag>false</Tag>");
+			DeserializeHelper(false, "<Tag>False</Tag>");
+			DeserializeHelper(false, "<Tag>FALSE</Tag>");
+			DeserializeHelper(false, "<Tag>fAlSe</Tag>");
+		}
+
+		[Test]
 		public void Test_Enum()
 		{
 			SerializeHelper(TestEnum.Enum1, string.Format("<Tag>{0}</Tag>", TestEnum.Enum1));
@@ -469,6 +521,18 @@ namespace ClearCanvas.Common.Serialization.Tests
 
 			SerializeHelper(TestEnum.Enum2, string.Format("<Tag>{0}</Tag>", TestEnum.Enum2));
 			DeserializeHelper(TestEnum.Enum2, string.Format("<Tag>{0}</Tag>", TestEnum.Enum2));
+		}
+
+		[Test]
+		public void Test_Enum_deserialize_case_insensitive()
+		{
+			DeserializeHelper(TestEnum.Enum1, "<Tag>enum1</Tag>");
+			DeserializeHelper(TestEnum.Enum1, "<Tag>ENUM1</Tag>");
+			DeserializeHelper(TestEnum.Enum1, "<Tag>eNUM1</Tag>");
+
+			DeserializeHelper(TestEnum.Enum2, "<Tag>enum2</Tag>");
+			DeserializeHelper(TestEnum.Enum2, "<Tag>ENUM2</Tag>");
+			DeserializeHelper(TestEnum.Enum2, "<Tag>eNuM2</Tag>");
 		}
 
 		[Test]

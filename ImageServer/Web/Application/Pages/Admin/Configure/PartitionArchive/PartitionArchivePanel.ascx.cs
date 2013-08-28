@@ -155,10 +155,10 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Admin.Configure.Partitio
         {
             var criteria = new PartitionArchiveSelectCriteria();
 
-            if (String.IsNullOrEmpty(DescriptionFilter.Text) == false)
+            if (String.IsNullOrEmpty(DescriptionFilter.TrimText) == false)
             {
                 QueryHelper.SetGuiStringCondition(criteria.Description,
-                                                   SearchHelper.TrailingWildCard(DescriptionFilter.Text));
+                                                   SearchHelper.TrailingWildCard(DescriptionFilter.TrimText));
             }
 
             if (StatusFilter.SelectedIndex > 0)

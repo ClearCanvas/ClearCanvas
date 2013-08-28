@@ -44,7 +44,7 @@ namespace ClearCanvas.ImageServer.Web.Common.Security
 
         static SessionManager()
         {
-            Platform.Log(LogLevel.Info, " Initilizing SessionManager");
+            Platform.Log(LogLevel.Info, " Initializing SessionManager");
         }
 
         /// <summary>

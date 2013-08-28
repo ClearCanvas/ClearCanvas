@@ -218,7 +218,7 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.ReprocessStudy
             // TODO: Should we enforce the patient's name rule?
             // If we do, the Study record will have the new patient's name 
             // but how should we handle the name in the Patient record?
-            bool enforceNameRules = false;
+            const bool enforceNameRules = false;
             var processor = new SopInstanceProcessor(context) { EnforceNameRules = enforceNameRules};
 
             var seriesMap = new Dictionary<string, List<string>>();
@@ -506,7 +506,7 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.ReprocessStudy
                         foreach (var entry in _additionalFilesToProcess)
                         {
                             var path = FilesystemDynamicPath.Parse(entry);
-                            var realPath = path.ConvertToAbsolutePath(this.StorageLocation);
+                            var realPath = path.ConvertToAbsolutePath(StorageLocation);
 
                             try
                             {
@@ -540,11 +540,11 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.ReprocessStudy
                                 _queueData.AdditionalFiles.Remove(entry);
 
                             }
-                            catch (FileNotFoundException ex)
+                            catch (FileNotFoundException)
                             {
                                 throw; // File is missing. Better leave decision making to the user.
                             }
-                            catch (DirectoryNotFoundException ex)
+                            catch (DirectoryNotFoundException)
                             {
                                 // ignore?
                             }
@@ -555,11 +555,8 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.ReprocessStudy
                     {
                         // update the list so we don't have to reprocess again when the WQI resumes (that will cause problem because we may have moved the files somewhere else)
                         SaveState(WorkQueueItem, _queueData);
-                    }
-                
-                }
-
-                
+                    }                
+                }                
             }
         }
 
@@ -579,7 +576,6 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.ReprocessStudy
             using (var processor = new ServerCommandProcessor("Move file back to incoming folder"))
             {
                 var fileInfo = new FileInfo(path);
-                const string folder = "FromWorkQueue";
                 var incomingPath = GetServerPartitionIncomingFolder();
                 incomingPath = Path.Combine(incomingPath, "FromWorkQueue");
                 incomingPath = Path.Combine(incomingPath, StorageLocation.StudyInstanceUid);
@@ -599,11 +595,6 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.ReprocessStudy
                 Platform.Log(LogLevel.Info, "File {0} has been moved to the incoming folder.", path);
 
             }
-        }
-
-        private void ProcessAdditionalFolder(string path)
-        {
-            Platform.Log(LogLevel.Info, "Reprocessing folder {0}", path);
         }
 
         private void LogRemovedFiles(List<FileInfo> removedFiles)
@@ -737,7 +728,7 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.ReprocessStudy
                 foreach (var entry in list)
                 {
                     var path = FilesystemDynamicPath.Parse(entry);
-                    var realPath = path.ConvertToAbsolutePath(this.StorageLocation);
+                    var realPath = path.ConvertToAbsolutePath(StorageLocation);
                     _additionalFilesToProcess.Add(realPath);
                 }
             }

@@ -173,6 +173,14 @@ namespace ClearCanvas.ImageViewer.InputManagement
 				get { return _instance ?? (_instance = new MouseWheelManager()); }
 			}
 
+            public IMouseWheelHandler GetCaptureHandler(TileController tileController)
+            {
+                if (_captureTileController == tileController)
+                    return _captureMouseWheelHandler;
+
+                return null;
+            }
+
 			public void SetCaptureHandler(TileController tileController, IMouseWheelHandler captureMouseWheelHandler)
 			{
                 if (_captureTileController == tileController && _captureMouseWheelHandler == captureMouseWheelHandler)
@@ -196,6 +204,8 @@ namespace ClearCanvas.ImageViewer.InputManagement
                 
 				if (_captureMouseWheelHandler == null)
 				{
+                    //This is only needed when the capture mouse wheel handler is not null.
+				    _captureTileController = null;
                     if (_delayedStop != null)
                     {
                         _delayedStop.Dispose();
@@ -336,10 +346,8 @@ namespace ClearCanvas.ImageViewer.InputManagement
 
 		private IMouseWheelHandler CaptureMouseWheelHandler
 		{
-			set 
-			{
-				MouseWheelManager.Instance.SetCaptureHandler(this, value);
-			}
+            set { MouseWheelManager.Instance.SetCaptureHandler(this, value); }
+		    get { return MouseWheelManager.Instance.GetCaptureHandler(this); }
 		}
 
 		#endregion
@@ -452,14 +460,29 @@ namespace ClearCanvas.ImageViewer.InputManagement
 			if (!_tile.Enabled)
 				return true;
 
-			ReleaseCapture(true);
+            if (wheelMessage.WheelDelta == 0)
+            {
+                if (CaptureMouseWheelHandler != null)
+                {
+                    //NOTE: hack for Webstation; we can't totally discard mouse wheel messages because
+                    //they need to reset the timer that releases "wheel capture". So, if we see a wheel delta
+                    //of zero, we just don't process the message through the handler, which could cause an unwanted draw.
+                    MouseWheelManager.Instance.OnMouseWheel();
+                    return true;
+                }
+
+                //Invalid message; do nothing.
+                return false;
+            }
+
+            ReleaseCapture(true);
 
 			IMouseWheelHandler handler = _shortcutManager.GetMouseWheelHandler(wheelMessage.Shortcut);
 			if (handler != null)
 			{
 				this.CaptureMouseWheelHandler = handler;
-
 				handler.Wheel(wheelMessage.WheelDelta);
+
 				MouseWheelManager.Instance.OnMouseWheel();
 				return true;
 			}

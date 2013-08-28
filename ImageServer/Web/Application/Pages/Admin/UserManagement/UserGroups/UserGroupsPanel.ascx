@@ -40,7 +40,7 @@
                                             </td>
                                             <td align="left">
                                                 <asp:Label ID="Label3" runat="server" Text="<%$Resources: SearchFieldLabels, GroupName %>" CssClass="SearchTextBoxLabel"></asp:Label><br />
-                                                <asp:TextBox ID="GroupName" runat="server" CssClass="SearchTextBox"></asp:TextBox>
+                                                <ccUI:TextBox ID="GroupName" runat="server" CssClass="SearchTextBox"></ccUI:TextBox>
                                             </td>
                                             <td valign="bottom">
                                                 <asp:Panel ID="Panel1" runat="server" CssClass="SearchButtonPanel"><ccUI:ToolbarButton ID="SearchButton" runat="server" SkinID="<%$Image:SearchIcon%>" OnClick="SearchButton_Click" /></asp:Panel>

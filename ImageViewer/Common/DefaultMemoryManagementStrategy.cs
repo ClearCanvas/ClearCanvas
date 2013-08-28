@@ -30,20 +30,98 @@ using ClearCanvas.Common.Utilities;
 
 namespace ClearCanvas.ImageViewer.Common
 {
-	internal class DefaultMemoryManagementStrategy : MemoryManagementStrategy
+    internal interface IMemoryInfo
+    {
+        long ProcessVirtualMemoryBytes { get; }
+        long ProcessPrivateBytes { get; }
+        long ProcessWorkingSetBytes { get; }
+        long GCTotalBytesAllocated { get; }
+        long SystemFreeMemoryBytes { get; }
+
+        long MemoryManagerLargeObjectBytesCount { get; }
+
+        long HighWaterMarkBytes { get; }
+        long LowWaterMarkBytes { get; }
+
+        double HeldMemoryToCollectPercent { get; }
+        
+        long x64MinimumFreeSystemMemoryBytes { get; }
+        double x64MaxMemoryUsagePercent { get; }
+        long x64MaxMemoryToCollectBytes { get; }
+
+        void Refresh();
+    }
+
+    internal partial class DefaultMemoryManagementStrategy
+    {
+        /// Exists separately with public settable properties for unit testing purposes.
+        internal class MemoryInfo : IMemoryInfo
+        {
+            #region IMemoryInfo Members
+
+            public long ProcessVirtualMemoryBytes { get; set; }
+            public long ProcessPrivateBytes { get; set; }
+            public long ProcessWorkingSetBytes { get; set; }
+            public long GCTotalBytesAllocated { get; set; }
+            public long SystemFreeMemoryBytes { get; set; }
+
+            public long MemoryManagerLargeObjectBytesCount { get; set; }
+
+            public long HighWaterMarkBytes { get; set; }
+            public long LowWaterMarkBytes { get; set; }
+
+            public double HeldMemoryToCollectPercent { get; set; }
+
+            public long x64MinimumFreeSystemMemoryBytes { get; set; }
+            public double x64MaxMemoryUsagePercent { get; set; }
+            public long x64MaxMemoryToCollectBytes { get; set; }
+
+
+            public void Refresh()
+            {
+                var clock = new CodeClock();
+                clock.Start();
+
+                var currentProcess = Process.GetCurrentProcess();
+                currentProcess.Refresh();
+
+                ProcessVirtualMemoryBytes = currentProcess.VirtualMemorySize64;
+                ProcessPrivateBytes = currentProcess.PrivateMemorySize64;
+                ProcessWorkingSetBytes = currentProcess.WorkingSet64;
+                GCTotalBytesAllocated = GC.GetTotalMemory(false);
+                SystemFreeMemoryBytes = SystemResources.GetAvailableMemory(SizeUnits.Bytes);
+
+                HighWaterMarkBytes = MemoryManagementSettings.Default.HighWatermarkMegaBytes*OneMegabyte;
+                LowWaterMarkBytes = MemoryManagementSettings.Default.LowWatermarkMegaBytes*OneMegabyte;
+                HeldMemoryToCollectPercent = MemoryManagementSettings.Default.HeldMemoryToCollectPercent/100.0;
+
+                x64MinimumFreeSystemMemoryBytes = MemoryManagementSettings.Default.x64MinimumFreeSystemMemoryMegabytes*OneMegabyte;
+                x64MaxMemoryUsagePercent = MemoryManagementSettings.Default.x64MaxMemoryUsagePercent/100.0;
+                x64MaxMemoryToCollectBytes = MemoryManagementSettings.Default.x64MaxMemoryToCollectMegabytes*OneMegabyte;
+
+                MemoryManagerLargeObjectBytesCount = MemoryManager.LargeObjectBytesCount;
+
+                clock.Stop();
+
+                PerformanceReportBroker.PublishReport("Memory", "UpdateMemoryInfo", clock.Seconds);
+            }
+
+            #endregion
+        }
+    }
+
+
+    internal partial class DefaultMemoryManagementStrategy : MemoryManagementStrategy
 	{
-		private const string x86Architecture = "x86";
+        private const LogLevel _debugLogLevel = LogLevel.Debug;
 
 		private const long OneKilobyte = 1024;
 		private const long OneMegabyte = 1024 * OneKilobyte;
 		private const long OneGigabyte = 1024 * OneMegabyte;
 		private const long TwoGigabytes = 2 * OneGigabyte;
-		private const long ThreeGigabytes = 3 * OneGigabyte;
-		private const long EightGigabytes = 8 * OneGigabyte;
 
-		private const float TwentyFivePercent = 0.25F;
-		private const float FortyPercent = 0.40F;
-		private const float NinetyPercent = 0.90F;
+		private const double TwentyFivePercent = 0.25;
+        private const double FortyPercent = 0.40;
 
 		private IEnumerator<ILargeObjectContainer> _largeObjectEnumerator;
 		
@@ -59,12 +137,10 @@ namespace ClearCanvas.ImageViewer.Common
 		private int _totalLargeObjectsCollected;
 		private int _totalContainersUnloaded;
 
-		private long _processVirtualMemoryBytes;
-		private long _processPrivateBytes;
-		private long _processWorkingSetBytes;
-		private long _gcTotalBytesAllocated;
-
-		public DefaultMemoryManagementStrategy()
+        internal IMemoryInfo _memoryInfo = new MemoryInfo();
+        internal bool _is32BitProcess = IntPtr.Size == 4;
+        
+	    public DefaultMemoryManagementStrategy()
 		{
 			_lastCollectionTime = DateTime.Now;
 		}
@@ -83,7 +159,7 @@ namespace ClearCanvas.ImageViewer.Common
 			TimeSpan thirtySeconds = TimeSpan.FromSeconds(30);
 			if (_timeSinceLastCollection < thirtySeconds)
 			{
-				Platform.Log(LogLevel.Debug, "Time since last collection is less than 30 seconds; adjusting to 30 seconds.");
+                Platform.Log(_debugLogLevel, "Time since last collection is less than 30 seconds; adjusting to 30 seconds.");
 				_timeSinceLastCollection = thirtySeconds;
 			}
 
@@ -119,7 +195,7 @@ namespace ClearCanvas.ImageViewer.Common
 
 				TimeSpan totalElapsed = collectionEndTime - _collectionStartTime;
 
-				MemoryCollectedEventArgs finalArgs = new MemoryCollectedEventArgs(
+				var finalArgs = new MemoryCollectedEventArgs(
 					_totalContainersUnloaded, _totalLargeObjectsCollected, _totalBytesCollected, totalElapsed, true);
 
                 if ( _totalNumberOfCollections != 0
@@ -140,67 +216,82 @@ namespace ClearCanvas.ImageViewer.Common
 
 		#endregion
 
-		private bool Is3GigEnabled()
-		{
-			//TODO: can't actually figure this out ...
-			return false;
-		}
+        internal long Get32BitMemoryHighWatermark()
+        {
+            long currentVirtualMemorySize = _memoryInfo.ProcessVirtualMemoryBytes;
+            long maxTheoreticalVirtualMemorySize = currentVirtualMemorySize + _memoryInfo.SystemFreeMemoryBytes;
 
-		private void UpdateProcessMemoryData()
-		{
-			CodeClock clock = new CodeClock();
-			clock.Start();
+            //On 32-bit systems, a process cannot have more than 2GB of virtual address space,
+            //unless the /3GB switch is set and the process is "large address aware".
+            //On 64-bit systems, a 32-bit process *can* actually have 4GB of virtual address space, but there are all sorts
+            //of exceptions to that, depending on whether the process is "large address aware", etc.
+            //So, because a lot of these things are hard or impossible to figure out, we just assume 32-bit processes
+            //max out at 2GB of virtual memory, and if you need more than that, buy an x64 machine :)
+            const long maxSystemVirtualMemorySize = TwoGigabytes;
+            long maxVirtualMemorySizeBytes = Math.Min(maxTheoreticalVirtualMemorySize, maxSystemVirtualMemorySize);
+            
+            //Forty percent was carefully selected based on experiment. Basically, if we don't keep the memory being used
+            //fairly low, the process heap gets fragmented and things start crashing when you can't get a large enough
+            //contiguous block of memory for an image.
+            return (long)(maxVirtualMemorySizeBytes * FortyPercent);
+        }
 
-			Process currentProcess = Process.GetCurrentProcess();
-			currentProcess.Refresh();
+        internal long Get64BitMemoryHighWatermark()
+        {
+            //We don't want to exhaust system memory so the machine is strapped.
+            long maxAvailableSystemMemory = _memoryInfo.SystemFreeMemoryBytes;
+            maxAvailableSystemMemory = Math.Max(0, maxAvailableSystemMemory - _memoryInfo.x64MinimumFreeSystemMemoryBytes);
 
-			_processVirtualMemoryBytes = currentProcess.VirtualMemorySize64;
-			_processPrivateBytes = currentProcess.PrivateMemorySize64;
-			_processWorkingSetBytes = currentProcess.WorkingSet64;
-			_gcTotalBytesAllocated = GC.GetTotalMemory(false);
+            var theoreticalMax = _memoryInfo.ProcessPrivateBytes + maxAvailableSystemMemory;
+            var highWatermark = (long)(_memoryInfo.x64MaxMemoryUsagePercent * theoreticalMax);
+            return highWatermark;
+        }
 
-			clock.Stop();
+        internal long GetMemoryHighWatermarkBytes()
+        {
+            if (_memoryInfo.HighWaterMarkBytes < 0)
+            {
+                return _is32BitProcess ? Get32BitMemoryHighWatermark() : Get64BitMemoryHighWatermark();
+            }
+            else
+            {
+                return _memoryInfo.HighWaterMarkBytes;
+            }
+        }
 
-			PerformanceReportBroker.PublishReport("Memory", "UpdateProcessMemoryData", clock.Seconds);
-		}
+        internal long GetMemoryLowWatermarkBytes(long highWatermark)
+        {
+            if (_memoryInfo.LowWaterMarkBytes < 0)
+            {
+                var amountToCollect = (long)(_memoryInfo.MemoryManagerLargeObjectBytesCount * _memoryInfo.HeldMemoryToCollectPercent);
+                if (!_is32BitProcess)
+                {
+                    //Don't allow more than 2GB of memory to be collected, so that the CLR doesn't go haywire and pause for a really long time.
+                    var maxAmountToCollect = _memoryInfo.x64MaxMemoryToCollectBytes;
+                    if (amountToCollect > maxAmountToCollect)
+                        amountToCollect = maxAmountToCollect;
+                }
 
-		private long GetMaxVirtualMemorySizeBytes()
-		{
-			long currentVirtualMemorySize = _processVirtualMemoryBytes;
-			long maxTheoreticalVirtualMemorySize = currentVirtualMemorySize + SystemResources.GetAvailableMemory(SizeUnits.Bytes);
-			long maxVirtualMemorySizeBytes;
+                return highWatermark - amountToCollect;
+            }
+            else
+            {
+                return _memoryInfo.LowWaterMarkBytes;
+            }
+        }
 
-			if (Environment.GetEnvironmentVariable("PROCESSOR_ARCHITECTURE") == x86Architecture)
-			{
-				long maxSystemVirtualMemorySize = Is3GigEnabled() ? ThreeGigabytes : TwoGigabytes;
-				maxVirtualMemorySizeBytes = Math.Min(maxTheoreticalVirtualMemorySize, maxSystemVirtualMemorySize);
-			}
-			else
-			{
-				//let's not get greedy :)
-				maxVirtualMemorySizeBytes = Math.Min(EightGigabytes, maxTheoreticalVirtualMemorySize);
-			}
-
-			return maxVirtualMemorySizeBytes;
-		}
-
-		private long GetMemoryHighWatermarkBytes()
-		{
-			if (MemoryManagementSettings.Default.HighWatermarkMegaBytes < 0)
-				return (long)(GetMaxVirtualMemorySizeBytes() * FortyPercent);
-			else
-				return MemoryManagementSettings.Default.HighWatermarkMegaBytes * OneMegabyte;
-		}
-
-		private long GetMemoryLowWatermarkBytes(long highWatermark)
-		{
-			if (MemoryManagementSettings.Default.LowWatermarkMegaBytes < 0)
-				return (long)(highWatermark - MemoryManager.LargeObjectBytesCount * TwentyFivePercent);
-			else
-				return Math.Min(MemoryManagementSettings.Default.LowWatermarkMegaBytes * OneMegabyte, (long)(highWatermark * NinetyPercent));
-		}
-
-		private IEnumerable<ILargeObjectContainer> GetNextBatchOfContainersToCollect(int batchSize)
+        // CR (JY 2013-APR-15): There is an interesting (read: obscure) unaccounted for scenario here that perhaps makes memory collection not as efficient as it could be
+        // It is possible that the regeneration cost of a container is tied to the data held by another container
+        // - e.g. MPR cached volumes - if a volume is unloaded, its derived frames elevate their regeneration cost
+        // - Hypothetically, you could also have the reverse - a container has data that *must* be reloaded if its parent container is unloaded
+        //   (and the actual unload is expensive, so rather than doing it immediately, it lowers the cost so that the memmgr can unload it at leisure)
+        // - It is also possible that the regeneration cost of a container just changes due to some other unrelated event, after it has already been evaluated on the pass for that cost value
+        //   e.g. on the 'low' cost pass, the objet is medium, but before the 'medium' cost pass executes, it changes to low.
+        // - to account for these dynamically assessed costs, the condition should be 'container.RegenerationCost <= _regenerationCost'
+        // - further, because of these dynamically assessed costs, it is possible that the same container could be yielded multiple times throughout the process of one collect
+        //   which would actually be desirable if the container still held on to objects (perhaps because it refused to unload it the first time around)
+        // - a check for container.BytesHeld > 0 would alleviate the number of 'already empty' containers yielded in each batch, making each pass able to collect more real objects and not ghosts
+        private IEnumerable<ILargeObjectContainer> GetNextBatchOfContainersToCollect(int batchSize)
 		{
 			int i = 0;
 			while (_regenerationCost <= RegenerationCost.High)
@@ -246,30 +337,31 @@ namespace ClearCanvas.ImageViewer.Common
 		{
 			try
 			{
-				UpdateProcessMemoryData();
+				_memoryInfo.Refresh();
 
 				long highWatermark = GetMemoryHighWatermarkBytes();
 				long lowWatermark = GetMemoryLowWatermarkBytes(highWatermark);
 
-				long bytesAboveHighWatermark = _processPrivateBytes - highWatermark;
-				long bytesToCollect = _processPrivateBytes - lowWatermark;
+				long bytesAboveHighWatermark = _memoryInfo.ProcessPrivateBytes - highWatermark;
+                long bytesToCollect = _memoryInfo.ProcessPrivateBytes - lowWatermark;
 
-				if (Platform.IsLogLevelEnabled(LogLevel.Debug))
+                if (Platform.IsLogLevelEnabled(_debugLogLevel))
 				{
-					Platform.Log(LogLevel.Debug,
-						"Virtual Memory (MB): {0}, Private Bytes (MB): {1}, Working Set (MB): {2}, GC Total Bytes Allocated (MB): {3}",
-						_processVirtualMemoryBytes / (float)OneMegabyte,
-						_processPrivateBytes / (float)OneMegabyte,
-						_processWorkingSetBytes / (float)OneMegabyte,
-						_gcTotalBytesAllocated / (float)OneMegabyte);
+                    Platform.Log(_debugLogLevel,
+						"Virtual Memory (MB): {0}, Private Bytes (MB): {1}, Working Set (MB): {2}, GC Total Bytes Allocated (MB): {3}, System Free (MB): {4}",
+                        _memoryInfo.ProcessVirtualMemoryBytes / (float)OneMegabyte,
+                        _memoryInfo.ProcessPrivateBytes / (float)OneMegabyte,
+                        _memoryInfo.ProcessWorkingSetBytes / (float)OneMegabyte,
+                        _memoryInfo.GCTotalBytesAllocated / (float)OneMegabyte,
+                        _memoryInfo.SystemFreeMemoryBytes / (float)OneMegabyte);
 
-					Platform.Log(LogLevel.Debug,
+                    Platform.Log(_debugLogLevel,
 						"Large Object Containers: {0}, Large Objects Held: {1}, Total Large Object Bytes (MB): {2}",
 						MemoryManager.LargeObjectContainerCount,
 						MemoryManager.LargeObjectCount,
 						MemoryManager.LargeObjectBytesCount / (float)OneMegabyte);
 
-					Platform.Log(LogLevel.Debug,
+                    Platform.Log(_debugLogLevel,
 						"High Watermark (MB): {0}, Low Watermark (MB): {1}, MB Above: {2}, MB To Collect: {3}",
 						highWatermark/(float)OneMegabyte,
 						lowWatermark/(float)OneMegabyte,
@@ -281,8 +373,9 @@ namespace ClearCanvas.ImageViewer.Common
 			}
 			catch (Exception e)
 			{
-				Platform.Log(LogLevel.Debug, e, "Failure when trying to determine number of bytes to collect; collecting 25% of held memory ...");
-				return (long)(MemoryManager.LargeObjectBytesCount * TwentyFivePercent);
+				Platform.Log(LogLevel.Warn, e, "Failure when trying to determine number of bytes to collect; collecting 25% of held memory (up to 1GB max) ...");
+				var twentyFivePercentOfHeld = (long)(MemoryManager.LargeObjectBytesCount * TwentyFivePercent);
+			    return Math.Min(twentyFivePercentOfHeld, OneGigabyte);
 			}
 		}
 
@@ -293,17 +386,17 @@ namespace ClearCanvas.ImageViewer.Common
 
 			if (bytesToCollect <= 0)
 			{
-				Platform.Log(LogLevel.Debug,
+				Platform.Log(_debugLogLevel,
 					"Memory is not above high watermark; firing collected event to check if more memory is required.");
 
-				MemoryCollectedEventArgs args = new MemoryCollectedEventArgs(0, 0, 0, TimeSpan.Zero, false);
+				var args = new MemoryCollectedEventArgs(0, 0, 0, TimeSpan.Zero, false);
 				OnMemoryCollected(args);
 				continueCollecting = needMoreMemorySignalled = args.NeedMoreMemory;
 			}
 			else
 			{
 				continueCollecting = true;
-				Platform.Log(LogLevel.Debug, "Memory *is* above high watermark; collecting ...");
+				Platform.Log(_debugLogLevel, "Memory *is* above high watermark; collecting ...");
 			}
 
 			if (!continueCollecting)
@@ -369,17 +462,15 @@ namespace ClearCanvas.ImageViewer.Common
 
 				PerformanceReportBroker.PublishReport("Memory", "CollectionIteration", clock.Seconds);
 
-				MemoryCollectedEventArgs args = new MemoryCollectedEventArgs(
-					containersUnloaded, largeObjectsCollected, bytesCollected, TimeSpan.FromSeconds(clock.Seconds), false);
-
+				var args = new MemoryCollectedEventArgs(containersUnloaded, largeObjectsCollected, bytesCollected, TimeSpan.FromSeconds(clock.Seconds), false);
 				OnMemoryCollected(args);
 
 				needMoreMemorySignalled = args.NeedMoreMemory;
 				continueCollecting = needMoreMemorySignalled || _totalBytesCollected < bytesToCollect;
 
-				if (Platform.IsLogLevelEnabled(LogLevel.Debug))
+                if (Platform.IsLogLevelEnabled(_debugLogLevel))
 				{
-					Platform.Log(LogLevel.Debug, 
+                    Platform.Log(_debugLogLevel, 
 					             "Large object collection #{0}: freed {1} MB in {2}, Containers Unloaded: {3}, Large Objects Collected: {4}, Need More Memory: {5}, Last Batch: {6}",
 					             ++collectionNumber, args.BytesCollectedCount / (float)OneMegabyte, clock,
 					             containersUnloaded, largeObjectsCollected, needMoreMemorySignalled, i);
@@ -394,7 +485,7 @@ namespace ClearCanvas.ImageViewer.Common
 			CodeClock clock = new CodeClock();
 			clock.Start();
 
-			Platform.Log(LogLevel.Debug, "Performing garbage collection.");
+			Platform.Log(_debugLogLevel, "Performing garbage collection.");
 			GC.Collect();
 
 			clock.Stop();

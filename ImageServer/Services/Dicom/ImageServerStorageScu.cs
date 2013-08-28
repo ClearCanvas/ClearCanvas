@@ -30,8 +30,10 @@ using ClearCanvas.Dicom.Network.Scu;
 using ClearCanvas.Dicom.Utilities.Xml;
 using ClearCanvas.Enterprise.Core;
 using ClearCanvas.ImageServer.Common;
+using ClearCanvas.ImageServer.Core;
 using ClearCanvas.ImageServer.Model;
 using ClearCanvas.ImageServer.Model.EntityBrokers;
+using ClearCanvas.Common;
 
 namespace ClearCanvas.ImageServer.Services.Dicom
 {
@@ -42,6 +44,8 @@ namespace ClearCanvas.ImageServer.Services.Dicom
     {
         #region Private Members
         private readonly Device _remoteDevice;
+        private readonly ServerPartition _partition;
+        private readonly Dictionary<string, List<TransferSyntax>> _sopClassUncompressedProposedTransferSyntaxes =new Dictionary<string, List<TransferSyntax>>();
 
     	#endregion
 
@@ -53,6 +57,7 @@ namespace ClearCanvas.ImageServer.Services.Dicom
             :base(partition.AeTitle,remoteDevice.AeTitle,remoteDevice.IpAddress,remoteDevice.Port)
         {
             _remoteDevice = remoteDevice;
+            _partition = partition;
         }
 
         /// <summary>
@@ -66,8 +71,45 @@ namespace ClearCanvas.ImageServer.Services.Dicom
             : base(partition.AeTitle, remoteDevice.AeTitle, remoteDevice.IpAddress, remoteDevice.Port, moveOriginatorAe, moveOrginatorMessageId)
         {
         	_remoteDevice = remoteDevice;
+            _partition = partition;
         }
         #endregion
+
+        #region Protected Methods
+
+        protected override IEnumerable<TransferSyntax> GetProposedTransferSyntaxesForUncompressedObjects(string sopClassUid)
+        {
+            List<TransferSyntax> syntaxes;
+
+            if (!_sopClassUncompressedProposedTransferSyntaxes.TryGetValue(sopClassUid, out syntaxes))
+            {
+                syntaxes = new List<TransferSyntax>();
+
+                // Check the ServerSopClass table to see if only implicit LE should be used when handling the sop class
+                var configuration = new PartitionSopClassConfiguration();
+                var partitionSopClass = configuration.GetPartitionSopClass(_partition, sopClassUid);
+                if (partitionSopClass != null)
+                {
+                    if (partitionSopClass.ImplicitOnly)
+                    {
+                        Platform.Log(LogLevel.Info, "System is being configured to send {0} using Implicit LE.", SopClass.GetSopClass(partitionSopClass.SopClassUid));
+                    }
+                    else
+                        syntaxes.Add(TransferSyntax.ExplicitVrLittleEndian);
+
+                    syntaxes.Add(TransferSyntax.ImplicitVrLittleEndian);
+                }
+
+                _sopClassUncompressedProposedTransferSyntaxes.Add(sopClassUid, syntaxes);
+            }
+
+            return syntaxes;
+
+        }
+
+        #endregion
+
+        #region Public Methods
 
         /// <summary>
         /// Load a list of preferred SOP Classes and Transfer Syntaxes for a Device.
@@ -149,6 +191,8 @@ namespace ClearCanvas.ImageServer.Services.Dicom
 				LoadSeriesFromSeriesXml(studyXml, seriesPath, seriesXml, studyXml.PatientsName, studyXml.PatientId);
             }
         }
+
+        #endregion
 
     }
 }

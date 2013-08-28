@@ -98,7 +98,7 @@ namespace ClearCanvas.Utilities.DicomEditor
                 context.ReportProgress(new BackgroundTaskProgress(0, SR.MessageAnonymizingStudy));
 
                 var loader = study.Server.GetService<IStudyLoader>();
-                int numberOfSops = loader.Start(new StudyLoaderArgs(study.StudyInstanceUid, null));
+				int numberOfSops = loader.Start(new StudyLoaderArgs(study.StudyInstanceUid, null, null));
                 if (numberOfSops <= 0)
                     return;
 

@@ -827,7 +827,9 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>DicomFilteredAnnotationLayoutStoreSettings.Designer.cs</LastGenOutput>
     </None>
-    <None Include="app.config" />
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="ClassDiagrams\StudyFindersLoaders.cd" />
     <None Include="ClassDiagrams\VectorGraphics.cd" />
     <None Include="ClassDiagrams\ViewerUndoSupport.cd" />

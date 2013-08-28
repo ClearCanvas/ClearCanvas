@@ -53,12 +53,12 @@
                                     <td align="left" valign="bottom">
                                         <asp:Label ID="Label3" runat="server" Text="<%$Resources: SearchFieldLabels, PatientName%>" CssClass="SearchTextBoxLabel"
                                             EnableViewState="False" /><br />
-                                        <asp:TextBox ID="PatientName" runat="server" CssClass="SearchTextBox" ToolTip="<%$Resources: Tooltips, SearchByPatientName %>" />
+                                        <ccUI:TextBox ID="PatientName" runat="server" CssClass="SearchTextBox" ToolTip="<%$Resources: Tooltips, SearchByPatientName %>" />
                                     </td>
                                     <td align="left" valign="bottom">
                                         <asp:Label ID="Label2" runat="server" Text="<%$Resources: SearchFieldLabels, PatientID%>" CssClass="SearchTextBoxLabel"
                                             EnableViewState="False" /><br />
-                                        <asp:TextBox ID="PatientId" runat="server" CssClass="SearchTextBox" ToolTip="<%$Resources: Tooltips, SearchByPatientID %>" />
+                                        <ccUI:TextBox ID="PatientId" runat="server" CssClass="SearchTextBox" ToolTip="<%$Resources: Tooltips, SearchByPatientID %>" />
                                     </td>
                                     <td align="left" valign="bottom">
                                         <asp:Label ID="Label1" runat="server" Text="<%$Resources: SearchFieldLabels, WorkQueueScheduledDate%>" CssClass="SearchTextBoxLabel" />&nbsp;&nbsp;
@@ -83,7 +83,7 @@
                                     <td align="left" valign="bottom">
                                         <asp:Label ID="Label4" runat="server" Text="<%$Resources: SearchFieldLabels, WorkQueueProcessingServer%>" CssClass="SearchTextBoxLabel"
                                             EnableViewState="False" /><br />
-                                        <asp:TextBox ID="ProcessingServer" runat="server" CssClass="SearchTextBox" ToolTip="<%$Resources: Tooltips, SearchByProcessingServer %>" />
+                                        <ccUI:TextBox ID="ProcessingServer" runat="server" CssClass="SearchTextBox" ToolTip="<%$Resources: Tooltips, SearchByProcessingServer %>" />
                                     </td>    
                                     <td valign="bottom">
                                         <asp:Panel ID="Panel1" runat="server" CssClass="SearchButtonPanel"><ccUI:ToolbarButton ID="SearchButton" runat="server" SkinID="<%$Image:SearchIcon%>" OnClick="SearchButton_Click" /></asp:Panel>

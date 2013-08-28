@@ -33,7 +33,7 @@ namespace ClearCanvas.Ris.Client.Workflow
 {
 	[MenuAction("apply", "folderexplorer-items-contextmenu/Open Documentation", "Apply")]
 	[ButtonAction("apply", "folderexplorer-items-toolbar/Open Documentation", "Apply")]
-	[IconSet("apply", IconScheme.Colour, "PerformingOpenDocumentationSmall.png", "PerformingOpenDocumentationMedium.png", "PerformingOpenDocumentationLarge.png")]
+	[IconSet("apply", "PerformingOpenDocumentationSmall.png", "PerformingOpenDocumentationMedium.png", "PerformingOpenDocumentationLarge.png")]
 	[ActionPermission("apply", ClearCanvas.Ris.Application.Common.AuthorityTokens.Workflow.Documentation.Create)]
 	[EnabledStateObserver("apply", "Enabled", "EnabledChanged")]
 	[ExtensionOf(typeof(PerformingWorkflowItemToolExtensionPoint))]

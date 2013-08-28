@@ -101,6 +101,8 @@ namespace ClearCanvas.ImageViewer.Tools.Synchronization
 			base.ImageViewer.EventBroker.ImageDrawing -= OnImageDrawing;
 
 			_coordinator.Release();
+			_coordinator = null;
+			_currentReferenceImagePlane = null;
 
 			base.Dispose(disposing);
 		}

@@ -23,59 +23,147 @@
 #endregion
 
 using System;
+using System.Linq;
+using System.Reflection;
 using System.Threading;
 using ClearCanvas.Common;
+using ClearCanvas.Common.Configuration;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Desktop;
+using ClearCanvas.Desktop.Actions;
 using ClearCanvas.Desktop.Tools;
-using Timer=System.Threading.Timer;
+using ClearCanvas.ImageViewer.Common;
 
 namespace ClearCanvas.ImageViewer
 {
-	// This tool is basically a cheap hack to make sure that the garbage collector
-	// runs a few times after a workspace is closed.  Performing a single GC 
-	// when listening for a workspace removed event doesn't work since DotNetMagic
-	// is still holding on to certain references at that point.  We have to wait
-	// until the workspace is completely closed and all UI resources released
-	// before we do the GC.  The easiest way to do that without hooking into 
-	// the UI code itself is to get a timer to perform a GC a few times after
-	// the workspace has been closed.
+#if DEBUG
+    [KeyboardAction("forcegc", "imageviewer-keyboard/ForceFullGarbageCollection", "ForceGC", KeyStroke = XKeys.G)]
+    [KeyboardAction("reloadSettings", "imageviewer-keyboard/ReloadMemorySettings", "ReloadSettings", KeyStroke = XKeys.Control | XKeys.R)]
+    [KeyboardAction("collectLargeObjects", "imageviewer-keyboard/CollectAllLargeObjects", "CollectAll", KeyStroke = XKeys.Control | XKeys.C)]
+    [ExtensionOf(typeof(ImageViewerToolExtensionPoint))]
+    internal class ManualGarbageCollectionTool : Tool<IImageViewerToolContext>
+    {
+        public void ForceGC()
+        {
+            GarbageCollectionTool.ForceGC();
+        }
 
+        public void CollectAll()
+        {
+            Platform.Log(LogLevel.Info, "Forcing collection of all large objects.");
+            
+            bool keepGoing = true;
+            EventHandler<MemoryCollectedEventArgs> del = delegate(object sender, MemoryCollectedEventArgs args)
+            {
+                if (args.IsLast)
+                    keepGoing = args.BytesCollectedCount > 0;
+            };
 
-	[ExtensionOf(typeof(DesktopToolExtensionPoint))]
-	internal class GarbageCollectionTool : Tool<IDesktopToolContext>
-	{
-		public GarbageCollectionTool()
-		{
-		}
+            MemoryManager.MemoryCollected += del;
 
-		public override void Initialize()
-		{
-			base.Initialize();
-			this.Context.DesktopWindow.Workspaces.ItemClosed += OnWorkspaceClosed;
-		}
+            try
+            {
+                MemoryManager.Execute(delegate
+                {
+                    if (keepGoing)
+                        throw new OutOfMemoryException();
+                }, TimeSpan.FromSeconds(30));
+            }
+            catch (Exception)
+            {
+            }
+            finally
+            {
+                MemoryManager.MemoryCollected -= del;
+            }
 
-		protected override void Dispose(bool disposing)
-		{
-			this.Context.DesktopWindow.Workspaces.ItemClosed -= OnWorkspaceClosed;
-			base.Dispose(disposing);
-		}
+            ForceGC();
+        }
 
-		void OnWorkspaceClosed(object sender, ItemEventArgs<Workspace> e)
-		{
-			// When a workspace has been closed, we want the GC to run
-			// a few times to release what is often a significant amount of managed memory.
+        public void ReloadSettings()
+        {
+            try
+            {
+                Platform.Log(LogLevel.Info, "Forcing reload of MemoryManagementSettings.");
 
-			WaitCallback del = delegate
-			                   	{
-									for (int i = 0; i < 5; ++i)
-									{
-										Thread.Sleep(500);
-										GC.Collect();
-									}
-			                   	};
+                var groups = SettingsGroupDescriptor.ListInstalledSettingsGroups(SettingsGroupFilter.LocalStorage);
+                var settingsGroups = groups.First(g => g.Name == "ClearCanvas.ImageViewer.Common.MemoryManagementSettings");
+                var instance = ApplicationSettingsHelper.GetSettingsClassInstance(Type.GetType(settingsGroups.AssemblyQualifiedTypeName));
+                instance.Reload();
+            }
+            catch (Exception e)
+            {
+                ExceptionHandler.Report(e, Context.DesktopWindow);
+            }
+        }
+    }
+#endif
 
-			ThreadPool.QueueUserWorkItem(del);
-		}
-	}
+    [ExtensionOf(typeof(ImageViewerToolExtensionPoint))]
+    internal class GarbageCollectionTool : Tool<IImageViewerToolContext>
+    {
+        private static int _count;
+        private static volatile bool _isRunning;
+        private bool _initialized;
+        private bool _disposed;
+
+        ~GarbageCollectionTool()
+        {
+            InternalDispose();
+        }
+
+        public override void Initialize()
+        {
+            base.Initialize();
+
+            if (!_initialized)
+            {
+                Interlocked.Increment(ref _count);
+                _initialized = true;
+            }
+        }
+
+        private void InternalDispose()
+        {
+            if (_disposed)
+                return;
+
+            _disposed = true;
+
+            //When there are viewers actively open, and even when there are active "large objects" outside the viewer(s) (e.g. clipboard),
+            //the MemoryManager is looking after garbage collection. However, when all viewers have closed, it makes sense to just force
+            //garbage collection to bring us back to "zero".
+            if (Interlocked.Decrement(ref _count) <= 0)
+                ForceGC();
+        }
+
+        internal static void ForceGC()
+        {
+            if (_isRunning) return;
+            _isRunning = true;
+            ThreadPool.QueueUserWorkItem((ignore) =>
+            {
+                //Sleep for a couple seconds to let things settle.
+                Thread.Sleep(2000);
+
+                for (int i = 0; i < 3; ++i)
+                {
+                    //Sometimes the first GC doesn't get everything, so as long as there's no new viewers open yet, we collect a couple extra times.
+                    if (Thread.VolatileRead(ref _count) > 0)
+                        break;
+
+                    GC.Collect();
+                    Thread.Sleep(1000);
+                }
+                _isRunning = false;
+            }, null);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+
+            InternalDispose();
+        }
+    }
 }

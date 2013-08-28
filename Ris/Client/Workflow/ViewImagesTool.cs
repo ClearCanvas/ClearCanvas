@@ -38,7 +38,7 @@ namespace ClearCanvas.Ris.Client.Workflow
 	[MenuAction("apply", "folderexplorer-items-contextmenu/View Images", "Apply")]
 	[ButtonAction("apply", "folderexplorer-items-toolbar/Verify", "Apply")]
 	[ButtonAction("apply", "biography-reports-toolbar/View Images", "Apply")]
-	[IconSet("apply", IconScheme.Colour, "Icons.ViewImagesSmall.png", "Icons.ViewImagesMedium.png", "Icons.ViewImagesLarge.png")]
+	[IconSet("apply", "Icons.ViewImagesSmall.png", "Icons.ViewImagesMedium.png", "Icons.ViewImagesLarge.png")]
 	[Tooltip("apply", "View Images")]
 	[EnabledStateObserver("apply", "Enabled", "EnabledChanged")]
 	[VisibleStateObserver("apply", "Visible", "VisibleChanged")]

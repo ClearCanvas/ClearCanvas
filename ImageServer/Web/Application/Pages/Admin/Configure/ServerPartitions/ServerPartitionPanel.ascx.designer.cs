@@ -46,7 +46,7 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Admin.Configure.ServerPa
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox AETitleFilter;
+        protected global::ClearCanvas.ImageServer.Web.Common.WebControls.UI.TextBox AETitleFilter;
         
         /// <summary>
         /// Label2 control.
@@ -64,7 +64,7 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Admin.Configure.ServerPa
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox DescriptionFilter;
+        protected global::ClearCanvas.ImageServer.Web.Common.WebControls.UI.TextBox DescriptionFilter;
         
         /// <summary>
         /// Label4 control.

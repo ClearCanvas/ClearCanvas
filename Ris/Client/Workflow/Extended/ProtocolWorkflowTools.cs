@@ -39,7 +39,7 @@ namespace ClearCanvas.Ris.Client.Workflow.Extended
 {
 	[MenuAction("apply", "folderexplorer-items-contextmenu/Verify Protocol", "Apply")]
     [ButtonAction("apply", "folderexplorer-items-toolbar/Verify Protocol", "Apply")]
-	[IconSet("apply", IconScheme.Colour, "Icons.VerifyReportSmall.png", "Icons.VerifyReportMedium.png", "Icons.VerifyReportLarge.png")]
+	[IconSet("apply", "Icons.VerifyReportSmall.png", "Icons.VerifyReportMedium.png", "Icons.VerifyReportLarge.png")]
 	[EnabledStateObserver("apply", "Enabled", "EnabledChanged")]
 	[ExtensionOf(typeof(ProtocolWorkflowItemToolExtensionPoint))]
 	public class VerifyProtocolTool : ProtocolWorkflowItemTool
@@ -85,7 +85,7 @@ namespace ClearCanvas.Ris.Client.Workflow.Extended
 
 	[MenuAction("apply", "folderexplorer-items-contextmenu/Reject Protocol", "Apply")]
 	[ButtonAction("apply", "folderexplorer-items-toolbar/Reject Protocol", "Apply")]
-	[IconSet("apply", IconScheme.Colour, "Icons.RejectProtocolSmall.png", "Icons.RejectProtocolMedium.png", "Icons.RejectProtocolLarge.png")]
+	[IconSet("apply", "Icons.RejectProtocolSmall.png", "Icons.RejectProtocolMedium.png", "Icons.RejectProtocolLarge.png")]
 	[EnabledStateObserver("apply", "Enabled", "EnabledChanged")]
 	[ExtensionOf(typeof(ProtocolWorkflowItemToolExtensionPoint))]
 	public class RejectProtocolTool : ProtocolWorkflowItemTool
@@ -146,7 +146,7 @@ namespace ClearCanvas.Ris.Client.Workflow.Extended
 
 	[MenuAction("apply", "folderexplorer-items-contextmenu/Submit for Review", "Apply")]
 	[ButtonAction("apply", "folderexplorer-items-toolbar/Submit for Review", "Apply")]
-	[IconSet("apply", IconScheme.Colour, "Icons.SubmitForReviewSmall.png", "Icons.SubmitForReviewMedium.png", "Icons.SubmitForReviewLarge.png")]
+	[IconSet("apply", "Icons.SubmitForReviewSmall.png", "Icons.SubmitForReviewMedium.png", "Icons.SubmitForReviewLarge.png")]
 	[EnabledStateObserver("apply", "Enabled", "EnabledChanged")]
 	[VisibleStateObserver("apply", "Visible", "VisibleChanged")]
 	[ExtensionOf(typeof(ProtocolWorkflowItemToolExtensionPoint))]
@@ -207,7 +207,7 @@ namespace ClearCanvas.Ris.Client.Workflow.Extended
 
     [MenuAction("apply", "folderexplorer-items-contextmenu/Discard Protocol", "Apply")]
     [ButtonAction("apply", "folderexplorer-items-toolbar/Discard Protocol", "Apply")]
-	[IconSet("apply", IconScheme.Colour, "Icons.CancelReportSmall.png", "Icons.CancelReportMedium.png", "Icons.CancelReportLarge.png")]
+	[IconSet("apply", "Icons.CancelReportSmall.png", "Icons.CancelReportMedium.png", "Icons.CancelReportLarge.png")]
 	[EnabledStateObserver("apply", "Enabled", "EnabledChanged")]
 	[ExtensionOf(typeof(ProtocolWorkflowItemToolExtensionPoint))]
 	[ExtensionOf(typeof(RadiologistAdminWorkflowItemToolExtensionPoint))]
@@ -243,7 +243,7 @@ namespace ClearCanvas.Ris.Client.Workflow.Extended
 
 	[MenuAction("apply", "folderexplorer-items-contextmenu/Reassign", "Apply")]
 	[ButtonAction("apply", "folderexplorer-items-toolbar/Reassign", "Apply")]
-	[IconSet("apply", IconScheme.Colour, "Icons.AssignSmall.png", "Icons.AssignMedium.png", "Icons.AssignLarge.png")]
+	[IconSet("apply", "Icons.AssignSmall.png", "Icons.AssignMedium.png", "Icons.AssignLarge.png")]
 	[EnabledStateObserver("apply", "Enabled", "EnabledChanged")]
 	[ActionPermission("apply", Application.Extended.Common.AuthorityTokens.Workflow.Protocol.Reassign)]
 	[ExtensionOf(typeof(RadiologistAdminWorkflowItemToolExtensionPoint))]

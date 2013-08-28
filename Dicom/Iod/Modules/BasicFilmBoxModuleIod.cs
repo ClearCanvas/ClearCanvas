@@ -773,6 +773,7 @@ namespace ClearCanvas.Dicom.Iod.Modules
 		                                                           		A3, A4
 		                                                           	}.AsReadOnly();
 
+		// TODO CR (Mar 2013): Rewrite in a way that isn't so dependent on replacing characters then doing a parse of sorts, especially when the strings are hardcoded
 		public static FilmSize FromDicomString(string dicomString)
 		{
 			try
@@ -816,8 +817,8 @@ namespace ClearCanvas.Dicom.Iod.Modules
 				               	{
 				               		_dicomString = dicomString,
 				               		_sizeUnit = firstUnit == "IN" ? FilmSizeUnit.Inch : FilmSizeUnit.Centimeter,
-				               		_width = float.Parse(dimensions[0]),
-				               		_height = float.Parse(dimensions[1]),
+				               		_width = float.Parse(dimensions[0], CultureInfo.InvariantCulture),
+				               		_height = float.Parse(dimensions[1], CultureInfo.InvariantCulture),
 				               	};
 				return filmSize;
 			}
