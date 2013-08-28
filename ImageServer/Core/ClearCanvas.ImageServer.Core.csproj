@@ -79,11 +79,11 @@
     <Compile Include="DuplicatePolicy.cs" />
     <Compile Include="Edit\BaseImageLevelUpdateCommand.cs" />
     <Compile Include="Edit\EditStudyWorkQueueData.cs" />
+    <Compile Include="Edit\EditType.cs" />
     <Compile Include="Edit\Extensions\LogHistory\LogHistory.cs" />
     <Compile Include="Edit\InstanceInfo.cs" />
     <Compile Include="DicomCharacterSetException.cs" />
     <Compile Include="Edit\IWebEditStudyCommandCompiler.cs" />
-    <Compile Include="Edit\IWebEditStudyProcessorExtension.cs" />
     <Compile Include="Edit\PatientInfo.cs" />
     <Compile Include="Edit\StudyDeleteHelper.cs" />
     <Compile Include="Edit\StudyEditorHelper.cs" />
@@ -100,6 +100,7 @@
     <Compile Include="Events\ImageServerEventAttribute.cs" />
     <Compile Include="Events\NewSopEventArgs.cs" />
     <Compile Include="Events\SopEventArgs.cs" />
+    <Compile Include="Events\StudyEditedEventArgs.cs" />
     <Compile Include="Events\UpdateSopEventArgs.cs" />
     <Compile Include="FilesystemDynamicPath.cs" />
     <Compile Include="FileSystemMonitor.cs" />
@@ -120,7 +121,6 @@
     <Compile Include="Query\QueryHelper.cs" />
     <Compile Include="Reconcile\StudyMatchingMap.cs" />
     <Compile Include="Edit\WebEditStudyCommandCompiler.cs" />
-    <Compile Include="Edit\WebEditStudyContext.cs" />
     <Compile Include="Edit\WebEditStudyHistoryRecord.cs" />
     <Compile Include="Process\StudyReprocessor.cs" />
     <Compile Include="Command\RebuildStudyXmlCommand.cs" />

@@ -1,4 +1,4 @@
-#region License
+﻿#region License
 
 // Copyright (c) 2013, ClearCanvas Inc.
 // All rights reserved.
@@ -23,35 +23,17 @@
 #endregion
 
 using System.Collections.Generic;
-using ClearCanvas.ImageServer.Common;
+using ClearCanvas.ImageServer.Core.Edit;
 using ClearCanvas.ImageServer.Enterprise.Command;
 using ClearCanvas.ImageServer.Model;
 
-namespace ClearCanvas.ImageServer.Core.Edit
+namespace ClearCanvas.ImageServer.Core.Events
 {
 	/// <summary>
-	/// Type of study edit operation
+	/// Event called after a study has been successfully edited.
 	/// </summary>
-	public enum EditType
-	{
-		/// <summary>
-		/// User edited the study via the Web GUI
-		/// </summary>
-		[EnumInfo(ShortDescription="Web Edit", LongDescription="Edited using the Web GUI")]
-		WebEdit,
-
-        /// <summary>
-        /// User edited the study via the Web GUI
-        /// </summary>
-        [EnumInfo(ShortDescription = "Web Service Edit", LongDescription = "Automatic edit caused by web service call")]
-        WebServiceEdit  
-
-	}
-
-	/// <summary>
-	/// Represents the context of the Web Edit Study operation.
-	/// </summary>
-	public class WebEditStudyContext
+	[ImageServerEvent]
+	public class StudyEditedEventArgs : ImageServerEventArgs
 	{
 		#region Public Properties
 
@@ -95,7 +77,7 @@ namespace ClearCanvas.ImageServer.Core.Edit
 		/// Depending on what is modified, it may have the same or different data 
 		/// compared with <see cref="OriginalStudyStorageLocation"/>.
 		/// </remarks>
-		public StudyStorageLocation NewStudystorageLocation { get; set; }
+		public StudyStorageLocation NewStudyStorageLocation { get; set; }
 
 		/// <summary>
 		/// Gets or sets the original <see cref="Study"/>
