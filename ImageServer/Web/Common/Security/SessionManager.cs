@@ -154,15 +154,6 @@ namespace ClearCanvas.ImageServer.Web.Common.Security
             }
         }
 
-        /// <summary>
-        /// Logs in and intializes the session using the given username and password.
-        /// </summary>
-        /// <param name="username"></param>
-        /// <param name="password"></param>
-        public static SessionInfo InitializeSession(string username, string password)
-        {
-            return InitializeSession(username, password, ImageServerConstants.DefaultApplicationName, true);
-        }
 
         /// <summary>
         /// Logs in and intializes the session using the given username and password.
