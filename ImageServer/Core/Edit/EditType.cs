@@ -1,4 +1,4 @@
-#region License
+﻿#region License
 
 // Copyright (c) 2013, ClearCanvas Inc.
 // All rights reserved.
@@ -22,39 +22,25 @@
 
 #endregion
 
-using System;
-using ClearCanvas.Common;
+using ClearCanvas.ImageServer.Common;
 
 namespace ClearCanvas.ImageServer.Core.Edit
 {
 	/// <summary>
-	/// Defines the interface of a extension to <see cref="StudyEditor"/>
+	/// Type of study edit operation
 	/// </summary>
-	public interface IWebEditStudyProcessorExtension : IDisposable
+	public enum EditType
 	{
 		/// <summary>
-		/// Gets a value indicating whether the extension is enabled.
+		/// User edited the study via the Web GUI
 		/// </summary>
-		bool Enabled { get; }
+		[EnumInfo(ShortDescription = "Web Edit", LongDescription = "Edited using the Web GUI")]
+		WebEdit,
 
 		/// <summary>
-		/// Initializes the extension.
+		/// User edited the study via the Web GUI
 		/// </summary>
-		void Initialize();
-
-		/// <summary>
-		/// Called when study is about to be updated.
-		/// </summary>
-		/// <param name="context"></param>
-		void OnStudyEditing(WebEditStudyContext context);
-
-		/// <summary>
-		/// Called after the study has been updated.
-		/// </summary>
-		/// <param name="context"></param>
-		void OnStudyEdited(WebEditStudyContext context);
+		[EnumInfo(ShortDescription = "Web Service Edit", LongDescription = "Automatic edit caused by web service call")]
+		WebServiceEdit
 	}
-
-	public class WebEditStudyProcessorExtensionPoint:ExtensionPoint<IWebEditStudyProcessorExtension>
-	{}
 }
