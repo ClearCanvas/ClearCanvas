@@ -28,6 +28,7 @@ using ClearCanvas.Dicom;
 using ClearCanvas.Dicom.Iod.Macros;
 using ClearCanvas.Dicom.Iod.Modules;
 using ClearCanvas.ImageViewer.StudyManagement;
+using ClearCanvas.ImageViewer.Volumes;
 
 namespace ClearCanvas.ImageViewer.Volume.Mpr
 {
@@ -37,14 +38,14 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 		/// Initializes a new <see cref="ISopDataSource"/> for the given volume slice.
 		/// </summary>
 		/// <param name="slice">A volume slice. This instance will be disposed when the <see cref="VolumeSliceSopDataSource"/> instance is disposed.</param>
-		public VolumeSliceSopDataSource(VolumeSlice slice)
+		public VolumeSliceSopDataSource(IVolumeSlice slice)
 		{
 			Slice = slice;
 			DataSet = new DicomAttributeCollection();
 			FillDataSet(DataSet, slice);
 		}
 
-		public VolumeSlice Slice { get; private set; }
+		public IVolumeSlice Slice { get; private set; }
 
 		public IDicomAttributeProvider DataSet { get; private set; }
 
@@ -118,7 +119,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 			base.Dispose(disposing);
 		}
 
-		internal static void FillDataSet(IDicomAttributeProvider dataSet, VolumeSlice slice)
+		internal static void FillDataSet(IDicomAttributeProvider dataSet, IVolumeSlice slice)
 		{
 			// generate values for SC Equipment Module
 			var scEquipment = new ScEquipmentModuleIod(dataSet);
@@ -136,6 +137,10 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 			dataSet[DicomTags.PixelSpacing].SetStringValue(slice.PixelSpacing);
 			dataSet[DicomTags.ImageOrientationPatient].SetStringValue(slice.ImageOrientationPatient);
 			dataSet[DicomTags.ImagePositionPatient].SetStringValue(slice.ImagePositionPatient);
+			dataSet[DicomTags.SliceThickness].SetStringValue(slice.SliceThickness);
+
+			// update the spacing between slices, even though it's only part of modality-specific modules
+			dataSet[DicomTags.SpacingBetweenSlices].SetStringValue(slice.SpacingBetweenSlices);
 
 			// update the Image Pixel Module
 			dataSet[DicomTags.Rows].SetInt32(0, slice.Rows);

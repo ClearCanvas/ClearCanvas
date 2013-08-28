@@ -22,44 +22,26 @@
 
 #endregion
 
-using System;
-using System.Collections.Generic;
-using ClearCanvas.Common;
-using ClearCanvas.Common.Utilities;
-
-namespace ClearCanvas.ImageViewer.Volume.Mpr.Utilities
+namespace ClearCanvas.ImageViewer.Volumes
 {
-	internal class ObservableDisposableList<T> : ObservableList<T>, IDisposable where T : IDisposable
+	/// <summary>
+	/// Specifies the type of interpolation to be used when working with the volume framework.
+	/// </summary>
+	public enum VolumeInterpolationMode
 	{
-		public ObservableDisposableList() {}
+		/// <summary>
+		/// Specifies the use of nearest-neighbor interpolation.
+		/// </summary>
+		NearestNeighbor,
 
-		public ObservableDisposableList(IEnumerable<T> list)
-			: base(list) {}
+		/// <summary>
+		/// Specifies the use of bilinear interpolation (in the context of 2D images) or trilinear interpolation (in the context of 3D volumes).
+		/// </summary>
+		Linear,
 
-		public void Dispose()
-		{
-			try
-			{
-				Dispose(true);
-				GC.SuppressFinalize(this);
-			}
-			catch (Exception e)
-			{
-				Platform.Log(LogLevel.Warn, e);
-			}
-		}
-
-		protected virtual void Dispose(bool disposing)
-		{
-			if (disposing)
-			{
-				var temp = new List<T>(this);
-				EnableEvents = false;
-				Clear();
-
-				foreach (T t in temp)
-					t.Dispose();
-			}
-		}
+		/// <summary>
+		/// Specifies the use of bicubic interpolation (in the context of 2D images) or tricubic interpolation (in the context of 3D volumes). 
+		/// </summary>
+		Cubic
 	}
 }

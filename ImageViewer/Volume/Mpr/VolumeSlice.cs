@@ -32,7 +32,7 @@ using ClearCanvas.ImageViewer.Volumes;
 
 namespace ClearCanvas.ImageViewer.Volume.Mpr
 {
-	public class VolumeSlice : IDicomAttributeProvider, IDisposable
+	public class VolumeSlice : IDicomAttributeProvider, IDisposable, IVolumeSlice
 	{
 		private IVolumeReference _volumeReference;
 		private IVolumeSlicerParams _slicerParams;
@@ -66,6 +66,8 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 			spacing.SetFloat32(0, effectiveSpacing);
 			spacing.SetFloat32(1, effectiveSpacing);
 			PixelSpacing = spacing.ToString();
+
+			SliceThickness = SpacingBetweenSlices = new DicomAttributeDS(DicomTags.SliceThickness) {Values = slicerParams.SliceSpacing}.ToString();
 
 			// compute Image Orientation (Patient)
 			var matrix = new Matrix(slicerParams.SlicingPlaneRotation);
@@ -135,6 +137,8 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 		public string PixelSpacing { get; private set; }
 		public string ImageOrientationPatient { get; private set; }
 		public string ImagePositionPatient { get; private set; }
+		public string SliceThickness { get; private set; }
+		public string SpacingBetweenSlices { get; private set; }
 
 		public IVolumeReference VolumeReference
 		{

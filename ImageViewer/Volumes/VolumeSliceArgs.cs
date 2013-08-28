@@ -23,43 +23,46 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
-using ClearCanvas.Common;
-using ClearCanvas.Common.Utilities;
+using ClearCanvas.ImageViewer.Mathematics;
 
-namespace ClearCanvas.ImageViewer.Volume.Mpr.Utilities
+namespace ClearCanvas.ImageViewer.Volumes
 {
-	internal class ObservableDisposableList<T> : ObservableList<T>, IDisposable where T : IDisposable
+	public class VolumeSliceArgs : ICloneable
 	{
-		public ObservableDisposableList() {}
+		public Vector3D RowOrientationPatient { get; set; }
 
-		public ObservableDisposableList(IEnumerable<T> list)
-			: base(list) {}
+		public Vector3D ColumnOrientationPatient { get; set; }
 
-		public void Dispose()
+		public int Columns { get; set; }
+
+		public int Rows { get; set; }
+
+		public float SliceThickness { get; set; }
+
+		public float RowSpacing { get; set; }
+
+		public float ColumnSpacing { get; set; }
+
+		public VolumeInterpolationMode Interpolation { get; set; }
+
+		public VolumeSliceArgs Clone()
 		{
-			try
-			{
-				Dispose(true);
-				GC.SuppressFinalize(this);
-			}
-			catch (Exception e)
-			{
-				Platform.Log(LogLevel.Warn, e);
-			}
+			return new VolumeSliceArgs
+			       	{
+			       		RowOrientationPatient = RowOrientationPatient,
+			       		ColumnOrientationPatient = ColumnOrientationPatient,
+			       		Columns = Columns,
+			       		Rows = Rows,
+			       		SliceThickness = SliceThickness,
+			       		RowSpacing = RowSpacing,
+			       		ColumnSpacing = ColumnSpacing,
+			       		Interpolation = Interpolation
+			       	};
 		}
 
-		protected virtual void Dispose(bool disposing)
+		object ICloneable.Clone()
 		{
-			if (disposing)
-			{
-				var temp = new List<T>(this);
-				EnableEvents = false;
-				Clear();
-
-				foreach (T t in temp)
-					t.Dispose();
-			}
+			return Clone();
 		}
 	}
 }

@@ -309,6 +309,8 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 		// Extract slice in specified orientation
 		private vtkImageData GenerateVtkSlice(Matrix resliceAxes)
 		{
+			var effectiveSpacing = EffectiveSpacing;
+
 			using (vtkImageReslice reslicer = new vtkImageReslice())
 			{
 				VtkHelper.RegisterVtkErrorEvents(reslicer);
@@ -326,8 +328,8 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 					// Use the volume's padding value for all pixels that are outside the volume
 					reslicer.SetBackgroundLevel(_volume.PaddingValue);
 
-					// This effectively ensures that the image reslicer uses the original spacing in the output images
-					reslicer.SetOutputSpacing(_volume.VoxelSpacing.X, _volume.VoxelSpacing.Y, _volume.VoxelSpacing.Z);
+					// Ensure the slicer outputs at our desired isotropic spacing, which is chosen so that we interpolate at least as many pixels as there were in the source data
+					reslicer.SetOutputSpacing(effectiveSpacing, effectiveSpacing, effectiveSpacing);
 
 					using (vtkMatrix4x4 resliceAxesMatrix = VtkHelper.ConvertToVtkMatrix(resliceAxes))
 					{
@@ -341,8 +343,8 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 						// Set the output origin to reflect the slice through point. The slice extent is
 						//	centered on the slice through point.
 						// VTK output origin is derived from the center image being 0,0
-						float originX = -sliceExtentX*EffectiveSpacing/2;
-						float originY = -sliceExtentY*EffectiveSpacing/2;
+						float originX = -sliceExtentX*effectiveSpacing/2;
+						float originY = -sliceExtentY*effectiveSpacing/2;
 						reslicer.SetOutputOrigin(originX, originY, 0);
 
 						switch (_slicerParams.InterpolationMode)

@@ -78,6 +78,7 @@
     <Compile Include="VtkSceneGraph.cs" />
     <Compile Include="VtkImageDataHandle.cs" />
     <Compile Include="VtkVolumeMethods.cs" />
+    <Compile Include="VtkVolumeSlicerCore.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Common\ClearCanvas.Common.csproj">
@@ -95,6 +96,10 @@
     <ProjectReference Include="..\ClearCanvas.ImageViewer.csproj">
       <Project>{85100D3E-471C-47C9-9687-ABF25F617ED7}</Project>
       <Name>ClearCanvas.ImageViewer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Common\ClearCanvas.ImageViewer.Common.csproj">
+      <Project>{FEFD73C5-8541-47D2-BBDB-FF61DEA28291}</Project>
+      <Name>ClearCanvas.ImageViewer.Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\Common\ClearCanvas.ImageViewer.Common.csproj">
       <Project>{FEFD73C5-8541-47D2-BBDB-FF61DEA28291}</Project>
