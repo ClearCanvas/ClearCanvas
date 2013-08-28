@@ -128,7 +128,7 @@ namespace ClearCanvas.ImageServer.Core.Reconcile.ProcessAsIs
 					string groupID = ServerHelper.GetUidGroup(file, _destinationStudyStorage.ServerPartition, Context.WorkQueueItem.InsertTime);
 
 				    SopInstanceProcessor sopProcessor = new SopInstanceProcessor(context);
-                    ProcessingResult result = sopProcessor.ProcessFile(groupID, file, xml, false, true, uid, GetReconcileUidPath(uid));
+                    ProcessingResult result = sopProcessor.ProcessFile(groupID, file, xml, false, true, uid, GetReconcileUidPath(uid), SopInstanceProcessorSopType.NewSop);
 					if (result.Status != ProcessingStatus.Success)
 					{
 						throw new ApplicationException(String.Format("Unable to reconcile image {0}", file.Filename));

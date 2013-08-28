@@ -160,18 +160,16 @@ namespace ClearCanvas.ImageServer.Core.Edit
 
 		private void Initialize()
 		{
-            using (var context = new ServerExecutionContext())
-            {
-				_backupDir = ServerExecutionContext.Current.BackupDirectory;
+			_backupDir = ProcessorContext.BackupDirectory;
 
 				_oldStudyPath = _oldStudyLocation.GetStudyPath();
 				_oldStudyInstanceUid = _oldStudyLocation.StudyInstanceUid;
 				_oldStudyFolder = _oldStudyLocation.StudyFolder;
 				_newStudyInstanceUid = _oldStudyInstanceUid;
 
-				_study = _oldStudyLocation.LoadStudy(context.ReadContext);
+			_study = _oldStudyLocation.LoadStudy(ServerExecutionContext.Current.ReadContext);
 				_totalSopCount = _study.NumberOfStudyRelatedInstances;
-				_curPatient = _study.LoadPatient(context.ReadContext);
+			_curPatient = _study.LoadPatient(ServerExecutionContext.Current.ReadContext);
 				_oldPatientInfo = new PatientInfo
 				                  	{
 				                  		Name = _curPatient.PatientsName,
@@ -212,7 +210,7 @@ namespace ClearCanvas.ImageServer.Core.Edit
 				NewStudyPath = Path.Combine(NewStudyPath, _oldStudyFolder);
 				NewStudyPath = Path.Combine(NewStudyPath, _newStudyInstanceUid);
 
-				_newPatient = FindPatient(_newPatientInfo, context.ReadContext);
+			_newPatient = FindPatient(_newPatientInfo, ServerExecutionContext.Current.ReadContext);
 				_patientInfoIsNotChanged = _newPatientInfo.Equals(_oldPatientInfo);
 
 				Statistics.InstanceCount = _study.NumberOfStudyRelatedInstances;
@@ -223,7 +221,6 @@ namespace ClearCanvas.ImageServer.Core.Edit
 				_deleteOriginalFolder = NewStudyPath != _oldStudyPath;
 				_initialized = true;
 			}
-		}
 
 		private void CleanupBackupFiles()
 		{

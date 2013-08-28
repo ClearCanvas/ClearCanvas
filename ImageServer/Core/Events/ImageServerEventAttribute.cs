@@ -22,28 +22,37 @@
 
 #endregion
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using ClearCanvas.Common;
+using ClearCanvas.Common.Utilities;
+
 namespace ClearCanvas.ImageServer.Core.Events
 {
-	/// <summary>
-	/// EventArgs for when a new SOP Instance has been processed
-	/// </summary>
-	/// <remarks>
-	/// The following example code shows how to define an extension that wil receive NewSopEventArgs events.
-	/// Just create a class that implements <see cref="IEventHandler{TImageServerEventArgs}"/> and add
-	/// the appropriate ExtensionOf attribute as shown below.  In this event case, it will be called each
-	/// time a new SOP Instance UID is processed by the ImageServer.
-	/// <code>
-	/// [ExtensionOf(typeof(EventExtensionPoint<NewSopEventArgs>))]
-	/// public class NewSopEventHandler : IEventHandler<NewSopEventArgs> 
-	/// {
-	///    public void EventHandler(object sender, NewSopEventArgs e)
-	///    {
-	///    }
-	/// }
-	/// </code>
-	/// </remarks>
-	[ImageServerEvent]
-	public class NewSopEventArgs : SopEventArgs
+	[AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
+	public class ImageServerEventAttribute : Attribute
 	{
+	}
+
+
+	public static class ImageServerEventTypeProvider
+	{
+		private static readonly List<Type> KnownTypes = (from p in Platform.PluginManager.Plugins
+														 from t in p.Assembly.Resolve().GetTypes()
+														 let a = AttributeUtils.GetAttribute<ImageServerEventAttribute>(t)
+														 where (a != null)
+														 select t).ToList();
+
+		public static IEnumerable<Type> GetKnownTypes(ICustomAttributeProvider ignored)
+		{
+			return KnownTypes;
+		}
+
+		public static Type[] GetTypeArray()
+		{
+			return KnownTypes.ToArray();
+		}
 	}
 }

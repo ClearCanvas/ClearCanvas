@@ -29,7 +29,7 @@ namespace ClearCanvas.ImageServer.Core.Events
     /// <summary>
     /// Base class for ImageServer specific event arguements.
     /// </summary>
-    public class ImageServerEventArgs : EventArgs
+    public abstract class ImageServerEventArgs : EventArgs
     {
     }
 }

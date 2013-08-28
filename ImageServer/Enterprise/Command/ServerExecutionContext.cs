@@ -92,19 +92,27 @@ namespace ClearCanvas.ImageServer.Enterprise.Command
 
         protected virtual string GetTemporaryPath()
         {
-            string tempDir;
-            // if specified in the config, use it
-            if (!String.IsNullOrEmpty(ImageServerCommonConfiguration.TemporaryPath))
+			string path;
+			if (_inheritFrom != null)
             {
-                tempDir = ImageServerCommonConfiguration.TemporaryPath;
+				path = Path.Combine(_inheritFrom.TempDirectory, _contextId);
+
+				for (int i = 1; i <= _contextId.Length; i++)
+				{
+					path = Path.Combine(_inheritFrom.TempDirectory, _contextId.Substring(0, i));
+					if (!Directory.Exists(path))
+						break;
+				}
             }
             else
             {
-                // Use the OS temp folder instead, assuming it's not too long.
+				// if specified in the config, use it
+				string tempDir = !String.IsNullOrEmpty(ImageServerCommonConfiguration.TemporaryPath)
+					                 ? ImageServerCommonConfiguration.TemporaryPath
+					                 : // Use the OS temp folder instead, assuming it's not too long.
                 // Avoid creating a temp folder under the installation directory because it could
                 // lead to PathTooLongException.
-                tempDir = Path.Combine(Path.GetTempPath(), "ImageServer");
-            }
+					                 Path.Combine(Path.GetTempPath(), "ImageServer");
 
             // make sure it exists
             if (!Directory.Exists(tempDir))
@@ -112,9 +120,9 @@ namespace ClearCanvas.ImageServer.Enterprise.Command
                 Directory.CreateDirectory(tempDir);
             }
 
-            string path = _inheritFrom != null
-                              ? Path.Combine(_inheritFrom.GetTemporaryPath(), _contextId)
-                              : Path.Combine(tempDir, _contextId);
+			    path = Path.Combine(tempDir, _contextId);
+		    }
+
             if (!Directory.Exists(path))
             {
                 Directory.CreateDirectory(path);

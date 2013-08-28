@@ -308,7 +308,7 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.StudyProcess
 
             string group = queueUid.GroupID ?? ServerHelper.GetUidGroup(file, ServerPartition, WorkQueueItem.InsertTime);
 
-            ProcessingResult result = processor.ProcessFile(group, file, stream, compare, true, queueUid, null);
+            ProcessingResult result = processor.ProcessFile(group, file, stream, compare, true, queueUid, null, SopInstanceProcessorSopType.NewSop);
 
             if (result.Status == ProcessingStatus.Reconciled)
             {

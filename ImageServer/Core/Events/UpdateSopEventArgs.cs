@@ -43,6 +43,7 @@ namespace ClearCanvas.ImageServer.Core.Events
 	/// }
 	/// </code>
 	/// </remarks>
+	[ImageServerEvent]
 	public class UpdateSopEventArgs : SopEventArgs
 	{
 	}
