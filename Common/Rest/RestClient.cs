@@ -286,6 +286,17 @@ namespace ClearCanvas.Common.Rest
 			/// Sets the request body for this request, and returns itself.
 			/// </summary>
 			/// <param name="data"></param>
+			/// <param name="buffer"></param>
+			/// <returns></returns>
+			public Request SetData(Stream data, bool buffer = true)
+			{
+				return SetData(data, null, buffer);
+			}
+
+			/// <summary>
+			/// Sets the request body for this request, and returns itself.
+			/// </summary>
+			/// <param name="data"></param>
 			/// <param name="contentType"></param>
 			/// <param name="buffer">Specifies whether the request should buffer the data.</param>
 			/// <returns></returns>
@@ -293,8 +304,6 @@ namespace ClearCanvas.Common.Rest
 			{
 				if (data == null)
 					throw new ArgumentNullException("data");
-				if (string.IsNullOrEmpty(contentType))
-					throw new ArgumentNullException("contentType");
 				if (!string.IsNullOrEmpty(_contentString) || _contentStream != null)
 					throw new InvalidOperationException("content already specified");
 
@@ -309,6 +318,17 @@ namespace ClearCanvas.Common.Rest
 			/// Sets the request body for this request, and returns itself.
 			/// </summary>
 			/// <param name="data"></param>
+			/// <param name="buffer"></param>
+			/// <returns></returns>
+			public Request SetData(string data, bool buffer = true)
+			{
+				return SetData(data, null, buffer);
+			}
+
+			/// <summary>
+			/// Sets the request body for this request, and returns itself.
+			/// </summary>
+			/// <param name="data"></param>
 			/// <param name="contentType"></param>
 			/// <param name="buffer">Specifies whether the request should buffer the data.</param>
 			/// <returns></returns>
@@ -316,8 +336,6 @@ namespace ClearCanvas.Common.Rest
 			{
 				if (string.IsNullOrEmpty(data))
 					return this;
-				if (string.IsNullOrEmpty(contentType))
-					throw new ArgumentNullException("contentType");
 				if (!string.IsNullOrEmpty(_contentString) || _contentStream != null)
 					throw new InvalidOperationException("content already specified");
 
@@ -364,8 +382,10 @@ namespace ClearCanvas.Common.Rest
 			{
 				if (_contentStream != null)
 				{
-					// set content type/length
-					_request.ContentType = _contentType;
+					// set content type if specified
+					if(!string.IsNullOrEmpty(_contentType))
+						_request.ContentType = _contentType;
+
 					using (var reqStream = _request.GetRequestStream())
 					{
 						_contentStream.CopyTo(reqStream);
@@ -375,8 +395,10 @@ namespace ClearCanvas.Common.Rest
 
 				if (!string.IsNullOrEmpty(_contentString))
 				{
-					// set content type/length
-					_request.ContentType = _contentType;
+					// set content type if specified
+					if (!string.IsNullOrEmpty(_contentType))
+						_request.ContentType = _contentType;
+
 					using (var reqStream = _request.GetRequestStream())
 					{
 						using (var writer = new StreamWriter(reqStream))
