@@ -62,8 +62,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ImageServerWadoLoader.cs" />
-    <Compile Include="StreamingSopDataSource.cs" />
-    <Compile Include="StreamingSopFrameData.cs" />
     <Compile Include="WebStation\WebStationStreamingStudyLoader.cs" />
     <Compile Include="WebStation\WebStationStreamingSettings.cs" />
     <Compile Include="WebStation\WebStationStreamingSettings.Designer.cs">
