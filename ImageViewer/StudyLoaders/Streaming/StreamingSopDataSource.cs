@@ -23,12 +23,10 @@
 #endregion
 
 using System;
-using System.IO;
-using System.Threading;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Dicom;
-using ClearCanvas.Dicom.ServiceModel.Streaming;
+using ClearCanvas.Dicom.Iod;
 using ClearCanvas.Dicom.Utilities.Xml;
 using ClearCanvas.ImageViewer.Common;
 using ClearCanvas.ImageViewer.StudyManagement;
@@ -40,19 +38,31 @@ namespace ClearCanvas.ImageViewer.StudyLoaders.Streaming
 		new IStreamingSopFrameData GetFrameData(int frameNumber);
 	}
 
-	internal partial class StreamingSopDataSource : DicomMessageSopDataSource, IStreamingSopDataSource
+	/// <summary>
+	/// <see cref="DicomMessageSopDataSource"/> for a <see cref="StudyXml"/>-based study,
+	/// where the complete header and per-frame pixel data can be retrieved on-demand via
+	/// an <see cref="IDicomFileLoader"/>.
+	/// </summary>
+	/// <remarks>
+	/// This class is optimized for the remote case, like streaming from an ImageServer, 
+	/// as it has built-in mechanisms for retrying when pixel data fails to be retrieved.
+	/// </remarks>
+	public partial class StreamingSopDataSource : DicomMessageSopDataSource, IStreamingSopDataSource
 	{
-		private readonly string _host;
-		private readonly string _aeTitle;
-		private readonly string _wadoUriPrefix;
-		private readonly int _wadoServicePort;
+		private readonly IDicomFileLoader _loader;
 		private volatile bool _fullHeaderRetrieved = false;
 
-		public StreamingSopDataSource(InstanceXml instanceXml, string host, string aeTitle, string wadoUriPrefix, int wadoServicePort)
+		public StreamingSopDataSource(InstanceXml instanceXml, IDicomFileLoader loader)
 			: base(new DicomFile("", new DicomAttributeCollection(), instanceXml.Collection))
 		{
+			if (!loader.CanLoadCompleteHeader)
+				throw new ArgumentException("Loader must be capable of retrieving the full image header.", "loader");
+			if (!loader.CanLoadFramePixelData)
+				throw new ArgumentException("Loader must be capable of loading frame pixel data.", "loader");
+
+			_loader = loader;
 			//These don't get set properly for instance xml.
-			DicomFile sourceFile = (DicomFile)SourceMessage;
+			var sourceFile = (DicomFile)SourceMessage;
 			sourceFile.TransferSyntaxUid = instanceXml.TransferSyntax.UidString;
 			sourceFile.MediaStorageSopInstanceUid = instanceXml.SopInstanceUid;
 
@@ -61,10 +71,6 @@ namespace ClearCanvas.ImageViewer.StudyLoaders.Streaming
 		                                                             ? instanceXml[DicomTags.SopClassUid].ToString()
 		                                                             : instanceXml.SopClass.Uid);
 
-		    _host = host;
-			_aeTitle = aeTitle;
-			_wadoUriPrefix = wadoUriPrefix;
-			_wadoServicePort = wadoServicePort;
 		}
 
 		private InstanceXmlDicomAttributeCollection AttributeCollection
@@ -178,8 +184,7 @@ namespace ClearCanvas.ImageViewer.StudyLoaders.Streaming
 				}
 				else
 				{
-					// if no result was returned, then the throw an exception with an appropriate, user-friendly message
-					throw TranslateStreamingException(retrieveException);
+					throw retrieveException;
 				}
 			}
 		}
@@ -191,10 +196,7 @@ namespace ClearCanvas.ImageViewer.StudyLoaders.Streaming
 			int retryDelay = 50;
 			int retryCounter = 0;
 
-			Uri uri = new Uri(string.Format(StreamingSettings.Default.FormatWadoUriPrefix, _host, _wadoServicePort));
-			StreamingClient client = new StreamingClient(uri);
 			DicomFile result = null;
-			lastRetrieveException = null;
 
 			CodeClock timeoutClock = new CodeClock();
 			timeoutClock.Start();
@@ -206,14 +208,7 @@ namespace ClearCanvas.ImageViewer.StudyLoaders.Streaming
 					if (retryCounter > 0)
 						Platform.Log(LogLevel.Info, "Retrying retrieve headers for Sop '{0}' (Attempt #{1})", this.SopInstanceUid, retryCounter);
 
-					using (Stream imageHeaderStream = client.RetrieveImageHeader(_aeTitle, this.StudyInstanceUid, this.SeriesInstanceUid, this.SopInstanceUid))
-					{
-						DicomFile imageHeader = new DicomFile();
-						imageHeader.Load(imageHeaderStream);
-						result = imageHeader;
-					}
-
-					break;
+					result = _loader.LoadDicomFile(new LoadDicomFileArgs(this.StudyInstanceUid, this.SeriesInstanceUid, this.SopInstanceUid, true, false));
 				}
 				catch (Exception ex)
 				{
@@ -242,30 +237,6 @@ namespace ClearCanvas.ImageViewer.StudyLoaders.Streaming
 			}
 
 			return result;
-		}
-
-		/// <summary>
-		/// Translates possible exceptions thrown by <see cref="StreamingClient"/> and related classes into standardized, user-friendly error messages.
-		/// </summary>
-		private static Exception TranslateStreamingException(Exception exception)
-		{
-			if (exception is StreamingClientException)
-			{
-				switch (((StreamingClientException) exception).Type)
-				{
-					case StreamingClientExceptionType.Access:
-						return new InvalidOperationException(SR.MessageStreamingAccessException, exception);
-					case StreamingClientExceptionType.Network:
-						return new IOException(SR.MessageStreamingNetworkException, exception);
-					case StreamingClientExceptionType.Protocol:
-					case StreamingClientExceptionType.Server:
-					case StreamingClientExceptionType.UnexpectedResponse:
-					case StreamingClientExceptionType.Generic:
-					default:
-						return new Exception(SR.MessageStreamingGenericException, exception);
-				}
-			}
-			return new Exception(SR.MessageStreamingGenericException, exception);
 		}
 	}
 }

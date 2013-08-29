@@ -28,11 +28,9 @@ using ClearCanvas.Common.Utilities;
 using ClearCanvas.Dicom;
 using ClearCanvas.Dicom.Iod;
 using ClearCanvas.Dicom.Iod.Modules;
-using ClearCanvas.Dicom.ServiceModel.Streaming;
 using ClearCanvas.ImageViewer.Common;
 using ClearCanvas.ImageViewer.Imaging;
 using ClearCanvas.ImageViewer.StudyManagement;
-using System.Threading;
 
 namespace ClearCanvas.ImageViewer.StudyLoaders.Streaming
 {
@@ -51,18 +49,18 @@ namespace ClearCanvas.ImageViewer.StudyLoaders.Streaming
 
 		public TimeSpan ElapsedTime
 		{
-			get { return EndTime.Subtract(StartTime); }	
+			get { return EndTime.Subtract(StartTime); }
 		}
 	}
 
 	public interface IStreamingSopFrameData : ISopFrameData
 	{
-		StreamingPerformanceInfo LastRetrievePerformanceInfo { get; } 
+		StreamingPerformanceInfo LastRetrievePerformanceInfo { get; }
 		bool PixelDataRetrieved { get; }
 		void RetrievePixelData();
 	}
 
-	internal partial class StreamingSopDataSource
+	partial class StreamingSopDataSource
 	{
 		private class StreamingSopFrameData : StandardSopFrameData, IStreamingSopFrameData
 		{
@@ -88,7 +86,7 @@ namespace ClearCanvas.ImageViewer.StudyLoaders.Streaming
 
 			public StreamingPerformanceInfo LastRetrievePerformanceInfo
 			{
-				get { return _framePixelData.LastRetrievePerformanceInfo; }	
+				get { return _framePixelData.LastRetrievePerformanceInfo; }
 			}
 
 			public void RetrievePixelData()
@@ -218,66 +216,51 @@ namespace ClearCanvas.ImageViewer.StudyLoaders.Streaming
 
 		private class FramePixelDataRetriever
 		{
-            const int MaxRetryDelay = 10000; // 10 seconds
+			private const int MaxRetryDelay = 10000; // 10 seconds
 
-			public readonly string StudyInstanceUid;
-			public readonly string SeriesInstanceUid;
 			public readonly string SopInstanceUid;
-			public readonly int FrameNumber;
 			public readonly string TransferSyntaxUid;
-			public readonly string AETitle;
-			public readonly Uri BaseUrl;
+
+			private readonly string _studyInstanceUid;
+			private readonly string _seriesInstanceUid;
+			private readonly int _frameNumber;
+
+			private readonly IDicomFileLoader _loader;
 
 			public FramePixelDataRetriever(FramePixelData source)
 			{
-				string host = source.Parent._host;
-				string wadoPrefix = source.Parent._wadoUriPrefix;
-				int wadoPort = source.Parent._wadoServicePort;
+				_loader = source.Parent._loader;
 
-				try
-				{
-					BaseUrl = new Uri(String.Format(wadoPrefix, host, wadoPort));
-				}
-				catch (FormatException ex)
-				{
-					// this exception happens if the FormatWadoUriPrefix setting is invalid.
-					throw new Exception(SR.MessageStreamingClientConfigurationException, ex);
-				}
-
-				AETitle = source.Parent._aeTitle;
-
-				StudyInstanceUid = source.Parent.StudyInstanceUid;
-				SeriesInstanceUid = source.Parent.SeriesInstanceUid;
+				_studyInstanceUid = source.Parent.StudyInstanceUid;
+				_seriesInstanceUid = source.Parent.SeriesInstanceUid;
 				SopInstanceUid = source.Parent.SopInstanceUid;
-				FrameNumber = source.FrameNumber;
 				TransferSyntaxUid = source.Parent.TransferSyntaxUid;
+				_frameNumber = source.FrameNumber;
 			}
 
-			public RetrievePixelDataResult Retrieve()
+			public IFramePixelData Retrieve()
 			{
 				Exception retrieveException;
-				RetrievePixelDataResult result = TryClientRetrievePixelData(out retrieveException);
+				var pixelData = TryClientRetrievePixelData(out retrieveException);
 
-				if (result != null)
-					return result;
+				if (pixelData != null)
+					return pixelData;
 
-				// if no result was returned, then the throw an exception with an appropriate, user-friendly message
-				throw TranslateStreamingException(retrieveException);
+				throw retrieveException;
 			}
 
-			private RetrievePixelDataResult TryClientRetrievePixelData(out Exception lastRetrieveException)
+			private IFramePixelData TryClientRetrievePixelData(out Exception lastRetrieveException)
 			{
 				// retry parameters
-			    const int maxRetryCount = 10;
-			    const int retryTimeout = 1500;
+				const int maxRetryCount = 10;
+				const int retryTimeout = 1500;
 				int retryDelay = 50;
 				int retryCounter = 0;
-                	
-				StreamingClient client = new StreamingClient(this.BaseUrl);
-				RetrievePixelDataResult result = null;
+
+				IFramePixelData result = null;
 				lastRetrieveException = null;
 
-				CodeClock timeoutClock = new CodeClock();
+				var timeoutClock = new CodeClock();
 				timeoutClock.Start();
 
 				while (true)
@@ -290,13 +273,13 @@ namespace ClearCanvas.ImageViewer.StudyLoaders.Streaming
 						CodeClock statsClock = new CodeClock();
 						statsClock.Start();
 
-						result = client.RetrievePixelData(this.AETitle, this.StudyInstanceUid, this.SeriesInstanceUid, this.SopInstanceUid, this.FrameNumber - 1);
+						result = _loader.LoadFramePixelData(new LoadFramePixelDataArgs(this._studyInstanceUid, this._seriesInstanceUid, this.SopInstanceUid, this._frameNumber));
 
 						statsClock.Stop();
 
 						Platform.Log(LogLevel.Debug, "[Retrieve Info] Sop/Frame: {0}/{1}, Transfer Syntax: {2}, Bytes transferred: {3}, Elapsed (s): {4}, Retries: {5}",
-						             this.SopInstanceUid, this.FrameNumber, this.TransferSyntaxUid,
-						             result.MetaData.ContentLength, statsClock.Seconds, retryCounter);
+						             this.SopInstanceUid, this._frameNumber, this.TransferSyntaxUid,
+						             result.BytesReceived, statsClock.Seconds, retryCounter);
 
 						break;
 					}
@@ -305,12 +288,13 @@ namespace ClearCanvas.ImageViewer.StudyLoaders.Streaming
 						lastRetrieveException = ex;
 
 						timeoutClock.Stop();
-                        if (timeoutClock.Seconds * 1000 >= retryTimeout || retryCounter>=maxRetryCount)
+						if (timeoutClock.Seconds*1000 >= retryTimeout || retryCounter >= maxRetryCount)
 						{
 							// log an alert that we are aborting (exception trace at debug level only)
-							int elapsed = (int)(1000*timeoutClock.Seconds);
+							int elapsed = (int) (1000*timeoutClock.Seconds);
 							Platform.Log(LogLevel.Warn, "Failed to retrieve pixel data for Sop '{0}'; Aborting after {1} attempts in {2} ms", this.SopInstanceUid, retryCounter, elapsed);
-							Platform.Log(LogLevel.Debug, ex, "[Retrieve Fail-Abort] Sop/Frame: {0}/{1}, Retry Attempts: {2}, Elapsed: {3} ms", this.SopInstanceUid, this.FrameNumber - 1, retryCounter, elapsed);
+							Platform.Log(LogLevel.Debug, ex, "[Retrieve Fail-Abort] Sop/Frame: {0}/{1}, Retry Attempts: {2}, Elapsed: {3} ms", this.SopInstanceUid, this._frameNumber - 1, retryCounter,
+							             elapsed);
 							break;
 						}
 						timeoutClock.Start();
@@ -319,33 +303,33 @@ namespace ClearCanvas.ImageViewer.StudyLoaders.Streaming
 
 						// log the retry (exception trace at debug level only)
 						Platform.Log(LogLevel.Warn, "Failed to retrieve pixel data for Sop '{0}'; Retrying in {1} ms", this.SopInstanceUid, retryDelay);
-						Platform.Log(LogLevel.Debug, ex, "[Retrieve Fail-Retry] Sop/Frame: {0}/{1}, Retry in: {2} ms", this.SopInstanceUid, this.FrameNumber - 1, retryDelay);
+						Platform.Log(LogLevel.Debug, ex, "[Retrieve Fail-Retry] Sop/Frame: {0}/{1}, Retry in: {2} ms", this.SopInstanceUid, this._frameNumber - 1, retryDelay);
 						MemoryManager.Collect(retryDelay);
 						retryDelay *= 2;
 
-                        if (retryDelay > MaxRetryDelay)
-                            retryDelay = MaxRetryDelay; // cap it to avoid overflow, which will cause exception when calling MemoryManager.Collect()
+						if (retryDelay > MaxRetryDelay)
+							retryDelay = MaxRetryDelay; // cap it to avoid overflow, which will cause exception when calling MemoryManager.Collect()
 					}
 				}
 
 				return result;
 			}
 		}
-		
+
 		private class FramePixelData
 		{
 			private readonly object _syncLock = new object();
 			private volatile bool _alreadyRetrieved;
-			private RetrievePixelDataResult _retrieveResult;
+			private IFramePixelData _framePixelData;
 			private volatile StreamingPerformanceInfo _lastRetrievePerformanceInfo;
 
 			public readonly StreamingSopDataSource Parent;
 			public readonly int FrameNumber;
 
-		    private int _retrievesAttempted;
-		    private Exception _lastError;
+			private int _retrievesAttempted;
+			private Exception _lastError;
 
-		    public FramePixelData(StreamingSopDataSource parent, int frameNumber)
+			public FramePixelData(StreamingSopDataSource parent, int frameNumber)
 			{
 				Parent = parent;
 				FrameNumber = frameNumber;
@@ -368,116 +352,114 @@ namespace ClearCanvas.ImageViewer.StudyLoaders.Streaming
 					//construct this object before the lock so there's no chance of deadlocking
 					//with the parent data source (because we are accessing it's tags at the 
 					//same time as it's trying to get the pixel data).
-					FramePixelDataRetriever retriever = new FramePixelDataRetriever(this);
+					var retriever = new FramePixelDataRetriever(this);
 
 					lock (_syncLock)
 					{
-                        if (!_alreadyRetrieved)
-                        {
-                            AbortAttemptIfNecessary();
+						if (!_alreadyRetrieved)
+						{
+							AbortAttemptIfNecessary();
 
-                            
-                            try
-                            {
-                                ResetAttemptData();
-                                _retrievesAttempted++;
-                                var start = DateTime.Now;
-                                _retrieveResult = retriever.Retrieve();
-                                var end = DateTime.Now;
-                                _lastRetrievePerformanceInfo =
-                                    new StreamingPerformanceInfo(start, end, _retrieveResult.MetaData.ContentLength);
+							try
+							{
+								ResetAttemptData();
+								_retrievesAttempted++;
+								var start = DateTime.Now;
+								_framePixelData = retriever.Retrieve();
+								var end = DateTime.Now;
+								_lastRetrievePerformanceInfo =
+									new StreamingPerformanceInfo(start, end, _framePixelData.BytesReceived);
 
-                                _alreadyRetrieved = true;
-                            }
-                            catch (Exception ex)
-                            {
-                                _lastError = ex;
-                                throw;
-                            }
-                        }
+								_alreadyRetrieved = true;
+							}
+							catch (Exception ex)
+							{
+								_lastError = ex;
+								throw;
+							}
+						}
 					}
 				}
 			}
 
 			public byte[] GetUncompressedPixelData()
 			{
-                try
-                {
+				try
+				{
 
-                    //construct this object before the lock so there's no chance of deadlocking
-                    //with the parent data source (because we are accessing its tags at the 
-                    //same time as it's trying to get the pixel data).
-                    FramePixelDataRetriever retriever = new FramePixelDataRetriever(this);
+					//construct this object before the lock so there's no chance of deadlocking
+					//with the parent data source (because we are accessing its tags at the 
+					//same time as it's trying to get the pixel data).
+					var retriever = new FramePixelDataRetriever(this);
 
-                    lock (_syncLock)
-                    {
-                        RetrievePixelDataResult result;
-                        
-                        if (_retrieveResult == null)
-                        {
-                            AbortAttemptIfNecessary();
+					lock (_syncLock)
+					{
+						IFramePixelData framePixelData;
 
-                            ResetAttemptData();
-                            _retrievesAttempted++;
-                            
-                            result = retriever.Retrieve();
-                        }
-                        else
-                            result = _retrieveResult;
+						if (_framePixelData == null)
+						{
+							AbortAttemptIfNecessary();
 
-                        //free this memory up in case it's holding a compressed buffer.
-                        _retrieveResult = null;
+							ResetAttemptData();
+							_retrievesAttempted++;
 
-                        CodeClock clock = new CodeClock();
-                        clock.Start();
+							framePixelData = retriever.Retrieve();
+						}
+						else
+							framePixelData = _framePixelData;
 
-                        //synchronize the call to decompress; it's really already synchronized by
-                        //the parent b/c it's only called from CreateFrameNormalizedPixelData, but it doesn't hurt.
-                        byte[] pixelData = result.GetPixelData();
+						//free this memory up in case it's holding a compressed buffer.
+						_framePixelData = null;
 
-                        clock.Stop();
+						var clock = new CodeClock();
+						clock.Start();
 
-                        Platform.Log(LogLevel.Debug,
-                                     "[Decompress Info] Sop/Frame: {0}/{1}, Transfer Syntax: {2}, Uncompressed bytes: {3}, Elapsed (s): {4}",
-                                     retriever.SopInstanceUid, FrameNumber, retriever.TransferSyntaxUid,
-                                     pixelData.Length, clock.Seconds);
+						//synchronize the call to decompress; it's really already synchronized by
+						//the parent b/c it's only called from CreateFrameNormalizedPixelData, but it doesn't hurt.
+						byte[] pixelData = framePixelData.GetPixelData();
 
-                        return pixelData;
-                    }
-                }
-                catch(Exception ex)
-                {
-                    _lastError = ex;
-                    throw;
-                }
+						clock.Stop();
+
+						Platform.Log(LogLevel.Debug,
+						             "[Decompress Info] Sop/Frame: {0}/{1}, Transfer Syntax: {2}, Uncompressed bytes: {3}, Elapsed (s): {4}",
+						             retriever.SopInstanceUid, FrameNumber, retriever.TransferSyntaxUid,
+						             pixelData.Length, clock.Seconds);
+
+						return pixelData;
+					}
+				}
+				catch (Exception ex)
+				{
+					_lastError = ex;
+					throw;
+				}
 			}
 
-		    private void AbortAttemptIfNecessary()
-		    {
-		        if (_retrievesAttempted > 0 && _lastError != null)
-                {
-                    Platform.Log(LogLevel.Warn, "Abort retrieving pixel data for Sop '{0}' Frame#{1}: attempt was made recently and failed with the following error", Parent.SopInstanceUid, FrameNumber);
+			private void AbortAttemptIfNecessary()
+			{
+				if (_retrievesAttempted > 0 && _lastError != null)
+				{
+					Platform.Log(LogLevel.Warn, "Abort retrieving pixel data for Sop '{0}' Frame#{1}: attempt was made recently and failed with the following error", Parent.SopInstanceUid, FrameNumber);
 
                     // throw the same error so that same message is rendered
                     // TODO: avoid logging this in the renderer
-                    throw _lastError; 
-                }
-		    }
+					throw _lastError;
+				}
+			}
 
-            private void ResetAttemptData()
-            {
-                _retrievesAttempted = 0;
-                _lastError = null;
-                            
-            }
+			private void ResetAttemptData()
+			{
+				_retrievesAttempted = 0;
+				_lastError = null;
+			}
 
-		    public void Unload()
+			public void Unload()
 			{
 				lock (_syncLock)
 				{
 					_alreadyRetrieved = false;
-					_retrieveResult = null;
-				    ResetAttemptData();
+					_framePixelData = null;
+					ResetAttemptData();
 				}
 			}
 		}

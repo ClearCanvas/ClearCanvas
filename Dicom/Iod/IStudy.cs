@@ -80,6 +80,13 @@ namespace ClearCanvas.Dicom.Iod
 		public readonly int FrameNumber;
 	}
 
+	public interface IFramePixelData
+	{
+		long BytesReceived { get; }
+
+		byte[] GetPixelData();
+	}
+
 	/// <summary>
 	/// Interface for loading a complete or partial DICOM File.
 	/// </summary>
@@ -89,7 +96,7 @@ namespace ClearCanvas.Dicom.Iod
 		bool CanLoadPixelData { get; }
 		bool CanLoadFramePixelData { get; }
 		DicomFile LoadDicomFile(LoadDicomFileArgs args);
-		byte[] LoadFramePixelData(LoadFramePixelDataArgs args);
+		IFramePixelData LoadFramePixelData(LoadFramePixelDataArgs args);
 	}
 
 	/// <summary>
@@ -102,15 +109,38 @@ namespace ClearCanvas.Dicom.Iod
 		bool CanLoadFramePixelData { get; }
 
 		DicomFile LoadDicomFile(LoadSopDicomFileArgs args);
-		byte[] LoadFramePixelData(LoadSopFramePixelDataArgs args);
+		IFramePixelData LoadFramePixelData(LoadSopFramePixelDataArgs args);
+	}
+
+	public class FramePixelData : IFramePixelData
+	{
+		private readonly byte[] _pixelData;
+
+		public FramePixelData(byte[] pixelData)
+		{
+			_pixelData = pixelData;
+		}
+		#region IFramePixelData Members
+
+		public long BytesReceived
+		{
+			get { return _pixelData.Length; }
+		}
+
+		public byte[] GetPixelData()
+		{
+			return _pixelData;
+		}
+
+		#endregion
 	}
 
 	public class DicomFileLoader : IDicomFileLoader
 	{
 		private readonly Func<LoadDicomFileArgs, DicomFile> _loadDicomFile;
-		private readonly Func<LoadFramePixelDataArgs, byte[]> _loadFramePixelData;
+		private readonly Func<LoadFramePixelDataArgs, IFramePixelData> _loadFramePixelData;
 
-		public DicomFileLoader(bool canLoadCompleteHeader, bool canLoadPixelData, Func<LoadDicomFileArgs, DicomFile> loadDicomFile, Func<LoadFramePixelDataArgs, byte[]> loadFramePixelData)
+		public DicomFileLoader(bool canLoadCompleteHeader, bool canLoadPixelData, Func<LoadDicomFileArgs, DicomFile> loadDicomFile, Func<LoadFramePixelDataArgs, IFramePixelData> loadFramePixelData)
 		{
 			_loadDicomFile = loadDicomFile;
 			_loadFramePixelData = loadFramePixelData;
@@ -134,7 +164,7 @@ namespace ClearCanvas.Dicom.Iod
 			return _loadDicomFile(args);
 		}
 
-		public byte[] LoadFramePixelData(LoadFramePixelDataArgs args)
+		public IFramePixelData LoadFramePixelData(LoadFramePixelDataArgs args)
 		{
 			if (!CanLoadFramePixelData)
 				throw new NotSupportedException("Provider doesn't support loading individual frame pixel data.");
