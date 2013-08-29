@@ -39,6 +39,7 @@ public partial class DuplicateSopPolicyEnum : ServerEnum
       private static readonly DuplicateSopPolicyEnum _SendSuccess = GetEnum("SendSuccess");
       private static readonly DuplicateSopPolicyEnum _RejectDuplicates = GetEnum("RejectDuplicates");
       private static readonly DuplicateSopPolicyEnum _CompareDuplicates = GetEnum("CompareDuplicates");
+      private static readonly DuplicateSopPolicyEnum _AcceptLatest = GetEnum("AcceptLatest");
       #endregion
 
       #region Public Static Properties
@@ -62,6 +63,13 @@ public partial class DuplicateSopPolicyEnum : ServerEnum
       public static DuplicateSopPolicyEnum CompareDuplicates
       {
           get { return _CompareDuplicates; }
+      }
+      /// <summary>
+      /// Process duplicate objects received and always accecpt the latest file received.
+      /// </summary>
+      public static DuplicateSopPolicyEnum AcceptLatest
+      {
+          get { return _AcceptLatest; }
       }
 
       #endregion

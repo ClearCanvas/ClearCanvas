@@ -705,6 +705,12 @@
   <data name="DuplicateSopPolicyEnum_CompareDuplicates_LongDescription" xml:space="preserve">
     <value>Process duplicate objects received and compare them to originals flagging any differences as a failure.</value>
   </data>
+  <data name="DuplicateSopPolicyEnum_AcceptLatest_Description" xml:space="preserve">
+    <value>Accept Latest</value>
+  </data>
+  <data name="DuplicateSopPolicyEnum_AcceptLatest_LongDescription" xml:space="preserve">
+    <value>Process duplicate objects received and always accecpt the latest file received.</value>
+  </data>
   <data name="RestoreQueueStatusEnum_Pending_Description" xml:space="preserve">
     <value>Pending</value>
   </data>

@@ -124,6 +124,13 @@ namespace ClearCanvas.ImageServer.Core.Process
 				return result;
 			}
 
+			if (context.StudyLocation.ServerPartition.DuplicateSopPolicyEnum.Equals(DuplicateSopPolicyEnum.AcceptLatest))
+			{
+				Platform.Log(LogLevel.Info, "Duplicate SOP Instance received, overwriting {0}", result.SopInstanceUid);
+				ProcessStoredDuplicate(context, file, data, DuplicateProcessingEnum.OverwriteSop);
+				return result;
+			}
+
 			if (context.StudyLocation.ServerPartition.DuplicateSopPolicyEnum.Equals(DuplicateSopPolicyEnum.SendSuccess))
 			{
 				Platform.Log(LogLevel.Info, "Duplicate SOP Instance received, sending success response {0}", result.SopInstanceUid);
