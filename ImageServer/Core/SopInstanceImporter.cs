@@ -467,7 +467,7 @@ namespace ClearCanvas.ImageServer.Core
                              "Received duplicate SOP {0} (StudyUid:{1}). Existing files haven't been processed.",
                              sopInstanceUid, studyLocation.StudyInstanceUid);
 
-    	    var sopProcessingContext = new SopProcessingContext(commandProcessor, studyLocation, _context.ContextID,
+    	    var sopProcessingContext = new SopInstanceProcessorContext(commandProcessor, studyLocation, _context.ContextID,
     	                                                        _context.Request);
             DicomProcessingResult result = DuplicateSopProcessorHelper.Process(sopProcessingContext, file, data);
             return result;
