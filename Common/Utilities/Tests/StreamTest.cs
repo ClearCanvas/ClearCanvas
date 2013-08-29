@@ -753,21 +753,14 @@ namespace ClearCanvas.Common.Utilities.Tests
 				Assert.AreEqual(sArray.Length, Read(s, sArray, 0, sArray.Length), "Bytes Read while dumping stream contents");
 				//AssertAreEqual(rArray, sArray, "Dump of Stream Contents");
 
-				using (var md5 = new MD5CryptoServiceProvider())
+				using (var hashProvider = new SHA256CryptoServiceProvider2())
 				{
-					var rHash = md5.ComputeHash(rArray);
-					var sHash = md5.ComputeHash(sArray);
+					var rHash = hashProvider.ComputeHash(rArray);
+					var sHash = hashProvider.ComputeHash(sArray);
 					Assert.AreEqual(rHash, sHash, "Hash of Stream Contents");
 
-					var hashString = new char[sHash.Length*2];
-					for (int y = 0; y < sHash.Length; ++y)
-					{
-						byte b = ((byte) (sHash[y] >> 4));
-						hashString[2*y] = (char) (b > 9 ? b + 0x57 : b + 0x30);
-						b = ((byte) (sHash[y] & 0xF));
-						hashString[2*y + 1] = (char) (b > 9 ? b + 0x57 : b + 0x30);
-					}
-					Console.WriteLine("Final stream has a hash value of {0}", new string(hashString));
+					var hashString = StringUtilities.ToHexString(sHash);
+					Console.WriteLine("Final stream has a hash value of {0}", hashString);
 				}
 			}
 		}

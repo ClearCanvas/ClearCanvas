@@ -38,80 +38,95 @@ namespace ClearCanvas.Common.Configuration.Tests
 		[Test]
 		public void TestReadNoSettings()
 		{
-			Type settingsClass = typeof(LocalMixedScopeSettings);
-			SystemConfigurationHelper.RemoveSettingsValues(SystemConfigurationHelper.GetExeConfiguration(), settingsClass);
+		    TestReadNoSettings(typeof (LocalMixedScopeSettings));
+            TestReadNoSettings(typeof(ExtendedLocalMixedScopeSettings));
+		}
+
+        [Test]
+        public void TestReadStringSettings()
+        {
+            TestReadStringSettings(typeof(LocalMixedScopeSettings));
+            TestReadStringSettings(typeof(ExtendedLocalMixedScopeSettings));
+        }
+
+        [Test]
+        public void TestReadXmlSettings()
+        {
+            TestReadXmlSettings(typeof(LocalXmlSettings));
+            TestReadXmlSettings(typeof(ExtendedLocalXmlSettings));
+        }
+
+        private static void TestReadNoSettings(Type localSettingsClass)
+        {
+			SystemConfigurationHelper.GetExeConfiguration().RemoveSettingsValues(localSettingsClass);
 
 			var reader = new ConfigurationFileReader(SystemConfigurationHelper.GetExeConfiguration().FilePath);
-			var path = new ConfigurationSectionPath(typeof(LocalMixedScopeSettings), SettingScope.Application);
+			var path = new ConfigurationSectionPath(localSettingsClass, SettingScope.Application);
 			var values = reader.GetSettingsValues(path);
 			Assert.AreEqual(0, values.Count);
 
-			path = new ConfigurationSectionPath(typeof(LocalMixedScopeSettings), SettingScope.User);
+            path = new ConfigurationSectionPath(localSettingsClass, SettingScope.User);
 			values = reader.GetSettingsValues(path);
 			Assert.AreEqual(0, values.Count);
 		}
 
-		[Test]
-		public void TestReadStringSettings()
-		{
-			Type settingsClass = typeof (LocalMixedScopeSettings);
-			var settings = ApplicationSettingsHelper.GetSettingsClassInstance(settingsClass);
+		public void TestReadStringSettings(Type localSettingsClass)
+        {
+			var settings = ApplicationSettingsHelper.GetSettingsClassInstance(localSettingsClass);
 
-			ApplicationSettingsExtensions.SetSharedPropertyValue(settings, LocalMixedScopeSettings.PropertyApp1, "TestApp1");
-			ApplicationSettingsExtensions.SetSharedPropertyValue(settings, LocalMixedScopeSettings.PropertyApp2, "TestApp2");
-			ApplicationSettingsExtensions.SetSharedPropertyValue(settings, LocalMixedScopeSettings.PropertyUser1, "TestUser1");
-			ApplicationSettingsExtensions.SetSharedPropertyValue(settings, LocalMixedScopeSettings.PropertyUser2, "TestUser2");
+			settings.SetSharedPropertyValue(MixedScopeSettingsBase.PropertyApp1, "TestApp1");
+            settings.SetSharedPropertyValue(MixedScopeSettingsBase.PropertyApp2, "TestApp2");
+            settings.SetSharedPropertyValue(MixedScopeSettingsBase.PropertyUser1, "TestUser1");
+            settings.SetSharedPropertyValue(MixedScopeSettingsBase.PropertyUser2, "TestUser2");
 
 			var reader = new ConfigurationFileReader(SystemConfigurationHelper.GetExeConfiguration().FilePath);
-			var path = new ConfigurationSectionPath(typeof(LocalMixedScopeSettings), SettingScope.Application);
+			var path = new ConfigurationSectionPath(localSettingsClass, SettingScope.Application);
 			var values = reader.GetSettingsValues(path);
 			Assert.AreEqual(2, values.Count);
-			Assert.AreEqual("TestApp1", values[LocalMixedScopeSettings.PropertyApp1]);
-			Assert.AreEqual("TestApp2", values[LocalMixedScopeSettings.PropertyApp2]);
+            Assert.AreEqual("TestApp1", values[MixedScopeSettingsBase.PropertyApp1]);
+            Assert.AreEqual("TestApp2", values[MixedScopeSettingsBase.PropertyApp2]);
 
-			path = new ConfigurationSectionPath(typeof(LocalMixedScopeSettings), SettingScope.User);
+			path = new ConfigurationSectionPath(localSettingsClass, SettingScope.User);
 			values = reader.GetSettingsValues(path);
 			Assert.AreEqual(2, values.Count);
-			Assert.AreEqual("TestUser1", values[LocalMixedScopeSettings.PropertyUser1]);
-			Assert.AreEqual("TestUser2", values[LocalMixedScopeSettings.PropertyUser2]);
+            Assert.AreEqual("TestUser1", values[MixedScopeSettingsBase.PropertyUser1]);
+            Assert.AreEqual("TestUser2", values[MixedScopeSettingsBase.PropertyUser2]);
 			
-			SystemConfigurationHelper.RemoveSettingsValues(SystemConfigurationHelper.GetExeConfiguration(), settingsClass);
+			SystemConfigurationHelper.GetExeConfiguration().RemoveSettingsValues(localSettingsClass);
 		}
 
-		[Test]
-		public void TestReadXmlSettings()
-		{
-			Type settingsClass = typeof(LocalXmlSettings);
-			var settings = ApplicationSettingsHelper.GetSettingsClassInstance(settingsClass);
+        private static void TestReadXmlSettings(Type localXmlSettingsClass)
+        {
+			var settings = ApplicationSettingsHelper.GetSettingsClassInstance(localXmlSettingsClass);
 
 			var appValue = @"<test><app/></test>";
 			XmlDocument appDocument = new XmlDocument();
 			appDocument.LoadXml(appValue);
-			ApplicationSettingsExtensions.SetSharedPropertyValue(settings, LocalXmlSettings.PropertyApp, appDocument);
+            settings.SetSharedPropertyValue(LocalXmlSettingsBase.PropertyApp, appDocument);
 
 			var userValue = @"<test><user/></test>";
 			XmlDocument userDocument= new XmlDocument();
 			userDocument.LoadXml(userValue);
-			ApplicationSettingsExtensions.SetSharedPropertyValue(settings, LocalXmlSettings.PropertyUser, userDocument);
+            settings.SetSharedPropertyValue(LocalXmlSettingsBase.PropertyUser, userDocument);
 
 			var reader = new ConfigurationFileReader(SystemConfigurationHelper.GetExeConfiguration().FilePath);
-			var path = new ConfigurationSectionPath(typeof(LocalXmlSettings), SettingScope.Application);
+            var path = new ConfigurationSectionPath(localXmlSettingsClass, SettingScope.Application);
 			var values = reader.GetSettingsValues(path);
 			Assert.AreEqual(1, values.Count);
 
 			XmlDocument testDocument = new XmlDocument();
-			testDocument.LoadXml(values[LocalXmlSettings.PropertyApp]);
+            testDocument.LoadXml(values[LocalXmlSettingsBase.PropertyApp]);
 			Assert.AreEqual(appDocument.InnerXml, testDocument.InnerXml);
 
-			path = new ConfigurationSectionPath(typeof(LocalXmlSettings), SettingScope.User);
+            path = new ConfigurationSectionPath(localXmlSettingsClass, SettingScope.User);
 			values = reader.GetSettingsValues(path);
 			Assert.AreEqual(1, values.Count);
 
 			testDocument = new XmlDocument();
-			testDocument.LoadXml(values[LocalXmlSettings.PropertyUser]);
+            testDocument.LoadXml(values[LocalXmlSettingsBase.PropertyUser]);
 			Assert.AreEqual(userDocument.InnerXml, testDocument.InnerXml);
 
-			SystemConfigurationHelper.RemoveSettingsValues(SystemConfigurationHelper.GetExeConfiguration(), settingsClass);
+			SystemConfigurationHelper.GetExeConfiguration().RemoveSettingsValues(localXmlSettingsClass);
 		}
 	}
 }

@@ -63,6 +63,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\Common\Utilities\XorCryptoServiceProvider.cs">
+      <Link>XorCryptoServiceProvider.cs</Link>
+    </Compile>
     <Compile Include="ClearCanvasManifest.cs" />
     <Compile Include="ManifestCommandLine.cs" />
     <Compile Include="ManifestSignature.cs" />

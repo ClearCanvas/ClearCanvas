@@ -36,8 +36,6 @@ namespace ClearCanvas.Desktop
 	{
 		public ToolStripSettings()
 		{
-            //TODO (Phoenix5): #10730 - remove this when it's fixed.
-			//ApplicationSettingsRegistry.Instance.RegisterInstance(this);
 		}
 	}
 }

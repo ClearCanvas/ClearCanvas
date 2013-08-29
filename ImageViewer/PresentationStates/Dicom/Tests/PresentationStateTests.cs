@@ -36,6 +36,23 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom.Tests
 	[TestFixture]
 	public class PresentationStateTests
 	{
+        [Test]
+        public void TestGrayscaleColorMap()
+        {
+            var colorMap = new OverlayPlaneGraphic.GrayscaleColorMap(128) {MinInputValue = 0, MaxInputValue = 255};
+
+            Assert.AreEqual(colorMap.Data.Length, 256);
+
+            //If the input is 0-255 (e.g. presentation LUT output range),
+            //then the color map has to be a no-op.
+
+            for (int i = 0; i < colorMap.Data.Length; ++i)
+            {
+                var value = 0xFF000000 | (i << 16) | (i << 8) | i;
+                Assert.AreEqual((uint)value, (uint)(0xFF000000 | colorMap.Data[i]));
+            }
+        }
+
 		[Test]
 		public void TestIodRoundtripSpatialTransform()
 		{
@@ -55,8 +72,8 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom.Tests
 					using (image)
 					{
 						SpatialTransformModuleIod actual = ps.SerializeSpatialTransform(image);
-					Assert.AreEqual(original.ImageHorizontalFlip, actual.ImageHorizontalFlip, string.Format("Roundtrip IOD->IMG->IOD FAILED: Rot={0}, fH={1}", rotation, flipH));
-					Assert.AreEqual(original.ImageRotation, actual.ImageRotation, string.Format("Roundtrip IOD->IMG->IOD FAILED: Rot={0}, fH={1}", rotation, flipH));
+					    Assert.AreEqual(original.ImageHorizontalFlip, actual.ImageHorizontalFlip, string.Format("Roundtrip IOD->IMG->IOD FAILED: Rot={0}, fH={1}", rotation, flipH));
+					    Assert.AreEqual(original.ImageRotation, actual.ImageRotation, string.Format("Roundtrip IOD->IMG->IOD FAILED: Rot={0}, fH={1}", rotation, flipH));
 					}
 				}
 			}

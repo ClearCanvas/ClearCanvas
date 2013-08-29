@@ -112,16 +112,16 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <assembly alias="mscorlib" name="mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="_createSingleImageDisplaySets.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="_createSingleImageDisplaySets.Location" type="System.Drawing.Point, System.Drawing">
     <value>15, 19</value>
   </data>
@@ -134,7 +134,7 @@
   <data name="_createSingleImageDisplaySets.Text" xml:space="preserve">
     <value>Create single image display sets</value>
   </data>
-  <metadata name="_tooltip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+  <metadata name="_tooltip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
   <data name="_createSingleImageDisplaySets.ToolTip" xml:space="preserve">
@@ -144,7 +144,7 @@
     <value>_createSingleImageDisplaySets</value>
   </data>
   <data name="&gt;&gt;_createSingleImageDisplaySets.Type" xml:space="preserve">
-    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;_createSingleImageDisplaySets.Parent" xml:space="preserve">
     <value>_creationGroup</value>
@@ -168,13 +168,13 @@
     <value>_modality</value>
   </data>
   <data name="&gt;&gt;_modality.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;_modality.Parent" xml:space="preserve">
     <value>$this</value>
   </data>
   <data name="&gt;&gt;_modality.ZOrder" xml:space="preserve">
-    <value>3</value>
+    <value>4</value>
   </data>
   <data name="label1.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -195,18 +195,69 @@
     <value>label1</value>
   </data>
   <data name="&gt;&gt;label1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;label1.Parent" xml:space="preserve">
     <value>$this</value>
   </data>
   <data name="&gt;&gt;label1.ZOrder" xml:space="preserve">
-    <value>4</value>
+    <value>5</value>
+  </data>
+  <data name="&gt;&gt;_showOriginalSeries.Name" xml:space="preserve">
+    <value>_showOriginalSeries</value>
+  </data>
+  <data name="&gt;&gt;_showOriginalSeries.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_showOriginalSeries.Parent" xml:space="preserve">
+    <value>_creationGroup</value>
+  </data>
+  <data name="&gt;&gt;_showOriginalSeries.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;_createAllImagesDisplaySet.Name" xml:space="preserve">
+    <value>_createAllImagesDisplaySet</value>
+  </data>
+  <data name="&gt;&gt;_createAllImagesDisplaySet.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_createAllImagesDisplaySet.Parent" xml:space="preserve">
+    <value>_creationGroup</value>
+  </data>
+  <data name="&gt;&gt;_createAllImagesDisplaySet.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="_creationGroup.Location" type="System.Drawing.Point, System.Drawing">
+    <value>15, 46</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="_creationGroup.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 3, 3, 1</value>
+  </data>
+  <data name="_creationGroup.Size" type="System.Drawing.Size, System.Drawing">
+    <value>205, 101</value>
+  </data>
+  <data name="_creationGroup.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="_creationGroup.Text" xml:space="preserve">
+    <value>General</value>
+  </data>
+  <data name="&gt;&gt;_creationGroup.Name" xml:space="preserve">
+    <value>_creationGroup</value>
+  </data>
+  <data name="&gt;&gt;_creationGroup.Type" xml:space="preserve">
+    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_creationGroup.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;_creationGroup.ZOrder" xml:space="preserve">
+    <value>3</value>
   </data>
   <data name="_showOriginalSeries.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="_showOriginalSeries.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
@@ -229,7 +280,7 @@
     <value>_showOriginalSeries</value>
   </data>
   <data name="&gt;&gt;_showOriginalSeries.Type" xml:space="preserve">
-    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;_showOriginalSeries.Parent" xml:space="preserve">
     <value>_creationGroup</value>
@@ -262,7 +313,7 @@
     <value>_createAllImagesDisplaySet</value>
   </data>
   <data name="&gt;&gt;_createAllImagesDisplaySet.Type" xml:space="preserve">
-    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;_createAllImagesDisplaySet.Parent" xml:space="preserve">
     <value>_creationGroup</value>
@@ -270,28 +321,43 @@
   <data name="&gt;&gt;_createAllImagesDisplaySet.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
-  <data name="_creationGroup.Location" type="System.Drawing.Point, System.Drawing">
-    <value>15, 46</value>
+  <data name="&gt;&gt;_invertImages.Name" xml:space="preserve">
+    <value>_invertImages</value>
   </data>
-  <data name="_creationGroup.Size" type="System.Drawing.Size, System.Drawing">
-    <value>205, 113</value>
+  <data name="&gt;&gt;_invertImages.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="_creationGroup.TabIndex" type="System.Int32, mscorlib">
-    <value>1</value>
+  <data name="&gt;&gt;_invertImages.Parent" xml:space="preserve">
+    <value>_presentationGroupBox</value>
   </data>
-  <data name="_creationGroup.Text" xml:space="preserve">
-    <value>General</value>
+  <data name="&gt;&gt;_invertImages.ZOrder" xml:space="preserve">
+    <value>0</value>
   </data>
-  <data name="&gt;&gt;_creationGroup.Name" xml:space="preserve">
-    <value>_creationGroup</value>
+  <data name="_presentationGroupBox.Location" type="System.Drawing.Point, System.Drawing">
+    <value>15, 151</value>
   </data>
-  <data name="&gt;&gt;_creationGroup.Type" xml:space="preserve">
-    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="_presentationGroupBox.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 3, 3, 1</value>
   </data>
-  <data name="&gt;&gt;_creationGroup.Parent" xml:space="preserve">
+  <data name="_presentationGroupBox.Size" type="System.Drawing.Size, System.Drawing">
+    <value>416, 45</value>
+  </data>
+  <data name="_presentationGroupBox.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <data name="_presentationGroupBox.Text" xml:space="preserve">
+    <value>Presentation</value>
+  </data>
+  <data name="&gt;&gt;_presentationGroupBox.Name" xml:space="preserve">
+    <value>_presentationGroupBox</value>
+  </data>
+  <data name="&gt;&gt;_presentationGroupBox.Type" xml:space="preserve">
+    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_presentationGroupBox.Parent" xml:space="preserve">
     <value>$this</value>
   </data>
-  <data name="&gt;&gt;_creationGroup.ZOrder" xml:space="preserve">
+  <data name="&gt;&gt;_presentationGroupBox.ZOrder" xml:space="preserve">
     <value>2</value>
   </data>
   <data name="_invertImages.AutoSize" type="System.Boolean, mscorlib">
@@ -316,37 +382,13 @@
     <value>_invertImages</value>
   </data>
   <data name="&gt;&gt;_invertImages.Type" xml:space="preserve">
-    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;_invertImages.Parent" xml:space="preserve">
     <value>_presentationGroupBox</value>
   </data>
   <data name="&gt;&gt;_invertImages.ZOrder" xml:space="preserve">
     <value>0</value>
-  </data>
-  <data name="_presentationGroupBox.Location" type="System.Drawing.Point, System.Drawing">
-    <value>15, 165</value>
-  </data>
-  <data name="_presentationGroupBox.Size" type="System.Drawing.Size, System.Drawing">
-    <value>416, 45</value>
-  </data>
-  <data name="_presentationGroupBox.TabIndex" type="System.Int32, mscorlib">
-    <value>3</value>
-  </data>
-  <data name="_presentationGroupBox.Text" xml:space="preserve">
-    <value>Presentation</value>
-  </data>
-  <data name="&gt;&gt;_presentationGroupBox.Name" xml:space="preserve">
-    <value>_presentationGroupBox</value>
-  </data>
-  <data name="&gt;&gt;_presentationGroupBox.Type" xml:space="preserve">
-    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;_presentationGroupBox.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;_presentationGroupBox.ZOrder" xml:space="preserve">
-    <value>1</value>
   </data>
   <data name="_splitMixedMultiframeSeries.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -355,7 +397,10 @@
     <value>NoControl</value>
   </data>
   <data name="_splitMixedMultiframeSeries.Location" type="System.Drawing.Point, System.Drawing">
-    <value>15, 65</value>
+    <value>15, 59</value>
+  </data>
+  <data name="_splitMixedMultiframeSeries.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 3, 3, 1</value>
   </data>
   <data name="_splitMixedMultiframeSeries.Size" type="System.Drawing.Size, System.Drawing">
     <value>159, 17</value>
@@ -373,7 +418,7 @@
     <value>_splitMixedMultiframeSeries</value>
   </data>
   <data name="&gt;&gt;_splitMixedMultiframeSeries.Type" xml:space="preserve">
-    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;_splitMixedMultiframeSeries.Parent" xml:space="preserve">
     <value>_splittingGroup</value>
@@ -388,7 +433,10 @@
     <value>NoControl</value>
   </data>
   <data name="_showOriginalMixedMultiframeSeries.Location" type="System.Drawing.Point, System.Drawing">
-    <value>25, 88</value>
+    <value>25, 78</value>
+  </data>
+  <data name="_showOriginalMixedMultiframeSeries.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>1, 1, 1, 1</value>
   </data>
   <data name="_showOriginalMixedMultiframeSeries.Size" type="System.Drawing.Size, System.Drawing">
     <value>119, 17</value>
@@ -406,7 +454,7 @@
     <value>_showOriginalMixedMultiframeSeries</value>
   </data>
   <data name="&gt;&gt;_showOriginalMixedMultiframeSeries.Type" xml:space="preserve">
-    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;_showOriginalMixedMultiframeSeries.Parent" xml:space="preserve">
     <value>_splittingGroup</value>
@@ -422,6 +470,9 @@
   </data>
   <data name="_splitEchos.Location" type="System.Drawing.Point, System.Drawing">
     <value>15, 19</value>
+  </data>
+  <data name="_splitEchos.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 3, 3, 1</value>
   </data>
   <data name="_splitEchos.Size" type="System.Drawing.Size, System.Drawing">
     <value>127, 17</value>
@@ -439,7 +490,7 @@
     <value>_splitEchos</value>
   </data>
   <data name="&gt;&gt;_splitEchos.Type" xml:space="preserve">
-    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;_splitEchos.Parent" xml:space="preserve">
     <value>_splittingGroup</value>
@@ -454,7 +505,10 @@
     <value>NoControl</value>
   </data>
   <data name="_showOriginalMultiEchoSeries.Location" type="System.Drawing.Point, System.Drawing">
-    <value>25, 42</value>
+    <value>25, 38</value>
+  </data>
+  <data name="_showOriginalMultiEchoSeries.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>1, 1, 1, 1</value>
   </data>
   <data name="_showOriginalMultiEchoSeries.Size" type="System.Drawing.Size, System.Drawing">
     <value>119, 17</value>
@@ -472,7 +526,7 @@
     <value>_showOriginalMultiEchoSeries</value>
   </data>
   <data name="&gt;&gt;_showOriginalMultiEchoSeries.Type" xml:space="preserve">
-    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;_showOriginalMultiEchoSeries.Parent" xml:space="preserve">
     <value>_splittingGroup</value>
@@ -480,11 +534,77 @@
   <data name="&gt;&gt;_showOriginalMultiEchoSeries.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
+  <data name="_overlaysPanel.AutoScroll" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="_overlaysPanel.Location" type="System.Drawing.Point, System.Drawing">
+    <value>6, 14</value>
+  </data>
+  <data name="_overlaysPanel.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>1, 1, 1, 2</value>
+  </data>
+  <data name="_overlaysPanel.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 2, 2, 2</value>
+  </data>
+  <data name="_overlaysPanel.Size" type="System.Drawing.Size, System.Drawing">
+    <value>404, 71</value>
+  </data>
+  <data name="_overlaysPanel.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;_overlaysPanel.Name" xml:space="preserve">
+    <value>_overlaysPanel</value>
+  </data>
+  <data name="&gt;&gt;_overlaysPanel.Type" xml:space="preserve">
+    <value>System.Windows.Forms.FlowLayoutPanel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_overlaysPanel.Parent" xml:space="preserve">
+    <value>_selectedOverlaysGroupBox</value>
+  </data>
+  <data name="&gt;&gt;_overlaysPanel.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="_selectedOverlaysGroupBox.Location" type="System.Drawing.Point, System.Drawing">
+    <value>15, 200</value>
+  </data>
+  <data name="_selectedOverlaysGroupBox.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 3, 3, 0</value>
+  </data>
+  <data name="_selectedOverlaysGroupBox.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 0, 3, 3</value>
+  </data>
+  <data name="_selectedOverlaysGroupBox.Size" type="System.Drawing.Size, System.Drawing">
+    <value>416, 90</value>
+  </data>
+  <data name="_selectedOverlaysGroupBox.TabIndex" type="System.Int32, mscorlib">
+    <value>4</value>
+  </data>
+  <data name="_selectedOverlaysGroupBox.Text" xml:space="preserve">
+    <value>Overlays</value>
+  </data>
+  <data name="_selectedOverlaysGroupBox.ToolTip" xml:space="preserve">
+    <value>Selected overlays will appear on images in the viewer; others will never appear.</value>
+  </data>
+  <data name="&gt;&gt;_selectedOverlaysGroupBox.Name" xml:space="preserve">
+    <value>_selectedOverlaysGroupBox</value>
+  </data>
+  <data name="&gt;&gt;_selectedOverlaysGroupBox.Type" xml:space="preserve">
+    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_selectedOverlaysGroupBox.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;_selectedOverlaysGroupBox.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
   <data name="_splittingGroup.Location" type="System.Drawing.Point, System.Drawing">
     <value>226, 46</value>
   </data>
+  <data name="_splittingGroup.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 3, 3, 1</value>
+  </data>
   <data name="_splittingGroup.Size" type="System.Drawing.Size, System.Drawing">
-    <value>205, 113</value>
+    <value>205, 101</value>
   </data>
   <data name="_splittingGroup.TabIndex" type="System.Int32, mscorlib">
     <value>2</value>
@@ -496,28 +616,28 @@
     <value>_splittingGroup</value>
   </data>
   <data name="&gt;&gt;_splittingGroup.Type" xml:space="preserve">
-    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;_splittingGroup.Parent" xml:space="preserve">
     <value>$this</value>
   </data>
   <data name="&gt;&gt;_splittingGroup.ZOrder" xml:space="preserve">
-    <value>0</value>
+    <value>1</value>
   </data>
-  <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+  <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
   <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
     <value>6, 13</value>
   </data>
   <data name="$this.Size" type="System.Drawing.Size, System.Drawing">
-    <value>446, 226</value>
+    <value>446, 296</value>
   </data>
   <data name="&gt;&gt;_tooltip.Name" xml:space="preserve">
     <value>_tooltip</value>
   </data>
   <data name="&gt;&gt;_tooltip.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolTip, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.ToolTip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
     <value>DisplaySetCreationConfigurationComponentControl</value>

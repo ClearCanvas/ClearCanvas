@@ -31,21 +31,6 @@ namespace ClearCanvas.ImageViewer.Imaging
 	public interface IVoiLut : IComposableLut
 	{
 		/// <summary>
-		/// Gets the minimum output value.
-		/// </summary>
-		new int MinOutputValue { get; }
-
-		/// <summary>
-		/// Gets the maximum output value.
-		/// </summary>
-		new int MaxOutputValue { get; }
-
-		/// <summary>
-		/// Gets the output value of the lookup table for a given input value.
-		/// </summary>
-		new int this[double input] { get; }
-
-		/// <summary>
 		/// Creates a deep-copy of the <see cref="IVoiLut"/>.
 		/// </summary>
 		/// <remarks>

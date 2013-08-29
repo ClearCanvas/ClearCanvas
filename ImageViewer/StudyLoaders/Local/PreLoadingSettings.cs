@@ -23,11 +23,12 @@
 #endregion
 
 using System.Configuration;
+using ClearCanvas.Common.Configuration;
 
 namespace ClearCanvas.ImageViewer.StudyLoaders.Local
 {
     [SettingsGroupDescription("Settings for pre-loading local images.")]
-    [SettingsProvider(typeof(LocalFileSettingsProvider))]
+    [SettingsProvider(typeof(ExtendedLocalFileSettingsProvider))]
     internal sealed partial class PreLoadingSettings
     {
         private PreLoadingSettings()

@@ -36,7 +36,6 @@ namespace ClearCanvas.ImageViewer.Annotations.Dicom
 	{
 		private DicomFilteredAnnotationLayoutStoreSettings()
 		{
-			ApplicationSettingsRegistry.Instance.RegisterInstance(this);
 		}
 
 		public override void Upgrade()

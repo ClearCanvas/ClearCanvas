@@ -34,7 +34,6 @@ namespace ClearCanvas.ImageViewer.Utilities.StudyFilters
 	{
 		public StudyFilterSettings()
 		{
-			ApplicationSettingsRegistry.Instance.RegisterInstance(this);
 		}
 	}
 }

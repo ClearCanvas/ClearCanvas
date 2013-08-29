@@ -123,6 +123,8 @@ namespace ClearCanvas.ImageServer.Web.Common.Security
 
                 //Create an unencrypted cookie that contains the userid and the expiry time so the browser
                 //can check for session timeout.
+
+                //TODO: store the expiry time as epoch instead so we don't need to deal with format or regional settings madness
                 var expiryCookie = new HttpCookie(GetExpiryTimeCookieName(session), DateTimeFormatter.Format(expiryTime.ToUniversalTime(), ImageServerConstants.CookieDateTimeFormat));
                 
                 HttpContext.Current.Response.Cookies.Add(authCookie);

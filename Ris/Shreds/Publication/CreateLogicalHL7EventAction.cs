@@ -32,11 +32,23 @@ namespace ClearCanvas.Ris.Shreds.Publication
 	public class CreateLogicalHL7EventAction : IPublicationAction
 	{
 		private readonly bool _enabled;
+		private readonly int _retryCount;
 
 		public CreateLogicalHL7EventAction()
 		{
 			var settings = new PublicationShredSettings();
 			_enabled = settings.HL7PublicationEnabled;
+			_retryCount = settings.HL7FailedItemRetryCount;
+		}
+
+		public bool Enabled
+		{
+			get { return _enabled; }
+		}
+
+		public int RetryCount
+		{
+			get { return _retryCount; }
 		}
 
 		public void Execute(ReportPart reportPart, IPersistenceContext context)

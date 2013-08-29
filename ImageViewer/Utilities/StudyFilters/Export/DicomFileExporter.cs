@@ -24,15 +24,15 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Threading;
+using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Desktop;
 using ClearCanvas.Dicom;
 using ClearCanvas.Dicom.Utilities.Anonymization;
-using ClearCanvas.Common;
-using System.IO;
 using ClearCanvas.ImageViewer.Common.Auditing;
-using System.Threading;
-using Path=System.IO.Path;
+using Path = System.IO.Path;
 
 namespace ClearCanvas.ImageViewer.Utilities.StudyFilters.Export
 {
@@ -72,7 +72,7 @@ namespace ClearCanvas.ImageViewer.Utilities.StudyFilters.Export
 			{
 				BackgroundTask task = new BackgroundTask(DoExport, true);
 				ProgressDialog.Show(task, DesktopWindow, true, ProgressBarStyle.Continuous);
-				
+
 				if (_canceled)
 					result = EventResult.MinorFailure;
 
@@ -108,17 +108,18 @@ namespace ClearCanvas.ImageViewer.Utilities.StudyFilters.Export
 				OutputPath = component.OutputPath;
 
 				StudyData studyData = new StudyData
-				{
-					PatientId = component.PatientId,
-					PatientsNameRaw = component.PatientsName,
-					PatientsBirthDate = component.PatientsDateOfBirth,
-					StudyId = component.StudyId,
-					StudyDescription = component.StudyDescription,
-					AccessionNumber = component.AccessionNumber,
-					StudyDate = component.StudyDate
-				};
+				                      	{
+				                      		PatientId = component.PatientId,
+				                      		PatientsNameRaw = component.PatientsName,
+				                      		PatientsBirthDate = component.PatientsDateOfBirth,
+				                      		StudyId = component.StudyId,
+				                      		StudyDescription = component.StudyDescription,
+				                      		AccessionNumber = component.AccessionNumber,
+				                      		StudyDate = component.StudyDate
+				                      	};
 
 				_anonymizer = new DicomAnonymizer();
+				_anonymizer.KeepPrivateTags = component.KeepPrivateTags;
 				_anonymizer.ValidationOptions = ValidationOptions.RelaxAllChecks;
 				_anonymizer.StudyDataPrototype = studyData;
 			}
@@ -143,18 +144,18 @@ namespace ClearCanvas.ImageViewer.Utilities.StudyFilters.Export
 			if (_anonymizer != null)
 			{
 				DicomFile dicomFile = new DicomFile(filename);
-				dicomFile.Load(); 
+				dicomFile.Load();
 
 				_anonymizer.Anonymize(dicomFile);
 
 				//anonymize first, then audit, since this is what gets exported.
 				_exportedInstances.AddInstance(
-				dicomFile.DataSet[DicomTags.PatientId].ToString(),
-				dicomFile.DataSet[DicomTags.PatientsName].ToString(),
-				dicomFile.DataSet[DicomTags.StudyInstanceUid].ToString(),
-				filename);
-				
-				string fileName = System.IO.Path.Combine(OutputPath, dicomFile.MediaStorageSopInstanceUid);
+					dicomFile.DataSet[DicomTags.PatientId].ToString(),
+					dicomFile.DataSet[DicomTags.PatientsName].ToString(),
+					dicomFile.DataSet[DicomTags.StudyInstanceUid].ToString(),
+					filename);
+
+				string fileName = Path.Combine(OutputPath, dicomFile.MediaStorageSopInstanceUid);
 				fileName += ".dcm";
 				CheckFileExists(fileName); // this will never happen for anonymized images.
 				if (_canceled)
@@ -166,7 +167,7 @@ namespace ClearCanvas.ImageViewer.Utilities.StudyFilters.Export
 			{
 				_exportedInstances.AddPath(filename, false);
 
-				string destination = Path.Combine(OutputPath, Path.GetFileName(filename));
+				string destination = Path.Combine(OutputPath, Path.GetFileName(filename) ?? string.Empty);
 				CheckFileExists(destination);
 				if (_canceled)
 					return;
@@ -180,11 +181,7 @@ namespace ClearCanvas.ImageViewer.Utilities.StudyFilters.Export
 			if (_overwrite || !File.Exists(fileName))
 				return;
 
-			_synchronizationContext.Send(
-				delegate
-				{
-					_canceled = DialogBoxAction.No == DesktopWindow.ShowMessageBox(SR.MessageConfirmOverwriteFiles, MessageBoxActions.YesNo);
-				}, null);
+			_synchronizationContext.Send(s => _canceled = DialogBoxAction.No == ((IDesktopWindow) s).ShowMessageBox(SR.MessageConfirmOverwriteFiles, MessageBoxActions.YesNo), DesktopWindow);
 
 			_overwrite = !_canceled;
 		}
@@ -203,7 +200,7 @@ namespace ClearCanvas.ImageViewer.Utilities.StudyFilters.Export
 					context.ReportProgress(progress);
 
 					SaveFile(filename);
-					
+
 					if (_canceled || context.CancelRequested)
 					{
 						_canceled = true;

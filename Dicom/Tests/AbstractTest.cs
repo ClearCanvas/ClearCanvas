@@ -284,7 +284,7 @@ namespace ClearCanvas.Dicom.Tests
 			theSet[DicomTags.PhotometricInterpretation].SetStringValue("MONOCHROME2");
 			theSet[DicomTags.Rows].SetStringValue("256");
 			theSet[DicomTags.Columns].SetStringValue("256");
-			theSet[DicomTags.PixelSpacing].SetStringValue("1.367188");
+            theSet[DicomTags.PixelSpacing].SetStringValue("1.367188\\1.367188");
 			theSet[DicomTags.BitsAllocated].SetStringValue("16");
 			theSet[DicomTags.BitsStored].SetStringValue("12");
 			theSet[DicomTags.HighBit].SetStringValue("11");

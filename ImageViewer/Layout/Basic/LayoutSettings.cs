@@ -50,8 +50,6 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
 
 		private LayoutSettings()
 		{
-            //TODO (Phoenix5): #10730 - remove this when it's fixed.
-            //ApplicationSettingsRegistry.Instance.RegisterInstance(this);
         }
 
         //TODO (Phoenix5): #10730 - remove this when it's fixed.

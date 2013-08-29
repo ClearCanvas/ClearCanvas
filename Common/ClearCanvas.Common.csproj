@@ -155,6 +155,8 @@
     <Compile Include="Configuration\SettingsClassMetaDataReader.cs" />
     <Compile Include="Configuration\SettingsGroupDescriptor.cs" />
     <Compile Include="Configuration\SettingsPropertyDescriptor.cs" />
+    <Compile Include="Configuration\Tests\SettingsGroupTests.cs" />
+    <Compile Include="Configuration\Tests\AltAppSettingsFolderTests.cs" />
     <Compile Include="DefaultExtensionFactory.cs" />
     <Compile Include="ExtensionPoint.cs" />
     <Compile Include="IExtensionFactory.cs" />
@@ -306,6 +308,7 @@
     <Compile Include="Utilities\DeferredLogMessageSink.cs" />
     <Compile Include="Utilities\DelayedEventPublisher.cs" />
     <Compile Include="Utilities\ExclusiveLock.cs" />
+    <Compile Include="Utilities\HashUtilities.cs" />
     <Compile Include="Utilities\ILogMessageSink.cs" />
     <Compile Include="Utilities\LargeMemoryStream.cs" />
     <Compile Include="Utilities\ListEventArgs.cs" />
@@ -314,6 +317,7 @@
     <Compile Include="Utilities\DictionaryEventArgs.cs" />
     <Compile Include="Utilities\ItemEventArgs.cs" />
     <Compile Include="Utilities\PerformanceReportBroker.cs" />
+    <Compile Include="Utilities\CryptoServiceFallbackHelper.cs" />
     <Compile Include="Utilities\SynchronizedEventHelper.cs" />
     <Compile Include="Utilities\SystemResources.cs" />
     <Compile Include="Utilities\ObjectWalker.cs" />
@@ -327,6 +331,7 @@
     <Compile Include="Utilities\Tests\DateTimeUtilsTests.cs" />
     <Compile Include="Utilities\Tests\ExclusiveLockTestApplication.cs" />
     <Compile Include="Utilities\Tests\ExclusiveLockTests.cs" />
+    <Compile Include="Utilities\Tests\HashUtilitiesTests.cs" />
     <Compile Include="Utilities\Tests\LargeMemoryStreamTests.cs" />
     <Compile Include="Utilities\Tests\ObjectWalkerTests.cs" />
     <Compile Include="Utilities\Tests\PseudoRandom.cs" />
@@ -334,6 +339,7 @@
     <Compile Include="Utilities\Tests\StringUtilitiesTests.cs" />
     <Compile Include="Utilities\Tests\TempFileStream.cs" />
     <Compile Include="Utilities\Tests\ThreadPoolTests.cs" />
+    <Compile Include="Utilities\Tests\XorCryptoServiceProviderTests.cs" />
     <Compile Include="Utilities\ThreadPoolBase.cs" />
     <Compile Include="Utilities\Timer.cs" />
     <Compile Include="Utilities\TypeSafeComparerWrapper.cs" />
@@ -349,6 +355,7 @@
     <Compile Include="Utilities\ResourceResolver.cs" />
     <Compile Include="Utilities\AttributeUtils.cs" />
     <Compile Include="Utilities\NullExtensionFactory.cs" />
+    <Compile Include="Utilities\XorCryptoServiceProvider.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Audit\AuditLog.cs" />

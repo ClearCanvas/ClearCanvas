@@ -35,7 +35,6 @@ namespace ClearCanvas.Ris.Client.Workflow
 	{
 		private PreliminaryDiagnosisSettings()
 		{
-			ApplicationSettingsRegistry.Instance.RegisterInstance(this);
 		}
 	}
 }

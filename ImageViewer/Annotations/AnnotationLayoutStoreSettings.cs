@@ -36,7 +36,6 @@ namespace ClearCanvas.ImageViewer.Annotations
 	{
 		private AnnotationLayoutStoreSettings()
 		{
-			ApplicationSettingsRegistry.Instance.RegisterInstance(this);
 		}
 
 		public override void Upgrade()

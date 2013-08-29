@@ -27,6 +27,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
+using ClearCanvas.Common;
 
 namespace ClearCanvas.ImageViewer.View.WinForms
 {
@@ -501,7 +502,7 @@ namespace ClearCanvas.ImageViewer.View.WinForms
 
 						Rectangle clipRectangleSibling = sibling.ClientRectangle;
 						clipRectangleSibling.Intersect(sibling.RectangleToClient(clipRectangleParent));
-						if (clipRectangleSibling.IsEmpty)
+						if (clipRectangleSibling.Width <= 0 || clipRectangleSibling.Height <= 0)
 							continue;
 
 						// save the coordinate space of the graphics context (the parent control's coordinate space)
@@ -523,6 +524,11 @@ namespace ClearCanvas.ImageViewer.View.WinForms
 								this.InvokePaint(sibling, paintEventArgs);
 								e.Graphics.DrawImage(temp, clipRectangleSibling, clipRectangleSibling, GraphicsUnit.Pixel);
 							}
+						}
+						catch(Exception ex)
+						{
+							// don't let a rendering exception in another control break our control - just log it
+							Platform.Log(LogLevel.Error, ex);
 						}
 						finally
 						{

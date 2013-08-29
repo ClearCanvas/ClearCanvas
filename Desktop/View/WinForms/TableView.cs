@@ -580,6 +580,17 @@ namespace ClearCanvas.Desktop.View.WinForms
 			return BeginEdit(colIndex, selectAll);
 		}
 
+    	/// <summary>
+    	/// Immediately commits any outstanding edits in progress.
+    	/// </summary>
+    	public bool EndEdit()
+    	{
+    		if (_dataGridView.IsCurrentCellInEditMode)
+    		{
+    			return _dataGridView.EndEdit();
+    		}
+    		return true;
+    	}
 
         #endregion
 
@@ -781,6 +792,15 @@ namespace ClearCanvas.Desktop.View.WinForms
 				_table.Items.TransactionCompleted -= _table_Items_TransactionCompleted;
 			}
         }
+
+		protected virtual void OnDataError(DataGridViewDataErrorEventArgs e)
+		{
+			if (e.Exception != null)
+			{
+				System.Windows.Forms.MessageBox.Show(this, e.Exception.Message, Application.Name, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+				e.ThrowException = false;
+			}
+		}
 
     	private void OnColumnsChanged(object sender, ItemChangedEventArgs e)
     	{
@@ -1313,6 +1333,11 @@ namespace ClearCanvas.Desktop.View.WinForms
 
 			// prevent editing on read-only columns, or if this particular item is not editable
 			e.Cancel = column.ReadOnly || !column.IsEditable(item);
+		}
+
+		private void _dataGridView_DataError(object sender, DataGridViewDataErrorEventArgs e)
+		{
+			OnDataError(e);
 		}
 	}
 }

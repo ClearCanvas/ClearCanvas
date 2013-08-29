@@ -32,29 +32,32 @@ namespace ClearCanvas.ImageViewer.Imaging
 	{
 		private readonly int _minInputValue;
 		private readonly int _maxInputValue;
-		private readonly int _length;
+        private readonly int _minOutputValue;
+        private readonly int _maxOutputValue;
+        private readonly int _length;
 		private readonly int[] _data;
 
-		public ComposedLut(LutCollection luts): this(luts, null)
+        public ComposedLut(IComposableLut[] luts)
+            : this(luts, null)
 		{
 		}
 
-		public ComposedLut(LutCollection luts, BufferCache<int> cache)
+        public ComposedLut(IComposableLut[] luts, BufferCache<int> cache)
 		{
 			//luts.Validate();
-
 			int lutCount;
 			IComposableLut firstLut, lastLut;
-			GetFirstAndLastLut(luts, out firstLut, out lastLut, out lutCount);
+            GetFirstAndLastLut(luts, out firstLut, out lastLut, out lutCount);
 
-			_minInputValue = (int) Math.Round(firstLut.MinInputValue);
-			_maxInputValue = (int) Math.Round(firstLut.MaxInputValue);
-			_length = _maxInputValue - _minInputValue + 1;
+			_minInputValue = (int)Math.Round(firstLut.MinInputValue);
+			_maxInputValue = (int)Math.Round(firstLut.MaxInputValue);
+            _minOutputValue = (int)Math.Round(lastLut.MinOutputValue);
+            _maxOutputValue = (int)Math.Round(lastLut.MaxOutputValue);
+
+            _length = _maxInputValue - _minInputValue + 1;
 			_data = cache != null ? cache.Allocate(_length) : MemoryManager.Allocate<int>(_length);
 
 			//copy to array because accessing ObservableList's indexer in a tight loop is very expensive
-			IComposableLut[] lutArray = new IComposableLut[lutCount];
-			luts.CopyTo(lutArray, 0);
 
 			unsafe
 			{
@@ -69,7 +72,7 @@ namespace ClearCanvas.ImageViewer.Imaging
 						double val = i;
 
 						for (int j = 0; j < lutCount; ++j)
-							val = lutArray[j][val];
+							val = luts[j][val];
 
 						*pLutData = (int) Math.Round(val);
 						++pLutData;
@@ -99,15 +102,14 @@ namespace ClearCanvas.ImageViewer.Imaging
 			get { return _maxInputValue; }
 		}
         
-		//never guaranteed because the output could be colour.
 		public int MinOutputValue
 		{
-			get { throw new InvalidOperationException("Composed Luts cannot have a MinOutputValue."); }
+			get { return _minOutputValue; }
 		}
 		public int MaxOutputValue
 		{
-			get { throw new InvalidOperationException("Composed Luts cannot have a MaxOutputValue."); }
-		}
+            get { return _maxOutputValue; }
+        }
 
 		public int this[int index]
 		{

@@ -51,7 +51,7 @@ namespace ClearCanvas.Common.Configuration.Tests
 			Assert.AreEqual(expected, actual);
 
 			expected = CreateSettingValue(property, MigrationScope.Shared, SettingValue.Current);
-			actual = (string)ApplicationSettingsExtensions.GetSharedPropertyValue(settings, property.Name);
+			actual = (string)settings.GetSharedPropertyValue(property.Name);
 			Assert.AreEqual(expected, actual);
 
 			expected = CreateSettingValue(property, MigrationScope.User, SettingValue.Previous);
@@ -60,7 +60,7 @@ namespace ClearCanvas.Common.Configuration.Tests
 			Assert.AreEqual(expected, actual);
 
 			expected = CreateSettingValue(property, MigrationScope.Shared, SettingValue.Current);
-			actual = (string)ApplicationSettingsExtensions.GetSharedPropertyValue(settings, property.Name);
+			actual = (string)settings.GetSharedPropertyValue(property.Name);
 			Assert.AreEqual(expected, actual);
 		}
 
@@ -79,7 +79,7 @@ namespace ClearCanvas.Common.Configuration.Tests
 			string expected = CreateSettingValue(property, MigrationScope.Shared, SettingValue.Current);
 			Assert.AreEqual(expected, settings[property.Name]);
 
-			string current = (string)ApplicationSettingsExtensions.GetSharedPropertyValue(settings, property.Name);
+			string current = (string)settings.GetSharedPropertyValue(property.Name);
 			Assert.AreEqual(expected, current);
 		}
 
@@ -100,7 +100,7 @@ namespace ClearCanvas.Common.Configuration.Tests
 			Assert.AreEqual(expected, settings[property.Name]);
 
 			expected = CreateSettingValue(property, MigrationScope.Shared, SettingValue.Previous);
-			string current = (string)ApplicationSettingsExtensions.GetSharedPropertyValue(settings, property.Name);
+			string current = (string)settings.GetSharedPropertyValue(property.Name);
 			Assert.AreEqual(expected, current);
 		}
 

@@ -33,7 +33,6 @@ namespace ClearCanvas.ImageViewer.Tools.Standard.ImageProperties
 	{
 		private ImagePropertiesSettings()
 		{
-			ApplicationSettingsRegistry.Instance.RegisterInstance(this);
 		}
 	}
 }

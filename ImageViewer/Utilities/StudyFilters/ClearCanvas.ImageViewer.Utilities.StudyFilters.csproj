@@ -38,7 +38,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;UNIT_TESTS</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
@@ -64,6 +64,8 @@
   <ItemGroup>
     <Compile Include="AuthorityTokens.cs" />
     <Compile Include="CoreTools\ClearFiltersTool.cs" />
+    <Compile Include="Tests\StudyItemTesting.cs" />
+    <Compile Include="Tests\TestTool.cs" />
     <Compile Include="Export\DicomFileExporter.cs" />
     <Compile Include="CoreTools\ToggleFiltersTool.cs" />
     <Compile Include="Columns\AttributeTagDicomTagColumn.cs" />

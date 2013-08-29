@@ -71,10 +71,6 @@ namespace ClearCanvas.ImageViewer
 	public interface IDisplaySetDescriptor
 	{
 		/// <summary>
-		/// The <see cref="IDisplaySet"/> described by this object.
-		/// </summary>
-		IDisplaySet DisplaySet { get; }
-		/// <summary>
 		/// Gets the descriptive name of the <see cref="IDisplaySet"/>.
 		/// </summary>
 		string Name { get; }
@@ -310,33 +306,12 @@ namespace ClearCanvas.ImageViewer
 	[Cloneable(true)]
 	public abstract class DisplaySetDescriptor : IDisplaySetDescriptor
 	{
-		[CloneIgnore]
-		private DisplaySet _displaySet;
-
 		/// <summary>
 		/// Protected constructor.
 		/// </summary>
 		protected DisplaySetDescriptor()
 		{
 		}
-
-		#region IDisplaySetDescriptor Members
-
-		IDisplaySet IDisplaySetDescriptor.DisplaySet
-		{
-			get { return _displaySet; }
-		}
-
-		/// <summary>
-		/// The <see cref="IDisplaySet"/> described by this object.
-		/// </summary>
-		public virtual DisplaySet DisplaySet
-		{
-			get { return _displaySet; }
-			internal set { _displaySet = value; }
-		}
-
-		#endregion
 
 		#region IDisplaySetDescriptor Members
 

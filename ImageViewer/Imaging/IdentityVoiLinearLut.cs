@@ -39,8 +39,8 @@ namespace ClearCanvas.ImageViewer.Imaging
 		/// </summary>
 		public IdentityVoiLinearLut()
 		{
-			MinInputValue = int.MinValue;
-			MaxInputValue = int.MaxValue;
+			MinInputValue = double.MinValue;
+			MaxInputValue = double.MaxValue;
 		}
 
 #if UNIT_TESTS
@@ -83,9 +83,9 @@ namespace ClearCanvas.ImageViewer.Imaging
 		/// <remarks>
 		/// This will always return <see cref="MinInputValue"/> rounded to an integer.
 		/// </remarks>
-		public override int MinOutputValue
+		public override double MinOutputValue
 		{
-			get { return (int) Math.Round(MinInputValue); }
+			get { return MinInputValue; }
 			protected set { throw new NotSupportedException(); }
 		}
 
@@ -95,16 +95,16 @@ namespace ClearCanvas.ImageViewer.Imaging
 		/// <remarks>
 		/// This will always return <see cref="MaxInputValue"/> rounded to an integer.
 		/// </remarks>
-		public override int MaxOutputValue
+		public override double MaxOutputValue
 		{
-			get { return (int) Math.Round(MaxInputValue); }
+			get { return MaxInputValue; }
 			protected set { throw new NotSupportedException(); }
 		}
 
 		/// <summary>
 		/// Gets the output value of the lookup table for a given input value.
 		/// </summary>
-		public override int this[double input]
+		public override double this[double input]
 		{
 			get
 			{
@@ -112,7 +112,7 @@ namespace ClearCanvas.ImageViewer.Imaging
 					return MinOutputValue;
 				if (input > MaxInputValue)
 					return MaxOutputValue;
-				return (int) Math.Round(input);
+				return input;
 			}
 		}
 

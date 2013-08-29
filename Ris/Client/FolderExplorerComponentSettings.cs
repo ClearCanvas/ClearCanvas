@@ -42,8 +42,6 @@ namespace ClearCanvas.Ris.Client
 
 		private FolderExplorerComponentSettings()
 		{
-			ApplicationSettingsRegistry.Instance.RegisterInstance(this);
-
 			_defaultConfig = new FolderExplorerConfiguration(() => this.DefaultConfigurationXml);
 			_userConfig = new FolderExplorerUserConfiguration(() => this.UserConfigurationXml, updatedUserConfigurationXml =>
 				{

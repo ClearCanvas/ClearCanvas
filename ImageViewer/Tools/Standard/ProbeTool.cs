@@ -263,7 +263,7 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 			if (luts.VoiLut != null)
 			{
 				var voiLutValue = luts.LookupPixelValue(pixelValue, LutPipelineStage.Voi);
-				voiLutString = String.Format(SR.FormatProbeInfo, SR.LabelVOILut, voiLutValue);
+				voiLutString = String.Format(SR.FormatProbeInfo, SR.LabelVOILut, voiLutValue.ToString("F1"));
 			}
 		}
 

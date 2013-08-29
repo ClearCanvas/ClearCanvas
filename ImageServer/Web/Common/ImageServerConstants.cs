@@ -37,7 +37,7 @@ public class ImageServerConstants
 
         #endregion
 
-        public const string CookieDateTimeFormat = "yyyy-M-d H:m:s";
+        public const string CookieDateTimeFormat = "yyyy-M-d H:m:s"; //TODO: get rid of this, use epoch instead
         public const string DefaultApplicationName = "ImageServer";
         public const string Default = "Default";
         public const string DefaultConfigurationXml = "<HsmArchive><RootDir>e:\\Archive</RootDir></HsmArchive>";
@@ -219,18 +219,21 @@ public class ImageServerConstants
             public const string WorkQueueItemDeletedPage = "~/Pages/Queues/WorkQueue/Edit/WorkQueueItemDeleted.aspx";
             public const string WorkQueueItemDetailsPage = "~/Pages/Queues/WorkQueue/Edit/Default.aspx";
             public const string WorkQueuePage = "~/Pages/Queues/WorkQueue/Default.aspx";
-            public const string ViewImagesPage = "~/Pages/Studies/View/Default.aspx";
-            public const string EmbeddedViewImagesPage = "~/Pages/Studies/ViewHtml/EmbeddedDefault.aspx";
-
+            
             public const string DefaultTimeoutPage = "~/Pages/Error/TimeoutErrorPage.aspx";
             public const string WebViewerTimeoutErrorPage = "~/Pages/Error/WebViewerTimeoutErrorPage.aspx";
             public const string WebViewerAuthorizationErrorPage = "~/Pages/Error/WebViewerAuthorizationErrorPage.aspx";
             public const string WebViewerErrorPage = "~/Pages/Error/WebViewerErrorPage.aspx";
-            public const string WebViewerSilverlightDefaultPage = "~/Pages/WebViewer/Default.aspx";
-            public const string WebViewerHtml5DefaultPage = "~/Pages/WebViewer/ViewHtml/EmbeddedDefault.aspx";
-            public const string WebViewerHTML5ClinicalDefaultPage = "~/Pages/WebViewer/ViewHtml/Default.aspx";
-            public const string WebViewerStudiesPage = "~/Pages/WebViewer/StudyList.aspx";
+            
+            public const string WebViewerStandaloneSilverlightDefault = "~/Pages/WebViewer/Default.aspx";
+            public const string WebViewerStandaloneHtml5Embedded = "~/Pages/WebViewer/ViewHtml/EmbeddedDefault.aspx";
+            public const string WebViewerStandaloneHTML5Default = "~/Pages/WebViewer/ViewHtml/Default.aspx";
+            public const string WebViewerStandaloneStudiesPage = "~/Pages/WebViewer/StudyList.aspx";
 
+            public const string WebViewerIntegratedSilverlightDefault = "~/Pages/Studies/View/Default.aspx";
+            public const string WebViewerIntegratedHtml5Embedded = "~/Pages/Studies/ViewHtml/EmbeddedDefault.aspx";
+            public const string WebViewerIntegratedHTML5Default = "~/Pages/Studies/ViewHtml/Default.aspx";
+            public const string WebViewerIntegratedStudiesPage = "~/Pages/WebViewer/StudyList.aspx";
         }
 
         #endregion

@@ -33,7 +33,6 @@ namespace ClearCanvas.Ris.Client
 	{
 		private OrderEditorComponentSettings()
 		{
-			ApplicationSettingsRegistry.Instance.RegisterInstance(this);
 		}
 	}
 }

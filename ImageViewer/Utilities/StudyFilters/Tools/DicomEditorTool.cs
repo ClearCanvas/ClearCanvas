@@ -22,40 +22,27 @@
 
 #endregion
 
-using System.Reflection;
 using ClearCanvas.Common;
-using ClearCanvas.Desktop;
 using ClearCanvas.Desktop.Actions;
 using ClearCanvas.Utilities.DicomEditor;
 
 namespace ClearCanvas.ImageViewer.Utilities.StudyFilters.Tools
 {
-	[ButtonAction("activate", DefaultToolbarActionSite + "/ToolbarDumpFiles", "Dump")]
-	[MenuAction("activate", DefaultContextMenuActionSite + "/MenuDumpFiles", "Dump")]
+	[ButtonAction("activate", DefaultToolbarActionSite + "/ToolbarBatchEdit", "Dump")]
+	[MenuAction("activate", DefaultContextMenuActionSite + "/MenuBatchEdit", "Dump")]
 	[EnabledStateObserver("activate", "AtLeastOneSelected", "AtLeastOneSelectedChanged")]
-	[Tooltip("activate", "TooltipDumpFiles")]
+	[Tooltip("activate", "TooltipBatchEdit")]
 	[IconSet("activate", "Icons.DicomEditorToolSmall.png", "Icons.DicomEditorToolMedium.png", "Icons.DicomEditorToolLarge.png")]
 	[ViewerActionPermission("activate", ClearCanvas.Utilities.DicomEditor.AuthorityTokens.DicomEditor)]
-	[ExtensionOf(typeof (StudyFilterToolExtensionPoint))]
+	[ExtensionOf(typeof (StudyFilterToolExtensionPoint), FeatureToken = FeatureTokens.DicomEditing)]
 	public class DicomEditorTool : LocalExplorerStudyFilterToolProxy<ShowDicomEditorTool>
 	{
-		private static MethodInfo _dumpMethod;
-
-		private static MethodInfo DumpMethod
-		{
-			get
-			{
-				if (_dumpMethod == null)
-					_dumpMethod = typeof (ShowDicomEditorTool).GetMethod("Dump", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
-				return _dumpMethod;
-			}
-		}
-
 		public void Dump()
 		{
-			MethodInfo methodInfo = DumpMethod;
-			if (methodInfo != null)
-				methodInfo.Invoke(base.BaseTool, null);
+			if (!LicenseInformation.IsFeatureAuthorized(FeatureTokens.DicomEditing))
+				return;
+
+			BaseTool.Dump();
 		}
 	}
 }

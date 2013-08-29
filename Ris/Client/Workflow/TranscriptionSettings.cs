@@ -34,7 +34,6 @@ namespace ClearCanvas.Ris.Client.Workflow
 	{
 		private TranscriptionSettings()
 		{
-			ApplicationSettingsRegistry.Instance.RegisterInstance(this);
 		}
 	}
 }

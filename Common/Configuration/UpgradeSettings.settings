@@ -9,5 +9,8 @@
     <Setting Name="UserUpgradeEnabled" Description="Specifies whether or not the application should run the user upgrade on startup." Type="System.Boolean" Scope="Application">
       <Value Profile="(Default)">False</Value>
     </Setting>
+    <Setting Name="PreviousInstallDir" Type="System.String" Scope="Application">
+      <Value Profile="(Default)" />
+    </Setting>
   </Settings>
 </SettingsFile>

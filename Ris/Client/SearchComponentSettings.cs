@@ -34,7 +34,6 @@ namespace ClearCanvas.Ris.Client
     {
         private SearchComponentSettings()
         {
-            ApplicationSettingsRegistry.Instance.RegisterInstance(this);
         }
     }
 }

@@ -35,28 +35,36 @@ namespace ClearCanvas.Utilities.DicomEditor.Tools
 	[EnabledStateObserver("activate", "Enabled", "EnabledChanged")]
 	[Tooltip("activate", "TooltipCreate")]
 	[IconSet("activate", "Icons.AddToolSmall.png", "Icons.AddToolSmall.png", "Icons.AddToolSmall.png")]
-	[ExtensionOf(typeof (DicomEditorToolExtensionPoint))]
+	[ExtensionOf(typeof (DicomEditorToolExtensionPoint), FeatureToken = FeatureTokens.DicomEditing)]
 	public class CreateTool : DicomEditorTool
 	{
 		public CreateTool() : base(true) {}
 
 		public void Create()
 		{
+			if (!LicenseInformation.IsFeatureAuthorized(FeatureTokens.DicomEditing))
+				return;
+
+			Activate();
+		}
+
+		protected override void ActivateCore()
+		{
 			var creator = new DicomEditorCreateToolComponent();
 			var result = ApplicationComponent.LaunchAsDialog(this.Context.DesktopWindow, creator, SR.TitleCreateTag);
-		    if (result != ApplicationComponentExitCode.Accepted)
-                return;
-		    
-            try
-		    {
-                //We can only edit tags in the DicomTagDictionary, currently.
-		        Context.DumpManagement.EditTag(creator.TagId, creator.Value, false);
-                Context.UpdateDisplay();
-            }
-		    catch (DicomException)
-		    {
-		        Context.DesktopWindow.ShowMessageBox(SR.MessageTagCannotBeCreated, MessageBoxActions.Ok);
-		    }
+			if (result != ApplicationComponentExitCode.Accepted)
+				return;
+
+			try
+			{
+				//We can only edit tags in the DicomTagDictionary, currently.
+				Context.DumpManagement.EditTag(creator.TagId, creator.Value, false);
+				Context.UpdateDisplay();
+			}
+			catch (DicomException)
+			{
+				Context.DesktopWindow.ShowMessageBox(SR.MessageTagCannotBeCreated, MessageBoxActions.Ok);
+			}
 		}
 
 		protected override void OnSelectedTagChanged(object sender, EventArgs e)

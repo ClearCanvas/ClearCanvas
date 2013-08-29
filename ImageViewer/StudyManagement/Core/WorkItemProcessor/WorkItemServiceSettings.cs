@@ -23,13 +23,12 @@
 #endregion
 
 using System.Configuration;
+using ClearCanvas.ImageViewer.Common.Configuration;
 
 namespace ClearCanvas.ImageViewer.StudyManagement.Core.WorkItemProcessor
 {
-    /// TODO (CR Jun 2012): Move to Common and/or use the new settings provider?
-    // (SW) didn't make it the new settings provider because there'd be no easy way for the user to edit.
     [SettingsGroupDescription("Settings for the WorkItemService.")]
-    [SettingsProvider(typeof(LocalFileSettingsProvider))]
+    [SettingsProvider(typeof(SystemConfigurationSettingsProvider))]
     public partial class WorkItemServiceSettings 
 	{
 	}

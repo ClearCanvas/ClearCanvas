@@ -251,6 +251,9 @@ namespace ClearCanvas.Dicom.Samples
             pcid = assoc.AddPresentationContext(SopClass.BreastTomosynthesisImageStorage);
             SetImageTransferSyntaxes(pcid, assoc);
 
+            pcid = assoc.AddPresentationContext(SopClass.EnhancedUsVolumeStorage);
+            SetImageTransferSyntaxes(pcid, assoc);
+
         }
         #endregion
 

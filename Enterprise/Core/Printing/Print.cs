@@ -475,6 +475,11 @@ namespace ClearCanvas.Enterprise.Core.Printing
 					}
 				}
 			}
+			catch
+			{
+				File.Delete(outputFilePath);
+				throw;
+			}
 			finally
 			{
 				if(_error)

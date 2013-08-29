@@ -3,28 +3,28 @@
   <Profiles />
   <Settings>
     <Setting Name="Component" Description="The product name." Type="System.String" Scope="Application">
-      <Value Profile="(Default)">jL55pMp+3yM7A6LSOywdX1oRfRZd9RvJ</Value>
+      <Value Profile="(Default)">SXNTb0Nvb2xJc1MMeGV8dXlmXG1Lc0IA</Value>
     </Setting>
     <Setting Name="Version" Description="The version of the product, which can be different from that of the assemblies." Type="System.String" Scope="Application">
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="VersionSuffix" Description="Product version suffix (e.g. SP1)." Type="System.String" Scope="Application">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">IB82DjEsDgI=</Value>
     </Setting>
     <Setting Name="Product" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">jL55pMp+3yM9uLAdmMqy1EZCbfkuN9/i</Value>
+      <Value Profile="(Default)">SXNTb0Nvb2xJc1MMfUNdMVpTfkoiHCwA</Value>
     </Setting>
     <Setting Name="Edition" Type="System.String" Scope="Application">
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="Copyright" Description="Product copyright." Type="System.String" Scope="Application">
-      <Value Profile="(Default)">SQpazixeCBDhrViLMH+USHI4o/OthHQfW6qpQqn2uwDIlCdWk8KsdsC7hHtQ9QsPIn5f2/hhj6s=</Value>
+      <Value Profile="(Default)">SXBGd0NFaWpLMhIcHjkuXWZ3XGthfUJ2TWEBZUxiNy17XFMqUHRLZVN2Em5lcG9/TVVWLzUOHC8=</Value>
     </Setting>
     <Setting Name="License" Description="Product license." Type="System.String" Scope="Application">
-      <Value Profile="(Default)">SQpazixeCBD4G1zRA+eXWheAmZyJFUq8gGDK5TOBR7YIggfHag3jRXiRuZCymFq37uHZE8Zk+8ar7cdLpW/lNB29fp+l7e7MKFHuWixc0AVqnmuTmKlAzF208LjCPiLDst91oXMbPhN/XAeSeSfbijyYUNeIsbKz+HUJEeOlPcQui/BLNc0pbXZEoHrt+5gSjwSa2I8DIPYmhHcB31YGU52R8CetvGeCrh5O06/YTtpFvwu5Q6kUx3bb+tXW/49/3LW4woGGvjW9I36XOdg1YoYjgDWpxfYGVbUzhjrLjXc=</Value>
+      <Value Profile="(Default)">SXBGd0NFaWpLMghPBio8LjshETlhcElhXlFAQlRgai1zXlwkLxdtYUslQHVna35+G0JXclB8akpBOD8XaHp1ahIvP3RReTNMRHhEfFNNbX9Jcj5tTBQEEgBLXmdCDGhrU3cARVwqfn94Zh12RDxYaEkyYkBHYGtOW15Ja1E9fkR0KmJdQ1AqYktVXCFGYWldRnMSbXJha39LdD4OLAMXe0B4BU1cSWJ7a2B+eExqLk1DTBlecG9dIlBiRUIPeWFreHFYOVJuQ2pJcVUMS3I5a0hVWipRckp5UGRAeTojc2JOEFFgWwMWXUByW250fGh4XXR1I096PU5GeQphQgxuZkxodncNcHo/f3FSa0MMempaMlRJXWd9PmV0HW1KeQxHYkcBa0dvfH9bXB9aV39AZEQIOFBpYG9jSFUSYEYubFpHeltuaGtlOkp5MHdOaz1pWnhALmNDZX1fYGJrDV9hamR7V3pYQ2AuH3dJWEdvfD58d09qS3NCIB8yTkoCdXFoNzpzY0F4Qn5CKRJzciMibE8QS25AfDxAVWJbcm4nIXtGeTBvR3p4XQhrQHxDRWxnBgwaAydNZnoqXFprUF5NY1FkQV8PWEdNJUJ8WnE8Q3BJfAFfTXRrbl8QT3hNd0luUyVbbyBnY35PQltjQHp5SwV/XD10ZmQ6QG9gZgZ6dU5cPUx6PSZ0YERtMGxIOXtsb3lDYh0MbHdLMndle0JBS14yfFd7PHtBfkBgYnZYIi1NWUtiTWhYLUJzV3Igd2JoG1lfcVlneUsFYVNvcm9vblEgf2UrBFBqel5tT354QkthTVladDlhbSpZf1p/aV1RH1Rvfg9LLk5LQGlQYUlgQX4ycXlwUVZefx4fKnF4SS1TbVc8R01fLXxVXGRHb3AiL0ZHf2xnYjpkaXNmSH14D05yVy5dQ3FsCGV1ekxwYmwkEjwDO3Vhdx9hSENaZmo+YnNLfAJuSWNJe1dJRiF4LVlfT3MCckotU21XPEdNXy18VVxkR29wD3VjUHFpbSFWQWN1bVVrPU5EcktpEFtqfUAMGnpFfC5cZnpXfHJNYHReYQB+ZlkhTktRbjlNbEluDGFOWVBifC1KQlBgR35YIwcle3ogbWV5FxBBZFAudFtRZggyL3l2bQZnfnYIYW9IB3FMbVVCcGxbLj4OLRkOHw==</Value>
     </Setting>
     <Setting Name="Release" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">vKfTr+ue1fm9jaIYbfkY5g==</Value>
+      <Value Profile="(Default)">IFtTeFRAYXJSd05YLwoOHg==</Value>
     </Setting>
     <Setting Name="Name" Type="System.String" Scope="Application">
       <Value Profile="(Default)" />

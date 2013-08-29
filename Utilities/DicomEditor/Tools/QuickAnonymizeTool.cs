@@ -34,7 +34,7 @@ namespace ClearCanvas.Utilities.DicomEditor.Tools
 	[Tooltip("activate", "TooltipQuickAnonymize")]
 	[IconSet("activate", "Icons.AnonymizeToolSmall.png", "Icons.AnonymizeToolSmall.png", "Icons.AnonymizeToolSmall.png")]
 	[EnabledStateObserver("activate", "Enabled", "EnabledChanged")]
-	[ExtensionOf(typeof (DicomEditorToolExtensionPoint))]
+	[ExtensionOf(typeof (DicomEditorToolExtensionPoint), FeatureToken = FeatureTokens.DicomEditing)]
 	public class QuickAnonymizeTool : DicomEditorTool
 	{
 		private bool _promptForAll;
@@ -47,6 +47,18 @@ namespace ClearCanvas.Utilities.DicomEditor.Tools
 
 		public void Apply()
 		{
+			if (!LicenseInformation.IsFeatureAuthorized(FeatureTokens.DicomEditing))
+				return;
+
+			Activate();
+		}
+
+		protected override void ActivateCore()
+		{
+			var component = new AnonymizeStudyComponent(Context.GetStudyRootData()) {ShowKeepReportsAndAttachments = false, ShowPreserveSeriesData = false};
+			if (ApplicationComponent.LaunchAsDialog(Context.DesktopWindow, component, SR.TitleQuickAnonymize) != ApplicationComponentExitCode.Accepted)
+				return;
+
 			bool applyToAll = false;
 
 			if (_promptForAll)
@@ -55,15 +67,8 @@ namespace ClearCanvas.Utilities.DicomEditor.Tools
 					applyToAll = true;
 			}
 
-			this.Anonymize(applyToAll);
+			this.Context.DumpManagement.Anonymize(applyToAll, component.AnonymizedData, component.KeepPrivateTags);
 			this.Context.UpdateDisplay();
-		}
-
-		private void Anonymize(bool applyToAll)
-		{
-			IDicomEditorDumpManagement dump = this.Context.DumpManagement;
-
-			dump.Anonymize(applyToAll);
 		}
 
 		protected override void OnDisplayedDumpChanged(object sender, DisplayedDumpChangedEventArgs e)

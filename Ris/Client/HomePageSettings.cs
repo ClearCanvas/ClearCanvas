@@ -35,7 +35,6 @@ namespace ClearCanvas.Ris.Client
     {
         private HomePageSettings()
         {
-            ApplicationSettingsRegistry.Instance.RegisterInstance(this);
         }
     }
 }

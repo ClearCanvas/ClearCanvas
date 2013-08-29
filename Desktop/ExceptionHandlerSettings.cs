@@ -35,7 +35,6 @@ namespace ClearCanvas.Desktop
 
         private ExceptionHandlerSettings()
         {
-            ApplicationSettingsRegistry.Instance.RegisterInstance(this);
         }
     }
 }
