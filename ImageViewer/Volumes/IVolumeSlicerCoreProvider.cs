@@ -22,44 +22,29 @@
 
 #endregion
 
-using System;
-using System.Collections.Generic;
 using ClearCanvas.Common;
-using ClearCanvas.Common.Utilities;
 
-namespace ClearCanvas.ImageViewer.Volume.Mpr.Utilities
+namespace ClearCanvas.ImageViewer.Volumes
 {
-	internal class ObservableDisposableList<T> : ObservableList<T>, IDisposable where T : IDisposable
+	/// <summary>
+	/// Extension point for providers of <see cref="IVolumeSlicerCoreProvider"/> implementations.
+	/// </summary>
+	[ExtensionPoint]
+	public sealed class VolumeSlicerCoreProviderExtensionPoint : ExtensionPoint<IVolumeSlicerCoreProvider> {}
+
+	/// <summary>
+	/// Represents a provider of <see cref="IVolumeSlicerCoreProvider"/> implementations.
+	/// </summary>
+	public interface IVolumeSlicerCoreProvider
 	{
-		public ObservableDisposableList() {}
+		/// <summary>
+		/// Called to check if the provider supports creating <see cref="IVolumeSlicerCore"/> using the specified arguments.
+		/// </summary>
+		bool IsSupported(VolumeSliceArgs args);
 
-		public ObservableDisposableList(IEnumerable<T> list)
-			: base(list) {}
-
-		public void Dispose()
-		{
-			try
-			{
-				Dispose(true);
-				GC.SuppressFinalize(this);
-			}
-			catch (Exception e)
-			{
-				Platform.Log(LogLevel.Warn, e);
-			}
-		}
-
-		protected virtual void Dispose(bool disposing)
-		{
-			if (disposing)
-			{
-				var temp = new List<T>(this);
-				EnableEvents = false;
-				Clear();
-
-				foreach (T t in temp)
-					t.Dispose();
-			}
-		}
+		/// <summary>
+		/// Called to create an instance of <see cref="IVolumeSlicerCore"/> to create slicings from a volume.
+		/// </summary>
+		IVolumeSlicerCore CreateSlicerCore(IVolumeReference volumeReference, VolumeSliceArgs args);
 	}
 }

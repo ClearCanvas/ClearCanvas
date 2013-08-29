@@ -798,6 +798,8 @@
     <Compile Include="Volumes\CreateVolumeException.cs" />
     <Compile Include="Volumes\HelperMethods.cs" />
     <Compile Include="Volumes\IVolumeHeader.cs" />
+    <Compile Include="Volumes\IVolumeSlicerCore.cs" />
+    <Compile Include="Volumes\IVolumeSlicerCoreProvider.cs" />
     <Compile Include="Volumes\Tests\AbstractVolumeTest.cs" />
     <Compile Include="Volumes\Tests\DataSetOrientation.cs" />
     <Compile Include="Volumes\Tests\VolumeBuilderTest.cs" />
@@ -809,10 +811,14 @@
     <Compile Include="Volumes\VolumeBuilder.cs" />
     <Compile Include="Volumes\VolumeCache.cs" />
     <Compile Include="Volumes\VolumeClasses.cs" />
+    <Compile Include="Volumes\VolumeInterpolationMode.cs" />
     <Compile Include="Volumes\VolumeLoader.cs" />
     <Compile Include="Volumes\VolumeMethods.cs" />
     <Compile Include="Volumes\VolumeReference.cs" />
     <Compile Include="Volumes\VolumeHeaderData.cs" />
+    <Compile Include="Volumes\VolumeSlice.cs" />
+    <Compile Include="Volumes\VolumeSliceFactory.cs" />
+    <Compile Include="Volumes\VolumeSliceArgs.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\ClearCanvas.Common.csproj">

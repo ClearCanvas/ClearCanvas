@@ -957,6 +957,11 @@ INSERT INTO [ImageServer].[dbo].DuplicateSopPolicyEnum([GUID],[Enum],[Lookup],[D
 VALUES(newid(),103,'CompareDuplicates','Compare Duplicates','Process duplicate objects received and compare them to originals flagging any differences as a failure.')
 GO
 
+INSERT INTO [ImageServer].[dbo].DuplicateSopPolicyEnum([GUID],[Enum],[Lookup],[Description],[LongDescription])
+VALUES(newid(),104,'AcceptLatest','Accept Latest','Process duplicate objects received and always accecpt the latest file received.')
+GO
+
+
 -- ArchiveQueueStatusEnum inserts
 INSERT INTO [ImageServer].[dbo].[ArchiveQueueStatusEnum] ([GUID],[Enum],[Lookup],[Description],[LongDescription])
      VALUES (newid(),100,'Pending','Pending','Pending')

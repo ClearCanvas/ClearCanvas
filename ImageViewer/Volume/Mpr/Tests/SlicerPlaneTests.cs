@@ -23,12 +23,12 @@
 #endregion
 
 #if	UNIT_TESTS
+
 #pragma warning disable 1591,0419,1574,1587
 
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using ClearCanvas.Dicom;
 using ClearCanvas.ImageViewer.Graphics;
 using ClearCanvas.ImageViewer.Mathematics;
 using ClearCanvas.ImageViewer.StudyManagement;
@@ -38,12 +38,15 @@ using NUnit.Framework;
 
 namespace ClearCanvas.ImageViewer.Volume.Mpr.Tests
 {
-	[TestFixture]
-	public class SlicePlaneTests : AbstractMprTest
+	/// <summary>
+	/// Tests various known location/value pairs for slices in various planes.
+	/// </summary>
+	[TestFixture(Description = "Tests various known location/value pairs for slices in various planes.")]
+	public class SlicerPlaneTests : AbstractMprTest
 	{
 		private readonly IList<IVolumeSlicerParams> _slicings;
 
-		public SlicePlaneTests()
+		public SlicerPlaneTests()
 		{
 			List<IVolumeSlicerParams> slicings = new List<IVolumeSlicerParams>();
 			slicings.Add(VolumeSlicerParams.Identity);

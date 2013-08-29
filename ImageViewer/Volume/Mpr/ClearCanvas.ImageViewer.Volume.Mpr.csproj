@@ -114,7 +114,7 @@
     </Compile>
     <Compile Include="Tests\MprProbeTool.cs" />
     <Compile Include="Tests\SlicerTests.cs" />
-    <Compile Include="Tests\SlicePlaneTests.cs" />
+    <Compile Include="Tests\SlicerPlaneTests.cs" />
     <Compile Include="Tests\Statistics.cs" />
     <Compile Include="Tests\SlicerFidelityTests.cs" />
     <Compile Include="Tests\MprTestVolumeTool.cs" />
@@ -139,9 +139,7 @@
     <Compile Include="Tools\MprMoveControlGraphic.cs" />
     <Compile Include="Utilities\ObservableDisposableList.cs" />
     <Compile Include="Utilities\ProgressTask.cs" />
-    <Compile Include="VolumeSlice.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="Utilities\TransitionalHelper.cs" />
     <Compile Include="VolumeSlicerParams.cs" />
     <Compile Include="MprSliceSet.cs" />
     <Compile Include="Tools\MprViewerTool.cs" />

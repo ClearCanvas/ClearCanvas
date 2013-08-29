@@ -295,7 +295,7 @@ namespace ClearCanvas.ImageServer.Core
 
                 using (ServerCommandProcessor processor = new ServerCommandProcessor("Process File"))
                 {
-                    SopProcessingContext processingContext = new SopProcessingContext(processor,
+                    SopInstanceProcessorContext processingContext = new SopInstanceProcessorContext(processor,
                                                                                       _context.StorageLocation, group);
 
                     if (EnforceNameRules)
@@ -475,7 +475,7 @@ namespace ClearCanvas.ImageServer.Core
 		/// <param name="context"></param>
 		/// <param name="file"></param>
 		/// <param name="uid"></param>
-		private static void ScheduleReconcile(SopProcessingContext context, DicomFile file, WorkQueueUid uid)
+		private static void ScheduleReconcile(SopInstanceProcessorContext context, DicomFile file, WorkQueueUid uid)
 		{
 			ImageReconciler reconciler = new ImageReconciler(context);
 			reconciler.ScheduleReconcile(file, StudyIntegrityReasonEnum.InconsistentData, uid);
