@@ -29,14 +29,13 @@ using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Desktop;
 using ClearCanvas.Dicom.Iod;
-using ClearCanvas.ImageViewer.AdvancedImaging.Fusion.Utilities;
 using ClearCanvas.ImageViewer.Common;
-using ClearCanvas.ImageViewer.Graphics;
 using ClearCanvas.ImageViewer.Imaging;
 using ClearCanvas.ImageViewer.InteractiveGraphics;
 using ClearCanvas.ImageViewer.Mathematics;
 using ClearCanvas.ImageViewer.StudyManagement;
 using ClearCanvas.ImageViewer.Volume.Mpr;
+using ClearCanvas.ImageViewer.Volumes;
 using VolumeData = ClearCanvas.ImageViewer.Volumes.Volume;
 
 namespace ClearCanvas.ImageViewer.AdvancedImaging.Fusion
@@ -139,12 +138,12 @@ namespace ClearCanvas.ImageViewer.AdvancedImaging.Fusion
 
 		private VolumeData LoadVolume(IBackgroundTaskContext context)
 		{
-		    // TODO (CR Apr 2013): Ideally, loading and unloading could be done with minimal locking; this way,
-            // Unload actually has to wait for Load to finish and vice versa. I think a quicker way would be to
-            // have a _loading field - have this method set it inside the lock, then proceed to do the load,
-            // then set the _volume field when done. Have Unload check _loading and just return, otherwise set _volume to null.
-            // Basically, you don't need to lock the entire load operation - you only need to guarantee that multiple loads
-            // can't occur at once, and that Unload actually unloads it.
+			// TODO (CR Apr 2013): Ideally, loading and unloading could be done with minimal locking; this way,
+			// Unload actually has to wait for Load to finish and vice versa. I think a quicker way would be to
+			// have a _loading field - have this method set it inside the lock, then proceed to do the load,
+			// then set the _volume field when done. Have Unload check _loading and just return, otherwise set _volume to null.
+			// Basically, you don't need to lock the entire load operation - you only need to guarantee that multiple loads
+			// can't occur at once, and that Unload actually unloads it.
 
 			// wait for synchronized access
 			lock (_syncVolumeDataLock)
@@ -221,13 +220,8 @@ namespace ClearCanvas.ImageViewer.AdvancedImaging.Fusion
 			var baseBottomLeft = baseFrame.ImagePlaneHelper.ConvertToPatient(new PointF(0, baseFrame.Rows));
 			var baseFrameCentre = (baseTopRight + baseBottomLeft)/2;
 
-			// compute the rotated volume slicing basis axes
-			var volumeXAxis = (volume.ConvertToVolume(baseTopRight) - volume.ConvertToVolume(baseTopLeft)).Normalize();
-			var volumeYAxis = (volume.ConvertToVolume(baseBottomLeft) - volume.ConvertToVolume(baseTopLeft)).Normalize();
-			var volumeZAxis = volumeXAxis.Cross(volumeYAxis);
-
-			var @params = new VolumeSlicerParams(volumeXAxis, volumeYAxis, volumeZAxis);
-			using (var slice = new VolumeSliceSopDataSource(new VolumeSlice(volume, @params, volume.ConvertToVolume(baseFrameCentre))))
+			var slicer = new VolumeSliceFactory {RowOrientationPatient = baseTopRight - baseTopLeft, ColumnOrientationPatient = baseBottomLeft - baseTopLeft};
+			using (var slice = new VolumeSliceSopDataSource(slicer.CreateSlice(volume.CreateReference(), baseFrameCentre)))
 			{
 				using (var sliceSop = new ImageSop(slice))
 				{
@@ -435,8 +429,8 @@ namespace ClearCanvas.ImageViewer.AdvancedImaging.Fusion
 				}
 				else
 				{
-                    // TODO (CR Apr 2013): See comment in OnVolumeLoaderTaskTerminated; if the task were not created
-                    // on the UI thread, _volumeLoaderTask could be set to null before hitting this instruction.
+					// TODO (CR Apr 2013): See comment in OnVolumeLoaderTaskTerminated; if the task were not created
+					// on the UI thread, _volumeLoaderTask could be set to null before hitting this instruction.
 					if (_volumeLoaderTask.LastBackgroundTaskProgress != null)
 					{
 						message = _volumeLoaderTask.LastBackgroundTaskProgress.Progress.Message;
@@ -466,18 +460,18 @@ namespace ClearCanvas.ImageViewer.AdvancedImaging.Fusion
 
 		private void OnVolumeLoaderTaskTerminated(object sender, BackgroundTaskTerminatedEventArgs e)
 		{
-            // TODO (CR Apr 2013): Since BeginLoad is only ever triggered from the UI thread (Draw), this won't be
-            // a problem because the task's Terminated event will also be fired on the UI thread. If the task
-            // were not created on the UI thread, though, this would have to be inside a lock (_syncLoaderLock).
-            
-            BackgroundTask volumeLoaderTask = sender as BackgroundTask;
+			// TODO (CR Apr 2013): Since BeginLoad is only ever triggered from the UI thread (Draw), this won't be
+			// a problem because the task's Terminated event will also be fired on the UI thread. If the task
+			// were not created on the UI thread, though, this would have to be inside a lock (_syncLoaderLock).
+
+			BackgroundTask volumeLoaderTask = sender as BackgroundTask;
 			if (volumeLoaderTask != null)
 			{
 				volumeLoaderTask.Terminated -= OnVolumeLoaderTaskTerminated;
 				volumeLoaderTask.Dispose();
 			}
 
-            _volumeLoaderTask = null;
+			_volumeLoaderTask = null;
 		}
 
 		#endregion
@@ -486,7 +480,7 @@ namespace ClearCanvas.ImageViewer.AdvancedImaging.Fusion
 
 		bool IProgressGraphicProgressProvider.IsRunning(out float progress, out string message)
 		{
-		    // TODO (CR Apr 2013): Misleading that IsRunning might actually trigger a load.
+			// TODO (CR Apr 2013): Misleading that IsRunning might actually trigger a load.
 			return !BeginLoad(out progress, out message);
 		}
 
