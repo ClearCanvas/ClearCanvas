@@ -154,11 +154,27 @@ namespace ClearCanvas.ImageViewer.Volumes
 		}
 
 		/// <summary>
-		/// Gets the requested interpolation to use when performing the reslicing.
+		/// Gets the requested number of subsamples when performing the reslicing.
+		/// </summary>
+		public int Subsamples
+		{
+			get { return _args.Subsamples; }
+		}
+
+		/// <summary>
+		/// Gets the requested interpolation method to use when performing the reslicing.
 		/// </summary>
 		public VolumeInterpolationMode Interpolation
 		{
 			get { return _args.Interpolation; }
+		}
+
+		/// <summary>
+		/// Gets the requested projection method to use to aggregate subsamples when performing the reslicing.
+		/// </summary>
+		public VolumeProjectionMode Projection
+		{
+			get { return _args.Projection; }
 		}
 
 		/// <summary>

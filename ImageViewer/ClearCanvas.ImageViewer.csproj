@@ -818,6 +818,7 @@
     <Compile Include="Volumes\VolumeInterpolationMode.cs" />
     <Compile Include="Volumes\VolumeLoader.cs" />
     <Compile Include="Volumes\VolumeMethods.cs" />
+    <Compile Include="Volumes\VolumeProjectionMode.cs" />
     <Compile Include="Volumes\VolumeReference.cs" />
     <Compile Include="Volumes\VolumeHeaderData.cs" />
     <Compile Include="Volumes\VolumeSlice.cs" />

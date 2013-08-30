@@ -27,6 +27,7 @@ using System.Runtime.InteropServices;
 using ClearCanvas.Common;
 using ClearCanvas.ImageViewer.Common;
 using ClearCanvas.ImageViewer.Mathematics;
+using ClearCanvas.ImageViewer.VTK.Utilities;
 using ClearCanvas.ImageViewer.Volumes;
 using ClearCanvas.ImageViewer.Vtk;
 using vtk;
@@ -50,6 +51,8 @@ namespace ClearCanvas.ImageViewer.VTK
 		}
 	}
 
+	// TODO: this code only supports ushort volumes - fix to support the other types!!!!
+
 	/// <summary>
 	/// Implements <see cref="IVolumeSlicerCore"/> using the VTK <see cref="vtk.vtkImageReslice"/> utility.
 	/// </summary>
@@ -67,7 +70,7 @@ namespace ClearCanvas.ImageViewer.VTK
 		{
 			var rowOrientation = RowOrientationPatient;
 			var columnOrientation = ColumnOrientationPatient;
-			var stackOrientation = rowOrientation.Cross(columnOrientation);
+			var stackOrientation = rowOrientation.Cross(columnOrientation).Normalize();
 
 			// VTK reslice axes are in the volume coordinate system and should be positioned at the center of the desired output image
 			var reslicePosition = imagePositionPatient + Columns*ColumnSpacing/2f*rowOrientation + Rows*RowSpacing/2f*columnOrientation;
@@ -83,98 +86,213 @@ namespace ClearCanvas.ImageViewer.VTK
 			resliceAxes = VolumeReference.RotateToVolumeOrientation(resliceAxes).Transpose();
 			resliceAxes.SetColumn(3, reslicePosition.X, reslicePosition.Y, reslicePosition.Z, 1);
 
-			using (var imageData = GenerateVtkSlice(resliceAxes))
+			if (Subsamples > 1)
 			{
-				var pixelData = CreatePixelDataFromVtkSlice(imageData);
-				imageData.ReleaseData();
-				return pixelData;
+				// if subsampling is required, extract the thick slice ("slab") from the volume and then aggregate it using the specified projection method
+				return GetSlabPixelData(VolumeReference, resliceAxes, stackOrientation, Rows, Columns, Subsamples, RowSpacing, ColumnSpacing, SliceThickness, Interpolation, Projection);
+			}
+			else
+			{
+				// extract the (thin) slice from the volume
+				return GetSlicePixelData(VolumeReference, resliceAxes, Rows, Columns, RowSpacing, ColumnSpacing, Interpolation);
 			}
 		}
 
 		/// <summary>
-		/// Slices the volume using the specified reslice axes.
+		/// Gets the pixel data representing a thin slice of the volume.
 		/// </summary>
-		private vtkImageData GenerateVtkSlice(Matrix resliceAxes)
+		private static byte[] GetSlicePixelData(IVolumeReference volumeReference, Matrix resliceAxes, int rows, int columns, float rowSpacing, float columnSpacing, VolumeInterpolationMode interpolation)
 		{
-			// read these parameters once to ensure consistency
-			var columnSpacing = ColumnSpacing;
-			var rowSpacing = RowSpacing;
-			var columns = Columns;
-			var rows = Rows;
-
 			using (var reslicer = new vtkImageReslice())
 			using (var resliceAxesMatrix = new vtkMatrix4x4())
+			using (var executive = reslicer.GetExecutive())
+			using (var volume = volumeReference.Volume.CreateVtkVolumeHandle())
 			{
 				// update the reslice axes matrix with the values from the slicing orientation
 				resliceAxesMatrix.SetElements(resliceAxes);
 
+				// register for errors on the reslicer
 				reslicer.RegisterVtkErrorEvents();
 
-				// obtain a pinned VTK volume for the reslicer
-				using (var volume = VolumeReference.Volume.CreateVtkVolumeHandle())
+				// set input to the volume
+				reslicer.SetInput(volume.vtkImageData);
+				reslicer.SetInformationInput(volume.vtkImageData);
+
+				// instruct reslicer to output 2D images
+				reslicer.SetOutputDimensionality(2);
+
+				// use the volume's padding value for all pixels that are outside the volume
+				reslicer.SetBackgroundLevel(volumeReference.PaddingValue);
+
+				// ensure the slicer outputs at our desired spacing
+				reslicer.SetOutputSpacing(columnSpacing, rowSpacing, Math.Min(columnSpacing, rowSpacing));
+
+				// set the reslice axes
+				reslicer.SetResliceAxes(resliceAxesMatrix);
+
+				// clamp the output based on the slice extent
+				reslicer.SetOutputExtent(0, columns - 1, 0, rows - 1, 0, 0);
+
+				// set the output origin to the slice through-point (output image will be centered on this location)
+				// VTK output origin is derived from the center image being 0,0
+				reslicer.SetOutputOrigin(-columns*columnSpacing/2, -rows*rowSpacing/2, 0);
+
+				// select the requested interpolation mode
+				switch (interpolation)
 				{
-					// set input to the volume
-					reslicer.SetInput(volume.vtkImageData);
-					reslicer.SetInformationInput(volume.vtkImageData);
+					case VolumeInterpolationMode.NearestNeighbor:
+						reslicer.SetInterpolationModeToNearestNeighbor();
+						break;
+					case VolumeInterpolationMode.Linear:
+						reslicer.SetInterpolationModeToLinear();
+						break;
+					case VolumeInterpolationMode.Cubic:
+						reslicer.SetInterpolationModeToCubic();
+						break;
+				}
 
-					// instruct reslicer to output 2D images
-					reslicer.SetOutputDimensionality(2);
+				// register for errors on the reslicer executive
+				executive.RegisterVtkErrorEvents();
+				executive.Update();
 
-					// use the volume's padding value for all pixels that are outside the volume
-					reslicer.SetBackgroundLevel(VolumeReference.PaddingValue);
-
-					// ensure the slicer outputs at our desired spacing
-					reslicer.SetOutputSpacing(columnSpacing, rowSpacing, Math.Min(columnSpacing, rowSpacing));
-
-					// set the reslice axes
-					reslicer.SetResliceAxes(resliceAxesMatrix);
-
-					// clamp the output based on the slice extent
-					reslicer.SetOutputExtent(0, columns - 1, 0, rows - 1, 0, 0);
-
-					// set the output origin to the slice through-point (output image will be centered on this location)
-					// VTK output origin is derived from the center image being 0,0
-					reslicer.SetOutputOrigin(-columns*columnSpacing/2, -rows*rowSpacing/2, 0);
-
-					// select the requested interpolation mode
-					switch (Interpolation)
-					{
-						case VolumeInterpolationMode.NearestNeighbor:
-							reslicer.SetInterpolationModeToNearestNeighbor();
-							break;
-						case VolumeInterpolationMode.Linear:
-							reslicer.SetInterpolationModeToLinear();
-							break;
-						case VolumeInterpolationMode.Cubic:
-							reslicer.SetInterpolationModeToCubic();
-							break;
-					}
-
-					using (var executive = reslicer.GetExecutive())
-					{
-						executive.RegisterVtkErrorEvents();
-						executive.Update();
-					}
-
-					var output = reslicer.GetOutput();
-					//Just in case VTK uses the matrix internally.
-					return output;
+				// get the slice output
+				using (var imageData = reslicer.GetOutput())
+				{
+					var pixelData = ReadVtkImageData(imageData);
+					imageData.ReleaseData();
+					return pixelData;
 				}
 			}
 		}
 
-		private static byte[] CreatePixelDataFromVtkSlice(vtkImageData sliceImageData)
+		/// <summary>
+		/// Gets the pixel data representing a thick slice (a.k.a. slab) of the volume.
+		/// </summary>
+		private static byte[] GetSlabPixelData(IVolumeReference volumeReference, Matrix resliceAxes, Vector3D stackOrientation, int rows, int columns, int subsamples, float rowSpacing, float columnSpacing, float sliceThickness, VolumeInterpolationMode interpolation, VolumeProjectionMode projection)
 		{
-			var sliceDataPtr = sliceImageData.GetScalarPointer();
-			if (sliceDataPtr.Equals(IntPtr.Zero)) return null;
+			if (subsamples == 0) return GetSlicePixelData(volumeReference, resliceAxes, rows, columns, rowSpacing, columnSpacing, interpolation);
+			var subsampleSpacing = sliceThickness/(subsamples - 1);
 
-			var scalarSize = sliceImageData.GetScalarSize();
+			using (var reslicer = new vtkImageReslice())
+			using (var resliceAxesMatrix = new vtkMatrix4x4())
+			using (var executive = reslicer.GetExecutive())
+			using (var volume = volumeReference.Volume.CreateVtkVolumeHandle())
+			{
+				// update the reslice axes matrix with the values from the slicing orientation
+				resliceAxesMatrix.SetElements(resliceAxes);
 
-			var sliceDimensions = sliceImageData.GetDimensions();
-			var sliceDataSize = sliceDimensions[0]*sliceDimensions[1];
+				// determine offset for start of slab (we centre the slab on the requested slice position, as DICOM defines "image position (patient)" to be centre of the thick slice)
+				var slabOffset = volumeReference.RotateToVolumeOrientation(-(subsamples - 1)/2f*stackOrientation) + new Vector3D(resliceAxes[0, 3], resliceAxes[1, 3], resliceAxes[2, 3]);
+				resliceAxesMatrix.SetElement(0, 3, slabOffset.X);
+				resliceAxesMatrix.SetElement(1, 3, slabOffset.Y);
+				resliceAxesMatrix.SetElement(2, 3, slabOffset.Z);
 
-			var pixelData = MemoryManager.Allocate<byte>(sliceDataSize*sizeof (short));
-			Marshal.Copy(sliceDataPtr, pixelData, 0, sliceDataSize*sizeof (short));
+				// register for errors on the reslicer
+				reslicer.RegisterVtkErrorEvents();
+
+				// set input to the volume
+				reslicer.SetInput(volume.vtkImageData);
+				reslicer.SetInformationInput(volume.vtkImageData);
+
+				// instruct reslicer to output a 3D slab volume
+				reslicer.SetOutputDimensionality(3);
+
+				// use the volume's padding value for all pixels that are outside the volume
+				reslicer.SetBackgroundLevel(volumeReference.PaddingValue);
+
+				// ensure the slicer outputs at our desired spacing
+				reslicer.SetOutputSpacing(columnSpacing, rowSpacing, subsampleSpacing);
+
+				// set the reslice axes
+				reslicer.SetResliceAxes(resliceAxesMatrix);
+
+				// clamp the output based on the slice extent
+				reslicer.SetOutputExtent(0, columns - 1, 0, rows - 1, 0, subsamples - 1);
+
+				// set the output origin to the slice through-point (output image will be centered on this location)
+				// VTK output origin is derived from the center image being 0,0
+				reslicer.SetOutputOrigin(-columns*columnSpacing/2, -rows*rowSpacing/2, 0);
+
+				// select the requested interpolation mode
+				switch (interpolation)
+				{
+					case VolumeInterpolationMode.NearestNeighbor:
+						reslicer.SetInterpolationModeToNearestNeighbor();
+						break;
+					case VolumeInterpolationMode.Linear:
+						reslicer.SetInterpolationModeToLinear();
+						break;
+					case VolumeInterpolationMode.Cubic:
+						reslicer.SetInterpolationModeToCubic();
+						break;
+				}
+
+				// select the requested slab projection mode
+				Action<IntPtr, byte[], int, int, int, bool> slabAggregator;
+				switch (projection)
+				{
+					case VolumeProjectionMode.Maximum:
+						slabAggregator = SlabProjection.AggregateSlabMaximumIntensity;
+						break;
+					case VolumeProjectionMode.Minimum:
+						slabAggregator = SlabProjection.AggregateSlabMinimumIntensity;
+						break;
+					case VolumeProjectionMode.Average:
+					default:
+						slabAggregator = SlabProjection.AggregateSlabAverageIntensity;
+						break;
+				}
+
+				// register for errors on the reslicer executive
+				executive.RegisterVtkErrorEvents();
+				executive.Update();
+
+				// get the slice output
+				using (var imageData = reslicer.GetOutput())
+				{
+					var pixelData = SlabVtkImageData(imageData, slabAggregator, volumeReference.BitsPerVoxel, volumeReference.Signed);
+					imageData.ReleaseData();
+					return pixelData;
+				}
+			}
+		}
+
+		private static byte[] ReadVtkImageData(vtkImageData imageData)
+		{
+			// get the pointer to the image data
+			var pData = imageData.GetScalarPointer();
+			if (pData.Equals(IntPtr.Zero)) return null;
+
+			// get number of pixels in data
+			var dataDimensions = imageData.GetDimensions();
+			var dataCount = dataDimensions[0]*dataDimensions[1]*dataDimensions[2];
+
+			// compute byte length of data
+			var dataLength = dataCount*imageData.GetScalarSize();
+
+			// copy data to managed buffer
+			var pixelData = MemoryManager.Allocate<byte>(dataLength);
+			Marshal.Copy(pData, pixelData, 0, dataLength);
+			return pixelData;
+		}
+
+		private static byte[] SlabVtkImageData(vtkImageData slabData, Action<IntPtr, byte[], int, int, int, bool> slabAggregator, int bitsPerVoxel, bool signed)
+		{
+			// get the pointer to the image data
+			var pData = slabData.GetScalarPointer();
+			if (pData.Equals(IntPtr.Zero)) return null;
+
+			// get number of subsamples and pixels per subsample
+			var dataDimensions = slabData.GetDimensions();
+			var subsamplePixels = dataDimensions[0]*dataDimensions[1];
+			var subsamples = dataDimensions[2];
+
+			// compute byte length of slabbed output data
+			var dataLength = subsamplePixels*slabData.GetScalarSize();
+
+			// slab data to managed buffer
+			var pixelData = MemoryManager.Allocate<byte>(dataLength);
+			slabAggregator.Invoke(pData, pixelData, subsamples, subsamplePixels, bitsPerVoxel/8, signed);
 			return pixelData;
 		}
 	}

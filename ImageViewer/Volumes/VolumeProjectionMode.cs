@@ -25,23 +25,23 @@
 namespace ClearCanvas.ImageViewer.Volumes
 {
 	/// <summary>
-	/// Specifies the type of interpolation to be used when creating image data in the volume framework.
+	/// Specifies the type of value aggregation to be used when projecting data in the volume framework.
 	/// </summary>
-	public enum VolumeInterpolationMode
+	public enum VolumeProjectionMode
 	{
 		/// <summary>
-		/// Specifies the use of bilinear interpolation (in the context of 2D images) or trilinear interpolation (in the context of 3D volumes).
+		/// Specifies the use of maximum intensity projection (MIP).
 		/// </summary>
-		Linear,
+		Maximum,
 
 		/// <summary>
-		/// Specifies the use of bicubic interpolation (in the context of 2D images) or tricubic interpolation (in the context of 3D volumes). 
+		/// Specifies the use of minimum intensity projection (MinIP).
 		/// </summary>
-		Cubic,
+		Minimum,
 
 		/// <summary>
-		/// Specifies the use of nearest-neighbor interpolation.
+		/// Specifies the use of average intensity projection (AIP).
 		/// </summary>
-		NearestNeighbor
+		Average
 	}
 }

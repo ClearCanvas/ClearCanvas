@@ -33,6 +33,10 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="nunit.framework, Version=2.6.2.12296, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\ReferencedAssemblies\nunit.framework.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -43,24 +47,31 @@
     <Reference Include="System.Xml" />
     <Reference Include="vtkCommonDotNet">
       <HintPath>..\..\ReferencedAssemblies\Vtk\vtkCommonDotNet.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="vtkFilteringDotNet">
       <HintPath>..\..\ReferencedAssemblies\Vtk\vtkFilteringDotNet.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="vtkGraphicsDotNet">
       <HintPath>..\..\ReferencedAssemblies\Vtk\vtkGraphicsDotNet.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="vtkHybridDotNet">
       <HintPath>..\..\ReferencedAssemblies\Vtk\vtkHybridDotNet.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="vtkImagingDotNet">
       <HintPath>..\..\ReferencedAssemblies\Vtk\vtkImagingDotNet.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="vtkRenderingDotNet">
       <HintPath>..\..\ReferencedAssemblies\Vtk\vtkRenderingDotNet.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="vtkVolumeRenderingDotNet">
       <HintPath>..\..\ReferencedAssemblies\Vtk\vtkVolumeRenderingDotNet.dll</HintPath>
+      <Private>False</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -72,6 +83,10 @@
     <Compile Include="Rendering\Win32VtkRenderingSurface.cs" />
     <Compile Include="Tests\VtkRendererTestTool.cs" />
     <Compile Include="Tests\VtkTestPresentationImage.cs" />
+    <Compile Include="Utilities\SlabProjection.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Utilities\Tests\SlabProjectionTests.cs" />
     <Compile Include="VtkCollectionHelper.cs" />
     <Compile Include="VtkColorTransferFunctionComposer.cs" />
     <Compile Include="VtkHelper.cs" />

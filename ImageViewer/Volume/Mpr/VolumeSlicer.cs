@@ -80,7 +80,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 		{
 			try
 			{
-				this.Dispose(true);
+				Dispose(true);
 				GC.SuppressFinalize(this);
 			}
 			catch (Exception e)
@@ -101,12 +101,10 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 
 		private float GetSliceSpacing()
 		{
-			//TODO (cr Oct 2009): setting outside, let consumer set 'auto' or 'value'
-
-			if (_sliceSpacing == 0f)
+			if (FloatComparer.AreEqual(0, _sliceSpacing))
 			{
 				_sliceSpacing = _slicerParams.SliceSpacing;
-				if (_sliceSpacing == 0f)
+				if (FloatComparer.AreEqual(0, _sliceSpacing))
 					_sliceSpacing = GetDefaultSpacing();
 			}
 			return _sliceSpacing;
@@ -204,7 +202,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 			// generate the slice SOPs by computing additional through points
 			for (var n = 0; n < sliceCount; n++)
 			{
-				var slice = CreateSlice(_volume.Clone(), _slicerParams, initialThroughPoint - n*spacingVector);
+				var slice = CreateSlice(_volume.Clone(), _slicerParams, thicknessAndSpacing, initialThroughPoint - n*spacingVector);
 				yield return slice;
 			}
 		}
@@ -232,7 +230,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 
 		#region VolumeSlice helper methods
 
-		private static VolumeSlice CreateSlice(IVolumeReference volumeReference, IVolumeSlicerParams slicerParams, Vector3D throughPoint)
+		private static VolumeSlice CreateSlice(IVolumeReference volumeReference, IVolumeSlicerParams slicerParams, float thicknessAndSpacing, Vector3D throughPoint)
 		{
 			// compute Rows and Columns to reflect actual output size
 			var frameSize = GetSliceExtent(volumeReference, slicerParams);
@@ -253,9 +251,9 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 			var args = new VolumeSliceArgs(frameSize.Height, frameSize.Width, effectiveSpacing, effectiveSpacing,
 			                               new Vector3D(resliceAxesPatientOrientation[0, 0], resliceAxesPatientOrientation[0, 1], resliceAxesPatientOrientation[0, 2]),
 			                               new Vector3D(resliceAxesPatientOrientation[1, 0], resliceAxesPatientOrientation[1, 1], resliceAxesPatientOrientation[1, 2]),
-			                               slicerParams.SliceSpacing, Convert(slicerParams.InterpolationMode));
+			                               thicknessAndSpacing, Convert(slicerParams.InterpolationMode));
 
-			return new VolumeSlice(volumeReference, true, args, topLeftOfSlicePatient, slicerParams.SliceSpacing);
+			return new VolumeSlice(volumeReference, true, args, topLeftOfSlicePatient, thicknessAndSpacing);
 		}
 
 		private static VolumeInterpolationMode Convert(VolumeSlicerInterpolationMode mode)

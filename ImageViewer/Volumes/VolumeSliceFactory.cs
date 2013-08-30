@@ -37,6 +37,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 	public sealed class VolumeSliceFactory
 	{
 		private VolumeInterpolationMode _interpolation = VolumeInterpolationMode.Linear;
+		private VolumeProjectionMode _projection = VolumeProjectionMode.Average;
 
 		/// <summary>
 		/// Gets or sets the row orientation of the output as a directional vector in patient coordinates.
@@ -141,6 +142,18 @@ namespace ClearCanvas.ImageViewer.Volumes
 		}
 
 		/// <summary>
+		/// Gets or sets the projection mode of the output.
+		/// </summary>
+		/// <remarks>
+		/// <para>The default value is <see cref="VolumeProjectionMode.Average"/>.</para>
+		/// </remarks>
+		public VolumeProjectionMode Projection
+		{
+			get { return _projection; }
+			set { _projection = value; }
+		}
+
+		/// <summary>
 		/// Creates a <see cref="VolumeSlice"/> representing the slice at the specified position in a <see cref="Volume"/>.
 		/// </summary>
 		/// <param name="volumeReference">A <see cref="IVolumeReference"/> for the <see cref="Volume"/>.</param>
@@ -238,6 +251,9 @@ namespace ClearCanvas.ImageViewer.Volumes
 			// get the thickness of each slice (defaults to slice spacing)
 			var sliceThickness = SliceThickness ?? sliceSpacing;
 
+			// get the ideal subsampling for the slice thickness
+			var sliceSubsamples = Math.Max(1, (int) (sliceThickness/GetMinimumComponent(volumeReference.VoxelSpacing) + 0.5));
+
 			// get the axes of the output plane and its normal in patient coordinates - these are the axes of the slicer frame
 			var slicerAxisX = (RowOrientationPatient ?? volumeReference.VolumeOrientationPatientX).Normalize();
 			var slicerAxisY = (ColumnOrientationPatient ?? volumeReference.VolumeOrientationPatientY).Normalize();
@@ -285,7 +301,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 			var sliceRows = Rows ?? (int) (Math.Abs(1.0*stackHeight/pixelSpacing.Height) + 0.5);
 
 			// capture all the slicer parameters in an args object
-			var args = new VolumeSliceArgs(sliceRows, sliceColumns, pixelSpacing.Height, pixelSpacing.Width, slicerAxisX, slicerAxisY, sliceThickness, Interpolation);
+			var args = new VolumeSliceArgs(sliceRows, sliceColumns, pixelSpacing.Height, pixelSpacing.Width, slicerAxisX, slicerAxisY, sliceThickness, sliceSubsamples, Interpolation, Projection);
 
 			// compute the image position patient for each output slice and create the slices
 			return GetSlicePositions(slicerOrigin, slicerAxisX, slicerAxisY, slicerAxisZ, stackDepth, sliceRows, sliceColumns, pixelSpacing, sliceSpacing, startPosition, endPosition, count)
