@@ -61,7 +61,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 
 	partial class StreamingSopDataSource
 	{
-		private class StreamingSopFrameData : StandardSopFrameData, IStreamingSopFrameData
+		protected class StreamingSopFrameData : StandardSopFrameData, IStreamingSopFrameData
 		{
 			private readonly FramePixelData _framePixelData;
 			private readonly byte[][] _overlayData;
@@ -272,7 +272,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 						CodeClock statsClock = new CodeClock();
 						statsClock.Start();
 
-						result = _loader.LoadFramePixelData(new LoadFramePixelDataArgs(this._studyInstanceUid, this._seriesInstanceUid, this.SopInstanceUid, this._frameNumber));
+						result = _loader.LoadFramePixelData(new LoadFramePixelDataArgs(this._studyInstanceUid, this._seriesInstanceUid, this.SopInstanceUid, this._frameNumber - 1));
 
 						statsClock.Stop();
 

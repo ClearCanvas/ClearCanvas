@@ -51,6 +51,19 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		private readonly IDicomFileLoader _loader;
 		private volatile bool _fullHeaderRetrieved = false;
 
+		public StreamingSopDataSource(DicomFile file, IDicomFileLoader loader)
+			: base(file)
+		{
+			if (!loader.CanLoadCompleteHeader)
+				throw new ArgumentException("Loader must be capable of retrieving the full image header.", "loader");
+			if (!loader.CanLoadFramePixelData)
+				throw new ArgumentException("Loader must be capable of loading frame pixel data.", "loader");
+
+			_loader = loader;
+			//Have to assume this to be the case.
+			_fullHeaderRetrieved = true;
+		}
+
 		public StreamingSopDataSource(InstanceXml instanceXml, IDicomFileLoader loader)
 			: base(new DicomFile("", new DicomAttributeCollection(), instanceXml.Collection))
 		{
@@ -69,7 +82,6 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		                                                         instanceXml.SopClass == null
 		                                                             ? instanceXml[DicomTags.SopClassUid].ToString()
 		                                                             : instanceXml.SopClass.Uid);
-
 		}
 
 		private InstanceXmlDicomAttributeCollection AttributeCollection
