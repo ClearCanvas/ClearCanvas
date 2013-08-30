@@ -1,4 +1,4 @@
-#region License
+﻿#region License
 
 // Copyright (c) 2013, ClearCanvas Inc.
 // All rights reserved.
@@ -22,44 +22,25 @@
 
 #endregion
 
-using System;
-using System.Collections.Generic;
-using ClearCanvas.Common;
-using ClearCanvas.Common.Utilities;
+using ClearCanvas.ImageServer.Common;
 
-namespace ClearCanvas.ImageViewer.Volume.Mpr.Utilities
+namespace ClearCanvas.ImageServer.Core.Edit
 {
-	internal class ObservableDisposableList<T> : ObservableList<T>, IDisposable where T : IDisposable
+	/// <summary>
+	/// Type of study edit operation
+	/// </summary>
+	public enum EditType
 	{
-		public ObservableDisposableList() {}
+		/// <summary>
+		/// User edited the study via the Web GUI
+		/// </summary>
+		[EnumInfo(ShortDescription = "Web Edit", LongDescription = "Edited using the Web GUI")]
+		WebEdit,
 
-		public ObservableDisposableList(IEnumerable<T> list)
-			: base(list) {}
-
-		public void Dispose()
-		{
-			try
-			{
-				Dispose(true);
-				GC.SuppressFinalize(this);
-			}
-			catch (Exception e)
-			{
-				Platform.Log(LogLevel.Warn, e);
-			}
-		}
-
-		protected virtual void Dispose(bool disposing)
-		{
-			if (disposing)
-			{
-				var temp = new List<T>(this);
-				EnableEvents = false;
-				Clear();
-
-				foreach (T t in temp)
-					t.Dispose();
-			}
-		}
+		/// <summary>
+		/// User edited the study via the Web GUI
+		/// </summary>
+		[EnumInfo(ShortDescription = "Web Service Edit", LongDescription = "Automatic edit caused by web service call")]
+		WebServiceEdit
 	}
 }

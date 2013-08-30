@@ -100,27 +100,6 @@ namespace ClearCanvas.ImageViewer.Vtk
 			}
 		}
 
-		/// <summary>
-		/// Converts a <see cref="Matrix"/> to a <see cref="vtkMatrix4x4"/>.
-		/// </summary>
-		/// <remarks>
-		/// The <see cref="vtkMatrix4x4"/> matrix is equivalent to <see cref="Matrix"/> transposed!
-		/// This is due to the fact that vtkMatrix4x4 uses (x,y) addresses whereas Matrix
-		/// uses (row,column). (NO IT DOESN'T)
-		/// </remarks>
-		/// <param name="matrix">The source <see cref="Matrix"/>.</param>
-		/// <returns>The equivalent <see cref="vtkMatrix4x4"/>.</returns>
-		public static vtkMatrix4x4 ConvertToVtkMatrix(Matrix matrix)
-		{
-			vtkMatrix4x4 vtkMatrix = new vtkMatrix4x4();
-
-			for (int row = 0; row < 4; row++)
-				for (int column = 0; column < 4; column++)
-					vtkMatrix.SetElement(column, row, matrix[row, column]);
-
-			return vtkMatrix;
-		}
-
 		public static void SetElements(this vtkMatrix4x4 vtkMatrix, Matrix matrix)
 		{
 			for (var i = 0; i < 16; i++)

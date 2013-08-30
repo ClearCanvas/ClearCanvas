@@ -116,6 +116,12 @@
     <Compile Include="ExtensionData.cs" />
     <Compile Include="FilteredGroup.cs" />
     <Compile Include="IBlockingEnumerator.cs" />
+    <Compile Include="ImageProcessingSettings.cs" />
+    <Compile Include="ImageProcessingSettings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>ImageProcessingSettings.settings</DependentUpon>
+    </Compile>
     <Compile Include="LargeObjectContainer.cs" />
     <Compile Include="LargeObjectContainerCache.cs" />
     <Compile Include="PublishManager.cs" />
@@ -235,6 +241,10 @@
     <None Include="DicomServer\DicomServerSettings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>DicomServerSettings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="ImageProcessingSettings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>ImageProcessingSettings.Designer.cs</LastGenOutput>
     </None>
     <None Include="MemoryManagementSettings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

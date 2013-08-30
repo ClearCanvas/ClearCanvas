@@ -117,7 +117,7 @@ namespace ClearCanvas.ImageServer.Core.Reconcile
 	class ImageReconciler
 	{
 		#region Private Members
-        private readonly SopProcessingContext _context;
+        private readonly SopInstanceProcessorContext _context;
 	    #endregion
 
         #region Constructors
@@ -126,7 +126,7 @@ namespace ClearCanvas.ImageServer.Core.Reconcile
         /// Creates an instance of <see cref="ImageReconciler"/>
         /// </summary>
         /// <param name="context"></param>
-        public ImageReconciler(SopProcessingContext context)
+        public ImageReconciler(SopInstanceProcessorContext context)
         {
             _context = context;
         }

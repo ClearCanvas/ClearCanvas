@@ -421,6 +421,17 @@ namespace ClearCanvas.ImageViewer.Mathematics
 			return new Rectangle3D(left, top, front, right - left, bottom - top, back - front);
 		}
 
+		/// <summary>
+		/// Creates a <see cref="Rectangle3D"/> with front-upper-left corner and back-lower-right corner at the specified locations.
+		/// </summary>
+		/// <param name="leftTopFront"></param>
+		/// <param name="rightBottomBack"></param>
+		/// <returns></returns>
+		public static Rectangle3D FromLTFRBB(Vector3D leftTopFront, Vector3D rightBottomBack)
+		{
+			return new Rectangle3D(leftTopFront, rightBottomBack - leftTopFront);
+		}
+
 // ReSharper restore InconsistentNaming
 
 		/// <summary>

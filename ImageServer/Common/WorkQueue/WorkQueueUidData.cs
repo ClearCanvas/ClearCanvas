@@ -26,6 +26,15 @@ using ClearCanvas.Common.Serialization;
 
 namespace ClearCanvas.ImageServer.Common.WorkQueue
 {
+	/// <summary>
+	/// Enumerated values for different handling of Duplicate SOP Instances.
+	/// </summary>
+	public enum DuplicateProcessingEnum
+	{
+		Compare,
+		OverwriteSop,
+		OverwriteReport
+	}
 
     [WorkQueueDataType("947CA259-E3A7-409F-B51D-12D358D01B13")]
     public class WorkQueueUidData : DataContractBase
@@ -37,5 +46,7 @@ namespace ClearCanvas.ImageServer.Common.WorkQueue
         public string RelativePath { get; set; }
 
         public string Extension { get; set; }
+
+		public DuplicateProcessingEnum? DuplicateProcessing { get; set; }
     }
 }

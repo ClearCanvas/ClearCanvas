@@ -247,8 +247,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 
 				var progressCallback = new FrameCopyProgressTracker(_frames.Count, _callback);
 				var frameRanges = Enumerable.Range(0, _frames.Count)
-					.AsParallel()
-					.WithDegreeOfParallelism(Math.Min(Environment.ProcessorCount, 4))
+					.AsParallel2()
 					.Select(n =>
 					        	{
 					        		var position = n*volumePaddedFrameSize;

@@ -22,39 +22,26 @@
 
 #endregion
 
-using System;
-using ClearCanvas.Common;
-
-namespace ClearCanvas.ImageServer.Core.Edit
+namespace ClearCanvas.ImageViewer.Volumes
 {
 	/// <summary>
-	/// Defines the interface of a extension to <see cref="StudyEditor"/>
+	/// Specifies the type of interpolation to be used when working with the volume framework.
 	/// </summary>
-	public interface IWebEditStudyProcessorExtension : IDisposable
+	public enum VolumeInterpolationMode
 	{
 		/// <summary>
-		/// Gets a value indicating whether the extension is enabled.
+		/// Specifies the use of nearest-neighbor interpolation.
 		/// </summary>
-		bool Enabled { get; }
+		NearestNeighbor,
 
 		/// <summary>
-		/// Initializes the extension.
+		/// Specifies the use of bilinear interpolation (in the context of 2D images) or trilinear interpolation (in the context of 3D volumes).
 		/// </summary>
-		void Initialize();
+		Linear,
 
 		/// <summary>
-		/// Called when study is about to be updated.
+		/// Specifies the use of bicubic interpolation (in the context of 2D images) or tricubic interpolation (in the context of 3D volumes). 
 		/// </summary>
-		/// <param name="context"></param>
-		void OnStudyEditing(WebEditStudyContext context);
-
-		/// <summary>
-		/// Called after the study has been updated.
-		/// </summary>
-		/// <param name="context"></param>
-		void OnStudyEdited(WebEditStudyContext context);
+		Cubic
 	}
-
-	public class WebEditStudyProcessorExtensionPoint:ExtensionPoint<IWebEditStudyProcessorExtension>
-	{}
 }
