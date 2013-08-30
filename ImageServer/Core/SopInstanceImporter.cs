@@ -45,91 +45,105 @@ using SaveDicomFileCommand = ClearCanvas.ImageServer.Core.Command.SaveDicomFileC
 
 namespace ClearCanvas.ImageServer.Core
 {
-    /// <summary>
-    /// Encapsulates the context of the application when <see cref="SopInstanceImporter"/> is called.
-    /// </summary>
-    public class SopInstanceImporterContext
-    {
-        #region Private Members
-        private readonly String _contextID;
-        private readonly string _sourceAE;
-        private readonly ServerPartition _partition;
-        private readonly ServerPartitionAlternateAeTitle _alternateAe;
-        private readonly ExternalRequestQueue _request;
-        #endregion
+	/// <summary>
+	/// Encapsulates the context of the application when <see cref="SopInstanceImporter"/> is called.
+	/// </summary>
+	public class SopInstanceImporterContext
+	{
+		#region Private Members
 
-        #region Constructors
+		private readonly String _contextID;
+		private readonly string _sourceAE;
+		private readonly ServerPartition _partition;
+		private readonly ServerPartitionAlternateAeTitle _alternateAe;
+		private readonly ExternalRequestQueue _request;
 
-        /// <summary>
-        /// Creates an instance of <see cref="SopInstanceImporterContext"/> to be used
-        /// by <see cref="SopInstanceImporter"/> 
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="sourceAe">Source AE title where the image(s) are imported from</param>
-        /// <param name="serverAe">Target AE title where the image(s) will be imported to</param>
-        public SopInstanceImporterContext(string id, string sourceAe, string serverAe)
-            :
-            this(id, sourceAe, ServerPartitionMonitor.Instance.GetPartition(serverAe))
-        {
-            _alternateAe = ServerPartitionMonitor.Instance.GetPartitionAlternateAe(serverAe);
-        }
+		#endregion
 
-        /// <summary>
-        /// Creates an instance of <see cref="SopInstanceImporterContext"/> to be used
-        /// by <see cref="SopInstanceImporter"/> 
-        /// </summary>
-        /// <param name="contextId">The ID assigned to the context. This will be used as the name of storage folder in case of duplicate.</param>
-        /// <param name="sourceAe">Source AE title of the image(s) to be imported</param>
-        /// <param name="partition">The <see cref="ServerPartition"/> which the image(s) will be imported to</param>
-        /// <param name="request">An external request that triggered this operation.</param>
-        public SopInstanceImporterContext(string contextId, string sourceAe, ServerPartition partition, ExternalRequestQueue request=null)
-        {
-            Platform.CheckForEmptyString(contextId, "contextID");
-            Platform.CheckForNullReference(partition, "partition");
-            _contextID = contextId;
-            _sourceAE = sourceAe;
-            _partition = partition;
-            _request = request;
-        }
-        
-        #endregion
+		#region Constructors
 
-        /// <summary>
-        /// Gets the ID of this context
-        /// </summary>
-        public string ContextID
-        {
-            get { return _contextID; }
-        }
+		/// <summary>
+		/// Creates an instance of <see cref="SopInstanceImporterContext"/> to be used
+		/// by <see cref="SopInstanceImporter"/> 
+		/// </summary>
+		/// <param name="id"></param>
+		/// <param name="sourceAe">Source AE title where the image(s) are imported from</param>
+		/// <param name="serverAe">Target AE title where the image(s) will be imported to</param>
+		public SopInstanceImporterContext(string id, string sourceAe, string serverAe)
+			:
+				this(id, sourceAe, ServerPartitionMonitor.Instance.GetPartition(serverAe))
+		{
+			_alternateAe = ServerPartitionMonitor.Instance.GetPartitionAlternateAe(serverAe);
+		}
 
-        /// <summary>
-        /// Gets the source AE title where the image(s) are imported from
-        /// </summary>
-        public string SourceAE
-        {
-            get { return _sourceAE; }
-        }
+		/// <summary>
+		/// Creates an instance of <see cref="SopInstanceImporterContext"/> to be used
+		/// by <see cref="SopInstanceImporter"/> 
+		/// </summary>
+		/// <param name="contextId">The ID assigned to the context. This will be used as the name of storage folder in case of duplicate.</param>
+		/// <param name="sourceAe">Source AE title of the image(s) to be imported</param>
+		/// <param name="partition">The <see cref="ServerPartition"/> which the image(s) will be imported to</param>
+		/// <param name="request">An external request that triggered this operation.</param>
+		public SopInstanceImporterContext(string contextId, string sourceAe, ServerPartition partition,
+		                                  ExternalRequestQueue request = null)
+		{
+			Platform.CheckForEmptyString(contextId, "contextID");
+			Platform.CheckForNullReference(partition, "partition");
+			_contextID = contextId;
+			_sourceAE = sourceAe;
+			_partition = partition;
+			_request = request;
+		}
 
-        /// <summary>
-        /// Gets <see cref="ServerPartition"/> where the image(s) will be imported to
-        /// </summary>
-        public ServerPartition Partition
-        {
-            get { return _partition; }
-        }
+		#endregion
 
-        public ServerPartitionAlternateAeTitle AlternateAe
-        {
-            get { return _alternateAe; }
-        }
+		/// <summary>
+		/// Gets the ID of this context
+		/// </summary>
+		public string ContextID
+		{
+			get { return _contextID; }
+		}
 
-        public ExternalRequestQueue Request
-        {
-            get { return _request; }
-        }
-    }
+		/// <summary>
+		/// Gets the source AE title where the image(s) are imported from
+		/// </summary>
+		public string SourceAE
+		{
+			get { return _sourceAE; }
+		}
 
-    /// <summary>
+		/// <summary>
+		/// Gets <see cref="ServerPartition"/> where the image(s) will be imported to
+		/// </summary>
+		public ServerPartition Partition
+		{
+			get { return _partition; }
+		}
+
+		/// <summary>
+		/// The Alternate AE Title that the SOP Instance was imported under, if applicable.
+		/// </summary>
+		public ServerPartitionAlternateAeTitle AlternateAe
+		{
+			get { return _alternateAe; }
+		}
+
+		/// <summary>
+		/// The <see cref="ExternalRequestQueue"/> entry associated with the import, if applicable.
+		/// </summary>
+		public ExternalRequestQueue Request
+		{
+			get { return _request; }
+		}
+
+		/// <summary>
+		/// If set, sets the DuplicateProcessing policy for the imported SOP.
+		/// </summary>
+		public DuplicateProcessingEnum? DuplicateProcessing { get; set; }
+	}
+
+	/// <summary>
     /// Helper class to import a DICOM image into the system.
     /// </summary>
     /// <remarks>
@@ -468,8 +482,11 @@ namespace ClearCanvas.ImageServer.Core
                              sopInstanceUid, studyLocation.StudyInstanceUid);
 
     	    var sopProcessingContext = new SopInstanceProcessorContext(commandProcessor, studyLocation, _context.ContextID,
-    	                                                        _context.Request);
-            DicomProcessingResult result = DuplicateSopProcessorHelper.Process(sopProcessingContext, file, data);
+    	                                                        _context.Request)
+	    	    {
+		    	    DuplicateProcessing = _context.DuplicateProcessing
+	    	    };
+    		DicomProcessingResult result = DuplicateSopProcessorHelper.Process(sopProcessingContext, file, data);
             return result;
         }
 

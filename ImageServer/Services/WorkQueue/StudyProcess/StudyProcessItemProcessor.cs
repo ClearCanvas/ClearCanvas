@@ -150,16 +150,16 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.StudyProcess
             {
                 var destination = Context.StorageLocation.GetSopInstancePath(uid.SeriesInstanceUid, uid.SopInstanceUid);
                 processor.AddCommand(new RenameFileCommand(dupFile.Filename, destination, false));
-
-                // Ideally we don't need to insert the instance into the database since it's a duplicate.
-				// However, we need to do so to ensure the Study record is recreated if we are dealing with an orphan study.
-				// For other cases, this will cause the instance count in the DB to be out of sync with the filesystem.
-				// But it will be corrected at the end of the processing when the study verification is executed.
-                processor.AddCommand(new InsertInstanceCommand(dupFile, Context.StorageLocation));
                 
                 // Update the StudyStream object
                 processor.AddCommand(new InsertStudyXmlCommand(dupFile, studyXml, Context.StorageLocation));
-                
+
+				// Ideally we don't need to insert the instance into the database since it's a duplicate.
+				// However, we need to do so to ensure the Study record is recreated if we are dealing with an orphan study.
+				// For other cases, this will cause the instance count in the DB to be out of sync with the filesystem.
+				// But it will be corrected at the end of the processing when the study verification is executed.
+				processor.AddCommand(new InsertInstanceCommand(dupFile, Context.StorageLocation));
+
                 processor.AddCommand(new DeleteWorkQueueUidCommand(uid));
 
                 if (!processor.Execute())

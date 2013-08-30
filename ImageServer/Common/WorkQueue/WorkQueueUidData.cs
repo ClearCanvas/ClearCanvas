@@ -33,7 +33,8 @@ namespace ClearCanvas.ImageServer.Common.WorkQueue
 	{
 		Compare,
 		OverwriteSop,
-		OverwriteReport
+		OverwriteReport,
+		Reject
 	}
 
     [WorkQueueDataType("947CA259-E3A7-409F-B51D-12D358D01B13")]

@@ -29,6 +29,7 @@ using ClearCanvas.Dicom;
 using ClearCanvas.Dicom.Network;
 using ClearCanvas.Dicom.Network.Scp;
 using ClearCanvas.Enterprise.Core;
+using ClearCanvas.ImageServer.Common.WorkQueue;
 using ClearCanvas.ImageServer.Core;
 using ClearCanvas.ImageServer.Enterprise;
 using ClearCanvas.ImageServer.Model;
@@ -144,6 +145,11 @@ namespace ClearCanvas.ImageServer.Services.Dicom
                 var context = new SopInstanceImporterContext(
                     String.Format("{0}_{1}", association.CallingAE, association.TimeStamp.ToString("yyyyMMddhhmmss")),
                     association.CallingAE, association.CalledAE);
+
+				if (Device != null && Device.DeviceTypeEnum.Equals(DeviceTypeEnum.PrimaryPacs))
+				{
+					context.DuplicateProcessing = DuplicateProcessingEnum.OverwriteSop;
+				}
 
                 var importer = new SopInstanceImporter(context);
                 DicomProcessingResult result = importer.Import(message);

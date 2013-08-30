@@ -1180,6 +1180,11 @@ INSERT INTO [ImageServer].[dbo].[DeviceTypeEnum]
      VALUES
            (newid(),104,'PriorsServer','Priors Server','Server with Prior Studies for the Web Viewer')
 GO
+INSERT INTO [ImageServer].[dbo].[DeviceTypeEnum]
+           ([GUID],[Enum],[Lookup],[Description],[LongDescription])
+     VALUES
+           (newid(),105,'PrimaryPacs','Primary PACS','Primary PACS Server, the ImageServer will accept duplicate SOP Instances from this server')
+GO
 
 -- ServerPartitionTypeEnum
 INSERT INTO [ImageServer].[dbo].[ServerPartitionTypeEnum]

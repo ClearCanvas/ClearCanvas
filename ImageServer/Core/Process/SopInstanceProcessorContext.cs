@@ -22,6 +22,7 @@
 
 #endregion
 
+using ClearCanvas.ImageServer.Common.WorkQueue;
 using ClearCanvas.ImageServer.Enterprise.Command;
 using ClearCanvas.ImageServer.Model;
 
@@ -83,6 +84,10 @@ namespace ClearCanvas.ImageServer.Core.Process
 			get { return _request; }
 		}
 
+		/// <summary>
+		/// If set, sets the DuplicateProcessing policy for the imported SOP.
+		/// </summary>
+		public DuplicateProcessingEnum? DuplicateProcessing { get; set; }
 		#endregion
 	}
 }

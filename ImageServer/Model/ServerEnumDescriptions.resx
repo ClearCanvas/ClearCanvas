@@ -567,6 +567,12 @@
   <data name="DeviceTypeEnum_PriorsServer_LongDescription" xml:space="preserve">
     <value>Server with Prior Studies for the Web Viewer</value>
   </data>
+  <data name="DeviceTypeEnum_PrimaryPacs_Description" xml:space="preserve">
+    <value>Primary PACS</value>
+  </data>
+  <data name="DeviceTypeEnum_PrimaryPacs_LongDescription" xml:space="preserve">
+    <value>Primary PACS Server, the ImageServer will accept duplicate SOP Instances from this server</value>
+  </data>
   <data name="FilesystemQueueTypeEnum_DeleteStudy_Description" xml:space="preserve">
     <value>Delete Study</value>
   </data>

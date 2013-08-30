@@ -108,6 +108,14 @@ namespace ClearCanvas.ImageServer.Core.Process
 
 			string failureMessage;
 
+			if (context.DuplicateProcessing.HasValue && context.DuplicateProcessing.Value.Equals(DuplicateProcessingEnum.Reject))
+			{
+				failureMessage = String.Format("Duplicate SOP Instance received, rejecting {0}", result.SopInstanceUid);
+				Platform.Log(LogLevel.Info, failureMessage);
+				result.SetError(DicomStatuses.DuplicateSOPInstance, failureMessage);
+				return result;
+			}
+
 			if (SopClassIsReport(result.SopClassUid) && context.StudyLocation.ServerPartition.AcceptLatestReport)
 			{
 				Platform.Log(LogLevel.Info, "Duplicate Report received, overwriting {0}", result.SopInstanceUid);
@@ -121,6 +129,15 @@ namespace ClearCanvas.ImageServer.Core.Process
 				             "Duplicate instance received for study {0} on Partition {1}. Duplicate policy overridden. Will overwrite {2}",
 				             result.StudyInstanceUid, context.StudyLocation.ServerPartition.AeTitle, result.SopInstanceUid);
 				ProcessStoredDuplicate(context, file, data, DuplicateProcessingEnum.OverwriteSop);
+				return result;
+			}
+
+			if (context.DuplicateProcessing.HasValue)
+			{
+				Platform.Log(LogLevel.Info, context.DuplicateProcessing.Value.Equals(DuplicateProcessingEnum.Compare)
+					                            ? "Duplicate SOP Instance received, comparing {0}"
+					                            : "Duplicate SOP Instance received, overwriting {0}", result.SopInstanceUid);
+				ProcessStoredDuplicate(context, file, data, context.DuplicateProcessing.Value);
 				return result;
 			}
 
