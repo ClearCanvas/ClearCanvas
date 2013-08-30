@@ -50,8 +50,6 @@ namespace ClearCanvas.Desktop.Actions
 
 		private ActionModelSettings()
 		{
-		    //TODO (Phoenix5): #10730 - remove this when it's fixed.
-            //ApplicationSettingsRegistry.Instance.RegisterInstance(this);
 		}
 
 		#region Public Methods

@@ -22,50 +22,49 @@
 
 #endregion
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-
+using System.Windows.Forms;
 using ClearCanvas.Common;
 using ClearCanvas.Desktop;
 using ClearCanvas.Desktop.View.WinForms;
 
 namespace ClearCanvas.ImageViewer.Layout.Basic.View.WinForms
 {
-    /// <summary>
-    /// Provides a Windows Forms view onto <see cref="DisplaySetOptionsApplicationComponent"/>.
-    /// </summary>
-    [ExtensionOf(typeof(DisplaySetCreationConfigurationComponentViewExtensionPoint))]
-    public class DisplaySetCreationConfigurationComponentView : WinFormsView, IApplicationComponentView
-    {
-        private DisplaySetCreationConfigurationComponent _component;
-        private DisplaySetCreationConfigurationComponentControl _control;
+	/// <summary>
+	/// Provides a Windows Forms view onto <see cref="DisplaySetCreationConfigurationComponent"/>.
+	/// </summary>
+	[ExtensionOf(typeof (DisplaySetCreationConfigurationComponentViewExtensionPoint))]
+	public class DisplaySetCreationConfigurationComponentView : WinFormsView, IApplicationComponentView
+	{
+		private DisplaySetCreationConfigurationComponent _component;
+		private Panel _control;
 
-        #region IApplicationComponentView Members
+		#region IApplicationComponentView Members
 
-        /// <summary>
-        /// Called by the host to assign this view to a component.
-        /// </summary>
-        public void SetComponent(IApplicationComponent component)
-        {
-            _component = (DisplaySetCreationConfigurationComponent)component;
-        }
+		/// <summary>
+		/// Called by the host to assign this view to a component.
+		/// </summary>
+		public void SetComponent(IApplicationComponent component)
+		{
+			_component = (DisplaySetCreationConfigurationComponent) component;
+		}
 
-        #endregion
+		#endregion
 
-        /// <summary>
-        /// Gets the underlying GUI component for this view.
-        /// </summary>
-        public override object GuiElement
-        {
-            get
-            {
-                if (_control == null)
-                {
-                    _control = new DisplaySetCreationConfigurationComponentControl(_component);
-                }
-                return _control;
-            }
-        }
-    }
+		/// <summary>
+		/// Gets the underlying GUI component for this view.
+		/// </summary>
+		public override object GuiElement
+		{
+			get
+			{
+				if (_control == null)
+				{
+					// this control is pretty full already, and some of the localizations of this page are pretty wordy, so we're inserting an autoscroll pane here
+					_control = new Panel {AutoScroll = true};
+					_control.Controls.Add(new DisplaySetCreationConfigurationComponentControl(_component));
+				}
+				return _control;
+			}
+		}
+	}
 }

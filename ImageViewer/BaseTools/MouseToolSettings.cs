@@ -36,8 +36,6 @@ namespace ClearCanvas.ImageViewer.BaseTools
 	{
 		public MouseToolSettings()
 		{
-            //TODO (Phoenix5): #10730 - remove this when it's fixed.
-            //ApplicationSettingsRegistry.Instance.RegisterInstance(this);
 		}
 
         //TODO (Phoenix5): #10730 - remove this when it's fixed.

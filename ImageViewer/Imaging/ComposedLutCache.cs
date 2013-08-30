@@ -25,6 +25,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.ImageViewer.Common;
 using ClearCanvas.Common;
@@ -246,7 +247,7 @@ namespace ClearCanvas.ImageViewer.Imaging
 				get { return _key; }
 			}
 
-			public IComposedLut GetLut(LutCollection sourceLuts)
+            public IComposedLut GetLut(LutCollection sourceLuts)
 			{
 				IComposedLut lut = _realComposedLut;
 				if (lut != null)
@@ -259,7 +260,7 @@ namespace ClearCanvas.ImageViewer.Imaging
 
 					//Trace.WriteLine(String.Format("Creating Composed Lut '{0}'", Key), "LUT");
 
-					_realComposedLut = new ComposedLut(sourceLuts, _bufferCache);
+					_realComposedLut = new ComposedLut(sourceLuts.ToArray(), _bufferCache);
 					//just use the creation time as the "last access time", otherwise it can get expensive when called in a tight loop.
 					_largeObjectData.UpdateLastAccessTime();
 					_largeObjectData.BytesHeldCount = _realComposedLut.Data.Length * sizeof(int);

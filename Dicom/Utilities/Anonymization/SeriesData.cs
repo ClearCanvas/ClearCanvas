@@ -23,6 +23,7 @@
 #endregion
 
 using ClearCanvas.Common.Utilities;
+using ClearCanvas.Dicom.Iod;
 
 namespace ClearCanvas.Dicom.Utilities.Anonymization
 {
@@ -30,7 +31,7 @@ namespace ClearCanvas.Dicom.Utilities.Anonymization
 	/// A class containing commonly anonymized dicom series attributes.
 	/// </summary>
 	[Cloneable(true)]
-	public class SeriesData
+	public class SeriesData : ISeriesData
 	{
 		private string _seriesInstanceUid = "";
 		private string _seriesDescription = "";
@@ -40,14 +41,24 @@ namespace ClearCanvas.Dicom.Utilities.Anonymization
 		/// <summary>
 		/// Constructor.
 		/// </summary>
-		public SeriesData()
+		public SeriesData() {}
+
+		/// <summary>
+		/// Constructor.
+		/// </summary>
+		public SeriesData(ISeriesData sourceData)
 		{
+			if (sourceData != null)
+			{
+				_seriesDescription = sourceData.SeriesDescription;
+				_seriesNumber = sourceData.SeriesNumber.ToString("d");
+			}
 		}
 
 		/// <summary>
 		/// Gets or sets the series description.
 		/// </summary>
-		[DicomField(DicomTags.SeriesDescription)] 
+		[DicomField(DicomTags.SeriesDescription)]
 		public string SeriesDescription
 		{
 			get { return _seriesDescription; }
@@ -57,7 +68,7 @@ namespace ClearCanvas.Dicom.Utilities.Anonymization
 		/// <summary>
 		/// Gets or sets the series number.
 		/// </summary>
-		[DicomField(DicomTags.SeriesNumber)] 
+		[DicomField(DicomTags.SeriesNumber)]
 		public string SeriesNumber
 		{
 			get { return _seriesNumber; }
@@ -91,7 +102,7 @@ namespace ClearCanvas.Dicom.Utilities.Anonymization
 			file.DataSet.SaveDicomFields(this);
 			file.DataSet[DicomTags.SeriesInstanceUid].SetStringValue(this.SeriesInstanceUid);
 		}
-		
+
 		/// <summary>
 		/// Creates a deep clone of this instance.
 		/// </summary>
@@ -99,5 +110,38 @@ namespace ClearCanvas.Dicom.Utilities.Anonymization
 		{
 			return CloneBuilder.Clone(this) as SeriesData;
 		}
+
+		#region ISeriesData Implementation
+
+		string ISeriesData.StudyInstanceUid
+		{
+			get { return string.Empty; }
+		}
+
+		string ISeriesData.SeriesInstanceUid
+		{
+			get { return string.Empty; }
+		}
+
+		string ISeriesData.Modality
+		{
+			get { return string.Empty; }
+		}
+
+		int ISeriesData.SeriesNumber
+		{
+			get
+			{
+				int i;
+				return int.TryParse(SeriesNumber, out i) ? i : 0;
+			}
+		}
+
+		int? ISeriesData.NumberOfSeriesRelatedInstances
+		{
+			get { return null; }
+		}
+
+		#endregion
 	}
 }

@@ -33,7 +33,6 @@ namespace ClearCanvas.Desktop
 	{
 		public LocalePolicy()
 		{
-			ApplicationSettingsRegistry.Instance.RegisterInstance(this);
 		}
 	}
 }

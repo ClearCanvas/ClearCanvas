@@ -104,6 +104,10 @@
       <Project>{89DF567B-A0D1-456A-A28F-043FD57D7F9A}</Project>
       <Name>ClearCanvas.ImageViewer.Configuration</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Layout\Basic\ClearCanvas.ImageViewer.Layout.Basic.csproj">
+      <Project>{EA38C1F1-C4BD-4ED7-9B60-C95DF22D6A72}</Project>
+      <Name>ClearCanvas.ImageViewer.Layout.Basic</Name>
+    </ProjectReference>
     <Reference Include="nunit.framework, Version=2.2.7.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\ReferencedAssemblies\nunit.framework.dll</HintPath>
@@ -149,7 +153,6 @@
     </Compile>
     <Compile Include="CineApplicationComponent.cs" />
     <Compile Include="CineTool.cs" />
-    <Compile Include="ColorBarTool.cs" />
     <Compile Include="Configuration\ConfigurationPageProvider.cs" />
     <Compile Include="Configuration\ToolConfigurationComponent.cs" />
     <Compile Include="Configuration\ToolModalityBehavior.cs" />
@@ -179,21 +182,15 @@
     <Compile Include="InteractiveTextAreaBuilder.cs" />
     <Compile Include="ClearCustomShuttersTool.cs" />
     <Compile Include="DeleteAnnotationsTool.cs" />
-    <Compile Include="DicomOverlaysTool.cs" />
     <Compile Include="DrawShutterTool.cs" />
     <Compile Include="InteractiveTextGraphicBuilder.cs" />
     <Compile Include="MagnificationTool.cs" />
-    <Compile Include="OverlayToolBase.cs" />
     <Compile Include="PresetVoiLuts\Luts\AutoVoiLutData.cs" />
     <Compile Include="PresetVoiLuts\Operations\AutoVoiLutApplicator.cs" />
     <Compile Include="PresetVoiLuts\LutHelper.cs" />
     <Compile Include="PresetVoiLuts\Operations\VoiLutSelector.cs" />
     <Compile Include="PresetVoiLuts\PresetVoiLutReservedActionModelKeyStrokesProvider.cs" />
     <Compile Include="Rotate3DTool.cs" />
-    <Compile Include="ScaleGraphic.cs" />
-    <Compile Include="ScaleOverlayTool.cs" />
-    <Compile Include="ShowHideOverlaysTool.cs" />
-    <Compile Include="ShutterOverlayTool.cs" />
     <Compile Include="TextCalloutTool.cs" />
     <Compile Include="ToolSettings.cs" />
     <Compile Include="ToolSettings.Designer.cs">
@@ -262,7 +259,6 @@
     </Compile>
     <Compile Include="StackTool.cs" />
     <Compile Include="ImageComparer.cs" />
-    <Compile Include="TextOverlayTool.cs" />
     <Compile Include="WindowLevelTool.cs" />
     <Compile Include="WindowLevelToolSensitivity.cs" />
     <Compile Include="ZoomTool.cs" />
@@ -371,15 +367,6 @@
     <EmbeddedResource Include="Icons\InvertToolSmall.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Icons\TextOverlayToolLarge.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Icons\TextOverlayToolMedium.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Icons\TextOverlayToolSmall.png" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Icons\MatchScaleToolLarge.png" />
   </ItemGroup>
   <ItemGroup>
@@ -389,29 +376,14 @@
     <EmbeddedResource Include="Icons\MatchScaleToolMedium.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Icons\ScaleOverlayToolLarge.png" />
-    <EmbeddedResource Include="Icons\ScaleOverlayToolMedium.png" />
-    <EmbeddedResource Include="Icons\ScaleOverlayToolSmall.png" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Icons\TextCalloutToolLarge.png" />
     <EmbeddedResource Include="Icons\TextCalloutToolMedium.png" />
     <EmbeddedResource Include="Icons\TextCalloutToolSmall.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Icons\ShowHideOverlaysToolLarge.png" />
-    <EmbeddedResource Include="Icons\ShowHideOverlaysToolMedium.png" />
-    <EmbeddedResource Include="Icons\ShowHideOverlaysToolSmall.png" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Icons\TextAreaToolLarge.png" />
     <EmbeddedResource Include="Icons\TextAreaToolMedium.png" />
     <EmbeddedResource Include="Icons\TextAreaToolSmall.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Icons\DicomOverlaysToolLarge.png" />
-    <EmbeddedResource Include="Icons\DicomOverlaysToolMedium.png" />
-    <EmbeddedResource Include="Icons\DicomOverlaysToolSmall.png" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Icons\DeleteAllAnnotationsToolLarge.png" />
@@ -432,30 +404,11 @@
     <EmbeddedResource Include="Icons\DeleteAnnotationToolSmall.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Icons\ShutterOverlayToolLarge.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Icons\ShutterOverlayToolMedium.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Icons\ShutterOverlayToolSmall.png" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Icons\ClearCustomShuttersToolLarge.png" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Icons\ClearCustomShuttersToolMedium.png" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Icons\ClearCustomShuttersToolSmall.png" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Icons\MagnificationToolLarge.png" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Icons\MagnificationToolMedium.png" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Icons\MagnificationToolSmall.png" />
   </ItemGroup>
   <ItemGroup>
@@ -482,17 +435,8 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Icons\ImagePropertiesToolLarge.png" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Icons\ImagePropertiesToolSmall.png" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Icons\ImagePropertiesToolMedium.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Icons\ColorBarToolLarge.png" />
-    <EmbeddedResource Include="Icons\ColorBarToolMedium.png" />
-    <EmbeddedResource Include="Icons\ColorBarToolSmall.png" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Configuration\ToolModalityBehaviorCollectionDefault.xml" />

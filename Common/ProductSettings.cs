@@ -29,6 +29,7 @@ using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
 using ClearCanvas.Common.Configuration;
+using ClearCanvas.Common.Utilities;
 
 namespace ClearCanvas.Common
 {
@@ -49,7 +50,7 @@ namespace ClearCanvas.Common
 			Console.WriteLine(@"Family: {0}", settings.FamilyName);
 			Console.WriteLine(@"Product: {0}", settings.Product);
 			Console.WriteLine(@"Component: {0}", settings.Component);
-            Console.WriteLine(@"SubComponent: {0}", settings.SubComponent);
+			Console.WriteLine(@"SubComponent: {0}", settings.SubComponent);
 			Console.WriteLine(@"Edition: {0}", settings.Edition);
 			Console.WriteLine(@"Version: {0}", settings.Version);
 			Console.WriteLine(@"VersionSuffix: {0}", settings.VersionSuffix);
@@ -67,10 +68,10 @@ namespace ClearCanvas.Common
 	internal class DecryptedProductSettings
 	{
 		private string _name;
-        private string _family;
+		private string _family;
 		private string _product;
 		private string _component;
-        private string _subComponent;
+		private string _subComponent;
 		private string _edition;
 		private string _release;
 		private Version _version;
@@ -98,20 +99,18 @@ namespace ClearCanvas.Common
 			}
 		}
 
-
-        /// <summary>
-        /// Gets the product's family name.
-        /// </summary>
-        public string FamilyName
-        {
-            get
-            {
-                if (_family == null)
-                    _family = Decrypt(_settings.FamilyName);
-                return _family;
-            }
-        }
-
+		/// <summary>
+		/// Gets the product's family name.
+		/// </summary>
+		public string FamilyName
+		{
+			get
+			{
+				if (_family == null)
+					_family = Decrypt(_settings.FamilyName);
+				return _family;
+			}
+		}
 
 		/// <summary>
 		/// Gets the component name.
@@ -126,19 +125,18 @@ namespace ClearCanvas.Common
 			}
 		}
 
-        /// <summary>
-        /// Gets the Subcomponent name.
-        /// </summary>
-        public string SubComponent
-        {
-            get
-            {
-                if (_subComponent == null)
-                    _subComponent = Decrypt(_settings.SubComponent);
-                return _subComponent;
-            }
-        }
-
+		/// <summary>
+		/// Gets the Subcomponent name.
+		/// </summary>
+		public string SubComponent
+		{
+			get
+			{
+				if (_subComponent == null)
+					_subComponent = Decrypt(_settings.SubComponent);
+				return _subComponent;
+			}
+		}
 
 		/// <summary>
 		/// Gets the product name.
@@ -259,23 +257,12 @@ namespace ClearCanvas.Common
 			string result;
 			try
 			{
-				byte[] bytes = Convert.FromBase64String(@string);
-				using (MemoryStream dataStream = new MemoryStream(bytes))
+				using (var dataStream = new MemoryStream(Convert.FromBase64String(@string)))
+				using (var cryptoService = new XorCryptoServiceProvider {Key = Encoding.UTF8.GetBytes(@"ClearCanvas"), IV = Encoding.UTF8.GetBytes(@"IsSoCool")})
+				using (var cryptoStream = new CryptoStream(dataStream, cryptoService.CreateDecryptor(), CryptoStreamMode.Read))
+				using (var reader = new StreamReader(cryptoStream, Encoding.UTF8))
 				{
-					RC2CryptoServiceProvider cryptoService = new RC2CryptoServiceProvider();
-					cryptoService.Key = Encoding.UTF8.GetBytes(@"ClearCanvas");
-					cryptoService.IV = Encoding.UTF8.GetBytes(@"IsSoCool");
-					cryptoService.UseSalt = false;
-					using (CryptoStream cryptoStream = new CryptoStream(dataStream, cryptoService.CreateDecryptor(), CryptoStreamMode.Read))
-					{
-						using (StreamReader reader = new StreamReader(cryptoStream, Encoding.UTF8))
-						{
-							result = reader.ReadToEnd();
-							reader.Close();
-						}
-						cryptoStream.Close();
-					}
-					dataStream.Close();
+					result = reader.ReadToEnd().TrimEnd('\0');
 				}
 			}
 			catch (Exception)
@@ -305,17 +292,13 @@ namespace ClearCanvas.Common
 			}
 		}
 
-        /// <summary>
-        /// Gets the product's family name.
-        /// </summary>
-        public static string FamilyName
-        {
-            get
-            {
-                return _settings.FamilyName;
-            }
-        }
-
+		/// <summary>
+		/// Gets the product's family name.
+		/// </summary>
+		public static string FamilyName
+		{
+			get { return _settings.FamilyName; }
+		}
 
 		/// <summary>
 		/// Gets the component name.
@@ -325,13 +308,13 @@ namespace ClearCanvas.Common
 			get { return _settings.Component; }
 		}
 
-        /// <summary>
-        /// Gets the subcomponent name.
-        /// </summary>
-        public static string SubComponent
-        {
-            get { return _settings.SubComponent; }
-        }
+		/// <summary>
+		/// Gets the subcomponent name.
+		/// </summary>
+		public static string SubComponent
+		{
+			get { return _settings.SubComponent; }
+		}
 
 		/// <summary>
 		/// Gets the product name.
@@ -399,7 +382,6 @@ namespace ClearCanvas.Common
 			return Concatenate(Name, GetNameSuffix(includeEdition, includeRelease));
 		}
 
-
 		/// <summary>
 		/// Gets the suffixes to the component name (i.e. the product edition and/or release type).
 		/// </summary>
@@ -462,15 +444,15 @@ namespace ClearCanvas.Common
 
 			return Concatenate(versionString.ToString(), includeVersionSuffix ? VersionSuffix : string.Empty, includeRelease ? Release : string.Empty);
 		}
-        
-	    public static bool IsEvaluation
-	    {
-            get
-            {
-                TimeSpan? ignore;
-                return LicenseInformation.GetTrialStatus(out ignore);
-            }
-	    }
+
+		public static bool IsEvaluation
+		{
+			get
+			{
+				TimeSpan? ignore;
+				return LicenseInformation.GetTrialStatus(out ignore);
+			}
+		}
 
 		/// <summary>
 		/// Concatenates a number of strings with spaces, skipping empty strings.

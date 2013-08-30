@@ -42,7 +42,6 @@ namespace ClearCanvas.Ris.Application.Common
 		/// </remarks>
         public AttachedDocumentSettings()
 		{
-			// Note: server-side settings classes do not register in the ApplicationSettingsRegistry
 		}
 	}
 }

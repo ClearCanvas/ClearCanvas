@@ -25,35 +25,36 @@
 using ClearCanvas.Common;
 using ClearCanvas.Desktop;
 using ClearCanvas.Desktop.Actions;
-using ClearCanvas.ImageViewer.Annotations;
+using ClearCanvas.ImageViewer.PresentationStates.Dicom;
 
 namespace ClearCanvas.ImageViewer.Tools.Standard
 {
-	[MenuAction("showHide", "imageviewer-contextmenu/MenuShowHideTextOverlay", "ShowHide", InitiallyAvailable = false)]
-	[MenuAction("showHide", "global-menus/MenuTools/MenuStandard/MenuShowHideTextOverlay", "ShowHide")]
-	[Tooltip("showHide", "TooltipShowHideTextOverlay")]
-	[GroupHint("showHide", "Tools.Image.Overlays.Text.ShowHide")]
-	[IconSet("showHide", "Icons.TextOverlayToolSmall.png", "Icons.TextOverlayToolMedium.png", "Icons.TextOverlayToolLarge.png")]
+    [MenuAction("showHide", "imageviewer-contextmenu/MenuShowHideShutterOverlay", "ShowHide", InitiallyAvailable = false)]
+	[MenuAction("showHide", "global-menus/MenuTools/MenuStandard/MenuShowHideShutterOverlay", "ShowHide")]
+	[Tooltip("showHide", "TooltipShowHideShutterOverlay")]
+	[GroupHint("showHide", "Tools.Image.Overlays.Shutter.ShowHide")]
+	[IconSet("showHide", "Icons.ShutterOverlayToolSmall.png", "Icons.ShutterOverlayToolMedium.png", "Icons.ShutterOverlayToolLarge.png")]
 	//
-	[ButtonAction("toggle", "overlays-dropdown/ToolbarTextOverlay", "ShowHide")]
+    [ButtonAction("toggle", "overlays-dropdown/ToolbarShutterOverlay", "ShowHide")]
 	[CheckedStateObserver("toggle", "Checked", "CheckedChanged")]
-	[Tooltip("toggle", "TooltipTextOverlay")]
-	[GroupHint("toggle", "Tools.Image.Overlays.Text.ShowHide")]
-	[IconSet("toggle", "Icons.TextOverlayToolSmall.png", "Icons.TextOverlayToolMedium.png", "Icons.TextOverlayToolLarge.png")]
+	[Tooltip("toggle", "TooltipShutterOverlay")]
+	[GroupHint("toggle", "Tools.Image.Overlays.Shutter.ShowHide")]
+	[IconSet("toggle", "Icons.ShutterOverlayToolSmall.png", "Icons.ShutterOverlayToolMedium.png", "Icons.ShutterOverlayToolLarge.png")]
 	//
 	[ExtensionOf(typeof(ImageViewerToolExtensionPoint))]
-	public class TextOverlayTool : OverlayToolBase
+	public class ShutterOverlayTool : OverlayToolBase
 	{
-		public TextOverlayTool()
+		public ShutterOverlayTool()
 		{
 		}
 
 		protected override void UpdateVisibility(IPresentationImage image, bool visible)
 		{
-			if (image is IAnnotationLayoutProvider)
+			if (image is IDicomPresentationImage)
 			{
-				foreach (AnnotationBox box in ((IAnnotationLayoutProvider)image).AnnotationLayout.AnnotationBoxes)
-					box.Visible = visible;
+				DicomGraphicsPlane dicomGraphics = DicomGraphicsPlane.GetDicomGraphicsPlane(image as IDicomPresentationImage, false);
+				if (dicomGraphics != null)
+					dicomGraphics.Shutters.Enabled = Checked;
 			}
 		}
 	}

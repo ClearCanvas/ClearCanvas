@@ -26,7 +26,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Security.Cryptography;
 using System.Threading;
 using System.Threading.Tasks;
 using ClearCanvas.Common;
@@ -730,7 +729,6 @@ namespace ClearCanvas.ImageViewer.Volumes
 			public CacheKey(IList<Frame> frames)
 				: this()
 			{
-				using (var md5 = new MD5CryptoServiceProvider())
 				using (var stream = new MemoryStream())
 				using (var writer = new StreamWriter(stream))
 				{
@@ -747,7 +745,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 					_length = stream.Length;
 
 					stream.Position = 0;
-					_hash = new Guid(md5.ComputeHash(stream));
+					_hash = HashUtilities.ComputeHashGuid(stream);
 				}
 			}
 

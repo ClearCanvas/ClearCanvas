@@ -25,7 +25,6 @@
 using System;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
-using ClearCanvas.Desktop;
 using ClearCanvas.Desktop.Actions;
 
 namespace ClearCanvas.Utilities.DicomEditor.Tools
@@ -35,12 +34,20 @@ namespace ClearCanvas.Utilities.DicomEditor.Tools
 	[EnabledStateObserver("activate", "Enabled", "EnabledChanged")]
 	[Tooltip("activate", "TooltipReplicate")]
 	[IconSet("activate", "Icons.CopyToolSmall.png", "Icons.CopyToolSmall.png", "Icons.CopyToolSmall.png")]
-	[ExtensionOf(typeof (DicomEditorToolExtensionPoint))]
+	[ExtensionOf(typeof (DicomEditorToolExtensionPoint), FeatureToken = FeatureTokens.DicomEditing)]
 	public class ReplicateTool : DicomEditorTool
 	{
 		public ReplicateTool() : base(true) {}
 
 		public void Replicate()
+		{
+			if (!LicenseInformation.IsFeatureAuthorized(FeatureTokens.DicomEditing))
+				return;
+
+			Activate();
+		}
+
+		protected override void ActivateCore()
 		{
 			// if it's not a root level tag, it's part of a sequence. if it's not editable, it's SQ or OB or OW or UN or ?? and thus cannot be set by string value
 			if (CollectionUtils.Contains(Context.SelectedTags, t => !t.IsRootLevelTag || !t.IsEditable()))

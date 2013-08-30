@@ -37,7 +37,6 @@ namespace ClearCanvas.Ris.Client
 
         private AddressEditorComponentSettings()
         {
-            ApplicationSettingsRegistry.Instance.RegisterInstance(this);
         }
 
         public ICollection<string> CountryChoices

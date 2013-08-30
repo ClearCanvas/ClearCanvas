@@ -577,9 +577,13 @@ namespace ClearCanvas.ImageViewer.Rendering.Tests
 			composer.ModalityLut = graphic.ModalityLut;
 			composer.VoiLut = graphic.VoiLut;
 			var colorMap = new GrayscaleColorMap();
-			colorMap.MaxInputValue = composer.MaxOutputValue;
-			colorMap.MinInputValue = composer.MinOutputValue;
-			return Color.FromArgb(colorMap[composer[interpolated]]).R;
+
+            //For this, we want the output range to be the same as the VOI.
+            var output = composer.GetOutputLut(0, byte.MaxValue);
+            colorMap.MaxInputValue = output.MaxOutputValue;
+            colorMap.MinInputValue = output.MinOutputValue;
+
+			return Color.FromArgb(colorMap[output[interpolated]]).R;
 		}
 
 		private void CreateImageLayer(ImageTypes imageType)

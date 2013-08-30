@@ -34,7 +34,6 @@ namespace ClearCanvas.Ris.Client
     {
         private RandomUtilsSettings()
         {
-            ApplicationSettingsRegistry.Instance.RegisterInstance(this);
         }
     }
 }

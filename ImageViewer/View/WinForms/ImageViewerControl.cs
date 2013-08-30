@@ -25,13 +25,14 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
-using ClearCanvas.Desktop;
 using ClearCanvas.Common.Utilities;
+using ClearCanvas.Desktop;
 
 namespace ClearCanvas.ImageViewer.View.WinForms
 {
-	public partial class ImageViewerControl : UserControl
+	public class ImageViewerControl : UserControl
 	{
 		private Form _parentForm;
 		private PhysicalWorkspace _physicalWorkspace;
@@ -41,24 +42,65 @@ namespace ClearCanvas.ImageViewer.View.WinForms
 		internal ImageViewerControl(ImageViewerComponent component)
 		{
 			_component = component;
-			_physicalWorkspace = _component.PhysicalWorkspace as PhysicalWorkspace;
-			InitializeComponent();
+			_physicalWorkspace = (PhysicalWorkspace) _component.PhysicalWorkspace;
 
-			this.SetStyle(ControlStyles.AllPaintingInWmPaint, true);
+			SuspendLayout();
+			Name = "ImageViewerControl";
+			ResumeLayout(false);
+			SetStyle(ControlStyles.AllPaintingInWmPaint, true);
 
-			this.BackColor = Color.Black;
+			base.BackColor = Color.Black;
 
-			_component.Closing += new EventHandler(OnComponentClosing);
-			_physicalWorkspace.Drawing += new EventHandler(OnPhysicalWorkspaceDrawing);
-			_physicalWorkspace.LayoutCompleted += new EventHandler(OnLayoutCompleted);
-			_physicalWorkspace.ScreenRectangleChanged += new EventHandler(OnScreenRectangleChanged);
+			_component.Closing += OnComponentClosing;
+			_physicalWorkspace.Drawing += OnPhysicalWorkspaceDrawing;
+			_physicalWorkspace.LayoutCompleted += OnLayoutCompleted;
+			_physicalWorkspace.ScreenRectangleChanged += OnScreenRectangleChanged;
 
 			_delayedEventPublisher = new DelayedEventPublisher(OnRecalculateImageBoxes, 50);
 		}
 
+		/// <summary> 
+		/// Clean up any resources being used.
+		/// </summary>
+		/// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+		protected override void Dispose(bool disposing)
+		{
+			if (disposing)
+			{
+				if (_parentForm != null)
+				{
+					_parentForm.Move -= OnParentMoved;
+					_parentForm = null;
+				}
+
+				if (_component != null)
+				{
+					_component.Closing -= OnComponentClosing;
+					_component = null;
+				}
+
+				if (_delayedEventPublisher != null)
+				{
+					_delayedEventPublisher.Dispose();
+					_delayedEventPublisher = null;
+				}
+
+				if (_physicalWorkspace != null)
+				{
+					_physicalWorkspace.Drawing -= OnPhysicalWorkspaceDrawing;
+					_physicalWorkspace.LayoutCompleted -= OnLayoutCompleted;
+					_physicalWorkspace.ScreenRectangleChanged -= OnScreenRectangleChanged;
+
+					_physicalWorkspace = null;
+				}
+			}
+
+			base.Dispose(disposing);
+		}
+
 		internal void Draw()
 		{
-			foreach (ImageBoxControl control in this.Controls)
+			foreach (ImageBoxControl control in Controls)
 				control.Draw();
 
 			Invalidate();
@@ -66,9 +108,10 @@ namespace ClearCanvas.ImageViewer.View.WinForms
 
 		#region Protected members
 
-		protected override void OnParentChanged(EventArgs e) {
-			SetParentForm(base.ParentForm);
-	
+		protected override void OnParentChanged(EventArgs e)
+		{
+			SetParentForm(ParentForm);
+
 			base.OnParentChanged(e);
 		}
 
@@ -100,12 +143,12 @@ namespace ClearCanvas.ImageViewer.View.WinForms
 
 		private void OnRecalculateImageBoxes(object sender, EventArgs e)
 		{
-			this.SuspendLayout();
+			SuspendLayout();
 
-			foreach (ImageBoxControl control in this.Controls)
-				control.ParentRectangle = this.ClientRectangle;
+			foreach (ImageBoxControl control in Controls)
+				control.ParentRectangle = ClientRectangle;
 
-			this.ResumeLayout(false);
+			ResumeLayout(false);
 
 			Invalidate();
 		}
@@ -115,18 +158,23 @@ namespace ClearCanvas.ImageViewer.View.WinForms
 			Draw();
 		}
 
-		void OnComponentClosing(object sender, EventArgs e)
+		private void OnComponentClosing(object sender, EventArgs e)
 		{
-			while (this.Controls.Count > 0)
-				this.Controls[0].Dispose();
+			List<Control> oldControlList = Controls.Cast<Control>().ToList();
+
+			foreach (Control control in oldControlList)
+			{
+				Controls.Remove(control);
+				control.Dispose();
+			}
+
+			// must call to force the UserControl's cachedLayoutEventArgs field to be cleared, otherwise it ends up leaking the viewer component
+			PerformLayout();
 		}
 
 		private void OnLayoutCompleted(object sender, EventArgs e)
 		{
-			List<Control> oldControlList = new List<Control>();
-
-			foreach (Control control in this.Controls)
-				oldControlList.Add(control);
+			List<Control> oldControlList = Controls.Cast<Control>().ToList();
 
 			// We add all the new tile controls to the image box control first,
 			// then we remove the old ones. Removing them first then adding them
@@ -135,14 +183,14 @@ namespace ClearCanvas.ImageViewer.View.WinForms
 
 			foreach (Control control in oldControlList)
 			{
-				this.Controls.Remove(control);
+				Controls.Remove(control);
 				control.Dispose();
 			}
 		}
 
 		private void UpdateScreenRectangle()
 		{
-			_physicalWorkspace.ScreenRectangle = this.RectangleToScreen(this.ClientRectangle);
+			_physicalWorkspace.ScreenRectangle = RectangleToScreen(ClientRectangle);
 		}
 
 		private void AddImageBoxControls(PhysicalWorkspace physicalWorkspace)
@@ -153,20 +201,22 @@ namespace ClearCanvas.ImageViewer.View.WinForms
 
 		private void AddImageBoxControl(ImageBox imageBox)
 		{
-			ImageBoxView view = ViewFactory.CreateAssociatedView(typeof(ImageBox)) as ImageBoxView;
+			ImageBoxView view = (ImageBoxView) ViewFactory.CreateAssociatedView(typeof (ImageBox));
 
 			view.ImageBox = imageBox;
-			view.ParentRectangle = this.ClientRectangle;
-			
-			ImageBoxControl control = view.GuiElement as ImageBoxControl;
+			view.ParentRectangle = ClientRectangle;
+
+			ImageBoxControl control = (ImageBoxControl) view.GuiElement;
 
 			control.SuspendLayout();
-			this.Controls.Add(control);
+			Controls.Add(control);
 			control.ResumeLayout(false);
 		}
 
-		private void SetParentForm(Form value) {
-			if (_parentForm != value) {
+		private void SetParentForm(Form value)
+		{
+			if (_parentForm != value)
+			{
 				if (_parentForm != null)
 					_parentForm.Move -= OnParentMoved;
 

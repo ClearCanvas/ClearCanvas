@@ -23,16 +23,16 @@
 #endregion
 
 using System.Configuration;
+using ClearCanvas.Common.Configuration;
 
 namespace ClearCanvas.ImageViewer.Common
 {
 	[SettingsGroupDescription("Application settings for memory management on the local machine.")]
-	[SettingsProvider(typeof(LocalFileSettingsProvider))]
+	[SettingsProvider(typeof(ExtendedLocalFileSettingsProvider))]
 	internal sealed partial class MemoryManagementSettings
 	{
 		private MemoryManagementSettings()
 		{
-			//ApplicationSettingsRegistry.Instance.RegisterInstance(this);
 		}
 	}
 }

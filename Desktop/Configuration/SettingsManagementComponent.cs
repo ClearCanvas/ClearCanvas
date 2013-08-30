@@ -559,8 +559,20 @@ namespace ClearCanvas.Desktop.Configuration
 
 				UpdateActionEnablement();
 
-				// update any loaded instances
-				ApplicationSettingsRegistry.Instance.Reload(_selectedSettingsGroup.Descriptor);
+                try
+                {
+                    //Settings classes cache values and don't automatically reload, so try to reload at least the static default instance.
+                    var settingsClass = ApplicationSettingsHelper.GetSettingsClass(_selectedSettingsGroup.Descriptor);
+                    var defaultInstance = ApplicationSettingsHelper.GetDefaultInstance(settingsClass);
+                    if (defaultInstance != null)
+                        defaultInstance.Reload();
+                }
+                catch(Exception e)
+                {
+                    //Shouldn't really happen, and definitely not the end of the world.
+                    Platform.Log(LogLevel.Debug, e);
+                }
+
 			}
 			catch (Exception e)
 			{

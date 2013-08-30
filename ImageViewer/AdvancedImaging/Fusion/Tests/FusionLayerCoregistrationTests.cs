@@ -63,8 +63,9 @@ namespace ClearCanvas.ImageViewer.AdvancedImaging.Fusion.Tests
 			{
 				var results = DiffFusionImages(data, testName);
 
+                const double threshold = 2e-4;
 				for (int n = 0; n < results.Count; n++)
-					Assert.AreEqual(0, results[n], 100*double.Epsilon, "{0}:: slice {1} exceeds difference limit.", testName, n);
+				    Assert.AreEqual(0, results[n], threshold, "{0}:: slice {1} exceeds difference limit.", testName, n);
 			}
 		}
 

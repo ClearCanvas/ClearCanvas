@@ -99,13 +99,15 @@ namespace ClearCanvas.ImageViewer.Rendering
 			{
 				if (image.InterpolationMode == InterpolationMode.Bilinear)
 				{
-					int[] finalLutBuffer = ConstructFinalLut(image.OutputLut, image.ColorMap, image.Invert);
+                    //TODO: if we actually supported >8 bit displays, the LUT part would work ...
+				    var outputLut = image.GetOutputLut(0, byte.MaxValue);
+					int[] finalLutBuffer = ConstructFinalLut(outputLut, image.ColorMap, image.Invert);
 
 					fixed (int* pFinalLutData = finalLutBuffer)
 					{
 						ImageInterpolatorBilinear.LutData lutData;
 						lutData.Data = pFinalLutData;
-						lutData.FirstMappedPixelData = image.OutputLut.MinInputValue;
+						lutData.FirstMappedPixelData = outputLut.MinInputValue;
 						lutData.Length = finalLutBuffer.Length;
 
 						ImageInterpolatorBilinear.Interpolate(

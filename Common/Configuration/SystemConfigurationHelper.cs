@@ -33,16 +33,16 @@ using SystemConfiguration = System.Configuration.Configuration;
 namespace ClearCanvas.Common.Configuration
 {
 	/// <summary>
-    /// Helper class that allows settings values for <see cref="ApplicationSettingsBase"/>-derived classes
-    /// to be easily read/written to/from a <see cref="SystemConfiguration"/> object.
-    /// </summary>
-    public static class SystemConfigurationHelper
+	/// Helper class that allows settings values for <see cref="ApplicationSettingsBase"/>-derived classes
+	/// to be easily read/written to/from a <see cref="SystemConfiguration"/> object.
+	/// </summary>
+	public static class SystemConfigurationHelper
 	{
 		internal static SettingsSerializeAs GetSerializeAs(string serializeAs)
 		{
-			var converter = new EnumConverter(typeof(SettingsSerializeAs));
+			var converter = new EnumConverter(typeof (SettingsSerializeAs));
 			if (!String.IsNullOrEmpty(serializeAs))
-				return (SettingsSerializeAs)converter.ConvertFromInvariantString(serializeAs);
+				return (SettingsSerializeAs) converter.ConvertFromInvariantString(serializeAs);
 
 			return default(SettingsSerializeAs);
 		}
@@ -97,9 +97,9 @@ namespace ClearCanvas.Common.Configuration
 
 		private static ClientSettingsSection CastToClientSection(ConfigurationSection section)
 		{
-		    var castToClientSection = section as ClientSettingsSection;
-		    if (castToClientSection != null)
-		        return castToClientSection;
+			var castToClientSection = section as ClientSettingsSection;
+			if (castToClientSection != null)
+				return castToClientSection;
 
 			throw new NotSupportedException(String.Format(
 				"The specified ConfigurationSection must be of Type ClientSettingsSection: {0}.", section.GetType().FullName));
@@ -174,11 +174,11 @@ namespace ClearCanvas.Common.Configuration
 		}
 
 		private static Dictionary<string, string> GetSettingsValues(
-			SystemConfiguration configuration, 
-			ConfigurationSectionPath sectionPath, 
+			SystemConfiguration configuration,
+			ConfigurationSectionPath sectionPath,
 			ICollection<PropertyInfo> properties)
-        {
-            var values = new Dictionary<string, string>();
+		{
+			var values = new Dictionary<string, string>();
 			if (properties.Count > 0)
 			{
 				var section = sectionPath.GetSection(configuration);
@@ -194,8 +194,8 @@ namespace ClearCanvas.Common.Configuration
 				}
 			}
 
-            return values;
-        }
+			return values;
+		}
 
 		private static ICollection<PropertyInfo> GetProperties(Type settingsClass, SettingScope scope)
 		{
@@ -216,28 +216,28 @@ namespace ClearCanvas.Common.Configuration
 		}
 
 		/// <summary>
-        /// Gets only those settings values that are different from the defaults for the given settings group.
-        /// </summary>
-        /// <param name="configuration">the configuration where the values will be taken from</param>
+		/// Gets only those settings values that are different from the defaults for the given settings group.
+		/// </summary>
+		/// <param name="configuration">the configuration where the values will be taken from</param>
 		/// <param name="settingsClass">the settings class for which to get the values</param>
-        public static Dictionary<string, string> GetSettingsValues(this SystemConfiguration configuration, Type settingsClass)
+		public static Dictionary<string, string> GetSettingsValues(this SystemConfiguration configuration, Type settingsClass)
 		{
 			var applicationScopedValues = GetSettingsValues(configuration, settingsClass, SettingScope.Application);
 			var userScopedValues = GetSettingsValues(configuration, settingsClass, SettingScope.User);
 
 			foreach (KeyValuePair<string, string> userScopedValue in userScopedValues)
-                applicationScopedValues[userScopedValue.Key] = userScopedValue.Value;
+				applicationScopedValues[userScopedValue.Key] = userScopedValue.Value;
 
-            return applicationScopedValues;
+			return applicationScopedValues;
 		}
 
 		/// <summary>
 		/// Stores the settings values for a given settings class.
 		/// </summary>
-        /// <param name="configuration">the configuration where the values will be stored</param>
+		/// <param name="configuration">the configuration where the values will be stored</param>
 		/// <param name="settingsClass">the settings class for which to store the values</param>
 		/// <param name="dirtyValues">contains the values to be stored</param>
-        public static void PutSettingsValues(this SystemConfiguration configuration, Type settingsClass, IDictionary<string, string> dirtyValues)
+		public static void PutSettingsValues(this SystemConfiguration configuration, Type settingsClass, IDictionary<string, string> dirtyValues)
 		{
 			var applicationScopedProperties = GetProperties(settingsClass, SettingScope.Application);
 			var userScopedProperties = GetProperties(settingsClass, SettingScope.User);
@@ -259,28 +259,28 @@ namespace ClearCanvas.Common.Configuration
 				configuration.Save(ConfigurationSaveMode.Minimal, true);
 		}
 
-	    public static void RemoveSettingsValues(this SystemConfiguration configuration, Type settingsClass, SettingScope? scope = null)
-	    {
-	        var removeApplicationSettings = !scope.HasValue || scope.Value == SettingScope.Application;
-            var removeUserSettings = !scope.HasValue || scope.Value == SettingScope.User;
+		public static void RemoveSettingsValues(this SystemConfiguration configuration, Type settingsClass, SettingScope? scope = null)
+		{
+			var removeApplicationSettings = !scope.HasValue || scope.Value == SettingScope.Application;
+			var removeUserSettings = !scope.HasValue || scope.Value == SettingScope.User;
 
-            if (removeApplicationSettings)
-            {
-                var sectionPath = new ConfigurationSectionPath(settingsClass, SettingScope.Application);
-                ConfigurationSectionGroup group = configuration.GetSectionGroup(sectionPath.GroupPath);
-                if (group != null)
-                    group.Sections.Remove(sectionPath.SectionName);
-            }
+			if (removeApplicationSettings)
+			{
+				var sectionPath = new ConfigurationSectionPath(settingsClass, SettingScope.Application);
+				ConfigurationSectionGroup group = configuration.GetSectionGroup(sectionPath.GroupPath);
+				if (group != null)
+					group.Sections.Remove(sectionPath.SectionName);
+			}
 
-            if (removeUserSettings)
-            {
-                var sectionPath = new ConfigurationSectionPath(settingsClass, SettingScope.User);
-                var group = configuration.GetSectionGroup(sectionPath.GroupPath);
-                if (group != null)
-                    group.Sections.Remove(sectionPath.SectionName);
-            }
+			if (removeUserSettings)
+			{
+				var sectionPath = new ConfigurationSectionPath(settingsClass, SettingScope.User);
+				var group = configuration.GetSectionGroup(sectionPath.GroupPath);
+				if (group != null)
+					group.Sections.Remove(sectionPath.SectionName);
+			}
 
-	        configuration.Save(ConfigurationSaveMode.Minimal, true);
+			configuration.Save(ConfigurationSaveMode.Minimal, true);
 		}
 
 		public static SystemConfiguration GetExeConfiguration()
@@ -290,7 +290,7 @@ namespace ClearCanvas.Common.Configuration
 
 		public static SystemConfiguration GetExeConfiguration(string fileName)
 		{
-			var fileMap = new ExeConfigurationFileMap {ExeConfigFilename = fileName };
+			var fileMap = new ExeConfigurationFileMap {ExeConfigFilename = fileName};
 			return ConfigurationManager.OpenMappedExeConfiguration(fileMap, ConfigurationUserLevel.None);
 		}
 	}

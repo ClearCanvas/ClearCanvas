@@ -27,24 +27,19 @@ using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Desktop;
 using ClearCanvas.Desktop.Actions;
-using ClearCanvas.ImageViewer;
 using ClearCanvas.ImageViewer.BaseTools;
 using ClearCanvas.ImageViewer.Graphics;
 
 namespace ClearCanvas.ImageViewer.Tools.Standard
 {
 	[KeyboardAction("delete", "imageviewer-keyboard/DeleteSelectedGraphic", "Delete", KeyStroke = XKeys.Delete)]
-	[ExtensionOf(typeof(ImageViewerToolExtensionPoint))]
+	[ExtensionOf(typeof (ImageViewerToolExtensionPoint))]
 	public class DeleteSelectedAnnotationTool : ImageViewerTool
 	{
-		public DeleteSelectedAnnotationTool()
-		{
-		}
-
 		private static bool IsGraphicInCollection(IGraphic graphic, GraphicCollection graphicCollection)
 		{
 			IGraphic testGraphic = graphic;
-			while(testGraphic != null)
+			while (testGraphic != null)
 			{
 				if (graphicCollection.Contains(testGraphic))
 					return true;
@@ -60,35 +55,31 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 			if (SelectedOverlayGraphicsProvider == null || SelectedPresentationImage == null)
 				return;
 
-			if (!IsGraphicInCollection(base.SelectedPresentationImage.SelectedGraphic, SelectedOverlayGraphicsProvider.OverlayGraphics))
+			if (!IsGraphicInCollection(SelectedPresentationImage.SelectedGraphic, SelectedOverlayGraphicsProvider.OverlayGraphics))
 				return;
 
-			DrawableUndoableCommand command = new DrawableUndoableCommand(base.SelectedPresentationImage);
-			command.Enqueue(new RemoveGraphicUndoableCommand(base.SelectedPresentationImage.SelectedGraphic));
+			DrawableUndoableCommand command = new DrawableUndoableCommand(SelectedPresentationImage);
+			command.Enqueue(new RemoveGraphicUndoableCommand(SelectedPresentationImage.SelectedGraphic));
 			command.Execute();
 			command.Name = SR.CommandDeleteAnnotation;
-			base.SelectedPresentationImage.ImageViewer.CommandHistory.AddCommand(command);
+			SelectedPresentationImage.ImageViewer.CommandHistory.AddCommand(command);
 		}
 	}
 
 	[MenuAction("delete", "basicgraphic-menu/MenuDeleteAnnotation", "Delete")]
 	[IconSet("delete", "DeleteAnnotationToolSmall.png", "DeleteAnnotationToolMedium.png", "DeleteAnnotationToolLarge.png")]
 	[GroupHint("delete", "Tools.Annotations.Delete")]
-
+	//
 	[MenuAction("deleteall", "basicgraphic-menu/MenuDeleteAllAnnotations", "DeleteAll")]
 	[IconSet("deleteall", "DeleteAllAnnotationsToolSmall.png", "DeleteAllAnnotationsToolMedium.png", "DeleteAllAnnotationsToolLarge.png")]
 	[GroupHint("deleteall", "Tools.Annotations.Delete")]
-
-	[ExtensionOf(typeof(GraphicToolExtensionPoint))]
+	//
+	[ExtensionOf(typeof (GraphicToolExtensionPoint))]
 	public class DeleteAnnotationsTool : GraphicTool
 	{
-		public DeleteAnnotationsTool()
-		{
-		}
-
 		public void Delete()
 		{
-			IGraphic graphic = base.Context.Graphic;
+			IGraphic graphic = Context.Graphic;
 			if (graphic == null)
 				return;
 
@@ -106,7 +97,7 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 
 		public void DeleteAll()
 		{
-			IGraphic graphic = base.Context.Graphic;
+			IGraphic graphic = Context.Graphic;
 			if (graphic == null)
 				return;
 
@@ -122,21 +113,17 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 	[VisibleStateObserver("deleteall", "DeleteAllVisible", "DeleteAllVisibleChanged")]
 	[IconSet("deleteall", "DeleteAllAnnotationsToolSmall.png", "DeleteAllAnnotationsToolMedium.png", "DeleteAllAnnotationsToolLarge.png")]
 	[GroupHint("deleteall", "Tools.Image.Annotations.DeleteAll")]
-
+	//
 	[ButtonAction("deleteallToolbar", "global-toolbars/ToolbarAnnotation/ToolbarDeleteAllAnnotations", "DeleteAll")]
 	[EnabledStateObserver("deleteallToolbar", "DeleteAllVisible", "DeleteAllVisibleChanged")]
 	[IconSet("deleteallToolbar", "DeleteAllAnnotationsToolSmall.png", "DeleteAllAnnotationsToolMedium.png", "DeleteAllAnnotationsToolLarge.png")]
 	[Tooltip("deleteallToolbar", "TooltipDeleteAllAnnotations")]
 	[GroupHint("deleteallToolbar", "Tools.Image.Annotations.DeleteAll")]
-
-	[ExtensionOf(typeof(ImageViewerToolExtensionPoint))]
+	//
+	[ExtensionOf(typeof (ImageViewerToolExtensionPoint))]
 	public class DeleteAllAnnotationsTool : ImageViewerTool
 	{
 		private bool _deleteAllVisible;
-
-		public DeleteAllAnnotationsTool()
-		{
-		}
 
 		public event EventHandler DeleteAllVisibleChanged;
 
@@ -155,8 +142,8 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 
 		public void DeleteAll()
 		{
-			if (DeleteAllVisible && base.SelectedPresentationImage != null)
-				DeleteAll(this.SelectedPresentationImage);
+			if (DeleteAllVisible && SelectedPresentationImage != null)
+				DeleteAll(SelectedPresentationImage);
 		}
 
 		public override void Initialize()
@@ -164,12 +151,13 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 			base.Initialize();
 			UpdateDeleteAllVisible();
 
-			base.ImageViewer.EventBroker.ImageDrawing += OnImageDrawing;
+			ImageViewer.EventBroker.ImageDrawing += OnImageDrawing;
 		}
 
 		protected override void Dispose(bool disposing)
 		{
-			base.Context.Viewer.EventBroker.ImageDrawing -= OnImageDrawing;
+			Context.Viewer.EventBroker.ImageDrawing -= OnImageDrawing;
+
 			base.Dispose(disposing);
 		}
 
@@ -181,7 +169,7 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 
 		private void UpdateDeleteAllVisible()
 		{
-			if (base.SelectedOverlayGraphicsProvider == null)
+			if (SelectedOverlayGraphicsProvider == null)
 			{
 				DeleteAllVisible = false;
 			}
@@ -206,6 +194,10 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 
 		internal static void DeleteAll(IPresentationImage image)
 		{
+			// if any editbox exists on the image, forcibly abort it now
+			if (image.Tile.EditBox != null)
+				image.Tile.EditBox.Cancel();
+
 			IOverlayGraphicsProvider provider = image as IOverlayGraphicsProvider;
 			if (provider == null)
 				return;
@@ -213,7 +205,9 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 			DrawableUndoableCommand command = new DrawableUndoableCommand(image);
 			foreach (IGraphic graphic in provider.OverlayGraphics)
 				command.Enqueue(new RemoveGraphicUndoableCommand(graphic));
-		
+
+			if (command.Count == 0) return;
+
 			command.Execute();
 			command.Name = SR.CommandDeleteAllAnnotations;
 			image.ImageViewer.CommandHistory.AddCommand(command);

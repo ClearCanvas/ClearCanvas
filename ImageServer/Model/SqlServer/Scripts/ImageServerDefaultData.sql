@@ -883,10 +883,12 @@ VALUES (newid(), '1.2.840.10008.5.1.4.1.1.104.2', 'Encapsulated CDA Storage', 1)
 GO
 
 INSERT INTO [ImageServer].[dbo].[ServerSopClass] ([GUID],[SopClassUid],[Description],[NonImage])
-VALUES (newid(), '1.2.840.10008.5.1.4.1.1.13.1.3', 'Breast Tomosynthesis Image Storage', 1);
+VALUES (newid(), '1.2.840.10008.5.1.4.1.1.13.1.3', 'Breast Tomosynthesis Image Storage', 0);
 GO
 
-
+INSERT INTO [ImageServer].[dbo].[ServerSopClass] ([GUID],[SopClassUid],[Description],[NonImage])
+VALUES (newid(), '1.2.840.10008.5.1.4.1.1.6.2', 'Enhanced US Volume Storage', 0);
+GO
 
 -- ServerTransferSyntax inserts
 INSERT INTO [ImageServer].[dbo].[ServerTransferSyntax] ([GUID],[Uid],[Description],[Lossless])

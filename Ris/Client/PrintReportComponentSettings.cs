@@ -33,7 +33,6 @@ namespace ClearCanvas.Ris.Client
 	{
 		private PrintReportComponentSettings()
 		{
-			ApplicationSettingsRegistry.Instance.RegisterInstance(this);
 		}
 	}
 }

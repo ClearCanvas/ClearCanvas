@@ -223,6 +223,15 @@ namespace ClearCanvas.ImageViewer {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Presentation Lut.
+        /// </summary>
+        public static string DescriptionPresentationLut {
+            get {
+                return ResourceManager.GetString("DescriptionPresentationLut", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Red.
         /// </summary>
         public static string DescriptionRedColorMap {

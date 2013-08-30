@@ -34,7 +34,6 @@ namespace ClearCanvas.ImageViewer.Explorer.Local.View.WinForms
 	{
 		public Settings()
 		{
-			ApplicationSettingsRegistry.Instance.RegisterInstance(this);
 		}
 	}
 }

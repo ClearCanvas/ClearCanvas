@@ -34,7 +34,6 @@ namespace ClearCanvas.ImageViewer.Explorer.Dicom
 	{
 		private DicomExplorerConfigurationSettings()
 		{
-			ApplicationSettingsRegistry.Instance.RegisterInstance(this);
 		}
 	}
 }

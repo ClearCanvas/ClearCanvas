@@ -234,7 +234,7 @@ namespace ClearCanvas.ImageViewer.Thumbnails
 				component,
 				SR.TitleThumbnails,
 				"Thumbnails",
-				ShelfDisplayHint.DockTop | ShelfDisplayHint.DockAutoHide);
+				ShelfDisplayHint.DockTop);
 
 			return shelf;
 		}

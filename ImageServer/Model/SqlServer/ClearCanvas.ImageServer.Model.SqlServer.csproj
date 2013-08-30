@@ -170,6 +170,7 @@
     <Compile Include="Brokers\UpdateWorkQueue.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RunSqlScriptApplication.cs" />
+    <Compile Include="UpgradeScripts\UpgradeFrom_10_0_11128_314.cs" />
     <Compile Include="UpgradeScripts\UpgradeFrom_10_1_00000_000.cs" />
     <Compile Include="UpgradeScripts\UpgradeFrom_4_0_5014_9549.cs" />
     <Compile Include="UpgradeScripts\UpgradeFrom_1_3_8146_27242.cs" />
@@ -230,9 +231,13 @@
     <EmbeddedResource Include="UpgradeScripts\UpgradeFrom_2_0_12655_37768.sql" />
     <EmbeddedResource Include="UpgradeScripts\UpgradeFrom_1_5_12104_35993.sql" />
     <EmbeddedResource Include="UpgradeScripts\UpgradeFrom_1_5_10019_31163.sql" />
+    <EmbeddedResource Include="UpgradeScripts\UpgradeFrom_9_0_9561_11723.sql" />
     <EmbeddedResource Include="UpgradeScripts\UpgradeFrom_NoOp.sql" />
     <EmbeddedResource Include="UpgradeScripts\UpgradeFrom_1_4_9277_29698.sql" />
     <EmbeddedResource Include="UpgradeScripts\UpgradeFrom_1_3_8146_27241.sql" />
+    <EmbeddedResource Include="UpgradeScripts\UpgradeFrom_6_1_7081_10268.sql" />
+    <EmbeddedResource Include="UpgradeScripts\UpgradeFrom_10_0_11128_314.sql" />
+    <EmbeddedResource Include="UpgradeScripts\UpgradeFrom_10_1_00000_000.sql" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
@@ -250,15 +255,6 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="UpgradeScripts\UpgradeFrom_6_1_7081_10268.sql" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="UpgradeScripts\UpgradeFrom_9_0_9561_11723.sql" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="UpgradeScripts\UpgradeFrom_10_1_00000_000.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

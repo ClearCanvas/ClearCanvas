@@ -34,7 +34,6 @@ namespace ClearCanvas.ImageViewer.InputManagement
 	{
 		public InputManagementSettings()
 		{
-			ApplicationSettingsRegistry.Instance.RegisterInstance(this);
 		}
 	}
 }

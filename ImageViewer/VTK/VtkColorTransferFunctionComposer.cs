@@ -423,7 +423,7 @@ namespace ClearCanvas.ImageViewer.Vtk
 		{
 			if (!_recalculationRequired) return;
 
-			var outputLut = OutputLut;
+			var outputLut = GetOutputLut();
 			var colorMap = ColorMap;
 			colorMap.MinInputValue = outputLut.MinOutputValue;
 			colorMap.MaxInputValue = outputLut.MaxOutputValue;
@@ -488,7 +488,7 @@ namespace ClearCanvas.ImageViewer.Vtk
 
 			// N.B.: BuildFunctionFromTable builds the transfer function from the given array, but does not keep pointer to array!
 
-			var outputLut = OutputLut;
+			var outputLut = GetOutputLut();
 			tfColor.SetRange(outputLut.MinInputValue, outputLut.MaxInputValue);
 			tfColor.BuildFunctionFromTable(outputLut.MinInputValue, outputLut.MaxInputValue, _vtkData.Length/3, _vtkData);
 		}
@@ -512,13 +512,10 @@ namespace ClearCanvas.ImageViewer.Vtk
 		/// <summary>
 		/// The output lut composed of both the Modality and Voi Luts.
 		/// </summary>
-		private IComposedLut OutputLut
+		private IComposedLut GetOutputLut()
 		{
-			get
-			{
-				InitializeNecessaryLuts(Luts.Voi);
-				return LutComposer;
-			}
+			InitializeNecessaryLuts(Luts.Voi);
+			return LutComposer.GetOutputLut(0, byte.MaxValue);
 		}
 
 		private LutComposer LutComposer

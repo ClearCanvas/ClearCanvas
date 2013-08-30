@@ -33,7 +33,6 @@ namespace ClearCanvas.Ris.Client
     {
         private CannedTextSettings()
         {
-            ApplicationSettingsRegistry.Instance.RegisterInstance(this);
         }
     }
 }

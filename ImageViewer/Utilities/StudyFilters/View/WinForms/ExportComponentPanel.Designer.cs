@@ -37,32 +37,41 @@ namespace ClearCanvas.ImageViewer.Utilities.StudyFilters.View.WinForms {
 			this._outputPath = new System.Windows.Forms.TextBox();
 			this.label1 = new System.Windows.Forms.Label();
 			this.panel1 = new System.Windows.Forms.Panel();
-			this.panel2 = new System.Windows.Forms.Panel();
 			this.label2 = new System.Windows.Forms.Label();
+			this.panel2 = new System.Windows.Forms.Panel();
+			this._lyoButtonPane = new System.Windows.Forms.FlowLayoutPanel();
+			this._pnlOutputOptions = new System.Windows.Forms.Panel();
+			this._keepPrivateTags = new System.Windows.Forms.CheckBox();
 			this.panel1.SuspendLayout();
+			this._lyoButtonPane.SuspendLayout();
+			this._pnlOutputOptions.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// _studyDescription
 			// 
 			resources.ApplyResources(this._studyDescription, "_studyDescription");
+			this._studyDescription.Mask = "";
 			this._studyDescription.Name = "_studyDescription";
 			this._studyDescription.Value = null;
 			// 
 			// _patientId
 			// 
 			resources.ApplyResources(this._patientId, "_patientId");
+			this._patientId.Mask = "";
 			this._patientId.Name = "_patientId";
 			this._patientId.Value = null;
 			// 
 			// _accessionNumber
 			// 
 			resources.ApplyResources(this._accessionNumber, "_accessionNumber");
+			this._accessionNumber.Mask = "";
 			this._accessionNumber.Name = "_accessionNumber";
 			this._accessionNumber.Value = null;
 			// 
 			// _patientsName
 			// 
 			resources.ApplyResources(this._patientsName, "_patientsName");
+			this._patientsName.Mask = "";
 			this._patientsName.Name = "_patientsName";
 			this._patientsName.Value = null;
 			// 
@@ -101,6 +110,7 @@ namespace ClearCanvas.ImageViewer.Utilities.StudyFilters.View.WinForms {
 			// _studyId
 			// 
 			resources.ApplyResources(this._studyId, "_studyId");
+			this._studyId.Mask = "";
 			this._studyId.Name = "_studyId";
 			this._studyId.Value = null;
 			// 
@@ -128,24 +138,46 @@ namespace ClearCanvas.ImageViewer.Utilities.StudyFilters.View.WinForms {
 			resources.ApplyResources(this.panel1, "panel1");
 			this.panel1.Name = "panel1";
 			// 
+			// label2
+			// 
+			resources.ApplyResources(this.label2, "label2");
+			this.label2.Name = "label2";
+			// 
 			// panel2
 			// 
 			this.panel2.BackgroundImage = global::ClearCanvas.ImageViewer.Utilities.StudyFilters.View.WinForms.Properties.Resources.WarningHS;
 			resources.ApplyResources(this.panel2, "panel2");
 			this.panel2.Name = "panel2";
 			// 
-			// label2
+			// _lyoButtonPane
 			// 
-			resources.ApplyResources(this.label2, "label2");
-			this.label2.Name = "label2";
+			this._lyoButtonPane.Controls.Add(this._cancelButton);
+			this._lyoButtonPane.Controls.Add(this._okButton);
+			resources.ApplyResources(this._lyoButtonPane, "_lyoButtonPane");
+			this._lyoButtonPane.Name = "_lyoButtonPane";
+			// 
+			// _pnlOutputOptions
+			// 
+			this._pnlOutputOptions.Controls.Add(this.panel1);
+			this._pnlOutputOptions.Controls.Add(this._outputPath);
+			this._pnlOutputOptions.Controls.Add(this._browse);
+			this._pnlOutputOptions.Controls.Add(this.label1);
+			resources.ApplyResources(this._pnlOutputOptions, "_pnlOutputOptions");
+			this._pnlOutputOptions.Name = "_pnlOutputOptions";
+			// 
+			// _keepPrivateTags
+			// 
+			resources.ApplyResources(this._keepPrivateTags, "_keepPrivateTags");
+			this._keepPrivateTags.Name = "_keepPrivateTags";
+			this._keepPrivateTags.UseVisualStyleBackColor = true;
 			// 
 			// ExportComponentPanel
 			// 
 			resources.ApplyResources(this, "$this");
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.Controls.Add(this.panel1);
-			this.Controls.Add(this._outputPath);
-			this.Controls.Add(this._browse);
+			this.Controls.Add(this._keepPrivateTags);
+			this.Controls.Add(this._pnlOutputOptions);
+			this.Controls.Add(this._lyoButtonPane);
 			this.Controls.Add(this._studyId);
 			this.Controls.Add(this._studyDescription);
 			this.Controls.Add(this._patientId);
@@ -153,11 +185,11 @@ namespace ClearCanvas.ImageViewer.Utilities.StudyFilters.View.WinForms {
 			this.Controls.Add(this._patientsName);
 			this.Controls.Add(this._dateOfBirth);
 			this.Controls.Add(this._studyDate);
-			this.Controls.Add(this._cancelButton);
-			this.Controls.Add(this._okButton);
-			this.Controls.Add(this.label1);
 			this.Name = "ExportComponentPanel";
 			this.panel1.ResumeLayout(false);
+			this._lyoButtonPane.ResumeLayout(false);
+			this._pnlOutputOptions.ResumeLayout(false);
+			this._pnlOutputOptions.PerformLayout();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -180,5 +212,8 @@ namespace ClearCanvas.ImageViewer.Utilities.StudyFilters.View.WinForms {
 		private System.Windows.Forms.Panel panel1;
 		private System.Windows.Forms.Panel panel2;
 		private System.Windows.Forms.Label label2;
+		private System.Windows.Forms.FlowLayoutPanel _lyoButtonPane;
+		private System.Windows.Forms.Panel _pnlOutputOptions;
+		private System.Windows.Forms.CheckBox _keepPrivateTags;
 	}
 }

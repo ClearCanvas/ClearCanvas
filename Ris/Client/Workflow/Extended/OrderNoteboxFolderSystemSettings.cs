@@ -65,7 +65,6 @@ namespace ClearCanvas.Ris.Client.Workflow.Extended
 
 		private OrderNoteboxFolderSystemSettings()
 		{
-			ApplicationSettingsRegistry.Instance.RegisterInstance(this);
 		}
 
 		public GroupFoldersData GroupFolders

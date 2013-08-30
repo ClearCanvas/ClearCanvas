@@ -47,8 +47,8 @@ namespace ClearCanvas.ImageViewer.Graphics
 		private enum Luts
 		{ 
 			Modality = 1,
-			Voi = 2,
-		}
+			Voi = 2
+        }
 
 		#region Private fields
 
@@ -190,6 +190,9 @@ namespace ClearCanvas.ImageViewer.Graphics
 
 			if (source.LutComposer.VoiLut != null) //clone the voi lut.
 				(this as IVoiLutInstaller).InstallVoiLut(source.VoiLut.Clone());
+
+            if (source.LutComposer.PresentationLut != null)//not really necessary, but consistent.
+                LutComposer.PresentationLut = source.PresentationLut.Clone();
 
 			//color map has already been cloned.
 		}
@@ -362,6 +365,23 @@ namespace ClearCanvas.ImageViewer.Graphics
 			}
 		}
 
+        /// <summary>
+        /// Gets or sets a LUT to normalize the output of the modality LUT immediately prior to the VOI LUT.
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// In most cases, this should be left NULL. However, some PET images have a very small rescale slope (&lt;&lt; 1)
+        /// and thus need this to fix the input to the VOI LUT.
+        /// </para>
+        /// <para>
+        /// At any rate, DO NOT use the output of this LUT for any purpose other than as an input to the VOI LUT, as it is meaningless otherwise.</para>
+        /// </remarks>
+        public IComposableLut NormalizationLut
+        {
+            get { return LutComposer.NormalizationLut; }
+            set { LutComposer.NormalizationLut = value; }
+        }
+
 		/// <summary>
 		/// Retrieves this image's Voi Lut.
 		/// </summary>
@@ -370,20 +390,34 @@ namespace ClearCanvas.ImageViewer.Graphics
 			get
 			{
 				InitializeNecessaryLuts(Luts.Voi);
-				return this.LutComposer.VoiLut; 
+				return this.LutComposer.VoiLut;
 			}
 		}
 
-		/// <summary>
-		/// The output lut composed of both the Modality and Voi Luts.
+        /// <summary>
+        /// Gets this image's presentation LUT.
+        /// </summary>
+        /// <remarks>You should not need to set this property unless you are writing a custom renderer
+        /// for 10-bit grayscale (for example) displays, or need an alternate range of p-values for some other output device.
+        /// Otherwise, this property is managed internally, assuming an 8-bit display.</remarks>
+	    public IPresentationLut PresentationLut
+	    {
+	        get
+	        {
+                InitializeNecessaryLuts(Luts.Voi);
+	            return this.LutComposer.PresentationLut;
+	        }
+            set { this.LutComposer.PresentationLut = value; }
+	    }
+
+	    /// <summary>
+		/// Gets the output lut composed of both the Modality and Voi Luts,
+		/// properly rescaled/normalized for the given output display range.
 		/// </summary>
-		public IComposedLut OutputLut
+		public IComposedLut GetOutputLut(int minDisplayValue, int maxDisplayValue)
 		{
-			get
-			{
-				InitializeNecessaryLuts(Luts.Voi);
-				return this.LutComposer;
-			}
+			InitializeNecessaryLuts(Luts.Voi);
+            return LutComposer.GetOutputLut(minDisplayValue, maxDisplayValue);
 		}
 
 		/// <summary>
@@ -403,23 +437,6 @@ namespace ClearCanvas.ImageViewer.Graphics
 		#endregion
 
 		#region Private properties
-
-		/// <summary>
-		/// Gets or sets a LUT to normalize the output of the modality LUT immediately prior to the VOI LUT.
-		/// </summary>
-		/// <remarks>
-		/// <para>
-		/// In most cases, this should be left NULL. However, some PET images have a very small rescale slope (&lt;&lt; 1)
-		/// and thus need this to fix the input to the VOI LUT.
-		/// </para>
-		/// <para>
-		/// At any rate, DO NOT use the output of this LUT for any purpose other than as an input to the VOI LUT, as it is meaningless otherwise.</para>
-		/// </remarks>
-		public IComposableLut NormalizationLut
-		{
-			get { return LutComposer.NormalizationLut; }
-			set { LutComposer.NormalizationLut = value; }
-		}
 
 		private LutComposer LutComposer
 		{
@@ -544,7 +561,7 @@ namespace ClearCanvas.ImageViewer.Graphics
 
 				(this as IVoiLutInstaller).InstallVoiLut(lut);
 			}
-		}
+        }
 
 		#endregion
 

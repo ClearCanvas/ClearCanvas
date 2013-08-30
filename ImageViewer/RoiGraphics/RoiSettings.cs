@@ -56,7 +56,6 @@ namespace ClearCanvas.ImageViewer.RoiGraphics
 	{
 		public RoiSettings()
 		{
-			ApplicationSettingsRegistry.Instance.RegisterInstance(this);
 		}
 	}
 }

@@ -1,4 +1,4 @@
-#region License
+﻿#region License
 
 // Copyright (c) 2013, ClearCanvas Inc.
 // All rights reserved.
@@ -22,57 +22,28 @@
 
 #endregion
 
-using System;
 using System.Drawing;
-using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Desktop;
-using ClearCanvas.Desktop.Actions;
 using ClearCanvas.ImageViewer.Graphics;
 using ClearCanvas.ImageViewer.Imaging;
 
-namespace ClearCanvas.ImageViewer.Tools.Standard
+namespace ClearCanvas.ImageViewer.Layout.Basic.OverlayManagers
 {
-	[MenuAction("showHide", "imageviewer-contextmenu/MenuShowHideColorBar", "ShowHide", InitiallyAvailable = false)]
-	[MenuAction("showHide", "global-menus/MenuTools/MenuStandard/MenuShowHideColorBar", "ShowHide")]
-	[EnabledStateObserver("showHide", "Enabled", "EnabledChanged")]
-	[Tooltip("showHide", "TooltipShowHideColorBar")]
-	[GroupHint("showHide", "Tools.Image.Overlays.ColourBar.ShowHide")]
-	[IconSet("showHide", "Icons.ColorBarToolSmall.png", "Icons.ColorBarToolMedium.png", "Icons.ColorBarToolLarge.png")]
-	//
-	[MenuAction("toggle", "overlays-dropdown/ToolbarColorBar", "ShowHide")]
-	[EnabledStateObserver("toggle", "Enabled", "EnabledChanged")]
-	[CheckedStateObserver("toggle", "Checked", "CheckedChanged")]
-	[Tooltip("toggle", "TooltipColorBar")]
-	[GroupHint("toggle", "Tools.Image.Overlays.ColourBar.ShowHide")]
-	[IconSet("toggle", "Icons.ColorBarToolSmall.png", "Icons.ColorBarToolMedium.png", "Icons.ColorBarToolLarge.png")]
-	//
-	[ExtensionOf(typeof (ImageViewerToolExtensionPoint))]
-	public class ColorBarTool : OverlayToolBase
+	internal class ColorBarManager : OverlayManager
 	{
-		private bool _enabled;
-
-		public event EventHandler EnabledChanged;
-
-		public ColorBarTool() 
-			: base(false)
+		public ColorBarManager()
+			: base("ColorBar", "NameColourBarOverlay")
 		{
+			IconSet = new IconSet("Icons.ColorBarToolSmall.png", "Icons.ColorBarToolMedium.png", "Icons.ColorBarToolLarge.png");
 		}
 
-		public bool Enabled
+		public override bool IsSelectedByDefault(string modality)
 		{
-			get { return _enabled; }
-			private set
-			{
-				if (_enabled != value)
-				{
-					_enabled = value;
-					EventsHelper.Fire(EnabledChanged, this, EventArgs.Empty);
-				}
-			}
+			return false;
 		}
 
-		protected override void UpdateVisibility(IPresentationImage image, bool visible)
+		public override void SetOverlayVisible(IPresentationImage image, bool visible)
 		{
 			ColorBarCompositeGraphic graphic = GetCompositeScaleGraphic(image, visible);
 			if (graphic != null)
@@ -94,28 +65,6 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 			}
 
 			return null;
-		}
-
-		public override void Initialize()
-		{
-			base.Initialize();
-
-			base.Context.Viewer.EventBroker.PresentationImageSelected += OnPresentationImageSelected;
-		}
-
-		protected override void Dispose(bool disposing)
-		{
-			if (disposing)
-			{
-				base.Context.Viewer.EventBroker.PresentationImageSelected -= OnPresentationImageSelected;
-			}
-
-			base.Dispose(disposing);
-		}
-
-		private void OnPresentationImageSelected(object sender, PresentationImageSelectedEventArgs e)
-		{
-			this.Enabled = e.SelectedPresentationImage is IColorMapProvider;
 		}
 
 		[Cloneable(false)]

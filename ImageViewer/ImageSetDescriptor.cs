@@ -50,6 +50,8 @@ namespace ClearCanvas.ImageViewer
         IDicomServiceNode Server { get; }
 
         Exception LoadStudyError { get; }
+
+		// TODO CR (Aug 13): turn this into a single status enum property. make it flags even, if really needed
         bool IsOffline { get; }
         bool IsNearline { get; }
         bool IsInUse { get; }
@@ -249,11 +251,6 @@ namespace ClearCanvas.ImageViewer
 	public interface IImageSetDescriptor
 	{
 		/// <summary>
-		/// Gets the <see cref="IImageSet"/> that this object describes.
-		/// </summary>
-		IImageSet ImageSet { get; }
-
-		/// <summary>
 		/// Gets the descriptive name of the <see cref="IImageSet"/>.
 		/// </summary>
 		string Name { get; }
@@ -274,8 +271,6 @@ namespace ClearCanvas.ImageViewer
 	/// </summary>
 	public abstract class ImageSetDescriptor : IImageSetDescriptor
 	{
-		private ImageSet _imageSet;
-
 		/// <summary>
 		/// Protected constructor.
 		/// </summary>
@@ -284,20 +279,6 @@ namespace ClearCanvas.ImageViewer
 		}
 
 		#region IImageSetDescriptor Members
-
-		IImageSet IImageSetDescriptor.ImageSet
-		{
-			get { return _imageSet; }	
-		}
-
-		/// <summary>
-		/// Gets the <see cref="IImageSet"/> that this object describes.
-		/// </summary>
-		public ImageSet ImageSet
-		{
-			get { return _imageSet; }
-			internal set { _imageSet = value; }
-		}
 
 		/// <summary>
 		/// Gets the descriptive name of the <see cref="IImageSet"/>.

@@ -39,7 +39,6 @@ namespace ClearCanvas.Healthcare
 		///</summary>
 		public WorklistSettings()
 		{
-			// Note: server-side settings classes do not register in the <see cref="ApplicationSettingsRegistry"/>
 		}
 	}
 }
