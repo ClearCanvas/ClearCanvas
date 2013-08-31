@@ -33,6 +33,7 @@ namespace ClearCanvas.ImageServer.Common.WorkQueue
 	{
 		Compare,
 		OverwriteSop,
+		OverwriteSopAndUpdateDatabase,
 		OverwriteReport,
 		Reject
 	}

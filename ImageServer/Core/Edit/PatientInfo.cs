@@ -23,6 +23,7 @@
 #endregion
 
 using System;
+using ClearCanvas.Dicom;
 using ClearCanvas.Dicom.Iod;
 
 namespace ClearCanvas.ImageServer.Core.Edit
@@ -40,18 +41,21 @@ namespace ClearCanvas.ImageServer.Core.Edit
 			IssuerOfPatientId = other.IssuerOfPatientId;
 		}
 
+		[DicomField(DicomTags.PatientsName, DefaultValue = DicomFieldDefault.Null)]
 		public string Name { get; set; }
 
+		[DicomField(DicomTags.PatientId, DefaultValue = DicomFieldDefault.Null)]
 		public string PatientId { get; set; }
 
+		[DicomField(DicomTags.IssuerOfPatientId, DefaultValue = DicomFieldDefault.Null)]
 		public string IssuerOfPatientId { get; set; }
 
 		#region IEquatable<PatientInfo> Members
 
 		public bool Equals(PatientInfo other)
 		{
-			PersonName name = new PersonName(Name);
-			PersonName otherName = new PersonName(other.Name);
+			var name = new PersonName(Name);
+			var otherName = new PersonName(other.Name);
 			return name.Equals(otherName) && String.Equals(PatientId, other.PatientId, StringComparison.InvariantCultureIgnoreCase);
 		}
 

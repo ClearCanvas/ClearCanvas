@@ -148,7 +148,7 @@ namespace ClearCanvas.ImageServer.Services.Dicom
 
 				if (Device != null && Device.DeviceTypeEnum.Equals(DeviceTypeEnum.PrimaryPacs))
 				{
-					context.DuplicateProcessing = DuplicateProcessingEnum.OverwriteSop;
+					context.DuplicateProcessing = DuplicateProcessingEnum.OverwriteSopAndUpdateDatabase;
 				}
 
                 var importer = new SopInstanceImporter(context);

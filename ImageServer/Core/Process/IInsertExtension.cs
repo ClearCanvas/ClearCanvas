@@ -24,15 +24,18 @@
 
 using ClearCanvas.Common;
 using ClearCanvas.Dicom;
+using ClearCanvas.ImageServer.Model.EntityBrokers;
 using ClearCanvas.ImageServer.Model.Parameters;
 
 namespace ClearCanvas.ImageServer.Core.Process
 {
-    public interface IInsertExtension
-    {
-        void InsertExtension(InsertInstanceParameters parameters, DicomFile theFile);
-    }
+	public interface IInsertExtension
+	{
+		void InsertExtension(InsertInstanceParameters parameters, DicomFile theFile);
+		void UpdateExtension(PatientUpdateColumns patientUpdate, StudyUpdateColumns studyUpdate, SeriesUpdateColumns seriesUpdate, DicomFile theFile);
+	}
 
-    public class ProcessorInsertExtensionPoint : ExtensionPoint<IInsertExtension>
-    { }
+	public class ProcessorInsertExtensionPoint : ExtensionPoint<IInsertExtension>
+	{
+	}
 }

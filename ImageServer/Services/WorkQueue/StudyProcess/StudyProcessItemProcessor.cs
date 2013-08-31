@@ -172,6 +172,39 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.StudyProcess
             return result;
         }
 
+		private ProcessDuplicateResult OverwriteAndUpdateDuplicate(DicomFile dupFile, WorkQueueUid uid, StudyXml studyXml)
+		{
+			Platform.Log(LogLevel.Info, "Overwriting duplicate SOP {0}", uid.SopInstanceUid);
+
+			var result = new ProcessDuplicateResult();
+			result.ActionTaken = DuplicateProcessResultAction.Accept;
+
+			using (var processor = new ServerCommandProcessor("Overwrite duplicate instance"))
+			{
+				var destination = Context.StorageLocation.GetSopInstancePath(uid.SeriesInstanceUid, uid.SopInstanceUid);
+				processor.AddCommand(new RenameFileCommand(dupFile.Filename, destination, false));
+
+				// Update the StudyStream object
+				processor.AddCommand(new InsertStudyXmlCommand(dupFile, studyXml, Context.StorageLocation));
+
+				// Ideally we don't need to insert the instance into the database since it's a duplicate.
+				// However, we need to do so to ensure the Study record is recreated if we are dealing with an orphan study.
+				// For other cases, this will cause the instance count in the DB to be out of sync with the filesystem.
+				// But it will be corrected at the end of the processing when the study verification is executed.
+				processor.AddCommand(new UpdateInstanceCommand(Context.StorageLocation.ServerPartition,Context.StorageLocation,dupFile));
+
+				processor.AddCommand(new DeleteWorkQueueUidCommand(uid));
+
+				if (!processor.Execute())
+				{
+					// cause the item to fail
+					throw new Exception(string.Format("Error occurred when trying to overwrite duplicate in the filesystem."), processor.FailureException);
+				}
+			}
+
+			return result;
+		}
+
 		private ProcessDuplicateResult ProcessDuplicate(DicomFile dupFile, WorkQueueUid uid, StudyXml studyXml)
 		{
 			var result = new ProcessDuplicateResult();
@@ -196,6 +229,12 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.StudyProcess
 				if (duplicateEnum == DuplicateProcessingEnum.OverwriteSop)
 				{
 					return OverwriteDuplicate(dupFile, uid, studyXml);
+				}
+
+				// Check if system is configured to override the rule for this study
+				if (duplicateEnum == DuplicateProcessingEnum.OverwriteSopAndUpdateDatabase)
+				{
+					return OverwriteAndUpdateDuplicate(dupFile, uid, studyXml);
 				}
 
 				var baseFile = new DicomFile(basePath);
