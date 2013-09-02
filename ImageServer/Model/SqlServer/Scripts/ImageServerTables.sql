@@ -881,6 +881,7 @@ CREATE TABLE [dbo].[ServiceLock](
 	[FilesystemGUID] [uniqueidentifier] NULL,
 	[Enabled] [bit] NOT NULL CONSTRAINT [DF_ServiceLock_Enabled]  DEFAULT ((1)),
 	[State] [xml] NULL,
+	[ServerPartitionGUID] [uniqueidentifier] NULL,
  CONSTRAINT [PK_ServiceLock] PRIMARY KEY CLUSTERED 
 (
 	[GUID] ASC
@@ -2281,7 +2282,13 @@ IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo
 ALTER TABLE [dbo].[ServiceLock]  WITH CHECK ADD  CONSTRAINT [FK_ServiceLock_ServiceLockTypeEnum] FOREIGN KEY([ServiceLockTypeEnum])
 REFERENCES [dbo].[ServiceLockTypeEnum] ([Enum])
 GO
-ALTER TABLE [dbo].[ServiceLock] CHECK CONSTRAINT [FK_ServiceLock_ServiceLockTypeEnum]
+ALTER TABLE [dbo].[ServiceLock]  CHECK CONSTRAINT [FK_ServiceLock_ServiceLockTypeEnum]
+GO
+/****** Object:  ForeignKey [FK_ServiceLock_ServerPartitionGUID]    Script Date: 08/31/2013 00:00:00 ******/
+ALTER TABLE [dbo].[ServiceLock] WITH CHECK ADD CONSTRAINT [FK_ServiceLock_ServerPartitionGUID] FOREIGN KEY([ServerPartitionGUID]) 
+REFERENCES [dbo].[ServerPartition] 	([GUID]) 
+GO
+ALTER TABLE [dbo].[ServiceLock]  CHECK CONSTRAINT [FK_ServiceLock_ServerPartitionGUID]
 GO
 /****** Object:  ForeignKey [FK_Study_Patient]    Script Date: 07/17/2008 00:50:12 ******/
 IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_Study_Patient]') AND parent_object_id = OBJECT_ID(N'[dbo].[Study]'))

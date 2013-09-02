@@ -435,6 +435,12 @@
   <data name="ServiceLockTypeEnum_ExternalNotificationProcess_LongDescription" xml:space="preserve">
     <value>This service processes notifications to send to external applications.</value>
   </data>
+  <data name="ServiceLockTypeEnum_PartitionReapplyRules_Description" xml:space="preserve">
+    <value>Partition Reapply Rules</value>
+  </data>
+  <data name="ServiceLockTypeEnum_PartitionReapplyRules_LongDescription" xml:space="preserve">
+    <value>This service scans the contents of a partition and reapplies Study Processing rules to all studies on the partition that have not been archived.  Studies that have been archived will have Study Archived and Data Access rules applied.</value>
+  </data>
   <data name="ServerRuleTypeEnum_AutoRoute_Description" xml:space="preserve">
     <value>Auto Routing</value>
   </data>

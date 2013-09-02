@@ -60,6 +60,11 @@ namespace ClearCanvas.ImageServer.Model.EntityBrokers
         {
             set { SubParameters["State"] = new EntityUpdateColumn<XmlDocument>("State", value); }
         }
+        [EntityFieldDatabaseMappingAttribute(TableName="ServiceLock", ColumnName="ServerPartitionGUID")]
+        public ServerEntityKey ServerPartitionKey
+        {
+            set { SubParameters["ServerPartitionKey"] = new EntityUpdateColumn<ServerEntityKey>("ServerPartitionKey", value); }
+        }
         [EntityFieldDatabaseMappingAttribute(TableName="ServiceLock", ColumnName="FilesystemGUID")]
         public ServerEntityKey FilesystemKey
         {
