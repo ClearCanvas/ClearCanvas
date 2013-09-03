@@ -739,7 +739,7 @@ BEGIN
 	SELECT @StandardServerPartitionTypeEnum = Enum FROM ServerPartitionTypeEnum WHERE Lookup = ''Standard''
 	SELECT @ResearchServerPartitionTypeEnum = Enum FROM ServerPartitionTypeEnum WHERE Lookup = ''Research''
 
-	SELECT @PartitionReapplyRulesServiceLockTypeEnum = Enum from ServerPartitionTypeEnum WHERE Lookup = ''ServerPartitionTypeEnum''
+	SELECT @PartitionReapplyRulesServiceLockTypeEnum = Enum from ServiceLockTypeEnum WHERE Lookup = ''PartitionReapplyRules''
 
 	-- Insert a default StudyDelete rule
 	if @ServerPartitionTypeEnum = @StandardServerPartitionTypeEnum
