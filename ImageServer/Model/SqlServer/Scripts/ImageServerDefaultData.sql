@@ -527,6 +527,12 @@ INSERT INTO [ImageServer].[dbo].[ServiceLockTypeEnum]
            (newid(),302,'ExternalNotificationProcess','Process External Notifications','This service processes notifications to send to external applications.')
 GO
 
+INSERT INTO [ImageServer].[dbo].[ServiceLockTypeEnum]
+           ([GUID],[Enum],[Lookup],[Description],[LongDescription])
+     VALUES
+           (newid(),401,'PartitionReapplyRules','Partition Reapply Rules','This service scans the contents of a partition and reapplies Study Processing rules to all studies on the partition that have not been archived.  Studies that have been archived will have Study Archived and Data Access rules applied.')
+GO
+
 -- ServiceLock Entries not associated with a Filesystem
 INSERT INTO [ImageServer].[dbo].ServiceLock
 	([GUID],[ServiceLockTypeEnum],[Lock],[ScheduledTime],[FilesystemGUID],[Enabled])

@@ -61,6 +61,7 @@
     <Compile Include="Command\LockStudyCommand.cs" />
     <Compile Include="Command\SaveDicomFileCommand.cs" />
     <Compile Include="Command\SaveXmlCommand.cs" />
+    <Compile Include="Command\UpdateInstanceCommand.cs" />
     <Compile Include="Command\UpdateStudySizeInDBCommand.cs" />
     <Compile Include="Command\UpdateWorkQueueCommand.cs" />
     <Compile Include="Data\ProcessDuplicateChangeLog.cs" />

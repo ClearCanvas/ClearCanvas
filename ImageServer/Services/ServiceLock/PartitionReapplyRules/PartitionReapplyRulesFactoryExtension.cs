@@ -22,33 +22,29 @@
 
 #endregion
 
-using ClearCanvas.Common.Serialization;
+using ClearCanvas.Common;
+using ClearCanvas.ImageServer.Model;
 
-namespace ClearCanvas.ImageServer.Common.WorkQueue
+namespace ClearCanvas.ImageServer.Services.ServiceLock.PartitionReapplyRules
 {
 	/// <summary>
-	/// Enumerated values for different handling of Duplicate SOP Instances.
+	/// Plugin for creating processors for 'PartitionReapplyRules' <see cref="Model.ServiceLock"/> items.
 	/// </summary>
-	public enum DuplicateProcessingEnum
+	[ExtensionOf(typeof (ServiceLockFactoryExtensionPoint))]
+	internal class PartitionReapplyRulesFactoryExtension : IServiceLockProcessorFactory
 	{
-		Compare,
-		OverwriteSop,
-		OverwriteSopAndUpdateDatabase,
-		OverwriteReport,
-		Reject
+		#region IServiceLockProcessorFactory Members
+
+		public ServiceLockTypeEnum GetServiceLockType()
+		{
+			return ServiceLockTypeEnum.PartitionReapplyRules;
+		}
+
+		public IServiceLockItemProcessor GetItemProcessor()
+		{
+			return new PartitionReapplyRulesItemProcessor();
+		}
+
+		#endregion
 	}
-
-    [WorkQueueDataType("947CA259-E3A7-409F-B51D-12D358D01B13")]
-    public class WorkQueueUidData : DataContractBase
-    {
-        public string OperationToken { get; set; }
-
-        public string GroupId { get; set; }
-
-        public string RelativePath { get; set; }
-
-        public string Extension { get; set; }
-
-		public DuplicateProcessingEnum? DuplicateProcessing { get; set; }
-    }
 }

@@ -45,6 +45,7 @@ namespace ClearCanvas.ImageServer.Model
             ,DateTime _scheduledTime_
             ,Boolean _enabled_
             ,XmlDocument _state_
+            ,ServerEntityKey _serverPartitionKey_
             ,ServerEntityKey _filesystemKey_
             ,String _processorId_
             ):base("ServiceLock")
@@ -54,6 +55,7 @@ namespace ClearCanvas.ImageServer.Model
             ScheduledTime = _scheduledTime_;
             Enabled = _enabled_;
             State = _state_;
+            ServerPartitionKey = _serverPartitionKey_;
             FilesystemKey = _filesystemKey_;
             ProcessorId = _processorId_;
         }
@@ -77,6 +79,9 @@ namespace ClearCanvas.ImageServer.Model
         { get { return _State; } set { _State = value; } }
         [NonSerialized]
         private XmlDocument _State;
+        [EntityFieldDatabaseMappingAttribute(TableName="ServiceLock", ColumnName="ServerPartitionGUID")]
+        public ServerEntityKey ServerPartitionKey
+        { get; set; }
         [EntityFieldDatabaseMappingAttribute(TableName="ServiceLock", ColumnName="FilesystemGUID")]
         public ServerEntityKey FilesystemKey
         { get; set; }
@@ -117,6 +122,7 @@ namespace ClearCanvas.ImageServer.Model
             updateColumns.ScheduledTime = entity.ScheduledTime;
             updateColumns.Enabled = entity.Enabled;
             updateColumns.State = entity.State;
+            updateColumns.ServerPartitionKey = entity.ServerPartitionKey;
             updateColumns.FilesystemKey = entity.FilesystemKey;
             updateColumns.ProcessorId = entity.ProcessorId;
             ServiceLock newEntity = broker.Insert(updateColumns);

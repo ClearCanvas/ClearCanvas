@@ -723,6 +723,7 @@ BEGIN
 	DECLARE  @StudyCompressServerRuleTypeEnum smallint
 	DECLARE  @StandardServerPartitionTypeEnum smallint
 	DECLARE  @ResearchServerPartitionTypeEnum smallint
+	DECLARE  @PartitionReapplyRulesServiceLockTypeEnum smallint
 
 	-- Get the Study Processed Rule Apply Time
 	SELECT @StudyServerRuleApplyTimeEnum = Enum FROM ServerRuleApplyTimeEnum WHERE Lookup = ''StudyProcessed''
@@ -737,6 +738,8 @@ BEGIN
 
 	SELECT @StandardServerPartitionTypeEnum = Enum FROM ServerPartitionTypeEnum WHERE Lookup = ''Standard''
 	SELECT @ResearchServerPartitionTypeEnum = Enum FROM ServerPartitionTypeEnum WHERE Lookup = ''Research''
+
+	SELECT @PartitionReapplyRulesServiceLockTypeEnum = Enum from ServiceLockTypeEnum WHERE Lookup = ''PartitionReapplyRules''
 
 	-- Insert a default StudyDelete rule
 	if @ServerPartitionTypeEnum = @StandardServerPartitionTypeEnum
@@ -825,6 +828,12 @@ BEGIN
 					<no-op />
 				  </action>
 				</rule>'' )
+
+	-- Insert ServiceLock for Reapply Rules per Partition
+	INSERT INTO [ImageServer].[dbo].[ServiceLock]
+		([GUID],[ServiceLockTypeEnum],[Lock],[ScheduledTime], [Enabled], [ServerPartitionGUID])
+	VALUES (newid(), @PartitionReapplyRulesServiceLockTypeEnum, 0, getdate(), 0, @ServerPartitionGUID)
+
 	COMMIT TRANSACTION
 
 	SELECT * from ServerPartition WHERE GUID=@ServerPartitionGUID
@@ -2631,6 +2640,9 @@ BEGIN
 
 	-- PRINT ''Deleting ServerPartitionAlternateAeTitle''
 	delete dbo.ServerPartitionAlternateAeTitle where ServerPartitionGUID= @ServerPartitionGUID
+
+	-- PRINT ''Deleting ServiceLock''
+	delete dbo.ServiceLock where ServerPartitionGUID= @ServerPartitionGUID
 
 	IF @DeleteStudies=1
 	BEGIN

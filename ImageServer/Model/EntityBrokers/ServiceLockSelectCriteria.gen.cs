@@ -103,6 +103,18 @@ namespace ClearCanvas.ImageServer.Model.EntityBrokers
               return (ISearchCondition<XmlDocument>)SubCriteria["State"];
             } 
         }
+        [EntityFieldDatabaseMappingAttribute(TableName="ServiceLock", ColumnName="ServerPartitionGUID")]
+        public ISearchCondition<ServerEntityKey> ServerPartitionKey
+        {
+            get
+            {
+              if (!SubCriteria.ContainsKey("ServerPartitionKey"))
+              {
+                 SubCriteria["ServerPartitionKey"] = new SearchCondition<ServerEntityKey>("ServerPartitionKey");
+              }
+              return (ISearchCondition<ServerEntityKey>)SubCriteria["ServerPartitionKey"];
+            } 
+        }
         [EntityFieldDatabaseMappingAttribute(TableName="ServiceLock", ColumnName="FilesystemGUID")]
         public ISearchCondition<ServerEntityKey> FilesystemKey
         {

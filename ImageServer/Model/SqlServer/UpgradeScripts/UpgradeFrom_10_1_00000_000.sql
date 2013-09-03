@@ -384,6 +384,50 @@ GO
 IF @@TRANCOUNT=0 BEGIN INSERT INTO #tmpErrors (Error) SELECT 1 BEGIN TRANSACTION END
 GO
 
+PRINT N'Add ServerPartitionGUID column to ServiceLock'
+
+ALTER TABLE dbo.ServiceLock ADD
+	ServerPartitionGUID uniqueidentifier NULL
+GO
+ALTER TABLE [dbo].[ServiceLock] WITH CHECK ADD CONSTRAINT [FK_ServiceLock_ServerPartitionGUID] FOREIGN KEY([ServerPartitionGUID]) 
+REFERENCES [dbo].[ServerPartition] 	([GUID]) 
+GO
+ALTER TABLE [dbo].[ServiceLock]  CHECK CONSTRAINT [FK_ServiceLock_ServerPartitionGUID]
+GO
+
+IF @@ERROR<>0 AND @@TRANCOUNT>0 ROLLBACK TRANSACTION
+GO
+IF @@TRANCOUNT=0 BEGIN INSERT INTO #tmpErrors (Error) SELECT 1 BEGIN TRANSACTION END
+GO
+
+PRINT N'Add PartitionReapplyRules ServiceLockTypeEnum'
+
+INSERT INTO [ImageServer].[dbo].[ServiceLockTypeEnum]
+           ([GUID],[Enum],[Lookup],[Description],[LongDescription])
+     VALUES
+           (newid(),401,'PartitionReapplyRules','Partition Reapply Rules','This service scans the contents of a partition and reapplies Study Processing rules to all studies on the partition that have not been archived.  Studies that have been archived will have Study Archived and Data Access rules applied.')
+GO
+
+DECLARE @ServerPartitionGUID uniqueidentifier
+DECLARE partition_cursor CURSOR FOR SELECT GUID From ServerPartition
+OPEN partition_cursor
+FETCH NEXT FROM partition_cursor INTO @ServerPartitionGUID
+WHILE @@FETCH_STATUS = 0
+BEGIN
+    INSERT INTO [ImageServer].[dbo].[ServiceLock]
+			([GUID],[ServiceLockTypeEnum],[Lock],[ScheduledTime], [Enabled], [ServerPartitionGUID])
+		VALUES (newid(), (select Enum from ServiceLockTypeEnum where Lookup='PartitionReapplyRules'), 0, getdate(), 0, @ServerPartitionGUID)
+    
+    FETCH NEXT FROM partition_cursor INTO @ServerPartitionGUID
+END 
+CLOSE partition_cursor;
+DEALLOCATE partition_cursor;
+
+IF @@ERROR<>0 AND @@TRANCOUNT>0 ROLLBACK TRANSACTION
+GO
+IF @@TRANCOUNT=0 BEGIN INSERT INTO #tmpErrors (Error) SELECT 1 BEGIN TRANSACTION END
+GO
+
 IF EXISTS (SELECT * FROM #tmpErrors) ROLLBACK TRANSACTION
 GO
 IF @@TRANCOUNT>0 BEGIN
