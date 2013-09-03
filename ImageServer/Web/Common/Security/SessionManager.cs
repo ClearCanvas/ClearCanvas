@@ -23,6 +23,7 @@
 #endregion
 
 using System;
+using System.ServiceModel;
 using System.Threading;
 using System.Web;
 using System.Web.Security;
@@ -30,6 +31,7 @@ using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Dicom.Audit;
 using ClearCanvas.Enterprise.Common;
+using ClearCanvas.Enterprise.Common.Authentication;
 using ClearCanvas.ImageServer.Common;
 using ClearCanvas.ImageServer.Common.Helpers;
 using ClearCanvas.ImageServer.Web.Common.Utilities;
@@ -93,7 +95,7 @@ namespace ClearCanvas.ImageServer.Web.Common.Security
 
 			var tokenParam = "userId=" + session.User.Identity.Name + "&sessionId=" + session.Credentials.SessionToken.Id;
 			var uri = new UriBuilder(redirectUrl);
-			uri.Query = string.IsNullOrEmpty(uri.Query) ? tokenParam : "&" + tokenParam;
+			uri.Query = string.IsNullOrEmpty(uri.Query) ? tokenParam : uri.Query.Substring(1)+"&" + tokenParam;
 			
 			return uri.ToString();
 		}
@@ -264,6 +266,46 @@ namespace ClearCanvas.ImageServer.Web.Common.Security
                 ServerAuditHelper.LogAuditMessage(audit);
             }
         }
+
+
+		/// <summary>
+		/// Verifies the specified session 
+		/// </summary>
+		/// <param name="userId"></param>
+		/// <param name="sessionToken"></param>
+		/// <param name="authorityTokens"></param>
+		/// <param name="bypassCache">True to always bypass the response cache and get a "fresh" response from the server.</param>
+		/// <returns></returns>
+		public static bool VerifySession(string userId, string sessionToken, out string[] authorityTokens, bool bypassCache = false)
+		{
+			try
+			{
+				ValidateSessionResponse response = null;
+				var request = new ValidateSessionRequest(userId, new SessionToken(sessionToken));
+				if (bypassCache)
+				{
+					using (new ResponseCacheBypassScope())
+					{
+						Platform.GetService<IAuthenticationService>(service => response = service.ValidateSession(request));
+					}
+				}
+				else
+				{
+					Platform.GetService<IAuthenticationService>(service => response = service.ValidateSession(request));
+				}
+
+				authorityTokens = response.AuthorityTokens;
+				return response.SessionToken.ExpiryTime > Platform.Time; //TODO : Utc?
+			}
+			catch (FaultException<InvalidUserSessionException> e)
+			{
+
+			}
+
+			authorityTokens = null;
+			return false;
+		}
+
 
 
         /// <summary>
