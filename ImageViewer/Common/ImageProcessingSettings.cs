@@ -69,7 +69,7 @@ namespace ClearCanvas.ImageViewer.Common
 					{
 						Platform.Log(LogLevel.Debug, ex);
 					}
-					if (_maxParallelThreads <= 0) _maxParallelThreads = 1;
+					if (_maxParallelThreads < 0) _maxParallelThreads = 1;
 				}
 				return _maxParallelThreads;
 			}

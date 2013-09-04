@@ -155,7 +155,7 @@ namespace ClearCanvas.ImageViewer.VTK.Utilities
 
 		internal static unsafe void ForceCodeJit()
 		{
-			const int pixels = 65536;
+			const int pixels = 512*512;
 			const int subsamples = 11;
 
 			ReportStats = false;
@@ -166,6 +166,7 @@ namespace ClearCanvas.ImageViewer.VTK.Utilities
 				var slabData = new ushort[pixels*subsamples];
 				fixed (ushort* pSlabData = slabData)
 				{
+					AggregateSlabAverageIntensity((IntPtr) pSlabData, projectedData, subsamples, pixels, 2, false);
 					AggregateSlabMaximumIntensity((IntPtr) pSlabData, projectedData, subsamples, pixels, 2, false);
 				}
 			}
