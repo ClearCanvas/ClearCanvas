@@ -25,6 +25,7 @@
 #if UNIT_TESTS
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
@@ -37,28 +38,29 @@ namespace ClearCanvas.ImageViewer.VTK.Utilities.Tests
 	internal class SlabProjectionTests
 	{
 		[TestFixtureSetUp]
-		public unsafe void Initialize()
+		public void Initialize()
 		{
-			const int pixels = 5*7;
-			const int subsamples = 11;
+			SlabProjection.ForceCodeJit();
+		}
 
-			SlabProjection.ReportStats = false;
-			try
-			{
-				// perform a dummy run to ensure code is JITed
-				var projectedData = new byte[pixels*sizeof (ushort)];
-				var slabData = new ushort[pixels*subsamples];
-				fixed (ushort* pSlabData = slabData)
-				{
-					SlabProjection.AggregateSlabMaximumIntensity((IntPtr) pSlabData, projectedData, subsamples, pixels, 2, false);
-					SlabProjection.AggregateSlabMinimumIntensity((IntPtr) pSlabData, projectedData, subsamples, pixels, 2, false);
-					SlabProjection.AggregateSlabAverageIntensity((IntPtr) pSlabData, projectedData, subsamples, pixels, 2, false);
-				}
-			}
-			finally
-			{
-				SlabProjection.ReportStats = true;
-			}
+		[Test]
+		public void TestParallelProjectionWorkDivision()
+		{
+			SlabProjection.TestParallelJobDivision(13, 4);
+			SlabProjection.TestParallelJobDivision(12, 4);
+			SlabProjection.TestParallelJobDivision(11, 4);
+
+			SlabProjection.TestParallelJobDivision(513, 4);
+			SlabProjection.TestParallelJobDivision(512, 4);
+			SlabProjection.TestParallelJobDivision(511, 4);
+
+			SlabProjection.TestParallelJobDivision(9, 13);
+			SlabProjection.TestParallelJobDivision(8, 13);
+			SlabProjection.TestParallelJobDivision(7, 13);
+
+			SlabProjection.TestParallelJobDivision(512*512 + 1, 13);
+			SlabProjection.TestParallelJobDivision(512*512, 13);
+			SlabProjection.TestParallelJobDivision(512*512 - 1, 13);
 		}
 
 		[Test]
@@ -128,6 +130,8 @@ namespace ClearCanvas.ImageViewer.VTK.Utilities.Tests
 			for (var p = 0; p < pixels; ++p)
 				expectedResults[p] = (ushort) Math.Round(Enumerable.Range(0, subsamples).Select(s => slabData[s*pixels + p]).Average(v => v));
 
+			SlabProjection.ForceCodeJit();
+
 			var actualResults = new ushort[pixels];
 			var projectedData = new byte[pixels*sizeof (ushort)];
 			fixed (ushort* pSlabData = slabData)
@@ -149,13 +153,55 @@ namespace ClearCanvas.ImageViewer.VTK.Utilities
 	{
 		internal static bool ReportStats { get; set; }
 
-		static unsafe partial void StartClock(ref CodeClock codeClock)
+		internal static unsafe void ForceCodeJit()
+		{
+			const int pixels = 65536;
+			const int subsamples = 11;
+
+			ReportStats = false;
+			try
+			{
+				// perform a dummy run to ensure the parallelization code is JITed
+				var projectedData = new byte[pixels*sizeof (ushort)];
+				var slabData = new ushort[pixels*subsamples];
+				fixed (ushort* pSlabData = slabData)
+				{
+					AggregateSlabMaximumIntensity((IntPtr) pSlabData, projectedData, subsamples, pixels, 2, false);
+				}
+			}
+			finally
+			{
+				ReportStats = true;
+			}
+		}
+
+		internal static void TestParallelJobDivision(int subsamplePixels, int maxThreads)
+		{
+			var syncLock = new object();
+			var actual = new List<int>();
+
+			AggregateSlabByIntensity((a, b, c, d, blockOffset, blockCount) =>
+			                         	{
+			                         		lock (syncLock)
+			                         		{
+			                         			actual.AddRange(Enumerable.Range(blockOffset, blockCount));
+			                         		}
+			                         	}, IntPtr.Zero, null, 0, subsamplePixels, maxThreads);
+
+			actual.Sort();
+
+			var expected = new List<int>(Enumerable.Range(0, subsamplePixels));
+
+			Assert.AreEqual(expected, actual, "total pixel count = {0}, thread jobs = {1}", subsamplePixels, maxThreads);
+		}
+
+		static partial void StartClock(ref CodeClock codeClock)
 		{
 			codeClock = new CodeClock();
 			codeClock.Start();
 		}
 
-		static unsafe partial void StopClock(CodeClock codeClock, string method, int pixels, int subsamples)
+		static partial void StopClock(CodeClock codeClock, string method, int pixels, int subsamples)
 		{
 			codeClock.Stop();
 

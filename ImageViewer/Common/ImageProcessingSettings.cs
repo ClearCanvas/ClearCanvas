@@ -47,6 +47,12 @@ namespace ClearCanvas.ImageViewer.Common
 		/// <summary>
 		/// Gets the maximum number of parallel threads to use when performing image processing routines.
 		/// </summary>
+		/// <remarks>
+		/// The value is determined by a combination of the setting and the actual number of logical processors available on the system.
+		/// If the setting is set, the value will be either the setting or the number of logical processors, whichever is less.
+		/// If the setting is not set, the value will be all but one of the logical processors when 3 or more processors are available;
+		/// otherwise, the value will simply be the actual number of logical processors.
+		/// </remarks>
 		public static int MaxParallelThreads
 		{
 			get
@@ -56,16 +62,21 @@ namespace ClearCanvas.ImageViewer.Common
 					try
 					{
 						var setting = ImageProcessingSettings.Default.MaxParallelThreads;
-						_maxParallelThreads = setting > 0 ? Math.Min(Environment.ProcessorCount, setting) : Environment.ProcessorCount;
+						var cpuCount = Environment.ProcessorCount;
+						_maxParallelThreads = setting > 0 ? Math.Min(cpuCount, setting) : (cpuCount > 2 ? cpuCount - 1 : 1);
 					}
 					catch (Exception ex)
 					{
 						Platform.Log(LogLevel.Debug, ex);
 					}
-					if (_maxParallelThreads < 0) _maxParallelThreads = 1;
+					if (_maxParallelThreads <= 0) _maxParallelThreads = 1;
 				}
 				return _maxParallelThreads;
 			}
+
+#if UNIT_TESTS
+			set { _maxParallelThreads = value; }
+#endif
 		}
 
 		/// <summary>

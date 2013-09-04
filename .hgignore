@@ -24,6 +24,7 @@ syntax: glob
 [Bb]in
 [Dd]ebug*/
 obj/
+ipch/
 [Rr]elease*/
 _ReSharper*/
 [Tt]est[Rr]esult*
@@ -42,6 +43,10 @@ aspnetdb_log.ldf
 ClearCanvas.Common.xml
 ClearCanvas.Desktop.xml
 ImageViewer/ClearCanvas.ImageViewer.xml
+
+# VC++ Intellisense db files
+Dicom/ClearCanvas.Dicom.sdf
+ImageViewer/Core/Functions/ViewerCoreFunctions.sdf
 
 # Viewer local datastore files
 dicom_datastore/*.sdf
