@@ -47,7 +47,7 @@ namespace ClearCanvas.Enterprise.Common
 		/// If the authority tokens are not known at creation time they will be obtained on-demand
 		/// via the <see cref="IAuthenticationService"/>.
 		/// </remarks>
-		public static IPrincipal CreatePrincipal(string identityName, SessionToken sessionToken, string[] authorityTokens = null)
+		public static DefaultPrincipal CreatePrincipal(string identityName, SessionToken sessionToken, string[] authorityTokens = null)
 		{
 			return new DefaultPrincipal(new GenericIdentity(identityName), sessionToken, authorityTokens);
 		}
@@ -64,7 +64,7 @@ namespace ClearCanvas.Enterprise.Common
 		/// If the authority tokens are not known at creation time they will be obtained on-demand
 		/// via the <see cref="IAuthenticationService"/>.
 		/// </remarks>
-		public static IPrincipal CreatePrincipal(IIdentity identity, SessionToken sessionToken, string[] authorityTokens = null)
+		public static DefaultPrincipal CreatePrincipal(IIdentity identity, SessionToken sessionToken, string[] authorityTokens = null)
 		{
 			return new DefaultPrincipal(identity, sessionToken, authorityTokens);
 		}
