@@ -29,5 +29,18 @@
 		/// </summary>
 		/// <param name="message"></param>
 		void Write(LogMessage message);
+
+		/// <summary>
+		/// Ensures that all messages written to the sink have been committed to the underlying storage.
+		/// </summary>
+		void Flush();
+	}
+
+	public static class LogMessageSinkExtensions
+	{
+		public static void Log(this ILogMessageSink sink, LogLevel level, string message, params object[] args)
+		{
+			sink.Write(new LogMessage(level, message, args));
+		}
 	}
 }

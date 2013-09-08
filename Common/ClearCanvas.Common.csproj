@@ -304,8 +304,8 @@
     <Compile Include="Utilities\CommandLine.cs" />
     <Compile Include="Utilities\CommandLineException.cs" />
     <Compile Include="Utilities\CommandLineParameterAttribute.cs" />
+    <Compile Include="Utilities\LogMessageSink.cs" />
     <Compile Include="Utilities\DateTimeUtils.cs" />
-    <Compile Include="Utilities\DeferredLogMessageSink.cs" />
     <Compile Include="Utilities\DelayedEventPublisher.cs" />
     <Compile Include="Utilities\ExclusiveLock.cs" />
     <Compile Include="Utilities\HashUtilities.cs" />
