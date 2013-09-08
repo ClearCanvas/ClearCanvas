@@ -85,6 +85,8 @@
     <Compile Include="AuthenticationService.cs" />
     <Compile Include="AuthorityGroup.cs" />
     <Compile Include="Brokers\IAuthorityGroupBroker.cs" />
+    <Compile Include="AuthenticationServiceBase.cs" />
+    <Compile Include="ImpersonationService.cs" />
     <Compile Include="Imex\AuthorityGroupImex.cs" />
     <Compile Include="Imex\AuthorityGroupImporter.cs" />
     <Compile Include="AuthorityToken.cs" />

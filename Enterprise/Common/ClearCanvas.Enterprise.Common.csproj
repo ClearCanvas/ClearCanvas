@@ -140,6 +140,8 @@
     <Compile Include="AuthenticationScope.cs" />
     <Compile Include="Authentication\ChangePasswordRequest.cs" />
     <Compile Include="Authentication\ChangePasswordResponse.cs" />
+    <Compile Include="Authentication\InitiateImpersonatedSessionRequest.cs" />
+    <Compile Include="Authentication\IImpersonationService.cs" />
     <Compile Include="Authentication\GetAuthorizationsRequest.cs" />
     <Compile Include="Authentication\GetAuthorizationsResponse.cs" />
     <Compile Include="Authentication\InitiateSessionRequest.cs" />

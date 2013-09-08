@@ -24,7 +24,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.IdentityModel.Tokens;
 using System.Linq;
 using ClearCanvas.Enterprise.Common;
 using Iesi.Collections.Generic;
@@ -137,7 +136,7 @@ namespace ClearCanvas.Enterprise.Authentication {
 			Platform.CheckForNullReference(password, "password");
 			Platform.CheckPositive(timeout.TotalMilliseconds, "timeout");
 
-			DateTime startTime = Platform.Time;
+			var startTime = Platform.Time;
 
 			// check account is active and password correct
 			if (!IsActive(startTime) || !_password.Verify(password))
@@ -152,20 +151,41 @@ namespace ClearCanvas.Enterprise.Authentication {
 				throw new PasswordExpiredException();
 
 			// create new session
-			UserSession session = new UserSession(
-				this,
-				hostName,
-				application,
-				Guid.NewGuid().ToString("N"),
-				startTime,
-				startTime + timeout);
-
-			_sessions.Add(session);
+			var session = CreateSession(hostName, application, startTime, timeout, false);
 
 			// update last login time
 			_lastLoginTime = startTime;
 
 			return session;
+		}
+
+		/// <summary>
+		/// Initiates a new session for this user, updating the <see cref="Sessions"/> collection and returning
+		/// the new session.
+		/// </summary>
+		/// <param name="application"></param>
+		/// <param name="hostName"></param>
+		/// <param name="timeout"></param>
+		/// <returns></returns>
+		public virtual UserSession InitiateSessionImpersonated(string application, string hostName, TimeSpan timeout)
+		{
+			Platform.CheckForEmptyString(application, "application");
+			Platform.CheckForEmptyString(hostName, "hostName");
+			Platform.CheckPositive(timeout.TotalMilliseconds, "timeout");
+
+			var startTime = Platform.Time;
+
+			// check account is active
+			if (!IsActive(startTime))
+			{
+				// account not active, or invalid password
+				// the error message is deliberately vague
+				throw new UserAccessDeniedException();
+			}
+
+			// create new session
+			// note: we do not update the lastLoginTime - impersonated sessions don't count
+			return CreateSession(hostName, application, startTime, timeout, true);
 		}
 
 		/// <summary>
@@ -192,6 +212,22 @@ namespace ClearCanvas.Enterprise.Authentication {
 		}
 
         #endregion
+
+		private UserSession CreateSession(string host, string application, DateTime startTime, TimeSpan timeout, bool impersonated)
+		{
+			// create new session
+			var session = new UserSession(
+				this,
+				host,
+				application,
+				Guid.NewGuid().ToString("N"),
+				startTime,
+				startTime + timeout,
+				impersonated);
+
+			_sessions.Add(session);
+			return session;
+		}
 
 		/// <summary>
 		/// This method is called from the constructor.  Use this method to implement any custom
