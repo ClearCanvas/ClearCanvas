@@ -31,6 +31,13 @@ namespace ClearCanvas.Enterprise.Common.Authentication
 	[DataContract]
 	public class InitiateImpersonatedSessionRequest : DataContractBase
 	{
+		public InitiateImpersonatedSessionRequest(string userName, string application, string hostName)
+		{
+			UserName = userName;
+			Application = application;
+			HostName = hostName;
+		}
+
 		/// <summary>
 		/// User account to begin session for.
 		/// </summary>
