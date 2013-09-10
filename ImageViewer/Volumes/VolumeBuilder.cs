@@ -24,7 +24,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using System.Threading;
 using ClearCanvas.Common;
@@ -677,11 +676,12 @@ namespace ClearCanvas.ImageViewer.Volumes
 
 			private static float CalcSpaceBetweenPlanes(Frame frame1, Frame frame2)
 			{
-				Vector3D point1 = frame1.ImagePlaneHelper.ConvertToPatient(new PointF(0, 0));
-				Vector3D point2 = frame2.ImagePlaneHelper.ConvertToPatient(new PointF(0, 0));
-				Vector3D delta = point1 - point2;
+				var point1 = frame1.ImagePlaneHelper.ImageTopLeftPatient;
+				var point2 = frame2.ImagePlaneHelper.ImageTopLeftPatient;
+				var delta = point1 - point2;
 
-				return delta.IsNull ? 0f : delta.Magnitude;
+				// spacing between images should be measured along normal to image plane, regardless of actual orientation of images! (e.g. consider gantry tiled images)
+				return delta.IsNull ? 0f : Math.Abs(delta.Dot(frame1.ImagePlaneHelper.ImageNormalPatient));
 			}
 
 			private static Matrix ImageOrientationPatientToMatrix(ImageOrientationPatient orientation)

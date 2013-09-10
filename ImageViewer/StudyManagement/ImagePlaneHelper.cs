@@ -137,7 +137,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		}
 
 		/// <summary>
-		/// Gets the normal to the image plane in the patient coordinate system.
+		/// Gets the unit normal to the image plane in the patient coordinate system.
 		/// </summary>
 		/// <remarks>
 		/// This property returns a zero vector if the image plane information is invalid.
@@ -450,12 +450,12 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		}
 
 		/// <summary>
-		/// Gets the normal vector describing the plane of the image in patient coordinates.
+		/// Gets the unit normal vector describing the plane of the image in patient coordinates.
 		/// </summary>
 		/// <remarks>
 		/// This method yields the same results as <see cref="ImageNormalPatient"/>, except that it returns null if the image plane information is invalid.
 		/// </remarks>
-		/// <returns>The normal vector, or null if the image plane information is invalid.</returns>
+		/// <returns>The unit normal vector, or null if the image plane information is invalid.</returns>
 		public Vector3D GetNormalVector()
 		{
 			var normal = ImageNormalPatient;
@@ -463,9 +463,9 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		}
 
 		/// <summary>
-		/// Gets the normal vector describing the specified image plane in patient coordinates.
+		/// Gets the unit normal vector describing the specified image plane in patient coordinates.
 		/// </summary>
-		/// <returns>The normal vector, or null if the <see cref="Frame"/>'s position information is invalid.</returns>
+		/// <returns>The unit normal vector, or null if the <see cref="Frame"/>'s position information is invalid.</returns>
 		public static Vector3D GetNormalVector(ImageOrientationPatient imageOrientationPatient)
 		{
 			if (imageOrientationPatient.IsNull)
