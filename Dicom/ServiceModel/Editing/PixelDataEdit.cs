@@ -60,6 +60,7 @@ namespace ClearCanvas.Dicom.ServiceModel.Editing
 		}
 	}
 
+	[KnownType("GetKnownTypes")]
 	[DataContract(Namespace = DicomEditNamespace.Value)]
 	public abstract class PixelDataEdit : DataContractBase
 	{
@@ -70,5 +71,10 @@ namespace ClearCanvas.Dicom.ServiceModel.Editing
 		/// is right aligned, and is "normalized" such that it is properly represented (numerically)
 		/// using the correct corresponding value type (e.g. byte, sbyte, ushort, short).</remarks>
 		public abstract void Apply(IEditPixelDataContext context);
+
+		public static IEnumerable<Type> GetKnownTypes()
+		{
+			return Edit.GetKnownTypes();
+		}
 	}
 }
