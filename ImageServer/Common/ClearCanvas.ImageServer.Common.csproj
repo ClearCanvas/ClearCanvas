@@ -86,6 +86,7 @@
     <Compile Include="ExternalQuery\InvalidExternalQueryParameterException.cs" />
     <Compile Include="ExternalQuery\UnknownExternalQueryTypeException.cs" />
     <Compile Include="ExternalRequest\ConflictingRequestIdException.cs" />
+    <Compile Include="ExternalRequest\ExternalRequestCancellationException.cs" />
     <Compile Include="ExternalRequest\ExternalRequestDelayProcessingException.cs" />
     <Compile Include="ExternalRequest\ExternalRequestProcessingException.cs" />
     <Compile Include="ExternalRequest\ImageServerNotification.cs" />
