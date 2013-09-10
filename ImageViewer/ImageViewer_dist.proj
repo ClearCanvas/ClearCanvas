@@ -193,12 +193,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <MprPluginFiles Include="$(TrunkDirectory)\ImageViewer\Core\Functions\$(PlatformSubFolder)\$(Configuration)\ClearCanvas.ImageViewer.Core.Functions.dll" />
     <MprPluginFiles Include="$(TrunkDirectory)\ImageViewer\VTK\bin\$(Configuration)\ClearCanvas.ImageViewer.VTK.dll" />
     <MprPluginFiles Include="$(TrunkDirectory)\ImageViewer\Volume\Mpr\bin\$(Configuration)\ClearCanvas.ImageViewer.Volume.Mpr.dll" />
     <MprPluginFiles Include="$(TrunkDirectory)\ImageViewer\Volume\Mpr\View\WinForms\bin\$(Configuration)\ClearCanvas.ImageViewer.Volume.Mpr.View.WinForms.dll" />
 
-    <!-- VTK Includes -->
+    <MprPluginFiles Include="$(TrunkDirectory)\ReferencedAssemblies\ViewerFunctions\$(PlatformSubFolder)\ClearCanvas.ImageViewer.Core.Functions.dll" />
+
+	  <!-- VTK Includes -->
     <MprPluginFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Vtk\$(PlatformSubFolder)\MapReduceMPI.dll" />
     <MprPluginFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Vtk\$(PlatformSubFolder)\mpistubs.dll" />
     <MprPluginFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Vtk\$(PlatformSubFolder)\vtkalglib.dll" />
