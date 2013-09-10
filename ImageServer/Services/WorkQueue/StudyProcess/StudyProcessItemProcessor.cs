@@ -38,6 +38,7 @@ using ClearCanvas.ImageServer.Common.Exceptions;
 using ClearCanvas.ImageServer.Common.WorkQueue;
 using ClearCanvas.ImageServer.Core;
 using ClearCanvas.ImageServer.Core.Command;
+using ClearCanvas.ImageServer.Core.Events;
 using ClearCanvas.ImageServer.Core.Helpers;
 using ClearCanvas.ImageServer.Core.Process;
 using ClearCanvas.ImageServer.Core.Reconcile;
@@ -150,9 +151,13 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.StudyProcess
             {
                 var destination = Context.StorageLocation.GetSopInstancePath(uid.SeriesInstanceUid, uid.SopInstanceUid);
                 processor.AddCommand(new RenameFileCommand(dupFile.Filename, destination, false));
-                
+
+				// Do so that the FileSize calculation inInsertStudyXmlCommand works
+	            dupFile.Filename = destination;
+
                 // Update the StudyStream object
-                processor.AddCommand(new InsertStudyXmlCommand(dupFile, studyXml, Context.StorageLocation));
+	            var insertStudyXmlCommand = new InsertStudyXmlCommand(dupFile, studyXml, Context.StorageLocation);
+                processor.AddCommand(insertStudyXmlCommand);
 
 				// Ideally we don't need to insert the instance into the database since it's a duplicate.
 				// However, we need to do so to ensure the Study record is recreated if we are dealing with an orphan study.
@@ -167,6 +172,8 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.StudyProcess
                     // cause the item to fail
                     throw new Exception(string.Format("Error occurred when trying to overwrite duplicate in the filesystem."), processor.FailureException);
                 }
+
+				EventManager.FireEvent(this, new UpdateSopEventArgs { File = dupFile, ServerPartitionEntry = Context.StorageLocation.ServerPartition, WorkQueueUidEntry = uid, WorkQueueEntry = WorkQueueItem, FileLength = (ulong)insertStudyXmlCommand.FileSize });
             }
 
             return result;
