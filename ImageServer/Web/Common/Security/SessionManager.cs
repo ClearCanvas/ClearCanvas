@@ -267,6 +267,24 @@ namespace ClearCanvas.ImageServer.Web.Common.Security
             }
         }
 
+		/// <summary>
+		/// Renew the current session
+		/// </summary>
+		public static void RenewSession()
+		{
+			var session = Current;
+
+			if (session != null)
+			{
+				using (var service = new LoginService())
+				{
+					SessionInfo sessionInfo = service.Renew(session.Credentials.SessionToken.Id, true /* force to bypass local cache */);
+					InitializeSession(sessionInfo);
+				}
+			}
+			
+		}
+
 
 		/// <summary>
 		/// Verifies the specified session 
