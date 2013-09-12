@@ -41,5 +41,21 @@ namespace ClearCanvas.ImageServer.Web.Common.Data
         {
             return _adaptor.GetCount(criteria);
         }
+
+		public bool DeleteExternalRequestQueueItem(ExternalRequestQueue item)
+		{
+			return _adaptor.Delete(item.Key);
+		}
+
+	    public bool ResetExternalRequestQueueItem(ExternalRequestQueue item)
+	    {
+		    if (!item.ExternalRequestQueueStatusEnum.Equals(ExternalRequestQueueStatusEnum.Failed))
+			    return false;
+		    var update = new ExternalRequestQueueUpdateColumns
+			    {
+				    ExternalRequestQueueStatusEnum = ExternalRequestQueueStatusEnum.Pending
+			    };
+		    return _adaptor.Update(item.Key, update);
+	    }
     }
 }

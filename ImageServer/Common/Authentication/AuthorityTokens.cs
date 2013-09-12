@@ -214,5 +214,17 @@ namespace ClearCanvas.ImageServer.Common.Authentication
             [AuthorityToken(Description = "Allow reconciling studies in the study integrity queue.")]
             public const string Reconcile = "PACS/StudyIntegrityQueue/Reconcile";
         }
+
+		/// <summary>
+		/// Tokens that allow access to External Request Queue functionalities.
+		/// </summary>
+		public static class ExternalRequestQueue
+		{
+			[AuthorityToken(Description = "Allow searching for external request queue entries.")]
+			public const string Search = "PACS/ExternalRequestQueue/Search";
+
+			[AuthorityToken(Description = "Allow deleting external request queue entries.")]
+			public const string Delete = "PACS/ExternalRequestQueue/Delete";
+		}
     }
 }

@@ -71,6 +71,8 @@ namespace ClearCanvas.ImageServer.Web.Common.Security
                     AuthorityTokens.Study.SaveReason,
                     AuthorityTokens.StudyIntegrityQueue.Reconcile,
                     AuthorityTokens.StudyIntegrityQueue.Search,
+                    AuthorityTokens.ExternalRequestQueue.Search,
+                    AuthorityTokens.ExternalRequestQueue.Delete,
                     AuthorityTokens.WorkQueue.Delete,
                     AuthorityTokens.WorkQueue.Reprocess,
                     AuthorityTokens.WorkQueue.Reschedule,
