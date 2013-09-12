@@ -213,7 +213,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 				var header = new VolumeHeaderData(_frames.Select(f => (IDicomAttributeProvider) f.Sop.DataSource).ToList(), VolumeSize, VoxelSpacing, VolumePositionPatient, VolumeOrientationPatient, 16, 16, false, pixelPaddingValue, normalizedSlope, normalizedIntercept);
 
 				// determine how the normalized modality LUT affects VOI windows and update the header
-				VoiWindow.SetWindows(ComputeNormalizedVoiWindows(_frames, normalizedSlope, normalizedIntercept), header);
+				VoiWindow.SetWindows(ComputeAggregateNormalizedVoiWindows(_frames, normalizedSlope, normalizedIntercept), header);
 
 				return _volumeHeaderData = header;
 			}
@@ -451,15 +451,24 @@ namespace ClearCanvas.ImageViewer.Volumes
 				slope = (rangeMax - rangeMin)/65535;
 			}
 
-			private static IEnumerable<VoiWindow> ComputeNormalizedVoiWindows(IList<IFrameReference> frames, double normalizedSlope, double normalizedIntercept)
+			private static IEnumerable<VoiWindow> ComputeAggregateNormalizedVoiWindows(IEnumerable<IFrameReference> frames, double normalizedSlope, double normalizedIntercept)
 			{
-				var normalizedWindows = new List<VoiWindow>(VoiWindow.GetWindows(frames[0].Sop.DataSource));
-				if (frames[0].ImageSop.Modality == @"PT" && frames[0].Frame.IsSubnormalRescale)
+				// aggregate all the VOI windows for the source frames by index - i.e. 1st window is aggregate of all 1st windows in the input, 2nd window is aggregate of all 2nd windows, etc.
+				var frameWindows = frames.Select(f => ComputeNormalizedVoiWindows(f, normalizedSlope, normalizedIntercept).ToArray()).ToArray();
+				return Enumerable.Range(0, frameWindows.Select(w => w.Length).Max())
+					.Select(i => frameWindows.Select(f => f.Length > i ? f[i] : null))
+					.Select(w => ComputeAggregateVoiWindow(w.ToList())).ToList();
+			}
+
+			private static IEnumerable<VoiWindow> ComputeNormalizedVoiWindows(IImageSopProvider frame, double normalizedSlope, double normalizedIntercept)
+			{
+				var normalizedWindows = new List<VoiWindow>(VoiWindow.GetWindows(frame.Sop.DataSource));
+				if (frame.ImageSop.Modality == @"PT" && frame.Frame.IsSubnormalRescale)
 				{
 					// for PET images with subnormal rescale, the VOI window will always be applied directly to the original stored pixel values
 					// since MPR will not have access to original stored pixel values, we compute the VOI window through original modality LUT and inverted normalized modality LUT
-					var normalizedVoiSlope = frames[0].Frame.RescaleSlope/normalizedSlope;
-					var normalizedVoiIntercept = (frames[0].Frame.RescaleIntercept - normalizedIntercept)/normalizedSlope;
+					var normalizedVoiSlope = frame.Frame.RescaleSlope/normalizedSlope;
+					var normalizedVoiIntercept = (frame.Frame.RescaleIntercept - normalizedIntercept)/normalizedSlope;
 					for (var i = 0; i < normalizedWindows.Count; ++i)
 					{
 						var window = normalizedWindows[i]; // round the computed windows - the extra precision is not useful for display anyway
@@ -467,6 +476,15 @@ namespace ClearCanvas.ImageViewer.Volumes
 					}
 				}
 				return normalizedWindows;
+			}
+
+			private static VoiWindow ComputeAggregateVoiWindow(IList<VoiWindow> voiWindows)
+			{
+				// conservative way to aggregate each window - take the max of all upper bounds, and the min of all lower bounds
+				var max = voiWindows.Select(w => w.Center + w.Width/2).Max();
+				var min = voiWindows.Select(w => w.Center - w.Width/2).Min();
+				var exp = voiWindows.Select(w => w.Explanation).FirstOrDefault();
+				return new VoiWindow(max - min, (max + min)/2, exp);
 			}
 
 			/// <summary>
