@@ -58,6 +58,15 @@ namespace ClearCanvas.ImageViewer.Volumes
 		public Vector3D ColumnOrientationPatient { get; set; }
 
 		/// <summary>
+		/// Gets or sets the stack orientation of the output slices as a directional vector in patient coordinates.
+		/// </summary>
+		/// <remarks>
+		/// <para>In general, the stack orientation does not need to be specified, and the direction orthogonal to both the slice plane will be used.</para>
+		/// <para>In DICOM, this parameter is equivalent to the vector formed by the difference of the Image Position (Patient) of two consecutive images.</para>
+		/// </remarks>
+		public Vector3D StackOrientationPatient { get; set; }
+
+		/// <summary>
 		/// Gets or sets the spacing, in patient units, between consecutive rows of the output.
 		/// </summary>
 		/// <remarks>
@@ -257,7 +266,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 			// get the axes of the output plane and its normal in patient coordinates - these are the axes of the slicer frame
 			var slicerAxisX = (RowOrientationPatient ?? volumeReference.VolumeOrientationPatientX).Normalize();
 			var slicerAxisY = (ColumnOrientationPatient ?? volumeReference.VolumeOrientationPatientY).Normalize();
-			var slicerAxisZ = slicerAxisX.Cross(slicerAxisY).Normalize();
+			var slicerAxisZ = (StackOrientationPatient ?? slicerAxisX.Cross(slicerAxisY)).Normalize();
 
 			// project the corners of the volume on to the slicer axes to determine the bounds of the volume in the slicer frame
 			float minBoundsX = float.MaxValue, minBoundsY = float.MaxValue, minBoundsZ = float.MaxValue;
