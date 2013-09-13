@@ -34,7 +34,6 @@ using ClearCanvas.Common;
 using ClearCanvas.Dicom;
 using ClearCanvas.ImageViewer.Mathematics;
 using ClearCanvas.ImageViewer.StudyManagement;
-using ClearCanvas.ImageViewer.Volume.Mpr.Configuration;
 using ClearCanvas.ImageViewer.Volume.Mpr.Utilities;
 using ClearCanvas.ImageViewer.Volumes;
 
@@ -354,10 +353,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 
 		private float GetDefaultSpacing()
 		{
-			MprSettings settings = MprSettings.DefaultInstance;
-
 			Vector3D spacingVector = ActualSliceSpacingVector;
-			if (settings.AutoSliceSpacing)
 			{
 				// adjust magnitude of vector by whole factor based on max volume spacing
 				if (spacingVector.Magnitude < _volume.GetMaximumSpacing()/2f)
@@ -365,11 +361,6 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 					int spacingFactor = (int) (_volume.GetMaximumSpacing()/spacingVector.Magnitude);
 					spacingVector *= spacingFactor;
 				}
-			}
-			else
-			{
-				// adjust magnitude by value specified by user
-				spacingVector *= settings.SliceSpacingFactor;
 			}
 			return spacingVector.Magnitude;
 		}

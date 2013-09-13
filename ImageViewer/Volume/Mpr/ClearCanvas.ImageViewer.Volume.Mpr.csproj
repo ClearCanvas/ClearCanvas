@@ -78,14 +78,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Configuration\ConfigurationPageProvider.cs" />
-    <Compile Include="Configuration\MprConfigurationComponent.cs" />
-    <Compile Include="Configuration\MprSettings.cs" />
-    <Compile Include="Configuration\MprSettings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-      <DependentUpon>MprSettings.settings</DependentUpon>
-    </Compile>
     <Compile Include="IMprWorkspace.cs" />
     <Compile Include="MprDisplaySet.cs" />
     <Compile Include="MprSliceSop.cs" />
@@ -178,10 +170,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="Configuration\MprSettings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>MprSettings.Designer.cs</LastGenOutput>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Icons\ResetAllToolLarge.png" />

@@ -195,7 +195,6 @@
   <ItemGroup>
     <MprPluginFiles Include="$(TrunkDirectory)\ImageViewer\VTK\bin\$(Configuration)\ClearCanvas.ImageViewer.VTK.dll" />
     <MprPluginFiles Include="$(TrunkDirectory)\ImageViewer\Volume\Mpr\bin\$(Configuration)\ClearCanvas.ImageViewer.Volume.Mpr.dll" />
-    <MprPluginFiles Include="$(TrunkDirectory)\ImageViewer\Volume\Mpr\View\WinForms\bin\$(Configuration)\ClearCanvas.ImageViewer.Volume.Mpr.View.WinForms.dll" />
 
     <MprPluginFiles Include="$(TrunkDirectory)\ReferencedAssemblies\ViewerFunctions\$(PlatformSubFolder)\ClearCanvas.ImageViewer.Core.Functions.dll" />
 
