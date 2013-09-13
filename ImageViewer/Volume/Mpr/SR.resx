@@ -240,7 +240,4 @@
   <data name="CommandMprReslice" xml:space="preserve">
     <value>Reslice MPR</value>
   </data>
-  <data name="MessageFormatReloading" xml:space="preserve">
-    <value>Reloading... ({0:f0}%)</value>
-  </data>
 </root>

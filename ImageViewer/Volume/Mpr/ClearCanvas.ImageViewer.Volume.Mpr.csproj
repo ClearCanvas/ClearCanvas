@@ -120,13 +120,6 @@
     <Compile Include="Tests\MprTestVolumeTool.cs" />
     <Compile Include="Tools\ResliceToolResetAll.cs" />
     <Compile Include="Tools\ResliceToolGraphic.cs" />
-    <Compile Include="Trial\AsyncDicomGrayscalePresentationImage.cs" />
-    <Compile Include="Trial\AsyncFrame.cs" />
-    <Compile Include="Trial\AsyncImageSop.cs" />
-    <Compile Include="Trial\AsyncPresentationImageFactory.cs" />
-    <Compile Include="Trial\AsyncSopDataSource.cs" />
-    <Compile Include="Trial\AsyncVolumeSliceSopDataSource.cs" />
-    <Compile Include="Trial\IAsyncSopFrameData.cs" />
     <Compile Include="Utilities\DicomImagePlane.cs" />
     <Compile Include="Tools\MprLineStretchControlGraphic.cs" />
     <Compile Include="Utilities\MouseImageViewerToolGroup.cs" />
@@ -139,7 +132,6 @@
     <Compile Include="Tools\MprMoveControlGraphic.cs" />
     <Compile Include="Utilities\ObservableDisposableList.cs" />
     <Compile Include="Utilities\ProgressTask.cs" />
-    <Compile Include="Utilities\TransitionalHelper.cs" />
     <Compile Include="VolumeSlicerParams.cs" />
     <Compile Include="MprSliceSet.cs" />
     <Compile Include="Tools\MprViewerTool.cs" />

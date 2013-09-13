@@ -120,11 +120,6 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 			return CreateSliceSopsCore(seriesInstanceUid, s => new VolumeSliceSopDataSource(s));
 		}
 
-		public IEnumerable<ISopDataSource> CreateAsyncSliceSops(string seriesInstanceUid)
-		{
-			return CreateSliceSopsCore(seriesInstanceUid, s => new AsyncVolumeSliceSopDataSource(s));
-		}
-
 		private IEnumerable<ISopDataSource> CreateSliceSopsCore(string seriesInstanceUid, Func<VolumeSlice, ISopDataSource> sopDataSourceConstructor)
 		{
 			if (string.IsNullOrWhiteSpace(seriesInstanceUid))
