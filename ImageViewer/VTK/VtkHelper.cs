@@ -25,6 +25,7 @@
 using System;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Runtime.InteropServices;
 using ClearCanvas.Common;
 using ClearCanvas.ImageViewer.Mathematics;
@@ -46,7 +47,7 @@ namespace ClearCanvas.ImageViewer.Vtk
 			obj.AddObserver((uint) EventIds.WarningEvent, VtkEventCallback);
 		}
 
-		public static void VtkEventCallback(vtkObject vtkObj, uint eventId, object obj, IntPtr ptr)
+		private static void VtkEventCallback(vtkObject vtkObj, uint eventId, object obj, IntPtr ptr)
 		{
 			const string unexpectedMessage = "Unexpected VTK event received.";
 			const string message = "VTK Event 0x{0:x4}: {1}";
@@ -92,6 +93,11 @@ namespace ClearCanvas.ImageViewer.Vtk
 
 		static unsafe VtkHelper()
 		{
+			// set up VTK logging
+			var fileOutputWindow = new vtkFileOutputWindow();
+			fileOutputWindow.SetFileName(Path.Combine(Platform.LogDirectory, "vtk.log"));
+			vtkOutputWindow.SetInstance(fileOutputWindow);
+
 			fixed (double* p = _singleChannelByteToDouble)
 			{
 				var pData = p;

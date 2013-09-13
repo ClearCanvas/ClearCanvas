@@ -25,6 +25,7 @@
 using System;
 using System.Runtime.InteropServices;
 using ClearCanvas.Common;
+using ClearCanvas.Dicom;
 using ClearCanvas.ImageViewer.Common;
 using ClearCanvas.ImageViewer.Mathematics;
 using ClearCanvas.ImageViewer.VTK.Utilities;
@@ -295,5 +296,62 @@ namespace ClearCanvas.ImageViewer.VTK
 			slabAggregator.Invoke(pData, pixelData, subsamples, subsamplePixels, bitsPerVoxel/8, signed);
 			return pixelData;
 		}
+
+		#region VTK Reslice Static Initialization Hack
+
+		static VtkVolumeSlicerCore()
+		{
+			//VTK initializes some static variables (collections, actually) internally in a way that is not thread safe.
+			//It seems that, at least for the code we use to do reslicing, the collections are fully initialized after 
+			//the first slice is created from the first volume. Problems arise, however, if 2 slices are being created
+			//simultaneously on different threads.
+			//For the record, individual VTK objects are not thread-safe and should never be shared across threads.
+			//This hack exists only to workaround the static collections issue. Note also, that this hack is not future-proof;
+			//if we start using different parts of VTK in the future, we need to make sure this hack still works.
+
+			//Create one signed and one unsigned, just to make sure.
+			CreateAndResliceVolume(false);
+			CreateAndResliceVolume(true);
+		}
+
+		private static void CreateAndResliceVolume(bool signed)
+		{
+			const int width = 10;
+			const int height = 10;
+			const int depth = 10;
+
+			Volume vol;
+			if (signed)
+			{
+				vol = new S16Volume(new short[width*height*depth],
+				                    new Size3D(width, height, depth), new Vector3D(1, 1, 1),
+				                    new Vector3D(0, 0, 0), Matrix3D.GetIdentity(),
+				                    new DicomAttributeCollection(),
+				                    short.MinValue, 1, 0);
+			}
+			else
+			{
+				vol = new U16Volume(new ushort[width*height*depth],
+				                    new Size3D(width, height, depth), new Vector3D(1, 1, 1),
+				                    new Vector3D(0, 0, 0), Matrix3D.GetIdentity(),
+				                    new DicomAttributeCollection(),
+				                    ushort.MinValue, 1, 0);
+			}
+
+			try
+			{
+				using (var volumeReference = vol.CreateReference())
+				{
+					GetSlicePixelData(volumeReference, Matrix.GetIdentity(4), 20, 20, 0.5f, 0.5f, VolumeInterpolationMode.Linear);
+					GetSlabPixelData(volumeReference, Matrix.GetIdentity(4), new Vector3D(0, 0, 1), 20, 20, 3, 0.5f, 0.5f, 1, VolumeInterpolationMode.Linear, VolumeProjectionMode.Average);
+				}
+			}
+			finally
+			{
+				vol.Dispose();
+			}
+		}
+
+		#endregion
 	}
 }

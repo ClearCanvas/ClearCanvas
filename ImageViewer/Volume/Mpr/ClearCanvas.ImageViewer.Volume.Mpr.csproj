@@ -76,21 +76,6 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-    <Reference Include="vtkCommonDotNet, Version=0.0.0.0, Culture=neutral, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\ReferencedAssemblies\Vtk\vtkCommonDotNet.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="vtkFilteringDotNet, Version=0.0.0.0, Culture=neutral, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\ReferencedAssemblies\Vtk\vtkFilteringDotNet.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="vtkImagingDotNet, Version=0.0.0.0, Culture=neutral, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\ReferencedAssemblies\Vtk\vtkImagingDotNet.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Configuration\ConfigurationPageProvider.cs" />
@@ -146,7 +131,6 @@
     <Compile Include="MprViewerComponent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VolumeSliceSopDataSource.cs" />
-    <Compile Include="Utilities\VtkHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Common\ClearCanvas.Common.csproj">
@@ -172,10 +156,6 @@
     <ProjectReference Include="..\..\Configuration\ClearCanvas.ImageViewer.Configuration.csproj">
       <Project>{89DF567B-A0D1-456A-A28F-043FD57D7F9A}</Project>
       <Name>ClearCanvas.ImageViewer.Configuration</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\VTK\ClearCanvas.ImageViewer.VTK.csproj">
-      <Project>{14FE088A-252E-4214-94B6-FC9D62C9BF0E}</Project>
-      <Name>ClearCanvas.ImageViewer.VTK</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
