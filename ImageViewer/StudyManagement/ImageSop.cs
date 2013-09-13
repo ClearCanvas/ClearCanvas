@@ -54,17 +54,19 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		/// </summary>
 		/// <param name="filename">The path to a local DICOM Part 10 file.</param>
 		public ImageSop(string filename)
-			: base(filename)
-		{
-		}
+			: base(filename) {}
 
 		/// <summary>
 		/// Initializes a new instance of <see cref="ImageSop"/>.
 		/// </summary>
 		public ImageSop(ISopDataSource dataSource)
-			: base(dataSource)
-		{
-		}
+			: base(dataSource) {}
+
+		/// <summary>
+		/// Initializes a new instance of <see cref="ImageSop"/>.
+		/// </summary>
+		public ImageSop(ISopDataSource dataSource, bool useCache)
+			: base(dataSource, useCache) {}
 
 		/// <summary>
 		/// A collection of <see cref="Frame"/> objects.
@@ -91,7 +93,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 							var frames = new FrameCollection();
 							for (int i = 1; i <= this.NumberOfFrames; i++)
 								frames.Add(CreateFrame(i));
-							
+
 							_frames = frames;
 						}
 					}
@@ -108,28 +110,22 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		/// </summary>
 		public virtual string AnatomicalOrientationType
 		{
-			get
-			{
-			    return this[DicomTags.AnatomicalOrientationType].ToString();
-			}
+			get { return this[DicomTags.AnatomicalOrientationType].ToString(); }
 		}
 
 		#endregion
 
-        #region DX Series Module
+		#region DX Series Module
 
-        /// <summary>
-        /// Gets the Anatomical Orientation Type.
-        /// </summary>
-        public virtual string PresentationIntentType
-        {
-            get
-            {
-                return this[DicomTags.PresentationIntentType].ToString();
-            }
-        }
+		/// <summary>
+		/// Gets the Anatomical Orientation Type.
+		/// </summary>
+		public virtual string PresentationIntentType
+		{
+			get { return this[DicomTags.PresentationIntentType].ToString(); }
+		}
 
-        #endregion
+		#endregion
 
 		#region General Image Module
 
@@ -297,7 +293,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		#region Image Pixel Module
 
 		#region Type 1
-		
+
 		/// <summary>
 		/// Gets the samples per pixel.
 		/// </summary>
@@ -370,7 +366,8 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 			get { return this.Frames[1].PixelRepresentation; }
 		}
 
-		#endregion 
+		#endregion
+
 		#region Type 1C
 
 		/// <summary>
@@ -396,6 +393,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		}
 
 		#endregion
+
 		#endregion
 
 		#region Modality LUT Module
@@ -578,7 +576,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 
 			if (disposing)
 			{
-				lock(_syncLock)
+				lock (_syncLock)
 				{
 					if (_frames != null)
 					{

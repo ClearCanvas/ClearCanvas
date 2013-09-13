@@ -25,12 +25,13 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using ClearCanvas.Common;
 using ClearCanvas.Dicom;
 using ClearCanvas.Dicom.Iod;
+using ClearCanvas.Dicom.Iod.Macros;
+using ClearCanvas.Dicom.ServiceModel.Query;
 using ClearCanvas.Dicom.Utilities;
 using ClearCanvas.Dicom.Validation;
-using ClearCanvas.Dicom.ServiceModel.Query;
-using ClearCanvas.Dicom.Iod.Macros;
 
 namespace ClearCanvas.ImageViewer.StudyManagement
 {
@@ -48,7 +49,6 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 	/// see <see cref="ISopReference"/>.
 	/// </para>
 	/// </remarks>
-	
 	public partial class Sop : IDisposable, ISopInstanceData, ISeriesData, IStudyData, IPatientData
 	{
 		private volatile Series _parentSeries;
@@ -63,7 +63,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 			ISopDataSource dataSource = new LocalSopDataSource(filename);
 			try
 			{
-				Initialize(dataSource);
+				Initialize(dataSource, true);
 			}
 			catch
 			{
@@ -76,11 +76,17 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		/// Creates a new instance of <see cref="Sop"/>.
 		/// </summary>
 		public Sop(ISopDataSource dataSource)
+			: this(dataSource, true) {}
+
+		/// <summary>
+		/// Creates a new instance of <see cref="Sop"/>.
+		/// </summary>
+		public Sop(ISopDataSource dataSource, bool useCache)
 		{
-			Initialize(dataSource);
+			Initialize(dataSource, useCache);
 		}
 
-		private void Initialize(ISopDataSource dataSource)
+		private void Initialize(ISopDataSource dataSource, bool useCache)
 		{
 			//We want to explicitly enforce that image data sources are wrapped in ImageSops.
 			IsImage = this is ImageSop;
@@ -89,7 +95,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 				throw new ArgumentException("Data source/Sop type mismatch.", "dataSource");
 
 			//silently use shared/cached data source.
-			_dataSourceReference = SopDataCache.Add(dataSource);
+			_dataSourceReference = useCache ? SopDataCache.Add(dataSource) : new NonCacheSopDataCacheItemReference(dataSource);
 		}
 
 		/// <summary>
@@ -106,7 +112,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		/// </summary>
 		public bool IsStored
 		{
-			get { return DataSource.IsStored; }	
+			get { return DataSource.IsStored; }
 		}
 
 		/// <summary>
@@ -135,23 +141,23 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		/// </remarks>
 		public IImageIdentifier GetIdentifier()
 		{
-		    var studyIdentifier = GetStudyIdentifier();
+			var studyIdentifier = GetStudyIdentifier();
 			return new ImageIdentifier(this, studyIdentifier);
 		}
 
 		internal IStudyRootStudyIdentifier GetStudyIdentifier()
 		{
 			return new StudyRootStudyIdentifier(this, this, null)
-			           {
-			               SpecificCharacterSet = DicomStringHelper.GetDicomStringArray(SpecificCharacterSet), 
-                           RetrieveAE = DataSource.Server, 
-                           InstanceAvailability = "ONLINE"
-			           };
+			       	{
+			       		SpecificCharacterSet = DicomStringHelper.GetDicomStringArray(SpecificCharacterSet),
+			       		RetrieveAE = DataSource.Server,
+			       		InstanceAvailability = "ONLINE"
+			       	};
 		}
 
 		internal ISeriesIdentifier GetSeriesIdentifier()
 		{
-		    var studyIdentifier = GetStudyIdentifier();
+			var studyIdentifier = GetStudyIdentifier();
 			return new SeriesIdentifier(this, studyIdentifier);
 		}
 
@@ -188,7 +194,6 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		public virtual string SopClassUid
 		{
 			get { return DataSource.SopClassUid; }
-			
 		}
 
 		/// <summary>
@@ -221,6 +226,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		{
 			get { return DataSource.InstanceNumber; }
 		}
+
 		#endregion
 
 		#region Patient Module
@@ -310,7 +316,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 				var attribute = this[DicomTags.PatientSpeciesCodeSequence];
 				if (attribute.IsNull || attribute.Count == 0)
 					return null;
-				
+
 				var codeSquenceMacro = new CodeSequenceMacro(((DicomSequenceItem[]) attribute.Values)[0]);
 				return codeSquenceMacro.CodingSchemeDesignator;
 			}
@@ -327,7 +333,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 				if (attribute.IsNull || attribute.Count == 0)
 					return null;
 
-				var codeSquenceMacro = new CodeSequenceMacro(((DicomSequenceItem[])attribute.Values)[0]);
+				var codeSquenceMacro = new CodeSequenceMacro(((DicomSequenceItem[]) attribute.Values)[0]);
 				return codeSquenceMacro.CodeValue;
 			}
 		}
@@ -343,7 +349,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 				if (attribute.IsNull || attribute.Count == 0)
 					return null;
 
-				var codeSquenceMacro = new CodeSequenceMacro(((DicomSequenceItem[])attribute.Values)[0]);
+				var codeSquenceMacro = new CodeSequenceMacro(((DicomSequenceItem[]) attribute.Values)[0]);
 				return codeSquenceMacro.CodeMeaning;
 			}
 		}
@@ -371,7 +377,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 				if (attribute.IsNull || attribute.Count == 0)
 					return null;
 
-				var codeSquenceMacro = new CodeSequenceMacro(((DicomSequenceItem[])attribute.Values)[0]);
+				var codeSquenceMacro = new CodeSequenceMacro(((DicomSequenceItem[]) attribute.Values)[0]);
 				return codeSquenceMacro.CodingSchemeDesignator;
 			}
 		}
@@ -387,7 +393,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 				if (attribute.IsNull || attribute.Count == 0)
 					return null;
 
-				var codeSquenceMacro = new CodeSequenceMacro(((DicomSequenceItem[])attribute.Values)[0]);
+				var codeSquenceMacro = new CodeSequenceMacro(((DicomSequenceItem[]) attribute.Values)[0]);
 				return codeSquenceMacro.CodeValue;
 			}
 		}
@@ -403,7 +409,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 				if (attribute.IsNull || attribute.Count == 0)
 					return null;
 
-				var codeSquenceMacro = new CodeSequenceMacro(((DicomSequenceItem[])attribute.Values)[0]);
+				var codeSquenceMacro = new CodeSequenceMacro(((DicomSequenceItem[]) attribute.Values)[0]);
 				return codeSquenceMacro.CodeMeaning;
 			}
 		}
@@ -558,18 +564,18 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 
 		#endregion
 
-        string[] IStudyData.SopClassesInStudy
-        {
-            get
-            {
-                if (_parentSeries != null && _parentSeries.ParentStudy != null)
-                    return _parentSeries.ParentStudy.SopClassesInStudy;
+		string[] IStudyData.SopClassesInStudy
+		{
+			get
+			{
+				if (_parentSeries != null && _parentSeries.ParentStudy != null)
+					return _parentSeries.ParentStudy.SopClassesInStudy;
 
-                return null;
-            }
-        }
-        
-        string[] IStudyData.ModalitiesInStudy
+				return null;
+			}
+		}
+
+		string[] IStudyData.ModalitiesInStudy
 		{
 			get
 			{
@@ -659,7 +665,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		{
 			get
 			{
-				string manufacturer; 
+				string manufacturer;
 				manufacturer = this[DicomTags.Manufacturer].GetString(0, null);
 				return manufacturer ?? "";
 			}
@@ -1125,22 +1131,22 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 
 		private static void GetUint16FromAttribute(DicomAttribute attribute, uint position, out ushort value)
 		{
-			attribute.TryGetUInt16((int)position, out value);
+			attribute.TryGetUInt16((int) position, out value);
 		}
 
 		private static void GetInt32FromAttribute(DicomAttribute attribute, uint position, out int value)
 		{
-			attribute.TryGetInt32((int)position, out value);
+			attribute.TryGetInt32((int) position, out value);
 		}
 
 		private static void GetFloat64FromAttribute(DicomAttribute attribute, uint position, out double value)
 		{
-			attribute.TryGetFloat64((int)position, out value);
+			attribute.TryGetFloat64((int) position, out value);
 		}
 
 		private static void GetStringFromAttribute(DicomAttribute attribute, uint position, out string value)
 		{
-			attribute.TryGetString((int)position, out value);
+			attribute.TryGetString((int) position, out value);
 		}
 
 		private static void GetStringArrayFromAttribute(DicomAttribute attribute, uint position, out string value)
@@ -1151,7 +1157,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		private static void GetAttributeValueOBOW(DicomAttribute attribute, uint position, out byte[] value)
 		{
 			if (attribute is DicomAttributeOW || attribute is DicomAttributeOB)
-				value = (byte[])attribute.Values;
+				value = (byte[]) attribute.Values;
 			else
 				value = null;
 		}
@@ -1200,7 +1206,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 			return IsImageSop(SopClass.GetSopClass(sopClassUid));
 		}
 
-        // TODO (CR Jun 2012): Move to a more common place, like a SopClassExtensions class in IV.Common, or CC.Dicom?
+		// TODO (CR Jun 2012): Move to a more common place, like a SopClassExtensions class in IV.Common, or CC.Dicom?
 
 		internal static bool IsImageSop(SopClass sopClass)
 		{
@@ -1289,7 +1295,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 			{
 				ValidateInternal();
 			}
-			catch(SopValidationException)
+			catch (SopValidationException)
 			{
 				throw;
 			}
@@ -1308,7 +1314,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 					return;
 			}
 
-            throw new SopValidationException(String.Format("Unsupported transfer syntax: {0}", TransferSyntaxUid));
+			throw new SopValidationException(String.Format("Unsupported transfer syntax: {0}", TransferSyntaxUid));
 		}
 
 		protected virtual IEnumerable<TransferSyntax> GetAllowableTransferSyntaxes()
@@ -1359,5 +1365,69 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		{
 			return String.Format("{0} | {1}", this.InstanceNumber, this.SopInstanceUid);
 		}
+
+		#region
+
+		private class NonCacheSopDataCacheItemReference : ISopDataCacheItemReference
+		{
+			private readonly object _syncLock = new object();
+			private ISopDataSource _sopDataSource;
+			private volatile IList<VoiDataLut> _sopVoiDataLuts;
+
+			public NonCacheSopDataCacheItemReference(ISopDataSource sopDataSource)
+			{
+				_sopDataSource = sopDataSource;
+			}
+
+			public void Dispose()
+			{
+				if (_sopDataSource != null)
+				{
+					_sopDataSource.Dispose();
+					_sopDataSource = null;
+				}
+			}
+
+			public ISopDataSource RealDataSource
+			{
+				get { return _sopDataSource; }
+			}
+
+			public IList<VoiDataLut> VoiDataLuts
+			{
+				get
+				{
+					if (_sopVoiDataLuts == null)
+					{
+						lock (_syncLock)
+						{
+							if (_sopVoiDataLuts == null)
+							{
+								List<VoiDataLut> luts;
+								try
+								{
+									luts = VoiDataLut.Create(_sopDataSource);
+								}
+								catch (Exception ex)
+								{
+									Platform.Log(LogLevel.Warn, ex, "Creation of VOI Data LUTs failed.");
+									luts = new List<VoiDataLut>();
+								}
+								_sopVoiDataLuts = luts.AsReadOnly();
+							}
+						}
+					}
+
+					return _sopVoiDataLuts;
+				}
+			}
+
+			public ISopDataCacheItemReference Clone()
+			{
+				return new NonCacheSopDataCacheItemReference(_sopDataSource);
+			}
+		}
+
+		#endregion
 	}
 }
