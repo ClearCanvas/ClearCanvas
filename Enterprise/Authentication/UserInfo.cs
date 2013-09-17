@@ -42,5 +42,6 @@ namespace ClearCanvas.Enterprise.Authentication
         public string EmailAddress;
         public DateTime? ValidFrom;
         public DateTime? ValidUntil;
+    	public UserAccountType AccountType;
     }
 }

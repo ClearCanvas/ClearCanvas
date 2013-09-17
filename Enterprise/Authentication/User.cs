@@ -59,6 +59,7 @@ namespace ClearCanvas.Enterprise.Authentication {
 
             return new User(
                 userInfo.UserName,
+				userInfo.AccountType,
                 initialPassword,
                 userInfo.DisplayName,
                 userInfo.ValidFrom,

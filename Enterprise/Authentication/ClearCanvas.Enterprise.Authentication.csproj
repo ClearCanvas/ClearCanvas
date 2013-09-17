@@ -121,6 +121,7 @@
     <Compile Include="Tests\UserSessionTests.cs" />
     <Compile Include="Tests\UserTests.cs" />
     <Compile Include="User.cs" />
+    <Compile Include="UserAccountType.cs" />
     <Compile Include="UserInfo.cs" />
     <Compile Include="UserName.cs" />
     <Compile Include="UserSession.cs" />
