@@ -120,6 +120,9 @@
   <data name="EmailAddressNotConfigured" xml:space="preserve">
     <value>An email address is not configured for the account.  Please contact an administrator.</value>
   </data>
+  <data name="ExceptionCannotManageBuiltInAuthorityGroups" xml:space="preserve">
+    <value>Built-in authority groups cannot be managed through this service.</value>
+  </data>
   <data name="ExceptionFailedToDelete" xml:space="preserve">
     <value>Unable to delete {0}.  The most likely reason is that the item is referenced by another item in the system.</value>
   </data>

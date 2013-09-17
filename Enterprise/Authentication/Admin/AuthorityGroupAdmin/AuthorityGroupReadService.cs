@@ -42,6 +42,8 @@ namespace ClearCanvas.Enterprise.Authentication.Admin.AuthorityGroupAdmin
         {
             var criteria = new AuthorityGroupSearchCriteria();
             criteria.Name.SortAsc(0);
+			criteria.BuiltIn.EqualTo(false);	// built-in groups are not visible through this service
+
             if (request.DataGroup.HasValue)
                 criteria.DataGroup.EqualTo(request.DataGroup.Value);
 

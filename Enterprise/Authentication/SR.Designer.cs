@@ -70,6 +70,15 @@ namespace ClearCanvas.Enterprise.Authentication {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Built-in authority groups cannot be managed through this service..
+        /// </summary>
+        internal static string ExceptionCannotManageBuiltInAuthorityGroups {
+            get {
+                return ResourceManager.GetString("ExceptionCannotManageBuiltInAuthorityGroups", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Unable to delete {0}.  The most likely reason is that the item is referenced by another item in the system..
         /// </summary>
         internal static string ExceptionFailedToDelete {

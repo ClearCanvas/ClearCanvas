@@ -30,32 +30,43 @@ namespace ClearCanvas.Common.Authorization
 	/// <seealso cref="AuthorityTokenAttribute"/>
 	public class AuthorityGroupDefinition
     {
-        /// <summary>
+		/// <summary>
+		/// Constructor.
+		/// </summary>
+		/// <param name="name">The name of the authority group.</param>
+		/// <param name="tokens">The associated authority group tokens.</param>
+		public AuthorityGroupDefinition(string name, string[] tokens)
+			:this(name, name, false, tokens, false)
+		{
+		}
+
+		/// <summary>
 		/// Constructor.
 		/// </summary>
 		/// <param name="name">The name of the authority group.</param>
 		/// <param name="tokens">The associated authority group tokens.</param>
 		/// <param name="dataGroup">Tells if the group is an authority group for controlling access to data.</param>
 		/// <param name="description">The description of the authority group.</param>
-        public AuthorityGroupDefinition(string name, string description, bool dataGroup, string[] tokens)
+		public AuthorityGroupDefinition(string name, string description, bool dataGroup, string[] tokens)
+			:this(name, description, dataGroup, tokens, false)
+		{
+		}
+
+    	/// <summary>
+    	/// Constructor.
+    	/// </summary>
+    	/// <param name="name">The name of the authority group.</param>
+    	/// <param name="tokens">The associated authority group tokens.</param>
+    	/// <param name="dataGroup">Tells if the group is an authority group for controlling access to data.</param>
+    	/// <param name="description">The description of the authority group.</param>
+    	/// <param name="builtIn"> </param>
+    	public AuthorityGroupDefinition(string name, string description, bool dataGroup, string[] tokens, bool builtIn)
         {
             Name = name;
             Tokens = tokens;
 		    Description = description;
             DataGroup = dataGroup;
-        }
-
-        /// <summary>
-        /// Constructor.
-        /// </summary>
-        /// <param name="name">The name of the authority group.</param>
-        /// <param name="tokens">The associated authority group tokens.</param>
-        public AuthorityGroupDefinition(string name, string[] tokens)
-        {
-            Name = name;
-            Tokens = tokens;
-            Description = name;
-            DataGroup = false;
+			BuiltIn = builtIn;
         }
 
         /// <summary>
@@ -73,6 +84,15 @@ namespace ClearCanvas.Common.Authorization
         {
             get; private set;
         }
+
+		/// <summary>
+		/// Gets a bool signaling if the authority group is a built-in group.
+		/// </summary>
+		public bool BuiltIn
+		{
+			get;
+			private set;
+		}
 
 
         /// <summary>

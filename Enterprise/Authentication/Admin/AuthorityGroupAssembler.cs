@@ -34,8 +34,12 @@ namespace ClearCanvas.Enterprise.Authentication.Admin
     {
         internal AuthorityGroupSummary CreateAuthorityGroupSummary(AuthorityGroup authorityGroup)
         {
-            return new AuthorityGroupSummary(authorityGroup.GetRef(), authorityGroup.Name, authorityGroup.Description,
-                                             authorityGroup.DataGroup);
+            return new AuthorityGroupSummary(
+				authorityGroup.GetRef(),
+				authorityGroup.Name,
+				authorityGroup.Description,
+				authorityGroup.BuiltIn,
+				authorityGroup.DataGroup);
         }
 
         internal AuthorityGroupDetail CreateAuthorityGroupDetail(AuthorityGroup authorityGroup)
@@ -50,12 +54,14 @@ namespace ClearCanvas.Enterprise.Authentication.Admin
                 authorityGroup.GetRef(),
                 authorityGroup.Name,
                 authorityGroup.Description,
-                authorityGroup.DataGroup,
+				authorityGroup.BuiltIn,
+				authorityGroup.DataGroup,
                 tokens);
         }
 
         internal void UpdateAuthorityGroup(AuthorityGroup authorityGroup, AuthorityGroupDetail detail, IPersistenceContext persistenceContext)
         {
+			// do not update BuiltIn flag
             authorityGroup.Name = detail.Name;
             authorityGroup.Description = detail.Description;
             authorityGroup.DataGroup = detail.DataGroup;
