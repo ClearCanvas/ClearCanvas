@@ -26,6 +26,7 @@ using System;
 using System.Collections.Generic;
 using ClearCanvas.Common;
 using ClearCanvas.Enterprise.Authentication.Imex;
+using ClearCanvas.Enterprise.Common;
 using ClearCanvas.Enterprise.Core;
 using ClearCanvas.Enterprise.Authentication.Brokers;
 using System.IO;
@@ -38,6 +39,9 @@ namespace ClearCanvas.Enterprise.Authentication.Setup
 	[ExtensionOf(typeof(ApplicationRootExtensionPoint))]
 	public class SetupApplication : IApplicationRoot
 	{
+		private const string ServiceAccountsGroupName = "Service Accounts";
+		private const string ServiceAccountsGroupDescription = "Built-in default authority group for Service Accounts.";
+
 		#region IApplicationRoot Members
 
 		public void RunApplication(string[] args)
@@ -54,15 +58,22 @@ namespace ClearCanvas.Enterprise.Authentication.Setup
 					// import authority tokens
 					var tokenImporter = new AuthorityTokenImporter();
 					var allTokens = tokenImporter.ImportFromPlugins((IUpdateContext)PersistenceScope.CurrentContext);
-
+					var tokenStrings = CollectionUtils.Map<AuthorityToken, string, List<string>>(allTokens, t => t.Name).ToArray();
 
 					// create the sys admin group, which has all tokens assigned by default
-					var tokenStrings = CollectionUtils.Map<AuthorityToken, string, List<string>>(allTokens, t => t.Name).ToArray();
-					var adminGroupDef = new AuthorityGroupDefinition(cmdLine.SysAdminGroup, cmdLine.SysAdminGroup, false,
-																						  tokenStrings);
-					var groupImporter = new AuthorityGroupImporter();
+					var adminGroupDef = new AuthorityGroupDefinition(cmdLine.SysAdminGroup, cmdLine.SysAdminGroup, false, tokenStrings, true);
 
-					var groups = groupImporter.Import(new[] { adminGroupDef }, (IUpdateContext)PersistenceScope.CurrentContext);
+					// create the service accounts group, which has only the impersonation token assigned by default
+					var serviceAccountsGroupDef = new AuthorityGroupDefinition(
+						ServiceAccountsGroupName,
+						ServiceAccountsGroupDescription,
+						false,
+						new[]{AuthorityTokens.Login.Impersonate},
+						true);
+					
+					// import built-in groups
+					var groupImporter = new AuthorityGroupImporter();
+					var groups = groupImporter.Import(new[] { adminGroupDef, serviceAccountsGroupDef }, (IUpdateContext)PersistenceScope.CurrentContext);
 
 					// find the admin group entity that was just created
 					var adminGroup = CollectionUtils.SelectFirst(groups, g => g.Name == cmdLine.SysAdminGroup);
