@@ -110,7 +110,7 @@ namespace ClearCanvas.Enterprise.Authentication.Setup
 
                 // create sa user using initial password, set to expire never
                 User saUser = User.CreateNewUser(
-					new UserInfo(cmdLine.SysAdminUserName, cmdLine.SysAdminDisplayName, null, null, null),
+					new UserInfo(UserAccountType.U, cmdLine.SysAdminUserName, cmdLine.SysAdminDisplayName, null, null, null),
 					Password.CreatePassword(cmdLine.SysAdminInitialPassword, null),
                     groups);
                 context.Lock(saUser, DirtyState.New);

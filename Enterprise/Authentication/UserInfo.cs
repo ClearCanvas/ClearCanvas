@@ -28,8 +28,9 @@ namespace ClearCanvas.Enterprise.Authentication
 {
     public class UserInfo
     {
-        public UserInfo(string userName, string displayName, string emailAddress, DateTime? validFrom, DateTime? validUntil)
+        public UserInfo(UserAccountType accountType, string userName, string displayName, string emailAddress, DateTime? validFrom, DateTime? validUntil)
         {
+        	this.AccountType = accountType;
             this.UserName = userName;
             this.DisplayName = displayName;
             this.ValidFrom = validFrom;
@@ -37,11 +38,11 @@ namespace ClearCanvas.Enterprise.Authentication
             this.EmailAddress = emailAddress;
         }
 
-        public string UserName;
+		public UserAccountType AccountType;
+		public string UserName;
         public string DisplayName;
         public string EmailAddress;
         public DateTime? ValidFrom;
         public DateTime? ValidUntil;
-    	public UserAccountType AccountType;
     }
 }

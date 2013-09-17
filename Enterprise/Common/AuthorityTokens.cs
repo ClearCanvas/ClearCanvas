@@ -46,6 +46,15 @@ namespace ClearCanvas.Enterprise.Common
 
 				[AuthorityToken(Description = "Allow administration of Authority Groups.")]
 				public const string AuthorityGroup = "Enterprise/Admin/Security/Authority Group";
+
+				public static class NonUserAccounts
+				{
+					[AuthorityToken(Description = "Allow administration of Service Accounts.")]
+					public const string Service = "Enterprise/Admin/Security/Non-user Accounts/Service";
+
+					[AuthorityToken(Description = "Allow administration of Group Accounts.")]
+					public const string Group = "Enterprise/Admin/Security/Non-user Accounts/Group";
+				}
 			}
 		}
 
@@ -62,6 +71,12 @@ namespace ClearCanvas.Enterprise.Common
 
 			[AuthorityToken(Description = "Allow the user access to all Server Partitions on the ImageServer.")]
 			public const string AllPartitions = "Data Access/Access to all Server Partitions";
+		}
+
+		public static class Login
+		{
+			[AuthorityToken(Description = "Allow modification of enterprise configuration store data.")]
+			public const string Impersonate = "Enterprise/Login/Impersonate";
 		}
 	}
 }

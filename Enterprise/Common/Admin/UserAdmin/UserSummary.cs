@@ -34,8 +34,9 @@ namespace ClearCanvas.Enterprise.Common.Admin.UserAdmin
 		/// <summary>
 		/// Constructor for returning only the most basic information about a user.
 		/// </summary>
-		public UserSummary(string userId, string displayName, string emailAddress)
+		public UserSummary(EnumValueInfo accountType, string userId, string displayName, string emailAddress)
 		{
+			AccountType = accountType;
 			UserName = userId;
 			DisplayName = displayName;
 			EmailAddress = emailAddress;
@@ -44,9 +45,20 @@ namespace ClearCanvas.Enterprise.Common.Admin.UserAdmin
 		/// <summary>
 		/// Constructor for returning full user summary.
 		/// </summary>
-		public UserSummary(string userId, string displayName, string emailAddress, DateTime creationTime, DateTime? validFrom, DateTime? validUntil,
-            DateTime? lastLoginTime, DateTime? passwordExpiry, bool enabled, int sessionCount)
-        {
+		public UserSummary(
+			EnumValueInfo accountType,
+			string userId,
+			string displayName,
+			string emailAddress,
+			DateTime creationTime,
+			DateTime? validFrom,
+			DateTime? validUntil,
+            DateTime? lastLoginTime,
+			DateTime? passwordExpiry,
+			bool enabled,
+			int sessionCount)
+		{
+			AccountType = accountType;
             UserName = userId;
             DisplayName = displayName;
             EmailAddress = emailAddress;
@@ -59,7 +71,10 @@ namespace ClearCanvas.Enterprise.Common.Admin.UserAdmin
             SessionCount = sessionCount;
         }
 
-        [DataMember]
+		[DataMember]
+		public EnumValueInfo AccountType;
+
+		[DataMember]
         public string UserName;
 
         [DataMember]

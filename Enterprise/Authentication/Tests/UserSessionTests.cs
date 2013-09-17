@@ -257,6 +257,7 @@ namespace ClearCanvas.Enterprise.Authentication.Tests
 		private static UserSession CreateSession(TimeSpan timeout)
 		{
 			UserInfo userInfo = new UserInfo(
+				UserAccountType.U,
 				UserName,
 				DisplayName,
                 "test@clearcanvas.ca",

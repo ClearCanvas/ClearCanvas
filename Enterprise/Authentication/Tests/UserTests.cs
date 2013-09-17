@@ -53,6 +53,7 @@ namespace ClearCanvas.Enterprise.Authentication.Tests
 		public void Test_CreateNewUser()
 		{
 			UserInfo userInfo = new UserInfo(
+				UserAccountType.U, 
 				"foo",
 				"Mr. Foo",
                 "test@clearcanvas.ca",                
@@ -94,6 +95,7 @@ namespace ClearCanvas.Enterprise.Authentication.Tests
 			DateTime tomorrow = now + TimeSpan.FromDays(1);
 
 			UserInfo userInfo = new UserInfo(
+				UserAccountType.U,
 				"foo",
 				"Mr. Foo",
                 "test@clearcanvas.ca",
@@ -119,6 +121,7 @@ namespace ClearCanvas.Enterprise.Authentication.Tests
 			DateTime now = DateTime.Now;
 			DateTime tomorrow = now + TimeSpan.FromDays(1);
 			UserInfo userInfo = new UserInfo(
+				UserAccountType.U,
 				"foo",
 				"Mr. Foo",
                 "test@clearcanvas.ca",                
@@ -156,6 +159,7 @@ namespace ClearCanvas.Enterprise.Authentication.Tests
 		public void Test_CreateNewUser_NullUserName()
 		{
 			UserInfo userInfo = new UserInfo(
+				UserAccountType.U,
 				null,
 				"Mr. Foo",
                 "test@clearcanvas.ca",                
@@ -170,6 +174,7 @@ namespace ClearCanvas.Enterprise.Authentication.Tests
 		public void Test_CreateNewUser_EmptyUserName()
 		{
 			UserInfo userInfo = new UserInfo(
+				UserAccountType.U,
 				"",
 				"Mr. Foo",
                 "test@clearcanvas.ca",
@@ -184,6 +189,7 @@ namespace ClearCanvas.Enterprise.Authentication.Tests
 		public void Test_CreateNewUser_IllegalUserName()
 		{
 			UserInfo userInfo = new UserInfo(
+				UserAccountType.U,
 				"foo>foo",
 				"Mr. Foo",
 				"test@clearcanvas.ca",
@@ -197,6 +203,7 @@ namespace ClearCanvas.Enterprise.Authentication.Tests
 		public void Test_CreateNewUser_NullDisplayName()
 		{
 			UserInfo userInfo = new UserInfo(
+				UserAccountType.U,
 				"foo",
 				null,
                 "test@clearcanvas.ca",
@@ -210,6 +217,7 @@ namespace ClearCanvas.Enterprise.Authentication.Tests
 		public void Test_CreateNewUser_EmptyDisplayName()
 		{
 			UserInfo userInfo = new UserInfo(
+				UserAccountType.U,
 				"foo",
 				"",
                 "test@clearcanvas.ca",
@@ -224,6 +232,7 @@ namespace ClearCanvas.Enterprise.Authentication.Tests
 		public void Test_CreateNewUser_NullPassword()
 		{
 			UserInfo userInfo = new UserInfo(
+				UserAccountType.U,
 				"foo",
 				"Mr. Foo",
                 "test@clearcanvas.ca",
@@ -238,6 +247,7 @@ namespace ClearCanvas.Enterprise.Authentication.Tests
 		public void Test_CreateNewUser_EmptyPassword()
 		{
 			UserInfo userInfo = new UserInfo(
+				UserAccountType.U,
 				"foo",
 				"Mr. Foo",
                 "test@clearcanvas.ca",
@@ -252,6 +262,7 @@ namespace ClearCanvas.Enterprise.Authentication.Tests
 		public void Test_CreateNewUser_InvalidDateRange()
 		{
 			UserInfo userInfo = new UserInfo(
+				UserAccountType.U,
 				"foo",
 				"Mr. Foo",
                 null,
@@ -598,6 +609,7 @@ namespace ClearCanvas.Enterprise.Authentication.Tests
 		{
 			string password = "password";
 			UserInfo userInfo = new UserInfo(
+				UserAccountType.U, 
 				"foo",
 				"Mr. Foo",
                 "test@clearcanvas.ca",

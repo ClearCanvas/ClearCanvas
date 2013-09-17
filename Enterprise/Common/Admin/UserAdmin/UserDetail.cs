@@ -33,9 +33,20 @@ namespace ClearCanvas.Enterprise.Common.Admin.UserAdmin
     [DataContract]
     public class UserDetail : DataContractBase
     {
-        public UserDetail(string userId, string displayName, string emailAddress, DateTime creationTime, DateTime? validFrom, DateTime? validUntil, 
-            DateTime? lastLoginTime, bool enabled, DateTime? expiryTime, List<AuthorityGroupSummary> authorityGroups)
+        public UserDetail(
+			EnumValueInfo accountType,
+			string userId,
+			string displayName,
+			string emailAddress,
+			DateTime creationTime,
+			DateTime? validFrom,
+			DateTime? validUntil, 
+            DateTime? lastLoginTime,
+			bool enabled,
+			DateTime? expiryTime,
+			List<AuthorityGroupSummary> authorityGroups)
         {
+        	AccountType = accountType;
             UserName = userId;
             DisplayName = displayName;
             AuthorityGroups = authorityGroups;
@@ -53,7 +64,10 @@ namespace ClearCanvas.Enterprise.Common.Admin.UserAdmin
             AuthorityGroups = new List<AuthorityGroupSummary>();
         }
 
-        [DataMember]
+		[DataMember]
+		public EnumValueInfo AccountType;
+
+		[DataMember]
         public string UserName;
 
         [DataMember]
@@ -95,6 +109,7 @@ namespace ClearCanvas.Enterprise.Common.Admin.UserAdmin
     	public UserSummary GetSummary()
     	{
     		return new UserSummary(
+				AccountType,
 				UserName,
 				DisplayName,
 				EmailAddress,

@@ -35,6 +35,7 @@ namespace ClearCanvas.Enterprise.Authentication.Admin.UserAdmin
         internal UserSummary GetUserSummary(User user)
         {
             return new UserSummary(
+				EnumUtils.GetEnumValueInfo(user.AccountType, PersistenceScope.CurrentContext),
 				user.UserName,
 				user.DisplayName,
 				user.EmailAddress,
@@ -49,7 +50,11 @@ namespace ClearCanvas.Enterprise.Authentication.Admin.UserAdmin
 
 		internal UserSummary GetUserSummaryMinimal(User user)
 		{
-			return new UserSummary(user.UserName, user.DisplayName, user.EmailAddress);
+			return new UserSummary(
+				EnumUtils.GetEnumValueInfo(user.AccountType, PersistenceScope.CurrentContext),
+				user.UserName,
+				user.DisplayName,
+				user.EmailAddress);
 		}
 
         internal UserDetail GetUserDetail(User user)
@@ -60,13 +65,24 @@ namespace ClearCanvas.Enterprise.Authentication.Admin.UserAdmin
         		user.AuthorityGroups,
         		(AuthorityGroup group) => assembler.CreateAuthorityGroupSummary(group));
 				
-            return new UserDetail(user.UserName, user.DisplayName, user.EmailAddress, user.CreationTime, user.ValidFrom, user.ValidUntil,
-                user.LastLoginTime, user.Enabled, user.Password.ExpiryTime, groups);
+            return new UserDetail(
+				EnumUtils.GetEnumValueInfo(user.AccountType, PersistenceScope.CurrentContext),
+				user.UserName,
+				user.DisplayName,
+				user.EmailAddress,
+				user.CreationTime,
+				user.ValidFrom,
+				user.ValidUntil,
+                user.LastLoginTime,
+				user.Enabled,
+				user.Password.ExpiryTime,
+				groups);
         }
 
         internal void UpdateUser(User user, UserDetail detail, IPersistenceContext context)
         {
-            // do not update user.UserName
+			// do not update user.AccountType
+			// do not update user.UserName
             // do not update user.Password
             user.DisplayName = detail.DisplayName;
             user.ValidFrom = detail.ValidFrom;

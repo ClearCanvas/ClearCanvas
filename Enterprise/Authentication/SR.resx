@@ -126,6 +126,9 @@
   <data name="ExceptionIncorrectApplicationSettings_CacheDuration" xml:space="preserve">
     <value>Invalid AuthenticationSettings: user session cache duration must be less than session timeout duration</value>
   </data>
+  <data name="ExceptionUserNotAuthorized" xml:space="preserve">
+    <value>User not authorized</value>
+  </data>
   <data name="MessageCannotDeleteOwnUserAccount" xml:space="preserve">
     <value>You cannot delete your own user account.</value>
   </data>

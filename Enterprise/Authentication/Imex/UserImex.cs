@@ -42,7 +42,10 @@ namespace ClearCanvas.Enterprise.Authentication.Imex
         [DataContract]
         public class UserData
         {
-            [DataMember]
+			[DataMember]
+			public string AccountType;
+
+			[DataMember]
             public string UserName;
 
             [DataMember]
@@ -79,6 +82,7 @@ namespace ClearCanvas.Enterprise.Authentication.Imex
         protected override UserData Export(User user, IReadContext context)
         {
             UserData data = new UserData();
+        	data.AccountType = user.AccountType.ToString();
             data.UserName = user.UserName;
             data.DisplayName = user.DisplayName;
             data.ValidFrom = user.ValidFrom;
@@ -96,7 +100,11 @@ namespace ClearCanvas.Enterprise.Authentication.Imex
 
         protected override void Import(UserData data, IUpdateContext context)
         {
-            UserInfo info = new UserInfo(data.UserName, data.DisplayName, data.EmailAddress, data.ValidFrom, data.ValidUntil);
+        	var accountType = string.IsNullOrEmpty(data.AccountType)
+        	                  	? UserAccountType.U
+								: (UserAccountType)Enum.Parse(typeof(UserAccountType), data.AccountType, true);
+
+			UserInfo info = new UserInfo(accountType, data.UserName, data.DisplayName, data.EmailAddress, data.ValidFrom, data.ValidUntil);
             User user = LoadOrCreateUser(info, context);
             user.Enabled = data.Enabled;
 
