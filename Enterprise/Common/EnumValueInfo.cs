@@ -28,76 +28,76 @@ using ClearCanvas.Common.Serialization;
 
 namespace ClearCanvas.Enterprise.Common
 {
-    [DataContract]
-    public class EnumValueInfo : DataContractBase, ICloneable, IEquatable<EnumValueInfo>
-    {
-        public EnumValueInfo(string code, string value)
-            : this(code, value, "")
-        {
-        }
+	[DataContract]
+	public class EnumValueInfo : DataContractBase, ICloneable, IEquatable<EnumValueInfo>
+	{
+		public EnumValueInfo(string code, string value)
+			: this(code, value, "")
+		{
+		}
 
-        public EnumValueInfo(string code, string value, string description)
-        {
-            this.Code = code;
-            this.Value = value;
-            this.Description = description;
-        }
+		public EnumValueInfo(string code, string value, string description)
+		{
+			this.Code = code;
+			this.Value = value;
+			this.Description = description;
+		}
 
-        public EnumValueInfo()
-        {
-        }
+		public EnumValueInfo()
+		{
+		}
 
-        [DataMember]
-        public string Code;
+		[DataMember]
+		public string Code;
 
-        [DataMember]
-        public string Value;
+		[DataMember]
+		public string Value;
 
-        [DataMember]
-        public string Description;
+		[DataMember]
+		public string Description;
 
-        #region ICloneable Members
+		#region ICloneable Members
 
-        public object Clone()
-        {
-            return new EnumValueInfo(this.Code, this.Value, this.Description);
-        }
+		public object Clone()
+		{
+			return new EnumValueInfo(this.Code, this.Value, this.Description);
+		}
 
-        #endregion
+		#endregion
 
-        #region IEquatable<EnumValueInfo>
+		#region IEquatable<EnumValueInfo>
 
-        public bool Equals(EnumValueInfo enumValueInfo)
-        {
-            if (ReferenceEquals(this, enumValueInfo)) return true;
-            if (enumValueInfo == null) return false;
-            if (!Equals(Code, enumValueInfo.Code)) return false;
-            return true;
-        }
+		public bool Equals(EnumValueInfo enumValueInfo)
+		{
+			if (ReferenceEquals(this, enumValueInfo)) return true;
+			if (enumValueInfo == null) return false;
+			if (!Equals(Code, enumValueInfo.Code)) return false;
+			return true;
+		}
 
-        #endregion
+		#endregion
 
-        #region Object overrides
+		#region Object overrides
 
-        public override bool Equals(object obj)
-        {
-            return Equals(obj as EnumValueInfo);
-        }
+		public override bool Equals(object obj)
+		{
+			return Equals(obj as EnumValueInfo);
+		}
 
-        public override int GetHashCode()
-        {
-            return Code.GetHashCode();
-        }
+		public override int GetHashCode()
+		{
+			return Code.GetHashCode();
+		}
 
-        /// <summary>
-        /// Return the display value
-        /// </summary>
-        /// <returns></returns>
-        public override string ToString()
-        {
-            return Value;
-        }
+		/// <summary>
+		/// Return the display value
+		/// </summary>
+		/// <returns></returns>
+		public override string ToString()
+		{
+			return Value;
+		}
 
-        #endregion
-    }
+		#endregion
+	}
 }

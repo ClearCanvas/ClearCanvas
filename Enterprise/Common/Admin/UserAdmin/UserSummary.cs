@@ -28,9 +28,9 @@ using ClearCanvas.Common.Serialization;
 
 namespace ClearCanvas.Enterprise.Common.Admin.UserAdmin
 {
-    [DataContract]
-    public class UserSummary : DataContractBase
-    {
+	[DataContract]
+	public class UserSummary : DataContractBase
+	{
 		/// <summary>
 		/// Constructor for returning only the most basic information about a user.
 		/// </summary>
@@ -53,72 +53,72 @@ namespace ClearCanvas.Enterprise.Common.Admin.UserAdmin
 			DateTime creationTime,
 			DateTime? validFrom,
 			DateTime? validUntil,
-            DateTime? lastLoginTime,
+			DateTime? lastLoginTime,
 			DateTime? passwordExpiry,
 			bool enabled,
 			int sessionCount)
 		{
 			AccountType = accountType;
-            UserName = userId;
-            DisplayName = displayName;
-            EmailAddress = emailAddress;
-            CreationTime = creationTime;
-            ValidFrom = validFrom;
-            ValidUntil = validUntil;
-            LastLoginTime = lastLoginTime;
-            Enabled = enabled;
-            PasswordExpiry = passwordExpiry;
-            SessionCount = sessionCount;
-        }
+			UserName = userId;
+			DisplayName = displayName;
+			EmailAddress = emailAddress;
+			CreationTime = creationTime;
+			ValidFrom = validFrom;
+			ValidUntil = validUntil;
+			LastLoginTime = lastLoginTime;
+			Enabled = enabled;
+			PasswordExpiry = passwordExpiry;
+			SessionCount = sessionCount;
+		}
 
 		[DataMember]
 		public EnumValueInfo AccountType;
 
 		[DataMember]
-        public string UserName;
+		public string UserName;
 
-        [DataMember]
-        public string DisplayName;
+		[DataMember]
+		public string DisplayName;
 
-        [DataMember]
-        public string EmailAddress;
+		[DataMember]
+		public string EmailAddress;
 
-        [DataMember]
-        public DateTime CreationTime;
+		[DataMember]
+		public DateTime CreationTime;
 
-        [DataMember]
-        public DateTime? ValidFrom;
+		[DataMember]
+		public DateTime? ValidFrom;
 
-        [DataMember]
-        public DateTime? ValidUntil;
+		[DataMember]
+		public DateTime? ValidUntil;
 
-        [DataMember]
-        public DateTime? LastLoginTime;
+		[DataMember]
+		public DateTime? LastLoginTime;
 
-        [DataMember]
-        public bool Enabled;
+		[DataMember]
+		public bool Enabled;
 
-        [DataMember]
-        public DateTime? PasswordExpiry;
+		[DataMember]
+		public DateTime? PasswordExpiry;
 
-        [DataMember]
-        public int SessionCount;
+		[DataMember]
+		public int SessionCount;
 
-        protected bool Equals(UserSummary userSummary)
-        {
-            if (userSummary == null) return false;
-            return Equals(UserName, userSummary.UserName);
-        }
+		protected bool Equals(UserSummary userSummary)
+		{
+			if (userSummary == null) return false;
+			return Equals(UserName, userSummary.UserName);
+		}
 
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(this, obj)) return true;
-            return Equals(obj as UserSummary);
-        }
+		public override bool Equals(object obj)
+		{
+			if (ReferenceEquals(this, obj)) return true;
+			return Equals(obj as UserSummary);
+		}
 
-        public override int GetHashCode()
-        {
-            return UserName.GetHashCode();
-        }
-    }
+		public override int GetHashCode()
+		{
+			return UserName.GetHashCode();
+		}
+	}
 }

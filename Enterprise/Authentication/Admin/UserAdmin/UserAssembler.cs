@@ -30,11 +30,11 @@ using ClearCanvas.Enterprise.Core;
 
 namespace ClearCanvas.Enterprise.Authentication.Admin.UserAdmin
 {
-    internal class UserAssembler
-    {
-        internal UserSummary GetUserSummary(User user)
-        {
-            return new UserSummary(
+	internal class UserAssembler
+	{
+		internal UserSummary GetUserSummary(User user)
+		{
+			return new UserSummary(
 				EnumUtils.GetEnumValueInfo(user.AccountType, PersistenceScope.CurrentContext),
 				user.UserName,
 				user.DisplayName,
@@ -46,7 +46,7 @@ namespace ClearCanvas.Enterprise.Authentication.Admin.UserAdmin
 				user.Password.ExpiryTime,
 				user.Enabled,
 				user.ActiveSessions.Count());
-        }
+		}
 
 		internal UserSummary GetUserSummaryMinimal(User user)
 		{
@@ -57,15 +57,15 @@ namespace ClearCanvas.Enterprise.Authentication.Admin.UserAdmin
 				user.EmailAddress);
 		}
 
-        internal UserDetail GetUserDetail(User user)
-        {
-            var assembler = new AuthorityGroupAssembler();
+		internal UserDetail GetUserDetail(User user)
+		{
+			var assembler = new AuthorityGroupAssembler();
 
-        	var groups = CollectionUtils.Map(
-        		user.AuthorityGroups,
-        		(AuthorityGroup group) => assembler.CreateAuthorityGroupSummary(group));
-				
-            return new UserDetail(
+			var groups = CollectionUtils.Map(
+				user.AuthorityGroups,
+				(AuthorityGroup group) => assembler.CreateAuthorityGroupSummary(group));
+
+			return new UserDetail(
 				EnumUtils.GetEnumValueInfo(user.AccountType, PersistenceScope.CurrentContext),
 				user.UserName,
 				user.DisplayName,
@@ -73,43 +73,43 @@ namespace ClearCanvas.Enterprise.Authentication.Admin.UserAdmin
 				user.CreationTime,
 				user.ValidFrom,
 				user.ValidUntil,
-                user.LastLoginTime,
+				user.LastLoginTime,
 				user.Enabled,
 				user.Password.ExpiryTime,
 				groups);
-        }
+		}
 
-        internal void UpdateUser(User user, UserDetail detail, IPersistenceContext context)
-        {
+		internal void UpdateUser(User user, UserDetail detail, IPersistenceContext context)
+		{
 			// do not update user.AccountType
 			// do not update user.UserName
-            // do not update user.Password
-            user.DisplayName = detail.DisplayName;
-            user.ValidFrom = detail.ValidFrom;
-            user.ValidUntil = detail.ValidUntil;
-            user.Enabled = detail.Enabled;
-            user.Password.ExpiryTime = detail.PasswordExpiryTime;
-            user.EmailAddress = detail.EmailAddress;
+			// do not update user.Password
+			user.DisplayName = detail.DisplayName;
+			user.ValidFrom = detail.ValidFrom;
+			user.ValidUntil = detail.ValidUntil;
+			user.Enabled = detail.Enabled;
+			user.Password.ExpiryTime = detail.PasswordExpiryTime;
+			user.EmailAddress = detail.EmailAddress;
 
-            // process authority groups
+			// process authority groups
 			var authGroups = CollectionUtils.Map(
 				detail.AuthorityGroups,
 				(AuthorityGroupSummary group) => context.Load<AuthorityGroup>(group.AuthorityGroupRef, EntityLoadFlags.Proxy));
 
-            user.AuthorityGroups.Clear();
+			user.AuthorityGroups.Clear();
 			user.AuthorityGroups.AddAll(authGroups);
-        }
+		}
 
 		internal UserSessionSummary GetUserSessionSummary(UserSession session)
 		{
 			return new UserSessionSummary
-			       	{
-			       		Application = session.Application,
-			       		CreationTime = session.CreationTime,
-			       		ExpiryTime = session.ExpiryTime,
-			       		HostName = session.HostName,
-			       		SessionId = session.SessionId
-			       	};
+					{
+						Application = session.Application,
+						CreationTime = session.CreationTime,
+						ExpiryTime = session.ExpiryTime,
+						HostName = session.HostName,
+						SessionId = session.SessionId
+					};
 		}
-    }
+	}
 }

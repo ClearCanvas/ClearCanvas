@@ -27,7 +27,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text;
 using ClearCanvas.Common;
 using NUnit.Framework;
 using ClearCanvas.Common.Utilities;
@@ -37,26 +36,26 @@ using System.Threading;
 
 namespace ClearCanvas.Enterprise.Authentication.Tests
 {
-    [TestFixture]
+	[TestFixture]
 	public class UserTests
 	{
-    	private const string DefaultPassword = "password";
+		private const string DefaultPassword = "password";
 		private const string AlternatePassword = "clearcanvas";
 
 		public UserTests()
-        {
-            // set the extension factory to special test factory
-            Platform.SetExtensionFactory(new NullExtensionFactory());
-        }
+		{
+			// set the extension factory to special test factory
+			Platform.SetExtensionFactory(new NullExtensionFactory());
+		}
 
 		[Test]
 		public void Test_CreateNewUser()
 		{
 			UserInfo userInfo = new UserInfo(
-				UserAccountType.U, 
+				UserAccountType.U,
 				"foo",
 				"Mr. Foo",
-                "test@clearcanvas.ca",                
+				"test@clearcanvas.ca",
 				null,
 				null);
 
@@ -98,7 +97,7 @@ namespace ClearCanvas.Enterprise.Authentication.Tests
 				UserAccountType.U,
 				"foo",
 				"Mr. Foo",
-                "test@clearcanvas.ca",
+				"test@clearcanvas.ca",
 				now,
 				tomorrow);
 
@@ -124,7 +123,7 @@ namespace ClearCanvas.Enterprise.Authentication.Tests
 				UserAccountType.U,
 				"foo",
 				"Mr. Foo",
-                "test@clearcanvas.ca",                
+				"test@clearcanvas.ca",
 				null,
 				null);
 
@@ -162,7 +161,7 @@ namespace ClearCanvas.Enterprise.Authentication.Tests
 				UserAccountType.U,
 				null,
 				"Mr. Foo",
-                "test@clearcanvas.ca",                
+				"test@clearcanvas.ca",
 				null,
 				null);
 
@@ -177,7 +176,7 @@ namespace ClearCanvas.Enterprise.Authentication.Tests
 				UserAccountType.U,
 				"",
 				"Mr. Foo",
-                "test@clearcanvas.ca",
+				"test@clearcanvas.ca",
 				null,
 				null);
 
@@ -206,7 +205,7 @@ namespace ClearCanvas.Enterprise.Authentication.Tests
 				UserAccountType.U,
 				"foo",
 				null,
-                "test@clearcanvas.ca",
+				"test@clearcanvas.ca",
 				null,
 				null);
 
@@ -220,7 +219,7 @@ namespace ClearCanvas.Enterprise.Authentication.Tests
 				UserAccountType.U,
 				"foo",
 				"",
-                "test@clearcanvas.ca",
+				"test@clearcanvas.ca",
 				null,
 				null);
 
@@ -235,7 +234,7 @@ namespace ClearCanvas.Enterprise.Authentication.Tests
 				UserAccountType.U,
 				"foo",
 				"Mr. Foo",
-                "test@clearcanvas.ca",
+				"test@clearcanvas.ca",
 				null,
 				null);
 
@@ -250,7 +249,7 @@ namespace ClearCanvas.Enterprise.Authentication.Tests
 				UserAccountType.U,
 				"foo",
 				"Mr. Foo",
-                "test@clearcanvas.ca",
+				"test@clearcanvas.ca",
 				null,
 				null);
 
@@ -265,7 +264,7 @@ namespace ClearCanvas.Enterprise.Authentication.Tests
 				UserAccountType.U,
 				"foo",
 				"Mr. Foo",
-                null,
+				null,
 				DateTime.Now + TimeSpan.FromDays(1),
 				DateTime.Now - TimeSpan.FromDays(1));
 
@@ -579,7 +578,7 @@ namespace ClearCanvas.Enterprise.Authentication.Tests
 			UserSession session3 = user.InitiateSession(app, host, AlternatePassword, TimeSpan.FromMilliseconds(300));
 			UserSession session4 = user.InitiateSession(app, host, AlternatePassword, TimeSpan.FromMinutes(1));
 
-			UserSession[] sessions = new UserSession[]{ session1, session2, session3, session4 };
+			UserSession[] sessions = new UserSession[] { session1, session2, session3, session4 };
 
 			// all sessions are active
 			Assert.AreEqual(4, user.Sessions.Count);
@@ -609,10 +608,10 @@ namespace ClearCanvas.Enterprise.Authentication.Tests
 		{
 			string password = "password";
 			UserInfo userInfo = new UserInfo(
-				UserAccountType.U, 
+				UserAccountType.U,
 				"foo",
 				"Mr. Foo",
-                "test@clearcanvas.ca",
+				"test@clearcanvas.ca",
 				validFrom,
 				validUntil);
 

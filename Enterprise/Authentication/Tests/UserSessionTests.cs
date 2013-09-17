@@ -38,16 +38,16 @@ namespace ClearCanvas.Enterprise.Authentication.Tests
 	[TestFixture]
 	public class UserSessionTests
 	{
-    	private const string DefaultPassword = "password";
+		private const string DefaultPassword = "password";
 		private const string AlternatePassword = "clearcanvas";
 		private const string UserName = "foo";
 		private const string DisplayName = "Mr. Foo";
 
 		public UserSessionTests()
-        {
-            // set the extension factory to special test factory
-            Platform.SetExtensionFactory(new NullExtensionFactory());
-        }
+		{
+			// set the extension factory to special test factory
+			Platform.SetExtensionFactory(new NullExtensionFactory());
+		}
 
 		[Test]
 		public void Test_GetToken()
@@ -260,7 +260,7 @@ namespace ClearCanvas.Enterprise.Authentication.Tests
 				UserAccountType.U,
 				UserName,
 				DisplayName,
-                "test@clearcanvas.ca",
+				"test@clearcanvas.ca",
 				null,
 				null);
 			User user = User.CreateNewUser(userInfo, DefaultPassword);

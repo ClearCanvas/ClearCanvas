@@ -26,23 +26,23 @@ using System;
 
 namespace ClearCanvas.Enterprise.Authentication
 {
-    public class UserInfo
-    {
-        public UserInfo(UserAccountType accountType, string userName, string displayName, string emailAddress, DateTime? validFrom, DateTime? validUntil)
-        {
-        	this.AccountType = accountType;
-            this.UserName = userName;
-            this.DisplayName = displayName;
-            this.ValidFrom = validFrom;
-            this.ValidUntil = validUntil;
-            this.EmailAddress = emailAddress;
-        }
+	public class UserInfo
+	{
+		public UserInfo(UserAccountType accountType, string userName, string displayName, string emailAddress, DateTime? validFrom, DateTime? validUntil)
+		{
+			this.AccountType = accountType;
+			this.UserName = userName;
+			this.DisplayName = displayName;
+			this.ValidFrom = validFrom;
+			this.ValidUntil = validUntil;
+			this.EmailAddress = emailAddress;
+		}
 
 		public UserAccountType AccountType;
 		public string UserName;
-        public string DisplayName;
-        public string EmailAddress;
-        public DateTime? ValidFrom;
-        public DateTime? ValidUntil;
-    }
+		public string DisplayName;
+		public string EmailAddress;
+		public DateTime? ValidFrom;
+		public DateTime? ValidUntil;
+	}
 }

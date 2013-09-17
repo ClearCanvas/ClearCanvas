@@ -28,19 +28,19 @@ using ClearCanvas.Common.Serialization;
 
 namespace ClearCanvas.Enterprise.Common.Admin.UserAdmin
 {
-    [DataContract]
-    public class ListUsersResponse : DataContractBase
-    {
-        public ListUsersResponse(List<UserSummary> users, int totalCount)
-        {
-            Users = users;
-        	TotalCount = totalCount;
-        }
+	[DataContract]
+	public class ListUsersResponse : DataContractBase
+	{
+		public ListUsersResponse(List<UserSummary> users, int totalCount)
+		{
+			Users = users;
+			TotalCount = totalCount;
+		}
 
-        [DataMember]
-        public List<UserSummary> Users;
+		[DataMember]
+		public List<UserSummary> Users;
 
 		[DataMember]
 		public int TotalCount;
-    }
+	}
 }
