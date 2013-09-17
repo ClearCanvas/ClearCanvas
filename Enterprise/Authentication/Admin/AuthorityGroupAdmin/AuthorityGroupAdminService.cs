@@ -38,10 +38,10 @@ namespace ClearCanvas.Enterprise.Authentication.Admin.AuthorityGroupAdmin
 	[ExtensionOf(typeof(CoreServiceExtensionPoint))]
 	[ServiceImplementsContract(typeof(IAuthorityGroupAdminService))]
 	public class AuthorityGroupAdminService : CoreServiceLayer, IAuthorityGroupAdminService
-    {
-        #region IAuthorityGroupAdminService Members
+	{
+		#region IAuthorityGroupAdminService Members
 
-        [ReadOperation]
+		[ReadOperation]
 		[PrincipalPermission(SecurityAction.Demand, Role = AuthorityTokens.Admin.Security.AuthorityGroup)]
 		[PrincipalPermission(SecurityAction.Demand, Role = AuthorityTokens.Admin.Security.User)]
 		public ListAuthorityGroupsResponse ListAuthorityGroups(ListAuthorityGroupsRequest request)
@@ -99,7 +99,7 @@ namespace ClearCanvas.Enterprise.Authentication.Admin.AuthorityGroupAdmin
 			Platform.CheckForNullReference(request, "request");
 			Platform.CheckMemberIsSet(request.AuthorityGroupDetail, "AuthorityGroupDetail");
 
-			if(request.AuthorityGroupDetail.BuiltIn)
+			if (request.AuthorityGroupDetail.BuiltIn)
 				throw new RequestValidationException(SR.ExceptionCannotManageBuiltInAuthorityGroups);
 
 			// create new group
@@ -127,15 +127,15 @@ namespace ClearCanvas.Enterprise.Authentication.Admin.AuthorityGroupAdmin
 			if (authorityGroup.BuiltIn || request.AuthorityGroupDetail.BuiltIn)
 				throw new RequestValidationException(SR.ExceptionCannotManageBuiltInAuthorityGroups);
 
-            if (authorityGroup.DataGroup && !request.AuthorityGroupDetail.DataGroup)
-            {
-                var user = GetUser(Thread.CurrentPrincipal.Identity.Name, PersistenceContext);
-                if (!user.Password.Verify(request.Password))
-                {
-                    // the error message is deliberately vague
-                    throw new UserAccessDeniedException(); 
-                }
-            }
+			if (authorityGroup.DataGroup && !request.AuthorityGroupDetail.DataGroup)
+			{
+				var user = GetUser(Thread.CurrentPrincipal.Identity.Name, PersistenceContext);
+				if (!user.Password.Verify(request.Password))
+				{
+					// the error message is deliberately vague
+					throw new UserAccessDeniedException();
+				}
+			}
 
 			// set properties from request
 			var assembler = new AuthorityGroupAssembler();
