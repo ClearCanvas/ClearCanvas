@@ -38,13 +38,17 @@ namespace ClearCanvas.Enterprise.Common.SystemAccounts
 
 	class LocalRegistryManager
 	{
+
 		public static string[] GetAccounts()
 		{
-			return GetRegistries().SelectMany(r => r.GetAccounts()).ToArray();
+			return GetRegistries().SelectMany(r => r.GetAccounts()).Select(a => a.ToLowerInvariant()).ToArray();
 		}
 
 		public static string GetAccountPassword(string account)
 		{
+			Platform.CheckForEmptyString(account, "account");
+
+			account = account.ToLowerInvariant();
 			var registry = GetRegistries().FirstOrDefault(r => r.GetAccounts().Contains(account));
 			if(registry == null)
 				throw new InvalidOperationException("Unknown account.");
@@ -54,6 +58,10 @@ namespace ClearCanvas.Enterprise.Common.SystemAccounts
 
 		public static void SetAccountPassword(string account, string password)
 		{
+			Platform.CheckForEmptyString(account, "account");
+			Platform.CheckForEmptyString(password, "password");
+
+			account = account.ToLowerInvariant();
 			foreach (var registry in GetRegistries().Where(r => r.GetAccounts().Contains(account)))
 			{
 				registry.SetAccountPassword(account, password);

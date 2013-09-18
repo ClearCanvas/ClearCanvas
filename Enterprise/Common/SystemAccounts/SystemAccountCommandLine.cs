@@ -47,9 +47,9 @@ namespace ClearCanvas.Enterprise.Common.SystemAccounts
 		public string Password { get; set; }
 
 		/// <summary>
-		/// Specifies the name of the system account to create or modify. Required.
+		/// Specifies the name of the system account to create or update. Required.
 		/// </summary>
-		[CommandLineParameter("account", "a", "Specifies the name of the system account to create, modify or remove. Required.", Required = true)]
+		[CommandLineParameter("account", "a", "Specifies the name of the system account to create or update.", Required = true)]
 		public string AccountName { get; set; }
 
 		/// <summary>

@@ -64,13 +64,15 @@ namespace ClearCanvas.Enterprise.Common.SystemAccounts
 
 		private static void CreateOrUpdateAccount(SystemAccountCommandLine cmdLine)
 		{
+			var accountName = cmdLine.AccountName.ToLowerInvariant();
+
 			var localAccounts = LocalRegistryManager.GetAccounts();
-			if(!localAccounts.Contains(cmdLine.AccountName))
-				throw new InvalidOperationException(string.Format("Account '{0}' is not a locally-known account.", cmdLine.AccountName));
+			if (!localAccounts.Contains(accountName))
+				throw new InvalidOperationException(string.Format("Account '{0}' is not a locally-known account.", accountName));
 
 			// update the enterprise server
 			UserDetail accountDetail;
-			if(GetExistingAccount(cmdLine.AccountName, out accountDetail))
+			if (GetExistingAccount(accountName, out accountDetail))
 			{
 				var updateRequest = new UpdateUserRequest(accountDetail);
 				// update auth group if specified
@@ -93,7 +95,7 @@ namespace ClearCanvas.Enterprise.Common.SystemAccounts
 				// update the local machine
 				if (changePassword)
 				{
-					LocalRegistryManager.SetAccountPassword(cmdLine.AccountName, cmdLine.AccountPassword);
+					LocalRegistryManager.SetAccountPassword(accountName, cmdLine.AccountPassword);
 				}
 			}
 			else
@@ -105,14 +107,17 @@ namespace ClearCanvas.Enterprise.Common.SystemAccounts
 				var userDetail = new UserDetail
 				{
 					AccountType = new EnumValueInfo("S", null),
-					UserName = cmdLine.AccountName,
-					DisplayName = cmdLine.AccountName,
+					UserName = accountName,
+					DisplayName = accountName,
 					Enabled = true,
 					AuthorityGroups = new List<AuthorityGroupSummary> { authGroup }
 				};
 
 				Platform.GetService<IUserAdminService>(
 					service => service.AddUser(new AddUserRequest(userDetail) { Password = cmdLine.AccountPassword }));
+				
+				// save password locally
+				LocalRegistryManager.SetAccountPassword(accountName, cmdLine.AccountPassword);
 			}
 		}
 
