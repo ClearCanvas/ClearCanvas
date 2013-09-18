@@ -120,6 +120,7 @@
   <ItemGroup>
     <Compile Include="Audit\AuditedInstances.cs" />
     <Compile Include="Audit\AuditLogHelper.cs" />
+    <Compile Include="Audit\HealthcareDataAuditHelper.cs" />
     <Compile Include="Audit\EventReceiptAction.cs" />
     <Compile Include="Audit\EventResult.cs" />
     <Compile Include="Audit\EventSource.cs" />
