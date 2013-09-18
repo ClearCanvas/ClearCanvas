@@ -117,19 +117,16 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="EmailAddressNotConfigured" xml:space="preserve">
+  <data name="MessageEmailAddressNotConfigured" xml:space="preserve">
     <value>An email address is not configured for the account.  Please contact an administrator.</value>
   </data>
-  <data name="ExceptionCannotManageBuiltInAuthorityGroups" xml:space="preserve">
+  <data name="MessageCannotManageBuiltInAuthorityGroups" xml:space="preserve">
     <value>Built-in authority groups cannot be managed through this service.</value>
   </data>
-  <data name="ExceptionFailedToDelete" xml:space="preserve">
-    <value>Unable to delete {0}.  The most likely reason is that the item is referenced by another item in the system.</value>
-  </data>
-  <data name="ExceptionIncorrectApplicationSettings_CacheDuration" xml:space="preserve">
+  <data name="MessageIncorrectApplicationSettings_CacheDuration" xml:space="preserve">
     <value>Invalid AuthenticationSettings: user session cache duration must be less than session timeout duration</value>
   </data>
-  <data name="ExceptionUserNotAuthorized" xml:space="preserve">
+  <data name="MessageUserNotAuthorized" xml:space="preserve">
     <value>User not authorized</value>
   </data>
   <data name="MessageCannotDeleteOwnUserAccount" xml:space="preserve">
@@ -137,5 +134,8 @@
   </data>
   <data name="MessageCannotDeleteOwnUserCurrentSession" xml:space="preserve">
     <value>You cannot terminate your current session.</value>
+  </data>
+  <data name="MessageAccountTypeDoesNotSupportPasswordReset" xml:space="preserve">
+    <value>This account type does not support password reset.</value>
   </data>
 </root>

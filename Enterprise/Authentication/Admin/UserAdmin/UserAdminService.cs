@@ -26,6 +26,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security;
+using System.Text.RegularExpressions;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Enterprise.Authentication.Brokers;
@@ -33,6 +34,7 @@ using ClearCanvas.Enterprise.Common;
 using ClearCanvas.Enterprise.Common.Admin.UserAdmin;
 using ClearCanvas.Enterprise.Core;
 using System.Threading;
+using Iesi.Collections.Generic;
 
 namespace ClearCanvas.Enterprise.Authentication.Admin.UserAdmin
 {
@@ -48,7 +50,7 @@ namespace ClearCanvas.Enterprise.Authentication.Admin.UserAdmin
 			// establish which account types this user is entitled to see
 			var visibleAccountTypes = new List<UserAccountType>(GetAccountTypesAuthorizedToManage());
 			if (!visibleAccountTypes.Any())
-				throw new SecurityException(SR.ExceptionUserNotAuthorized);
+				throw new SecurityException(SR.MessageUserNotAuthorized);
 
 			var criteria = new UserSearchCriteria();
 			criteria.AccountType.In(visibleAccountTypes);
@@ -117,8 +119,8 @@ namespace ClearCanvas.Enterprise.Authentication.Admin.UserAdmin
 				userDetail.ValidFrom,
 				userDetail.ValidUntil);
 
-			var settings = new AuthenticationSettings();
-			var user = User.CreateNewUser(userInfo, settings.DefaultTemporaryPassword);
+			var password = GetNewAccountPassword(accountType, request.Password);
+			var user = User.CreateNewUser(userInfo, password, new HashedSet<AuthorityGroup>());
 
 			// copy other info such as authority groups from request
 			var assembler = new UserAssembler();
@@ -144,9 +146,11 @@ namespace ClearCanvas.Enterprise.Authentication.Admin.UserAdmin
 			// reset password if requested
 			if (request.UserDetail.ResetPassword)
 			{
+				if(user.AccountType != UserAccountType.U)
+					throw new RequestValidationException(SR.MessageAccountTypeDoesNotSupportPasswordReset);
+
 				var settings = new AuthenticationSettings();
 				user.ResetPassword(settings.DefaultTemporaryPassword);
-
 			}
 
 			PersistenceContext.SynchState();
@@ -185,6 +189,10 @@ namespace ClearCanvas.Enterprise.Authentication.Admin.UserAdmin
 
 			var user = FindUserByName(request.UserName);
 			EnsureCurrentUserAuthorizedToManage(user.AccountType);
+
+			if (user.AccountType != UserAccountType.U)
+				throw new RequestValidationException(SR.MessageAccountTypeDoesNotSupportPasswordReset);
+
 
 			var settings = new AuthenticationSettings();
 			user.ResetPassword(settings.DefaultTemporaryPassword);
@@ -237,6 +245,17 @@ namespace ClearCanvas.Enterprise.Authentication.Admin.UserAdmin
 
 		#endregion
 
+		private static string CurrentUserSessionId
+		{
+			get
+			{
+				if (!(Thread.CurrentPrincipal is DefaultPrincipal))
+					throw new InvalidOperationException("Unable to obtain current user session ID on this thread");
+
+				return (Thread.CurrentPrincipal as DefaultPrincipal).SessionToken.Id;
+			}
+		}
+
 		private User FindUserByName(string name)
 		{
 			try
@@ -252,21 +271,36 @@ namespace ClearCanvas.Enterprise.Authentication.Admin.UserAdmin
 			}
 		}
 
-		private static string CurrentUserSessionId
+		private static Password GetNewAccountPassword(UserAccountType accountType, string password)
 		{
-			get
+			var settings = new AuthenticationSettings();
+			switch (accountType)
 			{
-				if (!(Thread.CurrentPrincipal is DefaultPrincipal))
-					throw new InvalidOperationException("Unable to obtain current user session ID on this thread");
+				case UserAccountType.U:
+					// for user accounts, always use the temp password, set to expire immediately
+					return Password.CreateTemporaryPassword(settings.DefaultTemporaryPassword);
 
-				return (Thread.CurrentPrincipal as DefaultPrincipal).SessionToken.Id;
+				case UserAccountType.G:
+					// for group accounts, generate a random password (since it will never be used)
+					return Password.CreatePassword(Guid.NewGuid().ToString("N"), null);
+
+				case UserAccountType.S:
+					// for service accounts, use password provided in request, and set to never expire
+					if(string.IsNullOrEmpty(password))
+						throw new RequestValidationException(settings.ValidPasswordMessage);
+					if (!Regex.Match(password, settings.ValidPasswordRegex).Success)
+						throw new RequestValidationException(settings.ValidPasswordMessage);
+					return Password.CreatePassword(password, null);
+
+				default:
+					throw new ArgumentOutOfRangeException("accountType");
 			}
 		}
 
 		private static void EnsureCurrentUserAuthorizedToManage(UserAccountType accountType)
 		{
 			if (!IsCurrentUserAuthorizedToManage(accountType))
-				throw new SecurityException(SR.ExceptionUserNotAuthorized);
+				throw new SecurityException(SR.MessageUserNotAuthorized);
 		}
 
 		private static bool IsCurrentUserAuthorizedToManage(UserAccountType accountType)

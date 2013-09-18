@@ -61,47 +61,11 @@ namespace ClearCanvas.Enterprise.Authentication {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to An email address is not configured for the account.  Please contact an administrator..
+        ///   Looks up a localized string similar to This account type does not support password reset..
         /// </summary>
-        internal static string EmailAddressNotConfigured {
+        internal static string MessageAccountTypeDoesNotSupportPasswordReset {
             get {
-                return ResourceManager.GetString("EmailAddressNotConfigured", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Built-in authority groups cannot be managed through this service..
-        /// </summary>
-        internal static string ExceptionCannotManageBuiltInAuthorityGroups {
-            get {
-                return ResourceManager.GetString("ExceptionCannotManageBuiltInAuthorityGroups", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Unable to delete {0}.  The most likely reason is that the item is referenced by another item in the system..
-        /// </summary>
-        internal static string ExceptionFailedToDelete {
-            get {
-                return ResourceManager.GetString("ExceptionFailedToDelete", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Invalid AuthenticationSettings: user session cache duration must be less than session timeout duration.
-        /// </summary>
-        internal static string ExceptionIncorrectApplicationSettings_CacheDuration {
-            get {
-                return ResourceManager.GetString("ExceptionIncorrectApplicationSettings_CacheDuration", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to User not authorized.
-        /// </summary>
-        internal static string ExceptionUserNotAuthorized {
-            get {
-                return ResourceManager.GetString("ExceptionUserNotAuthorized", resourceCulture);
+                return ResourceManager.GetString("MessageAccountTypeDoesNotSupportPasswordReset", resourceCulture);
             }
         }
         
@@ -120,6 +84,42 @@ namespace ClearCanvas.Enterprise.Authentication {
         internal static string MessageCannotDeleteOwnUserCurrentSession {
             get {
                 return ResourceManager.GetString("MessageCannotDeleteOwnUserCurrentSession", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Built-in authority groups cannot be managed through this service..
+        /// </summary>
+        internal static string MessageCannotManageBuiltInAuthorityGroups {
+            get {
+                return ResourceManager.GetString("MessageCannotManageBuiltInAuthorityGroups", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An email address is not configured for the account.  Please contact an administrator..
+        /// </summary>
+        internal static string MessageEmailAddressNotConfigured {
+            get {
+                return ResourceManager.GetString("MessageEmailAddressNotConfigured", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid AuthenticationSettings: user session cache duration must be less than session timeout duration.
+        /// </summary>
+        internal static string MessageIncorrectApplicationSettings_CacheDuration {
+            get {
+                return ResourceManager.GetString("MessageIncorrectApplicationSettings_CacheDuration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to User not authorized.
+        /// </summary>
+        internal static string MessageUserNotAuthorized {
+            get {
+                return ResourceManager.GetString("MessageUserNotAuthorized", resourceCulture);
             }
         }
     }

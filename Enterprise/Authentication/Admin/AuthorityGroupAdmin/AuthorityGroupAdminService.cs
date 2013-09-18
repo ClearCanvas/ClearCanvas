@@ -100,7 +100,7 @@ namespace ClearCanvas.Enterprise.Authentication.Admin.AuthorityGroupAdmin
 			Platform.CheckMemberIsSet(request.AuthorityGroupDetail, "AuthorityGroupDetail");
 
 			if (request.AuthorityGroupDetail.BuiltIn)
-				throw new RequestValidationException(SR.ExceptionCannotManageBuiltInAuthorityGroups);
+				throw new RequestValidationException(SR.MessageCannotManageBuiltInAuthorityGroups);
 
 			// create new group
 			var authorityGroup = new AuthorityGroup();
@@ -125,7 +125,7 @@ namespace ClearCanvas.Enterprise.Authentication.Admin.AuthorityGroupAdmin
 
 			var authorityGroup = PersistenceContext.Load<AuthorityGroup>(request.AuthorityGroupDetail.AuthorityGroupRef);
 			if (authorityGroup.BuiltIn || request.AuthorityGroupDetail.BuiltIn)
-				throw new RequestValidationException(SR.ExceptionCannotManageBuiltInAuthorityGroups);
+				throw new RequestValidationException(SR.MessageCannotManageBuiltInAuthorityGroups);
 
 			if (authorityGroup.DataGroup && !request.AuthorityGroupDetail.DataGroup)
 			{
@@ -156,7 +156,7 @@ namespace ClearCanvas.Enterprise.Authentication.Admin.AuthorityGroupAdmin
 			var broker = PersistenceContext.GetBroker<IAuthorityGroupBroker>();
 			var authorityGroup = PersistenceContext.Load<AuthorityGroup>(request.AuthorityGroupRef, EntityLoadFlags.Proxy);
 			if (authorityGroup.BuiltIn)
-				throw new RequestValidationException(SR.ExceptionCannotManageBuiltInAuthorityGroups);
+				throw new RequestValidationException(SR.MessageCannotManageBuiltInAuthorityGroups);
 
 			if (request.DeleteOnlyWhenEmpty)
 			{

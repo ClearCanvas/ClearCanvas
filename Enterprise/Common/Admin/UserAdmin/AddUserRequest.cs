@@ -37,5 +37,12 @@ namespace ClearCanvas.Enterprise.Common.Admin.UserAdmin
 
 		[DataMember]
 		public UserDetail UserDetail;
+
+		/// <summary>
+		/// For service accounts, specifies the password to the account (required).
+		/// For other account types, this field is ignored.
+		/// </summary>
+		[DataMember]
+		public string Password;
 	}
 }

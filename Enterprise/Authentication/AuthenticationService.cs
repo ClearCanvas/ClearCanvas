@@ -100,7 +100,7 @@ namespace ClearCanvas.Enterprise.Authentication
             // ensure user found, account is active and the current password is correct
             if (string.IsNullOrEmpty(user.EmailAddress))
             {
-                throw new RequestValidationException(SR.EmailAddressNotConfigured);
+                throw new RequestValidationException(SR.MessageEmailAddressNotConfigured);
             }
 
             // ensure user found, account is active and the current password is correct
