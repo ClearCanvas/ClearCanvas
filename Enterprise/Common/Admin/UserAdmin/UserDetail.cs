@@ -30,71 +30,86 @@ using ClearCanvas.Enterprise.Common.Admin.AuthorityGroupAdmin;
 
 namespace ClearCanvas.Enterprise.Common.Admin.UserAdmin
 {
-    [DataContract]
-    public class UserDetail : DataContractBase
-    {
-        public UserDetail(string userId, string displayName, string emailAddress, DateTime creationTime, DateTime? validFrom, DateTime? validUntil, 
-            DateTime? lastLoginTime, bool enabled, DateTime? expiryTime, List<AuthorityGroupSummary> authorityGroups)
-        {
-            UserName = userId;
-            DisplayName = displayName;
-            AuthorityGroups = authorityGroups;
-            CreationTime = creationTime;
-            ValidFrom = validFrom;
-            ValidUntil = validUntil;
-            LastLoginTime = lastLoginTime;
-            Enabled = enabled;
-            PasswordExpiryTime = expiryTime;
-            EmailAddress = emailAddress;
-        }
+	[DataContract]
+	public class UserDetail : DataContractBase
+	{
+		public UserDetail(
+			EnumValueInfo accountType,
+			string userId,
+			string displayName,
+			string emailAddress,
+			DateTime creationTime,
+			DateTime? validFrom,
+			DateTime? validUntil,
+			DateTime? lastLoginTime,
+			bool enabled,
+			DateTime? expiryTime,
+			List<AuthorityGroupSummary> authorityGroups)
+		{
+			AccountType = accountType;
+			UserName = userId;
+			DisplayName = displayName;
+			AuthorityGroups = authorityGroups;
+			CreationTime = creationTime;
+			ValidFrom = validFrom;
+			ValidUntil = validUntil;
+			LastLoginTime = lastLoginTime;
+			Enabled = enabled;
+			PasswordExpiryTime = expiryTime;
+			EmailAddress = emailAddress;
+		}
 
-        public UserDetail()
-        {
-            AuthorityGroups = new List<AuthorityGroupSummary>();
-        }
+		public UserDetail()
+		{
+			AuthorityGroups = new List<AuthorityGroupSummary>();
+		}
 
-        [DataMember]
-        public string UserName;
+		[DataMember]
+		public EnumValueInfo AccountType;
 
-        [DataMember]
-        public string DisplayName;
+		[DataMember]
+		public string UserName;
 
-        [DataMember]
-        public DateTime CreationTime;
+		[DataMember]
+		public string DisplayName;
 
-        [DataMember]
-        public DateTime? ValidFrom;
+		[DataMember]
+		public DateTime CreationTime;
 
-        [DataMember]
-        public DateTime? ValidUntil;
+		[DataMember]
+		public DateTime? ValidFrom;
 
-        [DataMember]
-        public DateTime? LastLoginTime;
+		[DataMember]
+		public DateTime? ValidUntil;
 
-        [DataMember]
-        public bool Enabled;
+		[DataMember]
+		public DateTime? LastLoginTime;
 
-        [DataMember]
-        public List<AuthorityGroupSummary> AuthorityGroups;
+		[DataMember]
+		public bool Enabled;
 
-        /// <summary>
-        /// Used by client to request password reset.
-        /// </summary>
-        [DataMember]
-        public bool ResetPassword;
+		[DataMember]
+		public List<AuthorityGroupSummary> AuthorityGroups;
 
-        [DataMember]
-        public DateTime? PasswordExpiryTime;
+		/// <summary>
+		/// Used by client to request password reset.
+		/// </summary>
+		[DataMember]
+		public bool ResetPassword;
 
-        [DataMember]
-        public string EmailAddress;
+		[DataMember]
+		public DateTime? PasswordExpiryTime;
+
+		[DataMember]
+		public string EmailAddress;
 
 		[DataMember]
 		public int SessionCount;
 
-    	public UserSummary GetSummary()
-    	{
-    		return new UserSummary(
+		public UserSummary GetSummary()
+		{
+			return new UserSummary(
+				AccountType,
 				UserName,
 				DisplayName,
 				EmailAddress,
@@ -105,6 +120,6 @@ namespace ClearCanvas.Enterprise.Common.Admin.UserAdmin
 				PasswordExpiryTime,
 				Enabled,
 				SessionCount);
-    	}
-    }
+		}
+	}
 }

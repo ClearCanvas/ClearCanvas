@@ -23,9 +23,10 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
-using System.Security.Permissions;
-
+using System.Security;
+using System.Text.RegularExpressions;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Enterprise.Authentication.Brokers;
@@ -33,6 +34,7 @@ using ClearCanvas.Enterprise.Common;
 using ClearCanvas.Enterprise.Common.Admin.UserAdmin;
 using ClearCanvas.Enterprise.Core;
 using System.Threading;
+using Iesi.Collections.Generic;
 
 namespace ClearCanvas.Enterprise.Authentication.Admin.UserAdmin
 {
@@ -43,10 +45,15 @@ namespace ClearCanvas.Enterprise.Authentication.Admin.UserAdmin
 		#region IUserAdminService Members
 
 		[ReadOperation]
-		[PrincipalPermission(SecurityAction.Demand, Role = AuthorityTokens.Admin.Security.User)]
 		public ListUsersResponse ListUsers(ListUsersRequest request)
 		{
+			// establish which account types this user is entitled to see
+			var visibleAccountTypes = new List<UserAccountType>(GetAccountTypesAuthorizedToManage());
+			if (!visibleAccountTypes.Any())
+				throw new SecurityException(SR.MessageUserNotAuthorized);
+
 			var criteria = new UserSearchCriteria();
+			criteria.AccountType.In(visibleAccountTypes);
 			criteria.UserName.SortAsc(0);
 
 			// create the criteria, depending on whether matches should be "exact" or "like"
@@ -76,34 +83,44 @@ namespace ClearCanvas.Enterprise.Authentication.Admin.UserAdmin
 		}
 
 		[ReadOperation]
-		[PrincipalPermission(SecurityAction.Demand, Role = AuthorityTokens.Admin.Security.User)]
 		public LoadUserForEditResponse LoadUserForEdit(LoadUserForEditRequest request)
 		{
 			var user = FindUserByName(request.UserName);
+
+			EnsureCurrentUserAuthorizedToManage(user.AccountType);
 
 			var assembler = new UserAssembler();
 			return new LoadUserForEditResponse(assembler.GetUserDetail(user));
 		}
 
 		[UpdateOperation]
-		[PrincipalPermission(SecurityAction.Demand, Role = AuthorityTokens.Admin.Security.User)]
 		public AddUserResponse AddUser(AddUserRequest request)
 		{
 			Platform.CheckForNullReference(request, "request");
 			Platform.CheckMemberIsSet(request.UserDetail, "UserDetail");
 
 			var userDetail = request.UserDetail;
+			var accountType = (userDetail.AccountType != null)
+				? EnumUtils.GetEnumValue<UserAccountType>(userDetail.AccountType)
+				: UserAccountType.U;	// default account type is U if not specified
+
+			// is the current user authorized to create user accounts of this type?
+			EnsureCurrentUserAuthorizedToManage(accountType);
 
 			if(!UserName.IsLegalUserName(userDetail.UserName))
 				throw new RequestValidationException("Illegal user name.");
 
-			var settings = new AuthenticationSettings();
-
 			// create new user
-			var userInfo =
-				new UserInfo(userDetail.UserName, userDetail.DisplayName, userDetail.EmailAddress, userDetail.ValidFrom, userDetail.ValidUntil);
+			var userInfo = new UserInfo(
+				accountType,
+				userDetail.UserName,
+				userDetail.DisplayName,
+				userDetail.EmailAddress,
+				userDetail.ValidFrom,
+				userDetail.ValidUntil);
 
-			var user = User.CreateNewUser(userInfo, settings.DefaultTemporaryPassword);
+			var password = GetNewAccountPassword(accountType, request.Password);
+			var user = User.CreateNewUser(userInfo, password, new HashedSet<AuthorityGroup>());
 
 			// copy other info such as authority groups from request
 			var assembler = new UserAssembler();
@@ -117,10 +134,10 @@ namespace ClearCanvas.Enterprise.Authentication.Admin.UserAdmin
 		}
 
 		[UpdateOperation]
-		[PrincipalPermission(SecurityAction.Demand, Role = AuthorityTokens.Admin.Security.User)]
 		public UpdateUserResponse UpdateUser(UpdateUserRequest request)
 		{
 			var user = FindUserByName(request.UserDetail.UserName);
+			EnsureCurrentUserAuthorizedToManage(user.AccountType);
 
 			// update user account info
 			var assembler = new UserAssembler();
@@ -129,9 +146,11 @@ namespace ClearCanvas.Enterprise.Authentication.Admin.UserAdmin
 			// reset password if requested
 			if (request.UserDetail.ResetPassword)
 			{
+				if(user.AccountType != UserAccountType.U)
+					throw new RequestValidationException(SR.MessageAccountTypeDoesNotSupportPasswordReset);
+
 				var settings = new AuthenticationSettings();
 				user.ResetPassword(settings.DefaultTemporaryPassword);
-
 			}
 
 			PersistenceContext.SynchState();
@@ -140,7 +159,6 @@ namespace ClearCanvas.Enterprise.Authentication.Admin.UserAdmin
 		}
 
 		[UpdateOperation]
-		[PrincipalPermission(SecurityAction.Demand, Role = AuthorityTokens.Admin.Security.User)]
 		public DeleteUserResponse DeleteUser(DeleteUserRequest request)
 		{
 			Platform.CheckForNullReference(request, "request");
@@ -150,26 +168,31 @@ namespace ClearCanvas.Enterprise.Authentication.Admin.UserAdmin
 			if (request.UserName == Thread.CurrentPrincipal.Identity.Name)
 				throw new RequestValidationException(SR.MessageCannotDeleteOwnUserAccount);
 
-			var broker = PersistenceContext.GetBroker<IUserBroker>();
 			var user = FindUserByName(request.UserName);
+			EnsureCurrentUserAuthorizedToManage(user.AccountType);
 
 			// remove user from groups we don't get errors from db references
 			user.AuthorityGroups.Clear();
 
 			// delete user
+			var broker = PersistenceContext.GetBroker<IUserBroker>();
 			broker.Delete(user);
 
 			return new DeleteUserResponse();
 		}
 
 		[UpdateOperation]
-		[PrincipalPermission(SecurityAction.Demand, Role = AuthorityTokens.Admin.Security.User)]
 		public ResetUserPasswordResponse ResetUserPassword(ResetUserPasswordRequest request)
 		{
 			Platform.CheckForNullReference(request, "request");
 			Platform.CheckMemberIsSet(request.UserName, "UserName");
 
 			var user = FindUserByName(request.UserName);
+			EnsureCurrentUserAuthorizedToManage(user.AccountType);
+
+			if (user.AccountType != UserAccountType.U)
+				throw new RequestValidationException(SR.MessageAccountTypeDoesNotSupportPasswordReset);
+
 
 			var settings = new AuthenticationSettings();
 			user.ResetPassword(settings.DefaultTemporaryPassword);
@@ -179,20 +202,20 @@ namespace ClearCanvas.Enterprise.Authentication.Admin.UserAdmin
 		}
 
 		[ReadOperation]
-		[PrincipalPermission(SecurityAction.Demand, Role = AuthorityTokens.Admin.Security.User)]
 		public ListUserSessionsResponse ListUserSessions(ListUserSessionsRequest request)
 		{
 			Platform.CheckForNullReference(request, "request");
 			Platform.CheckMemberIsSet(request.UserName, "UserName");
 
 			var user = FindUserByName(request.UserName);
+			EnsureCurrentUserAuthorizedToManage(user.AccountType);
+
 			var assembler = new UserAssembler();
 			return new ListUserSessionsResponse(user.UserName, user.ActiveSessions.Select(assembler.GetUserSessionSummary).ToList());
 		}
 
 
 		[UpdateOperation]
-		[PrincipalPermission(SecurityAction.Demand, Role = AuthorityTokens.Admin.Security.User)]
 		public TerminateUserSessionResponse TerminateUserSession(TerminateUserSessionRequest request)
 		{
 			Platform.CheckForNullReference(request, "request");
@@ -209,9 +232,11 @@ namespace ClearCanvas.Enterprise.Authentication.Admin.UserAdmin
 
 			var sessions = PersistenceContext.GetBroker<IUserSessionBroker>().Find(where);
 
-			// terminate all sessions
+			// terminate sessions
 			foreach (var session in sessions)
 			{
+				// but only if the current user is actually authorized to do so
+				EnsureCurrentUserAuthorizedToManage(session.User.AccountType);
 				session.Terminate();
 			}
 
@@ -219,6 +244,17 @@ namespace ClearCanvas.Enterprise.Authentication.Admin.UserAdmin
 		}
 
 		#endregion
+
+		private static string CurrentUserSessionId
+		{
+			get
+			{
+				if (!(Thread.CurrentPrincipal is DefaultPrincipal))
+					throw new InvalidOperationException("Unable to obtain current user session ID on this thread");
+
+				return (Thread.CurrentPrincipal as DefaultPrincipal).SessionToken.Id;
+			}
+		}
 
 		private User FindUserByName(string name)
 		{
@@ -235,16 +271,51 @@ namespace ClearCanvas.Enterprise.Authentication.Admin.UserAdmin
 			}
 		}
 
-		private static string CurrentUserSessionId
+		private static Password GetNewAccountPassword(UserAccountType accountType, string password)
 		{
-			get
+			var settings = new AuthenticationSettings();
+			switch (accountType)
 			{
-				if (!(Thread.CurrentPrincipal is DefaultPrincipal))
-					throw new InvalidOperationException("Unable to obtain current user session ID on this thread");
+				case UserAccountType.U:
+					// for user accounts, always use the temp password, set to expire immediately
+					return Password.CreateTemporaryPassword(settings.DefaultTemporaryPassword);
 
-				return (Thread.CurrentPrincipal as DefaultPrincipal).SessionToken.Id;
+				case UserAccountType.G:
+					// for group accounts, generate a random password (since it will never be used)
+					return Password.CreatePassword(Guid.NewGuid().ToString("N"), null);
+
+				case UserAccountType.S:
+					// for service accounts, use password provided in request, and set to never expire
+					if(string.IsNullOrEmpty(password))
+						throw new RequestValidationException(settings.ValidPasswordMessage);
+					if (!Regex.Match(password, settings.ValidPasswordRegex).Success)
+						throw new RequestValidationException(settings.ValidPasswordMessage);
+					return Password.CreatePassword(password, null);
+
+				default:
+					throw new ArgumentOutOfRangeException("accountType");
 			}
 		}
 
+		private static void EnsureCurrentUserAuthorizedToManage(UserAccountType accountType)
+		{
+			if (!IsCurrentUserAuthorizedToManage(accountType))
+				throw new SecurityException(SR.MessageUserNotAuthorized);
+		}
+
+		private static bool IsCurrentUserAuthorizedToManage(UserAccountType accountType)
+		{
+			return GetAccountTypesAuthorizedToManage().Contains(accountType);
+		}
+
+		private static IEnumerable<UserAccountType> GetAccountTypesAuthorizedToManage()
+		{
+			if (Thread.CurrentPrincipal.IsInRole(AuthorityTokens.Admin.Security.User))
+				yield return (UserAccountType.U);
+			if (Thread.CurrentPrincipal.IsInRole(AuthorityTokens.Admin.Security.NonUserAccounts.Group))
+				yield return (UserAccountType.G);
+			if (Thread.CurrentPrincipal.IsInRole(AuthorityTokens.Admin.Security.NonUserAccounts.Service))
+				yield return (UserAccountType.S);
+		}
 	}
 }

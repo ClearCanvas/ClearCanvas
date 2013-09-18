@@ -41,6 +41,7 @@ namespace ClearCanvas.Enterprise.Authentication.Admin.UserAdmin
 		{
 			var criteria = new UserSearchCriteria();
 			criteria.UserName.SortAsc(0);
+			criteria.AccountType.EqualTo(UserAccountType.U); // only regular user accounts are visible through this service
 
 			// create the criteria, depending on whether matches should be "exact" or "like"
 			if (request.ExactMatchOnly)

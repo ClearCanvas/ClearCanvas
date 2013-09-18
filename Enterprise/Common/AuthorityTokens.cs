@@ -26,8 +26,8 @@ using ClearCanvas.Common.Authorization;
 
 namespace ClearCanvas.Enterprise.Common
 {
-    public class AuthorityTokens
-    {
+	public class AuthorityTokens
+	{
 		/// <summary>
 		/// Tokens that allow access to administrative functionality.
 		/// </summary>
@@ -42,26 +42,41 @@ namespace ClearCanvas.Enterprise.Common
 			public static class Security
 			{
 				[AuthorityToken(Description = "Allow administration of User Accounts.")]
-                public const string User = "Enterprise/Admin/Security/User";
+				public const string User = "Enterprise/Admin/Security/User";
 
 				[AuthorityToken(Description = "Allow administration of Authority Groups.")]
-                public const string AuthorityGroup = "Enterprise/Admin/Security/Authority Group";
+				public const string AuthorityGroup = "Enterprise/Admin/Security/Authority Group";
+
+				public static class NonUserAccounts
+				{
+					[AuthorityToken(Description = "Allow administration of Service Accounts.")]
+					public const string Service = "Enterprise/Admin/Security/Non-user Accounts/Service";
+
+					[AuthorityToken(Description = "Allow administration of Group Accounts.")]
+					public const string Group = "Enterprise/Admin/Security/Non-user Accounts/Group";
+				}
 			}
 		}
 
-        /// <summary>
-        /// Tokens that specify data access
-        /// </summary>
-        /// <remarks>
-        /// The tokens are intended to be system wide and used across products.
-        /// </remarks>
-        public static class DataAccess
-        {
-            [AuthorityToken(Description = "Allow the user access to all studies.", Formerly = "Web Portal/Data Access/Access to all Studies")]
-            public const string AllStudies = "Data Access/Access to all Studies";
+		/// <summary>
+		/// Tokens that specify data access
+		/// </summary>
+		/// <remarks>
+		/// The tokens are intended to be system wide and used across products.
+		/// </remarks>
+		public static class DataAccess
+		{
+			[AuthorityToken(Description = "Allow the user access to all studies.", Formerly = "Web Portal/Data Access/Access to all Studies")]
+			public const string AllStudies = "Data Access/Access to all Studies";
 
-            [AuthorityToken(Description = "Allow the user access to all Server Partitions on the ImageServer.")]
-            public const string AllPartitions = "Data Access/Access to all Server Partitions";
-        }
+			[AuthorityToken(Description = "Allow the user access to all Server Partitions on the ImageServer.")]
+			public const string AllPartitions = "Data Access/Access to all Server Partitions";
+		}
+
+		public static class Login
+		{
+			[AuthorityToken(Description = "Allow modification of enterprise configuration store data.")]
+			public const string Impersonate = "Enterprise/Login/Impersonate";
+		}
 	}
 }

@@ -58,6 +58,7 @@ namespace ClearCanvas.Enterprise.Common.Setup
 					null,
 					g.Name,
 					g.Description,
+					g.BuiltIn,
 					g.DataGroup,
 					g.Tokens.Select(t => new AuthorityTokenSummary(t)).ToList()
 				)).ToList();

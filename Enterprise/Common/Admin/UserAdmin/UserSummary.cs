@@ -28,14 +28,15 @@ using ClearCanvas.Common.Serialization;
 
 namespace ClearCanvas.Enterprise.Common.Admin.UserAdmin
 {
-    [DataContract]
-    public class UserSummary : DataContractBase
-    {
+	[DataContract]
+	public class UserSummary : DataContractBase
+	{
 		/// <summary>
 		/// Constructor for returning only the most basic information about a user.
 		/// </summary>
-		public UserSummary(string userId, string displayName, string emailAddress)
+		public UserSummary(EnumValueInfo accountType, string userId, string displayName, string emailAddress)
 		{
+			AccountType = accountType;
 			UserName = userId;
 			DisplayName = displayName;
 			EmailAddress = emailAddress;
@@ -44,66 +45,80 @@ namespace ClearCanvas.Enterprise.Common.Admin.UserAdmin
 		/// <summary>
 		/// Constructor for returning full user summary.
 		/// </summary>
-		public UserSummary(string userId, string displayName, string emailAddress, DateTime creationTime, DateTime? validFrom, DateTime? validUntil,
-            DateTime? lastLoginTime, DateTime? passwordExpiry, bool enabled, int sessionCount)
-        {
-            UserName = userId;
-            DisplayName = displayName;
-            EmailAddress = emailAddress;
-            CreationTime = creationTime;
-            ValidFrom = validFrom;
-            ValidUntil = validUntil;
-            LastLoginTime = lastLoginTime;
-            Enabled = enabled;
-            PasswordExpiry = passwordExpiry;
-            SessionCount = sessionCount;
-        }
+		public UserSummary(
+			EnumValueInfo accountType,
+			string userId,
+			string displayName,
+			string emailAddress,
+			DateTime creationTime,
+			DateTime? validFrom,
+			DateTime? validUntil,
+			DateTime? lastLoginTime,
+			DateTime? passwordExpiry,
+			bool enabled,
+			int sessionCount)
+		{
+			AccountType = accountType;
+			UserName = userId;
+			DisplayName = displayName;
+			EmailAddress = emailAddress;
+			CreationTime = creationTime;
+			ValidFrom = validFrom;
+			ValidUntil = validUntil;
+			LastLoginTime = lastLoginTime;
+			Enabled = enabled;
+			PasswordExpiry = passwordExpiry;
+			SessionCount = sessionCount;
+		}
 
-        [DataMember]
-        public string UserName;
+		[DataMember]
+		public EnumValueInfo AccountType;
 
-        [DataMember]
-        public string DisplayName;
+		[DataMember]
+		public string UserName;
 
-        [DataMember]
-        public string EmailAddress;
+		[DataMember]
+		public string DisplayName;
 
-        [DataMember]
-        public DateTime CreationTime;
+		[DataMember]
+		public string EmailAddress;
 
-        [DataMember]
-        public DateTime? ValidFrom;
+		[DataMember]
+		public DateTime CreationTime;
 
-        [DataMember]
-        public DateTime? ValidUntil;
+		[DataMember]
+		public DateTime? ValidFrom;
 
-        [DataMember]
-        public DateTime? LastLoginTime;
+		[DataMember]
+		public DateTime? ValidUntil;
 
-        [DataMember]
-        public bool Enabled;
+		[DataMember]
+		public DateTime? LastLoginTime;
 
-        [DataMember]
-        public DateTime? PasswordExpiry;
+		[DataMember]
+		public bool Enabled;
 
-        [DataMember]
-        public int SessionCount;
+		[DataMember]
+		public DateTime? PasswordExpiry;
 
-        protected bool Equals(UserSummary userSummary)
-        {
-            if (userSummary == null) return false;
-            return Equals(UserName, userSummary.UserName);
-        }
+		[DataMember]
+		public int SessionCount;
 
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(this, obj)) return true;
-            return Equals(obj as UserSummary);
-        }
+		protected bool Equals(UserSummary userSummary)
+		{
+			if (userSummary == null) return false;
+			return Equals(UserName, userSummary.UserName);
+		}
 
-        public override int GetHashCode()
-        {
-            return UserName.GetHashCode();
-        }
-    }
+		public override bool Equals(object obj)
+		{
+			if (ReferenceEquals(this, obj)) return true;
+			return Equals(obj as UserSummary);
+		}
+
+		public override int GetHashCode()
+		{
+			return UserName.GetHashCode();
+		}
+	}
 }

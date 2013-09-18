@@ -37,7 +37,7 @@ namespace ClearCanvas.Enterprise.Authentication
 		#region IImpersonationService Members
 
 		[UpdateOperation(ChangeSetAuditable = false)]
-		//[PrincipalPermission(SecurityAction.Demand, Role = AuthorityTokens.Login.Impersonate)]
+		[PrincipalPermission(SecurityAction.Demand, Role = AuthorityTokens.Login.Impersonate)]
 		public InitiateSessionResponse InitiateSession(InitiateImpersonatedSessionRequest request)
 		{
 			Platform.CheckForNullReference(request, "request");

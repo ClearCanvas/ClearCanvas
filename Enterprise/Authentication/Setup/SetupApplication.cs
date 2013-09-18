@@ -26,6 +26,7 @@ using System;
 using System.Collections.Generic;
 using ClearCanvas.Common;
 using ClearCanvas.Enterprise.Authentication.Imex;
+using ClearCanvas.Enterprise.Common;
 using ClearCanvas.Enterprise.Core;
 using ClearCanvas.Enterprise.Authentication.Brokers;
 using System.IO;
@@ -35,40 +36,47 @@ using Iesi.Collections.Generic;
 
 namespace ClearCanvas.Enterprise.Authentication.Setup
 {
-    [ExtensionOf(typeof(ApplicationRootExtensionPoint))]
-    public class SetupApplication : IApplicationRoot
-    {
-        #region IApplicationRoot Members
+	[ExtensionOf(typeof(ApplicationRootExtensionPoint))]
+	public class SetupApplication : IApplicationRoot
+	{
+		private const string ServiceAccountsGroupName = "Service Accounts";
+		private const string ServiceAccountsGroupDescription = "Built-in default authority group for Service Accounts.";
 
-        public void RunApplication(string[] args)
-        {
-			SetupCommandLine cmdLine = new SetupCommandLine();
+		#region IApplicationRoot Members
+
+		public void RunApplication(string[] args)
+		{
+			var cmdLine = new SetupCommandLine();
 			try
 			{
 				cmdLine.Parse(args);
 
-				using (PersistenceScope scope = new PersistenceScope(PersistenceContextType.Update))
+				using (var scope = new PersistenceScope(PersistenceContextType.Update))
 				{
 					((IUpdateContext)PersistenceScope.CurrentContext).ChangeSetRecorder.OperationName = GetType().FullName;
 
 					// import authority tokens
-					AuthorityTokenImporter tokenImporter = new AuthorityTokenImporter();
-					IList<AuthorityToken> allTokens = tokenImporter.ImportFromPlugins((IUpdateContext)PersistenceScope.CurrentContext);
-
+					var tokenImporter = new AuthorityTokenImporter();
+					var allTokens = tokenImporter.ImportFromPlugins((IUpdateContext)PersistenceScope.CurrentContext);
+					var tokenStrings = CollectionUtils.Map<AuthorityToken, string, List<string>>(allTokens, t => t.Name).ToArray();
 
 					// create the sys admin group, which has all tokens assigned by default
-					string[] tokenStrings = CollectionUtils.Map<AuthorityToken, string, List<string>>(allTokens,
-					                                                                                  t => t.Name).ToArray();
-                    AuthorityGroupDefinition adminGroupDef = new AuthorityGroupDefinition(cmdLine.SysAdminGroup, cmdLine.SysAdminGroup, false,
-				                                                                          tokenStrings);
-					AuthorityGroupImporter groupImporter = new AuthorityGroupImporter();
+					var adminGroupDef = new AuthorityGroupDefinition(cmdLine.SysAdminGroup, cmdLine.SysAdminGroup, false, tokenStrings, true);
 
-					IList<AuthorityGroup> groups = 
-						groupImporter.Import(new AuthorityGroupDefinition[] { adminGroupDef }, (IUpdateContext)PersistenceScope.CurrentContext);
+					// create the service accounts group, which has only the impersonation token assigned by default
+					var serviceAccountsGroupDef = new AuthorityGroupDefinition(
+						ServiceAccountsGroupName,
+						ServiceAccountsGroupDescription,
+						false,
+						new[]{AuthorityTokens.Login.Impersonate},
+						true);
+					
+					// import built-in groups
+					var groupImporter = new AuthorityGroupImporter();
+					var groups = groupImporter.Import(new[] { adminGroupDef, serviceAccountsGroupDef }, (IUpdateContext)PersistenceScope.CurrentContext);
 
 					// find the admin group entity that was just created
-					AuthorityGroup adminGroup = CollectionUtils.SelectFirst(groups,
-					                                                        g => g.Name == cmdLine.SysAdminGroup);
+					var adminGroup = CollectionUtils.SelectFirst(groups, g => g.Name == cmdLine.SysAdminGroup);
 
 					// create the "sa" user
 					CreateSysAdminUser(adminGroup, cmdLine, PersistenceScope.CurrentContext, Console.Out);
@@ -76,7 +84,7 @@ namespace ClearCanvas.Enterprise.Authentication.Setup
 					// optionally import other default authority groups defined in other plugins
 					if (cmdLine.ImportDefaultAuthorityGroups)
 					{
-						groupImporter.ImportFromPlugins((IUpdateContext) PersistenceScope.CurrentContext);
+						groupImporter.ImportFromPlugins((IUpdateContext)PersistenceScope.CurrentContext);
 					}
 
 					scope.Complete();
@@ -87,36 +95,33 @@ namespace ClearCanvas.Enterprise.Authentication.Setup
 				Console.WriteLine(e.Message);
 				cmdLine.PrintUsage(Console.Out);
 			}
-        }
+		}
 
-        private static void CreateSysAdminUser(AuthorityGroup adminGroup, SetupCommandLine cmdLine, IPersistenceContext context, TextWriter log)
-        {
-            try
-            {
-                // create the sa user, if doesn't already exist
-                IUserBroker userBroker = context.GetBroker<IUserBroker>();
-                UserSearchCriteria where = new UserSearchCriteria();
+		private static void CreateSysAdminUser(AuthorityGroup adminGroup, SetupCommandLine cmdLine, IPersistenceContext context, TextWriter log)
+		{
+			try
+			{
+				// create the sa user, if doesn't already exist
+				var userBroker = context.GetBroker<IUserBroker>();
+				var where = new UserSearchCriteria();
 				where.UserName.EqualTo(cmdLine.SysAdminUserName);
-                userBroker.FindOne(where);
+				userBroker.FindOne(where);
 
 				log.WriteLine(string.Format("User '{0}' already exists.", cmdLine.SysAdminUserName));
-            }
-            catch (EntityNotFoundException)
-            {
-                HashedSet<AuthorityGroup> groups = new HashedSet<AuthorityGroup>
-                                                       {
-                                                           adminGroup
-                                                       };
+			}
+			catch (EntityNotFoundException)
+			{
+				var groups = new HashedSet<AuthorityGroup> { adminGroup };
 
-                // create sa user using initial password, set to expire never
-                User saUser = User.CreateNewUser(
-					new UserInfo(cmdLine.SysAdminUserName, cmdLine.SysAdminDisplayName, null, null, null),
+				// create sa user using initial password, set to expire never
+				var saUser = User.CreateNewUser(
+					new UserInfo(UserAccountType.U, cmdLine.SysAdminUserName, cmdLine.SysAdminDisplayName, null, null, null),
 					Password.CreatePassword(cmdLine.SysAdminInitialPassword, null),
-                    groups);
-                context.Lock(saUser, DirtyState.New);
-            }
-        }
+					groups);
+				context.Lock(saUser, DirtyState.New);
+			}
+		}
 
-        #endregion
-    }
+		#endregion
+	}
 }

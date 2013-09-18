@@ -31,94 +31,94 @@ using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
 
 
-namespace ClearCanvas.Enterprise.Authentication {
-
-
-    /// <summary>
-    /// User entity
-    /// </summary>
+namespace ClearCanvas.Enterprise.Authentication
+{
+	/// <summary>
+	/// User entity
+	/// </summary>
 	public partial class User
 	{
-        #region Public methods
+		#region Public methods
 
-        /// <summary>
-        /// Creates a new user with the specified initial password.
-        /// </summary>
-        /// <param name="userInfo"></param>
-        /// <param name="initialPassword"></param>
-        /// <param name="authorityGroups"></param>
-        /// <returns></returns>
-        public static User CreateNewUser(UserInfo userInfo, Password initialPassword, Iesi.Collections.Generic.ISet<AuthorityGroup> authorityGroups)
-        {
+		/// <summary>
+		/// Creates a new user with the specified initial password.
+		/// </summary>
+		/// <param name="userInfo"></param>
+		/// <param name="initialPassword"></param>
+		/// <param name="authorityGroups"></param>
+		/// <returns></returns>
+		public static User CreateNewUser(UserInfo userInfo, Password initialPassword, Iesi.Collections.Generic.ISet<AuthorityGroup> authorityGroups)
+		{
 			Platform.CheckForNullReference(userInfo, "userInfo");
 			Platform.CheckForNullReference(initialPassword, "initialPassword");
 			Platform.CheckForEmptyString(userInfo.UserName, "UserName");
 
-			if(!Authentication.UserName.IsLegalUserName(userInfo.UserName))
+			if (!Authentication.UserName.IsLegalUserName(userInfo.UserName))
 				throw new ArgumentException("Illegal UserName.");
 
-            return new User(
-                userInfo.UserName,
-                initialPassword,
-                userInfo.DisplayName,
-                userInfo.ValidFrom,
-                userInfo.ValidUntil,
-                true, // initially enabled
-                Platform.Time, // creation time
-                null, // last login time
-                userInfo.EmailAddress,
-                authorityGroups,
-                new HashedSet<UserSession>()  // empty session collection
-                );
-        }
+			return new User(
+				userInfo.UserName,
+				userInfo.AccountType,
+				initialPassword,
+				userInfo.DisplayName,
+				userInfo.ValidFrom,
+				userInfo.ValidUntil,
+				true, // initially enabled
+				Platform.Time, // creation time
+				null, // last login time
+				userInfo.EmailAddress,
+				authorityGroups,
+				new HashedSet<UserSession>()  // empty session collection
+				);
+		}
 
-        /// <summary>
+		/// <summary>
 		/// Creates a new user with the specified temporary password.
 		/// </summary>
-        /// <param name="userInfo"></param>
+		/// <param name="userInfo"></param>
 		/// <param name="temporaryPassword"></param>
 		/// <returns></returns>
 		public static User CreateNewUser(UserInfo userInfo, string temporaryPassword)
-        {
-			return CreateNewUser(userInfo, Authentication.Password.CreateTemporaryPassword(temporaryPassword), new HashedSet<AuthorityGroup>());
-        }
+		{
+			return CreateNewUser(userInfo, Password.CreateTemporaryPassword(temporaryPassword), new HashedSet<AuthorityGroup>());
+		}
 
-        /// <summary>
-        /// Changes the user's password, setting a new expiry date.
-        /// </summary>
-        /// <param name="newPassword"></param>
-        /// <param name="expiryTime"></param>
-        public virtual void ChangePassword(string newPassword, DateTime expiryTime)
-        {
-            _password = Authentication.Password.CreatePassword(newPassword, expiryTime);
-        }
+		/// <summary>
+		/// Changes the user's password, setting a new expiry date.
+		/// </summary>
+		/// <param name="newPassword"></param>
+		/// <param name="expiryTime"></param>
+		public virtual void ChangePassword(string newPassword, DateTime expiryTime)
+		{
+			_password = Password.CreatePassword(newPassword, expiryTime);
+		}
 
-        /// <summary>
-        /// Resets the user's password to the specified temporary password,
-        /// set to expire immediately.
-        /// </summary>
-        public virtual void ResetPassword(string temporaryPassword)
-        {
-            _password = Authentication.Password.CreateTemporaryPassword(temporaryPassword);
-        }
+		/// <summary>
+		/// Resets the user's password to the specified temporary password,
+		/// set to expire immediately.
+		/// </summary>
+		public virtual void ResetPassword(string temporaryPassword)
+		{
+			_password = Password.CreateTemporaryPassword(temporaryPassword);
+		}
 
-        /// <summary>
-        /// Gets a value indicating whether this account is currently active.
-        /// </summary>
-        public virtual bool IsActive(DateTime currentTime)
-        {
-            return _enabled
-                   && (_validFrom == null || _validFrom < currentTime)
-                   && (_validUntil == null || _validUntil > currentTime);
-        }
+		/// <summary>
+		/// Gets a value indicating whether this account is currently active.
+		/// </summary>
+		public virtual bool IsActive(DateTime currentTime)
+		{
+			return _enabled
+				   && (_validFrom == null || _validFrom < currentTime)
+				   && (_validUntil == null || _validUntil > currentTime);
+		}
 
 		/// <summary>
 		/// Obtains the set of sessions that are currently active (not expired).
 		/// </summary>
-    	public IEnumerable<UserSession> ActiveSessions
-    	{
+		public IEnumerable<UserSession> ActiveSessions
+		{
 			get { return _sessions.Where(s => !s.IsExpired).ToList(); }
-    	}
+		}
 
 		/// <summary>
 		/// Initiates a new session for this user, updating the <see cref="Sessions"/> collection and returning
@@ -195,14 +195,10 @@ namespace ClearCanvas.Enterprise.Authentication {
 		public virtual List<UserSession> TerminateExpiredSessions()
 		{
 			// find any expired sessions
-			List<UserSession> expiredSessions = CollectionUtils.Select(_sessions,
-				delegate(UserSession session)
-				{
-					return session.IsExpired;
-				});
+			var expiredSessions = CollectionUtils.Select(_sessions, session => session.IsExpired);
 
 			// terminate them
-			foreach (UserSession session in expiredSessions)
+			foreach (var session in expiredSessions)
 			{
 				session.Terminate();
 			}
@@ -211,7 +207,7 @@ namespace ClearCanvas.Enterprise.Authentication {
 			return expiredSessions;
 		}
 
-        #endregion
+		#endregion
 
 		private UserSession CreateSession(string host, string application, DateTime startTime, TimeSpan timeout, bool impersonated)
 		{
