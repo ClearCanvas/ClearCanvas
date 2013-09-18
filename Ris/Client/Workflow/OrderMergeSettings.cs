@@ -34,7 +34,6 @@ namespace ClearCanvas.Ris.Client.Workflow
 	{
 		private OrderMergeSettings()
 		{
-			ApplicationSettingsRegistry.Instance.RegisterInstance(this);
 		}
 	}
 }

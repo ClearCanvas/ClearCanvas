@@ -34,7 +34,6 @@ namespace ClearCanvas.ImageViewer.Thumbnails.Configuration
 	{
 		public ThumbnailsSettings()
 		{
-			ApplicationSettingsRegistry.Instance.RegisterInstance(this);
 		}
 	}
 }

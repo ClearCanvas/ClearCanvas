@@ -28,6 +28,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Security;
 using System.Threading;
 using NUnit.Framework;
 
@@ -98,13 +99,29 @@ namespace ClearCanvas.ImageViewer.Externals.General.Tests
 		[Test]
 		public void TestEnvironmentVariableExpansion()
 		{
+			try
+			{
+				TestEnvironmentVariableExpansionCore();
+			}
+			catch (SecurityException)
+			{
+				const string msg = "Test failing with security exception - you may need to start unit tests with UAC elevation";
+				Console.WriteLine(msg);
+				throw;
+			}
+		}
+
+		private void TestEnvironmentVariableExpansionCore()
+		{
 			string baseDirectory = Path.Combine(Path.Combine(Path.GetTempPath(), "ClearCanvas"), this.GetType().Name);
 			string commandDirectory = Path.Combine(baseDirectory, "TestEnvironmentVariableExpansion");
 			string invalidDirectory = Path.Combine(baseDirectory, "TestEnvironmentVariableExpansion.April");
 			string workingDirectory = Path.Combine(baseDirectory, "TestEnvironmentVariableExpansion.Archer");
+
 			Directory.CreateDirectory(commandDirectory);
 			Directory.CreateDirectory(invalidDirectory);
 			Directory.CreateDirectory(workingDirectory);
+
 			using (MockCommandLine command = new MockCommandLine(commandDirectory))
 			{
 				using (var processVars = new EnvironmentVariablesTestConstruct(EnvironmentVariableTarget.Process))
@@ -178,6 +195,7 @@ namespace ClearCanvas.ImageViewer.Externals.General.Tests
 					}
 				}
 			}
+
 			Directory.Delete(commandDirectory);
 			Directory.Delete(invalidDirectory);
 			Directory.Delete(workingDirectory);

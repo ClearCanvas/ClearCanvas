@@ -34,7 +34,6 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
 	{
 		private DefaultPatientReconciliationSettings()
 		{
-			ApplicationSettingsRegistry.Instance.RegisterInstance(this);
 		}
 	}
 }

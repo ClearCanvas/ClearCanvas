@@ -64,6 +64,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IntegratedGlobalHomeTool.cs" />
     <Compile Include="ViewerAutomationIntegration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -93,6 +94,10 @@
       <Project>{26E9A01A-64B5-42C5-8252-FBB30DF9CEC7}</Project>
       <Name>ClearCanvas.Desktop</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\..\Desktop\Explorer\ClearCanvas.Desktop.Explorer.csproj">
+      <Project>{085823EA-DDAE-4DAF-A99D-17F75A03CF23}</Project>
+      <Name>ClearCanvas.Desktop.Explorer</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\Dicom\ClearCanvas.Dicom.csproj">
       <Project>{AD9ECE2B-8268-4115-8DC8-860FBD011FFF}</Project>
       <Name>ClearCanvas.Dicom</Name>
@@ -100,6 +105,10 @@
     <ProjectReference Include="..\..\..\ImageViewer\Common\ClearCanvas.ImageViewer.Common.csproj">
       <Project>{FEFD73C5-8541-47D2-BBDB-FF61DEA28291}</Project>
       <Name>ClearCanvas.ImageViewer.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Application\Common\ClearCanvas.Ris.Application.Common.csproj">
+      <Project>{09F49217-CD98-4773-8CFB-594F189EEE3B}</Project>
+      <Name>ClearCanvas.Ris.Application.Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\ClearCanvas.Ris.Client.csproj">
       <Project>{F8E75C01-AB14-4DDE-ABEA-3EECC4957A1F}</Project>

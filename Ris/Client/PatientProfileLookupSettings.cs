@@ -34,7 +34,6 @@ namespace ClearCanvas.Ris.Client
 	{
 		private PatientProfileLookupSettings()
 		{
-			ApplicationSettingsRegistry.Instance.RegisterInstance(this);
 		}
 	}
 }

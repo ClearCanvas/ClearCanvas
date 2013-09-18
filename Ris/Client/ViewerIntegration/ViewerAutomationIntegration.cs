@@ -219,6 +219,7 @@ namespace ClearCanvas.Ris.Client.ViewerIntegration
 
 		#endregion
 
+		private readonly object _openViewersSyncRoot = new object();
 		private readonly List<ViewerInfo> _openViewers = new List<ViewerInfo>();
 		private readonly Timer _cleanupTimer;
 		private const uint CleanupPeriod = 200000;	// every 10 minutes
@@ -264,7 +265,7 @@ namespace ClearCanvas.Ris.Client.ViewerIntegration
 
 		private IStudyViewer[] ViewStudiesOneInstance(string[] studyInstanceUids)
 		{
-			lock (_openViewers)
+			lock (_openViewersSyncRoot)
 			{
 				using (var service = new ViewerService())
 				{
@@ -278,21 +279,23 @@ namespace ClearCanvas.Ris.Client.ViewerIntegration
 
 					// locate the studies
 					// note that any studies that cannot be located are silently ignored
-					var locatedStudies = service.LocateStudiesByUid(studyInstanceUids);
+					//
+					// only the first ('primary') study in a single viewer is used, as this is the only way to get hanging protocols to apply correctly
+					// all priors/linked studies should be loaded automatically via prior/related search anyway, there should probably be some explicit mechanism here
+					var locatedStudies = service.LocateStudiesByUid(new[] {studyInstanceUids.FirstOrDefault()});
 					if (!locatedStudies.Any())
 						return new IStudyViewer[0];
 
-					// open all located studies in a single viewer
 					vi = new ViewerInfo(this, service.OpenViewer(locatedStudies), studyInstanceUids);
 					_openViewers.Add(vi);
-					return new IStudyViewer[] { vi };
+					return new IStudyViewer[] {vi};
 				}
 			}
 		}
 
 		private IStudyViewer[] ViewStudiesMultiInstance(string[] studyInstanceUids)
 		{
-			lock (_openViewers)
+			lock (_openViewersSyncRoot)
 			{
 				using (var service = new ViewerService())
 				{
@@ -341,7 +344,7 @@ namespace ClearCanvas.Ris.Client.ViewerIntegration
 
 		private void CloseViewer(ViewerInfo vi)
 		{
-			lock (_openViewers)
+			lock (_openViewersSyncRoot)
 			{
 				using (var service = new ViewerService())
 				{
@@ -353,7 +356,7 @@ namespace ClearCanvas.Ris.Client.ViewerIntegration
 
 		private void RemoveDeadViewerEntries()
 		{
-			lock (_openViewers)
+			lock (_openViewersSyncRoot)
 			{
 				using (var service = new ViewerService())
 				{

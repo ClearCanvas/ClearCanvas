@@ -38,7 +38,6 @@ namespace ClearCanvas.ImageViewer.Configuration
         
         private DefaultServerSettings()
 		{
-			ApplicationSettingsRegistry.Instance.RegisterInstance(this);
 		}
 
 	    public static DefaultServerSettings Default

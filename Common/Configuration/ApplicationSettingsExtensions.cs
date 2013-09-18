@@ -124,10 +124,15 @@ namespace ClearCanvas.Common.Configuration
 
         private static ISharedApplicationSettingsProvider GetSharedSettingsProvider(SettingsProvider provider)
         {
-            if (provider is LocalFileSettingsProvider)
-                return new ExtendedLocalFileSettingsProvider((LocalFileSettingsProvider)provider);
+            var shared = provider as ISharedApplicationSettingsProvider;
+            if (shared != null)
+                return shared;
 
-            return provider as ISharedApplicationSettingsProvider;
+            var local = provider as LocalFileSettingsProvider;
+            if (local != null)
+                return new ExtendedLocalFileSettingsProvider(local);
+
+            return null;
         }
 
         private static void SaveIfDirty(ApplicationSettingsBase settings)

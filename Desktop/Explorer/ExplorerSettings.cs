@@ -35,11 +35,10 @@ namespace ClearCanvas.Desktop.Explorer
 	{
 		private ExplorerSettings()
 		{
-			ApplicationSettingsRegistry.Instance.RegisterInstance(this);
 		}
 
 		public override void Upgrade()
 		{
-	}
+	    }
 	}
 }

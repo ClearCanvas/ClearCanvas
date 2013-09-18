@@ -42,7 +42,6 @@ namespace ClearCanvas.Ris.Client
 
         private BannerSettings()
         {
-            ApplicationSettingsRegistry.Instance.RegisterInstance(this);
         }
 
         public static BannerSettings Default {

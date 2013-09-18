@@ -182,7 +182,7 @@ namespace ClearCanvas.Ris.Client
 			CheckAccess();
 
 			var studyUids = GetStudiesForProcedures(orderRef, procedureRefs.ToList());
-			var viewers = _viewer.ViewStudies(new ViewStudiesArgs {StudyInstanceUids = studyUids.ToArray(), InstancePerStudy = true});
+			var viewers = _viewer.ViewStudies(new ViewStudiesArgs {StudyInstanceUids = studyUids.ToArray(), InstancePerStudy = ViewImagesSettings.Default.OpenSeparateLinkedProcedureStudies});
 
 			if (!viewers.Any() && options.FallbackToOrder)
 			{

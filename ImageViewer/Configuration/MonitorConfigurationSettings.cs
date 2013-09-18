@@ -50,7 +50,6 @@ namespace ClearCanvas.ImageViewer.Configuration
 	{
 		private MonitorConfigurationSettings()
 		{
-			ApplicationSettingsRegistry.Instance.RegisterInstance(this);
 		}
 
 		private static MonitorConfigurationSettings defaultInstance = ((MonitorConfigurationSettings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new MonitorConfigurationSettings())));

@@ -46,7 +46,6 @@ namespace ClearCanvas.Desktop
 
 		private static InstalledLocales _instance;
 
-
 		/// <summary>
 		/// Gets a <see cref="Locale"/> representing the invariant locale.
 		/// </summary>

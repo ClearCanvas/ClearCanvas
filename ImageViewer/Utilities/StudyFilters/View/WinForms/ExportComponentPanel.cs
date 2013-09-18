@@ -23,11 +23,6 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Text;
 using System.Windows.Forms;
 using ClearCanvas.Desktop.View.WinForms;
 using ClearCanvas.ImageViewer.Utilities.StudyFilters.Export;
@@ -55,6 +50,7 @@ namespace ClearCanvas.ImageViewer.Utilities.StudyFilters.View.WinForms
 			_studyDescription.DataBindings.Add("Value", _component, "StudyDescription", true, DataSourceUpdateMode.OnPropertyChanged);
 			_accessionNumber.DataBindings.Add("Value", _component, "AccessionNumber", true, DataSourceUpdateMode.OnPropertyChanged);
 			_studyDate.DataBindings.Add("Value", _component, "StudyDate", true, DataSourceUpdateMode.OnPropertyChanged);
+			_keepPrivateTags.DataBindings.Add("Checked", _component, "KeepPrivateTags", true, DataSourceUpdateMode.OnPropertyChanged);
 			_outputPath.DataBindings.Add("Text", _component, "OutputPath", true, DataSourceUpdateMode.OnPropertyChanged);
 
 			base.ErrorProvider.SetIconAlignment(_outputPath, ErrorIconAlignment.MiddleLeft);

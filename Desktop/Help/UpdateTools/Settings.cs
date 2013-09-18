@@ -35,7 +35,6 @@ namespace ClearCanvas.Desktop.Help.UpdateTools
 	{
 		private Settings()
 		{
-			ApplicationSettingsRegistry.Instance.RegisterInstance(this);
 		}
 	}
 }

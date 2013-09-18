@@ -43,8 +43,6 @@ namespace ClearCanvas.ImageViewer.Tools.Standard.PresetVoiLuts
 		private PresetVoiLutSettings()
 		{
 			_xkeysConverter = TypeDescriptor.GetConverter(typeof(XKeys));
-            //TODO (Phoenix5): #10730 - remove this when it's fixed.
-            //ApplicationSettingsRegistry.Instance.RegisterInstance(this);
         }
 
         //TODO (Phoenix5): #10730 - remove this when it's fixed.

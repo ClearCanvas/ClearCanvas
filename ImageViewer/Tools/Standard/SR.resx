@@ -122,6 +122,7 @@
   </data>
   <data name="MenuWindowLevel" xml:space="preserve">
     <value>&amp;Window/Level</value>
+    <comment>Window (W) and Level (L), i.e. the width and center of the window used to enhance the contrast of a subrange of pixel values</comment>
   </data>
   <data name="MenuZoom" xml:space="preserve">
     <value>&amp;Zoom</value>
@@ -158,6 +159,7 @@
   </data>
   <data name="CommandWindowLevel" xml:space="preserve">
     <value>Window/Level</value>
+    <comment>Window (W) and Level (L), i.e. the width and center of the window used to enhance the contrast of a subrange of pixel values</comment>
   </data>
   <data name="CommandZoom" xml:space="preserve">
     <value>Zoom</value>
@@ -203,21 +205,26 @@
   </data>
   <data name="LabelModalityLut" xml:space="preserve">
     <value>VAL</value>
+    <comment>Short label for "value"</comment>
   </data>
   <data name="LabelRawPixel" xml:space="preserve">
     <value>RAW</value>
+    <comment>Short label for "raw" pixel value</comment>
   </data>
   <data name="LabelVOILut" xml:space="preserve">
     <value>VOI</value>
+    <comment>Short label for VOI transformed pixel value</comment>
   </data>
   <data name="LabelHounsfieldUnitsAbbreviation" xml:space="preserve">
     <value>HU</value>
   </data>
   <data name="MenuLutPresets" xml:space="preserve">
     <value>W/L Presets</value>
+    <comment>Window (W) and Level (L), i.e. the width and center of the window used to enhance the contrast of a subrange of pixel values</comment>
   </data>
   <data name="ToolsPresets" xml:space="preserve">
     <value>W/L Presets</value>
+    <comment>Window (W) and Level (L), i.e. the width and center of the window used to enhance the contrast of a subrange of pixel values</comment>
   </data>
   <data name="MenuLocateOnDisk" xml:space="preserve">
     <value>Locate on Disk</value>
@@ -328,9 +335,11 @@ Please ensure that the name/keystroke combination is unique.</value>
   </data>
   <data name="TitleAddWindowLevelPreset" xml:space="preserve">
     <value>Add Window/Level Preset</value>
+    <comment>Window (W) and Level (L), i.e. the width and center of the window used to enhance the contrast of a subrange of pixel values</comment>
   </data>
   <data name="TitleEditWindowLevelPreset" xml:space="preserve">
     <value>Edit Window/Level Preset</value>
+    <comment>Window (W) and Level (L), i.e. the width and center of the window used to enhance the contrast of a subrange of pixel values</comment>
   </data>
   <data name="CommandWindowLevelPreset" xml:space="preserve">
     <value>Window/Level Preset</value>
@@ -340,12 +349,14 @@ Please ensure that the name/keystroke combination is unique.</value>
   </data>
   <data name="MenuWindowLevelPresets" xml:space="preserve">
     <value>Window/Level Presets</value>
+    <comment>Window (W) and Level (L), i.e. the width and center of the window used to enhance the contrast of a subrange of pixel values</comment>
   </data>
   <data name="Added" xml:space="preserve">
     <value>added</value>
   </data>
   <data name="AutoPresetVoiLutOperationDescription" xml:space="preserve">
     <value>Automatically applies window/level</value>
+    <comment>Window (W) and Level (L), i.e. the width and center of the window used to enhance the contrast of a subrange of pixel values</comment>
   </data>
   <data name="AutoPresetVoiLutOperationFactoryDescription" xml:space="preserve">
     <value>Auto</value>
@@ -358,6 +369,7 @@ Please ensure that the name/keystroke combination is unique.</value>
   </data>
   <data name="LinearPresetVoiLutOperationFactoryDescription" xml:space="preserve">
     <value>Linear Window/Level Preset</value>
+    <comment>Window (W) and Level (L), i.e. the width and center of the window used to enhance the contrast of a subrange of pixel values</comment>
   </data>
   <data name="MinMaxAlgorithmPresetVoiLutOperationComponentDescription" xml:space="preserve">
     <value>Calculates Window/Level from the minimum and maximum pixel values</value>
@@ -400,12 +412,15 @@ Please ensure that the name/keystroke combination is unique.</value>
   </data>
   <data name="FormatDescriptionAutoLinearLutNoExplanation" xml:space="preserve">
     <value>W:{0:0.#} L:{1:0.#} (Auto)</value>
+    <comment>Window (W) and Level (L), i.e. the width and center of the window used to enhance the contrast of a subrange of pixel values</comment>
   </data>
   <data name="FormatDescriptionLinearPreset" xml:space="preserve">
     <value>W = {0}, L = {1}</value>
+    <comment>Window (W) and Level (L), i.e. the width and center of the window used to enhance the contrast of a subrange of pixel values</comment>
   </data>
   <data name="FormatDescriptionPresetLinearLut" xml:space="preserve">
     <value>W:{0} L:{1} ({2})</value>
+    <comment>Window (W) and Level (L), i.e. the width and center of the window used to enhance the contrast of a subrange of pixel values</comment>
   </data>
   <data name="MessageFailedToAddPreset" xml:space="preserve">
     <value>Failed to add the specified preset.</value>
@@ -439,6 +454,7 @@ Please ensure that the name/keystroke combination is unique.</value>
   </data>
   <data name="TitleWindowLevel" xml:space="preserve">
     <value>Window/Level</value>
+    <comment>Window (W) and Level (L), i.e. the width and center of the window used to enhance the contrast of a subrange of pixel values</comment>
   </data>
   <data name="MenuCine" xml:space="preserve">
     <value>Cine</value>
@@ -478,6 +494,7 @@ Please ensure that the name/keystroke combination is unique.</value>
   </data>
   <data name="FormatRGB" xml:space="preserve">
     <value>R={0}, G={1}, B={2}</value>
+    <comment>Red (R), Green (G) and Blue (B)</comment>
   </data>
   <data name="LabelAdd" xml:space="preserve">
     <value>Add</value>
@@ -509,15 +526,6 @@ Please ensure that the name/keystroke combination is unique.</value>
   <data name="TooltipInvert" xml:space="preserve">
     <value>Invert</value>
   </data>
-  <data name="MenuShowHideTextOverlay" xml:space="preserve">
-    <value>Show/Hide Text Overlay</value>
-  </data>
-  <data name="ToolbarTextOverlay" xml:space="preserve">
-    <value>Text Overlay</value>
-  </data>
-  <data name="TooltipShowHideTextOverlay" xml:space="preserve">
-    <value>Show/Hide Text Overlay</value>
-  </data>
   <data name="SortByAcquisitionTimeDescription" xml:space="preserve">
     <value>Acquisition Time</value>
   </data>
@@ -533,6 +541,7 @@ Please check the log for more details.</value>
   </data>
   <data name="FormatLabelZoomFixed" xml:space="preserve">
     <value>{0}x</value>
+    <comment>Zoom Factor (e.g. 1x, 2x, 10x)</comment>
   </data>
   <data name="LabelZoomFit" xml:space="preserve">
     <value>Fit to Tile</value>
@@ -560,18 +569,10 @@ Please check the log for more details.</value>
   </data>
   <data name="FormatDescriptionAutoLinearLut" xml:space="preserve">
     <value>W:{0:0.#} L:{1:0.#} ({2})</value>
+    <comment>Window (W) and Level (L), i.e. the width and center of the window used to enhance the contrast of a subrange of pixel values</comment>
   </data>
   <data name="FormatAutoVoiDataLutDescription" xml:space="preserve">
     <value>{0} (Data)</value>
-  </data>
-  <data name="MenuShowHideScaleOverlay" xml:space="preserve">
-    <value>Show/Hide Scale Overlay</value>
-  </data>
-  <data name="ToolbarScaleOverlay" xml:space="preserve">
-    <value>Scale Overlay</value>
-  </data>
-  <data name="TooltipShowHideScaleOverlay" xml:space="preserve">
-    <value>Show/Hide Scale Overlay</value>
   </data>
   <data name="CommandCreateTextCallout" xml:space="preserve">
     <value>Create Text Callout</value>
@@ -602,30 +603,6 @@ Please check the log for more details.</value>
   </data>
   <data name="TooltipTextArea" xml:space="preserve">
     <value>Text Area</value>
-  </data>
-  <data name="ToolbarShowHideOverlays" xml:space="preserve">
-    <value>Show/Hide Overlays</value>
-  </data>
-  <data name="TooltipScaleOverlay" xml:space="preserve">
-    <value>Scale Overlay</value>
-  </data>
-  <data name="TooltipShowHideOverlays" xml:space="preserve">
-    <value>Show/Hide Overlays</value>
-  </data>
-  <data name="TooltipTextOverlay" xml:space="preserve">
-    <value>Text Overlay</value>
-  </data>
-  <data name="MenuShowHideDicomOverlay" xml:space="preserve">
-    <value>Show/Hide DICOM Overlay(s)</value>
-  </data>
-  <data name="ToolbarDicomOverlay" xml:space="preserve">
-    <value>DICOM Overlay(s)</value>
-  </data>
-  <data name="TooltipDicomOverlay" xml:space="preserve">
-    <value>DICOM Overlay(s)</value>
-  </data>
-  <data name="TooltipShowHideDicomOverlay" xml:space="preserve">
-    <value>Show/Hide DICOM Overlay(s)</value>
   </data>
   <data name="CommandDeleteAllAnnotations" xml:space="preserve">
     <value>Delete All Annotations</value>
@@ -665,15 +642,6 @@ Please check the log for more details.</value>
   </data>
   <data name="MenuClearCustomShutters" xml:space="preserve">
     <value>Clear Custom Shutters</value>
-  </data>
-  <data name="MenuShowHideShutterOverlay" xml:space="preserve">
-    <value>Show/Hide Shutter Overlay</value>
-  </data>
-  <data name="ToolbarShutterOverlay" xml:space="preserve">
-    <value>Shutter Overlay</value>
-  </data>
-  <data name="TooltipShowHideShutterOverlay" xml:space="preserve">
-    <value>Show/Hide Shutter Overlay</value>
   </data>
   <data name="MessageShutterTooSmall" xml:space="preserve">
     <value>The shutter area is too small.</value>
@@ -719,6 +687,7 @@ Please check the log for more details.</value>
   </data>
   <data name="PrefixDefaultVoiDataLutExplanation" xml:space="preserve">
     <value>LUT</value>
+    <comment>Short for "LookUp Table", usually left untranslated</comment>
   </data>
   <data name="TooltipMatchScale" xml:space="preserve">
     <value>Match Scale</value>
@@ -752,24 +721,11 @@ Please check the log for more details.</value>
   </data>
   <data name="MenuWindowLevelPresetList" xml:space="preserve">
     <value>(List of Window/Level Presets)</value>
-  </data>
-  <data name="MenuColorBar" xml:space="preserve">
-    <value>&amp;Colour Bar</value>
-  </data>
-  <data name="MenuShowHideColorBar" xml:space="preserve">
-    <value>Show/Hide &amp;Colour Bar</value>
-  </data>
-  <data name="ToolbarColorBar" xml:space="preserve">
-    <value>Colour Bar</value>
-  </data>
-  <data name="TooltipColorBar" xml:space="preserve">
-    <value>Colour Bar</value>
-  </data>
-  <data name="TooltipShowHideColorBar" xml:space="preserve">
-    <value>Show/Hide Colour Bar</value>
+    <comment>Window (W) and Level (L), i.e. the width and center of the window used to enhance the contrast of a subrange of pixel values</comment>
   </data>
   <data name="FormatCoordinates" xml:space="preserve">
     <value>x={0}, y={1}</value>
+    <comment>2D Coordinate (X,Y)</comment>
   </data>
   <data name="FormatProbeInfo" xml:space="preserve">
     <value>{0}: {1}</value>
@@ -779,6 +735,7 @@ Please check the log for more details.</value>
   </data>
   <data name="LabelLocation" xml:space="preserve">
     <value>LOC</value>
+    <comment>Short label for "location"</comment>
   </data>
   <data name="FormatSortByReverse" xml:space="preserve">
     <value>{0} (Reverse)</value>
@@ -788,6 +745,7 @@ Please check the log for more details.</value>
   </data>
   <data name="LabelRGBPixel" xml:space="preserve">
     <value>RGB</value>
+    <comment>Short label for RGB color pixel value</comment>
   </data>
   <data name="TitleTools" xml:space="preserve">
     <value>Tools</value>

@@ -34,7 +34,6 @@ namespace ClearCanvas.ImageViewer.Configuration
 	{
         private DicomPublishingSettings()
 		{
-			ApplicationSettingsRegistry.Instance.RegisterInstance(this);
 		}
 	}
 }

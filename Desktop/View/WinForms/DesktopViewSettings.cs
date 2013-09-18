@@ -360,7 +360,6 @@ namespace ClearCanvas.Desktop.View.WinForms
 
 		private DesktopViewSettings()
 		{
-			ApplicationSettingsRegistry.Instance.RegisterInstance(this);
 		}
 
 		#region Private Methods
@@ -375,8 +374,6 @@ namespace ClearCanvas.Desktop.View.WinForms
 			{
 				Platform.Log(LogLevel.Error, ex);
 			}
-
-			ApplicationSettingsRegistry.Instance.UnregisterInstance(this);
 		}
 
 		private void LoadAllDesktops()

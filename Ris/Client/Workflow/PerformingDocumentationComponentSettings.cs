@@ -33,7 +33,6 @@ namespace ClearCanvas.Ris.Client.Workflow
     {
 		private PerformingDocumentationComponentSettings()
         {
-            ApplicationSettingsRegistry.Instance.RegisterInstance(this);
         }
     }
 }

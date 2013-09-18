@@ -25,6 +25,7 @@
 using System;
 using System.Collections.Generic;
 using ClearCanvas.Common.Utilities;
+using ClearCanvas.Desktop.Actions;
 using ClearCanvas.Desktop.Tools;
 using ClearCanvas.Common;
 
@@ -57,6 +58,30 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 				return _toolRegistry;
 			}
 		}
+
+        private ActionSet _nilActions;
+
+        public override IActionSet Actions
+        {
+            get
+            {
+                //These actions only exist in "legacy" mode.
+                if (!Layout.Basic.ShowHideOverlaysTool.LegacyMode)
+                {
+                    if (_nilActions == null)
+                    {
+                        _nilActions = new ActionSet();
+                        base.Actions = _nilActions;
+                    }
+                }
+
+                return base.Actions;
+            }
+            protected set
+            {
+                base.Actions = value;
+            }
+        }
 
 		public override void Initialize()
 		{

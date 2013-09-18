@@ -32,7 +32,7 @@ namespace ClearCanvas.Common.Utilities.Tests
 	/// A pseudorandom number generator implementation based on a 32-bit linear feedback shift register with taps at bits 31, 21, 1 and 0.
 	/// </summary>
 	/// <remarks>
-	/// Unlike <see cref="Random"/>, this implementation will produce deterministic results for a given seed.
+	/// Unlike <see cref="Random"/>, this implementation will produce deterministic, platform-agnostic results for a given seed.
 	/// </remarks>
 	public sealed class PseudoRandom
 	{

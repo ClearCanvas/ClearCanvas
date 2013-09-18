@@ -38,7 +38,6 @@ namespace ClearCanvas.ImageViewer.Clipboard.View.WinForms.Properties
 	{
 		public Settings()
 		{
-			ApplicationSettingsRegistry.Instance.RegisterInstance(this);
 		}
 
 		public int[] CustomColorsArray

@@ -34,7 +34,6 @@ namespace ClearCanvas.ImageViewer.Services
 	{
 		private ServiceControlSettings()
 		{
-			ApplicationSettingsRegistry.Instance.RegisterInstance(this);
 		}
 	}
 }

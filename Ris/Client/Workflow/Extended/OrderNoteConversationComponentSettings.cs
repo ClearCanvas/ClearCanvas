@@ -33,7 +33,6 @@ namespace ClearCanvas.Ris.Client.Workflow.Extended
 	{
 		private OrderNoteConversationComponentSettings()
 		{
-			ApplicationSettingsRegistry.Instance.RegisterInstance(this);
 		}
 	}
 }

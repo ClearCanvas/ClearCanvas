@@ -22,213 +22,486 @@
 
 #endregion
 
+using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ClearCanvas.Dicom.Utilities.Anonymization
 {
 	public partial class DicomAnonymizer
 	{
-		private static readonly List<uint> TagsToNull = new List<uint>(GetTagsToNull());
-		private static readonly List<uint> TagsToRemove = new List<uint>(GetTagsToRemove());
-		private static readonly List<uint> UidsToRemap = new List<uint>(GetUidsToRemap());
-		private static readonly List<uint> DateTimeTagsToAdjust = new List<uint>(GetDateTimeTagsToAdjust());
+		// This list of tags is derived from DICOM 2011 PS 3.15 Section E.1.1 (Table E.1-1) 'Basic Profile'
+		// X/Z tags are treated as Z (assume that the original dataset meets the IOD requirements)
+		// D tags are treated as Z (we don't have a way to figure out a suitable dummy value so just leave it blank but present)
+		// Many Date/Time tags are treated as Z/D if they have a logical relationship to the study date - and if study date/time is being blanked, these tags will also be blanked
+		// The following SQ tags do not receive any special processing (we automatically process all nested data sets, so all nested tags will get the appropriate action anyway)
+		// - ContentSequence; // X (but required for key image support)
+		// - GraphicAnnotationSequence; // D (but required for presentation state support)
+		// - OverlayData; // X (but the overlay doesn't usually contain identifying information, and should really be supported through a clean pixels option)
+		// - ReferencedImageSequence; // X/Z/U*
+		// - ReferencedStudySequence; // X/Z
+		// - SourceImageSequence; // X/Z/U*
 
-		private static IEnumerable<uint> GetTagsToRemove()
+		/// <summary>
+		/// Tags that are removed if they are present (DICOM PS 3.15 Action 'X') 
+		/// </summary>
+		internal static readonly ICollection<uint> TagsToRemove = ListTagsToRemove();
+
+		/// <summary>
+		/// Tags that are blanked if they are present (DICOM PS 3.15 Action 'Z') 
+		/// </summary>
+		internal static readonly ICollection<uint> TagsToNull = ListTagsToNull();
+
+		/// <summary>
+		/// UI tags that are remapped if they are present (DICOM PS 3.15 Action 'U') 
+		/// </summary>
+		internal static readonly ICollection<uint> UidTagsToRemap = ListUidTagsToRemap();
+
+		/// <summary>
+		/// DA/TM/DT tags that, if present, are adjusted relative to the study date/time (effectively a DICOM PS 3.15 Action 'D') 
+		/// </summary>
+		internal static readonly ICollection<uint> DateTimeTagsToAdjust = ListDateTimeTagsToAdjust();
+
+		private static ICollection<uint> ListTagsToRemove()
 		{
-			yield return DicomTags.InstanceCreatorUid;
-			yield return DicomTags.StorageMediaFileSetUid;
-			yield return DicomTags.RequestAttributesSequence;
-
-			//A bunch of tags from Patient Identification and Patient Demographic Modules
-			// which seem like they should be anonymized, but aren't explicitly covered by PS 3.15 E.1.
-			// None of these attributes are crucial to maintain the DICOM model, so we'll just remove them.
-			// See Also: http://groups.google.com/group/comp.protocols.dicom/browse_thread/thread/d3be2bf5dfdac19f#
-			yield return DicomTags.OtherPatientIdsSequence;
-			yield return DicomTags.PatientsBirthName;
-			yield return DicomTags.PatientsMothersBirthName;
-			yield return DicomTags.PatientsInsurancePlanCodeSequence;
-			yield return DicomTags.PatientsPrimaryLanguageCodeSequence;
-			yield return DicomTags.PatientsAddress;
-			yield return DicomTags.MilitaryRank;
-			yield return DicomTags.BranchOfService;
-			yield return DicomTags.PatientsTelephoneNumbers;
-			yield return DicomTags.ResponsiblePerson;
-			yield return DicomTags.ResponsiblePersonRole;
-			yield return DicomTags.ResponsibleOrganization;
+			return new ReadOnlyTagList(new[]
+			                           	{
+			                           		DicomTags.AcquisitionCommentsRetired,
+			                           		DicomTags.AcquisitionContextSequence,
+			                           		DicomTags.AcquisitionProtocolDescription,
+			                           		DicomTags.ActualHumanPerformersSequence,
+			                           		DicomTags.AdditionalPatientHistory,
+			                           		DicomTags.AdmissionId,
+			                           		DicomTags.AdmittingDate,
+			                           		DicomTags.AdmittingDiagnosesCodeSequence,
+			                           		DicomTags.AdmittingDiagnosesDescription,
+			                           		DicomTags.AdmittingTime,
+			                           		DicomTags.AffectedSopInstanceUid,
+			                           		DicomTags.Allergies,
+			                           		DicomTags.ArbitraryRetired,
+			                           		DicomTags.AuthorObserverSequence,
+			                           		DicomTags.BranchOfService,
+			                           		DicomTags.CassetteId,
+			                           		DicomTags.CommentsOnThePerformedProcedureStep,
+			                           		DicomTags.ConfidentialityConstraintOnPatientDataDescription,
+			                           		DicomTags.ContentCreatorsIdentificationCodeSequence,
+			                           		DicomTags.ContributionDescription,
+			                           		DicomTags.CountryOfResidence,
+			                           		DicomTags.CurrentPatientLocation,
+			                           		DicomTags.CurveDataRetired,
+			                           		DicomTags.CurveDateRetired,
+			                           		DicomTags.CurveTimeRetired,
+			                           		DicomTags.CustodialOrganizationSequence,
+			                           		DicomTags.DataSetTrailingPadding,
+			                           		DicomTags.DerivationDescription,
+			                           		DicomTags.DetectorId,
+			                           		DicomTags.DigitalSignatureUid,
+			                           		DicomTags.DigitalSignaturesSequence,
+			                           		DicomTags.DischargeDiagnosisDescriptionRetired,
+			                           		DicomTags.DistributionAddressRetired,
+			                           		DicomTags.DistributionNameRetired,
+			                           		DicomTags.EthnicGroup,
+			                           		DicomTags.FrameComments,
+			                           		DicomTags.GantryId,
+			                           		DicomTags.GeneratorId,
+			                           		DicomTags.HumanPerformersName,
+			                           		DicomTags.HumanPerformersOrganization,
+			                           		DicomTags.IconImageSequence,
+			                           		DicomTags.IdentifyingCommentsRetired,
+			                           		DicomTags.ImageComments,
+			                           		DicomTags.ImagePresentationCommentsRetired,
+			                           		DicomTags.ImagingServiceRequestComments,
+			                           		DicomTags.ImpressionsRetired,
+			                           		DicomTags.InstitutionAddress,
+			                           		DicomTags.InstitutionalDepartmentName,
+			                           		DicomTags.InsurancePlanIdentificationRetired,
+			                           		DicomTags.IntendedRecipientsOfResultsIdentificationSequence,
+			                           		DicomTags.InterpretationApproverSequenceRetired,
+			                           		DicomTags.InterpretationAuthorRetired,
+			                           		DicomTags.InterpretationDiagnosisDescriptionRetired,
+			                           		DicomTags.InterpretationIdIssuerRetired,
+			                           		DicomTags.InterpretationRecorderRetired,
+			                           		DicomTags.InterpretationTextRetired,
+			                           		DicomTags.InterpretationTranscriberRetired,
+			                           		DicomTags.IssuerOfAdmissionIdRetired,
+			                           		DicomTags.IssuerOfPatientId,
+			                           		DicomTags.IssuerOfServiceEpisodeIdRetired,
+			                           		DicomTags.LastMenstrualDate,
+			                           		DicomTags.Mac,
+			                           		DicomTags.MedicalAlerts,
+			                           		DicomTags.MedicalRecordLocator,
+			                           		DicomTags.MilitaryRank,
+			                           		DicomTags.ModifiedAttributesSequence,
+			                           		DicomTags.ModifiedImageDescriptionRetired,
+			                           		DicomTags.ModifyingDeviceIdRetired,
+			                           		DicomTags.ModifyingDeviceManufacturerRetired,
+			                           		DicomTags.NameOfPhysiciansReadingStudy,
+			                           		DicomTags.NamesOfIntendedRecipientsOfResults,
+			                           		DicomTags.Occupation,
+			                           		DicomTags.OriginalAttributesSequence,
+			                           		DicomTags.OrderCallbackPhoneNumber,
+			                           		DicomTags.OrderEnteredBy,
+			                           		DicomTags.OrderEnterersLocation,
+			                           		DicomTags.OtherPatientIds,
+			                           		DicomTags.OtherPatientIdsSequence,
+			                           		DicomTags.OtherPatientNames,
+			                           		DicomTags.OverlayCommentsRetired,
+			                           		DicomTags.OverlayDateRetired,
+			                           		DicomTags.OverlayTimeRetired,
+			                           		DicomTags.ParticipantSequence,
+			                           		DicomTags.PatientsAddress,
+			                           		DicomTags.PatientComments,
+			                           		DicomTags.PatientState,
+			                           		DicomTags.PatientTransportArrangements,
+			                           		DicomTags.PatientsAge,
+			                           		DicomTags.PatientsBirthName,
+			                           		DicomTags.PatientsBirthTime,
+			                           		DicomTags.PatientsInstitutionResidence,
+			                           		DicomTags.PatientsInsurancePlanCodeSequence,
+			                           		DicomTags.PatientsMothersBirthName,
+			                           		DicomTags.PatientsPrimaryLanguageCodeSequence,
+			                           		DicomTags.PatientsPrimaryLanguageModifierCodeSequence,
+			                           		DicomTags.PatientsReligiousPreference,
+			                           		DicomTags.PatientsSize,
+			                           		DicomTags.PatientsTelephoneNumbers,
+			                           		DicomTags.PatientsWeight,
+			                           		DicomTags.PerformedLocation,
+			                           		DicomTags.PerformedProcedureStepDescription,
+			                           		DicomTags.PerformedProcedureStepId,
+			                           		DicomTags.PerformedProcedureStepStartDate,
+			                           		DicomTags.PerformedProcedureStepStartTime,
+			                           		DicomTags.PerformedStationAeTitle,
+			                           		DicomTags.PerformedStationGeographicLocationCodeSequence,
+			                           		DicomTags.PerformedStationName,
+			                           		DicomTags.PerformedStationNameCodeSequence,
+			                           		DicomTags.PerformingPhysicianIdentificationSequence,
+			                           		DicomTags.PerformingPhysiciansName,
+			                           		DicomTags.PersonsAddress,
+			                           		DicomTags.PersonsTelephoneNumbers,
+			                           		DicomTags.PhysicianApprovingInterpretationRetired,
+			                           		DicomTags.PhysiciansReadingStudyIdentificationSequence,
+			                           		DicomTags.PhysiciansOfRecord,
+			                           		DicomTags.PhysiciansOfRecordIdentificationSequence,
+			                           		DicomTags.PlateId,
+			                           		DicomTags.PreMedication,
+			                           		DicomTags.PregnancyStatus,
+			                           		DicomTags.ReasonForTheImagingServiceRequestRetired,
+			                           		DicomTags.ReasonForStudyRetired,
+			                           		DicomTags.ReferencedDigitalSignatureSequence,
+			                           		DicomTags.ReferencedPatientAliasSequence,
+			                           		DicomTags.ReferencedPatientSequence,
+			                           		DicomTags.ReferencedSopInstanceMacSequence,
+			                           		DicomTags.ReferringPhysiciansAddress,
+			                           		DicomTags.ReferringPhysicianIdentificationSequence,
+			                           		DicomTags.ReferringPhysiciansTelephoneNumbers,
+			                           		DicomTags.RegionOfResidence,
+			                           		DicomTags.RequestAttributesSequence,
+			                           		DicomTags.RequestedContrastAgent,
+			                           		DicomTags.RequestedProcedureComments,
+			                           		DicomTags.RequestedProcedureId,
+			                           		DicomTags.RequestedProcedureLocation,
+			                           		DicomTags.RequestingPhysician,
+			                           		DicomTags.RequestingService,
+			                           		DicomTags.ResponsibleOrganization,
+			                           		DicomTags.ResponsiblePerson,
+			                           		DicomTags.ResultsCommentsRetired,
+			                           		DicomTags.ResultsDistributionListSequenceRetired,
+			                           		DicomTags.ResultsIdIssuerRetired,
+			                           		DicomTags.ScheduledHumanPerformersSequence,
+			                           		DicomTags.ScheduledPatientInstitutionResidenceRetired,
+			                           		DicomTags.ScheduledPerformingPhysicianIdentificationSequence,
+			                           		DicomTags.ScheduledPerformingPhysiciansName,
+			                           		DicomTags.ScheduledProcedureStepEndDate,
+			                           		DicomTags.ScheduledProcedureStepEndTime,
+			                           		DicomTags.ScheduledProcedureStepDescription,
+			                           		DicomTags.ScheduledProcedureStepLocation,
+			                           		DicomTags.ScheduledProcedureStepStartDate,
+			                           		DicomTags.ScheduledProcedureStepStartTime,
+			                           		DicomTags.ScheduledStationAeTitle,
+			                           		DicomTags.ScheduledStationGeographicLocationCodeSequence,
+			                           		DicomTags.ScheduledStationName,
+			                           		DicomTags.ScheduledStationNameCodeSequence,
+			                           		DicomTags.ScheduledStudyLocationRetired,
+			                           		DicomTags.ScheduledStudyLocationAeTitleRetired,
+			                           		DicomTags.SeriesDescription,
+			                           		DicomTags.ServiceEpisodeDescription,
+			                           		DicomTags.ServiceEpisodeId,
+			                           		DicomTags.SmokingStatus,
+			                           		DicomTags.SpecialNeeds,
+			                           		DicomTags.StudyCommentsRetired,
+			                           		DicomTags.StudyDescription,
+			                           		DicomTags.StudyIdIssuerRetired,
+			                           		DicomTags.TextCommentsRetired,
+			                           		DicomTags.TextString,
+			                           		DicomTags.TimezoneOffsetFromUtc,
+			                           		DicomTags.TopicAuthorRetired,
+			                           		DicomTags.TopicKeywordsRetired,
+			                           		DicomTags.TopicSubjectRetired,
+			                           		DicomTags.TopicTitleRetired,
+			                           		DicomTags.VerifyingOrganization,
+			                           		DicomTags.VisitComments
+			                           	});
 		}
 
-		private static IEnumerable<uint> GetUidsToRemap()
+		private static ICollection<uint> ListTagsToNull()
 		{
-			//Type 3, Sop Common
-			//removetag: DicomTags.InstanceCreatorUid;
-
-			//Type 1, Sop Common
-			yield return DicomTags.SopInstanceUid;
-
-			//Type 1 and 1C, many different modules and sequences
-			yield return DicomTags.ReferencedSopInstanceUid;
-
-			//Type 1, Series Module, but also Type 1 Hierarchical Sop Instance Reference Macro
-			yield return DicomTags.StudyInstanceUid;
-			//Type 1, Study Module, but also Type 1 Hierarchical Series Reference Macro
-			yield return DicomTags.SeriesInstanceUid;
-
-			//Type 1, Frame Of Reference
-			yield return DicomTags.FrameOfReferenceUid;
-			//Type 1, Synchronization Module
-			yield return DicomTags.SynchronizationFrameOfReferenceUid;
-
-			//Type 1C, Content Item Macro, Document Content Macro
-			yield return DicomTags.Uid;
-
-			//Type 3, Sop Instance Reference Macro, Instance Availability, Storage Commitment, Media Creation Management Module
-			//removetag: DicomTags.StorageMediaFileSetUid;
-			
-			//Type 1C, STRUCTURE SET MODULE
-			yield return DicomTags.ReferencedFrameOfReferenceUid;
-			//Type 1C, STRUCTURE SET MODULE
-			yield return DicomTags.RelatedFrameOfReferenceUid;
+			return new ReadOnlyTagList(new[]
+			                           	{
+			                           		DicomTags.AccessionNumber,
+			                           		DicomTags.AcquisitionDeviceProcessingDescription, // X/D
+			                           		DicomTags.ContentCreatorsName,
+			                           		DicomTags.ContrastBolusAgent, // Z/D
+			                           		DicomTags.DeviceSerialNumber, // X/Z/D
+			                           		DicomTags.FillerOrderNumberImagingServiceRequest,
+			                           		DicomTags.InstitutionCodeSequence, // X/Z/D
+			                           		DicomTags.InstitutionName, // X/Z/D
+			                           		DicomTags.OperatorIdentificationSequence, // X/D
+			                           		DicomTags.OperatorsName, // X/Z/D
+			                           		DicomTags.PatientId,
+			                           		DicomTags.PatientsBirthDate,
+			                           		DicomTags.PatientsName,
+			                           		DicomTags.PatientsSex,
+			                           		DicomTags.PatientsSexNeutered, // X/Z
+			                           		DicomTags.PersonIdentificationCodeSequence, // D
+			                           		DicomTags.PersonName, // D
+			                           		DicomTags.PlacerOrderNumberImagingServiceRequest,
+			                           		DicomTags.ProtocolName, // X/D
+			                           		DicomTags.ReferencedPerformedProcedureStepSequence, // X/Z/D
+			                           		DicomTags.ReferringPhysiciansName,
+			                           		DicomTags.RequestedProcedureDescription, // X/Z
+			                           		DicomTags.ReviewerName, // X/Z
+			                           		DicomTags.StationName, // X/Z/D
+			                           		DicomTags.StudyId,
+			                           		DicomTags.VerifyingObserverIdentificationCodeSequence,
+			                           		DicomTags.VerifyingObserverName, // D
+			                           		DicomTags.VerifyingObserverSequence // D
+			                           	});
 		}
 
-		private static IEnumerable<uint> GetTagsToNull()
+		private static ICollection<uint> ListUidTagsToRemap()
 		{
-			//Type 2, General Study
-			yield return DicomTags.AccessionNumber;
-			//Type 3, General Equipment
-			yield return DicomTags.InstitutionName;
-			//Type 3, General Equipment
-			yield return DicomTags.InstitutionAddress;
-			//Type 2, General Study
-			yield return DicomTags.ReferringPhysiciansName;
-			//Type 2, General Study
-			yield return DicomTags.ReferringPhysiciansAddress;
-			//VISIT ADMISSION MODULE
-			yield return DicomTags.ReferringPhysiciansTelephoneNumbers;
-			//Type 3, General Equipment
-			yield return DicomTags.StationName;
-			//Type 2, General Study
-			yield return DicomTags.StudyDescription;
-			//Type 3, General Series
-			yield return DicomTags.SeriesDescription;
-			//Type 3, General Equipment
-			yield return DicomTags.InstitutionalDepartmentName;
-			//Type 3, General Study
-			yield return DicomTags.PhysiciansOfRecord;
-			//Type 3, General Series
-			yield return DicomTags.PerformingPhysiciansName;
-			//Type 3, General Study
-			yield return DicomTags.NameOfPhysiciansReadingStudy;
-			//Type 3, General Series
-			yield return DicomTags.OperatorsName;
-			//Type 3, Patient Study
-			yield return DicomTags.AdmittingDiagnosesDescription;
-			//Type 3, General Image
-			yield return DicomTags.DerivationDescription;
-			//Type 2, Patient
-			yield return DicomTags.PatientsName;
-			//Type 1, Patient
-			yield return DicomTags.PatientId;
-			//Type 2, Patient
-			yield return DicomTags.PatientsBirthDate;
-			//Type 2, Patient
-			yield return DicomTags.PatientsBirthTime;
-			//Type 2, Patient
-			yield return DicomTags.PatientsSex;
-			//Type 3, Patient
-			yield return DicomTags.OtherPatientIds;
-			//Type 3, Patient
-			yield return DicomTags.OtherPatientNames;
-			//Type 3, Patient Study
-			yield return DicomTags.PatientsAge;
-			//Type 3, Patient Study
-			yield return DicomTags.PatientsSize;
-			//Type 3, Patient Study
-			yield return DicomTags.PatientsWeight;
-			//PATIENT IDENTIFICATION
-			yield return DicomTags.MedicalRecordLocator;
-			//Type 3, Patient
-			yield return DicomTags.EthnicGroup;
-			//Type 3, Patient Study
-			yield return DicomTags.Occupation;
-			//Type 3, Patient Study
-			yield return DicomTags.AdditionalPatientHistory;
-			//Type 3, Patient
-			yield return DicomTags.PatientComments;
-			//Type 3, General Equipment
-			yield return DicomTags.DeviceSerialNumber;
-			//Type 3, General Series
-			yield return DicomTags.ProtocolName;
-			//Type 2, General Study
-			yield return DicomTags.StudyId;
-			//Type 3, General Image
-			yield return DicomTags.ImageComments;
-
-			//NOTE: In RemoveTags
-			//Type 3, General Series, RT Series, Mammo Series, Encapsulted Document
-			//yield return DicomTags.RequestAttributesSequence;
-			
-			//NOTE: Specific to SR Documents; way too complicated to try and do this one at the moment.
-			//Type 1C, Document Relationship Macro, SR Document Keys
-			//yield return DicomTags.ContentSequence;
+			return new ReadOnlyTagList(new[]
+			                           	{
+			                           		DicomTags.ConcatenationUid,
+			                           		DicomTags.ContextGroupExtensionCreatorUid,
+			                           		DicomTags.CreatorVersionUid,
+			                           		DicomTags.DeviceUid,
+			                           		DicomTags.DimensionOrganizationUid,
+			                           		DicomTags.DoseReferenceUid,
+			                           		DicomTags.FailedSopInstanceUidList,
+			                           		DicomTags.FiducialUid,
+			                           		DicomTags.FrameOfReferenceUid,
+			                           		DicomTags.InstanceCreatorUid,
+			                           		DicomTags.IrradiationEventUid,
+			                           		DicomTags.LargePaletteColorLookupTableUidRetired,
+			                           		DicomTags.MediaStorageSopInstanceUid,
+			                           		DicomTags.PaletteColorLookupTableUid,
+			                           		DicomTags.ReferencedFrameOfReferenceUid,
+			                           		DicomTags.ReferencedGeneralPurposeScheduledProcedureStepTransactionUid,
+			                           		DicomTags.ReferencedSopInstanceUid,
+			                           		DicomTags.ReferencedSopInstanceUidInFile,
+			                           		DicomTags.RelatedFrameOfReferenceUid,
+			                           		DicomTags.RequestedSopInstanceUid,
+			                           		DicomTags.SeriesInstanceUid,
+			                           		DicomTags.SopInstanceUid,
+			                           		DicomTags.StorageMediaFileSetUid,
+			                           		DicomTags.StudyInstanceUid,
+			                           		DicomTags.SynchronizationFrameOfReferenceUid,
+			                           		DicomTags.TemplateExtensionCreatorUidRetired,
+			                           		DicomTags.TemplateExtensionOrganizationUidRetired,
+			                           		DicomTags.TransactionUid,
+			                           		DicomTags.Uid
+			                           	});
 		}
 
-		private static IEnumerable<uint> GetDateTimeTagsToAdjust()
+		private static ICollection<uint> ListDateTimeTagsToAdjust()
 		{
-			// This isn't every single date and time tag, only ones that
-			// might be affected by a change in study date.
-			yield return DicomTags.InstanceCreationDate;
-			yield return DicomTags.InstanceCreationTime;
+			return new ReadOnlyTagList(new[]
+			                           	{
+			                           		DicomTags.AcquisitionDate, // X/Z
+			                           		DicomTags.AcquisitionTime, // X/Z
+			                           		DicomTags.AcquisitionDatetime, // X/D
+			                           		DicomTags.ContentDate, // Z/D
+			                           		DicomTags.ContentTime, // Z/D
+			                           		DicomTags.SeriesDate, // X/D
+			                           		DicomTags.SeriesTime, // X/D
+			                           		DicomTags.StudyDate, // Z
+			                           		DicomTags.StudyTime, // Z
 
-			yield return DicomTags.SeriesDate;
-			yield return DicomTags.SeriesTime;
+			                           		// DICOM 2011 PS 3.15 Section E.1.1 #7 Note 4
+			                           		// Include additional date/time tags not explicitly identified in the standard, but logically depend on the study date
+			                           		DicomTags.ApprovalStatusDatetime,
+			                           		DicomTags.AttributeModificationDatetime,
+			                           		DicomTags.ContributionDateTime,
+			                           		DicomTags.CreationDate,
+			                           		DicomTags.CreationTime,
+			                           		DicomTags.Date,
+			                           		DicomTags.DateOfDocumentOrVerbalTransactionTrialRetired,
+			                           		DicomTags.DateOfSecondaryCapture,
+			                           		DicomTags.Datetime,
+			                           		DicomTags.DecayCorrectionDatetime,
+			                           		DicomTags.DigitalSignatureDatetime,
+			                           		DicomTags.DischargeDateRetired,
+			                           		DicomTags.DischargeTimeRetired,
+			                           		DicomTags.EffectiveDatetime,
+			                           		DicomTags.EndAcquisitionDatetime,
+			                           		DicomTags.ExclusionStartDatetime,
+			                           		DicomTags.ExpectedCompletionDateTime,
+			                           		DicomTags.ExpiryDate,
+			                           		DicomTags.FindingsGroupRecordingDateTrialRetired,
+			                           		DicomTags.FindingsGroupRecordingTimeTrialRetired,
+			                           		DicomTags.FirstTreatmentDate,
+			                           		DicomTags.FrameAcquisitionDatetime,
+			                           		DicomTags.FrameReferenceDatetime,
+			                           		DicomTags.HangingProtocolCreationDatetime,
+			                           		DicomTags.InformationIssueDatetime,
+			                           		DicomTags.InstanceCreationDate,
+			                           		DicomTags.InstanceCreationTime,
+			                           		DicomTags.InterpretationApprovalDateRetired,
+			                           		DicomTags.InterpretationApprovalTimeRetired,
+			                           		DicomTags.InterpretationRecordedDateRetired,
+			                           		DicomTags.InterpretationRecordedTimeRetired,
+			                           		DicomTags.InterpretationTranscriptionDateRetired,
+			                           		DicomTags.InterpretationTranscriptionTimeRetired,
+			                           		DicomTags.IssueDateOfImagingServiceRequest,
+			                           		DicomTags.IssueTimeOfImagingServiceRequest,
+			                           		DicomTags.ModifiedImageDateRetired,
+			                           		DicomTags.ModifiedImageTimeRetired,
+			                           		DicomTags.MostRecentTreatmentDate,
+			                           		DicomTags.ObservationDateTime,
+			                           		DicomTags.ObservationDateTrialRetired,
+			                           		DicomTags.ObservationTimeTrialRetired,
+			                           		DicomTags.ParticipationDatetime,
+			                           		DicomTags.PresentationCreationDate,
+			                           		DicomTags.PresentationCreationTime,
+			                           		DicomTags.ProcedureExpirationDate,
+			                           		DicomTags.ProcedureLastModifiedDate,
+			                           		DicomTags.ProcedureStepCancellationDatetime,
+			                           		DicomTags.ProductExpirationDatetime,
+			                           		DicomTags.RadiopharmaceuticalStartDatetime,
+			                           		DicomTags.RadiopharmaceuticalStopDatetime,
+			                           		DicomTags.ReferencedDatetime,
+			                           		DicomTags.ReviewDate,
+			                           		DicomTags.ReviewTime,
+			                           		DicomTags.RtPlanDate,
+			                           		DicomTags.RtPlanTime,
+			                           		DicomTags.SafePositionExitDate,
+			                           		DicomTags.SafePositionExitTime,
+			                           		DicomTags.SafePositionReturnDate,
+			                           		DicomTags.SafePositionReturnTime,
+			                           		DicomTags.ScheduledAdmissionDateRetired,
+			                           		DicomTags.ScheduledAdmissionTimeRetired,
+			                           		DicomTags.ScheduledDischargeDateRetired,
+			                           		DicomTags.ScheduledDischargeTimeRetired,
+			                           		DicomTags.ScheduledProcedureStepModificationDateTime,
+			                           		DicomTags.ScheduledStudyStartDateRetired,
+			                           		DicomTags.ScheduledStudyStartTimeRetired,
+			                           		DicomTags.SopAuthorizationDatetime,
+			                           		DicomTags.SourceStrengthReferenceDate,
+			                           		DicomTags.SourceStrengthReferenceTime,
+			                           		DicomTags.StructureSetDate,
+			                           		DicomTags.StructureSetTime,
+			                           		DicomTags.StartAcquisitionDatetime,
+			                           		DicomTags.StudyArrivalDateRetired,
+			                           		DicomTags.StudyArrivalTimeRetired,
+			                           		DicomTags.StudyCompletionDateRetired,
+			                           		DicomTags.StudyCompletionTimeRetired,
+			                           		DicomTags.StudyReadDateRetired,
+			                           		DicomTags.StudyReadTimeRetired,
+			                           		DicomTags.StudyVerifiedDateRetired,
+			                           		DicomTags.StudyVerifiedTimeRetired,
+			                           		DicomTags.SubstanceAdministrationDatetime,
+			                           		DicomTags.Time,
+			                           		DicomTags.TimeOfDocumentCreationOrVerbalTransactionTrialRetired,
+			                           		DicomTags.TimeOfSecondaryCapture,
+			                           		DicomTags.TreatmentControlPointDate,
+			                           		DicomTags.TreatmentControlPointTime,
+			                           		DicomTags.TreatmentDate,
+			                           		DicomTags.TreatmentTime,
+			                           		DicomTags.VerificationDateTime,
+			                           		// Include additional date/time tags not explicitly identified in the standard, but could otherwise identify specific hardware
+			                           		DicomTags.DateOfGainCalibration,
+			                           		DicomTags.TimeOfGainCalibration,
+			                           		DicomTags.DateOfLastCalibration,
+			                           		DicomTags.TimeOfLastCalibration,
+			                           		DicomTags.DateOfLastDetectorCalibration,
+			                           		DicomTags.TimeOfLastDetectorCalibration,
+			                           		DicomTags.CalibrationDate,
+			                           		DicomTags.CalibrationTime
+			                           	});
+		}
 
-			yield return DicomTags.AcquisitionDate;
-			yield return DicomTags.AcquisitionTime;
+		private class ReadOnlyTagList : ICollection<uint>
+		{
+			private readonly uint[] _innerList;
 
-			yield return DicomTags.ContentDate;
-			yield return DicomTags.ContentTime;
+			public ReadOnlyTagList(IEnumerable<uint> tags)
+			{
+				// since the tag lists are constant, pre-sort them to optimize the lookups
+				_innerList = tags.OrderBy(t => t).ToArray();
+			}
 
-			yield return DicomTags.AcquisitionDatetime;
+			public int Count
+			{
+				get { return _innerList.Length; }
+			}
 
-			yield return DicomTags.DateOfSecondaryCapture;
-			yield return DicomTags.TimeOfSecondaryCapture;
+			public bool Contains(uint item)
+			{
+				return Array.BinarySearch(_innerList, item) >= 0;
+			}
 
-			yield return DicomTags.RadiopharmaceuticalStartDatetime;
-			yield return DicomTags.RadiopharmaceuticalStopDatetime;
-			
-			yield return DicomTags.FrameAcquisitionDatetime;
-			yield return DicomTags.FrameReferenceDatetime;
-			
-			yield return DicomTags.StartAcquisitionDatetime;
-			yield return DicomTags.EndAcquisitionDatetime;
-			
-			yield return DicomTags.SubstanceAdministrationDatetime;
-			
-			yield return DicomTags.CreationDate;
-			
-			//yield return DicomTags.RtPlanDate;
-			
-			//yield return DicomTags.SourceStrengthReferenceDate;
+			public void CopyTo(uint[] array, int arrayIndex)
+			{
+				Array.Copy(_innerList, 0, array, arrayIndex, _innerList.Length);
+			}
+
+			public IEnumerator<uint> GetEnumerator()
+			{
+				return _innerList.ToList().GetEnumerator();
+			}
+
+			IEnumerator IEnumerable.GetEnumerator()
+			{
+				return _innerList.GetEnumerator();
+			}
+
+			#region Implementation of ICollection<uint>
+
+			void ICollection<uint>.Add(uint item)
+			{
+				throw new NotSupportedException();
+			}
+
+			void ICollection<uint>.Clear()
+			{
+				throw new NotSupportedException();
+			}
+
+			bool ICollection<uint>.Remove(uint item)
+			{
+				throw new NotSupportedException();
+			}
+
+			bool ICollection<uint>.IsReadOnly
+			{
+				get { return true; }
+			}
+
+			#endregion
 		}
 
 #if UNIT_TESTS
+
 		/// <summary>
-		/// For unit tests. This list should contain only unique entries!!
+		/// For unit tests. All 4 lists contenated, suitable for checking for uniqueness of tags.
 		/// </summary>
-		internal static IEnumerable<uint> AllProcessedTags
+		internal static IList<uint> ListAllProcessedTags()
 		{
-			get
-			{
-				foreach (uint tag in DateTimeTagsToAdjust)
-					yield return tag;
-				foreach (uint tag in TagsToNull)
-					yield return tag;
-				foreach (uint tag in TagsToRemove)
-					yield return tag;
-				foreach (uint tag in UidsToRemap)
-					yield return tag;
-			}
+			return TagsToRemove.Concat(TagsToNull).Concat(UidTagsToRemap).Concat(DateTimeTagsToAdjust).ToList();
 		}
+
 #endif
 	}
 }

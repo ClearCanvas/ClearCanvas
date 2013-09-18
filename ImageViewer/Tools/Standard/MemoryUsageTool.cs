@@ -37,7 +37,6 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 #if DEBUG
 	[MenuAction("apply", "global-menus/MenuTools/MenuUtilities/MenuMemoryUsage", "Apply")]
 	[ExtensionOf(typeof(ClearCanvas.Desktop.DesktopToolExtensionPoint))]
-#endif
 	public class MemoryUsageTool : Tool<ClearCanvas.Desktop.IDesktopToolContext>
 	{
 		/// <summary>
@@ -58,4 +57,5 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 			this.Context.DesktopWindow.ShowMessageBox(str, MessageBoxActions.Ok);
 		}
 	}
+#endif
 }

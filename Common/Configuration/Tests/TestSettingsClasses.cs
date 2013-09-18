@@ -152,8 +152,17 @@ namespace ClearCanvas.Common.Configuration.Tests
 		#endregion
 	}
 
-	[SettingsProvider(typeof(LocalFileSettingsProvider))]
-	internal class LocalXmlSettings : TestApplicationSettingsBase
+    [SettingsProvider(typeof (LocalFileSettingsProvider))]
+    internal class LocalXmlSettings : LocalXmlSettingsBase
+    {
+    }
+
+    [SettingsProvider(typeof(ExtendedLocalFileSettingsProvider))]
+    internal class ExtendedLocalXmlSettings : LocalXmlSettingsBase
+    {
+    }
+
+    internal class LocalXmlSettingsBase : TestApplicationSettingsBase
 	{
 		public const string PropertyApp = "App";
 		public const string PropertyUser = "User";
@@ -177,18 +186,24 @@ namespace ClearCanvas.Common.Configuration.Tests
 			set { base[PropertyUser] = value; }
 		}
 	}
-	[SettingsProvider(typeof(LocalFileSettingsProvider))]
+
+    [SettingsProvider(typeof(LocalFileSettingsProvider))]
 	internal class LocalMixedScopeSettings : MixedScopeSettingsBase
 	{
 		//private static readonly LocalMixedScopeSettings _default =
 		//    (LocalMixedScopeSettings)Synchronized(new LocalMixedScopeSettings());
 
-		public LocalMixedScopeSettings()
-		{
-		}
-
 		//public static LocalMixedScopeSettings Default { get { return _default; } }
 	}
+
+    [SettingsProvider(typeof(ExtendedLocalFileSettingsProvider))]
+    internal class ExtendedLocalMixedScopeSettings : MixedScopeSettingsBase
+    {
+        //private static readonly LocalMixedScopeSettings _default =
+        //    (LocalMixedScopeSettings)Synchronized(new LocalMixedScopeSettings());
+
+        //public static LocalMixedScopeSettings Default { get { return _default; } }
+    }
 
 	internal abstract class MixedScopeSettingsBase : TestApplicationSettingsBase
 	{

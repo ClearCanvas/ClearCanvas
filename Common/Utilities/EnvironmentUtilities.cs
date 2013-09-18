@@ -26,8 +26,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Management;
-using System.Security.Cryptography;
 using System.Text;
 
 namespace ClearCanvas.Common.Utilities
@@ -48,8 +48,8 @@ namespace ClearCanvas.Common.Utilities
 			{
 				if (_machineIdentifier == null)
 				{
-					var input = string.Format("CLEARCANVASRTW::{0}::{1}::{2}::{3}::{4}", GetProcessorId(), GetMotherboardSerial(), GetDiskSignature(), GetBiosSerial(), GetSystemUuid());
-					using (var sha256 = new SHA256Managed())
+					var input = string.Format("CLEARCANVASRTW::{0}::{1}::{2}::{3}::{4}", GetProcessorId(), GetMotherboardSerial(), GetSystemVolumeSerial(), GetBiosSerial(), GetSystemUuid());
+					using (var sha256 = new SHA256CryptoServiceProvider2())
 					{
 						_machineIdentifier = Convert.ToBase64String(sha256.ComputeHash(Encoding.UTF8.GetBytes(input)));
 					}
@@ -64,34 +64,30 @@ namespace ClearCanvas.Common.Utilities
 			{
 				// read the CPUID of the first processor
 				using (var searcher = new ManagementObjectSearcher("SELECT ProcessorId FROM Win32_Processor"))
+				using (var results = new ManagementObjectSearcherResults(searcher))
 				{
-					using (var results = new ManagementObjectSearcherResults(searcher))
+					foreach (var processor in results)
 					{
-						foreach (var processor in results)
-						{
-							var processorId = processor.GetString("ProcessorId");
-							if (processorId != null) processorId = processorId.Trim();
-							if (!string.IsNullOrEmpty(processorId))
-								return processorId;
-						}
+						var processorId = processor.GetString("ProcessorId");
+						if (processorId != null) processorId = processorId.Trim();
+						if (!string.IsNullOrEmpty(processorId))
+							return processorId;
 					}
 				}
 
 				// if the processor doesn't support the CPUID opcode, concatenate some immutable characteristics of the processor
 				using (var searcher = new ManagementObjectSearcher("SELECT Manufacturer, AddressWidth, Architecture, Family, Level, Revision FROM Win32_Processor"))
+				using (var results = new ManagementObjectSearcherResults(searcher))
 				{
-					using (var results = new ManagementObjectSearcherResults(searcher))
+					foreach (var processor in results)
 					{
-						foreach (var processor in results)
-						{
-							var manufacturer = processor.GetString("Manufacturer");
-							var addressWidth = processor.GetUInt16("AddressWidth");
-							var architecture = processor.GetUInt16("Architecture");
-							var family = processor.GetUInt16("Family");
-							var level = processor.GetUInt16("Level");
-							var revision = processor.GetUInt16("Revision");
-							return string.Format(CultureInfo.InvariantCulture, "CPU-{0}-{1}-{2:X2}-{3:X2}-{4}-{5:X4}", manufacturer, addressWidth, architecture, family, level, revision);
-						}
+						var manufacturer = processor.GetString("Manufacturer");
+						var addressWidth = processor.GetUInt16("AddressWidth");
+						var architecture = processor.GetUInt16("Architecture");
+						var family = processor.GetUInt16("Family");
+						var level = processor.GetUInt16("Level");
+						var revision = processor.GetUInt16("Revision");
+						return string.Format(CultureInfo.InvariantCulture, "CPU-{0}-{1}-{2:X2}-{3:X2}-{4}-{5:X4}", manufacturer, addressWidth, architecture, family, level, revision);
 					}
 				}
 			}
@@ -108,16 +104,14 @@ namespace ClearCanvas.Common.Utilities
 			{
 				// read the s/n of BIOS
 				using (var searcher = new ManagementObjectSearcher("SELECT SerialNumber FROM Win32_BIOS"))
+				using (var results = new ManagementObjectSearcherResults(searcher))
 				{
-					using (var results = new ManagementObjectSearcherResults(searcher))
+					foreach (var bios in results)
 					{
-						foreach (var bios in results)
-						{
-							var serialNumber = bios.GetString("SerialNumber");
-							if (serialNumber != null) serialNumber = serialNumber.Trim();
-							if (!string.IsNullOrEmpty(serialNumber))
-								return serialNumber;
-						}
+						var serialNumber = bios.GetString("SerialNumber");
+						if (serialNumber != null) serialNumber = serialNumber.Trim();
+						if (!string.IsNullOrEmpty(serialNumber))
+							return serialNumber;
 					}
 				}
 			}
@@ -134,16 +128,14 @@ namespace ClearCanvas.Common.Utilities
 			{
 				// read the s/n of the motherboard
 				using (var searcher = new ManagementObjectSearcher("SELECT SerialNumber FROM Win32_BaseBoard"))
+				using (var results = new ManagementObjectSearcherResults(searcher))
 				{
-					using (var results = new ManagementObjectSearcherResults(searcher))
+					foreach (var motherboard in results)
 					{
-						foreach (var motherboard in results)
-						{
-							var serialNumber = motherboard.GetString("SerialNumber");
-							if (serialNumber != null) serialNumber = serialNumber.Trim();
-							if (!string.IsNullOrEmpty(serialNumber))
-								return serialNumber;
-						}
+						var serialNumber = motherboard.GetString("SerialNumber");
+						if (serialNumber != null) serialNumber = serialNumber.Trim();
+						if (!string.IsNullOrEmpty(serialNumber))
+							return serialNumber;
 					}
 				}
 			}
@@ -154,33 +146,27 @@ namespace ClearCanvas.Common.Utilities
 			return string.Empty;
 		}
 
-		private static string GetDiskSignature()
+		private static string GetSystemVolumeSerial()
 		{
 			try
 			{
-				// identify the disk drives sorted by hardware order
-				var diskDrives = new SortedList<uint, uint>();
-				using (var searcher = new ManagementObjectSearcher("SELECT Index, Signature FROM Win32_DiskDrive"))
+				// read the volume serial of the system drive
+				var systemDrive = (Path.GetPathRoot(Environment.GetFolderPath(Environment.SpecialFolder.System)) ?? "C:").TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar).ToUpperInvariant();
+				using (var searcher = new ManagementObjectSearcher(string.Format("SELECT VolumeSerialNumber FROM Win32_LogicalDisk WHERE DeviceID='{0}'", WqlEscape(systemDrive))))
+				using (var results = new ManagementObjectSearcherResults(searcher))
 				{
-					using (var results = new ManagementObjectSearcherResults(searcher))
+					foreach (var logicalDisk in results)
 					{
-						foreach (var diskDrive in results)
-						{
-							var index = diskDrive.GetUInt32("Index");
-							var signature = diskDrive.GetUInt32("Signature");
-							if (index.HasValue && signature.HasValue)
-								diskDrives.Add(index.Value, signature.Value);
-						}
+						var volumeSerial = logicalDisk.GetString("VolumeSerialNumber");
+						if (volumeSerial != null) volumeSerial = volumeSerial.Trim();
+						if (!string.IsNullOrEmpty(volumeSerial))
+							return volumeSerial;
 					}
 				}
-
-				// use the signature of the first physical disk drive
-				foreach (var diskDriveId in diskDrives)
-					return diskDriveId.Value.ToString("X8", CultureInfo.InvariantCulture);
 			}
 			catch (Exception ex)
 			{
-				Platform.Log(LogLevel.Debug, ex, "Failed to retrieve disk drive signature.");
+				Platform.Log(LogLevel.Debug, ex, "Failed to retrieve system volume serial.");
 			}
 			return string.Empty;
 		}
@@ -191,16 +177,14 @@ namespace ClearCanvas.Common.Utilities
 			{
 				// read the UUID of the system
 				using (var searcher = new ManagementObjectSearcher("SELECT UUID FROM Win32_ComputerSystemProduct"))
+				using (var results = new ManagementObjectSearcherResults(searcher))
 				{
-					using (var results = new ManagementObjectSearcherResults(searcher))
+					foreach (var system in results)
 					{
-						foreach (var system in results)
-						{
-							var uuid = system.GetString("UUID");
-							if (uuid != null) uuid = uuid.Trim();
-							if (!string.IsNullOrEmpty(uuid))
-								return uuid;
-						}
+						var uuid = system.GetString("UUID");
+						if (uuid != null) uuid = uuid.Trim();
+						if (!string.IsNullOrEmpty(uuid))
+							return uuid;
 					}
 				}
 			}
@@ -241,19 +225,13 @@ namespace ClearCanvas.Common.Utilities
 			return null;
 		}
 
-		private static uint? GetUInt32(this ManagementBaseObject wmiObject, string propertyName)
+		/// <summary>
+		/// Escapes WQL WHERE clause string literals.
+		/// </summary>
+		/// <seealso cref="http://msdn.microsoft.com/en-us/library/windows/desktop/aa394054%28v=vs.85%29.aspx"/>
+		private static string WqlEscape(string literal)
 		{
-			try
-			{
-				var value = wmiObject[propertyName];
-				if (value != null)
-					return (uint) value;
-			}
-			catch (Exception ex)
-			{
-				Platform.Log(LogLevel.Debug, ex, @"WMI property ""{0}"" was not in the expected format.", propertyName);
-			}
-			return null;
+			return string.IsNullOrEmpty(literal) ? literal : literal.Replace("\\", "\\\\").Replace("'", "\\'").Replace("\"", "\\\"");
 		}
 
 		/// <summary>

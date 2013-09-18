@@ -31,9 +31,7 @@ using ClearCanvas.Desktop.Validation;
 namespace ClearCanvas.ImageViewer.Utilities.StudyFilters.Export
 {
 	[ExtensionPoint]
-	public sealed class ExportComponentViewExtensionPoint : ExtensionPoint<IApplicationComponentView>
-	{
-	}
+	public sealed class ExportComponentViewExtensionPoint : ExtensionPoint<IApplicationComponentView> {}
 
 	[AssociateView(typeof (ExportComponentViewExtensionPoint))]
 	public class ExportComponent : ApplicationComponent
@@ -45,12 +43,11 @@ namespace ClearCanvas.ImageViewer.Utilities.StudyFilters.Export
 		private string _studyDescription = "";
 		private string _accessionNumber = "00000001";
 		private DateTime? _studyDate = Platform.Time;
+		private bool _keepPrivateTags;
 
 		private string _outputPath = "";
 
-		internal ExportComponent()
-		{
-		}
+		internal ExportComponent() {}
 
 		[ValidationMethodFor("OutputPath")]
 		private ValidationResult ValidateOutputPath()
@@ -157,6 +154,19 @@ namespace ClearCanvas.ImageViewer.Utilities.StudyFilters.Export
 			}
 		}
 
+		public bool KeepPrivateTags
+		{
+			get { return _keepPrivateTags; }
+			set
+			{
+				if (_keepPrivateTags != value)
+				{
+					_keepPrivateTags = value;
+					base.NotifyPropertyChanged("KeepPrivateTags");
+				}
+			}
+		}
+
 		public string OutputPath
 		{
 			get { return _outputPath; }
@@ -196,7 +206,7 @@ namespace ClearCanvas.ImageViewer.Utilities.StudyFilters.Export
 				this.Host.Exit();
 			}
 		}
-        
+
 		public void Cancel()
 		{
 			base.Exit(ApplicationComponentExitCode.None);

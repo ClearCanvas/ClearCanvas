@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using ClearCanvas.Common;
 using ClearCanvas.Enterprise.Common;
 using ClearCanvas.Enterprise.Core;
@@ -39,6 +40,8 @@ namespace ClearCanvas.Ris.Shreds.Publication
 	/// </summary>
 	public interface IPublicationAction
 	{
+		bool Enabled { get; }
+		int RetryCount { get; }
 		void Execute(ReportPart reportPart, IPersistenceContext context);
 	}
 
@@ -106,9 +109,21 @@ namespace ClearCanvas.Ris.Shreds.Publication
 
 		private static void EnqueueWorkItem(ReportPart reportPart, ExtensionInfo publicationAction)
 		{
+			var actionType = publicationAction.ExtensionClass.FullName;
+			var action = (IPublicationAction)new PublicationActionExtensionPoint().CreateExtension(new ClassNameExtensionFilter(actionType));
+			if (!action.Enabled)
+				return;
+
 			var workQueueItem = new WorkQueueItem("Publication Action");
 			workQueueItem.ExtendedProperties.Add("ReportPartRef", reportPart.GetRef().Serialize());
-			workQueueItem.ExtendedProperties.Add("ActionType", publicationAction.ExtensionClass.FullName);
+			workQueueItem.ExtendedProperties.Add("ActionType", actionType);
+
+			var procedure = reportPart.Report.Procedures.First();
+			workQueueItem.ExtendedProperties.Add("ProcedureType", procedure.Type.Name);
+			workQueueItem.ExtendedProperties.Add("AccessionNumber", procedure.Order.AccessionNumber);
+			workQueueItem.ExtendedProperties.Add("StudyInstanceUID", procedure.StudyInstanceUID);
+			
+
 			PersistenceScope.CurrentContext.Lock(workQueueItem, DirtyState.New);
 		}
 	}

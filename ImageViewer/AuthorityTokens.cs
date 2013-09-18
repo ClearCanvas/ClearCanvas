@@ -40,7 +40,7 @@ namespace ClearCanvas.ImageViewer
         /// <summary>
         /// Permission to use clinical tools with the viewer (users with this token will require a license seat).
         /// </summary>
-        [AuthorityToken(Description = "Permission to use clinical tools with the viewer (users with this token will require a license seat).")]
+        [AuthorityToken(Description = "Permission to use clinical tools with the viewer.")]
         public const string ViewerClinical = "Viewer/Clinical";
 
 		/// <summary>

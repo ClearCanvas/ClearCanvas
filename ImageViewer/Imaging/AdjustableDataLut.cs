@@ -44,7 +44,7 @@ namespace ClearCanvas.ImageViewer.Imaging
 	/// the full window, since the true values won't necessarily have any real meaning.
 	/// </remarks>
 	[Cloneable]
-    public class AdjustableDataLut : ComposableVoiLut, IDataLut, IBasicVoiLutLinear
+    public class AdjustableDataLut : ComposableVoiLut, IBasicVoiLutLinear
 	{
 		private class Memento
 		{
@@ -86,14 +86,8 @@ namespace ClearCanvas.ImageViewer.Imaging
 
 		#region Private Fields
 
-		private double _minInputValue;
-		private double _maxInputValue;
-
 		private readonly DataLut _dataLut;
 		private readonly BasicVoiLutLinear _linearLut;
-
-		[CloneIgnore]
-		private int[] _lutDataCache = null;
 
 		#endregion
 
@@ -223,8 +217,8 @@ namespace ClearCanvas.ImageViewer.Imaging
 		/// </remarks>
 		public override double MinInputValue
 		{
-			get { return _minInputValue; }
-			set { _dataLut.MinInputValue = (int) Math.Round(_minInputValue = value); }
+            get { return _dataLut.MinInputValue; }
+			set { _dataLut.MinInputValue = (int) Math.Round(value); }
 		}
 
 		/// <summary>
@@ -235,14 +229,14 @@ namespace ClearCanvas.ImageViewer.Imaging
 		/// </remarks>
 		public override double MaxInputValue
 		{
-			get { return _maxInputValue; }
-			set { _dataLut.MaxInputValue = (int) Math.Round(_maxInputValue = value); }
+            get { return _dataLut.MaxInputValue; }
+			set { _dataLut.MaxInputValue = (int) Math.Round(value); }
 		}
 
-		/// <summary>
+        /// <summary>
 		/// Gets the minimum output value.
 		/// </summary>
-		public override int MinOutputValue
+		public override double MinOutputValue
 		{
 			get { return _linearLut.MinOutputValue; }
 			protected set { throw new InvalidOperationException(SR.ExceptionMinimumOutputValueIsNotSettable); } 
@@ -251,7 +245,7 @@ namespace ClearCanvas.ImageViewer.Imaging
 		/// <summary>
 		/// Gets the maximum output value.
 		/// </summary>
-		public override int MaxOutputValue
+		public override double MaxOutputValue
 		{
 			get { return _linearLut.MaxOutputValue; }
 			protected set { throw new InvalidOperationException(SR.ExceptionMaximumOutputValueIsNotSettable); }
@@ -286,7 +280,7 @@ namespace ClearCanvas.ImageViewer.Imaging
 		/// <summary>
 		/// Gets the output value of the lut at a given input.
 		/// </summary>
-		public override int this[double input]
+		public override double this[double input]
 		{
 			get { return _linearLut[_dataLut[(int) Math.Round(input)]]; }
 		}
@@ -359,83 +353,6 @@ namespace ClearCanvas.ImageViewer.Imaging
 			
 			if (lutMemento.LinearLutMemento != null)
 				_linearLut.SetMemento(lutMemento.LinearLutMemento);
-		}
-
-		#endregion
-
-		#region Overrides
-
-		/// <summary>
-		/// Fires the <see cref="ComposableLutBase.LutChanged"/> event.
-		/// </summary>
-		/// <remarks>
-		/// Inheritors should call this method when any property of the Lut has changed.
-		/// </remarks>
-		protected override void OnLutChanged()
-		{
-			// when something changes, wipe the cached lut array
-			_lutDataCache = null;
-
-			base.OnLutChanged();
-		}
-
-		#endregion
-
-		#region IDataLut Members
-
-		int IDataLut.this[int index]
-		{
-			get { return this[index]; }
-		}
-
-		int IDataLut.MinInputValue
-		{
-			get { return (int) Math.Round(MinInputValue); }
-			set { MinInputValue = value; }
-		}
-
-		int IDataLut.MaxInputValue
-		{
-			get { return (int) Math.Round(MaxInputValue); }
-			set { MaxInputValue = value; }
-		}
-
-		int IDataLut.FirstMappedPixelValue
-		{
-			get { return _dataLut.FirstMappedPixelValue; }
-		}
-
-		int[] IDataLut.Data
-		{
-			get
-			{
-				if (_lutDataCache == null)
-				{
-					int lutLength = _dataLut.Length;
-					int[] lutData = new int[lutLength];
-
-					unsafe
-					{
-						fixed (int* output = lutData)
-						{
-							fixed (int* input = _dataLut.Data)
-							{
-								for (int n = 0; n < lutLength; n++)
-									output[n] = _linearLut[input[n]];
-							}
-						}
-					}
-
-					_lutDataCache = lutData;
-				}
-
-				return _lutDataCache;
-			}
-		}
-
-		IDataLut IDataLut.Clone()
-		{
-			return (IDataLut) Clone();
 		}
 
 		#endregion

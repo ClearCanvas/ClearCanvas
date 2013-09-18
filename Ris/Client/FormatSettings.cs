@@ -36,7 +36,6 @@ namespace ClearCanvas.Ris.Client
 
         private FormatSettings()
         {
-            ApplicationSettingsRegistry.Instance.RegisterInstance(this);
         }
     }
 }
