@@ -43,7 +43,7 @@ namespace ClearCanvas.Common
 		private readonly string _featureToken;
 
 		public ExtensionInfo(TypeRef extensionClass, TypeRef pointExtended, string name, string description, bool enabled)
-			: this(extensionClass, pointExtended, name, description, enabled, null) {}
+			: this(extensionClass, pointExtended, name, description, enabled, null) { }
 
 		public ExtensionInfo(TypeRef extensionClass, TypeRef pointExtended, string name, string description, bool enabled, string featureToken)
 		{
@@ -93,6 +93,11 @@ namespace ClearCanvas.Common
 		public string FeatureToken
 		{
 			get { return _featureToken; }
+		}
+
+		public override string ToString()
+		{
+			return string.Format("{0} ({1})", _name ?? _extensionClass.Resolve().Name, _extensionClass.FullName);
 		}
 
 		#region IBrowsable Members
