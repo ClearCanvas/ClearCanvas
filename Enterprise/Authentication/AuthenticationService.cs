@@ -23,7 +23,6 @@
 #endregion
 
 using System;
-using System.Text.RegularExpressions;
 using System.Web.Security;
 using ClearCanvas.Enterprise.Common.Authentication;
 using ClearCanvas.Enterprise.Core;
@@ -77,8 +76,7 @@ namespace ClearCanvas.Enterprise.Authentication
 			}
 
 			// check new password meets policy
-			if (!Regex.Match(request.NewPassword, this.Settings.ValidPasswordRegex).Success)
-				throw new RequestValidationException(this.Settings.ValidPasswordMessage);
+			PasswordPolicy.CheckPasswordCandidate(request.NewPassword, this.Settings);
 
 			var expiryTime = Platform.Time.AddDays(this.Settings.PasswordExpiryDays);
 

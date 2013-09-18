@@ -32,7 +32,6 @@ namespace ClearCanvas.Enterprise.Common.Setup
 		{
 			Password = "clearcanvas";
 			UserName = "sa";
-			AuthorityGroup = BuiltInAuthorityGroups.SystemAccounts.Name;
 		}
 
 		/// <summary>
@@ -66,9 +65,10 @@ namespace ClearCanvas.Enterprise.Common.Setup
 		public string AccountPassword { get; set; }
 
 		/// <summary>
-		/// Specifies the name of the authority group to which the account should be assigned. Default is 'System Accounts'.
+		/// Specifies the name of the authority group to which the account should be assigned.
+		/// If not specified, new accounts will be assigned to the 'Service Accounts' group.
 		/// </summary>
-		[CommandLineParameter("auth", "Specifies the name of the authority group to which the account should be assigned. Default is 'System Accounts'.")]
+		[CommandLineParameter("auth", "Specifies the name of the authority group to which the account should be assigned. If not specified, new accounts will be assigned to the 'Service Accounts' group.")]
 		public string AuthorityGroup { get; set; }
 	}
 }

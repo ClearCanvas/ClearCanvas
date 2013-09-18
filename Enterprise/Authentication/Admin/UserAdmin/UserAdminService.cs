@@ -26,7 +26,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security;
-using System.Text.RegularExpressions;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Enterprise.Authentication.Brokers;
@@ -143,7 +142,7 @@ namespace ClearCanvas.Enterprise.Authentication.Admin.UserAdmin
 			var assembler = new UserAssembler();
 			assembler.UpdateUser(user, request.UserDetail, PersistenceContext);
 
-			// reset password if requested
+			// for user accounts, reset password if requested
 			if (request.UserDetail.ResetPassword)
 			{
 				if(user.AccountType != UserAccountType.U)
@@ -151,6 +150,13 @@ namespace ClearCanvas.Enterprise.Authentication.Admin.UserAdmin
 
 				var settings = new AuthenticationSettings();
 				user.ResetPassword(settings.DefaultTemporaryPassword);
+			}
+
+			// for system accounts, update the password if specified
+			if(!string.IsNullOrEmpty(request.Password) && user.AccountType == UserAccountType.S)
+			{
+				PasswordPolicy.CheckPasswordCandidate(request.Password, new AuthenticationSettings());
+				user.ChangePassword(request.Password, null);
 			}
 
 			PersistenceContext.SynchState();
@@ -286,10 +292,7 @@ namespace ClearCanvas.Enterprise.Authentication.Admin.UserAdmin
 
 				case UserAccountType.S:
 					// for system accounts, use password provided in request, and set to never expire
-					if(string.IsNullOrEmpty(password))
-						throw new RequestValidationException(settings.ValidPasswordMessage);
-					if (!Regex.Match(password, settings.ValidPasswordRegex).Success)
-						throw new RequestValidationException(settings.ValidPasswordMessage);
+					PasswordPolicy.CheckPasswordCandidate(password, settings);
 					return Password.CreatePassword(password, null);
 
 				default:

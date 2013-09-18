@@ -1,4 +1,4 @@
-#region License
+﻿#region License
 
 // Copyright (c) 2013, ClearCanvas Inc.
 // All rights reserved.
@@ -22,27 +22,24 @@
 
 #endregion
 
-using System.Runtime.Serialization;
-using ClearCanvas.Common.Serialization;
+using System.Text.RegularExpressions;
+using ClearCanvas.Enterprise.Common;
 
-namespace ClearCanvas.Enterprise.Common.Admin.UserAdmin
+namespace ClearCanvas.Enterprise.Authentication
 {
-	[DataContract]
-	public class UpdateUserRequest : DataContractBase
+	static class PasswordPolicy
 	{
-		public UpdateUserRequest(UserDetail userDetail)
-		{
-			UserDetail = userDetail;
-		}
-
-		[DataMember]
-		public UserDetail UserDetail;
-
 		/// <summary>
-		/// For system accounts, optionally specifies the password to be set on the account.
-		/// For other account types, this field is ignored.
+		/// Checks that a candidate password meets the enterprise-wide password policy.
 		/// </summary>
-		[DataMember]
-		public string Password;
+		/// <param name="passwordCandidate"></param>
+		/// <param name="settings"></param>
+		public static void CheckPasswordCandidate(string passwordCandidate, AuthenticationSettings settings)
+		{
+			if (string.IsNullOrEmpty(passwordCandidate))
+				throw new RequestValidationException(settings.ValidPasswordMessage);
+			if (!Regex.Match(passwordCandidate, settings.ValidPasswordRegex).Success)
+				throw new RequestValidationException(settings.ValidPasswordMessage);
+		}
 	}
 }

@@ -61,6 +61,15 @@ namespace ClearCanvas.Enterprise.Authentication {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to This account type does not support assigning a password..
+        /// </summary>
+        internal static string MessageAccountTypeDoesNotSupportAssignPassword {
+            get {
+                return ResourceManager.GetString("MessageAccountTypeDoesNotSupportAssignPassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to This account type does not support password reset..
         /// </summary>
         internal static string MessageAccountTypeDoesNotSupportPasswordReset {

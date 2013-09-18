@@ -102,6 +102,7 @@
     <Compile Include="Imex\UserImex.cs" />
     <Compile Include="Imex\UserImporter.cs" />
     <Compile Include="Password.cs" />
+    <Compile Include="PasswordPolicy.cs" />
     <Compile Include="PasswordResetEmailSettings.cs" />
     <Compile Include="PasswordResetEmailSettings.Designer.cs">
       <AutoGen>True</AutoGen>

@@ -88,7 +88,7 @@ namespace ClearCanvas.Enterprise.Authentication
 		/// </summary>
 		/// <param name="newPassword"></param>
 		/// <param name="expiryTime"></param>
-		public virtual void ChangePassword(string newPassword, DateTime expiryTime)
+		public virtual void ChangePassword(string newPassword, DateTime? expiryTime)
 		{
 			_password = Password.CreatePassword(newPassword, expiryTime);
 		}

@@ -138,4 +138,7 @@
   <data name="MessageAccountTypeDoesNotSupportPasswordReset" xml:space="preserve">
     <value>This account type does not support password reset.</value>
   </data>
+	<data name="MessageAccountTypeDoesNotSupportAssignPassword">
+		<value xml:space="preserve">This account type does not support assigning a password.</value>
+	</data>
 </root>
