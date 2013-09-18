@@ -49,8 +49,14 @@ namespace ClearCanvas.Dicom.Audit
         public static EventID PatientRecord = new EventID("110110", "DCM", "Patient Record", "Patient Record audit event");
         public static EventID ProcedureRecord = new EventID("110111", "DCM", "Procedure Record", "Procedure Record audit event");
         public static EventID NetworkEntry = new EventID("110108", "DCM", "Network Entry", "Network Entry audit event");
+		public static EventID HealthServicesProvisionEvent = new EventID("IHE0001", "IHE", "Health Services Provision Event", "Health services scheduled and performed within an instance or episode of care. This includes scheduling, initiation, updates or amendments, performing or completing the act, and cancellation.");
+		public static EventID MedicationEvent = new EventID("IHE0002", "IHE", "Medication Event","Medication orders and administration within an instance or episode of care. This includes initial order, dispensing, delivery, and cancellation.");
+		public static EventID PatientCareResourceAssignment = new EventID("IHE0003", "IHE", "Patient Care Resource Assignment", "Staffing or participant assignment actions relevant to the assignment of healthcare professionals, caregivers attending physician, residents, medical students, consultants, etc. to a patient It also includes change in assigned role or authorization, e.g., relative to healthcare status change, and de-assignment.");
+		public static EventID PatientCareEpisode = new EventID("IHE0004", "IHE", "Patient Care Episode","Specific patient care episodes or problems that occur within an instance of care. This includes initial assignment, updates or amendments, resolution, completion, and cancellation.");
+		public static EventID PatientCareProtocol = new EventID("IHE0005", "IHE", "Patient Care Protocol","Patient association with a care protocol. This includes initial assignment, scheduling, updates or amendments, completion, and cancellation");
+		public static EventID CCHealthcareDataEvent = new EventID("CC001","ClearCanvas","Healthcare Data Event", "Event to signal when healthcare data has been updated");
 
-        public EventID(string _code, string _codeSystemNameField,
+		public EventID(string _code, string _codeSystemNameField,
                        string _displayNameField, string description)
         {
             codeSystemName = _codeSystemNameField;
