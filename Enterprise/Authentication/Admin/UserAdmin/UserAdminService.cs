@@ -107,7 +107,7 @@ namespace ClearCanvas.Enterprise.Authentication.Admin.UserAdmin
 			EnsureCurrentUserAuthorizedToManage(accountType);
 
 			if(!UserName.IsLegalUserName(userDetail.UserName))
-				throw new RequestValidationException("Illegal user name.");
+				throw new RequestValidationException("Illegal account name.");
 
 			// create new user
 			var userInfo = new UserInfo(
@@ -273,7 +273,7 @@ namespace ClearCanvas.Enterprise.Authentication.Admin.UserAdmin
 			}
 			catch (EntityNotFoundException)
 			{
-				throw new RequestValidationException(string.Format("{0} is not a valid user name.", name));
+				throw new RequestValidationException(string.Format("{0} is not a valid account name.", name));
 			}
 		}
 

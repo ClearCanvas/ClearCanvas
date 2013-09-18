@@ -24,7 +24,7 @@
 
 using ClearCanvas.Common.Utilities;
 
-namespace ClearCanvas.Enterprise.Common.Setup
+namespace ClearCanvas.Enterprise.Common.SystemAccounts
 {
 	class SystemAccountCommandLine : CommandLine
 	{
@@ -33,12 +33,6 @@ namespace ClearCanvas.Enterprise.Common.Setup
 			Password = "clearcanvas";
 			UserName = "sa";
 		}
-
-		/// <summary>
-		/// Specifies what to do - either create, modify, or remove. Required.
-		/// </summary>
-		[CommandLineParameter("do", "Specifies what to do - either create, modify, or remove. Required.", Required = true)]
-		public SystemAccountApplication.Action Action { get; set; }
 
 		/// <summary>
 		/// Specifies user name to connect to enterprise server.
@@ -61,7 +55,7 @@ namespace ClearCanvas.Enterprise.Common.Setup
 		/// <summary>
 		/// Specifies the password to be set on the account.
 		/// </summary>
-		[CommandLineParameter("password", "p", "Specifies the password to be set on the account. Required for 'create' and 'modify'.")]
+		[CommandLineParameter("password", "p", "Specifies the password to be set on the account.")]
 		public string AccountPassword { get; set; }
 
 		/// <summary>

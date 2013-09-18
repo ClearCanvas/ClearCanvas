@@ -206,8 +206,10 @@
     <Compile Include="ServiceConfiguration\Client\NamedPipeConfiguration.cs" />
     <Compile Include="ServiceConfiguration\Server\CertificateSearchDirective.cs" />
     <Compile Include="ServiceConfiguration\Server\NamedPipeConfiguration.cs" />
-    <Compile Include="Setup\SystemAccountCommandLine.cs" />
-    <Compile Include="Setup\SystemAccountApplication.cs" />
+    <Compile Include="SystemAccounts\ISystemAccountLocalRegistry.cs" />
+    <Compile Include="SystemAccounts\LocalRegistryManager.cs" />
+    <Compile Include="SystemAccounts\SystemAccountCommandLine.cs" />
+    <Compile Include="SystemAccounts\SystemAccountUtility.cs" />
     <Compile Include="Setup\SetupApplication.cs" />
     <Compile Include="Setup\SetupCommandLine.cs" />
     <Compile Include="Setup\SetupHelper.cs" />
