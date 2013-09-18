@@ -22,9 +22,6 @@
 
 #endregion
 
-using System;
-using System.Collections.Generic;
-using System.Text;
 using ClearCanvas.Common.Utilities;
 
 namespace ClearCanvas.Enterprise.Authentication.Setup
@@ -38,7 +35,6 @@ namespace ClearCanvas.Enterprise.Authentication.Setup
 		private string _sysAdminUserName = "sa";
 		private string _sysAdminDisplayName = "sysadmin";
 		private string _sysAdminInitialPassword = "clearcanvas";
-		private string _sysAdminGroup = "Administrators";
 
 		/// <summary>
 		/// Specifies whether to create default authority groups.
@@ -69,13 +65,6 @@ namespace ClearCanvas.Enterprise.Authentication.Setup
 		{
 			get { return _sysAdminInitialPassword; }
 			set { _sysAdminInitialPassword = value; }
-		}
-
-		[CommandLineParameter("sgroup", "Specifies the name of the system admin authority group.  Default is 'Administrators'.")]
-		public string SysAdminGroup
-		{
-			get { return _sysAdminGroup; }
-			set { _sysAdminGroup = value; }
 		}
 	}
 }

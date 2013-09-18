@@ -285,7 +285,7 @@ namespace ClearCanvas.Enterprise.Authentication.Admin.UserAdmin
 					return Password.CreatePassword(Guid.NewGuid().ToString("N"), null);
 
 				case UserAccountType.S:
-					// for service accounts, use password provided in request, and set to never expire
+					// for system accounts, use password provided in request, and set to never expire
 					if(string.IsNullOrEmpty(password))
 						throw new RequestValidationException(settings.ValidPasswordMessage);
 					if (!Regex.Match(password, settings.ValidPasswordRegex).Success)

@@ -49,8 +49,8 @@ namespace ClearCanvas.Enterprise.Common
 
 				public static class NonUserAccounts
 				{
-					[AuthorityToken(Description = "Allow administration of Service Accounts.")]
-					public const string Service = "Enterprise/Admin/Security/Non-user Accounts/Service";
+					[AuthorityToken(Description = "Allow administration of System Accounts.")]
+					public const string Service = "Enterprise/Admin/Security/Non-user Accounts/System";
 
 					[AuthorityToken(Description = "Allow administration of Group Accounts.")]
 					public const string Group = "Enterprise/Admin/Security/Non-user Accounts/Group";
@@ -75,7 +75,7 @@ namespace ClearCanvas.Enterprise.Common
 
 		public static class Login
 		{
-			[AuthorityToken(Description = "Allow modification of enterprise configuration store data.")]
+			[AuthorityToken(Description = "Allows an account to impersonate other user accounts.")]
 			public const string Impersonate = "Enterprise/Login/Impersonate";
 		}
 	}

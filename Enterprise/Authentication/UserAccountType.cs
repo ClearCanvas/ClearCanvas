@@ -3,7 +3,7 @@ using ClearCanvas.Enterprise.Core;
 namespace ClearCanvas.Enterprise.Authentication
 {
 	/// <summary>
-	/// UserAccountType enumeration
+	/// Enumerates the types of accounts.
 	/// </summary>
 	[EnumValueClass(typeof(UserAccountTypeEnum))]
 	public enum UserAccountType
@@ -21,9 +21,9 @@ namespace ClearCanvas.Enterprise.Authentication
 		G,
 
 		/// <summary>
-		/// Service
+		/// System
 		/// </summary>
-		[EnumValue("Service")]
+		[EnumValue("System")]
 		S,
 	}
 }

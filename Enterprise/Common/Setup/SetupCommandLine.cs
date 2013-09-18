@@ -30,7 +30,6 @@ namespace ClearCanvas.Enterprise.Common.Setup
 	{
 		public SetupCommandLine()
 		{
-			SysAdminGroup = "Administrators";
 			Password = "clearcanvas";
 			UserName = "sa";
 			ImportSettingsGroups = true;
@@ -39,10 +38,10 @@ namespace ClearCanvas.Enterprise.Common.Setup
 			MigrateSharedSettings = true;
 		}
 
-        /// <summary>
-        /// Specifies whether to import authority tokens.
-        /// </summary>
-        [CommandLineParameter("tokens", "t", "Specifies whether to import authority tokens. This option is enabled by default.")]
+		/// <summary>
+		/// Specifies whether to import authority tokens.
+		/// </summary>
+		[CommandLineParameter("tokens", "t", "Specifies whether to import authority tokens. This option is enabled by default.")]
 		public bool ImportAuthorityTokens { get; set; }
 
 		/// <summary>
@@ -51,13 +50,13 @@ namespace ClearCanvas.Enterprise.Common.Setup
 		[CommandLineParameter("groups", "g", "Specifies whether to import the default authority groups. This option is enabled by default.")]
 		public bool ImportDefaultAuthorityGroups { get; set; }
 
-        /// <summary>
-        /// Specifies whether to import settings groups.
-        /// </summary>
-        [CommandLineParameter("settings", "s", "Specifies whether to import settings groups. This option is enabled by default.")]
+		/// <summary>
+		/// Specifies whether to import settings groups.
+		/// </summary>
+		[CommandLineParameter("settings", "s", "Specifies whether to import settings groups. This option is enabled by default.")]
 		public bool ImportSettingsGroups { get; set; }
 
-        /// <summary>
+		/// <summary>
 		/// Specifies whether to import settings groups.
 		/// </summary>
 		[CommandLineParameter("migrate", "m", "Specifies whether to migrate shared settings from a previously installed version.")]
@@ -80,11 +79,5 @@ namespace ClearCanvas.Enterprise.Common.Setup
 		/// </summary>
 		[CommandLineParameter("spwd", "Specifies password to connect to enterprise server. Default is 'clearcanvas'.")]
 		public string Password { get; set; }
-
-		/// <summary>
-		/// Name of the sys-admin group. Imported tokens will be automatically added to this group.
-		/// </summary>
-		[CommandLineParameter("sgroup", "Specifies the name of the system admin authority group, so that imported tokens can be added to it.")]
-		public string SysAdminGroup { get; set; }
-		}
+	}
 }

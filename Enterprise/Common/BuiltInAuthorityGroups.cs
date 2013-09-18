@@ -1,4 +1,4 @@
-#region License
+﻿#region License
 
 // Copyright (c) 2013, ClearCanvas Inc.
 // All rights reserved.
@@ -22,27 +22,39 @@
 
 #endregion
 
-using System.Runtime.Serialization;
-using ClearCanvas.Common.Serialization;
+using ClearCanvas.Common.Authorization;
 
-namespace ClearCanvas.Enterprise.Common.Admin.UserAdmin
+namespace ClearCanvas.Enterprise.Common
 {
-	[DataContract]
-	public class AddUserRequest : DataContractBase
+	/// <summary>
+	/// Defines some built-in authority groups.
+	/// </summary>
+	public static class BuiltInAuthorityGroups
 	{
-		public AddUserRequest(UserDetail userDetail)
-		{
-			UserDetail = userDetail;
-		}
-
-		[DataMember]
-		public UserDetail UserDetail;
-
 		/// <summary>
-		/// For system accounts, specifies the password to the account (required).
-		/// For other account types, this field is ignored.
+		/// 'Administrators' group.
 		/// </summary>
-		[DataMember]
-		public string Password;
+		/// <remarks>
+		/// The name of this group can be modified at install time by the setup application.
+		/// </remarks>
+		public static readonly AuthorityGroupDefinition Administrators
+			= new AuthorityGroupDefinition(
+				"Administrators",
+				"Administrators",
+				false,
+				new string[0],	// all authority tokens will be assigned automatically
+				true);
+
+		public static readonly AuthorityGroupDefinition SystemAccounts
+			= new AuthorityGroupDefinition(
+				"System Accounts",
+				"Built-in default authority group for System Accounts.",
+				false,
+				new[]
+				{
+					AuthorityTokens.Admin.Security.User,
+					AuthorityTokens.Login.Impersonate
+				},
+				true);
 	}
 }

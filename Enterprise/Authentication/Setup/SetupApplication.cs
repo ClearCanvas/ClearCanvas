@@ -39,9 +39,6 @@ namespace ClearCanvas.Enterprise.Authentication.Setup
 	[ExtensionOf(typeof(ApplicationRootExtensionPoint))]
 	public class SetupApplication : IApplicationRoot
 	{
-		private const string ServiceAccountsGroupName = "Service Accounts";
-		private const string ServiceAccountsGroupDescription = "Built-in default authority group for Service Accounts.";
-
 		#region IApplicationRoot Members
 
 		public void RunApplication(string[] args)
@@ -60,25 +57,18 @@ namespace ClearCanvas.Enterprise.Authentication.Setup
 					var allTokens = tokenImporter.ImportFromPlugins((IUpdateContext)PersistenceScope.CurrentContext);
 					var tokenStrings = CollectionUtils.Map<AuthorityToken, string, List<string>>(allTokens, t => t.Name).ToArray();
 
-					// create the sys admin group, which has all tokens assigned by default
-					var adminGroupDef = new AuthorityGroupDefinition(cmdLine.SysAdminGroup, cmdLine.SysAdminGroup, false, tokenStrings, true);
-
-					// create the service accounts group, which has only the impersonation token assigned by default
-					var serviceAccountsGroupDef = new AuthorityGroupDefinition(
-						ServiceAccountsGroupName,
-						ServiceAccountsGroupDescription,
-						false,
-						new[]{AuthorityTokens.Login.Impersonate},
-						true);
-					
 					// import built-in groups
-					var groupImporter = new AuthorityGroupImporter();
-					var groups = groupImporter.Import(new[] { adminGroupDef, serviceAccountsGroupDef }, (IUpdateContext)PersistenceScope.CurrentContext);
+					var builtInAuthorityGroups = new[]
+					{
+						GetSysAdminGroupDefinition(tokenStrings),
+						BuiltInAuthorityGroups.SystemAccounts
+					};
 
-					// find the admin group entity that was just created
-					var adminGroup = CollectionUtils.SelectFirst(groups, g => g.Name == cmdLine.SysAdminGroup);
+					var groupImporter = new AuthorityGroupImporter();
+					var groups = groupImporter.Import(builtInAuthorityGroups, (IUpdateContext)PersistenceScope.CurrentContext);
 
 					// create the "sa" user
+					var adminGroup = CollectionUtils.SelectFirst(groups, g => g.Name == BuiltInAuthorityGroups.Administrators.Name);
 					CreateSysAdminUser(adminGroup, cmdLine, PersistenceScope.CurrentContext, Console.Out);
 
 					// optionally import other default authority groups defined in other plugins
@@ -95,6 +85,19 @@ namespace ClearCanvas.Enterprise.Authentication.Setup
 				Console.WriteLine(e.Message);
 				cmdLine.PrintUsage(Console.Out);
 			}
+		}
+
+		#endregion
+
+		private static AuthorityGroupDefinition GetSysAdminGroupDefinition(string[] allTokens)
+		{
+			// clone the Administrators group, but with all tokens assigned
+			return new AuthorityGroupDefinition(
+				BuiltInAuthorityGroups.Administrators.Name,
+				BuiltInAuthorityGroups.Administrators.Description,
+				BuiltInAuthorityGroups.Administrators.DataGroup,
+				allTokens,
+				BuiltInAuthorityGroups.Administrators.BuiltIn);
 		}
 
 		private static void CreateSysAdminUser(AuthorityGroup adminGroup, SetupCommandLine cmdLine, IPersistenceContext context, TextWriter log)
@@ -122,6 +125,5 @@ namespace ClearCanvas.Enterprise.Authentication.Setup
 			}
 		}
 
-		#endregion
 	}
 }

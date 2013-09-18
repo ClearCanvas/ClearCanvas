@@ -153,6 +153,7 @@
     <Compile Include="Authentication\ValidateSessionRequest.cs" />
     <Compile Include="Authentication\ValidateSessionResponse.cs" />
     <Compile Include="AuthorityGroupIsNotEmptyException.cs" />
+    <Compile Include="BuiltInAuthorityGroups.cs" />
     <Compile Include="Configuration\IApplicationConfigurationReadService.cs" />
     <Compile Include="Configuration\ImportSettingsGroupRequest.cs" />
     <Compile Include="Configuration\ImportSettingsGroupResponse.cs" />
@@ -205,6 +206,8 @@
     <Compile Include="ServiceConfiguration\Client\NamedPipeConfiguration.cs" />
     <Compile Include="ServiceConfiguration\Server\CertificateSearchDirective.cs" />
     <Compile Include="ServiceConfiguration\Server\NamedPipeConfiguration.cs" />
+    <Compile Include="Setup\SystemAccountCommandLine.cs" />
+    <Compile Include="Setup\SystemAccountApplication.cs" />
     <Compile Include="Setup\SetupApplication.cs" />
     <Compile Include="Setup\SetupCommandLine.cs" />
     <Compile Include="Setup\SetupHelper.cs" />
