@@ -90,7 +90,8 @@ namespace ClearCanvas.Enterprise.Authentication.Imex
                                 {
                                     Name = groupDef.Name,
                                     Description = groupDef.Description,
-                                    DataGroup = groupDef.DataGroup
+                                    DataGroup = groupDef.DataGroup,
+									BuiltIn = groupDef.BuiltIn
                                 };
                     context.Lock(group, DirtyState.New);
                     existingGroups.Add(group);

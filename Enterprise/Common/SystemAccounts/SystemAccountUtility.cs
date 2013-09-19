@@ -161,7 +161,7 @@ namespace ClearCanvas.Enterprise.Common.SystemAccounts
 		private static AuthorityGroupSummary GetAuthorityGroup(string name)
 		{
 			List<AuthorityGroupSummary> authGroups = null;
-			Platform.GetService<IAuthorityGroupReadService>(
+			Platform.GetService<IAuthorityGroupAdminService>(
 				service => authGroups = service.ListAuthorityGroups(new ListAuthorityGroupsRequest()).AuthorityGroups);
 			var authGroup = authGroups.FirstOrDefault(g => g.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
 			if (authGroup == null)
