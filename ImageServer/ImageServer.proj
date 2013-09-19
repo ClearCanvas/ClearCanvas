@@ -49,8 +49,8 @@
   <Choose>
     <When Condition="$(DistributionBuild)">
       <PropertyGroup>
-        <DeploymentOutputPath>..\Distribution\Build\ImageServer$(BuildSuffix)\$(PlatformSubFolder)\$(Configuration)\Web</DeploymentOutputPath>
-        <DistributionDir>$(MSBuildProjectDirectory)\$(DeploymentOutputPath)</DistributionDir>
+		<DistributionDir>$(MSBuildProjectDirectory)\..\Distribution\Build\ImageServer$(BuildSuffix)\$(PlatformSubFolder)\$(Configuration)</DistributionDir>
+        <DeploymentOutputPath>..\Distribution\Build\ImageServer$(BuildSuffix)\$(PlatformSubFolder)\$(Configuration)\web</DeploymentOutputPath>
       </PropertyGroup>
     </When>
     <Otherwise>
