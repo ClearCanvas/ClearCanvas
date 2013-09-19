@@ -213,15 +213,12 @@ namespace ClearCanvas.Dicom.Iod
 
 		public override bool Equals(object obj)
 		{
-			if (obj == null)
-				return false;
-
-			return Equals(obj as PatientOrientation);
+			return obj != null && Equals(obj as PatientOrientation);
 		}
 
 		public override int GetHashCode()
 		{
-			return base.GetHashCode();
+			return -0x7360AA3E;
 		}
 
 		#endregion

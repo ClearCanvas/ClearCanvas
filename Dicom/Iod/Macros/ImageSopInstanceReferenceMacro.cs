@@ -23,6 +23,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 
 namespace ClearCanvas.Dicom.Iod.Macros
 {
@@ -30,7 +31,7 @@ namespace ClearCanvas.Dicom.Iod.Macros
 	/// Image SOP Instance Reference Macro
 	/// </summary>
 	/// <remarks>As defined in the DICOM Standard 2008, Part 3, Section 10.3 (Table 10-3)</remarks>
-	public class ImageSopInstanceReferenceMacro : SequenceIodBase
+	public class ImageSopInstanceReferenceMacro : SequenceIodBase, ISopInstanceReferenceMacro
 	{
 		#region Constructors
 
@@ -46,6 +47,19 @@ namespace ClearCanvas.Dicom.Iod.Macros
 		public ImageSopInstanceReferenceMacro(DicomSequenceItem dicomSequenceItem) : base(dicomSequenceItem) {}
 
 		#endregion
+
+		public static IEnumerable<uint> DefinedTags
+		{
+			get
+			{
+				yield return DicomTags.ReferencedSopClassUid;
+				yield return DicomTags.ReferencedSopInstanceUid;
+				yield return DicomTags.ReferencedFrameNumber;
+				yield return DicomTags.ReferencedSegmentNumber;
+			}
+		}
+
+		void IIodMacro.InitializeAttributes() {}
 
 		#region Public Properties
 
