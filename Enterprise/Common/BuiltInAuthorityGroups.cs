@@ -32,11 +32,8 @@ namespace ClearCanvas.Enterprise.Common
 	public static class BuiltInAuthorityGroups
 	{
 		/// <summary>
-		/// 'Administrators' group.
+		/// Administrators group.
 		/// </summary>
-		/// <remarks>
-		/// The name of this group can be modified at install time by the setup application.
-		/// </remarks>
 		public static readonly AuthorityGroupDefinition Administrators
 			= new AuthorityGroupDefinition(
 				"Administrators",
@@ -45,6 +42,9 @@ namespace ClearCanvas.Enterprise.Common
 				new string[0],	// all authority tokens will be assigned automatically
 				true);
 
+		/// <summary>
+		/// System Accounts group.
+		/// </summary>
 		public static readonly AuthorityGroupDefinition SystemAccounts
 			= new AuthorityGroupDefinition(
 				"System Accounts",
@@ -52,8 +52,14 @@ namespace ClearCanvas.Enterprise.Common
 				false,
 				new[]
 				{
+					// System accounts may need to impersonate users
+					AuthorityTokens.Login.Impersonate,
+
+					// required by RPACS in order to obtain detailed information about a user's authorizations
 					AuthorityTokens.Admin.Security.User,
-					AuthorityTokens.Login.Impersonate
+
+					// required by RPACS in order to manage work-group accounts
+					AuthorityTokens.Admin.Security.NonUserAccounts.Group,
 				},
 				true);
 	}
