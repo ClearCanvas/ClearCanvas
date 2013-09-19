@@ -49,9 +49,17 @@ namespace ClearCanvas.Enterprise.Common.SystemAccounts
 			{
 				cmdLine.Parse(args);
 
+				// use lower-case, to avoid casing issues
+				var accountName = cmdLine.AccountName.ToLowerInvariant();
+
+				var localAccounts = LocalRegistryManager.GetAccounts();
+				if (!localAccounts.Contains(accountName))
+					throw new InvalidOperationException(string.Format("Account '{0}' is not a locally-known system account.", accountName));
+
+				StdOut(string.Format("Connecting to Enterprise Server as '{0}'...", cmdLine.UserName), cmdLine);
 				using (new AuthenticationScope(cmdLine.UserName, "SystemAccount Utility", Dns.GetHostName(), cmdLine.Password))
 				{
-					CreateOrUpdateAccount(cmdLine);
+					CreateOrUpdateAccount(accountName, cmdLine);
 				}
 			}
 			catch (CommandLineException e)
@@ -62,24 +70,23 @@ namespace ClearCanvas.Enterprise.Common.SystemAccounts
 
 		#endregion
 
-		private static void CreateOrUpdateAccount(SystemAccountCommandLine cmdLine)
+		private static void CreateOrUpdateAccount(string accountName, SystemAccountCommandLine cmdLine)
 		{
-			var accountName = cmdLine.AccountName.ToLowerInvariant();
-
-			var localAccounts = LocalRegistryManager.GetAccounts();
-			if (!localAccounts.Contains(accountName))
-				throw new InvalidOperationException(string.Format("Account '{0}' is not a locally-known account.", accountName));
+			StdOut(string.Format("Checking Enterprise Server for existing account '{0}'...", accountName), cmdLine);
 
 			// update the enterprise server
 			UserDetail accountDetail;
 			if (GetExistingAccount(accountName, out accountDetail))
 			{
+				StdOut(string.Format("Account '{0}' exists and will be updated.", accountName), cmdLine);
+				
 				var updateRequest = new UpdateUserRequest(accountDetail);
 				// update auth group if specified
 				if (!string.IsNullOrEmpty(cmdLine.AuthorityGroup))
 				{
 					var authGroup = GetAuthorityGroup(cmdLine.AuthorityGroup);
 					accountDetail.AuthorityGroups = new List<AuthorityGroupSummary> { authGroup };
+					StdOut(string.Format("Authority group will be set to '{0}'.", authGroup.Name), cmdLine);
 				}
 
 				// update password if specified
@@ -87,7 +94,10 @@ namespace ClearCanvas.Enterprise.Common.SystemAccounts
 				if (changePassword)
 				{
 					updateRequest.Password = cmdLine.AccountPassword;
+					StdOut(string.Format("Account password will be set to '{0}'.", updateRequest.Password), cmdLine);
 				}
+
+				StdOut(string.Format("Saving changes to Enterprise Server..."), cmdLine);
 
 				Platform.GetService<IUserAdminService>(
 					service => service.UpdateUser(updateRequest));
@@ -95,11 +105,14 @@ namespace ClearCanvas.Enterprise.Common.SystemAccounts
 				// update the local machine
 				if (changePassword)
 				{
+					StdOut(string.Format("Saving password locally..."), cmdLine);
 					LocalRegistryManager.SetAccountPassword(accountName, cmdLine.AccountPassword);
 				}
 			}
 			else
 			{
+				StdOut(string.Format("Account '{0}' does not exist. It will be created.", accountName), cmdLine);
+				
 				if (string.IsNullOrEmpty(cmdLine.AccountPassword))
 					throw new CommandLineException("Password for the new account must be provided.");
 
@@ -113,12 +126,18 @@ namespace ClearCanvas.Enterprise.Common.SystemAccounts
 					AuthorityGroups = new List<AuthorityGroupSummary> { authGroup }
 				};
 
+				StdOut(string.Format("Creating account '{0}', password '{1}', authority group '{2}'.",
+					accountName, cmdLine.AccountPassword, authGroup.Name), cmdLine);
+
+				StdOut(string.Format("Saving changes to Enterprise Server..."), cmdLine);
 				Platform.GetService<IUserAdminService>(
 					service => service.AddUser(new AddUserRequest(userDetail) { Password = cmdLine.AccountPassword }));
 				
 				// save password locally
+				StdOut(string.Format("Saving password locally..."), cmdLine);
 				LocalRegistryManager.SetAccountPassword(accountName, cmdLine.AccountPassword);
 			}
+			StdOut(string.Format("All changes saved."), cmdLine);
 		}
 
 		private static bool GetExistingAccount(string account, out UserDetail detail)
@@ -148,6 +167,14 @@ namespace ClearCanvas.Enterprise.Common.SystemAccounts
 			if (authGroup == null)
 				throw new InvalidOperationException(string.Format("Authority group '{0}' does not exist.", name));
 			return authGroup;
+		}
+
+		private static void StdOut(string message, SystemAccountCommandLine cmdLine)
+		{
+			if (cmdLine.Verbose)
+			{
+				Console.WriteLine(message);
+			}
 		}
 	}
 }
