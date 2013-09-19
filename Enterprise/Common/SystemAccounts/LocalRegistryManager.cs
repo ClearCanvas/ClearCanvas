@@ -36,7 +36,7 @@ namespace ClearCanvas.Enterprise.Common.SystemAccounts
 	}
 
 
-	class LocalRegistryManager
+	internal class LocalRegistryManager
 	{
 
 		public static string[] GetAccounts()
