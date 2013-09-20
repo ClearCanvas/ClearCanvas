@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using ClearCanvas.Common;
 using ClearCanvas.Dicom.Iod.Sequences;
 using ClearCanvas.Dicom.Utilities;
 
@@ -340,5 +341,125 @@ namespace ClearCanvas.Dicom.Iod.Modules
 				DicomAttributeProvider[DicomTags.InConcatenationTotalNumber].SetInt32(0, value.Value);
 			}
 		}
+
+		#region Static Functional Group Helpers
+
+		/// <summary>
+		/// Gets the specified functional group for a specific frame in the data set.
+		/// </summary>
+		/// <remarks>
+		/// This method automatically handles getting the correct functional group IOD class for the specified frame, regardless
+		/// whether the functional group exists in the Per-Frame Functional Groups Sequence, or the Shared Functional Groups Sequence.
+		/// </remarks>
+		/// <typeparam name="T">The functional group type (derived class of <see cref="FunctionalGroupMacro"/>).</typeparam>
+		/// <param name="dataSet">The DICOM data set of the composite image SOP instance.</param>
+		/// <param name="frameNumber">The DICOM frame number to be retrieved (1-based index).</param>
+		/// <returns>A new instance of <typeparamref name="T"/> wrapping the sequence item pertaining to the specified frame.</returns>
+		public static T GetFunctionalGroup<T>(IDicomAttributeProvider dataSet, int frameNumber)
+			where T : FunctionalGroupMacro, new()
+		{
+			Platform.CheckForNullReference(dataSet, "dataSet");
+			Platform.CheckPositive(frameNumber, "frameNumber");
+
+			DicomAttribute sqAttribute;
+			if (dataSet.TryGetAttribute(DicomTags.PerFrameFunctionalGroupsSequence, out sqAttribute) && sqAttribute.Count >= frameNumber)
+			{
+				var sequenceItem = ((DicomAttributeSQ) sqAttribute)[frameNumber - 1];
+				var functionalGroup = new T {DicomSequenceItem = sequenceItem};
+				if (functionalGroup.HasValues())
+					return functionalGroup;
+			}
+
+			if (dataSet.TryGetAttribute(DicomTags.SharedFunctionalGroupsSequence, out sqAttribute) && sqAttribute.Count > 0)
+			{
+				var sequenceItem = ((DicomAttributeSQ) sqAttribute)[0];
+				var functionalGroup = new T {DicomSequenceItem = sequenceItem};
+				if (functionalGroup.HasValues())
+					return functionalGroup;
+			}
+
+			return null;
+		}
+
+		/// <summary>
+		/// Gets the specified functional group for a specific frame in the data set.
+		/// </summary>
+		/// <remarks>
+		/// This method automatically handles getting the correct functional group IOD class for the specified frame, regardless
+		/// whether the functional group exists in the Per-Frame Functional Groups Sequence, or the Shared Functional Groups Sequence.
+		/// </remarks>
+		/// <param name="functionalGroupType">The functional group type (derived class of <see cref="FunctionalGroupMacro"/>).</param>
+		/// <param name="dataSet">The DICOM data set of the composite image SOP instance.</param>
+		/// <param name="frameNumber">The DICOM frame number to be retrieved (1-based index).</param>
+		/// <returns>A new instance of <paramref name="functionalGroupType"/> wrapping the sequence item pertaining to the specified frame.</returns>
+		public static FunctionalGroupMacro GetFunctionalGroup(Type functionalGroupType, IDicomAttributeProvider dataSet, int frameNumber)
+		{
+			Platform.CheckForNullReference(functionalGroupType, "functionalGroupType");
+			Platform.CheckTrue(typeof (FunctionalGroupMacro).IsAssignableFrom(functionalGroupType) && !functionalGroupType.IsAbstract, "functionalGroupType must be an instantiable derived class of FunctionalGroupMacro");
+			Platform.CheckForNullReference(dataSet, "dataSet");
+			Platform.CheckPositive(frameNumber, "frameNumber");
+
+			DicomAttribute sqAttribute;
+			if (dataSet.TryGetAttribute(DicomTags.PerFrameFunctionalGroupsSequence, out sqAttribute) && sqAttribute.Count >= frameNumber)
+			{
+				var sequenceItem = ((DicomAttributeSQ) sqAttribute)[frameNumber - 1];
+				var functionalGroup = (FunctionalGroupMacro) Activator.CreateInstance(functionalGroupType);
+				functionalGroup.DicomSequenceItem = sequenceItem;
+				if (functionalGroup.HasValues())
+					return functionalGroup;
+			}
+
+			if (dataSet.TryGetAttribute(DicomTags.SharedFunctionalGroupsSequence, out sqAttribute) && sqAttribute.Count > 0)
+			{
+				var sequenceItem = ((DicomAttributeSQ) sqAttribute)[0];
+				var functionalGroup = (FunctionalGroupMacro) Activator.CreateInstance(functionalGroupType);
+				functionalGroup.DicomSequenceItem = sequenceItem;
+				if (functionalGroup.HasValues())
+					return functionalGroup;
+			}
+
+			return null;
+		}
+
+		public static bool TryGetMultiFrameAttribute(IDicomAttributeProvider dataSet, int frameNumber, uint dicomTag, out DicomAttribute dicomAttribute)
+		{
+			Platform.CheckForNullReference(dataSet, "dataSet");
+			Platform.CheckPositive(frameNumber, "frameNumber");
+
+			DicomAttribute attribute;
+			var sopClassUid = dataSet.TryGetAttribute(DicomTags.SopClassUid, out attribute) ? attribute.ToString() : string.Empty;
+
+			var functionalGroupType = FunctionalGroupMacro.GetFunctionalGroupByTag(sopClassUid, dicomTag);
+			if (functionalGroupType != null)
+			{
+				var item = GetFunctionalGroup(functionalGroupType, dataSet, frameNumber).SingleItem;
+				if (item != null) return item.TryGetAttribute(dicomTag, out dicomAttribute);
+			}
+
+			dicomAttribute = null;
+			return false;
+		}
+
+		public static bool TryGetMultiFrameAttribute(IDicomAttributeProvider dataSet, int frameNumber, DicomTag dicomTag, out DicomAttribute dicomAttribute)
+		{
+			Platform.CheckForNullReference(dataSet, "dataSet");
+			Platform.CheckPositive(frameNumber, "frameNumber");
+			Platform.CheckForNullReference(dicomTag, "dicomTag");
+
+			DicomAttribute attribute;
+			var sopClassUid = dataSet.TryGetAttribute(DicomTags.SopClassUid, out attribute) ? attribute.ToString() : string.Empty;
+
+			var functionalGroupType = FunctionalGroupMacro.GetFunctionalGroupByTag(sopClassUid, dicomTag.TagValue);
+			if (functionalGroupType != null)
+			{
+				var item = GetFunctionalGroup(functionalGroupType, dataSet, frameNumber).SingleItem;
+				if (item != null) return item.TryGetAttribute(dicomTag, out dicomAttribute);
+			}
+
+			dicomAttribute = null;
+			return false;
+		}
+
+		#endregion
 	}
 }
