@@ -23,26 +23,44 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
 
 namespace ClearCanvas.Enterprise.Common
 {
-    /// <summary>
-    /// Used by a service to indicate to the client that a request was rejected because it was invalid.  The client may
-    /// display the contained message to the end user.  Therefore, the message should be appropriate for the end-user.
-    /// </summary>
-    [Serializable]
-    public class RequestValidationException : Exception
-    {
-        public RequestValidationException(string message)
-            :base(message)
-        {
-        }
+	/// <summary>
+	/// Used by a service to indicate to the client that a request was rejected because it was invalid.  The client may
+	/// display the contained message to the end user.  Therefore, the message should be appropriate for the end-user.
+	/// </summary>
+	[Serializable]
+	public class RequestValidationException : Exception
+	{
+		private readonly List<string> _reasons;
 
-        public RequestValidationException(SerializationInfo info, StreamingContext context)
-            : base(info, context)
-        {
-        }
-    }
+		public RequestValidationException(string message)
+			: this(message, new string[0])
+		{
+		}
+
+		public RequestValidationException(string message, IEnumerable<string> reasons)
+			: base(message)
+		{
+			_reasons = reasons.ToList();
+		}
+
+		public RequestValidationException(SerializationInfo info, StreamingContext context)
+			: base(info, context)
+		{
+		}
+
+		/// <summary>
+		/// Gets a list of reasons why the request was invalid.
+		/// </summary>
+		public IList<string> Reasons
+		{
+			get { return _reasons.AsReadOnly(); }
+		}
+	}
 
 }
