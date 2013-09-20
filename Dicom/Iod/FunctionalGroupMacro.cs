@@ -25,6 +25,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ClearCanvas.Common.Utilities;
 using ClearCanvas.Dicom.Iod.FunctionalGroups;
 
 namespace ClearCanvas.Dicom.Iod
@@ -99,7 +100,7 @@ namespace ClearCanvas.Dicom.Iod
 		/// <summary>
 		/// The tag to functional group mapping by SOP class.
 		/// </summary>
-		private static readonly Dictionary<string, Dictionary<uint, Type>> _functionalGroupTagMap = new Dictionary<string, Dictionary<uint, Type>>();
+		private static readonly Dictionary<string, IDictionary<uint, Type>> _functionalGroupTagMap = new Dictionary<string, IDictionary<uint, Type>>();
 
 		/// <summary>
 		/// Gets the functional group in which the specified DICOM tag is uniquely used for a given SOP class.
@@ -112,11 +113,26 @@ namespace ClearCanvas.Dicom.Iod
 		/// <returns></returns>
 		public static Type GetFunctionalGroupByTag(string sopClassUid, uint dicomTag)
 		{
+			// lookup the requested tag in the tag map, and return the type of the functional group that defines it - or NULL if it's not defined at all
+			Type functionalGroupType;
+			return GetFunctionalGroupMap(sopClassUid).TryGetValue(dicomTag, out functionalGroupType) ? functionalGroupType : null;
+		}
+
+		/// <summary>
+		/// Gets a dictionary mapping tags to functional groups in which they are uniquely used for a given SOP class.
+		/// </summary>
+		/// <remarks>
+		/// This method will return only common, non-modality-specific functional groups if the SOP class is not multi-frame class by the standard that uses functional groups defined by the standard.
+		/// </remarks>
+		/// <param name="sopClassUid">The SOP class UID.</param>
+		/// <returns></returns>
+		public static IDictionary<uint, Type> GetFunctionalGroupMap(string sopClassUid)
+		{
 			// normalize the SOP class UID
 			if (sopClassUid == null || !_functionalGroupUsage.ContainsKey(sopClassUid)) sopClassUid = string.Empty;
 
 			// get the tag map for the indicated SOP class - building the tag map now if necessary
-			Dictionary<uint, Type> tagMap;
+			IDictionary<uint, Type> tagMap;
 			if (!_functionalGroupTagMap.TryGetValue(sopClassUid, out tagMap))
 			{
 				_functionalGroupTagMap[sopClassUid] = tagMap = GetApplicableFunctionalGroups(sopClassUid)
@@ -124,12 +140,9 @@ namespace ClearCanvas.Dicom.Iod
 				                                               	.Where(f => !f.CanHaveMultipleItems) // if the sequence can have multiple items, then you can't have a 1-1 mapping with a frame
 				                                               	.SelectMany(f => f.NestedTags.Select(g => new KeyValuePair<uint, Type>(g, f.GetType())))
 				                                               	.GroupBy(k => k.Key).Select(g => g.First()) // group by tag, and prioritize the first functional group that defines it
-				                                               	.ToDictionary(k => k.Key, k => k.Value);
+				                                               	.ToDictionary(k => k.Key, k => k.Value).AsReadOnly();
 			}
-
-			// lookup the requested tag in the tag map, and return the type of the functional group that defines it - or NULL if it's not defined at all
-			Type functionalGroupType;
-			return tagMap.TryGetValue(dicomTag, out functionalGroupType) ? functionalGroupType : null;
+			return tagMap;
 		}
 
 		#endregion

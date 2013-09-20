@@ -1217,6 +1217,8 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 
 		private static IEnumerable<SopClass> GetImageSopClasses()
 		{
+			yield return SopClass.BreastTomosynthesisImageStorage;
+
 			yield return SopClass.ComputedRadiographyImageStorage;
 			yield return SopClass.CtImageStorage;
 
@@ -1231,9 +1233,11 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 
 			yield return SopClass.EnhancedCtImageStorage;
 			yield return SopClass.EnhancedMrImageStorage;
+			yield return SopClass.EnhancedPetImageStorage;
+
+			yield return SopClass.EnhancedUsVolumeStorage;
 
 			yield return SopClass.EnhancedXaImageStorage;
-
 			yield return SopClass.EnhancedXrfImageStorage;
 
 			yield return SopClass.MrImageStorage;
