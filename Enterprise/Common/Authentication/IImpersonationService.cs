@@ -31,7 +31,7 @@ namespace ClearCanvas.Enterprise.Common.Authentication
 	/// </summary>
 	[EnterpriseCoreService]
 	[ServiceContract]
-	[Authentication(false)] //todo: this needs to be true! but first we need a way for shredhosts to authenticate
+	[Authentication(true)] //todo: this needs to be true! but first we need a way for shredhosts to authenticate
 	public interface IImpersonationService
 	{
 		/// <summary>
