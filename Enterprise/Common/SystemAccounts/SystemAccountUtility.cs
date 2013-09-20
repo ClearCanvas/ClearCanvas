@@ -78,14 +78,17 @@ namespace ClearCanvas.Enterprise.Common.SystemAccounts
 			UserDetail accountDetail;
 			if (GetExistingAccount(accountName, out accountDetail))
 			{
-				StdOut(string.Format("Account '{0}' exists and will be updated.", accountName), cmdLine);
+				StdOut(string.Format("Account '{0}' exists.", accountName), cmdLine);
 				
 				var updateRequest = new UpdateUserRequest(accountDetail);
+
+				bool authGroupChange = false, passwordChange = false;
 				// update auth group if specified
 				if (!string.IsNullOrEmpty(cmdLine.AuthorityGroup))
 				{
 					var authGroup = GetAuthorityGroup(cmdLine.AuthorityGroup);
 					accountDetail.AuthorityGroups = new List<AuthorityGroupSummary> { authGroup };
+					authGroupChange = true;
 					StdOut(string.Format("Authority group will be set to '{0}'.", authGroup.Name), cmdLine);
 				}
 
@@ -94,19 +97,28 @@ namespace ClearCanvas.Enterprise.Common.SystemAccounts
 				if (changePassword)
 				{
 					updateRequest.Password = cmdLine.AccountPassword;
+					passwordChange = true;
 					StdOut(string.Format("Account password will be set to '{0}'.", updateRequest.Password), cmdLine);
 				}
 
-				StdOut(string.Format("Saving changes to Enterprise Server..."), cmdLine);
-
-				Platform.GetService<IUserAdminService>(
-					service => service.UpdateUser(updateRequest));
-
-				// update the local machine
-				if (changePassword)
+				if(passwordChange || authGroupChange)
 				{
-					StdOut(string.Format("Saving password locally..."), cmdLine);
-					LocalRegistryManager.SetAccountPassword(accountName, cmdLine.AccountPassword);
+					StdOut(string.Format("Saving changes to Enterprise Server..."), cmdLine);
+
+					Platform.GetService<IUserAdminService>(
+						service => service.UpdateUser(updateRequest));
+
+					// update the local machine
+					if (changePassword)
+					{
+						StdOut(string.Format("Saving password locally..."), cmdLine);
+						LocalRegistryManager.SetAccountPassword(accountName, cmdLine.AccountPassword);
+					}
+					StdOut(string.Format("All changes saved."), cmdLine);
+				}
+				else
+				{
+					StdOut(string.Format("No changes to save."), cmdLine);
 				}
 			}
 			else
@@ -114,7 +126,10 @@ namespace ClearCanvas.Enterprise.Common.SystemAccounts
 				StdOut(string.Format("Account '{0}' does not exist. It will be created.", accountName), cmdLine);
 				
 				if (string.IsNullOrEmpty(cmdLine.AccountPassword))
-					throw new CommandLineException("Password for the new account must be provided.");
+				{
+					// generate a password
+					cmdLine.AccountPassword = GeneratePassword();
+				}
 
 				var authGroup = GetAuthorityGroup(cmdLine.AuthorityGroup ?? BuiltInAuthorityGroups.SystemAccounts.Name);
 				var userDetail = new UserDetail
@@ -136,8 +151,9 @@ namespace ClearCanvas.Enterprise.Common.SystemAccounts
 				// save password locally
 				StdOut(string.Format("Saving password locally..."), cmdLine);
 				LocalRegistryManager.SetAccountPassword(accountName, cmdLine.AccountPassword);
+
+				StdOut(string.Format("All changes saved."), cmdLine);
 			}
-			StdOut(string.Format("All changes saved."), cmdLine);
 		}
 
 		private static bool GetExistingAccount(string account, out UserDetail detail)
@@ -175,6 +191,16 @@ namespace ClearCanvas.Enterprise.Common.SystemAccounts
 			{
 				Console.WriteLine(message);
 			}
+		}
+
+		private static string GeneratePassword()
+		{
+			var a = Guid.NewGuid().ToString("N");
+			var b = Guid.NewGuid().ToString("N");
+			var c = Guid.NewGuid().ToString("N");
+			var d = Guid.NewGuid().ToString("N");
+
+			return string.Join("", new[] { a, b, c, d });
 		}
 	}
 }

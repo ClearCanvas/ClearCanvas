@@ -36,8 +36,15 @@ namespace ClearCanvas.Enterprise.Authentication
 		/// <param name="settings"></param>
 		public static void CheckPasswordCandidate(string passwordCandidate, AuthenticationSettings settings)
 		{
+			// password cannot be empty
 			if (string.IsNullOrEmpty(passwordCandidate))
 				throw new RequestValidationException(settings.ValidPasswordMessage);
+
+			// if no regex specified, then any non-empty password is valid
+			if (string.IsNullOrEmpty(settings.ValidPasswordRegex))
+				return;
+
+			// otherwise match the regex
 			if (!Regex.Match(passwordCandidate, settings.ValidPasswordRegex).Success)
 				throw new RequestValidationException(settings.ValidPasswordMessage);
 		}
