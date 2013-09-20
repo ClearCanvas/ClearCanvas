@@ -142,6 +142,7 @@
     <Compile Include="Iod\CorrectedImage.cs" />
     <Compile Include="Iod\CountsSource.cs" />
     <Compile Include="Iod\DecayCorrection.cs" />
+    <Compile Include="Iod\FunctionalGroupDescriptor.cs" />
     <Compile Include="Iod\FunctionalGroupMacro.cs" />
     <Compile Include="Iod\FunctionalGroups\CardiacSynchronizationFunctionalGroup.cs" />
     <Compile Include="Iod\FunctionalGroups\ContrastBolusUsageFunctionalGroup.cs" />

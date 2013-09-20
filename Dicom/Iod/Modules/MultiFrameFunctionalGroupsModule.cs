@@ -388,14 +388,13 @@ namespace ClearCanvas.Dicom.Iod.Modules
 		/// This method automatically handles getting the correct functional group IOD class for the specified frame, regardless
 		/// whether the functional group exists in the Per-Frame Functional Groups Sequence, or the Shared Functional Groups Sequence.
 		/// </remarks>
-		/// <param name="functionalGroupType">The functional group type (derived class of <see cref="FunctionalGroupMacro"/>).</param>
+		/// <param name="functionalGroupDescriptor">The functional group type (derived class of <see cref="FunctionalGroupMacro"/>).</param>
 		/// <param name="dataSet">The DICOM data set of the composite image SOP instance.</param>
 		/// <param name="frameNumber">The DICOM frame number to be retrieved (1-based index).</param>
-		/// <returns>A new instance of <paramref name="functionalGroupType"/> wrapping the sequence item pertaining to the specified frame.</returns>
-		public static FunctionalGroupMacro GetFunctionalGroup(Type functionalGroupType, IDicomAttributeProvider dataSet, int frameNumber)
+		/// <returns>A new instance of <paramref name="functionalGroupDescriptor"/> wrapping the sequence item pertaining to the specified frame.</returns>
+		public static FunctionalGroupMacro GetFunctionalGroup(FunctionalGroupDescriptor functionalGroupDescriptor, IDicomAttributeProvider dataSet, int frameNumber)
 		{
-			Platform.CheckForNullReference(functionalGroupType, "functionalGroupType");
-			Platform.CheckTrue(typeof (FunctionalGroupMacro).IsAssignableFrom(functionalGroupType) && !functionalGroupType.IsAbstract, "functionalGroupType must be an instantiable derived class of FunctionalGroupMacro");
+			Platform.CheckForNullReference(functionalGroupDescriptor, "functionalGroupType");
 			Platform.CheckForNullReference(dataSet, "dataSet");
 			Platform.CheckPositive(frameNumber, "frameNumber");
 
@@ -403,8 +402,7 @@ namespace ClearCanvas.Dicom.Iod.Modules
 			if (dataSet.TryGetAttribute(DicomTags.PerFrameFunctionalGroupsSequence, out sqAttribute) && sqAttribute.Count >= frameNumber)
 			{
 				var sequenceItem = ((DicomAttributeSQ) sqAttribute)[frameNumber - 1];
-				var functionalGroup = (FunctionalGroupMacro) Activator.CreateInstance(functionalGroupType);
-				functionalGroup.DicomSequenceItem = sequenceItem;
+				var functionalGroup = functionalGroupDescriptor.Create(sequenceItem);
 				if (functionalGroup.HasValues())
 					return functionalGroup;
 			}
@@ -412,7 +410,7 @@ namespace ClearCanvas.Dicom.Iod.Modules
 			if (dataSet.TryGetAttribute(DicomTags.SharedFunctionalGroupsSequence, out sqAttribute) && sqAttribute.Count > 0)
 			{
 				var sequenceItem = ((DicomAttributeSQ) sqAttribute)[0];
-				var functionalGroup = (FunctionalGroupMacro) Activator.CreateInstance(functionalGroupType);
+				var functionalGroup = functionalGroupDescriptor.Create(sequenceItem);
 				functionalGroup.DicomSequenceItem = sequenceItem;
 				if (functionalGroup.HasValues())
 					return functionalGroup;
@@ -429,7 +427,7 @@ namespace ClearCanvas.Dicom.Iod.Modules
 			DicomAttribute attribute;
 			var sopClassUid = dataSet.TryGetAttribute(DicomTags.SopClassUid, out attribute) ? attribute.ToString() : string.Empty;
 
-			var functionalGroupType = FunctionalGroupMacro.GetFunctionalGroupByTag(sopClassUid, dicomTag);
+			var functionalGroupType = FunctionalGroupDescriptor.GetFunctionalGroupByTag(sopClassUid, dicomTag);
 			if (functionalGroupType != null)
 			{
 				var item = GetFunctionalGroup(functionalGroupType, dataSet, frameNumber).SingleItem;
@@ -449,7 +447,7 @@ namespace ClearCanvas.Dicom.Iod.Modules
 			DicomAttribute attribute;
 			var sopClassUid = dataSet.TryGetAttribute(DicomTags.SopClassUid, out attribute) ? attribute.ToString() : string.Empty;
 
-			var functionalGroupType = FunctionalGroupMacro.GetFunctionalGroupByTag(sopClassUid, dicomTag.TagValue);
+			var functionalGroupType = FunctionalGroupDescriptor.GetFunctionalGroupByTag(sopClassUid, dicomTag.TagValue);
 			if (functionalGroupType != null)
 			{
 				var item = GetFunctionalGroup(functionalGroupType, dataSet, frameNumber).SingleItem;

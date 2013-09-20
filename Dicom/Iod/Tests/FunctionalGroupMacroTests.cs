@@ -89,7 +89,7 @@ namespace ClearCanvas.Dicom.Iod.Tests
 			{
 				const string msg = "SOP Class: {0}";
 				Console.WriteLine(msg, SopClass.GetSopClass(uid).Name);
-				ListTagsByParentSequence(FunctionalGroupMacro.GetApplicableFunctionalGroups(uid).Select(Activator.CreateInstance).Cast<FunctionalGroupMacro>(), true);
+				ListTagsByParentSequence(FunctionalGroupDescriptor.GetApplicableFunctionalGroups(uid).Select(f => f.Create()), true);
 
 				Console.WriteLine(new string('=', 32));
 				Console.WriteLine();
@@ -198,18 +198,19 @@ namespace ClearCanvas.Dicom.Iod.Tests
 			                   	};
 
 			// asserts that a set exists for the empty string, and that it's only the 'common' functional groups defined in PS 3.3 C.7.6.16
-			Assert.AreEqual(commonGroups.OrderBy(t => t.Name).ToList(), FunctionalGroupMacro.GetApplicableFunctionalGroups(string.Empty).OrderBy(t => t.Name).ToList(),
+			Assert.AreEqual(commonGroups.Select(t => new FunctionalGroupDescriptor(t)).OrderBy(t => t.Name).ToList(),
+			                FunctionalGroupDescriptor.GetApplicableFunctionalGroups(string.Empty).OrderBy(t => t.Name).ToList(),
 			                "A functional group set should exist that consists only of common (non-modality specific) functional groups");
 
 			// asserts that GetApplicableFunctionalGroups returns common functional groups for unrecognized SOP classes
-			Assert.AreEqual(FunctionalGroupMacro.GetApplicableFunctionalGroups(string.Empty).OrderBy(t => t.Name).ToList(),
-			                FunctionalGroupMacro.GetApplicableFunctionalGroups("1.2.3.4").OrderBy(t => t.Name).ToList(),
+			Assert.AreEqual(FunctionalGroupDescriptor.GetApplicableFunctionalGroups(string.Empty).OrderBy(t => t.Name).ToList(),
+			                FunctionalGroupDescriptor.GetApplicableFunctionalGroups("1.2.3.4").OrderBy(t => t.Name).ToList(),
 			                "Unrecognized SOP classes should only return the common functional groups");
 
 			// asserts that GetApplicableFunctionalGroups returns distinct functional groups
 			foreach (var uid in _multiframeSopClassUids)
 			{
-				var results = FunctionalGroupMacro.GetApplicableFunctionalGroups(uid).ToList();
+				var results = FunctionalGroupDescriptor.GetApplicableFunctionalGroups(uid).ToList();
 				Assert.IsTrue(results.Count == results.Distinct().Count(), "Non unique functional groups defined for {0}", SopClass.GetSopClass(uid).Name);
 			}
 		}
@@ -220,8 +221,8 @@ namespace ClearCanvas.Dicom.Iod.Tests
 			foreach (var uid in _multiframeSopClassUids)
 			{
 				var sopClass = SopClass.GetSopClass(uid).Name;
-				var functionalGroups = FunctionalGroupMacro.GetApplicableFunctionalGroups(uid).ToList();
-				var tagGroups = functionalGroups.Select(Activator.CreateInstance).Cast<FunctionalGroupMacro>()
+				var functionalGroups = FunctionalGroupDescriptor.GetApplicableFunctionalGroups(uid).ToList();
+				var tagGroups = functionalGroups.Select(f => f.Create())
 					.SelectMany(f => f.NestedTags.Select(t => new {TagValue = t, FunctionalGroup = f}))
 					.GroupBy(u => u.TagValue).OrderBy(u => u.Key).ToList();
 
@@ -230,7 +231,7 @@ namespace ClearCanvas.Dicom.Iod.Tests
 					var dcmTag = DicomTagDictionary.GetDicomTag(group.Key);
 
 					// asserts that any tag defined in 'singleton' functional groups (those whose sequence can have at most 1 item) should have at least some mapping
-					var fgType = FunctionalGroupMacro.GetFunctionalGroupByTag(uid, group.Key);
+					var fgType = FunctionalGroupDescriptor.GetFunctionalGroupByTag(uid, group.Key);
 					if (fgType == null)
 					{
 						foreach (var entry in group)
@@ -251,7 +252,7 @@ namespace ClearCanvas.Dicom.Iod.Tests
 								case DicomTags.TableHorizontalRotationAngle:
 								case DicomTags.TableHeadTiltAngle:
 								case DicomTags.TableCradleTiltAngle:
-									Assert.AreEqual(typeof (XRayTablePositionFunctionalGroup), fgType, wrongMapMsg, sopClass, dcmTag);
+									Assert.AreEqual(new FunctionalGroupDescriptor(typeof (XRayTablePositionFunctionalGroup)), fgType, wrongMapMsg, sopClass, dcmTag);
 									break;
 								default:
 									Assert.Fail("SOP Class {0} shouldn't have an ambiguous mapping for tag {1} - if new tags were added, please explicitly update the expected mapping in this unit test", sopClass, dcmTag);
