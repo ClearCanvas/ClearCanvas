@@ -86,7 +86,23 @@ namespace ClearCanvas.ImageServer.Common.ExternalRequest
             : base(c)
         {    
         }
-    }
+
+		[DicomField(DicomTags.Manufacturer, CreateEmptyElement = true, SetNullValueIfEmpty = true)]
+		[DataMember(IsRequired = false)]
+		public string Manufacturer { get; set; }
+
+		[DicomField(DicomTags.ManufacturersModelName, CreateEmptyElement = true, SetNullValueIfEmpty = true)]
+		[DataMember(IsRequired = false)]
+		public string ManufacturersModelName { get; set; }
+
+		[DicomField(DicomTags.StationName, CreateEmptyElement = true, SetNullValueIfEmpty = true)]
+		[DataMember(IsRequired = false)]
+		public string InstitutionName { get; set; }
+
+		[DicomField(DicomTags.StationName, CreateEmptyElement = true, SetNullValueIfEmpty = true)]
+		[DataMember(IsRequired = false)]
+		public string StationName { get; set; }
+	}
 
     [DataContract(Namespace = ImageServerExternalRequestNamespace.Value)]
     [ImageServerExternalRequestType("EBDB2829-8233-4F71-961E-24F2259BDE08")]
