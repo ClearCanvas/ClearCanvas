@@ -62,10 +62,30 @@ namespace ClearCanvas.Dicom.Utilities.Xml.Study
 			get { return SopInstances.First().GetAttribute(DicomTags.StationName).ToString(); }
     	}
 
-    	public string InstitutionName
-    	{
+		public string Manufacturer
+		{
+			get { return SopInstances.First().GetAttribute(DicomTags.Manufacturer).ToString(); }
+		}
+
+		public string ManufacturersModelName
+		{
+			get { return SopInstances.First().GetAttribute(DicomTags.ManufacturersModelName).ToString(); }
+		}
+
+		public string InstitutionName
+		{
 			get { return SopInstances.First().GetAttribute(DicomTags.InstitutionName).ToString(); }
-    	}
+		}
+
+		public string InstitutionAddress
+		{
+			get { return SopInstances.First().GetAttribute(DicomTags.InstitutionAddress).ToString(); }
+		}
+
+		public string InstitutionalDepartmentName
+		{
+			get { return SopInstances.First().GetAttribute(DicomTags.InstitutionalDepartmentName).ToString(); }
+		}
 
     	#endregion
 

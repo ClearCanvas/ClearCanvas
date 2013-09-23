@@ -200,7 +200,12 @@ namespace ClearCanvas.Dicom.Iod
 		IList<ISopInstance> SopInstances { get; }
 
 		string StationName { get; }
+		string Manufacturer { get; }
+		string ManufacturersModelName { get; }
+
 		string InstitutionName { get; }
+		string InstitutionAddress { get; }
+		string InstitutionalDepartmentName { get; }
 	}
 
 	/// <summary>
