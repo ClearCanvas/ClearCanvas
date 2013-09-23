@@ -15,10 +15,10 @@
       <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="ValidPasswordRegex" Description="Regular expression used to validate new password candidates" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">^\w{8,16}$</Value>
+      <Value Profile="(Default)">^.{8,1000}$</Value>
     </Setting>
     <Setting Name="ValidPasswordMessage" Description="User friendly description of a valid password" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">Password must contain only letters and numbers, and be 8-16 characters long</Value>
+      <Value Profile="(Default)">Password must be at least 8 characters long.</Value>
     </Setting>
     <Setting Name="ApplicationWhiteList" Description="Comma delimited list of valid application names.  If blank, all application names are valid." Type="System.String" Scope="Application">
       <Value Profile="(Default)" />

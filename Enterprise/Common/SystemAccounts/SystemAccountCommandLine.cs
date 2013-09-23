@@ -32,6 +32,7 @@ namespace ClearCanvas.Enterprise.Common.SystemAccounts
 		{
 			Password = "clearcanvas";
 			UserName = "sa";
+			Verbose = true;
 		}
 
 		/// <summary>
@@ -64,5 +65,11 @@ namespace ClearCanvas.Enterprise.Common.SystemAccounts
 		/// </summary>
 		[CommandLineParameter("auth", "Specifies the name of the authority group to which the account should be assigned. If not specified, new accounts will be assigned to the 'Service Accounts' group.")]
 		public string AuthorityGroup { get; set; }
+
+		/// <summary>
+		/// Specifies whether the program should emit informational messages to stdout.
+		/// </summary>
+		[CommandLineParameter("verbose", "v", "Specifies whether the program should emit informational messages to stdout. Default is true.")]
+		public bool Verbose { get; set; }
 	}
 }
