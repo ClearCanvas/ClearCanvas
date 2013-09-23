@@ -130,7 +130,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 			else
 			{
 				// projection images using a calibrated value in Pixel Spacing (0028,0030)
-				var calibrationMacro = new BasicPixelSpacingCalibrationMacro(_frame.ParentImageSop.DataSource);
+				var calibrationMacro = new BasicPixelSpacingCalibrationMacro(_frame);
 				SetValues(_frame.PixelSpacing, ConvertCalibrationType(calibrationMacro.PixelSpacingCalibrationType), calibrationMacro.PixelSpacingCalibrationDescription);
 			}
 		}

@@ -210,7 +210,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 				var pixelPaddingValue = ComputePixelPaddingValue(_frames, normalizedSlope, normalizedIntercept);
 
 				// Construct a model SOP data source based on the first frame's DICOM header
-				var header = new VolumeHeaderData(_frames.Select(f => (IDicomAttributeProvider) f.Sop.DataSource).ToList(), VolumeSize, VoxelSpacing, VolumePositionPatient, VolumeOrientationPatient, 16, 16, false, pixelPaddingValue, normalizedSlope, normalizedIntercept);
+				var header = new VolumeHeaderData(_frames.Select(f => (IDicomAttributeProvider) f.Frame).ToList(), VolumeSize, VoxelSpacing, VolumePositionPatient, VolumeOrientationPatient, 16, 16, false, pixelPaddingValue, normalizedSlope, normalizedIntercept);
 
 				// determine how the normalized modality LUT affects VOI windows and update the header
 				VoiWindow.SetWindows(ComputeAggregateNormalizedVoiWindows(_frames, normalizedSlope, normalizedIntercept), header);
@@ -462,7 +462,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 
 			private static IEnumerable<VoiWindow> ComputeNormalizedVoiWindows(IImageSopProvider frame, double normalizedSlope, double normalizedIntercept)
 			{
-				var normalizedWindows = new List<VoiWindow>(VoiWindow.GetWindows(frame.Sop.DataSource));
+				var normalizedWindows = new List<VoiWindow>(VoiWindow.GetWindows(frame.Frame));
 				if (frame.ImageSop.Modality == @"PT" && frame.Frame.IsSubnormalRescale)
 				{
 					// for PET images with subnormal rescale, the VOI window will always be applied directly to the original stored pixel values
@@ -505,11 +505,12 @@ namespace ClearCanvas.ImageViewer.Volumes
 				var pixelPaddingValue = isMonochrome1 ? DicomPixelData.GetMaxPixelValue(bitsStored, isSigned) : DicomPixelData.GetMinPixelValue(bitsStored, isSigned);
 
 				DicomAttribute attribute;
-				if (frames[0].Sop.DataSource.TryGetAttribute(DicomTags.PixelPaddingValue, out attribute))
+				var frameAttributeProvider = (IDicomAttributeProvider) frames[0].Frame;
+				if (frameAttributeProvider.TryGetAttribute(DicomTags.PixelPaddingValue, out attribute))
 					pixelPaddingValue = attribute.GetInt32(0, pixelPaddingValue);
-				else if (frames[0].Sop.DataSource.TryGetAttribute(DicomTags.SmallestPixelValueInSeries, out attribute))
+				else if (frameAttributeProvider.TryGetAttribute(DicomTags.SmallestPixelValueInSeries, out attribute))
 					pixelPaddingValue = attribute.GetInt32(0, pixelPaddingValue);
-				else if (frames[0].Sop.DataSource.TryGetAttribute(DicomTags.SmallestImagePixelValue, out attribute))
+				else if (frameAttributeProvider.TryGetAttribute(DicomTags.SmallestImagePixelValue, out attribute))
 					pixelPaddingValue = attribute.GetInt32(0, pixelPaddingValue);
 
 				// these next few lines may look positively stupid, but they are here for a good reason (See Ticket #7026)

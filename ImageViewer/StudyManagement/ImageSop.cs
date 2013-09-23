@@ -444,6 +444,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		/// <summary>
 		/// Gets the <see cref="VoiDataLut"/>s from the image header.
 		/// </summary>
+		[Obsolete("This method has been deprecated and will be removed in the future. Use equivalent property on Frame class instead.")]
 		public virtual IList<VoiDataLut> VoiDataLuts
 		{
 			get { return base.GetVoiDataLuts(); }

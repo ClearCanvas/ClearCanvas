@@ -65,7 +65,8 @@ namespace ClearCanvas.ImageViewer.AdvancedImaging.Fusion
 
 			if (frames.Count > 0)
 			{
-				_voiWindows = new List<VoiWindow>(VoiWindow.GetWindows(frames[0].Sop.DataSource)).AsReadOnly();
+				// TODO: should this VOI window be based on volume header's normalized VOI windows?
+				_voiWindows = new List<VoiWindow>(VoiWindow.GetWindows(frames[0].Frame)).AsReadOnly();
 				SourceSeriesInstanceUid = frames[0].Frame.SeriesInstanceUid;
 				FrameOfReferenceUid = frames[0].Frame.FrameOfReferenceUid;
 				Modality = frames[0].Sop.Modality;

@@ -189,9 +189,7 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 
 		public static GeometricShuttersGraphic CreateGeometricShuttersGraphic(Frame frame)
 		{
-			//TODO: you can actually have shutters defined per-frame, but right now we don't support per-frame data.
-
-			DisplayShutterMacroIod shutterIod = new DisplayShutterMacroIod(frame.ParentImageSop.DataSource);
+			DisplayShutterMacroIod shutterIod = new DisplayShutterMacroIod(frame);
 			return CreateGeometricShuttersGraphic(shutterIod, frame.Rows, frame.Columns);
 		}
 

@@ -476,7 +476,7 @@ namespace ClearCanvas.ImageViewer
 			{
 				if (sop.IsImage)
 				{
-					DicomAttribute echoAttribute = sop.DataSource[DicomTags.EchoNumbers];
+					DicomAttribute echoAttribute = sop[DicomTags.EchoNumbers];
 					if (!echoAttribute.IsEmpty)
 					{
 						int echoNumber = echoAttribute.GetInt32(0, 0);
