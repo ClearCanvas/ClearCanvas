@@ -775,6 +775,7 @@
       <DependentUpon>SR.resx</DependentUpon>
     </Compile>
     <Compile Include="StudyManagement\ImageSop.cs" />
+    <Compile Include="StudyManagement\ImageSopFunctionalGroups.cs" />
     <Compile Include="StudyManagement\IStudyFinder.cs" />
     <Compile Include="StudyManagement\IStudyLoader.cs" />
     <Compile Include="StudyManagement\SopCollection.cs" />

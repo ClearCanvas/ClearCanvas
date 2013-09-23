@@ -430,7 +430,8 @@ namespace ClearCanvas.Dicom.Iod.Modules
 			var functionalGroupType = FunctionalGroupDescriptor.GetFunctionalGroupByTag(sopClassUid, dicomTag);
 			if (functionalGroupType != null)
 			{
-				var item = GetFunctionalGroup(functionalGroupType, dataSet, frameNumber).SingleItem;
+				var functionalGroup = GetFunctionalGroup(functionalGroupType, dataSet, frameNumber);
+				var item = functionalGroup != null ? functionalGroup.SingleItem : null;
 				if (item != null) return item.TryGetAttribute(dicomTag, out dicomAttribute);
 			}
 
@@ -450,7 +451,8 @@ namespace ClearCanvas.Dicom.Iod.Modules
 			var functionalGroupType = FunctionalGroupDescriptor.GetFunctionalGroupByTag(sopClassUid, dicomTag.TagValue);
 			if (functionalGroupType != null)
 			{
-				var item = GetFunctionalGroup(functionalGroupType, dataSet, frameNumber).SingleItem;
+				var functionalGroup = GetFunctionalGroup(functionalGroupType, dataSet, frameNumber);
+				var item = functionalGroup != null ? functionalGroup.SingleItem : null;
 				if (item != null) return item.TryGetAttribute(dicomTag, out dicomAttribute);
 			}
 

@@ -1110,9 +1110,9 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		/// </remarks>
 		/// <param name="tag">The DICOM tag to retrieve.</param>
 		/// <exception cref="ArgumentOutOfRangeException">Thrown if the specified DICOM tag is not within the valid range for either the meta info or the dataset.</exception>
-		public DicomAttribute this[DicomTag tag]
+		public virtual DicomAttribute this[DicomTag tag]
 		{
-			get { return this[tag.TagValue]; }
+			get { return DataSource[tag]; }
 		}
 
 		/// <summary>
@@ -1126,7 +1126,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		/// <exception cref="ArgumentOutOfRangeException">Thrown if the specified DICOM tag is not within the valid range for either the meta info or the dataset.</exception>
 		public virtual DicomAttribute this[uint tag]
 		{
-			get { return this.DataSource[tag]; }
+			get { return DataSource[tag]; }
 		}
 
 		private static void GetUint16FromAttribute(DicomAttribute attribute, uint position, out ushort value)
