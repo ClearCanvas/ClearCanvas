@@ -55,9 +55,9 @@ namespace ClearCanvas.ImageViewer.Volumes
 			#region Private fields
 
 			private const float _halfPi = (float) Math.PI/2;
-			private const float _gantryTiltTolerance = 0.1f; // allowed tolerance for gantry tilt (in radians)
+			private const float _gantryTiltTolerance = 0.1f; // allowed tolerance for gantry tilt (in radians) = ~5.7 degrees
 			private const float _orientationTolerance = 0.01f; // allowed tolerance for image orientation (direction cosine values)
-			private const float _minimumSliceSpacing = 0.01f; // minimum spacing required between slices (in mm)
+			private const float _minimumSliceSpacing = 0.001f; // minimum spacing required between slices (in mm)
 			private const float _sliceSpacingTolerance = 0.01f; // allowed tolerance for slice spacing (in mm)
 
 			private readonly List<IFrameReference> _frames;
@@ -585,54 +585,42 @@ namespace ClearCanvas.ImageViewer.Volumes
 				}
 
 				// ensure all frames are of the same supported format
-				foreach (IFrameReference frame in _frames)
-				{
-					if (frame.Frame.BitsAllocated != 16)
-						throw new UnsupportedPixelFormatSourceImagesException();
-				}
+				if (_frames.Any(frame => frame.Frame.BitsAllocated != 16))
+					throw new UnsupportedPixelFormatSourceImagesException();
 
 				// ensure all frames have the same orientation
 				ImageOrientationPatient orient = _frames[0].Frame.ImageOrientationPatient;
 				foreach (IFrameReference frame in _frames)
 				{
 					if (frame.Frame.ImageOrientationPatient.IsNull)
-					{
-						if (frame.ImageSop.NumberOfFrames > 1)
-							throw new UnsupportedMultiFrameSourceImagesException(new NullImageOrientationException());
 						throw new NullImageOrientationException();
-					}
 					if (!frame.Frame.ImageOrientationPatient.EqualsWithinTolerance(orient, _orientationTolerance))
 						throw new MultipleImageOrientationsException();
 					if (frame.Frame.PixelSpacing.IsNull)
 						throw new UncalibratedFramesException();
-					if (Math.Abs(frame.Frame.PixelSpacing.AspectRatio - 1) > _minimumSliceSpacing)
+					if (Math.Abs(frame.Frame.PixelSpacing.AspectRatio - 1) > _sliceSpacingTolerance)
 						throw new AnisotropicPixelAspectRatioException();
 				}
 
 				// ensure all frames are sorted by slice location
 				SliceLocationComparer sliceLocationComparer = new SliceLocationComparer();
-				_frames.Sort(delegate(IFrameReference x, IFrameReference y) { return sliceLocationComparer.Compare(x.Frame, y.Frame); });
+				_frames.Sort((x, y) => sliceLocationComparer.Compare(x.Frame, y.Frame));
 
-				// ensure all frames are equally spaced
-				float? nominalSpacing = null;
+				// ensure all frames are evenly spaced
+				var spacing = new float[_frames.Count - 1];
 				for (int i = 1; i < _frames.Count; i++)
 				{
 					float currentSpacing = CalcSpaceBetweenPlanes(_frames[i].Frame, _frames[i - 1].Frame);
 					if (currentSpacing < _minimumSliceSpacing)
-					{
-						if (_frames[i].ImageSop.NumberOfFrames > 1)
-							throw new UnsupportedMultiFrameSourceImagesException(new UnevenlySpacedFramesException());
 						throw new UnevenlySpacedFramesException();
-					}
 
-					if (!nominalSpacing.HasValue)
-						nominalSpacing = currentSpacing;
-					if (!FloatComparer.AreEqual(currentSpacing, nominalSpacing.Value, _sliceSpacingTolerance))
-						throw new UnevenlySpacedFramesException();
+					spacing[i - 1] = currentSpacing;
 				}
+				if (spacing.Max() - spacing.Min() > 2*_sliceSpacingTolerance)
+					throw new UnevenlySpacedFramesException();
 
 				// ensure frames are not tilted about unsupposed axis combinations (the gantry correction algorithm only supports rotations about X)
-				if (!IsSupportedGantryTilt(_frames)) // suffices to check first one... they're all co-planar now!!
+				if (!IsSupportedGantryTilt(_frames))
 					throw new UnsupportedGantryTiltAxisException();
 			}
 
@@ -642,6 +630,21 @@ namespace ClearCanvas.ImageViewer.Volumes
 
 			private static bool IsSupportedGantryTilt(IList<IFrameReference> frames)
 			{
+				// N.B. Definition of Tilt and Slew from DICOM PS 3.3 C.8.22.5.2 description of the tags Gantry/Detector Tilt (0018,1120) and Gantry/Detector Slew (0018,1121)
+				// Nominal angle of tilt... Zero degrees means the gantry is not tilted, negative degrees are when the top of the gantry is tilted away from where the table enters the gantry.
+				// Nominal angle of slew... Zero degrees means the gantry is not slewed. Positive slew is moving the gantry on the patient’s left toward the patient’s superior, when the patient is supine.
+				//
+				//                          Feed Direction: >>>
+				//           View from Side                     View from Top
+				//
+				//              ANTERIOR                              LEFT
+				//       -Tilt \         / +Tilt            -Slew \         / +Slew
+				//              \       /                          \       /
+				//     FEET }--------------}O HEAD       FEET }-----------------}O HEAD
+				//                \   /                              \   /
+				//                 \ /                                \ /
+				//              POSTERIOR                            RIGHT
+
 				try
 				{
 					// neither of these should return null since we already checked for image orientation and position (patient)

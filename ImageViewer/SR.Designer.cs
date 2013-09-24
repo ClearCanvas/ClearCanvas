@@ -1659,15 +1659,6 @@ namespace ClearCanvas.ImageViewer {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The selected multiframe images are of an unsupported type..
-        /// </summary>
-        public static string MessageVolumeSourceMultiFrameImagesAreNotSupported {
-            get {
-                return ResourceManager.GetString("MessageVolumeSourceMultiFrameImagesAreNotSupported", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to MPR only supports 16-bit greyscale images..
         /// </summary>
         public static string MessageVolumeSourceMustBe16BitGreyscale {

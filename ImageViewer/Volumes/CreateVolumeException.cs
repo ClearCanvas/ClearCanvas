@@ -66,19 +66,6 @@ namespace ClearCanvas.ImageViewer.Volumes
 	}
 
 	[Serializable]
-	public class UnsupportedMultiFrameSourceImagesException : CreateVolumeException
-	{
-		public UnsupportedMultiFrameSourceImagesException()
-			: this(null) {}
-
-		public UnsupportedMultiFrameSourceImagesException(Exception innerException)
-			: base("Multiframe source images are currently not supported.", innerException) {}
-
-		protected UnsupportedMultiFrameSourceImagesException(SerializationInfo info, StreamingContext context)
-			: base(info, context) {}
-	}
-
-	[Serializable]
 	public class InsufficientFramesException : CreateVolumeException
 	{
 		public InsufficientFramesException()
@@ -201,8 +188,6 @@ namespace ClearCanvas.ImageViewer.Volumes
 				message = SR.MessageVolumeSourceAreNotSupported;
 			else if (ex is UnsupportedPixelFormatSourceImagesException)
 				message = SR.MessageVolumeSourceMustBe16BitGreyscale;
-			else if (ex is UnsupportedMultiFrameSourceImagesException)
-				message = SR.MessageVolumeSourceMultiFrameImagesAreNotSupported;
 			else if (ex is MultipleFramesOfReferenceException)
 				message = SR.MessageVolumeSourceMustBeSingleFrameOfReference;
 			else if (ex is MultipleImageOrientationsException)
