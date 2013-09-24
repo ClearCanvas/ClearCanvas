@@ -34,12 +34,12 @@ namespace ClearCanvas.Dicom.Iod.Sequences
 	public class MaskSubtractionSequenceIod : SequenceIodBase
 	{
 		/// <summary>
-		/// Initializes a new instance of the <see cref="MaskModuleIod"/> class.
+		/// Initializes a new instance of the <see cref="MaskSubtractionSequenceIod"/> class.
 		/// </summary>	
 		public MaskSubtractionSequenceIod() {}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="MaskModuleIod"/> class.
+		/// Initializes a new instance of the <see cref="MaskSubtractionSequenceIod"/> class.
 		/// </summary>
 		public MaskSubtractionSequenceIod(DicomSequenceItem dicomSequenceItem) : base(dicomSequenceItem) {}
 

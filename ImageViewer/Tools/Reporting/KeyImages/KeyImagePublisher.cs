@@ -107,7 +107,7 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 			var imageSopProvider = image as IImageSopProvider;
 			if (imageSopProvider == null)
 				return false;
-			return imageSopProvider.ImageSop.DataSource.IsStored && DicomSoftcopyPresentationState.IsSupported(image);
+			return imageSopProvider.ImageSop.IsStored && DicomSoftcopyPresentationState.IsSupported(image);
 		}
 
 		private void CreateKeyObjectDocuments()

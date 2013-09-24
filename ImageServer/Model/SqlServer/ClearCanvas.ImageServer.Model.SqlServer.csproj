@@ -171,7 +171,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RunSqlScriptApplication.cs" />
     <Compile Include="UpgradeScripts\UpgradeFrom_10_0_11128_314.cs" />
-    <Compile Include="UpgradeScripts\UpgradeFrom_10_1_00000_000.cs" />
+    <Compile Include="UpgradeScripts\UpgradeFrom_10_1_13120_656.cs" />
     <Compile Include="UpgradeScripts\UpgradeFrom_4_0_5014_9549.cs" />
     <Compile Include="UpgradeScripts\UpgradeFrom_1_3_8146_27242.cs" />
     <Compile Include="UpgradeScripts\UpgradeFrom_1_4_9277_29698.cs" />
@@ -237,7 +237,7 @@
     <EmbeddedResource Include="UpgradeScripts\UpgradeFrom_1_3_8146_27241.sql" />
     <EmbeddedResource Include="UpgradeScripts\UpgradeFrom_6_1_7081_10268.sql" />
     <EmbeddedResource Include="UpgradeScripts\UpgradeFrom_10_0_11128_314.sql" />
-    <EmbeddedResource Include="UpgradeScripts\UpgradeFrom_10_1_00000_000.sql" />
+    <EmbeddedResource Include="UpgradeScripts\UpgradeFrom_10_1_13120_656.sql" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

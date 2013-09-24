@@ -149,7 +149,7 @@ namespace ClearCanvas.ImageViewer.Imaging
 
 		public IList<VoiWindow> ImageVoiLinearLuts
 		{
-			get { return new List<VoiWindow>(VoiWindow.GetWindows(_image.ImageSop.DataSource)).AsReadOnly(); }
+			get { return new List<VoiWindow>(VoiWindow.GetWindows(_image.Frame)).AsReadOnly(); }
 		}
 
 		public IList<VoiDataLut> ImageVoiDataLuts

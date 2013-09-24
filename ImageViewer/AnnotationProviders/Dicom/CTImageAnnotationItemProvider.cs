@@ -32,13 +32,13 @@ using ClearCanvas.ImageViewer.StudyManagement;
 
 namespace ClearCanvas.ImageViewer.AnnotationProviders.Dicom
 {
-	[ExtensionOf(typeof(AnnotationItemProviderExtensionPoint))]
+	[ExtensionOf(typeof (AnnotationItemProviderExtensionPoint))]
 	public class CTImageAnnotationItemProvider : AnnotationItemProvider
 	{
 		private readonly List<IAnnotationItem> _annotationItems;
 
 		public CTImageAnnotationItemProvider()
-			: base("AnnotationItemProviders.Dicom.CTImage", new AnnotationResourceResolver(typeof(CTImageAnnotationItemProvider).Assembly))
+			: base("AnnotationItemProviders.Dicom.CTImage", new AnnotationResourceResolver(typeof (CTImageAnnotationItemProvider).Assembly))
 		{
 			_annotationItems = new List<IAnnotationItem>();
 
@@ -47,130 +47,125 @@ namespace ClearCanvas.ImageViewer.AnnotationProviders.Dicom
 			_annotationItems.Add
 				(
 					new DicomAnnotationItem<string>
-					(
+						(
 						"Dicom.CTImage.KVP",
 						resolver,
 						delegate(Frame frame)
-						{
-							double value;
-							bool tagExists = frame.ParentImageSop[DicomTags.Kvp].TryGetFloat64(0, out value);
-							if (tagExists)
-								return String.Format(SR.FormatKilovolts, value);
+							{
+								double value;
+								bool tagExists = frame[DicomTags.Kvp].TryGetFloat64(0, out value);
+								if (tagExists)
+									return String.Format(SR.FormatKilovolts, value);
 
-							return "";
-						},
+								return "";
+							},
 						DicomDataFormatHelper.RawStringFormat
-					)
+						)
 				);
 
 			_annotationItems.Add
 				(
 					new DicomAnnotationItem<string>
-					(
+						(
 						"Dicom.CTImage.XRayTubeCurrent",
 						resolver,
 						f => DXImageAnnotationItemProvider.GetXRayTubeCurrentInMa(f, SR.FormatMilliamps),
 						DicomDataFormatHelper.RawStringFormat
-					)
+						)
 				);
 
 			_annotationItems.Add
 				(
 					new DicomAnnotationItem<string>
-					(
+						(
 						"Dicom.CTImage.GantryDetectorTilt",
 						resolver,
 						delegate(Frame frame)
-						{
-							double value;
-							bool tagExists = frame.ParentImageSop[DicomTags.GantryDetectorTilt].TryGetFloat64(0, out value);
-							if (tagExists)
-								return String.Format(SR.FormatDegrees, value);
+							{
+								double value;
+								bool tagExists = frame[DicomTags.GantryDetectorTilt].TryGetFloat64(0, out value);
+								if (tagExists)
+									return String.Format(SR.FormatDegrees, value);
 
-							return "";
-						},
+								return "";
+							},
 						DicomDataFormatHelper.RawStringFormat
-					)
+						)
 				);
 
 			_annotationItems.Add
 				(
 					new DicomAnnotationItem<string>
-					(
+						(
 						"Dicom.CTImage.Exposure",
 						resolver,
 						f => DXImageAnnotationItemProvider.GetExposureInMas(f, SR.FormatMilliampSeconds),
 						DicomDataFormatHelper.RawStringFormat
-					)
+						)
 				);
 
 			_annotationItems.Add
 				(
 					new DicomAnnotationItem<string>
-					(
+						(
 						"Dicom.CTImage.ExposureTime",
 						resolver,
 						f => DXImageAnnotationItemProvider.GetExposureTimeInMs(f, SR.FormatMilliseconds),
 						DicomDataFormatHelper.RawStringFormat
-					)
+						)
 				);
 
 			_annotationItems.Add
 				(
 					new DicomAnnotationItem<string>
-					(
+						(
 						"Dicom.CTImage.ConvolutionKernel",
 						resolver,
-						delegate(Frame frame)
-						{
-							string value;
-							value = frame.ParentImageSop[DicomTags.ConvolutionKernel].GetString(0, null);
-							return value;
-						},
+						frame => frame[DicomTags.ConvolutionKernel].GetString(0, null),
 						DicomDataFormatHelper.RawStringFormat
-					)
+						)
 				);
 
 			_annotationItems.Add
 				(
 					new DicomAnnotationItem<string>
-					(
+						(
 						"Dicom.CTImage.TableSpeed",
 						resolver,
 						GetTableSpeed,
 						DicomDataFormatHelper.RawStringFormat
-					)
+						)
 				);
 
 			_annotationItems.Add
 				(
 					new DicomAnnotationItem<string>
-					(
+						(
 						"Dicom.CTImage.TablePosition",
 						resolver,
 						GetTablePosition,
 						DicomDataFormatHelper.RawStringFormat
-					)
+						)
 				);
 
 			_annotationItems.Add
 				(
 					new DicomAnnotationItem<string>
-					(
+						(
 						"Dicom.CTImage.Composite.TablePositionSpeed",
 						resolver,
 						delegate(Frame frame)
-						{
-							var position = GetTablePosition(frame);
-							var speed = GetTableSpeed(frame);
-							if (string.IsNullOrEmpty(position))
-								return speed;
-							if (string.IsNullOrEmpty(speed))
-								return position;
-							return string.Format(SR.FormatTablePositionSpeed, position, speed);
-						},
+							{
+								var position = GetTablePosition(frame);
+								var speed = GetTableSpeed(frame);
+								if (string.IsNullOrEmpty(position))
+									return speed;
+								if (string.IsNullOrEmpty(speed))
+									return position;
+								return string.Format(SR.FormatTablePositionSpeed, position, speed);
+							},
 						DicomDataFormatHelper.RawStringFormat
-					)
+						)
 				);
 		}
 
@@ -181,21 +176,16 @@ namespace ClearCanvas.ImageViewer.AnnotationProviders.Dicom
 
 		private static string GetTableSpeed(Frame frame)
 		{
-			float value;
-			var tagExists = frame.ParentImageSop[DicomTags.TableSpeed].TryGetFloat32(0, out value);
+			double value;
+			var tagExists = frame[DicomTags.TableSpeed].TryGetFloat64(0, out value);
 			return tagExists ? string.Format(SR.FormatMillimetersPerSecond, value.ToString("F2")) : string.Empty;
 		}
 
 		private static string GetTablePosition(Frame frame)
 		{
-			var attribute = frame.ParentImageSop[DicomTags.CtPositionSequence];
-			var items = attribute.Values as DicomSequenceItem[];
-			if (!attribute.IsNull && !attribute.IsEmpty && items != null && items.Length > 0) {
-				double value;
-				var tagExists = items[0][DicomTags.TablePosition].TryGetFloat64(0, out value);
-				return tagExists ? string.Format(SR.FormatMillimeters, value.ToString("F2")) : string.Empty;
-			}
-			return string.Empty;
+			double value;
+			var tagExists = frame[DicomTags.TablePosition].TryGetFloat64(0, out value);
+			return tagExists ? string.Format(SR.FormatMillimeters, value.ToString("F2")) : string.Empty;
 		}
 	}
 }

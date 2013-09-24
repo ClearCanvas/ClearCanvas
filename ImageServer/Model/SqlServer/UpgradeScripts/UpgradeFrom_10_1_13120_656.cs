@@ -33,10 +33,10 @@ namespace ClearCanvas.ImageServer.Model.SqlServer.UpgradeScripts
 	/// Upgrade from the Bennu milestone to the Rigel milestone.
 	/// </summary>
 	[ExtensionOf(typeof (PersistentStoreUpgradeScriptExtensionPoint))]
-	internal class UpgradeFrom_10_1_00000_000 : BaseUpgradeScript
+	internal class UpgradeFrom_10_1_13120_656 : BaseUpgradeScript
 	{
-		public UpgradeFrom_10_1_00000_000()
-			: base(new Version(10, 0, 11128, 314), null, "UpgradeFrom_10_1_00000_000.sql")
+		public UpgradeFrom_10_1_13120_656()
+			: base(new Version(10, 1, 13120, 656), null, "UpgradeFrom_10_1_13120_656.sql")
 		{
 		}
 	}

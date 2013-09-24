@@ -129,8 +129,7 @@ namespace ClearCanvas.ImageViewer.Tools.Measurement.Tests
 			using (IPresentationImage image = GetImage(key))
 			{
 				IImageSopProvider sopProvider = (IImageSopProvider) image;
-				DicomAttribute attribute;
-				if (sopProvider.Sop.DataSource.TryGetAttribute(DicomTags.PixelAspectRatio, out attribute))
+				if (!sopProvider.Frame.PixelAspectRatio.IsNull)
 					Trace.WriteLine("PixelAspectRatio (0028,0034) PRESENT", "UNIT_TESTS");
 				if (!sopProvider.Frame.PixelSpacing.IsNull)
 					Trace.WriteLine("PixelSpacing (0028,0030) or equivalent PRESENT", "UNIT_TESTS");

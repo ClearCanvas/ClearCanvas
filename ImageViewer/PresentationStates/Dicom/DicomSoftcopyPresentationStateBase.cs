@@ -299,7 +299,7 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 
 				PixelAspectRatio pixelAspectRatio = image.Frame.PixelAspectRatio;
 				if (pixelAspectRatio == null || pixelAspectRatio.IsNull)
-					pixelAspectRatio = PixelAspectRatio.FromString(image.ImageSop[DicomTags.PixelAspectRatio].ToString());
+					pixelAspectRatio = PixelAspectRatio.FromString(image.Frame[DicomTags.PixelAspectRatio].ToString());
 				if (pixelAspectRatio == null || pixelAspectRatio.IsNull)
 					pixelAspectRatio = new PixelAspectRatio(1, 1);
 				displayedArea.PresentationPixelAspectRatio = pixelAspectRatio;

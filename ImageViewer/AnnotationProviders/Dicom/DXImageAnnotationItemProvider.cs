@@ -46,218 +46,218 @@ namespace ClearCanvas.ImageViewer.AnnotationProviders.Dicom
 
 			_annotationItems.Add
 				(
-				new DicomAnnotationItem<string>
-					(
-					// this is actually DX Positioning module
-					"Dicom.DXImage.DetectorPrimaryAngle",
-					resolver,
-					f => FormatFloat64(f, DicomTags.DetectorPrimaryAngle, SR.FormatDegrees),
-					DicomDataFormatHelper.RawStringFormat
-					)
+					new DicomAnnotationItem<string>
+						(
+						// this is actually DX Positioning module
+						"Dicom.DXImage.DetectorPrimaryAngle",
+						resolver,
+						f => FormatFloat64(f, DicomTags.DetectorPrimaryAngle, SR.FormatDegrees),
+						DicomDataFormatHelper.RawStringFormat
+						)
 				);
 
 			_annotationItems.Add
 				(
-				new DicomAnnotationItem<string>
-					(
-					// this is actually DX Positioning module
-					"Dicom.DXImage.PositionerPrimaryAngle",
-					resolver,
-					f => FormatFloat64(f, DicomTags.PositionerPrimaryAngle, SR.FormatDegrees),
-					DicomDataFormatHelper.RawStringFormat
-					)
+					new DicomAnnotationItem<string>
+						(
+						// this is actually DX Positioning module
+						"Dicom.DXImage.PositionerPrimaryAngle",
+						resolver,
+						f => FormatFloat64(f, DicomTags.PositionerPrimaryAngle, SR.FormatDegrees),
+						DicomDataFormatHelper.RawStringFormat
+						)
 				);
 
 			_annotationItems.Add
 				(
-				new DicomAnnotationItem<string>
-					(
-					// this is actually DX Positioning module
-					"Dicom.DXImage.PositionerSecondaryAngle",
-					resolver,
-					f => FormatFloat64(f, DicomTags.PositionerSecondaryAngle, SR.FormatDegrees),
-					DicomDataFormatHelper.RawStringFormat
-					)
+					new DicomAnnotationItem<string>
+						(
+						// this is actually DX Positioning module
+						"Dicom.DXImage.PositionerSecondaryAngle",
+						resolver,
+						f => FormatFloat64(f, DicomTags.PositionerSecondaryAngle, SR.FormatDegrees),
+						DicomDataFormatHelper.RawStringFormat
+						)
 				);
 
 			_annotationItems.Add
 				(
-				new DicomAnnotationItem<string>
-					(
-					// this is actually DX Positioning module
-					"Dicom.DXImage.BodyPartThickness",
-					resolver,
-					f => string.Format(SR.FormatMillimeters, FormatFloat64(f, DicomTags.BodyPartThickness, "{0:F1}")),
-					DicomDataFormatHelper.RawStringFormat
-					)
+					new DicomAnnotationItem<string>
+						(
+						// this is actually DX Positioning module
+						"Dicom.DXImage.BodyPartThickness",
+						resolver,
+						f => string.Format(SR.FormatMillimeters, FormatFloat64(f, DicomTags.BodyPartThickness, "{0:F1}")),
+						DicomDataFormatHelper.RawStringFormat
+						)
 				);
 
 			_annotationItems.Add
 				(
-				new DicomAnnotationItem<string>
-					(
-					// this is actually DX Positioning module
-					"Dicom.DXImage.CompressionForce",
-					resolver,
-					f => FormatInt32(f, DicomTags.CompressionForce, SR.FormatNewtons),
-					DicomDataFormatHelper.RawStringFormat
-					)
+					new DicomAnnotationItem<string>
+						(
+						// this is actually DX Positioning module
+						"Dicom.DXImage.CompressionForce",
+						resolver,
+						f => FormatInt32(f, DicomTags.CompressionForce, SR.FormatNewtons),
+						DicomDataFormatHelper.RawStringFormat
+						)
 				);
 
 			_annotationItems.Add
 				(
-				new DicomAnnotationItem<string>
-					(
-					// this is actually DX Series module
-					"Dicom.DXImage.PresentationIntentType",
-					resolver,
-					f => f.ParentImageSop[DicomTags.PresentationIntentType].ToString(),
-					DicomDataFormatHelper.RawStringFormat
-					)
+					new DicomAnnotationItem<string>
+						(
+						// this is actually DX Series module
+						"Dicom.DXImage.PresentationIntentType",
+						resolver,
+						f => f[DicomTags.PresentationIntentType].ToString(),
+						DicomDataFormatHelper.RawStringFormat
+						)
 				);
 
 			_annotationItems.Add
 				(
-				new DicomAnnotationItem<string>
-					(
-					// whoa, this is actually DX Image module
-					"Dicom.DXImage.AcquisitionDeviceProcessingDescription",
-					resolver,
-					f => f.ParentImageSop[DicomTags.AcquisitionDeviceProcessingDescription].ToString(),
-					DicomDataFormatHelper.RawStringFormat
-					)
+					new DicomAnnotationItem<string>
+						(
+						// whoa, this is actually DX Image module
+						"Dicom.DXImage.AcquisitionDeviceProcessingDescription",
+						resolver,
+						f => f[DicomTags.AcquisitionDeviceProcessingDescription].ToString(),
+						DicomDataFormatHelper.RawStringFormat
+						)
 				);
 
 			_annotationItems.Add
 				(
-				new DicomAnnotationItem<string>
-					(
-					// this is actually DX Detector module
-					"Dicom.DXImage.CassetteId",
-					resolver,
-					f => f.ParentImageSop[DicomTags.CassetteId].ToString(),
-					DicomDataFormatHelper.RawStringFormat
-					)
+					new DicomAnnotationItem<string>
+						(
+						// this is actually DX Detector module
+						"Dicom.DXImage.CassetteId",
+						resolver,
+						f => f[DicomTags.CassetteId].ToString(),
+						DicomDataFormatHelper.RawStringFormat
+						)
 				);
 
 			_annotationItems.Add
 				(
-				new DicomAnnotationItem<string>
-					(
-					// this is actually DX Detector module
-					"Dicom.DXImage.PlateId",
-					resolver,
-					f => f.ParentImageSop[DicomTags.PlateId].ToString(),
-					DicomDataFormatHelper.RawStringFormat
-					)
+					new DicomAnnotationItem<string>
+						(
+						// this is actually DX Detector module
+						"Dicom.DXImage.PlateId",
+						resolver,
+						f => f[DicomTags.PlateId].ToString(),
+						DicomDataFormatHelper.RawStringFormat
+						)
 				);
 
 			_annotationItems.Add
 				(
-				new DicomAnnotationItem<string>
-					(
-					// this isn't even a DX module, but other X-Ray related modules
-					"Dicom.DXImage.KVP",
-					resolver,
-					f => FormatFloat64(f, DicomTags.Kvp, SR.FormatKilovolts),
-					DicomDataFormatHelper.RawStringFormat
-					)
+					new DicomAnnotationItem<string>
+						(
+						// this isn't even a DX module, but other X-Ray related modules
+						"Dicom.DXImage.KVP",
+						resolver,
+						f => FormatFloat64(f, DicomTags.Kvp, SR.FormatKilovolts),
+						DicomDataFormatHelper.RawStringFormat
+						)
 				);
 
 			_annotationItems.Add
 				(
-				new DicomAnnotationItem<string>
-					(
-					// this isn't even a DX module, but other X-Ray related modules
-					"Dicom.DXImage.AveragePulseWidth",
-					resolver,
-					f => FormatFloat64(f, DicomTags.AveragePulseWidth, SR.FormatMilliseconds),
-					DicomDataFormatHelper.RawStringFormat
-					)
+					new DicomAnnotationItem<string>
+						(
+						// this isn't even a DX module, but other X-Ray related modules
+						"Dicom.DXImage.AveragePulseWidth",
+						resolver,
+						f => FormatFloat64(f, DicomTags.AveragePulseWidth, SR.FormatMilliseconds),
+						DicomDataFormatHelper.RawStringFormat
+						)
 				);
 
 			_annotationItems.Add
 				(
-				new DicomAnnotationItem<string>
-					(
-					// this isn't even a DX module, but other X-Ray related modules
-					"Dicom.DXImage.ImageAndFluoroscopyAreaDoseProduct",
-					resolver,
-					f => FormatFloat64(f, DicomTags.ImageAndFluoroscopyAreaDoseProduct, SR.FormatDecigraySquareCentimeters),
-					DicomDataFormatHelper.RawStringFormat
-					)
+					new DicomAnnotationItem<string>
+						(
+						// this isn't even a DX module, but other X-Ray related modules
+						"Dicom.DXImage.ImageAndFluoroscopyAreaDoseProduct",
+						resolver,
+						f => FormatFloat64(f, DicomTags.ImageAndFluoroscopyAreaDoseProduct, SR.FormatDecigraySquareCentimeters),
+						DicomDataFormatHelper.RawStringFormat
+						)
 				);
 
 			_annotationItems.Add
 				(
-				new DicomAnnotationItem<string>
-					(
-					// legacy item (new layouts should use Exposure) so that current annotation layouts don't break - can be removed in a future release
-					"Dicom.DXImage.ExposureInMas",
-					resolver,
-					f => GetExposureInMas(f, SR.FormatMilliampSeconds),
-					DicomDataFormatHelper.RawStringFormat
-					)
+					new DicomAnnotationItem<string>
+						(
+						// legacy item (new layouts should use Exposure) so that current annotation layouts don't break - can be removed in a future release
+						"Dicom.DXImage.ExposureInMas",
+						resolver,
+						f => GetExposureInMas(f, SR.FormatMilliampSeconds),
+						DicomDataFormatHelper.RawStringFormat
+						)
 				);
 
 			_annotationItems.Add
 				(
-				new DicomAnnotationItem<string>
-					(
-					// this isn't defined in a DX module, but rather in other X-Ray related modules
-					"Dicom.DXImage.Exposure",
-					resolver,
-					f => GetExposureInMas(f, SR.FormatMilliampSeconds),
-					DicomDataFormatHelper.RawStringFormat
-					)
+					new DicomAnnotationItem<string>
+						(
+						// this isn't defined in a DX module, but rather in other X-Ray related modules
+						"Dicom.DXImage.Exposure",
+						resolver,
+						f => GetExposureInMas(f, SR.FormatMilliampSeconds),
+						DicomDataFormatHelper.RawStringFormat
+						)
 				);
 
 			_annotationItems.Add
 				(
-				new DicomAnnotationItem<string>
-					(
-					// this isn't defined in a DX module, but rather in other X-Ray related modules
-					"Dicom.DXImage.ExposureTime",
-					resolver,
-					f => GetExposureTimeInMs(f, SR.FormatMilliseconds),
-					DicomDataFormatHelper.RawStringFormat
-					)
+					new DicomAnnotationItem<string>
+						(
+						// this isn't defined in a DX module, but rather in other X-Ray related modules
+						"Dicom.DXImage.ExposureTime",
+						resolver,
+						f => GetExposureTimeInMs(f, SR.FormatMilliseconds),
+						DicomDataFormatHelper.RawStringFormat
+						)
 				);
 
 			_annotationItems.Add
 				(
-				new DicomAnnotationItem<string>
-					(
-					// this isn't defined in a DX module, but rather in other X-Ray related modules
-					"Dicom.DXImage.XRayTubeCurrent",
-					resolver,
-					f => GetXRayTubeCurrentInMa(f, SR.FormatMilliamps),
-					DicomDataFormatHelper.RawStringFormat
-					)
+					new DicomAnnotationItem<string>
+						(
+						// this isn't defined in a DX module, but rather in other X-Ray related modules
+						"Dicom.DXImage.XRayTubeCurrent",
+						resolver,
+						f => GetXRayTubeCurrentInMa(f, SR.FormatMilliamps),
+						DicomDataFormatHelper.RawStringFormat
+						)
 				);
 
 			_annotationItems.Add
 				(
-				new DicomAnnotationItem<string>
-					(
-					// this isn't even a DX module, but other X-Ray related modules
-					"Dicom.DXImage.FilterMaterial",
-					resolver,
-					f => f.ParentImageSop[DicomTags.FilterMaterial].ToString(),
-					DicomDataFormatHelper.RawStringFormat
-					)
+					new DicomAnnotationItem<string>
+						(
+						// this isn't even a DX module, but other X-Ray related modules
+						"Dicom.DXImage.FilterMaterial",
+						resolver,
+						f => f[DicomTags.FilterMaterial].ToString(),
+						DicomDataFormatHelper.RawStringFormat
+						)
 				);
 
 			_annotationItems.Add
 				(
-				new CodeSequenceAnnotationItem
-					(
-					// this isn't even a DX module, but other X-Ray related modules
-					"Dicom.DXImage.ContrastBolusAgent",
-					resolver,
-					DicomTags.ContrastBolusAgentSequence,
-					DicomTags.ContrastBolusAgent
-					)
+					new CodeSequenceAnnotationItem
+						(
+						// this isn't even a DX module, but other X-Ray related modules
+						"Dicom.DXImage.ContrastBolusAgent",
+						resolver,
+						DicomTags.ContrastBolusAgentSequence,
+						DicomTags.ContrastBolusAgent
+						)
 				);
 		}
 
@@ -269,46 +269,46 @@ namespace ClearCanvas.ImageViewer.AnnotationProviders.Dicom
 		internal static string GetExposureInMas(Frame frame, string formatString)
 		{
 			double dValue;
-			if (frame.ParentImageSop[DicomTags.ExposureInMas].TryGetFloat64(0, out dValue))
+			if (frame[DicomTags.ExposureInMas].TryGetFloat64(0, out dValue))
 				return string.Format(formatString, dValue.ToString(@"F2"));
 
 			int iValue;
-			if (frame.ParentImageSop[DicomTags.ExposureInUas].TryGetInt32(0, out iValue))
+			if (frame[DicomTags.ExposureInUas].TryGetInt32(0, out iValue))
 				return string.Format(formatString, (iValue/1000f).ToString(@"F2"));
 
-			return frame.ParentImageSop[DicomTags.Exposure].TryGetInt32(0, out iValue) ? string.Format(formatString, iValue) : string.Empty;
+			return frame[DicomTags.Exposure].TryGetInt32(0, out iValue) ? string.Format(formatString, iValue) : string.Empty;
 		}
 
 		internal static string GetExposureTimeInMs(Frame frame, string formatString)
 		{
 			double dValue;
-			if (frame.ParentImageSop[DicomTags.ExposureTimeInMs].TryGetFloat64(0, out dValue))
+			if (frame[DicomTags.ExposureTimeInMs].TryGetFloat64(0, out dValue))
 				return string.Format(formatString, dValue.ToString(@"F2"));
 
-			if (frame.ParentImageSop[DicomTags.ExposureTimeInUs].TryGetFloat64(0, out dValue))
+			if (frame[DicomTags.ExposureTimeInUs].TryGetFloat64(0, out dValue))
 				return string.Format(formatString, (dValue/1000.0).ToString(@"F2"));
 
 			int iValue;
-			return frame.ParentImageSop[DicomTags.ExposureTime].TryGetInt32(0, out iValue) ? string.Format(formatString, iValue) : string.Empty;
+			return frame[DicomTags.ExposureTime].TryGetInt32(0, out iValue) ? string.Format(formatString, iValue) : string.Empty;
 		}
 
 		internal static string GetXRayTubeCurrentInMa(Frame frame, string formatString)
 		{
 			double dValue;
-			if (frame.ParentImageSop[DicomTags.XRayTubeCurrentInMa].TryGetFloat64(0, out dValue))
+			if (frame[DicomTags.XRayTubeCurrentInMa].TryGetFloat64(0, out dValue))
 				return string.Format(formatString, dValue.ToString(@"F2"));
 
-			if (frame.ParentImageSop[DicomTags.XRayTubeCurrentInUa].TryGetFloat64(0, out dValue))
+			if (frame[DicomTags.XRayTubeCurrentInUa].TryGetFloat64(0, out dValue))
 				return string.Format(formatString, (dValue/1000.0).ToString(@"F2"));
 
 			int iValue;
-			return frame.ParentImageSop[DicomTags.XRayTubeCurrent].TryGetInt32(0, out iValue) ? string.Format(formatString, iValue) : string.Empty;
+			return frame[DicomTags.XRayTubeCurrent].TryGetInt32(0, out iValue) ? string.Format(formatString, iValue) : string.Empty;
 		}
 
 		private static string FormatInt32(Frame frame, uint dicomTag, string formatString)
 		{
 			int value;
-			bool tagExists = frame.ParentImageSop[dicomTag].TryGetInt32(0, out value);
+			bool tagExists = frame[dicomTag].TryGetInt32(0, out value);
 			if (tagExists)
 				return String.Format(formatString, value);
 
@@ -318,7 +318,7 @@ namespace ClearCanvas.ImageViewer.AnnotationProviders.Dicom
 		private static string FormatFloat64(Frame frame, uint dicomTag, string formatString)
 		{
 			double value;
-			bool tagExists = frame.ParentImageSop[dicomTag].TryGetFloat64(0, out value);
+			bool tagExists = frame[dicomTag].TryGetFloat64(0, out value);
 			if (tagExists)
 				return String.Format(formatString, value);
 

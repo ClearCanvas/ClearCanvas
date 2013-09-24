@@ -23,6 +23,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 
 namespace ClearCanvas.Dicom.Iod.Macros
 {
@@ -59,6 +60,15 @@ namespace ClearCanvas.Dicom.Iod.Macros
 		/// </summary>
 		/// <param name="dicomSequenceItem">The dicom sequence item.</param>
 		public SopInstanceReferenceMacro(DicomSequenceItem dicomSequenceItem) : base(dicomSequenceItem) {}
+
+		public static IEnumerable<uint> DefinedTags
+		{
+			get
+			{
+				yield return DicomTags.ReferencedSopClassUid;
+				yield return DicomTags.ReferencedSopInstanceUid;
+			}
+		}
 
 		/// <summary>
 		/// Initializes the underlying collection to implement the module using default values.

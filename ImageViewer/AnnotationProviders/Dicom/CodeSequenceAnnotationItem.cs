@@ -66,9 +66,9 @@ namespace ClearCanvas.ImageViewer.AnnotationProviders.Dicom
 			{
 				try
 				{
-					var codeSequence = f.ParentImageSop[_codeSequenceTag] as DicomAttributeSQ;
+					var codeSequence = f[_codeSequenceTag] as DicomAttributeSQ;
 					var codeSequenceItem = codeSequence != null && !codeSequence.IsEmpty && !codeSequence.IsNull && codeSequence.Count > 0 ? new CodeSequenceMacro(codeSequence[0]) : null;
-					var descriptor = _descriptorTag.HasValue ? f.ParentImageSop[_descriptorTag.Value].ToString() : null;
+					var descriptor = _descriptorTag.HasValue ? f[_descriptorTag.Value].ToString() : null;
 
 					if (codeSequenceItem != null && !string.IsNullOrEmpty(codeSequenceItem.CodeMeaning))
 						return codeSequenceItem.CodeMeaning;

@@ -44,7 +44,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 	/// see <see cref="ISopReference"/>.
 	/// </para>
 	/// </remarks>
-	public class ImageSop : Sop
+	public partial class ImageSop : Sop
 	{
 		private readonly object _syncLock = new object();
 		private volatile FrameCollection _frames;
@@ -54,19 +54,28 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		/// </summary>
 		/// <param name="filename">The path to a local DICOM Part 10 file.</param>
 		public ImageSop(string filename)
-			: base(filename) {}
+			: base(filename)
+		{
+			_functionalGroups = GetFunctionalGroupMap(DataSource);
+		}
 
 		/// <summary>
 		/// Initializes a new instance of <see cref="ImageSop"/>.
 		/// </summary>
 		public ImageSop(ISopDataSource dataSource)
-			: base(dataSource) {}
+			: base(dataSource)
+		{
+			_functionalGroups = GetFunctionalGroupMap(DataSource);
+		}
 
 		/// <summary>
 		/// Initializes a new instance of <see cref="ImageSop"/>.
 		/// </summary>
 		public ImageSop(ISopDataSource dataSource, bool useCache)
-			: base(dataSource, useCache) {}
+			: base(dataSource, useCache)
+		{
+			_functionalGroups = GetFunctionalGroupMap(DataSource);
+		}
 
 		/// <summary>
 		/// A collection of <see cref="Frame"/> objects.
@@ -118,7 +127,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		#region DX Series Module
 
 		/// <summary>
-		/// Gets the Anatomical Orientation Type.
+		/// Gets the Presentation Intent Type.
 		/// </summary>
 		public virtual string PresentationIntentType
 		{
@@ -435,6 +444,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		/// <summary>
 		/// Gets the <see cref="VoiDataLut"/>s from the image header.
 		/// </summary>
+		[Obsolete("This method has been deprecated and will be removed in the future. Use equivalent property on Frame class instead.")]
 		public virtual IList<VoiDataLut> VoiDataLuts
 		{
 			get { return base.GetVoiDataLuts(); }
@@ -491,6 +501,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		/// <summary>
 		/// Gets the Image Laterality.
 		/// </summary>
+		[Obsolete("This method has been deprecated and will be removed in the future. Use equivalent property on Frame class instead.")]
 		public virtual string ImageLaterality
 		{
 			get
@@ -508,6 +519,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		/// <summary>
 		/// Gets the View Position.
 		/// </summary>
+		[Obsolete("This method has been deprecated and will be removed in the future. Use equivalent property on Frame class instead.")]
 		public virtual string ViewPosition
 		{
 			get
