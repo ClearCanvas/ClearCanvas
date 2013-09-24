@@ -29,6 +29,7 @@ using ClearCanvas.Dicom;
 using ClearCanvas.Dicom.Iod;
 using ClearCanvas.Dicom.Utilities;
 using ClearCanvas.Dicom.Validation;
+using ClearCanvas.ImageViewer.Imaging;
 
 namespace ClearCanvas.ImageViewer.StudyManagement
 {
@@ -466,49 +467,38 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		#region VOI LUT Module
 
 		/// <summary>
-		/// Gets the window width and center.
+		/// Gets an array of the VOI window width/center values, and their respective explanations, applicable to this frame.
 		/// </summary>
 		/// <remarks>
 		/// Will return as many parsable values as possible up to the first non-parsable value.
 		/// For example, if there are 3 values, but the last one is poorly encoded, 2 values will be returned.
 		/// </remarks>
+		public virtual VoiWindow[] VoiWindows
+		{
+			get { return VoiWindow.GetWindows(this).ToArray(); }
+		}
+
+		/// <summary>
+		/// Gets an array of the VOI window width/center values, and their respective explanations, applicable to this frame.
+		/// </summary>
+		/// <remarks>
+		/// Will return as many parsable values as possible up to the first non-parsable value.
+		/// For example, if there are 3 values, but the last one is poorly encoded, 2 values will be returned.
+		/// </remarks>
+		/// <seealso cref="VoiWindows"/>
 		public virtual Window[] WindowCenterAndWidth
 		{
-			get
-			{
-				var windowCenterValues = _parentImageSop.GetDicomAttribute(_frameNumber, DicomTags.WindowCenter).ToString();
-				if (!string.IsNullOrEmpty(windowCenterValues))
-				{
-					var windowWidthValues = _parentImageSop.GetDicomAttribute(_frameNumber, DicomTags.WindowWidth).ToString();
-					if (!string.IsNullOrEmpty(windowWidthValues))
-					{
-						if (!String.IsNullOrEmpty(windowCenterValues) && !String.IsNullOrEmpty(windowWidthValues))
-						{
-							double[] windowCenters;
-							double[] windowWidths;
-							DicomStringHelper.TryGetDoubleArray(windowCenterValues, out windowCenters);
-							DicomStringHelper.TryGetDoubleArray(windowWidthValues, out windowWidths);
-
-							if (windowCenters.Length > 0 && windowCenters.Length == windowWidths.Length)
-								return Enumerable.Range(0, windowWidths.Length).Select(i => new Window(windowWidths[i], windowCenters[i])).ToArray();
-						}
-					}
-				}
-
-				return new Window[0];
-			}
+			// The equivalent parse method in Window throws an excpetion if there are any mismatched width/center pairs
+			get { return VoiWindow.GetWindows(this).Select(w => (Window) w).ToArray(); }
 		}
 
 		/// <summary>
 		/// Gets the window width and center explanation(s).
 		/// </summary>
+		/// <seealso cref="VoiWindows"/>
 		public virtual string[] WindowCenterAndWidthExplanation
 		{
-			get
-			{
-				var windowCenterAndWidthExplanations = _parentImageSop.GetDicomAttribute(_frameNumber, DicomTags.WindowCenterWidthExplanation).ToString();
-				return DicomStringHelper.GetStringArray(windowCenterAndWidthExplanations);
-			}
+			get { return DicomStringHelper.GetStringArray(_parentImageSop.GetDicomAttribute(_frameNumber, DicomTags.WindowCenterWidthExplanation).ToString()); }
 		}
 
 		#endregion

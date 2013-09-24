@@ -189,6 +189,7 @@
     <Compile Include="Imaging\MinMaxPixelLinearLut.cs" />
     <Compile Include="Imaging\PresentationLut.cs" />
     <Compile Include="Imaging\Tests\PresentationLutLinearTests.cs" />
+    <Compile Include="Imaging\Tests\VoiWindowTests.cs" />
     <Compile Include="InputManagement\MouseWheelCaptureChangedEventArgs.cs" />
     <Compile Include="InputManagement\Tests\ViewerShortcutManagerTests.cs" />
     <Compile Include="CloningExceptions.cs" />
