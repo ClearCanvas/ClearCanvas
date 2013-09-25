@@ -69,15 +69,6 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		}
 
 		/// <summary>
-		/// Initializes a new instance of <see cref="ImageSop"/>.
-		/// </summary>
-		public ImageSop(ISopDataSource dataSource, bool useCache)
-			: base(dataSource, useCache)
-		{
-			_functionalGroups = GetFunctionalGroupMap(DataSource);
-		}
-
-		/// <summary>
 		/// A collection of <see cref="Frame"/> objects.
 		/// </summary>
 		/// <remarks>

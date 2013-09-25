@@ -34,7 +34,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 
 		private IMprSliceSet _parent;
 
-		public MprSliceSop(ISopDataSource dataSource) : base(dataSource, false) { }
+		public MprSliceSop(ISopDataSource dataSource) : base(dataSource) { }
 
 		public IMprSliceSet Parent
 		{

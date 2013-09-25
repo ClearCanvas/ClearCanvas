@@ -602,7 +602,6 @@
     <Compile Include="StudyManagement\FrameDataRetrieverFactory.cs" />
     <Compile Include="StudyManagement\OpenFilesHelper.cs" />
     <Compile Include="StudyManagement\OpenStudyHelper.cs" />
-    <Compile Include="StudyManagement\SopDataCache.cs" />
     <Compile Include="StudyManagement\SopDataSource.cs" />
     <Compile Include="StudyManagement\SopValidationException.cs" />
     <Compile Include="Imaging\IVoiLutManager.cs" />
