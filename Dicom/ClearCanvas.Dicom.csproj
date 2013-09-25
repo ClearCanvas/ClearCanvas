@@ -284,6 +284,7 @@
     <Compile Include="ServiceModel\Streaming\HeaderStreamingServiceClient.cs" />
     <Compile Include="ServiceModel\Streaming\IDicomImportService.cs" />
     <Compile Include="Tests\ChangeTransferSyntaxTests.cs" />
+    <Compile Include="Tests\SopClassGeneratorTests.cs" />
     <Compile Include="Tests\DicomAttributeBinaryDataTests.cs" />
     <Compile Include="Tests\DicomImageTestHelper.cs" />
     <Compile Include="Tests\DicomUncompressedPixelDataTests.cs" />

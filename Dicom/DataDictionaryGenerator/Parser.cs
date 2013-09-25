@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security;
 using System.Text;
 using System.Xml;
@@ -53,14 +54,90 @@ namespace ClearCanvas.Dicom.DataDictionaryGenerator
         public String Uid;
         public String Type;
         public String VarName;
-    }
+
+		public bool IsMeta
+		{
+			get
+			{
+				return Name.ToLower().Contains("meta");
+			}
+		}
+
+    	public bool IsImage
+    	{
+    		get
+    		{
+				//As of DICOM 2011, this was true. Need to re-evaluate each time.
+    			return Name.ToLower().Contains("image storage") || Name == "Enhanced US Volume Storage";
+    		}
+    	}
+
+		public bool IsStorage
+		{
+			get
+			{
+				//As of DICOM 2011, this was true. Need to re-evaluate each time.
+				var lower = Name.ToLower();
+				return lower.Contains("storage") && !lower.Contains("storage commit");
+			}
+		}
+	}
 
     public class Parser
     {
         public SortedList<uint, Tag> Tags = new SortedList<uint, Tag>();
         public SortedList SopClasses = new SortedList();
         public SortedList MetaSopClasses = new SortedList();
-        public SortedList TranferSyntaxes = new SortedList();
+		public SortedList TranferSyntaxes = new SortedList();
+
+		public void DumpSopClassesXml(string fileName)
+		{
+			using (var fileStream = File.Open(fileName, FileMode.Create, FileAccess.Write))
+			{
+				using (var writer = new StreamWriter(fileStream, Encoding.UTF8))
+				{
+					writer.WriteLine("<SopClassList>");
+					foreach (DictionaryEntry sopClassEntry in SopClasses)
+					{
+						var sopClass = (SopClass)sopClassEntry.Value;
+						writer.WriteLine("   <SopClass name =\"" + sopClass.Name + "\"");
+						writer.WriteLine("             isImage=\"" + sopClass.IsImage + "\"");
+						writer.WriteLine("             isStorage=\"" + sopClass.IsStorage + "\"");
+						writer.WriteLine("             uid=\"" + sopClass.Uid + "\""); 
+						writer.Write(    "             variableName=\"" + sopClass.VarName+ "\"");
+						//writer.Write(    "             type=\"" + sopClass.Type + "\""); 
+						writer.WriteLine("/>");
+					}
+
+					writer.WriteLine("</SopClassList>");
+				}
+			}
+		}
+
+		public void DumpSopClassesCSV(string fileName)
+		{
+			using (var fileStream = File.Open(fileName, FileMode.Create, FileAccess.Write))
+			{
+				using (var writer = new StreamWriter(fileStream, Encoding.UTF8))
+				{
+					writer.WriteLine("name,isImage,isStorage,uid,variableName");
+					foreach (DictionaryEntry sopClassEntry in SopClasses)
+					{
+						var sopClass = (SopClass)sopClassEntry.Value;
+						writer.Write(sopClass.Name);
+						writer.Write(",");
+						writer.Write(sopClass.IsImage);
+						writer.Write(",");
+						writer.Write(sopClass.IsStorage);
+						writer.Write(",");
+						writer.Write(sopClass.Uid);
+						writer.Write(",");
+						writer.Write(sopClass.VarName);
+						writer.WriteLine();
+					}
+				}
+			}
+		}
 
         /// <summary>
         /// Formats to pascal.

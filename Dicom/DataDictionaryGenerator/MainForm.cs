@@ -33,7 +33,7 @@ namespace ClearCanvas.Dicom.DataDictionaryGenerator
     public partial class MainForm : Form
     {
         XmlDocument _transferSyntaxDoc = null;
-        Parser _parse = null;
+		Parser _parse = null;
 
         public MainForm()
         {
@@ -45,7 +45,8 @@ namespace ClearCanvas.Dicom.DataDictionaryGenerator
             _parse = new Parser();
 
             _parse.ParseFile(openFileDialog1.FileName);
-
+			//_parse.DumpSopClassesXml("c:\\stewart\\temp\\SopClasses.xml");
+			//_parse.DumpSopClassesCSV("c:\\stewart\\temp\\SopClasses.csv");
             AddGroupZeroTags(_parse.Tags);
         }
 
@@ -354,7 +355,6 @@ namespace ClearCanvas.Dicom.DataDictionaryGenerator
             _transferSyntaxDoc = new XmlDocument();
 
             _transferSyntaxDoc.Load(openFileDialog_TransferSyntax.FileName);
-
         }
 
         private void GenerateCode_Click(object sender, EventArgs e)
@@ -363,7 +363,6 @@ namespace ClearCanvas.Dicom.DataDictionaryGenerator
                 return;
 
             var gen = new CodeGenerator(_parse.Tags, _parse.TranferSyntaxes, _parse.SopClasses, _parse.MetaSopClasses, _transferSyntaxDoc);
-
 
             gen.WriteTags("DicomTags.cs");
 
