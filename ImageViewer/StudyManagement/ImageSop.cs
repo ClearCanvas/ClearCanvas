@@ -447,7 +447,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		[Obsolete("This method has been deprecated and will be removed in the future. Use equivalent property on Frame class instead.")]
 		public virtual IList<VoiDataLut> VoiDataLuts
 		{
-			get { return GetVoiDataLuts(); }
+			get { return Frames[1].VoiDataLuts; }
 		}
 
 		/// <summary>

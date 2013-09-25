@@ -23,6 +23,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using ClearCanvas.Common;
 using ClearCanvas.Dicom;
@@ -467,15 +468,23 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		#region VOI LUT Module
 
 		/// <summary>
-		/// Gets an array of the VOI window width/center values, and their respective explanations, applicable to this frame.
+		/// Gets the VOI data LUTs applicable to this frame.
+		/// </summary>
+		public virtual IList<VoiDataLut> VoiDataLuts
+		{
+			get { return _parentImageSop.GetFrameVoiDataLuts(_frameNumber); }
+		}
+
+		/// <summary>
+		/// Gets the VOI window width/center values, and their respective explanations, applicable to this frame.
 		/// </summary>
 		/// <remarks>
 		/// Will return as many parsable values as possible up to the first non-parsable value.
 		/// For example, if there are 3 values, but the last one is poorly encoded, 2 values will be returned.
 		/// </remarks>
-		public virtual VoiWindow[] VoiWindows
+		public virtual IList<VoiWindow> VoiWindows
 		{
-			get { return VoiWindow.GetWindows(this).ToArray(); }
+			get { return VoiWindow.GetWindows(this).ToList(); }
 		}
 
 		/// <summary>

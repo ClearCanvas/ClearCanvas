@@ -26,14 +26,12 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using ClearCanvas.Common;
-using ClearCanvas.Dicom.Iod;
 
 namespace ClearCanvas.ImageViewer.StudyManagement
 {
 	internal interface ISopDataCacheItemReference : IDisposable
 	{
 		ISopDataSource RealDataSource { get; }
-		IList<VoiDataLut> VoiDataLuts { get; }
 		ISopDataCacheItemReference Clone();
 	}
 
@@ -45,7 +43,6 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		{
 			private readonly object _syncLock = new object();
 			private readonly ISopDataSource _realDataSource;
-			private volatile IList<VoiDataLut> _sopVoiDataLuts;
 			private volatile int _referenceCount = 0;
 
 			public Item(ISopDataSource realDataSource)
@@ -64,34 +61,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 
 			public ISopDataSource RealDataSource
 			{
-				get { return _realDataSource; }	
-			}
-
-			public IList<VoiDataLut> VoiDataLuts
-			{
-				get
-				{
-					if (_sopVoiDataLuts == null)
-					{
-						lock (_syncLock)
-						{
-							if (_sopVoiDataLuts == null)
-							{
-								try
-								{
-									_sopVoiDataLuts = VoiDataLut.Create(_realDataSource).AsReadOnly();
-								}
-								catch (Exception ex)
-								{
-                                    Platform.Log(LogLevel.Warn, ex, "Creation of VOI Data LUTs failed.");
-									_sopVoiDataLuts = new List<VoiDataLut>().AsReadOnly();
-								}
-							}
-						}
-					}
-
-					return _sopVoiDataLuts;
-				}
+				get { return _realDataSource; }
 			}
 
 			public void OnReferenceCreated()
@@ -125,7 +95,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 						{
 							_realDataSource.Dispose();
 						}
-						catch(Exception e)
+						catch (Exception e)
 						{
 							Platform.Log(LogLevel.Debug, e);
 						}
@@ -138,7 +108,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		}
 
 		#endregion
-		
+
 		#region Cached Data Source
 
 		private class ItemReference : ISopDataCacheItemReference
@@ -156,11 +126,6 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 			public ISopDataSource RealDataSource
 			{
 				get { return _item.RealDataSource; }
-			}
-
-			public IList<VoiDataLut> VoiDataLuts
-			{
-				get { return _item.VoiDataLuts; }
 			}
 
 			public ISopDataCacheItemReference Clone()
@@ -183,13 +148,13 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 
 			#endregion
 		}
-		
+
 		#endregion
 
 		private static readonly object _itemsLock = new object();
 		private static readonly Dictionary<string, WeakReference> _items = new Dictionary<string, WeakReference>();
 		private static volatile bool _containsDeadItems = false;
-		
+
 #if UNIT_TESTS
 
 		internal static int ItemCount
@@ -198,9 +163,10 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		}
 
 #endif
+
 		public static ISopDataCacheItemReference Add(ISopDataSource dataSource)
 		{
-			lock(_itemsLock)
+			lock (_itemsLock)
 			{
 				CleanupDeadItems();
 
@@ -226,7 +192,6 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 					weakReference = new WeakReference(null);
 					_items[dataSource.SopInstanceUid] = weakReference;
 				}
-
 
 				if (item != null && weakReference.IsAlive)
 				{

@@ -25,7 +25,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using ClearCanvas.Common;
 using ClearCanvas.Dicom;
 using ClearCanvas.Dicom.Iod;
 using ClearCanvas.Dicom.Iod.Macros;
@@ -159,11 +158,6 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		{
 			var studyIdentifier = GetStudyIdentifier();
 			return new SeriesIdentifier(this, studyIdentifier);
-		}
-
-		internal IList<VoiDataLut> GetVoiDataLuts()
-		{
-			return _dataSourceReference.VoiDataLuts;
 		}
 
 		#region Meta info
@@ -1374,9 +1368,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 
 		private class NonCacheSopDataCacheItemReference : ISopDataCacheItemReference
 		{
-			private readonly object _syncLock = new object();
 			private ISopDataSource _sopDataSource;
-			private volatile IList<VoiDataLut> _sopVoiDataLuts;
 
 			public NonCacheSopDataCacheItemReference(ISopDataSource sopDataSource)
 			{
@@ -1395,35 +1387,6 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 			public ISopDataSource RealDataSource
 			{
 				get { return _sopDataSource; }
-			}
-
-			public IList<VoiDataLut> VoiDataLuts
-			{
-				get
-				{
-					if (_sopVoiDataLuts == null)
-					{
-						lock (_syncLock)
-						{
-							if (_sopVoiDataLuts == null)
-							{
-								List<VoiDataLut> luts;
-								try
-								{
-									luts = VoiDataLut.Create(_sopDataSource);
-								}
-								catch (Exception ex)
-								{
-									Platform.Log(LogLevel.Warn, ex, "Creation of VOI Data LUTs failed.");
-									luts = new List<VoiDataLut>();
-								}
-								_sopVoiDataLuts = luts.AsReadOnly();
-							}
-						}
-					}
-
-					return _sopVoiDataLuts;
-				}
 			}
 
 			public ISopDataCacheItemReference Clone()

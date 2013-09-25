@@ -22,7 +22,9 @@
 
 #endregion
 
+using System;
 using System.Collections.Generic;
+using ClearCanvas.Common;
 using ClearCanvas.Dicom;
 using ClearCanvas.Dicom.Iod;
 using ClearCanvas.Dicom.Iod.Modules;
@@ -95,5 +97,99 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		{
 			return new MultiFrameFunctionalGroupsModuleIod(sopDataSource).HasValues() ? FunctionalGroupDescriptor.GetFunctionalGroupMap(sopDataSource.SopClassUid) : null;
 		}
+
+		#region Frame VOI Data LUTs
+
+		private readonly Dictionary<VoiDataLutsCacheKey, IList<VoiDataLut>> _frameVoiDataLuts = new Dictionary<VoiDataLutsCacheKey, IList<VoiDataLut>>();
+
+		internal IList<VoiDataLut> GetFrameVoiDataLuts(int frameNumber)
+		{
+			Platform.CheckPositive(frameNumber, "frameNumber");
+
+			lock (_syncLock)
+			{
+				var cacheKey = VoiDataLutsCacheKey.RootKey;
+				var dataset = (IDicomAttributeProvider) DataSource;
+
+				// attempt to find the VOI LUT Sequence in a functional group pertaining to the requested frame
+				FunctionalGroupDescriptor functionalGroupDescriptor;
+				if (_functionalGroups != null && _functionalGroups.TryGetValue(DicomTags.VoiLutSequence, out functionalGroupDescriptor))
+				{
+					bool perFrame;
+					var functionalGroup = MultiFrameFunctionalGroupsModuleIod.GetFunctionalGroup(functionalGroupDescriptor, DataSource, frameNumber, out perFrame);
+					var item = functionalGroup != null ? functionalGroup.SingleItem : null;
+
+					DicomAttribute dicomAttribute;
+					if (item != null && item.TryGetAttribute(DicomTags.VoiLutSequence, out dicomAttribute))
+					{
+						cacheKey = perFrame ? VoiDataLutsCacheKey.GetFrameKey(frameNumber) : VoiDataLutsCacheKey.SharedKey;
+						dataset = item;
+					}
+				}
+
+				IList<VoiDataLut> dataLuts;
+				if (!_frameVoiDataLuts.TryGetValue(cacheKey, out dataLuts))
+					_frameVoiDataLuts.Add(cacheKey, dataLuts = CreateVoiDataLuts(dataset));
+				return dataLuts;
+			}
+		}
+
+		private static IList<VoiDataLut> CreateVoiDataLuts(IDicomAttributeProvider dataset)
+		{
+			try
+			{
+				return VoiDataLut.Create(dataset).AsReadOnly();
+			}
+			catch (Exception ex)
+			{
+				Platform.Log(LogLevel.Warn, ex, "Creation of VOI Data LUTs failed.");
+				return new List<VoiDataLut>(0).AsReadOnly();
+			}
+		}
+
+		private class VoiDataLutsCacheKey
+		{
+			/// <summary>
+			/// Gets the key representing the VOI LUT Sequence attribute at the root of the SOP instance data set.
+			/// </summary>
+			public static readonly VoiDataLutsCacheKey RootKey = new VoiDataLutsCacheKey(-1);
+
+			/// <summary>
+			/// Gets the key representing the VOI LUT Sequence attribute in the Shared Functional Groups Sequence.
+			/// </summary>
+			public static readonly VoiDataLutsCacheKey SharedKey = new VoiDataLutsCacheKey(0);
+
+			/// <summary>
+			/// Gets the key representing a VOI LUT Sequence attribute in the Per-Frame Functional Groups Sequence.
+			/// </summary>
+			public static VoiDataLutsCacheKey GetFrameKey(int frameNumber)
+			{
+				return new VoiDataLutsCacheKey(frameNumber);
+			}
+
+			private readonly int _frameNumber;
+
+			private VoiDataLutsCacheKey(int frameNumber)
+			{
+				_frameNumber = frameNumber;
+			}
+
+			public override int GetHashCode()
+			{
+				return _frameNumber.GetHashCode();
+			}
+
+			public override bool Equals(object obj)
+			{
+				return obj is VoiDataLutsCacheKey && _frameNumber == ((VoiDataLutsCacheKey) obj)._frameNumber;
+			}
+
+			public override string ToString()
+			{
+				return _frameNumber < 0 ? "ROOT" : (_frameNumber == 0 ? "SHARED" : string.Format("FRAME {0}", _frameNumber));
+			}
+		}
+
+		#endregion
 	}
 }
