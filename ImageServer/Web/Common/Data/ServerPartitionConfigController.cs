@@ -113,7 +113,7 @@ namespace ClearCanvas.ImageServer.Web.Common.Data
         /// <returns></returns>
         public IList<ServerPartition> GetAllPartitions()
         {
-        	ServerPartitionSelectCriteria searchCriteria = new ServerPartitionSelectCriteria();
+        	var searchCriteria = new ServerPartitionSelectCriteria();
         	searchCriteria.AeTitle.SortAsc(0);
 			return GetPartitions(searchCriteria);
         }
@@ -125,9 +125,18 @@ namespace ClearCanvas.ImageServer.Web.Common.Data
         /// <returns></returns>
         public bool CanDelete(ServerPartition partition)
         {
-            return partition.StudyCount <= 0;
+            return partition.StudyCount <= 0 && !partition.ServerPartitionTypeEnum.Equals(ServerPartitionTypeEnum.Research);
         }
 
+		/// <summary>
+		/// Checks if a specified partition can be edited
+		/// </summary>
+		/// <param name="partition"></param>
+		/// <returns></returns>
+		public bool CanEdit(ServerPartition partition)
+		{
+			return !partition.ServerPartitionTypeEnum.Equals(ServerPartitionTypeEnum.Research);
+		}
 
         /// <summary>
         /// Delete the specified partition
@@ -143,10 +152,12 @@ namespace ClearCanvas.ImageServer.Web.Common.Data
             {
                 using (IUpdateContext ctx = PersistentStoreRegistry.GetDefaultStore().OpenUpdateContext(UpdateContextSyncMode.Flush))
                 {
-                    IDeleteServerPartition broker = ctx.GetBroker<IDeleteServerPartition>();
-                    ServerPartitionDeleteParameters parms = new ServerPartitionDeleteParameters();
-                    parms.ServerPartitionKey = partition.Key;
-                    if (!broker.Execute(parms))
+                    var broker = ctx.GetBroker<IDeleteServerPartition>();
+                    var parms = new ServerPartitionDeleteParameters
+	                    {
+		                    ServerPartitionKey = partition.Key
+	                    };
+	                if (!broker.Execute(parms))
                         throw new Exception("Unable to delete server partition from database");
                     ctx.Commit();
                 }
