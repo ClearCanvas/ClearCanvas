@@ -154,7 +154,7 @@ namespace ClearCanvas.ImageViewer.Imaging
 
 		public IList<VoiDataLut> ImageVoiDataLuts
 		{
-			get { return _image.ImageSop.VoiDataLuts; }
+			get { return _image.Frame.VoiDataLuts; }
 		}
 
 		#endregion

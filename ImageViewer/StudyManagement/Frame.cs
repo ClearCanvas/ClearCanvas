@@ -524,7 +524,34 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 
 		#endregion
 
-		#region Modality-Specific Modules
+		#region Other Modules
+
+		/// <summary>
+		/// Gets the laterality of the anatomy depicted in this frame.
+		/// </summary>
+		public virtual string Laterality
+		{
+			get
+			{
+				string laterality;
+				DicomAttribute dicomAttribute;
+				if (_parentImageSop.TryGetDicomAttribute(_frameNumber, DicomTags.FrameLaterality, out dicomAttribute) && dicomAttribute.TryGetString(0, out laterality))
+					return laterality;
+				if (_parentImageSop.TryGetDicomAttribute(_frameNumber, DicomTags.ImageLaterality, out dicomAttribute) && dicomAttribute.TryGetString(0, out laterality))
+					return laterality;
+				if (_parentImageSop.TryGetDicomAttribute(0, DicomTags.ImageLaterality, out dicomAttribute) && dicomAttribute.TryGetString(0, out laterality))
+					return laterality;
+				return string.Empty;
+			}
+		}
+
+		/// <summary>
+		/// Gets the view position of the frame.
+		/// </summary>
+		public virtual string ViewPosition
+		{
+			get { return _parentImageSop.GetDicomAttribute(_frameNumber, DicomTags.ViewPosition).GetString(0, null) ?? string.Empty; }
+		}
 
 		/// <summary>
 		/// Gets the spacing between the slices.
