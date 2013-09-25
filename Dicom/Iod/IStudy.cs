@@ -215,6 +215,8 @@ namespace ClearCanvas.Dicom.Iod
 	{
 		ISeries ParentSeries { get; }
 
+		SopClass SopClass { get; }
+
 		string SourceApplicationEntityTitle { get; }
 
 		DicomAttribute GetAttribute(uint dicomTag);
