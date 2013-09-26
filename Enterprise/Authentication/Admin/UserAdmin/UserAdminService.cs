@@ -217,7 +217,8 @@ namespace ClearCanvas.Enterprise.Authentication.Admin.UserAdmin
 			EnsureCurrentUserAuthorizedToManage(user.AccountType);
 
 			var assembler = new UserAssembler();
-			return new ListUserSessionsResponse(user.UserName, user.ActiveSessions.Select(assembler.GetUserSessionSummary).ToList());
+			var sessions = user.ActiveSessions.Where(s => !s.IsImpersonated);
+			return new ListUserSessionsResponse(user.UserName, sessions.Select(assembler.GetUserSessionSummary).ToList());
 		}
 
 
@@ -235,6 +236,7 @@ namespace ClearCanvas.Enterprise.Authentication.Admin.UserAdmin
 			// load all sessions by id 
 			var where = new UserSessionSearchCriteria();
 			where.SessionId.In(sessionIds);
+			where.IsImpersonated.EqualTo(false);	// impersonated sessions cannot be terminated in this manner
 
 			var sessions = PersistenceContext.GetBroker<IUserSessionBroker>().Find(where);
 
