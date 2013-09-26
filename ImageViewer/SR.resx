@@ -729,9 +729,6 @@ Alternately, the study can be brought back online by a PACS administrator.</valu
   <data name="MessageVolumeSourceMinimumThreeImages" xml:space="preserve">
     <value>Source dataset must contain at least three frames.</value>
   </data>
-  <data name="MessageVolumeSourceMultiFrameImagesAreNotSupported" xml:space="preserve">
-    <value>The selected multiframe images are of an unsupported type.</value>
-  </data>
   <data name="MessageVolumeSourceMustBe16BitGreyscale" xml:space="preserve">
     <value>MPR only supports 16-bit greyscale images.</value>
   </data>

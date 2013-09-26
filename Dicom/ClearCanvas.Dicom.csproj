@@ -262,6 +262,7 @@
     <Compile Include="Iod\Tests\EncapsulatedPdfIodTests.cs" />
     <Compile Include="Iod\Tests\EqualityCompareHelper.cs" />
     <Compile Include="Iod\Tests\FunctionalGroupMacroTests.cs" />
+    <Compile Include="Iod\Tests\WindowTests.cs" />
     <Compile Include="Iod\Units.cs" />
     <Compile Include="IO\IByteBuffer.cs" />
     <Compile Include="IO\Tests\ByteBufferHighCapacityTests.cs" />

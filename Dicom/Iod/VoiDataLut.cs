@@ -22,8 +22,8 @@
 
 #endregion
 
-using System;
 using System.Collections.Generic;
+using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
 
 namespace ClearCanvas.Dicom.Iod
@@ -35,35 +35,26 @@ namespace ClearCanvas.Dicom.Iod
 		#region Constructors
 
 		public VoiDataLut(int firstMappedPixelValue, int bitsPerEntry, int[] data)
-			: this(firstMappedPixelValue, bitsPerEntry, data, null)
-		{
-		}
+			: this(firstMappedPixelValue, bitsPerEntry, data, null) {}
 
 		public VoiDataLut(int firstMappedPixelValue, int bitsPerEntry, int[] data, string explanation)
-			: base(firstMappedPixelValue, bitsPerEntry, data, explanation)
-		{
-		}
+			: base(firstMappedPixelValue, bitsPerEntry, data, explanation) {}
 
 		public VoiDataLut(VoiDataLut item)
-			: base(item)
-		{
-		}
+			: base(item) {}
 
 		protected VoiDataLut(DataLut dataLut)
-			: base(	dataLut.FirstMappedPixelValue, dataLut.BitsPerEntry, dataLut.Data,
-					dataLut.Explanation, dataLut.MinOutputValue, dataLut.MaxOutputValue)
-		{
-		}
+			: base(dataLut.FirstMappedPixelValue, dataLut.BitsPerEntry, dataLut.Data, dataLut.Explanation, dataLut.MinOutputValue, dataLut.MaxOutputValue) {}
 
 		#endregion
 
 		#region Public Methods
 
 		/// <summary>
-		/// Corrects the <see cref="MinOutputValue"/> and <see cref="MaxOutputValue"/> when <see cref="BitsPerEntry"/> is 16.
+		/// Corrects the <see cref="VoiDataLut.MinOutputValue"/> and <see cref="VoiDataLut.MaxOutputValue"/> when <see cref="VoiDataLut.BitsPerEntry"/> is 16.
 		/// </summary>
 		/// <remarks>
-		/// Some vendors set the <see cref="BitsPerEntry"/> to 16, but then only encode the lut values to the same bit depth
+		/// Some vendors set the <see cref="VoiDataLut.BitsPerEntry"/> to 16, but then only encode the lut values to the same bit depth
 		/// as the actual pixel values (e.g. 12 bits).  This can make the images look really bad.  Apparently, this is the
 		/// workaround David Clunie suggests.
 		/// </remarks>
@@ -76,7 +67,6 @@ namespace ClearCanvas.Dicom.Iod
 				CorrectMinMaxOutputInternal();
 			}
 		}
-
 
 		#endregion
 
@@ -108,7 +98,7 @@ namespace ClearCanvas.Dicom.Iod
 			{
 				int* pData = data;
 				int i = 0;
-				while(i < numberOfEntries)
+				while (i < numberOfEntries)
 				{
 					if (*pData < minLutValue)
 						minLutValue = *pData;
@@ -123,7 +113,7 @@ namespace ClearCanvas.Dicom.Iod
 			bool isSigned = FirstMappedPixelValue < 0;
 			int trueDepth = 16; //start at 16 and go downwards.
 
-			while(trueDepth > 0)
+			while (trueDepth > 0)
 			{
 				int minAllowedValue, maxAllowedValue;
 				GetMinMaxPixelValue(trueDepth, isSigned, out minAllowedValue, out maxAllowedValue);
@@ -136,7 +126,7 @@ namespace ClearCanvas.Dicom.Iod
 					BitsPerEntry = trueDepth;
 					MinOutputValue = minAllowedValue;
 					MaxOutputValue = maxAllowedValue;
-					
+
 					break;
 				}
 				else
@@ -147,18 +137,9 @@ namespace ClearCanvas.Dicom.Iod
 			}
 		}
 
-		private static double GetRescaleSlope(IDicomAttributeProvider attributeProvider)
-		{
-			DicomAttribute rescaleSlopeAttribute = attributeProvider[DicomTags.RescaleSlope];
-			if (rescaleSlopeAttribute == null)
-				return 1.0;
-			else
-				return rescaleSlopeAttribute.GetFloat64(0, 1);
-		}
-
 		private static List<VoiDataLut> Convert(IEnumerable<DataLut> dataLuts)
 		{
-			return CollectionUtils.Map<DataLut, VoiDataLut>(dataLuts, delegate(DataLut dataLut) { return new VoiDataLut(dataLut); });
+			return CollectionUtils.Map<DataLut, VoiDataLut>(dataLuts, dataLut => new VoiDataLut(dataLut));
 		}
 
 		#endregion
@@ -168,8 +149,8 @@ namespace ClearCanvas.Dicom.Iod
 		private static List<VoiDataLut> Create(DicomAttributeSQ voiLutSequence, int pixelRepresentation)
 		{
 			bool isFirstMappedPixelSigned = pixelRepresentation != 0;
-			
-			List<DataLut> dataLuts = DataLut.Create(voiLutSequence, isFirstMappedPixelSigned, false);
+
+			List<DataLut> dataLuts = Create(voiLutSequence, isFirstMappedPixelSigned, false);
 			return Convert(dataLuts);
 		}
 
@@ -181,12 +162,12 @@ namespace ClearCanvas.Dicom.Iod
 
 			GetMinMaxPixelValue(bitsStored, isSigned, out minPixelValue, out maxPixelValue);
 
-			double minModalityLutValue = minPixelValue * rescaleSlope + rescaleIntercept;
-			double maxModalityLutValue = maxPixelValue * rescaleSlope + rescaleIntercept;
+			double minModalityLutValue = minPixelValue*rescaleSlope + rescaleIntercept;
+			double maxModalityLutValue = maxPixelValue*rescaleSlope + rescaleIntercept;
 
 			bool isFirstMappedPixelValueSigned = minModalityLutValue < 0 || maxModalityLutValue < 0;
 
-			List<DataLut> dataLuts = DataLut.Create(voiLutSequence, isFirstMappedPixelValueSigned, false);
+			List<DataLut> dataLuts = Create(voiLutSequence, isFirstMappedPixelValueSigned, false);
 			return Convert(dataLuts);
 		}
 
@@ -209,16 +190,16 @@ namespace ClearCanvas.Dicom.Iod
 
 		public static List<VoiDataLut> Create(IDicomAttributeProvider attributeProvider)
 		{
-			if (attributeProvider == null)
-				throw new ArgumentNullException("attributeProvider");
+			Platform.CheckForNullReference(attributeProvider, "attributeProvider");
 
-			DicomAttributeSQ voiLutSequence = attributeProvider[DicomTags.VoiLutSequence] as DicomAttributeSQ;
-			if (voiLutSequence == null)
+			DicomAttributeSQ voiLutSequence;
+			if (!TryGetAttributeSQ(attributeProvider, DicomTags.VoiLutSequence, out voiLutSequence))
 				return new List<VoiDataLut>();
 
-			DicomAttributeSQ modalityLutSequence = attributeProvider[DicomTags.ModalityLutSequence] as DicomAttributeSQ;
 			int pixelRepresentation = GetPixelRepresentation(attributeProvider);
 
+			DicomAttributeSQ modalityLutSequence;
+			TryGetAttributeSQ(attributeProvider, DicomTags.ModalityLutSequence, out modalityLutSequence);
 			if (IsValidAttribute(modalityLutSequence))
 				return Create(voiLutSequence, modalityLutSequence, pixelRepresentation);
 
@@ -235,7 +216,29 @@ namespace ClearCanvas.Dicom.Iod
 			return Create(voiLutSequence, pixelRepresentation);
 		}
 
+		private static double GetRescaleSlope(IDicomAttributeProvider attributeProvider)
+		{
+			DicomAttribute rescaleSlopeAttribute = attributeProvider[DicomTags.RescaleSlope];
+			if (rescaleSlopeAttribute == null)
+				return 1.0;
+			else
+				return rescaleSlopeAttribute.GetFloat64(0, 1);
+		}
+
+		private static bool TryGetAttributeSQ(IDicomAttributeProvider provider, uint tag, out DicomAttributeSQ dicomAttributeSQ)
+		{
+			DicomAttribute dicomAttribute;
+			if (provider.TryGetAttribute(tag, out dicomAttribute))
+			{
+				dicomAttributeSQ = dicomAttribute as DicomAttributeSQ;
+				return dicomAttributeSQ != null;
+			}
+			dicomAttributeSQ = null;
+			return false;
+		}
+
 		#endregion
+
 		#endregion
 	}
 }

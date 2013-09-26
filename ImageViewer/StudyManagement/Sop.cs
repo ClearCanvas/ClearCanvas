@@ -25,7 +25,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using ClearCanvas.Common;
 using ClearCanvas.Dicom;
 using ClearCanvas.Dicom.Iod;
 using ClearCanvas.Dicom.Iod.Macros;
@@ -52,7 +51,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 	public partial class Sop : IDisposable, ISopInstanceData, ISeriesData, IStudyData, IPatientData
 	{
 		private volatile Series _parentSeries;
-		private volatile ISopDataCacheItemReference _dataSourceReference;
+		private ISopDataSource _dataSource;
 
 		/// <summary>
 		/// Creates a new instance of <see cref="Sop"/> from a local file.
@@ -63,7 +62,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 			ISopDataSource dataSource = new LocalSopDataSource(filename);
 			try
 			{
-				Initialize(dataSource, true);
+				Initialize(dataSource);
 			}
 			catch
 			{
@@ -76,17 +75,11 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		/// Creates a new instance of <see cref="Sop"/>.
 		/// </summary>
 		public Sop(ISopDataSource dataSource)
-			: this(dataSource, true) {}
-
-		/// <summary>
-		/// Creates a new instance of <see cref="Sop"/>.
-		/// </summary>
-		public Sop(ISopDataSource dataSource, bool useCache)
 		{
-			Initialize(dataSource, useCache);
+			Initialize(dataSource);
 		}
 
-		private void Initialize(ISopDataSource dataSource, bool useCache)
+		private void Initialize(ISopDataSource dataSource)
 		{
 			//We want to explicitly enforce that image data sources are wrapped in ImageSops.
 			IsImage = this is ImageSop;
@@ -94,8 +87,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 			if (dataSource.IsImage != IsImage)
 				throw new ArgumentException("Data source/Sop type mismatch.", "dataSource");
 
-			//silently use shared/cached data source.
-			_dataSourceReference = useCache ? SopDataCache.Add(dataSource) : new NonCacheSopDataCacheItemReference(dataSource);
+			_dataSource = dataSource;
 		}
 
 		/// <summary>
@@ -103,7 +95,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		/// </summary>
 		public ISopDataSource DataSource
 		{
-			get { return _dataSourceReference.RealDataSource; }
+			get { return _dataSource; }
 		}
 
 		/// <summary>
@@ -159,11 +151,6 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		{
 			var studyIdentifier = GetStudyIdentifier();
 			return new SeriesIdentifier(this, studyIdentifier);
-		}
-
-		internal IList<VoiDataLut> GetVoiDataLuts()
-		{
-			return _dataSourceReference.VoiDataLuts;
 		}
 
 		#region Meta info
@@ -1354,10 +1341,10 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		/// <param name="disposing"></param>
 		protected virtual void Dispose(bool disposing)
 		{
-			if (disposing && _dataSourceReference != null)
+			if (disposing && _dataSource != null)
 			{
-				_dataSourceReference.Dispose();
-				_dataSourceReference = null;
+				_dataSource.Dispose();
+				_dataSource = null;
 			}
 		}
 
@@ -1369,69 +1356,5 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		{
 			return String.Format("{0} | {1}", this.InstanceNumber, this.SopInstanceUid);
 		}
-
-		#region
-
-		private class NonCacheSopDataCacheItemReference : ISopDataCacheItemReference
-		{
-			private readonly object _syncLock = new object();
-			private ISopDataSource _sopDataSource;
-			private volatile IList<VoiDataLut> _sopVoiDataLuts;
-
-			public NonCacheSopDataCacheItemReference(ISopDataSource sopDataSource)
-			{
-				_sopDataSource = sopDataSource;
-			}
-
-			public void Dispose()
-			{
-				if (_sopDataSource != null)
-				{
-					_sopDataSource.Dispose();
-					_sopDataSource = null;
-				}
-			}
-
-			public ISopDataSource RealDataSource
-			{
-				get { return _sopDataSource; }
-			}
-
-			public IList<VoiDataLut> VoiDataLuts
-			{
-				get
-				{
-					if (_sopVoiDataLuts == null)
-					{
-						lock (_syncLock)
-						{
-							if (_sopVoiDataLuts == null)
-							{
-								List<VoiDataLut> luts;
-								try
-								{
-									luts = VoiDataLut.Create(_sopDataSource);
-								}
-								catch (Exception ex)
-								{
-									Platform.Log(LogLevel.Warn, ex, "Creation of VOI Data LUTs failed.");
-									luts = new List<VoiDataLut>();
-								}
-								_sopVoiDataLuts = luts.AsReadOnly();
-							}
-						}
-					}
-
-					return _sopVoiDataLuts;
-				}
-			}
-
-			public ISopDataCacheItemReference Clone()
-			{
-				return new NonCacheSopDataCacheItemReference(_sopDataSource);
-			}
-		}
-
-		#endregion
 	}
 }

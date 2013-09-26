@@ -225,7 +225,7 @@ namespace ClearCanvas.Dicom
 			_paletteColorLut = attrib.PaletteColorLut;
 
 			foreach (Window window in attrib.LinearVoiLuts)
-				_linearVoiLuts.Add(new Window(window));
+				_linearVoiLuts.Add(window);
 		}
 
 		#endregion

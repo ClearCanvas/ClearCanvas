@@ -224,7 +224,7 @@ namespace ClearCanvas.ImageViewer.AdvancedImaging.Fusion
 			var slicer = new VolumeSliceFactory {RowOrientationPatient = baseTopRight - baseTopLeft, ColumnOrientationPatient = baseBottomLeft - baseTopLeft};
 			using (var slice = new VolumeSliceSopDataSource(slicer.CreateSlice(volume.CreateReference(), baseFrameCentre)))
 			{
-				using (var sliceSop = new ImageSop(slice, false))
+				using (var sliceSop = new ImageSop(slice))
 				{
 					using (var overlayFrame = sliceSop.Frames[1])
 					{

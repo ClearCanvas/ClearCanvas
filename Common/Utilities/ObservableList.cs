@@ -168,12 +168,12 @@ namespace ClearCanvas.Common.Utilities
 		{
 			get
 			{
-				Platform.CheckIndexRange(index, 0, this.Count - 1, "index");
+				Platform.CheckArgumentRange(index, 0, this.Count - 1, "index");
 				return _list[index];
 			}
 			set
 			{
-				Platform.CheckIndexRange(index, 0, this.Count - 1, "index");
+				Platform.CheckArgumentRange(index, 0, this.Count - 1, "index");
 
 				ListEventArgs<TItem> args = new ListEventArgs<TItem>(_list[index], index);
 				OnItemChanging(args);

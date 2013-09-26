@@ -187,6 +187,11 @@ namespace ClearCanvas.ImageServer.Web.Common.Data.DataSource
 				reason = SR.ActionNotAllowed_StudyIsNearline;
 				return false;
 			}
+			if (ThePartition.ServerPartitionTypeEnum.Equals(ServerPartitionTypeEnum.Research))
+			{
+				reason = SR.ActionNotAllowed_ResearchPartition;
+				return false;
+			}
 
 			reason = String.Empty;
 			return true;

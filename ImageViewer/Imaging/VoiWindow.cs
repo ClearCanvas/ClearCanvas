@@ -32,7 +32,7 @@ using ClearCanvas.Dicom.Utilities;
 namespace ClearCanvas.ImageViewer.Imaging
 {
 	/// <summary>
-	/// Represents a window centre/width pair, with accompanying descriptive explanation.
+	/// Represents a window centre/width pair, with optional accompanying descriptive explanation.
 	/// </summary>
 	public class VoiWindow : IEquatable<VoiWindow>
 	{
@@ -91,7 +91,9 @@ namespace ClearCanvas.ImageViewer.Imaging
 		/// <returns>True if the window width and centre are the same.</returns>
 		public bool Equals(VoiWindow other)
 		{
-			return (_width == other._width && _center == other._center);
+// ReSharper disable CompareOfFloatsByEqualityOperator
+			return other != null && _width == other._width && _center == other._center;
+// ReSharper restore CompareOfFloatsByEqualityOperator
 		}
 
 		/// <summary>
@@ -101,9 +103,7 @@ namespace ClearCanvas.ImageViewer.Imaging
 		/// <returns>True if the window width and centre are the same.</returns>
 		public override bool Equals(object obj)
 		{
-			if (obj is VoiWindow)
-				return this.Equals((VoiWindow) obj);
-			return false;
+			return obj is VoiWindow && Equals((VoiWindow) obj);
 		}
 
 		/// <summary>
@@ -120,23 +120,24 @@ namespace ClearCanvas.ImageViewer.Imaging
 		/// </summary>
 		public override string ToString()
 		{
+			// not meant to be a DICOM attribute value (since width and center pairs don't go in the same attribute anyway)
 			return String.Format(@"{0:F2}/{1:F2}", _width, _center);
 		}
 
 		/// <summary>
 		/// Converts the specified window into a <see cref="Window">DICOM window IOD</see>.
 		/// </summary>
-		public static explicit operator Window(VoiWindow window)
+		public static implicit operator Window(VoiWindow window)
 		{
-			return new Window(window._width, window._center);
+			return new Window(window._width, window._center, window._explanation);
 		}
 
 		/// <summary>
 		/// Converts a window from the specified <see cref="Window">DICOM window IOD</see>.
 		/// </summary>
-		public static explicit operator VoiWindow(Window window)
+		public static implicit operator VoiWindow(Window window)
 		{
-			return new VoiWindow(window.Width, window.Center);
+			return new VoiWindow(window.Width, window.Center, window.Explanation);
 		}
 
 		/// <summary>
@@ -206,16 +207,18 @@ namespace ClearCanvas.ImageViewer.Imaging
 
 		private static IEnumerable<VoiWindow> GetWindows(double[] windowCenters, double[] windowWidths, string[] windowExplanations)
 		{
-			if (windowCenters.Length == windowWidths.Length)
+			var count = Math.Min(windowCenters.Length, windowWidths.Length);
+			if (count > 0)
 			{
-				for (int i = 0; i < windowWidths.Length; ++i)
+				if (windowExplanations.Length < count)
 				{
-					if (i < windowExplanations.Length)
-						yield return new VoiWindow(windowWidths[i], windowCenters[i], windowExplanations[i]);
-					else
-						yield return new VoiWindow(windowWidths[i], windowCenters[i]);
+					var explanations = new string[count];
+					Array.Copy(windowExplanations, explanations, windowExplanations.Length);
+					windowExplanations = explanations;
 				}
+				return Enumerable.Range(0, count).Select(i => new VoiWindow(windowWidths[i], windowCenters[i], windowExplanations[i])).ToList();
 			}
+			return new VoiWindow[0];
 		}
 
 		/// <summary>
@@ -225,13 +228,23 @@ namespace ClearCanvas.ImageViewer.Imaging
 		/// <param name="dataset">A DICOM data source.</param>
 		public static void SetWindows(IEnumerable<VoiWindow> windows, IDicomAttributeProvider dataset)
 		{
-			var windowCenters = DicomStringHelper.GetDicomStringArray(windows.Select(s => s.Center));
-			var windowWidths = DicomStringHelper.GetDicomStringArray(windows.Select(s => s.Width));
-			var windowExplanations = DicomStringHelper.GetDicomStringArray(windows.Select(s => s.Explanation));
+			var voiWindows = windows.ToList();
+			var windowCenters = DicomStringHelper.GetDicomStringArray(voiWindows.Select(s => s.Center));
+			var windowWidths = DicomStringHelper.GetDicomStringArray(voiWindows.Select(s => s.Width));
+			var windowExplanations = DicomStringHelper.GetDicomStringArray(voiWindows.Select(s => s.Explanation));
 
-			dataset[DicomTags.WindowCenter].SetStringValue(windowCenters);
-			dataset[DicomTags.WindowWidth].SetStringValue(windowWidths);
-			dataset[DicomTags.WindowCenterWidthExplanation].SetStringValue(windowExplanations);
+			if (voiWindows.Count > 0)
+			{
+				dataset[DicomTags.WindowCenter].SetStringValue(windowCenters);
+				dataset[DicomTags.WindowWidth].SetStringValue(windowWidths);
+				dataset[DicomTags.WindowCenterWidthExplanation].SetStringValue(windowExplanations);
+			}
+			else
+			{
+				dataset[DicomTags.WindowCenter].SetEmptyValue();
+				dataset[DicomTags.WindowWidth].SetEmptyValue();
+				dataset[DicomTags.WindowCenterWidthExplanation].SetEmptyValue();
+			}
 		}
 
 		/// <summary>

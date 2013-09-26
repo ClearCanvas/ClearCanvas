@@ -64,25 +64,30 @@ namespace ClearCanvas.ImageViewer.AnnotationProviders.Dicom
 
 			public string RetrieveData(Frame f)
 			{
-				try
-				{
-					var codeSequence = f[_codeSequenceTag] as DicomAttributeSQ;
-					var codeSequenceItem = codeSequence != null && !codeSequence.IsEmpty && !codeSequence.IsNull && codeSequence.Count > 0 ? new CodeSequenceMacro(codeSequence[0]) : null;
-					var descriptor = _descriptorTag.HasValue ? f[_descriptorTag.Value].ToString() : null;
+				return FormatCodeSequence(f, _codeSequenceTag, _descriptorTag);
+			}
+		}
 
-					if (codeSequenceItem != null && !string.IsNullOrEmpty(codeSequenceItem.CodeMeaning))
-						return codeSequenceItem.CodeMeaning;
-					if (!string.IsNullOrEmpty(descriptor))
-						return descriptor;
-					if (codeSequenceItem != null && !string.IsNullOrEmpty(codeSequenceItem.CodeValue))
-						return string.Format(SR.FormatCodeSequence, codeSequenceItem.CodeValue, codeSequenceItem.CodingSchemeDesignator);
-					return string.Empty;
-				}
-				catch (Exception ex)
-				{
-					Platform.Log(LogLevel.Debug, ex, "Failed to parse code sequence attribute at tag ({0:X4},{1:X4})", (_codeSequenceTag >> 16) & 0x00FFFF, _codeSequenceTag & 0x00FFFF);
-					return string.Empty;
-				}
+		public static string FormatCodeSequence(IDicomAttributeProvider dicomAttributeProvider, uint codeSequenceTag, uint? textDescriptionTag)
+		{
+			try
+			{
+				var codeSequence = dicomAttributeProvider[codeSequenceTag] as DicomAttributeSQ;
+				var codeSequenceItem = codeSequence != null && !codeSequence.IsEmpty && !codeSequence.IsNull && codeSequence.Count > 0 ? new CodeSequenceMacro(codeSequence[0]) : null;
+				var descriptor = textDescriptionTag.HasValue ? dicomAttributeProvider[textDescriptionTag.Value].ToString() : null;
+
+				if (codeSequenceItem != null && !string.IsNullOrEmpty(codeSequenceItem.CodeMeaning))
+					return codeSequenceItem.CodeMeaning;
+				if (!string.IsNullOrEmpty(descriptor))
+					return descriptor;
+				if (codeSequenceItem != null && !string.IsNullOrEmpty(codeSequenceItem.CodeValue))
+					return string.Format(SR.FormatCodeSequence, codeSequenceItem.CodeValue, codeSequenceItem.CodingSchemeDesignator);
+				return string.Empty;
+			}
+			catch (Exception ex)
+			{
+				Platform.Log(LogLevel.Debug, ex, "Failed to parse code sequence attribute at tag ({0:X4},{1:X4})", (codeSequenceTag >> 16) & 0x00FFFF, codeSequenceTag & 0x00FFFF);
+				return string.Empty;
 			}
 		}
 	}

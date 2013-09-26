@@ -37,7 +37,7 @@ namespace ClearCanvas.Common.Utilities
 		/// <summary>
 		/// A delegate used by <see cref="StringUtilities"/> to format output strings.
 		/// </summary>
-		public delegate string FormatDelegate<T>(T value);
+		public delegate string FormatDelegate<in T>(T value);
 
 		/// <summary>
 		/// Combines the input <paramref name="values"/> into a string, separated by <paramref name="separator"/>,
@@ -46,10 +46,10 @@ namespace ClearCanvas.Common.Utilities
 		/// <remarks>
 		/// <typeparam name="T">Must implement <see cref="IFormattable"/>.</typeparam>
 		/// </remarks>
-		public static string Combine<T>(IEnumerable<T> values, string separator, string formatSpecifier)
+		public static string Combine<T>(IEnumerable<T> values, string separator, string formatSpecifier, bool skipEmptyValues = true)
 			where T : IFormattable
 		{
-			return Combine(values, separator, formatSpecifier, null);
+			return Combine(values, separator, formatSpecifier, null, skipEmptyValues);
 		}
 
 		/// <summary>
@@ -59,17 +59,11 @@ namespace ClearCanvas.Common.Utilities
 		/// <remarks>
 		/// <typeparam name="T">Must implement <see cref="IFormattable"/>.</typeparam>
 		/// </remarks>
-		public static string Combine<T>(IEnumerable<T> values, string separator, string formatSpecifier, IFormatProvider formatProvider)
+		public static string Combine<T>(IEnumerable<T> values, string separator, string formatSpecifier, IFormatProvider formatProvider, bool skipEmptyValues = true)
 			where T : IFormattable
 		{
-			return Combine(values, separator,
-			               delegate(T value)
-			               	{
-			               		if (String.IsNullOrEmpty(formatSpecifier))
-			               			return value.ToString();
-
-			               		return value.ToString(formatSpecifier, formatProvider);
-			               	});
+			var formatter = string.IsNullOrEmpty(formatSpecifier) ? new FormatDelegate<T>(v => v.ToString()) : (v => v.ToString(formatSpecifier, formatProvider));
+			return Combine(values, separator, formatter, skipEmptyValues);
 		}
 
 		/// <summary>
@@ -89,7 +83,7 @@ namespace ClearCanvas.Common.Utilities
 		/// </summary>
 		public static string Combine<T>(IEnumerable<T> values, string separator, bool skipEmptyValues)
 		{
-			return Combine(values, separator, null, skipEmptyValues);
+			return Combine(values, separator, (FormatDelegate<T>) null, skipEmptyValues);
 		}
 
 		/// <summary>

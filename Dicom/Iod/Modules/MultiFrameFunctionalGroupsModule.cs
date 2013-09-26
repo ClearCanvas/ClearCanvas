@@ -394,9 +394,28 @@ namespace ClearCanvas.Dicom.Iod.Modules
 		/// <returns>A new instance of <paramref name="functionalGroupDescriptor"/> wrapping the sequence item pertaining to the specified frame.</returns>
 		public static FunctionalGroupMacro GetFunctionalGroup(FunctionalGroupDescriptor functionalGroupDescriptor, IDicomAttributeProvider dataSet, int frameNumber)
 		{
+			bool dummy;
+			return GetFunctionalGroup(functionalGroupDescriptor, dataSet, frameNumber, out dummy);
+		}
+
+		/// <summary>
+		/// Gets the specified functional group for a specific frame in the data set.
+		/// </summary>
+		/// <remarks>
+		/// This method automatically handles getting the correct functional group IOD class for the specified frame, regardless
+		/// whether the functional group exists in the Per-Frame Functional Groups Sequence, or the Shared Functional Groups Sequence.
+		/// </remarks>
+		/// <param name="functionalGroupDescriptor">The functional group type (derived class of <see cref="FunctionalGroupMacro"/>).</param>
+		/// <param name="dataSet">The DICOM data set of the composite image SOP instance.</param>
+		/// <param name="frameNumber">The DICOM frame number to be retrieved (1-based index).</param>
+		/// <param name="isFrameSpecific">Returns True if the functional group was invoked in the Per-Frame Functional Groups Sequence (5200,9230); returns False otherwise.</param>
+		/// <returns>A new instance of <paramref name="functionalGroupDescriptor"/> wrapping the sequence item pertaining to the specified frame,.</returns>
+		public static FunctionalGroupMacro GetFunctionalGroup(FunctionalGroupDescriptor functionalGroupDescriptor, IDicomAttributeProvider dataSet, int frameNumber, out bool isFrameSpecific)
+		{
 			Platform.CheckForNullReference(functionalGroupDescriptor, "functionalGroupType");
 			Platform.CheckForNullReference(dataSet, "dataSet");
 			Platform.CheckPositive(frameNumber, "frameNumber");
+			isFrameSpecific = false;
 
 			DicomAttribute sqAttribute;
 			if (dataSet.TryGetAttribute(DicomTags.PerFrameFunctionalGroupsSequence, out sqAttribute) && sqAttribute.Count >= frameNumber)
@@ -404,7 +423,10 @@ namespace ClearCanvas.Dicom.Iod.Modules
 				var sequenceItem = ((DicomAttributeSQ) sqAttribute)[frameNumber - 1];
 				var functionalGroup = functionalGroupDescriptor.Create(sequenceItem);
 				if (functionalGroup.HasValues())
+				{
+					isFrameSpecific = true;
 					return functionalGroup;
+				}
 			}
 
 			if (dataSet.TryGetAttribute(DicomTags.SharedFunctionalGroupsSequence, out sqAttribute) && sqAttribute.Count > 0)
