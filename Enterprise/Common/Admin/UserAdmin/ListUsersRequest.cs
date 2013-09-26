@@ -22,20 +22,18 @@
 
 #endregion
 
-using System;
 using System.Runtime.Serialization;
 using ClearCanvas.Common.Serialization;
-using ClearCanvas.Enterprise.Common;
 
 namespace ClearCanvas.Enterprise.Common.Admin.UserAdmin
 {
-    [DataContract]
+	[DataContract]
 	public class ListUsersRequest : DataContractBase
-    {
-        public ListUsersRequest()
-        {
+	{
+		public ListUsersRequest()
+		{
 			this.Page = new SearchResultPage();
-        }
+		}
 
 		/// <summary>
 		/// Filter by user name.
@@ -54,6 +52,18 @@ namespace ClearCanvas.Enterprise.Common.Admin.UserAdmin
 		/// </summary>
 		[DataMember]
 		public bool ExactMatchOnly;
+
+		/// <summary>
+		/// Specify true to include Group accounts in the results.
+		/// </summary>
+		[DataMember]
+		public bool IncludeGroupAccounts;
+
+		/// <summary>
+		/// Specify true to include System accounts in the results.
+		/// </summary>
+		[DataMember]
+		public bool IncludeSystemAccounts;
 
 		[DataMember]
 		public SearchResultPage Page;

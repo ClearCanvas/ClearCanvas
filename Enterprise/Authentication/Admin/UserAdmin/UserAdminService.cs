@@ -47,7 +47,7 @@ namespace ClearCanvas.Enterprise.Authentication.Admin.UserAdmin
 		public ListUsersResponse ListUsers(ListUsersRequest request)
 		{
 			// establish which account types this user is entitled to see
-			var visibleAccountTypes = new List<UserAccountType>(GetAccountTypesAuthorizedToManage());
+			var visibleAccountTypes = GetAccountTypesAuthorizedToManage(request.IncludeGroupAccounts, request.IncludeSystemAccounts).ToList();
 			if (!visibleAccountTypes.Any())
 				throw new SecurityException(SR.MessageUserNotAuthorized);
 
@@ -310,16 +310,16 @@ namespace ClearCanvas.Enterprise.Authentication.Admin.UserAdmin
 
 		private static bool IsCurrentUserAuthorizedToManage(UserAccountType accountType)
 		{
-			return GetAccountTypesAuthorizedToManage().Contains(accountType);
+			return GetAccountTypesAuthorizedToManage(true, true).Contains(accountType);
 		}
 
-		private static IEnumerable<UserAccountType> GetAccountTypesAuthorizedToManage()
+		private static IEnumerable<UserAccountType> GetAccountTypesAuthorizedToManage(bool includeGroupAccounts, bool includeSystemAccounts)
 		{
 			if (Thread.CurrentPrincipal.IsInRole(AuthorityTokens.Admin.Security.User))
 				yield return (UserAccountType.U);
-			if (Thread.CurrentPrincipal.IsInRole(AuthorityTokens.Admin.Security.NonUserAccounts.Group))
+			if (includeGroupAccounts && Thread.CurrentPrincipal.IsInRole(AuthorityTokens.Admin.Security.NonUserAccounts.Group))
 				yield return (UserAccountType.G);
-			if (Thread.CurrentPrincipal.IsInRole(AuthorityTokens.Admin.Security.NonUserAccounts.Service))
+			if (includeSystemAccounts && Thread.CurrentPrincipal.IsInRole(AuthorityTokens.Admin.Security.NonUserAccounts.Service))
 				yield return (UserAccountType.S);
 		}
 	}
