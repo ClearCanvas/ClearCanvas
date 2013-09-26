@@ -44,14 +44,16 @@ namespace ClearCanvas.Dicom.ServiceModel.Editing
 			set { _edits = value; }
 		}
 
+		public virtual bool AppliesTo(IEditContext context)
+		{
+			return Condition == null || Condition.IsMatch(context.DataSet);
+		}
+
 		#region Overrides of Edit
 
 		public override void Apply(IEditContext context)
 		{
-			if (context.Excluded)
-				return;
-
-			if (Condition != null && !Condition.IsMatch(context.DataSet))
+			if (context.Excluded || !AppliesTo(context))
 				return;
 
 			foreach (var edit in Edits)
