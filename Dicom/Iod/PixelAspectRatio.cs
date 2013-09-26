@@ -33,10 +33,10 @@ namespace ClearCanvas.Dicom.Iod
 	public class PixelAspectRatio : IEquatable<PixelAspectRatio>
 	{
 		#region Private Members
-		
-		int _row;
-		int _column;
-		
+
+		private int _row;
+		private int _column;
+
 		#endregion
 
 		/// <summary>
@@ -51,9 +51,7 @@ namespace ClearCanvas.Dicom.Iod
 		/// <summary>
 		/// Protected constructor.
 		/// </summary>
-		protected PixelAspectRatio()
-		{
-		}
+		protected PixelAspectRatio() {}
 
 		#region Public Properties
 
@@ -71,17 +69,17 @@ namespace ClearCanvas.Dicom.Iod
 		/// Gets the row (vertical) component of the ratio.
 		/// </summary>
 		public virtual int Row
-        {
-            get { return _row; }
-            protected set { _row = value; }
-        }
+		{
+			get { return _row; }
+			protected set { _row = value; }
+		}
 
 		/// <summary>
 		/// Gets the column (horizontal) component of the ratio.
 		/// </summary>
-        public virtual int Column
-        {
-            get { return _column; }
+		public virtual int Column
+		{
+			get { return _column; }
 			protected set { _column = value; }
 		}
 
@@ -99,7 +97,7 @@ namespace ClearCanvas.Dicom.Iod
 				if (IsNull)
 					return 0;
 
-				return Row / (float)Column;
+				return Row/(float) Column;
 			}
 		}
 
@@ -123,10 +121,11 @@ namespace ClearCanvas.Dicom.Iod
 		/// </returns>
 		public static PixelAspectRatio FromString(string multiValuedString)
 		{
+			if (string.IsNullOrEmpty(multiValuedString)) return null;
+
 			int[] values;
 			if (DicomStringHelper.TryGetIntArray(multiValuedString, out values) && values.Length == 2)
-					return new PixelAspectRatio(values[0], values[1]);
-
+				return new PixelAspectRatio(values[0], values[1]);
 			return null;
 		}
 
@@ -134,31 +133,25 @@ namespace ClearCanvas.Dicom.Iod
 
 		public bool Equals(PixelAspectRatio other)
 		{
-			if (other == null)
-				return false;
-
-			return _row == other._row && _column == other._column;
+			return other != null && _row == other._row && _column == other._column;
 		}
 
 		#endregion
 
 		public override bool Equals(object obj)
 		{
-			if (obj == null)
-				return false;
-
-			return this.Equals(obj as PixelAspectRatio);
+			return obj != null && Equals(obj as PixelAspectRatio);
 		}
 
 		/// <summary>
-        /// Serves as a hash function for a particular type. <see cref="M:System.Object.GetHashCode"></see> is suitable for use in hashing algorithms and data structures like a hash table.
-        /// </summary>
-        /// <returns>
-        /// A hash code for the current <see cref="T:System.Object"></see>.
-        /// </returns>
-        public override int GetHashCode()
-        {
-            return base.GetHashCode();
+		/// Serves as a hash function for a particular type. <see cref="M:System.Object.GetHashCode"></see> is suitable for use in hashing algorithms and data structures like a hash table.
+		/// </summary>
+		/// <returns>
+		/// A hash code for the current <see cref="T:System.Object"></see>.
+		/// </returns>
+		public override int GetHashCode()
+		{
+			return -0x463A3C83;
 		}
 
 		#endregion

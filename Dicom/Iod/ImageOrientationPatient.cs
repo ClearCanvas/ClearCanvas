@@ -28,28 +28,40 @@ using ClearCanvas.Dicom.Utilities;
 namespace ClearCanvas.Dicom.Iod
 {
 	/// <summary>
-	/// The ImageOrientationPatient class is quite simple, basically providing a centralized place to store the
-	/// row/column direction cosines from the Dicom Header.  One additional piece of functionality is the primary
-	/// and secondary row/column directions, which are transformed (using the cosines) into more meaningful 
-	/// values (Anterior, Left, Head, etc).
-	/// 
-	/// The components of each of the cosine vectors (row/column, x,y,z) corresponds to the patient based coordinate
-	/// system as follows (e.g. it is a right-handed system): 
-	///
-	/// +x --> Left,			-x --> Right
-	/// +y --> Posterior,		-y --> Anterior 
-	/// +z --> Head,			-z --> Foot
-	/// 
-	/// The primary and secondary directions of a cosine vector correspond directly to the 2 largest
-	/// values in the cosine vector, disregarding the sign.  The sign determines the direction along 
-	/// a particular axis in the patient based system as described above.
-	///
-	/// The row cosine vector completely describes the direction, in the patient based system, of the first row
-	/// in the image (increasing x).  Similarly, the column cosine vector completely describes the 
-	/// direction of the first column in the image in the patient based system.
+	/// Represents the orientation of the image in the patient coordinate system.
 	/// </summary>
+	/// <remarks>
+	/// <para>
+	/// The <see cref="ImageOrientationPatient"/> class is quite simple, basically providing a centralized place to store the
+	/// row/column direction cosines from the DICOM Header, which are basically the unit vectors in the patient coordinate
+	/// system that describe the orientation of the a row and a column in the image. One additional piece of functionality is
+	/// the primary and secondary row/column directions, which are transformed (using the cosines) into more meaningful 
+	/// values (Anterior, Left, Head, etc).
+	/// </para>
+	/// <para>
+	/// The components of each of the cosine vectors (row/column, X,Y,Z) corresponds to the patient based coordinate
+	/// system as follows (using a right-handed convention):
+	/// </para>
+	/// <para>
+	/// +X --> Left,			-X --> Right,
+	/// +Y --> Posterior,		-Y --> Anterior,
+	/// +Z --> Head,			-Z --> Foot
+	/// </para>
+	/// <para>
+	/// The primary and secondary directions of a cosine vector correspond directly to the 2 largest
+	/// values in the cosine vector, disregarding the sign. The sign determines the direction along 
+	/// a particular axis in the patient based system as described above.
+	/// </para>
+	/// <para>
+	/// The row cosine vector completely describes the direction, in the patient based system, of the first row
+	/// in the image (increasing X). Similarly, the column cosine vector completely describes the 
+	/// direction of the first column in the image in the patient based system.
+	/// </para>
+	/// </remarks>
 	public class ImageOrientationPatient : IEquatable<ImageOrientationPatient>
 	{
+		#region Directions Enum
+
 		/// <summary>
 		/// Defines the direction of the axes in the patient coordinate system.
 		/// </summary>
@@ -64,12 +76,16 @@ namespace ClearCanvas.Dicom.Iod
 			Foot = -3
 		};
 
+		#endregion
+
+		#region Standard Orientations
+
 		private static readonly int[] _left = new[] {1, 0, 0};
 		private static readonly int[] _right = new[] {-1, 0, 0};
 		private static readonly int[] _posterior = new[] {0, 1, 0};
 		private static readonly int[] _anterior = new[] {0, -1, 0};
-		private static readonly int[] _head = new[] {0, 0, 1};
 		private static readonly int[] _foot = new[] {0, 0, -1};
+		// head would (0,0,1) but is not used because no standard orientation has the head pointing sideways or down
 
 		public static ImageOrientationPatient Empty = new ImageOrientationPatient();
 		public static ImageOrientationPatient AxialRight = new ImageOrientationPatient(_right, _posterior);
@@ -78,6 +94,8 @@ namespace ClearCanvas.Dicom.Iod
 		public static ImageOrientationPatient SaggittalAnterior = new ImageOrientationPatient(_anterior, _foot);
 		public static ImageOrientationPatient CoronalRight = new ImageOrientationPatient(_right, _foot);
 		public static ImageOrientationPatient CoronalLeft = new ImageOrientationPatient(_left, _foot);
+
+		#endregion
 
 		#region Private Members
 
@@ -89,8 +107,18 @@ namespace ClearCanvas.Dicom.Iod
 		#endregion
 
 		/// <summary>
-		/// Constructor.
+		/// Initializes a new instance of <see cref="ImageOrientationPatient"/> from the direction cosines of the row and column orientations.
 		/// </summary>
+		/// <remarks>
+		/// Another way to think of direction cosine vectors is that they are simply the unit vectors in the
+		/// patient coordinate system describing the orientation of a row and a column in the image.
+		/// </remarks>
+		/// <param name="rowX">The X component of the row direction cosine vector.</param>
+		/// <param name="rowY">The Y component of the row direction cosine vector.</param>
+		/// <param name="rowZ">The Z component of the row direction cosine vector.</param>
+		/// <param name="columnX">The X component of the column direction cosine vector.</param>
+		/// <param name="columnY">The Y component of the column direction cosine vector.</param>
+		/// <param name="columnZ">The Z component of the column direction cosine vector.</param>
 		public ImageOrientationPatient(double rowX, double rowY, double rowZ, double columnX, double columnY, double columnZ)
 		{
 			RowX = rowX;
@@ -128,50 +156,61 @@ namespace ClearCanvas.Dicom.Iod
 		#region Public Properties
 
 		/// <summary>
-		/// Gets whether or not this object represents a null value.
+		/// Gets whether or not this object represents a NULL value.
 		/// </summary>
 		public bool IsNull
 		{
 			get
 			{
+// ReSharper disable CompareOfFloatsByEqualityOperator
 				return (RowX == 0 && RowY == 0 && RowZ == 0) ||
 				       (ColumnX == 0 && ColumnY == 0 && ColumnZ == 0);
+// ReSharper restore CompareOfFloatsByEqualityOperator
 			}
 		}
 
 		/// <summary>
-		/// Gets the x component of the direction cosine for the first row in the image.
+		/// Gets the X component of the direction cosine for the first row in the image.
 		/// </summary>
 		public double RowX { get; private set; }
 
 		/// <summary>
-		/// Gets the y component of the direction cosine for the first row in the image.
+		/// Gets the Y component of the direction cosine for the first row in the image.
 		/// </summary>
 		public double RowY { get; private set; }
 
 		/// <summary>
-		/// Gets the z component of the direction cosine for the first row in the image.
+		/// Gets the Z component of the direction cosine for the first row in the image.
 		/// </summary>
 		public double RowZ { get; private set; }
 
 		/// <summary>
-		/// Gets the x component of the direction cosine for the first column in the image.
+		/// Gets the X component of the direction cosine for the first column in the image.
 		/// </summary>
 		public double ColumnX { get; private set; }
 
 		/// <summary>
-		/// Gets the y component of the direction cosine for the first column in the image.
+		/// Gets the Y component of the direction cosine for the first column in the image.
 		/// </summary>
 		public double ColumnY { get; private set; }
 
 		/// <summary>
-		/// Gets the z component of the direction cosine for the first column in the image.
+		/// Gets the Z component of the direction cosine for the first column in the image.
 		/// </summary>
 		public double ColumnZ { get; private set; }
 
 		#endregion
 
 		#region Public Methods
+
+		/// <summary>
+		/// Gets the effective <see cref="PatientOrientation"/> that describes the image orientation.
+		/// </summary>
+		/// <returns>A <see cref="PatientOrientation"/> describing the primary and secondary directions of the image orientation.</returns>
+		public PatientOrientation ToPatientOrientation()
+		{
+			return !IsNull ? new PatientOrientation(PrimaryRow + (PatientDirection) SecondaryRow, PrimaryColumn + (PatientDirection) SecondaryColumn) : PatientOrientation.Empty;
+		}
 
 		/// <summary>
 		/// Gets a string suitable for direct insertion into a <see cref="DicomAttributeMultiValueText"/> attribute.
@@ -182,78 +221,102 @@ namespace ClearCanvas.Dicom.Iod
 		}
 
 		/// <summary>
-		/// Creates an <see cref="ImageOrientationPatient"/> object from a dicom multi-valued string.
+		/// Creates an <see cref="ImageOrientationPatient"/> object from a DICOM multi-valued string.
 		/// </summary>
+		/// <param name="multiValuedString">A DICOM multi-valued string containing the 6 components of the row and column cosine vectors.</param>
 		/// <returns>
-		/// Null if there are not exactly six parsed values in the input string.
+		/// Returns NULL if there are not exactly six parseable values in the input string.
 		/// </returns>
 		public static ImageOrientationPatient FromString(string multiValuedString)
 		{
+			if (string.IsNullOrEmpty(multiValuedString)) return null;
+
 			double[] values;
 			if (DicomStringHelper.TryGetDoubleArray(multiValuedString, out values) && values.Length == 6)
 				return new ImageOrientationPatient(values[0], values[1], values[2], values[3], values[4], values[5]);
-
 			return null;
 		}
 
+		/// <summary>
+		/// Gets the primary patient direction of the first row of the image (increasing X).
+		/// </summary>
 		public Directions PrimaryRow
 		{
 			get { return (Directions) _primaryRowDirection; }
 		}
 
+		/// <summary>
+		/// Gets the primary patient direction of the first column of the image (increasing Y).
+		/// </summary>
 		public Directions PrimaryColumn
 		{
 			get { return (Directions) _primaryColumnDirection; }
 		}
 
+		/// <summary>
+		/// Gets the secondary patient direction of the first row of the image (increasing X).
+		/// </summary>
 		public Directions SecondaryRow
 		{
 			get { return (Directions) _secondaryRowDirection; }
 		}
 
+		/// <summary>
+		/// Gets the secondary patient direction of the first column of the image (increasing Y).
+		/// </summary>
 		public Directions SecondaryColumn
 		{
 			get { return (Directions) _secondaryColumnDirection; }
 		}
 
 		/// <summary>
-		/// Gets the primary direction, in terms of the Patient based coordinate system, of the first row of the Image (increasing x).
+		/// Gets the primary patient direction of the first row of the image (increasing X).
 		/// </summary>
-		/// <param name="opposingDirection">indicates the opposite direction to the primary direction should be returned.
-		/// For example, if the primary direction is Anterior, then Posterior will be returned if this parameter is true.</param>
-		/// <returns>the direction, in terms of the Patient based coordinate system</returns>
+		/// <param name="opposingDirection">Indicates that the opposite of the primary direction should be returned.
+		/// (e.g. if the direction is <see cref="Directions.Anterior"/>, the opposite would be <see cref="Directions.Posterior"/>).</param>
+		/// <returns>The primary direction of the row in terms of the patient coordinate system.</returns>
 		public Directions GetPrimaryRowDirection(bool opposingDirection)
 		{
 			return (Directions) (_primaryRowDirection*(opposingDirection ? -1 : 1));
 		}
 
 		/// <summary>
-		/// Gets the primary direction, in terms of the Patient based coordinate system, of the first column of the Image (increasing y).
+		/// Gets the primary patient direction of the first column of the image (increasing Y).
 		/// </summary>
-		/// <param name="opposingDirection">indicates the opposite direction to the primary direction should be returned.
-		/// For example, if the primary direction is Anterior, then Posterior will be returned if this parameter is true.</param>
-		/// <returns>the direction, in terms of the Patient based coordinate system</returns>
+		/// <param name="opposingDirection">Indicates that the opposite of the primary direction should be returned.
+		/// (e.g. if the direction is <see cref="Directions.Anterior"/>, the opposite would be <see cref="Directions.Posterior"/>).</param>
+		/// <returns>The primary direction of the column in terms of the patient coordinate system.</returns>
 		public Directions GetPrimaryColumnDirection(bool opposingDirection)
 		{
 			return (Directions) (_primaryColumnDirection*(opposingDirection ? -1 : 1));
 		}
 
+		/// <summary>
+		/// Gets the secondary patient direction of the first row of the image (increasing X).
+		/// </summary>
+		/// <returns>The secondary direction of the row in terms of the patient coordinate system.</returns>
 		public Directions GetSecondaryRowDirection()
 		{
 			return GetSecondaryRowDirection(false);
 		}
 
+		/// <summary>
+		/// Gets the secondary patient direction of the first row of the image (increasing X).
+		/// </summary>
+		/// <param name="degreesTolerance">Angle of tolerance in degrees (i.e. if the direction is actually within the specified
+		/// angle of being perpendicular to the secondary direction, the result will be <see cref="Directions.None"/> instead).</param>
+		/// <returns>The secondary direction of the row in terms of the patient coordinate system.</returns>
 		public Directions GetSecondaryRowDirection(double degreesTolerance)
 		{
 			return GetSecondaryRowDirection(false, degreesTolerance);
 		}
 
 		/// <summary>
-		/// Gets the secondary direction, in terms of the Patient based coordinate system, of the first row of the Image (increasing x).
+		/// Gets the secondary patient direction of the first row of the image (increasing X).
 		/// </summary>
-		/// <param name="opposingDirection">indicates the opposite direction to the secondary direction should be returned.
-		/// For example, if the secondary direction is Anterior, then Posterior will be returned if this parameter is true.</param>
-		/// <returns>the direction, in terms of the Patient based coordinate system</returns>
+		/// <param name="opposingDirection">Indicates that the opposite of the secondary direction should be returned.
+		/// (e.g. if the direction is <see cref="Directions.Anterior"/>, the opposite would be <see cref="Directions.Posterior"/>).</param>
+		/// <returns>The secondary direction of the row in terms of the patient coordinate system.</returns>
 		public Directions GetSecondaryRowDirection(bool opposingDirection)
 		{
 			return (Directions) (_secondaryRowDirection*(opposingDirection ? -1 : 1));
@@ -262,19 +325,23 @@ namespace ClearCanvas.Dicom.Iod
 		//TODO (CR June 2011): Need tertiary?
 
 		/// <summary>
-		/// Gets the secondary direction, in terms of the Patient based coordinate system, of the first row of the Image (increasing x).
+		/// Gets the secondary patient direction of the first row of the image (increasing X).
 		/// </summary>
-		/// <param name="opposingDirection">indicates the opposite direction to the secondary direction should be returned.
-		/// For example, if the secondary direction is Anterior, then Posterior will be returned if this parameter is true.</param>
-		/// <param name="degreesTolerance">Specifies the angular tolerance in degrees. If the secondary directional cosine
-		/// does not exceed this value, then the result will be <see cref="Directions.None"/>.</param>
-		/// <returns>the direction, in terms of the Patient based coordinate system</returns>
+		/// <param name="opposingDirection">Indicates that the opposite of the secondary direction should be returned.
+		/// (e.g. if the direction is <see cref="Directions.Anterior"/>, the opposite would be <see cref="Directions.Posterior"/>).</param>
+		/// <param name="degreesTolerance">Angle of tolerance in degrees (i.e. if the direction is actually within the specified
+		/// angle of being perpendicular to the secondary direction, the result will be <see cref="Directions.None"/> instead).</param>
+		/// <returns>The secondary direction of the row in terms of the patient coordinate system.</returns>
 		public Directions GetSecondaryRowDirection(bool opposingDirection, double degreesTolerance)
 		{
 			// JY: Note that the same tolerance functionality is purposefully not available to the primary direction
 			//TODO (CR June 2011): why 10?
 			if (degreesTolerance < 0 || degreesTolerance > 10)
-				throw new ArgumentOutOfRangeException("degreesTolerance", degreesTolerance, "Value must be between 0 and 10.");
+			{
+				const string msg = "Value must be between 0 and 10.";
+				throw new ArgumentOutOfRangeException("degreesTolerance", degreesTolerance, msg);
+			}
+
 			if (_secondaryRowDirection == 0)
 				return Directions.None;
 
@@ -287,22 +354,32 @@ namespace ClearCanvas.Dicom.Iod
 			return GetSecondaryRowDirection(opposingDirection);
 		}
 
+		/// <summary>
+		/// Gets the secondary patient direction of the first column of the image (increasing Y).
+		/// </summary>
+		/// <returns>The secondary direction of the column in terms of the patient coordinate system.</returns>
 		public Directions GetSecondaryColumnDirection()
 		{
 			return GetSecondaryColumnDirection(false);
 		}
 
+		/// <summary>
+		/// Gets the secondary patient direction of the first column of the image (increasing Y).
+		/// </summary>
+		/// <param name="degreesTolerance">Angle of tolerance in degrees (i.e. if the direction is actually within the specified
+		/// angle of being perpendicular to the secondary direction, the result will be <see cref="Directions.None"/> instead).</param>
+		/// <returns>The secondary direction of the column in terms of the patient coordinate system.</returns>
 		public Directions GetSecondaryColumnDirection(double degreesTolerance)
 		{
 			return GetSecondaryColumnDirection(false, degreesTolerance);
 		}
 
 		/// <summary>
-		/// Gets the secondary direction, in terms of the Patient based coordinate system, of the first column of the Image (increasing y).
+		/// Gets the secondary patient direction of the first column of the image (increasing Y).
 		/// </summary>
-		/// <param name="opposingDirection">indicates the opposite direction to the secondary direction should be returned.
-		/// For example, if the secondary direction is Anterior, then Posterior will be returned if this parameter is true.</param>
-		/// <returns>the direction, in terms of the Patient based coordinate system</returns>
+		/// <param name="opposingDirection">Indicates that the opposite of the secondary direction should be returned.
+		/// (e.g. if the direction is <see cref="Directions.Anterior"/>, the opposite would be <see cref="Directions.Posterior"/>).</param>
+		/// <returns>The secondary direction of the column in terms of the patient coordinate system.</returns>
 		public Directions GetSecondaryColumnDirection(bool opposingDirection)
 		{
 			return (Directions) (_secondaryColumnDirection*(opposingDirection ? -1 : 1));
@@ -311,19 +388,23 @@ namespace ClearCanvas.Dicom.Iod
 		//TODO (CR June 2011): Need tertiary?
 
 		/// <summary>
-		/// Gets the secondary direction, in terms of the Patient based coordinate system, of the first column of the Image (increasing y).
+		/// Gets the secondary patient direction of the first column of the image (increasing Y).
 		/// </summary>
-		/// <param name="opposingDirection">indicates the opposite direction to the secondary direction should be returned.
-		/// For example, if the secondary direction is Anterior, then Posterior will be returned if this parameter is true.</param>
-		/// <param name="degreesTolerance">Specifies the angular tolerance in degrees. If the secondary directional cosine
-		/// does not exceed this value, then the result will be <see cref="Directions.None"/>.</param>
-		/// <returns>the direction, in terms of the Patient based coordinate system</returns>
+		/// <param name="opposingDirection">Indicates that the opposite of the secondary direction should be returned.
+		/// (e.g. if the direction is <see cref="Directions.Anterior"/>, the opposite would be <see cref="Directions.Posterior"/>).</param>
+		/// <param name="degreesTolerance">Angle of tolerance in degrees (i.e. if the direction is actually within the specified
+		/// angle of being perpendicular to the secondary direction, the result will be <see cref="Directions.None"/> instead).</param>
+		/// <returns>The secondary direction of the column in terms of the patient coordinate system.</returns>
 		public Directions GetSecondaryColumnDirection(bool opposingDirection, double degreesTolerance)
 		{
 			// JY: Note that the same tolerance functionality is purposefully not available to the primary direction
 			//TODO (CR June 2011): why 10?
 			if (degreesTolerance < 0 || degreesTolerance > 10)
-				throw new ArgumentOutOfRangeException("degreesTolerance", degreesTolerance, "Value must be between 0 and 10.");
+			{
+				const string msg = "Value must be between 0 and 10.";
+				throw new ArgumentOutOfRangeException("degreesTolerance", degreesTolerance, msg);
+			}
+
 			if (_secondaryColumnDirection == 0)
 				return Directions.None;
 
@@ -356,8 +437,16 @@ namespace ClearCanvas.Dicom.Iod
 			return obj != null && Equals(obj as ImageOrientationPatient);
 		}
 
+		/// <summary>
+		/// Determines if this <see cref="ImageOrientationPatient"/> is equal to another orientation
+		/// within the specified tolerance.
+		/// </summary>
+		/// <param name="other">The other <see cref="ImageOrientationPatient"/> with which to compare.</param>
+		/// <param name="withinTolerance">The absolute tolerance of each component of the orientation cosine vectors.</param>
+		/// <returns>True if they are considered equal; False otherwise.</returns>
 		public bool EqualsWithinTolerance(ImageOrientationPatient other, float withinTolerance)
 		{
+			// TODO CR (26 Sep 2013): This determines equality with an absolute tolerance - a more useful comparison might be one with an angular tolerance
 			if (other == null)
 				return false;
 
@@ -408,10 +497,10 @@ namespace ClearCanvas.Dicom.Iod
 			int[] rowCosineSortedIndices = BubbleSortCosineIndices(rowCosines);
 			int[] columnCosineSortedIndices = BubbleSortCosineIndices(columnCosines);
 
-			SetDirectionValue(ref _primaryRowDirection, rowCosines[rowCosineSortedIndices[0]], rowCosineSortedIndices[0]);
-			SetDirectionValue(ref _secondaryRowDirection, rowCosines[rowCosineSortedIndices[1]], rowCosineSortedIndices[1]);
-			SetDirectionValue(ref _primaryColumnDirection, columnCosines[columnCosineSortedIndices[0]], columnCosineSortedIndices[0]);
-			SetDirectionValue(ref _secondaryColumnDirection, columnCosines[columnCosineSortedIndices[1]], columnCosineSortedIndices[1]);
+			SetDirectionValue(out _primaryRowDirection, rowCosines[rowCosineSortedIndices[0]], rowCosineSortedIndices[0]);
+			SetDirectionValue(out _secondaryRowDirection, rowCosines[rowCosineSortedIndices[1]], rowCosineSortedIndices[1]);
+			SetDirectionValue(out _primaryColumnDirection, columnCosines[columnCosineSortedIndices[0]], columnCosineSortedIndices[0]);
+			SetDirectionValue(out _secondaryColumnDirection, columnCosines[columnCosineSortedIndices[1]], columnCosineSortedIndices[1]);
 		}
 
 		/// <summary>
@@ -420,11 +509,9 @@ namespace ClearCanvas.Dicom.Iod
 		/// <param name="member">the member to set</param>
 		/// <param name="cosineValue">the cosine value</param>
 		/// <param name="cosineIndex">the index of the cosine value in the original direction cosine vector</param>
-		private static void SetDirectionValue(ref int member, double cosineValue, int cosineIndex)
+		private static void SetDirectionValue(out int member, double cosineValue, int cosineIndex)
 		{
-			member = 0;
-			if (Math.Abs(cosineValue) > float.Epsilon)
-				member = (cosineIndex + 1)*Math.Sign(cosineValue);
+			member = Math.Abs(cosineValue) > float.Epsilon ? (cosineIndex + 1)*Math.Sign(cosineValue) : 0;
 		}
 
 		/// <summary>
