@@ -10,6 +10,9 @@ namespace ClearCanvas.Dicom.ServiceModel.Editing
 	{
 		DicomAttributeCollection DataSet { get; }
 
+		bool Excluded { get; }
+		void Exclude();
+
 		int FrameNumber { get; }
 		int Rows { get; }
 		int Columns { get; }
@@ -36,16 +39,31 @@ namespace ClearCanvas.Dicom.ServiceModel.Editing
 		private List<PixelDataEdit> _edits;
 
 		[DataMember(IsRequired = true)]
+		public Condition Condition { get; set; }
+
+		[DataMember(IsRequired = true)]
 		public List<PixelDataEdit> Edits
 		{
 			get { return _edits ?? (_edits = new List<PixelDataEdit>()); }
 			set { _edits = value; }
 		}
 
+		public virtual bool AppliesTo(IEditPixelDataContext context)
+		{
+			return Condition == null || Condition.IsMatch(context.DataSet);
+		}
+
 		public override void Apply(IEditPixelDataContext context)
 		{
+			if (context.Excluded || !AppliesTo(context))
+				return;
+
 			foreach (var edit in Edits)
+			{
 				edit.Apply(context);
+				if (context.Excluded)
+					return;
+			}
 		}
 
 		public override string ToString()

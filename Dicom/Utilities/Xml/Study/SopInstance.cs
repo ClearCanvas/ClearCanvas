@@ -171,6 +171,11 @@ namespace ClearCanvas.Dicom.Utilities.Xml.Study
         
         #region ISopInstance Members
 
+		public SopClass SopClass
+		{
+			get { return SopClass.GetSopClass(_xml.SopClass.Uid); }
+		}
+
         public DicomAttribute GetAttribute(uint dicomTag)
         {
             if (!IsStoredTag(dicomTag))
