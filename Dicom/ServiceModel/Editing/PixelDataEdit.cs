@@ -16,6 +16,7 @@ namespace ClearCanvas.Dicom.ServiceModel.Editing
 		int FrameNumber { get; }
 		int Rows { get; }
 		int Columns { get; }
+		int SamplesPerPixel { get; }
 		int BitsAllocated { get; }
 		int BitsStored { get; }
 		int HighBit { get; }
