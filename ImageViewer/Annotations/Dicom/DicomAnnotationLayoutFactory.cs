@@ -23,6 +23,7 @@
 #endregion
 
 using System.Collections.Generic;
+using ClearCanvas.Dicom;
 using ClearCanvas.ImageViewer.StudyManagement;
 
 namespace ClearCanvas.ImageViewer.Annotations.Dicom
@@ -32,6 +33,12 @@ namespace ClearCanvas.ImageViewer.Annotations.Dicom
 		public static IAnnotationLayout CreateLayout(IImageSopProvider dicomImage)
 		{
 			string layoutId = DicomFilteredAnnotationLayoutStore.Instance.GetMatchingStoredLayoutId(dicomImage);
+			return AnnotationLayoutFactory.CreateLayout(layoutId);
+		}
+
+		public static IAnnotationLayout CreateLayout(IDicomAttributeProvider dicomAttributeProvider)
+		{
+			string layoutId = DicomFilteredAnnotationLayoutStore.Instance.GetMatchingStoredLayoutId(dicomAttributeProvider);
 			return AnnotationLayoutFactory.CreateLayout(layoutId);
 		}
 

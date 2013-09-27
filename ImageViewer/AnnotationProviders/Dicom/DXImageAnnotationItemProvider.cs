@@ -24,8 +24,11 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using ClearCanvas.Common;
 using ClearCanvas.Dicom;
+using ClearCanvas.Dicom.Iod.Modules;
+using ClearCanvas.Dicom.Utilities;
 using ClearCanvas.ImageViewer.Annotations;
 using ClearCanvas.ImageViewer.Annotations.Dicom;
 using ClearCanvas.ImageViewer.StudyManagement;
@@ -35,12 +38,18 @@ namespace ClearCanvas.ImageViewer.AnnotationProviders.Dicom
 	[ExtensionOf(typeof (AnnotationItemProviderExtensionPoint))]
 	public class DXImageAnnotationItemProvider : AnnotationItemProvider
 	{
+		private const string _keyReconstructionSequence = "RECONSTRUCTION";
+		private const string _keyAcquisitionSequence = "ACQUISITION";
+
 		private readonly List<IAnnotationItem> _annotationItems;
+		private readonly AnnotationDataSourceContext<Frame> _frameContext;
 
 		public DXImageAnnotationItemProvider()
 			: base("AnnotationItemProviders.Dicom.DXImage", new AnnotationResourceResolver(typeof (DXImageAnnotationItemProvider).Assembly))
 		{
 			_annotationItems = new List<IAnnotationItem>();
+			_frameContext = new AnnotationDataSourceContext<Frame>();
+			_frameContext.DataSourceChanged += OnFrameContextDataSourceChanged;
 
 			AnnotationResourceResolver resolver = new AnnotationResourceResolver(this);
 
@@ -84,10 +93,15 @@ namespace ClearCanvas.ImageViewer.AnnotationProviders.Dicom
 				(
 					new DicomAnnotationItem<string>
 						(
-						// this is actually DX Positioning module
+						// this is actually DX Positioning or X-Ray 3D Acquisition module
 						"Dicom.DXImage.BodyPartThickness",
 						resolver,
-						f => string.Format(SR.FormatMillimeters, FormatFloat64(f, DicomTags.BodyPartThickness, "{0:F1}")),
+						f =>
+							{
+								var acquisitions = _frameContext.GetData<IXRay3DAcquisitionSequenceItem[]>(f, _keyAcquisitionSequence);
+								var dataset = acquisitions != null ? (IEnumerable<IDicomAttributeProvider>) acquisitions.Select(a => a.DicomSequenceItem) : new IDicomAttributeProvider[] {f};
+								return string.Format(SR.FormatMillimeters, FormatMultiValues(dataset, FormatFloat64, DicomTags.BodyPartThickness, "{0:F1}"));
+							},
 						DicomDataFormatHelper.RawStringFormat
 						)
 				);
@@ -99,7 +113,12 @@ namespace ClearCanvas.ImageViewer.AnnotationProviders.Dicom
 						// this is actually DX Positioning module
 						"Dicom.DXImage.CompressionForce",
 						resolver,
-						f => FormatInt32(f, DicomTags.CompressionForce, SR.FormatNewtons),
+						f =>
+							{
+								var acquisitions = _frameContext.GetData<IXRay3DAcquisitionSequenceItem[]>(f, _keyAcquisitionSequence);
+								var dataset = acquisitions != null ? (IEnumerable<IDicomAttributeProvider>) acquisitions.Select(a => a.DicomSequenceItem) : new IDicomAttributeProvider[] {f};
+								return FormatMultiValues(dataset, FormatInt32, DicomTags.CompressionForce, SR.FormatNewtons);
+							},
 						DicomDataFormatHelper.RawStringFormat
 						)
 				);
@@ -159,7 +178,12 @@ namespace ClearCanvas.ImageViewer.AnnotationProviders.Dicom
 						// this isn't even a DX module, but other X-Ray related modules
 						"Dicom.DXImage.KVP",
 						resolver,
-						f => FormatFloat64(f, DicomTags.Kvp, SR.FormatKilovolts),
+						f =>
+							{
+								var acquisitions = _frameContext.GetData<IXRay3DAcquisitionSequenceItem[]>(f, _keyAcquisitionSequence);
+								var dataset = acquisitions != null ? (IEnumerable<IDicomAttributeProvider>) acquisitions.Select(a => a.DicomSequenceItem) : new IDicomAttributeProvider[] {f};
+								return FormatMultiValues(dataset, FormatFloat64, DicomTags.Kvp, SR.FormatKilovolts);
+							},
 						DicomDataFormatHelper.RawStringFormat
 						)
 				);
@@ -195,7 +219,12 @@ namespace ClearCanvas.ImageViewer.AnnotationProviders.Dicom
 						// legacy item (new layouts should use Exposure) so that current annotation layouts don't break - can be removed in a future release
 						"Dicom.DXImage.ExposureInMas",
 						resolver,
-						f => GetExposureInMas(f, SR.FormatMilliampSeconds),
+						f =>
+							{
+								var acquisitions = _frameContext.GetData<IXRay3DAcquisitionSequenceItem[]>(f, _keyAcquisitionSequence);
+								var dataset = acquisitions != null ? (IEnumerable<IDicomAttributeProvider>) acquisitions.Select(a => a.DicomSequenceItem) : new IDicomAttributeProvider[] {f};
+								return FormatMultiValues(dataset, GetExposureInMas, SR.FormatMilliampSeconds);
+							},
 						DicomDataFormatHelper.RawStringFormat
 						)
 				);
@@ -207,7 +236,12 @@ namespace ClearCanvas.ImageViewer.AnnotationProviders.Dicom
 						// this isn't defined in a DX module, but rather in other X-Ray related modules
 						"Dicom.DXImage.Exposure",
 						resolver,
-						f => GetExposureInMas(f, SR.FormatMilliampSeconds),
+						f =>
+							{
+								var acquisitions = _frameContext.GetData<IXRay3DAcquisitionSequenceItem[]>(f, _keyAcquisitionSequence);
+								var dataset = acquisitions != null ? (IEnumerable<IDicomAttributeProvider>) acquisitions.Select(a => a.DicomSequenceItem) : new IDicomAttributeProvider[] {f};
+								return FormatMultiValues(dataset, GetExposureInMas, SR.FormatMilliampSeconds);
+							},
 						DicomDataFormatHelper.RawStringFormat
 						)
 				);
@@ -219,7 +253,12 @@ namespace ClearCanvas.ImageViewer.AnnotationProviders.Dicom
 						// this isn't defined in a DX module, but rather in other X-Ray related modules
 						"Dicom.DXImage.ExposureTime",
 						resolver,
-						f => GetExposureTimeInMs(f, SR.FormatMilliseconds),
+						f =>
+							{
+								var acquisitions = _frameContext.GetData<IXRay3DAcquisitionSequenceItem[]>(f, _keyAcquisitionSequence);
+								var dataset = acquisitions != null ? (IEnumerable<IDicomAttributeProvider>) acquisitions.Select(a => a.DicomSequenceItem) : new IDicomAttributeProvider[] {f};
+								return FormatMultiValues(dataset, GetExposureTimeInMs, SR.FormatMilliseconds);
+							},
 						DicomDataFormatHelper.RawStringFormat
 						)
 				);
@@ -231,7 +270,12 @@ namespace ClearCanvas.ImageViewer.AnnotationProviders.Dicom
 						// this isn't defined in a DX module, but rather in other X-Ray related modules
 						"Dicom.DXImage.XRayTubeCurrent",
 						resolver,
-						f => GetXRayTubeCurrentInMa(f, SR.FormatMilliamps),
+						f =>
+							{
+								var acquisitions = _frameContext.GetData<IXRay3DAcquisitionSequenceItem[]>(f, _keyAcquisitionSequence);
+								var dataset = acquisitions != null ? (IEnumerable<IDicomAttributeProvider>) acquisitions.Select(a => a.DicomSequenceItem) : new IDicomAttributeProvider[] {f};
+								return FormatMultiValues(dataset, GetXRayTubeCurrentInMa, SR.FormatMilliamps);
+							},
 						DicomDataFormatHelper.RawStringFormat
 						)
 				);
@@ -243,7 +287,12 @@ namespace ClearCanvas.ImageViewer.AnnotationProviders.Dicom
 						// this isn't even a DX module, but other X-Ray related modules
 						"Dicom.DXImage.FilterMaterial",
 						resolver,
-						f => f[DicomTags.FilterMaterial].ToString(),
+						f =>
+							{
+								var acquisitions = _frameContext.GetData<IXRay3DAcquisitionSequenceItem[]>(f, _keyAcquisitionSequence);
+								var dataset = acquisitions != null ? (IEnumerable<IDicomAttributeProvider>) acquisitions.Select(a => a.DicomSequenceItem) : new IDicomAttributeProvider[] {f};
+								return FormatMultiValues(dataset, FormatString, DicomTags.FilterMaterial, null);
+							},
 						DicomDataFormatHelper.RawStringFormat
 						)
 				);
@@ -256,7 +305,8 @@ namespace ClearCanvas.ImageViewer.AnnotationProviders.Dicom
 						"Dicom.DXImage.ContrastBolusAgent",
 						resolver,
 						DicomTags.ContrastBolusAgentSequence,
-						DicomTags.ContrastBolusAgent
+						DicomTags.ContrastBolusAgent,
+						f => _frameContext.GetData<IXRay3DAcquisitionSequenceItem[]>(f, _keyAcquisitionSequence).Select(d => d.DicomSequenceItem).FirstOrDefault()
 						)
 				);
 		}
@@ -266,7 +316,56 @@ namespace ClearCanvas.ImageViewer.AnnotationProviders.Dicom
 			return _annotationItems;
 		}
 
-		internal static string GetExposureInMas(Frame frame, string formatString)
+		private static void OnFrameContextDataSourceChanged(object sender, AnnotationDataSourceContextEventArgs<Frame> e)
+		{
+			if (e.DataSource != null)
+			{
+				var reconstruction = GetReconstruction(e.DataSource);
+				if (reconstruction == null) return;
+				e[_keyReconstructionSequence] = reconstruction;
+
+				var acquisitions = GetAcquisitions(e.DataSource, reconstruction.AcquisitionIndex);
+				if (acquisitions == null) return;
+				e[_keyAcquisitionSequence] = acquisitions;
+			}
+		}
+
+		private static XRay3DReconstructionSequenceItem GetReconstruction(Frame frame)
+		{
+			var reconstructionModule = new XRay3DReconstructionModule(frame.ParentImageSop.DataSource);
+			if (!reconstructionModule.HasValues()) return null;
+
+			var reconstructionItems = reconstructionModule.XRay3DReconstructionSequence;
+			if (reconstructionItems == null) return null;
+
+			var reconstructionIndex = frame[DicomTags.ReconstructionIndex].GetInt32(0, -1); // DICOM indexes are 1-based
+			return reconstructionIndex > 0 && reconstructionItems.Length >= reconstructionIndex ? reconstructionItems[reconstructionIndex - 1] : null;
+		}
+
+		private static IXRay3DAcquisitionSequenceItem[] GetAcquisitions(Frame frame, int[] acquisitionIndices)
+		{
+			var acquisitionModule = new XRay3DAcquisitionModule(frame.ParentImageSop.DataSource);
+			if (!acquisitionModule.HasValues()) return null;
+
+			var acquisitionItems = acquisitionModule.XRay3DAcquisitionSequence;
+			if (acquisitionItems == null) return null;
+
+			// DICOM indexes are 1-based
+			return acquisitionIndices != null && acquisitionIndices.Min() > 0
+			       && acquisitionItems.Length >= acquisitionIndices.Max() ? acquisitionIndices.Select(i => acquisitionItems[i - 1]).ToArray() : null;
+		}
+
+		private static string FormatMultiValues(IEnumerable<IDicomAttributeProvider> frames, Func<IDicomAttributeProvider, string, string> formatter, string formatString)
+		{
+			return DicomStringHelper.GetDicomStringArray(frames.Select(f => formatter(f, formatString)));
+		}
+
+		private static string FormatMultiValues(IEnumerable<IDicomAttributeProvider> frames, Func<IDicomAttributeProvider, uint, string, string> formatter, uint dicomTag, string formatString)
+		{
+			return DicomStringHelper.GetDicomStringArray(frames.Select(f => formatter(f, dicomTag, formatString)));
+		}
+
+		internal static string GetExposureInMas(IDicomAttributeProvider frame, string formatString)
 		{
 			double dValue;
 			if (frame[DicomTags.ExposureInMas].TryGetFloat64(0, out dValue))
@@ -279,7 +378,7 @@ namespace ClearCanvas.ImageViewer.AnnotationProviders.Dicom
 			return frame[DicomTags.Exposure].TryGetInt32(0, out iValue) ? string.Format(formatString, iValue) : string.Empty;
 		}
 
-		internal static string GetExposureTimeInMs(Frame frame, string formatString)
+		internal static string GetExposureTimeInMs(IDicomAttributeProvider frame, string formatString)
 		{
 			double dValue;
 			if (frame[DicomTags.ExposureTimeInMs].TryGetFloat64(0, out dValue))
@@ -292,7 +391,7 @@ namespace ClearCanvas.ImageViewer.AnnotationProviders.Dicom
 			return frame[DicomTags.ExposureTime].TryGetInt32(0, out iValue) ? string.Format(formatString, iValue) : string.Empty;
 		}
 
-		internal static string GetXRayTubeCurrentInMa(Frame frame, string formatString)
+		internal static string GetXRayTubeCurrentInMa(IDicomAttributeProvider frame, string formatString)
 		{
 			double dValue;
 			if (frame[DicomTags.XRayTubeCurrentInMa].TryGetFloat64(0, out dValue))
@@ -305,7 +404,7 @@ namespace ClearCanvas.ImageViewer.AnnotationProviders.Dicom
 			return frame[DicomTags.XRayTubeCurrent].TryGetInt32(0, out iValue) ? string.Format(formatString, iValue) : string.Empty;
 		}
 
-		private static string FormatInt32(Frame frame, uint dicomTag, string formatString)
+		private static string FormatInt32(IDicomAttributeProvider frame, uint dicomTag, string formatString)
 		{
 			int value;
 			bool tagExists = frame[dicomTag].TryGetInt32(0, out value);
@@ -315,12 +414,22 @@ namespace ClearCanvas.ImageViewer.AnnotationProviders.Dicom
 			return "";
 		}
 
-		private static string FormatFloat64(Frame frame, uint dicomTag, string formatString)
+		private static string FormatFloat64(IDicomAttributeProvider frame, uint dicomTag, string formatString)
 		{
 			double value;
 			bool tagExists = frame[dicomTag].TryGetFloat64(0, out value);
 			if (tagExists)
 				return String.Format(formatString, value);
+
+			return "";
+		}
+
+		private static string FormatString(IDicomAttributeProvider frame, uint dicomTag, string unused)
+		{
+			DicomAttribute attribute;
+			bool tagExists = frame.TryGetAttribute(dicomTag, out attribute) && !attribute.IsEmpty;
+			if (tagExists)
+				return attribute.ToString();
 
 			return "";
 		}

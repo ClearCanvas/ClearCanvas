@@ -34,37 +34,34 @@ namespace ClearCanvas.ImageViewer.AnnotationProviders.Dicom
 {
 	internal class CodeSequenceAnnotationItem : DicomAnnotationItem<string>
 	{
-		public CodeSequenceAnnotationItem(string identifier, IAnnotationResourceResolver resolver, uint codeSequenceTag)
-			: this(identifier, resolver, codeSequenceTag, null) {}
+		public CodeSequenceAnnotationItem(string identifier, IAnnotationResourceResolver resolver, uint codeSequenceTag, uint? descriptorTag = null, Func<Frame, IDicomAttributeProvider> dataSourceGetter = null)
+			: base(identifier, resolver, new FrameDataRetriever(codeSequenceTag, descriptorTag, dataSourceGetter).RetrieveData, FormatResult) {}
 
-		public CodeSequenceAnnotationItem(string identifier, IAnnotationResourceResolver resolver, uint codeSequenceTag, uint? descriptorTag)
-			: base(identifier, resolver, new SopDataRetriever(codeSequenceTag, descriptorTag).RetrieveData, FormatResult) {}
-
-		public CodeSequenceAnnotationItem(string identifier, string displayName, string label, uint codeSequenceTag)
-			: this(identifier, displayName, label, codeSequenceTag, null) {}
-
-		public CodeSequenceAnnotationItem(string identifier, string displayName, string label, uint codeSequenceTag, uint? descriptorTag)
-			: base(identifier, displayName, label, new SopDataRetriever(codeSequenceTag, descriptorTag).RetrieveData, FormatResult) {}
+		public CodeSequenceAnnotationItem(string identifier, string displayName, string label, uint codeSequenceTag, uint? descriptorTag = null, Func<Frame, IDicomAttributeProvider> dataSourceGetter = null)
+			: base(identifier, displayName, label, new FrameDataRetriever(codeSequenceTag, descriptorTag, dataSourceGetter).RetrieveData, FormatResult) {}
 
 		private static string FormatResult(string s)
 		{
 			return s;
 		}
 
-		private class SopDataRetriever
+		private class FrameDataRetriever
 		{
+			private readonly Func<Frame, IDicomAttributeProvider> _dataSourceGetter;
 			private readonly uint _codeSequenceTag;
 			private readonly uint? _descriptorTag;
 
-			public SopDataRetriever(uint codeSequenceTag, uint? descriptorTag)
+			public FrameDataRetriever(uint codeSequenceTag, uint? descriptorTag, Func<Frame, IDicomAttributeProvider> dataSourceGetter)
 			{
 				_codeSequenceTag = codeSequenceTag;
 				_descriptorTag = descriptorTag;
+				_dataSourceGetter = dataSourceGetter;
 			}
 
 			public string RetrieveData(Frame f)
 			{
-				return FormatCodeSequence(f, _codeSequenceTag, _descriptorTag);
+				var dataSource = _dataSourceGetter != null ? (_dataSourceGetter.Invoke(f) ?? f) : f;
+				return FormatCodeSequence(dataSource, _codeSequenceTag, _descriptorTag);
 			}
 		}
 

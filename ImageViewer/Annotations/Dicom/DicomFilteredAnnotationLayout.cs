@@ -23,6 +23,7 @@
 #endregion
 
 using System.Collections.Generic;
+using System.Linq;
 using ClearCanvas.Common;
 
 namespace ClearCanvas.ImageViewer.Annotations.Dicom
@@ -59,22 +60,15 @@ namespace ClearCanvas.ImageViewer.Annotations.Dicom
 			get { return _filters; }
 		}
 
-		internal bool IsMatch(List<KeyValuePair<string, string>> filterCandidates)
+		internal bool IsMatch(IEnumerable<KeyValuePair<string, string>> filterCandidates)
 		{
-			foreach (KeyValuePair<string, string> filter in _filters)
-			{
-				foreach (KeyValuePair<string, string> candidate in filterCandidates)
-				{
-					if (candidate.Key == filter.Key)
-					{
-						if (filter.Value != candidate.Value)
-							return false;
-					}
-				}
-			}
+			// join filters with candidates (default to null as a candidate if key doesn't exist), and assert that all match
+			return _filters.GroupJoin(filterCandidates, SelectKey, SelectKey, (a, b) => Equals(a.Value, b.FirstOrDefault().Value)).All(v => v);
+		}
 
-			//all filters matched, or there were none, which is always a match.
-			return true;
+		private static string SelectKey(KeyValuePair<string, string> f)
+		{
+			return f.Key;
 		}
 	}
 }

@@ -126,6 +126,191 @@ namespace ClearCanvas.Dicom.Iod.FunctionalGroups
 		public CollimatorShapeSequenceItem(DicomSequenceItem dicomSequenceItem)
 			: base(dicomSequenceItem) {}
 
-		// TODO: implement the functional group sequence items
+		/// <summary>
+		/// Gets or sets the value of CollimatorShape in the underlying collection. Type 1.
+		/// </summary>
+		public string CollimatorShape
+		{
+			get { return DicomAttributeProvider[DicomTags.CollimatorShape].ToString(); }
+			set
+			{
+				if (string.IsNullOrEmpty(value))
+				{
+					const string msg = "CollimatorShape is Type 1 Required.";
+					throw new ArgumentNullException("value", msg);
+				}
+				DicomAttributeProvider[DicomTags.CollimatorShape].SetStringValue(value);
+			}
+		}
+
+		/// <summary>
+		/// Gets or sets the value of CollimatorLeftVerticalEdge in the underlying collection. Type 1C.
+		/// </summary>
+		public int? CollimatorLeftVerticalEdge
+		{
+			get
+			{
+				int result;
+				if (DicomAttributeProvider[DicomTags.CollimatorLeftVerticalEdge].TryGetInt32(0, out result))
+					return result;
+				return null;
+			}
+			set
+			{
+				if (!value.HasValue)
+				{
+					DicomAttributeProvider[DicomTags.CollimatorLeftVerticalEdge] = null;
+					return;
+				}
+				DicomAttributeProvider[DicomTags.CollimatorLeftVerticalEdge].SetInt32(0, value.Value);
+			}
+		}
+
+		/// <summary>
+		/// Gets or sets the value of CollimatorRightVerticalEdge in the underlying collection. Type 1C.
+		/// </summary>
+		public int? CollimatorRightVerticalEdge
+		{
+			get
+			{
+				int result;
+				if (DicomAttributeProvider[DicomTags.CollimatorRightVerticalEdge].TryGetInt32(0, out result))
+					return result;
+				return null;
+			}
+			set
+			{
+				if (!value.HasValue)
+				{
+					DicomAttributeProvider[DicomTags.CollimatorRightVerticalEdge] = null;
+					return;
+				}
+				DicomAttributeProvider[DicomTags.CollimatorRightVerticalEdge].SetInt32(0, value.Value);
+			}
+		}
+
+		/// <summary>
+		/// Gets or sets the value of CollimatorUpperHorizontalEdge in the underlying collection. Type 1C.
+		/// </summary>
+		public int? CollimatorUpperHorizontalEdge
+		{
+			get
+			{
+				int result;
+				if (DicomAttributeProvider[DicomTags.CollimatorUpperHorizontalEdge].TryGetInt32(0, out result))
+					return result;
+				return null;
+			}
+			set
+			{
+				if (!value.HasValue)
+				{
+					DicomAttributeProvider[DicomTags.CollimatorUpperHorizontalEdge] = null;
+					return;
+				}
+				DicomAttributeProvider[DicomTags.CollimatorUpperHorizontalEdge].SetInt32(0, value.Value);
+			}
+		}
+
+		/// <summary>
+		/// Gets or sets the value of CollimatorLowerHorizontalEdge in the underlying collection. Type 1C.
+		/// </summary>
+		public int? CollimatorLowerHorizontalEdge
+		{
+			get
+			{
+				int result;
+				if (DicomAttributeProvider[DicomTags.CollimatorLowerHorizontalEdge].TryGetInt32(0, out result))
+					return result;
+				return null;
+			}
+			set
+			{
+				if (!value.HasValue)
+				{
+					DicomAttributeProvider[DicomTags.CollimatorLowerHorizontalEdge] = null;
+					return;
+				}
+				DicomAttributeProvider[DicomTags.CollimatorLowerHorizontalEdge].SetInt32(0, value.Value);
+			}
+		}
+
+		/// <summary>
+		/// Gets or sets the value of CenterOfCircularCollimator in the underlying collection. Type 1C.
+		/// </summary>
+		public int[] CenterOfCircularCollimator
+		{
+			get
+			{
+				var result = new int[2];
+				if (DicomAttributeProvider[DicomTags.CenterOfCircularCollimator].TryGetInt32(0, out result[0])
+				    && DicomAttributeProvider[DicomTags.CenterOfCircularCollimator].TryGetInt32(1, out result[1]))
+					return result;
+				return null;
+			}
+			set
+			{
+				if (value == null || value.Length != 2)
+				{
+					DicomAttributeProvider[DicomTags.CenterOfCircularCollimator] = null;
+					return;
+				}
+				DicomAttributeProvider[DicomTags.CenterOfCircularCollimator].SetInt32(0, value[0]);
+				DicomAttributeProvider[DicomTags.CenterOfCircularCollimator].SetInt32(1, value[1]);
+			}
+		}
+
+		/// <summary>
+		/// Gets or sets the value of RadiusOfCircularCollimator in the underlying collection. Type 1C.
+		/// </summary>
+		public int? RadiusOfCircularCollimator
+		{
+			get
+			{
+				int result;
+				if (DicomAttributeProvider[DicomTags.RadiusOfCircularCollimator].TryGetInt32(0, out result))
+					return result;
+				return null;
+			}
+			set
+			{
+				if (!value.HasValue)
+				{
+					DicomAttributeProvider[DicomTags.RadiusOfCircularCollimator] = null;
+					return;
+				}
+				DicomAttributeProvider[DicomTags.RadiusOfCircularCollimator].SetInt32(0, value.Value);
+			}
+		}
+
+		/// <summary>
+		/// Gets or sets the value of VerticesOfThePolygonalCollimator in the underlying collection. Type 1C.
+		/// </summary>
+		public int[] VerticesOfThePolygonalCollimator
+		{
+			get
+			{
+				var dicomAttribute = DicomAttributeProvider[DicomTags.VerticesOfThePolygonalCollimator];
+				if (dicomAttribute.IsNull || dicomAttribute.IsEmpty)
+					return null;
+
+				var values = new int[dicomAttribute.Count];
+				for (int n = 0; n < values.Length; n++)
+					values[n] = dicomAttribute.GetInt32(n, 0);
+				return values;
+			}
+			set
+			{
+				if (value == null || value.Length == 0)
+				{
+					DicomAttributeProvider[DicomTags.VerticesOfThePolygonalCollimator] = null;
+					return;
+				}
+
+				var dicomAttribute = DicomAttributeProvider[DicomTags.VerticesOfThePolygonalCollimator];
+				for (int n = 0; n < value.Length; n++)
+					dicomAttribute.SetInt32(n, value[n]);
+			}
+		}
 	}
 }
