@@ -476,13 +476,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		/// </remarks>
 		public virtual int NumberOfFrames
 		{
-			get
-			{
-				int numberOfFrames;
-				numberOfFrames = this[DicomTags.NumberOfFrames].GetInt32(0, 0);
-
-				return Math.Max(numberOfFrames, 1);
-			}
+			get { return Math.Max(this[DicomTags.NumberOfFrames].GetInt32(0, 1), 1); }
 		}
 
 		#endregion
@@ -495,12 +489,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		[Obsolete("This method has been deprecated and will be removed in the future. Use equivalent property on Frame class instead.")]
 		public virtual string ImageLaterality
 		{
-			get
-			{
-				string imageLaterality;
-				imageLaterality = this[DicomTags.ImageLaterality].GetString(0, null);
-				return imageLaterality ?? "";
-			}
+			get { return this[DicomTags.ImageLaterality].GetString(0, null) ?? string.Empty; }
 		}
 
 		#endregion
@@ -513,12 +502,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		[Obsolete("This method has been deprecated and will be removed in the future. Use equivalent property on Frame class instead.")]
 		public virtual string ViewPosition
 		{
-			get
-			{
-				string viewPosition;
-				viewPosition = this[DicomTags.ViewPosition].GetString(0, null);
-				return viewPosition ?? "";
-			}
+			get { return this[DicomTags.ViewPosition].GetString(0, null) ?? string.Empty; }
 		}
 
 		#endregion

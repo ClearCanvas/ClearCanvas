@@ -104,15 +104,6 @@ namespace ClearCanvas.ImageServer.Common.Authentication
                 [AuthorityToken(Description = "Allow deleting study delete history records.")]
                 public const string Delete = "PACS/StudyDeleteHistory/Delete";
             }
-
-            /// <summary>
-            /// Tokens related to research functionality.
-            /// </summary>
-            public static class Research
-            {
-                [AuthorityToken(Description = "Allow viewing of research partitions.")]
-                public const string ViewPartitions = "PACS/Research/View Partitions";
-            }
         }
         
         /// <summary>
@@ -225,6 +216,15 @@ namespace ClearCanvas.ImageServer.Common.Authentication
 
 			[AuthorityToken(Description = "Allow deleting external request queue entries.")]
 			public const string Delete = "PACS/ExternalRequestQueue/Delete";
+		}
+
+		/// <summary>
+		/// Tokens related to research functionality.
+		/// </summary>
+		public static class Research
+		{
+			[AuthorityToken(Description = "Allow viewing of research partitions.")]
+			public const string ViewPartitions = "PACS/Research/View Partitions";
 		}
     }
 }

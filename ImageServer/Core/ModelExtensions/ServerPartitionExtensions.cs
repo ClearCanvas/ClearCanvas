@@ -73,11 +73,12 @@ namespace ClearCanvas.ImageServer.Core.ModelExtensions
         {
             Platform.CheckForNullReference(user, "user cannot be null");
 
-            if (partition.ServerPartitionTypeEnum.Equals(ServerPartitionTypeEnum.Research) 
-                && !user.IsInRole(AuthorityTokens.Admin.Research.ViewPartitions))
-                return false;
+            if (partition.ServerPartitionTypeEnum.Equals(ServerPartitionTypeEnum.Research))
+	        {
+		        return user.IsInRole(AuthorityTokens.Research.ViewPartitions);
+	        }
 
-            // If user has the "access all" token, return true
+	        // If user has the "access all" token, return true
             if (user.IsInRole(ClearCanvas.Enterprise.Common.AuthorityTokens.DataAccess.AllPartitions))
                 return true;
             

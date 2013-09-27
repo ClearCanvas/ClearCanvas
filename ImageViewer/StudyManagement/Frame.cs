@@ -38,8 +38,20 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 	/// Represents the DICOM concept of a frame.
 	/// </summary>
 	/// <remarks>
-	/// Note that there should no longer be any need to derive directly from this class.
-	/// See <see cref="ISopDataSource"/> and/or <see cref="Sop"/> for more information.
+	/// <para>
+	/// The properties of this class, as well as its implementation of <see cref="IDicomAttributeProvider"/>,
+	/// represent a frame-normalized view of the attributes of the parent <see cref="ImageSop"/>. When the SOP
+	/// instance represents a multi-frame image, DICOM tags which have a singular invocation in the Multi-Frame
+	/// Functional Groups Module will be mapped to the appropriate functional group instead of the root of the data set.
+	/// </para>
+	/// <para>
+	/// Additionally, some properties (such as <see cref="ImageType"/>) will try to map to a different tag that represents the
+	/// frame-level version of the same concept if possible (e.g. <see cref="ImageType"/> maps to <see cref="DicomTags.FrameType"/>
+	/// in the functional groups first and, if that is unavailable, falls back to <see cref="DicomTags.ImageType"/>
+	/// at the root level. This behaviour does not occur when accessing attributes directly via the indexers or the
+	/// <see cref="IDicomAttributeProvider"/> implementation - <see cref="DicomTags.FrameType"/> will only map to the
+	/// functional group, and <see cref="DicomTags.ImageType"/> will only map to the root of the data set.
+	/// </para>
 	/// </remarks>
 	public partial class Frame : IDicomAttributeProvider, IDisposable
 	{
@@ -101,7 +113,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		}
 
 		/// <summary>
-		/// Gets the frame number.
+		/// Gets the Frame Number.
 		/// </summary>
 		public int FrameNumber
 		{
@@ -111,59 +123,129 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		#region General Image Module
 
 		/// <summary>
-		/// Gets the patient orientation.
+		/// Gets the patient orientation in the frame.
 		/// </summary>
 		/// <remarks>
-		/// A <see cref="Dicom.Iod.PatientOrientation"/> is returned even when no data is available; 
+		/// <para>
+		/// If the <see cref="DicomTags.PatientOrientation"/> is neither included in a functional group nor the root data set,
+		/// an equivalent patient orientation will be inferred from <see cref="DicomTags.ImageOrientationPatient"/> where available.
+		/// </para>
+		/// <para>
+		/// A <see cref="Dicom.Iod.PatientOrientation"/> instance is returned even when no data is available;
 		/// the <see cref="Dicom.Iod.PatientOrientation.IsEmpty"/> property will be true.
+		/// </para>
 		/// </remarks>
 		public virtual PatientOrientation PatientOrientation
 		{
 			get
 			{
 				var patientOrientation = _parentImageSop.GetDicomAttribute(_frameNumber, DicomTags.PatientOrientation).ToString();
-				return PatientOrientation.FromString(patientOrientation, _parentImageSop.AnatomicalOrientationType) ?? PatientOrientation.Empty;
+				return PatientOrientation.FromString(patientOrientation, _parentImageSop.AnatomicalOrientationType) ?? ImageOrientationPatient.ToPatientOrientation();
 			}
 		}
 
 		/// <summary>
-		/// Gets the image type as a DICOM multi-valued string.
+		/// Gets the frame type as a DICOM multi-valued string.
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// This property is named ImageType for historical reasons; the value of the <see cref="DicomTags.FrameType"/>
+		/// attribute in the functional groups will be returned if available.
+		/// </para>
+		/// </remarks>
 		public virtual string ImageType
 		{
-			get { return _parentImageSop.GetDicomAttribute(_frameNumber, DicomTags.ImageType).ToString(); }
+			get
+			{
+				DicomAttribute dicomAttribute;
+				if (_parentImageSop.TryGetDicomAttribute(_frameNumber, DicomTags.FrameType, out dicomAttribute) && !dicomAttribute.IsEmpty)
+					return dicomAttribute.ToString();
+				return _parentImageSop.GetDicomAttribute(_frameNumber, DicomTags.ImageType).ToString();
+			}
 		}
 
 		/// <summary>
-		/// Gets the acquisition number.
+		/// Gets the acquisition number for the frame.
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// This property will return the value of the <see cref="DicomTags.FrameAcquisitionNumber"/>
+		/// attribute in the functional groups if available.
+		/// </para>
+		/// </remarks>
 		public virtual int AcquisitionNumber
 		{
-			get { return _parentImageSop.GetDicomAttribute(_frameNumber, DicomTags.AcquisitionNumber).GetInt32(0, 0); }
+			get
+			{
+				DicomAttribute dicomAttribute;
+				if (_parentImageSop.TryGetDicomAttribute(_frameNumber, DicomTags.FrameAcquisitionNumber, out dicomAttribute) && !dicomAttribute.IsEmpty)
+					return dicomAttribute.GetInt32(0, 0);
+				return _parentImageSop.GetDicomAttribute(_frameNumber, DicomTags.AcquisitionNumber).GetInt32(0, 0);
+			}
 		}
 
 		/// <summary>
-		/// Gets the acquisiton date.
+		/// Gets the acquisiton date for the frame.
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// This property will return the date component of the <see cref="DicomTags.FrameAcquisitionDatetime"/>
+		/// attribute in the functional groups if available, or the date component of <see cref="DicomTags.AcquisitionDatetime"/>,
+		/// or the value of the <see cref="DicomTags.AcquisitionDate"/> attribute.
+		/// </para>
+		/// </remarks>
 		public virtual string AcquisitionDate
 		{
-			get { return _parentImageSop.GetDicomAttribute(_frameNumber, DicomTags.AcquisitionDate).GetString(0, null) ?? string.Empty; }
+			get
+			{
+				DicomAttribute dicomAttribute;
+				if (_parentImageSop.TryGetDicomAttribute(_frameNumber, DicomTags.FrameAcquisitionDatetime, out dicomAttribute) && !dicomAttribute.IsEmpty)
+					return DateTimeParser.GetDateAttributeValues(dicomAttribute.GetString(0, string.Empty));
+				return DateTimeParser.GetDateAttributeValues(this, DicomTags.AcquisitionDatetime, DicomTags.AcquisitionDate);
+			}
 		}
 
 		/// <summary>
-		/// Gets the acquisition time.
+		/// Gets the acquisition time for the frame.
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// This property will return the time component of the <see cref="DicomTags.FrameAcquisitionDatetime"/>
+		/// attribute in the functional groups if available, or the time component of <see cref="DicomTags.AcquisitionDatetime"/>,
+		/// or the value of the <see cref="DicomTags.AcquisitionTime"/> attribute.
+		/// </para>
+		/// </remarks>
 		public virtual string AcquisitionTime
 		{
-			get { return _parentImageSop.GetDicomAttribute(_frameNumber, DicomTags.AcquisitionTime).GetString(0, null) ?? string.Empty; }
+			get
+			{
+				DicomAttribute dicomAttribute;
+				if (_parentImageSop.TryGetDicomAttribute(_frameNumber, DicomTags.FrameAcquisitionDatetime, out dicomAttribute) && !dicomAttribute.IsEmpty)
+					return DateTimeParser.GetTimeAttributeValues(dicomAttribute.GetString(0, string.Empty));
+				return DateTimeParser.GetTimeAttributeValues(this, DicomTags.AcquisitionDatetime, DicomTags.AcquisitionTime);
+			}
 		}
 
 		/// <summary>
-		/// Gets the acquisition date/time.
+		/// Gets the acquisition date/time for the frame.
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// This property will return the value of the <see cref="DicomTags.FrameAcquisitionDatetime"/>
+		/// attribute in the functional groups if available, or the <see cref="DicomTags.AcquisitionDatetime"/>,
+		/// or a concatenation of the <see cref="DicomTags.AcquisitionDate"/> and <see cref="DicomTags.AcquisitionTime"/>
+		/// attributes.
+		/// </para>
+		/// </remarks>
 		public virtual string AcquisitionDateTime
 		{
-			get { return _parentImageSop.GetDicomAttribute(_frameNumber, DicomTags.AcquisitionDatetime).GetString(0, null) ?? string.Empty; }
+			get
+			{
+				DicomAttribute dicomAttribute;
+				if (_parentImageSop.TryGetDicomAttribute(_frameNumber, DicomTags.FrameAcquisitionDatetime, out dicomAttribute) && !dicomAttribute.IsEmpty)
+					return dicomAttribute.GetString(0, string.Empty);
+				return DateTimeParser.GetDateTimeAttributeValues(this, DicomTags.AcquisitionDatetime, DicomTags.AcquisitionDate, DicomTags.AcquisitionTime);
+			}
 		}
 
 		/// <summary>
@@ -175,15 +257,27 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		}
 
 		/// <summary>
-		/// Gets the image comments.
+		/// Gets the comments for the frame.
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// This property will return the value of the <see cref="DicomTags.FrameComments"/>
+		/// attribute in the functional groups if available.
+		/// </para>
+		/// </remarks>
 		public virtual string ImageComments
 		{
-			get { return _parentImageSop.GetDicomAttribute(_frameNumber, DicomTags.ImageComments).GetString(0, null) ?? string.Empty; }
+			get
+			{
+				DicomAttribute dicomAttribute;
+				if (_parentImageSop.TryGetDicomAttribute(_frameNumber, DicomTags.FrameComments, out dicomAttribute) && !dicomAttribute.IsEmpty)
+					return dicomAttribute.ToString();
+				return _parentImageSop.GetDicomAttribute(_frameNumber, DicomTags.ImageComments).ToString();
+			}
 		}
 
 		/// <summary>
-		/// Gets the lossy image compression.
+		/// Gets the the lossy image compression code value.
 		/// </summary>
 		public virtual string LossyImageCompression
 		{
@@ -217,7 +311,8 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		/// </summary>
 		/// <remarks>
 		/// It is generally recommended that clients use <see cref="NormalizedPixelSpacing"/> when
-		/// in calculations that require the pixel spacing.
+		/// performing calculations involving pixel spacing, as this property does not account for
+		/// alternate sources of pixel spacing information.
 		/// </remarks>
 		public virtual PixelSpacing PixelSpacing
 		{
@@ -241,14 +336,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 			get
 			{
 				var imageOrientationPatient = _parentImageSop.GetDicomAttribute(_frameNumber, DicomTags.ImageOrientationPatient).ToString();
-				if (!string.IsNullOrEmpty(imageOrientationPatient))
-				{
-					double[] values;
-					if (DicomStringHelper.TryGetDoubleArray(imageOrientationPatient, out values) && values.Length == 6)
-						return new ImageOrientationPatient(values[0], values[1], values[2], values[3], values[4], values[5]);
-				}
-
-				return new ImageOrientationPatient(0, 0, 0, 0, 0, 0);
+				return ImageOrientationPatient.FromString(imageOrientationPatient) ?? new ImageOrientationPatient(0, 0, 0, 0, 0, 0);
 			}
 		}
 
@@ -264,19 +352,12 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 			get
 			{
 				var imagePositionPatient = _parentImageSop.GetDicomAttribute(_frameNumber, DicomTags.ImagePositionPatient).ToString();
-				if (!string.IsNullOrEmpty(imagePositionPatient))
-				{
-					double[] values;
-					if (DicomStringHelper.TryGetDoubleArray(imagePositionPatient, out values) && values.Length == 3)
-						return new ImagePositionPatient(values[0], values[1], values[2]);
-				}
-
-				return new ImagePositionPatient(0, 0, 0);
+				return ImagePositionPatient.FromString(imagePositionPatient) ?? new ImagePositionPatient(0, 0, 0);
 			}
 		}
 
 		/// <summary>
-		/// Gets the slice thickness.
+		/// Gets the slice thickness of the frame.
 		/// </summary>
 		public virtual double SliceThickness
 		{
@@ -284,7 +365,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		}
 
 		/// <summary>
-		/// Gets the slice location.
+		/// Gets the slice location of the frame.
 		/// </summary>
 		public virtual double SliceLocation
 		{
@@ -300,7 +381,8 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		/// </summary>
 		/// <remarks>
 		/// It is generally recommended that clients use <see cref="NormalizedPixelSpacing"/> when
-		/// in calculations that require the imager pixel spacing.
+		/// performing calculations involving pixel spacing, as this property does not account for
+		/// alternate sources of pixel spacing information.
 		/// </remarks>
 		public virtual PixelSpacing ImagerPixelSpacing
 		{
@@ -316,7 +398,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		#region Image Pixel Module
 
 		/// <summary>
-		/// Gets the samples per pixel.
+		/// Gets the number of samples per pixel.
 		/// </summary>
 		public virtual int SamplesPerPixel
 		{
@@ -364,7 +446,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		}
 
 		/// <summary>
-		/// Gets the high bit.
+		/// Gets the index of the high bit.
 		/// </summary>
 		public virtual int HighBit
 		{
@@ -399,13 +481,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 			get
 			{
 				var pixelAspectRatio = _parentImageSop.GetDicomAttribute(_frameNumber, DicomTags.PixelAspectRatio).ToString();
-				if (!string.IsNullOrEmpty(pixelAspectRatio))
-				{
-					int[] values;
-					if (DicomStringHelper.TryGetIntArray(pixelAspectRatio, out values) && values.Length == 2)
-						return new PixelAspectRatio(values[0], values[1]);
-				}
-				return new PixelAspectRatio(0, 0);
+				return PixelAspectRatio.FromString(pixelAspectRatio) ?? new PixelAspectRatio(0, 0);
 			}
 		}
 
@@ -414,7 +490,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		#region Modality LUT Module
 
 		/// <summary>
-		/// Gets the rescale intercept.
+		/// Gets the rescale intercept for the frame.
 		/// </summary>
 		public virtual double RescaleIntercept
 		{
@@ -422,10 +498,10 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		}
 
 		/// <summary>
-		/// Gets the rescale slope.
+		/// Gets the rescale slope for the frame.
 		/// </summary>
 		/// <remarks>
-		/// 1.0 is returned if no data is available.
+		/// If the frame does not specify a slope, the default slope of 1.0 will be returned.
 		/// </remarks>
 		public virtual double RescaleSlope
 		{
@@ -439,7 +515,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		}
 
 		/// <summary>
-		/// Gets the rescale type.
+		/// Gets the rescale type for the frame.
 		/// </summary>
 		public virtual string RescaleType
 		{
@@ -515,7 +591,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		#region Frame of Reference Module
 
 		/// <summary>
-		/// Gets the frame of reference uid for the image.
+		/// Gets the frame of reference UID of the frame.
 		/// </summary>
 		public virtual string FrameOfReferenceUid
 		{

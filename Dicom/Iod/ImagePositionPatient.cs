@@ -114,10 +114,11 @@ namespace ClearCanvas.Dicom.Iod
 		/// </returns>
 		public static ImagePositionPatient FromString(string multiValuedString)
 		{
+			if (string.IsNullOrEmpty(multiValuedString)) return null;
+
 			double[] values;
 			if (DicomStringHelper.TryGetDoubleArray(multiValuedString, out values) && values.Length == 3)
 				return new ImagePositionPatient(values[0], values[1], values[2]);
-
 			return null;
 		}
 
