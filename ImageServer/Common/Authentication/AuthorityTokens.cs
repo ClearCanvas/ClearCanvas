@@ -219,12 +219,12 @@ namespace ClearCanvas.ImageServer.Common.Authentication
 		}
 
 		/// <summary>
-		/// Tokens related to research functionality.
+		/// Tokens related to Virtual File System functionality.
 		/// </summary>
-		public static class Research
+		public static class Vfs
 		{
-			[AuthorityToken(Description = "Allow viewing of research partitions.")]
-			public const string ViewPartitions = "PACS/Research/View Partitions";
+			[AuthorityToken(Description = "Allow viewing of VFS partitions.")]
+			public const string ViewPartitions = "PACS/VFS/View Partitions";
 		}
     }
 }

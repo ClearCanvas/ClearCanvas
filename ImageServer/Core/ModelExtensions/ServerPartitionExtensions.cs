@@ -75,7 +75,7 @@ namespace ClearCanvas.ImageServer.Core.ModelExtensions
 
             if (partition.ServerPartitionTypeEnum.Equals(ServerPartitionTypeEnum.Research))
 	        {
-		        return user.IsInRole(AuthorityTokens.Research.ViewPartitions);
+		        return user.IsInRole(AuthorityTokens.Vfs.ViewPartitions);
 	        }
 
 	        // If user has the "access all" token, return true
