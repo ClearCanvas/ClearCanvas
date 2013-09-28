@@ -37,7 +37,7 @@ public partial class ServerPartitionTypeEnum : ServerEnum
 {
       #region Private Static Members
       private static readonly ServerPartitionTypeEnum _Standard = GetEnum("Standard");
-      private static readonly ServerPartitionTypeEnum _Research = GetEnum("Research");
+      private static readonly ServerPartitionTypeEnum _VFS = GetEnum("VFS");
       #endregion
 
       #region Public Static Properties
@@ -49,11 +49,11 @@ public partial class ServerPartitionTypeEnum : ServerEnum
           get { return _Standard; }
       }
       /// <summary>
-      /// An ImageServer research Partition
+      /// An ImageServer Virtual File System Partition
       /// </summary>
-      public static ServerPartitionTypeEnum Research
+      public static ServerPartitionTypeEnum VFS
       {
-          get { return _Research; }
+          get { return _VFS; }
       }
 
       #endregion

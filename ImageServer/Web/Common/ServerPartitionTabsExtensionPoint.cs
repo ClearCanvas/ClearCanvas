@@ -55,7 +55,7 @@ namespace ClearCanvas.ImageServer.Web.Common
 		{
 			var list = LoadServerPartitions();
 
-			return list.Where(p => !p.ServerPartitionTypeEnum.Equals(ServerPartitionTypeEnum.Research)).ToList();
+			return list.Where(p => !p.ServerPartitionTypeEnum.Equals(ServerPartitionTypeEnum.VFS)).ToList();
 		}
     }
 }
