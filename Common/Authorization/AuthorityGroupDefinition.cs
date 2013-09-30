@@ -22,12 +22,15 @@
 
 #endregion
 
+using System.Runtime.Serialization;
+
 namespace ClearCanvas.Common.Authorization
 {
 	/// <summary>
 	/// Helper class for providing authority group definitions to be imported at deployment time.
 	/// </summary>
 	/// <seealso cref="AuthorityTokenAttribute"/>
+	[DataContract]
 	public class AuthorityGroupDefinition
 	{
 		/// <summary>
@@ -72,48 +75,32 @@ namespace ClearCanvas.Common.Authorization
 		/// <summary>
 		/// Gets the name of the authority group.
 		/// </summary>
-		public string Name
-		{
-			get;
-			private set;
-		}
+		[DataMember]
+		public string Name { get; set; }
 
 		/// <summary>
 		/// Gets the name of the authority group.
 		/// </summary>
-		public string Description
-		{
-			get;
-			private set;
-		}
+		[DataMember]
+		public string Description { get; set; }
 
 		/// <summary>
 		/// Gets a bool signaling if the authority group is a built-in group.
 		/// </summary>
-		public bool BuiltIn
-		{
-			get;
-			private set;
-		}
+		[DataMember]
+		public bool BuiltIn { get; set; }
 
 
 		/// <summary>
 		/// Gets a bool signaling if the authority group is for Data access.
 		/// </summary>
-		public bool DataGroup
-		{
-			get;
-			private set;
-		}
-
+		[DataMember]
+		public bool DataGroup { get; set; }
 
 		/// <summary>
 		/// Gets the set of tokens that are assigned to the group.
 		/// </summary>
-		public string[] Tokens
-		{
-			get;
-			private set;
-		}
+		[DataMember]
+		public string[] Tokens { get; set; }
 	}
 }
