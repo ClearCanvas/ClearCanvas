@@ -78,6 +78,7 @@
     <Compile Include="Auditing\EventReceiptAction.cs" />
     <Compile Include="Auditing\EventResult.cs" />
     <Compile Include="Auditing\EventSource.cs" />
+    <Compile Include="AuthorityTokens.cs" />
     <Compile Include="Automation\DataContracts.cs" />
     <Compile Include="Automation\IDicomExplorerAutomation.cs" />
     <Compile Include="Automation\IViewerAutomation.cs" />
