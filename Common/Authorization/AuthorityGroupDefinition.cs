@@ -34,6 +34,16 @@ namespace ClearCanvas.Common.Authorization
 	public class AuthorityGroupDefinition
 	{
 		/// <summary>
+		/// Default constructor.
+		/// </summary>
+		// Required for JSML deserialization - do not remove
+		public AuthorityGroupDefinition()
+		{
+			this.Tokens = new string[0];
+		}
+
+
+		/// <summary>
 		/// Constructor.
 		/// </summary>
 		/// <param name="name">The name of the authority group.</param>

@@ -22,10 +22,13 @@
 
 #endregion
 
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Authorization;
+using ClearCanvas.Common.Serialization;
 using ClearCanvas.Enterprise.Common.Admin.AuthorityGroupAdmin;
 
 namespace ClearCanvas.Enterprise.Common.Setup
@@ -49,31 +52,62 @@ namespace ClearCanvas.Enterprise.Common.Setup
 		/// <summary>
 		/// Import authority groups defined in local plugins.
 		/// </summary>
-		public static void ImportAuthorityGroups()
+		public static void ImportEmbeddedAuthorityGroups()
 		{
-
 			var groups = AuthorityGroupSetup.GetDefaultAuthorityGroups();
+			ImportAuthorityGroups(groups, "plugins");
+		}
+
+		/// <summary>
+		/// Import authority groups defined in XML files located at the specified path.
+		/// </summary>
+		/// <param name="dataFileOrFolderPath"></param>
+		public static void ImportAuthorityGroups(string dataFileOrFolderPath)
+		{
+			// determine list of source files to import
+			var fileList = new List<string>();
+			if (File.Exists(dataFileOrFolderPath))
+			{
+				fileList.Add(dataFileOrFolderPath);
+			}
+			else if (Directory.Exists(dataFileOrFolderPath))
+			{
+				fileList.AddRange(Directory.GetFiles(dataFileOrFolderPath, "*.xml"));
+			}
+			else
+				throw new ArgumentException(string.Format("{0} is not a valid data file or directory.", dataFileOrFolderPath));
+
+			var authGroups = from file in fileList
+							 let xml = File.ReadAllText(file)
+							 from authGroup in JsmlSerializer.Deserialize<AuthorityGroupDefinition[]>(xml)
+							 select authGroup;
+
+			ImportAuthorityGroups(authGroups, dataFileOrFolderPath);
+		}
+
+		private static void ImportAuthorityGroups(IEnumerable<AuthorityGroupDefinition> groups, string source)
+		{
 			var groupDetails = groups.Select(g =>
-				new AuthorityGroupDetail(
-					null,
-					g.Name,
-					g.Description,
-					g.BuiltIn,
-					g.DataGroup,
-					g.Tokens.Select(t => new AuthorityTokenSummary(t)).ToList()
-				)).ToList();
+											new AuthorityGroupDetail(
+											null,
+											g.Name,
+											g.Description,
+											g.BuiltIn,
+											g.DataGroup,
+											g.Tokens.Select(t => new AuthorityTokenSummary(t)).ToList()
+										)).ToList();
 
 			Platform.GetService<IAuthorityGroupAdminService>(
 				service => service.ImportAuthorityGroups(new ImportAuthorityGroupsRequest(groupDetails)));
 
-			LogImportedDefaultGroups(groups);
+			LogImportedGroups(groups, source);
 		}
 
-		private static void LogImportedDefaultGroups(IEnumerable<AuthorityGroupDefinition> groups)
+		private static void LogImportedGroups(IEnumerable<AuthorityGroupDefinition> groups, string source)
 		{
 			foreach (var g in groups.Distinct())
 			{
-				Platform.Log(LogLevel.Info, "Imported default authority group definition: {0}", g.Name);
+				Platform.Log(LogLevel.Info, "Imported authority group definition {0} from {1}", g.Name, source);
 			}
 		}
 
@@ -84,6 +118,5 @@ namespace ClearCanvas.Enterprise.Common.Setup
 				Platform.Log(LogLevel.Info, "Imported authority token '{0}' from {1}", token.Token, token.DefiningAssembly);
 			}
 		}
-
 	}
 }

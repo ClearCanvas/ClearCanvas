@@ -56,7 +56,12 @@ namespace ClearCanvas.Enterprise.Common.Setup
 					// import authority groups
 					if (cmdLine.ImportDefaultAuthorityGroups)
 					{
-						SetupHelper.ImportAuthorityGroups();
+						SetupHelper.ImportEmbeddedAuthorityGroups();
+					}
+
+					if(!string.IsNullOrEmpty(cmdLine.AuthorityGroupData))
+					{
+						SetupHelper.ImportAuthorityGroups(cmdLine.AuthorityGroupData);
 					}
 
 					// import settings groups
