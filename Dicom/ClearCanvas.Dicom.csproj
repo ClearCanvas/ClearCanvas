@@ -245,6 +245,7 @@
     <Compile Include="Iod\Modules\EnhancedSeriesModuleIod.cs" />
     <Compile Include="Iod\Modules\EnhancedUsSeriesModuleIod.cs" />
     <Compile Include="Iod\Modules\MrSeriesModuleIod.cs" />
+    <Compile Include="Iod\Modules\MultiFrameDimensionModule.cs" />
     <Compile Include="Iod\Modules\MultiFrameFunctionalGroupsModule.cs" />
     <Compile Include="Iod\Modules\NmPetPatientOrientationModuleIod.cs" />
     <Compile Include="Iod\Modules\OpthalmicTomographySeriesModuleIod.cs" />

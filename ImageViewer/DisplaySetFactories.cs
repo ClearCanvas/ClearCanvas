@@ -29,6 +29,7 @@ using System.Linq;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Dicom;
+using ClearCanvas.Dicom.Iod.Modules;
 using ClearCanvas.Dicom.ServiceModel.Query;
 using ClearCanvas.ImageViewer.Annotations;
 using ClearCanvas.ImageViewer.Graphics;
@@ -433,20 +434,17 @@ namespace ClearCanvas.ImageViewer
 		/// </remarks>
 		public override List<IDisplaySet> CreateDisplaySets(Series series)
 		{
-			//TODO: Update for Enhanced MR which doesn't use echo numbers - see https://groups.google.com/d/topic/comp.protocols.dicom/HRYKszdvKq8/discussion
 			List<IDisplaySet> displaySets = new List<IDisplaySet>();
 
 			if (series.Modality == "MR")
 			{
-				SortedDictionary<int, List<Sop>> imagesByEchoNumber = SplitMREchos(series.Sops);
+				SortedDictionary<int, List<IPresentationImage>> imagesByEchoNumber = SplitMREchos(series.Sops);
+
 				if (imagesByEchoNumber.Count > 1)
 				{
-					foreach (KeyValuePair<int, List<Sop>> echoImages in imagesByEchoNumber)
+					foreach (KeyValuePair<int, List<IPresentationImage>> echoImages in imagesByEchoNumber)
 					{
-						List<IPresentationImage> images = new List<IPresentationImage>();
-						foreach (ImageSop sop in echoImages.Value)
-							images.AddRange(PresentationImageFactory.CreateImages(sop));
-
+						var images = echoImages.Value;
 						if (images.Count > 0)
 						{
 							IDisplaySet displaySet = new DisplaySet(new MREchoDisplaySetDescriptor(series.GetIdentifier(), echoImages.Key, PresentationImageFactory));
@@ -463,27 +461,96 @@ namespace ClearCanvas.ImageViewer
 			return displaySets;
 		}
 
-		private static SortedDictionary<int, List<Sop>> SplitMREchos(IEnumerable<Sop> sops)
+		private SortedDictionary<int, List<IPresentationImage>> SplitMREchos(IEnumerable<Sop> sops)
 		{
-			SortedDictionary<int, List<Sop>> imagesByEchoNumber = new SortedDictionary<int, List<Sop>>();
+			// keep separate echo lists in case series is mixed single/multi frames
+			// unless their dimension uid also matches, echo dimension indices should not be mixed between sop intances (see DICOM 2011 PS 3.3 C.7.6.17.2)
+			SortedDictionary<int, List<IPresentationImage>> imagesByEchoNumber = new SortedDictionary<int, List<IPresentationImage>>();
+			Dictionary<EchoIndex, List<IPresentationImage>> imagesByEchoDimension = new Dictionary<EchoIndex, List<IPresentationImage>>();
 
-			foreach (Sop sop in sops)
+			foreach (var sop in sops.OfType<ImageSop>())
 			{
-				if (sop.IsImage)
+				if (sop.IsMultiframe)
+				{
+					var echoDimensionUid = string.Empty;
+					var echoDimensionIndex = -1;
+
+					// try to get the dimension index sequence from the multiframe
+					var indexSequence = new MultiFrameDimensionModuleIod(sop.DataSource).DimensionIndexSequence;
+					if (indexSequence != null && indexSequence.Length > 0)
+					{
+						// find a dimension that references the Effective Echo Time tag in the MR Echo Sequence (the MR Echo Functional Group)
+						echoDimensionIndex = Array.FindIndex(indexSequence, s => s.DimensionIndexPointer == DicomTags.EffectiveEchoTime && s.FunctionalGroupPointer == DicomTags.MrEchoSequence);
+						if (echoDimensionIndex >= 0)
+						{
+							// get the UID that identifies this dimension organization 
+							echoDimensionUid = indexSequence[echoDimensionIndex].DimensionOrganizationUid;
+						}
+					}
+
+					// if dimension organization UID is blank, assign one so that the index is effectively unique to this SOP instance only
+					if (string.IsNullOrWhiteSpace(echoDimensionUid)) echoDimensionUid = DicomUid.GenerateUid().UID;
+
+					foreach (var image in PresentationImageFactory.CreateImages(sop))
+					{
+						// key the echo stacks by dimension uid and the value of the echo dimension index
+						// if no dimension index was found, use a constant so that all frames from the same SOP effectively form their own 'echo'
+						var echoIndex = new EchoIndex(echoDimensionUid, echoDimensionIndex >= 0 ? ((IImageSopProvider) image).Frame[DicomTags.DimensionIndexValues].GetInt32(echoDimensionIndex, -1) : -1);
+						if (!imagesByEchoDimension.ContainsKey(echoIndex))
+							imagesByEchoDimension[echoIndex] = new List<IPresentationImage>();
+						imagesByEchoDimension[echoIndex].Add(image);
+					}
+				}
+				else
 				{
 					DicomAttribute echoAttribute = sop[DicomTags.EchoNumbers];
 					if (!echoAttribute.IsEmpty)
 					{
 						int echoNumber = echoAttribute.GetInt32(0, 0);
 						if (!imagesByEchoNumber.ContainsKey(echoNumber))
-							imagesByEchoNumber[echoNumber] = new List<Sop>();
+							imagesByEchoNumber[echoNumber] = new List<IPresentationImage>();
 
-						imagesByEchoNumber[echoNumber].Add(sop);
+						imagesByEchoNumber[echoNumber].AddRange(PresentationImageFactory.CreateImages(sop));
 					}
 				}
 			}
 
+			// if we have some multiframes processed into separate echos, append them to the main list and assign echo numbers
+			if (imagesByEchoDimension.Count > 0)
+			{
+				var echoNumber = imagesByEchoNumber.Count > 0 ? imagesByEchoNumber.Max(k => k.Key) : 0;
+				foreach (var multiframeEchos in imagesByEchoDimension.OrderBy(k => k.Key.DimensionOrganizationUid).ThenBy(k => k.Key.EchoIndexValue).Select(k => k.Value))
+					imagesByEchoNumber.Add(++echoNumber, multiframeEchos);
+			}
+
 			return imagesByEchoNumber;
+		}
+
+		private class EchoIndex : IEquatable<EchoIndex>
+		{
+			public readonly string DimensionOrganizationUid;
+			public readonly int EchoIndexValue;
+
+			public EchoIndex(string dimensionOrganizationUid, int echoIndexValue)
+			{
+				DimensionOrganizationUid = dimensionOrganizationUid;
+				EchoIndexValue = echoIndexValue;
+			}
+
+			public override int GetHashCode()
+			{
+				return DimensionOrganizationUid.GetHashCode() ^ EchoIndexValue.GetHashCode();
+			}
+
+			public bool Equals(EchoIndex other)
+			{
+				return other != null && Equals(DimensionOrganizationUid, other.DimensionOrganizationUid) && EchoIndexValue == other.EchoIndexValue;
+			}
+
+			public override bool Equals(object obj)
+			{
+				return Equals(obj as EchoIndex);
+			}
 		}
 	}
 
