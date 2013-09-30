@@ -37,6 +37,9 @@ namespace ClearCanvas.Enterprise.Common
 			{
 				[AuthorityToken(Description = "Allow modification of enterprise configuration store data.")]
 				public const string Configuration = "Enterprise/Admin/System/Configuration";
+
+				[AuthorityToken(Description = "Allow modification of enterprise installation license key.", Formerly = "Desktop/Admin/License")]
+				public const string License = "Enterprise/Admin/System/License";
 			}
 
 			public static class Security
@@ -56,6 +59,9 @@ namespace ClearCanvas.Enterprise.Common
 					public const string Group = "Enterprise/Admin/Security/Non-user Accounts/Group";
 				}
 			}
+
+			[AuthorityToken(Description = "Allow administration of Audit Log.")]
+			public const string AuditLog = "Enterprise/Admin/Audit Log";
 		}
 
 		/// <summary>

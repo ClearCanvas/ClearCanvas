@@ -39,14 +39,14 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 	[IconSet("create", "Icons.CreateKeyImageToolSmall.png", "Icons.CreateKeyImageToolMedium.png", "Icons.CreateKeyImageToolLarge.png")]
 	[EnabledStateObserver("create", "Enabled", "EnabledChanged")]
 	// TODO (CR Phoenix5 - Med): Clinical as well
-	[ViewerActionPermission("create", AuthorityTokens.KeyImages)]
+	[ViewerActionPermission("create", AuthorityTokens.Study.KeyImages)]
 
 	[ButtonAction("show", "global-toolbars/ToolbarStandard/ToolbarShowKeyImages", "Show")]
 	[Tooltip("show", "TooltipShowKeyImages")]
 	[IconSet("show", "Icons.ShowKeyImagesToolSmall.png", "Icons.ShowKeyImagesToolMedium.png", "Icons.ShowKeyImagesToolLarge.png")]
 	[EnabledStateObserver("show", "ShowEnabled", "ShowEnabledChanged")]
     // TODO (CR Phoenix5 - Med): Clinical as well
-    [ViewerActionPermission("show", AuthorityTokens.KeyImages)]
+    [ViewerActionPermission("show", AuthorityTokens.Study.KeyImages)]
 
 	[ExtensionOf(typeof(ImageViewerToolExtensionPoint))]
 	internal class KeyImageTool : ImageViewerTool
@@ -137,13 +137,13 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
             // TODO  Better way to address Webstation usage?
 			base.Enabled = KeyImagePublisher.IsSupportedImage(base.SelectedPresentationImage) &&
                 // TODO (CR Phoenix5 - Med): Clinical as well	  
-                        PermissionsHelper.IsInRole(AuthorityTokens.KeyImages) &&
+                        PermissionsHelper.IsInRole(AuthorityTokens.Study.KeyImages) &&
 			               // TODO (CR Phoenix5 - Low): KeyImagePublisher.IsSupportedImage?
                       !(SelectedPresentationImage.ParentDisplaySet.Descriptor is KeyImageDisplaySetDescriptor) ;
 
             // TODO (CR Phoenix5 - Med): Clinical as well
             this.ShowEnabled = 
-					  PermissionsHelper.IsInRole(AuthorityTokens.KeyImages);
+					  PermissionsHelper.IsInRole(AuthorityTokens.Study.KeyImages);
 		}
 
         private void OnIsConnectedChanged(object sender, EventArgs eventArgs)

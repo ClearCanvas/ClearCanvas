@@ -67,7 +67,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AuthorityTokens.cs" />
     <Compile Include="Config\ExternalsConfigurationComponent.cs" />
     <Compile Include="Config\ConfigurationPageProvider.cs" />
     <Compile Include="Config\ExternalsConfigurationSettings.cs" />

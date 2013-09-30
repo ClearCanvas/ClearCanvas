@@ -24,15 +24,36 @@
 
 using ClearCanvas.Common.Authorization;
 
-namespace ClearCanvas.Desktop.Help
+namespace ClearCanvas.Desktop
 {
-	public class AuthorityTokens
+	/// <summary>
+	/// Defines authority tokens for controlling access to various functionalities.
+	/// </summary>
+	public static class AuthorityTokens
 	{
 		/// <summary>
-		/// Tokens that allow access to administrative functionality.
+		/// Defines authority tokens for controlling access to various desktop functionalities.
 		/// </summary>
 		public static class Desktop
 		{
+			/// <summary>
+			/// Tokens that allow access to administrative functionality.
+			/// </summary>
+			public static class Admin
+			{
+				[AuthorityToken(Description = "Allow viewing and updating the License Key.")]
+				public const string License = "Desktop/Admin/License";
+			}
+
+			[AuthorityToken(Description = "Allow access to the Settings Management screen.")]
+			public const string SettingsManagement = "Desktop/Settings Management";
+
+			[AuthorityToken(Description = "Allow users to customize the Date-Time display format.")]
+			public const string CustomizeDateTimeFormat = "Desktop/Customize Date-Time Format";
+
+			[AuthorityToken(Description = "Allow access to the desktop Extension Browser.")]
+			public const string ExtensionBrowser = "Desktop/Extension Browser";
+
 			[AuthorityToken(Description = "Allow access to the 'Show Logs' functionality.")]
 			public const string ShowLogs = "Desktop/Show Logs";
 		}

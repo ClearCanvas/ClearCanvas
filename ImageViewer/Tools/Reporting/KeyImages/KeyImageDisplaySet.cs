@@ -43,7 +43,7 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
             Platform.CheckForNullReference(image.ImageViewer, "image.ImageViewer");
 
             // TODO (CR Phoenix5 - Med): Clinical as well
-            if (!PermissionsHelper.IsInRole(AuthorityTokens.KeyImages))
+            if (!PermissionsHelper.IsInRole(AuthorityTokens.Study.KeyImages))
                 throw new PolicyException(SR.ExceptionCreateKeyImagePermissionDenied);
 
             var sopProvider = image as IImageSopProvider;
@@ -126,7 +126,7 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
             Platform.CheckForNullReference(image.ImageViewer, "image.ImageViewer");
 
             // TODO (CR Phoenix5 - Med): Clinical as well
-            if (!PermissionsHelper.IsInRole(AuthorityTokens.KeyImages))
+            if (!PermissionsHelper.IsInRole(AuthorityTokens.Study.KeyImages))
                 throw new PolicyException(SR.ExceptionCreateKeyImagePermissionDenied);
             foreach (var imageSet in image.ImageViewer.LogicalWorkspace.ImageSets)
             {

@@ -62,7 +62,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AuthorityTokens.cs" />
     <Compile Include="KeyImages\DesktopWindowTool.cs" />
     <Compile Include="KeyImages\EditKeyImageInformationTool.cs" />
     <Compile Include="KeyImages\IKeyImageClipboard.cs" />
