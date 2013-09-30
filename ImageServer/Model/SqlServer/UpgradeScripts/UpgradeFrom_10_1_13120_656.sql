@@ -152,7 +152,8 @@ CREATE TABLE dbo.ExternalRequestQueue
 	RequestXml xml NOT NULL,
 	StateXml xml NULL,
 	InsertTime datetime NOT NULL,
-	DeletionTime datetime NULL
+	DeletionTime datetime NULL,
+	Revision int NOT NULL CONSTRAINT DF_ExternalRequestQueue_Revision DEFAULT 1
 	)  ON QUEUES
 	 TEXTIMAGE_ON QUEUES
 GO

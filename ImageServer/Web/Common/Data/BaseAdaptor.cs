@@ -182,6 +182,28 @@ namespace ClearCanvas.ImageServer.Web.Common.Data
             }
         }
 
+		public bool Update(TCriteria criteria, TColumns param)
+		{
+			try
+			{
+				using (IUpdateContext context = PersistentStore.OpenUpdateContext(UpdateContextSyncMode.Flush))
+				{
+					TIEntity update = context.GetBroker<TIEntity>();
+
+					var result = update.Update(criteria, param);
+
+					context.Commit();
+
+					return result;
+				}
+			}
+			catch (Exception e)
+			{
+				Platform.Log(LogLevel.Error, e, "Unexpected exception updating {0}", typeof(TServerEntity));
+				throw;
+			}
+		}
+
 		public bool Delete(IUpdateContext context, ServerEntityKey key)
 		{
 			TIEntity update = context.GetBroker<TIEntity>();

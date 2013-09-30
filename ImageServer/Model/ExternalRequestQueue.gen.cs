@@ -43,6 +43,7 @@ namespace ClearCanvas.ImageServer.Model
              String _requestType_
             ,XmlDocument _requestXml_
             ,DateTime _insertTime_
+            ,Int32 _revision_
             ,DateTime _deletionTime_
             ,XmlDocument _stateXml_
             ,String _operationToken_
@@ -53,6 +54,7 @@ namespace ClearCanvas.ImageServer.Model
             RequestType = _requestType_;
             RequestXml = _requestXml_;
             InsertTime = _insertTime_;
+            Revision = _revision_;
             DeletionTime = _deletionTime_;
             StateXml = _stateXml_;
             OperationToken = _operationToken_;
@@ -72,6 +74,9 @@ namespace ClearCanvas.ImageServer.Model
         private XmlDocument _RequestXml;
         [EntityFieldDatabaseMappingAttribute(TableName="ExternalRequestQueue", ColumnName="InsertTime")]
         public DateTime InsertTime
+        { get; set; }
+        [EntityFieldDatabaseMappingAttribute(TableName="ExternalRequestQueue", ColumnName="Revision")]
+        public Int32 Revision
         { get; set; }
         [EntityFieldDatabaseMappingAttribute(TableName="ExternalRequestQueue", ColumnName="DeletionTime")]
         public DateTime DeletionTime
@@ -122,6 +127,7 @@ namespace ClearCanvas.ImageServer.Model
             updateColumns.RequestType = entity.RequestType;
             updateColumns.RequestXml = entity.RequestXml;
             updateColumns.InsertTime = entity.InsertTime;
+            updateColumns.Revision = entity.Revision;
             updateColumns.DeletionTime = entity.DeletionTime;
             updateColumns.StateXml = entity.StateXml;
             updateColumns.OperationToken = entity.OperationToken;
