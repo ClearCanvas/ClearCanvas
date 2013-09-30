@@ -36,15 +36,6 @@ namespace ClearCanvas.Desktop
 		/// </summary>
 		public static class Desktop
 		{
-			/// <summary>
-			/// Tokens that allow access to administrative functionality.
-			/// </summary>
-			public static class Admin
-			{
-				[AuthorityToken(Description = "Allow viewing and updating the License Key.")]
-				public const string License = "Desktop/Admin/License";
-			}
-
 			[AuthorityToken(Description = "Allow access to the Settings Management screen.")]
 			public const string SettingsManagement = "Desktop/Settings Management";
 
