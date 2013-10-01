@@ -128,7 +128,6 @@
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="AuthorityTokens.cs" />
     <Compile Include="HelpSettings.cs" />
     <Compile Include="HelpSettings.Designer.cs">
       <AutoGen>True</AutoGen>

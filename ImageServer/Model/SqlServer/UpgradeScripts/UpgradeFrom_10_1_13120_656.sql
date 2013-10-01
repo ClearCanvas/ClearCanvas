@@ -46,7 +46,7 @@ GO
 INSERT INTO [ImageServer].[dbo].[ServerPartitionTypeEnum]
            ([GUID],[Enum],[Lookup],[Description],[LongDescription])
      VALUES
-           (newid(),101,'Research','Research','An ImageServer research Partition')
+           (newid(),101,'VFS','VFS','An ImageServer Virtual File System Partition')
 GO
 
 
@@ -152,7 +152,8 @@ CREATE TABLE dbo.ExternalRequestQueue
 	RequestXml xml NOT NULL,
 	StateXml xml NULL,
 	InsertTime datetime NOT NULL,
-	DeletionTime datetime NULL
+	DeletionTime datetime NULL,
+	Revision int NOT NULL CONSTRAINT DF_ExternalRequestQueue_Revision DEFAULT 1
 	)  ON QUEUES
 	 TEXTIMAGE_ON QUEUES
 GO

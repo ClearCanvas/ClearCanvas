@@ -27,6 +27,7 @@ using System.Collections.Generic;
 using ClearCanvas.Dicom;
 using ClearCanvas.Dicom.Codec;
 using ClearCanvas.Dicom.Iod;
+using ClearCanvas.Dicom.Iod.Modules;
 
 namespace ClearCanvas.ImageViewer.StudyManagement
 {
@@ -574,6 +575,15 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 					}
 				}
 			}
+		}
+
+		/// <summary>
+		/// Gets whether or not this Image SOP instance is a multi-frame image.
+		/// </summary>
+		public bool IsMultiframe
+		{
+			// we include a check for the functional groups since an "enhanced" image could have only one frame, but have important data encoded in functional groups anyway
+			get { return NumberOfFrames > 1 || new MultiFrameFunctionalGroupsModuleIod(DataSource).HasValues(); }
 		}
 
 		/// <summary>

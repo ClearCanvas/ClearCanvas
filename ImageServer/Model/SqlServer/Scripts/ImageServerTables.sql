@@ -1877,6 +1877,7 @@ CREATE TABLE [dbo].[ExternalRequestQueue](
 	[StateXml] [xml] NULL,
 	[InsertTime] [datetime] NOT NULL,
 	[DeletionTime] [datetime] NULL,
+	[Revision] [int] NOT NULL CONSTRAINT DF_ExternalRequestQueue_Revision DEFAULT 1
  CONSTRAINT [PK_ExternalRequestQueue] PRIMARY KEY NONCLUSTERED 
 (
 	[GUID] ASC

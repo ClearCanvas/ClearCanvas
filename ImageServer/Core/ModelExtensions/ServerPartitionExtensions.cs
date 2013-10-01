@@ -73,9 +73,9 @@ namespace ClearCanvas.ImageServer.Core.ModelExtensions
         {
             Platform.CheckForNullReference(user, "user cannot be null");
 
-            if (partition.ServerPartitionTypeEnum.Equals(ServerPartitionTypeEnum.Research))
+            if (partition.ServerPartitionTypeEnum.Equals(ServerPartitionTypeEnum.VFS))
 	        {
-		        return user.IsInRole(AuthorityTokens.Research.ViewPartitions);
+		        return user.IsInRole(AuthorityTokens.Vfs.ViewPartitions);
 	        }
 
 	        // If user has the "access all" token, return true

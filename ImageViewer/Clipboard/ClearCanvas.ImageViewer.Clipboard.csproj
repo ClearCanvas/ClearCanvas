@@ -71,7 +71,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AuthorityTokens.cs" />
     <Compile Include="Clipboard.cs" />
     <Compile Include="ClipboardComponent.cs" />
     <Compile Include="ClipboardItem.cs" />

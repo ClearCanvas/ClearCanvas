@@ -49,7 +49,7 @@ namespace ClearCanvas.ImageServer.Enterprise.SqlServer
         internal UpdateContext(SqlConnection connection, ITransactionNotifier transactionNotifier, UpdateContextSyncMode mode)
             : base (connection, transactionNotifier)
         {
-            _transaction = connection.BeginTransaction(IsolationLevel.ReadCommitted);
+            _transaction = connection.BeginTransaction(mode == UpdateContextSyncMode.Flush ? IsolationLevel.ReadCommitted : IsolationLevel.Serializable);
             _mode = mode;
         }
         #endregion

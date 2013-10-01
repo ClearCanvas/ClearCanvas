@@ -33,6 +33,7 @@ using ClearCanvas.Desktop.Tools;
 using ClearCanvas.Enterprise.Common;
 using ClearCanvas.Enterprise.Common.Admin.AuthorityGroupAdmin;
 using ClearCanvas.Enterprise.Common.Setup;
+using AuthorityTokens = ClearCanvas.Enterprise.Common.AuthorityTokens;
 
 namespace ClearCanvas.Enterprise.Desktop
 {

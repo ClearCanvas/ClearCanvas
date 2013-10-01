@@ -76,7 +76,10 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 					// otherwise if slope/intercept specify anything other than the identity function, return unspecified
 					var slope = GetAttributeDoubleValue(dicomAttributeProvider, DicomTags.RescaleSlope, 1);
 					var intercept = GetAttributeDoubleValue(dicomAttributeProvider, DicomTags.RescaleIntercept, 0);
+
+// ReSharper disable CompareOfFloatsByEqualityOperator
 					return slope == 1 && intercept == 0 ? None : Unspecified;
+// ReSharper restore CompareOfFloatsByEqualityOperator
 			}
 		}
 
@@ -251,9 +254,9 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		/// <returns>A PET series units string value.</returns>
 		public string ToPetSeriesUnits()
 		{
-			if (_codeRescaleType == null)
+			if (_codeUnits == null)
 				throw new InvalidOperationException(string.Format(@"The unit {0} cannot be represented as a Units (0054,1001)", Label));
-			return _codeRescaleType;
+			return _codeUnits;
 		}
 
 		#endregion
@@ -339,6 +342,21 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		public override string ToString()
 		{
 			return Label;
+		}
+
+		public static bool operator ==(RescaleUnits x, RescaleUnits y)
+		{
+			return Equals(x, y);
+		}
+
+		public static bool operator !=(RescaleUnits x, RescaleUnits y)
+		{
+			return !Equals(x, y);
+		}
+
+		public static explicit operator string(RescaleUnits units)
+		{
+			return units != null ? (!string.IsNullOrEmpty(units._codeRescaleType) ? units._codeRescaleType : units._codeUnits ?? string.Empty) : string.Empty;
 		}
 	}
 }

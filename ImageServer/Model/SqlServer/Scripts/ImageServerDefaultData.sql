@@ -1203,7 +1203,7 @@ GO
 INSERT INTO [ImageServer].[dbo].[ServerPartitionTypeEnum]
            ([GUID],[Enum],[Lookup],[Description],[LongDescription])
      VALUES
-           (newid(),101,'Research','Research','An ImageServer research Partition')
+           (newid(),101,'VFS','VFS','An ImageServer Virtual File System Partition')
 GO
 
 -- ExternalRequestQueueStatusEnum inserts

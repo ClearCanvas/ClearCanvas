@@ -125,7 +125,7 @@ namespace ClearCanvas.ImageServer.Web.Common.Data
         /// <returns></returns>
         public bool CanDelete(ServerPartition partition)
         {
-            return partition.StudyCount <= 0 && !partition.ServerPartitionTypeEnum.Equals(ServerPartitionTypeEnum.Research);
+            return partition.StudyCount <= 0 && !partition.ServerPartitionTypeEnum.Equals(ServerPartitionTypeEnum.VFS);
         }
 
 		/// <summary>
@@ -135,7 +135,7 @@ namespace ClearCanvas.ImageServer.Web.Common.Data
 		/// <returns></returns>
 		public bool CanEdit(ServerPartition partition)
 		{
-			return !partition.ServerPartitionTypeEnum.Equals(ServerPartitionTypeEnum.Research);
+			return !partition.ServerPartitionTypeEnum.Equals(ServerPartitionTypeEnum.VFS);
 		}
 
         /// <summary>

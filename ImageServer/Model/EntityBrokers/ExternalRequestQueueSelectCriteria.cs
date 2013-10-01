@@ -26,5 +26,18 @@ namespace ClearCanvas.ImageServer.Model.EntityBrokers
                 return (IRelatedEntityCondition<EntitySelectCriteria>)SubCriteria["WorkQueueRelatedEntityCondition"];
             }
         }
+
+		[EntityFieldDatabaseMappingAttribute(TableName = "ExternalRequestQueue", ColumnName = "GUID")]
+		public ISearchCondition<ServerEntityKey> Key
+		{
+			get
+			{
+				if (!SubCriteria.ContainsKey("Key"))
+				{
+					SubCriteria["Key"] = new SearchCondition<ServerEntityKey>("Key");
+				}
+				return (ISearchCondition<ServerEntityKey>)SubCriteria["Key"];
+			}
+		}
     }
 }

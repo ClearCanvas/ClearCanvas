@@ -1,4 +1,4 @@
-#region License
+﻿#region License
 
 // Copyright (c) 2013, ClearCanvas Inc.
 // All rights reserved.
@@ -22,14 +22,27 @@
 
 #endregion
 
-using ClearCanvas.Common;
-using ClearCanvas.Common.Authorization;
-
-namespace ClearCanvas.ImageViewer.Externals
+namespace ClearCanvas.Dicom.Iod.Macros
 {
-	public static class AuthorityTokens
+	/// <summary>
+	/// Exposure Index Macro
+	/// </summary>
+	/// <remarks>As defined in the DICOM Standard 2011, Part 3, Section 10.19 (Table 10-23)</remarks>
+	public interface IExposureIndexMacro : IIodMacro
 	{
-		[AuthorityToken(Description = "Grant access to the External Applications feature.")]
-		public const string Externals = "Viewer/Externals";
+		/// <summary>
+		/// Gets or sets the value of ExposureIndex in the underlying collection. Type 3.
+		/// </summary>
+		double? ExposureIndex { get; set; }
+
+		/// <summary>
+		/// Gets or sets the value of TargetExposureIndex in the underlying collection. Type 3.
+		/// </summary>
+		double? TargetExposureIndex { get; set; }
+
+		/// <summary>
+		/// Gets or sets the value of DeviationIndex in the underlying collection. Type 3.
+		/// </summary>
+		double? DeviationIndex { get; set; }
 	}
 }

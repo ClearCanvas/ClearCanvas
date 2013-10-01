@@ -145,6 +145,7 @@
     <Compile Include="Annotations\Dicom\DicomFilteredAnnotationLayout.cs" />
     <Compile Include="Annotations\Dicom\DicomFilteredAnnotationLayoutStore.cs" />
     <Compile Include="Annotations\Dicom\DicomFixedAnnotationLayoutFactory.cs" />
+    <Compile Include="Annotations\Dicom\Tests\DicomFilteredAnnotationLayoutTests.cs" />
     <Compile Include="Annotations\IAnnotationResourceResolver.cs" />
     <Compile Include="Annotations\MammogramAnnotationLayoutProxy.cs" />
     <Compile Include="Automation\Annotations.cs" />
@@ -193,7 +194,6 @@
     <Compile Include="InputManagement\MouseWheelCaptureChangedEventArgs.cs" />
     <Compile Include="InputManagement\Tests\ViewerShortcutManagerTests.cs" />
     <Compile Include="CloningExceptions.cs" />
-    <Compile Include="AuthorityTokens.cs" />
     <Compile Include="Comparers\ReverseComparer.cs" />
     <Compile Include="Graphics\ColorBarGraphic.cs" />
     <Compile Include="Graphics\GraphicFocusChangedEventArgs.cs" />

@@ -27,8 +27,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Xml;
 using ClearCanvas.Common;
-using ClearCanvas.ImageViewer.StudyManagement;
+using ClearCanvas.Dicom;
 using ClearCanvas.Dicom.Iod;
+using ClearCanvas.ImageViewer.StudyManagement;
 
 namespace ClearCanvas.ImageViewer.Annotations.Dicom
 {
@@ -42,10 +43,7 @@ namespace ClearCanvas.ImageViewer.Annotations.Dicom
 		private DicomFilteredAnnotationLayoutStore()
 		{
 			DicomFilteredAnnotationLayoutStoreSettings.Default.PropertyChanged +=
-				delegate
-				{
-					this.Initialize(true);
-				};
+				delegate { this.Initialize(true); };
 		}
 
 		public static DicomFilteredAnnotationLayoutStore Instance
@@ -60,7 +58,7 @@ namespace ClearCanvas.ImageViewer.Annotations.Dicom
 				List<DicomFilteredAnnotationLayout> allFilteredLayouts = new List<DicomFilteredAnnotationLayout>();
 
 				string xPath = "dicom-filtered-annotation-layout-configuration/dicom-filtered-annotation-layouts/dicom-filtered-annotation-layout";
-				
+
 				lock (_syncLock)
 				{
 					XmlNodeList filteredLayoutNodes = _document.SelectNodes(xPath);
@@ -136,7 +134,7 @@ namespace ClearCanvas.ImageViewer.Annotations.Dicom
 		private static void SerializeFilteredLayout(XmlDocument document, DicomFilteredAnnotationLayout dicomFilteredAnnotationLayout)
 		{
 			string xPath = "dicom-filtered-annotation-layout-configuration/dicom-filtered-annotation-layouts";
-			XmlElement filteredLayoutsNode = (XmlElement)document.SelectSingleNode(xPath);
+			XmlElement filteredLayoutsNode = (XmlElement) document.SelectSingleNode(xPath);
 			if (filteredLayoutsNode == null)
 				throw new InvalidDataException(String.Format(SR.ExceptionInvalidFilteredAnnotationLayoutXml, "'dicom-filtered-annotation-layouts' node does not exist"));
 
@@ -156,7 +154,7 @@ namespace ClearCanvas.ImageViewer.Annotations.Dicom
 			}
 
 			xPath = String.Format("dicom-filtered-annotation-layout[@id='{0}']", dicomFilteredAnnotationLayout.Identifier);
-			XmlElement existingNode = (XmlElement)filteredLayoutsNode.SelectSingleNode(xPath);
+			XmlElement existingNode = (XmlElement) filteredLayoutsNode.SelectSingleNode(xPath);
 			if (existingNode != null)
 				filteredLayoutsNode.ReplaceChild(newFilteredLayoutNode, existingNode);
 			else
@@ -174,25 +172,25 @@ namespace ClearCanvas.ImageViewer.Annotations.Dicom
 			lock (_syncLock)
 			{
 				string xPath = String.Format("dicom-filtered-annotation-layout-configuration/dicom-filtered-annotation-layouts/dicom-filtered-annotation-layout[@id='{0}']", filteredLayoutId);
-				XmlElement filteredLayoutNode = (XmlElement)_document.SelectSingleNode(xPath);
+				XmlElement filteredLayoutNode = (XmlElement) _document.SelectSingleNode(xPath);
 				if (filteredLayoutNode == null)
 					return null;
 
 				return DeserializeFilteredLayout(filteredLayoutNode);
 			}
 		}
-		
+
 		public void RemoveFilteredLayout(string filteredLayoutId)
 		{
 			lock (_syncLock)
 			{
 				string xPath = "dicom-filtered-annotation-layout-configuration/dicom-filtered-annotation-layouts";
-				XmlElement filteredLayoutsNode = (XmlElement)_document.SelectSingleNode(xPath);
+				XmlElement filteredLayoutsNode = (XmlElement) _document.SelectSingleNode(xPath);
 				if (filteredLayoutsNode == null)
 					throw new InvalidDataException(String.Format(SR.ExceptionInvalidFilteredAnnotationLayoutXml, "'dicom-filtered-annotation-layouts' node does not exist"));
 
 				xPath = String.Format("dicom-filtered-annotation-layout[@id='{0}']", filteredLayoutId);
-				XmlElement filteredLayoutNode = (XmlElement)filteredLayoutsNode.SelectSingleNode(xPath);
+				XmlElement filteredLayoutNode = (XmlElement) filteredLayoutsNode.SelectSingleNode(xPath);
 				if (filteredLayoutNode != null)
 					filteredLayoutsNode.RemoveChild(filteredLayoutNode);
 			}
@@ -225,7 +223,7 @@ namespace ClearCanvas.ImageViewer.Annotations.Dicom
 		}
 
 		public void Update(DicomFilteredAnnotationLayout filteredLayout)
-		{ 
+		{
 			Platform.CheckForNullReference(filteredLayout, "filteredLayout");
 			Platform.CheckForEmptyString(filteredLayout.MatchingLayoutIdentifier, "filteredLayout.MatchingLayoutIdentifier");
 
@@ -246,18 +244,44 @@ namespace ClearCanvas.ImageViewer.Annotations.Dicom
 			}
 		}
 
+		public string GetMatchingStoredLayoutId(IDicomAttributeProvider dicomAttributeProvider)
+		{
+			if (dicomAttributeProvider == null)
+				return null;
+
+			var filterCandidates = new List<KeyValuePair<string, string>>
+			                       	{
+			                       		new KeyValuePair<string, string>("Modality", dicomAttributeProvider[DicomTags.Modality].GetString(0, string.Empty))
+			                       	};
+
+			// these are hard-coded as the only filter candidates for now, until more general use cases are identified.
+			var patientOrientation = PatientOrientation.FromString(dicomAttributeProvider[DicomTags.PatientOrientation].ToString());
+			if (patientOrientation != null && !patientOrientation.IsEmpty)
+			{
+				filterCandidates.Add(new KeyValuePair<string, string>("PatientOrientation_Row", patientOrientation.PrimaryRow));
+				filterCandidates.Add(new KeyValuePair<string, string>("PatientOrientation_Col", patientOrientation.PrimaryColumn));
+			}
+
+			return GetMatchingStoredLayoutId(filterCandidates);
+		}
+
 		public string GetMatchingStoredLayoutId(IImageSopProvider dicomImage)
 		{
 			if (dicomImage == null)
 				return null;
 
 			var filterCandidates = new List<KeyValuePair<string, string>>
-            {new KeyValuePair<string, string>("Modality", dicomImage.ImageSop.Modality)};
+			                       	{
+			                       		new KeyValuePair<string, string>("Modality", dicomImage.ImageSop.Modality)
+			                       	};
 
 			// these are hard-coded as the only filter candidates for now, until more general use cases are identified.
-		    var patientOrientation = dicomImage.Frame.PatientOrientation;
-            filterCandidates.Add(new KeyValuePair<string, string>("PatientOrientation_Row", patientOrientation.PrimaryRow));
-		    filterCandidates.Add(new KeyValuePair<string, string>("PatientOrientation_Col", patientOrientation.PrimaryColumn));
+			var patientOrientation = dicomImage.Frame.PatientOrientation;
+			if (!patientOrientation.IsEmpty)
+			{
+				filterCandidates.Add(new KeyValuePair<string, string>("PatientOrientation_Row", patientOrientation.PrimaryRow));
+				filterCandidates.Add(new KeyValuePair<string, string>("PatientOrientation_Col", patientOrientation.PrimaryColumn));
+			}
 
 			return GetMatchingStoredLayoutId(filterCandidates);
 		}

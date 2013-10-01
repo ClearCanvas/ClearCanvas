@@ -22,7 +22,9 @@
 
 #endregion
 
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using ClearCanvas.Common.Utilities;
 
 namespace ClearCanvas.Common.Authorization
@@ -83,16 +85,36 @@ namespace ClearCanvas.Common.Authorization
 		/// <returns></returns>
 		public static AuthorityGroupDefinition[] GetDefaultAuthorityGroups()
 		{
-			var groupDefs = new List<AuthorityGroupDefinition>();
-			foreach (IDefineAuthorityGroups groupDefiner in new DefineAuthorityGroupsExtensionPoint().CreateExtensions())
-			{
-				var groups = groupDefiner.GetAuthorityGroups();
-				if (groups != null)
-				{
-					groupDefs.AddRange(groups);
-				}
-			}
+			var groupDefs = from definer in new DefineAuthorityGroupsExtensionPoint().CreateExtensions().Cast<IDefineAuthorityGroups>()
+							from def in definer.GetAuthorityGroups()
+							group def by def.Name
+								into g
+								select Merge(g.ToList());
+
 			return groupDefs.ToArray();
+		}
+
+		private static AuthorityGroupDefinition Merge(IList<AuthorityGroupDefinition> authorityGroupDefinitions)
+		{
+			if (!authorityGroupDefinitions.Any())
+				throw new ArgumentException("Input list cannot be empty.");
+
+			if (authorityGroupDefinitions.Select(g => g.Name).Distinct().Count() > 1)
+				throw new InvalidOperationException("Can only merge group definitions for the same group.");
+
+			var tokens = (from g in authorityGroupDefinitions
+						  from t in g.Tokens
+						  select t).Distinct();
+
+			var firstDef = authorityGroupDefinitions.First();
+
+			return new AuthorityGroupDefinition(
+				firstDef.Name,
+				firstDef.Description,
+				firstDef.DataGroup,
+				tokens.ToArray(),
+				firstDef.BuiltIn
+			);
 		}
 	}
 }

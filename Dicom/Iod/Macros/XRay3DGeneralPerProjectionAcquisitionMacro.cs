@@ -22,37 +22,32 @@
 
 #endregion
 
-using ClearCanvas.Common.Authorization;
-
-namespace ClearCanvas.ImageViewer.Clipboard
+namespace ClearCanvas.Dicom.Iod.Macros
 {
 	/// <summary>
-	/// Clipboard authority tokens.
+	/// X-Ray 3D General Per Projection Acquisition Macro
 	/// </summary>
-	public class AuthorityTokens
+	/// <remarks>As defined in the DICOM Standard 2011, Part 3, Section C.8.21.3.1.2 (Table C.8.21.3.1.2-1)</remarks>
+	public interface IXRay3DGeneralPerProjectionAcquisitionMacro : IXRayCollimatorDimensionsMacro
 	{
 		/// <summary>
-		/// Clipboard tokens
+		/// Gets or sets the value of Kvp in the underlying collection. Type 1C.
 		/// </summary>
-		public class Clipboard
-		{
-			/// <summary>
-			/// Clipboard export tokens
-			/// </summary>
-			public class Export
-			{
-				/// <summary>
-				/// Permission to export clipboard items into JPG files.
-				/// </summary>
-				[AuthorityToken(Description = "Permission to export clipboard items into JPG files.")]
-				public const string JPG = "Viewer/Clipboard/Export/JPG";
+		double? Kvp { get; set; }
 
-				/// <summary>
-				/// Permission to export clipboard items into AVI files.
-				/// </summary>
-				[AuthorityToken(Description = "Permission to export clipboard items into AVI files.")]
-				public const string AVI = "Viewer/Clipboard/Export/AVI";
-			}
-		}
+		/// <summary>
+		/// Gets or sets the value of XRayTubeCurrentInMa in the underlying collection. Type 1C.
+		/// </summary>
+		double? XRayTubeCurrentInMa { get; set; }
+
+		/// <summary>
+		/// Gets or sets the value of FrameAcquisitionDuration in the underlying collection. Type 1C.
+		/// </summary>
+		double? FrameAcquisitionDuration { get; set; }
+
+		/// <summary>
+		/// Gets or sets the value of CollimatorShape in the underlying collection. Type 1C.
+		/// </summary>
+		string CollimatorShape { get; set; }
 	}
 }

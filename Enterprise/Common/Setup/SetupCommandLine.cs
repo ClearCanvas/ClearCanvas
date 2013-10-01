@@ -33,7 +33,7 @@ namespace ClearCanvas.Enterprise.Common.Setup
 			Password = "clearcanvas";
 			UserName = "sa";
 			ImportSettingsGroups = true;
-			ImportDefaultAuthorityGroups = true;
+			ImportDefaultAuthorityGroups = false;
 			ImportAuthorityTokens = true;
 			MigrateSharedSettings = true;
 		}
@@ -45,9 +45,9 @@ namespace ClearCanvas.Enterprise.Common.Setup
 		public bool ImportAuthorityTokens { get; set; }
 
 		/// <summary>
-		/// Specifies whether to create default authority groups.
+		/// Specifies whether to create default authority groups defined in plugins.
 		/// </summary>
-		[CommandLineParameter("groups", "g", "Specifies whether to import the default authority groups. This option is enabled by default.")]
+		[CommandLineParameter("groups", "g", "Specifies whether to import the default authority groups defined in plugins. This option is disabled by default.")]
 		public bool ImportDefaultAuthorityGroups { get; set; }
 
 		/// <summary>
@@ -79,5 +79,11 @@ namespace ClearCanvas.Enterprise.Common.Setup
 		/// </summary>
 		[CommandLineParameter("spwd", "Specifies password to connect to enterprise server. Default is 'clearcanvas'.")]
 		public string Password { get; set; }
+
+		/// <summary>
+		/// Specifies the name of a file or folder containing authority group data to be imported.
+		/// </summary>
+		[CommandLineParameter("authGroupData", "Specifies the name of a file or folder containing authority group data to be imported.")]
+		public string AuthorityGroupData { get; set; }
 	}
 }

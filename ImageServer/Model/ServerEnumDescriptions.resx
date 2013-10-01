@@ -807,11 +807,11 @@
   <data name="ServerPartitionTypeEnum_Standard_LongDescription" xml:space="preserve">
     <value>A standard ImageServer Partition</value>
   </data>
-  <data name="ServerPartitionTypeEnum_Research_Description" xml:space="preserve">
-    <value>Research</value>
+  <data name="ServerPartitionTypeEnum_VFS_Description" xml:space="preserve">
+    <value>VFS</value>
   </data>
-  <data name="ServerPartitionTypeEnum_Research_LongDescription" xml:space="preserve">
-    <value>An ImageServer research Partition</value>
+  <data name="ServerPartitionTypeEnum_VFS_LongDescription" xml:space="preserve">
+    <value>An ImageServer Virtual File System Partition</value>
   </data>
   <data name="StudyIntegrityReasonEnum_InconsistentData_Description" xml:space="preserve">
     <value>Inconsistent Data</value>
