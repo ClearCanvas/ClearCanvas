@@ -242,6 +242,7 @@
     <None Include="DicomServer\DicomServerSettings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>DicomServerSettings.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </None>
     <None Include="ImageProcessingSettings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
