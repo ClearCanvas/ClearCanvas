@@ -438,7 +438,7 @@ namespace ClearCanvas.ImageViewer
 
 			if (series.Modality == "MR")
 			{
-				SortedDictionary<int, List<IPresentationImage>> imagesByEchoNumber = SplitMREchos(series.Sops);
+				var imagesByEchoNumber = SplitMREchos(series.Sops);
 
 				if (imagesByEchoNumber.Count > 1)
 				{
@@ -461,7 +461,7 @@ namespace ClearCanvas.ImageViewer
 			return displaySets;
 		}
 
-		private SortedDictionary<int, List<IPresentationImage>> SplitMREchos(IEnumerable<Sop> sops)
+		private IList<KeyValuePair<int, List<IPresentationImage>>> SplitMREchos(IEnumerable<Sop> sops)
 		{
 			// keep separate echo lists in case series is mixed single/multi frames
 			// unless their dimension uid also matches, echo dimension indices should not be mixed between sop intances (see DICOM 2011 PS 3.3 C.7.6.17.2)
@@ -473,19 +473,14 @@ namespace ClearCanvas.ImageViewer
 				if (sop.IsMultiframe)
 				{
 					var echoDimensionUid = string.Empty;
-					var echoDimensionIndex = -1;
 
-					// try to get the dimension index sequence from the multiframe
-					var indexSequence = new MultiFrameDimensionModuleIod(sop.DataSource).DimensionIndexSequence;
-					if (indexSequence != null && indexSequence.Length > 0)
+					// try to find the echo dimension from the multiframe
+					DimensionIndexSequenceItem dimension;
+					var echoDimensionIndex = new MultiFrameDimensionModuleIod(sop.DataSource).FindDimensionIndexSequenceItemByTag(DicomTags.EffectiveEchoTime, DicomTags.MrEchoSequence, out dimension);
+					if (echoDimensionIndex >= 0)
 					{
-						// find a dimension that references the Effective Echo Time tag in the MR Echo Sequence (the MR Echo Functional Group)
-						echoDimensionIndex = Array.FindIndex(indexSequence, s => s.DimensionIndexPointer == DicomTags.EffectiveEchoTime && s.FunctionalGroupPointer == DicomTags.MrEchoSequence);
-						if (echoDimensionIndex >= 0)
-						{
-							// get the UID that identifies this dimension organization 
-							echoDimensionUid = indexSequence[echoDimensionIndex].DimensionOrganizationUid;
-						}
+						// get the UID that identifies this dimension organization 
+						echoDimensionUid = dimension.DimensionOrganizationUid;
 					}
 
 					// if dimension organization UID is blank, assign one so that the index is effectively unique to this SOP instance only
@@ -515,36 +510,46 @@ namespace ClearCanvas.ImageViewer
 				}
 			}
 
-			// if we have some multiframes processed into separate echos, append them to the main list and assign echo numbers
+			var results = imagesByEchoNumber.ToList();
+
+			// if we have some multiframes processed into separate echos, append them to the main list
 			if (imagesByEchoDimension.Count > 0)
 			{
-				var echoNumber = imagesByEchoNumber.Count > 0 ? imagesByEchoNumber.Max(k => k.Key) : 0;
-				foreach (var multiframeEchos in imagesByEchoDimension.OrderBy(k => k.Key.DimensionOrganizationUid).ThenBy(k => k.Key.EchoIndexValue).Select(k => k.Value))
-					imagesByEchoNumber.Add(++echoNumber, multiframeEchos);
+				// make sure we number them in a logical order - since the multiframe echo indices don't have any meaning outside the SOP instance in which it was used,
+				// we'll sort by the first instance number in which the index was used, then order by the actual index value
+				results.AddRange(imagesByEchoDimension
+				                 	.Select(k => new KeyValuePair<int, List<IPresentationImage>>(k.Key.EchoIndexValue, k.Value))
+				                 	.OrderBy(k => k.Value.Select(i => ((IImageSopProvider) i).ImageSop.InstanceNumber).Min())
+				                 	.ThenBy(k => k.Key));
 			}
 
-			return imagesByEchoNumber;
+			return results;
 		}
 
 		private class EchoIndex : IEquatable<EchoIndex>
 		{
-			public readonly string DimensionOrganizationUid;
-			public readonly int EchoIndexValue;
+			private readonly string _dimensionOrganizationUid;
+			private readonly int _echoIndexValue;
 
 			public EchoIndex(string dimensionOrganizationUid, int echoIndexValue)
 			{
-				DimensionOrganizationUid = dimensionOrganizationUid;
-				EchoIndexValue = echoIndexValue;
+				_dimensionOrganizationUid = dimensionOrganizationUid;
+				_echoIndexValue = echoIndexValue;
+			}
+
+			public int EchoIndexValue
+			{
+				get { return _echoIndexValue; }
 			}
 
 			public override int GetHashCode()
 			{
-				return DimensionOrganizationUid.GetHashCode() ^ EchoIndexValue.GetHashCode();
+				return _dimensionOrganizationUid.GetHashCode() ^ _echoIndexValue.GetHashCode();
 			}
 
 			public bool Equals(EchoIndex other)
 			{
-				return other != null && Equals(DimensionOrganizationUid, other.DimensionOrganizationUid) && EchoIndexValue == other.EchoIndexValue;
+				return other != null && Equals(_dimensionOrganizationUid, other._dimensionOrganizationUid) && _echoIndexValue == other._echoIndexValue;
 			}
 
 			public override bool Equals(object obj)

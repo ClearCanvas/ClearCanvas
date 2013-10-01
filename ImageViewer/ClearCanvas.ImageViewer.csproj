@@ -280,6 +280,7 @@
     <Compile Include="StudyManagement\StudyExtensions.cs" />
     <Compile Include="StudyManagement\Tests\ActivityMonitorComponentTests.cs" />
     <Compile Include="StudyManagement\Tests\NormalizedPixelSpacingTests.cs" />
+    <Compile Include="StudyManagement\Tests\TestDataSource.cs" />
     <Compile Include="StudyManagement\Tests\UnitTestStudyLoader.cs" />
     <Compile Include="StudyManagement\ViewerFrameEnumerator.cs" />
     <Compile Include="StudyManagement\WeightedWindowPrefetchingStrategy.cs" />
@@ -683,7 +684,7 @@
     <Compile Include="Rendering\GDI\GdiRenderingSurface.cs" />
     <Compile Include="Rendering\IRenderer.cs" />
     <Compile Include="Rendering\IRenderingSurface.cs" />
-    <Compile Include="StudyManagement\Tests\SopTests.cs" />
+    <Compile Include="StudyManagement\Tests\SopDataSourceTests.cs" />
     <Compile Include="StudyManagement\ValidationSettings.cs" />
     <Compile Include="StudyManagement\ValidationSettings.Designer.cs">
       <AutoGen>True</AutoGen>

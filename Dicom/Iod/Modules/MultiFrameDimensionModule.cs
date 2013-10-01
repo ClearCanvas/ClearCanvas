@@ -176,6 +176,70 @@ namespace ClearCanvas.Dicom.Iod.Modules
 			var iodBase = new DimensionIndexSequenceItem(new DicomSequenceItem());
 			return iodBase;
 		}
+
+		/// <summary>
+		/// Finds the Dimension Index Sequence Item that references the specified DICOM tag, returning the index of the dimension or -1 if the dimension was not found.
+		/// </summary>
+		/// <param name="dimensionIndexPointer">The DICOM tag that describes the dimension (i.e. the value of Dimension Index Pointer).</param>
+		/// <param name="dimensionIndexPrivateCreator">The private creator code of the <paramref name="dimensionIndexPointer"/>, if it is a private tag.</param>
+		/// <returns>The index of the dimension if it was found; -1 otherwise.</returns>
+		public int FindDimensionIndexSequenceItemByTag(uint dimensionIndexPointer, string dimensionIndexPrivateCreator = null)
+		{
+			DimensionIndexSequenceItem sequenceItem;
+			return FindDimensionIndexSequenceItemByTag(dimensionIndexPointer, out sequenceItem, dimensionIndexPrivateCreator);
+		}
+
+		/// <summary>
+		/// Finds the Dimension Index Sequence Item that references the specified DICOM tag, returning the index of the dimension or -1 if the dimension was not found.
+		/// </summary>
+		/// <param name="dimensionIndexPointer">The DICOM tag that describes the dimension (i.e. the value of Dimension Index Pointer).</param>
+		/// <param name="sequenceItem">The <see cref="DimensionIndexSequenceItem"/> of the dimension if it was found; NULL otherwise.</param>
+		/// <param name="dimensionIndexPrivateCreator">The private creator code of the <paramref name="dimensionIndexPointer"/>, if it is a private tag.</param>
+		/// <returns>The index of the dimension if it was found; -1 otherwise.</returns>
+		public int FindDimensionIndexSequenceItemByTag(uint dimensionIndexPointer, out DimensionIndexSequenceItem sequenceItem, string dimensionIndexPrivateCreator = null)
+		{
+			return FindDimensionIndexSequenceItemByTag(dimensionIndexPointer, 0, out sequenceItem, dimensionIndexPrivateCreator);
+		}
+
+		/// <summary>
+		/// Finds the Dimension Index Sequence Item that references the specified DICOM tag, returning the index of the dimension or -1 if the dimension was not found.
+		/// </summary>
+		/// <param name="dimensionIndexPointer">The DICOM tag that describes the dimension (i.e. the value of Dimension Index Pointer).</param>
+		/// <param name="functionalGroupPointer">The DICOM tag of the functional group sequence in which the <paramref name="dimensionIndexPointer"/> tag is used.</param>
+		/// <param name="dimensionIndexPrivateCreator">The private creator code of the <paramref name="dimensionIndexPointer"/>, if it is a private tag.</param>
+		/// <param name="functionalGroupPrivateCreator">The private creator code of the <paramref name="functionalGroupPointer"/>, if it is a private tag.</param>
+		/// <returns>The index of the dimension if it was found; -1 otherwise.</returns>
+		public int FindDimensionIndexSequenceItemByTag(uint dimensionIndexPointer, uint functionalGroupPointer, string dimensionIndexPrivateCreator = null, string functionalGroupPrivateCreator = null)
+		{
+			DimensionIndexSequenceItem sequenceItem;
+			return FindDimensionIndexSequenceItemByTag(dimensionIndexPointer, functionalGroupPointer, out sequenceItem, dimensionIndexPrivateCreator, functionalGroupPrivateCreator);
+		}
+
+		/// <summary>
+		/// Finds the Dimension Index Sequence Item that references the specified DICOM tag, returning the index of the dimension or -1 if the dimension was not found.
+		/// </summary>
+		/// <param name="dimensionIndexPointer">The DICOM tag that describes the dimension (i.e. the value of Dimension Index Pointer).</param>
+		/// <param name="functionalGroupPointer">The DICOM tag of the functional group sequence in which the <paramref name="dimensionIndexPointer"/> tag is used.</param>
+		/// <param name="sequenceItem">The <see cref="DimensionIndexSequenceItem"/> of the dimension if it was found; NULL otherwise.</param>
+		/// <param name="dimensionIndexPrivateCreator">The private creator code of the <paramref name="dimensionIndexPointer"/>, if it is a private tag.</param>
+		/// <param name="functionalGroupPrivateCreator">The private creator code of the <paramref name="functionalGroupPointer"/>, if it is a private tag.</param>
+		/// <returns>The index of the dimension if it was found; -1 otherwise.</returns>
+		public int FindDimensionIndexSequenceItemByTag(uint dimensionIndexPointer, uint functionalGroupPointer, out DimensionIndexSequenceItem sequenceItem, string dimensionIndexPrivateCreator = null, string functionalGroupPrivateCreator = null)
+		{
+			var indexSequence = DimensionIndexSequence;
+			if (!IsNullOrEmpty(indexSequence))
+			{
+				// find the dimension that references the specified tags
+				var index = Array.FindIndex(indexSequence, s => s.DimensionIndexPointer == dimensionIndexPointer
+				                                                && (functionalGroupPointer == 0 || s.FunctionalGroupPointer == functionalGroupPointer)
+				                                                && (string.IsNullOrEmpty(dimensionIndexPrivateCreator) || s.DimensionIndexPrivateCreator == dimensionIndexPrivateCreator)
+				                                                && (string.IsNullOrEmpty(functionalGroupPrivateCreator) || s.FunctionalGroupPrivateCreator == functionalGroupPrivateCreator));
+				sequenceItem = index >= 0 ? indexSequence[index] : null;
+				return index;
+			}
+			sequenceItem = null;
+			return -1;
+		}
 	}
 
 	/// <summary>

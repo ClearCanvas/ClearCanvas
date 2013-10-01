@@ -32,33 +32,9 @@ using NUnit.Framework;
 
 namespace ClearCanvas.ImageViewer.StudyManagement.Tests
 {
-	public class TestDataSource : DicomMessageSopDataSource
-	{
-		public DicomFile _file;
-
-		public TestDataSource(DicomFile file)
-			: base(file)
-		{
-			_file = file;
-		}
-
-		protected override void Dispose(bool disposing)
-		{
-			base.Dispose(disposing);
-			_file = null;
-		}
-
-		public bool IsDisposed
-		{
-			get { return _file == null; }
-		}
-	}
-
 	[TestFixture]
-	public class SopTests : AbstractTest
+	public class SopDataSourceTests : AbstractTest
 	{
-		public SopTests() {}
-
 		[TestFixtureSetUp]
 		public void Initialize()
 		{

@@ -116,6 +116,27 @@ namespace ClearCanvas.Dicom.Iod.FunctionalGroups
 		public MrEchoSequenceItem(DicomSequenceItem dicomSequenceItem)
 			: base(dicomSequenceItem) {}
 
-		// TODO: implement the functional group sequence items
+		/// <summary>
+		/// Gets or sets the value of EffectiveEchoTime in the underlying collection. Type 1C.
+		/// </summary>
+		public double? EffectiveEchoTime
+		{
+			get
+			{
+				double result;
+				if (DicomAttributeProvider[DicomTags.EffectiveEchoTime].TryGetFloat64(0, out result))
+					return result;
+				return null;
+			}
+			set
+			{
+				if (!value.HasValue)
+				{
+					DicomAttributeProvider[DicomTags.EffectiveEchoTime] = null;
+					return;
+				}
+				DicomAttributeProvider[DicomTags.EffectiveEchoTime].SetFloat64(0, value.Value);
+			}
+		}
 	}
 }

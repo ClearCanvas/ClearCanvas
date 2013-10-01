@@ -312,23 +312,17 @@ namespace ClearCanvas.Dicom.Iod.FunctionalGroups
 		/// <summary>
 		/// Gets or sets the value of StackId in the underlying collection. Type 1C.
 		/// </summary>
-		public int? StackId
+		public string StackId
 		{
-			get
-			{
-				int result;
-				if (DicomAttributeProvider[DicomTags.StackId].TryGetInt32(0, out result))
-					return result;
-				return null;
-			}
+			get { return DicomAttributeProvider[DicomTags.StackId].GetString(0, string.Empty); }
 			set
 			{
-				if (!value.HasValue)
+				if (string.IsNullOrEmpty(value))
 				{
 					DicomAttributeProvider[DicomTags.StackId] = null;
 					return;
 				}
-				DicomAttributeProvider[DicomTags.StackId].SetInt32(0, value.Value);
+				DicomAttributeProvider[DicomTags.StackId].SetString(0, value);
 			}
 		}
 
