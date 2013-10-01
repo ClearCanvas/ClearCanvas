@@ -25,7 +25,14 @@ namespace ClearCanvas.Dicom.ServiceModel.Editing
 		PhotometricInterpretation PhotometricInterpretation { get; }
 		int PlanarConfiguration { get; }
 
-		byte[] PixelData { get; }
+		bool IsColorNormalizedForDisplay { get; }
+
+		/// <summary>
+		/// Pixel data is always "normalized" such that grayscale values convert easily to the correct
+		/// "native" representation (e.g. short, ushort, byte, sbyte). Color pixel data is always either RGB
+		/// or BGRA when <see cref="IsColorNormalizedForDisplay"/> is true.
+		/// </summary>
+		byte[] NormalizedPixelData { get; }
 
 		//ushort ToDicomUShort(int value);
 		//short ToDicomShort(int value);
