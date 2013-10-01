@@ -301,12 +301,16 @@ namespace ClearCanvas.ImageViewer.AnnotationProviders.Dicom
 				(
 					new CodeSequenceAnnotationItem
 						(
-						// this isn't even a DX module, but other X-Ray related modules
+						// definition of the contrast/bolus agent item takes into account the X-Ray 3D Acquisition sequence, and is thus separate from the normal contast/bolus modules
 						"Dicom.DXImage.ContrastBolusAgent",
 						resolver,
 						DicomTags.ContrastBolusAgentSequence,
 						DicomTags.ContrastBolusAgent,
-						f => _frameContext.GetData<IXRay3DAcquisitionSequenceItem[]>(f, _keyAcquisitionSequence).Select(d => d.DicomSequenceItem).FirstOrDefault()
+						f =>
+							{
+								var acquisitions = _frameContext.GetData<IXRay3DAcquisitionSequenceItem[]>(f, _keyAcquisitionSequence);
+								return acquisitions != null ? (IDicomAttributeProvider) acquisitions.Select(d => d.DicomSequenceItem).FirstOrDefault() : f;
+							}
 						)
 				);
 		}
