@@ -23,7 +23,9 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using ClearCanvas.Common.Utilities;
+using ClearCanvas.Dicom;
 using ClearCanvas.Dicom.Iod;
 using ClearCanvas.Dicom.Iod.Macros;
 
@@ -168,8 +170,26 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 				case "NM":
 					return true;
 			}
-			return false; // for safety reasons, we assume everything else might be projectional
+
+			// for safety reasons, we assume everything else might be projectional
+			return _crossSectionalSopClasses.Contains(frame.ParentImageSop.SopClassUid);
 		}
+
+		private static readonly IList<string> _crossSectionalSopClasses = new List<string>
+		                                                                  	{
+		                                                                  		// classic cross sectional modalities and their multiframe versions
+		                                                                  		SopClass.CtImageStorageUid,
+		                                                                  		SopClass.EnhancedCtImageStorageUid,
+		                                                                  		SopClass.MrImageStorageUid,
+		                                                                  		SopClass.EnhancedMrImageStorageUid,
+		                                                                  		SopClass.PositronEmissionTomographyImageStorageUid,
+		                                                                  		SopClass.EnhancedPetImageStorageUid,
+		                                                                  		SopClass.NuclearMedicineImageStorageUid,
+		                                                                  		// for 3D X-Ray types, Imager Pixel Spacing applies to the acquisition sources, but not the reconstruction
+		                                                                  		SopClass.BreastTomosynthesisImageStorageUid,
+		                                                                  		SopClass.XRay3dAngiographicImageStorageUid,
+		                                                                  		SopClass.XRay3dCraniofacialImageStorageUid
+		                                                                  	}.AsReadOnly();
 	}
 
 	/// <summary>
