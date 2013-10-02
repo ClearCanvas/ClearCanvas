@@ -61,6 +61,12 @@ namespace ClearCanvas.ImageServer.Common.ExternalRequest
         [DataMember]
         public string OperationToken { get; set; }
 
+		/// <summary>
+		/// The user requesting the operation.  Can be null.
+		/// </summary>
+		[DataMember]
+		public string User { get; set; }
+
         public bool Equals(ImageServerExternalRequest other)
         {
             if (other == null)

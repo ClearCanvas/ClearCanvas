@@ -49,6 +49,9 @@ namespace ClearCanvas.ImageServer.Common.ExternalRequest
         [DataMember(IsRequired = true)]
         public bool IsCancelable { get; set; }
 
+		[DataMember(IsRequired = false)]
+		public string RequestingClient { get; set; }
+
         [DataMember]
         public DateTime? CompletionTime { get; set; }
 
