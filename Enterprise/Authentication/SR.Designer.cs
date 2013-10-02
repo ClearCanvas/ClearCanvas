@@ -97,7 +97,7 @@ namespace ClearCanvas.Enterprise.Authentication {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Built-in authority groups cannot be managed through this service..
+        ///   Looks up a localized string similar to Built-in authority groups cannot be created, modified, or deleted..
         /// </summary>
         internal static string MessageCannotManageBuiltInAuthorityGroups {
             get {

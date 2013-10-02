@@ -121,7 +121,7 @@
     <value>An email address is not configured for the account.  Please contact an administrator.</value>
   </data>
   <data name="MessageCannotManageBuiltInAuthorityGroups" xml:space="preserve">
-    <value>Built-in authority groups cannot be managed through this service.</value>
+    <value>Built-in authority groups cannot be created, modified, or deleted.</value>
   </data>
   <data name="MessageIncorrectApplicationSettings_CacheDuration" xml:space="preserve">
     <value>Invalid AuthenticationSettings: user session cache duration must be less than session timeout duration</value>
@@ -138,7 +138,7 @@
   <data name="MessageAccountTypeDoesNotSupportPasswordReset" xml:space="preserve">
     <value>This account type does not support password reset.</value>
   </data>
-	<data name="MessageAccountTypeDoesNotSupportAssignPassword">
-		<value xml:space="preserve">This account type does not support assigning a password.</value>
-	</data>
+  <data name="MessageAccountTypeDoesNotSupportAssignPassword" xml:space="preserve">
+    <value>This account type does not support assigning a password.</value>
+  </data>
 </root>
