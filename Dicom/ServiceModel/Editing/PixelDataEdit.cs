@@ -33,11 +33,6 @@ namespace ClearCanvas.Dicom.ServiceModel.Editing
 		/// or BGRA when <see cref="IsColorNormalizedForDisplay"/> is true.
 		/// </summary>
 		byte[] NormalizedPixelData { get; }
-
-		//ushort ToDicomUShort(int value);
-		//short ToDicomShort(int value);
-		//byte ToDicomByte(int value);
-		//sbyte ToDicomSByte(int value);
 	}
 
 	[DataContract(Namespace = DicomEditNamespace.Value)]
