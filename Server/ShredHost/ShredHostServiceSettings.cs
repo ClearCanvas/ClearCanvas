@@ -30,6 +30,7 @@ namespace ClearCanvas.Server.ShredHost
 {
 	[SettingsGroupDescription("Configuration for the Shred Host Service.")]
 	[SettingsProvider(typeof (LocalFileSettingsProvider))]
+	[SharedSettingsMigrationDisabled]
 	internal sealed partial class ShredHostServiceSettings
 	{
 		public const int DefaultShredHostHttpPort = 51121;
