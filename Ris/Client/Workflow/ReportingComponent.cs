@@ -1439,6 +1439,7 @@ namespace ClearCanvas.Ris.Client.Workflow
 			_canCompleteInterpretationAndVerify = false;
 			_canCompleteVerification = false;
 			_canSubmitForReview = false;
+			_canReturnToInterpreter = false;
 			_canCompleteInterpretationForTranscription = false;
 			_canSaveReport = false;
 
@@ -1446,11 +1447,13 @@ namespace ClearCanvas.Ris.Client.Workflow
 			SetImageAvailabilityMessage(null);
 
 			UpdateChildComponents(false);
-
-			// notify extension pages that the worklist item has changed
 			_report = null;
 			_activeReportPartIndex = 0;
 			_orderDetail = null;
+			_reportPartExtendedProperties = null;
+			_supervisor = null;
+
+			// notify extension pages that the worklist item has changed
 			EventsHelper.Fire(_worklistItemChanged, this, EventArgs.Empty);
 		}
 

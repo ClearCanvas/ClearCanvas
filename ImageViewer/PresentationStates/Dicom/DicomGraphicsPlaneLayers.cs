@@ -80,6 +80,11 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 		/// <returns>The layer that was inserted.</returns>
 		/// <exception cref="ArgumentException">Thrown if a layer with the same ID already exists.</exception>
 		new ILayer Insert(int index, string layerId);
+
+        /// <summary>
+        /// Enables or disables all layers.
+        /// </summary>
+        bool Enabled { get; set; }
 	}
 
 	/// <summary>
@@ -147,7 +152,13 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 					_layers.Add(graphic.Id, graphic);
 			}
 
-			public ILayer InactiveLayer
+            public bool Enabled
+            {
+                get { return base.Visible; }
+                set { base.Visible = value; }
+            }
+
+		    public ILayer InactiveLayer
 			{
 				get { return this[string.Empty]; }
 			}

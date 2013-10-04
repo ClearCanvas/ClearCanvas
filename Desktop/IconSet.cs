@@ -194,15 +194,19 @@ namespace ClearCanvas.Desktop
 
 		public override int GetHashCode()
 		{
-			return 0x68377975
-			       ^ SmallIcon.GetHashCode()
-			       ^ MediumIcon.GetHashCode()
-			       ^ LargeIcon.GetHashCode();
+		    return 0x68377975
+		           //It's pretty likely another type will override CreateIcon
+		           ^ GetType().GetHashCode()
+		           ^ SmallIcon.GetHashCode()
+		           ^ MediumIcon.GetHashCode()
+		           ^ LargeIcon.GetHashCode();
 		}
 
 		public virtual bool Equals(IconSet other)
 		{
 			return other != null
+                //It's pretty likely another type will override CreateIcon
+                   && other.GetType() == GetType()
 			       && other.SmallIcon == SmallIcon
 			       && other.MediumIcon == MediumIcon
 			       && other.LargeIcon == LargeIcon;

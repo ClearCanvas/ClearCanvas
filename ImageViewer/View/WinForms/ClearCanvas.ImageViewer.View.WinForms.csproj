@@ -156,10 +156,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="ImageViewerControl.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>ImageViewerControl.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="SR.resx">
       <SubType>Designer</SubType>
       <Generator>ResXFileCodeGenerator</Generator>
@@ -189,9 +185,6 @@
     <Compile Include="ImageViewerComponentView.cs" />
     <Compile Include="ImageViewerControl.cs">
       <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="ImageViewerControl.Designer.cs">
-      <DependentUpon>ImageViewerControl.cs</DependentUpon>
     </Compile>
     <Compile Include="TileInputTranslator.cs" />
     <Compile Include="SR.Designer.cs">

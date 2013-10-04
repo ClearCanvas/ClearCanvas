@@ -23,7 +23,6 @@
 #endregion
 
 using ClearCanvas.Common;
-using ClearCanvas.Desktop;
 using ClearCanvas.Desktop.Actions;
 
 namespace ClearCanvas.Utilities.DicomEditor.Tools
@@ -38,6 +37,11 @@ namespace ClearCanvas.Utilities.DicomEditor.Tools
 		public NextTool() {}
 
 		public void Next()
+		{
+			Activate();
+		}
+
+		protected override void ActivateCore()
 		{
 			this.Context.DumpManagement.LoadedFileDumpIndex += 1;
 			this.Context.UpdateDisplay();

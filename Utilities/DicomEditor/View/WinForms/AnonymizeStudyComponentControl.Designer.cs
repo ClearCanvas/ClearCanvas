@@ -73,6 +73,7 @@ namespace ClearCanvas.Utilities.DicomEditor.View.WinForms
 			this._keepReportsAndAttachments = new System.Windows.Forms.CheckBox();
 			this._tooltipProvider = new System.Windows.Forms.ToolTip(this.components);
 			this._warningProvider = new System.Windows.Forms.ErrorProvider(this.components);
+			this._keepPrivateTags = new System.Windows.Forms.CheckBox();
 			((System.ComponentModel.ISupportInitialize)(this._warningProvider)).BeginInit();
 			this.SuspendLayout();
 			// 
@@ -111,29 +112,29 @@ namespace ClearCanvas.Utilities.DicomEditor.View.WinForms
 			// _patientsName
 			// 
 			resources.ApplyResources(this._patientsName, "_patientsName");
+			this._patientsName.Mask = "";
 			this._patientsName.Name = "_patientsName";
-			this._patientsName.ToolTip = null;
 			this._patientsName.Value = null;
 			// 
 			// _accessionNumber
 			// 
 			resources.ApplyResources(this._accessionNumber, "_accessionNumber");
+			this._accessionNumber.Mask = "";
 			this._accessionNumber.Name = "_accessionNumber";
-			this._accessionNumber.ToolTip = null;
 			this._accessionNumber.Value = null;
 			// 
 			// _patientId
 			// 
 			resources.ApplyResources(this._patientId, "_patientId");
+			this._patientId.Mask = "";
 			this._patientId.Name = "_patientId";
-			this._patientId.ToolTip = null;
 			this._patientId.Value = null;
 			// 
 			// _studyDescription
 			// 
 			resources.ApplyResources(this._studyDescription, "_studyDescription");
+			this._studyDescription.Mask = "";
 			this._studyDescription.Name = "_studyDescription";
-			this._studyDescription.ToolTip = null;
 			this._studyDescription.Value = null;
 			// 
 			// _preserveSeriesData
@@ -154,10 +155,17 @@ namespace ClearCanvas.Utilities.DicomEditor.View.WinForms
 			this._warningProvider.ContainerControl = this;
 			resources.ApplyResources(this._warningProvider, "_warningProvider");
 			// 
+			// _keepPrivateTags
+			// 
+			resources.ApplyResources(this._keepPrivateTags, "_keepPrivateTags");
+			this._keepPrivateTags.Name = "_keepPrivateTags";
+			this._keepPrivateTags.UseVisualStyleBackColor = true;
+			// 
 			// AnonymizeStudyComponentControl
 			// 
 			resources.ApplyResources(this, "$this");
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+			this.Controls.Add(this._keepPrivateTags);
 			this.Controls.Add(this._keepReportsAndAttachments);
 			this.Controls.Add(this._preserveSeriesData);
 			this.Controls.Add(this._studyDescription);
@@ -189,5 +197,6 @@ namespace ClearCanvas.Utilities.DicomEditor.View.WinForms
 		private System.Windows.Forms.CheckBox _keepReportsAndAttachments;
 		private System.Windows.Forms.ToolTip _tooltipProvider;
 		private System.Windows.Forms.ErrorProvider _warningProvider;
+		private System.Windows.Forms.CheckBox _keepPrivateTags;
     }
 }

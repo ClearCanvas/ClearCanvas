@@ -30,16 +30,13 @@ using ClearCanvas.Common.Utilities;
 namespace ClearCanvas.Desktop.Configuration
 {
 	[ExtensionPoint]
-	public class UserUpgradeProgressDialogViewExtensionPoint : ExtensionPoint<IUserUpgradeProgressDialogView>
-	{}
+	public class UserUpgradeProgressDialogViewExtensionPoint : ExtensionPoint<IUserUpgradeProgressDialogView> {}
 
 	internal class UserUpgradeProgressDialog
 	{
 		private IUserUpgradeProgressDialogView _dialogView;
 
-		private UserUpgradeProgressDialog()
-		{
-		}
+		private UserUpgradeProgressDialog() {}
 
 		private void RunUpgrade()
 		{
@@ -73,12 +70,10 @@ namespace ClearCanvas.Desktop.Configuration
 		{
 			try
 			{
-				return (IUserUpgradeProgressDialogView)new UserUpgradeProgressDialogViewExtensionPoint().CreateExtension();
+				return (IUserUpgradeProgressDialogView) new UserUpgradeProgressDialogViewExtensionPoint().CreateExtension();
 			}
-			catch (NotSupportedException)
-			{
-			}
-			catch(Exception e)
+			catch (NotSupportedException) {}
+			catch (Exception e)
 			{
 				Platform.Log(LogLevel.Debug, e, "Failed to create user upgrade progress dialog view.");
 			}

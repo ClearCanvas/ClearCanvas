@@ -60,15 +60,18 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
 		{
 			List<StoredDisplaySetCreationSetting> sortedSettings = DisplaySetCreationSettings.DefaultInstance.GetStoredSettings();
 			sortedSettings = CollectionUtils.Sort(sortedSettings,
-			                                      (setting1, setting2) => setting1.Modality.CompareTo(setting2.Modality));
+			                                      (setting1, setting2) => System.String.CompareOrdinal(setting1.Modality, setting2.Modality));
 
 			_settings = new BindingList<StoredDisplaySetCreationSetting>(sortedSettings);
-
 			foreach (StoredDisplaySetCreationSetting setting in _settings)
-				setting.PropertyChanged += OnPropertyChanged;
+			{
+			    setting.PropertyChanged += (s,e) => OnPropertyChanged();
+                foreach(var overlaySelection in setting.OverlaySelections)
+                    overlaySelection.IsSelectedChanged += (s, e) => OnPropertyChanged();
+			}
 		}
 
-		private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
+		private void OnPropertyChanged()
 		{
 			this.Modified = true;
 		}

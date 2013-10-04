@@ -34,7 +34,6 @@ namespace ClearCanvas.Desktop.Configuration
 	{
 		private ConfigurationDialogSettings()
 		{
-			ApplicationSettingsRegistry.Instance.RegisterInstance(this);
 		}
 	}
 }

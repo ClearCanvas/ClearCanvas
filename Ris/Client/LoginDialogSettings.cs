@@ -39,7 +39,6 @@ namespace ClearCanvas.Ris.Client
     {
         private LoginDialogSettings()
         {
-            ApplicationSettingsRegistry.Instance.RegisterInstance(this);
         }
     }
 }

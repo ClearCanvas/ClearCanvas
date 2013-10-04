@@ -34,7 +34,6 @@ namespace ClearCanvas.Desktop.Configuration.Standard
 	{
 		private CustomDateFormatSettings()
 		{
-			ApplicationSettingsRegistry.Instance.RegisterInstance(this);
 		}
 
 		public System.Collections.Specialized.StringCollection AvailableFormats

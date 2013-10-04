@@ -29,6 +29,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using ClearCanvas.Dicom.Tests;
@@ -38,24 +39,72 @@ namespace ClearCanvas.Dicom.Utilities.Anonymization.Tests
 {
 	internal class UidData
 	{
-		[DicomField(DicomTags.StudyInstanceUid)] public string StudyInstanceUid;
-		[DicomField(DicomTags.SeriesInstanceUid)] public string SeriesInstanceUid;
-		[DicomField(DicomTags.SopInstanceUid)] public string SopInstanceUid;
-		
-		[DicomField(DicomTags.ReferencedSopInstanceUid)] public string ReferencedSopInstanceUid;
-		[DicomField(DicomTags.FrameOfReferenceUid)] public string FrameOfReferenceUid;
-		[DicomField(DicomTags.SynchronizationFrameOfReferenceUid)] public string SynchronizationFrameOfReferenceUid;
-		[DicomField(DicomTags.Uid)] public string Uid;
-		[DicomField(DicomTags.ReferencedFrameOfReferenceUid)] public string ReferencedFrameOfReferenceUid;
-		[DicomField(DicomTags.RelatedFrameOfReferenceUid)] public string RelatedFrameOfReferenceUid;
+		[DicomField(DicomTags.StudyInstanceUid)]
+		public string StudyInstanceUid;
+
+		[DicomField(DicomTags.SeriesInstanceUid)]
+		public string SeriesInstanceUid;
+
+		[DicomField(DicomTags.SopInstanceUid)]
+		public string SopInstanceUid;
+
+		[DicomField(DicomTags.ReferencedSopInstanceUid)]
+		public string ReferencedSopInstanceUid;
+
+		[DicomField(DicomTags.FrameOfReferenceUid)]
+		public string FrameOfReferenceUid;
+
+		[DicomField(DicomTags.SynchronizationFrameOfReferenceUid)]
+		public string SynchronizationFrameOfReferenceUid;
+
+		[DicomField(DicomTags.Uid)]
+		public string Uid;
+
+		[DicomField(DicomTags.ReferencedFrameOfReferenceUid)]
+		public string ReferencedFrameOfReferenceUid;
+
+		[DicomField(DicomTags.RelatedFrameOfReferenceUid)]
+		public string RelatedFrameOfReferenceUid;
+
+		[DicomField(DicomTags.InstanceCreatorUid)]
+		public string InstanceCreatorUid;
+
+		[DicomField(DicomTags.StorageMediaFileSetUid)]
+		public string StorageMediaFileSetUid;
+
+		private DicomAttributeSQ _referencedImageSequence;
+
+		[DicomField(DicomTags.ReferencedImageSequence)]
+		public DicomAttributeSQ ReferencedImageSequence
+		{
+			get { return _referencedImageSequence; }
+			set { _referencedImageSequence = value != null ? (DicomAttributeSQ) value.Copy(true) : null; }
+		}
+
+		public string ReferencedImageSequenceInstanceCreatorUid
+		{
+			get
+			{
+				if (ReferencedImageSequence != null && !ReferencedImageSequence.IsEmpty && !ReferencedImageSequence.IsNull)
+					return ((DicomSequenceItem[]) ReferencedImageSequence.Values)[0][DicomTags.InstanceCreatorUid].ToString();
+				return null;
+			}
+		}
 	}
 
 	internal class DateData
 	{
-		[DicomField(DicomTags.InstanceCreationDate)] public string InstanceCreationDate;
-		[DicomField(DicomTags.SeriesDate)] public string SeriesDate;
-		[DicomField(DicomTags.ContentDate)] public string ContentDate;
-		[DicomField(DicomTags.AcquisitionDatetime)] public string AcquisitionDatetime;
+		[DicomField(DicomTags.InstanceCreationDate)]
+		public string InstanceCreationDate;
+
+		[DicomField(DicomTags.SeriesDate)]
+		public string SeriesDate;
+
+		[DicomField(DicomTags.ContentDate)]
+		public string ContentDate;
+
+		[DicomField(DicomTags.AcquisitionDatetime)]
+		public string AcquisitionDatetime;
 	}
 
 	[TestFixture]
@@ -73,9 +122,7 @@ namespace ClearCanvas.Dicom.Utilities.Anonymization.Tests
 		private SeriesData _anonymizedSeriesData;
 		private DateData _anonymizedDateData;
 
-		public AnonymizationTests()
-		{
-		}
+		public AnonymizationTests() {}
 
 		private DicomFile CreateTestFile()
 		{
@@ -94,7 +141,7 @@ namespace ClearCanvas.Dicom.Utilities.Anonymization.Tests
 			file.DataSet[DicomTags.StudyTime].SetStringValue("143600");
 			file.DataSet[DicomTags.SeriesDate].SetStringValue("20080219");
 			file.DataSet[DicomTags.SeriesTime].SetStringValue("143700");
-			
+
 			//add a couple of the dates that get adjusted.
 			file.DataSet[DicomTags.ContentDate].SetStringValue("20080219");
 			file.DataSet[DicomTags.AcquisitionDatetime].SetStringValue("20080219100406");
@@ -127,7 +174,7 @@ namespace ClearCanvas.Dicom.Utilities.Anonymization.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof(DicomAnonymizerValidationException))]
+		[ExpectedException(typeof (DicomAnonymizerValidationException))]
 		public void TestStrict()
 		{
 			DicomFile file = CreateTestFile();
@@ -139,7 +186,7 @@ namespace ClearCanvas.Dicom.Utilities.Anonymization.Tests
 				//this ought to work.
 				anonymizer.Anonymize(file);
 			}
-			catch(Exception)
+			catch (Exception)
 			{
 				Assert.Fail("Not strict - no exception expected.");
 			}
@@ -176,7 +223,7 @@ namespace ClearCanvas.Dicom.Utilities.Anonymization.Tests
 			studyPrototype.PatientsNameRaw = "Patient^Anonymous";
 			studyPrototype.PatientsSex = "M";
 			studyPrototype.StudyDateRaw = "20080220";
-			studyPrototype.StudyDescription= "Test";
+			studyPrototype.StudyDescription = "Test";
 			studyPrototype.StudyId = "Test";
 
 			SeriesData seriesPrototype = new SeriesData();
@@ -199,7 +246,7 @@ namespace ClearCanvas.Dicom.Utilities.Anonymization.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof(DicomAnonymizerValidationException))]
+		[ExpectedException(typeof (DicomAnonymizerValidationException))]
 		public void TestValidatePatientIdNotEqual()
 		{
 			Initialize();
@@ -214,8 +261,9 @@ namespace ClearCanvas.Dicom.Utilities.Anonymization.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof(DicomAnonymizerValidationException))]
-		public void TestValidatePatientIdNotEmpty() {
+		[ExpectedException(typeof (DicomAnonymizerValidationException))]
+		public void TestValidatePatientIdNotEmpty()
+		{
 			Initialize();
 
 			_file.DataSet[DicomTags.PatientId].SetStringValue("123");
@@ -228,7 +276,8 @@ namespace ClearCanvas.Dicom.Utilities.Anonymization.Tests
 		}
 
 		[Test]
-		public void TestValidatePatientIdAllowEmpty() {
+		public void TestValidatePatientIdAllowEmpty()
+		{
 			Initialize();
 
 			_file.DataSet[DicomTags.PatientId].SetStringValue("123");
@@ -242,7 +291,7 @@ namespace ClearCanvas.Dicom.Utilities.Anonymization.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof(DicomAnonymizerValidationException))]
+		[ExpectedException(typeof (DicomAnonymizerValidationException))]
 		public void TestValidatePatientsNameNotEqual()
 		{
 			Initialize();
@@ -257,8 +306,9 @@ namespace ClearCanvas.Dicom.Utilities.Anonymization.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof(DicomAnonymizerValidationException))]
-		public void TestValidatePatientsNameNotEmpty() {
+		[ExpectedException(typeof (DicomAnonymizerValidationException))]
+		public void TestValidatePatientsNameNotEmpty()
+		{
 			Initialize();
 
 			_file.DataSet[DicomTags.PatientsName].SetStringValue("Patient^Anonymous^Mr");
@@ -271,7 +321,8 @@ namespace ClearCanvas.Dicom.Utilities.Anonymization.Tests
 		}
 
 		[Test]
-		public void TestValidatePatientsNameAllowEmpty() {
+		public void TestValidatePatientsNameAllowEmpty()
+		{
 			Initialize();
 
 			_file.DataSet[DicomTags.PatientsName].SetStringValue("Patient^Anonymous^Mr");
@@ -285,7 +336,7 @@ namespace ClearCanvas.Dicom.Utilities.Anonymization.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof(DicomAnonymizerValidationException))]
+		[ExpectedException(typeof (DicomAnonymizerValidationException))]
 		public void TestValidateAccessionNotEqual()
 		{
 			Initialize();
@@ -300,7 +351,7 @@ namespace ClearCanvas.Dicom.Utilities.Anonymization.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof(DicomAnonymizerValidationException))]
+		[ExpectedException(typeof (DicomAnonymizerValidationException))]
 		public void TestValidatePatientsBirthDateNotEqual()
 		{
 			Initialize();
@@ -315,7 +366,8 @@ namespace ClearCanvas.Dicom.Utilities.Anonymization.Tests
 		}
 
 		[Test]
-		public void TestValidatePatientsBirthDateAllowEqual() {
+		public void TestValidatePatientsBirthDateAllowEqual()
+		{
 			Initialize();
 
 			_file.DataSet[DicomTags.PatientsBirthDate].SetStringValue("19760810");
@@ -329,7 +381,7 @@ namespace ClearCanvas.Dicom.Utilities.Anonymization.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof(DicomAnonymizerValidationException))]
+		[ExpectedException(typeof (DicomAnonymizerValidationException))]
 		public void TestValidateStudyIdNotEqual()
 		{
 			Initialize();
@@ -344,14 +396,122 @@ namespace ClearCanvas.Dicom.Utilities.Anonymization.Tests
 		}
 
 		[Test]
+		public void EnsureCorrectTagVr()
+		{
+			var failed = false;
+
+			var list = DicomAnonymizer.UidTagsToRemap;
+			foreach (var invalidTag in list.Select(DicomTagDictionary.GetDicomTag).Where(t => t.VR != DicomVr.UIvr))
+			{
+				failed = true;
+				Debug.WriteLine(string.Format("The tag {0} (VR={1}) is listed for RemappedUidTags", invalidTag, invalidTag.VR.Name));
+			}
+
+			list = DicomAnonymizer.DateTimeTagsToAdjust;
+			foreach (var invalidTag in list.Select(DicomTagDictionary.GetDicomTag).Where(t => !(t.VR == DicomVr.DAvr || t.VR == DicomVr.DTvr || t.VR == DicomVr.TMvr)))
+			{
+				failed = true;
+				Debug.WriteLine(string.Format("The tag {0} (VR={1}) is listed for AdjustedDateTimeTags", invalidTag, invalidTag.VR.Name));
+			}
+
+			Assert.IsFalse(failed, "Test failed because one or more tags with the wrong VR are listed for actions requiring specific VR");
+		}
+
+		[Test]
+		public void CheckSpecificTagActions()
+		{
+			// ContentSequence; // X (but required for key image support)
+			// GraphicAnnotationSequence; // D (but required for presentation state support)
+			// OverlayData; // X (but the overlay doesn't usually contain identifying information, and should really be supported through a clean pixels option)
+			// ReferencedImageSequence; // X/Z/U*
+			// ReferencedStudySequence; // X/Z
+			// SourceImageSequence; // X/Z/U*
+			var list = DicomAnonymizer.ListAllProcessedTags();
+
+			Assert.False(list.Contains(DicomTags.ContentSequence), "ContentSequence should not be removed or nulled because it is used by key objects and SRs");
+			Assert.False(list.Contains(DicomTags.GraphicAnnotationSequence), "GraphicAnnotationSequence should not be removed or nulled because it is used by presentation states");
+			Assert.False(list.Contains(DicomTags.OverlayData), "OverlayData is not be removed or nulled because it should really be covered under a clean pixels option");
+			Assert.False(list.Contains(DicomTags.ReferencedImageSequence), "ReferencedImageSequence should not be removed or nulled because the hierarchical relationships need to be kept");
+			Assert.False(list.Contains(DicomTags.ReferencedStudySequence), "ReferencedStudySequence should not be removed or nulled because the hierarchical relationships need to be kept");
+			Assert.False(list.Contains(DicomTags.SourceImageSequence), "SourceImageSequence should not be removed or nulled because the hierarchical relationships need to be kept");
+		}
+
+		[Test]
+		public void PrintTagActions()
+		{
+			// prints a list of tags processed by the anonymizer, and the action taken, in a format suitable for easy comparison with the table in the standard
+			var list = DicomAnonymizer.TagsToRemove.Select(t => new {Tag = t, Action = 'X', DicomTagDictionary.GetDicomTag(t).Name})
+				.Union(DicomAnonymizer.TagsToNull.Select(t => new {Tag = t, Action = 'Z', DicomTagDictionary.GetDicomTag(t).Name}))
+				.Union(DicomAnonymizer.UidTagsToRemap.Select(t => new {Tag = t, Action = 'U', DicomTagDictionary.GetDicomTag(t).Name}))
+				.Union(DicomAnonymizer.DateTimeTagsToAdjust.Select(t => new {Tag = t, Action = 'D', DicomTagDictionary.GetDicomTag(t).Name}))
+				.OrderBy(t => t.Name).ToList();
+
+			foreach (var tag in list)
+			{
+				Debug.WriteLine(string.Format("{0,65} ({1:X4},{2:X4}) {3}", tag.Name.Trim(), (tag.Tag >> 16) & 0x0FFFF, tag.Tag & 0x0FFFF, tag.Action));
+			}
+		}
+
+		[Test]
+		public void PrintTagActions2()
+		{
+			// prints a list of tags processed by the anonymizer, and the action taken, in a CSV format suitable for spreadsheet applications
+			// Hint: if you're using MS Excel, open the data through "Import Text" function (e.g. Data -> Import Text) to force the tag value column to Text mode
+			var list = DicomAnonymizer.TagsToRemove.Select(t => new {Tag = t, Action = 'X', DicomTagDictionary.GetDicomTag(t).Name})
+				.Union(DicomAnonymizer.TagsToNull.Select(t => new {Tag = t, Action = 'Z', DicomTagDictionary.GetDicomTag(t).Name}))
+				.Union(DicomAnonymizer.UidTagsToRemap.Select(t => new {Tag = t, Action = 'U', DicomTagDictionary.GetDicomTag(t).Name}))
+				.Union(DicomAnonymizer.DateTimeTagsToAdjust.Select(t => new {Tag = t, Action = 'D', DicomTagDictionary.GetDicomTag(t).Name}))
+				.OrderBy(t => t.Name).ToList();
+
+			foreach (var tag in list)
+			{
+				Debug.WriteLine(string.Format("\"{0}\",\"({1:X4},{2:X4})\",\"{3}\"", tag.Name.Trim(), (tag.Tag >> 16) & 0x0FFFF, tag.Tag & 0x0FFFF, tag.Action));
+			}
+		}
+
+		[Test]
 		public void EnsureUniqueTags()
 		{
-			List<uint> uniques = new List<uint>();
-			foreach (uint tag in DicomAnonymizer.AllProcessedTags)
+			var failed = false;
+
+			var list = DicomAnonymizer.TagsToRemove;
+			foreach (var duplicatedTag in list.GroupBy(t => t).SelectMany(t => t.Skip(1)).Select(DicomTagDictionary.GetDicomTag))
 			{
-				Assert.IsFalse(uniques.Contains(tag), "The tag ({0:x4},{1:x4}) is being processed twice by the anonymizer!", tag >> 16, tag & 0x0000ffff);
-				uniques.Add(tag);
+				failed = true;
+				Debug.WriteLine(string.Format("The tag {0} is listed twice in RemovedTags", duplicatedTag));
 			}
+
+			list = DicomAnonymizer.TagsToNull;
+			foreach (var duplicatedTag in list.GroupBy(t => t).SelectMany(t => t.Skip(1)).Select(DicomTagDictionary.GetDicomTag))
+			{
+				failed = true;
+				Debug.WriteLine(string.Format("The tag {0} is listed twice in NulledTags", duplicatedTag));
+			}
+
+			list = DicomAnonymizer.UidTagsToRemap;
+			foreach (var duplicatedTag in list.GroupBy(t => t).SelectMany(t => t.Skip(1)).Select(DicomTagDictionary.GetDicomTag))
+			{
+				failed = true;
+				Debug.WriteLine(string.Format("The tag {0} is listed twice in RemappedUidTags", duplicatedTag));
+			}
+
+			list = DicomAnonymizer.DateTimeTagsToAdjust;
+			foreach (var duplicatedTag in list.GroupBy(t => t).SelectMany(t => t.Skip(1)).Select(DicomTagDictionary.GetDicomTag))
+			{
+				failed = true;
+				Debug.WriteLine(string.Format("The tag {0} is listed twice in AdjustedDateTimeTags", duplicatedTag));
+			}
+
+			Assert.IsFalse(failed, "Test failed because one or more tags are duplicated in a single list");
+
+			list = DicomAnonymizer.ListAllProcessedTags();
+			foreach (var duplicatedTag in list.GroupBy(t => t).SelectMany(t => t.Skip(1)).Select(DicomTagDictionary.GetDicomTag))
+			{
+				failed = true;
+				Debug.WriteLine(string.Format("The tag {0} is listed twice with different actions", duplicatedTag));
+			}
+
+			Assert.IsFalse(failed, "Test failed because one or more tags are duplicated with multiple conflicting actions");
 		}
 
 		[Test]
@@ -366,7 +526,7 @@ namespace ClearCanvas.Dicom.Utilities.Anonymization.Tests
 			DicomAnonymizer anonymizer = new DicomAnonymizer();
 			anonymizer.StudyDataPrototype = studyPrototype;
 			anonymizer.Anonymize(_file);
-			
+
 			Assert.AreNotEqual(oldUid, _file.DataSet[DicomTags.SopInstanceUid].ToString(), "Patient Confidentiality Issue - SOP Instance Uid is not anonymized.");
 			Assert.AreNotEqual(oldUid, _file.MetaInfo[DicomTags.MediaStorageSopInstanceUid].ToString(), "Patient Confidentiality Issue - Media Storage SOP Instance Uid is not anonymized.");
 			Assert.AreNotEqual(oldUid, _file.MediaStorageSopInstanceUid, "Patient Confidentiality Issue - Media Storage SOP Instance Uid is not anonymized.");
@@ -590,7 +750,7 @@ namespace ClearCanvas.Dicom.Utilities.Anonymization.Tests
 		private void Initialize()
 		{
 			_file = CreateTestFile();
-			
+
 			_originalUidData = new UidData();
 			_originaStudyData = new StudyData();
 			_originaSeriesData = new SeriesData();
@@ -667,17 +827,10 @@ namespace ClearCanvas.Dicom.Utilities.Anonymization.Tests
 
 		private static void ValidateRemovedTags(DicomAttributeCollection dataset)
 		{
-			if (dataset.Contains(DicomTags.InstanceCreatorUid))
-				throw new Exception("InstanceCreatorUid");
-			if (dataset.Contains(DicomTags.StorageMediaFileSetUid))
-				throw new Exception("StorageMediaFileSetUid");
 			if (dataset.Contains(DicomTags.RequestAttributesSequence))
 				throw new Exception("RequestAttributesSequence");
 
-			DicomSequenceItem item = ((DicomSequenceItem[])dataset[DicomTags.ReferencedImageSequence].Values)[0];
-			if (item.Contains(DicomTags.InstanceCreatorUid))
-				throw new Exception("InstanceCreatorUid");
-
+			DicomSequenceItem item = ((DicomSequenceItem[]) dataset[DicomTags.ReferencedImageSequence].Values)[0];
 			if (item.Contains(DicomTags.RequestAttributesSequence))
 				throw new Exception("RequestAttributesSequence");
 		}
@@ -689,7 +842,7 @@ namespace ClearCanvas.Dicom.Utilities.Anonymization.Tests
 
 			if (originalData.SeriesInstanceUid == anonymizedData.SeriesInstanceUid)
 				throw new Exception("SeriesInstanceUid");
-			
+
 			if (originalData.SopInstanceUid == anonymizedData.SopInstanceUid)
 				throw new Exception("SopInstanceUid");
 
@@ -715,6 +868,18 @@ namespace ClearCanvas.Dicom.Utilities.Anonymization.Tests
 			if (!String.IsNullOrEmpty(originalData.RelatedFrameOfReferenceUid)
 			    && originalData.RelatedFrameOfReferenceUid == anonymizedData.RelatedFrameOfReferenceUid)
 				throw new Exception("RelatedFrameOfReferenceUid");
+
+			if (!String.IsNullOrEmpty(originalData.InstanceCreatorUid)
+			    && originalData.InstanceCreatorUid == anonymizedData.InstanceCreatorUid)
+				throw new Exception("InstanceCreatorUid");
+
+			if (!String.IsNullOrEmpty(originalData.StorageMediaFileSetUid)
+			    && originalData.StorageMediaFileSetUid == anonymizedData.StorageMediaFileSetUid)
+				throw new Exception("StorageMediaFileSetUid");
+
+			if (!String.IsNullOrEmpty(originalData.ReferencedImageSequenceInstanceCreatorUid)
+			    && originalData.ReferencedImageSequenceInstanceCreatorUid == anonymizedData.ReferencedImageSequenceInstanceCreatorUid)
+				throw new Exception("ReferencedImageSequence > InstanceCreatorUid");
 
 			Trace.WriteLine("Validated Remapped Uids.");
 		}

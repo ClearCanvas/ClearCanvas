@@ -39,8 +39,8 @@ namespace ClearCanvas.ImageViewer.Explorer.Local
 	[Tooltip("Open", "OpenDicomFilesVerbose")]
 	[IconSet("Open", "Icons.OpenToolSmall.png", "Icons.OpenToolMedium.png", "Icons.OpenToolLarge.png")]
 	[EnabledStateObserver("Open", "Enabled", "EnabledChanged")]
-
-	[ExtensionOf(typeof(LocalImageExplorerToolExtensionPoint))]
+	//
+	[ExtensionOf(typeof (LocalImageExplorerToolExtensionPoint))]
 	public class DicomImageLoaderTool : Tool<ILocalImageExplorerToolContext>
 	{
 		private bool _enabled;
@@ -98,7 +98,17 @@ namespace ClearCanvas.ImageViewer.Explorer.Local
 
 		public void Open()
 		{
-			string[] files = BuildFileList();
+			string[] files;
+			try
+			{
+				files = BuildFileList();
+			}
+			catch (Exception ex)
+			{
+				ExceptionHandler.Report(ex, SR.MessageUnableToOpenImages, Context.DesktopWindow);
+				return;
+			}
+
 			if (files.Length == 0)
 			{
 				Context.DesktopWindow.ShowMessageBox(SR.MessageNoFilesSelected, MessageBoxActions.Ok);
@@ -109,12 +119,12 @@ namespace ClearCanvas.ImageViewer.Explorer.Local
 			{
 				new OpenFilesHelper(files) {WindowBehaviour = ViewerLaunchSettings.WindowBehaviour}.OpenFiles();
 			}
-			catch(Exception e)
+			catch (Exception e)
 			{
 				ExceptionHandler.Report(e, SR.MessageUnableToOpenImages, Context.DesktopWindow);
 			}
 		}
-
+		
 		private string[] BuildFileList()
 		{
 			List<string> fileList = new List<string>();

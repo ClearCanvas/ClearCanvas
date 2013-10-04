@@ -24,7 +24,6 @@
 
 using System;
 using ClearCanvas.Common;
-using ClearCanvas.Desktop;
 using ClearCanvas.Desktop.Actions;
 
 namespace ClearCanvas.Utilities.DicomEditor.Tools
@@ -34,7 +33,7 @@ namespace ClearCanvas.Utilities.DicomEditor.Tools
 	[EnabledStateObserver("activate", "Enabled", "EnabledChanged")]
 	[Tooltip("activate", "TooltipDelete")]
 	[IconSet("activate", "Icons.DeleteToolSmall.png", "Icons.DeleteToolSmall.png", "Icons.DeleteToolSmall.png")]
-	[ExtensionOf(typeof (DicomEditorToolExtensionPoint))]
+	[ExtensionOf(typeof (DicomEditorToolExtensionPoint), FeatureToken = FeatureTokens.DicomEditing)]
 	public class DeleteTool : DicomEditorTool
 	{
 		private bool _promptForAll;
@@ -42,6 +41,14 @@ namespace ClearCanvas.Utilities.DicomEditor.Tools
 		public DeleteTool() : base(true) {}
 
 		public void Delete()
+		{
+			if (!LicenseInformation.IsFeatureAuthorized(FeatureTokens.DicomEditing))
+				return;
+
+			Activate();
+		}
+
+		protected override void ActivateCore()
 		{
 			if (this.Context.DesktopWindow.ShowMessageBox(SR.MessageConfirmDeleteSelectedTags, MessageBoxActions.YesNo) == DialogBoxAction.Yes)
 			{

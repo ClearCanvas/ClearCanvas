@@ -169,12 +169,7 @@ namespace ClearCanvas.ImageViewer
 			set
 			{
 				Platform.CheckForNullReference(value, "Descriptor");
-
-				if (_descriptor != null)
-					_descriptor.ImageSet = null;
-
 				_descriptor = value;
-				_descriptor.ImageSet = this;
 			}
 		}
 

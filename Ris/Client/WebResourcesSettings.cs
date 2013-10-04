@@ -42,7 +42,6 @@ namespace ClearCanvas.Ris.Client
 
 		public WebResourcesSettings()
 		{
-			ApplicationSettingsRegistry.Instance.RegisterInstance(this);
 		}
 
 		public static WebResourcesSettings Default

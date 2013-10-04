@@ -2014,6 +2014,15 @@ namespace ClearCanvas.Ris.Client {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Shows the RIS user homepage..
+        /// </summary>
+        internal static string MessageHomeDescription {
+            get {
+                return ResourceManager.GetString("MessageHomeDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Canned text Name, Category and Owner are identical to an existing canned text..
         /// </summary>
         internal static string MessageIdenticalCannedText {

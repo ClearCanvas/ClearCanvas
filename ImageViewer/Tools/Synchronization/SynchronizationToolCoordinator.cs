@@ -43,7 +43,7 @@ namespace ClearCanvas.ImageViewer.Tools.Synchronization
 	// more or less isolated to synchronization tools, so we will just use this class for
 	// now rather than spend the time to develop a general solution unnecessarily.
 
-	internal class SynchronizationToolCoordinator
+    public class SynchronizationToolCoordinator
 	{
 		#region SynchronizationToolCompositeGraphic class
 
@@ -74,9 +74,7 @@ namespace ClearCanvas.ImageViewer.Tools.Synchronization
 
 		#region Private Fields
 
-        //TODO (Phoenix5): #10730 - remove this when it's fixed.
-		[ThreadStatic]
-		private static Dictionary<IImageViewer, SynchronizationToolCoordinator> _coordinators;
+        private class ExtensionDataKey { }
 
 		private readonly IImageViewer _viewer;
 		
@@ -93,32 +91,87 @@ namespace ClearCanvas.ImageViewer.Tools.Synchronization
 			_viewer = viewer;
 		}
 
-		private static Dictionary<IImageViewer, SynchronizationToolCoordinator> Coordinators
-		{
-			get
-			{
-				if (_coordinators == null)
-					_coordinators = new Dictionary<IImageViewer, SynchronizationToolCoordinator>();
-				return _coordinators;
-			}
-		}
+        #region Internal Methods
 
-		public void SetStackingSynchronizationTool(StackingSynchronizationTool tool)
+        internal void SetStackingSynchronizationTool(StackingSynchronizationTool tool)
 		{
 			_stackingSynchronizationTool = tool;
 		}
 
-		public void SetReferenceLineTool(ReferenceLineTool tool)
+        internal void SetReferenceLineTool(ReferenceLineTool tool)
 		{
 			_referenceLineTool = tool;
 		}
 
-		public void SetSpatialLocatorTool(SpatialLocatorTool tool)
+        internal void SetSpatialLocatorTool(SpatialLocatorTool tool)
 		{
 			_spatialLocatorTool = tool;
 		}
 
-		private static void Draw<T>(IEnumerable<T> itemsToDraw)
+        internal ReferenceLineCompositeGraphic GetReferenceLineCompositeGraphic(IPresentationImage image)
+        {
+            SynchronizationToolCompositeGraphic container = GetSynchronizationToolCompositeGraphic(image);
+            if (container == null)
+                return null;
+
+            return container.ReferenceLineCompositeGraphic;
+        }
+
+        internal CompositeGraphic GetSpatialLocatorCompositeGraphic(IPresentationImage image)
+        {
+            SynchronizationToolCompositeGraphic container = GetSynchronizationToolCompositeGraphic(image);
+            if (container == null)
+                return null;
+
+            return container.SpatialLocatorCompositeGraphic;
+        }
+
+        internal void OnSynchronizedImageBoxes()
+        {
+            DrawImageBoxes(_stackingSynchronizationTool.GetImageBoxesToDraw());
+        }
+
+        internal void OnSpatialLocatorCrosshairsUpdated()
+        {
+            //The spatial locator and stacking sync tool conflict.
+            _stackingSynchronizationTool.SynchronizeActive = false;
+
+            DrawImageBoxes(_spatialLocatorTool.GetImageBoxesToRedraw());
+        }
+
+        internal void OnSpatialLocatorStopped()
+        {
+            Draw(_spatialLocatorTool.GetImageBoxesToRedraw());
+        }
+
+        internal void OnRefreshedReferenceLines()
+        {
+            Draw(_referenceLineTool.GetImagesToRedraw());
+        }
+
+        #endregion
+
+        #region Private Methods
+
+        private void OnTileSelected(object sender, TileSelectedEventArgs e)
+        {
+            if (e.SelectedTile.PresentationImage != null)
+            {
+                //the presentation image selected event will fire and take care of this.
+                return;
+            }
+
+            _referenceLineTool.RefreshAllReferenceLines();
+            Draw(_referenceLineTool.GetImagesToRedraw());
+        }
+
+        private void OnPresentationImageSelected(object sender, PresentationImageSelectedEventArgs e)
+        {
+            _stackingSynchronizationTool.SynchronizeImageBoxes();
+            OnSynchronizedImageBoxes();
+        }
+
+        private static void Draw<T>(IEnumerable<T> itemsToDraw)
 			where T : IDrawable
 		{
 			foreach (IDrawable drawable in itemsToDraw)
@@ -142,25 +195,7 @@ namespace ClearCanvas.ImageViewer.Tools.Synchronization
 			Draw(imageBoxesToDraw);
 		}
 
-		private void OnTileSelected(object sender, TileSelectedEventArgs e)
-		{
-			if (e.SelectedTile.PresentationImage != null)
-			{
-				//the presentation image selected event will fire and take care of this.
-				return;
-			}
-
-			_referenceLineTool.RefreshAllReferenceLines();
-			Draw(_referenceLineTool.GetImagesToRedraw());
-		}
-
-		private void OnPresentationImageSelected(object sender, PresentationImageSelectedEventArgs e)
-		{
-			_stackingSynchronizationTool.SynchronizeImageBoxes();
-			OnSynchronizedImageBoxes();
-		}
-
-		private static SynchronizationToolCompositeGraphic GetSynchronizationToolCompositeGraphic(IPresentationImage image)
+        private static SynchronizationToolCompositeGraphic GetSynchronizationToolCompositeGraphic(IPresentationImage image)
 		{
 			if (image is IApplicationGraphicsProvider)
 			{
@@ -181,78 +216,64 @@ namespace ClearCanvas.ImageViewer.Tools.Synchronization
 			return null;
 		}
 
+        #endregion
 
-		public static SynchronizationToolCoordinator Get(IImageViewer viewer)
+        #region Public Members
+
+        public static SynchronizationToolCoordinator Get(IImageViewer viewer)
 		{
-			if (!Coordinators.ContainsKey(viewer))
-			{
-				SynchronizationToolCoordinator coordinator = new SynchronizationToolCoordinator(viewer);
+            var coordinator = viewer.ExtensionData[typeof(ExtensionDataKey)] as SynchronizationToolCoordinator;
+            if (coordinator == null)
+            {
+                viewer.ExtensionData[typeof(ExtensionDataKey)] = coordinator = new SynchronizationToolCoordinator(viewer);
 
 				viewer.EventBroker.PresentationImageSelected += coordinator.OnPresentationImageSelected;
 				viewer.EventBroker.TileSelected += coordinator.OnTileSelected;
-			
-				Coordinators.Add(viewer, coordinator);
 			}
 
 			DicomImagePlane.InitializeCache();
 
-			++Coordinators[viewer]._referenceCount;
-			return Coordinators[viewer];
+			++coordinator._referenceCount;
+		    return coordinator;
 		}
 
 		public void Release()
 		{
 			DicomImagePlane.ReleaseCache();
 
-			--_referenceCount;
+            if (_referenceCount > 0)
+			    --_referenceCount;
+
 			if (_referenceCount <= 0)
 			{
 				_viewer.EventBroker.PresentationImageSelected -= OnPresentationImageSelected;
 				_viewer.EventBroker.TileSelected -= OnTileSelected;
-
-				Coordinators.Remove(_viewer);
 			}
 		}
 
-		public ReferenceLineCompositeGraphic GetReferenceLineCompositeGraphic(IPresentationImage image)
-		{
-			SynchronizationToolCompositeGraphic container = GetSynchronizationToolCompositeGraphic(image);
-			if (container == null)
-				return null;
+        public bool DefaultSyncStackingActive { get { return false; } }
+        public bool DefaultReferenceLinesActive { get { return false; } }
 
-			return container.ReferenceLineCompositeGraphic;
-		}
+        public bool SyncStackingActive
+	    {
+            get { return _stackingSynchronizationTool != null && _stackingSynchronizationTool.SynchronizeActive; }
+	        set
+	        {
+                if (_stackingSynchronizationTool != null)
+                    _stackingSynchronizationTool.SynchronizeActive = value;
+	        }
+	    }
 
-		public CompositeGraphic GetSpatialLocatorCompositeGraphic(IPresentationImage image)
-		{
-			SynchronizationToolCompositeGraphic container = GetSynchronizationToolCompositeGraphic(image);
-			if (container == null)
-				return null;
+        public bool ReferenceLinesActive
+        {
+            get { return _referenceLineTool != null && _referenceLineTool.Active; }
+            set
+            {
+                if (_referenceLineTool != null)
+                    _referenceLineTool.Active = value;
+            }
+        }
 
-			return container.SpatialLocatorCompositeGraphic;
-		}
-
-		public void OnSynchronizedImageBoxes()
-		{
-			DrawImageBoxes(_stackingSynchronizationTool.GetImageBoxesToDraw());
-		}
-
-		public void OnSpatialLocatorCrosshairsUpdated()
-		{
-			//The spatial locator and stacking sync tool conflict.
-			_stackingSynchronizationTool.SynchronizeActive = false;
-
-			DrawImageBoxes(_spatialLocatorTool.GetImageBoxesToRedraw());
-		}
-
-		public void OnSpatialLocatorStopped()
-		{
-			Draw(_spatialLocatorTool.GetImageBoxesToRedraw());
-		}
-		
-		public void OnRefreshedReferenceLines()
-		{
-			Draw(_referenceLineTool.GetImagesToRedraw());
-		}
-	}
+        #endregion
+    }
 }

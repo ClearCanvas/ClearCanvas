@@ -128,9 +128,6 @@
   <data name="_studyDescription.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>2, 2, 2, 2</value>
   </data>
-  <data name="_studyDescription.Mask" xml:space="preserve">
-    <value />
-  </data>
   <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="_studyDescription.PasswordChar" type="System.Char, mscorlib" xml:space="preserve">
     <value />
@@ -165,9 +162,6 @@
   <data name="_patientId.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>2, 2, 2, 2</value>
   </data>
-  <data name="_patientId.Mask" xml:space="preserve">
-    <value />
-  </data>
   <data name="_patientId.PasswordChar" type="System.Char, mscorlib" xml:space="preserve">
     <value />
   </data>
@@ -201,9 +195,6 @@
   <data name="_accessionNumber.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>2, 2, 2, 2</value>
   </data>
-  <data name="_accessionNumber.Mask" xml:space="preserve">
-    <value />
-  </data>
   <data name="_accessionNumber.PasswordChar" type="System.Char, mscorlib" xml:space="preserve">
     <value />
   </data>
@@ -236,9 +227,6 @@
   </data>
   <data name="_patientsName.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>2, 2, 2, 2</value>
-  </data>
-  <data name="_patientsName.Mask" xml:space="preserve">
-    <value />
   </data>
   <data name="_patientsName.PasswordChar" type="System.Char, mscorlib" xml:space="preserve">
     <value />
@@ -319,7 +307,7 @@
     <value>9</value>
   </data>
   <data name="_cancelButton.Location" type="System.Drawing.Point, System.Drawing">
-    <value>172, 463</value>
+    <value>169, 3</value>
   </data>
   <data name="_cancelButton.Size" type="System.Drawing.Size, System.Drawing">
     <value>75, 23</value>
@@ -337,13 +325,13 @@
     <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;_cancelButton.Parent" xml:space="preserve">
-    <value>$this</value>
+    <value>_lyoButtonPane</value>
   </data>
   <data name="&gt;&gt;_cancelButton.ZOrder" xml:space="preserve">
-    <value>10</value>
+    <value>0</value>
   </data>
   <data name="_okButton.Location" type="System.Drawing.Point, System.Drawing">
-    <value>91, 463</value>
+    <value>88, 3</value>
   </data>
   <data name="_okButton.Size" type="System.Drawing.Size, System.Drawing">
     <value>75, 23</value>
@@ -361,10 +349,10 @@
     <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;_okButton.Parent" xml:space="preserve">
-    <value>$this</value>
+    <value>_lyoButtonPane</value>
   </data>
   <data name="&gt;&gt;_okButton.ZOrder" xml:space="preserve">
-    <value>11</value>
+    <value>1</value>
   </data>
   <data name="_studyId.LabelText" xml:space="preserve">
     <value>Study ID</value>
@@ -374,9 +362,6 @@
   </data>
   <data name="_studyId.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>2, 2, 2, 2</value>
-  </data>
-  <data name="_studyId.Mask" xml:space="preserve">
-    <value />
   </data>
   <data name="_studyId.PasswordChar" type="System.Char, mscorlib" xml:space="preserve">
     <value />
@@ -403,7 +388,7 @@
     <value>3</value>
   </data>
   <data name="_browse.Location" type="System.Drawing.Point, System.Drawing">
-    <value>186, 365</value>
+    <value>186, 25</value>
   </data>
   <data name="_browse.Size" type="System.Drawing.Size, System.Drawing">
     <value>56, 20</value>
@@ -421,13 +406,13 @@
     <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;_browse.Parent" xml:space="preserve">
-    <value>$this</value>
+    <value>_pnlOutputOptions</value>
   </data>
   <data name="&gt;&gt;_browse.ZOrder" xml:space="preserve">
     <value>2</value>
   </data>
   <data name="_outputPath.Location" type="System.Drawing.Point, System.Drawing">
-    <value>17, 365</value>
+    <value>17, 25</value>
   </data>
   <data name="_outputPath.Size" type="System.Drawing.Size, System.Drawing">
     <value>163, 20</value>
@@ -442,7 +427,7 @@
     <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;_outputPath.Parent" xml:space="preserve">
-    <value>$this</value>
+    <value>_pnlOutputOptions</value>
   </data>
   <data name="&gt;&gt;_outputPath.ZOrder" xml:space="preserve">
     <value>1</value>
@@ -451,7 +436,7 @@
     <value>True</value>
   </data>
   <data name="label1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>17, 349</value>
+    <value>17, 9</value>
   </data>
   <data name="label1.Size" type="System.Drawing.Size, System.Drawing">
     <value>64, 13</value>
@@ -469,10 +454,10 @@
     <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;label1.Parent" xml:space="preserve">
-    <value>$this</value>
+    <value>_pnlOutputOptions</value>
   </data>
   <data name="&gt;&gt;label1.ZOrder" xml:space="preserve">
-    <value>12</value>
+    <value>3</value>
   </data>
   <data name="label2.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Fill</value>
@@ -529,7 +514,7 @@
     <value>1</value>
   </data>
   <data name="panel1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>15, 391</value>
+    <value>15, 51</value>
   </data>
   <data name="panel1.Size" type="System.Drawing.Size, System.Drawing">
     <value>229, 66</value>
@@ -544,9 +529,90 @@
     <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;panel1.Parent" xml:space="preserve">
-    <value>$this</value>
+    <value>_pnlOutputOptions</value>
   </data>
   <data name="&gt;&gt;panel1.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="_lyoButtonPane.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Bottom</value>
+  </data>
+  <data name="_lyoButtonPane.FlowDirection" type="System.Windows.Forms.FlowDirection, System.Windows.Forms">
+    <value>RightToLeft</value>
+  </data>
+  <data name="_lyoButtonPane.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 489</value>
+  </data>
+  <data name="_lyoButtonPane.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 0, 17, 0</value>
+  </data>
+  <data name="_lyoButtonPane.Size" type="System.Drawing.Size, System.Drawing">
+    <value>264, 40</value>
+  </data>
+  <data name="_lyoButtonPane.TabIndex" type="System.Int32, mscorlib">
+    <value>14</value>
+  </data>
+  <data name="&gt;&gt;_lyoButtonPane.Name" xml:space="preserve">
+    <value>_lyoButtonPane</value>
+  </data>
+  <data name="&gt;&gt;_lyoButtonPane.Type" xml:space="preserve">
+    <value>System.Windows.Forms.FlowLayoutPanel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_lyoButtonPane.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;_lyoButtonPane.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="_pnlOutputOptions.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Bottom</value>
+  </data>
+  <data name="_pnlOutputOptions.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 369</value>
+  </data>
+  <data name="_pnlOutputOptions.Size" type="System.Drawing.Size, System.Drawing">
+    <value>264, 120</value>
+  </data>
+  <data name="_pnlOutputOptions.TabIndex" type="System.Int32, mscorlib">
+    <value>8</value>
+  </data>
+  <data name="&gt;&gt;_pnlOutputOptions.Name" xml:space="preserve">
+    <value>_pnlOutputOptions</value>
+  </data>
+  <data name="&gt;&gt;_pnlOutputOptions.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_pnlOutputOptions.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;_pnlOutputOptions.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="_keepPrivateTags.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="_keepPrivateTags.Location" type="System.Drawing.Point, System.Drawing">
+    <value>21, 341</value>
+  </data>
+  <data name="_keepPrivateTags.Size" type="System.Drawing.Size, System.Drawing">
+    <value>114, 17</value>
+  </data>
+  <data name="_keepPrivateTags.TabIndex" type="System.Int32, mscorlib">
+    <value>7</value>
+  </data>
+  <data name="_keepPrivateTags.Text" xml:space="preserve">
+    <value>Keep Private Tags</value>
+  </data>
+  <data name="&gt;&gt;_keepPrivateTags.Name" xml:space="preserve">
+    <value>_keepPrivateTags</value>
+  </data>
+  <data name="&gt;&gt;_keepPrivateTags.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_keepPrivateTags.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;_keepPrivateTags.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -556,7 +622,7 @@
     <value>6, 13</value>
   </data>
   <data name="$this.Size" type="System.Drawing.Size, System.Drawing">
-    <value>264, 500</value>
+    <value>264, 529</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
     <value>ExportComponentPanel</value>

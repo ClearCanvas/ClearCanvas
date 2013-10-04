@@ -254,6 +254,11 @@ namespace ClearCanvas.Dicom.Utilities.Anonymization
 		/// </remarks>
 		public string SpecificCharacterSet { get; set; }
 
+		/// <summary>
+		/// Gets or sets a value indicating whether or not private tags should be kept.
+		/// </summary>
+		public bool KeepPrivateTags { get; set; }
+
 		#endregion
 
 		#region Public Methods
@@ -279,7 +284,7 @@ namespace ClearCanvas.Dicom.Utilities.Anonymization
 				anonymizedSeriesData.SaveTo(_currentFile);
 				anonymizedStudyData.SaveTo(_currentFile);
 			}
-			catch(DicomAnonymizerException)
+			catch (DicomAnonymizerException)
 			{
 				throw;
 			}
@@ -381,7 +386,7 @@ namespace ClearCanvas.Dicom.Utilities.Anonymization
 				ReadOnlyCollection<ValidationFailureDescription> failures = _validationStrategy.GetValidationFailures(originalData, anonymizedData);
 				if (failures.Count > 0)
 					throw new DicomAnonymizerValidationException("At least one validation failure has occurred.", failures);
-					
+
 				_uidMap[originalData.SeriesInstanceUid] = anonymizedData.SeriesInstanceUid;
 
 				_anonymizedSeriesDataMap[originalSeriesInstanceUid] = anonymizedData;
@@ -400,20 +405,20 @@ namespace ClearCanvas.Dicom.Utilities.Anonymization
 
 		private void Anonymize()
 		{
-            string oldUid = _currentFile.DataSet[DicomTags.SopInstanceUid].ToString();
-            if (string.IsNullOrEmpty(oldUid))
-                throw new DicomAnonymizerException("The SopInstanceUid of the source file cannot be empty.");
+			string oldUid = _currentFile.DataSet[DicomTags.SopInstanceUid].ToString();
+			if (string.IsNullOrEmpty(oldUid))
+				throw new DicomAnonymizerException("The SopInstanceUid of the source file cannot be empty.");
 
-            string newUid;
-            if (_uidMap.ContainsKey(oldUid))
-            {
-                newUid = _uidMap[oldUid];
-            }
-            else
-            {
-                newUid = DicomUid.GenerateUid().UID;
-                _uidMap[oldUid] = newUid;
-            }
+			string newUid;
+			if (_uidMap.ContainsKey(oldUid))
+			{
+				newUid = _uidMap[oldUid];
+			}
+			else
+			{
+				newUid = DicomUid.GenerateUid().UID;
+				_uidMap[oldUid] = newUid;
+			}
 
 			if (String.IsNullOrEmpty(newUid) || newUid == oldUid)
 				throw new DicomAnonymizerException("An error occurred while generating a new Uid.");
@@ -464,6 +469,10 @@ namespace ClearCanvas.Dicom.Utilities.Anonymization
 					if (IsAttributeToRemove(attribute))
 					{
 						tagsToRemove.Add(attribute.Tag.TagValue);
+					}
+					else if (IsPrivateAttribute(attribute))
+					{
+						if (!KeepPrivateTags) tagsToRemove.Add(attribute.Tag.TagValue);
 					}
 					else if (IsUidAttributeToRemap(attribute))
 					{
@@ -542,7 +551,7 @@ namespace ClearCanvas.Dicom.Utilities.Anonymization
 			}
 			else
 			{
-				//remove it altogether.
+				// blank the value
 				attribute.SetNullValue();
 			}
 		}
@@ -587,7 +596,7 @@ namespace ClearCanvas.Dicom.Utilities.Anonymization
 
 		private static bool IsAttributeToRemove(DicomAttribute attribute)
 		{
-			return IsPrivateAttribute(attribute) || TagsToRemove.Contains(attribute.Tag.TagValue);
+			return TagsToRemove.Contains(attribute.Tag.TagValue);
 		}
 
 		private static bool IsPrivateAttribute(DicomAttribute attribute)
@@ -602,7 +611,7 @@ namespace ClearCanvas.Dicom.Utilities.Anonymization
 
 		private static bool IsUidAttributeToRemap(DicomAttribute attribute)
 		{
-			return UidsToRemap.Contains(attribute.Tag.TagValue);
+			return UidTagsToRemap.Contains(attribute.Tag.TagValue);
 		}
 
 		private static bool IsDateTimeAttributeToAdjust(DicomAttribute attribute)

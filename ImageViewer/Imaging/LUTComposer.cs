@@ -27,7 +27,7 @@ using ClearCanvas.Common;
 
 namespace ClearCanvas.ImageViewer.Imaging
 {
-	/// <summary>
+    /// <summary>
 	/// Combines various <see cref="IComposableLut"/> objects together in the standard grayscale image display pipeline.
 	/// </summary>
 	/// <seealso cref="IComposableLut"/>
@@ -54,7 +54,7 @@ namespace ClearCanvas.ImageViewer.Imaging
 	/// </list>
 	/// </para>
 	/// </remarks>
-	public class LutComposer : IComposedLut, IDisposable
+	public class LutComposer : IDisposable
 	{
 		#region Private Fields
 
@@ -62,12 +62,16 @@ namespace ClearCanvas.ImageViewer.Imaging
 		private IComposableLut _normalizationLut;
 		private IModalityLut _modalityLut;
 		private IVoiLut _voiLut;
-		private bool _recalculate = true;
-		private ComposedLutCache.ICachedLut _cachedLut;
-		private int _minInputValue = int.MinValue;
+        private IPresentationLut _presentationLut;
+        
+        private ComposedLutCache.ICachedLut _cachedLut;
+		
+        private int _minInputValue = int.MinValue;
 		private int _maxInputValue = int.MaxValue;
+        private int _minOutputValue = 0;
+	    private int _maxOutputValue = 255;
 
-		#endregion
+	    #endregion
 
 		/// <summary>
 		/// Initializes a new instance of <see cref="LutComposer"/>.
@@ -115,10 +119,16 @@ namespace ClearCanvas.ImageViewer.Imaging
 				{
 					_lutCollection = new LutCollection();
 
-					if (_modalityLut != null) _lutCollection.Add(_modalityLut);
-					if (_normalizationLut != null) _lutCollection.Add(_normalizationLut);
-					if (_voiLut != null) _lutCollection.Add(_voiLut);
-				}
+					if (_modalityLut != null)
+                        _lutCollection.Add(_modalityLut);
+					if (_normalizationLut != null)
+                        _lutCollection.Add(_normalizationLut);
+					if (_voiLut != null)
+                        _lutCollection.Add(_voiLut);
+                    
+                    if (_lutCollection.Count > 0) //Don't add this unless there's at least one other.
+                        _lutCollection.Add(PresentationLut);
+                }
 
 				return _lutCollection;
 			}
@@ -156,7 +166,95 @@ namespace ClearCanvas.ImageViewer.Imaging
 			set { SetLutField(ref _voiLut, value); }
 		}
 
-		#endregion
+        /// <summary>
+        /// Gets or sets the Presentation LUT (p-values) in the grayscale image display pipeline, which converts the output range of the VOI LUT to values appropriate for display.
+        /// </summary>
+        /// <seealso cref="LutComposer"/>
+        public IPresentationLut PresentationLut
+        {
+            get { return _presentationLut ?? (_presentationLut = new PresentationLutLinear()); }
+            set { SetLutField(ref _presentationLut, value); }
+        }
+
+        /// <summary>
+        /// Gets or sets the minimum input value.
+        /// </summary>
+        public int MinInputValue
+        {
+            get { return _minInputValue; }
+            set
+            {
+                if (_minInputValue != value)
+                {
+                    _minInputValue = value;
+                    OnLutChanged();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the maximum input value.
+        /// </summary>
+        public int MaxInputValue
+        {
+            get { return _maxInputValue; }
+            set
+            {
+                if (_maxInputValue != value)
+                {
+                    _maxInputValue = value;
+                    OnLutChanged();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets the minimum output value.
+        /// </summary>
+        private int MinOutputValue
+        {
+            get { return _minOutputValue; }
+            set
+            {
+                if (_minOutputValue != value)
+                {
+                    _minOutputValue = value;
+                    OnLutChanged();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets the maximum output value.
+        /// </summary>
+        private int MaxOutputValue
+        {
+            get { return _maxOutputValue; }
+            set
+            {
+                if (_maxOutputValue != value)
+                {
+                    _maxOutputValue = value;
+                    OnLutChanged();
+                }
+            }
+        }
+        
+        #endregion
+
+        /// <summary>
+        /// Gets the output LUT of the pipeline, 
+        /// </summary>
+        public IComposedLut GetOutputLut(int minOutputValue, int maxOutputValue)
+        {
+            this.MinOutputValue = this.PresentationLut.MinOutputValue = minOutputValue;
+            this.MaxOutputValue = this.PresentationLut.MaxOutputValue = maxOutputValue;
+
+            this.LutCollection.SyncMinMaxValues();
+            this.LutCollection.Validate();
+
+            return _cachedLut ?? (_cachedLut = ComposedLutCache.GetLut(LutCollection));
+        }
 
 		/// <summary>
 		/// Sets the <see cref="IComposableLut"/> field and sets up the LutChanged event handler.
@@ -175,41 +273,44 @@ namespace ClearCanvas.ImageViewer.Imaging
 			if (field != null)
 				field.LutChanged += OnLutValuesChanged;
 
-			OnLutChanged();
-		}
+            // clear the LUT pipeline so that it will be reassembled
+            if (_lutCollection != null)
+            {
+                _lutCollection.Clear();
+                _lutCollection = null;
+            }
+
+            OnLutChanged();
+        }
 
 		private void OnLutChanged()
 		{
-			// clear the LUT pipeline so that it will be reassembled
-			if (_lutCollection != null)
-			{
-				_lutCollection.Clear();
-				_lutCollection = null;
-			}
-
 			SyncMinMaxValues();
-			_recalculate = true;
+			DisposeCachedLut();
 		}
 
 		private void SyncMinMaxValues()
 		{
-			if (LutCollection.Count > 0)
-			{
-				IComposableLut firstLut = LutCollection[0];
-				firstLut.MinInputValue = _minInputValue;
-				firstLut.MaxInputValue = _maxInputValue;
-			}
+            if (LutCollection.Count == 0)
+                return;
+
+            IComposableLut firstLut = LutCollection[0];
+			firstLut.MinInputValue = _minInputValue;
+			firstLut.MaxInputValue = _maxInputValue;
 
 			LutCollection.SyncMinMaxValues();
+		    
+            PresentationLut.MinOutputValue = _minOutputValue;
+		    PresentationLut.MaxOutputValue = _maxOutputValue;
 		}
 
 		private void DisposeCachedLut()
 		{
-			if (_cachedLut != null)
-			{
-				_cachedLut.Dispose();
-				_cachedLut = null;
-			}
+		    if (_cachedLut == null)
+                return;
+		    
+            _cachedLut.Dispose();
+		    _cachedLut = null;
 		}
 
 		#region Event Handlers
@@ -220,113 +321,6 @@ namespace ClearCanvas.ImageViewer.Imaging
 		}
 
 		#endregion
-
-		#region Properties
-
-		/// <summary>
-		/// The output LUT of the pipeline.
-		/// </summary>
-		private IComposedLut ComposedLut
-		{
-			get
-			{
-				if (_recalculate)
-				{
-					DisposeCachedLut();
-					_recalculate = false;
-				}
-
-				if (_cachedLut == null)
-					_cachedLut = ComposedLutCache.GetLut(LutCollection);
-
-				return _cachedLut;
-			}
-		}
-
-		private IComposableLut LastLut
-		{
-			get
-			{
-				LutCollection.Validate();
-				return LutCollection[LutCollection.Count - 1];
-			}
-		}
-
-		#endregion
-
-		#region IComposedLut Members
-
-		/// <summary>
-		/// Gets the composed lut data.
-		/// </summary>
-		/// <remarks>
-		/// This property should be considered readonly and is only 
-		/// provided for fast (unsafe) iteration over the array.
-		/// </remarks>
-		public int[] Data
-		{
-			get { return ComposedLut.Data; }
-		}
-
-		#endregion
-
-		#region ILut Members
-
-		/// <summary>
-		/// Gets or sets the minimum input value.
-		/// </summary>
-		public int MinInputValue
-		{
-			get { return _minInputValue; }
-			set
-			{
-				if (_minInputValue != value)
-				{
-					_minInputValue = value;
-					OnLutChanged();
-				}
-			}
-		}
-
-		/// <summary>
-		/// Gets or sets the maximum input value.
-		/// </summary>
-		public int MaxInputValue
-		{
-			get { return _maxInputValue; }
-			set
-			{
-				if (_maxInputValue != value)
-				{
-					_maxInputValue = value;
-					OnLutChanged();
-				}
-			}
-		}
-
-		/// <summary>
-		/// Gets the minimum output value.
-		/// </summary>
-		public int MinOutputValue
-		{
-			get { return (int) Math.Round(LastLut.MinOutputValue); }
-		}
-
-		/// <summary>
-		/// Gets the maximum output value.
-		/// </summary>
-		public int MaxOutputValue
-		{
-			get { return (int) Math.Round(LastLut.MaxOutputValue); }
-		}
-
-		/// <summary>
-		/// Gets the output value of the lut at a given input index.
-		/// </summary>
-		public int this[int index]
-		{
-			get { return ComposedLut[index]; }
-		}
 
 		#region Disposal
 
@@ -365,8 +359,6 @@ namespace ClearCanvas.ImageViewer.Imaging
 					_lutCollection.Clear();
 			}
 		}
-
-		#endregion
 
 		#endregion
 	}

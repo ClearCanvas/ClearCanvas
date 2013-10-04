@@ -48,6 +48,8 @@ namespace ClearCanvas.Enterprise.Hibernate.Ddl
 		/// <returns></returns>
 		protected static string MakeName(string prefix, string table, string element)
 		{
+			// NOTE: under some scenarios, the use of MD5 here may cause a FIPS-related exception - see #11283 for details
+
 			// use MD5 to obtain a 32-character hex string that is a unique function of the table and element
 			var bytes = Encoding.UTF8.GetBytes(table + element);
 			var hash = new MD5CryptoServiceProvider().ComputeHash(bytes);

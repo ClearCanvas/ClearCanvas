@@ -34,7 +34,6 @@ namespace ClearCanvas.Ris.Client
 	{
 		private DiagnosticServiceLookupSettings()
 		{
-			ApplicationSettingsRegistry.Instance.RegisterInstance(this);
 		}
 	}
 }

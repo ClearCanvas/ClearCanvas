@@ -243,6 +243,10 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
                 foreach (var factory in _externalFactories)
                     displaySets.AddRange(factory.CreateDisplaySets(series));
 
+                foreach (var displaySet in displaySets)
+                {
+                    
+                }
                 return displaySets;
             }
         }

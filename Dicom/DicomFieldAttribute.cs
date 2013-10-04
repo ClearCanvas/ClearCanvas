@@ -60,6 +60,7 @@ namespace ClearCanvas.Dicom
             _createEmpty = false;
         }
 
+		[Obsolete("The nested dataset feature that this constructor would otherwise suggest isn't actually implemented.")]
 		public DicomFieldAttribute(uint tag, uint parentTag)
 			: this(tag)
 		{
@@ -73,7 +74,8 @@ namespace ClearCanvas.Dicom
             get { return _tag; }
         }
 
-        // TODO (CR Mar 2012): This is unused, which means it doesn't work.
+		// TODO (CR Mar 2012): This is unused, which means it doesn't work.
+		[Obsolete("The nested dataset feature that this property would otherwise suggest isn't actually implemented.")]
     	public DicomTag ParentTag
     	{
     		get { return _parentTag; }

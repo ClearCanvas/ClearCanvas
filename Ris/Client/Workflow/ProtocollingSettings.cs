@@ -41,7 +41,6 @@ namespace ClearCanvas.Ris.Client.Workflow
 
 		public ProtocollingSettings()
 		{
-			ApplicationSettingsRegistry.Instance.RegisterInstance(this);
 		}
 
 		public string GetDefaultProtocolGroup(string procedureName)

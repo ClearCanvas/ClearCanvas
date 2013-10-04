@@ -24,8 +24,6 @@
 
 #if UNIT_TESTS
 
-// ReSharper disable SuggestBaseTypeForParameter
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -54,20 +52,28 @@ namespace ClearCanvas.Common.Utilities
 		/// <summary>
 		/// Instantiates an <see cref="UnitTestExtensionFactory"/> with the provided <paramref name="extensionMap">extensions map</paramref>.
 		/// </summary>
-		public UnitTestExtensionFactory(IDictionary<Type, IEnumerable<Type>> extensionMap)
+		public UnitTestExtensionFactory(IEnumerable<KeyValuePair<Type, IEnumerable<Type>>> extensionMap)
 		{
-			foreach (var entry in extensionMap)
-				foreach (var type in entry.Value)
-					Define(entry.Key, type);
+			if (extensionMap != null)
+			{
+				foreach (var entry in extensionMap)
+				{
+					foreach (var type in entry.Value)
+						Define(entry.Key, type);
+				}
+			}
 		}
 
 		/// <summary>
 		/// Instantiates an <see cref="UnitTestExtensionFactory"/> with the provided <paramref name="extensionMap">extensions map</paramref>.
 		/// </summary>
-		public UnitTestExtensionFactory(IDictionary<Type, Type> extensionMap)
+		public UnitTestExtensionFactory(IEnumerable<KeyValuePair<Type, Type>> extensionMap)
 		{
-			foreach (var entry in extensionMap)
-				Define(entry.Key, entry.Value);
+			if (extensionMap != null)
+			{
+				foreach (var entry in extensionMap)
+					Define(entry.Key, entry.Value);
+			}
 		}
 
 		/// <summary>
@@ -284,5 +290,4 @@ namespace ClearCanvas.Common.Utilities
 	}
 }
 
-// ReSharper restore SuggestBaseTypeForParameter
 #endif

@@ -55,11 +55,6 @@ namespace ClearCanvas.ImageViewer.Imaging
 			get { return MaxOutputValue; }
 		}
 
-		int IVoiLut.this[double input]
-		{
-			get { return this[(int) Math.Round(input)]; }
-		}
-
 		double IComposableLut.this[double input]
 		{
 			get { return this[(int) Math.Round(input)]; }

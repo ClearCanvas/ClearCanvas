@@ -85,18 +85,24 @@ namespace ClearCanvas.Common.Configuration
 		    return settingsClass;
 		}
 
-		public static ApplicationSettingsBase GetSettingsClassInstance(Type settingsClass)
+		public static ApplicationSettingsBase GetDefaultInstance(Type settingsClass)
 		{
-			CheckType(settingsClass);
+            CheckType(settingsClass);
 
-			const BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy;
-			var defaultProperty = settingsClass.GetProperty("Default", bindingFlags);
+            const BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy;
+            var defaultProperty = settingsClass.GetProperty("Default", bindingFlags);
 
-			if (defaultProperty != null)
-				return (ApplicationSettingsBase)defaultProperty.GetValue(null, null);
+            if (defaultProperty != null)
+                return (ApplicationSettingsBase)defaultProperty.GetValue(null, null);
 
+		    return null;
+		}
+
+	    public static ApplicationSettingsBase GetSettingsClassInstance(Type settingsClass)
+	    {
+	        var defaultInstance = GetDefaultInstance(settingsClass);
 			//try to return an instance of the class
-			return (ApplicationSettingsBase)Activator.CreateInstance(settingsClass);
+			return defaultInstance ?? (ApplicationSettingsBase)Activator.CreateInstance(settingsClass);
 		}
 	}
 }

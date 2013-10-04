@@ -734,27 +734,35 @@ namespace ClearCanvas.Dicom.Tests
 			}
 			catch (ArgumentException)
 			{
-				CultureAndRegionInfoBuilder cultureAndRegionInfoBuilder = new CultureAndRegionInfoBuilder(_cultureName, CultureAndRegionModifiers.None);
-				cultureAndRegionInfoBuilder.LoadDataFromCultureInfo(CultureInfo.InvariantCulture);
-				cultureAndRegionInfoBuilder.LoadDataFromRegionInfo(new RegionInfo("US"));
-				cultureAndRegionInfoBuilder.ThreeLetterWindowsRegionName = "bwl";
-				cultureAndRegionInfoBuilder.ThreeLetterISORegionName = "bwl";
-				cultureAndRegionInfoBuilder.TwoLetterISORegionName = "bl";
-				cultureAndRegionInfoBuilder.RegionEnglishName = "Backwards Land";
-				cultureAndRegionInfoBuilder.RegionNativeName = "Wark";
-				cultureAndRegionInfoBuilder.NumberFormat.NegativeSign = "+";
-				cultureAndRegionInfoBuilder.NumberFormat.PositiveSign = "-";
-				cultureAndRegionInfoBuilder.NumberFormat.NumberDecimalSeparator = ";";
-				cultureAndRegionInfoBuilder.NumberFormat.NumberGroupSeparator = ":";
-				cultureAndRegionInfoBuilder.NumberFormat.NumberGroupSizes = new int[] {2, 3, 4, 5};
-				cultureAndRegionInfoBuilder.NumberFormat.CurrencyDecimalSeparator = ";";
-				cultureAndRegionInfoBuilder.NumberFormat.CurrencyGroupSeparator = ":";
-				cultureAndRegionInfoBuilder.NumberFormat.CurrencyGroupSizes = new int[] {2, 3, 4, 5};
-				cultureAndRegionInfoBuilder.NumberFormat.PercentDecimalSeparator = ";";
-				cultureAndRegionInfoBuilder.NumberFormat.PercentGroupSeparator = ":";
-				cultureAndRegionInfoBuilder.NumberFormat.PercentGroupSizes = new int[] {2, 3, 4, 5};
-				cultureAndRegionInfoBuilder.Register();
-				return new CultureInfo(_cultureName);
+				try
+				{
+					CultureAndRegionInfoBuilder cultureAndRegionInfoBuilder = new CultureAndRegionInfoBuilder(_cultureName, CultureAndRegionModifiers.None);
+					cultureAndRegionInfoBuilder.LoadDataFromCultureInfo(CultureInfo.InvariantCulture);
+					cultureAndRegionInfoBuilder.LoadDataFromRegionInfo(new RegionInfo("US"));
+					cultureAndRegionInfoBuilder.ThreeLetterWindowsRegionName = "bwl";
+					cultureAndRegionInfoBuilder.ThreeLetterISORegionName = "bwl";
+					cultureAndRegionInfoBuilder.TwoLetterISORegionName = "bl";
+					cultureAndRegionInfoBuilder.RegionEnglishName = "Backwards Land";
+					cultureAndRegionInfoBuilder.RegionNativeName = "Wark";
+					cultureAndRegionInfoBuilder.NumberFormat.NegativeSign = "+";
+					cultureAndRegionInfoBuilder.NumberFormat.PositiveSign = "-";
+					cultureAndRegionInfoBuilder.NumberFormat.NumberDecimalSeparator = ";";
+					cultureAndRegionInfoBuilder.NumberFormat.NumberGroupSeparator = ":";
+					cultureAndRegionInfoBuilder.NumberFormat.NumberGroupSizes = new int[] {2, 3, 4, 5};
+					cultureAndRegionInfoBuilder.NumberFormat.CurrencyDecimalSeparator = ";";
+					cultureAndRegionInfoBuilder.NumberFormat.CurrencyGroupSeparator = ":";
+					cultureAndRegionInfoBuilder.NumberFormat.CurrencyGroupSizes = new int[] {2, 3, 4, 5};
+					cultureAndRegionInfoBuilder.NumberFormat.PercentDecimalSeparator = ";";
+					cultureAndRegionInfoBuilder.NumberFormat.PercentGroupSeparator = ":";
+					cultureAndRegionInfoBuilder.NumberFormat.PercentGroupSizes = new int[] {2, 3, 4, 5};
+					cultureAndRegionInfoBuilder.Register();
+					return new CultureInfo(_cultureName);
+				}
+				catch (UnauthorizedAccessException)
+				{
+					Assert.Ignore("Unable to register custom culture definition. You may need to run NUnit as an administrator.");
+					return CultureInfo.InvariantCulture;
+				}
 			}
 		}
 
@@ -784,27 +792,35 @@ namespace ClearCanvas.Dicom.Tests
 			}
 			catch (ArgumentException)
 			{
-				CultureAndRegionInfoBuilder cultureAndRegionInfoBuilder = new CultureAndRegionInfoBuilder(_cultureName, CultureAndRegionModifiers.None);
-				cultureAndRegionInfoBuilder.LoadDataFromCultureInfo(CultureInfo.InvariantCulture);
-				cultureAndRegionInfoBuilder.LoadDataFromRegionInfo(new RegionInfo("US"));
-				cultureAndRegionInfoBuilder.ThreeLetterWindowsRegionName = "cmt";
-				cultureAndRegionInfoBuilder.ThreeLetterISORegionName = "cmt";
-				cultureAndRegionInfoBuilder.TwoLetterISORegionName = "mc";
-				cultureAndRegionInfoBuilder.RegionEnglishName = "Candy Mountain";
-				cultureAndRegionInfoBuilder.RegionNativeName = "Come inside the cave, Charlie";
-				cultureAndRegionInfoBuilder.NumberFormat.NegativeSign = "++--";
-				cultureAndRegionInfoBuilder.NumberFormat.PositiveSign = "--++";
-				cultureAndRegionInfoBuilder.NumberFormat.NumberDecimalSeparator = ";";
-				cultureAndRegionInfoBuilder.NumberFormat.NumberGroupSeparator = ":";
-				cultureAndRegionInfoBuilder.NumberFormat.NumberGroupSizes = new int[] {2, 3, 4, 5};
-				cultureAndRegionInfoBuilder.NumberFormat.CurrencyDecimalSeparator = ";";
-				cultureAndRegionInfoBuilder.NumberFormat.CurrencyGroupSeparator = ":";
-				cultureAndRegionInfoBuilder.NumberFormat.CurrencyGroupSizes = new int[] {2, 3, 4, 5};
-				cultureAndRegionInfoBuilder.NumberFormat.PercentDecimalSeparator = ";";
-				cultureAndRegionInfoBuilder.NumberFormat.PercentGroupSeparator = ":";
-				cultureAndRegionInfoBuilder.NumberFormat.PercentGroupSizes = new int[] {2, 3, 4, 5};
-				cultureAndRegionInfoBuilder.Register();
-				return new CultureInfo(_cultureName);
+				try
+				{
+					CultureAndRegionInfoBuilder cultureAndRegionInfoBuilder = new CultureAndRegionInfoBuilder(_cultureName, CultureAndRegionModifiers.None);
+					cultureAndRegionInfoBuilder.LoadDataFromCultureInfo(CultureInfo.InvariantCulture);
+					cultureAndRegionInfoBuilder.LoadDataFromRegionInfo(new RegionInfo("US"));
+					cultureAndRegionInfoBuilder.ThreeLetterWindowsRegionName = "cmt";
+					cultureAndRegionInfoBuilder.ThreeLetterISORegionName = "cmt";
+					cultureAndRegionInfoBuilder.TwoLetterISORegionName = "mc";
+					cultureAndRegionInfoBuilder.RegionEnglishName = "Candy Mountain";
+					cultureAndRegionInfoBuilder.RegionNativeName = "Come inside the cave, Charlie";
+					cultureAndRegionInfoBuilder.NumberFormat.NegativeSign = "++--";
+					cultureAndRegionInfoBuilder.NumberFormat.PositiveSign = "--++";
+					cultureAndRegionInfoBuilder.NumberFormat.NumberDecimalSeparator = ";";
+					cultureAndRegionInfoBuilder.NumberFormat.NumberGroupSeparator = ":";
+					cultureAndRegionInfoBuilder.NumberFormat.NumberGroupSizes = new int[] {2, 3, 4, 5};
+					cultureAndRegionInfoBuilder.NumberFormat.CurrencyDecimalSeparator = ";";
+					cultureAndRegionInfoBuilder.NumberFormat.CurrencyGroupSeparator = ":";
+					cultureAndRegionInfoBuilder.NumberFormat.CurrencyGroupSizes = new int[] {2, 3, 4, 5};
+					cultureAndRegionInfoBuilder.NumberFormat.PercentDecimalSeparator = ";";
+					cultureAndRegionInfoBuilder.NumberFormat.PercentGroupSeparator = ":";
+					cultureAndRegionInfoBuilder.NumberFormat.PercentGroupSizes = new int[] {2, 3, 4, 5};
+					cultureAndRegionInfoBuilder.Register();
+					return new CultureInfo(_cultureName);
+				}
+				catch (UnauthorizedAccessException)
+				{
+					Assert.Ignore("Unable to register custom culture definition. You may need to run NUnit as an administrator.");
+					return CultureInfo.InvariantCulture;
+				}
 			}
 		}
 
@@ -818,6 +834,7 @@ namespace ClearCanvas.Dicom.Tests
 		}
 	}
 }
+
 // ReSharper restore InconsistentNaming
 
 #endif

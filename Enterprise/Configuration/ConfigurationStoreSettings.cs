@@ -39,7 +39,6 @@ namespace ClearCanvas.Enterprise.Configuration
 		///</summary>
 		public ConfigurationStoreSettings()
 		{
-			// Note: server-side settings classes do not register in the <see cref="ApplicationSettingsRegistry"/>
 		}
 	}
 }

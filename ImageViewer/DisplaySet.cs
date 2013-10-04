@@ -210,11 +210,7 @@ namespace ClearCanvas.ImageViewer
 			set
 			{
 				Platform.CheckForNullReference(value, "Descriptor");
-				if (_descriptor != null)
-					_descriptor.DisplaySet = null;
-
 				_descriptor = value;
-				_descriptor.DisplaySet = this;
 			}
 		}
 

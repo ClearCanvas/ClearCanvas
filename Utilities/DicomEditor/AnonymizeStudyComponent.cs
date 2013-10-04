@@ -23,15 +23,11 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Reflection;
 using ClearCanvas.Common;
 using ClearCanvas.Desktop;
-using ClearCanvas.Dicom.Iod;
-using ClearCanvas.Dicom.Utilities;
-using ClearCanvas.ImageViewer.StudyManagement;
 using ClearCanvas.Desktop.Validation;
+using ClearCanvas.Dicom.Iod;
 using ClearCanvas.Dicom.Utilities.Anonymization;
 
 namespace ClearCanvas.Utilities.DicomEditor
@@ -40,14 +36,12 @@ namespace ClearCanvas.Utilities.DicomEditor
 	/// Extension point for views onto <see cref="AnonymizeStudyComponent"/>.
 	/// </summary>
 	[ExtensionPoint]
-	public sealed class AnonymizeStudyComponentViewExtensionPoint : ExtensionPoint<IApplicationComponentView>
-	{
-	}
+	public sealed class AnonymizeStudyComponentViewExtensionPoint : ExtensionPoint<IApplicationComponentView> {}
 
 	/// <summary>
 	/// AnonymizeStudyComponent class.
 	/// </summary>
-	[AssociateView(typeof(AnonymizeStudyComponentViewExtensionPoint))]
+	[AssociateView(typeof (AnonymizeStudyComponentViewExtensionPoint))]
 	public class AnonymizeStudyComponent : ApplicationComponent
 	{
 		private class ValidateAnonymizationRule : IValidationRule
@@ -94,29 +88,33 @@ namespace ClearCanvas.Utilities.DicomEditor
 		private readonly StudyData _anonymized;
 		private readonly DicomAnonymizer.ValidationStrategy _validator;
 
+		private bool _keepPrivateTags;
 		private bool _preserveSeriesData;
 		private bool _keepReportsAndAttachments = false;
 
 		internal AnonymizeStudyComponent(IStudyRootData studyItem)
 		{
-		    _original = new StudyData
-		                    {
-		                        AccessionNumber = studyItem.AccessionNumber,
-		                        PatientsName = new PersonName(studyItem.PatientsName),
-		                        PatientId = studyItem.PatientId,
-		                        StudyDescription = studyItem.StudyDescription,
-		                        PatientsBirthDateRaw = studyItem.PatientsBirthDate,
-		                        StudyDateRaw = studyItem.StudyDate
-		                    };
+			_original = new StudyData
+			            	{
+			            		AccessionNumber = studyItem.AccessionNumber,
+			            		PatientsName = new PersonName(studyItem.PatientsName),
+			            		PatientId = studyItem.PatientId,
+			            		StudyDescription = studyItem.StudyDescription,
+			            		PatientsBirthDateRaw = studyItem.PatientsBirthDate,
+			            		StudyDateRaw = studyItem.StudyDate
+			            	};
 
-		    _anonymized = _original.Clone();
+			_anonymized = _original.Clone();
 
 			_validator = new DicomAnonymizer.ValidationStrategy();
+
+			ShowKeepReportsAndAttachments = true;
+			ShowPreserveSeriesData = true;
 		}
 
 		internal StudyData OriginalData
 		{
-			get { return _original; }	
+			get { return _original; }
 		}
 
 		internal StudyData AnonymizedData
@@ -203,6 +201,19 @@ namespace ClearCanvas.Utilities.DicomEditor
 			}
 		}
 
+		public bool KeepPrivateTags
+		{
+			get { return _keepPrivateTags; }
+			set
+			{
+				if (_keepPrivateTags == value)
+					return;
+
+				_keepPrivateTags = value;
+				NotifyPropertyChanged("KeepPrivateTags");
+			}
+		}
+
 		public bool PreserveSeriesData
 		{
 			get { return _preserveSeriesData; }
@@ -215,6 +226,8 @@ namespace ClearCanvas.Utilities.DicomEditor
 				NotifyPropertyChanged("PreserveSeriesDescriptions");
 			}
 		}
+
+		public bool ShowPreserveSeriesData { get; set; }
 
 		public bool KeepReportsAndAttachments
 		{
@@ -231,6 +244,8 @@ namespace ClearCanvas.Utilities.DicomEditor
 				NotifyPropertyChanged("KeepReportsAndAttachments");
 			}
 		}
+
+		public bool ShowKeepReportsAndAttachments { get; set; }
 
 		public override void Start()
 		{
@@ -289,5 +304,5 @@ namespace ClearCanvas.Utilities.DicomEditor
 		{
 			return _validator.GetValidationFailures(_original, _anonymized);
 		}
-	}	
+	}
 }

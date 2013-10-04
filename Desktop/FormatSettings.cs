@@ -32,7 +32,6 @@ namespace ClearCanvas.Desktop
     {
         private FormatSettings()
         {
-			ApplicationSettingsRegistry.Instance.RegisterInstance(this);
         }
     }
 }

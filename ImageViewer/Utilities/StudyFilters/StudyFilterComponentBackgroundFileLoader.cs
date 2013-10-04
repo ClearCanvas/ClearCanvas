@@ -22,6 +22,7 @@
 
 #endregion
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
@@ -66,13 +67,25 @@ namespace ClearCanvas.ImageViewer.Utilities.StudyFilters
 		{
 			public static bool Load(StudyFilterComponent component, IDesktopWindow desktopWindow, bool allowCancel, IEnumerable<string> paths, bool recursive)
 			{
-				bool success = false;
+				BackgroundTaskTerminatedEventArgs evArgs = null;
 
-				BackgroundTask task = new BackgroundTask(LoadWorker, allowCancel, new State(component, paths, recursive));
-				task.Terminated += delegate(object sender, BackgroundTaskTerminatedEventArgs e) { success = e.Reason == BackgroundTaskTerminatedReason.Completed; };
-				ProgressDialog.Show(task, desktopWindow, true, ProgressBarStyle.Continuous);
+				try
+				{
+					using (var task = new BackgroundTask(LoadWorker, allowCancel, new State(component, paths, recursive)))
+					{
+						task.Terminated += (s, e) => evArgs = e;
+						ProgressDialog.Show(task, desktopWindow, true, ProgressBarStyle.Continuous);
+					}
+				}
+				catch (Exception ex)
+				{
+					ExceptionHandler.Report(ex, desktopWindow);
+					return false;
+				}
 
-				return success;
+				if (evArgs.Reason == BackgroundTaskTerminatedReason.Exception && evArgs.Exception != null)
+					ExceptionHandler.Report(evArgs.Exception, desktopWindow);
+				return evArgs.Reason == BackgroundTaskTerminatedReason.Completed;
 			}
 
 			private static void LoadWorker(IBackgroundTaskContext context)
@@ -92,8 +105,16 @@ namespace ClearCanvas.ImageViewer.Utilities.StudyFilters
 				}
 
 				List<string> fileList = new List<string>();
-				foreach (string path in state.Paths)
-					fileList.AddRange(EnumerateFiles(path, state.Recursive));
+				try
+				{
+					foreach (string path in state.Paths)
+						fileList.AddRange(EnumerateFiles(path, state.Recursive));
+				}
+				catch (Exception ex)
+				{
+					context.Error(ex);
+					return;
+				}
 
 				for (int n = 0; n < fileList.Count; n++)
 				{
@@ -103,7 +124,7 @@ namespace ClearCanvas.ImageViewer.Utilities.StudyFilters
 						context.Cancel();
 						return;
 					}
-					state.SynchronizationContext.Send(delegate { state.Component.Load(fileList[n]); }, null);
+					state.SynchronizationContext.Send(i => state.Component.Load(fileList[(int) i]), n);
 				}
 
 				if (context.CancelRequested)

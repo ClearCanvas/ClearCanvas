@@ -39,7 +39,6 @@ namespace ClearCanvas.Desktop.Validation
 
 		private ValidationRulesSettings()
 		{
-			ApplicationSettingsRegistry.Instance.RegisterInstance(this);
 		}
 
 		/// <summary>

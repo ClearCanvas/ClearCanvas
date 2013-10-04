@@ -42,6 +42,7 @@ namespace ClearCanvas.Desktop.View.WinForms
 		private event EventHandler _selectedLocaleChanged;
 		private readonly ComboBox _dropDown;
 		private bool _availableLocalesInitialized;
+		private bool _internalLocalesChanging;
 
 		/// <summary>
 		/// Initializes a new instance of a <see cref="LocalePicker"/>.
@@ -115,14 +116,29 @@ namespace ClearCanvas.Desktop.View.WinForms
 			get { return _dropDown.Items.Cast<InstalledLocales.Locale>().ToList().AsReadOnly(); }
 			set
 			{
-				var selected = _dropDown.SelectedItem;
-				_dropDown.Items.Clear();
-				if(value != null)
+				_internalLocalesChanging = true;
+				try
 				{
-					foreach (var locale in value)
-						_dropDown.Items.Add(locale);
-					_dropDown.SelectedItem = selected;
-					_availableLocalesInitialized = true;
+					var selected = (InstalledLocales.Locale) _dropDown.SelectedItem;
+					_dropDown.Items.Clear();
+					if (value != null)
+					{
+						// update the list
+						foreach (var locale in value)
+							_dropDown.Items.Add(locale);
+
+						// check if previously selected item is still available
+						if (!value.Contains(selected))
+							selected = null;
+
+						// set previously selected item back, or select an appropriate fallback
+						_dropDown.SelectedItem = selected ?? InstalledLocales.Instance.Selected ?? InstalledLocales.Instance.Default;
+						_availableLocalesInitialized = true;
+					}
+				}
+				finally
+				{
+					_internalLocalesChanging = false;
 				}
 			}
 		}
@@ -139,10 +155,10 @@ namespace ClearCanvas.Desktop.View.WinForms
 		[Browsable(false)]
 		public InstalledLocales.Locale SelectedLocale
 		{
-			get { return (InstalledLocales.Locale)_dropDown.SelectedItem; }
+			get { return (InstalledLocales.Locale) _dropDown.SelectedItem; }
 			set
 			{
-				if ((InstalledLocales.Locale)_dropDown.SelectedItem != value)
+				if ((InstalledLocales.Locale) _dropDown.SelectedItem != value)
 					_dropDown.SelectedItem = value;
 			}
 		}
@@ -161,7 +177,6 @@ namespace ClearCanvas.Desktop.View.WinForms
 		{
 			get { return AvailableLocales.Select(x => x.GetCultureInfo()).ToList().AsReadOnly(); }
 		}
-
 
 		/// <summary>
 		/// Gets or sets the culture associated with <see cref="SelectedLocale"/>.
@@ -249,6 +264,8 @@ namespace ClearCanvas.Desktop.View.WinForms
 
 		private void OnSelectedIndexChanged(object sender, EventArgs e)
 		{
+			if (_internalLocalesChanging) return;
+
 			var locale = _dropDown.SelectedItem as InstalledLocales.Locale;
 			if (locale != null)
 				OnSelectedLocaleChanged();

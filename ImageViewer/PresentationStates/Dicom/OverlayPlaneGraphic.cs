@@ -457,21 +457,21 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 				set { _maxInputValue = value; }
 			}
 
-			public override int MinOutputValue
+			public override double MinOutputValue
 			{
 				get { return 0; }
 				protected set { }
 			}
 
-			public override int MaxOutputValue
+            public override double MaxOutputValue
 			{
 				get { return _maxOutputValue; }
 				protected set { }
 			}
 
-			public override int this[double index]
+            public override double this[double index]
 			{
-				get { return (int) Math.Round((index/_maxInputValue)*_presentationValue); }
+				get { return (index/_maxInputValue)*_presentationValue; }
 			}
 
 			public override string GetKey()
@@ -490,7 +490,7 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 		#region Color Map
 
 		[Cloneable(true)]
-		private class GrayscaleColorMap : Imaging.GrayscaleColorMap
+		internal class GrayscaleColorMap : Imaging.GrayscaleColorMap
 		{
 			private readonly ushort _presentationValue;
 
@@ -506,22 +506,21 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 
 			protected override void Create()
 			{
-				Color color;
-
 				int j = 0;
-				float maxGrayLevel = this.Length - 1;
-				float alphaRange = _presentationValue - this.MinInputValue;
+                int min = MinInputValue;
+                int max = MaxInputValue;
+                double maxGrayLevel = this.Length - 1;
+                double alphaRange = _presentationValue - min;
 
-				for (int i = this.MinInputValue; i <= this.MaxInputValue; i++)
+				for (int i = min; i <= max; i++)
 				{
-					float scale = j/maxGrayLevel;
-					float alphaScale = Math.Min(1f, j/alphaRange);
+                    double scale = j / maxGrayLevel;
+                    double alphaScale = Math.Min(1f, j / alphaRange);
 					j++;
 
-					int value = (int) (byte.MaxValue*scale);
-					int alpha = (int) (byte.MaxValue*alphaScale);
-					color = System.Drawing.Color.FromArgb(alpha, value, value, value);
-					this[i] = color.ToArgb();
+                    byte value = (byte)Math.Round(byte.MaxValue * scale);
+                    byte alpha = (byte)Math.Round(byte.MaxValue * alphaScale);
+                    this[i] = alpha << 24 | (value << 16) | (value << 8) | value;
 				}
 			}
 

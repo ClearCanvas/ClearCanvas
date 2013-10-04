@@ -33,7 +33,6 @@ namespace ClearCanvas.Ris.Client.Workflow
     {
 		private ReportingSettings()
         {
-            ApplicationSettingsRegistry.Instance.RegisterInstance(this);
         }
     }
 }

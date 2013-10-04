@@ -39,7 +39,6 @@ namespace ClearCanvas.Ris.Shreds.Merge
 		///</summary>
 		public MergeShredSettings()
 		{
-			// Note: server-side settings classes do not register in the <see cref="ApplicationSettingsRegistry"/>
 		}
 	}
 }

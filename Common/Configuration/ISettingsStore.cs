@@ -45,7 +45,8 @@ namespace ClearCanvas.Common.Configuration
 			IsSupported = _extensionPoint.ListExtensions().Length > 0;
 		}
 
-		public static bool IsSupported { get; private set; }
+        //Setter is internal for unit testing only
+		public static bool IsSupported { get; internal set; }
 
 		public static bool IsStoreOnline
 		{
