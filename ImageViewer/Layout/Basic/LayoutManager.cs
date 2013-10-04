@@ -234,7 +234,7 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
 			private static string GetPresentationIntent(Sop sop)
 			{
 				DicomAttribute attribute;
-				if (sop.DataSource.TryGetAttribute(DicomTags.PresentationIntentType, out attribute))
+				if (sop.TryGetAttribute(DicomTags.PresentationIntentType, out attribute))
 					return (attribute.ToString() ?? string.Empty).ToUpperInvariant();
 				return string.Empty;
 			}

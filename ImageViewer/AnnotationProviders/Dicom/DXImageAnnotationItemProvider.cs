@@ -336,7 +336,7 @@ namespace ClearCanvas.ImageViewer.AnnotationProviders.Dicom
 
 		private static XRay3DReconstructionSequenceItem GetReconstruction(Frame frame)
 		{
-			var reconstructionModule = new XRay3DReconstructionModule(frame.ParentImageSop.DataSource);
+			var reconstructionModule = new XRay3DReconstructionModule(frame.ParentImageSop);
 			if (!reconstructionModule.HasValues()) return null;
 
 			var reconstructionItems = reconstructionModule.XRay3DReconstructionSequence;
@@ -348,7 +348,7 @@ namespace ClearCanvas.ImageViewer.AnnotationProviders.Dicom
 
 		private static IXRay3DAcquisitionSequenceItem[] GetAcquisitions(Frame frame, int[] acquisitionIndices)
 		{
-			var acquisitionModule = new XRay3DAcquisitionModule(frame.ParentImageSop.DataSource);
+			var acquisitionModule = new XRay3DAcquisitionModule(frame.ParentImageSop);
 			if (!acquisitionModule.HasValues()) return null;
 
 			var acquisitionItems = acquisitionModule.XRay3DAcquisitionSequence;

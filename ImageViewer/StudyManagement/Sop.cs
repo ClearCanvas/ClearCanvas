@@ -48,7 +48,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 	/// see <see cref="ISopReference"/>.
 	/// </para>
 	/// </remarks>
-	public partial class Sop : IDisposable, ISopInstanceData, ISeriesData, IStudyData, IPatientData
+	public partial class Sop : IDisposable, IDicomAttributeProvider, ISopInstanceData, ISeriesData, IStudyData, IPatientData
 	{
 		private volatile Series _parentSeries;
 		private ISopDataSource _dataSource;
@@ -1088,14 +1088,16 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 			value = value ?? "";
 		}
 
+		#region IDicomAttributeProvider Implementation
+
 		/// <summary>
-		/// Gets a specific DICOM tag in the underlying native object.
+		/// Gets a specific DICOM attribute in the underlying native object.
 		/// </summary>
 		/// <remarks>
 		/// <see cref="DicomAttribute"/>s returned from this indexer are considered
 		/// read-only and should not be modified in any way.
 		/// </remarks>
-		/// <param name="tag">The DICOM tag to retrieve.</param>
+		/// <param name="tag">The DICOM tag of the attribute to retrieve.</param>
 		/// <exception cref="ArgumentOutOfRangeException">Thrown if the specified DICOM tag is not within the valid range for either the meta info or the dataset.</exception>
 		public virtual DicomAttribute this[DicomTag tag]
 		{
@@ -1103,18 +1105,62 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		}
 
 		/// <summary>
-		/// Gets a specific DICOM tag in the underlying native object.
+		/// Gets a specific DICOM attribute in the underlying native object.
 		/// </summary>
 		/// <remarks>
 		/// <see cref="DicomAttribute"/>s returned from this indexer are considered
 		/// read-only and should not be modified in any way.
 		/// </remarks>
-		/// <param name="tag">The DICOM tag to retrieve.</param>
+		/// <param name="tag">The DICOM tag of the attribute to retrieve.</param>
 		/// <exception cref="ArgumentOutOfRangeException">Thrown if the specified DICOM tag is not within the valid range for either the meta info or the dataset.</exception>
 		public virtual DicomAttribute this[uint tag]
 		{
 			get { return DataSource[tag]; }
 		}
+
+		/// <summary>
+		/// Gets a specific DICOM attribute in the underlying native object.
+		/// </summary>
+		/// <remarks>
+		/// <see cref="DicomAttribute"/>s returned from this indexer are considered
+		/// read-only and should not be modified in any way.
+		/// </remarks>
+		/// <param name="tag">The DICOM tag of the attribute to retrieve.</param>
+		/// <param name="dicomAttribute">Returns the requested <see cref="DicomAttribute"/>.</param>
+		/// <exception cref="ArgumentOutOfRangeException">Thrown if the specified DICOM tag is not within the valid range for either the meta info or the dataset.</exception>
+		public virtual bool TryGetAttribute(DicomTag tag, out DicomAttribute dicomAttribute)
+		{
+			return DataSource.TryGetAttribute(tag, out dicomAttribute);
+		}
+
+		/// <summary>
+		/// Gets a specific DICOM attribute in the underlying native object.
+		/// </summary>
+		/// <remarks>
+		/// <see cref="DicomAttribute"/>s returned from this indexer are considered
+		/// read-only and should not be modified in any way.
+		/// </remarks>
+		/// <param name="tag">The DICOM tag of the attribute to retrieve.</param>
+		/// <param name="dicomAttribute">Returns the requested <see cref="DicomAttribute"/>.</param>
+		/// <exception cref="ArgumentOutOfRangeException">Thrown if the specified DICOM tag is not within the valid range for either the meta info or the dataset.</exception>
+		public virtual bool TryGetAttribute(uint tag, out DicomAttribute dicomAttribute)
+		{
+			return DataSource.TryGetAttribute(tag, out dicomAttribute);
+		}
+
+		DicomAttribute IDicomAttributeProvider.this[DicomTag tag]
+		{
+			get { return this[tag]; }
+			set { throw new InvalidOperationException(); }
+		}
+
+		DicomAttribute IDicomAttributeProvider.this[uint tag]
+		{
+			get { return this[tag]; }
+			set { throw new InvalidOperationException(); }
+		}
+
+		#endregion
 
 		private static void GetUint16FromAttribute(DicomAttribute attribute, uint position, out ushort value)
 		{

@@ -53,7 +53,7 @@ namespace ClearCanvas.ImageViewer.KeyObjects
 		/// </remarks>
 		public KeyImageDeserializer(Sop sourceSop)
 		{
-			_document = new KeyObjectSelectionDocumentIod(sourceSop.DataSource);
+			_document = new KeyObjectSelectionDocumentIod(sourceSop);
 		}
 
 		/// <summary>

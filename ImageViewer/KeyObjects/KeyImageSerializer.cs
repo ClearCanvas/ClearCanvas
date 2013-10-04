@@ -251,7 +251,7 @@ namespace ClearCanvas.ImageViewer.KeyObjects
 					DicomFile keyObjectDocument = new DicomFile();
 					keyObjectDocument.SourceApplicationEntityTitle = this.SourceAETitle;
 					
-					KeyObjectSelectionDocumentIod iod = CreatePrototypeDocument(frame.ParentImageSop.DataSource, keyObjectDocument.DataSet, SpecificCharacterSet);
+					KeyObjectSelectionDocumentIod iod = CreatePrototypeDocument(frame.ParentImageSop, keyObjectDocument.DataSet, SpecificCharacterSet);
 					
 					iod.GeneralEquipment.Manufacturer = this.Manufacturer ?? string.Empty; // this one is type 2 - all other GenEq attributes are type 3
 					iod.GeneralEquipment.ManufacturersModelName = string.IsNullOrEmpty(this.ManufacturersModelName) ? null : this.ManufacturersModelName;

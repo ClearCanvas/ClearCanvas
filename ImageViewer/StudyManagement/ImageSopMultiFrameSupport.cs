@@ -37,37 +37,119 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 
 		public override sealed DicomAttribute this[DicomTag tag]
 		{
-			get { return GetDicomAttribute(-1, tag); }
+			get { return GetFrameAttribute(-1, tag); }
 		}
 
 		public override sealed DicomAttribute this[uint tag]
 		{
-			get { return GetDicomAttribute(-1, tag); }
+			get { return GetFrameAttribute(-1, tag); }
 		}
 
-		public virtual DicomAttribute GetDicomAttribute(int frameNumber, DicomTag tag)
+		public override sealed bool TryGetAttribute(DicomTag tag, out DicomAttribute dicomAttribute)
 		{
-			return GetMultiFrameDicomAttribute(frameNumber, tag) ?? base[tag];
+			return TryGetFrameAttribute(-1, tag, out dicomAttribute);
 		}
 
-		public virtual DicomAttribute GetDicomAttribute(int frameNumber, uint tag)
+		public override sealed bool TryGetAttribute(uint tag, out DicomAttribute dicomAttribute)
 		{
-			return GetMultiFrameDicomAttribute(frameNumber, tag) ?? base[tag];
+			return TryGetFrameAttribute(-1, tag, out dicomAttribute);
 		}
 
-		public virtual bool TryGetDicomAttribute(int frameNumber, DicomTag tag, out DicomAttribute dicomAttribute)
+		/// <summary>
+		/// Gets a specific DICOM attribute for the specified frame.
+		/// </summary>
+		/// <remarks>
+		/// <see cref="DicomAttribute"/>s returned by this method should be considered
+		/// read-only and should not be modified in any way.
+		/// </remarks>
+		/// <param name="frameNumber">The number of the frame for which the attribute is to be retrieved (1-based index).</param>
+		/// <param name="tag">The DICOM tag to retrieve.</param>
+		/// <returns>Returns the requested <see cref="DicomAttribute"/>.</returns>
+		public virtual DicomAttribute GetFrameAttribute(int frameNumber, DicomTag tag)
 		{
-			dicomAttribute = GetMultiFrameDicomAttribute(frameNumber, tag);
+			return GetFrameAttributeCore(frameNumber, tag) ?? base[tag];
+		}
+
+		/// <summary>
+		/// Gets a specific DICOM attribute for the specified frame.
+		/// </summary>
+		/// <remarks>
+		/// <see cref="DicomAttribute"/>s returned by this method should be considered
+		/// read-only and should not be modified in any way.
+		/// </remarks>
+		/// <param name="frameNumber">The number of the frame for which the attribute is to be retrieved (1-based index).</param>
+		/// <param name="tag">The DICOM tag to retrieve.</param>
+		/// <returns>Returns the requested <see cref="DicomAttribute"/>.</returns>
+		public virtual DicomAttribute GetFrameAttribute(int frameNumber, uint tag)
+		{
+			return GetFrameAttributeCore(frameNumber, tag) ?? base[tag];
+		}
+
+		/// <summary>
+		/// Gets a specific DICOM attribute for the specified frame.
+		/// </summary>
+		/// <remarks>
+		/// <see cref="DicomAttribute"/>s returned by this method should be considered
+		/// read-only and should not be modified in any way.
+		/// </remarks>
+		/// <param name="frameNumber">The number of the frame for which the attribute is to be retrieved (1-based index).</param>
+		/// <param name="tag">The DICOM tag to retrieve.</param>
+		/// <param name="dicomAttribute">Returns the requested <see cref="DicomAttribute"/>, or NULL if it was not found.</param>
+		/// <returns>Returns TRUE if the requested attribute was found; FALSE otherwise.</returns>
+		public virtual bool TryGetFrameAttribute(int frameNumber, DicomTag tag, out DicomAttribute dicomAttribute)
+		{
+			dicomAttribute = GetFrameAttributeCore(frameNumber, tag);
 			return dicomAttribute != null || DataSource.TryGetAttribute(tag, out dicomAttribute);
 		}
 
-		public virtual bool TryGetDicomAttribute(int frameNumber, uint tag, out DicomAttribute dicomAttribute)
+		/// <summary>
+		/// Gets a specific DICOM attribute for the specified frame.
+		/// </summary>
+		/// <remarks>
+		/// <see cref="DicomAttribute"/>s returned by this method should be considered
+		/// read-only and should not be modified in any way.
+		/// </remarks>
+		/// <param name="frameNumber">The number of the frame for which the attribute is to be retrieved (1-based index).</param>
+		/// <param name="tag">The DICOM tag to retrieve.</param>
+		/// <param name="dicomAttribute">Returns the requested <see cref="DicomAttribute"/>, or NULL if it was not found.</param>
+		/// <returns>Returns TRUE if the requested attribute was found; FALSE otherwise.</returns>
+		public virtual bool TryGetFrameAttribute(int frameNumber, uint tag, out DicomAttribute dicomAttribute)
 		{
-			dicomAttribute = GetMultiFrameDicomAttribute(frameNumber, tag);
+			dicomAttribute = GetFrameAttributeCore(frameNumber, tag);
 			return dicomAttribute != null || DataSource.TryGetAttribute(tag, out dicomAttribute);
 		}
 
-		private DicomAttribute GetMultiFrameDicomAttribute(int frameNumber, DicomTag tag)
+		/// <summary>
+		/// Gets the Dimension Index Value of a specific dimension for the specified frame.
+		/// </summary>
+		/// <remarks>
+		/// The Dimension Index Value is a number associated with a specific frame in a multi-frame image
+		/// that identifies its sequential order relative to the other frames in a particular dimension.
+		/// The dimension is identified by the DICOM tag which has the value of the frame in this dimension,
+		/// and the DICOM tag of the parent functional group sequence.
+		/// </remarks>
+		/// <param name="frameNumber">The number of the frame for which the index value is to be retrieved (1-based index).</param>
+		/// <param name="dimensionIndexTag">The DICOM tag of the dimension to retrieve (i.e. the Dimension Index Pointer).</param>
+		/// <param name="functionalGroupTag">The DICOM tag of the parent functional group sequence (i.e. the Functional Group Pointer).</param>
+		/// <returns>The index value of the frame in the specified dimension, or NULL if the image is not a multi-frame or does not contain the specified dimension.</returns>
+		public int? GetFrameDimensionIndexValue(int frameNumber, uint dimensionIndexTag, uint functionalGroupTag)
+		{
+			if (frameNumber > 0 && IsMultiframe)
+			{
+				DimensionIndexSequenceItem dimension;
+				var dimensionIndex = new MultiFrameDimensionModuleIod(DataSource).FindDimensionIndexSequenceItemByTag(dimensionIndexTag, functionalGroupTag, out dimension);
+				if (dimensionIndex >= 0)
+				{
+					int dimensionIndexValue;
+					var dicomAttribute = GetFrameAttributeCore(frameNumber, DicomTags.DimensionIndexValues);
+					if (dicomAttribute != null && dicomAttribute.TryGetInt32(dimensionIndex, out dimensionIndexValue))
+						return dimensionIndexValue;
+				}
+			}
+			return null;
+		}
+
+		private DicomAttribute GetFrameAttributeCore(int frameNumber, DicomTag tag)
 		{
 			FunctionalGroupDescriptor functionalGroupDescriptor;
 			if (frameNumber > 0 && _functionalGroups != null && _functionalGroups.TryGetValue(tag.TagValue, out functionalGroupDescriptor))
@@ -80,7 +162,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 			return null;
 		}
 
-		private DicomAttribute GetMultiFrameDicomAttribute(int frameNumber, uint tag)
+		private DicomAttribute GetFrameAttributeCore(int frameNumber, uint tag)
 		{
 			FunctionalGroupDescriptor functionalGroupDescriptor;
 			if (frameNumber > 0 && _functionalGroups != null && _functionalGroups.TryGetValue(tag, out functionalGroupDescriptor))
@@ -102,6 +184,11 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 
 		private readonly Dictionary<VoiDataLutsCacheKey, IList<VoiDataLut>> _frameVoiDataLuts = new Dictionary<VoiDataLutsCacheKey, IList<VoiDataLut>>();
 
+		/// <summary>
+		/// Gets the VOI data LUTs for specified frame.
+		/// </summary>
+		/// <param name="frameNumber"></param>
+		/// <returns></returns>
 		internal IList<VoiDataLut> GetFrameVoiDataLuts(int frameNumber)
 		{
 			Platform.CheckPositive(frameNumber, "frameNumber");

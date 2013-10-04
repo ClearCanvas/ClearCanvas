@@ -139,7 +139,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		{
 			get
 			{
-				var patientOrientation = _parentImageSop.GetDicomAttribute(_frameNumber, DicomTags.PatientOrientation).ToString();
+				var patientOrientation = _parentImageSop.GetFrameAttribute(_frameNumber, DicomTags.PatientOrientation).ToString();
 				return PatientOrientation.FromString(patientOrientation, _parentImageSop.AnatomicalOrientationType) ?? ImageOrientationPatient.ToPatientOrientation();
 			}
 		}
@@ -158,9 +158,9 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 			get
 			{
 				DicomAttribute dicomAttribute;
-				if (_parentImageSop.TryGetDicomAttribute(_frameNumber, DicomTags.FrameType, out dicomAttribute) && !dicomAttribute.IsEmpty)
+				if (_parentImageSop.TryGetFrameAttribute(_frameNumber, DicomTags.FrameType, out dicomAttribute) && !dicomAttribute.IsEmpty)
 					return dicomAttribute.ToString();
-				return _parentImageSop.GetDicomAttribute(_frameNumber, DicomTags.ImageType).ToString();
+				return _parentImageSop.GetFrameAttribute(_frameNumber, DicomTags.ImageType).ToString();
 			}
 		}
 
@@ -178,9 +178,9 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 			get
 			{
 				DicomAttribute dicomAttribute;
-				if (_parentImageSop.TryGetDicomAttribute(_frameNumber, DicomTags.FrameAcquisitionNumber, out dicomAttribute) && !dicomAttribute.IsEmpty)
+				if (_parentImageSop.TryGetFrameAttribute(_frameNumber, DicomTags.FrameAcquisitionNumber, out dicomAttribute) && !dicomAttribute.IsEmpty)
 					return dicomAttribute.GetInt32(0, 0);
-				return _parentImageSop.GetDicomAttribute(_frameNumber, DicomTags.AcquisitionNumber).GetInt32(0, 0);
+				return _parentImageSop.GetFrameAttribute(_frameNumber, DicomTags.AcquisitionNumber).GetInt32(0, 0);
 			}
 		}
 
@@ -199,7 +199,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 			get
 			{
 				DicomAttribute dicomAttribute;
-				if (_parentImageSop.TryGetDicomAttribute(_frameNumber, DicomTags.FrameAcquisitionDatetime, out dicomAttribute) && !dicomAttribute.IsEmpty)
+				if (_parentImageSop.TryGetFrameAttribute(_frameNumber, DicomTags.FrameAcquisitionDatetime, out dicomAttribute) && !dicomAttribute.IsEmpty)
 					return DateTimeParser.GetDateAttributeValues(dicomAttribute.GetString(0, string.Empty));
 				return DateTimeParser.GetDateAttributeValues(this, DicomTags.AcquisitionDatetime, DicomTags.AcquisitionDate);
 			}
@@ -220,7 +220,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 			get
 			{
 				DicomAttribute dicomAttribute;
-				if (_parentImageSop.TryGetDicomAttribute(_frameNumber, DicomTags.FrameAcquisitionDatetime, out dicomAttribute) && !dicomAttribute.IsEmpty)
+				if (_parentImageSop.TryGetFrameAttribute(_frameNumber, DicomTags.FrameAcquisitionDatetime, out dicomAttribute) && !dicomAttribute.IsEmpty)
 					return DateTimeParser.GetTimeAttributeValues(dicomAttribute.GetString(0, string.Empty));
 				return DateTimeParser.GetTimeAttributeValues(this, DicomTags.AcquisitionDatetime, DicomTags.AcquisitionTime);
 			}
@@ -242,7 +242,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 			get
 			{
 				DicomAttribute dicomAttribute;
-				if (_parentImageSop.TryGetDicomAttribute(_frameNumber, DicomTags.FrameAcquisitionDatetime, out dicomAttribute) && !dicomAttribute.IsEmpty)
+				if (_parentImageSop.TryGetFrameAttribute(_frameNumber, DicomTags.FrameAcquisitionDatetime, out dicomAttribute) && !dicomAttribute.IsEmpty)
 					return dicomAttribute.GetString(0, string.Empty);
 				return DateTimeParser.GetDateTimeAttributeValues(this, DicomTags.AcquisitionDatetime, DicomTags.AcquisitionDate, DicomTags.AcquisitionTime);
 			}
@@ -253,7 +253,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		/// </summary>
 		public virtual int ImagesInAcquisition
 		{
-			get { return _parentImageSop.GetDicomAttribute(_frameNumber, DicomTags.ImagesInAcquisition).GetInt32(0, 0); }
+			get { return _parentImageSop.GetFrameAttribute(_frameNumber, DicomTags.ImagesInAcquisition).GetInt32(0, 0); }
 		}
 
 		/// <summary>
@@ -270,9 +270,9 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 			get
 			{
 				DicomAttribute dicomAttribute;
-				if (_parentImageSop.TryGetDicomAttribute(_frameNumber, DicomTags.FrameComments, out dicomAttribute) && !dicomAttribute.IsEmpty)
+				if (_parentImageSop.TryGetFrameAttribute(_frameNumber, DicomTags.FrameComments, out dicomAttribute) && !dicomAttribute.IsEmpty)
 					return dicomAttribute.ToString();
-				return _parentImageSop.GetDicomAttribute(_frameNumber, DicomTags.ImageComments).ToString();
+				return _parentImageSop.GetFrameAttribute(_frameNumber, DicomTags.ImageComments).ToString();
 			}
 		}
 
@@ -281,7 +281,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		/// </summary>
 		public virtual string LossyImageCompression
 		{
-			get { return _parentImageSop.GetDicomAttribute(_frameNumber, DicomTags.LossyImageCompression).GetString(0, null) ?? string.Empty; }
+			get { return _parentImageSop.GetFrameAttribute(_frameNumber, DicomTags.LossyImageCompression).GetString(0, null) ?? string.Empty; }
 		}
 
 		/// <summary>
@@ -294,7 +294,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		{
 			get
 			{
-				var lossyImageCompressionRatios = _parentImageSop.GetDicomAttribute(_frameNumber, DicomTags.LossyImageCompressionRatio).ToString();
+				var lossyImageCompressionRatios = _parentImageSop.GetFrameAttribute(_frameNumber, DicomTags.LossyImageCompressionRatio).ToString();
 
 				double[] values;
 				DicomStringHelper.TryGetDoubleArray(lossyImageCompressionRatios, out values);
@@ -318,7 +318,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		{
 			get
 			{
-				var pixelSpacing = _parentImageSop.GetDicomAttribute(_frameNumber, DicomTags.PixelSpacing).ToString();
+				var pixelSpacing = _parentImageSop.GetFrameAttribute(_frameNumber, DicomTags.PixelSpacing).ToString();
 				return PixelSpacing.FromString(pixelSpacing) ?? PixelSpacing.Zero;
 			}
 		}
@@ -335,7 +335,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		{
 			get
 			{
-				var imageOrientationPatient = _parentImageSop.GetDicomAttribute(_frameNumber, DicomTags.ImageOrientationPatient).ToString();
+				var imageOrientationPatient = _parentImageSop.GetFrameAttribute(_frameNumber, DicomTags.ImageOrientationPatient).ToString();
 				return ImageOrientationPatient.FromString(imageOrientationPatient) ?? new ImageOrientationPatient(0, 0, 0, 0, 0, 0);
 			}
 		}
@@ -351,7 +351,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		{
 			get
 			{
-				var imagePositionPatient = _parentImageSop.GetDicomAttribute(_frameNumber, DicomTags.ImagePositionPatient).ToString();
+				var imagePositionPatient = _parentImageSop.GetFrameAttribute(_frameNumber, DicomTags.ImagePositionPatient).ToString();
 				return ImagePositionPatient.FromString(imagePositionPatient) ?? new ImagePositionPatient(0, 0, 0);
 			}
 		}
@@ -361,7 +361,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		/// </summary>
 		public virtual double SliceThickness
 		{
-			get { return _parentImageSop.GetDicomAttribute(_frameNumber, DicomTags.SliceThickness).GetFloat64(0, 0); }
+			get { return _parentImageSop.GetFrameAttribute(_frameNumber, DicomTags.SliceThickness).GetFloat64(0, 0); }
 		}
 
 		/// <summary>
@@ -369,7 +369,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		/// </summary>
 		public virtual double SliceLocation
 		{
-			get { return _parentImageSop.GetDicomAttribute(_frameNumber, DicomTags.SliceLocation).GetFloat64(0, 0); }
+			get { return _parentImageSop.GetFrameAttribute(_frameNumber, DicomTags.SliceLocation).GetFloat64(0, 0); }
 		}
 
 		#endregion
@@ -388,7 +388,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		{
 			get
 			{
-				var imagerPixelSpacing = _parentImageSop.GetDicomAttribute(_frameNumber, DicomTags.ImagerPixelSpacing).ToString();
+				var imagerPixelSpacing = _parentImageSop.GetFrameAttribute(_frameNumber, DicomTags.ImagerPixelSpacing).ToString();
 				return PixelSpacing.FromString(imagerPixelSpacing) ?? PixelSpacing.Zero;
 			}
 		}
@@ -480,7 +480,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		{
 			get
 			{
-				var pixelAspectRatio = _parentImageSop.GetDicomAttribute(_frameNumber, DicomTags.PixelAspectRatio).ToString();
+				var pixelAspectRatio = _parentImageSop.GetFrameAttribute(_frameNumber, DicomTags.PixelAspectRatio).ToString();
 				return PixelAspectRatio.FromString(pixelAspectRatio) ?? new PixelAspectRatio(0, 0);
 			}
 		}
@@ -494,7 +494,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		/// </summary>
 		public virtual double RescaleIntercept
 		{
-			get { return _parentImageSop.GetDicomAttribute(_frameNumber, DicomTags.RescaleIntercept).GetFloat64(0, 0); }
+			get { return _parentImageSop.GetFrameAttribute(_frameNumber, DicomTags.RescaleIntercept).GetFloat64(0, 0); }
 		}
 
 		/// <summary>
@@ -508,7 +508,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 			get
 			{
 				// ReSharper disable CompareOfFloatsByEqualityOperator
-				var rescaleSlope = _parentImageSop.GetDicomAttribute(_frameNumber, DicomTags.RescaleSlope).GetFloat64(0, 1);
+				var rescaleSlope = _parentImageSop.GetFrameAttribute(_frameNumber, DicomTags.RescaleSlope).GetFloat64(0, 1);
 				return rescaleSlope == 0.0 ? 1.0 : rescaleSlope;
 				// ReSharper restore CompareOfFloatsByEqualityOperator
 			}
@@ -519,7 +519,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		/// </summary>
 		public virtual string RescaleType
 		{
-			get { return _parentImageSop.GetDicomAttribute(_frameNumber, DicomTags.RescaleType).GetString(0, null) ?? string.Empty; }
+			get { return _parentImageSop.GetFrameAttribute(_frameNumber, DicomTags.RescaleType).GetString(0, null) ?? string.Empty; }
 		}
 
 		/// <summary>
@@ -583,7 +583,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		/// <seealso cref="VoiWindows"/>
 		public virtual string[] WindowCenterAndWidthExplanation
 		{
-			get { return DicomStringHelper.GetStringArray(_parentImageSop.GetDicomAttribute(_frameNumber, DicomTags.WindowCenterWidthExplanation).ToString()); }
+			get { return DicomStringHelper.GetStringArray(_parentImageSop.GetFrameAttribute(_frameNumber, DicomTags.WindowCenterWidthExplanation).ToString()); }
 		}
 
 		#endregion
@@ -595,7 +595,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		/// </summary>
 		public virtual string FrameOfReferenceUid
 		{
-			get { return _parentImageSop.GetDicomAttribute(_frameNumber, DicomTags.FrameOfReferenceUid).GetString(0, null) ?? string.Empty; }
+			get { return _parentImageSop.GetFrameAttribute(_frameNumber, DicomTags.FrameOfReferenceUid).GetString(0, null) ?? string.Empty; }
 		}
 
 		#endregion
@@ -611,11 +611,11 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 			{
 				string laterality;
 				DicomAttribute dicomAttribute;
-				if (_parentImageSop.TryGetDicomAttribute(_frameNumber, DicomTags.FrameLaterality, out dicomAttribute) && dicomAttribute.TryGetString(0, out laterality))
+				if (_parentImageSop.TryGetFrameAttribute(_frameNumber, DicomTags.FrameLaterality, out dicomAttribute) && dicomAttribute.TryGetString(0, out laterality))
 					return laterality;
-				if (_parentImageSop.TryGetDicomAttribute(_frameNumber, DicomTags.ImageLaterality, out dicomAttribute) && dicomAttribute.TryGetString(0, out laterality))
+				if (_parentImageSop.TryGetFrameAttribute(_frameNumber, DicomTags.ImageLaterality, out dicomAttribute) && dicomAttribute.TryGetString(0, out laterality))
 					return laterality;
-				if (_parentImageSop.TryGetDicomAttribute(0, DicomTags.ImageLaterality, out dicomAttribute) && dicomAttribute.TryGetString(0, out laterality))
+				if (_parentImageSop.TryGetFrameAttribute(0, DicomTags.ImageLaterality, out dicomAttribute) && dicomAttribute.TryGetString(0, out laterality))
 					return laterality;
 				return string.Empty;
 			}
@@ -626,7 +626,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		/// </summary>
 		public virtual string ViewPosition
 		{
-			get { return _parentImageSop.GetDicomAttribute(_frameNumber, DicomTags.ViewPosition).GetString(0, null) ?? string.Empty; }
+			get { return _parentImageSop.GetFrameAttribute(_frameNumber, DicomTags.ViewPosition).GetString(0, null) ?? string.Empty; }
 		}
 
 		/// <summary>
@@ -634,19 +634,66 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		/// </summary>
 		public virtual double SpacingBetweenSlices
 		{
-			get { return _parentImageSop.GetDicomAttribute(_frameNumber, DicomTags.SpacingBetweenSlices).GetFloat64(0, 0); }
+			get { return _parentImageSop.GetFrameAttribute(_frameNumber, DicomTags.SpacingBetweenSlices).GetFloat64(0, 0); }
+		}
+
+		/// <summary>
+		/// Gets the MR echo number of the frame.
+		/// </summary>
+		/// <remarks>
+		/// For single-frame MR images, this is the value of the <see cref="DicomTags.EchoNumbers"/> attribute.
+		/// For multi-frame MR images, this is the index value in the dimension identified by the <see cref="DicomTags.EffectiveEchoTime"/> tag.
+		/// For all other image, the value of this property is not defined.
+		/// </remarks>
+		public virtual int EchoNumber
+		{
+			get
+			{
+				return _parentImageSop.GetFrameDimensionIndexValue(_frameNumber, DicomTags.EffectiveEchoTime, DicomTags.MrEchoSequence)
+				       ?? _parentImageSop.GetFrameAttribute(_frameNumber, DicomTags.EchoNumbers).GetInt32(0, 0);
+			}
+		}
+
+		/// <summary>
+		/// Gets the stack number of the frame.
+		/// </summary>
+		/// <remarks>
+		/// For multi-frame images, this is the index value in the dimension identified by the <see cref="DicomTags.StackId"/> tag.
+		/// For all other image, the value of this property is not defined.
+		/// </remarks>
+		public virtual int StackNumber
+		{
+			get { return _parentImageSop.GetFrameDimensionIndexValue(_frameNumber, DicomTags.StackId, DicomTags.FrameContentSequence).GetValueOrDefault(0); }
 		}
 
 		#endregion
 
+		/// <summary>
+		/// Gets a specific DICOM attribute for this frame.
+		/// </summary>
+		/// <remarks>
+		/// <see cref="DicomAttribute"/>s returned by this method should be considered
+		/// read-only and should not be modified in any way.
+		/// </remarks>
+		/// <param name="dicomTag">The DICOM tag to retrieve.</param>
+		/// <returns>Returns the requested <see cref="DicomAttribute"/>.</returns>
 		public DicomAttribute this[DicomTag dicomTag]
 		{
-			get { return _parentImageSop.GetDicomAttribute(_frameNumber, dicomTag); }
+			get { return _parentImageSop.GetFrameAttribute(_frameNumber, dicomTag); }
 		}
 
+		/// <summary>
+		/// Gets a specific DICOM attribute for this frame.
+		/// </summary>
+		/// <remarks>
+		/// <see cref="DicomAttribute"/>s returned by this method should be considered
+		/// read-only and should not be modified in any way.
+		/// </remarks>
+		/// <param name="dicomTag">The DICOM tag to retrieve.</param>
+		/// <returns>Returns the requested <see cref="DicomAttribute"/>.</returns>
 		public DicomAttribute this[uint dicomTag]
 		{
-			get { return _parentImageSop.GetDicomAttribute(_frameNumber, dicomTag); }
+			get { return _parentImageSop.GetFrameAttribute(_frameNumber, dicomTag); }
 		}
 
 		/// <summary>
@@ -805,12 +852,12 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 
 		bool IDicomAttributeProvider.TryGetAttribute(DicomTag dicomTag, out DicomAttribute dicomAttribute)
 		{
-			return _parentImageSop.TryGetDicomAttribute(_frameNumber, dicomTag, out dicomAttribute);
+			return _parentImageSop.TryGetFrameAttribute(_frameNumber, dicomTag, out dicomAttribute);
 		}
 
 		bool IDicomAttributeProvider.TryGetAttribute(uint dicomTag, out DicomAttribute dicomAttribute)
 		{
-			return _parentImageSop.TryGetDicomAttribute(_frameNumber, dicomTag, out dicomAttribute);
+			return _parentImageSop.TryGetFrameAttribute(_frameNumber, dicomTag, out dicomAttribute);
 		}
 
 		#endregion

@@ -146,7 +146,7 @@ namespace ClearCanvas.ImageViewer
 				return CreateImages((ImageSop)sop);
 			
 			if (sop.SopClassUid == SopClass.KeyObjectSelectionDocumentStorageUid)
-				return CreateImages(new KeyObjectSelectionDocumentIod(sop.DataSource));
+				return CreateImages(new KeyObjectSelectionDocumentIod(sop));
 
 			return new List<IPresentationImage>();
 		}
@@ -218,7 +218,7 @@ namespace ClearCanvas.ImageViewer
 							try
 							{
 								IPresentationStateProvider presentationStateProvider = (IPresentationStateProvider)image;
-								presentationStateProvider.PresentationState = DicomSoftcopyPresentationState.Load(presentationStateSop.DataSource);
+								presentationStateProvider.PresentationState = DicomSoftcopyPresentationState.Load(presentationStateSop);
 							}
 							catch (Exception ex)
 							{

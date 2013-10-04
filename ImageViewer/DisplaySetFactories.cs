@@ -476,7 +476,7 @@ namespace ClearCanvas.ImageViewer
 
 					// try to find the echo dimension from the multiframe
 					DimensionIndexSequenceItem dimension;
-					var echoDimensionIndex = new MultiFrameDimensionModuleIod(sop.DataSource).FindDimensionIndexSequenceItemByTag(DicomTags.EffectiveEchoTime, DicomTags.MrEchoSequence, out dimension);
+					var echoDimensionIndex = new MultiFrameDimensionModuleIod(sop).FindDimensionIndexSequenceItemByTag(DicomTags.EffectiveEchoTime, DicomTags.MrEchoSequence, out dimension);
 					if (echoDimensionIndex >= 0)
 					{
 						// get the UID that identifies this dimension organization 
