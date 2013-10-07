@@ -29,7 +29,6 @@ using System.Linq;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Dicom;
-using ClearCanvas.Dicom.Iod.Modules;
 using ClearCanvas.Dicom.ServiceModel.Query;
 using ClearCanvas.ImageViewer.Annotations;
 using ClearCanvas.ImageViewer.Graphics;
@@ -368,13 +367,16 @@ namespace ClearCanvas.ImageViewer
 	{
 		private readonly string _suffix;
 
-		public MREchoDisplaySetDescriptor(ISeriesIdentifier sourceSeries, int echoNumber, IPresentationImageFactory presentationImageFactory)
+		public MREchoDisplaySetDescriptor(ISeriesIdentifier sourceSeries, int echoNumber, int? stackNumber, IPresentationImageFactory presentationImageFactory)
 			: base(sourceSeries, presentationImageFactory)
 		{
 			Platform.CheckForNullReference(sourceSeries, "sourceSeries");
 
 			EchoNumber = echoNumber;
+			StackNumber = stackNumber;
+
 			_suffix = String.Format(SR.SuffixFormatMREchoDisplaySet, echoNumber);
+			if (stackNumber.HasValue) _suffix = string.Concat(_suffix, @" ", String.Format(SR.SuffixFormatMultiframeStackDisplaySet, stackNumber.Value));
 		}
 
 		protected MREchoDisplaySetDescriptor(MREchoDisplaySetDescriptor source, ICloningContext context)
@@ -384,6 +386,7 @@ namespace ClearCanvas.ImageViewer
 		}
 
 		public int EchoNumber { get; private set; }
+		public int? StackNumber { get; private set; }
 
 		protected override string GetName()
 		{
@@ -403,7 +406,10 @@ namespace ClearCanvas.ImageViewer
 
 		protected override string GetUid()
 		{
-			return String.Format("{0}:Echo{1}", SourceSeries.SeriesInstanceUid, EchoNumber);
+			if (StackNumber.HasValue)
+				return String.Format("{0}:Echo{1}:Stack{2}", SourceSeries.SeriesInstanceUid, EchoNumber, StackNumber.Value);
+			else
+				return String.Format("{0}:Echo{1}", SourceSeries.SeriesInstanceUid, EchoNumber);
 		}
 	}
 
@@ -426,6 +432,11 @@ namespace ClearCanvas.ImageViewer
 			: base(presentationImageFactory) {}
 
 		/// <summary>
+		/// Gets or sets whether or not to split by multiframe stack as well as echo.
+		/// </summary>
+		public bool SplitStacks { get; set; }
+
+		/// <summary>
 		/// Creates zero or more <see cref="IDisplaySet"/>s from the given <see cref="Series"/>.
 		/// </summary>
 		/// <remarks>
@@ -442,12 +453,12 @@ namespace ClearCanvas.ImageViewer
 
 				if (imagesByEchoNumber.Count > 1)
 				{
-					foreach (KeyValuePair<int, List<IPresentationImage>> echoImages in imagesByEchoNumber)
+					foreach (var echoImages in imagesByEchoNumber)
 					{
 						var images = echoImages.Value;
 						if (images.Count > 0)
 						{
-							IDisplaySet displaySet = new DisplaySet(new MREchoDisplaySetDescriptor(series.GetIdentifier(), echoImages.Key, PresentationImageFactory));
+							IDisplaySet displaySet = new DisplaySet(new MREchoDisplaySetDescriptor(series.GetIdentifier(), echoImages.Key.EchoIndexValue, echoImages.Key.StackIndexValue, PresentationImageFactory));
 							foreach (IPresentationImage image in images)
 								displaySet.PresentationImages.Add(image);
 
@@ -461,7 +472,7 @@ namespace ClearCanvas.ImageViewer
 			return displaySets;
 		}
 
-		private IList<KeyValuePair<int, List<IPresentationImage>>> SplitMREchos(IEnumerable<Sop> sops)
+		private IList<KeyValuePair<EchoIndex, List<IPresentationImage>>> SplitMREchos(IEnumerable<Sop> sops)
 		{
 			// keep separate echo lists in case series is mixed single/multi frames
 			// unless their dimension uid also matches, echo dimension indices should not be mixed between sop intances (see DICOM 2011 PS 3.3 C.7.6.17.2)
@@ -472,25 +483,11 @@ namespace ClearCanvas.ImageViewer
 			{
 				if (sop.IsMultiframe)
 				{
-					var echoDimensionUid = string.Empty;
-
-					// try to find the echo dimension from the multiframe
-					DimensionIndexSequenceItem dimension;
-					var echoDimensionIndex = new MultiFrameDimensionModuleIod(sop).FindDimensionIndexSequenceItemByTag(DicomTags.EffectiveEchoTime, DicomTags.MrEchoSequence, out dimension);
-					if (echoDimensionIndex >= 0)
-					{
-						// get the UID that identifies this dimension organization 
-						echoDimensionUid = dimension.DimensionOrganizationUid;
-					}
-
-					// if dimension organization UID is blank, assign one so that the index is effectively unique to this SOP instance only
-					if (string.IsNullOrWhiteSpace(echoDimensionUid)) echoDimensionUid = DicomUid.GenerateUid().UID;
-
 					foreach (var image in PresentationImageFactory.CreateImages(sop))
 					{
-						// key the echo stacks by dimension uid and the value of the echo dimension index
-						// if no dimension index was found, use a constant so that all frames from the same SOP effectively form their own 'echo'
-						var echoIndex = new EchoIndex(echoDimensionUid, echoDimensionIndex >= 0 ? ((IImageSopProvider) image).Frame[DicomTags.DimensionIndexValues].GetInt32(echoDimensionIndex, -1) : -1);
+						// key the display sets by echo and stack within the multiframe instance
+						var frame = ((IImageSopProvider) image).Frame;
+						var echoIndex = new EchoIndex(sop.SopInstanceUid, frame.EchoNumber, SplitStacks ? (int?) frame.StackNumber : null);
 						if (!imagesByEchoDimension.ContainsKey(echoIndex))
 							imagesByEchoDimension[echoIndex] = new List<IPresentationImage>();
 						imagesByEchoDimension[echoIndex].Add(image);
@@ -510,7 +507,7 @@ namespace ClearCanvas.ImageViewer
 				}
 			}
 
-			var results = imagesByEchoNumber.ToList();
+			var results = imagesByEchoNumber.Select(k => new KeyValuePair<EchoIndex, List<IPresentationImage>>(new EchoIndex(k.Key), k.Value)).ToList();
 
 			// if we have some multiframes processed into separate echos, append them to the main list
 			if (imagesByEchoDimension.Count > 0)
@@ -518,9 +515,9 @@ namespace ClearCanvas.ImageViewer
 				// make sure we number them in a logical order - since the multiframe echo indices don't have any meaning outside the SOP instance in which it was used,
 				// we'll sort by the first instance number in which the index was used, then order by the actual index value
 				results.AddRange(imagesByEchoDimension
-				                 	.Select(k => new KeyValuePair<int, List<IPresentationImage>>(k.Key.EchoIndexValue, k.Value))
 				                 	.OrderBy(k => k.Value.Select(i => ((IImageSopProvider) i).ImageSop.InstanceNumber).Min())
-				                 	.ThenBy(k => k.Key));
+				                 	.ThenBy(k => k.Key.EchoIndexValue)
+				                 	.ThenBy(k => k.Key.StackIndexValue.GetValueOrDefault(-1)));
 			}
 
 			return results;
@@ -530,11 +527,16 @@ namespace ClearCanvas.ImageViewer
 		{
 			private readonly string _dimensionOrganizationUid;
 			private readonly int _echoIndexValue;
+			private readonly int? _stackIndexValue;
 
-			public EchoIndex(string dimensionOrganizationUid, int echoIndexValue)
+			public EchoIndex(int echoNumber)
+				: this(null, echoNumber, null) {}
+
+			public EchoIndex(string dimensionOrganizationUid, int echoIndexValue, int? stackIndexValue)
 			{
-				_dimensionOrganizationUid = dimensionOrganizationUid;
+				_dimensionOrganizationUid = dimensionOrganizationUid ?? string.Empty;
 				_echoIndexValue = echoIndexValue;
+				_stackIndexValue = stackIndexValue;
 			}
 
 			public int EchoIndexValue
@@ -542,14 +544,19 @@ namespace ClearCanvas.ImageViewer
 				get { return _echoIndexValue; }
 			}
 
+			public int? StackIndexValue
+			{
+				get { return _stackIndexValue; }
+			}
+
 			public override int GetHashCode()
 			{
-				return _dimensionOrganizationUid.GetHashCode() ^ _echoIndexValue.GetHashCode();
+				return _dimensionOrganizationUid.GetHashCode() ^ _echoIndexValue.GetHashCode() ^ _stackIndexValue.GetHashCode();
 			}
 
 			public bool Equals(EchoIndex other)
 			{
-				return other != null && Equals(_dimensionOrganizationUid, other._dimensionOrganizationUid) && _echoIndexValue == other._echoIndexValue;
+				return other != null && Equals(_dimensionOrganizationUid, other._dimensionOrganizationUid) && _echoIndexValue == other._echoIndexValue && Equals(_stackIndexValue, other._stackIndexValue);
 			}
 
 			public override bool Equals(object obj)
