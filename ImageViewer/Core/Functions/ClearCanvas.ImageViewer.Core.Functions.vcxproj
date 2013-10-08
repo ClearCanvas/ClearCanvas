@@ -67,18 +67,22 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <LinkKeyFile>$(AssemblyOriginatorKeyFile)</LinkKeyFile>
     <OutDir>$(ProjectDir)$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
+    <LinkKeyFile>$(AssemblyOriginatorKeyFile)</LinkKeyFile>
     <OutDir>$(ProjectDir)$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
+    <LinkKeyFile>$(AssemblyOriginatorKeyFile)</LinkKeyFile>
     <OutDir>$(ProjectDir)$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
+    <LinkKeyFile>$(AssemblyOriginatorKeyFile)</LinkKeyFile>
     <OutDir>$(ProjectDir)$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -91,6 +95,7 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <KeyFile>$(LinkKeyFile)</KeyFile>
       <AdditionalDependencies>
       </AdditionalDependencies>
     </Link>
@@ -105,6 +110,7 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <KeyFile>$(LinkKeyFile)</KeyFile>
       <AdditionalDependencies>
       </AdditionalDependencies>
     </Link>
@@ -119,6 +125,7 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <KeyFile>$(LinkKeyFile)</KeyFile>
       <AdditionalDependencies>
       </AdditionalDependencies>
     </Link>
@@ -133,6 +140,7 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <KeyFile>$(LinkKeyFile)</KeyFile>
       <AdditionalDependencies>
       </AdditionalDependencies>
     </Link>
