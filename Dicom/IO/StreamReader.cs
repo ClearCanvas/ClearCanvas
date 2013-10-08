@@ -597,6 +597,11 @@ namespace ClearCanvas.Dicom.IO
 										DicomAttributeOB elem = new DicomAttributeOB(LastTagRead, reference);
 										Dataset[LastTagRead] = elem;
 									}
+									else if (LastTagRead.VR.Equals(DicomVr.ODvr))
+									{
+										DicomAttributeOD elem = new DicomAttributeOD(LastTagRead, reference);
+										Dataset[LastTagRead] = elem;
+									}
 									else
 									{
 										DicomAttributeOF elem = new DicomAttributeOF(LastTagRead, reference);

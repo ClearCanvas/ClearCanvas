@@ -67,6 +67,7 @@ namespace ClearCanvas.Dicom
             _vrs.Add(LOvr.Name, LOvr);
             _vrs.Add(LTvr.Name, LTvr);
             _vrs.Add(OBvr.Name, OBvr);
+            _vrs.Add(ODvr.Name, ODvr);
             _vrs.Add(OFvr.Name, OFvr);
             _vrs.Add(OWvr.Name, OWvr);
             _vrs.Add(PNvr.Name, PNvr);
@@ -212,6 +213,16 @@ namespace ClearCanvas.Dicom
                 if (bb == null) return new DicomAttributeOB(tag);
 
                 return new DicomAttributeOB(tag, bb);
+            });
+        /// <summary>
+        /// The Other Double String VR.
+        /// </summary>
+        public static readonly DicomVr ODvr = new DicomVr("OD", false, false, false, 8, false, '\0', 8,
+            delegate(DicomTag tag, ByteBuffer bb)
+            {
+                if (bb == null) return new DicomAttributeOD(tag);
+
+                return new DicomAttributeOD(tag, bb);
             });
         /// <summary>
         /// The Other Float String VR.

@@ -121,6 +121,7 @@ namespace ClearCanvas.Dicom
                       (!(attrib is DicomAttributeOB)
                     && !(attrib is DicomAttributeOW)
                     && !(attrib is DicomAttributeOF)
+                    && !(attrib is DicomAttributeOD)
                     && !(attrib is DicomFragmentSequence)))
                 {
                     this[attrib.Tag] = attrib.Copy(copyBinary);
@@ -508,7 +509,7 @@ namespace ClearCanvas.Dicom
         /// <remarks>
         /// <para>
         /// This method creates a copy of all of the attributes within the DicomAttributeCollection and returns 
-        /// a new copy.  Note that binary attributes with a VR of OB, OW, OF, and UN are copied.
+        /// a new copy.  Note that binary attributes with a VR of OB, OW, OF, OD, and UN are copied.
         /// </para>
         /// </remarks>
         /// <returns>A new DicomAttributeCollection.</returns>
@@ -524,7 +525,7 @@ namespace ClearCanvas.Dicom
         /// <see cref="DicomAttributeOW"/> and <see cref="DicomAttributeOF"/>
         /// instances if the <paramref name="copyBinary"/> parameter is set
         /// to false.</remarks>
-        /// <param name="copyBinary">Flag to set if binary VR (OB, OW, OF) attributes will be copied.</param>
+        /// <param name="copyBinary">Flag to set if binary VR (OB, OW, OF, OD) attributes will be copied.</param>
         /// <param name="copyPrivate">Flag to set if Private attributes will be copied</param>
 		/// <param name="copyUnknown">Flag to set if UN VR attributes will be copied</param>
 		/// <returns>a new DicomAttributeCollection.</returns>
@@ -540,7 +541,7 @@ namespace ClearCanvas.Dicom
 		/// <see cref="DicomAttributeOW"/> and <see cref="DicomAttributeOF"/>
 		/// instances if the <paramref name="copyBinary"/> parameter is set
 		/// to false.</remarks>
-		/// <param name="copyBinary">Flag to set if binary VR (OB, OW, OF) attributes will be copied.</param>
+		/// <param name="copyBinary">Flag to set if binary VR (OB, OW, OF, OD) attributes will be copied.</param>
 		/// <param name="copyPrivate">Flag to set if Private attributes will be copied.</param>
 		/// <param name="stopTag">Indicates a tag at which to stop copying.</param>
 		/// <param name="copyUnknown">Flag to set if UN VR attributes will be copied.</param>
