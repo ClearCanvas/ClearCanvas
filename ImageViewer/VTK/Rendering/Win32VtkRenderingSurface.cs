@@ -26,7 +26,6 @@ using System;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
-using System.Text.RegularExpressions;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.ImageViewer.Rendering;
@@ -318,7 +317,7 @@ namespace ClearCanvas.ImageViewer.Vtk.Rendering
 							glPixelStorei(GL_PACK_ALIGNMENT, 4); // align to 4 byte boundaries (since we're copying 32-bit pixels anyway)
 
 							// now read from the OpenGL buffer directly into our surface buffer
-							glReadPixels(0, 0, _clientRectangle.Width, _clientRectangle.Height, GL_BGRA, _glReadPixelsTypeBgra, bmpData.Scan0);
+							glReadPixels(0, 0, _clientRectangle.Width, _clientRectangle.Height, GL_BGRA, OpenGlImplementation.ReadPixelsTypeBgra, bmpData.Scan0);
 
 							// OpenGL buffer data is a bottom-up image, and the GDI+ memory bitmap might be top-bottom, so we flip the scan lines here
 							if (bmpData.Stride > 0)
@@ -400,58 +399,17 @@ namespace ClearCanvas.ImageViewer.Vtk.Rendering
 			}
 		}
 
-		#region Static Initialization
-
-		private static readonly Version _glVersion;
-		private static readonly uint _glReadPixelsTypeBgra;
-
-		static Win32VtkRenderingSurface()
-		{
-			try
-			{
-				var oglVersion = Marshal.PtrToStringAnsi(glGetString(GL_VERSION)) ?? string.Empty;
-				var result = new Regex(@"(\d+)\.(\d+)").Match(oglVersion);
-				if (result.Success)
-				{
-					_glVersion = new Version(int.Parse(result.Groups[1].Value), int.Parse(result.Groups[2].Value));
-				}
-			}
-			catch (Exception ex)
-			{
-				Platform.Log(LogLevel.Debug, ex, "Failed to detect OpenGL version.");
-			}
-
-			// OpenGL static initialization of version-specific alternatives
-			// (without manufacturer drivers for video card, Windows defaults to an OpenGL 1.1-based software implementation)
-			if (_glVersion >= new Version(1, 2))
-			{
-				_glReadPixelsTypeBgra = GL_UNSIGNED_INT_8_8_8_8_REV; // OpenGL 1.2 defines this for optimized copying of 32-bit BGRA data
-			}
-			else
-			{
-				_glReadPixelsTypeBgra = GL_UNSIGNED_BYTE;
-			}
-		}
-
-		#endregion
-
 		#region Win32 API
 
 		// ReSharper disable InconsistentNaming
 
-		private const uint GL_UNSIGNED_BYTE = 0x1401;
-		private const uint GL_UNSIGNED_INT_8_8_8_8_REV = 0x8367;
 		private const uint GL_BGRA = 0x80E1;
 		private const uint GL_TEXTURE_2D = 0x0DE1;
 		private const uint GL_PACK_ALIGNMENT = 0x0D05;
 		private const uint GL_FRONT_LEFT = 0x0400;
-		private const uint GL_VERSION = 0x1F02;
 
 		[DllImport("kernel32.dll", EntryPoint = "RtlMoveMemory", SetLastError = false)]
 		private static extern void CopyMemory(IntPtr dest, IntPtr src, int size);
-
-		[DllImport("opengl32.dll")]
-		private static extern IntPtr glGetString(uint name);
 
 		[DllImport("opengl32.dll")]
 		private static extern void glPixelStorei(uint pname, int param);

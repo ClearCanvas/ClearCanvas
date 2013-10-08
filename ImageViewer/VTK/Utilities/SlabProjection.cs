@@ -29,7 +29,7 @@ using ClearCanvas.Common.Utilities;
 using ClearCanvas.ImageViewer.Common;
 using ClearCanvas.ImageViewer.Core.Functions;
 
-namespace ClearCanvas.ImageViewer.VTK.Utilities
+namespace ClearCanvas.ImageViewer.Vtk.Utilities
 {
 	internal static partial class SlabProjection
 	{

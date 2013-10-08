@@ -8,7 +8,7 @@
     <ProjectGuid>{14FE088A-252E-4214-94B6-FC9D62C9BF0E}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ClearCanvas.ImageViewer.VTK</RootNamespace>
+    <RootNamespace>ClearCanvas.ImageViewer.Vtk</RootNamespace>
     <AssemblyName>ClearCanvas.ImageViewer.VTK</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -83,6 +83,7 @@
     <Compile Include="IVtkPresentationImage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Rendering\IVtkRenderingSurface.cs" />
+    <Compile Include="Rendering\OglImplementation.cs" />
     <Compile Include="Rendering\VtkPresentationImageRenderer.cs" />
     <Compile Include="Rendering\Win32VtkRenderingSurface.cs" />
     <Compile Include="Tests\VtkRendererTestTool.cs" />

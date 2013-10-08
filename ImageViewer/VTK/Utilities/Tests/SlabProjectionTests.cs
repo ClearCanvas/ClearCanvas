@@ -32,7 +32,7 @@ using ClearCanvas.Common.Utilities;
 using ClearCanvas.Common.Utilities.Tests;
 using NUnit.Framework;
 
-namespace ClearCanvas.ImageViewer.VTK.Utilities.Tests
+namespace ClearCanvas.ImageViewer.Vtk.Utilities.Tests
 {
 	[TestFixture]
 	internal class SlabProjectionTests
@@ -145,7 +145,7 @@ namespace ClearCanvas.ImageViewer.VTK.Utilities.Tests
 	}
 }
 
-namespace ClearCanvas.ImageViewer.VTK.Utilities
+namespace ClearCanvas.ImageViewer.Vtk.Utilities
 {
 // ReSharper disable RedundantAssignment
 

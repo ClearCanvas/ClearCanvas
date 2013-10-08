@@ -28,12 +28,11 @@ using ClearCanvas.Common;
 using ClearCanvas.Dicom;
 using ClearCanvas.ImageViewer.Common;
 using ClearCanvas.ImageViewer.Mathematics;
-using ClearCanvas.ImageViewer.VTK.Utilities;
 using ClearCanvas.ImageViewer.Volumes;
-using ClearCanvas.ImageViewer.Vtk;
+using ClearCanvas.ImageViewer.Vtk.Utilities;
 using vtk;
 
-namespace ClearCanvas.ImageViewer.VTK
+namespace ClearCanvas.ImageViewer.Vtk
 {
 	/// <summary>
 	/// Extends <see cref="IVolumeSlicerCoreProvider"/> with the <see cref="VtkVolumeSlicerCore"/> implementation of volume reslicers.

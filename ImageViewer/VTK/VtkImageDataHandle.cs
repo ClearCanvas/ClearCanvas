@@ -27,7 +27,7 @@ using System.Runtime.InteropServices;
 using ClearCanvas.Common;
 using vtk;
 
-namespace ClearCanvas.ImageViewer.VTK
+namespace ClearCanvas.ImageViewer.Vtk
 {
 	/// <summary>
 	/// Wraps a <see cref="vtk.vtkImageData"/> object holding a handle to a managed data array that is passed to VTK.

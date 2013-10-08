@@ -26,10 +26,9 @@ using System;
 using System.Runtime.InteropServices;
 using ClearCanvas.Common;
 using ClearCanvas.ImageViewer.Volumes;
-using ClearCanvas.ImageViewer.Vtk;
 using vtk;
 
-namespace ClearCanvas.ImageViewer.VTK
+namespace ClearCanvas.ImageViewer.Vtk
 {
 	/// <summary>
 	/// Extension methods for working with <see cref="Volume"/>s.
