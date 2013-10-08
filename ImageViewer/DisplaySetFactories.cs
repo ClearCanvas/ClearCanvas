@@ -367,16 +367,16 @@ namespace ClearCanvas.ImageViewer
 	{
 		private readonly string _suffix;
 
-		public MREchoDisplaySetDescriptor(ISeriesIdentifier sourceSeries, int echoNumber, int? stackNumber, IPresentationImageFactory presentationImageFactory)
+		public MREchoDisplaySetDescriptor(ISeriesIdentifier sourceSeries, int echoNumber, string stackId, IPresentationImageFactory presentationImageFactory)
 			: base(sourceSeries, presentationImageFactory)
 		{
 			Platform.CheckForNullReference(sourceSeries, "sourceSeries");
 
 			EchoNumber = echoNumber;
-			StackNumber = stackNumber;
+			StackId = stackId ?? string.Empty;
 
 			_suffix = String.Format(SR.SuffixFormatMREchoDisplaySet, echoNumber);
-			if (stackNumber.HasValue) _suffix = string.Concat(_suffix, @" ", String.Format(SR.SuffixFormatMultiframeStackDisplaySet, stackNumber.Value));
+			if (!string.IsNullOrEmpty(stackId)) _suffix = string.Concat(_suffix, @" ", String.Format(SR.SuffixFormatMultiframeStackDisplaySet, stackId));
 		}
 
 		protected MREchoDisplaySetDescriptor(MREchoDisplaySetDescriptor source, ICloningContext context)
@@ -386,7 +386,7 @@ namespace ClearCanvas.ImageViewer
 		}
 
 		public int EchoNumber { get; private set; }
-		public int? StackNumber { get; private set; }
+		public string StackId { get; private set; }
 
 		protected override string GetName()
 		{
@@ -406,8 +406,8 @@ namespace ClearCanvas.ImageViewer
 
 		protected override string GetUid()
 		{
-			if (StackNumber.HasValue)
-				return String.Format("{0}:Echo{1}:Stack{2}", SourceSeries.SeriesInstanceUid, EchoNumber, StackNumber.Value);
+			if (!string.IsNullOrEmpty(StackId))
+				return String.Format("{0}:Echo{1}:Stack-{2}", SourceSeries.SeriesInstanceUid, EchoNumber, StackId);
 			else
 				return String.Format("{0}:Echo{1}", SourceSeries.SeriesInstanceUid, EchoNumber);
 		}
@@ -458,7 +458,7 @@ namespace ClearCanvas.ImageViewer
 						var images = echoImages.Value;
 						if (images.Count > 0)
 						{
-							IDisplaySet displaySet = new DisplaySet(new MREchoDisplaySetDescriptor(series.GetIdentifier(), echoImages.Key.EchoIndexValue, echoImages.Key.StackIndexValue, PresentationImageFactory));
+							IDisplaySet displaySet = new DisplaySet(new MREchoDisplaySetDescriptor(series.GetIdentifier(), echoImages.Key.EchoIndexValue, echoImages.Key.StackId, PresentationImageFactory));
 							foreach (IPresentationImage image in images)
 								displaySet.PresentationImages.Add(image);
 
@@ -487,7 +487,7 @@ namespace ClearCanvas.ImageViewer
 					{
 						// key the display sets by echo and stack within the multiframe instance
 						var frame = ((IImageSopProvider) image).Frame;
-						var echoIndex = new EchoIndex(sop.SopInstanceUid, frame.EchoNumber, SplitStacks ? (int?) frame.StackNumber : null);
+						var echoIndex = SplitStacks ? new EchoIndex(sop.SopInstanceUid, frame.EchoNumber, frame.StackNumber, frame.StackId) : new EchoIndex(sop.SopInstanceUid, frame.EchoNumber);
 						if (!imagesByEchoDimension.ContainsKey(echoIndex))
 							imagesByEchoDimension[echoIndex] = new List<IPresentationImage>();
 						imagesByEchoDimension[echoIndex].Add(image);
@@ -507,7 +507,7 @@ namespace ClearCanvas.ImageViewer
 				}
 			}
 
-			var results = imagesByEchoNumber.Select(k => new KeyValuePair<EchoIndex, List<IPresentationImage>>(new EchoIndex(k.Key), k.Value)).ToList();
+			var results = imagesByEchoNumber.Select(k => new KeyValuePair<EchoIndex, List<IPresentationImage>>(new EchoIndex(null, k.Key), k.Value)).ToList();
 
 			// if we have some multiframes processed into separate echos, append them to the main list
 			if (imagesByEchoDimension.Count > 0)
@@ -528,15 +528,14 @@ namespace ClearCanvas.ImageViewer
 			private readonly string _dimensionOrganizationUid;
 			private readonly int _echoIndexValue;
 			private readonly int? _stackIndexValue;
+			private readonly string _stackId;
 
-			public EchoIndex(int echoNumber)
-				: this(null, echoNumber, null) {}
-
-			public EchoIndex(string dimensionOrganizationUid, int echoIndexValue, int? stackIndexValue)
+			public EchoIndex(string dimensionOrganizationUid, int echoIndexValue, int? stackIndexValue = null, string stackId = null)
 			{
 				_dimensionOrganizationUid = dimensionOrganizationUid ?? string.Empty;
 				_echoIndexValue = echoIndexValue;
 				_stackIndexValue = stackIndexValue;
+				_stackId = stackId ?? string.Empty;
 			}
 
 			public int EchoIndexValue
@@ -549,14 +548,19 @@ namespace ClearCanvas.ImageViewer
 				get { return _stackIndexValue; }
 			}
 
+			public string StackId
+			{
+				get { return _stackId; }
+			}
+
 			public override int GetHashCode()
 			{
-				return _dimensionOrganizationUid.GetHashCode() ^ _echoIndexValue.GetHashCode() ^ _stackIndexValue.GetHashCode();
+				return _dimensionOrganizationUid.GetHashCode() ^ _echoIndexValue.GetHashCode() ^ _stackId.GetHashCode();
 			}
 
 			public bool Equals(EchoIndex other)
 			{
-				return other != null && Equals(_dimensionOrganizationUid, other._dimensionOrganizationUid) && _echoIndexValue == other._echoIndexValue && Equals(_stackIndexValue, other._stackIndexValue);
+				return other != null && Equals(_dimensionOrganizationUid, other._dimensionOrganizationUid) && _echoIndexValue == other._echoIndexValue && Equals(_stackId, other._stackId);
 			}
 
 			public override bool Equals(object obj)
@@ -575,14 +579,14 @@ namespace ClearCanvas.ImageViewer
 	{
 		private readonly string _suffix;
 
-		public MultiFrameStackDisplaySetDescriptor(ISeriesIdentifier sourceSeries, int stackNumber, IPresentationImageFactory presentationImageFactory)
+		public MultiFrameStackDisplaySetDescriptor(ISeriesIdentifier sourceSeries, string stackId, IPresentationImageFactory presentationImageFactory)
 			: base(sourceSeries, presentationImageFactory)
 		{
 			Platform.CheckForNullReference(sourceSeries, "sourceSeries");
 
-			StackNumber = stackNumber;
+			StackId = stackId ?? string.Empty;
 
-			_suffix = String.Format(SR.SuffixFormatMultiframeStackDisplaySet, stackNumber);
+			_suffix = String.Format(SR.SuffixFormatMultiframeStackDisplaySet, stackId);
 		}
 
 		protected MultiFrameStackDisplaySetDescriptor(MultiFrameStackDisplaySetDescriptor source, ICloningContext context)
@@ -591,7 +595,7 @@ namespace ClearCanvas.ImageViewer
 			context.CloneFields(source, this);
 		}
 
-		public int StackNumber { get; private set; }
+		public string StackId { get; private set; }
 
 		protected override string GetName()
 		{
@@ -611,7 +615,7 @@ namespace ClearCanvas.ImageViewer
 
 		protected override string GetUid()
 		{
-			return String.Format("{0}:Stack{1}", SourceSeries.SeriesInstanceUid, StackNumber);
+			return String.Format("{0}:Stack-{1}", SourceSeries.SeriesInstanceUid, StackId);
 		}
 	}
 
@@ -653,7 +657,7 @@ namespace ClearCanvas.ImageViewer
 					var images = stackImages.Value;
 					if (images.Count > 0)
 					{
-						IDisplaySet displaySet = new DisplaySet(new MultiFrameStackDisplaySetDescriptor(series.GetIdentifier(), stackImages.Key.StackIndexValue, PresentationImageFactory));
+						IDisplaySet displaySet = new DisplaySet(new MultiFrameStackDisplaySetDescriptor(series.GetIdentifier(), stackImages.Key.StackId, PresentationImageFactory));
 						foreach (IPresentationImage image in images)
 							displaySet.PresentationImages.Add(image);
 
@@ -681,7 +685,7 @@ namespace ClearCanvas.ImageViewer
 					{
 						// key the display sets by stack within the multiframe instance
 						var frame = ((IImageSopProvider) image).Frame;
-						var stackIndex = new StackIndex(sop.SopInstanceUid, frame.StackNumber);
+						var stackIndex = new StackIndex(sop.SopInstanceUid, frame.StackNumber, frame.StackId);
 						if (!imagesByStackDimension.ContainsKey(stackIndex))
 							imagesByStackDimension[stackIndex] = new List<IPresentationImage>();
 						imagesByStackDimension[stackIndex].Add(image);
@@ -697,7 +701,7 @@ namespace ClearCanvas.ImageViewer
 				}
 			}
 
-			var results = singleFrames.Select(k => new KeyValuePair<StackIndex, List<IPresentationImage>>(new StackIndex(null, k.Key), k.Value)).ToList();
+			var results = singleFrames.Select(k => new KeyValuePair<StackIndex, List<IPresentationImage>>(new StackIndex(null, null, string.Empty), k.Value)).ToList();
 
 			// if we have some multiframes processed into separate echos, append them to the main list
 			if (imagesByStackDimension.Count > 0)
@@ -706,7 +710,7 @@ namespace ClearCanvas.ImageViewer
 				// we'll sort by the first instance number in which the index was used, then order by the actual index value
 				results.AddRange(imagesByStackDimension
 				                 	.OrderBy(k => k.Value.Select(i => ((IImageSopProvider) i).ImageSop.InstanceNumber).Min())
-				                 	.ThenBy(k => k.Key.StackIndexValue));
+				                 	.ThenBy(k => k.Key.StackIndexValue.GetValueOrDefault(-1)));
 			}
 
 			return results;
@@ -715,27 +719,34 @@ namespace ClearCanvas.ImageViewer
 		private class StackIndex : IEquatable<StackIndex>
 		{
 			private readonly string _dimensionOrganizationUid;
-			private readonly int _stackIndexValue;
+			private readonly int? _stackIndexValue;
+			private readonly string _stackId;
 
-			public StackIndex(string dimensionOrganizationUid, int stackIndexValue)
+			public StackIndex(string dimensionOrganizationUid, int? stackIndexValue, string stackId)
 			{
 				_dimensionOrganizationUid = dimensionOrganizationUid ?? string.Empty;
 				_stackIndexValue = stackIndexValue;
+				_stackId = stackId ?? string.Empty;
 			}
 
-			public int StackIndexValue
+			public string StackId
+			{
+				get { return _stackId; }
+			}
+
+			public int? StackIndexValue
 			{
 				get { return _stackIndexValue; }
 			}
 
 			public override int GetHashCode()
 			{
-				return _dimensionOrganizationUid.GetHashCode() ^ _stackIndexValue.GetHashCode();
+				return _dimensionOrganizationUid.GetHashCode() ^ _stackId.GetHashCode();
 			}
 
 			public bool Equals(StackIndex other)
 			{
-				return other != null && Equals(_dimensionOrganizationUid, other._dimensionOrganizationUid) && Equals(_stackIndexValue, other._stackIndexValue);
+				return other != null && Equals(_dimensionOrganizationUid, other._dimensionOrganizationUid) && Equals(_stackId, other._stackId);
 			}
 
 			public override bool Equals(object obj)

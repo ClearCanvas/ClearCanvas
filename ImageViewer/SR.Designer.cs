@@ -1830,7 +1830,7 @@ namespace ClearCanvas.ImageViewer {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Stack #{0}.
+        ///   Looks up a localized string similar to Stack {0}.
         /// </summary>
         public static string SuffixFormatMultiframeStackDisplaySet {
             get {

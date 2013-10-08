@@ -763,6 +763,6 @@ Alternately, the study can be brought back online by a PACS administrator.</valu
     <value>An unexpected exception was encountered while creating the volume.</value>
   </data>
   <data name="SuffixFormatMultiframeStackDisplaySet" xml:space="preserve">
-    <value>Stack #{0}</value>
+    <value>Stack {0}</value>
   </data>
 </root>

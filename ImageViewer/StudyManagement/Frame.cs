@@ -643,7 +643,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		/// <remarks>
 		/// For single-frame MR images, this is the value of the <see cref="DicomTags.EchoNumbers"/> attribute.
 		/// For multi-frame MR images, this is the index value in the dimension identified by the <see cref="DicomTags.EffectiveEchoTime"/> tag.
-		/// For all other image, the value of this property is not defined.
+		/// For all other images, the value of this property is not defined.
 		/// </remarks>
 		public virtual int EchoNumber
 		{
@@ -659,11 +659,23 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		/// </summary>
 		/// <remarks>
 		/// For multi-frame images, this is the index value in the dimension identified by the <see cref="DicomTags.StackId"/> tag.
-		/// For all other image, the value of this property is not defined.
+		/// For all other images, the value of this property is not defined.
 		/// </remarks>
 		public virtual int StackNumber
 		{
 			get { return _parentImageSop.GetFrameDimensionIndexValue(_frameNumber, DicomTags.StackId, DicomTags.FrameContentSequence).GetValueOrDefault(0); }
+		}
+
+		/// <summary>
+		/// Gets the stack ID of the frame.
+		/// </summary>
+		/// <remarks>
+		/// For multi-frame images, this is the label of the stack as identified by the <see cref="DicomTags.StackId"/> tag.
+		/// For all other images, the value of this property is not defined.
+		/// </remarks>
+		public virtual string StackId
+		{
+			get { return _parentImageSop.GetFrameAttribute(_frameNumber, DicomTags.StackId).GetString(0, null) ?? string.Empty; }
 		}
 
 		#endregion
