@@ -23,19 +23,20 @@
 #endregion
 
 using System;
-using System.Linq;
-using System.Text;
-using log4net;
-using ClearCanvas.Common.Utilities;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Text;
+using ClearCanvas.Common.Utilities;
+using log4net;
+using log4net.Config;
 
-// Configure log4net using the .log4net file
-[assembly: log4net.Config.XmlConfigurator(ConfigFile = "Logging.config", Watch = true)]
 // This will cause log4net to look for a configuration file
-// called TestApp.exe.log4net in the application base
+// called Logging.config in the application base
 // directory (i.e. the directory containing TestApp.exe)
 // The config file will be watched for changes.
+
+[assembly : XmlConfigurator(ConfigFile = "Logging.config", Watch = true)]
 
 namespace ClearCanvas.Common
 {
@@ -48,32 +49,33 @@ namespace ClearCanvas.Common
 		/// Debug log level.
 		/// </summary>
 		Debug,
+
 		/// <summary>
 		/// Info log level.
 		/// </summary>
 		Info,
+
 		/// <summary>
 		/// Warning log level.
 		/// </summary>
 		Warn,
+
 		/// <summary>
 		/// Error log level.
 		/// </summary>
 		Error,
+
 		/// <summary>
 		/// Fatal log level.
 		/// </summary>
 		Fatal
 	}
 
-
 	/// <summary>
 	/// An extension point for <see cref="IMessageBox"/>es.
 	/// </summary>
 	[ExtensionPoint()]
-	public sealed class MessageBoxExtensionPoint : ExtensionPoint<IMessageBox>
-	{
-	}
+	public sealed class MessageBoxExtensionPoint : ExtensionPoint<IMessageBox> {}
 
 	/// <summary>
 	/// Defines the Application Root extension point.
@@ -84,9 +86,7 @@ namespace ClearCanvas.Common
 	/// <see cref="IApplicationRoot.RunApplication" />.
 	/// </remarks>
 	[ExtensionPoint()]
-	public sealed class ApplicationRootExtensionPoint : ExtensionPoint<IApplicationRoot>
-	{
-	}
+	public sealed class ApplicationRootExtensionPoint : ExtensionPoint<IApplicationRoot> {}
 
 	/// <summary>
 	/// An extension point for <see cref="ITimeProvider"/>s.
@@ -96,9 +96,7 @@ namespace ClearCanvas.Common
 	/// use by the application (see <see cref="Platform.Time"/>).
 	/// </remarks>
 	[ExtensionPoint()]
-	public sealed class TimeProviderExtensionPoint : ExtensionPoint<ITimeProvider>
-	{
-	}
+	public sealed class TimeProviderExtensionPoint : ExtensionPoint<ITimeProvider> {}
 
 	/// <summary>
 	/// Defines an extension point for service providers.
@@ -118,9 +116,7 @@ namespace ClearCanvas.Common
 	/// </para>
 	/// </remarks>
 	[ExtensionPoint]
-	public sealed class ServiceProviderExtensionPoint : ExtensionPoint<IServiceProvider>
-	{
-	}
+	public sealed class ServiceProviderExtensionPoint : ExtensionPoint<IServiceProvider> {}
 
 	public interface IDuplexServiceProvider
 	{
@@ -128,9 +124,7 @@ namespace ClearCanvas.Common
 	}
 
 	[ExtensionPoint]
-	public sealed class DuplexServiceProviderExtensionPoint : ExtensionPoint<IDuplexServiceProvider>
-	{
-	}
+	public sealed class DuplexServiceProviderExtensionPoint : ExtensionPoint<IDuplexServiceProvider> {}
 
 	/// <summary>
 	/// A collection of useful utility functions.
@@ -141,7 +135,7 @@ namespace ClearCanvas.Common
 
 		private static object _syncRoot = new Object();
 
-		private static readonly ILog _log = LogManager.GetLogger(typeof(Platform));
+		private static readonly ILog _log = LogManager.GetLogger(typeof (Platform));
 		private static readonly object _namedLogLock = new object();
 		private static readonly Dictionary<string, ILog> _namedLogs = new Dictionary<string, ILog>();
 
@@ -189,6 +183,18 @@ namespace ClearCanvas.Common
 			}
 
 			ExtensionPoint.SetExtensionFactory(factory);
+		}
+
+		/// <summary>
+		/// Resets the extension factory to the default implementation.
+		/// </summary>
+		/// <remarks>
+		/// This purpose of this method is to facilitate unit testing by allowing the factory to be
+		/// reset to the default instance after the <see cref="SetExtensionFactory"/> method has been called.
+		/// </remarks>
+		public static void ResetExtensionFactory()
+		{
+			SetExtensionFactory(new DefaultExtensionFactory());
 		}
 #endif
 
@@ -292,7 +298,7 @@ namespace ClearCanvas.Common
 					{
 						if (_pluginsDirectory == null)
 						{
-							string pluginsDirectory = Path.Combine(Platform.InstallDirectory, _pluginSubFolder);
+							string pluginsDirectory = Path.Combine(InstallDirectory, _pluginSubFolder);
 
 							if (Directory.Exists(pluginsDirectory))
 								_pluginsDirectory = pluginsDirectory;
@@ -323,7 +329,7 @@ namespace ClearCanvas.Common
 						if (_commonDirectory == null)
 						{
 							string commonDirectory =
-								Path.Combine(Platform.InstallDirectory, _commonSubFolder);
+								Path.Combine(InstallDirectory, _commonSubFolder);
 
 							if (Directory.Exists(commonDirectory))
 								_commonDirectory = commonDirectory;
@@ -352,7 +358,7 @@ namespace ClearCanvas.Common
 					lock (_syncRoot)
 					{
 						if (_logDirectory == null)
-							_logDirectory = System.IO.Path.Combine(Platform.InstallDirectory, _logSubFolder);
+							_logDirectory = Path.Combine(InstallDirectory, _logSubFolder);
 					}
 				}
 
@@ -466,7 +472,7 @@ namespace ClearCanvas.Common
 						{
 							// check for a time provider extension
 							var xp = new TimeProviderExtensionPoint();
-							_timeProvider = (ITimeProvider)xp.CreateExtension();
+							_timeProvider = (ITimeProvider) xp.CreateExtension();
 						}
 						catch (NotSupportedException)
 						{
@@ -508,8 +514,8 @@ namespace ClearCanvas.Common
 
 			var xp = new ApplicationRootExtensionPoint();
 			_applicationRoot = (applicationRootFilter == null) ?
-				(IApplicationRoot)xp.CreateExtension() :
-				(IApplicationRoot)xp.CreateExtension(applicationRootFilter);
+			                                                   	(IApplicationRoot) xp.CreateExtension() :
+			                                                   	                                        	(IApplicationRoot) xp.CreateExtension(applicationRootFilter);
 			_applicationRoot.RunApplication(args);
 		}
 
@@ -524,7 +530,7 @@ namespace ClearCanvas.Common
 		/// </remarks>
 		public static void StartApp()
 		{
-			StartApp((ExtensionFilter)null, new string[] { });
+			StartApp((ExtensionFilter) null, new string[] {});
 		}
 
 		/// <summary>
@@ -543,7 +549,7 @@ namespace ClearCanvas.Common
 			{
 				// try a partial match
 				matchingRoots = CollectionUtils.Select(appRoots,
-					info => info.ExtensionClass.FullName.EndsWith(appRootClassName, StringComparison.InvariantCultureIgnoreCase));
+				                                       info => info.ExtensionClass.FullName.EndsWith(appRootClassName, StringComparison.InvariantCultureIgnoreCase));
 			}
 
 			if (matchingRoots.Count == 0)
@@ -572,7 +578,7 @@ namespace ClearCanvas.Common
 		/// <exception cref="UnknownServiceException">The requested service cannot be provided.</exception>
 		public static TService GetService<TService>()
 		{
-			return (TService)GetService(typeof(TService));
+			return (TService) GetService(typeof (TService));
 		}
 
 		/// <summary>
@@ -618,7 +624,7 @@ namespace ClearCanvas.Common
 						// do not allow exceptions thrown from Dispose() because it may have the effect of
 						// hiding an exception that was thrown from the service itself
 						// if the service fails to dispose properly, we don't care, just log it and move on
-						Platform.Log(LogLevel.Error, e);
+						Log(LogLevel.Error, e);
 					}
 				}
 			}
@@ -675,7 +681,7 @@ namespace ClearCanvas.Common
 		/// <exception cref="UnknownServiceException">The requested service cannot be provided.</exception>
 		public static TService GetDuplexService<TService, TCallback>(TCallback callback)
 		{
-			return (TService)GetDuplexService(typeof(TService), callback);
+			return (TService) GetDuplexService(typeof (TService), callback);
 		}
 
 		/// <summary>
@@ -979,7 +985,7 @@ namespace ClearCanvas.Common
 					if (_messageBox == null)
 					{
 						MessageBoxExtensionPoint xp = new MessageBoxExtensionPoint();
-						_messageBox = (IMessageBox)xp.CreateExtension();
+						_messageBox = (IMessageBox) xp.CreateExtension();
 					}
 				}
 			}
@@ -1083,9 +1089,9 @@ namespace ClearCanvas.Common
 		[Obsolete("Use Platform.CheckExpectedType or perform a direct cast instead.")]
 		public static void CheckForInvalidCast(object castOutput, string castInputName, string castTypeName)
 		{
-			Platform.CheckForNullReference(castOutput, "castOutput");
-			Platform.CheckForNullReference(castInputName, "castInputName");
-			Platform.CheckForNullReference(castTypeName, "castTypeName");
+			CheckForNullReference(castOutput, "castOutput");
+			CheckForNullReference(castInputName, "castInputName");
+			CheckForNullReference(castTypeName, "castTypeName");
 
 			if (castOutput == null)
 				throw new InvalidCastException(String.Format(SR.ExceptionInvalidCast, castInputName, castTypeName));
@@ -1100,12 +1106,11 @@ namespace ClearCanvas.Common
 		/// <exception cref="ArgumentException"><paramref name="n"/> &lt;= 0.</exception>
 		public static void CheckPositive(int n, string variableName)
 		{
-			Platform.CheckForNullReference(variableName, "variableName");
+			CheckForNullReference(variableName, "variableName");
 
 			if (n <= 0)
 				throw new ArgumentException(SR.ExceptionArgumentNotPositive, variableName);
 		}
-
 
 		/// <summary>
 		/// Checks if a value is true.
@@ -1116,12 +1121,11 @@ namespace ClearCanvas.Common
 		/// <exception cref="ArgumentException"><paramref name="testTrueCondition"/> is  <b>false</b>.</exception>
 		public static void CheckTrue(bool testTrueCondition, string conditionName)
 		{
-			Platform.CheckForNullReference(conditionName, "conditionName");
+			CheckForNullReference(conditionName, "conditionName");
 
 			if (testTrueCondition != true)
 				throw new ArgumentException(String.Format(SR.ExceptionConditionIsNotMet, conditionName));
 		}
-
 
 		/// <summary>
 		/// Checks if a value is false.
@@ -1132,7 +1136,7 @@ namespace ClearCanvas.Common
 		/// <exception cref="ArgumentException"><paramref name="testFalseCondition"/> is  <b>true</b>.</exception>
 		public static void CheckFalse(bool testFalseCondition, string conditionName)
 		{
-			Platform.CheckForNullReference(conditionName, "conditionName");
+			CheckForNullReference(conditionName, "conditionName");
 
 			if (testFalseCondition != false)
 				throw new ArgumentException(String.Format(SR.ExceptionConditionIsNotMet, conditionName));
@@ -1147,7 +1151,7 @@ namespace ClearCanvas.Common
 		/// <exception cref="ArgumentException"><paramref name="x"/> &lt;= 0.</exception>
 		public static void CheckPositive(float x, string variableName)
 		{
-			Platform.CheckForNullReference(variableName, "variableName");
+			CheckForNullReference(variableName, "variableName");
 
 			if (x <= 0.0f)
 				throw new ArgumentException(SR.ExceptionArgumentNotPositive, variableName);
@@ -1162,7 +1166,7 @@ namespace ClearCanvas.Common
 		/// <exception cref="ArgumentException"><paramref name="x"/> &lt;= 0.</exception>
 		public static void CheckPositive(double x, string variableName)
 		{
-			Platform.CheckForNullReference(variableName, "variableName");
+			CheckForNullReference(variableName, "variableName");
 
 			if (x <= 0.0d)
 				throw new ArgumentException(SR.ExceptionArgumentNotPositive, variableName);
@@ -1177,7 +1181,7 @@ namespace ClearCanvas.Common
 		/// <exception cref="ArgumentException"><paramref name="n"/> &lt; 0.</exception>
 		public static void CheckNonNegative(int n, string variableName)
 		{
-			Platform.CheckForNullReference(variableName, "variableName");
+			CheckForNullReference(variableName, "variableName");
 
 			if (n < 0)
 				throw new ArgumentException(SR.ExceptionArgumentNegative, variableName);
@@ -1196,7 +1200,7 @@ namespace ClearCanvas.Common
 		/// specified range.</exception>
 		public static void CheckArgumentRange(int argumentValue, int min, int max, string variableName)
 		{
-			Platform.CheckForNullReference(variableName, "variableName");
+			CheckForNullReference(variableName, "variableName");
 
 			if (argumentValue < min || argumentValue > max)
 				throw new ArgumentOutOfRangeException(String.Format(SR.ExceptionArgumentOutOfRange, argumentValue, min, max, variableName));
@@ -1215,7 +1219,7 @@ namespace ClearCanvas.Common
 		/// specified range.</exception>
 		public static void CheckIndexRange(int index, int min, int max, object obj)
 		{
-			Platform.CheckForNullReference(obj, "obj");
+			CheckForNullReference(obj, "obj");
 
 			if (index < min || index > max)
 				throw new IndexOutOfRangeException(String.Format(SR.ExceptionIndexOutOfRange, index, min, max, obj.GetType().Name));
@@ -1233,7 +1237,7 @@ namespace ClearCanvas.Common
 		/// <exception cref="System.InvalidOperationException"><paramref name="variable"/> is <b>null</b>.</exception>
 		public static void CheckMemberIsSet(object variable, string variableName)
 		{
-			Platform.CheckForNullReference(variableName, "variableName");
+			CheckForNullReference(variableName, "variableName");
 
 			if (variable == null)
 				throw new InvalidOperationException(String.Format(SR.ExceptionMemberNotSet, variableName));
@@ -1253,8 +1257,8 @@ namespace ClearCanvas.Common
 		/// <exception cref="System.InvalidOperationException"><paramref name="variable"/> is <b>null</b>.</exception>
 		public static void CheckMemberIsSet(object variable, string variableName, string detailedMessage)
 		{
-			Platform.CheckForNullReference(variableName, "variableName");
-			Platform.CheckForNullReference(detailedMessage, "detailedMessage");
+			CheckForNullReference(variableName, "variableName");
+			CheckForNullReference(detailedMessage, "detailedMessage");
 
 			if (variable == null)
 				throw new InvalidOperationException(String.Format(SR.ExceptionMemberNotSetVerbose, variableName, detailedMessage));

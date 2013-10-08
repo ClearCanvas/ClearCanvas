@@ -231,13 +231,16 @@ namespace ClearCanvas.ImageViewer.Imaging
 			var voiWindows = windows.ToList();
 			var windowCenters = DicomStringHelper.GetDicomStringArray(voiWindows.Select(s => s.Center));
 			var windowWidths = DicomStringHelper.GetDicomStringArray(voiWindows.Select(s => s.Width));
-			var windowExplanations = DicomStringHelper.GetDicomStringArray(voiWindows.Select(s => s.Explanation));
+			var windowExplanations = voiWindows.Any(s => !string.IsNullOrEmpty(s.Explanation)) ? DicomStringHelper.GetDicomStringArray(voiWindows.Select(s => s.Explanation)) : null;
 
 			if (voiWindows.Count > 0)
 			{
 				dataset[DicomTags.WindowCenter].SetStringValue(windowCenters);
 				dataset[DicomTags.WindowWidth].SetStringValue(windowWidths);
-				dataset[DicomTags.WindowCenterWidthExplanation].SetStringValue(windowExplanations);
+				if (!string.IsNullOrEmpty(windowExplanations))
+					dataset[DicomTags.WindowCenterWidthExplanation].SetStringValue(windowExplanations);
+				else
+					dataset[DicomTags.WindowCenterWidthExplanation].SetEmptyValue();
 			}
 			else
 			{

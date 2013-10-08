@@ -128,6 +128,7 @@ namespace ClearCanvas.Dicom.Iod
 				var widthValues = new StringBuilder();
 				var centerValues = new StringBuilder();
 				var explanations = new StringBuilder();
+				var hasExplanations = false;
 
 				foreach (var value in voiWindows)
 				{
@@ -137,13 +138,19 @@ namespace ClearCanvas.Dicom.Iod
 					centerValues.Append(value.Center.ToString("G12"));
 					centerValues.Append('\\');
 
+					if (!string.IsNullOrEmpty(value.Explanation)) hasExplanations = true;
 					explanations.Append(value.Explanation);
 					explanations.Append('\\');
 				}
 
 				provider[DicomTags.WindowCenter].SetStringValue(centerValues.ToString(0, centerValues.Length - 1));
 				provider[DicomTags.WindowWidth].SetStringValue(widthValues.ToString(0, widthValues.Length - 1));
-				provider[DicomTags.WindowCenterWidthExplanation].SetStringValue(explanations.ToString(0, explanations.Length - 1));
+
+				// only set the explanations attribute if any were provided - if there are none, remove that attribute entirely
+				if (hasExplanations)
+					provider[DicomTags.WindowCenterWidthExplanation].SetStringValue(explanations.ToString(0, explanations.Length - 1));
+				else
+					provider[DicomTags.WindowCenterWidthExplanation].SetEmptyValue();
 			}
 			else
 			{

@@ -189,19 +189,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 
 		#region Static Factory Methods
 
-		private static readonly List<IVolumeSlicerCoreProvider> _coreProviders;
-
-		static VolumeSlicerCore()
-		{
-			try
-			{
-				_coreProviders = new VolumeSlicerCoreProviderExtensionPoint().CreateExtensions().Cast<IVolumeSlicerCoreProvider>().ToList();
-			}
-			catch (Exception ex)
-			{
-				Platform.Log(LogLevel.Error, ex, "Failed to initialize implementations on VolumeSlicerCoreProviderExtensionPoint");
-			}
-		}
+		private static List<IVolumeSlicerCoreProvider> _coreProviders;
 
 		/// <summary>
 		/// Creates an implementation of <see cref="IVolumeSlicerCore"/> for slicing the requested volume.
@@ -211,7 +199,32 @@ namespace ClearCanvas.ImageViewer.Volumes
 		public static IVolumeSlicerCore Create(IVolumeReference volumeReference, VolumeSliceArgs args)
 		{
 			if (_coreProviders == null)
+			{
+				try
+				{
+					_coreProviders = new VolumeSlicerCoreProviderExtensionPoint().CreateExtensions().Cast<IVolumeSlicerCoreProvider>().ToList();
+				}
+				catch (Exception ex)
+				{
+					Platform.Log(LogLevel.Error, ex, "Failed to initialize implementations on VolumeSlicerCoreProviderExtensionPoint");
+				}
+			}
+
+			if (_coreProviders == null || !_coreProviders.Any())
+			{
+#if UNIT_TESTS
+				// ensures that unit tests running under a custom extension factory will always have a slicer implementation where available
+				_coreProviders = Platform.PluginManager.ExtensionPoints
+					.First(e => e.ExtensionPointClass == typeof (VolumeSlicerCoreProviderExtensionPoint))
+					.ListExtensions().Select(x => Activator.CreateInstance(x.ExtensionClass.Resolve()))
+					.Cast<IVolumeSlicerCoreProvider>().ToList();
+
+				if (_coreProviders == null || !_coreProviders.Any())
+					throw new NotSupportedException("No implementations of IVolumeSlicerCoreProvider were found.");
+#else
 				throw new NotSupportedException("No implementations of IVolumeSlicerCoreProvider were found.");
+#endif
+			}
 
 			try
 			{
