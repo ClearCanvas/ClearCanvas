@@ -568,6 +568,185 @@ namespace ClearCanvas.ImageViewer
 
 	#endregion
 
+	#region Multi-frame Stack
+
+	[Cloneable(false)]
+	public class MultiFrameStackDisplaySetDescriptor : DicomDisplaySetDescriptor
+	{
+		private readonly string _suffix;
+
+		public MultiFrameStackDisplaySetDescriptor(ISeriesIdentifier sourceSeries, int stackNumber, IPresentationImageFactory presentationImageFactory)
+			: base(sourceSeries, presentationImageFactory)
+		{
+			Platform.CheckForNullReference(sourceSeries, "sourceSeries");
+
+			StackNumber = stackNumber;
+
+			_suffix = String.Format(SR.SuffixFormatMultiframeStackDisplaySet, stackNumber);
+		}
+
+		protected MultiFrameStackDisplaySetDescriptor(MultiFrameStackDisplaySetDescriptor source, ICloningContext context)
+			: base(source, context)
+		{
+			context.CloneFields(source, this);
+		}
+
+		public int StackNumber { get; private set; }
+
+		protected override string GetName()
+		{
+			if (String.IsNullOrEmpty(SourceSeries.SeriesDescription))
+				return String.Format("{0}: {1}", SourceSeries.SeriesNumber, _suffix);
+			else
+				return String.Format("{0}: {1} - {2}", SourceSeries.SeriesNumber, SourceSeries.SeriesDescription, _suffix);
+		}
+
+		protected override string GetDescription()
+		{
+			if (String.IsNullOrEmpty(SourceSeries.SeriesDescription))
+				return _suffix;
+			else
+				return String.Format("{0} - {1}", SourceSeries.SeriesDescription, _suffix);
+		}
+
+		protected override string GetUid()
+		{
+			return String.Format("{0}:Stack{1}", SourceSeries.SeriesInstanceUid, StackNumber);
+		}
+	}
+
+	/// <summary>
+	/// A <see cref="DisplaySetFactory"/> that splits multi-frame instances with multiple stacks into multiple <see cref="IDisplaySet"/>s; one per stack.
+	/// </summary>
+	public class MultiFrameStackDisplaySetFactory : DisplaySetFactory
+	{
+		/// <summary>
+		/// Constructor.
+		/// </summary>
+		public MultiFrameStackDisplaySetFactory() {}
+
+		/// <summary>
+		/// Constructor.
+		/// </summary>
+		/// <param name="presentationImageFactory">The <see cref="IPresentationImageFactory"/>
+		/// used to create the <see cref="IPresentationImage"/>s that populate the constructed <see cref="IDisplaySet"/>s.</param>
+		public MultiFrameStackDisplaySetFactory(IPresentationImageFactory presentationImageFactory)
+			: base(presentationImageFactory) {}
+
+		/// <summary>
+		/// Creates zero or more <see cref="IDisplaySet"/>s from the given <see cref="Series"/>.
+		/// </summary>
+		/// <remarks>
+		/// When the input <see cref="Series"/> does not have multiple echoes, no <see cref="IDisplaySet"/>s will be returned.
+		/// Otherwise, at least 2 <see cref="IDisplaySet"/>s will be returned.
+		/// </remarks>
+		public override List<IDisplaySet> CreateDisplaySets(Series series)
+		{
+			List<IDisplaySet> displaySets = new List<IDisplaySet>();
+
+			var imagesByStack = SplitStacks(series.Sops);
+
+			if (imagesByStack.Count > 1)
+			{
+				foreach (var stackImages in imagesByStack)
+				{
+					var images = stackImages.Value;
+					if (images.Count > 0)
+					{
+						IDisplaySet displaySet = new DisplaySet(new MultiFrameStackDisplaySetDescriptor(series.GetIdentifier(), stackImages.Key.StackIndexValue, PresentationImageFactory));
+						foreach (IPresentationImage image in images)
+							displaySet.PresentationImages.Add(image);
+
+						displaySet.PresentationImages.Sort();
+						displaySets.Add(displaySet);
+					}
+				}
+			}
+
+			return displaySets;
+		}
+
+		private IList<KeyValuePair<StackIndex, List<IPresentationImage>>> SplitStacks(IEnumerable<Sop> sops)
+		{
+			// keep separate echo lists in case series is mixed single/multi frames
+			// unless their dimension uid also matches, echo dimension indices should not be mixed between sop intances (see DICOM 2011 PS 3.3 C.7.6.17.2)
+			SortedDictionary<int, List<IPresentationImage>> singleFrames = new SortedDictionary<int, List<IPresentationImage>>();
+			Dictionary<StackIndex, List<IPresentationImage>> imagesByStackDimension = new Dictionary<StackIndex, List<IPresentationImage>>();
+
+			foreach (var sop in sops.OfType<ImageSop>())
+			{
+				if (sop.IsMultiframe)
+				{
+					foreach (var image in PresentationImageFactory.CreateImages(sop))
+					{
+						// key the display sets by stack within the multiframe instance
+						var frame = ((IImageSopProvider) image).Frame;
+						var stackIndex = new StackIndex(sop.SopInstanceUid, frame.StackNumber);
+						if (!imagesByStackDimension.ContainsKey(stackIndex))
+							imagesByStackDimension[stackIndex] = new List<IPresentationImage>();
+						imagesByStackDimension[stackIndex].Add(image);
+					}
+				}
+				else
+				{
+					// single frame images don't really have a stack, so just assign them all to a stack 0
+					const int stackNumber = 0;
+					if (!singleFrames.ContainsKey(stackNumber))
+						singleFrames[stackNumber] = new List<IPresentationImage>();
+					singleFrames[stackNumber].AddRange(PresentationImageFactory.CreateImages(sop));
+				}
+			}
+
+			var results = singleFrames.Select(k => new KeyValuePair<StackIndex, List<IPresentationImage>>(new StackIndex(null, k.Key), k.Value)).ToList();
+
+			// if we have some multiframes processed into separate echos, append them to the main list
+			if (imagesByStackDimension.Count > 0)
+			{
+				// make sure we number them in a logical order - since the multiframe echo indices don't have any meaning outside the SOP instance in which it was used,
+				// we'll sort by the first instance number in which the index was used, then order by the actual index value
+				results.AddRange(imagesByStackDimension
+				                 	.OrderBy(k => k.Value.Select(i => ((IImageSopProvider) i).ImageSop.InstanceNumber).Min())
+				                 	.ThenBy(k => k.Key.StackIndexValue));
+			}
+
+			return results;
+		}
+
+		private class StackIndex : IEquatable<StackIndex>
+		{
+			private readonly string _dimensionOrganizationUid;
+			private readonly int _stackIndexValue;
+
+			public StackIndex(string dimensionOrganizationUid, int stackIndexValue)
+			{
+				_dimensionOrganizationUid = dimensionOrganizationUid ?? string.Empty;
+				_stackIndexValue = stackIndexValue;
+			}
+
+			public int StackIndexValue
+			{
+				get { return _stackIndexValue; }
+			}
+
+			public override int GetHashCode()
+			{
+				return _dimensionOrganizationUid.GetHashCode() ^ _stackIndexValue.GetHashCode();
+			}
+
+			public bool Equals(StackIndex other)
+			{
+				return other != null && Equals(_dimensionOrganizationUid, other._dimensionOrganizationUid) && Equals(_stackIndexValue, other._stackIndexValue);
+			}
+
+			public override bool Equals(object obj)
+			{
+				return Equals(obj as StackIndex);
+			}
+		}
+	}
+
+	#endregion
+
 	#region Mixed Multi-frame
 
 	[Cloneable(false)]

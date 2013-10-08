@@ -118,6 +118,7 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
 			private readonly IModalityDisplaySetCreationOptions _creationOptions;
 
 			private readonly MREchoDisplaySetFactory _echoFactory;
+			private readonly MultiFrameStackDisplaySetFactory _multiFrameStackFactory;
 			private readonly MixedMultiFrameDisplaySetFactory _mixedMultiFrameFactory;
 			private readonly BasicDisplaySetFactory _basicFactory;
 			private readonly IDisplaySetFactory _placeholderDisplaySetFactory;
@@ -137,6 +138,9 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
 
 				if (creationOptions.SplitMultiEchoSeries)
 					_echoFactory = new MREchoDisplaySetFactory(imageFactory);
+
+				if (creationOptions.SplitMultiStackSeries)
+					_multiFrameStackFactory = new MultiFrameStackDisplaySetFactory(imageFactory);
 
 				if (_creationOptions.SplitMixedMultiframes)
 					_mixedMultiFrameFactory = new MixedMultiFrameDisplaySetFactory(imageFactory);
@@ -206,6 +210,9 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
 				if (_echoFactory != null)
 					_echoFactory.SetStudyTree(studyTree);
 
+				if (_multiFrameStackFactory != null)
+					_multiFrameStackFactory.SetStudyTree(studyTree);
+
 				if (_mixedMultiFrameFactory != null)
 					_mixedMultiFrameFactory.SetStudyTree(studyTree);
 
@@ -231,7 +238,11 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
 				}
 				else if (SplitMultiStackSeries)
 				{
-					// split stack factory
+					var stackDisplaySets = _multiFrameStackFactory.CreateDisplaySets(series);
+					if (stackDisplaySets.Count > 0 && !ShowOriginalStackSeries)
+						showOriginal = false;
+
+					displaySets.AddRange(stackDisplaySets);
 				}
 
 				if (SplitMixedMultiframeSeries)
