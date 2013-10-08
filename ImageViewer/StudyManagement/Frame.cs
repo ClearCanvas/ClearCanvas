@@ -678,6 +678,18 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 			get { return _parentImageSop.GetFrameAttribute(_frameNumber, DicomTags.StackId).GetString(0, null) ?? string.Empty; }
 		}
 
+		/// <summary>
+		/// Gets the position of the frame within its stack.
+		/// </summary>
+		/// <remarks>
+		/// For multi-frame images organized by stacks, this is the position of this frame within its stack as identified by the <see cref="DicomTags.InStackPositionNumber"/> tag.
+		/// For all other images, the value of this property is not defined.
+		/// </remarks>
+		public virtual int InStackPositionNumber
+		{
+			get { return _parentImageSop.GetFrameAttribute(_frameNumber, DicomTags.InStackPositionNumber).GetInt32(0, 0); }
+		}
+
 		#endregion
 
 		/// <summary>
