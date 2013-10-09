@@ -46,6 +46,8 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 
 		private Matrix3D _rotationMatrix;
 		private Matrix _pixelToPatientTransform;
+		private Vector3D _imageRowOrientationPatient;
+		private Vector3D _imageColumnOrientationPatient;
 		private Vector3D _imageNormalPatient;
 		private Vector3D _imageTopLeftPatient;
 		private Vector3D _imageTopRightPatient;
@@ -133,7 +135,29 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		/// </remarks>
 		public Vector3D ImagePositionPatientVector
 		{
-			get { return _imageTopLeftPatient ?? (_imageTopLeftPatient = new Vector3D((float) _imagePositionPatient.X, (float) _imagePositionPatient.Y, (float) _imagePositionPatient.Z)); }
+			get { return _imageTopLeftPatient ?? (_imageTopLeftPatient = !_imagePositionPatient.IsNull ? new Vector3D((float) _imagePositionPatient.X, (float) _imagePositionPatient.Y, (float) _imagePositionPatient.Z) : Vector3D.Null); }
+		}
+
+		/// <summary>
+		/// Gets the orientation vector of the first row in the patient coordinate system.
+		/// </summary>
+		/// <remarks>
+		/// This property returns a zero vector if the image plane information is invalid.
+		/// </remarks>
+		public Vector3D ImageRowOrientationPatientVector
+		{
+			get { return _imageRowOrientationPatient ?? (_imageRowOrientationPatient = !_imageOrientationPatient.IsNull ? new Vector3D((float) _imageOrientationPatient.RowX, (float) _imageOrientationPatient.RowY, (float) _imageOrientationPatient.RowZ).Normalize() : Vector3D.Null); }
+		}
+
+		/// <summary>
+		/// Gets the orientation vector of the first column in the patient coordinate system.
+		/// </summary>
+		/// <remarks>
+		/// This property returns a zero vector if the image plane information is invalid.
+		/// </remarks>
+		public Vector3D ImageColumnOrientationPatientVector
+		{
+			get { return _imageColumnOrientationPatient ?? (_imageColumnOrientationPatient = !_imageOrientationPatient.IsNull ? new Vector3D((float) _imageOrientationPatient.ColumnX, (float) _imageOrientationPatient.ColumnY, (float) _imageOrientationPatient.ColumnZ).Normalize() : Vector3D.Null); }
 		}
 
 		/// <summary>

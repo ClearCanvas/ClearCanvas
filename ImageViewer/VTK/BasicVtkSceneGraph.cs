@@ -22,6 +22,7 @@
 
 #endregion
 
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using ClearCanvas.Common;
@@ -117,13 +118,14 @@ namespace ClearCanvas.ImageViewer.Vtk
 
 			using (var renderWindow = vtkRenderer.GetRenderWindow())
 			{
+				var cameraDistance = GetNominalCameraDistance();
 				var clientSize = renderWindow.GetSize();
 				var camera = AddNewVtkObject<vtkCamera>();
 				camera.ParallelProjectionOn();
 				camera.SetParallelScale(0.5*clientSize[1]);
-				camera.SetPosition(0, 0, 1000);
+				camera.SetPosition(0, 0, cameraDistance);
 				camera.SetFocalPoint(0, 0, 0);
-				camera.SetClippingRange(10, 1100);
+				camera.SetClippingRange(10, 2*cameraDistance);
 				camera.ComputeViewPlaneNormal();
 				camera.SetViewUp(0, 1, 0);
 				vtkRenderer.SetActiveCamera(camera);
@@ -147,9 +149,11 @@ namespace ClearCanvas.ImageViewer.Vtk
 
 				camera.SetParallelScale(0.5*clientSize.Height/scale);
 
+				var cameraDistance = GetNominalCameraDistance();
 				var pos = ViewPortSpatialTransform.ConvertToSource(new PointF(clientSize.Width/2f, clientSize.Height/2f));
-				camera.SetPosition(pos.X, pos.Y, 1000);
+				camera.SetPosition(pos.X, pos.Y, cameraDistance);
 				camera.SetFocalPoint(pos.X, pos.Y, 0);
+				camera.SetClippingRange(10, 2*cameraDistance);
 				camera.ComputeViewPlaneNormal();
 
 				var up = ViewPortSpatialTransform.ConvertToSource(new SizeF(0, -1));
@@ -176,6 +180,13 @@ namespace ClearCanvas.ImageViewer.Vtk
 				_lastMTime = mTime;
 				Modified();
 			}
+		}
+
+		private double GetNominalCameraDistance()
+		{
+			// determine a suitable distance from the camera where the model will be positioned
+			const int padding = 10; // extra padding to ensure model won't be clipped by the backplane of the scene
+			return Math.Max(100, (int) Owner.Dimensions.Magnitude + padding);
 		}
 
 		public override sealed void DeinitializeSceneGraph(vtkRenderer vtkRenderer)
