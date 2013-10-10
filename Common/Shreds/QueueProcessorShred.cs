@@ -108,7 +108,6 @@ namespace ClearCanvas.Common.Shreds
 				foreach (QueueProcessor processor in GetProcessors())
 				{
 					Thread thread = StartProcessorThread(processor);
-					thread.Name = processor.Name;
 
 					// if thread started successfully, add to lists
 					_processorThreads.Add(thread);
@@ -195,6 +194,9 @@ namespace ClearCanvas.Common.Shreds
 						Platform.Log(LogLevel.Error, e);
 					}
 				});
+
+			if (!String.IsNullOrEmpty(processor.Name))
+				thread.Name = processor.Name;
 
 			thread.Start();
 			return thread;

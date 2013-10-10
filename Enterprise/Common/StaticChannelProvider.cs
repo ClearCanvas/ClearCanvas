@@ -203,7 +203,7 @@ namespace ClearCanvas.Enterprise.Common
                                                     AuthenticationAttribute.IsAuthenticationRequired(serviceContract),
                                                     _args.MaxReceivedMessageSize,
                                                     _args.CertificateValidationMode,
-                                                    _args.RevocationMode));
+                                                    _args.RevocationMode){SendTimeoutSeconds = _args.SendTimeoutSeconds});
         }
 
         private static Uri GetFullUri(Type serviceContract, Uri baseUri)

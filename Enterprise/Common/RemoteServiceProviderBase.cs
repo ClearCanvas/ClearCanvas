@@ -134,6 +134,12 @@ namespace ClearCanvas.Enterprise.Common
 		public int MaxReceivedMessageSize { get; set; }
 
 		/// <summary>
+		/// The time, in seconds, in which a send operation must complete.
+		/// </summary>
+		/// <remarks>Value less than or equal to zero should be ignored.</remarks>
+		public int SendTimeoutSeconds { get; set; }
+
+		/// <summary>
 		/// Certificate validation mode.
 		/// </summary>
 		public X509CertificateValidationMode CertificateValidationMode { get; set; }

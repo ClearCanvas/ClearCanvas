@@ -31,69 +31,74 @@ using ClearCanvas.Server.ShredHost;
 
 namespace ClearCanvas.ImageServer.Services.Common.Shreds
 {
-    /// <summary>
-    /// Plugin to host ImageServer-specific web services.
-    /// </summary>
-    [ExtensionOf(typeof(ShredExtensionPoint))]
-    public class RemoteServicesServer : WcfShred
-    {
+	/// <summary>
+	/// Plugin to host ImageServer-specific web services.
+	/// </summary>
+	[ExtensionOf(typeof (ShredExtensionPoint))]
+	public class RemoteServicesServer : WcfShred
+	{
 
-        #region Private Members
+		#region Private Members
 
-        private readonly string _className;
-        private ServiceMount _serviceMount;
+		private readonly string _className;
+		private ServiceMount _serviceMount;
 
-        #endregion
+		#endregion
 
-        #region Constructors
+		#region Constructors
 
-        public RemoteServicesServer()
-        {
-            _className = GetType().ToString();
-        }
+		public RemoteServicesServer()
+		{
+			_className = GetType().ToString();
+		}
 
-        #endregion
+		#endregion
 
-        #region IShred Implementation Shred Override
+		#region IShred Implementation Shred Override
 
-        public override void Start()
-        {
-            Platform.Log(LogLevel.Debug, "{0}[{1}]: Start invoked", _className, AppDomain.CurrentDomain.FriendlyName);
+		public override void Start()
+		{
+			Platform.Log(LogLevel.Debug, "{0}[{1}]: Start invoked", _className, AppDomain.CurrentDomain.FriendlyName);
 
-            try
-            {
-                MountWebServices();
-            }
-            catch (Exception e)
-            {
-                Platform.Log(LogLevel.Fatal, e, "Unexpected exception starting Web Services Server Shred");
-            }
-        }
+			try
+			{
+				MountWebServices();
+			}
+			catch (Exception e)
+			{
+				Platform.Log(LogLevel.Fatal, e, "Unexpected exception starting Web Services Server Shred");
+			}
+		}
 
-        private void MountWebServices()
-        {
-            _serviceMount = new ServiceMount(new Uri(WebServicesSettings.Default.BaseUri), typeof(ServerWsHttpConfiguration).AssemblyQualifiedName);
-            _serviceMount.AddServices(new ApplicationServiceExtensionPoint());
-            _serviceMount.OpenServices();
-        }
+		private void MountWebServices()
+		{
+			_serviceMount = new ServiceMount(new Uri(WebServicesSettings.Default.BaseUri), typeof (ServerWsHttpConfiguration).AssemblyQualifiedName)
+			                	{
+			                		MaxReceivedMessageSize = WebServicesSettings.Default.MaxReceivedMessageSize,
+			                		SendTimeoutSeconds = WebServicesSettings.Default.SendTimeoutSeconds
+			                	};
 
-        public override void Stop()
-        {
-            Platform.Log(LogLevel.Info, "{0}[{1}]: Stop invoked", _className, AppDomain.CurrentDomain.FriendlyName);
-            if (_serviceMount!=null)
-                _serviceMount.CloseServices();
-        }
+			_serviceMount.AddServices(new ApplicationServiceExtensionPoint());
+			_serviceMount.OpenServices();
+		}
 
-        public override string GetDisplayName()
-        {
-            return SR.RemoteImageServerServicesServer;
-        }
+		public override void Stop()
+		{
+			Platform.Log(LogLevel.Info, "{0}[{1}]: Stop invoked", _className, AppDomain.CurrentDomain.FriendlyName);
+			if (_serviceMount != null)
+				_serviceMount.CloseServices();
+		}
 
-        public override string GetDescription()
-        {
-            return SR.RemoteImageServerServicesServerDescription;
-        }
+		public override string GetDisplayName()
+		{
+			return SR.RemoteImageServerServicesServer;
+		}
 
-        #endregion
-    }
+		public override string GetDescription()
+		{
+			return SR.RemoteImageServerServicesServerDescription;
+		}
+
+		#endregion
+	}
 }

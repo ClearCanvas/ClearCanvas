@@ -47,6 +47,7 @@ namespace ClearCanvas.Enterprise.Common
             this.MaxReceivedMessageSize = maxReceivedMessageSize;
             this.CertificateValidationMode = certificateValidationMode;
             this.RevocationMode = revocationMode;
+        	this.SendTimeoutSeconds = 0;
         }
 
 		/// <summary>
@@ -68,6 +69,12 @@ namespace ClearCanvas.Enterprise.Common
 		/// The maximum size of received messages to allow, in bytes.
 		/// </summary>
         public int MaxReceivedMessageSize;
+
+		/// <summary>
+		/// The time, in seconds, in which a send operation must complete.
+		/// </summary>
+		/// <remarks>Value less than or equal to zero should be ignored.</remarks>
+		public int SendTimeoutSeconds;
 
         /// <summary>
         /// Specifies the mode used for X509 certificate validation.

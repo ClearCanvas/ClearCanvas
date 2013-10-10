@@ -48,6 +48,9 @@ namespace ClearCanvas.Enterprise.Common.ServiceConfiguration.Client
 				args.AuthenticationRequired ? MessageCredentialType.UserName : MessageCredentialType.None;
 			binding.MaxReceivedMessageSize = args.MaxReceivedMessageSize;
 
+			if (args.SendTimeoutSeconds > 0)
+				binding.SendTimeout = TimeSpan.FromSeconds(args.SendTimeoutSeconds);
+
 			// allow individual string content to be same size as entire message
 			binding.ReaderQuotas.MaxStringContentLength = args.MaxReceivedMessageSize;
 			binding.ReaderQuotas.MaxArrayLength = args.MaxReceivedMessageSize;

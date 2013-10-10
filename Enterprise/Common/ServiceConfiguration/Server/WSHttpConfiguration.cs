@@ -22,6 +22,7 @@
 
 #endregion
 
+using System;
 using System.ServiceModel;
 using System.ServiceModel.Description;
 
@@ -43,6 +44,9 @@ namespace ClearCanvas.Enterprise.Common.ServiceConfiguration.Server
 		{
 			var binding = new WSHttpBinding();
 			binding.MaxReceivedMessageSize = args.MaxReceivedMessageSize;
+			if (args.SendTimeoutSeconds > 0)
+				binding.SendTimeout = TimeSpan.FromSeconds(args.SendTimeoutSeconds);
+
 			binding.ReaderQuotas.MaxStringContentLength = args.MaxReceivedMessageSize;
 			binding.ReaderQuotas.MaxArrayLength = args.MaxReceivedMessageSize;
 			binding.Security.Mode = SecurityMode.Message;

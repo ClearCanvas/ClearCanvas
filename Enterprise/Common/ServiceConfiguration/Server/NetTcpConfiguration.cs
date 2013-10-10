@@ -45,6 +45,9 @@ namespace ClearCanvas.Enterprise.Common.ServiceConfiguration.Server
 		{
 			var binding = new NetTcpBinding();
 			binding.MaxReceivedMessageSize = args.MaxReceivedMessageSize;
+			if (args.SendTimeoutSeconds > 0)
+				binding.SendTimeout = TimeSpan.FromSeconds(args.SendTimeoutSeconds);
+
 			binding.ReaderQuotas.MaxStringContentLength = args.MaxReceivedMessageSize;
 			binding.ReaderQuotas.MaxArrayLength = args.MaxReceivedMessageSize;
 			binding.Security.Mode = args.Authenticated ? SecurityMode.TransportWithMessageCredential : SecurityMode.Transport;

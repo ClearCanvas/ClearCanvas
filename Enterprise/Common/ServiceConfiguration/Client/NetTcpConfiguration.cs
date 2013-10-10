@@ -49,6 +49,8 @@ namespace ClearCanvas.Enterprise.Common.ServiceConfiguration.Client
 			// turn off transport security altogether
 			binding.Security.Transport.ClientCredentialType = TcpClientCredentialType.None;
 
+			if (args.SendTimeoutSeconds > 0)
+				binding.SendTimeout = TimeSpan.FromSeconds(args.SendTimeoutSeconds);
 
 			binding.MaxReceivedMessageSize = args.MaxReceivedMessageSize;
 

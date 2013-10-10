@@ -30,86 +30,90 @@ using ClearCanvas.Enterprise.Common;
 
 namespace ClearCanvas.ImageServer.Common
 {
-    /// <summary>
-    /// Creates and configures a WS-HTTP service channel for the server.
-    /// </summary>
-    public class ServerWsHttpConfiguration : IServiceHostConfiguration
-    {
-        #region IServiceHostConfiguration Members
+	/// <summary>
+	/// Creates and configures a WS-HTTP service channel for the server.
+	/// </summary>
+	public class ServerWsHttpConfiguration : IServiceHostConfiguration
+	{
+		#region IServiceHostConfiguration Members
 
-        public void ConfigureServiceHost(ServiceHost host, ServiceHostConfigurationArgs args)
-        {
-            WSHttpBinding binding = new WSHttpBinding();
-            binding.MaxReceivedMessageSize = args.MaxReceivedMessageSize;
-            binding.ReaderQuotas.MaxStringContentLength = args.MaxReceivedMessageSize;
-            binding.ReaderQuotas.MaxArrayLength = args.MaxReceivedMessageSize;
-            binding.Security.Mode = WebServicesSettings.Default.SecurityMode;
-            binding.Security.Message.ClientCredentialType = args.Authenticated
-                                                                ? MessageCredentialType.UserName
-                                                                : MessageCredentialType.None;
-            // establish endpoint
-            host.AddServiceEndpoint(args.ServiceContract, binding, "");
+		public void ConfigureServiceHost(ServiceHost host, ServiceHostConfigurationArgs args)
+		{
+			WSHttpBinding binding = new WSHttpBinding();
+			binding.MaxReceivedMessageSize = args.MaxReceivedMessageSize;
 
-            // expose meta-data via HTTP GET
-            ServiceMetadataBehavior metadataBehavior = host.Description.Behaviors.Find<ServiceMetadataBehavior>();
-            if (metadataBehavior == null)
-            {
-                metadataBehavior = new ServiceMetadataBehavior();
-                metadataBehavior.HttpGetEnabled = true;
-                host.Description.Behaviors.Add(metadataBehavior);
-            }
+			if (args.SendTimeoutSeconds > 0)
+				binding.SendTimeout = TimeSpan.FromSeconds(args.SendTimeoutSeconds);
 
-            // set up the certificate 
-            if (WebServicesSettings.Default.SecurityMode == SecurityMode.Message 
-                || WebServicesSettings.Default.SecurityMode==SecurityMode.TransportWithMessageCredential)
-            {
-                host.Credentials.ServiceCertificate.SetCertificate(
-                    StoreLocation.LocalMachine, StoreName.My, X509FindType.FindBySubjectName, args.HostUri.Host);
-            }
-        }
+			binding.ReaderQuotas.MaxStringContentLength = args.MaxReceivedMessageSize;
+			binding.ReaderQuotas.MaxArrayLength = args.MaxReceivedMessageSize;
+			binding.Security.Mode = WebServicesSettings.Default.SecurityMode;
+			binding.Security.Message.ClientCredentialType = args.Authenticated
+			                                                	? MessageCredentialType.UserName
+			                                                	: MessageCredentialType.None;
+			// establish endpoint
+			host.AddServiceEndpoint(args.ServiceContract, binding, "");
+
+			// expose meta-data via HTTP GET
+			ServiceMetadataBehavior metadataBehavior = host.Description.Behaviors.Find<ServiceMetadataBehavior>();
+			if (metadataBehavior == null)
+			{
+				metadataBehavior = new ServiceMetadataBehavior();
+				metadataBehavior.HttpGetEnabled = true;
+				host.Description.Behaviors.Add(metadataBehavior);
+			}
+
+			// set up the certificate 
+			if (WebServicesSettings.Default.SecurityMode == SecurityMode.Message
+			    || WebServicesSettings.Default.SecurityMode == SecurityMode.TransportWithMessageCredential)
+			{
+				host.Credentials.ServiceCertificate.SetCertificate(
+					StoreLocation.LocalMachine, StoreName.My, X509FindType.FindBySubjectName, args.HostUri.Host);
+			}
+		}
+
+		#endregion
+	}
 
 
-    
+	/// <summary>
+	/// Creates and configures a WS-HTTP service channel for the client.
+	/// </summary>
+	public class ClientWsHttpConfiguration : IServiceChannelConfiguration
+	{
+		#region IServiceChannelConfiguration Members
 
-        #endregion
-    }
+		/// <summary>
+		/// Configures and returns an instance of the specified service channel factory, according to the specified arguments.
+		/// </summary>
+		/// <param name="args"></param>
+		/// <returns></returns>
+		public ChannelFactory ConfigureChannelFactory(ServiceChannelConfigurationArgs args)
+		{
+			WSHttpBinding binding = new WSHttpBinding();
+			binding.Security.Mode = WebServicesSettings.Default.SecurityMode;
+			binding.Security.Message.ClientCredentialType =
+				args.AuthenticationRequired ? MessageCredentialType.UserName : MessageCredentialType.None;
+			binding.MaxReceivedMessageSize = args.MaxReceivedMessageSize;
 
+			if (args.SendTimeoutSeconds > 0)
+				binding.SendTimeout = TimeSpan.FromSeconds(args.SendTimeoutSeconds);
 
-    /// <summary>
-    /// Creates and configures a WS-HTTP service channel for the client.
-    /// </summary>
-    public class ClientWsHttpConfiguration : IServiceChannelConfiguration
-    {
-        #region IServiceChannelConfiguration Members
+			// allow individual string content to be same size as entire message
+			binding.ReaderQuotas.MaxStringContentLength = args.MaxReceivedMessageSize;
+			binding.ReaderQuotas.MaxArrayLength = args.MaxReceivedMessageSize;
 
-        /// <summary>
-        /// Configures and returns an instance of the specified service channel factory, according to the specified arguments.
-        /// </summary>
-        /// <param name="args"></param>
-        /// <returns></returns>
-        public ChannelFactory ConfigureChannelFactory(ServiceChannelConfigurationArgs args)
-        {
-            WSHttpBinding binding = new WSHttpBinding();
-            binding.Security.Mode =  WebServicesSettings.Default.SecurityMode;
-            binding.Security.Message.ClientCredentialType =
-                args.AuthenticationRequired ? MessageCredentialType.UserName : MessageCredentialType.None;
-            binding.MaxReceivedMessageSize = args.MaxReceivedMessageSize;
+			//binding.ReceiveTimeout = new TimeSpan(0, 0 , 20);
+			//binding.SendTimeout = new TimeSpan(0, 0, 10);
 
-            // allow individual string content to be same size as entire message
-            binding.ReaderQuotas.MaxStringContentLength = args.MaxReceivedMessageSize;
-            binding.ReaderQuotas.MaxArrayLength = args.MaxReceivedMessageSize;
+			ChannelFactory channelFactory = (ChannelFactory) Activator.CreateInstance(args.ChannelFactoryClass, binding,
+			                                                                          new EndpointAddress(args.ServiceUri));
+			channelFactory.Credentials.ServiceCertificate.Authentication.CertificateValidationMode = args.CertificateValidationMode;
+			channelFactory.Credentials.ServiceCertificate.Authentication.RevocationMode = args.RevocationMode;
 
-            //binding.ReceiveTimeout = new TimeSpan(0, 0 , 20);
-            //binding.SendTimeout = new TimeSpan(0, 0, 10);
+			return channelFactory;
+		}
 
-            ChannelFactory channelFactory = (ChannelFactory)Activator.CreateInstance(args.ChannelFactoryClass, binding,
-                new EndpointAddress(args.ServiceUri));
-            channelFactory.Credentials.ServiceCertificate.Authentication.CertificateValidationMode = args.CertificateValidationMode;
-            channelFactory.Credentials.ServiceCertificate.Authentication.RevocationMode = args.RevocationMode;
-
-            return channelFactory;
-        }
-
-        #endregion
-    }
+		#endregion
+	}
 }
