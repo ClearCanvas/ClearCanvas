@@ -22,6 +22,7 @@
 
 #endregion
 
+using System;
 using ClearCanvas.ImageViewer.Mathematics;
 
 namespace ClearCanvas.ImageViewer.Volumes
@@ -162,31 +163,67 @@ namespace ClearCanvas.ImageViewer.Volumes
 		/// <summary>
 		/// Converts the specified volume position into the patient coordinate system.
 		/// </summary>
+		/// <param name="volumePosition">The volume position to be converted, specified as a <see cref="Vector3D"/>.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="volumePosition"/> is NULL.</exception>
+		/// <returns>The specified volume position converted to the patient coordinate system.</returns>
 		Vector3D ConvertToPatient(Vector3D volumePosition);
 
 		/// <summary>
 		/// Converts the specified patient position into the volume coordinate system.
 		/// </summary>
+		/// <param name="patientPosition">The patient position to be converted, specified as a <see cref="Vector3D"/>.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="patientPosition"/> is NULL.</exception>
+		/// <returns>The specified patient position converted to the volume coordinate system.</returns>
 		Vector3D ConvertToVolume(Vector3D patientPosition);
 
 		/// <summary>
 		/// Rotates the specified volume orientation matrix into the patient coordinate system.
 		/// </summary>
-		Matrix RotateToPatientOrientation(Matrix volumeOrientation);
+		/// <param name="volumeOrientation">The volume orientation to be converted, specified as a <see cref="Matrix3D"/>.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="volumeOrientation"/> is NULL.</exception>
+		/// <returns>The specified volume orientation converted to the patient coordinate system.</returns>
+		Matrix3D RotateToPatientOrientation(Matrix3D volumeOrientation);
 
 		/// <summary>
 		/// Rotates the specified patient orientation matrix into the volume coordinate system.
 		/// </summary>
+		/// <param name="patientOrientation">The patient orientation to be converted, specified as a <see cref="Matrix3D"/>.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="patientOrientation"/> is NULL.</exception>
+		/// <returns>The specified patient orientation converted to the volume coordinate system.</returns>
+		Matrix3D RotateToVolumeOrientation(Matrix3D patientOrientation);
+
+		/// <summary>
+		/// Rotates the specified volume orientation or affine transformation matrix into the patient coordinate system.
+		/// </summary>
+		/// <param name="volumeOrientation">The volume orientation to be converted, specified as a 3x3 (orientation) or 4x4 (affine transformation) instance of <see cref="Matrix"/>.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="volumeOrientation"/> is NULL.</exception>
+		/// <exception cref="ArgumentException">Thrown if <paramref name="volumeOrientation"/> is not a 3x3 orientation matrix or a 4x4 affine transformation matrix.</exception>
+		/// <returns>The specified volume orientation converted to the patient coordinate system.</returns>
+		Matrix RotateToPatientOrientation(Matrix volumeOrientation);
+
+		/// <summary>
+		/// Rotates the specified patient orientation or affine transformation matrix into the volume coordinate system.
+		/// </summary>
+		/// <param name="patientOrientation">The patient orientation to be converted, specified as a 3x3 (orientation) or 4x4 (affine transformation) instance of <see cref="Matrix"/>.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="patientOrientation"/> is NULL.</exception>
+		/// <exception cref="ArgumentException">Thrown if <paramref name="patientOrientation"/> is not a 3x3 orientation matrix or a 4x4 affine transformation matrix.</exception>
+		/// <returns>The specified patient orientation converted to the volume coordinate system.</returns>
 		Matrix RotateToVolumeOrientation(Matrix patientOrientation);
 
 		/// <summary>
 		/// Rotates the specified volume vector into the patient coordinate system.
 		/// </summary>
+		/// <param name="volumeVector">The volume vector to be converted, specified as a <see cref="Vector3D"/>.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="volumeVector"/> is NULL.</exception>
+		/// <returns>The specified volume vector converted to the patient coordinate system.</returns>
 		Vector3D RotateToPatientOrientation(Vector3D volumeVector);
 
 		/// <summary>
 		/// Rotates the specified patient vector into the volume coordinate system.
 		/// </summary>
+		/// <param name="patientVector">The patient vector to be converted, specified as a <see cref="Vector3D"/>.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="patientVector"/> is NULL.</exception>
+		/// <returns>The specified patient vector converted to the volume coordinate system.</returns>
 		Vector3D RotateToVolumeOrientation(Vector3D patientVector);
 	}
 
@@ -305,6 +342,16 @@ namespace ClearCanvas.ImageViewer.Volumes
 		public Vector3D ConvertToVolume(Vector3D patientPosition)
 		{
 			return VolumeHeaderData.ConvertToVolume(patientPosition);
+		}
+
+		public Matrix3D RotateToPatientOrientation(Matrix3D volumeOrientation)
+		{
+			return VolumeHeaderData.RotateToPatientOrientation(volumeOrientation);
+		}
+
+		public Matrix3D RotateToVolumeOrientation(Matrix3D patientOrientation)
+		{
+			return VolumeHeaderData.RotateToVolumeOrientation(patientOrientation);
 		}
 
 		public Matrix RotateToPatientOrientation(Matrix volumeOrientation)
