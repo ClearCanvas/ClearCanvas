@@ -27,6 +27,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Web;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Shreds;
@@ -252,5 +253,44 @@ namespace ClearCanvas.ImageServer.Services.Streaming.Shreds
 
 		#endregion
 
-	}
+		protected override void OnStarted()
+		{
+			AutoStartMe();
+		}
+
+		private void AutoStartMe()
+		{
+			// Send a dummy request to kick start the service
+			// Must be done in a thread because we are 
+			// in the thread that handles incoming requests
+			Task.Factory.StartNew(() =>
+			                      	{
+										try
+										{
+											using (var dummyClient = new WebClient())
+											{
+												foreach (var p in ServerPartitionMonitor.Instance.Partitions)
+												{
+													var request =
+														String.Format(
+															"{0}{1}?requestType=WADO&studyUID=28282&seriesUid=478844&objectUid=1231233&contentType=image%2Fjpeg&rows=100&columns=100",
+															ServerEndPointUri, p.AeTitle);
+
+													var uri = new Uri(request);
+													
+													// Note: this request will be rejected because the study doens't exist but we don't care 
+													dummyClient.OpenRead(uri); 
+													break;
+												}
+											}
+										}
+										catch(Exception e)
+										{
+											// ignore it
+										}
+										
+			                      	});
+			
+		}
+    }
 }

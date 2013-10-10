@@ -114,6 +114,18 @@ namespace ClearCanvas.Server.ShredHost
                     Uri.UriSchemeHttp, Port, UriSubPath); }
         }
 
+		/// <summary>
+		/// Gets the server Uri
+		/// </summary>
+		protected String ServerEndPointUri
+		{
+			get
+			{
+				
+				var host = Dns.GetHostName(); 
+				return String.Format("{0}://{1}:{2}{3}", Uri.UriSchemeHttp, host, Port, UriSubPath);
+			}
+		}
 
         /// <summary>
         /// Gets or sets the name of the shred.
@@ -137,9 +149,15 @@ namespace ClearCanvas.Server.ShredHost
             _listener.Prefixes.Add(BaseUri);
             _listener.Start();
 
-            
+        	bool firstTime = true;
+
             while (_listener.IsListening)
             {
+				if (firstTime)
+					OnStarted();
+
+            	firstTime = false;
+
                 Platform.Log(LogLevel.Debug, "Waiting for request at {0}", BaseUri);
 
                 _syncState = new HttpListenerAsyncState(_listener);
@@ -156,7 +174,11 @@ namespace ClearCanvas.Server.ShredHost
 
         #region Overridden Public Methods
 
-        public override void Stop()
+		protected virtual void OnStarted()
+		{
+		}
+
+    	public override void Stop()
         {
             _listener.Stop();
             _syncState.WaitEvent.Set();

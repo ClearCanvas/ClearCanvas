@@ -63,18 +63,4 @@ namespace ClearCanvas.ImageServer.Services.Streaming.ImageStreaming.MimeTypes
             
         }
     }
-
-    [ExtensionOf(typeof(ImageMimeTypeProcessorExtensionPoint))]
-    public class JPEGMimeType : IImageMimeTypeProcessor
-    {
-        public string OutputMimeType
-        {
-            get { return "image/jpeg"; }
-        }
-
-        public MimeTypeProcessorOutput Process(ImageStreamingContext context)
-        {
-            throw new WADOException( HttpStatusCode.NotImplemented, "image/jpeg is not supported. Please use a different ContentType");
-        }
-    }
 }
