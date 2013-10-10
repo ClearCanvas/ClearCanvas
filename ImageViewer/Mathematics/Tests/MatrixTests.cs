@@ -34,6 +34,8 @@ namespace ClearCanvas.ImageViewer.Mathematics.Tests
 	[TestFixture]
 	public class MatrixTests
 	{
+		private const float _tolerance = 0.00005f;
+
 		[Test]
 		public void TestConstructor()
 		{
@@ -403,13 +405,13 @@ namespace ClearCanvas.ImageViewer.Mathematics.Tests
 			                   		{10.00f}
 			                   	});
 
-			Assert.IsTrue(Matrix.AreEqual(m.Invert(), r, 0.00001f));
+			Assert.IsTrue(Matrix.AreEqual(m.Invert(), r, _tolerance));
 
 			// test inverse multiplied against original is the identity
 			m.SetRow(0, -1.1F);
 
-			Assert.IsTrue(Matrix.AreEqual(m*m.Invert(), Matrix.GetIdentity(1), 0.00001f));
-			Assert.IsTrue(Matrix.AreEqual(m.Invert()*m, Matrix.GetIdentity(1), 0.00001f));
+			Assert.IsTrue(Matrix.AreEqual(m*m.Invert(), Matrix.GetIdentity(1), _tolerance));
+			Assert.IsTrue(Matrix.AreEqual(m.Invert()*m, Matrix.GetIdentity(1), _tolerance));
 
 			// test non-invertible
 			m.SetRow(0, 0);
@@ -443,14 +445,14 @@ namespace ClearCanvas.ImageViewer.Mathematics.Tests
 			                   		{3.07692f, 0.76923f}
 			                   	});
 
-			Assert.IsTrue(Matrix.AreEqual(m.Invert(), r, 0.00001f));
+			Assert.IsTrue(Matrix.AreEqual(m.Invert(), r, _tolerance));
 
 			// test inverse multiplied against original is the identity
 			m.SetRow(0, -1.1F, 2.6F);
 			m.SetRow(1, 4.6F, -3.7F);
 
-			Assert.IsTrue(Matrix.AreEqual(m*m.Invert(), Matrix.GetIdentity(2), 0.00001f));
-			Assert.IsTrue(Matrix.AreEqual(m.Invert()*m, Matrix.GetIdentity(2), 0.00001f));
+			Assert.IsTrue(Matrix.AreEqual(m*m.Invert(), Matrix.GetIdentity(2), _tolerance));
+			Assert.IsTrue(Matrix.AreEqual(m.Invert()*m, Matrix.GetIdentity(2), _tolerance));
 
 			// test non-invertible
 			m.SetRow(0, 1, 0);
@@ -487,15 +489,15 @@ namespace ClearCanvas.ImageViewer.Mathematics.Tests
 			                   		{13.95833f, -1.25000f, -2.70833f}
 			                   	});
 
-			Assert.IsTrue(Matrix.AreEqual(m.Invert(), r, 0.00001f));
+			Assert.IsTrue(Matrix.AreEqual(m.Invert(), r, _tolerance));
 
 			// test inverse multiplied against original is the identity
 			m.SetRow(0, -1.1F, 2.6F, -7.1F);
 			m.SetRow(1, 4.6F, -3.7F, 9.1F);
 			m.SetRow(2, 4.1F, -3.1F, 7.7F);
 
-			Assert.IsTrue(Matrix.AreEqual(m*m.Invert(), Matrix.GetIdentity(3), 0.00001f));
-			Assert.IsTrue(Matrix.AreEqual(m.Invert()*m, Matrix.GetIdentity(3), 0.00001f));
+			Assert.IsTrue(Matrix.AreEqual(m*m.Invert(), Matrix.GetIdentity(3), _tolerance));
+			Assert.IsTrue(Matrix.AreEqual(m.Invert()*m, Matrix.GetIdentity(3), _tolerance));
 
 			// test non-invertible
 			m.SetRow(0, 1, 0, 0);
@@ -535,7 +537,7 @@ namespace ClearCanvas.ImageViewer.Mathematics.Tests
 			                   		{-0.15625f, 0.00000f, 0.46875f, -0.31250f}
 			                   	});
 
-			Assert.IsTrue(Matrix.AreEqual(m.Invert(), r, 0.00001f));
+			Assert.IsTrue(Matrix.AreEqual(m.Invert(), r, _tolerance));
 
 			// test inverse multiplied against original is the identity
 			m.SetRow(0, -1.1F, 2.6F, -7.1F, 2.2F);
@@ -543,8 +545,8 @@ namespace ClearCanvas.ImageViewer.Mathematics.Tests
 			m.SetRow(2, 4.1F, -3.1F, 7.7F, 7.1F);
 			m.SetRow(3, -9.9F, 0.2F, 4.3F, 5.5F);
 
-			Assert.IsTrue(Matrix.AreEqual(m*m.Invert(), Matrix.GetIdentity(4), 0.00001f));
-			Assert.IsTrue(Matrix.AreEqual(m.Invert()*m, Matrix.GetIdentity(4), 0.00001f));
+			Assert.IsTrue(Matrix.AreEqual(m*m.Invert(), Matrix.GetIdentity(4), _tolerance));
+			Assert.IsTrue(Matrix.AreEqual(m.Invert()*m, Matrix.GetIdentity(4), _tolerance));
 
 			// test non-invertible
 			m.SetRow(0, 1, 0, 0, 0);
