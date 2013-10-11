@@ -86,5 +86,14 @@ namespace ClearCanvas.ImageServer.Common {
                 return ((string)(this["UserCredentialsProviderClass"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("-1")]
+        public int SendTimeoutSeconds {
+            get {
+                return ((int)(this["SendTimeoutSeconds"]));
+            }
+        }
     }
 }
