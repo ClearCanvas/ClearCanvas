@@ -42,7 +42,18 @@ namespace ClearCanvas.ImageServer.Services.Streaming.ImageStreaming.Handlers
     {
     	// cache the extension for performance purpose
         static readonly Dictionary<string, Type> _processorMap = new Dictionary<string, Type>();
-        
+
+		static ImageStreamingHandler()
+		{
+			// Build the mime-type mapping
+			var xp = new ImageMimeTypeProcessorExtensionPoint();
+			object[] plugins = xp.CreateExtensions();
+			foreach (IImageMimeTypeProcessor mimeTypeConverter in plugins)
+			{
+				_processorMap.Add(mimeTypeConverter.OutputMimeType, mimeTypeConverter.GetType());
+			}
+		}
+
         public WADOResponse Process(WADORequestTypeHandlerContext context)
         {
             Platform.CheckForNullReference(context, "httpContext");
@@ -119,40 +130,23 @@ namespace ClearCanvas.ImageServer.Services.Streaming.ImageStreaming.Handlers
                 }
             }
 
-            if (_processorMap.ContainsKey(context.ContentType))
+			if (_processorMap.ContainsKey(responseContentType))
             {
-                return (IImageMimeTypeProcessor) Activator.CreateInstance(_processorMap[context.ContentType]);
+				Type processorType = _processorMap[responseContentType];
+
+				var processor = (IImageMimeTypeProcessor)Activator.CreateInstance(processorType);
+
+				if (!ClientAcceptable(context, processor.OutputMimeType))
+				{
+					Platform.Log(LogLevel.Warn, "Client requested for {0} but did not indicate in the request headers that it could support this mime-type (check HTTP-Accept)", context.ContentType);
+				}
+
+            	return processor;
+
             }
 
-            ImageMimeTypeProcessorExtensionPoint xp = new ImageMimeTypeProcessorExtensionPoint();
-            object[] plugins = xp.CreateExtensions();
-
-            bool found = false;
-            foreach (IImageMimeTypeProcessor mimeTypeConverter in plugins)
-            {
-
-                if (mimeTypeConverter.OutputMimeType == responseContentType)
-                {
-                    found = true;
-                    _processorMap.Add(context.ContentType, mimeTypeConverter.GetType());
-
-                    if (ClientAcceptable(context, mimeTypeConverter.OutputMimeType))
-                    {
-                        return mimeTypeConverter;
-                    }
-                }
-            }
-
-            if (found)
-            {
-                throw new WADOException(HttpStatusCode.NotAcceptable,
-                                    String.Format("{0} is supported but is not acceptable by the client", responseContentType));
-            }
-            else
-            {
-                throw new WADOException(HttpStatusCode.BadRequest,
-                                    String.Format("The specified contentType '{0}' is not supported", responseContentType));
-            }
+			throw new WADOException(HttpStatusCode.BadRequest,
+									String.Format("The specified contentType '{0}' is not supported", responseContentType));
         }
 
     }

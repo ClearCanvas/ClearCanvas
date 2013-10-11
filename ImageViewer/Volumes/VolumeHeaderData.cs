@@ -73,13 +73,13 @@ namespace ClearCanvas.ImageViewer.Volumes
 	{
 		private readonly object _syncRoot = new object();
 		private readonly DicomAttributeCollection _collection = new DicomAttributeCollection();
-		private readonly Matrix _volumeOrientationPatient;
+		private readonly Matrix3D _volumeOrientationPatient;
 
 		public VolumeHeaderData(IList<IDicomAttributeProvider> sourceSops,
 		                        Size3D arrayDimensions,
 		                        Vector3D voxelSpacing,
 		                        Vector3D volumePositionPatient,
-		                        Matrix volumeOrientationPatient,
+		                        Matrix3D volumeOrientationPatient,
 		                        int bitsAllocated,
 		                        int bitsStored,
 		                        bool isSigned,
@@ -239,8 +239,10 @@ namespace ClearCanvas.ImageViewer.Volumes
 
 		public Vector3D ConvertToPatient(Vector3D volumePosition)
 		{
+			Platform.CheckForNullReference(volumePosition, "volumePosition");
+
 			// Set orientation transform
-			var volumePatientTransform = new Matrix(_volumeOrientationPatient);
+			var volumePatientTransform = _volumeOrientationPatient.Augment();
 
 			// Set origin translation
 			volumePatientTransform.SetRow(3, VolumePositionPatient.X, VolumePositionPatient.Y, VolumePositionPatient.Z, 1);
@@ -256,8 +258,10 @@ namespace ClearCanvas.ImageViewer.Volumes
 
 		public Vector3D ConvertToVolume(Vector3D patientPosition)
 		{
+			Platform.CheckForNullReference(patientPosition, "patientPosition");
+
 			// Set orientation transform
-			var patientVolumeTransform = new Matrix(_volumeOrientationPatient.Transpose());
+			var patientVolumeTransform = _volumeOrientationPatient.Augment(true);
 
 			// Set origin translation
 			var rotatedOrigin = RotateToVolumeOrientation(VolumePositionPatient);
@@ -274,30 +278,56 @@ namespace ClearCanvas.ImageViewer.Volumes
 
 		public Matrix RotateToPatientOrientation(Matrix volumeOrientation)
 		{
-			var orientationPatient = volumeOrientation*_volumeOrientationPatient;
+			Platform.CheckForNullReference(volumeOrientation, "volumeOrientation");
+
+			var size = volumeOrientation.Rows;
+			Platform.CheckTrue(volumeOrientation.IsSquare && (size == 3 || size == 4), "volumeOrientation must be a 3x3 orientation matrix or a 4x4 affine transmation matrix");
+
+			var orientationPatient = size == 3 ? volumeOrientation*_volumeOrientationPatient : volumeOrientation*_volumeOrientationPatient.Augment();
 			return orientationPatient;
 		}
 
 		public Matrix RotateToVolumeOrientation(Matrix patientOrientation)
 		{
+			Platform.CheckForNullReference(patientOrientation, "patientOrientation");
+
+			var size = patientOrientation.Rows;
+			Platform.CheckTrue(patientOrientation.IsSquare && (size == 3 || size == 4), "patientOrientation must be a 3x3 orientation matrix or a 4x4 affine transmation matrix");
+
+			var orientationVolume = size == 3 ? patientOrientation*_volumeOrientationPatient.Transpose() : patientOrientation*_volumeOrientationPatient.Augment(true);
+			return orientationVolume;
+		}
+
+		public Matrix3D RotateToPatientOrientation(Matrix3D volumeOrientation)
+		{
+			Platform.CheckForNullReference(volumeOrientation, "volumeOrientation");
+
+			var orientationPatient = volumeOrientation*_volumeOrientationPatient;
+			return orientationPatient;
+		}
+
+		public Matrix3D RotateToVolumeOrientation(Matrix3D patientOrientation)
+		{
+			Platform.CheckForNullReference(patientOrientation, "patientOrientation");
+
 			var orientationVolume = patientOrientation*_volumeOrientationPatient.Transpose();
 			return orientationVolume;
 		}
 
 		public Vector3D RotateToPatientOrientation(Vector3D volumeVector)
 		{
-			var volumePos = new Matrix(1, 4);
-			volumePos.SetRow(0, volumeVector.X, volumeVector.Y, volumeVector.Z, 1F);
-			Matrix patientPos = volumePos*_volumeOrientationPatient;
-			return new Vector3D(patientPos[0, 0], patientPos[0, 1], patientPos[0, 2]);
+			Platform.CheckForNullReference(volumeVector, "volumeVector");
+
+			var patientPos = volumeVector*_volumeOrientationPatient;
+			return patientPos;
 		}
 
 		public Vector3D RotateToVolumeOrientation(Vector3D patientVector)
 		{
-			var patientPos = new Matrix(1, 4);
-			patientPos.SetRow(0, patientVector.X, patientVector.Y, patientVector.Z, 1F);
-			var volumePos = patientPos*_volumeOrientationPatient.Transpose();
-			return new Vector3D(volumePos[0, 0], volumePos[0, 1], volumePos[0, 2]);
+			Platform.CheckForNullReference(patientVector, "patientVector");
+
+			var volumePos = patientVector*_volumeOrientationPatient.Transpose();
+			return volumePos;
 		}
 
 		#endregion
@@ -433,7 +463,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 
 		internal static VolumeHeaderData TestCreate(IList<IDicomAttributeProvider> sourceSops, int bitsAllocated = 16, int bitsStored = 16, bool isSigned = false)
 		{
-			return new VolumeHeaderData(sourceSops, new Size3D(0, 0, 0), new Vector3D(0, 0, 0), new Vector3D(0, 0, 0), new Matrix(4, 4), bitsAllocated, bitsStored, isSigned, DicomPixelData.GetMinPixelValue(bitsAllocated, isSigned), 1, 0);
+			return new VolumeHeaderData(sourceSops, new Size3D(0, 0, 0), new Vector3D(0, 0, 0), new Vector3D(0, 0, 0), new Matrix3D(), bitsAllocated, bitsStored, isSigned, DicomPixelData.GetMinPixelValue(bitsAllocated, isSigned), 1, 0);
 		}
 
 #endif

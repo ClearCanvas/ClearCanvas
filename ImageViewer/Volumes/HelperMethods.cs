@@ -61,11 +61,11 @@ namespace ClearCanvas.ImageViewer.Volumes
 		/// <summary>
 		/// Augments the 3D orientation matrix as a 4x4 affine transformation matrix.
 		/// </summary>
-		public static Matrix Augment(this Matrix3D orientationMatrix)
+		public static Matrix Augment(this Matrix3D orientationMatrix, bool transpose = false)
 		{
-			var x = orientationMatrix.GetRow(0);
-			var y = orientationMatrix.GetRow(1);
-			var z = orientationMatrix.GetRow(2);
+			var x = transpose ? orientationMatrix.GetColumn(0) : orientationMatrix.GetRow(0);
+			var y = transpose ? orientationMatrix.GetColumn(1) : orientationMatrix.GetRow(1);
+			var z = transpose ? orientationMatrix.GetColumn(2) : orientationMatrix.GetRow(2);
 			return new Matrix(new[,]
 			                  	{
 			                  		{x.X, x.Y, x.Z, 0},

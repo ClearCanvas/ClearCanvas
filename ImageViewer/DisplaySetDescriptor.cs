@@ -63,7 +63,7 @@ namespace ClearCanvas.ImageViewer
 
 		/// <summary>
 		/// Gets whether or not the pixel data in the display set is derived in some manner from the pixel data of another
-		/// (i.e. the image type of the images in the display set is effectively be DERIVED instead of ORIGINAL)
+		/// (i.e. the image type of the images in the display set is effectively DERIVED rather than ORIGINAL)
 		/// </summary>
 		bool IsDerived { get; }
 

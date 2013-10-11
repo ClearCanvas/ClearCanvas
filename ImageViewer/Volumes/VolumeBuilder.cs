@@ -64,7 +64,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 			private readonly CreateVolumeProgressCallback _callback;
 
 			private VolumeHeaderData _volumeHeaderData;
-			private Matrix _volumeOrientationPatient;
+			private Matrix3D _volumeOrientationPatient;
 			private Vector3D _volumePositionPatient;
 			private Vector3D _voxelSpacing;
 			private Size3D _volumeSize;
@@ -96,7 +96,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 				_frames.Clear();
 			}
 
-			private Matrix VolumeOrientationPatient
+			private Matrix3D VolumeOrientationPatient
 			{
 				get
 				{
@@ -671,7 +671,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 			/// <summary>
 			/// Gets the rotation about the X-axis in radians.
 			/// </summary>
-			private static double GetXRotation(Matrix orientationPatient)
+			private static double GetXRotation(Matrix3D orientationPatient)
 			{
 				return Math.Atan2(orientationPatient[2, 1], orientationPatient[2, 2]);
 			}
@@ -679,7 +679,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 			/// <summary>
 			/// Gets the rotation about the Y-axis in radians.
 			/// </summary>
-			private static double GetYRotation(Matrix orientationPatient)
+			private static double GetYRotation(Matrix3D orientationPatient)
 			{
 				return -Math.Asin(orientationPatient[2, 0]);
 			}
@@ -687,7 +687,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 			/// <summary>
 			/// Gets the rotation about the Z-axis in radians.
 			/// </summary>
-			private static double GetZRotation(Matrix orientationPatient)
+			private static double GetZRotation(Matrix3D orientationPatient)
 			{
 				return Math.Atan2(orientationPatient[1, 0], orientationPatient[0, 0]);
 			}
@@ -706,19 +706,18 @@ namespace ClearCanvas.ImageViewer.Volumes
 				return delta.IsNull ? 0f : Math.Abs(delta.Dot(frame1.ImagePlaneHelper.ImageNormalPatient));
 			}
 
-			private static Matrix ImageOrientationPatientToMatrix(ImageOrientationPatient orientation)
+			private static Matrix3D ImageOrientationPatientToMatrix(ImageOrientationPatient orientation)
 			{
 				Vector3D xOrient = new Vector3D((float) orientation.RowX, (float) orientation.RowY, (float) orientation.RowZ);
 				Vector3D yOrient = new Vector3D((float) orientation.ColumnX, (float) orientation.ColumnY, (float) orientation.ColumnZ);
 				Vector3D zOrient = xOrient.Cross(yOrient);
 
-				Matrix orientationMatrix = new Matrix
+				Matrix3D orientationMatrix = new Matrix3D
 					(new[,]
 					 	{
-					 		{xOrient.X, xOrient.Y, xOrient.Z, 0},
-					 		{yOrient.X, yOrient.Y, yOrient.Z, 0},
-					 		{zOrient.X, zOrient.Y, zOrient.Z, 0},
-					 		{0, 0, 0, 1}
+					 		{xOrient.X, xOrient.Y, xOrient.Z},
+					 		{yOrient.X, yOrient.Y, yOrient.Z},
+					 		{zOrient.X, zOrient.Y, zOrient.Z}
 					 	});
 				return orientationMatrix;
 			}
