@@ -82,8 +82,10 @@
     <Compile Include="Automation\IDicomExplorerAutomation.cs" />
     <Compile Include="Automation\IViewerAutomation.cs" />
     <Compile Include="Automation\IViewerAutomationBridge.cs" />
-    <Compile Include="Automation\Tests\DataContractTests.cs" />
-    <Compile Include="Automation\Tests\LegacyContracts.cs" />
+    <Compile Include="Automation\Tests\AbstractDataContractTest.cs" />
+    <Compile Include="Automation\Tests\BaselineDataContracts.cs" />
+    <Compile Include="Automation\Tests\BaselineDataContractTests.cs" />
+    <Compile Include="Automation\Tests\Version30DataContractTests.cs" />
     <Compile Include="Automation\ViewerAutomationBridge.cs" />
     <Compile Include="Automation\ViewerAutomationServiceClient.cs" />
     <Compile Include="BlockingCollection.cs" />
