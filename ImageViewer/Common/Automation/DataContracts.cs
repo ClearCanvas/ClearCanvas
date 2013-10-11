@@ -139,9 +139,9 @@ namespace ClearCanvas.ImageViewer.Common.Automation
 		/// Constructor.
 		/// </summary>
 		/// <remarks>
-		/// Deprecated. Consider returning complete primary study identifier values using the overload <see cref="Viewer(Guid,StudyIdentifier)"/>.
+		/// Deprecated. Consider returning complete primary study identifier values using the overload <see cref="Viewer(Guid,StudyRootStudyIdentifier)"/>.
 		/// </remarks>
-		[Obsolete("Consider returning complete primary study identifier values using the overload ctor(Guid, StudyIdentifier)")]
+		[Obsolete("Consider returning complete primary study identifier values using the overload ctor(Guid, StudyRootStudyIdentifier)")]
 		public Viewer(Guid identifier, string primaryStudyInstanceUid)
 		{
 			Identifier = identifier;
@@ -168,16 +168,17 @@ namespace ClearCanvas.ImageViewer.Common.Automation
 		/// <summary>
 		/// Gets or sets the identifying details of the primary study, or study of interest.
 		/// </summary>
-		[DataMember(IsRequired = true)]
+		[DataMember(IsRequired = false)]
 		public StudyRootStudyIdentifier PrimaryStudyIdentifier { get; set; }
 
 		/// <summary>
 		/// Gets or sets the study instance uid of the primary study, or study of interest.
 		/// </summary>
+		[DataMember(IsRequired = true)]
 		public string PrimaryStudyInstanceUid
 		{
 			get { return PrimaryStudyIdentifier != null ? PrimaryStudyIdentifier.StudyInstanceUid : null; }
-			set { PrimaryStudyIdentifier = !string.IsNullOrEmpty(value) ? new StudyRootStudyIdentifier {StudyInstanceUid = value} : null; }
+			set { if (PrimaryStudyIdentifier == null || PrimaryStudyIdentifier.StudyInstanceUid != value) PrimaryStudyIdentifier = !string.IsNullOrEmpty(value) ? new StudyRootStudyIdentifier {StudyInstanceUid = value} : null; }
 		}
 
 		public override bool Equals(object obj)
