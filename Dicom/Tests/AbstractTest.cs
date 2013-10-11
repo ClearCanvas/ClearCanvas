@@ -503,8 +503,8 @@ namespace ClearCanvas.Dicom.Tests
             item = new DicomSequenceItem();
             theSet[DicomTags.RequestAttributesSequence].AddSequenceItem(item);
 
-            item[DicomTags.RequestedProcedureId].SetStringValue("XA123");
-            item[DicomTags.ScheduledProcedureStepId].SetStringValue("XA1234");
+            item[DicomTags.RequestedProcedureId].SetStringValue("XA567");
+            item[DicomTags.ScheduledProcedureStepId].SetStringValue("XA5678");
 
 
         }

@@ -343,6 +343,7 @@
     <Compile Include="Iod\Tests\ImageOrientationPatientTests.cs" />
     <Compile Include="Iod\IStudy.cs" />
     <Compile Include="Utilities\PdfStreamHelper.cs" />
+    <Compile Include="Utilities\Rules\Tests\DicomExpressionTests.cs" />
     <Compile Include="Utilities\SopInstanceFactory.cs" />
     <Compile Include="Utilities\Tests\DateTimeParserTests.cs" />
     <Compile Include="Utilities\Tests\DicomStringHelperTests.cs">
