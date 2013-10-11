@@ -39,8 +39,8 @@ namespace ClearCanvas.Dicom.Utilities
 		private static readonly char[] _pathSeparators = new char[] { '\\' , '/'};
 		private static readonly char[] _tagSeparator = new char[] { ',' };
 
-		private readonly List<DicomTag> _tags;
-		private readonly string _path;
+		private readonly DicomTag[] _tags;
+		private string _path;
 
 		public DicomTagPath(string path)
 			: this(GetTags(path, null))
@@ -68,17 +68,17 @@ namespace ClearCanvas.Dicom.Utilities
 		}
 
 		public DicomTagPath(params uint[] tags)
-            : this((IEnumerable<uint>)tags)
+            : this(GetTags(tags, null))
 		{
 		}
 
         public DicomTagPath(IEnumerable<uint> tags)
-            : this(GetTags(tags, null))
+            : this(GetTags(tags.ToArray(), null))
         {
         }
 
         public DicomTagPath(IEnumerable<uint> tags, DicomVr vr)
-            : this(GetTags(tags, vr))
+			: this(GetTags(tags.ToArray(), vr))
         {
         }
 
@@ -90,46 +90,48 @@ namespace ClearCanvas.Dicom.Utilities
 	    public DicomTagPath(IEnumerable<DicomTag> tags)
 		{
             Platform.CheckForNullReference(tags, "tags");
-            _tags = new List<DicomTag>(tags);
-            _path = StringUtilities.Combine(_tags, "/", tag => String.Format("({0:x4},{1:x4})", tag.Group, tag.Element));
+	    	_tags = tags.ToArray();
             ValidatePath(_tags);
 		}
 
         private DicomTagPath()
         {
-            _tags = new List<DicomTag>();
-            _path = "";
+            _tags = new DicomTag[0];
         }
 
 		public string Path
 		{
-			get { return _path; }
+			get
+			{
+				//Compute the path on demand and cache it because it's expensive.
+				return _path ?? (_path = StringUtilities.Combine(_tags, "/", tag => String.Format("({0:x4},{1:x4})", tag.Group, tag.Element)));
+			}
 		}
 
 		public IList<DicomTag> TagsInPath
 		{
-			get { return _tags.AsReadOnly(); }
+			get { return _tags.ToList(); }
 		}
 
 		public DicomVr ValueRepresentation
 		{
-			get { return _tags[_tags.Count - 1].VR; }	
+			get { return _tags[_tags.Length - 1].VR; }	
 		}
 
         public DicomTagPath UpOne()
         {
-            if (_tags.Count == 1)
+            if (_tags.Length == 1)
                 throw new InvalidOperationException();
 
-            return new DicomTagPath(_tags.Take(_tags.Count - 1));
+			return new DicomTagPath(_tags.Take(_tags.Length - 1));
         }
 
         public DicomTagPath DownOne()
         {
-            if (_tags.Count == 1)
+			if (_tags.Length == 1)
                 throw new InvalidOperationException();
 
-            return new DicomTagPath(_tags.Skip(_tags.Count - 1));
+			return new DicomTagPath(_tags.Skip(_tags.Length - 1));
         }
 
         /// <summary>
@@ -210,7 +212,7 @@ namespace ClearCanvas.Dicom.Utilities
 			if (other == null)
 				return false;
 
-			if (_tags.Count != 1)
+			if (_tags.Length != 1)
 				return false;
 
 			return _tags[0].Equals(other);
@@ -231,7 +233,7 @@ namespace ClearCanvas.Dicom.Utilities
 
 		public bool Equals(uint other)
 		{
-			if (_tags.Count != 1)
+			if (_tags.Length != 1)
 				return false;
 
 			return _tags[0].TagValue.Equals(other);
@@ -241,12 +243,15 @@ namespace ClearCanvas.Dicom.Utilities
 
 		public override int GetHashCode()
 		{
-			return _path.GetHashCode();
+			int hash = 0x8323421;
+			foreach(var tag in _tags)
+				hash ^= tag.GetHashCode();
+			return hash;
 		}
 
 		public override string ToString()
 		{
-			return _path;
+			return Path;
 		}
 
 		public static DicomTagPath operator +(DicomTagPath left, DicomTagPath right)
@@ -335,14 +340,13 @@ namespace ClearCanvas.Dicom.Utilities
 			}
 		}
 
-        private static IEnumerable<DicomTag> GetTags(IEnumerable<uint> tags, DicomVr vr)
+        private static IEnumerable<DicomTag> GetTags(IList<uint> tags, DicomVr vr)
         {
-            var theTags = tags.ToList();
             var dicomTags = new List<DicomTag>();
-            for (int i = 0; i < theTags.Count; ++i)
+            for (int i = 0; i < tags.Count; ++i)
             {
-                var tag = theTags[i];
-                var theVr = i < theTags.Count - 1 ? DicomVr.SQvr : vr;
+				var tag = tags[i];
+				var theVr = i < tags.Count - 1 ? DicomVr.SQvr : vr;
                 dicomTags.Add(NewTag(tag, theVr));
             }
 
