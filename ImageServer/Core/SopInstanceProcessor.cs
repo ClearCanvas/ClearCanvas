@@ -569,6 +569,7 @@ namespace ClearCanvas.ImageServer.Core
 					Platform.Log(LogLevel.Error, e, "Unexpected exception when {0}.  Rolling back operation.",
 					             processor.Description);
 					processor.Rollback();
+					EventManager.FireEvent(this, new FailedSopEventArgs { File = file, ServerPartitionEntry = _context.Partition, WorkQueueUidEntry = uid, WorkQueueEntry = _context.WorkQueueEntry, FileLength = InstanceStats.FileSize, FailureMessage = e.Message});
 					throw new ApplicationException("Unexpected exception when processing file.", e);
 				}
 				finally

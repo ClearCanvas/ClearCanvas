@@ -96,6 +96,7 @@
     <Compile Include="Edit\WebDeleteWorkQueueEntryData.cs" />
     <Compile Include="Events\EventExtensionPoint.cs" />
     <Compile Include="Events\EventManager.cs" />
+    <Compile Include="Events\FailedSopEventArgs.cs" />
     <Compile Include="Events\IEventHandler.cs" />
     <Compile Include="Events\ImageServerEventArgs.cs" />
     <Compile Include="Events\ImageServerEventAttribute.cs" />
