@@ -28,6 +28,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using ClearCanvas.Dicom;
 using ClearCanvas.Dicom.Iod;
 using ClearCanvas.ImageViewer.Mathematics;
@@ -50,7 +51,6 @@ namespace ClearCanvas.ImageViewer.Volumes.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof (InsufficientFramesException))]
 		public void TestInsufficientFramesSource()
 		{
 			// it doesn't really matter what function we use
@@ -60,14 +60,15 @@ namespace ClearCanvas.ImageViewer.Volumes.Tests
 			try
 			{
 				// create only 2 slices!!
-				foreach (ISopDataSource sopDataSource in function.CreateSops(100, 100, 2, false))
-				{
-					images.Add(new ImageSop(sopDataSource));
-				}
+				images.AddRange(function.CreateSops(100, 100, 2, false).Select(sopDataSource => new ImageSop(sopDataSource)));
 
 				// this line *should* throw an exception
-				using (Volume volume = Volume.Create(EnumerateFrames(images))) {}
+				using (Volume volume = Volume.Create(EnumerateFrames(images)))
+				{
+					Assert.Fail("Expected an exception of type {0}, instead got {1}", typeof (InsufficientFramesException), volume);
+				}
 			}
+			catch (InsufficientFramesException) {}
 			finally
 			{
 				DisposeAll(images);
@@ -75,69 +76,101 @@ namespace ClearCanvas.ImageViewer.Volumes.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof (NullSourceSeriesException))]
 		public void TestMissingStudySource()
 		{
-			// it doesn't really matter what function we use
-			TestVolume(VolumeFunction.Void, sopDataSource => sopDataSource[DicomTags.StudyInstanceUid].SetEmptyValue(), null);
+			try
+			{
+				// it doesn't really matter what function we use
+				TestVolume(VolumeFunction.Void, sopDataSource => sopDataSource[DicomTags.StudyInstanceUid].SetEmptyValue(), null);
+				Assert.Fail("Expected an exception of type {0}", typeof (NullSourceSeriesException));
+			}
+			catch (NullSourceSeriesException) {}
 		}
 
 		[Test]
-		[ExpectedException(typeof (NullSourceSeriesException))]
 		public void TestMissingSeriesSource()
 		{
-			// it doesn't really matter what function we use
-			TestVolume(VolumeFunction.Void, sopDataSource => sopDataSource[DicomTags.SeriesInstanceUid].SetEmptyValue(), null);
+			try
+			{
+				// it doesn't really matter what function we use
+				TestVolume(VolumeFunction.Void, sopDataSource => sopDataSource[DicomTags.SeriesInstanceUid].SetEmptyValue(), null);
+				Assert.Fail("Expected an exception of type {0}", typeof (NullSourceSeriesException));
+			}
+			catch (NullSourceSeriesException) {}
 		}
 
 		[Test]
-		[ExpectedException(typeof (MultipleSourceSeriesException))]
 		public void TestDifferentSeriesSource()
 		{
-			// it doesn't really matter what function we use
-			TestVolume(VolumeFunction.Void, sopDataSource => sopDataSource[DicomTags.SeriesInstanceUid].SetStringValue(DicomUid.GenerateUid().UID), null);
+			try
+			{
+				// it doesn't really matter what function we use
+				TestVolume(VolumeFunction.Void, sopDataSource => sopDataSource[DicomTags.SeriesInstanceUid].SetStringValue(DicomUid.GenerateUid().UID), null);
+				Assert.Fail("Expected an exception of type {0}", typeof (MultipleSourceSeriesException));
+			}
+			catch (MultipleSourceSeriesException) {}
 		}
 
 		[Test]
-		[ExpectedException(typeof (NullFrameOfReferenceException))]
 		public void TestMissingFramesOfReferenceSource()
 		{
-			// it doesn't really matter what function we use
-			TestVolume(VolumeFunction.Void, sopDataSource => sopDataSource[DicomTags.FrameOfReferenceUid].SetEmptyValue(), null);
+			try
+			{
+				// it doesn't really matter what function we use
+				TestVolume(VolumeFunction.Void, sopDataSource => sopDataSource[DicomTags.FrameOfReferenceUid].SetEmptyValue(), null);
+				Assert.Fail("Expected an exception of type {0}", typeof (NullFrameOfReferenceException));
+			}
+			catch (NullFrameOfReferenceException) {}
 		}
 
 		[Test]
-		[ExpectedException(typeof (MultipleFramesOfReferenceException))]
 		public void TestDifferentFramesOfReferenceSource()
 		{
-			// it doesn't really matter what function we use
-			TestVolume(VolumeFunction.Void, sopDataSource => sopDataSource[DicomTags.FrameOfReferenceUid].SetStringValue(DicomUid.GenerateUid().UID), null);
+			try
+			{
+				// it doesn't really matter what function we use
+				TestVolume(VolumeFunction.Void, sopDataSource => sopDataSource[DicomTags.FrameOfReferenceUid].SetStringValue(DicomUid.GenerateUid().UID), null);
+				Assert.Fail("Expected an exception of type {0}", typeof (MultipleFramesOfReferenceException));
+			}
+			catch (MultipleFramesOfReferenceException) {}
 		}
 
 		[Test]
-		[ExpectedException(typeof (NullImageOrientationException))]
 		public void TestMissingImageOrientationSource()
 		{
-			// it doesn't really matter what function we use
-			TestVolume(VolumeFunction.Void, sopDataSource => sopDataSource[DicomTags.ImageOrientationPatient].SetEmptyValue(), null);
+			try
+			{
+				// it doesn't really matter what function we use
+				TestVolume(VolumeFunction.Void, sopDataSource => sopDataSource[DicomTags.ImageOrientationPatient].SetEmptyValue(), null);
+				Assert.Fail("Expected an exception of type {0}", typeof (NullImageOrientationException));
+			}
+			catch (NullImageOrientationException) {}
 		}
 
 		[Test]
-		[ExpectedException(typeof (MultipleImageOrientationsException))]
 		public void TestDifferentImageOrientationSource()
 		{
 			int n = 0;
 
-			// it doesn't really matter what function we use
-			TestVolume(VolumeFunction.Void, sopDataSource => sopDataSource[DicomTags.ImageOrientationPatient].SetStringValue(DataSetOrientation.CreateGantryTiltedAboutX(n++).ImageOrientationPatient), null);
+			try
+			{
+				// it doesn't really matter what function we use
+				TestVolume(VolumeFunction.Void, sopDataSource => sopDataSource[DicomTags.ImageOrientationPatient].SetStringValue(DataSetOrientation.CreateGantryTiltedAboutX(n++).ImageOrientationPatient), null);
+				Assert.Fail("Expected an exception of type {0}", typeof (MultipleImageOrientationsException));
+			}
+			catch (MultipleImageOrientationsException) {}
 		}
 
 		[Test]
-		[ExpectedException(typeof (UncalibratedFramesException))]
 		public void TestUncalibratedImageSource()
 		{
-			// it doesn't really matter what function we use
-			TestVolume(VolumeFunction.Void, sopDataSource => sopDataSource[DicomTags.PixelSpacing].SetEmptyValue(), null);
+			try
+			{
+				// it doesn't really matter what function we use
+				TestVolume(VolumeFunction.Void, sopDataSource => sopDataSource[DicomTags.PixelSpacing].SetEmptyValue(), null);
+				Assert.Fail("Expected an exception of type {0}", typeof (UncalibratedFramesException));
+			}
+			catch (UncalibratedFramesException) {}
 		}
 
 		[Test]
@@ -148,53 +181,73 @@ namespace ClearCanvas.ImageViewer.Volumes.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof (AnisotropicPixelAspectRatioException))]
 		public void TestAnisotropicPixelAspectRatio4To3ImageSource()
 		{
-			// it doesn't really matter what function we use
-			TestVolume(VolumeFunction.Void, sopDataSource => sopDataSource[DicomTags.PixelSpacing].SetStringValue(@"0.13333333\0.0999999"), null);
+			try
+			{
+				// it doesn't really matter what function we use
+				TestVolume(VolumeFunction.Void, sopDataSource => sopDataSource[DicomTags.PixelSpacing].SetStringValue(@"0.13333333\0.0999999"), null);
+				Assert.Fail("Expected an exception of type {0}", typeof (AnisotropicPixelAspectRatioException));
+			}
+			catch (AnisotropicPixelAspectRatioException) {}
 		}
 
 		[Test]
-		[ExpectedException(typeof (AnisotropicPixelAspectRatioException))]
 		public void TestAnisotropicPixelAspectRatio3To4ImageSource()
 		{
-			// it doesn't really matter what function we use
-			TestVolume(VolumeFunction.Void, sopDataSource => sopDataSource[DicomTags.PixelSpacing].SetStringValue(@"0.10000000\0.13333333"), null);
+			try
+			{
+				// it doesn't really matter what function we use
+				TestVolume(VolumeFunction.Void, sopDataSource => sopDataSource[DicomTags.PixelSpacing].SetStringValue(@"0.10000000\0.13333333"), null);
+				Assert.Fail("Expected an exception of type {0}", typeof (AnisotropicPixelAspectRatioException));
+			}
+			catch (AnisotropicPixelAspectRatioException) {}
 		}
 
 		[Test]
-		[ExpectedException(typeof (UnevenlySpacedFramesException))]
 		public void TestUnevenlySpacedFramesSource()
 		{
 			int sliceSpacing = 1;
 			int sliceLocation = 100;
 
-			// it doesn't really matter what function we use
-			TestVolume(VolumeFunction.Void,
-			           sopDataSource =>
-			           	{
-			           		sopDataSource[DicomTags.ImagePositionPatient].SetStringValue(string.Format(@"100\100\{0}", sliceLocation));
-			           		sliceLocation += sliceSpacing++;
-			           	}, null);
+			try
+			{
+				// it doesn't really matter what function we use
+				TestVolume(VolumeFunction.Void,
+				           sopDataSource =>
+				           	{
+				           		sopDataSource[DicomTags.ImagePositionPatient].SetStringValue(string.Format(@"100\100\{0}", sliceLocation));
+				           		sliceLocation += sliceSpacing++;
+				           	}, null);
+				Assert.Fail("Expected an exception of type {0}", typeof (UnevenlySpacedFramesException));
+			}
+			catch (UnevenlySpacedFramesException) {}
 		}
 
 		[Test]
-		[ExpectedException(typeof (UnevenlySpacedFramesException))]
 		public void TestCoincidentFramesSource()
 		{
-			// it doesn't really matter what function we use
-			TestVolume(VolumeFunction.Void, sopDataSource => sopDataSource[DicomTags.ImagePositionPatient].SetStringValue(@"100\100\100"), null);
+			try
+			{
+				// it doesn't really matter what function we use
+				TestVolume(VolumeFunction.Void, sopDataSource => sopDataSource[DicomTags.ImagePositionPatient].SetStringValue(@"100\100\100"), null);
+				Assert.Fail("Expected an exception of type {0}", typeof (UnevenlySpacedFramesException));
+			}
+			catch (UnevenlySpacedFramesException) {}
 		}
 
 		[Test]
-		[ExpectedException(typeof (UnsupportedGantryTiltAxisException))]
 		public void TestMultiAxialGantryTiltedSource()
 		{
 			string imageOrientationPatient = string.Format(@"{1:f9}\{1:f9}\{0:f9}\-{0:f9}\{0:f9}\0", Math.Cos(Math.PI/4), Math.Pow(Math.Cos(Math.PI/4), 2));
 
-			// it doesn't really matter what function we use
-			TestVolume(VolumeFunction.Void, sopDataSource => sopDataSource[DicomTags.ImageOrientationPatient].SetStringValue(imageOrientationPatient), null);
+			try
+			{
+				// it doesn't really matter what function we use
+				TestVolume(VolumeFunction.Void, sopDataSource => sopDataSource[DicomTags.ImageOrientationPatient].SetStringValue(imageOrientationPatient), null);
+				Assert.Fail("Expected an exception of type {0}", typeof (UnsupportedGantryTiltAxisException));
+			}
+			catch (UnsupportedGantryTiltAxisException) {}
 		}
 
 		[Test]
@@ -216,23 +269,31 @@ namespace ClearCanvas.ImageViewer.Volumes.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof (UnsupportedGantryTiltAxisException))]
 		public void Test030DegreeYAxialRotationGantryTiltedSource()
 		{
 			DataSetOrientation orientation = DataSetOrientation.CreateGantryTiltedAboutY(30);
 
-			// it doesn't really matter what function we use
-			TestVolume(VolumeFunction.Void, orientation.Initialize, null);
+			try
+			{
+				// it doesn't really matter what function we use
+				TestVolume(VolumeFunction.Void, orientation.Initialize, null);
+				Assert.Fail("Expected an exception of type {0}", typeof (UnsupportedGantryTiltAxisException));
+			}
+			catch (UnsupportedGantryTiltAxisException) {}
 		}
 
 		[Test]
-		[ExpectedException(typeof (UnsupportedGantryTiltAxisException))]
 		public void Test330DegreeYAxialRotationGantryTiltedSource()
 		{
 			DataSetOrientation orientation = DataSetOrientation.CreateGantryTiltedAboutY(-30);
 
-			// it doesn't really matter what function we use
-			TestVolume(VolumeFunction.Void, orientation.Initialize, null);
+			try
+			{
+				// it doesn't really matter what function we use
+				TestVolume(VolumeFunction.Void, orientation.Initialize, null);
+				Assert.Fail("Expected an exception of type {0}", typeof (UnsupportedGantryTiltAxisException));
+			}
+			catch (UnsupportedGantryTiltAxisException) {}
 		}
 
 		[Test]
