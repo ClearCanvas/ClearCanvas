@@ -111,7 +111,15 @@ namespace ClearCanvas.ImageViewer.Volumes
 				get
 				{
 					if (_volumePositionPatient == null)
+					{
 						_volumePositionPatient = ImagePositionPatientToVector(_frames[0].Frame.ImagePositionPatient);
+						var paddingRows = PaddingRows;
+						if (paddingRows > 0 && GantryTilt > 0)
+						{
+							var mmOffsetY = VoxelSpacing.Y*PaddingRows;
+							_volumePositionPatient = _volumePositionPatient - mmOffsetY*VolumeOrientationPatient.GetRow(1).Normalize();
+						}
+					}
 					return _volumePositionPatient;
 				}
 			}
@@ -168,7 +176,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 						// This is the number of rows that we will pad for each frame, and it affects the overall
 						//	 dimensions of the volume.
 						// It is a function of the tilt angle and the run from first to last slice.
-						double padRowsMm = Math.Tan(this.GantryTilt)*(_frames[_frames.Count - 1].Frame.ImagePositionPatient.Z - _frames[0].Frame.ImagePositionPatient.Z);
+						double padRowsMm = Math.Sin(GantryTilt)*(_frames[_frames.Count - 1].Frame.ImagePositionPatient.Z - _frames[0].Frame.ImagePositionPatient.Z);
 
 						// ensure this pad is always positive for sizing calculations
 						_paddingRows = Math.Abs((int) (padRowsMm/this.VoxelSpacing.Y + 0.5f));
@@ -271,7 +279,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 				{
 					// figure out how many rows need to be padded at the top
 					float deltaMm = lastFramePos - (float) sourceFrame.ImagePositionPatient.Z;
-					double padTopMm = Math.Tan(gantryTilt)*deltaMm;
+					double padTopMm = Math.Sin(gantryTilt)*deltaMm;
 					countRowsPaddedAtTop = (int) (padTopMm/VoxelSpacing.Y + 0.5f);
 
 					//TODO (cr Oct 2009): verify that IPP of the first image is correct for the volume.
