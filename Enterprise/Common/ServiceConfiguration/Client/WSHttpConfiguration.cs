@@ -24,6 +24,7 @@
 
 using System;
 using System.ServiceModel;
+using System.ServiceModel.Description;
 using ClearCanvas.Common;
 
 namespace ClearCanvas.Enterprise.Common.ServiceConfiguration.Client
@@ -62,6 +63,10 @@ namespace ClearCanvas.Enterprise.Common.ServiceConfiguration.Client
 				new EndpointAddress(args.ServiceUri));
 			channelFactory.Credentials.ServiceCertificate.Authentication.CertificateValidationMode = args.CertificateValidationMode;
 			channelFactory.Credentials.ServiceCertificate.Authentication.RevocationMode = args.RevocationMode;
+
+			//TODO (Rockstar): remove this after refactoring to do per-sop edits
+			foreach (var operation in channelFactory.Endpoint.Contract.Operations)
+				operation.Behaviors.Find<DataContractSerializerOperationBehavior>().MaxItemsInObjectGraph = args.MaxReceivedMessageSize;
 
 			return channelFactory;
 		}

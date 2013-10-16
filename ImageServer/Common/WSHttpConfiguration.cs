@@ -63,6 +63,11 @@ namespace ClearCanvas.ImageServer.Common
 				host.Description.Behaviors.Add(metadataBehavior);
 			}
 
+			//TODO (Rockstar): remove this after refactoring to do per-sop edits
+			foreach (var endpoint in host.Description.Endpoints)
+				foreach (var operation in endpoint.Contract.Operations)
+					operation.Behaviors.Find<DataContractSerializerOperationBehavior>().MaxItemsInObjectGraph = args.MaxReceivedMessageSize;
+
 			// set up the certificate 
 			if (WebServicesSettings.Default.SecurityMode == SecurityMode.Message
 			    || WebServicesSettings.Default.SecurityMode == SecurityMode.TransportWithMessageCredential)
@@ -110,6 +115,10 @@ namespace ClearCanvas.ImageServer.Common
 			                                                                          new EndpointAddress(args.ServiceUri));
 			channelFactory.Credentials.ServiceCertificate.Authentication.CertificateValidationMode = args.CertificateValidationMode;
 			channelFactory.Credentials.ServiceCertificate.Authentication.RevocationMode = args.RevocationMode;
+
+			//TODO (Rockstar): remove this after refactoring to do per-sop edits
+			foreach (var operation in channelFactory.Endpoint.Contract.Operations)
+				operation.Behaviors.Find<DataContractSerializerOperationBehavior>().MaxItemsInObjectGraph = args.MaxReceivedMessageSize;
 
 			return channelFactory;
 		}
