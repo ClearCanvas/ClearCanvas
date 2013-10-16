@@ -176,8 +176,8 @@ namespace ClearCanvas.ImageServer.TestApp
             dicomFile.Load();
 
             //dicomFile.DataSet[DicomTags.PatientsName].SetEmptyValue();
-			//dicomFile.DataSet[DicomTags.PatientId].SetEmptyValue();
-        	dicomFile.DataSet[DicomTags.SopInstanceUid].SetStringValue(DicomUid.GenerateUid().UID);
+			dicomFile.DataSet[DicomTags.Modality].SetEmptyValue();
+        	//dicomFile.DataSet[DicomTags.SopInstanceUid].SetStringValue(DicomUid.GenerateUid().UID);
 
 			try
 			{
