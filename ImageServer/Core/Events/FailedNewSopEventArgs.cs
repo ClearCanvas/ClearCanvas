@@ -25,25 +25,27 @@
 namespace ClearCanvas.ImageServer.Core.Events
 {
 	/// <summary>
-	/// EventArgs for when a new SOP Instance has been processed
+	/// EventArgs for when a SOP Instance has failed initial processing in the WorkQueue
 	/// </summary>
 	/// <remarks>
-	/// The following example code shows how to define an extension that wil receive NewSopEventArgs events.
+	/// The following example code shows how to define an extension that wil receive FailedSopEventArgs events.
 	/// Just create a class that implements <see cref="IEventHandler{TImageServerEventArgs}"/> and add
 	/// the appropriate ExtensionOf attribute as shown below.  In this event case, it will be called each
-	/// time a new SOP Instance UID is processed by the ImageServer.
+	/// time a SOP Instance UID fails processing by the ImageServer.  Note that the WorkQueue is typically
+	/// configured to attempt multiple retries when a file fails processing.
 	/// <code>
-	/// [ExtensionOf(typeof(EventExtensionPoint{NewSopEventArgs}))]
-	/// public class NewSopEventHandler : IEventHandler{NewSopEventArgs} 
+	/// [ExtensionOf(typeof(EventExtensionPoint{FailedSopEventArgs}))]
+	/// public class FailedSopEventHandler : IEventHandler{FailedSopEventArgs} 
 	/// {
-	///    public void EventHandler(object sender, NewSopEventArgs e)
+	///    public void EventHandler(object sender, FailedSopEventArgs e)
 	///    {
 	///    }
 	/// }
 	/// </code>
 	/// </remarks>
 	[ImageServerEvent]
-	public class NewSopEventArgs : SopEventArgs
+	public class FailedNewSopEventArgs : SopEventArgs
 	{
+		public string FailureMessage { get; set; }
 	}
 }

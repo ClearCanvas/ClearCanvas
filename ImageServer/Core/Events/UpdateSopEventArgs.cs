@@ -34,8 +34,8 @@ namespace ClearCanvas.ImageServer.Core.Events
 	/// time a SOP Instance UID is modified or updated by the ImageServer.  This would happen after an
 	/// instance is reconciled, edited, or replaced due to the use of a Duplicate SOP Policy.
 	/// <code>
-	/// [ExtensionOf(typeof(EventExtensionPoint<UpdateSopEventArgs>))]
-	/// public class UpdateSopEventArgsHandler : IEventHandler<UpdateSopEventArgs> 
+	/// [ExtensionOf(typeof(EventExtensionPoint{UpdateSopEventArgs}))]
+	/// public class UpdateSopEventArgsHandler : IEventHandler{UpdateSopEventArgs}
 	/// {
 	///    public void EventHandler(object sender, UpdateSopEventArgs e)
 	///    {
