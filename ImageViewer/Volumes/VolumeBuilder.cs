@@ -215,8 +215,9 @@ namespace ClearCanvas.ImageViewer.Volumes
 
 						var padRowsMm = !FloatComparer.AreEqual(skewAngleY, 0) ? Math.Sin(skewAngleY)*((lastImagePlane.ImagePositionPatientVector - firstImagePlane.ImagePositionPatientVector).Magnitude) : 0;
 
-						// ensure this pad is always positive for sizing calculations
-						_paddingRows = Math.Abs((int) (padRowsMm/VoxelSpacing.Y + 0.5f));
+						// ensure this pad is always positive for sizing calculations, and round to nearest row
+						// (assumes that the row spacing is small enough to make rounding negligible - otherwise we would need to interpolate)
+						_paddingRows = (int) (Math.Abs(padRowsMm/VoxelSpacing.Y) + 0.5f);
 					}
 					return _paddingRows.Value;
 				}
@@ -283,15 +284,14 @@ namespace ClearCanvas.ImageViewer.Volumes
 			/// </summary>
 			private ushort[] BuildVolumeArray(ushort pixelPadValue, double normalizedSlope, double normalizedIntercept, out int minVolumeValue, out int maxVolumeValue)
 			{
-				var volumeData = MemoryManager.Allocate<ushort>(VolumeSize.Volume, TimeSpan.FromSeconds(10));
+				var volumeSize = VolumeSize;
+				var volumeData = MemoryManager.Allocate<ushort>(volumeSize.Volume, TimeSpan.FromSeconds(10));
 
-				var lastFramePos = (float) _frames[_frames.Count - 1].Frame.ImagePositionPatient.Z;
-
-				var volumePaddedFrameDimensions = VolumeSize;
+				var refFramePos = _frames[0].Frame.ImagePlaneHelper.ImagePositionPatientVector;
 				var paddingRows = PaddingRows;
-				var gantryTilt = SkewAngleY;
+				var skewAngleY = SkewAngleY;
 
-				var volumePaddedFrameSize = volumePaddedFrameDimensions.Width*volumePaddedFrameDimensions.Height;
+				var volumePaddedFrameSize = volumeSize.Width*volumeSize.Height;
 
 				var progressCallback = new FrameCopyProgressTracker(_frames.Count, _callback);
 				var frameRanges = Enumerable.Range(0, _frames.Count)
@@ -300,9 +300,22 @@ namespace ClearCanvas.ImageViewer.Volumes
 					        	{
 					        		var position = n*volumePaddedFrameSize;
 					        		var sourceFrame = _frames[n].Frame;
+
+					        		int paddingTopRows = 0, paddingBottomRows = 0;
+					        		if (paddingRows > 0)
+					        		{
+					        			// determine the number of rows to be padded at top and bottom
+					        			var framePadRowsMm = Math.Sin(skewAngleY)*(refFramePos - sourceFrame.ImagePlaneHelper.ImagePositionPatientVector).Magnitude;
+					        			var framePadRows = Math.Min(paddingRows, (int) (Math.Abs(framePadRowsMm/VoxelSpacing.Y) + 0.5f));
+
+					        			// when the skew angle is negative, the above calculation gives the rows to pad at the top of the frame
+					        			paddingTopRows = skewAngleY < 0 ? framePadRows : paddingRows - framePadRows;
+					        			paddingBottomRows = paddingRows - paddingTopRows;
+					        		}
+
 					        		int frameMinPixelValue, frameMaxPixelValue;
-					        		using (var lutFactory = LutFactory.Create())
-					        			FillVolumeFrame(volumeData, position, volumePaddedFrameDimensions, sourceFrame, pixelPadValue, normalizedSlope, normalizedIntercept, paddingRows, gantryTilt, lastFramePos, lutFactory, out frameMinPixelValue, out frameMaxPixelValue);
+					        		using (var lutFactory = LutFactory.Create()) // lut factory isn't thread safe, so we create one when needed in the worker thread
+					        			FillVolumeFrame(volumeData, position, volumeSize.Width, sourceFrame, pixelPadValue, normalizedSlope, normalizedIntercept, paddingTopRows, paddingBottomRows, lutFactory, out frameMinPixelValue, out frameMaxPixelValue);
 					        		progressCallback.IncrementAndNotify();
 					        		return new {Min = frameMinPixelValue, Max = frameMaxPixelValue};
 					        	}).ToList();
@@ -312,25 +325,13 @@ namespace ClearCanvas.ImageViewer.Volumes
 				return volumeData;
 			}
 
-			private void FillVolumeFrame(ushort[] volumeData, int position, Size3D volumePaddedFrameDimensions, Frame sourceFrame, ushort pixelPadValue, double normalizedSlope, double normalizedIntercept, int paddingRows, double gantryTilt, float lastFramePos, LutFactory lutFactory, out int frameMinPixelValue, out int frameMaxPixelValue)
+			private static void FillVolumeFrame(ushort[] volumeData, int position, int paddedColumns, Frame sourceFrame, ushort pixelPadValue, double normalizedSlope, double normalizedIntercept, int paddingRowsTop, int paddingRowsBottom, LutFactory lutFactory, out int frameMinPixelValue, out int frameMaxPixelValue)
 			{
-				// PadTop takes care of padding rows for gantry tilt correction
-				int countRowsPaddedAtTop = 0;
-				if (paddingRows > 0)
+				if (paddingRowsTop > 0) // pad rows at the top if required
 				{
-					// figure out how many rows need to be padded at the top
-					float deltaMm = lastFramePos - (float) sourceFrame.ImagePositionPatient.Z;
-					double padTopMm = Math.Sin(gantryTilt)*deltaMm;
-					countRowsPaddedAtTop = (int) (padTopMm/VoxelSpacing.Y + 0.5f);
-
-					//TODO (cr Oct 2009): verify that IPP of the first image is correct for the volume.
-					// account for the tilt in negative radians: we start padding from the bottom first in this case
-					if (gantryTilt < 0)
-						countRowsPaddedAtTop += paddingRows;
-
-					var count = countRowsPaddedAtTop*volumePaddedFrameDimensions.Width;
+					var count = paddingRowsTop*paddedColumns;
 					FillVolumeData(volumeData, pixelPadValue, position, count);
-					position += count;
+					position += count; // update position so frame is copied after the top padding
 				}
 
 				// Copy frame data
@@ -340,15 +341,12 @@ namespace ClearCanvas.ImageViewer.Volumes
 				var frameIsSigned = sourceFrame.PixelRepresentation != 0;
 				var frameModalityLut = lutFactory.GetModalityLutLinear(frameBitsStored, frameIsSigned, sourceFrame.RescaleSlope, sourceFrame.RescaleIntercept);
 				CopyFrameData(frameData, frameBytesPerPixel, frameIsSigned, frameModalityLut, volumeData, position, normalizedSlope, normalizedIntercept, out frameMinPixelValue, out frameMaxPixelValue);
-				position += frameData.Length/frameBytesPerPixel;
 
-				// Finish out any padding left over from PadTop
-				var countRowsPaddedAtBottom = paddingRows > 0 ? paddingRows - countRowsPaddedAtTop : 0;
-				if (countRowsPaddedAtBottom > 0) // Pad bottom
+				if (paddingRowsBottom > 0) // pad rows at the bottom if required
 				{
-					var count = countRowsPaddedAtBottom*volumePaddedFrameDimensions.Width;
+					position += frameData.Length/frameBytesPerPixel; // update position so bottom padding is copied after the frame data
+					var count = paddingRowsBottom*paddedColumns;
 					FillVolumeData(volumeData, pixelPadValue, position, count);
-					// position += count;
 				}
 			}
 
@@ -385,98 +383,92 @@ namespace ClearCanvas.ImageViewer.Volumes
 				}
 			}
 
-			private static void FillVolumeData(ushort[] volumeData, ushort fillValue, int start, int count)
+			private static unsafe void FillVolumeData(ushort[] volumeData, ushort fillValue, int start, int count)
 			{
-				unsafe
+				fixed (ushort* pVolumeData = volumeData)
 				{
-					fixed (ushort* pVolumeData = volumeData)
-					{
-						var pVolumeFill = pVolumeData + start;
-						for (var i = 0; i < count; ++i)
-							*pVolumeFill++ = fillValue;
-					}
+					var pVolumeFill = pVolumeData + start;
+					for (var i = 0; i < count; ++i)
+						*pVolumeFill++ = fillValue;
 				}
 			}
 
-			private static void CopyFrameData(byte[] frameData, int frameBytesPerPixel, bool frameIsSigned, IModalityLut frameModalityLut, ushort[] volumeData, int volumeStart, double normalizedSlope, double normalizedIntercept, out int minFramePixel, out int maxFramePixel)
+			private static unsafe void CopyFrameData(byte[] frameData, int frameBytesPerPixel, bool frameIsSigned, IModalityLut frameModalityLut, ushort[] volumeData, int volumeStart, double normalizedSlope, double normalizedIntercept, out int minFramePixel, out int maxFramePixel)
 			{
 				var pixelCount = frameData.Length/frameBytesPerPixel;
-				unsafe
-				{
-					var min = int.MaxValue;
-					var max = int.MinValue;
+				var min = int.MaxValue;
+				var max = int.MinValue;
 
-					fixed (byte* pFrameData = frameData)
-					fixed (ushort* pVolumeData = volumeData)
+				fixed (byte* pFrameData = frameData)
+				fixed (ushort* pVolumeData = volumeData)
+				{
+					var pVolumeFrame = pVolumeData + volumeStart;
+					if (frameBytesPerPixel == 2)
 					{
-						var pVolumeFrame = pVolumeData + volumeStart;
-						if (frameBytesPerPixel == 2)
+						if (frameIsSigned)
 						{
-							if (frameIsSigned)
+							var pFrameDataS16 = (short*) pFrameData;
+							for (var i = 0; i < pixelCount; ++i)
 							{
-								var pFrameDataS16 = (short*) pFrameData;
-								for (var i = 0; i < pixelCount; ++i)
-								{
-									var frameValue = frameModalityLut[*pFrameDataS16++];
-									var volumeValue = (frameValue - normalizedIntercept)/normalizedSlope;
-									var volumePixel = (ushort) Math.Max(ushort.MinValue, Math.Min(ushort.MaxValue, Math.Round(volumeValue)));
-									if (volumePixel < min) min = volumePixel;
-									if (volumePixel > max) max = volumePixel;
-									*pVolumeFrame++ = volumePixel;
-								}
-							}
-							else
-							{
-								var pFrameDataU16 = (ushort*) pFrameData;
-								for (var i = 0; i < pixelCount; ++i)
-								{
-									var frameValue = frameModalityLut[*pFrameDataU16++];
-									var volumeValue = (frameValue - normalizedIntercept)/normalizedSlope;
-									var volumePixel = (ushort) Math.Max(ushort.MinValue, Math.Min(ushort.MaxValue, Math.Round(volumeValue)));
-									if (volumePixel < min) min = volumePixel;
-									if (volumePixel > max) max = volumePixel;
-									*pVolumeFrame++ = volumePixel;
-								}
-							}
-						}
-						else if (frameBytesPerPixel == 1)
-						{
-							if (frameIsSigned)
-							{
-								var pFrameDataS8 = (sbyte*) pFrameData;
-								for (var i = 0; i < pixelCount; ++i)
-								{
-									var frameValue = frameModalityLut[*pFrameDataS8++];
-									var volumeValue = (frameValue - normalizedIntercept)/normalizedSlope;
-									var volumePixel = (ushort) Math.Max(ushort.MinValue, Math.Min(ushort.MaxValue, Math.Round(volumeValue)));
-									if (volumePixel < min) min = volumePixel;
-									if (volumePixel > max) max = volumePixel;
-									*pVolumeFrame++ = volumePixel;
-								}
-							}
-							else
-							{
-								var pFrameDataU8 = pFrameData;
-								for (var i = 0; i < pixelCount; ++i)
-								{
-									var frameValue = frameModalityLut[*pFrameDataU8++];
-									var volumeValue = (frameValue - normalizedIntercept)/normalizedSlope;
-									var volumePixel = (ushort) Math.Max(ushort.MinValue, Math.Min(ushort.MaxValue, Math.Round(volumeValue)));
-									if (volumePixel < min) min = volumePixel;
-									if (volumePixel > max) max = volumePixel;
-									*pVolumeFrame++ = volumePixel;
-								}
+								var frameValue = frameModalityLut[*pFrameDataS16++];
+								var volumeValue = (frameValue - normalizedIntercept)/normalizedSlope;
+								var volumePixel = (ushort) Math.Max(ushort.MinValue, Math.Min(ushort.MaxValue, Math.Round(volumeValue)));
+								if (volumePixel < min) min = volumePixel;
+								if (volumePixel > max) max = volumePixel;
+								*pVolumeFrame++ = volumePixel;
 							}
 						}
 						else
 						{
-							throw new ArgumentOutOfRangeException("frameBytesPerPixel");
+							var pFrameDataU16 = (ushort*) pFrameData;
+							for (var i = 0; i < pixelCount; ++i)
+							{
+								var frameValue = frameModalityLut[*pFrameDataU16++];
+								var volumeValue = (frameValue - normalizedIntercept)/normalizedSlope;
+								var volumePixel = (ushort) Math.Max(ushort.MinValue, Math.Min(ushort.MaxValue, Math.Round(volumeValue)));
+								if (volumePixel < min) min = volumePixel;
+								if (volumePixel > max) max = volumePixel;
+								*pVolumeFrame++ = volumePixel;
+							}
 						}
 					}
-
-					minFramePixel = min;
-					maxFramePixel = max;
+					else if (frameBytesPerPixel == 1)
+					{
+						if (frameIsSigned)
+						{
+							var pFrameDataS8 = (sbyte*) pFrameData;
+							for (var i = 0; i < pixelCount; ++i)
+							{
+								var frameValue = frameModalityLut[*pFrameDataS8++];
+								var volumeValue = (frameValue - normalizedIntercept)/normalizedSlope;
+								var volumePixel = (ushort) Math.Max(ushort.MinValue, Math.Min(ushort.MaxValue, Math.Round(volumeValue)));
+								if (volumePixel < min) min = volumePixel;
+								if (volumePixel > max) max = volumePixel;
+								*pVolumeFrame++ = volumePixel;
+							}
+						}
+						else
+						{
+							var pFrameDataU8 = pFrameData;
+							for (var i = 0; i < pixelCount; ++i)
+							{
+								var frameValue = frameModalityLut[*pFrameDataU8++];
+								var volumeValue = (frameValue - normalizedIntercept)/normalizedSlope;
+								var volumePixel = (ushort) Math.Max(ushort.MinValue, Math.Min(ushort.MaxValue, Math.Round(volumeValue)));
+								if (volumePixel < min) min = volumePixel;
+								if (volumePixel > max) max = volumePixel;
+								*pVolumeFrame++ = volumePixel;
+							}
+						}
+					}
+					else
+					{
+						throw new ArgumentOutOfRangeException("frameBytesPerPixel");
+					}
 				}
+
+				minFramePixel = min;
+				maxFramePixel = max;
 			}
 
 			#endregion

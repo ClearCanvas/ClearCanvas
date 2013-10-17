@@ -699,7 +699,6 @@
     <Compile Include="Tests\ImageBoxAndDisplaySetInteractionTest.cs" />
     <Compile Include="Tests\TestTree.cs" />
     <Compile Include="Mathematics\FloatComparer.cs" />
-    <Compile Include="Mathematics\RectF.cs" />
     <Compile Include="Mathematics\Tests\FloatComparerTest.cs" />
     <Compile Include="Mathematics\Vector.cs" />
     <Compile Include="Annotations\AnnotationItemConfigurationOptions.cs" />

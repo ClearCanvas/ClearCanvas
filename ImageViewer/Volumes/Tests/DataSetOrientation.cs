@@ -158,7 +158,12 @@ namespace ClearCanvas.ImageViewer.Volumes.Tests
 
 		public string NextImagePositionPatient()
 		{
-			try { return this.ImagePositionPatient; } finally {
+			try
+			{
+				return ImagePositionPatient;
+			}
+			finally
+			{
 				_sliceNumber++;
 			}
 		}

@@ -127,8 +127,13 @@ namespace ClearCanvas.ImageViewer.Volumes.Tests
 
 			public KnownSample(Vector3D point, int value)
 			{
-				this.Point = point;
-				this.Value = value;
+				Point = point;
+				Value = value;
+			}
+
+			public override string ToString()
+			{
+				return string.Format(@"{0} @{1}", Value, Point);
 			}
 		}
 

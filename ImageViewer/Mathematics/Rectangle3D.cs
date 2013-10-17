@@ -35,7 +35,7 @@ namespace ClearCanvas.ImageViewer.Mathematics
 	/// This class uses a right-handed convention for axes - the direction of the third axis is determined by the
 	/// cross product of the left-to-right vector and the top-to-bottom vectors, which yields the vector front-to-back.
 	/// </remarks>
-	public class Rectangle3D : IEquatable<Rectangle3D>
+	public sealed class Rectangle3D : IEquatable<Rectangle3D>
 	{
 		/// <summary>
 		/// Represents an instance of the <see cref="Rectangle3D"/> class with its members uninitialized.
