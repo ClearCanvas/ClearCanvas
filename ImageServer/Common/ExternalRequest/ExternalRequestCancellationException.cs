@@ -23,17 +23,25 @@
 #endregion
 
 using System;
+using System.Runtime.Serialization;
 
 namespace ClearCanvas.ImageServer.Common.ExternalRequest
 {
 	[Serializable]
-    public class ExternalRequestCancellationException : ApplicationException
-    {
-        public ExternalRequestCancellationException()
-        { }
+	public class ExternalRequestCancellationException : ApplicationException
+	{
+		public ExternalRequestCancellationException()
+		{
+		}
 
 		public ExternalRequestCancellationException(string message)
-            : base(message)
-        { }
-    }
+			: base(message)
+		{
+		}
+
+		protected ExternalRequestCancellationException(SerializationInfo info, StreamingContext context)
+			: base(info, context)
+		{
+		}
+	}
 }
