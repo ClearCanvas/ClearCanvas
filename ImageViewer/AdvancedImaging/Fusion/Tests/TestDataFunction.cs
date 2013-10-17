@@ -117,14 +117,14 @@ namespace ClearCanvas.ImageViewer.AdvancedImaging.Fusion.Tests
 				short[] data = CreateSignedArray(out width, out height, out depth, voxelSpacing);
 				DicomAttributeCollection dataset = CreateMockDataset(_name, _studyInstanceUid, _frameOfReferenceUid, modality, width, height, true, new SizeF(voxelSpacing.X, voxelSpacing.Y));
 				Size3D dimensions = new Size3D(width, height, depth);
-				return new S16Volume(data, dimensions, voxelSpacing, originPatient, orientationPatient, dataset, short.MinValue, 1, 0);
+				return new S16Volume(data, dimensions, voxelSpacing, originPatient, orientationPatient, dataset, short.MinValue);
 			}
 			else
 			{
 				ushort[] data = CreateUnsignedArray(out width, out height, out depth, voxelSpacing);
 				DicomAttributeCollection dataset = CreateMockDataset(_name, _studyInstanceUid, _frameOfReferenceUid, modality, width, height, false, new SizeF(voxelSpacing.X, voxelSpacing.Y));
 				Size3D dimensions = new Size3D(width, height, depth);
-				return new U16Volume(data, dimensions, voxelSpacing, originPatient, orientationPatient, dataset, ushort.MinValue, 1, 0);
+				return new U16Volume(data, dimensions, voxelSpacing, originPatient, orientationPatient, dataset, ushort.MinValue);
 			}
 		}
 

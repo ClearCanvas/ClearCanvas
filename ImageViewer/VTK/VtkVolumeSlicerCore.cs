@@ -326,7 +326,7 @@ namespace ClearCanvas.ImageViewer.Vtk
 				                    new Size3D(width, height, depth), new Vector3D(1, 1, 1),
 				                    new Vector3D(0, 0, 0), Matrix3D.GetIdentity(),
 				                    new DicomAttributeCollection(),
-				                    short.MinValue, 1, 0);
+				                    short.MinValue);
 			}
 			else
 			{
@@ -334,7 +334,7 @@ namespace ClearCanvas.ImageViewer.Vtk
 				                    new Size3D(width, height, depth), new Vector3D(1, 1, 1),
 				                    new Vector3D(0, 0, 0), Matrix3D.GetIdentity(),
 				                    new DicomAttributeCollection(),
-				                    ushort.MinValue, 1, 0);
+				                    ushort.MinValue);
 			}
 
 			try

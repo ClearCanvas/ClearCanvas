@@ -250,13 +250,14 @@ namespace ClearCanvas.ImageViewer.Volumes
 
 				// compute modality LUT parameters normalized for all frames
 				double normalizedSlope, normalizedIntercept;
+				var normalizedUnits = _frames[0].Frame.RescaleUnits;
 				ComputeNormalizedModalityLut(_frames, out normalizedSlope, out normalizedIntercept);
 
 				// determine an appropriate pixel padding value
 				var pixelPaddingValue = ComputePixelPaddingValue(_frames, normalizedSlope, normalizedIntercept);
 
 				// Construct a model SOP data source based on the first frame's DICOM header
-				var header = new VolumeHeaderData(_frames.Select(f => (IDicomAttributeProvider) f.Frame).ToList(), VolumeSize, VoxelSpacing, VolumePositionPatient, VolumeOrientationPatient, 16, 16, false, pixelPaddingValue, normalizedSlope, normalizedIntercept);
+				var header = new VolumeHeaderData(_frames.Select(f => (IDicomAttributeProvider) f.Frame).ToList(), VolumeSize, VoxelSpacing, VolumePositionPatient, VolumeOrientationPatient, 16, 16, false, pixelPaddingValue, normalizedSlope, normalizedIntercept, normalizedUnits);
 
 				// determine how the normalized modality LUT affects VOI windows and update the header
 				VoiWindow.SetWindows(ComputeAggregateNormalizedVoiWindows(_frames, normalizedSlope, normalizedIntercept), header);
@@ -604,6 +605,10 @@ namespace ClearCanvas.ImageViewer.Volumes
 				// ensure all frames are of the same supported format
 				if (frames.Any(frame => frame.Frame.BitsAllocated != 16))
 					throw new UnsupportedPixelFormatSourceImagesException();
+
+				// ensure all frames have the same rescale function units
+				if (frames.Select(frame => frame.Frame.RescaleUnits).Distinct().Count() > 1)
+					throw new InconsistentRescaleFunctionTypeException();
 
 				// ensure all frames have the same orientation
 				ImageOrientationPatient orient = frames[0].Frame.ImageOrientationPatient;

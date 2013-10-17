@@ -126,40 +126,61 @@ namespace ClearCanvas.ImageViewer.Volumes.Tests
 			if (signed)
 			{
 				short[] data = CreateSignedArray(width, height, depth);
-				return new S16Volume(data, dimensions, spacing, originPatient, orientationPatient, dataset, short.MinValue, 1, 0);
+				return new S16Volume(data, dimensions, spacing, originPatient, orientationPatient, dataset, short.MinValue);
 			}
 			else
 			{
 				ushort[] data = CreateUnsignedArray(width, height, depth);
-				return new U16Volume(data, dimensions, spacing, originPatient, orientationPatient, dataset, ushort.MinValue, 1, 0);
+				return new U16Volume(data, dimensions, spacing, originPatient, orientationPatient, dataset, ushort.MinValue);
 			}
 		}
 
-		public ISopDataSource[] CreateSops(int width, int height, int sliceCount, bool signed)
+		public unsafe ISopDataSource[] CreateSops(int width, int height, int sliceCount, bool signed = false, bool bpp8 = false)
 		{
 			string studyInstanceUid = DicomUid.GenerateUid().UID;
 			string seriesInstanceUid = DicomUid.GenerateUid().UID;
 			string frameOfReferenceUid = DicomUid.GenerateUid().UID;
 
-			List<SimpleSopDataSource> sops = new List<SimpleSopDataSource>();
+			var sops = new List<ISopDataSource>();
 			for (int z = 0; z < sliceCount; z++)
 			{
-				byte[] data = new byte[width*height*2];
-				for (int y = 0; y < height; y++)
+				var data = new byte[width*height*(bpp8 ? 1 : 2)];
+				fixed (byte* pData = data)
 				{
-					for (int x = 0; x < width; x++)
+					if (bpp8)
 					{
-						ushort value = (ushort) Math.Max(Math.Min(this.Evaluate(x, y, z), ushort.MaxValue), ushort.MinValue);
-						byte[] bytes;
-						if (signed)
-							bytes = BitConverter.GetBytes((short) (value - 32768));
-						else
-							bytes = BitConverter.GetBytes(value);
-						Array.Copy(bytes, 0, data, (y*width + x)*2, 2);
+						var pDataS8 = (sbyte*) pData;
+						for (int y = 0; y < height; y++)
+						{
+							for (int x = 0; x < width; x++)
+							{
+								byte value = (byte) (((ushort) Math.Max(Math.Min(Evaluate(x, y, z), ushort.MaxValue), ushort.MinValue)) >> 8);
+								if (signed)
+									pDataS8[y*width + x] = (sbyte) (value - 128);
+								else
+									pData[y*width + x] = value;
+							}
+						}
+					}
+					else
+					{
+						var pDataU16 = (ushort*) pData;
+						var pDataS16 = (short*) pData;
+						for (int y = 0; y < height; y++)
+						{
+							for (int x = 0; x < width; x++)
+							{
+								ushort value = (ushort) Math.Max(Math.Min(Evaluate(x, y, z), ushort.MaxValue), ushort.MinValue);
+								if (signed)
+									pDataS16[y*width + x] = (short) (value - 32768);
+								else
+									pDataU16[y*width + x] = value;
+							}
+						}
 					}
 				}
 
-				SimpleSopDataSource sop = new SimpleSopDataSource(CreateMockDataset(_name, width, height, signed));
+				var sop = new SimpleSopDataSource(CreateMockDataset(_name, width, height, signed, bpp8));
 				sop[DicomTags.PixelData].Values = data;
 				sop[DicomTags.StudyInstanceUid].SetStringValue(studyInstanceUid);
 				sop[DicomTags.SeriesInstanceUid].SetStringValue(seriesInstanceUid);
@@ -185,14 +206,14 @@ namespace ClearCanvas.ImageViewer.Volumes.Tests
 				{
 					for (int x = 0; x < width; x++)
 					{
-						data[((z*height) + y)*width + x] = (ushort) Math.Max(Math.Min(this.Evaluate(x, y, z), ushort.MaxValue), ushort.MinValue);
+						data[((z*height) + y)*width + x] = (ushort) Math.Max(Math.Min(Evaluate(x, y, z), ushort.MaxValue), ushort.MinValue);
 					}
 				}
 			}
 			return data;
 		}
 
-		private static DicomAttributeCollection CreateMockDataset(string patientName, int columns, int rows, bool signed)
+		private static DicomAttributeCollection CreateMockDataset(string patientName, int columns, int rows, bool signed, bool bpp8 = false)
 		{
 			DicomAttributeCollection dataset = new DicomAttributeCollection();
 			dataset[DicomTags.PatientId].SetStringValue("PATIENT");
@@ -206,14 +227,14 @@ namespace ClearCanvas.ImageViewer.Volumes.Tests
 			dataset[DicomTags.FrameOfReferenceUid].SetStringValue(DicomUid.GenerateUid().UID);
 			dataset[DicomTags.PixelSpacing].SetStringValue(@"1\1");
 			dataset[DicomTags.PhotometricInterpretation].SetStringValue("MONOCHROME2");
-			dataset[DicomTags.BitsStored].SetInt32(0, 16);
-			dataset[DicomTags.BitsAllocated].SetInt32(0, 16);
-			dataset[DicomTags.HighBit].SetInt32(0, 15);
+			dataset[DicomTags.BitsStored].SetInt32(0, bpp8 ? 8 : 16);
+			dataset[DicomTags.BitsAllocated].SetInt32(0, bpp8 ? 8 : 16);
+			dataset[DicomTags.HighBit].SetInt32(0, bpp8 ? 7 : 15);
 			dataset[DicomTags.PixelRepresentation].SetInt32(0, signed ? 1 : 0);
 			dataset[DicomTags.Rows].SetInt32(0, rows);
 			dataset[DicomTags.Columns].SetInt32(0, columns);
-			dataset[DicomTags.WindowCenter].SetInt32(0, signed ? 0 : 32768);
-			dataset[DicomTags.WindowWidth].SetInt32(0, 65536);
+			dataset[DicomTags.WindowCenter].SetInt32(0, signed ? 0 : (bpp8 ? 128 : 32768));
+			dataset[DicomTags.WindowWidth].SetInt32(0, bpp8 ? 256 : 65536);
 			dataset[DicomTags.WindowCenterWidthExplanation].SetString(0, "Full Window");
 			return dataset;
 		}
@@ -332,7 +353,7 @@ namespace ClearCanvas.ImageViewer.Volumes.Tests
 
 				public override byte[] GetNormalizedPixelData()
 				{
-					return (byte[]) base.Parent[DicomTags.PixelData].Values;
+					return (byte[]) Parent[DicomTags.PixelData].Values;
 				}
 
 				public override byte[] GetNormalizedOverlayData(int overlayNumber)

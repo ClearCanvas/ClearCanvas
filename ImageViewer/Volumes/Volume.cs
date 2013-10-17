@@ -25,6 +25,7 @@
 using System;
 using ClearCanvas.Common;
 using ClearCanvas.ImageViewer.Mathematics;
+using ClearCanvas.ImageViewer.StudyManagement;
 
 namespace ClearCanvas.ImageViewer.Volumes
 {
@@ -258,6 +259,14 @@ namespace ClearCanvas.ImageViewer.Volumes
 		public double RescaleIntercept
 		{
 			get { return _volumeHeaderData.RescaleIntercept; }
+		}
+
+		/// <summary>
+		/// Gets the output units of the linear modality LUT used to transform the values of the volume.
+		/// </summary>
+		public RescaleUnits RescaleUnits
+		{
+			get { return _volumeHeaderData.RescaleUnits; }
 		}
 
 		/// <summary>

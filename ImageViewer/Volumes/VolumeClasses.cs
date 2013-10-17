@@ -26,6 +26,7 @@ using System;
 using System.Collections.Generic;
 using ClearCanvas.Dicom;
 using ClearCanvas.ImageViewer.Mathematics;
+using ClearCanvas.ImageViewer.StudyManagement;
 
 namespace ClearCanvas.ImageViewer.Volumes
 {
@@ -42,8 +43,8 @@ namespace ClearCanvas.ImageViewer.Volumes
 		/// <remarks>
 		/// Consider using <see cref="Volume.Create(IDisplaySet)"/> or one of its overloads to automatically construct and fill a <see cref="Volume"/> of the appropriate type.
 		/// </remarks>
-		public U16Volume(ushort[] array, Size3D arrayDimensions, Vector3D voxelSpacing, Vector3D volumePositionPatient, Matrix3D volumeOrientationPatient, IDicomAttributeProvider attributeProvider, int paddingValue, double rescaleSlope, double rescaleIntercept)
-			: this(array, arrayDimensions, voxelSpacing, volumePositionPatient, volumeOrientationPatient, new[] {attributeProvider}, paddingValue, rescaleSlope, rescaleIntercept) {}
+		public U16Volume(ushort[] array, Size3D arrayDimensions, Vector3D voxelSpacing, Vector3D volumePositionPatient, Matrix3D volumeOrientationPatient, IDicomAttributeProvider attributeProvider, int paddingValue)
+			: this(array, arrayDimensions, voxelSpacing, volumePositionPatient, volumeOrientationPatient, new[] {attributeProvider}, paddingValue, 1, 0, RescaleUnits.None) {}
 
 		/// <summary>
 		/// Initializes the <see cref="Volume"/> using the specified volume data.
@@ -51,8 +52,26 @@ namespace ClearCanvas.ImageViewer.Volumes
 		/// <remarks>
 		/// Consider using <see cref="Volume.Create(IDisplaySet)"/> or one of its overloads to automatically construct and fill a <see cref="Volume"/> of the appropriate type.
 		/// </remarks>
-		public U16Volume(ushort[] array, Size3D arrayDimensions, Vector3D voxelSpacing, Vector3D volumePositionPatient, Matrix3D volumeOrientationPatient, IList<IDicomAttributeProvider> dicomAttributeModel, int paddingValue, double rescaleSlope, double rescaleIntercept)
-			: this(array, new VolumeHeaderData(dicomAttributeModel, arrayDimensions, voxelSpacing, volumePositionPatient, volumeOrientationPatient, 16, 16, false, paddingValue, rescaleSlope, rescaleIntercept), null, null) {}
+		public U16Volume(ushort[] array, Size3D arrayDimensions, Vector3D voxelSpacing, Vector3D volumePositionPatient, Matrix3D volumeOrientationPatient, IList<IDicomAttributeProvider> dicomAttributeModel, int paddingValue)
+			: this(array, new VolumeHeaderData(dicomAttributeModel, arrayDimensions, voxelSpacing, volumePositionPatient, volumeOrientationPatient, 16, 16, false, paddingValue, 1, 0, RescaleUnits.None), null, null) {}
+
+		/// <summary>
+		/// Initializes the <see cref="Volume"/> using the specified volume data.
+		/// </summary>
+		/// <remarks>
+		/// Consider using <see cref="Volume.Create(IDisplaySet)"/> or one of its overloads to automatically construct and fill a <see cref="Volume"/> of the appropriate type.
+		/// </remarks>
+		public U16Volume(ushort[] array, Size3D arrayDimensions, Vector3D voxelSpacing, Vector3D volumePositionPatient, Matrix3D volumeOrientationPatient, IDicomAttributeProvider attributeProvider, int paddingValue, double rescaleSlope, double rescaleIntercept, RescaleUnits rescaleUnits)
+			: this(array, arrayDimensions, voxelSpacing, volumePositionPatient, volumeOrientationPatient, new[] {attributeProvider}, paddingValue, rescaleSlope, rescaleIntercept, rescaleUnits) {}
+
+		/// <summary>
+		/// Initializes the <see cref="Volume"/> using the specified volume data.
+		/// </summary>
+		/// <remarks>
+		/// Consider using <see cref="Volume.Create(IDisplaySet)"/> or one of its overloads to automatically construct and fill a <see cref="Volume"/> of the appropriate type.
+		/// </remarks>
+		public U16Volume(ushort[] array, Size3D arrayDimensions, Vector3D voxelSpacing, Vector3D volumePositionPatient, Matrix3D volumeOrientationPatient, IList<IDicomAttributeProvider> dicomAttributeModel, int paddingValue, double rescaleSlope, double rescaleIntercept, RescaleUnits rescaleUnits)
+			: this(array, new VolumeHeaderData(dicomAttributeModel, arrayDimensions, voxelSpacing, volumePositionPatient, volumeOrientationPatient, 16, 16, false, paddingValue, rescaleSlope, rescaleIntercept, rescaleUnits), null, null) {}
 
 		internal U16Volume(ushort[] array, VolumeHeaderData volumeHeaderData, int? minVolumeValue, int? maxVolumeValue)
 			: base(volumeHeaderData, minVolumeValue, maxVolumeValue)
@@ -127,8 +146,8 @@ namespace ClearCanvas.ImageViewer.Volumes
 		/// <remarks>
 		/// Consider using <see cref="Volume.Create(IDisplaySet)"/> or one of its overloads to automatically construct and fill a <see cref="Volume"/> of the appropriate type.
 		/// </remarks>
-		public S16Volume(short[] array, Size3D arrayDimensions, Vector3D voxelSpacing, Vector3D volumePositionPatient, Matrix3D volumeOrientationPatient, IDicomAttributeProvider attributeProvider, int paddingValue, double rescaleSlope, double rescaleIntercept)
-			: this(array, arrayDimensions, voxelSpacing, volumePositionPatient, volumeOrientationPatient, new[] {attributeProvider}, paddingValue, rescaleSlope, rescaleIntercept) {}
+		public S16Volume(short[] array, Size3D arrayDimensions, Vector3D voxelSpacing, Vector3D volumePositionPatient, Matrix3D volumeOrientationPatient, IDicomAttributeProvider attributeProvider, int paddingValue)
+			: this(array, arrayDimensions, voxelSpacing, volumePositionPatient, volumeOrientationPatient, new[] {attributeProvider}, paddingValue, 1, 0, RescaleUnits.None) {}
 
 		/// <summary>
 		/// Initializes the <see cref="Volume"/> using the specified volume data.
@@ -136,8 +155,26 @@ namespace ClearCanvas.ImageViewer.Volumes
 		/// <remarks>
 		/// Consider using <see cref="Volume.Create(IDisplaySet)"/> or one of its overloads to automatically construct and fill a <see cref="Volume"/> of the appropriate type.
 		/// </remarks>
-		public S16Volume(short[] array, Size3D arrayDimensions, Vector3D voxelSpacing, Vector3D volumePositionPatient, Matrix3D volumeOrientationPatient, IList<IDicomAttributeProvider> dicomAttributeModel, int paddingValue, double rescaleSlope, double rescaleIntercept)
-			: this(array, new VolumeHeaderData(dicomAttributeModel, arrayDimensions, voxelSpacing, volumePositionPatient, volumeOrientationPatient, 16, 16, true, paddingValue, rescaleSlope, rescaleIntercept), null, null) {}
+		public S16Volume(short[] array, Size3D arrayDimensions, Vector3D voxelSpacing, Vector3D volumePositionPatient, Matrix3D volumeOrientationPatient, IList<IDicomAttributeProvider> dicomAttributeModel, int paddingValue)
+			: this(array, new VolumeHeaderData(dicomAttributeModel, arrayDimensions, voxelSpacing, volumePositionPatient, volumeOrientationPatient, 16, 16, true, paddingValue, 1, 0, RescaleUnits.None), null, null) {}
+
+		/// <summary>
+		/// Initializes the <see cref="Volume"/> using the specified volume data.
+		/// </summary>
+		/// <remarks>
+		/// Consider using <see cref="Volume.Create(IDisplaySet)"/> or one of its overloads to automatically construct and fill a <see cref="Volume"/> of the appropriate type.
+		/// </remarks>
+		public S16Volume(short[] array, Size3D arrayDimensions, Vector3D voxelSpacing, Vector3D volumePositionPatient, Matrix3D volumeOrientationPatient, IDicomAttributeProvider attributeProvider, int paddingValue, double rescaleSlope, double rescaleIntercept, RescaleUnits rescaleUnits)
+			: this(array, arrayDimensions, voxelSpacing, volumePositionPatient, volumeOrientationPatient, new[] {attributeProvider}, paddingValue, rescaleSlope, rescaleIntercept, rescaleUnits) {}
+
+		/// <summary>
+		/// Initializes the <see cref="Volume"/> using the specified volume data.
+		/// </summary>
+		/// <remarks>
+		/// Consider using <see cref="Volume.Create(IDisplaySet)"/> or one of its overloads to automatically construct and fill a <see cref="Volume"/> of the appropriate type.
+		/// </remarks>
+		public S16Volume(short[] array, Size3D arrayDimensions, Vector3D voxelSpacing, Vector3D volumePositionPatient, Matrix3D volumeOrientationPatient, IList<IDicomAttributeProvider> dicomAttributeModel, int paddingValue, double rescaleSlope, double rescaleIntercept, RescaleUnits rescaleUnits)
+			: this(array, new VolumeHeaderData(dicomAttributeModel, arrayDimensions, voxelSpacing, volumePositionPatient, volumeOrientationPatient, 16, 16, true, paddingValue, rescaleSlope, rescaleIntercept, rescaleUnits), null, null) {}
 
 		internal S16Volume(short[] array, VolumeHeaderData volumeHeaderData, int? minVolumeValue, int? maxVolumeValue)
 			: base(volumeHeaderData, minVolumeValue, maxVolumeValue)
@@ -212,8 +249,8 @@ namespace ClearCanvas.ImageViewer.Volumes
 		/// <remarks>
 		/// Consider using <see cref="Volume.Create(IDisplaySet)"/> or one of its overloads to automatically construct and fill a <see cref="Volume"/> of the appropriate type.
 		/// </remarks>
-		public U8Volume(byte[] array, Size3D arrayDimensions, Vector3D voxelSpacing, Vector3D volumePositionPatient, Matrix3D volumeOrientationPatient, IDicomAttributeProvider attributeProvider, int paddingValue, double rescaleSlope, double rescaleIntercept)
-			: this(array, arrayDimensions, voxelSpacing, volumePositionPatient, volumeOrientationPatient, new[] {attributeProvider}, paddingValue, rescaleSlope, rescaleIntercept) {}
+		public U8Volume(byte[] array, Size3D arrayDimensions, Vector3D voxelSpacing, Vector3D volumePositionPatient, Matrix3D volumeOrientationPatient, IDicomAttributeProvider attributeProvider, int paddingValue)
+			: this(array, arrayDimensions, voxelSpacing, volumePositionPatient, volumeOrientationPatient, new[] {attributeProvider}, paddingValue, 1, 0, RescaleUnits.None) {}
 
 		/// <summary>
 		/// Initializes the <see cref="Volume"/> using the specified volume data.
@@ -221,8 +258,26 @@ namespace ClearCanvas.ImageViewer.Volumes
 		/// <remarks>
 		/// Consider using <see cref="Volume.Create(IDisplaySet)"/> or one of its overloads to automatically construct and fill a <see cref="Volume"/> of the appropriate type.
 		/// </remarks>
-		public U8Volume(byte[] array, Size3D arrayDimensions, Vector3D voxelSpacing, Vector3D volumePositionPatient, Matrix3D volumeOrientationPatient, IList<IDicomAttributeProvider> dicomAttributeModel, int paddingValue, double rescaleSlope, double rescaleIntercept)
-			: this(array, new VolumeHeaderData(dicomAttributeModel, arrayDimensions, voxelSpacing, volumePositionPatient, volumeOrientationPatient, 8, 8, false, paddingValue, rescaleSlope, rescaleIntercept), null, null) {}
+		public U8Volume(byte[] array, Size3D arrayDimensions, Vector3D voxelSpacing, Vector3D volumePositionPatient, Matrix3D volumeOrientationPatient, IList<IDicomAttributeProvider> dicomAttributeModel, int paddingValue)
+			: this(array, new VolumeHeaderData(dicomAttributeModel, arrayDimensions, voxelSpacing, volumePositionPatient, volumeOrientationPatient, 8, 8, false, paddingValue, 1, 0, RescaleUnits.None), null, null) {}
+
+		/// <summary>
+		/// Initializes the <see cref="Volume"/> using the specified volume data.
+		/// </summary>
+		/// <remarks>
+		/// Consider using <see cref="Volume.Create(IDisplaySet)"/> or one of its overloads to automatically construct and fill a <see cref="Volume"/> of the appropriate type.
+		/// </remarks>
+		public U8Volume(byte[] array, Size3D arrayDimensions, Vector3D voxelSpacing, Vector3D volumePositionPatient, Matrix3D volumeOrientationPatient, IDicomAttributeProvider attributeProvider, int paddingValue, double rescaleSlope, double rescaleIntercept, RescaleUnits rescaleUnits)
+			: this(array, arrayDimensions, voxelSpacing, volumePositionPatient, volumeOrientationPatient, new[] {attributeProvider}, paddingValue, rescaleSlope, rescaleIntercept, rescaleUnits) {}
+
+		/// <summary>
+		/// Initializes the <see cref="Volume"/> using the specified volume data.
+		/// </summary>
+		/// <remarks>
+		/// Consider using <see cref="Volume.Create(IDisplaySet)"/> or one of its overloads to automatically construct and fill a <see cref="Volume"/> of the appropriate type.
+		/// </remarks>
+		public U8Volume(byte[] array, Size3D arrayDimensions, Vector3D voxelSpacing, Vector3D volumePositionPatient, Matrix3D volumeOrientationPatient, IList<IDicomAttributeProvider> dicomAttributeModel, int paddingValue, double rescaleSlope, double rescaleIntercept, RescaleUnits rescaleUnits)
+			: this(array, new VolumeHeaderData(dicomAttributeModel, arrayDimensions, voxelSpacing, volumePositionPatient, volumeOrientationPatient, 8, 8, false, paddingValue, rescaleSlope, rescaleIntercept, rescaleUnits), null, null) {}
 
 		internal U8Volume(byte[] array, VolumeHeaderData volumeHeaderData, int? minVolumeValue, int? maxVolumeValue)
 			: base(volumeHeaderData, minVolumeValue, maxVolumeValue)
@@ -297,8 +352,8 @@ namespace ClearCanvas.ImageViewer.Volumes
 		/// <remarks>
 		/// Consider using <see cref="Volume.Create(IDisplaySet)"/> or one of its overloads to automatically construct and fill a <see cref="Volume"/> of the appropriate type.
 		/// </remarks>
-		public S8Volume(sbyte[] array, Size3D arrayDimensions, Vector3D voxelSpacing, Vector3D volumePositionPatient, Matrix3D volumeOrientationPatient, IDicomAttributeProvider attributeProvider, int paddingValue, double rescaleSlope, double rescaleIntercept)
-			: this(array, arrayDimensions, voxelSpacing, volumePositionPatient, volumeOrientationPatient, new[] {attributeProvider}, paddingValue, rescaleSlope, rescaleIntercept) {}
+		public S8Volume(sbyte[] array, Size3D arrayDimensions, Vector3D voxelSpacing, Vector3D volumePositionPatient, Matrix3D volumeOrientationPatient, IDicomAttributeProvider attributeProvider, int paddingValue)
+			: this(array, arrayDimensions, voxelSpacing, volumePositionPatient, volumeOrientationPatient, new[] {attributeProvider}, paddingValue, 1, 0, RescaleUnits.None) {}
 
 		/// <summary>
 		/// Initializes the <see cref="Volume"/> using the specified volume data.
@@ -306,8 +361,26 @@ namespace ClearCanvas.ImageViewer.Volumes
 		/// <remarks>
 		/// Consider using <see cref="Volume.Create(IDisplaySet)"/> or one of its overloads to automatically construct and fill a <see cref="Volume"/> of the appropriate type.
 		/// </remarks>
-		public S8Volume(sbyte[] array, Size3D arrayDimensions, Vector3D voxelSpacing, Vector3D volumePositionPatient, Matrix3D volumeOrientationPatient, IList<IDicomAttributeProvider> dicomAttributeModel, int paddingValue, double rescaleSlope, double rescaleIntercept)
-			: this(array, new VolumeHeaderData(dicomAttributeModel, arrayDimensions, voxelSpacing, volumePositionPatient, volumeOrientationPatient, 8, 8, true, paddingValue, rescaleSlope, rescaleIntercept), null, null) {}
+		public S8Volume(sbyte[] array, Size3D arrayDimensions, Vector3D voxelSpacing, Vector3D volumePositionPatient, Matrix3D volumeOrientationPatient, IList<IDicomAttributeProvider> dicomAttributeModel, int paddingValue)
+			: this(array, new VolumeHeaderData(dicomAttributeModel, arrayDimensions, voxelSpacing, volumePositionPatient, volumeOrientationPatient, 8, 8, true, paddingValue, 1, 0, RescaleUnits.None), null, null) {}
+
+		/// <summary>
+		/// Initializes the <see cref="Volume"/> using the specified volume data.
+		/// </summary>
+		/// <remarks>
+		/// Consider using <see cref="Volume.Create(IDisplaySet)"/> or one of its overloads to automatically construct and fill a <see cref="Volume"/> of the appropriate type.
+		/// </remarks>
+		public S8Volume(sbyte[] array, Size3D arrayDimensions, Vector3D voxelSpacing, Vector3D volumePositionPatient, Matrix3D volumeOrientationPatient, IDicomAttributeProvider attributeProvider, int paddingValue, double rescaleSlope, double rescaleIntercept, RescaleUnits rescaleUnits)
+			: this(array, arrayDimensions, voxelSpacing, volumePositionPatient, volumeOrientationPatient, new[] {attributeProvider}, paddingValue, rescaleSlope, rescaleIntercept, rescaleUnits) {}
+
+		/// <summary>
+		/// Initializes the <see cref="Volume"/> using the specified volume data.
+		/// </summary>
+		/// <remarks>
+		/// Consider using <see cref="Volume.Create(IDisplaySet)"/> or one of its overloads to automatically construct and fill a <see cref="Volume"/> of the appropriate type.
+		/// </remarks>
+		public S8Volume(sbyte[] array, Size3D arrayDimensions, Vector3D voxelSpacing, Vector3D volumePositionPatient, Matrix3D volumeOrientationPatient, IList<IDicomAttributeProvider> dicomAttributeModel, int paddingValue, double rescaleSlope, double rescaleIntercept, RescaleUnits rescaleUnits)
+			: this(array, new VolumeHeaderData(dicomAttributeModel, arrayDimensions, voxelSpacing, volumePositionPatient, volumeOrientationPatient, 8, 8, true, paddingValue, rescaleSlope, rescaleIntercept, rescaleUnits), null, null) {}
 
 		internal S8Volume(sbyte[] array, VolumeHeaderData volumeHeaderData, int? minVolumeValue, int? maxVolumeValue)
 			: base(volumeHeaderData, minVolumeValue, maxVolumeValue)

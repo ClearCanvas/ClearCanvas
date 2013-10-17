@@ -1632,6 +1632,15 @@ namespace ClearCanvas.ImageViewer {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Each frame in the source dataset must be in the same pixel units..
+        /// </summary>
+        public static string MessageVolumeSourceInconsistentRescaleUnits {
+            get {
+                return ResourceManager.GetString("MessageVolumeSourceInconsistentRescaleUnits", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The selected images have a gantry slew. MPR only supports gantry tilts..
         /// </summary>
         public static string MessageVolumeSourceMayBotBeGantrySlewed {

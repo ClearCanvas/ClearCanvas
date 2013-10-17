@@ -62,7 +62,7 @@ namespace ClearCanvas.ImageViewer.Volumes.Tests
 			try
 			{
 				// create only 2 slices!!
-				images.AddRange(function.CreateSops(100, 100, 2, false).Select(sopDataSource => new ImageSop(sopDataSource)));
+				images.AddRange(function.CreateSops(100, 100, 2).Select(sopDataSource => new ImageSop(sopDataSource)));
 
 				// this line *should* throw an exception
 				using (Volume volume = Volume.Create(EnumerateFrames(images)))
@@ -111,6 +111,20 @@ namespace ClearCanvas.ImageViewer.Volumes.Tests
 				Assert.Fail("Expected an exception of type {0}", typeof (MultipleSourceSeriesException));
 			}
 			catch (MultipleSourceSeriesException) {}
+		}
+
+		[Test]
+		public void TestInconsistentRescaleUnitsSource()
+		{
+			try
+			{
+				var n = 0;
+
+				// it doesn't really matter what function we use
+				TestVolume(VolumeFunction.Void, sopDataSource => sopDataSource[DicomTags.RescaleType].SetStringValue(++n == 49 ? "OD" : "HU"), null);
+				Assert.Fail("Expected an exception of type {0}", typeof (InconsistentRescaleFunctionTypeException));
+			}
+			catch (InconsistentRescaleFunctionTypeException) {}
 		}
 
 		[Test]
@@ -456,6 +470,9 @@ namespace ClearCanvas.ImageViewer.Volumes.Tests
 			           	{
 			           		Assert.AreEqual(16, volume.BitsPerVoxel, "BitsPerVoxel");
 			           		Assert.AreEqual(false, volume.Signed, "Signed");
+			           		Assert.AreEqual(65535, volume.MaximumVolumeValue, "MaximumVolumeValue");
+			           		Assert.AreEqual(0, volume.MinimumVolumeValue, "MinimumVolumeValue");
+			           		Assert.AreEqual(0, volume.PaddingValue, "PaddingValue");
 			           		Assert.AreEqual(1, volume.RescaleSlope, "RescaleSlope");
 			           		Assert.AreEqual(0, volume.RescaleIntercept, "RescaleIntercept");
 
@@ -474,6 +491,41 @@ namespace ClearCanvas.ImageViewer.Volumes.Tests
 			           			Assert.AreEqual(sample.Value, actual, "Wrong colour sample @{0}", sample.Point);
 			           		}
 			           	});
+		}
+
+		[Test]
+		public void TestFillSigned16VoxelData()
+		{
+			var orientation = new DataSetOrientation(new Vector3D(1, 0, 0), new Vector3D(0, 1, 0), new Vector3D(0, 0, 1));
+
+			TestVolume(VolumeFunction.Stars,
+			           orientation.Initialize,
+			           volume =>
+			           	{
+			           		Assert.AreEqual(16, volume.BitsPerVoxel, "BitsPerVoxel");
+			           		Assert.AreEqual(false, volume.Signed, "Signed");
+			           		Assert.AreEqual(65535, volume.MaximumVolumeValue, "MaximumVolumeValue");
+			           		Assert.AreEqual(0, volume.MinimumVolumeValue, "MinimumVolumeValue");
+			           		Assert.AreEqual(0, volume.PaddingValue, "PaddingValue");
+			           		Assert.AreEqual(1, volume.RescaleSlope, "RescaleSlope");
+			           		Assert.AreEqual(-32768, volume.RescaleIntercept, "RescaleIntercept");
+
+			           		Assert.AreEqual(new Size3D(100, 100, 100), volume.ArrayDimensions, "ArrayDimensions");
+			           		AssertAreEqual(new Vector3D(1, 0, 0), volume.VolumeOrientationPatientX, "VolumeOrientationPatientX");
+			           		AssertAreEqual(new Vector3D(0, 1, 0), volume.VolumeOrientationPatientY, "VolumeOrientationPatientY");
+			           		AssertAreEqual(new Vector3D(0, 0, 1), volume.VolumeOrientationPatientZ, "VolumeOrientationPatientZ");
+			           		AssertAreEqual(new Vector3D(0, 0, 0), volume.VolumePositionPatient, "VolumePositionPatient");
+			           		AssertAreEqual(new Vector3D(100, 100, 100), volume.VolumeSize, "VolumeSize");
+			           		AssertAreEqual(new Vector3D(1, 1, 1), volume.VoxelSpacing, "VoxelSpacing");
+
+			           		foreach (KnownSample sample in StarsKnownSamples)
+			           		{
+			           			int actual = volume[(int) sample.Point.X, (int) sample.Point.Y, (int) sample.Point.Z];
+			           			Trace.WriteLine(string.Format("Sample {0} @{1}", actual, sample.Point));
+			           			Assert.AreEqual(sample.Value, actual, "Wrong colour sample @{0}", sample.Point);
+			           		}
+			           	},
+			           signed : true);
 		}
 
 		[Test]
@@ -674,10 +726,11 @@ namespace ClearCanvas.ImageViewer.Volumes.Tests
 		[Test]
 		public void TestFillPerFrameRescaleVoxelData()
 		{
-			var volumeMinValue = Enumerable.Range(1, 100).Select(n => ushort.MinValue*n/50.0 - n*100).Min();
-			var volumeMaxValue = Enumerable.Range(1, 100).Select(n => ushort.MaxValue*n/50.0 - n*100).Max();
-			var expectedRescaleSlope = (volumeMaxValue - volumeMinValue)/65535;
-			var expectedRescaleIntercept = volumeMinValue;
+			// the normalized rescale function is computed from the largest possible range given the pixel format
+			var sourceMinValue = Enumerable.Range(1, 100).Select(n => ushort.MinValue*n/50.0 - n*100).Min();
+			var sourceMaxValue = Enumerable.Range(1, 100).Select(n => ushort.MaxValue*n/50.0 - n*100).Max();
+			var expectedRescaleSlope = (sourceMaxValue - sourceMinValue)/65535;
+			var expectedRescaleIntercept = sourceMinValue;
 
 			var nFrame = 0;
 			TestVolume(VolumeFunction.Stars,
@@ -691,7 +744,7 @@ namespace ClearCanvas.ImageViewer.Volumes.Tests
 			           	{
 			           		Assert.AreEqual(expectedRescaleSlope, volume.RescaleSlope, "RescaleSlope");
 			           		Assert.AreEqual(expectedRescaleIntercept, volume.RescaleIntercept, "RescaleIntercept");
-			           		// TODO: add RescaleUnits to Volume and add checks to assert consistency of rescale function units!
+			           		Assert.AreEqual(RescaleUnits.HounsfieldUnits, volume.RescaleUnits, "RescaleUnits");
 
 			           		foreach (KnownSample sample in StarsKnownSamples)
 			           		{

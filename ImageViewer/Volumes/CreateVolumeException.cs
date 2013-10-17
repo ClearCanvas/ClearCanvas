@@ -66,6 +66,16 @@ namespace ClearCanvas.ImageViewer.Volumes
 	}
 
 	[Serializable]
+	public class InconsistentRescaleFunctionTypeException : CreateVolumeException
+	{
+		public InconsistentRescaleFunctionTypeException()
+			: base("Multiple types of rescale function outputs were found in the source frames. All the rescale functions of the source frames must output in the same units.") {}
+
+		protected InconsistentRescaleFunctionTypeException(SerializationInfo info, StreamingContext context)
+			: base(info, context) {}
+	}
+
+	[Serializable]
 	public class InsufficientFramesException : CreateVolumeException
 	{
 		public InsufficientFramesException()
@@ -208,6 +218,8 @@ namespace ClearCanvas.ImageViewer.Volumes
 				message = SR.MessageVolumeSourceMayNotHaveAnisotropicPixels;
 			else if (ex is UnsupportedGantryTiltAxisException)
 				message = SR.MessageVolumeSourceMayBotBeGantrySlewed;
+			else if (ex is InconsistentRescaleFunctionTypeException)
+				message = SR.MessageVolumeSourceInconsistentRescaleUnits;
 			exceptionHandlingContext.ShowMessageBox(message);
 		}
 	}
