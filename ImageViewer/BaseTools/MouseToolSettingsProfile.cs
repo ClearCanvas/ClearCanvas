@@ -65,6 +65,17 @@ namespace ClearCanvas.ImageViewer.BaseTools
 			return _entries.ContainsKey(key);
 		}
 
+		protected virtual XMouseButtons[] AvailableButtons
+		{
+			// Default, assume a basic left/right buttons mouse
+			get { return new [] { XMouseButtons.Left, XMouseButtons.Right }; }
+		}
+
+		public bool HasMultipleButtons
+		{
+			get { return this.AvailableButtons.Length > 1; }
+		}
+
 		public Setting this[Type mouseImageViewerToolType]
 		{
 			get
@@ -76,13 +87,24 @@ namespace ClearCanvas.ImageViewer.BaseTools
 			}
 		}
 
-		protected Setting GetSettingCore(string key)
+		protected virtual Setting GetSettingCore(string key)
 		{
+			if (!_entries.ContainsKey(key))
 			{
-				if (!_entries.ContainsKey(key))
-					_entries.Add(key, new Setting());
-				return _entries[key];
+				var newSetting = new Setting();
+				if (!this.HasMultipleButtons)
+				{
+					// If there is only one button available on the device, force every setting to use that available button
+					// Some device (ie. Touch device) has no buttons. Force to use the left mouse button 
+					var onlyAvailableButton = this.AvailableButtons.Length == 0 ||  this.AvailableButtons[0] == XMouseButtons.None
+						? XMouseButtons.Left : this.AvailableButtons[0];
+
+					newSetting.MouseButton = onlyAvailableButton;
+				}
+
+				_entries.Add(key, newSetting);
 			}
+			return _entries[key];
 		}
 
 		//TODO (CR Sept 2010): name of these methods is awkward, maybe because it's ActivationAction.  Can we use SelectAction instead?
