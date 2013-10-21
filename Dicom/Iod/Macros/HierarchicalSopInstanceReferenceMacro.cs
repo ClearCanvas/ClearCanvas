@@ -27,9 +27,9 @@ using System;
 namespace ClearCanvas.Dicom.Iod.Macros
 {
 	/// <summary>
-	/// HierarchicalSopInstanceReference Macro
+	/// Hierarchical SOP Instance Reference Macro
 	/// </summary>
-	/// <remarks>As defined in the DICOM Standard 2008, Part 3, Section C.17.2.1 (Table C.17-3)</remarks>
+	/// <remarks>As defined in the DICOM Standard 2011, Part 3, Section C.17.2.1 (Table C.17-3)</remarks>
 	public interface IHierarchicalSopInstanceReferenceMacro : IIodMacro
 	{
 		/// <summary>
@@ -49,28 +49,29 @@ namespace ClearCanvas.Dicom.Iod.Macros
 	}
 
 	/// <summary>
-	/// HierarchicalSopInstanceReference Macro Base Implementation
+	/// Hierarchical SOP Instance Reference Macro Base Implementation
 	/// </summary>
-	/// <remarks>As defined in the DICOM Standard 2008, Part 3, Section C.17.2.1 (Table C.17-3)</remarks>
+	/// <remarks>As defined in the DICOM Standard 2011, Part 3, Section C.17.2.1 (Table C.17-3)</remarks>
 	internal class HierarchicalSopInstanceReferenceMacro : SequenceIodBase, IHierarchicalSopInstanceReferenceMacro
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="HierarchicalSopInstanceReferenceMacro"/> class.
 		/// </summary>
-		public HierarchicalSopInstanceReferenceMacro() : base() {}
+		public HierarchicalSopInstanceReferenceMacro() {}
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="HierarchicalSopInstanceReferenceMacro"/> class.
 		/// </summary>
 		/// <param name="dicomSequenceItem">The dicom sequence item.</param>
-		public HierarchicalSopInstanceReferenceMacro(DicomSequenceItem dicomSequenceItem) : base(dicomSequenceItem) {}
+		public HierarchicalSopInstanceReferenceMacro(DicomSequenceItem dicomSequenceItem)
+			: base(dicomSequenceItem) {}
 
 		/// <summary>
 		/// Initializes the underlying collection to implement the module or sequence using default values.
 		/// </summary>
 		public void InitializeAttributes()
 		{
-			this.StudyInstanceUid = "1";
+			StudyInstanceUid = "1";
 		}
 
 		/// <summary>
@@ -78,12 +79,15 @@ namespace ClearCanvas.Dicom.Iod.Macros
 		/// </summary>
 		public string StudyInstanceUid
 		{
-			get { return base.DicomAttributeProvider[DicomTags.StudyInstanceUid].GetString(0, string.Empty); }
+			get { return DicomAttributeProvider[DicomTags.StudyInstanceUid].GetString(0, string.Empty); }
 			set
 			{
 				if (string.IsNullOrEmpty(value))
-					throw new ArgumentNullException("value", "StudyInstanceUid is Type 1 Required.");
-				base.DicomAttributeProvider[DicomTags.StudyInstanceUid].SetString(0, value);
+				{
+					const string msg = "StudyInstanceUid is Type 1 Required.";
+					throw new ArgumentNullException("value", msg);
+				}
+				DicomAttributeProvider[DicomTags.StudyInstanceUid].SetString(0, value);
 			}
 		}
 
@@ -94,7 +98,7 @@ namespace ClearCanvas.Dicom.Iod.Macros
 		{
 			get
 			{
-				DicomAttribute dicomAttribute = base.DicomAttributeProvider[DicomTags.ReferencedSeriesSequence];
+				DicomAttribute dicomAttribute = DicomAttributeProvider[DicomTags.ReferencedSeriesSequence];
 				if (dicomAttribute.IsNull || dicomAttribute.Count == 0)
 					return null;
 
@@ -108,13 +112,16 @@ namespace ClearCanvas.Dicom.Iod.Macros
 			set
 			{
 				if (value == null || value.Length == 0)
-					throw new ArgumentNullException("value", "ReferencedSeriesSequence is Type 1 Required.");
+				{
+					const string msg = "ReferencedSeriesSequence is Type 1 Required.";
+					throw new ArgumentNullException("value", msg);
+				}
 
 				DicomSequenceItem[] result = new DicomSequenceItem[value.Length];
 				for (int n = 0; n < value.Length; n++)
 					result[n] = value[n].DicomSequenceItem;
 
-				base.DicomAttributeProvider[DicomTags.ReferencedSeriesSequence].Values = result;
+				DicomAttributeProvider[DicomTags.ReferencedSeriesSequence].Values = result;
 			}
 		}
 

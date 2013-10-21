@@ -142,6 +142,7 @@
     <Compile Include="Iod\CorrectedImage.cs" />
     <Compile Include="Iod\CountsSource.cs" />
     <Compile Include="Iod\DecayCorrection.cs" />
+    <Compile Include="Iod\Extensions\XKeyObjectDocument.cs" />
     <Compile Include="Iod\FunctionalGroupDescriptor.cs" />
     <Compile Include="Iod\FunctionalGroupMacro.cs" />
     <Compile Include="Iod\FunctionalGroups\CardiacSynchronizationFunctionalGroup.cs" />
@@ -272,6 +273,7 @@
     <Compile Include="Iod\Tests\EncapsulatedPdfIodTests.cs" />
     <Compile Include="Iod\Tests\EqualityCompareHelper.cs" />
     <Compile Include="Iod\Tests\FunctionalGroupMacroTests.cs" />
+    <Compile Include="Iod\Tests\HierarchicalSopInstanceReferenceDictionaryTests.cs" />
     <Compile Include="Iod\Tests\WindowTests.cs" />
     <Compile Include="Iod\Units.cs" />
     <Compile Include="IO\IByteBuffer.cs" />

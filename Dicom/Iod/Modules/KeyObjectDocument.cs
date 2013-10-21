@@ -23,6 +23,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using ClearCanvas.Dicom.Iod.Macros;
 using ClearCanvas.Dicom.Iod.Macros.HierarchicalSeriesInstanceReference;
 using ClearCanvas.Dicom.Iod.Sequences;
@@ -31,31 +32,63 @@ using ClearCanvas.Dicom.Utilities;
 namespace ClearCanvas.Dicom.Iod.Modules
 {
 	/// <summary>
-	/// KeyObjectDocument Module
+	/// Key Object Document Module
 	/// </summary>
-	/// <remarks>As defined in the DICOM Standard 2008, Part 3, Section C.17.6.2 (Table C.17.6-2)</remarks>
+	/// <remarks>As defined in the DICOM Standard 2011, Part 3, Section C.17.6.2 (Table C.17.6-2)</remarks>
 	public class KeyObjectDocumentModuleIod : IodBase
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="KeyObjectDocumentModuleIod"/> class.
 		/// </summary>	
-		public KeyObjectDocumentModuleIod() : base() {}
+		public KeyObjectDocumentModuleIod() {}
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="KeyObjectDocumentModuleIod"/> class.
 		/// </summary>
-		public KeyObjectDocumentModuleIod(IDicomAttributeProvider dicomAttributeProvider) : base(dicomAttributeProvider) {}
+		/// <param name="dicomAttributeProvider">The DICOM attribute collection.</param>
+		public KeyObjectDocumentModuleIod(IDicomAttributeProvider dicomAttributeProvider)
+			: base(dicomAttributeProvider) {}
 
 		/// <summary>
-		/// Initializes the underlying collection to implement the module using default values.
+		/// Gets an enumeration of <see cref="DicomTag"/>s used by this module.
 		/// </summary>
-		public void InitializeAttributes()
+		public static IEnumerable<uint> DefinedTags
 		{
-			this.InstanceNumber = 1;
-			this.ContentDateTime = DateTime.Now;
-			this.ReferencedRequestSequence = null;
-			this.CreateCurrentRequestedProcedureEvidenceSequence();
-			this.IdenticalDocumentsSequence = null;
+			get
+			{
+				yield return DicomTags.InstanceNumber;
+				yield return DicomTags.ContentDate;
+				yield return DicomTags.ContentTime;
+				yield return DicomTags.ReferencedRequestSequence;
+				yield return DicomTags.CurrentRequestedProcedureEvidenceSequence;
+				yield return DicomTags.IdenticalDocumentsSequence;
+			}
+		}
+
+		/// <summary>
+		/// Initializes the underlying collection to implement the module or sequence using default values.
+		/// </summary>
+		public virtual void InitializeAttributes()
+		{
+			InstanceNumber = 1;
+			ContentDateTime = DateTime.Now;
+			ReferencedRequestSequence = null;
+			CreateCurrentRequestedProcedureEvidenceSequence();
+			IdenticalDocumentsSequence = null;
+		}
+
+		/// <summary>
+		/// Checks if this module appears to be non-empty.
+		/// </summary>
+		/// <returns>True if the module appears to be non-empty; False otherwise.</returns>
+		public virtual bool HasValues()
+		{
+			return !(IsNullOrEmpty(DicomAttributeProvider[DicomTags.InstanceNumber])
+			         && IsNullOrEmpty(ContentDateTime)
+			         && IsNullOrEmpty(ReferencedRequestSequence)
+			         && IsNullOrEmpty(CurrentRequestedProcedureEvidenceSequence)
+			         && IsNullOrEmpty(IdenticalDocumentsSequence)
+			        );
 		}
 
 		/// <summary>
@@ -63,8 +96,8 @@ namespace ClearCanvas.Dicom.Iod.Modules
 		/// </summary>
 		public int InstanceNumber
 		{
-			get { return base.DicomAttributeProvider[DicomTags.InstanceNumber].GetInt32(0, 0); }
-			set { base.DicomAttributeProvider[DicomTags.InstanceNumber].SetInt32(0, value); }
+			get { return DicomAttributeProvider[DicomTags.InstanceNumber].GetInt32(0, 0); }
+			set { DicomAttributeProvider[DicomTags.InstanceNumber].SetInt32(0, value); }
 		}
 
 		/// <summary>
@@ -74,16 +107,19 @@ namespace ClearCanvas.Dicom.Iod.Modules
 		{
 			get
 			{
-				string date = base.DicomAttributeProvider[DicomTags.ContentDate].GetString(0, string.Empty);
-				string time = base.DicomAttributeProvider[DicomTags.ContentTime].GetString(0, string.Empty);
+				var date = DicomAttributeProvider[DicomTags.ContentDate].GetString(0, string.Empty);
+				var time = DicomAttributeProvider[DicomTags.ContentTime].GetString(0, string.Empty);
 				return DateTimeParser.ParseDateAndTime(string.Empty, date, time);
 			}
 			set
 			{
 				if (!value.HasValue)
-					throw new ArgumentNullException("value", "Content is Type 1 Required.");
-				DicomAttribute date = base.DicomAttributeProvider[DicomTags.ContentDate];
-				DicomAttribute time = base.DicomAttributeProvider[DicomTags.ContentTime];
+				{
+					const string msg = "Content is Type 1 Required.";
+					throw new ArgumentNullException("value", msg);
+				}
+				var date = DicomAttributeProvider[DicomTags.ContentDate];
+				var time = DicomAttributeProvider[DicomTags.ContentTime];
 				DateTimeParser.SetDateTimeAttributeValues(value, date, time);
 			}
 		}
@@ -95,14 +131,14 @@ namespace ClearCanvas.Dicom.Iod.Modules
 		{
 			get
 			{
-				DicomAttribute dicomAttribute = base.DicomAttributeProvider[DicomTags.ReferencedRequestSequence];
-				if (dicomAttribute.IsNull || dicomAttribute.Count == 0)
+				var dicomAttribute = DicomAttributeProvider[DicomTags.ReferencedRequestSequence];
+				if (dicomAttribute.IsNull || dicomAttribute.IsEmpty)
 				{
 					return null;
 				}
 
-				ReferencedRequestSequence[] result = new ReferencedRequestSequence[dicomAttribute.Count];
-				DicomSequenceItem[] items = (DicomSequenceItem[]) dicomAttribute.Values;
+				var result = new ReferencedRequestSequence[dicomAttribute.Count];
+				var items = (DicomSequenceItem[]) dicomAttribute.Values;
 				for (int n = 0; n < items.Length; n++)
 					result[n] = new ReferencedRequestSequence(items[n]);
 
@@ -112,16 +148,25 @@ namespace ClearCanvas.Dicom.Iod.Modules
 			{
 				if (value == null || value.Length == 0)
 				{
-					base.DicomAttributeProvider[DicomTags.ReferencedRequestSequence] = null;
+					DicomAttributeProvider[DicomTags.ReferencedRequestSequence] = null;
 					return;
 				}
 
-				DicomSequenceItem[] result = new DicomSequenceItem[value.Length];
+				var result = new DicomSequenceItem[value.Length];
 				for (int n = 0; n < value.Length; n++)
 					result[n] = value[n].DicomSequenceItem;
 
-				base.DicomAttributeProvider[DicomTags.ReferencedRequestSequence].Values = result;
+				DicomAttributeProvider[DicomTags.ReferencedRequestSequence].Values = result;
 			}
+		}
+
+		/// <summary>
+		/// Creates a single instance of a ReferencedRequestSequence item. Does not modify the ReferencedRequestSequence in the underlying collection.
+		/// </summary>
+		public ReferencedRequestSequence CreateReferencedRequestSequenceItem()
+		{
+			var iodBase = new ReferencedRequestSequence(new DicomSequenceItem());
+			return iodBase;
 		}
 
 		/// <summary>
@@ -135,12 +180,12 @@ namespace ClearCanvas.Dicom.Iod.Modules
 		{
 			get
 			{
-				DicomAttribute dicomAttribute = base.DicomAttributeProvider[DicomTags.CurrentRequestedProcedureEvidenceSequence];
-				if (dicomAttribute.IsNull || dicomAttribute.Count == 0)
+				var dicomAttribute = DicomAttributeProvider[DicomTags.CurrentRequestedProcedureEvidenceSequence];
+				if (dicomAttribute.IsNull || dicomAttribute.IsEmpty)
 					return null;
 
-				IHierarchicalSopInstanceReferenceMacro[] result = new IHierarchicalSopInstanceReferenceMacro[dicomAttribute.Count];
-				DicomSequenceItem[] items = (DicomSequenceItem[]) dicomAttribute.Values;
+				var result = new IHierarchicalSopInstanceReferenceMacro[dicomAttribute.Count];
+				var items = (DicomSequenceItem[]) dicomAttribute.Values;
 				for (int n = 0; n < items.Length; n++)
 					result[n] = new HierarchicalSopInstanceReferenceMacro(items[n]);
 
@@ -149,13 +194,16 @@ namespace ClearCanvas.Dicom.Iod.Modules
 			set
 			{
 				if (value == null || value.Length == 0)
-					throw new ArgumentNullException("value", "CurrentRequestedProcedureEvidenceSequence is Type 1 Required.");
+				{
+					const string msg = "CurrentRequestedProcedureEvidenceSequence is Type 1 Required.";
+					throw new ArgumentNullException("value", msg);
+				}
 
-				DicomSequenceItem[] result = new DicomSequenceItem[value.Length];
+				var result = new DicomSequenceItem[value.Length];
 				for (int n = 0; n < value.Length; n++)
 					result[n] = value[n].DicomSequenceItem;
 
-				base.DicomAttributeProvider[DicomTags.CurrentRequestedProcedureEvidenceSequence].Values = result;
+				DicomAttributeProvider[DicomTags.CurrentRequestedProcedureEvidenceSequence].Values = result;
 			}
 		}
 
@@ -164,7 +212,7 @@ namespace ClearCanvas.Dicom.Iod.Modules
 		/// </summary>
 		public IHierarchicalSopInstanceReferenceMacro CreateCurrentRequestedProcedureEvidenceSequence()
 		{
-			IHierarchicalSopInstanceReferenceMacro iodBase = new HierarchicalSopInstanceReferenceMacro(new DicomSequenceItem());
+			var iodBase = new HierarchicalSopInstanceReferenceMacro(new DicomSequenceItem());
 			iodBase.InitializeAttributes();
 			return iodBase;
 		}
@@ -172,18 +220,22 @@ namespace ClearCanvas.Dicom.Iod.Modules
 		/// <summary>
 		/// Gets or sets the value of IdenticalDocumentsSequence in the underlying collection. Type 1C.
 		/// </summary>
+		/// <remarks>
+		/// The helper class <see cref="HierarchicalSopInstanceReferenceDictionary"/> can be used to assist in creating
+		/// an identical documents sequence with minimal repetition.
+		/// </remarks>
 		public IHierarchicalSopInstanceReferenceMacro[] IdenticalDocumentsSequence
 		{
 			get
 			{
-				DicomAttribute dicomAttribute = base.DicomAttributeProvider[DicomTags.IdenticalDocumentsSequence];
-				if (dicomAttribute.IsNull || dicomAttribute.Count == 0)
+				var dicomAttribute = DicomAttributeProvider[DicomTags.IdenticalDocumentsSequence];
+				if (dicomAttribute.IsNull || dicomAttribute.IsEmpty)
 				{
 					return null;
 				}
 
-				IHierarchicalSopInstanceReferenceMacro[] result = new IHierarchicalSopInstanceReferenceMacro[dicomAttribute.Count];
-				DicomSequenceItem[] items = (DicomSequenceItem[]) dicomAttribute.Values;
+				var result = new IHierarchicalSopInstanceReferenceMacro[dicomAttribute.Count];
+				var items = (DicomSequenceItem[]) dicomAttribute.Values;
 				for (int n = 0; n < items.Length; n++)
 					result[n] = new HierarchicalSopInstanceReferenceMacro(items[n]);
 
@@ -193,15 +245,15 @@ namespace ClearCanvas.Dicom.Iod.Modules
 			{
 				if (value == null || value.Length == 0)
 				{
-					base.DicomAttributeProvider[DicomTags.IdenticalDocumentsSequence] = null;
+					DicomAttributeProvider[DicomTags.IdenticalDocumentsSequence] = null;
 					return;
 				}
 
-				DicomSequenceItem[] result = new DicomSequenceItem[value.Length];
+				var result = new DicomSequenceItem[value.Length];
 				for (int n = 0; n < value.Length; n++)
 					result[n] = value[n].DicomSequenceItem;
 
-				base.DicomAttributeProvider[DicomTags.IdenticalDocumentsSequence].Values = result;
+				DicomAttributeProvider[DicomTags.IdenticalDocumentsSequence].Values = result;
 			}
 		}
 
@@ -210,7 +262,7 @@ namespace ClearCanvas.Dicom.Iod.Modules
 		/// </summary>
 		public IHierarchicalSopInstanceReferenceMacro CreateIdenticalDocumentsSequence()
 		{
-			IHierarchicalSopInstanceReferenceMacro iodBase = new HierarchicalSopInstanceReferenceMacro(new DicomSequenceItem());
+			var iodBase = new HierarchicalSopInstanceReferenceMacro(new DicomSequenceItem());
 			iodBase.InitializeAttributes();
 			return iodBase;
 		}
@@ -220,18 +272,17 @@ namespace ClearCanvas.Dicom.Iod.Modules
 		/// </summary>
 		public IHierarchicalSopInstanceReferenceMacro CreateIdenticalDocumentsSequence(string studyInstanceUid, string seriesInstanceUid, string sopClassUid, string sopInstanceUid)
 		{
-			IHierarchicalSopInstanceReferenceMacro identicalDocument;
 			IHierarchicalSeriesInstanceReferenceMacro seriesReference;
 			IReferencedSopSequence sopReference;
 
-			identicalDocument = this.CreateIdenticalDocumentsSequence();
+			var identicalDocument = CreateIdenticalDocumentsSequence();
 			identicalDocument.InitializeAttributes();
 			identicalDocument.StudyInstanceUid = studyInstanceUid;
-			identicalDocument.ReferencedSeriesSequence = new IHierarchicalSeriesInstanceReferenceMacro[] {seriesReference = identicalDocument.CreateReferencedSeriesSequence()};
+			identicalDocument.ReferencedSeriesSequence = new[] {seriesReference = identicalDocument.CreateReferencedSeriesSequence()};
 
 			seriesReference.InitializeAttributes();
 			seriesReference.SeriesInstanceUid = seriesInstanceUid;
-			seriesReference.ReferencedSopSequence = new IReferencedSopSequence[] {sopReference = seriesReference.CreateReferencedSopSequence()};
+			seriesReference.ReferencedSopSequence = new[] {sopReference = seriesReference.CreateReferencedSopSequence()};
 
 			sopReference.InitializeAttributes();
 			sopReference.ReferencedSopClassUid = sopClassUid;

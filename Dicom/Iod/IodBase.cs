@@ -153,6 +153,11 @@ namespace ClearCanvas.Dicom.Iod
 			return string.IsNullOrEmpty(value);
 		}
 
+		protected static bool IsNullOrEmpty(DicomAttribute attribute)
+		{
+			return attribute.IsEmpty || attribute.IsNull;
+		}
+
 		protected static bool IsNullOrEmpty<T>(T value)
 		{
 			return Equals(value, default(T));

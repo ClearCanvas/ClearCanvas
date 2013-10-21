@@ -27,7 +27,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Security.Principal;
 using System.Threading;
-using ClearCanvas.Desktop;
+using ClearCanvas.Common;
 using ClearCanvas.Dicom;
 using ClearCanvas.Dicom.Iod;
 using ClearCanvas.Dicom.Iod.ContextGroups;
@@ -37,9 +37,6 @@ using ClearCanvas.Dicom.Iod.Macros.DocumentRelationship;
 using ClearCanvas.Dicom.Iod.Modules;
 using ClearCanvas.ImageViewer.PresentationStates.Dicom;
 using ClearCanvas.ImageViewer.StudyManagement;
-using ClearCanvas.Common;
-using ClearCanvas.Common.Utilities;
-using ClearCanvas.Dicom.Utilities;
 
 namespace ClearCanvas.ImageViewer.KeyObjects
 {
@@ -240,7 +237,7 @@ namespace ClearCanvas.ImageViewer.KeyObjects
 			List<DicomFile> keyObjectDocuments = new List<DicomFile>();
 			List<IHierarchicalSopInstanceReferenceMacro> identicalDocuments = new List<IHierarchicalSopInstanceReferenceMacro>();
 			Dictionary<string, KeyObjectSelectionDocumentIod> koDocumentsByStudy = new Dictionary<string, KeyObjectSelectionDocumentIod>();
-			foreach (Frame frame in (IEnumerable<Frame>)_framePresentationStates)
+			foreach (Frame frame in (IEnumerable<Frame>) _framePresentationStates)
 			{
 				string studyInstanceUid = frame.StudyInstanceUid;
 				if (!koDocumentsByStudy.ContainsKey(studyInstanceUid))
@@ -250,9 +247,9 @@ namespace ClearCanvas.ImageViewer.KeyObjects
 
 					DicomFile keyObjectDocument = new DicomFile();
 					keyObjectDocument.SourceApplicationEntityTitle = this.SourceAETitle;
-					
+
 					KeyObjectSelectionDocumentIod iod = CreatePrototypeDocument(frame.ParentImageSop, keyObjectDocument.DataSet, SpecificCharacterSet);
-					
+
 					iod.GeneralEquipment.Manufacturer = this.Manufacturer ?? string.Empty; // this one is type 2 - all other GenEq attributes are type 3
 					iod.GeneralEquipment.ManufacturersModelName = string.IsNullOrEmpty(this.ManufacturersModelName) ? null : this.ManufacturersModelName;
 					iod.GeneralEquipment.DeviceSerialNumber = string.IsNullOrEmpty(this.DeviceSerialNumber) ? null : this.DeviceSerialNumber;
@@ -304,7 +301,7 @@ namespace ClearCanvas.ImageViewer.KeyObjects
 				EvidenceDictionary currentRequestedProcedureEvidenceList = new EvidenceDictionary();
 
 				Dictionary<ImageSop, List<int>> frameMap = new Dictionary<ImageSop, List<int>>();
-				foreach (KeyValuePair<Frame,DicomSoftcopyPresentationState> frameAndPresentationState in _framePresentationStates)
+				foreach (KeyValuePair<Frame, DicomSoftcopyPresentationState> frameAndPresentationState in _framePresentationStates)
 				{
 					Frame frame = frameAndPresentationState.Key;
 					ImageSop sop = frame.ParentImageSop;
@@ -320,7 +317,7 @@ namespace ClearCanvas.ImageViewer.KeyObjects
 					IContentSequence content = iod.SrDocumentContent.CreateContentSequence();
 					{
 						content.RelationshipType = RelationshipType.Contains;
-						content.ReferencedContentItemIdentifier = new uint[] { 1 };
+						content.ReferencedContentItemIdentifier = new uint[] {1};
 
 						IImageReferenceMacro imageReferenceMacro = content.InitializeImageReferenceAttributes();
 						imageReferenceMacro.ReferencedSopSequence.InitializeAttributes();
@@ -332,7 +329,7 @@ namespace ClearCanvas.ImageViewer.KeyObjects
 							imageReferenceMacro.ReferencedSopSequence.ReferencedFrameNumber = null;
 
 						// save the presentation state
-						if(frameAndPresentationState.Value!=null)
+						if (frameAndPresentationState.Value != null)
 						{
 							DicomSoftcopyPresentationState presentationState = frameAndPresentationState.Value;
 							imageReferenceMacro.ReferencedSopSequence.CreateReferencedSopSequence();
@@ -610,57 +607,36 @@ namespace ClearCanvas.ImageViewer.KeyObjects
 
 		#region EvidenceDictionary Class
 
-		private class EvidenceDictionary : HierarchicalSopInstanceReferenceDictionary
+// ReSharper disable RedundantArgumentName
+
+		private class EvidenceDictionary
 		{
-			private readonly Dictionary<string, SeriesInfo> _seriesInfo = new Dictionary<string, SeriesInfo>();
+			private readonly HierarchicalSopInstanceReferenceDictionary _dictionary = new HierarchicalSopInstanceReferenceDictionary();
 
 			public void Add(Sop sop)
 			{
-				bool result = base.TryAddReference(sop.StudyInstanceUid, sop.SeriesInstanceUid, sop.SopClassUid, sop.SopInstanceUid);
-				if (result && !_seriesInfo.ContainsKey(sop.SeriesInstanceUid))
-				{
-					SeriesInfo seriesInfo = new SeriesInfo();
-					seriesInfo.RetrieveAeTitle = sop[DicomTags.RetrieveAeTitle].ToString();
-					seriesInfo.StorageMediaFileSetId = sop[DicomTags.StorageMediaFileSetId].GetString(0, string.Empty);
-					seriesInfo.StorageMediaFileSetUid = sop[DicomTags.StorageMediaFileSetUid].GetString(0, string.Empty);
-					_seriesInfo.Add(sop.SeriesInstanceUid, seriesInfo);
-				}
+				_dictionary.TryAddReference(sop.StudyInstanceUid, sop.SeriesInstanceUid, sop.SopClassUid, sop.SopInstanceUid,
+				                            retrieveAeTitle : sop[DicomTags.RetrieveAeTitle].ToString(),
+				                            storageMediaFileSetId : sop[DicomTags.StorageMediaFileSetId].GetString(0, string.Empty),
+				                            storageMediaFileSetUid : sop[DicomTags.StorageMediaFileSetUid].GetString(0, string.Empty));
 			}
 
 			public void Add(DicomSoftcopyPresentationState state)
 			{
 				IDicomAttributeProvider dataset = state.DicomFile.DataSet;
-				bool result = base.TryAddReference(dataset[DicomTags.StudyInstanceUid], state.PresentationSeriesInstanceUid, state.PresentationSopClassUid, state.PresentationSopInstanceUid);
-				if (result && !_seriesInfo.ContainsKey(state.PresentationSeriesInstanceUid))
-				{
-					SeriesInfo seriesInfo = new SeriesInfo();
-					seriesInfo.RetrieveAeTitle = dataset[DicomTags.RetrieveAeTitle].ToString();
-					seriesInfo.StorageMediaFileSetId = dataset[DicomTags.StorageMediaFileSetId].GetString(0, string.Empty);
-					seriesInfo.StorageMediaFileSetUid = dataset[DicomTags.StorageMediaFileSetUid].GetString(0, string.Empty);
-					_seriesInfo.Add(state.PresentationSeriesInstanceUid, seriesInfo);
-				}
+				_dictionary.TryAddReference(dataset[DicomTags.StudyInstanceUid], state.PresentationSeriesInstanceUid, state.PresentationSopClassUid, state.PresentationSopInstanceUid,
+				                            retrieveAeTitle : dataset[DicomTags.RetrieveAeTitle].ToString(),
+				                            storageMediaFileSetId : dataset[DicomTags.StorageMediaFileSetId].GetString(0, string.Empty),
+				                            storageMediaFileSetUid : dataset[DicomTags.StorageMediaFileSetUid].GetString(0, string.Empty));
 			}
 
-			protected override IHierarchicalSeriesInstanceReferenceMacro CreateSeriesReference(string seriesInstanceUid)
+			public IHierarchicalSopInstanceReferenceMacro[] ToArray()
 			{
-				IHierarchicalSeriesInstanceReferenceMacro reference = base.CreateSeriesReference(seriesInstanceUid);
-				if (_seriesInfo.ContainsKey(seriesInstanceUid))
-				{
-					SeriesInfo seriesInfo = _seriesInfo[seriesInstanceUid];
-					reference.RetrieveAeTitle = seriesInfo.RetrieveAeTitle;
-					reference.StorageMediaFileSetId = seriesInfo.StorageMediaFileSetId;
-					reference.StorageMediaFileSetUid = seriesInfo.StorageMediaFileSetUid;
-				}
-				return reference;
-			}
-
-			private class SeriesInfo
-			{
-				public string RetrieveAeTitle = "";
-				public string StorageMediaFileSetId = "";
-				public string StorageMediaFileSetUid = "";
+				return _dictionary.ToArray();
 			}
 		}
+
+// ReSharper restore RedundantArgumentName
 
 		#endregion
 
