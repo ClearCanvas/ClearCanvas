@@ -639,6 +639,22 @@ namespace ClearCanvas.ImageServer.Model
 
         #endregion
 
+		#region Helper Methods
+
+		public delegate void SopInstanceProcessCallback(StudyStorageLocation location, SeriesXml seriesXml, InstanceXml instanceXml);
+
+		public void forEachSopInstanceInSeries(string seriesInstanceUid, SopInstanceProcessCallback callback)
+		{
+			var studyXml = this.LoadStudyXml();
+			var seriesXml = studyXml[seriesInstanceUid];
+			foreach (var instanceXml in seriesXml)
+			{
+				callback(this, seriesXml, instanceXml);
+			} 
+		}
+
+		#endregion
+
 		#region Static Methods
 
 		/// <summary>

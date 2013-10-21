@@ -36,6 +36,7 @@ namespace ClearCanvas.ImageServer.Rules
 		StudyCompress,
 		SopCompress,
 		DataAccess,
+		StudyQualityControl
 	}
 
 	public static class ApplicableRuleTypeExtensions
@@ -58,6 +59,8 @@ namespace ClearCanvas.ImageServer.Rules
 					return ServerRuleTypeEnum.SopCompress;
 				case ApplicableRuleType.DataAccess:
 					return ServerRuleTypeEnum.DataAccess;
+				case ApplicableRuleType.StudyQualityControl:
+					return ServerRuleTypeEnum.StudyQualityControl;
 				default:
 					throw new ArgumentOutOfRangeException("ruleType");
 			}
