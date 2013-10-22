@@ -40,15 +40,15 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 	[EnabledStateObserver("create", "Enabled", "EnabledChanged")]
 	// TODO (CR Phoenix5 - Med): Clinical as well
 	[ViewerActionPermission("create", AuthorityTokens.Study.KeyImages)]
-
+	//
 	[ButtonAction("show", "global-toolbars/ToolbarStandard/ToolbarShowKeyImages", "Show")]
 	[Tooltip("show", "TooltipShowKeyImages")]
 	[IconSet("show", "Icons.ShowKeyImagesToolSmall.png", "Icons.ShowKeyImagesToolMedium.png", "Icons.ShowKeyImagesToolLarge.png")]
 	[EnabledStateObserver("show", "ShowEnabled", "ShowEnabledChanged")]
-    // TODO (CR Phoenix5 - Med): Clinical as well
-    [ViewerActionPermission("show", AuthorityTokens.Study.KeyImages)]
-
-	[ExtensionOf(typeof(ImageViewerToolExtensionPoint))]
+	// TODO (CR Phoenix5 - Med): Clinical as well
+	[ViewerActionPermission("show", AuthorityTokens.Study.KeyImages)]
+	//
+	[ExtensionOf(typeof (ImageViewerToolExtensionPoint))]
 	internal class KeyImageTool : ImageViewerTool
 	{
 		#region Private Fields
@@ -84,7 +84,7 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 			add { _showEnabledChanged += value; }
 			remove { _showEnabledChanged -= value; }
 		}
-	
+
 		#region Overrides
 
 		public override void Initialize()
@@ -94,68 +94,68 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 
 			UpdateEnabled();
 
-            if (WorkItemActivityMonitor.IsSupported)
-            {
-                _workItemActivityMonitor = WorkItemActivityMonitor.Create();
-                _workItemActivityMonitor.IsConnectedChanged += OnIsConnectedChanged;
-            }
+			if (WorkItemActivityMonitor.IsSupported)
+			{
+				_workItemActivityMonitor = WorkItemActivityMonitor.Create();
+				_workItemActivityMonitor.IsConnectedChanged += OnIsConnectedChanged;
+			}
 
-            if (!KeyImageClipboard.HasViewPlugin)
-            {
-                foreach (var a in Actions)
-                {
-                    // TODO (CR Phoenix5 - High): use the ID, which doesn't change; this will change with language.
-                    if (a.Path.LocalizedPath == "global-toolbars/ToolbarStandard/Show Key Images")
-                    {
-                        var buttonAction = a as ButtonAction;
-                        if (buttonAction != null)
-                            buttonAction.Visible = false;
-                    }
-                }
-            }
+			if (!KeyImageClipboardComponent.HasViewPlugin)
+			{
+				foreach (var a in Actions)
+				{
+					// TODO (CR Phoenix5 - High): use the ID, which doesn't change; this will change with language.
+					if (a.Path.LocalizedPath == "global-toolbars/ToolbarStandard/Show Key Images")
+					{
+						var buttonAction = a as ButtonAction;
+						if (buttonAction != null)
+							buttonAction.Visible = false;
+					}
+				}
+			}
 		}
 
-	    protected override void Dispose(bool disposing)
+		protected override void Dispose(bool disposing)
 		{
-            if (_workItemActivityMonitor != null)
-            {
-                _workItemActivityMonitor.IsConnectedChanged -= OnIsConnectedChanged;
-                _workItemActivityMonitor.Dispose();
-                _workItemActivityMonitor = null;
-            }
+			if (_workItemActivityMonitor != null)
+			{
+				_workItemActivityMonitor.IsConnectedChanged -= OnIsConnectedChanged;
+				_workItemActivityMonitor.Dispose();
+				_workItemActivityMonitor = null;
+			}
 
-	        if (base.Context != null)
-	        {
-	            KeyImageClipboard.OnViewerClosed(base.Context.Viewer);
-	        }
+			if (base.Context != null)
+			{
+				KeyImageClipboard.OnViewerClosed(base.Context.Viewer);
+			}
 
-	        base.Dispose(disposing);
+			base.Dispose(disposing);
 		}
 
 		private void UpdateEnabled()
 		{
-            // TODO  Better way to address Webstation usage?
+			// TODO  Better way to address Webstation usage?
 			base.Enabled = KeyImagePublisher.IsSupportedImage(base.SelectedPresentationImage) &&
-                // TODO (CR Phoenix5 - Med): Clinical as well	  
-                        PermissionsHelper.IsInRole(AuthorityTokens.Study.KeyImages) &&
+			               // TODO (CR Phoenix5 - Med): Clinical as well	  
+			               PermissionsHelper.IsInRole(AuthorityTokens.Study.KeyImages) &&
 			               // TODO (CR Phoenix5 - Low): KeyImagePublisher.IsSupportedImage?
-                      !(SelectedPresentationImage.ParentDisplaySet.Descriptor is KeyImageDisplaySetDescriptor) ;
+			               !(SelectedPresentationImage.ParentDisplaySet.Descriptor is KeyImageDisplaySetDescriptor);
 
-            // TODO (CR Phoenix5 - Med): Clinical as well
-            this.ShowEnabled = 
-					  PermissionsHelper.IsInRole(AuthorityTokens.Study.KeyImages);
+			// TODO (CR Phoenix5 - Med): Clinical as well
+			this.ShowEnabled =
+				PermissionsHelper.IsInRole(AuthorityTokens.Study.KeyImages);
 		}
 
-        private void OnIsConnectedChanged(object sender, EventArgs eventArgs)
-        {
-            UpdateEnabled();
-        }
+		private void OnIsConnectedChanged(object sender, EventArgs eventArgs)
+		{
+			UpdateEnabled();
+		}
 
 		protected override void OnPresentationImageSelected(object sender, PresentationImageSelectedEventArgs e)
 		{
 			UpdateEnabled();
 
-            /*
+			/*
             if (!KeyImageClipboard.HasViewPlugin())
             {
                 if (SelectedPresentationImage.ParentDisplaySet.Descriptor is KeyImageDisplaySetDescriptor)
@@ -184,7 +184,7 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
                 }
             }
             */
-        }
+		}
 
 		protected override void OnTileSelected(object sender, TileSelectedEventArgs e)
 		{
@@ -206,55 +206,55 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 			if (!base.Enabled)
 				return;
 
-		    if (KeyImageClipboard.HasViewPlugin)
-		    {
-		        try
-		        {
-		            IPresentationImage image = base.Context.Viewer.SelectedPresentationImage;
-		            if (image != null)
-		            {
-		                KeyImageClipboard.Add(image);
-		                _flashOverlayController.Flash(image);
-		            }
+			if (KeyImageClipboardComponent.HasViewPlugin)
+			{
+				try
+				{
+					IPresentationImage image = base.Context.Viewer.SelectedPresentationImage;
+					if (image != null)
+					{
+						KeyImageClipboard.Add(image);
+						_flashOverlayController.Flash(image);
+					}
 
-		            if (_firstKeyImageCreation && this.ShowEnabled)
-		            {
-		                KeyImageClipboard.Show(Context.DesktopWindow,
-		                                       ShelfDisplayHint.DockAutoHide | ShelfDisplayHint.DockLeft);
-		                _firstKeyImageCreation = false;
-		            }
-		        }
-		        catch (Exception ex)
-		        {
-		            Platform.Log(LogLevel.Error, ex, "Failed to add item to the key image clipboard.");
-		            ExceptionHandler.Report(ex, SR.MessageCreateKeyImageFailed, base.Context.DesktopWindow);
-		        }
-		    }
-		    else
-		    {
-                try
-                {
-                    IPresentationImage image = base.Context.Viewer.SelectedPresentationImage;
-                    if (image != null)
-                    {
-                        // New Virtual Display Set
-                        // TODO (9-JAN-13) As per Phoenx5, Sprint 4 review, disable creation of the virtual display set in Webstation.
-                        //KeyImageDisplaySet.AddKeyImage(image);
+					if (_firstKeyImageCreation && this.ShowEnabled)
+					{
+						KeyImageClipboard.Show(Context.DesktopWindow,
+						                       ShelfDisplayHint.DockAutoHide | ShelfDisplayHint.DockLeft);
+						_firstKeyImageCreation = false;
+					}
+				}
+				catch (Exception ex)
+				{
+					Platform.Log(LogLevel.Error, ex, "Failed to add item to the key image clipboard.");
+					ExceptionHandler.Report(ex, SR.MessageCreateKeyImageFailed, base.Context.DesktopWindow);
+				}
+			}
+			else
+			{
+				try
+				{
+					IPresentationImage image = base.Context.Viewer.SelectedPresentationImage;
+					if (image != null)
+					{
+						// New Virtual Display Set
+						// TODO (9-JAN-13) As per Phoenx5, Sprint 4 review, disable creation of the virtual display set in Webstation.
+						//KeyImageDisplaySet.AddKeyImage(image);
 
-                        // Still save to clipboard, makes publishing easier later
-                        KeyImageClipboard.Add(image);
-		     
-                        _flashOverlayController.Flash(image);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Platform.Log(LogLevel.Error, ex, "Failed to create virtual display set for key image.");
-                    ExceptionHandler.Report(ex, SR.MessageCreateKeyImageFailed, base.Context.DesktopWindow);
-                }
-            }
+						// Still save to clipboard, makes publishing easier later
+						KeyImageClipboard.Add(image);
+
+						_flashOverlayController.Flash(image);
+					}
+				}
+				catch (Exception ex)
+				{
+					Platform.Log(LogLevel.Error, ex, "Failed to create virtual display set for key image.");
+					ExceptionHandler.Report(ex, SR.MessageCreateKeyImageFailed, base.Context.DesktopWindow);
+				}
+			}
 		}
-		
+
 		#endregion
 	}
 }

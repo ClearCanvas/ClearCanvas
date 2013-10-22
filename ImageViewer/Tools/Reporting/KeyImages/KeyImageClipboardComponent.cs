@@ -25,6 +25,7 @@
 using System;
 using System.ComponentModel;
 using ClearCanvas.Common.Utilities;
+using ClearCanvas.Desktop;
 using ClearCanvas.ImageViewer.Clipboard;
 
 namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
@@ -78,6 +79,17 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 		BindingList<IClipboardItem> IKeyImageClipboard.Items
 		{
 			get { return DataSource; }
+		}
+
+		#endregion
+
+		#region Static
+
+		internal static readonly bool HasViewPlugin;
+
+		static KeyImageClipboardComponent()
+		{
+			HasViewPlugin = ViewFactory.IsAssociatedViewAvailable<KeyImageClipboardComponent>();
 		}
 
 		#endregion
