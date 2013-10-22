@@ -50,7 +50,8 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 		/// </summary>
 		/// <param name="graphicAnnotationSequenceItem">The DICOM graphic annotation sequence item to render.</param>
 		/// <param name="displayedArea">The image's displayed area with which to </param>
-		public DicomGraphicAnnotation(GraphicAnnotationSequenceItem graphicAnnotationSequenceItem, RectangleF displayedArea)
+		/// <param name="editable">Indicates whether or not the graphic should be interactive and editable by the user.</param>
+		public DicomGraphicAnnotation(GraphicAnnotationSequenceItem graphicAnnotationSequenceItem, RectangleF displayedArea, bool editable = false)
 		{
 			this.CoordinateSystem = CoordinateSystem.Source;
 			_layerId = graphicAnnotationSequenceItem.GraphicLayer ?? string.Empty;
@@ -65,25 +66,11 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 						try
 						{
 							IList<PointF> points = GetGraphicDataAsSourceCoordinates(displayedArea, graphicItem);
-							switch (graphicItem.GraphicType)
+							var graphic = CreateGraphic(graphicItem.GraphicType, points, editable);
+							if (graphic != null)
 							{
-								case GraphicAnnotationSequenceItem.GraphicType.Interpolated:
-									base.Graphics.Add(CreateInterpolated(points));
-									break;
-								case GraphicAnnotationSequenceItem.GraphicType.Polyline:
-									base.Graphics.Add(CreatePolyline(points));
-									break;
-								case GraphicAnnotationSequenceItem.GraphicType.Point:
-									base.Graphics.Add(CreatePoint(points[0]));
-									break;
-								case GraphicAnnotationSequenceItem.GraphicType.Circle:
-									base.Graphics.Add(CreateCircle(points[0], (float) Vector.Distance(points[0], points[1])));
-									break;
-								case GraphicAnnotationSequenceItem.GraphicType.Ellipse:
-									base.Graphics.Add(CreateEllipse(points[0], points[1], points[2], points[3]));
-									break;
-								default:
-									break;
+								if (editable) graphic = new StandardStatefulGraphic(graphic);
+								Graphics.Add(graphic);
 							}
 							dataPoints.AddRange(points);
 						}
@@ -194,12 +181,8 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 		{
 			foreach (IGraphic graphic in base.Graphics)
 			{
-				if (graphic is PolylineGraphic)
-					((PolylineGraphic) graphic).Color = _color;
-				else if (graphic is IVectorGraphic)
+				if (graphic is IVectorGraphic)
 					((IVectorGraphic) graphic).Color = _color;
-				else if (graphic is CalloutGraphic)
-					((CalloutGraphic) graphic).Color = _color;
 				else if (graphic is StandardStatefulGraphic)
 					((StandardStatefulGraphic) graphic).InactiveColor = ((StandardStatefulGraphic) graphic).Color = _color;
 			}
@@ -231,50 +214,75 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 			return displayedArea.Location + new SizeF(displayedArea.Width*point.X, displayedArea.Height*point.Y);
 		}
 
-		private static IGraphic CreateInterpolated(IList<PointF> dataPoints)
+		private static IGraphic CreateGraphic(GraphicAnnotationSequenceItem.GraphicType graphicType, IList<PointF> points, bool editable = false)
 		{
-			CurvePrimitive curve = new CurvePrimitive();
-			for (int n = 0; n < dataPoints.Count; n++)
-				curve.Points.Add(dataPoints[n]);
-			return curve;
+			switch (graphicType)
+			{
+				case GraphicAnnotationSequenceItem.GraphicType.Interpolated:
+					Platform.CheckTrue(points.Count >= 2, "Graphic Type INTERPOLATED requires at least 2 coordinates");
+					return CreateInterpolated(points, editable);
+				case GraphicAnnotationSequenceItem.GraphicType.Polyline:
+					Platform.CheckTrue(points.Count >= 2, "Graphic Type POLYLINE requires at least 2 coordinates");
+					return CreatePolyline(points, editable);
+				case GraphicAnnotationSequenceItem.GraphicType.Point:
+					Platform.CheckTrue(points.Count >= 1, "Graphic Type POINT requires 1 coordinate");
+					return CreatePoint(points[0], editable);
+				case GraphicAnnotationSequenceItem.GraphicType.Circle:
+					Platform.CheckTrue(points.Count >= 2, "Graphic Type CIRCLE requires 2 coordinates");
+					return CreateCircle(points[0], (float) Vector.Distance(points[0], points[1]), editable);
+				case GraphicAnnotationSequenceItem.GraphicType.Ellipse:
+					Platform.CheckTrue(points.Count >= 4, "Graphic Type INTERPOLATED requires 4 coordinates");
+					return CreateEllipse(points[0], points[1], points[2], points[3], editable);
+				default:
+					Platform.Log(LogLevel.Debug, "Unrecognized Graphic Type");
+					return null;
+			}
 		}
 
-		private static IGraphic CreatePolyline(IList<PointF> vertices)
+		private static IGraphic CreateInterpolated(IList<PointF> dataPoints, bool editable = false)
 		{
-			PolylineGraphic polyline = new PolylineGraphic();
-			for (int n = 0; n < vertices.Count; n++)
-				polyline.Points.Add(vertices[n]);
-			return polyline;
+			var curve = new CurvePrimitive();
+			curve.Points.AddRange(dataPoints);
+			return editable ? (IGraphic) new VerticesControlGraphic(new MoveControlGraphic(curve)) : curve;
 		}
 
-		private static IGraphic CreateCircle(PointF center, float radius)
+		private static IGraphic CreatePolyline(IList<PointF> vertices, bool editable = false)
 		{
-			EllipsePrimitive circle = new EllipsePrimitive();
-			SizeF radial = new SizeF(radius, radius);
+			var closed = FloatComparer.AreEqual(vertices[0], vertices[vertices.Count - 1]);
+			var polyline = new PolylineGraphic(closed);
+			polyline.Points.AddRange(vertices);
+			if (!editable) return polyline;
+			return closed ? new PolygonControlGraphic(true, new MoveControlGraphic(polyline)) : new VerticesControlGraphic(true, new MoveControlGraphic(polyline));
+		}
+
+		private static IGraphic CreateCircle(PointF center, float radius, bool editable = false)
+		{
+			var circle = new EllipsePrimitive();
+			var radial = new SizeF(radius, radius);
 			circle.TopLeft = center - radial;
 			circle.BottomRight = center + radial;
-			return circle;
+			return editable ? (IGraphic) new BoundableResizeControlGraphic(new BoundableStretchControlGraphic(new MoveControlGraphic(circle))) : circle;
 		}
 
-		private static IGraphic CreatePoint(PointF location)
+		private static IGraphic CreatePoint(PointF location, bool editable = false)
 		{
 			const float radius = 4;
 
-			InvariantEllipsePrimitive point = new InvariantEllipsePrimitive();
+			var point = new InvariantEllipsePrimitive();
 			point.Location = location;
 			point.InvariantTopLeft = new PointF(-radius, -radius);
 			point.InvariantBottomRight = new PointF(radius, radius);
-			return point;
+			return editable ? (IGraphic) new MoveControlGraphic(point) : point;
 		}
 
-		private static IGraphic CreateEllipse(PointF majorAxisEnd1, PointF majorAxisEnd2, PointF minorAxisEnd1, PointF minorAxisEnd2)
+		private static IGraphic CreateEllipse(PointF majorAxisEnd1, PointF majorAxisEnd2, PointF minorAxisEnd1, PointF minorAxisEnd2, bool editable = false)
 		{
-			DicomEllipseGraphic dicomEllipseGraphic = new DicomEllipseGraphic();
+			var dicomEllipseGraphic = new DicomEllipseGraphic();
 			dicomEllipseGraphic.MajorAxisPoint1 = majorAxisEnd1;
 			dicomEllipseGraphic.MajorAxisPoint2 = majorAxisEnd2;
 			dicomEllipseGraphic.MinorAxisPoint1 = minorAxisEnd1;
 			dicomEllipseGraphic.MinorAxisPoint2 = minorAxisEnd2;
-			return dicomEllipseGraphic;
+			return editable ? (IGraphic) (new MoveControlGraphic(dicomEllipseGraphic)) : dicomEllipseGraphic;
 		}
 
 		private static IGraphic CreateCalloutText(RectangleF annotationBounds, RectangleF displayedArea, GraphicAnnotationSequenceItem.TextObjectSequenceItem textItem)
