@@ -42,6 +42,7 @@
       <HintPath>..\..\ReferencedAssemblies\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Xml.Linq" />
@@ -86,6 +87,17 @@
     <Compile Include="Rendering\OglImplementation.cs" />
     <Compile Include="Rendering\VtkPresentationImageRenderer.cs" />
     <Compile Include="Rendering\Win32VtkRenderingSurface.cs" />
+    <Compile Include="Settings.cs" />
+    <Compile Include="Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="SR.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SR.resx</DependentUpon>
+    </Compile>
     <Compile Include="Tests\VtkRendererTestTool.cs" />
     <Compile Include="Tests\VtkTestPresentationImage.cs" />
     <Compile Include="Utilities\SlabProjection.cs">
@@ -94,6 +106,7 @@
     <Compile Include="Utilities\Tests\SlabProjectionTests.cs" />
     <Compile Include="VtkCollectionHelper.cs" />
     <Compile Include="VtkColorTransferFunctionComposer.cs" />
+    <Compile Include="VtkDiagnosticTool.cs" />
     <Compile Include="VtkHelper.cs" />
     <Compile Include="VtkSceneGraph.cs" />
     <Compile Include="VtkImageDataHandle.cs" />
@@ -125,6 +138,19 @@
       <Project>{FEFD73C5-8541-47D2-BBDB-FF61DEA28291}</Project>
       <Name>ClearCanvas.ImageViewer.Common</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="SR.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>SR.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

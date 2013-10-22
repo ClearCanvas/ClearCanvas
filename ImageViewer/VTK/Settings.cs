@@ -1,4 +1,4 @@
-#region License
+﻿#region License
 
 // Copyright (c) 2013, ClearCanvas Inc.
 // All rights reserved.
@@ -22,33 +22,12 @@
 
 #endregion
 
-using System;
 using System.Configuration;
 using ClearCanvas.Common.Configuration;
-using ClearCanvas.Common.Utilities;
 
-namespace ClearCanvas.ImageViewer.Externals.Config
+namespace ClearCanvas.ImageViewer.Vtk
 {
-	[SettingsGroupDescription("Settings for external applications.")]
 	[SettingsProvider(typeof (ExtendedLocalFileSettingsProvider))]
-	internal sealed partial class ExternalsConfigurationSettings
-	{
-		private event EventHandler _externalsChanged;
-
-		public event EventHandler ExternalsChanged
-		{
-			add { _externalsChanged += value; }
-			remove { _externalsChanged -= value; }
-		}
-
-		protected override void OnSettingChanging(object sender, SettingChangingEventArgs e)
-		{
-			base.OnSettingChanging(sender, e);
-
-			if (e.SettingName == "Externals")
-			{
-				EventsHelper.Fire(_externalsChanged, this, EventArgs.Empty);
-			}
-		}
-	}
+	[SettingsGroupDescription("Tuning parameters for the VTK framework support plugin.")]
+	internal sealed partial class Settings {}
 }
