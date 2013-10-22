@@ -653,6 +653,13 @@ namespace ClearCanvas.ImageServer.Model
 			} 
 		}
 
+		public int GetNumberOfSeriesRelatedInstancesCount(string seriesInstanceUid)
+		{
+			var studyXml = this.LoadStudyXml();
+			var seriesXml = studyXml[seriesInstanceUid];
+			return seriesXml.NumberOfSeriesRelatedInstances;
+		}
+		
 		#endregion
 
 		#region Static Methods

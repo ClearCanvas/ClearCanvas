@@ -118,16 +118,19 @@ namespace ClearCanvas.ImageServer.Rules
 			Platform.Log(LogLevel.Info, "Processing Study Level rules for study {0} on partition {1} at {2} apply time",
 			             _location.StudyInstanceUid, _partition.Description, applyTime.Description);
 
+			var count = 0;
 			foreach (string seriesFilePath in files)
 			{
+				count++;
+				var isLastSeries = count == files.Count;
 				var theFile = new DicomFile(seriesFilePath);
 				theFile.Load(DicomReadOptions.Default);
 			    var context =
-			        new ServerActionContext(theFile, _location.FilesystemKey, _partition, _location.Key)
+			        new ServerActionContext(theFile, _location.FilesystemKey, _partition, _location.Key, isLastSeries)
 			            {CommandProcessor = theProcessor};
 			    _studyRulesEngine.Execute(context);
 
-				ProcessSeriesRules(theFile, theProcessor);
+				ProcessSeriesRules(theFile, theProcessor, isLastSeries);
 			}
 
 			if (applyTime.Equals(ServerRuleApplyTimeEnum.StudyProcessed))
@@ -209,7 +212,8 @@ namespace ClearCanvas.ImageServer.Rules
 		/// </summary>
 		/// <param name="file">The DICOM file being processed.</param>
 		/// <param name="processor">The command processor</param>
-		private void ProcessSeriesRules(DicomFile file, CommandProcessor processor)
+		/// <param name="isLastSeries">Indicate this method is called on the last series (i.e, it won't be called again) </param>
+		private void ProcessSeriesRules(DicomFile file, CommandProcessor processor, bool isLastSeries)
 		{
 			if (_seriesRulesEngine == null)
 			{
@@ -222,7 +226,7 @@ namespace ClearCanvas.ImageServer.Rules
 				_seriesRulesEngine.Statistics.ExecutionTime.Reset();
 			}
 
-		    var context = new ServerActionContext(file, _location.FilesystemKey, _partition, _location.Key)
+			var context = new ServerActionContext(file, _location.FilesystemKey, _partition, _location.Key, isLastSeries)
 		                      {CommandProcessor = processor};
 
 
