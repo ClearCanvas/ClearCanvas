@@ -60,20 +60,14 @@ namespace ClearCanvas.ImageViewer.BaseTools
 			return this.HasEntryCore(key);
 		}
 
-		protected bool HasEntryCore(string key)
+		protected virtual bool HasEntryCore(string key)
 		{
 			return _entries.ContainsKey(key);
 		}
 
-		protected virtual XMouseButtons[] AvailableButtons
+		public virtual bool HideButtonsOverlay
 		{
-			// Default, assume a basic left/right buttons mouse
-			get { return new [] { XMouseButtons.Left, XMouseButtons.Right }; }
-		}
-
-		public bool HasMultipleButtons
-		{
-			get { return this.AvailableButtons.Length > 1; }
+			get { return false; }
 		}
 
 		public Setting this[Type mouseImageViewerToolType]
@@ -90,20 +84,7 @@ namespace ClearCanvas.ImageViewer.BaseTools
 		protected virtual Setting GetSettingCore(string key)
 		{
 			if (!_entries.ContainsKey(key))
-			{
-				var newSetting = new Setting();
-				if (!this.HasMultipleButtons)
-				{
-					// If there is only one button available on the device, force every setting to use that available button
-					// Some device (ie. Touch device) has no buttons. Force to use the left mouse button 
-					var onlyAvailableButton = this.AvailableButtons.Length == 0 ||  this.AvailableButtons[0] == XMouseButtons.None
-						? XMouseButtons.Left : this.AvailableButtons[0];
-
-					newSetting.MouseButton = onlyAvailableButton;
-				}
-
-				_entries.Add(key, newSetting);
-			}
+				_entries.Add(key, new Setting());
 			return _entries[key];
 		}
 
@@ -265,7 +246,7 @@ namespace ClearCanvas.ImageViewer.BaseTools
 			private XMouseButtons? _mouseButton = null;
 			private bool? _initiallyActive = null;
 
-			internal Setting() {}
+			public Setting() {}
 
 			internal Setting(Setting original)
 			{

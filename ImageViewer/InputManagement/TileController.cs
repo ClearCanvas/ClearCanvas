@@ -245,7 +245,9 @@ namespace ClearCanvas.ImageViewer.InputManagement
 		private IMouseButtonHandler _captureHandler;
 		private int _startCount = 0;
 		private CursorToken _cursorToken;
-		
+
+		private int _mouseMovedToleranceInPixel = 2;
+		private XMouseButtons _buttonForContextMenu = XMouseButtons.Right;
 		private bool _contextMenuEnabled; 
 		private IContextMenuProvider _contextMenuProvider;
 
@@ -510,7 +512,7 @@ namespace ClearCanvas.ImageViewer.InputManagement
 				return true;
 
 			_tile.Select();
-			_contextMenuEnabled = (buttonMessage.Shortcut.MouseButton == XMouseButtons.Right);
+			_contextMenuEnabled = (buttonMessage.Shortcut.MouseButton == _buttonForContextMenu);
 
 			_startMousePoint = buttonMessage.Location;
 
@@ -768,9 +770,9 @@ namespace ClearCanvas.ImageViewer.InputManagement
 			return HasMoved(point, _startMousePoint);
 		}
 
-		private static bool HasMoved(Point testPoint, Point refPoint)
+		private bool HasMoved(Point testPoint, Point refPoint)
 		{
-			return Math.Abs(refPoint.X - testPoint.X) > 2 || Math.Abs(refPoint.Y - testPoint.Y) > 2;
+			return Math.Abs(refPoint.X - testPoint.X) > _mouseMovedToleranceInPixel || Math.Abs(refPoint.Y - testPoint.Y) > _mouseMovedToleranceInPixel;
 		}
 
 		private void ProcessDelayedContextMenuRequest(object sender, EventArgs e)
@@ -861,6 +863,24 @@ namespace ClearCanvas.ImageViewer.InputManagement
 		public bool ContextMenuEnabled
 		{
 			get { return _contextMenuEnabled; }
+		}
+
+		/// <summary>
+		/// Used by the view layer to tell this object which button to use for context menu.
+		/// </summary>
+		public XMouseButtons ButtonForContextMenu
+		{
+			get { return _buttonForContextMenu; }
+			set { _buttonForContextMenu = value; }
+		}
+
+		/// <summary>
+		/// Used by the view layer to tell this object the tolerance level for mouse moved.
+		/// </summary>
+		public int MouseMovedToleranceInPixel
+		{
+			get { return _mouseMovedToleranceInPixel; }
+			set { _mouseMovedToleranceInPixel = value; }
 		}
 
 		/// <summary>
