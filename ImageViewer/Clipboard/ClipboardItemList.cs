@@ -26,6 +26,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 
 namespace ClearCanvas.ImageViewer.Clipboard
 {
@@ -40,7 +41,7 @@ namespace ClearCanvas.ImageViewer.Clipboard
 
 		public BindingList<IClipboardItem> BindingList
 		{
-			get { return _bindingList; }	
+			get { return _bindingList; }
 		}
 
 		#region IList<IClipboardItem> Members
@@ -59,7 +60,7 @@ namespace ClearCanvas.ImageViewer.Clipboard
 		{
 			if (index < _bindingList.Count)
 			{
-				if (((ClipboardItem)_bindingList[index]).Locked)
+				if (_bindingList[index].IsLocked)
 					throw new InvalidOperationException("Unable to remove item because it is locked.");
 
 				_bindingList.RemoveAt(index);
@@ -68,14 +69,8 @@ namespace ClearCanvas.ImageViewer.Clipboard
 
 		public IClipboardItem this[int index]
 		{
-			get
-			{
-				return _bindingList[index];
-			}
-			set
-			{
-				throw new InvalidOperationException("Cannot set items via the indexer.");
-			}
+			get { return _bindingList[index]; }
+			set { throw new InvalidOperationException("Cannot set items via the indexer."); }
 		}
 
 		#endregion
@@ -89,11 +84,8 @@ namespace ClearCanvas.ImageViewer.Clipboard
 
 		public void Clear()
 		{
-			foreach (IClipboardItem item in _bindingList)
-			{
-				if (((ClipboardItem)item).Locked)
-					throw new InvalidOperationException("Unable to clear the list; there is a locked item.");
-			}
+			if (_bindingList.Any(item => item.IsLocked))
+				throw new InvalidOperationException("Unable to clear the list; there is a locked item.");
 
 			_bindingList.Clear();
 		}
@@ -120,7 +112,7 @@ namespace ClearCanvas.ImageViewer.Clipboard
 
 		public bool Remove(IClipboardItem item)
 		{
-			if (((ClipboardItem)item).Locked)
+			if (item.IsLocked)
 				throw new InvalidOperationException("Unable to remove item because it is locked.");
 
 			return _bindingList.Remove(item);
