@@ -63,6 +63,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="KeyImageClipboardComponentView.cs" />
     <Compile Include="KeyImageInformationEditorComponentControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -95,6 +96,18 @@
     <ProjectReference Include="..\..\..\..\..\Dicom\ClearCanvas.Dicom.csproj">
       <Project>{AD9ECE2B-8268-4115-8DC8-860FBD011FFF}</Project>
       <Name>ClearCanvas.Dicom</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\ClearCanvas.ImageViewer.csproj">
+      <Project>{85100D3E-471C-47C9-9687-ABF25F617ED7}</Project>
+      <Name>ClearCanvas.ImageViewer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Clipboard\ClearCanvas.ImageViewer.Clipboard.csproj">
+      <Project>{8517089B-809E-4A62-9AB2-CFF8C72E1AEB}</Project>
+      <Name>ClearCanvas.ImageViewer.Clipboard</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Clipboard\View\WinForms\ClearCanvas.ImageViewer.Clipboard.View.WinForms.csproj">
+      <Project>{98FE0932-F1F6-4125-BD0B-A8F781179AE9}</Project>
+      <Name>ClearCanvas.ImageViewer.Clipboard.View.WinForms</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\ClearCanvas.ImageViewer.Tools.Reporting.csproj">
       <Project>{7DE2AD68-75E5-44D0-B94D-7549D3AE7CC3}</Project>

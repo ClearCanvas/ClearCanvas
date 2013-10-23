@@ -34,7 +34,7 @@ using ClearCanvas.ImageViewer.StudyManagement;
 
 namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 {
-	public class KeyImageClipboard
+	public static class KeyImageClipboard
 	{
 		public const string MenuSite = "keyimageclipboard-contextmenu";
 		public const string ToolbarSite = "keyimageclipboard-toolbar";

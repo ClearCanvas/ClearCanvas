@@ -24,14 +24,18 @@
 
 using System;
 using System.ComponentModel;
+using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Desktop;
 using ClearCanvas.ImageViewer.Clipboard;
 
 namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 {
-	// TODO: Make Key Image Clipboard use KeyImageClipboardItems that cannot be Locked?
-	internal class KeyImageClipboardComponent : ClipboardComponent, IKeyImageClipboard
+	[ExtensionPoint]
+	public sealed class KeyImageClipboardComponentViewExtensionPoint : ExtensionPoint<IApplicationComponentView> {}
+
+	[AssociateView(typeof (KeyImageClipboardComponentViewExtensionPoint))]
+	public class KeyImageClipboardComponent : ClipboardComponent, IKeyImageClipboardComponent
 	{
 		private event EventHandler _keyImageInformationChanged;
 		private KeyImageInformation _keyImageInformation;
@@ -65,18 +69,18 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 
 		#region IKeyImageClipboard Implementation
 
-		IKeyObjectSelectionDocumentInformation IKeyImageClipboard.DocumentInformation
+		IKeyObjectSelectionDocumentInformation IKeyImageClipboardComponent.DocumentInformation
 		{
 			get { return KeyImageInformation; }
 		}
 
-		event EventHandler IKeyImageClipboard.DocumentInformationChanged
+		event EventHandler IKeyImageClipboardComponent.DocumentInformationChanged
 		{
 			add { KeyImageInformationChanged += value; }
 			remove { KeyImageInformationChanged -= value; }
 		}
 
-		BindingList<IClipboardItem> IKeyImageClipboard.Items
+		BindingList<IClipboardItem> IKeyImageClipboardComponent.Items
 		{
 			get { return DataSource; }
 		}
@@ -89,7 +93,14 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 
 		static KeyImageClipboardComponent()
 		{
-			HasViewPlugin = ViewFactory.IsAssociatedViewAvailable<KeyImageClipboardComponent>();
+			try
+			{
+				HasViewPlugin = ViewFactory.IsAssociatedViewAvailable<KeyImageClipboardComponent>();
+			}
+			catch (Exception)
+			{
+				HasViewPlugin = false;
+			}
 		}
 
 		#endregion

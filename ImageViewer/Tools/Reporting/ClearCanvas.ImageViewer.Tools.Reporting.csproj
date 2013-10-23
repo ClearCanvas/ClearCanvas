@@ -64,7 +64,7 @@
   <ItemGroup>
     <Compile Include="KeyImages\DesktopWindowTool.cs" />
     <Compile Include="KeyImages\EditKeyImageInformationTool.cs" />
-    <Compile Include="KeyImages\IKeyImageClipboard.cs" />
+    <Compile Include="KeyImages\IKeyImageClipboardComponent.cs" />
     <Compile Include="KeyImages\IKeyObjectSelectionDocumentInformation.cs" />
     <Compile Include="KeyImages\KeyImageClipboardComponent.cs" />
     <Compile Include="KeyImages\KeyImageDisplaySet.cs" />

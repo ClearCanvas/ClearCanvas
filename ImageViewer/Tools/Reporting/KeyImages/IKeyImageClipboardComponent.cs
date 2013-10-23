@@ -28,7 +28,7 @@ using ClearCanvas.ImageViewer.Clipboard;
 
 namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 {
-	public interface IKeyImageClipboard
+	public interface IKeyImageClipboardComponent
 	{
 		IKeyObjectSelectionDocumentInformation DocumentInformation { get; }
 		event EventHandler DocumentInformationChanged;
