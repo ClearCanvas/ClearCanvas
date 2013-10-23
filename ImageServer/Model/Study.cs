@@ -103,6 +103,7 @@ namespace ClearCanvas.ImageServer.Model
         }
 
         #endregion
+		
 
         /// <summary>
         /// Find a <see cref="Study"/> with the specified study instance uid on the given partition.
@@ -121,6 +122,19 @@ namespace ClearCanvas.ImageServer.Model
             return study;
            
         }
+
+		static public Study Find(IPersistenceContext context, String studyInstanceUid, string partitionAe)
+		{
+			var partitionBroker = context.GetBroker<IServerPartitionEntityBroker>();
+			var serverPartitionSelectCriteria = new ServerPartitionSelectCriteria();
+			serverPartitionSelectCriteria.AeTitle.EqualTo(partitionAe); //TODO: is EqualTo case sensitive?
+			var partition = partitionBroker.FindOne(serverPartitionSelectCriteria);
+			if (partition == null)
+				return null;
+
+			return Find(context, studyInstanceUid, partition);
+
+		}
 
         public Patient LoadPatient(IPersistenceContext context)
         {

@@ -86,6 +86,11 @@ namespace ClearCanvas.ImageServer.Model.EntityBrokers
         {
             set { SubParameters["QueryXml"] = new EntityUpdateColumn<XmlDocument>("QueryXml", value); }
         }
+        [EntityFieldDatabaseMappingAttribute(TableName="Study", ColumnName="QCOutput")]
+        public String QCOutput
+        {
+            set { SubParameters["QCOutput"] = new EntityUpdateColumn<String>("QCOutput", value); }
+        }
        [DicomField(DicomTags.SpecificCharacterSet, DefaultValue = DicomFieldDefault.Null)]
         [EntityFieldDatabaseMappingAttribute(TableName="Study", ColumnName="SpecificCharacterSet")]
         public String SpecificCharacterSet
