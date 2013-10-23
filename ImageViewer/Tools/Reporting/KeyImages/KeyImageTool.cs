@@ -23,6 +23,7 @@
 #endregion
 
 using System;
+using System.Linq;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Desktop;
@@ -63,7 +64,7 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 
 		public KeyImageTool()
 		{
-			_flashOverlayController = new FlashOverlayController("Icons.CreateKeyImageToolLarge.png", new ApplicationThemeResourceResolver(this.GetType(), false));
+			_flashOverlayController = new FlashOverlayController("Icons.CreateKeyImageToolLarge.png", new ApplicationThemeResourceResolver(GetType(), false));
 		}
 
 		public bool ShowEnabled
@@ -90,7 +91,7 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 		public override void Initialize()
 		{
 			base.Initialize();
-			KeyImageClipboard.OnViewerOpened(base.Context.Viewer);
+			KeyImageClipboard.OnViewerOpened(Context.Viewer);
 
 			UpdateEnabled();
 
@@ -102,16 +103,8 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 
 			if (!KeyImageClipboardComponent.HasViewPlugin)
 			{
-				foreach (var a in Actions)
-				{
-					// TODO (CR Phoenix5 - High): use the ID, which doesn't change; this will change with language.
-					if (a.Path.LocalizedPath == "global-toolbars/ToolbarStandard/Show Key Images")
-					{
-						var buttonAction = a as ButtonAction;
-						if (buttonAction != null)
-							buttonAction.Visible = false;
-					}
-				}
+				foreach (var buttonAction in Actions.Where(a => a.ActionID == "show").OfType<ClickAction>())
+					buttonAction.Visible = false;
 			}
 		}
 
@@ -124,9 +117,9 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 				_workItemActivityMonitor = null;
 			}
 
-			if (base.Context != null)
+			if (Context != null)
 			{
-				KeyImageClipboard.OnViewerClosed(base.Context.Viewer);
+				KeyImageClipboard.OnViewerClosed(Context.Viewer);
 			}
 
 			base.Dispose(disposing);
@@ -134,16 +127,12 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 
 		private void UpdateEnabled()
 		{
-			// TODO  Better way to address Webstation usage?
-			base.Enabled = KeyImagePublisher.IsSupportedImage(base.SelectedPresentationImage) &&
-			               // TODO (CR Phoenix5 - Med): Clinical as well	  
-			               PermissionsHelper.IsInRole(AuthorityTokens.Study.KeyImages) &&
-			               // TODO (CR Phoenix5 - Low): KeyImagePublisher.IsSupportedImage?
-			               !(SelectedPresentationImage.ParentDisplaySet.Descriptor is KeyImageDisplaySetDescriptor);
+			Enabled = KeyImagePublisher.IsSupportedImage(SelectedPresentationImage) &&
+			          // TODO (CR Phoenix5 - Med): Clinical as well	  
+			          PermissionsHelper.IsInRole(AuthorityTokens.Study.KeyImages);
 
 			// TODO (CR Phoenix5 - Med): Clinical as well
-			this.ShowEnabled =
-				PermissionsHelper.IsInRole(AuthorityTokens.Study.KeyImages);
+			ShowEnabled = PermissionsHelper.IsInRole(AuthorityTokens.Study.KeyImages);
 		}
 
 		private void OnIsConnectedChanged(object sender, EventArgs eventArgs)
@@ -154,36 +143,6 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 		protected override void OnPresentationImageSelected(object sender, PresentationImageSelectedEventArgs e)
 		{
 			UpdateEnabled();
-
-			/*
-            if (!KeyImageClipboard.HasViewPlugin())
-            {
-                if (SelectedPresentationImage.ParentDisplaySet.Descriptor is KeyImageDisplaySetDescriptor)
-                {
-                    foreach (ClearCanvas.Desktop.Actions.Action a in this.Actions)
-                    {
-                        // TODO (CR Phoenix5 - High): use the ID, which doesn't change; this will change with language.
-                        if (a.Path.LocalizedPath.Equals("imageviewer-contextmenu/MenuCreateKeyImage")
-                          | a.Path.LocalizedPath.Equals("global-toolbars/ToolbarStandard/Create Key Image"))
-                        {
-                            a.IconSet = new IconSet("Icons.DeleteToolSmall.png", "Icons.DeleteToolSmall.png", "Icons.DeleteToolSmall.png");
-                        }
-                    }
-                }
-                else
-                {
-                    foreach (ClearCanvas.Desktop.Actions.Action a in this.Actions)
-                    {
-                        // TODO (CR Phoenix5 - High): use the ID, which doesn't change; this will change with language.
-                        if (a.Path.LocalizedPath.Equals("imageviewer-contextmenu/MenuCreateKeyImage")
-                         || a.Path.LocalizedPath.Equals("global-toolbars/ToolbarStandard/Create Key Image"))
-                        {
-                            a.IconSet = new IconSet("Icons.CreateKeyImageToolSmall.png", "Icons.CreateKeyImageToolMedium.png", "Icons.CreateKeyImageToolLarge.png");
-                        }
-                    }
-                }
-            }
-            */
 		}
 
 		protected override void OnTileSelected(object sender, TileSelectedEventArgs e)
@@ -197,50 +156,45 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 
 		public void Show()
 		{
-			if (this.ShowEnabled)
+			if (ShowEnabled)
 				KeyImageClipboard.Show(Context.DesktopWindow);
 		}
 
 		public void Create()
 		{
-			if (!base.Enabled)
+			if (!Enabled)
 				return;
 
 			if (KeyImageClipboardComponent.HasViewPlugin)
 			{
 				try
 				{
-					IPresentationImage image = base.Context.Viewer.SelectedPresentationImage;
+					IPresentationImage image = Context.Viewer.SelectedPresentationImage;
 					if (image != null)
 					{
 						KeyImageClipboard.Add(image);
 						_flashOverlayController.Flash(image);
 					}
 
-					if (_firstKeyImageCreation && this.ShowEnabled)
+					if (_firstKeyImageCreation && ShowEnabled)
 					{
-						KeyImageClipboard.Show(Context.DesktopWindow,
-						                       ShelfDisplayHint.DockAutoHide | ShelfDisplayHint.DockLeft);
+						KeyImageClipboard.Show(Context.DesktopWindow, ShelfDisplayHint.DockAutoHide | ShelfDisplayHint.DockLeft);
 						_firstKeyImageCreation = false;
 					}
 				}
 				catch (Exception ex)
 				{
 					Platform.Log(LogLevel.Error, ex, "Failed to add item to the key image clipboard.");
-					ExceptionHandler.Report(ex, SR.MessageCreateKeyImageFailed, base.Context.DesktopWindow);
+					ExceptionHandler.Report(ex, SR.MessageCreateKeyImageFailed, Context.DesktopWindow);
 				}
 			}
 			else
 			{
 				try
 				{
-					IPresentationImage image = base.Context.Viewer.SelectedPresentationImage;
+					IPresentationImage image = Context.Viewer.SelectedPresentationImage;
 					if (image != null)
 					{
-						// New Virtual Display Set
-						// TODO (9-JAN-13) As per Phoenx5, Sprint 4 review, disable creation of the virtual display set in Webstation.
-						//KeyImageDisplaySet.AddKeyImage(image);
-
 						// Still save to clipboard, makes publishing easier later
 						KeyImageClipboard.Add(image);
 
@@ -250,7 +204,7 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 				catch (Exception ex)
 				{
 					Platform.Log(LogLevel.Error, ex, "Failed to create virtual display set for key image.");
-					ExceptionHandler.Report(ex, SR.MessageCreateKeyImageFailed, base.Context.DesktopWindow);
+					ExceptionHandler.Report(ex, SR.MessageCreateKeyImageFailed, Context.DesktopWindow);
 				}
 			}
 		}

@@ -34,11 +34,8 @@ using ClearCanvas.ImageViewer.StudyManagement;
 
 namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 {
-	public static class KeyImageClipboard
+	public class KeyImageClipboard
 	{
-		public const string MenuSite = "keyimageclipboard-contextmenu";
-		public const string ToolbarSite = "keyimageclipboard-toolbar";
-
 		//TODO (Phoenix5): #10730 - remove this when it's fixed.
 		[ThreadStatic]
 		private static Dictionary<IImageViewer, KeyImageInformation> _keyImageInformation;

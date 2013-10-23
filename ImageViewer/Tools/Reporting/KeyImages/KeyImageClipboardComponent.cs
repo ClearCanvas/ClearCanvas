@@ -37,11 +37,14 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 	[AssociateView(typeof (KeyImageClipboardComponentViewExtensionPoint))]
 	public class KeyImageClipboardComponent : ClipboardComponent, IKeyImageClipboardComponent
 	{
+		public const string MenuSite = "keyimageclipboard-contextmenu";
+		public const string ToolbarSite = "keyimageclipboard-toolbar";
+
 		private event EventHandler _keyImageInformationChanged;
 		private KeyImageInformation _keyImageInformation;
 
 		public KeyImageClipboardComponent(KeyImageInformation keyImageInformation)
-			: base(KeyImageClipboard.ToolbarSite, KeyImageClipboard.MenuSite, keyImageInformation.ClipboardItems, false)
+			: base(ToolbarSite, MenuSite, keyImageInformation.ClipboardItems, false)
 		{
 			_keyImageInformation = keyImageInformation;
 		}
