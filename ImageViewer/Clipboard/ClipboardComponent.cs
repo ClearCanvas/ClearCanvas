@@ -124,8 +124,8 @@ namespace ClearCanvas.ImageViewer.Clipboard
 
 		#endregion
 
-		public ClipboardComponent(string toolbarSite, string menuSite)
-			: this(toolbarSite, menuSite, new BindingList<IClipboardItem>(), true) {}
+		public ClipboardComponent(string toolbarSite, string menuSite, bool disposeItemsOnClose = true)
+			: this(toolbarSite, menuSite, new BindingList<IClipboardItem>(), disposeItemsOnClose) {}
 
 		public ClipboardComponent(string toolbarSite, string menuSite, BindingList<IClipboardItem> dataSource, bool disposeItemsOnClose)
 		{

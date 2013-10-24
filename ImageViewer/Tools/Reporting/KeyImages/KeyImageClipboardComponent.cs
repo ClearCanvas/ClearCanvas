@@ -42,17 +42,41 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 
 		private event EventHandler _keyImageInformationChanged;
 		private KeyImageInformation _keyImageInformation;
+		private KeyImageClipboard _clipboard;
 
-		public KeyImageClipboardComponent(KeyImageInformation keyImageInformation)
-			: base(ToolbarSite, MenuSite, keyImageInformation.ClipboardItems, false)
+		public KeyImageClipboardComponent(KeyImageClipboard clipboard)
+			: base(ToolbarSite, MenuSite, false)
 		{
-			_keyImageInformation = keyImageInformation;
+			_clipboard = clipboard;
+		}
+
+		public KeyImageClipboard Clipboard
+		{
+			get { return _clipboard; }
+			internal set
+			{
+				if (_clipboard != value)
+				{
+					if (_clipboard != null) _clipboard.CurrentContextChanged -= OnClipboardCurrentContextChanged;
+
+					_clipboard = value;
+
+					if (_clipboard != null) _clipboard.CurrentContextChanged += OnClipboardCurrentContextChanged;
+
+					OnClipboardCurrentContextChanged(null, null);
+				}
+			}
+		}
+
+		private void OnClipboardCurrentContextChanged(object sender, EventArgs e)
+		{
+			KeyImageInformation = _clipboard != null ? _clipboard.CurrentContext : new KeyImageInformation();
 		}
 
 		public KeyImageInformation KeyImageInformation
 		{
 			get { return _keyImageInformation; }
-			internal set
+			private set
 			{
 				if (_keyImageInformation != value)
 				{
@@ -68,6 +92,13 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 		{
 			add { _keyImageInformationChanged += value; }
 			remove { _keyImageInformationChanged -= value; }
+		}
+
+		public override void Start()
+		{
+			base.Start();
+
+			OnClipboardCurrentContextChanged(null, null);
 		}
 
 		#region IKeyImageClipboard Implementation

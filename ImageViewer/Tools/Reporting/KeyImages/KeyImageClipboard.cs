@@ -34,20 +34,20 @@ using ClearCanvas.ImageViewer.StudyManagement;
 
 namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 {
-	public class KeyImageClipboard
+	partial class KeyImageClipboard
 	{
 		//TODO (Phoenix5): #10730 - remove this when it's fixed.
 		[ThreadStatic]
-		private static Dictionary<IImageViewer, KeyImageInformation> _keyImageInformation;
+		private static Dictionary<IImageViewer, KeyImageClipboard> _keyImageClipboards;
 
 		[ThreadStatic]
 		private static Dictionary<IDesktopWindow, IShelf> _clipboardShelves;
 
 		private static IWorkItemActivityMonitor _activityMonitor;
 
-		private static Dictionary<IImageViewer, KeyImageInformation> KeyImageInformation
+		private static Dictionary<IImageViewer, KeyImageClipboard> KeyImageClipboards
 		{
-			get { return _keyImageInformation ?? (_keyImageInformation = new Dictionary<IImageViewer, KeyImageInformation>()); }
+			get { return _keyImageClipboards ?? (_keyImageClipboards = new Dictionary<IImageViewer, KeyImageClipboard>()); }
 		}
 
 		private static Dictionary<IDesktopWindow, IShelf> ClipboardShelves
@@ -67,7 +67,7 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 			if (clipboardComponent == null)
 				return;
 
-			clipboardComponent.KeyImageInformation = GetKeyImageInformation(e.Item) ?? new KeyImageInformation();
+			clipboardComponent.Clipboard = GetKeyImageClipboard(e.Item) ?? new KeyImageClipboard();
 		}
 
 		private static void OnClipboardShelfClosed(object sender, ClosedEventArgs e)
@@ -99,7 +99,7 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 
 		private static void ManageActivityMonitorConnection()
 		{
-			if (KeyImageInformation.Count == 0 && _activityMonitor != null)
+			if (KeyImageClipboards.Count == 0 && _activityMonitor != null)
 			{
 				try
 				{
@@ -115,7 +115,7 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 					_activityMonitor = null;
 				}
 			}
-			else if (KeyImageInformation.Count > 0 && _activityMonitor == null && WorkItemActivityMonitor.IsSupported)
+			else if (KeyImageClipboards.Count > 0 && _activityMonitor == null && WorkItemActivityMonitor.IsSupported)
 			{
 				try
 				{
@@ -137,25 +137,25 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 
 		#region Internal Methods
 
-		internal static KeyImageInformation GetKeyImageInformation(Workspace workspace)
+		internal static KeyImageClipboard GetKeyImageClipboard(Workspace workspace)
 		{
 			IImageViewer viewer = ImageViewerComponent.GetAsImageViewer(workspace);
-			return GetKeyImageInformation(viewer);
+			return GetKeyImageClipboard(viewer);
 		}
 
-		internal static KeyImageInformation GetKeyImageInformation(IImageViewer viewer)
+		internal static KeyImageClipboard GetKeyImageClipboard(IImageViewer viewer)
 		{
 			// TODO (CR Phoenix5 - Med): Clinical as well
 			if (!PermissionsHelper.IsInRole(AuthorityTokens.Study.KeyImages))
 				throw new PolicyException(SR.ExceptionViewKeyImagePermissionDenied);
 
 			if (viewer != null)
-				return KeyImageInformation[viewer];
+				return KeyImageClipboards[viewer];
 			else
 				return null;
 		}
 
-		internal static KeyImageInformation GetKeyImageInformation(IDesktopWindow desktopWindow)
+		internal static KeyImageClipboard GetKeyImageClipboard(IDesktopWindow desktopWindow)
 		{
 			IShelf shelf = GetClipboardShelf(desktopWindow);
 			if (shelf == null)
@@ -167,7 +167,7 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 
 			KeyImageClipboardComponent component = shelf.Component as KeyImageClipboardComponent;
 			if (component != null)
-				return component.KeyImageInformation;
+				return component.Clipboard;
 			else
 				return null;
 		}
@@ -188,31 +188,31 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 
 		internal static void OnViewerOpened(IImageViewer viewer)
 		{
-			if (!KeyImageInformation.ContainsKey(viewer))
-				KeyImageInformation[viewer] = new KeyImageInformation();
+			if (!KeyImageClipboards.ContainsKey(viewer))
+				KeyImageClipboards[viewer] = new KeyImageClipboard();
 
 			ManageActivityMonitorConnection();
 		}
 
 		internal static void OnViewerClosed(IImageViewer viewer)
 		{
-			KeyImageInformation info = GetKeyImageInformation(viewer);
-			KeyImageInformation.Remove(viewer);
+			var info = GetKeyImageClipboard(viewer);
+			KeyImageClipboards.Remove(viewer);
 
 			if (info != null)
 			{
-				using (info)
+				try
 				{
-					try
-					{
-						var publisher = new KeyImagePublisher(info);
-						publisher.Publish();
-					}
-					catch (Exception e)
-					{
-						//Should never happen because KeyImagePublisher.Publish doesn't throw exceptions.
-						ExceptionHandler.Report(e, Application.ActiveDesktopWindow);
-					}
+					info.Publish();
+				}
+				catch (Exception e)
+				{
+					//Should never happen because KeyImagePublisher.Publish doesn't throw exceptions.
+					ExceptionHandler.Report(e, Application.ActiveDesktopWindow);
+				}
+				finally
+				{
+					info.Dispose();
 				}
 			}
 
@@ -234,7 +234,7 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 			if (!PermissionsHelper.IsInRole(AuthorityTokens.Study.KeyImages))
 				throw new PolicyException(SR.ExceptionCreateKeyImagePermissionDenied);
 
-			KeyImageInformation info = GetKeyImageInformation(image.ImageViewer);
+			var info = GetKeyImageClipboard(image.ImageViewer);
 			if (info == null)
 				throw new ArgumentException("The specified image's viewer is not valid.", "image");
 
@@ -271,7 +271,7 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 			else
 			{
 				Workspace activeWorkspace = desktopWindow.ActiveWorkspace;
-				KeyImageInformation info = GetKeyImageInformation(activeWorkspace) ?? new KeyImageInformation();
+				var info = GetKeyImageClipboard(activeWorkspace) ?? new KeyImageClipboard();
 				ClipboardComponent component = new KeyImageClipboardComponent(info);
 				shelf = ApplicationComponent.LaunchAsShelf(desktopWindow, component, SR.TitleKeyImages, displayHint);
 				shelf.Closed += OnClipboardShelfClosed;
