@@ -31,5 +31,14 @@ namespace ClearCanvas.ImageViewer.Vtk {
                 return ((bool)(this["ShowDiagnosticTools"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool ReportRendererPerformance {
+            get {
+                return ((bool)(this["ReportRendererPerformance"]));
+            }
+        }
     }
 }
