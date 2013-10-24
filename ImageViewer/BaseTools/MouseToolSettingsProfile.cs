@@ -60,9 +60,14 @@ namespace ClearCanvas.ImageViewer.BaseTools
 			return this.HasEntryCore(key);
 		}
 
-		protected bool HasEntryCore(string key)
+		protected virtual bool HasEntryCore(string key)
 		{
 			return _entries.ContainsKey(key);
+		}
+
+		public virtual bool HideButtonsOverlay
+		{
+			get { return false; }
 		}
 
 		public Setting this[Type mouseImageViewerToolType]
@@ -76,13 +81,11 @@ namespace ClearCanvas.ImageViewer.BaseTools
 			}
 		}
 
-		protected Setting GetSettingCore(string key)
+		protected virtual Setting GetSettingCore(string key)
 		{
-			{
-				if (!_entries.ContainsKey(key))
-					_entries.Add(key, new Setting());
-				return _entries[key];
-			}
+			if (!_entries.ContainsKey(key))
+				_entries.Add(key, new Setting());
+			return _entries[key];
 		}
 
 		//TODO (CR Sept 2010): name of these methods is awkward, maybe because it's ActivationAction.  Can we use SelectAction instead?
@@ -243,7 +246,7 @@ namespace ClearCanvas.ImageViewer.BaseTools
 			private XMouseButtons? _mouseButton = null;
 			private bool? _initiallyActive = null;
 
-			internal Setting() {}
+			public Setting() {}
 
 			internal Setting(Setting original)
 			{

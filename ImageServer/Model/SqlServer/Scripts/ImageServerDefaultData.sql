@@ -378,6 +378,12 @@ INSERT INTO [ImageServer].[dbo].[ServerRuleTypeEnum]
            (newid(),106,'DataAccess','Data Access','A rule to specify the Authority Groups that have access to a study')
 GO
 
+INSERT INTO [ImageServer].[dbo].[ServerRuleTypeEnum]
+           ([GUID],[Enum],[Lookup],[Description],[LongDescription])
+     VALUES
+           (newid(),107,'StudyQualityControl','Study Quality Control','A rule for quality control purposes when studies are received')
+GO
+
 
 -- ServerRuleApplyTimeEnum inserts
 INSERT INTO [ImageServer].[dbo].[ServerRuleApplyTimeEnum]

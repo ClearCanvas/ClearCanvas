@@ -43,6 +43,7 @@ public partial class ServerRuleTypeEnum : ServerEnum
       private static readonly ServerRuleTypeEnum _StudyCompress = GetEnum("StudyCompress");
       private static readonly ServerRuleTypeEnum _SopCompress = GetEnum("SopCompress");
       private static readonly ServerRuleTypeEnum _DataAccess = GetEnum("DataAccess");
+	  private static readonly ServerRuleTypeEnum _StudyQualityControl = GetEnum("StudyQualityControl");
       #endregion
 
       #region Public Static Properties
@@ -95,6 +96,15 @@ public partial class ServerRuleTypeEnum : ServerEnum
       {
           get { return _DataAccess; }
       }
+
+	  /// <summary>
+	  /// A rule for quality control purposes when studies are received
+	  /// </summary>
+	  public static ServerRuleTypeEnum StudyQualityControl
+	  {
+		  get { return _StudyQualityControl; }
+	  }
+
 
       #endregion
 

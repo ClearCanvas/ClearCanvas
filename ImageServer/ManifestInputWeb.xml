@@ -347,6 +347,7 @@
     <File name="Web\Services\FilesystemInfoService.asmx" />
     <File name="Web\Services\ValidationServices.asmx" />
     <File name="Web\Services\webservice.htc" />
+    <File name="Web\Templates" ignore="true"/>
     <File name="Web\Test\speedtest_small.bin" ignore="true" />
     <File name="Web\Test\speedtest_tiny.bin" ignore="true" />
   </Files>

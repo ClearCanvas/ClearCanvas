@@ -855,4 +855,10 @@
   <data name="WorkQueueStatusEnum_Failed_LongDescription" xml:space="preserve">
     <value>The Queue entry has failed.</value>
   </data>
+  <data name="ServerRuleTypeEnum_StudyQualityControl_Description" xml:space="preserve">
+    <value>Study Quality Control Rule</value>
+  </data>
+  <data name="ServerRuleTypeEnum_StudyQualityControl_LongDescription" xml:space="preserve">
+    <value>A rule for quality control purposes when studies are received</value>
+  </data>
 </root>
