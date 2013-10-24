@@ -32,132 +32,123 @@ using NUnit.Framework;
 
 namespace ClearCanvas.Common.Configuration.Tests
 {
-    [TestFixture]
-    public class SettingsGroupTests
-    {
-        [SettingsProvider(typeof (StandardSettingsProvider))]
-        private class TestEnterpriseSetting : ApplicationSettingsBase
-        {
-        }
+	[TestFixture]
+	public class SettingsGroupTests
+	{
+		[SettingsProvider(typeof (StandardSettingsProvider))]
+		private class TestEnterpriseSetting : ApplicationSettingsBase {}
 
-        [SettingsProvider(typeof (LocalFileSettingsProvider))]
-        private class TestLocalSetting : ApplicationSettingsBase
-        {
-        }
+		[SettingsProvider(typeof (LocalFileSettingsProvider))]
+		private class TestLocalSetting : ApplicationSettingsBase {}
 
-        [SettingsProvider(typeof(ExtendedLocalFileSettingsProvider))]
-        private class TestExtendedLocalSetting : ApplicationSettingsBase
-        {
-        }
+		[SettingsProvider(typeof (ExtendedLocalFileSettingsProvider))]
+		private class TestExtendedLocalSetting : ApplicationSettingsBase {}
 
-        [SettingsProvider(typeof(ApplicationCriticalSettingsProvider))]
-        private class TestCriticalSetting : ApplicationSettingsBase
-        {
-        }
+		[SettingsProvider(typeof (ApplicationCriticalSettingsProvider))]
+		private class TestCriticalSetting : ApplicationSettingsBase {}
 
-        [TestFixtureSetUp]
-        public void Initialize()
-        {
-            Platform.SetExtensionFactory(new NullExtensionFactory());
-        }
+		[TestFixtureSetUp]
+		public void Initialize()
+		{
+			Platform.SetExtensionFactory(new NullExtensionFactory());
+		}
 
-        [Test]
-        public void TestApplyFilter()
-        {
-            SettingsStore.IsSupported = true;
+		[Test]
+		public void TestApplyFilter()
+		{
+			SettingsStore.SetIsSupported(true);
 
-            Type enterpriseType = typeof (TestEnterpriseSetting);
-            Type criticalSetting = typeof(TestCriticalSetting);
-            Type localType = typeof(TestLocalSetting);
-            Type extendedLocalType = typeof(TestExtendedLocalSetting);
+			Type enterpriseType = typeof (TestEnterpriseSetting);
+			Type criticalSetting = typeof (TestCriticalSetting);
+			Type localType = typeof (TestLocalSetting);
+			Type extendedLocalType = typeof (TestExtendedLocalSetting);
 
-            AssertSettingsType(enterpriseType,
-                               new Dictionary<SettingsGroupFilter, bool>
-                                   {
-                                       {SettingsGroupFilter.All, true},
-                                       {SettingsGroupFilter.SupportEnterpriseStorage, true},
-                                       {SettingsGroupFilter.SupportsEditingOfSharedProfile, true},
-                                       {SettingsGroupFilter.LocalStorage, false}
-                                   });
+			AssertSettingsType(enterpriseType,
+			                   new Dictionary<SettingsGroupFilter, bool>
+			                   	{
+			                   		{SettingsGroupFilter.All, true},
+			                   		{SettingsGroupFilter.SupportEnterpriseStorage, true},
+			                   		{SettingsGroupFilter.SupportsEditingOfSharedProfile, true},
+			                   		{SettingsGroupFilter.LocalStorage, false}
+			                   	});
 
-            AssertSettingsType(criticalSetting,
-                               new Dictionary<SettingsGroupFilter, bool>
-                                   {
-                                       {SettingsGroupFilter.All, true},
-                                       {SettingsGroupFilter.SupportEnterpriseStorage, false},
-                                       {SettingsGroupFilter.SupportsEditingOfSharedProfile, false},
-                                       {SettingsGroupFilter.LocalStorage, true}
-                                   });
-            AssertSettingsType(extendedLocalType,
-                               new Dictionary<SettingsGroupFilter, bool>
-                                   {
-                                       {SettingsGroupFilter.All, true},
-                                       {SettingsGroupFilter.SupportEnterpriseStorage, false},
-                                       {SettingsGroupFilter.SupportsEditingOfSharedProfile, true},
-                                       {SettingsGroupFilter.LocalStorage, true}
-                                   });
-            AssertSettingsType(localType,
-                               new Dictionary<SettingsGroupFilter, bool>
-                                   {
-                                       {SettingsGroupFilter.All, true},
-                                       {SettingsGroupFilter.SupportEnterpriseStorage, false},
-                                       {SettingsGroupFilter.SupportsEditingOfSharedProfile, false},
-                                       {SettingsGroupFilter.LocalStorage, true}
-                                   });
-        
-        }
+			AssertSettingsType(criticalSetting,
+			                   new Dictionary<SettingsGroupFilter, bool>
+			                   	{
+			                   		{SettingsGroupFilter.All, true},
+			                   		{SettingsGroupFilter.SupportEnterpriseStorage, false},
+			                   		{SettingsGroupFilter.SupportsEditingOfSharedProfile, false},
+			                   		{SettingsGroupFilter.LocalStorage, true}
+			                   	});
+			AssertSettingsType(extendedLocalType,
+			                   new Dictionary<SettingsGroupFilter, bool>
+			                   	{
+			                   		{SettingsGroupFilter.All, true},
+			                   		{SettingsGroupFilter.SupportEnterpriseStorage, false},
+			                   		{SettingsGroupFilter.SupportsEditingOfSharedProfile, true},
+			                   		{SettingsGroupFilter.LocalStorage, true}
+			                   	});
+			AssertSettingsType(localType,
+			                   new Dictionary<SettingsGroupFilter, bool>
+			                   	{
+			                   		{SettingsGroupFilter.All, true},
+			                   		{SettingsGroupFilter.SupportEnterpriseStorage, false},
+			                   		{SettingsGroupFilter.SupportsEditingOfSharedProfile, false},
+			                   		{SettingsGroupFilter.LocalStorage, true}
+			                   	});
+		}
 
-        [Test]
-        public void TestApplyFilterNoSettingsStore()
-        {
-            SettingsStore.IsSupported = false;
+		[Test]
+		public void TestApplyFilterNoSettingsStore()
+		{
+			SettingsStore.SetIsSupported(false);
 
-            Type enterpriseType = typeof(TestEnterpriseSetting);
-            Type criticalSetting = typeof(TestCriticalSetting);
-            Type localType = typeof(TestLocalSetting);
-            Type extendedLocalType = typeof(TestExtendedLocalSetting);
+			Type enterpriseType = typeof (TestEnterpriseSetting);
+			Type criticalSetting = typeof (TestCriticalSetting);
+			Type localType = typeof (TestLocalSetting);
+			Type extendedLocalType = typeof (TestExtendedLocalSetting);
 
-            AssertSettingsType(enterpriseType,
-                               new Dictionary<SettingsGroupFilter, bool>
-                                   {
-                                       {SettingsGroupFilter.All, true},
-                                       {SettingsGroupFilter.SupportEnterpriseStorage, true},
-                                       {SettingsGroupFilter.SupportsEditingOfSharedProfile, true},
-                                       {SettingsGroupFilter.LocalStorage, true}
-                                   });
+			AssertSettingsType(enterpriseType,
+			                   new Dictionary<SettingsGroupFilter, bool>
+			                   	{
+			                   		{SettingsGroupFilter.All, true},
+			                   		{SettingsGroupFilter.SupportEnterpriseStorage, true},
+			                   		{SettingsGroupFilter.SupportsEditingOfSharedProfile, true},
+			                   		{SettingsGroupFilter.LocalStorage, true}
+			                   	});
 
-            AssertSettingsType(criticalSetting,
-                               new Dictionary<SettingsGroupFilter, bool>
-                                   {
-                                       {SettingsGroupFilter.All, true},
-                                       {SettingsGroupFilter.SupportEnterpriseStorage, false},
-                                       {SettingsGroupFilter.SupportsEditingOfSharedProfile, false},
-                                       {SettingsGroupFilter.LocalStorage, true}
-                                   });
-            AssertSettingsType(extendedLocalType,
-                               new Dictionary<SettingsGroupFilter, bool>
-                                   {
-                                       {SettingsGroupFilter.All, true},
-                                       {SettingsGroupFilter.SupportEnterpriseStorage, false},
-                                       {SettingsGroupFilter.SupportsEditingOfSharedProfile, true},
-                                       {SettingsGroupFilter.LocalStorage, true}
-                                   });
-            AssertSettingsType(localType,
-                               new Dictionary<SettingsGroupFilter, bool>
-                                   {
-                                       {SettingsGroupFilter.All, true},
-                                       {SettingsGroupFilter.SupportEnterpriseStorage, false},
-                                       {SettingsGroupFilter.SupportsEditingOfSharedProfile, false},
-                                       {SettingsGroupFilter.LocalStorage, true}
-                                   });
+			AssertSettingsType(criticalSetting,
+			                   new Dictionary<SettingsGroupFilter, bool>
+			                   	{
+			                   		{SettingsGroupFilter.All, true},
+			                   		{SettingsGroupFilter.SupportEnterpriseStorage, false},
+			                   		{SettingsGroupFilter.SupportsEditingOfSharedProfile, false},
+			                   		{SettingsGroupFilter.LocalStorage, true}
+			                   	});
+			AssertSettingsType(extendedLocalType,
+			                   new Dictionary<SettingsGroupFilter, bool>
+			                   	{
+			                   		{SettingsGroupFilter.All, true},
+			                   		{SettingsGroupFilter.SupportEnterpriseStorage, false},
+			                   		{SettingsGroupFilter.SupportsEditingOfSharedProfile, true},
+			                   		{SettingsGroupFilter.LocalStorage, true}
+			                   	});
+			AssertSettingsType(localType,
+			                   new Dictionary<SettingsGroupFilter, bool>
+			                   	{
+			                   		{SettingsGroupFilter.All, true},
+			                   		{SettingsGroupFilter.SupportEnterpriseStorage, false},
+			                   		{SettingsGroupFilter.SupportsEditingOfSharedProfile, false},
+			                   		{SettingsGroupFilter.LocalStorage, true}
+			                   	});
+		}
 
-        }
-        private void AssertSettingsType(Type type, IEnumerable<KeyValuePair<SettingsGroupFilter, bool>> expectedResults)
-        {
-            foreach (var expectedResult in expectedResults)
-                Assert.AreEqual(expectedResult.Value, SettingsGroupDescriptor.ApplyFilter(expectedResult.Key, type), "(Filter={0}) expected {1} for {2}", expectedResult.Key, expectedResult.Value, type);
-        }
-    }
+		private void AssertSettingsType(Type type, IEnumerable<KeyValuePair<SettingsGroupFilter, bool>> expectedResults)
+		{
+			foreach (var expectedResult in expectedResults)
+				Assert.AreEqual(expectedResult.Value, SettingsGroupDescriptor.ApplyFilter(expectedResult.Key, type), "(Filter={0}) expected {1} for {2}", expectedResult.Key, expectedResult.Value, type);
+		}
+	}
 }
 
 #endif

@@ -32,9 +32,7 @@ namespace ClearCanvas.Common.Configuration
 	/// An extension point for <see cref="ISettingsStore"/>s.
 	/// </summary>
 	[ExtensionPoint]
-	public sealed class SettingsStoreExtensionPoint : ExtensionPoint<ISettingsStore>
-	{
-	}
+	public sealed class SettingsStoreExtensionPoint : ExtensionPoint<ISettingsStore> {}
 
 	public abstract class SettingsStore : ISettingsStore
 	{
@@ -45,8 +43,7 @@ namespace ClearCanvas.Common.Configuration
 			IsSupported = _extensionPoint.ListExtensions().Length > 0;
 		}
 
-        //Setter is internal for unit testing only
-		public static bool IsSupported { get; internal set; }
+		public static bool IsSupported { get; private set; }
 
 		public static bool IsStoreOnline
 		{
@@ -65,7 +62,7 @@ namespace ClearCanvas.Common.Configuration
 
 		public static ISettingsStore Create()
 		{
-			return (ISettingsStore)new SettingsStoreExtensionPoint().CreateExtension();
+			return (ISettingsStore) _extensionPoint.CreateExtension();
 		}
 
 		#region Implementation of ISettingsStore
@@ -79,6 +76,19 @@ namespace ClearCanvas.Common.Configuration
 		public abstract Dictionary<string, string> GetSettingsValues(SettingsGroupDescriptor group, string user, string instanceKey);
 		public abstract void PutSettingsValues(SettingsGroupDescriptor group, string user, string instanceKey, Dictionary<string, string> dirtyValues);
 		public abstract void RemoveUserSettings(SettingsGroupDescriptor group, string user, string instanceKey);
+
+		#endregion
+
+		#region Unit Test Support
+
+#if UNIT_TESTS
+
+		internal static void SetIsSupported(bool value)
+		{
+			IsSupported = value;
+		}
+
+#endif
 
 		#endregion
 	}
