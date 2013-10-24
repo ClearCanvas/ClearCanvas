@@ -35,19 +35,25 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 	public sealed class KeyImageClipboardComponentViewExtensionPoint : ExtensionPoint<IApplicationComponentView> {}
 
 	[AssociateView(typeof (KeyImageClipboardComponentViewExtensionPoint))]
-	public class KeyImageClipboardComponent : ClipboardComponent, IKeyImageClipboardComponent
+	public class KeyImageClipboardComponent : ClipboardComponent
 	{
 		public const string MenuSite = "keyimageclipboard-contextmenu";
 		public const string ToolbarSite = "keyimageclipboard-toolbar";
 
-		private event EventHandler _keyImageInformationChanged;
-		private KeyImageInformation _keyImageInformation;
+		// not static so that, if items are somehow added to this context, they won't stay around forever
+		private readonly KeyImageInformation _emptyContext = new KeyImageInformation();
+
+		private readonly BindingList<KeyImageInformation> _availableContexts;
+
+		private event EventHandler _currentContextChanged;
 		private KeyImageClipboard _clipboard;
 
 		public KeyImageClipboardComponent(KeyImageClipboard clipboard)
 			: base(ToolbarSite, MenuSite, false)
 		{
-			_clipboard = clipboard;
+			_availableContexts = new BindingList<KeyImageInformation>();
+
+			Clipboard = clipboard;
 		}
 
 		public KeyImageClipboard Clipboard
@@ -63,63 +69,56 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 
 					if (_clipboard != null) _clipboard.CurrentContextChanged += OnClipboardCurrentContextChanged;
 
-					OnClipboardCurrentContextChanged(null, null);
+					AvailableContexts.RaiseListChangedEvents = false;
+					try
+					{
+						AvailableContexts.Clear();
+						if (_clipboard != null)
+							foreach (var x in _clipboard.AvailableContexts)
+								AvailableContexts.Add(x);
+					}
+					finally
+					{
+						AvailableContexts.RaiseListChangedEvents = true;
+						AvailableContexts.ResetBindings();
+					}
+					if (IsStarted) OnClipboardCurrentContextChanged(null, null);
 				}
 			}
 		}
 
-		private void OnClipboardCurrentContextChanged(object sender, EventArgs e)
+		public BindingList<KeyImageInformation> AvailableContexts
 		{
-			KeyImageInformation = _clipboard != null ? _clipboard.CurrentContext : new KeyImageInformation();
+			get { return _availableContexts; }
 		}
 
-		public KeyImageInformation KeyImageInformation
+		public KeyImageInformation CurrentContext
 		{
-			get { return _keyImageInformation; }
-			private set
-			{
-				if (_keyImageInformation != value)
-				{
-					_keyImageInformation = value;
-					DataSource = _keyImageInformation.ClipboardItems;
-
-					EventsHelper.Fire(_keyImageInformationChanged, this, new EventArgs());
-				}
-			}
+			get { return _clipboard != null ? _clipboard.CurrentContext : _emptyContext; }
+			set { if (_clipboard != null) _clipboard.CurrentContext = value; }
 		}
 
-		public event EventHandler KeyImageInformationChanged
+		public event EventHandler CurrentContextChanged
 		{
-			add { _keyImageInformationChanged += value; }
-			remove { _keyImageInformationChanged -= value; }
+			add { _currentContextChanged += value; }
+			remove { _currentContextChanged -= value; }
 		}
 
 		public override void Start()
 		{
 			base.Start();
 
+			// ensure the clipboard context properties are loaded and ready just before component is shown for the first time
 			OnClipboardCurrentContextChanged(null, null);
 		}
 
-		#region IKeyImageClipboard Implementation
-
-		IKeyObjectSelectionDocumentInformation IKeyImageClipboardComponent.DocumentInformation
+		private void OnClipboardCurrentContextChanged(object sender, EventArgs e)
 		{
-			get { return KeyImageInformation; }
+			var currentContext = _clipboard != null ? _clipboard.CurrentContext : _emptyContext;
+			DataSource = currentContext.ClipboardItems;
+			NotifyPropertyChanged("CurrentContext");
+			EventsHelper.Fire(_currentContextChanged, this, new EventArgs());
 		}
-
-		event EventHandler IKeyImageClipboardComponent.DocumentInformationChanged
-		{
-			add { KeyImageInformationChanged += value; }
-			remove { KeyImageInformationChanged -= value; }
-		}
-
-		BindingList<IClipboardItem> IKeyImageClipboardComponent.Items
-		{
-			get { return DataSource; }
-		}
-
-		#endregion
 
 		#region Static
 

@@ -148,7 +148,7 @@ namespace ClearCanvas.ImageViewer
 		/// </summary>
 		public Rectangle ClientRectangle
 		{
-			get { return _clientRectangle; }
+			get { return !_clientRectangle.IsEmpty ? _clientRectangle : new Rectangle(new Point(), SceneSize); }
 		}
 
 		/// <summary>

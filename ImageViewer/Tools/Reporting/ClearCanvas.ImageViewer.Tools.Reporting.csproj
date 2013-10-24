@@ -59,12 +59,13 @@
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="KeyImages\DesktopWindowTool.cs" />
     <Compile Include="KeyImages\EditKeyImageInformationTool.cs" />
-    <Compile Include="KeyImages\IKeyImageClipboardComponent.cs" />
+    <Compile Include="KeyImages\IKeyImageClipboard.cs" />
     <Compile Include="KeyImages\IKeyObjectSelectionDocumentInformation.cs" />
     <Compile Include="KeyImages\KeyImageClipboard2.cs" />
     <Compile Include="KeyImages\KeyImageClipboardComponent.cs" />

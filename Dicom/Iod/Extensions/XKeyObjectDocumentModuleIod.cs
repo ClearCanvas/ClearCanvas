@@ -48,6 +48,13 @@ namespace ClearCanvas.Dicom.Iod.Extensions
 			: base(dicomAttributeProvider) {}
 
 		/// <summary>
+		/// Initializes a new instance of the <see cref="XKeyObjectDocumentModuleIod"/> class.
+		/// </summary>
+		/// <param name="keyObjectDocumentModule">A <see cref="KeyObjectDocumentModuleIod"/>.</param>
+		public XKeyObjectDocumentModuleIod(KeyObjectDocumentModuleIod keyObjectDocumentModule)
+			: base(keyObjectDocumentModule != null ? keyObjectDocumentModule.DicomAttributeProvider : new DicomAttributeCollection()) {}
+
+		/// <summary>
 		/// Gets an enumeration of <see cref="DicomTag"/>s used by this module.
 		/// </summary>
 		public new static IEnumerable<uint> DefinedTags

@@ -30,9 +30,9 @@ using ClearCanvas.Dicom;
 using ClearCanvas.Dicom.Iod;
 using ClearCanvas.Dicom.Iod.Iods;
 using ClearCanvas.ImageViewer.KeyObjects;
+using ClearCanvas.ImageViewer.PresentationStates;
 using ClearCanvas.ImageViewer.PresentationStates.Dicom;
 using ClearCanvas.ImageViewer.StudyManagement;
-using ClearCanvas.ImageViewer.PresentationStates;
 
 namespace ClearCanvas.ImageViewer
 {
@@ -74,11 +74,17 @@ namespace ClearCanvas.ImageViewer
 		/// <summary>
 		/// Constructs a <see cref="PresentationImageFactory"/>.
 		/// </summary>
-		public PresentationImageFactory()
+		public PresentationImageFactory() {}
+
+		/// <summary>
+		/// Constructs a <see cref="PresentationImageFactory"/>.
+		/// </summary>
+		public PresentationImageFactory(StudyTree studyTree)
 		{
+			_studyTree = studyTree;
 		}
 
-		public PresentationState DefaultPresentationState {get; set; }
+		public PresentationState DefaultPresentationState { get; set; }
 
 		/// <summary>
 		/// Gets the <see cref="StudyTree"/> used by the factory to resolve referenced SOPs.
@@ -143,8 +149,8 @@ namespace ClearCanvas.ImageViewer
 		public virtual List<IPresentationImage> CreateImages(Sop sop)
 		{
 			if (sop.IsImage)
-				return CreateImages((ImageSop)sop);
-			
+				return CreateImages((ImageSop) sop);
+
 			if (sop.SopClassUid == SopClass.KeyObjectSelectionDocumentStorageUid)
 				return CreateImages(new KeyObjectSelectionDocumentIod(sop));
 
@@ -185,7 +191,6 @@ namespace ClearCanvas.ImageViewer
 			ImageSop imageSop = FindReferencedImageSop(item.ReferencedImageSopInstanceUid, item.Source.GeneralStudy.StudyInstanceUid);
 			if (imageSop != null)
 			{
-
 				int frameNumber = item.FrameNumber.GetValueOrDefault(-1);
 				if (item.FrameNumber.HasValue)
 				{
@@ -217,7 +222,7 @@ namespace ClearCanvas.ImageViewer
 						{
 							try
 							{
-								IPresentationStateProvider presentationStateProvider = (IPresentationStateProvider)image;
+								IPresentationStateProvider presentationStateProvider = (IPresentationStateProvider) image;
 								presentationStateProvider.PresentationState = DicomSoftcopyPresentationState.Load(presentationStateSop);
 							}
 							catch (Exception ex)

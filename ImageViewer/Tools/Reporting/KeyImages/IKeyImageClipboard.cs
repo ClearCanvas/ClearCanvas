@@ -23,16 +23,16 @@
 #endregion
 
 using System;
-using System.ComponentModel;
+using System.Collections.Generic;
 using ClearCanvas.ImageViewer.Clipboard;
 
 namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 {
-	public interface IKeyImageClipboardComponent
+	public interface IKeyImageClipboard
 	{
 		IKeyObjectSelectionDocumentInformation DocumentInformation { get; }
 		event EventHandler DocumentInformationChanged;
 
-		BindingList<IClipboardItem> Items { get; }
+		IList<IClipboardItem> Items { get; }
 	}
 }

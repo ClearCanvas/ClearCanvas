@@ -25,6 +25,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Security.Principal;
 using System.Threading;
 using ClearCanvas.Common;
@@ -324,7 +325,7 @@ namespace ClearCanvas.ImageViewer.KeyObjects
 						imageReferenceMacro.ReferencedSopSequence.ReferencedSopClassUid = sop.SopClassUid;
 						imageReferenceMacro.ReferencedSopSequence.ReferencedSopInstanceUid = sop.SopInstanceUid;
 						if (sop.NumberOfFrames > 1)
-							imageReferenceMacro.ReferencedSopSequence.ReferencedFrameNumber = frame.FrameNumber.ToString();
+							imageReferenceMacro.ReferencedSopSequence.ReferencedFrameNumber = frame.FrameNumber.ToString(CultureInfo.InvariantCulture);
 						else
 							imageReferenceMacro.ReferencedSopSequence.ReferencedFrameNumber = null;
 
@@ -339,6 +340,18 @@ namespace ClearCanvas.ImageViewer.KeyObjects
 						}
 					}
 					contentList.Add(content);
+				}
+
+				// add the author
+				if (!string.IsNullOrEmpty(_author))
+				{
+					IContentSequence koAuthor = iod.SrDocumentContent.CreateContentSequence();
+					koAuthor.InitializeAttributes();
+					koAuthor.ConceptNameCodeSequence = KeyObjectSelectionCodeSequences.PersonObserverName;
+					koAuthor.PersonName = _author;
+					koAuthor.RelationshipType = RelationshipType.HasObsContext;
+					koAuthor.ReferencedContentItemIdentifier = new uint[] {1};
+					contentList.Add(koAuthor);
 				}
 
 				// add the description

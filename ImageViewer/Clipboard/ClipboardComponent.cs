@@ -421,16 +421,17 @@ namespace ClearCanvas.ImageViewer.Clipboard
 
 		#region Static Helper Methods
 
-		public static IClipboardItem CreatePresentationImageItem(IPresentationImage image)
+		public static IClipboardItem CreatePresentationImageItem(IPresentationImage image, bool ownReference = false)
 		{
 			Rectangle clientRectangle = image.ClientRectangle;
+			if (clientRectangle.IsEmpty) clientRectangle = new Rectangle(new Point(), image.SceneSize);
 
 			// Must build description from the source image because the ParentDisplaySet info is lost in the cloned image.
 			var name = BuildClipboardItemName(image);
 			var description = BuildClipboardItemDescription(image);
 
-			image = ImageExporter.ClonePresentationImage(image);
-			Bitmap bmp = IconCreator.CreatePresentationImageIcon(image);
+			image = !ownReference ? ImageExporter.ClonePresentationImage(image) : image;
+			Bitmap bmp = IconCreator.CreatePresentationImageIcon(image, clientRectangle);
 
 			return new ClipboardItem(image, bmp, name, description, clientRectangle);
 		}

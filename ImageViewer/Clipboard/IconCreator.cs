@@ -37,19 +37,20 @@ namespace ClearCanvas.ImageViewer.Clipboard
 		private static readonly int _iconWidth = 100;
 		private static readonly int _iconHeight = 100;
 
-		public static Bitmap CreatePresentationImageIcon(IPresentationImage image)
+		public static Bitmap CreatePresentationImageIcon(IPresentationImage image, Rectangle? clientRectangle = null)
 		{
-			float aspectRatio = _iconHeight / (float)_iconWidth;
+			float aspectRatio = _iconHeight/(float) _iconWidth;
 
-			int dimension = Math.Max(image.ClientRectangle.Width, image.ClientRectangle.Height);
+			var clientRectangle2 = clientRectangle.HasValue && !clientRectangle.Value.IsEmpty ? clientRectangle.Value : image.ClientRectangle;
+			int dimension = Math.Max(clientRectangle2.Width, clientRectangle2.Height);
 
 			// rendered twice to rasterize the invariant text first and then downsample to icon size
-			Bitmap img = DrawToIcon(image, dimension, (int)(dimension * aspectRatio));
+			Bitmap img = DrawToIcon(image, dimension, (int) (dimension*aspectRatio));
 			Bitmap bmp = new Bitmap(img, _iconWidth, _iconHeight);
-			
+
 			System.Drawing.Graphics g = System.Drawing.Graphics.FromImage(bmp);
 			img.Dispose();
-			
+
 			Pen pen = new Pen(Color.DarkGray);
 
 			g.DrawRectangle(pen, 0, 0, _iconWidth - 1, _iconHeight - 1);
@@ -64,11 +65,11 @@ namespace ClearCanvas.ImageViewer.Clipboard
 		{
 			Bitmap bmp = new Bitmap(_iconWidth, _iconHeight);
 			int numImages = 3;
-			float aspectRatio = _iconHeight / (float)_iconWidth;
+			float aspectRatio = _iconHeight/(float) _iconWidth;
 			int offsetX = 10;
-			int offsetY = (int)(aspectRatio * offsetX);
-			int subIconWidth = _iconWidth - ((numImages - 1) * offsetX);
-			int subIconHeight = (int)(aspectRatio * subIconWidth);
+			int offsetY = (int) (aspectRatio*offsetX);
+			int subIconWidth = _iconWidth - ((numImages - 1)*offsetX);
+			int subIconHeight = (int) (aspectRatio*subIconWidth);
 
 			System.Drawing.Graphics g = System.Drawing.Graphics.FromImage(bmp);
 
@@ -77,7 +78,7 @@ namespace ClearCanvas.ImageViewer.Clipboard
 			IPresentationImage image = GetMiddlePresentationImage(displaySet);
 
 			// rendered twice to rasterize the invariant text first and then downsample to icon size
-			Bitmap img = DrawToIcon(image, dimension, (int)(dimension * aspectRatio));
+			Bitmap img = DrawToIcon(image, dimension, (int) (dimension*aspectRatio));
 			Bitmap iconBmp = new Bitmap(img, subIconWidth, subIconHeight);
 			img.Dispose();
 
@@ -87,9 +88,8 @@ namespace ClearCanvas.ImageViewer.Clipboard
 
 			for (int i = 0; i < numImages; i++)
 			{
-				int x = offsetX * ((numImages - 1) - i);
-				int y = offsetY * i;
-
+				int x = offsetX*((numImages - 1) - i);
+				int y = offsetY*i;
 
 				g.DrawImage(iconBmp, new Point(x, y));
 				g.DrawRectangle(pen, x, y, subIconWidth - 1, subIconHeight - 1);
@@ -109,7 +109,7 @@ namespace ClearCanvas.ImageViewer.Clipboard
 			var applicationGraphicsHider = GraphicsVisibilityHelper.CreateForApplicationGraphics(image);
 			textOverlayHider.Hide();
 			applicationGraphicsHider.HideAll();
-			
+
 			try
 			{
 				return image.DrawToBitmap(width, height);
@@ -142,7 +142,7 @@ namespace ClearCanvas.ImageViewer.Clipboard
 			if (displaySet.PresentationImages.Count <= 2)
 				return displaySet.PresentationImages[0];
 
-			return displaySet.PresentationImages[displaySet.PresentationImages.Count / 2];
+			return displaySet.PresentationImages[displaySet.PresentationImages.Count/2];
 		}
 	}
 }

@@ -67,7 +67,7 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 			if (clipboardComponent == null)
 				return;
 
-			clipboardComponent.Clipboard = GetKeyImageClipboard(e.Item) ?? new KeyImageClipboard();
+			clipboardComponent.Clipboard = GetKeyImageClipboard(e.Item);
 		}
 
 		private static void OnClipboardShelfClosed(object sender, ClosedEventArgs e)
@@ -189,7 +189,7 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 		internal static void OnViewerOpened(IImageViewer viewer)
 		{
 			if (!KeyImageClipboards.ContainsKey(viewer))
-				KeyImageClipboards[viewer] = new KeyImageClipboard();
+				KeyImageClipboards[viewer] = new KeyImageClipboard(viewer.StudyTree);
 
 			ManageActivityMonitorConnection();
 		}
@@ -271,7 +271,7 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 			else
 			{
 				Workspace activeWorkspace = desktopWindow.ActiveWorkspace;
-				var info = GetKeyImageClipboard(activeWorkspace) ?? new KeyImageClipboard();
+				var info = GetKeyImageClipboard(activeWorkspace);
 				ClipboardComponent component = new KeyImageClipboardComponent(info);
 				shelf = ApplicationComponent.LaunchAsShelf(desktopWindow, component, SR.TitleKeyImages, displayHint);
 				shelf.Closed += OnClipboardShelfClosed;

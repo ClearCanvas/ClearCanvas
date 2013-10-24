@@ -22,27 +22,28 @@
 
 #endregion
 
-using ClearCanvas.Common;
-using ClearCanvas.Desktop;
-using ClearCanvas.Desktop.View.WinForms;
+using System.Windows.Forms;
+using ClearCanvas.ImageViewer.Clipboard.View.WinForms;
 using ClearCanvas.ImageViewer.Tools.Reporting.KeyImages;
 
 namespace ClearCanvas.ImageViewer.Tools.Reporting.View.WinForms
 {
-	[ExtensionOf(typeof (KeyImageClipboardComponentViewExtensionPoint))]
-	public class KeyImageClipboardComponentView : WinFormsView, IApplicationComponentView
+	public partial class KeyImageClipboardComponentControl : UserControl
 	{
-		private KeyImageClipboardComponent _component;
-		private KeyImageClipboardComponentControl _control;
+		private readonly KeyImageClipboardComponent _component;
+		private readonly ClipboardComponentControl _clipboardControl;
 
-		public void SetComponent(IApplicationComponent component)
+		public KeyImageClipboardComponentControl(KeyImageClipboardComponent component)
 		{
-			_component = (KeyImageClipboardComponent) component;
-		}
+			InitializeComponent();
 
-		public override object GuiElement
-		{
-			get { return _control ?? (_control = new KeyImageClipboardComponentControl(_component)); }
+			_component = component;
+
+			_clipboardControl = new ClipboardComponentControl(_component) {Dock = DockStyle.Fill};
+			_pnlMain.Controls.Add(_clipboardControl);
+
+			_cboCurrentContext.DataSource = _component.AvailableContexts;
+			_cboCurrentContext.DataBindings.Add("SelectedValue", _component, "CurrentContext", true, DataSourceUpdateMode.OnPropertyChanged);
 		}
 	}
 }
