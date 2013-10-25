@@ -318,7 +318,6 @@ namespace ClearCanvas.ImageViewer.KeyObjects
 					IContentSequence content = iod.SrDocumentContent.CreateContentSequence();
 					{
 						content.RelationshipType = RelationshipType.Contains;
-						content.ReferencedContentItemIdentifier = new uint[] {1};
 
 						IImageReferenceMacro imageReferenceMacro = content.InitializeImageReferenceAttributes();
 						imageReferenceMacro.ReferencedSopSequence.InitializeAttributes();
@@ -350,7 +349,6 @@ namespace ClearCanvas.ImageViewer.KeyObjects
 					koAuthor.ConceptNameCodeSequence = KeyObjectSelectionCodeSequences.PersonObserverName;
 					koAuthor.PersonName = _author;
 					koAuthor.RelationshipType = RelationshipType.HasObsContext;
-					koAuthor.ReferencedContentItemIdentifier = new uint[] {1};
 					contentList.Add(koAuthor);
 				}
 
@@ -362,7 +360,6 @@ namespace ClearCanvas.ImageViewer.KeyObjects
 					koDescription.ConceptNameCodeSequence = KeyObjectSelectionCodeSequences.KeyObjectDescription;
 					koDescription.TextValue = _description;
 					koDescription.RelationshipType = RelationshipType.Contains;
-					koDescription.ReferencedContentItemIdentifier = new uint[] {1};
 					contentList.Add(koDescription);
 				}
 
