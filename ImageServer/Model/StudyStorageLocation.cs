@@ -496,9 +496,9 @@ namespace ClearCanvas.ImageServer.Model
         public bool CanBeUsedForDiagnostics()
         {
             // TODO (CR Phoenix5 - Med): What if it has a failed entry? Will it be unusable until the work item is removed?
-            var allowed = this.QueueStudyStateEnum == QueueStudyStateEnum.Idle;
+            var allowed = QueueStudyStateEnum == QueueStudyStateEnum.Idle;
             if (!allowed)
-                Platform.Log(LogLevel.Error, "Study cannot be used for diagnostic purposes at this time because its state is ", QueueStudyStateEnum);
+                Platform.Log(LogLevel.Error, "Study cannot be used for diagnostic purposes at this time because its state is {0}", QueueStudyStateEnum.Description);
 
             return allowed;
         }
@@ -508,12 +508,12 @@ namespace ClearCanvas.ImageServer.Model
 		/// </summary>
 		public void LogFilesystemQueue()
 		{
-			FilesystemQueueSelectCriteria criteria = new FilesystemQueueSelectCriteria();
+			var criteria = new FilesystemQueueSelectCriteria();
 			criteria.StudyStorageKey.EqualTo(Key);
 
             using (var context = new ServerExecutionContext())
             {
-				IFilesystemQueueEntityBroker broker = context.ReadContext.GetBroker<IFilesystemQueueEntityBroker>();
+				var broker = context.ReadContext.GetBroker<IFilesystemQueueEntityBroker>();
 
 				IList<FilesystemQueue> list = broker.Find(criteria);
 				foreach (FilesystemQueue queueItem in list)
