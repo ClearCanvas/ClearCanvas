@@ -23,6 +23,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading;
@@ -30,7 +31,10 @@ using ClearCanvas.Common;
 using ClearCanvas.Dicom;
 using ClearCanvas.Dicom.Iod.ContextGroups;
 using ClearCanvas.ImageViewer.Clipboard;
+using ClearCanvas.ImageViewer.Common;
+using ClearCanvas.ImageViewer.Common.ServerDirectory;
 using ClearCanvas.ImageViewer.KeyObjects;
+using ClearCanvas.ImageViewer.PresentationStates.Dicom;
 using ClearCanvas.ImageViewer.StudyManagement;
 
 namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
@@ -159,6 +163,166 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 			return p.Identity.Name;
 		}
 
+		#region Key Image Serialization
+
+		/// <summary>
+		/// Creates all the SOP instances associated with the key object selection and the content presentation states.
+		/// </summary>
+		public IDictionary<IStudySource, List<DicomFile>> CreateSopInstances(NextSeriesNumberDelegate nextSeriesNumberDelegate = null)
+		{
+			if (!_hasChanges || !ClipboardItems.Any()) return new Dictionary<IStudySource, List<DicomFile>>(0);
+
+			// the series index ensures consistent series level data because we only create one KO series and one PR series per study
+			var studyIndex = new Dictionary<string, StudyInfo>();
+
+			var framePresentationStates = new List<KeyValuePair<KeyImageReference, PresentationStateReference>>();
+
+			// create presentation states for the images in the clipboard
+			var presentationStates = new List<DicomSoftcopyPresentationState>();
+			foreach (var image in ClipboardItems.Select(x => x.Item).OfType<IPresentationImage>())
+			{
+				if (image is KeyObjectPlaceholderImage)
+				{
+					var ko = (KeyObjectPlaceholderImage) image;
+					framePresentationStates.Add(new KeyValuePair<KeyImageReference, PresentationStateReference>(ko.KeyImageReference, ko.PresentationStateReference));
+					continue;
+				}
+
+				var provider = image as IImageSopProvider;
+				if (provider == null) continue;
+
+				StudyInfo studyInfo;
+				var studyInstanceUid = provider.ImageSop.StudyInstanceUid;
+				if (!studyIndex.TryGetValue(studyInstanceUid, out studyInfo))
+					studyIndex.Add(studyInstanceUid, studyInfo = new StudyInfo(provider));
+
+				var presentationState = DicomSoftcopyPresentationState.IsSupported(image)
+				                        	? DicomSoftcopyPresentationState.Create
+				                        	  	(image, ps =>
+				                        	  	        	{
+				                        	  	        		ps.PresentationSeriesInstanceUid = studyInfo.PresentationSeriesUid;
+				                        	  	        		ps.PresentationSeriesNumber = studyInfo.PresentationSeriesNumber;
+				                        	  	        		ps.PresentationSeriesDateTime = studyInfo.PresentationSeriesDateTime;
+				                        	  	        		ps.PresentationInstanceNumber = studyInfo.GetNextPresentationInstanceNumber();
+				                        	  	        		ps.SourceAETitle = provider.ImageSop.DataSource[DicomTags.SourceApplicationEntityTitle].ToString();
+				                        	  	        	}) : null;
+				if (presentationState != null) presentationStates.Add(presentationState);
+				framePresentationStates.Add(new KeyValuePair<KeyImageReference, PresentationStateReference>(provider.Frame, presentationState));
+			}
+
+			// serialize the key image document
+			var serializer = new KeyImageSerializer();
+			serializer.Author = Author;
+			serializer.Description = Description;
+			serializer.DocumentTitle = DocumentTitle;
+			serializer.SeriesDescription = SeriesDescription;
+			foreach (var presentationFrame in framePresentationStates)
+				serializer.AddImage(presentationFrame.Key, presentationFrame.Value);
+
+			// collect all the SOP instances that were created (both PR and KO)
+			var documents = new List<DicomFile>();
+			documents.AddRange(serializer.Serialize(koSeries =>
+			                                        	{
+			                                        		var uid = koSeries.StudyInstanceUid;
+			                                        		if (studyIndex.ContainsKey(uid))
+			                                        		{
+			                                        			koSeries.SeriesDateTime = studyIndex[uid].KeyObjectSeriesDateTime;
+			                                        			koSeries.SeriesNumber = studyIndex[uid].KeyObjectSeriesNumber;
+			                                        			koSeries.SeriesInstanceUid = studyIndex[uid].KeyObjectSeriesUid;
+			                                        			return studyIndex[uid].DataSource;
+			                                        		}
+			                                        		return null;
+			                                        	}
+			                   	));
+			documents.AddRange(presentationStates.Select(ps => ps.DicomFile));
+
+			// return the created instances grouped by study (and thus study origin/source)
+			return documents.GroupBy(f => (IStudySource) studyIndex[f.DataSet[DicomTags.StudyInstanceUid].ToString()]).ToDictionary(g => g.Key, g => g.ToList());
+		}
+
+		private class StudyInfo : IStudySource
+		{
+			public readonly string PresentationSeriesUid;
+			public readonly int PresentationSeriesNumber;
+			public readonly DateTime PresentationSeriesDateTime;
+
+			public readonly string KeyObjectSeriesUid;
+			public readonly int KeyObjectSeriesNumber;
+			public readonly DateTime KeyObjectSeriesDateTime;
+
+			private readonly IImageSopProvider _provider;
+			private readonly string _studyInstanceUid;
+			private readonly IDicomServiceNode _originServer;
+			private readonly IDicomServiceNode _sourceServer;
+			private int _presentationNextInstanceNumber = 1;
+
+			public StudyInfo(IImageSopProvider provider, NextSeriesNumberDelegate nextSeriesNumberDelegate = null)
+			{
+				_provider = provider;
+				_studyInstanceUid = provider.Sop.StudyInstanceUid;
+				_originServer = ServerDirectory.GetRemoteServersByAETitle(provider.Sop[DicomTags.SourceApplicationEntityTitle].ToString()).FirstOrDefault();
+				_sourceServer = provider.Sop.DataSource.Server;
+
+				KeyObjectSeriesUid = DicomUid.GenerateUid().UID;
+				KeyObjectSeriesDateTime = Platform.Time;
+				PresentationSeriesUid = DicomUid.GenerateUid().UID;
+				PresentationSeriesDateTime = Platform.Time;
+
+				if (nextSeriesNumberDelegate == null)
+				{
+					KeyObjectSeriesNumber = KeyImagePublisher.GetMaxSeriesNumber(provider.Frame) + 1;
+					PresentationSeriesNumber = KeyObjectSeriesNumber + 1;
+				}
+				else
+				{
+					KeyObjectSeriesNumber = nextSeriesNumberDelegate.Invoke(provider.Frame);
+					PresentationSeriesNumber = nextSeriesNumberDelegate.Invoke(provider.Frame);
+				}
+			}
+
+			public IDicomAttributeProvider DataSource
+			{
+				get { return _provider.Sop.DataSource; }
+			}
+
+			public string StudyInstanceUid
+			{
+				get { return _studyInstanceUid; }
+			}
+
+			public IDicomServiceNode OriginServer
+			{
+				get { return _originServer; }
+			}
+
+			public IDicomServiceNode SourceServer
+			{
+				get { return _sourceServer; }
+			}
+
+			public override int GetHashCode()
+			{
+				return _studyInstanceUid.GetHashCode();
+			}
+
+			public override bool Equals(object obj)
+			{
+				return obj is IStudySource && ((IStudySource) obj).StudyInstanceUid == _studyInstanceUid;
+			}
+
+			public override string ToString()
+			{
+				return _studyInstanceUid;
+			}
+
+			public int GetNextPresentationInstanceNumber()
+			{
+				return _presentationNextInstanceNumber++;
+			}
+		}
+
+		#endregion
+
 		#region IDisposable Members
 
 		void IDisposable.Dispose()
@@ -170,5 +334,14 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 		}
 
 		#endregion
+	}
+
+	public delegate int NextSeriesNumberDelegate(Frame frame);
+
+	public interface IStudySource
+	{
+		string StudyInstanceUid { get; }
+		IDicomServiceNode OriginServer { get; }
+		IDicomServiceNode SourceServer { get; }
 	}
 }

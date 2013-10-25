@@ -145,11 +145,7 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 
 		public void Publish()
 		{
-			foreach (var context in AvailableContexts.Where(c => c.HasChanges && c.ClipboardItems.Count > 0))
-			{
-				var publisher = new KeyImagePublisher(context);
-				publisher.Publish();
-			}
+			KeyImagePublisher.Publish(AvailableContexts.Where(c => c.HasChanges && c.ClipboardItems.Count > 0));
 		}
 
 		public void Dispose()

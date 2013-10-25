@@ -248,7 +248,7 @@ namespace ClearCanvas.Dicom
         }
         /// <summary>
         /// The DICOM Application Entity (AE) Title of the AE which wrote this file's 
-        /// content (or last updated it).  If used, it allows the tracin of the source 
+        /// content (or last updated it).  If used, it allows the tracing of the source 
         /// of errors in the event of media interchange problems.  The policies associated
         /// with AE Titles are the same as those defined in PS 3.8 of the DICOM Standard. 
         /// </summary>

@@ -31,6 +31,8 @@ using ClearCanvas.Desktop.Actions;
 using ClearCanvas.ImageViewer.BaseTools;
 using ClearCanvas.ImageViewer.Common.WorkItem;
 using ClearCanvas.ImageViewer.Graphics;
+using ClearCanvas.ImageViewer.PresentationStates.Dicom;
+using ClearCanvas.ImageViewer.StudyManagement;
 
 namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 {
@@ -125,9 +127,20 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 			base.Dispose(disposing);
 		}
 
+		/// <remarks>
+		/// The current implementation of <see cref="KeyImagePublisher"/> supports only locally stored images that are <see cref="IImageSopProvider"/>s and supports <see cref="DicomSoftcopyPresentationState"/>s.
+		/// </remarks>
+		private static bool IsSupportedImage(IPresentationImage image)
+		{
+			var imageSopProvider = image as IImageSopProvider;
+			if (imageSopProvider == null)
+				return false;
+			return imageSopProvider.ImageSop.IsStored && DicomSoftcopyPresentationState.IsSupported(image);
+		}
+
 		private void UpdateEnabled()
 		{
-			Enabled = KeyImagePublisher.IsSupportedImage(SelectedPresentationImage) &&
+			Enabled = IsSupportedImage(SelectedPresentationImage) &&
 			          // TODO (CR Phoenix5 - Med): Clinical as well	  
 			          PermissionsHelper.IsInRole(AuthorityTokens.Study.KeyImages);
 

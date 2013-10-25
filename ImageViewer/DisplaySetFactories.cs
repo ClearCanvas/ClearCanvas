@@ -1157,6 +1157,11 @@ namespace ClearCanvas.ImageViewer
 				return new PlaceholderPresentationImage(_sopReference.Sop);
 			}
 
+			public override Size SceneSize
+			{
+				get { return new Size(100, 100); }
+			}
+
 			[Cloneable(true)]
 			private class ErrorMessageGraphic : InvariantTextPrimitive
 			{

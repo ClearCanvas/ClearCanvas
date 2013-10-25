@@ -218,6 +218,7 @@
     <Compile Include="Imaging\NormalizationLutLinear.cs" />
     <Compile Include="Imaging\SimpleColorMap.cs" />
     <Compile Include="Imaging\SimpleDataModalityLut.cs" />
+    <Compile Include="KeyObjects\SopInstanceReference.cs" />
     <Compile Include="Layout\HpDataContractAttribute.cs" />
     <Compile Include="Layout\HpExtensionPoints.cs" />
     <Compile Include="Layout\HpApplicabilityResult.cs" />
