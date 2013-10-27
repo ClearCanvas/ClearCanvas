@@ -45,6 +45,11 @@ namespace ClearCanvas.ImageServer.Rules
 	{
 	}
 
+	public interface IServerRulesEngine
+	{
+		event EventHandler Completed;
+	}
+
 	/// <summary>
     /// Rules engine for applying rules against DICOM files and performing actions.
     /// </summary>
@@ -68,8 +73,8 @@ namespace ClearCanvas.ImageServer.Rules
     /// </rule>
     /// </code>
     /// </example>
-    public class ServerRulesEngine : RulesEngine<ServerActionContext,ServerRuleTypeEnum>
-    {
+    public class ServerRulesEngine : RulesEngine<ServerActionContext,ServerRuleTypeEnum>, IServerRulesEngine
+	{
         private readonly ServerRuleApplyTimeEnum _applyTime;
         private readonly ServerEntityKey _serverPartitionKey;
 
@@ -105,10 +110,19 @@ namespace ClearCanvas.ImageServer.Rules
 
         #endregion
 
-        #region Public Methods
+		#region Events
 
-	
-        /// <summary>
+		/// <summary>
+		/// Occurred when <see cref="Complete"/> in called.
+		/// </summary>
+		public event EventHandler Completed;
+
+		#endregion
+
+		#region Public Methods
+
+
+		/// <summary>
         /// Load the rules engine from the Persistent Store and compile the conditions and actions.
         /// </summary>
         public void Load()
@@ -183,6 +197,12 @@ namespace ClearCanvas.ImageServer.Rules
             Statistics.LoadTime.End();
         }
 
+		public void Complete()
+		{
+			if (Completed != null)
+				Completed(this, EventArgs.Empty);
+		}
+
 		public static XmlSpecificationCompiler GetSpecificationCompiler()
 		{
 			return new XmlSpecificationCompiler("dicom", new DicomRuleSpecificationCompilerOperatorExtensionPoint());
@@ -209,6 +229,7 @@ namespace ClearCanvas.ImageServer.Rules
 
 			return attrs.Any(a => a.RuleType.ToServerRuleTypeEnum().Equals(ruleType));
 		}
+
 
 	}
 }

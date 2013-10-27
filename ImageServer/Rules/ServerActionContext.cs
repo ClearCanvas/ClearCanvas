@@ -57,6 +57,10 @@ namespace ClearCanvas.ImageServer.Rules
 
 		#region Public Properties
 
+		/// <summary>
+		/// The Server Rules Engine
+		/// </summary>
+		public IServerRulesEngine RuleEngine { get; set; }
 
 		/// <summary>
 		/// The partition of the object.
