@@ -43,21 +43,19 @@ namespace ClearCanvas.ImageServer.Rules
         #region Constructors
 
         public ServerActionContext(DicomMessageBase msg, ServerEntityKey filesystemKey,
-                                   ServerPartition partition, ServerEntityKey studyLocationKey, bool isLast=false)
+                                   ServerPartition partition, ServerEntityKey studyLocationKey)
         {
             Message = msg;
             ServerPartitionKey = partition.Key;
             StudyLocationKey = studyLocationKey;
             FilesystemKey = filesystemKey;
         	ServerPartition = partition;
-        	IsLast = isLast;
         }
 
         #endregion
 
         #region Public Properties
 
-    	public bool IsLast { get; private set; }
 
         /// <summary>
         /// The partition of the object.
