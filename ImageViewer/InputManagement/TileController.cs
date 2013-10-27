@@ -245,7 +245,11 @@ namespace ClearCanvas.ImageViewer.InputManagement
 		private IMouseButtonHandler _captureHandler;
 		private int _startCount = 0;
 		private CursorToken _cursorToken;
-		
+
+		private int _mouseMovedToleranceInPixel = 2;
+		private int _mouseHoldDownForContextMenuInMilliseconds;
+		private long? _lastMouseDownProcessedTicks;
+		private XMouseButtons _buttonForContextMenu = XMouseButtons.Right;
 		private bool _contextMenuEnabled; 
 		private IContextMenuProvider _contextMenuProvider;
 
@@ -495,6 +499,7 @@ namespace ClearCanvas.ImageViewer.InputManagement
 		private bool ProcessMouseButtonDownMessage(MouseButtonMessage buttonMessage)
 		{
 			this.CaptureMouseWheelHandler = null;
+			_lastMouseDownProcessedTicks = Environment.TickCount;
 
 			//don't allow multiple buttons, it's just cleaner and easier to manage behaviour.
 			if (_activeButton != 0)
@@ -510,7 +515,7 @@ namespace ClearCanvas.ImageViewer.InputManagement
 				return true;
 
 			_tile.Select();
-			_contextMenuEnabled = (buttonMessage.Shortcut.MouseButton == XMouseButtons.Right);
+			_contextMenuEnabled = (buttonMessage.Shortcut.MouseButton == _buttonForContextMenu);
 
 			_startMousePoint = buttonMessage.Location;
 
@@ -608,6 +613,9 @@ namespace ClearCanvas.ImageViewer.InputManagement
 
 		private bool ProcessMouseButtonUpMessage(MouseButtonMessage buttonMessage)
 		{
+			var tapAndHoldForContextMenu = IsTapAndHoldForContextMenu(buttonMessage.Location);
+			_lastMouseDownProcessedTicks = null;
+
 			if (_activeButton != buttonMessage.Shortcut.MouseButton)
 				return true;
 
@@ -618,9 +626,10 @@ namespace ClearCanvas.ImageViewer.InputManagement
 			{
 				if (StopHandler(this.CaptureHandler))
 				{
-					if (_capturedOnThisClick && !HasMoved(buttonMessage.Location) && buttonMessage.Shortcut.MouseButton == XMouseButtons.Right)
+					if (_capturedOnThisClick && buttonMessage.Shortcut.MouseButton == _buttonForContextMenu && tapAndHoldForContextMenu)
 						_delayedContextMenuRequestPublisher.Publish(this, new ItemEventArgs<Point>(buttonMessage.Location));
 
+					_lastMouseDownProcessedTicks = null;
 					return true;
 				}
 
@@ -765,12 +774,12 @@ namespace ClearCanvas.ImageViewer.InputManagement
 		/// </summary>
 		private bool HasMoved(Point point)
 		{
-			return HasMoved(point, _startMousePoint);
+			return HasMoved(point, _startMousePoint, _mouseMovedToleranceInPixel);
 		}
 
-		private static bool HasMoved(Point testPoint, Point refPoint)
+		private static bool HasMoved(Point testPoint, Point refPoint, int tolerance)
 		{
-			return Math.Abs(refPoint.X - testPoint.X) > 2 || Math.Abs(refPoint.Y - testPoint.Y) > 2;
+			return Math.Abs(refPoint.X - testPoint.X) > tolerance || Math.Abs(refPoint.Y - testPoint.Y) > tolerance;
 		}
 
 		private void ProcessDelayedContextMenuRequest(object sender, EventArgs e)
@@ -779,7 +788,7 @@ namespace ClearCanvas.ImageViewer.InputManagement
 			if (eventArgs == null)
 				return;
 
-		    if (HasMoved(eventArgs.Item, _currentMousePoint))
+		    if (HasMoved(eventArgs.Item, _currentMousePoint, _mouseMovedToleranceInPixel))
                 return;
 		    
             if (CaptureHandler != null)
@@ -861,6 +870,33 @@ namespace ClearCanvas.ImageViewer.InputManagement
 		public bool ContextMenuEnabled
 		{
 			get { return _contextMenuEnabled; }
+		}
+
+		/// <summary>
+		/// Used by the view layer to tell this object which button to use for context menu.
+		/// </summary>
+		public XMouseButtons ButtonForContextMenu
+		{
+			get { return _buttonForContextMenu; }
+			set { _buttonForContextMenu = value; }
+		}
+
+		/// <summary>
+		/// Used by the view layer to tell this object the tolerance level for mouse moved.
+		/// </summary>
+		public int MouseMovedToleranceInPixel
+		{
+			get { return _mouseMovedToleranceInPixel; }
+			set { _mouseMovedToleranceInPixel = value; }
+		}
+
+		/// <summary>
+		/// Used by the view layer to tell this object how long the mouse has to be hold down in order to show the context menu.
+		/// </summary>
+		public int MouseHoldDownForContextMenuInMilliseconds
+		{
+			get { return _mouseHoldDownForContextMenuInMilliseconds; }
+			set { _mouseHoldDownForContextMenuInMilliseconds = value; }
 		}
 
 		/// <summary>
@@ -975,6 +1011,23 @@ namespace ClearCanvas.ImageViewer.InputManagement
 		    return false;
 		}
 
+		/// <summary>
+		/// Called by the view layer to determine whether user has tap and hold for a context menu.
+		/// </summary>
+		public bool IsTapAndHoldForContextMenu(Point mousePosition)
+		{
+			if (HasMoved(mousePosition))
+				return false;
+
+			if (_mouseHoldDownForContextMenuInMilliseconds == 0)
+				return true;
+
+			if (!_lastMouseDownProcessedTicks.HasValue)
+				return false;
+
+			var timeElapsedSinceMouseDown = TimeSpan.FromMilliseconds(Environment.TickCount - _lastMouseDownProcessedTicks.Value).TotalMilliseconds;
+			return timeElapsedSinceMouseDown >= _mouseHoldDownForContextMenuInMilliseconds;
+		}
 		#endregion
 
 		#region Public Events

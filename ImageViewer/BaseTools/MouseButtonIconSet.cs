@@ -163,7 +163,7 @@ namespace ClearCanvas.ImageViewer.BaseTools
 			//TODO (Web Viewer): make private again and find a solution that works in the client (e.g. pixel shader).
 			public bool ShowMouseButtonIconOverlay
 			{
-				get { return MouseToolSettings.DefaultInstance.ShowMouseButtonIconOverlay && MouseToolSettingsProfile.Current.HasMultipleButtons; }
+				get { return MouseToolSettings.DefaultInstance.ShowMouseButtonIconOverlay && !MouseToolSettingsProfile.Current.HideButtonsOverlay; }
 			}
 
 			/// <summary>

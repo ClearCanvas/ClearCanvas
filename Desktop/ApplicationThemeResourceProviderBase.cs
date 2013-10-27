@@ -159,8 +159,8 @@ namespace ClearCanvas.Desktop
 			try
 			{
 				var resourceName = MapResourceName(resourceFullName, originalAssemblyHint);
-				_resourceResolver.ResolveResource(resourceName);
-				return true;
+				string resolvedResourceName;
+				return _resourceResolver.TryResolveResource(resourceName, out resolvedResourceName);
 			}
 			catch (Exception)
 			{
@@ -183,9 +183,13 @@ namespace ClearCanvas.Desktop
 			try
 			{
 				var resourceName = MapResourceName(resourceFullName, originalAssemblyHint);
-				return _resourceResolver.OpenResource(resourceName);
+				Stream resourceStream;
+				if (_resourceResolver.TryOpenResource(resourceName, out resourceStream))
+					return resourceStream;
+
+				return null;
 			}
-			catch (Exception)
+			catch
 			{
 				return null;
 			}
