@@ -9,7 +9,7 @@
       <Value Profile="(Default)">CR,DX,MG,KO</Value>
     </Setting>
     <Setting Name="MixedMultiframeModalities" Description="Modalities where you might encounter &quot;mixed multiframe&quot; series, meaning there are one or more multiframes and/or single images in the same series." Type="System.String" Scope="Application">
-      <Value Profile="(Default)">CT,MG,MR,NM,RF,SC,US,XA</Value>
+      <Value Profile="(Default)">CT,MG,MR,NM,PT,RF,SC,US,XA</Value>
     </Setting>
     <Setting Name="AllImagesModalities" Type="System.String" Scope="Application">
       <Value Profile="(Default)">CR,DX,ES,MG,RF,US,XA,KO</Value>
