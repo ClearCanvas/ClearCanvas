@@ -207,10 +207,10 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 			int retryDelay = 50;
 			int retryCounter = 0;
 
-			DicomFile result = null;
-
 			CodeClock timeoutClock = new CodeClock();
 			timeoutClock.Start();
+
+			lastRetrieveException = null;
 
 			while (true)
 			{
@@ -219,7 +219,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 					if (retryCounter > 0)
 						Platform.Log(LogLevel.Info, "Retrying retrieve headers for Sop '{0}' (Attempt #{1})", this.SopInstanceUid, retryCounter);
 
-					result = _loader.LoadDicomFile(new LoadDicomFileArgs(this.StudyInstanceUid, this.SeriesInstanceUid, this.SopInstanceUid, true, false));
+					return _loader.LoadDicomFile(new LoadDicomFileArgs(this.StudyInstanceUid, this.SeriesInstanceUid, this.SopInstanceUid, true, false));
 				}
 				catch (Exception ex)
 				{
@@ -247,7 +247,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 				}
 			}
 
-			return result;
+			return null;
 		}
 	}
 }

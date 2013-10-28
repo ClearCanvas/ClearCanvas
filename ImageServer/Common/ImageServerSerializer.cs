@@ -46,6 +46,7 @@ namespace ClearCanvas.ImageServer.Common
 		private class CustomHook : IJsmlSerializerHook
 		{
 			private readonly Dictionary<string, Type> _contractMap;
+			private readonly IJsmlSerializerHook _editHook = new EditContractJsmlSerializerHook();
 
 			public CustomHook()
 			{
@@ -55,22 +56,6 @@ namespace ClearCanvas.ImageServer.Common
 				                where (a != null)
 				                select new {a.ContractId, Contract = t})
 					.ToDictionary(entry => entry.ContractId, entry => entry.Contract);
-
-				foreach (var type in Edit.GetKnownTypes().Where(AttributeUtils.HasAttribute<EditTypeAttribute>))
-				{
-					var attribute = AttributeUtils.GetAttribute<EditTypeAttribute>(type);
-					Type existing;
-					if (_contractMap.TryGetValue(attribute.ContractId, out existing))
-					{
-						if (type != existing)
-							Platform.Log(LogLevel.Debug, "Ignoring duplicate contract with ID={0}; keeping {1}, ignoring {2}",
-							             attribute.ContractId, existing, type);
-					}
-					else
-					{
-						_contractMap.Add(attribute.ContractId, type);
-					}
-				}
 			}
 
 			#region IJsmlSerializerHook
@@ -85,19 +70,11 @@ namespace ClearCanvas.ImageServer.Common
 					if (a != null)
 					{
 						context.Attributes.Add("contract", a.ContractId);
-					}
-					else
-					{
-						var b = AttributeUtils.GetAttribute<EditTypeAttribute>(data.GetType());
-						if (b != null)
-						{
-							context.Attributes.Add("contract", b.ContractId);
-						}
+						return false;
 					}
 				}
 
-				// always return false - we don't handle serialization ourselves
-				return false;
+				return _editHook.Serialize(context);
 			}
 
 			bool IJsmlSerializerHook.Deserialize(IJsmlDeserializationContext context)
@@ -106,24 +83,20 @@ namespace ClearCanvas.ImageServer.Common
 				var contract = context.XmlElement.GetAttribute("contract");
 				if (!string.IsNullOrEmpty(contract))
 				{
-					// constrain the data type by the contract id
-					context.DataType = GetDataContract(contract);
+					Type contractType;
+					if (_contractMap.TryGetValue(contract, out contractType))
+					{
+						context.DataType = contractType;
+						return false;
+					}
+
+					//Let the edit hook throw if the contract ID is invalid
 				}
 
-				// always return false - we don't handle serialization ourselves
-				return false;
+				return _editHook.Deserialize(context);
 			}
 
 			#endregion
-
-			private Type GetDataContract(string contractId)
-			{
-				Type contract;
-				if (!_contractMap.TryGetValue(contractId, out contract))
-					throw new ArgumentException("Invalid data contract ID.");
-
-				return contract;
-			}
 		}
 
 		#region Private Static Members

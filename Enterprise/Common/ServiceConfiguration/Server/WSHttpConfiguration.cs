@@ -65,6 +65,11 @@ namespace ClearCanvas.Enterprise.Common.ServiceConfiguration.Server
 				host.Description.Behaviors.Add(metadataBehavior);
 			}
 
+			//TODO (Rockstar): remove this after refactoring to do per-sop edits
+			foreach (var endpoint in host.Description.Endpoints)
+				foreach (var operation in endpoint.Contract.Operations)
+					operation.Behaviors.Find<DataContractSerializerOperationBehavior>().MaxItemsInObjectGraph = args.MaxReceivedMessageSize;
+
 			// set up the certificate - required for WSHttpBinding
 			host.Credentials.ServiceCertificate.SetCertificate(
 				args.CertificateSearchDirective.StoreLocation, args.CertificateSearchDirective.StoreName,

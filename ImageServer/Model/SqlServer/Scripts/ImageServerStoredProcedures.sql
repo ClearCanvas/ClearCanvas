@@ -1256,6 +1256,13 @@ BEGIN
 			AND WorkQueueTypeEnum = @WorkQueueTypeEnum
 			AND DeviceGUID = @DeviceGUID
 	END
+	ELSE IF @ExternalRequestQueueGUID is not null
+	BEGIN
+		SELECT @WorkQueueGUID = GUID from WorkQueue WITH (NOLOCK)
+			where StudyStorageGUID = @StudyStorageGUID
+			AND WorkQueueTypeEnum = @WorkQueueTypeEnum
+			AND ExternalRequestQueueGUID = @ExternalRequestQueueGUID
+	END
 	ELSE IF @StudyHistoryGUID is not null
 	BEGIN
 		SELECT @WorkQueueGUID = GUID from WorkQueue WITH (NOLOCK)

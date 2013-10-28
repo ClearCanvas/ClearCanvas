@@ -49,23 +49,40 @@ namespace ClearCanvas.Common.Utilities
         string LocalizeString(string unqualifiedStringKey);
 
         /// <summary>
-        /// Attempts to return a fully qualified resource name from the specified name, which may be partially
+		/// Attempts to resolve and open a resource from the specified name, which may be partially
         /// qualified or entirely unqualified.
         /// </summary>
         /// <param name="resourceName">A partially qualified or unqualified resource name.</param>
-        /// <returns>A qualified resource name, if found, otherwise an exception is thrown.</returns>
+        /// <returns>The resource as a <see cref="Stream"/>.</returns>
         /// <exception cref="MissingManifestResourceException">if the resource name could not be resolved.</exception>
         Stream OpenResource(string resourceName);
 
+    	/// <summary>
+		/// Attempts to resolve and open a resource from the specified name, which may be partially
+    	/// qualified or entirely unqualified.
+    	/// </summary>
+    	/// <param name="resourceName">A partially qualified or unqualified resource name.</param>
+    	/// <param name="resourceStream">The resource as a <see cref="Stream"/>.</param>
+    	/// <returns>True, if a resource is found, otherwise False.</returns>
+    	bool TryOpenResource(string resourceName, out Stream resourceStream);
 
         /// <summary>
-        /// Attempts to resolve and open a resource from the specified name, which may be partially
+        /// Attempts to resolve a resource name from the specified name, which may be partially
         /// qualified or entirely unqualified.
         /// </summary>
         /// <param name="resourceName">A partially qualified or unqualified resource name.</param>
         /// <returns>A qualified resource name, if found, otherwise an exception is thrown.</returns>
         /// <exception cref="MissingManifestResourceException">if the resource name could not be resolved.</exception>
         string ResolveResource(string resourceName);
+
+		/// <summary>
+		/// Attempts to resolve a resource name from the specified name, which may be partially
+		/// qualified or entirely unqualified.
+		/// </summary>
+		/// <param name="resourceName">A partially qualified or unqualified resource name.</param>
+		/// <param name="resolvedResourceName">The qualified resource name.</param>
+		/// <returns>Whether or not a resource was found.</returns>
+		bool TryResolveResource(string resourceName, out string resolvedResourceName);
 
         /// <summary>
         /// Returns the set of resources whose name matches the specified regular expression.

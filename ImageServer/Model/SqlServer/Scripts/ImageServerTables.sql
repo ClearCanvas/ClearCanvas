@@ -621,6 +621,7 @@ CREATE TABLE [dbo].[Study](
 	ResponsiblePerson nvarchar(64) NULL,
 	ResponsibleOrganization nvarchar(64) NULL,
 	QueryXml xml NULL,
+	QCOutput varchar(max) NULL,
  CONSTRAINT [PK_Study] PRIMARY KEY NONCLUSTERED 
 (
 	[GUID] ASC

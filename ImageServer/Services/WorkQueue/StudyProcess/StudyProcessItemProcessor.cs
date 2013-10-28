@@ -169,7 +169,9 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.StudyProcess
 
                 if (!processor.Execute())
                 {
-                    // cause the item to fail
+					EventManager.FireEvent(this, new FailedUpdateSopEventArgs { File = dupFile, ServerPartitionEntry = Context.StorageLocation.ServerPartition, WorkQueueUidEntry = uid, WorkQueueEntry = WorkQueueItem, FileLength = (ulong)insertStudyXmlCommand.FileSize, FailureMessage = processor.FailureReason});
+					
+					// cause the item to fail
                     throw new Exception(string.Format("Error occurred when trying to overwrite duplicate in the filesystem."), processor.FailureException);
                 }
 
@@ -208,6 +210,8 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.StudyProcess
 
 				if (!processor.Execute())
 				{
+					EventManager.FireEvent(this, new FailedUpdateSopEventArgs { File = dupFile, ServerPartitionEntry = Context.StorageLocation.ServerPartition, WorkQueueUidEntry = uid, WorkQueueEntry = WorkQueueItem, FileLength = (ulong)insertStudyXmlCommand.FileSize, FailureMessage = processor.FailureReason });
+
 					// cause the item to fail
 					throw new Exception(string.Format("Error occurred when trying to overwrite duplicate in the filesystem."), processor.FailureException);
 				}

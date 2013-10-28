@@ -418,7 +418,7 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.ReprocessStudy
 
                                               #endregion
 
-                                              cancel = reprocessedCounter >= 500;
+                                              cancel = reprocessedCounter >= 3000;
                                           }, true);
 
                 if (studyXml != null)
