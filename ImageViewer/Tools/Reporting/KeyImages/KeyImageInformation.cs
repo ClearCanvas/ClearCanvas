@@ -70,7 +70,11 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 			_clipboardItems = new BindingList<IClipboardItem>();
 			var factory = new PresentationImageFactory(studyTree);
 			foreach (var image in factory.CreateImages(keyObjectSelectionDocument))
-				_clipboardItems.Add(ClipboardComponent.CreatePresentationImageItem(image, true));
+			{
+				var item = ClipboardComponent.CreatePresentationImageItem(image, true);
+				item.SetHasChanges(false);
+				_clipboardItems.Add(item);
+			}
 
 			// subscribe after having pre-populated the contents!
 			_clipboardItems.ListChanged += OnClipboardItemsListChanged;
@@ -179,10 +183,15 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 
 			// create presentation states for the images in the clipboard
 			var presentationStates = new List<DicomSoftcopyPresentationState>();
-			foreach (var image in ClipboardItems.Select(x => x.Item).OfType<IPresentationImage>())
+			foreach (var item in ClipboardItems.Where(i => i.Item is IPresentationImage))
 			{
+				var image = (IPresentationImage) item.Item;
+
+				// if the item is a placeholder image (e.g. because source study wasn't available), simply reserialize the original sop references
 				if (image is KeyObjectPlaceholderImage)
 				{
+					// because source study wasn't available, we don't have enough information to create the identical KO for that study
+					// and thus an entry in the study index table is not needed
 					var ko = (KeyObjectPlaceholderImage) image;
 					framePresentationStates.Add(new KeyValuePair<KeyImageReference, PresentationStateReference>(ko.KeyImageReference, ko.PresentationStateReference));
 					continue;
@@ -195,6 +204,14 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 				var studyInstanceUid = provider.ImageSop.StudyInstanceUid;
 				if (!studyIndex.TryGetValue(studyInstanceUid, out studyInfo))
 					studyIndex.Add(studyInstanceUid, studyInfo = new StudyInfo(provider));
+
+				// if the item doesn't have changes and the presentation state is DICOM, simply reserialize the original sop references
+				if (!item.HasChanges() && image is IDicomPresentationImage)
+				{
+					var dicomPresentationState = ((IDicomPresentationImage) image).PresentationState as DicomSoftcopyPresentationState;
+					framePresentationStates.Add(new KeyValuePair<KeyImageReference, PresentationStateReference>(provider.Frame, dicomPresentationState));
+					continue;
+				}
 
 				var presentationState = DicomSoftcopyPresentationState.IsSupported(image)
 				                        	? DicomSoftcopyPresentationState.Create

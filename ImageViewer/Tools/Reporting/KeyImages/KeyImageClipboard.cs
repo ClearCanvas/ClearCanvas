@@ -242,7 +242,9 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 			if (sopProvider == null)
 				throw new ArgumentException("The image must be an IImageSopProvider.", "image");
 
-			info.ClipboardItems.Add(ClipboardComponent.CreatePresentationImageItem(image));
+			var item = ClipboardComponent.CreatePresentationImageItem(image);
+			item.SetHasChanges(true);
+			info.ClipboardItems.Add(item);
 		}
 
 		public static void Show(IDesktopWindow desktopWindow)

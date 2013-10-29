@@ -69,6 +69,7 @@
     <Compile Include="KeyImages\IKeyObjectSelectionDocumentInformation.cs" />
     <Compile Include="KeyImages\KeyImageClipboard2.cs" />
     <Compile Include="KeyImages\KeyImageClipboardComponent.cs" />
+    <Compile Include="KeyImages\KeyImageItem.cs" />
     <Compile Include="KeyImages\KeyImagePublisher.cs" />
     <Compile Include="KeyImages\KeyImageTool.cs" />
     <Compile Include="KeyImages\KeyImageClipboard.cs" />

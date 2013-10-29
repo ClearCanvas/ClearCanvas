@@ -77,6 +77,15 @@ namespace ClearCanvas.ImageViewer.Common
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets the data with the specified type key.
+		/// </summary>
+		/// <remarks>
+		/// Typically, the type key will be either the type of the data or the type of the calling class responsible for the data.
+		/// In general, the type key should never be a common type (such as <see cref="String"/>, <see cref="Int32"/> or <see cref="Boolean"/>)
+		/// since it would not be a particularly unique key unless extra care is taken to limit the context of the extension data).
+		/// </remarks>
+		/// <param name="key">The type key of the data.</param>
 		public object this[Type key]
 		{
 			get
@@ -85,6 +94,39 @@ namespace ClearCanvas.ImageViewer.Common
 				return _data.TryGetValue(key, out value) ? value : null;
 			}
 			set { _data[key] = value; }
+		}
+
+		/// <summary>
+		/// Gets the data where the type of the data also acts as its own type key.
+		/// </summary>
+		/// <typeparam name="T">The type key of the data.</typeparam>
+		/// <returns>The data.</returns>
+		public T Get<T>()
+			where T : class
+		{
+			return (T) this[typeof (T)];
+		}
+
+		/// <summary>
+		/// Gets the data where the type of the data also acts as its own type key. If necessary, the data will be instantiated and set.
+		/// </summary>
+		/// <typeparam name="T">The type key of the data.</typeparam>
+		/// <returns>The data.</returns>
+		public T GetOrCreate<T>()
+			where T : class, new()
+		{
+			return (T) this[typeof (T)] ?? ((T) (this[typeof (T)] = new T()));
+		}
+
+		/// <summary>
+		/// Gets the data where the type of the data also acts as its own type key.
+		/// </summary>
+		/// <typeparam name="T">The type key of the data.</typeparam>
+		/// <param name="value">The data.</param>
+		public void Set<T>(T value)
+			where T : class
+		{
+			this[typeof (T)] = value;
 		}
 	}
 }
