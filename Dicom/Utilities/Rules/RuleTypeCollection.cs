@@ -94,6 +94,7 @@ namespace ClearCanvas.Dicom.Utilities.Rules
         /// <param name="stopOnFirst"></param>
         public void Execute(TContext context, bool stopOnFirst)
         {
+			        
             bool doDefault = true;
             try
             {
@@ -102,7 +103,8 @@ namespace ClearCanvas.Dicom.Utilities.Rules
                     bool ruleApplied;
                     bool ruleSuccess;
 
-                    theRule.Execute(context, false, out ruleApplied, out ruleSuccess);
+					context.Name = theRule.Name;
+					theRule.Execute(context, false, out ruleApplied, out ruleSuccess);
 
                     if (ruleApplied)
                     {
@@ -116,7 +118,8 @@ namespace ClearCanvas.Dicom.Utilities.Rules
                     bool ruleApplied;
                     bool ruleSuccess;
 
-                    theRule.Execute(context, false, out ruleApplied, out ruleSuccess);
+					context.Name = theRule.Name;
+					theRule.Execute(context, false, out ruleApplied, out ruleSuccess);
 
                     if (ruleApplied && ruleSuccess)
                     {
@@ -132,7 +135,8 @@ namespace ClearCanvas.Dicom.Utilities.Rules
                     bool ruleApplied;
                     bool ruleSuccess;
 
-                    DefaultRule.Execute(context, true, out ruleApplied, out ruleSuccess);
+					context.Name = DefaultRule.Name;
+					DefaultRule.Execute(context, true, out ruleApplied, out ruleSuccess);
 
                     if (!ruleSuccess)
                     {
