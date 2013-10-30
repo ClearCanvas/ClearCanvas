@@ -41,14 +41,12 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 	[Tooltip("create", "TooltipCreateKeyImage")]
 	[IconSet("create", "Icons.CreateKeyImageToolSmall.png", "Icons.CreateKeyImageToolMedium.png", "Icons.CreateKeyImageToolLarge.png")]
 	[EnabledStateObserver("create", "Enabled", "EnabledChanged")]
-	// TODO (CR Phoenix5 - Med): Clinical as well
 	[ViewerActionPermission("create", AuthorityTokens.Study.KeyImages)]
 	//
 	[ButtonAction("show", "global-toolbars/ToolbarStandard/ToolbarShowKeyImages", "Show")]
 	[Tooltip("show", "TooltipShowKeyImages")]
 	[IconSet("show", "Icons.ShowKeyImagesToolSmall.png", "Icons.ShowKeyImagesToolMedium.png", "Icons.ShowKeyImagesToolLarge.png")]
 	[EnabledStateObserver("show", "ShowEnabled", "ShowEnabledChanged")]
-	// TODO (CR Phoenix5 - Med): Clinical as well
 	[ViewerActionPermission("show", AuthorityTokens.Study.KeyImages)]
 	//
 	[ExtensionOf(typeof (ImageViewerToolExtensionPoint))]
@@ -178,47 +176,53 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 			if (!Enabled)
 				return;
 
-			if (KeyImageClipboardComponent.HasViewPlugin)
+			var image = SelectedPresentationImage;
+			var koDocument = image.FindParentKeyObjectDocument();
+			if (koDocument != null)
 			{
-				try
+				if (Context.DesktopWindow.ShowMessageBox("You cannot take key image snapshots of key images. Would you like to revise the key image series instead?", MessageBoxActions.YesNo) == DialogBoxAction.Yes)
 				{
-					IPresentationImage image = Context.Viewer.SelectedPresentationImage;
-					if (image != null)
+					var clipboard = KeyImageClipboard.GetKeyImageClipboard(ImageViewer);
+					var context = clipboard.AvailableContexts.FirstOrDefault(c => c.DocumentInstanceUid == koDocument.SopCommon.SopInstanceUid);
+					if (context != null)
 					{
-						KeyImageClipboard.Add(image);
-						_flashOverlayController.Flash(image);
-					}
+						clipboard.CurrentContext = context;
 
-					if (_firstKeyImageCreation && ShowEnabled)
-					{
-						KeyImageClipboard.Show(Context.DesktopWindow, ShelfDisplayHint.DockAutoHide | ShelfDisplayHint.DockLeft);
-						_firstKeyImageCreation = false;
+						var displaySet = new DisplaySet();
+						displaySet.PresentationImages.AddRange(context.ClipboardItems.Select(i => i.BeginEditKeyImage(context)));
+						ImageViewer.SelectedImageBox.SetDisplaySet(displaySet);
 					}
 				}
-				catch (Exception ex)
+				return;
+			}
+
+			KeyImageInformation curcontext;
+			if (image.EndEditKeyImage(out curcontext))
+			{
+				var clipboard = KeyImageClipboard.GetKeyImageClipboard(ImageViewer);
+				clipboard.CurrentContext = curcontext;
+				_flashOverlayController.Flash(image);
+				return;
+			}
+
+			try
+			{
+				if (image != null)
 				{
-					Platform.Log(LogLevel.Error, ex, "Failed to add item to the key image clipboard.");
-					ExceptionHandler.Report(ex, SR.MessageCreateKeyImageFailed, Context.DesktopWindow);
+					KeyImageClipboard.Add(image);
+					_flashOverlayController.Flash(image);
+				}
+
+				if (KeyImageClipboardComponent.HasViewPlugin && _firstKeyImageCreation && ShowEnabled)
+				{
+					KeyImageClipboard.Show(Context.DesktopWindow, ShelfDisplayHint.DockAutoHide | ShelfDisplayHint.DockLeft);
+					_firstKeyImageCreation = false;
 				}
 			}
-			else
+			catch (Exception ex)
 			{
-				try
-				{
-					IPresentationImage image = Context.Viewer.SelectedPresentationImage;
-					if (image != null)
-					{
-						// Still save to clipboard, makes publishing easier later
-						KeyImageClipboard.Add(image);
-
-						_flashOverlayController.Flash(image);
-					}
-				}
-				catch (Exception ex)
-				{
-					Platform.Log(LogLevel.Error, ex, "Failed to create virtual display set for key image.");
-					ExceptionHandler.Report(ex, SR.MessageCreateKeyImageFailed, Context.DesktopWindow);
-				}
+				Platform.Log(LogLevel.Error, ex, "Failed to add item to the key image clipboard.");
+				ExceptionHandler.Report(ex, SR.MessageCreateKeyImageFailed, Context.DesktopWindow);
 			}
 		}
 

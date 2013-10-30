@@ -22,12 +22,90 @@
 
 #endregion
 
+using System;
+using System.Linq;
+using ClearCanvas.Dicom;
+using ClearCanvas.Dicom.Iod.Iods;
 using ClearCanvas.ImageViewer.Clipboard;
 
 namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 {
 	internal static class KeyImageItem
 	{
+		public static IPresentationImage BeginEditKeyImage(this IClipboardItem item, KeyImageInformation parentContext)
+		{
+			var image = item.Item as IDicomPresentationImage;
+			if (image != null)
+			{
+				var editableImage = image.Clone();
+				var metadata = editableImage.ExtensionData.GetOrCreate<KeyPresentationImageMetaData>();
+				metadata.Guid = item.GetGuid();
+				metadata.ParentContext = parentContext;
+				return editableImage;
+			}
+			return null;
+		}
+
+		public static bool EndEditKeyImage(this IPresentationImage image, out KeyImageInformation context)
+		{
+			context = null;
+			var metadata = image.ExtensionData.Get<KeyPresentationImageMetaData>();
+			if (metadata != null)
+			{
+				context = metadata.ParentContext;
+				var clipboardItems = metadata.ParentContext.ClipboardItems;
+				var item = clipboardItems.Select((k, i) => new {Guid = k.GetGuid(), Index = i}).FirstOrDefault(x => x.Guid == metadata.Guid);
+				if (item != null)
+				{
+					var keyImageItem = ClipboardComponent.CreatePresentationImageItem(image, false);
+					keyImageItem.SetHasChanges(true);
+					keyImageItem.SetGuid(item.Guid);
+					clipboardItems[item.Index] = keyImageItem;
+				}
+				return true;
+			}
+			return false;
+		}
+
+		public static bool IsEdittingKeyImage(this IPresentationImage image)
+		{
+			return image.ExtensionData.Get<KeyPresentationImageMetaData>() != null;
+		}
+
+		public static bool IsKeyImage(this IPresentationImage image)
+		{
+			return FindParentKeyObjectDocument(image) != null;
+		}
+
+		public static KeyObjectSelectionDocumentIod FindParentKeyObjectDocument(this IPresentationImage image)
+		{
+			if (image != null && image.ParentDisplaySet != null)
+			{
+				var viewer = image.ImageViewer;
+				if (viewer != null)
+				{
+					var descriptor = image.ParentDisplaySet.Descriptor as IDicomDisplaySetDescriptor;
+					if (descriptor != null && descriptor.SourceSeries != null)
+					{
+						var uid = descriptor.SourceSeries.SeriesInstanceUid;
+						if (!string.IsNullOrEmpty(uid))
+						{
+							var keyObjectSeries = viewer.StudyTree.GetSeries(uid);
+							if (keyObjectSeries != null)
+							{
+								var keyObjectSop = keyObjectSeries.Sops.FirstOrDefault();
+								if (keyObjectSop != null && keyObjectSop.SopClassUid == SopClass.KeyObjectSelectionDocumentStorageUid)
+								{
+									return new KeyObjectSelectionDocumentIod(keyObjectSop);
+								}
+							}
+						}
+					}
+				}
+			}
+			return null;
+		}
+
 		public static bool HasChanges(this IClipboardItem item)
 		{
 			return item.ExtensionData.GetOrCreate<KeyImageItemMetaData>().HasChanges;
@@ -38,34 +116,33 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 			item.ExtensionData.GetOrCreate<KeyImageItemMetaData>().HasChanges = value;
 		}
 
-		public static string GetSopInstanceUid(this IClipboardItem item)
+		public static Guid GetGuid(this IClipboardItem item)
 		{
-			return item.ExtensionData.GetOrCreate<KeyImageItemMetaData>().SopInstanceUid;
+			return item.ExtensionData.GetOrCreate<KeyImageItemMetaData>().Guid;
 		}
 
-		public static string GetPresentationStateInstanceUid(this IClipboardItem item)
-		{
-			return item.ExtensionData.GetOrCreate<KeyImageItemMetaData>().PresentationStateInstanceUid;
-		}
-
-		public static void SetMetaData(this IClipboardItem item, string sopInstanceUid, string presentationStateInstanceUid)
+		public static void SetGuid(this IClipboardItem item, Guid guid)
 		{
 			var metadata = item.ExtensionData.GetOrCreate<KeyImageItemMetaData>();
-			metadata.SopInstanceUid = sopInstanceUid;
-			metadata.PresentationStateInstanceUid = presentationStateInstanceUid;
+			metadata.Guid = guid;
 		}
 
 		private class KeyImageItemMetaData
 		{
 			public bool HasChanges { get; set; }
-			public string SopInstanceUid { get; set; }
-			public string PresentationStateInstanceUid { get; set; }
+			public Guid Guid { get; set; }
 
 			public KeyImageItemMetaData()
 			{
 				// assume that newly created items have changes by default
 				HasChanges = true;
 			}
+		}
+
+		private class KeyPresentationImageMetaData
+		{
+			public Guid Guid { get; set; }
+			public KeyImageInformation ParentContext { get; set; }
 		}
 	}
 }

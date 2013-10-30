@@ -30,7 +30,6 @@ using ClearCanvas.Common.Utilities;
 using ClearCanvas.Dicom.Iod;
 using ClearCanvas.Dicom.Iod.Modules;
 using ClearCanvas.Dicom.Iod.Sequences;
-using ClearCanvas.ImageViewer.Common;
 using ClearCanvas.ImageViewer.Graphics;
 using ClearCanvas.ImageViewer.Imaging;
 using ClearCanvas.ImageViewer.StudyManagement;
@@ -228,7 +227,7 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 
 		#region DICOM Graphic Annotations
 
-		public static IEnumerable<DicomGraphicAnnotation> CreateGraphicAnnotations(Frame frame, GraphicAnnotationModuleIod annotationsFromPresentationState, RectangleF displayedArea)
+		public static IEnumerable<DicomGraphicAnnotation> CreateGraphicAnnotations(Frame frame, GraphicAnnotationModuleIod annotationsFromPresentationState, RectangleF displayedArea, bool interactive = false)
 		{
 			List<DicomGraphicAnnotation> list = new List<DicomGraphicAnnotation>();
 
@@ -240,7 +239,7 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 					ImageSopInstanceReferenceDictionary dictionary = new ImageSopInstanceReferenceDictionary(sequenceItem.ReferencedImageSequence, true);
 					if (dictionary.ReferencesFrame(frame.ParentImageSop.SopInstanceUid, frame.FrameNumber))
 					{
-						list.Add(new DicomGraphicAnnotation(sequenceItem, displayedArea));
+						list.Add(new DicomGraphicAnnotation(sequenceItem, displayedArea, interactive));
 					}
 				}
 			}

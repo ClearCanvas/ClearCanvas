@@ -271,14 +271,10 @@ namespace ClearCanvas.ImageViewer.KeyObjects
 					iod.GeneralEquipment.InstitutionalDepartmentName = string.IsNullOrEmpty(this.Institution.DepartmentName) ? null : this.Institution.DepartmentName;
 					iod.GeneralEquipment.StationName = string.IsNullOrEmpty(this.StationName) ? null : this.StationName;
 
-					string seriesDescription = _seriesDescription;
-					if (!string.IsNullOrEmpty(_author))
-						seriesDescription = string.Format("{0} ({1})", seriesDescription, _author);
-
 					iod.KeyObjectDocumentSeries.InitializeAttributes();
 					iod.KeyObjectDocumentSeries.Modality = Modality.KO;
 					iod.KeyObjectDocumentSeries.SeriesDateTime = seriesInfo.SeriesDateTime;
-					iod.KeyObjectDocumentSeries.SeriesDescription = seriesDescription;
+					iod.KeyObjectDocumentSeries.SeriesDescription = _seriesDescription;
 					iod.KeyObjectDocumentSeries.SeriesInstanceUid = CreateUid(seriesInfo.SeriesInstanceUid);
 					iod.KeyObjectDocumentSeries.SeriesNumber = seriesInfo.SeriesNumber ?? 1;
 					iod.KeyObjectDocumentSeries.ReferencedPerformedProcedureStepSequence = null;

@@ -50,8 +50,8 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 		/// </summary>
 		/// <param name="graphicAnnotationSequenceItem">The DICOM graphic annotation sequence item to render.</param>
 		/// <param name="displayedArea">The image's displayed area with which to </param>
-		/// <param name="editable">Indicates whether or not the graphic should be interactive and editable by the user.</param>
-		public DicomGraphicAnnotation(GraphicAnnotationSequenceItem graphicAnnotationSequenceItem, RectangleF displayedArea, bool editable = false)
+		/// <param name="interactive">Indicates whether or not the graphic should be interactive and editable by the user.</param>
+		public DicomGraphicAnnotation(GraphicAnnotationSequenceItem graphicAnnotationSequenceItem, RectangleF displayedArea, bool interactive = false)
 		{
 			this.CoordinateSystem = CoordinateSystem.Source;
 			_layerId = graphicAnnotationSequenceItem.GraphicLayer ?? string.Empty;
@@ -66,10 +66,10 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 						try
 						{
 							IList<PointF> points = GetGraphicDataAsSourceCoordinates(displayedArea, graphicItem);
-							var graphic = CreateGraphic(graphicItem.GraphicType, points, editable);
+							var graphic = CreateGraphic(graphicItem.GraphicType, points, interactive);
 							if (graphic != null)
 							{
-								if (editable) graphic = new StandardStatefulGraphic(graphic);
+								if (interactive) graphic = new StandardStatefulGraphic(graphic);
 								Graphics.Add(graphic);
 							}
 							dataPoints.AddRange(points);

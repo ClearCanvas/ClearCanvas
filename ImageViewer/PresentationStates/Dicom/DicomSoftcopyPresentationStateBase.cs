@@ -418,14 +418,14 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 
 		private static void SetAllSpecificCharacterSets(GraphicAnnotationSequenceItem annotation, string specificCharacterSet)
 		{
-            if (annotation.TextObjectSequence == null)
-                return;
+			if (annotation.TextObjectSequence == null)
+				return;
 
 			foreach (var textItem in annotation.TextObjectSequence)
 			{
-			    var attributeCollection = textItem.DicomAttributeProvider as DicomAttributeCollection;
-                if (attributeCollection != null)
-			        attributeCollection.SpecificCharacterSet = specificCharacterSet;
+				var attributeCollection = textItem.DicomAttributeProvider as DicomAttributeCollection;
+				if (attributeCollection != null)
+					attributeCollection.SpecificCharacterSet = specificCharacterSet;
 			}
 		}
 
@@ -814,7 +814,7 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 		protected void DeserializeGraphicAnnotation(GraphicAnnotationModuleIod module, RectangleF displayedArea, T image)
 		{
 			DicomGraphicsPlane graphic = DicomGraphicsPlane.GetDicomGraphicsPlane(image, true);
-			foreach (DicomGraphicAnnotation annotation in DicomGraphicsFactory.CreateGraphicAnnotations(image.Frame, module, displayedArea))
+			foreach (DicomGraphicAnnotation annotation in DicomGraphicsFactory.CreateGraphicAnnotations(image.Frame, module, displayedArea, DeserializeInteractiveAnnotations))
 			{
 				graphic.Layers[annotation.LayerId].Graphics.Add(annotation);
 			}

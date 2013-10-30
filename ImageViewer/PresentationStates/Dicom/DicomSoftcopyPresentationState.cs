@@ -24,15 +24,14 @@
 
 using System;
 using System.Collections.Generic;
+using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
-using ClearCanvas.Desktop;
 using ClearCanvas.Dicom;
 using ClearCanvas.Dicom.Iod;
 using ClearCanvas.Dicom.Iod.Macros;
 using ClearCanvas.Dicom.Iod.Modules;
 using ClearCanvas.Dicom.Utilities;
 using ClearCanvas.ImageViewer.StudyManagement;
-using ClearCanvas.Common;
 
 namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 {
@@ -234,7 +233,7 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 			get { return _presentationInstanceNumber; }
 			set
 			{
-				CheckSerialized(false); 
+				CheckSerialized(false);
 				_presentationInstanceNumber = value;
 			}
 		}
@@ -286,7 +285,7 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 			get { return _presentationLabel; }
 			set
 			{
-				CheckSerialized(false); 
+				CheckSerialized(false);
 				_presentationLabel = value;
 			}
 		}
@@ -303,7 +302,7 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 			get { return _sourceAETitle; }
 			set
 			{
-				CheckSerialized(false); 
+				CheckSerialized(false);
 				_sourceAETitle = value;
 			}
 		}
@@ -320,7 +319,7 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 			get { return _stationName; }
 			set
 			{
-				CheckSerialized(false); 
+				CheckSerialized(false);
 				_stationName = value;
 			}
 		}
@@ -337,7 +336,7 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 			get { return _institution; }
 			set
 			{
-				CheckSerialized(false); 
+				CheckSerialized(false);
 				_institution = value;
 			}
 		}
@@ -354,7 +353,7 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 			get { return _manufacturer; }
 			protected set
 			{
-				CheckSerialized(false); 
+				CheckSerialized(false);
 				_manufacturer = value;
 			}
 		}
@@ -371,7 +370,7 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 			get { return _manufacturersModelName; }
 			protected set
 			{
-				CheckSerialized(false); 
+				CheckSerialized(false);
 				_manufacturersModelName = value;
 			}
 		}
@@ -405,7 +404,7 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 			get { return _softwareVersions; }
 			protected set
 			{
-				CheckSerialized(false); 
+				CheckSerialized(false);
 				_softwareVersions = value;
 			}
 		}
@@ -431,10 +430,15 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 			get { return _dicomFile.DataSet; }
 		}
 
+		/// <summary>
+		/// Gets or sets a value controlling whether or not annotations in the presentation state are deserialized as interactive objects.
+		/// </summary>
+		public bool DeserializeInteractiveAnnotations { get; set; }
+
 		private void CheckSerialized(bool expectedValue)
 		{
 			if (_serialized != expectedValue)
-				throw new InvalidOperationException(_serialized  ? _messageAlreadySerialized : _messageNotYetSerialized);
+				throw new InvalidOperationException(_serialized ? _messageAlreadySerialized : _messageNotYetSerialized);
 		}
 
 		/// <summary>
@@ -533,7 +537,7 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 
 		#region Protected Helper Methods
 
-		private static int? GetNullableInt32 (DicomAttribute attribute, int index)
+		private static int? GetNullableInt32(DicomAttribute attribute, int index)
 		{
 			int result;
 			if (attribute.TryGetInt32(index, out result))
@@ -733,7 +737,7 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 			{
 				return new DicomGrayscaleSoftcopyPresentationState(presentationState);
 			}
-			else if(presentationState.MediaStorageSopClassUid == DicomColorSoftcopyPresentationState.SopClass.Uid)
+			else if (presentationState.MediaStorageSopClassUid == DicomColorSoftcopyPresentationState.SopClass.Uid)
 			{
 				return new DicomColorSoftcopyPresentationState(presentationState);
 			}
@@ -802,8 +806,8 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 				if (presentationState[DicomTags.SopClassUid].ToString() == DicomGrayscaleSoftcopyPresentationState.SopClass.Uid)
 				{
 					yield return new DicomGrayscaleSoftcopyPresentationState(presentationState);
-				} 
-				else if (presentationState[DicomTags.SopClassUid].ToString() == DicomColorSoftcopyPresentationState.SopClass.Uid) 
+				}
+				else if (presentationState[DicomTags.SopClassUid].ToString() == DicomColorSoftcopyPresentationState.SopClass.Uid)
 				{
 					yield return new DicomColorSoftcopyPresentationState(presentationState);
 				}
