@@ -41,6 +41,7 @@ namespace ClearCanvas.ImageViewer
 		ITool[] GetTools();
 		//TODO (CR Sept 2010): remove this stuff
 		IViewerActionFilter GetContextMenuFilter();
+		IViewerActionFilter GetToolbarFilter();
 
 		IPriorStudyFinder GetPriorStudyFinder();
 	}
@@ -62,6 +63,7 @@ namespace ClearCanvas.ImageViewer
 		public ILayoutManager LayoutManager { get; set; }
 		public ITool[] Tools { get; set; }
 		public IViewerActionFilter ContextMenuFilter { get; set; }
+		public IViewerActionFilter ToolbarFilter { get; set; }
 		public IPriorStudyFinder PriorStudyFinder { get; set; }
 
 		protected virtual ITool[] GetTools()
@@ -84,6 +86,11 @@ namespace ClearCanvas.ImageViewer
 		protected virtual IViewerActionFilter GetContextMenuFilter()
 		{
 			return ContextMenuFilter ?? ViewerActionFilter.CreateContextMenuFilter();
+		}
+
+		protected virtual IViewerActionFilter GetToolbarFilter()
+		{
+			return ToolbarFilter ?? ViewerActionFilter.CreateToolbarFilter();
 		}
 
 		protected virtual ILayoutManager GetLayoutManager()
@@ -111,6 +118,11 @@ namespace ClearCanvas.ImageViewer
 		IViewerActionFilter IViewerSetupHelper.GetContextMenuFilter()
 		{
 			return GetContextMenuFilter();
+		}
+
+		IViewerActionFilter IViewerSetupHelper.GetToolbarFilter()
+		{
+			return GetToolbarFilter();
 		}
 
 		ILayoutManager IViewerSetupHelper.GetLayoutManager()
