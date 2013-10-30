@@ -49,6 +49,11 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
 		private ActionModelRoot _actionModel;
 		private bool _enabled;
 
+		protected virtual int MaximumImageBoxRows { get { return LayoutSettings.MaximumImageBoxRows; } }
+		protected virtual int MaximumImageBoxColumns { get { return LayoutSettings.MaximumImageBoxColumns; } }
+		protected virtual int MaximumTileRows { get { return LayoutSettings.MaximumTileRows; } }
+		protected virtual int MaximumTileColumns { get { return LayoutSettings.MaximumTileColumns; } }
+
 		public bool Enabled
 		{
 			get { return _enabled; }
@@ -78,15 +83,15 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
 
 					ActionPath pathBoxes = new ActionPath("root/ToolbarLayoutBoxesChooser", resolver);
 					LayoutChangerAction actionBoxes = new LayoutChangerAction("chooseBoxLayout",
-					                                                          LayoutSettings.MaximumImageBoxRows,
-					                                                          LayoutSettings.MaximumImageBoxColumns,
+					                                                          this.MaximumImageBoxRows,
+					                                                          this.MaximumImageBoxColumns,
 					                                                          this.SetImageBoxLayout, pathBoxes, resolver);
 					root.InsertAction(actionBoxes);
 
 					ActionPath pathTiles = new ActionPath("root/ToolbarLayoutTilesChooser", resolver);
 					LayoutChangerAction actionTiles = new LayoutChangerAction("chooseTileLayout",
-					                                                          LayoutSettings.MaximumTileRows,
-					                                                          LayoutSettings.MaximumTileColumns,
+					                                                          this.MaximumTileRows,
+					                                                          this.MaximumTileColumns,
 					                                                          this.SetTileLayout, pathTiles, resolver);
 					root.InsertAction(actionTiles);
 
