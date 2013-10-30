@@ -26,103 +26,116 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
+using ClearCanvas.Desktop;
+using ClearCanvas.Desktop.Actions;
+using ClearCanvas.Desktop.Tools;
 using ClearCanvas.Dicom.Iod.Sequences;
 using ClearCanvas.ImageViewer.Graphics;
+using ClearCanvas.ImageViewer.InputManagement;
 using ClearCanvas.ImageViewer.InteractiveGraphics;
 using ClearCanvas.ImageViewer.Mathematics;
 
 namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 {
 	/// <summary>
-	/// A <see cref="IGraphic"/> whose contents represent those of a DICOM Graphic Annotation Sequence (PS 3.3 C.10.5).
+	/// An <see cref="ClearCanvas.ImageViewer.Graphics.IGraphic"/> whose contents represent those of a DICOM Graphic Annotation Sequence (PS 3.3 C.10.5).
 	/// </summary>
 	[Cloneable]
 	[DicomSerializableGraphicAnnotation(typeof (DicomGraphicAnnotationSerializer))]
-	public class DicomGraphicAnnotation : CompositeGraphic
+	public partial class DicomGraphicAnnotation : StandardStatefulGraphic, IContextMenuProvider
 	{
-		private string _layerId;
-		private Color _color = Color.LemonChiffon;
+		[CloneIgnore]
+		private ToolSet _toolSet;
+
+		[CloneIgnore]
+		private bool _interactive = false;
 
 		/// <summary>
 		/// Constructs a new <see cref="IGraphic"/> whose contents are constructed based on a <see cref="GraphicAnnotationSequenceItem">DICOM Graphic Annotation Sequence Item</see>.
 		/// </summary>
 		/// <param name="graphicAnnotationSequenceItem">The DICOM graphic annotation sequence item to render.</param>
 		/// <param name="displayedArea">The image's displayed area with which to </param>
-		/// <param name="interactive">Indicates whether or not the graphic should be interactive and editable by the user.</param>
-		public DicomGraphicAnnotation(GraphicAnnotationSequenceItem graphicAnnotationSequenceItem, RectangleF displayedArea, bool interactive = false)
+		public static DicomGraphicAnnotation Create(GraphicAnnotationSequenceItem graphicAnnotationSequenceItem, RectangleF displayedArea)
 		{
-			this.CoordinateSystem = CoordinateSystem.Source;
-			_layerId = graphicAnnotationSequenceItem.GraphicLayer ?? string.Empty;
-
-			try
+			var subjectGraphic = new SubjectGraphic();
+			var dataPoints = new List<PointF>();
+			if (graphicAnnotationSequenceItem.GraphicObjectSequence != null)
 			{
-				List<PointF> dataPoints = new List<PointF>();
-				if (graphicAnnotationSequenceItem.GraphicObjectSequence != null)
+				foreach (var graphicItem in graphicAnnotationSequenceItem.GraphicObjectSequence)
 				{
-					foreach (GraphicAnnotationSequenceItem.GraphicObjectSequenceItem graphicItem in graphicAnnotationSequenceItem.GraphicObjectSequence)
+					try
 					{
-						try
-						{
-							IList<PointF> points = GetGraphicDataAsSourceCoordinates(displayedArea, graphicItem);
-							var graphic = CreateGraphic(graphicItem.GraphicType, points, interactive);
-							if (graphic != null)
-							{
-								if (interactive) graphic = new StandardStatefulGraphic(graphic);
-								Graphics.Add(graphic);
-							}
-							dataPoints.AddRange(points);
-						}
-						catch (Exception ex)
-						{
-							Platform.Log(LogLevel.Warn, ex, "DICOM Softcopy Presentation State Deserialization Fault (Graphic Object Type {0}). Reprocess with log level DEBUG to see DICOM data dump.", graphicItem.GraphicType);
-							Platform.Log(LogLevel.Debug, graphicItem.DicomSequenceItem.Dump());
-						}
+						var points = GetGraphicDataAsSourceCoordinates(displayedArea, graphicItem);
+						var graphic = CreateGraphic(graphicItem.GraphicType, points, true);
+						if (graphic != null) subjectGraphic.Graphics.Add(graphic);
+						dataPoints.AddRange(points);
 					}
-				}
-
-				RectangleF annotationBounds = RectangleF.Empty;
-				if (dataPoints.Count > 0)
-					annotationBounds = RectangleUtilities.ComputeBoundingRectangle(dataPoints.ToArray());
-				if (graphicAnnotationSequenceItem.TextObjectSequence != null)
-				{
-					foreach (GraphicAnnotationSequenceItem.TextObjectSequenceItem textItem in graphicAnnotationSequenceItem.TextObjectSequence)
+					catch (Exception ex)
 					{
-						try
-						{
-							base.Graphics.Add(CreateCalloutText(annotationBounds, displayedArea, textItem));
-						}
-						catch (Exception ex)
-						{
-							Platform.Log(LogLevel.Warn, ex, "DICOM Softcopy Presentation State Deserialization Fault (Text Object). Reprocess with log level DEBUG to see DICOM data dump.");
-							Platform.Log(LogLevel.Debug, textItem.DicomSequenceItem.Dump());
-						}
+						Platform.Log(LogLevel.Warn, ex, "DICOM Softcopy Presentation State Deserialization Fault (Graphic Object Type {0}). Reprocess with log level DEBUG to see DICOM data dump.", graphicItem.GraphicType);
+						Platform.Log(LogLevel.Debug, graphicItem.DicomSequenceItem.Dump());
 					}
 				}
 			}
-			finally
+			subjectGraphic.SetEnabled(false);
+			subjectGraphic.SetColor(Color.LemonChiffon);
+
+			var annotations = new List<IGraphic>();
+			var annotationBounds = RectangleF.Empty;
+			if (dataPoints.Count > 0) annotationBounds = RectangleUtilities.ComputeBoundingRectangle(dataPoints.ToArray());
+			if (graphicAnnotationSequenceItem.TextObjectSequence != null)
 			{
-				this.ResetCoordinateSystem();
+				foreach (var textItem in graphicAnnotationSequenceItem.TextObjectSequence)
+				{
+					try
+					{
+						annotations.Add(CreateCalloutText(annotationBounds, displayedArea, textItem));
+					}
+					catch (Exception ex)
+					{
+						Platform.Log(LogLevel.Warn, ex, "DICOM Softcopy Presentation State Deserialization Fault (Text Object). Reprocess with log level DEBUG to see DICOM data dump.");
+						Platform.Log(LogLevel.Debug, textItem.DicomSequenceItem.Dump());
+					}
+				}
 			}
 
-			OnColorChanged();
+			return new DicomGraphicAnnotation(subjectGraphic);
+		}
+
+		private DicomGraphicAnnotation(IGraphic subjectGraphic)
+			: base(subjectGraphic)
+		{
+			InactiveColor = Color.LemonChiffon;
 		}
 
 		/// <summary>
 		/// Cloning constructor.
 		/// </summary>
 		protected DicomGraphicAnnotation(DicomGraphicAnnotation source, ICloningContext context)
+			: base(source, context)
 		{
 			context.CloneFields(source, this);
 		}
 
-		/// <summary>
-		/// Gets the layer ID to which this graphic annotation belongs.
-		/// </summary>
-		public string LayerId
+		public bool Interactive
 		{
-			get { return _layerId; }
+			get { return _interactive; }
+			set
+			{
+				if (_interactive != value)
+				{
+					_interactive = value;
+					OnInteractiveChanged();
+				}
+			}
+		}
+
+		protected virtual string ContextMenuNamespace
+		{
+			get { return typeof (DicomGraphicAnnotation).FullName; }
 		}
 
 		/// <summary>
@@ -159,54 +172,67 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 		}
 
 		/// <summary>
-		/// Gets or sets the color of this graphic annotation.
+		/// Called when the <see cref="Interactive"/> property changes.
 		/// </summary>
-		public Color Color
+		protected virtual void OnInteractiveChanged()
 		{
-			get { return _color; }
-			set
+			foreach (var graphic in Graphics)
 			{
-				if (_color != value)
-				{
-					_color = value;
-					OnColorChanged();
-				}
+				if (graphic is SubjectGraphic)
+					((SubjectGraphic) graphic).SetEnabled(Interactive);
 			}
 		}
 
-		/// <summary>
-		/// Called when the <see cref="DicomGraphicAnnotation.Color"/> property changes.
-		/// </summary>
-		protected void OnColorChanged()
+		protected override bool Start(IMouseInformation mouseInformation)
 		{
-			foreach (IGraphic graphic in base.Graphics)
+			if (mouseInformation.ActiveButton == XMouseButtons.Right)
 			{
-				if (graphic is IVectorGraphic)
-					((IVectorGraphic) graphic).Color = _color;
-				else if (graphic is StandardStatefulGraphic)
-					((StandardStatefulGraphic) graphic).InactiveColor = ((StandardStatefulGraphic) graphic).Color = _color;
+				CoordinateSystem = CoordinateSystem.Destination;
+				try
+				{
+					if (HitTest(mouseInformation.Location)) return true;
+				}
+				finally
+				{
+					ResetCoordinateSystem();
+				}
 			}
+			return base.Start(mouseInformation);
+		}
+
+		public virtual ActionModelNode GetContextMenuModel(IMouseInformation mouseInformation)
+		{
+			const string actionSite = "basicgraphic-menu";
+			var actions = GetExportedActions(actionSite, mouseInformation);
+			if (actions == null || actions.Count == 0)
+				return null;
+			return ActionModelRoot.CreateModel(ContextMenuNamespace, actionSite, actions);
+		}
+
+		public override IActionSet GetExportedActions(string site, IMouseInformation mouseInformation)
+		{
+			if (!HitTest(mouseInformation.Location))
+				return new ActionSet();
+
+			if (_toolSet == null)
+				_toolSet = new ToolSet(new GraphicToolExtensionPoint(), new GraphicToolContext(this));
+
+			return base.GetExportedActions(site, mouseInformation).Union(_toolSet.Actions);
 		}
 
 		#region Static Graphic Creation Helpers
 
 		private static IList<PointF> GetGraphicDataAsSourceCoordinates(RectangleF displayedArea, GraphicAnnotationSequenceItem.GraphicObjectSequenceItem graphicItem)
 		{
-			List<PointF> list;
 			if (graphicItem.GraphicAnnotationUnits == GraphicAnnotationSequenceItem.GraphicAnnotationUnits.Display)
 			{
-				list = new List<PointF>(graphicItem.NumberOfGraphicPoints);
-				foreach (PointF point in graphicItem.GraphicData)
-					list.Add(GetPointInSourceCoordinates(displayedArea, point));
+				return graphicItem.GraphicData.Select(point => GetPointInSourceCoordinates(displayedArea, point)).ToList().AsReadOnly();
 			}
 			else
 			{
-				// offset to account for our 0,0 origin versyus DICOM 1,1 origin
-				list = new List<PointF>(graphicItem.NumberOfGraphicPoints);
-				foreach (PointF point in graphicItem.GraphicData)
-					list.Add(new PointF(point.X - 1, point.Y - 1));
+				// offset to account for our 0,0 origin versus DICOM 1,1 origin
+				return graphicItem.GraphicData.Select(point => new PointF(point.X - 1, point.Y - 1)).ToList().AsReadOnly();
 			}
-			return list.AsReadOnly();
 		}
 
 		private static PointF GetPointInSourceCoordinates(RectangleF displayedArea, PointF point)
@@ -241,9 +267,11 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 
 		private static IGraphic CreateInterpolated(IList<PointF> dataPoints, bool editable = false)
 		{
+			var closed = FloatComparer.AreEqual(dataPoints[0], dataPoints[dataPoints.Count - 1]);
 			var curve = new CurvePrimitive();
 			curve.Points.AddRange(dataPoints);
-			return editable ? (IGraphic) new VerticesControlGraphic(new MoveControlGraphic(curve)) : curve;
+			if (!editable) return curve;
+			return closed ? new PolygonControlGraphic(true, new MoveControlGraphic(curve)) : new VerticesControlGraphic(true, new MoveControlGraphic(curve));
 		}
 
 		private static IGraphic CreatePolyline(IList<PointF> vertices, bool editable = false)
@@ -352,6 +380,8 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 
 		#endregion
 
+		#region DicomGraphicAnnotationSerializer Class
+
 		private class DicomGraphicAnnotationSerializer : GraphicAnnotationSerializer<DicomGraphicAnnotation>
 		{
 			protected override void Serialize(DicomGraphicAnnotation graphic, GraphicAnnotationSequenceItem serializationState)
@@ -360,5 +390,7 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 					SerializeGraphic(subgraphic, serializationState);
 			}
 		}
+
+		#endregion
 	}
 }
