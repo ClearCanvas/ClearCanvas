@@ -22,29 +22,26 @@
 
 #endregion
 
+using System;
 using ClearCanvas.Common;
-using ClearCanvas.Desktop;
+using ClearCanvas.Common.Utilities;
 using ClearCanvas.Desktop.Actions;
 using ClearCanvas.Desktop.Tools;
 using ClearCanvas.ImageViewer.Clipboard;
-using System;
-using ClearCanvas.Common.Utilities;
 
 namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 {
-	[ButtonAction("edit", KeyImageClipboard.ToolbarSite + "/ToolbarEditKeyImageInformation", "Edit")]
+	[ButtonAction("edit", KeyImageClipboardComponent.ToolbarSite + "/ToolbarEditKeyImageInformation", "Edit")]
 	[Tooltip("edit", "TooltipEditKeyImageInformation")]
 	[IconSet("edit", "Icons.EditKeyImageInformationToolSmall.png", "Icons.EditKeyImageInformationToolMedium.png", "Icons.EditKeyImageInformationToolLarge.png")]
 	[EnabledStateObserver("edit", "Enabled", "EnabledChanged")]
-	[ExtensionOf(typeof(ClipboardToolExtensionPoint))]
+	[ExtensionOf(typeof (ClipboardToolExtensionPoint))]
 	internal class EditKeyImageInformationTool : Tool<IClipboardToolContext>
 	{
 		private bool _enabled;
 		private event EventHandler _enabledChanged;
 
-		public EditKeyImageInformationTool()
-		{
-		}
+		public EditKeyImageInformationTool() {}
 
 		public bool Enabled
 		{
@@ -61,8 +58,8 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 
 		public event EventHandler EnabledChanged
 		{
-			add { _enabledChanged += value; }	
-			remove { _enabledChanged -= value; }	
+			add { _enabledChanged += value; }
+			remove { _enabledChanged -= value; }
 		}
 
 		public override void Initialize()

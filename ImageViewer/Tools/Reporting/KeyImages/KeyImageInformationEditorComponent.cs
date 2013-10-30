@@ -132,7 +132,7 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 
 		internal static void Launch(IDesktopWindow desktopWindow)
 		{
-			KeyImageInformation info = KeyImageClipboard.GetKeyImageInformation(desktopWindow);
+			var info = KeyImageClipboard.GetKeyImageClipboard(desktopWindow);
 			if (info == null)
 				throw new ArgumentException("There is no valid key image data available for the given window.", "desktopWindow");
 

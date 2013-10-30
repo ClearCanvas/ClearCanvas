@@ -850,83 +850,6 @@ namespace ClearCanvas.ImageViewer
 		}
 	}
 
-	[Cloneable(false)]
-	public class KeyImageDisplaySetDescriptor : DisplaySetDescriptor
-	{
-		private readonly string _suffix;
-		private string _name;
-
-		[CloneCopyReference]
-		private IStudyIdentifier _study;
-
-		public KeyImageDisplaySetDescriptor(IStudyIdentifier sourceStudy)
-		{
-			Platform.CheckForNullReference(sourceStudy, "sourceStudy");
-
-			_study = sourceStudy;
-
-			_suffix = String.Format(SR.SuffixFormatKeyImageDisplaySet);
-		}
-
-		protected KeyImageDisplaySetDescriptor(KeyImageDisplaySetDescriptor source, ICloningContext context)
-		{
-			context.CloneFields(source, this);
-		}
-
-		/// <summary>
-		/// The source study for the display set.
-		/// </summary>
-		public IStudyIdentifier SourceStudy
-		{
-			get { return _study; }
-		}
-
-		/// <summary>
-		/// Gets the descriptive name of the <see cref="IDisplaySet"/>.
-		/// </summary>
-		public override string Name
-		{
-			get
-			{
-				if (_name == null)
-				{
-					_name = String.IsNullOrEmpty(SourceStudy.StudyDescription)
-					        	? String.Format("{0}", _suffix)
-					        	: String.Format("{0}: {1}", SourceStudy.StudyDescription, _suffix);
-				}
-				return _name;
-			}
-			set { throw new InvalidOperationException("The Name property cannot be set publicly."); }
-		}
-
-		/// <summary>
-		/// Gets a description of the <see cref="IDisplaySet"/>.
-		/// </summary>
-		public override string Description
-		{
-			get { return SourceStudy.StudyDescription; }
-			set { throw new InvalidOperationException("The Description property cannot be set publicly."); }
-		}
-
-		/// <summary>
-		/// Gets the unique identifier for the <see cref="IDisplaySet"/>.
-		/// </summary>
-		public override string Uid
-		{
-			get { return SourceStudy.StudyInstanceUid; }
-			set { throw new InvalidOperationException("The Uid property cannot be set publicly."); }
-		}
-
-		/// <summary>
-		/// Gets a numeric identifier for the <see cref="IDisplaySet"/>, always "1".
-		/// </summary>
-		public override int Number
-		{
-			get { return 1; }
-			set { throw new InvalidOperationException("The Uid property cannot be set publicly."); }
-		}
-	}
-
 	/// <summary>
 	/// A <see cref="DisplaySetFactory"/> that splits series with multiple single or multiframe images into
 	/// separate <see cref="IDisplaySet"/>s.
@@ -1232,6 +1155,11 @@ namespace ClearCanvas.ImageViewer
 			public override IPresentationImage CreateFreshCopy()
 			{
 				return new PlaceholderPresentationImage(_sopReference.Sop);
+			}
+
+			public override Size SceneSize
+			{
+				get { return new Size(100, 100); }
 			}
 
 			[Cloneable(true)]

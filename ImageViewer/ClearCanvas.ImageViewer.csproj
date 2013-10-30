@@ -218,6 +218,7 @@
     <Compile Include="Imaging\NormalizationLutLinear.cs" />
     <Compile Include="Imaging\SimpleColorMap.cs" />
     <Compile Include="Imaging\SimpleDataModalityLut.cs" />
+    <Compile Include="KeyObjects\SopInstanceReference.cs" />
     <Compile Include="Layout\HpDataContractAttribute.cs" />
     <Compile Include="Layout\HpExtensionPoints.cs" />
     <Compile Include="Layout\HpApplicabilityResult.cs" />
@@ -699,7 +700,6 @@
     <Compile Include="Tests\ImageBoxAndDisplaySetInteractionTest.cs" />
     <Compile Include="Tests\TestTree.cs" />
     <Compile Include="Mathematics\FloatComparer.cs" />
-    <Compile Include="Mathematics\RectF.cs" />
     <Compile Include="Mathematics\Tests\FloatComparerTest.cs" />
     <Compile Include="Mathematics\Vector.cs" />
     <Compile Include="Annotations\AnnotationItemConfigurationOptions.cs" />

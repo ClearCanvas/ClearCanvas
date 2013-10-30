@@ -48,6 +48,8 @@ namespace ClearCanvas.ImageViewer.Vtk.Rendering
 		[ThreadStatic]
 		private static CodeClock _renderClock;
 
+		private static readonly bool _reportRenderingPerformance = Settings.Default.ReportRendererPerformance;
+
 		private const double _dynamicFrameRate = 20;
 		private const double _stillFrameRate = 0.0001;
 
@@ -56,6 +58,9 @@ namespace ClearCanvas.ImageViewer.Vtk.Rendering
 		private event EventHandler _invalidated;
 
 		private int _lastRenderTime;
+
+		private float _statRenderDuration;
+		private int _statRenderFrameCount;
 
 		private BitmapBuffer _imageBuffer;
 		private BitmapBuffer _overlayBuffer;
@@ -338,12 +343,31 @@ namespace ClearCanvas.ImageViewer.Vtk.Rendering
 					// perform a single horizontal flip here if necessary, since the VTK camera does not support a mirrorred view port
 					ImageBuffer.Bitmap.RotateFlip(flip ? RotateFlipType.RotateNoneFlipX : RotateFlipType.RotateNoneFlipNone);
 
-					if (VtkPresentationImageRenderer.ShowFps && renderTime >= 0)
+					if (renderTime >= 0)
 					{
-						var font = _gdiFont ?? (_gdiFont = new Font(FontFamily.GenericMonospace, 12, FontStyle.Bold, GraphicsUnit.Point));
-						var msg = string.Format("FPS: {0,5}", renderTime >= 0.000001 ? (1/renderTime).ToString("f1") : "-----");
-						ImageBuffer.Graphics.DrawString(msg, font, Brushes.Black, 11, 11);
-						ImageBuffer.Graphics.DrawString(msg, font, Brushes.White, 10, 10);
+						if (VtkPresentationImageRenderer.ShowFps)
+						{
+							var font = _gdiFont ?? (_gdiFont = new Font(FontFamily.GenericMonospace, 12, FontStyle.Bold, GraphicsUnit.Point));
+							var msg = string.Format("FPS: {0,5}", renderTime >= 0.000001 ? (1/renderTime).ToString("f1") : "-----");
+							ImageBuffer.Graphics.DrawString(msg, font, Brushes.Black, 11, 11);
+							ImageBuffer.Graphics.DrawString(msg, font, Brushes.White, 10, 10);
+						}
+					}
+
+					if (fullQuality)
+					{
+						if (_reportRenderingPerformance && _statRenderFrameCount > 0 && _statRenderDuration > 0.000001)
+						{
+							var avgLowFrameRate = _statRenderFrameCount/_statRenderDuration;
+							Platform.Log(LogLevel.Info, "VTKRenderer: LOD FPS: {0:f1} ({1} frame(s) in {2:f1} ms); FINAL: {3:f1} ms", avgLowFrameRate, _statRenderFrameCount, _statRenderDuration*1000, renderTime*1000);
+						}
+						_statRenderFrameCount = 0;
+						_statRenderDuration = 0;
+					}
+					else
+					{
+						_statRenderDuration += renderTime;
+						++_statRenderFrameCount;
 					}
 
 					if (updateOverlayCallback != null)

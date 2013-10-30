@@ -32,10 +32,20 @@ namespace ClearCanvas.ImageViewer.KeyObjects
 	[Cloneable]
 	public class KeyObjectPlaceholderImage : GrayscalePresentationImage
 	{
+		[CloneCopyReference]
+		private readonly KeyImageReference _keyImageReference;
+
+		[CloneCopyReference]
+		private readonly PresentationStateReference _presentationStateReference;
+
 		private readonly string _reason;
 
-		public KeyObjectPlaceholderImage(string reason) : base(5, 5)
+		public KeyObjectPlaceholderImage(KeyImageReference keyImageReference, PresentationStateReference presentationStateReference, string reason)
+			: base(5, 5)
 		{
+			_keyImageReference = keyImageReference;
+			_presentationStateReference = presentationStateReference;
+
 			InvariantTextPrimitive textGraphic = new InvariantTextPrimitive(_reason = reason);
 			textGraphic.Color = Color.WhiteSmoke;
 			base.ApplicationGraphics.Add(textGraphic);
@@ -49,6 +59,16 @@ namespace ClearCanvas.ImageViewer.KeyObjects
 		protected KeyObjectPlaceholderImage(KeyObjectPlaceholderImage source, ICloningContext context) : base(source, context)
 		{
 			context.CloneFields(source, this);
+		}
+
+		public KeyImageReference KeyImageReference
+		{
+			get { return _keyImageReference; }
+		}
+
+		public PresentationStateReference PresentationStateReference
+		{
+			get { return _presentationStateReference; }
 		}
 
 		protected override void OnDrawing()
@@ -65,7 +85,12 @@ namespace ClearCanvas.ImageViewer.KeyObjects
 
 		public override IPresentationImage CreateFreshCopy()
 		{
-			return new KeyObjectPlaceholderImage(_reason);
+			return new KeyObjectPlaceholderImage(_keyImageReference, _presentationStateReference, _reason);
+		}
+
+		public override Size SceneSize
+		{
+			get { return new Size(100, 100); }
 		}
 
 		private static bool IsType<T>(object test)

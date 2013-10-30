@@ -54,8 +54,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 
 			#region Private fields
 
-			private const float _halfPi = (float) Math.PI/2;
-			private const float _gantryTiltTolerance = 0.1f; // allowed tolerance for gantry tilt (in radians) = ~5.7 degrees
+			private const float _skewAngleTolerance = 0.1f; // allowed tolerance for skew angle (in radians) = ~5.7 degrees
 			private const float _orientationTolerance = 0.01f; // allowed tolerance for image orientation (direction cosine values)
 			private const float _minimumSliceSpacing = 0.001f; // minimum spacing required between slices (in mm)
 			private const float _sliceSpacingTolerance = 0.01f; // allowed tolerance for slice spacing (in mm)
@@ -68,7 +67,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 			private Vector3D _volumePositionPatient;
 			private Vector3D _voxelSpacing;
 			private Size3D _volumeSize;
-			private double? _gantryTilt;
+			private double? _skewAngleY;
 			private int? _paddingRows;
 
 			#endregion
@@ -96,26 +95,56 @@ namespace ClearCanvas.ImageViewer.Volumes
 				_frames.Clear();
 			}
 
+			/// <summary>
+			/// Computes the orientation of the volume in patient coordinates.
+			/// </summary>
 			private Matrix3D VolumeOrientationPatient
 			{
 				get
 				{
 					if (_volumeOrientationPatient == null)
-						_volumeOrientationPatient = ImageOrientationPatientToMatrix(_frames[0].Frame.ImageOrientationPatient);
+					{
+						var imageOrientationPatient = _frames[0].Frame.ImageOrientationPatient;
+						var volumeRowOrientation = new Vector3D((float) imageOrientationPatient.RowX, (float) imageOrientationPatient.RowY, (float) imageOrientationPatient.RowZ);
+						var volumeColumnOrientation = new Vector3D((float) imageOrientationPatient.ColumnX, (float) imageOrientationPatient.ColumnY, (float) imageOrientationPatient.ColumnZ);
+						var volumeStackOrientation = volumeRowOrientation.Cross(volumeColumnOrientation);
+						_volumeOrientationPatient = Matrix3D.FromRows(volumeRowOrientation.Normalize(), volumeColumnOrientation.Normalize(), volumeStackOrientation.Normalize());
+					}
 					return _volumeOrientationPatient;
 				}
 			}
 
+			/// <summary>
+			/// Computes the position of the volume origin in patient coordinates after adjusting for source skew padding.
+			/// </summary>
 			private Vector3D VolumePositionPatient
 			{
 				get
 				{
 					if (_volumePositionPatient == null)
-						_volumePositionPatient = ImagePositionPatientToVector(_frames[0].Frame.ImagePositionPatient);
+					{
+						var imagePositionPatient = _frames[0].Frame.ImagePositionPatient;
+						_volumePositionPatient = new Vector3D((float) imagePositionPatient.X, (float) imagePositionPatient.Y, (float) imagePositionPatient.Z);
+
+						// if the volume is padded in order to normalize the source data (parallelepiped -> rect cuboid)
+						// and the skew angle is positive (so that the padding for the first frame is at the top)
+						// then we must offset the computed volume position in patient coordinates
+						var paddingRows = PaddingRows;
+						if (paddingRows > 0 && SkewAngleY > 0)
+						{
+							// the offset in patient units is given by number of padding rows times the voxel row spacing
+							// and the direction is along the actual volume column orientation (middle row of the orientation matrix)
+							var mmOffsetY = VoxelSpacing.Y*PaddingRows;
+							_volumePositionPatient = _volumePositionPatient - mmOffsetY*VolumeOrientationPatient.GetRow(1);
+						}
+					}
 					return _volumePositionPatient;
 				}
 			}
 
+			/// <summary>
+			/// Computes the voxel size in patient units.
+			/// </summary>
 			private Vector3D VoxelSpacing
 			{
 				get
@@ -131,47 +160,64 @@ namespace ClearCanvas.ImageViewer.Volumes
 				}
 			}
 
-			private double GantryTilt
+			/// <summary>
+			/// Gets the skew angle (radians) of the Y-axis represented by the source frames (angle between Y-axis and XZ-plane of the parallelepiped formed by the source frames). For explanation, see <see cref="IsSupportedSourceSkew"/>.
+			/// </summary>
+			private double SkewAngleY
 			{
 				get
 				{
-					if (!_gantryTilt.HasValue)
+					if (!_skewAngleY.HasValue)
 					{
-						double aboutXradians = this.ComputeTiltAboutX();
-						double aboutYradians = this.ComputeTiltAboutY();
+						const double halfPi = Math.PI/2;
+						var firstImagePlane = _frames[0].Frame.ImagePlaneHelper;
+						var lastImagePlane = _frames[_frames.Count - 1].Frame.ImagePlaneHelper;
 
-						if (aboutXradians != 0 && aboutYradians != 0)
-							// should never happen, since the validation should have caught this already
-							throw new Exception("Patient orientation is tilted about X and Y, not supported");
+						var sourceZ = lastImagePlane.ImagePositionPatientVector - firstImagePlane.ImagePositionPatientVector;
+						var sourceX = firstImagePlane.ImageRowOrientationPatientVector;
 
-						if (aboutXradians != 0)
-							// This flips euler sign in prone position, so that tilt is correctly signed
-							_gantryTilt = aboutXradians*this.VolumeOrientationPatient[0, 0];
-						else if (aboutYradians != 0)
-							// This flips euler sign in Decubitus Left position
-							_gantryTilt = aboutYradians*this.VolumeOrientationPatient[0, 1];
-						else
-							_gantryTilt = 0;
+						if (!sourceZ.IsOrthogonalTo(sourceX, _skewAngleTolerance))
+						{
+							// should have been caught before we even get here, but let's just double check
+							// this indicates a skew in the X-axis (X-axis and the YZ-plane of the source frames are not orthogonal)
+							// typically, this is a result of a gantry slew in the acquisition setup
+							throw new InvalidOperationException("Non-zero skew angle of X-axis detected");
+						}
+
+						// to compute the skew angle, project the Z unit axis on to the Y unit axis
+						// (the previous check has already verified that X is mutually orthogonal to Y and Z, so we can ignore X)
+						var projectionZonY = sourceZ.Normalize().Dot(firstImagePlane.ImageColumnOrientationPatientVector.Normalize());
+
+						// if the projection is not zero, then the result is the cosine of the angle between the two vectors
+						// and the skew angle is simply that angle less 90 degrees
+						_skewAngleY = !FloatComparer.AreEqual(0, projectionZonY) ? Math.Acos(projectionZonY) - halfPi : 0;
 					}
-					return _gantryTilt.Value;
+					return _skewAngleY.Value;
 				}
 			}
 
+			/// <summary>
+			/// Gets the number of padding rows necessary to normalize the source frames such that the represented volume is a rectangular cuboid.
+			/// </summary>
 			private int PaddingRows
 			{
 				get
 				{
 					if (!_paddingRows.HasValue)
 					{
-						// If the series was obtained with a Gantry/Detector Tilt, we will pad the frames as they're
-						//	 added to the volume so as to create a normalized cuboid volume that contains the tilted volume.
-						// This is the number of rows that we will pad for each frame, and it affects the overall
-						//	 dimensions of the volume.
-						// It is a function of the tilt angle and the run from first to last slice.
-						double padRowsMm = Math.Tan(this.GantryTilt)*(_frames[_frames.Count - 1].Frame.ImagePositionPatient.Z - _frames[0].Frame.ImagePositionPatient.Z);
+						// if the source frames have a non-zero skew (i.e. the volume represented is not a rectangular cuboid but a general parallelepiped),
+						// we will pad the frames as they're copied to the array so as to create a normalized cuboid volume that contains the skewed source data.
+						// This is the total number of rows that we will pad for each frame, and it affects the overall dimensions of the volume.
+						// It is a function of the Y-axis skew angle and the range along the Z-axis of the source frames.
+						var firstImagePlane = _frames[0].Frame.ImagePlaneHelper;
+						var lastImagePlane = _frames[_frames.Count - 1].Frame.ImagePlaneHelper;
+						var skewAngleY = SkewAngleY;
 
-						// ensure this pad is always positive for sizing calculations
-						_paddingRows = Math.Abs((int) (padRowsMm/this.VoxelSpacing.Y + 0.5f));
+						var padRowsMm = !FloatComparer.AreEqual(skewAngleY, 0) ? Math.Sin(skewAngleY)*((lastImagePlane.ImagePositionPatientVector - firstImagePlane.ImagePositionPatientVector).Magnitude) : 0;
+
+						// ensure this pad is always positive for sizing calculations, and round to nearest row
+						// (assumes that the row spacing is small enough to make rounding negligible - otherwise we would need to interpolate)
+						_paddingRows = (int) (Math.Abs(padRowsMm/VoxelSpacing.Y) + 0.5f);
 					}
 					return _paddingRows.Value;
 				}
@@ -183,8 +229,8 @@ namespace ClearCanvas.ImageViewer.Volumes
 				{
 					if (_volumeSize == null)
 					{
-						// Relying on the frames being uniform, so we'll base width/height off of first frame
-						_volumeSize = new Size3D(_frames[0].Frame.Columns, _frames[0].Frame.Rows + this.PaddingRows, _frames.Count);
+						var firstFrame = _frames[0].Frame;
+						_volumeSize = new Size3D(firstFrame.Columns, firstFrame.Rows + PaddingRows, _frames.Count);
 					}
 					return _volumeSize;
 				}
@@ -204,13 +250,14 @@ namespace ClearCanvas.ImageViewer.Volumes
 
 				// compute modality LUT parameters normalized for all frames
 				double normalizedSlope, normalizedIntercept;
+				var normalizedUnits = _frames[0].Frame.RescaleUnits;
 				ComputeNormalizedModalityLut(_frames, out normalizedSlope, out normalizedIntercept);
 
 				// determine an appropriate pixel padding value
 				var pixelPaddingValue = ComputePixelPaddingValue(_frames, normalizedSlope, normalizedIntercept);
 
 				// Construct a model SOP data source based on the first frame's DICOM header
-				var header = new VolumeHeaderData(_frames.Select(f => (IDicomAttributeProvider) f.Frame).ToList(), VolumeSize, VoxelSpacing, VolumePositionPatient, VolumeOrientationPatient, 16, 16, false, pixelPaddingValue, normalizedSlope, normalizedIntercept);
+				var header = new VolumeHeaderData(_frames.Select(f => (IDicomAttributeProvider) f.Frame).ToList(), VolumeSize, VoxelSpacing, VolumePositionPatient, VolumeOrientationPatient, 16, 16, false, pixelPaddingValue, normalizedSlope, normalizedIntercept, normalizedUnits);
 
 				// determine how the normalized modality LUT affects VOI windows and update the header
 				VoiWindow.SetWindows(ComputeAggregateNormalizedVoiWindows(_frames, normalizedSlope, normalizedIntercept), header);
@@ -225,24 +272,27 @@ namespace ClearCanvas.ImageViewer.Volumes
 			{
 				var header = BuildVolumeHeader();
 
+				// N.B.: this method only creates ushort volumes because it normalizes all the source frames so that the modality LUTs, VOI LUTs, etc. are consistent
+				// all pixel data is rescaled appropriately before filling the volume data array
 				int minVolumeValue, maxVolumeValue;
 				var volumeArray = BuildVolumeArray((ushort) header.PaddingValue, header.RescaleSlope, header.RescaleIntercept, out minVolumeValue, out maxVolumeValue);
 				var volume = new U16Volume(volumeArray, header, minVolumeValue, maxVolumeValue);
 				return volume;
 			}
 
-			// Builds the volume array. Takes care of Gantry Tilt correction (pads rows at top/bottom accordingly)
+			/// <summary>
+			/// Builds the volume array. Takes care of Gantry Tilt correction (pads rows at top/bottom accordingly)
+			/// </summary>
 			private ushort[] BuildVolumeArray(ushort pixelPadValue, double normalizedSlope, double normalizedIntercept, out int minVolumeValue, out int maxVolumeValue)
 			{
-				var volumeData = MemoryManager.Allocate<ushort>(VolumeSize.Volume, TimeSpan.FromSeconds(10));
+				var volumeSize = VolumeSize;
+				var volumeData = MemoryManager.Allocate<ushort>(volumeSize.Volume, TimeSpan.FromSeconds(10));
 
-				var lastFramePos = (float) _frames[_frames.Count - 1].Frame.ImagePositionPatient.Z;
-
-				var volumePaddedFrameDimensions = VolumeSize;
+				var refFramePos = _frames[0].Frame.ImagePlaneHelper.ImagePositionPatientVector;
 				var paddingRows = PaddingRows;
-				var gantryTilt = GantryTilt;
+				var skewAngleY = SkewAngleY;
 
-				var volumePaddedFrameSize = volumePaddedFrameDimensions.Width*volumePaddedFrameDimensions.Height;
+				var volumePaddedFrameSize = volumeSize.Width*volumeSize.Height;
 
 				var progressCallback = new FrameCopyProgressTracker(_frames.Count, _callback);
 				var frameRanges = Enumerable.Range(0, _frames.Count)
@@ -251,37 +301,38 @@ namespace ClearCanvas.ImageViewer.Volumes
 					        	{
 					        		var position = n*volumePaddedFrameSize;
 					        		var sourceFrame = _frames[n].Frame;
-					        		int frameMin, frameMax;
-					        		using (var lutFactory = LutFactory.Create())
-					        			FillVolumeFrame(volumeData, position, volumePaddedFrameDimensions, sourceFrame, pixelPadValue, normalizedSlope, normalizedIntercept, paddingRows, gantryTilt, lastFramePos, lutFactory, out frameMin, out frameMax);
+
+					        		int paddingTopRows = 0, paddingBottomRows = 0;
+					        		if (paddingRows > 0)
+					        		{
+					        			// determine the number of rows to be padded at top and bottom
+					        			var framePadRowsMm = Math.Sin(skewAngleY)*(refFramePos - sourceFrame.ImagePlaneHelper.ImagePositionPatientVector).Magnitude;
+					        			var framePadRows = Math.Min(paddingRows, (int) (Math.Abs(framePadRowsMm/VoxelSpacing.Y) + 0.5f));
+
+					        			// when the skew angle is negative, the above calculation gives the rows to pad at the top of the frame
+					        			paddingTopRows = skewAngleY < 0 ? framePadRows : paddingRows - framePadRows;
+					        			paddingBottomRows = paddingRows - paddingTopRows;
+					        		}
+
+					        		int frameMinPixelValue, frameMaxPixelValue;
+					        		using (var lutFactory = LutFactory.Create()) // lut factory isn't thread safe, so we create one when needed in the worker thread
+					        			FillVolumeFrame(volumeData, position, volumeSize.Width, sourceFrame, pixelPadValue, normalizedSlope, normalizedIntercept, paddingTopRows, paddingBottomRows, lutFactory, out frameMinPixelValue, out frameMaxPixelValue);
 					        		progressCallback.IncrementAndNotify();
-					        		return new KeyValuePair<int, int>(frameMin, frameMax);
+					        		return new {Min = frameMinPixelValue, Max = frameMaxPixelValue};
 					        	}).ToList();
 
-				minVolumeValue = frameRanges.Select(r => r.Key).Min();
-				maxVolumeValue = frameRanges.Select(r => r.Value).Max();
+				minVolumeValue = frameRanges.Select(r => r.Min).Min();
+				maxVolumeValue = frameRanges.Select(r => r.Max).Max();
 				return volumeData;
 			}
 
-			private void FillVolumeFrame(ushort[] volumeData, int position, Size3D volumePaddedFrameDimensions, Frame sourceFrame, ushort pixelPadValue, double normalizedSlope, double normalizedIntercept, int paddingRows, double gantryTilt, float lastFramePos, LutFactory lutFactory, out int frameMin, out int frameMax)
+			private static void FillVolumeFrame(ushort[] volumeData, int position, int paddedColumns, Frame sourceFrame, ushort pixelPadValue, double normalizedSlope, double normalizedIntercept, int paddingRowsTop, int paddingRowsBottom, LutFactory lutFactory, out int frameMinPixelValue, out int frameMaxPixelValue)
 			{
-				// PadTop takes care of padding rows for gantry tilt correction
-				int countRowsPaddedAtTop = 0;
-				if (paddingRows > 0)
+				if (paddingRowsTop > 0) // pad rows at the top if required
 				{
-					// figure out how many rows need to be padded at the top
-					float deltaMm = lastFramePos - (float) sourceFrame.ImagePositionPatient.Z;
-					double padTopMm = Math.Tan(gantryTilt)*deltaMm;
-					countRowsPaddedAtTop = (int) (padTopMm/VoxelSpacing.Y + 0.5f);
-
-					//TODO (cr Oct 2009): verify that IPP of the first image is correct for the volume.
-					// account for the tilt in negative radians: we start padding from the bottom first in this case
-					if (gantryTilt < 0)
-						countRowsPaddedAtTop += paddingRows;
-
-					var count = countRowsPaddedAtTop*volumePaddedFrameDimensions.Width;
+					var count = paddingRowsTop*paddedColumns;
 					FillVolumeData(volumeData, pixelPadValue, position, count);
-					position += count;
+					position += count; // update position so frame is copied after the top padding
 				}
 
 				// Copy frame data
@@ -290,16 +341,13 @@ namespace ClearCanvas.ImageViewer.Volumes
 				var frameBytesPerPixel = sourceFrame.BitsAllocated/8;
 				var frameIsSigned = sourceFrame.PixelRepresentation != 0;
 				var frameModalityLut = lutFactory.GetModalityLutLinear(frameBitsStored, frameIsSigned, sourceFrame.RescaleSlope, sourceFrame.RescaleIntercept);
-				CopyFrameData(frameData, frameBytesPerPixel, frameIsSigned, frameModalityLut, volumeData, position, normalizedSlope, normalizedIntercept, out frameMin, out frameMax);
-				position += frameData.Length/frameBytesPerPixel;
+				CopyFrameData(frameData, frameBytesPerPixel, frameIsSigned, frameModalityLut, volumeData, position, normalizedSlope, normalizedIntercept, out frameMinPixelValue, out frameMaxPixelValue);
 
-				// Finish out any padding left over from PadTop
-				var countRowsPaddedAtBottom = paddingRows > 0 ? paddingRows - countRowsPaddedAtTop : 0;
-				if (countRowsPaddedAtBottom > 0) // Pad bottom
+				if (paddingRowsBottom > 0) // pad rows at the bottom if required
 				{
-					var count = countRowsPaddedAtBottom*volumePaddedFrameDimensions.Width;
+					position += frameData.Length/frameBytesPerPixel; // update position so bottom padding is copied after the frame data
+					var count = paddingRowsBottom*paddedColumns;
 					FillVolumeData(volumeData, pixelPadValue, position, count);
-					position += count;
 				}
 			}
 
@@ -336,98 +384,92 @@ namespace ClearCanvas.ImageViewer.Volumes
 				}
 			}
 
-			private static void FillVolumeData(ushort[] volumeData, ushort fillValue, int start, int count)
+			private static unsafe void FillVolumeData(ushort[] volumeData, ushort fillValue, int start, int count)
 			{
-				unsafe
+				fixed (ushort* pVolumeData = volumeData)
 				{
-					fixed (ushort* pVolumeData = volumeData)
-					{
-						var pVolumeFill = pVolumeData + start;
-						for (var i = 0; i < count; ++i)
-							*pVolumeFill++ = fillValue;
-					}
+					var pVolumeFill = pVolumeData + start;
+					for (var i = 0; i < count; ++i)
+						*pVolumeFill++ = fillValue;
 				}
 			}
 
-			private static void CopyFrameData(byte[] frameData, int frameBytesPerPixel, bool frameIsSigned, IModalityLut frameModalityLut, ushort[] volumeData, int volumeStart, double normalizedSlope, double normalizedIntercept, out int minFramePixel, out int maxFramePixel)
+			private static unsafe void CopyFrameData(byte[] frameData, int frameBytesPerPixel, bool frameIsSigned, IModalityLut frameModalityLut, ushort[] volumeData, int volumeStart, double normalizedSlope, double normalizedIntercept, out int minFramePixel, out int maxFramePixel)
 			{
 				var pixelCount = frameData.Length/frameBytesPerPixel;
-				unsafe
-				{
-					var min = int.MaxValue;
-					var max = int.MinValue;
+				var min = int.MaxValue;
+				var max = int.MinValue;
 
-					fixed (byte* pFrameData = frameData)
-					fixed (ushort* pVolumeData = volumeData)
+				fixed (byte* pFrameData = frameData)
+				fixed (ushort* pVolumeData = volumeData)
+				{
+					var pVolumeFrame = pVolumeData + volumeStart;
+					if (frameBytesPerPixel == 2)
 					{
-						var pVolumeFrame = pVolumeData + volumeStart;
-						if (frameBytesPerPixel == 2)
+						if (frameIsSigned)
 						{
-							if (frameIsSigned)
+							var pFrameDataS16 = (short*) pFrameData;
+							for (var i = 0; i < pixelCount; ++i)
 							{
-								var pFrameDataS16 = (short*) pFrameData;
-								for (var i = 0; i < pixelCount; ++i)
-								{
-									var frameValue = frameModalityLut[*pFrameDataS16++];
-									var volumeValue = (frameValue - normalizedIntercept)/normalizedSlope;
-									var volumePixel = (ushort) Math.Max(ushort.MinValue, Math.Min(ushort.MaxValue, Math.Round(volumeValue)));
-									if (volumePixel < min) min = volumePixel;
-									if (volumePixel > max) max = volumePixel;
-									*pVolumeFrame++ = volumePixel;
-								}
-							}
-							else
-							{
-								var pFrameDataU16 = (ushort*) pFrameData;
-								for (var i = 0; i < pixelCount; ++i)
-								{
-									var frameValue = frameModalityLut[*pFrameDataU16++];
-									var volumeValue = (frameValue - normalizedIntercept)/normalizedSlope;
-									var volumePixel = (ushort) Math.Max(ushort.MinValue, Math.Min(ushort.MaxValue, Math.Round(volumeValue)));
-									if (volumePixel < min) min = volumePixel;
-									if (volumePixel > max) max = volumePixel;
-									*pVolumeFrame++ = volumePixel;
-								}
-							}
-						}
-						else if (frameBytesPerPixel == 1)
-						{
-							if (frameIsSigned)
-							{
-								var pFrameDataS8 = (sbyte*) pFrameData;
-								for (var i = 0; i < pixelCount; ++i)
-								{
-									var frameValue = frameModalityLut[*pFrameDataS8++];
-									var volumeValue = (frameValue - normalizedIntercept)/normalizedSlope;
-									var volumePixel = (ushort) Math.Max(ushort.MinValue, Math.Min(ushort.MaxValue, Math.Round(volumeValue)));
-									if (volumePixel < min) min = volumePixel;
-									if (volumePixel > max) max = volumePixel;
-									*pVolumeFrame++ = volumePixel;
-								}
-							}
-							else
-							{
-								var pFrameDataU8 = pFrameData;
-								for (var i = 0; i < pixelCount; ++i)
-								{
-									var frameValue = frameModalityLut[*pFrameDataU8++];
-									var volumeValue = (frameValue - normalizedIntercept)/normalizedSlope;
-									var volumePixel = (ushort) Math.Max(ushort.MinValue, Math.Min(ushort.MaxValue, Math.Round(volumeValue)));
-									if (volumePixel < min) min = volumePixel;
-									if (volumePixel > max) max = volumePixel;
-									*pVolumeFrame++ = volumePixel;
-								}
+								var frameValue = frameModalityLut[*pFrameDataS16++];
+								var volumeValue = (frameValue - normalizedIntercept)/normalizedSlope;
+								var volumePixel = (ushort) Math.Max(ushort.MinValue, Math.Min(ushort.MaxValue, Math.Round(volumeValue)));
+								if (volumePixel < min) min = volumePixel;
+								if (volumePixel > max) max = volumePixel;
+								*pVolumeFrame++ = volumePixel;
 							}
 						}
 						else
 						{
-							throw new ArgumentOutOfRangeException("frameBytesPerPixel");
+							var pFrameDataU16 = (ushort*) pFrameData;
+							for (var i = 0; i < pixelCount; ++i)
+							{
+								var frameValue = frameModalityLut[*pFrameDataU16++];
+								var volumeValue = (frameValue - normalizedIntercept)/normalizedSlope;
+								var volumePixel = (ushort) Math.Max(ushort.MinValue, Math.Min(ushort.MaxValue, Math.Round(volumeValue)));
+								if (volumePixel < min) min = volumePixel;
+								if (volumePixel > max) max = volumePixel;
+								*pVolumeFrame++ = volumePixel;
+							}
 						}
 					}
-
-					minFramePixel = min;
-					maxFramePixel = max;
+					else if (frameBytesPerPixel == 1)
+					{
+						if (frameIsSigned)
+						{
+							var pFrameDataS8 = (sbyte*) pFrameData;
+							for (var i = 0; i < pixelCount; ++i)
+							{
+								var frameValue = frameModalityLut[*pFrameDataS8++];
+								var volumeValue = (frameValue - normalizedIntercept)/normalizedSlope;
+								var volumePixel = (ushort) Math.Max(ushort.MinValue, Math.Min(ushort.MaxValue, Math.Round(volumeValue)));
+								if (volumePixel < min) min = volumePixel;
+								if (volumePixel > max) max = volumePixel;
+								*pVolumeFrame++ = volumePixel;
+							}
+						}
+						else
+						{
+							var pFrameDataU8 = pFrameData;
+							for (var i = 0; i < pixelCount; ++i)
+							{
+								var frameValue = frameModalityLut[*pFrameDataU8++];
+								var volumeValue = (frameValue - normalizedIntercept)/normalizedSlope;
+								var volumePixel = (ushort) Math.Max(ushort.MinValue, Math.Min(ushort.MaxValue, Math.Round(volumeValue)));
+								if (volumePixel < min) min = volumePixel;
+								if (volumePixel > max) max = volumePixel;
+								*pVolumeFrame++ = volumePixel;
+							}
+						}
+					}
+					else
+					{
+						throw new ArgumentOutOfRangeException("frameBytesPerPixel");
+					}
 				}
+
+				minFramePixel = min;
+				maxFramePixel = max;
 			}
 
 			#endregion
@@ -526,30 +568,6 @@ namespace ClearCanvas.ImageViewer.Volumes
 				return (ushort) Math.Max(ushort.MinValue, Math.Min(ushort.MaxValue, Math.Round(normalizedPaddingValue)));
 			}
 
-			private double ComputeTiltAboutX()
-			{
-				float aboutXradians = (float) GetXRotation(this.VolumeOrientationPatient);
-
-				// If within specified tolerance of 0, Pi/2, -Pi/2, then treat as no tilt (return 0)
-				if (FloatComparer.AreEqual(aboutXradians, 0f, _gantryTiltTolerance) ||
-				    FloatComparer.AreEqual(Math.Abs(aboutXradians), _halfPi, _gantryTiltTolerance))
-					return 0f;
-
-				return aboutXradians;
-			}
-
-			private double ComputeTiltAboutY()
-			{
-				float aboutYradians = (float) GetYRotation(this.VolumeOrientationPatient);
-
-				// If within specified tolerance of 0, Pi/2, -Pi/2, then treat as no tilt (return 0)
-				if (FloatComparer.AreEqual(aboutYradians, 0f, _gantryTiltTolerance) ||
-				    FloatComparer.AreEqual(Math.Abs(aboutYradians), _halfPi, _gantryTiltTolerance))
-					return 0f;
-
-				return aboutYradians;
-			}
-
 			#endregion
 
 			#region Validation and Preparation Helper
@@ -558,23 +576,23 @@ namespace ClearCanvas.ImageViewer.Volumes
 			/// Validates and prepares the provided frames for the <see cref="VolumeBuilder"/>.
 			/// </summary>
 			/// <exception cref="CreateVolumeException">Thrown if something is wrong with the source frames.</exception>
-			public static void PrepareFrames(List<IFrameReference> _frames)
+			public static void PrepareFrames(List<IFrameReference> frames)
 			{
 				// ensure we have at least 3 frames
-				if (_frames.Count < 3)
+				if (frames.Count < 3)
 					throw new InsufficientFramesException();
 
 				// ensure all frames have are from the same series, and have the same frame of reference
-				string studyInstanceUid = _frames[0].Frame.StudyInstanceUid;
-				string seriesInstanceUid = _frames[0].Frame.SeriesInstanceUid;
-				string frameOfReferenceUid = _frames[0].Frame.FrameOfReferenceUid;
+				string studyInstanceUid = frames[0].Frame.StudyInstanceUid;
+				string seriesInstanceUid = frames[0].Frame.SeriesInstanceUid;
+				string frameOfReferenceUid = frames[0].Frame.FrameOfReferenceUid;
 
 				if (string.IsNullOrEmpty(studyInstanceUid) || string.IsNullOrEmpty(seriesInstanceUid))
 					throw new NullSourceSeriesException();
 				if (string.IsNullOrEmpty(frameOfReferenceUid))
 					throw new NullFrameOfReferenceException();
 
-				foreach (IFrameReference frame in _frames)
+				foreach (IFrameReference frame in frames)
 				{
 					if (frame.Frame.StudyInstanceUid != studyInstanceUid)
 						throw new MultipleSourceSeriesException();
@@ -585,12 +603,16 @@ namespace ClearCanvas.ImageViewer.Volumes
 				}
 
 				// ensure all frames are of the same supported format
-				if (_frames.Any(frame => frame.Frame.BitsAllocated != 16))
+				if (frames.Any(frame => frame.Frame.BitsAllocated != 16))
 					throw new UnsupportedPixelFormatSourceImagesException();
 
+				// ensure all frames have the same rescale function units
+				if (frames.Select(frame => frame.Frame.RescaleUnits).Distinct().Count() > 1)
+					throw new InconsistentRescaleFunctionTypeException();
+
 				// ensure all frames have the same orientation
-				ImageOrientationPatient orient = _frames[0].Frame.ImageOrientationPatient;
-				foreach (IFrameReference frame in _frames)
+				ImageOrientationPatient orient = frames[0].Frame.ImageOrientationPatient;
+				foreach (IFrameReference frame in frames)
 				{
 					if (frame.Frame.ImageOrientationPatient.IsNull)
 						throw new NullImageOrientationException();
@@ -604,13 +626,13 @@ namespace ClearCanvas.ImageViewer.Volumes
 
 				// ensure all frames are sorted by slice location
 				SliceLocationComparer sliceLocationComparer = new SliceLocationComparer();
-				_frames.Sort((x, y) => sliceLocationComparer.Compare(x.Frame, y.Frame));
+				frames.Sort((x, y) => sliceLocationComparer.Compare(x.Frame, y.Frame));
 
 				// ensure all frames are evenly spaced
-				var spacing = new float[_frames.Count - 1];
-				for (int i = 1; i < _frames.Count; i++)
+				var spacing = new float[frames.Count - 1];
+				for (int i = 1; i < frames.Count; i++)
 				{
-					float currentSpacing = CalcSpaceBetweenPlanes(_frames[i].Frame, _frames[i - 1].Frame);
+					float currentSpacing = CalcSpaceBetweenPlanes(frames[i].Frame, frames[i - 1].Frame);
 					if (currentSpacing < _minimumSliceSpacing)
 						throw new UnevenlySpacedFramesException();
 
@@ -619,17 +641,23 @@ namespace ClearCanvas.ImageViewer.Volumes
 				if (spacing.Max() - spacing.Min() > 2*_sliceSpacingTolerance)
 					throw new UnevenlySpacedFramesException();
 
-				// ensure frames are not tilted about unsupposed axis combinations (the gantry correction algorithm only supports rotations about X)
-				if (!IsSupportedGantryTilt(_frames))
+				// ensure frames are not skewed about unsupported axis combinations (this volume builder only normalizes for skew between the Y-axis and XZ-plane in the source data)
+				if (!IsSupportedSourceSkew(frames))
 					throw new UnsupportedGantryTiltAxisException();
 			}
 
-			#endregion
-
-			#region Gantry Tilt Helpers
-
-			private static bool IsSupportedGantryTilt(IList<IFrameReference> frames)
+			/// <summary>
+			/// Checks for skew in the orientation of the source frames. Returns true if source frames are suitable.
+			/// </summary>
+			private static bool IsSupportedSourceSkew(IList<IFrameReference> frames)
 			{
+				// The Volume class requires that the data represents a rectangular cuboid region of the patient
+				// If the source frames do not represent a rectangular cuboid but rather a general parallelepiped, we have to pad the data when filling the volume
+				// At present, we only support row padding when filling the volume - which means we can take data where the Y-axis is not necessarily orthogonal to the XZ-plane
+				// (here, X refers to the source row orientation vector, Y refers to the source column orientation vector, and Z refers to the source stack orientation vector)
+				// We do NOT support column padding, so we must reject data where the X-axis is not orthogonal to the YZ-plane 
+				// Typically, such data arises from gantry tilted and gantry slewed acquisitions - but breast tomosynthesis images have non-orthogonal skews too (i.e. medial-lateral *oblique*)
+
 				// N.B. Definition of Tilt and Slew from DICOM PS 3.3 C.8.22.5.2 description of the tags Gantry/Detector Tilt (0018,1120) and Gantry/Detector Slew (0018,1121)
 				// Nominal angle of tilt... Zero degrees means the gantry is not tilted, negative degrees are when the top of the gantry is tilted away from where the table enters the gantry.
 				// Nominal angle of slew... Zero degrees means the gantry is not slewed. Positive slew is moving the gantry on the patient’s left toward the patient’s superior, when the patient is supine.
@@ -651,51 +679,31 @@ namespace ClearCanvas.ImageViewer.Volumes
 					var firstImagePlane = frames[0].Frame.ImagePlaneHelper;
 					var lastImagePlane = frames[frames.Count - 1].Frame.ImagePlaneHelper;
 
-					Vector3D stackZ = lastImagePlane.ImageTopLeftPatient - firstImagePlane.ImageTopLeftPatient;
-					Vector3D imageX = firstImagePlane.ImageTopRightPatient - firstImagePlane.ImageTopLeftPatient;
+					var sourceZ = lastImagePlane.ImagePositionPatientVector - firstImagePlane.ImagePositionPatientVector;
+					var sourceX = firstImagePlane.ImageRowOrientationPatientVector;
 
-					if (!stackZ.IsOrthogonalTo(imageX, _gantryTiltTolerance))
+					if (!sourceZ.IsOrthogonalTo(sourceX, _skewAngleTolerance))
 					{
-						// this is a gantry slew (gantry tilt about Y axis)
+						// this indicates a skew in the X-axis (X-axis and the YZ-plane of the source frames are not orthogonal)
+						// typically, this is a result of a gantry slew in the acquisition setup
 						return false;
 					}
 					return true;
 				}
 				catch (Exception ex)
 				{
-					Platform.Log(LogLevel.Debug, ex, "Unexpected exception encountered while checking for supported gantry tilts");
+					Platform.Log(LogLevel.Debug, ex, "Unexpected exception encountered while checking for skew in the source data");
 					return false;
 				}
-			}
-
-			/// <summary>
-			/// Gets the rotation about the X-axis in radians.
-			/// </summary>
-			private static double GetXRotation(Matrix3D orientationPatient)
-			{
-				return Math.Atan2(orientationPatient[2, 1], orientationPatient[2, 2]);
-			}
-
-			/// <summary>
-			/// Gets the rotation about the Y-axis in radians.
-			/// </summary>
-			private static double GetYRotation(Matrix3D orientationPatient)
-			{
-				return -Math.Asin(orientationPatient[2, 0]);
-			}
-
-			/// <summary>
-			/// Gets the rotation about the Z-axis in radians.
-			/// </summary>
-			private static double GetZRotation(Matrix3D orientationPatient)
-			{
-				return Math.Atan2(orientationPatient[1, 0], orientationPatient[0, 0]);
 			}
 
 			#endregion
 
 			#region Spacing and Orientation Helpers
 
+			/// <summary>
+			/// Calculates the inter-slice spacing in patient units, orthogonal to the image plane.
+			/// </summary>
 			private static float CalcSpaceBetweenPlanes(Frame frame1, Frame frame2)
 			{
 				var point1 = frame1.ImagePlaneHelper.ImageTopLeftPatient;
@@ -704,27 +712,6 @@ namespace ClearCanvas.ImageViewer.Volumes
 
 				// spacing between images should be measured along normal to image plane, regardless of actual orientation of images! (e.g. consider gantry tiled images)
 				return delta.IsNull ? 0f : Math.Abs(delta.Dot(frame1.ImagePlaneHelper.ImageNormalPatient));
-			}
-
-			private static Matrix3D ImageOrientationPatientToMatrix(ImageOrientationPatient orientation)
-			{
-				Vector3D xOrient = new Vector3D((float) orientation.RowX, (float) orientation.RowY, (float) orientation.RowZ);
-				Vector3D yOrient = new Vector3D((float) orientation.ColumnX, (float) orientation.ColumnY, (float) orientation.ColumnZ);
-				Vector3D zOrient = xOrient.Cross(yOrient);
-
-				Matrix3D orientationMatrix = new Matrix3D
-					(new[,]
-					 	{
-					 		{xOrient.X, xOrient.Y, xOrient.Z},
-					 		{yOrient.X, yOrient.Y, yOrient.Z},
-					 		{zOrient.X, zOrient.Y, zOrient.Z}
-					 	});
-				return orientationMatrix;
-			}
-
-			private static Vector3D ImagePositionPatientToVector(ImagePositionPatient position)
-			{
-				return new Vector3D((float) position.X, (float) position.Y, (float) position.Z);
 			}
 
 			#endregion

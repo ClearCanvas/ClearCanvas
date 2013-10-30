@@ -29,7 +29,7 @@ namespace ClearCanvas.Desktop.View.WinForms
 {
 	public class DragDropObject : IDragDropObject
 	{
-		private IDataObject _dataObject;
+		private readonly IDataObject _dataObject;
 
 		public DragDropObject(IDataObject dataObject)
 		{

@@ -39,11 +39,22 @@ namespace ClearCanvas.ImageViewer.Clipboard
 		/// Returns the actual clipboard item.
 		/// </summary>
 		object Item { get; }
-		
+
 		/// <summary>
 		/// Returns the display rectangle of the clipboard item.
 		/// </summary>
 		Rectangle DisplayRectangle { get; }
+
+		/// <summary>
+		/// Gets whether or not the clipboard item is locked.
+		/// </summary>
+		/// <remarks>
+		/// Locking indicates that asynchronous operations are potentially
+		/// being performed with this <see cref="IClipboardItem"/>, and thus
+		/// that the item may not be deleted from the clipboard, which
+		/// would otherwise result in <see cref="Item"/>'s disposal.
+		/// </remarks>
+		bool IsLocked { get; }
 
 		/// <summary>
 		/// Locks a clipboard item.
@@ -124,14 +135,12 @@ namespace ClearCanvas.ImageViewer.Clipboard
 			Interlocked.Decrement(ref _lockCount);
 		}
 
-		public bool Locked
+		public bool IsLocked
 		{
 			get { return Thread.VolatileRead(ref _lockCount) != 0; }
 		}
 
-		#region IDisposable Members
-
-		void IDisposable.Dispose()
+		public void Dispose()
 		{
 			if (_item != null && _item is IDisposable)
 			{
@@ -145,15 +154,6 @@ namespace ClearCanvas.ImageViewer.Clipboard
 			}
 		}
 
-		#endregion
-
-	    #region Implementation of INotifyPropertyChanged
-
-        /// <summary>
-        /// Unused.
-        /// </summary>
-	    public event PropertyChangedEventHandler PropertyChanged;
-
-	    #endregion
+		public event PropertyChangedEventHandler PropertyChanged;
 	}
 }

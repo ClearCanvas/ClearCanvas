@@ -219,6 +219,12 @@ namespace ClearCanvas.ImageViewer.Graphics
 			this.Insert(_sourcePoints.Count, item);
 		}
 
+		public void AddRange(IEnumerable<PointF> points)
+		{
+			foreach (var point in points)
+				Insert(_sourcePoints.Count, point);
+		}
+
 		///<summary>
 		///Removes all items from the <see cref="T:System.Collections.Generic.ICollection`1"></see>.
 		///</summary>

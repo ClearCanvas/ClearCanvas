@@ -23,7 +23,9 @@
 #endregion
 
 using System;
+using System.Collections.Specialized;
 using System.Configuration;
+using System.Reflection;
 
 namespace ClearCanvas.Common.Configuration
 {
@@ -48,7 +50,7 @@ namespace ClearCanvas.Common.Configuration
 		public StandardSettingsProvider()
 		{
 			// according to MSDN recommendation, use the name of the executing assembly here
-			_appName = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name;
+			_appName = Assembly.GetExecutingAssembly().GetName().Name;
 		}
 
 		static StandardSettingsProvider()
@@ -65,14 +67,8 @@ namespace ClearCanvas.Common.Configuration
 		/// </summary>
 		public override string ApplicationName
 		{
-			get
-			{
-				return _appName;
-			}
-			set
-			{
-				_appName = value;
-			}
+			get { return _appName; }
+			set { _appName = value; }
 		}
 
 		///<summary>
@@ -81,22 +77,29 @@ namespace ClearCanvas.Common.Configuration
 		///
 		///<param name="config">A collection of the name/value pairs representing the provider-specific attributes specified in the configuration for this provider.</param>
 		///<param name="name">The friendly name of the provider.</param>
-		public override void Initialize(string name, System.Collections.Specialized.NameValueCollection config)
+		public override void Initialize(string name, NameValueCollection config)
 		{
 			lock (_syncLock)
 			{
 				// obtain a source provider
-				try
+				if (SettingsStore.IsSupported)
 				{
-					ISettingsStore store = SettingsStore.Create();
-					_sourceProvider = new SettingsStoreSettingsProvider(store);
-				}
-				catch (NotSupportedException)
-				{
-                    //note: it's the log so keep it in English
-                    Platform.Log(LogLevel.Warn, "Configuration store not found - defaulting to LocalFileSettingsProvider" );
+					try
+					{
+						ISettingsStore store = SettingsStore.Create();
+						_sourceProvider = new SettingsStoreSettingsProvider(store);
+					}
+					catch (NotSupportedException ex)
+					{
+						// TODO: determine if we can safely treat other exceptions the same way here
+						Platform.Log(LogLevel.Warn, ex, "Configuration store failed to initialize - defaulting to LocalFileSettingsProvider");
 
-					// default to LocalFileSettingsProvider as a last resort
+						// default to LocalFileSettingsProvider as a last resort
+						_sourceProvider = new ExtendedLocalFileSettingsProvider(new LocalFileSettingsProvider());
+					}
+				}
+				else
+				{
 					_sourceProvider = new ExtendedLocalFileSettingsProvider(new LocalFileSettingsProvider());
 				}
 
@@ -121,7 +124,7 @@ namespace ClearCanvas.Common.Configuration
 		{
 			lock (_syncLock)
 			{
-				Type settingsClass = (Type)context["SettingsClassType"];
+				Type settingsClass = (Type) context["SettingsClassType"];
 				SettingsPropertyValueCollection values = _sourceProvider.GetPropertyValues(context, props);
 				TranslateValues(settingsClass, values);
 				return values;
@@ -144,7 +147,6 @@ namespace ClearCanvas.Common.Configuration
 
 		#endregion
 
-
 		#region IApplicationSettingsProvider Members
 
 		///<summary>
@@ -163,7 +165,7 @@ namespace ClearCanvas.Common.Configuration
 			{
 				if (_sourceProvider is IApplicationSettingsProvider)
 				{
-					return ((IApplicationSettingsProvider)_sourceProvider).GetPreviousVersion(context, property);
+					return ((IApplicationSettingsProvider) _sourceProvider).GetPreviousVersion(context, property);
 				}
 				else
 				{
@@ -184,7 +186,7 @@ namespace ClearCanvas.Common.Configuration
 			{
 				if (_sourceProvider is IApplicationSettingsProvider)
 				{
-					((IApplicationSettingsProvider)_sourceProvider).Reset(context);
+					((IApplicationSettingsProvider) _sourceProvider).Reset(context);
 				}
 				else
 				{
@@ -207,7 +209,7 @@ namespace ClearCanvas.Common.Configuration
 				{
 					if (_sourceProvider is IApplicationSettingsProvider)
 					{
-						((IApplicationSettingsProvider)_sourceProvider).Upgrade(context, properties);
+						((IApplicationSettingsProvider) _sourceProvider).Upgrade(context, properties);
 					}
 					else
 					{
@@ -226,7 +228,7 @@ namespace ClearCanvas.Common.Configuration
 			lock (_syncLock)
 			{
 				if (_sourceProvider is ISharedApplicationSettingsProvider)
-					return ((ISharedApplicationSettingsProvider)_sourceProvider).CanUpgradeSharedPropertyValues(context);
+					return ((ISharedApplicationSettingsProvider) _sourceProvider).CanUpgradeSharedPropertyValues(context);
 			}
 
 			return false;
@@ -237,7 +239,7 @@ namespace ClearCanvas.Common.Configuration
 			lock (_syncLock)
 			{
 				if (_sourceProvider is ISharedApplicationSettingsProvider)
-					((ISharedApplicationSettingsProvider)_sourceProvider).UpgradeSharedPropertyValues(context, properties, previousExeConfigFilename);
+					((ISharedApplicationSettingsProvider) _sourceProvider).UpgradeSharedPropertyValues(context, properties, previousExeConfigFilename);
 			}
 		}
 
@@ -247,8 +249,8 @@ namespace ClearCanvas.Common.Configuration
 			{
 				if (_sourceProvider is ISharedApplicationSettingsProvider)
 				{
-					var values = ((ISharedApplicationSettingsProvider)_sourceProvider).GetPreviousSharedPropertyValues(context, properties, previousExeConfigFilename);
-					var settingsClass = (Type)context["SettingsClassType"];
+					var values = ((ISharedApplicationSettingsProvider) _sourceProvider).GetPreviousSharedPropertyValues(context, properties, previousExeConfigFilename);
+					var settingsClass = (Type) context["SettingsClassType"];
 					TranslateValues(settingsClass, values);
 					return values;
 				}
@@ -263,8 +265,8 @@ namespace ClearCanvas.Common.Configuration
 			{
 				if (_sourceProvider is ISharedApplicationSettingsProvider)
 				{
-					var values = ((ISharedApplicationSettingsProvider)_sourceProvider).GetSharedPropertyValues(context, properties);
-					var settingsClass = (Type)context["SettingsClassType"];
+					var values = ((ISharedApplicationSettingsProvider) _sourceProvider).GetSharedPropertyValues(context, properties);
+					var settingsClass = (Type) context["SettingsClassType"];
 					TranslateValues(settingsClass, values);
 					return values;
 				}
@@ -278,7 +280,7 @@ namespace ClearCanvas.Common.Configuration
 			lock (_syncLock)
 			{
 				if (_sourceProvider is ISharedApplicationSettingsProvider)
-					((ISharedApplicationSettingsProvider)_sourceProvider).SetSharedPropertyValues(context, values);
+					((ISharedApplicationSettingsProvider) _sourceProvider).SetSharedPropertyValues(context, values);
 			}
 		}
 
@@ -288,8 +290,8 @@ namespace ClearCanvas.Common.Configuration
 		{
 			foreach (SettingsPropertyValue value in values)
 			{
-				if (value.SerializedValue == null || (value.SerializedValue is string) && ((string)value.SerializedValue) == ((string)value.Property.DefaultValue))
-					value.SerializedValue = SettingsClassMetaDataReader.TranslateDefaultValue(settingsClass, (string)value.Property.DefaultValue);
+				if (value.SerializedValue == null || (value.SerializedValue is string) && ((string) value.SerializedValue) == ((string) value.Property.DefaultValue))
+					value.SerializedValue = SettingsClassMetaDataReader.TranslateDefaultValue(settingsClass, (string) value.Property.DefaultValue);
 			}
 		}
 	}

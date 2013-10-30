@@ -76,9 +76,7 @@ namespace ClearCanvas.ImageViewer.InteractiveGraphics
 		/// <summary>
 		/// Constructs a new instance of <see cref="StandardStatefulGraphic"/>.
 		/// </summary>
-		public StandardStatefulGraphic(IGraphic subject) : base(subject)
-		{
-		}
+		public StandardStatefulGraphic(IGraphic subject) : base(subject) {}
 
 		/// <summary>
 		/// Cloning constructor.
@@ -88,13 +86,6 @@ namespace ClearCanvas.ImageViewer.InteractiveGraphics
 		protected StandardStatefulGraphic(StandardStatefulGraphic source, ICloningContext context) : base(source, context)
 		{
 			context.CloneFields(source, this);
-		}
-
-		[OnCloneComplete]
-		private void OnCloneComplete()
-		{
-			if (this.State == null)
-				this.State = this.CreateInactiveState();
 		}
 
 		/// <summary>
@@ -145,12 +136,17 @@ namespace ClearCanvas.ImageViewer.InteractiveGraphics
 			{
 				((IVectorGraphic) graphic).Color = color;
 			}
-			
+
 			if (graphic is CompositeGraphic)
 			{
 				foreach (IGraphic childGraphic in ((CompositeGraphic) graphic).Graphics)
 					UpdateGraphicStyle(childGraphic, color, controlGraphics);
 			}
+		}
+
+		protected override GraphicState CreateDefaultState()
+		{
+			return CreateInactiveState();
 		}
 
 		/// <summary>
@@ -162,7 +158,7 @@ namespace ClearCanvas.ImageViewer.InteractiveGraphics
 
 			if (this.State is InactiveGraphicState)
 				UpdateGraphicStyle(this, this.InactiveColor, false);
-			else if ( this.State is FocussedGraphicState)
+			else if (this.State is FocussedGraphicState)
 				UpdateGraphicStyle(this, this.FocusColor, true);
 			else if (this.State is SelectedGraphicState)
 				UpdateGraphicStyle(this, this.SelectedColor, false);

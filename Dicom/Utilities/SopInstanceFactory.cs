@@ -198,8 +198,8 @@ namespace ClearCanvas.Dicom.Utilities
 		{
 			// specific character set must be copied first before any other attributes are set!
 			var specificCharacterSet = SpecificCharacterSet ?? string.Empty;
-			if (target is DicomAttributeCollection)
-				((DicomAttributeCollection)target).SpecificCharacterSet = specificCharacterSet;
+			var dicomAttributeCollection = target as DicomAttributeCollection;
+			if (dicomAttributeCollection != null) dicomAttributeCollection.SpecificCharacterSet = specificCharacterSet;
 			target[DicomTags.SpecificCharacterSet].SetStringValue(specificCharacterSet);
 
 			// patient IE
@@ -321,126 +321,108 @@ namespace ClearCanvas.Dicom.Utilities
 			targetTrialStudy.ClinicalTrialTimePointId = sourceTrialStudy.ClinicalTrialTimePointId;
 			return true;
 		}
-
-		#region Prototype Factory Implementation
-
-	    /// TODO (CR Nov 2011): Unclear from method name what is returned.
-	    /// Also, "CreateInstance" often implies singleton.
-
-		/// <summary>
-		/// Creates a <see cref="SopInstanceFactory"/> that creates only empty prototype SOP instances.
-		/// </summary>
-		/// <returns>A new instance of <see cref="PrototypeSopInstanceFactory"/>.</returns>
-		public static PrototypeSopInstanceFactory CreateInstance()
-		{
-			return new PrototypeSopInstanceFactory();
-		}
-
-	    /// TODO (CR Nov 2011): Just make this an instantiable sealed class and move to outer scope.
-	    /// Generally prefer "new" over "Create" unless you actually need to abstract object creation,
-	    /// or there are parameters that are needed for creation, etc.
-
-		/// <summary>
-		/// An empty implementation of <see cref="SopInstanceFactory"/> that creates only empty prototype SOP instances.
-		/// </summary>
-		public sealed class PrototypeSopInstanceFactory : SopInstanceFactory
-		{
-			internal PrototypeSopInstanceFactory() {}
-
-			/// <summary>
-			/// Creates a prototype of a new composite SOP instance in the same study as the specified source.
-			/// </summary>
-			/// <remarks>
-			/// <para>
-			/// This method creates a new composite SOP instance with certain attributes initialized based on the specified
-			/// source SOP instance and details of the software application and institution creating the instance.
-			/// </para>
-			/// <para>
-			/// The following modules are copied verbatim from the source SOP instance:
-			/// </para>
-			/// <list type="bullet">
-			/// <item>Patient Module (C.7.1.1)</item>
-			/// <item>Clinical Trial Subject Module (C.7.1.3)</item>
-			/// <item>General Study Module (C.7.2.1)</item>
-			/// <item>Patient Study Module (C.7.2.2)</item>
-			/// <item>Clinical Trial Study Module (C.7.2.3)</item>
-			/// </list>
-			/// <para>
-			/// Additionally, certain attributes of the General Equipment Module (C.7.5.1) are automatically filled in with values
-			/// to identify the creating software application and institution, and the Specific Character Set (0008,0005) is copied
-			/// from the source SOP instance to ensure that copied attributes remain consistent.
-			/// </para>
-			/// </remarks>
-			/// <param name="source">An existing SOP instance whose attributes are used as a template to creating the new composite SOP instance.</param>
-			/// <returns>A <see cref="DicomFile"/> whose data set has been initialized with the attributes of common modules.</returns>
-			public DicomFile CreateFile(IDicomAttributeProvider source)
-			{
-				return CreatePrototypeFile(source);
-			}
-
-			/// <summary>
-			/// Creates a prototype of a new composite SOP instance in the same study as the specified source.
-			/// </summary>
-			/// <remarks>
-			/// <para>
-			/// This method creates a new composite SOP instance with certain attributes initialized based on the specified
-			/// source SOP instance and details of the software application and institution creating the instance.
-			/// </para>
-			/// <para>
-			/// The following modules are copied verbatim from the source SOP instance:
-			/// </para>
-			/// <list type="bullet">
-			/// <item>Patient Module (C.7.1.1)</item>
-			/// <item>Clinical Trial Subject Module (C.7.1.3)</item>
-			/// <item>General Study Module (C.7.2.1)</item>
-			/// <item>Patient Study Module (C.7.2.2)</item>
-			/// <item>Clinical Trial Study Module (C.7.2.3)</item>
-			/// </list>
-			/// <para>
-			/// Additionally, certain attributes of the General Equipment Module (C.7.5.1) are automatically filled in with values
-			/// to identify the creating software application and institution, and the Specific Character Set (0008,0005) is copied
-			/// from the source SOP instance to ensure that copied attributes remain consistent.
-			/// </para>
-			/// </remarks>
-			/// <param name="source">An existing SOP instance whose attributes are used as a template to creating the new composite SOP instance.</param>
-			/// <returns>A <see cref="DicomAttributeCollection"/> whose data set has been initialized with the attributes of common modules.</returns>
-			public DicomAttributeCollection CreateAttributeCollection(IDicomAttributeProvider source)
-			{
-				return CreatePrototypeAttributeCollection(source);
-			}
-
-			/// <summary>
-			/// Initializes a dataset with attributes for a new composite SOP instance in the same study as the specified source.
-			/// </summary>
-			/// <remarks>
-			/// <para>
-			/// This method initializes a data set with certain attributes based on the specified
-			/// source SOP instance and details of the software application and institution creating the instance.
-			/// </para>
-			/// <para>
-			/// The following modules are copied verbatim from the source SOP instance:
-			/// </para>
-			/// <list type="bullet">
-			/// <item>Patient Module (C.7.1.1)</item>
-			/// <item>Clinical Trial Subject Module (C.7.1.3)</item>
-			/// <item>General Study Module (C.7.2.1)</item>
-			/// <item>Patient Study Module (C.7.2.2)</item>
-			/// <item>Clinical Trial Study Module (C.7.2.3)</item>
-			/// </list>
-			/// <para>
-			/// Additionally, certain attributes of the General Equipment Module (C.7.5.1) are automatically filled in with values
-			/// to identify the creating software application and institution, and the Specific Character Set (0008,0005) is copied
-			/// from the source SOP instance to ensure that copied attributes remain consistent.
-			/// </para>
-			/// </remarks>
-			/// <param name="source">An existing SOP instance whose attributes are used as a template to creating the new composite SOP instance.</param>
-			/// <param name="target">The destination data set to be initialized with the attributes of common modules.</param>
-			public void InitializeDataSet(IDicomAttributeProvider source, IDicomAttributeProvider target)
-			{
-				InitializePrototypeDataSet(source, target);
-			}
-		}
-
-		#endregion
 	}
+
+	#region PrototypeSopInstanceFactory
+
+	/// <summary>
+	/// An implementation of <see cref="SopInstanceFactory"/> that creates only empty prototype SOP instances.
+	/// </summary>
+	public sealed class PrototypeSopInstanceFactory : SopInstanceFactory
+	{
+		/// <summary>
+		/// Creates a prototype of a new composite SOP instance in the same study as the specified source.
+		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// This method creates a new composite SOP instance with certain attributes initialized based on the specified
+		/// source SOP instance and details of the software application and institution creating the instance.
+		/// </para>
+		/// <para>
+		/// The following modules are copied verbatim from the source SOP instance:
+		/// </para>
+		/// <list type="bullet">
+		/// <item>Patient Module (C.7.1.1)</item>
+		/// <item>Clinical Trial Subject Module (C.7.1.3)</item>
+		/// <item>General Study Module (C.7.2.1)</item>
+		/// <item>Patient Study Module (C.7.2.2)</item>
+		/// <item>Clinical Trial Study Module (C.7.2.3)</item>
+		/// </list>
+		/// <para>
+		/// Additionally, certain attributes of the General Equipment Module (C.7.5.1) are automatically filled in with values
+		/// to identify the creating software application and institution, and the Specific Character Set (0008,0005) is copied
+		/// from the source SOP instance to ensure that copied attributes remain consistent.
+		/// </para>
+		/// </remarks>
+		/// <param name="source">An existing SOP instance whose attributes are used as a template to creating the new composite SOP instance.</param>
+		/// <returns>A <see cref="DicomFile"/> whose data set has been initialized with the attributes of common modules.</returns>
+		public DicomFile CreateFile(IDicomAttributeProvider source)
+		{
+			return CreatePrototypeFile(source);
+		}
+
+		/// <summary>
+		/// Creates a prototype of a new composite SOP instance in the same study as the specified source.
+		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// This method creates a new composite SOP instance with certain attributes initialized based on the specified
+		/// source SOP instance and details of the software application and institution creating the instance.
+		/// </para>
+		/// <para>
+		/// The following modules are copied verbatim from the source SOP instance:
+		/// </para>
+		/// <list type="bullet">
+		/// <item>Patient Module (C.7.1.1)</item>
+		/// <item>Clinical Trial Subject Module (C.7.1.3)</item>
+		/// <item>General Study Module (C.7.2.1)</item>
+		/// <item>Patient Study Module (C.7.2.2)</item>
+		/// <item>Clinical Trial Study Module (C.7.2.3)</item>
+		/// </list>
+		/// <para>
+		/// Additionally, certain attributes of the General Equipment Module (C.7.5.1) are automatically filled in with values
+		/// to identify the creating software application and institution, and the Specific Character Set (0008,0005) is copied
+		/// from the source SOP instance to ensure that copied attributes remain consistent.
+		/// </para>
+		/// </remarks>
+		/// <param name="source">An existing SOP instance whose attributes are used as a template to creating the new composite SOP instance.</param>
+		/// <returns>A <see cref="DicomAttributeCollection"/> whose data set has been initialized with the attributes of common modules.</returns>
+		public DicomAttributeCollection CreateAttributeCollection(IDicomAttributeProvider source)
+		{
+			return CreatePrototypeAttributeCollection(source);
+		}
+
+		/// <summary>
+		/// Initializes a dataset with attributes for a new composite SOP instance in the same study as the specified source.
+		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// This method initializes a data set with certain attributes based on the specified
+		/// source SOP instance and details of the software application and institution creating the instance.
+		/// </para>
+		/// <para>
+		/// The following modules are copied verbatim from the source SOP instance:
+		/// </para>
+		/// <list type="bullet">
+		/// <item>Patient Module (C.7.1.1)</item>
+		/// <item>Clinical Trial Subject Module (C.7.1.3)</item>
+		/// <item>General Study Module (C.7.2.1)</item>
+		/// <item>Patient Study Module (C.7.2.2)</item>
+		/// <item>Clinical Trial Study Module (C.7.2.3)</item>
+		/// </list>
+		/// <para>
+		/// Additionally, certain attributes of the General Equipment Module (C.7.5.1) are automatically filled in with values
+		/// to identify the creating software application and institution, and the Specific Character Set (0008,0005) is copied
+		/// from the source SOP instance to ensure that copied attributes remain consistent.
+		/// </para>
+		/// </remarks>
+		/// <param name="source">An existing SOP instance whose attributes are used as a template to creating the new composite SOP instance.</param>
+		/// <param name="target">The destination data set to be initialized with the attributes of common modules.</param>
+		public void InitializeDataSet(IDicomAttributeProvider source, IDicomAttributeProvider target)
+		{
+			InitializePrototypeDataSet(source, target);
+		}
+	}
+
+	#endregion
 }

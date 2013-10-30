@@ -22,6 +22,7 @@
 
 #endregion
 
+using System.Globalization;
 using ClearCanvas.Dicom.Iod.ContextGroups;
 
 namespace ClearCanvas.ImageViewer.KeyObjects
@@ -45,11 +46,21 @@ namespace ClearCanvas.ImageViewer.KeyObjects
 		public static readonly Code KeyObjectDescription = new Code(113012, "Key Object Description");
 
 		/// <summary>
+		/// Gets the code for DCM 121005 Observer Type.
+		/// </summary>
+		public static readonly Code ObserverType = new Code(121005, "Observer Type");
+
+		/// <summary>
+		/// Gets the code for DCM 121008 Person Observer Name.
+		/// </summary>
+		public static readonly Code PersonObserverName = new Code(121008, "Person Observer Name");
+
+		/// <summary>
 		/// A DICOM code sequence used in key object selections.
 		/// </summary>
 		public sealed class Code : ContextGroupBase<Code>.ContextGroupItemBase
 		{
-			internal Code(int codeValue, string codeMeaning) : base("DCM", codeValue.ToString(), codeMeaning) {}
+			internal Code(int codeValue, string codeMeaning) : base("DCM", codeValue.ToString(CultureInfo.InvariantCulture), codeMeaning) {}
 		}
 	}
 }

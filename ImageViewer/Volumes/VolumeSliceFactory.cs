@@ -251,6 +251,11 @@ namespace ClearCanvas.ImageViewer.Volumes
 
 		private IEnumerable<VolumeSlice> CreateSlicesCore(IVolumeReference volumeReference, Vector3D startPosition, Vector3D endPosition, int count)
 		{
+			// get the axes of the output plane and its normal in patient coordinates - these are the axes of the slicer frame
+			var slicerAxisX = (RowOrientationPatient ?? volumeReference.VolumeOrientationPatientX).Normalize();
+			var slicerAxisY = (ColumnOrientationPatient ?? volumeReference.VolumeOrientationPatientY).Normalize();
+			var slicerAxisZ = (StackOrientationPatient ?? slicerAxisX.Cross(slicerAxisY)).Normalize();
+
 			// get the pixel spacing (defaults to isotropic spacing based on smallest volume spacing dimension)
 			var pixelSpacing = GetPixelSpacing(volumeReference);
 
@@ -262,11 +267,6 @@ namespace ClearCanvas.ImageViewer.Volumes
 
 			// get the ideal subsampling for the slice thickness
 			var sliceSubsamples = Math.Max(1, (int) (sliceThickness/GetMinimumComponent(volumeReference.VoxelSpacing) + 0.5));
-
-			// get the axes of the output plane and its normal in patient coordinates - these are the axes of the slicer frame
-			var slicerAxisX = (RowOrientationPatient ?? volumeReference.VolumeOrientationPatientX).Normalize();
-			var slicerAxisY = (ColumnOrientationPatient ?? volumeReference.VolumeOrientationPatientY).Normalize();
-			var slicerAxisZ = (StackOrientationPatient ?? slicerAxisX.Cross(slicerAxisY)).Normalize();
 
 			// project the corners of the volume on to the slicer axes to determine the bounds of the volume in the slicer frame
 			float minBoundsX = float.MaxValue, minBoundsY = float.MaxValue, minBoundsZ = float.MaxValue;
@@ -313,11 +313,11 @@ namespace ClearCanvas.ImageViewer.Volumes
 			var args = new VolumeSliceArgs(sliceRows, sliceColumns, pixelSpacing.Height, pixelSpacing.Width, slicerAxisX, slicerAxisY, sliceThickness, sliceSubsamples, Interpolation, Projection);
 
 			// compute the image position patient for each output slice and create the slices
-			return GetSlicePositions(slicerOrigin, slicerAxisX, slicerAxisY, slicerAxisZ, stackDepth, sliceRows, sliceColumns, pixelSpacing, sliceSpacing, startPosition, endPosition, count)
+			return GetSlicePositions(slicerOrigin, slicerAxisX, slicerAxisY, slicerAxisZ, stackDepth, sliceRows, sliceColumns, pixelSpacing, sliceSpacing, sliceThickness, startPosition, endPosition, count)
 				.Select(p => new VolumeSlice(volumeReference.Clone(), true, args, p, sliceSpacing));
 		}
 
-		private IEnumerable<Vector3D> GetSlicePositions(Vector3D slicerOrigin, Vector3D slicerAxisX, Vector3D slicerAxisY, Vector3D slicerAxisZ, float stackDepth, int sliceRows, int sliceColumns, SizeF pixelSpacing, float sliceSpacing, Vector3D startPosition, Vector3D endPosition, int count)
+		private IEnumerable<Vector3D> GetSlicePositions(Vector3D slicerOrigin, Vector3D slicerAxisX, Vector3D slicerAxisY, Vector3D slicerAxisZ, float stackDepth, int sliceRows, int sliceColumns, SizeF pixelSpacing, float sliceSpacing, float sliceThickness, Vector3D startPosition, Vector3D endPosition, int count)
 		{
 			// compute the increment in position between consecutive slices
 			var slicePositionIncrement = slicerAxisZ*sliceSpacing;
@@ -326,7 +326,8 @@ namespace ClearCanvas.ImageViewer.Volumes
 			var sliceCount = (int) (Math.Abs(1.0*stackDepth/sliceSpacing) + 0.5);
 
 			// compute the position of the first slice when slicing the entire volume
-			var firstSlicePosition = slicerOrigin;
+			// (offset by half a slice thickness, since the position identifies the centre of the slice for non-trivial slice thicknesses)
+			var firstSlicePosition = slicerOrigin + slicerAxisZ*(sliceThickness/2f);
 
 			// if a start position (and, optionally, end position or total count) is provided, we adjust the slice position and count accordingly
 			if (startPosition != null)
@@ -386,7 +387,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 
 		private float GetSliceSpacing(IVolumeHeader volumeReference)
 		{
-			return SliceSpacing ?? GetMinimumComponent(volumeReference.VoxelSpacing);
+			return SliceSpacing ?? (SliceThickness.HasValue ? SliceThickness.Value : GetMinimumComponent(volumeReference.VoxelSpacing));
 		}
 
 		private SizeF GetPixelSpacing(IVolumeHeader volumeHeader)

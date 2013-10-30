@@ -33,7 +33,7 @@ namespace ClearCanvas.ImageViewer.Mathematics
 	/// The Vector3D class is immutable.  All necessary operations
 	/// can be done via the operator overloads.
 	/// </remarks>
-	public class Vector3D : IEquatable<Vector3D>
+	public sealed class Vector3D : IEquatable<Vector3D>
 	{
 		private readonly float _x;
 		private readonly float _y;
@@ -238,7 +238,7 @@ namespace ClearCanvas.ImageViewer.Mathematics
 		/// </summary>
 		public override string ToString()
 		{
-			return String.Format(@"({0:F8}, {1:F8}, {2:F8})", _x, _y, _z);
+			return String.Format(@"({0}, {1}, {2})", _x, _y, _z);
 		}
 
 		/// <summary>

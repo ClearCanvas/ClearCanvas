@@ -23,8 +23,6 @@
 #endregion
 
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Drawing;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
@@ -38,20 +36,18 @@ namespace ClearCanvas.ImageViewer
 	/// An extension point for views onto <see cref="ImageBox"/>.
 	/// </summary>
 	[ExtensionPoint]
-	public sealed class ImageBoxViewExtensionPoint : ExtensionPoint<IView>
-	{
-	}
+	public sealed class ImageBoxViewExtensionPoint : ExtensionPoint<IView> {}
 
-    /// <summary>
+	/// <summary>
 	/// A container for <see cref="ITile"/> objects.
 	/// </summary>
-	[AssociateView(typeof(ImageBoxViewExtensionPoint))]
+	[AssociateView(typeof (ImageBoxViewExtensionPoint))]
 	public class ImageBox : IImageBox
 	{
 		#region Private Fields
-		
+
 		private TileCollection _tiles;
-		private IImageViewer _imageViewer; 
+		private IImageViewer _imageViewer;
 		private PhysicalWorkspace _parentPhysicalWorkspace;
 		private DisplaySet _displaySet;
 		private Tile _selectedTile;
@@ -65,7 +61,7 @@ namespace ClearCanvas.ImageViewer
 		private static Color _selectedColor = Color.Orange;
 		private static Color _unselectedColor = Color.DarkGray;
 
-        private event EventHandler _drawingEvent;
+		private event EventHandler _drawingEvent;
 		private event EventHandler<ItemEventArgs<IImageBox>> _selectionChangedEvent;
 		private event EventHandler<DisplaySetChangedEventArgs> _displaySetChangedEvent;
 		private event EventHandler<ItemEventArgs<ITile>> _tileAddedEvent;
@@ -81,9 +77,8 @@ namespace ClearCanvas.ImageViewer
 		{
 			this.Tiles.ItemAdded += OnTileAdded;
 			this.Tiles.ItemRemoved += OnTileRemoved;
-            ExtensionData = new ExtensionData();
+			ExtensionData = new ExtensionData();
 		}
-
 
 		#region Public properties
 
@@ -93,12 +88,12 @@ namespace ClearCanvas.ImageViewer
 		/// </summary>
 		public TileCollection Tiles
 		{
-			get 
+			get
 			{
 				if (_tiles == null)
 					_tiles = new TileCollection();
 
-				return _tiles; 
+				return _tiles;
 			}
 		}
 
@@ -111,7 +106,7 @@ namespace ClearCanvas.ImageViewer
 		public IImageViewer ImageViewer
 		{
 			get { return _imageViewer; }
-			internal set 
+			internal set
 			{
 				_imageViewer = value;
 
@@ -152,10 +147,10 @@ namespace ClearCanvas.ImageViewer
 		public RectangleF NormalizedRectangle
 		{
 			get { return _normalizedRectangle; }
-			set 
+			set
 			{
 				RectangleUtilities.VerifyNormalizedRectangle(value);
-				_normalizedRectangle = value; 
+				_normalizedRectangle = value;
 			}
 		}
 
@@ -207,8 +202,8 @@ namespace ClearCanvas.ImageViewer
 					foreach (Tile tile in this.Tiles)
 						tile.PresentationImage = null;
 				}
-				// If there *is* a DisplaySet associated with
-				// this ImageBox...
+					// If there *is* a DisplaySet associated with
+					// this ImageBox...
 				else
 				{
 					_displaySet.ImageBox = this;
@@ -253,7 +248,7 @@ namespace ClearCanvas.ImageViewer
 		public bool Selected
 		{
 			get { return _selected; }
-			private set 
+			private set
 			{
 				if (_selected != value)
 				{
@@ -463,7 +458,7 @@ namespace ClearCanvas.ImageViewer
 				Platform.CheckIndexRange(row, 0, this.Rows - 1, this);
 				Platform.CheckIndexRange(column, 0, this.Columns - 1, this);
 
-				int index = row * this.Columns + column;
+				int index = row*this.Columns + column;
 				return this.Tiles[index];
 			}
 		}
@@ -477,9 +472,9 @@ namespace ClearCanvas.ImageViewer
 			set { _enabled = value; }
 		}
 
-        public ExtensionData ExtensionData { get; private set; }
+		public ExtensionData ExtensionData { get; private set; }
 
-        #endregion
+		#endregion
 
 		#region Public events
 
@@ -582,8 +577,7 @@ namespace ClearCanvas.ImageViewer
 			}
 		}
 
-
-        private void DisposeTiles()
+		private void DisposeTiles()
 		{
 			if (this.Tiles == null)
 				return;
@@ -594,7 +588,7 @@ namespace ClearCanvas.ImageViewer
 			this.Tiles.Clear();
 		}
 
-		#endregion 
+		#endregion
 
 		#region Public methods
 
@@ -618,7 +612,7 @@ namespace ClearCanvas.ImageViewer
 
 			// Don't bother if nothing's changed.
 			if (numberOfRows == this.Rows &&
-				numberOfColumns == this.Columns)
+			    numberOfColumns == this.Columns)
 				return;
 
 			_rows = numberOfRows;
@@ -626,16 +620,16 @@ namespace ClearCanvas.ImageViewer
 
 			DisposeTiles();
 
-			double tileWidth = 1.0d / numberOfColumns;
-			double tileHeight = 1.0d / numberOfRows;
+			double tileWidth = 1.0d/numberOfColumns;
+			double tileHeight = 1.0d/numberOfRows;
 
 			for (int row = 0; row < numberOfRows; row++)
 			{
 				for (int column = 0; column < numberOfColumns; column++)
 				{
-					double x = column * tileWidth;
-					double y = row * tileHeight;
-					RectangleF rect = new RectangleF((float)x, (float)y, (float)tileWidth, (float)tileHeight);
+					double x = column*tileWidth;
+					double y = row*tileHeight;
+					RectangleF rect = new RectangleF((float) x, (float) y, (float) tileWidth, (float) tileHeight);
 
 					Tile tile = new Tile();
 					tile.NormalizedRectangle = rect;
@@ -644,6 +638,31 @@ namespace ClearCanvas.ImageViewer
 			}
 
 			EventsHelper.Fire(_layoutCompletedEvent, this, EventArgs.Empty);
+		}
+
+		/// <summary>
+		/// Helper method for setting the display set of this image box.
+		/// </summary>
+		/// <param name="displaySet">The display set to show in this image box, or NULL to clear it.</param>
+		/// <param name="createFreshCopy">Value indicating whether or not <see cref="IDisplaySet.CreateFreshCopy"/> should be called on the display set.</param>
+		/// <param name="addToCommandHistory">Value indicating whether or not the viewer command history should be updated.</param>
+		/// <param name="selectDefaultTile">Value indicating whether or not <see cref="IImageBox.SelectDefaultTile"/> should be called after updating the display set.</param>
+		public void SetDisplaySet(IDisplaySet displaySet, bool createFreshCopy = false, bool addToCommandHistory = true, bool selectDefaultTile = true)
+		{
+			var memorableCommand = addToCommandHistory ? new MemorableUndoableCommand(this) {BeginState = CreateMemento()} : null;
+
+			DisplaySet = displaySet != null && createFreshCopy ? displaySet.CreateFreshCopy() : displaySet;
+			Draw();
+			if (selectDefaultTile) SelectDefaultTile();
+
+			if (addToCommandHistory)
+			{
+				memorableCommand.EndState = CreateMemento();
+
+				var historyCommand = new DrawableUndoableCommand(this);
+				historyCommand.Enqueue(memorableCommand);
+				ImageViewer.CommandHistory.AddCommand(historyCommand);
+			}
 		}
 
 		/// <summary>
@@ -706,14 +725,14 @@ namespace ClearCanvas.ImageViewer
 				displaySetMemento = this.DisplaySet.CreateMemento();
 
 			ImageBoxMemento imageBoxMemento =
-					new ImageBoxMemento(this.DisplaySet,
-										this.DisplaySetLocked,
-										displaySetMemento,
-										this.Rows,
-										this.Columns,
-										this.TopLeftPresentationImageIndex,
-										this.NormalizedRectangle,
-										this.IndexOfSelectedTile);
+				new ImageBoxMemento(this.DisplaySet,
+				                    this.DisplaySetLocked,
+				                    displaySetMemento,
+				                    this.Rows,
+				                    this.Columns,
+				                    this.TopLeftPresentationImageIndex,
+				                    this.NormalizedRectangle,
+				                    this.IndexOfSelectedTile);
 
 			return imageBoxMemento;
 		}
@@ -730,7 +749,7 @@ namespace ClearCanvas.ImageViewer
 		{
 			Platform.CheckForNullReference(memento, "memento");
 
-			ImageBoxMemento imageBoxMemento = (ImageBoxMemento)memento;
+			ImageBoxMemento imageBoxMemento = (ImageBoxMemento) memento;
 
 			if (imageBoxMemento.Rows != this.Rows || imageBoxMemento.Columns != this.Columns)
 			{
@@ -747,7 +766,7 @@ namespace ClearCanvas.ImageViewer
 			this.DisplaySet = imageBoxMemento.DisplaySet;
 			if (this.DisplaySet != null)
 				this.DisplaySet.SetMemento(imageBoxMemento.DisplaySetMemento);
-			
+
 			this.DisplaySetLocked = imageBoxMemento.DisplaySetLocked;
 
 			this.NormalizedRectangle = imageBoxMemento.NormalizedRectangle;
@@ -767,7 +786,6 @@ namespace ClearCanvas.ImageViewer
 		#endregion
 
 		#region Internal/private methods
-
 
 		internal void Deselect()
 		{
@@ -803,7 +821,7 @@ namespace ClearCanvas.ImageViewer
 				else
 					startImageIndex = imageIndex;
 			}
-			// Case when there are fewer images than tiles
+				// Case when there are fewer images than tiles
 			else
 			{
 				startImageIndex = 0;
@@ -834,7 +852,7 @@ namespace ClearCanvas.ImageViewer
 			// 2,4,5,6
 			// 3,4,5,6
 			if (startImageIndex <= this.TopLeftPresentationImageIndex ||
-				this.TopLeftPresentationImageIndex == -1)
+			    this.TopLeftPresentationImageIndex == -1)
 			{
 				for (int tileIndex = 0; tileIndex < this.Tiles.Count; tileIndex++)
 					SetImage(startImageIndex, tileIndex);
@@ -855,8 +873,8 @@ namespace ClearCanvas.ImageViewer
 			{
 				tile.PresentationImage = this.DisplaySet.PresentationImages[startImageIndex + tileIndex];
 			}
-			// If there are no images left (the case when there are fewer images than tiles)
-			// then just set the tile to blank
+				// If there are no images left (the case when there are fewer images than tiles)
+				// then just set the tile to blank
 			else
 			{
 				tile.PresentationImage = null;
@@ -866,10 +884,10 @@ namespace ClearCanvas.ImageViewer
 
 		private void OnTileAdded(object sender, ListEventArgs<ITile> e)
 		{
-			Tile tile = (Tile)e.Item;
+			Tile tile = (Tile) e.Item;
 			tile.ImageViewer = this.ImageViewer;
 			tile.ParentImageBox = this;
-		    EventsHelper.Fire(_tileAddedEvent, this, new ItemEventArgs<ITile>(e.Item));
+			EventsHelper.Fire(_tileAddedEvent, this, new ItemEventArgs<ITile>(e.Item));
 		}
 
 		private void OnTileRemoved(object sender, ListEventArgs<ITile> e)
@@ -877,7 +895,7 @@ namespace ClearCanvas.ImageViewer
 			if (e.Item.Selected)
 				this.SelectedTile = null;
 
-            EventsHelper.Fire(_tileRemovedEvent, this, new ItemEventArgs<ITile>(e.Item));
+			EventsHelper.Fire(_tileRemovedEvent, this, new ItemEventArgs<ITile>(e.Item));
 		}
 
 		#endregion

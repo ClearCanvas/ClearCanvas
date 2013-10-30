@@ -22,16 +22,17 @@
 
 #endregion
 
-using System;
 using System.Collections.Generic;
+using System.Linq;
 using ClearCanvas.Common;
+using ClearCanvas.Dicom.Iod;
+using ClearCanvas.Dicom.Iod.ContextGroups;
 using ClearCanvas.Dicom.Iod.Iods;
 using ClearCanvas.Dicom.Iod.Macros;
 using ClearCanvas.Dicom.Iod.Macros.DocumentRelationship;
 using ClearCanvas.Dicom.Iod.Modules;
-using ClearCanvas.ImageViewer.StudyManagement;
 using ClearCanvas.Dicom.Utilities;
-using ValueType=ClearCanvas.Dicom.Iod.ValueType;
+using ClearCanvas.ImageViewer.StudyManagement;
 
 namespace ClearCanvas.ImageViewer.KeyObjects
 {
@@ -75,61 +76,135 @@ namespace ClearCanvas.ImageViewer.KeyObjects
 			List<IKeyObjectContentItem> contentItems = new List<IKeyObjectContentItem>();
 
 			SrDocumentContentModuleIod srDocument = _document.SrDocumentContent;
-            if (srDocument.ContentSequence != null)
-            {
-                foreach (IContentSequence contentItem in srDocument.ContentSequence)
-                {
-                    if (contentItem.RelationshipType == RelationshipType.Contains)
-                    {
-                        if (contentItem.ValueType == ValueType.Image)
-                        {
-                            IImageReferenceMacro imageReference = contentItem;
-                            if (imageReference.ReferencedSopSequence == null)
-                            {
-                                Platform.Log(LogLevel.Warn, "Invalid Key Object Selection document has no Referenced SOP Sequence.");
-                                continue;
-                            }
+			if (srDocument.ContentSequence != null)
+			{
+				foreach (IContentSequence contentItem in srDocument.ContentSequence.Where(contentItem => contentItem.RelationshipType == RelationshipType.Contains))
+				{
+					if (contentItem.ValueType == ValueType.Image)
+					{
+						IImageReferenceMacro imageReference = contentItem;
+						if (imageReference.ReferencedSopSequence == null)
+						{
+							Platform.Log(LogLevel.Warn, "Invalid Key Object Selection document has no Referenced SOP Sequence.");
+							continue;
+						}
 
-                            string referencedSopInstanceUid = imageReference.ReferencedSopSequence.ReferencedSopInstanceUid;
-                            string presentationStateSopInstanceUid = null;
+						string referencedSopInstanceUid = imageReference.ReferencedSopSequence.ReferencedSopInstanceUid;
+						string presentationStateSopInstanceUid = null;
 
-                            if (imageReference.ReferencedSopSequence.ReferencedSopSequence != null)
-                            {
-                                presentationStateSopInstanceUid = imageReference.ReferencedSopSequence.ReferencedSopSequence.ReferencedSopInstanceUid;
-                            }
+						if (imageReference.ReferencedSopSequence.ReferencedSopSequence != null)
+						{
+							presentationStateSopInstanceUid = imageReference.ReferencedSopSequence.ReferencedSopSequence.ReferencedSopInstanceUid;
+						}
 
-                            string referencedFrameNumbers = imageReference.ReferencedSopSequence.ReferencedFrameNumber;
-                            int[] frameNumbers;
-                            if (!string.IsNullOrEmpty(referencedFrameNumbers)
-                                && DicomStringHelper.TryGetIntArray(referencedFrameNumbers, out frameNumbers) && frameNumbers.Length > 0)
-                            {
-                                foreach (int frameNumber in frameNumbers)
-                                {
-                                    KeyImageContentItem item = new KeyImageContentItem(referencedSopInstanceUid, frameNumber, presentationStateSopInstanceUid, _document);
-                                    contentItems.Add(item);
-                                }
-                            }
-                            else
-                            {
-                                KeyImageContentItem item = new KeyImageContentItem(referencedSopInstanceUid, presentationStateSopInstanceUid, _document);
-                                contentItems.Add(item);
-                            }
-                        }
-                        else
-                        {
-                            Platform.Log(LogLevel.Warn, "Unsupported key object selection content item of value type {0}.", contentItem.ValueType);
-                            continue;
-                        }
-
-                    }
-                }
-            }
-            else
-            {
-                Platform.Log(LogLevel.Warn, "Invalid Key Object Selection document has no Content Sequence.");
-            }
+						string referencedFrameNumbers = imageReference.ReferencedSopSequence.ReferencedFrameNumber;
+						int[] frameNumbers;
+						if (!string.IsNullOrEmpty(referencedFrameNumbers)
+						    && DicomStringHelper.TryGetIntArray(referencedFrameNumbers, out frameNumbers) && frameNumbers.Length > 0)
+						{
+							foreach (int frameNumber in frameNumbers)
+							{
+								KeyImageContentItem item = new KeyImageContentItem(referencedSopInstanceUid, frameNumber, presentationStateSopInstanceUid, _document);
+								contentItems.Add(item);
+							}
+						}
+						else
+						{
+							KeyImageContentItem item = new KeyImageContentItem(referencedSopInstanceUid, presentationStateSopInstanceUid, _document);
+							contentItems.Add(item);
+						}
+					}
+					else
+					{
+						Platform.Log(LogLevel.Warn, "Unsupported key object selection content item of value type {0}.", contentItem.ValueType);
+					}
+				}
+			}
+			else
+			{
+				Platform.Log(LogLevel.Warn, "Invalid Key Object Selection document has no Content Sequence.");
+			}
 
 			return contentItems.AsReadOnly();
+		}
+
+		/// <summary>
+		/// Deserializes the key object selection SOP instance into a list of observer contexts.
+		/// </summary>
+		public IList<IKeyObjectContentItem> DeserializeObserverContexts()
+		{
+			List<IKeyObjectContentItem> contentItems = new List<IKeyObjectContentItem>();
+
+			SrDocumentContentModuleIod srDocument = _document.SrDocumentContent;
+			if (srDocument.ContentSequence != null)
+			{
+				foreach (IContentSequence contentItem in srDocument.ContentSequence.Where(contentItem => contentItem.RelationshipType == RelationshipType.HasObsContext))
+				{
+					if (AreEqual(contentItem.ConceptNameCodeSequence, KeyObjectSelectionCodeSequences.PersonObserverName))
+					{
+						contentItems.Add(new PersonObserverContextContentItem(contentItem.PersonName, _document));
+					}
+					else
+					{
+						Platform.Log(LogLevel.Warn, "Unsupported key object selection content item of value type {0}.", contentItem.ValueType);
+					}
+				}
+			}
+			else
+			{
+				Platform.Log(LogLevel.Warn, "Invalid Key Object Selection document has no Content Sequence.");
+			}
+
+			return contentItems.AsReadOnly();
+		}
+
+		/// <summary>
+		/// Deserializes the key object selection SOP instance into a list of descriptions.
+		/// </summary>
+		public IList<IKeyObjectContentItem> DeserializeDescriptions()
+		{
+			List<IKeyObjectContentItem> contentItems = new List<IKeyObjectContentItem>();
+
+			SrDocumentContentModuleIod srDocument = _document.SrDocumentContent;
+			if (srDocument.ContentSequence != null)
+			{
+				foreach (IContentSequence contentItem in srDocument.ContentSequence.Where(contentItem => contentItem.RelationshipType == RelationshipType.Contains))
+				{
+					if (AreEqual(contentItem.ConceptNameCodeSequence, KeyObjectSelectionCodeSequences.KeyObjectDescription))
+					{
+						contentItems.Add(new KeyObjectDescriptionContentItem(contentItem.TextValue, _document));
+					}
+					else
+					{
+						Platform.Log(LogLevel.Warn, "Unsupported key object selection content item of value type {0}.", contentItem.ValueType);
+					}
+				}
+			}
+			else
+			{
+				Platform.Log(LogLevel.Warn, "Invalid Key Object Selection document has no Content Sequence.");
+			}
+
+			return contentItems.AsReadOnly();
+		}
+
+		public KeyObjectSelectionDocumentTitle DocumentTitle
+		{
+			get
+			{
+				var codeSequence = _document.SrDocumentContent.ConceptNameCodeSequence;
+				return KeyObjectSelectionDocumentTitleContextGroup.Values.FirstOrDefault(k => AreEqual(codeSequence, k));
+			}
+		}
+
+		private bool AreEqual(CodeSequenceMacro x, KeyObjectSelectionCodeSequences.Code y)
+		{
+			return x == null ? y == null : (y != null && x.CodeValue == y.CodeValue && x.CodingSchemeDesignator == y.CodingSchemeDesignator);
+		}
+
+		private bool AreEqual(CodeSequenceMacro x, KeyObjectSelectionDocumentTitle y)
+		{
+			return x == null ? y == null : (y != null && x.CodeValue == y.CodeValue && x.CodingSchemeDesignator == y.CodingSchemeDesignator);
 		}
 	}
 }

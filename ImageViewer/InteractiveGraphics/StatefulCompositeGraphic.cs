@@ -34,9 +34,12 @@ namespace ClearCanvas.ImageViewer.InteractiveGraphics
 	/// An interactive graphic that adds statefulness to the subject graphic.
 	/// </summary>
 	[Cloneable]
-	public abstract class StatefulCompositeGraphic : ControlGraphic, IStatefulGraphic, IMouseButtonHandler
+	public abstract class StatefulCompositeGraphic : ControlGraphic, IStatefulGraphic
 	{
 		private event EventHandler<GraphicStateChangedEventArgs> _stateChangedEvent;
+
+		[CloneIgnore]
+		private bool _firstDraw = true;
 
 		[CloneIgnore]
 		private GraphicState _state;
@@ -69,15 +72,22 @@ namespace ClearCanvas.ImageViewer.InteractiveGraphics
 		/// </summary>
 		public GraphicState State
 		{
-			get { return _state; }
+			get
+			{
+				if (_state == null)
+				{
+					_state = CreateDefaultState();
+					OnStateInitialized();
+				}
+				return _state;
+			}
 			set
 			{
 				Platform.CheckForNullReference(value, "State");
 
 				// If it's the same state, then don't do anything
-				if (_state != null)
-					if (_state.GetType() == value.GetType())
-						return;
+				if (_state != null && _state.GetType() == value.GetType())
+					return;
 
 				GraphicStateChangedEventArgs args = new GraphicStateChangedEventArgs();
 
@@ -97,7 +107,7 @@ namespace ClearCanvas.ImageViewer.InteractiveGraphics
 				{
 					OnStateChanged(args);
 					EventsHelper.Fire(_stateChangedEvent, this, args);
-				} 
+				}
 				else
 				{
 					OnStateInitialized();
@@ -112,6 +122,20 @@ namespace ClearCanvas.ImageViewer.InteractiveGraphics
 		{
 			add { _stateChangedEvent += value; }
 			remove { _stateChangedEvent -= value; }
+		}
+
+		/// <summary>
+		/// Called to create the initial default state of the graphic, if one was not assigned by client code.
+		/// </summary>
+		protected abstract GraphicState CreateDefaultState();
+
+		public override void OnDrawing()
+		{
+			// this exists to ensure that the state is initialized before the first draw whether client code
+			// explicitly creates and sets state, or it has to force a default state to be created and used.
+			if (_firstDraw && State != null) _firstDraw = false;
+
+			base.OnDrawing();
 		}
 
 		/// <summary>
@@ -141,9 +165,9 @@ namespace ClearCanvas.ImageViewer.InteractiveGraphics
 		/// </returns>
 		protected override bool Start(IMouseInformation mouseInformation)
 		{
-			Platform.CheckMemberIsSet(this.State, "State");
+			Platform.CheckMemberIsSet(State, "State");
 			_mouseInformation = mouseInformation;
-			this.State.Start(mouseInformation);
+			State.Start(mouseInformation);
 			return false;
 		}
 
@@ -157,9 +181,9 @@ namespace ClearCanvas.ImageViewer.InteractiveGraphics
 		/// <returns>True if the message was handled, otherwise false.</returns>
 		protected override bool Track(IMouseInformation mouseInformation)
 		{
-			Platform.CheckMemberIsSet(this.State, "State");
+			Platform.CheckMemberIsSet(State, "State");
 			_mouseInformation = mouseInformation;
-			this.State.Track(mouseInformation);
+			State.Track(mouseInformation);
 			return false;
 		}
 
@@ -171,9 +195,9 @@ namespace ClearCanvas.ImageViewer.InteractiveGraphics
 		/// </returns>
 		protected override bool Stop(IMouseInformation mouseInformation)
 		{
-			Platform.CheckMemberIsSet(this.State, "State");
+			Platform.CheckMemberIsSet(State, "State");
 			_mouseInformation = mouseInformation;
-			this.State.Stop(mouseInformation);
+			State.Stop(mouseInformation);
 			return false;
 		}
 
@@ -187,7 +211,7 @@ namespace ClearCanvas.ImageViewer.InteractiveGraphics
 		/// </remarks>
 		protected override void Cancel()
 		{
-			this.State.Cancel();
+			State.Cancel();
 		}
 
 		/// <summary>
@@ -195,7 +219,7 @@ namespace ClearCanvas.ImageViewer.InteractiveGraphics
 		/// </summary>
 		public override MouseButtonHandlerBehaviour Behaviour
 		{
-			get { return this.State.Behaviour; }
+			get { return State.Behaviour; }
 		}
 
 		#endregion

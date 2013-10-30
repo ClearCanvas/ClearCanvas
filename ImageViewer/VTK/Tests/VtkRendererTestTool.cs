@@ -32,13 +32,10 @@ using ClearCanvas.Desktop.Actions;
 using ClearCanvas.ImageViewer.BaseTools;
 using ClearCanvas.ImageViewer.Graphics3D;
 using ClearCanvas.ImageViewer.Mathematics;
-using ClearCanvas.ImageViewer.Vtk.Rendering;
 
 namespace ClearCanvas.ImageViewer.Vtk.Tests
 {
 	[MenuAction("testimage", "global-menus/VTK Debug/Test Image", "TestImage")]
-	[MenuAction("fps", "global-menus/VTK Debug/Show'/Hide FPS", "ShowHideFps")]
-	[MenuAction("report", "global-menus/VTK Debug/System Info", "SystemReport")]
 	[ExtensionOf(typeof (ImageViewerToolExtensionPoint))]
 	internal class VtkRendererTestTool : ImageViewerTool
 	{
@@ -58,47 +55,6 @@ namespace ClearCanvas.ImageViewer.Vtk.Tests
 
 				ImageViewer.SelectedImageBox.DisplaySet = dset;
 				ImageViewer.SelectedImageBox.Draw();
-			}
-			catch (Exception ex)
-			{
-				ExceptionHandler.Report(ex, Context.DesktopWindow);
-			}
-		}
-
-		public void ShowHideFps()
-		{
-			try
-			{
-				VtkPresentationImageRenderer.ShowFps = !VtkPresentationImageRenderer.ShowFps;
-
-				ImageViewer.PhysicalWorkspace.Draw();
-			}
-			catch (Exception ex)
-			{
-				ExceptionHandler.Report(ex, Context.DesktopWindow);
-			}
-		}
-
-		public void SystemReport()
-		{
-			try
-			{
-				string log;
-				string msg;
-
-				var lines = Win32VtkRenderingSurface.ReportCapabilities().Split('\r', '\n');
-				if (lines.Length > 16)
-				{
-					msg = string.Join(Environment.NewLine, lines, 0, 12) + Environment.NewLine + "(see logs for complete report)";
-					log = string.Join(Environment.NewLine, lines);
-				}
-				else
-				{
-					log = msg = string.Join(Environment.NewLine, lines);
-				}
-
-				Context.DesktopWindow.ShowMessageBox(msg, MessageBoxActions.Ok);
-				Platform.Log(LogLevel.Info, "VTK System Info" + Environment.NewLine + Environment.NewLine + log);
 			}
 			catch (Exception ex)
 			{

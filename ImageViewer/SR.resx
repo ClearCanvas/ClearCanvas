@@ -765,4 +765,7 @@ Alternately, the study can be brought back online by a PACS administrator.</valu
   <data name="SuffixFormatMultiframeStackDisplaySet" xml:space="preserve">
     <value>Stack {0}</value>
   </data>
+  <data name="MessageVolumeSourceInconsistentRescaleUnits">
+    <value xml:space="preserve">Each frame in the source dataset must be in the same pixel units.</value>
+  </data>
 </root>

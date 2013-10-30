@@ -24,12 +24,13 @@
 
 using System;
 using System.Configuration;
+using ClearCanvas.Common.Configuration;
 using ClearCanvas.Common.Utilities;
 
 namespace ClearCanvas.ImageViewer.Externals.Config
 {
 	[SettingsGroupDescription("Settings for external applications.")]
-	[SettingsProvider(typeof (LocalFileSettingsProvider))]
+	[SettingsProvider(typeof (ExtendedLocalFileSettingsProvider))]
 	internal sealed partial class ExternalsConfigurationSettings
 	{
 		private event EventHandler _externalsChanged;

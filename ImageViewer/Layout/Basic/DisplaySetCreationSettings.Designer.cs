@@ -61,7 +61,7 @@ namespace ClearCanvas.ImageViewer.Layout.Basic {
         [global::System.Configuration.SettingsDescriptionAttribute("Modalities where you might encounter \"mixed multiframe\" series, meaning there are" +
             " one or more multiframes and/or single images in the same series.")]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("CT,MG,MR,NM,RF,SC,US,XA")]
+        [global::System.Configuration.DefaultSettingValueAttribute("CT,MG,MR,NM,PT,RF,SC,US,XA")]
         public string MixedMultiframeModalities {
             get {
                 return ((string)(this["MixedMultiframeModalities"]));
