@@ -26,11 +26,5 @@
     <Setting Name="SendTimeoutSeconds" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">-1</Value>
     </Setting>
-    <Setting Name="StreamingConfigurationClass" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">ClearCanvas.ImageServer.Common.ClientStreamingHttpConfiguration, ClearCanvas.ImageServer.Common</Value>
-    </Setting>
-    <Setting Name="StreamingMaxReceivedMessageSize" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">2147483647</Value>
-    </Setting>
   </Settings>
 </SettingsFile>

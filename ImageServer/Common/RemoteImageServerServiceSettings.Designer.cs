@@ -95,24 +95,5 @@ namespace ClearCanvas.ImageServer.Common {
                 return ((int)(this["SendTimeoutSeconds"]));
             }
         }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("ClearCanvas.ImageServer.Common.ClientStreamingHttpConfiguration, ClearCanvas.Imag" +
-            "eServer.Common")]
-        public string StreamingConfigurationClass {
-            get {
-                return ((string)(this["StreamingConfigurationClass"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("2147483647")]
-        public int StreamingMaxReceivedMessageSize {
-            get {
-                return ((int)(this["StreamingMaxReceivedMessageSize"]));
-            }
-        }
     }
 }

@@ -71,7 +71,6 @@
     <Compile Include="IProcedureQueryBroker.cs" />
     <Compile Include="IProcedureUpdateBroker.cs" />
     <Compile Include="EntitySelectCriteria.cs" />
-    <Compile Include="IStreamingServiceLayer.cs" />
     <Compile Include="ServerEntity.cs" />
     <Compile Include="ServerEntityKey.cs" />
     <Compile Include="ProcedureParameter.cs" />
