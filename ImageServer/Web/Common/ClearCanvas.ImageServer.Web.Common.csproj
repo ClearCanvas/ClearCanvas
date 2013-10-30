@@ -162,6 +162,7 @@
     <Compile Include="Modules\ErrorModule.cs" />
     <Compile Include="Modules\HttpContextDataManagementModule.cs" />
     <Compile Include="Modules\ApplicationModule.cs" />
+    <Compile Include="Modules\SopFormatHandler.cs" />
     <Compile Include="PageSettings\AboutPage.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
