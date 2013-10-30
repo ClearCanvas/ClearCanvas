@@ -38,6 +38,11 @@ namespace ClearCanvas.Dicom.Iod.Modules
 	public class EncapsulatedDocumentModuleIod
 		: IodBase
 	{
+		public static DicomTag ClearCanvasEncapsulatedDocumentGroupTag = new DicomTag(0x00430010, "ClearCanvas Encapsulated Document Group", "ClearCanvasEncapsulatedDocumentGroup",
+											  DicomVr.LOvr, false, 1, 1, false);
+		public static DicomTag ClearCanvasHl7MessageControlIdTag = new DicomTag(0x00431012, "ClearCanvas HL7 Message Control Id", "ClearCanvasHl7MessageControlId",
+													  DicomVr.LOvr, false, 1, 1, false);
+
 		/// <summary>
 		/// Initializes a new instance of the <see cref="EncapsulatedDocumentModuleIod"/> class.
 		/// </summary>	
@@ -294,7 +299,7 @@ namespace ClearCanvas.Dicom.Iod.Modules
 		/// <summary>
 		/// Gets or sets the value of EncapsulatedDocument in the underlying collection. Type 1.
 		/// </summary>
-		/// </remarks>
+		/// <remarks></remarks>
 		public byte[] EncapsulatedDocument
 		{
 			get
@@ -317,6 +322,35 @@ namespace ClearCanvas.Dicom.Iod.Modules
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets the value of the private tag ClearCanvas HL7 Message Control Id.
+		/// </summary>
+		/// <remarks>
+		/// This private attribute stores an HL7 Message Control Id associated with an HL7 message that created the encapsulated document.  
+		/// </remarks>
+		public string ClearCanvasHl7MessageControlId
+		{
+			get
+			{
+				DicomAttribute attribute;
+				if (!DicomAttributeProvider.TryGetAttribute(ClearCanvasHl7MessageControlIdTag, out attribute))
+					return null;
+
+				return attribute.ToString();
+			}
+			set
+			{
+				DicomAttribute attribute;
+
+				if (!DicomAttributeProvider.TryGetAttribute(ClearCanvasEncapsulatedDocumentGroupTag, out attribute))
+					DicomAttributeProvider[ClearCanvasEncapsulatedDocumentGroupTag].SetString(0, ClearCanvasEncapsulatedDocumentGroupTag.Name);
+
+				if (value == null)
+					DicomAttributeProvider[ClearCanvasHl7MessageControlIdTag].SetEmptyValue();
+				else
+					DicomAttributeProvider[ClearCanvasHl7MessageControlIdTag].Values = value;
+			}
+		}
 
 		/// <summary>
 		/// Initializes the attributes in this module to their default values.

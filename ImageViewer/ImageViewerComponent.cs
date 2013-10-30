@@ -140,6 +140,7 @@ namespace ClearCanvas.ImageViewer
 		private readonly IViewerSetupHelper _setupHelper;
 		private ToolSet _toolSet;
 		private IViewerActionFilter _contextMenuFilter;
+		private IViewerActionFilter _toolbarFilter;
 		private ILayoutManager _layoutManager;
 
         private readonly AsynchronousPriorStudyLoader _priorStudyLoader;
@@ -251,6 +252,9 @@ namespace ClearCanvas.ImageViewer
 
 			_contextMenuFilter = _setupHelper.GetContextMenuFilter() ?? ViewerActionFilter.Null;
 			_contextMenuFilter.SetImageViewer(this);
+
+			_toolbarFilter = _setupHelper.GetToolbarFilter() ?? ViewerActionFilter.Null;
+			_toolbarFilter.SetImageViewer(this);
 
 			_toolSet = new ToolSet(CreateTools(), CreateToolContext());
 
@@ -659,7 +663,8 @@ namespace ClearCanvas.ImageViewer
 		{
 			get
 			{
-			    return ActionModelRoot.CreateModel(GlobalActionsNamespace, "global-toolbars", _toolSet.Actions);     
+				IActionSet actions = _toolSet.Actions.Select(_toolbarFilter.Evaluate);
+				return ActionModelRoot.CreateModel(GlobalActionsNamespace, "global-toolbars", actions);
 			}
 		}
 

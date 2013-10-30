@@ -63,7 +63,8 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 						var publisher = GetValue(publishers, studyInstances.Key.StudyInstanceUid);
 						publisher.OriginServer = studyInstances.Key.OriginServer;
 						publisher.SourceServer = studyInstances.Key.SourceServer;
-						publisher.Files.AddRange(studyInstances.Value);
+						foreach (var f in studyInstances.Value)
+							publisher.Files.Add(f);
 					}
 				}
 
