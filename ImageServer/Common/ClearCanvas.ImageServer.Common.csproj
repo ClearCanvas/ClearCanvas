@@ -70,6 +70,8 @@
     <Compile Include="Authentication\AuthorityTokens.cs" />
     <Compile Include="Authentication\DefaultAuthorityGroups.cs" />
     <Compile Include="ConstantResourceManager.cs" />
+    <Compile Include="RemoteImageServerStreamingServiceProvider.cs" />
+    <Compile Include="StreamingHttpConfiguration.cs" />
     <Compile Include="EnterpriseImageServerServiceProvider.cs" />
     <Compile Include="EnterpriseImageServerServiceSettings.cs" />
     <Compile Include="EnterpriseImageServerServiceSettings.Designer.cs">
@@ -128,6 +130,7 @@
       <DependentUpon>SR.resx</DependentUpon>
     </Compile>
     <Compile Include="ServerPlatform.cs" />
+    <Compile Include="ServiceModel\ISopDataService.cs" />
     <Compile Include="WorkQueueManagerExtensionPoint.cs" />
     <Compile Include="Helpers\ServerAuditHelper.cs" />
     <Compile Include="ServiceModel\IFilesystemService.cs" />

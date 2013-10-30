@@ -42,6 +42,7 @@ namespace ClearCanvas.ImageServer.Services.Common.Shreds
 
 		private readonly string _className;
 		private ServiceMount _serviceMount;
+		private ServiceMount _streamingServiceMount;
 
 		#endregion
 
@@ -80,6 +81,15 @@ namespace ClearCanvas.ImageServer.Services.Common.Shreds
 
 			_serviceMount.AddServices(new ApplicationServiceExtensionPoint());
 			_serviceMount.OpenServices();
+
+			_streamingServiceMount = new ServiceMount(new Uri(WebServicesSettings.Default.BaseUri), typeof(StreamingHttpConfiguration).AssemblyQualifiedName)
+			{
+				MaxReceivedMessageSize = WebServicesSettings.Default.StreamingMaxReceivedMessageSize,
+				SendTimeoutSeconds = WebServicesSettings.Default.SendTimeoutSeconds
+			};
+
+			_streamingServiceMount.AddServices(new StreamingServiceExtensionPoint());
+			_streamingServiceMount.OpenServices();
 		}
 
 		public override void Stop()
@@ -87,6 +97,8 @@ namespace ClearCanvas.ImageServer.Services.Common.Shreds
 			Platform.Log(LogLevel.Info, "{0}[{1}]: Stop invoked", _className, AppDomain.CurrentDomain.FriendlyName);
 			if (_serviceMount != null)
 				_serviceMount.CloseServices();
+			if (_streamingServiceMount != null)
+				_streamingServiceMount.CloseServices();
 		}
 
 		public override string GetDisplayName()
