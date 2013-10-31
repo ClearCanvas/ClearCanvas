@@ -24,7 +24,9 @@
 
 using System;
 using System.Collections.Generic;
+using ClearCanvas.Common;
 using ClearCanvas.Dicom;
+using ClearCanvas.Dicom.Iod.Sequences;
 using ClearCanvas.Dicom.Utilities.Command;
 using ClearCanvas.ImageServer.Core.Edit;
 
@@ -56,12 +58,25 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.ProcessDuplicate
         {
             if (_commands!=null)
             {
-                foreach (BaseImageLevelUpdateCommand command in _commands)
+	            var sq = new OriginalAttributesSequence
+		            {
+			            ModifiedAttributesSequence = new DicomSequenceItem(),
+			            ModifyingSystem = ProductInformation.Component,
+			            ReasonForTheAttributeModification = "CORRECT",
+			            AttributeModificationDatetime = Platform.Time,
+			            SourceOfPreviousValues = _file.SourceApplicationEntityTitle
+		            };
+
+	            foreach (BaseImageLevelUpdateCommand command in _commands)
                 {
-                    if (!command.Apply(_file))
+                    if (!command.Apply(_file, sq))
                         throw new ApplicationException(
                             String.Format("Unable to update the duplicate sop. Command={0}", command));
                 }
+
+				var sqAttrib = _file.DataSet[DicomTags.OriginalAttributesSequence] as DicomAttributeSQ;
+				if (sqAttrib != null)
+					sqAttrib.AddSequenceItem(sq.DicomSequenceItem);
             }
             
         }
