@@ -79,29 +79,6 @@ namespace ClearCanvas.Dicom.ServiceModel.Streaming
 		}
 	}
 
-	public struct StreamingClientArgs
-	{
-		public StreamingClientArgs(string serverAE, string studyInstanceUid, string seriesInstanceUid, string sopInstanceUid)
-		{
-			ServerAE = serverAE;
-			StudyInstanceUid = studyInstanceUid;
-			SeriesInstanceUid = seriesInstanceUid;
-			SopInstanceUid = sopInstanceUid;
-			FrameNumber = null;
-			ContentType = null;
-			StopTag = null;
-		}
-
-		public readonly string ServerAE;
-		public readonly string StudyInstanceUid;
-		public readonly string SeriesInstanceUid;
-		public readonly string SopInstanceUid;
-		
-		public uint? StopTag;
-		public int? FrameNumber;
-		public string ContentType;
-	}
-
     /// <summary>
     /// Represents a web client that can be used to retrieve study images or pixel data from a streaming server using WADO protocol.
     /// </summary>
@@ -128,12 +105,24 @@ namespace ClearCanvas.Dicom.ServiceModel.Streaming
 				clock.Start();
 
 				FrameStreamingResultMetaData result = new FrameStreamingResultMetaData();
+				StringBuilder url = new StringBuilder();
+
+				if (_baseUri.ToString().EndsWith("/"))
+				{
+					url.AppendFormat("{0}{1}", _baseUri, serverAE);
+				}
+				else
+				{
+					url.AppendFormat("{0}/{1}", _baseUri, serverAE);
+				}
+
+				url.AppendFormat("?requesttype=WADO&studyUID={0}&seriesUID={1}&objectUID={2}", studyInstanceUID, seriesInstanceUID, sopInstanceUid);
+				url.AppendFormat("&frameNumber={0}", frame);
+				url.AppendFormat("&contentType={0}", HttpUtility.HtmlEncode("application/clearcanvas"));
 
 				result.Speed.Start();
 
-				var args = new StreamingClientArgs(serverAE, studyInstanceUID, seriesInstanceUID, sopInstanceUid){FrameNumber = frame};
-				var downloadUri = GetDownloadUri(args);
-				HttpWebRequest request = (HttpWebRequest) WebRequest.Create(downloadUri.AbsoluteUri);
+				HttpWebRequest request = (HttpWebRequest) WebRequest.Create(url.ToString());
 				request.Accept = "application/dicom,application/clearcanvas,image/jpeg";
 				request.Timeout = (int) TimeSpan.FromSeconds(StreamingSettings.Default.ClientTimeoutSeconds).TotalMilliseconds;
 				request.KeepAlive = false;
@@ -192,9 +181,10 @@ namespace ClearCanvas.Dicom.ServiceModel.Streaming
 
 		public Stream RetrieveImageHeader(string serverAE, string studyInstanceUID, string seriesInstanceUID, string sopInstanceUid, uint stopTag, out StreamingResultMetaData metaInfo)
 		{
-			var args = new StreamingClientArgs(serverAE, studyInstanceUID, seriesInstanceUID, sopInstanceUid) {ContentType = "application/clearcanvas-header", StopTag = stopTag};
-			var imageUrl = GetDownloadUri(args);
-        	return RetrieveImageData(imageUrl.AbsoluteUri, out metaInfo);
+        	string imageUrl = BuildImageUrl(serverAE, studyInstanceUID, seriesInstanceUID, sopInstanceUid);
+			imageUrl = imageUrl + String.Format("&stopTag={0:x8}", stopTag);
+			imageUrl = imageUrl + String.Format("&contentType={0}", HttpUtility.HtmlEncode("application/clearcanvas-header"));
+        	return RetrieveImageData(imageUrl, out metaInfo);
 		}
 		
 		public Stream RetrieveImage(string serverAE, string studyInstanceUID, string seriesInstanceUID, string sopInstanceUid)
@@ -205,9 +195,9 @@ namespace ClearCanvas.Dicom.ServiceModel.Streaming
 
         public Stream RetrieveImage(string serverAE, string studyInstanceUID, string seriesInstanceUID, string sopInstanceUid, out StreamingResultMetaData metaInfo)
         {
-			var args = new StreamingClientArgs(serverAE, studyInstanceUID, seriesInstanceUID, sopInstanceUid) { ContentType = "application/dicom"};
-			var imageUrl = GetDownloadUri(args);
-        	return RetrieveImageData(imageUrl.AbsoluteUri, out metaInfo);
+        	string imageUrl = BuildImageUrl(serverAE, studyInstanceUID, seriesInstanceUID, sopInstanceUid);
+			imageUrl = imageUrl + String.Format("&contentType={0}", HttpUtility.HtmlEncode("application/dicom"));
+        	return RetrieveImageData(imageUrl, out metaInfo);
         }
 
         public Stream RetrievePdf(string serverAE, string studyInstanceUID, string seriesInstanceUID, string sopInstanceUid)
@@ -218,48 +208,27 @@ namespace ClearCanvas.Dicom.ServiceModel.Streaming
 
         public Stream RetrievePdf(string serverAE, string studyInstanceUID, string seriesInstanceUID, string sopInstanceUid, out StreamingResultMetaData metaInfo)
         {
-			var args = new StreamingClientArgs(serverAE, studyInstanceUID, seriesInstanceUID, sopInstanceUid) { ContentType = "application/pdf" };
-			var imageUrl = GetDownloadUri(args);
-            return RetrieveImageData(imageUrl.AbsoluteUri, out metaInfo);
+            string imageUrl = BuildImageUrl(serverAE, studyInstanceUID, seriesInstanceUID, sopInstanceUid);
+            imageUrl = imageUrl + String.Format("&contentType={0}", HttpUtility.HtmlEncode("application/pdf"));
+            return RetrieveImageData(imageUrl, out metaInfo);
         }
-
-		public Stream RetrieveImageData(StreamingClientArgs args)
-		{
-			var uri = GetDownloadUri(args);
-			StreamingResultMetaData result;
-			return RetrieveImageData(uri.AbsoluteUri, out result);
-		}
-
-		public Stream RetrieveImageData(StreamingClientArgs args, out StreamingResultMetaData result)
-		{
-			var uri = GetDownloadUri(args);
-			return RetrieveImageData(uri.AbsoluteUri, out result);
-		}
 
         #endregion Public Methods
 
 		#region Private Methods
 
-		private Uri GetDownloadUri(StreamingClientArgs args)
+		private string BuildImageUrl(string serverAE, string studyInstanceUid, string seriesInstanceUid, string sopInstanceUid)
 		{
-			Platform.CheckForEmptyString(args.ServerAE, "serverAE");
-			Platform.CheckForEmptyString(args.StudyInstanceUid, "studyInstanceUid");
-			Platform.CheckForEmptyString(args.SeriesInstanceUid, "seriesInstanceUid");
-			Platform.CheckForEmptyString(args.SopInstanceUid, "sopInstanceUid");
+			Platform.CheckForEmptyString(serverAE, "serverAE");
+			Platform.CheckForEmptyString(studyInstanceUid, "studyInstanceUid");
+			Platform.CheckForEmptyString(seriesInstanceUid, "seriesInstanceUid");
+			Platform.CheckForEmptyString(sopInstanceUid, "sopInstanceUid");
 
 			var url = new StringBuilder();
-			url.AppendFormat(_baseUri.ToString().EndsWith("/") ? "{0}{1}" : "{0}/{1}", _baseUri, args.ServerAE);
+		    url.AppendFormat(_baseUri.ToString().EndsWith("/") ? "{0}{1}" : "{0}/{1}", _baseUri, serverAE);
 
-			url.AppendFormat("?requesttype=WADO&studyUID={0}&seriesUID={1}&objectUID={2}", args.StudyInstanceUid, args.SeriesInstanceUid, args.SopInstanceUid);
-
-			if (args.FrameNumber.HasValue)
-				url.AppendFormat("&frameNumber={0}", args.FrameNumber.Value);
-			if (args.StopTag.HasValue)
-				url.AppendFormat("&stopTag={0:x8}", args.StopTag.Value);
-			if (!String.IsNullOrEmpty(args.ContentType))
-				url.AppendFormat("&contentType={0}", HttpUtility.HtmlEncode(args.ContentType));
-
-			return new Uri(url.ToString());
+		    url.AppendFormat("?requesttype=WADO&studyUID={0}&seriesUID={1}&objectUID={2}", studyInstanceUid, seriesInstanceUid, sopInstanceUid);
+			return url.ToString();
 		}
 
 		private static MemoryStream RetrieveImageData(string url, out StreamingResultMetaData result)
@@ -270,7 +239,7 @@ namespace ClearCanvas.Dicom.ServiceModel.Streaming
 
 				result.Speed.Start();
 
-				var request = (HttpWebRequest) WebRequest.Create(url);
+				var request = (HttpWebRequest) WebRequest.Create(url.ToString());
 				request.Accept = "application/dicom,application/clearcanvas,application/clearcanvas-header,image/jpeg,application/pdf";
 				request.Timeout = (int) TimeSpan.FromSeconds(StreamingSettings.Default.ClientTimeoutSeconds).TotalMilliseconds;
 				request.KeepAlive = false;
