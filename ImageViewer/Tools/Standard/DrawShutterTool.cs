@@ -52,7 +52,7 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 	[TooltipValueObserver("activate", "Tooltip", "TooltipChanged")]
 	[CheckedStateObserver("activate", "Active", "ActivationChanged")]
 	[IconSetObserver("activate", "IconSet", "SelectedShutterTypeChanged")]
-    [GroupHint("activate", "Tools.Image.Manipulation.Overlays.Shutter")]
+	[GroupHint("activate", "Tools.Image.Manipulation.Overlays.Shutter")]
 
 	#region Drop-down
 
@@ -60,18 +60,19 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 	[MouseButtonIconSet("selectDrawCircleShutter", "Icons.DrawCircularShutterToolSmall.png", "Icons.DrawCircularShutterToolMedium.png", "Icons.DrawCircularShutterToolLarge.png")]
 	[CheckedStateObserver("selectDrawCircleShutter", "DrawCircleShutterChecked", "SelectedShutterTypeChanged")]
 	[GroupHint("selectDrawCircleShutter", "Tools.Image.Manipulation.Overlays.Shutter")]
-
+	//
 	[ButtonAction("selectDrawPolygonShutter", "drawshutter-toolbar-dropdown/MenuDrawPolygonShutter", "SelectDrawPolygonShutter")]
 	[MouseButtonIconSet("selectDrawPolygonShutter", "Icons.DrawPolygonalShutterToolSmall.png", "Icons.DrawPolygonalShutterToolMedium.png", "Icons.DrawPolygonalShutterToolLarge.png")]
 	[CheckedStateObserver("selectDrawPolygonShutter", "DrawPolygonShutterChecked", "SelectedShutterTypeChanged")]
-    [GroupHint("selectDrawPolygonShutter", "Tools.Image.Manipulation.Overlays.Shutter")]
-
+	[GroupHint("selectDrawPolygonShutter", "Tools.Image.Manipulation.Overlays.Shutter")]
+	//
 	[ButtonAction("selectDrawRectangleShutter", "drawshutter-toolbar-dropdown/MenuDrawRectangleShutter", "SelectDrawRectangleShutter")]
 	[MouseButtonIconSet("selectDrawRectangleShutter", "Icons.DrawRectangularShutterToolSmall.png", "Icons.DrawRectangularShutterToolMedium.png", "Icons.DrawRectangularShutterToolLarge.png")]
 	[CheckedStateObserver("selectDrawRectangleShutter", "DrawRectangleShutterChecked", "SelectedShutterTypeChanged")]
-    [GroupHint("selectDrawRectangleShutter", "Tools.Image.Manipulation.Overlays.Shutter")]
+	[GroupHint("selectDrawRectangleShutter", "Tools.Image.Manipulation.Overlays.Shutter")]
 
 	#endregion
+
 	#endregion
 
 	#region Menu
@@ -81,24 +82,23 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 	[MouseButtonIconSet("activateDrawCircleShutter", "Icons.DrawCircularShutterToolSmall.png", "Icons.DrawCircularShutterToolMedium.png", "Icons.DrawCircularShutterToolLarge.png")]
 	[CheckedStateObserver("activateDrawCircleShutter", "DrawCircleShutterCheckedAndActive", "SelectedShutterTypeChanged")]
 	[GroupHint("activateDrawCircleShutter", "Tools.Image.Manipulation.Overlays.Shutter")]
-
+	//
 	[MenuAction("activateDrawPolygonShutter", "imageviewer-contextmenu/MenuDrawPolygonShutter", "SelectDrawPolygonShutter", InitiallyAvailable = false)]
 	[MenuAction("activateDrawPolygonShutter", "global-menus/MenuTools/MenuStandard/MenuDrawPolygonShutter", "SelectDrawPolygonShutter")]
 	[MouseButtonIconSet("activateDrawPolygonShutter", "Icons.DrawPolygonalShutterToolSmall.png", "Icons.DrawPolygonalShutterToolMedium.png", "Icons.DrawPolygonalShutterToolLarge.png")]
 	[CheckedStateObserver("activateDrawPolygonShutter", "DrawPolygonShutterCheckedAndActive", "SelectedShutterTypeChanged")]
 	[GroupHint("activateDrawPolygonShutter", "Tools.Image.Manipulation.Overlays.Shutter")]
-
+	//
 	[MenuAction("activateDrawRectangleShutter", "imageviewer-contextmenu/MenuDrawRectangleShutter", "SelectDrawRectangleShutter", InitiallyAvailable = false)]
 	[MenuAction("activateDrawRectangleShutter", "global-menus/MenuTools/MenuStandard/MenuDrawRectangleShutter", "SelectDrawRectangleShutter")]
 	[MouseButtonIconSet("activateDrawRectangleShutter", "Icons.DrawRectangularShutterToolSmall.png", "Icons.DrawRectangularShutterToolMedium.png", "Icons.DrawRectangularShutterToolLarge.png")]
 	[CheckedStateObserver("activateDrawRectangleShutter", "DrawRectangleShutterCheckedAndActive", "SelectedShutterTypeChanged")]
-    [GroupHint("activateDrawRectangleShutter", "Tools.Image.Manipulation.Overlays.Shutter")]
+	[GroupHint("activateDrawRectangleShutter", "Tools.Image.Manipulation.Overlays.Shutter")]
 
 	#endregion
 
 	[MouseToolButton(XMouseButtons.Left, false)]
-	[ExtensionOf(typeof(ImageViewerToolExtensionPoint))]
-
+	[ExtensionOf(typeof (ImageViewerToolExtensionPoint))]
 	public class DrawShutterTool : MouseImageViewerTool
 	{
 		private ShutterType _selectedShutterType;
@@ -172,7 +172,7 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 					return new MouseButtonIconSet("Icons.DrawPolygonalShutterToolSmall.png", "Icons.DrawPolygonalShutterToolMedium.png", "Icons.DrawPolygonalShutterToolLarge.png", this.MouseButton);
 				else
 					return new MouseButtonIconSet("Icons.DrawCircularShutterToolSmall.png", "Icons.DrawCircularShutterToolMedium.png", "Icons.DrawCircularShutterToolLarge.png", this.MouseButton);
-			}	
+			}
 		}
 
 		public void SelectDrawRectangleShutter()
@@ -192,13 +192,10 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 			SelectedShutterType = ShutterType.Circle;
 			base.Select();
 		}
-		
+
 		public ActionModelNode DrawShutterMenuModel
 		{
-			get
-			{
-				return ActionModelRoot.CreateModel(typeof (DrawShutterTool).FullName, "drawshutter-toolbar-dropdown", base.Actions);
-			}	
+			get { return ActionModelRoot.CreateModel(typeof (DrawShutterTool).FullName, "drawshutter-toolbar-dropdown", base.Actions); }
 		}
 
 		public override void Initialize()
@@ -230,7 +227,7 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 		}
 
 		private void OnImageDrawing(object sender, ImageDrawingEventArgs e)
-			{
+		{
 			if (e.PresentationImage.Selected)
 				UpdateEnabled(e.PresentationImage);
 		}
@@ -241,8 +238,7 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 			if (image != null && image is IDicomPresentationImage)
 			{
 				DicomGraphicsPlane dicomGraphicsPlane = DicomGraphicsPlane.GetDicomGraphicsPlane(image as IDicomPresentationImage, false);
-				if (dicomGraphicsPlane != null)
-					enabled = dicomGraphicsPlane.Shutters.Enabled;
+				enabled = dicomGraphicsPlane == null || dicomGraphicsPlane.Shutters.Enabled;
 			}
 
 			this.Enabled = enabled;
@@ -259,7 +255,7 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 				return _graphicBuilder.Start(mouseInformation);
 
 			IDicomPresentationImage image = mouseInformation.Tile.PresentationImage as IDicomPresentationImage;
-			if (image == null || GetGeometricShuttersGraphic(image) == null)
+			if (image == null || GetGeometricShuttersGraphic(image, true) == null)
 				return false;
 
 			AddDrawShutterGraphic(image);
@@ -335,21 +331,21 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 					{
 						_primitiveGraphic = new PolylineGraphic();
 						image.OverlayGraphics.Add(_primitiveGraphic);
-						_graphicBuilder = InteractiveShutterGraphicBuilders.CreatePolygonalShutterBuilder((PolylineGraphic)_primitiveGraphic);
+						_graphicBuilder = InteractiveShutterGraphicBuilders.CreatePolygonalShutterBuilder((PolylineGraphic) _primitiveGraphic);
 						break;
 					}
 				case ShutterType.Circle:
 					{
 						_primitiveGraphic = new EllipsePrimitive();
 						image.OverlayGraphics.Add(_primitiveGraphic);
-						_graphicBuilder = InteractiveShutterGraphicBuilders.CreateCircularShutterBuilder((EllipsePrimitive)_primitiveGraphic);
+						_graphicBuilder = InteractiveShutterGraphicBuilders.CreateCircularShutterBuilder((EllipsePrimitive) _primitiveGraphic);
 						break;
 					}
 				default:
 					{
 						_primitiveGraphic = new RectanglePrimitive();
 						image.OverlayGraphics.Add(_primitiveGraphic);
-						_graphicBuilder = InteractiveShutterGraphicBuilders.CreateRectangularShutterBuilder((RectanglePrimitive)_primitiveGraphic);
+						_graphicBuilder = InteractiveShutterGraphicBuilders.CreateRectangularShutterBuilder((RectanglePrimitive) _primitiveGraphic);
 						break;
 					}
 			}
@@ -381,7 +377,7 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 				{
 					GeometricShutter shutter = ConvertToGeometricShutter();
 					GeometricShuttersGraphic shuttersGraphic =
-						GetGeometricShuttersGraphic((IDicomPresentationImage)base.SelectedPresentationImage);
+						GetGeometricShuttersGraphic((IDicomPresentationImage) base.SelectedPresentationImage, true);
 					DrawableUndoableCommand command = new DrawableUndoableCommand(shuttersGraphic);
 					command.Name = SR.CommandDrawShutter;
 					command.Enqueue(new AddGeometricShutterUndoableCommand(shuttersGraphic, shutter));
@@ -390,7 +386,6 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 					base.ImageViewer.CommandHistory.AddCommand(command);
 				}
 			}
-
 		}
 
 		private void OnGraphicCancelled(object sender, GraphicEventArgs e)
@@ -404,7 +399,7 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 		{
 			if (_primitiveGraphic != null)
 			{
-				((CompositeGraphic)_primitiveGraphic.ParentGraphic).Graphics.Remove(_primitiveGraphic);
+				((CompositeGraphic) _primitiveGraphic.ParentGraphic).Graphics.Remove(_primitiveGraphic);
 				_primitiveGraphic.Dispose();
 				_primitiveGraphic = null;
 			}
@@ -416,31 +411,31 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 
 			if (_selectedShutterType == ShutterType.Rectangle)
 			{
-				RectanglePrimitive primitive = (RectanglePrimitive)_primitiveGraphic;
+				RectanglePrimitive primitive = (RectanglePrimitive) _primitiveGraphic;
 				primitive.CoordinateSystem = CoordinateSystem.Source;
 				Rectangle rectangle =
-					new Rectangle((int)primitive.TopLeft.X, (int)primitive.TopLeft.Y, (int)primitive.Width, (int)primitive.Height);
+					new Rectangle((int) primitive.TopLeft.X, (int) primitive.TopLeft.Y, (int) primitive.Width, (int) primitive.Height);
 				primitive.ResetCoordinateSystem();
-				
+
 				shutter = new RectangularShutter(rectangle);
 			}
 			else if (_selectedShutterType == ShutterType.Polygon)
 			{
-				PolylineGraphic polyLine = (PolylineGraphic)_primitiveGraphic;
+				PolylineGraphic polyLine = (PolylineGraphic) _primitiveGraphic;
 				polyLine.CoordinateSystem = CoordinateSystem.Source;
 
 				List<Point> points = new List<Point>();
 				for (int i = 0; i < polyLine.Points.Count; ++i)
-					points.Add(new Point((int)polyLine.Points[i].X, (int)polyLine.Points[i].Y));
+					points.Add(new Point((int) polyLine.Points[i].X, (int) polyLine.Points[i].Y));
 
 				polyLine.ResetCoordinateSystem();
 				shutter = new PolygonalShutter(points);
 			}
 			else
 			{
-				EllipsePrimitive primitive = (EllipsePrimitive)_primitiveGraphic;
+				EllipsePrimitive primitive = (EllipsePrimitive) _primitiveGraphic;
 				primitive.CoordinateSystem = CoordinateSystem.Source;
-				Rectangle rectangle = new Rectangle((int)primitive.TopLeft.X, (int)primitive.TopLeft.Y, (int)primitive.Width, (int)primitive.Height);
+				Rectangle rectangle = new Rectangle((int) primitive.TopLeft.X, (int) primitive.TopLeft.Y, (int) primitive.Width, (int) primitive.Height);
 				rectangle = RectangleUtilities.ConvertToPositiveRectangle(rectangle);
 				int radius = rectangle.Width/2;
 				Point center = new Point(rectangle.X + radius, rectangle.Y + radius);
@@ -453,23 +448,28 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 			return shutter;
 		}
 
-		internal static IDicomGraphicsPlaneShutters GetShuttersGraphic(IDicomPresentationImage image)
+		internal static IDicomGraphicsPlaneShutters GetShuttersGraphic(IDicomPresentationImage image, bool createAsNecessary = false)
 		{
-			DicomGraphicsPlane dicomGraphicsPlane = DicomGraphicsPlane.GetDicomGraphicsPlane(image, false);
+			DicomGraphicsPlane dicomGraphicsPlane = DicomGraphicsPlane.GetDicomGraphicsPlane(image, createAsNecessary);
 			if (dicomGraphicsPlane != null)
 				return dicomGraphicsPlane.Shutters;
 			return null;
 		}
 
-		internal static GeometricShuttersGraphic GetGeometricShuttersGraphic(IDicomPresentationImage image)
+		internal static GeometricShuttersGraphic GetGeometricShuttersGraphic(IDicomPresentationImage image, bool createAsNecessary = false)
 		{
-			DicomGraphicsPlane dicomGraphicsPlane = DicomGraphicsPlane.GetDicomGraphicsPlane(image, false);
+			DicomGraphicsPlane dicomGraphicsPlane = DicomGraphicsPlane.GetDicomGraphicsPlane(image, createAsNecessary);
 
 			if (dicomGraphicsPlane == null)
 				return null;
 
-			return CollectionUtils.SelectFirst(dicomGraphicsPlane.Shutters,
-				delegate(IShutterGraphic shutter) { return shutter is GeometricShuttersGraphic; }) as GeometricShuttersGraphic;
+			var geometricShuttersGraphic = (GeometricShuttersGraphic) CollectionUtils.SelectFirst(dicomGraphicsPlane.Shutters, shutter => shutter is GeometricShuttersGraphic);
+			if (createAsNecessary && geometricShuttersGraphic == null)
+			{
+				dicomGraphicsPlane.Shutters.Add(geometricShuttersGraphic = new GeometricShuttersGraphic(image.Frame.Rows, image.Frame.Columns));
+				dicomGraphicsPlane.Shutters.Activate(geometricShuttersGraphic);
+			}
+			return geometricShuttersGraphic;
 		}
 	}
 }
