@@ -37,7 +37,7 @@ namespace ClearCanvas.ImageViewer.RoiGraphics
 	/// subject of interest is an actual region of interest on an image.
 	/// </summary>
 	[Cloneable]
-	public class RoiGraphic : AnnotationGraphic
+	public class RoiGraphic : AnnotationGraphic, IRoiGraphic
 	{
 		private event EventHandler _roiChanged;
 		private event EventHandler _nameChanged;

@@ -38,7 +38,7 @@ using ClearCanvas.ImageViewer.RoiGraphics.Analyzers;
 namespace ClearCanvas.ImageViewer.RoiGraphics
 {
 	/// <summary>
-	/// A specialized callout graphic used by <see cref="RoiGraphic"/> whose text content is automatically computed by a list of <see cref="IRoiAnalyzer"/>s.
+	/// A specialized callout graphic used by <see cref="IRoiGraphic"/> whose text content is automatically computed by a list of <see cref="IRoiAnalyzer"/>s.
 	/// </summary>
 	[Cloneable]
 	public class RoiCalloutGraphic : CalloutGraphic
@@ -78,11 +78,11 @@ namespace ClearCanvas.ImageViewer.RoiGraphics
 		}
 
 		/// <summary>
-		/// Gets the parent <see cref="RoiGraphic"/>.
+		/// Gets the parent <see cref="IRoiGraphic"/>.
 		/// </summary>
-		public new RoiGraphic ParentGraphic
+		public new IRoiGraphic ParentGraphic
 		{
-			get { return base.ParentGraphic as RoiGraphic; }
+			get { return base.ParentGraphic as IRoiGraphic; }
 		}
 
 		/// <summary>
@@ -180,11 +180,11 @@ namespace ClearCanvas.ImageViewer.RoiGraphics
 		}
 
 		/// <summary>
-		/// Invokes an interactive edit box on the name of the graphic, allowing the user to assign a name to the <see cref="RoiGraphic"/>.
+		/// Invokes an interactive edit box on the name of the graphic, allowing the user to assign a name to the <see cref="IRoiGraphic"/>.
 		/// </summary>
 		public void Rename()
 		{
-			RoiGraphic parent = this.ParentGraphic;
+			var parent = ParentGraphic;
 			if (parent == null)
 				return;
 
@@ -211,7 +211,7 @@ namespace ClearCanvas.ImageViewer.RoiGraphics
 		{
 			this.ShowAnalysis = !_showAnalysis;
 
-			RoiGraphic parent = this.ParentGraphic;
+			var parent = ParentGraphic;
 			if (parent != null)
 			{
 				if (_showAnalysis)
@@ -238,7 +238,7 @@ namespace ClearCanvas.ImageViewer.RoiGraphics
 			if (base.ParentPresentationImage != null)
 				base.ParentPresentationImage.Tile.EditBox = null;
 
-			RoiGraphic parent = base.ParentGraphic as RoiGraphic;
+			var parent = ParentGraphic;
 			if (parent != null)
 			{
 				parent.Name = editBox.Value;
@@ -252,7 +252,7 @@ namespace ClearCanvas.ImageViewer.RoiGraphics
 		/// </summary>
 		public void Update()
 		{
-			RoiGraphic roiGraphic = this.ParentGraphic;
+			var roiGraphic = ParentGraphic;
 			this.Update(roiGraphic.GetRoi(), RoiAnalysisMode.Normal);
 		}
 
@@ -262,7 +262,7 @@ namespace ClearCanvas.ImageViewer.RoiGraphics
 		/// <param name="mode">A value indicating whether or not the current region of interest is in the state of changing, and therefore whether or not analyzers should skip expensive computations.</param>
 		public void Update(RoiAnalysisMode mode)
 		{
-			RoiGraphic roiGraphic = this.ParentGraphic;
+			var roiGraphic = ParentGraphic;
 			this.Update(roiGraphic.GetRoi(), mode);
 		}
 
@@ -288,7 +288,7 @@ namespace ClearCanvas.ImageViewer.RoiGraphics
 			}
 
 			StringBuilder builder = new StringBuilder();
-			RoiGraphic parent = this.ParentGraphic;
+			var parent = ParentGraphic;
 			if (parent != null && !string.IsNullOrEmpty(parent.Name))
 				builder.AppendLine(parent.Name);
 

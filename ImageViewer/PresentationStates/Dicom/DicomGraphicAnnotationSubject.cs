@@ -38,6 +38,7 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 	partial class DicomGraphicAnnotation
 	{
 		[Cloneable(true)]
+		[DicomSerializableGraphicAnnotation(typeof (DicomGraphicAnnotationSerializer))]
 		private class SubjectGraphic : CompositeGraphic, ICursorTokenProvider, IMouseButtonHandler, IExportedActionsProvider
 		{
 			[CloneIgnore]

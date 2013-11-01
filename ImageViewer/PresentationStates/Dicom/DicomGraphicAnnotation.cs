@@ -70,7 +70,7 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 					{
 						var points = GetGraphicDataAsSourceCoordinates(displayedArea, graphicItem);
 						var graphic = CreateGraphic(graphicItem.GraphicType, points, true);
-						if (graphic != null) subjectGraphic.Graphics.Add(graphic);
+						if (graphic != null) subjectGraphic.Graphics.Add(new ElementGraphic(graphic));
 						dataPoints.AddRange(points);
 					}
 					catch (Exception ex)
@@ -100,6 +100,18 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 						Platform.Log(LogLevel.Debug, textItem.DicomSequenceItem.Dump());
 					}
 				}
+			}
+
+			var calloutGraphic = annotations.FirstOrDefault() as ICalloutGraphic;
+			if (subjectGraphic.Graphics.Count == 1 && annotations.Count == 1 && calloutGraphic != null)
+			{
+				var subjectElement = (ElementGraphic) subjectGraphic.Graphics.Single();
+				subjectElement.Graphics.Add(calloutGraphic);
+				subjectElement.Callout = calloutGraphic;
+			}
+			else
+			{
+				subjectGraphic.Graphics.AddRange(annotations.Select(g => new ElementGraphic(g)));
 			}
 
 			return new DicomGraphicAnnotation(subjectGraphic);
@@ -230,8 +242,7 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 			}
 			else
 			{
-				// offset to account for our 0,0 origin versus DICOM 1,1 origin
-				return graphicItem.GraphicData.Select(point => new PointF(point.X - 1, point.Y - 1)).ToList().AsReadOnly();
+				return graphicItem.GraphicData.Select(point => new PointF(point.X, point.Y)).ToList().AsReadOnly();
 			}
 		}
 
@@ -346,11 +357,7 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 					else
 						callout.TextLocation = anchor - new SizeF(30, 30);
 				}
-
-				StandardStatefulGraphic statefulCallout = new StandardStatefulGraphic(callout);
-				statefulCallout.InactiveColor = Color.LemonChiffon;
-				statefulCallout.State = statefulCallout.CreateInactiveState();
-				return statefulCallout;
+				return callout;
 			}
 			else if (textItem.BoundingBoxTopLeftHandCorner.HasValue && textItem.BoundingBoxBottomRightHandCorner.HasValue)
 			{
@@ -370,7 +377,7 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 				// boundingBox.Location = boundingBox.Location - new SizeF(1, 1);
 				text.Location = Vector.Midpoint(topLeft, bottomRight);
 
-				return text;
+				return new MoveControlGraphic(text);
 			}
 			else
 			{
@@ -382,9 +389,9 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 
 		#region DicomGraphicAnnotationSerializer Class
 
-		private class DicomGraphicAnnotationSerializer : GraphicAnnotationSerializer<DicomGraphicAnnotation>
+		private class DicomGraphicAnnotationSerializer : GraphicAnnotationSerializer<CompositeGraphic>
 		{
-			protected override void Serialize(DicomGraphicAnnotation graphic, GraphicAnnotationSequenceItem serializationState)
+			protected override void Serialize(CompositeGraphic graphic, GraphicAnnotationSequenceItem serializationState)
 			{
 				foreach (IGraphic subgraphic in graphic.Graphics)
 					SerializeGraphic(subgraphic, serializationState);

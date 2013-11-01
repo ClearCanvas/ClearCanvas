@@ -49,7 +49,7 @@ namespace ClearCanvas.ImageViewer.Tools.Measurement
             get { return (IPointsGraphic)AnnotationSubject; }
 		}
 
-		protected override void OnAnnotationGraphicChanged(AnnotationGraphic oldAnnotationGraphic, AnnotationGraphic annotationGraphic)
+		protected override void OnAnnotationGraphicChanged(IAnnotationGraphic oldAnnotationGraphic, IAnnotationGraphic annotationGraphic)
 		{
 			base.OnAnnotationGraphicChanged(oldAnnotationGraphic, annotationGraphic);
 			if (_firstCalculation)

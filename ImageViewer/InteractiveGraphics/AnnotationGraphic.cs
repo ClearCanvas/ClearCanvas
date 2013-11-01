@@ -53,7 +53,7 @@ namespace ClearCanvas.ImageViewer.InteractiveGraphics
 	/// </remarks>
 	[DicomSerializableGraphicAnnotation(typeof (StandardAnnotationGraphicSerializer))]
 	[Cloneable]
-	public class AnnotationGraphic : StandardStatefulGraphic, IContextMenuProvider
+	public class AnnotationGraphic : StandardStatefulGraphic, IAnnotationGraphic, IContextMenuProvider
 	{
 		#region Private fields
 
@@ -210,7 +210,7 @@ namespace ClearCanvas.ImageViewer.InteractiveGraphics
 		{
 			if (_notifyOnSubjectChanged)
 			{
-				/// TODO (CR Sep 2011): If the subject is an arbitrary object, why are we doing this?
+				// TODO (CR Sep 2011): If the subject is an arbitrary object, why are we doing this?
 				if (e.PropertyName != "Color" && e.PropertyName != "LineStyle")
 					this.OnSubjectChanged();
 			}
