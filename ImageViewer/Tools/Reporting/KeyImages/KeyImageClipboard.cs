@@ -145,7 +145,6 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 
 		internal static KeyImageClipboard GetKeyImageClipboard(IImageViewer viewer)
 		{
-			// TODO (CR Phoenix5 - Med): Clinical as well
 			if (!PermissionsHelper.IsInRole(AuthorityTokens.Study.KeyImages))
 				throw new PolicyException(SR.ExceptionViewKeyImagePermissionDenied);
 
@@ -161,7 +160,6 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 			if (shelf == null)
 				return null;
 
-			// TODO (CR Phoenix5 - Med): Clinical as well
 			if (!PermissionsHelper.IsInRole(AuthorityTokens.Study.KeyImages))
 				throw new PolicyException(SR.ExceptionViewKeyImagePermissionDenied);
 
@@ -230,7 +228,6 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 			Platform.CheckForNullReference(image, "image");
 			Platform.CheckForNullReference(image.ImageViewer, "image.ImageViewer");
 
-			// TODO (CR Phoenix5 - Med): Clinical as well
 			if (!PermissionsHelper.IsInRole(AuthorityTokens.Study.KeyImages))
 				throw new PolicyException(SR.ExceptionCreateKeyImagePermissionDenied);
 
@@ -259,7 +256,8 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 
 		public static void Show(IDesktopWindow desktopWindow, ShelfDisplayHint displayHint)
 		{
-			// TODO (CR Phoenix5 - Med): Clinical as well
+			if (!KeyImageClipboardComponent.HasViewPlugin) return;
+
 			if (!PermissionsHelper.IsInRole(AuthorityTokens.Study.KeyImages))
 				throw new PolicyException(SR.ExceptionViewKeyImagePermissionDenied);
 

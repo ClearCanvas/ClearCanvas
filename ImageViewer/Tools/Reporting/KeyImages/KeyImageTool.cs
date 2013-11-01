@@ -138,12 +138,8 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 
 		private void UpdateEnabled()
 		{
-			Enabled = IsSupportedImage(SelectedPresentationImage) &&
-			          // TODO (CR Phoenix5 - Med): Clinical as well	  
-			          PermissionsHelper.IsInRole(AuthorityTokens.Study.KeyImages);
-
-			// TODO (CR Phoenix5 - Med): Clinical as well
-			ShowEnabled = PermissionsHelper.IsInRole(AuthorityTokens.Study.KeyImages);
+			Enabled = IsSupportedImage(SelectedPresentationImage) && PermissionsHelper.IsInRole(AuthorityTokens.Study.KeyImages);
+			ShowEnabled = KeyImageClipboardComponent.HasViewPlugin && PermissionsHelper.IsInRole(AuthorityTokens.Study.KeyImages);
 		}
 
 		private void OnIsConnectedChanged(object sender, EventArgs eventArgs)
