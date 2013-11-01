@@ -66,7 +66,7 @@ namespace ClearCanvas.ImageViewer.InteractiveGraphics.Tests
 		{
 			var rectangle = new Rectangle(new Point(), SelectedPresentationImage.SceneSize);
 			rectangle.Inflate(-10, -10);
-			var spline = new CurvePrimitive {Points = {rectangle.Location, rectangle.Location + new Size(rectangle.Width/2, 0), rectangle.Location + new Size(rectangle.Width, 0), rectangle.Location + rectangle.Size, rectangle.Location + new Size(0, rectangle.Height), rectangle.Location + new Size(0, rectangle.Height/2)}};
+			var spline = new SplinePrimitive {Points = {rectangle.Location, rectangle.Location + new Size(rectangle.Width/2, 0), rectangle.Location + new Size(rectangle.Width, 0), rectangle.Location + rectangle.Size, rectangle.Location + new Size(0, rectangle.Height), rectangle.Location + new Size(0, rectangle.Height/2)}};
 			DrawGraphic(new VerticesControlGraphic(true, spline));
 		}
 

@@ -171,11 +171,11 @@ namespace ClearCanvas.ImageViewer.Rendering.GDI
 		}
 
 		/// <summary>
-		/// Draws a <see cref="CurvePrimitive"/>.
+		/// Draws a <see cref="SplinePrimitive"/>.
 		/// </summary>
-		protected override void DrawCurvePrimitive(CurvePrimitive curve)
+		protected override void DrawSplinePrimitive(SplinePrimitive spline)
 		{
-			DrawCurvePrimitive(Surface.FinalBuffer, _pen, curve, Dpi);
+			DrawSplinePrimitive(Surface.FinalBuffer, _pen, spline, Dpi);
 		}
 
 		/// <summary>
@@ -575,38 +575,38 @@ namespace ClearCanvas.ImageViewer.Rendering.GDI
 		}
 
 		/// <summary>
-		/// Draws a curve primitive to the specified destination buffer.
+		/// Draws a spline primitive to the specified destination buffer.
 		/// </summary>
 		/// <param name="buffer">The destination buffer.</param>
 		/// <param name="pen">A GDI pen to use for drawing.</param>
-		/// <param name="curve">The curve primitive to be drawn.</param>
+		/// <param name="spline">The spline primitive to be drawn.</param>
 		/// <param name="dpi">The intended output DPI.</param>
-		public static void DrawCurvePrimitive(IGdiBuffer buffer, Pen pen, CurvePrimitive curve, float dpi = _nominalScreenDpi)
+		public static void DrawSplinePrimitive(IGdiBuffer buffer, Pen pen, SplinePrimitive spline, float dpi = _nominalScreenDpi)
 		{
-			buffer.Graphics.Transform = curve.SpatialTransform.CumulativeTransform;
-			curve.CoordinateSystem = CoordinateSystem.Source;
+			buffer.Graphics.Transform = spline.SpatialTransform.CumulativeTransform;
+			spline.CoordinateSystem = CoordinateSystem.Source;
 			buffer.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
 			try
 			{
 				// Draw drop shadow
 				pen.Color = Color.Black;
-				pen.Width = CalculateScaledPenWidth(curve, 1, dpi);
+				pen.Width = CalculateScaledPenWidth(spline, 1, dpi);
 
-				SetDashStyle(pen, curve);
+				SetDashStyle(pen, spline);
 
-				var dropShadowOffset = GetDropShadowOffset(curve, dpi);
-				var pathPoints = GetCurvePoints(curve.Points, dropShadowOffset);
+				var dropShadowOffset = GetDropShadowOffset(spline, dpi);
+				var pathPoints = GetCurvePoints(spline.Points, dropShadowOffset);
 
-				if (curve.Points.IsClosed)
+				if (spline.Points.IsClosed)
 					buffer.Graphics.DrawClosedCurve(pen, pathPoints);
 				else
 					buffer.Graphics.DrawCurve(pen, pathPoints);
 
 				// Draw line
-				pen.Color = curve.Color;
-				pathPoints = GetCurvePoints(curve.Points, SizeF.Empty);
+				pen.Color = spline.Color;
+				pathPoints = GetCurvePoints(spline.Points, SizeF.Empty);
 
-				if (curve.Points.IsClosed)
+				if (spline.Points.IsClosed)
 					buffer.Graphics.DrawClosedCurve(pen, pathPoints);
 				else
 					buffer.Graphics.DrawCurve(pen, pathPoints);
@@ -614,7 +614,7 @@ namespace ClearCanvas.ImageViewer.Rendering.GDI
 			finally
 			{
 				buffer.Graphics.SmoothingMode = SmoothingMode.None;
-				curve.ResetCoordinateSystem();
+				spline.ResetCoordinateSystem();
 				buffer.Graphics.ResetTransform();
 			}
 		}

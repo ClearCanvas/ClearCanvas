@@ -151,8 +151,8 @@ namespace ClearCanvas.ImageViewer.Vtk.Rendering
 						DrawLinePrimitive((LinePrimitive) graphic);
 					else if (graphic is InvariantLinePrimitive)
 						DrawInvariantLinePrimitive((InvariantLinePrimitive) graphic);
-					else if (graphic is CurvePrimitive)
-						DrawCurvePrimitive((CurvePrimitive) graphic);
+					else if (graphic is SplinePrimitive)
+						DrawCurvePrimitive((SplinePrimitive) graphic);
 					else if (graphic is RectanglePrimitive)
 						DrawRectanglePrimitive((RectanglePrimitive) graphic);
 					else if (graphic is InvariantRectanglePrimitive)
@@ -188,9 +188,9 @@ namespace ClearCanvas.ImageViewer.Vtk.Rendering
 			GdiRenderer.DrawLinePrimitive(Surface.OverlayBuffer, _pen, line, Dpi);
 		}
 
-		protected virtual void DrawCurvePrimitive(CurvePrimitive curve)
+		protected virtual void DrawCurvePrimitive(SplinePrimitive spline)
 		{
-			GdiRenderer.DrawCurvePrimitive(Surface.OverlayBuffer, _pen, curve, Dpi);
+			GdiRenderer.DrawSplinePrimitive(Surface.OverlayBuffer, _pen, spline, Dpi);
 		}
 
 		protected virtual void DrawRectanglePrimitive(RectanglePrimitive rect)

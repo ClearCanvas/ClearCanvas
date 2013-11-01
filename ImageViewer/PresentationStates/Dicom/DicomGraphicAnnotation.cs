@@ -268,7 +268,7 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 		private static IGraphic CreateInterpolated(IList<PointF> dataPoints, bool editable = false)
 		{
 			var closed = FloatComparer.AreEqual(dataPoints[0], dataPoints[dataPoints.Count - 1]);
-			var curve = new CurvePrimitive();
+			var curve = new SplinePrimitive();
 			curve.Points.AddRange(dataPoints);
 			if (!editable) return curve;
 			return closed ? new PolygonControlGraphic(true, new MoveControlGraphic(curve)) : new VerticesControlGraphic(true, new MoveControlGraphic(curve));

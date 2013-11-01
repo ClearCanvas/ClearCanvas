@@ -349,11 +349,11 @@
     <Compile Include="PresentationStates\Dicom\DicomGraphicsPlaneLayers.cs" />
     <Compile Include="PresentationStates\Dicom\DicomGraphicsPlaneUserOverlays.cs" />
     <Compile Include="PresentationStates\Dicom\DicomPresentationImageCollection.cs" />
-    <Compile Include="PresentationStates\Dicom\GraphicAnnotationSerializers\CurveGraphicAnnotationSerializer.cs" />
+    <Compile Include="PresentationStates\Dicom\GraphicAnnotationSerializers\SplineGraphicAnnotationSerializer.cs" />
     <Compile Include="PresentationStates\Dicom\DicomEllipseGraphic.cs" />
     <Compile Include="PresentationStates\Dicom\OverlayPlaneGraphic.cs" />
     <Compile Include="Graphics\FlashOverlayController.cs" />
-    <Compile Include="Graphics\CurvePrimitive.cs" />
+    <Compile Include="Graphics\SplinePrimitive.cs" />
     <Compile Include="Graphics\IApplicationGraphicsProvider.cs" />
     <Compile Include="Graphics\IPointsGraphic.cs" />
     <Compile Include="Graphics\ITextGraphic.cs" />
