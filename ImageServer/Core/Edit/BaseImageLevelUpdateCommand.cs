@@ -23,7 +23,9 @@
 #endregion
 
 using System.Xml.Serialization;
+using ClearCanvas.Common;
 using ClearCanvas.Dicom;
+using ClearCanvas.Dicom.Iod.Sequences;
 using ClearCanvas.Dicom.Utilities.Command;
 using ClearCanvas.ImageServer.Common.Helpers;
 
@@ -103,7 +105,7 @@ namespace ClearCanvas.ImageServer.Core.Edit
 
 	    #region IActionItem<DicomFile> Members
 
-		public abstract bool Apply(DicomFile file);
+		public abstract bool Apply(DicomFile file, OriginalAttributesSequence originalAttributes);
 
 		#endregion
 
@@ -126,7 +128,22 @@ namespace ClearCanvas.ImageServer.Core.Edit
 		protected override void OnExecute(CommandProcessor theProcessor)
 		{
 			if (File != null)
-				Apply(File);
+			{
+				var sq = new OriginalAttributesSequence
+				{
+					ModifiedAttributesSequence = new DicomSequenceItem(),
+					ModifyingSystem = ProductInformation.Component,
+					ReasonForTheAttributeModification = "CORRECT",
+					AttributeModificationDatetime = Platform.Time,
+					SourceOfPreviousValues = File.SourceApplicationEntityTitle
+				};
+
+				Apply(File, sq);
+
+				var sqAttrib = File.DataSet[DicomTags.OriginalAttributesSequence] as DicomAttributeSQ;
+				if (sqAttrib != null)
+					sqAttrib.AddSequenceItem(sq.DicomSequenceItem);
+			}
 		}
 
 		protected override void OnUndo()

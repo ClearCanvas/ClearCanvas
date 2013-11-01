@@ -387,7 +387,7 @@ namespace ClearCanvas.Dicom
 
 					if (dicomTag == null)
 					{
-						throw new DicomException("Invalid tag: " + tag.ToString("X8"));
+						dicomTag = DicomTag.GetTag(tag);
 					}
 					attr = dicomTag.CreateDicomAttribute();
 					if ((tag < _startTag) || (tag > _endTag))
