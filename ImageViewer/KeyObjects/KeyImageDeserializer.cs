@@ -114,10 +114,6 @@ namespace ClearCanvas.ImageViewer.KeyObjects
 							contentItems.Add(item);
 						}
 					}
-					else
-					{
-						Platform.Log(LogLevel.Warn, "Unsupported key object selection content item of value type {0}.", contentItem.ValueType);
-					}
 				}
 			}
 			else
@@ -144,10 +140,6 @@ namespace ClearCanvas.ImageViewer.KeyObjects
 					{
 						contentItems.Add(new PersonObserverContextContentItem(contentItem.PersonName, _document));
 					}
-					else
-					{
-						Platform.Log(LogLevel.Warn, "Unsupported key object selection content item of value type {0}.", contentItem.ValueType);
-					}
 				}
 			}
 			else
@@ -173,10 +165,6 @@ namespace ClearCanvas.ImageViewer.KeyObjects
 					if (AreEqual(contentItem.ConceptNameCodeSequence, KeyObjectSelectionCodeSequences.KeyObjectDescription))
 					{
 						contentItems.Add(new KeyObjectDescriptionContentItem(contentItem.TextValue, _document));
-					}
-					else
-					{
-						Platform.Log(LogLevel.Warn, "Unsupported key object selection content item of value type {0}.", contentItem.ValueType);
 					}
 				}
 			}
