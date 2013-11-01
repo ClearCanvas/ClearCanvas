@@ -177,39 +177,13 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 				return;
 
 			var image = SelectedPresentationImage;
-			var koDocument = image.FindParentKeyObjectDocument();
-			if (koDocument != null)
-			{
-				if (Context.DesktopWindow.ShowMessageBox("You cannot take key image snapshots of key images. Would you like to revise the key image series instead?", MessageBoxActions.YesNo) == DialogBoxAction.Yes)
-				{
-					var clipboard = KeyImageClipboard.GetKeyImageClipboard(ImageViewer);
-					var context = clipboard.AvailableContexts.FirstOrDefault(c => c.DocumentInstanceUid == koDocument.SopCommon.SopInstanceUid);
-					if (context != null)
-					{
-						clipboard.CurrentContext = context;
-
-						var displaySet = new DisplaySet();
-						displaySet.PresentationImages.AddRange(context.ClipboardItems.Select(i => i.BeginEditKeyImage(context)));
-						ImageViewer.SelectedImageBox.SetDisplaySet(displaySet);
-					}
-				}
-				return;
-			}
-
-			KeyImageInformation curcontext;
-			if (image.EndEditKeyImage(out curcontext))
-			{
-				var clipboard = KeyImageClipboard.GetKeyImageClipboard(ImageViewer);
-				clipboard.CurrentContext = curcontext;
-				_flashOverlayController.Flash(image);
-				return;
-			}
-
 			try
 			{
 				if (image != null)
 				{
-					KeyImageClipboard.Add(image);
+					if (!TryUpdateExistingItem(image))
+						KeyImageClipboard.Add(image);
+
 					_flashOverlayController.Flash(image);
 				}
 
@@ -224,6 +198,25 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 				Platform.Log(LogLevel.Error, ex, "Failed to add item to the key image clipboard.");
 				ExceptionHandler.Report(ex, SR.MessageCreateKeyImageFailed, Context.DesktopWindow);
 			}
+		}
+
+		private bool TryUpdateExistingItem(IPresentationImage image)
+		{
+			var koDocument = image.FindParentKeyObjectDocument();
+			if (koDocument != null)
+			{
+				var clipboard = KeyImageClipboard.GetKeyImageClipboard(ImageViewer);
+				var context = clipboard.AvailableContexts.FirstOrDefault(c => c.DocumentInstanceUid == koDocument.SopCommon.SopInstanceUid);
+				if (context != null)
+				{
+					if (image.UpdateKeyImage(context))
+					{
+						clipboard.CurrentContext = context;
+						return true;
+					}
+				}
+			}
+			return false;
 		}
 
 		#endregion

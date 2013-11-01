@@ -27,11 +27,13 @@ using System.Linq;
 using ClearCanvas.Dicom;
 using ClearCanvas.Dicom.Iod.Iods;
 using ClearCanvas.ImageViewer.Clipboard;
+using ClearCanvas.ImageViewer.PresentationStates.Dicom;
 
 namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 {
 	internal static class KeyImageItem
 	{
+		[Obsolete]
 		public static IPresentationImage BeginEditKeyImage(this IClipboardItem item, KeyImageInformation parentContext)
 		{
 			var image = item.Item as IDicomPresentationImage;
@@ -46,6 +48,7 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 			return null;
 		}
 
+		[Obsolete]
 		public static bool EndEditKeyImage(this IPresentationImage image, out KeyImageInformation context)
 		{
 			context = null;
@@ -57,7 +60,7 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 				var item = clipboardItems.Select((k, i) => new {Guid = k.GetGuid(), Index = i}).FirstOrDefault(x => x.Guid == metadata.Guid);
 				if (item != null)
 				{
-					var keyImageItem = ClipboardComponent.CreatePresentationImageItem(image, false);
+					var keyImageItem = ClipboardComponent.CreatePresentationImageItem(image);
 					keyImageItem.SetHasChanges(true);
 					keyImageItem.SetGuid(item.Guid);
 					clipboardItems[item.Index] = keyImageItem;
@@ -67,11 +70,33 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 			return false;
 		}
 
+		public static bool UpdateKeyImage(this IPresentationImage image, KeyImageInformation context)
+		{
+			if (context != null)
+			{
+				var presentationStateUid = image.GetPresentationStateSopInstanceUid();
+
+				var clipboardItems = context.ClipboardItems;
+				var item = clipboardItems.Select((k, i) => new {k.Item, Guid = k.GetGuid(), Index = i}).FirstOrDefault(c => (c.Item as IPresentationImage).GetPresentationStateSopInstanceUid() == presentationStateUid);
+				if (item != null)
+				{
+					var keyImageItem = ClipboardComponent.CreatePresentationImageItem(image);
+					keyImageItem.SetHasChanges(true);
+					keyImageItem.SetGuid(item.Guid);
+					clipboardItems[item.Index] = keyImageItem;
+					return true;
+				}
+			}
+			return false;
+		}
+
+		[Obsolete]
 		public static bool IsEdittingKeyImage(this IPresentationImage image)
 		{
 			return image.ExtensionData.Get<KeyPresentationImageMetaData>() != null;
 		}
 
+		[Obsolete]
 		public static bool IsKeyImage(this IPresentationImage image)
 		{
 			return FindParentKeyObjectDocument(image) != null;
@@ -102,6 +127,17 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 						}
 					}
 				}
+			}
+			return null;
+		}
+
+		public static string GetPresentationStateSopInstanceUid(this IPresentationImage image)
+		{
+			var dicomImage = image as IDicomPresentationImage;
+			if (dicomImage != null && dicomImage.PresentationState is DicomSoftcopyPresentationState)
+			{
+				var presentationState = (DicomSoftcopyPresentationState) dicomImage.PresentationState;
+				return presentationState.PresentationSopInstanceUid;
 			}
 			return null;
 		}
