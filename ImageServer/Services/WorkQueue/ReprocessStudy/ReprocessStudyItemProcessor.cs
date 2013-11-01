@@ -418,7 +418,14 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.ReprocessStudy
 
                                               #endregion
 
-                                              cancel = reprocessedCounter >= 3000;
+											  if (reprocessedCounter>0 && reprocessedCounter % 200 == 0)
+											  {
+												  Platform.Log(LogLevel.Info, "Reprocessed {0} files for study {1}", reprocessedCounter, StorageLocation.StudyInstanceUid);
+											  }
+
+                                              cancel = reprocessedCounter >= 5000;
+
+											  
                                           }, true);
 
                 if (studyXml != null)
