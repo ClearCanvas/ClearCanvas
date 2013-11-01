@@ -291,12 +291,12 @@ namespace ClearCanvas.ImageViewer.Vtk.Rendering
 			{
 				try
 				{
-					var flip = false;
+					var mirrored = false;
 					var mTime = -1;
 					if (_sceneGraphRoot != null)
 					{
 						_sceneGraphRoot.UpdateSceneGraph(_vtkRenderer);
-						flip = _sceneGraphRoot.ViewPortSpatialTransform.FlipX ^ _sceneGraphRoot.ViewPortSpatialTransform.FlipY;
+						mirrored = _sceneGraphRoot.ViewPortSpatialTransform.FlipX ^ _sceneGraphRoot.ViewPortSpatialTransform.FlipY;
 						mTime = _sceneGraphRoot.GetMTime();
 					}
 
@@ -338,10 +338,10 @@ namespace ClearCanvas.ImageViewer.Vtk.Rendering
 
 						renderClock.Stop();
 						renderTime = renderClock.Seconds;
-					}
 
-					// perform a single horizontal flip here if necessary, since the VTK camera does not support a mirrorred view port
-					ImageBuffer.Bitmap.RotateFlip(flip ? RotateFlipType.RotateNoneFlipX : RotateFlipType.RotateNoneFlipNone);
+						// perform a single horizontal flip here if necessary, since the VTK camera does not support a mirrorred view port
+						ImageBuffer.Bitmap.RotateFlip(mirrored ? RotateFlipType.RotateNoneFlipX : RotateFlipType.RotateNoneFlipNone);
+					}
 
 					if (renderTime >= 0)
 					{

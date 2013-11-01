@@ -143,6 +143,11 @@ namespace ClearCanvas.Dicom
 
         #region Properties
 
+		/// <summary>
+		/// Indicates if <see cref="Load"/> has been called on this file.
+		/// </summary>
+		public bool Loaded { get; set; }
+
         /// <summary>
         /// The filename of the file.
         /// </summary>
@@ -507,10 +512,13 @@ namespace ClearCanvas.Dicom
                 Platform.Log(LogLevel.Error, "Unexpected error ({0}) when reading file at offset {2}: {1}", readStat, Filename,dsr.BytesRead);
                 throw new DicomException("Unexpected failure (" + readStat + ") reading file at offset " + dsr.BytesRead + ": " + Filename);
             }
-        }
-    
 
-        /// <summary>
+			Loaded = true;
+
+        }
+
+		
+    	/// <summary>
         /// Internal routine to see if the file is encoded as a DICOM Part 10 format file.
         /// </summary>
         /// <param name="fs">The <see cref="FileStream"/> being used to read the file.</param>

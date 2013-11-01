@@ -53,11 +53,7 @@ namespace ClearCanvas.ImageViewer.Utilities.StudyFilters.Columns
 
 			uint tagGroup = (_tag >> 16) & 0x0000FFFF;
 			uint tagElement = _tag & 0x0000FFFF;
-
-			if (DicomTagDictionary.GetDicomTag(dicomTag.TagValue) == null)
-				_tagName = string.Format(SR.FormatUnknownDicomTag, tagGroup, tagElement);
-			else
-				_tagName = string.Format(SR.FormatDicomTag, tagGroup, tagElement, dicomTag.Name);
+			_tagName = string.Format(SR.FormatDicomTag, tagGroup, tagElement, dicomTag.Name);
 		}
 
 		public override string Name
