@@ -22,6 +22,7 @@
 
 #endregion
 
+using System;
 using System.Windows.Forms;
 using ClearCanvas.ImageViewer.Clipboard.View.WinForms;
 using ClearCanvas.ImageViewer.Tools.Reporting.KeyImages;
@@ -38,12 +39,18 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.View.WinForms
 			InitializeComponent();
 
 			_component = component;
+			_component.CurrentContextChanged += _component_CurrentContextChanged;
 
 			_clipboardControl = new ClipboardComponentControl(_component) {Dock = DockStyle.Fill};
 			_pnlMain.Controls.Add(_clipboardControl);
 
 			_cboCurrentContext.DataSource = _component.AvailableContexts;
 			_cboCurrentContext.DataBindings.Add("SelectedValue", _component, "CurrentContext", true, DataSourceUpdateMode.OnPropertyChanged);
+		}
+
+		private void _component_CurrentContextChanged(object sender, EventArgs e)
+		{
+			_cboCurrentContext.SelectedItem = _component.CurrentContext;
 		}
 	}
 }

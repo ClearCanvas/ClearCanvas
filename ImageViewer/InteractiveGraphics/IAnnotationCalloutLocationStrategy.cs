@@ -29,22 +29,22 @@ using ClearCanvas.ImageViewer.Graphics;
 namespace ClearCanvas.ImageViewer.InteractiveGraphics
 {
 	/// <summary>
-	/// A strategy for automatically calculating the location of a <see cref="AnnotationGraphic"/>'s callout.
+	/// A strategy for automatically calculating the location of a <see cref="IAnnotationGraphic"/>'s callout.
 	/// </summary>
 	public interface IAnnotationCalloutLocationStrategy : IDisposable
 	{
 		/// <summary>
-		/// Sets the <see cref="AnnotationGraphic"/> that owns this strategy.
+		/// Sets the <see cref="IAnnotationGraphic"/> that owns this strategy.
 		/// </summary>
-		void SetAnnotationGraphic(AnnotationGraphic annotationGraphic);
+		void SetAnnotationGraphic(IAnnotationGraphic annotationGraphic);
 
 		/// <summary>
-		/// Called when the <see cref="AnnotationGraphic"/>'s callout location has been changed externally; for example, by the user.
+		/// Called when the <see cref="IAnnotationGraphic"/>'s callout location has been changed externally; for example, by the user.
 		/// </summary>
 		void OnCalloutLocationChangedExternally();
 
 		/// <summary>
-		/// Called by the owning <see cref="AnnotationGraphic"/> to get the callout's new location.
+		/// Called by the owning <see cref="IAnnotationGraphic"/> to get the callout's new location.
 		/// </summary>
 		/// <param name="location">The new location of the callout.</param>
 		/// <param name="coordinateSystem">The <see cref="CoordinateSystem"/> of <paramref name="location"/>.</param>

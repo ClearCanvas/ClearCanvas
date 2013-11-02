@@ -25,12 +25,12 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Dicom.Iod;
 using ClearCanvas.Dicom.Iod.Modules;
 using ClearCanvas.Dicom.Iod.Sequences;
-using ClearCanvas.ImageViewer.Common;
 using ClearCanvas.ImageViewer.Graphics;
 using ClearCanvas.ImageViewer.Imaging;
 using ClearCanvas.ImageViewer.StudyManagement;
@@ -228,24 +228,17 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 
 		#region DICOM Graphic Annotations
 
-		public static IEnumerable<DicomGraphicAnnotation> CreateGraphicAnnotations(Frame frame, GraphicAnnotationModuleIod annotationsFromPresentationState, RectangleF displayedArea)
+		public static IEnumerable<DicomGraphicAnnotation> CreateGraphicAnnotations(Frame frame, GraphicAnnotationModuleIod annotationsFromPresentationState, RectangleF displayedArea, bool interactive = false)
 		{
-			List<DicomGraphicAnnotation> list = new List<DicomGraphicAnnotation>();
-
 			GraphicAnnotationSequenceItem[] annotationSequences = annotationsFromPresentationState.GraphicAnnotationSequence;
-			if (annotationSequences != null)
-			{
-				foreach (GraphicAnnotationSequenceItem sequenceItem in annotationSequences)
-				{
-					ImageSopInstanceReferenceDictionary dictionary = new ImageSopInstanceReferenceDictionary(sequenceItem.ReferencedImageSequence, true);
-					if (dictionary.ReferencesFrame(frame.ParentImageSop.SopInstanceUid, frame.FrameNumber))
-					{
-						list.Add(new DicomGraphicAnnotation(sequenceItem, displayedArea));
-					}
-				}
-			}
+			if (annotationSequences == null) return Enumerable.Empty<DicomGraphicAnnotation>().ToList();
+			return annotationSequences.Select(sqItem => CreateGraphicAnnotation(frame, sqItem, displayedArea, interactive)).Where(g => g != null).ToList();
+		}
 
-			return list.AsReadOnly();
+		public static DicomGraphicAnnotation CreateGraphicAnnotation(Frame frame, GraphicAnnotationSequenceItem sequenceItem, RectangleF displayedArea, bool interactive = false)
+		{
+			ImageSopInstanceReferenceDictionary dictionary = new ImageSopInstanceReferenceDictionary(sequenceItem.ReferencedImageSequence, true);
+			return dictionary.ReferencesFrame(frame.ParentImageSop.SopInstanceUid, frame.FrameNumber) ? DicomGraphicAnnotation.Create(sequenceItem, displayedArea) : null;
 		}
 
 		#endregion

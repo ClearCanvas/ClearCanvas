@@ -889,8 +889,8 @@ namespace ClearCanvas.ImageViewer
 		public static void Launch(ImageViewerComponent imageViewer, LaunchImageViewerArgs launchArgs)
 		{
 			IDesktopWindow window = GetLaunchWindow(launchArgs.WindowBehaviour);
-
-            Launch(imageViewer, window, launchArgs.Title ?? imageViewer.PatientsLoadedLabel);
+            
+			Launch(imageViewer, window, launchArgs.Title);
 		}
 
         /// <summary>
@@ -898,6 +898,9 @@ namespace ClearCanvas.ImageViewer
         /// </summary>
         public static void Launch(ImageViewerComponent imageViewer, IDesktopWindow window, string title)
         {
+			if (title == null)
+				title = imageViewer.PatientsLoadedLabel;
+
             IWorkspace workspace = LaunchAsWorkspace(window, imageViewer, title);
             imageViewer.ParentDesktopObject = workspace;
             try

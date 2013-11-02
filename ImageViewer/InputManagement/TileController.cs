@@ -772,7 +772,7 @@ namespace ClearCanvas.ImageViewer.InputManagement
 		/// <summary>
 		/// Checks if <paramref name="point"/> has moved out of the tolerance zone from where the mouse button was pressed.
 		/// </summary>
-		private bool HasMoved(Point point)
+		public bool HasMoved(Point point)
 		{
 			return HasMoved(point, _startMousePoint, _mouseMovedToleranceInPixel);
 		}

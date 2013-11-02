@@ -25,6 +25,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Dicom;
@@ -418,14 +419,14 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 
 		private static void SetAllSpecificCharacterSets(GraphicAnnotationSequenceItem annotation, string specificCharacterSet)
 		{
-            if (annotation.TextObjectSequence == null)
-                return;
+			if (annotation.TextObjectSequence == null)
+				return;
 
 			foreach (var textItem in annotation.TextObjectSequence)
 			{
-			    var attributeCollection = textItem.DicomAttributeProvider as DicomAttributeCollection;
-                if (attributeCollection != null)
-			        attributeCollection.SpecificCharacterSet = specificCharacterSet;
+				var attributeCollection = textItem.DicomAttributeProvider as DicomAttributeCollection;
+				if (attributeCollection != null)
+					attributeCollection.SpecificCharacterSet = specificCharacterSet;
 			}
 		}
 
@@ -814,9 +815,19 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 		protected void DeserializeGraphicAnnotation(GraphicAnnotationModuleIod module, RectangleF displayedArea, T image)
 		{
 			DicomGraphicsPlane graphic = DicomGraphicsPlane.GetDicomGraphicsPlane(image, true);
-			foreach (DicomGraphicAnnotation annotation in DicomGraphicsFactory.CreateGraphicAnnotations(image.Frame, module, displayedArea))
+
+			var sqItems = module.GraphicAnnotationSequence;
+			if (sqItems != null)
 			{
-				graphic.Layers[annotation.LayerId].Graphics.Add(annotation);
+				foreach (var annotation in sqItems.Select(sqItem =>
+				                                          new
+				                                          	{
+				                                          		LayerId = sqItem.GraphicLayer ?? string.Empty,
+				                                          		Graphic = DicomGraphicsFactory.CreateGraphicAnnotation(image.Frame, sqItem, displayedArea, DeserializeInteractiveAnnotations)
+				                                          	}).Where(g => g.Graphic != null))
+				{
+					graphic.Layers[annotation.LayerId].Graphics.Add(annotation.Graphic);
+				}
 			}
 		}
 

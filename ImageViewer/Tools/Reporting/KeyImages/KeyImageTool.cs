@@ -41,14 +41,12 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 	[Tooltip("create", "TooltipCreateKeyImage")]
 	[IconSet("create", "Icons.CreateKeyImageToolSmall.png", "Icons.CreateKeyImageToolMedium.png", "Icons.CreateKeyImageToolLarge.png")]
 	[EnabledStateObserver("create", "Enabled", "EnabledChanged")]
-	// TODO (CR Phoenix5 - Med): Clinical as well
 	[ViewerActionPermission("create", AuthorityTokens.Study.KeyImages)]
 	//
 	[ButtonAction("show", "global-toolbars/ToolbarStandard/ToolbarShowKeyImages", "Show")]
 	[Tooltip("show", "TooltipShowKeyImages")]
 	[IconSet("show", "Icons.ShowKeyImagesToolSmall.png", "Icons.ShowKeyImagesToolMedium.png", "Icons.ShowKeyImagesToolLarge.png")]
 	[EnabledStateObserver("show", "ShowEnabled", "ShowEnabledChanged")]
-	// TODO (CR Phoenix5 - Med): Clinical as well
 	[ViewerActionPermission("show", AuthorityTokens.Study.KeyImages)]
 	//
 	[ExtensionOf(typeof (ImageViewerToolExtensionPoint))]
@@ -140,12 +138,8 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 
 		private void UpdateEnabled()
 		{
-			Enabled = IsSupportedImage(SelectedPresentationImage) &&
-			          // TODO (CR Phoenix5 - Med): Clinical as well	  
-			          PermissionsHelper.IsInRole(AuthorityTokens.Study.KeyImages);
-
-			// TODO (CR Phoenix5 - Med): Clinical as well
-			ShowEnabled = PermissionsHelper.IsInRole(AuthorityTokens.Study.KeyImages);
+			Enabled = IsSupportedImage(SelectedPresentationImage) && PermissionsHelper.IsInRole(AuthorityTokens.Study.KeyImages);
+			ShowEnabled = KeyImageClipboardComponent.HasViewPlugin && PermissionsHelper.IsInRole(AuthorityTokens.Study.KeyImages);
 		}
 
 		private void OnIsConnectedChanged(object sender, EventArgs eventArgs)
@@ -178,48 +172,47 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 			if (!Enabled)
 				return;
 
-			if (KeyImageClipboardComponent.HasViewPlugin)
+			var image = SelectedPresentationImage;
+			try
 			{
-				try
+				if (image != null)
 				{
-					IPresentationImage image = Context.Viewer.SelectedPresentationImage;
-					if (image != null)
-					{
-						KeyImageClipboard.Add(image);
-						_flashOverlayController.Flash(image);
-					}
-
-					if (_firstKeyImageCreation && ShowEnabled)
-					{
-						KeyImageClipboard.Show(Context.DesktopWindow, ShelfDisplayHint.DockAutoHide | ShelfDisplayHint.DockLeft);
-						_firstKeyImageCreation = false;
-					}
-				}
-				catch (Exception ex)
-				{
-					Platform.Log(LogLevel.Error, ex, "Failed to add item to the key image clipboard.");
-					ExceptionHandler.Report(ex, SR.MessageCreateKeyImageFailed, Context.DesktopWindow);
-				}
-			}
-			else
-			{
-				try
-				{
-					IPresentationImage image = Context.Viewer.SelectedPresentationImage;
-					if (image != null)
-					{
-						// Still save to clipboard, makes publishing easier later
+					if (!TryUpdateExistingItem(image))
 						KeyImageClipboard.Add(image);
 
-						_flashOverlayController.Flash(image);
-					}
+					_flashOverlayController.Flash(image);
 				}
-				catch (Exception ex)
+
+				if (KeyImageClipboardComponent.HasViewPlugin && _firstKeyImageCreation && ShowEnabled)
 				{
-					Platform.Log(LogLevel.Error, ex, "Failed to create virtual display set for key image.");
-					ExceptionHandler.Report(ex, SR.MessageCreateKeyImageFailed, Context.DesktopWindow);
+					KeyImageClipboard.Show(Context.DesktopWindow, ShelfDisplayHint.DockAutoHide | ShelfDisplayHint.DockLeft);
+					_firstKeyImageCreation = false;
 				}
 			}
+			catch (Exception ex)
+			{
+				Platform.Log(LogLevel.Error, ex, "Failed to add item to the key image clipboard.");
+				ExceptionHandler.Report(ex, SR.MessageCreateKeyImageFailed, Context.DesktopWindow);
+			}
+		}
+
+		private bool TryUpdateExistingItem(IPresentationImage image)
+		{
+			var koDocument = image.FindParentKeyObjectDocument();
+			if (koDocument != null)
+			{
+				var clipboard = KeyImageClipboard.GetKeyImageClipboard(ImageViewer);
+				var context = clipboard.AvailableContexts.FirstOrDefault(c => c.DocumentInstanceUid == koDocument.SopCommon.SopInstanceUid);
+				if (context != null)
+				{
+					if (image.UpdateKeyImage(context))
+					{
+						clipboard.CurrentContext = context;
+						return true;
+					}
+				}
+			}
+			return false;
 		}
 
 		#endregion

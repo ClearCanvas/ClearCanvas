@@ -23,6 +23,7 @@
 #endregion
 
 using System.Drawing;
+using System.Linq;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Desktop;
 using ClearCanvas.Desktop.Actions;
@@ -49,15 +50,29 @@ namespace ClearCanvas.ImageViewer.InteractiveGraphics
 		IGraphic Subject { get; }
 
 		/// <summary>
-		/// Gets or sets the color of the control graphic.
+		/// Gets or sets the color of the control parts of the graphic.
 		/// </summary>
+		/// <remarks>
+		/// This property does not affect the color of the underlying subject or chained control graphics.
+		/// </remarks>
 		Color Color { get; set; }
 
 		/// <summary>
-		/// Gets or sets a value to show or hide this control graphic without affecting the
-		/// visibility of the underlying subject or other control graphics.
+		/// Gets or sets whether or not the control parts of the graphic are visible.
 		/// </summary>
+		/// <remarks>
+		/// This property does not affect the visibility of the underlying subject or chained control graphics.
+		/// </remarks>
 		bool Show { get; set; }
+
+		/// <summary>
+		/// Gets or sets whether or not the control parts of the graphic are enabled.
+		/// </summary>
+		/// <remarks>
+		/// When the control graphic is disabled, the control parts of the graphic do not show and do not respond to user interaction.
+		/// This property does not affect the enablement of the underlying subject or chained control graphics.
+		/// </remarks>
+		bool Enabled { get; set; }
 	}
 
 	/// <summary>
@@ -72,6 +87,7 @@ namespace ClearCanvas.ImageViewer.InteractiveGraphics
 	{
 		private Color _color = Color.Yellow;
 		private bool _show = true;
+		private bool _enabled = true;
 
 		[CloneIgnore]
 		private IMouseButtonHandler _capturedHandler = null;
@@ -86,9 +102,7 @@ namespace ClearCanvas.ImageViewer.InteractiveGraphics
 		/// Constructs a new control graphic to control the given subject graphic.
 		/// </summary>
 		/// <param name="subject">The graphic to control.</param>
-		public ControlGraphic(IGraphic subject) : base(subject)
-		{
-		}
+		public ControlGraphic(IGraphic subject) : base(subject) {}
 
 		/// <summary>
 		/// Cloning constructor.
@@ -113,9 +127,8 @@ namespace ClearCanvas.ImageViewer.InteractiveGraphics
 		{
 			get
 			{
-				if (this.DecoratedGraphic is IControlGraphic)
-					return ((IControlGraphic) this.DecoratedGraphic).Subject;
-				return this.DecoratedGraphic;
+				var controlGraphic = DecoratedGraphic as IControlGraphic;
+				return controlGraphic != null ? (controlGraphic).Subject : DecoratedGraphic;
 			}
 		}
 
@@ -127,9 +140,8 @@ namespace ClearCanvas.ImageViewer.InteractiveGraphics
 			get { return null; }
 		}
 
-	    /// TODO (CR Oct 2011): This doesn't work when chaining graphics together.
 		/// <summary>
-		/// Gets or sets the color of the control graphic.
+		/// Gets or sets the color of the control parts of the graphic.
 		/// </summary>
 		public Color Color
 		{
@@ -139,7 +151,7 @@ namespace ClearCanvas.ImageViewer.InteractiveGraphics
 				if (_color != value)
 				{
 					_color = value;
-					this.OnColorChanged();
+					OnColorChanged();
 				}
 			}
 		}
@@ -150,13 +162,27 @@ namespace ClearCanvas.ImageViewer.InteractiveGraphics
 		/// </summary>
 		public bool Show
 		{
-			get { return _show; }
+			get { return _enabled && _show; }
 			set
 			{
 				if (_show != value)
 				{
 					_show = value;
-					this.OnShowChanged();
+					OnShowChanged();
+				}
+			}
+		}
+
+		public bool Enabled
+		{
+			get { return _enabled; }
+			set
+			{
+				if (_enabled != value)
+				{
+					_enabled = value;
+					OnEnabledChanged();
+					OnShowChanged();
 				}
 			}
 		}
@@ -166,12 +192,7 @@ namespace ClearCanvas.ImageViewer.InteractiveGraphics
 		/// </summary>
 		protected PointF LastTrackedPosition
 		{
-			get
-			{
-				if (this.CoordinateSystem == CoordinateSystem.Source)
-					return this.SpatialTransform.ConvertToSource(_lastTrackedPosition);
-				return _lastTrackedPosition;
-			}
+			get { return CoordinateSystem == CoordinateSystem.Source ? SpatialTransform.ConvertToSource(_lastTrackedPosition) : _lastTrackedPosition; }
 		}
 
 		/// <summary>
@@ -191,6 +212,11 @@ namespace ClearCanvas.ImageViewer.InteractiveGraphics
 		/// Called when the <see cref="Show"/> property changes.
 		/// </summary>
 		protected virtual void OnShowChanged() {}
+
+		/// <summary>
+		/// Called when the <see cref="Enabled"/> property changes.
+		/// </summary>
+		protected virtual void OnEnabledChanged() {}
 
 		/// <summary>
 		/// Called by <see cref="ControlGraphic"/> in response to the framework requesting the cursor token for a particular screen coordinate via <see cref="GetCursorToken"/>.
@@ -235,7 +261,19 @@ namespace ClearCanvas.ImageViewer.InteractiveGraphics
 		/// <summary>
 		/// Called by <see cref="ControlGraphic"/> in response to an attempt to cancel the current operation via <see cref="Cancel"/>.
 		/// </summary>
-		protected virtual void Cancel() { }
+		protected virtual void Cancel() {}
+
+		public override PointF GetClosestPoint(PointF point)
+		{
+			// if the control is not enabled, closest point should ignore the control graphics (which is everything except the decorated graphic)
+			return Enabled ? base.GetClosestPoint(point) : DecoratedGraphic.GetClosestPoint(point);
+		}
+
+		public override bool HitTest(Point point)
+		{
+			// if the control is not enabled, hit test should ignore the control graphics (which is everything except the decorated graphic)
+			return Enabled ? base.HitTest(point) : DecoratedGraphic.HitTest(point);
+		}
 
 		#region ICursorTokenProvider Members
 
@@ -250,25 +288,24 @@ namespace ClearCanvas.ImageViewer.InteractiveGraphics
 		/// </remarks>
 		CursorToken ICursorTokenProvider.GetCursorToken(Point point)
 		{
-		    /// TODO (CR Oct 2011): This pattern could be reused outside the context
-		    /// of a "Control" graphic. Perhaps we could move it out to a "GraphicsController"
-		    /// class that enumerates through a list of graphics looking for a handler.
+			// TODO (CR Oct 2011): This pattern could be reused outside the context
+			// of a "Control" graphic. Perhaps we could move it out to a "GraphicsController"
+			// class that enumerates through a list of graphics looking for a handler.
 			CursorToken cursor = null;
 
 			if (_capturedHandler != null)
 			{
-				if (_capturedHandler is ICursorTokenProvider)
-				{
-					cursor = ((ICursorTokenProvider) _capturedHandler).GetCursorToken(point);
-				}
+				var provider = _capturedHandler as ICursorTokenProvider;
+				if (provider != null)
+					cursor = (provider).GetCursorToken(point);
 			}
 
-			if (cursor == null)
-				cursor = this.GetCursorToken(point);
+			if (Enabled && cursor == null)
+				cursor = GetCursorToken(point);
 
 			if (cursor == null)
 			{
-				foreach (IGraphic graphic in this.EnumerateChildGraphics(true))
+				foreach (IGraphic graphic in EnumerateChildGraphics(true))
 				{
 					if (!graphic.Visible)
 						continue;
@@ -308,35 +345,37 @@ namespace ClearCanvas.ImageViewer.InteractiveGraphics
 		/// <returns>True if the <see cref="ControlGraphic"/> did something as a result of the call and hence would like to receive capture; False otherwise.</returns>
 		bool IMouseButtonHandler.Start(IMouseInformation mouseInformation)
 		{
-			bool result;
+			bool result = false;
 
 			if (_capturedHandler != null)
 			{
 				result = _capturedHandler.Start(mouseInformation);
-				if (result)
-					return result;
+				if (result) return true;
 			}
 
-			this.CoordinateSystem = CoordinateSystem.Destination;
-			try
+			if (Enabled)
 			{
-				if (this.HitTest(mouseInformation.Location))
+				CoordinateSystem = CoordinateSystem.Destination;
+				try
 				{
-					_lastTrackedPosition = mouseInformation.Location;
-					_isTracking = true;
+					if (HitTest(mouseInformation.Location))
+					{
+						_lastTrackedPosition = mouseInformation.Location;
+						_isTracking = true;
+					}
+					result = Start(mouseInformation);
+					_isTracking = _isTracking && result;
 				}
-				result = this.Start(mouseInformation);
-				_isTracking = _isTracking && result;
-			}
-			finally
-			{
-				this.ResetCoordinateSystem();
+				finally
+				{
+					ResetCoordinateSystem();
+				}
 			}
 
 			_capturedHandler = null;
 			if (!result)
 			{
-				foreach (IGraphic graphic in this.EnumerateChildGraphics(true))
+				foreach (IGraphic graphic in EnumerateChildGraphics(true))
 				{
 					if (!graphic.Visible)
 						continue;
@@ -353,7 +392,7 @@ namespace ClearCanvas.ImageViewer.InteractiveGraphics
 					}
 				}
 			}
-			
+
 			return result;
 		}
 
@@ -375,24 +414,27 @@ namespace ClearCanvas.ImageViewer.InteractiveGraphics
 		/// <returns>True if the message was handled; False otherwise.</returns>
 		bool IMouseButtonHandler.Track(IMouseInformation mouseInformation)
 		{
-			bool result;
+			bool result = false;
 
 			if (_capturedHandler != null)
 				return _capturedHandler.Track(mouseInformation);
 
-			try
+			if (Enabled)
 			{
-				result = this.Track(mouseInformation);
-			}
-			finally
-			{
-				if (_isTracking)
-					_lastTrackedPosition = mouseInformation.Location;
+				try
+				{
+					result = Track(mouseInformation);
+				}
+				finally
+				{
+					if (_isTracking)
+						_lastTrackedPosition = mouseInformation.Location;
+				}
 			}
 
 			if (!result)
 			{
-				foreach (IGraphic graphic in this.EnumerateChildGraphics(true))
+				foreach (IGraphic graphic in EnumerateChildGraphics(true))
 				{
 					if (!graphic.Visible)
 						continue;
@@ -432,13 +474,13 @@ namespace ClearCanvas.ImageViewer.InteractiveGraphics
 				if (!result)
 				{
 					_capturedHandler = null;
-					return result;
+					return false;
 				}
 			}
 
 			try
 			{
-				result = this.Stop(mouseInformation);
+				result = Stop(mouseInformation);
 			}
 			finally
 			{
@@ -469,7 +511,7 @@ namespace ClearCanvas.ImageViewer.InteractiveGraphics
 
 			try
 			{
-				this.Cancel();
+				Cancel();
 			}
 			finally
 			{
@@ -490,9 +532,8 @@ namespace ClearCanvas.ImageViewer.InteractiveGraphics
 		{
 			get
 			{
-				if (this.DecoratedGraphic is IControlGraphic)
-					return ((IControlGraphic) this.DecoratedGraphic).Behaviour;
-				return MouseButtonHandlerBehaviour.None;
+				var controlGraphic = DecoratedGraphic as IControlGraphic;
+				return controlGraphic != null ? (controlGraphic).Behaviour : MouseButtonHandlerBehaviour.None;
 			}
 		}
 
@@ -519,20 +560,10 @@ namespace ClearCanvas.ImageViewer.InteractiveGraphics
 		/// <returns>A set of exported <see cref="IAction"/>s.</returns>
 		public virtual IActionSet GetExportedActions(string site, IMouseInformation mouseInformation)
 		{
-			IActionSet actions = new ActionSet();
-			foreach (IGraphic graphic in this.EnumerateChildGraphics(true))
-			{
-				IExportedActionsProvider controlGraphic = graphic as IExportedActionsProvider;
-				if (controlGraphic != null)
-				{
-					IActionSet otherActions = controlGraphic.GetExportedActions(site, mouseInformation);
-					if (otherActions != null)
-					{
-						actions = actions.Union(otherActions);
-					}
-				}
-			}
-			return actions;
+			return EnumerateChildGraphics(true).OfType<IExportedActionsProvider>()
+				.Select(p => p.GetExportedActions(site, mouseInformation))
+				.Where(a => a != null)
+				.Aggregate((IActionSet) new ActionSet(), (a, b) => a.Union(b));
 		}
 
 		#endregion

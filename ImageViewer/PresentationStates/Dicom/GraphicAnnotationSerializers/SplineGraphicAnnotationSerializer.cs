@@ -30,7 +30,7 @@ using ClearCanvas.ImageViewer.Mathematics;
 
 namespace ClearCanvas.ImageViewer.PresentationStates.Dicom.GraphicAnnotationSerializers
 {
-	internal class CurveGraphicAnnotationSerializer : GraphicAnnotationSerializer<IPointsGraphic>
+	internal class SplineGraphicAnnotationSerializer : GraphicAnnotationSerializer<IPointsGraphic>
 	{
 		protected override void Serialize(IPointsGraphic graphic, GraphicAnnotationSequenceItem serializationState)
 		{

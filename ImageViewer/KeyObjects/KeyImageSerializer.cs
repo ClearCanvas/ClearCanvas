@@ -246,7 +246,7 @@ namespace ClearCanvas.ImageViewer.KeyObjects
 				throw new InvalidOperationException("Key object selection cannot be empty.");
 
 			List<DicomFile> keyObjectDocuments = new List<DicomFile>();
-			List<IHierarchicalSopInstanceReferenceMacro> identicalDocuments = new List<IHierarchicalSopInstanceReferenceMacro>();
+			List<SopInstanceReference> identicalDocuments = new List<SopInstanceReference>();
 			Dictionary<string, KeyObjectSelectionDocumentIod> koDocumentsByStudy = new Dictionary<string, KeyObjectSelectionDocumentIod>();
 			foreach (var frame in (IEnumerable<KeyImageReference>) _framePresentationStates)
 			{
@@ -271,14 +271,10 @@ namespace ClearCanvas.ImageViewer.KeyObjects
 					iod.GeneralEquipment.InstitutionalDepartmentName = string.IsNullOrEmpty(this.Institution.DepartmentName) ? null : this.Institution.DepartmentName;
 					iod.GeneralEquipment.StationName = string.IsNullOrEmpty(this.StationName) ? null : this.StationName;
 
-					string seriesDescription = _seriesDescription;
-					if (!string.IsNullOrEmpty(_author))
-						seriesDescription = string.Format("{0} ({1})", seriesDescription, _author);
-
 					iod.KeyObjectDocumentSeries.InitializeAttributes();
 					iod.KeyObjectDocumentSeries.Modality = Modality.KO;
 					iod.KeyObjectDocumentSeries.SeriesDateTime = seriesInfo.SeriesDateTime;
-					iod.KeyObjectDocumentSeries.SeriesDescription = seriesDescription;
+					iod.KeyObjectDocumentSeries.SeriesDescription = _seriesDescription;
 					iod.KeyObjectDocumentSeries.SeriesInstanceUid = CreateUid(seriesInfo.SeriesInstanceUid);
 					iod.KeyObjectDocumentSeries.SeriesNumber = seriesInfo.SeriesNumber ?? 1;
 					iod.KeyObjectDocumentSeries.ReferencedPerformedProcedureStepSequence = null;
@@ -286,11 +282,11 @@ namespace ClearCanvas.ImageViewer.KeyObjects
 					iod.SopCommon.SopClass = SopClass.KeyObjectSelectionDocumentStorage;
 					iod.SopCommon.SopInstanceUid = DicomUid.GenerateUid().UID;
 
-					identicalDocuments.Add(iod.KeyObjectDocument.CreateIdenticalDocumentsSequence(
-						studyInstanceUid,
-						iod.KeyObjectDocumentSeries.SeriesInstanceUid,
-						iod.SopCommon.SopClassUid,
-						iod.SopCommon.SopInstanceUid));
+					identicalDocuments.Add(new SopInstanceReference(
+					                       	studyInstanceUid,
+					                       	iod.KeyObjectDocumentSeries.SeriesInstanceUid,
+					                       	iod.SopCommon.SopClassUid,
+					                       	iod.SopCommon.SopInstanceUid));
 
 					koDocumentsByStudy.Add(studyInstanceUid, iod);
 					keyObjectDocuments.Add(keyObjectDocument);
@@ -304,7 +300,15 @@ namespace ClearCanvas.ImageViewer.KeyObjects
 				iod.KeyObjectDocument.ContentDateTime = _datetime;
 				iod.KeyObjectDocument.ReferencedRequestSequence = null;
 
-				iod.KeyObjectDocument.IdenticalDocumentsSequence = identicalDocuments.ToArray();
+				// only add docuemnts other than current to the identical documents sequence (and if there's only one, it's obviously the current)
+				if (identicalDocuments.Count > 1)
+				{
+					var identicalDocumentsSequence = new HierarchicalSopInstanceReferenceDictionary();
+					var thisDocument = new SopInstanceReference(iod.GeneralStudy.StudyInstanceUid, iod.KeyObjectDocumentSeries.SeriesInstanceUid, iod.SopCommon.SopClassUid, iod.SopCommon.SopInstanceUid);
+					foreach (var otherDocument in identicalDocuments.Where(d => !d.Equals(thisDocument)))
+						identicalDocumentsSequence.AddReference(otherDocument.StudyInstanceUid, otherDocument.SeriesInstanceUid, otherDocument.SopClassUid, otherDocument.SopInstanceUid);
+					iod.KeyObjectDocument.IdenticalDocumentsSequence = identicalDocumentsSequence;
+				}
 
 				iod.SrDocumentContent.InitializeContainerAttributes();
 				iod.SrDocumentContent.ConceptNameCodeSequence = _docTitle;
@@ -615,7 +619,7 @@ namespace ClearCanvas.ImageViewer.KeyObjects
 		{
 			private readonly HierarchicalSopInstanceReferenceDictionary _dictionary = new HierarchicalSopInstanceReferenceDictionary();
 
-			public void Add(SopInstanceReference sop)
+			public void Add(SopInstanceReferenceBase sop)
 			{
 				_dictionary.TryAddReference(sop.StudyInstanceUid, sop.SeriesInstanceUid, sop.SopClassUid, sop.SopInstanceUid,
 				                            retrieveAeTitle : sop.SourceApplicationEntityTitle);

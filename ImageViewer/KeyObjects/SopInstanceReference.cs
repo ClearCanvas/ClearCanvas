@@ -28,7 +28,7 @@ using ClearCanvas.ImageViewer.StudyManagement;
 
 namespace ClearCanvas.ImageViewer.KeyObjects
 {
-	public abstract class SopInstanceReference
+	public abstract class SopInstanceReferenceBase
 	{
 		private readonly string _sourceApplicationEntityTitle;
 		private readonly string _studyInstanceUid;
@@ -36,13 +36,27 @@ namespace ClearCanvas.ImageViewer.KeyObjects
 		private readonly string _sopInstanceUid;
 		private readonly string _sopClassUid;
 
-		protected SopInstanceReference(string studyInstanceUid, string seriesInstanceUid, string sopClassUid, string sopInstanceUid, string sourceApplicationEntityTitle = null)
+		protected SopInstanceReferenceBase(string studyInstanceUid, string seriesInstanceUid, string sopClassUid, string sopInstanceUid, string sourceApplicationEntityTitle = null)
 		{
 			_studyInstanceUid = studyInstanceUid ?? string.Empty;
 			_seriesInstanceUid = seriesInstanceUid ?? string.Empty;
 			_sopClassUid = sopClassUid ?? string.Empty;
 			_sopInstanceUid = sopInstanceUid ?? string.Empty;
 			_sourceApplicationEntityTitle = sourceApplicationEntityTitle ?? string.Empty;
+		}
+
+		protected SopInstanceReferenceBase(Sop sop)
+			: this(sop.StudyInstanceUid, sop.SeriesInstanceUid, sop.SopClassUid, sop.SopInstanceUid, sop.DataSource[DicomTags.SourceApplicationEntityTitle].ToString()) {}
+
+		public override int GetHashCode()
+		{
+			return _sopInstanceUid.GetHashCode();
+		}
+
+		public override bool Equals(object obj)
+		{
+			var other = obj as SopInstanceReferenceBase;
+			return other != null && _sopInstanceUid == other._sopInstanceUid && _sopClassUid == other._sopClassUid && _seriesInstanceUid == other._seriesInstanceUid && _studyInstanceUid == other._studyInstanceUid;
 		}
 
 		public string SourceApplicationEntityTitle
@@ -71,7 +85,21 @@ namespace ClearCanvas.ImageViewer.KeyObjects
 		}
 	}
 
-	public class KeyImageReference : SopInstanceReference
+	public class SopInstanceReference : SopInstanceReferenceBase
+	{
+		public SopInstanceReference(string studyInstanceUid, string seriesInstanceUid, string sopClassUid, string sopInstanceUid, string sourceApplicationEntityTitle = null)
+			: base(studyInstanceUid, seriesInstanceUid, sopClassUid, sopInstanceUid, sourceApplicationEntityTitle) {}
+
+		public SopInstanceReference(Sop sop)
+			: base(sop) {}
+
+		public static implicit operator SopInstanceReference(Sop sop)
+		{
+			return sop != null ? new SopInstanceReference(sop) : null;
+		}
+	}
+
+	public class KeyImageReference : SopInstanceReferenceBase
 	{
 		private readonly int? _frameNumber;
 
@@ -86,21 +114,32 @@ namespace ClearCanvas.ImageViewer.KeyObjects
 			_frameNumber = frameNumber;
 		}
 
+		public KeyImageReference(ImageSop imageSop, int? frameNumber)
+			: base(imageSop)
+		{
+			_frameNumber = frameNumber;
+		}
+
 		public KeyImageReference(Frame frame)
-			: this(frame.StudyInstanceUid,
-			       frame.SeriesInstanceUid,
-			       frame.ParentImageSop.SopClassUid,
-			       frame.SopInstanceUid,
-			       frame.ParentImageSop.NumberOfFrames > 1 ? (int?) frame.FrameNumber : null,
-			       frame.ParentImageSop.DataSource[DicomTags.SourceApplicationEntityTitle].ToString()) {}
+			: this(frame.ParentImageSop, frame.ParentImageSop.NumberOfFrames > 1 ? (int?) frame.FrameNumber : null) {}
+
+		public override int GetHashCode()
+		{
+			return base.GetHashCode() & _frameNumber.GetHashCode();
+		}
+
+		public override bool Equals(object obj)
+		{
+			return obj is KeyImageReference && _frameNumber == ((KeyImageReference) obj)._frameNumber && base.Equals(obj);
+		}
 
 		public static implicit operator KeyImageReference(Frame frame)
 		{
-			return new KeyImageReference(frame);
+			return frame != null ? new KeyImageReference(frame) : null;
 		}
 	}
 
-	public class PresentationStateReference : SopInstanceReference
+	public class PresentationStateReference : SopInstanceReferenceBase
 	{
 		public PresentationStateReference(string studyInstanceUid, string seriesInstanceUid, string sopClassUid, string sopInstanceUid, string sourceApplicationEntityTitle = null)
 			: base(studyInstanceUid, seriesInstanceUid, sopClassUid, sopInstanceUid, sourceApplicationEntityTitle) {}
@@ -114,7 +153,7 @@ namespace ClearCanvas.ImageViewer.KeyObjects
 
 		public static implicit operator PresentationStateReference(DicomSoftcopyPresentationState presentationState)
 		{
-			return new PresentationStateReference(presentationState);
+			return presentationState != null ? new PresentationStateReference(presentationState) : null;
 		}
 	}
 }
