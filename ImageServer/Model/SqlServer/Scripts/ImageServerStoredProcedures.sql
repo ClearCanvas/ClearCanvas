@@ -2459,7 +2459,8 @@ BEGIN
 				@SourceApplicationEntityTitle)
 
 		UPDATE Study
-			SET NumberOfStudyRelatedSeries = NumberOfStudyRelatedSeries + 1
+			SET NumberOfStudyRelatedSeries = NumberOfStudyRelatedSeries + 1,
+				QCOutput=NULL
 		WHERE GUID = @StudyGUID
 
 		UPDATE Patient
