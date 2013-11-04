@@ -23,6 +23,8 @@
 #endregion
 
 using System;
+using System.IO;
+using System.Text;
 using ClearCanvas.Common;
 using ClearCanvas.Desktop;
 using ClearCanvas.Desktop.Actions;
@@ -67,21 +69,18 @@ namespace ClearCanvas.ImageViewer.Vtk
 		{
 			try
 			{
-				string log;
-				string msg;
+				var log = VtkPresentationImageRenderer.GetDiagnosticInfo();
+				var msg = new StringBuilder();
 
-				var lines = Win32VtkRenderingSurface.ReportCapabilities().Split(new[] {'\r', '\n'}, StringSplitOptions.RemoveEmptyEntries);
-				if (lines.Length > 16)
+				using (var sr = new StringReader(Win32VtkRenderingSurface.ReportCapabilities()))
 				{
-					msg = string.Join(Environment.NewLine, lines, 0, 12) + Environment.NewLine + "(see logs for complete report)";
-					log = string.Join(Environment.NewLine, lines);
-				}
-				else
-				{
-					log = msg = string.Join(Environment.NewLine, lines);
+					var n = 0;
+					string line;
+					while (++n <= 12 && (line = sr.ReadLine()) != null)
+						msg.AppendLine(line);
 				}
 
-				Context.DesktopWindow.ShowMessageBox(msg, MessageBoxActions.Ok);
+				Context.DesktopWindow.ShowMessageBox(msg.ToString(), MessageBoxActions.Ok);
 				Platform.Log(LogLevel.Info, "VTK System Info" + Environment.NewLine + Environment.NewLine + log);
 			}
 			catch (Exception ex)

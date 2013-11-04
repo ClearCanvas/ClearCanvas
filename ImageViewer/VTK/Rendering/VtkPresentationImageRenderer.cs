@@ -24,6 +24,8 @@
 
 using System;
 using System.Drawing;
+using System.IO;
+using System.Text;
 using ClearCanvas.ImageViewer.Annotations;
 using ClearCanvas.ImageViewer.Graphics;
 using ClearCanvas.ImageViewer.Rendering;
@@ -131,6 +133,22 @@ namespace ClearCanvas.ImageViewer.Vtk.Rendering
 		/// </summary>
 		public static bool ShowFps { get; set; }
 
+		/// <summary>
+		/// Gets diagnostic information regarding the system graphics support.
+		/// </summary>
+		public static string GetDiagnosticInfo()
+		{
+			var sb = new StringBuilder();
+			using (var sr = new StringReader(Win32VtkRenderingSurface.ReportCapabilities()))
+			{
+				// we do this to normalize the line endings
+				string line;
+				while ((line = sr.ReadLine()) != null)
+					sb.AppendLine(line);
+			}
+			return sb.ToString();
+		}
+
 		#endregion
 
 		#region GDI+ Rendering Implementation
@@ -152,7 +170,7 @@ namespace ClearCanvas.ImageViewer.Vtk.Rendering
 					else if (graphic is InvariantLinePrimitive)
 						DrawInvariantLinePrimitive((InvariantLinePrimitive) graphic);
 					else if (graphic is SplinePrimitive)
-						DrawCurvePrimitive((SplinePrimitive) graphic);
+						DrawSplinePrimitive((SplinePrimitive) graphic);
 					else if (graphic is RectanglePrimitive)
 						DrawRectanglePrimitive((RectanglePrimitive) graphic);
 					else if (graphic is InvariantRectanglePrimitive)
@@ -188,7 +206,7 @@ namespace ClearCanvas.ImageViewer.Vtk.Rendering
 			GdiRenderer.DrawLinePrimitive(Surface.OverlayBuffer, _pen, line, Dpi);
 		}
 
-		protected virtual void DrawCurvePrimitive(SplinePrimitive spline)
+		protected virtual void DrawSplinePrimitive(SplinePrimitive spline)
 		{
 			GdiRenderer.DrawSplinePrimitive(Surface.OverlayBuffer, _pen, spline, Dpi);
 		}
