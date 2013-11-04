@@ -1228,7 +1228,6 @@
                 <configuration-settings show-label="true" show-label-if-empty="true" />
               </box-settings>
             </annotation-box>
-            <annotation-box normalized-rectangle="0.500000\0.175000\1.000000\0.200000" annotation-item-id="" />
             <annotation-box normalized-rectangle="0.500000\0.200000\1.000000\0.225000" annotation-item-id="" />
             <annotation-box normalized-rectangle="0.500000\0.225000\1.000000\0.250000" annotation-item-id="" />
             <annotation-box normalized-rectangle="0.500000\0.250000\1.000000\0.275000" annotation-item-id="" />
