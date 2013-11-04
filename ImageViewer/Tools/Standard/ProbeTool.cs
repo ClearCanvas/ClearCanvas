@@ -210,8 +210,11 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 				displayString.AppendLine(coordinateString);
 
 				var patientPoint = _selectedFrame.ImagePlaneHelper.ConvertToPatient(sourcePointRounded);
-				var patientString = String.Format(SR.FormatProbeInfo, SR.LabelPatientLocation, string.Format(SR.FormatCoordinates3D, patientPoint.X.ToString("f3"), patientPoint.Y.ToString("f3"), patientPoint.Z.ToString("f3")));
-				displayString.AppendLine(patientString);
+				if (patientPoint != null)
+				{
+					var patientString = String.Format(SR.FormatProbeInfo, SR.LabelPatientLocation, string.Format(SR.FormatCoordinates3D, patientPoint.X.ToString("f3"), patientPoint.Y.ToString("f3"), patientPoint.Z.ToString("f3")));
+					displayString.AppendLine(patientString);
+				}
 
 				probeString = displayString.ToString().Trim();
 			}
