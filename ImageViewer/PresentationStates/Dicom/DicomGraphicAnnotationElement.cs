@@ -141,8 +141,11 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 
 			private void OnSubjectVisualStateChanged(object sender, VisualStateChangedEventArgs e)
 			{
-				if (e.PropertyKind == VisualStatePropertyKind.Geometry || e.PropertyKind == VisualStatePropertyKind.Unspecified)
-					OnSubjectChanged();
+				if (!(sender is ICalloutGraphic || e.Graphic is ICalloutGraphic))
+				{
+					if (e.PropertyKind == VisualStatePropertyKind.Geometry || e.PropertyKind == VisualStatePropertyKind.Unspecified)
+						OnSubjectChanged();
+				}
 			}
 
 			public Roi Roi
@@ -174,6 +177,9 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 			/// </summary>
 			private void OnSubjectChanged()
 			{
+				// do not respond to subject change events for ROI recalculation unless the graphic was unlocked
+				if (!Enabled) return;
+
 				if (DecoratedGraphic is IControlGraphic && SynchronizationContext.Current != null)
 				{
 					//we can't use the DelayedEventPublisher because that relies on the sync context,
