@@ -121,7 +121,7 @@
     <value>Diagnostics</value>
   </data>
   <data name="MenuTools" xml:space="preserve">
-    <value>Tools</value>
+    <value>&amp;Tools</value>
   </data>
   <data name="MenuVtkShowFps" xml:space="preserve">
     <value>VTK - Show/Hide FPS</value>

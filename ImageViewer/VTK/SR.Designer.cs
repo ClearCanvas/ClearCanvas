@@ -70,7 +70,7 @@ namespace ClearCanvas.ImageViewer.Vtk {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Tools.
+        ///   Looks up a localized string similar to &amp;Tools.
         /// </summary>
         internal static string MenuTools {
             get {
