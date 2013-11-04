@@ -79,7 +79,7 @@ namespace ClearCanvas.ImageViewer.Graphics
 				if (_color != value)
 				{
 					_color = value;
-					base.NotifyVisualStateChanged("Color");
+					base.NotifyVisualStateChanged("Color", VisualStatePropertyKind.Appearance);
 				}
 			}
 		}
@@ -95,7 +95,7 @@ namespace ClearCanvas.ImageViewer.Graphics
 				if (_lineStyle != value)
 				{
 					_lineStyle = value;
-					base.NotifyVisualStateChanged("LineStyle");
+					base.NotifyVisualStateChanged("LineStyle", VisualStatePropertyKind.Appearance);
 				}
 			}
 		}

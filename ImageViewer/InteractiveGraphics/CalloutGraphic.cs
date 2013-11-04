@@ -413,7 +413,7 @@ namespace ClearCanvas.ImageViewer.InteractiveGraphics
 		/// </summary>
 		protected virtual void OnColorChanged()
 		{
-			NotifyVisualStateChanged("Color");
+			NotifyVisualStateChanged("Color", VisualStatePropertyKind.Appearance);
 		}
 
 		/// <summary>
@@ -421,7 +421,7 @@ namespace ClearCanvas.ImageViewer.InteractiveGraphics
 		/// </summary>
 		protected virtual void OnTextChanged()
 		{
-			NotifyVisualStateChanged("Text");
+			NotifyVisualStateChanged("Text", VisualStatePropertyKind.Text);
 		}
 
 		/// <summary>
@@ -430,7 +430,7 @@ namespace ClearCanvas.ImageViewer.InteractiveGraphics
 		protected virtual void OnTextLocationChanged()
 		{
 			EventsHelper.Fire(_textLocationChanged, this, EventArgs.Empty);
-			NotifyVisualStateChanged("TextLocation");
+			NotifyVisualStateChanged("TextLocation", VisualStatePropertyKind.Geometry);
 		}
 
 		/// <summary>
@@ -439,7 +439,7 @@ namespace ClearCanvas.ImageViewer.InteractiveGraphics
 		protected virtual void OnAnchorPointChanged()
 		{
 			EventsHelper.Fire(_anchorPointChanged, this, EventArgs.Empty);
-			NotifyVisualStateChanged("AnchorPoint");
+			NotifyVisualStateChanged("AnchorPoint", VisualStatePropertyKind.Geometry);
 		}
 
 		#endregion
@@ -617,7 +617,7 @@ namespace ClearCanvas.ImageViewer.InteractiveGraphics
 					{
 						_point = value;
 						EventsHelper.Fire(PointChanged, this, EventArgs.Empty);
-						base.NotifyVisualStateChanged("Point");
+						base.NotifyVisualStateChanged("Point", VisualStatePropertyKind.Geometry);
 					}
 				}
 			}

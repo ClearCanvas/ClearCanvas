@@ -209,11 +209,7 @@ namespace ClearCanvas.ImageViewer.InteractiveGraphics
 		private void OnSubjectVisualStateChanged(object sender, VisualStateChangedEventArgs e)
 		{
 			if (_notifyOnSubjectChanged)
-			{
-				// TODO (CR Sep 2011): If the subject is an arbitrary object, why are we doing this?
-				if (e.PropertyName != "Color" && e.PropertyName != "LineStyle")
-					this.OnSubjectChanged();
-			}
+				OnSubjectChanged(e.PropertyKind);
 		}
 
 		/// <summary>
@@ -241,9 +237,10 @@ namespace ClearCanvas.ImageViewer.InteractiveGraphics
 		/// <summary>
 		/// Called when properties on the <see cref="ControlGraphic.Subject"/> have changed.
 		/// </summary>
-		protected virtual void OnSubjectChanged()
+		protected virtual void OnSubjectChanged(VisualStatePropertyKind propertyKind)
 		{
-			SetCalloutLocation();
+			if (propertyKind == VisualStatePropertyKind.Geometry || propertyKind == VisualStatePropertyKind.Unspecified)
+				SetCalloutLocation();
 		}
 
 		#endregion

@@ -85,7 +85,7 @@ namespace ClearCanvas.ImageViewer.Graphics
 				}
 
 				EventsHelper.Fire(_point1ChangedEvent, this, new PointChangedEventArgs(this.Point1, CoordinateSystem));
-				base.NotifyVisualStateChanged("Point1");
+				base.NotifyVisualStateChanged("Point1", VisualStatePropertyKind.Geometry);
 			}
 		}
 
@@ -122,7 +122,7 @@ namespace ClearCanvas.ImageViewer.Graphics
 				}
 
 				EventsHelper.Fire(_point2ChangedEvent, this, new PointChangedEventArgs(this.Point2, CoordinateSystem));
-				base.NotifyVisualStateChanged("Point2");
+				base.NotifyVisualStateChanged("Point2", VisualStatePropertyKind.Geometry);
 			}
 		}
 

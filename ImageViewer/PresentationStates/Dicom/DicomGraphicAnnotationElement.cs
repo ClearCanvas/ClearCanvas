@@ -141,8 +141,7 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 
 			private void OnSubjectVisualStateChanged(object sender, VisualStateChangedEventArgs e)
 			{
-				// TODO (CR Sep 2011): If the subject is an arbitrary object, why are we doing this?
-				if (e.PropertyName != "Color" && e.PropertyName != "LineStyle")
+				if (e.PropertyKind == VisualStatePropertyKind.Geometry || e.PropertyKind == VisualStatePropertyKind.Unspecified)
 					OnSubjectChanged();
 			}
 

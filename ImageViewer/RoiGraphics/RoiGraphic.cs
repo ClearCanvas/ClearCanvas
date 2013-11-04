@@ -197,7 +197,7 @@ namespace ClearCanvas.ImageViewer.RoiGraphics
 		/// </summary>
 		public override void Refresh()
 		{
-			this.OnSubjectChanged();
+			this.OnSubjectChanged(VisualStatePropertyKind.Geometry);
 			base.Refresh();
 		}
 
@@ -235,34 +235,36 @@ namespace ClearCanvas.ImageViewer.RoiGraphics
 		/// <summary>
 		/// Called when properties on the <see cref="ControlGraphic.Subject"/> have changed.
 		/// </summary>
-		protected override sealed void OnSubjectChanged()
+		protected override sealed void OnSubjectChanged(VisualStatePropertyKind propertyKind)
 		{
-			if (this.DecoratedGraphic is IControlGraphic && SynchronizationContext.Current != null)
+			if (propertyKind == VisualStatePropertyKind.Geometry)
 			{
-				//we can't use the DelayedEventPublisher because that relies on the sync context,
-				//and we use graphics on worker threads for avi export ... so, we'll just do it custom.
-				lock (_syncLock)
+				if (this.DecoratedGraphic is IControlGraphic && SynchronizationContext.Current != null)
 				{
-					_lastChange = Environment.TickCount;
-				}
+					//we can't use the DelayedEventPublisher because that relies on the sync context,
+					//and we use graphics on worker threads for avi export ... so, we'll just do it custom.
+					lock (_syncLock)
+					{
+						_lastChange = Environment.TickCount;
+					}
 
-				if (_uiThreadContext == null)
+					if (_uiThreadContext == null)
+					{
+						_uiThreadContext = SynchronizationContext.Current;
+						ThreadPool.QueueUserWorkItem(DelayedEventThread);
+					}
+
+					Analyze(true);
+				}
+				else
 				{
-					_uiThreadContext = SynchronizationContext.Current;
-					ThreadPool.QueueUserWorkItem(DelayedEventThread);
+					// the roi is inactive, focused or selected, but not actively
+					// moving or stretching; just do the calculation immediately.
+					Analyze(false);
 				}
-
-				Analyze(true);
+				OnRoiChanged();
 			}
-			else
-			{
-				// the roi is inactive, focused or selected, but not actively
-				// moving or stretching; just do the calculation immediately.
-				Analyze(false);
-			}
-
-			this.OnRoiChanged();
-			base.OnSubjectChanged();
+			base.OnSubjectChanged(propertyKind);
 		}
 
 		/// <summary>
