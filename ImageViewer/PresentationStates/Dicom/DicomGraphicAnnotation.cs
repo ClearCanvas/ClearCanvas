@@ -111,7 +111,7 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 			}
 			else
 			{
-				subjectGraphic.Graphics.AddRange(annotations.Select(g => new ElementGraphic(g)));
+				subjectGraphic.Graphics.AddRange(annotations);
 			}
 
 			return new DicomGraphicAnnotation(subjectGraphic);
