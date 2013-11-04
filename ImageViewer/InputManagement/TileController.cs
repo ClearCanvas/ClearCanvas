@@ -247,7 +247,8 @@ namespace ClearCanvas.ImageViewer.InputManagement
 		private CursorToken _cursorToken;
 
 		private int _mouseMovedToleranceInPixel = 2;
-		private int _contextMenuDelay;
+		private int _contextMenuDelayInMilliseconds;
+		private int _mouseHoldDownForContextMenuInMilliseconds;
 		private long? _lastMouseDownProcessedTicks;
 		private XMouseButtons _buttonForContextMenu = XMouseButtons.Right;
 		private MouseButtonMessage.ButtonActions _buttonActionForContextMenu = MouseButtonMessage.ButtonActions.Up;
@@ -281,8 +282,8 @@ namespace ClearCanvas.ImageViewer.InputManagement
             _selectedOnThisClick = false;
 			_capturedOnThisClick = false;
 			_shortcutManager = shortcutManager;
-			_contextMenuDelay = InputManagementSettings.Default.ContextMenuDelay;
-			_delayedContextMenuRequestPublisher = new DelayedEventPublisher(ProcessDelayedContextMenuRequest, _contextMenuDelay);
+			_contextMenuDelayInMilliseconds = InputManagementSettings.Default.ContextMenuDelay;
+			_delayedContextMenuRequestPublisher = new DelayedEventPublisher(ProcessDelayedContextMenuRequest, _contextMenuDelayInMilliseconds);
 		}
 
 		public void Dispose()
@@ -519,7 +520,10 @@ namespace ClearCanvas.ImageViewer.InputManagement
 			_tile.Select();
 			_contextMenuEnabled = (buttonMessage.Shortcut.MouseButton == _buttonForContextMenu);
 			if (_buttonActionForContextMenu == MouseButtonMessage.ButtonActions.Down)
+			{
+				_delayedContextMenuRequestPublisher.TimeoutMilliseconds = _mouseHoldDownForContextMenuInMilliseconds;
 				_delayedContextMenuRequestPublisher.Publish(this, new ItemEventArgs<Point>(buttonMessage.Location));
+			}
 
 			_startMousePoint = buttonMessage.Location;
 
@@ -636,9 +640,10 @@ namespace ClearCanvas.ImageViewer.InputManagement
 						_buttonForContextMenu == buttonMessage.Shortcut.MouseButton &&
 						_buttonActionForContextMenu == MouseButtonMessage.ButtonActions.Up &&
 						!HasMoved(buttonMessage.Location) &&
-						(_contextMenuDelay == 0 || timeElapsedSinceMouseDown >= _contextMenuDelay))
+						(_mouseHoldDownForContextMenuInMilliseconds == 0 || timeElapsedSinceMouseDown >= _mouseHoldDownForContextMenuInMilliseconds))
 					{
-						_delayedContextMenuRequestPublisher.PublishNow(this, new ItemEventArgs<Point>(buttonMessage.Location));
+						_delayedContextMenuRequestPublisher.TimeoutMilliseconds = _contextMenuDelayInMilliseconds;
+						_delayedContextMenuRequestPublisher.Publish(this, new ItemEventArgs<Point>(buttonMessage.Location));
 					}
 
 					return true;
@@ -647,9 +652,11 @@ namespace ClearCanvas.ImageViewer.InputManagement
 				if (_buttonForContextMenu == buttonMessage.Shortcut.MouseButton &&
 					_buttonActionForContextMenu == MouseButtonMessage.ButtonActions.Up &&
 					!HasMoved(buttonMessage.Location) &&
-					(_contextMenuDelay == 0 || timeElapsedSinceMouseDown >= _contextMenuDelay))
+					(_mouseHoldDownForContextMenuInMilliseconds == 0 || timeElapsedSinceMouseDown >= _mouseHoldDownForContextMenuInMilliseconds))
 				{
-					_delayedContextMenuRequestPublisher.PublishNow(this, new ItemEventArgs<Point>(buttonMessage.Location));
+					_delayedContextMenuRequestPublisher.TimeoutMilliseconds = _contextMenuDelayInMilliseconds;
+					_delayedContextMenuRequestPublisher.Publish(this, new ItemEventArgs<Point>(buttonMessage.Location));
+					return true;
 				}
 
                 //Trace.WriteLine(String.Format("Release capture {0}", this.CaptureHandler.GetType()));
@@ -920,20 +927,21 @@ namespace ClearCanvas.ImageViewer.InputManagement
 		}
 
 		/// <summary>
-		/// Used by the view layer to tell this object how long the mouse has to be hold down in order to show the context menu.
+		/// Used by the view layer to tell this object how long the mouse has to be hold down in order to show the context menu. Default is 0.
+		/// </summary>
+		public int MouseHoldDownForContextMenuInMilliseconds
+		{
+			get { return _mouseHoldDownForContextMenuInMilliseconds; }
+			set { _mouseHoldDownForContextMenuInMilliseconds = value; }
+		}
+
+		/// <summary>
+		/// Used by the view layer to tell this object the delay between a mouse up and the context menu showing.  Not applicable if <see cref="ButtonActionForContextMenu"/> is down.
 		/// </summary>
 		public int ContextMenuDelayInMilliseconds
 		{
-			get { return _contextMenuDelay; }
-			set
-			{
-				if (_contextMenuDelay == value)
-					return;
-
-				_contextMenuDelay = value;
-				if (_delayedContextMenuRequestPublisher != null)
-					_delayedContextMenuRequestPublisher.TimeoutMilliseconds = _contextMenuDelay;
-			}
+			get { return _contextMenuDelayInMilliseconds; }
+			set { _contextMenuDelayInMilliseconds = value; }
 		}
 
 		/// <summary>
