@@ -654,9 +654,8 @@ namespace ClearCanvas.ImageViewer.InputManagement
 					!HasMoved(buttonMessage.Location) &&
 					(_mouseHoldDownForContextMenuInMilliseconds == 0 || timeElapsedSinceMouseDown >= _mouseHoldDownForContextMenuInMilliseconds))
 				{
-					_delayedContextMenuRequestPublisher.TimeoutMilliseconds = _contextMenuDelayInMilliseconds;
-					_delayedContextMenuRequestPublisher.Publish(this, new ItemEventArgs<Point>(buttonMessage.Location));
-					return true;
+					_contextMenuEnabled = true;
+					EventsHelper.Fire(_contextMenuRequested, this, new ItemEventArgs<Point>(buttonMessage.Location));
 				}
 
                 //Trace.WriteLine(String.Format("Release capture {0}", this.CaptureHandler.GetType()));
