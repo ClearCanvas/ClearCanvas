@@ -326,8 +326,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 			var sliceCount = (int) (Math.Abs(1.0*stackDepth/sliceSpacing) + 0.5);
 
 			// compute the position of the first slice when slicing the entire volume
-			// (offset by half a slice thickness, since the position identifies the centre of the slice for non-trivial slice thicknesses)
-			var firstSlicePosition = slicerOrigin + slicerAxisZ*(sliceThickness/2f);
+			var firstSlicePosition = slicerOrigin;
 
 			// if a start position (and, optionally, end position or total count) is provided, we adjust the slice position and count accordingly
 			if (startPosition != null)
