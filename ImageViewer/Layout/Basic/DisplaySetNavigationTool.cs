@@ -23,14 +23,13 @@
 #endregion
 
 using System;
+using System.Linq;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Desktop;
 using ClearCanvas.Desktop.Actions;
-using ClearCanvas.ImageViewer;
-using ClearCanvas.ImageViewer.BaseTools;
-using ClearCanvas.ImageViewer.StudyManagement;
 using ClearCanvas.Desktop.Tools;
+using ClearCanvas.ImageViewer.StudyManagement;
 
 namespace ClearCanvas.ImageViewer.Layout.Basic
 {
@@ -39,17 +38,17 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
 	[Tooltip("previous", "TooltipPreviousDisplaySet")]
 	[IconSet("previous", "Icons.PreviousDisplaySetToolSmall.png", "Icons.PreviousDisplaySetToolMedium.png", "Icons.PreviousDisplaySetToolLarge.png")]
 	[GroupHint("previous", "Tools.Navigation.DisplaySets.Previous")]
-
+	//
 	[MenuAction("next", "global-menus/MenuTools/MenuStandard/MenuNextDisplaySet", "NextDisplaySet")]
 	[ButtonAction("next", "global-toolbars/ToolbarStandard/ToolbarNextDisplaySet", "NextDisplaySet", KeyStroke = XKeys.N)]
 	[Tooltip("next", "TooltipNextDisplaySet")]
 	[IconSet("next", "Icons.NextDisplaySetToolSmall.png", "Icons.NextDisplaySetToolMedium.png", "Icons.NextDisplaySetToolLarge.png")]
 	[GroupHint("next", "Tools.Navigation.DisplaySets.Next")]
-
+	//
 	[EnabledStateObserver("next", "Enabled", "EnabledChanged")]
 	[EnabledStateObserver("previous", "Enabled", "EnabledChanged")]
-
-	[ExtensionOf(typeof(ImageViewerToolExtensionPoint))]
+	//
+	[ExtensionOf(typeof (ImageViewerToolExtensionPoint))]
 	public class DisplaySetNavigationTool : Tool<IImageViewerToolContext>
 	{
 		// NOTE: this is purposely *not* derived from ImageViewerTool because that class sets Enabled differently than we want,
@@ -58,9 +57,7 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
 		private bool _enabled = true;
 		private event EventHandler _enabledChanged;
 
-		public DisplaySetNavigationTool()
-		{
-		}
+		public DisplaySetNavigationTool() {}
 
 		public bool Enabled
 		{
@@ -109,14 +106,17 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
 
 			IDisplaySet currentDisplaySet = imageBox.DisplaySet;
 
-			if (currentDisplaySet == null || currentDisplaySet.ParentImageSet == null)
+			if (currentDisplaySet == null)
 				return null;
 
-			return CollectionUtils.SelectFirst(currentDisplaySet.ParentImageSet.DisplaySets,
-									   delegate(IDisplaySet displaySet)
-									   {
-										   return displaySet.Uid == currentDisplaySet.Uid;
-									   });
+			if (currentDisplaySet.ParentImageSet == null)
+			{
+				// if the display set doesn't have a parent image set, fall back to using the logical workspace and the UID fo the display set
+				// this situation usually arises from dynamically generated alternate views of a display set which is part of an image set
+				return currentDisplaySet.ImageViewer != null ? currentDisplaySet.ImageViewer.LogicalWorkspace.ImageSets.SelectMany(ims => ims.DisplaySets).FirstOrDefault(ds => ds.Uid == currentDisplaySet.Uid) : null;
+			}
+
+			return CollectionUtils.SelectFirst(currentDisplaySet.ParentImageSet.DisplaySets, displaySet => displaySet.Uid == currentDisplaySet.Uid);
 		}
 
 		private void UpdateEnabled()
