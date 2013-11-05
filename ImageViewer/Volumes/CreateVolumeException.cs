@@ -76,6 +76,16 @@ namespace ClearCanvas.ImageViewer.Volumes
 	}
 
 	[Serializable]
+	public class InconsistentImageLateralityException : CreateVolumeException
+	{
+		public InconsistentImageLateralityException()
+			: base("Multiple image lateralities were found in the source frames. All the source frames must be of the same anatomical laterality.") {}
+
+		protected InconsistentImageLateralityException(SerializationInfo info, StreamingContext context)
+			: base(info, context) {}
+	}
+
+	[Serializable]
 	public class InsufficientFramesException : CreateVolumeException
 	{
 		public InsufficientFramesException()
@@ -220,6 +230,8 @@ namespace ClearCanvas.ImageViewer.Volumes
 				message = SR.MessageVolumeSourceMayBotBeGantrySlewed;
 			else if (ex is InconsistentRescaleFunctionTypeException)
 				message = SR.MessageVolumeSourceInconsistentRescaleUnits;
+			else if (ex is InconsistentImageLateralityException)
+				message = SR.MessageVolumeSourceInconsistentImageLaterality;
 			exceptionHandlingContext.ShowMessageBox(message);
 		}
 	}

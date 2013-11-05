@@ -256,8 +256,11 @@ namespace ClearCanvas.ImageViewer.Volumes
 				// determine an appropriate pixel padding value
 				var pixelPaddingValue = ComputePixelPaddingValue(_frames, normalizedSlope, normalizedIntercept);
 
+				// get the laterality of the anatomy being constructed
+				var laterality = _frames[0].Frame.Laterality;
+
 				// Construct a model SOP data source based on the first frame's DICOM header
-				var header = new VolumeHeaderData(_frames.Select(f => (IDicomAttributeProvider) f.Frame).ToList(), VolumeSize, VoxelSpacing, VolumePositionPatient, VolumeOrientationPatient, 16, 16, false, pixelPaddingValue, normalizedSlope, normalizedIntercept, normalizedUnits);
+				var header = new VolumeHeaderData(_frames.Select(f => (IDicomAttributeProvider) f.Frame).ToList(), VolumeSize, VoxelSpacing, VolumePositionPatient, VolumeOrientationPatient, 16, 16, false, pixelPaddingValue, normalizedSlope, normalizedIntercept, normalizedUnits, laterality);
 
 				// determine how the normalized modality LUT affects VOI windows and update the header
 				VoiWindow.SetWindows(ComputeAggregateNormalizedVoiWindows(_frames, normalizedSlope, normalizedIntercept), header);
@@ -611,7 +614,8 @@ namespace ClearCanvas.ImageViewer.Volumes
 					throw new InconsistentRescaleFunctionTypeException();
 
 				// ensure all frames have the same orientation
-				ImageOrientationPatient orient = frames[0].Frame.ImageOrientationPatient;
+				var orient = frames[0].Frame.ImageOrientationPatient;
+				var laterality = frames[0].Frame.Laterality;
 				foreach (IFrameReference frame in frames)
 				{
 					if (frame.Frame.ImageOrientationPatient.IsNull)
@@ -622,6 +626,8 @@ namespace ClearCanvas.ImageViewer.Volumes
 						throw new UncalibratedFramesException();
 					if (Math.Abs(frame.Frame.PixelSpacing.AspectRatio - 1) > _sliceSpacingTolerance)
 						throw new AnisotropicPixelAspectRatioException();
+					if (laterality != frame.Frame.Laterality)
+						throw new InconsistentImageLateralityException();
 				}
 
 				// ensure all frames are sorted by slice location

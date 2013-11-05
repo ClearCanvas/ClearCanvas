@@ -613,9 +613,9 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 				DicomAttribute dicomAttribute;
 				if (_parentImageSop.TryGetFrameAttribute(_frameNumber, DicomTags.FrameLaterality, out dicomAttribute) && dicomAttribute.TryGetString(0, out laterality))
 					return laterality;
-				if (_parentImageSop.TryGetFrameAttribute(_frameNumber, DicomTags.ImageLaterality, out dicomAttribute) && dicomAttribute.TryGetString(0, out laterality))
-					return laterality;
 				if (_parentImageSop.TryGetFrameAttribute(0, DicomTags.ImageLaterality, out dicomAttribute) && dicomAttribute.TryGetString(0, out laterality))
+					return laterality;
+				if (_parentImageSop.TryGetFrameAttribute(0, DicomTags.Laterality, out dicomAttribute) && dicomAttribute.TryGetString(0, out laterality))
 					return laterality;
 				return string.Empty;
 			}

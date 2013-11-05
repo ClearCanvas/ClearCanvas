@@ -1632,6 +1632,15 @@ namespace ClearCanvas.ImageViewer {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Each frame in the source dataset must be of the same anatomical laterality..
+        /// </summary>
+        public static string MessageVolumeSourceInconsistentImageLaterality {
+            get {
+                return ResourceManager.GetString("MessageVolumeSourceInconsistentImageLaterality", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Each frame in the source dataset must be in the same pixel units..
         /// </summary>
         public static string MessageVolumeSourceInconsistentRescaleUnits {
