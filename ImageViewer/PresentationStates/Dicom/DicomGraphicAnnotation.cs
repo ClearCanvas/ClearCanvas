@@ -316,6 +316,16 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 
 		private static IGraphic CreateEllipse(PointF majorAxisEnd1, PointF majorAxisEnd2, PointF minorAxisEnd1, PointF minorAxisEnd2, bool editable = false)
 		{
+			// use a standard ellipse primitive if the axes defines an orthogonal ellipse
+			var majorAxis = majorAxisEnd2 - new SizeF(majorAxisEnd1);
+			var minorAxis = minorAxisEnd2 - new SizeF(minorAxisEnd1);
+			if ((FloatComparer.AreEqual(0, majorAxis.X) || FloatComparer.AreEqual(0, majorAxis.Y)) && (FloatComparer.AreEqual(0, minorAxis.X) || FloatComparer.AreEqual(0, minorAxis.Y)))
+			{
+				var rect = RectangleUtilities.ConvertToPositiveRectangle(RectangleUtilities.ComputeBoundingRectangle(majorAxisEnd1, majorAxisEnd2, minorAxisEnd1, minorAxisEnd2));
+				var ellipse = new EllipsePrimitive {TopLeft = rect.Location, BottomRight = rect.Location + rect.Size};
+				return editable ? (IGraphic) new BoundableResizeControlGraphic(new BoundableStretchControlGraphic(new MoveControlGraphic(ellipse))) : ellipse;
+			}
+
 			var dicomEllipseGraphic = new DicomEllipseGraphic();
 			dicomEllipseGraphic.MajorAxisPoint1 = majorAxisEnd1;
 			dicomEllipseGraphic.MajorAxisPoint2 = majorAxisEnd2;
