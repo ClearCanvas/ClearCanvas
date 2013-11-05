@@ -37,6 +37,9 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 	{
 		public static void Publish(IEnumerable<KeyImageInformation> keyImageInformations)
 		{
+			var keyImageContexts = keyImageInformations != null ? keyImageInformations.ToList() : null;
+			if (keyImageContexts == null || !keyImageContexts.Any()) return;
+
 			if (!AssertIsPublishingServiceAvailable()) return;
 
 			var anyFailed = false;
@@ -55,7 +58,7 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 				                                                            		return nextSeriesNumber;
 				                                                            	});
 
-				foreach (var kod in keyImageInformations)
+				foreach (var kod in keyImageContexts)
 				{
 					// add each created instance to a publisher by study
 					foreach (var studyInstances in kod.CreateSopInstances(nextSeriesNumberDelegate))
