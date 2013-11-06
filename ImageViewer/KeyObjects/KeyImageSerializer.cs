@@ -37,6 +37,7 @@ using ClearCanvas.Dicom.Iod.Iods;
 using ClearCanvas.Dicom.Iod.Macros;
 using ClearCanvas.Dicom.Iod.Macros.DocumentRelationship;
 using ClearCanvas.Dicom.Iod.Modules;
+using ClearCanvas.Dicom.Utilities;
 using ClearCanvas.ImageViewer.PresentationStates.Dicom;
 using ClearCanvas.ImageViewer.StudyManagement;
 
@@ -48,23 +49,10 @@ namespace ClearCanvas.ImageViewer.KeyObjects
 	/// <remarks>
 	/// <para>Due to the relatively new nature of key object support in the ClearCanvas Framework, this API may be more prone to changes in the next release.</para>
 	/// </remarks>
-	// TODO CR (Oct 11): Refactor to use SopInstanceFactory
 	public class KeyImageSerializer
 	{
-		private readonly FramePresentationList _framePresentationStates;
-		private DateTime _datetime;
-		private string _description;
-		private string _seriesDescription;
-		private string _author;
-
-		private string _stationName;
-		private Institution _institution;
-		private string _manufacturer;
-		private string _manufacturersModelName;
-		private string _deviceSerialNumber;
-		private string _softwareVersions;
-		private string _specificCharacterSet = @"ISO_IR 192";
-		private KeyObjectSelectionDocumentTitle _docTitle = KeyObjectSelectionDocumentTitleContextGroup.OfInterest;
+		private readonly PrototypeSopInstanceFactory _sopInstanceFactory = new PrototypeSopInstanceFactory();
+		private readonly FramePresentationList _framePresentationStates = new FramePresentationList();
 
 		/// <summary>
 		/// Constructs a new instance of <see cref="KeyImageSerializer"/>.
@@ -74,62 +62,35 @@ namespace ClearCanvas.ImageViewer.KeyObjects
 		/// </remarks>
 		public KeyImageSerializer()
 		{
-			_framePresentationStates = new FramePresentationList();
-			_datetime = Platform.Time;
-			_author = GetUserName();
-
-			_stationName = string.Empty;
-			_institution = Institution.Empty;
-			_manufacturer = "ClearCanvas";
-			_manufacturersModelName = ProductInformation.Component;
-			_deviceSerialNumber = string.Empty;
-			_softwareVersions = ProductInformation.GetVersion(true, true);
+			DocumentTitle = KeyObjectSelectionDocumentTitleContextGroup.OfInterest;
+			DateTime = Platform.Time;
+			Author = GetUserName();
 		}
 
 		/// <summary>
 		/// Gets or sets the series date time to use for the key object selection document.
 		/// </summary>
-		public DateTime DateTime
-		{
-			get { return _datetime; }
-			set { _datetime = value; }
-		}
+		public DateTime DateTime { get; set; }
 
 		/// <summary>
 		/// Gets or sets the description of the key object selection.
 		/// </summary>
-		public string Description
-		{
-			get { return _description; }
-			set { _description = value; }
-		}
+		public string Description { get; set; }
 
 		/// <summary>
 		/// Gets or sets the series description.
 		/// </summary>
-		public string SeriesDescription
-		{
-			get { return _seriesDescription; }
-			set { _seriesDescription = value; }
-		}
+		public string SeriesDescription { get; set; }
 
 		/// <summary>
 		/// Gets or sets the KO document author.
 		/// </summary>
-		public string Author
-		{
-			get { return _author; }
-			set { _author = value; }
-		}
+		public string Author { get; set; }
 
 		/// <summary>
 		/// Gets or sets the key object selection document title.
 		/// </summary>
-		public KeyObjectSelectionDocumentTitle DocumentTitle
-		{
-			get { return _docTitle; }
-			set { _docTitle = value; }
-		}
+		public KeyObjectSelectionDocumentTitle DocumentTitle { get; set; }
 
 		/// <summary>
 		/// Unused. The Source Application Entity Title of the serialized SOP instances is automatically filled from the referenced frames.
@@ -146,8 +107,8 @@ namespace ClearCanvas.ImageViewer.KeyObjects
 		/// </summary>
 		public string StationName
 		{
-			get { return _stationName; }
-			set { _stationName = value; }
+			get { return _sopInstanceFactory.StationName; }
+			set { _sopInstanceFactory.StationName = value; }
 		}
 
 		/// <summary>
@@ -155,8 +116,8 @@ namespace ClearCanvas.ImageViewer.KeyObjects
 		/// </summary>
 		internal Institution Institution
 		{
-			get { return _institution; }
-			set { _institution = value; }
+			get { return _sopInstanceFactory.Institution; }
+			set { _sopInstanceFactory.Institution = value; }
 		}
 
 		/// <summary>
@@ -164,8 +125,7 @@ namespace ClearCanvas.ImageViewer.KeyObjects
 		/// </summary>
 		public string Manufacturer
 		{
-			get { return _manufacturer; }
-			protected set { _manufacturer = value; }
+			get { return _sopInstanceFactory.Manufacturer; }
 		}
 
 		/// <summary>
@@ -173,8 +133,7 @@ namespace ClearCanvas.ImageViewer.KeyObjects
 		/// </summary>
 		public string ManufacturersModelName
 		{
-			get { return _manufacturersModelName; }
-			protected set { _manufacturersModelName = value; }
+			get { return _sopInstanceFactory.ManufacturersModelName; }
 		}
 
 		/// <summary>
@@ -182,8 +141,7 @@ namespace ClearCanvas.ImageViewer.KeyObjects
 		/// </summary>
 		public string DeviceSerialNumber
 		{
-			get { return _deviceSerialNumber; }
-			protected set { _deviceSerialNumber = value; }
+			get { return _sopInstanceFactory.DeviceSerialNumber; }
 		}
 
 		/// <summary>
@@ -191,8 +149,7 @@ namespace ClearCanvas.ImageViewer.KeyObjects
 		/// </summary>
 		public string SoftwareVersions
 		{
-			get { return _softwareVersions; }
-			protected set { _softwareVersions = value; }
+			get { return _sopInstanceFactory.SoftwareVersions; }
 		}
 
 		/// <summary>
@@ -204,8 +161,8 @@ namespace ClearCanvas.ImageViewer.KeyObjects
 		/// </remarks>
 		public string SpecificCharacterSet
 		{
-			get { return _specificCharacterSet; }
-			set { _specificCharacterSet = value; }
+			get { return _sopInstanceFactory.SpecificCharacterSet; }
+			set { _sopInstanceFactory.SpecificCharacterSet = value; }
 		}
 
 		/// <summary>
@@ -260,7 +217,9 @@ namespace ClearCanvas.ImageViewer.KeyObjects
 					DicomFile keyObjectDocument = new DicomFile();
 					keyObjectDocument.SourceApplicationEntityTitle = frame.SourceApplicationEntityTitle;
 
-					KeyObjectSelectionDocumentIod iod = CreatePrototypeDocument(prototypeDataSet, keyObjectDocument.DataSet, SpecificCharacterSet);
+					_sopInstanceFactory.InitializeDataSet(prototypeDataSet, keyObjectDocument.DataSet);
+
+					KeyObjectSelectionDocumentIod iod = new KeyObjectSelectionDocumentIod(keyObjectDocument.DataSet);
 
 					iod.GeneralEquipment.Manufacturer = this.Manufacturer ?? string.Empty; // this one is type 2 - all other GenEq attributes are type 3
 					iod.GeneralEquipment.ManufacturersModelName = string.IsNullOrEmpty(this.ManufacturersModelName) ? null : this.ManufacturersModelName;
@@ -274,7 +233,7 @@ namespace ClearCanvas.ImageViewer.KeyObjects
 					iod.KeyObjectDocumentSeries.InitializeAttributes();
 					iod.KeyObjectDocumentSeries.Modality = Modality.KO;
 					iod.KeyObjectDocumentSeries.SeriesDateTime = seriesInfo.SeriesDateTime;
-					iod.KeyObjectDocumentSeries.SeriesDescription = _seriesDescription;
+					iod.KeyObjectDocumentSeries.SeriesDescription = SeriesDescription;
 					iod.KeyObjectDocumentSeries.SeriesInstanceUid = CreateUid(seriesInfo.SeriesInstanceUid);
 					iod.KeyObjectDocumentSeries.SeriesNumber = seriesInfo.SeriesNumber ?? 1;
 					iod.KeyObjectDocumentSeries.ReferencedPerformedProcedureStepSequence = null;
@@ -297,7 +256,7 @@ namespace ClearCanvas.ImageViewer.KeyObjects
 			{
 				iod.KeyObjectDocument.InitializeAttributes();
 				iod.KeyObjectDocument.InstanceNumber = 1;
-				iod.KeyObjectDocument.ContentDateTime = _datetime;
+				iod.KeyObjectDocument.ContentDateTime = DateTime;
 				iod.KeyObjectDocument.ReferencedRequestSequence = null;
 
 				// only add docuemnts other than current to the identical documents sequence (and if there's only one, it's obviously the current)
@@ -311,7 +270,7 @@ namespace ClearCanvas.ImageViewer.KeyObjects
 				}
 
 				iod.SrDocumentContent.InitializeContainerAttributes();
-				iod.SrDocumentContent.ConceptNameCodeSequence = _docTitle;
+				iod.SrDocumentContent.ConceptNameCodeSequence = DocumentTitle;
 
 				List<IContentSequence> contentList = new List<IContentSequence>();
 				EvidenceDictionary currentRequestedProcedureEvidenceList = new EvidenceDictionary();
@@ -353,23 +312,23 @@ namespace ClearCanvas.ImageViewer.KeyObjects
 				}
 
 				// add the author
-				if (!string.IsNullOrEmpty(_author))
+				if (!string.IsNullOrEmpty(Author))
 				{
 					IContentSequence koAuthor = iod.SrDocumentContent.CreateContentSequence();
 					koAuthor.InitializeAttributes();
 					koAuthor.ConceptNameCodeSequence = KeyObjectSelectionCodeSequences.PersonObserverName;
-					koAuthor.PersonName = _author;
+					koAuthor.PersonName = Author;
 					koAuthor.RelationshipType = RelationshipType.HasObsContext;
 					contentList.Add(koAuthor);
 				}
 
 				// add the description
-				if (!string.IsNullOrEmpty(_description))
+				if (!string.IsNullOrEmpty(Description))
 				{
 					IContentSequence koDescription = iod.SrDocumentContent.CreateContentSequence();
 					koDescription.InitializeAttributes();
 					koDescription.ConceptNameCodeSequence = KeyObjectSelectionCodeSequences.KeyObjectDescription;
-					koDescription.TextValue = _description;
+					koDescription.TextValue = Description;
 					koDescription.RelationshipType = RelationshipType.Contains;
 					contentList.Add(koDescription);
 				}
@@ -399,105 +358,6 @@ namespace ClearCanvas.ImageViewer.KeyObjects
 			}
 
 			return keyObjectDocuments;
-		}
-
-		private static KeyObjectSelectionDocumentIod CreatePrototypeDocument(IDicomAttributeProvider source, DicomAttributeCollection target, string specificCharacterSet)
-		{
-			KeyObjectSelectionDocumentIod iod = new KeyObjectSelectionDocumentIod(target);
-			specificCharacterSet = specificCharacterSet ?? string.Empty;
-			target.SpecificCharacterSet = specificCharacterSet;
-			target[DicomTags.SpecificCharacterSet].SetStringValue(specificCharacterSet);
-
-			PatientModuleIod sourcePatient = new PatientModuleIod(source);
-			if (true) // patient module is always required
-			{
-				iod.Patient.BreedRegistrationSequence = sourcePatient.BreedRegistrationSequence;
-				iod.Patient.DeIdentificationMethod = sourcePatient.DeIdentificationMethod;
-				iod.Patient.DeIdentificationMethodCodeSequence = sourcePatient.DeIdentificationMethodCodeSequence;
-				iod.Patient.EthnicGroup = sourcePatient.EthnicGroup;
-				iod.Patient.IssuerOfPatientId = sourcePatient.IssuerOfPatientId;
-				iod.Patient.OtherPatientIds = sourcePatient.OtherPatientIds;
-				iod.Patient.OtherPatientIdsSequence = sourcePatient.OtherPatientIdsSequence;
-				iod.Patient.OtherPatientNames = sourcePatient.OtherPatientNames;
-				iod.Patient.PatientBreedCodeSequence = sourcePatient.PatientBreedCodeSequence;
-				iod.Patient.PatientBreedDescription = sourcePatient.PatientBreedDescription;
-				iod.Patient.PatientComments = sourcePatient.PatientComments;
-				iod.Patient.PatientId = sourcePatient.PatientId;
-				iod.Patient.PatientIdentityRemoved = sourcePatient.PatientIdentityRemoved;
-				iod.Patient.PatientsBirthDateTime = sourcePatient.PatientsBirthDateTime;
-				iod.Patient.PatientsName = sourcePatient.PatientsName;
-				iod.Patient.PatientSpeciesCodeSequence = sourcePatient.PatientSpeciesCodeSequence;
-				iod.Patient.PatientSpeciesDescription = sourcePatient.PatientSpeciesDescription;
-				iod.Patient.PatientsSex = sourcePatient.PatientsSex;
-				iod.Patient.ReferencedPatientSequence = sourcePatient.ReferencedPatientSequence;
-				iod.Patient.ResponsibleOrganization = sourcePatient.ResponsibleOrganization;
-				iod.Patient.ResponsiblePerson = sourcePatient.ResponsiblePerson;
-				iod.Patient.ResponsiblePersonRole = sourcePatient.ResponsiblePersonRole;
-			}
-
-			SpecimenIdentificationModuleIod sourceSpecimen = new SpecimenIdentificationModuleIod(source);
-			if (sourceSpecimen.HasValues()) // specimen module is required only if subject is a specimen
-			{
-				iod.SpecimenIdentification.SpecimenAccessionNumber = sourceSpecimen.SpecimenAccessionNumber;
-				iod.SpecimenIdentification.SpecimenSequence = sourceSpecimen.SpecimenSequence;
-			}
-
-			ClinicalTrialSubjectModuleIod sourceTrialSubject = new ClinicalTrialSubjectModuleIod(source);
-			if (sourceTrialSubject.HasValues()) // clinical trial subkect module is user optional
-			{
-				iod.ClinicalTrialSubject.ClinicalTrialProtocolId = sourceTrialSubject.ClinicalTrialProtocolId;
-				iod.ClinicalTrialSubject.ClinicalTrialProtocolName = sourceTrialSubject.ClinicalTrialProtocolName;
-				iod.ClinicalTrialSubject.ClinicalTrialSiteId = sourceTrialSubject.ClinicalTrialSiteId;
-				iod.ClinicalTrialSubject.ClinicalTrialSiteName = sourceTrialSubject.ClinicalTrialSiteName;
-				iod.ClinicalTrialSubject.ClinicalTrialSponsorName = sourceTrialSubject.ClinicalTrialSponsorName;
-				iod.ClinicalTrialSubject.ClinicalTrialSubjectId = sourceTrialSubject.ClinicalTrialSubjectId;
-				iod.ClinicalTrialSubject.ClinicalTrialSubjectReadingId = sourceTrialSubject.ClinicalTrialSubjectReadingId;
-			}
-
-			GeneralStudyModuleIod sourceGeneralStudy = new GeneralStudyModuleIod(source);
-			if (true) // general study module is always required
-			{
-				iod.GeneralStudy.AccessionNumber = sourceGeneralStudy.AccessionNumber;
-				iod.GeneralStudy.NameOfPhysiciansReadingStudy = sourceGeneralStudy.NameOfPhysiciansReadingStudy;
-				iod.GeneralStudy.PhysiciansOfRecord = sourceGeneralStudy.PhysiciansOfRecord;
-				iod.GeneralStudy.PhysiciansOfRecordIdentificationSequence = sourceGeneralStudy.PhysiciansOfRecordIdentificationSequence;
-				iod.GeneralStudy.PhysiciansReadingStudyIdentificationSequence = sourceGeneralStudy.PhysiciansReadingStudyIdentificationSequence;
-				iod.GeneralStudy.ProcedureCodeSequence = sourceGeneralStudy.ProcedureCodeSequence;
-				iod.GeneralStudy.ReferencedStudySequence = sourceGeneralStudy.ReferencedStudySequence;
-				iod.GeneralStudy.ReferringPhysicianIdentificationSequence = sourceGeneralStudy.ReferringPhysicianIdentificationSequence;
-				iod.GeneralStudy.ReferringPhysiciansName = sourceGeneralStudy.ReferringPhysiciansName;
-				iod.GeneralStudy.StudyDateTime = sourceGeneralStudy.StudyDateTime;
-				iod.GeneralStudy.StudyDescription = sourceGeneralStudy.StudyDescription;
-				iod.GeneralStudy.StudyId = sourceGeneralStudy.StudyId;
-				iod.GeneralStudy.StudyInstanceUid = sourceGeneralStudy.StudyInstanceUid;
-			}
-
-			PatientStudyModuleIod sourcePatientStudy = new PatientStudyModuleIod(source);
-			if (sourcePatientStudy.HasValues()) // patient study module is user optional
-			{
-				iod.PatientStudy.AdditionalPatientHistory = sourcePatientStudy.AdditionalPatientHistory;
-				iod.PatientStudy.AdmissionId = sourcePatientStudy.AdmissionId;
-				iod.PatientStudy.AdmittingDiagnosesCodeSequence = sourcePatientStudy.AdmittingDiagnosesCodeSequence;
-				iod.PatientStudy.AdmittingDiagnosesDescription = sourcePatientStudy.AdmittingDiagnosesDescription;
-				iod.PatientStudy.IssuerOfAdmissionId = sourcePatientStudy.IssuerOfAdmissionId;
-				iod.PatientStudy.IssuerOfServiceEpisodeId = sourcePatientStudy.IssuerOfServiceEpisodeId;
-				iod.PatientStudy.Occupation = sourcePatientStudy.Occupation;
-				iod.PatientStudy.PatientsAge = sourcePatientStudy.PatientsAge;
-				iod.PatientStudy.PatientsSexNeutered = sourcePatientStudy.PatientsSexNeutered;
-				iod.PatientStudy.PatientsSize = sourcePatientStudy.PatientsSize;
-				iod.PatientStudy.PatientsWeight = sourcePatientStudy.PatientsWeight;
-				iod.PatientStudy.ServiceEpisodeDescription = sourcePatientStudy.ServiceEpisodeDescription;
-				iod.PatientStudy.ServiceEpisodeId = sourcePatientStudy.ServiceEpisodeId;
-			}
-
-			ClinicalTrialStudyModuleIod sourceTrialStudy = new ClinicalTrialStudyModuleIod(source);
-			if (sourceTrialStudy.HasValues()) // clinical trial study module is user optional
-			{
-				iod.ClinicalTrialStudy.ClinicalTrialTimePointDescription = sourceTrialStudy.ClinicalTrialTimePointDescription;
-				iod.ClinicalTrialStudy.ClinicalTrialTimePointId = sourceTrialStudy.ClinicalTrialTimePointId;
-			}
-
-			return iod;
 		}
 
 		private static string CreateUid(string uidHint)
