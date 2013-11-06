@@ -133,21 +133,15 @@ namespace ClearCanvas.ImageViewer.InteractiveGraphics
 		{
 			_numberOfPointsAnchored++;
 
-			// We just started creating
-			if (_numberOfPointsAnchored == 1)
+			if (_numberOfPointsAnchored == 1) // We just started creating
 			{
 				this.Graphic.CoordinateSystem = CoordinateSystem.Destination;
 				this.Graphic.Points.Add(mouseInformation.Location);
 				this.Graphic.Points.Add(mouseInformation.Location);
 				this.Graphic.ResetCoordinateSystem();
 			}
-			// We're done creating
-			else if (_numberOfPointsAnchored >= 5 && mouseInformation.ClickCount >= 2)
+			else if (_numberOfPointsAnchored >= 5 && mouseInformation.ClickCount >= 2) // We're done creating
 			{
-                // TODO? 
-                // When user moves the mouse very quickly and events are filtered for performance purpose (eg web viewer case), 
-                // the final point may not be the same as the last tracked point. Must update the final point based on the latest mouse position.
-
 				this.Graphic.CoordinateSystem = CoordinateSystem.Destination;
 				try
 				{
@@ -161,34 +155,37 @@ namespace ClearCanvas.ImageViewer.InteractiveGraphics
 
 				this.NotifyGraphicComplete();
 			}
-			// We're done creating
-			else if (_numberOfPointsAnchored >= 4 && AtOrigin(mouseInformation.Location) && mouseInformation.ClickCount == 1)
+			else if (_numberOfPointsAnchored >= 4 && AtOrigin(mouseInformation.Location) && mouseInformation.ClickCount == 1) // We're done creating
 			{
-                // TODO? 
-                // When user moves the mouse very quickly and events are filtered for performance purpose (eg web viewer case), 
-                // the final point may not be the same as the last tracked point. Must update the final point based on the latest mouse position.
-                this.NotifyGraphicComplete();
-			}
-			// We're done creating
-			else if (_numberOfPointsAnchored >= 3 && _numberOfPointsAnchored >= _maximumVertices && mouseInformation.ClickCount == 1)
-			{
-                // TODO? 
-                // When user moves the mouse very quickly and events are filtered for performance purpose (eg web viewer case), 
-                // the final point may not be the same as the last tracked point. Must update the final point based on the latest mouse position.
-                this.Graphic.CoordinateSystem = CoordinateSystem.Destination;
-				this.Graphic.Points.Add(this.Graphic.Points[0]);
-				this.Graphic.ResetCoordinateSystem();
 				this.NotifyGraphicComplete();
 			}
-			// We're in the middle of creating
-			else if (_numberOfPointsAnchored >= 2 && mouseInformation.ClickCount == 1)
+			else if (_numberOfPointsAnchored >= 3 && _numberOfPointsAnchored >= _maximumVertices && mouseInformation.ClickCount == 1) // We're done creating
 			{
-                // TODO? 
-                // When user moves the mouse very quickly and events are filtered for performance purpose (eg web viewer case), 
-                // the final point may not be the same as the last tracked point. Must update the final point based on the latest mouse position.
-                this.Graphic.CoordinateSystem = CoordinateSystem.Destination;
-				this.Graphic.Points.Add(mouseInformation.Location);
-				this.Graphic.ResetCoordinateSystem();
+				this.Graphic.CoordinateSystem = CoordinateSystem.Destination;
+				try
+				{
+					this.Graphic.Points.Add(this.Graphic.Points[0]);
+				}
+				finally
+				{
+					this.Graphic.ResetCoordinateSystem();
+				}
+				this.NotifyGraphicComplete();
+			}
+			else if (_numberOfPointsAnchored >= 2 && mouseInformation.ClickCount == 1) // We're in the middle of creating
+			{
+				// TODO? 
+				// When user moves the mouse very quickly and events are filtered for performance purpose (eg web viewer case), 
+				// the final point may not be the same as the last tracked point. Must update the final point based on the latest mouse position.
+				this.Graphic.CoordinateSystem = CoordinateSystem.Destination;
+				try
+				{
+					this.Graphic.Points.Add(mouseInformation.Location);
+				}
+				finally
+				{
+					this.Graphic.ResetCoordinateSystem();
+				}
 			}
 			else if (mouseInformation.ClickCount > 1)
 			{
@@ -233,6 +230,23 @@ namespace ClearCanvas.ImageViewer.InteractiveGraphics
 		public override bool Stop(IMouseInformation mouseInformation)
 		{
 			return true;
+		}
+
+		protected new void NotifyGraphicComplete()
+		{
+			// ensures that the last point is exactly equal to the first point, in case the last tracked point wasn't precisely at the origin
+			Graphic.CoordinateSystem = CoordinateSystem.Destination;
+			try
+			{
+				var firstPoint = Graphic.Points[0];
+				var lastIndex = Graphic.Points.Count - 1;
+				Graphic.Points[lastIndex] = firstPoint;
+			}
+			finally
+			{
+				Graphic.ResetCoordinateSystem();
+			}
+			base.NotifyGraphicComplete();
 		}
 
 		private bool AtOrigin(PointF point)
