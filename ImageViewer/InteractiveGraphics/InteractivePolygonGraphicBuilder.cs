@@ -174,12 +174,11 @@ namespace ClearCanvas.ImageViewer.InteractiveGraphics
 			}
 			else if (_numberOfPointsAnchored >= 2 && mouseInformation.ClickCount == 1) // We're in the middle of creating
 			{
-				// TODO? 
-				// When user moves the mouse very quickly and events are filtered for performance purpose (eg web viewer case), 
-				// the final point may not be the same as the last tracked point. Must update the final point based on the latest mouse position.
 				this.Graphic.CoordinateSystem = CoordinateSystem.Destination;
 				try
 				{
+					// ensures that the last anchored point is updated to the current point, in case the last tracked point wasn't equal to current location
+					this.Graphic.Points[Graphic.Points.Count - 1] = mouseInformation.Location;
 					this.Graphic.Points.Add(mouseInformation.Location);
 				}
 				finally
@@ -239,8 +238,7 @@ namespace ClearCanvas.ImageViewer.InteractiveGraphics
 			try
 			{
 				var firstPoint = Graphic.Points[0];
-				var lastIndex = Graphic.Points.Count - 1;
-				Graphic.Points[lastIndex] = firstPoint;
+				Graphic.Points[Graphic.Points.Count - 1] = firstPoint;
 			}
 			finally
 			{
