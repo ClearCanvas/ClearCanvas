@@ -518,8 +518,10 @@ namespace ClearCanvas.ImageViewer.InputManagement
 				return true;
 
 			_tile.Select();
-			_contextMenuEnabled = (buttonMessage.Shortcut.MouseButton == _buttonForContextMenu);
-			if (_buttonActionForContextMenu == MouseButtonMessage.ButtonActions.Down)
+			_contextMenuEnabled = _clickCount == 1
+				&& _buttonForContextMenu == buttonMessage.Shortcut.MouseButton
+				&& _buttonActionForContextMenu == MouseButtonMessage.ButtonActions.Down;
+			if (_contextMenuEnabled )
 			{
 				_delayedContextMenuRequestPublisher.TimeoutMilliseconds = _mouseHoldDownForContextMenuInMilliseconds;
 				_delayedContextMenuRequestPublisher.Publish(this, new ItemEventArgs<Point>(buttonMessage.Location));
