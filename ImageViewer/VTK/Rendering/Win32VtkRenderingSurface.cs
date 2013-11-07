@@ -348,9 +348,16 @@ namespace ClearCanvas.ImageViewer.Vtk.Rendering
 						if (VtkPresentationImageRenderer.ShowFps)
 						{
 							var font = _gdiFont ?? (_gdiFont = new Font(FontFamily.GenericMonospace, 12, FontStyle.Bold, GraphicsUnit.Point));
-							var msg = string.Format("FPS: {0,5}", renderTime >= 0.000001 ? (1/renderTime).ToString("f1") : "-----");
+							var msg = string.Format("FPS: {0,6}", renderTime >= 0.000001 ? (1/renderTime).ToString("f1") : "------");
 							ImageBuffer.Graphics.DrawString(msg, font, Brushes.Black, 11, 11);
 							ImageBuffer.Graphics.DrawString(msg, font, Brushes.White, 10, 10);
+
+							if (fullQuality)
+							{
+								msg = string.Format("TTI: {0,6} ms", renderTime >= 0.000001 ? (renderTime*1000).ToString("f1") : "------");
+								ImageBuffer.Graphics.DrawString(msg, font, Brushes.Black, 11, 15 + 11);
+								ImageBuffer.Graphics.DrawString(msg, font, Brushes.White, 10, 15 + 10);
+							}
 						}
 					}
 
