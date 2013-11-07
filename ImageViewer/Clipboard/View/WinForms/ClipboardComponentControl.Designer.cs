@@ -48,6 +48,7 @@ namespace ClearCanvas.ImageViewer.Clipboard.View.WinForms
         {
             if (disposing && (components != null))
             {
+                PerformDispose();
                 components.Dispose();
             }
             base.Dispose(disposing);
