@@ -130,7 +130,10 @@ namespace ClearCanvas.Common.Utilities
 
 		private static IEnumerable<Tuple<string, object>> ObjectLiteralToTuples(object objLiteral)
 		{
-			return objLiteral.GetType().GetProperties().Select(p => Tuple.Create(p.Name, p.GetValue(objLiteral, null)));
+			return from k in objLiteral.GetType().GetProperties()
+				   let v = k.GetValue(objLiteral, null)
+				   where v != null						// exclude properties that are null-valued
+				   select Tuple.Create(k.Name, v);
 		}
 	}
 }
