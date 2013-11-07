@@ -109,12 +109,21 @@ namespace ClearCanvas.Common.Utilities
 		}
 
 		/// <summary>
-		/// Gets the resulting query string represented by this instance.
+		/// Gets the resulting query string represented by this instance, using the &amp; character as a separator.
 		/// </summary>
 		/// <returns></returns>
 		public override string ToString()
 		{
-			return string.Join("&", 
+			return ToString("&");
+		}
+
+		/// <summary>
+		/// Gets the resulting query string represented by this instance using the specified separator.
+		/// </summary>
+		/// <returns></returns>
+		public string ToString(string separator)
+		{
+			return string.Join(separator,
 				_values.Select(tuple => string.Format("{0}={1}", tuple.Item1, HttpUtility.UrlEncode(tuple.Item2.ToString()))
 				).ToArray());
 		}
