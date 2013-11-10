@@ -229,6 +229,7 @@
     <Compile Include="Iod\FunctionalGroups\XRayPositionerFunctionalGroup.cs" />
     <Compile Include="Iod\FunctionalGroups\XRayProjectionPixelCalibrationFunctionalGroup.cs" />
     <Compile Include="Iod\FunctionalGroups\XRayTablePositionFunctionalGroup.cs" />
+    <Compile Include="Iod\GradientDirection.cs" />
     <Compile Include="Iod\Iods\RawDataIod.cs" />
     <Compile Include="Iod\Macros\CommonCtMrImageDescriptionMacro.cs" />
     <Compile Include="Iod\Macros\ExposureIndexMacro.cs" />
