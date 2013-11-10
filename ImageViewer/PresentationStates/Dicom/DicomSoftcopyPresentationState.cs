@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Dicom;
@@ -51,9 +52,6 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 	[Cloneable]
 	public abstract class DicomSoftcopyPresentationState : PresentationState
 	{
-		private const string _messageAlreadySerialized = "This presentation state has already been serialized to a file.";
-		private const string _messageNotYetSerialized = "This presentation state has not been serialized to a file.";
-
 		[CloneCopyReference]
 		private readonly SopClass _presentationSopClass;
 
@@ -70,10 +68,6 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 		private string _sourceAETitle;
 		private string _stationName;
 		private Institution _institution;
-		private string _manufacturer;
-		private string _manufacturersModelName;
-		private string _deviceSerialNumber;
-		private string _softwareVersions;
 		private string _specificCharacterSet = @"ISO_IR 192";
 
 		/// <summary>
@@ -89,10 +83,10 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 			_sourceAETitle = string.Empty;
 			_stationName = string.Empty;
 			_institution = Institution.Empty;
-			_manufacturer = "ClearCanvas";
-			_manufacturersModelName = ProductInformation.Component;
-			_deviceSerialNumber = string.Empty;
-			_softwareVersions = ProductInformation.GetVersion(true, true);
+			Manufacturer = "ClearCanvas Inc.";
+			ManufacturersModelName = ProductInformation.GetName(true, false);
+			DeviceSerialNumber = string.Empty;
+			SoftwareVersions = ProductInformation.GetVersion(true, true, true);
 			_presentationInstanceNumber = 1;
 			_presentationSopInstanceUid = string.Empty;
 			_presentationSeriesDateTime = Platform.Time;
@@ -110,8 +104,9 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 		{
 			if (dicomFile.MediaStorageSopClassUid != psSopClass.Uid)
 			{
-				string message = string.Format("Expected: {0}; Found: {1}", psSopClass, SopClass.GetSopClass(dicomFile.MediaStorageSopClassUid));
-				throw new ArgumentException("The specified DICOM file is not of a compatible SOP Class. " + message, "dicomFile");
+				string message = string.Format("The specified DICOM file is not of a compatible SOP Class. Expected: {0}; Found: {1}",
+				                               psSopClass, SopClass.GetSopClass(dicomFile.MediaStorageSopClassUid));
+				throw new ArgumentException(message, "dicomFile");
 			}
 
 			_presentationSopClass = psSopClass;
@@ -121,10 +116,10 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 			_sourceAETitle = _dicomFile.SourceApplicationEntityTitle;
 			_stationName = _dicomFile.DataSet[DicomTags.StationName].ToString();
 			_institution = Institution.GetInstitution(_dicomFile);
-			_manufacturer = _dicomFile.DataSet[DicomTags.Manufacturer].ToString();
-			_manufacturersModelName = _dicomFile.DataSet[DicomTags.ManufacturersModelName].ToString();
-			_deviceSerialNumber = _dicomFile.DataSet[DicomTags.DeviceSerialNumber].ToString();
-			_softwareVersions = _dicomFile.DataSet[DicomTags.SoftwareVersions].ToString();
+			Manufacturer = _dicomFile.DataSet[DicomTags.Manufacturer].ToString();
+			ManufacturersModelName = _dicomFile.DataSet[DicomTags.ManufacturersModelName].ToString();
+			DeviceSerialNumber = _dicomFile.DataSet[DicomTags.DeviceSerialNumber].ToString();
+			SoftwareVersions = _dicomFile.DataSet[DicomTags.SoftwareVersions].ToString();
 			_presentationInstanceNumber = _dicomFile.DataSet[DicomTags.InstanceNumber].GetInt32(0, 0);
 			_presentationSopInstanceUid = _dicomFile.DataSet[DicomTags.SopInstanceUid].ToString();
 			_presentationSeriesDateTime = DateTimeParser.ParseDateAndTime(_dicomFile.DataSet, 0, DicomTags.SeriesDate, DicomTags.SeriesTime);
@@ -182,7 +177,7 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 			get { return _specificCharacterSet; }
 			set
 			{
-				CheckSerialized(false);
+				AssertNotSerialized();
 				_specificCharacterSet = value;
 			}
 		}
@@ -199,7 +194,7 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 			get { return _presentationSeriesInstanceUid; }
 			set
 			{
-				CheckSerialized(false);
+				AssertNotSerialized();
 				_presentationSeriesInstanceUid = value;
 			}
 		}
@@ -216,7 +211,7 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 			get { return _presentationSopInstanceUid; }
 			set
 			{
-				CheckSerialized(false);
+				AssertNotSerialized();
 				_presentationSopInstanceUid = value;
 			}
 		}
@@ -233,7 +228,7 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 			get { return _presentationInstanceNumber; }
 			set
 			{
-				CheckSerialized(false);
+				AssertNotSerialized();
 				_presentationInstanceNumber = value;
 			}
 		}
@@ -250,7 +245,7 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 			get { return _presentationSeriesNumber; }
 			set
 			{
-				CheckSerialized(false);
+				AssertNotSerialized();
 				_presentationSeriesNumber = value;
 			}
 		}
@@ -268,7 +263,7 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 			get { return _presentationSeriesDateTime; }
 			set
 			{
-				CheckSerialized(false);
+				AssertNotSerialized();
 				_presentationSeriesDateTime = value;
 			}
 		}
@@ -285,7 +280,7 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 			get { return _presentationLabel; }
 			set
 			{
-				CheckSerialized(false);
+				AssertNotSerialized();
 				_presentationLabel = value;
 			}
 		}
@@ -302,7 +297,7 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 			get { return _sourceAETitle; }
 			set
 			{
-				CheckSerialized(false);
+				AssertNotSerialized();
 				_sourceAETitle = value;
 			}
 		}
@@ -319,7 +314,7 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 			get { return _stationName; }
 			set
 			{
-				CheckSerialized(false);
+				AssertNotSerialized();
 				_stationName = value;
 			}
 		}
@@ -336,7 +331,7 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 			get { return _institution; }
 			set
 			{
-				CheckSerialized(false);
+				AssertNotSerialized();
 				_institution = value;
 			}
 		}
@@ -348,15 +343,7 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 		/// This property may only be set if the presentation state has not yet been serialized to a file.
 		/// </remarks>
 		/// <exception cref="InvalidOperationException">Thrown if the presentation state has already been serialized to a file.</exception>
-		public string Manufacturer
-		{
-			get { return _manufacturer; }
-			protected set
-			{
-				CheckSerialized(false);
-				_manufacturer = value;
-			}
-		}
+		public string Manufacturer { get; private set; }
 
 		/// <summary>
 		/// Gets or sets the workstation's model name.
@@ -365,15 +352,7 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 		/// This property may only be set if the presentation state has not yet been serialized to a file.
 		/// </remarks>
 		/// <exception cref="InvalidOperationException">Thrown if the presentation state has already been serialized to a file.</exception>
-		public string ManufacturersModelName
-		{
-			get { return _manufacturersModelName; }
-			protected set
-			{
-				CheckSerialized(false);
-				_manufacturersModelName = value;
-			}
-		}
+		public string ManufacturersModelName { get; private set; }
 
 		/// <summary>
 		/// Gets or sets the workstation's serial number.
@@ -382,15 +361,7 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 		/// This property may only be set if the presentation state has not yet been serialized to a file.
 		/// </remarks>
 		/// <exception cref="InvalidOperationException">Thrown if the presentation state has already been serialized to a file.</exception>
-		public string DeviceSerialNumber
-		{
-			get { return _deviceSerialNumber; }
-			protected set
-			{
-				CheckSerialized(false);
-				_deviceSerialNumber = value;
-			}
-		}
+		public string DeviceSerialNumber { get; private set; }
 
 		/// <summary>
 		/// Gets or sets the workstation's software version numbers (backslash-delimited for multiple values).
@@ -399,15 +370,7 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 		/// This property may only be set if the presentation state has not yet been serialized to a file.
 		/// </remarks>
 		/// <exception cref="InvalidOperationException">Thrown if the presentation state has already been serialized to a file.</exception>
-		public string SoftwareVersions
-		{
-			get { return _softwareVersions; }
-			protected set
-			{
-				CheckSerialized(false);
-				_softwareVersions = value;
-			}
-		}
+		public string SoftwareVersions { get; private set; }
 
 		/// <summary>
 		/// Gets the DICOM file containing the presentation state after serialization.
@@ -417,7 +380,7 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 		{
 			get
 			{
-				CheckSerialized(true);
+				AssertSerialized();
 				return _dicomFile;
 			}
 		}
@@ -435,10 +398,16 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 		/// </summary>
 		public bool DeserializeInteractiveAnnotations { get; set; }
 
-		private void CheckSerialized(bool expectedValue)
+		private void AssertSerialized()
 		{
-			if (_serialized != expectedValue)
-				throw new InvalidOperationException(_serialized ? _messageAlreadySerialized : _messageNotYetSerialized);
+			const string msg = "This presentation state has not been serialized to a file.";
+			if (!_serialized) throw new InvalidOperationException(msg);
+		}
+
+		private void AssertNotSerialized()
+		{
+			const string msg = "This presentation state has already been serialized to a file.";
+			if (_serialized) throw new InvalidOperationException(msg);
 		}
 
 		/// <summary>
@@ -448,54 +417,44 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 		/// <exception cref="InvalidOperationException">Thrown if the presentation state has already been serialized to a file.</exception>
 		public override void Serialize(IEnumerable<IPresentationImage> images)
 		{
-			CheckSerialized(false);
+			AssertNotSerialized();
 
 			// create UIDs if needed now
-			this.PresentationSeriesInstanceUid = CreateUid(this.PresentationSeriesInstanceUid);
-			this.PresentationSopInstanceUid = CreateUid(this.PresentationSopInstanceUid);
+			PresentationSeriesInstanceUid = CreateUid(PresentationSeriesInstanceUid);
+			PresentationSopInstanceUid = CreateUid(PresentationSopInstanceUid);
 
 			_serialized = true;
 
-			var specificCharacterSet = _specificCharacterSet ?? string.Empty;
-			DataSet.SpecificCharacterSet = specificCharacterSet;
-			DataSet[DicomTags.SpecificCharacterSet].SetStringValue(specificCharacterSet);
+			var imageList = images.ToList();
+			var sopInstanceFactory = new PrototypeSopInstanceFactory {Institution = Institution, StationName = StationName, SpecificCharacterSet = SpecificCharacterSet};
+			sopInstanceFactory.InitializeDataSet(imageList.OfType<IImageSopProvider>().First().ImageSop.DataSource, DataSet);
 
-			GeneralEquipmentModuleIod generalEquipmentModule = new GeneralEquipmentModuleIod(this.DataSet);
-			generalEquipmentModule.Manufacturer = this.Manufacturer ?? string.Empty; // this one is type 2 - all other GenEq attributes are type 3
-			generalEquipmentModule.ManufacturersModelName = string.IsNullOrEmpty(this.ManufacturersModelName) ? null : this.ManufacturersModelName;
-			generalEquipmentModule.DeviceSerialNumber = string.IsNullOrEmpty(this.DeviceSerialNumber) ? null : this.DeviceSerialNumber;
-			generalEquipmentModule.SoftwareVersions = string.IsNullOrEmpty(this.SoftwareVersions) ? null : this.SoftwareVersions;
-			generalEquipmentModule.InstitutionName = string.IsNullOrEmpty(this.Institution.Name) ? null : this.Institution.Name;
-			generalEquipmentModule.InstitutionAddress = string.IsNullOrEmpty(this.Institution.Address) ? null : this.Institution.Address;
-			generalEquipmentModule.InstitutionalDepartmentName = string.IsNullOrEmpty(this.Institution.DepartmentName) ? null : this.Institution.DepartmentName;
-			generalEquipmentModule.StationName = string.IsNullOrEmpty(this.StationName) ? null : this.StationName;
-
-			GeneralSeriesModuleIod generalSeriesModule = new GeneralSeriesModuleIod(this.DataSet);
+			GeneralSeriesModuleIod generalSeriesModule = new GeneralSeriesModuleIod(DataSet);
 			generalSeriesModule.InitializeAttributes();
-			generalSeriesModule.SeriesDateTime = this.PresentationSeriesDateTime;
-			generalSeriesModule.SeriesDescription = this.PresentationContentLabel;
-			generalSeriesModule.SeriesInstanceUid = this.PresentationSeriesInstanceUid;
-			generalSeriesModule.SeriesNumber = this.PresentationSeriesNumber;
+			generalSeriesModule.SeriesDateTime = PresentationSeriesDateTime;
+			generalSeriesModule.SeriesDescription = PresentationContentLabel;
+			generalSeriesModule.SeriesInstanceUid = PresentationSeriesInstanceUid;
+			generalSeriesModule.SeriesNumber = PresentationSeriesNumber;
 
-			PresentationSeriesModuleIod presentationSeriesModule = new PresentationSeriesModuleIod(this.DataSet);
+			PresentationSeriesModuleIod presentationSeriesModule = new PresentationSeriesModuleIod(DataSet);
 			presentationSeriesModule.InitializeAttributes();
 			presentationSeriesModule.Modality = Modality.PR;
 
-			SopCommonModuleIod sopCommonModule = new SopCommonModuleIod(this.DataSet);
-			sopCommonModule.SopInstanceUid = this.PresentationSopInstanceUid;
-			sopCommonModule.SopClassUid = this.PresentationSopClass.Uid;
+			SopCommonModuleIod sopCommonModule = new SopCommonModuleIod(DataSet);
+			sopCommonModule.SopInstanceUid = PresentationSopInstanceUid;
+			sopCommonModule.SopClassUid = PresentationSopClass.Uid;
 
-			PresentationStateIdentificationModuleIod presentationStateIdentificationModule = new PresentationStateIdentificationModuleIod(this.DataSet);
+			PresentationStateIdentificationModuleIod presentationStateIdentificationModule = new PresentationStateIdentificationModuleIod(DataSet);
 			presentationStateIdentificationModule.InitializeAttributes();
-			presentationStateIdentificationModule.ContentLabel = this.PresentationContentLabel;
-			presentationStateIdentificationModule.InstanceNumber = this.PresentationInstanceNumber;
+			presentationStateIdentificationModule.ContentLabel = PresentationContentLabel;
+			presentationStateIdentificationModule.InstanceNumber = PresentationInstanceNumber;
 			presentationStateIdentificationModule.PresentationCreationDateTime = Platform.Time;
 
-			PerformSerialization(images);
+			PerformSerialization(imageList);
 
-			_dicomFile.SourceApplicationEntityTitle = this.SourceAETitle;
-			_dicomFile.MediaStorageSopClassUid = this.PresentationSopClassUid;
-			_dicomFile.MediaStorageSopInstanceUid = this.PresentationSopInstanceUid;
+			_dicomFile.SourceApplicationEntityTitle = SourceAETitle;
+			_dicomFile.MediaStorageSopClassUid = PresentationSopClassUid;
+			_dicomFile.MediaStorageSopInstanceUid = PresentationSopInstanceUid;
 		}
 
 		/// <summary>
@@ -505,8 +464,8 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 		/// <exception cref="InvalidOperationException">Thrown if the presentation state has not yet been serialized to a file.</exception>
 		public override void Deserialize(IEnumerable<IPresentationImage> images)
 		{
-			CheckSerialized(true);
-			PerformDeserialization(images);
+			AssertSerialized();
+			PerformDeserialization(images.ToList());
 		}
 
 		/// <summary>
@@ -520,20 +479,20 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 		/// <exception cref="InvalidOperationException">Thrown if the presentation state has not yet been serialized to a file.</exception>
 		public override void Clear(IEnumerable<IPresentationImage> image)
 		{
-			CheckSerialized(true);
+			AssertSerialized();
 		}
 
 		/// <summary>
 		/// Called by the base <see cref="DicomSoftcopyPresentationState"/> to invoke presentation state serialization of the specified images.
 		/// </summary>
 		/// <param name="images">The images whose presentation states are to be serialized.</param>
-		protected abstract void PerformSerialization(IEnumerable<IPresentationImage> images);
+		protected abstract void PerformSerialization(IList<IPresentationImage> images);
 
 		/// <summary>
 		/// Called by the base <see cref="DicomSoftcopyPresentationState"/> to invoke presentation state deserialization to the specified images.
 		/// </summary>
 		/// <param name="images">The images to which the presentation state is to be deserialized.</param>
-		protected abstract void PerformDeserialization(IEnumerable<IPresentationImage> images);
+		protected abstract void PerformDeserialization(IList<IPresentationImage> images);
 
 		#region Protected Helper Methods
 

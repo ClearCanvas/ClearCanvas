@@ -22,6 +22,7 @@
 
 #endregion
 
+using System;
 using System.Drawing;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.ImageViewer.Graphics;
@@ -54,6 +55,12 @@ namespace ClearCanvas.ImageViewer.InteractiveGraphics
 		/// Gets the default value of <see cref="InactiveColor"/>.
 		/// </summary>
 		protected static readonly Color DefaultInactiveColor = Color.Yellow;
+
+		/// <summary>
+		/// Specifies whether or not control graphics are shown when a graphic is selected, or when a graphic is focused.
+		/// </summary>
+		[ThreadStatic]
+		public static bool ShowControlGraphicsOnSelect;
 
 		[CloneIgnore]
 		private bool _selected = false;
@@ -156,9 +163,9 @@ namespace ClearCanvas.ImageViewer.InteractiveGraphics
 			if (state is InactiveGraphicState)
 				UpdateGraphicStyle(this, InactiveColor, false);
 			else if (state is FocussedGraphicState)
-				UpdateGraphicStyle(this, FocusColor, true);
+				UpdateGraphicStyle(this, FocusColor, !ShowControlGraphicsOnSelect);
 			else if (state is SelectedGraphicState)
-				UpdateGraphicStyle(this, SelectedColor, false);
+				UpdateGraphicStyle(this, SelectedColor, ShowControlGraphicsOnSelect);
 			else if (state is FocussedSelectedGraphicState)
 				UpdateGraphicStyle(this, FocusSelectedColor, true);
 		}
@@ -212,7 +219,7 @@ namespace ClearCanvas.ImageViewer.InteractiveGraphics
 		{
 			this.Focussed = true;
 
-			UpdateGraphicStyle(this, this.FocusColor, true);
+			UpdateGraphicStyle(this, this.FocusColor, !ShowControlGraphicsOnSelect);
 			Draw();
 		}
 
@@ -227,7 +234,7 @@ namespace ClearCanvas.ImageViewer.InteractiveGraphics
 			if (this.ParentPresentationImage != null && this.ParentPresentationImage.FocussedGraphic == this)
 				this.ParentPresentationImage.FocussedGraphic = null;
 
-			UpdateGraphicStyle(this, this.SelectedColor, false);
+			UpdateGraphicStyle(this, this.SelectedColor, ShowControlGraphicsOnSelect);
 			Draw();
 		}
 

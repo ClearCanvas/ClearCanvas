@@ -518,8 +518,10 @@ namespace ClearCanvas.ImageViewer.InputManagement
 				return true;
 
 			_tile.Select();
-			_contextMenuEnabled = (buttonMessage.Shortcut.MouseButton == _buttonForContextMenu);
-			if (_buttonActionForContextMenu == MouseButtonMessage.ButtonActions.Down)
+			_contextMenuEnabled = _clickCount == 1
+				&& _buttonForContextMenu == buttonMessage.Shortcut.MouseButton
+				&& _buttonActionForContextMenu == MouseButtonMessage.ButtonActions.Down;
+			if (_contextMenuEnabled )
 			{
 				_delayedContextMenuRequestPublisher.TimeoutMilliseconds = _mouseHoldDownForContextMenuInMilliseconds;
 				_delayedContextMenuRequestPublisher.Publish(this, new ItemEventArgs<Point>(buttonMessage.Location));
@@ -815,7 +817,14 @@ namespace ClearCanvas.ImageViewer.InputManagement
 
 		    if (HasMoved(eventArgs.Item, _currentMousePoint, _mouseMovedToleranceInPixel))
                 return;
-		    
+
+			// Touch events are simulated as Left mouse button, which causes problem because the framework tools/graphics assumes right click will bring up RCCM.
+			// Release previous capture and re-capture using a simulated right click.
+			ReleaseCapture(true);
+			_activeButton = XMouseButtons.Right;
+			var simulatedRightMouseClick = new MouseButtonMessage(((ItemEventArgs<Point>)e).Item, XMouseButtons.Right, MouseButtonMessage.ButtonActions.Down, 1);
+			StartNewHandler(simulatedRightMouseClick);
+
 		    //When we show the context menu, reset the active button and start count,
             //because the user is going to have to start over again with a new click.
             _activeButton = 0;

@@ -67,6 +67,9 @@ namespace ClearCanvas.ImageViewer.Tools.Synchronization
 			if (String.IsNullOrEmpty(frame.FrameOfReferenceUid) || String.IsNullOrEmpty(frame.ParentImageSop.StudyInstanceUid))
 				return null;
 
+			if (!frame.ImagePlaneHelper.IsValid)
+				return null;
+
 			return new DicomImagePlane(sourceImage, transform, frame);
 		}
 

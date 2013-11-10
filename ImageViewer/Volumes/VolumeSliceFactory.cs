@@ -260,13 +260,13 @@ namespace ClearCanvas.ImageViewer.Volumes
 			var pixelSpacing = GetPixelSpacing(volumeReference);
 
 			// get the spacing between slices (defaults to smallest volume spacing dimension)
-			var sliceSpacing = GetSliceSpacing(volumeReference);
+			var sliceSpacing = GetSliceSpacing(volumeReference, slicerAxisZ);
 
 			// get the thickness of each slice (defaults to slice spacing)
 			var sliceThickness = SliceThickness ?? sliceSpacing;
 
 			// get the ideal subsampling for the slice thickness
-			var sliceSubsamples = Math.Max(1, (int) (sliceThickness/GetMinimumComponent(volumeReference.VoxelSpacing) + 0.5));
+			var sliceSubsamples = Math.Max(1, (int) (sliceThickness/GetIdealSliceSpacing(volumeReference, slicerAxisZ) + 0.5));
 
 			// project the corners of the volume on to the slicer axes to determine the bounds of the volume in the slicer frame
 			float minBoundsX = float.MaxValue, minBoundsY = float.MaxValue, minBoundsZ = float.MaxValue;
@@ -381,12 +381,12 @@ namespace ClearCanvas.ImageViewer.Volumes
 			}
 
 			// compute the positions for the requested slices
-			return Enumerable.Range(0, sliceCount).Select(n => firstSlicePosition + n*slicePositionIncrement);
+			return Enumerable.Range(0, Math.Max(1, sliceCount)).Select(n => firstSlicePosition + n*slicePositionIncrement);
 		}
 
-		private float GetSliceSpacing(IVolumeHeader volumeReference)
+		private float GetSliceSpacing(IVolumeHeader volumeHeader, Vector3D slicerAxisZ)
 		{
-			return SliceSpacing ?? (SliceThickness.HasValue ? SliceThickness.Value : GetMinimumComponent(volumeReference.VoxelSpacing));
+			return SliceSpacing ?? (SliceThickness.HasValue ? SliceThickness.Value : GetIdealSliceSpacing(volumeHeader, slicerAxisZ));
 		}
 
 		private SizeF GetPixelSpacing(IVolumeHeader volumeHeader)
@@ -407,6 +407,14 @@ namespace ClearCanvas.ImageViewer.Volumes
 				var spacing = columnHasValue ? ColumnSpacing.Value : RowSpacing.Value;
 				return new SizeF(spacing, spacing);
 			}
+		}
+
+		private static float GetIdealSliceSpacing(IVolumeHeader volumeHeader, Vector3D unitSpacingAxis)
+		{
+			// the ideal spacing is simply the diagonal of the voxel projected on to the spacing axis
+			// any larger than this value, and it becomes possible for an entire voxel to fit in between two consecutive output locations (i.e. missed for interpolation)
+			// any smaller than this value, and some voxels will have two or more output locations within their bounds
+			return Math.Abs(unitSpacingAxis.Dot(volumeHeader.RotateToPatientOrientation(volumeHeader.VoxelSpacing)));
 		}
 
 		private static float GetMinimumComponent(Vector3D vector3D)

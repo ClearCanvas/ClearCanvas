@@ -112,6 +112,14 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 			OnClipboardCurrentContextChanged(null, null);
 		}
 
+		public override void Stop()
+		{
+			// upon component stop, ensure we clear the clipboard field to unsub any event handlers
+			Clipboard = null;
+
+			base.Stop();
+		}
+
 		private void OnClipboardCurrentContextChanged(object sender, EventArgs e)
 		{
 			var currentContext = _clipboard != null ? _clipboard.CurrentContext : _emptyContext;

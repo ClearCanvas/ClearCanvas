@@ -109,8 +109,8 @@ namespace ClearCanvas.ImageViewer.Clipboard
 		{
 			_item = item;
 			_image = image;
-			_name = name;
-			_description = description;
+			_name = name ?? string.Empty;
+			_description = description ?? string.Empty;
 			_displayRectangle = displayRectangle;
 			_extensionData = new ExtensionData();
 		}
