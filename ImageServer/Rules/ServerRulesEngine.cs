@@ -45,9 +45,22 @@ namespace ClearCanvas.ImageServer.Rules
 	{
 	}
 
+	public class ServerRulesEngineCompletedEventArgs:EventArgs
+	{
+		public ServerRulesEngineCompletedEventArgs(IEnumerable<IRule> rulesApplied)
+		{
+			RulesApplied = rulesApplied;
+		}
+
+		/// <summary>
+		/// Gets rules which were applied
+		/// </summary>
+		public IEnumerable<IRule> RulesApplied { get; private set; }
+	}
+
 	public interface IServerRulesEngine
 	{
-		event EventHandler Completed;
+		event EventHandler<ServerRulesEngineCompletedEventArgs> Completed;
 	}
 
 	/// <summary>
@@ -115,7 +128,12 @@ namespace ClearCanvas.ImageServer.Rules
 		/// <summary>
 		/// Occurred when <see cref="Complete"/> in called.
 		/// </summary>
-		public event EventHandler Completed;
+		public event EventHandler<ServerRulesEngineCompletedEventArgs> Completed;
+
+		/// <summary>
+		/// Gets rules which were applied on previous call to <see cref="Execute"/>
+		/// </summary>
+		public IEnumerable<IRule> RulesApplied { private set; get; } 
 
 		#endregion
 
@@ -197,10 +215,29 @@ namespace ClearCanvas.ImageServer.Rules
             Statistics.LoadTime.End();
         }
 
-		public void Complete()
+		public override void Execute(ServerActionContext context)
+		{
+			var rulesApplied=new List<IRule>();
+
+            Statistics.ExecutionTime.Start();
+
+            foreach (var typeCollection in _typeList.Values)
+            {
+                typeCollection.Execute(context, false);
+
+				if (typeCollection.LastAppliedRules!=null)
+            		rulesApplied.AddRange(typeCollection.LastAppliedRules);
+            }
+
+            Statistics.ExecutionTime.End();
+
+			RulesApplied = rulesApplied;
+		}
+
+		public void Complete(IEnumerable<IRule> rulesApplied)
 		{
 			if (Completed != null)
-				Completed(this, EventArgs.Empty);
+				Completed(this, new ServerRulesEngineCompletedEventArgs(rulesApplied));
 		}
 
 		public static XmlSpecificationCompiler GetSpecificationCompiler()

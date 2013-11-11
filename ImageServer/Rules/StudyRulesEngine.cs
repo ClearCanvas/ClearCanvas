@@ -145,7 +145,7 @@ namespace ClearCanvas.ImageServer.Rules
 			finally
 			{
 				if (_studyRulesEngine!=null)
-					_studyRulesEngine.Complete();
+					_studyRulesEngine.Complete(_studyRulesEngine.RulesApplied);
 			}
 
 

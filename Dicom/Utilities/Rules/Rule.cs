@@ -23,7 +23,9 @@
 #endregion
 
 using System;
+using System.Collections;
 using System.Xml;
+using System.Linq;
 using System.Collections.Generic;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Actions;
@@ -32,11 +34,31 @@ using ClearCanvas.Common.Utilities;
 
 namespace ClearCanvas.Dicom.Utilities.Rules
 {
+	public interface IRule
+	{
+		/// <summary>
+		/// The name of the rule.
+		/// </summary>
+		string Name { get; set; }
+
+		/// <summary>
+		/// A description of the rule.
+		/// </summary>
+		string Description { get; set; }
+
+		/// <summary>
+		/// Gets a list of actions in the rule that are of the specified type
+		/// </summary>
+		/// <typeparam name="TActionType"></typeparam>
+		/// <returns></returns>
+		IList<TActionType> ListActions<TActionType>();
+	}
+
     /// <summary>
     /// Representation of a rule.
     /// </summary>
     /// <typeparam name="TActionContext">The context passed to the <see cref="IActionList{TActionContext}"/> when executing the action.</typeparam>
-    public class Rule<TActionContext>
+    public class Rule<TActionContext>:IRule
         where TActionContext : ActionContext
     {
         private IActionList<TActionContext> _actions;
@@ -67,6 +89,14 @@ namespace ClearCanvas.Dicom.Utilities.Rules
         #endregion
 
         #region Public Methods
+
+		public IList<TActionType> ListActions<TActionType>()
+		{
+			if (_actions == null)
+				return null;
+
+			return _actions.Where(a => a is TActionType).Cast<TActionType>().ToList();
+		}
 
         /// <summary>
         /// Compile the rule.
