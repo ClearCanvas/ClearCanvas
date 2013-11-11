@@ -182,6 +182,9 @@ namespace ClearCanvas.ImageViewer.Tools.Synchronization
 
 		public Vector3D ConvertToPatient(PointF imagePoint)
 		{
+			var provider = _sourceImage as IPatientCoordinateMappingProvider;
+			if (provider != null && provider.PatientCoordinateMapping.IsValid)
+				return provider.PatientCoordinateMapping.ConvertToPatient(imagePoint);
 			return _sourceFrame.ImagePlaneHelper.ConvertToPatient(imagePoint);
 		}
 

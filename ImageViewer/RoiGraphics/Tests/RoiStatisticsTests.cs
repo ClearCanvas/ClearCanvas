@@ -31,7 +31,6 @@ using System.Drawing;
 using ClearCanvas.Common;
 using ClearCanvas.Dicom;
 using ClearCanvas.ImageViewer.Graphics;
-using ClearCanvas.ImageViewer.PresentationStates.Dicom;
 using ClearCanvas.ImageViewer.StudyManagement;
 using ClearCanvas.ImageViewer.StudyManagement.Tests;
 using NUnit.Framework;
@@ -241,6 +240,15 @@ namespace ClearCanvas.ImageViewer.RoiGraphics.Tests
 				#region ISopProvider Members (Not Implemented)
 
 				Sop ISopProvider.Sop
+				{
+					get { throw new NotImplementedException(); }
+				}
+
+				#endregion
+
+				#region IPatientCoordinateMappingProvider Members (Not Implemented)
+
+				public IPatientCoordinateMapping PatientCoordinateMapping
 				{
 					get { throw new NotImplementedException(); }
 				}
