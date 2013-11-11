@@ -23,15 +23,15 @@
 #endregion
 
 using System;
+using ClearCanvas.Common;
 
 namespace ClearCanvas.ImageViewer.Mathematics
 {
 	/// <summary>
-	/// A simple 3D vector class.
+	/// Represents a three dimensional coordinate or vector.
 	/// </summary>
 	/// <remarks>
-	/// The Vector3D class is immutable.  All necessary operations
-	/// can be done via the operator overloads.
+	/// This class is immutable. All necessary operators return the resulting output as a new instance.
 	/// </remarks>
 	public sealed class Vector3D : IEquatable<Vector3D>
 	{
@@ -64,8 +64,11 @@ namespace ClearCanvas.ImageViewer.Mathematics
 // ReSharper restore InconsistentNaming
 
 		/// <summary>
-		/// Constructor.
+		/// Initializes a new instance of <see cref="Vector3D"/>.
 		/// </summary>
+		/// <param name="x">The X component of the vector.</param>
+		/// <param name="y">The Y component of the vector.</param>
+		/// <param name="z">The Z component of the vector.</param>
 		public Vector3D(float x, float y, float z)
 		{
 			_x = x;
@@ -74,7 +77,22 @@ namespace ClearCanvas.ImageViewer.Mathematics
 		}
 
 		/// <summary>
-		/// Copy Constructor.
+		/// Initializes a new instance of <see cref="Vector3D"/>.
+		/// </summary>
+		/// <param name="values">The components of the vector.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="values"/> is NULL.</exception>
+		/// <exception cref="ArgumentException">Thrown if <paramref name="values"/> does not have exactly 3 elements.</exception>
+		public Vector3D(float[] values)
+		{
+			Platform.CheckForNullReference(values, "values");
+			Platform.CheckTrue(values.Length == 3, "values must have exactly 3 elements");
+			_x = values[0];
+			_y = values[1];
+			_z = values[2];
+		}
+
+		/// <summary>
+		/// Initializes a new instance of <see cref="Vector3D"/>.
 		/// </summary>
 		public Vector3D(Vector3D src)
 		{
@@ -84,7 +102,20 @@ namespace ClearCanvas.ImageViewer.Mathematics
 		}
 
 		/// <summary>
-		/// Gets the x-component.
+		/// Gets the specified component of the vector.
+		/// </summary>
+		/// <param name="index">The index of the component (X=0, Y=1, Z=2).</param>
+		public float this[int index]
+		{
+			get
+			{
+				Platform.CheckIndexRange(index, 0, 3, GetType());
+				return index == 0 ? _x : (index == 1 ? _y : _z);
+			}
+		}
+
+		/// <summary>
+		/// Gets the X component of the vector.
 		/// </summary>
 		public float X
 		{
@@ -92,7 +123,7 @@ namespace ClearCanvas.ImageViewer.Mathematics
 		}
 
 		/// <summary>
-		/// Gets the y-component.
+		/// Gets the Y component of the vector.
 		/// </summary>
 		public float Y
 		{
@@ -100,7 +131,7 @@ namespace ClearCanvas.ImageViewer.Mathematics
 		}
 
 		/// <summary>
-		/// Gets the z-component.
+		/// Gets the Z component of the vector.
 		/// </summary>
 		public float Z
 		{
@@ -134,7 +165,7 @@ namespace ClearCanvas.ImageViewer.Mathematics
 		}
 
 		/// <summary>
-		/// Gets the dot-product of of this vector and <paramref name="right"/>.
+		/// Gets the dot product (scalar product) of of this vector and <paramref name="right"/>.
 		/// </summary>
 		public float Dot(Vector3D right)
 		{
@@ -142,7 +173,7 @@ namespace ClearCanvas.ImageViewer.Mathematics
 		}
 
 		/// <summary>
-		/// Returns the cross-product of this vector and <paramref name="right"/>.
+		/// Returns the cross product (vector product) of this vector and <paramref name="right"/>.
 		/// </summary>
 		public Vector3D Cross(Vector3D right)
 		{
@@ -195,42 +226,11 @@ namespace ClearCanvas.ImageViewer.Mathematics
 		}
 
 		/// <summary>
-		/// Finds the intersection of the line segment defined by <paramref name="linePoint1"/> and
-		/// <paramref name="linePoint2"/> with a plane described by it's normal (<paramref name="planeNormal"/>)
-		/// and an arbitrary point in the plane (<paramref name="pointInPlane"/>).
+		/// Gets the components of the vector as an array (elements in order of X, Y and Z).
 		/// </summary>
-		/// <param name="planeNormal">The normal vector of an arbitrary plane.</param>
-		/// <param name="pointInPlane">A point in space that lies on the plane whose normal is <paramref name="planeNormal"/>.</param>
-		/// <param name="linePoint1">The position vector of the start of the line.</param>
-		/// <param name="linePoint2">The position vector of the end of the line.</param>
-		/// <param name="isLineSegment">Specifies whether <paramref name="linePoint1"/> and <paramref name="linePoint2"/>
-		/// define a line segment, or simply 2 points on an infinite line.</param>
-		/// <returns>A position vector describing the point of intersection of the line with the plane, or null if the
-		/// line and plane do not intersect.</returns>
-		public static Vector3D GetLinePlaneIntersection(
-			Vector3D planeNormal,
-			Vector3D pointInPlane,
-			Vector3D linePoint1,
-			Vector3D linePoint2,
-			bool isLineSegment)
+		public float[] ToArray()
 		{
-			if (AreEqual(planeNormal, Null))
-				return null;
-
-			Vector3D line = linePoint2 - linePoint1;
-			Vector3D planeToLineStart = pointInPlane - linePoint1;
-
-			float lineDotPlaneNormal = planeNormal.Dot(line);
-
-			if (FloatComparer.AreEqual(0F, lineDotPlaneNormal))
-				return null;
-
-			float ratio = planeNormal.Dot(planeToLineStart)/lineDotPlaneNormal;
-
-			if (isLineSegment && (ratio < 0F || ratio > 1F))
-				return null;
-
-			return linePoint1 + ratio*line;
+			return new[] {_x, _y, _z};
 		}
 
 		/// <summary>
@@ -332,7 +332,7 @@ namespace ClearCanvas.ImageViewer.Mathematics
 		}
 
 		/// <summary>
-		/// Gets whether or not this object equals <paramref name="obj"/>.
+		/// Gets whether or not this vector equals <paramref name="obj"/>.
 		/// </summary>
 		public override bool Equals(object obj)
 		{
@@ -340,7 +340,7 @@ namespace ClearCanvas.ImageViewer.Mathematics
 		}
 
 		/// <summary>
-		/// Gets whether or not this object equals <paramref name="other"/>.
+		/// Gets whether or not this vector equals <paramref name="other"/>.
 		/// </summary>
 		public bool Equals(Vector3D other)
 		{
@@ -352,9 +352,55 @@ namespace ClearCanvas.ImageViewer.Mathematics
 // ReSharper restore CompareOfFloatsByEqualityOperator
 		}
 
+		/// <summary>
+		/// Gets the specified <see cref="Size3D"/> value as a <see cref="Vector3D"/>.
+		/// </summary>
 		public static implicit operator Vector3D(Size3D size3D)
 		{
 			return new Vector3D(size3D.Width, size3D.Height, size3D.Depth);
 		}
+
+		#region Specialized Calculations
+
+		/// <summary>
+		/// Finds the intersection of the line segment defined by <paramref name="linePoint1"/> and
+		/// <paramref name="linePoint2"/> with a plane described by it's normal (<paramref name="planeNormal"/>)
+		/// and an arbitrary point in the plane (<paramref name="pointInPlane"/>).
+		/// </summary>
+		/// <param name="planeNormal">The normal vector of an arbitrary plane.</param>
+		/// <param name="pointInPlane">A point in space that lies on the plane whose normal is <paramref name="planeNormal"/>.</param>
+		/// <param name="linePoint1">The position vector of the start of the line.</param>
+		/// <param name="linePoint2">The position vector of the end of the line.</param>
+		/// <param name="isLineSegment">Specifies whether <paramref name="linePoint1"/> and <paramref name="linePoint2"/>
+		/// define a line segment, or simply 2 points on an infinite line.</param>
+		/// <returns>A position vector describing the point of intersection of the line with the plane, or null if the
+		/// line and plane do not intersect.</returns>
+		public static Vector3D GetLinePlaneIntersection(
+			Vector3D planeNormal,
+			Vector3D pointInPlane,
+			Vector3D linePoint1,
+			Vector3D linePoint2,
+			bool isLineSegment)
+		{
+			if (AreEqual(planeNormal, Null))
+				return null;
+
+			Vector3D line = linePoint2 - linePoint1;
+			Vector3D planeToLineStart = pointInPlane - linePoint1;
+
+			float lineDotPlaneNormal = planeNormal.Dot(line);
+
+			if (FloatComparer.AreEqual(0F, lineDotPlaneNormal))
+				return null;
+
+			float ratio = planeNormal.Dot(planeToLineStart)/lineDotPlaneNormal;
+
+			if (isLineSegment && (ratio < 0F || ratio > 1F))
+				return null;
+
+			return linePoint1 + ratio*line;
+		}
+
+		#endregion
 	}
 }

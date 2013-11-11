@@ -28,7 +28,8 @@ using ClearCanvas.ImageViewer.PresentationStates;
 using ClearCanvas.ImageViewer.PresentationStates.Dicom;
 using ClearCanvas.ImageViewer.StudyManagement;
 
-namespace ClearCanvas.ImageViewer {
+namespace ClearCanvas.ImageViewer
+{
 	/// <summary>
 	/// The interface for all DICOM-based Presentation Images.
 	/// </summary>
@@ -40,8 +41,8 @@ namespace ClearCanvas.ImageViewer {
 		IApplicationGraphicsProvider,
 		IOverlayGraphicsProvider,
 		ISpatialTransformProvider,
-		IPresentationStateProvider
-		
+		IPresentationStateProvider,
+		IPatientCoordinateMappingProvider
 	{
 		/// <summary>
 		/// Gets direct access to the presentation image's collection of domain-level graphics.

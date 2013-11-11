@@ -265,6 +265,8 @@
     <Compile Include="StudyManagement\ActivityMonitorFailureWatcher.cs" />
     <Compile Include="StudyManagement\ActivityMonitorProgressBar.cs" />
     <Compile Include="StudyManagement\ActivityMonitorQuickLink.cs" />
+    <Compile Include="StudyManagement\IPatientCoordinateMapping.cs" />
+    <Compile Include="StudyManagement\IPatientCoordinateMappingProvider.cs" />
     <Compile Include="StudyManagement\LocalServerWatcher.cs" />
     <Compile Include="StudyManagement\ReindexTool.cs" />
     <Compile Include="Rendering\RenderingException.cs" />
