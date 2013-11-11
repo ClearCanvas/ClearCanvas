@@ -139,7 +139,6 @@ namespace ClearCanvas.Common
 		private static readonly object _namedLogLock = new object();
 		private static readonly Dictionary<string, ILog> _namedLogs = new Dictionary<string, ILog>();
 
-		private static string _pluginSubFolder = "plugins";
 		private static string _commonSubFolder = "common";
 		private static string _logSubFolder = "logs";
 		private static string _manifestSubFolder = "manifest";
@@ -298,12 +297,10 @@ namespace ClearCanvas.Common
 					{
 						if (_pluginsDirectory == null)
 						{
-							string pluginsDirectory = Path.Combine(InstallDirectory, _pluginSubFolder);
+							var pluginsDirectory = Path.Combine(InstallDirectory, ExtensionSettings.Default.PluginPath);
 
-							if (Directory.Exists(pluginsDirectory))
-								_pluginsDirectory = pluginsDirectory;
-							else
-								_pluginsDirectory = InstallDirectory;
+							// fallback to install directory if PluginPath doesn't exist, for backwards compatibility
+							_pluginsDirectory = Directory.Exists(pluginsDirectory) ? pluginsDirectory : InstallDirectory;
 						}
 					}
 				}

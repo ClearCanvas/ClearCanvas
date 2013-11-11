@@ -6,5 +6,8 @@
       <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
 &lt;extensions /&gt;</Value>
     </Setting>
+    <Setting Name="PluginPath" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">plugins</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

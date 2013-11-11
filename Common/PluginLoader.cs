@@ -82,13 +82,18 @@ namespace ClearCanvas.Common
 			// build list of candidate plugin files
 			// Note: the reason for the "group by" operation is that some non-plugin files
 			// may have the same file name (located in different sub-folders) - e.g. localization satellite assemblies in ASP.NET,
-			// and we need to eliminate these prior to building the pluginPathLookup dictionary below.
+			// and we need to eliminate duplicates prior to building the pluginPathLookup dictionary below.
 			var pluginCandidates = (from p in ListPluginCandidateFiles()
 			                        group p by Path.GetFileNameWithoutExtension(p)
 			                        into g
-			                        where g.Count() == 1
 			                        select g.First())
 				.ToList();
+
+			// debug dump of candidates
+			foreach (var pluginCandidate in pluginCandidates.OrderBy(n => n))
+			{
+				Platform.Log(LogLevel.Debug, "Found plugin candidate file: {0}", pluginCandidate);
+			}
 
 			// establish assembly load resolver
 			var pluginPathLookup = BuildAssemblyMap(pluginCandidates);
@@ -177,7 +182,9 @@ namespace ClearCanvas.Common
 					return new LoadPluginResult(false, asm, null);
 
 				var fileName = Path.GetFileName(path);
+
 				Platform.Log(LogLevel.Debug, "Loaded plugin {0}", fileName);
+
 				var e = new PluginLoadedEventArgs(string.Format(SR.FormatLoadedPlugin, fileName), asm);
 				EventsHelper.Fire(PluginLoaded, this, e);
 

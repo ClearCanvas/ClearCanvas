@@ -129,16 +129,16 @@ namespace ClearCanvas.Common
 		/// <summary>
 		/// Internal constructor.
 		/// </summary>
-		internal PluginInfo(AssemblyRef assembly, string name, string description, string icon)
+		internal PluginInfo(Assembly assembly, string name, string description, string icon)
 			: this(assembly, name, description, icon, new List<ExtensionPointInfo>(), new List<ExtensionInfo>())
 		{
-			DiscoverExtensionPointsAndExtensions(assembly.Resolve(), _extensionPoints, _extensions);
+			DiscoverExtensionPointsAndExtensions(assembly, _extensionPoints, _extensions);
 		}
 
 		/// <summary>
-		/// Internal constructor.
+		/// Private constructor.
 		/// </summary>
-		internal PluginInfo(AssemblyRef assembly, string name, string description, string icon, List<ExtensionPointInfo> extensionPoints, List<ExtensionInfo> extensions)
+		private PluginInfo(Assembly assembly, string name, string description, string icon, List<ExtensionPointInfo> extensionPoints, List<ExtensionInfo> extensions)
 		{
 			_name = name;
 			_description = description;
