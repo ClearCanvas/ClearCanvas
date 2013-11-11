@@ -165,7 +165,7 @@ namespace ClearCanvas.ImageViewer.Mathematics
 		}
 
 		/// <summary>
-		/// Gets the dot-product of of this vector and <paramref name="right"/>.
+		/// Gets the dot product (scalar product) of of this vector and <paramref name="right"/>.
 		/// </summary>
 		public float Dot(Vector3D right)
 		{
@@ -173,7 +173,7 @@ namespace ClearCanvas.ImageViewer.Mathematics
 		}
 
 		/// <summary>
-		/// Returns the cross-product of this vector and <paramref name="right"/>.
+		/// Returns the cross product (vector product) of this vector and <paramref name="right"/>.
 		/// </summary>
 		public Vector3D Cross(Vector3D right)
 		{
@@ -223,45 +223,6 @@ namespace ClearCanvas.ImageViewer.Mathematics
 				dot = 1F;
 
 			return Math.Abs((float) Math.Acos(dot));
-		}
-
-		/// <summary>
-		/// Finds the intersection of the line segment defined by <paramref name="linePoint1"/> and
-		/// <paramref name="linePoint2"/> with a plane described by it's normal (<paramref name="planeNormal"/>)
-		/// and an arbitrary point in the plane (<paramref name="pointInPlane"/>).
-		/// </summary>
-		/// <param name="planeNormal">The normal vector of an arbitrary plane.</param>
-		/// <param name="pointInPlane">A point in space that lies on the plane whose normal is <paramref name="planeNormal"/>.</param>
-		/// <param name="linePoint1">The position vector of the start of the line.</param>
-		/// <param name="linePoint2">The position vector of the end of the line.</param>
-		/// <param name="isLineSegment">Specifies whether <paramref name="linePoint1"/> and <paramref name="linePoint2"/>
-		/// define a line segment, or simply 2 points on an infinite line.</param>
-		/// <returns>A position vector describing the point of intersection of the line with the plane, or null if the
-		/// line and plane do not intersect.</returns>
-		public static Vector3D GetLinePlaneIntersection(
-			Vector3D planeNormal,
-			Vector3D pointInPlane,
-			Vector3D linePoint1,
-			Vector3D linePoint2,
-			bool isLineSegment)
-		{
-			if (AreEqual(planeNormal, Null))
-				return null;
-
-			Vector3D line = linePoint2 - linePoint1;
-			Vector3D planeToLineStart = pointInPlane - linePoint1;
-
-			float lineDotPlaneNormal = planeNormal.Dot(line);
-
-			if (FloatComparer.AreEqual(0F, lineDotPlaneNormal))
-				return null;
-
-			float ratio = planeNormal.Dot(planeToLineStart)/lineDotPlaneNormal;
-
-			if (isLineSegment && (ratio < 0F || ratio > 1F))
-				return null;
-
-			return linePoint1 + ratio*line;
 		}
 
 		/// <summary>
@@ -391,9 +352,55 @@ namespace ClearCanvas.ImageViewer.Mathematics
 // ReSharper restore CompareOfFloatsByEqualityOperator
 		}
 
+		/// <summary>
+		/// Gets the specified <see cref="Size3D"/> value as a <see cref="Vector3D"/>.
+		/// </summary>
 		public static implicit operator Vector3D(Size3D size3D)
 		{
 			return new Vector3D(size3D.Width, size3D.Height, size3D.Depth);
 		}
+
+		#region Specialized Calculations
+
+		/// <summary>
+		/// Finds the intersection of the line segment defined by <paramref name="linePoint1"/> and
+		/// <paramref name="linePoint2"/> with a plane described by it's normal (<paramref name="planeNormal"/>)
+		/// and an arbitrary point in the plane (<paramref name="pointInPlane"/>).
+		/// </summary>
+		/// <param name="planeNormal">The normal vector of an arbitrary plane.</param>
+		/// <param name="pointInPlane">A point in space that lies on the plane whose normal is <paramref name="planeNormal"/>.</param>
+		/// <param name="linePoint1">The position vector of the start of the line.</param>
+		/// <param name="linePoint2">The position vector of the end of the line.</param>
+		/// <param name="isLineSegment">Specifies whether <paramref name="linePoint1"/> and <paramref name="linePoint2"/>
+		/// define a line segment, or simply 2 points on an infinite line.</param>
+		/// <returns>A position vector describing the point of intersection of the line with the plane, or null if the
+		/// line and plane do not intersect.</returns>
+		public static Vector3D GetLinePlaneIntersection(
+			Vector3D planeNormal,
+			Vector3D pointInPlane,
+			Vector3D linePoint1,
+			Vector3D linePoint2,
+			bool isLineSegment)
+		{
+			if (AreEqual(planeNormal, Null))
+				return null;
+
+			Vector3D line = linePoint2 - linePoint1;
+			Vector3D planeToLineStart = pointInPlane - linePoint1;
+
+			float lineDotPlaneNormal = planeNormal.Dot(line);
+
+			if (FloatComparer.AreEqual(0F, lineDotPlaneNormal))
+				return null;
+
+			float ratio = planeNormal.Dot(planeToLineStart)/lineDotPlaneNormal;
+
+			if (isLineSegment && (ratio < 0F || ratio > 1F))
+				return null;
+
+			return linePoint1 + ratio*line;
+		}
+
+		#endregion
 	}
 }
