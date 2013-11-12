@@ -32,6 +32,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.IO;
+using System.Linq;
 using System.Text;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.ImageViewer.Graphics;
@@ -42,7 +43,7 @@ namespace ClearCanvas.ImageViewer.RoiGraphics.Tests
 {
 	public abstract class RoiTestBase<T>
 	{
-		private static readonly string _testImagePathFormat = @"TestImages\{0}.dcm";
+		private const string _testImagePathFormat = @"TestImages\{0}.dcm";
 
 		/// <summary>
 		/// Tests the <see cref="Roi.Contains(System.Drawing.PointF)"/> method for a given shape. The image is used to provide a basis for the coordinate space.
@@ -188,7 +189,7 @@ namespace ClearCanvas.ImageViewer.RoiGraphics.Tests
 				}
 
 				// enumerate the post modality LUT values and compare with the expected list of values
-				var actualValues = new List<int>(roi.GetPixelValues()).AsReadOnly();
+				var actualValues = roi.GetPixelValues().Select(v => (int) Math.Round(v)).ToList().AsReadOnly();
 				try
 				{
 					var list = new List<int>(actualValues);
@@ -468,8 +469,8 @@ namespace ClearCanvas.ImageViewer.RoiGraphics.Tests
 				if (!File.Exists(filename))
 				{
 					string message = String.Format(
-						@"The required test image {0} is missing. " + 
-						@"Please copy the contents of <TrunkPath>\ImageViewer\RoiGraphics\Tests\Images " + 
+						@"The required test image {0} is missing. " +
+						@"Please copy the contents of <TrunkPath>\ImageViewer\RoiGraphics\Tests\Images " +
 						@"to {1} in order to execute these tests.", filename, directoryName);
 
 					Trace.WriteLine(message);

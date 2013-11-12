@@ -80,8 +80,9 @@ namespace ClearCanvas.ImageViewer.RoiGraphics
 				_pixelData = provider.ImageGraphic.PixelData;
 			}
 
-			if (presentationImage is IModalityLutProvider)
-				_modalityLut = ((IModalityLutProvider) presentationImage).ModalityLut;
+			var modalityLutProvider = presentationImage as IModalityLutProvider;
+			if (modalityLutProvider != null)
+				_modalityLut = (modalityLutProvider).ModalityLut;
 
 			if (presentationImage is IImageSopProvider)
 			{
@@ -220,7 +221,7 @@ namespace ClearCanvas.ImageViewer.RoiGraphics
 			Rectangle bounds = RectangleUtilities.RoundInflate(BoundingBox);
 			if (constrainToImage)
 			{
-				bounds.Intersect(new Rectangle(0, 0, this.ImageSize.Width - 1, this.ImageSize.Height - 1));
+				bounds.Intersect(new Rectangle(0, 0, ImageSize.Width - 1, ImageSize.Height - 1));
 			}
 
 			return bounds;
@@ -278,7 +279,7 @@ namespace ClearCanvas.ImageViewer.RoiGraphics
 		/// <returns>True if the point is defined as within the region of interest; False otherwise.</returns>
 		public bool Contains(float x, float y)
 		{
-			return this.Contains(new PointF(x, y));
+			return Contains(new PointF(x, y));
 		}
 
 		/// <summary>
@@ -293,7 +294,7 @@ namespace ClearCanvas.ImageViewer.RoiGraphics
 		/// <returns>True if the point is defined as within the region of interest; False otherwise.</returns>
 		public bool Contains(int x, int y)
 		{
-			return this.Contains(new PointF(x, y));
+			return Contains(new PointF(x, y));
 		}
 
 		/// <summary>
@@ -312,7 +313,7 @@ namespace ClearCanvas.ImageViewer.RoiGraphics
 				for (int y = bounds.Top; y <= bounds.Bottom; y++)
 				{
 					PointF p = new PointF(x, y);
-					if (this.Contains(p))
+					if (Contains(p))
 						yield return p;
 				}
 			}
@@ -324,7 +325,7 @@ namespace ClearCanvas.ImageViewer.RoiGraphics
 		/// <returns>An enumeration of raw pixel values.</returns>
 		public IEnumerable<int> GetRawPixelValues()
 		{
-			if (this.PixelData == null)
+			if (PixelData == null)
 				yield break;
 
 			Rectangle bounds = GetBoundingBoxRounded(true);
@@ -333,8 +334,8 @@ namespace ClearCanvas.ImageViewer.RoiGraphics
 				for (int y = bounds.Top; y <= bounds.Bottom; y++)
 				{
 					PointF p = new PointF(x, y);
-					if (this.Contains(p))
-						yield return this.PixelData.GetPixel(x, y);
+					if (Contains(p))
+						yield return PixelData.GetPixel(x, y);
 				}
 			}
 		}
@@ -346,26 +347,14 @@ namespace ClearCanvas.ImageViewer.RoiGraphics
 		/// If the <see cref="ModalityLut"/> is null, then this method enumerates the same values as <see cref="GetRawPixelValues"/>.
 		/// </remarks>
 		/// <returns>An enumeration of modality LUT transformed pixel values.</returns>
-		[Obsolete]
-		// TODO CR (Oct 11): replace entirely with one that returns doubles but without the real world units - breaking existing code is the least of our worries since anyone using this old version might get wrong values
-		public IEnumerable<int> GetPixelValues()
+		public IEnumerable<double> GetPixelValues()
 		{
-			int dummy;
-			foreach (var pixelValue in GetPixelValues(out dummy))
-				yield return (int) Math.Round(pixelValue);
-		}
+			if (PixelData == null)
+				yield break;
 
-		public IEnumerable<double> GetPixelValues(out int realWorldUnits)
-		{
-			realWorldUnits = 0;
-			if (this.PixelData == null)
-				return new double[0];
-
-			/// TODO (CR Nov 2011): Why a list rather than yield?
-			List<double> values = new List<double>();
 			LutFunction lut = v => v;
-			if (this.ModalityLut != null)
-				lut = v => this.ModalityLut[v];
+			if (ModalityLut != null)
+				lut = v => ModalityLut[v];
 
 			Rectangle bounds = GetBoundingBoxRounded(true);
 			for (int x = bounds.Left; x <= bounds.Right; x++)
@@ -373,11 +362,10 @@ namespace ClearCanvas.ImageViewer.RoiGraphics
 				for (int y = bounds.Top; y <= bounds.Bottom; y++)
 				{
 					PointF p = new PointF(x, y);
-					if (this.Contains(p))
-						values.Add(lut(this.PixelData.GetPixel(x, y)));
+					if (Contains(p))
+						yield return lut(PixelData.GetPixel(x, y));
 				}
 			}
-			return values;
 		}
 
 		/// <summary>
@@ -400,9 +388,12 @@ namespace ClearCanvas.ImageViewer.RoiGraphics
 		protected static double ConvertFromSquarePixels(double area, Units units, PixelSpacing pixelSpacing)
 		{
 			if (!ValidateUnits(units, pixelSpacing))
-				throw new ArgumentException("Pixel spacing must be calibrated in order to compute physical units.", "units");
+			{
+				const string msg = "Pixel spacing must be calibrated in order to compute physical units.";
+				throw new ArgumentException(msg, "units");
+			}
 
-			double factor = 1;
+			double factor;
 
 			switch (units)
 			{
@@ -429,13 +420,13 @@ namespace ClearCanvas.ImageViewer.RoiGraphics
 		{
 			RectangleF boundingBox = BoundingBox;
 
-			if (boundingBox.Width == 0 || boundingBox.Height == 0)
+			if (FloatComparer.AreEqual(0, boundingBox.Width) || FloatComparer.AreEqual(0, boundingBox.Height))
 				return false;
 
 			if (boundingBox.Left < 0 ||
 			    boundingBox.Top < 0 ||
-			    boundingBox.Right > (this.ImageColumns - 1) ||
-			    boundingBox.Bottom > (this.ImageRows - 1))
+			    boundingBox.Right > (ImageColumns - 1) ||
+			    boundingBox.Bottom > (ImageRows - 1))
 				return false;
 
 			return true;
