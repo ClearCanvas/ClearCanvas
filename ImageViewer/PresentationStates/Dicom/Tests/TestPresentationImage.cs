@@ -134,6 +134,15 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom.Tests
 
 		#endregion
 
+		#region IPatientPresentationProvider Members (Not Implemented)
+
+		public IPatientPresentation PatientPresentation
+		{
+			get { throw new NotImplementedException(); }
+		}
+
+		#endregion
+
 		#region IPatientCoordinateMappingProvider Members (Not Implemented)
 
 		public IPatientCoordinateMapping PatientCoordinateMapping

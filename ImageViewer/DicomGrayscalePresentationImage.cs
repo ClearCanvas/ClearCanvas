@@ -49,6 +49,9 @@ namespace ClearCanvas.ImageViewer
 		private IPatientCoordinateMapping _patientCoordinateMapping;
 
 		[CloneIgnore]
+		private IPatientPresentation _patientPresentation;
+
+		[CloneIgnore]
 		private readonly DicomVoiLuts _dicomVoiLuts;
 
 		/// <summary>
@@ -225,6 +228,15 @@ namespace ClearCanvas.ImageViewer
 		public GraphicCollection DicomGraphics
 		{
 			get { return _dicomGraphics.Graphics; }
+		}
+
+		#endregion
+
+		#region IPatientPresentationProvider Members
+
+		public IPatientPresentation PatientPresentation
+		{
+			get { return _patientPresentation ?? (_patientPresentation = new BasicPatientPresentation(this)); }
 		}
 
 		#endregion

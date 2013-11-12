@@ -236,6 +236,7 @@
     <Compile Include="Layout\Tests\HpApplicabilityResultTests.cs" />
     <Compile Include="Mathematics\Matrix3D.cs" />
     <Compile Include="Mathematics\Rectangle3D.cs" />
+    <Compile Include="PatientPresentation.cs" />
     <Compile Include="PermissionsHelper.cs" />
     <Compile Include="PresentationStates\Dicom\DicomGraphicAnnotationElement.cs" />
     <Compile Include="PresentationStates\Dicom\DicomGraphicAnnotationSubject.cs" />

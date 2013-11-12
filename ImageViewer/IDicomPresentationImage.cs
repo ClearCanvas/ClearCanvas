@@ -42,6 +42,7 @@ namespace ClearCanvas.ImageViewer
 		IOverlayGraphicsProvider,
 		ISpatialTransformProvider,
 		IPresentationStateProvider,
+		IPatientPresentationProvider,
 		IPatientCoordinateMappingProvider
 	{
 		/// <summary>

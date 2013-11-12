@@ -31,7 +31,6 @@ using ClearCanvas.ImageViewer.BaseTools;
 using ClearCanvas.ImageViewer.Graphics3D;
 using ClearCanvas.ImageViewer.InputManagement;
 using ClearCanvas.ImageViewer.Mathematics;
-using ClearCanvas.ImageViewer.StudyManagement;
 using ClearCanvas.ImageViewer.Tools.Standard.Configuration;
 
 namespace ClearCanvas.ImageViewer.Tools.Standard
@@ -47,6 +46,7 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 	[MenuAction("axial", _dropDownMenuActionSite + "/MenuAxialView", "ViewAxial")]
 	[MenuAction("coronal", _dropDownMenuActionSite + "/MenuCoronalView", "ViewCoronal")]
 	[MenuAction("sagittal", _dropDownMenuActionSite + "/MenuSagittalView", "ViewSagittal")]
+	[MenuAction("reset", _dropDownMenuActionSite + "/MenuReset", "RotateReset")]
 	//
 	[KeyboardAction("rotatereset", "imageviewer-keyboard/ToolsStandardRotate/RotateReset", "RotateReset", KeyStroke = XKeys.NumPad5)]
 	[KeyboardAction("rotateleft", "imageviewer-keyboard/ToolsStandardRotate/RotateLeft", "RotateLeft", KeyStroke = XKeys.NumPad4)]
@@ -136,40 +136,61 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 
 		private void ViewAxial()
 		{
-			SetOrientationWithUndo(Vector3D.xUnit, Vector3D.yUnit);
+			SetPatientOrientationWithUndo(Vector3D.xUnit, Vector3D.yUnit);
 		}
 
 		private void ViewCoronal()
 		{
-			SetOrientationWithUndo(Vector3D.xUnit, Vector3D.zUnit);
+			SetPatientOrientationWithUndo(Vector3D.xUnit, -Vector3D.zUnit);
 		}
 
 		private void ViewSagittal()
 		{
-			SetOrientationWithUndo(Vector3D.yUnit, Vector3D.zUnit);
+			SetPatientOrientationWithUndo(Vector3D.yUnit, -Vector3D.zUnit);
 		}
 
-		private void SetOrientationWithUndo(Vector3D rowDirection, Vector3D columnDirection)
+		private void SetPatientOrientationWithUndo(Vector3D rowDirectionPatient, Vector3D columnDirectionPatient)
 		{
 			if (!CanRotate())
 				return;
 
-			CaptureBeginState();
-			SetOrientation(rowDirection, columnDirection);
-			CaptureEndState();
+			try
+			{
+				CaptureBeginState();
+				SetPatientOrientation(rowDirectionPatient, columnDirectionPatient);
+				CaptureEndState();
+			}
+			catch (Exception ex)
+			{
+				Platform.Log(LogLevel.Warn, ex, "Error performing requested rotation");
+			}
 		}
 
-		private void SetOrientation(Vector3D rowDirection, Vector3D columnDirection)
+		private void SetPatientOrientation(Vector3D rowDirectionPatient, Vector3D columnDirectionPatient)
 		{
 			if (!CanRotate())
 				return;
 
-			if (rowDirection == null || columnDirection == null)
+			if (rowDirectionPatient == null || columnDirectionPatient == null || !rowDirectionPatient.IsOrthogonalTo(columnDirectionPatient, (float) (5/180d*Math.PI)))
 				return;
+
+			var patientPresentation = SelectedPresentationImage as IPatientPresentationProvider;
+			if (patientPresentation == null || !patientPresentation.PatientPresentation.IsValid)
+				return;
+
+			// Note the inverted column orientation vectors in both matrices - this is due to implicit Y axis inversion in the 3D transform
+			columnDirectionPatient = -columnDirectionPatient;
+
+			var currentRowOrientation = patientPresentation.PatientPresentation.OrientationX;
+			var currentColumnOrientation = -patientPresentation.PatientPresentation.OrientationY;
+			var currentOrientation = Matrix3D.FromRows(currentRowOrientation.Normalize(), currentColumnOrientation.Normalize(), currentRowOrientation.Cross(currentColumnOrientation).Normalize());
+			var requestedOrientation = Matrix3D.FromRows(rowDirectionPatient.Normalize(), columnDirectionPatient.Normalize(), rowDirectionPatient.Cross(columnDirectionPatient).Normalize());
 
 			var transform = _operation.GetOriginator(SelectedPresentationImage);
 
-			transform.Rotation = Matrix3D.FromRows(rowDirection, columnDirection, rowDirection.Cross(columnDirection));
+			// (because we're dealing with rotation matrices (i.e. orthogonal!), the Inverse is just Transpose)
+			var rotation = requestedOrientation*currentOrientation.Transpose();
+			transform.Rotation = rotation*transform.Rotation; // this rotation is cumulative upon current rotation, since IPatientPresentationProvider is based on *current* view
 
 			SelectedPresentationImage.Draw();
 		}
@@ -225,9 +246,16 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 			if (!CanRotate())
 				return;
 
-			CaptureBeginState();
-			IncrementRotate(xIncrement, yIncrement);
-			CaptureEndState();
+			try
+			{
+				CaptureBeginState();
+				IncrementRotate(xIncrement, yIncrement);
+				CaptureEndState();
+			}
+			catch (Exception ex)
+			{
+				Platform.Log(LogLevel.Warn, ex, "Error performing requested rotation");
+			}
 		}
 
 		private void IncrementRotate(int xIncrement, int yIncrement)
