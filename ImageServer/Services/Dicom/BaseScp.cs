@@ -203,12 +203,24 @@ namespace ClearCanvas.ImageServer.Services.Dicom
         {
         }
 
-        public virtual bool OnReceiveRequest(DicomServer server, ServerAssociationParameters association, byte presentationID, DicomMessage message)
+        public virtual bool OnReceiveRequest(DicomServer server, ServerAssociationParameters association, byte presentationId, DicomMessage message)
         {
             throw new Exception("The method or operation is not implemented.  The method must be overriden.");
         }
 
-        public virtual IList<SupportedSop> GetSupportedSopClasses()
+		public virtual IDicomFilestreamHandler OnStartFilestream(DicomServer server, ServerAssociationParameters association,
+																 byte presentationId, DicomMessage message)
+		{
+			return null;
+		}
+
+	    public virtual bool ReceiveMessageAsFileStream(DicomServer server, ServerAssociationParameters association, byte presentationId,
+	                                           DicomMessage message)
+	    {
+		    return false;
+	    }
+
+	    public virtual IList<SupportedSop> GetSupportedSopClasses()
         {
             throw new Exception("The method or operation is not implemented.  The method must be overriden.");
         }

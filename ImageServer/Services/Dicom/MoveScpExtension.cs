@@ -306,10 +306,10 @@ namespace ClearCanvas.ImageServer.Services.Dicom
         /// </summary>
         /// <param name="server"></param>
         /// <param name="association"></param>
-        /// <param name="presentationID"></param>
+        /// <param name="presentationId"></param>
         /// <param name="message"></param>
         /// <returns></returns>
-        public override bool OnReceiveRequest(DicomServer server, ServerAssociationParameters association, byte presentationID, DicomMessage message)
+        public override bool OnReceiveRequest(DicomServer server, ServerAssociationParameters association, byte presentationId, DicomMessage message)
         {
             bool finalResponseSent = false;
             string errorComment;
@@ -343,7 +343,7 @@ namespace ClearCanvas.ImageServer.Services.Dicom
                                      "Unknown move destination \"{0}\", failing C-MOVE-RQ from {1} to {2}",
                                      remoteAe, association.CallingAE, association.CalledAE);
                         Platform.Log(LogLevel.Error, errorComment);
-                        server.SendCMoveResponse(presentationID, message.MessageId, new DicomMessage(),
+                        server.SendCMoveResponse(presentationId, message.MessageId, new DicomMessage(),
                                                  DicomStatuses.QueryRetrieveMoveDestinationUnknown, errorComment);
                         finalResponseSent = true;
                         return true;
@@ -383,7 +383,7 @@ namespace ClearCanvas.ImageServer.Services.Dicom
                         errorComment = string.Format("Unexpected Study Root Move Query/Retrieve level: {0}", level);
                         Platform.Log(LogLevel.Error, errorComment);
 
-                        server.SendCMoveResponse(presentationID, message.MessageId, new DicomMessage(),
+                        server.SendCMoveResponse(presentationId, message.MessageId, new DicomMessage(),
                                                  DicomStatuses.QueryRetrieveIdentifierDoesNotMatchSOPClass,
                                                  errorComment);
                         finalResponseSent = true;
@@ -397,7 +397,7 @@ namespace ClearCanvas.ImageServer.Services.Dicom
                     {
                         Platform.Log(LogLevel.Error, "Unable to find online storage location for C-MOVE-RQ: {0}", errorComment);
 
-                        server.SendCMoveResponse(presentationID, message.MessageId, new DicomMessage(),
+                        server.SendCMoveResponse(presentationId, message.MessageId, new DicomMessage(),
                                                  DicomStatuses.QueryRetrieveUnableToPerformSuboperations,
                                                  string.IsNullOrEmpty(errorComment) ? string.Empty : errorComment);
                         finalResponseSent = true;
@@ -409,7 +409,7 @@ namespace ClearCanvas.ImageServer.Services.Dicom
                     // No files were eligible for transfer, just send success and return
                     if (_theScu.StorageInstanceList.Count == 0)
                     {
-                        server.SendCMoveResponse(presentationID, message.MessageId, new DicomMessage(),
+                        server.SendCMoveResponse(presentationId, message.MessageId, new DicomMessage(),
                                                  DicomStatuses.Success,
                                                  0, 0, 0, 0);
                         finalResponseSent = true;
@@ -462,7 +462,7 @@ namespace ClearCanvas.ImageServer.Services.Dicom
                 	                               				return;
                 	                               			// Only send a RSP every 5 to reduce network load
                 	                               		}
-                	                               	    server.SendCMoveResponse(presentationID, message.MessageId,
+                	                               	    server.SendCMoveResponse(presentationId, message.MessageId,
                 	                               	                             msg, status,
                 	                               	                             (ushort) scu.SuccessSubOperations,
                 	                               	                             (ushort) scu.RemainingSubOperations,
@@ -490,7 +490,7 @@ namespace ClearCanvas.ImageServer.Services.Dicom
                                     if (!finalResponseSent)
                                     {
                                         var msg = new DicomMessage();
-                                        server.SendCMoveResponse(presentationID, message.MessageId,
+                                        server.SendCMoveResponse(presentationId, message.MessageId,
                                                                  msg, DicomStatuses.QueryRetrieveSubOpsOneOrMoreFailures,
                                                                  (ushort) _theScu.SuccessSubOperations,
                                                                  0,
@@ -516,7 +516,7 @@ namespace ClearCanvas.ImageServer.Services.Dicom
                 {
                     try
                     {
-                        server.SendCMoveResponse(presentationID, message.MessageId, new DicomMessage(),
+                        server.SendCMoveResponse(presentationId, message.MessageId, new DicomMessage(),
                                                  DicomStatuses.QueryRetrieveUnableToProcess, e.Message);
                         finalResponseSent = true;
                     }
