@@ -22,23 +22,40 @@
 
 #endregion
 
+using System;
 using ClearCanvas.Common;
 using ClearCanvas.Desktop.Actions;
-using ClearCanvas.ImageViewer.BaseTools;
 using ClearCanvas.ImageViewer.Graphics;
 using ClearCanvas.ImageViewer.PresentationStates.Dicom;
 
 namespace ClearCanvas.ImageViewer.Tools.Standard
 {
-	[MenuAction("unlock", "basicgraphic-menu/MenuUnlockAnnotation", "Unlock")]
+	[MenuAction("delete", "dicomgraphic-menu/MenuDeleteAnnotation", "Delete")]
+	[IconSet("delete", "DeleteAnnotationToolSmall.png", "DeleteAnnotationToolMedium.png", "DeleteAnnotationToolLarge.png")]
+	[VisibleStateObserver("delete", "IsInteractive", "IsInteractiveChanged")]
+	[GroupHint("delete", "Tools.Annotations.Delete")]
+	//
+	[MenuAction("unlock", "dicomgraphic-menu/MenuUnlockAnnotation", "Unlock")]
 	[VisibleStateObserver("unlock", "Visible", "VisibleChanged")]
+	[GroupHint("delete", "Tools.Annotations.Unlock")]
 	//
 	[ExtensionOf(typeof (GraphicToolExtensionPoint))]
-	internal class DicomGraphicAnnotationTool : GraphicTool
+	internal class DicomGraphicAnnotationTool : DeleteAnnotationsTool
 	{
 		protected new DicomGraphicAnnotation Graphic
 		{
 			get { return base.Graphic as DicomGraphicAnnotation; }
+		}
+
+		public bool IsInteractive
+		{
+			get { return !Visible; }
+		}
+
+		public event EventHandler IsInteractiveChanged
+		{
+			add { VisibleChanged += value; }
+			remove { VisibleChanged -= value; }
 		}
 
 		public override void Initialize()

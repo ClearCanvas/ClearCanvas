@@ -566,6 +566,11 @@ namespace ClearCanvas.ImageViewer.InteractiveGraphics
 				.Aggregate((IActionSet) new ActionSet(), (a, b) => a.Union(b));
 		}
 
+		IActionSet IExportedActionsProvider.GetExportedActions(string site, IMouseInformation mouseInformation)
+		{
+			return Enabled ? GetExportedActions(site, mouseInformation) : new ActionSet();
+		}
+
 		#endregion
 
 		#region IMemorable Helpers

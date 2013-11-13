@@ -80,8 +80,6 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 					}
 				}
 			}
-			subjectGraphic.SetEnabled(false);
-			subjectGraphic.SetColor(Color.LemonChiffon);
 
 			var annotations = new List<IGraphic>();
 			var annotationBounds = RectangleF.Empty;
@@ -111,9 +109,18 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 			}
 			else
 			{
-				subjectGraphic.Graphics.AddRange(annotations);
+				subjectGraphic.Graphics.AddRange(annotations.Where(g => !(g is ICalloutGraphic)).Select(g => new TextEditControlGraphic(g)));
+				subjectGraphic.Graphics.AddRange(annotations.OfType<ICalloutGraphic>().Select(g => new UserCalloutGraphic
+				                                                                                   	{
+				                                                                                   		AnchorPoint = g.AnchorPoint,
+				                                                                                   		TextLocation = g.TextLocation,
+				                                                                                   		Text = g.Text,
+				                                                                                   		ShowArrowhead = !(g is CalloutGraphic) || ((CalloutGraphic) g).ShowArrowhead
+				                                                                                   	}));
 			}
 
+			subjectGraphic.SetEnabled(false);
+			subjectGraphic.SetColor(Color.LemonChiffon);
 			return new DicomGraphicAnnotation(subjectGraphic);
 		}
 
