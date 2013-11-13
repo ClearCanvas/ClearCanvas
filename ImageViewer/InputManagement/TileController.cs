@@ -518,10 +518,8 @@ namespace ClearCanvas.ImageViewer.InputManagement
 				return true;
 
 			_tile.Select();
-			_contextMenuEnabled = _clickCount == 1
-				&& _buttonForContextMenu == buttonMessage.Shortcut.MouseButton
-				&& _buttonActionForContextMenu == MouseButtonMessage.ButtonActions.Down;
-			if (_contextMenuEnabled )
+			_contextMenuEnabled = _clickCount == 1 && _buttonForContextMenu == buttonMessage.Shortcut.MouseButton;
+			if (_contextMenuEnabled && _buttonActionForContextMenu == MouseButtonMessage.ButtonActions.Down)
 			{
 				_delayedContextMenuRequestPublisher.TimeoutMilliseconds = _mouseHoldDownForContextMenuInMilliseconds;
 				_delayedContextMenuRequestPublisher.Publish(this, new ItemEventArgs<Point>(buttonMessage.Location));
@@ -634,15 +632,16 @@ namespace ClearCanvas.ImageViewer.InputManagement
 			_activeButton = 0;
 			_clickCount = 0;
 
+			var requestContextMenu = _buttonForContextMenu == buttonMessage.Shortcut.MouseButton &&
+					_buttonActionForContextMenu == MouseButtonMessage.ButtonActions.Up &&
+					!HasMoved(buttonMessage.Location) &&
+					(_mouseHoldDownForContextMenuInMilliseconds == 0 || timeElapsedSinceMouseDown >= _mouseHoldDownForContextMenuInMilliseconds);
+
 			if (this.CaptureHandler != null)
 			{
 				if (StopHandler(this.CaptureHandler))
 				{
-					if (_capturedOnThisClick &&
-						_buttonForContextMenu == buttonMessage.Shortcut.MouseButton &&
-						_buttonActionForContextMenu == MouseButtonMessage.ButtonActions.Up &&
-						!HasMoved(buttonMessage.Location) &&
-						(_mouseHoldDownForContextMenuInMilliseconds == 0 || timeElapsedSinceMouseDown >= _mouseHoldDownForContextMenuInMilliseconds))
+					if (_capturedOnThisClick && requestContextMenu)
 					{
 						_delayedContextMenuRequestPublisher.TimeoutMilliseconds = _contextMenuDelayInMilliseconds;
 						_delayedContextMenuRequestPublisher.Publish(this, new ItemEventArgs<Point>(buttonMessage.Location));
@@ -651,11 +650,9 @@ namespace ClearCanvas.ImageViewer.InputManagement
 					return true;
 				}
 
-				if (_buttonForContextMenu == buttonMessage.Shortcut.MouseButton &&
-					_buttonActionForContextMenu == MouseButtonMessage.ButtonActions.Up &&
-					!HasMoved(buttonMessage.Location) &&
-					(_mouseHoldDownForContextMenuInMilliseconds == 0 || timeElapsedSinceMouseDown >= _mouseHoldDownForContextMenuInMilliseconds))
+				if (requestContextMenu)
 				{
+					// Request the context menu right away
 					_contextMenuEnabled = true;
 					EventsHelper.Fire(_contextMenuRequested, this, new ItemEventArgs<Point>(buttonMessage.Location));
 				}
@@ -664,6 +661,13 @@ namespace ClearCanvas.ImageViewer.InputManagement
 
 				ReleaseCapture(false);
 				return true;
+			}
+
+			if (requestContextMenu)
+			{
+				// Request the context menu right away
+				_contextMenuEnabled = true;
+				EventsHelper.Fire(_contextMenuRequested, this, new ItemEventArgs<Point>(buttonMessage.Location));
 			}
 
 			return false;
