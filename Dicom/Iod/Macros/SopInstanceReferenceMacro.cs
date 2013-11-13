@@ -48,7 +48,7 @@ namespace ClearCanvas.Dicom.Iod.Macros
 	/// SOP Instance Reference Macro Base Implementation
 	/// </summary>
 	/// <remarks>As defined in the DICOM Standard 2011, Part 3, Section 10.8 (Table 10-11)</remarks>
-	internal class SopInstanceReferenceMacro : SequenceIodBase, ISopInstanceReferenceMacro
+	public class SopInstanceReferenceMacro : SequenceIodBase, ISopInstanceReferenceMacro
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="SopInstanceReferenceMacro"/> class.

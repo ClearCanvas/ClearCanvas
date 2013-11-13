@@ -44,10 +44,31 @@ namespace ClearCanvas.Dicom.Network.Scp
         /// </summary>
         /// <param name="server">The <see cref="DicomServer"/> instance for the association.</param>
         /// <param name="association">Parameters for the association.</param>
-        /// <param name="presentationID">The presentation context for the association.</param>
+        /// <param name="presentationId">The presentation context for the association.</param>
         /// <param name="message">The message to process.</param>
         /// <returns>true on success, false on failure.</returns>
-        bool OnReceiveRequest(DicomServer server, ServerAssociationParameters association, byte presentationID, DicomMessage message);
+        bool OnReceiveRequest(DicomServer server, ServerAssociationParameters association, byte presentationId, DicomMessage message);
+
+        /// <summary>
+        /// Called when streaming a file.
+        /// </summary>
+        /// <param name="server">The <see cref="DicomServer"/> instanace for the association.</param>
+        /// <param name="association">Parameters for the association.</param>
+        /// <param name="presentationId">The presentation context for the association.</param>
+        /// <param name="message">The message received.</param>
+        /// <returns></returns>
+        IDicomFilestreamHandler OnStartFilestream(DicomServer server, ServerAssociationParameters association, byte presentationId, DicomMessage message);
+
+        /// <summary>
+        /// Check to determine if a message should be received as a <see cref="DicomFile"/> stream.
+        /// </summary>
+        /// <param name="server">The <see cref="DicomServer"/> instance for the association.</param>
+        /// <param name="association">Parameters for the association.</param>
+        /// <param name="presentationId">The presentation context for the association.</param>
+        /// <param name="message">The message (with only a CommandSet) to determine if it should be saved as a file.</param>
+        /// <returns></returns>
+        bool ReceiveMessageAsFileStream(DicomServer server, ServerAssociationParameters association, byte presentationId,
+                                        DicomMessage message);
 
         /// <summary>
         /// Return a list of the DICOM services and transfer syntaxes supported by the interface.

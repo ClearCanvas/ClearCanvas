@@ -28,13 +28,10 @@ using System.Collections.Generic;
 namespace ClearCanvas.Dicom.Iod.Modules
 {
 	/// <summary>
-	/// ScEquipment Module
+	/// SC Equipment Module
 	/// </summary>
-	/// <remarks>
-	/// <para>As defined in the DICOM Standard 2009, Part 3, Section C.8.6.1 (Table C.8-24)</para>
-	/// </remarks>
-	public class ScEquipmentModuleIod
-		: IodBase
+	/// <remarks>As defined in the DICOM Standard 2011, Part 3, Section C.8.6.1 (Table C.8-24)</remarks>
+	public class ScEquipmentModuleIod : IodBase
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="ScEquipmentModuleIod"/> class.
@@ -44,9 +41,47 @@ namespace ClearCanvas.Dicom.Iod.Modules
 		/// <summary>
 		/// Initializes a new instance of the <see cref="ScEquipmentModuleIod"/> class.
 		/// </summary>
-		/// <param name="dicomAttributeProvider">The DICOM attribute provider.</param>
+		/// <param name="dicomAttributeProvider">The DICOM attribute collection.</param>
 		public ScEquipmentModuleIod(IDicomAttributeProvider dicomAttributeProvider)
 			: base(dicomAttributeProvider) {}
+
+		/// <summary>
+		/// Gets an enumeration of <see cref="DicomTag"/>s used by this module.
+		/// </summary>
+		public static IEnumerable<uint> DefinedTags
+		{
+			get
+			{
+				yield return DicomTags.ConversionType;
+				yield return DicomTags.Modality;
+				yield return DicomTags.SecondaryCaptureDeviceId;
+				yield return DicomTags.SecondaryCaptureDeviceManufacturer;
+				yield return DicomTags.SecondaryCaptureDeviceManufacturersModelName;
+				yield return DicomTags.SecondaryCaptureDeviceSoftwareVersions;
+				yield return DicomTags.VideoImageFormatAcquired;
+				yield return DicomTags.DigitalImageFormatAcquired;
+			}
+		}
+
+		/// <summary>
+		/// Initializes the underlying collection to implement the module or sequence using default values.
+		/// </summary>
+		public void InitializeAttributes() {}
+
+		/// <summary>
+		/// Checks if this module appears to be non-empty.
+		/// </summary>
+		/// <returns>True if the module appears to be non-empty; False otherwise.</returns>
+		public bool HasValues()
+		{
+			return !(IsNullOrEmpty(ConversionType)
+			         && IsNullOrEmpty(Modality)
+			         && IsNullOrEmpty(SecondaryCaptureDeviceId)
+			         && IsNullOrEmpty(SecondaryCaptureDeviceManufacturer)
+			         && IsNullOrEmpty(SecondaryCaptureDeviceManufacturersModelName)
+			         && IsNullOrEmpty(VideoImageFormatAcquired)
+			         && IsNullOrEmpty(DigitalImageFormatAcquired));
+		}
 
 		/// <summary>
 		/// Gets or sets the value of ConversionType in the underlying collection. Type 1.
@@ -57,7 +92,10 @@ namespace ClearCanvas.Dicom.Iod.Modules
 			set
 			{
 				if (string.IsNullOrEmpty(value))
-					throw new ArgumentNullException("value", "ConversionType is Type 1 Required.");
+				{
+					const string msg = "ConversionType is Type 1 Required.";
+					throw new ArgumentNullException("value", msg);
+				}
 				DicomAttributeProvider[DicomTags.ConversionType].SetStringValue(value);
 			}
 		}
@@ -191,32 +229,6 @@ namespace ClearCanvas.Dicom.Iod.Modules
 					return;
 				}
 				DicomAttributeProvider[DicomTags.DigitalImageFormatAcquired].SetStringValue(value);
-			}
-		}
-
-		/// <summary>
-		/// Initializes the attributes in this module to their default values.
-		/// </summary>
-		public void InitializeAttributes()
-		{
-			ConversionType = ' '.ToString();
-		}
-
-		/// <summary>
-		/// Gets an enumeration of <see cref="ClearCanvas.Dicom.DicomTag"/>s used by this module.
-		/// </summary>
-		public static IEnumerable<uint> DefinedTags
-		{
-			get
-			{
-				yield return DicomTags.ConversionType;
-				yield return DicomTags.Modality;
-				yield return DicomTags.SecondaryCaptureDeviceId;
-				yield return DicomTags.SecondaryCaptureDeviceManufacturer;
-				yield return DicomTags.SecondaryCaptureDeviceManufacturersModelName;
-				yield return DicomTags.SecondaryCaptureDeviceSoftwareVersions;
-				yield return DicomTags.VideoImageFormatAcquired;
-				yield return DicomTags.DigitalImageFormatAcquired;
 			}
 		}
 	}

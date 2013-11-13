@@ -120,6 +120,10 @@ namespace ClearCanvas.ImageServer.Common
             }
 	    }
 
+		/// <summary>
+		/// The Streaming folder.    DO NOT CHANGE!
+		/// </summary>
+		public const string StreamingStorageFolder = "Streaming";
 
 		/// <summary>
 		/// The Reconcile folder.    DO NOT CHANGE!

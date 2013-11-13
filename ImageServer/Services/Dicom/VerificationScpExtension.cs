@@ -57,9 +57,9 @@ namespace ClearCanvas.ImageServer.Services.Dicom
 
         #region IDicomScp Members
 
-        public override bool OnReceiveRequest(DicomServer server, ServerAssociationParameters association, byte presentationID, DicomMessage message)
+        public override bool OnReceiveRequest(DicomServer server, ServerAssociationParameters association, byte presentationId, DicomMessage message)
         {
-            server.SendCEchoResponse(presentationID,message.MessageId,DicomStatuses.Success);
+            server.SendCEchoResponse(presentationId,message.MessageId,DicomStatuses.Success);
             return true;
         }
 

@@ -29,7 +29,6 @@ using System;
 using System.IO;
 using ClearCanvas.Dicom;
 using ClearCanvas.ImageViewer.Graphics;
-using ClearCanvas.ImageViewer.PresentationStates.Dicom;
 using ClearCanvas.ImageViewer.StudyManagement;
 
 namespace ClearCanvas.ImageViewer.Externals.General.Tests
@@ -134,6 +133,24 @@ namespace ClearCanvas.ImageViewer.Externals.General.Tests
 		public Sop Sop
 		{
 			get { return _imageSop; }
+		}
+
+		#endregion
+
+		#region IPatientPresentationProvider Members (Not Implemented)
+
+		public IPatientPresentation PatientPresentation
+		{
+			get { throw new NotImplementedException(); }
+		}
+
+		#endregion
+
+		#region IPatientCoordinateMappingProvider Members (Not Implemented)
+
+		public IPatientCoordinateMapping PatientCoordinateMapping
+		{
+			get { throw new NotImplementedException(); }
 		}
 
 		#endregion

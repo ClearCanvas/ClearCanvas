@@ -1,4 +1,4 @@
-#region License
+﻿#region License
 
 // Copyright (c) 2013, ClearCanvas Inc.
 // All rights reserved.
@@ -22,71 +22,62 @@
 
 #endregion
 
-using System;
+using System.Collections.Generic;
+using ClearCanvas.Dicom.Iod.Macros;
 using ClearCanvas.Dicom.Iod.Macros.VoiLut;
 
-namespace ClearCanvas.Dicom.Iod.Macros
+namespace ClearCanvas.Dicom.Iod.Modules
 {
 	/// <summary>
-	/// VOI LUT Macro
+	/// VoiLut Module
 	/// </summary>
-	/// <remarks>As defined in the DICOM Standard 2011, Part 3, Section C.11.2 (Table C.11-2b)</remarks>
-	public interface IVoiLutMacro
+	/// <remarks>As defined in the DICOM Standard 2011, Part 3, Section C.11.2 (Table C.11-2)</remarks>
+	public class VoiLutModuleIod : IodBase, IVoiLutMacro
 	{
 		/// <summary>
-		/// Gets or sets the value of VoiLutSequence in the underlying collection. Type 1C.
-		/// </summary>
-		VoiLutSequenceItem[] VoiLutSequence { get; set; }
+		/// Initializes a new instance of the <see cref="VoiLutModuleIod"/> class.
+		/// </summary>	
+		public VoiLutModuleIod() {}
 
 		/// <summary>
-		/// Gets or sets the value of WindowCenter in the underlying collection. Type 1C.
+		/// Initializes a new instance of the <see cref="VoiLutModuleIod"/> class.
 		/// </summary>
-		double[] WindowCenter { get; set; }
+		/// <param name="dicomAttributeProvider">The DICOM attribute collection.</param>
+		public VoiLutModuleIod(IDicomAttributeProvider dicomAttributeProvider)
+			: base(dicomAttributeProvider) {}
 
 		/// <summary>
-		/// Gets or sets the value of WindowWidth in the underlying collection. Type 1C.
+		/// Gets an enumeration of <see cref="DicomTag"/>s used by this module.
 		/// </summary>
-		double[] WindowWidth { get; set; }
+		public static IEnumerable<uint> DefinedTags
+		{
+			get
+			{
+				yield return DicomTags.VoiLutSequence;
+				yield return DicomTags.WindowCenter;
+				yield return DicomTags.WindowWidth;
+				yield return DicomTags.WindowCenterWidthExplanation;
+				yield return DicomTags.VoiLutFunction;
+			}
+		}
 
 		/// <summary>
-		/// Gets or sets the value of WindowCenterWidthExplanation in the underlying collection. Type 3.
+		/// Initializes the underlying collection to implement the module or sequence using default values.
 		/// </summary>
-		string[] WindowCenterWidthExplanation { get; set; }
-
-		/// <summary>
-		/// Gets or sets the value of VoiLutFunction in the underlying collection. Type 3.
-		/// </summary>
-		VoiLutFunction VoiLutFunction { get; set; }
-
-		/// <summary>
-		/// Gets the number of VOI Data LUTs included in this sequence.
-		/// </summary>
-		long CountDataLuts { get; }
-
-		/// <summary>
-		/// Gets the number of VOI Windows included in this sequence.
-		/// </summary>
-		long CountWindows { get; }
-	}
-
-	/// <summary>
-	/// VOI LUT Macro
-	/// </summary>
-	/// <remarks>As defined in the DICOM Standard 2008, Part 3, Section C.11.2 (Table C.11-2b)</remarks>
-	internal class VoiLutMacro : SequenceIodBase, IVoiLutMacro
-	{
-		/// <summary>
-		/// Initializes a new instance of the <see cref="VoiLutMacro"/> class.
-		/// </summary>
-		public VoiLutMacro() : base() {}
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="VoiLutMacro"/> class.
-		/// </summary>
-		/// <param name="dicomSequenceItem">The dicom sequence item.</param>
-		public VoiLutMacro(DicomSequenceItem dicomSequenceItem) : base(dicomSequenceItem) {}
-
 		public void InitializeAttributes() {}
+
+		/// <summary>
+		/// Checks if this module appears to be non-empty.
+		/// </summary>
+		/// <returns>True if the module appears to be non-empty; False otherwise.</returns>
+		public bool HasValues()
+		{
+			return !(IsNullOrEmpty(VoiLutSequence)
+			         && IsNullOrEmpty(WindowCenter)
+			         && IsNullOrEmpty(WindowWidth)
+			         && IsNullOrEmpty(WindowCenterWidthExplanation)
+			         && IsNullOrEmpty(VoiLutFunction));
+		}
 
 		/// <summary>
 		/// Gets or sets the value of VoiLutSequence in the underlying collection. Type 1C.
@@ -266,117 +257,6 @@ namespace ClearCanvas.Dicom.Iod.Macros
 					return 0;
 				return attribute.Count;
 			}
-		}
-	}
-
-	namespace VoiLut
-	{
-		/// <summary>
-		/// VOI LUT Sequence Item
-		/// </summary>
-		/// <remarks>As defined in the DICOM Standard 2011, Part 3, Section C.11.2 (Table C.11-2b)</remarks>
-		public class VoiLutSequenceItem : SequenceIodBase
-		{
-			/// <summary>
-			/// Initializes a new instance of the <see cref="VoiLutSequenceItem"/> class.
-			/// </summary>
-			public VoiLutSequenceItem() : base() {}
-
-			/// <summary>
-			/// Initializes a new instance of the <see cref="VoiLutSequenceItem"/> class.
-			/// </summary>
-			/// <param name="dicomSequenceItem">The dicom sequence item.</param>
-			public VoiLutSequenceItem(DicomSequenceItem dicomSequenceItem) : base(dicomSequenceItem) {}
-
-			/// <summary>
-			/// Gets or sets the value of LutDescriptor in the underlying collection. Type 1.
-			/// </summary>
-			public int[] LutDescriptor
-			{
-				get
-				{
-					var result = new int[3];
-					if (DicomAttributeProvider[DicomTags.LutDescriptor].TryGetInt32(0, out result[0])
-					    && DicomAttributeProvider[DicomTags.LutDescriptor].TryGetInt32(1, out result[1])
-					    && DicomAttributeProvider[DicomTags.LutDescriptor].TryGetInt32(2, out result[2]))
-						return result;
-					return null;
-				}
-				set
-				{
-					if (value == null || value.Length != 3)
-					{
-						const string msg = "LutDescriptor is Type 1 Required.";
-						throw new ArgumentNullException("value", msg);
-					}
-					DicomAttributeProvider[DicomTags.LutDescriptor].SetInt32(0, value[0]);
-					DicomAttributeProvider[DicomTags.LutDescriptor].SetInt32(1, value[1]);
-					DicomAttributeProvider[DicomTags.LutDescriptor].SetInt32(2, value[2]);
-				}
-			}
-
-			/// <summary>
-			/// Gets or sets the value of LutExplanation in the underlying collection. Type 3.
-			/// </summary>
-			public string LutExplanation
-			{
-				get { return DicomAttributeProvider[DicomTags.LutExplanation].GetString(0, string.Empty); }
-				set
-				{
-					if (string.IsNullOrEmpty(value))
-					{
-						DicomAttributeProvider[DicomTags.LutExplanation] = null;
-						return;
-					}
-					DicomAttributeProvider[DicomTags.LutExplanation].SetString(0, value);
-				}
-			}
-
-			/// <summary>
-			/// Gets or sets the value of LutData in the underlying collection. Type 1.
-			/// </summary>
-			public ushort[] LutData
-			{
-				get
-				{
-					DicomAttribute attribute = DicomAttributeProvider[DicomTags.LutData];
-					if (attribute.IsNull || attribute.IsEmpty || attribute.Count == 0)
-						return null;
-					return (ushort[]) attribute.Values;
-				}
-				set
-				{
-					if (value == null || value.Length == 0)
-					{
-						const string msg = "LutData is Type 1 Required.";
-						throw new ArgumentNullException("value", msg);
-					}
-					DicomAttributeProvider[DicomTags.LutData].Values = value;
-				}
-			}
-		}
-
-		/// <summary>
-		/// Enumerated values for the <see cref="DicomTags.VoiLutFunction"/> attribute describing
-		/// a VOI LUT function to apply to the <see cref="IVoiLutMacro.WindowCenter"/> and <see cref="IVoiLutMacro.WindowWidth"/>.
-		/// </summary>
-		/// <remarks>As defined in the DICOM Standard 2008, Part 3, Section C.11.2 (Table C.11-2b)</remarks>
-		public enum VoiLutFunction
-		{
-			/// <summary>
-			/// Specifies a linear VOI LUT function.
-			/// </summary>
-			Linear,
-
-			/// <summary>
-			/// Specifies a sigmoid VOI LUT function.
-			/// </summary>
-			Sigmoid,
-
-			/// <summary>
-			/// Represents the null value, which is equivalent to the unknown status.
-			/// </summary>
-			None
 		}
 	}
 }

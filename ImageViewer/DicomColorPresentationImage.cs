@@ -22,15 +22,12 @@
 
 #endregion
 
-using System;
-using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.ImageViewer.Annotations;
 using ClearCanvas.ImageViewer.Annotations.Dicom;
 using ClearCanvas.ImageViewer.Graphics;
 using ClearCanvas.ImageViewer.Imaging;
 using ClearCanvas.ImageViewer.PresentationStates;
-using ClearCanvas.ImageViewer.PresentationStates.Dicom;
 using ClearCanvas.ImageViewer.StudyManagement;
 
 namespace ClearCanvas.ImageViewer
@@ -47,6 +44,12 @@ namespace ClearCanvas.ImageViewer
 		[CloneIgnore]
 		private CompositeGraphic _dicomGraphics;
 
+		[CloneIgnore]
+		private IPatientPresentation _patientPresentation;
+
+		[CloneIgnore]
+		private PatientCoordinateMapping _patientCoordinateMapping;
+
 		/// <summary>
 		/// Initializes a new instance of <see cref="DicomColorPresentationImage"/>.
 		/// </summary>
@@ -55,9 +58,7 @@ namespace ClearCanvas.ImageViewer
 		/// This constructor provides a convenient means of associating a <see cref="Frame"/> with a <see cref="ColorPresentationImage"/>.
 		/// </remarks>
 		public DicomColorPresentationImage(Frame frame)
-			: this(frame.CreateTransientReference())
-		{
-		}
+			: this(frame.CreateTransientReference()) {}
 
 		/// <summary>
 		/// Initializes a new instance of <see cref="DicomColorPresentationImage"/>.
@@ -65,12 +66,12 @@ namespace ClearCanvas.ImageViewer
 		/// <param name="frameReference">A <see cref="IFrameReference">reference</see> to the frame from which to construct the image.</param>
 		public DicomColorPresentationImage(IFrameReference frameReference)
 			: base(frameReference.Frame.Rows,
-				   frameReference.Frame.Columns,
-				   frameReference.Frame.NormalizedPixelSpacing.Column,
-				   frameReference.Frame.NormalizedPixelSpacing.Row,
-				   frameReference.Frame.PixelAspectRatio.Column,
-				   frameReference.Frame.PixelAspectRatio.Row,
-				   frameReference.Frame.GetNormalizedPixelData)
+			       frameReference.Frame.Columns,
+			       frameReference.Frame.NormalizedPixelSpacing.Column,
+			       frameReference.Frame.NormalizedPixelSpacing.Row,
+			       frameReference.Frame.PixelAspectRatio.Column,
+			       frameReference.Frame.PixelAspectRatio.Row,
+			       frameReference.Frame.GetNormalizedPixelData)
 		{
 			_frameReference = frameReference;
 			base.PresentationState = PresentationState.DicomDefault;
@@ -91,7 +92,7 @@ namespace ClearCanvas.ImageViewer
 		private void OnCloneComplete()
 		{
 			_dicomGraphics = CollectionUtils.SelectFirst(base.CompositeImageGraphic.Graphics,
-				delegate(IGraphic test) { return test.Name == "DICOM"; }) as CompositeGraphic;
+			                                             delegate(IGraphic test) { return test.Name == "DICOM"; }) as CompositeGraphic;
 
 			Initialize();
 		}
@@ -182,6 +183,24 @@ namespace ClearCanvas.ImageViewer
 
 		#endregion
 
+		#region IPatientPresentationProvider Members
+
+		public IPatientPresentation PatientPresentation
+		{
+			get { return _patientPresentation ?? (_patientPresentation = new BasicPatientPresentation(this)); }
+		}
+
+		#endregion
+
+		#region IPatientCoordinateMappingProvider Members
+
+		public IPatientCoordinateMapping PatientCoordinateMapping
+		{
+			get { return _patientCoordinateMapping ?? (_patientCoordinateMapping = new PatientCoordinateMapping(Frame)); }
+		}
+
+		#endregion
+
 		/// <summary>
 		/// Dispose method.  Inheritors should override this method to do any additional cleanup.
 		/// </summary>
@@ -192,7 +211,7 @@ namespace ClearCanvas.ImageViewer
 				_frameReference.Dispose();
 				_frameReference = null;
 			}
-			
+
 			base.Dispose(disposing);
 		}
 
