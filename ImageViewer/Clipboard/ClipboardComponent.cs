@@ -385,7 +385,10 @@ namespace ClearCanvas.ImageViewer.Clipboard
 		{
 			bool anyLocked = false;
 
-			foreach (ClipboardItem item in this.SelectedItems)
+			//Shouldn't be possible for selected items to not be in the current list, but check anyway,
+			//because the user's selections can come from the Webstation, where the UI changes are not going
+			//to be totally in sync with the "current" state on the server.
+			foreach (ClipboardItem item in this.SelectedItems.Where(s => _items.Contains(s)))
 			{
 				if (item.IsLocked)
 				{
