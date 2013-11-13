@@ -185,6 +185,7 @@
     <Compile Include="Graphics3D\TransformMatrixHelpers.cs" />
     <Compile Include="Graphics3D\VectorGraphic3D.cs" />
     <Compile Include="Graphics3D\VisualStateChanged3DEventArgs.cs" />
+    <Compile Include="Graphics\GraphicMethods.cs" />
     <Compile Include="Graphics\Tests\ImageGraphicTests.cs" />
     <Compile Include="Imaging\ILutPipelineProvider.cs" />
     <Compile Include="Imaging\MinMaxPixelLinearLut.cs" />

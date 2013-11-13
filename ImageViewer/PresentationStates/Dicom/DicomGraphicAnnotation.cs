@@ -288,6 +288,20 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 		private static IGraphic CreatePolyline(IList<PointF> vertices, bool editable = false)
 		{
 			var closed = FloatComparer.AreEqual(vertices[0], vertices[vertices.Count - 1]);
+
+			// use a standard rectangle primitive if the axes defines an axis-aligned rectangle
+			if (closed && vertices.Count == 5 && IsAxisAligned(vertices[0], vertices[1]) && IsAxisAligned(vertices[1], vertices[2]) && IsAxisAligned(vertices[2], vertices[3]) && IsAxisAligned(vertices[3], vertices[4]))
+			{
+				var bounds = RectangleUtilities.ConvertToPositiveRectangle(RectangleUtilities.ComputeBoundingRectangle(vertices[0], vertices[1], vertices[2], vertices[3]));
+				var rectangle = new RectanglePrimitive {TopLeft = bounds.Location, BottomRight = bounds.Location + bounds.Size};
+				return editable ? (IGraphic) new BoundableResizeControlGraphic(new BoundableStretchControlGraphic(new MoveControlGraphic(rectangle))) : rectangle;
+			}
+			else if (!closed && vertices.Count == 2)
+			{
+				var line = new PolylineGraphic {Points = {vertices[0], vertices[1]}};
+				return editable ? (IGraphic) new VerticesControlGraphic(new MoveControlGraphic(line)) : line;
+			}
+
 			var polyline = new PolylineGraphic(closed);
 			polyline.Points.AddRange(vertices);
 			if (!editable) return polyline;
@@ -316,13 +330,11 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 
 		private static IGraphic CreateEllipse(PointF majorAxisEnd1, PointF majorAxisEnd2, PointF minorAxisEnd1, PointF minorAxisEnd2, bool editable = false)
 		{
-			// use a standard ellipse primitive if the axes defines an orthogonal ellipse
-			var majorAxis = majorAxisEnd2 - new SizeF(majorAxisEnd1);
-			var minorAxis = minorAxisEnd2 - new SizeF(minorAxisEnd1);
-			if ((FloatComparer.AreEqual(0, majorAxis.X) || FloatComparer.AreEqual(0, majorAxis.Y)) && (FloatComparer.AreEqual(0, minorAxis.X) || FloatComparer.AreEqual(0, minorAxis.Y)))
+			// use a standard ellipse primitive if the axes defines an axis-aligned ellipse
+			if (IsAxisAligned(majorAxisEnd1, majorAxisEnd2) && IsAxisAligned(minorAxisEnd1, minorAxisEnd2))
 			{
-				var rect = RectangleUtilities.ConvertToPositiveRectangle(RectangleUtilities.ComputeBoundingRectangle(majorAxisEnd1, majorAxisEnd2, minorAxisEnd1, minorAxisEnd2));
-				var ellipse = new EllipsePrimitive {TopLeft = rect.Location, BottomRight = rect.Location + rect.Size};
+				var bounds = RectangleUtilities.ConvertToPositiveRectangle(RectangleUtilities.ComputeBoundingRectangle(majorAxisEnd1, majorAxisEnd2, minorAxisEnd1, minorAxisEnd2));
+				var ellipse = new EllipsePrimitive {TopLeft = bounds.Location, BottomRight = bounds.Location + bounds.Size};
 				return editable ? (IGraphic) new BoundableResizeControlGraphic(new BoundableStretchControlGraphic(new MoveControlGraphic(ellipse))) : ellipse;
 			}
 
@@ -393,6 +405,12 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 			{
 				throw new InvalidDataException("The GraphicAnnotationSequenceItem must define either an anchor point or a bounding box.");
 			}
+		}
+
+		private static bool IsAxisAligned(PointF pt1, PointF pt2)
+		{
+			var v = pt2 - new SizeF(pt1);
+			return FloatComparer.AreEqual(0, v.X) || FloatComparer.AreEqual(0, v.Y);
 		}
 
 		#endregion

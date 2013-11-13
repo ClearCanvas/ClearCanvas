@@ -58,11 +58,6 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 			[CloneIgnore]
 			private ICalloutGraphic _calloutGraphic;
 
-			[CloneIgnore]
-			private bool _settingCalloutLocation = false;
-
-			private IAnnotationCalloutLocationStrategy _calloutLocationStrategy;
-
 			public ElementGraphic(IGraphic subjectGraphic)
 				: base(subjectGraphic)
 			{
@@ -74,7 +69,7 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 			/// </summary>
 			/// <param name="source">The source object from which to clone.</param>
 			/// <param name="context">The cloning context object.</param>
-			protected ElementGraphic(ElementGraphic source, ICloningContext context)
+			private ElementGraphic(ElementGraphic source, ICloningContext context)
 				: base(source, context)
 			{
 				context.CloneFields(source, this);
@@ -82,10 +77,6 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 
 			private void Initialize()
 			{
-				if (_calloutLocationStrategy == null)
-					_calloutLocationStrategy = new AnnotationCalloutLocationStrategy();
-				_calloutLocationStrategy.SetAnnotationGraphic(this);
-
 				Subject.VisualStateChanged += OnSubjectVisualStateChanged;
 			}
 
@@ -97,12 +88,6 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 					lock (_syncLock)
 					{
 						_lastChange = null;
-					}
-
-					if (_calloutLocationStrategy != null)
-					{
-						_calloutLocationStrategy.Dispose();
-						_calloutLocationStrategy = null;
 					}
 
 					Subject.VisualStateChanged -= OnSubjectVisualStateChanged;
@@ -128,13 +113,20 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 				{
 					if (_calloutGraphic != value)
 					{
+						PointF? location = null;
 						if (_calloutGraphic != null)
+						{
 							_calloutGraphic.TextLocationChanged -= OnCalloutLocationChanged;
+							location = _calloutGraphic.WithSourceCoordinates(g => g.TextLocation);
+						}
 
 						_calloutGraphic = value;
 
-						if (_calloutGraphic != null)
+						if (location.HasValue && _calloutGraphic != null)
+						{
+							_calloutGraphic.WithSourceCoordinates(g => g.TextLocation = location.Value);
 							_calloutGraphic.TextLocationChanged += OnCalloutLocationChanged;
+						}
 					}
 				}
 			}
@@ -159,7 +151,7 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 				remove { _roiChanged -= value; }
 			}
 
-			protected void OnRoiChanged()
+			private void OnRoiChanged()
 			{
 				EventsHelper.Fire(_roiChanged, this, EventArgs.Empty);
 			}
@@ -167,7 +159,7 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 			public void Refresh()
 			{
 				OnSubjectChanged();
-				this.Draw();
+				Draw();
 			}
 
 			#region ROI Update Handling
@@ -205,7 +197,7 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 				}
 
 				OnRoiChanged();
-				SetCalloutLocation();
+				SetCalloutEndPoint();
 			}
 
 			private void DelayedEventThread(object nothing)
@@ -267,60 +259,27 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 
 			#endregion
 
-			#region Callout Locator Handling
-
-			protected void RecomputeCalloutLine()
-			{
-				this.SetCalloutEndPoint();
-			}
+			#region Callout Location Handling
 
 			private void SetCalloutEndPoint()
 			{
 				// We're attaching the callout to the ROI, so make sure the two
 				// graphics are in the same coordinate system before we do that.
 				// This sets all the graphics coordinate systems to be the same.
-				this.CoordinateSystem = Subject.CoordinateSystem;
 
-				PointF endPoint;
-				CoordinateSystem coordinateSystem;
-				_calloutLocationStrategy.CalculateCalloutEndPoint(out endPoint, out coordinateSystem);
-
-				this.ResetCoordinateSystem();
-
-				Callout.CoordinateSystem = coordinateSystem;
-				Callout.AnchorPoint = endPoint;
-				Callout.ResetCoordinateSystem();
-			}
-
-			private void SetCalloutLocation()
-			{
-				var callout = Callout;
-				if (!(callout is RoiCalloutGraphic)) return;
-
-				this.CoordinateSystem = Subject.CoordinateSystem;
-
-				PointF location;
-				CoordinateSystem coordinateSystem;
-				if (_calloutLocationStrategy.CalculateCalloutLocation(out location, out coordinateSystem))
+				CoordinateSystem = CoordinateSystem;
+				try
 				{
-					_settingCalloutLocation = true;
-
-					callout.CoordinateSystem = coordinateSystem;
-					callout.TextLocation = location;
-					callout.ResetCoordinateSystem();
-
-					_settingCalloutLocation = false;
+					Callout.AnchorPoint = Subject.GetClosestPoint(Callout.TextLocation);
 				}
-
-				this.ResetCoordinateSystem();
-
-				SetCalloutEndPoint();
+				finally
+				{
+					ResetCoordinateSystem();
+				}
 			}
 
 			private void OnCalloutLocationChanged(object sender, EventArgs e)
 			{
-				if (!_settingCalloutLocation)
-					_calloutLocationStrategy.OnCalloutLocationChangedExternally();
 				SetCalloutEndPoint();
 			}
 
