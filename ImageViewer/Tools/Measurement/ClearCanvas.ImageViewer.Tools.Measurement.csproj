@@ -132,10 +132,7 @@
     <Compile Include="PolygonalRoiTool.cs" />
     <Compile Include="EllipticalRoiTool.cs" />
     <Compile Include="PolygonalRoiCalloutLocationStrategy.cs" />
-    <Compile Include="ProtractorAnalyzers.cs" />
-    <Compile Include="ProtractorGraphic.cs" />
     <Compile Include="ProtractorRoiCalloutLocationStrategy.cs" />
-    <Compile Include="ProtractorRoiInfo.cs" />
     <Compile Include="ProtractorTool.cs" />
     <Compile Include="RulerCalloutLocationStrategy.cs" />
     <Compile Include="RulerTool.cs" />
@@ -155,7 +152,6 @@
       <DependentUpon>SR.resx</DependentUpon>
     </Compile>
     <Compile Include="Tests\CalibrationTest.cs" />
-    <Compile Include="Tests\ProtractorRoiTests.cs" />
     <Compile Include="Tests\ShowAnglesToolTest.cs" />
     <EmbeddedResource Include="SR.resx">
       <SubType>Designer</SubType>

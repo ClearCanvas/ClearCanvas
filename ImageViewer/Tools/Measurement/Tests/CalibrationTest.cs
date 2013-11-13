@@ -31,18 +31,15 @@ using System.Diagnostics;
 using System.Drawing;
 using ClearCanvas.ImageViewer.Graphics;
 using ClearCanvas.ImageViewer.InteractiveGraphics;
+using ClearCanvas.ImageViewer.RoiGraphics.Tests;
 using ClearCanvas.ImageViewer.StudyManagement;
 using NUnit.Framework;
 
 namespace ClearCanvas.ImageViewer.Tools.Measurement.Tests
 {
 	[TestFixture]
-	public class CalibrationTest
+	public class CalibrationTest : RoiTestBase
 	{
-		public CalibrationTest()
-		{
-		}
-
 		[Test]
 		public void TestCalibrationIsotropicPixels()
 		{
@@ -81,7 +78,7 @@ namespace ClearCanvas.ImageViewer.Tools.Measurement.Tests
 		public void TestCalibrationAnisotropicPixels3To4()
 		{
 			// shouldn't actually matter whether or not the image was already calibrated
-			foreach (bool uncalibrated in new[] { true, false })
+			foreach (bool uncalibrated in new[] {true, false})
 			{
 				// calibrates a horizontal line
 				TestCalibration("3:4", uncalibrated, new PointF(50, 336), new PointF(75, 336), 10, 0.3, 0.4);
@@ -96,7 +93,7 @@ namespace ClearCanvas.ImageViewer.Tools.Measurement.Tests
 
 		private static void TestCalibration(string pixelShape, bool uncalibrated, PointF pt1, PointF pt2, double calibrationValue, double expectedRowSpacing, double expectedColSpacing)
 		{
-			using (IPresentationImage image = ProtractorRoiTests.GetCalibrationTestImage(pixelShape, uncalibrated))
+			using (IPresentationImage image = GetCalibrationTestImage(pixelShape, uncalibrated))
 			{
 				Trace.WriteLine(string.Format("TEST {0} image with {1} pixels", uncalibrated ? "uncalibrated" : "calibrated", pixelShape));
 				Trace.WriteLine(string.Format("calibrating [{0}, {1}] to {2} mm", pt1, pt2, calibrationValue));
@@ -114,12 +111,12 @@ namespace ClearCanvas.ImageViewer.Tools.Measurement.Tests
 				IImageSopProvider imageSopProvider = (IImageSopProvider) image;
 
 				Trace.WriteLine(string.Format("Pixel Spacing (Actual)/(Expected): ({0:F4}:{1:F4})/({2:F4}:{3:F4})",
-					imageSopProvider.Frame.NormalizedPixelSpacing.Row, imageSopProvider.Frame.NormalizedPixelSpacing.Column,
-					expectedRowSpacing, expectedColSpacing));
+				                              imageSopProvider.Frame.NormalizedPixelSpacing.Row, imageSopProvider.Frame.NormalizedPixelSpacing.Column,
+				                              expectedRowSpacing, expectedColSpacing));
 
-				float percentErrorRow = Math.Abs((float)((imageSopProvider.Frame.NormalizedPixelSpacing.Row - expectedRowSpacing) / expectedRowSpacing * 100F));
-				float percentErrorCol = Math.Abs((float)((imageSopProvider.Frame.NormalizedPixelSpacing.Column - expectedColSpacing) / expectedColSpacing * 100F));
-				
+				float percentErrorRow = Math.Abs((float) ((imageSopProvider.Frame.NormalizedPixelSpacing.Row - expectedRowSpacing)/expectedRowSpacing*100F));
+				float percentErrorCol = Math.Abs((float) ((imageSopProvider.Frame.NormalizedPixelSpacing.Column - expectedColSpacing)/expectedColSpacing*100F));
+
 				Trace.WriteLine(String.Format("Percent Error (Row/Column): {0:F3}%/{1:F3}%", percentErrorRow, percentErrorCol));
 
 				Assert.AreEqual(expectedColSpacing, imageSopProvider.Frame.NormalizedPixelSpacing.Column, 0.005, "Column Spacing appears to be wrong");
@@ -153,7 +150,7 @@ namespace ClearCanvas.ImageViewer.Tools.Measurement.Tests
 				out pixelSpacingHeight);
 
 			Assert.AreEqual(1, pixelSpacingWidth, 1e-10);
-            Assert.AreEqual(2, pixelSpacingHeight, 1e-10);
+			Assert.AreEqual(2, pixelSpacingHeight, 1e-10);
 		}
 
 		[Test]
@@ -165,10 +162,10 @@ namespace ClearCanvas.ImageViewer.Tools.Measurement.Tests
 			double pixelSpacingWidth, pixelSpacingHeight;
 
 			double testPixelSpacingWidth = 1;
-			double testPixelSpacingHeight = testPixelSpacingWidth * pixelAspectRatio;
-			double testWidthInMm = testPixelSpacingWidth * widthInPixels;
-			double testHeightInMm = testPixelSpacingHeight * heightInPixels;
-			double lengthInMm = Math.Sqrt(testWidthInMm * testWidthInMm + testHeightInMm * testHeightInMm);
+			double testPixelSpacingHeight = testPixelSpacingWidth*pixelAspectRatio;
+			double testWidthInMm = testPixelSpacingWidth*widthInPixels;
+			double testHeightInMm = testPixelSpacingHeight*heightInPixels;
+			double lengthInMm = Math.Sqrt(testWidthInMm*testWidthInMm + testHeightInMm*testHeightInMm);
 
 			CalibrationTool.CalculatePixelSpacing(
 				lengthInMm,
@@ -178,8 +175,33 @@ namespace ClearCanvas.ImageViewer.Tools.Measurement.Tests
 				out pixelSpacingWidth,
 				out pixelSpacingHeight);
 
-            Assert.AreEqual(1, pixelSpacingWidth, 1e-10);
-            Assert.AreEqual(1, pixelSpacingHeight, 1e-10);
+			Assert.AreEqual(1, pixelSpacingWidth, 1e-10);
+			Assert.AreEqual(1, pixelSpacingHeight, 1e-10);
+		}
+
+		/// <summary>
+		/// Gets a test image for use in <see cref="CalibrationTest"/>.
+		/// </summary>
+		/// <param name="pixelShape">Available pixel shapes are ISO, 4:3 and 3:4</param>
+		/// <param name="uncalibrated">Whether or not the image should specify Pixel Spacing already.</param>
+		internal static IPresentationImage GetCalibrationTestImage(string pixelShape, bool uncalibrated)
+		{
+			ImageKey imageKey;
+			switch (pixelShape.ToLowerInvariant())
+			{
+				case "iso":
+					imageKey = uncalibrated ? ImageKey.Aspect01 : ImageKey.Aspect03;
+					break;
+				case "4:3":
+					imageKey = uncalibrated ? ImageKey.Aspect06 : ImageKey.Aspect07;
+					break;
+				case "3:4":
+					imageKey = uncalibrated ? ImageKey.Aspect10 : ImageKey.Aspect11;
+					break;
+				default:
+					throw new ArgumentException("Unsupported pixel shape");
+			}
+			return GetImage(imageKey);
 		}
 	}
 }

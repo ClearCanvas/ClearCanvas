@@ -771,4 +771,7 @@ Alternately, the study can be brought back online by a PACS administrator.</valu
   <data name="MessageVolumeSourceInconsistentImageLaterality" xml:space="preserve">
     <value>Each frame in the source dataset must be of the same anatomical laterality.</value>
   </data>
+  <data name="FormatAngleDegrees" xml:space="preserve">
+    <value>{0:F1}°</value>
+  </data>
 </root>

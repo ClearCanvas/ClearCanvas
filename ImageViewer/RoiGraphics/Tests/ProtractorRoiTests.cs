@@ -30,19 +30,15 @@ using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
 using System.Globalization;
 using System.Text.RegularExpressions;
-using System.Threading;
-using ClearCanvas.Dicom;
 using ClearCanvas.ImageViewer.Graphics;
-using ClearCanvas.ImageViewer.RoiGraphics;
 using ClearCanvas.ImageViewer.RoiGraphics.Analyzers;
-using ClearCanvas.ImageViewer.RoiGraphics.Tests;
 using ClearCanvas.ImageViewer.StudyManagement;
 using NUnit.Framework;
-using System.Drawing.Imaging;
 
-namespace ClearCanvas.ImageViewer.Tools.Measurement.Tests
+namespace ClearCanvas.ImageViewer.RoiGraphics.Tests
 {
 	[TestFixture]
 	public class ProtractorRoiTests : RoiTestBase<ProtractorRoiTests.Angle>
@@ -54,33 +50,33 @@ namespace ClearCanvas.ImageViewer.Tools.Measurement.Tests
 		{
 			RunAngleTest(ImageKey.Aspect01, 60, "standard-60",
 			             new Angle(new PointF(125, 52), new PointF(25, 225), new PointF(225, 225)),
-						 new Angle(new PointF(225, 225), new PointF(25, 225), new PointF(125, 52)),
-						 new Angle(new PointF(84, 125), new PointF(25, 225), new PointF(225, 225)));
+			             new Angle(new PointF(225, 225), new PointF(25, 225), new PointF(125, 52)),
+			             new Angle(new PointF(84, 125), new PointF(25, 225), new PointF(225, 225)));
 			RunAngleTest(ImageKey.Aspect01, 120, "standard-120",
-						 new Angle(new PointF(125, 52), new PointF(125, 167.33f), new PointF(225, 225)),
-						 new Angle(new PointF(225, 225), new PointF(125, 167.33f), new PointF(25, 225)),
-						 new Angle(new PointF(125, 52), new PointF(125, 167.33f), new PointF(25, 225)));
+			             new Angle(new PointF(125, 52), new PointF(125, 167.33f), new PointF(225, 225)),
+			             new Angle(new PointF(225, 225), new PointF(125, 167.33f), new PointF(25, 225)),
+			             new Angle(new PointF(125, 52), new PointF(125, 167.33f), new PointF(25, 225)));
 			RunAngleTest(ImageKey.Aspect01, 30, "standard-30",
-						 new Angle(new PointF(125, 167.33f), new PointF(125, 52), new PointF(225, 225)),
-						 new Angle(new PointF(125, 167.33f), new PointF(225, 225), new PointF(25, 225)),
-						 new Angle(new PointF(125, 167.33f), new PointF(125, 52), new PointF(25, 225)));
+			             new Angle(new PointF(125, 167.33f), new PointF(125, 52), new PointF(225, 225)),
+			             new Angle(new PointF(125, 167.33f), new PointF(225, 225), new PointF(25, 225)),
+			             new Angle(new PointF(125, 167.33f), new PointF(125, 52), new PointF(25, 225)));
 			RunAngleTest(ImageKey.Simple01, 90, "standard-90",
-						 new Angle(new PointF(77, 79), new PointF(77, 179), new PointF(177, 179)),
-						 new Angle(new PointF(77, 130), new PointF(77, 179), new PointF(130, 179)),
-						 new Angle(new PointF(77, 179), new PointF(177, 179), new PointF(177, 79)),
-						 new Angle(new PointF(177, 79), new PointF(177, 179), new PointF(77, 179)));
+			             new Angle(new PointF(77, 79), new PointF(77, 179), new PointF(177, 179)),
+			             new Angle(new PointF(77, 130), new PointF(77, 179), new PointF(130, 179)),
+			             new Angle(new PointF(77, 179), new PointF(177, 179), new PointF(177, 79)),
+			             new Angle(new PointF(177, 79), new PointF(177, 179), new PointF(77, 179)));
 			RunAngleTest(ImageKey.Simple01, 45, "standard-45",
-						 new Angle(new PointF(177, 79), new PointF(77, 179), new PointF(177, 179)),
-						 new Angle(new PointF(177, 79), new PointF(77, 179), new PointF(77, 79)));
+			             new Angle(new PointF(177, 79), new PointF(77, 179), new PointF(177, 179)),
+			             new Angle(new PointF(177, 79), new PointF(77, 179), new PointF(77, 79)));
 			RunAngleTest(ImageKey.Complex10, 32.9f, "standard-33",
-						 new Angle(new PointF(125, 50), new PointF(50, 225), new PointF(125, 175)),
-						 new Angle(new PointF(125, 175), new PointF(200, 225), new PointF(125, 50)));
+			             new Angle(new PointF(125, 50), new PointF(50, 225), new PointF(125, 175)),
+			             new Angle(new PointF(125, 175), new PointF(200, 225), new PointF(125, 50)));
 			RunAngleTest(ImageKey.Complex10, 46.7f, "standard-47",
-						 new Angle(new PointF(50, 225), new PointF(125, 50), new PointF(200, 225)),
-						 new Angle(new PointF(200, 225), new PointF(125, 50), new PointF(50, 225)));
+			             new Angle(new PointF(50, 225), new PointF(125, 50), new PointF(200, 225)),
+			             new Angle(new PointF(200, 225), new PointF(125, 50), new PointF(50, 225)));
 			RunAngleTest(ImageKey.Complex10, 112.6f, "standard-113",
-						 new Angle(new PointF(50, 225), new PointF(125, 175), new PointF(200, 225)),
-						 new Angle(new PointF(200, 225), new PointF(125, 175), new PointF(50, 225)));
+			             new Angle(new PointF(50, 225), new PointF(125, 175), new PointF(200, 225)),
+			             new Angle(new PointF(200, 225), new PointF(125, 175), new PointF(50, 225)));
 		}
 
 		[Test(Description = "Control test for measuring angles on images with isotropic pixels")]
@@ -90,9 +86,9 @@ namespace ClearCanvas.ImageViewer.Tools.Measurement.Tests
 			foreach (ImageKey image in new ImageKey[] {ImageKey.Aspect01, ImageKey.Aspect02, ImageKey.Aspect03, ImageKey.Aspect04})
 			{
 				RunAngleTest(image, 60, "iso",
-							 new Angle(corners[0], corners[1], corners[2]),
-							 new Angle(corners[1], corners[2], corners[0]),
-							 new Angle(corners[2], corners[0], corners[1]));
+				             new Angle(corners[0], corners[1], corners[2]),
+				             new Angle(corners[1], corners[2], corners[0]),
+				             new Angle(corners[2], corners[0], corners[1]));
 			}
 		}
 
@@ -103,9 +99,9 @@ namespace ClearCanvas.ImageViewer.Tools.Measurement.Tests
 			foreach (ImageKey image in new ImageKey[] {ImageKey.Aspect06, ImageKey.Aspect07, ImageKey.Aspect08})
 			{
 				RunAngleTest(image, 60, "aniso43",
-							 new Angle(corners[0], corners[1], corners[2]),
-							 new Angle(corners[1], corners[2], corners[0]),
-							 new Angle(corners[2], corners[0], corners[1]));
+				             new Angle(corners[0], corners[1], corners[2]),
+				             new Angle(corners[1], corners[2], corners[0]),
+				             new Angle(corners[2], corners[0], corners[1]));
 			}
 		}
 
@@ -124,7 +120,7 @@ namespace ClearCanvas.ImageViewer.Tools.Measurement.Tests
 
 		protected void RunAngleTest(ImageKey key, float expectedAngle, string dumpFilename, params Angle[] shapes)
 		{
-			ProtractorAngleCalculator analyzer = new ProtractorAngleCalculator();
+			ProtractorAnalyzer analyzer = new ProtractorAnalyzer();
 			Trace.WriteLine(string.Format("Using {0} for test case {1}", key, dumpFilename), "UNIT_TESTS");
 			using (IPresentationImage image = GetImage(key))
 			{
@@ -178,7 +174,7 @@ namespace ClearCanvas.ImageViewer.Tools.Measurement.Tests
 
 		protected override Roi CreateRoiFromImage(IPresentationImage image, Angle shapeData)
 		{
-			return new ProtractorRoiInfo(shapeData.Value1, shapeData.Value2, shapeData.Value3, image);
+			return new ProtractorRoi(shapeData.Value1, shapeData.Value2, shapeData.Value3, image);
 		}
 
 		protected override Angle CreateCoreSampleShape(PointF location, int imageRows, int imageCols)
@@ -191,38 +187,13 @@ namespace ClearCanvas.ImageViewer.Tools.Measurement.Tests
 			throw new IgnoreException("This class of ROI tests does not apply to the protractor angle shape.");
 		}
 
-		/// <summary>
-		/// Gets a test image for use in <see cref="CalibrationTest"/>.
-		/// </summary>
-		/// <param name="pixelShape">Available pixel shapes are ISO, 4:3 and 3:4</param>
-		/// <param name="uncalibrated">Whether or not the image should specify Pixel Spacing already.</param>
-		internal static IPresentationImage GetCalibrationTestImage(string pixelShape, bool uncalibrated)
-		{
-			ImageKey imageKey;
-			switch (pixelShape.ToLowerInvariant())
-			{
-				case "iso":
-					imageKey = uncalibrated ? ImageKey.Aspect01 : ImageKey.Aspect03;
-					break;
-				case "4:3":
-					imageKey = uncalibrated ? ImageKey.Aspect06 : ImageKey.Aspect07;
-					break;
-				case "3:4":
-					imageKey = uncalibrated ? ImageKey.Aspect10 : ImageKey.Aspect11;
-					break;
-				default:
-					throw new ArgumentException("Unsupported pixel shape");
-			}
-			return GetImage(imageKey);
-		}
-
 		protected static readonly Regex RegexAngleMeasurement;
 
 		static ProtractorRoiTests()
 		{
 			// this converts arg0 of the angle degrees measurement format string into a general floating point number regex
 			string parsePattern = Regex.Replace(
-				SR.ToolsMeasurementFormatDegrees,
+				SR.FormatAngleDegrees,
 				@"(.*?)([{]0(?:[:].+)?[}])(.*)",
 				m => Regex.Escape(m.Groups[1].Value) + @"([+-]?\d+(?:[.]\d*)?(?:[Ee][+-]?\d+)?)" + Regex.Escape(m.Groups[3].Value));
 			RegexAngleMeasurement = new Regex(parsePattern, RegexOptions.Compiled | RegexOptions.CultureInvariant);

@@ -186,6 +186,7 @@
     <Compile Include="Graphics3D\VectorGraphic3D.cs" />
     <Compile Include="Graphics3D\VisualStateChanged3DEventArgs.cs" />
     <Compile Include="Graphics\GraphicMethods.cs" />
+    <Compile Include="Graphics\ProtractorGraphic.cs" />
     <Compile Include="Graphics\Tests\ImageGraphicTests.cs" />
     <Compile Include="Imaging\ILutPipelineProvider.cs" />
     <Compile Include="Imaging\MinMaxPixelLinearLut.cs" />
@@ -250,7 +251,10 @@
     <Compile Include="Rendering\GDI\IGdiBuffer.cs" />
     <Compile Include="Rendering\RendererBase2.cs" />
     <Compile Include="Rendering\RenderingSurfaceBase.cs" />
+    <Compile Include="RoiGraphics\Analyzers\ProtractorAnalyzers.cs" />
     <Compile Include="RoiGraphics\IRoiGraphic.cs" />
+    <Compile Include="RoiGraphics\ProtractorRoi.cs" />
+    <Compile Include="RoiGraphics\Tests\ProtractorRoiTests.cs" />
     <Compile Include="Services\LocalServiceProcess.cs" />
     <Compile Include="Services\ServiceControlSettings.cs" />
     <Compile Include="Services\ServiceControlSettings.Designer.cs">

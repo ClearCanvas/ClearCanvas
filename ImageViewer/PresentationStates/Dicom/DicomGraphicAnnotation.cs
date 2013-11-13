@@ -188,10 +188,9 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 		/// </summary>
 		protected virtual void OnInteractiveChanged()
 		{
-			foreach (var graphic in Graphics)
+			foreach (var graphic in Graphics.OfType<SubjectGraphic>())
 			{
-				if (graphic is SubjectGraphic)
-					((SubjectGraphic) graphic).SetEnabled(Interactive);
+				graphic.SetEnabled(Interactive);
 			}
 		}
 
@@ -214,7 +213,7 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 
 		public virtual ActionModelNode GetContextMenuModel(IMouseInformation mouseInformation)
 		{
-			const string actionSite = "basicgraphic-menu";
+			const string actionSite = "dicomgraphic-menu";
 			var actions = GetExportedActions(actionSite, mouseInformation);
 			if (actions == null || actions.Count == 0)
 				return null;
@@ -257,35 +256,40 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 			{
 				case GraphicAnnotationSequenceItem.GraphicType.Interpolated:
 					Platform.CheckTrue(points.Count >= 2, "Graphic Type INTERPOLATED requires at least 2 coordinates");
-					return CreateInterpolated(points, editable);
+					return editable ? CreateInteractiveInterpolated(points) : CreateInterpolated(points);
 				case GraphicAnnotationSequenceItem.GraphicType.Polyline:
 					Platform.CheckTrue(points.Count >= 2, "Graphic Type POLYLINE requires at least 2 coordinates");
-					return CreatePolyline(points, editable);
+					return editable ? CreateInteractivePolyline(points) : CreatePolyline(points);
 				case GraphicAnnotationSequenceItem.GraphicType.Point:
 					Platform.CheckTrue(points.Count >= 1, "Graphic Type POINT requires 1 coordinate");
-					return CreatePoint(points[0], editable);
+					return editable ? CreateInteractivePoint(points[0]) : CreatePoint(points[0]);
 				case GraphicAnnotationSequenceItem.GraphicType.Circle:
 					Platform.CheckTrue(points.Count >= 2, "Graphic Type CIRCLE requires 2 coordinates");
-					return CreateCircle(points[0], (float) Vector.Distance(points[0], points[1]), editable);
+					return editable ? CreateInteractiveCircle(points[0], (float) Vector.Distance(points[0], points[1])) : CreateCircle(points[0], (float) Vector.Distance(points[0], points[1]));
 				case GraphicAnnotationSequenceItem.GraphicType.Ellipse:
 					Platform.CheckTrue(points.Count >= 4, "Graphic Type INTERPOLATED requires 4 coordinates");
-					return CreateEllipse(points[0], points[1], points[2], points[3], editable);
+					return editable ? CreateInteractiveEllipse(points[0], points[1], points[2], points[3]) : CreateEllipse(points[0], points[1], points[2], points[3]);
 				default:
 					Platform.Log(LogLevel.Debug, "Unrecognized Graphic Type");
 					return null;
 			}
 		}
 
-		private static IGraphic CreateInterpolated(IList<PointF> dataPoints, bool editable = false)
+		private static IGraphic CreateInteractiveInterpolated(IList<PointF> dataPoints)
 		{
 			var closed = FloatComparer.AreEqual(dataPoints[0], dataPoints[dataPoints.Count - 1]);
-			var curve = new SplinePrimitive();
-			curve.Points.AddRange(dataPoints);
-			if (!editable) return curve;
+			var curve = CreateInterpolated(dataPoints);
 			return closed ? new PolygonControlGraphic(true, new MoveControlGraphic(curve)) : new VerticesControlGraphic(true, new MoveControlGraphic(curve));
 		}
 
-		private static IGraphic CreatePolyline(IList<PointF> vertices, bool editable = false)
+		private static IGraphic CreateInterpolated(IList<PointF> dataPoints)
+		{
+			var curve = new SplinePrimitive();
+			curve.Points.AddRange(dataPoints);
+			return curve;
+		}
+
+		private static IGraphic CreateInteractivePolyline(IList<PointF> vertices)
 		{
 			var closed = FloatComparer.AreEqual(vertices[0], vertices[vertices.Count - 1]);
 
@@ -294,56 +298,81 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 			{
 				var bounds = RectangleUtilities.ConvertToPositiveRectangle(RectangleUtilities.ComputeBoundingRectangle(vertices[0], vertices[1], vertices[2], vertices[3]));
 				var rectangle = new RectanglePrimitive {TopLeft = bounds.Location, BottomRight = bounds.Location + bounds.Size};
-				return editable ? (IGraphic) new BoundableResizeControlGraphic(new BoundableStretchControlGraphic(new MoveControlGraphic(rectangle))) : rectangle;
+				return new BoundableResizeControlGraphic(new BoundableStretchControlGraphic(new MoveControlGraphic(rectangle)));
+			}
+			else if (!closed && vertices.Count == 3)
+			{
+				var protractor = new ProtractorGraphic {Points = {vertices[0], vertices[1], vertices[2]}};
+				return new VerticesControlGraphic(new MoveControlGraphic(protractor));
 			}
 			else if (!closed && vertices.Count == 2)
 			{
 				var line = new PolylineGraphic {Points = {vertices[0], vertices[1]}};
-				return editable ? (IGraphic) new VerticesControlGraphic(new MoveControlGraphic(line)) : line;
+				return new VerticesControlGraphic(new MoveControlGraphic(line));
 			}
 
 			var polyline = new PolylineGraphic(closed);
 			polyline.Points.AddRange(vertices);
-			if (!editable) return polyline;
 			return closed ? new PolygonControlGraphic(true, new MoveControlGraphic(polyline)) : new VerticesControlGraphic(true, new MoveControlGraphic(polyline));
 		}
 
-		private static IGraphic CreateCircle(PointF center, float radius, bool editable = false)
+		private static IGraphic CreatePolyline(IList<PointF> vertices)
+		{
+			var closed = FloatComparer.AreEqual(vertices[0], vertices[vertices.Count - 1]);
+			var polyline = new PolylineGraphic(closed);
+			polyline.Points.AddRange(vertices);
+			return polyline;
+		}
+
+		private static IGraphic CreateInteractiveCircle(PointF center, float radius)
+		{
+			return new BoundableResizeControlGraphic(new BoundableStretchControlGraphic(new MoveControlGraphic(CreateCircle(center, radius))));
+		}
+
+		private static IGraphic CreateCircle(PointF center, float radius)
 		{
 			var circle = new EllipsePrimitive();
 			var radial = new SizeF(radius, radius);
 			circle.TopLeft = center - radial;
 			circle.BottomRight = center + radial;
-			return editable ? (IGraphic) new BoundableResizeControlGraphic(new BoundableStretchControlGraphic(new MoveControlGraphic(circle))) : circle;
+			return circle;
 		}
 
-		private static IGraphic CreatePoint(PointF location, bool editable = false)
+		private static IGraphic CreateInteractivePoint(PointF location)
+		{
+			return new MoveControlGraphic(CreatePoint(location));
+		}
+
+		private static IGraphic CreatePoint(PointF location)
 		{
 			const float radius = 4;
-
 			var point = new InvariantEllipsePrimitive();
 			point.Location = location;
 			point.InvariantTopLeft = new PointF(-radius, -radius);
 			point.InvariantBottomRight = new PointF(radius, radius);
-			return editable ? (IGraphic) new MoveControlGraphic(point) : point;
+			return point;
 		}
 
-		private static IGraphic CreateEllipse(PointF majorAxisEnd1, PointF majorAxisEnd2, PointF minorAxisEnd1, PointF minorAxisEnd2, bool editable = false)
+		private static IGraphic CreateInteractiveEllipse(PointF majorAxisEnd1, PointF majorAxisEnd2, PointF minorAxisEnd1, PointF minorAxisEnd2)
 		{
-			// use a standard ellipse primitive if the axes defines an axis-aligned ellipse
 			if (IsAxisAligned(majorAxisEnd1, majorAxisEnd2) && IsAxisAligned(minorAxisEnd1, minorAxisEnd2))
 			{
+				// use a standard ellipse primitive if the axes defines an axis-aligned ellipse
 				var bounds = RectangleUtilities.ConvertToPositiveRectangle(RectangleUtilities.ComputeBoundingRectangle(majorAxisEnd1, majorAxisEnd2, minorAxisEnd1, minorAxisEnd2));
 				var ellipse = new EllipsePrimitive {TopLeft = bounds.Location, BottomRight = bounds.Location + bounds.Size};
-				return editable ? (IGraphic) new BoundableResizeControlGraphic(new BoundableStretchControlGraphic(new MoveControlGraphic(ellipse))) : ellipse;
+				return new BoundableResizeControlGraphic(new BoundableStretchControlGraphic(new MoveControlGraphic(ellipse)));
 			}
+			return new MoveControlGraphic(CreateEllipse(majorAxisEnd1, majorAxisEnd2, minorAxisEnd1, minorAxisEnd2));
+		}
 
+		private static IGraphic CreateEllipse(PointF majorAxisEnd1, PointF majorAxisEnd2, PointF minorAxisEnd1, PointF minorAxisEnd2)
+		{
 			var dicomEllipseGraphic = new DicomEllipseGraphic();
 			dicomEllipseGraphic.MajorAxisPoint1 = majorAxisEnd1;
 			dicomEllipseGraphic.MajorAxisPoint2 = majorAxisEnd2;
 			dicomEllipseGraphic.MinorAxisPoint1 = minorAxisEnd1;
 			dicomEllipseGraphic.MinorAxisPoint2 = minorAxisEnd2;
-			return editable ? (IGraphic) (new MoveControlGraphic(dicomEllipseGraphic)) : dicomEllipseGraphic;
+			return dicomEllipseGraphic;
 		}
 
 		private static IGraphic CreateCalloutText(RectangleF annotationBounds, RectangleF displayedArea, GraphicAnnotationSequenceItem.TextObjectSequenceItem textItem)

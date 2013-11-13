@@ -25,15 +25,14 @@
 using System.Collections.Generic;
 using System.Drawing;
 using ClearCanvas.ImageViewer.Graphics;
-using ClearCanvas.ImageViewer.RoiGraphics;
 
-namespace ClearCanvas.ImageViewer.Tools.Measurement
+namespace ClearCanvas.ImageViewer.RoiGraphics
 {
-	public class ProtractorRoiInfo : Roi
+	public class ProtractorRoi : Roi
 	{
-		private List<PointF> _points;
+		private readonly List<PointF> _points;
 
-		internal ProtractorRoiInfo(ProtractorGraphic protractor) : base(protractor.ParentPresentationImage)
+		public ProtractorRoi(ProtractorGraphic protractor) : base(protractor.ParentPresentationImage)
 		{
 			_points = new List<PointF>();
 
@@ -49,7 +48,7 @@ namespace ClearCanvas.ImageViewer.Tools.Measurement
 			}
 		}
 
-		internal ProtractorRoiInfo(PointF point1, PointF vertex, PointF point2, IPresentationImage presentationImage)
+		public ProtractorRoi(PointF point1, PointF vertex, PointF point2, IPresentationImage presentationImage)
 			: base(presentationImage)
 		{
 			_points = new List<PointF>();
@@ -73,7 +72,7 @@ namespace ClearCanvas.ImageViewer.Tools.Measurement
 
 		public override Roi CopyTo(IPresentationImage presentationImage)
 		{
-			return new ProtractorRoiInfo(_points[0], _points[1], _points[2], presentationImage);
+			return new ProtractorRoi(_points[0], _points[1], _points[2], presentationImage);
 		}
 
 		public override bool Contains(PointF point)
