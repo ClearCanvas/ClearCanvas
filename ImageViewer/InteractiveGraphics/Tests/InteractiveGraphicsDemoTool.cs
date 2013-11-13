@@ -26,17 +26,21 @@
 
 using System.Drawing;
 using ClearCanvas.Common;
+using ClearCanvas.Common.Utilities;
 using ClearCanvas.Desktop.Actions;
+using ClearCanvas.Dicom.Iod.Sequences;
 using ClearCanvas.ImageViewer.BaseTools;
 using ClearCanvas.ImageViewer.Graphics;
+using ClearCanvas.ImageViewer.PresentationStates.Dicom;
 
 namespace ClearCanvas.ImageViewer.InteractiveGraphics.Tests
 {
-	[MenuAction("ellipse", "global-menus/MenuDebug/Ellipse", "DrawEllipse")]
-	[MenuAction("rectangle", "global-menus/MenuDebug/Rectangle", "DrawRectangle")]
-	[MenuAction("polyline", "global-menus/MenuDebug/Polyline", "DrawPolyline")]
-	[MenuAction("spline", "global-menus/MenuDebug/Spline", "DrawSpline")]
-	[MenuAction("toggleEnabled", "global-menus/MenuDebug/Enabled", "ToggleEnabled")]
+	[MenuAction("ellipse", "global-menus/&Debug/Draw Ellipse", "DrawEllipse")]
+	[MenuAction("rectangle", "global-menus/&Debug/Draw Rectangle", "DrawRectangle")]
+	[MenuAction("polyline", "global-menus/&Debug/Draw Polyline", "DrawPolyline")]
+	[MenuAction("spline", "global-menus/&Debug/Draw Spline", "DrawSpline")]
+	[MenuAction("toggleEnabled", "global-menus/&Debug/Enabled", "ToggleEnabled")]
+	//
 	[ExtensionOf(typeof (ImageViewerToolExtensionPoint))]
 	internal class InteractiveGraphicsDemoTool : ImageViewerTool
 	{
@@ -93,9 +97,29 @@ namespace ClearCanvas.ImageViewer.InteractiveGraphics.Tests
 			}
 		}
 
+		[Cloneable]
+		[DicomSerializableGraphicAnnotation(typeof (XStatefulGraphicSerializer))]
 		private class XStatefulGraphic : StandardStatefulGraphic
 		{
 			public XStatefulGraphic(IGraphic subject) : base(subject) {}
+
+			/// <summary>
+			/// Cloning constructor.
+			/// </summary>
+			/// <param name="source">The source object from which to clone.</param>
+			/// <param name="context">The cloning context object.</param>
+			protected XStatefulGraphic(XStatefulGraphic source, ICloningContext context) : base(source, context)
+			{
+				context.CloneFields(source, this);
+			}
+		}
+
+		private class XStatefulGraphicSerializer : GraphicAnnotationSerializer<XStatefulGraphic>
+		{
+			protected override void Serialize(XStatefulGraphic graphic, GraphicAnnotationSequenceItem serializationState)
+			{
+				SerializeGraphic(graphic.Subject, serializationState);
+			}
 		}
 	}
 }
