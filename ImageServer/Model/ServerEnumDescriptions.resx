@@ -664,10 +664,10 @@
     <value>A rule to specify the Authority Groups that have access to a study</value>
   </data>
   <data name="ServerRuleTypeEnum_StudyQualityControl_Description" xml:space="preserve">
-    <value>StudyQualityControl</value>
+    <value>Study Quality Control</value>
   </data>
   <data name="ServerRuleTypeEnum_StudyQualityControl_LongDescription" xml:space="preserve">
-    <value>StudyQualityControl</value>
+    <value>A rule that checks if the study meets certain requirements and generates a report.</value>
   </data>
   <data name="ServerRuleApplyTimeEnum_SopReceived_Description" xml:space="preserve">
     <value>SOP Received</value>
