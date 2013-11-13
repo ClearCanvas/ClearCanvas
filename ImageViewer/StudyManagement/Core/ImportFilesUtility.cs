@@ -466,7 +466,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement.Core
             return result;
         }
 
-        private void InsertFailedWorkItemUid(WorkItem workItem, DicomMessageBase message, DicomProcessingResult result, int tryCount = 1)
+	    public void InsertFailedWorkItemUid(WorkItem workItem, DicomMessageBase message, DicomProcessingResult result, int tryCount = 1)
         {
             if (tryCount < 0)
                 tryCount = 1;

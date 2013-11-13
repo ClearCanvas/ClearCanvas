@@ -46,6 +46,39 @@ namespace ClearCanvas.ImageViewer.Shreds.DicomServer
 			: base(GetSupportedSops())
 		{}
 
+		public override bool ReceiveMessageAsFileStream(Dicom.Network.DicomServer server, ServerAssociationParameters association, byte presentationId,
+									   DicomMessage message)
+		{
+			var sopClassUid = message.AffectedSopClassUid;
+
+			if (sopClassUid.Equals(SopClass.BreastTomosynthesisImageStorageUid)
+				|| sopClassUid.Equals(SopClass.EnhancedCtImageStorageUid)
+				|| sopClassUid.Equals(SopClass.EnhancedMrColorImageStorageUid)
+				|| sopClassUid.Equals(SopClass.EnhancedMrImageStorageUid)
+				|| sopClassUid.Equals(SopClass.EnhancedPetImageStorageUid)
+				|| sopClassUid.Equals(SopClass.EnhancedUsVolumeStorageUid)
+				|| sopClassUid.Equals(SopClass.EnhancedXaImageStorageUid)
+				|| sopClassUid.Equals(SopClass.EnhancedXrfImageStorageUid)
+				|| sopClassUid.Equals(SopClass.UltrasoundMultiFrameImageStorageUid)
+				|| sopClassUid.Equals(SopClass.MultiFrameGrayscaleByteSecondaryCaptureImageStorageUid)
+				|| sopClassUid.Equals(SopClass.MultiFrameGrayscaleWordSecondaryCaptureImageStorageUid)
+				|| sopClassUid.Equals(SopClass.MultiFrameSingleBitSecondaryCaptureImageStorageUid)
+				|| sopClassUid.Equals(SopClass.MultiFrameTrueColorSecondaryCaptureImageStorageUid))
+			{
+				server.DimseDatasetStopTag = DicomTagDictionary.GetDicomTag(DicomTags.ReconstructionIndex); // Random tag at the end of group 20
+				server.StreamMessage = true;
+				return true;
+			}
+
+			return false;
+		}
+
+		public override IDicomFilestreamHandler OnStartFilestream(Dicom.Network.DicomServer server, ServerAssociationParameters association,
+															  byte presentationId, DicomMessage message)
+		{
+			return new StorageFilestreamHandler(Context, association);
+		}
+
 		private static IEnumerable<SupportedSop> GetSupportedSops()
 		{
             var extendedConfiguration = LocalDicomServer.GetExtendedConfiguration();
