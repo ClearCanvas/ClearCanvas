@@ -6,12 +6,12 @@ using System.Web;
 namespace ClearCanvas.Common.Utilities
 {
 	/// <summary>
-	/// Utility class for constructing query strings from collections of values.
+	/// Utility class for constructing URL query strings from collections of values.
 	/// </summary>
 	/// <remarks>
 	/// Values are automatically URL-encoded by this class.
 	/// </remarks>
-	public class QueryStringBuilder
+	public class UrlQueryString
 	{
 		/// <summary>
 		/// Builds a query string from the specified values.
@@ -20,7 +20,7 @@ namespace ClearCanvas.Common.Utilities
 		/// <returns></returns>
 		public static string Build(IEnumerable<KeyValuePair<string, object>> values)
 		{
-			return new QueryStringBuilder(values).ToString();
+			return new UrlQueryString(values).ToString();
 		}
 
 		/// <summary>
@@ -30,7 +30,7 @@ namespace ClearCanvas.Common.Utilities
 		/// <returns></returns>
 		public static string Build(object values)
 		{
-			return new QueryStringBuilder(values).ToString();
+			return new UrlQueryString(values).ToString();
 		}
 
 
@@ -39,7 +39,7 @@ namespace ClearCanvas.Common.Utilities
 		/// <summary>
 		/// Constructs an empty instance.
 		/// </summary>
-		public QueryStringBuilder()
+		public UrlQueryString()
 		{
 			_values = new List<Tuple<string, object>>();
 		}
@@ -48,7 +48,7 @@ namespace ClearCanvas.Common.Utilities
 		/// Constructs an instance initialized with the specified values.
 		/// </summary>
 		/// <param name="values"></param>
-		public QueryStringBuilder(IEnumerable<Tuple<string, object>> values)
+		public UrlQueryString(IEnumerable<Tuple<string, object>> values)
 		{
 			_values = values.ToList();
 		}
@@ -57,7 +57,7 @@ namespace ClearCanvas.Common.Utilities
 		/// Constructs an instance initialized with the specified values.
 		/// </summary>
 		/// <param name="values"></param>
-		public QueryStringBuilder(IEnumerable<KeyValuePair<string, object>> values)
+		public UrlQueryString(IEnumerable<KeyValuePair<string, object>> values)
 		{
 			_values = values.Select(kvp => Tuple.Create(kvp.Key, kvp.Value)).ToList();
 		}
@@ -66,7 +66,7 @@ namespace ClearCanvas.Common.Utilities
 		/// Constructs an instance initialized with values taken from the public properties of the specified object.
 		/// </summary>
 		/// <param name="values"></param>
-		public QueryStringBuilder(object values)
+		public UrlQueryString(object values)
 		{
 			_values = ObjectLiteralToTuples(values).ToList();
 		}
