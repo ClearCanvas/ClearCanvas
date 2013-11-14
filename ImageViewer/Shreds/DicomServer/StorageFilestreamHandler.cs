@@ -30,10 +30,9 @@ using ClearCanvas.Common.Utilities;
 using ClearCanvas.Dicom;
 using ClearCanvas.Dicom.Network;
 using ClearCanvas.ImageViewer.Common;
-using ClearCanvas.ImageViewer.Common.Auditing;
-using ClearCanvas.ImageViewer.Common.StudyManagement;
 using ClearCanvas.ImageViewer.Common.WorkItem;
 using ClearCanvas.ImageViewer.StudyManagement.Core;
+using ClearCanvas.ImageViewer.StudyManagement.Core.Storage;
 
 namespace ClearCanvas.ImageViewer.Shreds.DicomServer
 {
@@ -46,10 +45,10 @@ namespace ClearCanvas.ImageViewer.Shreds.DicomServer
 		private string _sourceFilename;
 		private bool _rejectFile = false;
 
-		public StorageFilestreamHandler(IDicomServerContext context, ServerAssociationParameters assoc)
+		public StorageFilestreamHandler(IDicomServerContext context, DicomReceiveImportContext importContext)
 		{
 			_context = context;
-			_importContext = new DicomReceiveImportContext(assoc.CallingAE, GetRemoteHostName(assoc), StudyStore.GetConfiguration(), EventSource.CurrentProcess);
+			_importContext = importContext;
 
 			if (LocalStorageMonitor.IsMaxUsedSpaceExceeded)
 			{
@@ -58,6 +57,9 @@ namespace ClearCanvas.ImageViewer.Shreds.DicomServer
 				//the work item to fail. In fact, that's why we're doing it.
 				_rejectFile = true;
 			}
+
+			if (!File.Exists(_context.StorageConfiguration.FileStoreIncomingFolder))
+				Directory.CreateDirectory(_context.StorageConfiguration.FileStoreIncomingFolder);
 		}
 
 		public bool SaveStreamData(DicomMessage message, byte[] data)
@@ -66,9 +68,9 @@ namespace ClearCanvas.ImageViewer.Shreds.DicomServer
 
 			if (_fileStream == null)
 			{
-				_sourceFolder = _importContext.StorageConfiguration.FileStoreDirectory;
+				_sourceFolder = _context.StorageConfiguration.FileStoreIncomingFolder;
 
-				_sourceFilename = Path.Combine(_sourceFolder, Guid.NewGuid().ToString() + ".dcm");
+				_sourceFilename = Path.Combine(_sourceFolder, Guid.NewGuid().ToString() + ".cc");
 
 				try
 				{
@@ -110,8 +112,7 @@ namespace ClearCanvas.ImageViewer.Shreds.DicomServer
 					}
 				}
 				catch (Exception)
-				{
-				}
+				{ }
 			}
 
 			CleanupFile();
@@ -119,22 +120,23 @@ namespace ClearCanvas.ImageViewer.Shreds.DicomServer
 
 		public bool CompleteStream(Dicom.Network.DicomServer server, ServerAssociationParameters assoc, byte presentationId, DicomMessage message)
 		{
-
 			DicomProcessingResult result;
 			var importer = new ImportFilesUtility(_importContext);
 
 			if (_rejectFile)
 			{
-				result = new DicomProcessingResult
-					{
-						DicomStatus = DicomStatuses.StorageStorageOutOfResources
-					};
+				result = new DicomProcessingResult();
+				result.SetError(DicomStatuses.StorageStorageOutOfResources, string.Format("Import failed, disk space usage exceeded"));
 
-				// TODO
-				//importer.InsertFailedWorkItemUid(workItem, message, result);
+				string studyInstanceUid = message.DataSet[DicomTags.StudyInstanceUid].GetString(0, string.Empty);
+				WorkItem workItem;
+				lock (_importContext.StudyWorkItemsSyncLock)
+					_importContext.StudyWorkItems.TryGetValue(studyInstanceUid, out workItem);
 
-				//_context.FatalError = true;
-				//importer.AuditFailure(result);
+				importer.InsertFailedWorkItemUid(workItem, message, result);
+
+				_importContext.FatalError = true;
+				importer.AuditFailure(result);
 
 				Platform.Log(LogLevel.Warn, "Failure receiving sop, out of disk space: {0}", message.AffectedSopInstanceUid);
 				server.SendCStoreResponse(presentationId, message.MessageId, message.AffectedSopInstanceUid, result.DicomStatus);
