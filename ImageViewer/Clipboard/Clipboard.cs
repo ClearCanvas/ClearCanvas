@@ -161,6 +161,28 @@ namespace ClearCanvas.ImageViewer.Clipboard
 		protected virtual void OnItemsListChanged(ListChangedEventArgs e) {}
 
 		/// <summary>
+		/// Called to create an icon image for the specified contents.
+		/// </summary>
+		/// <param name="presentationImage"></param>
+		/// <param name="clientRectangle"></param>
+		/// <returns></returns>
+		protected virtual Bitmap CreateIcon(IPresentationImage presentationImage, Rectangle clientRectangle)
+		{
+			return IconCreator.CreatePresentationImageIcon(presentationImage, clientRectangle);
+		}
+
+		/// <summary>
+		/// Called to create an icon image for the specified contents.
+		/// </summary>
+		/// <param name="displaySet"></param>
+		/// <param name="clientRectangle"></param>
+		/// <returns></returns>
+		protected virtual Bitmap CreateIcon(IDisplaySet displaySet, Rectangle clientRectangle)
+		{
+			return IconCreator.CreateDisplaySetIcon(displaySet, clientRectangle);
+		}
+
+		/// <summary>
 		/// Called to create a clipboard item representing a presentation image.
 		/// </summary>
 		/// <param name="image"></param>
@@ -176,7 +198,7 @@ namespace ClearCanvas.ImageViewer.Clipboard
 			var description = BuildClipboardItemDescription(image);
 
 			image = !ownReference ? ImageExporter.ClonePresentationImage(image) : image;
-			Bitmap bmp = IconCreator.CreatePresentationImageIcon(image, clientRectangle);
+			var bmp = CreateIcon(image, clientRectangle);
 
 			return new ClipboardItem(image, bmp, name, description, clientRectangle);
 		}
@@ -189,14 +211,18 @@ namespace ClearCanvas.ImageViewer.Clipboard
 		/// <returns></returns>
 		public virtual ClipboardItem CreateDisplaySetItem(IDisplaySet displaySet, IImageSelectionStrategy selectionStrategy = null)
 		{
-			if (displaySet.ImageBox == null ||
-			    displaySet.ImageBox.SelectedTile == null ||
-			    displaySet.ImageBox.SelectedTile.PresentationImage == null)
-			{
-				throw new ArgumentException("DisplaySet must have a selected image.");
-			}
+			if (displaySet.PresentationImages.Count == 0)
+				throw new ArgumentException("DisplaySet must have at least one image.");
 
-			Rectangle clientRectangle = displaySet.ImageBox.SelectedTile.PresentationImage.ClientRectangle;
+			var presentationImage = displaySet.ImageBox != null
+			                        && displaySet.ImageBox.SelectedTile != null
+			                        && displaySet.ImageBox.SelectedTile.PresentationImage != null
+			                        	? displaySet.ImageBox.SelectedTile.PresentationImage
+			                        	: displaySet.PresentationImages[displaySet.PresentationImages.Count/2];
+
+			var clientRectangle = presentationImage.ClientRectangle;
+			if (clientRectangle.IsEmpty) clientRectangle = new Rectangle(new Point(), presentationImage.SceneSize);
+
 			if (selectionStrategy == null)
 			{
 				if (displaySet.PresentationImages.Count == 1)
@@ -227,9 +253,9 @@ namespace ClearCanvas.ImageViewer.Clipboard
 			}
 		}
 
-		private static ClipboardItem CreateDisplaySetItem(IDisplaySet displaySet, Rectangle clientRectangle)
+		private ClipboardItem CreateDisplaySetItem(IDisplaySet displaySet, Rectangle clientRectangle)
 		{
-			Bitmap bmp = IconCreator.CreateDisplaySetIcon(displaySet, clientRectangle);
+			var bmp = CreateIcon(displaySet, clientRectangle);
 			return new ClipboardItem(displaySet, bmp, displaySet.Name, BuildClipboardItemDescription(displaySet), clientRectangle);
 		}
 

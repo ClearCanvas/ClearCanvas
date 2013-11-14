@@ -141,6 +141,9 @@
   <data name="MenuDeleteKeyImage" xml:space="preserve">
     <value>Delete Key Image</value>
   </data>
+  <data name="MenuRevertKeyImage" xml:space="preserve">
+    <value>Revert Key Image</value>
+  </data>
   <data name="MenuShowKeyImages" xml:space="preserve">
     <value>Show Key Images</value>
   </data>
@@ -176,6 +179,12 @@
   </data>
   <data name="ToolbarEditKeyImageInformation" xml:space="preserve">
     <value>Edit</value>
+  </data>
+  <data name="ToolbarRevertAllKeyImages" xml:space="preserve">
+    <value>Revert All Images</value>
+  </data>
+  <data name="ToolbarRevertKeyImage" xml:space="preserve">
+    <value>Revert Key Image</value>
   </data>
   <data name="ToolbarShowKeyImages" xml:space="preserve">
     <value>Show Key Images</value>

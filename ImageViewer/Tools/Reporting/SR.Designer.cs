@@ -133,6 +133,15 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Revert Key Image.
+        /// </summary>
+        internal static string MenuRevertKeyImage {
+            get {
+                return ResourceManager.GetString("MenuRevertKeyImage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Show Key Images.
         /// </summary>
         internal static string MenuShowKeyImages {
@@ -237,6 +246,24 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting {
         internal static string ToolbarEditKeyImageInformation {
             get {
                 return ResourceManager.GetString("ToolbarEditKeyImageInformation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Revert All Images.
+        /// </summary>
+        internal static string ToolbarRevertAllKeyImages {
+            get {
+                return ResourceManager.GetString("ToolbarRevertAllKeyImages", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Revert Key Image.
+        /// </summary>
+        internal static string ToolbarRevertKeyImage {
+            get {
+                return ResourceManager.GetString("ToolbarRevertKeyImage", resourceCulture);
             }
         }
         

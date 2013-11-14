@@ -33,73 +33,45 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 {
 	internal static class KeyImageItem
 	{
-		[Obsolete]
-		public static IPresentationImage BeginEditKeyImage(this IClipboardItem item, KeyImageInformation parentContext)
-		{
-			var image = item.Item as IDicomPresentationImage;
-			if (image != null)
-			{
-				var editableImage = image.Clone();
-				var metadata = editableImage.ExtensionData.GetOrCreate<KeyPresentationImageMetaData>();
-				metadata.Guid = item.GetGuid();
-				metadata.ParentContext = parentContext;
-				return editableImage;
-			}
-			return null;
-		}
-
-		[Obsolete]
-		public static bool EndEditKeyImage(this IPresentationImage image, out KeyImageInformation context)
-		{
-			context = null;
-			var metadata = image.ExtensionData.Get<KeyPresentationImageMetaData>();
-			if (metadata != null)
-			{
-				context = metadata.ParentContext;
-				var clipboardItems = metadata.ParentContext.Items;
-				var item = clipboardItems.Select((k, i) => new {Guid = k.GetGuid(), Index = i}).FirstOrDefault(x => x.Guid == metadata.Guid);
-				if (item != null)
-				{
-					var keyImageItem = context.CreatePresentationImageItem(image);
-					keyImageItem.SetHasChanges(true);
-					keyImageItem.SetGuid(item.Guid);
-					clipboardItems[item.Index] = keyImageItem;
-				}
-				return true;
-			}
-			return false;
-		}
-
 		public static bool UpdateKeyImage(this IPresentationImage image, KeyImageInformation context)
 		{
 			if (context != null)
 			{
-				var presentationStateUid = image.GetPresentationStateSopInstanceUid();
+				var presentationStateUid = GetPresentationStateSopInstanceUid(image);
 
 				var clipboardItems = context.Items;
-				var item = clipboardItems.Select((k, i) => new {k.Item, Guid = k.GetGuid(), Index = i}).FirstOrDefault(c => (c.Item as IPresentationImage).GetPresentationStateSopInstanceUid() == presentationStateUid);
-				if (item != null)
+				var result = clipboardItems.Where(IsSerialized).Select((k, i) => new {k.Item, Index = i, MetaData = k.ExtensionData.GetOrCreate<KeyImageItemMetaData>()}).FirstOrDefault(c => GetPresentationStateSopInstanceUid((c.Item as IPresentationImage)) == presentationStateUid);
+				if (result != null)
 				{
-					var keyImageItem = context.CreatePresentationImageItem(image);
-					keyImageItem.SetHasChanges(true);
-					keyImageItem.SetGuid(item.Guid);
-					clipboardItems[item.Index] = keyImageItem;
+					var keyImageItem = context.CreateKeyImageItem(image, hasChanges : true);
+
+					var metadata = ((IClipboardItem) keyImageItem).ExtensionData.GetOrCreate<KeyImageItemMetaData>();
+					metadata.Changes = true;
+					metadata.Guid = result.MetaData.Guid;
+					metadata.KoSopInstanceUid = result.MetaData.KoSopInstanceUid;
+					metadata.OriginalItem = result.MetaData.OriginalItem ?? clipboardItems[result.Index];
+
+					clipboardItems[result.Index] = keyImageItem;
 					return true;
 				}
 			}
 			return false;
 		}
 
-		[Obsolete]
-		public static bool IsEdittingKeyImage(this IPresentationImage image)
+		public static bool RevertKeyImage(this IClipboardItem item, KeyImageInformation context)
 		{
-			return image.ExtensionData.Get<KeyPresentationImageMetaData>() != null;
-		}
-
-		[Obsolete]
-		public static bool IsKeyImage(this IPresentationImage image)
-		{
-			return FindParentKeyObjectDocument(image) != null;
+			var guid = GetGuid(item);
+			if (context != null && IsSerialized(item))
+			{
+				var clipboardItems = context.Items;
+				var result = clipboardItems.Where(k => IsSerialized(k) && GetGuid(k) == guid).Select((k, i) => new {k.Item, Index = i, MetaData = k.ExtensionData.GetOrCreate<KeyImageItemMetaData>()}).FirstOrDefault();
+				if (result != null)
+				{
+					clipboardItems[result.Index] = result.MetaData.OriginalItem;
+					return true;
+				}
+			}
+			return false;
 		}
 
 		public static KeyObjectSelectionDocumentIod FindParentKeyObjectDocument(this IPresentationImage image)
@@ -142,43 +114,90 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 			return null;
 		}
 
+		/// <summary>
+		/// Gets a value indicating whether or not the item has unserialized changes.
+		/// </summary>
+		/// <param name="item"></param>
+		/// <returns></returns>
 		public static bool HasChanges(this IClipboardItem item)
 		{
-			return item.ExtensionData.GetOrCreate<KeyImageItemMetaData>().HasChanges;
+			return item.ExtensionData.GetOrCreate<KeyImageItemMetaData>().Changes;
 		}
 
-		public static void SetHasChanges(this IClipboardItem item, bool value)
+		/// <summary>
+		/// Flags an item as having unserialized changes.
+		/// </summary>
+		/// <param name="item"></param>
+		public static void FlagHasChanges(this IClipboardItem item)
 		{
-			item.ExtensionData.GetOrCreate<KeyImageItemMetaData>().HasChanges = value;
+			item.ExtensionData.GetOrCreate<KeyImageItemMetaData>().Changes = true;
 		}
 
-		public static Guid GetGuid(this IClipboardItem item)
-		{
-			return item.ExtensionData.GetOrCreate<KeyImageItemMetaData>().Guid;
-		}
-
-		public static void SetGuid(this IClipboardItem item, Guid guid)
+		/// <summary>
+		/// Assigns source identification details to a serialized item (i.e. that came from a KO document).
+		/// </summary>
+		/// <param name="item"></param>
+		/// <param name="guid"></param>
+		/// <param name="selectionDocumentInstanceUid"></param>
+		public static void AssignSourceInfo(this IClipboardItem item, Guid guid, string selectionDocumentInstanceUid)
 		{
 			var metadata = item.ExtensionData.GetOrCreate<KeyImageItemMetaData>();
+			metadata.Changes = false;
 			metadata.Guid = guid;
+			metadata.KoSopInstanceUid = selectionDocumentInstanceUid;
+			metadata.OriginalItem = item;
+		}
+
+		/// <summary>
+		/// Gets whether or not the item has previously been serialized to a KO document.
+		/// </summary>
+		/// <param name="item"></param>
+		/// <returns></returns>
+		public static bool IsSerialized(this IClipboardItem item)
+		{
+			return item.ExtensionData.GetOrCreate<KeyImageItemMetaData>().Guid.HasValue;
+		}
+
+		/// <summary>
+		/// Gets the identification Guid of a serialized item (i.e. that came from a KO document).
+		/// Throws exception if item is not previously serialized.
+		/// </summary>
+		/// <param name="item"></param>
+		/// <returns></returns>
+		public static Guid GetGuid(this IClipboardItem item)
+		{
+			var guid = item.ExtensionData.GetOrCreate<KeyImageItemMetaData>().Guid;
+			if (!guid.HasValue)
+				throw new InvalidOperationException("Item has not been serialized yet");
+			return guid.Value;
+		}
+
+		/// <summary>
+		/// Gets the selection document instance UID of a serialized item (i.e. the SOP instance UID of the source KO document).
+		/// Throws exception if item is not previously serialized.
+		/// </summary>
+		/// <param name="item"></param>
+		/// <returns></returns>
+		public static string GetSelectionDocumentInstanceUid(this IClipboardItem item)
+		{
+			var sopInstanceUid = item.ExtensionData.GetOrCreate<KeyImageItemMetaData>().KoSopInstanceUid;
+			if (sopInstanceUid == null)
+				throw new InvalidOperationException("Item has not been serialized yet");
+			return sopInstanceUid;
 		}
 
 		private class KeyImageItemMetaData
 		{
-			public bool HasChanges { get; set; }
-			public Guid Guid { get; set; }
+			public bool Changes { get; set; }
+			public string KoSopInstanceUid { get; set; }
+			public Guid? Guid { get; set; }
+			public IClipboardItem OriginalItem { get; set; }
 
 			public KeyImageItemMetaData()
 			{
 				// assume that newly created items have changes by default
-				HasChanges = true;
+				Changes = true;
 			}
-		}
-
-		private class KeyPresentationImageMetaData
-		{
-			public Guid Guid { get; set; }
-			public KeyImageInformation ParentContext { get; set; }
 		}
 	}
 }

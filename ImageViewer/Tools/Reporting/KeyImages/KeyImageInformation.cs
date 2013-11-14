@@ -25,6 +25,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Drawing;
 using System.Linq;
 using System.Threading;
 using ClearCanvas.Common;
@@ -50,6 +51,7 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 		private string _seriesDescription;
 
 		private bool _hasChanges = false;
+		private bool _creatingItemHasChanges = false;
 
 		internal KeyImageInformation()
 		{
@@ -79,9 +81,8 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 					if (presentationState != null) presentationState.DeserializeInteractiveAnnotations = true;
 				}
 
-				var item = dummyContext.CreatePresentationImageItem(image, true);
-				item.SetHasChanges(false);
-				item.SetGuid(Guid.NewGuid());
+				var item = dummyContext.CreateKeyImageItem(image, true);
+				item.AssignSourceInfo(Guid.NewGuid(), keyObjectSelectionDocument.SopInstanceUid);
 				yield return item;
 			}
 		}
@@ -152,7 +153,7 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 
 		public bool HasChanges
 		{
-			get { return _hasChanges; }
+			get { return _hasChanges || Items.Any(k => k.HasChanges()); }
 		}
 
 		public override string ToString()
@@ -162,12 +163,51 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 
 		protected override void OnItemsListChanged(ListChangedEventArgs e)
 		{
-			FlagChanges();
+			// ignore in-place item change events - they are evaluated when HasChanges is called
+			if (e.ListChangedType != ListChangedType.ItemChanged)
+				FlagChanges();
 		}
 
 		private void FlagChanges()
 		{
 			_hasChanges = true;
+		}
+
+		protected override Bitmap CreateIcon(IPresentationImage presentationImage, Rectangle clientRectangle)
+		{
+			var icon = base.CreateIcon(presentationImage, clientRectangle);
+			if (_creatingItemHasChanges)
+			{
+				using (var g = System.Drawing.Graphics.FromImage(icon))
+				using (var f = new Font(FontFamily.GenericSansSerif, 40, FontStyle.Bold, GraphicsUnit.Pixel))
+					g.DrawString("*", f, Brushes.Yellow, new PointF(0, 0));
+			}
+			return icon;
+		}
+
+		public ClipboardItem CreateKeyImageItem(IPresentationImage image, bool ownReference = false, bool hasChanges = false)
+		{
+			_creatingItemHasChanges = hasChanges;
+			try
+			{
+				return base.CreatePresentationImageItem(image, ownReference);
+			}
+			finally
+			{
+				_creatingItemHasChanges = false;
+			}
+		}
+
+		[Obsolete("Use CreateKeyImageItem", true)]
+		public override ClipboardItem CreatePresentationImageItem(IPresentationImage image, bool ownReference = false)
+		{
+			return CreateKeyImageItem(image, ownReference);
+		}
+
+		[Obsolete("Use CreateKeyImageItem", true)]
+		public override ClipboardItem CreateDisplaySetItem(IDisplaySet displaySet, IImageSelectionStrategy selectionStrategy = null)
+		{
+			throw new InvalidOperationException("Display set items are not supported by Key Images");
 		}
 
 		private static string GetUserName()
@@ -185,7 +225,7 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 		/// </summary>
 		public IDictionary<IStudySource, List<DicomFile>> CreateSopInstances(NextSeriesNumberDelegate nextSeriesNumberDelegate = null)
 		{
-			if (!_hasChanges || !Items.Any()) return new Dictionary<IStudySource, List<DicomFile>>(0);
+			if (!HasChanges || !Items.Any()) return new Dictionary<IStudySource, List<DicomFile>>(0);
 
 			// the series index ensures consistent series level data because we only create one KO series and one PR series per study
 			var studyIndex = new Dictionary<string, StudyInfo>();
@@ -369,10 +409,12 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 
 		void IDisposable.Dispose()
 		{
-			foreach (var item in base.Items.OfType<IDisposable>())
+			Items.RaiseListChangedEvents = false;
+
+			foreach (var item in Items.OfType<IDisposable>())
 				item.Dispose();
 
-			base.Items.Clear();
+			Items.Clear();
 		}
 
 		#endregion

@@ -27,10 +27,15 @@ using System.ComponentModel;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Desktop;
+using ClearCanvas.Desktop.Actions;
+using ClearCanvas.Desktop.Tools;
 using ClearCanvas.ImageViewer.Clipboard;
 
 namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 {
+	[ExtensionPoint]
+	public sealed class KeyImageClipboardComponentToolExtensionPoint : ExtensionPoint<ITool> {}
+
 	[ExtensionPoint]
 	public sealed class KeyImageClipboardComponentViewExtensionPoint : ExtensionPoint<IApplicationComponentView> {}
 
@@ -47,6 +52,9 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 
 		private event EventHandler _currentContextChanged;
 		private KeyImageClipboard _clipboard;
+
+		private IToolSet _toolSet;
+		private IActionSet _actionSet;
 
 		public KeyImageClipboardComponent(KeyImageClipboard clipboard)
 			: base(ToolbarSite, MenuSite, clipboard != null ? clipboard.CurrentContext : null, false)
@@ -102,6 +110,13 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 		{
 			add { _currentContextChanged += value; }
 			remove { _currentContextChanged -= value; }
+		}
+
+		protected override IActionSet CreateToolActions()
+		{
+			if (_toolSet == null)
+				_toolSet = new ToolSet(new KeyImageClipboardComponentToolExtensionPoint(), new ClipboardToolContext(this));
+			return _actionSet ?? (_actionSet = new ActionSet(_toolSet.Actions));
 		}
 
 		public override void Start()

@@ -73,7 +73,7 @@ namespace ClearCanvas.ImageViewer.Clipboard.View.WinForms
 			resources.ApplyResources(this._galleryView, "_galleryView");
 			this._galleryView.DragOutside = false;
 			this._galleryView.DragReorder = false;
-			this._galleryView.HideSelection = true;
+			this._galleryView.HideSelection = false;
 			this._galleryView.ImageSize = new System.Drawing.Size(100, 100);
 			this._galleryView.MaxDescriptionLines = 0;
 			this._galleryView.MultiSelect = true;

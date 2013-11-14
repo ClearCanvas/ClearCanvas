@@ -35,13 +35,12 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 	[Tooltip("edit", "TooltipEditKeyImageInformation")]
 	[IconSet("edit", "Icons.EditKeyImageInformationToolSmall.png", "Icons.EditKeyImageInformationToolMedium.png", "Icons.EditKeyImageInformationToolLarge.png")]
 	[EnabledStateObserver("edit", "Enabled", "EnabledChanged")]
-	[ExtensionOf(typeof (ClipboardToolExtensionPoint))]
+	//
+	[ExtensionOf(typeof (KeyImageClipboardComponentToolExtensionPoint))]
 	internal class EditKeyImageInformationTool : Tool<IClipboardToolContext>
 	{
 		private bool _enabled;
 		private event EventHandler _enabledChanged;
-
-		public EditKeyImageInformationTool() {}
 
 		public bool Enabled
 		{
@@ -66,8 +65,8 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 		{
 			base.Initialize();
 
-			this.Context.ClipboardItemsChanged += OnClipboardItemsChanged;
-			this.Context.SelectedClipboardItemsChanged += OnSelectionChanged;
+			Context.ClipboardItemsChanged += OnClipboardItemsChanged;
+			Context.SelectedClipboardItemsChanged += OnSelectionChanged;
 		}
 
 		/// <summary>
@@ -76,8 +75,8 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 		/// <param name="disposing">True if this object is being disposed, false if it is being finalized.</param>
 		protected override void Dispose(bool disposing)
 		{
-			this.Context.ClipboardItemsChanged -= OnClipboardItemsChanged;
-			this.Context.SelectedClipboardItemsChanged -= OnSelectionChanged;
+			Context.ClipboardItemsChanged -= OnClipboardItemsChanged;
+			Context.SelectedClipboardItemsChanged -= OnSelectionChanged;
 
 			base.Dispose(disposing);
 		}
@@ -94,8 +93,7 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 
 		public void Edit()
 		{
-			//TODO: can we use an override to add actions?
-			KeyImageInformationEditorComponent.Launch(this.Context.DesktopWindow);
+			KeyImageInformationEditorComponent.Launch(Context.DesktopWindow);
 		}
 	}
 }

@@ -56,7 +56,7 @@ namespace ClearCanvas.ImageViewer.Clipboard
 
 		#region ClipboardToolContext class
 
-		private class ClipboardToolContext : ToolContext, IClipboardToolContext
+		protected class ClipboardToolContext : ToolContext, IClipboardToolContext
 		{
 			private readonly ClipboardComponent _component;
 
@@ -69,6 +69,11 @@ namespace ClearCanvas.ImageViewer.Clipboard
 			public IDesktopWindow DesktopWindow
 			{
 				get { return _component.Host.DesktopWindow; }
+			}
+
+			public ClipboardComponent Component
+			{
+				get { return _component; }
 			}
 
 			public IList<IClipboardItem> ClipboardItems
@@ -235,6 +240,18 @@ namespace ClearCanvas.ImageViewer.Clipboard
 			get { return SelectedItems.Count > 0; }
 		}
 
+		protected virtual string ToolActionsNamespace
+		{
+			get { return typeof (ClipboardComponent).FullName; }
+		}
+
+		protected virtual IActionSet CreateToolActions()
+		{
+			if (_toolSet == null)
+				_toolSet = new ToolSet(new ClipboardToolExtensionPoint(), new ClipboardToolContext(this));
+			return new ActionSet(_toolSet.Actions);
+		}
+
 		#region Overrides
 
 		/// <summary>
@@ -244,16 +261,13 @@ namespace ClearCanvas.ImageViewer.Clipboard
 		{
 			base.Start();
 
-			ClipboardToolContext toolContext = new ClipboardToolContext(this);
-			_toolSet = new ToolSet(new ClipboardToolExtensionPoint(), toolContext);
-
 			_resolver = new ApplicationThemeResourceResolver(GetType(), true);
-			ActionSet toolActions = new ActionSet(_toolSet.Actions);
 			ActionSet deleteToolActions = new ActionSet(GetDeleteActions());
-			IActionSet allActions = toolActions.Union(deleteToolActions);
+			var toolActions = CreateToolActions();
+			IActionSet allActions = toolActions != null ? toolActions.Union(deleteToolActions) : deleteToolActions;
 
-			_toolbarModel = ActionModelRoot.CreateModel(typeof (ClipboardComponent).FullName, _toolbarSite, allActions);
-			_contextMenuModel = ActionModelRoot.CreateModel(typeof (ClipboardComponent).FullName, _menuSite, allActions);
+			_toolbarModel = ActionModelRoot.CreateModel(ToolActionsNamespace, _toolbarSite, allActions);
+			_contextMenuModel = ActionModelRoot.CreateModel(ToolActionsNamespace, _menuSite, allActions);
 
 			_items.BindingList.ListChanged += OnBindingListChanged;
 		}
@@ -274,8 +288,11 @@ namespace ClearCanvas.ImageViewer.Clipboard
 				}
 			}
 
-			_toolSet.Dispose();
-			_toolSet = null;
+			if (_toolSet != null)
+			{
+				_toolSet.Dispose();
+				_toolSet = null;
+			}
 
 			base.Stop();
 		}

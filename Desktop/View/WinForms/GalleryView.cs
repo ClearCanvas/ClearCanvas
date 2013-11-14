@@ -54,6 +54,8 @@ namespace ClearCanvas.Desktop.View.WinForms
 		{
 			InitializeComponent();
 
+			_contextMenu.ImageScalingSize = new Size(24, 24);
+
 			_listView.LargeImageList = new ImageList();
 			_listView.LargeImageList.ImageSize = new Size(100, 100);
 			_listView.View = System.Windows.Forms.View.LargeIcon;
