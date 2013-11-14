@@ -48,7 +48,7 @@ namespace ClearCanvas.ImageViewer
 		private IPatientPresentation _patientPresentation;
 
 		[CloneIgnore]
-		private PatientCoordinateMapping _patientCoordinateMapping;
+		private IPatientCoordinateMapping _patientCoordinateMapping;
 
 		/// <summary>
 		/// Initializes a new instance of <see cref="DicomColorPresentationImage"/>.
@@ -187,7 +187,12 @@ namespace ClearCanvas.ImageViewer
 
 		public IPatientPresentation PatientPresentation
 		{
-			get { return _patientPresentation ?? (_patientPresentation = new BasicPatientPresentation(this)); }
+			get { return _patientPresentation ?? (_patientPresentation = CreatePatientPresentation()); }
+		}
+
+		protected virtual IPatientPresentation CreatePatientPresentation()
+		{
+			return new BasicPatientPresentation(this);
 		}
 
 		#endregion
@@ -196,7 +201,12 @@ namespace ClearCanvas.ImageViewer
 
 		public IPatientCoordinateMapping PatientCoordinateMapping
 		{
-			get { return _patientCoordinateMapping ?? (_patientCoordinateMapping = new PatientCoordinateMapping(Frame)); }
+			get { return _patientCoordinateMapping ?? (_patientCoordinateMapping = CreatePatientCoordinateMapping()); }
+		}
+
+		protected virtual IPatientCoordinateMapping CreatePatientCoordinateMapping()
+		{
+			return new PatientCoordinateMapping(Frame);
 		}
 
 		#endregion
