@@ -136,13 +136,16 @@ namespace ClearCanvas.ImageViewer.Graphics
 			base.CoordinateSystem = CoordinateSystem.Destination;
 			try
 			{
-				PointF[] pathPoints = GetCurvePoints(_points);
-				GraphicsPath gp = new GraphicsPath();
-				if (_points.IsClosed)
-					gp.AddClosedCurve(pathPoints);
-				else
-					gp.AddCurve(pathPoints);
-				return gp.IsVisible(point);
+				using (var gp = new GraphicsPath())
+				using (var pen = new Pen(Color.Black, HitTestDistance))
+				{
+					PointF[] pathPoints = GetCurvePoints(_points);
+					if (_points.IsClosed)
+						gp.AddClosedCurve(pathPoints);
+					else
+						gp.AddCurve(pathPoints);
+					return gp.IsOutlineVisible(point, pen);
+				}
 			}
 			finally
 			{
