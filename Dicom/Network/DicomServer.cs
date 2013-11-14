@@ -428,14 +428,14 @@ namespace ClearCanvas.Dicom.Network
 			}
 		}
 
-		protected override bool OnReceiveFileStream(byte pcid, DicomAttributeCollection command, DicomAttributeCollection dataset, byte[] data, bool isFirst, bool isLast)
+		protected override bool OnReceiveFileStream(byte pcid, DicomAttributeCollection command, DicomAttributeCollection dataset, byte[] data, int offset, int count, bool isFirst, bool isLast)
 		{
 			try
 			{
 				if (isFirst)
 					_filestreamHandler = _handler.OnStartFilestream(this, _assoc as ServerAssociationParameters, pcid, new DicomMessage(command, dataset));
 
-				if (!_filestreamHandler.SaveStreamData(new DicomMessage(command, dataset), data))
+				if (!_filestreamHandler.SaveStreamData(new DicomMessage(command, dataset), data, offset, count))
 					return false;
 
 				if (isLast)

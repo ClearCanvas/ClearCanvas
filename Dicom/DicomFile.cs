@@ -148,6 +148,11 @@ namespace ClearCanvas.Dicom
 		/// </summary>
 		public bool Loaded { get; set; }
 
+		/// <summary>
+		/// The length of the MetaInfo in the file.  This value is only valid if <see cref="DicomFile.Load"/>  or if <see cref="DicomFile.Save"/> has been called on the file.
+		/// </summary>
+		public long MetaInfoFileLength { get; set; }
+
         /// <summary>
         /// The filename of the file.
         /// </summary>
@@ -504,6 +509,9 @@ namespace ClearCanvas.Dicom
                 Platform.Log(LogLevel.Error, "Unexpected error when reading file Meta info for file: {0}", Filename);
                 throw new DicomException("Unexpected failure reading file Meta info for file: " + Filename);
             }
+
+	        MetaInfoFileLength = dsr.EndGroupTwo + 128 + 4;
+
             dsr.Dataset = DataSet;
             dsr.TransferSyntax = TransferSyntax;
             readStat = dsr.Read(stopTag, options);
@@ -619,6 +627,8 @@ namespace ClearCanvas.Dicom
             DicomStreamWriter dsw = new DicomStreamWriter(iStream);
             dsw.Write(TransferSyntax.ExplicitVrLittleEndian,
                       MetaInfo, options | DicomWriteOptions.CalculateGroupLengths);
+
+	        MetaInfoFileLength = iStream.Position;
 
             dsw.Write(TransferSyntax, DataSet, options);
 

@@ -59,7 +59,7 @@ namespace ClearCanvas.ImageServer.Services.Dicom
 			}
 		}
 
-		public bool SaveStreamData(DicomMessage message, byte[] data)
+		public bool SaveStreamData(DicomMessage message, byte[] data, int offset, int count)
 		{
 			var importer = new SopInstanceImporter(_importContext);
 			var sopInstanceUid = message.DataSet[DicomTags.SopInstanceUid].GetString(0, string.Empty);
@@ -85,7 +85,7 @@ namespace ClearCanvas.ImageServer.Services.Dicom
 				}
 			}
 
-			_fileStream.Write(data, 0, data.Length);
+			_fileStream.Write(data, offset, count);
 
 			return true;
 		}

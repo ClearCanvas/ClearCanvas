@@ -423,7 +423,7 @@ namespace ClearCanvas.Dicom.Network
 		{
 		}
 
-		protected virtual bool OnReceiveFileStream(byte pcid, DicomAttributeCollection command, DicomAttributeCollection dataset, byte[] data, bool isFirst, bool isLast)
+		protected virtual bool OnReceiveFileStream(byte pcid, DicomAttributeCollection command, DicomAttributeCollection dataset, byte[] data, int offset, int count, bool isFirst, bool isLast)
 		{
 			return false;
 		}
@@ -1005,6 +1005,40 @@ namespace ClearCanvas.Dicom.Network
 
             SendDimse(presentationID, command, message.DataSet);
         }
+
+		/// <summary>
+		/// Method to send a DICOM C-STORE-RQ message.
+		/// </summary>
+		/// <param name="presentationID"></param>
+		/// <param name="messageID"></param>
+		/// <param name="priority"></param>
+		/// <param name="moveAE"></param>
+		/// <param name="moveMessageID"></param>
+		/// <param name="dataSetStream"></param>
+		public void SendCStoreRequest(byte presentationID, ushort messageID,
+									  DicomPriority priority, string moveAE, ushort moveMessageID, string sopInstanceUid, string sopClassUid, Stream dataSetStream)
+		{
+			DicomUid affectedClass = _assoc.GetAbstractSyntax(presentationID);
+
+			DicomMessage message = new DicomMessage();
+			DicomAttributeCollection command = message.MetaInfo;
+
+			message.MessageId = messageID;
+			message.CommandField = DicomCommandField.CStoreRequest;
+			message.AffectedSopClassUid = sopClassUid;
+			message.DataSetType = 0x0202;
+			message.Priority = priority;
+			message.AffectedSopInstanceUid = sopInstanceUid;
+
+
+			if (!string.IsNullOrEmpty(moveAE))
+			{
+				message.MoveOriginatorApplicationEntityTitle = moveAE;
+				message.MoveOriginatorMessageId = moveMessageID;
+			}
+
+			SendDimseDataSetStream(presentationID, command, dataSetStream);
+		}
 
         /// <summary>
         /// Method to send a DICOM C-STORE-RSP message.
@@ -1614,7 +1648,7 @@ namespace ClearCanvas.Dicom.Network
                         }
                     case 0x04:
                         {
-                            var pdu = new PDataTF();
+                            var pdu = new PDataTFRead();
                             pdu.Read(raw);
                             return ProcessPDataTF(pdu);
                         }
@@ -1680,21 +1714,22 @@ namespace ClearCanvas.Dicom.Network
         {
             var raw = new RawPDU(_network);
 
-            if (raw.Type == 0x04)
-            {
-                if (_dimse == null)
-                {
-                    _dimse = new DcmDimseInfo();
-	                _assoc.TotalDimseReceived++;
-                }
-            }
-
             raw.ReadPDU();
 
             if (_multiThreaded)
             {
                 _processingQueue.Enqueue(delegate
                                              {
+
+												 if (raw.Type == 0x04)
+												 {
+													 if (_dimse == null)
+													 {
+														 _dimse = new DcmDimseInfo();
+														 _assoc.TotalDimseReceived++;
+													 }
+												 }
+
 	                                             if (!ProcessRawPDU(raw))
 	                                             {
 		                                             Platform.Log(LogLevel.Error,
@@ -1706,10 +1741,21 @@ namespace ClearCanvas.Dicom.Network
                                              });
                 return true;
             }
+
+
+			if (raw.Type == 0x04)
+			{
+				if (_dimse == null)
+				{
+					_dimse = new DcmDimseInfo();
+					_assoc.TotalDimseReceived++;
+				}
+			}
+
             return ProcessRawPDU(raw);
         }
 
-        private bool ProcessPDataTF(PDataTF pdu)
+        private bool ProcessPDataTF(PDataTFRead pdu)
         {
         	try
             {
@@ -1824,10 +1870,10 @@ namespace ClearCanvas.Dicom.Network
 							if (_dimse.IsNewDimse)
 							{
 								byte[] fileGroup2 = CreateFileHeader(pcid, _dimse.Command);
-								ret = OnReceiveFileStream(pcid, _dimse.Command, _dimse.Dataset, fileGroup2, _dimse.IsNewDimse, false);
+								ret = OnReceiveFileStream(pcid, _dimse.Command, _dimse.Dataset, fileGroup2, 0, fileGroup2.Length, _dimse.IsNewDimse, false);
 							}
 
-							ret = ret && OnReceiveFileStream(pcid, _dimse.Command, _dimse.Dataset, pdv.Value, false, pdv.IsLastFragment);
+							ret = ret && OnReceiveFileStream(pcid, _dimse.Command, _dimse.Dataset, pdv.Value.Array, pdv.Value.Index, pdv.Value.Count, false, pdv.IsLastFragment);
 							if (!ret)
 								Platform.Log(LogLevel.Error, "Error with OnReceiveFileStream");
 						}
@@ -1932,18 +1978,11 @@ namespace ClearCanvas.Dicom.Network
             {
                 TransferSyntax ts = _assoc.GetAcceptedTransferSyntax(pcid);
 
-                uint total =
-                    command.CalculateWriteLength(TransferSyntax.ImplicitVrLittleEndian,
-                                                 DicomWriteOptions.Default | DicomWriteOptions.CalculateGroupLengths);
-
-                if (dataset != null  && !dataset.IsEmpty())
-                    total += dataset.CalculateWriteLength(ts, DicomWriteOptions.Default);
-
                 PDataTFStream pdustream;
                 if (_assoc.RemoteMaximumPduLength == 0 || _assoc.RemoteMaximumPduLength > _assoc.LocalMaximumPduLength)
-					pdustream = new PDataTFStream(this, pcid, _assoc.LocalMaximumPduLength, total, NetworkSettings.Default.CombineCommandDataPdu);
+					pdustream = new PDataTFStream(this, pcid, _assoc.LocalMaximumPduLength, NetworkSettings.Default.CombineCommandDataPdu);
                 else
-					pdustream = new PDataTFStream(this, pcid, _assoc.RemoteMaximumPduLength, total, NetworkSettings.Default.CombineCommandDataPdu);
+					pdustream = new PDataTFStream(this, pcid, _assoc.RemoteMaximumPduLength, NetworkSettings.Default.CombineCommandDataPdu);
                 pdustream.OnTick += delegate
                                         {
                                             if (DimseMessageSending != null)
@@ -1971,7 +2010,7 @@ namespace ClearCanvas.Dicom.Network
                     pdustream.Flush(true);
                 }
 
-                _assoc.TotalBytesSent += total;
+                _assoc.TotalBytesSent += (ulong)pdustream.BytesWritten;
 
                 OnDimseSent(pcid, command, dataset);
             }
@@ -1990,6 +2029,72 @@ namespace ClearCanvas.Dicom.Network
                 //throw new DicomException("Unexpected exception when sending a DIMSE message",e);
             }
         }
+
+
+		/// <summary>
+		/// Method for sending a DIMSE mesage.
+		/// </summary>
+		/// <param name="pcid"></param>
+		/// <param name="command"></param>
+		/// <param name="dataset"></param>
+		private void SendDimseDataSetStream(byte pcid, DicomAttributeCollection command, Stream dataset)
+		{
+			try
+			{
+				TransferSyntax ts = _assoc.GetAcceptedTransferSyntax(pcid);
+
+				PDataTFStream pdustream;
+				if (_assoc.RemoteMaximumPduLength == 0 || _assoc.RemoteMaximumPduLength > _assoc.LocalMaximumPduLength)
+					pdustream = new PDataTFStream(this, pcid, _assoc.LocalMaximumPduLength, NetworkSettings.Default.CombineCommandDataPdu);
+				else
+					pdustream = new PDataTFStream(this, pcid, _assoc.RemoteMaximumPduLength, NetworkSettings.Default.CombineCommandDataPdu);
+				pdustream.OnTick += delegate
+				{
+					if (DimseMessageSending != null)
+						DimseMessageSending(_assoc, pcid, command, null);
+				};
+
+				// Introduced lock as risk mitigation for ticket #10147.  Note that a more thorough locking
+				// mechanism should be developed to work across PDU types, and also should take into account
+				// if we do end up using _multiThreaded = true
+				lock (_writeSyncLock)
+				{
+					LogSendReceive(false, command, null);
+
+					var dsw = new DicomStreamWriter(pdustream);
+					dsw.Write(TransferSyntax.ImplicitVrLittleEndian,
+							  command, DicomWriteOptions.Default | DicomWriteOptions.CalculateGroupLengths);
+
+					if (dataset != null)
+					{
+						pdustream.IsCommand = false;
+
+						pdustream.Write(dataset);
+					}
+
+					// flush last pdu
+					pdustream.Flush(true);
+				}
+
+				_assoc.TotalBytesSent += (ulong)pdustream.BytesWritten;
+
+				OnDimseSent(pcid, command, null);
+			}
+			catch (Exception e)
+			{
+				OnNetworkError(e, true);
+
+				// TODO
+				// Should we throw another exception here?  Should the user know there's an error?  They'll get
+				// the error reported to them through the OnNetworkError routine, and throwing an exception here
+				// might cause us to call OnNetworkError a second time, because the exception may be caught at a higher
+				// level
+				// Note, when fixing defect #8184, realized that throwing an exception here would cause
+				// failures in the ImageServer, because there are places where we wouldn't catch the 
+				// exception.  Should be careful if this is ever introduced back in.
+				//throw new DicomException("Unexpected exception when sending a DIMSE message",e);
+			}
+		}
 
 		/// <summary>
 		/// Helper for sending N-Create, N-Set, and N-Delete Response messages.

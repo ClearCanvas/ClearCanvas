@@ -62,7 +62,7 @@ namespace ClearCanvas.ImageViewer.Shreds.DicomServer
 				Directory.CreateDirectory(_context.StorageConfiguration.FileStoreIncomingFolder);
 		}
 
-		public bool SaveStreamData(DicomMessage message, byte[] data)
+		public bool SaveStreamData(DicomMessage message, byte[] data, int offset, int length)
 		{
 			if (_rejectFile) return true;
 
@@ -83,7 +83,7 @@ namespace ClearCanvas.ImageViewer.Shreds.DicomServer
 				}
 			}
 
-			_fileStream.Write(data, 0, data.Length);
+			_fileStream.Write(data, offset, length);
 
 			return true;
 		}

@@ -28,7 +28,7 @@ namespace ClearCanvas.Dicom.Network
 {
 	public interface IDicomFilestreamHandler
 	{
-		bool SaveStreamData(DicomMessage message, byte[] data);
+		bool SaveStreamData(DicomMessage message, byte[] data, int offset, int count);
 		void CancelStream();
 		bool CompleteStream(DicomServer server, ServerAssociationParameters assoc, byte presentationId, DicomMessage message);
 	}

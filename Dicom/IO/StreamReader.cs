@@ -111,6 +111,8 @@ namespace ClearCanvas.Dicom.IO
     	public DicomTag LastTagRead { get; private set; }
         public DicomTag SaveTagRead { get; private set; }
 
+		public long EndGroupTwo { get { return _endGroup2; } }
+
     	#endregion
 
         private DicomReadStatus NeedMoreData(long count)
