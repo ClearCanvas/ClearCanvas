@@ -51,7 +51,9 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 			                            	.SelectMany(s => s.Series)
 			                            	.SelectMany(s => s.Sops)
 			                            	.Where(s => s.SopClassUid == SopClass.KeyObjectSelectionDocumentStorageUid)
-			                            	.Select(s => new KeyImageInformation(studyTree, s)));
+			                            	.Select(s => new KeyImageInformation(studyTree, s))
+			                            	.OrderByDescending(s => s.ContentDateTime)
+			                            	.ThenBy(s => s.SeriesNumber));
 		}
 
 		public IList<KeyImageInformation> AvailableContexts

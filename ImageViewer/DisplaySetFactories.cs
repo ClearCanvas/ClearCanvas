@@ -30,6 +30,7 @@ using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Dicom;
 using ClearCanvas.Dicom.ServiceModel.Query;
+using ClearCanvas.Dicom.Utilities;
 using ClearCanvas.ImageViewer.Annotations;
 using ClearCanvas.ImageViewer.Graphics;
 using ClearCanvas.ImageViewer.StudyManagement;
@@ -252,33 +253,54 @@ namespace ClearCanvas.ImageViewer
 			if (CreateSingleImageDisplaySets)
 				return DoCreateSingleImageDisplaySets(series);
 
-			var displaySets = new List<IDisplaySet>();
-			var displaySet = CreateSeriesDisplaySet(series);
-			if (displaySet != null)
+			var displaySets = CreateSeriesDisplaySet(series);
+			if (displaySets.Any())
 			{
-				displaySet.PresentationImages.Sort();
-				displaySets.Add(displaySet);
+				foreach (var displaySet in displaySets)
+					displaySet.PresentationImages.Sort();
 			}
-
 			return displaySets;
 		}
 
-		private IDisplaySet CreateSeriesDisplaySet(Series series)
+		private List<IDisplaySet> CreateSeriesDisplaySet(Series series)
 		{
-			IDisplaySet displaySet = null;
-			List<IPresentationImage> images = new List<IPresentationImage>();
-			foreach (Sop sop in series.Sops)
-				images.AddRange(PresentationImageFactory.CreateImages(sop));
-
-			if (images.Count > 0)
+			var displaySets = new List<IDisplaySet>();
+			if (series.Modality == "KO")
 			{
-				DisplaySetDescriptor descriptor = new SeriesDisplaySetDescriptor(series.GetIdentifier(), PresentationImageFactory);
-				displaySet = new DisplaySet(descriptor);
-				foreach (IPresentationImage image in images)
-					displaySet.PresentationImages.Add(image);
-			}
+				// even if there are multiple KO documents in a single series, split into separate series because they have separate, important header data
+				foreach (Sop sop in series.Sops)
+				{
+					List<IPresentationImage> images = new List<IPresentationImage>();
+					images.AddRange(PresentationImageFactory.CreateImages(sop));
 
-			return displaySet;
+					if (images.Count > 0)
+					{
+						var descriptor = new KOSelectionDocumentDisplaySetDescriptor(sop, series.GetIdentifier(), PresentationImageFactory);
+
+						var displaySet = new DisplaySet(descriptor);
+						foreach (IPresentationImage image in images)
+							displaySet.PresentationImages.Add(image);
+						displaySets.Add(displaySet);
+					}
+				}
+			}
+			else
+			{
+				List<IPresentationImage> images = new List<IPresentationImage>();
+				foreach (Sop sop in series.Sops)
+					images.AddRange(PresentationImageFactory.CreateImages(sop));
+
+				if (images.Count > 0)
+				{
+					DisplaySetDescriptor descriptor = new SeriesDisplaySetDescriptor(series.GetIdentifier(), PresentationImageFactory);
+
+					var displaySet = new DisplaySet(descriptor);
+					foreach (IPresentationImage image in images)
+						displaySet.PresentationImages.Add(image);
+					displaySets.Add(displaySet);
+				}
+			}
+			return displaySets;
 		}
 
 		private List<IDisplaySet> DoCreateSingleImageDisplaySets(Series series)
@@ -313,24 +335,18 @@ namespace ClearCanvas.ImageViewer
 					//The sop is actually a container for other referenced sops, like key images.
 					foreach (IPresentationImage image in images)
 					{
-						DisplaySetDescriptor descriptor = null;
+						DisplaySetDescriptor descriptor;
 						if (image is IImageSopProvider)
 						{
 							IImageSopProvider provider = (IImageSopProvider) image;
 							if (provider.ImageSop.NumberOfFrames == 1)
-								descriptor = new SingleImageDisplaySetDescriptor(series.GetIdentifier(), provider.ImageSop, position++);
+								descriptor = new KOSelectionSingleImageDisplaySetDescriptor(sop, series.GetIdentifier(), provider.ImageSop, position++);
 							else
-								descriptor = new SingleFrameDisplaySetDescriptor(series.GetIdentifier(), provider.Frame, position++);
+								descriptor = new KOSelectionSingleFrameDisplaySetDescriptor(sop, series.GetIdentifier(), provider.Frame, position++);
 						}
 						else
 						{
-							//TODO (CR Jan 2010): this because the design here is funny... the factory here should actually know something about the key object series it is building for
-							ISeriesIdentifier sourceSeries = series.GetIdentifier();
-							descriptor = new BasicDisplaySetDescriptor();
-							descriptor.Description = sourceSeries.SeriesDescription;
-							descriptor.Name = string.Format("{0}: {1}", sourceSeries.SeriesNumber, sourceSeries.SeriesDescription);
-							descriptor.Number = sourceSeries.SeriesNumber.GetValueOrDefault(0);
-							descriptor.Uid = sourceSeries.SeriesInstanceUid;
+							descriptor = new KOSelectionDocumentDisplaySetDescriptor(sop, series.GetIdentifier(), PresentationImageFactory);
 						}
 
 						DisplaySet displaySet = new DisplaySet(descriptor);
@@ -355,6 +371,88 @@ namespace ClearCanvas.ImageViewer
 			BasicDisplaySetFactory factory = new BasicDisplaySetFactory();
 			factory.SetStudyTree(studyTree);
 			return factory.CreateDisplaySets(series);
+		}
+	}
+
+	#endregion
+
+	#region KO Selections
+
+	public interface IKeyObjectSelectionDisplaySetDescriptor : IDicomDisplaySetDescriptor
+	{
+		DateTime? ContentDateTime { get; }
+		string SelectionInstanceUid { get; }
+	}
+
+	[Cloneable(false)]
+	public class KOSelectionDocumentDisplaySetDescriptor : SeriesDisplaySetDescriptor, IKeyObjectSelectionDisplaySetDescriptor
+	{
+		public KOSelectionDocumentDisplaySetDescriptor(Sop koSelectionSop, ISeriesIdentifier sourceSeries, IPresentationImageFactory presentationImageFactory)
+			: base(sourceSeries, presentationImageFactory)
+		{
+			ContentDateTime = DateTimeParser.ParseDateAndTime(null, koSelectionSop.ContentDate, koSelectionSop.ContentTime);
+			SelectionInstanceUid = koSelectionSop.SopInstanceUid;
+		}
+
+		protected KOSelectionDocumentDisplaySetDescriptor(KOSelectionDocumentDisplaySetDescriptor source, ICloningContext context)
+			: base(source, context) {}
+
+		public DateTime? ContentDateTime { get; private set; }
+		public string SelectionInstanceUid { get; private set; }
+
+		protected override string GetName()
+		{
+			var dateTime = ContentDateTime;
+			var name = base.GetName();
+			return dateTime.HasValue ? string.Format("{0} [{1}]", name, dateTime.Value) : name;
+		}
+	}
+
+	[Cloneable(false)]
+	public class KOSelectionSingleImageDisplaySetDescriptor : SingleImageDisplaySetDescriptor, IKeyObjectSelectionDisplaySetDescriptor
+	{
+		public KOSelectionSingleImageDisplaySetDescriptor(Sop koSelectionSop, ISeriesIdentifier sourceSeries, ImageSop imageSop, int position)
+			: base(sourceSeries, imageSop, position)
+		{
+			ContentDateTime = DateTimeParser.ParseDateAndTime(null, koSelectionSop.ContentDate, koSelectionSop.ContentTime);
+			SelectionInstanceUid = koSelectionSop.SopInstanceUid;
+		}
+
+		protected KOSelectionSingleImageDisplaySetDescriptor(KOSelectionSingleImageDisplaySetDescriptor source, ICloningContext context)
+			: base(source, context) {}
+
+		public DateTime? ContentDateTime { get; private set; }
+		public string SelectionInstanceUid { get; private set; }
+
+		protected override string GetName()
+		{
+			var dateTime = ContentDateTime;
+			var name = base.GetName();
+			return dateTime.HasValue ? string.Format("{0} [{1}]", name, dateTime.Value) : name;
+		}
+	}
+
+	[Cloneable(false)]
+	public class KOSelectionSingleFrameDisplaySetDescriptor : SingleFrameDisplaySetDescriptor, IKeyObjectSelectionDisplaySetDescriptor
+	{
+		public KOSelectionSingleFrameDisplaySetDescriptor(Sop koSelectionSop, ISeriesIdentifier sourceSeries, Frame frame, int position)
+			: base(sourceSeries, frame, position)
+		{
+			ContentDateTime = DateTimeParser.ParseDateAndTime(null, koSelectionSop.ContentDate, koSelectionSop.ContentTime);
+			SelectionInstanceUid = koSelectionSop.SopInstanceUid;
+		}
+
+		protected KOSelectionSingleFrameDisplaySetDescriptor(KOSelectionSingleFrameDisplaySetDescriptor source, ICloningContext context)
+			: base(source, context) {}
+
+		public DateTime? ContentDateTime { get; private set; }
+		public string SelectionInstanceUid { get; private set; }
+
+		protected override string GetName()
+		{
+			var dateTime = ContentDateTime;
+			var name = base.GetName();
+			return dateTime.HasValue ? string.Format("{0} [{1}]", name, dateTime.Value) : name;
 		}
 	}
 

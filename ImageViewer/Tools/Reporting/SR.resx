@@ -127,7 +127,8 @@
     <value>Permission to view key images (Study View) is denied.</value>
   </data>
   <data name="FormatOriginalKeyImageSelection" xml:space="preserve">
-    <value>{0}: {1}</value>
+    <value>{0}: {1} [{2}]</value>
+    <comment>0 - KO Series Number, 1 - KO Series Description, 2 - Content Date/Time</comment>
   </data>
   <data name="LabelKeyImageCurrentDisplaySet" xml:space="preserve">
     <value>Key Images (current)</value>

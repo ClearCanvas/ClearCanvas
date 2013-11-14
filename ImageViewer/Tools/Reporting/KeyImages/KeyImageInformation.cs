@@ -29,8 +29,10 @@ using System.Drawing;
 using System.Linq;
 using System.Threading;
 using ClearCanvas.Common;
+using ClearCanvas.Desktop;
 using ClearCanvas.Dicom;
 using ClearCanvas.Dicom.Iod.ContextGroups;
+using ClearCanvas.Dicom.Utilities;
 using ClearCanvas.ImageViewer.Clipboard;
 using ClearCanvas.ImageViewer.Common;
 using ClearCanvas.ImageViewer.Common.ServerDirectory;
@@ -44,23 +46,29 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 	{
 		private readonly string _name;
 
-		private string _documentInstanceUid;
+		private readonly string _parentStudyInstanceUid;
+		private readonly string _documentInstanceUid;
 		private KeyObjectSelectionDocumentTitle _documentTitle;
 		private string _author;
 		private string _description;
 		private string _seriesDescription;
+		private int? _seriesNumber;
+		private DateTime? _contentDateTime;
 
 		private bool _hasChanges = false;
 		private bool _creatingItemHasChanges = false;
 
 		internal KeyImageInformation()
 		{
+			_parentStudyInstanceUid = string.Empty;
 			_documentInstanceUid = string.Empty;
 			_description = string.Empty;
 			_seriesDescription = SR.DefaultKeyObjectSelectionSeriesDescription;
 			_documentTitle = KeyObjectSelectionDocumentTitleContextGroup.OfInterest;
 			_author = GetUserName();
 			_name = SR.LabelNewKeyImageSelection;
+			_seriesNumber = null;
+			_contentDateTime = null;
 			if (!string.IsNullOrEmpty(_author))
 				_seriesDescription = string.Format("{0} ({1})", _seriesDescription, _author);
 		}
@@ -94,12 +102,15 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 			var description = koDeserializer.DeserializeDescriptions().OfType<KeyObjectDescriptionContentItem>().FirstOrDefault();
 			var author = koDeserializer.DeserializeObserverContexts().OfType<PersonObserverContextContentItem>().FirstOrDefault();
 
+			_parentStudyInstanceUid = keyObjectSelectionDocument.StudyInstanceUid;
 			_documentInstanceUid = keyObjectSelectionDocument.SopInstanceUid;
 			_author = author != null ? author.PersonObserverName : string.Empty;
 			_description = description != null ? description.Description : string.Empty;
 			_documentTitle = koDeserializer.DocumentTitle ?? KeyObjectSelectionDocumentTitleContextGroup.OfInterest;
 			_seriesDescription = keyObjectSelectionDocument.SeriesDescription;
-			_name = string.Format(SR.FormatOriginalKeyImageSelection, keyObjectSelectionDocument.SeriesNumber, keyObjectSelectionDocument.SeriesDescription);
+			_seriesNumber = keyObjectSelectionDocument.SeriesNumber;
+			_contentDateTime = DateTimeParser.ParseDateAndTime(null, keyObjectSelectionDocument.ContentDate, keyObjectSelectionDocument.ContentTime);
+			_name = string.Format(SR.FormatOriginalKeyImageSelection, keyObjectSelectionDocument.SeriesNumber, keyObjectSelectionDocument.SeriesDescription, Format.DateTime(_contentDateTime));
 		}
 
 		public string DocumentInstanceUid
@@ -149,6 +160,16 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 				_seriesDescription = value;
 				FlagChanges();
 			}
+		}
+
+		public int? SeriesNumber
+		{
+			get { return _seriesNumber; }
+		}
+
+		public DateTime? ContentDateTime
+		{
+			get { return _contentDateTime; }
 		}
 
 		public bool HasChanges
@@ -254,7 +275,13 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 				StudyInfo studyInfo;
 				var studyInstanceUid = provider.ImageSop.StudyInstanceUid;
 				if (!studyIndex.TryGetValue(studyInstanceUid, out studyInfo))
+				{
 					studyIndex.Add(studyInstanceUid, studyInfo = new StudyInfo(provider, nextSeriesNumberDelegate));
+
+					// keep the previous series number if the one we know about is the same study as this new document
+					if (_parentStudyInstanceUid == studyInstanceUid && _seriesNumber.HasValue)
+						studyInfo.KeyObjectSeriesNumber = _seriesNumber.Value;
+				}
 
 				// if the item doesn't have changes and the presentation state is DICOM, simply reserialize the original sop references
 				if (!item.HasChanges() && image is IDicomPresentationImage)
@@ -353,6 +380,7 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 			public int KeyObjectSeriesNumber
 			{
 				get { return _keyObjectSeriesNumber ?? (_keyObjectSeriesNumber = _nextSeriesNumberDelegate(_provider.Frame)).Value; }
+				set { _keyObjectSeriesNumber = value; }
 			}
 
 			public string StudyInstanceUid

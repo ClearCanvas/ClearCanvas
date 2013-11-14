@@ -88,7 +88,7 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0}: {1}.
+        ///   Looks up a localized string similar to {0}: {1} [{2}].
         /// </summary>
         internal static string FormatOriginalKeyImageSelection {
             get {

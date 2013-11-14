@@ -206,12 +206,32 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 			}
 		}
 
+		#endregion
+
+		#region SOP Common Module
+
 		/// <summary>
 		/// Gets the instance number.
 		/// </summary>
 		public virtual int InstanceNumber
 		{
 			get { return DataSource.InstanceNumber; }
+		}
+
+		/// <summary>
+		/// Gets the content date.
+		/// </summary>
+		public virtual string ContentDate
+		{
+			get { return this[DicomTags.ContentDate].GetString(0, null) ?? ""; }
+		}
+
+		/// <summary>
+		/// Gets the content time.
+		/// </summary>
+		public virtual string ContentTime
+		{
+			get { return this[DicomTags.ContentTime].GetString(0, null) ?? ""; }
 		}
 
 		#endregion
