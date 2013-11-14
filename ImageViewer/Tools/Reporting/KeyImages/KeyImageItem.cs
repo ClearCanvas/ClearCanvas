@@ -56,11 +56,11 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 			if (metadata != null)
 			{
 				context = metadata.ParentContext;
-				var clipboardItems = metadata.ParentContext.ClipboardItems;
+				var clipboardItems = metadata.ParentContext.Items;
 				var item = clipboardItems.Select((k, i) => new {Guid = k.GetGuid(), Index = i}).FirstOrDefault(x => x.Guid == metadata.Guid);
 				if (item != null)
 				{
-					var keyImageItem = ClipboardComponent.CreatePresentationImageItem(image);
+					var keyImageItem = context.CreatePresentationImageItem(image);
 					keyImageItem.SetHasChanges(true);
 					keyImageItem.SetGuid(item.Guid);
 					clipboardItems[item.Index] = keyImageItem;
@@ -76,11 +76,11 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 			{
 				var presentationStateUid = image.GetPresentationStateSopInstanceUid();
 
-				var clipboardItems = context.ClipboardItems;
+				var clipboardItems = context.Items;
 				var item = clipboardItems.Select((k, i) => new {k.Item, Guid = k.GetGuid(), Index = i}).FirstOrDefault(c => (c.Item as IPresentationImage).GetPresentationStateSopInstanceUid() == presentationStateUid);
 				if (item != null)
 				{
-					var keyImageItem = ClipboardComponent.CreatePresentationImageItem(image);
+					var keyImageItem = context.CreatePresentationImageItem(image);
 					keyImageItem.SetHasChanges(true);
 					keyImageItem.SetGuid(item.Guid);
 					clipboardItems[item.Index] = keyImageItem;

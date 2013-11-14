@@ -140,12 +140,12 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 
 		public IList<IClipboardItem> ClipboardItems
 		{
-			get { return CurrentContext.ClipboardItems; }
+			get { return CurrentContext.Items; }
 		}
 
 		public void Publish()
 		{
-			KeyImagePublisher.Publish(AvailableContexts.Where(c => c.HasChanges && c.ClipboardItems.Count > 0));
+			KeyImagePublisher.Publish(AvailableContexts.Where(c => c.HasChanges && c.Items.Count > 0));
 		}
 
 		public void Dispose()
@@ -184,7 +184,7 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 
 		IList<IClipboardItem> IKeyImageClipboard.Items
 		{
-			get { return CurrentContext.ClipboardItems; }
+			get { return CurrentContext.Items; }
 		}
 
 		#endregion

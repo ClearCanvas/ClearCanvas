@@ -49,14 +49,14 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 		private KeyImageClipboard _clipboard;
 
 		public KeyImageClipboardComponent(KeyImageClipboard clipboard)
-			: base(ToolbarSite, MenuSite, false)
+			: base(ToolbarSite, MenuSite, clipboard != null ? clipboard.CurrentContext : null, false)
 		{
 			_availableContexts = new BindingList<KeyImageInformation>();
 
 			Clipboard = clipboard;
 		}
 
-		public KeyImageClipboard Clipboard
+		public new KeyImageClipboard Clipboard
 		{
 			get { return _clipboard; }
 			internal set
@@ -123,7 +123,7 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 		private void OnClipboardCurrentContextChanged(object sender, EventArgs e)
 		{
 			var currentContext = _clipboard != null ? _clipboard.CurrentContext : _emptyContext;
-			DataSource = currentContext.ClipboardItems;
+			base.Clipboard = currentContext;
 			NotifyPropertyChanged("CurrentContext");
 			EventsHelper.Fire(_currentContextChanged, this, new EventArgs());
 		}

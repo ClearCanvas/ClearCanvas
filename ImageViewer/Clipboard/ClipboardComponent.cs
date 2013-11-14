@@ -26,17 +26,12 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Drawing;
 using System.Linq;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Desktop;
 using ClearCanvas.Desktop.Actions;
 using ClearCanvas.Desktop.Tools;
-using ClearCanvas.Dicom.Utilities;
-using ClearCanvas.ImageViewer.Annotations.Utilities;
-using ClearCanvas.ImageViewer.Clipboard.ImageExport;
-using ClearCanvas.ImageViewer.StudyManagement;
 
 #pragma warning disable 0419,1574,1587,1591
 
@@ -122,34 +117,56 @@ namespace ClearCanvas.ImageViewer.Clipboard
 		private event EventHandler _selectedItemsChanged;
 		private event EventHandler _itemsChanged;
 
+		private Clipboard _clipboard;
+		private event EventHandler _clipboardChanged;
+
 		#endregion
 
 		public ClipboardComponent(string toolbarSite, string menuSite, bool disposeItemsOnClose = true)
-			: this(toolbarSite, menuSite, new BindingList<IClipboardItem>(), disposeItemsOnClose) {}
+			: this(toolbarSite, menuSite, null, disposeItemsOnClose) {}
 
-		public ClipboardComponent(string toolbarSite, string menuSite, BindingList<IClipboardItem> dataSource, bool disposeItemsOnClose)
+		public ClipboardComponent(string toolbarSite, string menuSite, Clipboard clipboard, bool disposeItemsOnClose)
 		{
 			Platform.CheckForEmptyString(toolbarSite, "toolbarSite");
 			Platform.CheckForEmptyString(menuSite, "menuSite");
-			Platform.CheckForNullReference(dataSource, "dataSource");
 
 			_toolbarSite = toolbarSite;
 			_menuSite = menuSite;
-			_items = new ClipboardItemList(dataSource);
+			_clipboard = clipboard;
+			_items = new ClipboardItemList(clipboard != null ? clipboard.Items : new BindingList<IClipboardItem>());
+			_items.BindingList.ListChanged += OnBindingListChanged;
 			_disposeItemsOnClose = disposeItemsOnClose;
 		}
 
-		internal ClipboardComponent()
-			: this(Clipboard.ClipboardSiteToolbar, Clipboard.ClipboardSiteMenu, Clipboard.Items, false) {}
-
 		#region Presentation Model
+
+		public Clipboard Clipboard
+		{
+			get { return _clipboard; }
+			set
+			{
+				if (!ReferenceEquals(_clipboard, value))
+				{
+					_clipboard = value;
+
+					DataSource = _clipboard != null ? _clipboard.Items : new BindingList<IClipboardItem>();
+
+					EventsHelper.Fire(_clipboardChanged, this, EventArgs.Empty);
+				}
+			}
+		}
+
+		public event EventHandler ClipboardChanged
+		{
+			add { _clipboardChanged += value; }
+			remove { _clipboardChanged -= value; }
+		}
 
 		public BindingList<IClipboardItem> DataSource
 		{
 			get { return _items.BindingList; }
-			set
+			private set
 			{
-				//TODO: make setting configurable, so it can be turned off.
 				Platform.CheckForNullReference(value, "value");
 
 				CheckForLockedItems();
@@ -407,135 +424,17 @@ namespace ClearCanvas.ImageViewer.Clipboard
 
 		public virtual void AddPresentationImage(IPresentationImage presentationImage)
 		{
-			_items.Add(CreatePresentationImageItem(presentationImage));
+			_items.Add(_clipboard.CreatePresentationImageItem(presentationImage));
 		}
 
 		public virtual void AddDisplaySet(DisplaySet displaySet)
 		{
-			_items.Add(CreateDisplaySetItem(displaySet, null));
+			_items.Add(_clipboard.CreateDisplaySetItem(displaySet));
 		}
 
 		public virtual void AddDisplaySet(DisplaySet displaySet, IImageSelectionStrategy selectionStrategy)
 		{
-			_items.Add(CreateDisplaySetItem(displaySet, selectionStrategy));
-		}
-
-		#endregion
-
-		#region Static Helper Methods
-
-		public static IClipboardItem CreatePresentationImageItem(IPresentationImage image, bool ownReference = false)
-		{
-			Rectangle clientRectangle = image.ClientRectangle;
-			if (clientRectangle.IsEmpty) clientRectangle = new Rectangle(new Point(), image.SceneSize);
-
-			// Must build description from the source image because the ParentDisplaySet info is lost in the cloned image.
-			var name = BuildClipboardItemName(image);
-			var description = BuildClipboardItemDescription(image);
-
-			image = !ownReference ? ImageExporter.ClonePresentationImage(image) : image;
-			Bitmap bmp = IconCreator.CreatePresentationImageIcon(image, clientRectangle);
-
-			return new ClipboardItem(image, bmp, name, description, clientRectangle);
-		}
-
-		public static IClipboardItem CreateDisplaySetItem(IDisplaySet displaySet)
-		{
-			return CreateDisplaySetItem(displaySet, null);
-		}
-
-		public static IClipboardItem CreateDisplaySetItem(IDisplaySet displaySet, IImageSelectionStrategy selectionStrategy)
-		{
-			if (displaySet.ImageBox == null ||
-			    displaySet.ImageBox.SelectedTile == null ||
-			    displaySet.ImageBox.SelectedTile.PresentationImage == null)
-			{
-				throw new ArgumentException("DisplaySet must have a selected image.");
-			}
-
-			Rectangle clientRectangle = displaySet.ImageBox.SelectedTile.PresentationImage.ClientRectangle;
-			if (selectionStrategy == null)
-			{
-				if (displaySet.PresentationImages.Count == 1)
-				{
-					// Add as a single image.
-					return CreatePresentationImageItem(displaySet.PresentationImages[0]);
-				}
-				else
-				{
-					return CreateDisplaySetItem(displaySet.Clone(), clientRectangle);
-				}
-			}
-			else
-			{
-				List<IPresentationImage> images = new List<IPresentationImage>(selectionStrategy.GetImages(displaySet));
-				if (images.Count == 1)
-				{
-					// Add as a single image.
-					return CreatePresentationImageItem(images[0]);
-				}
-				else
-				{
-					string name = String.Format("{0} - {1}", selectionStrategy.Description, displaySet.Name);
-					displaySet = new DisplaySet(name, displaySet.Uid) {Description = displaySet.Description, Number = displaySet.Number};
-					images.ForEach(delegate(IPresentationImage image) { displaySet.PresentationImages.Add(image.Clone()); });
-					return CreateDisplaySetItem(displaySet, clientRectangle);
-				}
-			}
-		}
-
-		private static IClipboardItem CreateDisplaySetItem(IDisplaySet displaySet, Rectangle clientRectangle)
-		{
-			Bitmap bmp = IconCreator.CreateDisplaySetIcon(displaySet, clientRectangle);
-			return new ClipboardItem(displaySet, bmp, displaySet.Name, BuildClipboardItemDescription(displaySet), clientRectangle);
-		}
-
-		private static string BuildClipboardItemName(IPresentationImage image)
-		{
-			if (!(image is IImageSopProvider))
-				return string.Empty;
-
-			var imageSopProvider = (IImageSopProvider) image;
-
-			// This is unlikely to happen
-			if (image.ParentDisplaySet == null)
-				return string.Format(SR.MessageClipboardNameSingleImage, imageSopProvider.ImageSop.SeriesDescription, imageSopProvider.ImageSop.InstanceNumber);
-
-			// Multi-frame image, display image and frame number
-			if (imageSopProvider.ImageSop.NumberOfFrames > 1)
-				return string.Format(SR.MessageClipboardNameMultiframeImage, image.ParentDisplaySet.Name, imageSopProvider.ImageSop.InstanceNumber, imageSopProvider.Frame.FrameNumber);
-
-			// Single frame image in a display set of multiple images, display image number
-			if (image.ParentDisplaySet.PresentationImages.Count > 1)
-				return string.Format(SR.MessageClipboardNameSingleImage, image.ParentDisplaySet.Name, imageSopProvider.ImageSop.InstanceNumber);
-
-			// Only one image in the displayset, no need for image number
-			return image.ParentDisplaySet.Name;
-		}
-
-		private static string BuildClipboardItemDescription(IPresentationImage image)
-		{
-			if (!(image is IImageSopProvider))
-				return string.Empty;
-
-			var imageSopProvider = (IImageSopProvider) image;
-			var sop = imageSopProvider.ImageSop;
-
-			return string.Format(SR.MessageClipboardDescription
-			                     , sop.PatientId
-			                     , sop.PatientsName == null ? null : sop.PatientsName.FormattedName
-			                     , Format.Date(DateParser.Parse(sop.StudyDate))
-			                     , sop.StudyDescription
-			                     , sop.AccessionNumber
-			                     , sop.Modality
-			                     , TextOverlayVisibilityHelper.IsVisible(image, true) ? SR.LabelOn : SR.LabelOff);
-		}
-
-		private static string BuildClipboardItemDescription(IDisplaySet displaySet)
-		{
-			return displaySet.PresentationImages.Count == 0
-			       	? string.Empty
-			       	: BuildClipboardItemDescription(displaySet.PresentationImages[0]);
+			_items.Add(_clipboard.CreateDisplaySetItem(displaySet, selectionStrategy));
 		}
 
 		#endregion

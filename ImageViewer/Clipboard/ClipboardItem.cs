@@ -87,7 +87,7 @@ namespace ClearCanvas.ImageViewer.Clipboard
 		void Unlock();
 	}
 
-	internal class ClipboardItem : IClipboardItem, IGalleryItem
+	public class ClipboardItem : IClipboardItem, IGalleryItem
 	{
 		private object _item;
 		private Image _image;

@@ -45,6 +45,10 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.View.WinForms
 			_pnlMain.Controls.Add(_clipboardControl);
 
 			_cboCurrentContext.DataSource = _component.AvailableContexts;
+
+			// SelectedItem needs to be explicitly initialized, because binding SelectedValue won't set correctly
+			// SelectedValue must be the binding, because SelectedItem doesn't register property changed until control loses focus
+			_cboCurrentContext.SelectedItem = _component.CurrentContext;
 			_cboCurrentContext.DataBindings.Add("SelectedValue", _component, "CurrentContext", true, DataSourceUpdateMode.OnPropertyChanged);
 		}
 

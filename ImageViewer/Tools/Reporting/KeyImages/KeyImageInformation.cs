@@ -39,9 +39,8 @@ using ClearCanvas.ImageViewer.StudyManagement;
 
 namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 {
-	public sealed class KeyImageInformation : IKeyObjectSelectionDocumentInformation, IDisposable
+	public sealed class KeyImageInformation : Clipboard.Clipboard, IKeyObjectSelectionDocumentInformation, IDisposable
 	{
-		private readonly BindingList<IClipboardItem> _clipboardItems;
 		private readonly string _name;
 
 		private string _documentInstanceUid;
@@ -54,9 +53,6 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 
 		internal KeyImageInformation()
 		{
-			_clipboardItems = new BindingList<IClipboardItem>();
-			_clipboardItems.ListChanged += OnClipboardItemsListChanged;
-
 			_documentInstanceUid = string.Empty;
 			_description = string.Empty;
 			_seriesDescription = SR.DefaultKeyObjectSelectionSeriesDescription;
@@ -67,11 +63,11 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 				_seriesDescription = string.Format("{0} ({1})", _seriesDescription, _author);
 		}
 
-		public KeyImageInformation(StudyTree studyTree, Sop keyObjectSelectionDocument)
+		private static IEnumerable<IClipboardItem> CreateClipboardItems(StudyTree studyTree, Sop keyObjectSelectionDocument)
 		{
 			Platform.CheckTrue(keyObjectSelectionDocument.SopClassUid == SopClass.KeyObjectSelectionDocumentStorageUid, "SOP Class must be Key Object Selection Document Storage");
 
-			_clipboardItems = new BindingList<IClipboardItem>();
+			var dummyContext = new KeyImageInformation(); // just need an instance of creating items
 			var factory = new PresentationImageFactory(studyTree);
 			foreach (var image in factory.CreateImages(keyObjectSelectionDocument))
 			{
@@ -83,15 +79,16 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 					if (presentationState != null) presentationState.DeserializeInteractiveAnnotations = true;
 				}
 
-				var item = ClipboardComponent.CreatePresentationImageItem(image, true);
+				var item = dummyContext.CreatePresentationImageItem(image, true);
 				item.SetHasChanges(false);
 				item.SetGuid(Guid.NewGuid());
-				_clipboardItems.Add(item);
+				yield return item;
 			}
+		}
 
-			// subscribe after having pre-populated the contents!
-			_clipboardItems.ListChanged += OnClipboardItemsListChanged;
-
+		public KeyImageInformation(StudyTree studyTree, Sop keyObjectSelectionDocument)
+			: base(CreateClipboardItems(studyTree, keyObjectSelectionDocument))
+		{
 			var koDeserializer = new KeyImageDeserializer(keyObjectSelectionDocument);
 			var description = koDeserializer.DeserializeDescriptions().OfType<KeyObjectDescriptionContentItem>().FirstOrDefault();
 			var author = koDeserializer.DeserializeObserverContexts().OfType<PersonObserverContextContentItem>().FirstOrDefault();
@@ -153,11 +150,6 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 			}
 		}
 
-		public BindingList<IClipboardItem> ClipboardItems
-		{
-			get { return _clipboardItems; }
-		}
-
 		public bool HasChanges
 		{
 			get { return _hasChanges; }
@@ -168,7 +160,7 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 			return _name;
 		}
 
-		private void OnClipboardItemsListChanged(object sender, ListChangedEventArgs e)
+		protected override void OnItemsListChanged(ListChangedEventArgs e)
 		{
 			FlagChanges();
 		}
@@ -193,7 +185,7 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 		/// </summary>
 		public IDictionary<IStudySource, List<DicomFile>> CreateSopInstances(NextSeriesNumberDelegate nextSeriesNumberDelegate = null)
 		{
-			if (!_hasChanges || !ClipboardItems.Any()) return new Dictionary<IStudySource, List<DicomFile>>(0);
+			if (!_hasChanges || !Items.Any()) return new Dictionary<IStudySource, List<DicomFile>>(0);
 
 			// the series index ensures consistent series level data because we only create one KO series and one PR series per study
 			var studyIndex = new Dictionary<string, StudyInfo>();
@@ -202,7 +194,7 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 
 			// create presentation states for the images in the clipboard
 			var presentationStates = new List<DicomSoftcopyPresentationState>();
-			foreach (var item in ClipboardItems.Where(i => i.Item is IPresentationImage))
+			foreach (var item in Items.Where(i => i.Item is IPresentationImage))
 			{
 				var image = (IPresentationImage) item.Item;
 
@@ -377,10 +369,10 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 
 		void IDisposable.Dispose()
 		{
-			foreach (IClipboardItem item in _clipboardItems)
-				((IDisposable) item).Dispose();
+			foreach (var item in base.Items.OfType<IDisposable>())
+				item.Dispose();
 
-			_clipboardItems.Clear();
+			base.Items.Clear();
 		}
 
 		#endregion
