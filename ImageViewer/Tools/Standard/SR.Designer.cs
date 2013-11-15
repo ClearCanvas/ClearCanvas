@@ -1260,6 +1260,15 @@ namespace ClearCanvas.ImageViewer.Tools.Standard {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 3D Only.
+        /// </summary>
+        internal static string Message3DOnly {
+            get {
+                return ResourceManager.GetString("Message3DOnly", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Failed to add the specified preset..
         /// </summary>
         internal static string MessageFailedToAddPreset {

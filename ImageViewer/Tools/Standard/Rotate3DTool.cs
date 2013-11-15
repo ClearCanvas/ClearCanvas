@@ -30,6 +30,7 @@ using ClearCanvas.Desktop.Actions;
 using ClearCanvas.ImageViewer.BaseTools;
 using ClearCanvas.ImageViewer.Graphics3D;
 using ClearCanvas.ImageViewer.InputManagement;
+using ClearCanvas.ImageViewer.InteractiveGraphics;
 using ClearCanvas.ImageViewer.Mathematics;
 using ClearCanvas.ImageViewer.Tools.Standard.Configuration;
 
@@ -64,12 +65,18 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 		private MemorableUndoableCommand _memorableCommand;
 		private ImageOperationApplicator _applicator;
 		private ToolModalityBehaviorHelper _toolBehavior;
+		private FlashOverlayController _flashOverlayController;
 
 		public Rotate3DTool()
 			: base(SR.TooltipRotate3D)
 		{
 			CursorToken = new CursorToken("Icons.Rotate3DToolSmall.png", GetType().Assembly);
 			_operation = new SpatialTransform3DImageOperation(Apply);
+
+			const string graphicName = "Icons.NoSpineLabeling.png";
+			var iconSet = new UnavailableActionIconSet(new IconSet("Icons.Rotate3DToolSmall.png", "Icons.Rotate3DToolMedium.png", "Icons.Rotate3DToolLarge.png"));
+			var resolver = new ApplicationThemeResourceResolver(GetType(), false);
+			_flashOverlayController = new FlashOverlayController(iconSet, resolver) {FlashSpeed = 1500};
 		}
 
 		public override void Initialize()
@@ -290,6 +297,9 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 
 		public override bool Start(IMouseInformation mouseInformation)
 		{
+			if (!CanRotate())
+				_flashOverlayController.Flash(SelectedPresentationImage, SR.Message3DOnly);
+
 			base.Start(mouseInformation);
 
 			CaptureBeginState();

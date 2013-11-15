@@ -30,7 +30,7 @@ using ClearCanvas.Desktop;
 using ClearCanvas.Desktop.Actions;
 using ClearCanvas.ImageViewer.BaseTools;
 using ClearCanvas.ImageViewer.Common.WorkItem;
-using ClearCanvas.ImageViewer.Graphics;
+using ClearCanvas.ImageViewer.InteractiveGraphics;
 using ClearCanvas.ImageViewer.PresentationStates.Dicom;
 using ClearCanvas.ImageViewer.StudyManagement;
 

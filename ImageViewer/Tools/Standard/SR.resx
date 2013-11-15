@@ -783,4 +783,7 @@ Please check the log for more details.</value>
   <data name="MenuUnlockAnnotation" xml:space="preserve">
     <value>Unlock Annotation</value>
   </data>
+  <data name="Message3DOnly" xml:space="preserve">
+    <value>3D Only</value>
+  </data>
 </root>
