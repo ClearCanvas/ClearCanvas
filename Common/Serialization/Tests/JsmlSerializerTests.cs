@@ -170,7 +170,6 @@ namespace ClearCanvas.Common.Serialization.Tests
             }
 		}
 
-		/// </summary>
 		[DataContract]
 		class TestContract3
 		{
@@ -261,6 +260,12 @@ namespace ClearCanvas.Common.Serialization.Tests
 		public JsmlSerializerTests()
 		{
 			Platform.SetExtensionFactory(new UnitTestExtensionFactory());
+		}
+
+		[TestFixtureSetUp]
+		public void InitTest()
+		{
+			PolymorphicDataContractHook<TestPolyDataContractAttribute>.ClearKnownTypes();
 		}
 
 		[Test]
