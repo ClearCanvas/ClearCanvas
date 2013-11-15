@@ -22,6 +22,7 @@
 
 #endregion
 
+using System;
 using System.Collections.Generic;
 using ClearCanvas.Dicom.Iod.Macros;
 using ClearCanvas.Dicom.Iod.Macros.VoiLut;
@@ -257,6 +258,12 @@ namespace ClearCanvas.Dicom.Iod.Modules
 					return 0;
 				return attribute.Count;
 			}
+		}
+
+		DicomSequenceItem IIodMacro.DicomSequenceItem
+		{
+			get { throw new InvalidOperationException(); }
+			set { throw new InvalidOperationException(); }
 		}
 	}
 }

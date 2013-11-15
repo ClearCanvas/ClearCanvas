@@ -31,7 +31,7 @@ namespace ClearCanvas.Dicom.Iod.Macros
 	/// VOI LUT Macro
 	/// </summary>
 	/// <remarks>As defined in the DICOM Standard 2011, Part 3, Section C.11.2 (Table C.11-2b)</remarks>
-	public interface IVoiLutMacro
+	public interface IVoiLutMacro : IIodMacro
 	{
 		/// <summary>
 		/// Gets or sets the value of VoiLutSequence in the underlying collection. Type 1C.
