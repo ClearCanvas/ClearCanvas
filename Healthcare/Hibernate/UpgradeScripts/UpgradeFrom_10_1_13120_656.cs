@@ -16,7 +16,7 @@ using ClearCanvas.Enterprise.Core.Upgrade;
 namespace ClearCanvas.Healthcare.Hibernate.UpgradeScripts
 {
     /// <summary>
-    /// Upgrade from the Yen milestone to the Phoenix5 milestone.
+    /// Upgrade from the Bennu milestone to the Rigel milestone.
     /// </summary>
     [ExtensionOf(typeof(PersistentStoreUpgradeScriptExtensionPoint))]
     internal class UpgradeFrom_10_1_13120_656 : BaseUpgradeScript
