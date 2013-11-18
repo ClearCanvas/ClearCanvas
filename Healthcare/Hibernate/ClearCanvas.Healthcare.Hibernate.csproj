@@ -123,7 +123,7 @@
     </Compile>
     <Compile Include="UpgradeScripts\BaseUpgradeScript.cs" />
     <Compile Include="UpgradeScripts\UpgradeFrom_9_0_9561_11723.cs" />
-    <Compile Include="UpgradeScripts\UpgradeFrom_10_1_13120_656.cs" />
+    <Compile Include="UpgradeScripts\UpgradeFrom_10_0_11128_314.cs" />
     <Compile Include="UpgradeScripts\UpgradeFrom_10_1_13120_656.cs" />
   </ItemGroup>
   <ItemGroup>
