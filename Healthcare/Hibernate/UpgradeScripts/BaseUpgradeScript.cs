@@ -36,7 +36,7 @@ namespace ClearCanvas.Healthcare.Hibernate.UpgradeScripts
 				string line;
 				while ((line = reader.ReadLine()) != null)
 				{
-					if (line.Length > 0)
+					if (line.Length > 0 && !line.Trim().Equals("GO"))
 					{
 						try
 						{
