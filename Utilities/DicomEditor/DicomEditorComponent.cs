@@ -560,15 +560,18 @@ namespace ClearCanvas.Utilities.DicomEditor
 		{
 			_dicomTagData.Items.Clear();
 
-			this.ReadAttributeCollection(_loadedFiles[_position].MetaInfo, null, 0);
-			this.ReadAttributeCollection(_loadedFiles[_position].DataSet, null, 0);
+			// minimize the number of calls to Items.Add because the table GUI is bound to the change events
+			// a large number of individual change events (e.g. multiframe image with many functional group tags) would slow down the GUI considerably
+			var tagData = ReadAttributeCollection(_loadedFiles[_position].MetaInfo, null, 0)
+				.Concat(ReadAttributeCollection(_loadedFiles[_position].DataSet, null, 0));
+			_dicomTagData.Items.AddRange(tagData);
 
 			this.DicomFileTitle = _loadedFiles[_position].Filename;
 
 			EventsHelper.Fire(_displayedDumpChangedEvent, this, new DisplayedDumpChangedEventArgs(_position == 0, _position == (_loadedFiles.Count - 1), _loadedFiles.Count == 1, _dirtyFlags[_position] == true));
 		}
 
-		private void ReadAttributeCollection(DicomAttributeCollection set, DicomEditorTag parent, int nestingLevel)
+		private static IEnumerable<DicomEditorTag> ReadAttributeCollection(DicomAttributeCollection set, DicomEditorTag parent, int nestingLevel)
 		{
 			foreach (DicomAttribute attribute in set)
 			{
@@ -578,31 +581,32 @@ namespace ClearCanvas.Utilities.DicomEditor
 				if (attribute is DicomAttributeSQ)
 				{
 					DicomEditorTag editorSq = new DicomEditorTag(attribute, parent, nestingLevel);
-					_dicomTagData.Items.Add(editorSq);
+					yield return editorSq;
 
-					DicomSequenceItem[] items = (DicomSequenceItem[]) ((DicomAttributeSQ) attribute).Values;
+					DicomSequenceItem[] items = (DicomSequenceItem[]) attribute.Values;
 					if (items.Length != 0)
 					{
-						DicomEditorTag editorSqItem;
-						DicomSequenceItem sequenceItem;
 						for (int i = 0; i < items.Length; i++)
 						{
-							sequenceItem = items[i];
+							var sequenceItem = items[i];
 
-							editorSqItem = new DicomEditorTag("fffe", "e000", "Sequence Item", editorSq, i, nestingLevel + 1);
-							_dicomTagData.Items.Add(editorSqItem);
+							var editorSqItem = new DicomEditorTag("fffe", "e000", "Sequence Item", editorSq, i, nestingLevel + 1);
+							yield return editorSqItem;
 
-							this.ReadAttributeCollection(sequenceItem, editorSqItem, nestingLevel + 2);
+							foreach (var tag in ReadAttributeCollection(sequenceItem, editorSqItem, nestingLevel + 2))
+								yield return tag;
+
 							//add SQ Item delimiter
-							_dicomTagData.Items.Add(new DicomEditorTag("fffe", "e00d", "Item Delimitation Item", editorSqItem, i, nestingLevel + 1));
+							yield return new DicomEditorTag("fffe", "e00d", "Item Delimitation Item", editorSqItem, i, nestingLevel + 1);
 						}
 					}
+
 					//add SQ delimiter
-					_dicomTagData.Items.Add(new DicomEditorTag("fffe", "e0dd", "Sequence Delimitation Item", editorSq, items.Length, nestingLevel));
+					yield return new DicomEditorTag("fffe", "e0dd", "Sequence Delimitation Item", editorSq, items.Length, nestingLevel);
 				}
 				else
 				{
-					_dicomTagData.Items.Add(new DicomEditorTag(attribute, parent, nestingLevel));
+					yield return new DicomEditorTag(attribute, parent, nestingLevel);
 				}
 			}
 		}
