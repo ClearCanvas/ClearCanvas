@@ -507,7 +507,7 @@ namespace ClearCanvas.Dicom.Network.Scu
                                                              return;
                                                          }
 
-                                                         /// TODO (CR Jun 2012): Do we need to check for a stop signal?
+                                                         // TODO (CR Jun 2012): Do we need to check for a stop signal?
                                                          // TODO (Marmot): Check stop?
                                                          // TODO (CR Jun 2012): Stop is checked for in OnReceiveResponseMessage after each c-store-rsp received.
                                                          // There's a small chance that every image we're attempting to send wasn't negotiated over the association and it
@@ -515,9 +515,9 @@ namespace ClearCanvas.Dicom.Network.Scu
                                                          ok = SendCStore(client, association);                                                             
                                                      }                                                     
                                                  }
-                                                 catch
+                                                 catch (Exception x)
                                                  {
-                                                     Platform.Log(LogLevel.Error, "Error when sending C-STORE-RQ messages, aborted on-going send operations");
+                                                     Platform.Log(LogLevel.Error, x, "Error when sending C-STORE-RQ messages, aborted on-going send operations");
                                                      try
                                                      {
                                                          client.SendAssociateAbort(DicomAbortSource.ServiceProvider, DicomAbortReason.NotSpecified);
@@ -579,6 +579,9 @@ namespace ClearCanvas.Dicom.Network.Scu
 		                pcid = SelectUncompressedPresentationContext(association, msg);
 	                }
                 }
+
+				if (pcid != 0 && fileToSend.FileIsLoaded)
+					msg = new DicomMessage(fileToSend.LoadFile());
             }
 
             return pcid;

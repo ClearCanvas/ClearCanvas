@@ -121,7 +121,7 @@ namespace ClearCanvas.Dicom.Tests
 			scu.Send();
 			scu.Join();
 
-			Assert.AreEqual(scu.Status, ScuOperationStatus.NetworkError);
+			Assert.AreEqual(ScuOperationStatus.NetworkError, scu.Status);
 
 			// StopListening
 			DicomServer.StopListening(serverParameters);

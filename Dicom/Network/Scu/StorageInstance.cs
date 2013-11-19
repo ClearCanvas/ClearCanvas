@@ -133,6 +133,10 @@ namespace ClearCanvas.Dicom.Network.Scu
 		/// </summary>
 		public long MetaInfoFileLength { get; set; }
 
+		/// <summary>
+		/// Returns true if the <see cref="DicomFile"/> is already loaded into memory
+		/// </summary>
+		public bool FileIsLoaded { get { return _dicomFile != null; } }
 		#endregion
 
 		#region Constructors
