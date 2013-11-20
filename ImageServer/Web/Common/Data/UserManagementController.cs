@@ -40,13 +40,13 @@ namespace ClearCanvas.ImageServer.Web.Common.Data
         {
             List<UserRowData> data;
             
-            using(UserManagement service = new UserManagement())
+            using(var service = new UserManagement())
             {
                 data = CollectionUtils.Map(
                     service.FindUsers(new ListUsersRequest()),
                     delegate(UserSummary summary)
                     {
-                        UserRowData user = new UserRowData(summary, null);
+                        var user = new UserRowData(summary, null);
                         return user;
                     });
             }
@@ -58,22 +58,23 @@ namespace ClearCanvas.ImageServer.Web.Common.Data
         {
             bool success = false;
 
-            using(UserManagement service = new UserManagement())
+            using(var service = new UserManagement())
             {
                 try
                 {
-                    UserDetail newUser = new UserDetail
-                                             {
-                                                 UserName = user.UserName,
-                                                 DisplayName = user.DisplayName,
-                                                 Enabled = user.Enabled,
-                                                 CreationTime = Platform.Time,
-                                                 PasswordExpiryTime = Platform.Time,
-                                                 ResetPassword = true // TODO: Why do we need to reset password here?
-                                             };
+	                var newUser = new UserDetail
+		                {
+			                UserName = user.UserName,
+			                DisplayName = user.DisplayName,
+			                Enabled = user.Enabled,
+			                CreationTime = Platform.Time,
+			                PasswordExpiryTime = Platform.Time,
+			                EmailAddress = user.EmailAddress,
+			                ResetPassword = true // TODO: Why do we need to reset password here?
+		                };
 
 
-                    List<AuthorityGroupSummary> groups = new List<AuthorityGroupSummary>();
+                    var groups = new List<AuthorityGroupSummary>();
 
                     foreach (UserGroup userGroup in user.UserGroups)
                     {
@@ -98,19 +99,19 @@ namespace ClearCanvas.ImageServer.Web.Common.Data
         {
             bool success = false;
 
-            using(UserManagement service = new UserManagement())
+            using(var service = new UserManagement())
             {
                 try
                 {
-                    UserDetail updateUser = new UserDetail
-                                                {
-                                                    UserName = user.UserName,
-                                                    DisplayName = user.DisplayName,
-                                                    EmailAddress = user.EmailAddress,
-                                                    Enabled = user.Enabled
-                                                };
+	                var updateUser = new UserDetail
+		                {
+			                UserName = user.UserName,
+			                DisplayName = user.DisplayName,
+			                EmailAddress = user.EmailAddress,
+			                Enabled = user.Enabled
+		                };
 
-                    List<AuthorityGroupSummary> groups = new List<AuthorityGroupSummary>();
+                    var groups = new List<AuthorityGroupSummary>();
 
                     foreach(UserGroup userGroup in user.UserGroups)
                     {
@@ -135,9 +136,9 @@ namespace ClearCanvas.ImageServer.Web.Common.Data
         {
             bool exists = false;
 
-            using(UserManagement service = new UserManagement())
+            using(var service = new UserManagement())
             {
-                ListUsersRequest filter = new ListUsersRequest();
+                var filter = new ListUsersRequest();
                 filter.ExactMatchOnly = true;
                 filter.UserName = username;
 
@@ -156,7 +157,7 @@ namespace ClearCanvas.ImageServer.Web.Common.Data
         {
             bool success = false;
 
-            using(UserManagement service = new UserManagement())
+            using(var service = new UserManagement())
             {
                 try
                 {
@@ -177,7 +178,7 @@ namespace ClearCanvas.ImageServer.Web.Common.Data
         {
             bool success = false;
 
-            using(UserManagement service = new UserManagement())
+            using(var service = new UserManagement())
             {
                 try
                 {
@@ -198,7 +199,7 @@ namespace ClearCanvas.ImageServer.Web.Common.Data
         {
             bool exists = false;
 
-            using (AuthorityManagement service = new AuthorityManagement())
+            using (var service = new AuthorityManagement())
             {
                 IList<AuthorityGroupSummary> list = service.ListAllAuthorityGroups();
 
@@ -222,9 +223,9 @@ namespace ClearCanvas.ImageServer.Web.Common.Data
         {
             bool success;
 
-            using(AuthorityManagement service = new AuthorityManagement())
+            using(var service = new AuthorityManagement())
             {
-                List<AuthorityTokenSummary> tokens = new List<AuthorityTokenSummary>();
+                var tokens = new List<AuthorityTokenSummary>();
 
                 foreach (TokenSummary token in userGroup.Tokens)
                 {
@@ -243,10 +244,10 @@ namespace ClearCanvas.ImageServer.Web.Common.Data
         {
             bool success;
 
-            using(AuthorityManagement service = new AuthorityManagement())
+            using(var service = new AuthorityManagement())
         
             {
-                AuthorityGroupDetail detail = new AuthorityGroupDetail
+                var detail = new AuthorityGroupDetail
                                                   {
                                                       AuthorityGroupRef = new EntityRef(userGroup.Ref),
                                                       Name = userGroup.Name,
@@ -269,11 +270,11 @@ namespace ClearCanvas.ImageServer.Web.Common.Data
 
         public void DeleteUserGroup(UserGroupRowData userGroup, bool checkIfGroupIsEmpty)
         {
-            using (AuthorityManagement service = new AuthorityManagement())
+            using (var service = new AuthorityManagement())
             {
                 try
                 {
-                    EntityRef entityRef = new EntityRef(userGroup.Ref);
+                    var entityRef = new EntityRef(userGroup.Ref);
                     service.DeleteAuthorityGroup(entityRef, checkIfGroupIsEmpty);
                 }
                 catch (Exception ex)
@@ -288,9 +289,9 @@ namespace ClearCanvas.ImageServer.Web.Common.Data
         {
             bool success;
 
-            using(AuthorityManagement service = new AuthorityManagement())
+            using(var service = new AuthorityManagement())
             {
-                   List<AuthorityTokenSummary> tokenList = new List<AuthorityTokenSummary>();
+                   var tokenList = new List<AuthorityTokenSummary>();
 
                    foreach(TokenRowData token in tokens)
                    {
