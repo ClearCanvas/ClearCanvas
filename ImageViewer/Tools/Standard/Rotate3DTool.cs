@@ -36,6 +36,7 @@ using ClearCanvas.ImageViewer.Tools.Standard.Configuration;
 
 namespace ClearCanvas.ImageViewer.Tools.Standard
 {
+	[ViewerActionPermission("activate", AuthorityTokens.ViewerClinical)]
 	[MenuAction("activate", "imageviewer-contextmenu/MenuRotate3D", "Select", Flags = ClickActionFlags.CheckAction)]
 	[MenuAction("activate", "global-menus/MenuTools/MenuStandard/MenuRotate3D", "Select", Flags = ClickActionFlags.CheckAction)]
 	[DropDownButtonAction("activate", "global-toolbars/ToolbarStandard/ToolbarRotate3D", "Select", "DropDownMenuModel", Flags = ClickActionFlags.CheckAction)]
