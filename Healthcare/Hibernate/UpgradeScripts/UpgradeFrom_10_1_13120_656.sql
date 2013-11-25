@@ -31,7 +31,7 @@ alter table AuthorityGroup_ add BuiltIn_ BIT
 GO
 
 update AuthorityGroup_ set BuiltIn_ = 0
-alter table AuthorityGroup_ alter column BuiltIn_ BIT NOT NULL
+alter table AuthorityGroup_ alter column BuiltIn_ BIT NOT NULL DEFAULT 0
 
 
 
