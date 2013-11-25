@@ -196,6 +196,15 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to One or more Key Images could not be reverted because they have never been saved before. Consider deleting them instead..
+        /// </summary>
+        internal static string MessageUnableToRevertSomeKeyImages {
+            get {
+                return ResourceManager.GetString("MessageUnableToRevertSomeKeyImages", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Create Key Object Selection.
         /// </summary>
         internal static string TitleCreateKeyObjectSelection {
