@@ -27,11 +27,11 @@ create index IX_AccountType_6EFE8F739003A904F7ECB8C9135C3F5A on User_ (AccountTy
 GO
 
 PRINT N'Update AuthorityGroup_ table'
-alter table AuthorityGroup_ add BuiltIn_ BIT 
+alter table AuthorityGroup_ add BuiltIn_ BIT DEFAULT 0
 GO
 
 update AuthorityGroup_ set BuiltIn_ = 0
-alter table AuthorityGroup_ alter column BuiltIn_ BIT NOT NULL DEFAULT 0
+alter table AuthorityGroup_ alter column BuiltIn_ BIT NOT NULL
 
 
 
