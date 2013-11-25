@@ -322,7 +322,8 @@ namespace ClearCanvas.ImageViewer.Vtk.Rendering
 							glPixelStorei(GL_PACK_ALIGNMENT, 4); // align to 4 byte boundaries (since we're copying 32-bit pixels anyway)
 
 							// now read from the OpenGL buffer directly into our surface buffer
-							glReadPixels(0, 0, _clientRectangle.Width, _clientRectangle.Height, GL_BGRA, OpenGlImplementation.ReadPixelsTypeBgra, bmpData.Scan0);
+							var pData = bmpData.Stride > 0 ? bmpData.Scan0 : bmpData.Scan0 + (bmpData.Height - 1)*bmpData.Stride;
+							glReadPixels(0, 0, _clientRectangle.Width, _clientRectangle.Height, GL_BGRA, OpenGlImplementation.ReadPixelsTypeBgra, pData);
 
 							// OpenGL buffer data is a bottom-up image, and the GDI+ memory bitmap might be top-bottom, so we flip the scan lines here
 							if (bmpData.Stride > 0)

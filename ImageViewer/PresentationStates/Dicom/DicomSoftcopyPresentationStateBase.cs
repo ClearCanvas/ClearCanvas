@@ -40,15 +40,20 @@ using ClearCanvas.ImageViewer.Mathematics;
 namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 {
 	[Cloneable]
-	internal abstract class DicomSoftcopyPresentationStateBase<T> : DicomSoftcopyPresentationState where T : IDicomPresentationImage
+	internal abstract class DicomSoftcopyPresentationStateBase<T> : DicomSoftcopyPresentationState
+		where T : IDicomPresentationImage
 	{
-		protected DicomSoftcopyPresentationStateBase(SopClass psSopClass) : base(psSopClass) {}
+		protected DicomSoftcopyPresentationStateBase(SopClass psSopClass)
+			: base(psSopClass) {}
 
-		protected DicomSoftcopyPresentationStateBase(SopClass psSopClass, DicomFile dicomFile) : base(psSopClass, dicomFile) {}
+		protected DicomSoftcopyPresentationStateBase(SopClass psSopClass, DicomFile dicomFile)
+			: base(psSopClass, dicomFile) {}
 
-		protected DicomSoftcopyPresentationStateBase(SopClass psSopClass, DicomAttributeCollection dataSource) : base(psSopClass, dataSource) {}
+		protected DicomSoftcopyPresentationStateBase(SopClass psSopClass, DicomAttributeCollection dataSource)
+			: base(psSopClass, dataSource) {}
 
-		protected DicomSoftcopyPresentationStateBase(DicomSoftcopyPresentationStateBase<T> source, ICloningContext context) : base(source, context)
+		protected DicomSoftcopyPresentationStateBase(DicomSoftcopyPresentationStateBase<T> source, ICloningContext context)
+			: base(source, context)
 		{
 			context.CloneFields(source, this);
 		}
@@ -59,19 +64,27 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 			if (imageCollection.Count == 0)
 				return;
 
-			this.PerformTypeSpecificSerialization(imageCollection);
+			PerformTypeSpecificSerialization(imageCollection);
 		}
 
 		protected override sealed void PerformDeserialization(IList<IPresentationImage> images)
 		{
-			foreach (PresentationStateRelationshipModuleIod psRelationship in this.RelationshipSets)
+			DicomPresentationImageCollection<T> imageCollection;
+
+			if (!DeserializeIgnoreImageRelationship)
 			{
-				SeriesReferenceDictionary dictionary = new SeriesReferenceDictionary(psRelationship.ReferencedSeriesSequence);
-
-				DicomPresentationImageCollection<T> imageCollection = new DicomPresentationImageCollection<T>(images.OfType<T>().Where(img => dictionary.ReferencesFrame(img.ImageSop.SeriesInstanceUid, img.ImageSop.SopInstanceUid, img.Frame.FrameNumber)));
-
-				this.PerformTypeSpecificDeserialization(imageCollection);
+				imageCollection = new DicomPresentationImageCollection<T>(
+					RelationshipSets.Select(s => new SeriesReferenceDictionary(s.ReferencedSeriesSequence))
+						.Aggregate(Enumerable.Empty<T>(),
+						           (set, rel) => set.Union(images.OfType<T>()
+						                                   	.Where(img => rel.ReferencesFrame(img.ImageSop.SeriesInstanceUid, img.ImageSop.SopInstanceUid, img.Frame.FrameNumber)))));
 			}
+			else
+			{
+				imageCollection = new DicomPresentationImageCollection<T>(images.OfType<T>());
+			}
+
+			PerformTypeSpecificDeserialization(imageCollection);
 		}
 
 		protected abstract void PerformTypeSpecificSerialization(DicomPresentationImageCollection<T> images);
@@ -571,12 +584,18 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 			return new PointF((rectangle.Left + rectangle.Right)/2f, (rectangle.Top + rectangle.Bottom)/2f);
 		}
 
+		protected bool DeserializeIgnoreImageRelationship
+		{
+			get { return DeserializeOptions.HasFlag(DicomSoftcopyPresentationStateDeserializeOptions.IgnoreImageRelationship); }
+		}
+
 		protected void DeserializeDisplayedArea(DisplayedAreaModuleIod dispAreaMod, out RectangleF displayedArea, T image)
 		{
 			ISpatialTransform spatialTransform = image.SpatialTransform;
 			foreach (DisplayedAreaModuleIod.DisplayedAreaSelectionSequenceItem item in dispAreaMod.DisplayedAreaSelectionSequence)
 			{
-				if (item.ReferencedImageSequence[0].ReferencedSopInstanceUid == image.ImageSop.SopInstanceUid)
+				var dictionary = !DeserializeIgnoreImageRelationship ? new ImageSopInstanceReferenceDictionary(item.ReferencedImageSequence, true) : null;
+				if (dictionary == null || dictionary.ReferencesFrame(image.Frame.SopInstanceUid, image.Frame.FrameNumber))
 				{
 					// get the displayed area of the image in source coordinates (stored values do not have sub-pixel accuracy)
 					var displayRect = RectangleF.FromLTRB(item.DisplayedAreaTopLeftHandCorner.X,
@@ -691,11 +710,13 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 			var sqItems = module.GraphicAnnotationSequence;
 			if (sqItems != null)
 			{
+				var interactiveAnnotations = DeserializeOptions.HasFlag(DicomSoftcopyPresentationStateDeserializeOptions.InteractiveAnnotations);
+				var ignoreImageRelationships = DeserializeIgnoreImageRelationship;
 				foreach (var annotation in sqItems.Select(sqItem =>
 				                                          new
 				                                          	{
 				                                          		LayerId = sqItem.GraphicLayer ?? string.Empty,
-				                                          		Graphic = DicomGraphicsFactory.CreateGraphicAnnotation(image.Frame, sqItem, displayedArea, DeserializeInteractiveAnnotations)
+				                                          		Graphic = DicomGraphicsFactory.CreateGraphicAnnotation(image.Frame, sqItem, displayedArea, interactiveAnnotations, ignoreImageRelationships)
 				                                          	}).Where(g => g.Graphic != null))
 				{
 					graphic.Layers[annotation.LayerId].Graphics.Add(annotation.Graphic);

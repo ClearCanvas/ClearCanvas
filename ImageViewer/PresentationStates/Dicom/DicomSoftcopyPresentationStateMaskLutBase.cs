@@ -31,15 +31,14 @@ using ClearCanvas.Dicom.Iod;
 using ClearCanvas.Dicom.Iod.Macros;
 using ClearCanvas.Dicom.Iod.Macros.VoiLut;
 using ClearCanvas.Dicom.Iod.Modules;
-using ClearCanvas.ImageViewer.Graphics;
 using ClearCanvas.ImageViewer.Imaging;
-using ClearCanvas.ImageViewer.StudyManagement;
-using DataLutIod=ClearCanvas.Dicom.Iod.DataLut;
+using DataLutIod = ClearCanvas.Dicom.Iod.DataLut;
 
 namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 {
 	[Cloneable]
-	internal abstract class DicomSoftcopyPresentationStateMaskLutBase<T> : DicomSoftcopyPresentationStateBase<T> where T : IDicomPresentationImage, IVoiLutProvider, IDicomVoiLutsProvider
+	internal abstract class DicomSoftcopyPresentationStateMaskLutBase<T> : DicomSoftcopyPresentationStateBase<T>
+		where T : IDicomPresentationImage, IVoiLutProvider, IDicomVoiLutsProvider
 	{
 		protected DicomSoftcopyPresentationStateMaskLutBase(SopClass psSopClass) : base(psSopClass) {}
 
@@ -66,7 +65,7 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 			// NOTE: Not supported
 		}
 
-		protected void SerializeModalityLut(ModalityLutModuleIod module, DicomPresentationImageCollection<T> images) { }
+		protected void SerializeModalityLut(ModalityLutModuleIod module, DicomPresentationImageCollection<T> images) {}
 
 		protected void SerializeSoftcopyVoiLut(SoftcopyVoiLutModuleIod module, DicomPresentationImageCollection<T> images)
 		{
@@ -92,7 +91,7 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 					IVoiLutLinear voiLut = (IVoiLutLinear) lut;
 					sequenceItem.WindowWidth = new double[] {voiLut.WindowWidth};
 					sequenceItem.WindowCenter = new double[] {voiLut.WindowCenter};
-					sequenceItem.WindowCenterWidthExplanation = new string[] { SR.LabelPresentationVoiLinearLut };
+					sequenceItem.WindowCenterWidthExplanation = new string[] {SR.LabelPresentationVoiLinearLut};
 					sequenceItem.VoiLutFunction = VoiLutFunction.Linear; // we don't support sigmoid
 				}
 				else
@@ -135,8 +134,8 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 
 			foreach (SoftcopyVoiLutModuleIod.SoftcopyVoiLutSequenceItem lutSequence in lutSequences)
 			{
-				ImageSopInstanceReferenceDictionary dictionary = new ImageSopInstanceReferenceDictionary(lutSequence.ReferencedImageSequence, true);
-				if (dictionary.ReferencesFrame(image.ImageSop.SopInstanceUid, image.Frame.FrameNumber))
+				var dictionary = !DeserializeIgnoreImageRelationship ? new ImageSopInstanceReferenceDictionary(lutSequence.ReferencedImageSequence, true) : null;
+				if (dictionary == null || dictionary.ReferencesFrame(image.ImageSop.SopInstanceUid, image.Frame.FrameNumber))
 				{
 					if (lutSequence.CountWindows > 0)
 					{

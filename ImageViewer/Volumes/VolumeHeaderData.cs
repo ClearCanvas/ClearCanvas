@@ -387,7 +387,8 @@ namespace ClearCanvas.ImageViewer.Volumes
 				volumeDataSet[tag] = source[tag].Copy();
 
 			// copy volume-consistent values for the Frame of Reference Module
-			volumeDataSet[DicomTags.FrameOfReferenceUid] = source[DicomTags.FrameOfReferenceUid].Copy();
+			foreach (uint tag in FrameOfReferenceModuleIod.DefinedTags)
+				volumeDataSet[tag] = source[tag].Copy();
 
 			// update computed normalized values for the Modality LUT Module
 			volumeDataSet[DicomTags.RescaleSlope].SetFloat64(0, rescaleSlope);

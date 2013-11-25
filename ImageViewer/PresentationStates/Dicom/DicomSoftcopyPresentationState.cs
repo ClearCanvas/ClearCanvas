@@ -84,9 +84,9 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 			_stationName = string.Empty;
 			_institution = Institution.Empty;
 			Manufacturer = "ClearCanvas Inc.";
-			ManufacturersModelName = ProductInformation.GetName(true, false);
+			ManufacturersModelName = ProductInformation.GetName(false, false);
 			DeviceSerialNumber = string.Empty;
-			SoftwareVersions = ProductInformation.GetVersion(true, true, true);
+			SoftwareVersions = ProductInformation.GetVersion(true, true, true, true);
 			_presentationInstanceNumber = 1;
 			_presentationSopInstanceUid = string.Empty;
 			_presentationSeriesDateTime = Platform.Time;
@@ -326,7 +326,7 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 		/// This property may only be set if the presentation state has not yet been serialized to a file.
 		/// </remarks>
 		/// <exception cref="InvalidOperationException">Thrown if the presentation state has already been serialized to a file.</exception>
-		internal Institution Institution
+		public Institution Institution
 		{
 			get { return _institution; }
 			set
@@ -394,9 +394,9 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 		}
 
 		/// <summary>
-		/// Gets or sets a value controlling whether or not annotations in the presentation state are deserialized as interactive objects.
+		/// Gets or sets options controlling the behaviour of presentation state deserialization.
 		/// </summary>
-		public bool DeserializeInteractiveAnnotations { get; set; }
+		public DicomSoftcopyPresentationStateDeserializeOptions DeserializeOptions { get; set; }
 
 		private void AssertSerialized()
 		{
@@ -785,5 +785,27 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 		}
 
 		#endregion
+	}
+
+	/// <summary>
+	/// Specifies options for the presentation state deserialization process.
+	/// </summary>
+	[Flags]
+	public enum DicomSoftcopyPresentationStateDeserializeOptions
+	{
+		/// <summary>
+		/// Specifies that annotations in the presentation state are to be deserialized as interactive objects.
+		/// </summary>
+		InteractiveAnnotations = 1,
+
+		/// <summary>
+		/// Specifies that the stored Referenced Image Sequence is ignored and the presentation state is applicable to all requested images.
+		/// </summary>
+		IgnoreImageRelationship = 2,
+
+		/// <summary>
+		/// Specifies the default set of options.
+		/// </summary>
+		Default = 0
 	}
 }

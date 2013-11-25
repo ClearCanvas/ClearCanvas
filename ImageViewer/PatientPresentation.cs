@@ -111,19 +111,31 @@ namespace ClearCanvas.ImageViewer
 
 		public void GetOrientation(out Vector3D orientationX, out Vector3D orientationY)
 		{
-			var imageSopProvider = _owner as IImageSopProvider;
+			GetOrientation(_owner, out orientationX, out orientationY);
+		}
+
+		/// <summary>
+		/// Gets the current orientation of the specified image presentation axes in the patient coordinate system.
+		/// </summary>
+		/// <param name="image">The <see cref="IPresentationImage"/>.</param>
+		/// <param name="orientationX">The presentation X-axis.</param>
+		/// <param name="orientationY">The presentation Y-axis.</param>
+		/// <returns>TRUE if the returned presentation axes are valid; FALSE otherwise.</returns>
+		public static bool GetOrientation(IPresentationImage image, out Vector3D orientationX, out Vector3D orientationY)
+		{
+			var imageSopProvider = image as IImageSopProvider;
 			if (imageSopProvider == null || !imageSopProvider.Frame.ImagePlaneHelper.IsValid)
 			{
 				orientationX = new Vector3D(1, 0, 0);
 				orientationY = new Vector3D(0, 1, 0);
-				return;
+				return false;
 			}
 
 			var point0 = new PointF(0, 0);
 			var pointR = new PointF(100, 0);
 			var pointD = new PointF(0, 100);
 
-			var spatialTransformProvider = _owner as ISpatialTransformProvider;
+			var spatialTransformProvider = image as ISpatialTransformProvider;
 			if (spatialTransformProvider != null)
 			{
 				point0 = spatialTransformProvider.SpatialTransform.ConvertToSource(point0);
@@ -135,6 +147,8 @@ namespace ClearCanvas.ImageViewer
 			var patient0 = imagePlaneHelper.ConvertToPatient(point0);
 			orientationX = (imagePlaneHelper.ConvertToPatient(pointR) - patient0).Normalize();
 			orientationY = (imagePlaneHelper.ConvertToPatient(pointD) - patient0).Normalize();
+
+			return true;
 		}
 	}
 }

@@ -774,4 +774,7 @@ Alternately, the study can be brought back online by a PACS administrator.</valu
   <data name="FormatAngleDegrees" xml:space="preserve">
     <value>{0:F1}°</value>
   </data>
+  <data name="MessageKeyObjectDeserializeFailure" xml:space="preserve">
+    <value>An error has occurred while deserializing the key object selection document.</value>
+  </data>
 </root>
