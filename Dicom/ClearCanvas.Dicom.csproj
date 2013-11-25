@@ -139,6 +139,8 @@
     <Compile Include="DicomUncompressedPixelData.cs" />
     <Compile Include="FileReference.cs" />
     <Compile Include="Iod\ComponentGroup.cs" />
+    <Compile Include="Iod\ContextGroups\ImageDrivationContextGroup.cs" />
+    <Compile Include="Iod\ContextGroups\SourceImagePurposesOfReferenceContextGroup.cs" />
     <Compile Include="Iod\CorrectedImage.cs" />
     <Compile Include="Iod\CountsSource.cs" />
     <Compile Include="Iod\DecayCorrection.cs" />
@@ -248,9 +250,11 @@
     <Compile Include="Iod\Modules\EnhancedPetSeriesModuleIod.cs" />
     <Compile Include="Iod\Modules\EnhancedSeriesModuleIod.cs" />
     <Compile Include="Iod\Modules\EnhancedUsSeriesModuleIod.cs" />
+    <Compile Include="Iod\Modules\FrameOfReferenceModuleIod.cs" />
     <Compile Include="Iod\Modules\MrSeriesModuleIod.cs" />
     <Compile Include="Iod\Modules\MultiFrameDimensionModule.cs" />
     <Compile Include="Iod\Modules\MultiFrameFunctionalGroupsModule.cs" />
+    <Compile Include="Iod\Modules\MultiFrameModuleIod.cs" />
     <Compile Include="Iod\Modules\NmPetPatientOrientationModuleIod.cs" />
     <Compile Include="Iod\Modules\OpthalmicTomographySeriesModuleIod.cs" />
     <Compile Include="Iod\Modules\PetIsotopeModuleIod.cs" />

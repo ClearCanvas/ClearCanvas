@@ -28,24 +28,31 @@ using ClearCanvas.Dicom.Iod.Macros;
 
 namespace ClearCanvas.Dicom.Iod.ContextGroups
 {
-	public sealed class SpeciesContextGroup : ContextGroupBase<Species>
+	/// <summary>
+	/// Source Image Purposes of Reference Context Group
+	/// </summary>
+	/// <remarks>As defined in the DICOM Standard 2011, Part 16, Annex B, CID 7202</remarks>
+	public sealed class SourceImagePurposesOfReferenceContextGroup : ContextGroupBase<SourceImagePurposesOfReference>
 	{
-		private SpeciesContextGroup() : base(7454, "Species", true, new DateTime(2006, 8, 22)) {}
+		private SourceImagePurposesOfReferenceContextGroup()
+			: base(7202, "Source Image Purposes of Reference", true, new DateTime(2011, 06, 09)) {}
 
-		public static readonly Species HomoSapiens = new Species("SRT", "L-85B00", "homo sapiens");
-		public static readonly Species FelineSpecies = new Species("SRT", "L-80A00", "Feline species");
-		public static readonly Species EquineSpecies = new Species("SRT", "L-80400", "Equine species");
-		public static readonly Species OvineSpecies = new Species("SRT", "L-80300", "Ovine species");
-		public static readonly Species PorcineSpecies = new Species("SRT", "L-80500", "Porcine species");
-		public static readonly Species CaprineSpecies = new Species("SRT", "L-80200", "Caprine species");
-		public static readonly Species CanineSpecies = new Species("SRT", "L-80700", "Canine species");
-		public static readonly Species BovineSpecies = new Species("SRT", "L-80100", "Bovine species");
+		#region Static Instances
+
+		public static readonly SourceImagePurposesOfReference UncompressedPredecessor = new SourceImagePurposesOfReference("121320", "Uncompressed predecessor");
+		public static readonly SourceImagePurposesOfReference MaskImageForImageProcessingOperation = new SourceImagePurposesOfReference("121321", "Mask image for image processing operation");
+		public static readonly SourceImagePurposesOfReference SourceImageForImageProcessingOperation = new SourceImagePurposesOfReference("121322", "Source image for image processing operation");
+		public static readonly SourceImagePurposesOfReference SourceImageForMontage = new SourceImagePurposesOfReference("121329", "Source image for montage");
+		public static readonly SourceImagePurposesOfReference LossyCompressedPredecessor = new SourceImagePurposesOfReference("121330", "Lossy compressed predecessor");
+		public static readonly SourceImagePurposesOfReference ForProcessingPredecessor = new SourceImagePurposesOfReference("121358", "For Processing predecessor");
+
+		#endregion
 
 		#region Singleton Instancing
 
-		private static readonly SpeciesContextGroup _contextGroup = new SpeciesContextGroup();
+		private static readonly SourceImagePurposesOfReferenceContextGroup _contextGroup = new SourceImagePurposesOfReferenceContextGroup();
 
-		public static SpeciesContextGroup Instance
+		public static SourceImagePurposesOfReferenceContextGroup Instance
 		{
 			get { return _contextGroup; }
 		}
@@ -54,31 +61,29 @@ namespace ClearCanvas.Dicom.Iod.ContextGroups
 
 		#region Static Enumeration of Values
 
-		public static IEnumerable<Species> Values
+		public static IEnumerable<SourceImagePurposesOfReference> Values
 		{
 			get
 			{
-				yield return HomoSapiens;
-				yield return FelineSpecies;
-				yield return EquineSpecies;
-				yield return OvineSpecies;
-				yield return PorcineSpecies;
-				yield return CaprineSpecies;
-				yield return CanineSpecies;
-				yield return BovineSpecies;
+				yield return UncompressedPredecessor;
+				yield return MaskImageForImageProcessingOperation;
+				yield return SourceImageForImageProcessingOperation;
+				yield return SourceImageForMontage;
+				yield return LossyCompressedPredecessor;
+				yield return ForProcessingPredecessor;
 			}
 		}
 
 		/// <summary>
-		/// Gets an enumerator that iterates through the defined titles.
+		/// Gets an enumerator that iterates through the defined codes.
 		/// </summary>
-		/// <returns>A <see cref="IEnumerator{T}"/> object that can be used to iterate through the defined titles.</returns>
-		public override IEnumerator<Species> GetEnumerator()
+		/// <returns>A <see cref="IEnumerator{T}"/> object that can be used to iterate through the defined codes.</returns>
+		public override IEnumerator<SourceImagePurposesOfReference> GetEnumerator()
 		{
 			return Values.GetEnumerator();
 		}
 
-		public static Species LookupTitle(CodeSequenceMacro codeSequence)
+		public static SourceImagePurposesOfReference LookupCode(CodeSequenceMacro codeSequence)
 		{
 			return Instance.Lookup(codeSequence);
 		}
@@ -87,56 +92,42 @@ namespace ClearCanvas.Dicom.Iod.ContextGroups
 	}
 
 	/// <summary>
-	/// Represents a species
+	/// Represents a Source Image Purposes of Reference code.
 	/// </summary>
-	public sealed class Species : ContextGroupBase<Species>.ContextGroupItemBase
+	public class SourceImagePurposesOfReference : ContextGroupBase<SourceImagePurposesOfReference>.ContextGroupItemBase
 	{
 		/// <summary>
-		/// Constructor for titles defined in DICOM 2009, Part 16, Annex B, CID 7454.
+		/// Constructor for codes defined in DICOM 2011, Part 16, Annex B, CID 7202.
 		/// </summary>
-		internal Species(string codeValue, string codeMeaning) : base("SRT", codeValue, codeMeaning) {}
+		internal SourceImagePurposesOfReference(string codeValue, string codeMeaning) : base("DCM", codeValue, codeMeaning) {}
 
 		/// <summary>
-		/// Constructs a new species.
+		/// Constructs a new code.
 		/// </summary>
 		/// <param name="codingSchemeDesignator">The designator of the coding scheme in which this code is defined.</param>
 		/// <param name="codeValue">The value of this code.</param>
 		/// <param name="codeMeaning">The Human-readable meaning of this code.</param>
 		/// <exception cref="ArgumentException">Thrown if <paramref name="codingSchemeDesignator"/> or <paramref name="codeValue"/> are <code>null</code> or empty.</exception>
-		public Species(string codingSchemeDesignator, string codeValue, string codeMeaning)
+		public SourceImagePurposesOfReference(string codingSchemeDesignator, string codeValue, string codeMeaning)
 			: base(codingSchemeDesignator, codeValue, codeMeaning) {}
 
 		/// <summary>
-		/// Constructs a new species.
+		/// Constructs a new code.
 		/// </summary>
 		/// <param name="codingSchemeDesignator">The designator of the coding scheme in which this code is defined.</param>
 		/// <param name="codingSchemeVersion">The version of the coding scheme in which this code is defined, if known. Should be <code>null</code> if not explicitly specified.</param>
 		/// <param name="codeValue">The value of this code.</param>
 		/// <param name="codeMeaning">The Human-readable meaning of this code.</param>
 		/// <exception cref="ArgumentException">Thrown if <paramref name="codingSchemeDesignator"/> or <paramref name="codeValue"/> are <code>null</code> or empty.</exception>
-		public Species(string codingSchemeDesignator, string codingSchemeVersion, string codeValue, string codeMeaning)
+		public SourceImagePurposesOfReference(string codingSchemeDesignator, string codingSchemeVersion, string codeValue, string codeMeaning)
 			: base(codingSchemeDesignator, codingSchemeVersion, codeValue, codeMeaning) {}
 
 		/// <summary>
-		/// Constructs a new species.
+		/// Constructs a new code.
 		/// </summary>
 		/// <param name="codeSequence">The code sequence attributes macro.</param>
 		/// <exception cref="ArgumentException">Thrown if <paramref name="codeSequence.CodingSchemeDesignator"/> or <paramref name="codeSequence.CodeValue"/> are <code>null</code> or empty.</exception>
-		public Species(CodeSequenceMacro codeSequence)
+		public SourceImagePurposesOfReference(CodeSequenceMacro codeSequence)
 			: base(codeSequence.CodingSchemeDesignator, codeSequence.CodingSchemeVersion, codeSequence.CodeValue, codeSequence.CodeMeaning) {}
-
-		public static bool TryParse(CodeSequenceMacro codeSequence, out Species species)
-		{
-			try
-			{
-				species = new Species(codeSequence);
-				return true;
-			}
-			catch (Exception)
-			{
-				species = null;
-				return false;
-			}
-		}
 	}
 }

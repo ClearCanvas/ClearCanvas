@@ -25,13 +25,12 @@
 using System;
 using System.Collections.Generic;
 using ClearCanvas.Dicom.Iod.Macros;
-using ClearCanvas.Dicom.Iod.Sequences;
 
 namespace ClearCanvas.Dicom.Iod.ContextGroups
 {
 	public sealed class BreedContextGroup : ContextGroupBase<Breed>
 	{
-		private BreedContextGroup() : base(7480, "Breed", true, new DateTime(2009, 3, 22)) { }
+		private BreedContextGroup() : base(7480, "Breed", true, new DateTime(2009, 3, 22)) {}
 
 		#region Static Instances
 
@@ -5509,7 +5508,7 @@ namespace ClearCanvas.Dicom.Iod.ContextGroups
 		/// <summary>
 		/// Constructor for titles defined in DICOM 2009, Part 16, Annex B, CID 7481.
 		/// </summary>
-		internal Breed(string codeValue, string codeMeaning) : base("SRT", codeValue, codeMeaning) { }
+		internal Breed(string codeValue, string codeMeaning) : base("SRT", codeValue, codeMeaning) {}
 
 		/// <summary>
 		/// Constructs a new breed.
@@ -5538,6 +5537,20 @@ namespace ClearCanvas.Dicom.Iod.ContextGroups
 		/// <param name="codeSequence">The code sequence attributes macro.</param>
 		/// <exception cref="ArgumentException">Thrown if <paramref name="codeSequence.CodingSchemeDesignator"/> or <paramref name="codeSequence.CodeValue"/> are <code>null</code> or empty.</exception>
 		public Breed(CodeSequenceMacro codeSequence)
-			: base(codeSequence.CodingSchemeDesignator, codeSequence.CodingSchemeVersion, codeSequence.CodeValue, codeSequence.CodeMeaning) { }
+			: base(codeSequence.CodingSchemeDesignator, codeSequence.CodingSchemeVersion, codeSequence.CodeValue, codeSequence.CodeMeaning) {}
+
+		public static bool TryParse(CodeSequenceMacro codeSequence, out Breed breed)
+		{
+			try
+			{
+				breed = new Breed(codeSequence);
+				return true;
+			}
+			catch (Exception)
+			{
+				breed = null;
+				return false;
+			}
+		}
 	}
 }
