@@ -229,6 +229,7 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="UpgradeScripts\UpgradeFrom_NoOp.sql" />
+    <EmbeddedResource Include="UpgradeScripts\UpgradeFrom_10_1_13120_656.sql" />
     <EmbeddedResource Include="Mappings\OrderCancelReasonEnum.hbm.xml" />
     <EmbeddedResource Include="Mappings\OrderStatusEnum.hbm.xml" />
     <EmbeddedResource Include="Mappings\Report.hbm.xml" />
