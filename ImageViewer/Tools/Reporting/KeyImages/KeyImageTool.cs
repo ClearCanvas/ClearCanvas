@@ -31,8 +31,6 @@ using ClearCanvas.Desktop.Actions;
 using ClearCanvas.ImageViewer.BaseTools;
 using ClearCanvas.ImageViewer.Common.WorkItem;
 using ClearCanvas.ImageViewer.InteractiveGraphics;
-using ClearCanvas.ImageViewer.PresentationStates.Dicom;
-using ClearCanvas.ImageViewer.StudyManagement;
 
 namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 {
@@ -125,21 +123,10 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 			base.Dispose(disposing);
 		}
 
-		/// <remarks>
-		/// The current implementation of <see cref="KeyImagePublisher"/> supports only locally stored images that are <see cref="IImageSopProvider"/>s and supports <see cref="DicomSoftcopyPresentationState"/>s.
-		/// </remarks>
-		private static bool IsSupportedImage(IPresentationImage image)
-		{
-			var imageSopProvider = image as IImageSopProvider;
-			if (imageSopProvider == null)
-				return false;
-			return imageSopProvider.ImageSop.IsStored && DicomSoftcopyPresentationState.IsSupported(image);
-		}
-
 		private void UpdateEnabled()
 		{
-			Enabled = IsSupportedImage(SelectedPresentationImage) && PermissionsHelper.IsInRole(AuthorityTokens.Study.KeyImages);
-			ShowEnabled = KeyImageClipboardComponent.HasViewPlugin && PermissionsHelper.IsInRole(AuthorityTokens.Study.KeyImages);
+			Enabled = PermissionsHelper.IsInRole(AuthorityTokens.Study.KeyImages);
+			ShowEnabled = KeyImageClipboardComponent.HasViewPlugin && Enabled;
 		}
 
 		private void OnIsConnectedChanged(object sender, EventArgs eventArgs)

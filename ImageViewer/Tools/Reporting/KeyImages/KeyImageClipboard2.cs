@@ -147,7 +147,7 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 
 		public void Publish()
 		{
-			KeyImagePublisher.Publish(AvailableContexts.Where(c => c.HasChanges && c.Items.Count > 0));
+			KeyImagePublisher.Publish(AvailableContexts.Where(c => c.HasChanges && c.Items.Count > 0), _studyTree);
 		}
 
 		public void Dispose()
