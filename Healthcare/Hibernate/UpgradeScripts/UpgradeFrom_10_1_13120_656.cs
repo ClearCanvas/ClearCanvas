@@ -22,7 +22,7 @@ namespace ClearCanvas.Healthcare.Hibernate.UpgradeScripts
     internal class UpgradeFrom_10_1_13120_656 : BaseUpgradeScript
     {
         public UpgradeFrom_10_1_13120_656()
-            : base(new Version(10, 1, 13120, 656), null, "UpgradeFrom_NoOp.sql")
+            : base(new Version(10, 1, 13120, 656), null, "UpgradeFrom_10_1_13120_656.sql")
         {
         }
     }
