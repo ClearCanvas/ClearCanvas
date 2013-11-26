@@ -89,12 +89,14 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 
 			ToolRegistry.Add(this);
 
-			this.Context.Viewer.EventBroker.DisplaySetChanged += OnDisplaySetChanged;
+			if (Layout.Basic.ShowHideOverlaysTool.LegacyMode)
+				this.Context.Viewer.EventBroker.DisplaySetChanged += OnDisplaySetChanged;
 		}
 
 		protected override void Dispose(bool disposing)
 		{
-			this.Context.Viewer.EventBroker.DisplaySetChanged -= OnDisplaySetChanged;
+			if (Layout.Basic.ShowHideOverlaysTool.LegacyMode)
+				this.Context.Viewer.EventBroker.DisplaySetChanged -= OnDisplaySetChanged;
 
 			ToolRegistry.Remove(this);
 
