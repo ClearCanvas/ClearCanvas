@@ -118,6 +118,7 @@
     <Compile Include="DicomServer\Tests\DicomServerSettingsTests.cs" />
     <Compile Include="Diskspace.cs" />
     <Compile Include="DiskspaceMonitor.cs" />
+    <Compile Include="DisposableList.cs" />
     <Compile Include="ExtensionData.cs" />
     <Compile Include="FilteredGroup.cs" />
     <Compile Include="IBlockingEnumerator.cs" />

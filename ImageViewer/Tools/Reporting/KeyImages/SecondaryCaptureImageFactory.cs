@@ -35,7 +35,6 @@ using ClearCanvas.Dicom.Iod.Modules;
 using ClearCanvas.Dicom.Utilities;
 using ClearCanvas.ImageViewer.Annotations;
 using ClearCanvas.ImageViewer.Graphics;
-using ClearCanvas.ImageViewer.Imaging;
 using ClearCanvas.ImageViewer.Mathematics;
 using ClearCanvas.ImageViewer.PresentationStates.Dicom;
 using ClearCanvas.ImageViewer.StudyManagement;
@@ -113,21 +112,17 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 				var secondaryCapture = PresentationImageFactory.Create(sop).Single();
 				try
 				{
-					var presentationState = DicomSoftcopyPresentationState.Create(image);
+					var presentationState = DicomSoftcopyPresentationState.IsSupported(image) ? DicomSoftcopyPresentationState.Create(image) : null;
 					if (presentationState != null)
 					{
 						presentationState.DeserializeOptions |= DicomSoftcopyPresentationStateDeserializeOptions.IgnoreImageRelationship;
 						presentationState.Deserialize(secondaryCapture);
 					}
 					secondaryCapture.RenderImage(image.ClientRectangle).Dispose();
-
-					// deserializing the presentation state only adds the VOI LUTs to the image's collection (IDicomVoiLutsProvider)
-					// it doesn't actually apply it, so we have to manually install it here so that the real presentation state can capture it
-					//CloneVoiLut(image, secondaryCapture);
 				}
 				catch (Exception ex)
 				{
-					Platform.Log(LogLevel.Debug, ex, "An error has occurred while deserializing the image presentation state.");
+					Platform.Log(LogLevel.Warn, ex, "An error has occurred while deserializing the image presentation state.");
 				}
 				return secondaryCapture;
 			}
@@ -411,22 +406,6 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 
 		#region Utility Methods
 
-		private static void CloneVoiLut(IPresentationImage source, IPresentationImage target)
-		{
-			if (source is IVoiLutProvider && target is IVoiLutProvider)
-			{
-				var sourceManager = ((IVoiLutProvider) source).VoiLutManager;
-				var targetManager = ((IVoiLutProvider) target).VoiLutManager;
-
-				targetManager.Invert = sourceManager.Invert;
-
-				// if the source image was using a custom LUT (and not the min/max auto calculated LUT), clone its values to the reformatted image
-				var sourceLut = sourceManager.VoiLut as IVoiLutLinear;
-				if (sourceLut != null && !(sourceLut is MinMaxPixelCalculatedLinearLut))
-					targetManager.InstallVoiLut(sourceLut.Clone());
-			}
-		}
-
 		private static string GetPixelAspectRatioString(Frame sourceFrame)
 		{
 			if (!sourceFrame.NormalizedPixelSpacing.IsNull)
@@ -456,7 +435,6 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 			private readonly bool _overlayGraphicsVisible;
 			private readonly bool _applicationGraphicsVisible;
 			private readonly bool _dicomGraphicsVisible;
-			private readonly object _spatialTransformMemento;
 			private IPresentationImage _image;
 
 			public RenderImageHelper(IPresentationImage image)
@@ -474,7 +452,7 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 				if (overlayGraphicsProvider != null)
 				{
 					_overlayGraphicsVisible = overlayGraphicsProvider.OverlayGraphics.Visible;
-					overlayGraphicsProvider.OverlayGraphics.Visible = false;
+					overlayGraphicsProvider.OverlayGraphics.Visible = true;
 				}
 
 				var applicationGraphicsProvider = image as IApplicationGraphicsProvider;
@@ -489,18 +467,6 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 				{
 					_dicomGraphicsVisible = dicomPresentationImage.DicomGraphics.Visible;
 					dicomPresentationImage.DicomGraphics.Visible = false;
-				}
-
-				var spatialTransformProvider = image as ISpatialTransformProvider;
-				if (spatialTransformProvider != null)
-				{
-					_spatialTransformMemento = spatialTransformProvider.SpatialTransform.CreateMemento();
-					spatialTransformProvider.SpatialTransform.FlipX = false;
-					spatialTransformProvider.SpatialTransform.FlipY = false;
-					spatialTransformProvider.SpatialTransform.RotationXY = 0;
-					spatialTransformProvider.SpatialTransform.Scale = 1;
-					spatialTransformProvider.SpatialTransform.TranslationX = 0;
-					spatialTransformProvider.SpatialTransform.TranslationY = 0;
 				}
 			}
 
@@ -582,10 +548,6 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 				var dicomPresentationImage = _image as IDicomPresentationImage;
 				if (dicomPresentationImage != null)
 					dicomPresentationImage.DicomGraphics.Visible = _dicomGraphicsVisible;
-
-				var spatialTransformProvider = _image as ISpatialTransformProvider;
-				if (spatialTransformProvider != null)
-					spatialTransformProvider.SpatialTransform.SetMemento(_spatialTransformMemento);
 
 				_image = null;
 			}

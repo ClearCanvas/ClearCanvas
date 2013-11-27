@@ -40,10 +40,7 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 	/// <summary>
 	/// Factory class to create the individual graphics components of a DICOM image for presentation.
 	/// </summary>
-	/// <remarks>
-	/// 
-	/// </remarks>
-	internal class DicomGraphicsFactory
+	public class DicomGraphicsFactory
 	{
 		#region DICOM Overlays (and Bitmap Shutters)
 

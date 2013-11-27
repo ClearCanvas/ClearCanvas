@@ -86,7 +86,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 			Row = pixelSpacingRow;
 			Column = pixelSpacingColumn;
 			CalibrationType = NormalizedPixelSpacingCalibrationType.Manual;
-			CalibrationDetails = string.Empty;
+			CalibrationDetails = String.Empty;
 			OnCalibrated();
 		}
 
@@ -122,12 +122,12 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 			if (IsCrossSectionalModality(_frame))
 			{
 				// cross-sectional images use Pixel Spacing (0028,0030)
-				SetValues(_frame.PixelSpacing, NormalizedPixelSpacingCalibrationType.CrossSectionalSpacing, string.Empty);
+				SetValues(_frame.PixelSpacing, NormalizedPixelSpacingCalibrationType.CrossSectionalSpacing, String.Empty);
 			}
 			else if (_frame.PixelSpacing.IsNull || _frame.PixelSpacing.Equals(_frame.ImagerPixelSpacing))
 			{
 				// projection images using Imager Pixel Spacing (0018,1164) alone or with same value in Pixel Spacing (0028,0030)
-				SetValues(_frame.ImagerPixelSpacing, NormalizedPixelSpacingCalibrationType.Detector, string.Empty);
+				SetValues(_frame.ImagerPixelSpacing, NormalizedPixelSpacingCalibrationType.Detector, String.Empty);
 			}
 			else
 			{
@@ -142,7 +142,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 			Row = pixelSpacing.Row;
 			Column = pixelSpacing.Column;
 			CalibrationType = !pixelSpacing.IsNull ? calibrationType : NormalizedPixelSpacingCalibrationType.None;
-			CalibrationDetails = !pixelSpacing.IsNull ? calibrationDetails : string.Empty;
+			CalibrationDetails = !pixelSpacing.IsNull ? calibrationDetails : String.Empty;
 		}
 
 		private static NormalizedPixelSpacingCalibrationType ConvertCalibrationType(PixelSpacingCalibrationType calibrationType)
@@ -158,6 +158,8 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 					return NormalizedPixelSpacingCalibrationType.Unknown;
 			}
 		}
+
+		#region Cross Sectional SOP Classes
 
 		private static bool IsCrossSectionalModality(Frame frame)
 		{
@@ -190,6 +192,8 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		                                                                  		SopClass.XRay3dAngiographicImageStorageUid,
 		                                                                  		SopClass.XRay3dCraniofacialImageStorageUid
 		                                                                  	}.AsReadOnly();
+
+		#endregion
 	}
 
 	/// <summary>
