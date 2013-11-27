@@ -356,7 +356,7 @@ namespace ClearCanvas.ImageViewer.Clipboard
 		private void OnBindingListChanged(object sender, ListChangedEventArgs e)
 		{
 			// if the list changed due to items being removed, ensure any removed items are unselected first!
-			if ((e.ListChangedType == ListChangedType.ItemDeleted || e.ListChangedType == ListChangedType.Reset)
+			if ((e.ListChangedType == ListChangedType.ItemDeleted || e.ListChangedType == ListChangedType.ItemChanged || e.ListChangedType == ListChangedType.Reset)
 			    && _selection != null && !_selection.Items.Cast<IClipboardItem>().All(_items.Contains))
 				SetSelection(new Selection(_selection.Items.Intersect(_items)));
 

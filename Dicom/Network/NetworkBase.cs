@@ -1597,6 +1597,7 @@ namespace ClearCanvas.Dicom.Network
         {
             try
             {
+                Platform.Log(LogLevel.Debug, "Received PDU: {0}", raw.ToString());
                 switch (raw.Type)
                 {
                     case 0x01:
@@ -1848,7 +1849,7 @@ namespace ClearCanvas.Dicom.Network
 				                };
 		                }
 
-		                if (_dimse.ParseDatasetStatus != DicomReadStatus.Success)
+						if (!_dimse.DatasetReader.EncounteredStopTag)
 		                {
 			                _dimse.DatasetData.AddChunk(pdv.Value);
 

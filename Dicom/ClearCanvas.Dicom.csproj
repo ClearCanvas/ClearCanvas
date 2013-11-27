@@ -735,7 +735,9 @@
     <Compile Include="Validation\StringValueValidation.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
     <EmbeddedResource Include="Audit\DicomAuditMessageSchema.xsd">
       <SubType>
       </SubType>

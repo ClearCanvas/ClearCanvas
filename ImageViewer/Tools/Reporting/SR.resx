@@ -163,6 +163,9 @@
   <data name="MessageKeyImagePublishingFailed" xml:space="preserve">
     <value>Publishing of Key Images has failed.  Please see the logs for more details.</value>
   </data>
+  <data name="MessageUnableToRevertSomeKeyImages" xml:space="preserve">
+    <value>One or more Key Images could not be reverted because they have never been saved before. Consider deleting them instead.</value>
+  </data>
   <data name="TitleCreateKeyObjectSelection" xml:space="preserve">
     <value>Create Key Object Selection</value>
   </data>
