@@ -83,6 +83,7 @@ namespace ClearCanvas.Dicom.IO
         	BytesNeeded = 0;
         	_stream = stream;
             TransferSyntax = TransferSyntax.ExplicitVrLittleEndian;
+	        EncounteredStopTag = false;
         }
         #endregion
 
@@ -110,6 +111,8 @@ namespace ClearCanvas.Dicom.IO
 
     	public DicomTag LastTagRead { get; private set; }
         public DicomTag SaveTagRead { get; private set; }
+
+		public bool EncounteredStopTag { get; private set; }
 
 		public long EndGroupTwo { get { return _endGroup2; } }
 
@@ -183,11 +186,14 @@ namespace ClearCanvas.Dicom.IO
 					else
 						tagValue = LastTagRead.TagValue;
 
-                    if ((tagValue >= stopAtTag.TagValue) 
-						&& (_sqrs.Count == 0)) // only exit in root message when after stop tag
-                        return DicomReadStatus.Success;
+	                if ((tagValue >= stopAtTag.TagValue)
+	                    && (_sqrs.Count == 0)) // only exit in root message when after stop tag
+	                {
+		                EncounteredStopTag = true;
+		                return DicomReadStatus.Success;
+	                }
 
-                	bool twoByteLength;
+	                bool twoByteLength;
                 	if (_vr == null)
                     {
 						if (_syntax.ExplicitVr)

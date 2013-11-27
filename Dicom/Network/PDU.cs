@@ -170,7 +170,19 @@ namespace ClearCanvas.Dicom.Network
 
         public override String ToString()
         {
-            return String.Format("Pdu[type={0:X2}, length={1}]", Type, Length);
+	        string typeString = string.Empty;
+	        switch (Type)
+	        {
+		        case 0x01: typeString = "A-Associate-RQ"; break;
+		        case 0x02: typeString = "A-Associate-AC"; break;
+		        case 0x03: typeString = "A-Associate-RJ"; break;
+		        case 0x04: typeString = "P-DATA"; break;
+		        case 0x05: typeString = "A-Release-RQ"; break;
+		        case 0x06: typeString = "A-Release-RP"; break;
+		        case 0x07: typeString = "A-Abort"; break;
+	        }
+
+	        return String.Format("Pdu[type={0} ({1:X2}), length={2}]", typeString, Type, Length);
         }
 
         #region Read Methods
