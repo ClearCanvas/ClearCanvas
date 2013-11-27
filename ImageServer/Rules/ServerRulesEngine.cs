@@ -90,6 +90,7 @@ namespace ClearCanvas.ImageServer.Rules
 	{
         private readonly ServerRuleApplyTimeEnum _applyTime;
         private readonly ServerEntityKey _serverPartitionKey;
+		private List<IRule> _rulesApplied = new List<IRule>();
 
         #region Constructors
 
@@ -131,9 +132,9 @@ namespace ClearCanvas.ImageServer.Rules
 		public event EventHandler<ServerRulesEngineCompletedEventArgs> Completed;
 
 		/// <summary>
-		/// Gets rules which were applied on previous call to <see cref="Execute"/>
+		/// Gets rules which were applied on all previous calls to <see cref="Execute"/>
 		/// </summary>
-		public IEnumerable<IRule> RulesApplied { private set; get; } 
+		public IEnumerable<IRule> RulesApplied { get { return _rulesApplied.AsReadOnly(); } } 
 
 		#endregion
 
@@ -231,7 +232,7 @@ namespace ClearCanvas.ImageServer.Rules
 
             Statistics.ExecutionTime.End();
 
-			RulesApplied = rulesApplied;
+			_rulesApplied.AddRange(rulesApplied.Where(r=>!_rulesApplied.Contains(r)));
 		}
 
 		public void Complete(IEnumerable<IRule> rulesApplied)
