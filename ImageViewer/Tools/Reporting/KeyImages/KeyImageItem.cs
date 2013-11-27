@@ -40,7 +40,14 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 				var presentationStateUid = GetPresentationStateSopInstanceUid(image);
 
 				var clipboardItems = context.Items;
-				var result = clipboardItems.Where(IsSerialized).Select((k, i) => new {k.Item, Index = i, MetaData = k.ExtensionData.GetOrCreate<KeyImageItemMetaData>()}).FirstOrDefault(c => GetPresentationStateSopInstanceUid((c.Item as IPresentationImage)) == presentationStateUid);
+				var result = clipboardItems.Select((k, i) => new
+				                                             	{
+				                                             		k.Item,
+				                                             		IsSerialized = k.IsSerialized(),
+				                                             		Index = i,
+				                                             		MetaData = k.ExtensionData.GetOrCreate<KeyImageItemMetaData>()
+				                                             	})
+					.FirstOrDefault(c => c.IsSerialized && c.MetaData.PrSopInstanceUid == presentationStateUid);
 				if (result != null)
 				{
 					var keyImageItem = context.CreateKeyImageItem(image, hasChanges : true);
@@ -49,6 +56,7 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 					metadata.Changes = true;
 					metadata.Guid = result.MetaData.Guid;
 					metadata.KoSopInstanceUid = result.MetaData.KoSopInstanceUid;
+					metadata.PrSopInstanceUid = result.MetaData.PrSopInstanceUid;
 					metadata.OriginalItem = result.MetaData.OriginalItem ?? clipboardItems[result.Index];
 
 					clipboardItems[result.Index] = keyImageItem;
@@ -64,7 +72,15 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 			if (context != null && IsSerialized(item))
 			{
 				var clipboardItems = context.Items;
-				var result = clipboardItems.Where(k => IsSerialized(k) && GetGuid(k) == guid).Select((k, i) => new {k.Item, Index = i, MetaData = k.ExtensionData.GetOrCreate<KeyImageItemMetaData>()}).FirstOrDefault();
+				var result = clipboardItems.Select((k, i) => new
+				                                             	{
+				                                             		k.Item,
+				                                             		IsSerialized = IsSerialized(k),
+				                                             		Guid = GetGuid(k),
+				                                             		Index = i,
+				                                             		MetaData = k.ExtensionData.GetOrCreate<KeyImageItemMetaData>()
+				                                             	})
+					.FirstOrDefault(k => k.IsSerialized && k.Guid == guid);
 				if (result != null)
 				{
 					clipboardItems[result.Index] = result.MetaData.OriginalItem;
@@ -139,12 +155,14 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 		/// <param name="item"></param>
 		/// <param name="guid"></param>
 		/// <param name="selectionDocumentInstanceUid"></param>
-		public static void AssignSourceInfo(this IClipboardItem item, Guid guid, string selectionDocumentInstanceUid)
+		/// <param name="presentationStateInstanceUid"> </param>
+		public static void AssignSourceInfo(this IClipboardItem item, Guid guid, string selectionDocumentInstanceUid, string presentationStateInstanceUid)
 		{
 			var metadata = item.ExtensionData.GetOrCreate<KeyImageItemMetaData>();
 			metadata.Changes = false;
 			metadata.Guid = guid;
 			metadata.KoSopInstanceUid = selectionDocumentInstanceUid;
+			metadata.PrSopInstanceUid = presentationStateInstanceUid;
 			metadata.OriginalItem = item;
 		}
 
@@ -186,10 +204,25 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 			return sopInstanceUid;
 		}
 
+		/// <summary>
+		/// Gets the presentation state instance UID of a serialized item (i.e. the SOP instance UID of the related PR SOP).
+		/// Throws exception if item is not previously serialized.
+		/// </summary>
+		/// <param name="item"></param>
+		/// <returns></returns>
+		public static string GetPresentationStateInstanceUid(this IClipboardItem item)
+		{
+			var sopInstanceUid = item.ExtensionData.GetOrCreate<KeyImageItemMetaData>().PrSopInstanceUid;
+			if (sopInstanceUid == null)
+				throw new InvalidOperationException("Item has not been serialized yet");
+			return sopInstanceUid;
+		}
+
 		private class KeyImageItemMetaData
 		{
 			public bool Changes { get; set; }
 			public string KoSopInstanceUid { get; set; }
+			public string PrSopInstanceUid { get; set; }
 			public Guid? Guid { get; set; }
 			public IClipboardItem OriginalItem { get; set; }
 

@@ -81,16 +81,22 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 			var factory = new PresentationImageFactory(studyTree);
 			foreach (var image in factory.CreateImages(keyObjectSelectionDocument))
 			{
+				var presentationStateInstanceUid = string.Empty;
+
 				// set the deserialize interactive flag on the presentation state
 				var dicomPresentationImage = image as IDicomPresentationImage;
 				if (dicomPresentationImage != null)
 				{
 					var presentationState = dicomPresentationImage.PresentationState as DicomSoftcopyPresentationState;
-					if (presentationState != null) presentationState.DeserializeOptions |= DicomSoftcopyPresentationStateDeserializeOptions.InteractiveAnnotations;
+					if (presentationState != null)
+					{
+						presentationState.DeserializeOptions |= DicomSoftcopyPresentationStateDeserializeOptions.InteractiveAnnotations;
+						presentationStateInstanceUid = presentationState.PresentationSopInstanceUid;
+					}
 				}
 
 				var item = dummyContext.CreateKeyImageItem(image, true);
-				item.AssignSourceInfo(Guid.NewGuid(), keyObjectSelectionDocument.SopInstanceUid);
+				item.AssignSourceInfo(Guid.NewGuid(), keyObjectSelectionDocument.SopInstanceUid, presentationStateInstanceUid);
 				yield return item;
 			}
 		}
