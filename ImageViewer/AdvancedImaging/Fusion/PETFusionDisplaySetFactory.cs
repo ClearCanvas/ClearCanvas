@@ -83,7 +83,8 @@ namespace ClearCanvas.ImageViewer.AdvancedImaging.Fusion
 						return displaySets;
 					}
 
-					using (var fusionOverlayData = new FusionOverlayData(GetFrames(series.Sops)))
+					var overlayFrames = GetFrames(series.Sops);
+					using (var fusionOverlayData = new FusionOverlayData(overlayFrames))
 					{
 						foreach (var baseSeries in fuseableBaseSeries)
 						{
@@ -96,7 +97,7 @@ namespace ClearCanvas.ImageViewer.AdvancedImaging.Fusion
 
 							var descriptor = new PETFusionDisplaySetDescriptor(baseSeries.GetIdentifier(), series.GetIdentifier(), IsAttenuationCorrected(series.Sops[0]));
 							var displaySet = new DisplaySet(descriptor);
-							using (var sops = new DisposableList<Sop>(baseSeries.Sops.OfType<ImageSop>().Select(s => new ImageSop(new FusionSopDataSource(s.DataSource, _fusionType)))))
+							using (var sops = new DisposableList<Sop>(baseSeries.Sops.OfType<ImageSop>().Select(s => new ImageSop(new FusionSopDataSource(s.DataSource, _fusionType, overlayFrames)))))
 							{
 								foreach (var baseFrame in GetFrames(sops))
 								{

@@ -53,6 +53,33 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 		}
 
 		/// <summary>
+		/// Converts <see cref="NormalizedPixelSpacingCalibrationType"/> to <see cref="PixelSpacingCalibrationType"/>.
+		/// </summary>
+		public static string GetDescription(this NormalizedPixelSpacingCalibrationType type)
+		{
+			switch (type)
+			{
+				case NormalizedPixelSpacingCalibrationType.Manual:
+					return "Manual";
+				case NormalizedPixelSpacingCalibrationType.CrossSectionalSpacing:
+					return "Actual";
+				case NormalizedPixelSpacingCalibrationType.Detector:
+					return "Detector";
+				case NormalizedPixelSpacingCalibrationType.Geometry:
+					return "Geometry";
+				case NormalizedPixelSpacingCalibrationType.Fiducial:
+					return "Fiducial";
+				case NormalizedPixelSpacingCalibrationType.Magnified:
+					return "Magnified";
+				case NormalizedPixelSpacingCalibrationType.None:
+					return string.Empty;
+				case NormalizedPixelSpacingCalibrationType.Unknown:
+				default:
+					return "Unknown";
+			}
+		}
+
+		/// <summary>
 		/// Format the <see cref="Vector3D"/> as a string of form X\Y\Z
 		/// </summary>
 		public static string ToDicomAttributeString(this Vector3D vector3D)

@@ -23,10 +23,13 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using ClearCanvas.Common;
 using ClearCanvas.Dicom;
 using ClearCanvas.Dicom.Iod.ContextGroups;
 using ClearCanvas.Dicom.Iod.Modules;
+using ClearCanvas.Dicom.Iod.Sequences;
 using ClearCanvas.ImageViewer.StudyManagement;
 
 namespace ClearCanvas.ImageViewer.AdvancedImaging.Fusion
@@ -36,7 +39,7 @@ namespace ClearCanvas.ImageViewer.AdvancedImaging.Fusion
 		private readonly ISopDataSource _realSopDataSource;
 		private readonly DicomAttributeCollection _fusionHeaders;
 
-		public FusionSopDataSource(ISopDataSource realSopDataSource, PETFusionType type)
+		public FusionSopDataSource(ISopDataSource realSopDataSource, PETFusionType type, IEnumerable<IDicomAttributeProvider> overlayFrames)
 		{
 			_realSopDataSource = realSopDataSource;
 			_fusionHeaders = new DicomAttributeCollection();
@@ -49,6 +52,7 @@ namespace ClearCanvas.ImageViewer.AdvancedImaging.Fusion
 
 			// generate values for the General Image Module
 			_fusionHeaders[DicomTags.ImageType].SetStringValue(@"DERIVED\SECONDARY");
+			_fusionHeaders[DicomTags.SourceImageSequence].Values = UpdateSourceImageSequence(realSopDataSource, overlayFrames);
 			UpdateDerivationType(type);
 		}
 
@@ -95,16 +99,41 @@ namespace ClearCanvas.ImageViewer.AdvancedImaging.Fusion
 			return new FrameData(_realSopDataSource.GetFrameData(frameNumber), this);
 		}
 
+		private static DicomSequenceItem[] UpdateSourceImageSequence(IDicomAttributeProvider baseSop, IEnumerable<IDicomAttributeProvider> overlaySops)
+		{
+			var baseItem = new SourceImageSequence
+			               	{
+			               		ReferencedSopInstanceUid = baseSop[DicomTags.SopInstanceUid].ToString(),
+			               		ReferencedSopClassUid = baseSop[DicomTags.SopClassUid].ToString(),
+			               		SpatialLocationsPreserved = SpatialLocationsPreserved.Yes,
+			               		PurposeOfReferenceCodeSequence = SourceImagePurposesOfReferenceContextGroup.SourceImageForImageProcessingOperation
+			               	};
+			var maskItems = overlaySops != null ? overlaySops.GroupBy(s => s[DicomTags.SopInstanceUid].ToString())
+			                                      	.Select(s => s.First())
+			                                      	.Select(s => new SourceImageSequence
+			                                      	             	{
+			                                      	             		ReferencedSopInstanceUid = s[DicomTags.SopInstanceUid].ToString(),
+			                                      	             		ReferencedSopClassUid = s[DicomTags.SopClassUid].ToString(),
+			                                      	             		SpatialLocationsPreserved = SpatialLocationsPreserved.Yes,
+			                                      	             		PurposeOfReferenceCodeSequence = SourceImagePurposesOfReferenceContextGroup.SourceImageForImageProcessingOperation
+			                                      	             	}) : Enumerable.Empty<SourceImageSequence>();
+			return new[] {baseItem}.Concat(maskItems).Select(s => s.DicomSequenceItem).ToArray();
+		}
+
 		private void UpdateDerivationType(PETFusionType type)
 		{
 			switch (type)
 			{
 				case PETFusionType.CT:
-					_fusionHeaders[DicomTags.DerivationDescription].SetStringValue("PET/CT Fusion (original CT image with a PET overlay frame extracted from a volume)");
+					const string ctPetFusion = "PET/CT Fusion (original CT image with a PET overlay frame extracted from a volume)";
+					_fusionHeaders[DicomTags.ImageComments].SetStringValue(ctPetFusion);
+					_fusionHeaders[DicomTags.DerivationDescription].SetStringValue(ctPetFusion);
 					_fusionHeaders[DicomTags.DerivationCodeSequence].Values = new[] {ImageDerivationContextGroup.SpatiallyRelatedFramesExtractedFromTheVolume.AsDicomSequenceItem()};
 					break;
 				case PETFusionType.MR:
-					_fusionHeaders[DicomTags.DerivationDescription].SetStringValue("PET/MR Fusion (original MR image with a PET overlay frame extracted from a volume)");
+					const string mrPetFusion = "PET/MR Fusion (original MR image with a PET overlay frame extracted from a volume)";
+					_fusionHeaders[DicomTags.ImageComments].SetStringValue(mrPetFusion);
+					_fusionHeaders[DicomTags.DerivationDescription].SetStringValue(mrPetFusion);
 					_fusionHeaders[DicomTags.DerivationCodeSequence].Values = new[] {ImageDerivationContextGroup.SpatiallyRelatedFramesExtractedFromTheVolume.AsDicomSequenceItem()};
 					break;
 				default:

@@ -135,15 +135,15 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 			var sourceModule = new GeneralSeriesModuleIod(source);
 			var targetModule = new GeneralSeriesModuleIod(target);
 
-			targetModule.AnatomicalOrientationType = sourceModule.AnatomicalOrientationType;
-			// body part examined and (series) laterality are not filled in because they may vary for multiple SC images
-			// we'll use Image Laterality instead, and BPE is optional anyway
 			targetModule.Modality = sourceModule.Modality;
-			targetModule.PatientPosition = sourceModule.PatientPosition;
+			targetModule.PatientPosition = string.Empty;
 			targetModule.SeriesDateTime = seriesInfo.SeriesDateTime;
 			targetModule.SeriesDescription = seriesInfo.SeriesDescription;
 			targetModule.SeriesInstanceUid = seriesInfo.SeriesInstanceUid;
 			targetModule.SeriesNumber = seriesInfo.SeriesNumber;
+			targetModule.AnatomicalOrientationType = sourceModule.AnatomicalOrientationType;
+			// body part examined and (series) laterality are not filled in because they may vary for multiple SC images
+			// we'll use Image Laterality instead, and BPE is optional anyway
 		}
 
 		private static void FillScEquipmentModule(IDicomAttributeProvider target, string manufacturer, string modelName, string softwareVersions)
@@ -162,8 +162,11 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 			var targetModule = new FrameOfReferenceModuleIod(target);
 
 			var frameOfReferenceUid = sourceModule.FrameOfReferenceUid;
-			targetModule.FrameOfReferenceUid = !string.IsNullOrEmpty(frameOfReferenceUid) ? frameOfReferenceUid : DicomUid.GenerateUid().UID;
-			targetModule.PositionReferenceIndicator = sourceModule.PositionReferenceIndicator;
+			if (!string.IsNullOrEmpty(frameOfReferenceUid))
+			{
+				targetModule.FrameOfReferenceUid = frameOfReferenceUid;
+				targetModule.PositionReferenceIndicator = sourceModule.PositionReferenceIndicator;
+			}
 		}
 
 		private static void FillGeneralImageModule(IDicomAttributeProvider target, IDicomAttributeProvider source, SeriesInfo seriesInfo)
@@ -198,7 +201,7 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 				targetModule.PixelSpacingCalibrationType = sourceFrame.NormalizedPixelSpacing.CalibrationType.ToPixelSpacingCalibrationType();
 				targetModule.PixelSpacingCalibrationDescription = !string.IsNullOrEmpty(sourceFrame.NormalizedPixelSpacing.CalibrationDetails)
 				                                                  	? sourceFrame.NormalizedPixelSpacing.CalibrationDetails
-				                                                  	: sourceFrame.NormalizedPixelSpacing.CalibrationType.ToString();
+				                                                  	: sourceFrame.NormalizedPixelSpacing.CalibrationType.GetDescription();
 			}
 		}
 
@@ -217,8 +220,11 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 			if (!imagePositionPatient.IsNull)
 				target[DicomTags.ImagePositionPatient].SetStringValue(imagePositionPatient.ToString());
 
-			targetModule.SliceThickness = sourceModule.SliceThickness;
-			targetModule.SliceLocation = sourceModule.SliceLocation;
+			var sliceThickness = sourceModule.SliceThickness;
+			if (sliceThickness.HasValue)
+				targetModule.SliceThickness = sliceThickness;
+
+			// slice location is not filled in, since it's only useful for relative position within a series, and the series will contain images from various unrelated positions
 		}
 
 		private static void FillModalityLutModule(IDicomAttributeProvider target, Frame sourceFrame)
@@ -227,15 +233,6 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 			targetModule.RescaleIntercept = sourceFrame.RescaleIntercept;
 			targetModule.RescaleSlope = sourceFrame.RescaleSlope;
 			targetModule.RescaleType = (string) sourceFrame.RescaleUnits;
-
-			if (sourceFrame.ParentImageSop.Modality == "PT")
-			{
-				try
-				{
-					target[DicomTags.Units].SetStringValue(sourceFrame.RescaleUnits.ToPetSeriesUnits());
-				}
-				catch (InvalidOperationException) {}
-			}
 		}
 
 		private static void FillVoiLutModule(IDicomAttributeProvider target, Frame sourceFrame)
@@ -262,6 +259,15 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 			var laterality = sourceFrame.Laterality;
 			if (!string.IsNullOrEmpty(laterality))
 				target[DicomTags.ImageLaterality].SetStringValue(laterality);
+
+			if (sourceFrame.ParentImageSop.Modality == "PT")
+			{
+				try
+				{
+					target[DicomTags.Units].SetStringValue(sourceFrame.RescaleUnits.ToPetSeriesUnits());
+				}
+				catch (InvalidOperationException) {}
+			}
 		}
 
 		#endregion
