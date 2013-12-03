@@ -415,14 +415,7 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 		private static string GetPixelAspectRatioString(Frame sourceFrame)
 		{
 			if (!sourceFrame.NormalizedPixelSpacing.IsNull)
-			{
-				var ratio = (float) sourceFrame.NormalizedPixelSpacing.AspectRatio;
-				if (FloatComparer.AreEqual(1, ratio)) return @"1\1";
-
-				const int denominator = 1000000;
-				var numerator = (int) Math.Round(ratio*denominator);
-				return string.Format(@"{0:D}\{1:D}", numerator, denominator);
-			}
+				return sourceFrame.NormalizedPixelSpacing.GetPixelAspectRatioString();
 			return !sourceFrame.PixelAspectRatio.IsNull ? sourceFrame.PixelAspectRatio.ToString() : string.Empty;
 		}
 

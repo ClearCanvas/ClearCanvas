@@ -51,6 +51,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement.Tests
 					Assert.AreEqual(0, normalizedPixelSpacing.Column, _tolerance, "Column property");
 					Assert.AreEqual(NormalizedPixelSpacingCalibrationType.None, normalizedPixelSpacing.CalibrationType, "CalibrationType property");
 					Assert.AreEqual(string.Empty, normalizedPixelSpacing.CalibrationDetails, "CalibrationDetails property");
+					Assert.AreEqual(string.Empty, normalizedPixelSpacing.GetPixelAspectRatioString(), "GetPixelAspectRatioString result");
 				}
 			}
 		}
@@ -69,6 +70,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement.Tests
 					Assert.AreEqual(0, normalizedPixelSpacing.Column, _tolerance, "Column property");
 					Assert.AreEqual(NormalizedPixelSpacingCalibrationType.None, normalizedPixelSpacing.CalibrationType, "CalibrationType property");
 					Assert.AreEqual(string.Empty, normalizedPixelSpacing.CalibrationDetails, "CalibrationDetails property");
+					Assert.AreEqual(string.Empty, normalizedPixelSpacing.GetPixelAspectRatioString(), "GetPixelAspectRatioString result");
 				}
 			}
 		}
@@ -87,6 +89,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement.Tests
 					Assert.AreEqual(0.4, normalizedPixelSpacing.Column, _tolerance, "Column property");
 					Assert.AreEqual(NormalizedPixelSpacingCalibrationType.CrossSectionalSpacing, normalizedPixelSpacing.CalibrationType, "CalibrationType property");
 					Assert.AreEqual(string.Empty, normalizedPixelSpacing.CalibrationDetails, "CalibrationDetails property");
+					Assert.AreEqual(@"3\4", normalizedPixelSpacing.GetPixelAspectRatioString(), "GetPixelAspectRatioString result");
 				}
 			}
 		}
@@ -105,6 +108,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement.Tests
 					Assert.AreEqual(0.4, normalizedPixelSpacing.Column, _tolerance, "Column property");
 					Assert.AreEqual(NormalizedPixelSpacingCalibrationType.CrossSectionalSpacing, normalizedPixelSpacing.CalibrationType, "CalibrationType property");
 					Assert.AreEqual(string.Empty, normalizedPixelSpacing.CalibrationDetails, "CalibrationDetails property");
+					Assert.AreEqual(@"3\4", normalizedPixelSpacing.GetPixelAspectRatioString(), "GetPixelAspectRatioString result");
 				}
 			}
 		}
@@ -123,6 +127,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement.Tests
 					Assert.AreEqual(0, normalizedPixelSpacing.Column, _tolerance, "Column property");
 					Assert.AreEqual(NormalizedPixelSpacingCalibrationType.None, normalizedPixelSpacing.CalibrationType, "CalibrationType property");
 					Assert.AreEqual(string.Empty, normalizedPixelSpacing.CalibrationDetails, "CalibrationDetails property");
+					Assert.AreEqual(string.Empty, normalizedPixelSpacing.GetPixelAspectRatioString(), "GetPixelAspectRatioString result");
 				}
 			}
 		}
@@ -141,6 +146,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement.Tests
 					Assert.AreEqual(0.4, normalizedPixelSpacing.Column, _tolerance, "Column property");
 					Assert.AreEqual(NormalizedPixelSpacingCalibrationType.Detector, normalizedPixelSpacing.CalibrationType, "CalibrationType property");
 					Assert.AreEqual(string.Empty, normalizedPixelSpacing.CalibrationDetails, "CalibrationDetails property");
+					Assert.AreEqual(@"3\4", normalizedPixelSpacing.GetPixelAspectRatioString(), "GetPixelAspectRatioString result");
 				}
 			}
 		}
@@ -159,6 +165,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement.Tests
 					Assert.AreEqual(0, normalizedPixelSpacing.Column, _tolerance, "Column property");
 					Assert.AreEqual(NormalizedPixelSpacingCalibrationType.None, normalizedPixelSpacing.CalibrationType, "CalibrationType property");
 					Assert.AreEqual(string.Empty, normalizedPixelSpacing.CalibrationDetails, "CalibrationDetails property");
+					Assert.AreEqual(string.Empty, normalizedPixelSpacing.GetPixelAspectRatioString(), "GetPixelAspectRatioString result");
 				}
 			}
 		}
@@ -177,6 +184,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement.Tests
 					Assert.AreEqual(0.4, normalizedPixelSpacing.Column, _tolerance, "Column property");
 					Assert.AreEqual(NormalizedPixelSpacingCalibrationType.Detector, normalizedPixelSpacing.CalibrationType, "CalibrationType property");
 					Assert.AreEqual(string.Empty, normalizedPixelSpacing.CalibrationDetails, "CalibrationDetails property");
+					Assert.AreEqual(@"3\4", normalizedPixelSpacing.GetPixelAspectRatioString(), "GetPixelAspectRatioString result");
 				}
 			}
 		}
@@ -196,6 +204,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement.Tests
 					Assert.AreEqual(0.4, normalizedPixelSpacing.Column, _tolerance, "Column property");
 					Assert.AreEqual(NormalizedPixelSpacingCalibrationType.Detector, normalizedPixelSpacing.CalibrationType, "CalibrationType property");
 					Assert.AreEqual(string.Empty, normalizedPixelSpacing.CalibrationDetails, "CalibrationDetails property");
+					Assert.AreEqual(@"3\4", normalizedPixelSpacing.GetPixelAspectRatioString(), "GetPixelAspectRatioString result");
 				}
 			}
 		}
@@ -214,6 +223,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement.Tests
 					Assert.AreEqual(0.4, normalizedPixelSpacing.Column, _tolerance, "Column property");
 					Assert.AreEqual(NormalizedPixelSpacingCalibrationType.Unknown, normalizedPixelSpacing.CalibrationType, "CalibrationType property");
 					Assert.AreEqual(string.Empty, normalizedPixelSpacing.CalibrationDetails, "CalibrationDetails property");
+					Assert.AreEqual(@"3\4", normalizedPixelSpacing.GetPixelAspectRatioString(), "GetPixelAspectRatioString result");
 				}
 			}
 		}
@@ -233,6 +243,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement.Tests
 					Assert.AreEqual(0.4, normalizedPixelSpacing.Column, _tolerance, "Column property");
 					Assert.AreEqual(NormalizedPixelSpacingCalibrationType.Unknown, normalizedPixelSpacing.CalibrationType, "CalibrationType property");
 					Assert.AreEqual(string.Empty, normalizedPixelSpacing.CalibrationDetails, "CalibrationDetails property");
+					Assert.AreEqual(@"3\4", normalizedPixelSpacing.GetPixelAspectRatioString(), "GetPixelAspectRatioString result");
 				}
 			}
 		}
@@ -251,6 +262,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement.Tests
 					Assert.AreEqual(0.4, normalizedPixelSpacing.Column, _tolerance, "Column property");
 					Assert.AreEqual(NormalizedPixelSpacingCalibrationType.Fiducial, normalizedPixelSpacing.CalibrationType, "CalibrationType property");
 					Assert.AreEqual(string.Empty, normalizedPixelSpacing.CalibrationDetails, "CalibrationDetails property");
+					Assert.AreEqual(@"3\4", normalizedPixelSpacing.GetPixelAspectRatioString(), "GetPixelAspectRatioString result");
 				}
 			}
 		}
@@ -270,6 +282,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement.Tests
 					Assert.AreEqual(0.4, normalizedPixelSpacing.Column, _tolerance, "Column property");
 					Assert.AreEqual(NormalizedPixelSpacingCalibrationType.Fiducial, normalizedPixelSpacing.CalibrationType, "CalibrationType property");
 					Assert.AreEqual(string.Empty, normalizedPixelSpacing.CalibrationDetails, "CalibrationDetails property");
+					Assert.AreEqual(@"3\4", normalizedPixelSpacing.GetPixelAspectRatioString(), "GetPixelAspectRatioString result");
 				}
 			}
 		}
@@ -288,6 +301,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement.Tests
 					Assert.AreEqual(0.4, normalizedPixelSpacing.Column, _tolerance, "Column property");
 					Assert.AreEqual(NormalizedPixelSpacingCalibrationType.Geometry, normalizedPixelSpacing.CalibrationType, "CalibrationType property");
 					Assert.AreEqual(string.Empty, normalizedPixelSpacing.CalibrationDetails, "CalibrationDetails property");
+					Assert.AreEqual(@"3\4", normalizedPixelSpacing.GetPixelAspectRatioString(), "GetPixelAspectRatioString result");
 				}
 			}
 		}
@@ -307,6 +321,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement.Tests
 					Assert.AreEqual(0.4, normalizedPixelSpacing.Column, _tolerance, "Column property");
 					Assert.AreEqual(NormalizedPixelSpacingCalibrationType.Geometry, normalizedPixelSpacing.CalibrationType, "CalibrationType property");
 					Assert.AreEqual(string.Empty, normalizedPixelSpacing.CalibrationDetails, "CalibrationDetails property");
+					Assert.AreEqual(@"3\4", normalizedPixelSpacing.GetPixelAspectRatioString(), "GetPixelAspectRatioString result");
 				}
 			}
 		}
@@ -325,6 +340,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement.Tests
 					Assert.AreEqual(0, normalizedPixelSpacing.Column, _tolerance, "Column property");
 					Assert.AreEqual(NormalizedPixelSpacingCalibrationType.None, normalizedPixelSpacing.CalibrationType, "CalibrationType property");
 					Assert.AreEqual(string.Empty, normalizedPixelSpacing.CalibrationDetails, "CalibrationDetails property");
+					Assert.AreEqual(string.Empty, normalizedPixelSpacing.GetPixelAspectRatioString(), "GetPixelAspectRatioString result");
 				}
 			}
 		}
@@ -343,6 +359,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement.Tests
 					Assert.AreEqual(0.4, normalizedPixelSpacing.Column, _tolerance, "Column property");
 					Assert.AreEqual(NormalizedPixelSpacingCalibrationType.Detector, normalizedPixelSpacing.CalibrationType, "CalibrationType property");
 					Assert.AreEqual(string.Empty, normalizedPixelSpacing.CalibrationDetails, "CalibrationDetails property");
+					Assert.AreEqual(@"3\4", normalizedPixelSpacing.GetPixelAspectRatioString(), "GetPixelAspectRatioString result");
 				}
 			}
 		}
@@ -361,6 +378,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement.Tests
 					Assert.AreEqual(0.4, normalizedPixelSpacing.Column, _tolerance, "Column property");
 					Assert.AreEqual(NormalizedPixelSpacingCalibrationType.Detector, normalizedPixelSpacing.CalibrationType, "CalibrationType property");
 					Assert.AreEqual(string.Empty, normalizedPixelSpacing.CalibrationDetails, "CalibrationDetails property");
+					Assert.AreEqual(@"3\4", normalizedPixelSpacing.GetPixelAspectRatioString(), "GetPixelAspectRatioString result");
 				}
 			}
 		}
@@ -379,6 +397,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement.Tests
 					Assert.AreEqual(0.4, normalizedPixelSpacing.Column, _tolerance, "Column property");
 					Assert.AreEqual(NormalizedPixelSpacingCalibrationType.Unknown, normalizedPixelSpacing.CalibrationType, "CalibrationType property");
 					Assert.AreEqual(string.Empty, normalizedPixelSpacing.CalibrationDetails, "CalibrationDetails property");
+					Assert.AreEqual(@"3\4", normalizedPixelSpacing.GetPixelAspectRatioString(), "GetPixelAspectRatioString result");
 				}
 			}
 		}
@@ -397,6 +416,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement.Tests
 					Assert.AreEqual(0.4, normalizedPixelSpacing.Column, _tolerance, "Column property");
 					Assert.AreEqual(NormalizedPixelSpacingCalibrationType.Unknown, normalizedPixelSpacing.CalibrationType, "CalibrationType property");
 					Assert.AreEqual(string.Empty, normalizedPixelSpacing.CalibrationDetails, "CalibrationDetails property");
+					Assert.AreEqual(@"3\4", normalizedPixelSpacing.GetPixelAspectRatioString(), "GetPixelAspectRatioString result");
 				}
 			}
 		}
@@ -415,6 +435,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement.Tests
 					Assert.AreEqual(0.4, normalizedPixelSpacing.Column, _tolerance, "Column property");
 					Assert.AreEqual(NormalizedPixelSpacingCalibrationType.Geometry, normalizedPixelSpacing.CalibrationType, "CalibrationType property");
 					Assert.AreEqual("details", normalizedPixelSpacing.CalibrationDetails, "CalibrationDetails property");
+					Assert.AreEqual(@"3\4", normalizedPixelSpacing.GetPixelAspectRatioString(), "GetPixelAspectRatioString result");
 				}
 			}
 		}
@@ -433,6 +454,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement.Tests
 					Assert.AreEqual(0.4, normalizedPixelSpacing.Column, _tolerance, "Column property");
 					Assert.AreEqual(NormalizedPixelSpacingCalibrationType.Geometry, normalizedPixelSpacing.CalibrationType, "CalibrationType property");
 					Assert.AreEqual("details", normalizedPixelSpacing.CalibrationDetails, "CalibrationDetails property");
+					Assert.AreEqual(@"3\4", normalizedPixelSpacing.GetPixelAspectRatioString(), "GetPixelAspectRatioString result");
 				}
 			}
 		}
@@ -451,6 +473,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement.Tests
 					Assert.AreEqual(0.4, normalizedPixelSpacing.Column, _tolerance, "Column property");
 					Assert.AreEqual(NormalizedPixelSpacingCalibrationType.Fiducial, normalizedPixelSpacing.CalibrationType, "CalibrationType property");
 					Assert.AreEqual("details", normalizedPixelSpacing.CalibrationDetails, "CalibrationDetails property");
+					Assert.AreEqual(@"3\4", normalizedPixelSpacing.GetPixelAspectRatioString(), "GetPixelAspectRatioString result");
 				}
 			}
 		}
@@ -469,6 +492,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement.Tests
 					Assert.AreEqual(0.4, normalizedPixelSpacing.Column, _tolerance, "Column property");
 					Assert.AreEqual(NormalizedPixelSpacingCalibrationType.Fiducial, normalizedPixelSpacing.CalibrationType, "CalibrationType property");
 					Assert.AreEqual("details", normalizedPixelSpacing.CalibrationDetails, "CalibrationDetails property");
+					Assert.AreEqual(@"3\4", normalizedPixelSpacing.GetPixelAspectRatioString(), "GetPixelAspectRatioString result");
 				}
 			}
 		}
@@ -488,8 +512,105 @@ namespace ClearCanvas.ImageViewer.StudyManagement.Tests
 					Assert.AreEqual(0.4, normalizedPixelSpacing.Column, _tolerance, "Column property");
 					Assert.AreEqual(NormalizedPixelSpacingCalibrationType.Manual, normalizedPixelSpacing.CalibrationType, "CalibrationType property");
 					Assert.AreEqual(string.Empty, normalizedPixelSpacing.CalibrationDetails, "CalibrationDetails property");
+					Assert.AreEqual(@"3\4", normalizedPixelSpacing.GetPixelAspectRatioString(), "GetPixelAspectRatioString result");
 				}
 			}
+		}
+
+		[Test]
+		public void TestGetPixelAspectRatioString()
+		{
+			using (var dataset = CreateMockDataset("CR", SopClass.ComputedRadiographyImageStorage, null, new SizeF(0.6f, 0.5f), "FIDUCIAL", "details", null))
+			using (var sop = (ImageSop) Sop.Create(dataset))
+			{
+				var normalizedPixelSpacing = new NormalizedPixelSpacing(sop.Frames[1]);
+
+				normalizedPixelSpacing.Calibrate(0.33333331, 0.3333333);
+				Assert.AreEqual(@"1\1", normalizedPixelSpacing.GetPixelAspectRatioString(), "GetPixelAspectRatioString result");
+
+				normalizedPixelSpacing.Calibrate(0.7074200013, 0.7074200009);
+				Assert.AreEqual(@"1\1", normalizedPixelSpacing.GetPixelAspectRatioString(), "GetPixelAspectRatioString result");
+
+				normalizedPixelSpacing.Calibrate(0.3, 0.4);
+				Assert.AreEqual(@"3\4", normalizedPixelSpacing.GetPixelAspectRatioString(), "GetPixelAspectRatioString result");
+
+				normalizedPixelSpacing.Calibrate(0.4, 0.3);
+				Assert.AreEqual(@"4\3", normalizedPixelSpacing.GetPixelAspectRatioString(), "GetPixelAspectRatioString result");
+
+				normalizedPixelSpacing.Calibrate(0.55, 0.4);
+				Assert.AreEqual(@"11\8", normalizedPixelSpacing.GetPixelAspectRatioString(), "GetPixelAspectRatioString result");
+
+				normalizedPixelSpacing.Calibrate(0.7777777, 0.3333333);
+				Assert.AreEqual(@"7\3", normalizedPixelSpacing.GetPixelAspectRatioString(), "GetPixelAspectRatioString result");
+			}
+		}
+
+		[Test]
+		public void TestFindFraction()
+		{
+			var testRational = new Action<int, int>((expectedNumerator, expectedDenominator) =>
+			                                        	{
+			                                        		var value = 1d*expectedNumerator/expectedDenominator;
+
+			                                        		int actualNumerator, actualDenominator;
+			                                        		NormalizedPixelSpacing.TestFindFraction(value, out actualNumerator, out actualDenominator);
+
+			                                        		var expectedFraction = string.Format("{0}/{1}", expectedNumerator, expectedDenominator);
+			                                        		var actualFraction = string.Format("{0}/{1}", actualNumerator, actualDenominator);
+
+			                                        		const string msg = "Value={0}, Result={1}";
+			                                        		Console.WriteLine(msg, value, actualFraction);
+			                                        		Assert.AreEqual(expectedFraction, actualFraction, "Value={0}", value);
+			                                        	});
+
+			testRational.Invoke(0, 1);
+			testRational.Invoke(1, 10);
+			testRational.Invoke(-1, 10);
+			testRational.Invoke(1, 100);
+			testRational.Invoke(1, 1000);
+			testRational.Invoke(1, 10000);
+			testRational.Invoke(649, 200);
+			testRational.Invoke(649, 300);
+			testRational.Invoke(7, 11);
+			testRational.Invoke(21, 19);
+			testRational.Invoke(1, 9);
+			testRational.Invoke(5, 9);
+			testRational.Invoke(5, 99);
+			testRational.Invoke(5, 999);
+
+			var testIrrational = new Action<double, double>((expectedValue, tolerance) =>
+			                                                	{
+			                                                		int actualNumerator, actualDenominator;
+			                                                		NormalizedPixelSpacing.TestFindFraction(expectedValue, out actualNumerator, out actualDenominator, tolerance);
+
+			                                                		var actualFraction = string.Format("{0}/{1}", actualNumerator, actualDenominator);
+			                                                		var actualValue = 1d*actualNumerator/actualDenominator;
+
+			                                                		const string msg = "Value={0}, Result={1} ({2}), Delta={3}";
+			                                                		Console.WriteLine(msg, expectedValue, actualFraction, actualValue, Math.Abs(expectedValue - actualValue));
+			                                                		Assert.AreEqual(expectedValue, actualValue, tolerance, "Value={0}", expectedValue);
+			                                                	});
+
+			testIrrational.Invoke(Math.PI, 1e-6);
+			testIrrational.Invoke(Math.PI, 1e-9);
+			testIrrational.Invoke(Math.PI, 1e-15);
+			testIrrational.Invoke(Math.E, 1e-6);
+			testIrrational.Invoke(Math.E, 1e-9);
+			testIrrational.Invoke(Math.E, 1e-15);
+
+			try
+			{
+				testIrrational.Invoke(0.5/int.MaxValue, 1e-16);
+				Assert.Fail("Expected overflow exception");
+			}
+			catch (OverflowException) {}
+
+			try
+			{
+				testIrrational.Invoke(2d*int.MaxValue, 1e-16);
+				Assert.Fail("Expected overflow exception");
+			}
+			catch (OverflowException) {}
 		}
 
 		private static string GetPixelSpacingAttributeInfo(IDicomAttributeProvider sopDataSource)
