@@ -50,7 +50,7 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 					.FirstOrDefault(c => c.IsSerialized && c.MetaData.PrSopInstanceUid == presentationStateUid);
 				if (result != null)
 				{
-					var keyImageItem = context.CreateKeyImageItem(image, hasChanges : true);
+					var keyImageItem = context.CreateKeyImageItem(image);
 
 					var metadata = ((IClipboardItem) keyImageItem).ExtensionData.GetOrCreate<KeyImageItemMetaData>();
 					metadata.Changes = true;

@@ -26,6 +26,7 @@ using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Threading;
+using ClearCanvas.Common;
 using ClearCanvas.Desktop;
 using ClearCanvas.ImageViewer.Common;
 
@@ -91,6 +92,7 @@ namespace ClearCanvas.ImageViewer.Clipboard
 	{
 		private object _item;
 		private Image _image;
+		private Func<ClipboardItem, Image> _imageGetter;
 		private readonly string _name;
 		private readonly string _description;
 		private readonly Rectangle _displayRectangle;
@@ -107,8 +109,32 @@ namespace ClearCanvas.ImageViewer.Clipboard
 		/// <param name="displayRectangle"></param>
 		public ClipboardItem(object item, Image image, string name, string description, Rectangle displayRectangle)
 		{
+			Platform.CheckForNullReference(item, "item");
+			Platform.CheckForNullReference(image, "image");
+
 			_item = item;
 			_image = image;
+			_name = name ?? string.Empty;
+			_description = description ?? string.Empty;
+			_displayRectangle = displayRectangle;
+			_extensionData = new ExtensionData();
+		}
+
+		/// <summary>
+		/// Initializes a new instance of <see cref="ClipboardItem"/>.
+		/// </summary>
+		/// <param name="item"></param>
+		/// <param name="imageGetter"></param>
+		/// <param name="name"></param>
+		/// <param name="description"></param>
+		/// <param name="displayRectangle"></param>
+		public ClipboardItem(object item, string name, string description, Rectangle displayRectangle, Func<ClipboardItem, Image> imageGetter)
+		{
+			Platform.CheckForNullReference(item, "item");
+			Platform.CheckForNullReference(imageGetter, "imageGetter");
+
+			_item = item;
+			_imageGetter = imageGetter;
 			_name = name ?? string.Empty;
 			_description = description ?? string.Empty;
 			_displayRectangle = displayRectangle;
@@ -130,7 +156,7 @@ namespace ClearCanvas.ImageViewer.Clipboard
 		/// </summary>
 		public Image Image
 		{
-			get { return _image; }
+			get { return _image ?? (_image = _imageGetter.Invoke(this)); }
 		}
 
 		/// <summary>
@@ -183,6 +209,7 @@ namespace ClearCanvas.ImageViewer.Clipboard
 				_extensionData.Dispose();
 				_extensionData = null;
 			}
+			_imageGetter = null;
 		}
 
 		#region IGalleryItem Implementation

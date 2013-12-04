@@ -239,7 +239,7 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 			if (sopProvider == null)
 				throw new ArgumentException("The image must be an IImageSopProvider.", "image");
 
-			var item = (info.CurrentContext ?? new KeyImageInformation()).CreateKeyImageItem(image, hasChanges : true);
+			var item = (info.CurrentContext ?? new KeyImageInformation()).CreateKeyImageItem(image);
 			item.FlagHasChanges();
 			info.ClipboardItems.Add(item);
 		}

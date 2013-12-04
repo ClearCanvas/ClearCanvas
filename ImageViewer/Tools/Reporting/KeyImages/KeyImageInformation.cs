@@ -34,6 +34,7 @@ using ClearCanvas.Dicom;
 using ClearCanvas.Dicom.Iod.ContextGroups;
 using ClearCanvas.Dicom.Utilities;
 using ClearCanvas.ImageViewer.Clipboard;
+using ClearCanvas.ImageViewer.Clipboard.ImageExport;
 using ClearCanvas.ImageViewer.Common;
 using ClearCanvas.ImageViewer.Common.ServerDirectory;
 using ClearCanvas.ImageViewer.KeyObjects;
@@ -212,17 +213,30 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 			return icon;
 		}
 
-		public ClipboardItem CreateKeyImageItem(IPresentationImage image, bool ownReference = false, bool hasChanges = false)
+		public ClipboardItem CreateKeyImageItem(IPresentationImage image, bool ownReference = false)
 		{
-			_creatingItemHasChanges = hasChanges;
-			try
-			{
-				return base.CreatePresentationImageItem(image, ownReference);
-			}
-			finally
-			{
-				_creatingItemHasChanges = false;
-			}
+			Rectangle clientRectangle = image.ClientRectangle;
+			if (clientRectangle.IsEmpty) clientRectangle = new Rectangle(new Point(), image.SceneSize);
+
+			// Must build description from the source image because the ParentDisplaySet info is lost in the cloned image.
+			var name = BuildClipboardItemName(image);
+			var description = BuildClipboardItemDescription(image);
+
+			image = !ownReference ? ImageExporter.ClonePresentationImage(image) : image;
+			var iconGetter = new Func<ClipboardItem, Image>(item =>
+			                                                	{
+			                                                		_creatingItemHasChanges = item.HasChanges();
+			                                                		try
+			                                                		{
+			                                                			return CreateIcon((IPresentationImage) item.Item, clientRectangle);
+			                                                		}
+			                                                		finally
+			                                                		{
+			                                                			_creatingItemHasChanges = false;
+			                                                		}
+			                                                	});
+
+			return new ClipboardItem(image, name, description, clientRectangle, iconGetter);
 		}
 
 		[Obsolete("Use CreateKeyImageItem", true)]
