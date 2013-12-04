@@ -259,7 +259,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 			// get the pixel spacing (defaults to isotropic spacing based on smallest volume spacing dimension)
 			var pixelSpacing = GetPixelSpacing(volumeReference);
 
-			// get the spacing between slices (defaults to smallest volume spacing dimension)
+			// get the spacing between slices (defaults to projecting voxel diagonal on to normal axis)
 			var sliceSpacing = GetSliceSpacing(volumeReference, slicerAxisZ);
 
 			// get the thickness of each slice (defaults to slice spacing)
@@ -414,7 +414,10 @@ namespace ClearCanvas.ImageViewer.Volumes
 			// the ideal spacing is simply the diagonal of the voxel projected on to the spacing axis
 			// any larger than this value, and it becomes possible for an entire voxel to fit in between two consecutive output locations (i.e. missed for interpolation)
 			// any smaller than this value, and some voxels will have two or more output locations within their bounds
-			return Math.Abs(unitSpacingAxis.Dot(volumeHeader.RotateToPatientOrientation(volumeHeader.VoxelSpacing)));
+			// note: voxel actually has 4 possible diagonals depending on the orientation, so we do this calculation for all diagonals and take the largest one
+			var p = volumeHeader.RotateToPatientOrientation(volumeHeader.VoxelSpacing);
+			return new[] {p, new Vector3D(-p.X, p.Y, p.Z), new Vector3D(p.X, -p.Y, p.Z), new Vector3D(-p.X, -p.Y, p.Z)}
+				.Select(v => Math.Abs(unitSpacingAxis.Dot(v))).Max();
 		}
 
 		private static float GetMinimumComponent(Vector3D vector3D)
