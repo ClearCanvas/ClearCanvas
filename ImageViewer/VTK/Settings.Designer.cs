@@ -23,7 +23,11 @@ namespace ClearCanvas.ImageViewer.Vtk {
             }
         }
         
+        /// <summary>
+        /// Shows diagnostic tools in Tools menu.
+        /// </summary>
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.SettingsDescriptionAttribute("Shows diagnostic tools in Tools menu.")]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool ShowDiagnosticTools {
@@ -32,12 +36,31 @@ namespace ClearCanvas.ImageViewer.Vtk {
             }
         }
         
+        /// <summary>
+        /// Logs renderer performance statistics.
+        /// </summary>
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.SettingsDescriptionAttribute("Logs renderer performance statistics.")]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool ReportRendererPerformance {
             get {
                 return ((bool)(this["ReportRendererPerformance"]));
+            }
+        }
+        
+        /// <summary>
+        /// Target FPS when dynamically manipulating object being rendered. Reduce this value to increase quality of image at cost to performance. Recommended range is 10-25.
+        /// </summary>
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.SettingsDescriptionAttribute("Target FPS when dynamically manipulating object being rendered. Reduce this value" +
+            " to increase quality of image at cost to performance. Recommended range is 10-25" +
+            ".")]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("15")]
+        public int RendererDynamicFps {
+            get {
+                return ((int)(this["RendererDynamicFps"]));
             }
         }
     }

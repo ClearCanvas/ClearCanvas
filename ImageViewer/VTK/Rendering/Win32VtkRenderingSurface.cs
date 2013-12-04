@@ -50,7 +50,7 @@ namespace ClearCanvas.ImageViewer.Vtk.Rendering
 
 		private static readonly bool _reportRenderingPerformance = Settings.Default.ReportRendererPerformance;
 
-		private const double _dynamicFrameRate = 20;
+		private readonly double _dynamicFrameRate = 20;
 		private const double _stillFrameRate = 0.0001;
 
 		private readonly object _lockRender = new object();
@@ -92,6 +92,7 @@ namespace ClearCanvas.ImageViewer.Vtk.Rendering
 			_vtkRenderWindow.SetDesiredUpdateRate(_dynamicFrameRate);
 			_vtkRenderWindow.AddRenderer(_vtkRenderer);
 
+			_dynamicFrameRate = Math.Min(1000, Math.Max(1, Settings.Default.RendererDynamicFps));
 			_dynamicRenderEventPublisher = !offscreen ? new DelayedEventPublisher((s, e) => Render(true, null)) : null;
 
 			WindowID = windowId;
