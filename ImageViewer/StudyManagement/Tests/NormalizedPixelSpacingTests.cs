@@ -524,6 +524,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement.Tests
 			using (var sop = (ImageSop) Sop.Create(dataset))
 			{
 				var normalizedPixelSpacing = new NormalizedPixelSpacing(sop.Frames[1]);
+				Assert.AreEqual(@"5\6", normalizedPixelSpacing.GetPixelAspectRatioString(), "GetPixelAspectRatioString result");
 
 				normalizedPixelSpacing.Calibrate(0.33333331, 0.3333333);
 				Assert.AreEqual(@"1\1", normalizedPixelSpacing.GetPixelAspectRatioString(), "GetPixelAspectRatioString result");
@@ -534,7 +535,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement.Tests
 				normalizedPixelSpacing.Calibrate(0.3, 0.4);
 				Assert.AreEqual(@"3\4", normalizedPixelSpacing.GetPixelAspectRatioString(), "GetPixelAspectRatioString result");
 
-				normalizedPixelSpacing.Calibrate(0.4, 0.3);
+				normalizedPixelSpacing.Calibrate(0.4, 0.3000001);
 				Assert.AreEqual(@"4\3", normalizedPixelSpacing.GetPixelAspectRatioString(), "GetPixelAspectRatioString result");
 
 				normalizedPixelSpacing.Calibrate(0.55, 0.4);
@@ -572,7 +573,9 @@ namespace ClearCanvas.ImageViewer.StudyManagement.Tests
 			testRational.Invoke(649, 200);
 			testRational.Invoke(649, 300);
 			testRational.Invoke(7, 11);
+			testRational.Invoke(5, 19);
 			testRational.Invoke(21, 19);
+			testRational.Invoke(37, 61);
 			testRational.Invoke(1, 9);
 			testRational.Invoke(5, 9);
 			testRational.Invoke(5, 99);

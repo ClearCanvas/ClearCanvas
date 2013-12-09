@@ -147,6 +147,7 @@
     <Compile Include="Iod\Extensions\XKeyObjectDocumentModuleIod.cs" />
     <Compile Include="Iod\FunctionalGroupDescriptor.cs" />
     <Compile Include="Iod\FunctionalGroupMacro.cs" />
+    <Compile Include="Iod\FunctionalGroupMapCache.cs" />
     <Compile Include="Iod\FunctionalGroups\CardiacSynchronizationFunctionalGroup.cs" />
     <Compile Include="Iod\FunctionalGroups\ContrastBolusUsageFunctionalGroup.cs" />
     <Compile Include="Iod\FunctionalGroups\CtAcquisitionDetailsFunctionalGroup.cs" />
