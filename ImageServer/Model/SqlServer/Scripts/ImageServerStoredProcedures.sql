@@ -1227,7 +1227,8 @@ CREATE PROCEDURE [dbo].[InsertWorkQueue]
 	@UidGroupID varchar(64) = null,
 	@UidRelativePath varchar(256) = null,
 	@ExternalRequestQueueGUID uniqueidentifier = null,
-	@WorkQueueUidData xml = null
+	@WorkQueueUidData xml = null,
+	@WorkQueuePriorityEnum smallint = 0
 AS
 BEGIN
 	-- SET NOCOUNT ON added to prevent extra result sets from
@@ -1239,11 +1240,16 @@ BEGIN
 	declare @PendingStatusEnum as smallint
 	select @PendingStatusEnum = Enum from WorkQueueStatusEnum where Lookup = ''Pending''
 
-	declare @WorkQueuePriorityEnum as smallint
+	declare @WorkQueuePriorityEnumNew as smallint
 	declare @DelaySeconds as int
 	declare @ExpirationTime as DateTime
-	select @WorkQueuePriorityEnum = WorkQueuePriorityEnum, @DelaySeconds=ExpireDelaySeconds from WorkQueueTypeProperties where WorkQueueTypeEnum = @WorkQueueTypeEnum
+	select @WorkQueuePriorityEnumNew = WorkQueuePriorityEnum, @DelaySeconds=ExpireDelaySeconds from WorkQueueTypeProperties where WorkQueueTypeEnum = @WorkQueueTypeEnum
 	
+	IF @WorkQueuePriorityEnum = 0
+	BEGIN
+		set @WorkQueuePriorityEnum = @WorkQueuePriorityEnumNew
+	END
+
 	set @ExpirationTime = DATEADD(second, @DelaySeconds, @ScheduledTime)
 
 	BEGIN TRANSACTION

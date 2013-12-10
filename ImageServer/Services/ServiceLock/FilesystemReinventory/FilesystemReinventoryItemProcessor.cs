@@ -61,14 +61,14 @@ namespace ClearCanvas.ImageServer.Services.ServiceLock.FilesystemReinventory
 			using (IReadContext updateContext = PersistentStoreRegistry.GetDefaultStore().OpenReadContext())
 			{
 				// Setup the delete parameters
-				DeleteStudyStorageParameters parms = new DeleteStudyStorageParameters
+				var parms = new DeleteStudyStorageParameters
 				                                     	{
 				                                     		ServerPartitionKey = location.ServerPartitionKey,
 				                                     		StudyStorageKey = location.Key
 				                                     	};
 
 				// Get the Insert Instance broker and do the insert
-				IDeleteStudyStorage delete = updateContext.GetBroker<IDeleteStudyStorage>();
+				var delete = updateContext.GetBroker<IDeleteStudyStorage>();
 
 				if (false == delete.Execute(parms))
 				{
@@ -82,18 +82,18 @@ namespace ClearCanvas.ImageServer.Services.ServiceLock.FilesystemReinventory
 		{
 			using (IReadContext context = _store.OpenReadContext())
 			{
-				IStudyIntegrityQueueEntityBroker integrityBroker = context.GetBroker<IStudyIntegrityQueueEntityBroker>();
-				StudyIntegrityQueueSelectCriteria integrityCriteria = new StudyIntegrityQueueSelectCriteria();
+				var integrityBroker = context.GetBroker<IStudyIntegrityQueueEntityBroker>();
+				var integrityCriteria = new StudyIntegrityQueueSelectCriteria();
 				integrityCriteria.StudyStorageKey.EqualTo(location.Key);
 				integrityQueueCount = integrityBroker.Count(integrityCriteria);
 
-				IWorkQueueEntityBroker workBroker = context.GetBroker<IWorkQueueEntityBroker>();
-				WorkQueueSelectCriteria workCriteria = new WorkQueueSelectCriteria();
+				var workBroker = context.GetBroker<IWorkQueueEntityBroker>();
+				var workCriteria = new WorkQueueSelectCriteria();
 				workCriteria.StudyStorageKey.EqualTo(location.Key);
 				workQueueCount = workBroker.Count(workCriteria);
 
-				IStudyEntityBroker procedure = context.GetBroker<IStudyEntityBroker>();
-				StudySelectCriteria criteria = new StudySelectCriteria();
+				var procedure = context.GetBroker<IStudyEntityBroker>();
+				var criteria = new StudySelectCriteria();
 				criteria.StudyStorageKey.EqualTo(location.Key);
 				return procedure.FindOne(criteria);
 			}
@@ -101,13 +101,12 @@ namespace ClearCanvas.ImageServer.Services.ServiceLock.FilesystemReinventory
 
 		private void ReinventoryFilesystem(Filesystem filesystem)
         {
-            ServerPartition partition;
-
-            DirectoryInfo filesystemDir = new DirectoryInfo(filesystem.FilesystemPath);
+			var filesystemDir = new DirectoryInfo(filesystem.FilesystemPath);
 
             foreach(DirectoryInfo partitionDir in filesystemDir.GetDirectories())
             {
-                if (GetServerPartition(partitionDir.Name, out partition) == false)
+	            ServerPartition partition;
+	            if (GetServerPartition(partitionDir.Name, out partition) == false)
                     continue;
 
                 foreach(DirectoryInfo dateDir in partitionDir.GetDirectories())
@@ -115,9 +114,8 @@ namespace ClearCanvas.ImageServer.Services.ServiceLock.FilesystemReinventory
                     if (dateDir.FullName.EndsWith("Deleted", StringComparison.InvariantCultureIgnoreCase)
 						|| dateDir.FullName.EndsWith(ServerPlatform.ReconcileStorageFolder, StringComparison.InvariantCultureIgnoreCase))
 						continue;
-                	List<FileInfo> fileList;
 
-					foreach (DirectoryInfo studyDir in dateDir.GetDirectories())
+	                foreach (DirectoryInfo studyDir in dateDir.GetDirectories())
 					{
                         if (studyDir.FullName.EndsWith("Deleted", StringComparison.InvariantCultureIgnoreCase))
                             continue;
@@ -128,6 +126,7 @@ namespace ClearCanvas.ImageServer.Services.ServiceLock.FilesystemReinventory
 						String studyInstanceUid = studyDir.Name;
 
 						StudyStorageLocation location;
+						List<FileInfo> fileList;
 						if (GetStudyStorageLocation(partition.Key, studyInstanceUid, out location))
 						{
                             #region Study record exists in db
@@ -205,8 +204,8 @@ namespace ClearCanvas.ImageServer.Services.ServiceLock.FilesystemReinventory
                             // Insert StudyStorage
                             using (IUpdateContext update = _store.OpenUpdateContext(UpdateContextSyncMode.Flush))
                             {
-                                IInsertStudyStorage studyInsert = update.GetBroker<IInsertStudyStorage>();
-                                InsertStudyStorageParameters insertParms = new InsertStudyStorageParameters
+                                var studyInsert = update.GetBroker<IInsertStudyStorage>();
+                                var insertParms = new InsertStudyStorageParameters
                                                                            	{
                                                                            		ServerPartitionKey = partition.GetKey(),
                                                                            		StudyInstanceUid = studyInstanceUid,
@@ -234,8 +233,8 @@ namespace ClearCanvas.ImageServer.Services.ServiceLock.FilesystemReinventory
                                 location = studyInsert.FindOne(insertParms);
 
                                 // WriteLock the new study storage for study processing
-                                ILockStudy lockStudy = update.GetBroker<ILockStudy>();
-                                LockStudyParameters lockParms = new LockStudyParameters
+                                var lockStudy = update.GetBroker<ILockStudy>();
+                                var lockParms = new LockStudyParameters
                                                                 	{
                                                                 		StudyStorageKey = location.Key,
                                                                 		QueueStudyStateEnum =
@@ -262,15 +261,15 @@ namespace ClearCanvas.ImageServer.Services.ServiceLock.FilesystemReinventory
 						{
 							String sopInstanceUid = sopFile.Name.Replace(sopFile.Extension, string.Empty);
 
-							using (ServerExecutionContext context = new ServerExecutionContext())
+							using (var context = new ServerExecutionContext())
 							{
 								// Just use a read context here, in hopes of improving 
 								// performance.  Every other place in the code should use
 								// Update contexts when doing transactions.
-								IInsertWorkQueue workQueueInsert =
+								var workQueueInsert =
 									context.ReadContext.GetBroker<IInsertWorkQueue>();
 
-								InsertWorkQueueParameters queueInsertParms =
+								var queueInsertParms =
 									new InsertWorkQueueParameters
 										{
 											WorkQueueTypeEnum = WorkQueueTypeEnum.StudyProcess,
@@ -278,7 +277,8 @@ namespace ClearCanvas.ImageServer.Services.ServiceLock.FilesystemReinventory
 											ServerPartitionKey = partition.GetKey(),
 											SeriesInstanceUid = sopFile.Directory.Name,
 											SopInstanceUid = sopInstanceUid,
-											ScheduledTime = Platform.Time
+											ScheduledTime = Platform.Time,
+											WorkQueuePriorityEnum = WorkQueuePriorityEnum.Low
 										};
 
 								if (workQueueInsert.FindOne(queueInsertParms) == null)
@@ -310,7 +310,7 @@ namespace ClearCanvas.ImageServer.Services.ServiceLock.FilesystemReinventory
 
 		private static bool GetStudyStorage(ServerPartition partition, string studyInstanceUid, out StudyStorage storage)
 		{
-			using (ServerExecutionContext context = new ServerExecutionContext())
+			using (var context = new ServerExecutionContext())
 			{
 				storage = StudyStorage.Load(context.ReadContext, partition.Key, studyInstanceUid);
 				if (storage != null)
@@ -326,10 +326,10 @@ namespace ClearCanvas.ImageServer.Services.ServiceLock.FilesystemReinventory
         protected override void OnProcess(Model.ServiceLock item)
         {
             _store = PersistentStoreRegistry.GetDefaultStore();
-			using (ServerExecutionContext context = new ServerExecutionContext())
+			using (var context = new ServerExecutionContext())
 			{
-				IServerPartitionEntityBroker broker = context.ReadContext.GetBroker<IServerPartitionEntityBroker>();
-				ServerPartitionSelectCriteria criteria = new ServerPartitionSelectCriteria();
+				var broker = context.ReadContext.GetBroker<IServerPartitionEntityBroker>();
+				var criteria = new ServerPartitionSelectCriteria();
 				criteria.AeTitle.SortAsc(0);
 
 				_partitions = broker.Find(criteria);
