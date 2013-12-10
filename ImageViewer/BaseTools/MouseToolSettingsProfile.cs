@@ -132,7 +132,28 @@ namespace ClearCanvas.ImageViewer.BaseTools
 
 		#region Static Profile Access
 
-		private static event EventHandler _currentProfileChanged;
+		//Wrapper class to work around the fact that you cannot make an event field ThreadStatic.
+		private class CurrentProfileChangedEvent
+		{
+			private CurrentProfileChangedEvent()
+			{
+			}
+
+			public event EventHandler RealEvent;
+
+			public void Fire()
+			{
+				EventsHelper.Fire(RealEvent, null, EventArgs.Empty);
+			}
+
+			[ThreadStatic]
+			private static CurrentProfileChangedEvent _instance;
+
+			public static CurrentProfileChangedEvent Instance
+			{
+				get { return _instance ?? (_instance = new CurrentProfileChangedEvent()); }
+			}
+		}
 
         //TODO (Phoenix5): #10730 - remove this when it's fixed.
         [ThreadStatic]
@@ -156,15 +177,15 @@ namespace ClearCanvas.ImageViewer.BaseTools
 				if (_profile != value)
 				{
 					_profile = value;
-					EventsHelper.Fire(_currentProfileChanged, null, EventArgs.Empty);
+					CurrentProfileChangedEvent.Instance.Fire();
 				}
 			}
 		}
 
 		public static event EventHandler CurrentProfileChanged
 		{
-			add { _currentProfileChanged += value; }
-			remove { _currentProfileChanged -= value; }
+			add { CurrentProfileChangedEvent.Instance.RealEvent += value; }
+			remove { CurrentProfileChangedEvent.Instance.RealEvent -= value; }
 		}
 
 		//TODO (CR Sept 2010): why not just do this when Current is set?
