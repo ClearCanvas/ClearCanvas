@@ -176,7 +176,7 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 						break;
 					case DisplayAreaSerializationOption.SerializeAsTrueSize:
 						displayedArea.PresentationSizeMode = DisplayedAreaModuleIod.PresentationSizeMode.TrueSize;
-						displayedArea.PresentationPixelSpacing = image.Frame.PixelSpacing;
+						displayedArea.PresentationPixelSpacing = image.Frame.NormalizedPixelSpacing;
 						break;
 					case DisplayAreaSerializationOption.SerializeAsDisplayedArea:
 					default:
@@ -184,12 +184,7 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 						break;
 				}
 
-				PixelAspectRatio pixelAspectRatio = image.Frame.PixelAspectRatio;
-				if (pixelAspectRatio == null || pixelAspectRatio.IsNull)
-					pixelAspectRatio = PixelAspectRatio.FromString(image.Frame[DicomTags.PixelAspectRatio].ToString());
-				if (pixelAspectRatio == null || pixelAspectRatio.IsNull)
-					pixelAspectRatio = new PixelAspectRatio(1, 1);
-				displayedArea.PresentationPixelAspectRatio = pixelAspectRatio;
+				displayedArea.PresentationPixelAspectRatio = PixelAspectRatio.FromString(image.Frame.NormalizedPixelSpacing.GetPixelAspectRatioString());
 
 				displayedAreas.Add(displayedArea);
 			}
