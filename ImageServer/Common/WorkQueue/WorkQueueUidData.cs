@@ -31,10 +31,28 @@ namespace ClearCanvas.ImageServer.Common.WorkQueue
 	/// </summary>
 	public enum DuplicateProcessingEnum
 	{
+		/// <summary>
+		/// Compares duplicate against the existing instance
+		/// </summary>
 		Compare,
+		/// <summary>
+		/// Overwrite existing instance in the filesystem and process it.
+		/// </summary>
 		OverwriteSop,
+
+		/// <summary>
+		/// Overwrite existing instance in the filesystem and process it.
+		/// </summary>
 		OverwriteSopAndUpdateDatabase,
+
+		/// <summary>
+		/// Overwrite existing report in the filesystem
+		/// </summary>
 		OverwriteReport,
+
+		/// <summary>
+		/// Rejects duplicate
+		/// </summary>
 		Reject
 	}
 

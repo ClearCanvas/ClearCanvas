@@ -104,9 +104,10 @@ namespace ClearCanvas.ImageServer.Services.ServiceLock.PartitionReapplyRules
 						filesystemDeleteExists = filesystemQueueBroker.Count(filesystemQueueCriteria) > 0;
 					}
 
-					var context = new ServerActionContext(msg, location.FilesystemKey, partition, location.Key);
-					using (context.CommandProcessor = new ServerCommandProcessor("Study Rule Processor"))
+					using (var commandProcessor = new ServerCommandProcessor("Study Rule Processor"))
 					{
+						var context = new ServerActionContext(msg, location.FilesystemKey, partition, location.Key, commandProcessor);
+					
 						// Check if the Study has been archived 
 						if (archiveStudyStorageExists && !archiveQueueExists && !filesystemDeleteExists)
 						{

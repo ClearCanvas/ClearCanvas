@@ -24,6 +24,7 @@
 
 using System.Collections.Generic;
 using ClearCanvas.Dicom;
+using ClearCanvas.Dicom.Utilities.Command;
 using ClearCanvas.Dicom.Utilities.Rules;
 using ClearCanvas.ImageServer.Enterprise;
 using ClearCanvas.ImageServer.Model;
@@ -44,13 +45,14 @@ namespace ClearCanvas.ImageServer.Rules
 		#region Constructors
 
 		public ServerActionContext(DicomMessageBase msg, ServerEntityKey filesystemKey,
-		                           ServerPartition partition, ServerEntityKey studyLocationKey)
+		                           ServerPartition partition, ServerEntityKey studyLocationKey, CommandProcessor commandProcessor)
 		{
 			Message = msg;
 			ServerPartitionKey = partition.Key;
 			StudyLocationKey = studyLocationKey;
 			FilesystemKey = filesystemKey;
 			ServerPartition = partition;
+			CommandProcessor = commandProcessor;
 		}
 
 		#endregion

@@ -249,7 +249,7 @@ namespace ClearCanvas.ImageServer.Services.Archiving.Hsm
                     // Apply the rules engine.
 					var context =
 						new ServerActionContext(null, fs.Filesystem.GetKey(), _hsmArchive.ServerPartition,
-						                        queueItem.StudyStorageKey) {CommandProcessor = processor};
+						                        queueItem.StudyStorageKey, processor);
 					processor.AddCommand(
 						new ApplyRulesCommand(destinationFolder, _studyStorage.StudyInstanceUid, context));
 
@@ -379,7 +379,7 @@ namespace ClearCanvas.ImageServer.Services.Archiving.Hsm
 					// Apply the rules engine.
 					var context =
 						new ServerActionContext(null, _location.FilesystemKey, _hsmArchive.ServerPartition,
-												queueItem.StudyStorageKey) {CommandProcessor = processor};
+												queueItem.StudyStorageKey, processor);
 					processor.AddCommand(
 						new ApplyRulesCommand(destinationFolder, _location.StudyInstanceUid, context));
 

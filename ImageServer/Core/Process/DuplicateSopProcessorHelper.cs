@@ -161,8 +161,11 @@ namespace ClearCanvas.ImageServer.Core.Process
 
 			if (DuplicatePolicy.IsParitionDuplicatePolicyOverridden(context.StudyLocation))
 			{
+				// Note: this is a special case where we need to temporarily override the duplicate policy for a particular study
+				// so that SIQ entry can be processed (#10569). This should only happen once in a blue moon.
+			
 				Platform.Log(LogLevel.Warn,
-				             "Duplicate instance received for study {0} on Partition {1}. Duplicate policy overridden. Will overwrite {2}",
+				             "Duplicate instance received for study {0} on Partition {1}. Duplicate policy overridden in app config. Will overwrite {2}",
 				             result.StudyInstanceUid, context.StudyLocation.ServerPartition.AeTitle, result.SopInstanceUid);
 				if (string.IsNullOrEmpty(sourceFilename))
 					ProcessStoredDuplicate(context, file as DicomFile, data, DuplicateProcessingEnum.OverwriteSop);

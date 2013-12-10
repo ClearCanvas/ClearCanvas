@@ -125,8 +125,7 @@ namespace ClearCanvas.ImageServer.Rules
 					var theFile = new DicomFile(seriesFilePath);
 					theFile.Load(DicomReadOptions.Default);
 					var context =
-						new ServerActionContext(theFile, _location.FilesystemKey, _partition, _location.Key)
-							{CommandProcessor = theProcessor, RuleEngine = _studyRulesEngine};
+						new ServerActionContext(theFile, _location.FilesystemKey, _partition, _location.Key, theProcessor){ RuleEngine = _studyRulesEngine};
 					_studyRulesEngine.Execute(context);
 
 					ProcessSeriesRules(theFile, theProcessor);
@@ -233,8 +232,7 @@ namespace ClearCanvas.ImageServer.Rules
 				_seriesRulesEngine.Statistics.ExecutionTime.Reset();
 			}
 
-			var context = new ServerActionContext(file, _location.FilesystemKey, _partition, _location.Key)
-		                      {CommandProcessor = processor};
+			var context = new ServerActionContext(file, _location.FilesystemKey, _partition, _location.Key,processor);
 
 
 		    _seriesRulesEngine.Execute(context);
