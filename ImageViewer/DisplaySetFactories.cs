@@ -28,11 +28,13 @@ using System.Drawing;
 using System.Linq;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
+using ClearCanvas.Desktop;
 using ClearCanvas.Dicom;
 using ClearCanvas.Dicom.ServiceModel.Query;
 using ClearCanvas.Dicom.Utilities;
 using ClearCanvas.ImageViewer.Annotations;
 using ClearCanvas.ImageViewer.Graphics;
+using ClearCanvas.ImageViewer.KeyObjects;
 using ClearCanvas.ImageViewer.StudyManagement;
 
 namespace ClearCanvas.ImageViewer
@@ -382,6 +384,8 @@ namespace ClearCanvas.ImageViewer
 	{
 		DateTime? ContentDateTime { get; }
 		string SelectionInstanceUid { get; }
+		string SelectionDescription { get; }
+		string SelectionAuthor { get; }
 	}
 
 	[Cloneable(false)]
@@ -392,6 +396,10 @@ namespace ClearCanvas.ImageViewer
 		{
 			ContentDateTime = DateTimeParser.ParseDateAndTime(null, koSelectionSop.ContentDate, koSelectionSop.ContentTime);
 			SelectionInstanceUid = koSelectionSop.SopInstanceUid;
+
+			var keyImageDeserializer = new KeyImageDeserializer(koSelectionSop);
+			SelectionDescription = keyImageDeserializer.DeserializeDescriptions().Select(x => x.ToString()).FirstOrDefault() ?? string.Empty;
+			SelectionAuthor = keyImageDeserializer.DeserializeObserverContexts().Select(x => x.ToString()).FirstOrDefault() ?? string.Empty;
 		}
 
 		protected KOSelectionDocumentDisplaySetDescriptor(KOSelectionDocumentDisplaySetDescriptor source, ICloningContext context)
@@ -399,12 +407,24 @@ namespace ClearCanvas.ImageViewer
 
 		public DateTime? ContentDateTime { get; private set; }
 		public string SelectionInstanceUid { get; private set; }
+		public string SelectionDescription { get; private set; }
+		public string SelectionAuthor { get; private set; }
 
 		protected override string GetName()
 		{
-			var dateTime = ContentDateTime;
+			var suffix = GetSuffix();
 			var name = base.GetName();
-			return dateTime.HasValue ? string.Format("{0} [{1}]", name, dateTime.Value) : name;
+			return !string.IsNullOrWhiteSpace(suffix) ? string.Format("{0} [{1}]", name, suffix) : name;
+		}
+
+		protected virtual string GetSuffix()
+		{
+			var author = SelectionAuthor;
+			var dateTime = ContentDateTime;
+			if (!string.IsNullOrEmpty(author))
+				return dateTime.HasValue ? string.Concat(author, " ", Format.DateTime(dateTime.Value)) : author;
+			else
+				return Format.DateTime(dateTime);
 		}
 	}
 
@@ -416,6 +436,10 @@ namespace ClearCanvas.ImageViewer
 		{
 			ContentDateTime = DateTimeParser.ParseDateAndTime(null, koSelectionSop.ContentDate, koSelectionSop.ContentTime);
 			SelectionInstanceUid = koSelectionSop.SopInstanceUid;
+
+			var keyImageDeserializer = new KeyImageDeserializer(koSelectionSop);
+			SelectionDescription = keyImageDeserializer.DeserializeDescriptions().Select(x => x.ToString()).FirstOrDefault() ?? string.Empty;
+			SelectionAuthor = keyImageDeserializer.DeserializeObserverContexts().Select(x => x.ToString()).FirstOrDefault() ?? string.Empty;
 		}
 
 		protected KOSelectionSingleImageDisplaySetDescriptor(KOSelectionSingleImageDisplaySetDescriptor source, ICloningContext context)
@@ -423,12 +447,24 @@ namespace ClearCanvas.ImageViewer
 
 		public DateTime? ContentDateTime { get; private set; }
 		public string SelectionInstanceUid { get; private set; }
+		public string SelectionDescription { get; private set; }
+		public string SelectionAuthor { get; private set; }
 
 		protected override string GetName()
 		{
-			var dateTime = ContentDateTime;
+			var suffix = GetSuffix();
 			var name = base.GetName();
-			return dateTime.HasValue ? string.Format("{0} [{1}]", name, dateTime.Value) : name;
+			return !string.IsNullOrWhiteSpace(suffix) ? string.Format("{0} [{1}]", name, suffix) : name;
+		}
+
+		protected virtual string GetSuffix()
+		{
+			var author = SelectionAuthor;
+			var dateTime = ContentDateTime;
+			if (!string.IsNullOrEmpty(author))
+				return dateTime.HasValue ? string.Concat(author, " ", Format.DateTime(dateTime.Value)) : author;
+			else
+				return Format.DateTime(dateTime);
 		}
 	}
 
@@ -440,6 +476,10 @@ namespace ClearCanvas.ImageViewer
 		{
 			ContentDateTime = DateTimeParser.ParseDateAndTime(null, koSelectionSop.ContentDate, koSelectionSop.ContentTime);
 			SelectionInstanceUid = koSelectionSop.SopInstanceUid;
+
+			var keyImageDeserializer = new KeyImageDeserializer(koSelectionSop);
+			SelectionDescription = keyImageDeserializer.DeserializeDescriptions().Select(x => x.ToString()).FirstOrDefault() ?? string.Empty;
+			SelectionAuthor = keyImageDeserializer.DeserializeObserverContexts().Select(x => x.ToString()).FirstOrDefault() ?? string.Empty;
 		}
 
 		protected KOSelectionSingleFrameDisplaySetDescriptor(KOSelectionSingleFrameDisplaySetDescriptor source, ICloningContext context)
@@ -447,12 +487,24 @@ namespace ClearCanvas.ImageViewer
 
 		public DateTime? ContentDateTime { get; private set; }
 		public string SelectionInstanceUid { get; private set; }
+		public string SelectionDescription { get; private set; }
+		public string SelectionAuthor { get; private set; }
 
 		protected override string GetName()
 		{
-			var dateTime = ContentDateTime;
+			var suffix = GetSuffix();
 			var name = base.GetName();
-			return dateTime.HasValue ? string.Format("{0} [{1}]", name, dateTime.Value) : name;
+			return !string.IsNullOrWhiteSpace(suffix) ? string.Format("{0} [{1}]", name, suffix) : name;
+		}
+
+		protected virtual string GetSuffix()
+		{
+			var author = SelectionAuthor;
+			var dateTime = ContentDateTime;
+			if (!string.IsNullOrEmpty(author))
+				return dateTime.HasValue ? string.Concat(author, " ", Format.DateTime(dateTime.Value)) : author;
+			else
+				return Format.DateTime(dateTime);
 		}
 	}
 

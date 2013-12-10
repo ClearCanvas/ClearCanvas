@@ -70,8 +70,6 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 			_name = SR.LabelNewKeyImageSelection;
 			_seriesNumber = null;
 			_contentDateTime = null;
-			if (!string.IsNullOrEmpty(_author))
-				_seriesDescription = string.Format("{0} ({1})", _seriesDescription, _author);
 		}
 
 		private static IEnumerable<IClipboardItem> CreateClipboardItems(StudyTree studyTree, Sop keyObjectSelectionDocument)

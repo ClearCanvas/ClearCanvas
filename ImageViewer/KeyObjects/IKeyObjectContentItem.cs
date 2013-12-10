@@ -67,6 +67,11 @@ namespace ClearCanvas.ImageViewer.KeyObjects
 		{
 			get { return _source; }
 		}
+
+		public override string ToString()
+		{
+			return PersonObserverName;
+		}
 	}
 
 	/// <summary>
@@ -96,6 +101,11 @@ namespace ClearCanvas.ImageViewer.KeyObjects
 		public KeyObjectSelectionDocumentIod Source
 		{
 			get { return _source; }
+		}
+
+		public override string ToString()
+		{
+			return Description;
 		}
 	}
 
@@ -137,6 +147,11 @@ namespace ClearCanvas.ImageViewer.KeyObjects
 		public KeyObjectSelectionDocumentIod Source
 		{
 			get { return _source; }
+		}
+
+		public override string ToString()
+		{
+			return FrameNumber.HasValue ? string.Concat(ReferencedImageSopInstanceUid, ":", FrameNumber) : ReferencedImageSopInstanceUid;
 		}
 	}
 }
