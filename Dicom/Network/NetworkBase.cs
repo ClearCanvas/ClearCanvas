@@ -1872,6 +1872,7 @@ namespace ClearCanvas.Dicom.Network
 							{
 								byte[] fileGroup2 = CreateFileHeader(pcid, _dimse.Command);
 								ret = OnReceiveFileStream(pcid, _dimse.Command, _dimse.Dataset, fileGroup2, 0, fileGroup2.Length, _dimse.IsNewDimse, false);
+								_dimse.IsNewDimse = false;
 							}
 
 							ret = ret && OnReceiveFileStream(pcid, _dimse.Command, _dimse.Dataset, pdv.Value.Array, pdv.Value.Index, pdv.Value.Count, false, pdv.IsLastFragment);
@@ -1906,11 +1907,6 @@ namespace ClearCanvas.Dicom.Network
 
 						if (!ret) return false;
 	                }
-                }
-
-                if (_dimse.IsNewDimse)
-                {
-                    _dimse.IsNewDimse = false;
                 }
 
                 return true;
