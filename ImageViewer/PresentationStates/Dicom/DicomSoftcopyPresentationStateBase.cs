@@ -152,17 +152,13 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 				ImageGraphic imageGraphic = ((IImageGraphicProvider) image).ImageGraphic;
 				Size imageSize = new Size(imageGraphic.Columns, imageGraphic.Rows);
 
-				// compute the visible boundaries of the image as a positive rectangle in screen space
-				RectangleF visibleBounds = imageGraphic.SpatialTransform.ConvertToDestination(new Rectangle(new Point(0, 0), imageSize));
-				visibleBounds = RectangleUtilities.Intersect(visibleBounds, image.ClientRectangle);
-				visibleBounds = RectangleUtilities.ConvertToPositiveRectangle(visibleBounds);
-
 				// compute the visible area of the image as a rectangle oriented positively in screen space
-				RectangleF visibleImageArea = imageGraphic.SpatialTransform.ConvertToSource(visibleBounds);
+				RectangleF visibleImageArea = imageGraphic.SpatialTransform.ConvertToSource(image.ClientRectangle);
+				visibleImageArea = RectangleUtilities.ConvertToPositiveRectangle(visibleImageArea);
 				visibleImageArea = RectangleUtilities.RoundInflate(visibleImageArea);
+				visibleImageArea = RectangleUtilities.Intersect(visibleImageArea, new Rectangle(new Point(0, 0), imageSize));
 
 				// compute the pixel addresses of the visible area by intersecting area with actual pixel addresses available
-				//Rectangle visiblePixels = Rectangle.Truncate(RectangleUtilities.Intersect(visibleImageArea, new RectangleF(_point1, imageSize)));
 				Rectangle visiblePixels = ConvertToPixelAddressRectangle(Rectangle.Truncate(visibleImageArea));
 				displayedArea.DisplayedAreaTopLeftHandCorner = visiblePixels.Location;
 				displayedArea.DisplayedAreaBottomRightHandCorner = visiblePixels.Location + visiblePixels.Size;
@@ -272,7 +268,7 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 						foreach (IGraphic graphic in layerGraphic.Graphics)
 						{
 							GraphicAnnotationSequenceItem annotation = new GraphicAnnotationSequenceItem();
-							if (GraphicAnnotationSerializer.SerializeGraphic(graphic, annotation))
+							if (GraphicAnnotationSerializer.SerializeGraphic(graphic, annotation) && AnyContent(annotation))
 							{
 								SetAllSpecificCharacterSets(annotation, DataSet.SpecificCharacterSet);
 								annotation.GraphicLayer = layerGraphic.Id.ToUpperInvariant();
@@ -286,7 +282,7 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 				foreach (IGraphic graphic in image.OverlayGraphics)
 				{
 					GraphicAnnotationSequenceItem annotation = new GraphicAnnotationSequenceItem();
-					if (GraphicAnnotationSerializer.SerializeGraphic(graphic, annotation))
+					if (GraphicAnnotationSerializer.SerializeGraphic(graphic, annotation) && AnyContent(annotation))
 					{
 						SetAllSpecificCharacterSets(annotation, DataSet.SpecificCharacterSet);
 						annotation.GraphicLayer = _annotationsLayerId;
@@ -298,6 +294,14 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 
 			if (annotations.Count > 0)
 				graphicAnnotationModule.GraphicAnnotationSequence = annotations.ToArray();
+		}
+
+		private static bool AnyContent(GraphicAnnotationSequenceItem annotation)
+		{
+			var graphicObjectSequenceItems = annotation.GraphicObjectSequence;
+			var textObjectSequenceItems = annotation.TextObjectSequence;
+			return graphicObjectSequenceItems != null && graphicObjectSequenceItems.Length > 0
+			       && textObjectSequenceItems != null && textObjectSequenceItems.Length > 0;
 		}
 
 		private static void SetAllSpecificCharacterSets(GraphicAnnotationSequenceItem annotation, string specificCharacterSet)

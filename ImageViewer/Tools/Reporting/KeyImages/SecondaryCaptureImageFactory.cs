@@ -117,7 +117,28 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 					{
 						presentationState.DeserializeOptions |= DicomSoftcopyPresentationStateDeserializeOptions.IgnoreImageRelationship;
 						presentationState.Deserialize(secondaryCapture);
+
+						// override the spatial transform of the secondary capture because the presentation state doesn't save exact parameters
+						var sourceTransform = image as ISpatialTransformProvider;
+						var targetTransform = secondaryCapture as ISpatialTransformProvider;
+						if (sourceTransform != null && targetTransform != null)
+						{
+							targetTransform.SpatialTransform.CenterOfRotationXY = sourceTransform.SpatialTransform.CenterOfRotationXY;
+							targetTransform.SpatialTransform.FlipX = sourceTransform.SpatialTransform.FlipX;
+							targetTransform.SpatialTransform.FlipY = sourceTransform.SpatialTransform.FlipY;
+							targetTransform.SpatialTransform.RotationXY = sourceTransform.SpatialTransform.RotationXY;
+							targetTransform.SpatialTransform.Scale = sourceTransform.SpatialTransform.Scale;
+							targetTransform.SpatialTransform.TranslationX = sourceTransform.SpatialTransform.TranslationX;
+							targetTransform.SpatialTransform.TranslationY = sourceTransform.SpatialTransform.TranslationY;
+
+							var sourceImageTransform = sourceTransform as IImageSpatialTransform;
+							var targetImageTransform = targetTransform as IImageSpatialTransform;
+							if (sourceImageTransform != null && targetImageTransform != null)
+								targetImageTransform.ScaleToFit = sourceImageTransform.ScaleToFit;
+						}
 					}
+
+					// force a render to update the client rectangle and scaling of the image
 					secondaryCapture.RenderImage(image.ClientRectangle).Dispose();
 				}
 				catch (Exception ex)
