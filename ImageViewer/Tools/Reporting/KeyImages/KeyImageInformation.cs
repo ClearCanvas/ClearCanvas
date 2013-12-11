@@ -298,8 +298,11 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 					studyIndex.Add(studyInstanceUid, studyInfo = new StudyInfo(provider, nextSeriesNumberDelegate));
 
 					// keep the previous series number if the one we know about is the same study as this new document
+					// otherwise, pre-allocate a series number for the KO now (ensures the number will be lower than any SC and PR series)
 					if (_parentStudyInstanceUid == studyInstanceUid && _seriesNumber.HasValue)
 						studyInfo.KeyObjectSeriesNumber = _seriesNumber.Value;
+					else
+						studyInfo.AllocateKeyObjectSeriesNumber();
 				}
 
 				// if the item doesn't have changes and the presentation state is DICOM, simply reserialize the original sop references
@@ -443,6 +446,11 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 			public int GetNextPresentationInstanceNumber()
 			{
 				return _presentationNextInstanceNumber++;
+			}
+
+			public int AllocateKeyObjectSeriesNumber()
+			{
+				return KeyObjectSeriesNumber;
 			}
 		}
 
