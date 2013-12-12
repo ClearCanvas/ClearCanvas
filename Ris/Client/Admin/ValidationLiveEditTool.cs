@@ -37,7 +37,7 @@ namespace ClearCanvas.Ris.Client.Admin
     /// Tool that allows editing of validation rules on a live application component.
     /// </summary>
     [MenuAction("launch", "applicationcomponent-metacontextmenu/Edit Validation Rules", "Launch")]
-	[ActionPermission("launch", ClearCanvas.Ris.Client.AuthorityTokens.Desktop.UIValidationRules)]
+	[ActionPermission("launch", ClearCanvas.Ris.Application.Common.AuthorityTokens.Desktop.UIValidationRules)]
 	[ExtensionOf(typeof(ApplicationComponentMetaToolExtensionPoint), FeatureToken = FeatureTokens.RIS.Core)]
     public class ValidationLiveEditTool : Tool<IApplicationComponentMetaToolContext>
     {
