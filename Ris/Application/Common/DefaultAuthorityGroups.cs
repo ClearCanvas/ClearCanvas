@@ -108,8 +108,6 @@ namespace ClearCanvas.Ris.Application.Common
                         AuthorityTokens.Workflow.Patient.Create,
                         AuthorityTokens.Workflow.Patient.Update,
                         AuthorityTokens.Workflow.PatientProfile.Update,
-                        AuthorityTokens.Workflow.Visit.Create,
-                        AuthorityTokens.Workflow.Visit.Update,
                         AuthorityTokens.Workflow.Order.Create,
                         AuthorityTokens.Workflow.Order.Modify,
                         AuthorityTokens.Workflow.Order.Cancel,
