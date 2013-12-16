@@ -51,8 +51,6 @@ namespace ClearCanvas.ImageViewer.Vtk
 		}
 	}
 
-	// TODO: this code only supports ushort volumes - fix to support the other types!!!!
-
 	/// <summary>
 	/// Implements <see cref="IVolumeSlicerCore"/> using the VTK <see cref="vtk.vtkImageReslice"/> utility.
 	/// </summary>

@@ -36,8 +36,14 @@ namespace ClearCanvas.ImageViewer.Volumes
 	/// </summary>
 	public sealed class VolumeSliceFactory
 	{
-		private VolumeInterpolationMode _interpolation = VolumeInterpolationMode.Linear;
-		private VolumeProjectionMode _projection = VolumeProjectionMode.Average;
+		/// <summary>
+		/// Initializes a new instance of <see cref="VolumeSliceFactory"/>.
+		/// </summary>
+		public VolumeSliceFactory()
+		{
+			Projection = VolumeProjectionMode.Average;
+			Interpolation = VolumeInterpolationMode.Linear;
+		}
 
 		/// <summary>
 		/// Gets or sets the row orientation of the output as a directional vector in patient coordinates.
@@ -144,11 +150,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 		/// <remarks>
 		/// <para>The default value is <see cref="VolumeInterpolationMode.Linear"/>.</para>
 		/// </remarks>
-		public VolumeInterpolationMode Interpolation
-		{
-			get { return _interpolation; }
-			set { _interpolation = value; }
-		}
+		public VolumeInterpolationMode Interpolation { get; set; }
 
 		/// <summary>
 		/// Gets or sets the projection mode of the output.
@@ -156,11 +158,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 		/// <remarks>
 		/// <para>The default value is <see cref="VolumeProjectionMode.Average"/>.</para>
 		/// </remarks>
-		public VolumeProjectionMode Projection
-		{
-			get { return _projection; }
-			set { _projection = value; }
-		}
+		public VolumeProjectionMode Projection { get; set; }
 
 		/// <summary>
 		/// Creates a <see cref="VolumeSlice"/> representing the slice at the specified position in a <see cref="Volume"/>.
@@ -313,17 +311,23 @@ namespace ClearCanvas.ImageViewer.Volumes
 			var args = new VolumeSliceArgs(sliceRows, sliceColumns, pixelSpacing.Height, pixelSpacing.Width, slicerAxisX, slicerAxisY, sliceThickness, sliceSubsamples, Interpolation, Projection);
 
 			// compute the image position patient for each output slice and create the slices
-			return GetSlicePositions(slicerOrigin, slicerAxisX, slicerAxisY, slicerAxisZ, stackDepth, sliceRows, sliceColumns, pixelSpacing, sliceSpacing, sliceThickness, startPosition, endPosition, count)
-				.Select(p => new VolumeSlice(volumeReference.Clone(), true, args, p, sliceSpacing));
+			var slicePositions = GetSlicePositions(slicerOrigin, slicerAxisX, slicerAxisY, slicerAxisZ, stackDepth, sliceRows, sliceColumns, pixelSpacing, sliceSpacing, sliceThickness, startPosition, endPosition, count).ToList();
+			return slicePositions.Select(p => new VolumeSlice(volumeReference.Clone(), true, args, p, slicePositions.Count > 1 ? (float?) sliceSpacing : null));
 		}
 
 		private IEnumerable<Vector3D> GetSlicePositions(Vector3D slicerOrigin, Vector3D slicerAxisX, Vector3D slicerAxisY, Vector3D slicerAxisZ, float stackDepth, int sliceRows, int sliceColumns, SizeF pixelSpacing, float sliceSpacing, float sliceThickness, Vector3D startPosition, Vector3D endPosition, int count)
 		{
+			// just under 1.5 (+1 is to include the end edge as a slice, and +0.499999 to make it round *down* if the stack depth is almost an exact multiple of the requested spacing)
+			const double sliceCountRounder = 1 + 0.5 - 1e-6;
+
 			// compute the increment in position between consecutive slices
 			var slicePositionIncrement = slicerAxisZ*sliceSpacing;
 
 			// get the number of slices in the output when slicing the entire volume
-			var sliceCount = (int) (Math.Abs(1.0*stackDepth/sliceSpacing) + 0.5);
+			var sliceCount = (int) (Math.Abs(1.0*stackDepth/sliceSpacing) + sliceCountRounder);
+
+			// compute the offset needed to centre the stack along the stacking axis (so that we don't favour either end of the stack if the slice count is rounded)
+			var firstSliceOffset = (stackDepth - (sliceCount - 1)*sliceSpacing)/2f;
 
 			// compute the position of the first slice when slicing the entire volume
 			var firstSlicePosition = slicerOrigin;
@@ -364,10 +368,13 @@ namespace ClearCanvas.ImageViewer.Volumes
 					var offsetZ = slicerAxisZ.Dot(slicerStart);
 					firstSlicePosition += offsetZ*slicerAxisZ;
 
+					// position is explicitly given, so clear the offset
+					firstSliceOffset = 0;
+
 					// recompute the slice count based on the magnitude of the Z component delta between the end and start positions
 					var slicerStop = endPosition - slicerOrigin;
 					var stackRange = slicerAxisZ.Dot(slicerStop) - offsetZ;
-					sliceCount = (int) (Math.Abs(1.0*stackRange/sliceSpacing) + 0.5);
+					sliceCount = (int) (Math.Abs(1.0*stackRange/sliceSpacing) + sliceCountRounder);
 				}
 				else if (count > 0)
 				{
@@ -375,10 +382,16 @@ namespace ClearCanvas.ImageViewer.Volumes
 					var offsetZ = slicerAxisZ.Dot(slicerStart);
 					firstSlicePosition += offsetZ*slicerAxisZ;
 
+					// position is explicitly given, so clear the offset
+					firstSliceOffset = 0;
+
 					// the slice count is exactly as provided
 					sliceCount = count;
 				}
 			}
+
+			// if necessary, adjust the first slice position in order to centre the stack on the volume
+			if (!FloatComparer.AreEqual(firstSliceOffset, 0)) firstSlicePosition += firstSliceOffset*slicerAxisZ;
 
 			// compute the positions for the requested slices
 			return Enumerable.Range(0, Math.Max(1, sliceCount)).Select(n => firstSlicePosition + n*slicePositionIncrement);
