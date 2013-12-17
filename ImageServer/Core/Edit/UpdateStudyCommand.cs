@@ -30,6 +30,7 @@ using System.Text;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Dicom;
+using ClearCanvas.Dicom.Iod.Sequences;
 using ClearCanvas.Dicom.Utilities.Xml;
 using ClearCanvas.Dicom.Utilities.Command;
 using ClearCanvas.Enterprise.Core;
@@ -574,13 +575,25 @@ namespace ClearCanvas.ImageServer.Core.Edit
         private void UpdateDicomFile(DicomFile file)
         {
             var originalCS = file.DataSet.SpecificCharacterSet;
-                        
+
+			var sq = new OriginalAttributesSequence
+			{
+				ModifiedAttributesSequence = new DicomSequenceItem(),
+				ModifyingSystem = ProductInformation.Component,
+				ReasonForTheAttributeModification = "CORRECT",
+				AttributeModificationDatetime = Platform.Time,
+				SourceOfPreviousValues = file.SourceApplicationEntityTitle
+			};
 
             foreach (BaseImageLevelUpdateCommand command in _commands)
             {
                 command.File = file;
-                command.Apply(file);
-            }           
+                command.Apply(file, sq);
+            }
+
+			var sqAttrib = file.DataSet[DicomTags.OriginalAttributesSequence] as DicomAttributeSQ;
+			if (sqAttrib != null)
+				sqAttrib.AddSequenceItem(sq.DicomSequenceItem);
 
             var newCS = file.DataSet.SpecificCharacterSet;
 
@@ -633,9 +646,8 @@ namespace ClearCanvas.ImageServer.Core.Edit
 
 				if (_rulesEngine != null)
 				{
-					ServerActionContext context = new ServerActionContext(file, _oldStudyLocation.FilesystemKey, _partition, _oldStudyLocation.Key)
-					                              	{CommandProcessor = filesystemUpdateProcessor};
-					_rulesEngine.Execute(context);
+					ServerActionContext context = new ServerActionContext(file, _oldStudyLocation.FilesystemKey, _partition, _oldStudyLocation.Key, filesystemUpdateProcessor);
+					_rulesEngine.Execute(context); 
 				}
 
 				if (!filesystemUpdateProcessor.Execute())

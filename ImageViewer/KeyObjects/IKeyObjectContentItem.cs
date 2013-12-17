@@ -22,8 +22,8 @@
 
 #endregion
 
+using ClearCanvas.Dicom.Iod;
 using ClearCanvas.Dicom.Iod.Iods;
-using ValueType=ClearCanvas.Dicom.Iod.ValueType;
 
 namespace ClearCanvas.ImageViewer.KeyObjects
 {
@@ -37,6 +37,76 @@ namespace ClearCanvas.ImageViewer.KeyObjects
 	{
 		ValueType ValueType { get; }
 		KeyObjectSelectionDocumentIod Source { get; }
+	}
+
+	/// <summary>
+	/// A single person observer context item in a key object document.
+	/// </summary>
+	/// <remarks>
+	/// <para>Due to the relatively new nature of key object support in the ClearCanvas Framework, this API may be more prone to changes in the next release.</para>
+	/// </remarks>
+	public class PersonObserverContextContentItem : IKeyObjectContentItem
+	{
+		public readonly string PersonObserverName;
+
+		private readonly KeyObjectSelectionDocumentIod _source;
+
+		public PersonObserverContextContentItem(string personObserverName, KeyObjectSelectionDocumentIod source)
+		{
+			_source = source;
+
+			PersonObserverName = personObserverName;
+		}
+
+		ValueType IKeyObjectContentItem.ValueType
+		{
+			get { return ValueType.PName; }
+		}
+
+		public KeyObjectSelectionDocumentIod Source
+		{
+			get { return _source; }
+		}
+
+		public override string ToString()
+		{
+			return PersonObserverName;
+		}
+	}
+
+	/// <summary>
+	/// A single key object description item in a key object document.
+	/// </summary>
+	/// <remarks>
+	/// <para>Due to the relatively new nature of key object support in the ClearCanvas Framework, this API may be more prone to changes in the next release.</para>
+	/// </remarks>
+	public class KeyObjectDescriptionContentItem : IKeyObjectContentItem
+	{
+		public readonly string Description;
+
+		private readonly KeyObjectSelectionDocumentIod _source;
+
+		public KeyObjectDescriptionContentItem(string description, KeyObjectSelectionDocumentIod source)
+		{
+			_source = source;
+
+			Description = description;
+		}
+
+		ValueType IKeyObjectContentItem.ValueType
+		{
+			get { return ValueType.Text; }
+		}
+
+		public KeyObjectSelectionDocumentIod Source
+		{
+			get { return _source; }
+		}
+
+		public override string ToString()
+		{
+			return Description;
+		}
 	}
 
 	/// <summary>
@@ -56,16 +126,17 @@ namespace ClearCanvas.ImageViewer.KeyObjects
 
 		public KeyImageContentItem(string imageSopInstanceUid, string presentationSopInstanceUid, KeyObjectSelectionDocumentIod source)
 		{
-			this.ReferencedImageSopInstanceUid = imageSopInstanceUid;
-			this.PresentationStateSopInstanceUid = presentationSopInstanceUid;
-			this.FrameNumber = null;
-			this._source = source;
+			_source = source;
+
+			ReferencedImageSopInstanceUid = imageSopInstanceUid;
+			PresentationStateSopInstanceUid = presentationSopInstanceUid;
+			FrameNumber = null;
 		}
 
 		public KeyImageContentItem(string imageSopInstanceUid, int frameNumber, string presentationSopInstanceUid, KeyObjectSelectionDocumentIod source)
 			: this(imageSopInstanceUid, presentationSopInstanceUid, source)
 		{
-			this.FrameNumber = frameNumber;
+			FrameNumber = frameNumber;
 		}
 
 		ValueType IKeyObjectContentItem.ValueType
@@ -76,6 +147,11 @@ namespace ClearCanvas.ImageViewer.KeyObjects
 		public KeyObjectSelectionDocumentIod Source
 		{
 			get { return _source; }
+		}
+
+		public override string ToString()
+		{
+			return FrameNumber.HasValue ? string.Concat(ReferencedImageSopInstanceUid, ":", FrameNumber) : ReferencedImageSopInstanceUid;
 		}
 	}
 }

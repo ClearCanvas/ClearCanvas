@@ -168,10 +168,10 @@ namespace ClearCanvas.ImageViewer
 		/// </summary>
 		bool Enabled { get; set; }
 
-        /// <summary>
-        /// A place for extensions to store custom data about the tile.
-        /// </summary>
-        ExtensionData ExtensionData { get; }
+		/// <summary>
+		/// A place for extensions to store custom data about the tile.
+		/// </summary>
+		ExtensionData ExtensionData { get; }
 
 		/// <summary>
 		/// Creates a rectangular grid of tiles.
@@ -189,96 +189,99 @@ namespace ClearCanvas.ImageViewer
 		void SetTileGrid(int numberOfRows, int numberOfColumns);
 
 		/// <summary>
+		/// Helper method for setting the display set of this image box.
+		/// </summary>
+		/// <param name="displaySet">The display set to show in this image box, or NULL to clear it.</param>
+		/// <param name="createFreshCopy">Value indicating whether or not <see cref="IDisplaySet.CreateFreshCopy"/> should be called on the display set.</param>
+		/// <param name="addToCommandHistory">Value indicating whether or not the viewer command history should be updated.</param>
+		/// <param name="selectDefaultTile">Value indicating whether or not <see cref="SelectDefaultTile"/> should be called after updating the display set.</param>
+		void SetDisplaySet(IDisplaySet displaySet, bool createFreshCopy = false, bool addToCommandHistory = true, bool selectDefaultTile = true);
+
+		/// <summary>
 		/// Selects the top left tile.
 		/// </summary>
 		void SelectDefaultTile();
 
-	    /// <summary>
-	    /// Occurs when the <see cref="DisplaySet"/> property has changed.
-	    /// </summary>
-	    event EventHandler<DisplaySetChangedEventArgs> DisplaySetChanged;
+		/// <summary>
+		/// Occurs when the <see cref="DisplaySet"/> property has changed.
+		/// </summary>
+		event EventHandler<DisplaySetChangedEventArgs> DisplaySetChanged;
 	}
 
-    /// <summary>
-    /// An extension point for ImageBox "tools" 
-    /// </summary>
-    [ExtensionPoint]
-    public sealed class ImageBoxExtensionPoint : ExtensionPoint<IImageBoxExtension>
-    { }
+	/// <summary>
+	/// An extension point for ImageBox "tools" 
+	/// </summary>
+	[ExtensionPoint]
+	public sealed class ImageBoxExtensionPoint : ExtensionPoint<IImageBoxExtension> {}
 
+	/// TODO: Now IImageBoxExtension is basically an extension to the ImageBoxControl instead of the ImageBox.
+	/// Consider combining IImageBoxExtensionView and IImageBoxExtension.
+	/// 
+	/// <summary>
+	/// Defines interface to the view of an image box extension.
+	/// </summary>
+	public interface IImageBoxExtensionView : IView, IDisposable
+	{
+		///<summary>
+		/// Sets the parent size for the view
+		///</summary>
+		Size ParentSize { set; }
 
-    /// TODO: Now IImageBoxExtension is basically an extension to the ImageBoxControl instead of the ImageBox.
-    /// Consider combining IImageBoxExtensionView and IImageBoxExtension.
-    /// 
-    /// <summary>
-    /// Defines interface to the view of an image box extension.
-    /// </summary>
-    public interface IImageBoxExtensionView:IView,IDisposable
-    {
-        ///<summary>
-        /// Sets the parent size for the view
-        ///</summary>
-        Size ParentSize{ set; }
+		/// <summary>
+		/// Gets the render size of the view
+		/// </summary>
+		Size ActualSize { get; }
 
-        /// <summary>
-        /// Gets the render size of the view
-        /// </summary>
-        Size ActualSize { get; }
+		///<summary>
+		/// Updates the view
+		///</summary>
+		void UpdateLayout();
 
-        ///<summary>
-        /// Updates the view
-        ///</summary>
-        void UpdateLayout();
+		///<summary>
+		/// Gets a boolean indicating whether the view is visible
+		///</summary>
+		bool Visible { get; }
+	}
 
-        ///<summary>
-        /// Gets a boolean indicating whether the view is visible
-        ///</summary>
-        bool Visible { get; }
-    }
+	/// TODO: Now IImageBoxExtension is basically an extension to the ImageBoxControl instead of the ImageBox.
+	/// Consider combining IImageBoxExtensionView and IImageBoxExtension.
+	/// 
+	/// <summary>
+	/// Defines the interface of an extension to the <see cref="IImageBox"/>
+	/// </summary>
+	public interface IImageBoxExtension : INotifyPropertyChanged, IDisposable
+	{
+		/// <summary>
+		/// Name of the extension
+		/// </summary>
+		string Name { get; }
 
-    /// TODO: Now IImageBoxExtension is basically an extension to the ImageBoxControl instead of the ImageBox.
-    /// Consider combining IImageBoxExtensionView and IImageBoxExtension.
-    /// 
-    /// <summary>
-    /// Defines the interface of an extension to the <see cref="IImageBox"/>
-    /// </summary>
-    public interface IImageBoxExtension : INotifyPropertyChanged, IDisposable
-    {
+		///<summary>
+		/// Sets the associated ImageBox
+		///</summary>
+		IImageBox ImageBox { set; }
 
-        /// <summary>
-        /// Name of the extension
-        /// </summary>
-        string Name { get; }
+		///<summary>
+		/// Create an instance of the view for the plugin
+		///</summary>
+		/// <remarks>
+		/// Caller will be responsible for managing the view
+		/// </remarks>
+		IImageBoxExtensionView CreateView();
 
+		///<summary>
+		/// Gets or sets a value indicating whether the extension wants its <see cref="View"/> to be visible.
+		///</summary>
+		/// <remarks>
+		/// It is up to the image box control implementation to decide whether it's feasible 
+		/// to display the extension's view on the screen.
+		/// The extension must fire <see cref="PropertyChanged"/> if it wants to change its visibility. 
+		/// </remarks>
+		bool Visible { get; set; }
 
-        ///<summary>
-        /// Sets the associated ImageBox
-        ///</summary>
-        IImageBox ImageBox { set; }
-
-        ///<summary>
-        /// Create an instance of the view for the plugin
-        ///</summary>
-        /// <remarks>
-        /// Caller will be responsible for managing the view
-        /// </remarks>
-        IImageBoxExtensionView CreateView();
-
-        ///<summary>
-        /// Gets or sets a value indicating whether the extension wants its <see cref="View"/> to be visible.
-        ///</summary>
-        /// <remarks>
-        /// It is up to the image box control implementation to decide whether it's feasible 
-        /// to display the extension's view on the screen.
-        /// The extension must fire <see cref="PropertyChanged"/> if it wants to change its visibility. 
-        /// </remarks>
-        bool Visible { get; set; }
-
-        ///<summary>
-        /// Gets the icons for the extension
-        ///</summary>
-        IconSet IconSet { get; }
-
-    }
-
+		///<summary>
+		/// Gets the icons for the extension
+		///</summary>
+		IconSet IconSet { get; }
+	}
 }

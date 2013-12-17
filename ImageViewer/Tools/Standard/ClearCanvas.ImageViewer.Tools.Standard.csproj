@@ -147,6 +147,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DicomGraphicAnnotationTool.cs" />
     <Compile Include="MagnificationTool2.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>

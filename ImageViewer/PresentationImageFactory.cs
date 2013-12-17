@@ -24,15 +24,16 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Dicom;
 using ClearCanvas.Dicom.Iod;
 using ClearCanvas.Dicom.Iod.Iods;
 using ClearCanvas.ImageViewer.KeyObjects;
+using ClearCanvas.ImageViewer.PresentationStates;
 using ClearCanvas.ImageViewer.PresentationStates.Dicom;
 using ClearCanvas.ImageViewer.StudyManagement;
-using ClearCanvas.ImageViewer.PresentationStates;
 
 namespace ClearCanvas.ImageViewer
 {
@@ -74,11 +75,17 @@ namespace ClearCanvas.ImageViewer
 		/// <summary>
 		/// Constructs a <see cref="PresentationImageFactory"/>.
 		/// </summary>
-		public PresentationImageFactory()
+		public PresentationImageFactory() {}
+
+		/// <summary>
+		/// Constructs a <see cref="PresentationImageFactory"/>.
+		/// </summary>
+		public PresentationImageFactory(StudyTree studyTree)
 		{
+			_studyTree = studyTree;
 		}
 
-		public PresentationState DefaultPresentationState {get; set; }
+		public PresentationState DefaultPresentationState { get; set; }
 
 		/// <summary>
 		/// Gets the <see cref="StudyTree"/> used by the factory to resolve referenced SOPs.
@@ -143,8 +150,8 @@ namespace ClearCanvas.ImageViewer
 		public virtual List<IPresentationImage> CreateImages(Sop sop)
 		{
 			if (sop.IsImage)
-				return CreateImages((ImageSop)sop);
-			
+				return CreateImages((ImageSop) sop);
+
 			if (sop.SopClassUid == SopClass.KeyObjectSelectionDocumentStorageUid)
 				return CreateImages(new KeyObjectSelectionDocumentIod(sop));
 
@@ -159,6 +166,7 @@ namespace ClearCanvas.ImageViewer
 		protected virtual List<IPresentationImage> CreateImages(KeyObjectSelectionDocumentIod keyObjectDocument)
 		{
 			List<IPresentationImage> images = new List<IPresentationImage>();
+
 			if (_studyTree == null)
 			{
 				Platform.Log(LogLevel.Warn, "Key object document cannot be used to create images because there is no study tree to build from.");
@@ -166,27 +174,37 @@ namespace ClearCanvas.ImageViewer
 			else
 			{
 				IList<IKeyObjectContentItem> content = new KeyImageDeserializer(keyObjectDocument).Deserialize();
+				var evidence = new HierarchicalSopInstanceReferenceDictionary(keyObjectDocument.KeyObjectDocument.CurrentRequestedProcedureEvidenceSequence);
 				foreach (IKeyObjectContentItem item in content)
 				{
-					if (item is KeyImageContentItem)
-						images.AddRange(CreateImages((KeyImageContentItem) item));
-					else
-						Platform.Log(LogLevel.Warn, "Unsupported key object content value type");
+					try
+					{
+						if (item is KeyImageContentItem)
+							images.AddRange(CreateImages((KeyImageContentItem) item, evidence));
+						else
+							Platform.Log(LogLevel.Warn, "Unsupported key object content value type");
+					}
+					catch (Exception ex)
+					{
+						Platform.Log(LogLevel.Warn, ex, SR.MessageKeyObjectDeserializeFailure);
+					}
 				}
 			}
 
 			return images;
 		}
 
-		protected virtual List<IPresentationImage> CreateImages(KeyImageContentItem item)
+		protected virtual List<IPresentationImage> CreateImages(KeyImageContentItem item, HierarchicalSopInstanceReferenceDictionary currentRequestedProcedureEvidence)
 		{
 			List<IPresentationImage> images = new List<IPresentationImage>();
 
-			ImageSop imageSop = FindReferencedImageSop(item.ReferencedImageSopInstanceUid, item.Source.GeneralStudy.StudyInstanceUid);
+			var imageRef = LookupKeyImageEvidence(item.ReferencedImageSopInstanceUid, item.FrameNumber, currentRequestedProcedureEvidence);
+			var presentationStateRef = LookupPresentationStateEvidence(item.PresentationStateSopInstanceUid, currentRequestedProcedureEvidence);
+
+			var imageSop = FindSop<ImageSop>(imageRef.SopInstanceUid, imageRef.StudyInstanceUid);
 			if (imageSop != null)
 			{
-
-				int frameNumber = item.FrameNumber.GetValueOrDefault(-1);
+				int frameNumber = imageRef.FrameNumber.GetValueOrDefault(-1);
 				if (item.FrameNumber.HasValue)
 				{
 					// FramesCollection is a 1-based index!!!
@@ -197,18 +215,15 @@ namespace ClearCanvas.ImageViewer
 					else
 					{
 						Platform.Log(LogLevel.Error, "The referenced key image {0} does not have a frame {1} (referenced in Key Object Selection {2})", item.ReferencedImageSopInstanceUid, frameNumber, item.Source.SopCommon.SopInstanceUid);
-						images.Add(new KeyObjectPlaceholderImage(SR.MessageReferencedKeyImageFrameNotFound));
+						images.Add(new KeyObjectPlaceholderImage(imageRef, presentationStateRef, SR.MessageReferencedKeyImageFrameNotFound));
 					}
 				}
 				else
 				{
-					foreach (Frame frame in imageSop.Frames)
-					{
-						images.Add(Create(frame));
-					}
+					images.AddRange(imageSop.Frames.Select(Create));
 				}
 
-				Sop presentationStateSop = FindReferencedSop(item.PresentationStateSopInstanceUid, item.Source.GeneralStudy.StudyInstanceUid);
+				var presentationStateSop = FindSop<Sop>(presentationStateRef.SopInstanceUid, presentationStateRef.StudyInstanceUid);
 				if (presentationStateSop != null)
 				{
 					foreach (IPresentationImage image in images)
@@ -217,7 +232,7 @@ namespace ClearCanvas.ImageViewer
 						{
 							try
 							{
-								IPresentationStateProvider presentationStateProvider = (IPresentationStateProvider)image;
+								IPresentationStateProvider presentationStateProvider = (IPresentationStateProvider) image;
 								presentationStateProvider.PresentationState = DicomSoftcopyPresentationState.Load(presentationStateSop);
 							}
 							catch (Exception ex)
@@ -231,7 +246,7 @@ namespace ClearCanvas.ImageViewer
 			else
 			{
 				Platform.Log(LogLevel.Warn, "The referenced key image {0} is not loaded as part of the current study (referenced in Key Object Selection {1})", item.ReferencedImageSopInstanceUid, item.Source.SopCommon.SopInstanceUid);
-				images.Add(new KeyObjectPlaceholderImage(SR.MessageReferencedKeyImageFromOtherStudy));
+				images.Add(new KeyObjectPlaceholderImage(imageRef, presentationStateRef, SR.MessageReferencedKeyImageFromOtherStudy));
 			}
 
 			return images;
@@ -257,29 +272,26 @@ namespace ClearCanvas.ImageViewer
 
 		#region Private KO Helpers
 
-		//TODO (CR Mar 2010): return Sop and check IsImage.
-		private ImageSop FindReferencedImageSop(string sopInstanceUid, string studyInstanceUid)
+		private KeyImageReference LookupKeyImageEvidence(string sopInstanceUid, int? frameNumber, HierarchicalSopInstanceReferenceDictionary evidenceDictionary)
 		{
 			if (string.IsNullOrEmpty(sopInstanceUid))
 				return null;
 
-			string sameStudyUid = studyInstanceUid;
-			Study sameStudy = _studyTree.GetStudy(sameStudyUid);
-
-			if (sameStudy != null)
-			{
-				foreach (Series series in sameStudy.Series)
-				{
-					Sop referencedSop = series.Sops[sopInstanceUid];
-					if (referencedSop != null)
-						return referencedSop as ImageSop;
-				}
-			}
-
-			return null;
+			var result = evidenceDictionary.FirstOrDefault(e => e.SopInstanceUid == sopInstanceUid);
+			return new KeyImageReference(result.StudyInstanceUid, result.SeriesInstanceUid, result.SopClassUid, result.SopInstanceUid, frameNumber);
 		}
 
-		private Sop FindReferencedSop(string sopInstanceUid, string studyInstanceUid)
+		private PresentationStateReference LookupPresentationStateEvidence(string sopInstanceUid, HierarchicalSopInstanceReferenceDictionary evidenceDictionary)
+		{
+			if (string.IsNullOrEmpty(sopInstanceUid))
+				return null;
+
+			var result = evidenceDictionary.FirstOrDefault(e => e.SopInstanceUid == sopInstanceUid);
+			return new PresentationStateReference(result.StudyInstanceUid, result.SeriesInstanceUid, result.SopClassUid, result.SopInstanceUid);
+		}
+
+		private T FindSop<T>(string sopInstanceUid, string studyInstanceUid)
+			where T : Sop
 		{
 			if (string.IsNullOrEmpty(sopInstanceUid))
 				return null;
@@ -287,17 +299,7 @@ namespace ClearCanvas.ImageViewer
 			string sameStudyUid = studyInstanceUid;
 			Study sameStudy = _studyTree.GetStudy(sameStudyUid);
 
-			if (sameStudy != null)
-			{
-				foreach (Series series in sameStudy.Series)
-				{
-					Sop referencedSop = series.Sops[sopInstanceUid];
-					if (referencedSop != null)
-						return referencedSop;
-				}
-			}
-
-			return null;
+			return sameStudy != null ? sameStudy.Series.Select(series => series.Sops[sopInstanceUid]).OfType<T>().FirstOrDefault() : null;
 		}
 
 		#endregion

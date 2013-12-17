@@ -46,6 +46,12 @@ namespace ClearCanvas.ImageViewer
 		private CompositeGraphic _dicomGraphics;
 
 		[CloneIgnore]
+		private IPatientCoordinateMapping _patientCoordinateMapping;
+
+		[CloneIgnore]
+		private IPatientPresentation _patientPresentation;
+
+		[CloneIgnore]
 		private readonly DicomVoiLuts _dicomVoiLuts;
 
 		/// <summary>
@@ -222,6 +228,34 @@ namespace ClearCanvas.ImageViewer
 		public GraphicCollection DicomGraphics
 		{
 			get { return _dicomGraphics.Graphics; }
+		}
+
+		#endregion
+
+		#region IPatientPresentationProvider Members
+
+		public IPatientPresentation PatientPresentation
+		{
+			get { return _patientPresentation ?? (_patientPresentation = CreatePatientPresentation()); }
+		}
+
+		protected virtual IPatientPresentation CreatePatientPresentation()
+		{
+			return new BasicPatientPresentation(this);
+		}
+
+		#endregion
+
+		#region IPatientCoordinateMappingProvider Members
+
+		public IPatientCoordinateMapping PatientCoordinateMapping
+		{
+			get { return _patientCoordinateMapping ?? (_patientCoordinateMapping = CreatePatientCoordinateMapping()); }
+		}
+
+		protected virtual IPatientCoordinateMapping CreatePatientCoordinateMapping()
+		{
+			return new PatientCoordinateMapping(Frame);
 		}
 
 		#endregion

@@ -27,6 +27,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using ClearCanvas.Dicom;
 using ClearCanvas.Dicom.Iod;
+using ClearCanvas.Dicom.Iod.ContextGroups;
 using ClearCanvas.Dicom.Iod.Macros;
 using ClearCanvas.Dicom.ServiceModel.Query;
 using ClearCanvas.Dicom.Utilities;
@@ -206,12 +207,32 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 			}
 		}
 
+		#endregion
+
+		#region SOP Common Module
+
 		/// <summary>
 		/// Gets the instance number.
 		/// </summary>
 		public virtual int InstanceNumber
 		{
 			get { return DataSource.InstanceNumber; }
+		}
+
+		/// <summary>
+		/// Gets the content date.
+		/// </summary>
+		public virtual string ContentDate
+		{
+			get { return this[DicomTags.ContentDate].GetString(0, null) ?? ""; }
+		}
+
+		/// <summary>
+		/// Gets the content time.
+		/// </summary>
+		public virtual string ContentTime
+		{
+			get { return this[DicomTags.ContentTime].GetString(0, null) ?? ""; }
 		}
 
 		#endregion
@@ -294,6 +315,22 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		}
 
 		/// <summary>
+		/// Gets the patient species code sequence.
+		/// </summary>
+		public virtual Species PatientSpeciesCodeSequence
+		{
+			get
+			{
+				var attribute = this[DicomTags.PatientSpeciesCodeSequence];
+				if (attribute.IsEmpty || attribute.IsNull || attribute.Count == 0)
+					return null;
+
+				Species species;
+				return Species.TryParse(new CodeSequenceMacro(((DicomSequenceItem[]) attribute.Values)[0]), out species) ? species : null;
+			}
+		}
+
+		/// <summary>
 		/// Gets the coding scheme designator of the patient species code sequence.
 		/// </summary>
 		public virtual string PatientSpeciesCodeSequenceCodingSchemeDesignator
@@ -301,7 +338,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 			get
 			{
 				var attribute = this[DicomTags.PatientSpeciesCodeSequence];
-				if (attribute.IsNull || attribute.Count == 0)
+				if (attribute.IsEmpty || attribute.IsNull || attribute.Count == 0)
 					return null;
 
 				var codeSquenceMacro = new CodeSequenceMacro(((DicomSequenceItem[]) attribute.Values)[0]);
@@ -317,7 +354,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 			get
 			{
 				var attribute = this[DicomTags.PatientSpeciesCodeSequence];
-				if (attribute.IsNull || attribute.Count == 0)
+				if (attribute.IsEmpty || attribute.IsNull || attribute.Count == 0)
 					return null;
 
 				var codeSquenceMacro = new CodeSequenceMacro(((DicomSequenceItem[]) attribute.Values)[0]);
@@ -333,7 +370,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 			get
 			{
 				var attribute = this[DicomTags.PatientSpeciesCodeSequence];
-				if (attribute.IsNull || attribute.Count == 0)
+				if (attribute.IsEmpty || attribute.IsNull || attribute.Count == 0)
 					return null;
 
 				var codeSquenceMacro = new CodeSequenceMacro(((DicomSequenceItem[]) attribute.Values)[0]);
@@ -354,6 +391,22 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		}
 
 		/// <summary>
+		/// Gets the patient breed code sequence.
+		/// </summary>
+		public virtual Breed PatientBreedCodeSequence
+		{
+			get
+			{
+				var attribute = this[DicomTags.PatientBreedCodeSequence];
+				if (attribute.IsEmpty || attribute.IsNull || attribute.Count == 0)
+					return null;
+
+				Breed breed;
+				return Breed.TryParse(new CodeSequenceMacro(((DicomSequenceItem[]) attribute.Values)[0]), out breed) ? breed : null;
+			}
+		}
+
+		/// <summary>
 		/// Gets the coding scheme designator of the patient breed code sequence.
 		/// </summary>
 		public virtual string PatientBreedCodeSequenceCodingSchemeDesignator
@@ -361,7 +414,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 			get
 			{
 				var attribute = this[DicomTags.PatientBreedCodeSequence];
-				if (attribute.IsNull || attribute.Count == 0)
+				if (attribute.IsEmpty || attribute.IsNull || attribute.Count == 0)
 					return null;
 
 				var codeSquenceMacro = new CodeSequenceMacro(((DicomSequenceItem[]) attribute.Values)[0]);
@@ -377,7 +430,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 			get
 			{
 				var attribute = this[DicomTags.PatientBreedCodeSequence];
-				if (attribute.IsNull || attribute.Count == 0)
+				if (attribute.IsEmpty || attribute.IsNull || attribute.Count == 0)
 					return null;
 
 				var codeSquenceMacro = new CodeSequenceMacro(((DicomSequenceItem[]) attribute.Values)[0]);
@@ -393,7 +446,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 			get
 			{
 				var attribute = this[DicomTags.PatientBreedCodeSequence];
-				if (attribute.IsNull || attribute.Count == 0)
+				if (attribute.IsEmpty || attribute.IsNull || attribute.Count == 0)
 					return null;
 
 				var codeSquenceMacro = new CodeSequenceMacro(((DicomSequenceItem[]) attribute.Values)[0]);

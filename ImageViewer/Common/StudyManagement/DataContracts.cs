@@ -339,6 +339,11 @@ namespace ClearCanvas.ImageViewer.Common.StudyManagement
             }
         }
 
+	    public string FileStoreIncomingFolder
+	    {
+		    get { return Path.Combine(FileStoreDirectory, "Incoming"); }
+	    }
+
         public bool FileStoreDriveExists
         {
             get

@@ -26,7 +26,9 @@ using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Threading;
+using ClearCanvas.Common;
 using ClearCanvas.Desktop;
+using ClearCanvas.ImageViewer.Common;
 
 namespace ClearCanvas.ImageViewer.Clipboard
 {
@@ -39,11 +41,27 @@ namespace ClearCanvas.ImageViewer.Clipboard
 		/// Returns the actual clipboard item.
 		/// </summary>
 		object Item { get; }
-		
+
+		/// <summary>
+		/// Gets extension data associated with the clipboard item.
+		/// </summary>
+		ExtensionData ExtensionData { get; }
+
 		/// <summary>
 		/// Returns the display rectangle of the clipboard item.
 		/// </summary>
 		Rectangle DisplayRectangle { get; }
+
+		/// <summary>
+		/// Gets whether or not the clipboard item is locked.
+		/// </summary>
+		/// <remarks>
+		/// Locking indicates that asynchronous operations are potentially
+		/// being performed with this <see cref="IClipboardItem"/>, and thus
+		/// that the item may not be deleted from the clipboard, which
+		/// would otherwise result in <see cref="Item"/>'s disposal.
+		/// </remarks>
+		bool IsLocked { get; }
 
 		/// <summary>
 		/// Locks a clipboard item.
@@ -70,22 +88,62 @@ namespace ClearCanvas.ImageViewer.Clipboard
 		void Unlock();
 	}
 
-	internal class ClipboardItem : IClipboardItem, IGalleryItem
+	public class ClipboardItem : IClipboardItem, IGalleryItem
 	{
 		private object _item;
 		private Image _image;
+		private Func<ClipboardItem, Image> _imageGetter;
 		private readonly string _name;
 		private readonly string _description;
 		private readonly Rectangle _displayRectangle;
 		private int _lockCount;
+		private ExtensionData _extensionData;
 
+		/// <summary>
+		/// Initializes a new instance of <see cref="ClipboardItem"/>.
+		/// </summary>
+		/// <param name="item"></param>
+		/// <param name="image"></param>
+		/// <param name="name"></param>
+		/// <param name="description"></param>
+		/// <param name="displayRectangle"></param>
 		public ClipboardItem(object item, Image image, string name, string description, Rectangle displayRectangle)
 		{
+			Platform.CheckForNullReference(item, "item");
+			Platform.CheckForNullReference(image, "image");
+
 			_item = item;
 			_image = image;
-			_name = name;
-			_description = description;
+			_name = name ?? string.Empty;
+			_description = description ?? string.Empty;
 			_displayRectangle = displayRectangle;
+			_extensionData = new ExtensionData();
+		}
+
+		/// <summary>
+		/// Initializes a new instance of <see cref="ClipboardItem"/>.
+		/// </summary>
+		/// <param name="item"></param>
+		/// <param name="imageGetter"></param>
+		/// <param name="name"></param>
+		/// <param name="description"></param>
+		/// <param name="displayRectangle"></param>
+		public ClipboardItem(object item, string name, string description, Rectangle displayRectangle, Func<ClipboardItem, Image> imageGetter)
+		{
+			Platform.CheckForNullReference(item, "item");
+			Platform.CheckForNullReference(imageGetter, "imageGetter");
+
+			_item = item;
+			_imageGetter = imageGetter;
+			_name = name ?? string.Empty;
+			_description = description ?? string.Empty;
+			_displayRectangle = displayRectangle;
+			_extensionData = new ExtensionData();
+		}
+
+		public ExtensionData ExtensionData
+		{
+			get { return _extensionData; }
 		}
 
 		public object Item
@@ -93,15 +151,20 @@ namespace ClearCanvas.ImageViewer.Clipboard
 			get { return _item; }
 		}
 
-		public object Image
+		/// <summary>
+		/// Gets the thumbnail image for the clipboard item.
+		/// </summary>
+		public Image Image
 		{
-			get { return _image; }
+			get { return _image ?? (_image = _imageGetter.Invoke(this)); }
 		}
 
+		/// <summary>
+		/// Gets the label for the clipboard item.
+		/// </summary>
 		public string Name
 		{
 			get { return _name; }
-			set { throw new NotImplementedException("Renaming clipboard items is not yet supported."); }
 		}
 
 		public string Description
@@ -124,14 +187,12 @@ namespace ClearCanvas.ImageViewer.Clipboard
 			Interlocked.Decrement(ref _lockCount);
 		}
 
-		public bool Locked
+		public bool IsLocked
 		{
 			get { return Thread.VolatileRead(ref _lockCount) != 0; }
 		}
 
-		#region IDisposable Members
-
-		void IDisposable.Dispose()
+		public void Dispose()
 		{
 			if (_item != null && _item is IDisposable)
 			{
@@ -143,17 +204,33 @@ namespace ClearCanvas.ImageViewer.Clipboard
 				_image.Dispose();
 				_image = null;
 			}
+			if (_extensionData != null)
+			{
+				_extensionData.Dispose();
+				_extensionData = null;
+			}
+			_imageGetter = null;
+		}
+
+		#region IGalleryItem Implementation
+
+		event PropertyChangedEventHandler INotifyPropertyChanged.PropertyChanged
+		{
+			add { }
+			remove { }
+		}
+
+		object IGalleryItem.Image
+		{
+			get { return Image; }
+		}
+
+		string IGalleryItem.Name
+		{
+			get { return Name; }
+			set { throw new InvalidOperationException("Renaming clipboard items is not supported."); }
 		}
 
 		#endregion
-
-	    #region Implementation of INotifyPropertyChanged
-
-        /// <summary>
-        /// Unused.
-        /// </summary>
-	    public event PropertyChangedEventHandler PropertyChanged;
-
-	    #endregion
 	}
 }

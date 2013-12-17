@@ -85,7 +85,7 @@ namespace ClearCanvas.ImageViewer.Graphics
 				}
 
 				OnTopLeftChanged(new PointChangedEventArgs(TopLeft, CoordinateSystem));
-				NotifyVisualStateChanged("TopLeft");
+				NotifyVisualStateChanged("TopLeft", VisualStatePropertyKind.Geometry);
 			}
 		}
 
@@ -123,7 +123,7 @@ namespace ClearCanvas.ImageViewer.Graphics
 				}
 
 				OnBottomRightChanged(new PointChangedEventArgs(BottomRight, CoordinateSystem));
-				NotifyVisualStateChanged("BottomRight");
+				NotifyVisualStateChanged("BottomRight", VisualStatePropertyKind.Geometry);
 			}
 		}
 

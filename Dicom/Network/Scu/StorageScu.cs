@@ -24,10 +24,13 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading;
 using ClearCanvas.Common;
+using ClearCanvas.Common.Utilities;
 using ClearCanvas.Dicom.Codec;
 using System.Text;
+using ClearCanvas.Dicom.Utilities.Statistics;
 
 namespace ClearCanvas.Dicom.Network.Scu
 {
@@ -108,6 +111,7 @@ namespace ClearCanvas.Dicom.Network.Scu
 		private int _successSubOperations = 0;
 		private int _totalSubOperations = 0;
 		private int _remainingSubOperations = 0;
+		private AssociationStatisticsRecorder _stats;
 
 		#endregion
 
@@ -503,7 +507,7 @@ namespace ClearCanvas.Dicom.Network.Scu
                                                              return;
                                                          }
 
-                                                         /// TODO (CR Jun 2012): Do we need to check for a stop signal?
+                                                         // TODO (CR Jun 2012): Do we need to check for a stop signal?
                                                          // TODO (Marmot): Check stop?
                                                          // TODO (CR Jun 2012): Stop is checked for in OnReceiveResponseMessage after each c-store-rsp received.
                                                          // There's a small chance that every image we're attempting to send wasn't negotiated over the association and it
@@ -511,9 +515,9 @@ namespace ClearCanvas.Dicom.Network.Scu
                                                          ok = SendCStore(client, association);                                                             
                                                      }                                                     
                                                  }
-                                                 catch
+                                                 catch (Exception x)
                                                  {
-                                                     Platform.Log(LogLevel.Error, "Error when sending C-STORE-RQ messages, aborted on-going send operations");
+                                                     Platform.Log(LogLevel.Error, x, "Error when sending C-STORE-RQ messages, aborted on-going send operations");
                                                      try
                                                      {
                                                          client.SendAssociateAbort(DicomAbortSource.ServiceProvider, DicomAbortReason.NotSpecified);
@@ -537,36 +541,49 @@ namespace ClearCanvas.Dicom.Network.Scu
             return pcid;
         }
 
-	    private byte SelectPresentationContext(ClientAssociationParameters association, StorageInstance fileToSend, DicomFile dicomFile, out DicomMessage msg)
+	    private byte SelectPresentationContext(ClientAssociationParameters association, StorageInstance fileToSend, out DicomMessage msg)
         {
-            byte pcid = 0;
+            byte pcid;
             if (PresentationContextSelectionDelegate != null)
             {
                 // Note, this may do a conversion of the file according to codecs, need to catch a codec exception if it occurs
+				var dicomFile = fileToSend.LoadFile();
                 pcid = PresentationContextSelectionDelegate(association, dicomFile, out msg);
             }
             else
             {
-                msg = new DicomMessage(dicomFile);
+	            msg = null;
+
+				pcid = association.FindAbstractSyntaxWithTransferSyntax(fileToSend.SopClass,
+																	   fileToSend.TransferSyntax);
 
                 if (fileToSend.TransferSyntax.Encapsulated)
                 {
-                    pcid = association.FindAbstractSyntaxWithTransferSyntax(msg.SopClass,
-                                                                            msg.TransferSyntax);
-
-                    if (DicomCodecRegistry.GetCodec(fileToSend.TransferSyntax) != null)
+					if (pcid == 0) 
                     {
                         // We can compress/decompress the file. Check if remote device accepts it
-                        if (pcid == 0)
-                            pcid = SelectUncompressedPresentationContext(association, msg);
+	                    if (DicomCodecRegistry.GetCodec(fileToSend.TransferSyntax) != null)
+	                    {
+							var dicomFile = fileToSend.LoadFile();
+							msg = new DicomMessage(dicomFile);
+		                    pcid = SelectUncompressedPresentationContext(association, msg);
+	                    }
                     }
                 }
                 else
                 {
-                    if (pcid == 0)
-                        pcid = SelectUncompressedPresentationContext(association, msg);
+	                if (pcid == 0)
+					{
+						var dicomFile = fileToSend.LoadFile();
+						msg = new DicomMessage(dicomFile);
+		                pcid = SelectUncompressedPresentationContext(association, msg);
+	                }
                 }
+
+				if (pcid != 0 && fileToSend.FileIsLoaded)
+					msg = new DicomMessage(fileToSend.LoadFile());
             }
+
             return pcid;
         }
 
@@ -590,6 +607,31 @@ namespace ClearCanvas.Dicom.Network.Scu
                                          _moveOriginatorMessageId, msg);
         }
 
+		private void SendFilePresentationContext(DicomClient client, byte pcid, StorageInstance fileToSend)
+		{
+			fileToSend.SentMessageId = client.NextMessageID();
+
+			if (fileToSend.MetaInfoFileLength == 0)
+			{
+				DicomFile theFile = new DicomFile(fileToSend.Filename);
+				theFile.Load(DicomTags.RelatedGeneralSopClassUid, DicomReadOptions.Default);
+				fileToSend.MetaInfoFileLength = theFile.MetaInfoFileLength;
+			}
+
+			using (var fs = FileStreamOpener.OpenForRead(fileToSend.Filename, FileMode.Open))
+			{
+				// Seek to the Dataset
+				fs.Seek(fileToSend.MetaInfoFileLength, SeekOrigin.Begin);
+
+				if (_moveOriginatorAe == null)
+					client.SendCStoreRequest(pcid, fileToSend.SentMessageId, DicomPriority.Medium, null, 0, fileToSend.SopInstanceUid,
+					                         fileToSend.SopClass.Uid, fs);
+				else
+					client.SendCStoreRequest(pcid, fileToSend.SentMessageId, DicomPriority.Medium, _moveOriginatorAe, _moveOriginatorMessageId, fileToSend.SopInstanceUid,
+											 fileToSend.SopClass.Uid, fs);
+			}
+		}
+
 		/// <summary>
 		/// Generic routine to send the next C-STORE-RQ message in the <see cref="StorageInstanceList"/>.
 		/// </summary>
@@ -601,8 +643,6 @@ namespace ClearCanvas.Dicom.Network.Scu
 
 			OnImageStoreStarted(fileToSend);
 
-			DicomFile dicomFile;
-
 			try
 			{
 				// Check to see if image does not exist or is corrupted
@@ -613,8 +653,6 @@ namespace ClearCanvas.Dicom.Network.Scu
 					OnImageStoreCompleted(fileToSend);
 					return false;
 				}
-
-				dicomFile = fileToSend.LoadFile();
 			}
 			catch (DicomException e)
 			{
@@ -631,7 +669,7 @@ namespace ClearCanvas.Dicom.Network.Scu
             {
                 DicomMessage msg;
 
-                byte pcid = SelectPresentationContext(association, fileToSend, dicomFile, out msg);
+                byte pcid = SelectPresentationContext(association, fileToSend, out msg);
 
                 if (pcid == 0)
                 {
@@ -648,11 +686,14 @@ namespace ClearCanvas.Dicom.Network.Scu
 
                 try
                 {
-                    SendOnPresentationContext(client, association, pcid, fileToSend, msg);
+					if (msg != null)
+						SendOnPresentationContext(client, association, pcid, fileToSend, msg);
+					else
+						SendFilePresentationContext(client, pcid, fileToSend);
                 }
                 catch (DicomCodecUnsupportedSopException e)
                 {
-                    if (!msg.TransferSyntax.Encapsulated)
+                    if (msg != null && !msg.TransferSyntax.Encapsulated)
                     {
                         pcid = SelectUncompressedPresentationContext(association, msg);
                         if (pcid != 0)
@@ -833,7 +874,7 @@ namespace ClearCanvas.Dicom.Network.Scu
 			Platform.Log(LogLevel.Info, "Association Accepted:\r\n{0}", association.ToString());
 
 			_fileListIndex = 0;
-
+			_stats = new AssociationStatisticsRecorder(client);
 			SendCStoreUntilSuccess(client,association);
 		}
 

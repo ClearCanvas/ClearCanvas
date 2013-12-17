@@ -28,6 +28,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using ClearCanvas.Dicom;
 using ClearCanvas.Dicom.Iod;
 using ClearCanvas.ImageViewer.Mathematics;
@@ -42,6 +43,8 @@ namespace ClearCanvas.ImageViewer.Volumes.Tests
 	[TestFixture]
 	public class VolumeBuilderTest : AbstractVolumeTest
 	{
+		private const double _degreesInRadians = Math.PI/180;
+
 		[Test]
 		public void TestWellBehavedSource()
 		{
@@ -50,7 +53,6 @@ namespace ClearCanvas.ImageViewer.Volumes.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof (InsufficientFramesException))]
 		public void TestInsufficientFramesSource()
 		{
 			// it doesn't really matter what function we use
@@ -60,14 +62,15 @@ namespace ClearCanvas.ImageViewer.Volumes.Tests
 			try
 			{
 				// create only 2 slices!!
-				foreach (ISopDataSource sopDataSource in function.CreateSops(100, 100, 2, false))
-				{
-					images.Add(new ImageSop(sopDataSource));
-				}
+				images.AddRange(function.CreateSops(100, 100, 2).Select(sopDataSource => new ImageSop(sopDataSource)));
 
 				// this line *should* throw an exception
-				using (Volume volume = Volume.Create(EnumerateFrames(images))) {}
+				using (Volume volume = Volume.Create(EnumerateFrames(images)))
+				{
+					Assert.Fail("Expected an exception of type {0}, instead got {1}", typeof (InsufficientFramesException), volume);
+				}
 			}
+			catch (InsufficientFramesException) {}
 			finally
 			{
 				DisposeAll(images);
@@ -75,69 +78,115 @@ namespace ClearCanvas.ImageViewer.Volumes.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof (NullSourceSeriesException))]
 		public void TestMissingStudySource()
 		{
-			// it doesn't really matter what function we use
-			TestVolume(VolumeFunction.Void, sopDataSource => sopDataSource[DicomTags.StudyInstanceUid].SetEmptyValue(), null);
+			try
+			{
+				// it doesn't really matter what function we use
+				TestVolume(VolumeFunction.Void, sopDataSource => sopDataSource[DicomTags.StudyInstanceUid].SetEmptyValue(), null);
+				Assert.Fail("Expected an exception of type {0}", typeof (NullSourceSeriesException));
+			}
+			catch (NullSourceSeriesException) {}
 		}
 
 		[Test]
-		[ExpectedException(typeof (NullSourceSeriesException))]
 		public void TestMissingSeriesSource()
 		{
-			// it doesn't really matter what function we use
-			TestVolume(VolumeFunction.Void, sopDataSource => sopDataSource[DicomTags.SeriesInstanceUid].SetEmptyValue(), null);
+			try
+			{
+				// it doesn't really matter what function we use
+				TestVolume(VolumeFunction.Void, sopDataSource => sopDataSource[DicomTags.SeriesInstanceUid].SetEmptyValue(), null);
+				Assert.Fail("Expected an exception of type {0}", typeof (NullSourceSeriesException));
+			}
+			catch (NullSourceSeriesException) {}
 		}
 
 		[Test]
-		[ExpectedException(typeof (MultipleSourceSeriesException))]
 		public void TestDifferentSeriesSource()
 		{
-			// it doesn't really matter what function we use
-			TestVolume(VolumeFunction.Void, sopDataSource => sopDataSource[DicomTags.SeriesInstanceUid].SetStringValue(DicomUid.GenerateUid().UID), null);
+			try
+			{
+				// it doesn't really matter what function we use
+				TestVolume(VolumeFunction.Void, sopDataSource => sopDataSource[DicomTags.SeriesInstanceUid].SetStringValue(DicomUid.GenerateUid().UID), null);
+				Assert.Fail("Expected an exception of type {0}", typeof (MultipleSourceSeriesException));
+			}
+			catch (MultipleSourceSeriesException) {}
 		}
 
 		[Test]
-		[ExpectedException(typeof (NullFrameOfReferenceException))]
+		public void TestInconsistentRescaleUnitsSource()
+		{
+			try
+			{
+				var n = 0;
+
+				// it doesn't really matter what function we use
+				TestVolume(VolumeFunction.Void, sopDataSource => sopDataSource[DicomTags.RescaleType].SetStringValue(++n == 49 ? "OD" : "HU"), null);
+				Assert.Fail("Expected an exception of type {0}", typeof (InconsistentRescaleFunctionTypeException));
+			}
+			catch (InconsistentRescaleFunctionTypeException) {}
+		}
+
+		[Test]
 		public void TestMissingFramesOfReferenceSource()
 		{
-			// it doesn't really matter what function we use
-			TestVolume(VolumeFunction.Void, sopDataSource => sopDataSource[DicomTags.FrameOfReferenceUid].SetEmptyValue(), null);
+			try
+			{
+				// it doesn't really matter what function we use
+				TestVolume(VolumeFunction.Void, sopDataSource => sopDataSource[DicomTags.FrameOfReferenceUid].SetEmptyValue(), null);
+				Assert.Fail("Expected an exception of type {0}", typeof (NullFrameOfReferenceException));
+			}
+			catch (NullFrameOfReferenceException) {}
 		}
 
 		[Test]
-		[ExpectedException(typeof (MultipleFramesOfReferenceException))]
 		public void TestDifferentFramesOfReferenceSource()
 		{
-			// it doesn't really matter what function we use
-			TestVolume(VolumeFunction.Void, sopDataSource => sopDataSource[DicomTags.FrameOfReferenceUid].SetStringValue(DicomUid.GenerateUid().UID), null);
+			try
+			{
+				// it doesn't really matter what function we use
+				TestVolume(VolumeFunction.Void, sopDataSource => sopDataSource[DicomTags.FrameOfReferenceUid].SetStringValue(DicomUid.GenerateUid().UID), null);
+				Assert.Fail("Expected an exception of type {0}", typeof (MultipleFramesOfReferenceException));
+			}
+			catch (MultipleFramesOfReferenceException) {}
 		}
 
 		[Test]
-		[ExpectedException(typeof (NullImageOrientationException))]
 		public void TestMissingImageOrientationSource()
 		{
-			// it doesn't really matter what function we use
-			TestVolume(VolumeFunction.Void, sopDataSource => sopDataSource[DicomTags.ImageOrientationPatient].SetEmptyValue(), null);
+			try
+			{
+				// it doesn't really matter what function we use
+				TestVolume(VolumeFunction.Void, sopDataSource => sopDataSource[DicomTags.ImageOrientationPatient].SetEmptyValue(), null);
+				Assert.Fail("Expected an exception of type {0}", typeof (NullImageOrientationException));
+			}
+			catch (NullImageOrientationException) {}
 		}
 
 		[Test]
-		[ExpectedException(typeof (MultipleImageOrientationsException))]
 		public void TestDifferentImageOrientationSource()
 		{
 			int n = 0;
 
-			// it doesn't really matter what function we use
-			TestVolume(VolumeFunction.Void, sopDataSource => sopDataSource[DicomTags.ImageOrientationPatient].SetStringValue(DataSetOrientation.CreateGantryTiltedAboutX(n++).ImageOrientationPatient), null);
+			try
+			{
+				// it doesn't really matter what function we use
+				TestVolume(VolumeFunction.Void, sopDataSource => sopDataSource[DicomTags.ImageOrientationPatient].SetStringValue(DataSetOrientation.CreateGantryTiltedAboutX(n++).ImageOrientationPatient), null);
+				Assert.Fail("Expected an exception of type {0}", typeof (MultipleImageOrientationsException));
+			}
+			catch (MultipleImageOrientationsException) {}
 		}
 
 		[Test]
-		[ExpectedException(typeof (UncalibratedFramesException))]
 		public void TestUncalibratedImageSource()
 		{
-			// it doesn't really matter what function we use
-			TestVolume(VolumeFunction.Void, sopDataSource => sopDataSource[DicomTags.PixelSpacing].SetEmptyValue(), null);
+			try
+			{
+				// it doesn't really matter what function we use
+				TestVolume(VolumeFunction.Void, sopDataSource => sopDataSource[DicomTags.PixelSpacing].SetEmptyValue(), null);
+				Assert.Fail("Expected an exception of type {0}", typeof (UncalibratedFramesException));
+			}
+			catch (UncalibratedFramesException) {}
 		}
 
 		[Test]
@@ -148,127 +197,239 @@ namespace ClearCanvas.ImageViewer.Volumes.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof (AnisotropicPixelAspectRatioException))]
-		public void TestAnisotropicPixelAspectRatio4To3ImageSource()
+		public void TestAnisotropicPixelAspectRatioImageSource()
 		{
-			// it doesn't really matter what function we use
-			TestVolume(VolumeFunction.Void, sopDataSource => sopDataSource[DicomTags.PixelSpacing].SetStringValue(@"0.13333333\0.0999999"), null);
+			try
+			{
+				// it doesn't really matter what function we use
+				TestVolume(VolumeFunction.Void, sopDataSource => sopDataSource[DicomTags.PixelSpacing].SetStringValue(@"0.13333333\0.0999999"), null);
+				Assert.Fail("Expected an exception of type {0}", typeof (AnisotropicPixelAspectRatioException));
+			}
+			catch (AnisotropicPixelAspectRatioException) {}
+
+			try
+			{
+				// it doesn't really matter what function we use
+				TestVolume(VolumeFunction.Void, sopDataSource => sopDataSource[DicomTags.PixelSpacing].SetStringValue(@"0.10000000\0.13333333"), null);
+				Assert.Fail("Expected an exception of type {0}", typeof (AnisotropicPixelAspectRatioException));
+			}
+			catch (AnisotropicPixelAspectRatioException) {}
 		}
 
 		[Test]
-		[ExpectedException(typeof (AnisotropicPixelAspectRatioException))]
-		public void TestAnisotropicPixelAspectRatio3To4ImageSource()
-		{
-			// it doesn't really matter what function we use
-			TestVolume(VolumeFunction.Void, sopDataSource => sopDataSource[DicomTags.PixelSpacing].SetStringValue(@"0.10000000\0.13333333"), null);
-		}
-
-		[Test]
-		[ExpectedException(typeof (UnevenlySpacedFramesException))]
 		public void TestUnevenlySpacedFramesSource()
 		{
 			int sliceSpacing = 1;
 			int sliceLocation = 100;
 
-			// it doesn't really matter what function we use
-			TestVolume(VolumeFunction.Void,
-			           sopDataSource =>
-			           	{
-			           		sopDataSource[DicomTags.ImagePositionPatient].SetStringValue(string.Format(@"100\100\{0}", sliceLocation));
-			           		sliceLocation += sliceSpacing++;
-			           	}, null);
+			try
+			{
+				// it doesn't really matter what function we use
+				TestVolume(VolumeFunction.Void,
+				           sopDataSource =>
+				           	{
+				           		sopDataSource[DicomTags.ImagePositionPatient].SetStringValue(string.Format(@"100\100\{0}", sliceLocation));
+				           		sliceLocation += sliceSpacing++;
+				           	}, null);
+				Assert.Fail("Expected an exception of type {0}", typeof (UnevenlySpacedFramesException));
+			}
+			catch (UnevenlySpacedFramesException) {}
 		}
 
 		[Test]
-		[ExpectedException(typeof (UnevenlySpacedFramesException))]
 		public void TestCoincidentFramesSource()
 		{
-			// it doesn't really matter what function we use
-			TestVolume(VolumeFunction.Void, sopDataSource => sopDataSource[DicomTags.ImagePositionPatient].SetStringValue(@"100\100\100"), null);
+			try
+			{
+				// it doesn't really matter what function we use
+				TestVolume(VolumeFunction.Void, sopDataSource => sopDataSource[DicomTags.ImagePositionPatient].SetStringValue(@"100\100\100"), null);
+				Assert.Fail("Expected an exception of type {0}", typeof (UnevenlySpacedFramesException));
+			}
+			catch (UnevenlySpacedFramesException) {}
 		}
 
 		[Test]
-		[ExpectedException(typeof (UnsupportedGantryTiltAxisException))]
-		public void TestMultiAxialGantryTiltedSource()
+		public void TestGantryTiltedSource()
 		{
-			string imageOrientationPatient = string.Format(@"{1:f9}\{1:f9}\{0:f9}\-{0:f9}\{0:f9}\0", Math.Cos(Math.PI/4), Math.Pow(Math.Cos(Math.PI/4), 2));
+			{
+				string imageOrientationPatient = string.Format(@"{1:f9}\{1:f9}\{0:f9}\-{0:f9}\{0:f9}\0", Math.Cos(Math.PI/4), Math.Pow(Math.Cos(Math.PI/4), 2));
+				try
+				{
+					// it doesn't really matter what function we use
+					TestVolume(VolumeFunction.Void, sopDataSource => sopDataSource[DicomTags.ImageOrientationPatient].SetStringValue(imageOrientationPatient), null);
+					Assert.Fail("Expected an exception of type {0}", typeof (UnsupportedGantryTiltAxisException));
+				}
+				catch (UnsupportedGantryTiltAxisException) {}
+			}
 
-			// it doesn't really matter what function we use
-			TestVolume(VolumeFunction.Void, sopDataSource => sopDataSource[DicomTags.ImageOrientationPatient].SetStringValue(imageOrientationPatient), null);
+			{
+				DataSetOrientation orientation = DataSetOrientation.CreateGantryTiltedAboutX(30);
+
+				// it doesn't really matter what function we use
+				TestVolume(VolumeFunction.Void, orientation.Initialize, null);
+			}
+
+			{
+				DataSetOrientation orientation = DataSetOrientation.CreateGantryTiltedAboutX(-30);
+
+				// it doesn't really matter what function we use
+				TestVolume(VolumeFunction.Void, orientation.Initialize, null);
+			}
+
+			{
+				DataSetOrientation orientation = DataSetOrientation.CreateGantryTiltedAboutY(30);
+
+				try
+				{
+					// it doesn't really matter what function we use
+					TestVolume(VolumeFunction.Void, orientation.Initialize, null);
+					Assert.Fail("Expected an exception of type {0}", typeof (UnsupportedGantryTiltAxisException));
+				}
+				catch (UnsupportedGantryTiltAxisException) {}
+			}
+
+			{
+				DataSetOrientation orientation = DataSetOrientation.CreateGantryTiltedAboutY(-30);
+
+				try
+				{
+					// it doesn't really matter what function we use
+					TestVolume(VolumeFunction.Void, orientation.Initialize, null);
+					Assert.Fail("Expected an exception of type {0}", typeof (UnsupportedGantryTiltAxisException));
+				}
+				catch (UnsupportedGantryTiltAxisException) {}
+			}
 		}
 
 		[Test]
-		public void Test030DegreeXAxialRotationGantryTiltedSource()
+		public void TestCouchTiltedSource()
 		{
-			DataSetOrientation orientation = DataSetOrientation.CreateGantryTiltedAboutX(30);
+			{
+				DataSetOrientation orientation = DataSetOrientation.CreateCouchTiltedAboutX(30);
 
-			// it doesn't really matter what function we use
-			TestVolume(VolumeFunction.Void, orientation.Initialize, null);
+				// it doesn't really matter what function we use
+				TestVolume(VolumeFunction.Void, orientation.Initialize, null);
+			}
+
+			{
+				DataSetOrientation orientation = DataSetOrientation.CreateCouchTiltedAboutX(-30);
+
+				// it doesn't really matter what function we use
+				TestVolume(VolumeFunction.Void, orientation.Initialize, null);
+			}
+
+			{
+				DataSetOrientation orientation = DataSetOrientation.CreateCouchTiltedAboutY(30);
+
+				// it doesn't really matter what function we use
+				TestVolume(VolumeFunction.Void, orientation.Initialize, null);
+			}
+
+			{
+				DataSetOrientation orientation = DataSetOrientation.CreateCouchTiltedAboutY(-30);
+
+				// it doesn't really matter what function we use
+				TestVolume(VolumeFunction.Void, orientation.Initialize, null);
+			}
 		}
 
 		[Test]
-		public void Test330DegreeXAxialRotationGantryTiltedSource()
+		public void TestObliqueSkewedSource()
 		{
-			DataSetOrientation orientation = DataSetOrientation.CreateGantryTiltedAboutX(-30);
 
-			// it doesn't really matter what function we use
-			TestVolume(VolumeFunction.Void, orientation.Initialize, null);
-		}
+			{
+				// perfectly rectangular cuboid, oblique source
+				var row = new Vector3D(1, 2, 3);
+				var column = new Vector3D(7, 10, -9);
+				var stack = row.Cross(column);
 
-		[Test]
-		[ExpectedException(typeof (UnsupportedGantryTiltAxisException))]
-		public void Test030DegreeYAxialRotationGantryTiltedSource()
-		{
-			DataSetOrientation orientation = DataSetOrientation.CreateGantryTiltedAboutY(30);
+				var orientation = new DataSetOrientation(row, column, stack);
+				TestVolume(VolumeFunction.Void, orientation.Initialize, null);
+			}
 
-			// it doesn't really matter what function we use
-			TestVolume(VolumeFunction.Void, orientation.Initialize, null);
-		}
+			{
+				// based on a real breast tomo MLO source - perfectly valid, and oblique w.r.t normal gantry-oriented calculations
+				var row = new Vector3D(0, 1, 0);
+				var column = new Vector3D(1, 0, 1);
+				var stack = new Vector3D(-100, 0, 100);
 
-		[Test]
-		[ExpectedException(typeof (UnsupportedGantryTiltAxisException))]
-		public void Test330DegreeYAxialRotationGantryTiltedSource()
-		{
-			DataSetOrientation orientation = DataSetOrientation.CreateGantryTiltedAboutY(-30);
+				var orientation = new DataSetOrientation(row, column, stack);
+				TestVolume(VolumeFunction.Void, orientation.Initialize, null);
+			}
 
-			// it doesn't really matter what function we use
-			TestVolume(VolumeFunction.Void, orientation.Initialize, null);
-		}
+			{
+				// column orientation skewed by 30 degreees from normal
+				const double skewAngle = 30*_degreesInRadians;
 
-		[Test]
-		public void Test030DegreeXAxialRotationCouchTiltedSource()
-		{
-			DataSetOrientation orientation = DataSetOrientation.CreateCouchTiltedAboutX(30);
+				var row = new Vector3D(1, 2, 3);
+				var column = new Vector3D(7, 10, -9);
+				var stack = (float) Math.Cos(skewAngle)*row.Cross(column).Normalize() - (float) Math.Sin(skewAngle)*column.Normalize();
 
-			// it doesn't really matter what function we use
-			TestVolume(VolumeFunction.Void, orientation.Initialize, null);
-		}
+				var orientation = new DataSetOrientation(row, column, stack);
+				TestVolume(VolumeFunction.Void, orientation.Initialize, null);
+			}
 
-		[Test]
-		public void Test330DegreeXAxialRotationCouchTiltedSource()
-		{
-			DataSetOrientation orientation = DataSetOrientation.CreateCouchTiltedAboutX(-30);
+			{
+				// column orientation skewed by -30 degreees from normal
+				const double skewAngle = -30*_degreesInRadians;
 
-			// it doesn't really matter what function we use
-			TestVolume(VolumeFunction.Void, orientation.Initialize, null);
-		}
+				var row = new Vector3D(1, 2, 3);
+				var column = new Vector3D(7, 10, -9);
+				var stack = (float) Math.Cos(skewAngle)*row.Cross(column).Normalize() - (float) Math.Sin(skewAngle)*column.Normalize();
 
-		[Test]
-		public void Test030DegreeYAxialRotationCouchTiltedSource()
-		{
-			DataSetOrientation orientation = DataSetOrientation.CreateCouchTiltedAboutY(30);
+				var orientation = new DataSetOrientation(row, column, stack);
+				TestVolume(VolumeFunction.Void, orientation.Initialize, null);
+			}
 
-			// it doesn't really matter what function we use
-			TestVolume(VolumeFunction.Void, orientation.Initialize, null);
-		}
+			try
+			{
+				// row orientation skewed by 30 degreees from normal
+				const double skewAngle = 30*_degreesInRadians;
 
-		[Test]
-		public void Test330DegreeYAxialRotationCouchTiltedSource()
-		{
-			DataSetOrientation orientation = DataSetOrientation.CreateCouchTiltedAboutY(-30);
+				var row = new Vector3D(1, 2, 3);
+				var column = new Vector3D(7, 10, -9);
+				var stack = (float) Math.Cos(skewAngle)*row.Cross(column).Normalize() - (float) Math.Sin(skewAngle)*row.Normalize();
 
-			// it doesn't really matter what function we use
-			TestVolume(VolumeFunction.Void, orientation.Initialize, null);
+				var orientation = new DataSetOrientation(row, column, stack);
+				TestVolume(VolumeFunction.Void, orientation.Initialize, null);
+
+				Assert.Fail("Expected an exception of type {0}", typeof (UnsupportedGantryTiltAxisException));
+			}
+			catch (UnsupportedGantryTiltAxisException) {}
+
+			try
+			{
+				// row orientation skewed by -30 degreees from normal
+				const double skewAngle = -30*_degreesInRadians;
+
+				var row = new Vector3D(1, 2, 3);
+				var column = new Vector3D(7, 10, -9);
+				var stack = (float) Math.Cos(skewAngle)*row.Cross(column).Normalize() - (float) Math.Sin(skewAngle)*row.Normalize();
+
+				var orientation = new DataSetOrientation(row, column, stack);
+				TestVolume(VolumeFunction.Void, orientation.Initialize, null);
+
+				Assert.Fail("Expected an exception of type {0}", typeof (UnsupportedGantryTiltAxisException));
+			}
+			catch (UnsupportedGantryTiltAxisException) {}
+
+			try
+			{
+				// column orientation skewed by -30 degreees from normal, then further row skewed by 20 degrees
+				const double skewAngle1 = -30*_degreesInRadians;
+				const double skewAngle2 = 20*_degreesInRadians;
+
+				var row = new Vector3D(1, 2, 3);
+				var column = new Vector3D(7, 10, -9);
+				var temp = (float) Math.Cos(skewAngle1)*row.Cross(column).Normalize() - (float) Math.Sin(skewAngle1)*column.Normalize();
+				var stack = (float) Math.Cos(skewAngle2)*temp.Normalize() - (float) Math.Sin(skewAngle2)*row.Normalize();
+
+				var orientation = new DataSetOrientation(row, column, stack);
+				TestVolume(VolumeFunction.Void, orientation.Initialize, null);
+
+				Assert.Fail("Expected an exception of type {0}", typeof (UnsupportedGantryTiltAxisException));
+			}
+			catch (UnsupportedGantryTiltAxisException) {}
 		}
 
 		[Test]
@@ -299,11 +460,30 @@ namespace ClearCanvas.ImageViewer.Volumes.Tests
 		}
 
 		[Test]
-		public void TestFilledVoxelData()
+		public void TestFillNormalVoxelData()
 		{
-			TestVolume(VolumeFunction.Stars, null,
+			var orientation = new DataSetOrientation(new Vector3D(1, 0, 0), new Vector3D(0, 1, 0), new Vector3D(0, 0, 1));
+
+			TestVolume(VolumeFunction.Stars,
+			           orientation.Initialize,
 			           volume =>
 			           	{
+			           		Assert.AreEqual(16, volume.BitsPerVoxel, "BitsPerVoxel");
+			           		Assert.AreEqual(false, volume.Signed, "Signed");
+			           		Assert.AreEqual(65535, volume.MaximumVolumeValue, "MaximumVolumeValue");
+			           		Assert.AreEqual(0, volume.MinimumVolumeValue, "MinimumVolumeValue");
+			           		Assert.AreEqual(0, volume.PaddingValue, "PaddingValue");
+			           		Assert.AreEqual(1, volume.RescaleSlope, "RescaleSlope");
+			           		Assert.AreEqual(0, volume.RescaleIntercept, "RescaleIntercept");
+
+			           		Assert.AreEqual(new Size3D(100, 100, 100), volume.ArrayDimensions, "ArrayDimensions");
+			           		AssertAreEqual(new Vector3D(1, 0, 0), volume.VolumeOrientationPatientX, "VolumeOrientationPatientX");
+			           		AssertAreEqual(new Vector3D(0, 1, 0), volume.VolumeOrientationPatientY, "VolumeOrientationPatientY");
+			           		AssertAreEqual(new Vector3D(0, 0, 1), volume.VolumeOrientationPatientZ, "VolumeOrientationPatientZ");
+			           		AssertAreEqual(new Vector3D(0, 0, 0), volume.VolumePositionPatient, "VolumePositionPatient");
+			           		AssertAreEqual(new Vector3D(100, 100, 100), volume.VolumeSize, "VolumeSize");
+			           		AssertAreEqual(new Vector3D(1, 1, 1), volume.VoxelSpacing, "VoxelSpacing");
+
 			           		foreach (KnownSample sample in StarsKnownSamples)
 			           		{
 			           			int actual = volume[(int) sample.Point.X, (int) sample.Point.Y, (int) sample.Point.Z];
@@ -314,23 +494,267 @@ namespace ClearCanvas.ImageViewer.Volumes.Tests
 		}
 
 		[Test]
-		public void TestXAxialRotationGantryTiltedVoxelData()
+		public void TestFillSigned16VoxelData()
 		{
-			const double angle = 30;
-			DataSetOrientation orientation = DataSetOrientation.CreateGantryTiltedAboutX(angle);
+			var orientation = new DataSetOrientation(new Vector3D(1, 0, 0), new Vector3D(0, 1, 0), new Vector3D(0, 0, 1));
 
 			TestVolume(VolumeFunction.Stars,
 			           orientation.Initialize,
 			           volume =>
 			           	{
+			           		Assert.AreEqual(16, volume.BitsPerVoxel, "BitsPerVoxel");
+			           		Assert.AreEqual(false, volume.Signed, "Signed");
+			           		Assert.AreEqual(65535, volume.MaximumVolumeValue, "MaximumVolumeValue");
+			           		Assert.AreEqual(0, volume.MinimumVolumeValue, "MinimumVolumeValue");
+			           		Assert.AreEqual(0, volume.PaddingValue, "PaddingValue");
+			           		Assert.AreEqual(1, volume.RescaleSlope, "RescaleSlope");
+			           		Assert.AreEqual(-32768, volume.RescaleIntercept, "RescaleIntercept");
+
+			           		Assert.AreEqual(new Size3D(100, 100, 100), volume.ArrayDimensions, "ArrayDimensions");
+			           		AssertAreEqual(new Vector3D(1, 0, 0), volume.VolumeOrientationPatientX, "VolumeOrientationPatientX");
+			           		AssertAreEqual(new Vector3D(0, 1, 0), volume.VolumeOrientationPatientY, "VolumeOrientationPatientY");
+			           		AssertAreEqual(new Vector3D(0, 0, 1), volume.VolumeOrientationPatientZ, "VolumeOrientationPatientZ");
+			           		AssertAreEqual(new Vector3D(0, 0, 0), volume.VolumePositionPatient, "VolumePositionPatient");
+			           		AssertAreEqual(new Vector3D(100, 100, 100), volume.VolumeSize, "VolumeSize");
+			           		AssertAreEqual(new Vector3D(1, 1, 1), volume.VoxelSpacing, "VoxelSpacing");
+
+			           		foreach (KnownSample sample in StarsKnownSamples)
+			           		{
+			           			int actual = volume[(int) sample.Point.X, (int) sample.Point.Y, (int) sample.Point.Z];
+			           			Trace.WriteLine(string.Format("Sample {0} @{1}", actual, sample.Point));
+			           			Assert.AreEqual(sample.Value, actual, "Wrong colour sample @{0}", sample.Point);
+			           		}
+			           	},
+			           signed : true);
+		}
+
+		[Test]
+		public void TestFillReverseFrameOrderVoxelData()
+		{
+			var orientation = new DataSetOrientation(new Vector3D(1, 0, 0), new Vector3D(0, 1, 0), new Vector3D(0, 0, -1));
+
+			TestVolume(VolumeFunction.Stars,
+			           orientation.Initialize,
+			           volume =>
+			           	{
+			           		Assert.AreEqual(new Size3D(100, 100, 100), volume.ArrayDimensions, "ArrayDimensions");
+			           		AssertAreEqual(new Vector3D(1, 0, 0), volume.VolumeOrientationPatientX, "VolumeOrientationPatientX");
+			           		AssertAreEqual(new Vector3D(0, 1, 0), volume.VolumeOrientationPatientY, "VolumeOrientationPatientY");
+			           		AssertAreEqual(new Vector3D(0, 0, 1), volume.VolumeOrientationPatientZ, "VolumeOrientationPatientZ"); // volume orientation is always a right-handed system
+			           		AssertAreEqual(new Vector3D(0, 0, -99), volume.VolumePositionPatient, "VolumePositionPatient"); // 0 is the coordinate of the first frame, so the last (100th) frame is -99
+			           		AssertAreEqual(new Vector3D(100, 100, 100), volume.VolumeSize, "VolumeSize");
+			           		AssertAreEqual(new Vector3D(1, 1, 1), volume.VoxelSpacing, "VoxelSpacing");
+
+			           		foreach (KnownSample sample in StarsKnownSamples)
+			           		{
+			           			int actual = volume[(int) sample.Point.X, (int) sample.Point.Y, 100 - (int) sample.Point.Z];
+			           			Trace.WriteLine(string.Format("Sample {0} @{1}", actual, sample.Point));
+			           			Assert.AreEqual(sample.Value, actual, "Wrong colour sample @{0}", sample.Point);
+			           		}
+			           	});
+		}
+
+		[Test]
+		public void TestFillObliqueCuboidVoxelData()
+		{
+			var halfRoot2 = (float) (1/Math.Sqrt(2));
+			var orientation = new DataSetOrientation(new Vector3D(0, 1, 0), new Vector3D(1, 0, 1), new Vector3D(-1, 0, 1));
+
+			TestVolume(VolumeFunction.Stars,
+			           orientation.Initialize,
+			           volume =>
+			           	{
+			           		Assert.AreEqual(new Size3D(100, 100, 100), volume.ArrayDimensions, "ArrayDimensions");
+			           		AssertAreEqual(new Vector3D(0, 1, 0), volume.VolumeOrientationPatientX, "VolumeOrientationPatientX");
+			           		AssertAreEqual(new Vector3D(halfRoot2, 0, halfRoot2), volume.VolumeOrientationPatientY, "VolumeOrientationPatientY");
+			           		AssertAreEqual(new Vector3D(halfRoot2, 0, -halfRoot2), volume.VolumeOrientationPatientZ, "VolumeOrientationPatientZ"); // volume orientation is always a right-handed system
+			           		AssertAreEqual(-99*new Vector3D(halfRoot2, 0, -halfRoot2), volume.VolumePositionPatient, "VolumePositionPatient"); // 0 is the the first frame, so the last (100th) frame is -99
+			           		AssertAreEqual(new Vector3D(100, 100, 100), volume.VolumeSize, "VolumeSize");
+			           		AssertAreEqual(new Vector3D(1, 1, 1), volume.VoxelSpacing, "VoxelSpacing");
+
+			           		foreach (KnownSample sample in StarsKnownSamples)
+			           		{
+			           			int actual = volume[(int) sample.Point.X, (int) sample.Point.Y, 100 - (int) sample.Point.Z];
+			           			Trace.WriteLine(string.Format("Sample {0} @{1}", actual, sample.Point));
+			           			Assert.AreEqual(sample.Value, actual, "Wrong colour sample @{0}", sample.Point);
+			           		}
+			           	});
+		}
+
+		[Test]
+		public void TestFillObliqueParallelepipedVoxelData()
+		{
+			// column orientation skewed by 30 degreees from normal
+			const double skewAngle = 30*_degreesInRadians;
+			const int paddingRows = 50; // 50 padding rows because sin(30)*(100 voxels deep) = 50 voxels high
+			var halfRoot2 = (float) (1/Math.Sqrt(2));
+			var halfRoot3 = (float) Math.Sqrt(3)/2;
+
+			var row = new Vector3D(0, 1, 0);
+			var column = new Vector3D(halfRoot2, 0, halfRoot2);
+			var stack = new Vector3D(halfRoot2*halfRoot3 - halfRoot2/2, 0, -halfRoot2*halfRoot3 - halfRoot2/2).Normalize();
+			var orientation = new DataSetOrientation(row, column, stack);
+
+			TestVolume(VolumeFunction.Stars,
+			           orientation.Initialize,
+			           volume =>
+			           	{
+			           		Assert.AreEqual(new Size3D(100, 100 + paddingRows, 100), volume.ArrayDimensions, "ArrayDimensions");
+			           		AssertAreEqual(row, volume.VolumeOrientationPatientX, "VolumeOrientationPatientX");
+			           		AssertAreEqual(column, volume.VolumeOrientationPatientY, "VolumeOrientationPatientY");
+			           		AssertAreEqual((100*stack + paddingRows*column).Normalize(), volume.VolumeOrientationPatientZ, "VolumeOrientationPatientZ");
+			           		AssertAreEqual(-50*column, volume.VolumePositionPatient, "VolumePositionPatient");
+			           		AssertAreEqual(new Vector3D(100, 100 + paddingRows, (float) (100*Math.Cos(skewAngle))), volume.VolumeSize, "VolumeSize");
+			           		AssertAreEqual(new Vector3D(1, 1, (float) Math.Cos(skewAngle)), volume.VoxelSpacing, "VoxelSpacing");
+
 			           		foreach (KnownSample sample in StarsKnownSamples)
 			           		{
 			           			Vector3D realPoint = sample.Point;
-			           			Vector3D paddedPoint = realPoint + new Vector3D(0, (float) (Math.Tan(angle*Math.PI/180)*(100 - realPoint.Z)), 0);
+			           			Vector3D paddedPoint = realPoint + new Vector3D(0, (float) (paddingRows - Math.Sin(skewAngle)*(realPoint.Z)), 0);
 
 			           			int actual = volume[(int) paddedPoint.X, (int) paddedPoint.Y, (int) paddedPoint.Z];
 			           			Trace.WriteLine(string.Format("Sample {0} @{1} ({2} before padding)", actual, paddedPoint, realPoint));
 			           			Assert.AreEqual(sample.Value, actual, "Wrong colour sample @{0} ({1} before padding)", paddedPoint, realPoint);
+			           		}
+			           	});
+		}
+
+		[Test]
+		public void TestFillObliqueParallelepipedVoxelData2()
+		{
+			// column orientation skewed by 30 degreees from normal
+			const double skewAngle = -30*_degreesInRadians;
+			const int paddingRows = 50; // 50 padding rows because sin(-30)*(100 voxels deep) = 50 voxels high (just padding starts at bottom this time)
+			var halfRoot2 = (float) (1/Math.Sqrt(2));
+			var halfRoot3 = (float) Math.Sqrt(3)/2;
+
+			var row = new Vector3D(0, 1, 0);
+			var column = new Vector3D(halfRoot2, 0, halfRoot2);
+			var stack = new Vector3D(halfRoot2*halfRoot3 + halfRoot2/2, 0, -halfRoot2*halfRoot3 + halfRoot2/2).Normalize();
+			var orientation = new DataSetOrientation(row, column, stack);
+
+			TestVolume(VolumeFunction.Stars,
+			           orientation.Initialize,
+			           volume =>
+			           	{
+			           		Assert.AreEqual(new Size3D(100, 100 + paddingRows, 100), volume.ArrayDimensions, "ArrayDimensions");
+			           		AssertAreEqual(row, volume.VolumeOrientationPatientX, "VolumeOrientationPatientX");
+			           		AssertAreEqual(column, volume.VolumeOrientationPatientY, "VolumeOrientationPatientY");
+			           		AssertAreEqual((100*stack - paddingRows*column).Normalize(), volume.VolumeOrientationPatientZ, "VolumeOrientationPatientZ");
+			           		AssertAreEqual(new Vector3D(0, 0, 0), volume.VolumePositionPatient, "VolumePositionPatient");
+			           		AssertAreEqual(new Vector3D(100, 100 + paddingRows, (float) (100*Math.Cos(skewAngle))), volume.VolumeSize, "VolumeSize");
+			           		AssertAreEqual(new Vector3D(1, 1, (float) Math.Cos(skewAngle)), volume.VoxelSpacing, "VoxelSpacing");
+
+			           		foreach (KnownSample sample in StarsKnownSamples)
+			           		{
+			           			Vector3D realPoint = sample.Point;
+			           			Vector3D paddedPoint = realPoint + new Vector3D(0, (float) (-Math.Sin(skewAngle)*(realPoint.Z)), 0);
+
+			           			int actual = volume[(int) paddedPoint.X, (int) paddedPoint.Y, (int) paddedPoint.Z];
+			           			Trace.WriteLine(string.Format("Sample {0} @{1} ({2} before padding)", actual, paddedPoint, realPoint));
+			           			Assert.AreEqual(sample.Value, actual, "Wrong colour sample @{0} ({1} before padding)", paddedPoint, realPoint);
+			           		}
+			           	});
+		}
+
+		[Test]
+		public void TestFillGantryTiltedVoxelData()
+		{
+			const double angleDegrees = 30;
+			const double angleRadians = angleDegrees*_degreesInRadians;
+			const int paddingRows = 50; // 50 padding rows because sin(30)*(100 voxels deep) = 50 voxels high
+
+			DataSetOrientation orientation = DataSetOrientation.CreateGantryTiltedAboutX(angleDegrees);
+
+			TestVolume(VolumeFunction.Stars,
+			           orientation.Initialize,
+			           volume =>
+			           	{
+			           		Assert.AreEqual(new Size3D(100, 100 + paddingRows, 100), volume.ArrayDimensions, "ArrayDimensions");
+			           		AssertAreEqual(new Vector3D(1, 0, 0), volume.VolumeOrientationPatientX, "VolumeOrientationPatientX");
+			           		AssertAreEqual(new Vector3D(0, (float) Math.Cos(angleRadians), -(float) Math.Sin(angleRadians)), volume.VolumeOrientationPatientY, "VolumeOrientationPatientY");
+			           		AssertAreEqual(new Vector3D(0, (float) Math.Sin(angleRadians), (float) Math.Cos(angleRadians)), volume.VolumeOrientationPatientZ, "VolumeOrientationPatientZ");
+			           		AssertAreEqual(-50*new Vector3D(0, (float) Math.Cos(angleRadians), -(float) Math.Sin(angleRadians)), volume.VolumePositionPatient, "VolumePositionPatient");
+			           		AssertAreEqual(new Vector3D(100, 100 + paddingRows, (float) (100*Math.Cos(angleRadians))), volume.VolumeSize, "VolumeSize");
+			           		AssertAreEqual(new Vector3D(1, 1, (float) Math.Cos(angleRadians)), volume.VoxelSpacing, "VoxelSpacing");
+
+			           		foreach (KnownSample sample in StarsKnownSamples)
+			           		{
+			           			Vector3D realPoint = sample.Point;
+			           			Vector3D paddedPoint = realPoint + new Vector3D(0, (float) (paddingRows - Math.Sin(angleRadians)*(realPoint.Z)), 0);
+
+			           			int actual = volume[(int) paddedPoint.X, (int) paddedPoint.Y, (int) paddedPoint.Z];
+			           			Trace.WriteLine(string.Format("Sample {0} @{1} ({2} before padding)", actual, paddedPoint, realPoint));
+			           			Assert.AreEqual(sample.Value, actual, "Wrong colour sample @{0} ({1} before padding)", paddedPoint, realPoint);
+			           		}
+			           	});
+		}
+
+		[Test]
+		public void TestFillGantryTiltedVoxelData2()
+		{
+			const double angleDegrees = -30;
+			const double angleRadians = angleDegrees*_degreesInRadians;
+			const int paddingRows = 50; // 50 padding rows because sin(-30)*(100 voxels deep) = 50 voxels high (just padding starts at bottom this time)
+
+			DataSetOrientation orientation = DataSetOrientation.CreateGantryTiltedAboutX(angleDegrees);
+
+			TestVolume(VolumeFunction.Stars,
+			           orientation.Initialize,
+			           volume =>
+			           	{
+			           		Assert.AreEqual(new Size3D(100, 100 + paddingRows, 100), volume.ArrayDimensions, "ArrayDimensions");
+			           		AssertAreEqual(new Vector3D(1, 0, 0), volume.VolumeOrientationPatientX, "VolumeOrientationPatientX");
+			           		AssertAreEqual(new Vector3D(0, (float) Math.Cos(angleRadians), -(float) Math.Sin(angleRadians)), volume.VolumeOrientationPatientY, "VolumeOrientationPatientY");
+			           		AssertAreEqual(new Vector3D(0, (float) Math.Sin(angleRadians), (float) Math.Cos(angleRadians)), volume.VolumeOrientationPatientZ, "VolumeOrientationPatientZ");
+			           		AssertAreEqual(new Vector3D(0, 0, 0), volume.VolumePositionPatient, "VolumePositionPatient");
+			           		AssertAreEqual(new Vector3D(100, 100 + paddingRows, (float) (100*Math.Cos(angleRadians))), volume.VolumeSize, "VolumeSize");
+			           		AssertAreEqual(new Vector3D(1, 1, (float) Math.Cos(angleRadians)), volume.VoxelSpacing, "VoxelSpacing");
+
+			           		foreach (KnownSample sample in StarsKnownSamples)
+			           		{
+			           			Vector3D realPoint = sample.Point;
+			           			Vector3D paddedPoint = realPoint + new Vector3D(0, (float) (-Math.Sin(angleRadians)*(realPoint.Z)), 0);
+
+			           			int actual = volume[(int) paddedPoint.X, (int) paddedPoint.Y, (int) paddedPoint.Z];
+			           			Trace.WriteLine(string.Format("Sample {0} @{1} ({2} before padding)", actual, paddedPoint, realPoint));
+			           			Assert.AreEqual(sample.Value, actual, "Wrong colour sample @{0} ({1} before padding)", paddedPoint, realPoint);
+			           		}
+			           	});
+		}
+
+		[Test]
+		public void TestFillPerFrameRescaleVoxelData()
+		{
+			// the normalized rescale function is computed from the largest possible range given the pixel format
+			var sourceMinValue = Enumerable.Range(1, 100).Select(n => ushort.MinValue*n/50.0 - n*100).Min();
+			var sourceMaxValue = Enumerable.Range(1, 100).Select(n => ushort.MaxValue*n/50.0 - n*100).Max();
+			var expectedRescaleSlope = (sourceMaxValue - sourceMinValue)/65535;
+			var expectedRescaleIntercept = sourceMinValue;
+
+			var nFrame = 0;
+			TestVolume(VolumeFunction.Stars,
+			           frame =>
+			           	{
+			           		frame[DicomTags.RescaleSlope].SetFloat64(0, ++nFrame/50.0);
+			           		frame[DicomTags.RescaleIntercept].SetFloat64(0, -nFrame*100);
+			           		frame[DicomTags.RescaleType].SetStringValue("HU");
+			           	},
+			           volume =>
+			           	{
+			           		Assert.AreEqual(expectedRescaleSlope, volume.RescaleSlope, "RescaleSlope");
+			           		Assert.AreEqual(expectedRescaleIntercept, volume.RescaleIntercept, "RescaleIntercept");
+			           		Assert.AreEqual(RescaleUnits.HounsfieldUnits, volume.RescaleUnits, "RescaleUnits");
+
+			           		foreach (KnownSample sample in StarsKnownSamples)
+			           		{
+			           			var frameNumber = (int) sample.Point.Z + 1;
+			           			var frameValue = sample.Value*frameNumber/50.0 - frameNumber*100;
+			           			var expectedValue = (int) Math.Round((frameValue - expectedRescaleIntercept)/expectedRescaleSlope);
+
+			           			int actualValue = volume[(int) sample.Point.X, (int) sample.Point.Y, (int) sample.Point.Z];
+			           			Trace.WriteLine(string.Format("Sample {0} @{1}", actualValue, sample.Point));
+			           			Assert.AreEqual(expectedValue, actualValue, "Wrong colour sample @{0} (Value before rescale adjustment was {1})", sample.Point, sample.Value);
 			           		}
 			           	});
 		}
@@ -555,6 +979,11 @@ namespace ClearCanvas.ImageViewer.Volumes.Tests
 			var intercept = volume.DataSet[DicomTags.RescaleIntercept].GetFloat64(0, 0);
 			var slope = volume.DataSet[DicomTags.RescaleSlope].GetFloat64(0, 1);
 			return (int) Math.Round(rawVoxelValue*slope + intercept);
+		}
+
+		private static void AssertAreEqual(Vector3D expected, Vector3D actual, string message = null, params object[] args)
+		{
+			if (!Vector3D.AreEqual(expected, actual)) Assert.AreEqual(expected, actual, message, args);
 		}
 	}
 }

@@ -29,6 +29,8 @@ namespace ClearCanvas.ImageViewer.Tools.Standard.Configuration
 {
 	internal sealed class ToolModalityBehaviorHelper
 	{
+		internal const string ModalityBreastTomosynthesis = @"MG (BT)";
+
 		private readonly IImageViewer _imageViewer;
 
 		public ToolModalityBehaviorHelper(IImageViewer imageViewer)
@@ -38,7 +40,7 @@ namespace ClearCanvas.ImageViewer.Tools.Standard.Configuration
 
 		public ToolModalityBehavior Behavior
 		{
-            get { return ToolSettings.DefaultInstance.CachedToolModalityBehavior.GetEntryOrDefault(SelectedModality); }
+			get { return ToolSettings.DefaultInstance.CachedToolModalityBehavior.GetEntryOrDefault(SelectedModality); }
 		}
 
 		private string SelectedModality
@@ -61,7 +63,8 @@ namespace ClearCanvas.ImageViewer.Tools.Standard.Configuration
 				}
 
 				var imageSopProvider = selectedImage as IImageSopProvider;
-				return imageSopProvider != null ? imageSopProvider.ImageSop.Modality : string.Empty;
+				if (imageSopProvider == null) return string.Empty;
+				return imageSopProvider.Sop.SopClassUid == SopClass.BreastTomosynthesisImageStorageUid ? ModalityBreastTomosynthesis : imageSopProvider.ImageSop.Modality;
 			}
 		}
 	}

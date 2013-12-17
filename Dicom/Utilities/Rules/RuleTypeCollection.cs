@@ -60,6 +60,11 @@ namespace ClearCanvas.Dicom.Utilities.Rules
         /// </summary>
         public Rule<TContext> DefaultRule { get; private set; }
 
+		/// <summary>
+		/// Gets the rules which were applied in previous <see cref="Execute"/> call.
+		/// </summary>
+		public IList<IRule> LastAppliedRules { get; private set; }
+
         #endregion
 
         #region Public Methods
@@ -94,6 +99,8 @@ namespace ClearCanvas.Dicom.Utilities.Rules
         /// <param name="stopOnFirst"></param>
         public void Execute(TContext context, bool stopOnFirst)
         {
+			LastAppliedRules = new List<IRule>();
+
             bool doDefault = true;
             try
             {
@@ -102,10 +109,12 @@ namespace ClearCanvas.Dicom.Utilities.Rules
                     bool ruleApplied;
                     bool ruleSuccess;
 
-                    theRule.Execute(context, false, out ruleApplied, out ruleSuccess);
+					context.Name = theRule.Name;
+					theRule.Execute(context, false, out ruleApplied, out ruleSuccess);
 
                     if (ruleApplied)
                     {
+						LastAppliedRules.Add(theRule);
                         Platform.Log(LogLevel.Info, "Exempt rule found that applies for {0}, ignoring action.", Type.ToString());
                         return;
                     }
@@ -116,10 +125,13 @@ namespace ClearCanvas.Dicom.Utilities.Rules
                     bool ruleApplied;
                     bool ruleSuccess;
 
-                    theRule.Execute(context, false, out ruleApplied, out ruleSuccess);
+					context.Name = theRule.Name;
+					theRule.Execute(context, false, out ruleApplied, out ruleSuccess);
 
                     if (ruleApplied && ruleSuccess)
                     {
+						LastAppliedRules.Add(theRule);
+
                         if (stopOnFirst)
                             return;
 
@@ -132,7 +144,12 @@ namespace ClearCanvas.Dicom.Utilities.Rules
                     bool ruleApplied;
                     bool ruleSuccess;
 
-                    DefaultRule.Execute(context, true, out ruleApplied, out ruleSuccess);
+					context.Name = DefaultRule.Name;
+					DefaultRule.Execute(context, true, out ruleApplied, out ruleSuccess);
+					if (ruleApplied)
+					{
+						LastAppliedRules.Add(DefaultRule);
+					}
 
                     if (!ruleSuccess)
                     {

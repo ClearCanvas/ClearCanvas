@@ -74,11 +74,41 @@ namespace ClearCanvas.ImageServer.Core.Process
 		}
 
 		/// <summary>
+		/// Process the duplicate with the supplied <see cref="DuplicateProcessingEnum"/>
+		/// </summary>
+		/// <param name="context">The processing context</param>
+		/// <param name="message">A subset of the message stored in <paramref name="sourceFilename"/></param>
+		/// <param name="sourceFilename">The location of the filename that is a duplicate</param>
+		/// <param name="data">The data</param>
+		/// <param name="duplicate">How the processor should handle the duplicate</param>
+		public static void ProcessStoredDuplicateFile(SopInstanceProcessorContext context,
+													  string sourceFilename,
+													  DicomMessageBase message,
+													  StudyProcessWorkQueueData data,
+													  DuplicateProcessingEnum duplicate)
+		{
+			SaveDuplicateFile(context, message.DataSet[DicomTags.SopInstanceUid].ToString(), sourceFilename);
+			var uidData = new WorkQueueUidData
+			{
+				Extension = ServerPlatform.DuplicateFileExtension,
+				GroupId = context.Group,
+				DuplicateProcessing = duplicate
+			};
+
+			if (context.Request != null)
+				uidData.OperationToken = context.Request.OperationToken;
+
+			context.CommandProcessor.AddCommand(
+				new UpdateWorkQueueCommand(message, context.StudyLocation, true, data, uidData, context.Request));
+		}
+
+		/// <summary>
 		/// Inserts the duplicate DICOM file into the <see cref="WorkQueue"/> for processing (if applicable).
 		/// </summary>
 		/// <param name="context">The processing context.</param>
 		/// <param name="file">The duplicate DICOM file being processed.</param>
 		/// <param name="data">Extra data to insert for the WorkQueue item.</param>
+		/// <param name="sourceFilename">Optional source filename already saved to disk to import.</param>
 		/// <returns>A <see cref="DicomProcessingResult"/> that contains the result of the processing.</returns>
 		/// <remarks>
 		/// This method inserts a <see cref="CommandBase"/> into <paramref name="context.CommandProcessor"/>.
@@ -86,14 +116,16 @@ namespace ClearCanvas.ImageServer.Core.Process
 		/// If it is set to <see cref="DuplicateSopPolicyEnum.CompareDuplicates"/>, the duplicate file will be
 		/// inserted into the <see cref="WorkQueue"/> for processing.
 		/// </remarks>
-		public static DicomProcessingResult Process(SopInstanceProcessorContext context, DicomFile file,
-		                                            StudyProcessWorkQueueData data)
+		public static DicomProcessingResult Process(SopInstanceProcessorContext context, DicomMessageBase file,
+		                                            StudyProcessWorkQueueData data, string sourceFilename=null)
 		{
 			Platform.CheckForNullReference(file, "file");
 			Platform.CheckForNullReference(context, "context");
 			Platform.CheckMemberIsSet(context.Group, "parameters.Group");
 			Platform.CheckMemberIsSet(context.CommandProcessor, "parameters.CommandProcessor");
 			Platform.CheckMemberIsSet(context.StudyLocation, "parameters.StudyLocation");
+			if (string.IsNullOrEmpty(sourceFilename))
+				Platform.CheckForNullReference(file as DicomFile, "file");
 
 			var result = new DicomProcessingResult
 				{
@@ -119,16 +151,26 @@ namespace ClearCanvas.ImageServer.Core.Process
 			if (SopClassIsReport(result.SopClassUid) && context.StudyLocation.ServerPartition.AcceptLatestReport)
 			{
 				Platform.Log(LogLevel.Info, "Duplicate Report received, overwriting {0}", result.SopInstanceUid);
-				ProcessStoredDuplicate(context, file, data, DuplicateProcessingEnum.OverwriteReport);
+				if (string.IsNullOrEmpty(sourceFilename))
+					ProcessStoredDuplicate(context, file as DicomFile, data, DuplicateProcessingEnum.OverwriteReport);
+				else
+					ProcessStoredDuplicateFile(context, sourceFilename, file, data, DuplicateProcessingEnum.OverwriteReport);
+				
 				return result;
 			}
 
 			if (DuplicatePolicy.IsParitionDuplicatePolicyOverridden(context.StudyLocation))
 			{
+				// Note: this is a special case where we need to temporarily override the duplicate policy for a particular study
+				// so that SIQ entry can be processed (#10569). This should only happen once in a blue moon.
+			
 				Platform.Log(LogLevel.Warn,
-				             "Duplicate instance received for study {0} on Partition {1}. Duplicate policy overridden. Will overwrite {2}",
+				             "Duplicate instance received for study {0} on Partition {1}. Duplicate policy overridden in app config. Will overwrite {2}",
 				             result.StudyInstanceUid, context.StudyLocation.ServerPartition.AeTitle, result.SopInstanceUid);
-				ProcessStoredDuplicate(context, file, data, DuplicateProcessingEnum.OverwriteSop);
+				if (string.IsNullOrEmpty(sourceFilename))
+					ProcessStoredDuplicate(context, file as DicomFile, data, DuplicateProcessingEnum.OverwriteSop);
+				else
+					ProcessStoredDuplicateFile(context, sourceFilename, file, data, DuplicateProcessingEnum.OverwriteSop);
 				return result;
 			}
 
@@ -137,14 +179,21 @@ namespace ClearCanvas.ImageServer.Core.Process
 				Platform.Log(LogLevel.Info, context.DuplicateProcessing.Value.Equals(DuplicateProcessingEnum.Compare)
 					                            ? "Duplicate SOP Instance received, comparing {0}"
 					                            : "Duplicate SOP Instance received, overwriting {0}", result.SopInstanceUid);
-				ProcessStoredDuplicate(context, file, data, context.DuplicateProcessing.Value);
+				if (string.IsNullOrEmpty(sourceFilename))
+					ProcessStoredDuplicate(context, file as DicomFile, data, context.DuplicateProcessing.Value);
+				else
+					ProcessStoredDuplicateFile(context, sourceFilename, file, data, context.DuplicateProcessing.Value);
+
 				return result;
 			}
 
 			if (context.StudyLocation.ServerPartition.DuplicateSopPolicyEnum.Equals(DuplicateSopPolicyEnum.AcceptLatest))
 			{
 				Platform.Log(LogLevel.Info, "Duplicate SOP Instance received, overwriting {0}", result.SopInstanceUid);
-				ProcessStoredDuplicate(context, file, data, DuplicateProcessingEnum.OverwriteSopAndUpdateDatabase);
+				if (string.IsNullOrEmpty(sourceFilename))
+					ProcessStoredDuplicate(context, file as DicomFile, data, DuplicateProcessingEnum.OverwriteSopAndUpdateDatabase);
+				else
+					ProcessStoredDuplicateFile(context, sourceFilename, file, data, DuplicateProcessingEnum.OverwriteSopAndUpdateDatabase);
 				return result;
 			}
 
@@ -164,7 +213,10 @@ namespace ClearCanvas.ImageServer.Core.Process
 
 			if (context.StudyLocation.ServerPartition.DuplicateSopPolicyEnum.Equals(DuplicateSopPolicyEnum.CompareDuplicates))
 			{
-				ProcessStoredDuplicate(context, file, data, DuplicateProcessingEnum.Compare);
+				if (string.IsNullOrEmpty(sourceFilename))
+					ProcessStoredDuplicate(context, file as DicomFile, data, DuplicateProcessingEnum.Compare);
+				else
+					ProcessStoredDuplicateFile(context,sourceFilename,file,data,DuplicateProcessingEnum.Compare);
 			}
 			else
 			{
@@ -271,6 +323,28 @@ namespace ClearCanvas.ImageServer.Core.Process
 			path += "." + ServerPlatform.DuplicateFileExtension;
 
 			context.CommandProcessor.AddCommand(new SaveDicomFileCommand(path, file, true));
+
+			Platform.Log(ServerPlatform.InstanceLogLevel, "Duplicate ==> {0}", path);
+		}
+
+		private static void SaveDuplicateFile(SopInstanceProcessorContext context, string sopInstanceUid, string sourceFilename)
+		{
+			String path = Path.Combine(context.StudyLocation.FilesystemPath, context.StudyLocation.PartitionFolder);
+			context.CommandProcessor.AddCommand(new CreateDirectoryCommand(path));
+
+			path = Path.Combine(path, ServerPlatform.ReconcileStorageFolder);
+			context.CommandProcessor.AddCommand(new CreateDirectoryCommand(path));
+
+			path = Path.Combine(path, context.Group /* the AE title + timestamp */);
+			context.CommandProcessor.AddCommand(new CreateDirectoryCommand(path));
+
+			path = Path.Combine(path, context.StudyLocation.StudyInstanceUid);
+			context.CommandProcessor.AddCommand(new CreateDirectoryCommand(path));
+
+			path = Path.Combine(path, sopInstanceUid);
+			path += "." + ServerPlatform.DuplicateFileExtension;
+
+			context.CommandProcessor.AddCommand(new RenameFileCommand(sourceFilename, path, true));
 
 			Platform.Log(ServerPlatform.InstanceLogLevel, "Duplicate ==> {0}", path);
 		}

@@ -229,7 +229,8 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr.Tools
 					set { _textGraphic.Text = value; }
 				}
 
-				public override void OnDrawing() {
+				public override void OnDrawing()
+				{
 					KeepTextInsideClientRectangle();
 					base.OnDrawing();
 				}
@@ -607,6 +608,12 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr.Tools
 						{
 							_enableInternalEvent = true;
 						}
+					}
+
+					public void AddRange(IEnumerable<PointF> points)
+					{
+						foreach (var point in points)
+							Add(point);
 					}
 
 					public void Clear()

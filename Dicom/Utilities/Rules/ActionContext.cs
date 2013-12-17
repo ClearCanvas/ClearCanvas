@@ -33,6 +33,8 @@ namespace ClearCanvas.Dicom.Utilities.Rules
     {
         #region Public Properties
 
+		public string Name { get; set; }
+
         /// <summary>
         /// The message being worked against.
         /// </summary>

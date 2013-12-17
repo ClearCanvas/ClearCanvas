@@ -1,4 +1,4 @@
-#region License
+﻿#region License
 
 // Copyright (c) 2013, ClearCanvas Inc.
 // All rights reserved.
@@ -23,21 +23,33 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
-using System.Text;
-using ClearCanvas.Common.Authorization;
+using ClearCanvas.ImageViewer.Graphics;
 
-namespace ClearCanvas.Ris.Client
+namespace ClearCanvas.ImageViewer.RoiGraphics
 {
-	public static class AuthorityTokens
+	/// <summary>
+	/// Represents a graphic where the selected subject is a region of interest.
+	/// </summary>
+	public interface IRoiGraphic : IGraphic
 	{
-        public static class Desktop
-        {
-            [AuthorityToken(Description = "Allow administration of User-Interface validation rules.")]
-            public const string UIValidationRules = "Desktop/UI Validation Rules";
-		
-			[AuthorityToken(Description = "Allow access to the RIS Folder Organization functionality.")]
-			public const string FolderOrganization = "Desktop/RIS/Folder Organization";
-		}
+		/// <summary>
+		/// Gets the subject graphic of this <see cref="IRoiGraphic"/>.
+		/// </summary>
+		IGraphic Subject { get; }
+
+		/// <summary>
+		/// Gets an object representing the data of the current region of interest.
+		/// </summary>
+		Roi Roi { get; }
+
+		/// <summary>
+		/// Occurs when the region of interest changes, thereby changing the data and invalidating any existing, computed statistics.
+		/// </summary>
+		event EventHandler RoiChanged;
+
+		/// <summary>
+		/// Refreshes the annotation graphic by recomputing the callout position and redrawing the graphic.
+		/// </summary>
+		void Refresh();
 	}
 }

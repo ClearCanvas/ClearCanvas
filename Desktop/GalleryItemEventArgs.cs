@@ -24,9 +24,12 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text;
 
-namespace ClearCanvas.Desktop {
+namespace ClearCanvas.Desktop
+{
+
+	#region GalleryItemEventArgs
+
 	/// <summary>
 	/// Represents the method that handles an event involving a single <see cref="IGalleryItem"/>.
 	/// </summary>
@@ -37,9 +40,10 @@ namespace ClearCanvas.Desktop {
 	/// <summary>
 	/// Provides data for an event involving a single <see cref="IGalleryItem"/>.
 	/// </summary>
-	public class GalleryItemEventArgs : EventArgs {
+	public class GalleryItemEventArgs : EventArgs
+	{
 		private readonly IGalleryItem _item;
-		
+
 		/// <summary>
 		/// Constructs a new <see cref="GalleryItemEventArgs"/>.
 		/// </summary>
@@ -57,4 +61,43 @@ namespace ClearCanvas.Desktop {
 			get { return _item; }
 		}
 	}
+
+	#endregion
+
+	#region GalleryItemDragEventArgs
+
+	/// <summary>
+	/// Represents the method that handles an event when an <see cref="IGalleryItem"/> is dragged.
+	/// </summary>
+	/// <param name="sender">The source of the event.</param>
+	/// <param name="e">A <see cref="GalleryItemDragEventArgs"/> that contains the event data.</param>
+	public delegate void GalleryItemDragEventHandler(object sender, GalleryItemDragEventArgs e);
+
+	/// <summary>
+	/// Provides data for an event when an <see cref="IGalleryItem"/> is dragged.
+	/// </summary>
+	public class GalleryItemDragEventArgs : GalleryItemEventArgs
+	{
+		private readonly List<object> _additionalDataFormats;
+
+		/// <summary>
+		/// Constructs a new <see cref="GalleryItemDragEventArgs"/>.
+		/// </summary>
+		/// <param name="item">The <see cref="IGalleryItem"/>.</param>
+		public GalleryItemDragEventArgs(IGalleryItem item)
+			: base(item)
+		{
+			_additionalDataFormats = new List<object>();
+		}
+
+		/// <summary>
+		/// Gets a list of additional data formats in which the <see cref="GalleryItemEventArgs.Item"/> can be represented.
+		/// </summary>
+		public IList<object> AdditionalDataFormats
+		{
+			get { return _additionalDataFormats; }
+		}
+	}
+
+	#endregion
 }

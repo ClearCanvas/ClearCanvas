@@ -51,8 +51,6 @@ namespace ClearCanvas.ImageViewer.Vtk
 		}
 	}
 
-	// TODO: this code only supports ushort volumes - fix to support the other types!!!!
-
 	/// <summary>
 	/// Implements <see cref="IVolumeSlicerCore"/> using the VTK <see cref="vtk.vtkImageReslice"/> utility.
 	/// </summary>
@@ -182,7 +180,7 @@ namespace ClearCanvas.ImageViewer.Vtk
 				resliceAxesMatrix.SetElements(resliceAxes);
 
 				// determine offset for start of slab (we centre the slab on the requested slice position, as DICOM defines "image position (patient)" to be centre of the thick slice)
-				var slabOffset = volumeReference.RotateToVolumeOrientation(-(subsamples - 1)/2f*stackOrientation) + new Vector3D(resliceAxes[0, 3], resliceAxes[1, 3], resliceAxes[2, 3]);
+				var slabOffset = volumeReference.RotateToVolumeOrientation(-sliceThickness/2f*stackOrientation) + new Vector3D(resliceAxes[0, 3], resliceAxes[1, 3], resliceAxes[2, 3]);
 				resliceAxesMatrix.SetElement(0, 3, slabOffset.X);
 				resliceAxesMatrix.SetElement(1, 3, slabOffset.Y);
 				resliceAxesMatrix.SetElement(2, 3, slabOffset.Z);
@@ -326,7 +324,7 @@ namespace ClearCanvas.ImageViewer.Vtk
 				                    new Size3D(width, height, depth), new Vector3D(1, 1, 1),
 				                    new Vector3D(0, 0, 0), Matrix3D.GetIdentity(),
 				                    new DicomAttributeCollection(),
-				                    short.MinValue, 1, 0);
+				                    short.MinValue);
 			}
 			else
 			{
@@ -334,7 +332,7 @@ namespace ClearCanvas.ImageViewer.Vtk
 				                    new Size3D(width, height, depth), new Vector3D(1, 1, 1),
 				                    new Vector3D(0, 0, 0), Matrix3D.GetIdentity(),
 				                    new DicomAttributeCollection(),
-				                    ushort.MinValue, 1, 0);
+				                    ushort.MinValue);
 			}
 
 			try

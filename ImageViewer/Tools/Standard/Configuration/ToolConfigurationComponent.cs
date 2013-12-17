@@ -22,6 +22,9 @@
 
 #endregion
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using ClearCanvas.Common;
 using ClearCanvas.Desktop;
 using ClearCanvas.Desktop.Configuration;
@@ -34,8 +37,14 @@ namespace ClearCanvas.ImageViewer.Tools.Standard.Configuration
 	[AssociateView(typeof (ToolConfigurationComponentViewExtensionPoint))]
 	public class ToolConfigurationComponent : ConfigurationApplicationComponent
 	{
+		private IList<string> _modalities;
 		private ToolModalityBehaviorCollection _modalityBehavior;
 		private bool _invertZoomDirection;
+
+		public IList<string> Modalities
+		{
+			get { return _modalities; }
+		}
 
 		public ToolModalityBehaviorCollection ModalityBehavior
 		{
@@ -69,14 +78,18 @@ namespace ClearCanvas.ImageViewer.Tools.Standard.Configuration
 		{
 			base.Start();
 
-            var settings = ToolSettings.DefaultInstance;
+			_modalities = StandardModalities.Modalities
+				.Union(new[] {string.Empty, ToolModalityBehaviorHelper.ModalityBreastTomosynthesis})
+				.OrderBy(k => k, StringComparer.InvariantCultureIgnoreCase).ToList().AsReadOnly();
+
+			var settings = ToolSettings.DefaultInstance;
 			_modalityBehavior = settings.CachedToolModalityBehavior;
 			_invertZoomDirection = settings.InvertedZoomToolOperation;
 		}
 
 		public override void Save()
 		{
-            var settings = ToolSettings.DefaultInstance;
+			var settings = ToolSettings.DefaultInstance;
 			settings.ToolModalityBehavior = _modalityBehavior;
 			settings.InvertedZoomToolOperation = _invertZoomDirection;
 			settings.Save();

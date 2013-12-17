@@ -143,6 +143,16 @@ namespace ClearCanvas.Dicom
 
         #region Properties
 
+		/// <summary>
+		/// Indicates if <see cref="Load"/> has been called on this file.
+		/// </summary>
+		public bool Loaded { get; set; }
+
+		/// <summary>
+		/// The length of the MetaInfo in the file.  This value is only valid if <see cref="DicomFile.Load"/>  or if <see cref="DicomFile.Save"/> has been called on the file.
+		/// </summary>
+		public long MetaInfoFileLength { get; set; }
+
         /// <summary>
         /// The filename of the file.
         /// </summary>
@@ -248,7 +258,7 @@ namespace ClearCanvas.Dicom
         }
         /// <summary>
         /// The DICOM Application Entity (AE) Title of the AE which wrote this file's 
-        /// content (or last updated it).  If used, it allows the tracin of the source 
+        /// content (or last updated it).  If used, it allows the tracing of the source 
         /// of errors in the event of media interchange problems.  The policies associated
         /// with AE Titles are the same as those defined in PS 3.8 of the DICOM Standard. 
         /// </summary>
@@ -499,6 +509,9 @@ namespace ClearCanvas.Dicom
                 Platform.Log(LogLevel.Error, "Unexpected error when reading file Meta info for file: {0}", Filename);
                 throw new DicomException("Unexpected failure reading file Meta info for file: " + Filename);
             }
+
+	        MetaInfoFileLength = dsr.EndGroupTwo + 128 + 4;
+
             dsr.Dataset = DataSet;
             dsr.TransferSyntax = TransferSyntax;
             readStat = dsr.Read(stopTag, options);
@@ -507,10 +520,13 @@ namespace ClearCanvas.Dicom
                 Platform.Log(LogLevel.Error, "Unexpected error ({0}) when reading file at offset {2}: {1}", readStat, Filename,dsr.BytesRead);
                 throw new DicomException("Unexpected failure (" + readStat + ") reading file at offset " + dsr.BytesRead + ": " + Filename);
             }
-        }
-    
 
-        /// <summary>
+			Loaded = true;
+
+        }
+
+		
+    	/// <summary>
         /// Internal routine to see if the file is encoded as a DICOM Part 10 format file.
         /// </summary>
         /// <param name="fs">The <see cref="FileStream"/> being used to read the file.</param>
@@ -611,6 +627,8 @@ namespace ClearCanvas.Dicom
             DicomStreamWriter dsw = new DicomStreamWriter(iStream);
             dsw.Write(TransferSyntax.ExplicitVrLittleEndian,
                       MetaInfo, options | DicomWriteOptions.CalculateGroupLengths);
+
+	        MetaInfoFileLength = iStream.Position;
 
             dsw.Write(TransferSyntax, DataSet, options);
 

@@ -429,6 +429,30 @@ GO
 IF @@TRANCOUNT=0 BEGIN INSERT INTO #tmpErrors (Error) SELECT 1 BEGIN TRANSACTION END
 GO
 
+PRINT N'Add StudyQualityControl ServerRuleTypeEnum'
+
+INSERT INTO [ImageServer].[dbo].[ServerRuleTypeEnum]
+           ([GUID],[Enum],[Lookup],[Description],[LongDescription])
+     VALUES
+           (newid(),107,'StudyQualityControl','Study Quality Control','A rule for quality control purposes when studies are received')
+GO
+
+IF @@ERROR<>0 AND @@TRANCOUNT>0 ROLLBACK TRANSACTION
+GO
+IF @@TRANCOUNT=0 BEGIN INSERT INTO #tmpErrors (Error) SELECT 1 BEGIN TRANSACTION END
+GO
+
+PRINT N'Add QCOutput to Study'
+
+ALTER TABLE dbo.Study ADD
+	QCOutput varchar(MAX) NULL
+GO
+
+IF @@ERROR<>0 AND @@TRANCOUNT>0 ROLLBACK TRANSACTION
+GO
+IF @@TRANCOUNT=0 BEGIN INSERT INTO #tmpErrors (Error) SELECT 1 BEGIN TRANSACTION END
+GO
+
 IF EXISTS (SELECT * FROM #tmpErrors) ROLLBACK TRANSACTION
 GO
 IF @@TRANCOUNT>0 BEGIN

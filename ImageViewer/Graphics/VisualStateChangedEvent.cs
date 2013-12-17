@@ -39,20 +39,67 @@ namespace ClearCanvas.ImageViewer.Graphics
 	/// </summary>
 	public sealed class VisualStateChangedEventArgs : PropertyChangedEventArgs
 	{
+		private readonly VisualStatePropertyKind _propertyKind;
+		private readonly IGraphic _graphic;
+
 		/// <summary>
 		/// Gets the graphic whose visual state changed.
 		/// </summary>
-		public readonly IGraphic Graphic;
+		public IGraphic Graphic
+		{
+			get { return _graphic; }
+		}
+
+		/// <summary>
+		/// Gets the kind of the property that changed.
+		/// </summary>
+		public VisualStatePropertyKind PropertyKind
+		{
+			get { return _propertyKind; }
+		}
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="VisualStateChangedEventArgs"/> class. 
 		/// </summary>
 		/// <param name="graphic">The graphic whose visual state changed.</param>
 		/// <param name="propertyName">The name of the property that changed. </param>
-		public VisualStateChangedEventArgs(IGraphic graphic, string propertyName)
+		/// <param name="propertyKind">The kind of the property that changed.</param>
+		public VisualStateChangedEventArgs(IGraphic graphic, string propertyName, VisualStatePropertyKind propertyKind = VisualStatePropertyKind.Unspecified)
 			: base(propertyName)
 		{
-			this.Graphic = graphic;
+			_graphic = graphic;
+			_propertyKind = propertyKind;
 		}
+	}
+
+	/// <summary>
+	/// Indiciates the kind of visual state property.
+	/// </summary>
+	public enum VisualStatePropertyKind
+	{
+		/// <summary>
+		/// Indicates that the property kind is unspecified.
+		/// </summary>
+		Unspecified,
+
+		/// <summary>
+		/// Indicates that the property affects the geometry (e.g. coordinates, angles, etc.) of the graphic.
+		/// </summary>
+		Geometry,
+
+		/// <summary>
+		/// Indicates that the property affects the appearance (e.g. line style, color, etc.) of the graphic.
+		/// </summary>
+		Appearance,
+
+		/// <summary>
+		/// Indicates that the property affects the textual content of the graphic.
+		/// </summary>
+		Text,
+
+		/// <summary>
+		/// Indicates that the property affects the font (e.g. font face, size, weight, etc.) of the textual content of the graphic.
+		/// </summary>
+		Font
 	}
 }

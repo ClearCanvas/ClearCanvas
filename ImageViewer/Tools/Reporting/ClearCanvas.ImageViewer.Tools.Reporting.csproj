@@ -42,6 +42,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -51,6 +52,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -59,6 +61,7 @@
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -66,13 +69,17 @@
     <Compile Include="KeyImages\EditKeyImageInformationTool.cs" />
     <Compile Include="KeyImages\IKeyImageClipboard.cs" />
     <Compile Include="KeyImages\IKeyObjectSelectionDocumentInformation.cs" />
+    <Compile Include="KeyImages\KeyImageClipboard2.cs" />
     <Compile Include="KeyImages\KeyImageClipboardComponent.cs" />
-    <Compile Include="KeyImages\KeyImageDisplaySet.cs" />
+    <Compile Include="KeyImages\KeyImageItem.cs" />
     <Compile Include="KeyImages\KeyImagePublisher.cs" />
     <Compile Include="KeyImages\KeyImageTool.cs" />
     <Compile Include="KeyImages\KeyImageClipboard.cs" />
     <Compile Include="KeyImages\KeyImageInformationEditorComponent.cs" />
     <Compile Include="KeyImages\KeyImageInformation.cs" />
+    <Compile Include="KeyImages\RevertKeyImageClipboardTool.cs" />
+    <Compile Include="KeyImages\SecondaryCaptureImageFactory.cs" />
+    <Compile Include="KeyImages\Utilities.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SR.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -160,6 +167,14 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\RevertAllToolLarge.png" />
+    <EmbeddedResource Include="Icons\RevertAllToolMedium.png" />
+    <EmbeddedResource Include="Icons\RevertAllToolSmall.png" />
+    <EmbeddedResource Include="Icons\RevertToolLarge.png" />
+    <EmbeddedResource Include="Icons\RevertToolMedium.png" />
+    <EmbeddedResource Include="Icons\RevertToolSmall.png" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

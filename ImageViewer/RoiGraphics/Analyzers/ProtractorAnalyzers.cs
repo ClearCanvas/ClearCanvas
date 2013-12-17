@@ -27,13 +27,11 @@ using System.Collections.Generic;
 using System.Drawing;
 using ClearCanvas.Common;
 using ClearCanvas.ImageViewer.Mathematics;
-using ClearCanvas.ImageViewer.RoiGraphics;
-using ClearCanvas.ImageViewer.RoiGraphics.Analyzers;
 
-namespace ClearCanvas.ImageViewer.Tools.Measurement
+namespace ClearCanvas.ImageViewer.RoiGraphics.Analyzers
 {
 	[ExtensionOf(typeof (RoiAnalyzerExtensionPoint))]
-	public class ProtractorAngleCalculator : IRoiAnalyzer
+	public class ProtractorAnalyzer : IRoiAnalyzer
 	{
 		Units IRoiAnalyzer.Units
 		{
@@ -41,43 +39,43 @@ namespace ClearCanvas.ImageViewer.Tools.Measurement
 			set { }
 		}
 
-		//TODO (cr Feb 2010): All the analysis should really be done in the ProtractorRoiInfo.
+		//TODO (cr Feb 2010): All the analysis should really be done in the ProtractorRoi.
 		public IRoiAnalyzerResult Analyze(Roi roi, RoiAnalysisMode mode)
 		{
-			return Analyze((ProtractorRoiInfo) roi, mode);
+			return Analyze((ProtractorRoi) roi, mode);
 		}
 
-		private IRoiAnalyzerResult Analyze(ProtractorRoiInfo roiInfo, RoiAnalysisMode mode)
+		private IRoiAnalyzerResult Analyze(ProtractorRoi roi, RoiAnalysisMode mode)
 		{
 			// Don't show the callout until the second ray is drawn
-			if (roiInfo.Points.Count < 3)
+			if (roi.Points.Count < 3)
 			{
-				return new RoiAnalyzerResultNoValue("Protactor", SR.ToolsMeasurementSetVertex);
+				return new RoiAnalyzerResultNoValue("Protactor", SR.StringNoValue);
 			}
 
-			List<PointF> normalizedPoints = NormalizePoints(roiInfo);
+			List<PointF> normalizedPoints = NormalizePoints(roi);
 
 			double angle = Vector.SubtendedAngle(normalizedPoints[0], normalizedPoints[1], normalizedPoints[2]);
 
-			return new SingleValueRoiAnalyzerResult("Protactor", SR.ToolsMeasurementFormatDegrees, Math.Abs(angle), String.Format(SR.ToolsMeasurementFormatDegrees, Math.Abs(angle)));
+			return new SingleValueRoiAnalyzerResult("Protactor", SR.FormatAngleDegrees, Math.Abs(angle), String.Format(SR.FormatAngleDegrees, Math.Abs(angle)));
 		}
 
-		private List<PointF> NormalizePoints(ProtractorRoiInfo roiInfo)
+		private List<PointF> NormalizePoints(ProtractorRoi roi)
 		{
 			float aspectRatio = 1F;
 
-			if (roiInfo.PixelAspectRatio.IsNull)
+			if (roi.PixelAspectRatio.IsNull)
 			{
-				if (!roiInfo.NormalizedPixelSpacing.IsNull)
-					aspectRatio = (float) roiInfo.NormalizedPixelSpacing.AspectRatio;
+				if (!roi.NormalizedPixelSpacing.IsNull)
+					aspectRatio = (float) roi.NormalizedPixelSpacing.AspectRatio;
 			}
 			else
 			{
-				aspectRatio = roiInfo.PixelAspectRatio.Value;
+				aspectRatio = roi.PixelAspectRatio.Value;
 			}
 
 			List<PointF> normalized = new List<PointF>();
-			foreach (PointF point in roiInfo.Points)
+			foreach (PointF point in roi.Points)
 				normalized.Add(new PointF(point.X, point.Y*aspectRatio));
 
 			return normalized;
@@ -85,7 +83,7 @@ namespace ClearCanvas.ImageViewer.Tools.Measurement
 
 		public bool SupportsRoi(Roi roi)
 		{
-			return roi is ProtractorRoiInfo;
+			return roi is ProtractorRoi;
 		}
 	}
 }

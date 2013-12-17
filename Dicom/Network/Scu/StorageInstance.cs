@@ -128,6 +128,15 @@ namespace ClearCanvas.Dicom.Network.Scu
 		/// </summary>
 		public string ExtendedFailureDescription { get; set; }
 
+		/// <summary>
+		/// Offset to the dataset in the <see cref="DicomFile"/>, used if the file is streamed directly to the network
+		/// </summary>
+		public long MetaInfoFileLength { get; set; }
+
+		/// <summary>
+		/// Returns true if the <see cref="DicomFile"/> is already loaded into memory
+		/// </summary>
+		public bool FileIsLoaded { get { return _dicomFile != null; } }
 		#endregion
 
 		#region Constructors
@@ -229,6 +238,7 @@ namespace ClearCanvas.Dicom.Network.Scu
 			_patientsName = theFile.DataSet[DicomTags.PatientsName].GetString(0, string.Empty);
 			_patientId = theFile.DataSet[DicomTags.PatientId].GetString(0, string.Empty);
 
+			MetaInfoFileLength = theFile.MetaInfoFileLength;
 			return theFile;
 		}
 
@@ -260,7 +270,7 @@ namespace ClearCanvas.Dicom.Network.Scu
 
 			_syntax = theFile.TransferSyntax;
 			SopInstanceUid = theFile.MediaStorageSopInstanceUid;
-
+			MetaInfoFileLength = theFile.MetaInfoFileLength;
 			_infoLoaded = true;
 		}
 		#endregion

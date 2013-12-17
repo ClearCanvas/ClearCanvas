@@ -81,6 +81,7 @@
     <Compile Include="DicomServer\DicomServerServiceType.cs" />
     <Compile Include="DicomServer\MoveScpExtension.cs" />
     <Compile Include="DicomServer\ScpExtension.cs" />
+    <Compile Include="DicomServer\StorageFilestreamHandler.cs" />
     <Compile Include="DicomServer\StoreScpExtension.cs" />
     <Compile Include="DicomServer\VerifyScpExtension.cs" />
     <Compile Include="FilestoreManagement\FilestoreManagementProcessor.cs" />

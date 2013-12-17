@@ -48,7 +48,7 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 				_ownerTool = ownerTool;
 				_preset = preset;
 
-				string actionId = String.Format("apply{0}", _preset.Operation.Name);
+				string actionId = String.Format("{1}:apply{0}", _preset.Operation.Name, typeof (WindowLevelTool).FullName);
 
 				ActionPlaceholder actionPlaceholder = ownerTool.FindActionPlaceholder(actionSite);
 				_action = actionPlaceholder.CreateMenuAction(actionId, string.Format("presetLut{0}", index), ClickActionFlags.None, ownerTool._resolver);
@@ -62,7 +62,7 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 				get { return _action; }
 			}
 
-		    private void Apply()
+			private void Apply()
 			{
 				ImageOperationApplicator applicator = new ImageOperationApplicator(_ownerTool.SelectedPresentationImage, _preset.Operation);
 				UndoableCommand historyCommand = _ownerTool._toolBehavior.Behavior.SelectedImageWindowLevelPresetsTool ? applicator.ApplyToReferenceImage() : applicator.ApplyToAllImages();
@@ -74,7 +74,7 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 			}
 		}
 
-		private readonly IResourceResolver _resolver = new ApplicationThemeResourceResolver(typeof(WindowLevelTool).Assembly);
+		private readonly IResourceResolver _resolver = new ApplicationThemeResourceResolver(typeof (WindowLevelTool).Assembly);
 
 		public ActionModelNode PresetDropDownMenuModel
 		{
@@ -84,9 +84,9 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 				root.InsertActions(CreateActions("windowlevel-dropdown").ToArray());
 				if (root.ChildNodes.Count == 0)
 				{
-					ClickAction dummy = new ClickAction("dummy",
-						new ActionPath("windowlevel-dropdown/dummy", _resolver),
-						ClickActionFlags.None, _resolver);
+					ClickAction dummy = new ClickAction(typeof (WindowLevelTool).FullName + ":dummy",
+					                                    new ActionPath("windowlevel-dropdown/dummy", _resolver),
+					                                    ClickActionFlags.None, _resolver);
 					dummy.Persistent = false;
 					dummy.Label = SR.LabelNone;
 					root.InsertAction(dummy);
@@ -110,50 +110,47 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 			return ActionPlaceholder.GetPlaceholderAction(actionSite, base.Actions, "auto");
 		}
 
-        private IEnumerable<IAction> CreateContextMenuActions()
-        {
-            return CreateActions("imageviewer-contextmenu");
-        }
+		private IEnumerable<IAction> CreateContextMenuActions()
+		{
+			return CreateActions("imageviewer-contextmenu");
+		}
 
-        private List<PresetVoiLut> GetApplicablePresets()
-        {
-            List<PresetVoiLut> presets = new List<PresetVoiLut>();
+		private List<PresetVoiLut> GetApplicablePresets()
+		{
+			List<PresetVoiLut> presets = new List<PresetVoiLut>();
 
-            if (this.SelectedPresentationImage is IImageSopProvider)
-            {
-                //Only temporary until we enable the full functionality in the presets.
-                PresetVoiLut autoPreset = new PresetVoiLut(new AutoPresetVoiLutOperationComponent());
-                autoPreset.KeyStroke = XKeys.F2;
-                presets.Add(autoPreset);
+			if (this.SelectedPresentationImage is IImageSopProvider)
+			{
+				//Only temporary until we enable the full functionality in the presets.
+				PresetVoiLut autoPreset = new PresetVoiLut(new AutoPresetVoiLutOperationComponent());
+				autoPreset.KeyStroke = XKeys.F2;
+				presets.Add(autoPreset);
 
-                ImageSop sop = ((IImageSopProvider) this.SelectedPresentationImage).ImageSop;
+				ImageSop sop = ((IImageSopProvider) this.SelectedPresentationImage).ImageSop;
 
-                PresetVoiLutGroupCollection groups = PresetVoiLutSettings.DefaultInstance.GetPresetGroups();
-                PresetVoiLutGroup group = CollectionUtils.SelectFirst(groups,
-                                                                      delegate(PresetVoiLutGroup testGroup)
-                                                                          {
-                                                                              return testGroup.AppliesTo(sop);
-                                                                          });
-                if (group != null)
-                {
-                    foreach (PresetVoiLut preset in group.Clone().Presets)
-                    {
-                        if (preset.Operation.AppliesTo(this.SelectedPresentationImage))
-                            presets.Add(preset);
-                    }
-                }
+				PresetVoiLutGroupCollection groups = PresetVoiLutSettings.DefaultInstance.GetPresetGroups();
+				PresetVoiLutGroup group = CollectionUtils.SelectFirst(groups,
+				                                                      delegate(PresetVoiLutGroup testGroup) { return testGroup.AppliesTo(sop); });
+				if (group != null)
+				{
+					foreach (PresetVoiLut preset in group.Clone().Presets)
+					{
+						if (preset.Operation.AppliesTo(this.SelectedPresentationImage))
+							presets.Add(preset);
+					}
+				}
 
-                presets.Sort(new PresetVoiLutComparer());
-            }
+				presets.Sort(new PresetVoiLutComparer());
+			}
 
-            return presets;
-        }
+			return presets;
+		}
 
-	    private List<IAction> CreateActions(string actionSite)
+		private List<IAction> CreateActions(string actionSite)
 		{
 			List<IAction> actions = new List<IAction>();
 
-            int i = 0;
+			int i = 0;
 			foreach (PresetVoiLut preset in GetApplicablePresets())
 				actions.Add(new PresetVoiLutActionContainer(this, actionSite, preset, ++i).Action);
 

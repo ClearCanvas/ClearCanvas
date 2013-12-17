@@ -780,4 +780,10 @@ Please check the log for more details.</value>
   <data name="MenuSagittalView" xml:space="preserve">
     <value>&amp;Sagittal View</value>
   </data>
+  <data name="MenuUnlockAnnotation" xml:space="preserve">
+    <value>Unlock Annotation</value>
+  </data>
+  <data name="Message3DOnly" xml:space="preserve">
+    <value>3D Only</value>
+  </data>
 </root>

@@ -272,7 +272,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 						CodeClock statsClock = new CodeClock();
 						statsClock.Start();
 
-						result = _loader.LoadFramePixelData(new LoadFramePixelDataArgs(this._studyInstanceUid, this._seriesInstanceUid, this.SopInstanceUid, this._frameNumber - 1));
+						result = _loader.LoadFramePixelData(new LoadFramePixelDataArgs(this._studyInstanceUid, this._seriesInstanceUid, this.SopInstanceUid, this._frameNumber));
 
 						statsClock.Stop();
 

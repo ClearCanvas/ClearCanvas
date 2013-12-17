@@ -57,7 +57,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		public ImageSop(string filename)
 			: base(filename)
 		{
-			_functionalGroups = GetFunctionalGroupMap(DataSource);
+			_functionalGroups = new FunctionalGroupMapCache(DataSource, DataSource.SopClassUid);
 		}
 
 		/// <summary>
@@ -66,7 +66,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		public ImageSop(ISopDataSource dataSource)
 			: base(dataSource)
 		{
-			_functionalGroups = GetFunctionalGroupMap(DataSource);
+			_functionalGroups = new FunctionalGroupMapCache(DataSource, DataSource.SopClassUid);
 		}
 
 		/// <summary>

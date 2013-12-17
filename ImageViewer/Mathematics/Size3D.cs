@@ -32,7 +32,7 @@ namespace ClearCanvas.ImageViewer.Mathematics
 	/// <remarks>
 	/// The Size3D class is immutable.
 	/// </remarks>
-	public class Size3D : IEquatable<Size3D>
+	public sealed class Size3D : IEquatable<Size3D>
 	{
 		private readonly int _width;
 		private readonly int _height;
@@ -109,6 +109,11 @@ namespace ClearCanvas.ImageViewer.Mathematics
 				return false;
 
 			return (Width == other.Width && Height == other.Height && Depth == other.Depth);
+		}
+
+		public override string ToString()
+		{
+			return string.Format(@"(Width={0}, Height={1}, Depth={2})", _width, _height, _depth);
 		}
 	}
 }

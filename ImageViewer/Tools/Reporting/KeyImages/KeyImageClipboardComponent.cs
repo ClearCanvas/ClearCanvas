@@ -24,60 +24,163 @@
 
 using System;
 using System.ComponentModel;
+using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
+using ClearCanvas.Desktop;
+using ClearCanvas.Desktop.Actions;
+using ClearCanvas.Desktop.Tools;
 using ClearCanvas.ImageViewer.Clipboard;
 
 namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 {
-	// TODO: Make Key Image Clipboard use KeyImageClipboardItems that cannot be Locked?
-	internal class KeyImageClipboardComponent : ClipboardComponent, IKeyImageClipboard
-	{
-		private event EventHandler _keyImageInformationChanged;
-		private KeyImageInformation _keyImageInformation;
+	[ExtensionPoint]
+	public sealed class KeyImageClipboardComponentToolExtensionPoint : ExtensionPoint<ITool> {}
 
-		public KeyImageClipboardComponent(KeyImageInformation keyImageInformation)
-			: base(KeyImageClipboard.ToolbarSite, KeyImageClipboard.MenuSite, keyImageInformation.ClipboardItems, false)
+	[ExtensionPoint]
+	public sealed class KeyImageClipboardComponentViewExtensionPoint : ExtensionPoint<IApplicationComponentView> {}
+
+	[AssociateView(typeof (KeyImageClipboardComponentViewExtensionPoint))]
+	public class KeyImageClipboardComponent : ClipboardComponent
+	{
+		public const string MenuSite = "keyimageclipboard-contextmenu";
+		public const string ToolbarSite = "keyimageclipboard-toolbar";
+
+		// not static so that, if items are somehow added to this context, they won't stay around forever
+		private readonly KeyImageInformation _emptyContext = new KeyImageInformation();
+
+		private readonly BindingList<KeyImageInformation> _availableContexts;
+
+		private event EventHandler _currentContextChanged;
+		private KeyImageClipboard _clipboard;
+
+		private IToolSet _toolSet;
+		private IActionSet _actionSet;
+
+		public KeyImageClipboardComponent(KeyImageClipboard clipboard)
+			: base(ToolbarSite, MenuSite, clipboard != null ? clipboard.CurrentContext : null, false)
 		{
-			_keyImageInformation = keyImageInformation;
+			_availableContexts = new BindingList<KeyImageInformation>();
+
+			Clipboard = clipboard;
 		}
 
-		public KeyImageInformation KeyImageInformation
+		public new KeyImageClipboard Clipboard
 		{
-			get { return _keyImageInformation; }
+			get { return _clipboard; }
 			internal set
 			{
-				if (_keyImageInformation != value)
+				if (_clipboard != value)
 				{
-					_keyImageInformation = value;
-					DataSource = _keyImageInformation.ClipboardItems;
+					if (_clipboard != null)
+					{
+						_clipboard.AvailableContexts.ItemAdded -= OnAvailableContextsItemAdded;
+						_clipboard.AvailableContexts.ItemChanged -= OnAvailableContextsItemAdded;
+						_clipboard.AvailableContexts.ItemChanging -= OnAvailableContextsItemRemoved;
+						_clipboard.AvailableContexts.ItemRemoved -= OnAvailableContextsItemRemoved;
+						_clipboard.CurrentContextChanged -= OnClipboardCurrentContextChanged;
+					}
 
-					EventsHelper.Fire(_keyImageInformationChanged, this, new EventArgs());
+					_clipboard = value;
+
+					if (_clipboard != null)
+					{
+						_clipboard.CurrentContextChanged += OnClipboardCurrentContextChanged;
+						_clipboard.AvailableContexts.ItemAdded += OnAvailableContextsItemAdded;
+						_clipboard.AvailableContexts.ItemChanged += OnAvailableContextsItemAdded;
+						_clipboard.AvailableContexts.ItemChanging += OnAvailableContextsItemRemoved;
+						_clipboard.AvailableContexts.ItemRemoved += OnAvailableContextsItemRemoved;
+					}
+
+					AvailableContexts.RaiseListChangedEvents = false;
+					try
+					{
+						AvailableContexts.Clear();
+						if (_clipboard != null)
+							foreach (var x in _clipboard.AvailableContexts)
+								AvailableContexts.Add(x);
+					}
+					finally
+					{
+						AvailableContexts.RaiseListChangedEvents = true;
+						AvailableContexts.ResetBindings();
+					}
+					if (IsStarted) OnClipboardCurrentContextChanged(null, null);
 				}
 			}
 		}
 
-		public event EventHandler KeyImageInformationChanged
+		public BindingList<KeyImageInformation> AvailableContexts
 		{
-			add { _keyImageInformationChanged += value; }
-			remove { _keyImageInformationChanged -= value; }
+			get { return _availableContexts; }
 		}
 
-		#region IKeyImageClipboard Implementation
-
-		IKeyObjectSelectionDocumentInformation IKeyImageClipboard.DocumentInformation
+		public KeyImageInformation CurrentContext
 		{
-			get { return KeyImageInformation; }
+			get { return _clipboard != null ? _clipboard.CurrentContext : _emptyContext; }
+			set { if (_clipboard != null) _clipboard.CurrentContext = value; }
 		}
 
-		event EventHandler IKeyImageClipboard.DocumentInformationChanged
+		public event EventHandler CurrentContextChanged
 		{
-			add { KeyImageInformationChanged += value; }
-			remove { KeyImageInformationChanged -= value; }
+			add { _currentContextChanged += value; }
+			remove { _currentContextChanged -= value; }
 		}
 
-		BindingList<IClipboardItem> IKeyImageClipboard.Items
+		protected override IActionSet CreateToolActions()
 		{
-			get { return DataSource; }
+			if (_toolSet == null)
+				_toolSet = new ToolSet(new KeyImageClipboardComponentToolExtensionPoint(), new ClipboardToolContext(this));
+			return _actionSet ?? (_actionSet = new ActionSet(_toolSet.Actions));
+		}
+
+		public override void Start()
+		{
+			base.Start();
+
+			// ensure the clipboard context properties are loaded and ready just before component is shown for the first time
+			OnClipboardCurrentContextChanged(null, null);
+		}
+
+		public override void Stop()
+		{
+			// upon component stop, ensure we clear the clipboard field to unsub any event handlers
+			Clipboard = null;
+
+			base.Stop();
+		}
+
+		private void OnClipboardCurrentContextChanged(object sender, EventArgs e)
+		{
+			var currentContext = _clipboard != null ? _clipboard.CurrentContext : _emptyContext;
+			base.Clipboard = currentContext;
+			NotifyPropertyChanged("CurrentContext");
+			EventsHelper.Fire(_currentContextChanged, this, new EventArgs());
+		}
+
+		private void OnAvailableContextsItemAdded(object sender, ListEventArgs<KeyImageInformation> e)
+		{
+			AvailableContexts.Insert(e.Index, e.Item);
+		}
+
+		private void OnAvailableContextsItemRemoved(object sender, ListEventArgs<KeyImageInformation> e)
+		{
+			AvailableContexts.RemoveAt(e.Index);
+		}
+
+		#region Static
+
+		internal static readonly bool HasViewPlugin;
+
+		static KeyImageClipboardComponent()
+		{
+			try
+			{
+				HasViewPlugin = ViewFactory.IsAssociatedViewAvailable<KeyImageClipboardComponent>();
+			}
+			catch (Exception)
+			{
+				HasViewPlugin = false;
+			}
 		}
 
 		#endregion

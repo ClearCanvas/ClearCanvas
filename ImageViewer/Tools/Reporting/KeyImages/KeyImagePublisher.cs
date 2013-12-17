@@ -27,182 +27,64 @@ using System.Collections.Generic;
 using System.Linq;
 using ClearCanvas.Common;
 using ClearCanvas.Desktop;
-using ClearCanvas.Dicom;
-using ClearCanvas.ImageViewer.Clipboard;
-using ClearCanvas.ImageViewer.Common.DicomServer;
-using ClearCanvas.ImageViewer.Common.ServerDirectory;
 using ClearCanvas.ImageViewer.Common.StudyManagement;
 using ClearCanvas.ImageViewer.Configuration;
-using ClearCanvas.ImageViewer.KeyObjects;
-using ClearCanvas.ImageViewer.PresentationStates.Dicom;
 using ClearCanvas.ImageViewer.StudyManagement;
 
 namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 {
-    // TODO (CR Jan 2013): Badly needs to be refactored.
-
-	internal class KeyImagePublisher
+	internal static class KeyImagePublisher
 	{
-		private readonly KeyImageInformation _sourceInformation;
-		private readonly List<DicomFile> _keyObjectDocuments;
-
-		private List<KeyValuePair<Frame, DicomSoftcopyPresentationState>> _framePresentationStates;
-		private Dictionary<string, SeriesInfo> _seriesIndex;
-
-		public KeyImagePublisher(KeyImageInformation information)
+		public static void Publish(IEnumerable<KeyImageInformation> keyImageInformations, StudyTree studyTree)
 		{
-			_sourceInformation = information;
-			_keyObjectDocuments = new List<DicomFile>();
-		}
+			var keyImageContexts = keyImageInformations != null ? keyImageInformations.ToList() : null;
+			if (keyImageContexts == null || !keyImageContexts.Any()) return;
 
-		private List<KeyValuePair<Frame, DicomSoftcopyPresentationState>> SourceFrames
-		{
-			get
+			if (!AssertIsPublishingServiceAvailable()) return;
+
+			var anyFailed = false;
+			try
 			{
-				if (_framePresentationStates == null)
+				var publishers = new Dictionary<string, DicomPublishingHelper>();
+
+				var seriesNumberIndex = new Dictionary<string, int>();
+				var nextSeriesNumberDelegate = new NextSeriesNumberDelegate(studyInstanceUid =>
+				                                                            	{
+				                                                            		int nextSeriesNumber;
+				                                                            		if (!seriesNumberIndex.TryGetValue(studyInstanceUid, out nextSeriesNumber))
+				                                                            		{
+				                                                            			var study = studyTree.GetStudy(studyInstanceUid);
+				                                                            			nextSeriesNumber = study != null ? study.Series.Select(series => series.SeriesNumber).Concat(new[] {0}).Max() : 0;
+				                                                            		}
+				                                                            		seriesNumberIndex[studyInstanceUid] = ++nextSeriesNumber;
+				                                                            		return nextSeriesNumber;
+				                                                            	});
+
+				foreach (var kod in keyImageContexts)
 				{
-					_framePresentationStates = new List<KeyValuePair<Frame, DicomSoftcopyPresentationState>>();
-					_seriesIndex = new Dictionary<string, SeriesInfo>();
-					foreach (IClipboardItem item in _sourceInformation.ClipboardItems)
+					// add each created instance to a publisher by study
+					foreach (var studyInstances in kod.CreateSopInstances(nextSeriesNumberDelegate))
 					{
-						var image = item.Item as IPresentationImage;
-						if (image == null)
-							continue;
-
-						if (!DicomSoftcopyPresentationState.IsSupported(image))
-							continue;
-
-						var provider = image as IImageSopProvider;
-						if (provider == null)
-							continue;
-
-						SeriesInfo seriesInfo;
-						string key = provider.ImageSop.StudyInstanceUid;
-						if (!_seriesIndex.TryGetValue(key, out seriesInfo))
-							_seriesIndex.Add(key, seriesInfo = new SeriesInfo(provider));
-
-						var presentationState = DicomSoftcopyPresentationState.Create
-							(image, delegate(DicomSoftcopyPresentationState ps)
-							        	{
-							        		ps.PresentationSeriesInstanceUid = seriesInfo.PresentationSeriesUid;
-							        		ps.PresentationSeriesNumber = seriesInfo.PresentationSeriesNumber;
-							        		ps.PresentationSeriesDateTime = seriesInfo.PresentationSeriesDateTime;
-							        		ps.PresentationInstanceNumber = seriesInfo.GetNextPresentationInstanceNumber();
-							        	    ps.SourceAETitle = DicomServer.AETitle;
-							        	});
-
-						_framePresentationStates.Add(new KeyValuePair<Frame, DicomSoftcopyPresentationState>(provider.Frame, presentationState));
+						var publisher = GetValue(publishers, studyInstances.Key.StudyInstanceUid);
+						publisher.OriginServer = studyInstances.Key.OriginServer;
+						publisher.SourceServer = studyInstances.Key.SourceServer;
+						foreach (var f in studyInstances.Value)
+							publisher.Files.Add(f);
 					}
 				}
 
-				return _framePresentationStates;
+				// publish all files now
+				foreach (var publisher in publishers.Values)
+				{
+					if (!publisher.Publish())
+						anyFailed = true;
+				}
 			}
-		}
-
-		/// <remarks>
-		/// The current implementation of <see cref="KeyImagePublisher"/> supports only locally stored images that are <see cref="IImageSopProvider"/>s and supports <see cref="DicomSoftcopyPresentationState"/>s.
-		/// </remarks>
-		public static bool IsSupportedImage(IPresentationImage image)
-		{
-			var imageSopProvider = image as IImageSopProvider;
-			if (imageSopProvider == null)
-				return false;
-			return imageSopProvider.ImageSop.IsStored && DicomSoftcopyPresentationState.IsSupported(image);
-		}
-
-		private void CreateKeyObjectDocuments()
-		{
-			KeyImageSerializer serializer = new KeyImageSerializer();
-			serializer.Author = _sourceInformation.Author;
-			serializer.Description = _sourceInformation.Description;
-			serializer.DocumentTitle = _sourceInformation.DocumentTitle;
-			serializer.SeriesDescription = _sourceInformation.SeriesDescription;
-		    serializer.SourceAETitle = DicomServer.AETitle;
-
-			foreach (KeyValuePair<Frame, DicomSoftcopyPresentationState> presentationFrame in SourceFrames)
-				serializer.AddImage(presentationFrame.Key, presentationFrame.Value);
-
-			_keyObjectDocuments.AddRange(serializer.Serialize(
-			                             	delegate(KeyImageSerializer.KeyObjectDocumentSeries keyObjectDocumentSeries)
-			                             		{
-			                             			string key = keyObjectDocumentSeries.StudyInstanceUid;
-			                             			if (_seriesIndex.ContainsKey(key))
-			                             			{
-			                             				keyObjectDocumentSeries.SeriesDateTime = _seriesIndex[key].KeyObjectSeriesDateTime;
-			                             				keyObjectDocumentSeries.SeriesNumber = _seriesIndex[key].KeyObjectSeriesNumber;
-			                             				keyObjectDocumentSeries.SeriesInstanceUid = _seriesIndex[key].KeyObjectSeriesUid;
-			                             			}
-			                             		}
-			                             	));
-		}
-
-		public void Publish()
-		{
-			if (_sourceInformation.ClipboardItems.Count == 0)
-				return;
-
-            var service = Platform.GetService<IPublishFiles>();
-            while (!service.CanPublish())
-            {
-                // ActiveDesktopWindow may be null when the study is opened from Webstation
-                // By the time viewer closes, there is no browser window to display the error
-                if (Application.ActiveDesktopWindow == null)
-                {
-                    // Log to file only and return immediately
-                    Platform.Log(LogLevel.Error, SR.MessageKeyImagePublishingFailed);
-                    return;
-                }
-                else
-                {
-                    // TODO CR (Sep 12): convert this to a desktop alert
-                    DialogBoxAction result = Application.ActiveDesktopWindow.ShowMessageBox(
-                        SR.MessageCannotPublishKeyImagesServersNotRunning, MessageBoxActions.OkCancel);
-
-                    if (result == DialogBoxAction.Cancel)
-                        return;
-                }
-            }
-
-		    var anyFailed = false;
-		    try
-		    {
-                CreateKeyObjectDocuments();
-
-                var publishers = new Dictionary<string, DicomPublishingHelper>();
-
-                // add each KO document to a publisher by study
-                foreach (var koDocument in _keyObjectDocuments)
-                {
-                    var publisher = GetValue(publishers, koDocument.DataSet[DicomTags.StudyInstanceUid].ToString());
-                    publisher.Files.Add(koDocument);
-                }
-
-                // add each PR state to a publisher by study
-                foreach (var presentationFrame in SourceFrames)
-                {
-                    var sourceFrame = presentationFrame.Key;
-                    var publisher = GetValue(publishers, sourceFrame.StudyInstanceUid);
-
-                    if (presentationFrame.Value != null)
-                        publisher.Files.Add(presentationFrame.Value.DicomFile);
-
-                    var sopDataSource = sourceFrame.ParentImageSop.DataSource;
-                    publisher.OriginServer = ServerDirectory.GetRemoteServersByAETitle(sopDataSource[DicomTags.SourceApplicationEntityTitle].ToString()).FirstOrDefault();
-                    publisher.SourceServer = sopDataSource.Server;
-                }
-
-                // publish all files now
-		        foreach (var publisher in publishers.Values)
-                {
-                    if (!publisher.Publish())
-                        anyFailed = true;
-                }
-		    }
-		    catch (Exception e)
-		    {
-		        anyFailed = true;
-		        Platform.Log(LogLevel.Error, e, "An unexpected error occurred while trying to publish key images.");
-		    }
+			catch (Exception e)
+			{
+				anyFailed = true;
+				Platform.Log(LogLevel.Error, e, "An unexpected error occurred while trying to publish key images.");
+			}
 
 			// TODO CR (Sep 12): convert this to a desktop alert
 			if (anyFailed)
@@ -216,55 +98,35 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 			}
 		}
 
+		private static bool AssertIsPublishingServiceAvailable()
+		{
+			var service = Platform.GetService<IPublishFiles>();
+			while (!service.CanPublish())
+			{
+				// ActiveDesktopWindow may be null when the study is opened from Webstation
+				// By the time viewer closes, there is no browser window to display the error
+				if (Application.ActiveDesktopWindow == null)
+				{
+					// Log to file only and return immediately
+					Platform.Log(LogLevel.Error, SR.MessageKeyImagePublishingFailed);
+					return false;
+				}
+				else
+				{
+					var result = Application.ActiveDesktopWindow.ShowMessageBox(SR.MessageCannotPublishKeyImagesServersNotRunning, MessageBoxActions.OkCancel);
+					if (result == DialogBoxAction.Cancel)
+						return false;
+				}
+			}
+			return true;
+		}
+
 		private static T GetValue<T>(IDictionary<string, T> dictionary, string key)
 			where T : new()
 		{
 			if (!dictionary.ContainsKey(key))
 				dictionary.Add(key, new T());
 			return dictionary[key];
-		}
-
-		private class SeriesInfo
-		{
-			public readonly string PresentationSeriesUid;
-			public readonly int PresentationSeriesNumber;
-			public readonly DateTime PresentationSeriesDateTime;
-			public readonly string KeyObjectSeriesUid;
-			public readonly int KeyObjectSeriesNumber;
-			public readonly DateTime KeyObjectSeriesDateTime;
-
-			private int _presentationNextInstanceNumber;
-
-			public SeriesInfo(IImageSopProvider provider)
-			{
-				KeyObjectSeriesUid = DicomUid.GenerateUid().UID;
-				KeyObjectSeriesNumber = CalculateSeriesNumber(provider.Frame);
-				KeyObjectSeriesDateTime = Platform.Time;
-				PresentationSeriesUid = DicomUid.GenerateUid().UID;
-				PresentationSeriesNumber = KeyObjectSeriesNumber + 1;
-				PresentationSeriesDateTime = Platform.Time;
-				_presentationNextInstanceNumber = 1;
-			}
-
-			public int GetNextPresentationInstanceNumber()
-			{
-				return _presentationNextInstanceNumber++;
-			}
-
-			private static int CalculateSeriesNumber(Frame frame)
-			{
-				if (frame.ParentImageSop == null || frame.ParentImageSop.ParentSeries == null || frame.ParentImageSop.ParentSeries.ParentStudy == null)
-					return 1;
-
-				int maxValue = 0;
-				foreach (Series series in frame.ParentImageSop.ParentSeries.ParentStudy.Series)
-				{
-					if (series.SeriesNumber > maxValue)
-						maxValue = series.SeriesNumber;
-				}
-
-				return maxValue + 1;
-			}
 		}
 	}
 }

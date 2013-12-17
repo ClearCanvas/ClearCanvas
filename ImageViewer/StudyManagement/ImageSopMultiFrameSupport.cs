@@ -33,7 +33,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 {
 	partial class ImageSop
 	{
-		private readonly IDictionary<uint, FunctionalGroupDescriptor> _functionalGroups;
+		private readonly FunctionalGroupMapCache _functionalGroups;
 
 		public override sealed DicomAttribute this[DicomTag tag]
 		{
@@ -67,7 +67,8 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		/// <returns>Returns the requested <see cref="DicomAttribute"/>.</returns>
 		public virtual DicomAttribute GetFrameAttribute(int frameNumber, DicomTag tag)
 		{
-			return GetFrameAttributeCore(frameNumber, tag) ?? base[tag];
+			if (frameNumber <= 0) return DataSource[tag];
+			return _functionalGroups[frameNumber, tag] ?? DataSource[tag];
 		}
 
 		/// <summary>
@@ -82,7 +83,8 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		/// <returns>Returns the requested <see cref="DicomAttribute"/>.</returns>
 		public virtual DicomAttribute GetFrameAttribute(int frameNumber, uint tag)
 		{
-			return GetFrameAttributeCore(frameNumber, tag) ?? base[tag];
+			if (frameNumber <= 0) return DataSource[tag];
+			return _functionalGroups[frameNumber, tag] ?? DataSource[tag];
 		}
 
 		/// <summary>
@@ -98,7 +100,9 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		/// <returns>Returns TRUE if the requested attribute was found; FALSE otherwise.</returns>
 		public virtual bool TryGetFrameAttribute(int frameNumber, DicomTag tag, out DicomAttribute dicomAttribute)
 		{
-			dicomAttribute = GetFrameAttributeCore(frameNumber, tag);
+			if (frameNumber <= 0) return DataSource.TryGetAttribute(tag, out dicomAttribute);
+
+			dicomAttribute = _functionalGroups[frameNumber, tag];
 			return dicomAttribute != null || DataSource.TryGetAttribute(tag, out dicomAttribute);
 		}
 
@@ -115,7 +119,9 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		/// <returns>Returns TRUE if the requested attribute was found; FALSE otherwise.</returns>
 		public virtual bool TryGetFrameAttribute(int frameNumber, uint tag, out DicomAttribute dicomAttribute)
 		{
-			dicomAttribute = GetFrameAttributeCore(frameNumber, tag);
+			if (frameNumber <= 0) return DataSource.TryGetAttribute(tag, out dicomAttribute);
+
+			dicomAttribute = _functionalGroups[frameNumber, tag];
 			return dicomAttribute != null || DataSource.TryGetAttribute(tag, out dicomAttribute);
 		}
 
@@ -141,43 +147,12 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 				if (dimensionIndex >= 0)
 				{
 					int dimensionIndexValue;
-					var dicomAttribute = GetFrameAttributeCore(frameNumber, DicomTags.DimensionIndexValues);
+					var dicomAttribute = _functionalGroups[frameNumber, DicomTags.DimensionIndexValues];
 					if (dicomAttribute != null && dicomAttribute.TryGetInt32(dimensionIndex, out dimensionIndexValue))
 						return dimensionIndexValue;
 				}
 			}
 			return null;
-		}
-
-		private DicomAttribute GetFrameAttributeCore(int frameNumber, DicomTag tag)
-		{
-			FunctionalGroupDescriptor functionalGroupDescriptor;
-			if (frameNumber > 0 && _functionalGroups != null && _functionalGroups.TryGetValue(tag.TagValue, out functionalGroupDescriptor))
-			{
-				DicomAttribute dicomAttribute;
-				var functionalGroup = MultiFrameFunctionalGroupsModuleIod.GetFunctionalGroup(functionalGroupDescriptor, DataSource, frameNumber);
-				var item = functionalGroup != null ? functionalGroup.SingleItem : null;
-				if (item != null && item.TryGetAttribute(tag, out dicomAttribute)) return dicomAttribute;
-			}
-			return null;
-		}
-
-		private DicomAttribute GetFrameAttributeCore(int frameNumber, uint tag)
-		{
-			FunctionalGroupDescriptor functionalGroupDescriptor;
-			if (frameNumber > 0 && _functionalGroups != null && _functionalGroups.TryGetValue(tag, out functionalGroupDescriptor))
-			{
-				DicomAttribute dicomAttribute;
-				var functionalGroup = MultiFrameFunctionalGroupsModuleIod.GetFunctionalGroup(functionalGroupDescriptor, DataSource, frameNumber);
-				var item = functionalGroup != null ? functionalGroup.SingleItem : null;
-				if (item != null && item.TryGetAttribute(tag, out dicomAttribute)) return dicomAttribute;
-			}
-			return null;
-		}
-
-		private static IDictionary<uint, FunctionalGroupDescriptor> GetFunctionalGroupMap(ISopDataSource sopDataSource)
-		{
-			return new MultiFrameFunctionalGroupsModuleIod(sopDataSource).HasValues() ? FunctionalGroupDescriptor.GetFunctionalGroupMap(sopDataSource.SopClassUid) : null;
 		}
 
 		#region Frame VOI Data LUTs
@@ -199,19 +174,13 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 				var dataset = (IDicomAttributeProvider) DataSource;
 
 				// attempt to find the VOI LUT Sequence in a functional group pertaining to the requested frame
-				FunctionalGroupDescriptor functionalGroupDescriptor;
-				if (_functionalGroups != null && _functionalGroups.TryGetValue(DicomTags.VoiLutSequence, out functionalGroupDescriptor))
+				bool isFrameSpecific;
+				DicomAttribute dicomAttribute;
+				var item = _functionalGroups.GetFrameFunctionalGroupItem(frameNumber, DicomTags.VoiLutSequence, out isFrameSpecific);
+				if (item != null && item.TryGetAttribute(DicomTags.VoiLutSequence, out dicomAttribute))
 				{
-					bool perFrame;
-					var functionalGroup = MultiFrameFunctionalGroupsModuleIod.GetFunctionalGroup(functionalGroupDescriptor, DataSource, frameNumber, out perFrame);
-					var item = functionalGroup != null ? functionalGroup.SingleItem : null;
-
-					DicomAttribute dicomAttribute;
-					if (item != null && item.TryGetAttribute(DicomTags.VoiLutSequence, out dicomAttribute))
-					{
-						cacheKey = perFrame ? VoiDataLutsCacheKey.GetFrameKey(frameNumber) : VoiDataLutsCacheKey.SharedKey;
-						dataset = item;
-					}
+					cacheKey = isFrameSpecific ? VoiDataLutsCacheKey.GetFrameKey(frameNumber) : VoiDataLutsCacheKey.SharedKey;
+					dataset = item;
 				}
 
 				IList<VoiDataLut> dataLuts;

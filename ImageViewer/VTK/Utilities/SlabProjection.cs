@@ -28,11 +28,29 @@ using System.Linq;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.ImageViewer.Common;
 using ClearCanvas.ImageViewer.Core.Functions;
+using ClearCanvas.ImageViewer.Volumes;
 
 namespace ClearCanvas.ImageViewer.Vtk.Utilities
 {
 	internal static partial class SlabProjection
 	{
+		public static void AggregateSlabIntensity(VolumeProjectionMode mode, IntPtr pSlabData, byte[] pixelData, int subsamples, int subsamplePixels, int bytesPerPixel, bool signed)
+		{
+			switch (mode)
+			{
+				case VolumeProjectionMode.Maximum:
+					AggregateSlabMaximumIntensity(pSlabData, pixelData, subsamples, subsamplePixels, bytesPerPixel, signed);
+					return;
+				case VolumeProjectionMode.Minimum:
+					AggregateSlabMinimumIntensity(pSlabData, pixelData, subsamples, subsamplePixels, bytesPerPixel, signed);
+					return;
+				case VolumeProjectionMode.Average:
+				default:
+					AggregateSlabAverageIntensity(pSlabData, pixelData, subsamples, subsamplePixels, bytesPerPixel, signed);
+					return;
+			}
+		}
+
 		public static void AggregateSlabMaximumIntensity(IntPtr pSlabData, byte[] pixelData, int subsamples, int subsamplePixels, int bytesPerPixel, bool signed)
 		{
 			IntensityProjectionMethod method;

@@ -139,11 +139,15 @@
     <Compile Include="DicomUncompressedPixelData.cs" />
     <Compile Include="FileReference.cs" />
     <Compile Include="Iod\ComponentGroup.cs" />
+    <Compile Include="Iod\ContextGroups\ImageDrivationContextGroup.cs" />
+    <Compile Include="Iod\ContextGroups\SourceImagePurposesOfReferenceContextGroup.cs" />
     <Compile Include="Iod\CorrectedImage.cs" />
     <Compile Include="Iod\CountsSource.cs" />
     <Compile Include="Iod\DecayCorrection.cs" />
+    <Compile Include="Iod\Extensions\XKeyObjectDocumentModuleIod.cs" />
     <Compile Include="Iod\FunctionalGroupDescriptor.cs" />
     <Compile Include="Iod\FunctionalGroupMacro.cs" />
+    <Compile Include="Iod\FunctionalGroupMapCache.cs" />
     <Compile Include="Iod\FunctionalGroups\CardiacSynchronizationFunctionalGroup.cs" />
     <Compile Include="Iod\FunctionalGroups\ContrastBolusUsageFunctionalGroup.cs" />
     <Compile Include="Iod\FunctionalGroups\CtAcquisitionDetailsFunctionalGroup.cs" />
@@ -228,7 +232,9 @@
     <Compile Include="Iod\FunctionalGroups\XRayPositionerFunctionalGroup.cs" />
     <Compile Include="Iod\FunctionalGroups\XRayProjectionPixelCalibrationFunctionalGroup.cs" />
     <Compile Include="Iod\FunctionalGroups\XRayTablePositionFunctionalGroup.cs" />
+    <Compile Include="Iod\GradientDirection.cs" />
     <Compile Include="Iod\Iods\RawDataIod.cs" />
+    <Compile Include="Iod\Iods\ScImageIod.cs" />
     <Compile Include="Iod\Macros\CommonCtMrImageDescriptionMacro.cs" />
     <Compile Include="Iod\Macros\ExposureIndexMacro.cs" />
     <Compile Include="Iod\Macros\XRay3DGeneralPerProjectionAcquisitionMacro.cs" />
@@ -240,27 +246,34 @@
     <Compile Include="Iod\Modules\BreastTomosynthesisAcquisitionModule.cs" />
     <Compile Include="Iod\Modules\CrSeriesModuleIod.cs" />
     <Compile Include="Iod\Modules\CtSeriesModuleIod.cs" />
+    <Compile Include="Iod\Modules\DeviceModuleIod.cs" />
     <Compile Include="Iod\Modules\EnhancedMammographySeriesModuleIod.cs" />
     <Compile Include="Iod\Modules\EnhancedPetSeriesModuleIod.cs" />
     <Compile Include="Iod\Modules\EnhancedSeriesModuleIod.cs" />
     <Compile Include="Iod\Modules\EnhancedUsSeriesModuleIod.cs" />
+    <Compile Include="Iod\Modules\FrameOfReferenceModuleIod.cs" />
     <Compile Include="Iod\Modules\MrSeriesModuleIod.cs" />
     <Compile Include="Iod\Modules\MultiFrameDimensionModule.cs" />
     <Compile Include="Iod\Modules\MultiFrameFunctionalGroupsModule.cs" />
+    <Compile Include="Iod\Modules\MultiFrameModuleIod.cs" />
     <Compile Include="Iod\Modules\NmPetPatientOrientationModuleIod.cs" />
     <Compile Include="Iod\Modules\OpthalmicTomographySeriesModuleIod.cs" />
     <Compile Include="Iod\Modules\PetIsotopeModuleIod.cs" />
     <Compile Include="Iod\Modules\PetMultiGatedAcquisitionModuleIod.cs" />
     <Compile Include="Iod\Modules\PetSeriesModuleIod.cs" />
     <Compile Include="Iod\Modules\RawDataModule.cs" />
+    <Compile Include="Iod\Modules\ScImageModuleIod.cs" />
+    <Compile Include="Iod\Modules\ScMultiFrameImageModuleIod.cs" />
     <Compile Include="Iod\Modules\Tests\FilmSizeTests.cs" />
     <Compile Include="Iod\Modules\Tests\PrintScuTests.cs" />
+    <Compile Include="Iod\Modules\VoiLutModuleIod.cs" />
     <Compile Include="Iod\Modules\XaXrfSeriesModuleIod.cs" />
     <Compile Include="Iod\Modules\XRay3DAcquisitionModule.cs" />
     <Compile Include="Iod\Modules\XRay3DReconstructionModule.cs" />
     <Compile Include="Iod\RandomsCorrectionMethod.cs" />
     <Compile Include="Iod\Sequences\AcquisitionContextSequence.cs" />
     <Compile Include="Iod\Sequences\AnatomicRegionSequenceItem.cs" />
+    <Compile Include="Iod\Sequences\DeviceSequenceItem.cs" />
     <Compile Include="Iod\Sequences\FunctionalGroupsSequenceItem.cs" />
     <Compile Include="Iod\Sequences\IconImageSequence.cs" />
     <Compile Include="Iod\Sequences\OriginalAttributesSequence.cs" />
@@ -272,6 +285,7 @@
     <Compile Include="Iod\Tests\EncapsulatedPdfIodTests.cs" />
     <Compile Include="Iod\Tests\EqualityCompareHelper.cs" />
     <Compile Include="Iod\Tests\FunctionalGroupMacroTests.cs" />
+    <Compile Include="Iod\Tests\HierarchicalSopInstanceReferenceDictionaryTests.cs" />
     <Compile Include="Iod\Tests\WindowTests.cs" />
     <Compile Include="Iod\Units.cs" />
     <Compile Include="IO\IByteBuffer.cs" />
@@ -726,7 +740,9 @@
     <Compile Include="Validation\StringValueValidation.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
     <EmbeddedResource Include="Audit\DicomAuditMessageSchema.xsd">
       <SubType>
       </SubType>

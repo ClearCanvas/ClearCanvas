@@ -24,6 +24,7 @@
 
 using System;
 using ClearCanvas.ImageViewer.Mathematics;
+using ClearCanvas.ImageViewer.StudyManagement;
 
 namespace ClearCanvas.ImageViewer.Volumes
 {
@@ -129,6 +130,11 @@ namespace ClearCanvas.ImageViewer.Volumes
 		/// will be normalized such that they are defined by this one single rescale function.
 		/// </remarks>
 		double RescaleIntercept { get; }
+
+		/// <summary>
+		/// Gets the output units of the linear modality LUT used to transform the values of the volume.
+		/// </summary>
+		RescaleUnits RescaleUnits { get; }
 
 		/// <summary>
 		/// Gets the Modality of the source images from which the volume was created.
@@ -327,6 +333,11 @@ namespace ClearCanvas.ImageViewer.Volumes
 		public double RescaleIntercept
 		{
 			get { return VolumeHeaderData.RescaleIntercept; }
+		}
+
+		public RescaleUnits RescaleUnits
+		{
+			get { return VolumeHeaderData.RescaleUnits; }
 		}
 
 		public IVolumeDataSet DataSet

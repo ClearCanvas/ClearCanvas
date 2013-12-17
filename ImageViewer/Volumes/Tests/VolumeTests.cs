@@ -48,7 +48,7 @@ namespace ClearCanvas.ImageViewer.Volumes.Tests
 			data[999] = expectedMinimum;
 
 			var volume = new U16Volume(data, new Size3D(5, 10, 20), new Vector3D(2, 1, 0.5f), new Vector3D(5, 0, -5),
-			                           new Matrix3D(new float[,] {{0, 1, 0}, {0, 0, 1}, {1, 0, 0}}), new DicomAttributeCollection(), 123, 1, 0);
+			                           new Matrix3D(new float[,] {{0, 1, 0}, {0, 0, 1}, {1, 0, 0}}), new DicomAttributeCollection(), 123);
 
 			Assert.AreSame(data, volume.Array, "Array");
 			Assert.AreSame(data, volume.ArrayData, "ArrayData");
@@ -87,7 +87,7 @@ namespace ClearCanvas.ImageViewer.Volumes.Tests
 			data[999] = expectedMinimum;
 
 			var volume = new S16Volume(data, new Size3D(5, 10, 20), new Vector3D(2, 1, 0.5f), new Vector3D(5, 0, -5),
-			                           new Matrix3D(new float[,] {{0, 1, 0}, {0, 0, 1}, {1, 0, 0}}), new DicomAttributeCollection(), 123, 1, 0);
+			                           new Matrix3D(new float[,] {{0, 1, 0}, {0, 0, 1}, {1, 0, 0}}), new DicomAttributeCollection(), 123);
 
 			Assert.AreSame(data, volume.Array, "Array");
 			Assert.AreSame(data, volume.ArrayData, "ArrayData");
@@ -126,7 +126,7 @@ namespace ClearCanvas.ImageViewer.Volumes.Tests
 			data[999] = expectedMinimum;
 
 			var volume = new U8Volume(data, new Size3D(5, 10, 20), new Vector3D(2, 1, 0.5f), new Vector3D(5, 0, -5),
-			                          new Matrix3D(new float[,] {{0, 1, 0}, {0, 0, 1}, {1, 0, 0}}), new DicomAttributeCollection(), 123, 1, 0);
+			                          new Matrix3D(new float[,] {{0, 1, 0}, {0, 0, 1}, {1, 0, 0}}), new DicomAttributeCollection(), 123);
 
 			Assert.AreSame(data, volume.Array, "Array");
 			Assert.AreSame(data, volume.ArrayData, "ArrayData");
@@ -165,7 +165,7 @@ namespace ClearCanvas.ImageViewer.Volumes.Tests
 			data[999] = expectedMinimum;
 
 			var volume = new S8Volume(data, new Size3D(5, 10, 20), new Vector3D(2, 1, 0.5f), new Vector3D(5, 0, -5),
-			                          new Matrix3D(new float[,] {{0, 1, 0}, {0, 0, 1}, {1, 0, 0}}), new DicomAttributeCollection(), 123, 1, 0);
+			                          new Matrix3D(new float[,] {{0, 1, 0}, {0, 0, 1}, {1, 0, 0}}), new DicomAttributeCollection(), 123);
 
 			Assert.AreSame(data, volume.Array, "Array");
 			Assert.AreSame(data, volume.ArrayData, "ArrayData");

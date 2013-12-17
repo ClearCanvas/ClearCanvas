@@ -66,6 +66,7 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 	{
 		private Tile _selectedTile;
 		private ISpatialTransform _selectedSpatialTransform;
+		private IPatientCoordinateMapping _selectedCoordinateMapping;
 		private ImageGraphic _selectedImageGraphic;
 		private Frame _selectedFrame;
 		private ActionModelNode _actionModel;
@@ -111,6 +112,7 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 			_selectedTile.InformationBox = new InformationBox();
 			_selectedImageGraphic = SelectedImageGraphicProvider != null ? SelectedImageGraphicProvider.ImageGraphic : null;
 			_selectedFrame = ((IImageSopProvider) SelectedPresentationImage).Frame;
+			_selectedCoordinateMapping = SelectedPresentationImage is IPatientCoordinateMappingProvider ? ((IPatientCoordinateMappingProvider) SelectedPresentationImage).PatientCoordinateMapping : null;
 			_selectedSpatialTransform = SelectedSpatialTransformProvider.SpatialTransform;
 
 			Probe(mouseInformation.Location);
@@ -151,6 +153,7 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 			_selectedImageGraphic = null;
 			_selectedSpatialTransform = null;
 			_selectedFrame = null;
+			_selectedCoordinateMapping = null;
 			_selectedTile.InformationBox.Visible = false;
 			_selectedTile.InformationBox = null;
 			_selectedTile = null;
@@ -209,9 +212,14 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 				var coordinateString = String.Format(SR.FormatProbeInfo, SR.LabelLocation, string.Format(SR.FormatCoordinates, sourcePointRounded.X, sourcePointRounded.Y));
 				displayString.AppendLine(coordinateString);
 
-				var patientPoint = _selectedFrame.ImagePlaneHelper.ConvertToPatient(sourcePointRounded);
-				var patientString = String.Format(SR.FormatProbeInfo, SR.LabelPatientLocation, string.Format(SR.FormatCoordinates3D, patientPoint.X.ToString("f3"), patientPoint.Y.ToString("f3"), patientPoint.Z.ToString("f3")));
-				displayString.AppendLine(patientString);
+				var patientPoint = _selectedCoordinateMapping != null && _selectedCoordinateMapping.IsValid
+				                   	? _selectedCoordinateMapping.ConvertToPatient(sourcePointRounded)
+				                   	: _selectedFrame.ImagePlaneHelper.ConvertToPatient(sourcePointRounded);
+				if (patientPoint != null)
+				{
+					var patientString = String.Format(SR.FormatProbeInfo, SR.LabelPatientLocation, string.Format(SR.FormatCoordinates3D, patientPoint.X.ToString("f3"), patientPoint.Y.ToString("f3"), patientPoint.Z.ToString("f3")));
+					displayString.AppendLine(patientString);
+				}
 
 				probeString = displayString.ToString().Trim();
 			}
@@ -387,6 +395,7 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 			_selectedImageGraphic = SelectedImageGraphicProvider != null ? SelectedImageGraphicProvider.ImageGraphic : null;
 			_selectedSpatialTransform = SelectedSpatialTransformProvider.SpatialTransform;
 			_selectedFrame = ((IImageSopProvider) SelectedPresentationImage).Frame;
+			_selectedCoordinateMapping = SelectedPresentationImage is IPatientCoordinateMappingProvider ? ((IPatientCoordinateMappingProvider) SelectedPresentationImage).PatientCoordinateMapping : null;
 
 			Probe(Point.Truncate(coordinate), true, true);
 		}

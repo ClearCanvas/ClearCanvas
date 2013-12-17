@@ -383,7 +383,19 @@ namespace ClearCanvas.Dicom.Samples
 			Platform.Log(LogLevel.Info, "Received association release request from  {0}.", association.CallingAE);
         }
 
-        void IDicomServerHandler.OnReceiveAbort(DicomServer server, ServerAssociationParameters association, DicomAbortSource source, DicomAbortReason reason)
+	    public void OnReceiveDimseCommand(DicomServer server, ServerAssociationParameters association, byte presentationId,
+	                                      DicomAttributeCollection command)
+	    {
+	    }
+
+	    public IDicomFilestreamHandler OnStartFilestream(DicomServer server, ServerAssociationParameters association,
+	                                                     byte presentationId, DicomMessage message)
+	    {
+			// Should not be called bcause OnReceiveDimseCommand isn't doing anything
+		    throw new NotImplementedException();
+	    }
+
+	    void IDicomServerHandler.OnReceiveAbort(DicomServer server, ServerAssociationParameters association, DicomAbortSource source, DicomAbortReason reason)
         {
 			Platform.Log(LogLevel.Error, "Unexpected association abort received.");
         }

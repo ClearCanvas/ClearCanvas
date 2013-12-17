@@ -26,6 +26,7 @@ using System;
 using System.Drawing;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
+using ClearCanvas.Desktop;
 using ClearCanvas.Desktop.Actions;
 using ClearCanvas.Desktop.Tools;
 using ClearCanvas.ImageViewer.Graphics;
@@ -52,7 +53,7 @@ namespace ClearCanvas.ImageViewer.InteractiveGraphics
 	/// </remarks>
 	[DicomSerializableGraphicAnnotation(typeof (StandardAnnotationGraphicSerializer))]
 	[Cloneable]
-	public class AnnotationGraphic : StandardStatefulGraphic, IContextMenuProvider
+	public class AnnotationGraphic : StandardStatefulGraphic, IAnnotationGraphic, IContextMenuProvider
 	{
 		#region Private fields
 
@@ -194,7 +195,7 @@ namespace ClearCanvas.ImageViewer.InteractiveGraphics
 		private void OnCloneComplete()
 		{
 			_calloutGraphic = CollectionUtils.SelectFirst(base.Graphics,
-														  delegate(IGraphic test) { return test is ICalloutGraphic; }) as ICalloutGraphic;
+			                                              delegate(IGraphic test) { return test is ICalloutGraphic; }) as ICalloutGraphic;
 			Platform.CheckForNullReference(_calloutGraphic, "_calloutGraphic");
 
 			this.Initialize(null);
@@ -208,11 +209,7 @@ namespace ClearCanvas.ImageViewer.InteractiveGraphics
 		private void OnSubjectVisualStateChanged(object sender, VisualStateChangedEventArgs e)
 		{
 			if (_notifyOnSubjectChanged)
-			{
-			    /// TODO (CR Sep 2011): If the subject is an arbitrary object, why are we doing this?
-				if(e.PropertyName != "Color" && e.PropertyName != "LineStyle")
-					this.OnSubjectChanged();
-			}
+				OnSubjectChanged(e.PropertyKind);
 		}
 
 		/// <summary>
@@ -240,9 +237,10 @@ namespace ClearCanvas.ImageViewer.InteractiveGraphics
 		/// <summary>
 		/// Called when properties on the <see cref="ControlGraphic.Subject"/> have changed.
 		/// </summary>
-		protected virtual void OnSubjectChanged()
+		protected virtual void OnSubjectChanged(VisualStatePropertyKind propertyKind)
 		{
-			SetCalloutLocation();
+			if (propertyKind == VisualStatePropertyKind.Geometry || propertyKind == VisualStatePropertyKind.Unspecified)
+				SetCalloutLocation();
 		}
 
 		#endregion
@@ -294,6 +292,23 @@ namespace ClearCanvas.ImageViewer.InteractiveGraphics
 			SetCalloutEndPoint();
 		}
 
+		protected override bool Start(IMouseInformation mouseInformation)
+		{
+			if (mouseInformation.ActiveButton == XMouseButtons.Right)
+			{
+				CoordinateSystem = CoordinateSystem.Destination;
+				try
+				{
+					if (HitTest(mouseInformation.Location)) return true;
+				}
+				finally
+				{
+					ResetCoordinateSystem();
+				}
+			}
+			return base.Start(mouseInformation);
+		}
+
 		/// <summary>
 		/// Gets a set of exported <see cref="IAction"/>s.
 		/// </summary>
@@ -302,8 +317,8 @@ namespace ClearCanvas.ImageViewer.InteractiveGraphics
 		/// <returns>A set of exported <see cref="IAction"/>s.</returns>
 		public override IActionSet GetExportedActions(string site, IMouseInformation mouseInformation)
 		{
-            if (!HitTest(mouseInformation.Location))
-                return new ActionSet();
+			if (!HitTest(mouseInformation.Location))
+				return new ActionSet();
 
 			if (_toolSet == null)
 				_toolSet = new ToolSet(new GraphicToolExtensionPoint(), new GraphicToolContext(this));

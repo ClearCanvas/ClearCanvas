@@ -151,6 +151,18 @@ namespace ClearCanvas.ImageServer.Model.EntityBrokers
               return (ISearchCondition<XmlDocument>)SubCriteria["QueryXml"];
             } 
         }
+        [EntityFieldDatabaseMappingAttribute(TableName="Study", ColumnName="QCOutput")]
+        public ISearchCondition<String> QCOutput
+        {
+            get
+            {
+              if (!SubCriteria.ContainsKey("QCOutput"))
+              {
+                 SubCriteria["QCOutput"] = new SearchCondition<String>("QCOutput");
+              }
+              return (ISearchCondition<String>)SubCriteria["QCOutput"];
+            } 
+        }
         [EntityFieldDatabaseMappingAttribute(TableName="Study", ColumnName="SpecificCharacterSet")]
         public ISearchCondition<String> SpecificCharacterSet
         {

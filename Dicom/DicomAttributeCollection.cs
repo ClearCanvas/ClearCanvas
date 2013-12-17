@@ -387,7 +387,7 @@ namespace ClearCanvas.Dicom
 
 					if (dicomTag == null)
 					{
-						throw new DicomException("Invalid tag: " + tag.ToString("X8"));
+						dicomTag = DicomTag.GetTag(tag);
 					}
 					attr = dicomTag.CreateDicomAttribute();
 					if ((tag < _startTag) || (tag > _endTag))
@@ -1016,8 +1016,12 @@ namespace ClearCanvas.Dicom
         /// </remarks>
         /// <param name="obj"></param>
         /// <seealso cref="DicomFieldAttribute"/>
-        public void LoadDicomFields(object obj)
+        public bool LoadDicomFields(object obj)
         {
+			// TODO: perhaps we should throw exception if there's problem binding any field so the caller knows the fields in the object may be incomplete.
+			// Decided to return a boolean instead so existing code still works.
+			var failureCount = 0; 
+
             FieldInfo[] fields = obj.GetType().GetFields();
             foreach (FieldInfo field in fields)
             {
@@ -1048,7 +1052,8 @@ namespace ClearCanvas.Dicom
                     }
                     catch (Exception e)
                     {
-                        Platform.Log(LogLevel.Error, e,"Unable to bind field");
+                        Platform.Log(LogLevel.Error, e,"Unable to bind field {0}", field.Name);
+						failureCount++;
                     }
                 }
             }
@@ -1078,10 +1083,13 @@ namespace ClearCanvas.Dicom
                     }
                     catch (Exception e)
                     {
-                        Platform.Log(LogLevel.Error, e,"Unable to bind field");
+						Platform.Log(LogLevel.Error, e, "Unable to bind property {0}", property.Name);
+						failureCount++;
                     }
                 }
             }
+
+        	return failureCount == 0;
         }
 
         private void SaveDicomFieldValue(DicomTag tag, object value, bool createEmpty, bool setNullIfEmpty)

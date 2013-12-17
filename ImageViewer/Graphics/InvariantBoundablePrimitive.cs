@@ -100,7 +100,7 @@ namespace ClearCanvas.ImageViewer.Graphics
 				{
 					_topLeft = value;
 					this.OnTopLeftChanged();
-					base.NotifyVisualStateChanged("InvariantTopLeft");
+					base.NotifyVisualStateChanged("InvariantTopLeft", VisualStatePropertyKind.Geometry);
 				}
 			}
 		}
@@ -154,7 +154,7 @@ namespace ClearCanvas.ImageViewer.Graphics
 				{
 					_bottomRight = value;
 					this.OnBottomRightChanged();
-					base.NotifyVisualStateChanged("InvariantBottomRight");
+					base.NotifyVisualStateChanged("InvariantBottomRight", VisualStatePropertyKind.Geometry);
 				}
 			}
 		}

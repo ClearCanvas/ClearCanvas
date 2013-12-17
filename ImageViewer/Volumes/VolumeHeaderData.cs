@@ -30,6 +30,7 @@ using ClearCanvas.Dicom.Iod.Macros;
 using ClearCanvas.Dicom.Iod.Modules;
 using ClearCanvas.Dicom.Iod.Sequences;
 using ClearCanvas.ImageViewer.Mathematics;
+using ClearCanvas.ImageViewer.StudyManagement;
 
 namespace ClearCanvas.ImageViewer.Volumes
 {
@@ -85,7 +86,9 @@ namespace ClearCanvas.ImageViewer.Volumes
 		                        bool isSigned,
 		                        int paddingValue,
 		                        double rescaleSlope,
-		                        double rescaleIntercept)
+		                        double rescaleIntercept,
+		                        RescaleUnits rescaleUnits,
+		                        string laterality = null)
 		{
 			Platform.CheckForNullReference(sourceSops, "sourceSops");
 			Platform.CheckTrue(sourceSops.Count > 0, "At least one sourceSop is required");
@@ -112,13 +115,15 @@ namespace ClearCanvas.ImageViewer.Volumes
 			PaddingValue = paddingValue;
 			RescaleSlope = rescaleSlope;
 			RescaleIntercept = rescaleIntercept;
+			RescaleUnits = rescaleUnits ?? RescaleUnits.None;
+			Laterality = laterality ?? string.Empty;
 			VolumeSize = new Vector3D(ArrayDimensions.Width*VoxelSpacing.X, ArrayDimensions.Height*VoxelSpacing.Y, ArrayDimensions.Depth*VoxelSpacing.Z);
 			VolumeBounds = new Rectangle3D(new Vector3D(0, 0, 0), VolumeSize);
 			VolumeCenter = 0.5f*VolumeBounds.Size;
 			VolumeCenterPatient = ConvertToPatient(VolumeCenter);
 
 			// populate the DICOM data set
-			FillDataSet(_collection, sourceSops, bitsAllocated, bitsStored, isSigned, rescaleSlope, rescaleIntercept);
+			FillDataSet(_collection, sourceSops, bitsAllocated, bitsStored, isSigned, rescaleSlope, rescaleIntercept, laterality);
 		}
 
 		public readonly Size3D ArrayDimensions;
@@ -140,6 +145,8 @@ namespace ClearCanvas.ImageViewer.Volumes
 		public readonly string FrameOfReferenceUid;
 		public readonly double RescaleSlope;
 		public readonly double RescaleIntercept;
+		public readonly RescaleUnits RescaleUnits;
+		public readonly string Laterality;
 
 		#region IVolumeDataSet Members
 
@@ -334,7 +341,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 
 		#region DataSet Helpers
 
-		private static void FillDataSet(IDicomAttributeProvider volumeDataSet, IList<IDicomAttributeProvider> sourceSops, int bitsAllocated, int bitsStored, bool isSigned, double rescaleSlope, double rescaleIntercept)
+		private static void FillDataSet(IDicomAttributeProvider volumeDataSet, IList<IDicomAttributeProvider> sourceSops, int bitsAllocated, int bitsStored, bool isSigned, double rescaleSlope, double rescaleIntercept, string laterality)
 		{
 			const string enumYes = "YES";
 			const string enumNo = "NO";
@@ -380,7 +387,8 @@ namespace ClearCanvas.ImageViewer.Volumes
 				volumeDataSet[tag] = source[tag].Copy();
 
 			// copy volume-consistent values for the Frame of Reference Module
-			volumeDataSet[DicomTags.FrameOfReferenceUid] = source[DicomTags.FrameOfReferenceUid].Copy();
+			foreach (uint tag in FrameOfReferenceModuleIod.DefinedTags)
+				volumeDataSet[tag] = source[tag].Copy();
 
 			// update computed normalized values for the Modality LUT Module
 			volumeDataSet[DicomTags.RescaleSlope].SetFloat64(0, rescaleSlope);
@@ -413,6 +421,10 @@ namespace ClearCanvas.ImageViewer.Volumes
 			volumeDataSet[DicomTags.BitsStored].SetInt32(0, bitsStored);
 			volumeDataSet[DicomTags.HighBit].SetInt32(0, bitsStored - 1);
 			volumeDataSet[DicomTags.PixelRepresentation].SetInt32(0, isSigned ? 1 : 0);
+
+			// fill values for additional modality specific modules in the image IE
+			if (!string.IsNullOrEmpty(laterality))
+				volumeDataSet[DicomTags.ImageLaterality].SetStringValue(laterality);
 		}
 
 		private static DicomSequenceItem[] CreateSourceImageSequence(IEnumerable<IDicomAttributeProvider> sourceSops)
@@ -461,9 +473,9 @@ namespace ClearCanvas.ImageViewer.Volumes
 
 #if UNIT_TESTS
 
-		internal static VolumeHeaderData TestCreate(IList<IDicomAttributeProvider> sourceSops, int bitsAllocated = 16, int bitsStored = 16, bool isSigned = false)
+		internal static VolumeHeaderData TestCreate(IList<IDicomAttributeProvider> sourceSops, int bitsAllocated = 16, int bitsStored = 16, bool isSigned = false, string laterality = null)
 		{
-			return new VolumeHeaderData(sourceSops, new Size3D(0, 0, 0), new Vector3D(0, 0, 0), new Vector3D(0, 0, 0), new Matrix3D(), bitsAllocated, bitsStored, isSigned, DicomPixelData.GetMinPixelValue(bitsAllocated, isSigned), 1, 0);
+			return new VolumeHeaderData(sourceSops, new Size3D(0, 0, 0), new Vector3D(0, 0, 0), new Vector3D(0, 0, 0), new Matrix3D(), bitsAllocated, bitsStored, isSigned, DicomPixelData.GetMinPixelValue(bitsAllocated, isSigned), 1, 0, null, laterality);
 		}
 
 #endif

@@ -31,6 +31,7 @@ using System.Xml;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Dicom;
+using ClearCanvas.Dicom.Iod.Sequences;
 using ClearCanvas.Dicom.Utilities.Command;
 using ClearCanvas.Dicom.Utilities.Xml;
 using ClearCanvas.Enterprise.Core;
@@ -454,11 +455,24 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.ProcessDuplicate
 
             if (action==ProcessDuplicateAction.OverwriteUseExisting)
             {
+	            var sq = new OriginalAttributesSequence
+		            {
+			            ModifiedAttributesSequence = new DicomSequenceItem(),
+			            ModifyingSystem = ProductInformation.Component,
+			            ReasonForTheAttributeModification = "COERCE",
+			            AttributeModificationDatetime = Platform.Time,
+			            SourceOfPreviousValues = duplicateDicomFile.SourceApplicationEntityTitle
+		            };
+
                 foreach (BaseImageLevelUpdateCommand command in _duplicateUpdateCommands)
                 {
-                    if (!command.Apply(duplicateDicomFile))
+                    if (!command.Apply(duplicateDicomFile, sq))
                         throw new ApplicationException(String.Format("Unable to update the duplicate sop. Command={0}", command));
                 }
+
+				var sqAttrib = duplicateDicomFile.DataSet[DicomTags.OriginalAttributesSequence] as DicomAttributeSQ;
+				if (sqAttrib != null)
+					sqAttrib.AddSequenceItem(sq.DicomSequenceItem);
             }
         }
 

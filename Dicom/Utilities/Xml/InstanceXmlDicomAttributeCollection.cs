@@ -100,7 +100,7 @@ namespace ClearCanvas.Dicom.Utilities.Xml
 		public bool IsTagExcluded(uint tag)
 		{
 			return CollectionUtils.Contains(ExcludedTags,
-				delegate(DicomTag dicomTag) { return dicomTag.TagValue == tag; });
+			                                dicomTag => dicomTag.TagValue == tag);
 		}
 
 		public bool HasExcludedTags(bool recursive)
@@ -121,7 +121,7 @@ namespace ClearCanvas.Dicom.Utilities.Xml
 							{
 								if (item is InstanceXmlDicomSequenceItem)
 								{
-									if (((InstanceXmlDicomSequenceItem)item).HasExcludedTags(recursive))
+									if (((InstanceXmlDicomSequenceItem) item).HasExcludedTags(true))
 										return true;
 								}
 							}
@@ -156,15 +156,12 @@ namespace ClearCanvas.Dicom.Utilities.Xml
 
 		public override int GetHashCode()
 		{
-			return base.GetHashCode();
+			return 0;
 		}
 
 		public override bool Equals(object obj)
 		{
-			if (obj is ExcludedTagsHelper)
-				return Equals((ExcludedTagsHelper)obj);
-
-			return false;
+			return obj is ExcludedTagsHelper && Equals((ExcludedTagsHelper) obj);
 		}
 	}
 
@@ -177,7 +174,7 @@ namespace ClearCanvas.Dicom.Utilities.Xml
 		{
 			_excludedTagsHelper = new ExcludedTagsHelper(this);
 			if (source is IInstanceXmlDicomAttributeCollection)
-				_excludedTagsHelper.Add(((IInstanceXmlDicomAttributeCollection)source).ExcludedTags);
+				_excludedTagsHelper.Add(((IInstanceXmlDicomAttributeCollection) source).ExcludedTags);
 		}
 
 		internal InstanceXmlDicomAttributeCollection()
@@ -227,7 +224,7 @@ namespace ClearCanvas.Dicom.Utilities.Xml
 		{
 			if (obj is InstanceXmlDicomAttributeCollection)
 			{
-				if (!_excludedTagsHelper.Equals(((InstanceXmlDicomAttributeCollection)obj)._excludedTagsHelper))
+				if (!_excludedTagsHelper.Equals(((InstanceXmlDicomAttributeCollection) obj)._excludedTagsHelper))
 					return false;
 			}
 
@@ -244,7 +241,7 @@ namespace ClearCanvas.Dicom.Utilities.Xml
 		{
 			_excludedTagsHelper = new ExcludedTagsHelper(this);
 			if (source is IInstanceXmlDicomAttributeCollection)
-				_excludedTagsHelper.Add(((IInstanceXmlDicomAttributeCollection)source).ExcludedTags);
+				_excludedTagsHelper.Add(((IInstanceXmlDicomAttributeCollection) source).ExcludedTags);
 		}
 
 		internal InstanceXmlDicomSequenceItem()
@@ -294,7 +291,7 @@ namespace ClearCanvas.Dicom.Utilities.Xml
 		{
 			if (obj is InstanceXmlDicomSequenceItem)
 			{
-				if (!_excludedTagsHelper.Equals(((InstanceXmlDicomSequenceItem)obj)._excludedTagsHelper))
+				if (!_excludedTagsHelper.Equals(((InstanceXmlDicomSequenceItem) obj)._excludedTagsHelper))
 					return false;
 			}
 

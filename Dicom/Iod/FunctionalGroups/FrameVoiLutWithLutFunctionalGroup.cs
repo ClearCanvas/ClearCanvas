@@ -85,7 +85,12 @@ namespace ClearCanvas.Dicom.Iod.FunctionalGroups
 					const string msg = "FrameVoiLutSequence is Type 1 Required.";
 					throw new ArgumentNullException("value", msg);
 				}
-				dicomAttribute.Values = new[] {value.DicomSequenceItem};
+				else if (!(value is IIodMacro))
+				{
+					const string msg = "FrameVoiLutSequence value must implement IIodMacro.";
+					throw new ArgumentNullException("value", msg);
+				}
+				dicomAttribute.Values = new[] {((IIodMacro) value).DicomSequenceItem};
 			}
 		}
 

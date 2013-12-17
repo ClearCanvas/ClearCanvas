@@ -141,6 +141,11 @@ namespace ClearCanvas.ImageServer.Core
 		/// If set, sets the DuplicateProcessing policy for the imported SOP.
 		/// </summary>
 		public DuplicateProcessingEnum? DuplicateProcessing { get; set; }
+
+		/// <summary>
+		/// If the import is through a file stream, the filestream is stored here between import calls.
+		/// </summary>
+		public FileStream FileStream { get; set; }
 	}
 
 	/// <summary>
@@ -175,6 +180,237 @@ namespace ClearCanvas.ImageServer.Core
         #endregion
 
         #region Public Methods
+
+		 public bool GetStreamedFileStorageFolder(DicomMessageBase message, out string folder, out string filesystemStreamingFolder)
+		 {
+			 var location = GetWritableOnlineStorage(message);
+
+			 using (
+				 var commandProcessor =
+					 new ServerCommandProcessor(String.Format("Streaming folder for Study Instance {0}", location.StudyInstanceUid)))
+			 {
+
+				 String path = Path.Combine(location.FilesystemPath, location.PartitionFolder);
+				 commandProcessor.AddCommand(new CreateDirectoryCommand(path));
+
+				 filesystemStreamingFolder = path = Path.Combine(path, ServerPlatform.StreamingStorageFolder);
+				 commandProcessor.AddCommand(new CreateDirectoryCommand(path));
+
+				 path = Path.Combine(path, _context.ContextID /* the AE title + timestamp */);
+				 commandProcessor.AddCommand(new CreateDirectoryCommand(path));
+
+				 path = Path.Combine(path, location.StudyInstanceUid);
+				 commandProcessor.AddCommand(new CreateDirectoryCommand(path));
+
+				 if (!commandProcessor.Execute())
+				 {
+					 folder = null;
+					 Platform.Log(LogLevel.Warn, "Unable to create directory to store study: {0}: {1}", path,
+					              commandProcessor.FailureReason);
+					 return false;
+				 }
+				 folder = path;
+				 return true;
+			 }
+		 }
+		/// <summary>
+		/// Import a file that already resides at an accessible path on a filesystem.
+		/// </summary>
+		/// <remarks>
+		/// 
+		/// </remarks>
+		/// <param name="message"></param>
+		/// <param name="sourceFilename"></param>
+		/// <returns></returns>
+		public DicomProcessingResult ImportFile(DicomMessageBase message, string sourceFilename)
+		{
+			Platform.CheckForNullReference(message, "message");
+			String studyInstanceUid;
+			String seriesInstanceUid;
+			String sopInstanceUid;
+			String accessionNumber;
+			String patientsName;
+
+			LoadMessageUids(message, out studyInstanceUid, out seriesInstanceUid, out sopInstanceUid,
+								 out accessionNumber, out patientsName);
+
+			// Scrub the name for invalid characters.
+			string newName = XmlUtils.XmlCharacterScrub(patientsName);
+			if (!newName.Equals(patientsName))
+				message.DataSet[DicomTags.PatientsName].SetStringValue(newName);
+
+			var result = new DicomProcessingResult
+			{
+				Successful = true,
+				StudyInstanceUid = studyInstanceUid,
+				SeriesInstanceUid = seriesInstanceUid,
+				SopInstanceUid = sopInstanceUid,
+				AccessionNumber = accessionNumber
+			};
+
+			try
+			{
+				Validate(message);
+			}
+			catch (DicomDataException e)
+			{
+				result.SetError(DicomStatuses.ProcessingFailure, e.Message);
+				return result;
+			}
+
+			// Use the command processor for rollback capabilities.
+			using (var commandProcessor = new ServerCommandProcessor(String.Format("Processing Sop Instance {0}", sopInstanceUid)))
+			{
+				try
+				{
+					string failureMessage;
+					StudyStorageLocation studyLocation = GetWritableOnlineStorage(message);
+
+					// GetWritableOnlineStorage should throw an exception if the study location cannot be found.
+					Platform.CheckForNullReference(studyLocation, "studyLocation");
+
+					if (!studyLocation.QueueStudyStateEnum.Equals(QueueStudyStateEnum.Idle)
+						&& (!studyLocation.QueueStudyStateEnum.Equals(QueueStudyStateEnum.ProcessingScheduled)))
+					{
+						failureMessage = String.Format("Study {0} on partition {1} is being processed: {2}, can't accept new images.",
+													   studyLocation.StudyInstanceUid, _context.Partition.Description, studyLocation.QueueStudyStateEnum.Description);
+						result.SetError(DicomStatuses.StorageStorageOutOfResources, failureMessage);
+						return result;
+					}
+					if (studyLocation.StudyStatusEnum.Equals(StudyStatusEnum.OnlineLossy))
+					{
+						if (studyLocation.IsLatestArchiveLossless)
+						{
+							result.DicomStatus = DicomStatuses.StorageStorageOutOfResources;
+							failureMessage = String.Format("Study {0} on partition {1} can't accept new images due to lossy compression of the study.  Restoring study.",
+														   studyLocation.StudyInstanceUid, _context.Partition.Description);
+							Platform.Log(LogLevel.Error, failureMessage);
+							if (ServerHelper.InsertRestoreRequest(studyLocation) == null)
+							{
+								Platform.Log(LogLevel.Warn, "Unable to insert Restore Request for Study");
+							}
+
+							result.SetError(DicomStatuses.StorageStorageOutOfResources, failureMessage);
+							result.RestoreRequested = true;
+							return result;
+						}
+					}
+
+					String path = studyLocation.FilesystemPath;
+					String finalDest = studyLocation.GetSopInstancePath(seriesInstanceUid, sopInstanceUid);
+
+					if (HasUnprocessedCopy(studyLocation.Key, seriesInstanceUid, sopInstanceUid))
+					{
+						var accept = false;
+
+						// This is a special case: #10569
+						// Allow user to revive an orphaned study by reprocessing the files found in the filesystem
+						if (File.Exists(finalDest))
+						{
+							accept = DuplicatePolicy.IsParitionDuplicatePolicyOverridden(studyLocation);
+						}
+
+						if (!accept)
+						{
+							failureMessage = string.Format("Another copy of the SOP Instance was received but has not been processed: {0}", sopInstanceUid);
+							result.SetError(DicomStatuses.DuplicateSOPInstance, failureMessage);
+							return result;
+						}
+					}
+
+					var data = new StudyProcessWorkQueueData
+					{
+						ReceivingAeTitle = _context.AlternateAe == null
+											  ? _context.Partition.AeTitle
+											  : _context.AlternateAe.AeTitle
+					};
+
+					if (File.Exists(finalDest))
+					{
+						result = HandleDuplicateFile(sopInstanceUid, studyLocation, commandProcessor, message, sourceFilename, data);
+						if (!result.Successful)
+							return result;
+					}
+					else
+					{
+						HandleNonDuplicateFile(seriesInstanceUid, sopInstanceUid, studyLocation, commandProcessor, message, sourceFilename, path,
+										   false, data);
+					}
+
+					if (commandProcessor.Execute())
+					{
+						result.DicomStatus = DicomStatuses.Success;
+					}
+					else
+					{
+						failureMessage =
+							String.Format("Failure processing message: {0}. Sending failure status.",
+										  commandProcessor.FailureReason);
+						result.SetError(DicomStatuses.ProcessingFailure, failureMessage);
+						// processor already rolled back
+						return result;
+					}
+				}
+				catch (NoWritableFilesystemException)
+				{
+					String failureMessage = String.Format("Unable to process image, no writable filesystem found for Study UID {0}.", sopInstanceUid);
+					commandProcessor.Rollback();
+					result.SetError(DicomStatuses.StorageStorageOutOfResources, failureMessage);
+				}
+				catch (StudyIsNearlineException e)
+				{
+					String failureMessage = e.RestoreRequested
+												? String.Format("{0}. Restore has been requested.", e.Message)
+												: e.Message;
+
+					Platform.Log(LogLevel.Error, failureMessage);
+					commandProcessor.Rollback();
+					result.SetError(DicomStatuses.ProcessingFailure, failureMessage);
+				}
+				catch (FilesystemNotWritableException)
+				{
+					commandProcessor.Rollback();
+
+					string folder;
+					if (!FilesystemMonitor.Instance.GetWriteableIncomingFolder(_context.Partition, out folder))
+					{
+						String failureMessage =
+							String.Format("Unable to process image, study storage location is missing or not writeable: {0}.", sopInstanceUid);
+						result.SetError(DicomStatuses.StorageStorageOutOfResources, failureMessage);
+						return result;
+					}
+
+					string path = Path.Combine(folder, sopInstanceUid);
+					path += ServerPlatform.DicomFileExtension;
+
+					if (!File.Exists(path))
+					{
+						File.Move(sourceFilename, path);
+
+						Platform.Log(LogLevel.Info, "Saved existing SOP without writeable storage location to {0} folder: {1}",
+								 FilesystemMonitor.ImportDirectorySuffix, sopInstanceUid);
+						result.DicomStatus = DicomStatuses.Success;
+						return result;
+					}
+					
+					File.Delete(sourceFilename);
+
+					Platform.Log(LogLevel.Info, "Unable to save temporary file to incoming folder, file already exists there: {0}, rejecting SOP as processing failure",
+							 path);
+					result.DicomStatus = DicomStatuses.ProcessingFailure;
+					return result;
+				}
+				catch (Exception e)
+				{
+					Platform.Log(LogLevel.Error, e, "Unexpected exception when {0}.  Rolling back operation.", commandProcessor.Description);
+					commandProcessor.Rollback();
+					result.SetError(result.DicomStatus ?? DicomStatuses.ProcessingFailure, e.Message);
+				}
+			}
+
+			return result;
+		}
+
         /// <summary>
         /// Imports the specified <see cref="DicomMessageBase"/> object into the system.
         /// The object will be inserted into the <see cref="WorkQueue"/> for processing and
@@ -187,11 +423,15 @@ namespace ClearCanvas.ImageServer.Core
         public DicomProcessingResult Import(DicomMessageBase message)
         {
             Platform.CheckForNullReference(message, "message");
-            String studyInstanceUid = message.DataSet[DicomTags.StudyInstanceUid].GetString(0, string.Empty);
-            String seriesInstanceUid = message.DataSet[DicomTags.SeriesInstanceUid].GetString(0, string.Empty);
-            String sopInstanceUid = message.DataSet[DicomTags.SopInstanceUid].GetString(0, string.Empty);
-            String accessionNumber = message.DataSet[DicomTags.AccessionNumber].GetString(0, string.Empty);
-            String patientsName = message.DataSet[DicomTags.PatientsName].GetString(0, string.Empty);
+            String studyInstanceUid;
+            String seriesInstanceUid;
+            String sopInstanceUid;
+            String accessionNumber;
+            String patientsName;
+
+	        LoadMessageUids(message, out studyInstanceUid, out seriesInstanceUid, out sopInstanceUid,
+	                             out accessionNumber, out patientsName);
+
         	DicomFile file = null;
 
             // Scrub the name for invalid characters.
@@ -372,6 +612,14 @@ namespace ClearCanvas.ImageServer.Core
 
         #region Private Methods
 
+		static private void LoadMessageUids(DicomMessageBase message, out string studyInstanceUid, out string seriesInstanceUid, out string sopInstanceUid, out string accessionNumber, out string patientsName )
+		{
+			studyInstanceUid = message.DataSet[DicomTags.StudyInstanceUid].GetString(0, string.Empty);
+			seriesInstanceUid = message.DataSet[DicomTags.SeriesInstanceUid].GetString(0, string.Empty);
+			sopInstanceUid = message.DataSet[DicomTags.SopInstanceUid].GetString(0, string.Empty);
+			accessionNumber = message.DataSet[DicomTags.AccessionNumber].GetString(0, string.Empty);
+			patientsName = message.DataSet[DicomTags.PatientsName].GetString(0, string.Empty);
+		}
 
         /// <summary>
         /// Gets the online storage location for a <see cref="DicomMessageBase"/>.
@@ -447,6 +695,48 @@ namespace ClearCanvas.ImageServer.Core
             #endregion
         }
 
+		private void HandleNonDuplicateFile(string seriesInstanceUid, string sopInstanceUid, StudyStorageLocation studyLocation, ServerCommandProcessor commandProcessor, DicomMessageBase message, string sourcePath, string path, bool dupImage, StudyProcessWorkQueueData data)
+		{
+			commandProcessor.AddCommand(new CreateDirectoryCommand(path));
+
+			path = Path.Combine(path, studyLocation.PartitionFolder);
+			commandProcessor.AddCommand(new CreateDirectoryCommand(path));
+
+			path = Path.Combine(path, studyLocation.StudyFolder);
+			commandProcessor.AddCommand(new CreateDirectoryCommand(path));
+
+			path = Path.Combine(path, studyLocation.StudyInstanceUid);
+			commandProcessor.AddCommand(new CreateDirectoryCommand(path));
+
+			path = Path.Combine(path, seriesInstanceUid);
+			commandProcessor.AddCommand(new CreateDirectoryCommand(path));
+
+			path = Path.Combine(path, sopInstanceUid);
+			path += ServerPlatform.DicomFileExtension;
+
+			commandProcessor.AddCommand(new RenameFileCommand(sourcePath, path, true));
+
+			WorkQueueUidData uidData = null;
+			if (_context.Request != null && !string.IsNullOrEmpty(_context.Request.OperationToken))
+			{
+				uidData = new WorkQueueUidData
+				{
+					OperationToken = _context.Request.OperationToken
+				};
+			}
+
+			commandProcessor.AddCommand(
+				new UpdateWorkQueueCommand(message, studyLocation, dupImage, data, uidData, _context.Request));
+
+			#region SPECIAL CODE FOR TESTING
+			if (Diagnostics.Settings.SimulateFileCorruption)
+			{
+				commandProcessor.AddCommand(new CorruptDicomFileCommand(path));
+			}
+			#endregion
+		}
+
+
 		private static bool SaveToFolder(string folder, string sopInstanceUid, string studyInstanceUid, DicomFile file)
 		{
 			using (var commandProcessor =
@@ -490,7 +780,30 @@ namespace ClearCanvas.ImageServer.Core
             return result;
         }
 
-       
+		private DicomProcessingResult HandleDuplicateFile(string sopInstanceUid, StudyStorageLocation studyLocation, ServerCommandProcessor commandProcessor, DicomMessageBase message, string sourceFilename, StudyProcessWorkQueueData data)
+		{
+			Study study = studyLocation.Study ??
+						  studyLocation.LoadStudy(ServerExecutionContext.Current.PersistenceContext);
+			if (study != null)
+				Platform.Log(LogLevel.Info, "Received duplicate SOP {0} (A#:{1} StudyUid:{2}  Patient: {3}  ID:{4})",
+							 sopInstanceUid,
+							 study.AccessionNumber, study.StudyInstanceUid,
+							 study.PatientsName, study.PatientId);
+			else
+				Platform.Log(LogLevel.Info,
+							 "Received duplicate SOP {0} (StudyUid:{1}). Existing files haven't been processed.",
+							 sopInstanceUid, studyLocation.StudyInstanceUid);
+
+			var sopProcessingContext = new SopInstanceProcessorContext(commandProcessor, studyLocation, _context.ContextID,
+																_context.Request)
+			{
+				DuplicateProcessing = _context.DuplicateProcessing
+			};
+			DicomProcessingResult result = DuplicateSopProcessorHelper.Process(sopProcessingContext, message, data,
+			                                                                   sourceFilename);
+			return result;
+		}
+
         private static void Validate(DicomMessageBase message)
         {
             var validator = new DicomSopInstanceValidator();

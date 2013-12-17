@@ -22,6 +22,7 @@
 
 #endregion
 
+using System;
 using System.Drawing;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.ImageViewer.Graphics;
@@ -55,46 +56,38 @@ namespace ClearCanvas.ImageViewer.InteractiveGraphics
 		/// </summary>
 		protected static readonly Color DefaultInactiveColor = Color.Yellow;
 
+		/// <summary>
+		/// Specifies whether or not control graphics are shown when a graphic is selected, or when a graphic is focused.
+		/// </summary>
+		[ThreadStatic]
+		public static bool ShowControlGraphicsOnSelect;
+
 		[CloneIgnore]
 		private bool _selected = false;
 
 		[CloneIgnore]
 		private bool _focused = false;
 
-		[CloneCopyReference]
 		private Color _focusColor = DefaultFocusColor;
-
-		[CloneCopyReference]
 		private Color _focusSelectedColor = DefaultFocusSelectedColor;
-
-		[CloneCopyReference]
 		private Color _selectedColor = DefaultSelectedColor;
-
-		[CloneCopyReference]
 		private Color _inactiveColor = DefaultInactiveColor;
 
 		/// <summary>
 		/// Constructs a new instance of <see cref="StandardStatefulGraphic"/>.
 		/// </summary>
-		public StandardStatefulGraphic(IGraphic subject) : base(subject)
-		{
-		}
+		public StandardStatefulGraphic(IGraphic subject)
+			: base(subject) {}
 
 		/// <summary>
 		/// Cloning constructor.
 		/// </summary>
 		/// <param name="source">The source object from which to clone.</param>
 		/// <param name="context">The cloning context object.</param>
-		protected StandardStatefulGraphic(StandardStatefulGraphic source, ICloningContext context) : base(source, context)
+		protected StandardStatefulGraphic(StandardStatefulGraphic source, ICloningContext context)
+			: base(source, context)
 		{
 			context.CloneFields(source, this);
-		}
-
-		[OnCloneComplete]
-		private void OnCloneComplete()
-		{
-			if (this.State == null)
-				this.State = this.CreateInactiveState();
 		}
 
 		/// <summary>
@@ -145,12 +138,18 @@ namespace ClearCanvas.ImageViewer.InteractiveGraphics
 			{
 				((IVectorGraphic) graphic).Color = color;
 			}
-			
-			if (graphic is CompositeGraphic)
+
+			var compositeGraphic = graphic as CompositeGraphic;
+			if (compositeGraphic != null)
 			{
-				foreach (IGraphic childGraphic in ((CompositeGraphic) graphic).Graphics)
+				foreach (var childGraphic in compositeGraphic.Graphics)
 					UpdateGraphicStyle(childGraphic, color, controlGraphics);
 			}
+		}
+
+		protected override GraphicState CreateDefaultState()
+		{
+			return CreateInactiveState();
 		}
 
 		/// <summary>
@@ -160,14 +159,15 @@ namespace ClearCanvas.ImageViewer.InteractiveGraphics
 		{
 			base.OnStateInitialized();
 
-			if (this.State is InactiveGraphicState)
-				UpdateGraphicStyle(this, this.InactiveColor, false);
-			else if ( this.State is FocussedGraphicState)
-				UpdateGraphicStyle(this, this.FocusColor, true);
-			else if (this.State is SelectedGraphicState)
-				UpdateGraphicStyle(this, this.SelectedColor, false);
-			else if (this.State is FocussedSelectedGraphicState)
-				UpdateGraphicStyle(this, this.FocusSelectedColor, true);
+			var state = State;
+			if (state is InactiveGraphicState)
+				UpdateGraphicStyle(this, InactiveColor, false);
+			else if (state is FocussedGraphicState)
+				UpdateGraphicStyle(this, FocusColor, !ShowControlGraphicsOnSelect);
+			else if (state is SelectedGraphicState)
+				UpdateGraphicStyle(this, SelectedColor, ShowControlGraphicsOnSelect);
+			else if (state is FocussedSelectedGraphicState)
+				UpdateGraphicStyle(this, FocusSelectedColor, true);
 		}
 
 		/// <summary>
@@ -178,13 +178,14 @@ namespace ClearCanvas.ImageViewer.InteractiveGraphics
 		{
 			base.OnStateChanged(e);
 
-			if (typeof (InactiveGraphicState).IsAssignableFrom(e.NewState.GetType()))
+			var state = e.NewState;
+			if (state is InactiveGraphicState)
 				OnEnterInactiveState(e.MouseInformation);
-			else if (typeof (FocussedGraphicState).IsAssignableFrom(e.NewState.GetType()))
+			else if (state is FocussedGraphicState)
 				OnEnterFocusState(e.MouseInformation);
-			else if (typeof (SelectedGraphicState).IsAssignableFrom(e.NewState.GetType()))
+			else if (state is SelectedGraphicState)
 				OnEnterSelectedState(e.MouseInformation);
-			else if (typeof (FocussedSelectedGraphicState).IsAssignableFrom(e.NewState.GetType()))
+			else if (state is FocussedSelectedGraphicState)
 				OnEnterFocusSelectedState(e.MouseInformation);
 		}
 
@@ -218,7 +219,7 @@ namespace ClearCanvas.ImageViewer.InteractiveGraphics
 		{
 			this.Focussed = true;
 
-			UpdateGraphicStyle(this, this.FocusColor, true);
+			UpdateGraphicStyle(this, this.FocusColor, !ShowControlGraphicsOnSelect);
 			Draw();
 		}
 
@@ -233,7 +234,7 @@ namespace ClearCanvas.ImageViewer.InteractiveGraphics
 			if (this.ParentPresentationImage != null && this.ParentPresentationImage.FocussedGraphic == this)
 				this.ParentPresentationImage.FocussedGraphic = null;
 
-			UpdateGraphicStyle(this, this.SelectedColor, false);
+			UpdateGraphicStyle(this, this.SelectedColor, ShowControlGraphicsOnSelect);
 			Draw();
 		}
 

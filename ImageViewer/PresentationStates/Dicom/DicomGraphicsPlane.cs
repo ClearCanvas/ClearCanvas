@@ -189,21 +189,22 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 		/// <summary>
 		/// Gets the DICOM graphics plane of the specified DICOM presentation image, creating the plane if necessary.
 		/// </summary>
-		/// <param name="dicomPresentationImage">The target DICOM presentation image.</param>
+		/// <param name="presentationImage">The target DICOM presentation image.</param>
 		/// <returns>The DICOM graphics plane associated with the specified presentation image.</returns>
-		public static DicomGraphicsPlane GetDicomGraphicsPlane(IDicomPresentationImage dicomPresentationImage)
+		public static DicomGraphicsPlane GetDicomGraphicsPlane(IPresentationImage presentationImage)
 		{
-			return GetDicomGraphicsPlane(dicomPresentationImage, true);
+			return GetDicomGraphicsPlane(presentationImage, true);
 		}
 
 		/// <summary>
 		/// Gets the DICOM graphics plane of the specified DICOM presentation image.
 		/// </summary>
-		/// <param name="dicomPresentationImage">The target DICOM presentation image.</param>
+		/// <param name="presentationImage">The target DICOM presentation image.</param>
 		/// <param name="createIfNecessary">A value indicating if a DICOM graphics plane should be automatically created and associated with the presentation image.</param>
 		/// <returns>The DICOM graphics plane associated with the specified presentation image, or null if one doesn't exist and was not created.</returns>
-		public static DicomGraphicsPlane GetDicomGraphicsPlane(IDicomPresentationImage dicomPresentationImage, bool createIfNecessary)
+		public static DicomGraphicsPlane GetDicomGraphicsPlane(IPresentationImage presentationImage, bool createIfNecessary)
 		{
+			var dicomPresentationImage = presentationImage as IDicomPresentationImage;
 			if (dicomPresentationImage == null)
 				return null;
 

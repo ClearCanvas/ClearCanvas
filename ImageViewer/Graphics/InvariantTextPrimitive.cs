@@ -81,7 +81,7 @@ namespace ClearCanvas.ImageViewer.Graphics
 				if (_text != value)
 				{
 					_text = value;
-					base.NotifyVisualStateChanged("Text");
+					base.NotifyVisualStateChanged("Text", VisualStatePropertyKind.Text);
 				}
 			}
 		}
@@ -100,7 +100,7 @@ namespace ClearCanvas.ImageViewer.Graphics
 				if (!FloatComparer.AreEqual(_sizeInPoints, value))
 				{
 					_sizeInPoints = value;
-					base.NotifyVisualStateChanged("SizeInPoints");
+					base.NotifyVisualStateChanged("SizeInPoints", VisualStatePropertyKind.Font);
 				}
 			}
 		}
@@ -119,7 +119,7 @@ namespace ClearCanvas.ImageViewer.Graphics
 				if (_font != value)
 				{
 					_font = value;
-					base.NotifyVisualStateChanged("Font");
+					base.NotifyVisualStateChanged("Font", VisualStatePropertyKind.Font);
 				}
 			}
 		}

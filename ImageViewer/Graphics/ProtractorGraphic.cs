@@ -22,23 +22,23 @@
 
 #endregion
 
-using ClearCanvas.Common.Utilities;
 using System.Drawing;
-using ClearCanvas.ImageViewer.Graphics;
-using ClearCanvas.ImageViewer.Mathematics;
 using ClearCanvas.Common;
+using ClearCanvas.Common.Utilities;
+using ClearCanvas.ImageViewer.Mathematics;
 using ClearCanvas.ImageViewer.RoiGraphics;
 
-namespace ClearCanvas.ImageViewer.Tools.Measurement
+namespace ClearCanvas.ImageViewer.Graphics
 {
 	[Cloneable]
 	public class ProtractorGraphic : PolylineGraphic
 	{
+		private const int _arcRadius = 20;
+
 		[CloneIgnore]
 		private InvariantArcPrimitive _arc;
-		private readonly int _arcRadius = 20;
 
-		protected ProtractorGraphic (ProtractorGraphic source, ICloningContext context)
+		protected ProtractorGraphic(ProtractorGraphic source, ICloningContext context)
 			: base(source, context)
 		{
 			context.CloneFields(source, this);
@@ -59,7 +59,7 @@ namespace ClearCanvas.ImageViewer.Tools.Measurement
 		public override void OnDrawing()
 		{
 			base.OnDrawing();
-			
+
 			if (this.Points.Count == 3)
 			{
 				_arc.Visible = IsArcVisible();
@@ -114,7 +114,7 @@ namespace ClearCanvas.ImageViewer.Tools.Measurement
 			CalculateAngles(out startAngle, out sweepAngle);
 			_arc.StartAngle = startAngle;
 			_arc.SweepAngle = sweepAngle;
-	
+
 			_arc.ResetCoordinateSystem();
 			this.ResetCoordinateSystem();
 		}
@@ -123,20 +123,19 @@ namespace ClearCanvas.ImageViewer.Tools.Measurement
 		{
 			this.CoordinateSystem = CoordinateSystem.Destination;
 
-			sweepAngle = -(float)Vector.SubtendedAngle(
+			sweepAngle = -(float) Vector.SubtendedAngle(
 				this.Points[0],
 				this.Points[1],
 				this.Points[2]);
-
 
 			// Define a horizontal ray
 			PointF zeroDegreePoint = this.Points[1];
 			zeroDegreePoint.X += 50;
 
 			startAngle = (float) Vector.SubtendedAngle(
-									this.Points[0],
-									this.Points[1],
-			                      	zeroDegreePoint);
+				this.Points[0],
+				this.Points[1],
+				zeroDegreePoint);
 
 			this.ResetCoordinateSystem();
 		}
@@ -158,14 +157,14 @@ namespace ClearCanvas.ImageViewer.Tools.Measurement
 		private void OnCloneComplete()
 		{
 			_arc = CollectionUtils.SelectFirst(base.Graphics,
-				delegate(IGraphic test) { return test is InvariantArcPrimitive; }) as InvariantArcPrimitive;
+			                                   delegate(IGraphic test) { return test is InvariantArcPrimitive; }) as InvariantArcPrimitive;
 
 			Platform.CheckForNullReference(_arc, "_arc");
 		}
 
 		public override Roi GetRoi()
 		{
-			return new ProtractorRoiInfo(this);
+			return new ProtractorRoi(this);
 		}
 	}
 }

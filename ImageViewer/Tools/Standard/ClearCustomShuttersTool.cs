@@ -22,12 +22,11 @@
 
 #endregion
 
-using ClearCanvas.Desktop;
+using System;
+using ClearCanvas.Common;
+using ClearCanvas.Common.Utilities;
 using ClearCanvas.Desktop.Actions;
 using ClearCanvas.ImageViewer.BaseTools;
-using ClearCanvas.Common;
-using System;
-using ClearCanvas.Common.Utilities;
 using ClearCanvas.ImageViewer.PresentationStates;
 
 namespace ClearCanvas.ImageViewer.Tools.Standard
@@ -35,24 +34,22 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 	[MenuAction("clear", "imageviewer-contextmenu/MenuClearCustomShutters", "Clear")]
 	[IconSet("clear", "Icons.ClearCustomShuttersToolSmall.png", "Icons.ClearCustomShuttersToolMedium.png", "Icons.ClearCustomShuttersToolLarge.png")]
 	[VisibleStateObserver("clear", "Visible", "VisibleChanged")]
-
+	//
 	[ButtonAction("clearToolbar", "global-toolbars/ToolbarStandard/ToolbarClearCustomShutters", "Clear")]
 	[Tooltip("clearToolbar", "TooltipClearCustomShutters")]
 	[IconSet("clearToolbar", "Icons.ClearCustomShuttersToolSmall.png", "Icons.ClearCustomShuttersToolMedium.png", "Icons.ClearCustomShuttersToolLarge.png")]
 	[EnabledStateObserver("clearToolbar", "Visible", "VisibleChanged")]
-
-	[ExtensionOf(typeof(ImageViewerToolExtensionPoint))]
+	//
+	[ExtensionOf(typeof (ImageViewerToolExtensionPoint))]
 	public class ClearCustomShuttersTool : ImageViewerTool
 	{
 		private bool _visible;
 
-		public ClearCustomShuttersTool()
-		{
-		}
+		public ClearCustomShuttersTool() {}
 
 		public bool Visible
 		{
-			get { return _visible; }	
+			get { return _visible; }
 			set
 			{
 				if (_visible == value)
@@ -84,8 +81,10 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 
 			if (base.SelectedPresentationImage is IDicomPresentationImage)
 			{
-				IDicomPresentationImage dicomImage = (IDicomPresentationImage)base.SelectedPresentationImage;
+				IDicomPresentationImage dicomImage = (IDicomPresentationImage) base.SelectedPresentationImage;
 				GeometricShuttersGraphic shuttersGraphic = DrawShutterTool.GetGeometricShuttersGraphic(dicomImage);
+				if (shuttersGraphic == null) return;
+
 				DrawableUndoableCommand historyCommand = new DrawableUndoableCommand(shuttersGraphic);
 				foreach (GeometricShutter shutter in shuttersGraphic.CustomShutters)
 					historyCommand.Enqueue(new RemoveGeometricShutterUndoableCommand(shuttersGraphic, shutter));
@@ -125,7 +124,7 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 		{
 			if (image != null && image is IDicomPresentationImage)
 			{
-				IDicomPresentationImage dicomImage = (IDicomPresentationImage)image;
+				IDicomPresentationImage dicomImage = (IDicomPresentationImage) image;
 				GeometricShuttersGraphic shuttersGraphic = DrawShutterTool.GetGeometricShuttersGraphic(dicomImage);
 				if (shuttersGraphic != null)
 					return shuttersGraphic.CustomShutters.Count > 0;

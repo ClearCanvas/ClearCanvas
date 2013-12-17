@@ -48,4 +48,20 @@ namespace ClearCanvas.ImageServer.Rules
 		/// </summary>
 		public ApplicableRuleType RuleType { get; private set; }
 	}
+
+	[AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
+	public class ActionOperatorAttribute: Attribute
+	{
+		/// <summary>
+		/// Specifies the operator tag for the action decorated by this attribute
+		/// </summary>
+		/// <param name="operatorTag"> </param>
+		public ActionOperatorAttribute(String operatorTag)
+		{
+			this.OperatorTag = operatorTag;
+		}
+
+		public string OperatorTag { get; private set; }
+
+	}
 }

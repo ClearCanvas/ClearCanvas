@@ -234,7 +234,6 @@ public class ImageServerConstants
             public const string WebViewerIntegratedSilverlightDefault = "~/Pages/Studies/View/Default.aspx";
             public const string WebViewerIntegratedHtml5Embedded = "~/Pages/Studies/ViewHtml/EmbeddedDefault.aspx";
             public const string WebViewerIntegratedHTML5Default = "~/Pages/Studies/ViewHtml/Default.aspx";
-            public const string WebViewerIntegratedStudiesPage = "~/Pages/WebViewer/StudyList.aspx";
         }
 
         #endregion

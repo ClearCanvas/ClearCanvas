@@ -291,7 +291,7 @@ namespace ClearCanvas.ImageViewer.Graphics
 					line.ResetCoordinateSystem();
 				}
 			}
-			base.NotifyVisualStateChanged("Points");
+			base.NotifyVisualStateChanged("Points", VisualStatePropertyKind.Geometry);
 		}
 
 		private void OnPointsItemRemoved(object sender, IndexEventArgs e)
@@ -312,7 +312,7 @@ namespace ClearCanvas.ImageViewer.Graphics
 					_lines.Graphics.RemoveAt(e.Index);
 				}
 			}
-			base.NotifyVisualStateChanged("Points");
+			base.NotifyVisualStateChanged("Points", VisualStatePropertyKind.Geometry);
 		}
 
 		private void OnPointsItemChanged(object sender, IndexEventArgs e)
@@ -329,13 +329,13 @@ namespace ClearCanvas.ImageViewer.Graphics
 					((LinePrimitive) _lines.Graphics[e.Index - 1]).Point2 = _points[e.Index];
 				}
 			}
-			base.NotifyVisualStateChanged("Points");
+			base.NotifyVisualStateChanged("Points", VisualStatePropertyKind.Geometry);
 		}
 
 		private void OnPointsCleared(object sender, EventArgs e)
 		{
 			_lines.Graphics.Clear();
-			base.NotifyVisualStateChanged("Points");
+			base.NotifyVisualStateChanged("Points", VisualStatePropertyKind.Geometry);
 		}
 
 		/// <summary>

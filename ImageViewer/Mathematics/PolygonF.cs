@@ -37,6 +37,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
 
@@ -45,7 +46,7 @@ namespace ClearCanvas.ImageViewer.Mathematics
 	/// <summary>
 	/// A class containing useful methods for computing with polygons defined on floating-point coordinates.
 	/// </summary>
-	public class PolygonF : IEnumerable<PointF>
+	public sealed class PolygonF : IEnumerable<PointF>
 	{
 		private readonly IList<PointF> _vertices;
 		private readonly RectangleF _boundingRect;
@@ -277,14 +278,8 @@ namespace ClearCanvas.ImageViewer.Mathematics
 
 		private static IEnumerable<PointF> GetPoints(PointF pt1, PointF pt2, PointF pt3, params PointF[] additionalPoints)
 		{
-			yield return pt1;
-			yield return pt2;
-			yield return pt3;
-			if (additionalPoints != null)
-			{
-				for (int n = 0; n < additionalPoints.Length; n++)
-					yield return additionalPoints[n];
-			}
+			var array = new[] {pt1, pt2, pt3};
+			return additionalPoints != null ? array.Concat(additionalPoints) : array;
 		}
 
 		private static RectangleF InitializeBoundingRectangle(PointF[] vertices)

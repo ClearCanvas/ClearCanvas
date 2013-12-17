@@ -23,6 +23,8 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using ClearCanvas.Common;
 using ClearCanvas.Dicom;
 using ClearCanvas.Dicom.ServiceModel.Query;
@@ -32,17 +34,19 @@ using ClearCanvas.ImageViewer.Common.StudyManagement;
 
 namespace ClearCanvas.ImageViewer.StudyManagement.Core.Storage
 {
-    internal class SopInstance : ISopInstance
-    {
+	internal class SopInstance : ISopInstance
+	{
 		private readonly Series _parentSeries;
 		private readonly InstanceXml _xml;
 		private readonly DicomAttributeCollection _metaInfo;
+		private readonly Dictionary<uint, bool> _sequenceHasExcludedTags;
 
 		internal SopInstance(Series parentSeries, InstanceXml instanceXml)
 		{
 			_parentSeries = parentSeries;
 			_xml = instanceXml;
 			_metaInfo = new DicomAttributeCollection();
+			_sequenceHasExcludedTags = new Dictionary<uint, bool>();
 
 			if (instanceXml.TransferSyntax != null)
 			{
@@ -66,10 +70,10 @@ namespace ClearCanvas.ImageViewer.StudyManagement.Core.Storage
 			return _parentSeries;
 		}
 
-        public string FilePath
-        {
-            get { return _parentSeries.ParentStudy.StudyLocation.GetSopInstancePath(SeriesInstanceUid, SopInstanceUid); }
-        }
+		public string FilePath
+		{
+			get { return _parentSeries.ParentStudy.StudyLocation.GetSopInstancePath(SeriesInstanceUid, SopInstanceUid); }
+		}
 
 		public string SpecificCharacterSet
 		{
@@ -112,41 +116,41 @@ namespace ClearCanvas.ImageViewer.StudyManagement.Core.Storage
 			get { return _xml.TransferSyntax.UidString; }
 		}
 
-        public int? BitsAllocated
-        {
-            get 
-            { 
-                int bitsAllocated;
-                if (this[DicomTags.BitsAllocated].TryGetInt32(0, out bitsAllocated))
-                    return bitsAllocated;
+		public int? BitsAllocated
+		{
+			get
+			{
+				int bitsAllocated;
+				if (this[DicomTags.BitsAllocated].TryGetInt32(0, out bitsAllocated))
+					return bitsAllocated;
 
-                return null;
-            }
-        }
+				return null;
+			}
+		}
 
-        public int? BitsStored
-        {
-            get
-            {
-                int bitsStored;
-                if (this[DicomTags.BitsStored].TryGetInt32(0, out bitsStored))
-                    return bitsStored;
+		public int? BitsStored
+		{
+			get
+			{
+				int bitsStored;
+				if (this[DicomTags.BitsStored].TryGetInt32(0, out bitsStored))
+					return bitsStored;
 
-                return null;
-            }
-        }
+				return null;
+			}
+		}
 
-        public string PhotometricInterpretation
-        {
-            get { return this[DicomTags.PhotometricInterpretation].GetString(0, null); }
-        }
+		public string PhotometricInterpretation
+		{
+			get { return this[DicomTags.PhotometricInterpretation].GetString(0, null); }
+		}
 
-        public string SourceAETitle
-        {
-            get { return this[DicomTags.SourceApplicationEntityTitle].GetString(0, null); }
-        }
+		public string SourceAETitle
+		{
+			get { return this[DicomTags.SourceApplicationEntityTitle].GetString(0, null); }
+		}
 
-        public bool IsStoredTag(uint tag)
+		public bool IsStoredTag(uint tag)
 		{
 			DicomTag dicomTag = DicomTagDictionary.GetDicomTag(tag);
 			if (dicomTag == null)
@@ -171,18 +175,16 @@ namespace ClearCanvas.ImageViewer.StudyManagement.Core.Storage
 
 			if (tag.VR == DicomVr.SQvr)
 			{
-				var items = _xml[tag].Values as DicomSequenceItem[];
-				if (items != null)
+				// cache the results for the recursive SQ item excluded tags check - it adds up if you've got a multiframe image and functional group sequences get accessed repeatedly
+				bool sequenceHasExcludedTags;
+				if (!_sequenceHasExcludedTags.TryGetValue(tag.TagValue, out sequenceHasExcludedTags))
 				{
-					foreach (DicomSequenceItem item in items)
-					{
-						if (item is InstanceXmlDicomSequenceItem)
-						{
-							if (((InstanceXmlDicomSequenceItem)item).HasExcludedTags(true))
-								return false;
-						}
-					}
+					var items = _xml[tag].Values as DicomSequenceItem[];
+					_sequenceHasExcludedTags[tag.TagValue] = sequenceHasExcludedTags = (items != null && items.OfType<InstanceXmlDicomSequenceItem>().Any(item => item.HasExcludedTags(true)));
 				}
+
+				if (sequenceHasExcludedTags)
+					return false;
 			}
 
 			bool isBinary = tag.VR == DicomVr.OBvr || tag.VR == DicomVr.OWvr || tag.VR == DicomVr.OFvr;
@@ -193,8 +195,8 @@ namespace ClearCanvas.ImageViewer.StudyManagement.Core.Storage
 			return true;
 		}
 
-    	public DicomAttribute this[DicomTag tag]
-    	{
+		public DicomAttribute this[DicomTag tag]
+		{
 			get
 			{
 				DicomAttribute attribute;
@@ -203,7 +205,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement.Core.Storage
 
 				return _xml[tag];
 			}
-    	}
+		}
 
 		public DicomAttribute this[uint tag]
 		{
@@ -219,22 +221,22 @@ namespace ClearCanvas.ImageViewer.StudyManagement.Core.Storage
 
 		#endregion
 
-        public ImageEntry ToStoreEntry()
-        {
-            var entry = new ImageEntry
-                                   {
-                                       Image = new ImageIdentifier(this)
-                                                   {
-                                                       InstanceAvailability = "ONLINE",
-                                                       RetrieveAE = ServerDirectory.GetLocalServer(),
-                                                       SpecificCharacterSet = SpecificCharacterSet
-                                                   },
-                                       Data = new ImageEntryData
-                                                  {
-                                                      SourceAETitle = SourceAETitle
-                                                  }
-                                   };
-            return entry;
-        }
-    }
+		public ImageEntry ToStoreEntry()
+		{
+			var entry = new ImageEntry
+			            	{
+			            		Image = new ImageIdentifier(this)
+			            		        	{
+			            		        		InstanceAvailability = "ONLINE",
+			            		        		RetrieveAE = ServerDirectory.GetLocalServer(),
+			            		        		SpecificCharacterSet = SpecificCharacterSet
+			            		        	},
+			            		Data = new ImageEntryData
+			            		       	{
+			            		       		SourceAETitle = SourceAETitle
+			            		       	}
+			            	};
+			return entry;
+		}
+	}
 }

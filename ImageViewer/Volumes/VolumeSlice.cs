@@ -29,7 +29,7 @@ using ClearCanvas.ImageViewer.Mathematics;
 
 namespace ClearCanvas.ImageViewer.Volumes
 {
-	public sealed class VolumeSlice : IDicomAttributeProvider, IDisposable
+	public class VolumeSlice : IDicomAttributeProvider, IDisposable
 	{
 		private IVolumeReference _volumeReference;
 		private VolumeSliceArgs _sliceArgs;
@@ -111,7 +111,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 			}
 		}
 
-		private void Dispose(bool disposing)
+		protected virtual void Dispose(bool disposing)
 		{
 			if (!disposing) return;
 
@@ -138,7 +138,12 @@ namespace ClearCanvas.ImageViewer.Volumes
 			get { return _volumeReference; }
 		}
 
-		public byte[] GetPixelData()
+		public VolumeSliceArgs SliceArgs
+		{
+			get { return _sliceArgs; }
+		}
+
+		public virtual byte[] GetPixelData()
 		{
 			using (var slicer = VolumeSlicerCore.Create(_volumeReference, _sliceArgs))
 			{
@@ -148,24 +153,24 @@ namespace ClearCanvas.ImageViewer.Volumes
 
 		#region Implementation of IDicomAttributeProvider
 
-		public DicomAttribute this[DicomTag tag]
+		public virtual DicomAttribute this[DicomTag tag]
 		{
 			get { return _volumeReference.DataSet[tag]; }
 			set { _volumeReference.DataSet[tag] = value; }
 		}
 
-		public DicomAttribute this[uint tag]
+		public virtual DicomAttribute this[uint tag]
 		{
 			get { return _volumeReference.DataSet[tag]; }
 			set { _volumeReference.DataSet[tag] = value; }
 		}
 
-		public bool TryGetAttribute(uint tag, out DicomAttribute attribute)
+		public virtual bool TryGetAttribute(uint tag, out DicomAttribute attribute)
 		{
 			return _volumeReference.DataSet.TryGetAttribute(tag, out attribute);
 		}
 
-		public bool TryGetAttribute(DicomTag tag, out DicomAttribute attribute)
+		public virtual bool TryGetAttribute(DicomTag tag, out DicomAttribute attribute)
 		{
 			return _volumeReference.DataSet.TryGetAttribute(tag, out attribute);
 		}

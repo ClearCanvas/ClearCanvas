@@ -278,27 +278,27 @@ namespace ClearCanvas.Utilities.Manifest
 
         private void VerifyProduct()
         {
-            if (!ProductInformation.Component.Equals(_productManifest.ProductManifest.Product.Component))
+            if (!Equals(ProductInformation.Component, _productManifest.ProductManifest.Product.Component ?? string.Empty))
                 throw new ApplicationException(string.Format("Component Name does not match the manifest: {0}, {1}",
                                                              _productManifest.ProductManifest.Product.Component,
                                                              ProductInformation.Component));
 
-            if (!ProductInformation.Edition.Equals(_productManifest.ProductManifest.Product.Edition))
+            if (!Equals(ProductInformation.Edition, _productManifest.ProductManifest.Product.Edition ?? string.Empty))
                 throw new ApplicationException(string.Format("Edition Name does not match the manifest: {0}, {1}",
                                                              _productManifest.ProductManifest.Product.Edition,
                                                              ProductInformation.Edition));
 
-            if (!ProductInformation.Product.Equals(_productManifest.ProductManifest.Product.Name))
+            if (!Equals(ProductInformation.Product, _productManifest.ProductManifest.Product.Name ?? string.Empty))
                 throw new ApplicationException(string.Format("Product Name does not match the manifest: {0}, {1}",
                                                              _productManifest.ProductManifest.Product.Name,
                                                              ProductInformation.Product));
 
-            if (!ProductInformation.Version.ToString().Equals(_productManifest.ProductManifest.Product.Version))
+            if (!Equals(ProductInformation.Version.ToString(), _productManifest.ProductManifest.Product.Version ?? string.Empty))
                 throw new ApplicationException(string.Format("Product Version does not match the manifest: {0}, {1}",
                                                              _productManifest.ProductManifest.Product.Version,
                                                              ProductInformation.Version));
 
-            if (!ProductInformation.VersionSuffix.Equals(_productManifest.ProductManifest.Product.Suffix))
+            if (!Equals(ProductInformation.VersionSuffix, _productManifest.ProductManifest.Product.Suffix ?? string.Empty))
                 throw new ApplicationException(
                     string.Format("Product Version Suffix does not match the manifest: {0}, {1}",
                                   _productManifest.ProductManifest.Product.Suffix,
@@ -310,16 +310,16 @@ namespace ClearCanvas.Utilities.Manifest
             foreach (ClearCanvasManifest manifest in _manifests)
             {
                 if (manifest.PackageManifest == null) continue;
-             
-                if (!_productManifest.ProductManifest.Product.Name.Equals(manifest.PackageManifest.Package.Product.Name))
+
+                if (!Equals(_productManifest.ProductManifest.Product.Name ?? string.Empty, manifest.PackageManifest.Package.Product.Name ?? string.Empty))
                     throw new ApplicationException("Product Version Suffix in Package manifes does not match the manifest: "
                                                    + manifest.PackageManifest.Package.Product.Suffix);
 
-                if (!_productManifest.ProductManifest.Product.Version.Equals(manifest.PackageManifest.Package.Product.Version))
+                if (!Equals(_productManifest.ProductManifest.Product.Version ?? string.Empty, manifest.PackageManifest.Package.Product.Version ?? string.Empty))
                     throw new ApplicationException("Product Version in Package manifes does not match the manifest: "
                                                    + manifest.PackageManifest.Package.Product.Version);
 
-                if (!_productManifest.ProductManifest.Product.Suffix.Equals(manifest.PackageManifest.Package.Product.Suffix))
+                if (!Equals(_productManifest.ProductManifest.Product.Suffix ?? string.Empty, manifest.PackageManifest.Package.Product.Suffix ?? string.Empty))
                     throw new ApplicationException("Product Version Suffix in Package manifes does not match the manifest: "
                                                    + manifest.PackageManifest.Package.Product.Suffix);
             }

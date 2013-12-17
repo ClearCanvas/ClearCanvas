@@ -49,7 +49,7 @@ namespace ClearCanvas.Ris.Client
 			var listPages = new List<IConfigurationPage>();
 
 			if (Thread.CurrentPrincipal.IsInRole(Application.Common.AuthorityTokens.Workflow.HomePage.View)
-				&& Thread.CurrentPrincipal.IsInRole(AuthorityTokens.Desktop.FolderOrganization)
+				&& Thread.CurrentPrincipal.IsInRole(Application.Common.AuthorityTokens.Desktop.FolderOrganization)
 				&& LoginSession.Current != null && LoginSession.Current.IsStaff
 				&& Desktop.Application.SessionStatus == SessionStatus.Online)
 			{

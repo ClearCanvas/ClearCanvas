@@ -150,54 +150,90 @@ namespace ClearCanvas.Common.Utilities
 		}
 
 		/// <summary>
-		/// Attempts to return a fully qualified resource name from the specified name, which may be partially
-		/// qualified or entirely unqualified, by searching the assemblies associated with this <see cref="ResourceResolver"/> in order.
+		/// Attempts to resolve a resource name from the specified name, which may be partially
+		/// qualified or entirely unqualified.
+		/// </summary>
+		/// <param name="resourceName">A partially qualified or unqualified resource name.</param>
+		/// <param name="resolvedResourceName">The qualified resource name.</param>
+		/// <returns>Whether or not a resource was found.</returns>
+		public bool TryResolveResource(string resourceName, out string resolvedResourceName)
+		{
+			Platform.CheckForEmptyString(resourceName, @"resourceName");
+			foreach (var asm in _assemblies)
+			{
+				var result = ResolveResource(resourceName, asm);
+				if (result != null)
+				{
+					resolvedResourceName = result;
+					return true;
+				}
+			}
+
+			// try the fallback
+			if (_fallbackResolver != null)
+				return _fallbackResolver.TryResolveResource(resourceName, out resolvedResourceName);
+
+			resolvedResourceName = null;
+			return false;
+		}
+
+		/// <summary>
+		/// Attempts to resolve a resource name from the specified name, which may be partially
+		/// qualified or entirely unqualified.
 		/// </summary>
 		/// <param name="resourceName">A partially qualified or unqualified resource name.</param>
 		/// <returns>A qualified resource name, if found, otherwise an exception is thrown.</returns>
 		/// <exception cref="MissingManifestResourceException">if the resource name could not be resolved.</exception>
 		public string ResolveResource(string resourceName)
 		{
-			Platform.CheckForEmptyString(resourceName, @"resourceName");
+			string resolvedResourceName;
+			if (TryResolveResource(resourceName, out resolvedResourceName))
+				return resolvedResourceName;
 
-			foreach (var asm in _assemblies)
-			{
-				var result = ResolveResource(resourceName, asm);
-				if (result != null)
-					return result;
-			}
-
-			// try the fallback
-			if (_fallbackResolver != null)
-				return _fallbackResolver.ResolveResource(resourceName);
-
-			// not found - throw exception
 			throw new MissingManifestResourceException(string.Format(SR.ExceptionResourceNotFound, resourceName));
 		}
 
 		/// <summary>
 		/// Attempts to resolve and open a resource from the specified name, which may be partially
-		/// qualified or entirely unqualified, by searching the assemblies associated with this <see cref="ResourceResolver"/> in order.
+		/// qualified or entirely unqualified.
 		/// </summary>
 		/// <param name="resourceName">A partially qualified or unqualified resource name.</param>
-		/// <returns>The loaded resource stream.</returns>
-		/// <exception cref="MissingManifestResourceException">if the resource name could not be resolved.</exception>
-		public Stream OpenResource(string resourceName)
+		/// <param name="resourceStream">The resource as a <see cref="Stream"/>.</param>
+		/// <returns>True, if a resource is found, otherwise False.</returns>
+		public bool TryOpenResource(string resourceName, out Stream resourceStream)
 		{
 			Platform.CheckForEmptyString(resourceName, @"resourceName");
-
 			foreach (var asm in _assemblies)
 			{
 				var result = ResolveResource(resourceName, asm);
 				if (result != null)
-					return OpenResource(result, asm);
+				{
+					resourceStream = OpenResource(result, asm);
+					return true;
+				}
 			}
 
 			// try the fallback
 			if (_fallbackResolver != null)
-				return _fallbackResolver.OpenResource(resourceName);
+				return _fallbackResolver.TryOpenResource(resourceName, out resourceStream);
 
-			// not found - throw exception
+			resourceStream = null;
+			return false;
+		}
+
+		/// <summary>
+		/// Attempts to resolve and open a resource from the specified name, which may be partially
+		/// qualified or entirely unqualified.
+		/// </summary>
+		/// <param name="resourceName">A partially qualified or unqualified resource name.</param>
+		/// <returns>The resource as a <see cref="Stream"/>.</returns>
+		/// <exception cref="MissingManifestResourceException">if the resource name could not be resolved.</exception>
+		public Stream OpenResource(string resourceName)
+		{
+			Stream resourceStream;
+			if (TryOpenResource(resourceName, out resourceStream))
+				return resourceStream;
+
 			throw new MissingManifestResourceException(string.Format(SR.ExceptionResourceNotFound, resourceName));
 		}
 

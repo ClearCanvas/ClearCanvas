@@ -45,6 +45,24 @@ namespace ClearCanvas.ImageServer.Rules
 	{
 	}
 
+	public class ServerRulesEngineCompletedEventArgs:EventArgs
+	{
+		public ServerRulesEngineCompletedEventArgs(IEnumerable<IRule> rulesApplied)
+		{
+			RulesApplied = rulesApplied;
+		}
+
+		/// <summary>
+		/// Gets rules which were applied
+		/// </summary>
+		public IEnumerable<IRule> RulesApplied { get; private set; }
+	}
+
+	public interface IServerRulesEngine
+	{
+		event EventHandler<ServerRulesEngineCompletedEventArgs> Completed;
+	}
+
 	/// <summary>
     /// Rules engine for applying rules against DICOM files and performing actions.
     /// </summary>
@@ -68,10 +86,11 @@ namespace ClearCanvas.ImageServer.Rules
     /// </rule>
     /// </code>
     /// </example>
-    public class ServerRulesEngine : RulesEngine<ServerActionContext,ServerRuleTypeEnum>
-    {
+    public class ServerRulesEngine : RulesEngine<ServerActionContext,ServerRuleTypeEnum>, IServerRulesEngine
+	{
         private readonly ServerRuleApplyTimeEnum _applyTime;
         private readonly ServerEntityKey _serverPartitionKey;
+		private List<IRule> _rulesApplied = new List<IRule>();
 
         #region Constructors
 
@@ -105,10 +124,24 @@ namespace ClearCanvas.ImageServer.Rules
 
         #endregion
 
-        #region Public Methods
+		#region Events
 
-	
-        /// <summary>
+		/// <summary>
+		/// Occurred when <see cref="Complete"/> in called.
+		/// </summary>
+		public event EventHandler<ServerRulesEngineCompletedEventArgs> Completed;
+
+		/// <summary>
+		/// Gets rules which were applied on all previous calls to <see cref="Execute"/>
+		/// </summary>
+		public IEnumerable<IRule> RulesApplied { get { return _rulesApplied.AsReadOnly(); } } 
+
+		#endregion
+
+		#region Public Methods
+
+
+		/// <summary>
         /// Load the rules engine from the Persistent Store and compile the conditions and actions.
         /// </summary>
         public void Load()
@@ -183,6 +216,31 @@ namespace ClearCanvas.ImageServer.Rules
             Statistics.LoadTime.End();
         }
 
+		public override void Execute(ServerActionContext context)
+		{
+			var rulesApplied=new List<IRule>();
+
+            Statistics.ExecutionTime.Start();
+
+            foreach (var typeCollection in _typeList.Values)
+            {
+                typeCollection.Execute(context, false);
+
+				if (typeCollection.LastAppliedRules!=null)
+            		rulesApplied.AddRange(typeCollection.LastAppliedRules);
+            }
+
+            Statistics.ExecutionTime.End();
+
+			_rulesApplied.AddRange(rulesApplied.Where(r=>!_rulesApplied.Contains(r)));
+		}
+
+		public void Complete(IEnumerable<IRule> rulesApplied)
+		{
+			if (Completed != null)
+				Completed(this, new ServerRulesEngineCompletedEventArgs(rulesApplied));
+		}
+
 		public static XmlSpecificationCompiler GetSpecificationCompiler()
 		{
 			return new XmlSpecificationCompiler("dicom", new DicomRuleSpecificationCompilerOperatorExtensionPoint());
@@ -209,6 +267,7 @@ namespace ClearCanvas.ImageServer.Rules
 
 			return attrs.Any(a => a.RuleType.ToServerRuleTypeEnum().Equals(ruleType));
 		}
+
 
 	}
 }

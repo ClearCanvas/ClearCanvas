@@ -28,6 +28,8 @@ using System.Linq;
 using ClearCanvas.Common;
 using ClearCanvas.Dicom;
 using ClearCanvas.Dicom.Iod;
+using ClearCanvas.Dicom.Iod.ContextGroups;
+using ClearCanvas.Dicom.Iod.Macros;
 using ClearCanvas.Dicom.Utilities;
 using ClearCanvas.Dicom.Validation;
 using ClearCanvas.ImageViewer.Imaging;
@@ -161,6 +163,30 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 				if (_parentImageSop.TryGetFrameAttribute(_frameNumber, DicomTags.FrameType, out dicomAttribute) && !dicomAttribute.IsEmpty)
 					return dicomAttribute.ToString();
 				return _parentImageSop.GetFrameAttribute(_frameNumber, DicomTags.ImageType).ToString();
+			}
+		}
+
+		/// <summary>
+		/// Gets the derivation description.
+		/// </summary>
+		public virtual string DerivationDescription
+		{
+			get { return _parentImageSop.GetFrameAttribute(_frameNumber, DicomTags.DerivationDescription).ToString(); }
+		}
+
+		/// <summary>
+		/// Gets the derivation code sequence.
+		/// </summary>
+		public virtual ImageDerivation DerivationCodeSequence
+		{
+			get
+			{
+				DicomAttribute dicomAttribute = _parentImageSop.GetFrameAttribute(_frameNumber, DicomTags.DerivationCodeSequence);
+				if (dicomAttribute.IsEmpty || dicomAttribute.IsNull || dicomAttribute.Count == 0)
+					return null;
+
+				ImageDerivation derivation;
+				return ImageDerivation.TryParse(new CodeSequenceMacro(((DicomSequenceItem[]) dicomAttribute.Values)[0]), out derivation) ? derivation : null;
 			}
 		}
 
@@ -613,9 +639,9 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 				DicomAttribute dicomAttribute;
 				if (_parentImageSop.TryGetFrameAttribute(_frameNumber, DicomTags.FrameLaterality, out dicomAttribute) && dicomAttribute.TryGetString(0, out laterality))
 					return laterality;
-				if (_parentImageSop.TryGetFrameAttribute(_frameNumber, DicomTags.ImageLaterality, out dicomAttribute) && dicomAttribute.TryGetString(0, out laterality))
-					return laterality;
 				if (_parentImageSop.TryGetFrameAttribute(0, DicomTags.ImageLaterality, out dicomAttribute) && dicomAttribute.TryGetString(0, out laterality))
+					return laterality;
+				if (_parentImageSop.TryGetFrameAttribute(0, DicomTags.Laterality, out dicomAttribute) && dicomAttribute.TryGetString(0, out laterality))
 					return laterality;
 				return string.Empty;
 			}

@@ -28,9 +28,9 @@ using System.Collections.Generic;
 namespace ClearCanvas.Dicom.Iod.Macros
 {
 	/// <summary>
-	/// SopInstanceReference Macro
+	/// SOP Instance Reference Macro
 	/// </summary>
-	/// <remarks>As defined in the DICOM Standard 2008, Part 3, Section 10.8 (Table 10-11)</remarks>
+	/// <remarks>As defined in the DICOM Standard 2011, Part 3, Section 10.8 (Table 10-11)</remarks>
 	public interface ISopInstanceReferenceMacro : IIodMacro
 	{
 		/// <summary>
@@ -45,21 +45,22 @@ namespace ClearCanvas.Dicom.Iod.Macros
 	}
 
 	/// <summary>
-	/// SopInstanceReference Macro Base Implementation
+	/// SOP Instance Reference Macro Base Implementation
 	/// </summary>
-	/// <remarks>As defined in the DICOM Standard 2008, Part 3, Section 10.8 (Table 10-11)</remarks>
-	internal class SopInstanceReferenceMacro : SequenceIodBase, ISopInstanceReferenceMacro
+	/// <remarks>As defined in the DICOM Standard 2011, Part 3, Section 10.8 (Table 10-11)</remarks>
+	public class SopInstanceReferenceMacro : SequenceIodBase, ISopInstanceReferenceMacro
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="SopInstanceReferenceMacro"/> class.
 		/// </summary>
-		public SopInstanceReferenceMacro() : base() {}
+		public SopInstanceReferenceMacro() {}
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="SopInstanceReferenceMacro"/> class.
 		/// </summary>
 		/// <param name="dicomSequenceItem">The dicom sequence item.</param>
-		public SopInstanceReferenceMacro(DicomSequenceItem dicomSequenceItem) : base(dicomSequenceItem) {}
+		public SopInstanceReferenceMacro(DicomSequenceItem dicomSequenceItem)
+			: base(dicomSequenceItem) {}
 
 		public static IEnumerable<uint> DefinedTags
 		{
@@ -75,8 +76,8 @@ namespace ClearCanvas.Dicom.Iod.Macros
 		/// </summary>
 		public virtual void InitializeAttributes()
 		{
-			this.ReferencedSopClassUid = "1";
-			this.ReferencedSopInstanceUid = "1";
+			ReferencedSopClassUid = "1";
+			ReferencedSopInstanceUid = "1";
 		}
 
 		/// <summary>
@@ -84,12 +85,15 @@ namespace ClearCanvas.Dicom.Iod.Macros
 		/// </summary>
 		public string ReferencedSopClassUid
 		{
-			get { return base.DicomAttributeProvider[DicomTags.ReferencedSopClassUid].GetString(0, string.Empty); }
+			get { return DicomAttributeProvider[DicomTags.ReferencedSopClassUid].GetString(0, string.Empty); }
 			set
 			{
 				if (string.IsNullOrEmpty(value))
-					throw new ArgumentNullException("value", "ReferencedSopClassUid is Type 1 Required.");
-				base.DicomAttributeProvider[DicomTags.ReferencedSopClassUid].SetString(0, value);
+				{
+					const string msg = "ReferencedSopClassUid is Type 1 Required.";
+					throw new ArgumentNullException("value", msg);
+				}
+				DicomAttributeProvider[DicomTags.ReferencedSopClassUid].SetString(0, value);
 			}
 		}
 
@@ -98,12 +102,15 @@ namespace ClearCanvas.Dicom.Iod.Macros
 		/// </summary>
 		public string ReferencedSopInstanceUid
 		{
-			get { return base.DicomAttributeProvider[DicomTags.ReferencedSopInstanceUid].GetString(0, string.Empty); }
+			get { return DicomAttributeProvider[DicomTags.ReferencedSopInstanceUid].GetString(0, string.Empty); }
 			set
 			{
 				if (string.IsNullOrEmpty(value))
-					throw new ArgumentNullException("value", "ReferencedSopInstanceUid is Type 1 Required.");
-				base.DicomAttributeProvider[DicomTags.ReferencedSopInstanceUid].SetString(0, value);
+				{
+					const string msg = "ReferencedSopInstanceUid is Type 1 Required.";
+					throw new ArgumentNullException("value", msg);
+				}
+				DicomAttributeProvider[DicomTags.ReferencedSopInstanceUid].SetString(0, value);
 			}
 		}
 	}

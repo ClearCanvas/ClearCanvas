@@ -224,10 +224,17 @@ namespace ClearCanvas.ImageViewer.AnnotationProviders.Dicom
 						resolver,
 						delegate(Frame frame)
 							{
-								// TODO CR (30 Sep 2013): Update to support enhanced MR - this tag is actually for cardiac MR, and now appears in the cardiac synchronization functional group
 								double value;
 								var tagExists = frame[DicomTags.TriggerTime].TryGetFloat64(0, out value);
-								return tagExists ? string.Format(SR.FormatMilliseconds, value.ToString("F2")) : string.Empty;
+								if (tagExists) return string.Format(SR.FormatMilliseconds, value.ToString("F2"));
+
+								DicomAttribute dicomAttribute;
+								if (((IDicomAttributeProvider) frame).TryGetAttribute(DicomTags.NominalCardiacTriggerDelayTime, out dicomAttribute) && !dicomAttribute.IsEmpty && !dicomAttribute.IsNull)
+								{
+									tagExists = frame[DicomTags.TriggerTime].TryGetFloat64(0, out value);
+									if (tagExists) return string.Format(SR.FormatMilliseconds, value.ToString("F2"));
+								}
+								return string.Empty;
 							},
 						DicomDataFormatHelper.RawStringFormat
 						)

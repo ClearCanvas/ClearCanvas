@@ -48,7 +48,9 @@ namespace ClearCanvas.ImageViewer.Vtk.Rendering
 		[ThreadStatic]
 		private static CodeClock _renderClock;
 
-		private const double _dynamicFrameRate = 20;
+		private static readonly bool _reportRenderingPerformance = Settings.Default.ReportRendererPerformance;
+
+		private readonly double _dynamicFrameRate = 20;
 		private const double _stillFrameRate = 0.0001;
 
 		private readonly object _lockRender = new object();
@@ -56,6 +58,9 @@ namespace ClearCanvas.ImageViewer.Vtk.Rendering
 		private event EventHandler _invalidated;
 
 		private int _lastRenderTime;
+
+		private float _statRenderDuration;
+		private int _statRenderFrameCount;
 
 		private BitmapBuffer _imageBuffer;
 		private BitmapBuffer _overlayBuffer;
@@ -87,6 +92,7 @@ namespace ClearCanvas.ImageViewer.Vtk.Rendering
 			_vtkRenderWindow.SetDesiredUpdateRate(_dynamicFrameRate);
 			_vtkRenderWindow.AddRenderer(_vtkRenderer);
 
+			_dynamicFrameRate = Math.Min(1000, Math.Max(1, Settings.Default.RendererDynamicFps));
 			_dynamicRenderEventPublisher = !offscreen ? new DelayedEventPublisher((s, e) => Render(true, null)) : null;
 
 			WindowID = windowId;
@@ -286,12 +292,12 @@ namespace ClearCanvas.ImageViewer.Vtk.Rendering
 			{
 				try
 				{
-					var flip = false;
+					var mirrored = false;
 					var mTime = -1;
 					if (_sceneGraphRoot != null)
 					{
 						_sceneGraphRoot.UpdateSceneGraph(_vtkRenderer);
-						flip = _sceneGraphRoot.ViewPortSpatialTransform.FlipX ^ _sceneGraphRoot.ViewPortSpatialTransform.FlipY;
+						mirrored = _sceneGraphRoot.ViewPortSpatialTransform.FlipX ^ _sceneGraphRoot.ViewPortSpatialTransform.FlipY;
 						mTime = _sceneGraphRoot.GetMTime();
 					}
 
@@ -317,7 +323,8 @@ namespace ClearCanvas.ImageViewer.Vtk.Rendering
 							glPixelStorei(GL_PACK_ALIGNMENT, 4); // align to 4 byte boundaries (since we're copying 32-bit pixels anyway)
 
 							// now read from the OpenGL buffer directly into our surface buffer
-							glReadPixels(0, 0, _clientRectangle.Width, _clientRectangle.Height, GL_BGRA, OpenGlImplementation.ReadPixelsTypeBgra, bmpData.Scan0);
+							var pData = bmpData.Stride > 0 ? bmpData.Scan0 : bmpData.Scan0 + (bmpData.Height - 1)*bmpData.Stride;
+							glReadPixels(0, 0, _clientRectangle.Width, _clientRectangle.Height, GL_BGRA, OpenGlImplementation.ReadPixelsTypeBgra, pData);
 
 							// OpenGL buffer data is a bottom-up image, and the GDI+ memory bitmap might be top-bottom, so we flip the scan lines here
 							if (bmpData.Stride > 0)
@@ -333,17 +340,43 @@ namespace ClearCanvas.ImageViewer.Vtk.Rendering
 
 						renderClock.Stop();
 						renderTime = renderClock.Seconds;
+
+						// perform a single horizontal flip here if necessary, since the VTK camera does not support a mirrorred view port
+						ImageBuffer.Bitmap.RotateFlip(mirrored ? RotateFlipType.RotateNoneFlipX : RotateFlipType.RotateNoneFlipNone);
 					}
 
-					// perform a single horizontal flip here if necessary, since the VTK camera does not support a mirrorred view port
-					ImageBuffer.Bitmap.RotateFlip(flip ? RotateFlipType.RotateNoneFlipX : RotateFlipType.RotateNoneFlipNone);
-
-					if (VtkPresentationImageRenderer.ShowFps && renderTime >= 0)
+					if (renderTime >= 0)
 					{
-						var font = _gdiFont ?? (_gdiFont = new Font(FontFamily.GenericMonospace, 12, FontStyle.Bold, GraphicsUnit.Point));
-						var msg = string.Format("FPS: {0,5}", renderTime >= 0.000001 ? (1/renderTime).ToString("f1") : "-----");
-						ImageBuffer.Graphics.DrawString(msg, font, Brushes.Black, 11, 11);
-						ImageBuffer.Graphics.DrawString(msg, font, Brushes.White, 10, 10);
+						if (VtkPresentationImageRenderer.ShowFps)
+						{
+							var font = _gdiFont ?? (_gdiFont = new Font(FontFamily.GenericMonospace, 12, FontStyle.Bold, GraphicsUnit.Point));
+							var msg = string.Format("FPS: {0,6}", renderTime >= 0.000001 ? (1/renderTime).ToString("f1") : "------");
+							ImageBuffer.Graphics.DrawString(msg, font, Brushes.Black, 11, 11);
+							ImageBuffer.Graphics.DrawString(msg, font, Brushes.White, 10, 10);
+
+							if (fullQuality)
+							{
+								msg = string.Format("TTI: {0,6} ms", renderTime >= 0.000001 ? (renderTime*1000).ToString("f1") : "------");
+								ImageBuffer.Graphics.DrawString(msg, font, Brushes.Black, 11, 15 + 11);
+								ImageBuffer.Graphics.DrawString(msg, font, Brushes.White, 10, 15 + 10);
+							}
+						}
+					}
+
+					if (fullQuality)
+					{
+						if (_reportRenderingPerformance && _statRenderFrameCount > 0 && _statRenderDuration > 0.000001)
+						{
+							var avgLowFrameRate = _statRenderFrameCount/_statRenderDuration;
+							Platform.Log(LogLevel.Info, "VTKRenderer: LOD FPS: {0:f1} ({1} frame(s) in {2:f1} ms); FINAL: {3:f1} ms", avgLowFrameRate, _statRenderFrameCount, _statRenderDuration*1000, renderTime*1000);
+						}
+						_statRenderFrameCount = 0;
+						_statRenderDuration = 0;
+					}
+					else
+					{
+						_statRenderDuration += renderTime;
+						++_statRenderFrameCount;
 					}
 
 					if (updateOverlayCallback != null)

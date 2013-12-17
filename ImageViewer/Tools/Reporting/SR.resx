@@ -126,14 +126,24 @@
   <data name="ExceptionViewKeyImagePermissionDenied" xml:space="preserve">
     <value>Permission to view key images (Study View) is denied.</value>
   </data>
+  <data name="FormatOriginalKeyImageSelection" xml:space="preserve">
+    <value>{0}: {1} [{2}]</value>
+    <comment>0 - KO Series Number, 1 - KO Series Description, 2 - Content Date/Time</comment>
+  </data>
   <data name="LabelKeyImageCurrentDisplaySet" xml:space="preserve">
     <value>Key Images (current)</value>
+  </data>
+  <data name="LabelNewKeyImageSelection" xml:space="preserve">
+    <value>(New Key Image Selection)</value>
   </data>
   <data name="MenuCreateKeyImage" xml:space="preserve">
     <value>Create Key Image</value>
   </data>
   <data name="MenuDeleteKeyImage" xml:space="preserve">
     <value>Delete Key Image</value>
+  </data>
+  <data name="MenuRevertKeyImage" xml:space="preserve">
+    <value>Revert Key Image</value>
   </data>
   <data name="MenuShowKeyImages" xml:space="preserve">
     <value>Show Key Images</value>
@@ -153,6 +163,9 @@
   <data name="MessageKeyImagePublishingFailed" xml:space="preserve">
     <value>Publishing of Key Images has failed.  Please see the logs for more details.</value>
   </data>
+  <data name="MessageUnableToRevertSomeKeyImages" xml:space="preserve">
+    <value>One or more Key Images could not be reverted because they have never been saved before. Consider deleting them instead.</value>
+  </data>
   <data name="TitleCreateKeyObjectSelection" xml:space="preserve">
     <value>Create Key Object Selection</value>
   </data>
@@ -170,6 +183,12 @@
   </data>
   <data name="ToolbarEditKeyImageInformation" xml:space="preserve">
     <value>Edit</value>
+  </data>
+  <data name="ToolbarRevertAllKeyImages" xml:space="preserve">
+    <value>Revert All Images</value>
+  </data>
+  <data name="ToolbarRevertKeyImage" xml:space="preserve">
+    <value>Revert Key Image</value>
   </data>
   <data name="ToolbarShowKeyImages" xml:space="preserve">
     <value>Show Key Images</value>

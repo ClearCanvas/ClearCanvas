@@ -55,7 +55,7 @@ namespace ClearCanvas.Common.Utilities
 		private Timer _timer;
 		private readonly EventHandler _realEventHandler;
 
-		private readonly int _timeoutMilliseconds;
+		private int _timeoutMilliseconds;
 		private readonly DelayedEventPublisherTriggerMode _trigger;
 
 		private int _lastPublishTime;
@@ -100,6 +100,15 @@ namespace ClearCanvas.Common.Utilities
 
 			// for period trigger, reset the timeout now
 			if (_trigger == DelayedEventPublisherTriggerMode.Periodic) _lastPublishTime = Environment.TickCount;
+		}
+
+		/// <summary>
+		/// Gets and sets the timeout period, in milliseconds, for triggering the real event handler. The default is 350 ms.
+		/// </summary>
+		public int TimeoutMilliseconds
+		{
+			get { return _timeoutMilliseconds; }
+			set { _timeoutMilliseconds = value; }
 		}
 
 		/// <summary>

@@ -709,6 +709,15 @@ namespace ClearCanvas.ImageViewer {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0:F1}°.
+        /// </summary>
+        public static string FormatAngleDegrees {
+            get {
+                return ResourceManager.GetString("FormatAngleDegrees", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0}: {1}.
         /// </summary>
         public static string FormatAnnotationItem {
@@ -1415,6 +1424,15 @@ namespace ClearCanvas.ImageViewer {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to An error has occurred while deserializing the key object selection document..
+        /// </summary>
+        public static string MessageKeyObjectDeserializeFailure {
+            get {
+                return ResourceManager.GetString("MessageKeyObjectDeserializeFailure", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The following failures occurred while loading studies:.
         /// </summary>
         public static string MessageLoadMultipleStudiesFailurePrefix {
@@ -1628,6 +1646,24 @@ namespace ClearCanvas.ImageViewer {
         public static string MessageVolumeSourceAreNotSupported {
             get {
                 return ResourceManager.GetString("MessageVolumeSourceAreNotSupported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Each frame in the source dataset must be of the same anatomical laterality..
+        /// </summary>
+        public static string MessageVolumeSourceInconsistentImageLaterality {
+            get {
+                return ResourceManager.GetString("MessageVolumeSourceInconsistentImageLaterality", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Each frame in the source dataset must be in the same pixel units..
+        /// </summary>
+        public static string MessageVolumeSourceInconsistentRescaleUnits {
+            get {
+                return ResourceManager.GetString("MessageVolumeSourceInconsistentRescaleUnits", resourceCulture);
             }
         }
         

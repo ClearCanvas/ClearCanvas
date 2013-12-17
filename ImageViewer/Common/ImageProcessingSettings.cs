@@ -27,11 +27,12 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using ClearCanvas.Common;
+using ClearCanvas.Common.Configuration;
 
 namespace ClearCanvas.ImageViewer.Common
 {
 	[SettingsGroupDescription("Application settings for image processing routines on the local machine.")]
-	[SettingsProvider(typeof (LocalFileSettingsProvider))]
+	[SettingsProvider(typeof (ExtendedLocalFileSettingsProvider))]
 	internal sealed partial class ImageProcessingSettings
 	{
 		private ImageProcessingSettings() {}

@@ -33,24 +33,43 @@ using ClearCanvas.ImageViewer.PresentationStates.Dicom.GraphicAnnotationSerializ
 namespace ClearCanvas.ImageViewer.Graphics
 {
 	/// <summary>
-	/// A primitive curve graphic.
+	/// A primitive spline graphic.
 	/// </summary>
-	/// <remarks>
-	/// <para>Unlike the <see cref="ArcPrimitive"/>, this graphic is defined as a series of points with
-	/// an cubic-spline-interpolated curve between the data points. The resulting curve will pass through
-	/// all the specified points.</para>
-	/// </remarks>
 	[Cloneable]
-	[DicomSerializableGraphicAnnotation(typeof(CurveGraphicAnnotationSerializer))]
-	public class CurvePrimitive : VectorGraphic, IPointsGraphic
+	[Obsolete("Use SplinePrimitive instead.")]
+	public class CurvePrimitive : SplinePrimitive
+	{
+		/// <summary>
+		/// Constructs a spline graphic.
+		/// </summary>
+		public CurvePrimitive() {}
+
+		/// <summary>
+		/// Cloning constructor.
+		/// </summary>
+		/// <param name="source">The source object from which to clone.</param>
+		/// <param name="context">The cloning context object.</param>
+		protected CurvePrimitive(CurvePrimitive source, ICloningContext context)
+			: base(source, context)
+		{
+			context.CloneFields(source, this);
+		}
+	}
+
+	/// <summary>
+	/// A primitive spline graphic.
+	/// </summary>
+	[Cloneable]
+	[DicomSerializableGraphicAnnotation(typeof (SplineGraphicAnnotationSerializer))]
+	public class SplinePrimitive : VectorGraphic, IPointsGraphic
 	{
 		[CloneIgnore]
 		private readonly PointsList _points;
 
 		/// <summary>
-		/// Constructs a curve graphic.
+		/// Constructs a spline graphic.
 		/// </summary>
-		public CurvePrimitive()
+		public SplinePrimitive()
 		{
 			_points = new PointsList(this);
 			Initialize();
@@ -59,7 +78,7 @@ namespace ClearCanvas.ImageViewer.Graphics
 		/// <summary>
 		/// Cloning constructor.
 		/// </summary>
-		protected CurvePrimitive(CurvePrimitive source, ICloningContext context)
+		protected SplinePrimitive(SplinePrimitive source, ICloningContext context)
 		{
 			context.CloneFields(source, this);
 			_points = new PointsList(source._points, this);
@@ -72,7 +91,7 @@ namespace ClearCanvas.ImageViewer.Graphics
 		}
 
 		/// <summary>
-		/// Gets the ordered list of points that defines the graphic.
+		/// Gets the ordered list of points that defines the spline.
 		/// </summary>
 		public IPointsList Points
 		{
@@ -101,7 +120,7 @@ namespace ClearCanvas.ImageViewer.Graphics
 
 		private void OnPointsChanged(object sender, EventArgs e)
 		{
-			base.NotifyVisualStateChanged("Points");
+			base.NotifyVisualStateChanged("Points", VisualStatePropertyKind.Geometry);
 		}
 
 		/// <summary>
@@ -117,13 +136,16 @@ namespace ClearCanvas.ImageViewer.Graphics
 			base.CoordinateSystem = CoordinateSystem.Destination;
 			try
 			{
-				PointF[] pathPoints = GetCurvePoints(_points);
-				GraphicsPath gp = new GraphicsPath();
-				if (_points.IsClosed)
-					gp.AddClosedCurve(pathPoints);
-				else
-					gp.AddCurve(pathPoints);
-				return gp.IsVisible(point);
+				using (var gp = new GraphicsPath())
+				using (var pen = new Pen(Color.Black, HitTestDistance))
+				{
+					PointF[] pathPoints = GetCurvePoints(_points);
+					if (_points.IsClosed)
+						gp.AddClosedCurve(pathPoints);
+					else
+						gp.AddCurve(pathPoints);
+					return gp.IsOutlineVisible(point, pen);
+				}
 			}
 			finally
 			{
@@ -132,7 +154,7 @@ namespace ClearCanvas.ImageViewer.Graphics
 		}
 
 		/// <summary>
-		/// Gets the point on the <see cref="CurvePrimitive"/> closest to the specified point.
+		/// Gets the point on the <see cref="SplinePrimitive"/> closest to the specified point.
 		/// </summary>
 		/// <param name="point">A point in either source or destination coordinates.</param>
 		/// <returns>The point on the graphic closest to the given <paramref name="point"/>.</returns>

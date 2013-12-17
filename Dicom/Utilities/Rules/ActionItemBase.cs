@@ -93,7 +93,7 @@ namespace ClearCanvas.Dicom.Utilities.Rules
 
         #region IActionItem<ServerActionContext> Members
 
-		public ActionExecuteResult Execute(TActionContext context)
+		public virtual ActionExecuteResult Execute(TActionContext context)
         {
             try
             {

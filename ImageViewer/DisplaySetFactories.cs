@@ -28,10 +28,13 @@ using System.Drawing;
 using System.Linq;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
+using ClearCanvas.Desktop;
 using ClearCanvas.Dicom;
 using ClearCanvas.Dicom.ServiceModel.Query;
+using ClearCanvas.Dicom.Utilities;
 using ClearCanvas.ImageViewer.Annotations;
 using ClearCanvas.ImageViewer.Graphics;
+using ClearCanvas.ImageViewer.KeyObjects;
 using ClearCanvas.ImageViewer.StudyManagement;
 
 namespace ClearCanvas.ImageViewer
@@ -252,33 +255,54 @@ namespace ClearCanvas.ImageViewer
 			if (CreateSingleImageDisplaySets)
 				return DoCreateSingleImageDisplaySets(series);
 
-			var displaySets = new List<IDisplaySet>();
-			var displaySet = CreateSeriesDisplaySet(series);
-			if (displaySet != null)
+			var displaySets = CreateSeriesDisplaySet(series);
+			if (displaySets.Any())
 			{
-				displaySet.PresentationImages.Sort();
-				displaySets.Add(displaySet);
+				foreach (var displaySet in displaySets)
+					displaySet.PresentationImages.Sort();
 			}
-
 			return displaySets;
 		}
 
-		private IDisplaySet CreateSeriesDisplaySet(Series series)
+		private List<IDisplaySet> CreateSeriesDisplaySet(Series series)
 		{
-			IDisplaySet displaySet = null;
-			List<IPresentationImage> images = new List<IPresentationImage>();
-			foreach (Sop sop in series.Sops)
-				images.AddRange(PresentationImageFactory.CreateImages(sop));
-
-			if (images.Count > 0)
+			var displaySets = new List<IDisplaySet>();
+			if (series.Modality == "KO")
 			{
-				DisplaySetDescriptor descriptor = new SeriesDisplaySetDescriptor(series.GetIdentifier(), PresentationImageFactory);
-				displaySet = new DisplaySet(descriptor);
-				foreach (IPresentationImage image in images)
-					displaySet.PresentationImages.Add(image);
-			}
+				// even if there are multiple KO documents in a single series, split into separate series because they have separate, important header data
+				foreach (Sop sop in series.Sops)
+				{
+					List<IPresentationImage> images = new List<IPresentationImage>();
+					images.AddRange(PresentationImageFactory.CreateImages(sop));
 
-			return displaySet;
+					if (images.Count > 0)
+					{
+						var descriptor = new KOSelectionDocumentDisplaySetDescriptor(sop, series.GetIdentifier(), PresentationImageFactory);
+
+						var displaySet = new DisplaySet(descriptor);
+						foreach (IPresentationImage image in images)
+							displaySet.PresentationImages.Add(image);
+						displaySets.Add(displaySet);
+					}
+				}
+			}
+			else
+			{
+				List<IPresentationImage> images = new List<IPresentationImage>();
+				foreach (Sop sop in series.Sops)
+					images.AddRange(PresentationImageFactory.CreateImages(sop));
+
+				if (images.Count > 0)
+				{
+					DisplaySetDescriptor descriptor = new SeriesDisplaySetDescriptor(series.GetIdentifier(), PresentationImageFactory);
+
+					var displaySet = new DisplaySet(descriptor);
+					foreach (IPresentationImage image in images)
+						displaySet.PresentationImages.Add(image);
+					displaySets.Add(displaySet);
+				}
+			}
+			return displaySets;
 		}
 
 		private List<IDisplaySet> DoCreateSingleImageDisplaySets(Series series)
@@ -313,24 +337,18 @@ namespace ClearCanvas.ImageViewer
 					//The sop is actually a container for other referenced sops, like key images.
 					foreach (IPresentationImage image in images)
 					{
-						DisplaySetDescriptor descriptor = null;
+						DisplaySetDescriptor descriptor;
 						if (image is IImageSopProvider)
 						{
 							IImageSopProvider provider = (IImageSopProvider) image;
 							if (provider.ImageSop.NumberOfFrames == 1)
-								descriptor = new SingleImageDisplaySetDescriptor(series.GetIdentifier(), provider.ImageSop, position++);
+								descriptor = new KOSelectionSingleImageDisplaySetDescriptor(sop, series.GetIdentifier(), provider.ImageSop, position++);
 							else
-								descriptor = new SingleFrameDisplaySetDescriptor(series.GetIdentifier(), provider.Frame, position++);
+								descriptor = new KOSelectionSingleFrameDisplaySetDescriptor(sop, series.GetIdentifier(), provider.Frame, position++);
 						}
 						else
 						{
-							//TODO (CR Jan 2010): this because the design here is funny... the factory here should actually know something about the key object series it is building for
-							ISeriesIdentifier sourceSeries = series.GetIdentifier();
-							descriptor = new BasicDisplaySetDescriptor();
-							descriptor.Description = sourceSeries.SeriesDescription;
-							descriptor.Name = string.Format("{0}: {1}", sourceSeries.SeriesNumber, sourceSeries.SeriesDescription);
-							descriptor.Number = sourceSeries.SeriesNumber.GetValueOrDefault(0);
-							descriptor.Uid = sourceSeries.SeriesInstanceUid;
+							descriptor = new KOSelectionDocumentDisplaySetDescriptor(sop, series.GetIdentifier(), PresentationImageFactory);
 						}
 
 						DisplaySet displaySet = new DisplaySet(descriptor);
@@ -355,6 +373,138 @@ namespace ClearCanvas.ImageViewer
 			BasicDisplaySetFactory factory = new BasicDisplaySetFactory();
 			factory.SetStudyTree(studyTree);
 			return factory.CreateDisplaySets(series);
+		}
+	}
+
+	#endregion
+
+	#region KO Selections
+
+	public interface IKeyObjectSelectionDisplaySetDescriptor : IDicomDisplaySetDescriptor
+	{
+		DateTime? ContentDateTime { get; }
+		string SelectionInstanceUid { get; }
+		string SelectionDescription { get; }
+		string SelectionAuthor { get; }
+	}
+
+	[Cloneable(false)]
+	public class KOSelectionDocumentDisplaySetDescriptor : SeriesDisplaySetDescriptor, IKeyObjectSelectionDisplaySetDescriptor
+	{
+		public KOSelectionDocumentDisplaySetDescriptor(Sop koSelectionSop, ISeriesIdentifier sourceSeries, IPresentationImageFactory presentationImageFactory)
+			: base(sourceSeries, presentationImageFactory)
+		{
+			ContentDateTime = DateTimeParser.ParseDateAndTime(null, koSelectionSop.ContentDate, koSelectionSop.ContentTime);
+			SelectionInstanceUid = koSelectionSop.SopInstanceUid;
+
+			var keyImageDeserializer = new KeyImageDeserializer(koSelectionSop);
+			SelectionDescription = keyImageDeserializer.DeserializeDescriptions().Select(x => x.ToString()).FirstOrDefault() ?? string.Empty;
+			SelectionAuthor = keyImageDeserializer.DeserializeObserverContexts().Select(x => x.ToString()).FirstOrDefault() ?? string.Empty;
+		}
+
+		protected KOSelectionDocumentDisplaySetDescriptor(KOSelectionDocumentDisplaySetDescriptor source, ICloningContext context)
+			: base(source, context) {}
+
+		public DateTime? ContentDateTime { get; private set; }
+		public string SelectionInstanceUid { get; private set; }
+		public string SelectionDescription { get; private set; }
+		public string SelectionAuthor { get; private set; }
+
+		protected override string GetName()
+		{
+			var suffix = GetSuffix();
+			var name = base.GetName();
+			return !string.IsNullOrWhiteSpace(suffix) ? string.Format("{0} [{1}]", name, suffix) : name;
+		}
+
+		protected virtual string GetSuffix()
+		{
+			var author = SelectionAuthor;
+			var dateTime = ContentDateTime;
+			if (!string.IsNullOrEmpty(author))
+				return dateTime.HasValue ? string.Concat(author, " ", Format.DateTime(dateTime.Value)) : author;
+			else
+				return Format.DateTime(dateTime);
+		}
+	}
+
+	[Cloneable(false)]
+	public class KOSelectionSingleImageDisplaySetDescriptor : SingleImageDisplaySetDescriptor, IKeyObjectSelectionDisplaySetDescriptor
+	{
+		public KOSelectionSingleImageDisplaySetDescriptor(Sop koSelectionSop, ISeriesIdentifier sourceSeries, ImageSop imageSop, int position)
+			: base(sourceSeries, imageSop, position)
+		{
+			ContentDateTime = DateTimeParser.ParseDateAndTime(null, koSelectionSop.ContentDate, koSelectionSop.ContentTime);
+			SelectionInstanceUid = koSelectionSop.SopInstanceUid;
+
+			var keyImageDeserializer = new KeyImageDeserializer(koSelectionSop);
+			SelectionDescription = keyImageDeserializer.DeserializeDescriptions().Select(x => x.ToString()).FirstOrDefault() ?? string.Empty;
+			SelectionAuthor = keyImageDeserializer.DeserializeObserverContexts().Select(x => x.ToString()).FirstOrDefault() ?? string.Empty;
+		}
+
+		protected KOSelectionSingleImageDisplaySetDescriptor(KOSelectionSingleImageDisplaySetDescriptor source, ICloningContext context)
+			: base(source, context) {}
+
+		public DateTime? ContentDateTime { get; private set; }
+		public string SelectionInstanceUid { get; private set; }
+		public string SelectionDescription { get; private set; }
+		public string SelectionAuthor { get; private set; }
+
+		protected override string GetName()
+		{
+			var suffix = GetSuffix();
+			var name = base.GetName();
+			return !string.IsNullOrWhiteSpace(suffix) ? string.Format("{0} [{1}]", name, suffix) : name;
+		}
+
+		protected virtual string GetSuffix()
+		{
+			var author = SelectionAuthor;
+			var dateTime = ContentDateTime;
+			if (!string.IsNullOrEmpty(author))
+				return dateTime.HasValue ? string.Concat(author, " ", Format.DateTime(dateTime.Value)) : author;
+			else
+				return Format.DateTime(dateTime);
+		}
+	}
+
+	[Cloneable(false)]
+	public class KOSelectionSingleFrameDisplaySetDescriptor : SingleFrameDisplaySetDescriptor, IKeyObjectSelectionDisplaySetDescriptor
+	{
+		public KOSelectionSingleFrameDisplaySetDescriptor(Sop koSelectionSop, ISeriesIdentifier sourceSeries, Frame frame, int position)
+			: base(sourceSeries, frame, position)
+		{
+			ContentDateTime = DateTimeParser.ParseDateAndTime(null, koSelectionSop.ContentDate, koSelectionSop.ContentTime);
+			SelectionInstanceUid = koSelectionSop.SopInstanceUid;
+
+			var keyImageDeserializer = new KeyImageDeserializer(koSelectionSop);
+			SelectionDescription = keyImageDeserializer.DeserializeDescriptions().Select(x => x.ToString()).FirstOrDefault() ?? string.Empty;
+			SelectionAuthor = keyImageDeserializer.DeserializeObserverContexts().Select(x => x.ToString()).FirstOrDefault() ?? string.Empty;
+		}
+
+		protected KOSelectionSingleFrameDisplaySetDescriptor(KOSelectionSingleFrameDisplaySetDescriptor source, ICloningContext context)
+			: base(source, context) {}
+
+		public DateTime? ContentDateTime { get; private set; }
+		public string SelectionInstanceUid { get; private set; }
+		public string SelectionDescription { get; private set; }
+		public string SelectionAuthor { get; private set; }
+
+		protected override string GetName()
+		{
+			var suffix = GetSuffix();
+			var name = base.GetName();
+			return !string.IsNullOrWhiteSpace(suffix) ? string.Format("{0} [{1}]", name, suffix) : name;
+		}
+
+		protected virtual string GetSuffix()
+		{
+			var author = SelectionAuthor;
+			var dateTime = ContentDateTime;
+			if (!string.IsNullOrEmpty(author))
+				return dateTime.HasValue ? string.Concat(author, " ", Format.DateTime(dateTime.Value)) : author;
+			else
+				return Format.DateTime(dateTime);
 		}
 	}
 
@@ -850,83 +1000,6 @@ namespace ClearCanvas.ImageViewer
 		}
 	}
 
-	[Cloneable(false)]
-	public class KeyImageDisplaySetDescriptor : DisplaySetDescriptor
-	{
-		private readonly string _suffix;
-		private string _name;
-
-		[CloneCopyReference]
-		private IStudyIdentifier _study;
-
-		public KeyImageDisplaySetDescriptor(IStudyIdentifier sourceStudy)
-		{
-			Platform.CheckForNullReference(sourceStudy, "sourceStudy");
-
-			_study = sourceStudy;
-
-			_suffix = String.Format(SR.SuffixFormatKeyImageDisplaySet);
-		}
-
-		protected KeyImageDisplaySetDescriptor(KeyImageDisplaySetDescriptor source, ICloningContext context)
-		{
-			context.CloneFields(source, this);
-		}
-
-		/// <summary>
-		/// The source study for the display set.
-		/// </summary>
-		public IStudyIdentifier SourceStudy
-		{
-			get { return _study; }
-		}
-
-		/// <summary>
-		/// Gets the descriptive name of the <see cref="IDisplaySet"/>.
-		/// </summary>
-		public override string Name
-		{
-			get
-			{
-				if (_name == null)
-				{
-					_name = String.IsNullOrEmpty(SourceStudy.StudyDescription)
-					        	? String.Format("{0}", _suffix)
-					        	: String.Format("{0}: {1}", SourceStudy.StudyDescription, _suffix);
-				}
-				return _name;
-			}
-			set { throw new InvalidOperationException("The Name property cannot be set publicly."); }
-		}
-
-		/// <summary>
-		/// Gets a description of the <see cref="IDisplaySet"/>.
-		/// </summary>
-		public override string Description
-		{
-			get { return SourceStudy.StudyDescription; }
-			set { throw new InvalidOperationException("The Description property cannot be set publicly."); }
-		}
-
-		/// <summary>
-		/// Gets the unique identifier for the <see cref="IDisplaySet"/>.
-		/// </summary>
-		public override string Uid
-		{
-			get { return SourceStudy.StudyInstanceUid; }
-			set { throw new InvalidOperationException("The Uid property cannot be set publicly."); }
-		}
-
-		/// <summary>
-		/// Gets a numeric identifier for the <see cref="IDisplaySet"/>, always "1".
-		/// </summary>
-		public override int Number
-		{
-			get { return 1; }
-			set { throw new InvalidOperationException("The Uid property cannot be set publicly."); }
-		}
-	}
-
 	/// <summary>
 	/// A <see cref="DisplaySetFactory"/> that splits series with multiple single or multiframe images into
 	/// separate <see cref="IDisplaySet"/>s.
@@ -1232,6 +1305,11 @@ namespace ClearCanvas.ImageViewer
 			public override IPresentationImage CreateFreshCopy()
 			{
 				return new PlaceholderPresentationImage(_sopReference.Sop);
+			}
+
+			public override Size SceneSize
+			{
+				get { return new Size(100, 100); }
 			}
 
 			[Cloneable(true)]

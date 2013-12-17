@@ -101,5 +101,18 @@ namespace ClearCanvas.Common.Serialization
 
 			return contract;
 		}
+
+		#region
+
+#if UNIT_TESTS
+
+		internal static void ClearKnownTypes()
+		{
+			_contractMap.Clear();
+		}
+
+#endif
+
+		#endregion
 	}
 }

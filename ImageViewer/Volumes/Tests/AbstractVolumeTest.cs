@@ -45,13 +45,15 @@ namespace ClearCanvas.ImageViewer.Volumes.Tests
 		/// <param name="function">The function with which to generate frame data - 0-99 in each dimension.</param>
 		/// <param name="initializer">A delegate to initialize additional SOP attributes for each of the 100 frames.</param>
 		/// <param name="testMethod">A test routine with which to exercise the volume. The volume is disposed automatically afterwards.</param>
-		protected static void TestVolume(VolumeFunction function, InitializeSopDataSourceDelegate initializer, TestVolumeDelegate testMethod)
+		/// <param name="signed">Whether or not the source frames should have signed pixel data.</param>
+		/// <param name="bpp8">Whether or not the source frames should have 8 bit allocated/stored pixel data.</param>
+		protected static void TestVolume(VolumeFunction function, InitializeSopDataSourceDelegate initializer, TestVolumeDelegate testMethod, bool signed = false, bool bpp8 = false)
 		{
 			function = function.Normalize(100);
 			List<ImageSop> images = new List<ImageSop>();
 			try
 			{
-				foreach (ISopDataSource sopDataSource in function.CreateSops(100, 100, 100, false))
+				foreach (ISopDataSource sopDataSource in function.CreateSops(100, 100, 100, signed, bpp8))
 				{
 					if (initializer != null)
 						initializer.Invoke(sopDataSource);
@@ -127,8 +129,13 @@ namespace ClearCanvas.ImageViewer.Volumes.Tests
 
 			public KnownSample(Vector3D point, int value)
 			{
-				this.Point = point;
-				this.Value = value;
+				Point = point;
+				Value = value;
+			}
+
+			public override string ToString()
+			{
+				return string.Format(@"{0} @{1}", Value, Point);
 			}
 		}
 

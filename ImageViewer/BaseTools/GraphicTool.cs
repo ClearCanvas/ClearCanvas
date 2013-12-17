@@ -24,6 +24,7 @@
 
 using System;
 using ClearCanvas.Common.Utilities;
+using ClearCanvas.Desktop;
 using ClearCanvas.Desktop.Tools;
 using ClearCanvas.ImageViewer.Graphics;
 
@@ -89,6 +90,46 @@ namespace ClearCanvas.ImageViewer.BaseTools
 		{
 			add { _visibleChanged += value; }
 			remove { _visibleChanged -= value; }
+		}
+
+		/// <summary>
+		/// Gets the <see cref="IGraphic"/> that the tool applies to.
+		/// </summary>
+		protected IGraphic Graphic
+		{
+			get { return Context.Graphic; }
+		}
+
+		/// <summary>
+		/// Gets the parent <see cref="IPresentationImage"/> of the <see cref="Graphic"/>.
+		/// </summary>
+		protected IPresentationImage PresentationImage
+		{
+			get
+			{
+				var graphic = Graphic;
+				return graphic != null ? graphic.ParentPresentationImage : null;
+			}
+		}
+
+		/// <summary>
+		/// Gets the parent <see cref="IImageViewer"/> of the <see cref="Graphic"/>.
+		/// </summary>
+		protected IImageViewer ImageViewer
+		{
+			get
+			{
+				var graphic = Graphic;
+				return graphic != null ? graphic.ImageViewer : null;
+			}
+		}
+
+		/// <summary>
+		/// Gets the <see cref="IDesktopWindow"/>.
+		/// </summary>
+		protected IDesktopWindow DesktopWindow
+		{
+			get { return Context.DesktopWindow; }
 		}
 	}
 }

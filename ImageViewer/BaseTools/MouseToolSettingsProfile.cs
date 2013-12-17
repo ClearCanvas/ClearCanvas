@@ -60,9 +60,14 @@ namespace ClearCanvas.ImageViewer.BaseTools
 			return this.HasEntryCore(key);
 		}
 
-		protected bool HasEntryCore(string key)
+		protected virtual bool HasEntryCore(string key)
 		{
 			return _entries.ContainsKey(key);
+		}
+
+		public virtual bool HideButtonsOverlay
+		{
+			get { return false; }
 		}
 
 		public Setting this[Type mouseImageViewerToolType]
@@ -76,13 +81,11 @@ namespace ClearCanvas.ImageViewer.BaseTools
 			}
 		}
 
-		protected Setting GetSettingCore(string key)
+		protected virtual Setting GetSettingCore(string key)
 		{
-			{
-				if (!_entries.ContainsKey(key))
-					_entries.Add(key, new Setting());
-				return _entries[key];
-			}
+			if (!_entries.ContainsKey(key))
+				_entries.Add(key, new Setting());
+			return _entries[key];
 		}
 
 		//TODO (CR Sept 2010): name of these methods is awkward, maybe because it's ActivationAction.  Can we use SelectAction instead?
@@ -129,7 +132,28 @@ namespace ClearCanvas.ImageViewer.BaseTools
 
 		#region Static Profile Access
 
-		private static event EventHandler _currentProfileChanged;
+		//Wrapper class to work around the fact that you cannot make an event field ThreadStatic.
+		private class CurrentProfileChangedEvent
+		{
+			private CurrentProfileChangedEvent()
+			{
+			}
+
+			public event EventHandler RealEvent;
+
+			public void Fire()
+			{
+				EventsHelper.Fire(RealEvent, null, EventArgs.Empty);
+			}
+
+			[ThreadStatic]
+			private static CurrentProfileChangedEvent _instance;
+
+			public static CurrentProfileChangedEvent Instance
+			{
+				get { return _instance ?? (_instance = new CurrentProfileChangedEvent()); }
+			}
+		}
 
         //TODO (Phoenix5): #10730 - remove this when it's fixed.
         [ThreadStatic]
@@ -153,15 +177,15 @@ namespace ClearCanvas.ImageViewer.BaseTools
 				if (_profile != value)
 				{
 					_profile = value;
-					EventsHelper.Fire(_currentProfileChanged, null, EventArgs.Empty);
+					CurrentProfileChangedEvent.Instance.Fire();
 				}
 			}
 		}
 
 		public static event EventHandler CurrentProfileChanged
 		{
-			add { _currentProfileChanged += value; }
-			remove { _currentProfileChanged -= value; }
+			add { CurrentProfileChangedEvent.Instance.RealEvent += value; }
+			remove { CurrentProfileChangedEvent.Instance.RealEvent -= value; }
 		}
 
 		//TODO (CR Sept 2010): why not just do this when Current is set?
@@ -243,7 +267,7 @@ namespace ClearCanvas.ImageViewer.BaseTools
 			private XMouseButtons? _mouseButton = null;
 			private bool? _initiallyActive = null;
 
-			internal Setting() {}
+			public Setting() {}
 
 			internal Setting(Setting original)
 			{

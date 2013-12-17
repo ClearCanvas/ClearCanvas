@@ -31,12 +31,26 @@ namespace ClearCanvas.ImageViewer.Graphics
 	/// </summary>
 	public class GraphicCollection : ObservableList<IGraphic>
 	{
+		private readonly IGraphic _parentGraphic;
+
 		/// <summary>
 		/// Instantiates a new instance of <see cref="GraphicCollection"/>.
 		/// </summary>
-		internal GraphicCollection()
+		internal GraphicCollection(IGraphic parentGraphic)
 		{
+			_parentGraphic = parentGraphic;
+		}
 
+		/// <summary>
+		/// Gets or sets a value indicating whether or not this <see cref="GraphicCollection"/> is visible.
+		/// </summary>
+		/// <remarks>
+		/// This property is effectively the same as the <see cref="IGraphic.Visible"/> property on the collection's parent graphic.
+		/// </remarks>
+		public bool Visible
+		{
+			get { return _parentGraphic.Visible; }
+			set { _parentGraphic.Visible = value; }
 		}
 	}
 }
