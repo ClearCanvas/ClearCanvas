@@ -162,6 +162,13 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 				Draw();
 			}
 
+			public override bool HitTest(Point point)
+			{
+				if (_calloutGraphic != null && _calloutGraphic.HitTest(point))
+					return true;
+				return base.HitTest(point);
+			}
+
 			#region ROI Update Handling
 
 			/// <summary>

@@ -300,8 +300,8 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 		{
 			var graphicObjectSequenceItems = annotation.GraphicObjectSequence;
 			var textObjectSequenceItems = annotation.TextObjectSequence;
-			return graphicObjectSequenceItems != null && graphicObjectSequenceItems.Length > 0
-			       && textObjectSequenceItems != null && textObjectSequenceItems.Length > 0;
+			return (graphicObjectSequenceItems != null && graphicObjectSequenceItems.Length > 0)
+			       || (textObjectSequenceItems != null && textObjectSequenceItems.Length > 0);
 		}
 
 		private static void SetAllSpecificCharacterSets(GraphicAnnotationSequenceItem annotation, string specificCharacterSet)
