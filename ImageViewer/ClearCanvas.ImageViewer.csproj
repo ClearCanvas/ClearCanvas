@@ -825,6 +825,7 @@
     <Compile Include="Volumes\Tests\VolumeCacheTestTool.cs" />
     <Compile Include="Volumes\Tests\VolumeFunction.cs" />
     <Compile Include="Volumes\Tests\VolumeHeaderDataTests.cs" />
+    <Compile Include="Volumes\Tests\VolumeSliceFactoryTests.cs" />
     <Compile Include="Volumes\Tests\VolumeTests.cs" />
     <Compile Include="Volumes\Volume.cs" />
     <Compile Include="Volumes\VolumeBuilder.cs" />

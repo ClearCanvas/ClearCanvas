@@ -138,6 +138,11 @@ namespace ClearCanvas.ImageViewer.Volumes
 			get { return _volumeReference; }
 		}
 
+		public VolumeSliceArgs SliceArgs
+		{
+			get { return _sliceArgs; }
+		}
+
 		public virtual byte[] GetPixelData()
 		{
 			using (var slicer = VolumeSlicerCore.Create(_volumeReference, _sliceArgs))
