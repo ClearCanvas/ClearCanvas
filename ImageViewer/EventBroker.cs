@@ -248,7 +248,7 @@ namespace ClearCanvas.ImageViewer
 			remove { _mouseCaptureChanged -= value; }
 		}
 
-		internal void OnMouseCaptureChanged(MouseCaptureChangedEventArgs args)
+		public void OnMouseCaptureChanged(MouseCaptureChangedEventArgs args)
 		{
 			EventsHelper.Fire(_mouseCaptureChanged, this, args);
 		}
@@ -262,7 +262,7 @@ namespace ClearCanvas.ImageViewer
             remove { _mouseWheelCaptureChanged -= value; }
         }
 
-        internal void OnMouseWheelCaptureChanged(MouseWheelCaptureChangedEventArgs args)
+        public void OnMouseWheelCaptureChanged(MouseWheelCaptureChangedEventArgs args)
         {
             EventsHelper.Fire(_mouseWheelCaptureChanged, this, args);
         }
