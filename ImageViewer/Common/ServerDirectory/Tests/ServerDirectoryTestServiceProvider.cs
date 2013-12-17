@@ -66,7 +66,12 @@ namespace ClearCanvas.ImageViewer.Common.ServerDirectory.Tests
                            {
                                new ServerDirectoryEntry
                                    {
-                                       Server = new ApplicationEntity{Name = "Name1", AETitle = "AE1", ScpParameters = new ScpParameters("localhost", 104)},
+                                       Server = new ApplicationEntity
+                                                	{
+                                                		Name = "Name1", AETitle = "AE1", 
+														StreamingParameters = new StreamingParameters(123, 456),
+														ScpParameters = new ScpParameters("localhost", 104)
+                                                	},
                                        IsPriorsServer = true,
                                        Data = new Dictionary<string, object>{{"test1", "value1"}}
                                    },

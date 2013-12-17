@@ -93,6 +93,8 @@
     <Compile Include="BlockingThreadPool.cs" />
     <Compile Include="BufferCache.cs" />
     <Compile Include="Cache.cs" />
+    <Compile Include="Comparers\StudyDateTimeComparer.cs" />
+    <Compile Include="Comparers\Tests\StudyDateTimeComparerTests.cs" />
     <Compile Include="CompressionType.cs" />
     <Compile Include="Configuration\ISystemConfigurationSettingsStore.cs" />
     <Compile Include="Configuration\SystemConfigurationSettingsProvider.cs" />

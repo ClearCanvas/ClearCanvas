@@ -66,17 +66,20 @@ namespace ClearCanvas.ImageViewer.Common.ServerDirectory
 
         public static bool IsSupported { get; private set; }
 
-        private static int GetSortKey(IDicomServiceNode serviceNode)
+        internal static int GetSortKey(IDicomServiceNode serviceNode)
         {
+			if (serviceNode == null)
+				return 3; //We basically know nothing ... sort below even non-streaming servers.
+
             if (serviceNode.IsLocal)
-                return 0; //local first.
+                return 0; //Local first.
 
             // TODO (CR Jun 2012): !!!!! This should be IsSupported<IStudyLoader>(), but it's in the wrong assembly !!!!!! Need to move IStudyLoader to Common.
             //Ones that can load, followed by those that can't.
             return serviceNode.StreamingParameters != null ? 1 : 2;
         }
 
-        private static List<IDicomServiceNode> SortServers(IEnumerable<IDicomServiceNode> servers)
+        internal static List<IDicomServiceNode> SortServers(IEnumerable<IDicomServiceNode> servers)
         {
             //Sort servers
             return servers.OrderBy(GetSortKey).ToList();
