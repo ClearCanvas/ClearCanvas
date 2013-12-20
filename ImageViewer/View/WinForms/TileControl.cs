@@ -62,8 +62,7 @@ namespace ClearCanvas.ImageViewer.View.WinForms
 		private bool _suppressDrawOnSizeChanged = false;
 		private string _lastRenderExceptionMessage = null;
 
-		[ThreadStatic]
-		private static float? _dpi;
+		private float? _dpi;
 
 		[ThreadStatic]
 		private static bool _isDrawing = false;
@@ -128,8 +127,16 @@ namespace ClearCanvas.ImageViewer.View.WinForms
 			{
 				if (!_dpi.HasValue)
 				{
-					using (var g = CreateGraphics())
-						_dpi = (g.DpiX + g.DpiY)/2;
+					var setting = ViewSettings.Default.AnnotationDpi;
+					if (setting <= 0)
+					{
+						using (var g = CreateGraphics())
+							_dpi = (g.DpiX + g.DpiY)/2;
+					}
+					else
+					{
+						_dpi = setting;
+					}
 				}
 				return _dpi.Value;
 			}
