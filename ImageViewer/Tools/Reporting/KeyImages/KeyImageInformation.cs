@@ -266,6 +266,9 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 		{
 			if (!HasChanges || !Items.Any()) return new Dictionary<IStudySource, List<DicomFile>>(0);
 
+			// update the author field
+			Author = GetUserName();
+
 			// the series index ensures consistent series level data because we only create one KO series and one PR series per study
 			var studyIndex = new Dictionary<string, StudyInfo>();
 
