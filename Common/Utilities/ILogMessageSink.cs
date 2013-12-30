@@ -34,6 +34,11 @@
 		/// Ensures that all messages written to the sink have been committed to the underlying storage.
 		/// </summary>
 		void Flush();
+
+		/// <summary>
+		/// Purges any messages that have not been flushed.
+		/// </summary>
+		void Purge();
 	}
 
 	public static class LogMessageSinkExtensions

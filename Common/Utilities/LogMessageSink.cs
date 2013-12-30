@@ -20,6 +20,11 @@ namespace ClearCanvas.Common.Utilities
 		{
 			// nothing to do
 		}
+
+		public void Purge()
+		{
+			// nothing to do
+		}
 	}
 
 	/// <summary>
@@ -37,6 +42,11 @@ namespace ClearCanvas.Common.Utilities
 				var message = _messages.Dequeue();
 				Platform.Log(message.Level, message.Message, message.Arguments);
 			}
+		}
+
+		public void Purge()
+		{
+			_messages.Clear();
 		}
 
 		public void Write(LogMessage message)
@@ -76,6 +86,11 @@ namespace ClearCanvas.Common.Utilities
 		public void Flush()
 		{
 			_inner.Flush();
+		}
+
+		public void Purge()
+		{
+			_inner.Purge();
 		}
 	}
 }
