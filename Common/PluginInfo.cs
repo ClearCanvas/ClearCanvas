@@ -73,9 +73,14 @@ namespace ClearCanvas.Common
 					}
 
 					var extensionPointClass = a.ExtensionPointClass;
-					var extensionInterface = GetExtensionInterface(extensionPointClass);
+					if(!IsValidExtensionPointClass(extensionPointClass))
+					{
+						Platform.Log(LogLevel.Error, SR.ExceptionExtensionDoesNotExtendValidExtensionPointClass, type.FullName);
+						continue;
+					}
 
 					// does the extension implement the required interface?
+					var extensionInterface = GetExtensionInterface(extensionPointClass);
 					if (!extensionInterface.IsAssignableFrom(type))
 					{
 						Platform.Log(LogLevel.Error, SR.ExceptionExtensionDoesNotImplementRequiredInterface,
@@ -101,7 +106,7 @@ namespace ClearCanvas.Common
 		private static Type GetExtensionInterface(Type extensionPointClass)
 		{
 			if (!IsValidExtensionPointClass(extensionPointClass))
-				throw new ArgumentException("Specified type does not appear to be a valid extension point class.");
+				throw new ArgumentException(string.Format("{0} does not appear to be a valid extension point class.", extensionPointClass.FullName));
 
 			return extensionPointClass.BaseType.GetGenericArguments()[0];
 		}
