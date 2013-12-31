@@ -518,7 +518,7 @@ namespace ClearCanvas.Common.Rest
 		private string QueryString(Dictionary<string, object> args)
 		{
 			return args == null ? null : string.Join("&",
-				args.Select(kvp => string.Format("{0}={1}", kvp.Key, HttpUtility.UrlEncode(kvp.Value.ToString()))
+				args.Select(kvp => string.Format("{0}={1}", kvp.Key, HttpUtility.UrlEncode((kvp.Value ?? "").ToString()))
 				).ToArray());
 		}
 
