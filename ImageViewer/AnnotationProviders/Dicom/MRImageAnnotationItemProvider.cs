@@ -231,7 +231,7 @@ namespace ClearCanvas.ImageViewer.AnnotationProviders.Dicom
 								DicomAttribute dicomAttribute;
 								if (((IDicomAttributeProvider) frame).TryGetAttribute(DicomTags.NominalCardiacTriggerDelayTime, out dicomAttribute) && !dicomAttribute.IsEmpty && !dicomAttribute.IsNull)
 								{
-									tagExists = frame[DicomTags.TriggerTime].TryGetFloat64(0, out value);
+									tagExists = dicomAttribute.TryGetFloat64(0, out value);
 									if (tagExists) return string.Format(SR.FormatMilliseconds, value.ToString("F2"));
 								}
 								return string.Empty;
