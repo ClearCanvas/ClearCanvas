@@ -325,11 +325,11 @@ namespace ClearCanvas.ImageViewer.AnnotationProviders.Dicom
 			if (e.DataSource != null)
 			{
 				var reconstruction = GetReconstruction(e.DataSource);
-				if (reconstruction == null) return;
 				e[_keyReconstructionSequence] = reconstruction;
 
-				var acquisitions = GetAcquisitions(e.DataSource, reconstruction.AcquisitionIndex);
-				if (acquisitions == null) return;
+				var acquisitionIndices = reconstruction != null ? reconstruction.AcquisitionIndex : null;
+
+				var acquisitions = GetAcquisitions(e.DataSource, acquisitionIndices);
 				e[_keyAcquisitionSequence] = acquisitions;
 			}
 		}
@@ -354,9 +354,13 @@ namespace ClearCanvas.ImageViewer.AnnotationProviders.Dicom
 			var acquisitionItems = acquisitionModule.XRay3DAcquisitionSequence;
 			if (acquisitionItems == null) return null;
 
+			// if acquisition indices are not specified, but the acquisition sequence exists and has exactly one item, assume everything came from that acquisition
+			if (acquisitionIndices == null)
+				return acquisitionItems.Length == 1 ? new[] {acquisitionItems[0]} : null;
+
 			// DICOM indexes are 1-based
-			return acquisitionIndices != null && acquisitionIndices.Min() > 0
-			       && acquisitionItems.Length >= acquisitionIndices.Max() ? acquisitionIndices.Select(i => acquisitionItems[i - 1]).ToArray() : null;
+			return acquisitionIndices.Min() > 0 && acquisitionItems.Length >= acquisitionIndices.Max()
+			       	? acquisitionIndices.Select(i => acquisitionItems[i - 1]).ToArray() : null;
 		}
 
 		private static string FormatMultiValues(IEnumerable<IDicomAttributeProvider> frames, Func<IDicomAttributeProvider, string, string> formatter, string formatString)
