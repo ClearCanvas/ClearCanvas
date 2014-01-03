@@ -117,7 +117,7 @@ namespace ClearCanvas.ImageViewer.AnnotationProviders.Dicom
 							{
 								var acquisitions = _frameContext.GetData<IXRay3DAcquisitionSequenceItem[]>(f, _keyAcquisitionSequence);
 								var dataset = acquisitions != null ? (IEnumerable<IDicomAttributeProvider>) acquisitions.Select(a => a.DicomSequenceItem) : new IDicomAttributeProvider[] {f};
-								return FormatMultiValues(dataset, FormatInt32, DicomTags.CompressionForce, SR.FormatNewtons);
+								return FormatMultiValues(dataset, FormatFloat64, DicomTags.CompressionForce, SR.FormatNewtons);
 							},
 						DicomDataFormatHelper.RawStringFormat
 						)
