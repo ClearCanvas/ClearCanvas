@@ -313,6 +313,7 @@ namespace ClearCanvas.ImageServer.Services.Archiving.Shreds
 
 		protected override void Stop()
 		{
+			PersistentStoreRegistry.GetDefaultStore().ShutdownRequested = true;
 			lock (_syncLock)
 			{
 				foreach (PartitionArchiveService node in _archiveServiceList)

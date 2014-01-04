@@ -25,6 +25,7 @@
 using System;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
+using ClearCanvas.Enterprise.Core;
 using ClearCanvas.ImageServer.Common;
 using ClearCanvas.ImageServer.Model;
 
@@ -117,6 +118,7 @@ namespace ClearCanvas.ImageServer.Services.Archiving.Hsm
 		/// </summary>
 		protected override void Stop()
 		{
+			PersistentStoreRegistry.GetDefaultStore().ShutdownRequested = true;
 			_threadPool.Stop(true);
 		}
 	}

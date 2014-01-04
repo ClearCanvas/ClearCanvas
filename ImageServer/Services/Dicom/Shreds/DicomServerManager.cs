@@ -406,8 +406,12 @@ namespace ClearCanvas.ImageServer.Services.Dicom.Shreds
 		/// </summary>
 		protected override void Stop()
 		{
+			PersistentStoreRegistry.GetDefaultStore().ShutdownRequested = true;
 			lock (_syncLock)
 			{
+				if (_changedEvent == null)
+					return;
+
                 ServerPartitionMonitor.Instance.Changed -= _changedEvent;
 
 				foreach (DicomScp<DicomScpContext> scp in _listenerList)
