@@ -134,6 +134,7 @@ namespace ClearCanvas.ImageServer.Services.ServiceLock.PartitionReapplyRules
 							context.CommandProcessor.AddCommand(new DeleteFilesystemQueueCommand(location.Key,ServerRuleApplyTimeEnum.StudyProcessed));
 
 							// Execute the rules engine, insert commands to update the database into the command processor.
+							// Note: Should this call be removed? See comment below about defect #11673
 							engine.Execute(context);
 
 							// Re-do insert into the archive queue.
@@ -141,6 +142,15 @@ namespace ClearCanvas.ImageServer.Services.ServiceLock.PartitionReapplyRules
 							context.CommandProcessor.AddCommand(
 								new InsertArchiveQueueCommand(location.ServerPartitionKey, location.Key));
 						}
+
+						// Defect #11673
+						// Note: There is an inconsistency in how server rule is being called when study is processed and when rules are reapplied.
+						// In the former case, rules are applied through StudyRulesEngine which wraps the ServerRuleEngine to execute the rules on every series. 
+						// In the the latter case, ServerRuleEngine was used directly (above) and exected once on the first series. As a result, some server rules may not work as expect.
+						// Fix the defect here by using StudyRulesEngine. It is a temporary solution. There may be a performance hit because some rules will be re-applied twice.
+						var studyRulesEngine = new StudyRulesEngine(location, location.ServerPartition, location.LoadStudyXml());
+						studyRulesEngine.Apply(ServerRuleApplyTimeEnum.StudyProcessed, commandProcessor);
+
 
 						// Do the actual database updates.
 						if (false == context.CommandProcessor.Execute())
