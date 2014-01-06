@@ -121,7 +121,8 @@ namespace ClearCanvas.ImageServer.Services.ServiceLock.PartitionReapplyRules
 							// processed, we don't want to delete them, because they might still be valid.  
 							// We just re-run the rules engine at this point, and delete only the StudyPurge entries,
 							// since those we know at least would only be applied for archived studies.
-							postArchivalEngine.Execute(context);
+							var studyRulesEngine = new StudyRulesEngine(postArchivalEngine, location, location.ServerPartition, location.LoadStudyXml());
+							studyRulesEngine.Apply(ServerRuleApplyTimeEnum.StudyArchived, commandProcessor);
 
 							// Post Archive doesn't allow data access rules.  Force Data Access rules to be reapplied
 							// to these studies also.
@@ -135,22 +136,9 @@ namespace ClearCanvas.ImageServer.Services.ServiceLock.PartitionReapplyRules
 
 							// Execute the rules engine, insert commands to update the database into the command processor.
 							// Note: Should this call be removed? See comment below about defect #11673
-							engine.Execute(context);
-
-							// Re-do insert into the archive queue.
-							// Note: the stored procedure will update the archive entry if it already exists
-							context.CommandProcessor.AddCommand(
-								new InsertArchiveQueueCommand(location.ServerPartitionKey, location.Key));
+							var studyRulesEngine = new StudyRulesEngine(engine, location, location.ServerPartition, location.LoadStudyXml());
+							studyRulesEngine.Apply(ServerRuleApplyTimeEnum.StudyProcessed, commandProcessor);
 						}
-
-						// Defect #11673
-						// Note: There is an inconsistency in how server rule is being called when study is processed and when rules are reapplied.
-						// In the former case, rules are applied through StudyRulesEngine which wraps the ServerRuleEngine to execute the rules on every series. 
-						// In the the latter case, ServerRuleEngine was used directly (above) and exected once on the first series. As a result, some server rules may not work as expect.
-						// Fix the defect here by using StudyRulesEngine. It is a temporary solution. There may be a performance hit because some rules will be re-applied twice.
-						var studyRulesEngine = new StudyRulesEngine(location, location.ServerPartition, location.LoadStudyXml());
-						studyRulesEngine.Apply(ServerRuleApplyTimeEnum.StudyProcessed, commandProcessor);
-
 
 						// Do the actual database updates.
 						if (false == context.CommandProcessor.Execute())
