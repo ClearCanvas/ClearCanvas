@@ -135,8 +135,9 @@ namespace ClearCanvas.ImageServer.Services.ServiceLock.PartitionReapplyRules
 							context.CommandProcessor.AddCommand(new DeleteFilesystemQueueCommand(location.Key,ServerRuleApplyTimeEnum.StudyProcessed));
 
 							// Execute the rules engine, insert commands to update the database into the command processor.
-							// Note: Should this call be removed? See comment below about defect #11673
-							var studyRulesEngine = new StudyRulesEngine(engine, location, location.ServerPartition, location.LoadStudyXml());
+							// Due to ticket #11673, we create a new rules engine instance for each study, since the Study QC rules
+							// don't work right now with a single rules engine.
+							var studyRulesEngine = new StudyRulesEngine(location, location.ServerPartition, location.LoadStudyXml());
 							studyRulesEngine.Apply(ServerRuleApplyTimeEnum.StudyProcessed, commandProcessor);
 						}
 
