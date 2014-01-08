@@ -1,4 +1,28 @@
-﻿using System.Collections.Generic;
+﻿#region License
+
+// Copyright (c) 2014, ClearCanvas Inc.
+// All rights reserved.
+// http://www.clearcanvas.ca
+//
+// This file is part of the ClearCanvas RIS/PACS open source project.
+//
+// The ClearCanvas RIS/PACS open source project is free software: you can
+// redistribute it and/or modify it under the terms of the GNU General Public
+// License as published by the Free Software Foundation, either version 3 of the
+// License, or (at your option) any later version.
+//
+// The ClearCanvas RIS/PACS open source project is distributed in the hope that it
+// will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
+// Public License for more details.
+//
+// You should have received a copy of the GNU General Public License along with
+// the ClearCanvas RIS/PACS open source project.  If not, see
+// <http://www.gnu.org/licenses/>.
+
+#endregion
+
+using System.Collections.Generic;
 using System.IO;
 using System.Xml;
 using ClearCanvas.Common;
@@ -137,6 +161,7 @@ namespace ClearCanvas.ImageServer.Services.ServiceLock.PartitionReapplyRules
 							// Execute the rules engine, insert commands to update the database into the command processor.
 							// Due to ticket #11673, we create a new rules engine instance for each study, since the Study QC rules
 							// don't work right now with a single rules engine.
+							//TODO CR (Jan 2014) - Check if we can go back to caching the rules engine to reduce database hits on the rules
 							var studyRulesEngine = new StudyRulesEngine(location, location.ServerPartition, location.LoadStudyXml());
 							studyRulesEngine.Apply(ServerRuleApplyTimeEnum.StudyProcessed, commandProcessor);
 						}
