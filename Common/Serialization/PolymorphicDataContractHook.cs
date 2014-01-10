@@ -32,18 +32,7 @@ namespace ClearCanvas.Common.Serialization
 	public class PolymorphicDataContractHook<T> : IJsmlSerializerHook
 		where T : PolymorphicDataContractAttribute
 	{
-		private static readonly Dictionary<string, Type> _contractMap;
-
-		static PolymorphicDataContractHook()
-		{
-			// build the contract map by finding all types having a T attribute
-			_contractMap = (from p in Platform.PluginManager.Plugins
-							from t in p.Assembly.Resolve().GetTypes()
-							let a = AttributeUtils.GetAttribute<T>(t)
-							where (a != null)
-							select new { a.ContractId, Contract = t })
-				.ToDictionary(entry => entry.ContractId, entry => entry.Contract);
-		}
+		private static readonly Dictionary<string, Type> _contractMap = PolymorphicDataContractAttribute.GetContractMap(typeof(T));
 
 		public static void RegisterKnownType(Type type)
 		{
