@@ -306,11 +306,11 @@ namespace ClearCanvas.ImageViewer.AnnotationProviders.Dicom
 						resolver,
 						DicomTags.ContrastBolusAgentSequence,
 						DicomTags.ContrastBolusAgent,
-						f =>
-							{
-								var acquisitions = _frameContext.GetData<IXRay3DAcquisitionSequenceItem[]>(f, _keyAcquisitionSequence);
-								return acquisitions != null ? (IDicomAttributeProvider) acquisitions.Select(d => d.DicomSequenceItem).FirstOrDefault() : f;
-							}
+						dataSourceGetter : f =>
+						                   	{
+						                   		var acquisitions = _frameContext.GetData<IXRay3DAcquisitionSequenceItem[]>(f, _keyAcquisitionSequence);
+						                   		return acquisitions != null ? (IDicomAttributeProvider) acquisitions.Select(d => d.DicomSequenceItem).FirstOrDefault() : f;
+						                   	}
 						)
 				);
 		}
