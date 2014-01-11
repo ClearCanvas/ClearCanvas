@@ -49,7 +49,7 @@ namespace ClearCanvas.ImageViewer.AnnotationProviders.Dicom
 		private static IEnumerable<DicomSequenceItem> EnumerateSequenceItems(DicomAttribute dicomAttribute)
 		{
 			var dicomAttributeSQ = dicomAttribute as DicomAttributeSQ;
-			return dicomAttributeSQ != null ? Enumerable.Range(0, (int) dicomAttributeSQ.Count).Select(n => dicomAttributeSQ[n]) : Enumerable.Empty<DicomSequenceItem>();
+			return dicomAttributeSQ != null && !dicomAttributeSQ.IsNull && !dicomAttributeSQ.IsEmpty ? Enumerable.Range(0, (int) dicomAttributeSQ.Count).Select(n => dicomAttributeSQ[n]) : Enumerable.Empty<DicomSequenceItem>();
 		}
 
 		private class FrameDataRetriever
