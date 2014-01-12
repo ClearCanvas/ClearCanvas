@@ -55,5 +55,10 @@ namespace ClearCanvas.Enterprise.Core
 		/// Occurs when the <see cref="Commit"/> method has been called, but prior to committing anything.
 		/// </summary>
 		event EventHandler PreCommit;
+
+		/// <summary>
+		/// Occurs if and when the transaction associated with this context is successfully committed.
+		/// </summary>
+		event EventHandler PostCommit;
 	}
 }

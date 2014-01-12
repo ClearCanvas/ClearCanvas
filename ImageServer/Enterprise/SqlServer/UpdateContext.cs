@@ -91,7 +91,9 @@ namespace ClearCanvas.ImageServer.Enterprise.SqlServer
                 }
                 _transaction.Dispose();
                 _transaction = null;
-            }
+				
+ 				EventsHelper.Fire(PostCommit, this, EventArgs.Empty);
+           }
             else
             {
                 string errorMessage = "Attempting to commit transaction that is invalid. ";
@@ -102,6 +104,8 @@ namespace ClearCanvas.ImageServer.Enterprise.SqlServer
         }
 
     	public event EventHandler PreCommit;
+		
+    	public event EventHandler PostCommit;
 
     	#endregion
 
