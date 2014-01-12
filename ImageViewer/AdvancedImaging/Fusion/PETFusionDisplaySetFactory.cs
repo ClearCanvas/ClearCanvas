@@ -209,6 +209,7 @@ namespace ClearCanvas.ImageViewer.AdvancedImaging.Fusion
 
 			// ensure all frames have the same orientation
 			ImageOrientationPatient orient = frames[0].ImageOrientationPatient;
+			var rescaleUnits = frames[0].RescaleUnits;
 			double minColumnSpacing = double.MaxValue, minRowSpacing = double.MaxValue;
 			double maxColumnSpacing = double.MinValue, maxRowSpacing = double.MinValue;
 			foreach (Frame frame in frames)
@@ -216,6 +217,12 @@ namespace ClearCanvas.ImageViewer.AdvancedImaging.Fusion
 				if (frame.ImageOrientationPatient.IsNull)
 				{
 					error = SR.MessageMissingImageOrientation;
+					return false;
+				}
+
+				if (frame.RescaleUnits != rescaleUnits)
+				{
+					error = SR.MessageInconsistentRescaleFunctionUnits;
 					return false;
 				}
 
