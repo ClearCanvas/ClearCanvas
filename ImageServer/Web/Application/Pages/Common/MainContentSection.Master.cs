@@ -52,7 +52,22 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Common
             }
         }
 
-        protected void Page_Load(object sender, EventArgs e)
+    	public bool RequiresLegacyIE
+    	{
+			get
+			{
+				IMasterProperties master = Master as IMasterProperties;
+				return master.RequiresLegacyIE;
+			}
+
+			set
+			{
+				IMasterProperties master = Master as IMasterProperties;
+				master.RequiresLegacyIE = value;
+			}
+    	}
+
+    	protected void Page_Load(object sender, EventArgs e)
         {
 
         }

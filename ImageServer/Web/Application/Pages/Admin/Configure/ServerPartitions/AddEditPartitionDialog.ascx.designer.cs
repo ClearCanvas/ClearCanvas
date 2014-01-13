@@ -418,13 +418,13 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Admin.Configure.ServerPa
         protected global::ClearCanvas.ImageServer.Web.Common.WebControls.Validators.RangeValidator DefaultRemotePortRangeValidator;
         
         /// <summary>
-        /// TabPanel1 control.
+        /// StudyMatchingTabPanel control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::AjaxControlToolkit.TabPanel TabPanel1;
+        protected global::AjaxControlToolkit.TabPanel StudyMatchingTabPanel;
         
         /// <summary>
         /// Panel4 control.

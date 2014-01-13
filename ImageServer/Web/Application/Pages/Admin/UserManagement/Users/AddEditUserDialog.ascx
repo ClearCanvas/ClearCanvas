@@ -47,7 +47,7 @@ function ValidationUsernameParams() {
        
                 <asp:TableRow runat="server" ID="UserNameRow">
                     <asp:TableCell runat="server" Wrap="false"><asp:Label ID="Label2" runat="server" Text="<%$Resources: InputLabels, AdminUsers_AddEditDialog_UserID %>" CssClass="DialogTextBoxLabel" /></asp:TableCell>
-                    <asp:TableCell><asp:TextBox runat="server" ID="UserLoginId" CssClass="DialogTextBox" Width="100%"></asp:TextBox><asp:HiddenField ID="OriginalUserLoginId" runat="server" /></asp:TableCell>
+                    <asp:TableCell><asp:TextBox runat="server" ID="UserLoginId" CssClass="DialogTextBox" Width="200px"></asp:TextBox><asp:HiddenField ID="OriginalUserLoginId" runat="server" /></asp:TableCell>
                     <asp:TableCell runat="server" HorizontalAlign="left">
                         <ccAsp:InvalidInputIndicator ID="UserLoginHelpId" runat="server" SkinID="InvalidInputIndicator" />
                         <ccValidator:ConditionalRequiredFieldValidator ID="UserNameRequiredFieldValidator" runat="server"
@@ -64,7 +64,7 @@ function ValidationUsernameParams() {
                    
                 <asp:TableRow>
                     <asp:TableCell CssClass="DialogTextBoxLabel" Wrap="false"><asp:Label ID="Label1" runat="server" Text="<%$Resources: InputLabels, AdminUsers_AddEditDialog_Name %>" CssClass="DialogTextBoxLabel" /></asp:TableCell>
-                    <asp:TableCell><asp:TextBox runat="server" ID="DisplayName" CssClass="DialogTextBox" Width="100%"></asp:TextBox></asp:TableCell>
+                    <asp:TableCell><asp:TextBox runat="server" ID="DisplayName" CssClass="DialogTextBox" Width="200px"></asp:TextBox></asp:TableCell>
                     <asp:TableCell HorizontalAlign="left">
                         <ccAsp:InvalidInputIndicator ID="UserDisplayNameHelp" runat="server" SkinID="InvalidInputIndicator" />
                         <ccValidator:ConditionalRequiredFieldValidator ID="ConditionalRequiredFieldValidator1" runat="server"
@@ -76,7 +76,7 @@ function ValidationUsernameParams() {
                  
                 <asp:TableRow>
                     <asp:TableCell CssClass="DialogTextBoxLabel" Wrap="false"><asp:Label runat="server" Text="<%$Resources: InputLabels, AdminUsers_AddEditDialog_EmailAddress %>" CssClass="DialogTextBoxLabel" /></asp:TableCell>
-                    <asp:TableCell><asp:TextBox runat="server" ID="EmailAddressId" CssClass="DialogTextBox" Width="100%"></asp:TextBox></asp:TableCell>
+                    <asp:TableCell><asp:TextBox runat="server" ID="EmailAddressId" CssClass="DialogTextBox" Width="200px"></asp:TextBox></asp:TableCell>
                     <asp:TableCell HorizontalAlign="left">
                         <ccAsp:InvalidInputIndicator ID="UserEmailAddressHelp" runat="server" SkinID="InvalidInputIndicator" />
                         <ccValidator:RegularExpressionFieldValidator ID="UserEmailAddressValidator"
@@ -87,14 +87,15 @@ function ValidationUsernameParams() {
                                                                      Display="None" />
                     </asp:TableCell>
                 </asp:TableRow>
-                <asp:TableRow ID="EnabledRow"><asp:TableCell VerticalAlign="top" CssClass="DialogTextBoxLabel"><asp:Label ID="Label4" runat="server" Text="Enabled" CssClass="DialogTextBoxLabel" /></asp:TableCell>
+                <asp:TableRow ID="EnabledRow">
+	                <asp:TableCell VerticalAlign="top" CssClass="DialogTextBoxLabel"><asp:Label ID="Label4" runat="server" Text="Enabled" CssClass="DialogTextBoxLabel" /></asp:TableCell>
                     <asp:TableCell ColumnSpan="2"><asp:CheckBox runat="server" ID="UserEnabledCheckbox" /></asp:TableCell>
                 </asp:TableRow>
                 <asp:TableRow>
                     <asp:TableCell VerticalAlign="top" CssClass="DialogTextBoxLabel"><asp:Label ID="Label3" runat="server" Text="<%$Resources: InputLabels, AdminUsers_AddEditDialog_Groups %>" CssClass="DialogTextBoxLabel" /></asp:TableCell>
                     <asp:TableCell ColumnSpan="2" Width="100%">
                         <div class="DialogCheckBoxList">
-                            <asp:CheckBoxList runat="server" ID="UserGroupListBox" Width="100%" />
+                            <asp:CheckBoxList runat="server" ID="UserGroupListBox" />
                         </div>
                     </asp:TableCell>
                 </asp:TableRow>

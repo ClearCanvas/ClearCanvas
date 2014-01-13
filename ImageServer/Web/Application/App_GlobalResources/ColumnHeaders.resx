@@ -375,7 +375,7 @@
     <value>Studies</value>
   </data>
   <data name="ServerRuleApplyTime" xml:space="preserve">
-    <value>Apply Name</value>
+    <value>Apply Time</value>
   </data>
   <data name="ServerRuleDefault" xml:space="preserve">
     <value>Default</value>
@@ -487,5 +487,26 @@
   </data>
   <data name="LoginWarningComponent" xml:space="preserve">
     <value>Login Warnings</value>
+  </data>
+  <data name="ExternalRequestQueueStatus" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="InsertDateTime" xml:space="preserve">
+    <value>Insert Date/Time</value>
+  </data>
+  <data name="OperationToken" xml:space="preserve">
+    <value>Operation Token</value>
+  </data>
+  <data name="RequestDescription" xml:space="preserve">
+    <value>Request Description</value>
+  </data>
+  <data name="RequestType" xml:space="preserve">
+    <value>Request Type</value>
+  </data>
+  <data name="PartitionType" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="QCStatus" xml:space="preserve">
+    <value>QC Status</value>
   </data>
 </root>

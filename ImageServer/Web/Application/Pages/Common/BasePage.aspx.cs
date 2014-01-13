@@ -32,7 +32,6 @@ using ClearCanvas.ImageServer.Common;
 using ClearCanvas.ImageServer.Web.Common;
 using Resources;
 using ClearCanvas.ImageServer.Web.Common.Extensions;
-using ClearCanvas.Common.Utilities;
 
 namespace ClearCanvas.ImageServer.Web.Application.Pages.Common
 {
@@ -71,12 +70,13 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Common
                     {
                         Extensions.Clear();
 
-                        var attrs = ClearCanvas.Common.Utilities.AttributeUtils.GetAttributes<ExtensibleAttribute>(this.GetType(), true);
+                        var attrs = ClearCanvas.Common.Utilities.AttributeUtils.GetAttributes<ExtensibleAttribute>(GetType(), true);
                         foreach (var attr in attrs)
                         {
                             var xp = Activator.CreateInstance(attr.ExtensionPoint);
                             Extensions.AddRange((xp as ExtensionPoint).CreateExtensions());
                         }
+                        _extensionLoaded = true;
                     }
                     catch (Exception ex)
                     {
@@ -136,16 +136,6 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Common
                     }
                 }
             }
-        }
-
-        protected void ForceDocumentMode(string docMode)
-        {
-            if (base.Master == null)
-                return;
-
-            var meta = base.Master.Page.Header.Controls.OfType<HtmlMeta>().First();
-            if (meta != null)
-                meta.Content = docMode;
         }
     }
 }

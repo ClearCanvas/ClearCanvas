@@ -40,7 +40,7 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Help
         {
             try
             {
-                if (Thread.CurrentPrincipal.IsInRole(ClearCanvas.ImageServer.Enterprise.Authentication.AuthorityTokens.Admin.Configuration.ServerPartitions))
+                if (Thread.CurrentPrincipal.IsInRole(ClearCanvas.ImageServer.Common.Authentication.AuthorityTokens.Admin.Configuration.ServerPartitions))
                 {
                     LicenseInformation.Reset();
                     LicenseKey = LicenseInformation.LicenseKey;

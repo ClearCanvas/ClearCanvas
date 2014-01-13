@@ -66,14 +66,14 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Login
                     else
                     {
                         service.ChangePassword(Username.Text, OriginalPassword.Value, NewPassword.Text);
-                        SessionManager.InitializeSession(Username.Text, NewPassword.Text);
+                        SessionManager.InitializeSession(Username.Text, NewPassword.Text, ImageServerConstants.DefaultApplicationName /*TODO: must change this */ );
                     }
                 }
                 catch (Exception ex)
                 {
                     ErrorMessage.Text = ex.Message;
                     ErrorMessagePanel.Visible = true;
-                    NewPassword.Focus();
+					SetInputFocus(NewPassword);
 					// May want to elimiate this.
 					Platform.Log(LogLevel.Error, ex, "Unexpected exception changing password: {0}.", ex.Message);
 				}

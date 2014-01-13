@@ -23,12 +23,10 @@
 #endregion
 
 using System;
-using System.Web.UI;
 using System.Web.UI.WebControls;
 using ClearCanvas.ImageServer.Model;
 using ClearCanvas.ImageServer.Web.Application.Controls;
 using ClearCanvas.ImageServer.Web.Common.Data;
-using GridView = ClearCanvas.ImageServer.Web.Common.WebControls.UI.GridView;
 
 
 namespace ClearCanvas.ImageServer.Web.Application.Pages.Admin.Configure.ServiceLocks
@@ -41,7 +39,8 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Admin.Configure.ServiceL
         #region private members
         private ServiceLockCollection _services;
         private Unit _height;
-        FileSystemsConfigurationController _fsController = new FileSystemsConfigurationController();
+        private FileSystemsConfigurationController _fsController = new FileSystemsConfigurationController();
+	    private ServerPartitionConfigController _partitionController = new ServerPartitionConfigController();
         #endregion Private members
 
         #region protected properties
@@ -147,6 +146,7 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Admin.Configure.ServiceL
                     CustomizeEnabledColumn(e.Row);
                     CustomizeLockColumn(e.Row);
                     CustomizeFilesystemColumn(e.Row);
+					CustomizePartitionColumn(e.Row);
                 }
             }
         }
@@ -201,7 +201,14 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Admin.Configure.ServiceL
             if (text != null && item != null)
                 text.Text = item.FilesystemKey == null ? "N/A" : _fsController.LoadFileSystem(item.FilesystemKey).Description;
         }
+		protected void CustomizePartitionColumn(GridViewRow row)
+		{
+			var text = row.FindControl("Partition") as Label;
 
+			var item = row.DataItem as ServiceLock;
+			if (text != null && item != null)
+				text.Text = item.ServerPartitionKey == null ? "N/A" : _partitionController.GetPartition(item.ServerPartitionKey).AeTitle;
+		}
         protected void GridView_DataBound(object sender, EventArgs e)
         {
             // reselect the row based on the new order

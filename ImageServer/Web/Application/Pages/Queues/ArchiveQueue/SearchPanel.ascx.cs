@@ -27,37 +27,37 @@ using System.Collections.Generic;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using AjaxControlToolkit;
-using ClearCanvas.ImageServer.Enterprise;
 using ClearCanvas.ImageServer.Model;
 using ClearCanvas.ImageServer.Web.Application.Controls;
 using ClearCanvas.ImageServer.Web.Application.Helpers;
 using ClearCanvas.ImageServer.Web.Common.Data;
 using ClearCanvas.ImageServer.Web.Common.Data.DataSource;
 using ClearCanvas.ImageServer.Web.Common.WebControls.UI;
-using AuthorityTokens=ClearCanvas.ImageServer.Enterprise.Authentication.AuthorityTokens;
+using AuthorityTokens=ClearCanvas.ImageServer.Common.Authentication.AuthorityTokens;
 using Resources;
 
 [assembly: WebResource("ClearCanvas.ImageServer.Web.Application.Pages.Queues.ArchiveQueue.SearchPanel.js", "application/x-javascript")]
 
 namespace ClearCanvas.ImageServer.Web.Application.Pages.Queues.ArchiveQueue
 {
-    [ClientScriptResource(ComponentType="ClearCanvas.ImageServer.Web.Application.Pages.Queues.ArchiveQueue.SearchPanel", ResourcePath="ClearCanvas.ImageServer.Web.Application.Pages.Queues.ArchiveQueue.SearchPanel.js")]
-    public partial class SearchPanel : AJAXScriptControl
-    {
-        #region Private members
+	[ClientScriptResource(ComponentType = "ClearCanvas.ImageServer.Web.Application.Pages.Queues.ArchiveQueue.SearchPanel",
+		ResourcePath = "ClearCanvas.ImageServer.Web.Application.Pages.Queues.ArchiveQueue.SearchPanel.js")]
+	public partial class SearchPanel : AJAXScriptControl
+	{
+		#region Private members
 
-        private readonly ArchiveQueueController _controller = new ArchiveQueueController();
+		private readonly ArchiveQueueController _controller = new ArchiveQueueController();
 
-        #endregion Private members
+		#endregion Private members
 
-        #region Public Properties
+		#region Public Properties
 
-        [ExtenderControlProperty]
-        [ClientPropertyName("DeleteButtonClientID")]
-        public string DeleteButtonClientID
-        {
-            get { return DeleteItemButton.ClientID; }
-        }
+		[ExtenderControlProperty]
+		[ClientPropertyName("DeleteButtonClientID")]
+		public string DeleteButtonClientID
+		{
+			get { return DeleteItemButton.ClientID; }
+		}
 
 		[ExtenderControlProperty]
 		[ClientPropertyName("OpenButtonClientID")]
@@ -74,11 +74,11 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Queues.ArchiveQueue
 		}
 
 		[ExtenderControlProperty]
-        [ClientPropertyName("ItemListClientID")]
-        public string ItemListClientID
-        {
-            get { return ArchiveQueueItemList.ArchiveQueueGrid.ClientID; }
-        }
+		[ClientPropertyName("ItemListClientID")]
+		public string ItemListClientID
+		{
+			get { return ArchiveQueueItemList.ArchiveQueueGrid.ClientID; }
+		}
 
 		[ExtenderControlProperty]
 		[ClientPropertyName("OpenStudyPageUrl")]
@@ -87,104 +87,107 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Queues.ArchiveQueue
 			get { return Page.ResolveClientUrl(ImageServerConstants.PageURLs.StudyDetailsPage); }
 		}
 
-        public Default EnclosingPage { get; set; }
+		public Default EnclosingPage { get; set; }
 
-        /// <summary>
-        /// Gets the <see cref="Model.ServerPartition"/> associated with this search panel.
-        /// </summary>
-        public ServerPartition ServerPartition { get; set; }
+		/// <summary>
+		/// Gets the <see cref="Model.ServerPartition"/> associated with this search panel.
+		/// </summary>
+		public ServerPartition ServerPartition { get; set; }
 
-        #endregion Public Properties  
+		#endregion Public Properties
 
-        #region Public Methods
+		#region Public Methods
 
-        /// <summary>
-        /// Remove all filter settings.
-        /// </summary>
-        public void Clear()
-        {
-            PatientId.Text = string.Empty;
-            PatientName.Text = string.Empty;
-            ScheduleDate.Text = string.Empty;
-            StatusFilter.SelectedIndex = 0;
-        }
+		/// <summary>
+		/// Remove all filter settings.
+		/// </summary>
+		public void Clear()
+		{
+			PatientId.Text = string.Empty;
+			PatientName.Text = string.Empty;
+			ScheduleDate.Text = string.Empty;
+			StatusFilter.SelectedIndex = 0;
+		}
 
-        public void Refresh()
-        {
-            
-        }
+		public void Refresh()
+		{
 
-        internal void Reset()
-        {
-            Clear();
-            ArchiveQueueItemList.Reset();
-        }
+		}
 
-        #endregion Public Methods
+		internal void Reset()
+		{
+			Clear();
+			ArchiveQueueItemList.Reset();
+		}
 
-        #region Protected Methods
+		#endregion Public Methods
 
-        protected override void OnInit(EventArgs e)
-        {
-            base.OnInit(e);
+		#region Protected Methods
 
-            ClearScheduleDateButton.OnClientClick = ScriptHelper.ClearDate(ScheduleDate.ClientID, ScheduleDateCalendarExtender.ClientID);
-                           
-            // setup child controls
-            GridPagerTop.InitializeGridPager(Labels.GridPagerQueueSingleItem, Labels.GridPagerQueueMultipleItems, ArchiveQueueItemList.ArchiveQueueGrid,
-                                             () => ArchiveQueueItemList.ResultCount, ImageServerConstants.GridViewPagerPosition.Top);
-            ArchiveQueueItemList.Pager = GridPagerTop;
+		protected override void OnInit(EventArgs e)
+		{
+			base.OnInit(e);
 
-            MessageBox.Confirmed += delegate(object data)
-                            {
-                                if (data is IList<Model.ArchiveQueue>)
-                                {
-                                    var items = data as IList<Model.ArchiveQueue>;
-                                    foreach (Model.ArchiveQueue item in items)
-                                    {
-                                        _controller.DeleteArchiveQueueItem(item);
-                                    }
-                                }
-                                else if (data is Model.ArchiveQueue)
-                                {
-                                    var item = data as Model.ArchiveQueue;
-                                    _controller.DeleteArchiveQueueItem(item);
-                                }
+			ClearScheduleDateButton.OnClientClick = ScriptHelper.ClearDate(ScheduleDate.ClientID,
+			                                                               ScheduleDateCalendarExtender.ClientID);
 
-                                ArchiveQueueItemList.RefreshCurrentPage();
-                                SearchUpdatePanel.Update(); // force refresh
+			// setup child controls
+			GridPagerTop.InitializeGridPager(Labels.GridPagerQueueSingleItem, Labels.GridPagerQueueMultipleItems,
+			                                 ArchiveQueueItemList.ArchiveQueueGrid,
+			                                 () => ArchiveQueueItemList.ResultCount,
+			                                 ImageServerConstants.GridViewPagerPosition.Top);
+			ArchiveQueueItemList.Pager = GridPagerTop;
 
-                            };
+			MessageBox.Confirmed += delegate(object data)
+				{
+					if (data is IList<Model.ArchiveQueue>)
+					{
+						var items = data as IList<Model.ArchiveQueue>;
+						foreach (Model.ArchiveQueue item in items)
+						{
+							_controller.DeleteArchiveQueueItem(item);
+						}
+					}
+					else if (data is Model.ArchiveQueue)
+					{
+						var item = data as Model.ArchiveQueue;
+						_controller.DeleteArchiveQueueItem(item);
+					}
+
+					ArchiveQueueItemList.RefreshCurrentPage();
+					SearchUpdatePanel.Update(); // force refresh
+
+				};
 
 			ArchiveQueueItemList.DataSourceCreated += delegate(ArchiveQueueDataSource source)
-										{
-											source.Partition = ServerPartition;
-                                            source.DateFormats = ScheduleDateCalendarExtender.Format;
+				{
+					source.Partition = ServerPartition;
+					source.DateFormats = ScheduleDateCalendarExtender.Format;
 
-                                            if (!String.IsNullOrEmpty(StatusFilter.SelectedValue) && StatusFilter.SelectedIndex > 0)
-                                                source.StatusEnum = ArchiveQueueStatusEnum.GetEnum(StatusFilter.SelectedValue);
-                                            if (!String.IsNullOrEmpty(PatientId.TrimText))
-												source.PatientId = SearchHelper.TrailingWildCard(PatientId.TrimText);
-											if (!String.IsNullOrEmpty(PatientName.TrimText))
-												source.PatientName = SearchHelper.NameWildCard(PatientName.TrimText);
-											if (!String.IsNullOrEmpty(ScheduleDate.Text))
-												source.ScheduledDate = ScheduleDate.Text;
-										};
-        }
+					if (!String.IsNullOrEmpty(StatusFilter.SelectedValue) && StatusFilter.SelectedIndex > 0)
+						source.StatusEnum = ArchiveQueueStatusEnum.GetEnum(StatusFilter.SelectedValue);
+					if (!String.IsNullOrEmpty(PatientId.TrimText))
+						source.PatientId = SearchHelper.TrailingWildCard(PatientId.TrimText);
+					if (!String.IsNullOrEmpty(PatientName.TrimText))
+						source.PatientName = SearchHelper.NameWildCard(PatientName.TrimText);
+					if (!String.IsNullOrEmpty(ScheduleDate.Text))
+						source.ScheduledDate = ScheduleDate.Text;
+				};
+		}
 
-        protected void Page_Load(object sender, EventArgs e)
-        {
-            IList<ArchiveQueueStatusEnum> statusItems = ArchiveQueueStatusEnum.GetAll();
+		protected void Page_Load(object sender, EventArgs e)
+		{
+			IList<ArchiveQueueStatusEnum> statusItems = ArchiveQueueStatusEnum.GetAll();
 
-            int prevSelectedIndex = StatusFilter.SelectedIndex;
-            StatusFilter.Items.Clear();
-            StatusFilter.Items.Add(new ListItem(SR.All, "All"));
-            foreach (ArchiveQueueStatusEnum s in statusItems)
-                StatusFilter.Items.Add(new ListItem(ServerEnumDescription.GetLocalizedDescription(s), s.Lookup));
-            StatusFilter.SelectedIndex = prevSelectedIndex;
+			int prevSelectedIndex = StatusFilter.SelectedIndex;
+			StatusFilter.Items.Clear();
+			StatusFilter.Items.Add(new ListItem(SR.All, "All"));
+			foreach (ArchiveQueueStatusEnum s in statusItems)
+				StatusFilter.Items.Add(new ListItem(ServerEnumDescription.GetLocalizedDescription(s), s.Lookup));
+			StatusFilter.SelectedIndex = prevSelectedIndex;
 
-            DeleteItemButton.Roles = AuthorityTokens.ArchiveQueue.Delete;
-        	ViewStudyDetailsButton.Roles = AuthorityTokens.Study.View;
+			DeleteItemButton.Roles = AuthorityTokens.ArchiveQueue.Delete;
+			ViewStudyDetailsButton.Roles = AuthorityTokens.Study.View;
 
 			if (!IsPostBack && !Page.IsAsync)
 			{
@@ -199,42 +202,44 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Queues.ArchiveQueue
 					ArchiveQueueItemList.Refresh();
 				}
 			}
-        }
-       
-        protected void SearchButton_Click(object sender, ImageClickEventArgs e)
-        {
-            ArchiveQueueItemList.Refresh();
-        }
+		}
 
-        protected void DeleteItemButton_Click(object sender, EventArgs e)
-        {            
-            IList<Model.ArchiveQueue> items = ArchiveQueueItemList.SelectedItems;
+		protected void SearchButton_Click(object sender, ImageClickEventArgs e)
+		{
+			ArchiveQueueItemList.Refresh();
+		}
 
-            if (items != null && items.Count>0)
-            {
-                if (items.Count > 1) MessageBox.Message = string.Format(SR.MultipleArchiveQueueDelete);
-                else MessageBox.Message = string.Format(SR.SingleArchiveQueueDelete);
+		protected void DeleteItemButton_Click(object sender, EventArgs e)
+		{
+			IList<Model.ArchiveQueue> items = ArchiveQueueItemList.SelectedItems;
 
-                MessageBox.Message += "<table style=\"border: solid #CCCCCC 2px; margin-top: 5px;\">";
-                foreach (Model.ArchiveQueue item in items)
-                {
-                    MessageBox.Message += String.Format("<tr><td style=\"font-weight: bold; color: #618FAD\">{0}:</td><td style=\"font-weight: normal; color: black;\">{1}</td></tr>", 
-                        SR.StudyInstanceUID,            
-                        StudyStorage.Load(item.StudyStorageKey).StudyInstanceUid);
-                }
-                MessageBox.Message += "</table>";
+			if (items != null && items.Count > 0)
+			{
+				if (items.Count > 1) MessageBox.Message = string.Format(SR.MultipleArchiveQueueDelete);
+				else MessageBox.Message = string.Format(SR.SingleArchiveQueueDelete);
 
-                MessageBox.MessageType = MessageBox.MessageTypeEnum.YESNO;
-                MessageBox.MessageStyle = "color: #FF0000; font-weight: bold;";
-                MessageBox.Data = items;
-                MessageBox.Show();
-            }
-        }
+				MessageBox.Message += "<table style=\"border: solid #CCCCCC 2px; margin-top: 5px;\">";
+				foreach (Model.ArchiveQueue item in items)
+				{
+					MessageBox.Message +=
+						String.Format(
+							"<tr><td style=\"font-weight: bold; color: #618FAD\">{0}:</td><td style=\"font-weight: normal; color: black;\">{1}</td></tr>",
+							SR.StudyInstanceUID,
+							StudyStorage.Load(item.StudyStorageKey).StudyInstanceUid);
+				}
+				MessageBox.Message += "</table>";
 
-        #endregion Protected Methods
+				MessageBox.MessageType = MessageBox.MessageTypeEnum.YESNO;
+				MessageBox.MessageStyle = "color: #FF0000; font-weight: bold;";
+				MessageBox.Data = items;
+				MessageBox.Show();
+			}
+		}
 
-    	protected void ResetItemButton_Click(object sender, ImageClickEventArgs e)
-    	{
+		#endregion Protected Methods
+
+		protected void ResetItemButton_Click(object sender, ImageClickEventArgs e)
+		{
 			if (ArchiveQueueItemList.SelectedItems == null)
 				DataBind();
 
@@ -243,6 +248,6 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Queues.ArchiveQueue
 				EnclosingPage.ResetArchiveQueueItem(ArchiveQueueItemList.SelectedItems);
 				ArchiveQueueItemList.RefreshCurrentPage();
 			}
-    	}
-    }
+		}
+	}
 }

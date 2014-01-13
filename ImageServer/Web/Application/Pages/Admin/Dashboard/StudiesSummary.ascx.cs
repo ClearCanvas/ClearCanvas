@@ -24,8 +24,11 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Web.UI.WebControls;
+using ClearCanvas.ImageServer.Common.Authentication;
 using ClearCanvas.ImageServer.Model;
+using ClearCanvas.ImageServer.Model.EntityBrokers;
 using ClearCanvas.ImageServer.Web.Common.Data;
 
 namespace ClearCanvas.ImageServer.Web.Application.Pages.Admin.Dashboard
@@ -36,8 +39,13 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Admin.Dashboard
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            ServerPartitionConfigController partitionController = new ServerPartitionConfigController();
-            IList<ServerPartition> partitions = partitionController.GetAllPartitions();
+            var criteria = new ServerPartitionSelectCriteria();
+            criteria.AeTitle.SortAsc(0);
+            if (!Thread.CurrentPrincipal.IsInRole(AuthorityTokens.Vfs.ViewPartitions))
+                criteria.ServerPartitionTypeEnum.EqualTo(ServerPartitionTypeEnum.Standard);
+
+            var partitionController = new ServerPartitionConfigController();
+            IList<ServerPartition> partitions = partitionController.GetPartitions(criteria);
 
             long totalStudies = 0;
             foreach(ServerPartition partition in partitions)
