@@ -534,6 +534,13 @@
     <Compile Include="Pages\Login\Default.aspx.designer.cs">
       <DependentUpon>Default.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Pages\Login\Logout.aspx.cs">
+      <DependentUpon>Logout.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Login\Logout.aspx.designer.cs">
+      <DependentUpon>Logout.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Pages\Login\PasswordExpiredDialog.ascx.cs">
       <DependentUpon>PasswordExpiredDialog.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -1549,6 +1556,7 @@
     <Content Include="Pages\Error\SoftwareExpiredErrorPage.aspx" />
     <Content Include="Pages\Error\LicenseErrorPage.aspx" />
     <Content Include="Pages\Help\Contact.ascx" />
+    <Content Include="Pages\Login\Logout.aspx" />
     <Content Include="Pages\Queues\StudyIntegrityQueue\SIQEntryTooltip.ascx" />
     <Content Include="Pages\Queues\WorkQueue\Edit\EditWorkQueueDetailsView.ascx" />
     <Content Include="Pages\Studies\StudyDetails\Controls\AddAuthorityGroupsDialog.ascx" />
