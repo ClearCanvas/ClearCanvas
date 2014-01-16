@@ -4113,6 +4113,9 @@ BEGIN
 
 	SELECT @NumStudiesOwnedByCurrentPatient=NumberOfPatientRelatedStudies FROM Patient WHERE GUID=@CurrentPatientGUID
 
+	-- CR (Jan 2014): Although unlikely, an error may be thrown here if another process somehow inserted a study for this patient but hasn''t updated the count.
+	-- Instead of relying on the count, it is safer to delete the Patient record only if it is not being referenced in the Study table:
+	--    DELETE Patient WHERE GUID =@CurrentPatientGUID and NOT EXISTS(SELECT COUNT(*) FROM Study WITH (NOLOCK) WHERE Study.PatientGUID = Patient.GUID )		
 	IF @NumStudiesOwnedByCurrentPatient<=0
 	BEGIN
 		DELETE Patient WHERE GUID = @CurrentPatientGUID
