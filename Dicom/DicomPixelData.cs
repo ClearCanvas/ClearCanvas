@@ -103,8 +103,20 @@ namespace ClearCanvas.Dicom
 		/// </returns>
 		public static DicomPixelData CreateFrom(string path)
 		{
-			DicomFile file = new DicomFile(path);
-			file.Load();
+			return CreateFrom(path, DicomReadOptions.Default);
+		}
+
+		/// <summary>
+		/// Creates an instance of <see cref="DicomPixelData"/> from specified image path
+		/// </summary>
+		/// <param name="path"></param>
+		/// <param name="readOptions"></param>
+		/// <returns>
+		/// </returns>
+		public static DicomPixelData CreateFrom(string path, DicomReadOptions readOptions)
+		{
+			var file = new DicomFile(path);
+			file.Load(readOptions);
 			return CreateFrom(file);
 		}
 
@@ -116,8 +128,23 @@ namespace ClearCanvas.Dicom
 		/// </returns>
 		public static DicomPixelData CreateFrom(Stream stream)
 		{
-			DicomFile file = new DicomFile();
-			file.Load(stream);
+			var file = new DicomFile();
+			file.Load(stream, null, DicomReadOptions.Default);
+			return CreateFrom(file);
+		}
+
+		/// <summary>
+		/// Creates an instance of <see cref="DicomPixelData"/> from specified stream
+		/// </summary>
+		/// <param name="filename"></param>
+		/// <param name="stream"></param>
+		/// <param name="readOptions"></param>
+		/// <returns>
+		/// </returns>
+		public static DicomPixelData CreateFrom(string filename, Stream stream, DicomReadOptions readOptions)
+		{
+			var file = new DicomFile(filename);
+			file.Load(stream, null, readOptions);
 			return CreateFrom(file);
 		}
 
