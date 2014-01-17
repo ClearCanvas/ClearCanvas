@@ -192,7 +192,7 @@ namespace ClearCanvas.ImageServer.Services.Streaming.ImageStreaming
             }
 
             statistics.TotalProcessTime.End();
-            StatisticsLogger.Log(LogLevel.Debug, statistics);
+            StatisticsLogger.Log(LogLevel.Info, statistics);
             
         }
 
