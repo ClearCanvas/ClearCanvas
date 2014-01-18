@@ -113,7 +113,8 @@ namespace ClearCanvas.Server.ShredHost
 				}
 				catch (Exception e)
 				{
-					Platform.Log(LogLevel.Warn, e, "Unexpected error in HttpListenerShred.");
+					if (_listener.IsListening)
+						Platform.Log(LogLevel.Warn, e, "Unexpected error in HttpListenerShred.");
 				}
 			}
         }

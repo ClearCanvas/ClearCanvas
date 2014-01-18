@@ -25,6 +25,7 @@
 using System.IO;
 using System.Net;
 using System.Text;
+using System.Threading.Tasks;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Statistics;
 using ClearCanvas.ImageServer.Services.Streaming.ImageStreaming.Handlers;
@@ -83,28 +84,21 @@ namespace ClearCanvas.ImageServer.Services.Streaming.ImageStreaming
         /// Logs information about the request.
         /// </summary>
         /// <param name="context"></param>
-        private static void LogRequest(HttpListenerContext context)
+		private static void LogRequest(HttpListenerContext context)
         {
-            Platform.CheckForNullReference(context, "context");
+        	StringBuilder info = new StringBuilder();
 
-            if (Platform.IsLogLevelEnabled(LogLevel.Debug))
-            {
-                StringBuilder info = new StringBuilder();
+        	info.AppendFormat("\n\tAgents={0}", context.Request.UserAgent);
+        	info.AppendFormat("\n\tRequestType={0}", context.Request.QueryString["RequestType"]);
+        	info.AppendFormat("\n\tStudyUid={0}", context.Request.QueryString["StudyUid"]);
+        	info.AppendFormat("\n\tSeriesUid={0}", context.Request.QueryString["SeriesUid"]);
+        	info.AppendFormat("\n\tObjectUid={0}", context.Request.QueryString["ObjectUid"]);
+        	info.AppendFormat("\n\tAccepts={0}", GetClientAcceptTypes(context));
 
-                info.AppendFormat("\n\tAgents={0}", context.Request.UserAgent);
-                info.AppendFormat("\n\tRequestType={0}", context.Request.QueryString["RequestType"]);
-                info.AppendFormat("\n\tStudyUid={0}", context.Request.QueryString["StudyUid"]);
-                info.AppendFormat("\n\tSeriesUid={0}", context.Request.QueryString["SeriesUid"]);
-                info.AppendFormat("\n\tObjectUid={0}", context.Request.QueryString["ObjectUid"]);
-                info.AppendFormat("\n\tAccepts={0}", GetClientAcceptTypes(context));
-
-                Platform.Log(LogLevel.Debug, info);
-            }
-            
-
+        	Platform.Log(LogLevel.Debug, info);
         }
 
-        /// <summary>
+    	/// <summary>
         /// Generates a http response for an error
         /// </summary>
         /// <param name="context"></param>
@@ -155,9 +149,14 @@ namespace ClearCanvas.ImageServer.Services.Streaming.ImageStreaming
         {
             WADORequestProcessorStatistics statistics = new WADORequestProcessorStatistics("Image Streaming");
             statistics.TotalProcessTime.Start();
-            LogRequest(context);
-
-            try
+        	
+			if (Platform.IsLogLevelEnabled(LogLevel.Debug))
+			{
+				//Don't hold up this thread for logging.
+				Task.Factory.StartNew(() => LogRequest(context));
+			}
+            
+			try
             {
                 using (WADORequestTypeHandlerManager handlerManager = new WADORequestTypeHandlerManager())
                 {
@@ -192,8 +191,13 @@ namespace ClearCanvas.ImageServer.Services.Streaming.ImageStreaming
             }
 
             statistics.TotalProcessTime.End();
-            StatisticsLogger.Log(LogLevel.Info, statistics);
-            
+
+			//Seems like something you'd only want to log if there was a problem.
+			if (Platform.IsLogLevelEnabled(LogLevel.Debug))
+			{
+				//Don't hold up this thread for logging.
+				Task.Factory.StartNew(() => StatisticsLogger.Log(LogLevel.Debug, statistics));
+			}
         }
 
         #endregion
