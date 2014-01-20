@@ -23,6 +23,7 @@
 #endregion
 
 using System;
+using System.Linq;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Shreds;
 
@@ -40,16 +41,25 @@ namespace ClearCanvas.Server.ShredHost
         {
             Platform.Log(LogLevel.Debug, this.GetType().ToString() + ":" + this.GetType().Name + " in AppDomain [" + AppDomain.CurrentDomain.FriendlyName + "]");
 
-            ShredStartupInfoList shredInfoList = new ShredStartupInfoList();
-            ShredExtensionPoint xp = new ShredExtensionPoint();
-            object[] shredObjects = xp.CreateExtensions();
-            foreach (object shredObject in shredObjects)
+            var shredInfoList = new ShredStartupInfoList();
+			var xp = new ShredExtensionPoint();
+            var shredObjects = xp.CreateExtensions();
+            foreach (var shredObject in shredObjects)
             {
-                if (shredObject is IShred)
-                {
-                    Uri assemblyPath = new Uri(shredObject.GetType().Assembly.CodeBase);
-                    shredInfoList.Add(new ShredStartupInfo(assemblyPath, (shredObject as IShred).GetDisplayName(), shredObject.GetType().FullName));
-                }
+				var shredType = shredObject.GetType();
+            	var asShred = shredObject as IShred;
+				if (asShred == null)
+				{
+					Platform.Log(LogLevel.Debug, "Shred extension '{0}' does not implement IShred.", shredType.FullName);
+					continue;
+				}
+
+            	var shredIsolation = shredType.GetCustomAttributes(typeof (ShredIsolationAttribute), true).OfType<ShredIsolationAttribute>().FirstOrDefault();
+            	var shredIsolationLevel = shredIsolation == null ? ShredIsolationLevel.OwnAppDomain : shredIsolation.Level;
+
+				var assemblyPath = new Uri(shredType.Assembly.CodeBase);
+				var startupInfo = new ShredStartupInfo(assemblyPath, ((IShred)shredObject).GetDisplayName(), shredType.FullName, shredIsolationLevel);
+                shredInfoList.Add(startupInfo);
             }
 
             return shredInfoList;

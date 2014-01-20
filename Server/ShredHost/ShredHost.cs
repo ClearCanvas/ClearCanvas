@@ -192,13 +192,13 @@ namespace ClearCanvas.Server.ShredHost
                     {
                         // clone the shredStartupInfo structure into the current AppDomain, otherwise, once the StagingDomain 
                         // has been unloaded, the shredStartupInfo structure will be destroyed
-                        ShredStartupInfo newShredStartupInfo = new ShredStartupInfo(shredStartupInfo.AssemblyPath, shredStartupInfo.ShredName, shredStartupInfo.ShredTypeName);
+                    	var newShredStartupInfo = new ShredStartupInfo(shredStartupInfo.AssemblyPath, shredStartupInfo.ShredName,
+                    	                                               shredStartupInfo.ShredTypeName, shredStartupInfo.IsolationLevel);
                         
                         // create the controller that will allow us to start and stop the shred
-                        ShredController shredController = new ShredController(newShredStartupInfo);
+						var shredController = new ShredController(newShredStartupInfo);
                         _shredInfoList.Add(shredController);
                     }
-
                 }
             }
 

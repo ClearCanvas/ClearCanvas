@@ -28,6 +28,7 @@ using System.Text;
 using System.Threading;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Shreds;
+using ClearCanvas.Common.Utilities;
 
 namespace ClearCanvas.Server.ShredHost
 {
@@ -57,18 +58,27 @@ namespace ClearCanvas.Server.ShredHost
                 _runningState = RunningState.Transition;
             }
 
-            // create the AppDomain that the shred object will be instantiated in
-            _domain = AppDomain.CreateDomain(_startupInfo.ShredTypeName);
-            _shredObject = (IShred)_domain.CreateInstanceFromAndUnwrap(_startupInfo.AssemblyPath.LocalPath, _startupInfo.ShredTypeName);
+			if (_startupInfo.IsolationLevel == ShredIsolationLevel.OwnAppDomain)
+			{
+				_domain = AppDomain.CreateDomain(_startupInfo.ShredTypeName);
+				_shredObject = (IShred)_domain.CreateInstanceFromAndUnwrap(_startupInfo.AssemblyPath.LocalPath, _startupInfo.ShredTypeName);
+			}
+			else
+			{
+				_shredObject = (IShred)AppDomain.CurrentDomain.CreateInstanceFromAndUnwrap(_startupInfo.AssemblyPath.LocalPath, _startupInfo.ShredTypeName);
+			}
             
             // cache the shred's details so that even if the shred is stopped and unloaded
             // we still have it's display name 
             _shredCacheObject = new ShredCacheObject(_shredObject.GetDisplayName(), _shredObject.GetDescription());
             
             // create the thread and start it
-            _thread = new Thread(new ParameterizedThreadStart(StartupShred));
-            _thread.Name = String.Format("{0}", _shredCacheObject.GetDisplayName());
-            _thread.Start(this);
+        	_thread = new Thread(StartupShred)
+        	          	{
+        	          		Name = String.Format("{0}", _shredCacheObject.GetDisplayName())
+        	          	};
+
+        	_thread.Start(this);
 
             lock (_lockRunningState)
             {
@@ -91,8 +101,12 @@ namespace ClearCanvas.Server.ShredHost
 
             _shredObject.Stop();
             _thread.Join();
-            AppDomain.Unload(_domain);
-            _domain = null;         // need to explicity set to null, otherwise any references to it in the future will throw an exception
+			if (_domain != null)
+			{
+				AppDomain.Unload(_domain);
+				_domain = null;         // need to explicity set to null, otherwise any references to it in the future will throw an exception
+			}
+
             _shredObject = null;
             _thread = null;
 
