@@ -153,7 +153,7 @@ namespace ClearCanvas.Dicom.ServiceModel.Streaming
 
 				clock.Stop();
 				PerformanceReportBroker.PublishReport("Streaming", "RetrievePixelData", clock.Seconds);
-				Platform.Log(LogLevel.Info, "Client streaming time: {0} seconds", clock.Seconds);
+				Platform.Log(LogLevel.Debug, "Client streaming time: {0} seconds", clock.Seconds);
 				RetrievePixelDataResult pixelDataResult;
 				if (response.Headers["Compressed"] != null && bool.Parse(response.Headers["Compressed"]))
 					pixelDataResult = new RetrievePixelDataResult(CreateCompressedPixelData(response, buffer), result);
