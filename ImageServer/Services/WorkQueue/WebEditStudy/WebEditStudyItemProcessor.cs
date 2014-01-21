@@ -26,8 +26,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using ClearCanvas.Common;
 using ClearCanvas.ImageServer.Common;
-using ClearCanvas.ImageServer.Common.Command;
 using ClearCanvas.ImageServer.Core;
+using ClearCanvas.ImageServer.Enterprise.Command;
 using ClearCanvas.ImageServer.Model;
 
 namespace ClearCanvas.ImageServer.Services.WorkQueue.WebEditStudy
@@ -65,7 +65,7 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.WebEditStudy
 		{
 			LoadAdditionalEntities();
 
-			using (StudyEditor editor = new StudyEditor(ServerPartition, StorageLocation, _patient, Study))
+			using (StudyEditor editor = new StudyEditor(ServerPartition, StorageLocation, _patient, Study, item))
 			{
 				if (!editor.Edit(item.Data.DocumentElement))
 				{

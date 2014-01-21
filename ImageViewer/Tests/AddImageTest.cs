@@ -26,36 +26,31 @@
 
 #pragma warning disable 1591,0419,1574,1587
 
+using System;
+using ClearCanvas.Common;
+using ClearCanvas.Common.Utilities;
 using ClearCanvas.Dicom;
-using ClearCanvas.Dicom.Iod;
+using ClearCanvas.Dicom.Tests;
 using ClearCanvas.ImageViewer.StudyManagement;
 using ClearCanvas.ImageViewer.StudyManagement.Tests;
 using NUnit.Framework;
-using ClearCanvas.Common;
-using ClearCanvas.Common.Utilities;
-using ClearCanvas.Dicom.Tests;
-using System;
 
 namespace ClearCanvas.ImageViewer.Tests
 {
 	[TestFixture]
 	public class AddImageTest : AbstractTest
 	{
-		public AddImageTest()
-		{
-		}
+		public AddImageTest() {}
 
 		[TestFixtureSetUp]
 		public void Init()
 		{
 			Platform.SetExtensionFactory(new NullExtensionFactory());
-            GC.Collect();
+			GC.Collect();
 		}
 
 		[TestFixtureTearDown]
-		public void Cleanup()
-		{
-		}
+		public void Cleanup() {}
 
 		[Test]
 		public void BuildStudyTree()
@@ -140,8 +135,6 @@ namespace ClearCanvas.ImageViewer.Tests
 			Assert.IsTrue(studyTree.GetSop(imageUid9).SopInstanceUid == image9.SopInstanceUid);
 
 			viewer.Dispose();
-
-			Assert.IsTrue(SopDataCache.ItemCount == 0, "The Sop data cache is NOT empty.");
 		}
 
 		[Test]
@@ -157,18 +150,15 @@ namespace ClearCanvas.ImageViewer.Tests
 			ImageSop image1 = CreateImageSop("patient1", studyUid1, seriesUid1, imageUid1);
 			ImageSop image2 = CreateImageSop("patient1", studyUid1, seriesUid1, imageUid1);
 
-			//The sop has already silently disposed the 2nd data source.
-			Assert.IsTrue(Object.ReferenceEquals(image1.DataSource, image2.DataSource));
-			studyTree.AddSop(image1);
-			studyTree.AddSop(image2);
+			Assert.IsTrue(studyTree.AddSop(image1));
+			Assert.IsFalse(studyTree.AddSop(image2));
 
 			Assert.IsTrue(studyTree.Patients["patient1"].Studies[studyUid1].Series[seriesUid1].Sops.Count == 1);
 
-			TestDataSource dataSource = (TestDataSource)image1.DataSource;
+			TestDataSource dataSource = (TestDataSource) image1.DataSource;
 			viewer.Dispose();
 
 			Assert.IsTrue(dataSource.IsDisposed);
-			Assert.IsTrue(SopDataCache.ItemCount == 0, "The Sop data cache is NOT empty.");
 		}
 
 		private ImageSop CreateImageSop(string patientId, string studyUid, string seriesUid, string sopUid)

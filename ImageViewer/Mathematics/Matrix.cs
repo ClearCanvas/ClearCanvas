@@ -28,8 +28,6 @@ using ClearCanvas.Common;
 
 namespace ClearCanvas.ImageViewer.Mathematics
 {
-	// TODO: Determinant, Inverse, etc are still missing.
-
 	/// <summary>
 	/// Represents a matrix of arbitrary dimensions.
 	/// </summary>
@@ -225,6 +223,51 @@ namespace ClearCanvas.ImageViewer.Mathematics
 			return transpose;
 		}
 
+		public float GetDeterminant()
+		{
+			Platform.CheckTrue(_rows == _columns, "Matrix must be square!");
+
+			switch (_rows)
+			{
+				case 1:
+					// det(I) = 1, and det(k*A) = (k^n)*det(A)
+					// so for matrix A (n=1), with entry A[0,0] = k,
+					// det(A) = det(k*I) = (k^1)*det(I) = k = A[0,0]
+					return _matrix[0, 0];
+				case 2:
+					return Determinant2(_matrix);
+				case 3:
+					return Determinant3(_matrix);
+				case 4:
+					return Determinant4(_matrix);
+				default:
+					throw new NotImplementedException("GetDeterminant is not implemented for matrix size N > 4");
+			}
+		}
+
+		public Matrix Invert()
+		{
+			Platform.CheckTrue(_rows == _columns, "Matrix must be square!");
+
+			switch (_rows)
+			{
+				case 1:
+					// A*inv(A) = I
+					// so for matrix A (n=1), with entry A[0,0] = k,
+					// A*inv(A) = A[0,0]*invA[0,0] = 1 => invA[0,0] = 1/A[0,0]
+					Platform.CheckFalse(FloatComparer.AreEqual(0, _matrix[0, 0]), "Matrix is not invertible!");
+					return new Matrix(new[,] {{1/_matrix[0, 0]}});
+				case 2:
+					return new Matrix(Invert2(_matrix));
+				case 3:
+					return new Matrix(Invert3(_matrix));
+				case 4:
+					return new Matrix(Invert4(_matrix));
+				default:
+					throw new NotImplementedException("Invert is not implemented for matrix size N > 4");
+			}
+		}
+
 		/// <summary>
 		/// Gets a string describing the matrix.
 		/// </summary>
@@ -314,6 +357,16 @@ namespace ClearCanvas.ImageViewer.Mathematics
 		{
 			Matrix clone = matrix.Clone();
 			clone.Scale(scale);
+			return clone;
+		}
+
+		/// <summary>
+		/// Performs scalar multiplication of <paramref name="matrix"/> by -1.
+		/// </summary>
+		public static Matrix operator -(Matrix matrix)
+		{
+			Matrix clone = matrix.Clone();
+			clone.Scale(-1);
 			return clone;
 		}
 
@@ -422,5 +475,143 @@ namespace ClearCanvas.ImageViewer.Mathematics
 
 			return true;
 		}
+
+		#region Advanced Math Implementations
+
+		#region 2x2
+
+		internal static float Determinant2(float[,] m)
+		{
+			return (float) ((double) m[0, 0]*m[1, 1] - (double) m[0, 1]*m[1, 0]);
+		}
+
+		internal static float[,] Invert2(float[,] m)
+		{
+			var det = (double) m[0, 0]*m[1, 1] - (double) m[0, 1]*m[1, 0];
+			Platform.CheckFalse(FloatComparer.AreEqual(0, det), "Matrix is not invertible!");
+
+			var inv = new float[2,2];
+			det = 1/det;
+
+			inv[0, 0] = (float) (m[1, 1]*det);
+			inv[0, 1] = (float) (-m[0, 1]*det);
+			inv[1, 0] = (float) (-m[1, 0]*det);
+			inv[1, 1] = (float) (m[0, 0]*det);
+
+			return inv;
+		}
+
+		#endregion
+
+		#region 3x3
+
+		internal static float Determinant3(float[,] m)
+		{
+			return (float) (m[0, 0]*((double) m[1, 1]*m[2, 2] - (double) m[1, 2]*m[2, 1])
+			                - m[0, 1]*((double) m[1, 0]*m[2, 2] - (double) m[1, 2]*m[2, 0])
+			                + m[0, 2]*((double) m[1, 0]*m[2, 1] - (double) m[1, 1]*m[2, 0]));
+		}
+
+		internal static float[,] Invert3(float[,] m)
+		{
+			var b0 = (double) m[1, 1]*m[2, 2] - (double) m[1, 2]*m[2, 1];
+			var b1 = (double) m[1, 0]*m[2, 2] - (double) m[1, 2]*m[2, 0];
+			var b2 = (double) m[1, 0]*m[2, 1] - (double) m[1, 1]*m[2, 0];
+
+			var c0 = (double) m[0, 1]*m[2, 2] - (double) m[0, 2]*m[2, 1];
+			var s0 = (double) m[0, 1]*m[1, 2] - (double) m[0, 2]*m[1, 1];
+			var c1 = (double) m[0, 0]*m[2, 2] - (double) m[0, 2]*m[2, 0];
+
+			var s1 = (double) m[0, 0]*m[1, 2] - (double) m[0, 2]*m[1, 0];
+			var c2 = (double) m[0, 0]*m[2, 1] - (double) m[0, 1]*m[2, 0];
+			var s2 = (double) m[0, 0]*m[1, 1] - (double) m[0, 1]*m[1, 0];
+
+			var det = m[0, 0]*b0 - m[0, 1]*b1 + m[0, 2]*b2;
+			Platform.CheckFalse(FloatComparer.AreEqual(0, det), "Matrix is not invertible!");
+
+			var inv = new float[3,3];
+			det = 1/det;
+
+			inv[0, 0] = (float) (b0*det);
+			inv[0, 1] = (float) (-c0*det);
+			inv[0, 2] = (float) (s0*det);
+			inv[1, 0] = (float) (-b1*det);
+			inv[1, 1] = (float) (c1*det);
+			inv[1, 2] = (float) (-s1*det);
+			inv[2, 0] = (float) (b2*det);
+			inv[2, 1] = (float) (-c2*det);
+			inv[2, 2] = (float) (s2*det);
+
+			return inv;
+		}
+
+		#endregion
+
+		#region 4x4
+
+		internal static float Determinant4(float[,] m)
+		{
+			var s0 = (double) m[0, 0]*m[1, 1] - (double) m[1, 0]*m[0, 1];
+			var s1 = (double) m[0, 0]*m[1, 2] - (double) m[1, 0]*m[0, 2];
+			var s2 = (double) m[0, 0]*m[1, 3] - (double) m[1, 0]*m[0, 3];
+			var s3 = (double) m[0, 1]*m[1, 2] - (double) m[1, 1]*m[0, 2];
+			var s4 = (double) m[0, 1]*m[1, 3] - (double) m[1, 1]*m[0, 3];
+			var s5 = (double) m[0, 2]*m[1, 3] - (double) m[1, 2]*m[0, 3];
+
+			var c5 = (double) m[2, 2]*m[3, 3] - (double) m[3, 2]*m[2, 3];
+			var c4 = (double) m[2, 1]*m[3, 3] - (double) m[3, 1]*m[2, 3];
+			var c3 = (double) m[2, 1]*m[3, 2] - (double) m[3, 1]*m[2, 2];
+			var c2 = (double) m[2, 0]*m[3, 3] - (double) m[3, 0]*m[2, 3];
+			var c1 = (double) m[2, 0]*m[3, 2] - (double) m[3, 0]*m[2, 2];
+			var c0 = (double) m[2, 0]*m[3, 1] - (double) m[3, 0]*m[2, 1];
+
+			return (float) (s0*c5 - s1*c4 + s2*c3 + s3*c2 - s4*c1 + s5*c0);
+		}
+
+		internal static float[,] Invert4(float[,] m)
+		{
+			var s0 = (double) m[0, 0]*m[1, 1] - (double) m[1, 0]*m[0, 1];
+			var s1 = (double) m[0, 0]*m[1, 2] - (double) m[1, 0]*m[0, 2];
+			var s2 = (double) m[0, 0]*m[1, 3] - (double) m[1, 0]*m[0, 3];
+			var s3 = (double) m[0, 1]*m[1, 2] - (double) m[1, 1]*m[0, 2];
+			var s4 = (double) m[0, 1]*m[1, 3] - (double) m[1, 1]*m[0, 3];
+			var s5 = (double) m[0, 2]*m[1, 3] - (double) m[1, 2]*m[0, 3];
+
+			var c5 = (double) m[2, 2]*m[3, 3] - (double) m[3, 2]*m[2, 3];
+			var c4 = (double) m[2, 1]*m[3, 3] - (double) m[3, 1]*m[2, 3];
+			var c3 = (double) m[2, 1]*m[3, 2] - (double) m[3, 1]*m[2, 2];
+			var c2 = (double) m[2, 0]*m[3, 3] - (double) m[3, 0]*m[2, 3];
+			var c1 = (double) m[2, 0]*m[3, 2] - (double) m[3, 0]*m[2, 2];
+			var c0 = (double) m[2, 0]*m[3, 1] - (double) m[3, 0]*m[2, 1];
+
+			var det = s0*c5 - s1*c4 + s2*c3 + s3*c2 - s4*c1 + s5*c0;
+			Platform.CheckFalse(FloatComparer.AreEqual(0, det), "Matrix is not invertible!");
+
+			var inv = new float[4,4];
+			det = 1/det;
+
+			inv[0, 0] = (float) ((m[1, 1]*c5 - m[1, 2]*c4 + m[1, 3]*c3)*det);
+			inv[0, 1] = (float) ((-m[0, 1]*c5 + m[0, 2]*c4 - m[0, 3]*c3)*det);
+			inv[0, 2] = (float) ((m[3, 1]*s5 - m[3, 2]*s4 + m[3, 3]*s3)*det);
+			inv[0, 3] = (float) ((-m[2, 1]*s5 + m[2, 2]*s4 - m[2, 3]*s3)*det);
+			inv[1, 0] = (float) ((-m[1, 0]*c5 + m[1, 2]*c2 - m[1, 3]*c1)*det);
+			inv[1, 1] = (float) ((m[0, 0]*c5 - m[0, 2]*c2 + m[0, 3]*c1)*det);
+			inv[1, 2] = (float) ((-m[3, 0]*s5 + m[3, 2]*s2 - m[3, 3]*s1)*det);
+			inv[1, 3] = (float) ((m[2, 0]*s5 - m[2, 2]*s2 + m[2, 3]*s1)*det);
+			inv[2, 0] = (float) ((m[1, 0]*c4 - m[1, 1]*c2 + m[1, 3]*c0)*det);
+			inv[2, 1] = (float) ((-m[0, 0]*c4 + m[0, 1]*c2 - m[0, 3]*c0)*det);
+			inv[2, 2] = (float) ((m[3, 0]*s4 - m[3, 1]*s2 + m[3, 3]*s0)*det);
+			inv[2, 3] = (float) ((-m[2, 0]*s4 + m[2, 1]*s2 - m[2, 3]*s0)*det);
+			inv[3, 0] = (float) ((-m[1, 0]*c3 + m[1, 1]*c1 - m[1, 2]*c0)*det);
+			inv[3, 1] = (float) ((m[0, 0]*c3 - m[0, 1]*c1 + m[0, 2]*c0)*det);
+			inv[3, 2] = (float) ((-m[3, 0]*s3 + m[3, 1]*s1 - m[3, 2]*s0)*det);
+			inv[3, 3] = (float) ((m[2, 0]*s3 - m[2, 1]*s1 + m[2, 2]*s0)*det);
+
+			return inv;
+		}
+
+		#endregion
+
+		#endregion
 	}
 }

@@ -32,7 +32,7 @@ using ClearCanvas.Dicom;
 using ClearCanvas.Dicom.Utilities.Command;
 using ClearCanvas.Dicom.Utilities.Xml;
 using ClearCanvas.ImageServer.Common;
-using ClearCanvas.ImageServer.Common.Command;
+using ClearCanvas.ImageServer.Enterprise.Command;
 using ClearCanvas.ImageServer.Model;
 
 namespace ClearCanvas.ImageServer.Rules
@@ -58,6 +58,13 @@ namespace ClearCanvas.ImageServer.Rules
 		}
 		public StudyRulesEngine(StudyStorageLocation location, ServerPartition partition, StudyXml studyXml)
 		{
+			_studyXml = studyXml;
+			_location = location;
+			_partition = partition ?? ServerPartition.Load(_location.ServerPartitionKey);
+		}
+		public StudyRulesEngine(ServerRulesEngine studyRulesEngine, StudyStorageLocation location, ServerPartition partition, StudyXml studyXml)
+		{
+			_studyRulesEngine = studyRulesEngine;
 			_studyXml = studyXml;
 			_location = location;
 			_partition = partition ?? ServerPartition.Load(_location.ServerPartitionKey);
@@ -96,49 +103,60 @@ namespace ClearCanvas.ImageServer.Rules
                                  _location.StudyInstanceUid, _partition.Description, applyTime.Description);
                 }
 			}
-
-			
 		}
 
 		public void Apply(ServerRuleApplyTimeEnum applyTime, CommandProcessor theProcessor)
 		{
-			_studyRulesEngine = new ServerRulesEngine(applyTime, _location.ServerPartitionKey);
-			_studyRulesEngine.Load();
-
-			List<string> files = GetFirstInstanceInEachStudySeries();
-			if (files.Count == 0)
+			try
 			{
-				string message =
-					String.Format("Unexpectedly unable to find SOP instances for rules engine in each series in study: {0}",
-					              _location.StudyInstanceUid);
-				Platform.Log(LogLevel.Error, message);
-				throw new ApplicationException(message);
+				if (_studyRulesEngine == null || !_studyRulesEngine.RuleApplyTime.Equals(applyTime))
+				{
+					_studyRulesEngine = new ServerRulesEngine(applyTime, _location.ServerPartitionKey);
+					_studyRulesEngine.Load();
+				}
+
+				List<string> files = GetFirstInstanceInEachStudySeries();
+				if (files.Count == 0)
+				{
+					string message =
+						String.Format("Unexpectedly unable to find SOP instances for rules engine in each series in study: {0}",
+						              _location.StudyInstanceUid);
+					Platform.Log(LogLevel.Error, message);
+					throw new ApplicationException(message);
+				}
+
+				Platform.Log(LogLevel.Info, "Processing Study Level rules for study {0} on partition {1} at {2} apply time",
+				             _location.StudyInstanceUid, _partition.Description, applyTime.Description);
+
+				foreach (string seriesFilePath in files)
+				{
+					var theFile = new DicomFile(seriesFilePath);
+					theFile.Load(DicomReadOptions.Default);
+					var context =
+						new ServerActionContext(theFile, _location.FilesystemKey, _partition, _location.Key, theProcessor){ RuleEngine = _studyRulesEngine};
+					_studyRulesEngine.Execute(context);
+
+					ProcessSeriesRules(theFile, theProcessor);
+				}
+
+				if (applyTime.Equals(ServerRuleApplyTimeEnum.StudyProcessed))
+				{
+					// This is a bit kludgy, but we had a problem with studies with only 1 image incorectlly
+					// having archive requests inserted when they were scheduled for deletion.  Calling
+					// this command here so that if a delete is inserted at the study level, we will remove
+					// the previously inserted archive request for the study.  Note also this has to be done
+					// after the rules engine is executed.
+					theProcessor.AddCommand(new InsertArchiveQueueCommand(_location.ServerPartitionKey, _location.Key));
+				}
+			}
+			finally
+			{
+				if (_studyRulesEngine!=null)
+					_studyRulesEngine.Complete(_studyRulesEngine.RulesApplied);
 			}
 
-			Platform.Log(LogLevel.Info, "Processing Study Level rules for study {0} on partition {1} at {2} apply time",
-			             _location.StudyInstanceUid, _partition.Description, applyTime.Description);
 
-			foreach (string seriesFilePath in files)
-			{
-				var theFile = new DicomFile(seriesFilePath);
-				theFile.Load(DicomReadOptions.Default);
-			    var context =
-			        new ServerActionContext(theFile, _location.FilesystemKey, _partition, _location.Key)
-			            {CommandProcessor = theProcessor};
-			    _studyRulesEngine.Execute(context);
-
-				ProcessSeriesRules(theFile, theProcessor);
-			}
-
-			if (applyTime.Equals(ServerRuleApplyTimeEnum.StudyProcessed))
-			{
-				// This is a bit kludgy, but we had a problem with studies with only 1 image incorectlly
-				// having archive requests inserted when they were scheduled for deletion.  Calling
-				// this command here so that if a delete is inserted at the study level, we will remove
-				// the previously inserted archive request for the study.  Note also this has to be done
-				// after the rules engine is executed.
-				theProcessor.AddCommand(new InsertArchiveQueueCommand(_location.ServerPartitionKey, _location.Key));
-			}
+			
 		}
 
 		#endregion
@@ -222,8 +240,7 @@ namespace ClearCanvas.ImageServer.Rules
 				_seriesRulesEngine.Statistics.ExecutionTime.Reset();
 			}
 
-		    var context = new ServerActionContext(file, _location.FilesystemKey, _partition, _location.Key)
-		                      {CommandProcessor = processor};
+			var context = new ServerActionContext(file, _location.FilesystemKey, _partition, _location.Key,processor);
 
 
 		    _seriesRulesEngine.Execute(context);

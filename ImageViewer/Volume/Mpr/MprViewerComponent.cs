@@ -43,7 +43,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 
 		#endregion
 
-		public MprViewerComponent(Volume volume) : this()
+		public MprViewerComponent(Volumes.Volume volume) : this()
 		{
 			_volumes.Add(new MprVolume(volume));
 		}

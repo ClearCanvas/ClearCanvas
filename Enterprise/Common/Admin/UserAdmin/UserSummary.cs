@@ -28,69 +28,97 @@ using ClearCanvas.Common.Serialization;
 
 namespace ClearCanvas.Enterprise.Common.Admin.UserAdmin
 {
-    [DataContract]
-    public class UserSummary : DataContractBase
-    {
-        public UserSummary(string userId, string displayName, string emailAddress, DateTime creationTime, DateTime? validFrom, DateTime? validUntil,
-            DateTime? lastLoginTime, DateTime? passwordExpiry, bool enabled, int sessionCount)
-        {
-            UserName = userId;
-            DisplayName = displayName;
-            EmailAddress = emailAddress;
-            CreationTime = creationTime;
-            ValidFrom = validFrom;
-            ValidUntil = validUntil;
-            LastLoginTime = lastLoginTime;
-            Enabled = enabled;
-            PasswordExpiry = passwordExpiry;
-            SessionCount = sessionCount;
-        }
+	[DataContract]
+	public class UserSummary : DataContractBase
+	{
+		/// <summary>
+		/// Constructor for returning only the most basic information about a user.
+		/// </summary>
+		public UserSummary(EnumValueInfo accountType, string userId, string displayName, string emailAddress)
+		{
+			AccountType = accountType;
+			UserName = userId;
+			DisplayName = displayName;
+			EmailAddress = emailAddress;
+		}
 
-        [DataMember]
-        public string UserName;
+		/// <summary>
+		/// Constructor for returning full user summary.
+		/// </summary>
+		public UserSummary(
+			EnumValueInfo accountType,
+			string userId,
+			string displayName,
+			string emailAddress,
+			DateTime creationTime,
+			DateTime? validFrom,
+			DateTime? validUntil,
+			DateTime? lastLoginTime,
+			DateTime? passwordExpiry,
+			bool enabled,
+			int sessionCount)
+		{
+			AccountType = accountType;
+			UserName = userId;
+			DisplayName = displayName;
+			EmailAddress = emailAddress;
+			CreationTime = creationTime;
+			ValidFrom = validFrom;
+			ValidUntil = validUntil;
+			LastLoginTime = lastLoginTime;
+			Enabled = enabled;
+			PasswordExpiry = passwordExpiry;
+			SessionCount = sessionCount;
+		}
 
-        [DataMember]
-        public string DisplayName;
+		[DataMember]
+		public EnumValueInfo AccountType;
 
-        [DataMember]
-        public string EmailAddress;
+		[DataMember]
+		public string UserName;
 
-        [DataMember]
-        public DateTime CreationTime;
+		[DataMember]
+		public string DisplayName;
 
-        [DataMember]
-        public DateTime? ValidFrom;
+		[DataMember]
+		public string EmailAddress;
 
-        [DataMember]
-        public DateTime? ValidUntil;
+		[DataMember]
+		public DateTime CreationTime;
 
-        [DataMember]
-        public DateTime? LastLoginTime;
+		[DataMember]
+		public DateTime? ValidFrom;
 
-        [DataMember]
-        public bool Enabled;
+		[DataMember]
+		public DateTime? ValidUntil;
 
-        [DataMember]
-        public DateTime? PasswordExpiry;
+		[DataMember]
+		public DateTime? LastLoginTime;
 
-        [DataMember]
-        public int SessionCount;
+		[DataMember]
+		public bool Enabled;
 
-        protected bool Equals(UserSummary userSummary)
-        {
-            if (userSummary == null) return false;
-            return Equals(UserName, userSummary.UserName);
-        }
+		[DataMember]
+		public DateTime? PasswordExpiry;
 
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(this, obj)) return true;
-            return Equals(obj as UserSummary);
-        }
+		[DataMember]
+		public int SessionCount;
 
-        public override int GetHashCode()
-        {
-            return UserName.GetHashCode();
-        }
-    }
+		protected bool Equals(UserSummary userSummary)
+		{
+			if (userSummary == null) return false;
+			return Equals(UserName, userSummary.UserName);
+		}
+
+		public override bool Equals(object obj)
+		{
+			if (ReferenceEquals(this, obj)) return true;
+			return Equals(obj as UserSummary);
+		}
+
+		public override int GetHashCode()
+		{
+			return UserName.GetHashCode();
+		}
+	}
 }

@@ -28,13 +28,14 @@ using System.Globalization;
 using System.Security.Permissions;
 using System.Web;
 using System.Web.UI.WebControls;
+using ClearCanvas.ImageServer.Common.Authentication;
 using ClearCanvas.ImageServer.Model;
 using ClearCanvas.ImageServer.Model.EntityBrokers;
 using ClearCanvas.ImageServer.Web.Common.Data;
 
 namespace ClearCanvas.ImageServer.Web.Application.Controls
 {
-    [PrincipalPermission(SecurityAction.Demand, Role = ClearCanvas.ImageServer.Enterprise.Authentication.AuthorityTokens.Admin.Alert.View)]
+    [PrincipalPermission(SecurityAction.Demand, Role = AuthorityTokens.Admin.Alert.View)]
     public partial class AlertIndicator : System.Web.UI.UserControl
     {
         protected IList<Alert> alerts;

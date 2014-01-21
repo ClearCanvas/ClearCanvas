@@ -30,7 +30,7 @@ namespace ClearCanvas.ImageServer.Model.EntityBrokers
     using System.Xml;
     using ClearCanvas.ImageServer.Enterprise;
 
-   public class ServiceLockUpdateColumns : EntityUpdateColumns
+   public partial class ServiceLockUpdateColumns : EntityUpdateColumns
    {
        public ServiceLockUpdateColumns()
        : base("ServiceLock")
@@ -59,6 +59,11 @@ namespace ClearCanvas.ImageServer.Model.EntityBrokers
         public XmlDocument State
         {
             set { SubParameters["State"] = new EntityUpdateColumn<XmlDocument>("State", value); }
+        }
+        [EntityFieldDatabaseMappingAttribute(TableName="ServiceLock", ColumnName="ServerPartitionGUID")]
+        public ServerEntityKey ServerPartitionKey
+        {
+            set { SubParameters["ServerPartitionKey"] = new EntityUpdateColumn<ServerEntityKey>("ServerPartitionKey", value); }
         }
         [EntityFieldDatabaseMappingAttribute(TableName="ServiceLock", ColumnName="FilesystemGUID")]
         public ServerEntityKey FilesystemKey

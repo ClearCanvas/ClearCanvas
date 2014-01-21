@@ -25,8 +25,10 @@
 using System.IO;
 using System.Net;
 using System.Text;
+using System.Threading.Tasks;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Statistics;
+using ClearCanvas.ImageServer.Services.Streaming.ImageStreaming.Handlers;
 using ClearCanvas.ImageServer.Services.Streaming.Shreds;
 
 namespace ClearCanvas.ImageServer.Services.Streaming.ImageStreaming
@@ -82,26 +84,30 @@ namespace ClearCanvas.ImageServer.Services.Streaming.ImageStreaming
         /// Logs information about the request.
         /// </summary>
         /// <param name="context"></param>
-        private static void LogRequest(HttpListenerContext context)
+		private static void LogRequest(HttpListenerContext context)
         {
-            Platform.CheckForNullReference(context, "context");
+        	StringBuilder info = new StringBuilder();
 
-            if (Platform.IsLogLevelEnabled(LogLevel.Debug))
-            {
-                StringBuilder info = new StringBuilder();
+        	info.AppendFormat("\n\tAgents={0}", context.Request.UserAgent);
+        	info.AppendFormat("\n\tRequestType={0}", context.Request.QueryString["RequestType"]);
+        	info.AppendFormat("\n\tStudyUid={0}", context.Request.QueryString["StudyUid"]);
+        	info.AppendFormat("\n\tSeriesUid={0}", context.Request.QueryString["SeriesUid"]);
+        	info.AppendFormat("\n\tObjectUid={0}", context.Request.QueryString["ObjectUid"]);
+        	info.AppendFormat("\n\tAccepts={0}", GetClientAcceptTypes(context));
 
-                info.AppendFormat("\n\tAgents={0}", context.Request.UserAgent);
-                info.AppendFormat("\n\tRequestType={0}", context.Request.QueryString["RequestType"]);
-                info.AppendFormat("\n\tStudyUid={0}", context.Request.QueryString["StudyUid"]);
-                info.AppendFormat("\n\tSeriesUid={0}", context.Request.QueryString["SeriesUid"]);
-                info.AppendFormat("\n\tObjectUid={0}", context.Request.QueryString["ObjectUid"]);
-                info.AppendFormat("\n\tAccepts={0}", GetClientAcceptTypes(context));
-
-                Platform.Log(LogLevel.Debug, info);
-            }
-            
-
+        	Platform.Log(LogLevel.Debug, info);
         }
+
+    	/// <summary>
+        /// Generates a http response for an error
+        /// </summary>
+        /// <param name="context"></param>
+        private static void SendError(HttpStatusCode errorCode, HttpListenerContext context)
+        {
+
+            context.Response.StatusCode = (int)errorCode;
+        }
+
 
         /// <summary>
         /// Generates a http response based on the specified <see cref="response"/> object and send it to the client
@@ -143,38 +149,55 @@ namespace ClearCanvas.ImageServer.Services.Streaming.ImageStreaming
         {
             WADORequestProcessorStatistics statistics = new WADORequestProcessorStatistics("Image Streaming");
             statistics.TotalProcessTime.Start();
-            LogRequest(context);
-
-            using(WADORequestTypeHandlerManager handlerManager = new WADORequestTypeHandlerManager())
+        	
+			if (Platform.IsLogLevelEnabled(LogLevel.Debug))
+			{
+				//Don't hold up this thread for logging.
+				Task.Factory.StartNew(() => LogRequest(context));
+			}
+            
+			try
             {
-                string requestType = context.Request.QueryString["requestType"];
-                IWADORequestTypeHandler typeHandler = handlerManager.GetHandler(requestType);
-
-                WADORequestTypeHandlerContext ctx = new WADORequestTypeHandlerContext
-                                                        {
-                                                            HttpContext = context,
-                                                            ServerAE = UriHelper.GetServerAE(context)
-                                                        };
-
-                using (WADOResponse response = typeHandler.Process(ctx))
+                using (WADORequestTypeHandlerManager handlerManager = new WADORequestTypeHandlerManager())
                 {
-                    if (response != null)
+                    string requestType = context.Request.QueryString["requestType"];
+                    IWADORequestTypeHandler typeHandler = handlerManager.GetHandler(requestType);
+
+                    WADORequestTypeHandlerContext ctx = new WADORequestTypeHandlerContext
                     {
-                        statistics.TransmissionSpeed.Start();
-                        SendWADOResponse(response, context);
-                        statistics.TransmissionSpeed.End(); 
-                        if (response.Output != null)
+                        HttpContext = context,
+                        ServerAE = UriHelper.GetServerAE(context)
+                    };
+
+                    using (WADOResponse response = typeHandler.Process(ctx))
+                    {
+                        if (response != null)
                         {
-                            statistics.TransmissionSpeed.SetData(response.Output.Length);   
+                            statistics.TransmissionSpeed.Start();
+                            SendWADOResponse(response, context);
+                            statistics.TransmissionSpeed.End();
+                            if (response.Output != null)
+                            {
+                                statistics.TransmissionSpeed.SetData(response.Output.Length);
+                            }
                         }
-                    }    
+                    }
+
                 }
-                        
+            }
+            catch(MimeTypeProcessorError error)
+            {
+                SendError(error.HttpError, context);
             }
 
             statistics.TotalProcessTime.End();
-            StatisticsLogger.Log(LogLevel.Debug, statistics);
-            
+
+			//Seems like something you'd only want to log if there was a problem.
+			if (Platform.IsLogLevelEnabled(LogLevel.Debug))
+			{
+				//Don't hold up this thread for logging.
+				Task.Factory.StartNew(() => StatisticsLogger.Log(LogLevel.Debug, statistics));
+			}
         }
 
         #endregion

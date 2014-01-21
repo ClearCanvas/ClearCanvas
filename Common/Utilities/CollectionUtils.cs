@@ -90,7 +90,7 @@ namespace ClearCanvas.Common.Utilities
 		/// <returns>A collection containing the subset of matching items from the target collection.</returns>
 		public static List<TItem> Select<TItem>(IEnumerable<TItem> target, Predicate<TItem> predicate)
 		{
-			return Select((IEnumerable)target, predicate);
+			return Select((IEnumerable) target, predicate);
 		}
 
 		/// <summary>
@@ -153,7 +153,7 @@ namespace ClearCanvas.Common.Utilities
 		/// <returns>A collection containing the subset of matching items from the target collection.</returns>
 		public static List<TItem> Reject<TItem>(IEnumerable<TItem> target, Predicate<TItem> predicate)
 		{
-			return Reject((IEnumerable)target, predicate);
+			return Reject((IEnumerable) target, predicate);
 		}
 
 		/// <summary>
@@ -209,7 +209,7 @@ namespace ClearCanvas.Common.Utilities
 		public static TItem SelectFirst<TItem>(IEnumerable<TItem> target, Predicate<TItem> predicate)
 			where TItem : class
 		{
-			return SelectFirst((IEnumerable)target, predicate);
+			return SelectFirst((IEnumerable) target, predicate);
 		}
 
 		/// <summary>
@@ -356,7 +356,7 @@ namespace ClearCanvas.Common.Utilities
 		/// <param name="action">The action to perform.</param>
 		public static void ForEach<TItem>(IEnumerable<TItem> target, Action<TItem> action)
 		{
-			ForEach((IEnumerable)target, action);
+			ForEach((IEnumerable) target, action);
 		}
 
 		/// <summary>
@@ -393,7 +393,7 @@ namespace ClearCanvas.Common.Utilities
 		/// </summary>
 		public static bool Contains<TItem>(IEnumerable<TItem> target, Predicate<TItem> predicate)
 		{
-			return Contains((IEnumerable)target, predicate);
+			return Contains((IEnumerable) target, predicate);
 		}
 
 		/// <summary>
@@ -427,7 +427,7 @@ namespace ClearCanvas.Common.Utilities
 		/// </summary>
 		public static bool TrueForAll<TItem>(IEnumerable<TItem> target, Predicate<TItem> predicate)
 		{
-			return TrueForAll((IEnumerable)target, predicate);
+			return TrueForAll((IEnumerable) target, predicate);
 		}
 
 		/// <summary>
@@ -450,7 +450,7 @@ namespace ClearCanvas.Common.Utilities
 		{
 			if (target is IList)
 			{
-				var list = (IList)target;
+				var list = (IList) target;
 				return list.Count > 0 ? list[0] : null;
 			}
 			else
@@ -466,7 +466,7 @@ namespace ClearCanvas.Common.Utilities
 		public static TItem FirstElement<TItem>(IEnumerable target, TItem defaultValue)
 		{
 			var value = FirstElement(target);
-			return value != null ? (TItem)value : defaultValue;
+			return value != null ? (TItem) value : defaultValue;
 		}
 
 		/// <summary>
@@ -500,7 +500,7 @@ namespace ClearCanvas.Common.Utilities
 		{
 			if (target is IList)
 			{
-				var list = (IList)target;
+				var list = (IList) target;
 				return list.Count > 0 ? list[list.Count - 1] : null;
 			}
 			else
@@ -519,7 +519,7 @@ namespace ClearCanvas.Common.Utilities
 		public static TItem LastElement<TItem>(IEnumerable target, TItem defaultValue)
 		{
 			var value = LastElement(target);
-			return value != null ? (TItem)value : defaultValue;
+			return value != null ? (TItem) value : defaultValue;
 		}
 
 		/// <summary>
@@ -623,7 +623,7 @@ namespace ClearCanvas.Common.Utilities
 		/// </remarks>
 		public static List<TItem> Sort<TItem>(IEnumerable<TItem> target, Comparison<TItem> comparison)
 		{
-			return Sort((IEnumerable)target, comparison);
+			return Sort((IEnumerable) target, comparison);
 		}
 
 		/// <summary>
@@ -648,7 +648,7 @@ namespace ClearCanvas.Common.Utilities
 			// optimize if collection
 			if (target is ICollection<TItem>)
 			{
-				var c = (ICollection<TItem>)target;
+				var c = (ICollection<TItem>) target;
 				var arr = new TItem[c.Count];
 				c.CopyTo(arr, 0);
 				return arr;
@@ -668,7 +668,7 @@ namespace ClearCanvas.Common.Utilities
 			// optimize if collection
 			if (target is ICollection<TItem>)
 			{
-				var c = (ICollection<TItem>)target;
+				var c = (ICollection<TItem>) target;
 				var arr = new TItem[c.Count];
 				c.CopyTo(arr, 0);
 				return arr;
@@ -832,11 +832,11 @@ namespace ClearCanvas.Common.Utilities
 				return nullValue;
 
 			// enumerate all items to find extreme value
-			var memo = (T)enumerator.Current;
+			var memo = (T) enumerator.Current;
 			while (enumerator.MoveNext())
 			{
-				var item = (T)enumerator.Current;
-				if (comparison(item, memo) * sign > 0)
+				var item = (T) enumerator.Current;
+				if (comparison(item, memo)*sign > 0)
 					memo = item;
 			}
 			return memo;
@@ -985,7 +985,6 @@ namespace ClearCanvas.Common.Utilities
 			return Unique(target, null);
 		}
 
-
 		/// <summary>
 		/// Returns a new list containing only the unique elements of the target collection, preserving the order.
 		/// The specified <see cref="IEqualityComparer"/> is used to determine uniqueness.
@@ -1121,6 +1120,19 @@ namespace ClearCanvas.Common.Utilities
 				result.Add(keyFunc(item), valueFunc(item));
 			}
 			return result;
+		}
+
+		/// <summary>
+		/// Creates a read-only view of a source dictionary.
+		/// </summary>
+		/// <typeparam name="TKey"></typeparam>
+		/// <typeparam name="TValue"></typeparam>
+		/// <param name="source"></param>
+		/// <returns></returns>
+		public static IDictionary<TKey, TValue> AsReadOnly<TKey, TValue>(this IDictionary<TKey, TValue> source)
+		{
+			Platform.CheckForNullReference(source, "source");
+			return new ReadOnlyDictionary<TKey, TValue>(source);
 		}
 	}
 }

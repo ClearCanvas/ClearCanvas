@@ -28,58 +28,23 @@ using System.Text.RegularExpressions;
 
 namespace ClearCanvas.Common.Specifications
 {
-    public class RegexSpecification : PrimitiveSpecification
-    {
-        private readonly string _pattern;
-    	private readonly bool _ignoreCase = true;	// true by default
-    	private readonly bool _nullMatches;
-
-        public RegexSpecification(string pattern, bool ignoreCase, bool nullMatches)
-        {
-			Platform.CheckForNullReference(pattern, "pattern");
-			Platform.CheckForEmptyString(pattern, "pattern");
-
-            _pattern = pattern;
-            _ignoreCase = ignoreCase;
-        	_nullMatches = nullMatches;
-        }
-
-		public RegexSpecification(string pattern)
-			:this(pattern, true, false)
+	public class RegexSpecification : StringMatchingSpecification
+	{
+		public RegexSpecification(string pattern, bool ignoreCase, bool nullMatches)
+			: base(pattern, ignoreCase, nullMatches)
 		{
 		}
 
-    	public string Pattern
-    	{
-			get { return _pattern; }
-    	}
+		public RegexSpecification(string pattern)
+			: this(pattern, true, false)
+		{
+		}
 
-    	public bool IgnoreCase
-    	{
-			get { return _ignoreCase; }
-    	}
-
-    	public bool NullMatches
-    	{
-			get { return _nullMatches; }
-    	}
-
-        protected override TestResult InnerTest(object exp, object root)
-        {
-            if (exp == null)
-				return DefaultTestResult(_nullMatches);
-
-            if (exp is string)
-            {
-                if (_ignoreCase)
-                    return DefaultTestResult(Regex.Match(exp as string, _pattern, RegexOptions.IgnoreCase).Success);
-                else
-                    return DefaultTestResult(Regex.Match(exp as string, _pattern).Success);
-            }
-            else
-            {
-                throw new SpecificationException(SR.ExceptionCastExpressionString);
-            }
-        }
-    }
+		protected override bool IsMatch(string test, string pattern, bool ignoreCase)
+		{
+			return ignoreCase ?
+				Regex.Match(test, pattern, RegexOptions.IgnoreCase).Success
+				: Regex.Match(test, pattern).Success;
+		}
+	}
 }

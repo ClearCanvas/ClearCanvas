@@ -203,61 +203,10 @@
   <data name="&gt;&gt;label1.ZOrder" xml:space="preserve">
     <value>5</value>
   </data>
-  <data name="&gt;&gt;_showOriginalSeries.Name" xml:space="preserve">
-    <value>_showOriginalSeries</value>
-  </data>
-  <data name="&gt;&gt;_showOriginalSeries.Type" xml:space="preserve">
-    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;_showOriginalSeries.Parent" xml:space="preserve">
-    <value>_creationGroup</value>
-  </data>
-  <data name="&gt;&gt;_showOriginalSeries.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="&gt;&gt;_createAllImagesDisplaySet.Name" xml:space="preserve">
-    <value>_createAllImagesDisplaySet</value>
-  </data>
-  <data name="&gt;&gt;_createAllImagesDisplaySet.Type" xml:space="preserve">
-    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;_createAllImagesDisplaySet.Parent" xml:space="preserve">
-    <value>_creationGroup</value>
-  </data>
-  <data name="&gt;&gt;_createAllImagesDisplaySet.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="_creationGroup.Location" type="System.Drawing.Point, System.Drawing">
-    <value>15, 46</value>
-  </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="_creationGroup.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>3, 3, 3, 1</value>
-  </data>
-  <data name="_creationGroup.Size" type="System.Drawing.Size, System.Drawing">
-    <value>205, 101</value>
-  </data>
-  <data name="_creationGroup.TabIndex" type="System.Int32, mscorlib">
-    <value>1</value>
-  </data>
-  <data name="_creationGroup.Text" xml:space="preserve">
-    <value>General</value>
-  </data>
-  <data name="&gt;&gt;_creationGroup.Name" xml:space="preserve">
-    <value>_creationGroup</value>
-  </data>
-  <data name="&gt;&gt;_creationGroup.Type" xml:space="preserve">
-    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;_creationGroup.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;_creationGroup.ZOrder" xml:space="preserve">
-    <value>3</value>
-  </data>
   <data name="_showOriginalSeries.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="_showOriginalSeries.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
@@ -321,44 +270,32 @@
   <data name="&gt;&gt;_createAllImagesDisplaySet.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
-  <data name="&gt;&gt;_invertImages.Name" xml:space="preserve">
-    <value>_invertImages</value>
+  <data name="_creationGroup.Location" type="System.Drawing.Point, System.Drawing">
+    <value>15, 46</value>
   </data>
-  <data name="&gt;&gt;_invertImages.Type" xml:space="preserve">
-    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;_invertImages.Parent" xml:space="preserve">
-    <value>_presentationGroupBox</value>
-  </data>
-  <data name="&gt;&gt;_invertImages.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="_presentationGroupBox.Location" type="System.Drawing.Point, System.Drawing">
-    <value>15, 151</value>
-  </data>
-  <data name="_presentationGroupBox.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+  <data name="_creationGroup.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>3, 3, 3, 1</value>
   </data>
-  <data name="_presentationGroupBox.Size" type="System.Drawing.Size, System.Drawing">
-    <value>416, 45</value>
+  <data name="_creationGroup.Size" type="System.Drawing.Size, System.Drawing">
+    <value>205, 101</value>
   </data>
-  <data name="_presentationGroupBox.TabIndex" type="System.Int32, mscorlib">
-    <value>3</value>
+  <data name="_creationGroup.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
   </data>
-  <data name="_presentationGroupBox.Text" xml:space="preserve">
-    <value>Presentation</value>
+  <data name="_creationGroup.Text" xml:space="preserve">
+    <value>General</value>
   </data>
-  <data name="&gt;&gt;_presentationGroupBox.Name" xml:space="preserve">
-    <value>_presentationGroupBox</value>
+  <data name="&gt;&gt;_creationGroup.Name" xml:space="preserve">
+    <value>_creationGroup</value>
   </data>
-  <data name="&gt;&gt;_presentationGroupBox.Type" xml:space="preserve">
+  <data name="&gt;&gt;_creationGroup.Type" xml:space="preserve">
     <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;_presentationGroupBox.Parent" xml:space="preserve">
+  <data name="&gt;&gt;_creationGroup.Parent" xml:space="preserve">
     <value>$this</value>
   </data>
-  <data name="&gt;&gt;_presentationGroupBox.ZOrder" xml:space="preserve">
-    <value>2</value>
+  <data name="&gt;&gt;_creationGroup.ZOrder" xml:space="preserve">
+    <value>3</value>
   </data>
   <data name="_invertImages.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -390,6 +327,33 @@
   <data name="&gt;&gt;_invertImages.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
+  <data name="_presentationGroupBox.Location" type="System.Drawing.Point, System.Drawing">
+    <value>15, 151</value>
+  </data>
+  <data name="_presentationGroupBox.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 3, 3, 1</value>
+  </data>
+  <data name="_presentationGroupBox.Size" type="System.Drawing.Size, System.Drawing">
+    <value>205, 45</value>
+  </data>
+  <data name="_presentationGroupBox.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <data name="_presentationGroupBox.Text" xml:space="preserve">
+    <value>Presentation</value>
+  </data>
+  <data name="&gt;&gt;_presentationGroupBox.Name" xml:space="preserve">
+    <value>_presentationGroupBox</value>
+  </data>
+  <data name="&gt;&gt;_presentationGroupBox.Type" xml:space="preserve">
+    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_presentationGroupBox.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;_presentationGroupBox.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
   <data name="_splitMixedMultiframeSeries.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
@@ -397,7 +361,7 @@
     <value>NoControl</value>
   </data>
   <data name="_splitMixedMultiframeSeries.Location" type="System.Drawing.Point, System.Drawing">
-    <value>15, 59</value>
+    <value>15, 99</value>
   </data>
   <data name="_splitMixedMultiframeSeries.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>3, 3, 3, 1</value>
@@ -406,7 +370,7 @@
     <value>159, 17</value>
   </data>
   <data name="_splitMixedMultiframeSeries.TabIndex" type="System.Int32, mscorlib">
-    <value>2</value>
+    <value>4</value>
   </data>
   <data name="_splitMixedMultiframeSeries.Text" xml:space="preserve">
     <value>Split mixed multi-frame series</value>
@@ -424,7 +388,7 @@
     <value>_splittingGroup</value>
   </data>
   <data name="&gt;&gt;_splitMixedMultiframeSeries.ZOrder" xml:space="preserve">
-    <value>3</value>
+    <value>5</value>
   </data>
   <data name="_showOriginalMixedMultiframeSeries.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -433,7 +397,7 @@
     <value>NoControl</value>
   </data>
   <data name="_showOriginalMixedMultiframeSeries.Location" type="System.Drawing.Point, System.Drawing">
-    <value>25, 78</value>
+    <value>25, 118</value>
   </data>
   <data name="_showOriginalMixedMultiframeSeries.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>1, 1, 1, 1</value>
@@ -442,7 +406,7 @@
     <value>119, 17</value>
   </data>
   <data name="_showOriginalMixedMultiframeSeries.TabIndex" type="System.Int32, mscorlib">
-    <value>3</value>
+    <value>5</value>
   </data>
   <data name="_showOriginalMixedMultiframeSeries.Text" xml:space="preserve">
     <value>Show original series</value>
@@ -460,7 +424,7 @@
     <value>_splittingGroup</value>
   </data>
   <data name="&gt;&gt;_showOriginalMixedMultiframeSeries.ZOrder" xml:space="preserve">
-    <value>2</value>
+    <value>4</value>
   </data>
   <data name="_splitEchos.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -496,7 +460,7 @@
     <value>_splittingGroup</value>
   </data>
   <data name="&gt;&gt;_splitEchos.ZOrder" xml:space="preserve">
-    <value>1</value>
+    <value>3</value>
   </data>
   <data name="_showOriginalMultiEchoSeries.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -532,7 +496,7 @@
     <value>_splittingGroup</value>
   </data>
   <data name="&gt;&gt;_showOriginalMultiEchoSeries.ZOrder" xml:space="preserve">
-    <value>0</value>
+    <value>2</value>
   </data>
   <data name="_overlaysPanel.AutoScroll" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -597,6 +561,78 @@
   <data name="&gt;&gt;_selectedOverlaysGroupBox.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
+  <data name="_showOriginalMultiStackSeries.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="_showOriginalMultiStackSeries.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="_showOriginalMultiStackSeries.Location" type="System.Drawing.Point, System.Drawing">
+    <value>25, 78</value>
+  </data>
+  <data name="_showOriginalMultiStackSeries.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>1, 1, 1, 1</value>
+  </data>
+  <data name="_showOriginalMultiStackSeries.Size" type="System.Drawing.Size, System.Drawing">
+    <value>119, 17</value>
+  </data>
+  <data name="_showOriginalMultiStackSeries.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <data name="_showOriginalMultiStackSeries.Text" xml:space="preserve">
+    <value>Show original series</value>
+  </data>
+  <data name="_showOriginalMultiStackSeries.ToolTip" xml:space="preserve">
+    <value>When a multi-stack series has been split, still create a display set for the original series. Original series is never shown unless this is checked, regardless of other options.</value>
+  </data>
+  <data name="&gt;&gt;_showOriginalMultiStackSeries.Name" xml:space="preserve">
+    <value>_showOriginalMultiStackSeries</value>
+  </data>
+  <data name="&gt;&gt;_showOriginalMultiStackSeries.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_showOriginalMultiStackSeries.Parent" xml:space="preserve">
+    <value>_splittingGroup</value>
+  </data>
+  <data name="&gt;&gt;_showOriginalMultiStackSeries.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="_splitStacks.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="_splitStacks.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="_splitStacks.Location" type="System.Drawing.Point, System.Drawing">
+    <value>15, 59</value>
+  </data>
+  <data name="_splitStacks.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 3, 3, 1</value>
+  </data>
+  <data name="_splitStacks.Size" type="System.Drawing.Size, System.Drawing">
+    <value>129, 17</value>
+  </data>
+  <data name="_splitStacks.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="_splitStacks.Text" xml:space="preserve">
+    <value>Split multi-stack series</value>
+  </data>
+  <data name="_splitStacks.ToolTip" xml:space="preserve">
+    <value>Split multi-stack series into a single display set per stack.</value>
+  </data>
+  <data name="&gt;&gt;_splitStacks.Name" xml:space="preserve">
+    <value>_splitStacks</value>
+  </data>
+  <data name="&gt;&gt;_splitStacks.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_splitStacks.Parent" xml:space="preserve">
+    <value>_splittingGroup</value>
+  </data>
+  <data name="&gt;&gt;_splitStacks.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
   <data name="_splittingGroup.Location" type="System.Drawing.Point, System.Drawing">
     <value>226, 46</value>
   </data>
@@ -604,7 +640,7 @@
     <value>3, 3, 3, 1</value>
   </data>
   <data name="_splittingGroup.Size" type="System.Drawing.Size, System.Drawing">
-    <value>205, 101</value>
+    <value>205, 150</value>
   </data>
   <data name="_splittingGroup.TabIndex" type="System.Int32, mscorlib">
     <value>2</value>

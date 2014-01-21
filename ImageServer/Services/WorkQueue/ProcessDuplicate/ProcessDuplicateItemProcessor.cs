@@ -31,18 +31,20 @@ using System.Xml;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Dicom;
+using ClearCanvas.Dicom.Iod.Sequences;
 using ClearCanvas.Dicom.Utilities.Command;
 using ClearCanvas.Dicom.Utilities.Xml;
 using ClearCanvas.Enterprise.Core;
 using ClearCanvas.ImageServer.Common;
-using ClearCanvas.ImageServer.Common.Command;
 using ClearCanvas.ImageServer.Common.Utilities;
 using ClearCanvas.ImageServer.Core;
 using ClearCanvas.ImageServer.Core.Command;
 using ClearCanvas.ImageServer.Core.Data;
 using ClearCanvas.ImageServer.Core.Edit;
+using ClearCanvas.ImageServer.Core.Helpers;
 using ClearCanvas.ImageServer.Core.Reconcile;
 using ClearCanvas.ImageServer.Core.Validation;
+using ClearCanvas.ImageServer.Enterprise.Command;
 using ClearCanvas.ImageServer.Model;
 using ClearCanvas.ImageServer.Model.EntityBrokers;
 
@@ -68,7 +70,7 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.ProcessDuplicate
         {
             get
             {
-                return ServerPlatform.GetDuplicateGroupPath(StorageLocation, WorkQueueItem);
+                return ServerHelper.GetDuplicateGroupPath(StorageLocation, WorkQueueItem);
             }
         }
 
@@ -218,7 +220,7 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.ProcessDuplicate
                         _studyUpdateCommands = BuildUpdateStudyCommandsFromDuplicate();
                         using (ServerCommandProcessor processor = new ServerCommandProcessor("Update Existing Study w/ Duplicate Info"))
                         {
-                            processor.AddCommand(new UpdateStudyCommand(ServerPartition, StorageLocation, _studyUpdateCommands, ServerRuleApplyTimeEnum.SopProcessed));
+                            processor.AddCommand(new UpdateStudyCommand(ServerPartition, StorageLocation, _studyUpdateCommands, ServerRuleApplyTimeEnum.SopProcessed, WorkQueueItem));
                             if (!processor.Execute())
                             {
                                 throw new ApplicationException(processor.FailureReason, processor.FailureException);
@@ -358,7 +360,7 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.ProcessDuplicate
 
         private StudyHistoryUpdateColumns CreateStudyHistoryRecord(ImageSetDetails details)
         {
-            StudyHistoryUpdateColumns columns = new StudyHistoryUpdateColumns
+            var columns = new StudyHistoryUpdateColumns
                                                 	{
                                                 		InsertTime = Platform.Time,
                                                 		StudyHistoryTypeEnum = StudyHistoryTypeEnum.Duplicate,
@@ -367,7 +369,7 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.ProcessDuplicate
                                                 		StudyData = XmlUtils.SerializeAsXmlDoc(_currentStudyInfo)
                                                 	};
 
-        	ProcessDuplicateChangeLog changeLog = new ProcessDuplicateChangeLog
+            var changeLog = new ProcessDuplicateChangeLog
                                                   	{
                                                   		Action = _processDuplicateEntry.QueueData.Action,
                                                         DuplicateDetails = details,
@@ -453,19 +455,32 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.ProcessDuplicate
 
             if (action==ProcessDuplicateAction.OverwriteUseExisting)
             {
+	            var sq = new OriginalAttributesSequence
+		            {
+			            ModifiedAttributesSequence = new DicomSequenceItem(),
+			            ModifyingSystem = ProductInformation.Component,
+			            ReasonForTheAttributeModification = "COERCE",
+			            AttributeModificationDatetime = Platform.Time,
+			            SourceOfPreviousValues = duplicateDicomFile.SourceApplicationEntityTitle
+		            };
+
                 foreach (BaseImageLevelUpdateCommand command in _duplicateUpdateCommands)
                 {
-                    if (!command.Apply(duplicateDicomFile))
+                    if (!command.Apply(duplicateDicomFile, sq))
                         throw new ApplicationException(String.Format("Unable to update the duplicate sop. Command={0}", command));
                 }
+
+				var sqAttrib = duplicateDicomFile.DataSet[DicomTags.OriginalAttributesSequence] as DicomAttributeSQ;
+				if (sqAttrib != null)
+					sqAttrib.AddSequenceItem(sq.DicomSequenceItem);
             }
         }
 
         private void AddDuplicateToStudy(DicomFile duplicateDicomFile, WorkQueueUid uid, ProcessDuplicateAction action)
         {
             
-            StudyProcessorContext context = new StudyProcessorContext(StorageLocation);
-            SopInstanceProcessor sopInstanceProcessor = new SopInstanceProcessor(context) { EnforceNameRules = true };
+            var context = new StudyProcessorContext(StorageLocation, WorkQueueItem);
+            var sopInstanceProcessor = new SopInstanceProcessor(context) { EnforceNameRules = true };
             string group = uid.GroupID ?? ServerHelper.GetUidGroup(duplicateDicomFile, ServerPartition, WorkQueueItem.InsertTime);
 
             StudyXml studyXml = StorageLocation.LoadStudyXml();
@@ -474,7 +489,7 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.ProcessDuplicate
             bool compare = action != ProcessDuplicateAction.OverwriteAsIs;
             // NOTE: "compare" has no effect for OverwriteUseExisting or OverwriteUseDuplicate
             // because in both cases, the study and the duplicates are modified to be the same.
-            ProcessingResult result = sopInstanceProcessor.ProcessFile(group, duplicateDicomFile, studyXml, compare, true, uid, duplicateDicomFile.Filename);
+            ProcessingResult result = sopInstanceProcessor.ProcessFile(group, duplicateDicomFile, studyXml, compare, true, uid, duplicateDicomFile.Filename, SopInstanceProcessorSopType.UpdatedSop);
             if (result.Status == ProcessingStatus.Reconciled)
             {
                 throw new ApplicationException("Unexpected status of Reconciled image in duplicate handling!");
@@ -493,7 +508,7 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.ProcessDuplicate
                 return;
 
             StudyXml studyXml = StorageLocation.LoadStudyXml();
-            DicomFile file = new DicomFile(path);
+            var file = new DicomFile(path);
             file.Load(DicomReadOptions.DoNotStorePixelDataInDataSet | DicomReadOptions.Default); // don't need to load pixel data cause we will delete it
 
             #if DEBUG
@@ -502,11 +517,14 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.ProcessDuplicate
             int originalSeriesInstanceCount = Study.Series[uid.SeriesInstanceUid].NumberOfSeriesRelatedInstances;
             #endif
 
-            using (ServerCommandProcessor processor = new ServerCommandProcessor("Delete Existing Image"))
+            using (var processor = new ServerCommandProcessor("Delete Existing Image"))
             {
+                var seriesInstanceUid = file.DataSet[DicomTags.SeriesInstanceUid].ToString();
+                var sopInstanceUid = file.DataSet[DicomTags.SopInstanceUid].ToString();
+
                 processor.AddCommand(new FileDeleteCommand(path,true));
-                processor.AddCommand(new RemoveInstanceFromStudyXmlCommand(StorageLocation, studyXml, file));
-                processor.AddCommand(new UpdateInstanceCountCommand(StorageLocation, file));
+                processor.AddCommand(new RemoveInstanceFromStudyXmlCommand(StorageLocation, studyXml, seriesInstanceUid, sopInstanceUid));
+                processor.AddCommand(new UpdateInstanceCountCommand(StorageLocation, seriesInstanceUid,sopInstanceUid));
 
                 if (!processor.Execute())
                 {

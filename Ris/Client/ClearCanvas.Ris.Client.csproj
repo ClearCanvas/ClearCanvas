@@ -74,7 +74,6 @@
     <Compile Include="AttachmentSummaryTable.cs" />
     <Compile Include="AuditHelper.cs" />
     <Compile Include="AuditDataContracts.cs" />
-    <Compile Include="AuthorityTokens.cs" />
     <Compile Include="BannerSettings.cs" />
     <Compile Include="AttachDocumentComponent.cs" />
     <Compile Include="CancelOrderComponent.cs" />

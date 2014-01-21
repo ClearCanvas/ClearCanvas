@@ -38,13 +38,6 @@ namespace ClearCanvas.Enterprise.Core
         void Initialize();
 
         /// <summary>
-        /// Sets the transaction notifier, which the store can use to notify the application of changes
-        /// made to its entities.
-        /// </summary>
-        /// <param name="transactionNotifier"></param>
-        void SetTransactionNotifier(ITransactionNotifier transactionNotifier);
-
-        /// <summary>
         /// Obtains an <see cref="IReadContext"/> for use by the application to interact
         /// with this persistent store.
         /// </summary>
@@ -62,5 +55,10 @@ namespace ClearCanvas.Enterprise.Core
 		/// The version associated with the persistent store.
 		/// </summary>
 		Version Version { get; }
+
+		/// <summary>
+		/// Boolean that can be set on the persistent store to signal that the process is shutting down.
+		/// </summary>
+		bool ShutdownRequested { get; set; }
     }
 }

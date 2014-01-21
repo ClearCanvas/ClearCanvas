@@ -23,18 +23,11 @@
 #endregion
 
 using ClearCanvas.Common;
-using ClearCanvas.Common.Authorization;
 using ClearCanvas.Desktop.Explorer;
 using ClearCanvas.Desktop;
 
 namespace ClearCanvas.ImageViewer.Explorer.Local
 {
-	public static class AuthorityTokens
-	{
-		[AuthorityToken(Description = "Grant access to the 'My Computer' explorer.")]
-		public const string MyComputer = "Viewer/Explorer/My Computer";
-	}
-
 	[ExtensionOf(typeof(HealthcareArtifactExplorerExtensionPoint))]
 	public class LocalImageExplorer : IHealthcareArtifactExplorer
 	{
@@ -54,7 +47,7 @@ namespace ClearCanvas.ImageViewer.Explorer.Local
 
 		public bool IsAvailable
 		{
-			get { return PermissionsHelper.IsInRole(AuthorityTokens.MyComputer); }
+			get { return PermissionsHelper.IsInRole(AuthorityTokens.Explorer.MyComputer); }
 		}
 
 		public IApplicationComponent Component

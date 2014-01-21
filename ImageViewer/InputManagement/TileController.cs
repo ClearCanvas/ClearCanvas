@@ -95,61 +95,61 @@ namespace ClearCanvas.ImageViewer.InputManagement
 	{
 		private delegate bool CallHandlerMethodDelegate(IMouseButtonHandler handler);
 
-        #region Action Model Provider
+		#region Action Model Provider
 
-        /// <summary>
-        /// A proxy class for providing an action model directly to the tile control in order to show
-        /// a context menu without the user having to click.
-        /// </summary>
-        private class ActionModelProvider : IContextMenuProvider, IMouseButtonHandler
-        {
-            private readonly ActionModelNode _actionModel;
+		/// <summary>
+		/// A proxy class for providing an action model directly to the tile control in order to show
+		/// a context menu without the user having to click.
+		/// </summary>
+		private class ActionModelProvider : IContextMenuProvider, IMouseButtonHandler
+		{
+			private readonly ActionModelNode _actionModel;
 
-            public ActionModelProvider(ActionModelNode actionModel)
-            {
-                _actionModel = actionModel;
-            }
+			public ActionModelProvider(ActionModelNode actionModel)
+			{
+				_actionModel = actionModel;
+			}
 
-            #region IContextMenuProvider Members
+			#region IContextMenuProvider Members
 
-            public ActionModelNode GetContextMenuModel(IMouseInformation mouseInformation)
-            {
-                return _actionModel;
-            }
+			public ActionModelNode GetContextMenuModel(IMouseInformation mouseInformation)
+			{
+				return _actionModel;
+			}
 
-            #endregion
+			#endregion
 
-            #region IMouseButtonHandler Members
+			#region IMouseButtonHandler Members
 
-            public bool Start(IMouseInformation mouseInformation)
-            {
-                return false;
-            }
+			public bool Start(IMouseInformation mouseInformation)
+			{
+				return false;
+			}
 
-            public bool Track(IMouseInformation mouseInformation)
-            {
-                return false;
-            }
+			public bool Track(IMouseInformation mouseInformation)
+			{
+				return false;
+			}
 
-            public bool Stop(IMouseInformation mouseInformation)
-            {
-                return false;
-            }
+			public bool Stop(IMouseInformation mouseInformation)
+			{
+				return false;
+			}
 
-            public void Cancel()
-            {
-            }
+			public void Cancel()
+			{
+			}
 
-            public MouseButtonHandlerBehaviour Behaviour
-            {
-                get { return MouseButtonHandlerBehaviour.Default; }
-            }
+			public MouseButtonHandlerBehaviour Behaviour
+			{
+				get { return MouseButtonHandlerBehaviour.Default; }
+			}
 
-            #endregion
-        } 
-        #endregion
+			#endregion
+		}
+		#endregion
 
-		#region MouseWheelManager class 
+		#region MouseWheelManager class
 
 		private class MouseWheelManager
 		{
@@ -159,10 +159,10 @@ namespace ClearCanvas.ImageViewer.InputManagement
 			[ThreadStatic]
 			private static MouseWheelManager _instance;
 
-		    private TileController _captureTileController;
+			private TileController _captureTileController;
 			private IMouseWheelHandler _captureMouseWheelHandler;
 
-		    private DelayedEventPublisher _delayedStop;
+			private DelayedEventPublisher _delayedStop;
 
 			private MouseWheelManager()
 			{
@@ -173,65 +173,65 @@ namespace ClearCanvas.ImageViewer.InputManagement
 				get { return _instance ?? (_instance = new MouseWheelManager()); }
 			}
 
-            public IMouseWheelHandler GetCaptureHandler(TileController tileController)
-            {
-                if (_captureTileController == tileController)
-                    return _captureMouseWheelHandler;
+			public IMouseWheelHandler GetCaptureHandler(TileController tileController)
+			{
+				if (_captureTileController == tileController)
+					return _captureMouseWheelHandler;
 
-                return null;
-            }
+				return null;
+			}
 
 			public void SetCaptureHandler(TileController tileController, IMouseWheelHandler captureMouseWheelHandler)
 			{
-                if (_captureTileController == tileController && _captureMouseWheelHandler == captureMouseWheelHandler)
+				if (_captureTileController == tileController && _captureMouseWheelHandler == captureMouseWheelHandler)
 					return;
 
 				if (_captureMouseWheelHandler != null)
 				{
-                    if (_delayedStop != null)
-                    {
-                        _delayedStop.Dispose();
-                        _delayedStop = null;
-                    }
+					if (_delayedStop != null)
+					{
+						_delayedStop.Dispose();
+						_delayedStop = null;
+					}
 
-                    EventsHelper.Fire(tileController._wheelCaptureChangingEvent, tileController, new ItemEventArgs<IMouseWheelHandler>(null));
-                    _captureMouseWheelHandler.StopWheel();
-                    _captureTileController._tile.ImageViewer.EventBroker.OnMouseWheelCaptureChanged(new MouseWheelCaptureChangedEventArgs(_captureTileController._tile, false));
+					EventsHelper.Fire(tileController._wheelCaptureChangingEvent, tileController, new ItemEventArgs<IMouseWheelHandler>(null));
+					_captureMouseWheelHandler.StopWheel();
+					_captureTileController._tile.ImageViewer.EventBroker.OnMouseWheelCaptureChanged(new MouseWheelCaptureChangedEventArgs(_captureTileController._tile, false));
 				}
 
-			    _captureTileController = tileController;
+				_captureTileController = tileController;
 				_captureMouseWheelHandler = captureMouseWheelHandler;
-                
+
 				if (_captureMouseWheelHandler == null)
 				{
-                    //This is only needed when the capture mouse wheel handler is not null.
-				    _captureTileController = null;
-                    if (_delayedStop != null)
-                    {
-                        _delayedStop.Dispose();
-                        _delayedStop = null;
-                    }
-                    return;
+					//This is only needed when the capture mouse wheel handler is not null.
+					_captureTileController = null;
+					if (_delayedStop != null)
+					{
+						_delayedStop.Dispose();
+						_delayedStop = null;
+					}
+					return;
 				}
 
-                _delayedStop = new DelayedEventPublisher((s, e) => SetCaptureHandler(tileController, null), WheelStopDelayMilliseconds);
+				_delayedStop = new DelayedEventPublisher((s, e) => SetCaptureHandler(tileController, null), WheelStopDelayMilliseconds);
 
-                EventsHelper.Fire(tileController._wheelCaptureChangingEvent, tileController, new ItemEventArgs<IMouseWheelHandler>(_captureMouseWheelHandler));
-                _captureMouseWheelHandler.StartWheel();
-                _captureTileController._tile.ImageViewer.EventBroker.OnMouseWheelCaptureChanged(new MouseWheelCaptureChangedEventArgs(_captureTileController._tile, true));
+				EventsHelper.Fire(tileController._wheelCaptureChangingEvent, tileController, new ItemEventArgs<IMouseWheelHandler>(_captureMouseWheelHandler));
+				_captureMouseWheelHandler.StartWheel();
+				_captureTileController._tile.ImageViewer.EventBroker.OnMouseWheelCaptureChanged(new MouseWheelCaptureChangedEventArgs(_captureTileController._tile, true));
 
-                _delayedStop.Publish(this, EventArgs.Empty);
+				_delayedStop.Publish(this, EventArgs.Empty);
 			}
 
-		    public void OnMouseWheel()
-		    {
-                if (_delayedStop != null)
-                    _delayedStop.Publish(this, EventArgs.Empty);
-		    }
+			public void OnMouseWheel()
+			{
+				if (_delayedStop != null)
+					_delayedStop.Publish(this, EventArgs.Empty);
+			}
 		}
 
 		#endregion
-		
+
 		#region Private Fields
 
 		private readonly Tile _tile;
@@ -245,14 +245,14 @@ namespace ClearCanvas.ImageViewer.InputManagement
 		private IMouseButtonHandler _captureHandler;
 		private int _startCount = 0;
 		private CursorToken _cursorToken;
-		
-		private bool _contextMenuEnabled; 
+
+		private bool _contextMenuEnabled;
 		private IContextMenuProvider _contextMenuProvider;
 
 		private event EventHandler _cursorTokenChanged;
 		private event EventHandler<ItemEventArgs<Point>> _contextMenuRequested;
 		private event EventHandler<ItemEventArgs<IMouseButtonHandler>> _captureChangingEvent;
-        private event EventHandler<ItemEventArgs<IMouseWheelHandler>> _wheelCaptureChangingEvent;
+		private event EventHandler<ItemEventArgs<IMouseWheelHandler>> _wheelCaptureChangingEvent;
 
 		private XMouseButtons _activeButton;
 		private uint _clickCount;
@@ -271,9 +271,9 @@ namespace ClearCanvas.ImageViewer.InputManagement
 			Platform.CheckForNullReference(shortcutManager, "shortcutManager");
 
 			_tile = tile;
-            _tile.ContextMenuRequested += ProcessExplicitContextMenuRequest;
+			_tile.ContextMenuRequested += ProcessExplicitContextMenuRequest;
 
-            _selectedOnThisClick = false;
+			_selectedOnThisClick = false;
 			_capturedOnThisClick = false;
 			_shortcutManager = shortcutManager;
 			_delayedContextMenuRequestPublisher = new DelayedEventPublisher(ProcessDelayedContextMenuRequest, InputManagementSettings.Default.ContextMenuDelay);
@@ -281,16 +281,16 @@ namespace ClearCanvas.ImageViewer.InputManagement
 
 		public void Dispose()
 		{
-            if (_delayedContextMenuRequestPublisher == null)
-                return;
+			if (_delayedContextMenuRequestPublisher == null)
+				return;
 
-		    ReleaseCapture(true);
-		    this.CaptureMouseWheelHandler = null;
+			ReleaseCapture(true);
+			this.CaptureMouseWheelHandler = null;
 
 			_delayedContextMenuRequestPublisher.Dispose();
-		    _tile.ContextMenuRequested -= ProcessExplicitContextMenuRequest;
+			_tile.ContextMenuRequested -= ProcessExplicitContextMenuRequest;
 
-		    _delayedContextMenuRequestPublisher = null;
+			_delayedContextMenuRequestPublisher = null;
 		}
 
 		#region Private Properties
@@ -316,14 +316,14 @@ namespace ClearCanvas.ImageViewer.InputManagement
 
 				if (_captureHandler != null && _captureHandler is IMemorable)
 				{
-					_command.EndState = ((IMemorable) _captureHandler).CreateMemento();
+					_command.EndState = ((IMemorable)_captureHandler).CreateMemento();
 					if (_command.BeginState != null && !_command.BeginState.Equals(_command.EndState))
 					{
 						DrawableUndoableCommand drawableCommand = new DrawableUndoableCommand(_tile);
 						drawableCommand.Enqueue(_command);
 						_tile.ImageViewer.CommandHistory.AddCommand(drawableCommand);
 					}
-					
+
 					_command = null;
 				}
 
@@ -331,11 +331,11 @@ namespace ClearCanvas.ImageViewer.InputManagement
 
 				if (_captureHandler != null && _captureHandler is IMemorable)
 				{
-					IMemorable originator = (IMemorable) _captureHandler;
+					IMemorable originator = (IMemorable)_captureHandler;
 					_command = new MemorableUndoableCommand(originator);
 					_command.BeginState = originator.CreateMemento();
 				}
-				
+
 				//fire our own event first, so the view can release 'real' capture 
 				// before other notifications go out through the event broker.
 				EventsHelper.Fire(_captureChangingEvent, this, new ItemEventArgs<IMouseButtonHandler>(_captureHandler));
@@ -346,8 +346,8 @@ namespace ClearCanvas.ImageViewer.InputManagement
 
 		private IMouseWheelHandler CaptureMouseWheelHandler
 		{
-            set { MouseWheelManager.Instance.SetCaptureHandler(this, value); }
-		    get { return MouseWheelManager.Instance.GetCaptureHandler(this); }
+			set { MouseWheelManager.Instance.SetCaptureHandler(this, value); }
+			get { return MouseWheelManager.Instance.GetCaptureHandler(this); }
 		}
 
 		#endregion
@@ -445,7 +445,7 @@ namespace ClearCanvas.ImageViewer.InputManagement
 			this.CaptureMouseWheelHandler = null;
 
 			IClickAction action = _shortcutManager.GetKeyboardAction(keyboardMessage.Shortcut);
-            Trace.WriteLine(String.Format("Finding shortcut for: {0}", keyboardMessage.Shortcut));
+			Trace.WriteLine(String.Format("Finding shortcut for: {0}", keyboardMessage.Shortcut));
 			if (action != null)
 			{
 				action.Click();
@@ -460,22 +460,22 @@ namespace ClearCanvas.ImageViewer.InputManagement
 			if (!_tile.Enabled)
 				return true;
 
-            if (wheelMessage.WheelDelta == 0)
-            {
-                if (CaptureMouseWheelHandler != null)
-                {
-                    //NOTE: hack for Webstation; we can't totally discard mouse wheel messages because
-                    //they need to reset the timer that releases "wheel capture". So, if we see a wheel delta
-                    //of zero, we just don't process the message through the handler, which could cause an unwanted draw.
-                    MouseWheelManager.Instance.OnMouseWheel();
-                    return true;
-                }
+			if (wheelMessage.WheelDelta == 0)
+			{
+				if (CaptureMouseWheelHandler != null)
+				{
+					//NOTE: hack for Webstation; we can't totally discard mouse wheel messages because
+					//they need to reset the timer that releases "wheel capture". So, if we see a wheel delta
+					//of zero, we just don't process the message through the handler, which could cause an unwanted draw.
+					MouseWheelManager.Instance.OnMouseWheel();
+					return true;
+				}
 
-                //Invalid message; do nothing.
-                return false;
-            }
+				//Invalid message; do nothing.
+				return false;
+			}
 
-            ReleaseCapture(true);
+			ReleaseCapture(true);
 
 			IMouseWheelHandler handler = _shortcutManager.GetMouseWheelHandler(wheelMessage.Shortcut);
 			if (handler != null)
@@ -553,7 +553,7 @@ namespace ClearCanvas.ImageViewer.InputManagement
 		{
 			if (StartNewGraphicHandler())
 				return true;
-			else 
+			else
 				return StartNewToolHandler(buttonMessage);
 		}
 
@@ -624,7 +624,7 @@ namespace ClearCanvas.ImageViewer.InputManagement
 					return true;
 				}
 
-                //Trace.WriteLine(String.Format("Release capture {0}", this.CaptureHandler.GetType()));
+				//Trace.WriteLine(String.Format("Release capture {0}", this.CaptureHandler.GetType()));
 
 				ReleaseCapture(false);
 				return true;
@@ -662,7 +662,7 @@ namespace ClearCanvas.ImageViewer.InputManagement
 		private bool ProcessTrackMessage(TrackMousePositionMessage trackMessage)
 		{
 			this.Location = trackMessage.Location;
-						
+
 			if (HasMoved(this.Location))
 				_contextMenuEnabled = false;
 
@@ -728,7 +728,7 @@ namespace ClearCanvas.ImageViewer.InputManagement
 		{
 			if (_tile.PresentationImage is PresentationImage)
 			{
-				CompositeGraphic sceneGraph = ((PresentationImage) _tile.PresentationImage).SceneGraph;
+				CompositeGraphic sceneGraph = ((PresentationImage)_tile.PresentationImage).SceneGraph;
 				foreach (IMouseButtonHandler handler in GetHandlerGraphics(sceneGraph))
 				{
 					if (handlerDelegate(handler))
@@ -741,12 +741,12 @@ namespace ClearCanvas.ImageViewer.InputManagement
 
 		private IEnumerable<IGraphic> GetVisibleGraphics(CompositeGraphic compositeGraphic)
 		{
-		    return compositeGraphic.EnumerateChildGraphics(true).Where(g => g.Visible);
+			return compositeGraphic.EnumerateChildGraphics(true).Where(g => g.Visible);
 		}
 
-	    private IEnumerable<IMouseButtonHandler> GetHandlerGraphics(CompositeGraphic compositeGraphic)
+		private IEnumerable<IMouseButtonHandler> GetHandlerGraphics(CompositeGraphic compositeGraphic)
 		{
-            foreach (IGraphic graphic in GetVisibleGraphics(compositeGraphic))
+			foreach (IGraphic graphic in GetVisibleGraphics(compositeGraphic))
 			{
 				if (graphic is IMouseButtonHandler)
 				{
@@ -775,72 +775,72 @@ namespace ClearCanvas.ImageViewer.InputManagement
 
 		private void ProcessDelayedContextMenuRequest(object sender, EventArgs e)
 		{
-            var eventArgs = e as ItemEventArgs<Point>;
+			var eventArgs = e as ItemEventArgs<Point>;
 			if (eventArgs == null)
 				return;
 
-		    if (HasMoved(eventArgs.Item, _currentMousePoint))
-                return;
-		    
-            if (CaptureHandler != null)
-		        ReleaseCapture(true);
+			if (HasMoved(eventArgs.Item, _currentMousePoint))
+				return;
 
-		    //When we show the context menu, reset the active button and start count,
-            //because the user is going to have to start over again with a new click.
-            _activeButton = 0;
-		    _startCount = 0;
+			if (CaptureHandler != null)
+				ReleaseCapture(true);
 
-		    _contextMenuEnabled = true;
-		    EventsHelper.Fire(_contextMenuRequested, this, eventArgs);
+			//When we show the context menu, reset the active button and start count,
+			//because the user is going to have to start over again with a new click.
+			_activeButton = 0;
+			_startCount = 0;
+
+			_contextMenuEnabled = true;
+			EventsHelper.Fire(_contextMenuRequested, this, eventArgs);
 		}
 
-	    private void ProcessExplicitContextMenuRequest(object sender, TileContextMenuRequestEventArgs e)
-	    {
-            //Because it is likely to be called from within a mouse button handler's Start
-            //method, which can cause problems, we'll post it instead.
-            SynchronizationContext.Current.Post(ignore=>ProcessExplicitContextMenuRequest(e.Location, e.ActionModel), null);
-	    }
-        
-	    private void ProcessExplicitContextMenuRequest(Point? location, ActionModelNode actionModel)
-        {
-            //Force a handler with capture to release.
-            if (this.CaptureHandler != null)
-                ReleaseCapture(true);
+		private void ProcessExplicitContextMenuRequest(object sender, TileContextMenuRequestEventArgs e)
+		{
+			//Because it is likely to be called from within a mouse button handler's Start
+			//method, which can cause problems, we'll post it instead.
+			SynchronizationContext.Current.Post(ignore => ProcessExplicitContextMenuRequest(e.Location, e.ActionModel), null);
+		}
 
-            //When we show the context menu, reset the active button and start count,
-            //because the user is going to have to start over again with a new click.
-            _activeButton = 0;
-            _startCount = 0;
+		private void ProcessExplicitContextMenuRequest(Point? location, ActionModelNode actionModel)
+		{
+			//Force a handler with capture to release.
+			if (this.CaptureHandler != null)
+				ReleaseCapture(true);
 
-            if (!location.HasValue || !TileClientRectangle.Contains(location.Value))
-                location = _currentMousePoint;
+			//When we show the context menu, reset the active button and start count,
+			//because the user is going to have to start over again with a new click.
+			_activeButton = 0;
+			_startCount = 0;
 
-            if (actionModel == null)
-            {
-                CompositeGraphic sceneGraph = ((PresentationImage)_tile.PresentationImage).SceneGraph;
-                //Get all the mouse button handlers that provide a context menu.
-                foreach (var handlerGraphic in GetHandlerGraphics(sceneGraph).OfType<IContextMenuProvider>())
-                {
-                    var actionSet = handlerGraphic.GetContextMenuModel(this);
-                    if (actionSet != null && actionSet.ChildNodes.Count > 0)
-                    {
-                        ContextMenuProvider = handlerGraphic;
-                        break;
-                    }
-                }
-            }
-            else
-            {
-                ContextMenuProvider = new ActionModelProvider(actionModel);
-            }
+			if (!location.HasValue || !TileClientRectangle.Contains(location.Value))
+				location = _currentMousePoint;
 
-            //Request the context menu.
-            _contextMenuEnabled = true;
-            EventsHelper.Fire(_contextMenuRequested, this, new ItemEventArgs<Point>(location.Value));
+			if (actionModel == null)
+			{
+				CompositeGraphic sceneGraph = ((PresentationImage)_tile.PresentationImage).SceneGraph;
+				//Get all the mouse button handlers that provide a context menu.
+				foreach (var handlerGraphic in GetHandlerGraphics(sceneGraph).OfType<IContextMenuProvider>())
+				{
+					var actionSet = handlerGraphic.GetContextMenuModel(this);
+					if (actionSet != null && actionSet.ChildNodes.Count > 0)
+					{
+						ContextMenuProvider = handlerGraphic;
+						break;
+					}
+				}
+			}
+			else
+			{
+				ContextMenuProvider = new ActionModelProvider(actionModel);
+			}
 
-            ContextMenuProvider = null;
-        }
-        
+			//Request the context menu.
+			_contextMenuEnabled = true;
+			EventsHelper.Fire(_contextMenuRequested, this, new ItemEventArgs<Point>(location.Value));
+
+			ContextMenuProvider = null;
+		}
+
 		#endregion
 		#endregion
 
@@ -938,41 +938,41 @@ namespace ClearCanvas.ImageViewer.InputManagement
 				return ProcessTrackMessage(message as TrackMousePositionMessage);
 			}
 
-            if (_tile.PresentationImage != null)
-            {
-                if (message is MouseWheelMessage)
-                {
-                    bool returnValue = ProcessMouseWheelMessage(message as MouseWheelMessage);
-                    TrackCurrentPosition();
-                    return returnValue;
-                }
-                else if (message is KeyboardButtonMessage)
-                {
-                    bool returnValue = ProcessKeyboardMessage(message as KeyboardButtonMessage);
-                    TrackCurrentPosition();
-                    return returnValue;
-                }
-                else if (message is ReleaseCaptureMessage)
-                {
-                    ReleaseCapture(true);
-                    TrackCurrentPosition();
-                    return true;
-                }
-                else if (message is MouseLeaveMessage)
-                {
-                    _tile.PresentationImage.FocussedGraphic = null;
-                }
-            }
-            else
-            {
-                // We should respond to keyboard even when there's no presentation image.
-                if (message is KeyboardButtonMessage)
-                {
-                    bool returnValue = ProcessKeyboardMessage(message as KeyboardButtonMessage);
-                    return returnValue;
-                }
-            }
-		    return false;
+			if (_tile.PresentationImage != null)
+			{
+				if (message is MouseWheelMessage)
+				{
+					bool returnValue = ProcessMouseWheelMessage(message as MouseWheelMessage);
+					TrackCurrentPosition();
+					return returnValue;
+				}
+				else if (message is KeyboardButtonMessage)
+				{
+					bool returnValue = ProcessKeyboardMessage(message as KeyboardButtonMessage);
+					TrackCurrentPosition();
+					return returnValue;
+				}
+				else if (message is ReleaseCaptureMessage)
+				{
+					ReleaseCapture(true);
+					TrackCurrentPosition();
+					return true;
+				}
+				else if (message is MouseLeaveMessage)
+				{
+					_tile.PresentationImage.FocussedGraphic = null;
+				}
+			}
+			else
+			{
+				// We should respond to keyboard even when there's no presentation image.
+				if (message is KeyboardButtonMessage)
+				{
+					bool returnValue = ProcessKeyboardMessage(message as KeyboardButtonMessage);
+					return returnValue;
+				}
+			}
+			return false;
 		}
 
 		#endregion
@@ -1006,14 +1006,14 @@ namespace ClearCanvas.ImageViewer.InputManagement
 			remove { _captureChangingEvent -= value; }
 		}
 
-        /// <summary>
-        /// For use by the view layer, so it can detect when capture is changing.
-        /// </summary>
-        public event EventHandler<ItemEventArgs<IMouseWheelHandler>> WheelCaptureChanging
-        {
-            add { _wheelCaptureChangingEvent += value; }
-            remove { _wheelCaptureChangingEvent -= value; }
-        }
+		/// <summary>
+		/// For use by the view layer, so it can detect when capture is changing.
+		/// </summary>
+		public event EventHandler<ItemEventArgs<IMouseWheelHandler>> WheelCaptureChanging
+		{
+			add { _wheelCaptureChangingEvent += value; }
+			remove { _wheelCaptureChangingEvent -= value; }
+		}
 
 		#endregion
 

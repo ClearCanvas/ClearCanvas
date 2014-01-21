@@ -71,6 +71,7 @@
     <Compile Include="ErrorPresentationImage.cs" />
     <Compile Include="FusionImageAnnotationItemProvider.cs" />
     <Compile Include="FusionOverlayMinMaxVoiLutLinear.cs" />
+    <Compile Include="FusionSopDataSource.cs" />
     <Compile Include="IFusionDisplaySetDescriptor.cs" />
     <Compile Include="Tests\AsynchronousFusionTestTool.cs" />
     <Compile Include="Tests\FusionColorCompositingTest.cs" />
@@ -105,7 +106,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>SR.resx</DependentUpon>
     </Compile>
-    <Compile Include="Utilities\DicomImagePlane.cs" />
     <Compile Include="WindowLevelSynchronicityTool.cs" />
   </ItemGroup>
   <ItemGroup>

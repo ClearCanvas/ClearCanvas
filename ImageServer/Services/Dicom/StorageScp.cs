@@ -29,6 +29,7 @@ using ClearCanvas.Dicom;
 using ClearCanvas.Dicom.Network;
 using ClearCanvas.Dicom.Network.Scp;
 using ClearCanvas.Enterprise.Core;
+using ClearCanvas.ImageServer.Common.WorkQueue;
 using ClearCanvas.ImageServer.Core;
 using ClearCanvas.ImageServer.Enterprise;
 using ClearCanvas.ImageServer.Model;
@@ -64,10 +65,12 @@ namespace ClearCanvas.ImageServer.Services.Dicom
         protected static DicomFile ConvertToDicomFile(DicomMessage message, string filename, AssociationParameters assocParms)
         {
             // This routine sets some of the group 0x0002 elements.
-            DicomFile file = new DicomFile(message, filename);
+            var file = new DicomFile(message, filename)
+                {
+                    SourceApplicationEntityTitle = assocParms.CallingAE,
+                    TransferSyntax = message.TransferSyntax
+                };
 
-            file.SourceApplicationEntityTitle = assocParms.CallingAE;
-            file.TransferSyntax = message.TransferSyntax;
             return file;
         }
 
@@ -80,18 +83,17 @@ namespace ClearCanvas.ImageServer.Services.Dicom
         /// <returns>The list of syntaxes</returns>
 		protected static IList<PartitionTransferSyntax> LoadTransferSyntaxes(IReadContext read, ServerEntityKey partitionKey, bool encapsulated)
         {
-            IList<PartitionTransferSyntax> list;
+            var broker = read.GetBroker<IQueryServerPartitionTransferSyntaxes>();
 
-			IQueryServerPartitionTransferSyntaxes broker = read.GetBroker<IQueryServerPartitionTransferSyntaxes>();
+			var criteria = new PartitionTransferSyntaxQueryParameters
+			    {
+			        ServerPartitionKey = partitionKey
+			    };
 
-			PartitionTransferSyntaxQueryParameters criteria = new PartitionTransferSyntaxQueryParameters();
-
-            criteria.ServerPartitionKey = partitionKey;
-
-            list = broker.Find(criteria);
+            IList<PartitionTransferSyntax> list = broker.Find(criteria);
 
 
-			List<PartitionTransferSyntax> returnList = new List<PartitionTransferSyntax>();
+			var returnList = new List<PartitionTransferSyntax>();
 			foreach (PartitionTransferSyntax syntax in list)
             {
 				if (!syntax.Enabled) continue;
@@ -116,7 +118,7 @@ namespace ClearCanvas.ImageServer.Services.Dicom
                 return DicomPresContextResult.RejectUser;
             }
 
-			if (Device.AcceptKOPR)
+			if (Device.AcceptKOPR || Context.AllowKOPR)
 			{
 				DicomPresContext context = association.GetPresentationContext(pcid);
 				if (context.AbstractSyntax.Equals(SopClass.KeyObjectSelectionDocumentStorage)
@@ -132,19 +134,56 @@ namespace ClearCanvas.ImageServer.Services.Dicom
             return DicomPresContextResult.Accept;
         }
 
+		public override bool ReceiveMessageAsFileStream(DicomServer server, ServerAssociationParameters association, byte presentationId, DicomMessage message)
+		{
+			var sopClassUid = message.AffectedSopClassUid;
+
+			if (sopClassUid.Equals(SopClass.BreastTomosynthesisImageStorageUid)
+				|| sopClassUid.Equals(SopClass.EnhancedCtImageStorageUid)
+				|| sopClassUid.Equals(SopClass.EnhancedMrColorImageStorageUid)
+				|| sopClassUid.Equals(SopClass.EnhancedMrImageStorageUid)
+				|| sopClassUid.Equals(SopClass.EnhancedPetImageStorageUid)
+				|| sopClassUid.Equals(SopClass.EnhancedUsVolumeStorageUid)
+				|| sopClassUid.Equals(SopClass.EnhancedXaImageStorageUid)
+				|| sopClassUid.Equals(SopClass.EnhancedXrfImageStorageUid)
+				|| sopClassUid.Equals(SopClass.UltrasoundMultiFrameImageStorageUid)
+				|| sopClassUid.Equals(SopClass.MultiFrameGrayscaleByteSecondaryCaptureImageStorageUid)
+				|| sopClassUid.Equals(SopClass.MultiFrameGrayscaleWordSecondaryCaptureImageStorageUid)
+				|| sopClassUid.Equals(SopClass.MultiFrameSingleBitSecondaryCaptureImageStorageUid)
+				|| sopClassUid.Equals(SopClass.MultiFrameTrueColorSecondaryCaptureImageStorageUid))
+			{
+				server.DimseDatasetStopTag = DicomTagDictionary.GetDicomTag(DicomTags.ReconstructionIndex); // Random tag at the end of group 20
+				server.StreamMessage = true;
+				return true;
+			}
+
+			return false;
+		}
+
         #endregion Overridden BaseSCP methods
 
         #region IDicomScp Members
 
-        public override bool OnReceiveRequest(DicomServer server, ServerAssociationParameters association, byte presentationID, DicomMessage message)
+		public override IDicomFilestreamHandler OnStartFilestream(DicomServer server, ServerAssociationParameters association,
+		                                                          byte presentationId, DicomMessage message)
+		{
+			return new StorageFilestreamHandler(Context, Device, association);
+		}
+
+        public override bool OnReceiveRequest(DicomServer server, ServerAssociationParameters association, byte presentationId, DicomMessage message)
         {
             try
             {
-                SopInstanceImporterContext context = new SopInstanceImporterContext(
+                var context = new SopInstanceImporterContext(
                     String.Format("{0}_{1}", association.CallingAE, association.TimeStamp.ToString("yyyyMMddhhmmss")),
                     association.CallingAE, association.CalledAE);
 
-                SopInstanceImporter importer = new SopInstanceImporter(context);
+				if (Device != null && Device.DeviceTypeEnum.Equals(DeviceTypeEnum.PrimaryPacs))
+				{
+					context.DuplicateProcessing = DuplicateProcessingEnum.OverwriteSopAndUpdateDatabase;
+				}
+
+                var importer = new SopInstanceImporter(context);
                 DicomProcessingResult result = importer.Import(message);
 
                 if (result.Successful)
@@ -161,7 +200,7 @@ namespace ClearCanvas.ImageServer.Services.Dicom
 				else 
 					Platform.Log(LogLevel.Warn, "Failure importing sop: {0}", result.ErrorMessage);
 
-                server.SendCStoreResponse(presentationID, message.MessageId, message.AffectedSopInstanceUid, result.DicomStatus);
+                server.SendCStoreResponse(presentationId, message.MessageId, message.AffectedSopInstanceUid, result.DicomStatus);
                 return true;
             }
             catch(DicomDataException ex)

@@ -100,13 +100,13 @@
       <Project>{85100D3E-471C-47C9-9687-ABF25F617ED7}</Project>
       <Name>ClearCanvas.ImageViewer</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Common\ClearCanvas.ImageViewer.Common.csproj">
+      <Project>{FEFD73C5-8541-47D2-BBDB-FF61DEA28291}</Project>
+      <Name>ClearCanvas.ImageViewer.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Configuration\ClearCanvas.ImageViewer.Configuration.csproj">
       <Project>{89DF567B-A0D1-456A-A28F-043FD57D7F9A}</Project>
       <Name>ClearCanvas.ImageViewer.Configuration</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Layout\Basic\ClearCanvas.ImageViewer.Layout.Basic.csproj">
-      <Project>{EA38C1F1-C4BD-4ED7-9B60-C95DF22D6A72}</Project>
-      <Name>ClearCanvas.ImageViewer.Layout.Basic</Name>
     </ProjectReference>
     <Reference Include="nunit.framework, Version=2.2.7.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -147,6 +147,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DicomGraphicAnnotationTool.cs" />
     <Compile Include="MagnificationTool2.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
@@ -190,6 +191,7 @@
     <Compile Include="PresetVoiLuts\LutHelper.cs" />
     <Compile Include="PresetVoiLuts\Operations\VoiLutSelector.cs" />
     <Compile Include="PresetVoiLuts\PresetVoiLutReservedActionModelKeyStrokesProvider.cs" />
+    <Compile Include="Rotate3DTool.cs" />
     <Compile Include="TextCalloutTool.cs" />
     <Compile Include="ToolSettings.cs" />
     <Compile Include="ToolSettings.Designer.cs">
@@ -404,20 +406,10 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Icons\ClearCustomShuttersToolLarge.png" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Icons\ClearCustomShuttersToolMedium.png" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Icons\ClearCustomShuttersToolSmall.png" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Icons\MagnificationToolLarge.png" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Icons\MagnificationToolMedium.png" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Icons\MagnificationToolSmall.png" />
   </ItemGroup>
   <ItemGroup>
@@ -444,15 +436,16 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Icons\ImagePropertiesToolLarge.png" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Icons\ImagePropertiesToolSmall.png" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Icons\ImagePropertiesToolMedium.png" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Configuration\ToolModalityBehaviorCollectionDefault.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\Rotate3DToolLarge.png" />
+    <EmbeddedResource Include="Icons\Rotate3DToolMedium.png" />
+    <EmbeddedResource Include="Icons\Rotate3DToolSmall.png" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

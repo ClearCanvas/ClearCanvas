@@ -22,6 +22,8 @@
 
 #endregion
 
+using System;
+using System.Data.SqlTypes;
 using ClearCanvas.Common;
 using ClearCanvas.Dicom.Utilities.Command;
 using ClearCanvas.Dicom.Utilities.Xml;
@@ -85,6 +87,12 @@ namespace ClearCanvas.ImageViewer.StudyManagement.Core.Command
             }
 
             Context.ContextStudy.Update(_studyXml);
+
+			// TODO (2014-01-11) Rigel - Deal with this better in the database, converted due to ticket #11593
+	        if (Context.ContextStudy.StudyDate < (DateTime)SqlDateTime.MinValue)
+		        Context.ContextStudy.StudyDate = null;
+			if (Context.ContextStudy.PatientsBirthDate < (DateTime)SqlDateTime.MinValue)
+				Context.ContextStudy.PatientsBirthDate = null;
         }
     }
 }

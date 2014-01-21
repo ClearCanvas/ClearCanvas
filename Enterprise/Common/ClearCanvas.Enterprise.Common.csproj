@@ -105,6 +105,7 @@
     <Compile Include="Admin\AuthorityGroupAdmin\ImportAuthorityGroupsResponse.cs" />
     <Compile Include="Admin\AuthorityGroupAdmin\ImportAuthorityTokensRequest.cs" />
     <Compile Include="Admin\AuthorityGroupAdmin\ImportAuthorityTokensResponse.cs" />
+    <Compile Include="Admin\UserAdmin\IUserReadService.cs" />
     <Compile Include="Admin\UserAdmin\IUserAdminService.cs" />
     <Compile Include="Admin\AuthorityGroupAdmin\ListAuthorityGroupsRequest.cs" />
     <Compile Include="Admin\AuthorityGroupAdmin\ListAuthorityGroupsResponse.cs" />
@@ -139,6 +140,8 @@
     <Compile Include="AuthenticationScope.cs" />
     <Compile Include="Authentication\ChangePasswordRequest.cs" />
     <Compile Include="Authentication\ChangePasswordResponse.cs" />
+    <Compile Include="Authentication\InitiateImpersonatedSessionRequest.cs" />
+    <Compile Include="Authentication\IImpersonationService.cs" />
     <Compile Include="Authentication\GetAuthorizationsRequest.cs" />
     <Compile Include="Authentication\GetAuthorizationsResponse.cs" />
     <Compile Include="Authentication\InitiateSessionRequest.cs" />
@@ -150,6 +153,7 @@
     <Compile Include="Authentication\ValidateSessionRequest.cs" />
     <Compile Include="Authentication\ValidateSessionResponse.cs" />
     <Compile Include="AuthorityGroupIsNotEmptyException.cs" />
+    <Compile Include="BuiltInAuthorityGroups.cs" />
     <Compile Include="Configuration\IApplicationConfigurationReadService.cs" />
     <Compile Include="Configuration\ImportSettingsGroupRequest.cs" />
     <Compile Include="Configuration\ImportSettingsGroupResponse.cs" />
@@ -157,6 +161,7 @@
     <Compile Include="Configuration\ListConfigurationDocumentsResponse.cs" />
     <Compile Include="DefaultPrincipal.cs" />
     <Compile Include="EntityRefJsmlSerializerHook.cs" />
+    <Compile Include="EnumValueInfo.cs" />
     <Compile Include="Facility.cs" />
     <Compile Include="FailoverClientAdvice.cs" />
     <Compile Include="IChannelProvider.cs" />
@@ -165,6 +170,8 @@
     <Compile Include="Manifest\IManifestService.cs" />
     <Compile Include="Manifest\ServerManifestVerification.cs" />
     <Compile Include="NullOfflineCache.cs" />
+    <Compile Include="PagedResults.cs" />
+    <Compile Include="PageRange.cs" />
     <Compile Include="PagedDataContractBase.cs" />
     <Compile Include="Ping\IPingService.cs" />
     <Compile Include="RemoteCoreServiceProvider2.cs" />
@@ -196,7 +203,15 @@
     <Compile Include="Configuration\IConfigurationService.cs" />
     <Compile Include="ICoreServiceLayer.cs" />
     <Compile Include="ResponseCachingDirective.cs" />
+    <Compile Include="ServiceConfiguration\Client\NamedPipeConfiguration.cs" />
     <Compile Include="ServiceConfiguration\Server\CertificateSearchDirective.cs" />
+    <Compile Include="ServiceConfiguration\Server\NamedPipeConfiguration.cs" />
+    <Compile Include="Setup\SetSettingApplication.cs" />
+    <Compile Include="Setup\SetSettingCommandLine.cs" />
+    <Compile Include="SystemAccounts\ISystemAccountLocalRegistry.cs" />
+    <Compile Include="SystemAccounts\LocalRegistryManager.cs" />
+    <Compile Include="SystemAccounts\SystemAccountCommandLine.cs" />
+    <Compile Include="SystemAccounts\SystemAccountUtility.cs" />
     <Compile Include="Setup\SetupApplication.cs" />
     <Compile Include="Setup\SetupCommandLine.cs" />
     <Compile Include="Setup\SetupHelper.cs" />

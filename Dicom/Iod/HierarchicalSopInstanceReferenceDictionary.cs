@@ -23,32 +23,64 @@
 #endregion
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using ClearCanvas.Dicom.Iod.Macros;
 using ClearCanvas.Dicom.Iod.Macros.HierarchicalSeriesInstanceReference;
 
 namespace ClearCanvas.Dicom.Iod
 {
 	/// <summary>
-	/// Helper class to quickly build a hierarchical sequence of
-	/// <see cref="IHierarchicalSopInstanceReferenceMacro"/>s with minimal repetition.
+	/// Helper class for building a hierarchical SOP instance reference sequence.
 	/// </summary>
-	public class HierarchicalSopInstanceReferenceDictionary
+	public partial class HierarchicalSopInstanceReferenceDictionary : ICollection<HierarchicalSopInstanceReferenceDictionary.Entry>
 	{
-		private readonly Dictionary<string, Dictionary<string, Dictionary<string, string>>> _dictionary = new Dictionary<string, Dictionary<string, Dictionary<string, string>>>();
+		private readonly Dictionary<string, Dictionary<SeriesKey, Dictionary<string, string>>> _dictionary = new Dictionary<string, Dictionary<SeriesKey, Dictionary<string, string>>>();
 
 		/// <summary>
-		/// Constructs an instance of a hierarchical SOP reference dictionary.
+		/// Initializes a new instance of <see cref="HierarchicalSopInstanceReferenceDictionary"/>.
 		/// </summary>
 		public HierarchicalSopInstanceReferenceDictionary() {}
 
 		/// <summary>
-		/// Adds a SOP reference to the dictionary.
+		/// Initializes a new instance of <see cref="HierarchicalSopInstanceReferenceDictionary"/>.
+		/// </summary>
+		public HierarchicalSopInstanceReferenceDictionary(IEnumerable<IHierarchicalSopInstanceReferenceMacro> hierarchicalSopInstanceReferenceSequence)
+		{
+			foreach (var study in hierarchicalSopInstanceReferenceSequence ?? Enumerable.Empty<IHierarchicalSopInstanceReferenceMacro>())
+			{
+				foreach (var series in study.ReferencedSeriesSequence ?? Enumerable.Empty<IHierarchicalSeriesInstanceReferenceMacro>())
+				{
+					foreach (var sop in series.ReferencedSopSequence ?? Enumerable.Empty<IReferencedSopSequence>())
+					{
+						AddReference(study.StudyInstanceUid, series.SeriesInstanceUid, sop.ReferencedSopClassUid, sop.ReferencedSopInstanceUid,
+						             series.RetrieveAeTitle, series.RetrieveLocationUid, series.StorageMediaFileSetId, series.StorageMediaFileSetUid);
+					}
+				}
+			}
+		}
+
+		/// <summary>
+		/// Gets the number of unique SOP instance references in the dictionary.
+		/// </summary>
+		public int Count
+		{
+			get { return _dictionary.SelectMany(s => s.Value).SelectMany(s => s.Value).Count(); }
+		}
+
+		/// <summary>
+		/// Adds a SOP instance reference to the dictionary.
 		/// </summary>
 		/// <param name="studyInstanceUid">The study instance UID.</param>
 		/// <param name="seriesInstanceUid">The series instance UID.</param>
 		/// <param name="sopClassUid">The SOP class UID.</param>
 		/// <param name="sopInstanceUid">The SOP instance UID.</param>
+		/// <param name="retrieveAeTitle">Optional value specifying the DICOM AE from which the SOP instance can be retrieved over the network.</param>
+		/// <param name="retrieveLocationUid">Optional value specifying the UID of the location from which the SOP instance can be retrieved over the network</param>
+		/// <param name="storageMediaFileSetId">Optional value specifying the identifier of the storage media on which the SOP instance resides.</param>
+		/// <param name="storageMediaFileSetUid">Optional value specifying the UID of the storage media on which the SOP instance resides.</param>
 		/// <exception cref="ArgumentNullException">Thrown if any of the arguments are null or empty.</exception>
 		/// <exception cref="ArgumentException">Thrown if that SOP instance has already been added to the dictionary.</exception>
 		/// <remarks>
@@ -56,23 +88,32 @@ namespace ClearCanvas.Dicom.Iod
 		/// To do so, the particular SOP instance should be removed first. A SOP instance can only be referenced as
 		/// one SOP class.
 		/// </remarks>
-		public virtual void AddReference(string studyInstanceUid, string seriesInstanceUid, string sopClassUid, string sopInstanceUid)
+		public void AddReference(string studyInstanceUid, string seriesInstanceUid, string sopClassUid, string sopInstanceUid,
+		                         string retrieveAeTitle = null, string retrieveLocationUid = null, string storageMediaFileSetId = null, string storageMediaFileSetUid = null)
 		{
-			bool result = TryAddReference(studyInstanceUid, seriesInstanceUid, sopClassUid, sopInstanceUid);
+			var result = TryAddReference(studyInstanceUid, seriesInstanceUid, sopClassUid, sopInstanceUid, retrieveAeTitle, retrieveLocationUid, storageMediaFileSetId, storageMediaFileSetUid);
 			if (!result)
-				throw new ArgumentException("That SOP Instance has already been added to the dictionary.", "sopInstanceUid");
+			{
+				const string msg = "That SOP Instance has already been added to the dictionary.";
+				throw new ArgumentException(msg, "sopInstanceUid");
+			}
 		}
 
 		/// <summary>
-		/// Adds a SOP reference to the dictionary.
+		/// Adds a SOP instance reference to the dictionary.
 		/// </summary>
 		/// <param name="studyInstanceUid">The study instance UID.</param>
 		/// <param name="seriesInstanceUid">The series instance UID.</param>
 		/// <param name="sopClassUid">The SOP class UID.</param>
 		/// <param name="sopInstanceUid">The SOP instance UID.</param>
-		/// <exception cref="ArgumentNullException">Thrown if any of the arguments are null or empty.</exception>
-		/// <returns>True if the SOP was referenced successfully; False if a reference already exists for the given SOP instance.</returns>
-		public virtual bool TryAddReference(string studyInstanceUid, string seriesInstanceUid, string sopClassUid, string sopInstanceUid)
+		/// <param name="retrieveAeTitle">Optional value specifying the DICOM AE from which the SOP instance can be retrieved over the network.</param>
+		/// <param name="retrieveLocationUid">Optional value specifying the UID of the location from which the SOP instance can be retrieved over the network</param>
+		/// <param name="storageMediaFileSetId">Optional value specifying the identifier of the storage media on which the SOP instance resides.</param>
+		/// <param name="storageMediaFileSetUid">Optional value specifying the UID of the storage media on which the SOP instance resides.</param>
+		/// <exception cref="ArgumentNullException">Thrown if any of the required arguments are null or empty.</exception>
+		/// <returns>True if the SOP instance reference was added successfully; False if a reference already exists for the given SOP instance.</returns>
+		public bool TryAddReference(string studyInstanceUid, string seriesInstanceUid, string sopClassUid, string sopInstanceUid,
+		                            string retrieveAeTitle = null, string retrieveLocationUid = null, string storageMediaFileSetId = null, string storageMediaFileSetUid = null)
 		{
 			if (string.IsNullOrEmpty(studyInstanceUid))
 				throw new ArgumentNullException("studyInstanceUid");
@@ -84,12 +125,13 @@ namespace ClearCanvas.Dicom.Iod
 				throw new ArgumentNullException("sopInstanceUid");
 
 			if (!_dictionary.ContainsKey(studyInstanceUid))
-				_dictionary.Add(studyInstanceUid, new Dictionary<string, Dictionary<string, string>>());
-			Dictionary<string, Dictionary<string, string>> seriesDictionary = _dictionary[studyInstanceUid];
+				_dictionary.Add(studyInstanceUid, new Dictionary<SeriesKey, Dictionary<string, string>>());
+			var seriesDictionary = _dictionary[studyInstanceUid];
 
-			if (!seriesDictionary.ContainsKey(seriesInstanceUid))
-				seriesDictionary.Add(seriesInstanceUid, new Dictionary<string, string>());
-			Dictionary<string, string> sopDictionary = seriesDictionary[seriesInstanceUid];
+			var seriesKey = new SeriesKey(seriesInstanceUid, retrieveAeTitle, retrieveLocationUid, storageMediaFileSetId, storageMediaFileSetUid);
+			if (!seriesDictionary.ContainsKey(seriesKey))
+				seriesDictionary.Add(seriesKey, new Dictionary<string, string>());
+			var sopDictionary = seriesDictionary[seriesKey];
 
 			if (sopDictionary.ContainsKey(sopInstanceUid))
 				return false;
@@ -99,15 +141,18 @@ namespace ClearCanvas.Dicom.Iod
 		}
 
 		/// <summary>
-		/// Attempts to remove the given SOP reference from the dictionary.
+		/// Attempts to remove the given SOP instance reference from the dictionary.
 		/// </summary>
+		/// <remarks>
+		/// This overload removes all SOP instance references regardless of origin (i.e. Retrieve AE Title, Retrive Location UID and Storage Media File-Set).
+		/// </remarks>
 		/// <param name="studyInstanceUid">The study instance UID.</param>
 		/// <param name="seriesInstanceUid">The series instance UID.</param>
 		/// <param name="sopClassUid">The SOP class UID.</param>
 		/// <param name="sopInstanceUid">The SOP instance UID.</param>
 		/// <exception cref="ArgumentNullException">Thrown if any of the arguments are null or empty.</exception>
-		/// <returns>True if the SOP was unreferenced successfully; False if a reference does not already exist for the given SOP instance.</returns>
-		public virtual bool TryRemoveReference(string studyInstanceUid, string seriesInstanceUid, string sopClassUid, string sopInstanceUid)
+		/// <returns>True if the SOP instance reference was removed successfully; False if a reference does not exist for the given SOP instance.</returns>
+		public bool TryRemoveReference(string studyInstanceUid, string seriesInstanceUid, string sopClassUid, string sopInstanceUid)
 		{
 			if (string.IsNullOrEmpty(studyInstanceUid))
 				throw new ArgumentNullException("studyInstanceUid");
@@ -120,25 +165,67 @@ namespace ClearCanvas.Dicom.Iod
 
 			if (_dictionary.ContainsKey(studyInstanceUid))
 			{
-				Dictionary<string, Dictionary<string, string>> seriesDictionary = _dictionary[studyInstanceUid];
-				if (seriesDictionary.ContainsKey(seriesInstanceUid))
+				var anyRemoved = false;
+				var seriesDictionary = _dictionary[studyInstanceUid];
+				foreach (var seriesEntry in seriesDictionary.Where(s => s.Key.SeriesInstanceUid == seriesInstanceUid).ToList())
 				{
-					Dictionary<string, string> sopDictionary = seriesDictionary[seriesInstanceUid];
+					var sopDictionary = seriesEntry.Value;
 					if (sopDictionary.ContainsKey(sopInstanceUid))
 					{
 						if (sopDictionary[sopInstanceUid] == sopClassUid)
 						{
 							sopDictionary.Remove(sopInstanceUid);
+							CompactDictionary(studyInstanceUid, seriesEntry.Key, sopDictionary, seriesDictionary);
+							anyRemoved = true;
+						}
+					}
+				}
+				return anyRemoved;
+			}
+			return false;
+		}
 
-							// compact the dictionary
-							if (sopDictionary.Count == 0)
-							{
-								seriesDictionary.Remove(seriesInstanceUid);
-								if (seriesDictionary.Count == 0)
-								{
-									_dictionary.Remove(studyInstanceUid);
-								}
-							}
+		/// <summary>
+		/// Attempts to remove the given SOP instance reference from the dictionary.
+		/// </summary>
+		/// <remarks>
+		/// This overload removes only the SOP instance reference that matches the specified origin (i.e. Retrieve AE Title, Retrive Location UID and Storage Media File-Set).
+		/// </remarks>
+		/// <param name="studyInstanceUid">The study instance UID.</param>
+		/// <param name="seriesInstanceUid">The series instance UID.</param>
+		/// <param name="sopClassUid">The SOP class UID.</param>
+		/// <param name="sopInstanceUid">The SOP instance UID.</param>
+		/// <param name="retrieveAeTitle">The DICOM AE from which the SOP instance can be retrieved over the network.</param>
+		/// <param name="retrieveLocationUid">The UID of the location from which the SOP instance can be retrieved over the network</param>
+		/// <param name="storageMediaFileSetId">The identifier of the storage media on which the SOP instance resides.</param>
+		/// <param name="storageMediaFileSetUid">The UID of the storage media on which the SOP instance resides.</param>
+		/// <exception cref="ArgumentNullException">Thrown if any of the arguments are null or empty.</exception>
+		/// <returns>True if the SOP instance reference was removed successfully; False if a reference does not exist for the given SOP instance.</returns>
+		public bool TryRemoveReference(string studyInstanceUid, string seriesInstanceUid, string sopClassUid, string sopInstanceUid,
+		                               string retrieveAeTitle, string retrieveLocationUid, string storageMediaFileSetId, string storageMediaFileSetUid)
+		{
+			if (string.IsNullOrEmpty(studyInstanceUid))
+				throw new ArgumentNullException("studyInstanceUid");
+			if (string.IsNullOrEmpty(seriesInstanceUid))
+				throw new ArgumentNullException("seriesInstanceUid");
+			if (string.IsNullOrEmpty(sopClassUid))
+				throw new ArgumentNullException("sopClassUid");
+			if (string.IsNullOrEmpty(sopInstanceUid))
+				throw new ArgumentNullException("sopInstanceUid");
+
+			if (_dictionary.ContainsKey(studyInstanceUid))
+			{
+				var seriesKey = new SeriesKey(seriesInstanceUid, retrieveAeTitle, retrieveLocationUid, storageMediaFileSetId, storageMediaFileSetUid);
+				var seriesDictionary = _dictionary[studyInstanceUid];
+				if (seriesDictionary.ContainsKey(seriesKey))
+				{
+					var sopDictionary = seriesDictionary[seriesKey];
+					if (sopDictionary.ContainsKey(sopInstanceUid))
+					{
+						if (sopDictionary[sopInstanceUid] == sopClassUid)
+						{
+							sopDictionary.Remove(sopInstanceUid);
+							CompactDictionary(studyInstanceUid, seriesKey, sopDictionary, seriesDictionary);
 							return true;
 						}
 					}
@@ -147,10 +234,87 @@ namespace ClearCanvas.Dicom.Iod
 			return false;
 		}
 
+		private void CompactDictionary(string studyInstanceUid, SeriesKey seriesKey, Dictionary<string, string> sopDictionary, Dictionary<SeriesKey, Dictionary<string, string>> seriesDictionary)
+		{
+			// compacts the dictionary after having removed a single reference
+			if (sopDictionary.Count == 0)
+			{
+				seriesDictionary.Remove(seriesKey);
+				if (seriesDictionary.Count == 0)
+				{
+					_dictionary.Remove(studyInstanceUid);
+				}
+			}
+		}
+
+		/// <summary>
+		/// Checks whether or not the given SOP instance is referenced in the dictionary.
+		/// </summary>
+		/// <remarks>
+		/// This overload checks for any matching SOP instance reference regardless of origin (i.e. Retrieve AE Title, Retrive Location UID and Storage Media File-Set).
+		/// </remarks>
+		/// <param name="studyInstanceUid">The study instance UID.</param>
+		/// <param name="seriesInstanceUid">The series instance UID.</param>
+		/// <param name="sopClassUid">The SOP class UID.</param>
+		/// <param name="sopInstanceUid">The SOP instance UID.</param>
+		/// <exception cref="ArgumentNullException">Thrown if any of the arguments are null or empty.</exception>
+		/// <returns>True if the SOP instance is referenced in the dictionary; False if a reference does not exist for the given SOP instance.</returns>
+		public bool ContainsReference(string studyInstanceUid, string seriesInstanceUid, string sopClassUid, string sopInstanceUid)
+		{
+			Dictionary<SeriesKey, Dictionary<string, string>> seriesDictionary;
+			if (_dictionary.TryGetValue(studyInstanceUid, out seriesDictionary))
+			{
+				foreach (var seriesEntry in seriesDictionary.Where(s => s.Key.SeriesInstanceUid == seriesInstanceUid))
+				{
+					Dictionary<string, string> sopDictionary;
+					if (seriesDictionary.TryGetValue(seriesEntry.Key, out sopDictionary))
+					{
+						string sopClass;
+						if (sopDictionary.TryGetValue(sopInstanceUid, out sopClass) && sopClass == sopClassUid)
+							return true;
+					}
+				}
+			}
+			return false;
+		}
+
+		/// <summary>
+		/// Checks whether or not the given SOP instance is referenced in the dictionary.
+		/// </summary>
+		/// <remarks>
+		/// This overload checks for only the SOP instance reference that matches the specified origin (i.e. Retrieve AE Title, Retrive Location UID and Storage Media File-Set).
+		/// </remarks>
+		/// <param name="studyInstanceUid">The study instance UID.</param>
+		/// <param name="seriesInstanceUid">The series instance UID.</param>
+		/// <param name="sopClassUid">The SOP class UID.</param>
+		/// <param name="sopInstanceUid">The SOP instance UID.</param>
+		/// <param name="retrieveAeTitle">The DICOM AE from which the SOP instance can be retrieved over the network.</param>
+		/// <param name="retrieveLocationUid">The UID of the location from which the SOP instance can be retrieved over the network</param>
+		/// <param name="storageMediaFileSetId">The identifier of the storage media on which the SOP instance resides.</param>
+		/// <param name="storageMediaFileSetUid">The UID of the storage media on which the SOP instance resides.</param>
+		/// <exception cref="ArgumentNullException">Thrown if any of the arguments are null or empty.</exception>
+		/// <returns>True if the SOP instance is referenced in the dictionary; False if a reference does not exist for the given SOP instance.</returns>
+		public bool ContainsReference(string studyInstanceUid, string seriesInstanceUid, string sopClassUid, string sopInstanceUid,
+		                              string retrieveAeTitle, string retrieveLocationUid, string storageMediaFileSetId, string storageMediaFileSetUid)
+		{
+			Dictionary<SeriesKey, Dictionary<string, string>> seriesDictionary;
+			if (_dictionary.TryGetValue(studyInstanceUid, out seriesDictionary))
+			{
+				Dictionary<string, string> sopDictionary;
+				var seriesKey = new SeriesKey(seriesInstanceUid, retrieveAeTitle, retrieveLocationUid, storageMediaFileSetId, storageMediaFileSetUid);
+				if (seriesDictionary.TryGetValue(seriesKey, out sopDictionary))
+				{
+					string sopClass;
+					return sopDictionary.TryGetValue(sopInstanceUid, out sopClass) && sopClass == sopClassUid;
+				}
+			}
+			return false;
+		}
+
 		/// <summary>
 		/// Clears the reference dictionary.
 		/// </summary>
-		public virtual void Clear()
+		public void Clear()
 		{
 			_dictionary.Clear();
 		}
@@ -171,11 +335,19 @@ namespace ClearCanvas.Dicom.Iod
 		/// Creates and initializes a <see cref="IHierarchicalSeriesInstanceReferenceMacro"/> to the given series instance.
 		/// </summary>
 		/// <param name="seriesInstanceUid">The series instance UID.</param>
-		protected virtual IHierarchicalSeriesInstanceReferenceMacro CreateSeriesReference(string seriesInstanceUid)
+		/// <param name="retrieveAeTitle">Optional value specifying the DICOM AE from which the SOP instance can be retrieved over the network.</param>
+		/// <param name="retrieveLocationUid">Optional value specifying the UID of the location from which the SOP instance can be retrieved over the network</param>
+		/// <param name="storageMediaFileSetId">Optional value specifying the identifier of the storage media on which the SOP instance resides.</param>
+		/// <param name="storageMediaFileSetUid">Optional value specifying the UID of the storage media on which the SOP instance resides.</param>
+		protected virtual IHierarchicalSeriesInstanceReferenceMacro CreateSeriesReference(string seriesInstanceUid, string retrieveAeTitle = null, string retrieveLocationUid = null, string storageMediaFileSetId = null, string storageMediaFileSetUid = null)
 		{
 			IHierarchicalSeriesInstanceReferenceMacro reference = new HierarchicalSeriesInstanceReferenceMacro(new DicomSequenceItem());
 			reference.InitializeAttributes();
 			reference.SeriesInstanceUid = seriesInstanceUid;
+			reference.RetrieveAeTitle = retrieveAeTitle;
+			reference.RetrieveLocationUid = retrieveLocationUid;
+			reference.StorageMediaFileSetId = storageMediaFileSetId;
+			reference.StorageMediaFileSetUid = storageMediaFileSetUid;
 			return reference;
 		}
 
@@ -186,7 +358,7 @@ namespace ClearCanvas.Dicom.Iod
 		/// <param name="sopInstanceUid">The SOP instance UID.</param>
 		protected virtual IReferencedSopSequence CreateSopReference(string sopClassUid, string sopInstanceUid)
 		{
-			IReferencedSopSequence reference = new HierarchicalSeriesInstanceReferenceMacro.ReferencedSopSequenceType(new DicomSequenceItem());
+			IReferencedSopSequence reference = new HierarchicalSeriesInstanceReferenceMacro.ReferencedSopSequenceItem(new DicomSequenceItem());
 			reference.InitializeAttributes();
 			reference.ReferencedSopClassUid = sopClassUid;
 			reference.ReferencedSopInstanceUid = sopInstanceUid;
@@ -198,7 +370,7 @@ namespace ClearCanvas.Dicom.Iod
 		/// </summary>
 		public IHierarchicalSopInstanceReferenceMacro[] ToArray()
 		{
-			return this.GetList().ToArray();
+			return GetList().ToArray();
 		}
 
 		/// <summary>
@@ -206,29 +378,21 @@ namespace ClearCanvas.Dicom.Iod
 		/// </summary>
 		public IList<IHierarchicalSopInstanceReferenceMacro> ToList()
 		{
-			return this.GetList().AsReadOnly();
+			return GetList().AsReadOnly();
 		}
 
 		private List<IHierarchicalSopInstanceReferenceMacro> GetList()
 		{
 			List<IHierarchicalSopInstanceReferenceMacro> studyReferences = new List<IHierarchicalSopInstanceReferenceMacro>();
-			foreach (KeyValuePair<string, Dictionary<string, Dictionary<string, string>>> studyPair in _dictionary)
+			foreach (var studyEntry in _dictionary)
 			{
-				IHierarchicalSopInstanceReferenceMacro studyReference = this.CreateStudyReference(studyPair.Key);
+				IHierarchicalSopInstanceReferenceMacro studyReference = CreateStudyReference(studyEntry.Key);
 
 				List<IHierarchicalSeriesInstanceReferenceMacro> seriesReferences = new List<IHierarchicalSeriesInstanceReferenceMacro>();
-				foreach (KeyValuePair<string, Dictionary<string, string>> seriesPair in studyPair.Value)
+				foreach (var seriesEntry in studyEntry.Value)
 				{
-					IHierarchicalSeriesInstanceReferenceMacro seriesReference = this.CreateSeriesReference(seriesPair.Key);
-
-					List<IReferencedSopSequence> sopReferences = new List<IReferencedSopSequence>();
-					foreach (KeyValuePair<string, string> sopPair in seriesPair.Value)
-					{
-						IReferencedSopSequence sopReference = this.CreateSopReference(sopPair.Value, sopPair.Key);
-						sopReferences.Add(sopReference);
-					}
-
-					seriesReference.ReferencedSopSequence = sopReferences.ToArray();
+					var seriesReference = CreateSeriesReference(seriesEntry.Key.SeriesInstanceUid, seriesEntry.Key.RetrieveAeTitle, seriesEntry.Key.RetrieveLocationUid, seriesEntry.Key.StorageMediaFileSetId, seriesEntry.Key.StorageMediaFileSetUid);
+					seriesReference.ReferencedSopSequence = seriesEntry.Value.Select(sop => CreateSopReference(sop.Value, sop.Key)).ToArray();
 					seriesReferences.Add(seriesReference);
 				}
 
@@ -240,11 +404,180 @@ namespace ClearCanvas.Dicom.Iod
 		}
 
 		/// <summary>
-		/// Gets the specified reference <paramref name="dictionary"/> as an array of <see cref="IHierarchicalSopInstanceReferenceMacro"/>s.
+		/// Creates a hierarchical SOP instance reference sequence from the specified <see cref="HierarchicalSopInstanceReferenceDictionary"/>.
 		/// </summary>
-		public static implicit operator IHierarchicalSopInstanceReferenceMacro[] (HierarchicalSopInstanceReferenceDictionary dictionary)
+		public static implicit operator IHierarchicalSopInstanceReferenceMacro[](HierarchicalSopInstanceReferenceDictionary dictionary)
 		{
 			return dictionary.ToArray();
 		}
+
+		/// <summary>
+		/// Creates an instance of <see cref="HierarchicalSopInstanceReferenceDictionary"/> from the specified hierarchical SOP instance reference sequence.
+		/// </summary>
+		public static explicit operator HierarchicalSopInstanceReferenceDictionary(IHierarchicalSopInstanceReferenceMacro[] hierarchicalSopInstanceReferenceSequence)
+		{
+			return new HierarchicalSopInstanceReferenceDictionary(hierarchicalSopInstanceReferenceSequence);
+		}
+
+		#region SeriesKey Type
+
+		private struct SeriesKey : IEquatable<SeriesKey>
+		{
+			public readonly string SeriesInstanceUid;
+			public readonly string RetrieveAeTitle;
+			public readonly string RetrieveLocationUid;
+			public readonly string StorageMediaFileSetId;
+			public readonly string StorageMediaFileSetUid;
+
+			public SeriesKey(string seriesInstanceUid, string retrieveAeTitle, string retrieveLocationUid, string storageMediaFileSetId, string storageMediaFileSetUid)
+			{
+				SeriesInstanceUid = !string.IsNullOrWhiteSpace(seriesInstanceUid) ? seriesInstanceUid.Trim() : string.Empty;
+				RetrieveAeTitle = !string.IsNullOrWhiteSpace(retrieveAeTitle) ? retrieveAeTitle.Trim() : string.Empty;
+				RetrieveLocationUid = !string.IsNullOrWhiteSpace(retrieveLocationUid) ? retrieveLocationUid.Trim() : string.Empty;
+				StorageMediaFileSetId = !string.IsNullOrWhiteSpace(storageMediaFileSetId) ? storageMediaFileSetId.Trim() : string.Empty;
+				StorageMediaFileSetUid = !string.IsNullOrWhiteSpace(storageMediaFileSetUid) ? storageMediaFileSetUid.Trim() : string.Empty;
+			}
+
+			public override int GetHashCode()
+			{
+				return SeriesInstanceUid.GetHashCode()
+				       ^ RetrieveAeTitle.GetHashCode()
+				       ^ RetrieveLocationUid.GetHashCode()
+				       ^ StorageMediaFileSetId.GetHashCode()
+				       ^ StorageMediaFileSetUid.GetHashCode();
+			}
+
+			public bool Equals(SeriesKey other)
+			{
+				return string.Equals(SeriesInstanceUid, other.SeriesInstanceUid)
+				       && string.Equals(RetrieveAeTitle, other.RetrieveAeTitle)
+				       && string.Equals(RetrieveLocationUid, other.RetrieveLocationUid)
+				       && string.Equals(StorageMediaFileSetId, other.StorageMediaFileSetId)
+				       && string.Equals(StorageMediaFileSetUid, other.StorageMediaFileSetUid);
+			}
+
+			public override bool Equals(object obj)
+			{
+				return obj is SeriesKey && Equals((SeriesKey) obj);
+			}
+
+			public override string ToString()
+			{
+				var sb = new StringBuilder(SeriesInstanceUid);
+				if (!string.IsNullOrEmpty(RetrieveAeTitle)) sb.AppendFormat(" AETITLE={0}", RetrieveAeTitle);
+				if (!string.IsNullOrEmpty(RetrieveLocationUid)) sb.AppendFormat(" LOC_UID={0}", RetrieveLocationUid);
+				if (!string.IsNullOrEmpty(StorageMediaFileSetId)) sb.AppendFormat(" MEDIA_ID={0}", StorageMediaFileSetId);
+				if (!string.IsNullOrEmpty(StorageMediaFileSetUid)) sb.AppendFormat(" MEDIA_UID={0}", StorageMediaFileSetUid);
+				return sb.ToString();
+			}
+		}
+
+		#endregion
+
+		#region ICollection<Entry> Implementation
+
+		bool ICollection<Entry>.IsReadOnly
+		{
+			get { return false; }
+		}
+
+		void ICollection<Entry>.Add(Entry entry)
+		{
+			AddReference(entry.StudyInstanceUid, entry.SeriesInstanceUid, entry.SopClassUid, entry.SopInstanceUid,
+			             entry.RetrieveAeTitle, entry.RetrieveLocationUid, entry.StorageMediaFileSetId, entry.StorageMediaFileSetUid);
+		}
+
+		bool ICollection<Entry>.Remove(Entry entry)
+		{
+			return TryRemoveReference(entry.StudyInstanceUid, entry.SeriesInstanceUid, entry.SopClassUid, entry.SopInstanceUid,
+			                          entry.RetrieveAeTitle, entry.RetrieveLocationUid, entry.StorageMediaFileSetId, entry.StorageMediaFileSetUid);
+		}
+
+		bool ICollection<Entry>.Contains(Entry entry)
+		{
+			return ContainsReference(entry.StudyInstanceUid, entry.SeriesInstanceUid, entry.SopClassUid, entry.SopInstanceUid,
+			                         entry.RetrieveAeTitle, entry.RetrieveLocationUid, entry.StorageMediaFileSetId, entry.StorageMediaFileSetUid);
+		}
+
+		void ICollection<Entry>.CopyTo(Entry[] array, int arrayIndex)
+		{
+			var sourceArray = EnumerateEntries().ToArray();
+			Array.Copy(sourceArray, 0, array, arrayIndex, sourceArray.Length);
+		}
+
+		public IEnumerator<Entry> GetEnumerator()
+		{
+			return EnumerateEntries().GetEnumerator();
+		}
+
+		IEnumerator IEnumerable.GetEnumerator()
+		{
+			return GetEnumerator();
+		}
+
+		private IEnumerable<Entry> EnumerateEntries()
+		{
+			return from study in _dictionary
+			       from series in study.Value
+			       from sop in series.Value
+			       select new Entry(study.Key, series.Key.SeriesInstanceUid, sop.Value, sop.Key,
+			                        series.Key.RetrieveAeTitle,
+			                        series.Key.RetrieveLocationUid,
+			                        series.Key.StorageMediaFileSetId,
+			                        series.Key.StorageMediaFileSetUid);
+		}
+
+		public struct Entry : IEquatable<Entry>
+		{
+			public readonly string StudyInstanceUid;
+			public readonly string SeriesInstanceUid;
+			public readonly string SopInstanceUid;
+			public readonly string SopClassUid;
+
+			public readonly string RetrieveAeTitle;
+			public readonly string RetrieveLocationUid;
+			public readonly string StorageMediaFileSetId;
+			public readonly string StorageMediaFileSetUid;
+
+			public Entry(string studyInstanceUid, string seriesInstanceUid, string sopClassUid, string sopInstanceUid,
+			             string retrieveAeTitle = null, string retrieveLocationUid = null, string storageMediaFileSetId = null, string storageMediaFileSetUid = null)
+			{
+				StudyInstanceUid = !string.IsNullOrWhiteSpace(studyInstanceUid) ? studyInstanceUid.Trim() : string.Empty;
+				SeriesInstanceUid = !string.IsNullOrWhiteSpace(seriesInstanceUid) ? seriesInstanceUid.Trim() : string.Empty;
+				SopInstanceUid = !string.IsNullOrWhiteSpace(sopInstanceUid) ? sopInstanceUid.Trim() : string.Empty;
+				SopClassUid = !string.IsNullOrWhiteSpace(sopClassUid) ? sopClassUid.Trim() : string.Empty;
+				RetrieveAeTitle = !string.IsNullOrWhiteSpace(retrieveAeTitle) ? retrieveAeTitle.Trim() : string.Empty;
+				RetrieveLocationUid = !string.IsNullOrWhiteSpace(retrieveLocationUid) ? retrieveLocationUid.Trim() : string.Empty;
+				StorageMediaFileSetId = !string.IsNullOrWhiteSpace(storageMediaFileSetId) ? storageMediaFileSetId.Trim() : string.Empty;
+				StorageMediaFileSetUid = !string.IsNullOrWhiteSpace(storageMediaFileSetUid) ? storageMediaFileSetUid.Trim() : string.Empty;
+			}
+
+			public override int GetHashCode()
+			{
+				return StudyInstanceUid.GetHashCode()
+				       ^ SeriesInstanceUid.GetHashCode()
+				       ^ SopInstanceUid.GetHashCode()
+				       ^ SopClassUid.GetHashCode();
+			}
+
+			public bool Equals(Entry other)
+			{
+				return string.Equals(StudyInstanceUid, other.StudyInstanceUid)
+				       && string.Equals(SeriesInstanceUid, other.SeriesInstanceUid)
+				       && string.Equals(SopInstanceUid, other.SopInstanceUid)
+				       && string.Equals(SopClassUid, other.SopClassUid)
+				       && string.Equals(RetrieveAeTitle, other.RetrieveAeTitle)
+				       && string.Equals(RetrieveLocationUid, other.RetrieveLocationUid)
+				       && string.Equals(StorageMediaFileSetId, other.StorageMediaFileSetId)
+				       && string.Equals(StorageMediaFileSetUid, other.StorageMediaFileSetUid);
+			}
+
+			public override bool Equals(object obj)
+			{
+				return obj is Entry && Equals((Entry) obj);
+			}
+		}
+
+		#endregion
 	}
 }

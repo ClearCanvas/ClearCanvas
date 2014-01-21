@@ -32,11 +32,12 @@ using NUnit.Framework;
 
 namespace ClearCanvas.ImageViewer.Volume.Mpr.Tests
 {
-	[TestFixture]
-	public class SlicerTests
+	/// <summary>
+	/// Tests basic operation of the <see cref="VolumeSlicer"/>.
+	/// </summary>
+	[TestFixture(Description = "Tests basic operation of the VolumeSlicer.")]
+	public class SlicerTests : AbstractMprTest
 	{
-		public SlicerTests() {}
-
 		[Test]
 		public void TestInverseRotationMatrices()
 		{

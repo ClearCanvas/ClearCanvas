@@ -194,6 +194,15 @@ namespace ClearCanvas.Common.Serialization
 			public Predicate<MemberInfo> DataMemberTest { get; set; }
 
 			/// <summary>
+			/// Gets or sets a value that indicates whether non-public members should be included.
+			/// </summary>
+			/// <remarks>
+			/// This value is set to true by default for backwards compatibility with the behaviour of
+			/// previous versions of <see cref="JsmlSerializer"/>.
+			/// </remarks>
+			public bool IncludeNonPublicMembers { get; set; }
+
+			/// <summary>
 			/// Gets or sets a predicate that determines whether a type is considered a data-contract.
 			/// </summary>
 			/// <remarks>
@@ -300,6 +309,14 @@ namespace ClearCanvas.Common.Serialization
 			return (T)Deserialize(typeof(T), jsml, options);
 		}
 
+        /// <summary>
+        /// Deserializes the specified XML Document into an object of the specified type.
+        /// </summary>
+        public static T Deserialize<T>(XmlDocument xmlDoc, DeserializeOptions options)
+        {
+            return (T)Deserialize(typeof(T), xmlDoc, options);
+        }
+
 		/// <summary>
 		/// Deserializes the specified JSML text into an object of the specified type.
 		/// </summary>
@@ -322,6 +339,21 @@ namespace ClearCanvas.Common.Serialization
 			var deserializer = new Deserializer(options);
 			return deserializer.Do(dataContract, xmlDoc.DocumentElement);
 		}
+
+        /// <summary>
+        /// Deserializes the specified XML document into an object of the specified type.
+        /// </summary>
+        /// 
+        public static object Deserialize(Type dataContract, XmlDocument xmlDoc, DeserializeOptions options)
+        {
+            if (xmlDoc == null)
+                return null;
+
+            xmlDoc.PreserveWhitespace = true;
+
+            var deserializer = new Deserializer(options);
+            return deserializer.Do(dataContract, xmlDoc.DocumentElement);
+        }
 
 		/// <summary>
 		/// Deserializes the specified JSML text into an object of the specified type.
@@ -377,12 +409,12 @@ namespace ClearCanvas.Common.Serialization
 			/// <summary>
 			/// Get a list of properties and fields from a data contract that satisfy the predicate.
 			/// </summary>
-			protected static IEnumerable<IObjectMemberContext> GetDataMemberFields(object dataObject, Predicate<MemberInfo> memberTest)
+			protected static IEnumerable<IObjectMemberContext> GetDataMemberFields(object dataObject, Predicate<MemberInfo> memberTest, bool includeNonPublicMembers)
 			{
 				var walker = new ObjectWalker(memberTest)
 				{
-					IncludeNonPublicFields = true,
-					IncludeNonPublicProperties = true
+					IncludeNonPublicFields = includeNonPublicMembers,
+					IncludeNonPublicProperties = includeNonPublicMembers
 				};
 
 				return walker.Walk(dataObject);
@@ -490,7 +522,7 @@ namespace ClearCanvas.Common.Serialization
 
 				if (IsDataContract(obj.GetType()))
 				{
-					var dataMemberFields = new List<IObjectMemberContext>(GetDataMemberFields(obj, this.Options.DataMemberTest));
+					var dataMemberFields = new List<IObjectMemberContext>(GetDataMemberFields(obj, this.Options.DataMemberTest, this.Options.IncludeNonPublicMembers));
 					if (dataMemberFields.Count > 0)
 					{
 						_writer.WriteAttributeString("type", "hash");
@@ -530,7 +562,15 @@ namespace ClearCanvas.Common.Serialization
 				{
 					_writer.WriteValue(DateTimeUtils.FormatISO(((DateTime?)obj).Value));
 				}
-				else if (obj is bool)
+                else if (obj is TimeSpan)
+                {
+                    _writer.WriteValue(DateTimeUtils.FormatTimeSpan((TimeSpan)obj));
+                }
+                else if (obj is TimeSpan?)
+                {
+                    _writer.WriteValue(DateTimeUtils.FormatTimeSpan(((TimeSpan?)obj).Value));
+                }
+                else if (obj is bool)
 				{
 					_writer.WriteValue((bool)obj ? "true" : "false");
 				}
@@ -620,7 +660,7 @@ namespace ClearCanvas.Common.Serialization
 				{
 					var dataObject = Activator.CreateInstance(dataType, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance, null, null, null);
 
-					foreach (var context in GetDataMemberFields(dataObject, this.Options.DataMemberTest))
+					foreach (var context in GetDataMemberFields(dataObject, this.Options.DataMemberTest, this.Options.IncludeNonPublicMembers))
 					{
 						var memberElement = GetFirstElementWithTagName(xmlElement, context.Member.Name);
 						if (memberElement != null)
@@ -669,6 +709,10 @@ namespace ClearCanvas.Common.Serialization
 				{
 					return DateTimeUtils.ParseISO(xmlElement.InnerText);
 				}
+                if (dataType == typeof(TimeSpan))
+                {
+                    return DateTimeUtils.ParseTimeSpan(xmlElement.InnerText);
+                }
 
 				if (dataType == typeof(bool))
 				{

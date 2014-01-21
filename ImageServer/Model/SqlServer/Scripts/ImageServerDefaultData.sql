@@ -378,6 +378,12 @@ INSERT INTO [ImageServer].[dbo].[ServerRuleTypeEnum]
            (newid(),106,'DataAccess','Data Access','A rule to specify the Authority Groups that have access to a study')
 GO
 
+INSERT INTO [ImageServer].[dbo].[ServerRuleTypeEnum]
+           ([GUID],[Enum],[Lookup],[Description],[LongDescription])
+     VALUES
+           (newid(),107,'StudyQualityControl','Study Quality Control','A rule for quality control purposes when studies are received')
+GO
+
 
 -- ServerRuleApplyTimeEnum inserts
 INSERT INTO [ImageServer].[dbo].[ServerRuleApplyTimeEnum]
@@ -513,6 +519,24 @@ INSERT INTO [ImageServer].[dbo].[ServiceLockTypeEnum]
            ([GUID],[Enum],[Lookup],[Description],[LongDescription])
      VALUES
            (newid(),300,'SyncDataAccess','Synchronize Data Access','This service periodically synchronizes the deletion status of Authority Groups on the Enterprise Services with Data Access granted to studies on the ImageServer.')
+GO
+
+INSERT INTO [ImageServer].[dbo].[ServiceLockTypeEnum]
+           ([GUID],[Enum],[Lookup],[Description],[LongDescription])
+     VALUES
+           (newid(),301,'ExternalRequestProcess','Process External Requests','This service processes requests made to the ImageServer from external applications.')
+GO
+
+INSERT INTO [ImageServer].[dbo].[ServiceLockTypeEnum]
+           ([GUID],[Enum],[Lookup],[Description],[LongDescription])
+     VALUES
+           (newid(),302,'ExternalNotificationProcess','Process External Notifications','This service processes notifications to send to external applications.')
+GO
+
+INSERT INTO [ImageServer].[dbo].[ServiceLockTypeEnum]
+           ([GUID],[Enum],[Lookup],[Description],[LongDescription])
+     VALUES
+           (newid(),401,'PartitionReapplyRules','Partition Reapply Rules','This service scans the contents of a partition and reapplies Study Processing rules to all studies on the partition that have not been archived.  Studies that have been archived will have Study Archived and Data Access rules applied.')
 GO
 
 -- ServiceLock Entries not associated with a Filesystem
@@ -878,6 +902,10 @@ INSERT INTO [ImageServer].[dbo].[ServerSopClass] ([GUID],[SopClassUid],[Descript
 VALUES (newid(), '1.2.840.10008.5.1.4.1.1.6.2', 'Enhanced US Volume Storage', 0);
 GO
 
+INSERT INTO [ImageServer].[dbo].[ServerSopClass] ([GUID],[SopClassUid],[Description],[NonImage])
+VALUES (newid(), '1.2.840.10008.5.1.4.1.1.130', 'Enhanced PET Storage', 0);
+GO
+
 -- ServerTransferSyntax inserts
 INSERT INTO [ImageServer].[dbo].[ServerTransferSyntax] ([GUID],[Uid],[Description],[Lossless])
 VALUES (newid(), '1.2.840.10008.1.2.2', 'Explicit VR Big Endian', 1)
@@ -946,6 +974,11 @@ GO
 INSERT INTO [ImageServer].[dbo].DuplicateSopPolicyEnum([GUID],[Enum],[Lookup],[Description],[LongDescription])
 VALUES(newid(),103,'CompareDuplicates','Compare Duplicates','Process duplicate objects received and compare them to originals flagging any differences as a failure.')
 GO
+
+INSERT INTO [ImageServer].[dbo].DuplicateSopPolicyEnum([GUID],[Enum],[Lookup],[Description],[LongDescription])
+VALUES(newid(),104,'AcceptLatest','Accept Latest','Process duplicate objects received and always accecpt the latest file received.')
+GO
+
 
 -- ArchiveQueueStatusEnum inserts
 INSERT INTO [ImageServer].[dbo].[ArchiveQueueStatusEnum] ([GUID],[Enum],[Lookup],[Description],[LongDescription])
@@ -1164,4 +1197,58 @@ INSERT INTO [ImageServer].[dbo].[DeviceTypeEnum]
            ([GUID],[Enum],[Lookup],[Description],[LongDescription])
      VALUES
            (newid(),104,'PriorsServer','Priors Server','Server with Prior Studies for the Web Viewer')
+GO
+INSERT INTO [ImageServer].[dbo].[DeviceTypeEnum]
+           ([GUID],[Enum],[Lookup],[Description],[LongDescription])
+     VALUES
+           (newid(),105,'PrimaryPacs','Primary PACS','Primary PACS Server, the ImageServer will accept duplicate SOP Instances from this server')
+GO
+
+-- ServerPartitionTypeEnum
+INSERT INTO [ImageServer].[dbo].[ServerPartitionTypeEnum]
+           ([GUID],[Enum],[Lookup],[Description],[LongDescription])
+     VALUES
+           (newid(),100,'Standard','Standard','A standard ImageServer Partition')
+GO
+INSERT INTO [ImageServer].[dbo].[ServerPartitionTypeEnum]
+           ([GUID],[Enum],[Lookup],[Description],[LongDescription])
+     VALUES
+           (newid(),101,'VFS','VFS','An ImageServer Virtual File System Partition')
+GO
+
+-- ExternalRequestQueueStatusEnum inserts
+INSERT INTO [ImageServer].[dbo].[ExternalRequestQueueStatusEnum]
+           ([GUID],[Enum],[Lookup],[Description],[LongDescription])
+     VALUES
+           (newid(),100,'Notification','Notification','The request is a permanent notification request')
+GO
+INSERT INTO [ImageServer].[dbo].[ExternalRequestQueueStatusEnum]
+           ([GUID],[Enum],[Lookup],[Description],[LongDescription])
+     VALUES
+           (newid(),101,'Authorization','Authorization','The request is a transient authorization request')
+GO
+
+
+INSERT INTO [ImageServer].[dbo].[ExternalRequestQueueStatusEnum]
+           ([GUID],[Enum],[Lookup],[Description],[LongDescription])
+     VALUES
+           (newid(),200,'Pending','Pending','Pending')
+GO
+
+INSERT INTO [ImageServer].[dbo].[ExternalRequestQueueStatusEnum]
+           ([GUID],[Enum],[Lookup],[Description],[LongDescription])
+     VALUES
+           (newid(),201,'In Progress','In Progress','In Progress')
+GO
+
+INSERT INTO [ImageServer].[dbo].[ExternalRequestQueueStatusEnum]
+           ([GUID],[Enum],[Lookup],[Description],[LongDescription])
+     VALUES
+           (newid(),202,'Completed','Completed','The Queue entry is completed.')
+GO
+
+INSERT INTO [ImageServer].[dbo].[ExternalRequestQueueStatusEnum]
+           ([GUID],[Enum],[Lookup],[Description],[LongDescription])
+     VALUES
+           (newid(),203,'Failed','Failed','The Queue entry has failed.')
 GO

@@ -30,6 +30,7 @@ using ClearCanvas.ImageServer.Common.Exceptions;
 using ClearCanvas.ImageServer.Common.Utilities;
 using ClearCanvas.ImageServer.Core;
 using ClearCanvas.ImageServer.Core.Edit;
+using ClearCanvas.ImageServer.Core.Helpers;
 using ClearCanvas.ImageServer.Core.Process;
 using ClearCanvas.ImageServer.Enterprise;
 using ClearCanvas.ImageServer.Model;
@@ -107,6 +108,7 @@ namespace ClearCanvas.ImageServer.Web.Common.Data
 		public void DeleteStudy(ServerEntityKey studyKey, string reason)
         {
 			StudySummary study = StudySummaryAssembler.CreateStudySummary(HttpContextData.Current.ReadContext, Study.Load(HttpContextData.Current.ReadContext, studyKey));
+            
 			if (study.IsReconcileRequired)
 			{
 				throw new ApplicationException(
@@ -114,59 +116,22 @@ namespace ClearCanvas.ImageServer.Web.Common.Data
 
 				// NOTE: another check will occur when the delete is actually processed
 			}
-			
 
-			using (IUpdateContext ctx = PersistentStoreRegistry.GetDefaultStore().OpenUpdateContext(UpdateContextSyncMode.Flush))
-			{
-                LockStudyParameters lockParms = new LockStudyParameters
-                                                	{
-                                                		QueueStudyStateEnum = QueueStudyStateEnum.WebDeleteScheduled,
-                                                		StudyStorageKey = study.TheStudyStorage.Key
-                                                	};
-				ILockStudy broker = ctx.GetBroker<ILockStudy>();
-				broker.Execute(lockParms);
-				if (!lockParms.Successful)
-				{
-				    throw new ApplicationException(String.Format("Unable to lock the study : {0}", lockParms.FailureReason));
-				}
-				
-
-				InsertWorkQueueParameters insertParms = new InsertWorkQueueParameters
-				                                        	{
-				                                        		WorkQueueTypeEnum = WorkQueueTypeEnum.WebDeleteStudy,
-				                                        		ServerPartitionKey = study.ThePartition.Key,
-				                                        		StudyStorageKey = study.TheStudyStorage.Key,
-				                                        		ScheduledTime = Platform.Time
-				                                        	};
-
-				WebDeleteStudyLevelQueueData extendedData = new WebDeleteStudyLevelQueueData
-			                                                	{
-			                                                		Level = DeletionLevel.Study,
-			                                                		Reason = reason,
-			                                                		UserId = ServerHelper.CurrentUserId,
-			                                                		UserName = ServerHelper.CurrentUserName
-			                                                	};
-				insertParms.WorkQueueData = XmlUtils.SerializeAsXmlDoc(extendedData);
-				IInsertWorkQueue insertWorkQueue = ctx.GetBroker<IInsertWorkQueue>();
-				
-                if (insertWorkQueue.FindOne(insertParms)==null)
-                {
-                    throw new ApplicationException("DeleteStudy failed");
-                }
-
-
-				ctx.Commit();
-			}
+            using (IUpdateContext ctx = PersistentStoreRegistry.GetDefaultStore().OpenUpdateContext(UpdateContextSyncMode.Flush))
+            {
+                StudyDeleteHelper.DeleteStudy(ctx, study.ThePartition, study.StudyInstanceUid, reason);
+                ctx.Commit();
+            }
         }
 
         //TODO: Consolidate this and DeleteStudy?
         public void DeleteSeries(Study study, IList<Series> series, string reason)
         {
             // Load the Partition
-            ServerPartitionConfigController partitionConfigController = new ServerPartitionConfigController();
+            var partitionConfigController = new ServerPartitionConfigController();
             ServerPartition partition = partitionConfigController.GetPartition(study.ServerPartitionKey);
 
-            List<string> seriesUids = new List<string>();
+            var seriesUids = new List<string>();
             foreach (Series s in series)
             {
                 seriesUids.Add(s.SeriesInstanceUid);
@@ -174,7 +139,7 @@ namespace ClearCanvas.ImageServer.Web.Common.Data
 
             using (IUpdateContext ctx = PersistentStoreRegistry.GetDefaultStore().OpenUpdateContext(UpdateContextSyncMode.Flush))
             {
-                StudyEditorHelper.DeleteSeries(ctx, partition, study.StudyInstanceUid, seriesUids, reason);
+                StudyDeleteHelper.DeleteSeries(ctx, partition, study.StudyInstanceUid, seriesUids, reason);
                 ctx.Commit();
             }
         }

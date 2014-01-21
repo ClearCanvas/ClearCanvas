@@ -132,9 +132,10 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <Compile Include="Actions\ActionSet.cs" />
+    <Compile Include="Actions\ActionExecuteResult.cs" />
+    <Compile Include="Actions\ActionList.cs" />
     <Compile Include="Actions\IActionItem.cs" />
-    <Compile Include="Actions\IActionSet.cs" />
+    <Compile Include="Actions\IActionList.cs" />
     <Compile Include="Actions\IXmlActionCompilerOperator.cs" />
     <Compile Include="Actions\XmlActionCompiler.cs" />
     <Compile Include="Actions\XmlActionCompilerException.cs" />
@@ -171,9 +172,15 @@
     <Compile Include="log4net\RollingFileAppender.cs" />
     <Compile Include="PluginInfoCache.cs" />
     <Compile Include="PluginLoader.cs" />
+    <Compile Include="Rest\RestClient.cs" />
     <Compile Include="Specifications\CaseSpecification.cs" />
+    <Compile Include="Specifications\ContainsSpecification.cs" />
+    <Compile Include="Specifications\EndsWithSpecification.cs" />
+    <Compile Include="Specifications\StartsWithSpecification.cs" />
+    <Compile Include="Specifications\StringMatchingSpecification.cs" />
     <Compile Include="Specifications\NotSpecification.cs" />
     <Compile Include="Specifications\Tests\CompositeSpecificationTests.cs" />
+    <Compile Include="Specifications\Tests\StringMatchingSpecificationTests.cs" />
     <Compile Include="Specifications\Tests\CountSpecificationTests.cs" />
     <Compile Include="Specifications\Tests\EnumerableSpecificationTests.cs" />
     <Compile Include="Specifications\Tests\EqualitySpecificationTests.cs" />
@@ -183,6 +190,7 @@
     <Compile Include="Specifications\Tests\TestsBase.cs" />
     <Compile Include="Specifications\Tests\XmlSpecificationCompilerTests.cs" />
     <Compile Include="Specifications\WhenThenPair.cs" />
+    <Compile Include="Specifications\XmlSpecificationSchema.cs" />
     <Compile Include="Statistics\AverageByteCountStatistics.cs" />
     <Compile Include="Statistics\AverageCountStatistics.cs" />
     <Compile Include="Statistics\AverageMessageCountStatistics.cs" />
@@ -238,7 +246,7 @@
     <Compile Include="Specifications\CompositeSpecification.cs" />
     <Compile Include="Specifications\CountSpecification.cs" />
     <Compile Include="Specifications\DefinedSpecification.cs" />
-    <Compile Include="Specifications\EachSpecification.cs" />
+    <Compile Include="Specifications\AllSpecification.cs" />
     <Compile Include="Specifications\EnumerableSpecification.cs" />
     <Compile Include="Specifications\EqualSpecification.cs" />
     <Compile Include="Specifications\Expression.cs" />
@@ -296,10 +304,12 @@
     <Compile Include="Utilities\CommandLine.cs" />
     <Compile Include="Utilities\CommandLineException.cs" />
     <Compile Include="Utilities\CommandLineParameterAttribute.cs" />
+    <Compile Include="Utilities\LogMessageSink.cs" />
     <Compile Include="Utilities\DateTimeUtils.cs" />
     <Compile Include="Utilities\DelayedEventPublisher.cs" />
     <Compile Include="Utilities\ExclusiveLock.cs" />
     <Compile Include="Utilities\HashUtilities.cs" />
+    <Compile Include="Utilities\ILogMessageSink.cs" />
     <Compile Include="Utilities\LargeMemoryStream.cs" />
     <Compile Include="Utilities\ListEventArgs.cs" />
     <Compile Include="Utilities\CollectionUtils.cs" />
@@ -308,6 +318,7 @@
     <Compile Include="Utilities\ItemEventArgs.cs" />
     <Compile Include="Utilities\PerformanceReportBroker.cs" />
     <Compile Include="Utilities\CryptoServiceFallbackHelper.cs" />
+    <Compile Include="Utilities\ReadOnlyDictionary.cs" />
     <Compile Include="Utilities\SynchronizedEventHelper.cs" />
     <Compile Include="Utilities\SystemResources.cs" />
     <Compile Include="Utilities\ObjectWalker.cs" />

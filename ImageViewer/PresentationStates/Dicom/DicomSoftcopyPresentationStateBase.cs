@@ -25,6 +25,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Dicom;
@@ -39,62 +40,51 @@ using ClearCanvas.ImageViewer.Mathematics;
 namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 {
 	[Cloneable]
-	internal abstract class DicomSoftcopyPresentationStateBase<T> : DicomSoftcopyPresentationState where T : IDicomPresentationImage
+	internal abstract class DicomSoftcopyPresentationStateBase<T> : DicomSoftcopyPresentationState
+		where T : IDicomPresentationImage
 	{
-		protected DicomSoftcopyPresentationStateBase(SopClass psSopClass) : base(psSopClass) {}
+		protected DicomSoftcopyPresentationStateBase(SopClass psSopClass)
+			: base(psSopClass) {}
 
-		protected DicomSoftcopyPresentationStateBase(SopClass psSopClass, DicomFile dicomFile) : base(psSopClass, dicomFile) {}
+		protected DicomSoftcopyPresentationStateBase(SopClass psSopClass, DicomFile dicomFile)
+			: base(psSopClass, dicomFile) {}
 
-		protected DicomSoftcopyPresentationStateBase(SopClass psSopClass, DicomAttributeCollection dataSource) : base(psSopClass, dataSource) {}
+		protected DicomSoftcopyPresentationStateBase(SopClass psSopClass, DicomAttributeCollection dataSource)
+			: base(psSopClass, dataSource) {}
 
-		protected DicomSoftcopyPresentationStateBase(DicomSoftcopyPresentationStateBase<T> source, ICloningContext context) : base(source, context)
+		protected DicomSoftcopyPresentationStateBase(DicomSoftcopyPresentationStateBase<T> source, ICloningContext context)
+			: base(source, context)
 		{
 			context.CloneFields(source, this);
 		}
 
-		protected override void PerformSerialization(IEnumerable<IPresentationImage> images)
+		protected override void PerformSerialization(IList<IPresentationImage> images)
 		{
-			DicomPresentationImageCollection<T> imageCollection = new DicomPresentationImageCollection<T>();
-			foreach (IPresentationImage image in images)
-			{
-				if (image is T)
-					imageCollection.Add((T) image);
-			}
-
+			DicomPresentationImageCollection<T> imageCollection = new DicomPresentationImageCollection<T>(images.OfType<T>());
 			if (imageCollection.Count == 0)
 				return;
 
-			// Initialize the Patient IE using source image information
-			InitializePatientModule(new PatientModuleIod(base.DataSet), imageCollection.FirstImage);
-			InitializeClinicalTrialSubjectModule(new ClinicalTrialSubjectModuleIod(base.DataSet), imageCollection.FirstImage);
-
-			// Initialize the Study IE using source image information
-			InitializeGeneralStudyModule(new GeneralStudyModuleIod(base.DataSet), imageCollection.FirstImage);
-			InitializePatientStudyModule(new PatientStudyModuleIod(base.DataSet), imageCollection.FirstImage);
-			InitializeClinicalTrialStudyModule(new ClinicalTrialStudyModuleIod(base.DataSet), imageCollection.FirstImage);
-
-			this.PerformTypeSpecificSerialization(imageCollection);
+			PerformTypeSpecificSerialization(imageCollection);
 		}
 
-		protected override sealed void PerformDeserialization(IEnumerable<IPresentationImage> images)
+		protected override sealed void PerformDeserialization(IList<IPresentationImage> images)
 		{
-			foreach (PresentationStateRelationshipModuleIod psRelationship in this.RelationshipSets)
+			DicomPresentationImageCollection<T> imageCollection;
+
+			if (!DeserializeIgnoreImageRelationship)
 			{
-				SeriesReferenceDictionary dictionary = new SeriesReferenceDictionary(psRelationship.ReferencedSeriesSequence);
-
-				DicomPresentationImageCollection<T> imageCollection = new DicomPresentationImageCollection<T>();
-				foreach (IPresentationImage image in images)
-				{
-					if (image is T)
-					{
-						T tImage = (T) image;
-						if (dictionary.ReferencesFrame(tImage.ImageSop.SeriesInstanceUid, tImage.ImageSop.SopInstanceUid, tImage.Frame.FrameNumber))
-							imageCollection.Add(tImage);
-					}
-				}
-
-				this.PerformTypeSpecificDeserialization(imageCollection);
+				imageCollection = new DicomPresentationImageCollection<T>(
+					RelationshipSets.Select(s => new SeriesReferenceDictionary(s.ReferencedSeriesSequence))
+						.Aggregate(Enumerable.Empty<T>(),
+						           (set, rel) => set.Union(images.OfType<T>()
+						                                   	.Where(img => rel.ReferencesFrame(img.ImageSop.SeriesInstanceUid, img.ImageSop.SopInstanceUid, img.Frame.FrameNumber)))));
 			}
+			else
+			{
+				imageCollection = new DicomPresentationImageCollection<T>(images.OfType<T>());
+			}
+
+			PerformTypeSpecificDeserialization(imageCollection);
 		}
 
 		protected abstract void PerformTypeSpecificSerialization(DicomPresentationImageCollection<T> images);
@@ -112,103 +102,8 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 		/// </remarks>
 		protected virtual IEnumerable<PresentationStateRelationshipModuleIod> RelationshipSets
 		{
-			get { return new PresentationStateRelationshipModuleIod[] {new PresentationStateRelationshipModuleIod(this.DataSet)}; }
+			get { return new[] {new PresentationStateRelationshipModuleIod(DataSet)}; }
 		}
-
-		#region Serialization of Demographic/Study Data
-
-		private static void InitializePatientModule(PatientModuleIod patientModule, T prototypeImage)
-		{
-			PatientModuleIod srcPatient = new PatientModuleIod(prototypeImage.ImageSop.DataSource);
-			patientModule.BreedRegistrationSequence = srcPatient.BreedRegistrationSequence;
-			patientModule.DeIdentificationMethod = srcPatient.DeIdentificationMethod;
-			patientModule.DeIdentificationMethodCodeSequence = srcPatient.DeIdentificationMethodCodeSequence;
-			patientModule.EthnicGroup = srcPatient.EthnicGroup;
-			patientModule.IssuerOfPatientId = srcPatient.IssuerOfPatientId;
-			patientModule.OtherPatientIds = srcPatient.OtherPatientIds;
-			patientModule.OtherPatientIdsSequence = srcPatient.OtherPatientIdsSequence;
-			patientModule.OtherPatientNames = srcPatient.OtherPatientNames;
-			patientModule.PatientBreedCodeSequence = srcPatient.PatientBreedCodeSequence;
-			patientModule.PatientBreedDescription = srcPatient.PatientBreedDescription;
-			patientModule.PatientComments = srcPatient.PatientComments;
-			patientModule.PatientId = srcPatient.PatientId;
-			patientModule.PatientIdentityRemoved = srcPatient.PatientIdentityRemoved;
-			patientModule.PatientsBirthDateTime = srcPatient.PatientsBirthDateTime;
-			patientModule.PatientsName = srcPatient.PatientsName;
-			patientModule.PatientSpeciesCodeSequence = srcPatient.PatientSpeciesCodeSequence;
-			patientModule.PatientSpeciesDescription = srcPatient.PatientSpeciesDescription;
-			patientModule.PatientsSex = srcPatient.PatientsSex;
-			patientModule.ReferencedPatientSequence = srcPatient.ReferencedPatientSequence;
-			patientModule.ResponsibleOrganization = srcPatient.ResponsibleOrganization;
-			patientModule.ResponsiblePerson = srcPatient.ResponsiblePerson;
-			patientModule.ResponsiblePersonRole = srcPatient.ResponsiblePersonRole;
-		}
-
-		private static void InitializeClinicalTrialSubjectModule(ClinicalTrialSubjectModuleIod clinicalTrialSubjectModule, T prototypeImage)
-		{
-			ClinicalTrialSubjectModuleIod srcTrialSubject = new ClinicalTrialSubjectModuleIod(prototypeImage.ImageSop.DataSource);
-			if (srcTrialSubject.HasValues()) // clinical trial subkect module is user optional
-			{
-				clinicalTrialSubjectModule.ClinicalTrialProtocolId = srcTrialSubject.ClinicalTrialProtocolId;
-				clinicalTrialSubjectModule.ClinicalTrialProtocolName = srcTrialSubject.ClinicalTrialProtocolName;
-				clinicalTrialSubjectModule.ClinicalTrialSiteId = srcTrialSubject.ClinicalTrialSiteId;
-				clinicalTrialSubjectModule.ClinicalTrialSiteName = srcTrialSubject.ClinicalTrialSiteName;
-				clinicalTrialSubjectModule.ClinicalTrialSponsorName = srcTrialSubject.ClinicalTrialSponsorName;
-				clinicalTrialSubjectModule.ClinicalTrialSubjectId = srcTrialSubject.ClinicalTrialSubjectId;
-				clinicalTrialSubjectModule.ClinicalTrialSubjectReadingId = srcTrialSubject.ClinicalTrialSubjectReadingId;
-			}
-		}
-
-		private static void InitializeGeneralStudyModule(GeneralStudyModuleIod generalStudyModule, T prototypeImage)
-		{
-			GeneralStudyModuleIod srcGeneralStudy = new GeneralStudyModuleIod(prototypeImage.ImageSop.DataSource);
-			generalStudyModule.AccessionNumber = srcGeneralStudy.AccessionNumber;
-			generalStudyModule.NameOfPhysiciansReadingStudy = srcGeneralStudy.NameOfPhysiciansReadingStudy;
-			generalStudyModule.PhysiciansOfRecord = srcGeneralStudy.PhysiciansOfRecord;
-			generalStudyModule.PhysiciansOfRecordIdentificationSequence = srcGeneralStudy.PhysiciansOfRecordIdentificationSequence;
-			generalStudyModule.PhysiciansReadingStudyIdentificationSequence = srcGeneralStudy.PhysiciansReadingStudyIdentificationSequence;
-			generalStudyModule.ProcedureCodeSequence = srcGeneralStudy.ProcedureCodeSequence;
-			generalStudyModule.ReferencedStudySequence = srcGeneralStudy.ReferencedStudySequence;
-			generalStudyModule.ReferringPhysicianIdentificationSequence = srcGeneralStudy.ReferringPhysicianIdentificationSequence;
-			generalStudyModule.ReferringPhysiciansName = srcGeneralStudy.ReferringPhysiciansName;
-			generalStudyModule.StudyDateTime = srcGeneralStudy.StudyDateTime;
-			generalStudyModule.StudyDescription = srcGeneralStudy.StudyDescription;
-			generalStudyModule.StudyId = srcGeneralStudy.StudyId;
-			generalStudyModule.StudyInstanceUid = srcGeneralStudy.StudyInstanceUid;
-		}
-
-		private static void InitializePatientStudyModule(PatientStudyModuleIod patientStudyModule, T prototypeImage)
-		{
-			PatientStudyModuleIod srcPatientStudy = new PatientStudyModuleIod(prototypeImage.ImageSop.DataSource);
-			if (srcPatientStudy.HasValues()) // patient study module is user optional
-			{
-				patientStudyModule.AdditionalPatientHistory = srcPatientStudy.AdditionalPatientHistory;
-				patientStudyModule.AdmissionId = srcPatientStudy.AdmissionId;
-				patientStudyModule.AdmittingDiagnosesCodeSequence = srcPatientStudy.AdmittingDiagnosesCodeSequence;
-				patientStudyModule.AdmittingDiagnosesDescription = srcPatientStudy.AdmittingDiagnosesDescription;
-				patientStudyModule.IssuerOfAdmissionId = srcPatientStudy.IssuerOfAdmissionId;
-				patientStudyModule.IssuerOfServiceEpisodeId = srcPatientStudy.IssuerOfServiceEpisodeId;
-				patientStudyModule.Occupation = srcPatientStudy.Occupation;
-				patientStudyModule.PatientsAge = srcPatientStudy.PatientsAge;
-				patientStudyModule.PatientsSexNeutered = srcPatientStudy.PatientsSexNeutered;
-				patientStudyModule.PatientsSize = srcPatientStudy.PatientsSize;
-				patientStudyModule.PatientsWeight = srcPatientStudy.PatientsWeight;
-				patientStudyModule.ServiceEpisodeDescription = srcPatientStudy.ServiceEpisodeDescription;
-				patientStudyModule.ServiceEpisodeId = srcPatientStudy.ServiceEpisodeId;
-			}
-		}
-
-		private static void InitializeClinicalTrialStudyModule(ClinicalTrialStudyModuleIod clinicalTrialStudyModule, T prototypeImage)
-		{
-			ClinicalTrialStudyModuleIod srcTrialStudy = new ClinicalTrialStudyModuleIod(prototypeImage.ImageSop.DataSource);
-			if (srcTrialStudy.HasValues()) // clinical trial study module is user optional
-			{
-				clinicalTrialStudyModule.ClinicalTrialTimePointDescription = srcTrialStudy.ClinicalTrialTimePointDescription;
-				clinicalTrialStudyModule.ClinicalTrialTimePointId = srcTrialStudy.ClinicalTrialTimePointId;
-			}
-		}
-
-		#endregion
 
 		#region Serialization of Presentation States
 
@@ -252,33 +147,21 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 			{
 				DisplayedAreaModuleIod.DisplayedAreaSelectionSequenceItem displayedArea = new DisplayedAreaModuleIod.DisplayedAreaSelectionSequenceItem();
 				displayedArea.InitializeAttributes();
-				displayedArea.ReferencedImageSequence = new ImageSopInstanceReferenceMacro[] {CreateImageSopInstanceReference(image.Frame)};
+				displayedArea.ReferencedImageSequence = new[] {CreateImageSopInstanceReference(image.Frame)};
 
-				if (image is IImageGraphicProvider)
-				{
-					ImageGraphic imageGraphic = ((IImageGraphicProvider) image).ImageGraphic;
-					Size imageSize = new Size(imageGraphic.Columns, imageGraphic.Rows);
+				ImageGraphic imageGraphic = ((IImageGraphicProvider) image).ImageGraphic;
+				Size imageSize = new Size(imageGraphic.Columns, imageGraphic.Rows);
 
-					// compute the visible boundaries of the image as a positive rectangle in screen space
-					RectangleF visibleBounds = imageGraphic.SpatialTransform.ConvertToDestination(new Rectangle(new Point(0, 0), imageSize));
-					visibleBounds = RectangleUtilities.Intersect(visibleBounds, image.ClientRectangle);
-					visibleBounds = RectangleUtilities.ConvertToPositiveRectangle(visibleBounds);
+				// compute the visible area of the image as a rectangle oriented positively in screen space
+				RectangleF visibleImageArea = imageGraphic.SpatialTransform.ConvertToSource(image.ClientRectangle);
+				visibleImageArea = RectangleUtilities.ConvertToPositiveRectangle(visibleImageArea);
+				visibleImageArea = RectangleUtilities.RoundInflate(visibleImageArea);
+				visibleImageArea = RectangleUtilities.Intersect(visibleImageArea, new Rectangle(new Point(0, 0), imageSize));
 
-					// compute the visible area of the image as a rectangle oriented positively in screen space
-					RectangleF visibleImageArea = imageGraphic.SpatialTransform.ConvertToSource(visibleBounds);
-					visibleImageArea = RectangleUtilities.RoundInflate(visibleImageArea);
-
-					// compute the pixel addresses of the visible area by intersecting area with actual pixel addresses available
-					//Rectangle visiblePixels = Rectangle.Truncate(RectangleUtilities.Intersect(visibleImageArea, new RectangleF(_point1, imageSize)));
-					Rectangle visiblePixels = ConvertToPixelAddressRectangle(Rectangle.Truncate(visibleImageArea));
-					displayedArea.DisplayedAreaTopLeftHandCorner = visiblePixels.Location;
-					displayedArea.DisplayedAreaBottomRightHandCorner = visiblePixels.Location + visiblePixels.Size;
-				}
-				else
-				{
-					displayedArea.DisplayedAreaTopLeftHandCorner = image.ClientRectangle.Location + new Size(1, 1);
-					displayedArea.DisplayedAreaBottomRightHandCorner = image.ClientRectangle.Location + image.ClientRectangle.Size;
-				}
+				// compute the pixel addresses of the visible area by intersecting area with actual pixel addresses available
+				Rectangle visiblePixels = ConvertToPixelAddressRectangle(Rectangle.Truncate(visibleImageArea));
+				displayedArea.DisplayedAreaTopLeftHandCorner = visiblePixels.Location;
+				displayedArea.DisplayedAreaBottomRightHandCorner = visiblePixels.Location + visiblePixels.Size;
 
 				ISpatialTransform spatialTransform = image.SpatialTransform;
 				switch (_displayAreaSerializationOption)
@@ -289,7 +172,7 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 						break;
 					case DisplayAreaSerializationOption.SerializeAsTrueSize:
 						displayedArea.PresentationSizeMode = DisplayedAreaModuleIod.PresentationSizeMode.TrueSize;
-						displayedArea.PresentationPixelSpacing = image.Frame.PixelSpacing;
+						displayedArea.PresentationPixelSpacing = image.Frame.NormalizedPixelSpacing;
 						break;
 					case DisplayAreaSerializationOption.SerializeAsDisplayedArea:
 					default:
@@ -297,12 +180,7 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 						break;
 				}
 
-				PixelAspectRatio pixelAspectRatio = image.Frame.PixelAspectRatio;
-				if (pixelAspectRatio == null || pixelAspectRatio.IsNull)
-					pixelAspectRatio = PixelAspectRatio.FromString(image.ImageSop[DicomTags.PixelAspectRatio].ToString());
-				if (pixelAspectRatio == null || pixelAspectRatio.IsNull)
-					pixelAspectRatio = new PixelAspectRatio(1, 1);
-				displayedArea.PresentationPixelAspectRatio = pixelAspectRatio;
+				displayedArea.PresentationPixelAspectRatio = PixelAspectRatio.FromString(image.Frame.NormalizedPixelSpacing.GetPixelAspectRatioString());
 
 				displayedAreas.Add(displayedArea);
 			}
@@ -324,9 +202,11 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 			}
 		}
 
-		private static readonly int[] _spatialTransformRotationTranslation = new int[] {0, 90, 180, 270, 0, 270, 180, 90, 180, 90, 0, 270, 180, 270, 0, 90};
+// ReSharper disable StaticFieldInGenericType
+		private static readonly int[] _spatialTransformRotationTranslation = new[] {0, 90, 180, 270, 0, 270, 180, 90, 180, 90, 0, 270, 180, 270, 0, 90};
+// ReSharper restore StaticFieldInGenericType
 
-		private static readonly string _annotationsLayerId = "USER ANNOTATIONS";
+		private const string _annotationsLayerId = "USER ANNOTATIONS";
 
 		protected void SerializeGraphicLayer(GraphicLayerModuleIod graphicLayerModule, DicomPresentationImageCollection<T> images)
 		{
@@ -388,11 +268,11 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 						foreach (IGraphic graphic in layerGraphic.Graphics)
 						{
 							GraphicAnnotationSequenceItem annotation = new GraphicAnnotationSequenceItem();
-							if (GraphicAnnotationSerializer.SerializeGraphic(graphic, annotation))
+							if (GraphicAnnotationSerializer.SerializeGraphic(graphic, annotation) && AnyContent(annotation))
 							{
 								SetAllSpecificCharacterSets(annotation, DataSet.SpecificCharacterSet);
 								annotation.GraphicLayer = layerGraphic.Id.ToUpperInvariant();
-								annotation.ReferencedImageSequence = new ImageSopInstanceReferenceMacro[] {CreateImageSopInstanceReference(image.Frame)};
+								annotation.ReferencedImageSequence = new[] {CreateImageSopInstanceReference(image.Frame)};
 								annotations.Add(annotation);
 							}
 						}
@@ -402,11 +282,11 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 				foreach (IGraphic graphic in image.OverlayGraphics)
 				{
 					GraphicAnnotationSequenceItem annotation = new GraphicAnnotationSequenceItem();
-					if (GraphicAnnotationSerializer.SerializeGraphic(graphic, annotation))
+					if (GraphicAnnotationSerializer.SerializeGraphic(graphic, annotation) && AnyContent(annotation))
 					{
 						SetAllSpecificCharacterSets(annotation, DataSet.SpecificCharacterSet);
 						annotation.GraphicLayer = _annotationsLayerId;
-						annotation.ReferencedImageSequence = new ImageSopInstanceReferenceMacro[] {CreateImageSopInstanceReference(image.Frame)};
+						annotation.ReferencedImageSequence = new[] {CreateImageSopInstanceReference(image.Frame)};
 						annotations.Add(annotation);
 					}
 				}
@@ -416,16 +296,24 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 				graphicAnnotationModule.GraphicAnnotationSequence = annotations.ToArray();
 		}
 
+		private static bool AnyContent(GraphicAnnotationSequenceItem annotation)
+		{
+			var graphicObjectSequenceItems = annotation.GraphicObjectSequence;
+			var textObjectSequenceItems = annotation.TextObjectSequence;
+			return (graphicObjectSequenceItems != null && graphicObjectSequenceItems.Length > 0)
+			       || (textObjectSequenceItems != null && textObjectSequenceItems.Length > 0);
+		}
+
 		private static void SetAllSpecificCharacterSets(GraphicAnnotationSequenceItem annotation, string specificCharacterSet)
 		{
-            if (annotation.TextObjectSequence == null)
-                return;
+			if (annotation.TextObjectSequence == null)
+				return;
 
 			foreach (var textItem in annotation.TextObjectSequence)
 			{
-			    var attributeCollection = textItem.DicomAttributeProvider as DicomAttributeCollection;
-                if (attributeCollection != null)
-			        attributeCollection.SpecificCharacterSet = specificCharacterSet;
+				var attributeCollection = textItem.DicomAttributeProvider as DicomAttributeCollection;
+				if (attributeCollection != null)
+					attributeCollection.SpecificCharacterSet = specificCharacterSet;
 			}
 		}
 
@@ -552,13 +440,7 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 						visibleOverlays.Add(bitmapShutter);
 
 					// identify any visible overlays
-					foreach (ILayer layer in
-						CollectionUtils.Select((IEnumerable<ILayer>) dicomGraphics.Layers, delegate(ILayer test) { return test.Visible; }))
-					{
-						foreach (OverlayPlaneGraphic overlay in
-							CollectionUtils.Select(layer.Graphics, delegate(IGraphic test) { return test is OverlayPlaneGraphic && test.Visible; }))
-							visibleOverlays.Add(overlay);
-					}
+					visibleOverlays.AddRange(((IEnumerable<ILayer>) dicomGraphics.Layers).Where(l => l.Visible).SelectMany(l => l.Graphics).OfType<OverlayPlaneGraphic>().Where(g => g.Visible));
 				}
 			}
 
@@ -679,7 +561,10 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 		private static Rectangle ConvertToPixelAddressRectangle(Rectangle rectangle)
 		{
 			if (rectangle.Width*rectangle.Height == 0)
-				throw new ArgumentException("Zero-area rectangles cannot be specified in terms of a pixel address rectangle.", "rectangle");
+			{
+				const string msg = "Zero-area rectangles cannot be specified in terms of a pixel address rectangle.";
+				throw new ArgumentException(msg, "rectangle");
+			}
 
 			Size locationOffset = new Size(rectangle.Width > 0 ? 1 : 0, rectangle.Height > 0 ? 1 : 0);
 			Size sizeOffset = new Size(rectangle.Width > 0 ? -1 : 1, rectangle.Height > 0 ? -1 : 1);
@@ -698,12 +583,18 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 			return new PointF((rectangle.Left + rectangle.Right)/2f, (rectangle.Top + rectangle.Bottom)/2f);
 		}
 
+		protected bool DeserializeIgnoreImageRelationship
+		{
+			get { return DeserializeOptions.HasFlag(DicomSoftcopyPresentationStateDeserializeOptions.IgnoreImageRelationship); }
+		}
+
 		protected void DeserializeDisplayedArea(DisplayedAreaModuleIod dispAreaMod, out RectangleF displayedArea, T image)
 		{
 			ISpatialTransform spatialTransform = image.SpatialTransform;
 			foreach (DisplayedAreaModuleIod.DisplayedAreaSelectionSequenceItem item in dispAreaMod.DisplayedAreaSelectionSequence)
 			{
-				if (item.ReferencedImageSequence[0].ReferencedSopInstanceUid == image.ImageSop.SopInstanceUid)
+				var dictionary = !DeserializeIgnoreImageRelationship ? new ImageSopInstanceReferenceDictionary(item.ReferencedImageSequence, true) : null;
+				if (dictionary == null || dictionary.ReferencesFrame(image.Frame.SopInstanceUid, image.Frame.FrameNumber))
 				{
 					// get the displayed area of the image in source coordinates (stored values do not have sub-pixel accuracy)
 					var displayRect = RectangleF.FromLTRB(item.DisplayedAreaTopLeftHandCorner.X,
@@ -750,11 +641,11 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 							break;
 					}
 
-					if (centerDisplay && spatialTransform is SpatialTransform)
+					if (centerDisplay)
 					{
 						// compute translation so that the displayRect is centered in the clientRect
 						var displayCentre = GetRectangleCenter(displayRect);
-						var clientCentre = ((SpatialTransform) spatialTransform).ConvertToSource(GetRectangleCenter(image.ClientRectangle));
+						var clientCentre = spatialTransform.ConvertToSource(GetRectangleCenter(image.ClientRectangle));
 						spatialTransform.TranslationX = clientCentre.X - displayCentre.X;
 						spatialTransform.TranslationY = clientCentre.Y - displayCentre.Y;
 					}
@@ -814,9 +705,21 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 		protected void DeserializeGraphicAnnotation(GraphicAnnotationModuleIod module, RectangleF displayedArea, T image)
 		{
 			DicomGraphicsPlane graphic = DicomGraphicsPlane.GetDicomGraphicsPlane(image, true);
-			foreach (DicomGraphicAnnotation annotation in DicomGraphicsFactory.CreateGraphicAnnotations(image.Frame, module, displayedArea))
+
+			var sqItems = module.GraphicAnnotationSequence;
+			if (sqItems != null)
 			{
-				graphic.Layers[annotation.LayerId].Graphics.Add(annotation);
+				var interactiveAnnotations = DeserializeOptions.HasFlag(DicomSoftcopyPresentationStateDeserializeOptions.InteractiveAnnotations);
+				var ignoreImageRelationships = DeserializeIgnoreImageRelationship;
+				foreach (var annotation in sqItems.Select(sqItem =>
+				                                          new
+				                                          	{
+				                                          		LayerId = sqItem.GraphicLayer ?? string.Empty,
+				                                          		Graphic = DicomGraphicsFactory.CreateGraphicAnnotation(image.Frame, sqItem, displayedArea, interactiveAnnotations, ignoreImageRelationships)
+				                                          	}).Where(g => g.Graphic != null))
+				{
+					graphic.Layers[annotation.LayerId].Graphics.Add(annotation.Graphic);
+				}
 			}
 		}
 

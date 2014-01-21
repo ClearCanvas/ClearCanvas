@@ -27,6 +27,7 @@ using System.Collections.Generic;
 using ClearCanvas.Dicom;
 using ClearCanvas.Dicom.Codec;
 using ClearCanvas.Dicom.Iod;
+using ClearCanvas.Dicom.Iod.Modules;
 
 namespace ClearCanvas.ImageViewer.StudyManagement
 {
@@ -44,7 +45,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 	/// see <see cref="ISopReference"/>.
 	/// </para>
 	/// </remarks>
-	public class ImageSop : Sop
+	public partial class ImageSop : Sop
 	{
 		private readonly object _syncLock = new object();
 		private volatile FrameCollection _frames;
@@ -56,6 +57,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		public ImageSop(string filename)
 			: base(filename)
 		{
+			_functionalGroups = new FunctionalGroupMapCache(DataSource, DataSource.SopClassUid);
 		}
 
 		/// <summary>
@@ -64,6 +66,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		public ImageSop(ISopDataSource dataSource)
 			: base(dataSource)
 		{
+			_functionalGroups = new FunctionalGroupMapCache(DataSource, DataSource.SopClassUid);
 		}
 
 		/// <summary>
@@ -89,9 +92,9 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 						if (_frames == null)
 						{
 							var frames = new FrameCollection();
-							for (int i = 1; i <= this.NumberOfFrames; i++)
+							for (int i = 1; i <= NumberOfFrames; i++)
 								frames.Add(CreateFrame(i));
-							
+
 							_frames = frames;
 						}
 					}
@@ -108,28 +111,22 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		/// </summary>
 		public virtual string AnatomicalOrientationType
 		{
-			get
-			{
-			    return this[DicomTags.AnatomicalOrientationType].ToString();
-			}
+			get { return this[DicomTags.AnatomicalOrientationType].ToString(); }
 		}
 
 		#endregion
 
-        #region DX Series Module
+		#region DX Series Module
 
-        /// <summary>
-        /// Gets the Anatomical Orientation Type.
-        /// </summary>
-        public virtual string PresentationIntentType
-        {
-            get
-            {
-                return this[DicomTags.PresentationIntentType].ToString();
-            }
-        }
+		/// <summary>
+		/// Gets the Presentation Intent Type.
+		/// </summary>
+		public virtual string PresentationIntentType
+		{
+			get { return this[DicomTags.PresentationIntentType].ToString(); }
+		}
 
-        #endregion
+		#endregion
 
 		#region General Image Module
 
@@ -143,7 +140,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		[Obsolete("This method has been deprecated and will be removed in the future. Use equivalent property on Frame class instead.")]
 		public virtual PatientOrientation PatientOrientation
 		{
-			get { return this.Frames[1].PatientOrientation; }
+			get { return Frames[1].PatientOrientation; }
 		}
 
 		/// <summary>
@@ -152,7 +149,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		[Obsolete("This method has been deprecated and will be removed in the future. Use equivalent property on Frame class instead.")]
 		public virtual string ImageType
 		{
-			get { return this.Frames[1].ImageType; }
+			get { return Frames[1].ImageType; }
 		}
 
 		/// <summary>
@@ -161,7 +158,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		[Obsolete("This method has been deprecated and will be removed in the future. Use equivalent property on Frame class instead.")]
 		public virtual int AcquisitionNumber
 		{
-			get { return this.Frames[1].AcquisitionNumber; }
+			get { return Frames[1].AcquisitionNumber; }
 		}
 
 		/// <summary>
@@ -170,7 +167,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		[Obsolete("This method has been deprecated and will be removed in the future. Use equivalent property on Frame class instead.")]
 		public virtual string AcquisitionDate
 		{
-			get { return this.Frames[1].AcquisitionDate; }
+			get { return Frames[1].AcquisitionDate; }
 		}
 
 		/// <summary>
@@ -179,7 +176,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		[Obsolete("This method has been deprecated and will be removed in the future. Use equivalent property on Frame class instead.")]
 		public virtual string AcquisitionTime
 		{
-			get { return this.Frames[1].AcquisitionTime; }
+			get { return Frames[1].AcquisitionTime; }
 		}
 
 		/// <summary>
@@ -188,7 +185,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		[Obsolete("This method has been deprecated and will be removed in the future. Use equivalent property on Frame class instead.")]
 		public virtual string AcquisitionDateTime
 		{
-			get { return this.Frames[1].AcquisitionDateTime; }
+			get { return Frames[1].AcquisitionDateTime; }
 		}
 
 		/// <summary>
@@ -197,7 +194,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		[Obsolete("This method has been deprecated and will be removed in the future. Use equivalent property on Frame class instead.")]
 		public virtual int ImagesInAcquisition
 		{
-			get { return this.Frames[1].ImagesInAcquisition; }
+			get { return Frames[1].ImagesInAcquisition; }
 		}
 
 		/// <summary>
@@ -206,7 +203,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		[Obsolete("This method has been deprecated and will be removed in the future. Use equivalent property on Frame class instead.")]
 		public virtual string ImageComments
 		{
-			get { return this.Frames[1].ImageComments; }
+			get { return Frames[1].ImageComments; }
 		}
 
 		/// <summary>
@@ -215,7 +212,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		[Obsolete("This method has been deprecated and will be removed in the future. Use equivalent property on Frame class instead.")]
 		public virtual string LossyImageCompression
 		{
-			get { return this.Frames[1].LossyImageCompression; }
+			get { return Frames[1].LossyImageCompression; }
 		}
 
 		/// <summary>
@@ -227,7 +224,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		[Obsolete("This method has been deprecated and will be removed in the future. Use equivalent property on Frame class instead.")]
 		public virtual double[] LossyImageCompressionRatio
 		{
-			get { return this.Frames[1].LossyImageCompressionRatio; }
+			get { return Frames[1].LossyImageCompressionRatio; }
 		}
 
 		#endregion
@@ -244,7 +241,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		[Obsolete("This method has been deprecated and will be removed in the future. Use equivalent property on Frame class instead.")]
 		public virtual PixelSpacing PixelSpacing
 		{
-			get { return this.Frames[1].PixelSpacing; }
+			get { return Frames[1].PixelSpacing; }
 		}
 
 		/// <summary>
@@ -258,7 +255,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		[Obsolete("This method has been deprecated and will be removed in the future. Use equivalent property on Frame class instead.")]
 		public virtual ImageOrientationPatient ImageOrientationPatient
 		{
-			get { return this.Frames[1].ImageOrientationPatient; }
+			get { return Frames[1].ImageOrientationPatient; }
 		}
 
 		/// <summary>
@@ -271,7 +268,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		[Obsolete("This method has been deprecated and will be removed in the future. Use equivalent property on Frame class instead.")]
 		public virtual ImagePositionPatient ImagePositionPatient
 		{
-			get { return this.Frames[1].ImagePositionPatient; }
+			get { return Frames[1].ImagePositionPatient; }
 		}
 
 		/// <summary>
@@ -280,7 +277,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		[Obsolete("This method has been deprecated and will be removed in the future. Use equivalent property on Frame class instead.")]
 		public virtual double SliceThickness
 		{
-			get { return this.Frames[1].SliceThickness; }
+			get { return Frames[1].SliceThickness; }
 		}
 
 		/// <summary>
@@ -289,7 +286,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		[Obsolete("This method has been deprecated and will be removed in the future. Use equivalent property on Frame class instead.")]
 		public virtual double SliceLocation
 		{
-			get { return this.Frames[1].SliceLocation; }
+			get { return Frames[1].SliceLocation; }
 		}
 
 		#endregion
@@ -297,14 +294,14 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		#region Image Pixel Module
 
 		#region Type 1
-		
+
 		/// <summary>
 		/// Gets the samples per pixel.
 		/// </summary>
 		[Obsolete("This method has been deprecated and will be removed in the future. Use equivalent property on Frame class instead.")]
 		public virtual int SamplesPerPixel
 		{
-			get { return this.Frames[1].SamplesPerPixel; }
+			get { return Frames[1].SamplesPerPixel; }
 		}
 
 		/// <summary>
@@ -313,7 +310,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		[Obsolete("This method has been deprecated and will be removed in the future. Use equivalent property on Frame class instead.")]
 		public virtual PhotometricInterpretation PhotometricInterpretation
 		{
-			get { return this.Frames[1].PhotometricInterpretation; }
+			get { return Frames[1].PhotometricInterpretation; }
 		}
 
 		/// <summary>
@@ -322,7 +319,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		[Obsolete("This method has been deprecated and will be removed in the future. Use equivalent property on Frame class instead.")]
 		public virtual int Rows
 		{
-			get { return this.Frames[1].Rows; }
+			get { return Frames[1].Rows; }
 		}
 
 		/// <summary>
@@ -331,7 +328,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		[Obsolete("This method has been deprecated and will be removed in the future. Use equivalent property on Frame class instead.")]
 		public virtual int Columns
 		{
-			get { return this.Frames[1].Columns; }
+			get { return Frames[1].Columns; }
 		}
 
 		/// <summary>
@@ -340,7 +337,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		[Obsolete("This method has been deprecated and will be removed in the future. Use equivalent property on Frame class instead.")]
 		public virtual int BitsAllocated
 		{
-			get { return this.Frames[1].BitsAllocated; }
+			get { return Frames[1].BitsAllocated; }
 		}
 
 		/// <summary>
@@ -349,7 +346,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		[Obsolete("This method has been deprecated and will be removed in the future. Use equivalent property on Frame class instead.")]
 		public virtual int BitsStored
 		{
-			get { return this.Frames[1].BitsStored; }
+			get { return Frames[1].BitsStored; }
 		}
 
 		/// <summary>
@@ -358,7 +355,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		[Obsolete("This method has been deprecated and will be removed in the future. Use equivalent property on Frame class instead.")]
 		public virtual int HighBit
 		{
-			get { return this.Frames[1].HighBit; }
+			get { return Frames[1].HighBit; }
 		}
 
 		/// <summary>
@@ -367,10 +364,11 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		[Obsolete("This method has been deprecated and will be removed in the future. Use equivalent property on Frame class instead.")]
 		public virtual int PixelRepresentation
 		{
-			get { return this.Frames[1].PixelRepresentation; }
+			get { return Frames[1].PixelRepresentation; }
 		}
 
-		#endregion 
+		#endregion
+
 		#region Type 1C
 
 		/// <summary>
@@ -379,7 +377,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		[Obsolete("This method has been deprecated and will be removed in the future. Use equivalent property on Frame class instead.")]
 		public virtual int PlanarConfiguration
 		{
-			get { return this.Frames[1].PlanarConfiguration; }
+			get { return Frames[1].PlanarConfiguration; }
 		}
 
 		/// <summary>
@@ -392,10 +390,11 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		[Obsolete("This method has been deprecated and will be removed in the future. Use equivalent property on Frame class instead.")]
 		public virtual PixelAspectRatio PixelAspectRatio
 		{
-			get { return this.Frames[1].PixelAspectRatio; }
+			get { return Frames[1].PixelAspectRatio; }
 		}
 
 		#endregion
+
 		#endregion
 
 		#region Modality LUT Module
@@ -406,7 +405,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		[Obsolete("This method has been deprecated and will be removed in the future. Use equivalent property on Frame class instead.")]
 		public virtual double RescaleIntercept
 		{
-			get { return this.Frames[1].RescaleIntercept; }
+			get { return Frames[1].RescaleIntercept; }
 		}
 
 		/// <summary>
@@ -418,7 +417,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		[Obsolete("This method has been deprecated and will be removed in the future. Use equivalent property on Frame class instead.")]
 		public virtual double RescaleSlope
 		{
-			get { return this.Frames[1].RescaleSlope; }
+			get { return Frames[1].RescaleSlope; }
 		}
 
 		/// <summary>
@@ -427,7 +426,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		[Obsolete("This method has been deprecated and will be removed in the future. Use equivalent property on Frame class instead.")]
 		public virtual string RescaleType
 		{
-			get { return this.Frames[1].RescaleType; }
+			get { return Frames[1].RescaleType; }
 		}
 
 		#endregion
@@ -437,9 +436,10 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		/// <summary>
 		/// Gets the <see cref="VoiDataLut"/>s from the image header.
 		/// </summary>
+		[Obsolete("This method has been deprecated and will be removed in the future. Use equivalent property on Frame class instead.")]
 		public virtual IList<VoiDataLut> VoiDataLuts
 		{
-			get { return base.GetVoiDataLuts(); }
+			get { return Frames[1].VoiDataLuts; }
 		}
 
 		/// <summary>
@@ -451,7 +451,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		[Obsolete("This method has been deprecated and will be removed in the future. Use equivalent property on Frame class instead.")]
 		public virtual Window[] WindowCenterAndWidth
 		{
-			get { return this.Frames[1].WindowCenterAndWidth; }
+			get { return Frames[1].WindowCenterAndWidth; }
 		}
 
 		/// <summary>
@@ -460,12 +460,12 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		[Obsolete("This method has been deprecated and will be removed in the future. Use equivalent property on Frame class instead.")]
 		public virtual string[] WindowCenterAndWidthExplanation
 		{
-			get { return this.Frames[1].WindowCenterAndWidthExplanation; }
+			get { return Frames[1].WindowCenterAndWidthExplanation; }
 		}
 
 		#endregion
 
-		#region Multiframe Module
+		#region Multi-Frame Module
 
 		/// <summary>
 		/// Gets the number of frames in the image SOP.
@@ -477,13 +477,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		/// </remarks>
 		public virtual int NumberOfFrames
 		{
-			get
-			{
-				int numberOfFrames;
-				numberOfFrames = this[DicomTags.NumberOfFrames].GetInt32(0, 0);
-
-				return Math.Max(numberOfFrames, 1);
-			}
+			get { return Math.Max(this[DicomTags.NumberOfFrames].GetInt32(0, 1), 1); }
 		}
 
 		#endregion
@@ -493,14 +487,10 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		/// <summary>
 		/// Gets the Image Laterality.
 		/// </summary>
+		[Obsolete("This method has been deprecated and will be removed in the future. Use equivalent property on Frame class instead.")]
 		public virtual string ImageLaterality
 		{
-			get
-			{
-				string imageLaterality;
-				imageLaterality = this[DicomTags.ImageLaterality].GetString(0, null);
-				return imageLaterality ?? "";
-			}
+			get { return this[DicomTags.ImageLaterality].GetString(0, null) ?? string.Empty; }
 		}
 
 		#endregion
@@ -510,14 +500,10 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		/// <summary>
 		/// Gets the View Position.
 		/// </summary>
+		[Obsolete("This method has been deprecated and will be removed in the future. Use equivalent property on Frame class instead.")]
 		public virtual string ViewPosition
 		{
-			get
-			{
-				string viewPosition;
-				viewPosition = this[DicomTags.ViewPosition].GetString(0, null);
-				return viewPosition ?? "";
-			}
+			get { return this[DicomTags.ViewPosition].GetString(0, null) ?? string.Empty; }
 		}
 
 		#endregion
@@ -531,7 +517,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		[Obsolete("This method has been deprecated and will be removed in the future. Use equivalent property on Frame class instead.")]
 		public virtual byte[] GetNormalizedPixelData()
 		{
-			return this.Frames[1].GetNormalizedPixelData();
+			return Frames[1].GetNormalizedPixelData();
 		}
 
 		protected override IEnumerable<TransferSyntax> GetAllowableTransferSyntaxes()
@@ -578,7 +564,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 
 			if (disposing)
 			{
-				lock(_syncLock)
+				lock (_syncLock)
 				{
 					if (_frames != null)
 					{
@@ -589,6 +575,15 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 					}
 				}
 			}
+		}
+
+		/// <summary>
+		/// Gets whether or not this Image SOP instance is a multi-frame image.
+		/// </summary>
+		public bool IsMultiframe
+		{
+			// we include a check for the functional groups since an "enhanced" image could have only one frame, but have important data encoded in functional groups anyway
+			get { return NumberOfFrames > 1 || new MultiFrameFunctionalGroupsModuleIod(DataSource).HasValues(); }
 		}
 
 		/// <summary>

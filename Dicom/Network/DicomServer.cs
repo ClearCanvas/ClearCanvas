@@ -82,6 +82,8 @@ namespace ClearCanvas.Dicom.Network
         IDicomServerHandler _handler;
         private Dictionary<string, ListenerInfo> _appList;
         private bool _disposed;
+		private IDicomFilestreamHandler _filestreamHandler;
+
 		#endregion
 
         #region Public Properties
@@ -271,6 +273,19 @@ namespace ClearCanvas.Dicom.Network
         /// <param name="closeConnection">Flag telling if the connection should be closed</param>
         protected override void OnNetworkError(Exception e, bool closeConnection)
         {
+	        try
+	        {
+				if (_filestreamHandler != null)
+				{
+					_filestreamHandler.CancelStream();
+					_filestreamHandler = null;
+				}
+	        }
+	        catch (Exception x)
+	        {
+				Platform.Log(LogLevel.Error, x, "Unexpected exception when calling IDicomFilestreamHandler.CancelStream");
+			}
+
             try
             {
                 if (_handler != null && State != DicomAssociationState.Sta13_AwaitingTransportConnectionClose)
@@ -401,6 +416,44 @@ namespace ClearCanvas.Dicom.Network
             }
         }
 
+		protected override void OnReceiveDimseCommand(byte pcid, DicomAttributeCollection command)
+		{
+			try
+			{
+				_handler.OnReceiveDimseCommand(this, _assoc as ServerAssociationParameters, pcid, command);
+			}
+			catch (Exception e)
+			{
+				OnUserException(e, "Unexpected exception on OnReceiveDimseCommand");
+			}
+		}
+
+		protected override bool OnReceiveFileStream(byte pcid, DicomAttributeCollection command, DicomAttributeCollection dataset, byte[] data, int offset, int count, bool isFirst, bool isLast)
+		{
+			try
+			{
+				if (isFirst)
+					_filestreamHandler = _handler.OnStartFilestream(this, _assoc as ServerAssociationParameters, pcid, new DicomMessage(command, dataset));
+
+				if (!_filestreamHandler.SaveStreamData(new DicomMessage(command, dataset), data, offset, count))
+					return false;
+
+				if (isLast)
+				{
+					_filestreamHandler.CompleteStream(this, _assoc as ServerAssociationParameters, pcid,
+					                                  new DicomMessage(command, dataset));
+					_filestreamHandler = null;
+				}
+
+				return true;
+			}
+			catch (Exception e)
+			{
+				OnUserException(e, "Unexpected exception on OnReceiveFileStream");
+				return false;
+			}
+		}
+
         #endregion
 
         #region IDisposable Members
@@ -436,6 +489,20 @@ namespace ClearCanvas.Dicom.Network
 				// 2500 millisecond timeout
                 Abort(2500);
             }
+
+			try
+			{
+				if (_filestreamHandler != null)
+				{
+					_filestreamHandler.CancelStream();
+					_filestreamHandler = null;
+				}
+			}
+			catch (Exception x)
+			{
+				Platform.Log(LogLevel.Error, x, "Unexpected exception when calling IDicomFilestreamHandler.CancelStream");
+			}
+
             // FREE UNMANAGED RESOURCES
             _disposed = true;
         }

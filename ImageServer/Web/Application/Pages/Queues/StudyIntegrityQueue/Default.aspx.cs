@@ -24,12 +24,10 @@
 
 using System;
 using System.Security.Permissions;
-using ClearCanvas.ImageServer.Enterprise;
-using ClearCanvas.ImageServer.Enterprise.Authentication;
+using ClearCanvas.ImageServer.Common.Authentication;
 using ClearCanvas.ImageServer.Model;
 using Resources;
 using ClearCanvas.ImageServer.Web.Application.Pages.Common;
-using ClearCanvas.ImageServer.Web.Common.Data;
 using ClearCanvas.ImageServer.Web.Common.Data.DataSource;
 
 namespace ClearCanvas.ImageServer.Web.Application.Pages.Queues.StudyIntegrityQueue
@@ -41,6 +39,7 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Queues.StudyIntegrityQue
         {
             base.OnInit(e);
 
+			ServerPartitionSelector.UseNonResearchPartitions = true;
             ServerPartitionSelector.PartitionChanged += delegate(ServerPartition partition)
             {
                 SearchPanel.ServerPartition = partition;

@@ -26,11 +26,10 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using ClearCanvas.Dicom.Iod;
-using ClearCanvas.ImageViewer;
 using ClearCanvas.ImageViewer.Graphics;
 using ClearCanvas.ImageViewer.Imaging;
-using ClearCanvas.ImageViewer.StudyManagement;
 using ClearCanvas.ImageViewer.Mathematics;
+using ClearCanvas.ImageViewer.StudyManagement;
 
 namespace ClearCanvas.ImageViewer.RoiGraphics
 {
@@ -71,17 +70,19 @@ namespace ClearCanvas.ImageViewer.RoiGraphics
 		/// <param name="presentationImage">The image containing the source pixel data.</param>
 		protected Roi(IPresentationImage presentationImage)
 		{
-			IImageGraphicProvider provider = presentationImage as IImageGraphicProvider;
-			if (provider == null)
-				return;
-
-			_imageRows = provider.ImageGraphic.Rows;
-			_imageColumns = provider.ImageGraphic.Columns;
 			_presentationImage = presentationImage;
 
-			_pixelData = provider.ImageGraphic.PixelData;
-			if (presentationImage is IModalityLutProvider)
-				_modalityLut = ((IModalityLutProvider) presentationImage).ModalityLut;
+			IImageGraphicProvider provider = presentationImage as IImageGraphicProvider;
+			if (provider != null)
+			{
+				_imageRows = provider.ImageGraphic.Rows;
+				_imageColumns = provider.ImageGraphic.Columns;
+				_pixelData = provider.ImageGraphic.PixelData;
+			}
+
+			var modalityLutProvider = presentationImage as IModalityLutProvider;
+			if (modalityLutProvider != null)
+				_modalityLut = (modalityLutProvider).ModalityLut;
 
 			if (presentationImage is IImageSopProvider)
 			{
@@ -101,11 +102,10 @@ namespace ClearCanvas.ImageViewer.RoiGraphics
 			}
 		}
 
-
 		///<summary>
-        /// Gets the presentation image from which the ROI was created.
-        ///</summary>
-        public IPresentationImage PresentationImage
+		/// Gets the presentation image from which the ROI was created.
+		///</summary>
+		public IPresentationImage PresentationImage
 		{
 			get { return _presentationImage; }
 		}
@@ -201,33 +201,33 @@ namespace ClearCanvas.ImageViewer.RoiGraphics
 		{
 			get
 			{
-                if (_boundingBox.IsEmpty)
-                    _boundingBox = RectangleUtilities.ConvertToPositiveRectangle(ComputeBounds());
+				if (_boundingBox.IsEmpty)
+					_boundingBox = RectangleUtilities.ConvertToPositiveRectangle(ComputeBounds());
 
-			    return _boundingBox;
+				return _boundingBox;
 			}
 		}
 
-        /// <summary>
-        /// Returns a bounding box that has been rounded to the nearest whole pixel(s).
-        /// </summary>
-        /// <remarks>
-        /// Uses <see cref="RectangleUtilities.RoundInflate"/> to ensure the bounding box
-        /// returned will encompass every pixel that is inside the ROI.
-        /// </remarks>
-        /// <param name="constrainToImage">Whether or not the returned rectangle should also be constrained to the image bounds.</param>
-	    public Rectangle GetBoundingBoxRounded(bool constrainToImage)
-	    {
-	        Rectangle bounds = RectangleUtilities.RoundInflate(BoundingBox);
-	        if (constrainToImage)
-	        {
-                bounds.Intersect(new Rectangle(0, 0, this.ImageSize.Width - 1, this.ImageSize.Height - 1));
-	        }
-	        
-            return bounds;
-	    }
+		/// <summary>
+		/// Returns a bounding box that has been rounded to the nearest whole pixel(s).
+		/// </summary>
+		/// <remarks>
+		/// Uses <see cref="RectangleUtilities.RoundInflate"/> to ensure the bounding box
+		/// returned will encompass every pixel that is inside the ROI.
+		/// </remarks>
+		/// <param name="constrainToImage">Whether or not the returned rectangle should also be constrained to the image bounds.</param>
+		public Rectangle GetBoundingBoxRounded(bool constrainToImage)
+		{
+			Rectangle bounds = RectangleUtilities.RoundInflate(BoundingBox);
+			if (constrainToImage)
+			{
+				bounds.Intersect(new Rectangle(0, 0, ImageSize.Width - 1, ImageSize.Height - 1));
+			}
 
-	    /// <summary>
+			return bounds;
+		}
+
+		/// <summary>
 		/// Called by <see cref="BoundingBox"/> to compute the tightest bounding box of the region of interest.
 		/// </summary>
 		/// <remarks>
@@ -267,9 +267,7 @@ namespace ClearCanvas.ImageViewer.RoiGraphics
 			get { return IsBoundingBoxInImage(); }
 		}
 
-        
-
-	    /// <summary>
+		/// <summary>
 		/// Tests to see if the given point is contained within the region of interest.
 		/// </summary>
 		/// <remarks>
@@ -281,7 +279,7 @@ namespace ClearCanvas.ImageViewer.RoiGraphics
 		/// <returns>True if the point is defined as within the region of interest; False otherwise.</returns>
 		public bool Contains(float x, float y)
 		{
-			return this.Contains(new PointF(x, y));
+			return Contains(new PointF(x, y));
 		}
 
 		/// <summary>
@@ -296,7 +294,7 @@ namespace ClearCanvas.ImageViewer.RoiGraphics
 		/// <returns>True if the point is defined as within the region of interest; False otherwise.</returns>
 		public bool Contains(int x, int y)
 		{
-			return this.Contains(new PointF(x, y));
+			return Contains(new PointF(x, y));
 		}
 
 		/// <summary>
@@ -309,13 +307,13 @@ namespace ClearCanvas.ImageViewer.RoiGraphics
 		/// <returns>An enumeration of points.</returns>
 		public IEnumerable<PointF> GetPixelCoordinates()
 		{
-            Rectangle bounds = GetBoundingBoxRounded(true);
-            for (int x = bounds.Left; x <= bounds.Right; x++)
+			Rectangle bounds = GetBoundingBoxRounded(true);
+			for (int x = bounds.Left; x <= bounds.Right; x++)
 			{
 				for (int y = bounds.Top; y <= bounds.Bottom; y++)
 				{
 					PointF p = new PointF(x, y);
-					if (this.Contains(p))
+					if (Contains(p))
 						yield return p;
 				}
 			}
@@ -327,17 +325,17 @@ namespace ClearCanvas.ImageViewer.RoiGraphics
 		/// <returns>An enumeration of raw pixel values.</returns>
 		public IEnumerable<int> GetRawPixelValues()
 		{
-			if (this.PixelData == null)
+			if (PixelData == null)
 				yield break;
 
-            Rectangle bounds = GetBoundingBoxRounded(true);
-            for (int x = bounds.Left; x <= bounds.Right; x++)
+			Rectangle bounds = GetBoundingBoxRounded(true);
+			for (int x = bounds.Left; x <= bounds.Right; x++)
 			{
 				for (int y = bounds.Top; y <= bounds.Bottom; y++)
 				{
 					PointF p = new PointF(x, y);
-					if (this.Contains(p))
-						yield return this.PixelData.GetPixel(x, y);
+					if (Contains(p))
+						yield return PixelData.GetPixel(x, y);
 				}
 			}
 		}
@@ -349,38 +347,25 @@ namespace ClearCanvas.ImageViewer.RoiGraphics
 		/// If the <see cref="ModalityLut"/> is null, then this method enumerates the same values as <see cref="GetRawPixelValues"/>.
 		/// </remarks>
 		/// <returns>An enumeration of modality LUT transformed pixel values.</returns>
-		[Obsolete]
-		// TODO CR (Oct 11): replace entirely with one that returns doubles but without the real world units - breaking existing code is the least of our worries since anyone using this old version might get wrong values
-		public IEnumerable<int> GetPixelValues()
+		public IEnumerable<double> GetPixelValues()
 		{
-			int dummy;
-			foreach (var pixelValue in GetPixelValues(out dummy))
-				yield return (int) Math.Round(pixelValue);
-		}
+			if (PixelData == null)
+				yield break;
 
-		public IEnumerable<double> GetPixelValues(out int realWorldUnits)
-		{
-			realWorldUnits = 0;
-			if (this.PixelData == null)
-				return new double[0];
-
-		    /// TODO (CR Nov 2011): Why a list rather than yield?
-			List<double> values = new List<double>();
 			LutFunction lut = v => v;
-			if (this.ModalityLut != null)
-				lut = v => this.ModalityLut[v];
+			if (ModalityLut != null)
+				lut = v => ModalityLut[v];
 
-		    Rectangle bounds = GetBoundingBoxRounded(true);
+			Rectangle bounds = GetBoundingBoxRounded(true);
 			for (int x = bounds.Left; x <= bounds.Right; x++)
 			{
 				for (int y = bounds.Top; y <= bounds.Bottom; y++)
 				{
 					PointF p = new PointF(x, y);
-					if (this.Contains(p))
-						values.Add(lut(this.PixelData.GetPixel(x, y)));
+					if (Contains(p))
+						yield return lut(PixelData.GetPixel(x, y));
 				}
 			}
-			return values;
 		}
 
 		/// <summary>
@@ -403,9 +388,12 @@ namespace ClearCanvas.ImageViewer.RoiGraphics
 		protected static double ConvertFromSquarePixels(double area, Units units, PixelSpacing pixelSpacing)
 		{
 			if (!ValidateUnits(units, pixelSpacing))
-				throw new ArgumentException("Pixel spacing must be calibrated in order to compute physical units.", "units");
+			{
+				const string msg = "Pixel spacing must be calibrated in order to compute physical units.";
+				throw new ArgumentException(msg, "units");
+			}
 
-			double factor = 1;
+			double factor;
 
 			switch (units)
 			{
@@ -430,15 +418,15 @@ namespace ClearCanvas.ImageViewer.RoiGraphics
 		/// <returns>True if the bounding box intersects the image; False otherwise.</returns>
 		private bool IsBoundingBoxInImage()
 		{
-            RectangleF boundingBox = BoundingBox;
+			RectangleF boundingBox = BoundingBox;
 
-			if (boundingBox.Width == 0 || boundingBox.Height == 0)
+			if (FloatComparer.AreEqual(0, boundingBox.Width) || FloatComparer.AreEqual(0, boundingBox.Height))
 				return false;
 
 			if (boundingBox.Left < 0 ||
-				boundingBox.Top < 0 ||
-				boundingBox.Right > (this.ImageColumns - 1) ||
-				boundingBox.Bottom > (this.ImageRows - 1))
+			    boundingBox.Top < 0 ||
+			    boundingBox.Right > (ImageColumns - 1) ||
+			    boundingBox.Bottom > (ImageRows - 1))
 				return false;
 
 			return true;

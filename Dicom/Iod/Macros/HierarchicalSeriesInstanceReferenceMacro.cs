@@ -29,9 +29,9 @@ using ClearCanvas.Dicom.Iod.Sequences;
 namespace ClearCanvas.Dicom.Iod.Macros
 {
 	/// <summary>
-	/// HierarchicalSeriesInstanceReference Macro
+	/// Hierarchical Series Instance Reference Macro
 	/// </summary>
-	/// <remarks>As defined in the DICOM Standard 2008, Part 3, Section C.17.2.1 (Table C.17-3a)</remarks>
+	/// <remarks>As defined in the DICOM Standard 2011, Part 3, Section C.17.2.1 (Table C.17-3a)</remarks>
 	public interface IHierarchicalSeriesInstanceReferenceMacro : IIodMacro
 	{
 		/// <summary>
@@ -43,6 +43,11 @@ namespace ClearCanvas.Dicom.Iod.Macros
 		/// Gets or sets the value of RetrieveAeTitle in the underlying collection. Type 3.
 		/// </summary>
 		string RetrieveAeTitle { get; set; }
+
+		/// <summary>
+		/// Gets or sets the value of RetrieveLocationUid in the underlying collection. Type 3.
+		/// </summary>
+		string RetrieveLocationUid { get; set; }
 
 		/// <summary>
 		/// Gets or sets the value of StorageMediaFileSetId in the underlying collection. Type 3.
@@ -67,6 +72,10 @@ namespace ClearCanvas.Dicom.Iod.Macros
 
 	namespace HierarchicalSeriesInstanceReference
 	{
+		/// <summary>
+		/// SOP Instance Reference Macro as used in the <see cref="IHierarchicalSeriesInstanceReferenceMacro"/>
+		/// </summary>
+		/// <remarks>As defined in the DICOM Standard 2011, Part 3, Section 10.8 (Table 10-11)</remarks>
 		public interface IReferencedSopSequence : ISopInstanceReferenceMacro
 		{
 			/// <summary>
@@ -87,7 +96,7 @@ namespace ClearCanvas.Dicom.Iod.Macros
 	}
 
 	/// <summary>
-	/// HierarchicalSeriesInstanceReference Macro Base Implementation
+	/// Hierarchical Series Instance Reference Macro Base Implementation
 	/// </summary>
 	/// <remarks>As defined in the DICOM Standard 2008, Part 3, Section C.17.2.1 (Table C.17-3a)</remarks>
 	internal class HierarchicalSeriesInstanceReferenceMacro : SequenceIodBase, IHierarchicalSeriesInstanceReferenceMacro
@@ -95,23 +104,25 @@ namespace ClearCanvas.Dicom.Iod.Macros
 		/// <summary>
 		/// Initializes a new instance of the <see cref="HierarchicalSeriesInstanceReferenceMacro"/> class.
 		/// </summary>
-		public HierarchicalSeriesInstanceReferenceMacro() : base() {}
+		public HierarchicalSeriesInstanceReferenceMacro() {}
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="HierarchicalSeriesInstanceReferenceMacro"/> class.
 		/// </summary>
 		/// <param name="dicomSequenceItem">The dicom sequence item.</param>
-		public HierarchicalSeriesInstanceReferenceMacro(DicomSequenceItem dicomSequenceItem) : base(dicomSequenceItem) {}
+		public HierarchicalSeriesInstanceReferenceMacro(DicomSequenceItem dicomSequenceItem)
+			: base(dicomSequenceItem) {}
 
 		/// <summary>
 		/// Initializes the underlying collection to implement the module or sequence using default values.
 		/// </summary>
 		public void InitializeAttributes()
 		{
-			this.SeriesInstanceUid = "1";
-			this.RetrieveAeTitle = null;
-			this.StorageMediaFileSetId = null;
-			this.StorageMediaFileSetUid = null;
+			SeriesInstanceUid = "1";
+			RetrieveAeTitle = null;
+			RetrieveLocationUid = null;
+			StorageMediaFileSetId = null;
+			StorageMediaFileSetUid = null;
 		}
 
 		/// <summary>
@@ -119,12 +130,15 @@ namespace ClearCanvas.Dicom.Iod.Macros
 		/// </summary>
 		public string SeriesInstanceUid
 		{
-			get { return base.DicomAttributeProvider[DicomTags.SeriesInstanceUid].GetString(0, string.Empty); }
+			get { return DicomAttributeProvider[DicomTags.SeriesInstanceUid].GetString(0, string.Empty); }
 			set
 			{
 				if (string.IsNullOrEmpty(value))
-					throw new ArgumentNullException("value", "SeriesInstanceUid is Type 1 Required.");
-				base.DicomAttributeProvider[DicomTags.SeriesInstanceUid].SetString(0, value);
+				{
+					const string msg = "SeriesInstanceUid is Type 1 Required.";
+					throw new ArgumentNullException("value", msg);
+				}
+				DicomAttributeProvider[DicomTags.SeriesInstanceUid].SetString(0, value);
 			}
 		}
 
@@ -133,15 +147,32 @@ namespace ClearCanvas.Dicom.Iod.Macros
 		/// </summary>
 		public string RetrieveAeTitle
 		{
-			get { return base.DicomAttributeProvider[DicomTags.RetrieveAeTitle].ToString(); }
+			get { return DicomAttributeProvider[DicomTags.RetrieveAeTitle].ToString(); }
 			set
 			{
 				if (string.IsNullOrEmpty(value))
 				{
-					base.DicomAttributeProvider[DicomTags.RetrieveAeTitle] = null;
+					DicomAttributeProvider[DicomTags.RetrieveAeTitle] = null;
 					return;
 				}
-				base.DicomAttributeProvider[DicomTags.RetrieveAeTitle].SetStringValue(value);
+				DicomAttributeProvider[DicomTags.RetrieveAeTitle].SetStringValue(value);
+			}
+		}
+
+		/// <summary>
+		/// Gets or sets the value of RetrieveLocationUid in the underlying collection. Type 3.
+		/// </summary>
+		public string RetrieveLocationUid
+		{
+			get { return DicomAttributeProvider[DicomTags.RetrieveLocationUid].GetString(0, string.Empty); }
+			set
+			{
+				if (string.IsNullOrEmpty(value))
+				{
+					DicomAttributeProvider[DicomTags.RetrieveLocationUid] = null;
+					return;
+				}
+				DicomAttributeProvider[DicomTags.RetrieveLocationUid].SetString(0, value);
 			}
 		}
 
@@ -150,15 +181,15 @@ namespace ClearCanvas.Dicom.Iod.Macros
 		/// </summary>
 		public string StorageMediaFileSetId
 		{
-			get { return base.DicomAttributeProvider[DicomTags.StorageMediaFileSetId].GetString(0, string.Empty); }
+			get { return DicomAttributeProvider[DicomTags.StorageMediaFileSetId].GetString(0, string.Empty); }
 			set
 			{
 				if (string.IsNullOrEmpty(value))
 				{
-					base.DicomAttributeProvider[DicomTags.StorageMediaFileSetId] = null;
+					DicomAttributeProvider[DicomTags.StorageMediaFileSetId] = null;
 					return;
 				}
-				base.DicomAttributeProvider[DicomTags.StorageMediaFileSetId].SetString(0, value);
+				DicomAttributeProvider[DicomTags.StorageMediaFileSetId].SetString(0, value);
 			}
 		}
 
@@ -167,15 +198,15 @@ namespace ClearCanvas.Dicom.Iod.Macros
 		/// </summary>
 		public string StorageMediaFileSetUid
 		{
-			get { return base.DicomAttributeProvider[DicomTags.StorageMediaFileSetUid].GetString(0, string.Empty); }
+			get { return DicomAttributeProvider[DicomTags.StorageMediaFileSetUid].GetString(0, string.Empty); }
 			set
 			{
 				if (string.IsNullOrEmpty(value))
 				{
-					base.DicomAttributeProvider[DicomTags.StorageMediaFileSetUid] = null;
+					DicomAttributeProvider[DicomTags.StorageMediaFileSetUid] = null;
 					return;
 				}
-				base.DicomAttributeProvider[DicomTags.StorageMediaFileSetUid].SetString(0, value);
+				DicomAttributeProvider[DicomTags.StorageMediaFileSetUid].SetString(0, value);
 			}
 		}
 
@@ -186,27 +217,30 @@ namespace ClearCanvas.Dicom.Iod.Macros
 		{
 			get
 			{
-				DicomAttribute dicomAttribute = base.DicomAttributeProvider[DicomTags.ReferencedSopSequence];
+				DicomAttribute dicomAttribute = DicomAttributeProvider[DicomTags.ReferencedSopSequence];
 				if (dicomAttribute.IsNull || dicomAttribute.Count == 0)
 					return null;
 
 				IReferencedSopSequence[] result = new IReferencedSopSequence[dicomAttribute.Count];
 				DicomSequenceItem[] items = (DicomSequenceItem[]) dicomAttribute.Values;
 				for (int n = 0; n < items.Length; n++)
-					result[n] = new ReferencedSopSequenceType(items[n]);
+					result[n] = new ReferencedSopSequenceItem(items[n]);
 
 				return result;
 			}
 			set
 			{
 				if (value == null || value.Length == 0)
-					throw new ArgumentNullException("value", "ReferencedSopSequence is Type 1 Required.");
+				{
+					const string msg = "ReferencedSopSequence is Type 1 Required.";
+					throw new ArgumentNullException("value", msg);
+				}
 
 				DicomSequenceItem[] result = new DicomSequenceItem[value.Length];
 				for (int n = 0; n < value.Length; n++)
 					result[n] = value[n].DicomSequenceItem;
 
-				base.DicomAttributeProvider[DicomTags.ReferencedSopSequence].Values = result;
+				DicomAttributeProvider[DicomTags.ReferencedSopSequence].Values = result;
 			}
 		}
 
@@ -215,27 +249,28 @@ namespace ClearCanvas.Dicom.Iod.Macros
 		/// </summary>
 		public IReferencedSopSequence CreateReferencedSopSequence()
 		{
-			IReferencedSopSequence iodBase = new ReferencedSopSequenceType(new DicomSequenceItem());
+			IReferencedSopSequence iodBase = new ReferencedSopSequenceItem(new DicomSequenceItem());
 			iodBase.InitializeAttributes();
 			return iodBase;
 		}
 
 		/// <summary>
-		/// ReferencedSop Sequence Base Implementation
+		/// Referenced SOP Sequence Base Implementation
 		/// </summary>
-		/// <remarks>As defined in the DICOM Standard 2008, Part 3, Section C.17.2.1 (Table C.17-3a)</remarks>
-		internal class ReferencedSopSequenceType : SopInstanceReferenceMacro, IReferencedSopSequence
+		/// <remarks>As defined in the DICOM Standard 2011, Part 3, Section C.17.2.1 (Table C.17-3a)</remarks>
+		internal class ReferencedSopSequenceItem : SopInstanceReferenceMacro, IReferencedSopSequence
 		{
 			/// <summary>
 			/// Initializes a new instance of the <see cref="ReferencedSopSequence"/> class.
 			/// </summary>
-			public ReferencedSopSequenceType() : base() {}
+			public ReferencedSopSequenceItem() {}
 
 			/// <summary>
 			/// Initializes a new instance of the <see cref="ReferencedSopSequence"/> class.
 			/// </summary>
 			/// <param name="dicomSequenceItem">The dicom sequence item.</param>
-			public ReferencedSopSequenceType(DicomSequenceItem dicomSequenceItem) : base(dicomSequenceItem) {}
+			public ReferencedSopSequenceItem(DicomSequenceItem dicomSequenceItem)
+				: base(dicomSequenceItem) {}
 
 			/// <summary>
 			/// Initializes the underlying collection to implement the module using default values.
@@ -243,9 +278,9 @@ namespace ClearCanvas.Dicom.Iod.Macros
 			public override void InitializeAttributes()
 			{
 				base.InitializeAttributes();
-				this.PurposeOfReferenceCodeSequence = null;
-				this.ReferencedDigitalSignatureSequence = null;
-				this.ReferencedSopInstanceMacSequence = null;
+				PurposeOfReferenceCodeSequence = null;
+				ReferencedDigitalSignatureSequence = null;
+				ReferencedSopInstanceMacSequence = null;
 			}
 
 			/// <summary>
@@ -255,7 +290,7 @@ namespace ClearCanvas.Dicom.Iod.Macros
 			{
 				get
 				{
-					DicomAttribute dicomAttribute = base.DicomAttributeProvider[DicomTags.PurposeOfReferenceCodeSequence];
+					DicomAttribute dicomAttribute = DicomAttributeProvider[DicomTags.PurposeOfReferenceCodeSequence];
 					if (dicomAttribute.IsNull || dicomAttribute.Count == 0)
 					{
 						return null;
@@ -272,7 +307,7 @@ namespace ClearCanvas.Dicom.Iod.Macros
 				{
 					if (value == null || value.Length == 0)
 					{
-						base.DicomAttributeProvider[DicomTags.PurposeOfReferenceCodeSequence] = null;
+						DicomAttributeProvider[DicomTags.PurposeOfReferenceCodeSequence] = null;
 						return;
 					}
 
@@ -280,7 +315,7 @@ namespace ClearCanvas.Dicom.Iod.Macros
 					for (int n = 0; n < value.Length; n++)
 						result[n] = value[n].DicomSequenceItem;
 
-					base.DicomAttributeProvider[DicomTags.PurposeOfReferenceCodeSequence].Values = result;
+					DicomAttributeProvider[DicomTags.PurposeOfReferenceCodeSequence].Values = result;
 				}
 			}
 
@@ -291,7 +326,7 @@ namespace ClearCanvas.Dicom.Iod.Macros
 			{
 				get
 				{
-					DicomAttribute dicomAttribute = base.DicomAttributeProvider[DicomTags.ReferencedDigitalSignatureSequence];
+					DicomAttribute dicomAttribute = DicomAttributeProvider[DicomTags.ReferencedDigitalSignatureSequence];
 					if (dicomAttribute.IsNull || dicomAttribute.Count == 0)
 					{
 						return null;
@@ -308,7 +343,7 @@ namespace ClearCanvas.Dicom.Iod.Macros
 				{
 					if (value == null || value.Length == 0)
 					{
-						base.DicomAttributeProvider[DicomTags.ReferencedDigitalSignatureSequence] = null;
+						DicomAttributeProvider[DicomTags.ReferencedDigitalSignatureSequence] = null;
 						return;
 					}
 
@@ -316,7 +351,7 @@ namespace ClearCanvas.Dicom.Iod.Macros
 					for (int n = 0; n < value.Length; n++)
 						result[n] = value[n].DicomSequenceItem;
 
-					base.DicomAttributeProvider[DicomTags.ReferencedDigitalSignatureSequence].Values = result;
+					DicomAttributeProvider[DicomTags.ReferencedDigitalSignatureSequence].Values = result;
 				}
 			}
 
@@ -327,7 +362,7 @@ namespace ClearCanvas.Dicom.Iod.Macros
 			{
 				get
 				{
-					DicomAttribute dicomAttribute = base.DicomAttributeProvider[DicomTags.ReferencedSopInstanceMacSequence];
+					DicomAttribute dicomAttribute = DicomAttributeProvider[DicomTags.ReferencedSopInstanceMacSequence];
 					if (dicomAttribute.IsNull || dicomAttribute.Count == 0)
 					{
 						return null;
@@ -336,13 +371,13 @@ namespace ClearCanvas.Dicom.Iod.Macros
 				}
 				set
 				{
-					DicomAttribute dicomAttribute = base.DicomAttributeProvider[DicomTags.ReferencedSopInstanceMacSequence];
+					DicomAttribute dicomAttribute = DicomAttributeProvider[DicomTags.ReferencedSopInstanceMacSequence];
 					if (value == null)
 					{
-						base.DicomAttributeProvider[DicomTags.ReferencedSopInstanceMacSequence] = null;
+						DicomAttributeProvider[DicomTags.ReferencedSopInstanceMacSequence] = null;
 						return;
 					}
-					dicomAttribute.Values = new DicomSequenceItem[] {value.DicomSequenceItem};
+					dicomAttribute.Values = new[] {value.DicomSequenceItem};
 				}
 			}
 		}

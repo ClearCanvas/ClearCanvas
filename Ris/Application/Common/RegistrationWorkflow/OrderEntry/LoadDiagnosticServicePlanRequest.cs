@@ -35,9 +35,13 @@ namespace ClearCanvas.Ris.Application.Common.RegistrationWorkflow.OrderEntry
 		public LoadDiagnosticServicePlanRequest(EntityRef diagnosticServiceRef)
 		{
 			this.DiagnosticServiceRef = diagnosticServiceRef;
+			this.IncludeDeactivatedProcedures = false;
 		}
 
 		[DataMember]
 		public EntityRef DiagnosticServiceRef;
+
+		[DataMember]
+		public bool IncludeDeactivatedProcedures;
 	}
 }

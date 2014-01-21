@@ -63,6 +63,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Dicom\AnnotationDataSourceContext.cs" />
+    <Compile Include="Dicom\ContrastBolusAgentAnnotationItem.cs" />
+    <Compile Include="Dicom\ContrastBolusAnnotationItemProvider.cs" />
     <Compile Include="Dicom\DXImageAnnotationItemProvider.cs" />
     <Compile Include="Dicom\LateralityViewPositionAnnotationItem.cs" />
     <Compile Include="Dicom\ImagePlaneAnnotationItemProvider.cs" />
@@ -77,6 +80,8 @@
     <Compile Include="Dicom\PatientStudyAnnotationItemProvider.cs" />
     <Compile Include="Dicom\PatientAnnotationItemProvider.cs" />
     <Compile Include="Dicom\SliceLocationAnnotationItem.cs" />
+    <Compile Include="Dicom\Tests\CodeSequenceAnnotationItemTests.cs" />
+    <Compile Include="Dicom\Tests\ContrastBolusAgentTests.cs" />
     <Compile Include="Dicom\Tests\DXParameterTests.cs" />
     <Compile Include="Dicom\Tests\MockImageSop.cs" />
     <Compile Include="Presentation\AppliedLutAnnotationItem.cs">
@@ -122,6 +127,10 @@
     <ProjectReference Include="..\ClearCanvas.ImageViewer.csproj">
       <Project>{85100D3E-471C-47C9-9687-ABF25F617ED7}</Project>
       <Name>ClearCanvas.ImageViewer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Common\ClearCanvas.ImageViewer.Common.csproj">
+      <Project>{FEFD73C5-8541-47D2-BBDB-FF61DEA28291}</Project>
+      <Name>ClearCanvas.ImageViewer.Common</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

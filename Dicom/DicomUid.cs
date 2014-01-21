@@ -25,7 +25,9 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Net.NetworkInformation;
+using System.Numerics;
 using System.Text;
 
 namespace ClearCanvas.Dicom
@@ -51,16 +53,12 @@ namespace ClearCanvas.Dicom
     public class DicomUid
     {
         #region Private Members
-        private string _uid;
-        private string _description;
-        private UidType _type;
+        private readonly string _uid;
+        private readonly string _description;
+        private readonly UidType _type;
         #endregion
 
         #region Constructors
-        /// <summary>
-        /// Default private constructor.
-        /// </summary>
-        private DicomUid() { }
 
         /// <summary>
         /// Constructor.
@@ -123,11 +121,11 @@ namespace ClearCanvas.Dicom
         /// <returns></returns>
         public override bool Equals(object obj)
         {
-            DicomUid uid = obj as DicomUid;
+            var uid = obj as DicomUid;
             if (uid != null)
                 return uid.UID.Equals(UID);
 
-            String value = obj as String;
+            var value = obj as String;
             if (value != null)
                 return value == UID;
 
@@ -151,7 +149,7 @@ namespace ClearCanvas.Dicom
         private static short _count = 0;
 
         /// <summary>
-        /// This routine generates a DICOM Unique Identifier.
+        /// This routine generates a DICOM Unique Identifier.  Note, this UID is NOT unique for UIDs generated in the same process across App Domains.
         /// </summary>
         /// <remarks>
         /// <para>
@@ -214,7 +212,7 @@ namespace ClearCanvas.Dicom
         /// </para>
         /// </remarks>
         /// <returns></returns>
-        public static DicomUid GenerateUid()
+        private static DicomUid ObsoleteGenerateUid()
         {
             lock (_lock)
             {
@@ -234,10 +232,10 @@ namespace ClearCanvas.Dicom
                     foreach (byte b in addressBytes)
                     {
                         address <<= 8;
-                        address |= (ulong)b;
+                        address |= b;
                     }
 
-                    StringBuilder sb = new StringBuilder();
+                    var sb = new StringBuilder();
 
                     // ClearCanvas root from IANA
                     sb.Append("1.3.6.1.4.1.25403");
@@ -253,7 +251,7 @@ namespace ClearCanvas.Dicom
                     _lastTimestamp = DateTime.Now.ToString("yyyyMMddhhmmss");
                 }
 
-                StringBuilder uid = new StringBuilder();
+                var uid = new StringBuilder();
                 uid.Append(_baseUid);
 
                 String time = DateTime.Now.ToString("yyyyMMddhhmmss");
@@ -275,6 +273,49 @@ namespace ClearCanvas.Dicom
                 return new DicomUid(uid.ToString(),"Instance UID",UidType.SOPInstance);
             }
         }
+
+        /// <summary>
+        /// This routine generates a DICOM Unique Identifier.
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// The UID generator uses a GUID to generate the UID, as descriped in DICOM CP-1156:
+        ///
+        /// ftp://medical.nema.org/medical/dicom/final/cp1156_ft.pdf
+        /// 
+        /// The UID is composed of the following components:
+        /// </para>
+        /// <list type="table">
+        ///   <listheader>
+        ///     <term>UID Component</term> <description>Description</description>
+        ///   </listheader>
+        /// <item>
+        ///   <term> 2.25 </term>
+        ///   <description>
+        ///   The UID root for GUID UIDs as per CP-1156.
+        ///   </description>
+        /// </item>
+        /// <item>
+        ///   <term>GUID as Integer</term>
+        ///   <description>
+        ///   The Guid is converted to an integer and displayed in base 10.  Can be upto 39 characters long.
+        ///   </description>
+        /// </item>
+        /// </list>
+        /// <para>
+        /// The UID generator uses the above components to insure uniqueness.  It simply converts a GUID acquired by a 
+        /// call to Guid.NewGuid() into an integer and appends it to the UID for uniqueness.
+        /// </para>
+        /// </remarks>
+        /// <returns></returns>
+        public static DicomUid GenerateUid()
+        {
+            var guidBytes = string.Format("0{0:N}", Guid.NewGuid());
+            var bigInteger = BigInteger.Parse(guidBytes, NumberStyles.HexNumber);
+
+            return new DicomUid(string.Format(CultureInfo.InvariantCulture, "2.25.{0}", bigInteger), "Instance UID", UidType.SOPInstance);
+        }
+
         #endregion
     } 
 
@@ -490,13 +531,9 @@ namespace ClearCanvas.Dicom
 
         public static DicomUid Lookup(string uid)
         {
-            DicomUid o = null;
+            DicomUid o;
             Entries.TryGetValue(uid, out o);
-            if (o == null)
-            {
-                o = new DicomUid(uid, "Unknown UID", UidType.Unknown);
-            }
-            return o;
+            return o ?? (new DicomUid(uid, "Unknown UID", UidType.Unknown));
         }
 
         #region Dicom UIDs

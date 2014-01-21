@@ -29,15 +29,16 @@ using System.Text;
 using ClearCanvas.Common;
 using ClearCanvas.Dicom;
 using ClearCanvas.ImageServer.Common;
-using ClearCanvas.ImageServer.Common.Command;
 using ClearCanvas.ImageServer.Common.Exceptions;
 using ClearCanvas.ImageServer.Common.Utilities;
 using ClearCanvas.ImageServer.Core.Command;
 using ClearCanvas.ImageServer.Core.Data;
 using ClearCanvas.ImageServer.Core.Edit;
+using ClearCanvas.ImageServer.Core.Helpers;
 using ClearCanvas.ImageServer.Core.Reconcile;
 using ClearCanvas.ImageServer.Core.Reconcile.CreateStudy;
 using ClearCanvas.ImageServer.Enterprise;
+using ClearCanvas.ImageServer.Enterprise.Command;
 using ClearCanvas.ImageServer.Model;
 
 namespace ClearCanvas.ImageServer.Core
@@ -125,7 +126,7 @@ namespace ClearCanvas.ImageServer.Core
             AutoReconcilerResult preProcessingResult = null;
 
             StudyHistory lastHistory = histories[0];
-            StudyReconcileDescriptorParser parser = new StudyReconcileDescriptorParser();
+            var parser = new StudyReconcileDescriptorParser();
             StudyReconcileDescriptor changeLog = parser.Parse(lastHistory.ChangeDescription);
 
             switch (changeLog.Action)
@@ -157,7 +158,7 @@ namespace ClearCanvas.ImageServer.Core
         {
             StudyStorage destinationStudy = StudyStorage.Load(lastHistory.DestStudyStorageKey);
         	StudyStorageLocation destStudy;
-            AutoReconcilerResult preProcessingResult = new AutoReconcilerResult(StudyReconcileAction.ProcessAsIs);
+            var preProcessingResult = new AutoReconcilerResult(StudyReconcileAction.ProcessAsIs);
 
 			//Load the destination.  An exception will be thrown if any issues are encountered.
         	FilesystemMonitor.Instance.GetWritableStudyStorageLocation(destinationStudy.ServerPartitionKey,
@@ -176,10 +177,10 @@ namespace ClearCanvas.ImageServer.Core
                                                   };
 
                 file.DataSet[DicomTags.StudyInstanceUid].SetStringValue(destStudy.StudyInstanceUid);
-                SopInstanceImporterContext importContext = new SopInstanceImporterContext(
+                var importContext = new SopInstanceImporterContext(
                     _contextID,
                     file.SourceApplicationEntityTitle, destStudy.ServerPartition);
-                SopInstanceImporter importer = new SopInstanceImporter(importContext);
+                var importer = new SopInstanceImporter(importContext);
                 DicomProcessingResult result = importer.Import(file);
 
                 if (!result.Successful)
@@ -196,14 +197,14 @@ namespace ClearCanvas.ImageServer.Core
             string originalSopUid = file.DataSet[DicomTags.SopInstanceUid].ToString();
             
             AutoReconcilerResult preProcessingResult = null;
-        	StudyStorageLocation destStudy;
             UidMapper uidMapper = null;
         	if (lastHistory.DestStudyStorageKey != null)
             {
                 StudyStorage destinationStudy = StudyStorage.Load(lastHistory.DestStudyStorageKey);
 
 				//Load the destination.  An exception will be thrown if any issues are encountered.
-				FilesystemMonitor.Instance.GetWritableStudyStorageLocation(destinationStudy.ServerPartitionKey,
+                StudyStorageLocation destStudy;
+                FilesystemMonitor.Instance.GetWritableStudyStorageLocation(destinationStudy.ServerPartitionKey,
 																		   destinationStudy.StudyInstanceUid, 
 																		   StudyRestore.True, StudyCache.True, 
 																		   out destStudy);
@@ -212,7 +213,7 @@ namespace ClearCanvas.ImageServer.Core
 
                 bool belongsToAnotherStudy = !destStudy.Equals(StorageLocation);
 
-                ImageUpdateCommandBuilder commandBuilder = new ImageUpdateCommandBuilder();
+                var commandBuilder = new ImageUpdateCommandBuilder();
                 IList<BaseImageLevelUpdateCommand> commands = commandBuilder.BuildCommands<StudyMatchingMap>(destStudy);
                 if (belongsToAnotherStudy)
                 {
@@ -221,7 +222,7 @@ namespace ClearCanvas.ImageServer.Core
                     // Load the Uid Map, either from cache or from disk
                     if (!_uidMapCache.TryGetValue(destStudy.Key, out uidMapper))
                     {
-                        UidMapXml mapXml = new UidMapXml();
+                        var mapXml = new UidMapXml();
                         mapXml.Load(destStudy);
                         uidMapper = new UidMapper(mapXml);
 
@@ -254,8 +255,8 @@ namespace ClearCanvas.ImageServer.Core
 
                 if (belongsToAnotherStudy)
                 {
-                    SopInstanceImporterContext importContext = new SopInstanceImporterContext(_contextID, file.SourceApplicationEntityTitle, destStudy.ServerPartition);
-                    SopInstanceImporter importer = new SopInstanceImporter(importContext);
+                    var importContext = new SopInstanceImporterContext(_contextID, file.SourceApplicationEntityTitle, destStudy.ServerPartition);
+                    var importer = new SopInstanceImporter(importContext);
                     DicomProcessingResult result = importer.Import(file);
 
                     if (!result.Successful)
@@ -280,7 +281,7 @@ namespace ClearCanvas.ImageServer.Core
 
         private static void UpdateUidMap(StudyStorageLocation dest, UidMapper uidMapper)
         {
-            using (ServerCommandProcessor processor = new ServerCommandProcessor("Update UID Mapping Processor"))
+            using (var processor = new ServerCommandProcessor("Update UID Mapping Processor"))
             {
                 processor.AddCommand(new SaveUidMapXmlCommand(dest, uidMapper));
                 if (!processor.Execute())
@@ -292,7 +293,7 @@ namespace ClearCanvas.ImageServer.Core
 
         private static void UpdateImage(DicomFile file, IEnumerable<BaseImageLevelUpdateCommand> commands)
         {
-            using (ServerCommandProcessor processor = new ServerCommandProcessor("Update Image According to History"))
+            using (var processor = new ServerCommandProcessor("Update Image According to History"))
             {
                 foreach (BaseImageLevelUpdateCommand cmd in commands)
                 {
@@ -309,12 +310,12 @@ namespace ClearCanvas.ImageServer.Core
 
         private static List<UpdateItem> GetUpdateList(DicomFile file, IEnumerable<BaseImageLevelUpdateCommand> commands)
         {
-            List<UpdateItem> updateList = new List<UpdateItem>();
+            var updateList = new List<UpdateItem>();
             foreach (BaseImageLevelUpdateCommand cmd in commands)
             {
                 if (cmd.UpdateEntry != null && cmd.UpdateEntry.TagPath != null && cmd.UpdateEntry.TagPath.Tag != null)
                 {
-                    UpdateItem item = new UpdateItem(cmd, file);
+                    var item = new UpdateItem(cmd, file);
                     updateList.Add(item);
                 }
             }
@@ -369,16 +370,16 @@ namespace ClearCanvas.ImageServer.Core
 
         private static IList<StudyHistory> FindReconcileHistories(StudyStorageLocation storageLocation, DicomMessageBase file)
         {
-            ImageSetDescriptor fileDesc = new ImageSetDescriptor(file.DataSet);
+            var fileDesc = new ImageSetDescriptor(file.DataSet);
 
-            List<StudyHistory> studyHistoryList = new List<StudyHistory>(
-                ServerHelper.FindStudyHistories(storageLocation.StudyStorage,
+            var studyHistoryList = new List<StudyHistory>(
+                StudyHistoryHelper.FindStudyHistories(storageLocation.StudyStorage,
                                                 new[] { StudyHistoryTypeEnum.StudyReconciled }));
 
             IList<StudyHistory> reconcileHistories = studyHistoryList.FindAll(
                 delegate(StudyHistory item)
                     {
-                        ImageSetDescriptor desc = XmlUtils.Deserialize<ImageSetDescriptor>(item.StudyData.DocumentElement);
+                        var desc = XmlUtils.Deserialize<ImageSetDescriptor>(item.StudyData.DocumentElement);
                         return desc.Equals(fileDesc);
                     });
 
@@ -386,13 +387,13 @@ namespace ClearCanvas.ImageServer.Core
             {
                 // no history found in cache... reload the list and search again one more time
                 studyHistoryList = new List<StudyHistory>(
-                    ServerHelper.FindStudyHistories(storageLocation.StudyStorage,
+                    StudyHistoryHelper.FindStudyHistories(storageLocation.StudyStorage,
                                                     new[] { StudyHistoryTypeEnum.StudyReconciled }));
 
                 reconcileHistories = studyHistoryList.FindAll(
                     delegate(StudyHistory item)
                         {
-                            ImageSetDescriptor desc = XmlUtils.Deserialize<ImageSetDescriptor>(item.StudyData.DocumentElement);
+                            var desc = XmlUtils.Deserialize<ImageSetDescriptor>(item.StudyData.DocumentElement);
                             return desc.Equals(fileDesc);
                         });
 

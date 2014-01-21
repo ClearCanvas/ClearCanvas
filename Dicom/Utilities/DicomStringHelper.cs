@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Dicom.Iod;
 
@@ -48,10 +49,10 @@ namespace ClearCanvas.Dicom.Utilities
 		/// <remarks>
 		/// It is assumed that the <see cref="T.ToString"/> method returns the string that is to be encoded into the Dicom String Array.
 		/// </remarks>
-		static public string GetDicomStringArray<T>(IEnumerable<T> values)
+		public static string GetDicomStringArray<T>(IEnumerable<T> values)
 		{
-			// TODO CR (Nov 11): this will throw an exception if T were double or float and a value has enough decimal places to break the VR
-			return StringUtilities.Combine(values, "\\");
+			// TODO CR (Nov 11): callers of this function will get an exception later if T were double or float and a value has enough decimal places to break the VR
+			return StringUtilities.Combine(values, "\\", false);
 		}
 
 		/// <summary>
@@ -64,10 +65,10 @@ namespace ClearCanvas.Dicom.Utilities
 		/// <param name="values">The input values.</param>
 		/// <param name="formatSpecifier">A format specifier appropriate for type <typeparamref name="T"/>.</param>
 		/// <returns>A Dicom String Array representation of <see cref="values"/>.</returns>
-		static public string GetDicomStringArray<T>(IEnumerable<T> values, string formatSpecifier)
+		public static string GetDicomStringArray<T>(IEnumerable<T> values, string formatSpecifier)
 			where T : IFormattable
 		{
-			return StringUtilities.Combine(values, "\\", formatSpecifier, System.Globalization.CultureInfo.InvariantCulture);
+			return StringUtilities.Combine(values, "\\", formatSpecifier, CultureInfo.InvariantCulture, false);
 		}
 
 		/// <summary>
@@ -75,17 +76,17 @@ namespace ClearCanvas.Dicom.Utilities
 		/// </summary>
 		/// <param name="dicomStringArray">the Dicom String Array to be split up.</param>
 		/// <returns>An array of <see cref="string"/>s.</returns>
-		static public string[] GetStringArray(string dicomStringArray)
+		public static string[] GetStringArray(string dicomStringArray)
 		{
-		    return String.IsNullOrEmpty(dicomStringArray) ? new string[0] : dicomStringArray.Split(new [] { '\\' }, StringSplitOptions.None);
+			return String.IsNullOrEmpty(dicomStringArray) ? new string[0] : dicomStringArray.Split(new[] {'\\'}, StringSplitOptions.None);
 		}
 
-	    /// <summary>
+		/// <summary>
 		/// Splits a Dicom String Array (<see cref="dicomStringArray"/>) into its component <see cref="PersonName"/>s.
 		/// </summary>
 		/// <param name="dicomStringArray">The Dicom String Array to be split up.</param>
 		/// <returns>An array of <see cref="PersonName"/>s.</returns>
-		static public PersonName[] GetPersonNameArray(string dicomStringArray)
+		public static PersonName[] GetPersonNameArray(string dicomStringArray)
 		{
 			string[] stringValues = GetStringArray(dicomStringArray);
 
@@ -103,7 +104,7 @@ namespace ClearCanvas.Dicom.Utilities
 		/// <param name="returnValues">The return values.</param>
 		/// <returns>True if all values were parsed successfully.  Otherwise, false.</returns>
 		/// <remarks>The input string must consist of valid <see cref="double"/> values.  If not, all valid values up to, but not including, the first invalid value are returned.</remarks>
-		static public bool TryGetDoubleArray(string dicomStringArray, out double[] returnValues)
+		public static bool TryGetDoubleArray(string dicomStringArray, out double[] returnValues)
 		{
 			string[] stringValues = GetStringArray(dicomStringArray);
 
@@ -111,7 +112,7 @@ namespace ClearCanvas.Dicom.Utilities
 			foreach (string value in stringValues)
 			{
 				double outValue;
-				if (!double.TryParse(value, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out outValue))
+				if (!double.TryParse(value, NumberStyles.Float, CultureInfo.InvariantCulture, out outValue))
 				{
 					returnValues = doubleValues.ToArray();
 					return false;
@@ -131,7 +132,7 @@ namespace ClearCanvas.Dicom.Utilities
 		/// <param name="returnValues">The return values.</param>
 		/// <returns>True if all values were parsed successfully.  Otherwise, false.</returns>
 		/// <remarks>The input string must consist of valid <see cref="float"/> values.  If not, all valid values up to, but not including, the first invalid value are returned.</remarks>
-		static public bool TryGetFloatArray(string dicomStringArray, out float[] returnValues)
+		public static bool TryGetFloatArray(string dicomStringArray, out float[] returnValues)
 		{
 			string[] stringValues = GetStringArray(dicomStringArray);
 
@@ -139,7 +140,7 @@ namespace ClearCanvas.Dicom.Utilities
 			foreach (string value in stringValues)
 			{
 				float outValue;
-				if (!float.TryParse(value, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out outValue))
+				if (!float.TryParse(value, NumberStyles.Float, CultureInfo.InvariantCulture, out outValue))
 				{
 					returnValues = floatValues.ToArray();
 					return false;
@@ -159,7 +160,7 @@ namespace ClearCanvas.Dicom.Utilities
 		/// <param name="returnValues">The return values.</param>
 		/// <returns>True if all values were parsed successfully.  Otherwise, false.</returns>
 		/// <remarks>The input string must consist of valid <see cref="int"/> values.  If not, all valid values up to, but not including, the first invalid value are returned.</remarks>
-		static public bool TryGetIntArray(string dicomStringArray, out int[] returnValues)
+		public static bool TryGetIntArray(string dicomStringArray, out int[] returnValues)
 		{
 			string[] stringValues = GetStringArray(dicomStringArray);
 
@@ -167,7 +168,7 @@ namespace ClearCanvas.Dicom.Utilities
 			foreach (string value in stringValues)
 			{
 				int outValue;
-				if (!int.TryParse(value, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out outValue))
+				if (!int.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out outValue))
 				{
 					returnValues = intValues.ToArray();
 					return false;

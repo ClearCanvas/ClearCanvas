@@ -31,12 +31,13 @@ namespace ClearCanvas.Enterprise.Common.Admin.AuthorityGroupAdmin
     [DataContract]
     public class AuthorityGroupDetail : DataContractBase
     {
-        public AuthorityGroupDetail(EntityRef authorityGroupRef, string name, string description, bool dataGroup, List<AuthorityTokenSummary> authorityTokens)
+        public AuthorityGroupDetail(EntityRef authorityGroupRef, string name, string description, bool builtIn, bool dataGroup, List<AuthorityTokenSummary> authorityTokens)
         {
             AuthorityGroupRef = authorityGroupRef;
             Name = name;
             AuthorityTokens = authorityTokens;
             Description = description;
+        	BuiltIn = builtIn;
             DataGroup = dataGroup;
         }
 
@@ -57,7 +58,15 @@ namespace ClearCanvas.Enterprise.Common.Admin.AuthorityGroupAdmin
         [DataMember]
         public string Description;
 
-        [DataMember]
+		[DataMember]
+		public bool BuiltIn;
+
+		[DataMember]
         public bool DataGroup;
+
+    	public AuthorityGroupSummary GetSummary()
+    	{
+    		return new AuthorityGroupSummary(AuthorityGroupRef, Name, Description, BuiltIn, DataGroup);
+    	}
     }
 }

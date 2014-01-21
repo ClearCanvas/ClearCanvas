@@ -23,7 +23,7 @@
 #endregion
 
 using System.Collections.Generic;
-using ClearCanvas.Enterprise.Core;
+using ClearCanvas.ImageServer.Enterprise.Command;
 using ClearCanvas.ImageServer.Model.EntityBrokers;
 
 namespace ClearCanvas.ImageServer.Model
@@ -32,9 +32,9 @@ namespace ClearCanvas.ImageServer.Model
 	{
 		public IList<Study> LoadRelatedStudies()
 		{
-			using (IReadContext read = PersistentStoreRegistry.GetDefaultStore().OpenReadContext())
-			{
-				IStudyEntityBroker broker = read.GetBroker<IStudyEntityBroker>();
+            using (var context = new ServerExecutionContext())
+            {
+				IStudyEntityBroker broker = context.ReadContext.GetBroker<IStudyEntityBroker>();
 				StudySelectCriteria criteria = new StudySelectCriteria();
 				criteria.PatientKey.EqualTo(Key);
 				return broker.Find(criteria);

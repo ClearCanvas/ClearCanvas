@@ -30,11 +30,11 @@ using ClearCanvas.Dicom;
 using ClearCanvas.Dicom.Utilities.Command;
 using ClearCanvas.Enterprise.Core;
 using ClearCanvas.ImageServer.Common;
-using ClearCanvas.ImageServer.Common.Command;
 using ClearCanvas.ImageServer.Common.Utilities;
 using ClearCanvas.ImageServer.Core.Command;
 using ClearCanvas.ImageServer.Core.Data;
 using ClearCanvas.ImageServer.Core.Process;
+using ClearCanvas.ImageServer.Enterprise.Command;
 using ClearCanvas.ImageServer.Model;
 using ClearCanvas.ImageServer.Model.Brokers;
 using ClearCanvas.ImageServer.Model.EntityBrokers;
@@ -117,7 +117,7 @@ namespace ClearCanvas.ImageServer.Core.Reconcile
 	class ImageReconciler
 	{
 		#region Private Members
-        private readonly SopProcessingContext _context;
+        private readonly SopInstanceProcessorContext _context;
 	    #endregion
 
         #region Constructors
@@ -126,7 +126,7 @@ namespace ClearCanvas.ImageServer.Core.Reconcile
         /// Creates an instance of <see cref="ImageReconciler"/>
         /// </summary>
         /// <param name="context"></param>
-        public ImageReconciler(SopProcessingContext context)
+        public ImageReconciler(SopInstanceProcessorContext context)
         {
             _context = context;
         }

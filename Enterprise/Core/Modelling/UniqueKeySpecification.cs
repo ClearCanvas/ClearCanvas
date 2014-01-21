@@ -66,14 +66,13 @@ namespace ClearCanvas.Enterprise.Core.Modelling
 			if (context == null)
 				throw new SpecificationException(SR.ExceptionPersistenceContextRequired);
 
-			var domainObj = (DomainObject)obj;
 			var broker = context.GetBroker<IUniqueConstraintValidationBroker>();
-			var valid = broker.IsUnique(domainObj, _entityClass, _uniqueKeyMembers);
+			var valid = broker.IsUnique(obj, _entityClass, _uniqueKeyMembers);
 
-			return valid ? new TestResult(true) : new TestResult(false, new TestResultReason(GetMessage(domainObj)));
+			return valid ? new TestResult(true) : new TestResult(false, new TestResultReason(GetMessage(obj)));
 		}
 
-		protected virtual string GetMessage(DomainObject obj)
+		protected virtual string GetMessage(object obj)
 		{
 			return string.Format(SR.RuleUniqueKey, TerminologyTranslator.Translate(obj.GetClass(), _logicalKeyName),
 				TerminologyTranslator.Translate(_entityClass));

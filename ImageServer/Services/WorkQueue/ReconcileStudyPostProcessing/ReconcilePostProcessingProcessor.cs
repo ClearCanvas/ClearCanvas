@@ -28,6 +28,7 @@ using ClearCanvas.Common;
 using ClearCanvas.Dicom;
 using ClearCanvas.ImageServer.Common.Helpers;
 using ClearCanvas.ImageServer.Core;
+using ClearCanvas.ImageServer.Core.Helpers;
 using ClearCanvas.ImageServer.Core.Validation;
 using ClearCanvas.ImageServer.Services.WorkQueue.StudyProcess;
 
@@ -71,9 +72,9 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.ReconcileStudyPostProcessin
 		{
             Platform.CheckFalse(compare, "compare");
 
-			SopInstanceProcessor processor = new SopInstanceProcessor(Context);
+			var processor = new SopInstanceProcessor(Context);
 
-			FileInfo fileInfo = new FileInfo(file.Filename);
+			var fileInfo = new FileInfo(file.Filename);
 			long fileSize = fileInfo.Length;
 			processor.InstanceStats.FileSize = (ulong)fileSize;
 			string sopInstanceUid = file.DataSet[DicomTags.SopInstanceUid].GetString(0, "File:" + fileInfo.Name);
@@ -81,7 +82,7 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.ReconcileStudyPostProcessin
 
 			if (Study != null)
 			{
-				StudyComparer comparer = new StudyComparer();
+				var comparer = new StudyComparer();
 				DifferenceCollection list = comparer.Compare(file, Study, ServerPartition.GetComparisonOptions());
 				if (list != null && list.Count > 0)
 				{
@@ -90,7 +91,7 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.ReconcileStudyPostProcessin
 			}
 
 		    string groupID = ServerHelper.GetUidGroup(file, StorageLocation.ServerPartition, WorkQueueItem.InsertTime);
-			processor.ProcessFile(groupID, file, stream, false, false, null, null);
+			processor.ProcessFile(groupID, file, stream, false, false, null, null, SopInstanceProcessorSopType.NewSop);
 
 			Statistics.StudyInstanceUid = StorageLocation.StudyInstanceUid;
 			if (String.IsNullOrEmpty(processor.Modality) == false)

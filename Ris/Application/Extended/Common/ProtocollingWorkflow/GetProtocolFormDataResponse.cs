@@ -25,7 +25,7 @@
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using ClearCanvas.Common.Serialization;
-using ClearCanvas.Ris.Application.Common;
+using ClearCanvas.Enterprise.Common;
 
 namespace ClearCanvas.Ris.Application.Extended.Common.ProtocollingWorkflow
 {

@@ -120,6 +120,9 @@
   <data name="ActionNotAllowed_NeedReconcile" xml:space="preserve">
     <value>There are images to be reconciled for this study</value>
   </data>
+  <data name="ActionNotAllowed_ResearchPartition" xml:space="preserve">
+    <value>The study is stored on a research partition.</value>
+  </data>
   <data name="ActionNotAllowed_StudyHasPendingWorkQueue" xml:space="preserve">
     <value>There is some pending work queue item(s) for this study.</value>
   </data>

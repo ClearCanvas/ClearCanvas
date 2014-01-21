@@ -34,6 +34,8 @@ namespace ClearCanvas.ImageViewer.Mathematics.Tests
 	[TestFixture]
 	public class MatrixTests
 	{
+		private const float _tolerance = 0.00005f;
+
 		[Test]
 		public void TestConstructor()
 		{
@@ -61,7 +63,7 @@ namespace ClearCanvas.ImageViewer.Mathematics.Tests
 				new Matrix(new Matrix(4, -5));
 				Assert.Fail("Expected an exception");
 			}
-            catch (ArgumentException) { }
+			catch (ArgumentException) {}
 
 			try
 			{
@@ -95,6 +97,19 @@ namespace ClearCanvas.ImageViewer.Mathematics.Tests
 
 			m2[1, 1] = 0;
 			Assert.IsFalse(Matrix.AreEqual(m1, m2));
+		}
+
+		[Test]
+		public void TestNegate()
+		{
+			var m = -new Matrix(new float[,]
+			                    	{
+			                    		{1, -2, 3},
+			                    		{-4, 5, -6},
+			                    		{7, -8, 9}
+			                    	});
+
+			Assert.IsTrue(Matrix.AreEqual(m, new Matrix(new float[,] {{-1, 2, -3}, {4, -5, 6}, {-7, 8, -9}})));
 		}
 
 		[Test]
@@ -172,7 +187,7 @@ namespace ClearCanvas.ImageViewer.Mathematics.Tests
 		}
 
 		[Test]
-		public void TestMultipleMatrix()
+		public void TestMultiplyMatrix()
 		{
 			const float a11 = 1.1f;
 			const float a12 = 2.1f;
@@ -241,6 +256,310 @@ namespace ClearCanvas.ImageViewer.Mathematics.Tests
 			result.SetColumn(1, 4.6F, -3.7F, 9.1F);
 
 			Assert.IsTrue(Matrix.AreEqual(m.Transpose(), result));
+		}
+
+		[Test]
+		public void TestDeterminant()
+		{
+			try
+			{
+				var m = new Matrix(3, 2);
+				m.GetDeterminant();
+				Assert.Fail("Expected an exception");
+			}
+			catch (ArgumentException) {}
+
+			try
+			{
+				var m = Matrix.GetIdentity(5);
+				m.GetDeterminant();
+				Assert.Fail("Expected an exception");
+			}
+			catch (NotImplementedException) {}
+		}
+
+		[Test]
+		public void TestDeterminant1()
+		{
+			var m = Matrix.GetIdentity(1);
+
+			Assert.AreEqual(1, m.GetDeterminant());
+
+			m.SetRow(0, 0);
+
+			Assert.AreEqual(0, m.GetDeterminant());
+
+			m = new Matrix(new float[,]
+			               	{
+			               		{2}
+			               	});
+
+			Assert.AreEqual(2, m.GetDeterminant());
+		}
+
+		[Test]
+		public void TestDeterminant2()
+		{
+			var m = Matrix.GetIdentity(2);
+
+			Assert.AreEqual(1, m.GetDeterminant());
+
+			m.SetRow(0, 1, 0);
+			m.SetRow(1, 5, 0);
+
+			Assert.AreEqual(0, m.GetDeterminant());
+
+			m = new Matrix(new float[,]
+			               	{
+			               		{1, 2},
+			               		{4, 3}
+			               	});
+
+			Assert.AreEqual(1*3 - 2*4, m.GetDeterminant());
+		}
+
+		[Test]
+		public void TestDeterminant3()
+		{
+			var m = Matrix.GetIdentity(3);
+
+			Assert.AreEqual(1, m.GetDeterminant());
+
+			m.SetRow(0, 1, 0, 0);
+			m.SetRow(1, 0, 1, 0);
+			m.SetRow(2, 0, 5, 0);
+
+			Assert.AreEqual(0, m.GetDeterminant());
+
+			m = new Matrix(new float[,]
+			               	{
+			               		{1, 2, 3},
+			               		{6, 5, 4},
+			               		{8, 7, 9}
+			               	});
+
+			Assert.AreEqual(1*5*9 + 2*4*8 + 3*7*6 - 8*5*3 - 7*4*1 - 9*2*6, m.GetDeterminant());
+		}
+
+		[Test]
+		public void TestDeterminant4()
+		{
+			var m = Matrix.GetIdentity(4);
+
+			Assert.AreEqual(1, m.GetDeterminant());
+
+			m.SetRow(0, 1, 0, 0, 0);
+			m.SetRow(1, 0, 1, 0, 0);
+			m.SetRow(2, 0, 0, 1, 0);
+			m.SetRow(3, 0, 0, 5, 0);
+
+			Assert.AreEqual(0, m.GetDeterminant());
+
+			m = new Matrix(new float[,]
+			               	{
+			               		{1, 2, 3, 4},
+			               		{8, 7, 6, 5},
+			               		{10, 9, 11, 12},
+			               		{14, 15, 13, 16}
+			               	});
+
+			Assert.AreEqual(-108, m.GetDeterminant());
+		}
+
+		[Test]
+		public void TestInverse()
+		{
+			try
+			{
+				var m = new Matrix(3, 2);
+				m.Invert();
+				Assert.Fail("Expected an exception");
+			}
+			catch (ArgumentException) {}
+
+			try
+			{
+				var m = Matrix.GetIdentity(5);
+				m.Invert();
+				Assert.Fail("Expected an exception");
+			}
+			catch (NotImplementedException) {}
+		}
+
+		[Test]
+		public void TestInverse1()
+		{
+			// test identity inverse
+			var m = Matrix.GetIdentity(1);
+
+			Assert.IsTrue(Matrix.AreEqual(m.Invert(), new Matrix(new float[,] {{1}})));
+
+			// test a known inverse
+			m = new Matrix(new[,]
+			               	{
+			               		{0.100f}
+			               	});
+
+			var r = new Matrix(new[,]
+			                   	{
+			                   		{10.00f}
+			                   	});
+
+			Assert.IsTrue(Matrix.AreEqual(m.Invert(), r, _tolerance));
+
+			// test inverse multiplied against original is the identity
+			m.SetRow(0, -1.1F);
+
+			Assert.IsTrue(Matrix.AreEqual(m*m.Invert(), Matrix.GetIdentity(1), _tolerance));
+			Assert.IsTrue(Matrix.AreEqual(m.Invert()*m, Matrix.GetIdentity(1), _tolerance));
+
+			// test non-invertible
+			m.SetRow(0, 0);
+
+			try
+			{
+				m.Invert();
+				Assert.Fail("Expected an exception");
+			}
+			catch (ArgumentException) {}
+		}
+
+		[Test]
+		public void TestInverse2()
+		{
+			// test identity inverse
+			var m = Matrix.GetIdentity(2);
+
+			Assert.IsTrue(Matrix.AreEqual(m.Invert(), new Matrix(new float[,] {{1, 0}, {0, 1}})));
+
+			// test a known inverse
+			m = new Matrix(new[,]
+			               	{
+			               		{0.100f, 0.200f},
+			               		{-0.400f, 0.500f}
+			               	});
+
+			var r = new Matrix(new[,]
+			                   	{
+			                   		{3.84615f, -1.53846f},
+			                   		{3.07692f, 0.76923f}
+			                   	});
+
+			Assert.IsTrue(Matrix.AreEqual(m.Invert(), r, _tolerance));
+
+			// test inverse multiplied against original is the identity
+			m.SetRow(0, -1.1F, 2.6F);
+			m.SetRow(1, 4.6F, -3.7F);
+
+			Assert.IsTrue(Matrix.AreEqual(m*m.Invert(), Matrix.GetIdentity(2), _tolerance));
+			Assert.IsTrue(Matrix.AreEqual(m.Invert()*m, Matrix.GetIdentity(2), _tolerance));
+
+			// test non-invertible
+			m.SetRow(0, 1, 0);
+			m.SetRow(1, 5, 0);
+
+			try
+			{
+				m.Invert();
+				Assert.Fail("Expected an exception");
+			}
+			catch (ArgumentException) {}
+		}
+
+		[Test]
+		public void TestInverse3()
+		{
+			// test identity inverse
+			var m = Matrix.GetIdentity(3);
+
+			Assert.IsTrue(Matrix.AreEqual(m.Invert(), new Matrix(new float[,] {{1, 0, 0}, {0, 1, 0}, {0, 0, 1}})));
+
+			// test a known inverse
+			m = new Matrix(new[,]
+			               	{
+			               		{0.100f, 0.200f, 0.300f},
+			               		{-0.400f, 0.500f, 0.600f},
+			               		{0.700f, 0.800f, 0.900f}
+			               	});
+
+			var r = new Matrix(new[,]
+			                   	{
+			                   		{0.62500f, -1.25000f, 0.62500f},
+			                   		{-16.25000f, 2.50000f, 3.75000f},
+			                   		{13.95833f, -1.25000f, -2.70833f}
+			                   	});
+
+			Assert.IsTrue(Matrix.AreEqual(m.Invert(), r, _tolerance));
+
+			// test inverse multiplied against original is the identity
+			m.SetRow(0, -1.1F, 2.6F, -7.1F);
+			m.SetRow(1, 4.6F, -3.7F, 9.1F);
+			m.SetRow(2, 4.1F, -3.1F, 7.7F);
+
+			Assert.IsTrue(Matrix.AreEqual(m*m.Invert(), Matrix.GetIdentity(3), _tolerance));
+			Assert.IsTrue(Matrix.AreEqual(m.Invert()*m, Matrix.GetIdentity(3), _tolerance));
+
+			// test non-invertible
+			m.SetRow(0, 1, 0, 0);
+			m.SetRow(1, 0, 1, 0);
+			m.SetRow(2, 0, 5, 0);
+
+			try
+			{
+				m.Invert();
+				Assert.Fail("Expected an exception");
+			}
+			catch (ArgumentException) {}
+		}
+
+		[Test]
+		public void TestInverse4()
+		{
+			// test identity inverse
+			var m = Matrix.GetIdentity(4);
+
+			Assert.IsTrue(Matrix.AreEqual(m.Invert(), new Matrix(new float[,] {{1, 0, 0, 0}, {0, 1, 0, 0}, {0, 0, 1, 0}, {0, 0, 0, 1}})));
+
+			// test a known inverse
+			m = new Matrix(new[,]
+			               	{
+			               		{0.100f, 0.200f, 0.300f, 1.300f},
+			               		{-0.400f, 0.500f, 0.600f, 1.400f},
+			               		{0.700f, 0.800f, 0.900f, 1.500f},
+			               		{1.000f, 1.100f, 1.200f, -1.600f}
+			               	});
+
+			var r = new Matrix(new[,]
+			                   	{
+			                   		{0.62500f, -1.25000f, 0.62500f, 0.00000f},
+			                   		{-18.12500f, 2.50000f, 9.37500f, -3.75000f},
+			                   		{15.8854167f, -1.25000f, -8.4895833f, 3.854167f},
+			                   		{-0.15625f, 0.00000f, 0.46875f, -0.31250f}
+			                   	});
+
+			Assert.IsTrue(Matrix.AreEqual(m.Invert(), r, _tolerance));
+
+			// test inverse multiplied against original is the identity
+			m.SetRow(0, -1.1F, 2.6F, -7.1F, 2.2F);
+			m.SetRow(1, 4.6F, -3.7F, 9.1F, 6.9F);
+			m.SetRow(2, 4.1F, -3.1F, 7.7F, 7.1F);
+			m.SetRow(3, -9.9F, 0.2F, 4.3F, 5.5F);
+
+			Assert.IsTrue(Matrix.AreEqual(m*m.Invert(), Matrix.GetIdentity(4), _tolerance));
+			Assert.IsTrue(Matrix.AreEqual(m.Invert()*m, Matrix.GetIdentity(4), _tolerance));
+
+			// test non-invertible
+			m.SetRow(0, 1, 0, 0, 0);
+			m.SetRow(1, 0, 1, 0, 0);
+			m.SetRow(2, 0, 0, 1, 0);
+			m.SetRow(3, 0, 0, 5, 0);
+
+			try
+			{
+				m.Invert();
+				Assert.Fail("Expected an exception");
+			}
+			catch (ArgumentException) {}
 		}
 
 		[Test]

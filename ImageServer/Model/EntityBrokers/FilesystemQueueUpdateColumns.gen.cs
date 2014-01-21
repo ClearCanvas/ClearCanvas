@@ -31,7 +31,7 @@ namespace ClearCanvas.ImageServer.Model.EntityBrokers
     using ClearCanvas.Dicom;
     using ClearCanvas.ImageServer.Enterprise;
 
-   public class FilesystemQueueUpdateColumns : EntityUpdateColumns
+   public partial class FilesystemQueueUpdateColumns : EntityUpdateColumns
    {
        public FilesystemQueueUpdateColumns()
        : base("FilesystemQueue")

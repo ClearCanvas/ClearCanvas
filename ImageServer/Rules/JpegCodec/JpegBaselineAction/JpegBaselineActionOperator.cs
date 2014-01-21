@@ -33,8 +33,9 @@ using ClearCanvas.ImageServer.Model;
 
 namespace ClearCanvas.ImageServer.Rules.JpegCodec.JpegBaselineAction
 {
-	[ExtensionOf(typeof(XmlActionCompilerOperatorExtensionPoint<ServerActionContext,ServerRuleTypeEnum>))]
-	public class JpegBaselineActionOperator : ActionOperatorCompilerBase, IXmlActionCompilerOperator<ServerActionContext, ServerRuleTypeEnum>
+	[ExtensionOf(typeof(ServerRuleActionCompilerOperatorExtensionPoint))]
+	[ActionApplicability(ApplicableRuleType.StudyCompress)]
+	public class JpegBaselineActionOperator : ActionOperatorCompilerBase, IXmlActionCompilerOperator<ServerActionContext>
 	{
 		public JpegBaselineActionOperator()
 			: base("jpeg-baseline")
@@ -90,11 +91,8 @@ namespace ClearCanvas.ImageServer.Rules.JpegCodec.JpegBaselineAction
 			return new JpegBaselineActionItem(time, unit, quality, convertFromPalette);
 		}
 
-		public XmlSchemaElement GetSchema(ServerRuleTypeEnum ruleType)
+		public XmlSchemaElement GetSchema()
 		{
-			if (!ruleType.Equals(ServerRuleTypeEnum.StudyCompress))
-				return null;
-
 			XmlSchemaElement element = GetTimeSchema(OperatorTag);
 
 			XmlSchemaAttribute attrib = new XmlSchemaAttribute

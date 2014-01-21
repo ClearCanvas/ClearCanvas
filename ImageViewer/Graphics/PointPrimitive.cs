@@ -80,7 +80,7 @@ namespace ClearCanvas.ImageViewer.Graphics
 				}
 
 				this.NotifyPointChanged();
-				base.NotifyVisualStateChanged("Point");
+				base.NotifyVisualStateChanged("Point", VisualStatePropertyKind.Geometry);
 			}
 		}
 

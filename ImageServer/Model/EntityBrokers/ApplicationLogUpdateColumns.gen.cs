@@ -30,7 +30,7 @@ namespace ClearCanvas.ImageServer.Model.EntityBrokers
     using System.Xml;
     using ClearCanvas.ImageServer.Enterprise;
 
-   public class ApplicationLogUpdateColumns : EntityUpdateColumns
+   public partial class ApplicationLogUpdateColumns : EntityUpdateColumns
    {
        public ApplicationLogUpdateColumns()
        : base("ApplicationLog")

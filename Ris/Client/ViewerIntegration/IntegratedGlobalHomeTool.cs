@@ -31,9 +31,19 @@ using ClearCanvas.Ris.Application.Common;
 
 namespace ClearCanvas.Ris.Client.ViewerIntegration
 {
-	[ExtensionOf(typeof (StartupActionProviderExtensionPoint), FeatureToken = FeatureTokens.RIS.Core)]
-	public class IntegratedGlobalHomeTool : GlobalHomeStartupActionProvider
+	[ExtensionOf(typeof (StartupActionProviderExtensionPoint))]
+	public class IntegratedGlobalHomeTool : IStartupActionProvider
 	{
+		public string Name
+		{
+			get { return "TitleHome"; }
+		}
+
+		public string Description
+		{
+			get { return "MessageHomeDescription"; }
+		}
+
 		protected bool LaunchExplorerAtStartup
 		{
 			get
@@ -51,9 +61,36 @@ namespace ClearCanvas.Ris.Client.ViewerIntegration
 			}
 		}
 
-		protected override void OnBeforeStartup(IDesktopWindow mainDesktopWindow, bool canShowHome) {}
+		public void Startup(IDesktopWindow mainDesktopWindow)
+		{
+			if (LicenseInformation.IsFeatureAuthorized(FeatureTokens.RIS.Core))
+			{
+				new RisViewerStartupActionProvider(this).Startup(mainDesktopWindow);
+			}
+			else
+			{
+				ShowExplorer(mainDesktopWindow, false);
+			}
+		}
 
-		protected override void OnAfterStartup(IDesktopWindow mainDesktopWindow, bool canShowHome)
+		private class RisViewerStartupActionProvider : GlobalHomeStartupActionProvider
+		{
+			private readonly IntegratedGlobalHomeTool _owner;
+
+			public RisViewerStartupActionProvider(IntegratedGlobalHomeTool owner)
+			{
+				_owner = owner;
+			}
+
+			protected override void OnBeforeStartup(IDesktopWindow mainDesktopWindow, bool canShowHome) {}
+
+			protected override void OnAfterStartup(IDesktopWindow mainDesktopWindow, bool canShowHome)
+			{
+				_owner.ShowExplorer(mainDesktopWindow, canShowHome);
+			}
+		}
+
+		private void ShowExplorer(IDesktopWindow mainDesktopWindow, bool canShowHome)
 		{
 			if (!canShowHome || LaunchExplorerAtStartup)
 			{

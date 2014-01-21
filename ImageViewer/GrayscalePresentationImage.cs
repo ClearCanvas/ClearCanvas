@@ -35,7 +35,8 @@ namespace ClearCanvas.ImageViewer
 	public class GrayscalePresentationImage 
 		: BasicPresentationImage, 
 		IModalityLutProvider,
-		IVoiLutProvider, 
+		IVoiLutProvider,
+		ILutPipelineProvider,
 		IColorMapProvider
 	{
 		#region Private fields
@@ -189,6 +190,20 @@ namespace ClearCanvas.ImageViewer
 			{
 				return this.ImageGraphic.VoiLutManager;
 			}
+		}
+
+		#endregion
+
+		#region ILutPipelineProvider Members
+
+		IVoiLut ILutPipelineProvider.VoiLut
+		{
+			get { return ImageGraphic.VoiLut; }
+		}
+
+		public double LookupPixelValue(int rawPixelValue, LutPipelineStage outStage)
+		{
+			return ImageGraphic.LookupPixelValue(rawPixelValue, outStage);
 		}
 
 		#endregion

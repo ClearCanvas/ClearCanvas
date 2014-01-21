@@ -50,14 +50,18 @@ namespace ClearCanvas.Enterprise.Common.Setup
 					// first import the tokens, since the default groups will likely depend on these tokens
 					if (cmdLine.ImportAuthorityTokens)
 					{
-						var addToGroups = string.IsNullOrEmpty(cmdLine.SysAdminGroup) ? new string[] { } : new[] { cmdLine.SysAdminGroup };
-						SetupHelper.ImportAuthorityTokens(addToGroups);
+						SetupHelper.ImportAuthorityTokens(new[] { BuiltInAuthorityGroups.Administrators.Name });
 					}
 
 					// import authority groups
 					if (cmdLine.ImportDefaultAuthorityGroups)
 					{
-						SetupHelper.ImportAuthorityGroups();
+						SetupHelper.ImportEmbeddedAuthorityGroups();
+					}
+
+					if(!string.IsNullOrEmpty(cmdLine.AuthorityGroupData))
+					{
+						SetupHelper.ImportAuthorityGroups(cmdLine.AuthorityGroupData);
 					}
 
 					// import settings groups
@@ -84,17 +88,17 @@ namespace ClearCanvas.Enterprise.Common.Setup
 		{
 			foreach (var group in SettingsGroupDescriptor.ListInstalledSettingsGroups())
 			{
-			    try
-			    {
-                    SettingsMigrator.MigrateSharedSettings(group, previousExeConfigFilename);
-			    }
-			    catch (Exception e)
-			    {
-			        //Failure to migrate a settings is not good enough reason to cause the whole app to fail.
-                    //Some of the viewer settings classes SHOULD actually fail to migrate in the context of the ImageServer.
-                    //
-                    Platform.Log(LogLevel.Warn, e, "Failed to migrate settings '{0}'", group.AssemblyQualifiedTypeName);
-			    }
+				try
+				{
+					SettingsMigrator.MigrateSharedSettings(group, previousExeConfigFilename);
+				}
+				catch (Exception e)
+				{
+					//Failure to migrate a settings is not good enough reason to cause the whole app to fail.
+					//Some of the viewer settings classes SHOULD actually fail to migrate in the context of the ImageServer.
+					//
+					Platform.Log(LogLevel.Warn, e, "Failed to migrate settings '{0}'", group.AssemblyQualifiedTypeName);
+				}
 			}
 		}
 

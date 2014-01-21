@@ -126,17 +126,19 @@ namespace ClearCanvas.ImageServer.Services.ServiceLock
 
 					    using (IUpdateContext updateContext = _store.OpenUpdateContext(UpdateContextSyncMode.Flush))
 					    {
-						    IQueryServiceLock select = updateContext.GetBroker<IQueryServiceLock>();
-						    ServiceLockQueryParameters parms = new ServiceLockQueryParameters();
-						    parms.ProcessorId = ServerPlatform.ProcessorId;
+						    var select = updateContext.GetBroker<IQueryServiceLock>();
+						    var parms = new ServiceLockQueryParameters
+						        {
+						            ProcessorId = ServerPlatform.ProcessorId
+						        };
 
-						    queueListItem = select.FindOne(parms);
+					        queueListItem = select.FindOne(parms);
 						    updateContext.Commit();
 					    }
 
 					    if (queueListItem == null)
 					    {
-                            WaitHandle.WaitAny(new WaitHandle[] { _terminationEvent, _threadStop }, TimeSpan.FromSeconds(30), false);
+                            WaitHandle.WaitAny(new WaitHandle[] { _terminationEvent, _threadStop }, TimeSpan.FromSeconds(10), false);
 						    _threadStop.Reset();
 					    }
 					    else
@@ -235,9 +237,11 @@ namespace ClearCanvas.ImageServer.Services.ServiceLock
         {
             using (IUpdateContext updateContext = _store.OpenUpdateContext(UpdateContextSyncMode.Flush))
             {
-                IResetServiceLock reset = updateContext.GetBroker<IResetServiceLock>();
-                ServiceLockResetParameters parms = new ServiceLockResetParameters();
-                parms.ProcessorId = ServerPlatform.ProcessorId;
+                var reset = updateContext.GetBroker<IResetServiceLock>();
+                var parms = new ServiceLockResetParameters
+                    {
+                        ProcessorId = ServerPlatform.ProcessorId
+                    };
 
                 IList<Model.ServiceLock> modifiedList = reset.Find(parms);
 
@@ -271,9 +275,9 @@ namespace ClearCanvas.ImageServer.Services.ServiceLock
                     using (IUpdateContext updateContext = PersistentStoreRegistry.GetDefaultStore().OpenUpdateContext(UpdateContextSyncMode.Flush))
                     {
                         // Update the ServiceLock item status and times.
-                        IUpdateServiceLock update = updateContext.GetBroker<IUpdateServiceLock>();
+                        var update = updateContext.GetBroker<IUpdateServiceLock>();
 
-                        ServiceLockUpdateParameters parms = new ServiceLockUpdateParameters();
+                        var parms = new ServiceLockUpdateParameters();
                         parms.ServiceLockKey = item.GetKey();
                         parms.Lock = false;
                         parms.ScheduledTime = Platform.Time.AddMinutes(10);

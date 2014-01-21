@@ -26,8 +26,8 @@
 
 namespace ClearCanvas.Common.Specifications
 {
-    public interface ISpecificationProvider
-    {
-        ISpecification GetSpecification(string id);
-    }
+	public interface ISpecificationProvider
+	{
+		ISpecification GetSpecification(string id);
+	}
 }

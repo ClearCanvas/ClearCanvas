@@ -22,107 +22,84 @@
 
 #endregion
 
-using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 using ClearCanvas.Common;
+using ClearCanvas.Common.Authorization;
 using ClearCanvas.Enterprise.Common;
 using ClearCanvas.Enterprise.Core.Imex;
-using System.Runtime.Serialization;
 using ClearCanvas.Enterprise.Core;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Enterprise.Authentication.Brokers;
 
 namespace ClearCanvas.Enterprise.Authentication.Imex
 {
-    [ExtensionOf(typeof(XmlDataImexExtensionPoint))]
-    [ImexDataClass("AuthorityGroup")]
-    public class AuthorityGroupImex : XmlEntityImex<AuthorityGroup, AuthorityGroupImex.AuthorityGroupData>
-    {
-        [DataContract]
-        public class AuthorityGroupData
-        {
-            [DataMember]
-            public string Name;
+	[ExtensionOf(typeof(XmlDataImexExtensionPoint))]
+	[ImexDataClass("AuthorityGroup")]
+	public class AuthorityGroupImex : XmlEntityImex<AuthorityGroup, AuthorityGroupDefinition>
+	{
+		#region Overrides
 
-			[DataMember]
-			public string Description;
+		protected override IList<AuthorityGroup> GetItemsForExport(IReadContext context, int firstRow, int maxRows)
+		{
+			var where = new AuthorityGroupSearchCriteria();
+			where.Name.SortAsc(0);
+			return context.GetBroker<IAuthorityGroupBroker>().Find(where, new SearchResultPage(firstRow, maxRows));
+		}
 
-			[DataMember]
-			public bool DataGroup;
+		protected override AuthorityGroupDefinition Export(AuthorityGroup group, IReadContext context)
+		{
+			return new AuthorityGroupDefinition(
+				group.Name,
+				group.Description,
+				group.DataGroup,
+				group.AuthorityTokens.Select(t => t.Name).ToArray(),
+				group.BuiltIn);
+		}
 
-            [DataMember]
-            public List<string> Tokens;
-        }
+		protected override void Import(AuthorityGroupDefinition data, IUpdateContext context)
+		{
+			var group = LoadOrCreateGroup(data.Name, context);
+			group.Description = data.Description;
+			group.DataGroup = data.DataGroup;
+			group.BuiltIn = data.BuiltIn;
 
+			if (data.Tokens != null)
+			{
+				foreach (var token in data.Tokens)
+				{
+					var where = new AuthorityTokenSearchCriteria();
+					where.Name.EqualTo(token);
 
-        #region Overrides
+					var authToken = CollectionUtils.FirstElement(context.GetBroker<IAuthorityTokenBroker>().Find(where));
+					if (authToken != null)
+						group.AuthorityTokens.Add(authToken);
+				}
+			}
+		}
 
-        protected override IList<AuthorityGroup> GetItemsForExport(IReadContext context, int firstRow, int maxRows)
-        {
-            AuthorityGroupSearchCriteria where = new AuthorityGroupSearchCriteria();
-            where.Name.SortAsc(0);
-            return context.GetBroker<IAuthorityGroupBroker>().Find(where, new SearchResultPage(firstRow, maxRows));
-        }
-
-        protected override AuthorityGroupData Export(AuthorityGroup group, IReadContext context)
-        {
-            AuthorityGroupData data = new AuthorityGroupData();
-            data.Name = group.Name;
-        	data.Description = group.Description;
-        	data.DataGroup = group.DataGroup;
-            data.Tokens = CollectionUtils.Map<AuthorityToken, string>(
-                group.AuthorityTokens,
-                delegate(AuthorityToken token)
-                {
-                    return token.Name;
-                });
-
-            return data;
-        }
-
-        protected override void Import(AuthorityGroupData data, IUpdateContext context)
-        {
-            AuthorityGroup group = LoadOrCreateGroup(data.Name, context);
-        	group.Description = data.Description;
-        	group.DataGroup = data.DataGroup;
-            if (data.Tokens != null)
-            {
-                foreach (string token in data.Tokens)
-                {
-                    AuthorityTokenSearchCriteria where = new AuthorityTokenSearchCriteria();
-                    where.Name.EqualTo(token);
-
-                    AuthorityToken authToken = CollectionUtils.FirstElement(context.GetBroker<IAuthorityTokenBroker>().Find(where));
-                    if (authToken != null)
-                        group.AuthorityTokens.Add(authToken);
-                }
-            }
-        }
-
-        #endregion
+		#endregion
 
 
-        private AuthorityGroup LoadOrCreateGroup(string name, IPersistenceContext context)
-        {
-            AuthorityGroup group = null;
+		private static AuthorityGroup LoadOrCreateGroup(string name, IPersistenceContext context)
+		{
+			AuthorityGroup group;
 
-            try
-            {
-                AuthorityGroupSearchCriteria criteria = new AuthorityGroupSearchCriteria();
-                criteria.Name.EqualTo(name);
+			try
+			{
+				var criteria = new AuthorityGroupSearchCriteria();
+				criteria.Name.EqualTo(name);
 
-                IAuthorityGroupBroker broker = context.GetBroker<IAuthorityGroupBroker>();
-                group = broker.FindOne(criteria);
-            }
-            catch (EntityNotFoundException)
-            {
-                group = new AuthorityGroup();
-                group.Name = name;
-                context.Lock(group, DirtyState.New);
-            }
-            return group;
-        }
-    }
+				var broker = context.GetBroker<IAuthorityGroupBroker>();
+				group = broker.FindOne(criteria);
+			}
+			catch (EntityNotFoundException)
+			{
+				group = new AuthorityGroup {Name = name};
+				context.Lock(group, DirtyState.New);
+			}
+			return group;
+		}
+	}
 }
 

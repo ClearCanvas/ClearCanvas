@@ -57,6 +57,12 @@ namespace ClearCanvas.ImageViewer.Graphics
 	public interface IPointsList : IList<PointF>
 	{
 		/// <summary>
+		/// Adds multiple points to the list in sequence.
+		/// </summary>
+		/// <param name="points">The sequence of points to be added to the list.</param>
+		void AddRange(IEnumerable<PointF> points);
+
+		/// <summary>
 		/// Gets a value indicating if the first and last points of the list are coincident.
 		/// </summary>
 		bool IsClosed { get; }

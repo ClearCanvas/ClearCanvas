@@ -26,6 +26,7 @@ using System;
 using System.Data;
 using System.Data.SqlClient;
 using ClearCanvas.Common;
+using ClearCanvas.Common.Utilities;
 using ClearCanvas.Enterprise.Core;
 
 namespace ClearCanvas.ImageServer.Enterprise.SqlServer
@@ -48,7 +49,7 @@ namespace ClearCanvas.ImageServer.Enterprise.SqlServer
         internal UpdateContext(SqlConnection connection, ITransactionNotifier transactionNotifier, UpdateContextSyncMode mode)
             : base (connection, transactionNotifier)
         {
-            _transaction = connection.BeginTransaction(IsolationLevel.ReadCommitted);
+            _transaction = connection.BeginTransaction(mode == UpdateContextSyncMode.Flush ? IsolationLevel.ReadCommitted : IsolationLevel.Serializable);
             _mode = mode;
         }
         #endregion
@@ -60,22 +61,14 @@ namespace ClearCanvas.ImageServer.Enterprise.SqlServer
         }
         #endregion
 
-        #region PersistenceContext Overrides
-        public override void Suspend()
-        {
-        }
-
-        public override void Resume()
-        { 
-        }
-        #endregion
-
         #region IUpdateContext Members
 
         void IUpdateContext.Commit()
         {
             if (_transaction != null && _transaction.Connection != null)
             {
+				EventsHelper.Fire(PreCommit, this, EventArgs.Empty);
+
                 try
                 {
                     _transaction.Commit();
@@ -108,7 +101,9 @@ namespace ClearCanvas.ImageServer.Enterprise.SqlServer
             }
         }
 
-        #endregion
+    	public event EventHandler PreCommit;
+
+    	#endregion
 
         #region IDisposable Members
 

@@ -229,13 +229,13 @@ namespace ClearCanvas.ImageServer.Web.Application {
         protected global::System.Web.UI.WebControls.PlaceHolder AlertIndicatorPlaceHolder;
         
         /// <summary>
-        /// LogoutButton control.
+        /// LogoutLink control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.LinkButton LogoutButton;
+        protected global::System.Web.UI.HtmlControls.HtmlAnchor LogoutLink;
         
         /// <summary>
         /// Image1 control.

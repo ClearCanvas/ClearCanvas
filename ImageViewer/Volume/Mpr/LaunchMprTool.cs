@@ -34,6 +34,7 @@ using ClearCanvas.ImageViewer.BaseTools;
 using ClearCanvas.ImageViewer.Configuration;
 using ClearCanvas.ImageViewer.StudyManagement;
 using ClearCanvas.ImageViewer.Volume.Mpr.Utilities;
+using ClearCanvas.ImageViewer.Volumes;
 
 namespace ClearCanvas.ImageViewer.Volume.Mpr
 {
@@ -42,42 +43,31 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 	[MenuAction("open", "global-menus/MenuTools/MenuMpr/MenuOpenSelectionWithMpr", "LaunchMpr")]
 	[IconSet("open", "Icons.LaunchMprToolSmall.png", "Icons.LaunchMprToolMedium.png", "Icons.LaunchMprToolLarge.png")]
 	[EnabledStateObserver("open", "Enabled", "EnabledChanged")]
-	[VisibleStateObserver("open", "Visible", "VisibleChanged")]
-	[ViewerActionPermissionAttribute("open", AuthorityTokens.ViewerClinical)]
+	[VisibleStateObserver("open", "Visible", null)]
+	[ViewerActionPermission("open", AuthorityTokens.ViewerClinical)]
 	[GroupHint("open", "Tools.Volume.MPR")]
+	//
 	[ExtensionOf(typeof (ImageViewerToolExtensionPoint))]
 	public class LaunchMprTool : ImageViewerTool
 	{
 		private MprViewerComponent _viewer;
-		private bool _visible;
 
-		public LaunchMprTool() {}
-
-		public bool Visible
-		{
-			get { return _visible; }
-		}
-
-		public event EventHandler VisibleChanged
-		{
-			add { }
-			remove { }
-		}
+		public bool Visible { get; private set; }
 
 		public override void Initialize()
 		{
 			base.Initialize();
 
-			_visible = !(base.ImageViewer is MprViewerComponent);
+			Visible = !(ImageViewer is MprViewerComponent);
 
-			base.Context.Viewer.EventBroker.ImageBoxSelected += OnImageBoxSelected;
-			base.Context.Viewer.EventBroker.DisplaySetSelected += OnDisplaySetSelected;
+			Context.Viewer.EventBroker.ImageBoxSelected += OnImageBoxSelected;
+			Context.Viewer.EventBroker.DisplaySetSelected += OnDisplaySetSelected;
 		}
 
 		protected override void Dispose(bool disposing)
 		{
-			base.Context.Viewer.EventBroker.ImageBoxSelected -= OnImageBoxSelected;
-			base.Context.Viewer.EventBroker.DisplaySetSelected -= OnDisplaySetSelected;
+			Context.Viewer.EventBroker.ImageBoxSelected -= OnImageBoxSelected;
+			Context.Viewer.EventBroker.DisplaySetSelected -= OnDisplaySetSelected;
 
 			base.Dispose(disposing);
 		}
@@ -86,7 +76,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 		{
 			Exception exception = null;
 
-			IPresentationImage currentImage = this.Context.Viewer.SelectedPresentationImage;
+			IPresentationImage currentImage = Context.Viewer.SelectedPresentationImage;
 			if (currentImage == null)
 				return;
 
@@ -98,7 +88,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 			}
 			catch (Exception ex)
 			{
-				ExceptionHandler.Report(ex, SR.ExceptionMprLoadFailure, base.Context.DesktopWindow);
+				ReportException(ex);
 				return;
 			}
 
@@ -107,16 +97,18 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 			task.Terminated += (sender, e) => exception = e.Exception;
 			try
 			{
-				ProgressDialog.Show(task, base.Context.DesktopWindow, true, ProgressBarStyle.Blocks);
+				ProgressDialog.Show(task, Context.DesktopWindow);
 			}
 			catch (Exception ex)
 			{
-				exception = ex;
 				if (_viewer != null)
 				{
 					_viewer.Dispose();
 					_viewer = null;
 				}
+
+				ReportException(ex);
+				return;
 			}
 			finally
 			{
@@ -125,7 +117,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 
 			if (exception != null)
 			{
-				ExceptionHandler.Report(exception, SR.ExceptionMprLoadFailure, base.Context.DesktopWindow);
+				ReportException(exception);
 				return;
 			}
 
@@ -134,16 +126,21 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 			{
 				LaunchImageViewerArgs args = new LaunchImageViewerArgs(ViewerLaunchSettings.WindowBehaviour);
 				args.Title = _viewer.Title;
-				MprViewerComponent.Launch(_viewer, args);
+				ImageViewerComponent.Launch(_viewer, args);
 			}
 			catch (Exception ex)
 			{
-				ExceptionHandler.Report(ex, SR.ExceptionMprLoadFailure, base.Context.DesktopWindow);
+				ReportException(ex);
 			}
 			finally
 			{
 				_viewer = null;
 			}
+		}
+
+		private void ReportException(Exception ex)
+		{
+			ExceptionHandler.Report(ex, SR.ExceptionMprLoadFailure, Context.DesktopWindow);
 		}
 
 		private static IEnumerable<Frame> FilterSourceFrames(IDisplaySet displaySet, IPresentationImage currentImage)
@@ -164,11 +161,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 				if (string.IsNullOrEmpty(frameOfReferenceUid))
 					throw new NullFrameOfReferenceException();
 				if (imageOrientationPatient == null || imageOrientationPatient.IsNull)
-				{
-					if (currentFrame.ParentImageSop.NumberOfFrames > 1)
-						throw new UnsupportedMultiFrameSourceImagesException(new NullImageOrientationException());
 					throw new NullImageOrientationException();
-				}
 
 				// if the current frame is not a supported pixel format, then it is always an error
 				if (currentFrame.BitsAllocated != 16)
@@ -222,17 +215,17 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 				context.ReportProgress(new BackgroundTaskProgress(mainTask.IntPercent, string.Format(SR.MessageInitializingMpr, mainTask.Progress)));
 
 				BackgroundTaskParams @params = (BackgroundTaskParams) context.UserState;
-				Volume volume = Volume.Create(@params.Frames,
-				                                    delegate(int i, int count)
-				                                    	{
-				                                    		if (context.CancelRequested)
-				                                    			throw new BackgroundTaskCancelledException();
-				                                    		if (i == 0)
-				                                    			mainTask["BUILD"].AddSubTask("", count);
-				                                    		mainTask["BUILD"][""].Increment();
-				                                    		string message = string.Format(SR.MessageBuildingMprVolumeProgress, mainTask.Progress, i + 1, count, mainTask["BUILD"].Progress);
-				                                    		context.ReportProgress(new BackgroundTaskProgress(mainTask.IntPercent, message));
-				                                    	});
+				Volumes.Volume volume = Volumes.Volume.Create(@params.Frames,
+				                                              delegate(int i, int count)
+				                                              	{
+				                                              		if (context.CancelRequested)
+				                                              			throw new BackgroundTaskCancelledException();
+				                                              		if (i == 0)
+				                                              			mainTask["BUILD"].AddSubTask("", count);
+				                                              		mainTask["BUILD"][""].Increment();
+				                                              		string message = string.Format(SR.MessageBuildingMprVolumeProgress, mainTask.Progress, i + 1, count, mainTask["BUILD"].Progress);
+				                                              		context.ReportProgress(new BackgroundTaskProgress(mainTask.IntPercent, message));
+				                                              	});
 
 				mainTask["BUILD"].MarkComplete();
 				context.ReportProgress(new BackgroundTaskProgress(mainTask.IntPercent, string.Format(SR.MessagePerformingMprWorkspaceLayout, mainTask.Progress)));
@@ -240,8 +233,8 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 				//call layout here b/c it could take a while
 				@params.SynchronizationContext.Send(delegate
 				                                    	{
-															_viewer = new MprViewerComponent(volume);
-															_viewer.Layout();
+				                                    		_viewer = new MprViewerComponent(volume);
+				                                    		_viewer.Layout();
 				                                    	}, null);
 
 				mainTask["LAYOUT"].MarkComplete();
@@ -268,33 +261,33 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 
 			public BackgroundTaskParams(IEnumerable<Frame> frames)
 			{
-				this.Frames = frames;
-				this.SynchronizationContext = SynchronizationContext.Current;
+				Frames = frames;
+				SynchronizationContext = SynchronizationContext.Current;
 			}
 		}
 
 		protected override void OnPresentationImageSelected(object sender, PresentationImageSelectedEventArgs e)
 		{
 			if (e.SelectedPresentationImage != null)
-				this.UpdateEnabled(e.SelectedPresentationImage.ParentDisplaySet);
+				UpdateEnabled(e.SelectedPresentationImage.ParentDisplaySet);
 			else
-				this.UpdateEnabled(null);
+				UpdateEnabled(null);
 		}
 
 		private void OnImageBoxSelected(object sender, ImageBoxSelectedEventArgs e)
 		{
 			if (e.SelectedImageBox.DisplaySet == null)
-				this.UpdateEnabled(null);
+				UpdateEnabled(null);
 		}
 
 		private void OnDisplaySetSelected(object sender, DisplaySetSelectedEventArgs e)
 		{
-			this.UpdateEnabled(e.SelectedDisplaySet);
+			UpdateEnabled(e.SelectedDisplaySet);
 		}
 
 		private void UpdateEnabled(IDisplaySet selectedDisplaySet)
 		{
-			base.Enabled = selectedDisplaySet != null && selectedDisplaySet.PresentationImages.Count > 1;
+			Enabled = selectedDisplaySet != null && selectedDisplaySet.PresentationImages.Count > 1;
 		}
 	}
 }

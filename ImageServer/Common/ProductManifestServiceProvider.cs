@@ -33,7 +33,7 @@ namespace ClearCanvas.ImageServer.Common
     /// <summary>
     /// 
     /// </summary>
-    class ProductManifestChecker
+    public class ProductManifestChecker
     {
         private ProductVerificationResponse _lastResult;
         private const string _cacheKey = "LastResult";

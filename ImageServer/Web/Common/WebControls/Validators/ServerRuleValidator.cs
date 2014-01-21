@@ -78,7 +78,11 @@ namespace ClearCanvas.ImageServer.Web.Common.WebControls.Validators
             }
 
             string error;
-                if (false == Rule<ServerActionContext,ServerRuleTypeEnum>.ValidateRule(ServerRuleTypeEnum.GetEnum(RuleTypeControl), theDoc, out error))
+                if (false == Rule<ServerActionContext>.ValidateRule(
+					theDoc,
+					ServerRulesEngine.GetSpecificationCompiler(),
+					ServerRulesEngine.GetActionCompiler(ServerRuleTypeEnum.GetEnum(RuleTypeControl)),
+					out error))
                 {
                     ErrorMessage = error;
                     return false;

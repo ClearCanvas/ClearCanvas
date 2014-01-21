@@ -489,6 +489,8 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 
 			unsafe
 			{
+				// TODO (CR Aug 2013): Replace with DicomUncompressedPixelData.NormalizePixelData.
+
 				//TODO (CR May 2011): this is not as efficient as it could be, and more confusing than it needs to be.
 				//It could mostly be done with bit-wise operators if we cast the pixel data pointer to the correct type
 				//right off the bat (short* or byte*), and we could optimize for the case where no right shift is necessary (high bit = bits stored - 1).

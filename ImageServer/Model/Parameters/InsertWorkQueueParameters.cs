@@ -24,6 +24,8 @@
 
 using System;
 using System.Xml;
+using ClearCanvas.ImageServer.Common;
+using ClearCanvas.ImageServer.Common.WorkQueue;
 using ClearCanvas.ImageServer.Enterprise;
 
 namespace ClearCanvas.ImageServer.Model.Parameters
@@ -46,6 +48,10 @@ namespace ClearCanvas.ImageServer.Model.Parameters
 		{
 			set { SubCriteria["WorkQueueTypeEnum"] = new ProcedureParameter<ServerEnum>("WorkQueueTypeEnum", value); }
 		}
+	    public WorkQueuePriorityEnum WorkQueuePriorityEnum
+	    {
+		    set { SubCriteria["WorkQueuePriorityEnum"] = new ProcedureParameter<ServerEnum>("WorkQueuePriorityEnum", value); }
+	    }
         public DateTime ScheduledTime
         {
             set { SubCriteria["ScheduledTime"] = new ProcedureParameter<DateTime>("ScheduledTime", value); }
@@ -95,9 +101,22 @@ namespace ClearCanvas.ImageServer.Model.Parameters
             set { SubCriteria["UidRelativePath"] = new ProcedureParameter<string>("UidRelativePath", value); }
         }
 
+        // TODO (Rigel) - figure out how to do the DB upgrade to remove this and UidRelativePath and store it in WorkQueueUidData
         public string UidGroupID
         {
             set { SubCriteria["UidGroupID"] = new ProcedureParameter<string>("UidGroupID", value); }
         }
+        public ServerEntityKey ExternalRequestQueueKey
+        {
+            set { SubCriteria["ExternalRequestQueueKey"] = new ProcedureParameter<ServerEntityKey>("ExternalRequestQueueKey", value); }
+        }
+        public WorkQueueUidData WorkQueueUidData
+        {
+            set
+            {
+                ;
+                SubCriteria["WorkQueueUidData"] = new ProcedureParameter<XmlDocument>("WorkQueueUidData", ImageServerSerializer.SerializeWorkQueueUidDataToXmlDocument(value));
+    }
+}
     }
 }

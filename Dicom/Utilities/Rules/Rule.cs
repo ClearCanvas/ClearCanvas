@@ -23,7 +23,9 @@
 #endregion
 
 using System;
+using System.Collections;
 using System.Xml;
+using System.Linq;
 using System.Collections.Generic;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Actions;
@@ -32,15 +34,34 @@ using ClearCanvas.Common.Utilities;
 
 namespace ClearCanvas.Dicom.Utilities.Rules
 {
+	public interface IRule
+	{
+		/// <summary>
+		/// The name of the rule.
+		/// </summary>
+		string Name { get; set; }
+
+		/// <summary>
+		/// A description of the rule.
+		/// </summary>
+		string Description { get; set; }
+
+		/// <summary>
+		/// Gets a list of actions in the rule that are of the specified type
+		/// </summary>
+		/// <typeparam name="TActionType"></typeparam>
+		/// <returns></returns>
+		IList<TActionType> ListActions<TActionType>();
+	}
+
     /// <summary>
     /// Representation of a rule.
     /// </summary>
-    /// <typeparam name="TActionContext">The context passed to the <see cref="IActionSet{TActionContext}"/> when executing the action.</typeparam>
-    /// <typeparam name="TTypeEnum">A type enum that represents the type of rule.</typeparam>
-    public class Rule<TActionContext, TTypeEnum>
+    /// <typeparam name="TActionContext">The context passed to the <see cref="IActionList{TActionContext}"/> when executing the action.</typeparam>
+    public class Rule<TActionContext>:IRule
         where TActionContext : ActionContext
     {
-        private IActionSet<TActionContext> _actions;
+        private IActionList<TActionContext> _actions;
         private ISpecification _conditions;
 
         #region Public Properties
@@ -69,15 +90,21 @@ namespace ClearCanvas.Dicom.Utilities.Rules
 
         #region Public Methods
 
+		public IList<TActionType> ListActions<TActionType>()
+		{
+			if (_actions == null)
+				return null;
+
+			return _actions.Where(a => a is TActionType).Cast<TActionType>().ToList();
+		}
+
         /// <summary>
         /// Compile the rule.
         /// </summary>
         /// <param name="ruleNode">XML representation of the rule.</param>
-        /// <param name="ruleType">The type of the rule.</param>
         /// <param name="specCompiler">An <see cref="XmlSpecificationCompiler"/>.</param>
-        /// <param name="actionCompiler">An <see cref="XmlActionCompiler{TActionContext,TTypeEnum}"/>.</param>
-        public void Compile(XmlNode ruleNode, TTypeEnum ruleType, XmlSpecificationCompiler specCompiler,
-                            XmlActionCompiler<TActionContext, TTypeEnum> actionCompiler)
+        /// <param name="actionCompiler">An <see cref="XmlActionCompiler{TActionContext}"/>.</param>
+        public void Compile(XmlNode ruleNode, XmlSpecificationCompiler specCompiler, XmlActionCompiler<TActionContext> actionCompiler)
         {
             var conditionNode =
                 CollectionUtils.SelectFirst(ruleNode.ChildNodes,
@@ -95,11 +122,11 @@ namespace ClearCanvas.Dicom.Utilities.Rules
                                             (XmlNode child) => child.Name.Equals("action"));
 
             if (actionNode != null)
-                _actions = actionCompiler.Compile(actionNode as XmlElement, ruleType, true);
+                _actions = actionCompiler.Compile(actionNode as XmlElement, true);
             else if (!IsExempt)
                 throw new ApplicationException("No action element defined for the rule.");
             else
-                _actions = new ActionSet<TActionContext>(new List<IActionItem<TActionContext>>());
+                _actions = new ActionList<TActionContext>(new List<IActionItem<TActionContext>>());
         }
 
         /// <summary>
@@ -133,12 +160,12 @@ namespace ClearCanvas.Dicom.Utilities.Rules
             {
                 ruleApplied = true;
                 Platform.Log(LogLevel.Debug, "Applying rule {0}", Name);
-                TestResult actionResult = _actions.Execute(context);
+                var actionResult = _actions.Execute(context);
                 if (actionResult.Fail)
                 {
-                    foreach (TestResultReason reason in actionResult.Reasons)
+                    foreach (var reason in actionResult.FailureReasons)
                     {
-                        Platform.Log(LogLevel.Error, "Unexpected error performing action {0}: {1}", Name, reason.Message);
+						Platform.Log(LogLevel.Error, "Unexpected error performing action {0}: {1}", Name, reason);
                     }
                     ruleSuccess = false;
                 }
@@ -149,20 +176,23 @@ namespace ClearCanvas.Dicom.Utilities.Rules
 
         #region Static Public Methods
 
-        /// <summary>
-        /// Method for validating proper format of a ServerRule.
-        /// </summary>
-        /// <param name="type">The type of rule to validate</param>
-        /// <param name="rule">The rule to validate</param>
-        /// <param name="errorDescription">A failure description on error.</param>
-        /// <returns>true on successful validation, otherwise false.</returns>
-        public static bool ValidateRule(TTypeEnum type, XmlDocument rule, out string errorDescription)
+    	/// <summary>
+    	/// Method for validating proper format of a ServerRule.
+    	/// </summary>
+    	/// <param name="rule">The rule to validate</param>
+		/// <param name="specCompiler">The specification compiler to use.</param>
+		/// <param name="actionCompiler">The action compiler to use.</param>
+    	/// <param name="errorDescription">A failure description on error.</param>
+    	/// <returns>true on successful validation, otherwise false.</returns>
+    	public static bool ValidateRule(
+			XmlDocument rule,
+			XmlSpecificationCompiler specCompiler,
+			XmlActionCompiler<TActionContext> actionCompiler,
+			out string errorDescription)
         {
-            var specCompiler = new XmlSpecificationCompiler("dicom");
-            var actionCompiler = new XmlActionCompiler<TActionContext, TTypeEnum>();
 
 
-            var theRule = new Rule<TActionContext, TTypeEnum>
+            var theRule = new Rule<TActionContext>
                               {
                                   Name = string.Empty
                               };
@@ -174,7 +204,7 @@ namespace ClearCanvas.Dicom.Utilities.Rules
 
             try
             {
-                theRule.Compile(ruleNode, type, specCompiler, actionCompiler);
+                theRule.Compile(ruleNode, specCompiler, actionCompiler);
             }
             catch (Exception e)
             {

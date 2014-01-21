@@ -27,6 +27,7 @@ using System.Xml.Serialization;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Dicom;
+using ClearCanvas.Dicom.Iod.Sequences;
 using ClearCanvas.ImageServer.Common.Helpers;
 
 namespace ClearCanvas.ImageServer.Core.Edit
@@ -189,13 +190,16 @@ namespace ClearCanvas.ImageServer.Core.Edit
 
 		#region IImageLevelCommand Members
 
-		public override bool Apply(DicomFile file)
+		public override bool Apply(DicomFile file, OriginalAttributesSequence originalAttributes)
 		{
 			if (UpdateEntry != null)
 			{
 				DicomAttribute attr = FindAttribute(file.DataSet, UpdateEntry);
 				if (attr != null)
 				{
+					var copiedAttrib = attr.Copy();
+					originalAttributes.ModifiedAttributesSequence[copiedAttrib.Tag] = copiedAttrib;
+
 				    UpdateEntry.OriginalValue = attr.ToString();
 					try
 					{

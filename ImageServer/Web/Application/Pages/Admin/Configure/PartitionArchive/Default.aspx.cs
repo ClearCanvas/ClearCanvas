@@ -24,8 +24,8 @@
 
 using System;
 using System.Security.Permissions;
+using ClearCanvas.ImageServer.Common.Authentication;
 using ClearCanvas.ImageServer.Enterprise;
-using ClearCanvas.ImageServer.Enterprise.Authentication;
 using ClearCanvas.ImageServer.Model;
 using ClearCanvas.ImageServer.Web.Application.Controls;
 using ClearCanvas.ImageServer.Web.Application.Pages.Common;
@@ -64,6 +64,7 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Admin.Configure.Partitio
 
             SetupEventHandlers();
 
+			ServerPartitionSelector.UseNonResearchPartitions = true;
             ServerPartitionSelector.PartitionChanged += delegate(ServerPartition partition)
             {
                 SearchPanel.ServerPartition = partition;

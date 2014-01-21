@@ -84,6 +84,14 @@ namespace ClearCanvas.ImageViewer
 		#region Public Properties
 
 		/// <summary>
+		/// Gets the dimensions of the scene.
+		/// </summary>
+		/// <remarks>
+		/// The dimensions of the scene effectively define the boundaries of the <see cref="IPresentationImage"/>.
+		/// </remarks>
+		public abstract Size SceneSize { get; }
+
+		/// <summary>
 		/// Gets the parent <see cref="IImageViewer"/>.
 		/// </summary>
 		/// <value>The associated <see cref="IImageViewer"/> or <b>null</b> if the 
@@ -140,7 +148,7 @@ namespace ClearCanvas.ImageViewer
 		/// </summary>
 		public Rectangle ClientRectangle
 		{
-			get { return _clientRectangle; }
+			get { return !_clientRectangle.IsEmpty ? _clientRectangle : new Rectangle(new Point(), SceneSize); }
 		}
 
 		/// <summary>
@@ -516,7 +524,7 @@ namespace ClearCanvas.ImageViewer
 			var contextId = graphics.GetHdc();
 			try
 			{
-				using (var surface = ImageRenderer.GetRenderingSurface(IntPtr.Zero, bmp.Width, bmp.Height))
+				using (var surface = ImageRenderer.CreateRenderingSurface(IntPtr.Zero, bmp.Width, bmp.Height, RenderingSurfaceType.Offscreen))
 				{
 					surface.ContextID = contextId;
 					surface.ClipRectangle = new Rectangle(0, 0, bmp.Width, bmp.Height);

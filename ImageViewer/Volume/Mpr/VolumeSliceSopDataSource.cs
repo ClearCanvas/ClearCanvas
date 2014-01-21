@@ -25,7 +25,10 @@
 using System;
 using ClearCanvas.Common;
 using ClearCanvas.Dicom;
+using ClearCanvas.Dicom.Iod.ContextGroups;
+using ClearCanvas.Dicom.Iod.Modules;
 using ClearCanvas.ImageViewer.StudyManagement;
+using ClearCanvas.ImageViewer.Volumes;
 
 namespace ClearCanvas.ImageViewer.Volume.Mpr
 {
@@ -38,14 +41,8 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 		public VolumeSliceSopDataSource(VolumeSlice slice)
 		{
 			Slice = slice;
-
 			DataSet = new DicomAttributeCollection();
-			DataSet[DicomTags.Rows].SetInt32(0, Slice.Rows);
-			DataSet[DicomTags.Columns].SetInt32(0, Slice.Colums);
-			DataSet[DicomTags.NumberOfFrames].SetInt32(0, 1);
-			DataSet[DicomTags.ImageOrientationPatient].SetStringValue(Slice.ImageOrientationPatient);
-			DataSet[DicomTags.ImagePositionPatient].SetStringValue(Slice.ImagePositionPatient);
-			DataSet[DicomTags.SopInstanceUid].SetString(0, DicomUid.GenerateUid().UID);
+			FillDataSet(DataSet, slice);
 		}
 
 		public VolumeSlice Slice { get; private set; }
@@ -120,6 +117,41 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 				DataSet = null;
 			}
 			base.Dispose(disposing);
+		}
+
+		internal static void FillDataSet(IDicomAttributeProvider dataSet, VolumeSlice slice)
+		{
+			// generate values for SC Equipment Module
+			var scEquipment = new ScEquipmentModuleIod(dataSet);
+			scEquipment.ConversionType = @"WSD";
+			scEquipment.SecondaryCaptureDeviceManufacturer = @"ClearCanvas Inc.";
+			scEquipment.SecondaryCaptureDeviceManufacturersModelName = ProductInformation.GetName(false, false);
+			scEquipment.SecondaryCaptureDeviceSoftwareVersions = new[] {ProductInformation.GetVersion(true, true, true, true)};
+
+			// generate values for the General Image Module
+			dataSet[DicomTags.ImageType].SetStringValue(@"DERIVED\SECONDARY");
+			dataSet[DicomTags.DerivationDescription].SetStringValue(@"Multiplanar Reformatting");
+			dataSet[DicomTags.DerivationCodeSequence].Values = new[] {ImageDerivationContextGroup.MultiplanarReformatting.AsDicomSequenceItem()};
+
+			// update the Image Plane Module
+			dataSet[DicomTags.PixelSpacing].SetStringValue(slice.PixelSpacing);
+			dataSet[DicomTags.ImageOrientationPatient].SetStringValue(slice.ImageOrientationPatient);
+			dataSet[DicomTags.ImagePositionPatient].SetStringValue(slice.ImagePositionPatient);
+			dataSet[DicomTags.SliceThickness].SetStringValue(slice.SliceThickness);
+
+			// update the spacing between slices, even though it's only part of modality-specific modules
+			dataSet[DicomTags.SpacingBetweenSlices].SetStringValue(slice.SpacingBetweenSlices);
+
+			// update the Image Pixel Module
+			dataSet[DicomTags.Rows].SetInt32(0, slice.Rows);
+			dataSet[DicomTags.Columns].SetInt32(0, slice.Columns);
+
+			// generate values for Multi-Frame Module
+			dataSet[DicomTags.NumberOfFrames].SetInt32(0, 1);
+
+			// generate values for SOP Common Module
+			dataSet[DicomTags.SopClassUid].SetStringValue(SopClass.SecondaryCaptureImageStorageUid);
+			dataSet[DicomTags.SopInstanceUid].SetStringValue(DicomUid.GenerateUid().UID);
 		}
 
 		protected class VolumeSliceSopFrameData : StandardSopFrameData

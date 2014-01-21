@@ -231,16 +231,12 @@ namespace ClearCanvas.ImageViewer.Tools.Synchronization
 				viewer.EventBroker.TileSelected += coordinator.OnTileSelected;
 			}
 
-			DicomImagePlane.InitializeCache();
-
 			++coordinator._referenceCount;
 		    return coordinator;
 		}
 
 		public void Release()
 		{
-			DicomImagePlane.ReleaseCache();
-
             if (_referenceCount > 0)
 			    --_referenceCount;
 

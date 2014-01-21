@@ -31,7 +31,13 @@ using ClearCanvas.Common.Specifications;
 
 namespace ClearCanvas.Dicom.Utilities.Rules.Specifications
 {
-    [ExtensionOf(typeof (XmlSpecificationCompilerOperatorExtensionPoint))]
+	//todo: where to put this definition
+	[ExtensionPoint]
+	public sealed class DicomRuleSpecificationCompilerOperatorExtensionPoint : ExtensionPoint<IXmlSpecificationCompilerOperator>
+	{
+	}
+
+	[ExtensionOf(typeof(DicomRuleSpecificationCompilerOperatorExtensionPoint))]
     public class DicomAgeGreaterThanSpecificationOperator : IXmlSpecificationCompilerOperator
     {
         #region IXmlSpecificationCompilerOperator Members

@@ -77,7 +77,10 @@
     <Compile Include="Data\AlertController.cs" />
     <Compile Include="Data\AuthorityGroupStudyAccessInfo.cs" />
     <Compile Include="Data\DataAccessGroupInfo.cs" />
+    <Compile Include="Data\DataSource\ExternalRequestQueueDataSource.cs" />
     <Compile Include="Data\DataSource\IStudySummaryAssembler.cs" />
+    <Compile Include="Data\ExternalRequestQueueAdaptor.cs" />
+    <Compile Include="Data\ExternalRequestQueueController.cs" />
     <Compile Include="Data\StudyDataAccessAdaptor.cs" />
     <Compile Include="Data\StudyDataAccessController.cs" />
     <Compile Include="Data\StudyEditReasonAdaptor.cs" />

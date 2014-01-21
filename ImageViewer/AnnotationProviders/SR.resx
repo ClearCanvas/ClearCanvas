@@ -826,9 +826,6 @@
   <data name="Dicom_Patient_ResponsiblePerson_Label" xml:space="preserve">
     <value>Responsible Person</value>
   </data>
-  <data name="FormatCodeSequence" xml:space="preserve">
-    <value>{0} ({1})</value>
-  </data>
   <data name="ValueDirectionalMarkersQuadrupedCaudal" xml:space="preserve">
     <value>Cd</value>
   </data>
@@ -922,7 +919,7 @@
     <value>Spd</value>
   </data>
   <data name="Dicom_DXImage_ContrastBolusAgent_DisplayName" xml:space="preserve">
-    <value>Contrast/Bolus Agent</value>
+    <value>Contrast/Bolus Agent (X-Ray)</value>
   </data>
   <data name="Dicom_DXImage_ContrastBolusAgent_Label" xml:space="preserve">
     <value>Contrast/Bolus</value>
@@ -1026,5 +1023,14 @@
   <data name="FormatDecigraySquareCentimeters" xml:space="preserve">
     <value>{0} dGy·cm²</value>
     <comment>Do not use format specifiers here - inputs are preformatted strings!</comment>
+  </data>
+  <data name="AnnotationItemProviders_Dicom_ContrastBolus_DisplayName" xml:space="preserve">
+    <value>Dicom (Contrast/Bolus)</value>
+  </data>
+  <data name="Dicom_ContrastBolus_Agent_DisplayName" xml:space="preserve">
+    <value>Contrast/Bolus Agent</value>
+  </data>
+  <data name="Dicom_ContrastBolus_Agent_Label" xml:space="preserve">
+    <value>Contrast/Bolus</value>
   </data>
 </root>

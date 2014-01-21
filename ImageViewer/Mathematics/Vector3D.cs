@@ -23,17 +23,17 @@
 #endregion
 
 using System;
+using ClearCanvas.Common;
 
 namespace ClearCanvas.ImageViewer.Mathematics
 {
 	/// <summary>
-	/// A simple 3D vector class.
+	/// Represents a three dimensional coordinate or vector.
 	/// </summary>
 	/// <remarks>
-	/// The Vector3D class is immutable.  All necessary operations
-	/// can be done via the operator overloads.
+	/// This class is immutable. All necessary operators return the resulting output as a new instance.
 	/// </remarks>
-	public class Vector3D : IEquatable<Vector3D>
+	public sealed class Vector3D : IEquatable<Vector3D>
 	{
 		private readonly float _x;
 		private readonly float _y;
@@ -43,6 +43,8 @@ namespace ClearCanvas.ImageViewer.Mathematics
 		/// Represents the Zero vector.
 		/// </summary>
 		public static readonly Vector3D Null = new Vector3D(0F, 0F, 0F);
+
+// ReSharper disable InconsistentNaming
 
 		/// <summary>
 		/// Represents the unit vector in the direction of the positive X axis.
@@ -59,9 +61,14 @@ namespace ClearCanvas.ImageViewer.Mathematics
 		/// </summary>
 		public static readonly Vector3D zUnit = new Vector3D(0F, 0F, 1F);
 
+// ReSharper restore InconsistentNaming
+
 		/// <summary>
-		/// Constructor.
+		/// Initializes a new instance of <see cref="Vector3D"/>.
 		/// </summary>
+		/// <param name="x">The X component of the vector.</param>
+		/// <param name="y">The Y component of the vector.</param>
+		/// <param name="z">The Z component of the vector.</param>
 		public Vector3D(float x, float y, float z)
 		{
 			_x = x;
@@ -70,7 +77,22 @@ namespace ClearCanvas.ImageViewer.Mathematics
 		}
 
 		/// <summary>
-		/// Copy Constructor.
+		/// Initializes a new instance of <see cref="Vector3D"/>.
+		/// </summary>
+		/// <param name="values">The components of the vector.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="values"/> is NULL.</exception>
+		/// <exception cref="ArgumentException">Thrown if <paramref name="values"/> does not have exactly 3 elements.</exception>
+		public Vector3D(float[] values)
+		{
+			Platform.CheckForNullReference(values, "values");
+			Platform.CheckTrue(values.Length == 3, "values must have exactly 3 elements");
+			_x = values[0];
+			_y = values[1];
+			_z = values[2];
+		}
+
+		/// <summary>
+		/// Initializes a new instance of <see cref="Vector3D"/>.
 		/// </summary>
 		public Vector3D(Vector3D src)
 		{
@@ -80,7 +102,20 @@ namespace ClearCanvas.ImageViewer.Mathematics
 		}
 
 		/// <summary>
-		/// Gets the x-component.
+		/// Gets the specified component of the vector.
+		/// </summary>
+		/// <param name="index">The index of the component (X=0, Y=1, Z=2).</param>
+		public float this[int index]
+		{
+			get
+			{
+				Platform.CheckIndexRange(index, 0, 3, GetType());
+				return index == 0 ? _x : (index == 1 ? _y : _z);
+			}
+		}
+
+		/// <summary>
+		/// Gets the X component of the vector.
 		/// </summary>
 		public float X
 		{
@@ -88,7 +123,7 @@ namespace ClearCanvas.ImageViewer.Mathematics
 		}
 
 		/// <summary>
-		/// Gets the y-component.
+		/// Gets the Y component of the vector.
 		/// </summary>
 		public float Y
 		{
@@ -96,7 +131,7 @@ namespace ClearCanvas.ImageViewer.Mathematics
 		}
 
 		/// <summary>
-		/// Gets the z-component.
+		/// Gets the Z component of the vector.
 		/// </summary>
 		public float Z
 		{
@@ -108,7 +143,9 @@ namespace ClearCanvas.ImageViewer.Mathematics
 		/// </summary>
 		public bool IsNull
 		{
+// ReSharper disable CompareOfFloatsByEqualityOperator
 			get { return _x == 0F && _y == 0F && _z == 0F; }
+// ReSharper restore CompareOfFloatsByEqualityOperator
 		}
 
 		/// <summary>
@@ -116,10 +153,7 @@ namespace ClearCanvas.ImageViewer.Mathematics
 		/// </summary>
 		public float Magnitude
 		{
-			get
-			{
-				return (float)Math.Sqrt(_x * _x + _y * _y + _z * _z);
-			}
+			get { return (float) Math.Sqrt(_x*_x + _y*_y + _z*_z); }
 		}
 
 		/// <summary>
@@ -127,48 +161,48 @@ namespace ClearCanvas.ImageViewer.Mathematics
 		/// </summary>
 		public Vector3D Normalize()
 		{
-			return this / Magnitude;
+			return this/Magnitude;
 		}
 
 		/// <summary>
-		/// Gets the dot-product of of this vector and <paramref name="right"/>.
+		/// Gets the dot product (scalar product) of of this vector and <paramref name="right"/>.
 		/// </summary>
 		public float Dot(Vector3D right)
 		{
-			return _x * right.X + _y * right.Y + _z * right.Z;
+			return _x*right.X + _y*right.Y + _z*right.Z;
 		}
 
 		/// <summary>
-		/// Returns the cross-product of this vector and <paramref name="right"/>.
+		/// Returns the cross product (vector product) of this vector and <paramref name="right"/>.
 		/// </summary>
 		public Vector3D Cross(Vector3D right)
 		{
-			float x = _y * right.Z - _z * right.Y;
-			float y = -_x * right.Z + _z * right.X;
-			float z = _x * right.Y - _y * right.X;
+			float x = _y*right.Z - _z*right.Y;
+			float y = -_x*right.Z + _z*right.X;
+			float z = _x*right.Y - _y*right.X;
 
 			return new Vector3D(x, y, z);
 		}
 
 		/// <summary>
-		/// Determines whether or not this vector is parallel to <paramref name="other"/> within a certain <paramref name="angleTolerance"/>.
+		/// Determines whether or not this vector is parallel to <paramref name="other"/> within a certain <paramref name="angleToleranceRadians"/>.
 		/// </summary>
 		public bool IsParallelTo(Vector3D other, float angleToleranceRadians)
 		{
 			angleToleranceRadians = Math.Abs(angleToleranceRadians);
 			float angle = GetAngleBetween(other);
 			return FloatComparer.AreEqual(angle, 0, angleToleranceRadians) ||
-			       FloatComparer.AreEqual(angle, (float)Math.PI, angleToleranceRadians);
+			       FloatComparer.AreEqual(angle, (float) Math.PI, angleToleranceRadians);
 		}
 
 		/// <summary>
-		/// Determines whether or not this vector is orthogonal to <paramref name="other"/> within a certain <paramref name="angleTolerance"/>.
+		/// Determines whether or not this vector is orthogonal to <paramref name="other"/> within a certain <paramref name="angleToleranceRadians"/>.
 		/// </summary>
 		public bool IsOrthogonalTo(Vector3D other, float angleToleranceRadians)
 		{
 			angleToleranceRadians = Math.Abs(angleToleranceRadians);
 			float angle = GetAngleBetween(other);
-			const float halfPi = (float)Math.PI/2;
+			const float halfPi = (float) Math.PI/2;
 			return FloatComparer.AreEqual(angle, halfPi, angleToleranceRadians);
 		}
 
@@ -177,7 +211,7 @@ namespace ClearCanvas.ImageViewer.Mathematics
 		/// </summary>
 		public float GetAngleBetween(Vector3D other)
 		{
-			Vector3D normal1 = this.Normalize();
+			Vector3D normal1 = Normalize();
 			Vector3D normal2 = other.Normalize();
 
 			// the vectors are already normalized, so we don't need to divide by the magnitudes.
@@ -188,46 +222,15 @@ namespace ClearCanvas.ImageViewer.Mathematics
 			if (dot > 1F)
 				dot = 1F;
 
-			return Math.Abs((float)Math.Acos(dot));
+			return Math.Abs((float) Math.Acos(dot));
 		}
 
 		/// <summary>
-		/// Finds the intersection of the line segment defined by <paramref name="linePoint1"/> and
-		/// <paramref name="linePoint2"/> with a plane described by it's normal (<paramref name="planeNormal"/>)
-		/// and an arbitrary point in the plane (<paramref name="pointInPlane"/>).
+		/// Gets the components of the vector as an array (elements in order of X, Y and Z).
 		/// </summary>
-		/// <param name="planeNormal">The normal vector of an arbitrary plane.</param>
-		/// <param name="pointInPlane">A point in space that lies on the plane whose normal is <paramref name="planeNormal"/>.</param>
-		/// <param name="linePoint1">The position vector of the start of the line.</param>
-		/// <param name="linePoint2">The position vector of the end of the line.</param>
-		/// <param name="isLineSegment">Specifies whether <paramref name="linePoint1"/> and <paramref name="linePoint2"/>
-		/// define a line segment, or simply 2 points on an infinite line.</param>
-		/// <returns>A position vector describing the point of intersection of the line with the plane, or null if the
-		/// line and plane do not intersect.</returns>
-		public static Vector3D GetLinePlaneIntersection(
-			Vector3D planeNormal,
-			Vector3D pointInPlane,
-			Vector3D linePoint1,
-			Vector3D linePoint2,
-			bool isLineSegment)
+		public float[] ToArray()
 		{
-			if (Vector3D.AreEqual(planeNormal, Vector3D.Null))
-				return null;
-
-			Vector3D line = linePoint2 - linePoint1;
-			Vector3D planeToLineStart = pointInPlane - linePoint1;
-
-			float lineDotPlaneNormal = planeNormal.Dot(line);
-
-			if (FloatComparer.AreEqual(0F, lineDotPlaneNormal))
-				return null;
-
-			float ratio = planeNormal.Dot(planeToLineStart) / lineDotPlaneNormal;
-
-			if (isLineSegment && (ratio < 0F || ratio > 1F))
-				return null;
-
-			return linePoint1 + ratio * line;
+			return new[] {_x, _y, _z};
 		}
 
 		/// <summary>
@@ -235,7 +238,7 @@ namespace ClearCanvas.ImageViewer.Mathematics
 		/// </summary>
 		public override string ToString()
 		{
-			return String.Format(@"({0:F8}, {1:F8}, {2:F8})", _x, _y, _z);
+			return String.Format(@"({0}, {1}, {2})", _x, _y, _z);
 		}
 
 		/// <summary>
@@ -243,7 +246,7 @@ namespace ClearCanvas.ImageViewer.Mathematics
 		/// </summary>
 		public static Vector3D operator *(float scale, Vector3D vector)
 		{
-			return vector * scale;
+			return vector*scale;
 		}
 
 		/// <summary>
@@ -251,7 +254,7 @@ namespace ClearCanvas.ImageViewer.Mathematics
 		/// </summary>
 		public static Vector3D operator *(Vector3D vector, float scale)
 		{
-			return new Vector3D(vector.X * scale, vector.Y * scale, vector.Z * scale);
+			return new Vector3D(vector.X*scale, vector.Y*scale, vector.Z*scale);
 		}
 
 		/// <summary>
@@ -259,7 +262,7 @@ namespace ClearCanvas.ImageViewer.Mathematics
 		/// </summary>
 		public static Vector3D operator /(float scale, Vector3D vector)
 		{
-			return vector / scale;
+			return vector/scale;
 		}
 
 		/// <summary>
@@ -267,7 +270,7 @@ namespace ClearCanvas.ImageViewer.Mathematics
 		/// </summary>
 		public static Vector3D operator /(Vector3D vector, float scale)
 		{
-			return new Vector3D(vector.X / scale, vector.Y / scale, vector.Z / scale);
+			return new Vector3D(vector.X/scale, vector.Y/scale, vector.Z/scale);
 		}
 
 		/// <summary>
@@ -291,7 +294,7 @@ namespace ClearCanvas.ImageViewer.Mathematics
 		/// </summary>
 		public static Vector3D operator -(Vector3D vector)
 		{
-			return -1 * vector;
+			return -1*vector;
 		}
 
 		/// <summary>
@@ -299,12 +302,12 @@ namespace ClearCanvas.ImageViewer.Mathematics
 		/// </summary>
 		public static bool AreEqual(Vector3D left, Vector3D right, float tolerance)
 		{
-            if (left == null || right == null)
-                return ReferenceEquals(left, right);
-            
-            return FloatComparer.AreEqual(left.X, right.X, tolerance) &&
-					FloatComparer.AreEqual(left.Y, right.Y, tolerance) &&
-					FloatComparer.AreEqual(left.Z, right.Z, tolerance);
+			if (left == null || right == null)
+				return ReferenceEquals(left, right);
+
+			return FloatComparer.AreEqual(left.X, right.X, tolerance) &&
+			       FloatComparer.AreEqual(left.Y, right.Y, tolerance) &&
+			       FloatComparer.AreEqual(left.Z, right.Z, tolerance);
 		}
 
 		/// <summary>
@@ -312,12 +315,12 @@ namespace ClearCanvas.ImageViewer.Mathematics
 		/// </summary>
 		public static bool AreEqual(Vector3D left, Vector3D right)
 		{
-            if (left == null || right == null)
-                return ReferenceEquals(left, right);
+			if (left == null || right == null)
+				return ReferenceEquals(left, right);
 
 			return FloatComparer.AreEqual(left.X, right.X) &&
-					FloatComparer.AreEqual(left.Y, right.Y) &&
-					FloatComparer.AreEqual(left.Z, right.Z);
+			       FloatComparer.AreEqual(left.Y, right.Y) &&
+			       FloatComparer.AreEqual(left.Z, right.Z);
 		}
 
 		/// <summary>
@@ -325,31 +328,77 @@ namespace ClearCanvas.ImageViewer.Mathematics
 		/// </summary>
 		public override int GetHashCode()
 		{
-			return 3 * _x.GetHashCode() + 5 * _y.GetHashCode() + 7 * _z.GetHashCode();
+			return -0x760F6FAB ^ _x.GetHashCode() ^ _y.GetHashCode() ^ _z.GetHashCode();
 		}
 
 		/// <summary>
-		/// Gets whether or not this object equals <paramref name="obj"/>.
+		/// Gets whether or not this vector equals <paramref name="obj"/>.
 		/// </summary>
 		public override bool Equals(object obj)
 		{
-			if (obj == this)
-				return true;
-
-			return this.Equals(obj as Vector3D);
+			return obj == this || Equals(obj as Vector3D);
 		}
 
-		#region IEquatable<Vector3D> Members
-
 		/// <summary>
-		/// Gets whether or not this object equals <paramref name="other"/>.
+		/// Gets whether or not this vector equals <paramref name="other"/>.
 		/// </summary>
 		public bool Equals(Vector3D other)
 		{
 			if (other == null)
 				return false;
 
+// ReSharper disable CompareOfFloatsByEqualityOperator
 			return (X == other.X && Y == other.Y && Z == other.Z);
+// ReSharper restore CompareOfFloatsByEqualityOperator
+		}
+
+		/// <summary>
+		/// Gets the specified <see cref="Size3D"/> value as a <see cref="Vector3D"/>.
+		/// </summary>
+		public static implicit operator Vector3D(Size3D size3D)
+		{
+			return new Vector3D(size3D.Width, size3D.Height, size3D.Depth);
+		}
+
+		#region Specialized Calculations
+
+		/// <summary>
+		/// Finds the intersection of the line segment defined by <paramref name="linePoint1"/> and
+		/// <paramref name="linePoint2"/> with a plane described by it's normal (<paramref name="planeNormal"/>)
+		/// and an arbitrary point in the plane (<paramref name="pointInPlane"/>).
+		/// </summary>
+		/// <param name="planeNormal">The normal vector of an arbitrary plane.</param>
+		/// <param name="pointInPlane">A point in space that lies on the plane whose normal is <paramref name="planeNormal"/>.</param>
+		/// <param name="linePoint1">The position vector of the start of the line.</param>
+		/// <param name="linePoint2">The position vector of the end of the line.</param>
+		/// <param name="isLineSegment">Specifies whether <paramref name="linePoint1"/> and <paramref name="linePoint2"/>
+		/// define a line segment, or simply 2 points on an infinite line.</param>
+		/// <returns>A position vector describing the point of intersection of the line with the plane, or null if the
+		/// line and plane do not intersect.</returns>
+		public static Vector3D GetLinePlaneIntersection(
+			Vector3D planeNormal,
+			Vector3D pointInPlane,
+			Vector3D linePoint1,
+			Vector3D linePoint2,
+			bool isLineSegment)
+		{
+			if (AreEqual(planeNormal, Null))
+				return null;
+
+			Vector3D line = linePoint2 - linePoint1;
+			Vector3D planeToLineStart = pointInPlane - linePoint1;
+
+			float lineDotPlaneNormal = planeNormal.Dot(line);
+
+			if (FloatComparer.AreEqual(0F, lineDotPlaneNormal))
+				return null;
+
+			float ratio = planeNormal.Dot(planeToLineStart)/lineDotPlaneNormal;
+
+			if (isLineSegment && (ratio < 0F || ratio > 1F))
+				return null;
+
+			return linePoint1 + ratio*line;
 		}
 
 		#endregion

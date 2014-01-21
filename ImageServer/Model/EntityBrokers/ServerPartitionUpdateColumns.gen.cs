@@ -30,7 +30,7 @@ namespace ClearCanvas.ImageServer.Model.EntityBrokers
     using System.Xml;
     using ClearCanvas.ImageServer.Enterprise;
 
-   public class ServerPartitionUpdateColumns : EntityUpdateColumns
+   public partial class ServerPartitionUpdateColumns : EntityUpdateColumns
    {
        public ServerPartitionUpdateColumns()
        : base("ServerPartition")
@@ -124,6 +124,11 @@ namespace ClearCanvas.ImageServer.Model.EntityBrokers
         public Boolean AcceptLatestReport
         {
             set { SubParameters["AcceptLatestReport"] = new EntityUpdateColumn<Boolean>("AcceptLatestReport", value); }
+        }
+        [EntityFieldDatabaseMappingAttribute(TableName="ServerPartition", ColumnName="ServerPartitionTypeEnum")]
+        public ServerPartitionTypeEnum ServerPartitionTypeEnum
+        {
+            set { SubParameters["ServerPartitionTypeEnum"] = new EntityUpdateColumn<ServerPartitionTypeEnum>("ServerPartitionTypeEnum", value); }
         }
     }
 }

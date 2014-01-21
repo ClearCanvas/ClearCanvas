@@ -35,9 +35,8 @@ using ClearCanvas.Desktop.Actions;
 using ClearCanvas.Desktop.View.WinForms;
 using ClearCanvas.ImageViewer.InputManagement;
 using ClearCanvas.ImageViewer.Rendering;
-using DrawMode=ClearCanvas.ImageViewer.Rendering.DrawMode;
-using MessageBox=ClearCanvas.Desktop.View.WinForms.MessageBox;
-using Screen=System.Windows.Forms.Screen;
+using DrawMode = ClearCanvas.ImageViewer.Rendering.DrawMode;
+using Screen = System.Windows.Forms.Screen;
 
 namespace ClearCanvas.ImageViewer.View.WinForms
 {
@@ -62,6 +61,8 @@ namespace ClearCanvas.ImageViewer.View.WinForms
 
 		private bool _suppressDrawOnSizeChanged = false;
 		private string _lastRenderExceptionMessage = null;
+
+		private float? _dpi;
 
 		[ThreadStatic]
 		private static bool _isDrawing = false;
@@ -120,6 +121,27 @@ namespace ClearCanvas.ImageViewer.View.WinForms
 			get { return _tile; }
 		}
 
+		private float Dpi
+		{
+			get
+			{
+				if (!_dpi.HasValue)
+				{
+					var setting = ViewSettings.Default.AnnotationDpi;
+					if (setting <= 0)
+					{
+						using (var g = CreateGraphics())
+							_dpi = (g.DpiX + g.DpiY)/2;
+					}
+					else
+					{
+						_dpi = setting;
+					}
+				}
+				return _dpi.Value;
+			}
+		}
+
 		private IRenderingSurface Surface
 		{
 			get
@@ -140,11 +162,17 @@ namespace ClearCanvas.ImageViewer.View.WinForms
 					if (renderer == null)
 						throw new Exception(SR.ExceptionPresentationImageNotAssociatedWithARenderer);
 
-					_surface = renderer.GetRenderingSurface(this.Handle, this.Width, this.Height);
+					_surface = renderer.CreateRenderingSurface(this.Handle, this.Width, this.Height, RenderingSurfaceType.Onscreen);
+					_surface.Invalidated += OnSurfaceInvalidated;
 				}
 
 				return _surface;
 			}
+		}
+
+		private void OnSurfaceInvalidated(object sender, EventArgs e)
+		{
+			Invalidate();
 		}
 
 		public void SetParentImageBoxRectangle(Rectangle parentImageBoxRectangle, int parentImageBoxBorderWidth, bool suppressDraw)
@@ -175,8 +203,8 @@ namespace ClearCanvas.ImageViewer.View.WinForms
 
 		public event EventHandler Drawing
 		{
-			add { _drawing += value; }	
-			remove { _drawing -= value; }	
+			add { _drawing += value; }
+			remove { _drawing -= value; }
 		}
 
 		public void Draw()
@@ -202,7 +230,7 @@ namespace ClearCanvas.ImageViewer.View.WinForms
 
 				DrawArgs args = new DrawArgs(this.Surface,
 				                             new WinFormsScreenProxy(Screen.FromControl(this)),
-				                             DrawMode.Render);
+				                             DrawMode.Render) {Dpi = Dpi};
 
 				_isDrawing = true;
 
@@ -245,7 +273,10 @@ namespace ClearCanvas.ImageViewer.View.WinForms
 			try
 			{
 				if (_surface != null)
+				{
+					_surface.Invalidated -= OnSurfaceInvalidated;
 					_surface.Dispose();
+				}
 			}
 			finally
 			{
@@ -352,7 +383,7 @@ namespace ClearCanvas.ImageViewer.View.WinForms
 
 				DrawArgs args = new DrawArgs(this.Surface,
 				                             new WinFormsScreenProxy(Screen.FromControl(this)),
-				                             DrawMode.Refresh);
+				                             DrawMode.Refresh) {Dpi = Dpi};
 
 				_painting = true;
 
@@ -459,19 +490,18 @@ namespace ClearCanvas.ImageViewer.View.WinForms
 
 		protected override void OnMouseMove(MouseEventArgs e)
 		{
-            bool handled = false;
+			bool handled = false;
 			object message = _inputTranslator.OnMouseMove(e);
 			if (message != null)
 			{
-                if (_tileController != null)
-                    handled = _tileController.ProcessMessage(message);
+				if (_tileController != null)
+					handled = _tileController.ProcessMessage(message);
 			}
 
-            if (!handled)
-            {
-                base.OnMouseMove(e);
-            }
-			
+			if (!handled)
+			{
+				base.OnMouseMove(e);
+			}
 		}
 
 		protected override void OnMouseUp(MouseEventArgs e)
@@ -606,7 +636,7 @@ namespace ClearCanvas.ImageViewer.View.WinForms
 		{
 			_contextMenuStrip.Show(this, e.Item);
 		}
-		
+
 		private void OnCaptureChanging(object sender, ItemEventArgs<IMouseButtonHandler> e)
 		{
 			if (_currentMouseButtonHandler == e.Item)
@@ -651,7 +681,7 @@ namespace ClearCanvas.ImageViewer.View.WinForms
 			}
 		}
 
-	    private void OnContextMenuStripOpening(object sender, CancelEventArgs e)
+		private void OnContextMenuStripOpening(object sender, CancelEventArgs e)
 		{
 			if (_tileController == null || _tileController.ContextMenuProvider == null)
 			{
@@ -748,14 +778,14 @@ namespace ClearCanvas.ImageViewer.View.WinForms
 			}
 		}
 
-        internal void ProcessKeyUp(KeyEventArgs ev)
-        {
-            OnKeyUp(ev);
-        }
+		internal void ProcessKeyUp(KeyEventArgs ev)
+		{
+			OnKeyUp(ev);
+		}
 
-        internal void ProcessKeyDown(KeyEventArgs args)
-	    {
-	        OnKeyDown(args);
-	    }
+		internal void ProcessKeyDown(KeyEventArgs args)
+		{
+			OnKeyDown(args);
+		}
 	}
 }

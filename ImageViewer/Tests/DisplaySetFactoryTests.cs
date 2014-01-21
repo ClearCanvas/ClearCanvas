@@ -27,27 +27,27 @@
 #pragma warning disable 1591,0419,1574,1587
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using ClearCanvas.Common;
+using ClearCanvas.Common.Utilities;
+using ClearCanvas.Dicom;
+using ClearCanvas.Dicom.Iod.FunctionalGroups;
+using ClearCanvas.Dicom.Iod.Modules;
+using ClearCanvas.Dicom.Iod.Sequences;
+using ClearCanvas.Dicom.Tests;
+using ClearCanvas.ImageViewer.Common;
+using ClearCanvas.ImageViewer.KeyObjects;
 using ClearCanvas.ImageViewer.PresentationStates.Dicom;
 using ClearCanvas.ImageViewer.StudyManagement;
 using ClearCanvas.ImageViewer.StudyManagement.Tests;
 using NUnit.Framework;
-using ClearCanvas.Dicom.Tests;
-using ClearCanvas.Dicom;
-using ClearCanvas.Common;
-using ClearCanvas.Common.Utilities;
-using ClearCanvas.ImageViewer.KeyObjects;
-using ClearCanvas.ImageViewer.Common;
 
 namespace ClearCanvas.ImageViewer.Tests
 {
 	[TestFixture]
 	public class DisplaySetFactoryTests : AbstractTest
 	{
-		public DisplaySetFactoryTests()
-		{ }
-
 		[TestFixtureSetUp]
 		public void Init()
 		{
@@ -56,8 +56,7 @@ namespace ClearCanvas.ImageViewer.Tests
 		}
 
 		[TestFixtureTearDown]
-		public void Cleanup()
-		{ }
+		public void Cleanup() {}
 
 		private List<TestDataSource> CreateMRStudyDataSources(int numberOfSeries, int instancesPerSeries, string studyInstanceUid)
 		{
@@ -70,10 +69,10 @@ namespace ClearCanvas.ImageViewer.Tests
 				TestDataSource dataSource = new TestDataSource(file);
 
 				//because of an exception that gets thrown from the DateTimeParser
-				dataSource._file.DataSet[DicomTags.StudyDate].SetNullValue();
-				dataSource._file.DataSet[DicomTags.StudyTime].SetNullValue();
-				dataSource._file.DataSet[DicomTags.SeriesDate].SetNullValue();
-				dataSource._file.DataSet[DicomTags.SeriesTime].SetNullValue();
+				dataSource.File.DataSet[DicomTags.StudyDate].SetNullValue();
+				dataSource.File.DataSet[DicomTags.StudyTime].SetNullValue();
+				dataSource.File.DataSet[DicomTags.SeriesDate].SetNullValue();
+				dataSource.File.DataSet[DicomTags.SeriesTime].SetNullValue();
 				dataSources.Add(dataSource);
 			}
 
@@ -131,7 +130,7 @@ namespace ClearCanvas.ImageViewer.Tests
 
 					Assert.AreEqual(series.Sops.Count, displaySet.PresentationImages.Count, "#Sops should match #presentation images");
 					Assert.AreEqual(series.SeriesInstanceUid, displaySet.Descriptor.Uid, "Series UID and Display Set UID don't match");
-					Assert.AreEqual(typeof(SeriesDisplaySetDescriptor), displaySet.Descriptor.GetType(), "Wrong display set descriptor type");
+					Assert.AreEqual(typeof (SeriesDisplaySetDescriptor), displaySet.Descriptor.GetType(), "Wrong display set descriptor type");
 				}
 			}
 			finally
@@ -188,13 +187,13 @@ namespace ClearCanvas.ImageViewer.Tests
 			for (int i = 0; i < numberOfMultiframes; ++i)
 			{
 				TestDataSource multiFrameDataSource = dataSources[i];
-				multiFrameDataSource._file.DataSet[DicomTags.NumberOfFrames].SetInt32(0, multiFrameNumberOfFrames);
+				multiFrameDataSource.File.DataSet[DicomTags.NumberOfFrames].SetInt32(0, multiFrameNumberOfFrames);
 			}
 
 			StudyTree studyTree = CreateStudyTree(ConvertToSops(dataSources));
-			BasicDisplaySetFactory factory = new BasicDisplaySetFactory { CreateSingleImageDisplaySets = instancesPerSeries > 1 };
+			BasicDisplaySetFactory factory = new BasicDisplaySetFactory {CreateSingleImageDisplaySets = instancesPerSeries > 1};
 
-		    List<IDisplaySet> allDisplaySets = new List<IDisplaySet>();
+			List<IDisplaySet> allDisplaySets = new List<IDisplaySet>();
 
 			int numberOfMultiframesFound = 0;
 			int numberOfSingleframesFound = 0;
@@ -215,14 +214,14 @@ namespace ClearCanvas.ImageViewer.Tests
 
 					foreach (IDisplaySet displaySet in displaySets)
 					{
-						ImageSop imageSop = ((IImageSopProvider)displaySet.PresentationImages[0]).ImageSop;
+						ImageSop imageSop = ((IImageSopProvider) displaySet.PresentationImages[0]).ImageSop;
 						if (imageSop.NumberOfFrames > 1)
 						{
 							++numberOfMultiframesFound;
 							Assert.AreEqual(multiFrameNumberOfFrames, displaySet.PresentationImages.Count, "There should be {0} presentation image per display set", multiFrameNumberOfFrames);
 							if (instancesPerSeries > 1)
 							{
-								Assert.AreEqual(typeof(MultiframeDisplaySetDescriptor), displaySet.Descriptor.GetType(), "Wrong display set descriptor type");
+								Assert.AreEqual(typeof (MultiframeDisplaySetDescriptor), displaySet.Descriptor.GetType(), "Wrong display set descriptor type");
 								Assert.IsTrue(displaySet.Name.Contains("Multiframe #"), "display set name doesn't contain \"Multiframe #\"");
 							}
 						}
@@ -232,7 +231,7 @@ namespace ClearCanvas.ImageViewer.Tests
 							Assert.AreEqual(1, displaySet.PresentationImages.Count, "There should be only one presentation image per display set");
 							if (instancesPerSeries > 1)
 							{
-								Assert.AreEqual(typeof(SingleImageDisplaySetDescriptor), displaySet.Descriptor.GetType(), "Wrong display set descriptor type");
+								Assert.AreEqual(typeof (SingleImageDisplaySetDescriptor), displaySet.Descriptor.GetType(), "Wrong display set descriptor type");
 								Assert.IsTrue(displaySet.Name.Contains("Image #"), "display set name doesn't contain \"Image #\"");
 							}
 						}
@@ -244,7 +243,7 @@ namespace ClearCanvas.ImageViewer.Tests
 							else
 								Assert.AreEqual(1, displaySet.PresentationImages.Count, "There should be only one presentation image per display set");
 
-							Assert.AreEqual(typeof(SeriesDisplaySetDescriptor), displaySet.Descriptor.GetType(), "Wrong display set descriptor type");
+							Assert.AreEqual(typeof (SeriesDisplaySetDescriptor), displaySet.Descriptor.GetType(), "Wrong display set descriptor type");
 						}
 					}
 				}
@@ -297,7 +296,7 @@ namespace ClearCanvas.ImageViewer.Tests
 			Assert.IsTrue(numberOfMultiframeKeyImages <= numberOfFrames);
 
 			const int numberOfSeries = 1;
-			int instancesPerSeries = numberOfSingleFrameKeyImages + ((numberOfFrames > 0) ? 1:0);
+			int instancesPerSeries = numberOfSingleFrameKeyImages + ((numberOfFrames > 0) ? 1 : 0);
 
 			Assert.IsTrue(instancesPerSeries > 0);
 
@@ -305,11 +304,11 @@ namespace ClearCanvas.ImageViewer.Tests
 			if (numberOfFrames > 0)
 			{
 				TestDataSource multiFrameDataSource = dataSources[0];
-				DicomAttributeCollection oldDataSet = multiFrameDataSource._file.DataSet;
+				DicomAttributeCollection oldDataSet = multiFrameDataSource.File.DataSet;
 				DicomAttributeCollection newDataSet = new DicomAttributeCollection();
 				DicomFile newFile = new DicomFile("", new DicomAttributeCollection(), newDataSet);
 				//Yes this is the world's crappiest hack.
-				base.SetupMultiframeXA(newDataSet, 512,512, (uint)numberOfFrames);
+				base.SetupMultiframeXA(newDataSet, 512, 512, (uint) numberOfFrames);
 				//because of an exception that gets thrown from the DateTimeParser
 				newDataSet[DicomTags.StudyDate].SetNullValue();
 				newDataSet[DicomTags.StudyTime].SetNullValue();
@@ -343,10 +342,10 @@ namespace ClearCanvas.ImageViewer.Tests
 			{
 				foreach (IPresentationImage image in displaySet.PresentationImages)
 				{
-					Frame frame = ((IImageSopProvider)image).Frame;
+					Frame frame = ((IImageSopProvider) image).Frame;
 					if (frame.ParentImageSop.NumberOfFrames > 1)
 					{
-						if(numberOfMultiframeKeyImagesCreated >= numberOfMultiframeKeyImages)
+						if (numberOfMultiframeKeyImagesCreated >= numberOfMultiframeKeyImages)
 							continue;
 
 						++numberOfMultiframeKeyImagesCreated;
@@ -379,21 +378,21 @@ namespace ClearCanvas.ImageViewer.Tests
 					if (series.Modality != "KO")
 						continue;
 
-				    List<IDisplaySet> keyImageDisplaySets;
-                    if (doSplitting)
-                    {
-                        factory.CreateSingleImageDisplaySets = true;
-                        keyImageDisplaySets = factory.CreateDisplaySets(series);
-                        if (keyImageDisplaySets.Count == 0)
-                        {
-                            factory.CreateSingleImageDisplaySets = false;
-                            keyImageDisplaySets = factory.CreateDisplaySets(series);
-                        }
-                    }
-                    else
-                    {
-                        keyImageDisplaySets = factory.CreateDisplaySets(series);
-                    }
+					List<IDisplaySet> keyImageDisplaySets;
+					if (doSplitting)
+					{
+						factory.CreateSingleImageDisplaySets = true;
+						keyImageDisplaySets = factory.CreateDisplaySets(series);
+						if (keyImageDisplaySets.Count == 0)
+						{
+							factory.CreateSingleImageDisplaySets = false;
+							keyImageDisplaySets = factory.CreateDisplaySets(series);
+						}
+					}
+					else
+					{
+						keyImageDisplaySets = factory.CreateDisplaySets(series);
+					}
 
 					allDisplaySets.AddRange(keyImageDisplaySets);
 
@@ -403,7 +402,7 @@ namespace ClearCanvas.ImageViewer.Tests
 						Assert.AreEqual(1, keyImageDisplaySets.Count, "There should be only one display set");
 						IDisplaySet keyImageDisplaySet = keyImageDisplaySets[0];
 						Assert.AreEqual(numberOfKeyImages, keyImageDisplaySet.PresentationImages.Count, "Expected {0} images", numberOfKeyImages);
-						Assert.AreEqual(typeof(SeriesDisplaySetDescriptor), keyImageDisplaySet.Descriptor.GetType(), "Wrong display set descriptor type");
+						Assert.AreEqual(typeof (KOSelectionDocumentDisplaySetDescriptor), keyImageDisplaySet.Descriptor.GetType(), "Wrong display set descriptor type");
 					}
 					else
 					{
@@ -413,15 +412,15 @@ namespace ClearCanvas.ImageViewer.Tests
 						{
 							Assert.AreEqual(1, keyImageDisplaySet.PresentationImages.Count, "There should be only one presentation image");
 							IPresentationImage keyImage = keyImageDisplaySet.PresentationImages[0];
-							ImageSop sop = ((IImageSopProvider)keyImage).ImageSop;
+							ImageSop sop = ((IImageSopProvider) keyImage).ImageSop;
 
 							Assert.AreEqual(sourceSeries.SeriesInstanceUid, sop.SeriesInstanceUid, "Series Instance Uid is not that of the source series");
 							if (numberOfKeyImages == 1)
-								Assert.AreEqual(typeof(SeriesDisplaySetDescriptor), keyImageDisplaySet.Descriptor.GetType(), "Wrong display set descriptor type");
+								Assert.AreEqual(typeof (KOSelectionDocumentDisplaySetDescriptor), keyImageDisplaySet.Descriptor.GetType(), "Wrong display set descriptor type");
 							else if (sop.NumberOfFrames > 1)
-								Assert.AreEqual(typeof(SingleFrameDisplaySetDescriptor), keyImageDisplaySet.Descriptor.GetType(), "Wrong display set descriptor type");
+								Assert.AreEqual(typeof (KOSelectionSingleFrameDisplaySetDescriptor), keyImageDisplaySet.Descriptor.GetType(), "Wrong display set descriptor type");
 							else
-								Assert.AreEqual(typeof(SingleImageDisplaySetDescriptor), keyImageDisplaySet.Descriptor.GetType(), "Wrong display set descriptor type");
+								Assert.AreEqual(typeof (KOSelectionSingleImageDisplaySetDescriptor), keyImageDisplaySet.Descriptor.GetType(), "Wrong display set descriptor type");
 						}
 					}
 				}
@@ -434,7 +433,6 @@ namespace ClearCanvas.ImageViewer.Tests
 				studyTree.Dispose();
 			}
 		}
-
 
 		[Test]
 		public void TestSeriesSplittingMREcho()
@@ -471,9 +469,9 @@ namespace ClearCanvas.ImageViewer.Tests
 					{
 						IDisplaySet displaySet = displaySets[0];
 						Assert.AreEqual(2, displaySets.Count, "There should be exactly 2 display sets");
-						Assert.AreEqual(series.Sops.Count / 2, displaySet.PresentationImages.Count, "#presentation images should be #Sops/2");
+						Assert.AreEqual(series.Sops.Count/2, displaySet.PresentationImages.Count, "#presentation images should be #Sops/2");
 						Assert.AreNotEqual(series.SeriesInstanceUid, displaySet.Descriptor.Uid, "Series UID and Display Set UID don't match");
-						Assert.AreEqual(typeof(MREchoDisplaySetDescriptor), displaySet.Descriptor.GetType(), "Wrong display set descriptor type");
+						Assert.AreEqual(typeof (MREchoDisplaySetDescriptor), displaySet.Descriptor.GetType(), "Wrong display set descriptor type");
 						Assert.IsTrue(displaySet.Name.Contains("Echo"), "Display Set name not correct");
 
 						ValidateEchoDisplaySet(displaySets[0], 1);
@@ -499,9 +497,9 @@ namespace ClearCanvas.ImageViewer.Tests
 			int i = 0;
 			foreach (Sop sop in series.Sops)
 			{
-				TestDataSource dataSource = (TestDataSource)sop.DataSource;
+				TestDataSource dataSource = (TestDataSource) sop.DataSource;
 				int echoNumber = (++i <= 5) ? 1 : 2;
-				dataSource._file.DataSet[DicomTags.EchoNumbers].SetInt32(0, echoNumber);
+				dataSource.File.DataSet[DicomTags.EchoNumbers].SetInt32(0, echoNumber);
 			}
 		}
 
@@ -510,7 +508,7 @@ namespace ClearCanvas.ImageViewer.Tests
 			string seriesInstanceUid = null;
 			foreach (IPresentationImage presentationImage in displaySet.PresentationImages)
 			{
-				ImageSop sop = ((IImageSopProvider)presentationImage).ImageSop;
+				ImageSop sop = ((IImageSopProvider) presentationImage).ImageSop;
 				seriesInstanceUid = sop.SeriesInstanceUid;
 				Assert.AreEqual(echoNumber, sop[DicomTags.EchoNumbers].GetUInt32(0, 0), "Echo number must be {0} for each image in the series", echoNumber);
 			}
@@ -520,9 +518,111 @@ namespace ClearCanvas.ImageViewer.Tests
 		}
 
 		[Test]
+		public void TestSeriesSplittingEnhancedMREcho()
+		{
+			const int numberOfSeries = 2;
+			const int instancesPerSeries = 3;
+			const int framesPerInstance = 10;
+			List<TestDataSource> dataSources = CreateMRStudyDataSources(numberOfSeries, instancesPerSeries, "1.2.3");
+
+			foreach (var dicomFile in dataSources.Select(d => d.File))
+			{
+				dicomFile.DataSet[DicomTags.NumberOfFrames].SetInt32(0, framesPerInstance);
+
+				if (dicomFile.DataSet[DicomTags.SeriesNumber].GetInt32(0, 0) != 2) continue;
+
+				var dimUid = "1.2.3.4.5";
+				var mfdModule = new MultiFrameDimensionModuleIod(dicomFile.DataSet);
+				mfdModule.DimensionOrganizationSequence = new[] {new DimensionOrganizationSequenceItem {DimensionOrganizationUid = dimUid}};
+				mfdModule.DimensionIndexSequence = new[]
+				                                   	{
+				                                   		new DimensionIndexSequenceItem {DimensionIndexPointer = DicomTags.StackId, FunctionalGroupPointer = DicomTags.FrameContentSequence, DimensionOrganizationUid = dimUid},
+				                                   		new DimensionIndexSequenceItem {DimensionIndexPointer = DicomTags.InStackPositionNumber, FunctionalGroupPointer = DicomTags.FrameContentSequence, DimensionOrganizationUid = dimUid},
+				                                   		new DimensionIndexSequenceItem {DimensionIndexPointer = DicomTags.EffectiveEchoTime, FunctionalGroupPointer = DicomTags.MrEchoSequence, DimensionOrganizationUid = dimUid}
+				                                   	};
+				var mffgModule = new MultiFrameFunctionalGroupsModuleIod(dicomFile.DataSet);
+				mffgModule.PerFrameFunctionalGroupsSequence = Enumerable.Range(0, framesPerInstance).Select(i =>
+				                                                                                            	{
+				                                                                                            		var fg = new FunctionalGroupsSequenceItem();
+				                                                                                            		ushort inStackPositionNumber = (ushort) (i%5 + 1);
+				                                                                                            		ushort echoNumber = (ushort) (i/5 + 1);
+				                                                                                            		fg.GetFunctionalGroup<FrameContentFunctionalGroup>().FrameContentSequence = new FrameContentSequenceItem {InStackPositionNumber = inStackPositionNumber, StackId = "1", DimensionIndexValues = new uint[] {1, inStackPositionNumber, echoNumber}};
+				                                                                                            		fg.GetFunctionalGroup<MrEchoFunctionalGroup>().MrEchoSequence = new MrEchoSequenceItem {EffectiveEchoTime = echoNumber + 5/1000f};
+				                                                                                            		return fg;
+				                                                                                            	}).ToArray();
+			}
+
+			StudyTree studyTree = CreateStudyTree(ConvertToSops(dataSources));
+
+			MREchoDisplaySetFactory factory = new MREchoDisplaySetFactory();
+			factory.SetStudyTree(studyTree);
+			List<IDisplaySet> allDisplaySets = new List<IDisplaySet>();
+
+			try
+			{
+				Patient patient = studyTree.Patients[0];
+				Study study = patient.Studies[0];
+
+				Assert.AreEqual(numberOfSeries, study.Series.Count, "There should be exactly {0} series", numberOfSeries);
+
+				Series series2 = study.Series[1];
+
+				foreach (Series series in study.Series)
+				{
+					Assert.AreEqual(instancesPerSeries, series.Sops.Count, "There should be exactly {0} sops", instancesPerSeries);
+					List<IDisplaySet> displaySets = factory.CreateDisplaySets(series);
+					allDisplaySets.AddRange(displaySets);
+
+					if (series == series2)
+					{
+						Assert.AreEqual(2, displaySets.Count, "There should be exactly 4 display sets");
+
+						IDisplaySet displaySet = displaySets[0];
+						Assert.AreEqual(series.Sops.Count*framesPerInstance/2, displaySet.PresentationImages.Count, "#presentation images should be #Sops/2");
+						Assert.AreNotEqual(series.SeriesInstanceUid, displaySet.Descriptor.Uid, "Series UID and Display Set UID don't match");
+						Assert.AreEqual(typeof (MREchoDisplaySetDescriptor), displaySet.Descriptor.GetType(), "Wrong display set descriptor type");
+						Assert.IsTrue(displaySet.Name.Contains("Echo"), "Display Set name not correct");
+
+						ValidateMultiframeEchoDisplaySet(displaySets[0], 1);
+						ValidateMultiframeEchoDisplaySet(displaySets[1], 2);
+					}
+					else
+					{
+						//Assert.AreEqual(0, displaySets.Count, "There should be no display sets");
+					}
+				}
+			}
+			finally
+			{
+				foreach (IDisplaySet displaySet in allDisplaySets)
+					displaySet.Dispose();
+
+				studyTree.Dispose();
+			}
+		}
+
+		private void ValidateMultiframeEchoDisplaySet(IDisplaySet displaySet, int echoNumber)
+		{
+			string seriesInstanceUid = null;
+			foreach (IPresentationImage presentationImage in displaySet.PresentationImages)
+			{
+				var sopProvider = ((IImageSopProvider) presentationImage);
+				var mfdModule = new MultiFrameDimensionModuleIod(sopProvider.ImageSop.DataSource);
+				var echoDim = mfdModule.FindDimensionIndexSequenceItemByTag(DicomTags.EffectiveEchoTime, DicomTags.MrEchoSequence);
+				Assert.IsTrue(echoDim >= 0, "MR Echo dimension was not found");
+
+				seriesInstanceUid = sopProvider.ImageSop.SeriesInstanceUid;
+				Assert.AreEqual(echoNumber, sopProvider.Frame[DicomTags.DimensionIndexValues].GetInt32(echoDim, -1), "Echo number must be {0} for each image in the display set", echoNumber);
+			}
+
+			Assert.IsNotNull(seriesInstanceUid);
+			Assert.AreEqual(String.Format("{0}:Echo{1}", seriesInstanceUid, echoNumber), displaySet.Uid);
+		}
+
+		[Test]
 		public void TestSplitMixedMultiframeSeries_OneMultiframeOnly()
 		{
-			TestMixedMultiframes(0, new[] { 5 });
+			TestMixedMultiframes(0, new[] {5});
 		}
 
 		[Test]
@@ -534,27 +634,27 @@ namespace ClearCanvas.ImageViewer.Tests
 		[Test]
 		public void TestSplitMixedMultiframeSeries_OneMultiframeOneSingleFrame()
 		{
-			TestMixedMultiframes(1, new[] { 5 });
+			TestMixedMultiframes(1, new[] {5});
 		}
 
 		[Test]
 		public void TestSplitMixedMultiframeSeries_AllMultiframes()
 		{
-			TestMixedMultiframes(0, new[] { 5, 10, 15 });
+			TestMixedMultiframes(0, new[] {5, 10, 15});
 		}
 
 		[Test]
 		public void TestSplitMixedMultiframeSeries_OneMultiframeSomeSingleFrames()
 		{
-			TestMixedMultiframes(8, new[] { 5 });
+			TestMixedMultiframes(8, new[] {5});
 		}
 
 		[Test]
 		public void TestSplitMixedMultiframeSeries_SomeMultiframesSomeSingleFrames()
 		{
-			TestMixedMultiframes(8, new[] { 5, 10, 15 });
+			TestMixedMultiframes(8, new[] {5, 10, 15});
 		}
-		
+
 		public void TestMixedMultiframes(int numberOfSingleFrames, int[] multiFramesNumberOfFrames)
 		{
 			const int numberOfSeries = 1;
@@ -563,14 +663,14 @@ namespace ClearCanvas.ImageViewer.Tests
 
 			List<TestDataSource> dataSources = CreateMRStudyDataSources(numberOfSeries, instancesPerSeries, "1.2.3");
 			for (int i = 0; i < numberOfMultiframes; i++)
-				dataSources[i]._file.DataSet[DicomTags.NumberOfFrames].SetInt32(0, multiFramesNumberOfFrames[i]);
+				dataSources[i].File.DataSet[DicomTags.NumberOfFrames].SetInt32(0, multiFramesNumberOfFrames[i]);
 
 			StudyTree studyTree = CreateStudyTree(ConvertToSops(dataSources));
 
 			MixedMultiFrameDisplaySetFactory factory = new MixedMultiFrameDisplaySetFactory();
 			factory.SetStudyTree(studyTree);
 			List<IDisplaySet> allDisplaySets = new List<IDisplaySet>();
-			
+
 			Patient patient = studyTree.Patients[0];
 			Study study = patient.Studies[0];
 			Series series = study.Series[0];
@@ -613,7 +713,7 @@ namespace ClearCanvas.ImageViewer.Tests
 						{
 							IDisplaySet singleFramesDisplaySet = displaySets[0];
 							Assert.AreEqual(numberOfSingleFrames, singleFramesDisplaySet.PresentationImages.Count, "#Presentation images should match #singe frames in series");
-							Assert.AreEqual(typeof(SingleImagesDisplaySetDescriptor), singleFramesDisplaySet.Descriptor.GetType(), "Wrong display set descriptor type");
+							Assert.AreEqual(typeof (SingleImagesDisplaySetDescriptor), singleFramesDisplaySet.Descriptor.GetType(), "Wrong display set descriptor type");
 							Assert.AreEqual(String.Format("{0}:SingleImages", series.SeriesInstanceUid), singleFramesDisplaySet.Uid);
 						}
 
@@ -622,9 +722,9 @@ namespace ClearCanvas.ImageViewer.Tests
 						{
 							IDisplaySet multiFrameDisplaySet = displaySets[i];
 							int numberOfFrames = multiFramesNumberOfFrames[i - multiFramesStartIndex];
-							ImageSop multiFrame = ((IImageSopProvider)multiFrameDisplaySet.PresentationImages[0]).ImageSop;
+							ImageSop multiFrame = ((IImageSopProvider) multiFrameDisplaySet.PresentationImages[0]).ImageSop;
 							Assert.AreEqual(numberOfFrames, multiFrameDisplaySet.PresentationImages.Count, "#Presentation images should match #frames in multiframe");
-							Assert.AreEqual(typeof(MultiframeDisplaySetDescriptor), multiFrameDisplaySet.Descriptor.GetType(), "Wrong display set descriptor type");
+							Assert.AreEqual(typeof (MultiframeDisplaySetDescriptor), multiFrameDisplaySet.Descriptor.GetType(), "Wrong display set descriptor type");
 							Assert.AreEqual(multiFrame.SopInstanceUid, multiFrameDisplaySet.Uid);
 						}
 					}

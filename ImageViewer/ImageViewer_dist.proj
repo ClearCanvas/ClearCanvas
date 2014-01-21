@@ -193,38 +193,50 @@
   </ItemGroup>
 
   <ItemGroup>
+    <MprPluginFiles Include="$(TrunkDirectory)\ImageViewer\VTK\bin\$(Configuration)\ClearCanvas.ImageViewer.VTK.dll" />
     <MprPluginFiles Include="$(TrunkDirectory)\ImageViewer\Volume\Mpr\bin\$(Configuration)\ClearCanvas.ImageViewer.Volume.Mpr.dll" />
-    <MprPluginFiles Include="$(TrunkDirectory)\ImageViewer\Volume\Mpr\View\WinForms\bin\$(Configuration)\ClearCanvas.ImageViewer.Volume.Mpr.View.WinForms.dll" />
-    <MprPluginFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Vtk\$(PlatformSubFolder)\vtksys.dll" />
-    <MprPluginFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Vtk\$(PlatformSubFolder)\vtkCommon.dll" />
-    <MprPluginFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Vtk\$(PlatformSubFolder)\vtkFiltering.dll" />
-    <MprPluginFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Vtk\$(PlatformSubFolder)\vtkImaging.dll" />
-    <MprPluginFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Vtk\$(PlatformSubFolder)\vtkCommonDotNet.dll" />
-    <MprPluginFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Vtk\$(PlatformSubFolder)\vtkFilteringDotNet.dll" />
-    <MprPluginFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Vtk\$(PlatformSubFolder)\vtkImagingDotNet.dll" />
-    
-    <!-- Dependencies for Slabbing Support -->
-    <!-- (as indicated by DependencyWalker)
-    <MprPluginFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Vtk\$(PlatformSubFolder)\vtkftgl.dll" />
-    <MprPluginFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Vtk\$(PlatformSubFolder)\vtkfreetype.dll" />
-    <MprPluginFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Vtk\$(PlatformSubFolder)\vtkverdict.dll" />
-    <MprPluginFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Vtk\$(PlatformSubFolder)\vtkGraphics.dll" />
-   
-    <MprPluginFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Vtk\$(PlatformSubFolder)\vtkDicomParser.dll" />
-    <MprPluginFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Vtk\$(PlatformSubFolder)\vtkNetCDF.dll" />
-    <MprPluginFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Vtk\$(PlatformSubFolder)\vtkMetaIO.dll" />
-    <MprPluginFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Vtk\$(PlatformSubFolder)\vtkPNG.dll" />
-    <MprPluginFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Vtk\$(PlatformSubFolder)\vtkZlib.dll" />
-    <MprPluginFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Vtk\$(PlatformSubFolder)\vtkJpeg.dll" />
-    <MprPluginFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Vtk\$(PlatformSubFolder)\vtkTiff.dll" />
-    <MprPluginFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Vtk\$(PlatformSubFolder)\vtkExpat.dll" />
-    <MprPluginFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Vtk\$(PlatformSubFolder)\vtkIO.dll" />
 
+    <MprPluginFiles Include="$(TrunkDirectory)\ReferencedAssemblies\ViewerFunctions\$(PlatformSubFolder)\ClearCanvas.ImageViewer.Core.Functions.dll" />
+
+	  <!-- VTK Includes -->
+    <MprPluginFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Vtk\$(PlatformSubFolder)\MapReduceMPI.dll" />
+    <MprPluginFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Vtk\$(PlatformSubFolder)\mpistubs.dll" />
+    <MprPluginFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Vtk\$(PlatformSubFolder)\vtkalglib.dll" />
+    <MprPluginFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Vtk\$(PlatformSubFolder)\vtkDICOMParser.dll" />
+    <MprPluginFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Vtk\$(PlatformSubFolder)\vtkexoIIc.dll" />
+    <MprPluginFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Vtk\$(PlatformSubFolder)\vtkexpat.dll" />
+    <MprPluginFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Vtk\$(PlatformSubFolder)\vtkfreetype.dll" />
+    <MprPluginFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Vtk\$(PlatformSubFolder)\vtkftgl.dll" />
+    <MprPluginFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Vtk\$(PlatformSubFolder)\vtkjpeg.dll" />
+    <MprPluginFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Vtk\$(PlatformSubFolder)\vtklibxml2.dll" />
+    <MprPluginFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Vtk\$(PlatformSubFolder)\vtkmetaio.dll" />
+    <MprPluginFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Vtk\$(PlatformSubFolder)\vtkNetCDF.dll" />
+    <MprPluginFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Vtk\$(PlatformSubFolder)\vtkpng.dll" />
+    <MprPluginFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Vtk\$(PlatformSubFolder)\vtkproj4.dll" />
+    <MprPluginFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Vtk\$(PlatformSubFolder)\vtksys.dll" />
+    <MprPluginFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Vtk\$(PlatformSubFolder)\vtktiff.dll" />
+    <MprPluginFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Vtk\$(PlatformSubFolder)\vtkverdict.dll" />
+    <MprPluginFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Vtk\$(PlatformSubFolder)\vtkzlib.dll" />
+    <MprPluginFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Vtk\$(PlatformSubFolder)\vtkCommon.dll" />
+    <MprPluginFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Vtk\$(PlatformSubFolder)\vtkCommonDotNet.dll" />
+    <MprPluginFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Vtk\$(PlatformSubFolder)\vtkFiltering.dll" />
+    <MprPluginFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Vtk\$(PlatformSubFolder)\vtkFilteringDotNet.dll" />
+    <MprPluginFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Vtk\$(PlatformSubFolder)\vtkGenericFiltering.dll" />
+    <MprPluginFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Vtk\$(PlatformSubFolder)\vtkGenericFilteringDotNet.dll" />
+    <MprPluginFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Vtk\$(PlatformSubFolder)\vtkGraphics.dll" />
+    <MprPluginFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Vtk\$(PlatformSubFolder)\vtkGraphicsDotNet.dll" />
+    <MprPluginFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Vtk\$(PlatformSubFolder)\vtkHybrid.dll" />
+    <MprPluginFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Vtk\$(PlatformSubFolder)\vtkHybridDotNet.dll" />
+    <MprPluginFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Vtk\$(PlatformSubFolder)\vtkImaging.dll" />
+    <MprPluginFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Vtk\$(PlatformSubFolder)\vtkImagingDotNet.dll" />
+    <MprPluginFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Vtk\$(PlatformSubFolder)\vtkIO.dll" />
+    <MprPluginFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Vtk\$(PlatformSubFolder)\vtkIODotNet.dll" />
     <MprPluginFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Vtk\$(PlatformSubFolder)\vtkRendering.dll" />
     <MprPluginFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Vtk\$(PlatformSubFolder)\vtkRenderingDotNet.dll" />
     <MprPluginFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Vtk\$(PlatformSubFolder)\vtkVolumeRendering.dll" />
     <MprPluginFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Vtk\$(PlatformSubFolder)\vtkVolumeRenderingDotNet.dll" />
-    -->
+    <MprPluginFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Vtk\$(PlatformSubFolder)\vtkWidgets.dll" />
+    <MprPluginFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Vtk\$(PlatformSubFolder)\vtkWidgetsDotNet.dll" />
   </ItemGroup>
 
   <ItemGroup>

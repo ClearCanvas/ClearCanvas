@@ -36,8 +36,8 @@ namespace ClearCanvas.Dicom.Utilities.Rules
     public class RuleTypeCollection<TContext, TTypeEnum>
         where TContext : ActionContext
     {
-        private readonly List<Rule<TContext, TTypeEnum>> _exemptRuleList = new List<Rule<TContext, TTypeEnum>>();
-        private readonly List<Rule<TContext, TTypeEnum>> _ruleList = new List<Rule<TContext, TTypeEnum>>();
+        private readonly List<Rule<TContext>> _exemptRuleList = new List<Rule<TContext>>();
+        private readonly List<Rule<TContext>> _ruleList = new List<Rule<TContext>>();
 
         #region Constructors
 
@@ -58,7 +58,12 @@ namespace ClearCanvas.Dicom.Utilities.Rules
         /// <summary>
         /// The identified default rule for the collection of rules.
         /// </summary>
-        public Rule<TContext, TTypeEnum> DefaultRule { get; private set; }
+        public Rule<TContext> DefaultRule { get; private set; }
+
+		/// <summary>
+		/// Gets the rules which were applied in previous <see cref="Execute"/> call.
+		/// </summary>
+		public IList<IRule> LastAppliedRules { get; private set; }
 
         #endregion
 
@@ -68,7 +73,7 @@ namespace ClearCanvas.Dicom.Utilities.Rules
         /// Add a rule to the collection.
         /// </summary>
         /// <param name="rule"></param>
-        public void AddRule(Rule<TContext, TTypeEnum> rule)
+        public void AddRule(Rule<TContext> rule)
         {
             if (rule.IsDefault)
             {
@@ -94,32 +99,39 @@ namespace ClearCanvas.Dicom.Utilities.Rules
         /// <param name="stopOnFirst"></param>
         public void Execute(TContext context, bool stopOnFirst)
         {
+			LastAppliedRules = new List<IRule>();
+
             bool doDefault = true;
             try
             {
-                foreach (Rule<TContext, TTypeEnum> theRule in _exemptRuleList)
+                foreach (var theRule in _exemptRuleList)
                 {
                     bool ruleApplied;
                     bool ruleSuccess;
 
-                    theRule.Execute(context, false, out ruleApplied, out ruleSuccess);
+					context.Name = theRule.Name;
+					theRule.Execute(context, false, out ruleApplied, out ruleSuccess);
 
                     if (ruleApplied)
                     {
+						LastAppliedRules.Add(theRule);
                         Platform.Log(LogLevel.Info, "Exempt rule found that applies for {0}, ignoring action.", Type.ToString());
                         return;
                     }
                 }
 
-                foreach (Rule<TContext, TTypeEnum> theRule in _ruleList)
+                foreach (var theRule in _ruleList)
                 {
                     bool ruleApplied;
                     bool ruleSuccess;
 
-                    theRule.Execute(context, false, out ruleApplied, out ruleSuccess);
+					context.Name = theRule.Name;
+					theRule.Execute(context, false, out ruleApplied, out ruleSuccess);
 
                     if (ruleApplied && ruleSuccess)
                     {
+						LastAppliedRules.Add(theRule);
+
                         if (stopOnFirst)
                             return;
 
@@ -132,7 +144,12 @@ namespace ClearCanvas.Dicom.Utilities.Rules
                     bool ruleApplied;
                     bool ruleSuccess;
 
-                    DefaultRule.Execute(context, true, out ruleApplied, out ruleSuccess);
+					context.Name = DefaultRule.Name;
+					DefaultRule.Execute(context, true, out ruleApplied, out ruleSuccess);
+					if (ruleApplied)
+					{
+						LastAppliedRules.Add(DefaultRule);
+					}
 
                     if (!ruleSuccess)
                     {

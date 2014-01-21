@@ -30,7 +30,7 @@ namespace ClearCanvas.ImageServer.Model.EntityBrokers
     using System.Xml;
     using ClearCanvas.ImageServer.Enterprise;
 
-   public class ArchiveQueueUpdateColumns : EntityUpdateColumns
+   public partial class ArchiveQueueUpdateColumns : EntityUpdateColumns
    {
        public ArchiveQueueUpdateColumns()
        : base("ArchiveQueue")

@@ -24,7 +24,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Reflection;
 
 namespace ClearCanvas.Common.Utilities
@@ -54,6 +53,15 @@ namespace ClearCanvas.Common.Utilities
         /// assuming an object instance is being walked.
         /// </summary>
         object MemberValue { get; set; }
+
+		/// <summary>
+		/// Gets a value indicating whether this member is read-only.
+		/// </summary>
+		/// <remarks>
+		/// Attempting to set the value of a read-only member (via <see cref="MemberValue"/>) will
+		/// throw an exception.
+		/// </remarks>
+		bool IsReadOnly { get; }
     }
 
     /// <summary>
@@ -96,19 +104,24 @@ namespace ClearCanvas.Common.Utilities
 
             public object MemberValue
             {
-                get { return _property.GetValue(_obj, BindingFlags.Public|BindingFlags.NonPublic, null, null, null);}
+                get { return _property.GetValue(_obj, BindingFlags.Public | BindingFlags.NonPublic, null, null, null);}
                 set { _property.SetValue(_obj, value, BindingFlags.Public | BindingFlags.NonPublic, null, null, null); }
             }
+
+        	public bool IsReadOnly
+        	{
+        		get { return _property.GetSetMethod() == null; }
+        	}
         }
 
         class FieldContext : IObjectMemberContext
         {
-            private readonly FieldInfo _member;
+            private readonly FieldInfo _field;
             private readonly object _obj;
 
-            public FieldContext(object obj, FieldInfo member)
+            public FieldContext(object obj, FieldInfo field)
             {
-                _member = member;
+                _field = field;
                 _obj = obj;
             }
 
@@ -119,19 +132,24 @@ namespace ClearCanvas.Common.Utilities
 
             public Type MemberType
             {
-                get { return _member.FieldType; }
+                get { return _field.FieldType; }
             }
 
             public MemberInfo Member
             {
-                get { return _member;}
+                get { return _field;}
             }
 
             public object MemberValue
             {
-                get { return _member.GetValue(_obj);}
-                set { _member.SetValue(_obj, value);}
+                get { return _field.GetValue(_obj);}
+                set { _field.SetValue(_obj, value);}
             }
+
+        	public bool IsReadOnly
+        	{
+				get { return _field.IsInitOnly; }
+        	}
         }
 
         #endregion
@@ -240,12 +258,12 @@ namespace ClearCanvas.Common.Utilities
             // walk properties
             if (_includePublicProperties || _includeNonPublicProperties)
             {
-                BindingFlags bindingFlags = BindingFlags.Instance;
+                var bindingFlags = BindingFlags.Instance;
                 if (_includePublicProperties)
                     bindingFlags |= BindingFlags.Public;
                 if (_includeNonPublicProperties)
                     bindingFlags |= BindingFlags.NonPublic;
-                foreach (PropertyInfo property in type.GetProperties(bindingFlags))
+                foreach (var property in type.GetProperties(bindingFlags))
                 {
                     if (_memberFilter == null || _memberFilter(property))
                     {
@@ -257,12 +275,12 @@ namespace ClearCanvas.Common.Utilities
             // walk fields
             if (_includePublicFields || _includeNonPublicFields)
             {
-                BindingFlags bindingFlags = BindingFlags.Instance;
+                var bindingFlags = BindingFlags.Instance;
                 if (_includePublicFields)
                     bindingFlags |= BindingFlags.Public;
                 if (_includeNonPublicFields)
                     bindingFlags |= BindingFlags.NonPublic;
-                foreach (FieldInfo field in type.GetFields(bindingFlags))
+                foreach (var field in type.GetFields(bindingFlags))
                 {
                     if (_memberFilter == null || _memberFilter(field))
                     {

@@ -100,7 +100,7 @@ namespace ClearCanvas.ImageViewer.Graphics
 				{
 					_topLeft = value;
 					this.OnTopLeftChanged();
-					base.NotifyVisualStateChanged("InvariantTopLeft");
+					base.NotifyVisualStateChanged("InvariantTopLeft", VisualStatePropertyKind.Geometry);
 				}
 			}
 		}
@@ -154,7 +154,7 @@ namespace ClearCanvas.ImageViewer.Graphics
 				{
 					_bottomRight = value;
 					this.OnBottomRightChanged();
-					base.NotifyVisualStateChanged("InvariantBottomRight");
+					base.NotifyVisualStateChanged("InvariantBottomRight", VisualStatePropertyKind.Geometry);
 				}
 			}
 		}
@@ -272,7 +272,7 @@ namespace ClearCanvas.ImageViewer.Graphics
 		/// </summary>
 		protected virtual void OnTopLeftChanged()
 		{
-			EventsHelper.Fire(_topLeftChanged, this, new PointChangedEventArgs(this.TopLeft));
+			EventsHelper.Fire(_topLeftChanged, this, new PointChangedEventArgs(this.TopLeft, CoordinateSystem));
 		}
 
 		/// <summary>
@@ -280,7 +280,7 @@ namespace ClearCanvas.ImageViewer.Graphics
 		/// </summary>
 		protected virtual void OnBottomRightChanged()
 		{
-			EventsHelper.Fire(_bottomRightChanged, this, new PointChangedEventArgs(this.BottomRight));
+			EventsHelper.Fire(_bottomRightChanged, this, new PointChangedEventArgs(this.BottomRight, CoordinateSystem));
 		}
 
 		#region IBoundableGraphic Members

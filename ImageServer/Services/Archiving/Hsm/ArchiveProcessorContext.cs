@@ -25,7 +25,7 @@
 using System;
 using System.IO;
 using ClearCanvas.Common;
-using ClearCanvas.ImageServer.Common.Command;
+using ClearCanvas.ImageServer.Enterprise.Command;
 using ClearCanvas.ImageServer.Model;
 
 namespace ClearCanvas.ImageServer.Services.Archiving.Hsm

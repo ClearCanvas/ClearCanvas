@@ -22,23 +22,25 @@
 
 #endregion
 
-using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using ClearCanvas.Common.Serialization;
-using ClearCanvas.Enterprise.Common;
 
 namespace ClearCanvas.Enterprise.Common.Admin.UserAdmin
 {
-    [DataContract]
-    public class ListUsersResponse : DataContractBase
-    {
-        public ListUsersResponse(List<UserSummary> users)
-        {
-            Users = users;
-        }
+	[DataContract]
+	public class ListUsersResponse : DataContractBase
+	{
+		public ListUsersResponse(List<UserSummary> users, int totalCount)
+		{
+			Users = users;
+			TotalCount = totalCount;
+		}
 
-        [DataMember]
-        public List<UserSummary> Users;
-    }
+		[DataMember]
+		public List<UserSummary> Users;
+
+		[DataMember]
+		public int TotalCount;
+	}
 }

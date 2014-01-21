@@ -22,73 +22,73 @@
 
 #endregion
 
+using System.Collections;
 using System.Collections.Generic;
 
 namespace ClearCanvas.ImageViewer.Layout.Basic
 {
-    public interface IModalityDisplaySetCreationOptions
-    {
-        string Modality { get; }
+	public interface IModalityDisplaySetCreationOptions
+	{
+		string Modality { get; }
 
-        bool CreateAllImagesDisplaySet { get; }
-        bool CreateSingleImageDisplaySets { get; }
-        bool ShowOriginalSeries { get; }
+		bool CreateAllImagesDisplaySet { get; }
+		bool CreateSingleImageDisplaySets { get; }
+		bool ShowOriginalSeries { get; }
 
-        bool SplitMultiEchoSeries { get; }
-        bool ShowOriginalMultiEchoSeries { get; }
+		bool SplitMultiEchoSeries { get; }
+		bool ShowOriginalMultiEchoSeries { get; }
 
-        bool SplitMixedMultiframes { get; }
-        bool ShowOriginalMixedMultiframeSeries { get; }
+		bool SplitMultiStackSeries { get; }
+		bool ShowOriginalMultiStackSeries { get; }
 
-        bool ShowGrayscaleInverted { get; }
-    }
+		bool SplitMixedMultiframes { get; }
+		bool ShowOriginalMixedMultiframeSeries { get; }
 
-    public interface IDisplaySetCreationOptions : IEnumerable<IModalityDisplaySetCreationOptions>
-    {
-        IModalityDisplaySetCreationOptions this[string modality] { get; set; }
-    }
+		bool ShowGrayscaleInverted { get; }
+	}
 
-    public class DisplaySetCreationOptions : IDisplaySetCreationOptions
-    {
-        private readonly SortedDictionary<string, IModalityDisplaySetCreationOptions> _options;
+	public interface IDisplaySetCreationOptions : IEnumerable<IModalityDisplaySetCreationOptions>
+	{
+		IModalityDisplaySetCreationOptions this[string modality] { get; set; }
+	}
 
-        public DisplaySetCreationOptions()
-        {
-            _options = new SortedDictionary<string, IModalityDisplaySetCreationOptions>();
-            foreach (var storedSetting in DisplaySetCreationSettings.DefaultInstance.GetStoredSettings())
-                _options[storedSetting.Modality] = storedSetting;
+	public class DisplaySetCreationOptions : IDisplaySetCreationOptions
+	{
+		private readonly SortedDictionary<string, IModalityDisplaySetCreationOptions> _options;
 
-        }
+		public DisplaySetCreationOptions()
+		{
+			_options = new SortedDictionary<string, IModalityDisplaySetCreationOptions>();
+			foreach (var storedSetting in DisplaySetCreationSettings.DefaultInstance.GetStoredSettings())
+				_options[storedSetting.Modality] = storedSetting;
+		}
 
-        public IModalityDisplaySetCreationOptions this[string modality]
-        {
-            get
-            {
-                IModalityDisplaySetCreationOptions value;
-                return _options.TryGetValue(modality, out value) ? value : null;
-            }
-            set
-            {
-                _options[modality] = value;
-            }
-        }
+		public IModalityDisplaySetCreationOptions this[string modality]
+		{
+			get
+			{
+				IModalityDisplaySetCreationOptions value;
+				return _options.TryGetValue(modality, out value) ? value : null;
+			}
+			set { _options[modality] = value; }
+		}
 
-        #region IEnumerable<IModalityDisplaySetCreationOptions> Members
+		#region IEnumerable<IModalityDisplaySetCreationOptions> Members
 
-        public IEnumerator<IModalityDisplaySetCreationOptions> GetEnumerator()
-        {
-            return _options.Values.GetEnumerator();
-        }
+		public IEnumerator<IModalityDisplaySetCreationOptions> GetEnumerator()
+		{
+			return _options.Values.GetEnumerator();
+		}
 
-        #endregion
+		#endregion
 
-        #region IEnumerable Members
+		#region IEnumerable Members
 
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
+		IEnumerator IEnumerable.GetEnumerator()
+		{
+			return GetEnumerator();
+		}
 
-        #endregion
-    }
+		#endregion
+	}
 }

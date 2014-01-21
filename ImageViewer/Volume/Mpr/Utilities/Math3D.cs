@@ -22,12 +22,44 @@
 
 #endregion
 
+using System;
 using ClearCanvas.ImageViewer.Mathematics;
+using ClearCanvas.ImageViewer.Volumes;
 
 namespace ClearCanvas.ImageViewer.Volume.Mpr.Utilities
 {
 	public static class Math3D
 	{
+		public static float Min(this Vector3D vector3D)
+		{
+			return Math.Min(Math.Min(vector3D.X, vector3D.Y), vector3D.Z);
+		}
+
+		public static float Max(this Vector3D vector3D)
+		{
+			return Math.Max(Math.Max(vector3D.X, vector3D.Y), vector3D.Z);
+		}
+
+		public static float GetMinimumSpacing(this IVolumeHeader volume)
+		{
+			return volume.VoxelSpacing.Min();
+		}
+
+		public static float GetMaximumSpacing(this IVolumeHeader volume)
+		{
+			return volume.VoxelSpacing.Max();
+		}
+
+		public static float GetLongAxisMagnitude(this IVolumeHeader volume)
+		{
+			return volume.VolumeSize.Max();
+		}
+
+		public static float GetShortAxisMagnitude(this IVolumeHeader volume)
+		{
+			return volume.VolumeSize.Min();
+		}
+
 		public static Matrix OrientationMatrixFromVectors(Vector3D xVec, Vector3D yVec, Vector3D zVec)
 		{
 			return new Matrix

@@ -34,7 +34,7 @@ namespace ClearCanvas.ImageViewer.InputManagement
 		private readonly bool _gained;
 		private readonly ITile _tile;
 
-		internal MouseCaptureChangedEventArgs(ITile tile, bool gained)
+		public MouseCaptureChangedEventArgs(ITile tile, bool gained)
 		{
 			_gained = gained;
 			_tile = tile;

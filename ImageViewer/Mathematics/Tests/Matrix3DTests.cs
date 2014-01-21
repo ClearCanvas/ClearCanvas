@@ -72,6 +72,30 @@ namespace ClearCanvas.ImageViewer.Mathematics.Tests
 		}
 
 		[Test]
+		public void TestFromRows()
+		{
+			var v1 = new Vector3D(1, 2, 3);
+			var v2 = new Vector3D(4, 5, 6);
+			var v3 = new Vector3D(7, 8, 9);
+
+			var m = Matrix3D.FromRows(v1, v2, v3);
+
+			Assert.IsTrue(Matrix3D.AreEqual(m, new Matrix3D(new float[,] {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}})));
+		}
+
+		[Test]
+		public void TestFromColumns()
+		{
+			var v1 = new Vector3D(1, 2, 3);
+			var v2 = new Vector3D(4, 5, 6);
+			var v3 = new Vector3D(7, 8, 9);
+
+			var m = Matrix3D.FromColumns(v1, v2, v3);
+
+			Assert.IsTrue(Matrix3D.AreEqual(m, new Matrix3D(new float[,] {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}}).Transpose()));
+		}
+
+		[Test]
 		public void TestAreEqual()
 		{
 			var m1 = new Matrix3D();
@@ -88,6 +112,19 @@ namespace ClearCanvas.ImageViewer.Mathematics.Tests
 
 			m2[1, 1] = 0;
 			Assert.IsFalse(Matrix3D.AreEqual(m1, m2));
+		}
+
+		[Test]
+		public void TestNegate()
+		{
+			var m = -new Matrix3D(new float[,]
+			                      	{
+			                      		{1, -2, 3},
+			                      		{-4, 5, -6},
+			                      		{7, -8, 9}
+			                      	});
+
+			Assert.IsTrue(Matrix3D.AreEqual(m, new Matrix3D(new float[,] {{-1, 2, -3}, {4, -5, 6}, {-7, 8, -9}})));
 		}
 
 		[Test]
@@ -165,7 +202,7 @@ namespace ClearCanvas.ImageViewer.Mathematics.Tests
 		}
 
 		[Test]
-		public void TestMultipleMatrix()
+		public void TestMultiplyMatrix()
 		{
 			const float a11 = 1.1f;
 			const float a12 = 2.1f;
@@ -253,6 +290,7 @@ namespace ClearCanvas.ImageViewer.Mathematics.Tests
 			Assert.IsFalse(identity.IsIdentity);
 		}
 
+		[Test]
 		public void TestTranspose()
 		{
 			var m = new Matrix3D();
@@ -266,6 +304,75 @@ namespace ClearCanvas.ImageViewer.Mathematics.Tests
 			result.SetColumn(2, 4.1F, -3.1F, 7.7F);
 
 			Assert.IsTrue(Matrix3D.AreEqual(m.Transpose(), result));
+		}
+
+		[Test]
+		public void TestDeterminant()
+		{
+			var m = Matrix3D.GetIdentity();
+
+			Assert.AreEqual(1, m.GetDeterminant());
+
+			m.SetRow(0, 1, 0, 0);
+			m.SetRow(1, 0, 1, 0);
+			m.SetRow(2, 0, 5, 0);
+
+			Assert.AreEqual(0, m.GetDeterminant());
+
+			m = new Matrix3D(new float[,]
+			                 	{
+			                 		{1, 2, 3},
+			                 		{4, 5, 6},
+			                 		{7, 8, 9}
+			                 	});
+
+			Assert.AreEqual(1*5*9 + 2*6*7 + 3*4*8 - 7*5*3 - 8*6*1 - 9*2*4, m.GetDeterminant());
+		}
+
+		[Test]
+		public void TestInverse()
+		{
+			// test identity inverse
+			var m = Matrix3D.GetIdentity();
+
+			Assert.IsTrue(Matrix3D.AreEqual(m.Invert(), new Matrix3D(new float[,] {{1, 0, 0}, {0, 1, 0}, {0, 0, 1}})));
+
+			// test a known inverse
+			m = new Matrix3D(new[,]
+			                 	{
+			                 		{0.100f, 0.200f, 0.300f},
+			                 		{-0.400f, 0.500f, 0.600f},
+			                 		{0.700f, 0.800f, 0.900f}
+			                 	});
+
+			var r = new Matrix3D(new[,]
+			                     	{
+			                     		{0.62500f, -1.25000f, 0.62500f},
+			                     		{-16.25000f, 2.50000f, 3.75000f},
+			                     		{13.95833f, -1.25000f, -2.70833f}
+			                     	});
+
+			Assert.IsTrue(Matrix3D.AreEqual(m.Invert(), r, 0.00001f));
+
+			// test inverse multiplied against original is the identity
+			m.SetRow(0, -1.1F, 2.6F, -7.1F);
+			m.SetRow(1, 4.6F, -3.7F, 9.1F);
+			m.SetRow(2, 4.1F, -3.1F, 7.7F);
+
+			Assert.IsTrue(Matrix3D.AreEqual(m*m.Invert(), Matrix3D.GetIdentity(), 0.00001f));
+			Assert.IsTrue(Matrix3D.AreEqual(m.Invert()*m, Matrix3D.GetIdentity(), 0.00001f));
+
+			// test non-invertible
+			m.SetRow(0, 1, 0, 0);
+			m.SetRow(1, 0, 1, 0);
+			m.SetRow(2, 0, 5, 0);
+
+			try
+			{
+				m.Invert();
+				Assert.Fail("Expected an exception");
+			}
+			catch (ArgumentException) {}
 		}
 
 		[Test]

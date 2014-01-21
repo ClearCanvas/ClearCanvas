@@ -637,4 +637,13 @@
   <data name="PrivateBrowsing" xml:space="preserve">
     <value>It is recommended that private browsing mode (e.g. incognito mode) be used or the browser cache be cleared, and the browser tab closed after each use to prevent exposure of protected health information.</value>
   </data>
+  <data name="ExternalRequestQueue_EnterSearchCriteria" xml:space="preserve">
+    <value>Please enter search criteria</value>
+  </data>
+  <data name="ExternalRequestQueue_NoResults" xml:space="preserve">
+    <value>No items found matching the provided criteria.</value>
+  </data>
+  <data name="PatientSummary_QCReport" xml:space="preserve">
+    <value>QC Status:</value>
+  </data>
 </root>

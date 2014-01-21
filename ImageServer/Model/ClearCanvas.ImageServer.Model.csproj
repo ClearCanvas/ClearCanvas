@@ -56,6 +56,7 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
@@ -148,6 +149,10 @@
     <Compile Include="EntityBrokers\DeviceUpdateColumns.gen.cs" />
     <Compile Include="EntityBrokers\DuplicateSopReceivedQueueSelectCriteria.cs" />
     <Compile Include="EntityBrokers\DuplicateSopReceivedQueueUpdateColumns.cs" />
+    <Compile Include="EntityBrokers\ExternalRequestQueueSelectCriteria.cs" />
+    <Compile Include="EntityBrokers\ExternalRequestQueueSelectCriteria.gen.cs" />
+    <Compile Include="EntityBrokers\ExternalRequestQueueUpdateColumns.cs" />
+    <Compile Include="EntityBrokers\ExternalRequestQueueUpdateColumns.gen.cs" />
     <Compile Include="EntityBrokers\FilesystemQueueSelectCriteria.cs" />
     <Compile Include="EntityBrokers\FilesystemQueueSelectCriteria.gen.cs" />
     <Compile Include="EntityBrokers\FilesystemQueueUpdateColumns.gen.cs" />
@@ -171,10 +176,13 @@
     <Compile Include="EntityBrokers\IDeviceTypeEnumBroker.gen.cs" />
     <Compile Include="EntityBrokers\IDuplicateSopEntryEntityBroker.cs" />
     <Compile Include="EntityBrokers\IDuplicateSopPolicyEnumBroker.gen.cs" />
+    <Compile Include="EntityBrokers\IExternalRequestQueueEntityBroker.gen.cs" />
+    <Compile Include="EntityBrokers\IExternalRequestQueueStatusEnumBroker.gen.cs" />
     <Compile Include="EntityBrokers\IFilesystemEntityBroker.gen.cs" />
     <Compile Include="EntityBrokers\IFilesystemQueueEntityBroker.gen.cs" />
     <Compile Include="EntityBrokers\IFilesystemQueueTypeEnumBroker.gen.cs" />
     <Compile Include="EntityBrokers\IFilesystemTierEnumBroker.gen.cs" />
+    <Compile Include="EntityBrokers\INotificationQueueEntityBroker.gen.cs" />
     <Compile Include="EntityBrokers\IPartitionArchiveEntityBroker.gen.cs" />
     <Compile Include="EntityBrokers\IPartitionSopClassEntityBroker.gen.cs" />
     <Compile Include="EntityBrokers\IPartitionTransferSyntaxEntityBroker.gen.cs" />
@@ -185,8 +193,10 @@
     <Compile Include="EntityBrokers\IRestoreQueueEntityBroker.gen.cs" />
     <Compile Include="EntityBrokers\IRestoreQueueStatusEnumBroker.gen.cs" />
     <Compile Include="EntityBrokers\ISeriesEntityBroker.gen.cs" />
+    <Compile Include="EntityBrokers\IServerPartitionAlternateAeTitleEntityBroker.gen.cs" />
     <Compile Include="EntityBrokers\IServerPartitionDataAccessEntityBroker.gen.cs" />
     <Compile Include="EntityBrokers\IServerPartitionEntityBroker.gen.cs" />
+    <Compile Include="EntityBrokers\IServerPartitionTypeEnumBroker.gen.cs" />
     <Compile Include="EntityBrokers\IServerRuleApplyTimeEnumBroker.gen.cs" />
     <Compile Include="EntityBrokers\IServerRuleEntityBroker.gen.cs" />
     <Compile Include="EntityBrokers\IServerRuleTypeEnumBroker.gen.cs" />
@@ -211,6 +221,8 @@
     <Compile Include="EntityBrokers\IWorkQueueTypeEnumBroker.gen.cs" />
     <Compile Include="EntityBrokers\IWorkQueueTypePropertiesEntityBroker.gen.cs" />
     <Compile Include="EntityBrokers\IWorkQueueUidEntityBroker.gen.cs" />
+    <Compile Include="EntityBrokers\NotificationQueueSelectCriteria.gen.cs" />
+    <Compile Include="EntityBrokers\NotificationQueueUpdateColumns.gen.cs" />
     <Compile Include="EntityBrokers\PartitionArchiveSelectCriteria.gen.cs" />
     <Compile Include="EntityBrokers\PartitionArchiveUpdateColumns.gen.cs" />
     <Compile Include="EntityBrokers\PartitionSopClassSelectCriteria.gen.cs" />
@@ -227,6 +239,8 @@
     <Compile Include="EntityBrokers\RestoreQueueUpdateColumns.gen.cs" />
     <Compile Include="EntityBrokers\SeriesSelectCriteria.gen.cs" />
     <Compile Include="EntityBrokers\SeriesUpdateColumns.gen.cs" />
+    <Compile Include="EntityBrokers\ServerPartitionAlternateAeTitleSelectCriteria.gen.cs" />
+    <Compile Include="EntityBrokers\ServerPartitionAlternateAeTitleUpdateColumns.gen.cs" />
     <Compile Include="EntityBrokers\ServerPartitionDataAccessSelectCriteria.gen.cs" />
     <Compile Include="EntityBrokers\ServerPartitionDataAccessUpdateColumns.gen.cs" />
     <Compile Include="EntityBrokers\ServerPartitionSelectCriteria.gen.cs" />
@@ -266,6 +280,9 @@
     <Compile Include="EntityBrokers\WorkQueueUidSelectCriteria.gen.cs" />
     <Compile Include="EntityBrokers\WorkQueueUidUpdateColumns.gen.cs" />
     <Compile Include="EntityBrokers\WorkQueueUpdateColumns.gen.cs" />
+    <Compile Include="ExternalRequestQueue.cs" />
+    <Compile Include="ExternalRequestQueue.gen.cs" />
+    <Compile Include="ExternalRequestQueueStatusEnum.gen.cs" />
     <Compile Include="Filesystem.cs" />
     <Compile Include="Filesystem.gen.cs" />
     <Compile Include="FilesystemQueue.gen.cs" />
@@ -273,6 +290,7 @@
     <Compile Include="FilesystemTierEnum.gen.cs" />
     <Compile Include="InconsistentDataSIQEntry.cs" />
     <Compile Include="InstanceKeys.cs" />
+    <Compile Include="NotificationQueue.gen.cs" />
     <Compile Include="Parameters\PostponeWorkQueueParameters.cs" />
     <Compile Include="Parameters\QueryCurrentStudyMoveParameters.cs" />
     <Compile Include="Parameters\WebResetWorkQueueParameters.cs" />
@@ -322,7 +340,9 @@
     <Compile Include="ServerEnumDescription.cs" />
     <Compile Include="ServerPartition.cs" />
     <Compile Include="ServerPartition.gen.cs" />
+    <Compile Include="ServerPartitionAlternateAeTitle.gen.cs" />
     <Compile Include="ServerPartitionDataAccess.gen.cs" />
+    <Compile Include="ServerPartitionTypeEnum.gen.cs" />
     <Compile Include="ServerRule.gen.cs" />
     <Compile Include="ServerRuleApplyTimeEnum.gen.cs" />
     <Compile Include="ServerRuleTypeEnum.gen.cs" />
@@ -385,6 +405,7 @@
     <Compile Include="Parameters\InsertWorkQueueParameters.cs" />
     <Compile Include="WorkQueueTypeEnum.gen.cs" />
     <Compile Include="WorkQueueTypeProperties.gen.cs" />
+    <Compile Include="WorkQueueUid.cs" />
     <Compile Include="WorkQueueUid.gen.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -396,13 +417,13 @@
       <Project>{AD9ECE2B-8268-4115-8DC8-860FBD011FFF}</Project>
       <Name>ClearCanvas.Dicom</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Enterprise\Common\ClearCanvas.Enterprise.Common.csproj">
-      <Project>{B5EBFFD7-6641-4932-91C9-4C4322B41868}</Project>
-      <Name>ClearCanvas.Enterprise.Common</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\Enterprise\Core\ClearCanvas.Enterprise.Core.csproj">
       <Project>{431E9444-9915-4D49-B92D-9B7EC086622A}</Project>
       <Name>ClearCanvas.Enterprise.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Common\ClearCanvas.ImageServer.Common.csproj">
+      <Project>{DDFB1D25-75AE-43A6-A7A5-33D173EFFD04}</Project>
+      <Name>ClearCanvas.ImageServer.Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\Enterprise\ClearCanvas.ImageServer.Enterprise.csproj">
       <Project>{86CA6EDB-DE59-45E9-8BD8-832FBB3F8009}</Project>

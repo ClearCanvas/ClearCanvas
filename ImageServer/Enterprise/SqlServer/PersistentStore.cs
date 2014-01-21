@@ -39,6 +39,7 @@ namespace ClearCanvas.ImageServer.Enterprise.SqlServer
     [ExtensionOf(typeof(PersistentStoreExtensionPoint))]
     public class PersistentStore : IPersistentStore
     {
+	    private static volatile bool _shutdownRequested;
         private static readonly object SyncRoot = new object();
         private static int _connectionCounter;
         private String _connectionString;
@@ -46,6 +47,11 @@ namespace ClearCanvas.ImageServer.Enterprise.SqlServer
         private int _maxPoolSize;
 
         #region IPersistentStore Members
+
+		/// <summary>
+		/// Boolean that can be set on the persistent store to signal that the process is shutting down.
+		/// </summary>
+		public bool ShutdownRequested { get { return _shutdownRequested; } set { _shutdownRequested = value; } }
 
         public Version Version
         {
@@ -89,6 +95,14 @@ namespace ClearCanvas.ImageServer.Enterprise.SqlServer
                 SqlConnectionStringBuilder sb = new SqlConnectionStringBuilder(_connectionString);
                 _maxPoolSize = sb.MaxPoolSize;
             }
+#if UNIT_TESTS
+            else 
+            {
+                _connectionString = "Data Source=127.0.0.1;Integrated Security=True;Persist Security Info=True;Initial Catalog=ImageServer";
+                SqlConnectionStringBuilder sb = new SqlConnectionStringBuilder(_connectionString);
+                _maxPoolSize = sb.MaxPoolSize;
+            }
+#endif
         }
 
         public void SetTransactionNotifier(ITransactionNotifier transactionNotifier)
@@ -130,7 +144,7 @@ namespace ClearCanvas.ImageServer.Enterprise.SqlServer
                 {
                     // The connection failed.  Check the Sql error class 0x14 is for connection failure, let the 
                     // other error types through.
-                    if ((i >= 10) || e.Class != 0x14)
+                    if ((i >= 10) || e.Class != 0x14 || _shutdownRequested)
                         throw;
 
                     if (rand == null) rand = new Random();

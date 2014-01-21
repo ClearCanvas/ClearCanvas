@@ -28,7 +28,7 @@ using System.Drawing;
 namespace ClearCanvas.ImageViewer.Mathematics
 {
 	/// <summary>
-	/// A collection vector related methods.
+	/// A collection of vector related methods.
 	/// </summary>
 	public static class Vector
 	{
@@ -65,10 +65,22 @@ namespace ClearCanvas.ImageViewer.Mathematics
 			if (cosTheta < -1.0f)
 				cosTheta = -1.0f;
 
-			double theta = Math.Acos(cosTheta)*(crossProduct.Z == 0 ? 1 : -Math.Sign(crossProduct.Z));
+			double theta = Math.Acos(cosTheta)*(FloatComparer.AreEqual(crossProduct.Z, 0) ? 1 : -Math.Sign(crossProduct.Z));
 			double thetaInDegrees = theta/Math.PI*180;
 
 			return thetaInDegrees;
+		}
+
+		/// <summary>
+		/// Calculates the angle subtended by two line segments that meet at a vertex.
+		/// </summary>
+		/// <param name="vertex">The vertex of the angle formed by the two line segments.</param>
+		/// <param name="pt1">The end of one of the line segments.</param>
+		/// <param name="pt2">The end of the other line segment.</param>
+		/// <returns>The angle subtended by the two line segments in degrees.</returns>
+		public static double GetSubtendedAngle(this PointF vertex, PointF pt1, PointF pt2)
+		{
+			return SubtendedAngle(pt1, vertex, pt2);
 		}
 
 		/// <summary>
@@ -86,6 +98,17 @@ namespace ClearCanvas.ImageViewer.Mathematics
 		}
 
 		/// <summary>
+		/// Calculates the distance between this point and another.
+		/// </summary>
+		/// <param name="pt1">One end of the distance to be computed.</param>
+		/// <param name="pt2">The other end of the distance to be computed.</param>
+		/// <returns>The distance between the two points.</returns>
+		public static double GetDistance(this PointF pt1, PointF pt2)
+		{
+			return Distance(pt1, pt2);
+		}
+
+		/// <summary>
 		/// Finds the midpoint between two points.
 		/// </summary>
 		/// <param name="pt1">One end of the span.</param>
@@ -99,18 +122,28 @@ namespace ClearCanvas.ImageViewer.Mathematics
 			return new PointF(x, y);
 		}
 
-		//TODO (CR February 2011) - Low: Not used except in unit tests.  Deprecate and recommend using the Vector3D class.
+		/// <summary>
+		/// Finds the midpoint between this point and another.
+		/// </summary>
+		/// <param name="pt1">One end of the span.</param>
+		/// <param name="pt2">The other end of the span.</param>
+		/// <returns>The midpoint between the two points.</returns>
+		public static PointF GetMidpoint(this PointF pt1, PointF pt2)
+		{
+			return Midpoint(pt1, pt2);
+		}
+
 		/// <summary>
 		/// Computes the unit vector of the vector defined by <paramref name="vector"/>.
 		/// </summary>
 		/// <param name="vector">The vector given as a point relative to the origin.</param>
 		/// <returns>The unit vector in the same direction as the given vector.</returns>
 		/// <exception cref="ArgumentException">If <paramref name="vector"/> is equal to the origin.</exception>
+		[Obsolete("Consider using GetUnitVector instead.")]
 		public static PointF CreateUnitVector(PointF vector)
 		{
-			if (FloatComparer.AreEqual(PointF.Empty, vector))
-				throw new ArgumentException("Argument must specify a valid vector.", "vector");
-			return CreateUnitVector(PointF.Empty, vector);
+			var result = GetUnitVector(new SizeF(vector));
+			return new PointF(result.Width, result.Height);
 		}
 
 		/// <summary>
@@ -120,14 +153,47 @@ namespace ClearCanvas.ImageViewer.Mathematics
 		/// <param name="endingPoint">The ending point of the vector.</param>
 		/// <returns>The unit vector in the same direction as the given vector.</returns>
 		/// <exception cref="ArgumentException">If <paramref name="startingPoint"/> is equal to <paramref name="endingPoint"/>.</exception>
+		[Obsolete("Consider using GetUnitVector instead.")]
 		public static PointF CreateUnitVector(PointF startingPoint, PointF endingPoint)
 		{
-			if (FloatComparer.AreEqual(startingPoint, endingPoint))
-				throw new ArgumentException("Arguments must specify a valid vector.", "endingPoint");
-			float deltaX = endingPoint.X - startingPoint.X;
-			float deltaY = endingPoint.Y - startingPoint.Y;
-			double magnitude = Math.Sqrt(deltaX*deltaX + deltaY*deltaY);
-			return new PointF((float) (deltaX/magnitude), (float) (deltaY/magnitude));
+			var result = GetUnitVector(startingPoint, endingPoint);
+			return new PointF(result.Width, result.Height);
+		}
+
+		/// <summary>
+		/// Computes the unit vector of the offset defined by <paramref name="ptStart"/> to <paramref name="ptEnd"/>.
+		/// </summary>
+		/// <param name="ptStart">The starting point of the vector.</param>
+		/// <param name="ptEnd">The ending point of the vector.</param>
+		/// <returns>The unit vector in the same direction as the given vector.</returns>
+		/// <exception cref="ArgumentException">If <paramref name="ptStart"/> is equal to <paramref name="ptEnd"/>.</exception>
+		public static SizeF GetUnitVector(this PointF ptStart, PointF ptEnd)
+		{
+			if (FloatComparer.AreEqual(ptStart, ptEnd))
+			{
+				const string msg = "Arguments must specify a valid vector.";
+				throw new ArgumentException(msg, "ptEnd");
+			}
+			float deltaX = ptEnd.X - ptStart.X;
+			float deltaY = ptEnd.Y - ptStart.Y;
+			return GetUnitVector(new SizeF {Width = deltaX, Height = deltaY});
+		}
+
+		/// <summary>
+		/// Computes the unit vector of the vector defined by <paramref name="vector"/>.
+		/// </summary>
+		/// <param name="vector">The vector given as a point relative to the origin.</param>
+		/// <returns>The unit vector in the same direction as the given vector.</returns>
+		/// <exception cref="ArgumentException">If <paramref name="vector"/> is equal to the origin.</exception>
+		public static SizeF GetUnitVector(this SizeF vector)
+		{
+			if (FloatComparer.AreEqual(vector, SizeF.Empty))
+			{
+				const string msg = "Argument must specify a non-zero vector.";
+				throw new ArgumentException(msg, "vector");
+			}
+			double magnitude = Math.Sqrt(vector.Width*vector.Width + vector.Height*vector.Height);
+			return new SizeF((float) (vector.Width/magnitude), (float) (vector.Height/magnitude));
 		}
 
 		/// <summary>
@@ -140,17 +206,12 @@ namespace ClearCanvas.ImageViewer.Mathematics
 		/// <returns>The distance from the <paramref name="ptTest">test point</paramref> to the <paramref name="ptNearest">nearest point</paramref> on the line segment.</returns>
 		public static double DistanceFromPointToLine(PointF ptTest, PointF pt1, PointF pt2, ref PointF ptNearest)
 		{
-			float distanceX;
-			float distanceY;
-			double distance;
-
 			// Point on line segment nearest to pt0
 			float dx = pt2.X - pt1.X;
 			float dy = pt2.Y - pt1.Y;
 
-			//TODO (CR February 2011) - Low: use FloatComparer?
 			// It's a point, not a line
-			if (dx == 0 && dy == 0)
+			if (FloatComparer.AreEqual(dx, 0) && FloatComparer.AreEqual(dy, 0))
 			{
 				ptNearest.X = pt1.X;
 				ptNearest.Y = pt1.Y;
@@ -179,9 +240,9 @@ namespace ClearCanvas.ImageViewer.Mathematics
 				}
 			}
 
-			distanceX = ptTest.X - ptNearest.X;
-			distanceY = ptTest.Y - ptNearest.Y;
-			distance = Math.Sqrt(distanceX*distanceX + distanceY*distanceY);
+			float distanceX = ptTest.X - ptNearest.X;
+			float distanceY = ptTest.Y - ptNearest.Y;
+			double distance = Math.Sqrt(distanceX*distanceX + distanceY*distanceY);
 
 			return distance;
 		}
@@ -195,10 +256,12 @@ namespace ClearCanvas.ImageViewer.Mathematics
 			/// The line segments do not interesect.
 			/// </summary>
 			DoNotIntersect,
+
 			/// <summary>
 			/// The line segments intersect.
 			/// </summary>
 			Intersect,
+
 			/// <summary>
 			/// The line segments are colinear.
 			/// </summary>
@@ -237,7 +300,6 @@ namespace ClearCanvas.ImageViewer.Mathematics
 		/// <param name="q2">The other endpoint of the other line segment.</param>
 		/// <param name="intersection">The intersection between the two line segments, if a solution exists.</param>
 		/// <returns>True if the intersection exists; False otherwise.</returns>
-
 		//TODO (CR February 2011) - High (SDK release): Name? GetLineSegmentIntersection : Nullable<Point>
 		public static bool IntersectLineSegments(PointF p1, PointF p2, PointF q1, PointF q2, out PointF intersection)
 		{
@@ -299,7 +361,6 @@ namespace ClearCanvas.ImageViewer.Mathematics
 		/// <param name="q2">The other endpoint of the other line.</param>
 		/// <param name="intersection">The intersection between the two lines, if a solution exists.</param>
 		/// <returns>True if the intersection exists and is distinct; False otherwise.</returns>
-
 		//TODO (CR February 2011) - High (SDK release): Name? GetLineIntersection : Nullable<Point>
 		public static bool IntersectLines(PointF p1, PointF p2, PointF q1, PointF q2, out PointF intersection)
 		{
@@ -357,7 +418,6 @@ namespace ClearCanvas.ImageViewer.Mathematics
 		/// <returns>True if the lines are parallel; False otherwise.</returns>
 		public static bool AreParallel(PointF p1, PointF p2, PointF q1, PointF q2)
 		{
-			//TODO (CR February 2011) - Medium (SDK release): same determinant computed in 3 places; should make it a method (ComputeDeterminant?)
 			// find the solution to the line equations in matrix form
 			// P1 + s(P2-P1) = Q1 + t(Q2-Q1)
 			// => P1 + s(P2-P1) = Q1 - t(Q1-Q2)

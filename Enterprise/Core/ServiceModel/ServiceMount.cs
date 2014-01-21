@@ -147,6 +147,12 @@ namespace ClearCanvas.Enterprise.Core.ServiceModel
 		}
 
 		/// <summary>
+		/// The time, in seconds, in which a send operation must complete.
+		/// </summary>
+		/// <remarks>Value less than or equal to zero should be ignored.</remarks>
+		public int SendTimeoutSeconds { get; set; }
+
+		/// <summary>
 		/// Gets or sets a value indicating whether performance logging is enabled.
 		/// </summary>
 		/// <remarks>
@@ -360,7 +366,7 @@ namespace ClearCanvas.Enterprise.Core.ServiceModel
 					contractAttribute.ServiceContract,
 					uri, authenticated,
 					_maxReceivedMessageSize,
-					_certificateSearchDirective));
+					_certificateSearchDirective){SendTimeoutSeconds = SendTimeoutSeconds});
 
 			// add behaviour to inject AOP proxy service factory
 			host.Description.Behaviors.Add(new ServiceFactoryInjectionServiceBehavior(contractAttribute.ServiceContract, serviceFactory));

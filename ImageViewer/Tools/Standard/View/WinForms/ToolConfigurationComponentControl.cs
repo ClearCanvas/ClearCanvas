@@ -45,8 +45,7 @@ namespace ClearCanvas.ImageViewer.Tools.Standard.View.WinForms
 			_collection = new ToolModalityBehaviorCollection(component.ModalityBehavior);
 			_collection.CollectionChanged += HandleCollectionChanged;
 
-			var modalities = StandardModalities.Modalities.Union(new[] {string.Empty}).ToList();
-			modalities.Sort(StringComparer.InvariantCultureIgnoreCase);
+			var modalities = component.Modalities;
 			var bindingSource = new BindingSource {DataSource = new BindingList<ToolModalityBehaviorSettings>(modalities.Select(s => new ToolModalityBehaviorSettings(_collection[s], string.IsNullOrEmpty(s) ? SR.LabelDefault : s)).ToList())};
 
 			_cboModality.DataSource = bindingSource;

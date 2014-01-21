@@ -177,6 +177,7 @@ namespace ClearCanvas.Enterprise.Desktop
 						{
 						    _authorityGroupDetail.AuthorityGroupRef = null;
                             _authorityGroupDetail.Name = _authorityGroupDetail.Name + " Copy";
+							_authorityGroupDetail.BuiltIn = false;	// built-in groups duplicate to a regular group
 						}
                     }
 

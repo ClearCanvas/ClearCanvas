@@ -79,11 +79,14 @@
     <Compile Include="Admin\AuthorityGroupAdmin\AuthorityGroupReadService.cs" />
     <Compile Include="Admin\AuthorityGroupAssembler.cs" />
     <Compile Include="Admin\AuthorityTokenAssembler.cs" />
+    <Compile Include="Admin\UserAdmin\UserReadService.cs" />
     <Compile Include="Admin\UserAdmin\UserAdminService.cs" />
     <Compile Include="Admin\UserAdmin\UserAssembler.cs" />
     <Compile Include="AuthenticationService.cs" />
     <Compile Include="AuthorityGroup.cs" />
     <Compile Include="Brokers\IAuthorityGroupBroker.cs" />
+    <Compile Include="AuthenticationServiceBase.cs" />
+    <Compile Include="ImpersonationService.cs" />
     <Compile Include="Imex\AuthorityGroupImex.cs" />
     <Compile Include="Imex\AuthorityGroupImporter.cs" />
     <Compile Include="AuthorityToken.cs" />
@@ -99,6 +102,7 @@
     <Compile Include="Imex\UserImex.cs" />
     <Compile Include="Imex\UserImporter.cs" />
     <Compile Include="Password.cs" />
+    <Compile Include="PasswordPolicy.cs" />
     <Compile Include="PasswordResetEmailSettings.cs" />
     <Compile Include="PasswordResetEmailSettings.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -118,7 +122,9 @@
     <Compile Include="Tests\UserSessionTests.cs" />
     <Compile Include="Tests\UserTests.cs" />
     <Compile Include="User.cs" />
+    <Compile Include="UserAccountType.cs" />
     <Compile Include="UserInfo.cs" />
+    <Compile Include="UserName.cs" />
     <Compile Include="UserSession.cs" />
   </ItemGroup>
   <ItemGroup>

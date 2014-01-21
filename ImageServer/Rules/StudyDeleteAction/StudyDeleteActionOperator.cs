@@ -33,8 +33,9 @@ using ClearCanvas.ImageServer.Model;
 
 namespace ClearCanvas.ImageServer.Rules.StudyDeleteAction
 {
-	[ExtensionOf(typeof(XmlActionCompilerOperatorExtensionPoint<ServerActionContext, ServerRuleTypeEnum>))]
-	public class StudyDeleteActionOperator : ActionOperatorCompilerBase, IXmlActionCompilerOperator<ServerActionContext, ServerRuleTypeEnum>
+	[ExtensionOf(typeof(ServerRuleActionCompilerOperatorExtensionPoint))]
+	[ActionApplicability(ApplicableRuleType.StudyDelete)]
+	public class StudyDeleteActionOperator : ActionOperatorCompilerBase, IXmlActionCompilerOperator<ServerActionContext>
     {
         public StudyDeleteActionOperator() :
             base("study-delete")
@@ -80,11 +81,8 @@ namespace ClearCanvas.ImageServer.Rules.StudyDeleteAction
             }
         }
 
-		public XmlSchemaElement GetSchema(ServerRuleTypeEnum ruleType)
+		public XmlSchemaElement GetSchema()
         {
-			if (!ruleType.Equals(ServerRuleTypeEnum.StudyDelete))
-				return null;
-
             XmlSchemaSimpleType timeUnitType = new XmlSchemaSimpleType();
 
             XmlSchemaSimpleTypeRestriction restriction = new XmlSchemaSimpleTypeRestriction();

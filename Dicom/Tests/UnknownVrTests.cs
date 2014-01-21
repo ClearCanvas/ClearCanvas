@@ -67,7 +67,7 @@ namespace ClearCanvas.Dicom.Tests
             DicomTag privateTagUL = new DicomTag(0x00091043, "PrivateUI", "PrivateUI", DicomVr.ULvr, true, 1, 10, false);
             DicomTag privateTagUS = new DicomTag(0x00091044, "PrivateUS", "PrivateUS", DicomVr.USvr, true, 1, 10, false);
             DicomTag privateTagUT = new DicomTag(0x00091045, "PrivateUT", "PrivateUT", DicomVr.UTvr, true, 1, 1, false);
-
+            DicomTag privateTagOD = new DicomTag(0x00091046, "PrivateOD", "PrivateOD", DicomVr.ODvr, true, 1, 1, false);
 
             dataSet[privateTagFL].AppendFloat32(1.1f);
             dataSet[privateTagFL].AppendFloat32(1.1123132f);
@@ -159,6 +159,8 @@ namespace ClearCanvas.Dicom.Tests
             dataSet[privateTagOF].Values = new[] { 1.1111f, 2.222f, 3.3333f, 44444.444f, 5555.555f, 66666.66666f, 123123.123123f };
             tagList.Add(privateTagOF);
 
+            dataSet[privateTagOD].Values = new[] { 1.11111111111111, 2.22222222222, 3333333333.3333, 44444.44444444444, 5555.555555555555, 66666.666666666666, 123123.123123123123123123 };
+            tagList.Add(privateTagOD);
 
             DicomSequenceItem item = new DicomSequenceItem();
             item[DicomTags.PhotometricInterpretation].AppendString("MONOCHROME1");

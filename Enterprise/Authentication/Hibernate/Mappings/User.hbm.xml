@@ -7,7 +7,8 @@
     </id>
     <version name="Version" column="Version_"/>
     <property name="UserName" column="UserName_" type="String" not-null="true" unique="true" access="nosetter.camelcase-underscore"/>
-    <component name="Password" class="Password" access="nosetter.camelcase-underscore">
+		<property name="AccountType" column="AccountType_" type="ClearCanvas.Enterprise.Authentication.Hibernate.UserAccountTypeEnumHbm, ClearCanvas.Enterprise.Authentication.Hibernate" not-null="true" access="nosetter.camelcase-underscore"/>
+		<component name="Password" class="Password" access="nosetter.camelcase-underscore">
       <property name="Salt" column="PasswordSalt_" type="String" not-null="true" access="nosetter.camelcase-underscore"/>
       <property name="SaltedHash" column="PasswordSaltedHash_" type="String" not-null="true" access="nosetter.camelcase-underscore"/>
       <property name="ExpiryTime" column="PasswordExpiryDate_" type="DateTime"/>

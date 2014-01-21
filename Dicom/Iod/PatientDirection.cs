@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using ClearCanvas.Common.Utilities;
 
 namespace ClearCanvas.Dicom.Iod
@@ -62,13 +63,13 @@ namespace ClearCanvas.Dicom.Iod
 		public const string QuadrupedPlantarCode = "PL";
 
 		public static readonly PatientDirection Empty = new PatientDirection(string.Empty, string.Empty, AnatomicalOrientationType.None);
-		public static readonly PatientDirection Unspecified = new PatientDirection(UnspecifiedCode.ToString(), SR.LabelPatientDirectionUnspecified, AnatomicalOrientationType.None);
-		public static readonly PatientDirection Left = new PatientDirection(LeftCode.ToString(), SR.LabelPatientDirectionLeft, AnatomicalOrientationType.Biped);
-		public static readonly PatientDirection Right = new PatientDirection(RightCode.ToString(), SR.LabelPatientDirectionRight, AnatomicalOrientationType.Biped);
-		public static readonly PatientDirection Posterior = new PatientDirection(PosteriorCode.ToString(), SR.LabelPatientDirectionPosterior, AnatomicalOrientationType.Biped);
-		public static readonly PatientDirection Anterior = new PatientDirection(AnteriorCode.ToString(), SR.LabelPatientDirectionAnterior, AnatomicalOrientationType.Biped);
-		public static readonly PatientDirection Head = new PatientDirection(HeadCode.ToString(), SR.LabelPatientDirectionHead, AnatomicalOrientationType.Biped);
-		public static readonly PatientDirection Foot = new PatientDirection(FootCode.ToString(), SR.LabelPatientDirectionFoot, AnatomicalOrientationType.Biped);
+		public static readonly PatientDirection Unspecified = new PatientDirection(UnspecifiedCode.ToString(CultureInfo.InvariantCulture), SR.LabelPatientDirectionUnspecified, AnatomicalOrientationType.None);
+		public static readonly PatientDirection Left = new PatientDirection(LeftCode.ToString(CultureInfo.InvariantCulture), SR.LabelPatientDirectionLeft, AnatomicalOrientationType.Biped);
+		public static readonly PatientDirection Right = new PatientDirection(RightCode.ToString(CultureInfo.InvariantCulture), SR.LabelPatientDirectionRight, AnatomicalOrientationType.Biped);
+		public static readonly PatientDirection Posterior = new PatientDirection(PosteriorCode.ToString(CultureInfo.InvariantCulture), SR.LabelPatientDirectionPosterior, AnatomicalOrientationType.Biped);
+		public static readonly PatientDirection Anterior = new PatientDirection(AnteriorCode.ToString(CultureInfo.InvariantCulture), SR.LabelPatientDirectionAnterior, AnatomicalOrientationType.Biped);
+		public static readonly PatientDirection Head = new PatientDirection(HeadCode.ToString(CultureInfo.InvariantCulture), SR.LabelPatientDirectionHead, AnatomicalOrientationType.Biped);
+		public static readonly PatientDirection Foot = new PatientDirection(FootCode.ToString(CultureInfo.InvariantCulture), SR.LabelPatientDirectionFoot, AnatomicalOrientationType.Biped);
 		public static readonly PatientDirection QuadrupedLeft = new PatientDirection(QuadrupedLeftCode, SR.LabelPatientDirectionLeft, AnatomicalOrientationType.Quadruped);
 		public static readonly PatientDirection QuadrupedRight = new PatientDirection(QuadrupedRightCode, SR.LabelPatientDirectionRight, AnatomicalOrientationType.Quadruped);
 		public static readonly PatientDirection QuadrupedDorsal = new PatientDirection(QuadrupedDorsalCode, SR.LabelPatientDirectionDorsal, AnatomicalOrientationType.Quadruped);
@@ -195,7 +196,7 @@ namespace ClearCanvas.Dicom.Iod
 			get { return _code; }
 		}
 
-	    // TODO (CR Mar 2012): Add a "short description" which could essentially be used in places where we show/use directional markers?
+		// TODO (CR Mar 2012): Add a "short description" which could essentially be used in places where we show/use directional markers?
 
 		/// <summary>
 		/// Gets a textual description of the direction.
@@ -288,8 +289,8 @@ namespace ClearCanvas.Dicom.Iod
 		/// </summary>
 		public override bool Equals(object obj)
 		{
-			if (obj is PatientDirection)
-				return _code == ((PatientDirection) obj).Code && _anatomicalOrientationType == ((PatientDirection) obj).AnatomicalOrientationType;
+			var patientDirection = obj as PatientDirection;
+			if (patientDirection != null) return _code == (patientDirection).Code && _anatomicalOrientationType == (patientDirection).AnatomicalOrientationType;
 			return false;
 		}
 
@@ -380,20 +381,20 @@ namespace ClearCanvas.Dicom.Iod
 			switch (component[0])
 			{
 				case LeftCode:
-					return RightCode.ToString();
+					return RightCode.ToString(CultureInfo.InvariantCulture);
 				case RightCode:
-					return LeftCode.ToString();
+					return LeftCode.ToString(CultureInfo.InvariantCulture);
 				case AnteriorCode:
-					return PosteriorCode.ToString();
+					return PosteriorCode.ToString(CultureInfo.InvariantCulture);
 				case PosteriorCode:
-					return AnteriorCode.ToString();
+					return AnteriorCode.ToString(CultureInfo.InvariantCulture);
 				case HeadCode:
-					return FootCode.ToString();
+					return FootCode.ToString(CultureInfo.InvariantCulture);
 				case FootCode:
-					return HeadCode.ToString();
+					return HeadCode.ToString(CultureInfo.InvariantCulture);
 			}
 
-			return UnspecifiedCode.ToString();
+			return UnspecifiedCode.ToString(CultureInfo.InvariantCulture);
 		}
 
 		private static PatientDirection[] ParseBipedDirection(string code)

@@ -31,11 +31,16 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr.Utilities
 {
 	internal class ObservableDisposableList<T> : ObservableList<T>, IDisposable where T : IDisposable
 	{
+		public ObservableDisposableList() {}
+
+		public ObservableDisposableList(IEnumerable<T> list)
+			: base(list) {}
+
 		public void Dispose()
 		{
 			try
 			{
-				this.Dispose(true);
+				Dispose(true);
 				GC.SuppressFinalize(this);
 			}
 			catch (Exception e)
@@ -48,9 +53,10 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr.Utilities
 		{
 			if (disposing)
 			{
-				List<T> temp = new List<T>(this);
-				this.EnableEvents = false;
-				this.Clear();
+				var temp = new List<T>(this);
+				EnableEvents = false;
+				Clear();
+
 				foreach (T t in temp)
 					t.Dispose();
 			}

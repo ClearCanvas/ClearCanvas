@@ -12,5 +12,6 @@
     <property name="SessionId" column="SessionId_" type="String" not-null="true" unique="true"/>
     <property name="CreationTime" column="CreationTime_" type="DateTime" not-null="true"/>
     <property name="ExpiryTime" column="ExpiryTime_" type="DateTime" not-null="true"/>
-  </class>
+		<property name="IsImpersonated" column="IsImpersonated_" type="Boolean" not-null="true"/>
+	</class>
 </hibernate-mapping>

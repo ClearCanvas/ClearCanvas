@@ -24,12 +24,14 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Xml;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Actions;
 using ClearCanvas.Common.Specifications;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Dicom.Utilities.Rules;
+using ClearCanvas.Dicom.Utilities.Rules.Specifications;
 using ClearCanvas.Enterprise.Core;
 using ClearCanvas.ImageServer.Enterprise;
 using ClearCanvas.ImageServer.Model;
@@ -37,7 +39,31 @@ using ClearCanvas.ImageServer.Model.EntityBrokers;
 
 namespace ClearCanvas.ImageServer.Rules
 {
-    /// <summary>
+
+	[ExtensionPoint]
+	public sealed class ServerRuleActionCompilerOperatorExtensionPoint : ExtensionPoint<IXmlActionCompilerOperator<ServerActionContext>>
+	{
+	}
+
+	public class ServerRulesEngineCompletedEventArgs:EventArgs
+	{
+		public ServerRulesEngineCompletedEventArgs(IEnumerable<IRule> rulesApplied)
+		{
+			RulesApplied = rulesApplied;
+		}
+
+		/// <summary>
+		/// Gets rules which were applied
+		/// </summary>
+		public IEnumerable<IRule> RulesApplied { get; private set; }
+	}
+
+	public interface IServerRulesEngine
+	{
+		event EventHandler<ServerRulesEngineCompletedEventArgs> Completed;
+	}
+
+	/// <summary>
     /// Rules engine for applying rules against DICOM files and performing actions.
     /// </summary>
     /// <remarks>
@@ -60,10 +86,11 @@ namespace ClearCanvas.ImageServer.Rules
     /// </rule>
     /// </code>
     /// </example>
-    public class ServerRulesEngine : RulesEngine<ServerActionContext,ServerRuleTypeEnum>
-    {
+    public class ServerRulesEngine : RulesEngine<ServerActionContext,ServerRuleTypeEnum>, IServerRulesEngine
+	{
         private readonly ServerRuleApplyTimeEnum _applyTime;
         private readonly ServerEntityKey _serverPartitionKey;
+		private List<IRule> _rulesApplied = new List<IRule>();
 
         #region Constructors
 
@@ -97,10 +124,24 @@ namespace ClearCanvas.ImageServer.Rules
 
         #endregion
 
-        #region Public Methods
+		#region Events
 
-	
-        /// <summary>
+		/// <summary>
+		/// Occurred when <see cref="Complete"/> in called.
+		/// </summary>
+		public event EventHandler<ServerRulesEngineCompletedEventArgs> Completed;
+
+		/// <summary>
+		/// Gets rules which were applied on all previous calls to <see cref="Execute"/>
+		/// </summary>
+		public IEnumerable<IRule> RulesApplied { get { return _rulesApplied.AsReadOnly(); } } 
+
+		#endregion
+
+		#region Public Methods
+
+
+		/// <summary>
         /// Load the rules engine from the Persistent Store and compile the conditions and actions.
         /// </summary>
         public void Load()
@@ -129,14 +170,13 @@ namespace ClearCanvas.ImageServer.Rules
 
                 // Create the specification and action compilers
                 // We'll compile the rules right away
-                XmlSpecificationCompiler specCompiler = new XmlSpecificationCompiler("dicom");
-                XmlActionCompiler<ServerActionContext, ServerRuleTypeEnum> actionCompiler = new XmlActionCompiler<ServerActionContext, ServerRuleTypeEnum>();
+            	var specCompiler = GetSpecificationCompiler();
 
                 foreach (ServerRule serverRule in list)
                 {
                     try
                     {
-                        Rule<ServerActionContext, ServerRuleTypeEnum> theRule = new Rule<ServerActionContext, ServerRuleTypeEnum>();
+                        var theRule = new Rule<ServerActionContext>();
                         theRule.Name = serverRule.RuleName;
                     	theRule.IsDefault = serverRule.DefaultRule;
                     	theRule.IsExempt = serverRule.ExemptRule;
@@ -147,7 +187,8 @@ namespace ClearCanvas.ImageServer.Rules
                                                                  delegate(XmlNode child) { return child.Name.Equals("rule"); });
 
 
-						theRule.Compile(ruleNode, serverRule.ServerRuleTypeEnum, specCompiler, actionCompiler);
+                    	var actionCompiler = GetActionCompiler(serverRule.ServerRuleTypeEnum);
+						theRule.Compile(ruleNode, specCompiler, actionCompiler);
 
                         RuleTypeCollection<ServerActionContext, ServerRuleTypeEnum> typeCollection;
 
@@ -175,6 +216,58 @@ namespace ClearCanvas.ImageServer.Rules
             Statistics.LoadTime.End();
         }
 
-        #endregion
-    }
+		public override void Execute(ServerActionContext context)
+		{
+			var rulesApplied=new List<IRule>();
+
+            Statistics.ExecutionTime.Start();
+
+            foreach (var typeCollection in _typeList.Values)
+            {
+                typeCollection.Execute(context, false);
+
+				if (typeCollection.LastAppliedRules!=null)
+            		rulesApplied.AddRange(typeCollection.LastAppliedRules);
+            }
+
+            Statistics.ExecutionTime.End();
+
+			_rulesApplied.AddRange(rulesApplied.Where(r=>!_rulesApplied.Contains(r)));
+		}
+
+		public void Complete(IEnumerable<IRule> rulesApplied)
+		{
+			if (Completed != null)
+				Completed(this, new ServerRulesEngineCompletedEventArgs(rulesApplied));
+		}
+
+		public static XmlSpecificationCompiler GetSpecificationCompiler()
+		{
+			return new XmlSpecificationCompiler("dicom", new DicomRuleSpecificationCompilerOperatorExtensionPoint());
+		}
+
+		public static XmlActionCompiler<ServerActionContext> GetActionCompiler(ServerRuleTypeEnum ruleType)
+		{
+			var xp = new ServerRuleActionCompilerOperatorExtensionPoint();
+			var operators = xp.CreateExtensions(ext => IsApplicableAction(ext.ExtensionClass.Resolve(), ruleType))
+				.Cast<IXmlActionCompilerOperator<ServerActionContext>>();
+
+			return new XmlActionCompiler<ServerActionContext>(operators);
+		}
+
+		#endregion
+
+		private static bool IsApplicableAction(Type actionClass, ServerRuleTypeEnum ruleType)
+		{
+			var attrs = AttributeUtils.GetAttributes<ActionApplicabilityAttribute>(actionClass);
+
+			// if no attributes, assume applicable to all rule types
+			if (!attrs.Any())
+				return true;
+
+			return attrs.Any(a => a.RuleType.ToServerRuleTypeEnum().Equals(ruleType));
+		}
+
+
+	}
 }

@@ -24,7 +24,6 @@
 
 using System.Collections.Generic;
 using ClearCanvas.Common.Utilities;
-using ClearCanvas.ImageViewer;
 using ClearCanvas.ImageViewer.PresentationStates.Dicom;
 
 namespace ClearCanvas.ImageViewer.PresentationStates
@@ -47,20 +46,15 @@ namespace ClearCanvas.ImageViewer.PresentationStates
 	/// The objects that constitute the presentation state of a given <see cref="IPresentationImage"/> are defined by the specific implementations.
 	/// </remarks>
 	[Cloneable(true)]
-    public abstract class PresentationState
+	public abstract class PresentationState
 	{
-        /// <summary>
-        /// Gets the default <see cref="PresentationState"/> for DICOM images.
-        /// </summary>
+		/// <summary>
+		/// Gets the default <see cref="PresentationState"/> for DICOM images.
+		/// </summary>
 		public static PresentationState DicomDefault
 		{
 			get { return DicomPresentationState.Default; }
 		}
-
-		/// <summary>
-		/// Constructs a new presentation state.
-		/// </summary>
-		protected PresentationState() {}
 
 		/// <summary>
 		/// Serializes the presentation state of the image to the current state object.
@@ -68,7 +62,7 @@ namespace ClearCanvas.ImageViewer.PresentationStates
 		/// <param name="image">The image whose presentation state is to be serialized.</param>
 		public virtual void Serialize(IPresentationImage image)
 		{
-			this.Serialize(ToEnumerable(image));
+			Serialize(ToEnumerable(image));
 		}
 
 		/// <summary>
@@ -83,7 +77,7 @@ namespace ClearCanvas.ImageViewer.PresentationStates
 		/// <param name="image">The image to which the presentation state is to be deserialized.</param>
 		public virtual void Deserialize(IPresentationImage image)
 		{
-			this.Deserialize(ToEnumerable(image));
+			Deserialize(ToEnumerable(image));
 		}
 
 		/// <summary>
@@ -102,7 +96,7 @@ namespace ClearCanvas.ImageViewer.PresentationStates
 		/// <param name="image">The image whose presentation state is to be cleared.</param>
 		public virtual void Clear(IPresentationImage image)
 		{
-			this.Clear(ToEnumerable(image));
+			Clear(ToEnumerable(image));
 		}
 
 		/// <summary>

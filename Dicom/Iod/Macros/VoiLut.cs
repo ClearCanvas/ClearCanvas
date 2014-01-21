@@ -23,15 +23,14 @@
 #endregion
 
 using System;
-using ClearCanvas.Dicom;
 using ClearCanvas.Dicom.Iod.Macros.VoiLut;
 
 namespace ClearCanvas.Dicom.Iod.Macros
 {
 	/// <summary>
-	/// VoiLut Macro
+	/// VOI LUT Macro
 	/// </summary>
-	/// <remarks>As defined in the DICOM Standard 2008, Part 3, Section C.11.2 (Table C.11-2b)</remarks>
+	/// <remarks>As defined in the DICOM Standard 2011, Part 3, Section C.11.2 (Table C.11-2b)</remarks>
 	public interface IVoiLutMacro : IIodMacro
 	{
 		/// <summary>
@@ -71,7 +70,7 @@ namespace ClearCanvas.Dicom.Iod.Macros
 	}
 
 	/// <summary>
-	/// VoiLut Macro
+	/// VOI LUT Macro
 	/// </summary>
 	/// <remarks>As defined in the DICOM Standard 2008, Part 3, Section C.11.2 (Table C.11-2b)</remarks>
 	internal class VoiLutMacro : SequenceIodBase, IVoiLutMacro
@@ -96,14 +95,14 @@ namespace ClearCanvas.Dicom.Iod.Macros
 		{
 			get
 			{
-				DicomAttribute dicomAttribute = base.DicomAttributeProvider[DicomTags.VoiLutSequence];
-				if (dicomAttribute.IsNull || dicomAttribute.Count == 0)
+				var dicomAttribute = DicomAttributeProvider[DicomTags.VoiLutSequence];
+				if (dicomAttribute.IsNull || dicomAttribute.IsEmpty)
 				{
 					return null;
 				}
 
-				VoiLutSequenceItem[] result = new VoiLutSequenceItem[dicomAttribute.Count];
-				DicomSequenceItem[] items = (DicomSequenceItem[]) dicomAttribute.Values;
+				var result = new VoiLutSequenceItem[dicomAttribute.Count];
+				var items = (DicomSequenceItem[]) dicomAttribute.Values;
 				for (int n = 0; n < items.Length; n++)
 					result[n] = new VoiLutSequenceItem(items[n]);
 
@@ -113,16 +112,25 @@ namespace ClearCanvas.Dicom.Iod.Macros
 			{
 				if (value == null || value.Length == 0)
 				{
-					base.DicomAttributeProvider[DicomTags.VoiLutSequence] = null;
+					DicomAttributeProvider[DicomTags.VoiLutSequence] = null;
 					return;
 				}
 
-				DicomSequenceItem[] result = new DicomSequenceItem[value.Length];
+				var result = new DicomSequenceItem[value.Length];
 				for (int n = 0; n < value.Length; n++)
 					result[n] = value[n].DicomSequenceItem;
 
-				base.DicomAttributeProvider[DicomTags.VoiLutSequence].Values = result;
+				DicomAttributeProvider[DicomTags.VoiLutSequence].Values = result;
 			}
+		}
+
+		/// <summary>
+		/// Creates a single instance of a VoiLutSequence item. Does not modify the VoiLutSequence in the underlying collection.
+		/// </summary>
+		public VoiLutSequenceItem CreateVoiLutSequenceItem()
+		{
+			var iodBase = new VoiLutSequenceItem(new DicomSequenceItem());
+			return iodBase;
 		}
 
 		/// <summary>
@@ -132,26 +140,26 @@ namespace ClearCanvas.Dicom.Iod.Macros
 		{
 			get
 			{
-				DicomAttribute attribute = base.DicomAttributeProvider[DicomTags.WindowCenter];
-				if (attribute.IsNull || attribute.IsEmpty || attribute.Count == 0)
+				var dicomAttribute = DicomAttributeProvider[DicomTags.WindowCenter];
+				if (dicomAttribute.IsNull || dicomAttribute.IsEmpty)
 					return null;
 
-				double[] values = new double[attribute.Count];
-				for (int n = 0; n < attribute.Count; n++)
-					values[n] = attribute.GetFloat64(n, 0);
+				var values = new double[dicomAttribute.Count];
+				for (var n = 0; n < values.Length; n++)
+					values[n] = dicomAttribute.GetFloat64(n, 0);
 				return values;
 			}
 			set
 			{
 				if (value == null || value.Length == 0)
 				{
-					base.DicomAttributeProvider[DicomTags.WindowCenter] = null;
+					DicomAttributeProvider[DicomTags.WindowCenter] = null;
 					return;
 				}
 
-				DicomAttribute attribute = base.DicomAttributeProvider[DicomTags.WindowCenter];
-				for (int n = value.Length - 1; n >= 0; n--)
-					attribute.SetFloat64(n, value[n]);
+				var dicomAttribute = DicomAttributeProvider[DicomTags.WindowCenter];
+				for (var n = 0; n < value.Length; n++)
+					dicomAttribute.SetFloat64(n, value[n]);
 			}
 		}
 
@@ -162,26 +170,26 @@ namespace ClearCanvas.Dicom.Iod.Macros
 		{
 			get
 			{
-				DicomAttribute attribute = base.DicomAttributeProvider[DicomTags.WindowWidth];
-				if (attribute.IsNull || attribute.IsEmpty || attribute.Count == 0)
+				var dicomAttribute = DicomAttributeProvider[DicomTags.WindowWidth];
+				if (dicomAttribute.IsNull || dicomAttribute.IsEmpty)
 					return null;
 
-				double[] values = new double[attribute.Count];
-				for (int n = 0; n < attribute.Count; n++)
-					values[n] = attribute.GetFloat64(n, 0);
+				var values = new double[dicomAttribute.Count];
+				for (var n = 0; n < values.Length; n++)
+					values[n] = dicomAttribute.GetFloat64(n, 0);
 				return values;
 			}
 			set
 			{
 				if (value == null || value.Length == 0)
 				{
-					base.DicomAttributeProvider[DicomTags.WindowWidth] = null;
+					DicomAttributeProvider[DicomTags.WindowWidth] = null;
 					return;
 				}
 
-				DicomAttribute attribute = base.DicomAttributeProvider[DicomTags.WindowWidth];
-				for (int n = value.Length - 1; n >= 0; n--)
-					attribute.SetFloat64(n, value[n]);
+				var dicomAttribute = DicomAttributeProvider[DicomTags.WindowWidth];
+				for (var n = 0; n < value.Length; n++)
+					dicomAttribute.SetFloat64(n, value[n]);
 			}
 		}
 
@@ -192,19 +200,26 @@ namespace ClearCanvas.Dicom.Iod.Macros
 		{
 			get
 			{
-				DicomAttribute attribute = base.DicomAttributeProvider[DicomTags.WindowCenterWidthExplanation];
-				if (attribute.IsNull || attribute.IsEmpty || attribute.Count == 0)
+				var dicomAttribute = DicomAttributeProvider[DicomTags.WindowCenterWidthExplanation];
+				if (dicomAttribute.IsNull || dicomAttribute.IsEmpty)
 					return null;
-				return (string[]) attribute.Values;
+
+				var values = new string[dicomAttribute.Count];
+				for (int n = 0; n < values.Length; n++)
+					values[n] = dicomAttribute.GetString(n, string.Empty);
+				return values;
 			}
 			set
 			{
 				if (value == null || value.Length == 0)
 				{
-					base.DicomAttributeProvider[DicomTags.WindowCenterWidthExplanation] = null;
+					DicomAttributeProvider[DicomTags.WindowCenterWidthExplanation] = null;
 					return;
 				}
-				base.DicomAttributeProvider[DicomTags.WindowCenterWidthExplanation].Values = value;
+
+				var dicomAttribute = DicomAttributeProvider[DicomTags.WindowCenterWidthExplanation];
+				for (int n = 0; n < value.Length; n++)
+					dicomAttribute.SetString(n, value[n] ?? string.Empty);
 			}
 		}
 
@@ -213,15 +228,15 @@ namespace ClearCanvas.Dicom.Iod.Macros
 		/// </summary>
 		public VoiLutFunction VoiLutFunction
 		{
-			get { return ParseEnum(base.DicomAttributeProvider[DicomTags.VoiLutFunction].GetString(0, string.Empty), VoiLutFunction.None); }
+			get { return ParseEnum(DicomAttributeProvider[DicomTags.VoiLutFunction].GetString(0, string.Empty), VoiLutFunction.None); }
 			set
 			{
 				if (value == VoiLutFunction.None)
 				{
-					base.DicomAttributeProvider[DicomTags.VoiLutFunction] = null;
+					DicomAttributeProvider[DicomTags.VoiLutFunction] = null;
 					return;
 				}
-				SetAttributeFromEnum(base.DicomAttributeProvider[DicomTags.VoiLutFunction], value);
+				SetAttributeFromEnum(DicomAttributeProvider[DicomTags.VoiLutFunction], value);
 			}
 		}
 
@@ -232,7 +247,7 @@ namespace ClearCanvas.Dicom.Iod.Macros
 		{
 			get
 			{
-				DicomAttribute attribute = base.DicomAttributeProvider[DicomTags.VoiLutSequence];
+				DicomAttribute attribute = DicomAttributeProvider[DicomTags.VoiLutSequence];
 				if (attribute.IsNull || attribute.IsEmpty)
 					return 0;
 				return attribute.Count;
@@ -246,7 +261,7 @@ namespace ClearCanvas.Dicom.Iod.Macros
 		{
 			get
 			{
-				DicomAttribute attribute = base.DicomAttributeProvider[DicomTags.WindowCenter];
+				DicomAttribute attribute = DicomAttributeProvider[DicomTags.WindowCenter];
 				if (attribute.IsNull || attribute.IsEmpty)
 					return 0;
 				return attribute.Count;
@@ -257,9 +272,9 @@ namespace ClearCanvas.Dicom.Iod.Macros
 	namespace VoiLut
 	{
 		/// <summary>
-		/// VoiLut Sequence
+		/// VOI LUT Sequence Item
 		/// </summary>
-		/// <remarks>As defined in the DICOM Standard 2008, Part 3, Section C.11.2 (Table C.11-2b)</remarks>
+		/// <remarks>As defined in the DICOM Standard 2011, Part 3, Section C.11.2 (Table C.11-2b)</remarks>
 		public class VoiLutSequenceItem : SequenceIodBase
 		{
 			/// <summary>
@@ -280,20 +295,23 @@ namespace ClearCanvas.Dicom.Iod.Macros
 			{
 				get
 				{
-					int[] result = new int[3];
-					if (base.DicomAttributeProvider[DicomTags.LutDescriptor].TryGetInt32(0, out result[0]))
-						if (base.DicomAttributeProvider[DicomTags.LutDescriptor].TryGetInt32(1, out result[1]))
-							if (base.DicomAttributeProvider[DicomTags.LutDescriptor].TryGetInt32(2, out result[2]))
-								return result;
+					var result = new int[3];
+					if (DicomAttributeProvider[DicomTags.LutDescriptor].TryGetInt32(0, out result[0])
+					    && DicomAttributeProvider[DicomTags.LutDescriptor].TryGetInt32(1, out result[1])
+					    && DicomAttributeProvider[DicomTags.LutDescriptor].TryGetInt32(2, out result[2]))
+						return result;
 					return null;
 				}
 				set
 				{
 					if (value == null || value.Length != 3)
-						throw new ArgumentNullException("value", "LutDescriptor is Type 1 Required.");
-					base.DicomAttributeProvider[DicomTags.LutDescriptor].SetInt32(0, value[0]);
-					base.DicomAttributeProvider[DicomTags.LutDescriptor].SetInt32(1, value[1]);
-					base.DicomAttributeProvider[DicomTags.LutDescriptor].SetInt32(2, value[2]);
+					{
+						const string msg = "LutDescriptor is Type 1 Required.";
+						throw new ArgumentNullException("value", msg);
+					}
+					DicomAttributeProvider[DicomTags.LutDescriptor].SetInt32(0, value[0]);
+					DicomAttributeProvider[DicomTags.LutDescriptor].SetInt32(1, value[1]);
+					DicomAttributeProvider[DicomTags.LutDescriptor].SetInt32(2, value[2]);
 				}
 			}
 
@@ -302,38 +320,38 @@ namespace ClearCanvas.Dicom.Iod.Macros
 			/// </summary>
 			public string LutExplanation
 			{
-				get { return base.DicomAttributeProvider[DicomTags.LutExplanation].GetString(0, string.Empty); }
+				get { return DicomAttributeProvider[DicomTags.LutExplanation].GetString(0, string.Empty); }
 				set
 				{
 					if (string.IsNullOrEmpty(value))
 					{
-						base.DicomAttributeProvider[DicomTags.LutExplanation] = null;
+						DicomAttributeProvider[DicomTags.LutExplanation] = null;
 						return;
 					}
-					base.DicomAttributeProvider[DicomTags.LutExplanation].SetString(0, value);
+					DicomAttributeProvider[DicomTags.LutExplanation].SetString(0, value);
 				}
 			}
 
 			/// <summary>
-			/// Gets or sets the value of LutData in the underlying collection. Type 1C.
+			/// Gets or sets the value of LutData in the underlying collection. Type 1.
 			/// </summary>
 			public ushort[] LutData
 			{
 				get
 				{
-					DicomAttribute attribute = base.DicomAttributeProvider[DicomTags.LutData];
+					DicomAttribute attribute = DicomAttributeProvider[DicomTags.LutData];
 					if (attribute.IsNull || attribute.IsEmpty || attribute.Count == 0)
 						return null;
-					return (ushort[])attribute.Values;
+					return (ushort[]) attribute.Values;
 				}
 				set
 				{
 					if (value == null || value.Length == 0)
 					{
-						base.DicomAttributeProvider[DicomTags.LutData] = null;
-						return;
+						const string msg = "LutData is Type 1 Required.";
+						throw new ArgumentNullException("value", msg);
 					}
-					base.DicomAttributeProvider[DicomTags.LutData].Values = value;
+					DicomAttributeProvider[DicomTags.LutData].Values = value;
 				}
 			}
 		}
@@ -343,8 +361,16 @@ namespace ClearCanvas.Dicom.Iod.Macros
 		/// a VOI LUT function to apply to the <see cref="IVoiLutMacro.WindowCenter"/> and <see cref="IVoiLutMacro.WindowWidth"/>.
 		/// </summary>
 		/// <remarks>As defined in the DICOM Standard 2008, Part 3, Section C.11.2 (Table C.11-2b)</remarks>
-		public enum VoiLutFunction {
+		public enum VoiLutFunction
+		{
+			/// <summary>
+			/// Specifies a linear VOI LUT function.
+			/// </summary>
 			Linear,
+
+			/// <summary>
+			/// Specifies a sigmoid VOI LUT function.
+			/// </summary>
 			Sigmoid,
 
 			/// <summary>

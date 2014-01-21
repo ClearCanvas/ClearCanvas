@@ -22,10 +22,12 @@
 
 #endregion
 
+using ClearCanvas.Common;
 using ClearCanvas.Desktop;
 using ClearCanvas.Desktop.Actions;
 using ClearCanvas.ImageViewer.BaseTools;
 using ClearCanvas.ImageViewer.Graphics;
+using ClearCanvas.ImageViewer.Graphics3D;
 using ClearCanvas.ImageViewer.Tools.Standard.Configuration;
 
 namespace ClearCanvas.ImageViewer.Tools.Standard
@@ -37,16 +39,15 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 	[Tooltip("activate", "TooltipReset")]
 	[IconSet("activate", "Icons.ResetToolSmall.png", "Icons.ResetToolMedium.png", "Icons.ResetToolLarge.png")]
 	[GroupHint("activate", "Tools.Image.Manipulation.Orientation.Reset")]
-
-	[ClearCanvas.Common.ExtensionOf(typeof(ImageViewerToolExtensionPoint))]
+	[ExtensionOf(typeof (ImageViewerToolExtensionPoint))]
 	public class ResetTool : ImageViewerTool
-    {
-		private readonly ImageSpatialTransformImageOperation _operation;
+	{
+		private readonly ResetImageOperation _operation;
 		private ToolModalityBehaviorHelper _toolBehavior;
-		
+
 		public ResetTool()
 		{
-			_operation = new ImageSpatialTransformImageOperation(Apply);
+			_operation = new ResetImageOperation(Apply);
 		}
 
 		public override void Initialize()
@@ -58,11 +59,11 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 
 		public void Activate()
 		{
-			if (!_operation.AppliesTo(this.SelectedPresentationImage))
+			if (!_operation.AppliesTo(SelectedPresentationImage))
 				return;
 
-			ImageOperationApplicator applicator = new ImageOperationApplicator(SelectedPresentationImage, _operation);
-			UndoableCommand historyCommand = _toolBehavior.Behavior.SelectedImageResetTool ? applicator.ApplyToReferenceImage() : applicator.ApplyToAllImages();
+			var applicator = new ImageOperationApplicator(SelectedPresentationImage, _operation);
+			var historyCommand = _toolBehavior.Behavior.SelectedImageResetTool ? applicator.ApplyToReferenceImage() : applicator.ApplyToAllImages();
 			if (historyCommand != null)
 			{
 				historyCommand.Name = SR.CommandReset;
@@ -72,14 +73,79 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 
 		public void Apply(IPresentationImage image)
 		{
-			IImageSpatialTransform transform = (IImageSpatialTransform)_operation.GetOriginator(image);
-			transform.Scale = 1.0f;
-			transform.TranslationX = 0.0f;
-			transform.TranslationY = 0.0f;
-			transform.FlipY = false;
-			transform.FlipX = false;
-			transform.RotationXY = 0;
-			transform.ScaleToFit = true;
+			var transform = ResetImageOperation.GetSpatialTransform(image);
+			if (transform != null)
+			{
+				transform.Scale = 1.0f;
+				transform.TranslationX = 0.0f;
+				transform.TranslationY = 0.0f;
+				transform.FlipY = false;
+				transform.FlipX = false;
+				transform.RotationXY = 0;
+				transform.ScaleToFit = true;
+			}
+
+			var transform3D = ResetImageOperation.GetSpatialTransform3D(image);
+			if (transform3D != null)
+			{
+				transform3D.Scale = 1.0f;
+				transform3D.TranslationX = 0.0f;
+				transform3D.TranslationY = 0.0f;
+				transform3D.TranslationZ = 0.0f;
+				transform3D.FlipYZ = false;
+				transform3D.FlipXZ = false;
+				transform3D.FlipXY = false;
+				transform3D.Rotation = null;
+			}
+		}
+
+		private class ResetImageOperation : BasicImageOperation
+		{
+			public ResetImageOperation(ApplyDelegate applyDelegate)
+				: base(i => new MemorableAdapter(i), applyDelegate) {}
+
+			public static IImageSpatialTransform GetSpatialTransform(IPresentationImage image)
+			{
+				return image is ISpatialTransformProvider ? ((ISpatialTransformProvider) image).SpatialTransform as IImageSpatialTransform : null;
+			}
+
+			public static ISpatialTransform3D GetSpatialTransform3D(IPresentationImage image)
+			{
+				return image is ISpatialTransform3DProvider ? ((ISpatialTransform3DProvider) image).SpatialTransform3D : null;
+			}
+
+			private class MemorableAdapter : IMemorable
+			{
+				private readonly IPresentationImage _image;
+
+				internal MemorableAdapter(IPresentationImage image)
+				{
+					_image = image;
+				}
+
+				public object CreateMemento()
+				{
+					var spatialTransform = GetSpatialTransform(_image);
+					var spatialTransformMemento = spatialTransform != null ? spatialTransform.CreateMemento() : null;
+
+					var spatialTransform3D = GetSpatialTransform3D(_image);
+					var spatialTransform3DMemento = spatialTransform3D != null ? spatialTransform3D.CreateMemento() : null;
+
+					return new[] {spatialTransformMemento, spatialTransform3DMemento};
+				}
+
+				public void SetMemento(object memento)
+				{
+					var array = memento as object[];
+					if (array == null) return;
+
+					var spatialTransform = GetSpatialTransform(_image);
+					if (spatialTransform != null && array.Length > 0) spatialTransform.SetMemento(array[0]);
+
+					var spatialTransform3D = GetSpatialTransform3D(_image);
+					if (spatialTransform3D != null && array.Length > 1) spatialTransform3D.SetMemento(array[1]);
+				}
+			}
 		}
 	}
 }

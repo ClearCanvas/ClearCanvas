@@ -31,8 +31,8 @@ using ClearCanvas.ImageServer.Model;
 
 namespace ClearCanvas.ImageServer.Rules.NoOp
 {
-	[ExtensionOf(typeof(XmlActionCompilerOperatorExtensionPoint<ServerActionContext, ServerRuleTypeEnum>))]
-	public class NoOpActionOperator : ActionOperatorCompilerBase, IXmlActionCompilerOperator<ServerActionContext, ServerRuleTypeEnum>
+	[ExtensionOf(typeof(ServerRuleActionCompilerOperatorExtensionPoint))]
+	public class NoOpActionOperator : ActionOperatorCompilerBase, IXmlActionCompilerOperator<ServerActionContext>
     {
         public NoOpActionOperator()
             : base("no-op")
@@ -46,7 +46,7 @@ namespace ClearCanvas.ImageServer.Rules.NoOp
             return new NoOpActionItem();
         }
 
-        public XmlSchemaElement GetSchema(ServerRuleTypeEnum ruleType)
+        public XmlSchemaElement GetSchema()
         {
             XmlSchemaComplexType type = new XmlSchemaComplexType();
 

@@ -37,13 +37,14 @@ using ClearCanvas.ImageServer.Common;
 using ClearCanvas.ImageServer.Common.Utilities;
 using ClearCanvas.ImageServer.Core;
 using ClearCanvas.ImageServer.Core.Data;
+using ClearCanvas.ImageServer.Core.Helpers;
 using ClearCanvas.ImageServer.Core.Validation;
+using ClearCanvas.ImageServer.Enterprise.Command;
 using ClearCanvas.ImageServer.Model;
 using ClearCanvas.ImageServer.Model.Brokers;
 using ClearCanvas.ImageServer.Model.EntityBrokers;
 using ClearCanvas.ImageServer.Model.Parameters;
 using ClearCanvas.ImageServer.Rules;
-using ClearCanvas.ImageServer.Common.Command;
 using ClearCanvas.Dicom.Utilities.Command;
 using ClearCanvas.ImageServer.Core.ModelExtensions;
 
@@ -213,7 +214,7 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.ReprocessStudy
             Platform.CheckForNullReference(item, "item");
             Platform.CheckForNullReference(item.StudyStorageKey, "item.StudyStorageKey");
 
-            var context = new StudyProcessorContext(StorageLocation);
+            var context = new StudyProcessorContext(StorageLocation, WorkQueueItem);
             
             // TODO: Should we enforce the patient's name rule?
             // If we do, the Study record will have the new patient's name 
@@ -318,12 +319,13 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.ReprocessStudy
 
             StudyXml studyXml = LoadStudyXml();
 
-            int reprocessedCounter = 0;
+            var reprocessedCounter = 0;
+        	var skippedCount = 0;
             var removedFiles = new List<FileInfo>();
             try
             {
                 // Traverse the directories, process 500 files at a time
-                FileProcessor.Process(StorageLocation.GetStudyPath(), "*.*",
+                var isCancelled = FileProcessor.Process(StorageLocation.GetStudyPath(), "*.*",
                                       delegate(string path, out bool cancel)
                                           {
                                               #region Reprocess File
@@ -353,12 +355,14 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.ReprocessStudy
                                                           {
                                                               Platform.Log(LogLevel.Warn, "SOP Instance UID in {0} appears more than once in the study.", path);
                                                           }
+
+                                                      	skippedCount++;
                                                       }
                                                       else
                                                       {
                                                           Platform.Log(ServerPlatform.InstanceLogLevel, "Reprocessing SOP {0} for study {1}",instanceUid, StorageLocation.StudyInstanceUid);
                                                           string groupId = ServerHelper.GetUidGroup(dicomFile, StorageLocation.ServerPartition, WorkQueueItem.InsertTime);
-                                                          ProcessingResult result = processor.ProcessFile(groupId, dicomFile, studyXml, true, false, null, null);
+                                                          ProcessingResult result = processor.ProcessFile(groupId, dicomFile, studyXml, true, false, null, null, SopInstanceProcessorSopType.ReprocessedSop);
                                                           switch (result.Status)
                                                           {
                                                               case ProcessingStatus.Success:
@@ -417,7 +421,14 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.ReprocessStudy
 
                                               #endregion
 
-                                              cancel = reprocessedCounter >= 500;
+											  if (reprocessedCounter>0 && reprocessedCounter % 200 == 0)
+											  {
+												  Platform.Log(LogLevel.Info, "Reprocessed {0} files for study {1}", reprocessedCounter + skippedCount, StorageLocation.StudyInstanceUid);
+											  }
+
+                                              cancel = reprocessedCounter >= 5000;
+
+											  
                                           }, true);
 
                 if (studyXml != null)
@@ -428,7 +439,7 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.ReprocessStudy
 
                 // Completed if either all files have been reprocessed 
                 // or no more dicom files left that can be reprocessed.
-                _completed = reprocessedCounter == 0;
+				_completed = reprocessedCounter == 0 || !isCancelled;
             }
             catch (Exception e)
             {
@@ -663,7 +674,7 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.ReprocessStudy
                                         User = _queueData.ChangeLog != null ? _queueData.ChangeLog.User : "Unknown"
                                     };
 
-                StudyHistory history = ServerPlatform.CreateStudyHistoryRecord(ctx, StorageLocation, null, StudyHistoryTypeEnum.Reprocessed, null, changeLog);
+                StudyHistory history = StudyHistoryHelper.CreateStudyHistoryRecord(ctx, StorageLocation, null, StudyHistoryTypeEnum.Reprocessed, null, changeLog);
                 if (history != null)
                     ctx.Commit();
             }

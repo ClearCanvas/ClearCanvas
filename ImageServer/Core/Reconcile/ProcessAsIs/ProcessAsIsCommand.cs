@@ -29,6 +29,7 @@ using ClearCanvas.Dicom.Utilities.Command;
 using ClearCanvas.Dicom.Utilities.Xml;
 using ClearCanvas.ImageServer.Common;
 using ClearCanvas.ImageServer.Core.Command;
+using ClearCanvas.ImageServer.Core.Helpers;
 using ClearCanvas.ImageServer.Core.Process;
 using ClearCanvas.ImageServer.Model;
 using ClearCanvas.ImageServer.Rules;
@@ -127,7 +128,7 @@ namespace ClearCanvas.ImageServer.Core.Reconcile.ProcessAsIs
 					string groupID = ServerHelper.GetUidGroup(file, _destinationStudyStorage.ServerPartition, Context.WorkQueueItem.InsertTime);
 
 				    SopInstanceProcessor sopProcessor = new SopInstanceProcessor(context);
-                    ProcessingResult result = sopProcessor.ProcessFile(groupID, file, xml, false, true, uid, GetReconcileUidPath(uid));
+                    ProcessingResult result = sopProcessor.ProcessFile(groupID, file, xml, false, true, uid, GetReconcileUidPath(uid), SopInstanceProcessorSopType.NewSop);
 					if (result.Status != ProcessingStatus.Success)
 					{
 						throw new ApplicationException(String.Format("Unable to reconcile image {0}", file.Filename));
@@ -145,8 +146,9 @@ namespace ClearCanvas.ImageServer.Core.Reconcile.ProcessAsIs
                     if (e is InstanceAlreadyExistsException
                         || e.InnerException != null && e.InnerException is InstanceAlreadyExistsException)
                     {
+                        // TODO (Rigel) - Check if we should include the WorkQueueData field here
                         DuplicateSopProcessorHelper.CreateDuplicateSIQEntry(file, _destinationStudyStorage, GetReconcileUidPath(uid),
-                                                                           Context.WorkQueueItem, uid);
+                                                                           Context.WorkQueueItem, uid, null);
                     }
                     else
                     {

@@ -84,8 +84,8 @@ namespace ClearCanvas.ImageViewer.Graphics
 					_point1 = base.SpatialTransform.ConvertToSource(value);
 				}
 
-				EventsHelper.Fire(_point1ChangedEvent, this, new PointChangedEventArgs(this.Point1));
-				base.NotifyVisualStateChanged("Point1");
+				EventsHelper.Fire(_point1ChangedEvent, this, new PointChangedEventArgs(this.Point1, CoordinateSystem));
+				base.NotifyVisualStateChanged("Point1", VisualStatePropertyKind.Geometry);
 			}
 		}
 
@@ -121,8 +121,8 @@ namespace ClearCanvas.ImageViewer.Graphics
 					_point2 = base.SpatialTransform.ConvertToSource(value);
 				}
 
-				EventsHelper.Fire(_point2ChangedEvent, this, new PointChangedEventArgs(this.Point2));
-				base.NotifyVisualStateChanged("Point2");
+				EventsHelper.Fire(_point2ChangedEvent, this, new PointChangedEventArgs(this.Point2, CoordinateSystem));
+				base.NotifyVisualStateChanged("Point2", VisualStatePropertyKind.Geometry);
 			}
 		}
 

@@ -31,12 +31,13 @@ using ClearCanvas.Dicom;
 using ClearCanvas.Dicom.Utilities.Command;
 using ClearCanvas.Dicom.Utilities.Xml;
 using ClearCanvas.ImageServer.Common;
-using ClearCanvas.ImageServer.Common.Command;
 using ClearCanvas.ImageServer.Core.Command;
 using ClearCanvas.ImageServer.Core.Data;
 using ClearCanvas.ImageServer.Core.Edit;
+using ClearCanvas.ImageServer.Core.Helpers;
 using ClearCanvas.ImageServer.Core.Process;
 using ClearCanvas.ImageServer.Core.Reconcile.CreateStudy;
+using ClearCanvas.ImageServer.Enterprise.Command;
 using ClearCanvas.ImageServer.Model;
 using ClearCanvas.ImageServer.Rules;
 
@@ -173,7 +174,7 @@ namespace ClearCanvas.ImageServer.Core.Reconcile.MergeStudy
 			Platform.Log(LogLevel.Info, "Updating existing study...");
 			using(ServerCommandProcessor updateProcessor = new ServerCommandProcessor("Update Study"))
 			{
-				UpdateStudyCommand studyUpdateCommand = new UpdateStudyCommand(Context.Partition, _destinationStudyStorage, _commands, ServerRuleApplyTimeEnum.SopProcessed);
+				UpdateStudyCommand studyUpdateCommand = new UpdateStudyCommand(Context.Partition, _destinationStudyStorage, _commands, ServerRuleApplyTimeEnum.SopProcessed, Context.WorkQueueItem);
 				updateProcessor.AddCommand(studyUpdateCommand);
 				if (!updateProcessor.Execute())
 				{
@@ -220,7 +221,8 @@ namespace ClearCanvas.ImageServer.Core.Reconcile.MergeStudy
 
 				    SopInstanceProcessor sopProcessor = new SopInstanceProcessor(context) {EnforceNameRules = true };
 
-                    ProcessingResult result = sopProcessor.ProcessFile(groupID, file, xml, false, true, uid, GetReconcileUidPath(uid));
+					ProcessingResult result = sopProcessor.ProcessFile(groupID, file, xml, false, true, uid, GetReconcileUidPath(uid),
+					                                                   SopInstanceProcessorSopType.NewSop);
 					if (result.Status != ProcessingStatus.Success)
 					{
 						throw new ApplicationException(String.Format("Unable to reconcile image {0}", file.Filename));
@@ -237,8 +239,9 @@ namespace ClearCanvas.ImageServer.Core.Reconcile.MergeStudy
                     if (e is InstanceAlreadyExistsException
 						|| e.InnerException != null && e.InnerException is InstanceAlreadyExistsException)
 					{
+                        // TODO (Rigel) - Check if we should include the WorkItemData to insert into the WorkQueue here.
 						DuplicateSopProcessorHelper.CreateDuplicateSIQEntry(file, _destinationStudyStorage, GetReconcileUidPath(uid),
-												   Context.WorkQueueItem, uid);
+												   Context.WorkQueueItem, uid, null);
 					}
                     else
                     {

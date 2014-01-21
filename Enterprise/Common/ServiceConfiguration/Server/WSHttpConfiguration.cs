@@ -22,6 +22,7 @@
 
 #endregion
 
+using System;
 using System.ServiceModel;
 using System.ServiceModel.Description;
 
@@ -41,10 +42,13 @@ namespace ClearCanvas.Enterprise.Common.ServiceConfiguration.Server
 		/// <param name="args"></param>
 		public void ConfigureServiceHost(ServiceHost host, ServiceHostConfigurationArgs args)
 		{
-			WSHttpBinding binding = new WSHttpBinding();
+			var binding = new WSHttpBinding();
 			binding.MaxReceivedMessageSize = args.MaxReceivedMessageSize;
-            binding.ReaderQuotas.MaxStringContentLength = args.MaxReceivedMessageSize;
-            binding.ReaderQuotas.MaxArrayLength = args.MaxReceivedMessageSize;
+			if (args.SendTimeoutSeconds > 0)
+				binding.SendTimeout = TimeSpan.FromSeconds(args.SendTimeoutSeconds);
+
+			binding.ReaderQuotas.MaxStringContentLength = args.MaxReceivedMessageSize;
+			binding.ReaderQuotas.MaxArrayLength = args.MaxReceivedMessageSize;
 			binding.Security.Mode = SecurityMode.Message;
 			binding.Security.Message.ClientCredentialType = args.Authenticated ?
 				MessageCredentialType.UserName : MessageCredentialType.None;
@@ -53,7 +57,7 @@ namespace ClearCanvas.Enterprise.Common.ServiceConfiguration.Server
 			host.AddServiceEndpoint(args.ServiceContract, binding, "");
 
 			// expose meta-data via HTTP GET
-			ServiceMetadataBehavior metadataBehavior = host.Description.Behaviors.Find<ServiceMetadataBehavior>();
+			var metadataBehavior = host.Description.Behaviors.Find<ServiceMetadataBehavior>();
 			if (metadataBehavior == null)
 			{
 				metadataBehavior = new ServiceMetadataBehavior();
@@ -61,10 +65,15 @@ namespace ClearCanvas.Enterprise.Common.ServiceConfiguration.Server
 				host.Description.Behaviors.Add(metadataBehavior);
 			}
 
+			//TODO (Rockstar): remove this after refactoring to do per-sop edits
+			foreach (var endpoint in host.Description.Endpoints)
+				foreach (var operation in endpoint.Contract.Operations)
+					operation.Behaviors.Find<DataContractSerializerOperationBehavior>().MaxItemsInObjectGraph = args.MaxReceivedMessageSize;
+
 			// set up the certificate - required for WSHttpBinding
-            host.Credentials.ServiceCertificate.SetCertificate(
-                args.CertificateSearchDirective.StoreLocation, args.CertificateSearchDirective.StoreName,
-                args.CertificateSearchDirective.FindType, args.CertificateSearchDirective.FindValue);
+			host.Credentials.ServiceCertificate.SetCertificate(
+				args.CertificateSearchDirective.StoreLocation, args.CertificateSearchDirective.StoreName,
+				args.CertificateSearchDirective.FindType, args.CertificateSearchDirective.FindValue);
 		}
 
 		#endregion

@@ -62,6 +62,9 @@ namespace ClearCanvas.ImageServer.Services.Dicom
         /// <returns></returns>
         public override IList<SupportedSop> GetSupportedSopClasses()
         {
+            if (!Context.AllowStorage)
+                return new List<SupportedSop>();
+
             if (_sopList == null)
             {
                 _sopList = new List<SupportedSop>();
@@ -83,9 +86,11 @@ namespace ClearCanvas.ImageServer.Services.Dicom
                         if (partitionSopClass.Enabled
                             && !partitionSopClass.NonImage)
                         {
-                            SupportedSop sop = new SupportedSop();
+                            var sop = new SupportedSop
+                                {
+                                    SopClass = SopClass.GetSopClass(partitionSopClass.SopClassUid)
+                                };
 
-                            sop.SopClass = SopClass.GetSopClass(partitionSopClass.SopClassUid);
                             foreach (PartitionTransferSyntax syntax in _syntaxList)
                             {
                                 sop.SyntaxList.Add(TransferSyntax.GetTransferSyntax(syntax.Uid));

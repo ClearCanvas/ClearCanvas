@@ -28,6 +28,7 @@ using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Dicom;
 using ClearCanvas.ImageViewer.Volume.Mpr.Utilities;
+using ClearCanvas.ImageViewer.Volumes;
 
 namespace ClearCanvas.ImageViewer.Volume.Mpr
 {
@@ -36,7 +37,8 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 	{
 		string Uid { get; }
 		string Description { get; }
-		Volume Volume { get; }
+		Volumes.Volume Volume { get; }
+		IVolumeHeader VolumeHeader { get; }
 		IMprVolume Parent { get; }
 		IList<MprSliceSop> SliceSops { get; }
 		event EventHandler SliceSopsChanged;
@@ -52,10 +54,10 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 		private IVolumeReference _volume;
 		private ObservableDisposableList<MprSliceSop> _sliceSops;
 
-		protected MprSliceSet(Volume volume)
+		protected MprSliceSet(Volumes.Volume volume)
 		{
 			Platform.CheckForNullReference(volume, "volume");
-			_volume = volume.CreateTransientReference();
+			_volume = volume.CreateReference();
 
 			_sliceSops = new ObservableDisposableList<MprSliceSop>();
 			_sliceSops.EnableEvents = true;
@@ -76,9 +78,14 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 			protected set { _description = value; }
 		}
 
-		public Volume Volume
+		public Volumes.Volume Volume
 		{
 			get { return _volume.Volume; }
+		}
+
+		public IVolumeHeader VolumeHeader
+		{
+			get { return _volume; }
 		}
 
 		public IList<MprSliceSop> SliceSops

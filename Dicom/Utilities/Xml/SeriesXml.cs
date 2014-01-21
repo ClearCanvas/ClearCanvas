@@ -147,6 +147,11 @@ namespace ClearCanvas.Dicom.Utilities.Xml
                 XmlElement baseInstance = _seriesTagsStream.GetMemento(theDocument, settings);
                 baseElement.AppendChild(baseInstance);
             }
+            else
+            {
+                _seriesTagsStream = null;
+            }
+
             series.AppendChild(baseElement);
 
             foreach (InstanceXml instance in _instanceList.Values)

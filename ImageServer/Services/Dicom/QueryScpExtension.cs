@@ -35,6 +35,8 @@ using ClearCanvas.Dicom.Network.Scp;
 using ClearCanvas.Dicom.Utilities.Xml;
 using ClearCanvas.Enterprise.Core;
 using ClearCanvas.ImageServer.Common;
+using ClearCanvas.ImageServer.Common.Helpers;
+using ClearCanvas.ImageServer.Core;
 using ClearCanvas.ImageServer.Core.Query;
 using ClearCanvas.ImageServer.Enterprise;
 using ClearCanvas.ImageServer.Model;
@@ -121,7 +123,7 @@ namespace ClearCanvas.ImageServer.Services.Dicom
 		    {
                 var helper = new QueryAuditHelper(ServerPlatform.AuditSource,
                                               outcome, parms, msg.AffectedSopClassUid, msg.DataSet);
-                ServerPlatform.LogAuditMessage(helper);
+                ServerAuditHelper.LogAuditMessage(helper);
 		    }
 		    catch (Exception e)
 		    {
@@ -1415,6 +1417,9 @@ namespace ClearCanvas.ImageServer.Services.Dicom
         /// <returns></returns>
         public override IList<SupportedSop> GetSupportedSopClasses()
         {
+            if (!Context.AllowQuery)
+                return new List<SupportedSop>();
+
             return _list;
         }
 

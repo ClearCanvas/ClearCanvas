@@ -102,5 +102,9 @@ namespace ClearCanvas.ImageServer.Model.Parameters
         {
             set { SubCriteria["AcceptLatestReport"] = new ProcedureParameter<bool>("AcceptLatestReport", value); }
         }
+        public ServerPartitionTypeEnum ServerPartitionTypeEnum
+        {
+            set { SubCriteria["ServerPartitionTypeEnum"] = new ProcedureParameter<ServerEnum>("ServerPartitionTypeEnum", value); }
+        }
     }
 }

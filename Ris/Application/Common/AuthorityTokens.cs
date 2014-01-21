@@ -298,5 +298,14 @@ namespace ClearCanvas.Ris.Application.Common
 			[AuthorityToken(Description = "Allow access to the Scheduling folder system.")]
 			public const string Scheduling = "RIS/Folder Systems/Scheduling";
 		}
+
+		public static class Desktop
+		{
+			[AuthorityToken(Description = "Allow administration of User-Interface validation rules.")]
+			public const string UIValidationRules = "Desktop/UI Validation Rules";
+
+			[AuthorityToken(Description = "Allow access to the RIS Folder Organization functionality.")]
+			public const string FolderOrganization = "Desktop/RIS/Folder Organization";
+		}
 	}
 }

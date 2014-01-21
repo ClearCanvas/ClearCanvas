@@ -33,8 +33,9 @@ using ClearCanvas.ImageServer.Model;
 
 namespace ClearCanvas.ImageServer.Rules.RleCodec.RleCompressAction
 {
-	[ExtensionOf(typeof(XmlActionCompilerOperatorExtensionPoint<ServerActionContext, ServerRuleTypeEnum>))]
-	public class RleActionOperator : ActionOperatorCompilerBase, IXmlActionCompilerOperator<ServerActionContext, ServerRuleTypeEnum>
+	[ExtensionOf(typeof(ServerRuleActionCompilerOperatorExtensionPoint))]
+	[ActionApplicability(ApplicableRuleType.StudyCompress)]
+	public class RleActionOperator : ActionOperatorCompilerBase, IXmlActionCompilerOperator<ServerActionContext>
 	{
 		public RleActionOperator()
 			: base("rle")
@@ -84,11 +85,8 @@ namespace ClearCanvas.ImageServer.Rules.RleCodec.RleCompressAction
 			return new RleActionItem(time, unit, convertFromPalette);
 		}
 
-		public XmlSchemaElement GetSchema(ServerRuleTypeEnum ruleType)
+		public XmlSchemaElement GetSchema()
 		{
-			if (!ruleType.Equals(ServerRuleTypeEnum.StudyCompress))
-				return null;
-
 			XmlSchemaElement element = GetTimeSchema(OperatorTag);
 
 			XmlSchemaAttribute attrib = new XmlSchemaAttribute();

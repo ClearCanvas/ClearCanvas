@@ -27,10 +27,11 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using ClearCanvas.Dicom;
 using ClearCanvas.Dicom.Iod;
+using ClearCanvas.Dicom.Iod.ContextGroups;
+using ClearCanvas.Dicom.Iod.Macros;
+using ClearCanvas.Dicom.ServiceModel.Query;
 using ClearCanvas.Dicom.Utilities;
 using ClearCanvas.Dicom.Validation;
-using ClearCanvas.Dicom.ServiceModel.Query;
-using ClearCanvas.Dicom.Iod.Macros;
 
 namespace ClearCanvas.ImageViewer.StudyManagement
 {
@@ -48,11 +49,10 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 	/// see <see cref="ISopReference"/>.
 	/// </para>
 	/// </remarks>
-	
-	public partial class Sop : IDisposable, ISopInstanceData, ISeriesData, IStudyData, IPatientData
+	public partial class Sop : IDisposable, IDicomAttributeProvider, ISopInstanceData, ISeriesData, IStudyData, IPatientData
 	{
 		private volatile Series _parentSeries;
-		private volatile ISopDataCacheItemReference _dataSourceReference;
+		private ISopDataSource _dataSource;
 
 		/// <summary>
 		/// Creates a new instance of <see cref="Sop"/> from a local file.
@@ -88,8 +88,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 			if (dataSource.IsImage != IsImage)
 				throw new ArgumentException("Data source/Sop type mismatch.", "dataSource");
 
-			//silently use shared/cached data source.
-			_dataSourceReference = SopDataCache.Add(dataSource);
+			_dataSource = dataSource;
 		}
 
 		/// <summary>
@@ -97,7 +96,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		/// </summary>
 		public ISopDataSource DataSource
 		{
-			get { return _dataSourceReference.RealDataSource; }
+			get { return _dataSource; }
 		}
 
 		/// <summary>
@@ -106,7 +105,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		/// </summary>
 		public bool IsStored
 		{
-			get { return DataSource.IsStored; }	
+			get { return DataSource.IsStored; }
 		}
 
 		/// <summary>
@@ -135,29 +134,24 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		/// </remarks>
 		public IImageIdentifier GetIdentifier()
 		{
-		    var studyIdentifier = GetStudyIdentifier();
+			var studyIdentifier = GetStudyIdentifier();
 			return new ImageIdentifier(this, studyIdentifier);
 		}
 
 		internal IStudyRootStudyIdentifier GetStudyIdentifier()
 		{
 			return new StudyRootStudyIdentifier(this, this, null)
-			           {
-			               SpecificCharacterSet = DicomStringHelper.GetDicomStringArray(SpecificCharacterSet), 
-                           RetrieveAE = DataSource.Server, 
-                           InstanceAvailability = "ONLINE"
-			           };
+			       	{
+			       		SpecificCharacterSet = DicomStringHelper.GetDicomStringArray(SpecificCharacterSet),
+			       		RetrieveAE = DataSource.Server,
+			       		InstanceAvailability = "ONLINE"
+			       	};
 		}
 
 		internal ISeriesIdentifier GetSeriesIdentifier()
 		{
-		    var studyIdentifier = GetStudyIdentifier();
+			var studyIdentifier = GetStudyIdentifier();
 			return new SeriesIdentifier(this, studyIdentifier);
-		}
-
-		internal IList<VoiDataLut> GetVoiDataLuts()
-		{
-			return _dataSourceReference.VoiDataLuts;
 		}
 
 		#region Meta info
@@ -188,7 +182,6 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		public virtual string SopClassUid
 		{
 			get { return DataSource.SopClassUid; }
-			
 		}
 
 		/// <summary>
@@ -214,6 +207,10 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 			}
 		}
 
+		#endregion
+
+		#region SOP Common Module
+
 		/// <summary>
 		/// Gets the instance number.
 		/// </summary>
@@ -221,6 +218,23 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		{
 			get { return DataSource.InstanceNumber; }
 		}
+
+		/// <summary>
+		/// Gets the content date.
+		/// </summary>
+		public virtual string ContentDate
+		{
+			get { return this[DicomTags.ContentDate].GetString(0, null) ?? ""; }
+		}
+
+		/// <summary>
+		/// Gets the content time.
+		/// </summary>
+		public virtual string ContentTime
+		{
+			get { return this[DicomTags.ContentTime].GetString(0, null) ?? ""; }
+		}
+
 		#endregion
 
 		#region Patient Module
@@ -301,6 +315,22 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		}
 
 		/// <summary>
+		/// Gets the patient species code sequence.
+		/// </summary>
+		public virtual Species PatientSpeciesCodeSequence
+		{
+			get
+			{
+				var attribute = this[DicomTags.PatientSpeciesCodeSequence];
+				if (attribute.IsEmpty || attribute.IsNull || attribute.Count == 0)
+					return null;
+
+				Species species;
+				return Species.TryParse(new CodeSequenceMacro(((DicomSequenceItem[]) attribute.Values)[0]), out species) ? species : null;
+			}
+		}
+
+		/// <summary>
 		/// Gets the coding scheme designator of the patient species code sequence.
 		/// </summary>
 		public virtual string PatientSpeciesCodeSequenceCodingSchemeDesignator
@@ -308,9 +338,9 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 			get
 			{
 				var attribute = this[DicomTags.PatientSpeciesCodeSequence];
-				if (attribute.IsNull || attribute.Count == 0)
+				if (attribute.IsEmpty || attribute.IsNull || attribute.Count == 0)
 					return null;
-				
+
 				var codeSquenceMacro = new CodeSequenceMacro(((DicomSequenceItem[]) attribute.Values)[0]);
 				return codeSquenceMacro.CodingSchemeDesignator;
 			}
@@ -324,10 +354,10 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 			get
 			{
 				var attribute = this[DicomTags.PatientSpeciesCodeSequence];
-				if (attribute.IsNull || attribute.Count == 0)
+				if (attribute.IsEmpty || attribute.IsNull || attribute.Count == 0)
 					return null;
 
-				var codeSquenceMacro = new CodeSequenceMacro(((DicomSequenceItem[])attribute.Values)[0]);
+				var codeSquenceMacro = new CodeSequenceMacro(((DicomSequenceItem[]) attribute.Values)[0]);
 				return codeSquenceMacro.CodeValue;
 			}
 		}
@@ -340,10 +370,10 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 			get
 			{
 				var attribute = this[DicomTags.PatientSpeciesCodeSequence];
-				if (attribute.IsNull || attribute.Count == 0)
+				if (attribute.IsEmpty || attribute.IsNull || attribute.Count == 0)
 					return null;
 
-				var codeSquenceMacro = new CodeSequenceMacro(((DicomSequenceItem[])attribute.Values)[0]);
+				var codeSquenceMacro = new CodeSequenceMacro(((DicomSequenceItem[]) attribute.Values)[0]);
 				return codeSquenceMacro.CodeMeaning;
 			}
 		}
@@ -361,6 +391,22 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		}
 
 		/// <summary>
+		/// Gets the patient breed code sequence.
+		/// </summary>
+		public virtual Breed PatientBreedCodeSequence
+		{
+			get
+			{
+				var attribute = this[DicomTags.PatientBreedCodeSequence];
+				if (attribute.IsEmpty || attribute.IsNull || attribute.Count == 0)
+					return null;
+
+				Breed breed;
+				return Breed.TryParse(new CodeSequenceMacro(((DicomSequenceItem[]) attribute.Values)[0]), out breed) ? breed : null;
+			}
+		}
+
+		/// <summary>
 		/// Gets the coding scheme designator of the patient breed code sequence.
 		/// </summary>
 		public virtual string PatientBreedCodeSequenceCodingSchemeDesignator
@@ -368,10 +414,10 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 			get
 			{
 				var attribute = this[DicomTags.PatientBreedCodeSequence];
-				if (attribute.IsNull || attribute.Count == 0)
+				if (attribute.IsEmpty || attribute.IsNull || attribute.Count == 0)
 					return null;
 
-				var codeSquenceMacro = new CodeSequenceMacro(((DicomSequenceItem[])attribute.Values)[0]);
+				var codeSquenceMacro = new CodeSequenceMacro(((DicomSequenceItem[]) attribute.Values)[0]);
 				return codeSquenceMacro.CodingSchemeDesignator;
 			}
 		}
@@ -384,10 +430,10 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 			get
 			{
 				var attribute = this[DicomTags.PatientBreedCodeSequence];
-				if (attribute.IsNull || attribute.Count == 0)
+				if (attribute.IsEmpty || attribute.IsNull || attribute.Count == 0)
 					return null;
 
-				var codeSquenceMacro = new CodeSequenceMacro(((DicomSequenceItem[])attribute.Values)[0]);
+				var codeSquenceMacro = new CodeSequenceMacro(((DicomSequenceItem[]) attribute.Values)[0]);
 				return codeSquenceMacro.CodeValue;
 			}
 		}
@@ -400,10 +446,10 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 			get
 			{
 				var attribute = this[DicomTags.PatientBreedCodeSequence];
-				if (attribute.IsNull || attribute.Count == 0)
+				if (attribute.IsEmpty || attribute.IsNull || attribute.Count == 0)
 					return null;
 
-				var codeSquenceMacro = new CodeSequenceMacro(((DicomSequenceItem[])attribute.Values)[0]);
+				var codeSquenceMacro = new CodeSequenceMacro(((DicomSequenceItem[]) attribute.Values)[0]);
 				return codeSquenceMacro.CodeMeaning;
 			}
 		}
@@ -558,18 +604,18 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 
 		#endregion
 
-        string[] IStudyData.SopClassesInStudy
-        {
-            get
-            {
-                if (_parentSeries != null && _parentSeries.ParentStudy != null)
-                    return _parentSeries.ParentStudy.SopClassesInStudy;
+		string[] IStudyData.SopClassesInStudy
+		{
+			get
+			{
+				if (_parentSeries != null && _parentSeries.ParentStudy != null)
+					return _parentSeries.ParentStudy.SopClassesInStudy;
 
-                return null;
-            }
-        }
-        
-        string[] IStudyData.ModalitiesInStudy
+				return null;
+			}
+		}
+
+		string[] IStudyData.ModalitiesInStudy
 		{
 			get
 			{
@@ -659,7 +705,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		{
 			get
 			{
-				string manufacturer; 
+				string manufacturer;
 				manufacturer = this[DicomTags.Manufacturer].GetString(0, null);
 				return manufacturer ?? "";
 			}
@@ -1095,52 +1141,98 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 			value = value ?? "";
 		}
 
+		#region IDicomAttributeProvider Implementation
+
 		/// <summary>
-		/// Gets a specific DICOM tag in the underlying native object.
+		/// Gets a specific DICOM attribute in the underlying native object.
 		/// </summary>
 		/// <remarks>
 		/// <see cref="DicomAttribute"/>s returned from this indexer are considered
 		/// read-only and should not be modified in any way.
 		/// </remarks>
-		/// <param name="tag">The DICOM tag to retrieve.</param>
+		/// <param name="tag">The DICOM tag of the attribute to retrieve.</param>
 		/// <exception cref="ArgumentOutOfRangeException">Thrown if the specified DICOM tag is not within the valid range for either the meta info or the dataset.</exception>
-		public DicomAttribute this[DicomTag tag]
+		public virtual DicomAttribute this[DicomTag tag]
 		{
-			get { return this[tag.TagValue]; }
+			get { return DataSource[tag]; }
 		}
 
 		/// <summary>
-		/// Gets a specific DICOM tag in the underlying native object.
+		/// Gets a specific DICOM attribute in the underlying native object.
 		/// </summary>
 		/// <remarks>
 		/// <see cref="DicomAttribute"/>s returned from this indexer are considered
 		/// read-only and should not be modified in any way.
 		/// </remarks>
-		/// <param name="tag">The DICOM tag to retrieve.</param>
+		/// <param name="tag">The DICOM tag of the attribute to retrieve.</param>
 		/// <exception cref="ArgumentOutOfRangeException">Thrown if the specified DICOM tag is not within the valid range for either the meta info or the dataset.</exception>
 		public virtual DicomAttribute this[uint tag]
 		{
-			get { return this.DataSource[tag]; }
+			get { return DataSource[tag]; }
 		}
+
+		/// <summary>
+		/// Gets a specific DICOM attribute in the underlying native object.
+		/// </summary>
+		/// <remarks>
+		/// <see cref="DicomAttribute"/>s returned from this indexer are considered
+		/// read-only and should not be modified in any way.
+		/// </remarks>
+		/// <param name="tag">The DICOM tag of the attribute to retrieve.</param>
+		/// <param name="dicomAttribute">Returns the requested <see cref="DicomAttribute"/>.</param>
+		/// <exception cref="ArgumentOutOfRangeException">Thrown if the specified DICOM tag is not within the valid range for either the meta info or the dataset.</exception>
+		public virtual bool TryGetAttribute(DicomTag tag, out DicomAttribute dicomAttribute)
+		{
+			return DataSource.TryGetAttribute(tag, out dicomAttribute);
+		}
+
+		/// <summary>
+		/// Gets a specific DICOM attribute in the underlying native object.
+		/// </summary>
+		/// <remarks>
+		/// <see cref="DicomAttribute"/>s returned from this indexer are considered
+		/// read-only and should not be modified in any way.
+		/// </remarks>
+		/// <param name="tag">The DICOM tag of the attribute to retrieve.</param>
+		/// <param name="dicomAttribute">Returns the requested <see cref="DicomAttribute"/>.</param>
+		/// <exception cref="ArgumentOutOfRangeException">Thrown if the specified DICOM tag is not within the valid range for either the meta info or the dataset.</exception>
+		public virtual bool TryGetAttribute(uint tag, out DicomAttribute dicomAttribute)
+		{
+			return DataSource.TryGetAttribute(tag, out dicomAttribute);
+		}
+
+		DicomAttribute IDicomAttributeProvider.this[DicomTag tag]
+		{
+			get { return this[tag]; }
+			set { throw new InvalidOperationException(); }
+		}
+
+		DicomAttribute IDicomAttributeProvider.this[uint tag]
+		{
+			get { return this[tag]; }
+			set { throw new InvalidOperationException(); }
+		}
+
+		#endregion
 
 		private static void GetUint16FromAttribute(DicomAttribute attribute, uint position, out ushort value)
 		{
-			attribute.TryGetUInt16((int)position, out value);
+			attribute.TryGetUInt16((int) position, out value);
 		}
 
 		private static void GetInt32FromAttribute(DicomAttribute attribute, uint position, out int value)
 		{
-			attribute.TryGetInt32((int)position, out value);
+			attribute.TryGetInt32((int) position, out value);
 		}
 
 		private static void GetFloat64FromAttribute(DicomAttribute attribute, uint position, out double value)
 		{
-			attribute.TryGetFloat64((int)position, out value);
+			attribute.TryGetFloat64((int) position, out value);
 		}
 
 		private static void GetStringFromAttribute(DicomAttribute attribute, uint position, out string value)
 		{
-			attribute.TryGetString((int)position, out value);
+			attribute.TryGetString((int) position, out value);
 		}
 
 		private static void GetStringArrayFromAttribute(DicomAttribute attribute, uint position, out string value)
@@ -1151,7 +1243,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		private static void GetAttributeValueOBOW(DicomAttribute attribute, uint position, out byte[] value)
 		{
 			if (attribute is DicomAttributeOW || attribute is DicomAttributeOB)
-				value = (byte[])attribute.Values;
+				value = (byte[]) attribute.Values;
 			else
 				value = null;
 		}
@@ -1200,7 +1292,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 			return IsImageSop(SopClass.GetSopClass(sopClassUid));
 		}
 
-        // TODO (CR Jun 2012): Move to a more common place, like a SopClassExtensions class in IV.Common, or CC.Dicom?
+		// TODO (CR Jun 2012): Move to a more common place, like a SopClassExtensions class in IV.Common, or CC.Dicom?
 
 		internal static bool IsImageSop(SopClass sopClass)
 		{
@@ -1211,6 +1303,8 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 
 		private static IEnumerable<SopClass> GetImageSopClasses()
 		{
+			yield return SopClass.BreastTomosynthesisImageStorage;
+
 			yield return SopClass.ComputedRadiographyImageStorage;
 			yield return SopClass.CtImageStorage;
 
@@ -1225,9 +1319,11 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 
 			yield return SopClass.EnhancedCtImageStorage;
 			yield return SopClass.EnhancedMrImageStorage;
+			yield return SopClass.EnhancedPetImageStorage;
+
+			yield return SopClass.EnhancedUsVolumeStorage;
 
 			yield return SopClass.EnhancedXaImageStorage;
-
 			yield return SopClass.EnhancedXrfImageStorage;
 
 			yield return SopClass.MrImageStorage;
@@ -1289,7 +1385,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 			{
 				ValidateInternal();
 			}
-			catch(SopValidationException)
+			catch (SopValidationException)
 			{
 				throw;
 			}
@@ -1308,7 +1404,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 					return;
 			}
 
-            throw new SopValidationException(String.Format("Unsupported transfer syntax: {0}", TransferSyntaxUid));
+			throw new SopValidationException(String.Format("Unsupported transfer syntax: {0}", TransferSyntaxUid));
 		}
 
 		protected virtual IEnumerable<TransferSyntax> GetAllowableTransferSyntaxes()
@@ -1344,10 +1440,10 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		/// <param name="disposing"></param>
 		protected virtual void Dispose(bool disposing)
 		{
-			if (disposing && _dataSourceReference != null)
+			if (disposing && _dataSource != null)
 			{
-				_dataSourceReference.Dispose();
-				_dataSourceReference = null;
+				_dataSource.Dispose();
+				_dataSource = null;
 			}
 		}
 

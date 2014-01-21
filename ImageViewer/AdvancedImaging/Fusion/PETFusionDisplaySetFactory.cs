@@ -25,11 +25,12 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using ClearCanvas.Common;
 using ClearCanvas.Dicom;
 using ClearCanvas.Dicom.Iod;
 using ClearCanvas.Dicom.Utilities;
-using ClearCanvas.ImageViewer.AdvancedImaging.Fusion.Utilities;
+using ClearCanvas.ImageViewer.Common;
 using ClearCanvas.ImageViewer.Comparers;
 using ClearCanvas.ImageViewer.Mathematics;
 using ClearCanvas.ImageViewer.StudyManagement;
@@ -82,7 +83,8 @@ namespace ClearCanvas.ImageViewer.AdvancedImaging.Fusion
 						return displaySets;
 					}
 
-					using (var fusionOverlayData = new FusionOverlayData(GetFrames(series.Sops)))
+					var overlayFrames = GetFrames(series.Sops);
+					using (var fusionOverlayData = new FusionOverlayData(overlayFrames))
 					{
 						foreach (var baseSeries in fuseableBaseSeries)
 						{
@@ -95,12 +97,15 @@ namespace ClearCanvas.ImageViewer.AdvancedImaging.Fusion
 
 							var descriptor = new PETFusionDisplaySetDescriptor(baseSeries.GetIdentifier(), series.GetIdentifier(), IsAttenuationCorrected(series.Sops[0]));
 							var displaySet = new DisplaySet(descriptor);
-							foreach (var baseFrame in GetFrames(baseSeries.Sops))
+							using (var sops = new DisposableList<Sop>(baseSeries.Sops.OfType<ImageSop>().Select(s => new ImageSop(new FusionSopDataSource(s.DataSource, _fusionType, overlayFrames)))))
 							{
-								using (var fusionOverlaySlice = fusionOverlayData.CreateOverlaySlice(baseFrame))
+								foreach (var baseFrame in GetFrames(sops))
 								{
-									var fus = new FusionPresentationImage(baseFrame, fusionOverlaySlice);
-									displaySet.PresentationImages.Add(fus);
+									using (var fusionOverlaySlice = fusionOverlayData.CreateOverlaySlice(baseFrame))
+									{
+										var fus = new FusionPresentationImage(baseFrame, fusionOverlaySlice);
+										displaySet.PresentationImages.Add(fus);
+									}
 								}
 							}
 							displaySet.PresentationImages.Sort();
@@ -204,6 +209,7 @@ namespace ClearCanvas.ImageViewer.AdvancedImaging.Fusion
 
 			// ensure all frames have the same orientation
 			ImageOrientationPatient orient = frames[0].ImageOrientationPatient;
+			var rescaleUnits = frames[0].RescaleUnits;
 			double minColumnSpacing = double.MaxValue, minRowSpacing = double.MaxValue;
 			double maxColumnSpacing = double.MinValue, maxRowSpacing = double.MinValue;
 			foreach (Frame frame in frames)
@@ -211,6 +217,12 @@ namespace ClearCanvas.ImageViewer.AdvancedImaging.Fusion
 				if (frame.ImageOrientationPatient.IsNull)
 				{
 					error = SR.MessageMissingImageOrientation;
+					return false;
+				}
+
+				if (frame.RescaleUnits != rescaleUnits)
+				{
+					error = SR.MessageInconsistentRescaleFunctionUnits;
 					return false;
 				}
 
@@ -324,11 +336,7 @@ namespace ClearCanvas.ImageViewer.AdvancedImaging.Fusion
 
 		private static List<Frame> GetFrames(IEnumerable<Sop> sops)
 		{
-			List<Frame> list = new List<Frame>();
-			foreach (var sop in sops)
-				if (sop is ImageSop)
-					list.AddRange(((ImageSop) sop).Frames);
-			return list;
+			return sops.OfType<ImageSop>().SelectMany(s => s.Frames).ToList();
 		}
 
 		private static float CalcSpaceBetweenPlanes(Frame frame1, Frame frame2)
@@ -344,23 +352,17 @@ namespace ClearCanvas.ImageViewer.AdvancedImaging.Fusion
 		{
 			try
 			{
-				using (IPresentationImage firstImage = ImageViewer.PresentationImageFactory.Create(frames[0]))
+				// neither of these should return null since we already checked for image orientation and position (patient)
+				var firstImagePlane = frames[0].ImagePlaneHelper;
+				var lastImagePlane = frames[frames.Count - 1].ImagePlaneHelper;
+
+				Vector3D stackZ = lastImagePlane.ImageTopLeftPatient - firstImagePlane.ImageTopLeftPatient;
+				Vector3D imageX = firstImagePlane.ImageTopRightPatient - firstImagePlane.ImageTopLeftPatient;
+
+				if (!stackZ.IsOrthogonalTo(imageX, _gantryTiltTolerance))
 				{
-					using (IPresentationImage lastImage = ImageViewer.PresentationImageFactory.Create(frames[frames.Count - 1]))
-					{
-						// neither of these should return null since we already checked for image orientation and position (patient)
-						DicomImagePlane firstImagePlane = DicomImagePlane.FromImage(firstImage);
-						DicomImagePlane lastImagePlane = DicomImagePlane.FromImage(lastImage);
-
-						Vector3D stackZ = lastImagePlane.PositionPatientTopLeft - firstImagePlane.PositionPatientTopLeft;
-						Vector3D imageX = firstImagePlane.PositionPatientTopRight - firstImagePlane.PositionPatientTopLeft;
-
-						if (!stackZ.IsOrthogonalTo(imageX, _gantryTiltTolerance))
-						{
-							// this is a gantry slew (gantry tilt about Y axis)
-							return false;
-						}
-					}
+					// this is a gantry slew (gantry tilt about Y axis)
+					return false;
 				}
 				return true;
 			}

@@ -26,8 +26,8 @@
 
 namespace ClearCanvas.Common.Specifications
 {
-    public interface ISpecification
-    {
-        TestResult Test(object obj);
-    }
+	public interface ISpecification
+	{
+		TestResult Test(object obj);
+	}
 }

@@ -62,7 +62,7 @@ namespace ClearCanvas.ImageViewer.Tools.Standard.ImageProperties
 			if (image == null || !(image is IImageSopProvider))
 				return properties.ToArray();
 
-			ISopDataSource dataSource = ((IImageSopProvider) image).ImageSop.DataSource;
+			IDicomAttributeProvider dataSource = ((IImageSopProvider) image).Frame;
 
 			try
 			{

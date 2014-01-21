@@ -30,34 +30,33 @@ namespace ClearCanvas.Enterprise.Common.Setup
 	{
 		public SetupCommandLine()
 		{
-			SysAdminGroup = "Administrators";
 			Password = "clearcanvas";
 			UserName = "sa";
 			ImportSettingsGroups = true;
-			ImportDefaultAuthorityGroups = true;
+			ImportDefaultAuthorityGroups = false;
 			ImportAuthorityTokens = true;
 			MigrateSharedSettings = true;
 		}
 
-        /// <summary>
-        /// Specifies whether to import authority tokens.
-        /// </summary>
-        [CommandLineParameter("tokens", "t", "Specifies whether to import authority tokens. This option is enabled by default.")]
+		/// <summary>
+		/// Specifies whether to import authority tokens.
+		/// </summary>
+		[CommandLineParameter("tokens", "t", "Specifies whether to import authority tokens. This option is enabled by default.")]
 		public bool ImportAuthorityTokens { get; set; }
 
 		/// <summary>
-		/// Specifies whether to create default authority groups.
+		/// Specifies whether to create default authority groups defined in plugins.
 		/// </summary>
-		[CommandLineParameter("groups", "g", "Specifies whether to import the default authority groups. This option is enabled by default.")]
+		[CommandLineParameter("groups", "g", "Specifies whether to import the default authority groups defined in plugins. This option is disabled by default.")]
 		public bool ImportDefaultAuthorityGroups { get; set; }
 
-        /// <summary>
-        /// Specifies whether to import settings groups.
-        /// </summary>
-        [CommandLineParameter("settings", "s", "Specifies whether to import settings groups. This option is enabled by default.")]
+		/// <summary>
+		/// Specifies whether to import settings groups.
+		/// </summary>
+		[CommandLineParameter("settings", "s", "Specifies whether to import settings groups. This option is enabled by default.")]
 		public bool ImportSettingsGroups { get; set; }
 
-        /// <summary>
+		/// <summary>
 		/// Specifies whether to import settings groups.
 		/// </summary>
 		[CommandLineParameter("migrate", "m", "Specifies whether to migrate shared settings from a previously installed version.")]
@@ -82,9 +81,9 @@ namespace ClearCanvas.Enterprise.Common.Setup
 		public string Password { get; set; }
 
 		/// <summary>
-		/// Name of the sys-admin group. Imported tokens will be automatically added to this group.
+		/// Specifies the name of a file or folder containing authority group data to be imported.
 		/// </summary>
-		[CommandLineParameter("sgroup", "Specifies the name of the system admin authority group, so that imported tokens can be added to it.")]
-		public string SysAdminGroup { get; set; }
-		}
+		[CommandLineParameter("authGroupData", "Specifies the name of a file or folder containing authority group data to be imported.")]
+		public string AuthorityGroupData { get; set; }
+	}
 }

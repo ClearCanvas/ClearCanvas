@@ -280,6 +280,22 @@ namespace ClearCanvas.Dicom.Iod.ContextGroups
 			}
 
 			/// <summary>
+			/// Gets the context group item as a code sequence.
+			/// </summary>
+			public CodeSequenceMacro AsCodeSequenceItem()
+			{
+				return this;
+			}
+
+			/// <summary>
+			/// Gets the context group item as a sequence item.
+			/// </summary>
+			public DicomSequenceItem AsDicomSequenceItem()
+			{
+				return this;
+			}
+
+			/// <summary>
 			/// Casts a context group item as a code sequence.
 			/// </summary>
 			/// <param name="value">A context group item.</param>
@@ -291,6 +307,20 @@ namespace ClearCanvas.Dicom.Iod.ContextGroups
 				CodeSequenceMacro codeSequence = new CodeSequenceMacro();
 				value.WriteToCodeSequence(codeSequence);
 				return codeSequence;
+			}
+
+			/// <summary>
+			/// Casts a context group item as a sequence item.
+			/// </summary>
+			/// <param name="value">A context group item.</param>
+			/// <returns>A <see cref="CodeSequenceMacro"/> whose attribute values are those of the specified context group item.</returns>
+			public static implicit operator DicomSequenceItem(ContextGroupItemBase value)
+			{
+				if (value == null)
+					return null;
+				CodeSequenceMacro codeSequence = new CodeSequenceMacro();
+				value.WriteToCodeSequence(codeSequence);
+				return codeSequence.DicomSequenceItem;
 			}
 
 			/// <summary>

@@ -24,6 +24,7 @@
 
 using System;
 using ClearCanvas.Common;
+using ClearCanvas.Common.Utilities;
 using ClearCanvas.Enterprise.Common;
 using NHibernate;
 using ClearCanvas.Enterprise.Core;
@@ -104,6 +105,8 @@ namespace ClearCanvas.Enterprise.Hibernate
 				// recorded by the interceptor
 				FlushAndValidate();
 
+				EventsHelper.Fire(PreCommit, this, EventArgs.Empty);
+
 				// publish pre-commit to listeners
 				var changeSetPublisher = new EntityChangeSetPublisher();
 				changeSetPublisher.PreCommit(new EntityChangeSetPreCommitArgs(new EntityChangeSet(_interceptor.FullChangeSet), this));
@@ -125,6 +128,8 @@ namespace ClearCanvas.Enterprise.Hibernate
 				HandleHibernateException(e, SR.ExceptionCommitFailure);
 			}
 		}
+
+		public event EventHandler PreCommit;
 
 		#endregion
 

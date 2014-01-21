@@ -22,6 +22,7 @@
 
 #endregion
 
+using System.Linq;
 using ClearCanvas.Dicom;
 using ClearCanvas.ImageViewer.StudyManagement;
 
@@ -29,6 +30,8 @@ namespace ClearCanvas.ImageViewer.Tools.Standard.Configuration
 {
 	internal sealed class ToolModalityBehaviorHelper
 	{
+		internal const string ModalityBreastTomosynthesis = @"MG (BT)";
+
 		private readonly IImageViewer _imageViewer;
 
 		public ToolModalityBehaviorHelper(IImageViewer imageViewer)
@@ -38,7 +41,7 @@ namespace ClearCanvas.ImageViewer.Tools.Standard.Configuration
 
 		public ToolModalityBehavior Behavior
 		{
-            get { return ToolSettings.DefaultInstance.CachedToolModalityBehavior.GetEntryOrDefault(SelectedModality); }
+			get { return ToolSettings.DefaultInstance.CachedToolModalityBehavior.GetEntryOrDefault(SelectedModality); }
 		}
 
 		private string SelectedModality
@@ -49,19 +52,31 @@ namespace ClearCanvas.ImageViewer.Tools.Standard.Configuration
 				if (selectedImage == null)
 					return string.Empty;
 
-				if (selectedImage.ParentDisplaySet != null)
+				var parentDisplaySet = selectedImage.ParentDisplaySet;
+				if (parentDisplaySet != null)
 				{
-					var dicomDescriptor = selectedImage.ParentDisplaySet.Descriptor as IDicomDisplaySetDescriptor;
+					var dicomDescriptor = parentDisplaySet.Descriptor as IDicomDisplaySetDescriptor;
 					if (dicomDescriptor != null && dicomDescriptor.SourceSeries != null)
 					{
 						var series = _imageViewer.StudyTree.GetSeries(dicomDescriptor.SourceSeries.SeriesInstanceUid ?? string.Empty);
-						if (series != null && series.Sops.Count > 0 && series.Sops[0].SopClassUid == SopClass.KeyObjectSelectionDocumentStorageUid)
-							return @"KO";
+						if (series != null)
+						{
+							var firstSop = series.Sops.FirstOrDefault();
+							if (firstSop != null)
+							{
+								var sopClassUid = firstSop.SopClassUid;
+								if (sopClassUid == SopClass.KeyObjectSelectionDocumentStorageUid)
+									return @"KO";
+								else if (sopClassUid == SopClass.BreastTomosynthesisImageStorageUid)
+									return ModalityBreastTomosynthesis;
+							}
+						}
 					}
 				}
 
 				var imageSopProvider = selectedImage as IImageSopProvider;
-				return imageSopProvider != null ? imageSopProvider.ImageSop.Modality : string.Empty;
+				if (imageSopProvider == null) return string.Empty;
+				return imageSopProvider.Sop.SopClassUid == SopClass.BreastTomosynthesisImageStorageUid ? ModalityBreastTomosynthesis : imageSopProvider.ImageSop.Modality;
 			}
 		}
 	}

@@ -37,169 +37,168 @@ using ClearCanvas.ImageViewer.StudyManagement;
 
 namespace ClearCanvas.ImageViewer.StudyLoaders.Streaming
 {
-    [ExtensionOf(typeof(ServiceNodeServiceProviderExtensionPoint))]
-    internal class StudyLoaderServiceProvider : ServiceNodeServiceProvider
-    {
-        private bool IsStreamingServiceNode
-        {
-            get
-            {
-                var dicomServiceNode = Context.ServiceNode as IDicomServiceNode;
-                return dicomServiceNode != null && dicomServiceNode.StreamingParameters != null;
-            }
-        }
+	[ExtensionOf(typeof (ServiceNodeServiceProviderExtensionPoint))]
+	internal class StudyLoaderServiceProvider : ServiceNodeServiceProvider
+	{
+		private bool IsStreamingServiceNode
+		{
+			get
+			{
+				var dicomServiceNode = Context.ServiceNode as IDicomServiceNode;
+				return dicomServiceNode != null && dicomServiceNode.StreamingParameters != null;
+			}
+		}
 
-        public override bool IsSupported(Type type)
-        {
-            return type == typeof(IStudyLoader) && IsStreamingServiceNode;
-        }
+		public override bool IsSupported(Type type)
+		{
+			return type == typeof (IStudyLoader) && IsStreamingServiceNode;
+		}
 
-        public override object GetService(Type type)
-        {
-            return IsSupported(type) ? new StreamingStudyLoader() : null;
-        }
-    }
+		public override object GetService(Type type)
+		{
+			return IsSupported(type) ? new StreamingStudyLoader() : null;
+		}
+	}
 
-    [ExtensionOf(typeof(StudyLoaderExtensionPoint))]
-    public class StreamingStudyLoader : StudyLoader
-    {
-        private const string _loaderName = "CC_STREAMING";
+	[ExtensionOf(typeof (StudyLoaderExtensionPoint))]
+	public class StreamingStudyLoader : StudyLoader
+	{
+		private const string _loaderName = "CC_STREAMING";
 
-        private IEnumerator<InstanceXml> _instances;
-        private IApplicationEntity _serverAe;
+		private IEnumerator<InstanceXml> _instances;
+		private IApplicationEntity _serverAe;
 
-        /// <summary>
-        /// Get the <see cref="EventSource"/> representing the current user for the purpose of audit logging
-        /// </summary>
-        private readonly EventSource _auditSourceCurrentUser;
-        
+		/// <summary>
+		/// Get the <see cref="EventSource"/> representing the current user for the purpose of audit logging
+		/// </summary>
+		private readonly EventSource _auditSourceCurrentUser;
 
-        public StreamingStudyLoader()
-            : this(_loaderName)
-        {
-        }
 
-        public StreamingStudyLoader(string name):
-            base(name)
-        {
-            _auditSourceCurrentUser = EventSource.GetUserEventSource(Thread.CurrentPrincipal.Identity.Name); 
-            InitStrategy();
-        }
+		public StreamingStudyLoader()
+			: this(_loaderName)
+		{
+		}
 
-        protected virtual void InitStrategy()
-        {
-            PrefetchingStrategy = new WeightedWindowPrefetchingStrategy(new StreamingCorePrefetchingStrategy(), _loaderName, SR.DescriptionPrefetchingStrategy)
-                                      {
-                                          Enabled = StreamingSettings.Default.RetrieveConcurrency > 0,
-                                          RetrievalThreadConcurrency = Math.Max(StreamingSettings.Default.RetrieveConcurrency, 1),
-                                          DecompressionThreadConcurrency = Math.Max(StreamingSettings.Default.DecompressConcurrency, 1),
-                                          FrameLookAheadCount = StreamingSettings.Default.ImageWindow >= 0 ? (int?) StreamingSettings.Default.ImageWindow : null,
-                                          SelectedImageBoxWeight = Math.Max(StreamingSettings.Default.SelectedWeighting, 1),
-                                          UnselectedImageBoxWeight = Math.Max(StreamingSettings.Default.UnselectedWeighting, 0)
-                                      };
-        }
+		public StreamingStudyLoader(string name) :
+			base(name)
+		{
+			_auditSourceCurrentUser = EventSource.GetUserEventSource(Thread.CurrentPrincipal.Identity.Name);
+			InitStrategy();
+		}
 
-        protected override int OnStart(StudyLoaderArgs studyLoaderArgs)
-        {
-            var serverAe = studyLoaderArgs.Server;
-            Platform.CheckForNullReference(serverAe, "Server");
-            Platform.CheckMemberIsSet(serverAe.StreamingParameters, "StreamingParameters");
-            _serverAe = serverAe;
+		protected virtual void InitStrategy()
+		{
+			PrefetchingStrategy = new WeightedWindowPrefetchingStrategy(new StreamingCorePrefetchingStrategy(), _loaderName, SR.DescriptionPrefetchingStrategy)
+			                      	{
+			                      		Enabled = StreamingSettings.Default.RetrieveConcurrency > 0,
+			                      		RetrievalThreadConcurrency = Math.Max(StreamingSettings.Default.RetrieveConcurrency, 1),
+			                      		DecompressionThreadConcurrency = Math.Max(StreamingSettings.Default.DecompressConcurrency, 1),
+			                      		FrameLookAheadCount = StreamingSettings.Default.ImageWindow >= 0 ? (int?) StreamingSettings.Default.ImageWindow : null,
+			                      		SelectedImageBoxWeight = Math.Max(StreamingSettings.Default.SelectedWeighting, 1),
+			                      		UnselectedImageBoxWeight = Math.Max(StreamingSettings.Default.UnselectedWeighting, 0)
+			                      	};
+		}
 
-            EventResult result = EventResult.Success;
-            AuditedInstances loadedInstances = new AuditedInstances();
-            try
-            {
+		protected override int OnStart(StudyLoaderArgs studyLoaderArgs)
+		{
+			var serverAe = studyLoaderArgs.Server;
+			Platform.CheckForNullReference(serverAe, "Server");
+			Platform.CheckMemberIsSet(serverAe.StreamingParameters, "StreamingParameters");
+			_serverAe = serverAe;
 
-                StudyXml studyXml = RetrieveStudyXml(studyLoaderArgs);
-                _instances = GetInstances(studyXml).GetEnumerator();
+			EventResult result = EventResult.Success;
+			AuditedInstances loadedInstances = new AuditedInstances();
+			try
+			{
 
-                loadedInstances.AddInstance(studyXml.PatientId, studyXml.PatientsName, studyXml.StudyInstanceUid);
+				StudyXml studyXml = RetrieveStudyXml(studyLoaderArgs);
+				_instances = GetInstances(studyXml).GetEnumerator();
 
-                return studyXml.NumberOfStudyRelatedInstances;
+				loadedInstances.AddInstance(studyXml.PatientId, studyXml.PatientsName, studyXml.StudyInstanceUid);
 
-            }
-            finally
-            {
-                AuditHelper.LogOpenStudies(new string[] { _serverAe.AETitle }, loadedInstances, _auditSourceCurrentUser, result);
-            }
-        }
+				return studyXml.NumberOfStudyRelatedInstances;
 
-        private IEnumerable<InstanceXml> GetInstances(StudyXml studyXml)
-        {
-            foreach (SeriesXml seriesXml in studyXml)
-            {
-                foreach (InstanceXml instanceXml in seriesXml)
-                {
-                    yield return instanceXml;
-                }
-            }
-        }
+			}
+			finally
+			{
+				AuditHelper.LogOpenStudies(new string[] {_serverAe.AETitle}, loadedInstances, _auditSourceCurrentUser, result);
+			}
+		}
 
-        protected override SopDataSource LoadNextSopDataSource()
-        {
-            if (!_instances.MoveNext())
-                return null;
+		private IEnumerable<InstanceXml> GetInstances(StudyXml studyXml)
+		{
+			foreach (SeriesXml seriesXml in studyXml)
+			{
+				foreach (InstanceXml instanceXml in seriesXml)
+				{
+					yield return instanceXml;
+				}
+			}
+		}
 
-            return new StreamingSopDataSource(_instances.Current, _serverAe.ScpParameters.HostName,
-                            _serverAe.AETitle, StreamingSettings.Default.FormatWadoUriPrefix,
-                            _serverAe.StreamingParameters.WadoServicePort);
-        }
+		protected override SopDataSource LoadNextSopDataSource()
+		{
+			if (!_instances.MoveNext())
+				return null;
 
-        private StudyXml RetrieveStudyXml(StudyLoaderArgs studyLoaderArgs)
-        {
-            var headerParams = new HeaderStreamingParameters
-                                   {
-                                       StudyInstanceUID = studyLoaderArgs.StudyInstanceUid,
-                                       ServerAETitle = _serverAe.AETitle,
-                                       ReferenceID = Guid.NewGuid().ToString(),
-                                       IgnoreInUse = studyLoaderArgs.Options != null && studyLoaderArgs.Options.IgnoreInUse
-                                   };
+			var loader = new ImageServerWadoLoader(_serverAe.ScpParameters.HostName,
+			                                       _serverAe.AETitle, _serverAe.StreamingParameters.WadoServicePort);
+			
+			return new StreamingSopDataSource(_instances.Current, loader);
+		}
 
-            HeaderStreamingServiceClient client = null;
-            try
-            {
+		private StudyXml RetrieveStudyXml(StudyLoaderArgs studyLoaderArgs)
+		{
+			var headerParams = new HeaderStreamingParameters
+			                   	{
+			                   		StudyInstanceUID = studyLoaderArgs.StudyInstanceUid,
+			                   		ServerAETitle = _serverAe.AETitle,
+			                   		ReferenceID = Guid.NewGuid().ToString(),
+			                   		IgnoreInUse = studyLoaderArgs.Options != null && studyLoaderArgs.Options.IgnoreInUse
+			                   	};
 
-                string uri = String.Format(StreamingSettings.Default.FormatHeaderServiceUri,
-                                            _serverAe.ScpParameters.HostName, _serverAe.StreamingParameters.HeaderServicePort);
+			HeaderStreamingServiceClient client = null;
+			try
+			{
 
-                client = new HeaderStreamingServiceClient(new Uri(uri));
-                client.Open();
-                var studyXml = client.GetStudyXml(ServerDirectory.GetLocalServer().AETitle, headerParams);
-                client.Close();
-                return studyXml;
-            }
-            catch (FaultException<StudyIsInUseFault> e)
-            {
-                throw new InUseLoadStudyException(studyLoaderArgs.StudyInstanceUid, e);
-            }
-            catch (FaultException<StudyIsNearlineFault> e)
-            {
-				throw new NearlineLoadStudyException(studyLoaderArgs.StudyInstanceUid, e)
-					{ IsStudyBeingRestored = e.Detail.IsStudyBeingRestored };
-            }
-            catch (FaultException<StudyNotFoundFault> e)
-            {
-                throw new NotFoundLoadStudyException(studyLoaderArgs.StudyInstanceUid, e);
-            }
-            catch (FaultException e)
-            {
-                //TODO: Some versions (pre-Team) of the ImageServer
+				string uri = String.Format(StreamingSettings.Default.FormatHeaderServiceUri,
+				                           _serverAe.ScpParameters.HostName, _serverAe.StreamingParameters.HeaderServicePort);
+
+				client = new HeaderStreamingServiceClient(new Uri(uri));
+				client.Open();
+				var studyXml = client.GetStudyXml(ServerDirectory.GetLocalServer().AETitle, headerParams);
+				client.Close();
+				return studyXml;
+			}
+			catch (FaultException<StudyIsInUseFault> e)
+			{
+				throw new InUseLoadStudyException(studyLoaderArgs.StudyInstanceUid, e);
+			}
+			catch (FaultException<StudyIsNearlineFault> e)
+			{
+				throw new NearlineLoadStudyException(studyLoaderArgs.StudyInstanceUid, e) {IsStudyBeingRestored = e.Detail.IsStudyBeingRestored};
+			}
+			catch (FaultException<StudyNotFoundFault> e)
+			{
+				throw new NotFoundLoadStudyException(studyLoaderArgs.StudyInstanceUid, e);
+			}
+			catch (FaultException e)
+			{
+				//TODO: Some versions (pre-Team) of the ImageServer
 				//throw a generic fault when a study is nearline, instead of the more specialized one.
-                string message = e.Message.ToLower();
-                if (message.Contains("nearline"))
-					throw new NearlineLoadStudyException(studyLoaderArgs.StudyInstanceUid, e)
-						{ IsStudyBeingRestored = true }; //assume true in legacy case.
+				string message = e.Message.ToLower();
+				if (message.Contains("nearline"))
+					throw new NearlineLoadStudyException(studyLoaderArgs.StudyInstanceUid, e) {IsStudyBeingRestored = true}; //assume true in legacy case.
 
-                throw new LoadStudyException(studyLoaderArgs.StudyInstanceUid, e);
-            }
-            catch (Exception e)
-            {
-                if (client != null)
-                    client.Abort();
+				throw new LoadStudyException(studyLoaderArgs.StudyInstanceUid, e);
+			}
+			catch (Exception e)
+			{
+				if (client != null)
+					client.Abort();
 
-                throw new LoadStudyException(studyLoaderArgs.StudyInstanceUid, e);
-            }
-        }
-    }
+				throw new LoadStudyException(studyLoaderArgs.StudyInstanceUid, e);
+			}
+		}
+	}
 }

@@ -155,7 +155,6 @@
     <Compile Include="Admin\WorklistAdmin\WorklistAdminService.cs" />
     <Compile Include="Admin\WorklistAdmin\WorklistAdminAssembler.cs" />
     <Compile Include="AttachedDocumentAssembler.cs" />
-    <Compile Include="EnumUtils.cs" />
     <Compile Include="InProcessApplicationServiceProvider.cs" />
     <Compile Include="Jsml\JsmlShimService.cs" />
     <Compile Include="WorklistAssembler.cs" />

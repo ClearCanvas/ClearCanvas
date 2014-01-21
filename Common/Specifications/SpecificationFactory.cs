@@ -31,109 +31,106 @@ using ClearCanvas.Common.Utilities;
 
 namespace ClearCanvas.Common.Specifications
 {
-    public class SpecificationFactory : ISpecificationProvider
-    {
-        class SingleDocumentSource : ISpecificationXmlSource
-        {
-            private XmlDocument _xmlDoc;
+	public class SpecificationFactory : ISpecificationProvider
+	{
+		class SingleDocumentSource : ISpecificationXmlSource
+		{
+			private readonly XmlDocument _xmlDoc;
 
-            public SingleDocumentSource(Stream xml)
-            {
-                _xmlDoc = new XmlDocument();
-                _xmlDoc.Load(xml);
-            }
+			public SingleDocumentSource(Stream xml)
+			{
+				_xmlDoc = new XmlDocument();
+				_xmlDoc.Load(xml);
+			}
 
-            public SingleDocumentSource(TextReader xml)
-            {
-                _xmlDoc = new XmlDocument();
-                _xmlDoc.Load(xml);
-            }
-
-
-
-            #region ISpecificationXmlSource Members
-
-            public string DefaultExpressionLanguage
-            {
-                get
-                {
-                    string exprLang = _xmlDoc.DocumentElement.GetAttribute("expressionLanguage");
-
-                    // if not specified, assume jscript
-                    return string.IsNullOrEmpty(exprLang) ? "jscript" : exprLang;
-                }
-            }
-
-            public XmlElement GetSpecificationXml(string id)
-            {
-                XmlElement specNode = (XmlElement)CollectionUtils.SelectFirst(_xmlDoc.GetElementsByTagName("spec"),
-                    delegate(object node) { return ((XmlElement)node).GetAttribute("id") == id; });
-
-                if (specNode == null)
-                    throw new UndefinedSpecificationException(id);
-
-                return specNode;
-            }
-
-            public IDictionary<string, XmlElement> GetAllSpecificationsXml()
-            {
-                Dictionary<string, XmlElement> specs = new Dictionary<string, XmlElement>();
-                foreach (XmlElement specNode in _xmlDoc.GetElementsByTagName("spec"))
-                {
-                    specs.Add(specNode.GetAttribute("id"), specNode);
-                }
-                return specs;
-            }
-
-            #endregion
-        }
+			public SingleDocumentSource(TextReader xml)
+			{
+				_xmlDoc = new XmlDocument();
+				_xmlDoc.Load(xml);
+			}
 
 
 
-        private XmlSpecificationCompiler _builder;
-        private ISpecificationXmlSource _xmlSource;
+			#region ISpecificationXmlSource Members
 
-        private Dictionary<string, ISpecification> _cache;
+			public string DefaultExpressionLanguage
+			{
+				get
+				{
+					var exprLang = _xmlDoc.DocumentElement.GetAttribute("expressionLanguage");
 
-        public SpecificationFactory(Stream xml)
-            :this(new SingleDocumentSource(xml))
-        {
-        }
+					// if not specified, assume jscript
+					return string.IsNullOrEmpty(exprLang) ? "jscript" : exprLang;
+				}
+			}
 
-        public SpecificationFactory(TextReader xml)
-            : this(new SingleDocumentSource(xml))
-        {
-        }
+			public XmlElement GetSpecificationXml(string id)
+			{
+				var specNode = (XmlElement)CollectionUtils.SelectFirst(_xmlDoc.GetElementsByTagName("spec"),
+					node => ((XmlElement) node).GetAttribute("id") == id);
+
+				if (specNode == null)
+					throw new UndefinedSpecificationException(id);
+
+				return specNode;
+			}
+
+			public IDictionary<string, XmlElement> GetAllSpecificationsXml()
+			{
+				var specs = new Dictionary<string, XmlElement>();
+				foreach (XmlElement specNode in _xmlDoc.GetElementsByTagName("spec"))
+				{
+					specs.Add(specNode.GetAttribute("id"), specNode);
+				}
+				return specs;
+			}
+
+			#endregion
+		}
 
 
-        public SpecificationFactory(ISpecificationXmlSource xmlSource)
-        {
-            _builder = new XmlSpecificationCompiler(this, xmlSource.DefaultExpressionLanguage);
-            _cache = new Dictionary<string, ISpecification>();
-            _xmlSource = xmlSource;
-        }
 
-        public ISpecification GetSpecification(string id)
-        {
-            if (_cache.ContainsKey(id))
-            {
-                return _cache[id];
-            }
-            else
-            {
-                XmlElement specNode = _xmlSource.GetSpecificationXml(id);
-                return _cache[id] = _builder.Compile(specNode, false);
-            }
-        }
+		private readonly XmlSpecificationCompiler _builder;
+		private readonly ISpecificationXmlSource _xmlSource;
 
-        public IDictionary<string, ISpecification> GetAllSpecifications()
-        {
-            Dictionary<string, ISpecification> specs = new Dictionary<string, ISpecification>();
-            foreach (KeyValuePair<string, XmlElement> kvp in _xmlSource.GetAllSpecificationsXml())
-            {
-                specs.Add(kvp.Key, _builder.Compile(kvp.Value, false));
-            }
-            return specs;
-        }
-    }
+		private readonly Dictionary<string, ISpecification> _cache;
+
+		public SpecificationFactory(Stream xml)
+			: this(new SingleDocumentSource(xml))
+		{
+		}
+
+		public SpecificationFactory(TextReader xml)
+			: this(new SingleDocumentSource(xml))
+		{
+		}
+
+
+		public SpecificationFactory(ISpecificationXmlSource xmlSource)
+		{
+			_builder = new XmlSpecificationCompiler(xmlSource.DefaultExpressionLanguage, this);
+			_cache = new Dictionary<string, ISpecification>();
+			_xmlSource = xmlSource;
+		}
+
+		public ISpecification GetSpecification(string id)
+		{
+			if (_cache.ContainsKey(id))
+			{
+				return _cache[id];
+			}
+			var specNode = _xmlSource.GetSpecificationXml(id);
+			return _cache[id] = _builder.Compile(specNode, false);
+		}
+
+		public IDictionary<string, ISpecification> GetAllSpecifications()
+		{
+			var specs = new Dictionary<string, ISpecification>();
+			foreach (var kvp in _xmlSource.GetAllSpecificationsXml())
+			{
+				specs.Add(kvp.Key, _builder.Compile(kvp.Value, false));
+			}
+			return specs;
+		}
+	}
 }

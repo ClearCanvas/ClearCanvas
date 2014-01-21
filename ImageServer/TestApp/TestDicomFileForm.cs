@@ -30,6 +30,7 @@ using ClearCanvas.Common;
 using ClearCanvas.Dicom;
 using ClearCanvas.Enterprise.Core;
 using ClearCanvas.ImageServer.Common;
+using ClearCanvas.ImageServer.Core;
 using ClearCanvas.ImageServer.Model;
 using ClearCanvas.ImageServer.Model.Brokers;
 using ClearCanvas.ImageServer.Model.Parameters;
@@ -175,8 +176,8 @@ namespace ClearCanvas.ImageServer.TestApp
             dicomFile.Load();
 
             //dicomFile.DataSet[DicomTags.PatientsName].SetEmptyValue();
-			//dicomFile.DataSet[DicomTags.PatientId].SetEmptyValue();
-        	dicomFile.DataSet[DicomTags.SopInstanceUid].SetStringValue(DicomUid.GenerateUid().UID);
+			dicomFile.DataSet[DicomTags.Modality].SetEmptyValue();
+        	//dicomFile.DataSet[DicomTags.SopInstanceUid].SetStringValue(DicomUid.GenerateUid().UID);
 
 			try
 			{

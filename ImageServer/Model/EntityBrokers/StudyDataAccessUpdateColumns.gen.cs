@@ -30,7 +30,7 @@ namespace ClearCanvas.ImageServer.Model.EntityBrokers
     using System.Xml;
     using ClearCanvas.ImageServer.Enterprise;
 
-   public class StudyDataAccessUpdateColumns : EntityUpdateColumns
+   public partial class StudyDataAccessUpdateColumns : EntityUpdateColumns
    {
        public StudyDataAccessUpdateColumns()
        : base("StudyDataAccess")

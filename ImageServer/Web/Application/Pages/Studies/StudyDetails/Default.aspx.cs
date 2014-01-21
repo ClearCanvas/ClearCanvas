@@ -26,8 +26,8 @@ using System;
 using System.Collections.Generic;
 using System.Security.Permissions;
 using ClearCanvas.Common.Utilities;
+using ClearCanvas.ImageServer.Common.Authentication;
 using ClearCanvas.ImageServer.Common.Exceptions;
-using ClearCanvas.ImageServer.Enterprise.Authentication;
 using ClearCanvas.ImageServer.Model;
 using ClearCanvas.ImageServer.Model.EntityBrokers;
 using ClearCanvas.ImageServer.Web.Application.Controls;
@@ -182,7 +182,8 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Studies.StudyDetails
             }
             else
             {
-                StudyNotFoundException exception =new StudyNotFoundException(_studyInstanceUid);
+                StudyNotFoundException exception =
+                    new StudyNotFoundException(_studyInstanceUid);
                 ExceptionHandler.ThrowException(exception);
             }
 			
@@ -201,7 +202,7 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Studies.StudyDetails
             } 
             if (_partition == null)
             {
-                PartitionNotFoundException exception = new PartitionNotFoundException(_serverae);
+                PartitionNotFoundException exception = new PartitionNotFoundException(_serverae, "The Server Partition is null in Default.aspx -> OnPreRender()");
                 ExceptionHandler.ThrowException(exception);
             }
 

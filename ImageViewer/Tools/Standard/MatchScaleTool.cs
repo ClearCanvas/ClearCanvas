@@ -103,7 +103,7 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 
 		public bool AppliesTo(IPresentationImage image)
 		{
-			ImageSpatialTransform transform = GetImageTransform(image);
+			IImageSpatialTransform transform = GetImageTransform(image);
 			if (transform == null)
 				return false;
 
@@ -149,7 +149,7 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 			//We do this because images that have been "scaled to fit", but have not been shown yet,
 			//have no client rectangle and their scale is often very small.  This is safer
 			//and could produce a more accurate result.
-			ImageSpatialTransform matchTransform = GetImageTransform(image);
+			IImageSpatialTransform matchTransform = GetImageTransform(image);
 			matchTransform.ScaleToFit = false;
 			matchTransform.Scale = 1;
 
@@ -166,7 +166,7 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 
 		private void CalculateReferenceDisplayValues()
 		{
-			ImageSpatialTransform transform = GetImageTransform(ReferenceImage);
+			IImageSpatialTransform transform = GetImageTransform(ReferenceImage);
 			Frame frame = GetFrame(ReferenceImage);
 
 			//calculate the width (in mm) of the portion of the image that is visible on the display,
@@ -191,7 +191,7 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 
 		private static float GetDisplayedWidth(IPresentationImage presentationImage, RectangleF referenceDisplayedRectangle)
 		{
-			ImageSpatialTransform transform = GetImageTransform(presentationImage);
+			IImageSpatialTransform transform = GetImageTransform(presentationImage);
 			Frame frame = GetFrame(presentationImage);
 
 			//Convert the displayed width to source dimensions
@@ -207,10 +207,10 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 			return y * (float)frame.NormalizedPixelSpacing.Row;
 		}
 
-		private static ImageSpatialTransform GetImageTransform(IPresentationImage image)
+		private static IImageSpatialTransform GetImageTransform(IPresentationImage image)
 		{
 			if (image != null && image is ISpatialTransformProvider)
-				return ((ISpatialTransformProvider)image).SpatialTransform as ImageSpatialTransform;
+				return ((ISpatialTransformProvider)image).SpatialTransform as IImageSpatialTransform;
 
 			return null;
 		}

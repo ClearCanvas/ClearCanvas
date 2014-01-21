@@ -30,7 +30,7 @@ namespace ClearCanvas.Dicom.Iod.ContextGroups
 {
 	public sealed class SpeciesContextGroup : ContextGroupBase<Species>
 	{
-		private SpeciesContextGroup() : base(7454, "Species", true, new DateTime(2006, 8, 22)) { }
+		private SpeciesContextGroup() : base(7454, "Species", true, new DateTime(2006, 8, 22)) {}
 
 		public static readonly Species HomoSapiens = new Species("SRT", "L-85B00", "homo sapiens");
 		public static readonly Species FelineSpecies = new Species("SRT", "L-80A00", "Feline species");
@@ -94,7 +94,7 @@ namespace ClearCanvas.Dicom.Iod.ContextGroups
 		/// <summary>
 		/// Constructor for titles defined in DICOM 2009, Part 16, Annex B, CID 7454.
 		/// </summary>
-		internal Species(string codeValue, string codeMeaning) : base("SRT", codeValue, codeMeaning) { }
+		internal Species(string codeValue, string codeMeaning) : base("SRT", codeValue, codeMeaning) {}
 
 		/// <summary>
 		/// Constructs a new species.
@@ -123,6 +123,20 @@ namespace ClearCanvas.Dicom.Iod.ContextGroups
 		/// <param name="codeSequence">The code sequence attributes macro.</param>
 		/// <exception cref="ArgumentException">Thrown if <paramref name="codeSequence.CodingSchemeDesignator"/> or <paramref name="codeSequence.CodeValue"/> are <code>null</code> or empty.</exception>
 		public Species(CodeSequenceMacro codeSequence)
-			: base(codeSequence.CodingSchemeDesignator, codeSequence.CodingSchemeVersion, codeSequence.CodeValue, codeSequence.CodeMeaning) { }
+			: base(codeSequence.CodingSchemeDesignator, codeSequence.CodingSchemeVersion, codeSequence.CodeValue, codeSequence.CodeMeaning) {}
+
+		public static bool TryParse(CodeSequenceMacro codeSequence, out Species species)
+		{
+			try
+			{
+				species = new Species(codeSequence);
+				return true;
+			}
+			catch (Exception)
+			{
+				species = null;
+				return false;
+			}
+		}
 	}
 }

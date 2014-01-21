@@ -34,13 +34,8 @@ using ClearCanvas.Dicom.Network;
 using ClearCanvas.Dicom.Network.Scp;
 using ClearCanvas.Dicom.Utilities.Xml;
 using ClearCanvas.Enterprise.Core;
-using ClearCanvas.ImageServer.Common;
-using ClearCanvas.ImageServer.Common.Helpers;
-using ClearCanvas.ImageServer.Enterprise;
 using ClearCanvas.ImageServer.Model;
-using ClearCanvas.ImageServer.Model.Brokers;
 using ClearCanvas.ImageServer.Model.EntityBrokers;
-using ClearCanvas.ImageServer.Model.Parameters;
 
 namespace ClearCanvas.ImageServer.Services.Dicom
 {
@@ -53,7 +48,7 @@ namespace ClearCanvas.ImageServer.Services.Dicom
         #region Protected Members
         protected IPersistentStore _store = PersistentStoreRegistry.GetDefaultStore();
     	private DicomScpContext _context;
-        private Device _device;
+
         #endregion
 
         #region Private Methods
@@ -69,11 +64,16 @@ namespace ClearCanvas.ImageServer.Services.Dicom
             get { return _context.Partition; }
         }
 
-        protected Device Device
+        /// <summary>
+        /// The <see cref="DicomScpContext"/> associated with the Scp.
+        /// </summary>
+        protected DicomScpContext Context
         {
-            get { return _device; }
-            set { _device = value; }
+            get { return _context; }
         }
+
+        protected Device Device { get; set; }
+
         #endregion
 
         #region Protected methods
@@ -123,12 +123,12 @@ namespace ClearCanvas.ImageServer.Services.Dicom
         {
             String streamFile = Path.Combine(location.GetStudyPath(), location.StudyInstanceUid + ".xml");
 
-            StudyXml theXml = new StudyXml();
+            var theXml = new StudyXml();
 
             if (File.Exists(streamFile))
             {
                 // allocate the random number generator here, in case we need it below
-                Random rand = new Random();
+                var rand = new Random();
 
                 // Go into a retry loop, to handle if the study is being processed right now 
                 for (int i = 0; ;i++ )
@@ -136,7 +136,7 @@ namespace ClearCanvas.ImageServer.Services.Dicom
                     {
                         using (Stream fileStream = FileStreamOpener.OpenForRead(streamFile, FileMode.Open))
                         {
-                            XmlDocument theDoc = new XmlDocument();
+                            var theDoc = new XmlDocument();
 
                             StudyXmlIo.Read(theDoc, fileStream);
 
@@ -172,8 +172,8 @@ namespace ClearCanvas.ImageServer.Services.Dicom
 		{
 			using (IReadContext read = _store.OpenReadContext())
 			{
-				IStudyStorageEntityBroker selectBroker = read.GetBroker<IStudyStorageEntityBroker>();
-				StudyStorageSelectCriteria criteria = new StudyStorageSelectCriteria();
+				var selectBroker = read.GetBroker<IStudyStorageEntityBroker>();
+				var criteria = new StudyStorageSelectCriteria();
 
 				criteria.ServerPartitionKey.EqualTo(Partition.GetKey());
 				criteria.StudyInstanceUid.EqualTo(studyInstanceUid);
@@ -203,12 +203,24 @@ namespace ClearCanvas.ImageServer.Services.Dicom
         {
         }
 
-        public virtual bool OnReceiveRequest(DicomServer server, ServerAssociationParameters association, byte presentationID, DicomMessage message)
+        public virtual bool OnReceiveRequest(DicomServer server, ServerAssociationParameters association, byte presentationId, DicomMessage message)
         {
             throw new Exception("The method or operation is not implemented.  The method must be overriden.");
         }
 
-        public virtual IList<SupportedSop> GetSupportedSopClasses()
+		public virtual IDicomFilestreamHandler OnStartFilestream(DicomServer server, ServerAssociationParameters association,
+																 byte presentationId, DicomMessage message)
+		{
+			return null;
+		}
+
+	    public virtual bool ReceiveMessageAsFileStream(DicomServer server, ServerAssociationParameters association, byte presentationId,
+	                                           DicomMessage message)
+	    {
+		    return false;
+	    }
+
+	    public virtual IList<SupportedSop> GetSupportedSopClasses()
         {
             throw new Exception("The method or operation is not implemented.  The method must be overriden.");
         }

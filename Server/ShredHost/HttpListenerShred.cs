@@ -31,59 +31,12 @@ using ClearCanvas.Common.Shreds;
 namespace ClearCanvas.Server.ShredHost
 {
     /// <summary>
-    /// Represents the state of the asynchronous operation that occurs when a http request is processed.
-    /// </summary>
-    public class HttpListenerAsyncState
-    {
-        #region Private Members
-        private HttpListener _listener;
-        private ManualResetEvent _waitEvent;
-
-        #endregion
-
-        #region Public Properties
-
-        /// <summary>
-        /// Gets the wait event associated with the operation
-        /// </summary>
-        public ManualResetEvent WaitEvent
-        {
-            get { return _waitEvent; }
-        }
-
-        /// <summary>
-        /// Gets the http listener object
-        /// </summary>
-        public HttpListener Listener
-        {
-            get { return _listener; }
-        }
-
-        #endregion
-
-        #region Constructors
-        
-        /// <summary>
-        /// Creates an instance of <see cref="HttpListenerAsyncState"/> for the specified http listener.
-        /// </summary>
-        /// <param name="listener"></param>
-        public HttpListenerAsyncState(HttpListener listener)
-        {
-            _listener = listener;
-            _waitEvent = new ManualResetEvent(false);
-        }
-
-        #endregion
-    }
-
-    /// <summary>
     /// Represents a shred that listens to and handles http requests.
     /// </summary>
     public abstract class HttpListenerShred : Shred
     {
         #region Private Members
         private HttpListener _listener;
-        private HttpListenerAsyncState _syncState;
         
         #endregion
 
@@ -114,6 +67,18 @@ namespace ClearCanvas.Server.ShredHost
                     Uri.UriSchemeHttp, Port, UriSubPath); }
         }
 
+		/// <summary>
+		/// Gets the server Uri
+		/// </summary>
+		protected String ServerEndPointUri
+		{
+			get
+			{
+				
+				var host = Dns.GetHostName(); 
+				return String.Format("{0}://{1}:{2}{3}", Uri.UriSchemeHttp, host, Port, UriSubPath);
+			}
+		}
 
         /// <summary>
         /// Gets or sets the name of the shred.
@@ -129,38 +94,42 @@ namespace ClearCanvas.Server.ShredHost
 
         #region Protected Methods
 
-        protected void StartListening(AsyncCallback callback)
+        protected void StartListening(Action<HttpListenerContext> callback)
         {
             Platform.Log(LogLevel.Info, "Started listening at {0}", BaseUri);
 
-            _listener = new HttpListener(); ;
+            _listener = new HttpListener();
             _listener.Prefixes.Add(BaseUri);
             _listener.Start();
 
-            
-            while (_listener.IsListening)
-            {
-                Platform.Log(LogLevel.Debug, "Waiting for request at {0}", BaseUri);
+			OnStarted();
 
-                _syncState = new HttpListenerAsyncState(_listener);
-
-                _listener.BeginGetContext(callback, _syncState);
-
-                _syncState.WaitEvent.WaitOne();
-
-            }
+			while(_listener.IsListening)
+			{
+				try
+				{
+					var context = _listener.GetContext();
+					ThreadPool.QueueUserWorkItem(n => callback(context));
+				}
+				catch (Exception e)
+				{
+					if (_listener.IsListening)
+						Platform.Log(LogLevel.Warn, e, "Unexpected error in HttpListenerShred.");
+				}
+			}
         }
 
-        #endregion
-
+    	#endregion
 
         #region Overridden Public Methods
 
-        public override void Stop()
+		protected virtual void OnStarted()
+		{
+		}
+
+    	public override void Stop()
         {
             _listener.Stop();
-            _syncState.WaitEvent.Set();
-
         }
 
         #endregion

@@ -32,10 +32,11 @@ using ClearCanvas.ImageServer.Model;
 namespace ClearCanvas.ImageServer.Rules.JpegCodec.JpegLosslessAction
 {
 	/// <summary>
-	/// Jpeg Losless SOP Compress Action Operator, for use with <see cref="IXmlActionCompilerOperator{ServerActionContext,ServerRuleTypeEnum}"/>
+	/// Jpeg Losless SOP Compress Action Operator, for use with <see cref="IXmlActionCompilerOperator{ServerActionContext}"/>
 	/// </summary>
-	[ExtensionOf(typeof(XmlActionCompilerOperatorExtensionPoint<ServerActionContext, ServerRuleTypeEnum>))]
-	public class JpegLosslessSopActionOperator : ActionOperatorCompilerBase, IXmlActionCompilerOperator<ServerActionContext, ServerRuleTypeEnum>
+	[ExtensionOf(typeof(ServerRuleActionCompilerOperatorExtensionPoint))]
+	[ActionApplicability(ApplicableRuleType.SopCompress)]
+	public class JpegLosslessSopActionOperator : ActionOperatorCompilerBase, IXmlActionCompilerOperator<ServerActionContext>
 	{
 		public JpegLosslessSopActionOperator()
 			: base("jpeg-lossless-sop")
@@ -54,11 +55,8 @@ namespace ClearCanvas.ImageServer.Rules.JpegCodec.JpegLosslessAction
 			return new JpegLosslessSopActionItem(convertFromPalette);
 		}
 
-		public XmlSchemaElement GetSchema(ServerRuleTypeEnum ruleType)
+		public XmlSchemaElement GetSchema()
 		{
-			if (!ruleType.Equals(ServerRuleTypeEnum.SopCompress))
-				return null;
-
 			XmlSchemaElement element = GetBaseSchema(OperatorTag);
 
 			XmlSchemaAttribute attrib = new XmlSchemaAttribute

@@ -36,6 +36,11 @@
                 PageSize="20">
                 <Columns>
                     <asp:BoundField DataField="AeTitle" HeaderText="<%$Resources: ColumnHeaders,AETitle %>" HeaderStyle-HorizontalAlign="Left"/>
+                    <asp:TemplateField HeaderText="<%$Resources: ColumnHeaders,PartitionType %>" HeaderStyle-HorizontalAlign="Left">
+                        <ItemTemplate>
+                            <asp:Label ID="PartitionTypeDescription" runat="server"/>
+                        </ItemTemplate>
+                    </asp:TemplateField>
                     <asp:BoundField DataField="Description" HeaderText="<%$Resources: ColumnHeaders, PartitionDescription %>" HeaderStyle-HorizontalAlign="Left" />
                     <asp:BoundField DataField="Port" HeaderText="<%$Resources: ColumnHeaders,Port %>" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center" />
                     <asp:TemplateField>

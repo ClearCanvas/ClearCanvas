@@ -73,7 +73,7 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 			if(dicomGraphicsPlane == null)
 				throw new DicomGraphicsDeserializationException("Unknown exception.");
 
-			// Check if the image header specifies a bitmap display shutter
+			// Check if the image header specifies a bitmap display shutter (bitmap shutters have built-in multiframe handling, and thus the attributes are not themselves frame-specific, unlike geometric shutters)
 			BitmapDisplayShutterModuleIod bitmapShutterIod = new BitmapDisplayShutterModuleIod(image.ImageSop.DataSource);
 			int bitmapShutterIndex = -1;
 			if (bitmapShutterIod.ShutterShape == ShutterShape.Bitmap)

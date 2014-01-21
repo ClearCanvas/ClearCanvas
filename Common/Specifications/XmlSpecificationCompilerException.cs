@@ -28,12 +28,12 @@ using System;
 
 namespace ClearCanvas.Common.Specifications
 {
-    public class XmlSpecificationCompilerException : Exception
-    {
-        public XmlSpecificationCompilerException(string message)
-            :base(message)
-        {
+	public class XmlSpecificationCompilerException : Exception
+	{
+		public XmlSpecificationCompilerException(string message)
+			: base(message)
+		{
 
-        }
-    }
+		}
+	}
 }

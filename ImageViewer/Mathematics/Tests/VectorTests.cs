@@ -62,22 +62,22 @@ namespace ClearCanvas.ImageViewer.Mathematics.Tests
 			PointF origin;
 
 			origin = new PointF(0, 0);
-			unitVector = new SizeF(Vector.CreateUnitVector(origin, origin + new SizeF(-1, 1)));
+			unitVector = new SizeF(Vector.GetUnitVector(origin, origin + new SizeF(-1, 1)));
 			Assert.IsTrue(FloatComparer.AreEqual(new SizeF(-oneOverSqrt2, oneOverSqrt2), unitVector));
 			Assert.IsTrue(FloatComparer.AreEqual(unitVector.Width*unitVector.Width + unitVector.Height*unitVector.Height, 1), "Magnitude must be 1.");
 
 			origin = new PointF(-1, 1);
-			unitVector = new SizeF(Vector.CreateUnitVector(origin, origin + new SizeF(-2, 2)));
+			unitVector = new SizeF(Vector.GetUnitVector(origin, origin + new SizeF(-2, 2)));
 			Assert.IsTrue(FloatComparer.AreEqual(new SizeF(-oneOverSqrt2, oneOverSqrt2), unitVector));
 			Assert.IsTrue(FloatComparer.AreEqual(unitVector.Width*unitVector.Width + unitVector.Height*unitVector.Height, 1), "Magnitude must be 1.");
 
 			origin = new PointF(3, -1);
-			unitVector = new SizeF(Vector.CreateUnitVector(origin, origin + new SizeF(-2, 2)));
+			unitVector = new SizeF(Vector.GetUnitVector(origin, origin + new SizeF(-2, 2)));
 			Assert.IsTrue(FloatComparer.AreEqual(new SizeF(-oneOverSqrt2, oneOverSqrt2), unitVector));
 			Assert.IsTrue(FloatComparer.AreEqual(unitVector.Width*unitVector.Width + unitVector.Height*unitVector.Height, 1), "Magnitude must be 1.");
 
 			origin = new PointF(3, 1);
-			unitVector = new SizeF(Vector.CreateUnitVector(origin, origin + new SizeF(-2, 2)));
+			unitVector = new SizeF(Vector.GetUnitVector(origin, origin + new SizeF(-2, 2)));
 			Assert.IsTrue(FloatComparer.AreEqual(new SizeF(-oneOverSqrt2, oneOverSqrt2), unitVector));
 			Assert.IsTrue(FloatComparer.AreEqual(unitVector.Width*unitVector.Width + unitVector.Height*unitVector.Height, 1), "Magnitude must be 1.");
 		}

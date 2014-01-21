@@ -26,7 +26,6 @@ using System;
 using System.Reflection;
 using System.ServiceProcess;
 using ClearCanvas.Common;
-using ClearCanvas.ImageServer.Common;
 
 namespace ClearCanvas.ImageServer.ShredHostService
 {
@@ -38,11 +37,6 @@ namespace ClearCanvas.ImageServer.ShredHostService
         internal static void InternalStart()
         {
             Platform.Log(LogLevel.Info, "Starting Server Shred Host Service...");
-
-            ServerPlatform.Alert(AlertCategory.System, AlertLevel.Informational,
-                                 SR.AlertComponentName, AlertTypeCodes.Starting,
-                                 null, TimeSpan.Zero,
-                                 SR.AlertShredHostServiceStarting);
 
             // the default startup path is in the system folder
             // we need to change this to be able to scan for plugins and to log
@@ -62,12 +56,6 @@ namespace ClearCanvas.ImageServer.ShredHostService
         {
             _shredHostType.InvokeMember("Stop", BindingFlags.Static | BindingFlags.InvokeMethod | BindingFlags.Public,
                 null, null, new object[] { });
-
-
-            ServerPlatform.Alert(AlertCategory.System, AlertLevel.Informational,
-                                 SR.AlertComponentName, AlertTypeCodes.Stopped,
-                                 null, TimeSpan.Zero,
-                                 SR.AlertShredHostServiceStopped);
         }
 
         public ShredHostService()

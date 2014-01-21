@@ -23,6 +23,7 @@
 #endregion
 
 #if	UNIT_TESTS
+
 #pragma warning disable 1591,0419,1574,1587
 
 using System;
@@ -37,15 +38,17 @@ using ClearCanvas.ImageViewer.Imaging;
 using ClearCanvas.ImageViewer.Mathematics;
 using ClearCanvas.ImageViewer.StudyManagement;
 using ClearCanvas.ImageViewer.Volume.Mpr.Utilities;
+using ClearCanvas.ImageViewer.Volumes.Tests;
 using NUnit.Framework;
 
 namespace ClearCanvas.ImageViewer.Volume.Mpr.Tests
 {
-	[TestFixture]
-	public class SlicerFidelityTests
+	/// <summary>
+	/// Compares values from generated slices with corresponding voxel in source volume.
+	/// </summary>
+	[TestFixture(Description = "Compares values from generated slices with corresponding voxel in source volume.")]
+	public class SlicerFidelityTests : AbstractMprTest
 	{
-		public SlicerFidelityTests() {}
-
 		[TestFixtureSetUp]
 		public void Initialize()
 		{
@@ -78,7 +81,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr.Tests
 			const int FULL_SCALE = 65535;
 			VolumeFunction normalizedFunction = f.Normalize(100);
 
-			using (Volume volume = normalizedFunction.CreateVolume(100, signed))
+			using (Volumes.Volume volume = normalizedFunction.CreateVolume(100, signed))
 			{
 				float offset = signed ? -32768 : 0;
 				foreach (IVolumeSlicerParams slicing in slicerParams)
@@ -90,6 +93,12 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr.Tests
 						{
 							using (ImageSop imageSop = new ImageSop(slice))
 							{
+								// assert tags inserted by slicer
+								AssertAreEqual("WSD", imageSop.DataSource, DicomTags.ConversionType);
+								AssertAreEqual("ClearCanvas Inc.", imageSop.DataSource, DicomTags.SecondaryCaptureDeviceManufacturer);
+								AssertAreEqual(@"DERIVED\SECONDARY", imageSop.DataSource, DicomTags.ImageType);
+								AssertAreEqual("Multiplanar Reformatting", imageSop.DataSource, DicomTags.DerivationDescription);
+
 								foreach (IPresentationImage image in PresentationImageFactory.Create(imageSop))
 								{
 									IImageSopProvider imageSopProvider = (IImageSopProvider) image;
@@ -129,6 +138,12 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr.Tests
 					Assert.Less(stats.StandardDeviation, FULL_SCALE*0.05, "StdDev delta exceeds 5% of full scale ({0})", FULL_SCALE);
 				}
 			}
+		}
+
+		private static void AssertAreEqual(string value, IDicomAttributeProvider actualDataSource, uint dicomTag, string message = "", params object[] args)
+		{
+			var tag = DicomTagDictionary.GetDicomTag(dicomTag);
+			Assert.AreEqual(value, actualDataSource[dicomTag].ToString(), "@{1}: {0}", string.Format(message, args), tag != null ? tag.Name : dicomTag.ToString("X8"));
 		}
 
 		private static bool Between(double value, double min, double max)

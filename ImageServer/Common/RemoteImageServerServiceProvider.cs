@@ -55,7 +55,10 @@ namespace ClearCanvas.ImageServer.Common
                 RemoteImageServerServiceSettings.Default.CertificateValidationMode,
                 RemoteImageServerServiceSettings.Default.RevocationMode,
                 RemoteImageServerServiceSettings.Default.UserCredentialsProviderClass
-				);
+				)
+			       	{
+			       		SendTimeoutSeconds = RemoteImageServerServiceSettings.Default.SendTimeoutSeconds
+			       	};
 		}
     }
 }

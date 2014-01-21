@@ -22,6 +22,15 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Studies.MoveSeries {
         protected global::System.Web.UI.UpdatePanel SearchUpdatePanel;
         
         /// <summary>
+        /// Panel2 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel Panel2;
+        
+        /// <summary>
         /// PatientSummary control.
         /// </summary>
         /// <remarks>

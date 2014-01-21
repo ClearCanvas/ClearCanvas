@@ -1,0 +1,18 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="ClearCanvas.ImageViewer.Vtk" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="ShowDiagnosticTools" Description="Shows diagnostic tools in Tools menu." Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="ReportRendererPerformance" Description="Logs renderer performance statistics." Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="RendererDynamicFps" Description="Target FPS when dynamically manipulating object being rendered. Reduce this value to increase quality of image at cost to performance. Recommended range is 10-25." Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">15</Value>
+    </Setting>
+    <Setting Name="RendererRefinementDelayMs" Description="Minimum inactivity time in ms before rendering refinement starts" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">350</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

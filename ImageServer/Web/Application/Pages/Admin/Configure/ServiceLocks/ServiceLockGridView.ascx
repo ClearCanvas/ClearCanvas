@@ -76,6 +76,13 @@
                         <HeaderStyle HorizontalAlign="Center" />
                         <ItemStyle HorizontalAlign="Center"/>
                     </asp:TemplateField>
+                    <asp:TemplateField HeaderText="<%$Resources: ColumnHeaders, Partition %>">
+                        <ItemTemplate>
+                            <asp:Label ID="Partition" runat="server" Text=""/>
+                        </ItemTemplate>
+                        <HeaderStyle HorizontalAlign="Center" />
+                        <ItemStyle HorizontalAlign="Center"/>
+                    </asp:TemplateField>
                     <asp:TemplateField HeaderText="<%$Resources: ColumnHeaders, ServiceProcessorID %>">
                         <ItemTemplate>
                             <asp:Label ID="ProcessorID" runat="server" Text='<%# Eval("ProcessorID") %>' style="padding-right: 5px;"></asp:Label>

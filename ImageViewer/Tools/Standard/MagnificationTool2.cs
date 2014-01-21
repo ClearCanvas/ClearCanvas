@@ -57,8 +57,8 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 
             try
             {
-                var sourceTransform = (ImageSpatialTransform)((ISpatialTransformProvider)SelectedPresentationImage).SpatialTransform;
-                var transform = (ImageSpatialTransform)((ISpatialTransformProvider)_magnificationImage).SpatialTransform;
+                var sourceTransform = (IImageSpatialTransform)((ISpatialTransformProvider)SelectedPresentationImage).SpatialTransform;
+                var transform = (IImageSpatialTransform)((ISpatialTransformProvider)_magnificationImage).SpatialTransform;
 
                 float scale = sourceTransform.Scale * ToolSettings.DefaultInstance.MagnificationFactor;
                 transform.ScaleToFit = false;
@@ -157,7 +157,7 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
                 box.Justification = AnnotationBox.JustificationBehaviour.Right;
                 box.VerticalAlignment = AnnotationBox.VerticalAlignmentBehaviour.Top;
                 layout.AnnotationBoxes.Add(box);
-                ((BasicPresentationImage)_magnificationImage).AnnotationLayout = layout;
+				((IAnnotationLayoutProvider)_magnificationImage).AnnotationLayout = layout;
             }
 
             if (_magnificationImage is IOverlayGraphicsProvider)
@@ -195,7 +195,7 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
             if (!(SelectedPresentationImage is ISpatialTransformProvider))
                 throw new ArgumentException("The image must implement ISpatialTransformProvider", "value");
 
-            if (!(((ISpatialTransformProvider)SelectedPresentationImage).SpatialTransform is ImageSpatialTransform))
+            if (!(((ISpatialTransformProvider)SelectedPresentationImage).SpatialTransform is IImageSpatialTransform))
                 throw new ArgumentException("The image must provide an IImageSpatialTransform", "value");
 
             DisposeMagnificationImage();

@@ -23,6 +23,7 @@
 #endregion
 
 using ClearCanvas.ImageViewer.Mathematics;
+using ClearCanvas.ImageViewer.Volumes;
 
 namespace ClearCanvas.ImageViewer.Volume.Mpr
 {

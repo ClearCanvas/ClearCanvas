@@ -40,10 +40,10 @@ namespace ClearCanvas.ImageViewer.Tools.Measurement
 	[CheckedStateObserver("activate", "Active", "ActivationChanged")]
 	[TooltipValueObserver("activate", "Tooltip", "TooltipChanged")]
 	[MouseButtonIconSet("activate", "Icons.ProtractorToolSmall.png", "Icons.ProtractorToolMedium.png", "Icons.ProtractorToolLarge.png")]
-    [GroupHint("activate", "Tools.Image.Annotations.Measurement.Angle")]
+	[GroupHint("activate", "Tools.Image.Annotations.Measurement.Angle")]
 	[MouseToolButton(XMouseButtons.Left, false)]
 	[ExtensionOf(typeof (ImageViewerToolExtensionPoint))]
-	public partial class ProtractorTool : MeasurementTool
+	public partial class ProtractorTool : MeasurementTool, IDrawProtractor
 	{
 		public ProtractorTool()
 			: base(SR.TooltipProtractor) {}
@@ -72,40 +72,38 @@ namespace ClearCanvas.ImageViewer.Tools.Measurement
 		{
 			return new ProtractorRoiCalloutLocationStrategy();
 		}
-    }
 
-    #region Oto
-    partial class ProtractorTool : IDrawProtractor
-    {
-        AnnotationGraphic IDrawProtractor.Draw(CoordinateSystem coordinateSystem, string name, PointF point1, PointF vertex, PointF point2)
-        {
-            var image = Context.Viewer.SelectedPresentationImage;
-            if (!CanStart(image))
-                throw new InvalidOperationException("Can't draw a protractor at this time.");
+		#region IDrawProtractor Members
 
-            var imageGraphic = ((IImageGraphicProvider) image).ImageGraphic;
-            if (coordinateSystem == CoordinateSystem.Destination)
-            {
-                point1 = imageGraphic.SpatialTransform.ConvertToSource(point1);
-                vertex = imageGraphic.SpatialTransform.ConvertToSource(vertex);
-                point2 = imageGraphic.SpatialTransform.ConvertToSource(point2);
-            }
+		AnnotationGraphic IDrawProtractor.Draw(CoordinateSystem coordinateSystem, string name, PointF point1, PointF vertex, PointF point2)
+		{
+			var image = Context.Viewer.SelectedPresentationImage;
+			if (!CanStart(image))
+				throw new InvalidOperationException("Can't draw a protractor at this time.");
 
-            var overlayProvider = (IOverlayGraphicsProvider) image;
-            var roiGraphic = CreateRoiGraphic(false);
-            roiGraphic.Name = name;
-            AddRoiGraphic(image, roiGraphic, overlayProvider);
+			var imageGraphic = ((IImageGraphicProvider) image).ImageGraphic;
+			if (coordinateSystem == CoordinateSystem.Destination)
+			{
+				point1 = imageGraphic.SpatialTransform.ConvertToSource(point1);
+				vertex = imageGraphic.SpatialTransform.ConvertToSource(vertex);
+				point2 = imageGraphic.SpatialTransform.ConvertToSource(point2);
+			}
 
-            var subject = (IPointsGraphic)roiGraphic.Subject;
-            subject.Points.Add(point1);
-            subject.Points.Add(vertex);
-            subject.Points.Add(point2);
+			var overlayProvider = (IOverlayGraphicsProvider) image;
+			var roiGraphic = CreateRoiGraphic(false);
+			roiGraphic.Name = name;
+			AddRoiGraphic(image, roiGraphic, overlayProvider);
 
-            roiGraphic.Callout.Update();
-            roiGraphic.State = roiGraphic.CreateSelectedState();
-            //roiGraphic.Draw();
-            return roiGraphic;
-        }
-    }
-    #endregion
+			var subject = (IPointsGraphic) roiGraphic.Subject;
+			subject.Points.Add(point1);
+			subject.Points.Add(vertex);
+			subject.Points.Add(point2);
+
+			roiGraphic.Callout.Update();
+			roiGraphic.State = roiGraphic.CreateSelectedState();
+			return roiGraphic;
+		}
+
+		#endregion
+	}
 }

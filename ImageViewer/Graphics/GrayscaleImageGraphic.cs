@@ -36,18 +36,19 @@ namespace ClearCanvas.ImageViewer.Graphics
 	/// </summary>
 	[Cloneable]
 	public class GrayscaleImageGraphic
-		: ImageGraphic, 
-		IVoiLutInstaller, 
-		IColorMapInstaller, 
-		IModalityLutProvider, 
-		IVoiLutProvider, 
-		IColorMapProvider
+		: ImageGraphic,
+		  IVoiLutInstaller,
+		  IColorMapInstaller,
+		  IModalityLutProvider,
+		  IVoiLutProvider,
+		  IColorMapProvider,
+		  ILutPipelineProvider
 	{
 		private enum Luts
-		{ 
+		{
 			Modality = 1,
 			Voi = 2
-        }
+		}
 
 		#region Private fields
 
@@ -188,12 +189,24 @@ namespace ClearCanvas.ImageViewer.Graphics
 				LutComposer.NormalizationLut = source.NormalizationLut.Clone();
 
 			if (source.LutComposer.VoiLut != null) //clone the voi lut.
-				(this as IVoiLutInstaller).InstallVoiLut(source.VoiLut.Clone());
+				(this as IVoiLutInstaller).InstallVoiLut(CloneVoiLut(source.VoiLut));
 
-            if (source.LutComposer.PresentationLut != null)//not really necessary, but consistent.
-                LutComposer.PresentationLut = source.PresentationLut.Clone();
+			if (source.LutComposer.PresentationLut != null) //not really necessary, but consistent.
+				LutComposer.PresentationLut = source.PresentationLut.Clone();
 
 			//color map has already been cloned.
+		}
+
+		private static IVoiLut CloneVoiLut(IVoiLut source)
+		{
+			var clone = source.Clone();
+			if (clone == null)
+			{
+				var linearLut = source as IVoiLutLinear;
+				if (linearLut != null)
+					clone = new BasicVoiLutLinear(linearLut.WindowWidth, linearLut.WindowCenter);
+			}
+			return clone;
 		}
 
 		#endregion
@@ -241,11 +254,11 @@ namespace ClearCanvas.ImageViewer.Graphics
 		/// </remarks>
 		public bool Invert { get; set; }
 
-	    /// <summary>
-	    /// Gets the default value of <see cref="Invert"/>.  In DICOM, this would be true
-	    /// for all MONOCHROME1 images.
-	    /// </summary>
-	    public bool DefaultInvert { get; private set; }
+		/// <summary>
+		/// Gets the default value of <see cref="Invert"/>.  In DICOM, this would be true
+		/// for all MONOCHROME1 images.
+		/// </summary>
+		public bool DefaultInvert { get; private set; }
 
 		/// <summary>
 		/// Gets or sets the VOI LUT factory for this <see cref="GrayscaleImageGraphic"/>.
@@ -277,10 +290,7 @@ namespace ClearCanvas.ImageViewer.Graphics
 		/// </summary>
 		public new GrayscalePixelData PixelData
 		{
-			get
-			{
-				return base.PixelData as GrayscalePixelData;
-			}
+			get { return base.PixelData as GrayscalePixelData; }
 		}
 
 		#region IVoiLutProvider Members
@@ -290,7 +300,7 @@ namespace ClearCanvas.ImageViewer.Graphics
 		/// </summary>
 		public IVoiLutManager VoiLutManager
 		{
-			get 
+			get
 			{
 				if (_voiLutManager == null)
 					_voiLutManager = new VoiLutManager(this, false);
@@ -319,6 +329,39 @@ namespace ClearCanvas.ImageViewer.Graphics
 
 		#endregion
 
+		#region ILutPipelineProvider Members
+
+		public double LookupPixelValue(int rawPixelValue, LutPipelineStage outStage)
+		{
+			double value = rawPixelValue;
+
+			if (outStage == LutPipelineStage.Source)
+				return value;
+
+			var modalityLut = ModalityLut;
+			if (modalityLut != null)
+				value = modalityLut[value];
+
+			if (outStage == LutPipelineStage.Modality)
+				return value;
+
+			var normalizationLut = NormalizationLut;
+			if (normalizationLut != null)
+				value = normalizationLut[value];
+
+			var voiLut = VoiLut;
+			if (voiLut != null)
+				value = voiLut[value];
+
+			if (outStage == LutPipelineStage.Voi)
+				return value;
+
+			Platform.Log(LogLevel.Debug, "Unrecognized LUT pipeline stage");
+			return value;
+		}
+
+		#endregion
+
 		/// <summary>
 		/// Retrieves this image's modality lut.
 		/// </summary>
@@ -327,26 +370,26 @@ namespace ClearCanvas.ImageViewer.Graphics
 			get
 			{
 				InitializeNecessaryLuts(Luts.Modality);
-				return this.LutComposer.ModalityLut; 
+				return this.LutComposer.ModalityLut;
 			}
 		}
 
-        /// <summary>
-        /// Gets or sets a LUT to normalize the output of the modality LUT immediately prior to the VOI LUT.
-        /// </summary>
-        /// <remarks>
-        /// <para>
-        /// In most cases, this should be left NULL. However, some PET images have a very small rescale slope (&lt;&lt; 1)
-        /// and thus need this to fix the input to the VOI LUT.
-        /// </para>
-        /// <para>
-        /// At any rate, DO NOT use the output of this LUT for any purpose other than as an input to the VOI LUT, as it is meaningless otherwise.</para>
-        /// </remarks>
-        public IComposableLut NormalizationLut
-        {
-            get { return LutComposer.NormalizationLut; }
-            set { LutComposer.NormalizationLut = value; }
-        }
+		/// <summary>
+		/// Gets or sets a LUT to normalize the output of the modality LUT immediately prior to the VOI LUT.
+		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// In most cases, this should be left NULL. However, some PET images have a very small rescale slope (&lt;&lt; 1)
+		/// and thus need this to fix the input to the VOI LUT.
+		/// </para>
+		/// <para>
+		/// At any rate, DO NOT use the output of this LUT for any purpose other than as an input to the VOI LUT, as it is meaningless otherwise.</para>
+		/// </remarks>
+		public IComposableLut NormalizationLut
+		{
+			get { return LutComposer.NormalizationLut; }
+			set { LutComposer.NormalizationLut = value; }
+		}
 
 		/// <summary>
 		/// Retrieves this image's Voi Lut.
@@ -360,30 +403,30 @@ namespace ClearCanvas.ImageViewer.Graphics
 			}
 		}
 
-        /// <summary>
-        /// Gets this image's presentation LUT.
-        /// </summary>
-        /// <remarks>You should not need to set this property unless you are writing a custom renderer
-        /// for 10-bit grayscale (for example) displays, or need an alternate range of p-values for some other output device.
-        /// Otherwise, this property is managed internally, assuming an 8-bit display.</remarks>
-	    public IPresentationLut PresentationLut
-	    {
-	        get
-	        {
-                InitializeNecessaryLuts(Luts.Voi);
-	            return this.LutComposer.PresentationLut;
-	        }
-            set { this.LutComposer.PresentationLut = value; }
-	    }
+		/// <summary>
+		/// Gets this image's presentation LUT.
+		/// </summary>
+		/// <remarks>You should not need to set this property unless you are writing a custom renderer
+		/// for 10-bit grayscale (for example) displays, or need an alternate range of p-values for some other output device.
+		/// Otherwise, this property is managed internally, assuming an 8-bit display.</remarks>
+		public IPresentationLut PresentationLut
+		{
+			get
+			{
+				InitializeNecessaryLuts(Luts.Voi);
+				return this.LutComposer.PresentationLut;
+			}
+			set { this.LutComposer.PresentationLut = value; }
+		}
 
-	    /// <summary>
+		/// <summary>
 		/// Gets the output lut composed of both the Modality and Voi Luts,
 		/// properly rescaled/normalized for the given output display range.
 		/// </summary>
 		public IComposedLut GetOutputLut(int minDisplayValue, int maxDisplayValue)
 		{
 			InitializeNecessaryLuts(Luts.Voi);
-            return LutComposer.GetOutputLut(minDisplayValue, maxDisplayValue);
+			return LutComposer.GetOutputLut(minDisplayValue, maxDisplayValue);
 		}
 
 		/// <summary>
@@ -490,8 +533,8 @@ namespace ClearCanvas.ImageViewer.Graphics
 			int bitsStored,
 			int highBit,
 			bool isSigned,
-			double rescaleSlope, 
-			double rescaleIntercept, 
+			double rescaleSlope,
+			double rescaleIntercept,
 			bool invert)
 		{
 			DicomValidator.ValidateBitsStored(bitsStored);
@@ -511,7 +554,7 @@ namespace ClearCanvas.ImageViewer.Graphics
 			{
 				IModalityLut modalityLut =
 					this.LutFactory.GetModalityLutLinear(this.BitsStored, this.IsSigned, _rescaleSlope, _rescaleIntercept);
-			
+
 				this.LutComposer.ModalityLut = modalityLut;
 			}
 
@@ -527,7 +570,7 @@ namespace ClearCanvas.ImageViewer.Graphics
 
 				(this as IVoiLutInstaller).InstallVoiLut(lut);
 			}
-        }
+		}
 
 		#endregion
 
@@ -535,10 +578,7 @@ namespace ClearCanvas.ImageViewer.Graphics
 
 		IEnumerable<ColorMapDescriptor> IColorMapInstaller.AvailableColorMaps
 		{
-			get
-			{
-				return this.LutFactory.AvailableColorMaps;
-			}
+			get { return this.LutFactory.AvailableColorMaps; }
 		}
 
 		void IVoiLutInstaller.InstallVoiLut(IVoiLut voiLut)

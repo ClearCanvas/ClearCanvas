@@ -64,7 +64,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 			return delegate(Frame frame)
 				{
 					string value;
-					value = frame.ParentImageSop[dicomTag].GetString((int)position, null);
+					value = frame[dicomTag].GetString((int)position, null);
 					return value ?? "";
 				};
 		}
@@ -78,7 +78,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 			return delegate(Frame frame)
 				{
 					string value;
-					value = frame.ParentImageSop[dicomTag].ToString();
+					value = frame[dicomTag].ToString();
 					return DicomStringHelper.GetStringArray(value ?? "");
 				};
 		}
@@ -101,7 +101,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 			return delegate(Frame frame)
 				{
 					int value;
-					value = frame.ParentImageSop[dicomTag].GetInt32((int)position, 0);
+					value = frame[dicomTag].GetInt32((int)position, 0);
 					return value;
 				};
 		}
@@ -115,7 +115,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 			return delegate(Frame frame)
 				{
 					string value;
-					value = frame.ParentImageSop[dicomTag].ToString();
+					value = frame[dicomTag].ToString();
 					
 					int[] values;
 					if (!DicomStringHelper.TryGetIntArray(value ?? "", out values))
@@ -143,7 +143,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 			return delegate(Frame frame)
 				{
 					double value;
-					value = frame.ParentImageSop[dicomTag].GetFloat64((int)position, 0);
+					value = frame[dicomTag].GetFloat64((int)position, 0);
 					return value;
 				};
 		}
@@ -157,7 +157,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 			return delegate(Frame frame)
 				{
 					string value;
-					value = frame.ParentImageSop[dicomTag].ToString();
+					value = frame[dicomTag].ToString();
 					double[] values;
 					if (!DicomStringHelper.TryGetDoubleArray(value ?? "", out values))
 						values = new double[] { };

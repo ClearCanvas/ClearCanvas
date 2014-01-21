@@ -37,7 +37,7 @@ namespace ClearCanvas.ImageViewer.Clipboard.ImageExport
 	[Tooltip("export", "TooltipExportToImage")]
 	[IconSet("export", "Icons.ExportToImageToolSmall.png", "Icons.ExportToImageToolSmall.png", "Icons.ExportToImageToolSmall.png")]
 	[EnabledStateObserver("export", "Enabled", "EnabledChanged")]
-	[ViewerActionPermission("export", AuthorityTokens.Clipboard.Export.JPG)]
+	[ViewerActionPermission("export", AuthorityTokens.Clipboard.Export.Jpeg)]
 	[ExtensionOf(typeof(ClipboardToolExtensionPoint))]
 	public class ExportToImageTool : ClipboardTool
 	{

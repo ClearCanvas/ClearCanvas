@@ -2,7 +2,11 @@
 <ManifestInput xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.clearcanvas.ca">
   <Files>
     <File name="plugins\ClearCanvas.ImageViewer.Volume.Mpr.dll" checksum="true" />
-    <File name="plugins\ClearCanvas.ImageViewer.Volume.Mpr.View.WinForms.dll" checksum="true" />
+    <File name="plugins\ClearCanvas.ImageViewer.AdvancedImaging.Core.dll" checksum="true" />
+    <File name="plugins\ClearCanvas.ImageViewer.AdvancedImaging.MIP.dll" checksum="true" />
+    <File name="plugins\ClearCanvas.ImageViewer.AdvancedImaging.MPR.View.WinForms.dll" checksum="true" />
+    <File name="plugins\ClearCanvas.ImageViewer.Core.Functions.dll" checksum="true" />
+    <File name="plugins\ClearCanvas.ImageViewer.VTK.dll" checksum="true" />
     <File name="plugins\vtkCommon.dll" checksum="true" />
     <File name="plugins\vtkCommonDotNet.dll" checksum="true" />
     <File name="plugins\vtkFiltering.dll" checksum="true" />
@@ -10,5 +14,36 @@
     <File name="plugins\vtkImaging.dll" checksum="true" />
     <File name="plugins\vtkImagingDotNet.dll" checksum="true" />
     <File name="plugins\vtksys.dll" checksum="true" />
+    <File name="plugins\MapReduceMPI.dll" checksum="true" />
+    <File name="plugins\mpistubs.dll" checksum="true" />
+    <File name="plugins\vtkalglib.dll" checksum="true" />
+    <File name="plugins\vtkDICOMParser.dll" checksum="true" />
+    <File name="plugins\vtkexoIIc.dll" checksum="true" />
+    <File name="plugins\vtkexpat.dll" checksum="true" />
+    <File name="plugins\vtkfreetype.dll" checksum="true" />
+    <File name="plugins\vtkftgl.dll" checksum="true" />
+    <File name="plugins\vtkGenericFiltering.dll" checksum="true" />
+    <File name="plugins\vtkGenericFilteringDotNet.dll" checksum="true" />
+    <File name="plugins\vtkGraphics.dll" checksum="true" />
+    <File name="plugins\vtkGraphicsDotNet.dll" checksum="true" />
+    <File name="plugins\vtkHybrid.dll" checksum="true" />
+    <File name="plugins\vtkHybridDotNet.dll" checksum="true" />
+    <File name="plugins\vtkIO.dll" checksum="true" />
+    <File name="plugins\vtkIODotNet.dll" checksum="true" />
+    <File name="plugins\vtkjpeg.dll" checksum="true" />
+    <File name="plugins\vtklibxml2.dll" checksum="true" />
+    <File name="plugins\vtkmetaio.dll" checksum="true" />
+    <File name="plugins\vtkNetCDF.dll" checksum="true" />
+    <File name="plugins\vtkpng.dll" checksum="true" />
+    <File name="plugins\vtkproj4.dll" checksum="true" />
+    <File name="plugins\vtkRendering.dll" checksum="true" />
+    <File name="plugins\vtkRenderingDotNet.dll" checksum="true" />
+    <File name="plugins\vtktiff.dll" checksum="true" />
+    <File name="plugins\vtkverdict.dll" checksum="true" />
+    <File name="plugins\vtkVolumeRendering.dll" checksum="true" />
+    <File name="plugins\vtkVolumeRenderingDotNet.dll" checksum="true" />
+    <File name="plugins\vtkWidgets.dll" checksum="true" />
+    <File name="plugins\vtkWidgetsDotNet.dll" checksum="true" />
+    <File name="plugins\vtkzlib.dll" checksum="true" />
   </Files>
 </ManifestInput>

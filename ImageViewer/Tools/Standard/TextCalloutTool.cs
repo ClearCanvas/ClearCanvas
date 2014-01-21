@@ -34,7 +34,6 @@ using ClearCanvas.ImageViewer.BaseTools;
 using ClearCanvas.ImageViewer.Graphics;
 using ClearCanvas.ImageViewer.InputManagement;
 using ClearCanvas.ImageViewer.InteractiveGraphics;
-using Point=System.Drawing.Point;
 
 namespace ClearCanvas.ImageViewer.Tools.Standard
 {
@@ -62,17 +61,17 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 	[CheckedStateObserver("selectTextArea", "IsTextAreaModeSelected", "ModeChanged")]
 	[Tooltip("selectTextArea", "TooltipTextArea")]
 	[MouseButtonIconSet("selectTextArea", SmallTextAreaIcon, MediumTextAreaIcon, LargeTextAreaIcon)]
-    [GroupHint("selectTextArea", "Tools.Image.Annotations.Text.Area")]
+	[GroupHint("selectTextArea", "Tools.Image.Annotations.Text.Area")]
 	//
 	[DropDownButtonAction("activate", "global-toolbars/ToolbarAnnotation/ToolbarTextCallout", "Select", "DropDownMenuModel", Flags = ClickActionFlags.CheckAction)]
 	[CheckedStateObserver("activate", "Active", "ActivationChanged")]
 	[TooltipValueObserver("activate", "Tooltip", "TooltipChanged")]
 	[IconSetObserver("activate", "IconSet", "ModeChanged")]
-    [GroupHint("activate", "Tools.Image.Annotations.Text.Callout")]
+	[GroupHint("activate", "Tools.Image.Annotations.Text.Callout")]
 	//
 	[MouseToolButton(XMouseButtons.Left, false)]
 	[ExtensionOf(typeof (ImageViewerToolExtensionPoint))]
-	public partial class TextCalloutTool : MouseImageViewerTool
+	public class TextCalloutTool : MouseImageViewerTool, IDrawTextCallout, IDrawTextArea
 	{
 		#region Icon Resource Constants
 
@@ -128,7 +127,7 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 		/// </summary>
 		protected virtual void InitializeMode()
 		{
-            _settings = ToolSettings.DefaultInstance;
+			_settings = ToolSettings.DefaultInstance;
 
 			try
 			{
@@ -273,10 +272,10 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 			EventsHelper.Fire(ModeOrActiveChanged, this, new EventArgs());
 		}
 
-        protected virtual bool CanStart(IPresentationImage image)
-        {
-            return image != null && image is IOverlayGraphicsProvider;
-        }
+		protected virtual bool CanStart(IPresentationImage image)
+		{
+			return image != null && image is IOverlayGraphicsProvider;
+		}
 
 		#endregion
 
@@ -307,11 +306,11 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 				return _graphicBuilder.Start(mouseInformation);
 
 			IPresentationImage image = mouseInformation.Tile.PresentationImage;
-            if (!CanStart(image))
-                return false;
-			
-            var provider = (IOverlayGraphicsProvider)image;
-		    IControlGraphic graphic = _graphicDelegateCreatorDelegate();
+			if (!CanStart(image))
+				return false;
+
+			var provider = (IOverlayGraphicsProvider) image;
+			IControlGraphic graphic = _graphicDelegateCreatorDelegate();
 
 			_graphicBuilder = _interactiveGraphicBuilderDelegate(graphic);
 			_graphicBuilder.GraphicComplete += OnGraphicBuilderInitiallyDone;
@@ -319,7 +318,7 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 			_graphicBuilder.GraphicFinalComplete += OnGraphicFinalComplete;
 			_graphicBuilder.GraphicFinalCancelled += OnGraphicFinalCancelled;
 
-            AddGraphic(image, graphic, provider);
+			AddGraphic(image, graphic, provider);
 
 			if (_graphicBuilder.Start(mouseInformation))
 				return true;
@@ -358,15 +357,15 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 			_graphicBuilder.Cancel();
 		}
 
-        protected void AddGraphic(IPresentationImage image, IControlGraphic graphic, IOverlayGraphicsProvider provider)
-        {
-            _undoableCommand = new DrawableUndoableCommand(image);
-            _undoableCommand.Enqueue(new AddGraphicUndoableCommand(graphic, provider.OverlayGraphics));
-            _undoableCommand.Name = CreationCommandName;
-            _undoableCommand.Execute();
-        }
+		protected void AddGraphic(IPresentationImage image, IControlGraphic graphic, IOverlayGraphicsProvider provider)
+		{
+			_undoableCommand = new DrawableUndoableCommand(image);
+			_undoableCommand.Enqueue(new AddGraphicUndoableCommand(graphic, provider.OverlayGraphics));
+			_undoableCommand.Name = CreationCommandName;
+			_undoableCommand.Execute();
+		}
 
-	    /// <summary>
+		/// <summary>
 		/// Fired when the graphic builder is done placing the graphic, and hence does not need mouse capture anymore, but in the
 		/// text graphic is not technically complete yet and thus we do not insert into the command history yet.
 		/// </summary>
@@ -421,9 +420,9 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 			StandardStatefulGraphic statefulGraphic = new StandardStatefulGraphic(callout);
 			statefulGraphic.State = statefulGraphic.CreateInactiveState();
 
-		    /// TODO (CR Oct 2011): This is the wrong order - the "selected" graphic (stateful) gets
-		    /// deleted by the "delete graphics" tool, and then the top-level context menu
-		    /// graphic gets left dangling.
+			/// TODO (CR Oct 2011): This is the wrong order - the "selected" graphic (stateful) gets
+			/// deleted by the "delete graphics" tool, and then the top-level context menu
+			/// graphic gets left dangling.
 			ContextMenuControlGraphic contextGraphic = new ContextMenuControlGraphic(typeof (TextCalloutTool).FullName, "basicgraphic-menu", null, statefulGraphic);
 			contextGraphic.Actions = new ToolSet(new GraphicToolExtensionPoint(), new GraphicToolContext(contextGraphic)).Actions;
 
@@ -454,6 +453,66 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 		{
 			return new InteractiveTextAreaBuilder(graphic.Subject as ITextGraphic);
 		}
+
+		#region Implementation of IDrawTextCallout, IDrawTextArea
+
+		IControlGraphic IDrawTextCallout.Draw(CoordinateSystem coordinateSystem, string name, PointF anchorPoint, string text, PointF textLocation)
+		{
+			var image = Context.Viewer.SelectedPresentationImage;
+			if (!CanStart(image))
+				throw new InvalidOperationException("Can't draw a text callout at this time.");
+
+			var imageGraphic = ((IImageGraphicProvider) image).ImageGraphic;
+			if (coordinateSystem == CoordinateSystem.Destination)
+			{
+				//Use the image graphic to get the "source" coordinates because it's already in the scene.
+				anchorPoint = imageGraphic.SpatialTransform.ConvertToSource(anchorPoint);
+				textLocation = imageGraphic.SpatialTransform.ConvertToSource(textLocation);
+			}
+
+			var overlayProvider = (IOverlayGraphicsProvider) image;
+			var graphic = CreateTextCalloutGraphic();
+			graphic.Name = name;
+			AddGraphic(image, graphic, overlayProvider);
+
+			var subject = (UserCalloutGraphic) graphic.Subject;
+
+			subject.AnchorPoint = anchorPoint;
+			subject.Text = text;
+			subject.TextLocation = textLocation;
+
+			graphic.Draw();
+			return graphic;
+		}
+
+		IControlGraphic IDrawTextArea.Draw(CoordinateSystem coordinateSystem, string name, string text, PointF textLocation)
+		{
+			var image = Context.Viewer.SelectedPresentationImage;
+			if (!CanStart(image))
+				throw new InvalidOperationException("Can't draw a text callout at this time.");
+
+			var imageGraphic = ((IImageGraphicProvider) image).ImageGraphic;
+			if (coordinateSystem == CoordinateSystem.Destination)
+			{
+				//Use the image graphic to get the "source" coordinates because it's already in the scene.
+				textLocation = imageGraphic.SpatialTransform.ConvertToSource(textLocation);
+			}
+
+			var overlayProvider = (IOverlayGraphicsProvider) image;
+			var graphic = CreateTextAreaGraphic();
+			graphic.Name = name;
+			AddGraphic(image, graphic, overlayProvider);
+
+			var subject = (ITextGraphic) graphic.Subject;
+
+			subject.Text = text;
+			subject.Location = textLocation;
+
+			graphic.Draw();
+			return graphic;
+		}
+
+		#endregion
 	}
 
 	/// <summary>
@@ -470,70 +529,5 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 		/// Specifies that the tool should create a standalone text annotation graphic.
 		/// </summary>
 		TextArea
-    }
-
-    #region Oto
-    partial class TextCalloutTool : IDrawTextCallout, IDrawTextArea
-    {
-        IControlGraphic IDrawTextCallout.Draw(CoordinateSystem coordinateSystem, string name, PointF anchorPoint, string text, PointF textLocation)
-	    {
-            var image = Context.Viewer.SelectedPresentationImage;
-            if (!CanStart(image))
-                throw new InvalidOperationException("Can't draw a text callout at this time.");
-
-            var imageGraphic = ((IImageGraphicProvider)image).ImageGraphic;
-            if (coordinateSystem == CoordinateSystem.Destination)
-            {
-                //Use the image graphic to get the "source" coordinates because it's already in the scene.
-                anchorPoint = imageGraphic.SpatialTransform.ConvertToSource(anchorPoint);
-                textLocation = imageGraphic.SpatialTransform.ConvertToSource(textLocation);
-            }
-
-            var overlayProvider = (IOverlayGraphicsProvider)image;
-	        var graphic = CreateTextCalloutGraphic();
-            graphic.Name = name;
-            AddGraphic(image, graphic, overlayProvider);
-
-            var subject = (UserCalloutGraphic)graphic.Subject;
-
-            subject.AnchorPoint = anchorPoint;
-            subject.Text = text;
-	        subject.TextLocation = textLocation;
-
-            graphic.Draw();
-	        return graphic;
-        }
-
-	    #region Implementation of IViewerTextAreaService
-
-        IControlGraphic IDrawTextArea.Draw(CoordinateSystem coordinateSystem, string name, string text, PointF textLocation)
-	    {
-            var image = Context.Viewer.SelectedPresentationImage;
-            if (!CanStart(image))
-                throw new InvalidOperationException("Can't draw a text callout at this time.");
-
-            var imageGraphic = ((IImageGraphicProvider)image).ImageGraphic;
-            if (coordinateSystem == CoordinateSystem.Destination)
-            {
-                //Use the image graphic to get the "source" coordinates because it's already in the scene.
-                textLocation = imageGraphic.SpatialTransform.ConvertToSource(textLocation);
-            }
-
-            var overlayProvider = (IOverlayGraphicsProvider)image;
-            var graphic = CreateTextAreaGraphic();
-            graphic.Name = name;
-            AddGraphic(image, graphic, overlayProvider);
-
-            var subject = (ITextGraphic)graphic.Subject;
-
-            subject.Text = text;
-            subject.Location = textLocation;
-
-            graphic.Draw();
-	        return graphic;
-        }
-
-	    #endregion
-    }
-    #endregion
+	}
 }

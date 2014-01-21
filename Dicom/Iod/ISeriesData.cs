@@ -22,8 +22,6 @@
 
 #endregion
 
-using System.Runtime.Serialization;
-
 namespace ClearCanvas.Dicom.Iod
 {
 	public interface ISeriesData

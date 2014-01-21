@@ -24,7 +24,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
@@ -81,11 +80,13 @@ namespace ClearCanvas.ImageViewer.Graphics
 
 		[CloneIgnore]
 		private IGraphic _parentGraphic;
+
 		[CloneIgnore]
 		private IImageViewer _parentImageViewer;
+
 		[CloneIgnore]
 		private IPresentationImage _parentPresentationImage;
-		
+
 		private SpatialTransform _spatialTransform;
 
 		private string _name;
@@ -93,14 +94,13 @@ namespace ClearCanvas.ImageViewer.Graphics
 		private Stack<CoordinateSystem> _coordinateSystemStack;
 		private event EventHandler _drawing;
 		private event VisualStateChangedEventHandler _visualStateChanged;
+
 		#endregion
 
 		/// <summary>
 		/// Constructor.
 		/// </summary>
-		protected Graphic()
-		{
-		}
+		protected Graphic() {}
 
 		private Stack<CoordinateSystem> CoordinateSystemStack
 		{
@@ -146,7 +146,7 @@ namespace ClearCanvas.ImageViewer.Graphics
 		/// </summary>
 		/// <param name="oldParentPresentationImage">A reference to the old parent presentation image.</param>
 		/// <param name="newParentPresentationImage">A reference to the new parent presentation image.</param>
-		protected virtual void OnParentPresentationImageChanged(IPresentationImage oldParentPresentationImage, IPresentationImage newParentPresentationImage) { }
+		protected virtual void OnParentPresentationImageChanged(IPresentationImage oldParentPresentationImage, IPresentationImage newParentPresentationImage) {}
 
 		internal virtual void SetParentPresentationImage(IPresentationImage parentPresentationImage)
 		{
@@ -202,7 +202,7 @@ namespace ClearCanvas.ImageViewer.Graphics
 		public virtual bool Visible
 		{
 			get { return _visible; }
-			set	{ _visible = value; }
+			set { _visible = value; }
 		}
 
 		/// <summary>
@@ -237,7 +237,7 @@ namespace ClearCanvas.ImageViewer.Graphics
 		/// </summary>
 		public virtual SpatialTransform SpatialTransform
 		{
-			get 
+			get
 			{
 				if (_spatialTransform == null)
 					_spatialTransform = CreateSpatialTransform();
@@ -313,7 +313,7 @@ namespace ClearCanvas.ImageViewer.Graphics
 			add { _drawing += value; }
 			remove { _drawing -= value; }
 		}
-		
+
 		/// <summary>
 		/// Draws the <see cref="Graphic"/>.
 		/// </summary>
@@ -343,7 +343,7 @@ namespace ClearCanvas.ImageViewer.Graphics
 			IGraphic clone = CloneBuilder.Clone(this) as IGraphic;
 			if (clone != null && ImageViewer != null)
 				ImageViewer.EventBroker.OnCloneCreated(new CloneCreatedEventArgs(this, clone));
-			
+
 			return clone;
 		}
 
@@ -356,7 +356,7 @@ namespace ClearCanvas.ImageViewer.Graphics
 		/// <returns>A <see cref="Roi"/> describing this region of interest, or null if the graphic does not describe a region of interest.</returns>
 		public virtual Roi GetRoi()
 		{
-		    return null;
+			return null;
 		}
 
 		/// <summary>
@@ -401,9 +401,7 @@ namespace ClearCanvas.ImageViewer.Graphics
 		/// <param name="disposing">True if this object is being disposed, false if it is being finalized</param>
 		protected virtual void Dispose(bool disposing)
 		{
-			if (disposing)
-			{
-			}
+			if (disposing) {}
 		}
 
 		#endregion
@@ -428,10 +426,11 @@ namespace ClearCanvas.ImageViewer.Graphics
 		/// Fires the <see cref="VisualStateChanged"/> event.
 		/// </summary>
 		/// <param name="propertyName">The name of the property whose value changed.</param>
-		protected void NotifyVisualStateChanged(string propertyName)
+		/// <param name="propertyKind">The kind of the property whose value changed.</param>
+		protected void NotifyVisualStateChanged(string propertyName, VisualStatePropertyKind propertyKind = VisualStatePropertyKind.Unspecified)
 		{
 			this.OnVisualStateChanged(propertyName);
-			EventsHelper.Fire(_visualStateChanged, this, new VisualStateChangedEventArgs(this, propertyName));
+			EventsHelper.Fire(_visualStateChanged, this, new VisualStateChangedEventArgs(this, propertyName, propertyKind));
 		}
 
 		/// <summary>
@@ -440,8 +439,8 @@ namespace ClearCanvas.ImageViewer.Graphics
 		/// <param name="e">Data for the <see cref="VisualStateChanged"/> event.</param>
 		internal void NotifyVisualStateChanged(VisualStateChangedEventArgs e)
 		{
-			if(e.Graphic == this)
-				this.OnVisualStateChanged(e.PropertyName);
+			if (ReferenceEquals(e.Graphic, this))
+				OnVisualStateChanged(e.PropertyName);
 			EventsHelper.Fire(_visualStateChanged, this, e);
 		}
 

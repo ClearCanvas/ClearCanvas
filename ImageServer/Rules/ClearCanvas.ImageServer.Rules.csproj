@@ -47,6 +47,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ActionApplicabilityAttribute.cs" />
     <Compile Include="AutoRouteAction\AutoRouteActionItem.cs" />
     <Compile Include="AutoRouteAction\AutoRouteActionOperator.cs" />
     <Compile Include="AutoRouteAction\AutoRouteSamples.cs" />
@@ -70,6 +71,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>RuleSettings.settings</DependentUpon>
     </Compile>
+    <Compile Include="ApplicableRuleType.cs" />
     <Compile Include="SampleRuleBase.cs" />
     <Compile Include="SampleRuleExtensionPoint.cs" />
     <Compile Include="ServerActionContext.cs" />

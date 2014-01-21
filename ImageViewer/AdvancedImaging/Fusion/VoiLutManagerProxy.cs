@@ -23,6 +23,7 @@
 #endregion
 
 using System;
+using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Desktop;
 using ClearCanvas.ImageViewer.Imaging;
@@ -72,7 +73,14 @@ namespace ClearCanvas.ImageViewer.AdvancedImaging.Fusion
 
 		private static void Replicate<T>(T source, T destination) where T : IMemorable
 		{
-			destination.SetMemento(source.CreateMemento());
+			try
+			{
+				destination.SetMemento(source.CreateMemento());
+			}
+			catch (Exception ex)
+			{
+				Platform.Log(LogLevel.Debug, ex, "Failed to replicate state");
+			}
 		}
 
 		#region IVoiLutManager Members
@@ -145,10 +153,10 @@ namespace ClearCanvas.ImageViewer.AdvancedImaging.Fusion
 			set { }
 		}
 
-        bool IVoiLutInstaller.DefaultInvert
-        {
-            get { return false; }
-        }
+		bool IVoiLutInstaller.DefaultInvert
+		{
+			get { return false; }
+		}
 
 		#endregion
 
@@ -183,8 +191,8 @@ namespace ClearCanvas.ImageViewer.AdvancedImaging.Fusion
 		private class XVoiLutInstaller : IVoiLutInstaller
 		{
 			public bool Invert { get; set; }
-            public bool DefaultInvert { get; private set; }
-            public IVoiLut VoiLut { get; set; }
+			public bool DefaultInvert { get; private set; }
+			public IVoiLut VoiLut { get; set; }
 
 			public XVoiLutInstaller()
 			{
@@ -194,7 +202,7 @@ namespace ClearCanvas.ImageViewer.AdvancedImaging.Fusion
 
 			public XVoiLutInstaller(IVoiLutInstaller source)
 			{
-                DefaultInvert = this.Invert = source.Invert;
+				DefaultInvert = this.Invert = source.Invert;
 				this.VoiLut = source.VoiLut.Clone();
 			}
 

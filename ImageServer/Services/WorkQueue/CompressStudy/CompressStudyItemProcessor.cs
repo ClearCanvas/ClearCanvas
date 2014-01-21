@@ -34,9 +34,10 @@ using ClearCanvas.Dicom.Utilities.Command;
 using ClearCanvas.Dicom.Utilities.Xml;
 using ClearCanvas.Enterprise.Core;
 using ClearCanvas.ImageServer.Common;
-using ClearCanvas.ImageServer.Common.Command;
 using ClearCanvas.ImageServer.Core.Command;
+using ClearCanvas.ImageServer.Core.Events;
 using ClearCanvas.ImageServer.Core.Validation;
+using ClearCanvas.ImageServer.Enterprise.Command;
 using ClearCanvas.ImageServer.Model;
 using ClearCanvas.ImageServer.Model.Brokers;
 using ClearCanvas.ImageServer.Model.EntityBrokers;
@@ -202,7 +203,7 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.CompressStudy
 
 		protected void ProcessFile(Model.WorkQueue item, WorkQueueUid sop, string path, StudyXml studyXml, IDicomCodecFactory theCodecFactory)
 		{
-			DicomFile file;
+			DicomFile file = null;
 
 			_instanceStats = new CompressInstanceStatistics();
 
@@ -251,8 +252,7 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.CompressStudy
                         IDicomCodec codec = theCodecFactory.GetDicomCodec();
 
                         // Create a context for applying actions from the rules engine
-                        var context = new ServerActionContext(file, StorageLocation.FilesystemKey, ServerPartition, item.StudyStorageKey);
-                        context.CommandProcessor = processor;
+                        var context = new ServerActionContext(file, StorageLocation.FilesystemKey, ServerPartition, item.StudyStorageKey, processor);
                         
                         var parms = theCodecFactory.GetCodecParameters(item.Data);
                         var compressCommand =
@@ -273,7 +273,9 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.CompressStudy
                         // Do the actual processing
                         if (!processor.Execute())
                         {
-                            _instanceStats.CompressTime.Add(compressCommand.CompressTime);
+							EventManager.FireEvent(this, new FailedUpdateSopEventArgs { File = file, ServerPartitionEntry = context.ServerPartition, WorkQueueUidEntry = sop, WorkQueueEntry = WorkQueueItem, FileLength = (ulong)insertStudyXmlCommand.FileSize, FailureMessage = processor.FailureReason});
+							
+							_instanceStats.CompressTime.Add(compressCommand.CompressTime);
                             Platform.Log(LogLevel.Error, "Failure compressing command {0} for SOP: {1}", processor.Description, file.MediaStorageSopInstanceUid);
                             Platform.Log(LogLevel.Error, "Compression file that failed: {0}", file.Filename);
                             throw new ApplicationException("Unexpected failure (" + processor.FailureReason + ") executing command for SOP: " + file.MediaStorageSopInstanceUid,processor.FailureException);
@@ -281,12 +283,16 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.CompressStudy
                     	_instanceStats.CompressTime.Add(compressCommand.CompressTime);
                     	Platform.Log(ServerPlatform.InstanceLogLevel, "Compress SOP: {0} for Patient {1}", file.MediaStorageSopInstanceUid,
                     	             patientsName);
+
+						EventManager.FireEvent(this, new UpdateSopEventArgs { File = file, ServerPartitionEntry = context.ServerPartition, WorkQueueUidEntry = sop, WorkQueueEntry = WorkQueueItem, FileLength = (ulong)insertStudyXmlCommand.FileSize });
                     }
                     
                 }
                 catch (Exception e)
                 {
-                    Platform.Log(LogLevel.Error, e, "Unexpected exception when {0}.  Rolling back operation.",
+					EventManager.FireEvent(this, new FailedUpdateSopEventArgs { File = file, ServerPartitionEntry = ServerPartition, WorkQueueUidEntry = sop, WorkQueueEntry = WorkQueueItem, FileLength = (ulong)new FileInfo(path).Length, FailureMessage = processor.FailureReason });
+					
+					Platform.Log(LogLevel.Error, e, "Unexpected exception when {0}.  Rolling back operation.",
                                  processor.Description);
                     processor.Rollback();
 

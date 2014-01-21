@@ -29,10 +29,10 @@ using System.Xml;
 
 namespace ClearCanvas.Common.Specifications
 {
-    public interface ISpecificationXmlSource
-    {
-        string DefaultExpressionLanguage { get; }
-        XmlElement GetSpecificationXml(string id);
-        IDictionary<string, XmlElement> GetAllSpecificationsXml();
-    }
+	public interface ISpecificationXmlSource
+	{
+		string DefaultExpressionLanguage { get; }
+		XmlElement GetSpecificationXml(string id);
+		IDictionary<string, XmlElement> GetAllSpecificationsXml();
+	}
 }

@@ -71,21 +71,26 @@ namespace ClearCanvas.Enterprise.Common
 
 		#region ITimeProvider Members
 
-		public DateTime CurrentTime
+		public DateTime GetCurrentTime(DateTimeKind kind)
 		{
-			get
+			if (ResyncRequired())
 			{
-				if (ResyncRequired())
-				{
-					ResyncLocalToEnterpriseTime();
-				}
-				return EnterpriseTimeFromLocal(DateTime.Now);
+				ResyncLocalToEnterpriseTime();
+			}
+			switch (kind)
+			{
+				case DateTimeKind.Utc:
+					return EnterpriseTime(DateTime.UtcNow);
+				case DateTimeKind.Local:
+					return EnterpriseTime(DateTime.Now);
+				default:
+					throw new ArgumentOutOfRangeException("kind");
 			}
 		}
 
 		#endregion
 
-		private DateTime EnterpriseTimeFromLocal(DateTime localTime)
+		private DateTime EnterpriseTime(DateTime localTime)
 		{
 			return localTime - _localToEnterpriseOffset;
 		}

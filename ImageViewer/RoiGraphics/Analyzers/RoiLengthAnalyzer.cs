@@ -36,9 +36,8 @@ namespace ClearCanvas.ImageViewer.RoiGraphics.Analyzers
 	public class RoiLengthAnalyzer : IRoiAnalyzer
 	{
 		private Units _units = Units.Centimeters;
-	    private RoiAnalyzerUpdateCallback _updateCallback;
 
-	    /// <summary>
+		/// <summary>
 		/// Gets or sets the base unit of measurement in which analysis is performed.
 		/// </summary>
 		public Units Units
@@ -64,75 +63,40 @@ namespace ClearCanvas.ImageViewer.RoiGraphics.Analyzers
 		/// <param name="mode">The analysis mode.</param>
 		/// <returns>A string containing the analysis results, which can be appended to the analysis
 		/// callout of the associated <see cref="RoiGraphic"/>, if one exists.</returns>
-        //public string Analyze(Roi roi, RoiAnalysisMode mode)
-        //{
-        //    if (!SupportsRoi(roi))
-        //        return null;
+		public IRoiAnalyzerResult Analyze(Roi roi, RoiAnalysisMode mode)
+		{
+			if (!SupportsRoi(roi))
+				return null;
 
-        //    IRoiLengthProvider lengthProvider = (IRoiLengthProvider) roi;
+			IRoiLengthProvider lengthProvider = (IRoiLengthProvider) roi;
 
-        //    string text;
+			Units oldUnits = lengthProvider.Units;
+			lengthProvider.Units = lengthProvider.IsCalibrated ? _units : Units.Pixels;
 
-        //    Units oldUnits = lengthProvider.Units;
-        //    lengthProvider.Units = lengthProvider.IsCalibrated ? _units : Units.Pixels;
+			IRoiAnalyzerResult result;
 
-        //    if (!lengthProvider.IsCalibrated || _units == Units.Pixels)
-        //        text = String.Format(SR.FormatLengthPixels, lengthProvider.Length);
-        //    else if (_units == Units.Millimeters)
-        //        text = String.Format(SR.FormatLengthMm, lengthProvider.Length);
-        //    else
-        //        text = String.Format(SR.FormatLengthCm, lengthProvider.Length);
+			if (!lengthProvider.IsCalibrated || _units == Units.Pixels)
+			{
+				result = new SingleValueRoiAnalyzerResult("Length", SR.FormatLengthPixels, lengthProvider.Length,
+				                                          String.Format(SR.FormatLengthPixels, lengthProvider.Length));
+			}
+			else if (_units == Units.Millimeters)
+			{
+				result = new SingleValueRoiAnalyzerResult("Length", SR.FormatLengthMm, lengthProvider.Length,
+				                                          String.Format(SR.FormatLengthMm, lengthProvider.Length));
+			}
+			else
+			{
+				result = new SingleValueRoiAnalyzerResult("Length", SR.FormatLengthCm, lengthProvider.Length,
+				                                          String.Format(SR.FormatLengthCm, lengthProvider.Length));
+			}
 
-        //    lengthProvider.Units = oldUnits;
+			lengthProvider.Units = oldUnits;
 
-        //    return text;
-        //}
+			return result;
+		}
 
-        public IRoiAnalyzerResult Analyze(Roi roi, RoiAnalysisMode mode)
-        {
-            if (!SupportsRoi(roi))
-                return null;
-
-            IRoiLengthProvider lengthProvider = (IRoiLengthProvider)roi;
-
-		    Units oldUnits = lengthProvider.Units;
-            lengthProvider.Units = lengthProvider.IsCalibrated ? _units : Units.Pixels;
-
-		    IRoiAnalyzerResult result;
-
-            if (!lengthProvider.IsCalibrated || _units == Units.Pixels)
-            {
-                //text = String.Format(SR.FormatLengthPixels, lengthProvider.Length);
-                result = new SingleValueRoiAnalyzerResult("Length", SR.FormatLengthPixels, lengthProvider.Length,
-                                                          String.Format(SR.FormatLengthPixels, lengthProvider.Length));
-
-            }
-            else if (_units == Units.Millimeters)
-            {
-                //text = String.Format(SR.FormatLengthMm, lengthProvider.Length);
-                result = new SingleValueRoiAnalyzerResult("Length", SR.FormatLengthMm, lengthProvider.Length,
-                                                          String.Format(SR.FormatLengthMm, lengthProvider.Length));
-
-            }
-            else
-            {
-                //text = String.Format(SR.FormatLengthCm, lengthProvider.Length);
-                result = new SingleValueRoiAnalyzerResult("Length", SR.FormatLengthCm, lengthProvider.Length,
-                                                          String.Format(SR.FormatLengthCm, lengthProvider.Length));
-
-            }
-
-            lengthProvider.Units = oldUnits;
-
-            return result;
-            
-        }
-
-        public void SetRoiAnalyzerUpdateCallback(RoiAnalyzerUpdateCallback callback)
-        {
-            _updateCallback = callback;
-        }
-	    #region Public Static Helpers
+		#region Public Static Helpers
 
 		/// <summary>
 		/// Helper method to compute the physical distance between two pixels.

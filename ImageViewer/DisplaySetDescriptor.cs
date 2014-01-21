@@ -23,9 +23,9 @@
 #endregion
 
 using System;
+using ClearCanvas.Common.Utilities;
 using ClearCanvas.Dicom.ServiceModel.Query;
 using ClearCanvas.ImageViewer.StudyManagement;
-using ClearCanvas.Common.Utilities;
 
 namespace ClearCanvas.ImageViewer
 {
@@ -45,21 +45,32 @@ namespace ClearCanvas.ImageViewer
 		/// the same as the series that the contained <see cref="IPresentationImage"/>s
 		/// belong to.  For example, the <see cref="SourceSeries"/> could be a Key Object
 		/// series that simply references images in other series.
-        /// </para>
-        /// <para>
-        /// Additionally, this property can also be null if, for example, the images are
-        /// a composition of images from many series in the same study.
-        /// </para>
-        /// </remarks>
+		/// </para>
+		/// <para>
+		/// Additionally, this property can also be null if, for example, the images are
+		/// a composition of images from many series in the same study.
+		/// </para>
+		/// </remarks>
 		ISeriesIdentifier SourceSeries { get; }
 
-        //TODO (CR July 2011): Not sure about this ...
+		//TODO (CR July 2011): Not sure about this ...
 
-        /// <summary>
-        /// Gets whether or not the display set is comprised of simple DICOM images, taken from a single
-        /// series, or whether it is a composite of images from multiple series.
-        /// </summary>
-        bool IsComposite { get; }
+		/// <summary>
+		/// Gets whether or not the display set is comprised of simple DICOM images, taken from a single
+		/// series, or whether it is a composite of images from multiple series.
+		/// </summary>
+		bool IsComposite { get; }
+
+		/// <summary>
+		/// Gets whether or not the pixel data in the display set is derived in some manner from the pixel data of another
+		/// (i.e. the image type of the images in the display set is effectively DERIVED rather than ORIGINAL)
+		/// </summary>
+		bool IsDerived { get; }
+
+		/// <summary>
+		/// Gets the original <see cref="IDisplaySetDescriptor"/> of the display set from which this display set was derived.
+		/// </summary>
+		IDisplaySetDescriptor DerivationSourceDescriptor { get; }
 
 		//TODO: put this stuff back when we actually support dynamically updating the viewer.
 		//bool Update(Sop sop);
@@ -74,15 +85,18 @@ namespace ClearCanvas.ImageViewer
 		/// Gets the descriptive name of the <see cref="IDisplaySet"/>.
 		/// </summary>
 		string Name { get; }
+
 		/// <summary>
 		/// Gets a description of the <see cref="IDisplaySet"/>.
 		/// </summary>
 		string Description { get; }
+
 		/// <summary>
 		/// Gets a numeric identifier for the <see cref="IDisplaySet"/>, which usually corresponds
 		/// to a DICOM Series Number.
 		/// </summary>
 		int Number { get; }
+
 		/// <summary>
 		/// Gets the unique identifier for the <see cref="IDisplaySet"/>.
 		/// </summary>
@@ -97,8 +111,12 @@ namespace ClearCanvas.ImageViewer
 	{
 		[CloneCopyReference]
 		private readonly ISeriesIdentifier _sourceSeries;
+
 		[CloneCopyReference]
 		private readonly IPresentationImageFactory _presentationImageFactory;
+
+		[CloneCopyReference]
+		private IDisplaySetDescriptor _derivationSourceDescriptor;
 
 		private string _name;
 		private string _description;
@@ -109,9 +127,7 @@ namespace ClearCanvas.ImageViewer
 		/// Protected constructor.
 		/// </summary>
 		protected DicomDisplaySetDescriptor(ISeriesIdentifier sourceSeries)
-			: this(sourceSeries, null)
-		{
-		}
+			: this(sourceSeries, null) {}
 
 		/// <summary>
 		/// Protected constructor.
@@ -147,7 +163,15 @@ namespace ClearCanvas.ImageViewer
 			get { return _sourceSeries; }
 		}
 
-        public bool IsComposite { get; protected set; }
+		public bool IsComposite { get; protected set; }
+
+		public bool IsDerived { get; protected set; }
+
+		public IDisplaySetDescriptor DerivationSourceDescriptor
+		{
+			get { return _derivationSourceDescriptor; }
+			protected set { _derivationSourceDescriptor = value; }
+		}
 
 		#endregion
 
@@ -212,10 +236,12 @@ namespace ClearCanvas.ImageViewer
 		/// Gets the descriptive name of the <see cref="IDisplaySet"/>.
 		/// </summary>
 		protected abstract string GetName();
+
 		/// <summary>
 		/// Gets a description of the <see cref="IDisplaySet"/>.
 		/// </summary>
 		protected abstract string GetDescription();
+
 		/// <summary>
 		/// Gets the unique identifier for the <see cref="IDisplaySet"/>.
 		/// </summary>
@@ -227,8 +253,8 @@ namespace ClearCanvas.ImageViewer
 		/// </summary>
 		protected virtual int GetNumber()
 		{
-            if (SourceSeries == null)
-                return default(int);
+			if (SourceSeries == null)
+				return default(int);
 
 			return SourceSeries.SeriesNumber ?? default(int);
 		}
@@ -238,10 +264,10 @@ namespace ClearCanvas.ImageViewer
 			return false;
 		}
 
-        //Add this when we actually support it.
+		//Add this when we actually support it.
 		internal virtual bool Update(Sop sop)
 		{
-            throw new NotSupportedException();
+			throw new NotSupportedException();
 		}
 	}
 
@@ -259,9 +285,7 @@ namespace ClearCanvas.ImageViewer
 		/// <summary>
 		/// Constructor.
 		/// </summary>
-		public BasicDisplaySetDescriptor()
-		{
-		}
+		public BasicDisplaySetDescriptor() {}
 
 		/// <summary>
 		/// Gets or sets the descriptive name of the <see cref="IDisplaySet"/>.
@@ -297,7 +321,7 @@ namespace ClearCanvas.ImageViewer
 		{
 			get { return _uid ?? ""; }
 			set { _uid = value; }
-		}	
+		}
 	}
 
 	/// <summary>
@@ -309,9 +333,7 @@ namespace ClearCanvas.ImageViewer
 		/// <summary>
 		/// Protected constructor.
 		/// </summary>
-		protected DisplaySetDescriptor()
-		{
-		}
+		protected DisplaySetDescriptor() {}
 
 		#region IDisplaySetDescriptor Members
 
@@ -343,7 +365,7 @@ namespace ClearCanvas.ImageViewer
 		///</summary>
 		public DisplaySetDescriptor Clone()
 		{
-			return (DisplaySetDescriptor)CloneBuilder.Clone(this);
+			return (DisplaySetDescriptor) CloneBuilder.Clone(this);
 		}
 
 		/// <summary>
@@ -351,7 +373,7 @@ namespace ClearCanvas.ImageViewer
 		/// </summary>
 		public override string ToString()
 		{
-			return StringUtilities.Combine(new string[] { Name, Uid}, " | ", true);
+			return StringUtilities.Combine(new string[] {Name, Uid}, " | ", true);
 		}
 	}
 }

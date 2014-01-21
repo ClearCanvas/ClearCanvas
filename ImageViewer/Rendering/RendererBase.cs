@@ -39,8 +39,11 @@ namespace ClearCanvas.ImageViewer.Rendering
 	/// use this class in tandem with the <see cref="RendererFactoryBase"/>, although it
 	/// is not required that you do so.
 	/// </remarks>
+	/// <seealso cref="RendererBase2{TRenderingSurface,TPresentationImage}"/>
+	/// <seealso cref="RendererFactoryBase"/>
 	public abstract class RendererBase : IRenderer
 	{
+		private readonly string _rendererTypeId;
 		private DrawMode _drawMode;
 		private CompositeGraphic _sceneGraph;
 		private IRenderingSurface _surface;
@@ -50,6 +53,19 @@ namespace ClearCanvas.ImageViewer.Rendering
 		/// </summary>
 		protected RendererBase()
 		{
+			_rendererTypeId = GetType().Name;
+		}
+
+		~RendererBase()
+		{
+			try
+			{
+				Dispose(false);
+			}
+			catch (Exception ex)
+			{
+				Platform.Log(LogLevel.Error, ex);
+			}
 		}
 
 		/// <summary>
@@ -101,11 +117,11 @@ namespace ClearCanvas.ImageViewer.Rendering
 		{
 			try
 			{
-				Initialize(drawArgs); 
-				
+				Initialize(drawArgs);
+
 				if (drawArgs.RenderingSurface.ClientRectangle.Width == 0 || drawArgs.RenderingSurface.ClientRectangle.Height == 0)
 					return;
-								
+
 				if (DrawMode == DrawMode.Render)
 					Render();
 				else
@@ -125,7 +141,12 @@ namespace ClearCanvas.ImageViewer.Rendering
 		/// <summary>
 		/// Factory method for an <see cref="IRenderingSurface"/>.
 		/// </summary>
-		public abstract IRenderingSurface GetRenderingSurface(IntPtr windowID, int width, int height);
+		public abstract IRenderingSurface GetRenderingSurface(IntPtr windowId, int width, int height);
+
+		public virtual IRenderingSurface CreateRenderingSurface(IntPtr windowId, int width, int height, RenderingSurfaceType type)
+		{
+			return GetRenderingSurface(windowId, width, height);
+		}
 
 		/// <summary>
 		/// Initializes the member variables before calling <see cref="Render"/> or <see cref="Refresh"/>.
@@ -170,31 +191,31 @@ namespace ClearCanvas.ImageViewer.Rendering
 					graphic.OnDrawing();
 
 					if (graphic is CompositeGraphic)
-						DrawSceneGraph((CompositeGraphic)graphic);
+						DrawSceneGraph((CompositeGraphic) graphic);
 					else if (graphic is ImageGraphic)
-						DrawImageGraphic((ImageGraphic)graphic);
+						DrawImageGraphic((ImageGraphic) graphic);
 					else if (graphic is LinePrimitive)
-						DrawLinePrimitive((LinePrimitive)graphic);
+						DrawLinePrimitive((LinePrimitive) graphic);
 					else if (graphic is InvariantLinePrimitive)
-						DrawInvariantLinePrimitive((InvariantLinePrimitive)graphic);
-					else if (graphic is CurvePrimitive)
-						DrawCurvePrimitive((CurvePrimitive)graphic);
+						DrawInvariantLinePrimitive((InvariantLinePrimitive) graphic);
+					else if (graphic is SplinePrimitive)
+						DrawSplinePrimitive((SplinePrimitive) graphic);
 					else if (graphic is RectanglePrimitive)
-						DrawRectanglePrimitive((RectanglePrimitive)graphic);
+						DrawRectanglePrimitive((RectanglePrimitive) graphic);
 					else if (graphic is InvariantRectanglePrimitive)
-						DrawInvariantRectanglePrimitive((InvariantRectanglePrimitive)graphic);
+						DrawInvariantRectanglePrimitive((InvariantRectanglePrimitive) graphic);
 					else if (graphic is EllipsePrimitive)
-						DrawEllipsePrimitive((EllipsePrimitive)graphic);
+						DrawEllipsePrimitive((EllipsePrimitive) graphic);
 					else if (graphic is InvariantEllipsePrimitive)
-						DrawInvariantEllipsePrimitive((InvariantEllipsePrimitive)graphic);
+						DrawInvariantEllipsePrimitive((InvariantEllipsePrimitive) graphic);
 					else if (graphic is ArcPrimitive)
-						DrawArcPrimitive((IArcGraphic)graphic);
+						DrawArcPrimitive((IArcGraphic) graphic);
 					else if (graphic is InvariantArcPrimitive)
-						DrawArcPrimitive((IArcGraphic)graphic);
+						DrawArcPrimitive((IArcGraphic) graphic);
 					else if (graphic is PointPrimitive)
-						DrawPointPrimitive((PointPrimitive)graphic);
+						DrawPointPrimitive((PointPrimitive) graphic);
 					else if (graphic is InvariantTextPrimitive)
-						DrawTextPrimitive((InvariantTextPrimitive)graphic);
+						DrawTextPrimitive((InvariantTextPrimitive) graphic);
 				}
 			}
 		}
@@ -210,7 +231,7 @@ namespace ClearCanvas.ImageViewer.Rendering
 			if (presentationImage == null || !(presentationImage is IAnnotationLayoutProvider))
 				return;
 
-			IAnnotationLayout layout = ((IAnnotationLayoutProvider)presentationImage).AnnotationLayout;
+			IAnnotationLayout layout = ((IAnnotationLayoutProvider) presentationImage).AnnotationLayout;
 			if (layout == null || !layout.Visible)
 				return;
 
@@ -225,7 +246,7 @@ namespace ClearCanvas.ImageViewer.Rendering
 			}
 
 			clock.Stop();
-			PerformanceReportBroker.PublishReport("RendererBase", "DrawTextOverlay", clock.Seconds);
+			PerformanceReportBroker.PublishReport(_rendererTypeId, "DrawTextOverlay", clock.Seconds);
 		}
 
 		/// <summary>
@@ -244,9 +265,9 @@ namespace ClearCanvas.ImageViewer.Rendering
 		protected abstract void DrawInvariantLinePrimitive(InvariantLinePrimitive line);
 
 		/// <summary>
-		/// Draws a <see cref="CurvePrimitive"/>. Must be overridden and implemented.
+		/// Draws a <see cref="SplinePrimitive"/>. Must be overridden and implemented.
 		/// </summary>
-		protected abstract void DrawCurvePrimitive(CurvePrimitive curve);
+		protected abstract void DrawSplinePrimitive(SplinePrimitive spline);
 
 		/// <summary>
 		/// Draws a <see cref="RectanglePrimitive"/>.  Must be overridden and implemented.
@@ -314,12 +335,7 @@ namespace ClearCanvas.ImageViewer.Rendering
 		/// <summary>
 		/// Dispose method.  Inheritors should override this method to do any additional cleanup.
 		/// </summary>
-		protected virtual void Dispose(bool disposing)
-		{
-			if (disposing)
-			{
-			}
-		}
+		protected virtual void Dispose(bool disposing) {}
 
 		#region IDisposable Members
 
@@ -333,13 +349,14 @@ namespace ClearCanvas.ImageViewer.Rendering
 				Dispose(true);
 				GC.SuppressFinalize(this);
 			}
-			catch(Exception e)
+			catch (Exception e)
 			{
 				Platform.Log(LogLevel.Error, e);
 			}
 		}
 
 		#endregion
+
 		#endregion
 	}
 }

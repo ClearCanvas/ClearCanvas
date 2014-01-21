@@ -151,8 +151,9 @@ namespace ClearCanvas.ImageViewer.Graphics
 		/// </summary>
 		/// <remarks>Usually, <see cref="Scale"/> = <see cref="ScaleX"/> = <see cref="ScaleY"/>.
 		/// However, when pixels are non-square, <see cref="ScaleX"/> and <see cref="ScaleY"/>
-		/// will differ.  Note that <see cref="ScaleX"/> does not account for flip and is
-		/// thus always positive.</remarks>
+		/// will differ.  Note that <see cref="ScaleX"/> is not used to account for user flip and is
+		/// thus generally positive. It can, however, be used to invert one or both axes to account
+		/// for the native orientation of the coordinate system.</remarks>
 		protected internal float ScaleX
 		{
 			get
@@ -165,7 +166,7 @@ namespace ClearCanvas.ImageViewer.Graphics
 				if (_scaleX == value)
 					return;
 
-				if (value < 0 || FloatComparer.AreEqual(value, 0F))
+				if (FloatComparer.AreEqual(value, 0F))
 					throw new ArgumentOutOfRangeException("value", "Cannot set ScaleX to zero.");
 
 				_scaleX = value;
@@ -178,8 +179,9 @@ namespace ClearCanvas.ImageViewer.Graphics
 		/// </summary>
 		/// <remarks>Usually, <see cref="Scale"/> = <see cref="ScaleX"/> = <see cref="ScaleY"/>.
 		/// However, when pixels are non-square, <see cref="ScaleX"/> and <see cref="ScaleY"/>
-		/// will differ.  Note that <see cref="ScaleY"/> does not account for flip and is
-		/// thus always positive.</remarks>
+		/// will differ.  Note that <see cref="ScaleY"/> is not used to account for user flip and is
+		/// thus generally positive. It can, however, be used to invert one or both axes to account
+		/// for the native orientation of the coordinate system.</remarks>
 		protected internal float ScaleY
 		{
 			get
@@ -192,7 +194,7 @@ namespace ClearCanvas.ImageViewer.Graphics
 				if (_scaleY == value)
 					return;
 
-				if (value < 0 || FloatComparer.AreEqual(value, 0F))
+				if (FloatComparer.AreEqual(value, 0F))
 					throw new ArgumentOutOfRangeException("value", "Cannot set ScaleY to zero.");
 
 				_scaleY = value;
@@ -338,7 +340,7 @@ namespace ClearCanvas.ImageViewer.Graphics
 		/// <remarks>
 		/// Gets the scale relative to the root of the scene graph.
 		/// </remarks>
-		public float CumulativeScale
+		public virtual float CumulativeScale
 		{
 			get
 			{
@@ -572,8 +574,7 @@ namespace ClearCanvas.ImageViewer.Graphics
 
 			_cumulativeTransform.Reset();
 
-			IGraphic parentGraphic = this.OwnerGraphic.ParentGraphic;
-
+			IGraphic parentGraphic = OwnerGraphic != null ? OwnerGraphic.ParentGraphic : null;
 			if (parentGraphic != null)
 				_cumulativeTransform.Multiply(parentGraphic.SpatialTransform.CumulativeTransform);
 
@@ -624,8 +625,14 @@ namespace ClearCanvas.ImageViewer.Graphics
 				return;
 
 			_updatingScaleParameters = true;
-			UpdateScaleParameters();
-			_updatingScaleParameters = false;
+			try
+			{
+				UpdateScaleParameters();
+			}
+			finally
+			{
+				_updatingScaleParameters = false;
+			}
 		}
 
 		#endregion

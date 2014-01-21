@@ -26,8 +26,8 @@
 
 namespace ClearCanvas.Common.Specifications
 {
-    public interface IExpressionFactory
-    {
-        Expression CreateExpression(string text);
-    }
+	public interface IExpressionFactory
+	{
+		Expression CreateExpression(string text);
+	}
 }

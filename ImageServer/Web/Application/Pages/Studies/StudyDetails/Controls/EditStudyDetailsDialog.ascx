@@ -119,7 +119,7 @@ EnableClientScript="true" runat="server" ValidationGroup="EditStudyValidationGro
                                     <table cellpadding="0" cellspacing="0">
                                         <tr>
                                             <td valign="bottom">
-                                                <ccUI:TextBox ID="PatientBirthDate" runat="server" CausesValidation="true" ValidationGroup="EditStudyValidationGroup" CssClass="DialogTextBox" Text="20010101" ></ccUI:TextBox>
+                                                <ccUI:TextBox ID="PatientBirthDate" runat="server" CausesValidation="true" ValidationGroup="EditStudyValidationGroup" CssClass="DialogTextBox" ></ccUI:TextBox>
                                             </td>
                                             
                                             <td>    

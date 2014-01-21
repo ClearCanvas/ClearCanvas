@@ -47,7 +47,6 @@ namespace ClearCanvas.ImageViewer.Imaging
 	/// </remarks>
 	/// <seealso cref="PixelDataGetter"/>
 
-	//TODO (cr Oct 2009): Disposable?
 	public abstract class PixelData
 	{
 		#region Private fields

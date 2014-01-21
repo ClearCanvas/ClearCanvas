@@ -31,7 +31,7 @@ namespace ClearCanvas.ImageServer.Model.EntityBrokers
     using ClearCanvas.Dicom;
     using ClearCanvas.ImageServer.Enterprise;
 
-   public class RequestAttributesUpdateColumns : EntityUpdateColumns
+   public partial class RequestAttributesUpdateColumns : EntityUpdateColumns
    {
        public RequestAttributesUpdateColumns()
        : base("RequestAttributes")

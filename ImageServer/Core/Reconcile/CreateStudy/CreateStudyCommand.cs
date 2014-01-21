@@ -31,9 +31,10 @@ using ClearCanvas.Dicom.Utilities.Command;
 using ClearCanvas.Dicom.Utilities.Xml;
 using ClearCanvas.Enterprise.Core;
 using ClearCanvas.ImageServer.Common;
-using ClearCanvas.ImageServer.Common.Command;
 using ClearCanvas.ImageServer.Core.Data;
 using ClearCanvas.ImageServer.Core.Edit;
+using ClearCanvas.ImageServer.Core.Helpers;
+using ClearCanvas.ImageServer.Enterprise.Command;
 using ClearCanvas.ImageServer.Model;
 using ClearCanvas.ImageServer.Rules;
 
@@ -197,7 +198,8 @@ namespace ClearCanvas.ImageServer.Core.Reconcile.CreateStudy
 
 					string groupID = ServerHelper.GetUidGroup(file, _destinationStudyStorage.ServerPartition, Context.WorkQueueItem.InsertTime);
 
-                    ProcessingResult result = sopProcessor.ProcessFile(groupID, file, xml, false, true, uid, imagePath);
+					ProcessingResult result = sopProcessor.ProcessFile(groupID, file, xml, false, true, uid, imagePath,
+					                                                   SopInstanceProcessorSopType.NewSop);
 					if (result.Status != ProcessingStatus.Success)
 					{
 						throw new ApplicationException(String.Format("Unable to reconcile image {0}", file.Filename));
