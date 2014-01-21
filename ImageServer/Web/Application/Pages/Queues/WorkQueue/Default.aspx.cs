@@ -35,7 +35,7 @@ using ClearCanvas.ImageServer.Web.Application.Pages.Common;
 using ClearCanvas.ImageServer.Web.Application.Pages.Queues.WorkQueue.Edit;
 using ClearCanvas.ImageServer.Web.Common.Data;
 using ClearCanvas.ImageServer.Web.Common.WebControls.UI;
-using AuthorityTokens=ClearCanvas.ImageServer.Enterprise.Authentication.AuthorityTokens;
+using AuthorityTokens=ClearCanvas.ImageServer.Common.Authentication.AuthorityTokens;
 using Resources;
 
 namespace ClearCanvas.ImageServer.Web.Application.Pages.Queues.WorkQueue

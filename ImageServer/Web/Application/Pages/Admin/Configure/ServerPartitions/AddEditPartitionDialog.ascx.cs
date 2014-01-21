@@ -58,29 +58,42 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Admin.Configure.ServerPa
             }
         }
 
-        /// <summary>
-        /// Sets/Gets the current editing partition.
-        /// </summary>
-        public ServerPartition Partition
-        {
-            set
-            {
-                _partition = value;
-                // put into viewstate to retrieve later
-                ViewState[ "EditedPartition"] = _partition;
+	    /// <summary>
+	    /// Sets/Gets the current editing partition.
+	    /// </summary>
+	    public ServerPartition Partition
+	    {
+		    set
+		    {
+			    _partition = value;
+			    // put into viewstate to retrieve later
+			    ViewState["EditedPartition"] = _partition;
 
-                dataAccessPanel.Partition = _partition;
-                
-				if (value != null && !Page.IsPostBack)
-				{
-					ServerPartitionValidator.OriginalAeTitle = value.AeTitle;
-					PartitionFolderValidator.OriginalPartitionFolder = value.PartitionFolder;
-				}
-            }
-            get { return _partition; }
-        }
+			    dataAccessPanel.Partition = _partition;
 
-        #endregion // public members
+			    if (value != null && !Page.IsPostBack)
+			    {
+				    ServerPartitionValidator.OriginalAeTitle = value.AeTitle;
+				    PartitionFolderValidator.OriginalPartitionFolder = value.PartitionFolder;
+			    }
+
+			    bool enabled = _partition == null || !_partition.ServerPartitionTypeEnum.Equals(ServerPartitionTypeEnum.VFS);
+
+			    // Disable some of the buttons when editing a VFS partition
+
+			    StudyMatchingTabPanel.Visible = enabled;
+				DataAccessTab.Visible = enabled;
+
+			    AETitleTextBox.Enabled = enabled;
+			    PortTextBox.Enabled = enabled;
+			    EnabledCheckBox.Enabled = enabled;
+			    DuplicateSopDropDownList.Enabled = enabled;
+			    AcceptLatestReportCheckBox.Enabled = enabled;
+		    }
+		    get { return _partition; }
+	    }
+
+	    #endregion // public members
 
         #region Events
 
@@ -203,7 +216,10 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Admin.Configure.ServerPa
             DuplicateSopDropDownList.Items.Clear();
             foreach (DuplicateSopPolicyEnum policyEnum in DuplicateSopPolicyEnum.GetAll())
             {
-            	ListItem item = new ListItem(ServerEnumDescription.GetLocalizedDescription(policyEnum), policyEnum.Lookup);
+	            if (policyEnum.Equals(DuplicateSopPolicyEnum.AcceptLatest))
+		            continue;
+
+            	var item = new ListItem(ServerEnumDescription.GetLocalizedDescription(policyEnum), policyEnum.Lookup);
                 DuplicateSopDropDownList.Items.Add(item);
             }
 
@@ -246,7 +262,8 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Admin.Configure.ServerPa
 
                 DefaultRemotePortTextBox.Enabled = Partition.AutoInsertDevice;
 
-                DuplicateSopDropDownList.SelectedValue = Partition.DuplicateSopPolicyEnum.Lookup;
+				if (!Partition.DuplicateSopPolicyEnum.Equals(DuplicateSopPolicyEnum.AcceptLatest))
+					DuplicateSopDropDownList.SelectedValue = Partition.DuplicateSopPolicyEnum.Lookup;
                 AcceptLatestReportCheckBox.Checked = Partition.AcceptLatestReport;
 
                 MatchPatientName.Checked = Partition.MatchPatientsName;
@@ -267,7 +284,7 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Admin.Configure.ServerPa
         {
             if (Partition == null)
             {
-                Partition = new ServerPartition();
+                Partition = new ServerPartition { ServerPartitionTypeEnum = ServerPartitionTypeEnum.Standard };
             }
 
 

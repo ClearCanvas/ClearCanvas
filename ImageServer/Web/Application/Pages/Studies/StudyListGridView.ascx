@@ -87,6 +87,14 @@
 							    </div>
 							</itemtemplate>
 						</asp:TemplateField>
+						
+						<asp:TemplateField HeaderText="<%$ Resources: ColumnHeaders, QCStatus %>" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
+							<itemtemplate>
+							    <div style="padding-right:4px">
+									<a runat="server" ID="QCStatusLink" target="_blank"></a>
+							    </div>
+							</itemtemplate>
+						</asp:TemplateField>
 					</Columns>
 					<EmptyDataTemplate>				    
                         <ccAsp:EmptySearchResultsMessage runat="server" ID="EmptySearchResultsMessage" />

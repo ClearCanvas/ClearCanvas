@@ -34,6 +34,7 @@ using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Dicom.Audit;
 using ClearCanvas.ImageServer.Common;
+using ClearCanvas.ImageServer.Common.Helpers;
 using ClearCanvas.ImageServer.Model;
 using ClearCanvas.ImageServer.Web.Application.Controls;
 using ClearCanvas.ImageServer.Web.Application.Helpers;
@@ -42,7 +43,7 @@ using ClearCanvas.ImageServer.Web.Common.Data;
 using ClearCanvas.ImageServer.Web.Common.Data.DataSource;
 using ClearCanvas.ImageServer.Web.Common.Security;
 using ClearCanvas.ImageServer.Web.Common.WebControls.UI;
-using AuthorityTokens=ClearCanvas.ImageServer.Enterprise.Authentication.AuthorityTokens;
+using AuthorityTokens = ClearCanvas.ImageServer.Common.Authentication.AuthorityTokens;
 using Resources;
 using SR=Resources.SR;
 
@@ -179,7 +180,7 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Studies
 //                if (!Thread.CurrentPrincipal.IsInRole(ClearCanvas.ImageViewer.AuthorityTokens.ViewerClinical))
 //                    return Page.ResolveClientUrl(ImageServerConstants.PageURLs.EmbeddedViewImagesPage);
 
-                return Page.ResolveClientUrl(ConfigurationManager.AppSettings["WebViewerPage"] ?? ImageServerConstants.PageURLs.ViewImagesPage);
+                return Page.ResolveClientUrl(ConfigurationManager.AppSettings["WebViewerPage"] ?? ImageServerConstants.PageURLs.ErrorPage);
             }
         }
         
@@ -343,7 +344,7 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Studies
             MoveStudyButton.Roles = AuthorityTokens.Study.Move;
             DeleteStudyButton.Roles = AuthorityTokens.Study.Delete;
             RestoreStudyButton.Roles = AuthorityTokens.Study.Restore;
-            AssignAuthorityGroupsButton.Roles = ClearCanvas.ImageServer.Enterprise.Authentication.AuthorityTokens.Study.EditDataAccess;
+            AssignAuthorityGroupsButton.Roles = ClearCanvas.ImageServer.Common.Authentication.AuthorityTokens.Study.EditDataAccess;
         }
 
     	#endregion Private Methods
@@ -460,7 +461,7 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Studies
 											 null,
 											 SessionManager.Current.Credentials.DisplayName),
 				ServerPartition.AeTitle,ServerPlatform.HostId,sb.ToString());
-			ServerPlatform.LogAuditMessage(helper);
+			ServerAuditHelper.LogAuditMessage(helper);
         }
         
 		protected void RestoreStudyButton_Click(object sender, ImageClickEventArgs e)

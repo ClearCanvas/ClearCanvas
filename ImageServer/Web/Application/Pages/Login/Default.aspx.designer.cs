@@ -13,6 +13,15 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Login {
     public partial class LoginPage {
         
         /// <summary>
+        /// PageBody control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl PageBody;
+        
+        /// <summary>
         /// CheckJavascript control.
         /// </summary>
         /// <remarks>

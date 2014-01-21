@@ -265,24 +265,6 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Admin.ApplicationLog {
         protected global::ClearCanvas.ImageServer.Web.Common.WebControls.UI.ToolbarButton SearchButton;
         
         /// <summary>
-        /// ToolBarUpdatePanel control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.UpdatePanel ToolBarUpdatePanel;
-        
-        /// <summary>
-        /// ToolbarButtons control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel ToolbarButtons;
-        
-        /// <summary>
         /// Panel2 control.
         /// </summary>
         /// <remarks>

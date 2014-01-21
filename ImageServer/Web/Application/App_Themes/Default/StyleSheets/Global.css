@@ -353,6 +353,56 @@ img
     line-height: 24px;
 }
 
+.SearchPanelParentDiv {
+	display:inline-block
+}
+
+.SearchPanelChildDiv 
+{
+	float: left;
+    vertical-align: bottom;
+	height: 40px;
+}
+
+.SearchPanelChildDivCancelX 
+{
+	float: left;
+    vertical-align: bottom;
+	height: 40px;
+}
+
+/* 
+Funky Chrome/FireFox related css to get the search text boxes to line up properly
+on the search page on Chrome/FireFox.  The straight css works on IE, but the 
+text boxes with X on them were slightly off and needed this css to work properly
+on each platform.
+ */
+@media screen and (-webkit-min-device-pixel-ratio:0) { 
+	 .SearchPanelChildDiv {
+		 margin-top:1px;
+	 } 
+	 .SearchPanelChildDivCancelX 
+	{
+		height: 41px;
+	}
+}
+
+@-moz-document url-prefix() { 
+	.SearchPanelChildDiv {
+		margin-top:2px;
+	}
+	.SearchPanelChildDivCancelX {
+		height: 42px;
+	}
+}
+
+.SearchPanelChildDivTall
+{
+	height: 50px;
+	display: inline-block;
+	margin-top: auto;
+}
+
 .SearchPanelContainer
 {
     margin: 5px 0px 5px 5px;
@@ -360,17 +410,35 @@ img
 
 .SearchPanelContent
 {
-    background: #B8D9EE url(../../../PersistantImage.ashx?key=SearchPanelBackground) repeat-x bottom;
+	background: #e1eff8 url(../../../PersistantImage.ashx?key=SearchPanelBackground) repeat-x bottom;
     border-bottom: solid 1px #3D98D1;
     padding: 6px 4px 6px 4px;
 }
 
 .SearchPanelContentWithoutTabs
 {
-    background: #B8D9EE url(../../../PersistantImage.ashx?key=SearchPanelBackground) repeat-x bottom;
+    background: #e1eff8 url(../../../PersistantImage.ashx?key=SearchPanelBackground) repeat-x bottom;
     border-top: solid 1px #205F87;
     border-bottom: solid 1px #3D98D1;
     padding: 6px 4px 6px 4px;
+}
+
+.SearchPanelResultContainerTable
+{
+	width: 100%;
+	height: 100%;
+	border-spacing:0px;
+	border-collapse: collapse;
+}
+
+.SearchPanelResultContainerTable td
+{
+	padding: 0px;
+}
+
+.SearchPanelResultContainerTd
+{
+	background-color: white;
 }
 
 .SearchTextBoxLabel

@@ -34,38 +34,39 @@ using ClearCanvas.ImageServer.Web.Application.Helpers;
 using ClearCanvas.ImageServer.Web.Common.Data;
 using ClearCanvas.ImageServer.Web.Common.Data.DataSource;
 using ClearCanvas.ImageServer.Web.Common.WebControls.UI;
-using AuthorityTokens=ClearCanvas.ImageServer.Enterprise.Authentication.AuthorityTokens;
+using AuthorityTokens=ClearCanvas.ImageServer.Common.Authentication.AuthorityTokens;
 using Resources;
 
 [assembly: WebResource("ClearCanvas.ImageServer.Web.Application.Pages.Queues.RestoreQueue.SearchPanel.js", "application/x-javascript")]
 
 namespace ClearCanvas.ImageServer.Web.Application.Pages.Queues.RestoreQueue
 {
-    [ClientScriptResource(ComponentType="ClearCanvas.ImageServer.Web.Application.Pages.Queues.RestoreQueue.SearchPanel", ResourcePath="ClearCanvas.ImageServer.Web.Application.Pages.Queues.RestoreQueue.SearchPanel.js")]
-    public partial class SearchPanel : AJAXScriptControl
-    {
-        #region Private members
+	[ClientScriptResource(ComponentType = "ClearCanvas.ImageServer.Web.Application.Pages.Queues.RestoreQueue.SearchPanel",
+		ResourcePath = "ClearCanvas.ImageServer.Web.Application.Pages.Queues.RestoreQueue.SearchPanel.js")]
+	public partial class SearchPanel : AJAXScriptControl
+	{
+		#region Private members
 
-        private readonly RestoreQueueController _controller = new RestoreQueueController();
-    	private ServerPartition _serverPartition;
+		private readonly RestoreQueueController _controller = new RestoreQueueController();
+		private ServerPartition _serverPartition;
 
-    	#endregion Private members
+		#endregion Private members
 
-        #region Public Properties
+		#region Public Properties
 
-        [ExtenderControlProperty]
-        [ClientPropertyName("DeleteButtonClientID")]
-        public string DeleteButtonClientID
-        {
-            get { return DeleteItemButton.ClientID; }
-        }
+		[ExtenderControlProperty]
+		[ClientPropertyName("DeleteButtonClientID")]
+		public string DeleteButtonClientID
+		{
+			get { return DeleteItemButton.ClientID; }
+		}
 
-        [ExtenderControlProperty]
-        [ClientPropertyName("ItemListClientID")]
-        public string ItemListClientID
-        {
-            get { return RestoreQueueItemList.RestoreQueueGrid.ClientID; }
-        }
+		[ExtenderControlProperty]
+		[ClientPropertyName("ItemListClientID")]
+		public string ItemListClientID
+		{
+			get { return RestoreQueueItemList.RestoreQueueGrid.ClientID; }
+		}
 
 		[ExtenderControlProperty]
 		[ClientPropertyName("OpenButtonClientID")]
@@ -89,96 +90,100 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Queues.RestoreQueue
 		{
 			get { return Page.ResolveClientUrl(ImageServerConstants.PageURLs.StudyDetailsPage); }
 		}
-        #endregion Public Properties  
 
-        #region Public Methods
+		#endregion Public Properties
 
-        /// <summary>
-        /// Remove all filter settings.
-        /// </summary>
-        public void Clear()
-        {
-            PatientId.Text = string.Empty;
-            PatientName.Text = string.Empty;
-            ScheduleDate.Text = string.Empty;
-            StatusFilter.SelectedIndex = 0;
-        }
+		#region Public Methods
 
-        public void Refresh()
-        {
-            
-        }
+		/// <summary>
+		/// Remove all filter settings.
+		/// </summary>
+		public void Clear()
+		{
+			PatientId.Text = string.Empty;
+			PatientName.Text = string.Empty;
+			ScheduleDate.Text = string.Empty;
+			StatusFilter.SelectedIndex = 0;
+		}
 
-        internal void Reset()
-        {
-            Clear();
-            RestoreQueueItemList.Reset();
-        }
+		public void Refresh()
+		{
 
-        #endregion Public Methods
+		}
 
-        #region Protected Methods
+		internal void Reset()
+		{
+			Clear();
+			RestoreQueueItemList.Reset();
+		}
 
-        protected override void OnInit(EventArgs e)
-        {
-            base.OnInit(e);
+		#endregion Public Methods
 
-            ClearScheduleDateButton.OnClientClick = ScriptHelper.ClearDate(ScheduleDate.ClientID, ScheduleDateCalendarExtender.ClientID);
-                          
-            // setup child controls
-            GridPagerTop.InitializeGridPager(Labels.GridPagerQueueSingleItem, Labels.GridPagerQueueMultipleItems, RestoreQueueItemList.RestoreQueueGrid,
-                                             () => RestoreQueueItemList.ResultCount, ImageServerConstants.GridViewPagerPosition.Top);
-            RestoreQueueItemList.Pager = GridPagerTop;
+		#region Protected Methods
 
-            MessageBox.Confirmed += delegate(object data)
-                            {
-                                if (data is IList<Model.RestoreQueue>)
-                                {
-                                    var items = data as IList<Model.RestoreQueue>;
-                                    foreach (Model.RestoreQueue item in items)
-                                    {
-                                        _controller.DeleteRestoreQueueItem(item);
-                                    }
-                                }
-                                else if (data is Model.RestoreQueue)
-                                {
-                                    var item = data as Model.RestoreQueue;
-                                    _controller.DeleteRestoreQueueItem(item);
-                                }
+		protected override void OnInit(EventArgs e)
+		{
+			base.OnInit(e);
 
-                                DataBind();
-                                SearchUpdatePanel.Update(); // force refresh
+			ClearScheduleDateButton.OnClientClick = ScriptHelper.ClearDate(ScheduleDate.ClientID,
+			                                                               ScheduleDateCalendarExtender.ClientID);
 
-                            };
+			// setup child controls
+			GridPagerTop.InitializeGridPager(Labels.GridPagerQueueSingleItem, Labels.GridPagerQueueMultipleItems,
+			                                 RestoreQueueItemList.RestoreQueueGrid,
+			                                 () => RestoreQueueItemList.ResultCount,
+			                                 ImageServerConstants.GridViewPagerPosition.Top);
+			RestoreQueueItemList.Pager = GridPagerTop;
+
+			MessageBox.Confirmed += delegate(object data)
+				{
+					if (data is IList<Model.RestoreQueue>)
+					{
+						var items = data as IList<Model.RestoreQueue>;
+						foreach (Model.RestoreQueue item in items)
+						{
+							_controller.DeleteRestoreQueueItem(item);
+						}
+					}
+					else if (data is Model.RestoreQueue)
+					{
+						var item = data as Model.RestoreQueue;
+						_controller.DeleteRestoreQueueItem(item);
+					}
+
+					DataBind();
+					SearchUpdatePanel.Update(); // force refresh
+
+				};
 
 			RestoreQueueItemList.DataSourceCreated += delegate(RestoreQueueDataSource source)
-										{
-											source.Partition = ServerPartition;
-                                            source.DateFormats = ScheduleDateCalendarExtender.Format;
+				{
+					source.Partition = ServerPartition;
+					source.DateFormats = ScheduleDateCalendarExtender.Format;
 
-                                            if (!String.IsNullOrEmpty(StatusFilter.SelectedValue) && StatusFilter.SelectedIndex > 0)
-                                                source.StatusEnum = RestoreQueueStatusEnum.GetEnum(StatusFilter.SelectedValue);
-                                            if (!String.IsNullOrEmpty(PatientId.TrimText))
-												source.PatientId = SearchHelper.TrailingWildCard(PatientId.TrimText);
-											if (!String.IsNullOrEmpty(PatientName.TrimText))
-												source.PatientName = SearchHelper.NameWildCard(PatientName.TrimText);
-											if (!String.IsNullOrEmpty(ScheduleDate.Text))
-												source.ScheduledDate = ScheduleDate.Text;
-										};
-        }
+					if (!String.IsNullOrEmpty(StatusFilter.SelectedValue) && StatusFilter.SelectedIndex > 0)
+						source.StatusEnum = RestoreQueueStatusEnum.GetEnum(StatusFilter.SelectedValue);
+					if (!String.IsNullOrEmpty(PatientId.TrimText))
+						source.PatientId = SearchHelper.TrailingWildCard(PatientId.TrimText);
+					if (!String.IsNullOrEmpty(PatientName.TrimText))
+						source.PatientName = SearchHelper.NameWildCard(PatientName.TrimText);
+					if (!String.IsNullOrEmpty(ScheduleDate.Text))
+						source.ScheduledDate = ScheduleDate.Text;
+				};
+		}
 
-        protected void Page_Load(object sender, EventArgs e)
-        {
-            IList<RestoreQueueStatusEnum> statusItems = RestoreQueueStatusEnum.GetAll();
+		protected void Page_Load(object sender, EventArgs e)
+		{
+			IList<RestoreQueueStatusEnum> statusItems = RestoreQueueStatusEnum.GetAll();
 
-            int prevSelectedIndex = StatusFilter.SelectedIndex;
-            StatusFilter.Items.Clear();
-            StatusFilter.Items.Add(new ListItem(SR.All, "All"));
-            foreach (RestoreQueueStatusEnum s in statusItems)
-                StatusFilter.Items.Add(new ListItem(ServerEnumDescription.GetLocalizedDescription(s), s.Lookup));
-            StatusFilter.SelectedIndex = prevSelectedIndex;
+			int prevSelectedIndex = StatusFilter.SelectedIndex;
+			StatusFilter.Items.Clear();
+			StatusFilter.Items.Add(new ListItem(SR.All, "All"));
+			foreach (RestoreQueueStatusEnum s in statusItems)
+				StatusFilter.Items.Add(new ListItem(ServerEnumDescription.GetLocalizedDescription(s), s.Lookup));
+			StatusFilter.SelectedIndex = prevSelectedIndex;
 
-            DeleteItemButton.Roles = AuthorityTokens.RestoreQueue.Delete;
+			DeleteItemButton.Roles = AuthorityTokens.RestoreQueue.Delete;
 			ViewStudyDetailsButton.Roles = AuthorityTokens.Study.View;
 
 			if (!IsPostBack && !Page.IsAsync)
@@ -194,41 +199,41 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Queues.RestoreQueue
 					RestoreQueueItemList.Refresh();
 				}
 			}
-        }
+		}
 
-        protected void SearchButton_Click(object sender, ImageClickEventArgs e)
-        {
-            RestoreQueueItemList.Refresh();
-        }
+		protected void SearchButton_Click(object sender, ImageClickEventArgs e)
+		{
+			RestoreQueueItemList.Refresh();
+		}
 
-        protected void DeleteItemButton_Click(object sender, EventArgs e)
-        {
-            RestoreQueueItemList.RefreshCurrentPage();
-            
-            IList<Model.RestoreQueue> items = RestoreQueueItemList.SelectedItems;
+		protected void DeleteItemButton_Click(object sender, EventArgs e)
+		{
+			RestoreQueueItemList.RefreshCurrentPage();
 
-            if (items != null && items.Count>0)
-            {
-                if (items.Count > 1) MessageBox.Message = string.Format(SR.MultipleRestoreQueueDelete);
-                else MessageBox.Message = string.Format(SR.SingleRestoreQueueDelete);
+			IList<Model.RestoreQueue> items = RestoreQueueItemList.SelectedItems;
 
-                MessageBox.Message += "<table>";
-                foreach (Model.RestoreQueue item in items)
-                {
-                    String text = "";
-                    String.Format("<tr align='left'><td>{0}:{1}</td></tr>",
-                                    SR.StudyInstanceUID,
-                                    StudyStorage.Load(item.StudyStorageKey).StudyInstanceUid);
-                    MessageBox.Message += text;
-                }
-                MessageBox.Message += "</table>";
+			if (items != null && items.Count > 0)
+			{
+				if (items.Count > 1) MessageBox.Message = string.Format(SR.MultipleRestoreQueueDelete);
+				else MessageBox.Message = string.Format(SR.SingleRestoreQueueDelete);
 
-                MessageBox.MessageType = MessageBox.MessageTypeEnum.YESNO;
-                MessageBox.Data = items;
-                MessageBox.Show();
-            }
-        }
+				MessageBox.Message += "<table>";
+				foreach (Model.RestoreQueue item in items)
+				{
+					String text = "";
+					String.Format("<tr align='left'><td>{0}:{1}</td></tr>",
+					              SR.StudyInstanceUID,
+					              StudyStorage.Load(item.StudyStorageKey).StudyInstanceUid);
+					MessageBox.Message += text;
+				}
+				MessageBox.Message += "</table>";
 
-        #endregion Protected Methods
-    }
+				MessageBox.MessageType = MessageBox.MessageTypeEnum.YESNO;
+				MessageBox.Data = items;
+				MessageBox.Show();
+			}
+		}
+
+		#endregion Protected Methods
+	}
 }

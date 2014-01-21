@@ -23,12 +23,72 @@
 --%>
 <%@ Control Language="C#" AutoEventWireup="true" CodeBehind="AddEditDataRuleDialog.ascx.cs"
     Inherits="ClearCanvas.ImageServer.Web.Application.Pages.Admin.Configure.DataRules.AddEditDataRuleDialog" %>
+	
+
+<link rel="stylesheet" href="../../../../Scripts/CodeMirror/js/lib/codemirror.css">
+<script type="text/javascript" src="../../../../Scripts/CodeMirror/js/lib/CodeMirror.js"></script>
+<script type="text/javascript" src="../../../../Scripts/CodeMirror/js/mode/xml/xml.js"></script>
+<script type="text/javascript" src="../../../../Scripts/CodeMirror/js/addon/fold/foldcode.js"></script>
+<script type="text/javascript" src="../../../../Scripts/CodeMirror/js/addon/fold/foldgutter.js"></script>
+<script type="text/javascript" src="../../../../Scripts/CodeMirror/js/addon/fold/brace-fold.js"></script>
+<script type="text/javascript" src="../../../../Scripts/CodeMirror/js/addon/fold/xml-fold.js"></script>
+<script type="text/javascript" src="../../../../Scripts/CodeMirror/js/addon/fold/comment-fold.js"></script>
+
+<style type="text/css">
+	.CodeMirror {
+		height: 200px;
+		width: 600px;
+	}
+	.cm-s-default .cm-tag {
+		color: #36880F;
+		font-weight: bold;
+		background: rgba(255, 0, 0, 0);
+		text-shadow: 1px 1px 1px rgb(175, 175, 175);
+	}
+		
+	.cm-s-default .cm-attribute {
+		color: rgb(124, 124, 124);
+	}
+		.cm-s-default .cm-string {
+		color: #0068DA;
+		font-weight: bold;
+	}
+	
+	.RuleName {
+		width: 400px;
+	}
+	
+	.RuleXmlPanel {
+		width: 400px;
+	}
+</style>
+
+<script type="text/javascript">
+	function OnRuleXmlTabActivated() {
+
+		setTimeout(function () {
+			CodeMirrorEditor.refresh();
+		}, 200);
+	}
+	function HighlightXML() {
+		var textBoxId = "<%= RuleXmlTextBox.ClientID %>";
+		var textbox = document.getElementById(textBoxId);
+		CodeMirrorEditor = CodeMirror.fromTextArea(textbox, {
+			mode: { name: "xml", alignCDATA: true },
+			lineNumbers: true,
+			lineWrapping: true,
+			value: textbox.value
+		});
+
+	}
+</script>
+
 <asp:ScriptManagerProxy runat="server">
     <Services>
         <asp:ServiceReference Path="DataRuleSamples.asmx" />
     </Services>
 </asp:ScriptManagerProxy>
-<ccAsp:ModalDialog ID="ModalDialog" runat="server" Width="1000px">
+<ccAsp:ModalDialog ID="ModalDialog" runat="server">
     <ContentTemplate>
         <asp:ValidationSummary ID="EditDataRuleValidationSummary" ShowMessageBox="false"
             ShowSummary="true" DisplayMode="SingleParagraph" EnableClientScript="true" runat="server"
@@ -40,16 +100,24 @@
                         <asp:Label ID="RuleNameLabel" runat="server" Text="<%$Resources: InputLabels, ServerRuleName %>"
                             CssClass="DialogTextBoxLabel"></asp:Label>
                     </asp:TableCell>
-                    <asp:TableCell runat="server" HorizontalAlign="left" Width="100%">
-                        <asp:TextBox ID="RuleNameTextBox" runat="server" Width="50%" ValidationGroup="AddEditDataRuleValidationGroup"
-                            CssClass="DialogTextBox"></asp:TextBox>
-                    </asp:TableCell>
-                    <asp:TableCell runat="server">
-                        <ccAsp:InvalidInputIndicator ID="RuleNameHelp" runat="server" SkinID="InvalidInputIndicator" />
-                        <ccValidator:ConditionalRequiredFieldValidator ID="RuleNameValidator" runat="server"
-                            ControlToValidate="RuleNameTextBox" InvalidInputCSS="DialogTextBoxInvalidInput"
-                            ValidationGroup="AddEditDataRuleValidationGroup" Text="<%$Resources: InputValidation,InvalidRuleName %>"
-                            InvalidInputIndicatorID="RuleNameHelp" Display="None" />
+                    <asp:TableCell runat="server" HorizontalAlign="left" ColumnSpan="2">
+                    	<table>
+                    		<tr>
+                    			<td>
+                    				<asp:TextBox ID="RuleNameTextBox" runat="server" ValidationGroup="AddEditDataRuleValidationGroup"
+										CssClass="DialogTextBox RuleName"></asp:TextBox>
+								</td>
+								<td>
+									<ccAsp:InvalidInputIndicator ID="RuleNameHelp" runat="server" SkinID="InvalidInputIndicator" />
+									<ccValidator:ConditionalRequiredFieldValidator ID="RuleNameValidator" runat="server"
+										ControlToValidate="RuleNameTextBox" InvalidInputCSS="DialogTextBoxInvalidInput RuleName"
+										ValidationGroup="AddEditDataRuleValidationGroup" Text="<%$Resources: InputValidation,InvalidRuleName %>"
+										InvalidInputIndicatorID="RuleNameHelp" Display="None" />
+								</td>
+                    		</tr>
+                    	</table>
+                       
+                        
                     </asp:TableCell>
                 </asp:TableRow>
                 <asp:TableRow ID="TableRow1" runat="server">
@@ -109,7 +177,7 @@
                     <asp:TableCell runat="server" HorizontalAlign="left" Width="100%">
                         <div class="DialogCheckBoxList">
                             <asp:TextBox ID="RuleXmlTextBox" runat="server" EnableViewState="true" Width="100%"
-                               Height="100%" TextMode="MultiLine" CssClass="DialogTextBox" BackColor="White"></asp:TextBox>
+                               Height="100%" TextMode="MultiLine" CssClass="DialogTextBox RuleXmlPanel" BackColor="White"></asp:TextBox>
                         </div>
                     </asp:TableCell>
                     <asp:TableCell runat="server">

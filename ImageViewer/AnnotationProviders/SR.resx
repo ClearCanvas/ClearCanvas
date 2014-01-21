@@ -826,9 +826,6 @@
   <data name="Dicom_Patient_ResponsiblePerson_Label" xml:space="preserve">
     <value>Responsible Person</value>
   </data>
-  <data name="FormatCodeSequence" xml:space="preserve">
-    <value>{0} ({1})</value>
-  </data>
   <data name="ValueDirectionalMarkersQuadrupedCaudal" xml:space="preserve">
     <value>Cd</value>
   </data>

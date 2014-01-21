@@ -37,12 +37,12 @@ namespace ClearCanvas.Ris.Application.Common
 		// note: we do not define the sys admin ("Administrators") group here because it is defined 
 		// automatically in ClearCanvas.Enterprise.Authentication
 
-		public const string HealthcareAdmin = "Healthcare Administrators";
-		public const string Clerical = "Clerical";
-		public const string Technologists = "Technologists";
-		public const string Radiologists = "Radiologists";
-		public const string RadiologyResidents = "Radiology Residents";
-		public const string EmergencyPhysicians = "Emergency Physicians";
+		public const string HealthcareAdmin = "Healthcare Administrators (Example)";
+		public const string Clerical = "Clerical (Example)";
+		public const string Technologists = "Technologists (Example)";
+		public const string Radiologists = "Radiologists (Example)";
+		public const string RadiologyResidents = "Radiology Residents (Example)";
+		public const string EmergencyPhysicians = "Emergency Physicians (Example)";
 
 
 		#region IDefineAuthorityGroups Members

@@ -24,7 +24,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using ClearCanvas.Common;
+using ClearCanvas.Dicom.Iod.FunctionalGroups;
 using ClearCanvas.Dicom.Iod.Modules;
 
 namespace ClearCanvas.Dicom.Iod
@@ -32,6 +34,25 @@ namespace ClearCanvas.Dicom.Iod
 	/// <summary>
 	/// Represents a cached mapping of tags to functional groups in a multi-frame data set.
 	/// </summary>
+	/// <remarks>
+	/// <para>
+	/// This class caches a mapping of certain tags used in functional group to the specific functional group
+	/// pertaining to that tag and frame. Mapped tags include both the root sequence (SQ) tag used each
+	/// the functional group as well as the nested tags in each singleton functional group (i.e. if and only if
+	/// the functional group allows has a maximum of one sequence item in the root sequence tag).
+	/// </para>
+	/// <para>
+	/// For example, the tags <see cref="DicomTags.PatientOrientationInFrameSequence"/> and
+	/// <see cref="DicomTags.PatientOrientation"/> will map to the <see cref="PatientOrientationInFrameFunctionalGroup"/>
+	/// functional group because <see cref="DicomTags.PatientOrientationInFrameSequence"/> is the root
+	/// sequence tag used in the functional group, and <see cref="DicomTags.PatientOrientation"/> is a nested
+	/// tag used in the sole sequence item allowed by the root sequence attribute. In contrast, the tag
+	/// <see cref="DicomTags.RadiopharmaceuticalUsageSequence"/> will map to the <see cref="RadiopharmaceuticalUsageFunctionalGroup"/>
+	/// functional group because <see cref="DicomTags.RadiopharmaceuticalUsageSequence"/> is the root sequence
+	/// tag used in the functional group, but <see cref="DicomTags.RadiopharmaceuticalAgentNumber"/> will not
+	/// be mapped to anything because the root sequence attribute can have multiple items.
+	/// </para>
+	/// </remarks>
 	public sealed class FunctionalGroupMapCache
 	{
 		private readonly IDicomAttributeProvider _dataSet;
@@ -83,6 +104,11 @@ namespace ClearCanvas.Dicom.Iod
 		/// <summary>
 		/// Gets a nested frame attribute from a functional group in the data set.
 		/// </summary>
+		/// <remarks>
+		/// It is not possible to directly access a nested tag of a functional group if the root sequence tag allows multiple sequence items
+		/// (e.g. <see cref="DicomTags.RadiopharmaceuticalAgentNumber"/> as a nested tag of <see cref="DicomTags.RadiopharmaceuticalUsageSequence"/>).
+		/// To do so, access the <see cref="DicomTags.RadiopharmaceuticalUsageSequence"/> and handle the sequence items individually.
+		/// </remarks>
 		/// <param name="frameNumber">DICOM frame number (first frame is 1).</param>
 		/// <param name="tag">DICOM tag of the frame attribute.</param>
 		public DicomAttribute this[int frameNumber, DicomTag tag]
@@ -97,6 +123,11 @@ namespace ClearCanvas.Dicom.Iod
 		/// <summary>
 		/// Gets a nested frame attribute from a functional group in the data set.
 		/// </summary>
+		/// <remarks>
+		/// It is not possible to directly access a nested tag of a functional group if the root sequence tag allows multiple sequence items
+		/// (e.g. <see cref="DicomTags.RadiopharmaceuticalAgentNumber"/> as a nested tag of <see cref="DicomTags.RadiopharmaceuticalUsageSequence"/>).
+		/// To do so, access the <see cref="DicomTags.RadiopharmaceuticalUsageSequence"/> and handle the sequence items individually.
+		/// </remarks>
 		/// <param name="frameNumber">DICOM frame number (first frame is 1).</param>
 		/// <param name="tag">DICOM tag of the frame attribute.</param>
 		public DicomAttribute this[int frameNumber, uint tag]
@@ -109,8 +140,24 @@ namespace ClearCanvas.Dicom.Iod
 		}
 
 		/// <summary>
-		/// Gets the functional group sequence item for a particular tag in the data set.
+		/// Gets the functional group sequence item for a particular tag in the data set (i.e. the parent sequence item containing the requested tag).
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// If the requested tag is the root sequence tag of a functional group (e.g. <see cref="DicomTags.PatientOrientationInFrameSequence"/>),
+		/// the returned sequence item will be the functional group sequence item for the frame in which the requested attribute can be found.
+		/// </para>
+		/// <para>
+		/// If the requested tag is a nested tag of a functional group and the root sequence tag allows only one sequence item
+		/// (e.g. <see cref="DicomTags.PatientOrientation"/> as a nested tag of <see cref="DicomTags.PatientOrientationInFrameSequence"/>),
+		/// the returned sequence item will be the single sequence item in the root sequence attribute.
+		/// </para>
+		/// <para>
+		/// It is not possible to directly access a nested tag of a functional group if the root sequence tag allows multiple sequence items
+		/// (e.g. <see cref="DicomTags.RadiopharmaceuticalAgentNumber"/> as a nested tag of <see cref="DicomTags.RadiopharmaceuticalUsageSequence"/>).
+		/// To do so, access the <see cref="DicomTags.RadiopharmaceuticalUsageSequence"/> and handle the sequence items individually.
+		/// </para>
+		/// </remarks>
 		/// <param name="frameNumber">DICOM frame number (first frame is 1).</param>
 		/// <param name="tag">DICOM tag of the attribute.</param>
 		/// <param name="isFrameSpecific">Indicates whether or not the returned functional group is specific to the requested frame.</param>
@@ -128,15 +175,35 @@ namespace ClearCanvas.Dicom.Iod
 					isFrameSpecific = functionalGroupResult.IsFrameSpecific;
 
 				var functionalGroup = functionalGroupResult.FunctionalGroupMacro;
-				return functionalGroup != null ? functionalGroup.SingleItem : null;
+				if (functionalGroup == null) return null;
+
+				// if the requested tag is the root sequence tag, return the entire per-frame/shared functional group sequence item as the result
+				// otherwise, return the singleton sequence item that contains the requested nested tag (or null if the containing sequence item is not a singleton)
+				return functionalGroup.DefinedTags.Contains(tag) ? functionalGroup.DicomSequenceItem : functionalGroup.SingleItem;
 			}
 			isFrameSpecific = false;
 			return null;
 		}
 
 		/// <summary>
-		/// Gets the functional group sequence item for a particular tag in the data set.
+		/// Gets the functional group sequence item for a particular tag in the data set (i.e. the parent sequence item containing the requested tag).
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// If the requested tag is the root sequence tag of a functional group (e.g. <see cref="DicomTags.PatientOrientationInFrameSequence"/>),
+		/// the returned sequence item will be the functional group sequence item for the frame in which the requested attribute can be found.
+		/// </para>
+		/// <para>
+		/// If the requested tag is a nested tag of a functional group and the root sequence tag allows only one sequence item
+		/// (e.g. <see cref="DicomTags.PatientOrientation"/> as a nested tag of <see cref="DicomTags.PatientOrientationInFrameSequence"/>),
+		/// the returned sequence item will be the single sequence item in the root sequence attribute.
+		/// </para>
+		/// <para>
+		/// It is not possible to directly access a nested tag of a functional group if the root sequence tag allows multiple sequence items
+		/// (e.g. <see cref="DicomTags.RadiopharmaceuticalAgentNumber"/> as a nested tag of <see cref="DicomTags.RadiopharmaceuticalUsageSequence"/>).
+		/// To do so, access the <see cref="DicomTags.RadiopharmaceuticalUsageSequence"/> and handle the sequence items individually.
+		/// </para>
+		/// </remarks>
 		/// <param name="frameNumber">DICOM frame number (first frame is 1).</param>
 		/// <param name="tag">DICOM tag of the attribute.</param>
 		/// <param name="isFrameSpecific">Indicates whether or not the returned functional group is specific to the requested frame.</param>
@@ -149,6 +216,11 @@ namespace ClearCanvas.Dicom.Iod
 		/// <summary>
 		/// Gets a nested frame attribute from a functional group in the data set.
 		/// </summary>
+		/// <remarks>
+		/// It is not possible to directly access a nested tag of a functional group if the root sequence tag allows multiple sequence items
+		/// (e.g. <see cref="DicomTags.RadiopharmaceuticalAgentNumber"/> as a nested tag of <see cref="DicomTags.RadiopharmaceuticalUsageSequence"/>).
+		/// To do so, access the <see cref="DicomTags.RadiopharmaceuticalUsageSequence"/> and handle the sequence items individually.
+		/// </remarks>
 		/// <param name="frameNumber">DICOM frame number (first frame is 1).</param>
 		/// <param name="tag">DICOM tag of the frame attribute.</param>
 		/// <param name="isFrameSpecific">Indicates whether or not the returned frame attribute is specific to the requested frame.</param>
@@ -164,6 +236,11 @@ namespace ClearCanvas.Dicom.Iod
 		/// <summary>
 		/// Gets a nested frame attribute from a functional group in the data set.
 		/// </summary>
+		/// <remarks>
+		/// It is not possible to directly access a nested tag of a functional group if the root sequence tag allows multiple sequence items
+		/// (e.g. <see cref="DicomTags.RadiopharmaceuticalAgentNumber"/> as a nested tag of <see cref="DicomTags.RadiopharmaceuticalUsageSequence"/>).
+		/// To do so, access the <see cref="DicomTags.RadiopharmaceuticalUsageSequence"/> and handle the sequence items individually.
+		/// </remarks>
 		/// <param name="frameNumber">DICOM frame number (first frame is 1).</param>
 		/// <param name="tag">DICOM tag of the frame attribute.</param>
 		/// <param name="isFrameSpecific">Indicates whether or not the returned frame attribute is specific to the requested frame.</param>

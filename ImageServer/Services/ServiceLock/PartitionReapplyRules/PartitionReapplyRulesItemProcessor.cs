@@ -68,6 +68,7 @@ namespace ClearCanvas.ImageServer.Services.ServiceLock.PartitionReapplyRules
 		/// <param name="partition"></param>
 		private void ReprocessPartition(ServerPartition partition)
 		{
+			//TODO CR (Jan 2014) - Cached engine not being used now, due to #11673
 			var engine = new ServerRulesEngine(ServerRuleApplyTimeEnum.StudyProcessed, partition.Key);
 			engine.Load();
 

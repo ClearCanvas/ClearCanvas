@@ -36,7 +36,7 @@ using ClearCanvas.ImageServer.Web.Application.Helpers;
 using ClearCanvas.ImageServer.Web.Common.Data;
 using ClearCanvas.ImageServer.Web.Common.Data.DataSource;
 using ClearCanvas.ImageServer.Web.Common.WebControls.UI;
-using AuthorityTokens=ClearCanvas.ImageServer.Enterprise.Authentication.AuthorityTokens;
+using AuthorityTokens=ClearCanvas.ImageServer.Common.Authentication.AuthorityTokens;
 using SR = Resources.SR;
 using Resources;
 

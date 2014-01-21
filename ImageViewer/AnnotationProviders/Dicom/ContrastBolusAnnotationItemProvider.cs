@@ -23,8 +23,10 @@
 #endregion
 
 using System.Collections.Generic;
+using System.Linq;
 using ClearCanvas.Common;
 using ClearCanvas.Dicom;
+using ClearCanvas.Dicom.Iod.Macros;
 using ClearCanvas.ImageViewer.Annotations;
 
 namespace ClearCanvas.ImageViewer.AnnotationProviders.Dicom
@@ -46,12 +48,12 @@ namespace ClearCanvas.ImageViewer.AnnotationProviders.Dicom
 
 			_annotationItems.Add
 				(
-					new CodeSequenceAnnotationItem
+					new ContrastBolusAgentAnnotationItem
 						(
 						"Dicom.ContrastBolus.Agent",
 						resolver,
-						DicomTags.ContrastBolusAgentSequence,
-						DicomTags.ContrastBolusAgent
+						dataSet => CodeSequenceAnnotationItem.FormatCodeSequence(dataSet, DicomTags.ContrastBolusAgentSequence, DicomTags.ContrastBolusAgent),
+						agents => CodeSequenceAnnotationItem.FormatCodeSequence(agents.Select(x => new CodeSequenceMacro(x)))
 						)
 				);
 

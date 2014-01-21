@@ -23,13 +23,18 @@
 #endregion
 
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Threading;
+using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
+using ClearCanvas.Common;
+using ClearCanvas.ImageServer.Common.Authentication;
 using ClearCanvas.ImageServer.Model;
 using ClearCanvas.ImageServer.Web.Application.Controls;
 using ClearCanvas.ImageServer.Web.Common.Data.DataSource;
 using Resources;
+using SR = Resources.SR;
 
 namespace ClearCanvas.ImageServer.Web.Application.Pages.Studies
 {
@@ -163,8 +168,13 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Studies
 
         public bool DisplayVetTags()
         {
-            return Thread.CurrentPrincipal.IsInRole(Enterprise.Authentication.AuthorityTokens.Study.VetTags);
+            return Thread.CurrentPrincipal.IsInRole(AuthorityTokens.Study.VetTags);
         }
+
+		public bool DisplayQCColumn
+		{
+			get { return LicenseInformation.IsFeatureAuthorized("ImageServer.QualityControl"); }
+		}
 
         #endregion
   
@@ -206,7 +216,13 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Studies
                     else if (f.DataField.Equals("Breed"))
                         f.Visible = true;
                 }
-            } 
+            }
+
+			var col = StudyListControl.Columns.OfType<TemplateField>().FirstOrDefault(c => c.HeaderText.Equals(ColumnHeaders.QCStatus));
+			if (col != null)
+			{
+				col.Visible = DisplayQCColumn;
+			}
 
 
             if(IsPostBack || Page.IsAsync)
@@ -259,6 +275,29 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Studies
                         var status = (Label) row.FindControl("StudyStatusEnum");
                         status.Text = ServerEnumDescription.GetLocalizedDescription(study.StudyStatusEnum);
 
+
+						var qcStatusLink = (HtmlAnchor)row.FindControl("QCStatusLink");
+						if (qcStatusLink != null)
+						{
+							var processing = study.QueueStudyStateEnum.Equals(QueueStudyStateEnum.ProcessingScheduled) || study.QueueStudyStateEnum.Equals(QueueStudyStateEnum.ProcessingScheduled);
+							if (string.IsNullOrEmpty(study.TheStudy.QCOutput))
+							{
+								if (!processing)
+								{
+									qcStatusLink.InnerText = "N/A";
+									qcStatusLink.HRef = ResolveClientUrl(string.Format("~/Pages/Studies/StudyQCReport.aspx?PartitionAE={0}&StudyUid={1}",
+																				 study.ThePartition.AeTitle, study.TheStudy.StudyInstanceUid
+																	));
+								}
+								else
+								{
+									qcStatusLink.InnerText = "";
+								}
+							}
+						}
+						
+						
+
                         LinkButton button = (LinkButton) row.FindControl("ReconcileLinkButton");
                         Label label = (Label)row.FindControl("SeparatorLabel");
 
@@ -270,7 +309,7 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Studies
                             button.PostBackUrl = ImageServerConstants.PageURLs.StudyIntegrityQueuePage +
                                                  "?PatientID=" + study.PatientId + "&PatientName=" + study.PatientsName + "&PartitionKey=" + study.ThePartition.GetKey();
 
-                            button.Enabled = Context.User.IsInRole(Enterprise.Authentication.AuthorityTokens.StudyIntegrityQueue.Search);
+                            button.Enabled = Context.User.IsInRole(AuthorityTokens.StudyIntegrityQueue.Search);
                         }
                         else
                         {
@@ -291,7 +330,7 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Studies
                                                          "?PatientID=" + Server.UrlEncode(study.PatientId) + "&PatientName=" + Server.UrlEncode(study.PatientsName) + "&PartitionKey=" +
                                                          study.ThePartition.Key;
                                 button.Text = ServerEnumDescription.GetLocalizedDescription(study.QueueStudyStateEnum);
-							    button.Enabled = Context.User.IsInRole(Enterprise.Authentication.AuthorityTokens.RestoreQueue.Search);
+							    button.Enabled = Context.User.IsInRole(AuthorityTokens.RestoreQueue.Search);
 							}
 							else if (study.QueueStudyStateEnum.Equals(QueueStudyStateEnum.ArchiveScheduled))
 							{
@@ -299,7 +338,7 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Studies
                                                          "?PatientID=" + Server.UrlEncode(study.PatientId) + "&PatientName=" + Server.UrlEncode(study.PatientsName) + "&PartitionKey=" +
                                                          study.ThePartition.Key;
                                 button.Text = ServerEnumDescription.GetLocalizedDescription(study.QueueStudyStateEnum);
-							    button.Enabled = Context.User.IsInRole(Enterprise.Authentication.AuthorityTokens.ArchiveQueue.Search);
+							    button.Enabled = Context.User.IsInRole(AuthorityTokens.ArchiveQueue.Search);
 							}
 							else
 							{
@@ -307,7 +346,7 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Studies
                                                          "?PatientID=" + Server.UrlEncode(study.PatientId) + "&PatientName=" + Server.UrlEncode(study.PatientsName) + "&PartitionKey=" +
                                                          study.ThePartition.Key;
                                 button.Text = ServerEnumDescription.GetLocalizedDescription(study.QueueStudyStateEnum);
-							    button.Enabled = Context.User.IsInRole(Enterprise.Authentication.AuthorityTokens.WorkQueue.Search);
+							    button.Enabled = Context.User.IsInRole(AuthorityTokens.WorkQueue.Search);
 							}
                         } else
                         {

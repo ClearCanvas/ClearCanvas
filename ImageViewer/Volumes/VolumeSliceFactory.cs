@@ -263,8 +263,9 @@ namespace ClearCanvas.ImageViewer.Volumes
 			// get the thickness of each slice (defaults to slice spacing)
 			var sliceThickness = SliceThickness ?? sliceSpacing;
 
-			// get the ideal subsampling for the slice thickness
+			// get the ideal subsampling for the slice thickness (if thickness exceeds threshold, create thin slices and aggregate them as a slab)
 			var sliceSubsamples = Math.Max(1, (int) (sliceThickness/GetIdealSliceSpacing(volumeReference, slicerAxisZ) + 0.5));
+			if (sliceSubsamples > 1) sliceSubsamples *= 2; // if slabbing required, double the subsampling rate to achieve Nyquist sampling and ensure we don't miss any data
 
 			// project the corners of the volume on to the slicer axes to determine the bounds of the volume in the slicer frame
 			float minBoundsX = float.MaxValue, minBoundsY = float.MaxValue, minBoundsZ = float.MaxValue;

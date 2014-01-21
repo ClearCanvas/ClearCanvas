@@ -32,6 +32,8 @@ using ClearCanvas.Dicom.Audit;
 using ClearCanvas.Dicom.Iod;
 using ClearCanvas.Dicom.Utilities;
 using ClearCanvas.ImageServer.Common;
+using ClearCanvas.ImageServer.Common.Authentication;
+using ClearCanvas.ImageServer.Common.Helpers;
 using ClearCanvas.ImageServer.Core.Edit;
 using ClearCanvas.ImageServer.Model;
 using ClearCanvas.ImageServer.Model.EntityBrokers;
@@ -253,8 +255,7 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Studies.StudyDetails.Con
 
             PatientID.Text = Study.PatientId;
             DateTime? birthDate = String.IsNullOrEmpty(Study.PatientsBirthDate)? null:DateParser.Parse(Study.PatientsBirthDate);
-            if (birthDate == null)
-                PatientBirthDate.Text = String.Empty; // calendar fills in the default date if it's null, we don't want that to happen.
+            PatientBirthDate.Text = birthDate == null ? String.Empty : this.Study.PatientsBirthDate;
 
             if (!String.IsNullOrEmpty(Study.PatientsAge))
             {
@@ -347,7 +348,7 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Studies.StudyDetails.Con
             criteria.Category.EqualTo(REASON_CANNEDTEXT_CATEGORY);
             IList<CannedText> list = broker.Find(criteria);
 
-            if (SessionManager.Current.User.IsInRole(Enterprise.Authentication.AuthorityTokens.Study.SaveReason))
+            if (SessionManager.Current.User.IsInRole(AuthorityTokens.Study.SaveReason))
             {
                 ReasonListBox.Items.Add(new ListItem(SR.CustomReason, SR.CustomReasonComment));
             } else
@@ -385,7 +386,7 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Studies.StudyDetails.Con
 
             participant.ParticipantObjectDetailString = updateDescription;
             helper.AddStudyParticipantObject(participant);
-            ServerPlatform.LogAuditMessage(helper);
+            ServerAuditHelper.LogAuditMessage(helper);
         }
 
         private void SaveCustomReason()
@@ -431,7 +432,7 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Studies.StudyDetails.Con
             EnsurePredefinedReasonsLoaded();
 
             //Set up the control to handle custom reasons if the user has the authority.
-            if (!SessionManager.Current.User.IsInRole(Enterprise.Authentication.AuthorityTokens.Study.SaveReason))
+            if (!SessionManager.Current.User.IsInRole(AuthorityTokens.Study.SaveReason))
             {
                 ReasonSavePanel.Visible = false;
                 SaveReasonAsName.Attributes.Add("display", "none");
@@ -479,6 +480,7 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Studies.StudyDetails.Con
                 // Prevents the calendar from copying its value into the textbox
                 StudyDateCalendarExtender.SelectedDate = null;
             }
+
         }
 
         /// <summary>

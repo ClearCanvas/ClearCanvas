@@ -28,7 +28,6 @@ using ClearCanvas.Dicom;
 using ClearCanvas.Dicom.Utilities.Command;
 using ClearCanvas.Enterprise.Core;
 using ClearCanvas.ImageServer.Common;
-using ClearCanvas.ImageServer.Common.Utilities;
 using ClearCanvas.ImageServer.Common.WorkQueue;
 using ClearCanvas.ImageServer.Enterprise.Command;
 using ClearCanvas.ImageServer.Model;
@@ -47,9 +46,10 @@ namespace ClearCanvas.ImageServer.Core.Command
         private readonly WorkQueueData _data;
         private readonly WorkQueueUidData _uidData;
         private readonly ExternalRequestQueue _request;
+	    private readonly WorkQueuePriorityEnum _priority;
         #endregion
 
-        public UpdateWorkQueueCommand(DicomMessageBase message, StudyStorageLocation location, bool duplicate, WorkQueueData data=null, WorkQueueUidData uidData=null, ExternalRequestQueue request=null)
+        public UpdateWorkQueueCommand(DicomMessageBase message, StudyStorageLocation location, bool duplicate, WorkQueueData data=null, WorkQueueUidData uidData=null, ExternalRequestQueue request=null, WorkQueuePriorityEnum priority=null)
             : base("Update/Insert a WorkQueue Entry")
         {
             Platform.CheckForNullReference(message, "Dicom Message object");
@@ -61,6 +61,7 @@ namespace ClearCanvas.ImageServer.Core.Command
             _data = data;
             _request = request;
             _uidData = uidData;
+	        _priority = priority;
         }
 
         public WorkQueue InsertedWorkQueue
@@ -81,6 +82,10 @@ namespace ClearCanvas.ImageServer.Core.Command
                                 ScheduledTime = Platform.Time,
                                 
                             };
+
+	        if (_priority != null)
+		        parms.WorkQueuePriorityEnum = _priority;
+
             if (_data != null)
             {
                 parms.WorkQueueData = ImageServerSerializer.SerializeWorkQueueDataToXmlDocument(_data);

@@ -110,6 +110,8 @@ namespace ClearCanvas.ImageServer.Web.Common.Security
                     SessionManager.InitializeSession(session);
                 }
 
+            	// TODO (CR Jan 2014): This is a worker thread, and thread names can only be 
+				// set once. This will forever give false information after the first use.
                 if (String.IsNullOrEmpty(Thread.CurrentThread.Name))
                 {
                     String user = SessionManager.Current != null ? SessionManager.Current.User.Identity.Name : "Unknown";

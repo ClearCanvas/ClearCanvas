@@ -150,10 +150,8 @@ namespace ClearCanvas.ImageViewer.Tests
 			ImageSop image1 = CreateImageSop("patient1", studyUid1, seriesUid1, imageUid1);
 			ImageSop image2 = CreateImageSop("patient1", studyUid1, seriesUid1, imageUid1);
 
-			//The sop has already silently disposed the 2nd data source.
-			Assert.IsTrue(ReferenceEquals(image1.DataSource, image2.DataSource));
-			studyTree.AddSop(image1);
-			studyTree.AddSop(image2);
+			Assert.IsTrue(studyTree.AddSop(image1));
+			Assert.IsFalse(studyTree.AddSop(image2));
 
 			Assert.IsTrue(studyTree.Patients["patient1"].Studies[studyUid1].Series[seriesUid1].Sops.Count == 1);
 

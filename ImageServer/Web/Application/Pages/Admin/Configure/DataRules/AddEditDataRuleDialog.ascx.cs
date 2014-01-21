@@ -201,7 +201,7 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Admin.Configure.DataRule
                 RuleXmlTextBox.ClientID +
                 @"');
                 params = new Array();
-                params.serverRule=escape(CodeMirrorEditor.getCode());
+                params.serverRule=escape(CodeMirrorEditor.doc.getValue());
 				params.ruleType = '" + ServerRuleTypeEnum.DataAccess.Lookup + @"';
                 return params;
             }
@@ -250,7 +250,7 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Admin.Configure.DataRule
                 //Set the value on the TextArea and then set the value in the Editor.
                 //CodeMirror doesn't monitor changes to the textarea.
                 RsltElem.value = result;
-                CodeMirrorEditor.setCode(RsltElem.value);
+                CodeMirrorEditor.doc.setValue(RsltElem.value);
             }
            
             function pageLoad(){
@@ -259,27 +259,20 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Admin.Configure.DataRule
                 @"').add_shown(HighlightXML);
             }
 
-            function HighlightXML() {
-                CodeMirrorEditor = CodeMirror.fromTextArea('" +
-                RuleXmlTextBox.ClientID +
-                @"', {parserfile: 'parsexml.js',path: '../../../../Scripts/CodeMirror/js/', stylesheet: '../../../../Scripts/CodeMirror/css/xmlcolors.css'});
-            }
+            
 
 	        function UpdateRuleXML() {
                 RsltElem = document.getElementById('" +
                 RuleXmlTextBox.ClientID +
                 @"');	            
 
-                RsltElem.value = CodeMirrorEditor.getCode();    
+                RsltElem.value = CodeMirrorEditor.doc.getValue();    
 	        }
   
             var CodeMirrorEditor = null;
             </script>";
 
             Page.ClientScript.RegisterClientScriptBlock(GetType(), ClientID, javascript);
-
-            Page.ClientScript.RegisterClientScriptInclude(GetType(), "CodeMirrorLibrary",
-                                                          "../../../../Scripts/CodeMirror/js/codemirror.js");
 
             EditDataRuleValidationSummary.HeaderText = ErrorMessages.EditServerRuleValidationError;
         }

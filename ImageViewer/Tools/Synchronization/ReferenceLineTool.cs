@@ -25,6 +25,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Desktop;
@@ -41,8 +42,8 @@ namespace ClearCanvas.ImageViewer.Tools.Synchronization
 	[Tooltip("activate", "TooltipReferenceLines")]
 	[IconSet("activate", "Icons.CurrentReferenceLineToolSmall.png", "Icons.CurrentReferenceLineToolMedium.png", "Icons.CurrentReferenceLineToolLarge.png")]
 	[GroupHint("activate", "Tools.Image.Synchronization.ReferenceLines.Current")]
-
-	[ExtensionOf(typeof(ImageViewerToolExtensionPoint))]
+	//
+	[ExtensionOf(typeof (ImageViewerToolExtensionPoint))]
 	public class ReferenceLineTool : ImageViewerTool
 	{
 		#region ReferenceLine class
@@ -66,15 +67,15 @@ namespace ClearCanvas.ImageViewer.Tools.Synchronization
 		#region Private Fields
 
 		private DicomImagePlane _currentReferenceImagePlane;
-		
+
 		private bool _active;
 		private event EventHandler _activeChanged;
 
 		private SynchronizationToolCoordinator _coordinator;
 
-		private static readonly float _oneDegreeInRadians = (float)(Math.PI / 180);
+		private static readonly float _oneDegreeInRadians = (float) (Math.PI/180);
 
-		private IResourceResolver _resolver = new ApplicationThemeResourceResolver(typeof(ReferenceLineTool).Assembly);
+		private IResourceResolver _resolver = new ApplicationThemeResourceResolver(typeof (ReferenceLineTool).Assembly);
 		private ActionModelRoot _dropDownMenuModel;
 
 		#endregion
@@ -138,8 +139,8 @@ namespace ClearCanvas.ImageViewer.Tools.Synchronization
 				{
 					_dropDownMenuModel = new ActionModelRoot();
 					ClickAction action = new ClickAction("showFirstAndLastReferenceLines",
-						new ActionPath("reference-line-dropdown/ShowFirstAndLastReferenceLines", _resolver),
-						ClickActionFlags.CheckAction, _resolver);
+					                                     new ActionPath("reference-line-dropdown/ShowFirstAndLastReferenceLines", _resolver),
+					                                     ClickActionFlags.CheckAction, _resolver);
 
 					action.Checked = ShowFirstAndLastReferenceLines;
 					action.Label = SR.ShowFirstAndLastReferenceLines;
@@ -154,16 +155,13 @@ namespace ClearCanvas.ImageViewer.Tools.Synchronization
 
 		public bool ShowFirstAndLastReferenceLines
 		{
-			get
-			{
-                return SynchronizationToolSettings.DefaultInstance.ShowFirstAndLastReferenceLines;
-			}
+			get { return SynchronizationToolSettings.DefaultInstance.ShowFirstAndLastReferenceLines; }
 			set
 			{
-                SynchronizationToolSettings.DefaultInstance.ShowFirstAndLastReferenceLines = value;
-                SynchronizationToolSettings.DefaultInstance.Save();
+				SynchronizationToolSettings.DefaultInstance.ShowFirstAndLastReferenceLines = value;
+				SynchronizationToolSettings.DefaultInstance.Save();
 
-				ClickAction showFirstAndLastAction = (ClickAction)((ActionNode)(ReferenceLineDropDownMenuModel.ChildNodes[0])).Action;
+				ClickAction showFirstAndLastAction = (ClickAction) ((ActionNode) (ReferenceLineDropDownMenuModel.ChildNodes[0])).Action;
 				showFirstAndLastAction.Checked = ShowFirstAndLastReferenceLines;
 			}
 		}
@@ -191,7 +189,7 @@ namespace ClearCanvas.ImageViewer.Tools.Synchronization
 			{
 				if (_currentReferenceImagePlane != null)
 					return _currentReferenceImagePlane.SourceImage;
-				
+
 				return null;
 			}
 		}
@@ -219,13 +217,13 @@ namespace ClearCanvas.ImageViewer.Tools.Synchronization
 
 		private IEnumerable<DicomImagePlane> GetPlanesParallelToReferencePlane()
 		{
-			foreach (IPresentationImage image in CurrentReferenceImage.ParentDisplaySet.PresentationImages)
+			foreach (IPresentationImage image in CurrentReferenceImage.ParentDisplaySet.PresentationImages.Where(i => !(i is BasicPresentationImage3D)))
 			{
 				DicomImagePlane plane = DicomImagePlane.FromImage(image);
 				if (plane != null)
 				{
 					if (_currentReferenceImagePlane.IsInSameFrameOfReference(plane) &&
-						_currentReferenceImagePlane.IsParallelTo(plane, _oneDegreeInRadians))
+					    _currentReferenceImagePlane.IsParallelTo(plane, _oneDegreeInRadians))
 					{
 						yield return plane;
 					}
@@ -315,7 +313,7 @@ namespace ClearCanvas.ImageViewer.Tools.Synchronization
 
 		private void RefreshReferenceLines(IPresentationImage targetImage)
 		{
-			DicomImagePlane targetImagePlane = DicomImagePlane.FromImage(targetImage);
+			DicomImagePlane targetImagePlane = targetImage is BasicPresentationImage3D ? null : DicomImagePlane.FromImage(targetImage);
 			if (targetImagePlane == null)
 				return;
 
@@ -323,8 +321,8 @@ namespace ClearCanvas.ImageViewer.Tools.Synchronization
 			if (referenceLineCompositeGraphic == null)
 				return;
 
-			bool showReferenceLines = this.Active && _currentReferenceImagePlane != null && 
-				_currentReferenceImagePlane.IsInSameFrameOfReference(targetImagePlane);
+			bool showReferenceLines = this.Active && _currentReferenceImagePlane != null &&
+			                          _currentReferenceImagePlane.IsInSameFrameOfReference(targetImagePlane);
 
 			if (!showReferenceLines)
 			{
@@ -352,7 +350,7 @@ namespace ClearCanvas.ImageViewer.Tools.Synchronization
 			if (CurrentReferenceImage == this.SelectedPresentationImage)
 				return;
 
-			_currentReferenceImagePlane = DicomImagePlane.FromImage(this.SelectedPresentationImage);
+			_currentReferenceImagePlane = SelectedPresentationImage is BasicPresentationImage3D ? null : DicomImagePlane.FromImage(this.SelectedPresentationImage);
 			if (_currentReferenceImagePlane == null)
 				return;
 
