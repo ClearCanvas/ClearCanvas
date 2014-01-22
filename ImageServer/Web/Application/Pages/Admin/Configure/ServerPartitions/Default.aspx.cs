@@ -23,13 +23,12 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
 using System.Security.Permissions;
 using ClearCanvas.ImageServer.Model;
 using ClearCanvas.ImageServer.Web.Application.Controls;
 using ClearCanvas.ImageServer.Web.Application.Pages.Common;
 using ClearCanvas.ImageServer.Web.Common.Data;
-using AuthorityTokens=ClearCanvas.ImageServer.Enterprise.Authentication.AuthorityTokens;
+using AuthorityTokens=ClearCanvas.ImageServer.Common.Authentication.AuthorityTokens;
 using Resources;
 
 namespace ClearCanvas.ImageServer.Web.Application.Pages.Admin.Configure.ServerPartitions

@@ -28,18 +28,15 @@ using ClearCanvas.Dicom.Utilities;
 namespace ClearCanvas.Dicom.Iod.Macros
 {
 	/// <summary>
-	/// Code Sequence Attributes Macro
+	/// Code Sequence Macro
 	/// </summary>
 	/// <remarks>As defined in the DICOM Standard 2008, Part 3, Section 8.8 (Table 8.8-1)</remarks>
 	public class CodeSequenceMacro : SequenceIodBase
 	{
-		#region Constructors
-
 		/// <summary>
 		/// Initializes a new instance of the <see cref="CodeSequenceMacro"/> class.
 		/// </summary>
-		public CodeSequenceMacro()
-		{}
+		public CodeSequenceMacro() {}
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="CodeSequenceMacro"/> class.
@@ -47,7 +44,18 @@ namespace ClearCanvas.Dicom.Iod.Macros
 		/// <param name="dicomSequenceItem">The dicom sequence item.</param>
 		public CodeSequenceMacro(DicomSequenceItem dicomSequenceItem) : base(dicomSequenceItem) {}
 
-		#endregion
+		/// <summary>
+		/// Gets a user-friendly name of the code value.
+		/// </summary>
+		public string GetName()
+		{
+			var codeMeaning = CodeMeaning;
+			if (!string.IsNullOrEmpty(codeMeaning))
+				return codeMeaning;
+
+			var codeValue = CodeValue;
+			return !string.IsNullOrEmpty(codeValue) ? string.Format(SR.FormatCodeSequenceValue, codeValue, CodingSchemeDesignator) : string.Empty;
+		}
 
 		#region Public Properties
 
@@ -139,7 +147,6 @@ namespace ClearCanvas.Dicom.Iod.Macros
 		public DateTime? ContextGroupLocalVersion
 		{
 			get { return DateTimeParser.ParseDateAndTime(DicomAttributeProvider, DicomTags.ContextGroupLocalVersion, 0, 0); }
-
 			set { DateTimeParser.SetDateTimeAttributeValues(value, DicomAttributeProvider, DicomTags.ContextGroupLocalVersion, 0, 0); }
 		}
 

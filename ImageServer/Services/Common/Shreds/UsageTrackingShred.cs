@@ -25,6 +25,7 @@
 using System;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Shreds;
+using ClearCanvas.Enterprise.Core;
 using ClearCanvas.ImageServer.Services.Common.Misc;
 
 namespace ClearCanvas.ImageServer.Services.Common.Shreds
@@ -70,6 +71,7 @@ namespace ClearCanvas.ImageServer.Services.Common.Shreds
 
         public override void Stop()
         {
+			PersistentStoreRegistry.GetDefaultStore().ShutdownRequested = true;
             Platform.Log(LogLevel.Info, "{0}[{1}]: Stop invoked", _className, AppDomain.CurrentDomain.FriendlyName);
             if (_service != null)
                 _service.Stop();

@@ -34,22 +34,26 @@
             <asp:Table runat="server">
                 <asp:TableRow>
                     <asp:TableCell>
-                                <asp:Panel ID="Panel6" runat="server" CssClass="SearchPanelContentWithoutTabs" DefaultButton="SearchButton">
-                                    <table cellpadding="0" cellspacing="0">
-                                        <tr>
-                                            <td align="left">
-                                                <asp:Label ID="Label1" runat="server" Text="<%$Resources: SearchFieldLabels, FileSystemDescription %>" CssClass="SearchTextBoxLabel"></asp:Label><br />
-                                                <ccUI:TextBox ID="DescriptionFilter" runat="server" CssClass="SearchTextBox" ToolTip="Search by description"></ccUI:TextBox></td>
-                                            <td align="left">
-                                                <asp:Label ID="Label2" runat="server" Text="<%$Resources: SearchFieldLabels, FileSystemTiers %>" CssClass="SearchTextBoxLabel"></asp:Label><br />
-                                                <asp:DropDownList ID="TiersDropDownList" runat="server" CssClass="SearchDropDownList">
-                                                </asp:DropDownList></td>
-                                            <td valign="bottom">
-                                                <asp:Panel ID="Panel1" runat="server" CssClass="SearchButtonPanel"><ccUI:ToolbarButton ID="SearchButton" runat="server" SkinID="<%$Image:SearchIcon%>" OnClick="SearchButton_Click"/></asp:Panel>
-                                            </td>
-                                        </tr> 
-                                    </table>
-                            </asp:Panel>
+						<asp:Panel ID="Panel6" runat="server" CssClass="SearchPanelContentWithoutTabs" DefaultButton="SearchButton">
+							<div class="SearchPanelParentDiv">
+								<div class="SearchPanelChildDiv">
+									<asp:Label ID="Label1" runat="server" Text="<%$Resources: SearchFieldLabels, FileSystemDescription %>"
+									           CssClass="SearchTextBoxLabel"/><br />
+									<ccUI:TextBox ID="DescriptionFilter" runat="server" CssClass="SearchTextBox" ToolTip="Search by description"/>
+								</div>
+								<div class="SearchPanelChildDiv">
+									<asp:Label ID="Label2" runat="server" Text="<%$Resources: SearchFieldLabels, FileSystemTiers %>"
+									           CssClass="SearchTextBoxLabel"/><br />
+									<asp:DropDownList ID="TiersDropDownList" runat="server" CssClass="SearchDropDownList"/>
+								</div>
+								<div class="SearchPanelChildDiv">
+									<asp:Panel ID="Panel1" runat="server" CssClass="SearchButtonPanel">
+										<ccUI:ToolbarButton ID="SearchButton" runat="server" SkinID="<%$Image:SearchIcon%>"
+											OnClick="SearchButton_Click" />
+									</asp:Panel>
+								</div>
+							</div>
+						</asp:Panel>
                     </asp:TableCell> 
                  </asp:TableRow>
                 <asp:TableRow Height="100%">
@@ -68,9 +72,9 @@
                         <tr><td>
 
                          <asp:Panel ID="Panel2" runat="server"  CssClass="SearchPanelResultContainer">
-                            <table width="100%" cellpadding="0" cellspacing="0">
+                            <table class="SearchPanelResultContainerTable">
                                  <tr><td><ccAsp:GridPager ID="GridPagerTop" runat="server" /></td></tr>                        
-                                <tr><td style="background-color: white;"><localAsp:FileSystemsGridView ID="FileSystemsGridView1" runat="server"  Height="500px"/></td></tr>
+                                <tr><td class="SearchPanelResultContainerTd"><localAsp:FileSystemsGridView ID="FileSystemsGridView1" runat="server"  Height="500px"/></td></tr>
                             </table>                        
                         </asp:Panel>
                         </td>

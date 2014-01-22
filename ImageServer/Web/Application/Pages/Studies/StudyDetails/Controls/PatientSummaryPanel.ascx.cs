@@ -24,9 +24,12 @@
 
 using System;
 using System.Web.UI;
+using ClearCanvas.Common;
 using ClearCanvas.Dicom;
 using ClearCanvas.Dicom.Utilities;
+using ClearCanvas.ImageServer.Model;
 using ClearCanvas.ImageServer.Web.Application.Pages.Studies.StudyDetails.Code;
+using ClearCanvas.ImageServer.Web.Common.Data.DataSource;
 using SR = Resources.SR;
 
 namespace ClearCanvas.ImageServer.Web.Application.Pages.Studies.StudyDetails.Controls
@@ -50,6 +53,8 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Studies.StudyDetails.Con
             get { return _patientSummary; }
             set { _patientSummary = value; }
         }
+
+		public StudySummary TheStudy { get; set; }
 
         #endregion Public Properties
 

@@ -26,12 +26,13 @@ using System;
 using System.Web;
 using System.Web.Caching;
 using ClearCanvas.ImageServer.Model;
+using ClearCanvas.ImageServer.Services.Streaming.Shreds;
 
 namespace ClearCanvas.ImageServer.Services.Streaming.ImageStreaming.Handlers
 {
     class StudyStorageCache
     {
-        private TimeSpan _retentionTime = TimeSpan.FromSeconds(10);
+		private TimeSpan _retentionTime = ImageStreamingServerSettings.Default.CacheRetentionWindow;
 
         private readonly Cache _cache = HttpRuntime.Cache;
 

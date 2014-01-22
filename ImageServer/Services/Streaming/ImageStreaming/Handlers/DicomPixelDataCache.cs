@@ -27,12 +27,13 @@ using System.Web;
 using System.Web.Caching;
 using ClearCanvas.Dicom;
 using ClearCanvas.ImageServer.Model;
+using ClearCanvas.ImageServer.Services.Streaming.Shreds;
 
 namespace ClearCanvas.ImageServer.Services.Streaming.ImageStreaming.Handlers
 {
     internal class DicomPixelDataCache
     {
-        private static TimeSpan _retentionTime = TimeSpan.FromSeconds(10);
+        private static TimeSpan _retentionTime = ImageStreamingServerSettings.Default.CacheRetentionWindow;
         private static readonly Cache _cache = HttpRuntime.Cache;
 
         public static TimeSpan RetentionTime

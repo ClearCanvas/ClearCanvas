@@ -24,7 +24,6 @@
 
 #if UNIT_TESTS
 
-
 using System;
 using System.Linq;
 using System.Xml;
@@ -39,7 +38,7 @@ using NUnit.Framework;
 
 namespace ClearCanvas.Dicom.Utilities.Rules.Tests
 {
-	public class TestContext: ActionContext
+	public class TestContext : ActionContext
 	{
 		public bool WasApplied = false;
 	}
@@ -51,23 +50,18 @@ namespace ClearCanvas.Dicom.Utilities.Rules.Tests
 	}
 
 	[ExtensionPoint]
-	public sealed class TestActionCompilerOperatorExtensionPoint : ExtensionPoint<IXmlActionCompilerOperator<TestContext>>
-	{
-	}
+	public sealed class TestActionCompilerOperatorExtensionPoint : ExtensionPoint<IXmlActionCompilerOperator<TestContext>> {}
 
-	[ExtensionOf(typeof(TestActionCompilerOperatorExtensionPoint))]
+	[ExtensionOf(typeof (TestActionCompilerOperatorExtensionPoint))]
 	public class TestActionOperator : ActionOperatorCompilerBase, IXmlActionCompilerOperator<TestContext>
 	{
 		public TestActionOperator()
-			: base("test")
-		{
-		}
+			: base("test") {}
 
 		#region IXmlActionCompilerOperator<ServerActionContext> Members
 
 		public IActionItem<TestContext> Compile(XmlElement xmlNode)
 		{
-			
 			return new TestActionItem();
 		}
 
@@ -76,10 +70,10 @@ namespace ClearCanvas.Dicom.Utilities.Rules.Tests
 			var type = new XmlSchemaComplexType();
 
 			var element = new XmlSchemaElement
-				{
-					Name = "test", 
-					SchemaType = type
-				};
+			              	{
+			              		Name = "test",
+			              		SchemaType = type
+			              	};
 
 			return element;
 		}
@@ -87,43 +81,40 @@ namespace ClearCanvas.Dicom.Utilities.Rules.Tests
 		#endregion
 	}
 
-    public class TestActionItem : ActionItemBase<TestContext>
-    {
-        public TestActionItem()
-            : base("Test Action")
-        {
-        }
+	public class TestActionItem : ActionItemBase<TestContext>
+	{
+		public TestActionItem()
+			: base("Test Action") {}
 
-        protected override bool OnExecute(TestContext context)
-        {
-	        context.WasApplied = true;
-            return true;
-        }
-    }
+		protected override bool OnExecute(TestContext context)
+		{
+			context.WasApplied = true;
+			return true;
+		}
+	}
 
-	public class TestRulesEngine : RulesEngine<TestContext,TestEnum>
+	public class TestRulesEngine : RulesEngine<TestContext, TestEnum>
 	{
 		public TestRulesEngine()
-        {
-            Statistics = new RulesEngineStatistics("TEST","TEST");
-        }
+		{
+			Statistics = new RulesEngineStatistics("TEST", "TEST");
+		}
 
 		/// <summary>
 		/// Load the rules engine from the Persistent Store and compile the conditions and actions.
 		/// </summary>
 		public void Load(XmlDocument theRuleXml, TestEnum test)
 		{
-
 			// Clearout the current type list.
 			_typeList.Clear();
 
 			try
 			{
 				var theRule = new Rule<TestContext>
-					{
-						Name = "TEST", IsDefault = false, 
-						IsExempt = false, Description = "TEST"
-					};
+				              	{
+				              		Name = "TEST", IsDefault = false,
+				              		IsExempt = false, Description = "TEST"
+				              	};
 
 				var ruleNode =
 					CollectionUtils.SelectFirst<XmlNode>(theRuleXml.ChildNodes,
@@ -152,7 +143,6 @@ namespace ClearCanvas.Dicom.Utilities.Rules.Tests
 				// something wrong with the rule...
 				Platform.Log(LogLevel.Warn, e, "Unable to add rule to the engine. It will be skipped");
 			}
-
 		}
 
 		public static XmlSpecificationCompiler GetSpecificationCompiler()
@@ -176,20 +166,25 @@ namespace ClearCanvas.Dicom.Utilities.Rules.Tests
 	}
 
 	[TestFixture]
-	class DicomExpressionTests : AbstractTest
+	internal class DicomExpressionTests : AbstractTest
 	{
+		[TestFixtureSetUp]
+		public void Setup()
+		{
+			Platform.ResetExtensionFactory();
+		}
 
 		[Test]
 		public void SequenceMatchingTests()
 		{
-			var context = new TestContext { Message = new DicomFile() };
+			var context = new TestContext {Message = new DicomFile()};
 			SetupMultiframeXA(context.Message.DataSet, 64, 64, 5);
 
 			var rulesEngine = new TestRulesEngine();
 
 			var doc = new XmlDocument();
 			doc.LoadXml("<rule expressionLanguage=\"dicom\" ><condition><regex test=\"$RequestAttributesSequence/$RequestedProcedureId\" pattern=\"XA123\" /></condition><action><test/></action></rule>");
-			rulesEngine.Load(doc,TestEnum.Test1);
+			rulesEngine.Load(doc, TestEnum.Test1);
 			rulesEngine.Execute(context);
 			Assert.IsTrue(context.WasApplied);
 
@@ -218,7 +213,7 @@ namespace ClearCanvas.Dicom.Utilities.Rules.Tests
 		[Test]
 		public void BaseMatchingTests()
 		{
-			var context = new TestContext { Message = new DicomFile() };
+			var context = new TestContext {Message = new DicomFile()};
 			SetupMultiframeXA(context.Message.DataSet, 32, 32, 2);
 
 			var rulesEngine = new TestRulesEngine();
@@ -244,7 +239,6 @@ namespace ClearCanvas.Dicom.Utilities.Rules.Tests
 			rulesEngine.Load(doc, TestEnum.Test1);
 			rulesEngine.Execute(context);
 			Assert.IsFalse(context.WasApplied);
-
 		}
 	}
 }

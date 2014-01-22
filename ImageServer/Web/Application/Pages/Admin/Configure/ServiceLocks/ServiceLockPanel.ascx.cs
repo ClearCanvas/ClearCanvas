@@ -39,11 +39,11 @@ using Resources;
 [assembly: WebResource("ClearCanvas.ImageServer.Web.Application.Pages.Admin.Configure.ServiceLocks.ServiceLockPanel.js", "application/x-javascript")]
 namespace ClearCanvas.ImageServer.Web.Application.Pages.Admin.Configure.ServiceLocks
 {
-    [ClientScriptResource(ComponentType = "ClearCanvas.ImageServer.Web.Application.Pages.Admin.Configure.ServiceLocks.ServiceLockPanel", ResourcePath = "ClearCanvas.ImageServer.Web.Application.Pages.Admin.Configure.ServiceLocks.ServiceLockPanel.js")]
     /// <summary>
     /// Panel to display list of devices for a particular server partition.
     /// </summary>
-    public partial class ServiceLockPanel : AJAXScriptControl
+	[ClientScriptResource(ComponentType = "ClearCanvas.ImageServer.Web.Application.Pages.Admin.Configure.ServiceLocks.ServiceLockPanel", ResourcePath = "ClearCanvas.ImageServer.Web.Application.Pages.Admin.Configure.ServiceLocks.ServiceLockPanel.js")]
+	public partial class ServiceLockPanel : AJAXScriptControl
     {
         #region Private members
 
@@ -92,21 +92,30 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Admin.Configure.ServiceL
             EditServiceLockDialog.ServiceLockUpdated += AddEditServiceLockDialog_ServiceLockUpdated; 
             
             // setup child controls
-            GridPagerTop.InitializeGridPager(SR.GridPagerServiceSingleItem, SR.GridPagerServiceMultipleItems, ServiceLockGridViewControl.TheGrid, delegate { return ServiceLockGridViewControl.ServiceLocks != null ? ServiceLockGridViewControl.ServiceLocks.Count : 0; }, ImageServerConstants.GridViewPagerPosition.Top);
+            GridPagerTop.InitializeGridPager(SR.GridPagerServiceSingleItem, SR.GridPagerServiceMultipleItems, ServiceLockGridViewControl.TheGrid,
+                                             () =>
+                                             ServiceLockGridViewControl.ServiceLocks != null
+	                                             ? ServiceLockGridViewControl.ServiceLocks.Count
+	                                             : 0, ImageServerConstants.GridViewPagerPosition.Top);
             ServiceLockGridViewControl.Pager = GridPagerTop;
            
             StatusFilter.Items.Add(new ListItem(SR.All));
             StatusFilter.Items.Add(new ListItem(SR.Enabled));
             StatusFilter.Items.Add(new ListItem(SR.Disabled));
 
-            FileSystemsConfigurationController fileSystemController = new FileSystemsConfigurationController();
-            IList<Model.Filesystem> fileSystems = fileSystemController.GetAllFileSystems();
+            var fileSystemController = new FileSystemsConfigurationController();
+            IList<Filesystem> fileSystems = fileSystemController.GetAllFileSystems();
 
-            foreach(Model.Filesystem fs in fileSystems)
+            foreach(Filesystem fs in fileSystems)
             {
                 FileSystemFilter.Items.Add(new ListItem(fs.Description, fs.Key.ToString()));
             }
-            
+	        var controller = new ServerPartitionConfigController();
+	        IList<ServerPartition> partitions = controller.GetAllPartitions();
+			foreach (var partition in partitions)
+			{
+				PartitionFilter.Items.Add(new ListItem(partition.AeTitle, partition.Key.ToString()));
+			}
             ConfirmEditDialog.Confirmed += ConfirmEditDialog_Confirmed;
 
         }
@@ -217,9 +226,9 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Admin.Configure.ServiceL
         /// </remarks>
         public void LoadServiceLocks()
         {
-            ServiceLockSelectCriteria criteria = new ServiceLockSelectCriteria();
+            var criteria = new ServiceLockSelectCriteria();
 
-            ServiceLockConfigurationController controller = new ServiceLockConfigurationController();
+            var controller = new ServiceLockConfigurationController();
 
             if (TypeDropDownList.SelectedValue != SR.All)
             {
@@ -236,8 +245,8 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Admin.Configure.ServiceL
 
             if (FileSystemFilter.SelectedIndex != -1)
             {
-                FileSystemsConfigurationController fsController = new FileSystemsConfigurationController();
-                List<ServerEntityKey> fileSystemKeys = new List<ServerEntityKey>();
+                var fsController = new FileSystemsConfigurationController();
+                var fileSystemKeys = new List<ServerEntityKey>();
                 foreach (ListItem fileSystem in FileSystemFilter.Items)
                 {
                     if (fileSystem.Selected)
@@ -246,20 +255,34 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Admin.Configure.ServiceL
                     }
                 }
 
-                IList<Model.Filesystem> fs = fsController.GetFileSystems(fileSystemKeys);
+                IList<Filesystem> fs = fsController.GetFileSystems(fileSystemKeys);
 
                 if(fs != null)
                 {
-                    List<ServerEntityKey> entityKeys = new List<ServerEntityKey>();
+                    var entityKeys = new List<ServerEntityKey>();
                     foreach(Filesystem f in fs)
                     {
                         entityKeys.Add(f.Key);
                     }
                     criteria.FilesystemKey.In(entityKeys);    
-                }                
+                }
             }
 
-            IList<ServiceLock> services = controller.GetServiceLocks(criteria);
+	        if (PartitionFilter.SelectedIndex != -1)
+	        {
+		        var partitionKeys = new List<ServerEntityKey>();
+		        foreach (ListItem partition in PartitionFilter.Items)
+		        {
+			        if (partition.Selected)
+			        {
+				        partitionKeys.Add(new ServerEntityKey("ServerPartition", partition.Value));
+			        }
+		        }
+
+		        criteria.ServerPartitionKey.In(partitionKeys);
+	        }
+
+	        IList<ServiceLock> services = controller.GetServiceLocks(criteria);
 
         	List<ServiceLock> sortedServices =
         		CollectionUtils.Sort(services, delegate(ServiceLock a, ServiceLock b)
@@ -271,42 +294,33 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Admin.Configure.ServiceL
         		                               				// If both null, they're equal. 
         		                               				return 0;
         		                               			}
-        		                               			else
-        		                               			{
-        		                               				// If x is null and y is not null, y
-        		                               				// is greater. 
-        		                               				return -1;
-        		                               			}
+        		                               			// If x is null and y is not null, y
+        		                               			// is greater. 
+        		                               			return -1;
         		                               		}
-        		                               		else
+        		                               		// If a is not null...
+        		                               		if (b == null)
         		                               		{
-        		                               			// If a is not null...
-        		                               			if (b == null)
-        		                               			{
-															// ...and b is null, x is greater.
-															return 1;
-        		                               			}
-        		                               			else
-        		                               			{
-        		                               				// just compare
-															if (a.Filesystem == null || b.Filesystem == null)
-																return a.ServiceLockTypeEnum.Description.CompareTo(b.ServiceLockTypeEnum.Description);
-
-															int retVal =
-        		                               					a.Filesystem.Description.CompareTo(
-        		                               						b.Filesystem.Description);
-															if (retVal == 0)
-																return a.ServiceLockTypeEnum.Description.CompareTo(b.ServiceLockTypeEnum.Description);
-        		                               				return retVal;
-        		                               			}
+        		                               			// ...and b is null, x is greater.
+        		                               			return 1;
         		                               		}
+        		                               		// just compare
+        		                               		if (a.Filesystem == null || b.Filesystem == null)
+        		                               			return String.Compare(a.ServiceLockTypeEnum.Description, b.ServiceLockTypeEnum.Description, StringComparison.Ordinal);
+
+        		                               		int retVal = String.Compare(a.Filesystem.Description, b.Filesystem.Description, StringComparison.Ordinal);
+        		                               		if (retVal == 0)
+        		                               			return String.Compare(a.ServiceLockTypeEnum.Description, b.ServiceLockTypeEnum.Description, StringComparison.Ordinal);
+        		                               		return retVal;
         		                               	});
 
 			
-            ServiceLockCollection items = new ServiceLockCollection();
-            items.Add(sortedServices);
+            var items = new ServiceLockCollection
+	            {
+		            sortedServices
+	            };
 
-            ServiceLockGridViewControl.ServiceLocks = items;
+	        ServiceLockGridViewControl.ServiceLocks = items;
 
             ServiceLockGridViewControl.RefreshCurrentPage();
         }

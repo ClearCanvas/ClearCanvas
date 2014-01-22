@@ -25,6 +25,7 @@
 <%@ Control Language="C#" AutoEventWireup="true" CodeBehind="ServerPartitionSelector.ascx.cs" 
     Inherits="ClearCanvas.ImageServer.Web.Application.Controls.ServerPartitionSelector" %>
 
+<%@ Import Namespace="ClearCanvas.ImageServer.Common.Authentication" %>
 <%@ Import Namespace="ClearCanvas.ImageServer.Web.Common.Security"%>
 <%@ Import Namespace="Resources" %>
 
@@ -35,7 +36,7 @@
 </asp:Panel>
   
 <asp:Panel runat="server" ID="NoPartitionPanel" CssClass="PartitionPanel" Visible="false">
-    <% if (SessionManager.Current.User.IsInRole(ClearCanvas.ImageServer.Enterprise.Authentication.AuthorityTokens.Admin.Configuration.ServerPartitions)){%>
+    <% if (SessionManager.Current.User.IsInRole(AuthorityTokens.Admin.Configuration.ServerPartitions)){%>
     <asp:Panel ID="Panel1" runat="server" CssClass="AddPartitionMessage">
         <asp:Literal ID="Literal1" runat="server" Text="<%$Resources: SR, NoPartitionAvailable %>"></asp:Literal>
         <asp:LinkButton ID="LinkButton1" runat="server" PostBackUrl="~/Pages/Admin/Configure/ServerPartitions/Default.aspx" CssClass="AddPartitionLink" Text="<%$Resources:Labels,AddNewPartition %>"></asp:LinkButton>

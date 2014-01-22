@@ -141,11 +141,14 @@ namespace ClearCanvas.Dicom.Iod
 			IDictionary<uint, FunctionalGroupDescriptor> tagMap;
 			if (!_functionalGroupTagMap.TryGetValue(sopClassUid, out tagMap))
 			{
-				_functionalGroupTagMap[sopClassUid] = tagMap = GetApplicableFunctionalGroups(sopClassUid).Select(t => t.Create())
-				                                               	.Where(f => !f.CanHaveMultipleItems) // if the sequence can have multiple items, then you can't have a 1-1 mapping with a frame
-				                                               	.SelectMany(f => f.NestedTags.Select(g => new KeyValuePair<uint, FunctionalGroupDescriptor>(g, _functionalGroupDescriptors[f.GetType()])))
-				                                               	.GroupBy(k => k.Key).Select(g => g.First()) // group by tag, and prioritize the first functional group that defines it
-				                                               	.ToDictionary(k => k.Key, k => k.Value).AsReadOnly();
+				var functionalGroups = GetApplicableFunctionalGroups(sopClassUid).Select(t => t.Create()).ToList();
+				var functionalGroupByRootSequence = functionalGroups.SelectMany(f => f.DefinedTags.Select(g => new {Tag = g, FunctionalGroup = _functionalGroupDescriptors[f.GetType()]}));
+				_functionalGroupTagMap[sopClassUid] = tagMap = functionalGroups
+				                                               	.Where(f => !f.CanHaveMultipleItems) // if the sequence can have multiple items, then you can't have a 1-1 mapping of nested tags with frames
+				                                               	.SelectMany(f => f.NestedTags.Select(g => new {Tag = g, FunctionalGroup = _functionalGroupDescriptors[f.GetType()]}))
+				                                               	.GroupBy(k => k.Tag).Select(g => g.First()) // group by tag, and prioritize the first functional group that defines it
+				                                               	.Concat(functionalGroupByRootSequence) // append the root sequence tags mapping (only way to support the sequences with multiple items excluded above)
+				                                               	.ToDictionary(k => k.Tag, k => k.FunctionalGroup).AsReadOnly();
 			}
 			return tagMap;
 		}

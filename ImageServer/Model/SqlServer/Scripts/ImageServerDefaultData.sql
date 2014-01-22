@@ -902,6 +902,10 @@ INSERT INTO [ImageServer].[dbo].[ServerSopClass] ([GUID],[SopClassUid],[Descript
 VALUES (newid(), '1.2.840.10008.5.1.4.1.1.6.2', 'Enhanced US Volume Storage', 0);
 GO
 
+INSERT INTO [ImageServer].[dbo].[ServerSopClass] ([GUID],[SopClassUid],[Description],[NonImage])
+VALUES (newid(), '1.2.840.10008.5.1.4.1.1.130', 'Enhanced PET Storage', 0);
+GO
+
 -- ServerTransferSyntax inserts
 INSERT INTO [ImageServer].[dbo].[ServerTransferSyntax] ([GUID],[Uid],[Description],[Lossless])
 VALUES (newid(), '1.2.840.10008.1.2.2', 'Explicit VR Big Endian', 1)

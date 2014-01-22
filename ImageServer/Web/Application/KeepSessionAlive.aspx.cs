@@ -23,15 +23,21 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
 using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
+using ClearCanvas.ImageServer.Web.Common.Security;
 
 namespace ClearCanvas.ImageServer.Web.Application
 {
     public partial class KeepSessionAlive : System.Web.UI.Page
     {
+
+		protected override void OnInit(EventArgs e)
+		{
+			base.OnInit(e);
+
+			SessionManager.RenewSession();
+		}
+
         protected void Page_Load(object sender, EventArgs e)
         {
             // make sure client won't cache this page or it won't actually update the session

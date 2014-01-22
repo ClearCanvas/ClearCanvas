@@ -254,6 +254,9 @@ namespace ClearCanvas.ImageViewer.Volumes
 		{
 			lock (_syncRoot)
 			{
+				// cached volume is an orphan because viewer was closed, so just ignore this command
+				if (_cache == null) return;
+
 				// double check identity of item being removed, in case it's already been recreated before the previous item's dispose finishes
 				CachedVolume realItem;
 				if (_cache.TryGetValue(cacheKey, out realItem) && ReferenceEquals(realItem, cachedItem))

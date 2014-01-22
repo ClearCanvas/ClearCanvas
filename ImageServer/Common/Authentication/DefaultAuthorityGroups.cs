@@ -37,13 +37,13 @@ namespace ClearCanvas.ImageServer.Common.Authentication
 
     enum DefaultUserGroup
     {
-        [UserGroupDefinition(Name = "PACS Administrators")]
+        [UserGroupDefinition(Name = "PACS Administrators (Example)")]
         PACSAdministrators,
 
-        [UserGroupDefinition(Name = "PACS Technologists")]
+		[UserGroupDefinition(Name = "PACS Technologists (Example)")]
         PACSTechnologists,
 
-        [UserGroupDefinition(Name = "PACS Read-only Users")]
+		[UserGroupDefinition(Name = "PACS Read-only Users (Example)")]
         PACSUsers
     }
 

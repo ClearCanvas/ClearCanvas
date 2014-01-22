@@ -141,6 +141,9 @@ namespace ClearCanvas.ImageServer.Common
 													}
 												}
 
+												if (_stopFlag)
+													return;
+
 												try
 												{
 													Run();

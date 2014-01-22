@@ -25,8 +25,8 @@
 using System;
 using System.Collections.Generic;
 using System.Security.Permissions;
+using ClearCanvas.ImageServer.Common.Authentication;
 using ClearCanvas.ImageServer.Enterprise;
-using ClearCanvas.ImageServer.Enterprise.Authentication;
 using ClearCanvas.ImageServer.Model;
 using Resources;
 using ClearCanvas.ImageServer.Web.Application.Controls;

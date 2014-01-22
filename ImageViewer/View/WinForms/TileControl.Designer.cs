@@ -31,6 +31,7 @@
 
 using System;
 using System.Drawing;
+using ClearCanvas.Desktop.View.WinForms;
 using ClearCanvas.ImageViewer.InputManagement;
 using ClearCanvas.Common.Utilities;
 
@@ -51,6 +52,8 @@ namespace ClearCanvas.ImageViewer.View.WinForms
         {
             if (disposing)
             {
+				ToolStripBuilder.Clear(_contextMenuStrip.Items);
+
             	_tilesToRepaint.Remove(this);
 
 				DisposeSurface();

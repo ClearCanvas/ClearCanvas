@@ -64,6 +64,16 @@ namespace ClearCanvas.Dicom
 		}
 
 		/// <summary>
+		/// Checks if the specified tag is a private tag (group is odd).
+		/// </summary>
+		/// <param name="tag">The tag to check.</param>
+		/// <returns>True if the tag is private; False otherwise.</returns>
+		public static bool IsPrivateTag(uint tag)
+		{
+			return ((tag >> 16) & 1) == 1;
+		}
+
+		/// <summary>
 		/// Gets a <see cref="DicomTag"/> instance for the specified tag, which may not necessary be a tag defined in the data dictionary.
 		/// </summary>
 		/// <remarks>

@@ -92,8 +92,9 @@ namespace ClearCanvas.ImageViewer.Vtk.Rendering
 			_vtkRenderWindow.SetDesiredUpdateRate(_dynamicFrameRate);
 			_vtkRenderWindow.AddRenderer(_vtkRenderer);
 
+			var delayTime = Math.Min(10000, Math.Max(100, Settings.Default.RendererRefinementDelayMs));
 			_dynamicFrameRate = Math.Min(1000, Math.Max(1, Settings.Default.RendererDynamicFps));
-			_dynamicRenderEventPublisher = !offscreen ? new DelayedEventPublisher((s, e) => Render(true, null)) : null;
+			_dynamicRenderEventPublisher = !offscreen ? new DelayedEventPublisher((s, e) => Render(true, null), delayTime) : null;
 
 			WindowID = windowId;
 		}
@@ -261,9 +262,11 @@ namespace ClearCanvas.ImageViewer.Vtk.Rendering
 		{
 			if (_dynamicRenderEventPublisher != null)
 			{
-				_dynamicRenderEventPublisher.Publish(null, null);
+				_dynamicRenderEventPublisher.Cancel();
 
 				Render(false, updateOverlayCallback);
+
+				_dynamicRenderEventPublisher.Publish(null, null);
 			}
 			else
 			{

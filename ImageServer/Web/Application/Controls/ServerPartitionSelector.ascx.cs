@@ -30,7 +30,6 @@ using System.Web.UI.WebControls;
 using ClearCanvas.ImageServer.Enterprise;
 using ClearCanvas.ImageServer.Model;
 using ClearCanvas.ImageServer.Web.Common;
-using ClearCanvas.ImageServer.Web.Common.Data;
 
 namespace ClearCanvas.ImageServer.Web.Application.Controls
 {
@@ -67,6 +66,8 @@ namespace ClearCanvas.ImageServer.Web.Application.Controls
                 return ServerPartitionList == null || ServerPartitionList.Count == 0;
             }
         }
+
+		public bool UseNonResearchPartitions { get; set; }
 
         public ServerPartition SelectedPartition
         {
@@ -139,6 +140,11 @@ namespace ClearCanvas.ImageServer.Web.Application.Controls
                 return ViewState["SelectedPartitionKey"] as ServerEntityKey;
             }
         }
+
+		public ServerPartitionSelector()
+		{
+			UseNonResearchPartitions = false;
+		}
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -241,12 +247,13 @@ namespace ClearCanvas.ImageServer.Web.Application.Controls
 
                 if (extension != null)
                 {
+					if (UseNonResearchPartitions)
+						return new List<ServerPartition>(extension.LoadNonResearchServerPartitions());
                     return new List<ServerPartition>(extension.LoadServerPartitions());
                 }
             }
             catch (Exception)
             {
-
             }
 
             var defaultImpl = new DefaultServerPartitionTabsExtension();
