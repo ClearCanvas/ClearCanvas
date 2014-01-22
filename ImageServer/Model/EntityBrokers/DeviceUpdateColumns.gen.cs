@@ -30,7 +30,7 @@ namespace ClearCanvas.ImageServer.Model.EntityBrokers
     using System.Xml;
     using ClearCanvas.ImageServer.Enterprise;
 
-   public class DeviceUpdateColumns : EntityUpdateColumns
+   public partial class DeviceUpdateColumns : EntityUpdateColumns
    {
        public DeviceUpdateColumns()
        : base("Device")

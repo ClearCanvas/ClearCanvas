@@ -24,6 +24,7 @@
 
 using System;
 using ClearCanvas.Dicom;
+using ClearCanvas.Dicom.Iod.Sequences;
 using ClearCanvas.ImageServer.Core.Edit;
 using ClearCanvas.ImageServer.Model;
 
@@ -51,7 +52,7 @@ namespace ClearCanvas.ImageServer.Core.Reconcile.CreateStudy
 		}
 		#endregion
 
-		public override bool Apply(DicomFile file)
+		public override bool Apply(DicomFile file, OriginalAttributesSequence originalAttributes)
 		{
             if (_uidMapper == null)
                 return true; // Nothing to do

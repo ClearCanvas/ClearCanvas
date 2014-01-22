@@ -48,6 +48,8 @@
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Data" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -59,6 +61,7 @@
     <Compile Include="Command\LockStudyCommand.cs" />
     <Compile Include="Command\SaveDicomFileCommand.cs" />
     <Compile Include="Command\SaveXmlCommand.cs" />
+    <Compile Include="Command\UpdateInstanceCommand.cs" />
     <Compile Include="Command\UpdateStudySizeInDBCommand.cs" />
     <Compile Include="Command\UpdateWorkQueueCommand.cs" />
     <Compile Include="Data\ProcessDuplicateChangeLog.cs" />
@@ -77,12 +80,13 @@
     <Compile Include="DuplicatePolicy.cs" />
     <Compile Include="Edit\BaseImageLevelUpdateCommand.cs" />
     <Compile Include="Edit\EditStudyWorkQueueData.cs" />
+    <Compile Include="Edit\EditType.cs" />
     <Compile Include="Edit\Extensions\LogHistory\LogHistory.cs" />
     <Compile Include="Edit\InstanceInfo.cs" />
     <Compile Include="DicomCharacterSetException.cs" />
     <Compile Include="Edit\IWebEditStudyCommandCompiler.cs" />
-    <Compile Include="Edit\IWebEditStudyProcessorExtension.cs" />
     <Compile Include="Edit\PatientInfo.cs" />
+    <Compile Include="Edit\StudyDeleteHelper.cs" />
     <Compile Include="Edit\StudyEditorHelper.cs" />
     <Compile Include="Edit\Test\SetDicomTagTestBase.cs" />
     <Compile Include="Edit\Test\SetDicomTagTest_UnicodeConversionAllowed.cs" />
@@ -90,7 +94,24 @@
     <Compile Include="Edit\UpdateStudyCommand.cs" />
     <Compile Include="Edit\UpdateStudyStatistics.cs" />
     <Compile Include="Edit\WebDeleteWorkQueueEntryData.cs" />
+    <Compile Include="Events\EventExtensionPoint.cs" />
+    <Compile Include="Events\EventManager.cs" />
+    <Compile Include="Events\FailedNewSopEventArgs.cs" />
+    <Compile Include="Events\FailedUpdateSopEventArgs.cs" />
+    <Compile Include="Events\IEventHandler.cs" />
+    <Compile Include="Events\ImageServerEventArgs.cs" />
+    <Compile Include="Events\ImageServerEventAttribute.cs" />
+    <Compile Include="Events\NewSopEventArgs.cs" />
+    <Compile Include="Events\SopEventArgs.cs" />
+    <Compile Include="Events\StudyEditedEventArgs.cs" />
+    <Compile Include="Events\UpdateSopEventArgs.cs" />
     <Compile Include="FilesystemDynamicPath.cs" />
+    <Compile Include="FileSystemMonitor.cs" />
+    <Compile Include="FilesystemSelector.cs" />
+    <Compile Include="Helpers\StudyComparer.cs" />
+    <Compile Include="Helpers\StudyHistoryHelper.cs" />
+    <Compile Include="Helpers\WorkQueueHelper.cs" />
+    <Compile Include="HttpServer.cs" />
     <Compile Include="IStudyPreProcessor.cs" />
     <Compile Include="ModelExtensions\ServerPartitionExtensions.cs" />
     <Compile Include="ModelExtensions\StudyStorageLocationExtensions.cs" />
@@ -99,11 +120,11 @@
     <Compile Include="PatientNameRules.cs" />
     <Compile Include="PreProcessors.cs" />
     <Compile Include="Process\IInsertExtension.cs" />
+    <Compile Include="Process\SopInstanceProcessorContext.cs" />
     <Compile Include="Query\IExtendedQueryKeys.cs" />
     <Compile Include="Query\QueryHelper.cs" />
     <Compile Include="Reconcile\StudyMatchingMap.cs" />
     <Compile Include="Edit\WebEditStudyCommandCompiler.cs" />
-    <Compile Include="Edit\WebEditStudyContext.cs" />
     <Compile Include="Edit\WebEditStudyHistoryRecord.cs" />
     <Compile Include="Process\StudyReprocessor.cs" />
     <Compile Include="Command\RebuildStudyXmlCommand.cs" />
@@ -146,9 +167,12 @@
     <Compile Include="Reconcile\Test\ImageReconcilerTest.cs" />
     <Compile Include="Reconcile\UpdateHistoryCommand.cs" />
     <Compile Include="Reconcile\SaveUidMapXmlCommand.cs" />
-    <Compile Include="ServerHelper.cs" />
+    <Compile Include="ServerFilesystemInfo.cs" />
+    <Compile Include="Helpers\ServerHelper.cs" />
+    <Compile Include="ServerPartitionMonitor.cs" />
     <Compile Include="SopInstanceImporter.cs" />
     <Compile Include="SopInstanceProcessor.cs" />
+    <Compile Include="StorageLocationCache.cs" />
     <Compile Include="StudyAlertGenerator.cs" />
     <Compile Include="StudyEditor.cs" />
     <Compile Include="UpdateStudyStatusCommand.cs" />
@@ -173,6 +197,10 @@
     <ProjectReference Include="..\..\Enterprise\Core\ClearCanvas.Enterprise.Core.csproj">
       <Project>{431E9444-9915-4D49-B92D-9B7EC086622A}</Project>
       <Name>ClearCanvas.Enterprise.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Server\ShredHost\ClearCanvas.Server.ShredHost.csproj">
+      <Project>{8347B928-805E-42E7-B980-08D8AF1A0671}</Project>
+      <Name>ClearCanvas.Server.ShredHost</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Web\Enterprise\ClearCanvas.Web.Enterprise.csproj">
       <Project>{22444EF5-740E-41C2-B6DD-0029BD616338}</Project>
@@ -201,6 +229,7 @@
       <LastGenOutput>DiagnosticSettings.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -202,7 +202,7 @@ namespace ClearCanvas.ImageViewer.Mathematics
 			return new Matrix3D(_matrix);
 		}
 
-		private void Scale(float scale)
+		private void ScaleInternal(float scale)
 		{
 			for (int row = 0; row < 3; ++row)
 			{
@@ -225,6 +225,23 @@ namespace ClearCanvas.ImageViewer.Mathematics
 			}
 
 			return transpose;
+		}
+
+		/// <summary>
+		/// Computes the determinant of this matrix.
+		/// </summary>
+		public float GetDeterminant()
+		{
+			return Matrix.Determinant3(_matrix);
+		}
+
+		/// <summary>
+		/// Returns a matrix that is the inverse of this matrix.
+		/// </summary>
+		/// <returns></returns>
+		public Matrix3D Invert()
+		{
+			return new Matrix3D(Matrix.Invert3(_matrix));
 		}
 
 		/// <summary>
@@ -253,11 +270,62 @@ namespace ClearCanvas.ImageViewer.Mathematics
 		}
 
 		/// <summary>
+		/// Constructs a new 3x3 matrix from the specified column vectors.
+		/// </summary>
+		/// <exception cref="ArgumentNullException">Thrown if any of the supplied vectors are null.</exception>
+		public static Matrix3D FromColumns(Vector3D column0, Vector3D column1, Vector3D column2)
+		{
+			Platform.CheckForNullReference(column0, "column0");
+			Platform.CheckForNullReference(column1, "column1");
+			Platform.CheckForNullReference(column2, "column2");
+
+			return new Matrix3D(new[,]
+			                    	{
+			                    		{column0.X, column1.X, column2.X},
+			                    		{column0.Y, column1.Y, column2.Y},
+			                    		{column0.Z, column1.Z, column2.Z}
+			                    	});
+		}
+
+		/// <summary>
+		/// Constructs a new 3x3 matrix from the specified row vectors.
+		/// </summary>
+		/// <exception cref="ArgumentNullException">Thrown if any of the supplied vectors are null.</exception>
+		public static Matrix3D FromRows(Vector3D row0, Vector3D row1, Vector3D row2)
+		{
+			Platform.CheckForNullReference(row0, "row0");
+			Platform.CheckForNullReference(row1, "row1");
+			Platform.CheckForNullReference(row2, "row2");
+
+			return new Matrix3D(new[,]
+			                    	{
+			                    		{row0.X, row0.Y, row0.Z},
+			                    		{row1.X, row1.Y, row1.Z},
+			                    		{row2.X, row2.Y, row2.Z}
+			                    	});
+		}
+
+		/// <summary>
 		/// Gets a 3x3 identity matrix.
 		/// </summary>
 		public static Matrix3D GetIdentity()
 		{
-			return new Matrix3D(new float[,] {{1, 0, 0}, {0, 1, 0}, {0, 0, 1}});
+			return new Matrix3D(new float[,]
+			                    	{
+			                    		{1, 0, 0},
+			                    		{0, 1, 0},
+			                    		{0, 0, 1}
+			                    	});
+		}
+
+		/// <summary>
+		/// Performs scalar multiplication of <paramref name="matrix"/> by -1.
+		/// </summary>
+		public static Matrix3D operator -(Matrix3D matrix)
+		{
+			Matrix3D clone = matrix.Clone();
+			clone.ScaleInternal(-1);
+			return clone;
 		}
 
 		/// <summary>
@@ -266,7 +334,7 @@ namespace ClearCanvas.ImageViewer.Mathematics
 		public static Matrix3D operator /(Matrix3D matrix, float scale)
 		{
 			Matrix3D clone = matrix.Clone();
-			clone.Scale(1/scale);
+			clone.ScaleInternal(1/scale);
 			return clone;
 		}
 
@@ -366,7 +434,7 @@ namespace ClearCanvas.ImageViewer.Mathematics
 		public static Matrix3D operator *(Matrix3D matrix, float scale)
 		{
 			Matrix3D clone = matrix.Clone();
-			clone.Scale(scale);
+			clone.ScaleInternal(scale);
 			return clone;
 		}
 

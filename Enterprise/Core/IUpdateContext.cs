@@ -22,6 +22,8 @@
 
 #endregion
 
+using System;
+
 namespace ClearCanvas.Enterprise.Core
 {
 	/// <summary>
@@ -48,5 +50,10 @@ namespace ClearCanvas.Enterprise.Core
 		/// for read operations only. If the operation fails, an exception will be thrown.
 		/// </remarks>
 		void Commit();
+
+		/// <summary>
+		/// Occurs when the <see cref="Commit"/> method has been called, but prior to committing anything.
+		/// </summary>
+		event EventHandler PreCommit;
 	}
 }

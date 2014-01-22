@@ -38,7 +38,7 @@ namespace ClearCanvas.Enterprise.Common
 	#region RemoteServiceProviderArgs class
 
 	/// <summary>
-	/// Encapsulates options that confgiure a <see cref="RemoteServiceProviderBase{T}"/>.
+	/// Encapsulates options that configure a <see cref="RemoteServiceProviderBase{T}"/>.
 	/// </summary>
 	public class RemoteServiceProviderArgs
 	{
@@ -132,6 +132,12 @@ namespace ClearCanvas.Enterprise.Common
 		/// Maximum size in bytes of message received by the service client.
 		/// </summary>
 		public int MaxReceivedMessageSize { get; set; }
+
+		/// <summary>
+		/// The time, in seconds, in which a send operation must complete.
+		/// </summary>
+		/// <remarks>Value less than or equal to zero should be ignored.</remarks>
+		public int SendTimeoutSeconds { get; set; }
 
 		/// <summary>
 		/// Certificate validation mode.

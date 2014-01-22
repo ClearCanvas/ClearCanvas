@@ -30,6 +30,7 @@ namespace ClearCanvas.ImageServer.Model
     using System.Xml;
     using ClearCanvas.Enterprise.Core;
     using ClearCanvas.ImageServer.Enterprise;
+    using ClearCanvas.ImageServer.Enterprise.Command;
     using ClearCanvas.ImageServer.Model.EntityBrokers;
 
     [Serializable]
@@ -57,6 +58,7 @@ namespace ClearCanvas.ImageServer.Model
             ,Boolean _matchPatientsName_
             ,Boolean _matchPatientsSex_
             ,Boolean _acceptLatestReport_
+            ,ServerPartitionTypeEnum _serverPartitionTypeEnum_
             ):base("ServerPartition")
         {
             Enabled = _enabled_;
@@ -77,6 +79,7 @@ namespace ClearCanvas.ImageServer.Model
             MatchPatientsName = _matchPatientsName_;
             MatchPatientsSex = _matchPatientsSex_;
             AcceptLatestReport = _acceptLatestReport_;
+            ServerPartitionTypeEnum = _serverPartitionTypeEnum_;
         }
         #endregion
 
@@ -135,14 +138,17 @@ namespace ClearCanvas.ImageServer.Model
         [EntityFieldDatabaseMappingAttribute(TableName="ServerPartition", ColumnName="AcceptLatestReport")]
         public Boolean AcceptLatestReport
         { get; set; }
+        [EntityFieldDatabaseMappingAttribute(TableName="ServerPartition", ColumnName="ServerPartitionTypeEnum")]
+        public ServerPartitionTypeEnum ServerPartitionTypeEnum
+        { get; set; }
         #endregion
 
         #region Static Methods
         static public ServerPartition Load(ServerEntityKey key)
         {
-            using (var read = PersistentStoreRegistry.GetDefaultStore().OpenReadContext())
+            using (var context = new ServerExecutionContext())
             {
-                return Load(read, key);
+                return Load(context.ReadContext, key);
             }
         }
         static public ServerPartition Load(IPersistenceContext read, ServerEntityKey key)
@@ -182,6 +188,7 @@ namespace ClearCanvas.ImageServer.Model
             updateColumns.MatchPatientsName = entity.MatchPatientsName;
             updateColumns.MatchPatientsSex = entity.MatchPatientsSex;
             updateColumns.AcceptLatestReport = entity.AcceptLatestReport;
+            updateColumns.ServerPartitionTypeEnum = entity.ServerPartitionTypeEnum;
             ServerPartition newEntity = broker.Insert(updateColumns);
             return newEntity;
         }

@@ -22,9 +22,7 @@
 
 #endregion
 
-using System;
-using System.Collections.Generic;
-using System.Text;
+using ClearCanvas.Enterprise.Core;
 using ClearCanvas.Ris.Application.Common;
 using ClearCanvas.Healthcare;
 

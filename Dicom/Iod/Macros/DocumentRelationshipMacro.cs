@@ -146,7 +146,7 @@ namespace ClearCanvas.Dicom.Iod.Macros
 		public interface IContentSequence : IIodMacro, IDocumentContentMacro, IDocumentRelationshipMacro
 		{
 			/// <summary>
-			/// Gets or sets the value of RelationshipTyp in the underlying collection. Type 1.
+			/// Gets or sets the value of RelationshipType in the underlying collection. Type 1.
 			/// </summary>
 			RelationshipType RelationshipType { get; set; }
 

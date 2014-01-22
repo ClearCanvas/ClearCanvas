@@ -18,7 +18,7 @@
       <Value Profile="(Default)">120</Value>
     </Setting>
     <Setting Name="DbChangeDelaySeconds" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">180</Value>
+      <Value Profile="(Default)">120</Value>
     </Setting>
     <Setting Name="UseReceiveDateAsFolder" Type="System.Boolean" Scope="Application">
       <Value Profile="(Default)">False</Value>

@@ -30,7 +30,7 @@ namespace ClearCanvas.ImageServer.Model.EntityBrokers
     using System.Xml;
     using ClearCanvas.ImageServer.Enterprise;
 
-   public class CannedTextUpdateColumns : EntityUpdateColumns
+   public partial class CannedTextUpdateColumns : EntityUpdateColumns
    {
        public CannedTextUpdateColumns()
        : base("CannedText")

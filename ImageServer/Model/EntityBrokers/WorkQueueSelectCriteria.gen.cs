@@ -103,6 +103,18 @@ namespace ClearCanvas.ImageServer.Model.EntityBrokers
               return (ISearchCondition<WorkQueuePriorityEnum>)SubCriteria["WorkQueuePriorityEnum"];
             } 
         }
+        [EntityFieldDatabaseMappingAttribute(TableName="WorkQueue", ColumnName="FailureCount")]
+        public ISearchCondition<Int32> FailureCount
+        {
+            get
+            {
+              if (!SubCriteria.ContainsKey("FailureCount"))
+              {
+                 SubCriteria["FailureCount"] = new SearchCondition<Int32>("FailureCount");
+              }
+              return (ISearchCondition<Int32>)SubCriteria["FailureCount"];
+            } 
+        }
         [EntityFieldDatabaseMappingAttribute(TableName="WorkQueue", ColumnName="ScheduledTime")]
         public ISearchCondition<DateTime> ScheduledTime
         {
@@ -127,16 +139,16 @@ namespace ClearCanvas.ImageServer.Model.EntityBrokers
               return (ISearchCondition<DateTime>)SubCriteria["InsertTime"];
             } 
         }
-        [EntityFieldDatabaseMappingAttribute(TableName="WorkQueue", ColumnName="FailureCount")]
-        public ISearchCondition<Int32> FailureCount
+        [EntityFieldDatabaseMappingAttribute(TableName="WorkQueue", ColumnName="LastUpdatedTime")]
+        public ISearchCondition<DateTime> LastUpdatedTime
         {
             get
             {
-              if (!SubCriteria.ContainsKey("FailureCount"))
+              if (!SubCriteria.ContainsKey("LastUpdatedTime"))
               {
-                 SubCriteria["FailureCount"] = new SearchCondition<Int32>("FailureCount");
+                 SubCriteria["LastUpdatedTime"] = new SearchCondition<DateTime>("LastUpdatedTime");
               }
-              return (ISearchCondition<Int32>)SubCriteria["FailureCount"];
+              return (ISearchCondition<DateTime>)SubCriteria["LastUpdatedTime"];
             } 
         }
         [EntityFieldDatabaseMappingAttribute(TableName="WorkQueue", ColumnName="FailureDescription")]
@@ -163,16 +175,16 @@ namespace ClearCanvas.ImageServer.Model.EntityBrokers
               return (ISearchCondition<XmlDocument>)SubCriteria["Data"];
             } 
         }
-        [EntityFieldDatabaseMappingAttribute(TableName="WorkQueue", ColumnName="LastUpdatedTime")]
-        public ISearchCondition<DateTime> LastUpdatedTime
+        [EntityFieldDatabaseMappingAttribute(TableName="WorkQueue", ColumnName="ExternalRequestQueueGUID")]
+        public ISearchCondition<ServerEntityKey> ExternalRequestQueueKey
         {
             get
             {
-              if (!SubCriteria.ContainsKey("LastUpdatedTime"))
+              if (!SubCriteria.ContainsKey("ExternalRequestQueueKey"))
               {
-                 SubCriteria["LastUpdatedTime"] = new SearchCondition<DateTime>("LastUpdatedTime");
+                 SubCriteria["ExternalRequestQueueKey"] = new SearchCondition<ServerEntityKey>("ExternalRequestQueueKey");
               }
-              return (ISearchCondition<DateTime>)SubCriteria["LastUpdatedTime"];
+              return (ISearchCondition<ServerEntityKey>)SubCriteria["ExternalRequestQueueKey"];
             } 
         }
         [EntityFieldDatabaseMappingAttribute(TableName="WorkQueue", ColumnName="ProcessorID")]

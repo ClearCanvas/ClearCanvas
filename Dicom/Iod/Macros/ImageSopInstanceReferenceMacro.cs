@@ -23,6 +23,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 
 namespace ClearCanvas.Dicom.Iod.Macros
 {
@@ -30,7 +31,7 @@ namespace ClearCanvas.Dicom.Iod.Macros
 	/// Image SOP Instance Reference Macro
 	/// </summary>
 	/// <remarks>As defined in the DICOM Standard 2008, Part 3, Section 10.3 (Table 10-3)</remarks>
-	public class ImageSopInstanceReferenceMacro : SequenceIodBase
+	public class ImageSopInstanceReferenceMacro : SequenceIodBase, ISopInstanceReferenceMacro
 	{
 		#region Constructors
 
@@ -46,6 +47,19 @@ namespace ClearCanvas.Dicom.Iod.Macros
 		public ImageSopInstanceReferenceMacro(DicomSequenceItem dicomSequenceItem) : base(dicomSequenceItem) {}
 
 		#endregion
+
+		public static IEnumerable<uint> DefinedTags
+		{
+			get
+			{
+				yield return DicomTags.ReferencedSopClassUid;
+				yield return DicomTags.ReferencedSopInstanceUid;
+				yield return DicomTags.ReferencedFrameNumber;
+				yield return DicomTags.ReferencedSegmentNumber;
+			}
+		}
+
+		void IIodMacro.InitializeAttributes() {}
 
 		#region Public Properties
 
@@ -85,6 +99,36 @@ namespace ClearCanvas.Dicom.Iod.Macros
 		}
 
 		/// <summary>
+		/// Gets or sets the value of ReferencedFrameNumber in the underlying collection. Type 1C.
+		/// </summary>
+		public int[] ReferencedFrameNumber2
+		{
+			get
+			{
+				var dicomAttribute = DicomAttributeProvider[DicomTags.ReferencedFrameNumber];
+				if (dicomAttribute.IsNull || dicomAttribute.IsEmpty)
+					return null;
+
+				var values = new int[dicomAttribute.Count];
+				for (int n = 0; n < values.Length; n++)
+					values[n] = dicomAttribute.GetInt32(n, 0);
+				return values;
+			}
+			set
+			{
+				if (value == null || value.Length == 0)
+				{
+					DicomAttributeProvider[DicomTags.ReferencedFrameNumber] = null;
+					return;
+				}
+
+				var dicomAttribute = DicomAttributeProvider[DicomTags.ReferencedFrameNumber];
+				for (int n = 0; n < value.Length; n++)
+					dicomAttribute.SetInt32(n, value[n]);
+			}
+		}
+
+		/// <summary>
 		/// Identifies the Segment Number to which the reference applies. Required if the Referenced
 		///  SOP Instance is a Segmentation and the reference does not apply to all segments and
 		///  Referenced Frame Number (0008,1160) is not present.
@@ -93,6 +137,36 @@ namespace ClearCanvas.Dicom.Iod.Macros
 		public DicomAttributeUS ReferencedSegmentNumber
 		{
 			get { return base.DicomAttributeProvider[DicomTags.ReferencedSegmentNumber] as DicomAttributeUS; }
+		}
+
+		/// <summary>
+		/// Gets or sets the value of ReferencedSegmentNumber in the underlying collection. Type 1C.
+		/// </summary>
+		public int[] ReferencedSegmentNumber2
+		{
+			get
+			{
+				var dicomAttribute = DicomAttributeProvider[DicomTags.ReferencedSegmentNumber];
+				if (dicomAttribute.IsNull || dicomAttribute.IsEmpty)
+					return null;
+
+				var values = new int[dicomAttribute.Count];
+				for (int n = 0; n < values.Length; n++)
+					values[n] = dicomAttribute.GetInt32(n, 0);
+				return values;
+			}
+			set
+			{
+				if (value == null || value.Length == 0)
+				{
+					DicomAttributeProvider[DicomTags.ReferencedSegmentNumber] = null;
+					return;
+				}
+
+				var dicomAttribute = DicomAttributeProvider[DicomTags.ReferencedSegmentNumber];
+				for (int n = 0; n < value.Length; n++)
+					dicomAttribute.SetInt32(n, value[n]);
+			}
 		}
 
 		#endregion

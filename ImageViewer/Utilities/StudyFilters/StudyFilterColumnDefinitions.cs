@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Reflection;
 using ClearCanvas.Dicom;
 using ClearCanvas.ImageViewer.Utilities.StudyFilters.Columns;
@@ -77,27 +78,27 @@ namespace ClearCanvas.ImageViewer.Utilities.StudyFilters
 		public static ColumnDefinition GetColumnDefinition(string key)
 		{
 			// force initialize definition table
-			StudyFilterColumn.SpecialColumnDefinitions.GetHashCode();
+			SpecialColumnDefinitions.GetHashCode();
 
 			if (_specialColumnDefinitions.ContainsKey(key))
 				return _specialColumnDefinitions[key];
 
 			// force initialize definition table
-			StudyFilterColumn.DicomTagColumnDefinitions.GetHashCode();
+			DicomTagColumnDefinitions.GetHashCode();
 
 			if (_dicomColumnDefinitions.ContainsKey(key))
 				return _dicomColumnDefinitions[key];
 
 			uint dicomTag;
-			if (uint.TryParse(key, System.Globalization.NumberStyles.AllowHexSpecifier, System.Globalization.CultureInfo.InvariantCulture, out dicomTag))
-				return StudyFilterColumn.GetColumnDefinition(dicomTag);
+			if (uint.TryParse(key, NumberStyles.AllowHexSpecifier, CultureInfo.InvariantCulture, out dicomTag))
+				return GetColumnDefinition(dicomTag);
 
 			return null;
 		}
 
 		public static StudyFilterColumn CreateColumn(string key)
 		{
-			ColumnDefinition definition = StudyFilterColumn.GetColumnDefinition(key);
+			ColumnDefinition definition = GetColumnDefinition(key);
 			if (definition != null)
 				return definition.Create();
 			return null;
@@ -169,8 +170,8 @@ namespace ClearCanvas.ImageViewer.Utilities.StudyFilters
 							for (uint n = 0; n <= 0x1E; n += 2)
 							{
 								DicomTag rDicomTag = new DicomTag(
-									dicomTag.TagValue + n * 0x10000,
-									string.Format(SR.FormatRepeatingDicomTagName, dicomTag.Name, 1 + n / 2), 
+									dicomTag.TagValue + n*0x10000,
+									string.Format(SR.FormatRepeatingDicomTagName, dicomTag.Name, 1 + n/2),
 									string.Format("{0}{1:X2}", dicomTag.VariableName, n),
 									dicomTag.VR, dicomTag.MultiVR, dicomTag.VMLow, dicomTag.VMHigh, dicomTag.Retired);
 								ColumnDefinition rDefinition = CreateDefinition(rDicomTag);
@@ -185,7 +186,7 @@ namespace ClearCanvas.ImageViewer.Utilities.StudyFilters
 
 		public static ColumnDefinition GetColumnDefinition(uint dicomTag)
 		{
-			DicomTag tag = DicomTagDictionary.GetDicomTag(dicomTag);
+			DicomTag tag = DicomTag.GetTag(dicomTag);
 			if (tag == null)
 				tag = new DicomTag(dicomTag, string.Empty, string.Empty, DicomVr.UNvr, false, uint.MinValue, uint.MaxValue, false);
 			return GetColumnDefinition(tag);
@@ -249,11 +250,14 @@ namespace ClearCanvas.ImageViewer.Utilities.StudyFilters
 				case "SQ":
 				case "OB":
 				case "OF":
+				case "OD":
 				case "OW":
+					// sequence, binary data
+					return new BinaryDicomColumnDefintion(dicomTag);
 				case "UN":
 				default:
-					// sequence, binary and unknown data
-					return new BinaryDicomColumnDefintion(dicomTag);
+					// treat unknown data as a polymorphic column
+					return new PolymorphicDicomColumnDefintion(dicomTag);
 			}
 		}
 
@@ -367,6 +371,41 @@ namespace ClearCanvas.ImageViewer.Utilities.StudyFilters
 			public override StudyFilterColumn Create()
 			{
 				return new BinaryDicomTagColumn(Tag);
+			}
+		}
+
+		private class PolymorphicDicomColumnDefintion : DicomColumnDefinition
+		{
+			public PolymorphicDicomColumnDefintion(DicomTag tag) : base(tag) {}
+
+			public override StudyFilterColumn Create()
+			{
+				return new PolymorphicDicomTagColumn(Tag);
+			}
+
+			private class PolymorphicDicomTagColumn : DicomTagColumn<string>, IGenericSortableColumn
+			{
+				public PolymorphicDicomTagColumn(DicomTag dicomTag) : base(dicomTag) {}
+
+				public override string GetTypedValue(IStudyItem item)
+				{
+					var attribute = item[Tag];
+					if (attribute == null || attribute.IsEmpty || attribute.IsNull)
+						return string.Empty;
+
+					return attribute.ToString();
+				}
+
+				public override bool Parse(string input, out string output)
+				{
+					output = input;
+					return false;
+				}
+
+				public override int Compare(IStudyItem x, IStudyItem y)
+				{
+					return string.Compare(GetTypedValue(x), GetTypedValue(y), StringComparison.InvariantCultureIgnoreCase);
+				}
 			}
 		}
 

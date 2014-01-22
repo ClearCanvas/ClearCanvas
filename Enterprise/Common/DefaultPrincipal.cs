@@ -22,10 +22,7 @@
 
 #endregion
 
-using System;
-using System.Collections.Generic;
 using System.Security.Principal;
-using System.Text;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Enterprise.Common.Authentication;
@@ -40,29 +37,37 @@ namespace ClearCanvas.Enterprise.Common
 	{
 		/// <summary>
 		/// Creates an object that implements <see cref="IPrincipal"/> based on the specified
-		/// identity and session token.  The authorizations will be automatically obtained
-        /// via the <see cref="IAuthenticationService"/>.
+		/// identity, session token, and authorizations.
+		/// </summary>
+		/// <param name="identityName"></param>
+		/// <param name="sessionToken"></param>
+		/// <param name="authorityTokens">The set of authority tokens, if known, otherwise null.</param>
+		/// <returns></returns>
+		/// <remarks>
+		/// If the authority tokens are not known at creation time they will be obtained on-demand
+		/// via the <see cref="IAuthenticationService"/>.
+		/// </remarks>
+		public static DefaultPrincipal CreatePrincipal(string identityName, SessionToken sessionToken, string[] authorityTokens = null)
+		{
+			return new DefaultPrincipal(new GenericIdentity(identityName), sessionToken, authorityTokens);
+		}
+
+		/// <summary>
+		/// Creates an object that implements <see cref="IPrincipal"/> based on the specified
+		/// identity, session token, and authorizations.
 		/// </summary>
 		/// <param name="identity"></param>
 		/// <param name="sessionToken"></param>
+		/// <param name="authorityTokens">The set of authority tokens, if known, otherwise null.</param>
 		/// <returns></returns>
-		public static IPrincipal CreatePrincipal(IIdentity identity, SessionToken sessionToken)
+		/// <remarks>
+		/// If the authority tokens are not known at creation time they will be obtained on-demand
+		/// via the <see cref="IAuthenticationService"/>.
+		/// </remarks>
+		public static DefaultPrincipal CreatePrincipal(IIdentity identity, SessionToken sessionToken, string[] authorityTokens = null)
 		{
-			return new DefaultPrincipal(identity, sessionToken, null);
+			return new DefaultPrincipal(identity, sessionToken, authorityTokens);
 		}
-
-        /// <summary>
-        /// Creates an object that implements <see cref="IPrincipal"/> based on the specified
-        /// identity, session token, and authorizations.
-        /// </summary>
-        /// <param name="identity"></param>
-        /// <param name="sessionToken"></param>
-        /// <param name="authorityTokens"></param>
-        /// <returns></returns>
-        public static IPrincipal CreatePrincipal(IIdentity identity, SessionToken sessionToken, string[] authorityTokens)
-        {
-            return new DefaultPrincipal(identity, sessionToken, authorityTokens);
-        }
 
 
 		private readonly IIdentity _identity;
@@ -73,7 +78,7 @@ namespace ClearCanvas.Enterprise.Common
 		{
 			_identity = identity;
 			_sessionToken = sessionToken;
-            _authorityTokens = authorityTokens;
+			_authorityTokens = authorityTokens;
 		}
 
 		public IIdentity Identity
@@ -81,16 +86,16 @@ namespace ClearCanvas.Enterprise.Common
 			get { return _identity; }
 		}
 
-        public SessionToken SessionToken
-        {
-            get { return _sessionToken; }
-        }
+		public SessionToken SessionToken
+		{
+			get { return _sessionToken; }
+		}
 
 		public bool IsInRole(string role)
 		{
 			// initialize auth tokens if not yet initialized
 			if (_authorityTokens == null)
-                Platform.GetService((IAuthenticationService service) => _authorityTokens =service.GetAuthorizations(new GetAuthorizationsRequest(_identity.Name, _sessionToken)).AuthorityTokens);
+				Platform.GetService((IAuthenticationService service) => _authorityTokens = service.GetAuthorizations(new GetAuthorizationsRequest(_identity.Name, _sessionToken)).AuthorityTokens);
 
 			// check that the user was granted this token
 			return CollectionUtils.Contains(_authorityTokens, token => token == role);

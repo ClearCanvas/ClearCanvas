@@ -55,5 +55,18 @@ namespace ClearCanvas.Common.Utilities
         {
             return dt.ToString("s");
         }
+
+        public static TimeSpan? ParseTimeSpan(string timeSpan)
+        {
+            if (string.IsNullOrEmpty(timeSpan))
+                return null;
+
+            return TimeSpan.ParseExact(timeSpan, "c", null);
+        }
+
+        public static string FormatTimeSpan(TimeSpan ts)
+        {
+            return ts.ToString("c");
+        }
     }
 }

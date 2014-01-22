@@ -31,6 +31,7 @@ namespace ClearCanvas.ImageServer.Model
     using ClearCanvas.Dicom;
     using ClearCanvas.Enterprise.Core;
     using ClearCanvas.ImageServer.Enterprise;
+    using ClearCanvas.ImageServer.Enterprise.Command;
     using ClearCanvas.ImageServer.Model.EntityBrokers;
 
     [Serializable]
@@ -49,6 +50,7 @@ namespace ClearCanvas.ImageServer.Model
             ,String _responsiblePerson_
             ,String _responsibleOrganization_
             ,XmlDocument _queryXml_
+            ,String _qCOutput_
             ,String _specificCharacterSet_
             ,ServerEntityKey _studyStorageKey_
             ,String _patientsName_
@@ -74,6 +76,7 @@ namespace ClearCanvas.ImageServer.Model
             ResponsiblePerson = _responsiblePerson_;
             ResponsibleOrganization = _responsibleOrganization_;
             QueryXml = _queryXml_;
+            QCOutput = _qCOutput_;
             SpecificCharacterSet = _specificCharacterSet_;
             StudyStorageKey = _studyStorageKey_;
             PatientsName = _patientsName_;
@@ -126,6 +129,9 @@ namespace ClearCanvas.ImageServer.Model
         { get { return _QueryXml; } set { _QueryXml = value; } }
         [NonSerialized]
         private XmlDocument _QueryXml;
+        [EntityFieldDatabaseMappingAttribute(TableName="Study", ColumnName="QCOutput")]
+        public String QCOutput
+        { get; set; }
         [DicomField(DicomTags.SpecificCharacterSet, DefaultValue = DicomFieldDefault.Null)]
         [EntityFieldDatabaseMappingAttribute(TableName="Study", ColumnName="SpecificCharacterSet")]
         public String SpecificCharacterSet
@@ -186,9 +192,9 @@ namespace ClearCanvas.ImageServer.Model
         #region Static Methods
         static public Study Load(ServerEntityKey key)
         {
-            using (var read = PersistentStoreRegistry.GetDefaultStore().OpenReadContext())
+            using (var context = new ServerExecutionContext())
             {
-                return Load(read, key);
+                return Load(context.ReadContext, key);
             }
         }
         static public Study Load(IPersistenceContext read, ServerEntityKey key)
@@ -219,6 +225,7 @@ namespace ClearCanvas.ImageServer.Model
             updateColumns.ResponsiblePerson = entity.ResponsiblePerson;
             updateColumns.ResponsibleOrganization = entity.ResponsibleOrganization;
             updateColumns.QueryXml = entity.QueryXml;
+            updateColumns.QCOutput = entity.QCOutput;
             updateColumns.SpecificCharacterSet = entity.SpecificCharacterSet;
             updateColumns.StudyStorageKey = entity.StudyStorageKey;
             updateColumns.PatientsName = entity.PatientsName;

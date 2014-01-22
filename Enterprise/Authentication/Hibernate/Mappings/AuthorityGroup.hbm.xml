@@ -7,7 +7,8 @@
     <version name="Version" column="Version_"/>
     <property name="Name" column="Name_" type="String" length="100" not-null="true" unique="true"/>
     <property name="Description" column="Description_" type="String" length="255" not-null="false" unique="false"/>
-    <property name="DataGroup" column="DataGroup_" type="Boolean" not-null="true"/>
+		<property name="BuiltIn" column="BuiltIn_" type="Boolean" not-null="true"/>
+		<property name="DataGroup" column="DataGroup_" type="Boolean" not-null="true"/>
     <set name="AuthorityTokens" table="AuthorityTokenAuthorityGroup_" lazy="true" cascade="all" access="nosetter.camelcase-underscore">
       <key column="AuthorityGroupOID_"/>
       <many-to-many column="AuthorityTokenOID_" class="AuthorityToken" fetch="join"/>

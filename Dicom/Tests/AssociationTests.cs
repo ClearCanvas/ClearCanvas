@@ -228,11 +228,21 @@ namespace ClearCanvas.Dicom.Tests
 
         }
 
-        public void OnReceiveAbort(DicomServer server, ServerAssociationParameters association, DicomAbortSource source, DicomAbortReason reason)
+	    public void OnReceiveDimseCommand(DicomServer server, ServerAssociationParameters association, byte presentationId,
+	                                      DicomAttributeCollection command)
+	    {
+	    }
+
+	    public IDicomFilestreamHandler OnStartFilestream(DicomServer server, ServerAssociationParameters association,
+	                                                     byte presentationId, DicomMessage message)
+	    {
+		    throw new NotImplementedException();
+	    }
+
+	    public void OnReceiveAbort(DicomServer server, ServerAssociationParameters association, DicomAbortSource source, DicomAbortReason reason)
         {
             throw new Exception("The method or operation is not implemented.");
         }
-
         #endregion
     }
 

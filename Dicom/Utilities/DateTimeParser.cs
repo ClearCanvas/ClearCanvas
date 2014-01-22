@@ -29,11 +29,11 @@ namespace ClearCanvas.Dicom.Utilities
 {
 	public static class DateTimeParser
 	{
-	    /// TODO (CR Sep 2011): Are we sure this is 100% correct?
+		// TODO (CR Sep 2011): Are we sure this is 100% correct?
 		public static readonly string DicomFullDateTimeFormatWithTimeZone = "yyyyMMddHHmmss.ffffff&zzzz";
 		public static readonly string DicomFullDateTimeFormat = "yyyyMMddHHmmss.ffffff";
 
-		private static readonly char[] _plusMinus = { '+', '-' };
+		private static readonly char[] _plusMinus = {'+', '-'};
 
 		/// <summary>
 		/// Attempts to parse the time string exactly, according to accepted Dicom datetime format(s).
@@ -61,7 +61,7 @@ namespace ClearCanvas.Dicom.Utilities
 		public static bool Parse(string dicomDateTime, out DateTime dateTime)
 		{
 			dateTime = new DateTime();
-			
+
 			if (String.IsNullOrEmpty(dicomDateTime))
 				return false;
 
@@ -71,25 +71,25 @@ namespace ClearCanvas.Dicom.Utilities
 			string offsetString = String.Empty;
 			if (plusMinusIndex > 0)
 			{
-                //It has to be at least beyond the "day" ... there's probably even more complex rules, but I don't think we need to go nuts.
-                if (plusMinusIndex < 8)
-                    return false;
+				//It has to be at least beyond the "day" ... there's probably even more complex rules, but I don't think we need to go nuts.
+				if (plusMinusIndex < 8)
+					return false;
 
 				offsetString = dateTimeString.Substring(plusMinusIndex);
 				dateTimeString = dateTimeString.Remove(plusMinusIndex);
 			}
 
 			string dateString;
-            string timeString = String.Empty;
-            if (dateTimeString.Length >= 8)
-            {
-                dateString = dateTimeString.Substring(0, 8);
-                timeString = dateTimeString.Substring(8);
-            }
+			string timeString = String.Empty;
+			if (dateTimeString.Length >= 8)
+			{
+				dateString = dateTimeString.Substring(0, 8);
+				timeString = dateTimeString.Substring(8);
+			}
 			else
-            {
-                dateString = dateTimeString;
-            }
+			{
+				dateString = dateTimeString;
+			}
 
 			int hourOffset = 0;
 			int minuteOffset = 0;
@@ -113,12 +113,12 @@ namespace ClearCanvas.Dicom.Utilities
 			}
 
 			DateTime date;
-            var formats = new[] { "yyyy", "yyyyMM", "yyyyMMdd" };
-            //We do this independently of DateParser here because the rules are slightly different than for a date.
-            //In DICOM, DT values can exclude the month and/or day, whereas DA values cannot.
-            //The rules for the time component are the same as for TM, so we use TimeParser.
-            if (!DateTime.TryParseExact(dateString, formats, CultureInfo.InvariantCulture, DateTimeStyles.None, out date))
-                return false;
+			var formats = new[] {"yyyy", "yyyyMM", "yyyyMMdd"};
+			//We do this independently of DateParser here because the rules are slightly different than for a date.
+			//In DICOM, DT values can exclude the month and/or day, whereas DA values cannot.
+			//The rules for the time component are the same as for TM, so we use TimeParser.
+			if (!DateTime.TryParseExact(dateString, formats, CultureInfo.InvariantCulture, DateTimeStyles.None, out date))
+				return false;
 
 			DateTime time = new DateTime(); //zero datetime
 			if (!String.IsNullOrEmpty(timeString))
@@ -130,7 +130,7 @@ namespace ClearCanvas.Dicom.Utilities
 			dateTime = date;
 			dateTime = dateTime.AddHours(hourOffset);
 			dateTime = dateTime.AddMinutes(minuteOffset);
-            dateTime = dateTime.Add(time.TimeOfDay);
+			dateTime = dateTime.Add(time.TimeOfDay);
 
 			return true;
 		}
@@ -151,7 +151,6 @@ namespace ClearCanvas.Dicom.Utilities
 			{
 				return datetime.ToString(DicomFullDateTimeFormat, CultureInfo.InvariantCulture);
 			}
-            
 		}
 
 		/// <summary>
@@ -163,7 +162,7 @@ namespace ClearCanvas.Dicom.Utilities
 		/// <param name="dicomDateTime">The dicom date time.</param>
 		/// <param name="dicomDate">The dicom date.</param>
 		/// <param name="dicomTime">The dicom time.</param>
-        /// <param name="outDateTime">The date time.</param>
+		/// <param name="outDateTime">The date time.</param>
 		/// <returns></returns>
 		public static bool ParseDateAndTime(string dicomDateTime, string dicomDate, string dicomTime, out DateTime outDateTime)
 		{
@@ -174,29 +173,29 @@ namespace ClearCanvas.Dicom.Utilities
 			// First try to do dateValue and timeValue separately - if both are there then set 
 			// dateTimeConcat, and then parse dateTimeConcat the same as if dateTimeValue was set
 			if (dateTimeValue != String.Empty)
-			    return Parse(dateTimeValue, out outDateTime);
+				return Parse(dateTimeValue, out outDateTime);
 
-            string dateValue = dicomDate == null ? String.Empty : dicomDate.Trim();
-            string timeValue = dicomTime == null ? String.Empty : dicomTime.Trim();
+			string dateValue = dicomDate == null ? String.Empty : dicomDate.Trim();
+			string timeValue = dicomTime == null ? String.Empty : dicomTime.Trim();
 
-		    if (dateValue == String.Empty)
-		        return false;
+			if (dateValue == String.Empty)
+				return false;
 
-		    DateTime date;
-		    if (!DateParser.Parse(dateValue, out date))
-		        return false;
+			DateTime date;
+			if (!DateParser.Parse(dateValue, out date))
+				return false;
 
-		    outDateTime = date;
-            if (timeValue == String.Empty)
-		        return true;
+			outDateTime = date;
+			if (timeValue == String.Empty)
+				return true;
 
-            //Even though we have the date, the time is wrong. The "out" parameter will still have the parsed date in it if anyone cares.
-		    DateTime time;
-		    if (!TimeParser.Parse(timeValue, out time))
-		        return false;
+			//Even though we have the date, the time is wrong. The "out" parameter will still have the parsed date in it if anyone cares.
+			DateTime time;
+			if (!TimeParser.Parse(timeValue, out time))
+				return false;
 
-		    outDateTime = outDateTime.Add(time.TimeOfDay);
-		    return true;
+			outDateTime = outDateTime.Add(time.TimeOfDay);
+			return true;
 		}
 
 		/// <summary>
@@ -324,11 +323,133 @@ namespace ClearCanvas.Dicom.Utilities
 			else
 			{
 				if (dicomTimeTag == 0)
-					SetDateAttributeValues(value,dicomAttributeProvider[dicomDateTag]);
+					SetDateAttributeValues(value, dicomAttributeProvider[dicomDateTag]);
 				else
 					SetDateTimeAttributeValues(value, dicomAttributeProvider[dicomDateTag], dicomAttributeProvider[dicomTimeTag]);
 			}
 		}
 
+		/// <summary>
+		/// Gets the date component of the DICOM DT (date/time) string as a DA (date) string.
+		/// </summary>
+		/// <param name="dateTimeString">A DICOM DT string.</param>
+		/// <returns>The date component of the DT string as a DA string.</returns>
+		public static string GetDateAttributeValues(string dateTimeString)
+		{
+			if (string.IsNullOrEmpty(dateTimeString)) return string.Empty;
+
+			// DA is always YYYYMMDD, while DT could be as short as YYYY, so we default month/day to 01 if necessary by padding 0101 before we pull the date substring
+			return dateTimeString.Length >= 4 ? string.Concat(dateTimeString, "0101").Substring(0, 8) : dateTimeString;
+		}
+
+		/// <summary>
+		/// Gets the date value of a DICOM DT attribute or a DA attribute, formatted as a DA string.
+		/// </summary>
+		/// <param name="dicomAttributeProvider">The source DICOM data set.</param>
+		/// <param name="dicomDateTimeTag">The DT tag.</param>
+		/// <param name="dicomDateTag">The DA tag.</param>
+		/// <returns></returns>
+		public static string GetDateAttributeValues(IDicomAttributeProvider dicomAttributeProvider, uint dicomDateTimeTag, uint dicomDateTag)
+		{
+			DicomAttribute dicomAttribute;
+
+			// if the DT attribute is present, use the date component of that
+			if (dicomDateTimeTag != 0 && dicomAttributeProvider.TryGetAttribute(dicomDateTimeTag, out dicomAttribute) && !dicomAttribute.IsEmpty)
+			{
+				var dtString = dicomAttribute.GetString(0, string.Empty);
+				if (!string.IsNullOrEmpty(dtString)) return GetDateAttributeValues(dtString);
+			}
+
+			// if the DA attribute is present, return that value
+			if (dicomDateTag != 0 && dicomAttributeProvider.TryGetAttribute(dicomDateTag, out dicomAttribute))
+				return dicomAttribute.GetString(0, string.Empty);
+			return string.Empty;
+		}
+
+		/// <summary>
+		/// Gets the time component of the DICOM DT (date/time) string as a TM (time) string.
+		/// </summary>
+		/// <param name="dateTimeString">A DICOM DT string.</param>
+		/// <returns>The time component of the DT string as a TM string.</returns>
+		public static string GetTimeAttributeValues(string dateTimeString)
+		{
+			if (string.IsNullOrEmpty(dateTimeString)) return string.Empty;
+
+			// if DT string contains a time offset component, strip it off
+			var offsetIndex = dateTimeString.IndexOfAny(_plusMinus);
+			if (offsetIndex >= 0) dateTimeString = dateTimeString.Substring(0, offsetIndex);
+
+			// TM must contain at least HH component, while DT could be as short as YYYY, so we check if the DT string is at least YYYYMMDDHH and pull everything starting at the HH component
+			return dateTimeString.Length >= 10 ? dateTimeString.Substring(8) : string.Empty;
+		}
+
+		/// <summary>
+		/// Gets the time value of a DICOM DT attribute or a TM attribute, formatted as a TM string.
+		/// </summary>
+		/// <param name="dicomAttributeProvider">The source DICOM data set.</param>
+		/// <param name="dicomDateTimeTag">The DT tag.</param>
+		/// <param name="dicomTimeTag">The TM tag.</param>
+		/// <returns></returns>
+		public static string GetTimeAttributeValues(IDicomAttributeProvider dicomAttributeProvider, uint dicomDateTimeTag, uint dicomTimeTag)
+		{
+			DicomAttribute dicomAttribute;
+
+			// if the DT attribute is present, use the time component of that
+			if (dicomDateTimeTag != 0 && dicomAttributeProvider.TryGetAttribute(dicomDateTimeTag, out dicomAttribute) && !dicomAttribute.IsEmpty)
+			{
+				var dtString = dicomAttribute.GetString(0, string.Empty);
+				if (!string.IsNullOrEmpty(dtString)) return GetTimeAttributeValues(dtString);
+			}
+
+			// if the TM attribute is present, return that value
+			if (dicomTimeTag != 0 && dicomAttributeProvider.TryGetAttribute(dicomTimeTag, out dicomAttribute))
+				return dicomAttribute.GetString(0, string.Empty);
+			return string.Empty;
+		}
+
+		/// <summary>
+		/// Gets the concatenation of a DICOM DA (date) and TM (time) string as a DT (date/time) string/
+		/// </summary>
+		/// <param name="dateString">A DICOM DA string.</param>
+		/// <param name="timeString">A DICOM TM string.</param>
+		/// <returns>The concatenated date/time as a DT string.</returns>
+		public static string GetDateTimeAttributeValues(string dateString, string timeString)
+		{
+			if (string.IsNullOrEmpty(dateString)) return string.Empty;
+
+			// if DA value is valid, try concatenating with the TM value if that is present, otherwise just return the DA value
+			return dateString.Length == 8 && !string.IsNullOrEmpty(timeString) ? string.Concat(dateString, timeString) : dateString;
+		}
+
+		/// <summary>
+		/// Gets the date/time value of either a DICOM DT attribute, or a concatenation of a DT attribute and a TM attribute, formatted as a DT string.
+		/// </summary>
+		/// <param name="dicomAttributeProvider">The source DICOM data set.</param>
+		/// <param name="dicomDateTimeTag">The DT tag.</param>
+		/// <param name="dicomDateTag">The DA tag.</param>
+		/// <param name="dicomTimeTag">The TM tag.</param>
+		/// <returns></returns>
+		public static string GetDateTimeAttributeValues(IDicomAttributeProvider dicomAttributeProvider, uint dicomDateTimeTag, uint dicomDateTag, uint dicomTimeTag)
+		{
+			DicomAttribute dicomAttribute;
+
+			// if the DT attribute is present, return that value
+			if (dicomDateTimeTag != 0 && dicomAttributeProvider.TryGetAttribute(dicomDateTimeTag, out dicomAttribute) && !dicomAttribute.IsEmpty)
+				return dicomAttribute.GetString(0, string.Empty);
+
+			// check for presence of DA attribute, and return that concatenated with the TM attribute value if it exists
+			if (dicomDateTag != 0 && dicomAttributeProvider.TryGetAttribute(dicomDateTag, out dicomAttribute))
+			{
+				var daString = dicomAttribute.GetString(0, string.Empty);
+				if (!string.IsNullOrEmpty(daString))
+				{
+					string tmString = null;
+					if (dicomTimeTag != 0 && dicomAttributeProvider.TryGetAttribute(dicomTimeTag, out dicomAttribute) && !dicomAttribute.IsEmpty)
+						tmString = dicomAttribute.GetString(0, string.Empty);
+					return GetDateTimeAttributeValues(daString, tmString);
+				}
+			}
+			return string.Empty;
+		}
 	}
 }

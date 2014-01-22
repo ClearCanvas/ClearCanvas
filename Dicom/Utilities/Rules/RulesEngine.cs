@@ -110,7 +110,7 @@ namespace ClearCanvas.Dicom.Utilities.Rules
         /// Execute the rules against the context for the rules.
         /// </summary>
         /// <param name="context">A class containing the context for applying the rules.</param>
-        public void Execute(TActionContext context)
+        public virtual void Execute(TActionContext context)
         {
             Statistics.ExecutionTime.Start();
 

@@ -24,6 +24,7 @@
 
 using System.Collections.Generic;
 using ClearCanvas.Common;
+using ClearCanvas.Enterprise.Common;
 using ClearCanvas.Ris.Application.Common;
 using ClearCanvas.Ris.Application.Common.TranscriptionWorkflow;
 

@@ -30,7 +30,7 @@ namespace ClearCanvas.ImageServer.Model.EntityBrokers
     using System.Xml;
     using ClearCanvas.ImageServer.Enterprise;
 
-   public class DatabaseVersionUpdateColumns : EntityUpdateColumns
+   public partial class DatabaseVersionUpdateColumns : EntityUpdateColumns
    {
        public DatabaseVersionUpdateColumns()
        : base("DatabaseVersion_")

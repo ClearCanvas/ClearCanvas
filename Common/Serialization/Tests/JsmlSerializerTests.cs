@@ -170,7 +170,6 @@ namespace ClearCanvas.Common.Serialization.Tests
             }
 		}
 
-		/// </summary>
 		[DataContract]
 		class TestContract3
 		{
@@ -261,6 +260,12 @@ namespace ClearCanvas.Common.Serialization.Tests
 		public JsmlSerializerTests()
 		{
 			Platform.SetExtensionFactory(new UnitTestExtensionFactory());
+		}
+
+		[TestFixtureSetUp]
+		public void InitTest()
+		{
+			PolymorphicDataContractHook<TestPolyDataContractAttribute>.ClearKnownTypes();
 		}
 
 		[Test]
@@ -568,14 +573,29 @@ namespace ClearCanvas.Common.Serialization.Tests
 		{
 			var now = DateTime.Now;
 			var nowWithoutMilliseconds = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second);
-			DateTime? nullable = nowWithoutMilliseconds;
+			var nullable = (DateTime?)nowWithoutMilliseconds;
 
 			SerializeHelper(nullable, string.Format("<Tag>{0}</Tag>", DateTimeUtils.FormatISO(nullable.Value)));
 			DeserializeHelper(nullable, string.Format("<Tag>{0}</Tag>", DateTimeUtils.FormatISO(nullable.Value)));
+		}
 
-			nullable = null;
-			SerializeHelper(nullable, null);
-			DeserializeHelper(nullable, null);
+		[Test]
+		public void Test_TimeSpan()
+		{
+			var oneHour = new TimeSpan(1, 0, 0);
+
+			SerializeHelper(oneHour, string.Format("<Tag>{0}</Tag>", DateTimeUtils.FormatTimeSpan(oneHour)));
+			DeserializeHelper(oneHour, string.Format("<Tag>{0}</Tag>", DateTimeUtils.FormatTimeSpan(oneHour)));
+		}
+
+		[Test]
+		public void Test_NullableTimeSpan()
+		{
+			var oneHour = new TimeSpan(1, 0, 0);
+			TimeSpan? nullable = oneHour;
+
+			SerializeHelper(nullable, string.Format("<Tag>{0}</Tag>", DateTimeUtils.FormatTimeSpan(nullable.Value)));
+			DeserializeHelper(nullable, string.Format("<Tag>{0}</Tag>", DateTimeUtils.FormatTimeSpan(nullable.Value)));
 		}
 
 		[Test]
@@ -707,18 +727,6 @@ namespace ClearCanvas.Common.Serialization.Tests
 			SerializeHelper(intStrDictionary, "<Tag type=\"hash\">\r\n  <0>value</0>\r\n</Tag>");
 			DeserializeHelper(intStrDictionary, "<Tag type=\"hash\">\r\n  <0>value</0>\r\n</Tag>");
 			DeserializeHelper(intStrDictionary, "<Tag hash=\"true\">\r\n  <0>value</0>\r\n</Tag>");
-		}
-
-		[Test]
-		[ExpectedException(typeof(ArgumentException))]
-		public void Test_Dictionary_InvalidValueType()
-		{
-			// Only IDictionary<string, T>, where T is a JSML-serializable type, is supported.
-			var dictionary = new Dictionary<string, TimeSpan>();
-			dictionary["key"] = new TimeSpan(1, 0, 0);
-			SerializeHelper(dictionary, "<Tag type=\"hash\">\r\n  <key>01:00:00</key>\r\n</Tag>");
-			DeserializeHelper(dictionary, "<Tag type=\"hash\">\r\n  <key>01:00:00</key>\r\n</Tag>");
-			DeserializeHelper(dictionary, "<Tag hash=\"true\">\r\n  <key>01:00:00</key>\r\n</Tag>");
 		}
 
 		[Test]

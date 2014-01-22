@@ -145,6 +145,7 @@
     <Compile Include="Annotations\Dicom\DicomFilteredAnnotationLayout.cs" />
     <Compile Include="Annotations\Dicom\DicomFilteredAnnotationLayoutStore.cs" />
     <Compile Include="Annotations\Dicom\DicomFixedAnnotationLayoutFactory.cs" />
+    <Compile Include="Annotations\Dicom\Tests\DicomFilteredAnnotationLayoutTests.cs" />
     <Compile Include="Annotations\IAnnotationResourceResolver.cs" />
     <Compile Include="Annotations\MammogramAnnotationLayoutProxy.cs" />
     <Compile Include="Automation\Annotations.cs" />
@@ -166,13 +167,35 @@
       <DependentUpon>MouseToolSettings.settings</DependentUpon>
     </Compile>
     <Compile Include="BaseTools\MouseToolSettingsProfile.cs" />
+    <Compile Include="BasicPresentationImage3D.cs" />
+    <Compile Include="Graphics3D\BoundableGraphic3D.cs" />
+    <Compile Include="Graphics3D\CompositeGraphic3D.cs" />
+    <Compile Include="Graphics3D\CompositeRootModel3D.cs" />
+    <Compile Include="Graphics3D\Graphic3D.cs" />
+    <Compile Include="Graphics3D\GraphicCollection3D.cs" />
+    <Compile Include="Graphics3D\IGraphic3D.cs" />
+    <Compile Include="Graphics3D\IOverlayGraphics3DProvider.cs" />
+    <Compile Include="Graphics3D\ISpatialTransform3D.cs" />
+    <Compile Include="Graphics3D\ISpatialTransform3DProvider.cs" />
+    <Compile Include="Graphics3D\PointChanged3DEventArgs.cs" />
+    <Compile Include="Graphics3D\RootModelSpatialTransform.cs" />
+    <Compile Include="Graphics3D\SpatialTransform3D.cs" />
+    <Compile Include="Graphics3D\SpatialTransform3DImageOperation.cs" />
+    <Compile Include="Graphics3D\EllipsoidPrimitive.cs" />
+    <Compile Include="Graphics3D\TransformMatrixHelpers.cs" />
+    <Compile Include="Graphics3D\VectorGraphic3D.cs" />
+    <Compile Include="Graphics3D\VisualStateChanged3DEventArgs.cs" />
+    <Compile Include="Graphics\GraphicMethods.cs" />
+    <Compile Include="Graphics\ProtractorGraphic.cs" />
     <Compile Include="Graphics\Tests\ImageGraphicTests.cs" />
+    <Compile Include="Imaging\ILutPipelineProvider.cs" />
+    <Compile Include="Imaging\MinMaxPixelLinearLut.cs" />
     <Compile Include="Imaging\PresentationLut.cs" />
     <Compile Include="Imaging\Tests\PresentationLutLinearTests.cs" />
+    <Compile Include="Imaging\Tests\VoiWindowTests.cs" />
     <Compile Include="InputManagement\MouseWheelCaptureChangedEventArgs.cs" />
     <Compile Include="InputManagement\Tests\ViewerShortcutManagerTests.cs" />
     <Compile Include="CloningExceptions.cs" />
-    <Compile Include="AuthorityTokens.cs" />
     <Compile Include="Comparers\ReverseComparer.cs" />
     <Compile Include="Graphics\ColorBarGraphic.cs" />
     <Compile Include="Graphics\GraphicFocusChangedEventArgs.cs" />
@@ -197,6 +220,9 @@
     <Compile Include="Imaging\NormalizationLutLinear.cs" />
     <Compile Include="Imaging\SimpleColorMap.cs" />
     <Compile Include="Imaging\SimpleDataModalityLut.cs" />
+    <Compile Include="InteractiveGraphics\IAnnotationGraphic.cs" />
+    <Compile Include="InteractiveGraphics\Tests\InteractiveGraphicsDemoTool.cs" />
+    <Compile Include="KeyObjects\SopInstanceReference.cs" />
     <Compile Include="Layout\HpDataContractAttribute.cs" />
     <Compile Include="Layout\HpExtensionPoints.cs" />
     <Compile Include="Layout\HpApplicabilityResult.cs" />
@@ -211,12 +237,24 @@
     <Compile Include="Layout\RectangularGrid.cs" />
     <Compile Include="Layout\Tests\HpApplicabilityResultTests.cs" />
     <Compile Include="Mathematics\Matrix3D.cs" />
+    <Compile Include="Mathematics\Rectangle3D.cs" />
+    <Compile Include="PatientPresentation.cs" />
     <Compile Include="PermissionsHelper.cs" />
+    <Compile Include="PresentationStates\Dicom\DicomGraphicAnnotationElement.cs" />
+    <Compile Include="PresentationStates\Dicom\DicomGraphicAnnotationSubject.cs" />
     <Compile Include="PresentationStates\Dicom\DicomOverlayDeserializationException.cs" />
     <Compile Include="PresentationStates\Dicom\Tests\GeneratedOverlayTestImages.cs" />
     <Compile Include="PresentationStates\Dicom\Tests\OverlayPlanePresentationTests.cs" />
     <Compile Include="PresentationStates\GeometricShutterCache.cs" />
-    <Compile Include="Rendering\FontFactory.cs" />
+    <Compile Include="Rendering\GDI\FontFactory.cs" />
+    <Compile Include="Rendering\GDI\GdiRendererFactory.cs" />
+    <Compile Include="Rendering\GDI\IGdiBuffer.cs" />
+    <Compile Include="Rendering\RendererBase2.cs" />
+    <Compile Include="Rendering\RenderingSurfaceBase.cs" />
+    <Compile Include="RoiGraphics\Analyzers\ProtractorAnalyzers.cs" />
+    <Compile Include="RoiGraphics\IRoiGraphic.cs" />
+    <Compile Include="RoiGraphics\ProtractorRoi.cs" />
+    <Compile Include="RoiGraphics\Tests\ProtractorRoiTests.cs" />
     <Compile Include="Services\LocalServiceProcess.cs" />
     <Compile Include="Services\ServiceControlSettings.cs" />
     <Compile Include="Services\ServiceControlSettings.Designer.cs">
@@ -233,6 +271,8 @@
     <Compile Include="StudyManagement\ActivityMonitorFailureWatcher.cs" />
     <Compile Include="StudyManagement\ActivityMonitorProgressBar.cs" />
     <Compile Include="StudyManagement\ActivityMonitorQuickLink.cs" />
+    <Compile Include="StudyManagement\IPatientCoordinateMapping.cs" />
+    <Compile Include="StudyManagement\IPatientCoordinateMappingProvider.cs" />
     <Compile Include="StudyManagement\LocalServerWatcher.cs" />
     <Compile Include="StudyManagement\ReindexTool.cs" />
     <Compile Include="Rendering\RenderingException.cs" />
@@ -249,9 +289,12 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>SR.resx</DependentUpon>
     </Compile>
+    <Compile Include="StudyManagement\StreamingSopDataSource.cs" />
+    <Compile Include="StudyManagement\StreamingSopFrameData.cs" />
     <Compile Include="StudyManagement\StudyExtensions.cs" />
     <Compile Include="StudyManagement\Tests\ActivityMonitorComponentTests.cs" />
     <Compile Include="StudyManagement\Tests\NormalizedPixelSpacingTests.cs" />
+    <Compile Include="StudyManagement\Tests\TestDataSource.cs" />
     <Compile Include="StudyManagement\Tests\UnitTestStudyLoader.cs" />
     <Compile Include="StudyManagement\ViewerFrameEnumerator.cs" />
     <Compile Include="StudyManagement\WeightedWindowPrefetchingStrategy.cs" />
@@ -317,11 +360,11 @@
     <Compile Include="PresentationStates\Dicom\DicomGraphicsPlaneLayers.cs" />
     <Compile Include="PresentationStates\Dicom\DicomGraphicsPlaneUserOverlays.cs" />
     <Compile Include="PresentationStates\Dicom\DicomPresentationImageCollection.cs" />
-    <Compile Include="PresentationStates\Dicom\GraphicAnnotationSerializers\CurveGraphicAnnotationSerializer.cs" />
+    <Compile Include="PresentationStates\Dicom\GraphicAnnotationSerializers\SplineGraphicAnnotationSerializer.cs" />
     <Compile Include="PresentationStates\Dicom\DicomEllipseGraphic.cs" />
     <Compile Include="PresentationStates\Dicom\OverlayPlaneGraphic.cs" />
-    <Compile Include="Graphics\FlashOverlayController.cs" />
-    <Compile Include="Graphics\CurvePrimitive.cs" />
+    <Compile Include="InteractiveGraphics\FlashOverlayController.cs" />
+    <Compile Include="Graphics\SplinePrimitive.cs" />
     <Compile Include="Graphics\IApplicationGraphicsProvider.cs" />
     <Compile Include="Graphics\IPointsGraphic.cs" />
     <Compile Include="Graphics\ITextGraphic.cs" />
@@ -549,8 +592,8 @@
     <Compile Include="PriorStudyLoader.cs" />
     <Compile Include="PresentationImageChangedEventArgs.cs" />
     <Compile Include="PresentationImageFactory.cs" />
-    <Compile Include="Rendering\BackBuffer.cs" />
-    <Compile Include="Rendering\GDIRenderer.cs" />
+    <Compile Include="Rendering\GDI\BackBuffer.cs" />
+    <Compile Include="Rendering\GDI\GdiRenderer.cs" />
     <Compile Include="Rendering\IRendererFactory.cs" />
     <Compile Include="Rendering\RendererBase.cs" />
     <Compile Include="Rendering\RendererFactoryBase.cs" />
@@ -574,7 +617,6 @@
     <Compile Include="StudyManagement\FrameDataRetrieverFactory.cs" />
     <Compile Include="StudyManagement\OpenFilesHelper.cs" />
     <Compile Include="StudyManagement\OpenStudyHelper.cs" />
-    <Compile Include="StudyManagement\SopDataCache.cs" />
     <Compile Include="StudyManagement\SopDataSource.cs" />
     <Compile Include="StudyManagement\SopValidationException.cs" />
     <Compile Include="Imaging\IVoiLutManager.cs" />
@@ -653,10 +695,10 @@
     <Compile Include="IPresentationImage.cs" />
     <Compile Include="ITile.cs" />
     <Compile Include="Rendering\DrawArgs.cs" />
-    <Compile Include="Rendering\GdiRenderingSurface.cs" />
+    <Compile Include="Rendering\GDI\GdiRenderingSurface.cs" />
     <Compile Include="Rendering\IRenderer.cs" />
     <Compile Include="Rendering\IRenderingSurface.cs" />
-    <Compile Include="StudyManagement\Tests\SopTests.cs" />
+    <Compile Include="StudyManagement\Tests\SopDataSourceTests.cs" />
     <Compile Include="StudyManagement\ValidationSettings.cs" />
     <Compile Include="StudyManagement\ValidationSettings.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -671,7 +713,6 @@
     <Compile Include="Tests\ImageBoxAndDisplaySetInteractionTest.cs" />
     <Compile Include="Tests\TestTree.cs" />
     <Compile Include="Mathematics\FloatComparer.cs" />
-    <Compile Include="Mathematics\RectF.cs" />
     <Compile Include="Mathematics\Tests\FloatComparerTest.cs" />
     <Compile Include="Mathematics\Vector.cs" />
     <Compile Include="Annotations\AnnotationItemConfigurationOptions.cs" />
@@ -738,7 +779,7 @@
     <Compile Include="PresentationImageSelectedEventArgs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RectangleChangedEventArgs.cs" />
-    <Compile Include="Rendering\ImageBuffer.cs" />
+    <Compile Include="Rendering\GDI\BitmapBuffer.cs" />
     <Compile Include="Rendering\ImageInterpolatorBilinear.cs" />
     <Compile Include="Rendering\ImageRenderer.cs" />
     <Compile Include="Mathematics\RectangleUtilities.cs" />
@@ -748,6 +789,7 @@
       <DependentUpon>SR.resx</DependentUpon>
     </Compile>
     <Compile Include="StudyManagement\ImageSop.cs" />
+    <Compile Include="StudyManagement\ImageSopMultiFrameSupport.cs" />
     <Compile Include="StudyManagement\IStudyFinder.cs" />
     <Compile Include="StudyManagement\IStudyLoader.cs" />
     <Compile Include="StudyManagement\SopCollection.cs" />
@@ -772,6 +814,31 @@
     <Compile Include="UndoableOperationCommand.cs" />
     <Compile Include="ViewerSetupHelper.cs" />
     <Compile Include="ViewerShortcutManager.cs" />
+    <Compile Include="Volumes\CreateVolumeException.cs" />
+    <Compile Include="Volumes\HelperMethods.cs" />
+    <Compile Include="Volumes\IVolumeHeader.cs" />
+    <Compile Include="Volumes\IVolumeSlicerCore.cs" />
+    <Compile Include="Volumes\IVolumeSlicerCoreProvider.cs" />
+    <Compile Include="Volumes\Tests\AbstractVolumeTest.cs" />
+    <Compile Include="Volumes\Tests\DataSetOrientation.cs" />
+    <Compile Include="Volumes\Tests\VolumeBuilderTest.cs" />
+    <Compile Include="Volumes\Tests\VolumeCacheTestTool.cs" />
+    <Compile Include="Volumes\Tests\VolumeFunction.cs" />
+    <Compile Include="Volumes\Tests\VolumeHeaderDataTests.cs" />
+    <Compile Include="Volumes\Tests\VolumeTests.cs" />
+    <Compile Include="Volumes\Volume.cs" />
+    <Compile Include="Volumes\VolumeBuilder.cs" />
+    <Compile Include="Volumes\VolumeCache.cs" />
+    <Compile Include="Volumes\VolumeClasses.cs" />
+    <Compile Include="Volumes\VolumeInterpolationMode.cs" />
+    <Compile Include="Volumes\VolumeLoader.cs" />
+    <Compile Include="Volumes\VolumeMethods.cs" />
+    <Compile Include="Volumes\VolumeProjectionMode.cs" />
+    <Compile Include="Volumes\VolumeReference.cs" />
+    <Compile Include="Volumes\VolumeHeaderData.cs" />
+    <Compile Include="Volumes\VolumeSlice.cs" />
+    <Compile Include="Volumes\VolumeSliceFactory.cs" />
+    <Compile Include="Volumes\VolumeSliceArgs.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\ClearCanvas.Common.csproj">

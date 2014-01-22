@@ -77,6 +77,8 @@ namespace ClearCanvas.ImageViewer.Layout.Basic.View.WinForms
 			this._selectedOverlaysGroupBox = new System.Windows.Forms.GroupBox();
 			this._overlaysPanel = new System.Windows.Forms.FlowLayoutPanel();
 			this._splittingGroup = new System.Windows.Forms.GroupBox();
+			this._showOriginalMultiStackSeries = new System.Windows.Forms.CheckBox();
+			this._splitStacks = new System.Windows.Forms.CheckBox();
 			this._creationGroup.SuspendLayout();
 			this._presentationGroupBox.SuspendLayout();
 			this._selectedOverlaysGroupBox.SuspendLayout();
@@ -182,6 +184,8 @@ namespace ClearCanvas.ImageViewer.Layout.Basic.View.WinForms
 			// 
 			// _splittingGroup
 			// 
+			this._splittingGroup.Controls.Add(this._showOriginalMultiStackSeries);
+			this._splittingGroup.Controls.Add(this._splitStacks);
 			this._splittingGroup.Controls.Add(this._showOriginalMultiEchoSeries);
 			this._splittingGroup.Controls.Add(this._splitEchos);
 			this._splittingGroup.Controls.Add(this._showOriginalMixedMultiframeSeries);
@@ -189,6 +193,20 @@ namespace ClearCanvas.ImageViewer.Layout.Basic.View.WinForms
 			resources.ApplyResources(this._splittingGroup, "_splittingGroup");
 			this._splittingGroup.Name = "_splittingGroup";
 			this._splittingGroup.TabStop = false;
+			// 
+			// _showOriginalMultiStackSeries
+			// 
+			resources.ApplyResources(this._showOriginalMultiStackSeries, "_showOriginalMultiStackSeries");
+			this._showOriginalMultiStackSeries.Name = "_showOriginalMultiStackSeries";
+			this._tooltip.SetToolTip(this._showOriginalMultiStackSeries, resources.GetString("_showOriginalMultiStackSeries.ToolTip"));
+			this._showOriginalMultiStackSeries.UseVisualStyleBackColor = true;
+			// 
+			// _splitStacks
+			// 
+			resources.ApplyResources(this._splitStacks, "_splitStacks");
+			this._splitStacks.Name = "_splitStacks";
+			this._tooltip.SetToolTip(this._splitStacks, resources.GetString("_splitStacks.ToolTip"));
+			this._splitStacks.UseVisualStyleBackColor = true;
 			// 
 			// DisplaySetCreationConfigurationComponentControl
 			// 
@@ -231,5 +249,7 @@ namespace ClearCanvas.ImageViewer.Layout.Basic.View.WinForms
         private System.Windows.Forms.GroupBox _splittingGroup;
         private System.Windows.Forms.GroupBox _selectedOverlaysGroupBox;
         private System.Windows.Forms.FlowLayoutPanel _overlaysPanel;
+		private System.Windows.Forms.CheckBox _showOriginalMultiStackSeries;
+		private System.Windows.Forms.CheckBox _splitStacks;
     }
 }

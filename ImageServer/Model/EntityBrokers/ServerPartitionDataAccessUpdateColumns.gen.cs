@@ -30,7 +30,7 @@ namespace ClearCanvas.ImageServer.Model.EntityBrokers
     using System.Xml;
     using ClearCanvas.ImageServer.Enterprise;
 
-   public class ServerPartitionDataAccessUpdateColumns : EntityUpdateColumns
+   public partial class ServerPartitionDataAccessUpdateColumns : EntityUpdateColumns
    {
        public ServerPartitionDataAccessUpdateColumns()
        : base("ServerPartitionDataAccess")

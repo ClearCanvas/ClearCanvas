@@ -33,10 +33,11 @@ using ClearCanvas.ImageServer.Model;
 
 namespace ClearCanvas.ImageServer.Rules.OnlineRetentionAction
 {
-	[ExtensionOf(typeof(XmlActionCompilerOperatorExtensionPoint<ServerActionContext, ServerRuleTypeEnum>))]
-    public class OnlineRetentionActionOperator :
+	[ExtensionOf(typeof(ServerRuleActionCompilerOperatorExtensionPoint))]
+	[ActionApplicability(ApplicableRuleType.OnlineRetention)]
+	public class OnlineRetentionActionOperator :
         ActionOperatorCompilerBase,
-		IXmlActionCompilerOperator<ServerActionContext, ServerRuleTypeEnum>
+		IXmlActionCompilerOperator<ServerActionContext>
     {
         public OnlineRetentionActionOperator()
             :
@@ -84,11 +85,8 @@ namespace ClearCanvas.ImageServer.Rules.OnlineRetentionAction
         }
 
 
-		public XmlSchemaElement GetSchema(ServerRuleTypeEnum ruleType)
+		public XmlSchemaElement GetSchema()
 		{
-			if (!ruleType.Equals(ServerRuleTypeEnum.OnlineRetention))
-				return null;
-
             XmlSchemaSimpleType timeUnitType = new XmlSchemaSimpleType();
 
             XmlSchemaSimpleTypeRestriction restriction = new XmlSchemaSimpleTypeRestriction();

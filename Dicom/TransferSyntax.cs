@@ -924,56 +924,55 @@ namespace ClearCanvas.Dicom
             get { return _deflate; }
         }
 
-    	/// <summary>
-    	/// Gets the <see cref="TransferSyntax"/> instance for a specific transfer syntax UID.
-    	/// </summary>
-    	public static TransferSyntax GetTransferSyntax(String uid)
-    	{
-    		TransferSyntax theSyntax;
-    		if (!_transferSyntaxes.TryGetValue(uid, out theSyntax) && !_privateTransferSyntaxes.TryGetValue(uid, out theSyntax))
-    			return null;
+        /// <summary>
+        /// Gets the <see cref="TransferSyntax"/> instance for a specific transfer syntax UID.
+        /// </summary>
+        public static TransferSyntax GetTransferSyntax(String uid)
+        {
+            TransferSyntax theSyntax;
+            if (!_transferSyntaxes.TryGetValue(uid, out theSyntax) && !_privateTransferSyntaxes.TryGetValue(uid, out theSyntax))
+                return null;
 
-    		return theSyntax;
-    	}
+            return theSyntax;
+        }
 
-    	/// <summary>
-    	/// Enumerates all registered transfer syntaxes.
-    	/// </summary>
-    	public static IEnumerable<TransferSyntax> TransferSyntaxes
-    	{
-    		get { return _transferSyntaxes.Values.Concat(_privateTransferSyntaxes.Values); }
-    	}
+        /// <summary>
+        /// Enumerates all registered transfer syntaxes.
+        /// </summary>
+        public static IEnumerable<TransferSyntax> TransferSyntaxes
+        {
+            get { return _transferSyntaxes.Values.Concat(_privateTransferSyntaxes.Values); }
+        }
 
-    	/// <summary>
-    	/// Enumerates all registered transfer syntax UIDs.
-    	/// </summary>
-    	public static IEnumerable<string> TransferSyntaxUids
-    	{
-    		get { return _transferSyntaxes.Keys.Concat(_privateTransferSyntaxes.Keys); }
-    	}
+        /// <summary>
+        /// Enumerates all registered transfer syntax UIDs.
+        /// </summary>
+        public static IEnumerable<string> TransferSyntaxUids
+        {
+            get { return _transferSyntaxes.Keys.Concat(_privateTransferSyntaxes.Keys); }
+        }
 
-    	/// <summary>
-    	/// Registers a private transfer syntax.
-    	/// </summary>
-    	/// <param name="transferSyntax">The private transfer syntax to reigster.</param>
-    	public static void RegisterTransferSyntax(TransferSyntax transferSyntax)
-    	{
-    		Platform.CheckForNullReference(transferSyntax, "transferSyntax");
-    		Platform.CheckTrue(!_transferSyntaxes.ContainsKey(transferSyntax.UidString), "Cannot redefine a standard transfer syntax.");
-    		Platform.CheckTrue(!_privateTransferSyntaxes.ContainsKey(transferSyntax.UidString), "The specified private transfer syntax UID is already defined.");
-    		_privateTransferSyntaxes.Add(transferSyntax.UidString, transferSyntax);
-    	}
+        /// <summary>
+        /// Registers a private transfer syntax.
+        /// </summary>
+        /// <param name="transferSyntax">The private transfer syntax to reigster.</param>
+        public static void RegisterTransferSyntax(TransferSyntax transferSyntax)
+        {
+            Platform.CheckForNullReference(transferSyntax, "transferSyntax");
+            Platform.CheckTrue(!_transferSyntaxes.ContainsKey(transferSyntax.UidString), "Cannot redefine a standard transfer syntax.");
+            Platform.CheckTrue(!_privateTransferSyntaxes.ContainsKey(transferSyntax.UidString), "The specified private transfer syntax UID is already defined.");
+            _privateTransferSyntaxes.Add(transferSyntax.UidString, transferSyntax);
+        }
 
-    	/// <summary>
-    	/// Unregisters a private transfer syntax.
-    	/// </summary>
-    	/// <param name="transferSyntax">The private transfer syntax to unreigster.</param>
-    	public static void UnregisterTransferSyntax(TransferSyntax transferSyntax)
-    	{
-    		Platform.CheckForNullReference(transferSyntax, "transferSyntax");
-    		_privateTransferSyntaxes.Remove(transferSyntax.UidString);
-    	}
-
+        /// <summary>
+        /// Unregisters a private transfer syntax.
+        /// </summary>
+        /// <param name="transferSyntax">The private transfer syntax to unreigster.</param>
+        public static void UnregisterTransferSyntax(TransferSyntax transferSyntax)
+        {
+            Platform.CheckForNullReference(transferSyntax, "transferSyntax");
+            _privateTransferSyntaxes.Remove(transferSyntax.UidString);
+        }
         static TransferSyntax()
         {
             _transferSyntaxes.Add(DeflatedExplicitVrLittleEndianUid,

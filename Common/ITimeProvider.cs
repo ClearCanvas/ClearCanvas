@@ -26,18 +26,18 @@ using System;
 
 namespace ClearCanvas.Common
 {
-    /// <summary>
-    /// An interface for a time provider.
-    /// </summary>
-    /// <remarks>
-    /// The framework provides an <see cref="ITimeProvider"/> (<see cref="Platform.Time"/>),
-    /// which uses the <see cref="TimeProviderExtensionPoint"/> internally.
-    /// </remarks>
+	/// <summary>
+	/// Defines the interface to a time provider.
+	/// </summary>
+	/// <remarks>
+	/// Applications should call <see cref="Platform.Time"/> rather than making direct use of a time provider.
+	/// </remarks>
 	public interface ITimeProvider
-    {
+	{
 		/// <summary>
-		/// Gets the current date and time.
+		/// Gets the current date and time, in either local or UTC.
 		/// </summary>
-		DateTime CurrentTime { get; }
-    }
+		/// <param name="kind"> </param>
+		DateTime GetCurrentTime(DateTimeKind kind);
+	}
 }

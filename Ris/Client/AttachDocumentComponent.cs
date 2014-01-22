@@ -27,6 +27,7 @@ using ClearCanvas.Common;
 using ClearCanvas.Desktop;
 using System.Collections;
 using ClearCanvas.Desktop.Validation;
+using ClearCanvas.Enterprise.Common;
 using ClearCanvas.Ris.Application.Common;
 using ClearCanvas.Ris.Application.Common.Documents;
 using System.Collections.Generic;

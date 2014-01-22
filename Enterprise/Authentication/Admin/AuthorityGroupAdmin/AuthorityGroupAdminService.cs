@@ -38,58 +38,37 @@ namespace ClearCanvas.Enterprise.Authentication.Admin.AuthorityGroupAdmin
 	[ExtensionOf(typeof(CoreServiceExtensionPoint))]
 	[ServiceImplementsContract(typeof(IAuthorityGroupAdminService))]
 	public class AuthorityGroupAdminService : CoreServiceLayer, IAuthorityGroupAdminService
-    {
-        #region Private Members
-        
-        /// <summary>
-        /// Gets the user specified by the user name, or null if no such user exists.
-        /// </summary>
-        /// <param name="userName"></param>
-        /// <param name="persistenceContext"
-        /// <returns></returns>
-        private User GetUser(string userName, IPersistenceContext persistenceContext)
-        {
-            var criteria = new UserSearchCriteria();
-            criteria.UserName.EqualTo(userName);
+	{
+		#region IAuthorityGroupAdminService Members
 
-            // use query caching here to make this fast (assuming the user table is not often updated)
-            var users = persistenceContext.GetBroker<IUserBroker>().Find(
-                criteria, new SearchResultPage(0, 1), new EntityFindOptions { Cache = true });
-
-            // bug #3701: to ensure the username match is case-sensitive, we need to compare the stored name to the supplied name
-            // returns null if no match
-            return CollectionUtils.SelectFirst(users, u => u.UserName == userName);
-        }
-        
-        #endregion
-
-        #region IAuthorityGroupAdminService Members
-
-        [ReadOperation]
+		[ReadOperation]
 		[PrincipalPermission(SecurityAction.Demand, Role = AuthorityTokens.Admin.Security.AuthorityGroup)]
 		[PrincipalPermission(SecurityAction.Demand, Role = AuthorityTokens.Admin.Security.User)]
 		public ListAuthorityGroupsResponse ListAuthorityGroups(ListAuthorityGroupsRequest request)
 		{
 			var criteria = new AuthorityGroupSearchCriteria();
 			criteria.Name.SortAsc(0);
-            if (request.DataGroup.HasValue)
-                criteria.DataGroup.EqualTo(request.DataGroup.Value);
+			if (request.DataGroup.HasValue)
+				criteria.DataGroup.EqualTo(request.DataGroup.Value);
 
-            var assembler = new AuthorityGroupAssembler();
-            if (request.Details.HasValue && request.Details.Value)
-            {
-                var authorityGroups = CollectionUtils.Map(
-                 PersistenceContext.GetBroker<IAuthorityGroupBroker>().Find(criteria, request.Page),
-                 (AuthorityGroup authorityGroup) => assembler.CreateAuthorityGroupDetail(authorityGroup));
-                return new ListAuthorityGroupsResponse(authorityGroups);
-            }
-            else
-            {
-                var authorityGroups = CollectionUtils.Map(
-                    PersistenceContext.GetBroker<IAuthorityGroupBroker>().Find(criteria, request.Page),
-                    (AuthorityGroup authorityGroup) => assembler.CreateAuthorityGroupSummary(authorityGroup));
-                return new ListAuthorityGroupsResponse(authorityGroups);
-            }
+			var broker = PersistenceContext.GetBroker<IAuthorityGroupBroker>();
+			var assembler = new AuthorityGroupAssembler();
+			if (request.Details.HasValue && request.Details.Value)
+			{
+				var authorityGroups = CollectionUtils.Map(
+				 broker.Find(criteria, request.Page),
+				 (AuthorityGroup authorityGroup) => assembler.CreateAuthorityGroupDetail(authorityGroup));
+				var total = broker.Count(criteria);
+				return new ListAuthorityGroupsResponse(authorityGroups, (int)total);
+			}
+			else
+			{
+				var authorityGroups = CollectionUtils.Map(
+					broker.Find(criteria, request.Page),
+					(AuthorityGroup authorityGroup) => assembler.CreateAuthorityGroupSummary(authorityGroup));
+				var total = broker.Count(criteria);
+				return new ListAuthorityGroupsResponse(authorityGroups, (int)total);
+			}
 		}
 
 		[ReadOperation]
@@ -117,6 +96,12 @@ namespace ClearCanvas.Enterprise.Authentication.Admin.AuthorityGroupAdmin
 		[PrincipalPermission(SecurityAction.Demand, Role = AuthorityTokens.Admin.Security.AuthorityGroup)]
 		public AddAuthorityGroupResponse AddAuthorityGroup(AddAuthorityGroupRequest request)
 		{
+			Platform.CheckForNullReference(request, "request");
+			Platform.CheckMemberIsSet(request.AuthorityGroupDetail, "AuthorityGroupDetail");
+
+			if (request.AuthorityGroupDetail.BuiltIn)
+				throw new RequestValidationException(SR.MessageCannotManageBuiltInAuthorityGroups);
+
 			// create new group
 			var authorityGroup = new AuthorityGroup();
 
@@ -135,17 +120,22 @@ namespace ClearCanvas.Enterprise.Authentication.Admin.AuthorityGroupAdmin
 		[PrincipalPermission(SecurityAction.Demand, Role = AuthorityTokens.Admin.Security.AuthorityGroup)]
 		public UpdateAuthorityGroupResponse UpdateAuthorityGroup(UpdateAuthorityGroupRequest request)
 		{
-			var authorityGroup = PersistenceContext.Load<AuthorityGroup>(request.AuthorityGroupDetail.AuthorityGroupRef);
+			Platform.CheckForNullReference(request, "request");
+			Platform.CheckMemberIsSet(request.AuthorityGroupDetail, "AuthorityGroupDetail");
 
-            if (authorityGroup.DataGroup && !request.AuthorityGroupDetail.DataGroup)
-            {
-                var user = GetUser(Thread.CurrentPrincipal.Identity.Name, PersistenceContext);
-                if (!user.Password.Verify(request.Password))
-                {
-                    // the error message is deliberately vague
-                    throw new UserAccessDeniedException(); 
-                }
-            }
+			var authorityGroup = PersistenceContext.Load<AuthorityGroup>(request.AuthorityGroupDetail.AuthorityGroupRef);
+			if (authorityGroup.BuiltIn || request.AuthorityGroupDetail.BuiltIn)
+				throw new RequestValidationException(SR.MessageCannotManageBuiltInAuthorityGroups);
+
+			if (authorityGroup.DataGroup && !request.AuthorityGroupDetail.DataGroup)
+			{
+				var user = GetUser(Thread.CurrentPrincipal.Identity.Name, PersistenceContext);
+				if (!user.Password.Verify(request.Password))
+				{
+					// the error message is deliberately vague
+					throw new UserAccessDeniedException();
+				}
+			}
 
 			// set properties from request
 			var assembler = new AuthorityGroupAssembler();
@@ -160,8 +150,13 @@ namespace ClearCanvas.Enterprise.Authentication.Admin.AuthorityGroupAdmin
 		[PrincipalPermission(SecurityAction.Demand, Role = AuthorityTokens.Admin.Security.AuthorityGroup)]
 		public DeleteAuthorityGroupResponse DeleteAuthorityGroup(DeleteAuthorityGroupRequest request)
 		{
+			Platform.CheckForNullReference(request, "request");
+			Platform.CheckMemberIsSet(request.AuthorityGroupRef, "AuthorityGroupRef");
+
 			var broker = PersistenceContext.GetBroker<IAuthorityGroupBroker>();
 			var authorityGroup = PersistenceContext.Load<AuthorityGroup>(request.AuthorityGroupRef, EntityLoadFlags.Proxy);
+			if (authorityGroup.BuiltIn)
+				throw new RequestValidationException(SR.MessageCannotManageBuiltInAuthorityGroups);
 
 			if (request.DeleteOnlyWhenEmpty)
 			{
@@ -214,10 +209,7 @@ namespace ClearCanvas.Enterprise.Authentication.Admin.AuthorityGroupAdmin
 			{
 				var importer = new AuthorityGroupImporter();
 				importer.Import(
-					CollectionUtils.Map(request.AuthorityGroups,
-										(AuthorityGroupDetail g) =>
-											new AuthorityGroupDefinition(g.Name, g.Description, g.DataGroup,
-												CollectionUtils.Map(g.AuthorityTokens, (AuthorityTokenSummary s) => s.Name).ToArray())),
+					CollectionUtils.Map(request.AuthorityGroups, (AuthorityGroupDetail g) => GetAuthorityGroupDefinition(g)),
 					(IUpdateContext)PersistenceContext);
 
 			}
@@ -226,5 +218,40 @@ namespace ClearCanvas.Enterprise.Authentication.Admin.AuthorityGroupAdmin
 		}
 
 		#endregion
+
+		#region Private Members
+
+		/// <summary>
+		/// Gets the user specified by the user name, or null if no such user exists.
+		/// </summary>
+		/// <param name="userName"></param>
+		/// <param name="persistenceContext"></param>
+		/// <returns></returns>
+		private static User GetUser(string userName, IPersistenceBrokerFactory persistenceContext)
+		{
+			var criteria = new UserSearchCriteria();
+			criteria.UserName.EqualTo(userName);
+
+			// use query caching here to make this fast (assuming the user table is not often updated)
+			var users = persistenceContext.GetBroker<IUserBroker>().Find(
+				criteria, new SearchResultPage(0, 1), new EntityFindOptions { Cache = true });
+
+			// bug #3701: to ensure the username match is case-sensitive, we need to compare the stored name to the supplied name
+			// returns null if no match
+			return CollectionUtils.SelectFirst(users, u => u.UserName == userName);
+		}
+
+		private static AuthorityGroupDefinition GetAuthorityGroupDefinition(AuthorityGroupDetail detail)
+		{
+			return new AuthorityGroupDefinition(
+				detail.Name,
+				detail.Description,
+				detail.DataGroup,
+				CollectionUtils.Map(detail.AuthorityTokens, (AuthorityTokenSummary s) => s.Name).ToArray(),
+				detail.BuiltIn);
+		}
+
+		#endregion
+
 	}
 }

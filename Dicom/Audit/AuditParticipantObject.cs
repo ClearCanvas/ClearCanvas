@@ -22,7 +22,6 @@
 
 #endregion
 
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -457,6 +456,58 @@ namespace ClearCanvas.Dicom.Audit
 			}
 
 			return sb.ToString();
+		}
+	}
+
+	public class HealthcareDataParticipantObject : AuditParticipantObject
+	{
+		/// <summary>
+		/// Constructor.
+		/// </summary>
+		/// <param name="role">Code representing the functional application role of Participant Object being audited</param>
+		/// <param name="objectIdType">Describes the identifier that is contained in Participant Object ID.</param>
+		/// <param name="participantObjectId">The Identifier for the participant object.</param>
+		/// <param name="participantObjectName">The name (type) of object</param>
+		/// <param name="participantObjectDetailType">The type of object encoded in <paramref name="participantObjectDetailString"/>.</param>
+		/// <param name="participantObjectDetailString">A detailed string describing the object</param>
+		public HealthcareDataParticipantObject(ParticipantObjectTypeCodeRoleEnum role, 
+			ParticipantObjectIdTypeCodeEnum objectIdType, string participantObjectId, string participantObjectName, string participantObjectDetailType, string participantObjectDetailString)
+		{
+			Platform.CheckForNullReference(participantObjectId, "participantObjectId");
+
+			ParticipantObjectTypeCode = ParticipantObjectTypeCodeEnum.SystemObject;
+			ParticipantObjectTypeCodeRole = role;
+			ParticipantObjectIdTypeCode = objectIdType;
+			_participantObjectId = participantObjectId;
+			_participantObjectName = participantObjectName;
+			if (!string.IsNullOrEmpty(participantObjectDetailType) && !string.IsNullOrEmpty(participantObjectDetailString))
+			{
+				var encoding = new ASCIIEncoding();
+				ParticipantObjectDetail = new ParticipantObjectDetail()
+					{
+						type = participantObjectDetailType,
+						value = encoding.GetBytes(participantObjectDetailString)
+					};
+			}
+		}
+
+		/// <summary>
+		/// Constructor.
+		/// </summary>
+		/// <param name="role">Code representing the functional application role of Participant Object being audited</param>
+		/// <param name="objectIdType">Describes the identifier that is contained in Participant Object ID.</param>
+		/// <param name="participantObjectId">The Identifier for the participant object.</param>
+		/// <param name="participantObjectName">The name (type) of object</param>
+		public HealthcareDataParticipantObject(ParticipantObjectTypeCodeRoleEnum role,
+			ParticipantObjectIdTypeCodeEnum objectIdType, string participantObjectId, string participantObjectName)
+		{
+			Platform.CheckForNullReference(participantObjectId, "participantObjectId");
+
+			ParticipantObjectTypeCode = ParticipantObjectTypeCodeEnum.SystemObject;
+			ParticipantObjectTypeCodeRole = role;
+			ParticipantObjectIdTypeCode = objectIdType;
+			_participantObjectId = participantObjectId;
+			_participantObjectName = participantObjectName;
 		}
 	}
 }

@@ -23,6 +23,7 @@
 #endregion
 
 using System;
+using System.ComponentModel;
 using System.Drawing;
 using System.Text;
 using ClearCanvas.Common;
@@ -33,15 +34,14 @@ using ClearCanvas.Desktop.Tools;
 using ClearCanvas.ImageViewer.Automation;
 using ClearCanvas.ImageViewer.BaseTools;
 using ClearCanvas.ImageViewer.Graphics;
+using ClearCanvas.ImageViewer.Imaging;
 using ClearCanvas.ImageViewer.InputManagement;
 using ClearCanvas.ImageViewer.StudyManagement;
-using System.ComponentModel;
-using Point=System.Drawing.Point;
 
 namespace ClearCanvas.ImageViewer.Tools.Standard
 {
 	[ExtensionPoint]
-	public sealed class ProbeToolDropDownToolExtensionPoint : ExtensionPoint<ITool> { }
+	public sealed class ProbeToolDropDownToolExtensionPoint : ExtensionPoint<ITool> {}
 
 	[MenuAction("activate", "imageviewer-contextmenu/MenuProbe", "Select", Flags = ClickActionFlags.CheckAction, InitiallyAvailable = false)]
 	[MenuAction("activate", "global-menus/MenuTools/MenuStandard/MenuProbe", "Select", Flags = ClickActionFlags.CheckAction)]
@@ -49,26 +49,24 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 	[TooltipValueObserver("activate", "Tooltip", "TooltipChanged")]
 	[MouseButtonIconSet("activate", "Icons.ProbeToolSmall.png", "Icons.ProbeToolMedium.png", "Icons.ProbeToolLarge.png")]
 	[CheckedStateObserver("activate", "Active", "ActivationChanged")]
-    [GroupHint("activate", "Tools.Image.Inspection.Probe")]
-
+	[GroupHint("activate", "Tools.Image.Inspection.Probe")]
+	//
 	[MouseToolButton(XMouseButtons.Left, false)]
-
-	#region Tool Settings Actions
-
+	//
 	[MenuAction("showRawPix", "probetool-dropdown/MenuShowRawPixelValue", "ToggleShowRawPix")]
 	[CheckedStateObserver("showRawPix", "ShowRawPix", "ShowRawPixChanged")]
 	[GroupHint("showRawPix", "Tools.Image.Inspection.Probe.Modality.CT.ShowPixel")]
-
+	//
 	[MenuAction("showVoiLut", "probetool-dropdown/MenuShowVoiPixelValue", "ToggleShowVoiLut")]
 	[CheckedStateObserver("showVoiLut", "ShowVoiLut", "ShowVoiLutChanged")]
-    [GroupHint("showVoiLut", "Tools.Image.Inspection.Probe.General.ShowVoiLut")]
-
-	#endregion
-
-	[ExtensionOf(typeof(ImageViewerToolExtensionPoint))]
-	public partial class ProbeTool : MouseImageViewerTool
+	[GroupHint("showVoiLut", "Tools.Image.Inspection.Probe.General.ShowVoiLut")]
+	//
+	[ExtensionOf(typeof (ImageViewerToolExtensionPoint))]
+	public class ProbeTool : MouseImageViewerTool, IProbe
 	{
 		private Tile _selectedTile;
+		private ISpatialTransform _selectedSpatialTransform;
+		private IPatientCoordinateMapping _selectedCoordinateMapping;
 		private ImageGraphic _selectedImageGraphic;
 		private Frame _selectedFrame;
 		private ActionModelNode _actionModel;
@@ -80,7 +78,7 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 		public ProbeTool()
 			: base(SR.TooltipProbe)
 		{
-			this.CursorToken = new CursorToken("ProbeCursor.png", this.GetType().Assembly);
+			CursorToken = new CursorToken("ProbeCursor.png", this.GetType().Assembly);
 			Behaviour |= MouseButtonHandlerBehaviour.ConstrainToTile;
 		}
 
@@ -105,13 +103,17 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 
 		public override bool Start(IMouseInformation mouseInformation)
 		{
-			if (this.SelectedImageGraphicProvider == null || SelectedImageSopProvider == null)
+			if (SelectedSpatialTransformProvider == null || SelectedImageSopProvider == null)
 				return false;
 
 			_selectedTile = mouseInformation.Tile as Tile;
+			if (_selectedTile == null) return false; // if it's not Tile, then we can't do anything
+
 			_selectedTile.InformationBox = new InformationBox();
-			_selectedImageGraphic = this.SelectedImageGraphicProvider.ImageGraphic;
+			_selectedImageGraphic = SelectedImageGraphicProvider != null ? SelectedImageGraphicProvider.ImageGraphic : null;
 			_selectedFrame = ((IImageSopProvider) SelectedPresentationImage).Frame;
+			_selectedCoordinateMapping = SelectedPresentationImage is IPatientCoordinateMappingProvider ? ((IPatientCoordinateMappingProvider) SelectedPresentationImage).PatientCoordinateMapping : null;
+			_selectedSpatialTransform = SelectedSpatialTransformProvider.SpatialTransform;
 
 			Probe(mouseInformation.Location);
 
@@ -122,11 +124,10 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 		/// Called by the framework as the mouse moves while the assigned mouse button
 		/// is pressed.
 		/// </summary>
-		/// <param name="e">Mouse event args</param>
 		/// <returns>True if the event was handled, false otherwise</returns>
 		public override bool Track(IMouseInformation mouseInformation)
 		{
-			if (_selectedTile == null || _selectedImageGraphic == null)
+			if (_selectedTile == null || _selectedSpatialTransform == null)
 				return false;
 
 			Probe(mouseInformation.Location);
@@ -137,7 +138,6 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 		/// <summary>
 		/// Called by the framework when the assigned mouse button is released.
 		/// </summary>
-		/// <param name="e">Mouse event args</param>
 		/// <returns>True if the event was handled, false otherwise</returns>
 		public override bool Stop(IMouseInformation mouseInformation)
 		{
@@ -147,11 +147,13 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 
 		public override void Cancel()
 		{
-			if (_selectedTile == null || _selectedImageGraphic == null)
+			if (_selectedTile == null || _selectedSpatialTransform == null)
 				return;
 
 			_selectedImageGraphic = null;
-
+			_selectedSpatialTransform = null;
+			_selectedFrame = null;
+			_selectedCoordinateMapping = null;
 			_selectedTile.InformationBox.Visible = false;
 			_selectedTile.InformationBox = null;
 			_selectedTile = null;
@@ -159,9 +161,9 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 
 		private void Probe(Point destinationPoint)
 		{
-			Point sourcePointRounded = Point.Truncate(_selectedImageGraphic.SpatialTransform.ConvertToSource(destinationPoint));
+			Point sourcePointRounded = Point.Truncate(_selectedSpatialTransform.ConvertToSource(destinationPoint));
 
-            ToolSettings settings = ToolSettings.DefaultInstance;
+			ToolSettings settings = ToolSettings.DefaultInstance;
 			bool showPixelValue = settings.ShowRawPixelValue;
 			bool showVoiValue = settings.ShowVOIPixelValue;
 
@@ -171,7 +173,6 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 		private void Probe(Point sourcePointRounded, bool showPixelValue, bool showVoiValue)
 		{
 			string probeString;
-			string coordinateString = String.Format(SR.FormatProbeInfo, SR.LabelLocation, string.Format(SR.FormatCoordinates, SR.LabelNotApplicable, SR.LabelNotApplicable));
 			string pixelValueString = String.Format(SR.FormatProbeInfo, SR.LabelRawPixel, SR.LabelNotApplicable);
 			string modalityLutString = String.Format(SR.FormatProbeInfo, SR.LabelModalityLut, SR.LabelNotApplicable);
 			string voiLutString = String.Format(SR.FormatProbeInfo, SR.LabelVOILut, SR.LabelNotApplicable);
@@ -179,19 +180,17 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 			try
 			{
 				var displayString = new StringBuilder();
-				if (_selectedImageGraphic.BoundingBox.Contains(sourcePointRounded))
+
+				if (_selectedImageGraphic != null && _selectedImageGraphic.BoundingBox.Contains(sourcePointRounded))
 				{
-					coordinateString = String.Format(SR.FormatProbeInfo, SR.LabelLocation, string.Format(SR.FormatCoordinates, sourcePointRounded.X, sourcePointRounded.Y));
-
-					if (_selectedImageGraphic is GrayscaleImageGraphic)
+					if (_selectedImageGraphic is ILutPipelineProvider)
 					{
-						GrayscaleImageGraphic image = _selectedImageGraphic as GrayscaleImageGraphic;
+						var luts = _selectedImageGraphic as ILutPipelineProvider;
+						var pixelValue = _selectedImageGraphic.PixelData.GetPixel(sourcePointRounded.X, sourcePointRounded.Y);
 
-						int pixelValue = 0;
-
-						GetPixelValue(image, sourcePointRounded, ref pixelValue, ref pixelValueString);
-						GetModalityLutValue(image, pixelValue, ref modalityLutString);
-						GetVoiLutValue(image, pixelValue, ref voiLutString);
+						GetPixelValue(luts, pixelValue, ref pixelValueString);
+						GetModalityLutValue(luts, pixelValue, ref modalityLutString);
+						GetVoiLutValue(luts, pixelValue, ref voiLutString);
 
 						// the modality LUT value is always shown
 						displayString.AppendLine(modalityLutString);
@@ -209,8 +208,18 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 					}
 				}
 
-				// show the coordinate last, cause it's probably the least interesting information
+				// show the coordinates last, cause it's probably the least interesting information
+				var coordinateString = String.Format(SR.FormatProbeInfo, SR.LabelLocation, string.Format(SR.FormatCoordinates, sourcePointRounded.X, sourcePointRounded.Y));
 				displayString.AppendLine(coordinateString);
+
+				var patientPoint = _selectedCoordinateMapping != null && _selectedCoordinateMapping.IsValid
+				                   	? _selectedCoordinateMapping.ConvertToPatient(sourcePointRounded)
+				                   	: _selectedFrame.ImagePlaneHelper.ConvertToPatient(sourcePointRounded);
+				if (patientPoint != null)
+				{
+					var patientString = String.Format(SR.FormatProbeInfo, SR.LabelPatientLocation, string.Format(SR.FormatCoordinates3D, patientPoint.X.ToString("f3"), patientPoint.Y.ToString("f3"), patientPoint.Z.ToString("f3")));
+					displayString.AppendLine(patientString);
+				}
 
 				probeString = displayString.ToString().Trim();
 			}
@@ -220,29 +229,28 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 				probeString = SR.MessageProbeToolError;
 			}
 
-			var destinationPoint = Point.Round(_selectedImageGraphic.SpatialTransform.ConvertToDestination(sourcePointRounded));
+			var destinationPoint = Point.Round(_selectedSpatialTransform.ConvertToDestination(sourcePointRounded));
 			_selectedTile.InformationBox.Update(probeString, destinationPoint);
 		}
 
 		private void GetPixelValue(
-			GrayscaleImageGraphic grayscaleImage,
-			Point sourcePointRounded,
-			ref int pixelValue,
+			ILutPipelineProvider luts,
+			int pixelValue,
 			ref string pixelValueString)
 		{
-			pixelValue = grayscaleImage.PixelData.GetPixel(sourcePointRounded.X, sourcePointRounded.Y);
-			pixelValueString = String.Format(SR.FormatProbeInfo, SR.LabelRawPixel, pixelValue);
+			var value = luts.LookupPixelValue(pixelValue, LutPipelineStage.Source);
+			pixelValueString = String.Format(SR.FormatProbeInfo, SR.LabelRawPixel, value);
 		}
 
 		private void GetModalityLutValue(
-			GrayscaleImageGraphic grayscaleImage,
+			ILutPipelineProvider luts,
 			int pixelValue,
 			ref string modalityLutString)
 		{
-			if (grayscaleImage.ModalityLut != null)
+			if (luts.ModalityLut != null)
 			{
-				var modalityLutValue = grayscaleImage.ModalityLut[pixelValue];
-				
+				var modalityLutValue = luts.LookupPixelValue(pixelValue, LutPipelineStage.Modality);
+
 				var modalityLutValueDisplay = modalityLutValue.ToString(_selectedFrame != null && _selectedFrame.IsSubnormalRescale ? @"G3" : @"F1");
 				if (_selectedFrame != null)
 				{
@@ -256,17 +264,13 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 		}
 
 		private void GetVoiLutValue(
-			GrayscaleImageGraphic grayscaleImage,
+			ILutPipelineProvider luts,
 			int pixelValue,
 			ref string voiLutString)
 		{
-			if (grayscaleImage.VoiLut != null)
+			if (luts.VoiLut != null)
 			{
-			    var value = grayscaleImage.ModalityLut[pixelValue];
-                if (grayscaleImage.NormalizationLut != null)
-                    value = grayscaleImage.NormalizationLut[value];
-
-                var voiLutValue = grayscaleImage.VoiLut[value];
+				var voiLutValue = luts.LookupPixelValue(pixelValue, LutPipelineStage.Voi);
 				voiLutString = String.Format(SR.FormatProbeInfo, SR.LabelVOILut, voiLutValue.ToString("F1"));
 			}
 		}
@@ -281,13 +285,12 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 		{
 			base.Initialize();
 
-            _settings = ToolSettings.DefaultInstance;
+			_settings = ToolSettings.DefaultInstance;
 			_settings.PropertyChanged += OnPropertyChanged;
 		}
 
 		protected override void Dispose(bool disposing)
 		{
-
 			_settings.PropertyChanged -= OnPropertyChanged;
 			_settings = null;
 
@@ -335,7 +338,7 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 			set
 			{
 				_settings.ShowRawPixelValue = value;
-                _settings.Save();
+				_settings.Save();
 			}
 		}
 
@@ -355,25 +358,24 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 			set
 			{
 				_settings.ShowVOIPixelValue = value;
-                _settings.Save();
-            }
+				_settings.Save();
+			}
 		}
 
 		public void ToggleShowRawPix()
 		{
-			this.ShowRawPix = !this.ShowRawPix;
+			ShowRawPix = !ShowRawPix;
 		}
 
 		public void ToggleShowVoiLut()
 		{
-			this.ShowVoiLut = !this.ShowVoiLut;
+			ShowVoiLut = !ShowVoiLut;
 		}
 
 		#endregion
-	}
 
-	partial class ProbeTool : IProbe
-	{
+		#region IProbe Implementation
+
 		void IProbe.Probe(PointF coordinate, CoordinateSystem coordinateSystem)
 		{
 			if (Context.Viewer.SelectedTile == null)
@@ -382,16 +384,18 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 			if (SelectedPresentationImage == null)
 				throw new InvalidOperationException("No image selected.");
 
-			if (SelectedImageGraphicProvider == null)
+			if (SelectedSpatialTransformProvider == null)
 				throw new InvalidOperationException("Unsupported image type selected.");
 
 			if (coordinateSystem == CoordinateSystem.Destination)
-				coordinate = SelectedImageGraphicProvider.ImageGraphic.SpatialTransform.ConvertToSource(coordinate);
+				coordinate = SelectedSpatialTransformProvider.SpatialTransform.ConvertToSource(coordinate);
 
 			_selectedTile = (Tile) Context.Viewer.SelectedTile;
 			_selectedTile.InformationBox = new InformationBox();
-			_selectedImageGraphic = SelectedImageGraphicProvider.ImageGraphic;
+			_selectedImageGraphic = SelectedImageGraphicProvider != null ? SelectedImageGraphicProvider.ImageGraphic : null;
+			_selectedSpatialTransform = SelectedSpatialTransformProvider.SpatialTransform;
 			_selectedFrame = ((IImageSopProvider) SelectedPresentationImage).Frame;
+			_selectedCoordinateMapping = SelectedPresentationImage is IPatientCoordinateMappingProvider ? ((IPatientCoordinateMappingProvider) SelectedPresentationImage).PatientCoordinateMapping : null;
 
 			Probe(Point.Truncate(coordinate), true, true);
 		}
@@ -400,5 +404,7 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 		{
 			Cancel();
 		}
+
+		#endregion
 	}
 }

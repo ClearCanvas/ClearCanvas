@@ -30,6 +30,7 @@ namespace ClearCanvas.ImageServer.Model
     using System.Xml;
     using ClearCanvas.Enterprise.Core;
     using ClearCanvas.ImageServer.Enterprise;
+    using ClearCanvas.ImageServer.Enterprise.Command;
     using ClearCanvas.ImageServer.Model.EntityBrokers;
 
     [Serializable]
@@ -44,12 +45,13 @@ namespace ClearCanvas.ImageServer.Model
             ,WorkQueueTypeEnum _workQueueTypeEnum_
             ,WorkQueueStatusEnum _workQueueStatusEnum_
             ,WorkQueuePriorityEnum _workQueuePriorityEnum_
+            ,Int32 _failureCount_
             ,DateTime _scheduledTime_
             ,DateTime _insertTime_
-            ,Int32 _failureCount_
+            ,DateTime _lastUpdatedTime_
             ,String _failureDescription_
             ,XmlDocument _data_
-            ,DateTime _lastUpdatedTime_
+            ,ServerEntityKey _externalRequestQueueKey_
             ,String _processorID_
             ,String _groupID_
             ,DateTime _expirationTime_
@@ -62,12 +64,13 @@ namespace ClearCanvas.ImageServer.Model
             WorkQueueTypeEnum = _workQueueTypeEnum_;
             WorkQueueStatusEnum = _workQueueStatusEnum_;
             WorkQueuePriorityEnum = _workQueuePriorityEnum_;
+            FailureCount = _failureCount_;
             ScheduledTime = _scheduledTime_;
             InsertTime = _insertTime_;
-            FailureCount = _failureCount_;
+            LastUpdatedTime = _lastUpdatedTime_;
             FailureDescription = _failureDescription_;
             Data = _data_;
-            LastUpdatedTime = _lastUpdatedTime_;
+            ExternalRequestQueueKey = _externalRequestQueueKey_;
             ProcessorID = _processorID_;
             GroupID = _groupID_;
             ExpirationTime = _expirationTime_;
@@ -92,14 +95,17 @@ namespace ClearCanvas.ImageServer.Model
         [EntityFieldDatabaseMappingAttribute(TableName="WorkQueue", ColumnName="WorkQueuePriorityEnum")]
         public WorkQueuePriorityEnum WorkQueuePriorityEnum
         { get; set; }
+        [EntityFieldDatabaseMappingAttribute(TableName="WorkQueue", ColumnName="FailureCount")]
+        public Int32 FailureCount
+        { get; set; }
         [EntityFieldDatabaseMappingAttribute(TableName="WorkQueue", ColumnName="ScheduledTime")]
         public DateTime ScheduledTime
         { get; set; }
         [EntityFieldDatabaseMappingAttribute(TableName="WorkQueue", ColumnName="InsertTime")]
         public DateTime InsertTime
         { get; set; }
-        [EntityFieldDatabaseMappingAttribute(TableName="WorkQueue", ColumnName="FailureCount")]
-        public Int32 FailureCount
+        [EntityFieldDatabaseMappingAttribute(TableName="WorkQueue", ColumnName="LastUpdatedTime")]
+        public DateTime LastUpdatedTime
         { get; set; }
         [EntityFieldDatabaseMappingAttribute(TableName="WorkQueue", ColumnName="FailureDescription")]
         public String FailureDescription
@@ -109,8 +115,8 @@ namespace ClearCanvas.ImageServer.Model
         { get { return _Data; } set { _Data = value; } }
         [NonSerialized]
         private XmlDocument _Data;
-        [EntityFieldDatabaseMappingAttribute(TableName="WorkQueue", ColumnName="LastUpdatedTime")]
-        public DateTime LastUpdatedTime
+        [EntityFieldDatabaseMappingAttribute(TableName="WorkQueue", ColumnName="ExternalRequestQueueGUID")]
+        public ServerEntityKey ExternalRequestQueueKey
         { get; set; }
         [EntityFieldDatabaseMappingAttribute(TableName="WorkQueue", ColumnName="ProcessorID")]
         public String ProcessorID
@@ -132,9 +138,9 @@ namespace ClearCanvas.ImageServer.Model
         #region Static Methods
         static public WorkQueue Load(ServerEntityKey key)
         {
-            using (var read = PersistentStoreRegistry.GetDefaultStore().OpenReadContext())
+            using (var context = new ServerExecutionContext())
             {
-                return Load(read, key);
+                return Load(context.ReadContext, key);
             }
         }
         static public WorkQueue Load(IPersistenceContext read, ServerEntityKey key)
@@ -161,12 +167,13 @@ namespace ClearCanvas.ImageServer.Model
             updateColumns.WorkQueueTypeEnum = entity.WorkQueueTypeEnum;
             updateColumns.WorkQueueStatusEnum = entity.WorkQueueStatusEnum;
             updateColumns.WorkQueuePriorityEnum = entity.WorkQueuePriorityEnum;
+            updateColumns.FailureCount = entity.FailureCount;
             updateColumns.ScheduledTime = entity.ScheduledTime;
             updateColumns.InsertTime = entity.InsertTime;
-            updateColumns.FailureCount = entity.FailureCount;
+            updateColumns.LastUpdatedTime = entity.LastUpdatedTime;
             updateColumns.FailureDescription = entity.FailureDescription;
             updateColumns.Data = entity.Data;
-            updateColumns.LastUpdatedTime = entity.LastUpdatedTime;
+            updateColumns.ExternalRequestQueueKey = entity.ExternalRequestQueueKey;
             updateColumns.ProcessorID = entity.ProcessorID;
             updateColumns.GroupID = entity.GroupID;
             updateColumns.ExpirationTime = entity.ExpirationTime;

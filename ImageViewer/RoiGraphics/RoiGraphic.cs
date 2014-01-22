@@ -23,13 +23,12 @@
 #endregion
 
 using System;
+using System.Threading;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.ImageViewer.Graphics;
 using ClearCanvas.ImageViewer.InteractiveGraphics;
 using ClearCanvas.ImageViewer.RoiGraphics.Analyzers;
 using ClearCanvas.ImageViewer.StudyManagement;
-using ClearCanvas.Common;
-using System.Threading;
 
 namespace ClearCanvas.ImageViewer.RoiGraphics
 {
@@ -38,7 +37,7 @@ namespace ClearCanvas.ImageViewer.RoiGraphics
 	/// subject of interest is an actual region of interest on an image.
 	/// </summary>
 	[Cloneable]
-	public class RoiGraphic : AnnotationGraphic
+	public class RoiGraphic : AnnotationGraphic, IRoiGraphic
 	{
 		private event EventHandler _roiChanged;
 		private event EventHandler _nameChanged;
@@ -52,8 +51,9 @@ namespace ClearCanvas.ImageViewer.RoiGraphics
 		//need the lock because structs cannot be volatile.
 		[CloneIgnore]
 		private readonly object _syncLock = new object();
+
 		[CloneIgnore]
-		private DateTime? _lastChange;
+		private int? _lastChange;
 
 		/// <summary>
 		/// Constructs a new instance of <see cref="RoiGraphic"/>.
@@ -100,7 +100,10 @@ namespace ClearCanvas.ImageViewer.RoiGraphics
 			if (disposing)
 			{
 				_uiThreadContext = null;
-				lock (_syncLock) { _lastChange = null; }
+				lock (_syncLock)
+				{
+					_lastChange = null;
+				}
 			}
 
 			base.Dispose(disposing);
@@ -129,7 +132,7 @@ namespace ClearCanvas.ImageViewer.RoiGraphics
 		/// </summary>
 		public new RoiCalloutGraphic Callout
 		{
-			get { return (RoiCalloutGraphic)base.Callout; }
+			get { return (RoiCalloutGraphic) base.Callout; }
 		}
 
 		/// <summary>
@@ -194,7 +197,7 @@ namespace ClearCanvas.ImageViewer.RoiGraphics
 		/// </summary>
 		public override void Refresh()
 		{
-			this.OnSubjectChanged();
+			this.OnSubjectChanged(VisualStatePropertyKind.Geometry);
 			base.Refresh();
 		}
 
@@ -232,32 +235,36 @@ namespace ClearCanvas.ImageViewer.RoiGraphics
 		/// <summary>
 		/// Called when properties on the <see cref="ControlGraphic.Subject"/> have changed.
 		/// </summary>
-		protected override sealed void OnSubjectChanged()
+		protected override sealed void OnSubjectChanged(VisualStatePropertyKind propertyKind)
 		{
-			if (this.DecoratedGraphic is IControlGraphic && SynchronizationContext.Current != null)
+			if (propertyKind == VisualStatePropertyKind.Geometry)
 			{
-				//we can't use the DelayedEventPublisher because that relies on the sync context,
-				//and we use graphics on worker threads for avi export ... so, we'll just do it custom.
-				//TODO (Time Review): use Environment.TickCount
-				lock (_syncLock) { _lastChange = Platform.Time; }
-
-				if (_uiThreadContext == null)
+				if (this.DecoratedGraphic is IControlGraphic && SynchronizationContext.Current != null)
 				{
-					_uiThreadContext = SynchronizationContext.Current;
-					ThreadPool.QueueUserWorkItem(DelayedEventThread);
+					//we can't use the DelayedEventPublisher because that relies on the sync context,
+					//and we use graphics on worker threads for avi export ... so, we'll just do it custom.
+					lock (_syncLock)
+					{
+						_lastChange = Environment.TickCount;
+					}
+
+					if (_uiThreadContext == null)
+					{
+						_uiThreadContext = SynchronizationContext.Current;
+						ThreadPool.QueueUserWorkItem(DelayedEventThread);
+					}
+
+					Analyze(true);
 				}
-
-				Analyze(true);
+				else
+				{
+					// the roi is inactive, focused or selected, but not actively
+					// moving or stretching; just do the calculation immediately.
+					Analyze(false);
+				}
+				OnRoiChanged();
 			}
-			else
-			{
-				// the roi is inactive, focused or selected, but not actively
-				// moving or stretching; just do the calculation immediately.
-				Analyze(false);
-			}
-
-			this.OnRoiChanged();
-			base.OnSubjectChanged();
+			base.OnSubjectChanged(propertyKind);
 		}
 
 		/// <summary>
@@ -282,16 +289,19 @@ namespace ClearCanvas.ImageViewer.RoiGraphics
 		private void DelayedEventThread(object nothing)
 		{
 			SynchronizationContext uiThreadContext;
-			DateTime? lastChange;
 
 			while (null != (uiThreadContext = _uiThreadContext))
 			{
-				lock (_syncLock) { lastChange = _lastChange; }
+				int? lastChange;
+				lock (_syncLock)
+				{
+					lastChange = _lastChange;
+				}
 				if (lastChange == null)
 					break;
 
-				TimeSpan timeDiff = Platform.Time.Subtract(lastChange.Value);
-				if (timeDiff.Milliseconds >= 300)
+				var timeDiff = Math.Abs(Environment.TickCount - lastChange.Value);
+				if (timeDiff >= 300)
 				{
 					uiThreadContext.Post(delegate { OnDelayedRoiChanged(); }, null);
 					break;

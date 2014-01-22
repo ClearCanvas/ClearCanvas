@@ -61,6 +61,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ImageServerWadoLoader.cs" />
     <Compile Include="WebStation\WebStationStreamingStudyLoader.cs" />
     <Compile Include="WebStation\WebStationStreamingSettings.cs" />
     <Compile Include="WebStation\WebStationStreamingSettings.Designer.cs">
@@ -75,14 +76,12 @@
       <DependentUpon>SR.resx</DependentUpon>
     </Compile>
     <Compile Include="StreamingCorePrefetchingStrategy.cs" />
-    <Compile Include="StreamingSopDataSource.cs" />
     <Compile Include="StreamingSettings.cs" />
     <Compile Include="StreamingSettings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>StreamingSettings.settings</DependentUpon>
     </Compile>
-    <Compile Include="StreamingSopFrameData.cs" />
     <Compile Include="StreamingStudyLoader.cs" />
   </ItemGroup>
   <ItemGroup>

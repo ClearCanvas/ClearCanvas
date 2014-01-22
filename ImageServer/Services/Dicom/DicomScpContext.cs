@@ -22,7 +22,7 @@
 
 #endregion
 
-using ClearCanvas.ImageServer.Common;
+using ClearCanvas.ImageServer.Core;
 using ClearCanvas.ImageServer.Model;
 
 namespace ClearCanvas.ImageServer.Services.Dicom
@@ -35,20 +35,69 @@ namespace ClearCanvas.ImageServer.Services.Dicom
         #region Constructors
         public DicomScpContext(ServerPartition partition)
         {
-            _partition = partition;
+            Partition = partition;
         }
         #endregion
 
         #region Private Members
-        private ServerPartition _partition;
+
         #endregion
 
         #region Properties
-        public ServerPartition Partition
+
+        public ServerPartition Partition { get; set; }
+
+        public ServerPartitionAlternateAeTitle AlternateAeTitle { get; set; }
+
+        public bool AllowStorage
         {
-            get { return _partition; }
-			set { _partition = value; }
+            get
+            {
+                if (AlternateAeTitle != null)
+                    return AlternateAeTitle.AllowStorage;
+
+                return true;
+            }
         }
+
+        public bool AllowQuery
+        {
+            get
+            {
+                if (AlternateAeTitle != null)
+                    return AlternateAeTitle.AllowQuery;
+
+                return true;
+            }
+        }
+
+        public bool AllowRetrieve
+        {
+            get
+            {
+                if (AlternateAeTitle != null)
+                    return AlternateAeTitle.AllowRetrieve;
+
+                return true;
+            }
+        }
+
+        public bool AllowKOPR
+        {
+            get
+            {
+                if (AlternateAeTitle != null)
+                    return AlternateAeTitle.AllowKOPR;
+
+                return false;
+            }
+        }
+
+	    public SopInstanceImporterContext FileStreamImportContext
+	    {
+		    get; set;
+	    }
+
         #endregion
     }
 }

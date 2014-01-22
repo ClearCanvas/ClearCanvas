@@ -44,6 +44,11 @@ namespace ClearCanvas.ImageViewer.Clipboard
 		IDesktopWindow DesktopWindow { get; }
 
 		/// <summary>
+		/// Gets the parent clipboard component.
+		/// </summary>
+		ClipboardComponent Component { get; }
+
+		/// <summary>
 		/// Gets a list of the items in the clipboard.
 		/// </summary>
 		IList<IClipboardItem> ClipboardItems { get; }

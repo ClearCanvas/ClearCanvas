@@ -30,15 +30,15 @@ using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Desktop;
 using ClearCanvas.Desktop.Actions;
+using ClearCanvas.ImageViewer.Graphics;
 using ClearCanvas.ImageViewer.InputManagement;
 using ClearCanvas.ImageViewer.InteractiveGraphics;
 using ClearCanvas.ImageViewer.RoiGraphics.Analyzers;
-using CoordinateSystem = ClearCanvas.ImageViewer.Graphics.CoordinateSystem;
 
 namespace ClearCanvas.ImageViewer.RoiGraphics
 {
 	/// <summary>
-	/// A specialized callout graphic used by <see cref="RoiGraphic"/> whose text content is automatically computed by a list of <see cref="IRoiAnalyzer"/>s.
+	/// A specialized callout graphic used by <see cref="IRoiGraphic"/> whose text content is automatically computed by a list of <see cref="IRoiAnalyzer"/>s.
 	/// </summary>
 	[Cloneable]
 	public class RoiCalloutGraphic : CalloutGraphic
@@ -63,12 +63,6 @@ namespace ClearCanvas.ImageViewer.RoiGraphics
 		{
 			_roiAnalyzers.AddRange(analyzers);
 			_showAnalysis = RoiSettings.Default.ShowAnalysisByDefault;
-
-            foreach (var analyzer in _roiAnalyzers)
-            {
-                /// TODO (CR Nov 2011): Remove this again because I think we just want to overhaul the analyzers.
-                analyzer.SetRoiAnalyzerUpdateCallback(Refresh);
-            }
 		}
 
 		/// <summary>
@@ -81,18 +75,14 @@ namespace ClearCanvas.ImageViewer.RoiGraphics
 		{
 			context.CloneFields(source, this);
 			_roiAnalyzers.AddRange(source._roiAnalyzers);
-            foreach(var analyzer in _roiAnalyzers)
-            {
-                analyzer.SetRoiAnalyzerUpdateCallback(Refresh);
-            }
 		}
 
 		/// <summary>
-		/// Gets the parent <see cref="RoiGraphic"/>.
+		/// Gets the parent <see cref="IRoiGraphic"/>.
 		/// </summary>
-		public new RoiGraphic ParentGraphic
+		public new IRoiGraphic ParentGraphic
 		{
-			get { return base.ParentGraphic as RoiGraphic; }
+			get { return base.ParentGraphic as IRoiGraphic; }
 		}
 
 		/// <summary>
@@ -130,7 +120,7 @@ namespace ClearCanvas.ImageViewer.RoiGraphics
 		public override IActionSet GetExportedActions(string site, IMouseInformation mouseInformation)
 		{
 			IResourceResolver resolver = new ApplicationThemeResourceResolver(this.GetType(), true);
-			string @namespace = typeof(RoiCalloutGraphic).FullName;
+			string @namespace = typeof (RoiCalloutGraphic).FullName;
 
 			List<IAction> actions = new List<IAction>();
 			MenuAction hideAction = new MenuAction(@namespace + ":toggle", new ActionPath(site + "/MenuShowAnalysis", resolver), ClickActionFlags.None, resolver);
@@ -154,18 +144,17 @@ namespace ClearCanvas.ImageViewer.RoiGraphics
 			IActionSet actionSet = new ActionSet(actions);
 
 			if (this.ShowAnalysis)
-            {
-                var analyzerActionSets = GetAnalyzersExportedActions(site, mouseInformation);
+			{
+				var analyzerActionSets = GetAnalyzersExportedActions(site, mouseInformation);
 
-                if (analyzerActionSets != null)
-                {
-                    foreach(var set in analyzerActionSets)
-                    {
-                        actionSet = actionSet.Union(set);
-                    } 
-                }
-                   
-            }
+				if (analyzerActionSets != null)
+				{
+					foreach (var set in analyzerActionSets)
+					{
+						actionSet = actionSet.Union(set);
+					}
+				}
+			}
 
 			IActionSet other = base.GetExportedActions(site, mouseInformation);
 			if (other != null)
@@ -174,28 +163,28 @@ namespace ClearCanvas.ImageViewer.RoiGraphics
 			return actionSet;
 		}
 
-        private IEnumerable<IActionSet> GetAnalyzersExportedActions(string site, IMouseInformation mouseInformation)
-        {
-            var actionSets = new List<IActionSet>();
-            foreach(var analyzer in _roiAnalyzers)
-            {
-                if (analyzer is IExportedActionsProvider)
-                {
-                    var actionProvider = analyzer as IExportedActionsProvider;
-                    var actions = actionProvider.GetExportedActions(site, mouseInformation);
-                    actionSets.Add(actions);
-                }   
-            }
+		private IEnumerable<IActionSet> GetAnalyzersExportedActions(string site, IMouseInformation mouseInformation)
+		{
+			var actionSets = new List<IActionSet>();
+			foreach (var analyzer in _roiAnalyzers)
+			{
+				if (analyzer is IExportedActionsProvider)
+				{
+					var actionProvider = analyzer as IExportedActionsProvider;
+					var actions = actionProvider.GetExportedActions(site, mouseInformation);
+					actionSets.Add(actions);
+				}
+			}
 
-            return actionSets;
-        }
+			return actionSets;
+		}
 
 		/// <summary>
-		/// Invokes an interactive edit box on the name of the graphic, allowing the user to assign a name to the <see cref="RoiGraphic"/>.
+		/// Invokes an interactive edit box on the name of the graphic, allowing the user to assign a name to the <see cref="IRoiGraphic"/>.
 		/// </summary>
 		public void Rename()
 		{
-			RoiGraphic parent = this.ParentGraphic;
+			var parent = ParentGraphic;
 			if (parent == null)
 				return;
 
@@ -222,29 +211,22 @@ namespace ClearCanvas.ImageViewer.RoiGraphics
 		{
 			this.ShowAnalysis = !_showAnalysis;
 
-			RoiGraphic parent = this.ParentGraphic;
+			var parent = ParentGraphic;
 			if (parent != null)
 			{
 				if (_showAnalysis)
 					parent.Refresh();
-				else 
+				else
 					parent.Draw();
 			}
 		}
-
-	    /// TODO (CR Nov 2011): Remove because I think we should just refactor the analyzers.
-        private void Refresh()
-        {
-            Update();
-            Draw();
-        }
 
 		private void OnEditBoxCancelled(object sender, EventArgs e)
 		{
 			EditBox editBox = (EditBox) sender;
 			editBox.ValueAccepted -= OnEditBoxAccepted;
 			editBox.ValueCancelled -= OnEditBoxCancelled;
-			if(base.ParentPresentationImage != null)
+			if (base.ParentPresentationImage != null)
 				base.ParentPresentationImage.Tile.EditBox = null;
 		}
 
@@ -256,7 +238,7 @@ namespace ClearCanvas.ImageViewer.RoiGraphics
 			if (base.ParentPresentationImage != null)
 				base.ParentPresentationImage.Tile.EditBox = null;
 
-			RoiGraphic parent = base.ParentGraphic as RoiGraphic;
+			var parent = ParentGraphic;
 			if (parent != null)
 			{
 				parent.Name = editBox.Value;
@@ -270,7 +252,7 @@ namespace ClearCanvas.ImageViewer.RoiGraphics
 		/// </summary>
 		public void Update()
 		{
-			RoiGraphic roiGraphic = this.ParentGraphic;
+			var roiGraphic = ParentGraphic;
 			this.Update(roiGraphic.GetRoi(), RoiAnalysisMode.Normal);
 		}
 
@@ -280,7 +262,7 @@ namespace ClearCanvas.ImageViewer.RoiGraphics
 		/// <param name="mode">A value indicating whether or not the current region of interest is in the state of changing, and therefore whether or not analyzers should skip expensive computations.</param>
 		public void Update(RoiAnalysisMode mode)
 		{
-			RoiGraphic roiGraphic = this.ParentGraphic;
+			var roiGraphic = ParentGraphic;
 			this.Update(roiGraphic.GetRoi(), mode);
 		}
 
@@ -306,7 +288,7 @@ namespace ClearCanvas.ImageViewer.RoiGraphics
 			}
 
 			StringBuilder builder = new StringBuilder();
-			RoiGraphic parent = this.ParentGraphic;
+			var parent = ParentGraphic;
 			if (parent != null && !string.IsNullOrEmpty(parent.Name))
 				builder.AppendLine(parent.Name);
 
@@ -318,11 +300,11 @@ namespace ClearCanvas.ImageViewer.RoiGraphics
 					{
 						if (analyzer.SupportsRoi(roi))
 						{
-						    var analysis = analyzer.Analyze(roi, mode);
-						    if (analysis != null)
-						    {
-						        builder.AppendLine(analysis.SerializedAsString());
-						    }
+							var analysis = analyzer.Analyze(roi, mode);
+							if (analysis != null)
+							{
+								builder.AppendLine(analysis.SerializedAsString());
+							}
 						}
 					}
 				}

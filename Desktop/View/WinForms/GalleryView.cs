@@ -54,6 +54,8 @@ namespace ClearCanvas.Desktop.View.WinForms
 		{
 			InitializeComponent();
 
+			_contextMenu.ImageScalingSize = new Size(24, 24);
+
 			_listView.LargeImageList = new ImageList();
 			_listView.LargeImageList.ImageSize = new Size(100, 100);
 			_listView.View = System.Windows.Forms.View.LargeIcon;
@@ -72,10 +74,7 @@ namespace ClearCanvas.Desktop.View.WinForms
 
 		public object DataSource
 		{
-			get
-			{
-				return _gallery;
-			}
+			get { return _gallery; }
 			set
 			{
 				if (_gallery != value)
@@ -112,7 +111,6 @@ namespace ClearCanvas.Desktop.View.WinForms
 			}
 		}
 
-
 		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
 		public ActionModelNode ContextMenuModel
 		{
@@ -138,9 +136,8 @@ namespace ClearCanvas.Desktop.View.WinForms
 				//before the item is removed, so the indices are out of sync and we can't rely on them
 				foreach (int index in _listView.SelectedIndices)
 				{
-					object item = _listView.Items[index].Tag;
-					selectedItems.Add(CollectionUtils.SelectFirst(_gallery,
-					                                              delegate(object test) { return ((IGalleryItem) test).Item == item; }));
+					var item = (IGalleryItem) _listView.Items[index].Tag;
+					selectedItems.Add(item);
 				}
 
 				return new Selection(selectedItems);
@@ -224,6 +221,13 @@ namespace ClearCanvas.Desktop.View.WinForms
 			set { _listView.LabelEdit = value; }
 		}
 
+		public event GalleryItemDragEventHandler ItemDrag;
+
+		protected virtual void OnItemDrag(GalleryItemDragEventArgs e)
+		{
+			EventsHelper.Fire(ItemDrag, this, e);
+		}
+
 		private void InitializeToolStrip()
 		{
 			ToolStripBuilder.Clear(_toolStrip.Items);
@@ -264,16 +268,16 @@ namespace ClearCanvas.Desktop.View.WinForms
 			ListViewItem lvi = _listView.Items[index];
 			IGalleryItem item = (IGalleryItem) _gallery[index];
 			int keyIndex = _listView.LargeImageList.Images.IndexOfKey(lvi.ImageKey);
-		    
-            var existing = _listView.LargeImageList.Images[keyIndex];
-		    var @new = (Image) item.Image;
 
-            if (existing != @new)
-            {
-                _listView.LargeImageList.Images[keyIndex] = @new;
-                // update name, description
-                _listView.RedrawItems(index, index, true);
-            }
+			var existing = _listView.LargeImageList.Images[keyIndex];
+			var @new = (Image) item.Image;
+
+			if (existing != @new)
+			{
+				_listView.LargeImageList.Images[keyIndex] = @new;
+				// update name, description
+				_listView.RedrawItems(index, index, true);
+			}
 		}
 
 		private void AddItem(object item)
@@ -281,23 +285,23 @@ namespace ClearCanvas.Desktop.View.WinForms
 			IGalleryItem galleryItem = CastToGalleryItem(item);
 
 			string imageKey = Guid.NewGuid().ToString();
-            _listView.LargeImageList.Images.Add(imageKey, (Image)galleryItem.Image);
+			_listView.LargeImageList.Images.Add(imageKey, (Image) galleryItem.Image);
 			ListViewItem lvi = new ListViewItem(galleryItem.Name, imageKey);
 
 			AddSubItems(lvi, galleryItem);
 
 			lvi.ToolTipText = galleryItem.Description;
-			lvi.Tag = galleryItem.Item;
+			lvi.Tag = galleryItem;
 			_listView.Items.Add(lvi);
 		}
 
 		private void AddSubItems(ListViewItem lvi, IGalleryItem galleryItem)
 		{
-			string[] galleryDescriptionLines = galleryItem.Description.Split(new char[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
+			string[] galleryDescriptionLines = galleryItem.Description.Split(new char[] {'\n', '\r'}, StringSplitOptions.RemoveEmptyEntries);
 			for (var i = 0; i < galleryDescriptionLines.Length; i++)
 			{
 				if (galleryDescriptionLines.Length > this.MaxDescriptionLines &&
-					i == this.MaxDescriptionLines - 1)
+				    i == this.MaxDescriptionLines - 1)
 				{
 					// There are more descriptions then number of lines allowed
 					// and this is pass the last line, add ellipsis instead
@@ -378,15 +382,26 @@ namespace ClearCanvas.Desktop.View.WinForms
 			}
 
 			ListViewItem draggedItem = (ListViewItem) e.Item;
+			var galleryItem = (IGalleryItem) draggedItem.Tag;
 
 			DataObject data = new DataObject();
 			if (DragOutside)
 			{
-			    data.SetData(draggedItem.Tag);
-			    data.SetText(draggedItem.Tag.ToString(),TextDataFormat.UnicodeText);
+				data.SetData(galleryItem.Item);
+				data.SetText(galleryItem.Item.ToString(), TextDataFormat.UnicodeText);
 			}
+
+			// allow event listeners to specify additional formats
+			var galleryItemDragEventArgs = new GalleryItemDragEventArgs(galleryItem);
+			OnItemDrag(galleryItemDragEventArgs);
+			foreach (var additionalData in galleryItemDragEventArgs.AdditionalDataFormats)
+				data.SetData(additionalData);
+
+			// in order for drag reorder to work, we do this last to ensure that the ListViewItem format is always our item
 			if (DragReorder)
+			{
 				data.SetData(draggedItem);
+			}
 
 			_listView.DoDragDrop(data, DragDropEffects.Move);
 		}
@@ -522,6 +537,5 @@ namespace ClearCanvas.Desktop.View.WinForms
 				return ((ListViewItem) x).Index - ((ListViewItem) y).Index;
 			}
 		}
-
 	}
 }

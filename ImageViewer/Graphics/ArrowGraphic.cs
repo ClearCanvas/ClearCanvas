@@ -279,8 +279,8 @@ namespace ClearCanvas.ImageViewer.Graphics
 			_shaft.CoordinateSystem = CoordinateSystem.Source;
 			try
 			{
-				this.OnShaftPoint1Changed(this, new PointChangedEventArgs(_shaft.Point1));
-				this.OnShaftPoint2Changed(this, new PointChangedEventArgs(_shaft.Point2));
+				this.OnShaftPoint1Changed(this, new PointChangedEventArgs(_shaft.Point1, CoordinateSystem.Source));
+				this.OnShaftPoint2Changed(this, new PointChangedEventArgs(_shaft.Point2, CoordinateSystem.Source));
 			}
 			finally
 			{
@@ -323,13 +323,13 @@ namespace ClearCanvas.ImageViewer.Graphics
 		private void OnShaftPoint1Changed(object sender, PointChangedEventArgs e)
 		{
 			if (_enablePointChangeEvents)
-				EventsHelper.Fire(_startPointChanged, this, new PointChangedEventArgs(e.Point));
+				EventsHelper.Fire(_startPointChanged, this, new PointChangedEventArgs(e.Point, e.CoordinateSystem));
 		}
 
 		private void OnShaftPoint2Changed(object sender, PointChangedEventArgs e)
 		{
 			if (_enablePointChangeEvents)
-				EventsHelper.Fire(_endPointChanged, this, new PointChangedEventArgs(e.Point));
+				EventsHelper.Fire(_endPointChanged, this, new PointChangedEventArgs(e.Point, e.CoordinateSystem));
 		}
 	}
 }

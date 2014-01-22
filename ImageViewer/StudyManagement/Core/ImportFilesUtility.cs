@@ -466,7 +466,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement.Core
             return result;
         }
 
-        private void InsertFailedWorkItemUid(WorkItem workItem, DicomMessageBase message, DicomProcessingResult result, int tryCount = 1)
+	    public void InsertFailedWorkItemUid(WorkItem workItem, DicomMessageBase message, DicomProcessingResult result, int tryCount = 1)
         {
             if (tryCount < 0)
                 tryCount = 1;
@@ -495,11 +495,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement.Core
             Platform.Log(LogLevel.Error, "Failed to insert failed work item UID after {0} attempts (Sop Instance UID={1}).", tries, result.SopInstanceUid);
         }
 
-        #endregion
-
-        #region Private Methods
-        
-        private void AuditFailure(DicomProcessingResult result)
+	    public void AuditFailure(DicomProcessingResult result)
         {
             // This primarily happens with DICOMDIR files
             if (string.IsNullOrEmpty(result.StudyInstanceUid))
@@ -517,7 +513,12 @@ namespace ClearCanvas.ImageViewer.StudyManagement.Core
                 _context.FailedStudyAudits.Add(result.StudyInstanceUid, result.StudyInstanceUid);
             }
         }
-        private void Process(DicomMessageBase message, FileImportBehaviourEnum fileImportBehaviour, WorkItem workItem, DicomProcessingResult result)
+
+		#endregion
+
+		#region Private Methods
+
+		private void Process(DicomMessageBase message, FileImportBehaviourEnum fileImportBehaviour, WorkItem workItem, DicomProcessingResult result)
         {
             result.Initialize();
 

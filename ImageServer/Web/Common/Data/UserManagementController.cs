@@ -77,7 +77,7 @@ namespace ClearCanvas.ImageServer.Web.Common.Data
 
                     foreach (UserGroup userGroup in user.UserGroups)
                     {
-                        groups.Add(new AuthorityGroupSummary(new EntityRef(userGroup.UserGroupRef), userGroup.Name,userGroup.Name, false));
+                        groups.Add(new AuthorityGroupSummary(new EntityRef(userGroup.UserGroupRef), userGroup.Name,userGroup.Name, false, false));
                     }
 
                     newUser.AuthorityGroups = groups;
@@ -114,7 +114,7 @@ namespace ClearCanvas.ImageServer.Web.Common.Data
 
                     foreach(UserGroup userGroup in user.UserGroups)
                     {
-                        groups.Add(new AuthorityGroupSummary(new EntityRef(userGroup.UserGroupRef), userGroup.Name, userGroup.Name,false));
+                        groups.Add(new AuthorityGroupSummary(new EntityRef(userGroup.UserGroupRef), userGroup.Name, userGroup.Name, false, false));
                     }
 
                     updateUser.AuthorityGroups = groups;

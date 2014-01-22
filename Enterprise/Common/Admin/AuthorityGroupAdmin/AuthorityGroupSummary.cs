@@ -27,27 +27,31 @@ using ClearCanvas.Common.Serialization;
 
 namespace ClearCanvas.Enterprise.Common.Admin.AuthorityGroupAdmin
 {
-    [DataContract]
-    public class AuthorityGroupSummary : DataContractBase
-    {
-        public AuthorityGroupSummary(EntityRef authorityGroupRef, string name, string description, bool dataGroup)
-        {
-            AuthorityGroupRef = authorityGroupRef;
-            Name = name;
-            Description = description;
-            DataGroup = dataGroup;
-        }
+	[DataContract]
+	public class AuthorityGroupSummary : DataContractBase
+	{
+		public AuthorityGroupSummary(EntityRef authorityGroupRef, string name, string description, bool builtIn, bool dataGroup)
+		{
+			AuthorityGroupRef = authorityGroupRef;
+			Name = name;
+			Description = description;
+			BuiltIn = builtIn;
+			DataGroup = dataGroup;
+		}
 
-        [DataMember]
-        public EntityRef AuthorityGroupRef;
+		[DataMember]
+		public EntityRef AuthorityGroupRef;
 
-        [DataMember]
-        public string Name;
+		[DataMember]
+		public string Name;
 
-        [DataMember]
-        public string Description;
+		[DataMember]
+		public string Description;
 
-        [DataMember]
-        public bool DataGroup;
-    }
+		[DataMember]
+		public bool BuiltIn;
+
+		[DataMember]
+		public bool DataGroup;
+	}
 }

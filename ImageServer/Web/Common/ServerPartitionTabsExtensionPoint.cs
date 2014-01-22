@@ -23,6 +23,7 @@
 #endregion
 
 using System.Collections.Generic;
+using System.Linq;
 using ClearCanvas.Common;
 using ClearCanvas.ImageServer.Model;
 using ClearCanvas.ImageServer.Web.Common.Data;
@@ -33,6 +34,7 @@ namespace ClearCanvas.ImageServer.Web.Common
     public interface IServerPartitionTabsExtension
     {
         IEnumerable<ServerPartition> LoadServerPartitions();
+		IEnumerable<ServerPartition> LoadNonResearchServerPartitions();
     }
     
     
@@ -48,5 +50,12 @@ namespace ClearCanvas.ImageServer.Web.Common
         {
             return _controller.GetAllPartitions();
         }
+
+		public IEnumerable<ServerPartition> LoadNonResearchServerPartitions()
+		{
+			var list = LoadServerPartitions();
+
+			return list.Where(p => !p.ServerPartitionTypeEnum.Equals(ServerPartitionTypeEnum.VFS)).ToList();
+		}
     }
 }

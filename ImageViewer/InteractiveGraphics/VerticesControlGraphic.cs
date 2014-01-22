@@ -68,7 +68,7 @@ namespace ClearCanvas.ImageViewer.InteractiveGraphics
 			this.CoordinateSystem = CoordinateSystem.Source;
 			try
 			{
-				foreach(PointF point in this.Subject.Points)
+				foreach (PointF point in this.Subject.Points)
 				{
 					base.ControlPoints.Add(point);
 				}
@@ -146,7 +146,7 @@ namespace ClearCanvas.ImageViewer.InteractiveGraphics
 			get { return _canAddRemoveVertices; }
 			set
 			{
-				if(_canAddRemoveVertices!=value)
+				if (_canAddRemoveVertices != value)
 				{
 					_canAddRemoveVertices = value;
 					OnCanAddRemoveVerticesChanged();
@@ -159,7 +159,7 @@ namespace ClearCanvas.ImageViewer.InteractiveGraphics
 		/// </summary>
 		protected virtual void InsertVertex()
 		{
-			if (!_canAddRemoveVertices)
+			if (!_canAddRemoveVertices || !Enabled)
 				return;
 
 			object memento = this.CreateMemento();
@@ -175,7 +175,7 @@ namespace ClearCanvas.ImageViewer.InteractiveGraphics
 					// if inserting in middle of line, find which index to insert at
 					index = IndexOfNextClosestPoint(subject, _lastContextMenuPoint);
 				}
-				else if(index == subject.Points.Count - 1)
+				else if (index == subject.Points.Count - 1)
 				{
 					// if inserting on last point, append instead of inserting before
 					index++;
@@ -199,7 +199,7 @@ namespace ClearCanvas.ImageViewer.InteractiveGraphics
 		/// </summary>
 		protected virtual void DeleteVertex()
 		{
-			if (!_canAddRemoveVertices)
+			if (!_canAddRemoveVertices || !Enabled)
 				return;
 
 			object memento = this.CreateMemento();
@@ -266,7 +266,7 @@ namespace ClearCanvas.ImageViewer.InteractiveGraphics
 			IActionSet actions = base.GetExportedActions(site, mouseInformation);
 			_lastContextMenuPoint = mouseInformation.Location;
 
-			if (!_canAddRemoveVertices)
+			if (!_canAddRemoveVertices || !Enabled)
 				return actions;
 
 			if (!base.Subject.HitTest(Point.Round(_lastContextMenuPoint)))

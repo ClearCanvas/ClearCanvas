@@ -63,7 +63,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AuthorityTokens.cs" />
     <Compile Include="BrowserNode.cs" />
     <Compile Include="ExtensionBrowserComponent.cs" />
     <Compile Include="ExtensionPointView\ExtensionPointViewExtensionNode.cs" />

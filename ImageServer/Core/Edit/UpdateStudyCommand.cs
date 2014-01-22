@@ -30,14 +30,16 @@ using System.Text;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Dicom;
+using ClearCanvas.Dicom.Iod.Sequences;
 using ClearCanvas.Dicom.Utilities.Xml;
 using ClearCanvas.Dicom.Utilities.Command;
 using ClearCanvas.Enterprise.Core;
 using ClearCanvas.ImageServer.Common;
-using ClearCanvas.ImageServer.Common.Command;
 using ClearCanvas.ImageServer.Core.Command;
 using ClearCanvas.ImageServer.Core.Diagnostics;
+using ClearCanvas.ImageServer.Core.Events;
 using ClearCanvas.ImageServer.Enterprise;
+using ClearCanvas.ImageServer.Enterprise.Command;
 using ClearCanvas.ImageServer.Model;
 using ClearCanvas.ImageServer.Model.Brokers;
 using ClearCanvas.ImageServer.Model.EntityBrokers;
@@ -76,6 +78,7 @@ namespace ClearCanvas.ImageServer.Core.Edit
 		private Patient _curPatient;
 		private Patient _newPatient;
 		private StudyStorage _storage;
+		private WorkQueue _workQueue;
 
 		private readonly UpdateStudyStatistics _statistics;
 		private int _totalSopCount;
@@ -93,12 +96,14 @@ namespace ClearCanvas.ImageServer.Core.Edit
 		public UpdateStudyCommand(ServerPartition partition, 
 		                          StudyStorageLocation studyLocation,
 		                          IList<BaseImageLevelUpdateCommand> imageLevelCommands,
-								  ServerRuleApplyTimeEnum applyTime) 
+								  ServerRuleApplyTimeEnum applyTime,
+								  WorkQueue workQueue) 
 			: base("Update existing study")
 		{
 			_partition = partition;
 			_oldStudyLocation = studyLocation;
 			_commands = imageLevelCommands;
+			_workQueue = workQueue;
 			_statistics = new UpdateStudyStatistics(_oldStudyLocation.StudyInstanceUid);
 			// Load the engine for editing rules.
 			_rulesEngine = new ServerRulesEngine(applyTime, _partition.Key);
@@ -156,18 +161,16 @@ namespace ClearCanvas.ImageServer.Core.Edit
 
 		private void Initialize()
 		{
-			using (IPersistenceContext readContext = PersistentStoreRegistry.GetDefaultStore().OpenReadContext())
-			{
-				_backupDir = ServerExecutionContext.Current.BackupDirectory;
+			_backupDir = ProcessorContext.BackupDirectory;
 
 				_oldStudyPath = _oldStudyLocation.GetStudyPath();
 				_oldStudyInstanceUid = _oldStudyLocation.StudyInstanceUid;
 				_oldStudyFolder = _oldStudyLocation.StudyFolder;
 				_newStudyInstanceUid = _oldStudyInstanceUid;
 
-				_study = _oldStudyLocation.LoadStudy(readContext);
+			_study = _oldStudyLocation.LoadStudy(ServerExecutionContext.Current.ReadContext);
 				_totalSopCount = _study.NumberOfStudyRelatedInstances;
-				_curPatient = _study.LoadPatient(readContext);
+			_curPatient = _study.LoadPatient(ServerExecutionContext.Current.ReadContext);
 				_oldPatientInfo = new PatientInfo
 				                  	{
 				                  		Name = _curPatient.PatientsName,
@@ -208,7 +211,7 @@ namespace ClearCanvas.ImageServer.Core.Edit
 				NewStudyPath = Path.Combine(NewStudyPath, _oldStudyFolder);
 				NewStudyPath = Path.Combine(NewStudyPath, _newStudyInstanceUid);
 
-				_newPatient = FindPatient(_newPatientInfo, readContext);
+			_newPatient = FindPatient(_newPatientInfo, ServerExecutionContext.Current.ReadContext);
 				_patientInfoIsNotChanged = _newPatientInfo.Equals(_oldPatientInfo);
 
 				Statistics.InstanceCount = _study.NumberOfStudyRelatedInstances;
@@ -219,7 +222,6 @@ namespace ClearCanvas.ImageServer.Core.Edit
 				_deleteOriginalFolder = NewStudyPath != _oldStudyPath;
 				_initialized = true;
 			}
-		}
 
 		private void CleanupBackupFiles()
 		{
@@ -539,6 +541,9 @@ namespace ClearCanvas.ImageServer.Core.Edit
                         
                         _updatedSopList.Add(instance);
                         Platform.Log(ServerPlatform.InstanceLogLevel, "SOP {0} has been updated [{1} of {2}].", instance.SopInstanceUid, _updatedSopList.Count, _totalSopCount);
+
+						EventManager.FireEvent(this, new UpdateSopEventArgs { File = file, ServerPartitionEntry = _partition, WorkQueueUidEntry = null, WorkQueueEntry = _workQueue, FileLength = (ulong)fileSize });
+
                     }
                     catch (Exception)
                     {
@@ -570,13 +575,25 @@ namespace ClearCanvas.ImageServer.Core.Edit
         private void UpdateDicomFile(DicomFile file)
         {
             var originalCS = file.DataSet.SpecificCharacterSet;
-                        
+
+			var sq = new OriginalAttributesSequence
+			{
+				ModifiedAttributesSequence = new DicomSequenceItem(),
+				ModifyingSystem = ProductInformation.Component,
+				ReasonForTheAttributeModification = "CORRECT",
+				AttributeModificationDatetime = Platform.Time,
+				SourceOfPreviousValues = file.SourceApplicationEntityTitle
+			};
 
             foreach (BaseImageLevelUpdateCommand command in _commands)
             {
                 command.File = file;
-                command.Apply(file);
-            }           
+                command.Apply(file, sq);
+            }
+
+			var sqAttrib = file.DataSet[DicomTags.OriginalAttributesSequence] as DicomAttributeSQ;
+			if (sqAttrib != null)
+				sqAttrib.AddSequenceItem(sq.DicomSequenceItem);
 
             var newCS = file.DataSet.SpecificCharacterSet;
 

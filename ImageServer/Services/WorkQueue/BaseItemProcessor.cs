@@ -36,11 +36,12 @@ using ClearCanvas.Dicom;
 using ClearCanvas.Dicom.Utilities.Xml;
 using ClearCanvas.Enterprise.Core;
 using ClearCanvas.ImageServer.Common;
-using ClearCanvas.ImageServer.Common.Command;
 using ClearCanvas.ImageServer.Common.Exceptions;
 using ClearCanvas.ImageServer.Core;
+using ClearCanvas.ImageServer.Core.Helpers;
 using ClearCanvas.ImageServer.Core.Process;
 using ClearCanvas.ImageServer.Core.Validation;
+using ClearCanvas.ImageServer.Enterprise.Command;
 using ClearCanvas.ImageServer.Model;
 using ClearCanvas.ImageServer.Model.Brokers;
 using ClearCanvas.ImageServer.Model.EntityBrokers;
@@ -1176,7 +1177,7 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue
 
         private static bool AppearsStuck(Model.WorkQueue item, out string reason)
         {
-            IList<Model.WorkQueue> allItems = ServerHelper.FindWorkQueueEntries(item.StudyStorageKey, null);
+            IList<Model.WorkQueue> allItems = WorkQueueHelper.FindWorkQueueEntries(item.StudyStorageKey, null);
             bool updatedBefore = item.LastUpdatedTime > DateTime.MinValue;
             reason = null;
 
@@ -1197,7 +1198,7 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue
                 {
                     if (anotherItem.Key.Equals(item.Key)) continue;
 
-                    if (!ServerPlatform.IsActiveWorkQueue(anotherItem))
+                    if (!WorkQueueHelper.IsActiveWorkQueue(anotherItem))
                     {
                         reason = "Another work queue entry for the same study appears stuck.";
                         return true;
@@ -1265,7 +1266,7 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue
         protected static IList<Model.WorkQueue> FindRelatedWorkQueueItems(Model.WorkQueue workQueueItem,
             IEnumerable<WorkQueueTypeEnum> types, IEnumerable<WorkQueueStatusEnum> status)
         {
-            IList<Model.WorkQueue> list = ServerHelper.FindWorkQueueEntries(workQueueItem.StudyStorageKey, null);
+            IList<Model.WorkQueue> list = WorkQueueHelper.FindWorkQueueEntries(workQueueItem.StudyStorageKey, null);
 
             if (list==null)
                 return null;
@@ -1443,8 +1444,8 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue
 
         		using (IUpdateContext updateContext = PersistentStoreRegistry.GetDefaultStore().OpenUpdateContext(UpdateContextSyncMode.Flush))
         		{
-        			ISetStudyRelatedInstanceCount broker = updateContext.GetBroker<ISetStudyRelatedInstanceCount>();
-        			SetStudyRelatedInstanceCountParameters criteria = new SetStudyRelatedInstanceCountParameters(storageLocation.GetKey())
+        			var broker = updateContext.GetBroker<ISetStudyRelatedInstanceCount>();
+        			var criteria = new SetStudyRelatedInstanceCountParameters(storageLocation.GetKey())
         			                                                      {
         			                                                          StudyRelatedSeriesCount = numStudyRelatedSeriesInXml,
         			                                                          StudyRelatedInstanceCount = numStudyRelatedInstancesInXml
@@ -1530,13 +1531,10 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue
                                 if (broker.Update(theStudy.Key, parameters))
                                     ctx.Commit();
                             }
-
                         }
                     }
                 }
-                
             }
-            
         }
 
         protected abstract void ProcessItem(Model.WorkQueue item);
@@ -1640,7 +1638,7 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue
                                                                         true);
                     if (attributes != null && attributes.Length > 0)
                     {
-                        StudyIntegrityValidationAttribute att = attributes[0] as StudyIntegrityValidationAttribute;
+                        var att = attributes[0] as StudyIntegrityValidationAttribute;
                         if (!ProcessorsRecoverySettings.ContainsKey(GetType()))
                         {
                             ProcessorsRecoverySettings.Add(GetType(), att.Recovery);
@@ -1664,7 +1662,7 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue
                     object[] attributes = GetType().GetCustomAttributes(typeof (StudyIntegrityValidationAttribute), true);
                     if (attributes != null && attributes.Length > 0)
                     {
-                        StudyIntegrityValidationAttribute att = attributes[0] as StudyIntegrityValidationAttribute;
+                        var att = attributes[0] as StudyIntegrityValidationAttribute;
                         ProcessorsValidationSettings.Add(GetType(), att.ValidationTypes);
                         return att.ValidationTypes;
                     }
@@ -1677,24 +1675,22 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue
         private void VerifyStudy(StudyStorageLocation studyStorage)
         {
             Platform.CheckForNullReference(studyStorage, "studyStorage");
-			// Only verify if the Study record exists
+
+            // Only verify if the Study record exists
+            // Explicitly load the study entry again, if a deletion happened, the counts will not be accurate.
             if (studyStorage.Study != null)
             {
                 StudyIntegrityValidationModes mode = GetValidationMode();
                 if (mode != StudyIntegrityValidationModes.None)
                 {
                     Platform.Log(LogLevel.Info, "Verifying study {0}", studyStorage.StudyInstanceUid);
-                    using (new ServerExecutionContext())
-                    {
-                        StudyIntegrityValidator validator = new StudyIntegrityValidator();
-                        validator.ValidateStudyState(WorkQueueItem.WorkQueueTypeEnum.ToString(), studyStorage, mode);
-                    }
+
+                    var validator = new StudyIntegrityValidator();
+                    validator.ValidateStudyState(WorkQueueItem.WorkQueueTypeEnum.ToString(), studyStorage, mode);
+
                     Platform.Log(LogLevel.Info, "Study {0} has been verified", studyStorage.StudyInstanceUid);
                 }
-            
             }
-            
-            
         }
 
         #endregion

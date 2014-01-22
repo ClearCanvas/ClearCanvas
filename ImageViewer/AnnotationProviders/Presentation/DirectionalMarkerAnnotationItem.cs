@@ -81,7 +81,7 @@ namespace ClearCanvas.ImageViewer.AnnotationProviders.Presentation
 
 				if (associatedDicom != null && associatedTransform != null)
 				{
-					var spatialTransform = associatedTransform.SpatialTransform as SpatialTransform;
+					var spatialTransform = associatedTransform.SpatialTransform as ISpatialTransform;
 					if (spatialTransform != null)
 					{
 						var imageOrientationPatient = associatedDicom.Frame.ImageOrientationPatient;
@@ -105,7 +105,7 @@ namespace ClearCanvas.ImageViewer.AnnotationProviders.Presentation
 		/// <param name="imageTransform">the image transform</param>
 		/// <param name="imageOrientationPatient">the image orientation patient (direction cosines)</param>
 		/// <returns></returns>
-		internal string GetAnnotationTextInternal(SpatialTransform imageTransform, ImageOrientationPatient imageOrientationPatient)
+		internal string GetAnnotationTextInternal(ISpatialTransform imageTransform, ImageOrientationPatient imageOrientationPatient)
 		{
 			SizeF[] imageEdgeVectors = new SizeF[4];
 			for (int i = 0; i < 4; ++i)
@@ -125,7 +125,7 @@ namespace ClearCanvas.ImageViewer.AnnotationProviders.Presentation
 		/// <param name="imageTransform">the image transform</param>
 		/// <param name="patientOrientation">the image orientation patient (direction cosines)</param>
 		/// <returns></returns>
-		internal string GetAnnotationTextInternal(SpatialTransform imageTransform, PatientOrientation patientOrientation)
+		internal string GetAnnotationTextInternal(ISpatialTransform imageTransform, PatientOrientation patientOrientation)
 		{
 			SizeF[] imageEdgeVectors = new SizeF[4];
 			for (int i = 0; i < 4; ++i)

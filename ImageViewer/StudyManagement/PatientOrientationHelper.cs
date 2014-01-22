@@ -32,14 +32,14 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 {
     public class PatientOrientationHelper
     {
-        private readonly SpatialTransform _imageTransform;
+        private readonly ISpatialTransform _imageTransform;
         private readonly ImageOrientationPatient _imageOrientationPatient;
         private readonly PatientOrientation _patientOrientation;
 
         public enum ImageEdge { Left = 0, Top = 1, Right = 2, Bottom = 3 };
         private static readonly SizeF[] _edgeVectors = new [] { new SizeF(-1, 0), new SizeF(0, -1), new SizeF(1, 0), new SizeF(0, 1) };
 
-        public PatientOrientationHelper(SpatialTransform imageTransform, ImageOrientationPatient imageOrientationPatient)
+        public PatientOrientationHelper(ISpatialTransform imageTransform, ImageOrientationPatient imageOrientationPatient)
         {
             Platform.CheckForNullReference(imageTransform, "imageTransform");
             Platform.CheckForNullReference(imageOrientationPatient, "imageOrientationPatient");
@@ -49,7 +49,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
             AngleTolerance = 1;
         }
 
-        public PatientOrientationHelper(SpatialTransform imageTransform, PatientOrientation patientOrientation)
+        public PatientOrientationHelper(ISpatialTransform imageTransform, PatientOrientation patientOrientation)
         {
             Platform.CheckForNullReference(imageTransform, "imageTransform");
             Platform.CheckForNullReference(patientOrientation, "patientOrientation");

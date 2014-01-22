@@ -160,7 +160,7 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 			if (!CanPan())
 				return;
 
-			SpatialTransform transform = (SpatialTransform)_operation.GetOriginator(this.SelectedPresentationImage);
+			ISpatialTransform transform = _operation.GetOriginator(this.SelectedPresentationImage);
 
 			// Because the pan increment is in destination coordinates, we have to convert
 			// them to source coordinates, since the transform translation is in source coordinates.

@@ -30,7 +30,7 @@ namespace ClearCanvas.ImageServer.Model.EntityBrokers
     using System.Xml;
     using ClearCanvas.ImageServer.Enterprise;
 
-   public class DevicePreferredTransferSyntaxUpdateColumns : EntityUpdateColumns
+   public partial class DevicePreferredTransferSyntaxUpdateColumns : EntityUpdateColumns
    {
        public DevicePreferredTransferSyntaxUpdateColumns()
        : base("DevicePreferredTransferSyntax")

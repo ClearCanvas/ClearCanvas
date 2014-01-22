@@ -27,6 +27,7 @@ using System.Net;
 using System.Text;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Statistics;
+using ClearCanvas.ImageServer.Services.Streaming.ImageStreaming.Handlers;
 using ClearCanvas.ImageServer.Services.Streaming.Shreds;
 
 namespace ClearCanvas.ImageServer.Services.Streaming.ImageStreaming
@@ -104,6 +105,17 @@ namespace ClearCanvas.ImageServer.Services.Streaming.ImageStreaming
         }
 
         /// <summary>
+        /// Generates a http response for an error
+        /// </summary>
+        /// <param name="context"></param>
+        private static void SendError(HttpStatusCode errorCode, HttpListenerContext context)
+        {
+
+            context.Response.StatusCode = (int)errorCode;
+        }
+
+
+        /// <summary>
         /// Generates a http response based on the specified <see cref="response"/> object and send it to the client
         /// </summary>
         /// <param name="response"></param>
@@ -145,31 +157,38 @@ namespace ClearCanvas.ImageServer.Services.Streaming.ImageStreaming
             statistics.TotalProcessTime.Start();
             LogRequest(context);
 
-            using(WADORequestTypeHandlerManager handlerManager = new WADORequestTypeHandlerManager())
+            try
             {
-                string requestType = context.Request.QueryString["requestType"];
-                IWADORequestTypeHandler typeHandler = handlerManager.GetHandler(requestType);
-
-                WADORequestTypeHandlerContext ctx = new WADORequestTypeHandlerContext
-                                                        {
-                                                            HttpContext = context,
-                                                            ServerAE = UriHelper.GetServerAE(context)
-                                                        };
-
-                using (WADOResponse response = typeHandler.Process(ctx))
+                using (WADORequestTypeHandlerManager handlerManager = new WADORequestTypeHandlerManager())
                 {
-                    if (response != null)
+                    string requestType = context.Request.QueryString["requestType"];
+                    IWADORequestTypeHandler typeHandler = handlerManager.GetHandler(requestType);
+
+                    WADORequestTypeHandlerContext ctx = new WADORequestTypeHandlerContext
                     {
-                        statistics.TransmissionSpeed.Start();
-                        SendWADOResponse(response, context);
-                        statistics.TransmissionSpeed.End(); 
-                        if (response.Output != null)
+                        HttpContext = context,
+                        ServerAE = UriHelper.GetServerAE(context)
+                    };
+
+                    using (WADOResponse response = typeHandler.Process(ctx))
+                    {
+                        if (response != null)
                         {
-                            statistics.TransmissionSpeed.SetData(response.Output.Length);   
+                            statistics.TransmissionSpeed.Start();
+                            SendWADOResponse(response, context);
+                            statistics.TransmissionSpeed.End();
+                            if (response.Output != null)
+                            {
+                                statistics.TransmissionSpeed.SetData(response.Output.Length);
+                            }
                         }
-                    }    
+                    }
+
                 }
-                        
+            }
+            catch(MimeTypeProcessorError error)
+            {
+                SendError(error.HttpError, context);
             }
 
             statistics.TotalProcessTime.End();

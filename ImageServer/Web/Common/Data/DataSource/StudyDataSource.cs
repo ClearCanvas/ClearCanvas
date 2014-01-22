@@ -26,12 +26,13 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using ClearCanvas.Enterprise.Core;
-using ClearCanvas.ImageServer.Common;
+using ClearCanvas.ImageServer.Common.Authentication;
+using ClearCanvas.ImageServer.Core;
+using ClearCanvas.ImageServer.Core.Helpers;
 using ClearCanvas.ImageServer.Core.Query;
 using ClearCanvas.ImageServer.Enterprise;
 using ClearCanvas.ImageServer.Model;
 using ClearCanvas.ImageServer.Model.EntityBrokers;
-using ClearCanvas.ImageServer.Enterprise.Authentication;
 
 namespace ClearCanvas.ImageServer.Web.Common.Data.DataSource
 {
@@ -157,7 +158,7 @@ namespace ClearCanvas.ImageServer.Web.Common.Data.DataSource
                     IList<WorkQueue> workqueueItems = controller.GetWorkQueueItems(TheStudy);
                     foreach (WorkQueue item in workqueueItems)
                     {
-                        if (!ServerPlatform.IsActiveWorkQueue(item))
+                        if (!WorkQueueHelper.IsActiveWorkQueue(item))
                         {
                             _requiresWorkQueueAttention = true;
                             break;
@@ -184,6 +185,11 @@ namespace ClearCanvas.ImageServer.Web.Common.Data.DataSource
 			if (IsNearline)
 			{
 				reason = SR.ActionNotAllowed_StudyIsNearline;
+				return false;
+			}
+			if (ThePartition.ServerPartitionTypeEnum.Equals(ServerPartitionTypeEnum.VFS))
+			{
+				reason = SR.ActionNotAllowed_ResearchPartition;
 				return false;
 			}
 

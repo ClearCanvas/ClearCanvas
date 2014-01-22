@@ -27,7 +27,7 @@ using ClearCanvas.Dicom.Iod.Modules;
 namespace ClearCanvas.Dicom.Iod.Iods
 {
 	/// <summary>
-	/// EncapsulatedPdf IOD
+	/// Encapsulated PDF IOD
 	/// </summary>
 	/// <remarks>
 	/// <para>As defined in the DICOM Standard 2009, Part 3, Section A.45.1 (Table A.45.1-1)</para>

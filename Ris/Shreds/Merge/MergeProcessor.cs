@@ -75,7 +75,7 @@ namespace ClearCanvas.Ris.Shreds.Merge
 		protected override void ActOnItem(WorkQueueItem item)
 		{
 			// We need to know if the target still exist.  Use the default entity flag, rather than proxy.
-			var target = PersistenceScope.CurrentContext.Load(MergeWorkQueueItem.GetTargetRef(item), EntityLoadFlags.None);
+			var target = PersistenceScope.CurrentContext.Load<Entity>(MergeWorkQueueItem.GetTargetRef(item), EntityLoadFlags.None);
 			if (target == null)
 				throw new TargetAlreadyDeletedException();  // target has already been deleted somewhere else.  Nothing to act on.
 

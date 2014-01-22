@@ -23,7 +23,6 @@
 #endregion
 
 using System;
-using ClearCanvas.ImageServer.Model;
 
 namespace ClearCanvas.ImageServer.Common.Exceptions
 {
@@ -32,11 +31,13 @@ namespace ClearCanvas.ImageServer.Common.Exceptions
     /// </summary>
     public class StudyIsInInvalidStateException: Exception
     {
-        public StudyIsInInvalidStateException(StudyStorageLocation location, string message)
+        public StudyIsInInvalidStateException(string state, string studyInstanceUid, string message)
             :base(message)
         {
-            CurrentState = location.StudyStatusEnum.Description;
-            StudyInstanceUid = location.StudyInstanceUid;
+            CurrentState = state;
+            StudyInstanceUid = studyInstanceUid;
+            //   CurrentState = location.StudyStatusEnum.Description;
+            // StudyInstanceUid = location.StudyInstanceUid;
         }
 
         public string CurrentState { get; set; }

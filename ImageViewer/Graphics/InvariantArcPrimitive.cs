@@ -78,7 +78,7 @@ namespace ClearCanvas.ImageViewer.Graphics
 				if (!FloatComparer.AreEqual(_startAngle, value))
 				{
 					_startAngle = value;
-					base.NotifyVisualStateChanged("StartAngle");
+					base.NotifyVisualStateChanged("StartAngle", VisualStatePropertyKind.Geometry);
 				}
 			}
 		}
@@ -114,7 +114,7 @@ namespace ClearCanvas.ImageViewer.Graphics
 				if (!FloatComparer.AreEqual(_sweepAngle, value))
 				{
 					_sweepAngle = value;
-					base.NotifyVisualStateChanged("SweepAngle");
+					base.NotifyVisualStateChanged("SweepAngle", VisualStatePropertyKind.Geometry);
 				}
 			}
 		}

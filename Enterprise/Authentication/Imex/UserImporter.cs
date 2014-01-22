@@ -22,9 +22,7 @@
 
 #endregion
 
-using System;
 using System.Collections.Generic;
-using System.Text;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Enterprise.Authentication.Brokers;
@@ -33,87 +31,87 @@ using ClearCanvas.Enterprise.Core.Imex;
 
 namespace ClearCanvas.Enterprise.Authentication.Imex
 {
-    [ExtensionOf(typeof(CsvDataImporterExtensionPoint), Name = "User Importer")]
-    [ExtensionOf(typeof(ApplicationRootExtensionPoint))]
-    class UserImporter : CsvDataImporterBase
-    {
-        private const int _numFields = 9;
+	[ExtensionOf(typeof(CsvDataImporterExtensionPoint), Name = "User Importer")]
+	[ExtensionOf(typeof(ApplicationRootExtensionPoint))]
+	class UserImporter : CsvDataImporterBase
+	{
+		private const int NumFields = 9;
 
-        private IPersistenceContext _context;
+		private IPersistenceContext _context;
 		private readonly AuthenticationSettings _settings = new AuthenticationSettings();
 
-        #region CsvDataImporterBase overrides
+		#region CsvDataImporterBase overrides
 
-        /// <summary>
-        /// Import user from CSV format.
-        /// </summary>
-        /// <param name="rows">
-        /// Each string in the list must contain 25 CSV fields, as follows:
-        ///     0 - UserName
-        ///     1 - StaffType
-        ///     2 - Id
-        ///     3 - FamilyName
-        ///     4 - GivenName
-        ///     5 - MiddleName
-        ///     6 - Prefix
-        ///     7 - Suffix
-        ///     8 - Degree
-        /// </param>
-        /// <param name="context"></param>
-        public override void Import(List<string> rows, IUpdateContext context)
-        {
-            _context = context;
+		/// <summary>
+		/// Import user from CSV format.
+		/// </summary>
+		/// <param name="rows">
+		/// Each string in the list must contain 25 CSV fields, as follows:
+		///     0 - UserName
+		///     1 - StaffType
+		///     2 - Id
+		///     3 - FamilyName
+		///     4 - GivenName
+		///     5 - MiddleName
+		///     6 - Prefix
+		///     7 - Suffix
+		///     8 - Degree
+		/// </param>
+		/// <param name="context"></param>
+		public override void Import(List<string> rows, IUpdateContext context)
+		{
+			_context = context;
 
-            List<User> importedUsers = new List<User>();
+			var importedUsers = new List<User>();
 
-            foreach (string row in rows)
-            {
-                string[] fields = ParseCsv(row, _numFields);
+			foreach (var row in rows)
+			{
+				var fields = ParseCsv(row, NumFields);
 
-                string userName = fields[0];
+				var userName = fields[0];
 
-                string staffId = fields[2];
-                string staffFamilyName = fields[3];
-                string staffGivenName = fields[4];
+				var staffId = fields[2];
+				var staffFamilyName = fields[3];
+				var staffGivenName = fields[4];
 
-                User user = GetUser(userName, importedUsers);
+				var user = GetUser(userName, importedUsers);
 
-                if (user == null)
-                {
-                	UserInfo userInfo =
-                		new UserInfo(userName, string.Format("{0} {1}", staffFamilyName, staffGivenName), null, null, null);
+				if (user == null)
+				{
+					var userInfo =
+						new UserInfo(UserAccountType.U, userName, string.Format("{0} {1}", staffFamilyName, staffGivenName), null, null, null);
 					user = User.CreateNewUser(userInfo, _settings.DefaultTemporaryPassword);
-                    _context.Lock(user, DirtyState.New);
+					_context.Lock(user, DirtyState.New);
 
-                    importedUsers.Add(user);
-                }
-            }
-        }
+					importedUsers.Add(user);
+				}
+			}
+		}
 
-        #endregion
+		#endregion
 
-        #region Private Methods
+		#region Private Methods
 
-        private User GetUser(string userName, IList<User> importedUsers)
-        {
-            User user = null;
+		private User GetUser(string userName, IList<User> importedUsers)
+		{
+			User user = null;
 
-            user = CollectionUtils.SelectFirst(importedUsers,
-                delegate(User u) { return u.UserName == userName; });
+			user = CollectionUtils.SelectFirst(importedUsers,
+				delegate(User u) { return u.UserName == userName; });
 
-            if (user == null)
-            {
-                UserSearchCriteria criteria = new UserSearchCriteria();
-                criteria.UserName.EqualTo(userName);
+			if (user == null)
+			{
+				UserSearchCriteria criteria = new UserSearchCriteria();
+				criteria.UserName.EqualTo(userName);
 
-                IUserBroker broker = _context.GetBroker<IUserBroker>();
-                user = CollectionUtils.FirstElement(broker.Find(criteria));
-            }
+				IUserBroker broker = _context.GetBroker<IUserBroker>();
+				user = CollectionUtils.FirstElement(broker.Find(criteria));
+			}
 
-            return user;
-        }
+			return user;
+		}
 
-        #endregion
+		#endregion
 
-    }
+	}
 }

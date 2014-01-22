@@ -132,98 +132,76 @@ namespace ClearCanvas.Web.Enterprise.Authentication
                     });
         }
 
+		/// <summary>
+		/// Renew the specified session
+		/// </summary>
+		/// <param name="tokenId"></param>
+		/// <param name="bypassCache"></param>
+		/// <returns></returns>
         [Obfuscation(Exclude = true)]
-        public SessionInfo ValidateSession(string tokenId)
+		public SessionInfo Renew(string tokenId, bool bypassCache = false)
         {
-            return CheckSession(tokenId, false);
+			return RenewSession(tokenId, bypassCache);
         }
 
+        /// <summary>
+        /// Verifies that the session exists
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="sessionTokenId"></param>
+        /// <returns></returns>
         [Obfuscation(Exclude = true)]
-        public SessionInfo Renew(string tokenId)
+        public SessionInfo VerifySession(string userId, string sessionTokenId)
         {
-            return CheckSession(tokenId, true);
-        }
+            SessionInfo sessionInfo = SessionCache.Instance.Find(sessionTokenId);
+            if (sessionInfo != null) return sessionInfo;
 
-        private SessionInfo CheckSession(string tokenId, bool renew)
-        {
-            SessionInfo sessionInfo = SessionCache.Instance.Find(tokenId);
-            if (sessionInfo == null)
+            // Session does not exist in the cache.
+            // Go to the server to see if the session exists
+            // It may 
+            var request = new ValidateSessionRequest(userId, new SessionToken(sessionTokenId))
             {
-                throw new Exception(String.Format("Unexpected error: session {0} does not exist in the cache", tokenId));
-            }
+                GetAuthorizations = true,
+                ValidateOnly = false // load the tokens too since we don't know anything about session yet
+            };
 
-            var request = new ValidateSessionRequest(sessionInfo.Credentials.UserName,
-                                                     sessionInfo.Credentials.SessionToken)
-                              {
-                                  GetAuthorizations = true,
-                                  ValidateOnly = !renew
-                              };
             try
             {
-                SessionToken newToken = null;
-                Platform.GetService(
+                using (new ResponseCacheBypassScope()) //bypass the response cache
+                {
+                    Platform.GetService(
                     delegate(IAuthenticationService service)
-                        {
-                            DateTime originalExpiryTime = sessionInfo.Credentials.SessionToken.ExpiryTime;
-                            ValidateSessionResponse response = service.ValidateSession(request);
+                    {
 
-                            //If we're renewing, might as well renew well before expiry. If we're only validating,
-                            //we don't want to force a call to the server unless it's actually expired.
-                            var addSeconds = 0.0;
-                            if (renew)
-                            {
-                                //Minor hack - the ImageServer client shows a little bar at the top of the page counting down to session timeout,
-                                //and allowing the user to cancel. This timeout value determines when that bar shows up. If, however, the 
-                                //validate response is being cached, we need to make sure we hit the server - otherwise the bar doesn't go away.
-                                double.TryParse(ConfigurationManager.AppSettings.Get("ClientTimeoutWarningMinDuration"), out addSeconds);
-                                addSeconds = Math.Max(addSeconds, 30);
-                            }
+                        ValidateSessionResponse response = service.ValidateSession(request);
+                        sessionInfo = new SessionInfo(userId, userId, response.SessionToken);
 
-                            if (Platform.Time.AddSeconds(addSeconds) >= response.SessionToken.ExpiryTime)
-                            {
-                                Platform.Log(LogLevel.Debug, "Session is at or near expiry; bypassing cache.");
+                        SessionCache.Instance.AddSession(sessionTokenId, sessionInfo);
+                        sessionInfo.Validate();
 
-                                //The response likely came from the cache, and we want to make sure we get a real validation response.
-                                //Note that this only really matters when 2 processes are sharing a session, like ImageServer and Webstation.
-                                using (new ResponseCacheBypassScope()) { response = service.ValidateSession(request); }
-                            }
+                    });
 
-                            // update session info
-                            string id = response.SessionToken.Id;
-                            newToken = SessionCache.Instance.Renew(id, response.SessionToken.ExpiryTime);
-                            sessionInfo.Credentials.Authorities = response.AuthorityTokens;
-                            sessionInfo.Credentials.SessionToken = newToken;
-
-                            if (Platform.IsLogLevelEnabled(LogLevel.Debug))
-                            {
-                                Platform.Log(LogLevel.Debug, "Session {0} for {1} is renewed. Valid until {2}", id, sessionInfo.Credentials.UserName, newToken.ExpiryTime);
-
-                                if (originalExpiryTime == newToken.ExpiryTime)
-                                {
-                                    Platform.Log(LogLevel.Warn, "Session expiry time is not changed. Is it cached?");
-                                }
-                            }
-                        });
-
+                }
+                
                 return sessionInfo;
             }
-            catch(FaultException<InvalidUserSessionException> ex)
+            catch (FaultException<InvalidUserSessionException> ex)
             {
-                SessionCache.Instance.RemoveSession(tokenId);
+                SessionCache.Instance.RemoveSession(sessionTokenId);
                 throw new SessionValidationException(ex.Detail);
             }
-            catch(FaultException<UserAccessDeniedException> ex)
+            catch (FaultException<UserAccessDeniedException> ex)
             {
-                SessionCache.Instance.RemoveSession(tokenId);
-                throw new SessionValidationException(ex.Detail);   
+                SessionCache.Instance.RemoveSession(sessionTokenId);
+                throw new SessionValidationException(ex.Detail);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 //TODO: for now we can't distinguish communicate errors and credential validation errors.
-                // All exceptions are treated the same: we can't verify the login.
+                // All exceptions are treated the same: we can't verify the session.
                 var e = new SessionValidationException(ex);
                 throw e;
-            }            
+            }         
         }
 
         [Obfuscation(Exclude = true)]
@@ -262,9 +240,118 @@ namespace ClearCanvas.Web.Enterprise.Authentication
                 });
         }
 
-        #region IDisposable Members
 
-        public void Dispose()
+		#region Private Methods
+
+
+		private SessionInfo RenewSession(string tokenId, bool bypassCache = false)
+		{
+			try
+			{
+				if (bypassCache)
+				{
+					using (new ResponseCacheBypassScope())
+					{
+						return DoRenewSession(tokenId);
+					}
+				}
+				else
+				{
+					return DoRenewSession(tokenId);
+				}
+
+			}
+			catch (FaultException<InvalidUserSessionException> ex)
+			{
+				SessionCache.Instance.RemoveSession(tokenId);
+				throw new SessionValidationException(ex.Detail);
+			}
+			catch (FaultException<UserAccessDeniedException> ex)
+			{
+				SessionCache.Instance.RemoveSession(tokenId);
+				throw new SessionValidationException(ex.Detail);
+			}
+			catch (Exception ex)
+			{
+				//TODO: for now we can't distinguish communicate errors and credential validation errors.
+				// All exceptions are treated the same: we can't verify the login.
+				var e = new SessionValidationException(ex);
+				throw e;
+			}
+		}
+
+		private SessionInfo DoRenewSession(string tokenId)
+		{
+			SessionInfo sessionInfo = SessionCache.Instance.Find(tokenId);
+			if (sessionInfo == null)
+			{
+				throw new Exception(String.Format("Unexpected error: session {0} does not exist in the cache", tokenId));
+			}
+
+
+			var request = new ValidateSessionRequest(sessionInfo.Credentials.UserName,
+													 sessionInfo.Credentials.SessionToken)
+			{
+				GetAuthorizations = true,
+				ValidateOnly = false
+			};
+
+			SessionToken newToken = null;
+			Platform.GetService(
+				delegate(IAuthenticationService service)
+				{
+					DateTime originalExpiryTime = sessionInfo.Credentials.SessionToken.ExpiryTime;
+					ValidateSessionResponse response = service.ValidateSession(request);
+
+					//If we're renewing, might as well renew well before expiry. If we're only validating,
+					//we don't want to force a call to the server unless it's actually expired.
+					var addSeconds = 0.0;
+
+					//Minor hack - the ImageServer client shows a little bar at the top of the page counting down to session timeout,
+					//and allowing the user to cancel. This timeout value determines when that bar shows up. If, however, the 
+					//validate response is being cached, we need to make sure we hit the server - otherwise the bar doesn't go away.
+					double.TryParse(ConfigurationManager.AppSettings.Get("ClientTimeoutWarningMinDuration"), out addSeconds);
+					addSeconds = Math.Max(addSeconds, 30);
+
+					if (Platform.Time.AddSeconds(addSeconds) >= response.SessionToken.ExpiryTime)
+					{
+						Platform.Log(LogLevel.Debug, "Session is at or near expiry; bypassing cache.");
+
+						//The response likely came from the cache, and we want to make sure we get a real validation response.
+						//Note that this only really matters when 2 processes are sharing a session, like ImageServer and Webstation.
+						using (new ResponseCacheBypassScope())
+						{
+							response = service.ValidateSession(request);
+						}
+					}
+
+					// update session info
+					string id = response.SessionToken.Id;
+					newToken = SessionCache.Instance.Renew(id, response.SessionToken.ExpiryTime);
+					sessionInfo.Credentials.Authorities = response.AuthorityTokens;
+					sessionInfo.Credentials.SessionToken = newToken;
+
+					if (Platform.IsLogLevelEnabled(LogLevel.Debug))
+					{
+						Platform.Log(LogLevel.Debug, "Session {0} for {1} is renewed. Valid until {2}", id,
+									 sessionInfo.Credentials.UserName, newToken.ExpiryTime);
+
+						if (originalExpiryTime == newToken.ExpiryTime)
+						{
+							Platform.Log(LogLevel.Warn, "Session expiry time is not changed. Is it cached?");
+						}
+					}
+				});
+
+			return sessionInfo;
+		}
+
+
+		#endregion
+
+		#region IDisposable Members
+
+		public void Dispose()
         {
         }
 

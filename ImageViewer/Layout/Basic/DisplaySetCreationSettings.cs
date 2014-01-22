@@ -92,6 +92,8 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
 		private bool _showOriginalSeries;
 		private bool _splitMultiEchoSeries;
 		private bool _showOriginalMultiEchoSeries;
+		private bool _splitMultiStackSeries;
+		private bool _showOriginalMultiStackSeries;
 
 		private bool _splitMixedMultiframes;
 		private bool _showOriginalMixedMultiframeSeries;
@@ -130,6 +132,12 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
 			{
 				SplitMultiEchoSeries = true;
 				ShowOriginalMultiEchoSeries = false;
+			}
+
+			if (SplitMultiStackSeriesEnabled)
+			{
+				SplitMultiStackSeries = true;
+				ShowOriginalMultiStackSeries = false;
 			}
 
 			OverlaySelections = OverlayHelper.OverlayManagers.Select(
@@ -259,6 +267,43 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
 		public bool ShowOriginalMultiEchoSeriesEnabled
 		{
 			get { return SplitMultiEchoSeries && SplitMultiEchoSeriesEnabled; }
+		}
+
+		public bool SplitMultiStackSeries
+		{
+			get { return _splitMultiStackSeries; }
+			set
+			{
+				if (_splitMultiStackSeries != value)
+				{
+					_splitMultiStackSeries = value;
+					NotifyPropertyChanged("SplitMultiStackSeries");
+					NotifyPropertyChanged("ShowOriginalMultiStackSeriesEnabled");
+				}
+			}
+		}
+
+		public bool SplitMultiStackSeriesEnabled
+		{
+			get { return SplitMixedMultiframesEnabled; }
+		}
+
+		public bool ShowOriginalMultiStackSeries
+		{
+			get { return _showOriginalMultiStackSeries; }
+			set
+			{
+				if (_showOriginalMultiStackSeries != value)
+				{
+					_showOriginalMultiStackSeries = value;
+					NotifyPropertyChanged("ShowOriginalMultiStackSeries");
+				}
+			}
+		}
+
+		public bool ShowOriginalMultiStackSeriesEnabled
+		{
+			get { return SplitMultiStackSeries && SplitMultiStackSeriesEnabled; }
 		}
 
 		public bool SplitMixedMultiframes
@@ -511,6 +556,18 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
 										setting.ShowOriginalMultiEchoSeries = showOriginalAttribute.Value == "True";
 								}
 								break;
+							case "SplitStacks":
+								if (setting.SplitMultiStackSeriesEnabled)
+								{
+									valueAttribute = optionNode.Attributes["value"];
+									if (valueAttribute != null)
+										setting.SplitMultiStackSeries = (valueAttribute.Value == "True");
+
+									showOriginalAttribute = optionNode.Attributes["show-original"];
+									if (showOriginalAttribute != null)
+										setting.ShowOriginalMultiStackSeries = showOriginalAttribute.Value == "True";
+								}
+								break;
 							case "SplitMixedMultiframes":
 								if (setting.SplitMixedMultiframesEnabled)
 								{
@@ -597,6 +654,15 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
 					splitEchosElement.SetAttribute("value", storedSetting.SplitMultiEchoSeries ? "True" : "False");
 					splitEchosElement.SetAttribute("show-original", storedSetting.ShowOriginalMultiEchoSeries ? "True" : "False");
 					optionsElement.AppendChild(splitEchosElement);
+				}
+
+				if (storedSetting.SplitMultiStackSeriesEnabled)
+				{
+					XmlElement splitStacksElement = document.CreateElement("option");
+					splitStacksElement.SetAttribute("identifier", "SplitStacks");
+					splitStacksElement.SetAttribute("value", storedSetting.SplitMultiStackSeries ? "True" : "False");
+					splitStacksElement.SetAttribute("show-original", storedSetting.ShowOriginalMultiStackSeries ? "True" : "False");
+					optionsElement.AppendChild(splitStacksElement);
 				}
 
 				if (storedSetting.SplitMixedMultiframesEnabled)

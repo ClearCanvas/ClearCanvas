@@ -22,27 +22,20 @@
 
 #endregion
 
-using System.Xml.Serialization;
 using System.Collections.Generic;
+using ClearCanvas.Common.Serialization;
+using ClearCanvas.ImageServer.Common.WorkQueue;
 using ClearCanvas.ImageServer.Model;
-using System.IO;
-using ClearCanvas.Common;
-using System;
-using NUnit.Framework;
-using System.Text;
-using ClearCanvas.ImageServer.Core.ModelExtensions;
 
 namespace ClearCanvas.ImageServer.Core.Data
 {
     /// <summary>
     /// Represents the data in the <see cref="WorkQueueTypeEnum.ReprocessStudy"/> <see cref="WorkQueue"/> item
     /// </summary>
-    public class ReprocessStudyQueueData
+    [WorkQueueDataType("4424D7DB-8120-4C10-ABB8-B22BFC984152")]
+    public class ReprocessStudyQueueData : WorkQueueData
     {
         #region Private Fields
-
-        private ReprocessStudyState _state;
-        private ReprocessStudyChangeLog _changeLog;
 
         #endregion
 
@@ -51,21 +44,13 @@ namespace ClearCanvas.ImageServer.Core.Data
         /// <summary>
         /// Represents the state of the processing (used by the service only)
         /// </summary>
-        public ReprocessStudyState State
-        {
-            get { return _state; }
-            set { _state = value; }
-        }
+        public ReprocessStudyState State { get; set; }
 
         /// <summary>
         /// Represents the changelog which will end up in the Study History record.
         /// Filled in by the process which requests the study to be reprocessed
         /// </summary>
-        public ReprocessStudyChangeLog ChangeLog
-        {
-            get { return _changeLog; }
-            set { _changeLog = value; }
-        }
+        public ReprocessStudyChangeLog ChangeLog { get; set; }
 
         /// <summary>
         /// (Optional) Additional files which the reprocess request initiator fill in to request
@@ -76,35 +61,20 @@ namespace ClearCanvas.ImageServer.Core.Data
         #endregion
     }
 
-    public class ReprocessStudyState
+    [WorkQueueDataType("AE4AE732-CC0B-4605-9C15-4AAEC98A0CC2")]
+    public class ReprocessStudyState : DataContractBase
     {
         #region Private Fields
-        
-        private bool _executeAtLeastOnce;
-        private bool _completed;
-        private int _completeAttemptCount;
 
         #endregion
 
         #region Public Properties
 
-        public bool ExecuteAtLeastOnce
-        {
-            get { return _executeAtLeastOnce; }
-            set { _executeAtLeastOnce = value; }
-        }
+        public bool ExecuteAtLeastOnce { get; set; }
 
-        public bool Completed
-        {
-            get { return _completed; }
-            set { _completed = value; }
-        }
+        public bool Completed { get; set; }
 
-        public int CompleteAttemptCount
-        {
-            get { return _completeAttemptCount; }
-            set { _completeAttemptCount = value; }
-        }
+        public int CompleteAttemptCount { get; set; }
 
         #endregion
 

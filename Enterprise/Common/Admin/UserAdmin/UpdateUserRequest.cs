@@ -22,22 +22,27 @@
 
 #endregion
 
-using System;
 using System.Runtime.Serialization;
 using ClearCanvas.Common.Serialization;
-using ClearCanvas.Enterprise.Common;
 
 namespace ClearCanvas.Enterprise.Common.Admin.UserAdmin
 {
-    [DataContract]
-    public class UpdateUserRequest : DataContractBase
-    {
-        public UpdateUserRequest(UserDetail userDetail)
-        {
-            UserDetail = userDetail;
-        }
+	[DataContract]
+	public class UpdateUserRequest : DataContractBase
+	{
+		public UpdateUserRequest(UserDetail userDetail)
+		{
+			UserDetail = userDetail;
+		}
 
-        [DataMember]
-        public UserDetail UserDetail;
-    }
+		[DataMember]
+		public UserDetail UserDetail;
+
+		/// <summary>
+		/// For system accounts, optionally specifies the password to be set on the account.
+		/// For other account types, this field is ignored.
+		/// </summary>
+		[DataMember]
+		public string Password;
+	}
 }

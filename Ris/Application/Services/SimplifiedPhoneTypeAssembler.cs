@@ -24,8 +24,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text;
-using ClearCanvas.Ris.Application.Common;
+using ClearCanvas.Enterprise.Common;
 using ClearCanvas.Healthcare;
 using ClearCanvas.Common.Utilities;
 

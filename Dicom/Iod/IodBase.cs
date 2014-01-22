@@ -153,6 +153,11 @@ namespace ClearCanvas.Dicom.Iod
 			return string.IsNullOrEmpty(value);
 		}
 
+		protected static bool IsNullOrEmpty(DicomAttribute attribute)
+		{
+			return attribute.IsEmpty || attribute.IsNull;
+		}
+
 		protected static bool IsNullOrEmpty<T>(T value)
 		{
 			return Equals(value, default(T));
@@ -167,6 +172,27 @@ namespace ClearCanvas.Dicom.Iod
 		protected static bool IsNullOrEmpty<T>(T[] array)
 		{
 			return array == null || array.Length == 0;
+		}
+
+		public static bool? ParseBool(string input, string trueString, string falseString)
+		{
+			if (!string.IsNullOrEmpty(input))
+			{
+				input = input.ToUpperInvariant();
+				if (input == trueString.ToUpperInvariant())
+					return true;
+				else if (input == falseString.ToUpperInvariant())
+					return false;
+			}
+			return null;
+		}
+
+		public static void SetAttributeFromBool(DicomAttribute dicomAttribute, bool? value, string trueString, string falseString)
+		{
+			if (!value.HasValue)
+				dicomAttribute.SetNullValue();
+			else
+				dicomAttribute.SetStringValue(value.Value ? trueString : falseString);
 		}
 
 		/// <summary>

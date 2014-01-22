@@ -26,6 +26,7 @@ using System;
 using ClearCanvas.Common;
 using ClearCanvas.Enterprise.Core;
 using ClearCanvas.ImageServer.Enterprise;
+using ClearCanvas.ImageServer.Enterprise.Command;
 using ClearCanvas.ImageServer.Model.Brokers;
 using ClearCanvas.ImageServer.Model.EntityBrokers;
 using ClearCanvas.ImageServer.Model.Parameters;
@@ -67,11 +68,9 @@ namespace ClearCanvas.ImageServer.Model
             {
                 lock (SyncRoot)
                 {
-                    // TODO: Use ExecutionContext to re-use db connection if possible
-                    // This however requires breaking the Common --> Model dependency.
-                    using (IReadContext readContext = PersistentStoreRegistry.GetDefaultStore().OpenReadContext())
+                    using (var context = new ServerExecutionContext())
                     {
-                        _study = LoadStudy(readContext);
+                        _study = LoadStudy(context.ReadContext);
                     }
                 }
             }
@@ -133,9 +132,9 @@ namespace ClearCanvas.ImageServer.Model
 
 		public static StudyStorage Load(ServerEntityKey partitionKey, string studyInstanceUid)
 		{
-			using (IReadContext context = PersistentStoreRegistry.GetDefaultStore().OpenReadContext())
-			{
-				return Load(context, partitionKey, studyInstanceUid);
+            using (var context = new ServerExecutionContext())
+            {
+				return Load(context.ReadContext, partitionKey, studyInstanceUid);
 			}
 		}
     }

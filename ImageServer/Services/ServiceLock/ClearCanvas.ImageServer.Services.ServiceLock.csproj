@@ -74,6 +74,9 @@
     </Compile>
     <Compile Include="FilesystemFileImporter\FilesystemFileImporterProcessorFactoryExtension.cs" />
     <Compile Include="FilesystemFileImporter\SopImportedEventArgs.cs" />
+    <Compile Include="PartitionReapplyRules\BaseReapplyRulesServiceLockItemProcessor.cs" />
+    <Compile Include="PartitionReapplyRules\PartitionReapplyRulesFactoryExtension.cs" />
+    <Compile Include="PartitionReapplyRules\PartitionReapplyRulesItemProcessor.cs" />
     <Compile Include="PurgeAlerts\PurgeAlertsFactoryExtension.cs" />
     <Compile Include="PurgeAlerts\PurgeAlertsItemProcessor.cs" />
     <Compile Include="ArchiveApplicationLog\ApplicationLogArchiveFactoryExtension.cs" />

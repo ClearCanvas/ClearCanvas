@@ -45,10 +45,8 @@ namespace ClearCanvas.Common.Specifications.Tests
 			public object[] CreateExtensions(ExtensionPoint extensionPoint, ExtensionFilter filter, bool justOne)
 			{
 				Console.WriteLine(extensionPoint);
-				if (extensionPoint.GetType() == typeof(ExpressionFactoryExtensionPoint))
+				if (extensionPoint is ExpressionFactoryExtensionPoint)
 					return new object[] { new ConstantExpressionFactory() };
-				if (extensionPoint.GetType() == typeof(XmlSpecificationCompilerOperatorExtensionPoint))
-					return new object[]{};
 
 				return new object[0];
 			}
@@ -56,10 +54,8 @@ namespace ClearCanvas.Common.Specifications.Tests
 			public ExtensionInfo[] ListExtensions(ExtensionPoint extensionPoint, ExtensionFilter filter)
 			{
 				Console.WriteLine(extensionPoint);
-				if (extensionPoint.GetType() == typeof(ExpressionFactoryExtensionPoint))
-					return new ExtensionInfo[] { new ExtensionInfo(typeof(ConstantExpressionFactory), extensionPoint.GetType(), null, null, true),  };
-				if (extensionPoint.GetType() == typeof(XmlSpecificationCompilerOperatorExtensionPoint))
-					return new ExtensionInfo[] { };
+				if (extensionPoint is ExpressionFactoryExtensionPoint)
+					return new[] { new ExtensionInfo(typeof(ConstantExpressionFactory), extensionPoint.GetType(), null, null, true),  };
 
 				return new ExtensionInfo[0];
 			}
@@ -175,6 +171,135 @@ namespace ClearCanvas.Common.Specifications.Tests
 		public void Test_Regex_MissingPattern()
 		{
 			ISpecification s = _factory.GetSpecification("regex_missingPattern");
+		}
+
+		[Test]
+		public void Test_StartsWith_Default()
+		{
+			var s = _factory.GetSpecification("startsWith_default");
+			Assert.IsInstanceOf(typeof(StartsWithSpecification), s);
+
+			var s1 = (StartsWithSpecification)s;
+			Assert.AreEqual("XXX", s1.Pattern);
+			Assert.AreEqual(false, s1.NullMatches);
+			Assert.AreEqual(true, s1.IgnoreCase);
+		}
+
+		[Test]
+		public void Test_StartsWith_Options1()
+		{
+			var s = _factory.GetSpecification("startsWith_options1");
+			Assert.IsInstanceOf(typeof(StartsWithSpecification), s);
+
+			var s1 = (StartsWithSpecification)s;
+			Assert.AreEqual("XXX", s1.Pattern);
+			Assert.AreEqual(false, s1.NullMatches);
+			Assert.AreEqual(false, s1.IgnoreCase);
+		}
+
+		[Test]
+		public void Test_StartsWith_Options2()
+		{
+			var s = _factory.GetSpecification("startsWith_options2");
+			Assert.IsInstanceOf(typeof(StartsWithSpecification), s);
+
+			var s1 = (StartsWithSpecification)s;
+			Assert.AreEqual("XXX", s1.Pattern);
+			Assert.AreEqual(true, s1.NullMatches);
+			Assert.AreEqual(true, s1.IgnoreCase);
+		}
+
+		[Test]
+		[ExpectedException(typeof(XmlSpecificationCompilerException))]
+		public void Test_StartsWith_MissingPattern()
+		{
+			var s = _factory.GetSpecification("startsWith_missingPattern");
+		}
+
+		[Test]
+		public void Test_EndsWith_Default()
+		{
+			var s = _factory.GetSpecification("endsWith_default");
+			Assert.IsInstanceOf(typeof(EndsWithSpecification), s);
+
+			var s1 = (EndsWithSpecification)s;
+			Assert.AreEqual("XXX", s1.Pattern);
+			Assert.AreEqual(false, s1.NullMatches);
+			Assert.AreEqual(true, s1.IgnoreCase);
+		}
+
+		[Test]
+		public void Test_EndsWith_Options1()
+		{
+			var s = _factory.GetSpecification("endsWith_options1");
+			Assert.IsInstanceOf(typeof(EndsWithSpecification), s);
+
+			var s1 = (EndsWithSpecification)s;
+			Assert.AreEqual("XXX", s1.Pattern);
+			Assert.AreEqual(false, s1.NullMatches);
+			Assert.AreEqual(false, s1.IgnoreCase);
+		}
+
+		[Test]
+		public void Test_EndsWith_Options2()
+		{
+			var s = _factory.GetSpecification("endsWith_options2");
+			Assert.IsInstanceOf(typeof(EndsWithSpecification), s);
+
+			var s1 = (EndsWithSpecification)s;
+			Assert.AreEqual("XXX", s1.Pattern);
+			Assert.AreEqual(true, s1.NullMatches);
+			Assert.AreEqual(true, s1.IgnoreCase);
+		}
+
+		[Test]
+		[ExpectedException(typeof(XmlSpecificationCompilerException))]
+		public void Test_EndsWith_MissingPattern()
+		{
+			var s = _factory.GetSpecification("endsWith_missingPattern");
+		}
+
+		[Test]
+		public void Test_Contains_Default()
+		{
+			var s = _factory.GetSpecification("contains_default");
+			Assert.IsInstanceOf(typeof(ContainsSpecification), s);
+
+			var s1 = (ContainsSpecification)s;
+			Assert.AreEqual("XXX", s1.Pattern);
+			Assert.AreEqual(false, s1.NullMatches);
+			Assert.AreEqual(true, s1.IgnoreCase);
+		}
+
+		[Test]
+		public void Test_Contains_Options1()
+		{
+			var s = _factory.GetSpecification("contains_options1");
+			Assert.IsInstanceOf(typeof(ContainsSpecification), s);
+
+			var s1 = (ContainsSpecification)s;
+			Assert.AreEqual("XXX", s1.Pattern);
+			Assert.AreEqual(false, s1.NullMatches);
+			Assert.AreEqual(false, s1.IgnoreCase);
+		}
+
+		[Test]
+		public void Test_Contains_Options2()
+		{
+			var s = _factory.GetSpecification("contains_options2");
+			Assert.IsInstanceOf(typeof(ContainsSpecification), s);
+
+			var s1 = (ContainsSpecification)s;
+			Assert.AreEqual("XXX", s1.Pattern);
+			Assert.AreEqual(true, s1.NullMatches);
+			Assert.AreEqual(true, s1.IgnoreCase);
+		}
+
+		[Test]
+		[ExpectedException(typeof(XmlSpecificationCompilerException))]
+		public void Test_Contains_MissingPattern()
+		{
+			var s = _factory.GetSpecification("contains_missingPattern");
 		}
 
 		[Test]
@@ -420,9 +545,9 @@ namespace ClearCanvas.Common.Specifications.Tests
 		public void Test_Each_Default()
 		{
 			ISpecification s = _factory.GetSpecification("each_default");
-            Assert.IsInstanceOf(typeof(EachSpecification), s);
+            Assert.IsInstanceOf(typeof(AllSpecification), s);
 
-			var s1 = (EachSpecification)s;
+			var s1 = (AllSpecification)s;
 			Assert.IsNotNull(s1.ElementSpec);
             Assert.IsInstanceOf(typeof(TrueSpecification), s1.ElementSpec);
 		}
@@ -432,7 +557,26 @@ namespace ClearCanvas.Common.Specifications.Tests
 		{
 			//TODO: this scenario does not currently throw an exception - should it?
 			ISpecification s = _factory.GetSpecification("each_missingElement");
-            Assert.IsInstanceOf(typeof(EachSpecification), s);
+            Assert.IsInstanceOf(typeof(AllSpecification), s);
+		}
+
+		[Test]
+		public void Test_All_Default()
+		{
+			ISpecification s = _factory.GetSpecification("all_default");
+			Assert.IsInstanceOf(typeof(AllSpecification), s);
+
+			var s1 = (AllSpecification)s;
+			Assert.IsNotNull(s1.ElementSpec);
+			Assert.IsInstanceOf(typeof(TrueSpecification), s1.ElementSpec);
+		}
+
+		[Test]
+		public void Test_All_MissingElement()
+		{
+			//TODO: this scenario does not currently throw an exception - should it?
+			ISpecification s = _factory.GetSpecification("all_missingElement");
+			Assert.IsInstanceOf(typeof(AllSpecification), s);
 		}
 
 		[Test]

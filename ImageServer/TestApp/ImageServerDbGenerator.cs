@@ -30,8 +30,9 @@ using ClearCanvas.Dicom;
 using ClearCanvas.Dicom.Network.Scu;
 using ClearCanvas.Enterprise.Core;
 using ClearCanvas.ImageServer.Common;
-using ClearCanvas.ImageServer.Common.Command;
+using ClearCanvas.ImageServer.Core;
 using ClearCanvas.ImageServer.Core.Process;
+using ClearCanvas.ImageServer.Enterprise.Command;
 using ClearCanvas.ImageServer.Model;
 
 namespace ClearCanvas.ImageServer.TestApp

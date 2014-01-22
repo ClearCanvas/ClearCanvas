@@ -27,9 +27,9 @@ using ClearCanvas.Common.Serialization;
 
 namespace ClearCanvas.Enterprise.Common.Admin.AuthorityGroupAdmin
 {
-    [DataContract]
+	[DataContract]
 	public class ListAuthorityGroupsRequest : DataContractBase
-    {
+	{
 		public ListAuthorityGroupsRequest()
 		{
 			Page = new SearchResultPage();
@@ -38,11 +38,10 @@ namespace ClearCanvas.Enterprise.Common.Admin.AuthorityGroupAdmin
 		[DataMember]
 		public SearchResultPage Page;
 
-        [DataMember]
-        public bool? DataGroup;
+		[DataMember]
+		public bool? DataGroup;
 
-        [DataMember]
-        public bool? Details;
-
+		[DataMember]
+		public bool? Details;
 	}
 }

@@ -29,13 +29,15 @@ using System.Linq;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Dicom;
+using ClearCanvas.Dicom.ServiceModel.Query;
+using ClearCanvas.Dicom.Utilities;
 using ClearCanvas.ImageViewer.Annotations;
 using ClearCanvas.ImageViewer.Graphics;
 using ClearCanvas.ImageViewer.StudyManagement;
-using ClearCanvas.Dicom.ServiceModel.Query;
 
 namespace ClearCanvas.ImageViewer
 {
+
 	#region Default
 
 	[Cloneable(false)]
@@ -44,14 +46,12 @@ namespace ClearCanvas.ImageViewer
 		public SeriesDisplaySetDescriptor(ISeriesIdentifier sourceSeries, IPresentationImageFactory presentationImageFactory)
 			: base(sourceSeries, presentationImageFactory)
 		{
-            Platform.CheckForNullReference(sourceSeries, "sourceSeries");
+			Platform.CheckForNullReference(sourceSeries, "sourceSeries");
 			Platform.CheckForNullReference(presentationImageFactory, "presentationImageFactory");
 		}
 
 		protected SeriesDisplaySetDescriptor(SeriesDisplaySetDescriptor source, ICloningContext context)
-			: base(source, context)
-		{
-		}
+			: base(source, context) {}
 
 		protected override string GetName()
 		{
@@ -81,10 +81,10 @@ namespace ClearCanvas.ImageViewer
 		public SingleFrameDisplaySetDescriptor(ISeriesIdentifier sourceSeries, Frame frame, int position)
 			: base(sourceSeries)
 		{
-            Platform.CheckForNullReference(sourceSeries, "sourceSeries");
-            Platform.CheckForNullReference(frame, "frame");
+			Platform.CheckForNullReference(sourceSeries, "sourceSeries");
+			Platform.CheckForNullReference(frame, "frame");
 
-            _seriesInstanceUid = frame.SeriesInstanceUid;
+			_seriesInstanceUid = frame.SeriesInstanceUid;
 			_sopInstanceUid = frame.SopInstanceUid;
 			_frameNumber = frame.FrameNumber;
 			_position = position;
@@ -96,8 +96,8 @@ namespace ClearCanvas.ImageViewer
 			else
 			{
 				//this is a referenced frame (e.g. key iamge).
-				_suffix = String.Format(SR.SuffixFormatSingleReferencedFrameDisplaySet, 
-					frame.ParentImageSop.SeriesNumber, frame.ParentImageSop.InstanceNumber, _frameNumber);
+				_suffix = String.Format(SR.SuffixFormatSingleReferencedFrameDisplaySet,
+				                        frame.ParentImageSop.SeriesNumber, frame.ParentImageSop.InstanceNumber, _frameNumber);
 			}
 		}
 
@@ -140,19 +140,20 @@ namespace ClearCanvas.ImageViewer
 		public SingleImageDisplaySetDescriptor(ISeriesIdentifier sourceSeries, ImageSop imageSop, int position)
 			: base(sourceSeries)
 		{
-            Platform.CheckForNullReference(sourceSeries, "sourceSeries");
-            Platform.CheckForNullReference(imageSop, "imageSop");
-            
-            _sopInstanceUid = imageSop.SopInstanceUid;
+			Platform.CheckForNullReference(sourceSeries, "sourceSeries");
+			Platform.CheckForNullReference(imageSop, "imageSop");
+
+			var frame = imageSop.Frames.First();
+			_sopInstanceUid = imageSop.SopInstanceUid;
 			_seriesInstanceUid = imageSop.SeriesInstanceUid;
 			_position = position;
 
-			string laterality = imageSop.ImageLaterality;
-			string viewPosition = imageSop.ViewPosition;
+			string laterality = frame.Laterality;
+			string viewPosition = frame.ViewPosition;
 			if (string.IsNullOrEmpty(viewPosition))
 			{
-				DicomAttributeSQ codeSequence = imageSop[DicomTags.ViewCodeSequence] as DicomAttributeSQ;
-                if (codeSequence != null && !codeSequence.IsNull && codeSequence.Count > 0)
+				DicomAttributeSQ codeSequence = frame[DicomTags.ViewCodeSequence] as DicomAttributeSQ;
+				if (codeSequence != null && !codeSequence.IsNull && codeSequence.Count > 0)
 					viewPosition = codeSequence[0][DicomTags.CodeMeaning].GetString(0, null);
 			}
 
@@ -175,11 +176,11 @@ namespace ClearCanvas.ImageViewer
 			{
 				//this is a referenced image (e.g. key image).
 				if (lateralityViewPosition != null)
-					_suffix = String.Format(SR.SuffixFormatSingleReferencedImageDisplaySetWithLateralityViewPosition, 
-						lateralityViewPosition, imageSop.SeriesNumber, imageSop.InstanceNumber);
+					_suffix = String.Format(SR.SuffixFormatSingleReferencedImageDisplaySetWithLateralityViewPosition,
+					                        lateralityViewPosition, imageSop.SeriesNumber, imageSop.InstanceNumber);
 				else
 					_suffix = String.Format(SR.SuffixFormatSingleReferencedImageDisplaySet,
-						imageSop.SeriesNumber, imageSop.InstanceNumber);
+					                        imageSop.SeriesNumber, imageSop.InstanceNumber);
 			}
 		}
 
@@ -221,9 +222,7 @@ namespace ClearCanvas.ImageViewer
 		/// <summary>
 		/// Constructor.
 		/// </summary>
-		public BasicDisplaySetFactory()
-		{
-		}
+		public BasicDisplaySetFactory() {}
 
 		/// <summary>
 		/// Constructor.
@@ -231,19 +230,17 @@ namespace ClearCanvas.ImageViewer
 		/// <param name="presentationImageFactory">The <see cref="IPresentationImageFactory"/>
 		/// used to create the <see cref="IPresentationImage"/>s that populate the constructed <see cref="IDisplaySet"/>s.</param>
 		public BasicDisplaySetFactory(IPresentationImageFactory presentationImageFactory)
-			: base(presentationImageFactory)
-		{
-		}
+			: base(presentationImageFactory) {}
 
-        /// <summary>
-        /// Specifies whether single image display sets should be created.
-        /// </summary>
-        /// <remarks>
-        /// When this is false, series display sets are created. However, in the degenerate case
-        /// where a series has only one image, the factory will not return a display set when
-        /// this property is true. Instead, you must set this property to false in order
-        /// to get a series display set returned.
-        /// </remarks>
+		/// <summary>
+		/// Specifies whether single image display sets should be created.
+		/// </summary>
+		/// <remarks>
+		/// When this is false, series display sets are created. However, in the degenerate case
+		/// where a series has only one image, the factory will not return a display set when
+		/// this property is true. Instead, you must set this property to false in order
+		/// to get a series display set returned.
+		/// </remarks>
 		public bool CreateSingleImageDisplaySets { get; set; }
 
 		/// <summary>
@@ -256,33 +253,54 @@ namespace ClearCanvas.ImageViewer
 			if (CreateSingleImageDisplaySets)
 				return DoCreateSingleImageDisplaySets(series);
 
-            var displaySets = new List<IDisplaySet>();
-			var displaySet = CreateSeriesDisplaySet(series);
-			if (displaySet != null)
+			var displaySets = CreateSeriesDisplaySet(series);
+			if (displaySets.Any())
 			{
-			    displaySet.PresentationImages.Sort();
-                displaySets.Add(displaySet);
+				foreach (var displaySet in displaySets)
+					displaySet.PresentationImages.Sort();
 			}
-
-		    return displaySets;
+			return displaySets;
 		}
 
-		private IDisplaySet CreateSeriesDisplaySet(Series series)
+		private List<IDisplaySet> CreateSeriesDisplaySet(Series series)
 		{
-			IDisplaySet displaySet = null;
-			List<IPresentationImage> images = new List<IPresentationImage>();
-			foreach (Sop sop in series.Sops)
-				images.AddRange(PresentationImageFactory.CreateImages(sop));
-
-			if (images.Count > 0)
+			var displaySets = new List<IDisplaySet>();
+			if (series.Modality == "KO")
 			{
-				DisplaySetDescriptor descriptor = new SeriesDisplaySetDescriptor(series.GetIdentifier(), PresentationImageFactory);
-				displaySet = new DisplaySet(descriptor);
-				foreach (IPresentationImage image in images)
-					displaySet.PresentationImages.Add(image);
-			}
+				// even if there are multiple KO documents in a single series, split into separate series because they have separate, important header data
+				foreach (Sop sop in series.Sops)
+				{
+					List<IPresentationImage> images = new List<IPresentationImage>();
+					images.AddRange(PresentationImageFactory.CreateImages(sop));
 
-			return displaySet;
+					if (images.Count > 0)
+					{
+						var descriptor = new KOSelectionDocumentDisplaySetDescriptor(sop, series.GetIdentifier(), PresentationImageFactory);
+
+						var displaySet = new DisplaySet(descriptor);
+						foreach (IPresentationImage image in images)
+							displaySet.PresentationImages.Add(image);
+						displaySets.Add(displaySet);
+					}
+				}
+			}
+			else
+			{
+				List<IPresentationImage> images = new List<IPresentationImage>();
+				foreach (Sop sop in series.Sops)
+					images.AddRange(PresentationImageFactory.CreateImages(sop));
+
+				if (images.Count > 0)
+				{
+					DisplaySetDescriptor descriptor = new SeriesDisplaySetDescriptor(series.GetIdentifier(), PresentationImageFactory);
+
+					var displaySet = new DisplaySet(descriptor);
+					foreach (IPresentationImage image in images)
+						displaySet.PresentationImages.Add(image);
+					displaySets.Add(displaySet);
+				}
+			}
+			return displaySets;
 		}
 
 		private List<IDisplaySet> DoCreateSingleImageDisplaySets(Series series)
@@ -296,9 +314,9 @@ namespace ClearCanvas.ImageViewer
 				if (images.Count == 0)
 					continue;
 
-                if (sop.IsImage)
+				if (sop.IsImage)
 				{
-					ImageSop imageSop = (ImageSop)sop;
+					ImageSop imageSop = (ImageSop) sop;
 					DicomDisplaySetDescriptor descriptor;
 
 					if (imageSop.NumberOfFrames == 1)
@@ -317,24 +335,18 @@ namespace ClearCanvas.ImageViewer
 					//The sop is actually a container for other referenced sops, like key images.
 					foreach (IPresentationImage image in images)
 					{
-						DisplaySetDescriptor descriptor = null;
+						DisplaySetDescriptor descriptor;
 						if (image is IImageSopProvider)
 						{
 							IImageSopProvider provider = (IImageSopProvider) image;
 							if (provider.ImageSop.NumberOfFrames == 1)
-								descriptor = new SingleImageDisplaySetDescriptor(series.GetIdentifier(), provider.ImageSop, position++);
+								descriptor = new KOSelectionSingleImageDisplaySetDescriptor(sop, series.GetIdentifier(), provider.ImageSop, position++);
 							else
-								descriptor = new SingleFrameDisplaySetDescriptor(series.GetIdentifier(), provider.Frame, position++);
+								descriptor = new KOSelectionSingleFrameDisplaySetDescriptor(sop, series.GetIdentifier(), provider.Frame, position++);
 						}
 						else
 						{
-							//TODO (CR Jan 2010): this because the design here is funny... the factory here should actually know something about the key object series it is building for
-							ISeriesIdentifier sourceSeries = series.GetIdentifier();
-							descriptor = new BasicDisplaySetDescriptor();
-							descriptor.Description = sourceSeries.SeriesDescription;
-							descriptor.Name = string.Format("{0}: {1}", sourceSeries.SeriesNumber, sourceSeries.SeriesDescription);
-							descriptor.Number = sourceSeries.SeriesNumber.GetValueOrDefault(0);
-							descriptor.Uid = sourceSeries.SeriesInstanceUid;
+							descriptor = new KOSelectionDocumentDisplaySetDescriptor(sop, series.GetIdentifier(), PresentationImageFactory);
 						}
 
 						DisplaySet displaySet = new DisplaySet(descriptor);
@@ -344,14 +356,14 @@ namespace ClearCanvas.ImageViewer
 				}
 			}
 
-            if (displaySets.Count == 1)
-            {
-                //Degenerate case; single image series, which we're not supposed to create.
-                displaySets[0].Dispose();
-                displaySets.Clear();
-            }
+			if (displaySets.Count == 1)
+			{
+				//Degenerate case; single image series, which we're not supposed to create.
+				displaySets[0].Dispose();
+				displaySets.Clear();
+			}
 
-		    return displaySets;
+			return displaySets;
 		}
 
 		internal static IEnumerable<IDisplaySet> CreateSeriesDisplaySets(Series series, StudyTree studyTree)
@@ -361,7 +373,89 @@ namespace ClearCanvas.ImageViewer
 			return factory.CreateDisplaySets(series);
 		}
 	}
-	
+
+	#endregion
+
+	#region KO Selections
+
+	public interface IKeyObjectSelectionDisplaySetDescriptor : IDicomDisplaySetDescriptor
+	{
+		DateTime? ContentDateTime { get; }
+		string SelectionInstanceUid { get; }
+	}
+
+	[Cloneable(false)]
+	public class KOSelectionDocumentDisplaySetDescriptor : SeriesDisplaySetDescriptor, IKeyObjectSelectionDisplaySetDescriptor
+	{
+		public KOSelectionDocumentDisplaySetDescriptor(Sop koSelectionSop, ISeriesIdentifier sourceSeries, IPresentationImageFactory presentationImageFactory)
+			: base(sourceSeries, presentationImageFactory)
+		{
+			ContentDateTime = DateTimeParser.ParseDateAndTime(null, koSelectionSop.ContentDate, koSelectionSop.ContentTime);
+			SelectionInstanceUid = koSelectionSop.SopInstanceUid;
+		}
+
+		protected KOSelectionDocumentDisplaySetDescriptor(KOSelectionDocumentDisplaySetDescriptor source, ICloningContext context)
+			: base(source, context) {}
+
+		public DateTime? ContentDateTime { get; private set; }
+		public string SelectionInstanceUid { get; private set; }
+
+		protected override string GetName()
+		{
+			var dateTime = ContentDateTime;
+			var name = base.GetName();
+			return dateTime.HasValue ? string.Format("{0} [{1}]", name, dateTime.Value) : name;
+		}
+	}
+
+	[Cloneable(false)]
+	public class KOSelectionSingleImageDisplaySetDescriptor : SingleImageDisplaySetDescriptor, IKeyObjectSelectionDisplaySetDescriptor
+	{
+		public KOSelectionSingleImageDisplaySetDescriptor(Sop koSelectionSop, ISeriesIdentifier sourceSeries, ImageSop imageSop, int position)
+			: base(sourceSeries, imageSop, position)
+		{
+			ContentDateTime = DateTimeParser.ParseDateAndTime(null, koSelectionSop.ContentDate, koSelectionSop.ContentTime);
+			SelectionInstanceUid = koSelectionSop.SopInstanceUid;
+		}
+
+		protected KOSelectionSingleImageDisplaySetDescriptor(KOSelectionSingleImageDisplaySetDescriptor source, ICloningContext context)
+			: base(source, context) {}
+
+		public DateTime? ContentDateTime { get; private set; }
+		public string SelectionInstanceUid { get; private set; }
+
+		protected override string GetName()
+		{
+			var dateTime = ContentDateTime;
+			var name = base.GetName();
+			return dateTime.HasValue ? string.Format("{0} [{1}]", name, dateTime.Value) : name;
+		}
+	}
+
+	[Cloneable(false)]
+	public class KOSelectionSingleFrameDisplaySetDescriptor : SingleFrameDisplaySetDescriptor, IKeyObjectSelectionDisplaySetDescriptor
+	{
+		public KOSelectionSingleFrameDisplaySetDescriptor(Sop koSelectionSop, ISeriesIdentifier sourceSeries, Frame frame, int position)
+			: base(sourceSeries, frame, position)
+		{
+			ContentDateTime = DateTimeParser.ParseDateAndTime(null, koSelectionSop.ContentDate, koSelectionSop.ContentTime);
+			SelectionInstanceUid = koSelectionSop.SopInstanceUid;
+		}
+
+		protected KOSelectionSingleFrameDisplaySetDescriptor(KOSelectionSingleFrameDisplaySetDescriptor source, ICloningContext context)
+			: base(source, context) {}
+
+		public DateTime? ContentDateTime { get; private set; }
+		public string SelectionInstanceUid { get; private set; }
+
+		protected override string GetName()
+		{
+			var dateTime = ContentDateTime;
+			var name = base.GetName();
+			return dateTime.HasValue ? string.Format("{0} [{1}]", name, dateTime.Value) : name;
+		}
+	}
+
 	#endregion
 
 	#region MR Echo
@@ -371,13 +465,16 @@ namespace ClearCanvas.ImageViewer
 	{
 		private readonly string _suffix;
 
-		public MREchoDisplaySetDescriptor(ISeriesIdentifier sourceSeries, int echoNumber, IPresentationImageFactory presentationImageFactory)
+		public MREchoDisplaySetDescriptor(ISeriesIdentifier sourceSeries, int echoNumber, string stackId, IPresentationImageFactory presentationImageFactory)
 			: base(sourceSeries, presentationImageFactory)
 		{
-            Platform.CheckForNullReference(sourceSeries, "sourceSeries");
-			
-            EchoNumber = echoNumber;
+			Platform.CheckForNullReference(sourceSeries, "sourceSeries");
+
+			EchoNumber = echoNumber;
+			StackId = stackId ?? string.Empty;
+
 			_suffix = String.Format(SR.SuffixFormatMREchoDisplaySet, echoNumber);
+			if (!string.IsNullOrEmpty(stackId)) _suffix = string.Concat(_suffix, @" ", String.Format(SR.SuffixFormatMultiframeStackDisplaySet, stackId));
 		}
 
 		protected MREchoDisplaySetDescriptor(MREchoDisplaySetDescriptor source, ICloningContext context)
@@ -386,7 +483,8 @@ namespace ClearCanvas.ImageViewer
 			context.CloneFields(source, this);
 		}
 
-        public int EchoNumber { get; private set; }
+		public int EchoNumber { get; private set; }
+		public string StackId { get; private set; }
 
 		protected override string GetName()
 		{
@@ -406,7 +504,10 @@ namespace ClearCanvas.ImageViewer
 
 		protected override string GetUid()
 		{
-			return String.Format("{0}:Echo{1}", SourceSeries.SeriesInstanceUid, EchoNumber);
+			if (!string.IsNullOrEmpty(StackId))
+				return String.Format("{0}:Echo{1}:Stack-{2}", SourceSeries.SeriesInstanceUid, EchoNumber, StackId);
+			else
+				return String.Format("{0}:Echo{1}", SourceSeries.SeriesInstanceUid, EchoNumber);
 		}
 	}
 
@@ -418,8 +519,7 @@ namespace ClearCanvas.ImageViewer
 		/// <summary>
 		/// Constructor.
 		/// </summary>
-		public MREchoDisplaySetFactory()
-		{}
+		public MREchoDisplaySetFactory() {}
 
 		/// <summary>
 		/// Constructor.
@@ -427,8 +527,12 @@ namespace ClearCanvas.ImageViewer
 		/// <param name="presentationImageFactory">The <see cref="IPresentationImageFactory"/>
 		/// used to create the <see cref="IPresentationImage"/>s that populate the constructed <see cref="IDisplaySet"/>s.</param>
 		public MREchoDisplaySetFactory(IPresentationImageFactory presentationImageFactory)
-			: base(presentationImageFactory)
-		{ }
+			: base(presentationImageFactory) {}
+
+		/// <summary>
+		/// Gets or sets whether or not to split by multiframe stack as well as echo.
+		/// </summary>
+		public bool SplitStacks { get; set; }
 
 		/// <summary>
 		/// Creates zero or more <see cref="IDisplaySet"/>s from the given <see cref="Series"/>.
@@ -443,18 +547,16 @@ namespace ClearCanvas.ImageViewer
 
 			if (series.Modality == "MR")
 			{
-				SortedDictionary<int, List<Sop>> imagesByEchoNumber = SplitMREchos(series.Sops);
+				var imagesByEchoNumber = SplitMREchos(series.Sops);
+
 				if (imagesByEchoNumber.Count > 1)
 				{
-					foreach (KeyValuePair<int, List<Sop>> echoImages in imagesByEchoNumber)
+					foreach (var echoImages in imagesByEchoNumber)
 					{
-						List<IPresentationImage> images = new List<IPresentationImage>();
-						foreach (ImageSop sop in echoImages.Value)
-							images.AddRange(PresentationImageFactory.CreateImages(sop));
-
+						var images = echoImages.Value;
 						if (images.Count > 0)
 						{
-							IDisplaySet displaySet = new DisplaySet(new MREchoDisplaySetDescriptor(series.GetIdentifier(), echoImages.Key, PresentationImageFactory));
+							IDisplaySet displaySet = new DisplaySet(new MREchoDisplaySetDescriptor(series.GetIdentifier(), echoImages.Key.EchoIndexValue, echoImages.Key.StackId, PresentationImageFactory));
 							foreach (IPresentationImage image in images)
 								displaySet.PresentationImages.Add(image);
 
@@ -468,27 +570,287 @@ namespace ClearCanvas.ImageViewer
 			return displaySets;
 		}
 
-		private static SortedDictionary<int, List<Sop>> SplitMREchos(IEnumerable<Sop> sops)
+		private IList<KeyValuePair<EchoIndex, List<IPresentationImage>>> SplitMREchos(IEnumerable<Sop> sops)
 		{
-			SortedDictionary<int, List<Sop>> imagesByEchoNumber = new SortedDictionary<int, List<Sop>>();
+			// keep separate echo lists in case series is mixed single/multi frames
+			// unless their dimension uid also matches, echo dimension indices should not be mixed between sop intances (see DICOM 2011 PS 3.3 C.7.6.17.2)
+			SortedDictionary<int, List<IPresentationImage>> imagesByEchoNumber = new SortedDictionary<int, List<IPresentationImage>>();
+			Dictionary<EchoIndex, List<IPresentationImage>> imagesByEchoDimension = new Dictionary<EchoIndex, List<IPresentationImage>>();
 
-			foreach (Sop sop in sops)
+			foreach (var sop in sops.OfType<ImageSop>())
 			{
-				if (sop.IsImage)
+				if (sop.IsMultiframe)
 				{
-					DicomAttribute echoAttribute = sop.DataSource[DicomTags.EchoNumbers];
+					foreach (var image in PresentationImageFactory.CreateImages(sop))
+					{
+						// key the display sets by echo and stack within the multiframe instance
+						var frame = ((IImageSopProvider) image).Frame;
+						var echoIndex = SplitStacks ? new EchoIndex(sop.SopInstanceUid, frame.EchoNumber, frame.StackNumber, frame.StackId) : new EchoIndex(sop.SopInstanceUid, frame.EchoNumber);
+						if (!imagesByEchoDimension.ContainsKey(echoIndex))
+							imagesByEchoDimension[echoIndex] = new List<IPresentationImage>();
+						imagesByEchoDimension[echoIndex].Add(image);
+					}
+				}
+				else
+				{
+					DicomAttribute echoAttribute = sop[DicomTags.EchoNumbers];
 					if (!echoAttribute.IsEmpty)
 					{
 						int echoNumber = echoAttribute.GetInt32(0, 0);
 						if (!imagesByEchoNumber.ContainsKey(echoNumber))
-							imagesByEchoNumber[echoNumber] = new List<Sop>();
+							imagesByEchoNumber[echoNumber] = new List<IPresentationImage>();
 
-						imagesByEchoNumber[echoNumber].Add(sop);
+						imagesByEchoNumber[echoNumber].AddRange(PresentationImageFactory.CreateImages(sop));
 					}
 				}
 			}
 
-			return imagesByEchoNumber;
+			var results = imagesByEchoNumber.Select(k => new KeyValuePair<EchoIndex, List<IPresentationImage>>(new EchoIndex(null, k.Key), k.Value)).ToList();
+
+			// if we have some multiframes processed into separate echos, append them to the main list
+			if (imagesByEchoDimension.Count > 0)
+			{
+				// make sure we number them in a logical order - since the multiframe echo indices don't have any meaning outside the SOP instance in which it was used,
+				// we'll sort by the first instance number in which the index was used, then order by the actual index value
+				results.AddRange(imagesByEchoDimension
+				                 	.OrderBy(k => k.Value.Select(i => ((IImageSopProvider) i).ImageSop.InstanceNumber).Min())
+				                 	.ThenBy(k => k.Key.EchoIndexValue)
+				                 	.ThenBy(k => k.Key.StackIndexValue.GetValueOrDefault(-1)));
+			}
+
+			return results;
+		}
+
+		private class EchoIndex : IEquatable<EchoIndex>
+		{
+			private readonly string _dimensionOrganizationUid;
+			private readonly int _echoIndexValue;
+			private readonly int? _stackIndexValue;
+			private readonly string _stackId;
+
+			public EchoIndex(string dimensionOrganizationUid, int echoIndexValue, int? stackIndexValue = null, string stackId = null)
+			{
+				_dimensionOrganizationUid = dimensionOrganizationUid ?? string.Empty;
+				_echoIndexValue = echoIndexValue;
+				_stackIndexValue = stackIndexValue;
+				_stackId = stackId ?? string.Empty;
+			}
+
+			public int EchoIndexValue
+			{
+				get { return _echoIndexValue; }
+			}
+
+			public int? StackIndexValue
+			{
+				get { return _stackIndexValue; }
+			}
+
+			public string StackId
+			{
+				get { return _stackId; }
+			}
+
+			public override int GetHashCode()
+			{
+				return _dimensionOrganizationUid.GetHashCode() ^ _echoIndexValue.GetHashCode() ^ _stackId.GetHashCode();
+			}
+
+			public bool Equals(EchoIndex other)
+			{
+				return other != null && Equals(_dimensionOrganizationUid, other._dimensionOrganizationUid) && _echoIndexValue == other._echoIndexValue && Equals(_stackId, other._stackId);
+			}
+
+			public override bool Equals(object obj)
+			{
+				return Equals(obj as EchoIndex);
+			}
+		}
+	}
+
+	#endregion
+
+	#region Multi-frame Stack
+
+	[Cloneable(false)]
+	public class MultiFrameStackDisplaySetDescriptor : DicomDisplaySetDescriptor
+	{
+		private readonly string _suffix;
+
+		public MultiFrameStackDisplaySetDescriptor(ISeriesIdentifier sourceSeries, string stackId, IPresentationImageFactory presentationImageFactory)
+			: base(sourceSeries, presentationImageFactory)
+		{
+			Platform.CheckForNullReference(sourceSeries, "sourceSeries");
+
+			StackId = stackId ?? string.Empty;
+
+			_suffix = String.Format(SR.SuffixFormatMultiframeStackDisplaySet, stackId);
+		}
+
+		protected MultiFrameStackDisplaySetDescriptor(MultiFrameStackDisplaySetDescriptor source, ICloningContext context)
+			: base(source, context)
+		{
+			context.CloneFields(source, this);
+		}
+
+		public string StackId { get; private set; }
+
+		protected override string GetName()
+		{
+			if (String.IsNullOrEmpty(SourceSeries.SeriesDescription))
+				return String.Format("{0}: {1}", SourceSeries.SeriesNumber, _suffix);
+			else
+				return String.Format("{0}: {1} - {2}", SourceSeries.SeriesNumber, SourceSeries.SeriesDescription, _suffix);
+		}
+
+		protected override string GetDescription()
+		{
+			if (String.IsNullOrEmpty(SourceSeries.SeriesDescription))
+				return _suffix;
+			else
+				return String.Format("{0} - {1}", SourceSeries.SeriesDescription, _suffix);
+		}
+
+		protected override string GetUid()
+		{
+			return String.Format("{0}:Stack-{1}", SourceSeries.SeriesInstanceUid, StackId);
+		}
+	}
+
+	/// <summary>
+	/// A <see cref="DisplaySetFactory"/> that splits multi-frame instances with multiple stacks into multiple <see cref="IDisplaySet"/>s; one per stack.
+	/// </summary>
+	public class MultiFrameStackDisplaySetFactory : DisplaySetFactory
+	{
+		/// <summary>
+		/// Constructor.
+		/// </summary>
+		public MultiFrameStackDisplaySetFactory() {}
+
+		/// <summary>
+		/// Constructor.
+		/// </summary>
+		/// <param name="presentationImageFactory">The <see cref="IPresentationImageFactory"/>
+		/// used to create the <see cref="IPresentationImage"/>s that populate the constructed <see cref="IDisplaySet"/>s.</param>
+		public MultiFrameStackDisplaySetFactory(IPresentationImageFactory presentationImageFactory)
+			: base(presentationImageFactory) {}
+
+		/// <summary>
+		/// Creates zero or more <see cref="IDisplaySet"/>s from the given <see cref="Series"/>.
+		/// </summary>
+		/// <remarks>
+		/// When the input <see cref="Series"/> does not have multiple echoes, no <see cref="IDisplaySet"/>s will be returned.
+		/// Otherwise, at least 2 <see cref="IDisplaySet"/>s will be returned.
+		/// </remarks>
+		public override List<IDisplaySet> CreateDisplaySets(Series series)
+		{
+			List<IDisplaySet> displaySets = new List<IDisplaySet>();
+
+			var imagesByStack = SplitStacks(series.Sops);
+
+			if (imagesByStack.Count > 1)
+			{
+				foreach (var stackImages in imagesByStack)
+				{
+					var images = stackImages.Value;
+					if (images.Count > 0)
+					{
+						IDisplaySet displaySet = new DisplaySet(new MultiFrameStackDisplaySetDescriptor(series.GetIdentifier(), stackImages.Key.StackId, PresentationImageFactory));
+						foreach (IPresentationImage image in images)
+							displaySet.PresentationImages.Add(image);
+
+						displaySet.PresentationImages.Sort();
+						displaySets.Add(displaySet);
+					}
+				}
+			}
+
+			return displaySets;
+		}
+
+		private IList<KeyValuePair<StackIndex, List<IPresentationImage>>> SplitStacks(IEnumerable<Sop> sops)
+		{
+			// keep separate echo lists in case series is mixed single/multi frames
+			// unless their dimension uid also matches, echo dimension indices should not be mixed between sop intances (see DICOM 2011 PS 3.3 C.7.6.17.2)
+			SortedDictionary<int, List<IPresentationImage>> singleFrames = new SortedDictionary<int, List<IPresentationImage>>();
+			Dictionary<StackIndex, List<IPresentationImage>> imagesByStackDimension = new Dictionary<StackIndex, List<IPresentationImage>>();
+
+			foreach (var sop in sops.OfType<ImageSop>())
+			{
+				if (sop.IsMultiframe)
+				{
+					foreach (var image in PresentationImageFactory.CreateImages(sop))
+					{
+						// key the display sets by stack within the multiframe instance
+						var frame = ((IImageSopProvider) image).Frame;
+						var stackIndex = new StackIndex(sop.SopInstanceUid, frame.StackNumber, frame.StackId);
+						if (!imagesByStackDimension.ContainsKey(stackIndex))
+							imagesByStackDimension[stackIndex] = new List<IPresentationImage>();
+						imagesByStackDimension[stackIndex].Add(image);
+					}
+				}
+				else
+				{
+					// single frame images don't really have a stack, so just assign them all to a stack 0
+					const int stackNumber = 0;
+					if (!singleFrames.ContainsKey(stackNumber))
+						singleFrames[stackNumber] = new List<IPresentationImage>();
+					singleFrames[stackNumber].AddRange(PresentationImageFactory.CreateImages(sop));
+				}
+			}
+
+			var results = singleFrames.Select(k => new KeyValuePair<StackIndex, List<IPresentationImage>>(new StackIndex(null, null, string.Empty), k.Value)).ToList();
+
+			// if we have some multiframes processed into separate echos, append them to the main list
+			if (imagesByStackDimension.Count > 0)
+			{
+				// make sure we number them in a logical order - since the multiframe echo indices don't have any meaning outside the SOP instance in which it was used,
+				// we'll sort by the first instance number in which the index was used, then order by the actual index value
+				results.AddRange(imagesByStackDimension
+				                 	.OrderBy(k => k.Value.Select(i => ((IImageSopProvider) i).ImageSop.InstanceNumber).Min())
+				                 	.ThenBy(k => k.Key.StackIndexValue.GetValueOrDefault(-1)));
+			}
+
+			return results;
+		}
+
+		private class StackIndex : IEquatable<StackIndex>
+		{
+			private readonly string _dimensionOrganizationUid;
+			private readonly int? _stackIndexValue;
+			private readonly string _stackId;
+
+			public StackIndex(string dimensionOrganizationUid, int? stackIndexValue, string stackId)
+			{
+				_dimensionOrganizationUid = dimensionOrganizationUid ?? string.Empty;
+				_stackIndexValue = stackIndexValue;
+				_stackId = stackId ?? string.Empty;
+			}
+
+			public string StackId
+			{
+				get { return _stackId; }
+			}
+
+			public int? StackIndexValue
+			{
+				get { return _stackIndexValue; }
+			}
+
+			public override int GetHashCode()
+			{
+				return _dimensionOrganizationUid.GetHashCode() ^ _stackId.GetHashCode();
+			}
+
+			public bool Equals(StackIndex other)
+			{
+				return other != null && Equals(_dimensionOrganizationUid, other._dimensionOrganizationUid) && Equals(_stackId, other._stackId);
+			}
+
+			public override bool Equals(object obj)
+			{
+				return Equals(obj as StackIndex);
+			}
 		}
 	}
 
@@ -499,18 +861,18 @@ namespace ClearCanvas.ImageViewer
 	[Cloneable(false)]
 	public class MultiframeDisplaySetDescriptor : DicomDisplaySetDescriptor
 	{
-	    private readonly string _sopInstanceUid;
+		private readonly string _sopInstanceUid;
 		private readonly string _suffix;
 
 		public MultiframeDisplaySetDescriptor(ISeriesIdentifier sourceSeries, string sopInstanceUid, int instanceNumber)
 			: base(sourceSeries)
 		{
-		    SopInstanceUid = sopInstanceUid;
-		    InstanceNumber = instanceNumber;
-		    Platform.CheckForNullReference(sourceSeries, "sourceSeries");
-            Platform.CheckForEmptyString(sopInstanceUid, "sopInstanceUid");
-            
-            _sopInstanceUid = sopInstanceUid;
+			SopInstanceUid = sopInstanceUid;
+			InstanceNumber = instanceNumber;
+			Platform.CheckForNullReference(sourceSeries, "sourceSeries");
+			Platform.CheckForEmptyString(sopInstanceUid, "sopInstanceUid");
+
+			_sopInstanceUid = sopInstanceUid;
 			_suffix = String.Format(SR.SuffixFormatMultiframeDisplaySet, instanceNumber);
 		}
 
@@ -520,17 +882,17 @@ namespace ClearCanvas.ImageViewer
 			context.CloneFields(source, this);
 		}
 
-        public string SopInstanceUid { get; private set; }
-        public int InstanceNumber { get; private set; }
-        
-        protected override string GetName()
+		public string SopInstanceUid { get; private set; }
+		public int InstanceNumber { get; private set; }
+
+		protected override string GetName()
 		{
 			if (String.IsNullOrEmpty(base.SourceSeries.SeriesDescription))
 				return String.Format("{0}: {1}", SourceSeries.SeriesNumber, _suffix);
 			else
 				return String.Format("{0}: {1} - {2}", SourceSeries.SeriesNumber, SourceSeries.SeriesDescription, _suffix);
 		}
-		
+
 		protected override string GetDescription()
 		{
 			if (String.IsNullOrEmpty(base.SourceSeries.SeriesDescription))
@@ -538,7 +900,7 @@ namespace ClearCanvas.ImageViewer
 			else
 				return String.Format("{0} - {1}", SourceSeries.SeriesDescription, _suffix);
 		}
-		
+
 		protected override string GetUid()
 		{
 			return _sopInstanceUid;
@@ -553,9 +915,9 @@ namespace ClearCanvas.ImageViewer
 		public SingleImagesDisplaySetDescriptor(ISeriesIdentifier sourceSeries, IPresentationImageFactory presentationImageFactory)
 			: base(sourceSeries, presentationImageFactory)
 		{
-		    Platform.CheckForNullReference(sourceSeries, "sourceSeries");
+			Platform.CheckForNullReference(sourceSeries, "sourceSeries");
 
-            _suffix = SR.SuffixSingleImagesDisplaySet;
+			_suffix = SR.SuffixSingleImagesDisplaySet;
 		}
 
 		protected SingleImagesDisplaySetDescriptor(SingleImagesDisplaySetDescriptor source, ICloningContext context)
@@ -571,7 +933,7 @@ namespace ClearCanvas.ImageViewer
 			else
 				return String.Format("{0}: {1} - {2}", SourceSeries.SeriesNumber, SourceSeries.SeriesDescription, _suffix);
 		}
-	
+
 		protected override string GetDescription()
 		{
 			if (String.IsNullOrEmpty(base.SourceSeries.SeriesDescription))
@@ -585,89 +947,6 @@ namespace ClearCanvas.ImageViewer
 			return String.Format("{0}:SingleImages", SourceSeries.SeriesInstanceUid);
 		}
 	}
-
-    [Cloneable(false)]
-    public class KeyImageDisplaySetDescriptor : DisplaySetDescriptor
-    {
-        private readonly string _suffix;
-        private string _name;
-
-        [CloneCopyReference] 
-        private IStudyIdentifier _study;
-
-        public KeyImageDisplaySetDescriptor(IStudyIdentifier sourceStudy)
-        {
-            Platform.CheckForNullReference(sourceStudy, "sourceStudy");
-
-            _study = sourceStudy;
-
-            _suffix = String.Format(SR.SuffixFormatKeyImageDisplaySet);
-        }
-
-        protected KeyImageDisplaySetDescriptor(KeyImageDisplaySetDescriptor source, ICloningContext context)
-        {
-            context.CloneFields(source, this);
-        }
-
-        /// <summary>
-        /// The source study for the display set.
-        /// </summary>
-        public IStudyIdentifier SourceStudy { get { return _study; } }
-
-        /// <summary>
-        /// Gets the descriptive name of the <see cref="IDisplaySet"/>.
-        /// </summary>
-        public override string Name
-        {
-            get
-            {
-                if (_name == null)
-                {
-                    _name = String.IsNullOrEmpty(SourceStudy.StudyDescription) 
-                        ? String.Format("{0}", _suffix) 
-                        : String.Format("{0}: {1}", SourceStudy.StudyDescription, _suffix) ;
-                }
-                return _name;
-            }
-            set { throw new InvalidOperationException("The Name property cannot be set publicly."); }
-        }
-
-        /// <summary>
-        /// Gets a description of the <see cref="IDisplaySet"/>.
-        /// </summary>
-        public override string Description
-        {
-            get
-            {
-                return SourceStudy.StudyDescription;
-            }
-            set { throw new InvalidOperationException("The Description property cannot be set publicly."); }
-        }
-
-        /// <summary>
-        /// Gets the unique identifier for the <see cref="IDisplaySet"/>.
-        /// </summary>
-        public override string Uid
-        {
-            get
-            {
-                return SourceStudy.StudyInstanceUid;
-            }
-            set { throw new InvalidOperationException("The Uid property cannot be set publicly."); }
-        }
-
-        /// <summary>
-        /// Gets a numeric identifier for the <see cref="IDisplaySet"/>, always "1".
-        /// </summary>
-        public override int Number
-        {
-            get
-            {
-                return 1;
-            }
-            set { throw new InvalidOperationException("The Uid property cannot be set publicly."); }
-        }
-    }
 
 	/// <summary>
 	/// A <see cref="DisplaySetFactory"/> that splits series with multiple single or multiframe images into
@@ -691,8 +970,7 @@ namespace ClearCanvas.ImageViewer
 		/// <summary>
 		/// Constructor.
 		/// </summary>
-		public MixedMultiFrameDisplaySetFactory()
-		{}
+		public MixedMultiFrameDisplaySetFactory() {}
 
 		/// <summary>
 		/// Constructor.
@@ -700,8 +978,7 @@ namespace ClearCanvas.ImageViewer
 		/// <param name="presentationImageFactory">The <see cref="IPresentationImageFactory"/>
 		/// used to create the <see cref="IPresentationImage"/>s that populate the constructed <see cref="IDisplaySet"/>s.</param>
 		public MixedMultiFrameDisplaySetFactory(IPresentationImageFactory presentationImageFactory)
-			: base(presentationImageFactory)
-		{ }
+			: base(presentationImageFactory) {}
 
 		/// <summary>
 		/// Creates zero or more <see cref="IDisplaySet"/>s from the given <see cref="Series"/>.
@@ -719,7 +996,7 @@ namespace ClearCanvas.ImageViewer
 			{
 				if (sop.IsImage)
 				{
-					ImageSop imageSop = (ImageSop)sop;
+					ImageSop imageSop = (ImageSop) sop;
 					if (imageSop.NumberOfFrames > 1)
 						multiFrames.Add(imageSop);
 					else
@@ -743,7 +1020,7 @@ namespace ClearCanvas.ImageViewer
 						foreach (IPresentationImage singleFrameImage in singleFrameImages)
 							singleImagesDisplaySet.PresentationImages.Add(singleFrameImage);
 
-                        singleImagesDisplaySet.PresentationImages.Sort();
+						singleImagesDisplaySet.PresentationImages.Sort();
 						displaySets.Add(singleImagesDisplaySet);
 					}
 				}
@@ -769,249 +1046,250 @@ namespace ClearCanvas.ImageViewer
 			return displaySets;
 		}
 	}
-	
+
 	#endregion
 
-    #region EntireStudy
+	#region EntireStudy
 
-    [Cloneable(false)]
-    public class ModalityDisplaySetDescriptor : DicomDisplaySetDescriptor
-    {
-        public ModalityDisplaySetDescriptor(IStudyIdentifier sourceStudy, string modality, IPresentationImageFactory presentationImageFactory)
-            : base(null, presentationImageFactory)
-        {
-            Platform.CheckForNullReference(sourceStudy, "sourceStudy");
-            Platform.CheckForEmptyString(modality, "modality");
-            
-            SourceStudy = sourceStudy;
-            Modality = modality;
-        }
-
-        protected ModalityDisplaySetDescriptor(ModalityDisplaySetDescriptor source, ICloningContext context)
-            :base(source, context)
+	[Cloneable(false)]
+	public class ModalityDisplaySetDescriptor : DicomDisplaySetDescriptor
+	{
+		public ModalityDisplaySetDescriptor(IStudyIdentifier sourceStudy, string modality, IPresentationImageFactory presentationImageFactory)
+			: base(null, presentationImageFactory)
 		{
-            //context.CloneFields(source, this);
-            Modality = source.Modality;
-            SourceStudy = source.SourceStudy;
+			Platform.CheckForNullReference(sourceStudy, "sourceStudy");
+			Platform.CheckForEmptyString(modality, "modality");
+
+			SourceStudy = sourceStudy;
+			Modality = modality;
 		}
 
-        public IStudyIdentifier SourceStudy { get; private set; }
-        public string Modality { get; private set; }
+		protected ModalityDisplaySetDescriptor(ModalityDisplaySetDescriptor source, ICloningContext context)
+			: base(source, context)
+		{
+			//context.CloneFields(source, this);
+			Modality = source.Modality;
+			SourceStudy = source.SourceStudy;
+		}
 
-        protected override string GetName()
-        {
-            return String.Format(SR.FormatNameModalityDisplaySet, Modality);
-        }
+		public IStudyIdentifier SourceStudy { get; private set; }
+		public string Modality { get; private set; }
 
-        protected override string GetDescription()
-        {
-            return String.Format(SR.FormatDescriptionModalityDisplaySet, Modality);
-        }
+		protected override string GetName()
+		{
+			return String.Format(SR.FormatNameModalityDisplaySet, Modality);
+		}
 
-        protected override string GetUid()
-        {
-            return String.Format("AllImages_{0}_{1}", Modality, SourceStudy.StudyInstanceUid);
-        }
-    }
+		protected override string GetDescription()
+		{
+			return String.Format(SR.FormatDescriptionModalityDisplaySet, Modality);
+		}
 
-    public class ModalityDisplaySetFactory : DisplaySetFactory
-    {
-        public ModalityDisplaySetFactory()
-        {
-        }
+		protected override string GetUid()
+		{
+			return String.Format("AllImages_{0}_{1}", Modality, SourceStudy.StudyInstanceUid);
+		}
+	}
 
-        public ModalityDisplaySetFactory(IPresentationImageFactory presentationImageFactory)
-            : base(presentationImageFactory)
-        {
-        }
+	public class ModalityDisplaySetFactory : DisplaySetFactory
+	{
+		public ModalityDisplaySetFactory() {}
 
-        private IDisplaySet CreateDisplaySet(Study study, IEnumerable<Series> modalitySeries)
-        {
-            var first = modalitySeries.FirstOrDefault();
-            if (first == null)
-                return null; 
+		public ModalityDisplaySetFactory(IPresentationImageFactory presentationImageFactory)
+			: base(presentationImageFactory) {}
 
-            var modality = first.Modality;
-            if (String.IsNullOrEmpty(modality))
-                return null;
+		private IDisplaySet CreateDisplaySet(Study study, IEnumerable<Series> modalitySeries)
+		{
+			var first = modalitySeries.FirstOrDefault();
+			if (first == null)
+				return null;
 
-            var displaySet = new DisplaySet(new ModalityDisplaySetDescriptor(study.GetIdentifier(), modality, PresentationImageFactory));
-            int seriesCount = 0;
-            foreach (var series in modalitySeries)
-            {
-                bool added = false;
-                foreach (var imageSop in series.Sops) //We don't want key images, references etc.
-                {
-                    foreach (var image in PresentationImageFactory.CreateImages(imageSop))
-                    {
-                        displaySet.PresentationImages.Add(image);
-                        added = true;
-                    }
-                }
+			var modality = first.Modality;
+			if (String.IsNullOrEmpty(modality))
+				return null;
 
-                if (added)
-                    ++seriesCount;
-            }
+			var displaySet = new DisplaySet(new ModalityDisplaySetDescriptor(study.GetIdentifier(), modality, PresentationImageFactory));
+			int seriesCount = 0;
+			foreach (var series in modalitySeries)
+			{
+				bool added = false;
+				foreach (var imageSop in series.Sops) //We don't want key images, references etc.
+				{
+					foreach (var image in PresentationImageFactory.CreateImages(imageSop))
+					{
+						displaySet.PresentationImages.Add(image);
+						added = true;
+					}
+				}
 
-            // Degenerate case is one series, in which case we don't create this display set.
-            if (seriesCount > 1)
-                return displaySet;
+				if (added)
+					++seriesCount;
+			}
 
-            displaySet.Dispose();
-            return null;
-        }
+			// Degenerate case is one series, in which case we don't create this display set.
+			if (seriesCount > 1)
+				return displaySet;
 
-        public IDisplaySet CreateDisplaySet(Study study, string modality)
-        {
-            return CreateDisplaySet(study, study.Series.Where(s => s.Modality == modality));
-        }
+			displaySet.Dispose();
+			return null;
+		}
 
-        public override List<IDisplaySet> CreateDisplaySets(Study study)
-        {
-            var displaySets = new List<IDisplaySet>();
-            foreach (var seriesByModality in study.Series.GroupBy(s => s.Modality))
-            {
-                var displaySet = CreateDisplaySet(study, seriesByModality);
-                if (displaySet != null)
-                {
-                    displaySet.PresentationImages.Sort();
-                    displaySets.Add(displaySet);
-                }
-            }
+		public IDisplaySet CreateDisplaySet(Study study, string modality)
+		{
+			return CreateDisplaySet(study, study.Series.Where(s => s.Modality == modality));
+		}
 
-            return displaySets;
-        }
+		public override List<IDisplaySet> CreateDisplaySets(Study study)
+		{
+			var displaySets = new List<IDisplaySet>();
+			foreach (var seriesByModality in study.Series.GroupBy(s => s.Modality))
+			{
+				var displaySet = CreateDisplaySet(study, seriesByModality);
+				if (displaySet != null)
+				{
+					displaySet.PresentationImages.Sort();
+					displaySets.Add(displaySet);
+				}
+			}
 
-        public override List<IDisplaySet> CreateDisplaySets(Series series)
-        {
-            throw new NotSupportedException();
-        }
-    }
+			return displaySets;
+		}
 
-    #endregion
+		public override List<IDisplaySet> CreateDisplaySets(Series series)
+		{
+			throw new NotSupportedException();
+		}
+	}
 
-    #region Placeholder
- 
-    public class PlaceholderDisplaySetFactory : DisplaySetFactory
-    {
-        public override List<IDisplaySet> CreateDisplaySets(Series series)
-        {
-            var images = new List<IPresentationImage>();
-            foreach (var sop in series.Sops)
-            {
-                // TODO CR (Oct 11): To be reworked before next Community release, since we do want this to show
+	#endregion
 
-                // only create placeholders for any non-image, non-presentation state SOPs
-                if (sop.IsImage
-                    || sop.SopClassUid == SopClass.EncapsulatedPdfStorageUid
-                    || sop.SopClassUid == SopClass.GrayscaleSoftcopyPresentationStateStorageSopClassUid
-                    || sop.SopClassUid == SopClass.ColorSoftcopyPresentationStateStorageSopClassUid
-                    || sop.SopClassUid == SopClass.PseudoColorSoftcopyPresentationStateStorageSopClassUid
-                    || sop.SopClassUid == SopClass.BlendingSoftcopyPresentationStateStorageSopClassUid)
-                    continue;
+	#region Placeholder
 
-                images.Add(new PlaceholderPresentationImage(sop));
-            }
+	public class PlaceholderDisplaySetFactory : DisplaySetFactory
+	{
+		public override List<IDisplaySet> CreateDisplaySets(Series series)
+		{
+			var images = new List<IPresentationImage>();
+			foreach (var sop in series.Sops)
+			{
+				// TODO CR (Oct 11): To be reworked before next Community release, since we do want this to show
 
-            if (images.Count > 0)
-            {
-                var displaySet = new DisplaySet(new SeriesDisplaySetDescriptor(series.GetIdentifier(), PresentationImageFactory));
-                foreach (var image in images)
-                    displaySet.PresentationImages.Add(image);
+				// only create placeholders for any non-image, non-presentation state SOPs
+				if (sop.IsImage
+				    || sop.SopClassUid == SopClass.EncapsulatedPdfStorageUid
+				    || sop.SopClassUid == SopClass.GrayscaleSoftcopyPresentationStateStorageSopClassUid
+				    || sop.SopClassUid == SopClass.ColorSoftcopyPresentationStateStorageSopClassUid
+				    || sop.SopClassUid == SopClass.PseudoColorSoftcopyPresentationStateStorageSopClassUid
+				    || sop.SopClassUid == SopClass.BlendingSoftcopyPresentationStateStorageSopClassUid)
+					continue;
 
-                return new List<IDisplaySet>(new[] { displaySet });
-            }
+				images.Add(new PlaceholderPresentationImage(sop));
+			}
 
-            return new List<IDisplaySet>();
-        }
+			if (images.Count > 0)
+			{
+				var displaySet = new DisplaySet(new SeriesDisplaySetDescriptor(series.GetIdentifier(), PresentationImageFactory));
+				foreach (var image in images)
+					displaySet.PresentationImages.Add(image);
 
-        #region PlaceholderPresentationImage Class
+				return new List<IDisplaySet>(new[] {displaySet});
+			}
 
-        [Cloneable]
-        private sealed class PlaceholderPresentationImage : BasicPresentationImage, ISopProvider
-        {
-            [CloneIgnore]
-            private ISopReference _sopReference;
+			return new List<IDisplaySet>();
+		}
 
-            public PlaceholderPresentationImage(Sop sop)
-                : base(new GrayscaleImageGraphic(1, 1))
-            {
-                _sopReference = sop.CreateTransientReference();
+		#region PlaceholderPresentationImage Class
 
-                var sopClass = SopClass.GetSopClass(sop.SopClassUid);
-                var sopClassDescription = sopClass != null ? sopClass.Name : SR.LabelUnknown;
-                CompositeImageGraphic.Graphics.Add(new ErrorMessageGraphic { Text = string.Format(SR.MessageUnsupportedImageType, sopClassDescription), Color = Color.WhiteSmoke });
-                Platform.Log(LogLevel.Warn, "Unsupported SOP Class \"{0} ({1})\" (SOP Instance {2})", sopClassDescription, sop.SopClassUid, sop.SopInstanceUid);
-            }
+		[Cloneable]
+		private sealed class PlaceholderPresentationImage : BasicPresentationImage, ISopProvider
+		{
+			[CloneIgnore]
+			private ISopReference _sopReference;
 
-            /// <summary>
-            /// Cloning constructor.
-            /// </summary>
-            /// <param name="source">The source object from which to clone.</param>
-            /// <param name="context">The cloning context object.</param>
-            private PlaceholderPresentationImage(PlaceholderPresentationImage source, ICloningContext context)
-                : base(source, context)
-            {
-                _sopReference = source._sopReference.Clone();
+			public PlaceholderPresentationImage(Sop sop)
+				: base(new GrayscaleImageGraphic(1, 1))
+			{
+				_sopReference = sop.CreateTransientReference();
 
-                context.CloneFields(source, this);
-            }
+				var sopClass = SopClass.GetSopClass(sop.SopClassUid);
+				var sopClassDescription = sopClass != null ? sopClass.Name : SR.LabelUnknown;
+				CompositeImageGraphic.Graphics.Add(new ErrorMessageGraphic {Text = string.Format(SR.MessageUnsupportedImageType, sopClassDescription), Color = Color.WhiteSmoke});
+				Platform.Log(LogLevel.Warn, "Unsupported SOP Class \"{0} ({1})\" (SOP Instance {2})", sopClassDescription, sop.SopClassUid, sop.SopInstanceUid);
+			}
 
-            protected override void Dispose(bool disposing)
-            {
-                if (_sopReference != null)
-                {
-                    _sopReference.Dispose();
-                    _sopReference = null;
-                }
-                base.Dispose(disposing);
-            }
+			/// <summary>
+			/// Cloning constructor.
+			/// </summary>
+			/// <param name="source">The source object from which to clone.</param>
+			/// <param name="context">The cloning context object.</param>
+			private PlaceholderPresentationImage(PlaceholderPresentationImage source, ICloningContext context)
+				: base(source, context)
+			{
+				_sopReference = source._sopReference.Clone();
 
-            public Sop Sop
-            {
-                get { return _sopReference.Sop; }
-            }
+				context.CloneFields(source, this);
+			}
 
-            protected override IAnnotationLayout CreateAnnotationLayout()
-            {
-                return new AnnotationLayout();
-            }
+			protected override void Dispose(bool disposing)
+			{
+				if (_sopReference != null)
+				{
+					_sopReference.Dispose();
+					_sopReference = null;
+				}
+				base.Dispose(disposing);
+			}
 
-            public override IPresentationImage CreateFreshCopy()
-            {
-                return new PlaceholderPresentationImage(_sopReference.Sop);
-            }
+			public Sop Sop
+			{
+				get { return _sopReference.Sop; }
+			}
 
-            [Cloneable(true)]
-            private class ErrorMessageGraphic : InvariantTextPrimitive
-            {
-                protected override SpatialTransform CreateSpatialTransform()
-                {
-                    return new InvariantSpatialTransform(this);
-                }
+			protected override IAnnotationLayout CreateAnnotationLayout()
+			{
+				return new AnnotationLayout();
+			}
 
-                public override void OnDrawing()
-                {
-                    if (base.ParentPresentationImage != null)
-                    {
-                        CoordinateSystem = CoordinateSystem.Destination;
-                        try
-                        {
-                            var clientRectangle = ParentPresentationImage.ClientRectangle;
-                            Location = new PointF(clientRectangle.Width / 2f, clientRectangle.Height / 2f);
-                        }
-                        finally
-                        {
-                            ResetCoordinateSystem();
-                        }
-                    }
-                    base.OnDrawing();
-                }
-            }
-        }
+			public override IPresentationImage CreateFreshCopy()
+			{
+				return new PlaceholderPresentationImage(_sopReference.Sop);
+			}
 
-        #endregion
-    }
+			public override Size SceneSize
+			{
+				get { return new Size(100, 100); }
+			}
 
-    #endregion
+			[Cloneable(true)]
+			private class ErrorMessageGraphic : InvariantTextPrimitive
+			{
+				protected override SpatialTransform CreateSpatialTransform()
+				{
+					return new InvariantSpatialTransform(this);
+				}
+
+				public override void OnDrawing()
+				{
+					if (base.ParentPresentationImage != null)
+					{
+						CoordinateSystem = CoordinateSystem.Destination;
+						try
+						{
+							var clientRectangle = ParentPresentationImage.ClientRectangle;
+							Location = new PointF(clientRectangle.Width/2f, clientRectangle.Height/2f);
+						}
+						finally
+						{
+							ResetCoordinateSystem();
+						}
+					}
+					base.OnDrawing();
+				}
+			}
+		}
+
+		#endregion
+	}
+
+	#endregion
 }

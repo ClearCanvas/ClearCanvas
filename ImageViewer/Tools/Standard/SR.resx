@@ -753,4 +753,37 @@ Please check the log for more details.</value>
   <data name="None" xml:space="preserve">
     <value>None</value>
   </data>
+  <data name="CommandRotate3D" xml:space="preserve">
+    <value>Rotate 3D</value>
+  </data>
+  <data name="MenuRotate3D" xml:space="preserve">
+    <value>Rotate 3D</value>
+  </data>
+  <data name="ToolbarRotate3D" xml:space="preserve">
+    <value>Rotate 3D</value>
+  </data>
+  <data name="TooltipRotate3D" xml:space="preserve">
+    <value>Rotate 3D</value>
+  </data>
+  <data name="FormatCoordinates3D" xml:space="preserve">
+    <value>x={0}, y={1}, z={2}</value>
+  </data>
+  <data name="LabelPatientLocation" xml:space="preserve">
+    <value>PAT</value>
+  </data>
+  <data name="MenuAxialView" xml:space="preserve">
+    <value>&amp;Axial View</value>
+  </data>
+  <data name="MenuCoronalView" xml:space="preserve">
+    <value>&amp;Coronal View</value>
+  </data>
+  <data name="MenuSagittalView" xml:space="preserve">
+    <value>&amp;Sagittal View</value>
+  </data>
+  <data name="MenuUnlockAnnotation" xml:space="preserve">
+    <value>Unlock Annotation</value>
+  </data>
+  <data name="Message3DOnly" xml:space="preserve">
+    <value>3D Only</value>
+  </data>
 </root>

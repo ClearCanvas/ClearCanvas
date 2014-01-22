@@ -42,6 +42,7 @@ namespace ClearCanvas.ImageViewer.Tools.Standard.Configuration
 		private bool _selectedImagePanTool;
 		private bool _selectedImageFlipTool;
 		private bool _selectedImageRotateTool;
+		private bool _selectedImageRotate3DTool;
 		private bool _selectedImageResetTool;
 
 		public ToolModalityBehavior() {}
@@ -57,6 +58,7 @@ namespace ClearCanvas.ImageViewer.Tools.Standard.Configuration
 			SelectedImagePanTool = source.SelectedImagePanTool;
 			SelectedImageResetTool = source.SelectedImageResetTool;
 			SelectedImageRotateTool = source.SelectedImageRotateTool;
+			SelectedImageRotate3DTool = source.SelectedImageRotate3DTool;
 			SelectedImageWindowLevelPresetsTool = source.SelectedImageWindowLevelPresetsTool;
 			SelectedImageWindowLevelTool = source.SelectedImageWindowLevelTool;
 			SelectedImageZoomTool = source.SelectedImageZoomTool;
@@ -191,6 +193,22 @@ namespace ClearCanvas.ImageViewer.Tools.Standard.Configuration
 		}
 
 		/// <summary>
+		/// Configures whether or not the <see cref="Rotate3DTool"/> is only applied to the selected image.
+		/// </summary>
+		public bool SelectedImageRotate3DTool
+		{
+			get { return _selectedImageRotate3DTool; }
+			set
+			{
+				if (_selectedImageRotate3DTool != value)
+				{
+					_selectedImageRotate3DTool = value;
+					NotifyPropertyChanged("SelectedImageRotate3DTool");
+				}
+			}
+		}
+
+		/// <summary>
 		/// Configures whether or not the <see cref="ResetTool"/> is only applied to the selected image.
 		/// </summary>
 		public bool SelectedImageResetTool
@@ -254,6 +272,9 @@ namespace ClearCanvas.ImageViewer.Tools.Standard.Configuration
 						case @"SelectedImageRotateTool":
 							SelectedImageRotateTool = ReadXmlBooleanAttribute(reader, false);
 							break;
+						case @"SelectedImageRotate3DTool":
+							SelectedImageRotate3DTool = ReadXmlBooleanAttribute(reader, false);
+							break;
 						case @"SelectedImageResetTool":
 							SelectedImageResetTool = ReadXmlBooleanAttribute(reader, false);
 							break;
@@ -278,6 +299,7 @@ namespace ClearCanvas.ImageViewer.Tools.Standard.Configuration
 			WriteXmlBooleanAttribute(writer, @"SelectedImageZoomTool", SelectedImageZoomTool);
 			WriteXmlBooleanAttribute(writer, @"SelectedImageFlipTool", SelectedImageFlipTool);
 			WriteXmlBooleanAttribute(writer, @"SelectedImageRotateTool", SelectedImageRotateTool);
+			WriteXmlBooleanAttribute(writer, @"SelectedImageRotate3DTool", SelectedImageRotate3DTool);
 			WriteXmlBooleanAttribute(writer, @"SelectedImageResetTool", SelectedImageResetTool);
 		}
 

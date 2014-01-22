@@ -41,6 +41,7 @@ public partial class DeviceTypeEnum : ServerEnum
       private static readonly DeviceTypeEnum _Server = GetEnum("Server");
       private static readonly DeviceTypeEnum _Broker = GetEnum("Broker");
       private static readonly DeviceTypeEnum _PriorsServer = GetEnum("PriorsServer");
+      private static readonly DeviceTypeEnum _PrimaryPacs = GetEnum("PrimaryPacs");
       #endregion
 
       #region Public Static Properties
@@ -78,6 +79,13 @@ public partial class DeviceTypeEnum : ServerEnum
       public static DeviceTypeEnum PriorsServer
       {
           get { return _PriorsServer; }
+      }
+      /// <summary>
+      /// Primary PACS Server, the ImageServer will accept duplicate SOP Instances from this server
+      /// </summary>
+      public static DeviceTypeEnum PrimaryPacs
+      {
+          get { return _PrimaryPacs; }
       }
 
       #endregion

@@ -32,12 +32,13 @@ using ClearCanvas.Dicom.Utilities.Command;
 using ClearCanvas.Dicom.Utilities.Xml;
 using ClearCanvas.Enterprise.Core;
 using ClearCanvas.ImageServer.Common;
-using ClearCanvas.ImageServer.Common.Command;
 using ClearCanvas.ImageServer.Common.Helpers;
 using ClearCanvas.ImageServer.Core.Command;
 using ClearCanvas.ImageServer.Core.Edit;
+using ClearCanvas.ImageServer.Core.Events;
 using ClearCanvas.ImageServer.Core.Process;
 using ClearCanvas.ImageServer.Core.Reconcile;
+using ClearCanvas.ImageServer.Enterprise.Command;
 using ClearCanvas.ImageServer.Model;
 using ClearCanvas.ImageServer.Model.EntityBrokers;
 using ClearCanvas.ImageServer.Rules;
@@ -45,6 +46,15 @@ using SaveDicomFileCommand = ClearCanvas.ImageServer.Core.Command.SaveDicomFileC
 
 namespace ClearCanvas.ImageServer.Core
 {
+	/// <summary>
+	/// Enum for telling the processor if a NewSop or UpdatedSop is being imported
+	/// </summary>
+	public enum SopInstanceProcessorSopType
+	{
+		NewSop,
+		UpdatedSop,
+		ReprocessedSop
+	}
 
 	/// <summary>
 	/// Encapsulates the context of the 'StudyProcess' operation.
@@ -55,6 +65,7 @@ namespace ClearCanvas.ImageServer.Core
 
 	    private readonly object _syncLock = new object();
         private readonly StudyStorageLocation _storageLocation;
+	    private readonly WorkQueue _workQueue;
 		private Study _study;
 		private ServerRulesEngine _sopProcessedRulesEngine;
 		private ServerRulesEngine _sopCompressionRulesEngine;
@@ -63,11 +74,19 @@ namespace ClearCanvas.ImageServer.Core
 
 		#region Constructors
 
-		public StudyProcessorContext(StudyStorageLocation storageLocation)
+		public StudyProcessorContext(StudyStorageLocation storageLocation, WorkQueue queue)
 		{
 		    Platform.CheckForNullReference(storageLocation, "storageLocation");
 		    _storageLocation = storageLocation;
+		    _workQueue = queue;
 		}
+
+        public StudyProcessorContext(StudyStorageLocation storageLocation)
+        {
+            Platform.CheckForNullReference(storageLocation, "storageLocation");
+            _storageLocation = storageLocation;
+            _workQueue = null;
+        }
 
 		#endregion
 
@@ -152,6 +171,11 @@ namespace ClearCanvas.ImageServer.Core
 	    {
 	        get { return _storageLocation; }
 	    }
+
+        public WorkQueue WorkQueueEntry
+        {
+            get { return _workQueue; }
+        }
 
 		public List<BaseImageLevelUpdateCommand> UpdateCommands
 		{
@@ -252,9 +276,10 @@ namespace ClearCanvas.ImageServer.Core
 		/// <param name="retry">Flag telling if the item should be retried on failure.  Note that if the item is a duplicate, the WorkQueueUid item is not failed. </param>
 		/// <param name="uid">An optional WorkQueueUid associated with the entry, that will be deleted upon success or failed on failure.</param>
 		/// <param name="deleteFile">An option file to delete as part of the process</param>
+		/// <param name="sopType">Flag telling if the SOP is a new or updated SOP</param>
         /// <exception cref="Exception"/>
         /// <exception cref="DicomDataException"/>
-        public  ProcessingResult ProcessFile(string group, DicomFile file, StudyXml stream, bool compare, bool retry, WorkQueueUid uid, string deleteFile)
+		public  ProcessingResult ProcessFile(string group, DicomFile file, StudyXml stream, bool compare, bool retry, WorkQueueUid uid, string deleteFile, SopInstanceProcessorSopType sopType)
 		{
 		    Platform.CheckForNullReference(file, "file");
 
@@ -270,7 +295,7 @@ namespace ClearCanvas.ImageServer.Core
 
                 using (ServerCommandProcessor processor = new ServerCommandProcessor("Process File"))
                 {
-                    SopProcessingContext processingContext = new SopProcessingContext(processor,
+                    SopInstanceProcessorContext processingContext = new SopInstanceProcessorContext(processor,
                                                                                       _context.StorageLocation, group);
 
                     if (EnforceNameRules)
@@ -285,7 +310,7 @@ namespace ClearCanvas.ImageServer.Core
                     }
                     else
                     {
-                        InsertInstance(file, stream, uid, deleteFile);
+                        InsertInstance(file, stream, uid, deleteFile,sopType);
                         result.Status = ProcessingStatus.Success;
                     }
                 }
@@ -308,7 +333,7 @@ namespace ClearCanvas.ImageServer.Core
             {
                 // If its a duplicate, ignore the exception, and just throw it
                 if (deleteFile != null && (e is InstanceAlreadyExistsException
-                        || e.InnerException != null && e.InnerException is InstanceAlreadyExistsException))
+                        || e.InnerException is InstanceAlreadyExistsException))
                     throw;
 
                 if (uid != null)
@@ -450,16 +475,16 @@ namespace ClearCanvas.ImageServer.Core
 		/// <param name="context"></param>
 		/// <param name="file"></param>
 		/// <param name="uid"></param>
-		private static void ScheduleReconcile(SopProcessingContext context, DicomFile file, WorkQueueUid uid)
+		private static void ScheduleReconcile(SopInstanceProcessorContext context, DicomFile file, WorkQueueUid uid)
 		{
 			ImageReconciler reconciler = new ImageReconciler(context);
 			reconciler.ScheduleReconcile(file, StudyIntegrityReasonEnum.InconsistentData, uid);
 		}
 
        
-		private void InsertInstance(DicomFile file, StudyXml stream, WorkQueueUid uid, string deleteFile)
+		private void InsertInstance(DicomFile file, StudyXml stream, WorkQueueUid uid, string deleteFile, SopInstanceProcessorSopType sopType)
 		{
-			using (ServerCommandProcessor processor = new ServerCommandProcessor("Processing WorkQueue DICOM file"))
+			using (var processor = new ServerCommandProcessor("Processing WorkQueue DICOM file"))
 			{
 			    EventsHelper.Fire(OnInsertingSop, this, new SopInsertingEventArgs {Processor = processor });
 
@@ -530,13 +555,24 @@ namespace ClearCanvas.ImageServer.Core
 						Platform.Log(LogLevel.Error, "File that failed processing: {0}", file.Filename);
 						throw new ApplicationException("Unexpected failure (" + processor.FailureReason + ") executing command for SOP: " + file.MediaStorageSopInstanceUid, processor.FailureException);
 					}
-				    Platform.Log(ServerPlatform.InstanceLogLevel, "Processed SOP: {0} for Patient {1}", file.MediaStorageSopInstanceUid, patientsName);
+					Platform.Log(ServerPlatform.InstanceLogLevel, "Processed SOP: {0} for Patient {1}", file.MediaStorageSopInstanceUid, patientsName);
+
+					// Fire NewSopEventArgs or UpdateSopEventArgs Event
+					// Know its a duplicate if we have to delete the duplicate object
+					if (sopType == SopInstanceProcessorSopType.NewSop)
+						EventManager.FireEvent(this, new NewSopEventArgs { File = file, ServerPartitionEntry = _context.Partition, WorkQueueUidEntry = uid, WorkQueueEntry = _context.WorkQueueEntry, FileLength = InstanceStats.FileSize });
+					else if (sopType == SopInstanceProcessorSopType.UpdatedSop)
+						EventManager.FireEvent(this, new UpdateSopEventArgs {File = file,ServerPartitionEntry = _context.Partition,WorkQueueUidEntry = uid, WorkQueueEntry = _context.WorkQueueEntry, FileLength = InstanceStats.FileSize});
 				}
 				catch (Exception e)
 				{
 					Platform.Log(LogLevel.Error, e, "Unexpected exception when {0}.  Rolling back operation.",
 					             processor.Description);
 					processor.Rollback();
+					if (sopType == SopInstanceProcessorSopType.NewSop)
+						EventManager.FireEvent(this, new FailedNewSopEventArgs { File = file, ServerPartitionEntry = _context.Partition, WorkQueueUidEntry = uid, WorkQueueEntry = _context.WorkQueueEntry, FileLength = InstanceStats.FileSize, FailureMessage = e.Message });
+					else
+						EventManager.FireEvent(this, new FailedUpdateSopEventArgs { File = file, ServerPartitionEntry = _context.Partition, WorkQueueUidEntry = uid, WorkQueueEntry = _context.WorkQueueEntry, FileLength = InstanceStats.FileSize, FailureMessage = e.Message });
 					throw new ApplicationException("Unexpected exception when processing file.", e);
 				}
 				finally

@@ -26,15 +26,23 @@ using System;
 
 namespace ClearCanvas.Common
 {
-    internal class LocalTimeProvider : ITimeProvider
-    {
-        #region ITimeProvider Members
+	internal class LocalTimeProvider : ITimeProvider
+	{
+		#region ITimeProvider Members
 
-        public DateTime CurrentTime
-        {
-            get { return DateTime.Now; }
-        }
+		public DateTime GetCurrentTime(DateTimeKind kind)
+		{
+			switch (kind)
+			{
+				case DateTimeKind.Utc:
+					return DateTime.UtcNow;
+				case DateTimeKind.Local:
+					return DateTime.Now;
+				default:
+					throw new ArgumentOutOfRangeException("kind");
+			}
+		}
 
-        #endregion
-    }
+		#endregion
+	}
 }

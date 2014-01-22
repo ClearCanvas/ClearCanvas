@@ -31,14 +31,20 @@ namespace ClearCanvas.Dicom.Iod
 	/// Represents the pixel spacing of an image.
 	/// </summary>
 	public class PixelSpacing : IEquatable<PixelSpacing>
-    {
-		#region Private Members
-		
-		double _row;
-		double _column;
+	{
+		#region Static Members
+
+		public static readonly PixelSpacing Zero = new PixelSpacing(0, 0);
 
 		#endregion
-		
+
+		#region Private Members
+
+		private double _row;
+		private double _column;
+
+		#endregion
+
 		/// <summary>
 		/// Constructor.
 		/// </summary>
@@ -51,9 +57,7 @@ namespace ClearCanvas.Dicom.Iod
 		/// <summary>
 		/// Protected constructor.
 		/// </summary>
-		protected PixelSpacing()
-		{
-		}
+		protected PixelSpacing() {}
 
 		#region Public Properties
 
@@ -62,24 +66,26 @@ namespace ClearCanvas.Dicom.Iod
 		/// </summary>
 		public bool IsNull
 		{
+// ReSharper disable CompareOfFloatsByEqualityOperator
 			get { return _row == 0 || _column == 0; }
+// ReSharper restore CompareOfFloatsByEqualityOperator
 		}
 
 		/// <summary>
 		/// Gets the spacing of the rows in the image, in millimetres.
 		/// </summary>
 		public virtual double Row
-        {
-            get { return _row; }
+		{
+			get { return _row; }
 			protected set { _row = value; }
-        }
+		}
 
 		/// <summary>
 		/// Gets the spacing of the columns in the image, in millimetres.
 		/// </summary>
 		public virtual double Column
-        {
-            get { return _column; }
+		{
+			get { return _column; }
 			protected set { _column = value; }
 		}
 
@@ -92,13 +98,7 @@ namespace ClearCanvas.Dicom.Iod
 		/// </remarks>
 		public double AspectRatio
 		{
-			get
-			{
-				if (IsNull)
-					return 0;
-				
-				return Row / Column;
-			}
+			get { return IsNull ? 0 : Row/Column; }
 		}
 
 		#endregion
@@ -113,13 +113,19 @@ namespace ClearCanvas.Dicom.Iod
 			return String.Format(@"{0:G12}\{1:G12}", _row, _column);
 		}
 
+		/// <summary>
+		/// Parses a <see cref="PixelSpacing"/> from a DICOM multi-valued string.
+		/// </summary>
+		/// <param name="multiValuedString">Pixel spacing, defined in row spacing and column spacing, separated by a backslash.</param>
+		/// <returns>
+		/// NULL if there are not exactly 2 parsed values in the input string.
+		/// </returns>
 		public static PixelSpacing FromString(string multiValuedString)
 		{
-			double[] values;
-			if (DicomStringHelper.TryGetDoubleArray(multiValuedString, out values) && values.Length == 2)
-					return new PixelSpacing(values[0], values[1]);
+			if (string.IsNullOrEmpty(multiValuedString)) return null;
 
-			return null;
+			double[] values;
+			return DicomStringHelper.TryGetDoubleArray(multiValuedString, out values) && values.Length == 2 ? new PixelSpacing(values[0], values[1]) : null;
 		}
 
 		#region IEquatable<PixelSpacing> Members
@@ -129,17 +135,16 @@ namespace ClearCanvas.Dicom.Iod
 			if (other == null)
 				return false;
 
+// ReSharper disable CompareOfFloatsByEqualityOperator
 			return _row == other._row && _column == other._column;
+// ReSharper restore CompareOfFloatsByEqualityOperator
 		}
 
 		#endregion
 
 		public override bool Equals(object obj)
 		{
-			if (obj == null)
-				return false;
-
-			return this.Equals(obj as PixelSpacing);
+			return obj != null && Equals(obj as PixelSpacing);
 		}
 
 		/// <summary>
@@ -150,7 +155,7 @@ namespace ClearCanvas.Dicom.Iod
 		/// </returns>
 		public override int GetHashCode()
 		{
-			return base.GetHashCode();
+			return -0x649CC600; // use a constant value because the real values are mutable and otherwise certain equality comparisons won't work
 		}
 
 		#endregion

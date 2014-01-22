@@ -50,13 +50,14 @@ namespace ClearCanvas.ImageViewer.InteractiveGraphics
 	public class AnnotationCalloutLocationStrategy : IAnnotationCalloutLocationStrategy
 	{
 		[CloneIgnore]
-		private AnnotationGraphic _annotationGraphic;
+		private IAnnotationGraphic _annotationGraphic;
+
 		private bool _initialLocationSet;
 
 		/// <summary>
 		/// Constructor.
 		/// </summary>
-		internal protected AnnotationCalloutLocationStrategy()
+		public AnnotationCalloutLocationStrategy()
 		{
 			_initialLocationSet = false;
 		}
@@ -80,21 +81,21 @@ namespace ClearCanvas.ImageViewer.InteractiveGraphics
 		/// <summary>
 		/// Gets the owning <see cref="AnnotationGraphic"/>.
 		/// </summary>
-		protected AnnotationGraphic AnnotationGraphic
+		protected IAnnotationGraphic AnnotationGraphic
 		{
 			get { return _annotationGraphic; }
 		}
 
-        [Obsolete("Access this via AnnotationSubject.")]
+		[Obsolete("Access this via AnnotationSubject.")]
 		protected IGraphic Roi
 		{
 			get { return _annotationGraphic.Subject; }
 		}
 
-	    protected IGraphic AnnotationSubject
-	    {
-            get { return _annotationGraphic.Subject; }    
-	    }
+		protected IGraphic AnnotationSubject
+		{
+			get { return _annotationGraphic.Subject; }
+		}
 
 		/// <summary>
 		/// Gets the <see cref="AnnotationGraphic"/>'s Callout.
@@ -115,14 +116,14 @@ namespace ClearCanvas.ImageViewer.InteractiveGraphics
 		/// </summary>
 		/// <param name="oldAnnotationGraphic">The former value of <see cref="AnnotationGraphic"/>.</param>
 		/// <param name="annotationGraphic">The new value of <see cref="AnnotationGraphic"/>.</param>
-		protected virtual void OnAnnotationGraphicChanged(AnnotationGraphic oldAnnotationGraphic, AnnotationGraphic annotationGraphic) {}
+		protected virtual void OnAnnotationGraphicChanged(IAnnotationGraphic oldAnnotationGraphic, IAnnotationGraphic annotationGraphic) {}
 
 		#region IRoiCalloutLocationStrategy Members
 
 		/// <summary>
 		/// Sets the <see cref="AnnotationGraphic"/> that owns this strategy.
 		/// </summary>
-		public void SetAnnotationGraphic(AnnotationGraphic annotationGraphic)
+		public void SetAnnotationGraphic(IAnnotationGraphic annotationGraphic)
 		{
 			if (_annotationGraphic != annotationGraphic)
 			{
@@ -133,7 +134,7 @@ namespace ClearCanvas.ImageViewer.InteractiveGraphics
 		}
 
 		/// <summary>
-		/// Called when the <see cref="InteractiveGraphics.AnnotationGraphic"/>'s callout location has been changed externally; for example, by the user.
+		/// Called when the <see cref="IAnnotationGraphic"/>'s callout location has been changed externally; for example, by the user.
 		/// </summary>
 		public virtual void OnCalloutLocationChangedExternally() {}
 
@@ -152,9 +153,9 @@ namespace ClearCanvas.ImageViewer.InteractiveGraphics
 				SizeF offset = new SizeF(0, 55);
 
 				// Setup the callout
-                AnnotationSubject.CoordinateSystem = CoordinateSystem.Destination;
-                location = RectangleUtilities.ConvertToPositiveRectangle(AnnotationSubject.BoundingBox).Location - offset;
-                AnnotationSubject.ResetCoordinateSystem();
+				AnnotationSubject.CoordinateSystem = CoordinateSystem.Destination;
+				location = RectangleUtilities.ConvertToPositiveRectangle(AnnotationSubject.BoundingBox).Location - offset;
+				AnnotationSubject.ResetCoordinateSystem();
 				return true;
 			}
 
@@ -166,7 +167,7 @@ namespace ClearCanvas.ImageViewer.InteractiveGraphics
 		/// </summary>
 		public virtual void CalculateCalloutEndPoint(out PointF endPoint, out CoordinateSystem coordinateSystem)
 		{
-			coordinateSystem = this.AnnotationGraphic.CoordinateSystem;
+			coordinateSystem = AnnotationGraphic.CoordinateSystem;
 			endPoint = AnnotationGraphic.Subject.GetClosestPoint(AnnotationGraphic.Callout.TextLocation);
 		}
 

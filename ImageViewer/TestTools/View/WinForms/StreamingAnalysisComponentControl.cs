@@ -32,6 +32,7 @@ using System.Windows.Forms;
 
 using ClearCanvas.Desktop.View.WinForms;
 using ClearCanvas.ImageViewer.StudyLoaders.Streaming;
+using ClearCanvas.ImageViewer.StudyManagement;
 using NPlot;
 using System.Threading;
 using Timer=System.Windows.Forms.Timer;

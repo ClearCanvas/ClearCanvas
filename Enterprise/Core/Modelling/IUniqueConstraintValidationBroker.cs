@@ -31,15 +31,15 @@ namespace ClearCanvas.Enterprise.Core.Modelling
     /// </summary>
     public interface IUniqueConstraintValidationBroker : IPersistenceBroker
     {
-        /// <summary>
-        /// Tests whether the specified object satisfies the specified unique constraint.
-        /// </summary>
-        /// <param name="obj">The object to test.</param>
-        /// <param name="entityClass">The class of entity to which the constraint applies.</param>
-        /// <param name="uniqueConstraintMembers">The properties of the object that form the unique key.
-        /// These may be compound property expressions (e.g. Name.FirstName, Name.LastName).
-        /// </param>
-        /// <returns></returns>
-        bool IsUnique(DomainObject obj, Type entityClass, string[] uniqueConstraintMembers);
+    	/// <summary>
+    	/// Tests whether the specified object satisfies the specified unique constraint.
+    	/// </summary>
+		/// <param name="domainObject">The object to test.</param>
+    	/// <param name="entityClass">The class of entity to which the constraint applies.</param>
+    	/// <param name="uniqueConstraintMembers">The properties of the object that form the unique key.
+    	/// These may be compound property expressions (e.g. Name.FirstName, Name.LastName).
+    	/// </param>
+    	/// <returns></returns>
+    	bool IsUnique(object domainObject, Type entityClass, string[] uniqueConstraintMembers);
     }
 }

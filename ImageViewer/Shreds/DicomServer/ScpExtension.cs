@@ -70,7 +70,20 @@ namespace ClearCanvas.ImageViewer.Shreds.DicomServer
 			return DicomPresContextResult.Accept;
 		}
 
-		public abstract bool OnReceiveRequest(ClearCanvas.Dicom.Network.DicomServer server, ServerAssociationParameters association, byte presentationID, DicomMessage message);
+		public abstract bool OnReceiveRequest(Dicom.Network.DicomServer server, ServerAssociationParameters association, byte presentationId, DicomMessage message);
+
+		public virtual IDicomFilestreamHandler OnStartFilestream(Dicom.Network.DicomServer server, ServerAssociationParameters association,
+		                                                 byte presentationId, DicomMessage message)
+		{
+			throw new System.NotImplementedException();
+		}
+
+		public virtual bool ReceiveMessageAsFileStream(Dicom.Network.DicomServer server, ServerAssociationParameters association, byte presentationId,
+		                                       DicomMessage message)
+		{
+			// receive studies the standard way in memory
+			return false;
+		}
 
 		public IList<SupportedSop> GetSupportedSopClasses()
 		{

@@ -73,7 +73,7 @@ namespace ClearCanvas.Dicom
         /// </summary>
         /// <param name="group"></param>
         /// <param name="element"></param>
-        /// <returns>A DicomTag instance, if the tag exists, or null if it doesn't.</returns>
+        /// <returns>A DicomTag instance, if the tag is defined, or null if it doesn't.</returns>
         public static DicomTag GetDicomTag(ushort group, ushort element)
         {
             return GetDicomTag((uint)group << 16 | (uint)element);
@@ -83,7 +83,7 @@ namespace ClearCanvas.Dicom
         /// Method used to retrieve DicomTag instances for specific DICOM attributes.
         /// </summary>
         /// <param name="tag">The DICOM tag to retrieve.</param>
-        /// <returns>A DicomTag instance, if the tag exists, or null if it doesn't.</returns>
+        /// <returns>A DicomTag instance, if the tag is defined, or null if it doesn't.</returns>
         public static DicomTag GetDicomTag(uint tag)
         {
             DicomTag theTag;

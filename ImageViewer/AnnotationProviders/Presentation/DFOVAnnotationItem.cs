@@ -23,40 +23,43 @@
 #endregion
 
 using System;
+using System.Drawing;
+using ClearCanvas.Dicom.Iod;
 using ClearCanvas.ImageViewer.Annotations;
 using ClearCanvas.ImageViewer.Graphics;
-using ClearCanvas.ImageViewer.StudyManagement;
-using ClearCanvas.Dicom.Iod;
-using System.Drawing;
+using ClearCanvas.ImageViewer.Graphics3D;
 using ClearCanvas.ImageViewer.Mathematics;
+using ClearCanvas.ImageViewer.StudyManagement;
 
 namespace ClearCanvas.ImageViewer.AnnotationProviders.Presentation
 {
 	internal sealed class DFOVAnnotationItem : AnnotationItem
 	{
 		public DFOVAnnotationItem()
-			: base("Presentation.DFOV", new AnnotationResourceResolver(typeof(DFOVAnnotationItem).Assembly))
-		{ 
-		}
+			: base("Presentation.DFOV", new AnnotationResourceResolver(typeof (DFOVAnnotationItem).Assembly)) {}
 
 		public override string GetAnnotationText(IPresentationImage presentationImage)
 		{
 			if (presentationImage == null)
 				return String.Empty;
-				
+
 			IImageSopProvider imageSopProvider = presentationImage as IImageSopProvider;
-			if (imageSopProvider  == null)
+			if (imageSopProvider == null)
 				return String.Empty;
-				
+
 			ISpatialTransformProvider spatialTransformProvider = presentationImage as ISpatialTransformProvider;
 			if (spatialTransformProvider == null)
 				return String.Empty;
 
-			ImageSpatialTransform transform = spatialTransformProvider.SpatialTransform as ImageSpatialTransform;
+			// 2D DFOV value doesn't make a lot of sense when the "image" is 3D, so we're blanking it out until we define what DFOV means in this context
+			if (presentationImage is ISpatialTransform3DProvider)
+				return String.Empty;
+
+			IImageSpatialTransform transform = spatialTransformProvider.SpatialTransform as IImageSpatialTransform;
 			if (transform == null)
 				return String.Empty;
 
-			if (transform.RotationXY % 90 != 0)
+			if (transform.RotationXY%90 != 0)
 				return SR.ValueNotApplicable;
 
 			Frame frame = imageSopProvider.Frame;
@@ -84,13 +87,13 @@ namespace ClearCanvas.ImageViewer.AnnotationProviders.Presentation
 
 			if (x1 > y1) //the image is not rotated
 			{
-				displayedFieldOfViewX = x1 * normalizedPixelSpacing.Column / 10;
-				displayedFieldOfViewY = y2 * normalizedPixelSpacing.Row / 10;
+				displayedFieldOfViewX = x1*normalizedPixelSpacing.Column/10;
+				displayedFieldOfViewY = y2*normalizedPixelSpacing.Row/10;
 			}
 			else //the image is rotated by 90 or 270 degrees
 			{
-				displayedFieldOfViewX = x2 * normalizedPixelSpacing.Column / 10;
-				displayedFieldOfViewY = y1 * normalizedPixelSpacing.Row / 10;
+				displayedFieldOfViewX = x2*normalizedPixelSpacing.Column/10;
+				displayedFieldOfViewY = y1*normalizedPixelSpacing.Row/10;
 			}
 
 			return String.Format(SR.FormatCentimeters, String.Format(SR.Format2Dimensions, displayedFieldOfViewX.ToString("F1"), displayedFieldOfViewY.ToString("F1")));

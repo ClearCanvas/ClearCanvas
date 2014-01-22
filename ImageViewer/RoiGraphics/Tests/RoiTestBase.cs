@@ -41,10 +41,8 @@ using NUnit.Framework;
 
 namespace ClearCanvas.ImageViewer.RoiGraphics.Tests
 {
-	public abstract class RoiTestBase<T>
+	public abstract class RoiTestBase<T> : RoiTestBase
 	{
-		private static readonly string _testImagePathFormat = @"TestImages\{0}.dcm";
-
 		/// <summary>
 		/// Tests the <see cref="Roi.Contains(System.Drawing.PointF)"/> method for a given shape. The image is used to provide a basis for the coordinate space.
 		/// </summary>
@@ -189,7 +187,7 @@ namespace ClearCanvas.ImageViewer.RoiGraphics.Tests
 				}
 
 				// enumerate the post modality LUT values and compare with the expected list of values
-				var actualValues = new List<int>(roi.GetPixelValues().Select(v => (int) Math.Round(v))).AsReadOnly();
+				var actualValues = roi.GetPixelValues().Select(v => (int) Math.Round(v)).ToList().AsReadOnly();
 				try
 				{
 					var list = new List<int>(actualValues);
@@ -406,6 +404,35 @@ namespace ClearCanvas.ImageViewer.RoiGraphics.Tests
 		protected abstract Roi CreateRoiFromImage(IPresentationImage image, T shapeData);
 		protected abstract void AddShapeToGraphicsPath(GraphicsPath graphicsPath, T shapeData);
 
+		private static string Format<TItem>(IEnumerable<TItem> enumerable)
+		{
+			var builder = new StringBuilder();
+			foreach (var item in enumerable)
+			{
+				builder.Append(item.ToString());
+				builder.Append("; ");
+			}
+			if (builder.Length == 0)
+				return string.Empty;
+			return builder.ToString(0, builder.Length - 2);
+		}
+
+		private static Color ShiftColor(Color original, bool shiftRed, bool shiftGreen, bool shiftBlue)
+		{
+			return Color.FromArgb(shiftRed ? 255 : (int) original.R, shiftGreen ? 255 : (int) original.G, shiftBlue ? 255 : (int) original.B);
+		}
+
+		[TestFixtureSetUp]
+		public void TestSetup()
+		{
+			AssertTestImagePath();
+		}
+	}
+
+	public abstract class RoiTestBase
+	{
+		private const string _testImagePathFormat = @"TestImages\{0}.dcm";
+
 		protected static void WriteLine(string message, params object[] args)
 		{
 			if (args != null && args.Length > 0)
@@ -439,26 +466,7 @@ namespace ClearCanvas.ImageViewer.RoiGraphics.Tests
 			}
 		}
 
-		private static string Format<TItem>(IEnumerable<TItem> enumerable)
-		{
-			var builder = new StringBuilder();
-			foreach (var item in enumerable)
-			{
-				builder.Append(item.ToString());
-				builder.Append("; ");
-			}
-			if (builder.Length == 0)
-				return string.Empty;
-			return builder.ToString(0, builder.Length - 2);
-		}
-
-		private static Color ShiftColor(Color original, bool shiftRed, bool shiftGreen, bool shiftBlue)
-		{
-			return Color.FromArgb(shiftRed ? 255 : (int) original.R, shiftGreen ? 255 : (int) original.G, shiftBlue ? 255 : (int) original.B);
-		}
-
-		[TestFixtureSetUp]
-		public void TestSetup()
+		protected static void AssertTestImagePath()
 		{
 			foreach (ImageKey imageKey in Enum.GetValues(typeof (ImageKey)))
 			{
@@ -469,8 +477,8 @@ namespace ClearCanvas.ImageViewer.RoiGraphics.Tests
 				if (!File.Exists(filename))
 				{
 					string message = String.Format(
-						@"The required test image {0} is missing. " + 
-						@"Please copy the contents of <TrunkPath>\ImageViewer\RoiGraphics\Tests\Images " + 
+						@"The required test image {0} is missing. " +
+						@"Please copy the contents of <TrunkPath>\ImageViewer\RoiGraphics\Tests\Images " +
 						@"to {1} in order to execute these tests.", filename, directoryName);
 
 					Trace.WriteLine(message);

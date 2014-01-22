@@ -25,22 +25,9 @@
 using ClearCanvas.Common;
 using ClearCanvas.Desktop;
 using ClearCanvas.Desktop.Explorer;
-using ClearCanvas.Common.Authorization;
 
 namespace ClearCanvas.ImageViewer.Explorer.Dicom
 {
-	public static class AuthorityTokens
-	{
-		[AuthorityToken(Description = "Grant access to the DICOM explorer.")]
-		public const string DicomExplorer = "Viewer/Explorer/DICOM";
-
-		public static class Configuration
-		{
-			[AuthorityToken(Description = "Allow configuration of 'My Servers'.")]
-			public const string MyServers = "Viewer/Configuration/My Servers";
-		}
-	}
-
 	[ExtensionOf(typeof(HealthcareArtifactExplorerExtensionPoint))]
 	public class DicomExplorer : IHealthcareArtifactExplorer
 	{
@@ -60,7 +47,7 @@ namespace ClearCanvas.ImageViewer.Explorer.Dicom
 
 		public bool IsAvailable
 		{
-			get { return PermissionsHelper.IsInRole(AuthorityTokens.DicomExplorer); }
+			get { return PermissionsHelper.IsInRole(AuthorityTokens.Explorer.DicomExplorer); }
 		}
 
 		public IApplicationComponent Component

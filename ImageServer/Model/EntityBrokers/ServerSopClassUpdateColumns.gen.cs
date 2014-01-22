@@ -31,7 +31,7 @@ namespace ClearCanvas.ImageServer.Model.EntityBrokers
     using ClearCanvas.Dicom;
     using ClearCanvas.ImageServer.Enterprise;
 
-   public class ServerSopClassUpdateColumns : EntityUpdateColumns
+   public partial class ServerSopClassUpdateColumns : EntityUpdateColumns
    {
        public ServerSopClassUpdateColumns()
        : base("ServerSopClass")

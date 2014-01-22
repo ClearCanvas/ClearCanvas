@@ -81,11 +81,11 @@ namespace ClearCanvas.ImageViewer.Imaging
 		string PresentationStateSopInstanceUid { get; }
 	}
 
-	internal sealed class DicomVoiLuts : IDicomVoiLuts
+	public sealed class DicomVoiLuts : IDicomVoiLuts
 	{
 		private readonly IImageSopProvider _image;
 
-		internal DicomVoiLuts(IImageSopProvider image)
+		public DicomVoiLuts(IImageSopProvider image)
 		{
 			_image = image;
 		}
@@ -149,12 +149,12 @@ namespace ClearCanvas.ImageViewer.Imaging
 
 		public IList<VoiWindow> ImageVoiLinearLuts
 		{
-			get { return new List<VoiWindow>(VoiWindow.GetWindows(_image.ImageSop.DataSource)).AsReadOnly(); }
+			get { return new List<VoiWindow>(VoiWindow.GetWindows(_image.Frame)).AsReadOnly(); }
 		}
 
 		public IList<VoiDataLut> ImageVoiDataLuts
 		{
-			get { return _image.ImageSop.VoiDataLuts; }
+			get { return _image.Frame.VoiDataLuts; }
 		}
 
 		#endregion

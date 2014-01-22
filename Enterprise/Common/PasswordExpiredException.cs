@@ -33,6 +33,7 @@ namespace ClearCanvas.Enterprise.Common
     public class PasswordExpiredException : Exception
     {
         public PasswordExpiredException()
+			:base(SR.ExceptionPasswordExpired)
         {
         }
 

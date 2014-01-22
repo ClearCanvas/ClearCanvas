@@ -36,7 +36,7 @@ namespace ClearCanvas.ImageViewer.AnnotationProviders.Dicom
 		private readonly bool _showViewPosition;
 
 		public LateralityViewPositionAnnotationItem(string identifier, bool showLaterality, bool showViewPosition)
-			: base(identifier, new AnnotationResourceResolver(typeof(LateralityViewPositionAnnotationItem).Assembly))
+			: base(identifier, new AnnotationResourceResolver(typeof (LateralityViewPositionAnnotationItem).Assembly))
 		{
 			Platform.CheckTrue(showViewPosition || showLaterality, "At least one of showLaterality and showViewPosition must be true.");
 
@@ -54,22 +54,16 @@ namespace ClearCanvas.ImageViewer.AnnotationProviders.Dicom
 
 			string laterality = null;
 			if (_showLaterality)
-			{
-				laterality = provider.ImageSop.ImageLaterality;
-				if (string.IsNullOrEmpty(laterality))
-					laterality = provider.ImageSop.Laterality;
-			}
+				laterality = provider.Frame.Laterality;
 
 			string viewPosition = null;
 			if (_showViewPosition)
 			{
-				viewPosition = provider.ImageSop.ViewPosition;
+				viewPosition = provider.Frame.ViewPosition;
 				if (string.IsNullOrEmpty(viewPosition))
 				{
 					//TODO: later, we could translate to ACR MCQM equivalent, at least for mammo.
-					DicomAttributeSQ codeSequence = provider.ImageSop[DicomTags.ViewCodeSequence] as DicomAttributeSQ;
-					if (codeSequence != null && !codeSequence.IsNull && codeSequence.Count > 0)
-						viewPosition = codeSequence[0][DicomTags.CodeMeaning].GetString(0, null);
+					viewPosition = CodeSequenceAnnotationItem.FormatCodeSequence(provider.Frame, DicomTags.ViewCodeSequence, null);
 				}
 			}
 

@@ -150,7 +150,7 @@
     <Compile Include="Configuration\ActionModel\BasicActionModelConfigurationComponentTools.cs" />
     <Compile Include="Configuration\ActionModel\ClickActionKeystrokePropertyComponent.cs" />
     <Compile Include="Actions\UnavailableActionIconSet.cs" />
-    <Compile Include="Configuration\AuthorityTokens.cs" />
+    <Compile Include="AuthorityTokens.cs" />
     <Compile Include="Configuration\ConfigurationApplicationComponent.cs" />
     <Compile Include="Configuration\ConfigurationDialog.cs" />
     <Compile Include="Configuration\ConfigurationDialogComponent.cs" />

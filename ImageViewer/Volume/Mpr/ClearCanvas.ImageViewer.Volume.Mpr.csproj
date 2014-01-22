@@ -76,29 +76,8 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-    <Reference Include="vtkCommonDotNet, Version=0.0.0.0, Culture=neutral, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\ReferencedAssemblies\Vtk\vtkCommonDotNet.dll</HintPath>
-    </Reference>
-    <Reference Include="vtkFilteringDotNet, Version=0.0.0.0, Culture=neutral, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\ReferencedAssemblies\Vtk\vtkFilteringDotNet.dll</HintPath>
-    </Reference>
-    <Reference Include="vtkImagingDotNet, Version=0.0.0.0, Culture=neutral, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\ReferencedAssemblies\Vtk\vtkImagingDotNet.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Configuration\ConfigurationPageProvider.cs" />
-    <Compile Include="Configuration\MprConfigurationComponent.cs" />
-    <Compile Include="Configuration\MprSettings.cs" />
-    <Compile Include="Configuration\MprSettings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-      <DependentUpon>MprSettings.settings</DependentUpon>
-    </Compile>
-    <Compile Include="CreateVolumeException.cs" />
     <Compile Include="IMprWorkspace.cs" />
     <Compile Include="MprDisplaySet.cs" />
     <Compile Include="MprSliceSop.cs" />
@@ -107,28 +86,17 @@
     <Compile Include="IVolumeSlicerParams.cs" />
     <Compile Include="MprVolume.cs" />
     <Compile Include="ReadOnlyVolumeSlicerParams.cs" />
-    <Compile Include="Tests\AbstractMprTest.cs" />
-    <Compile Include="Tests\DataSetOrientation.cs" />
+    <Compile Include="Tests\AbstractMprTest.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Tests\MprProbeTool.cs" />
     <Compile Include="Tests\SlicerTests.cs" />
-    <Compile Include="Tests\SlicePlaneTests.cs" />
+    <Compile Include="Tests\SlicerPlaneTests.cs" />
     <Compile Include="Tests\Statistics.cs" />
-    <Compile Include="Tests\VolumeBuilderTest.cs" />
     <Compile Include="Tests\SlicerFidelityTests.cs" />
-    <Compile Include="Tests\VolumeCacheTestTool.cs" />
-    <Compile Include="Tests\VolumeFunction.cs" />
     <Compile Include="Tests\MprTestVolumeTool.cs" />
-    <Compile Include="Tests\VolumeSopDataSourcePrototypeTests.cs" />
     <Compile Include="Tools\ResliceToolResetAll.cs" />
     <Compile Include="Tools\ResliceToolGraphic.cs" />
-    <Compile Include="Trial\AsyncDicomGrayscalePresentationImage.cs" />
-    <Compile Include="Trial\AsyncFrame.cs" />
-    <Compile Include="Trial\AsyncImageSop.cs" />
-    <Compile Include="Trial\AsyncPresentationImageFactory.cs" />
-    <Compile Include="Trial\AsyncSopDataSource.cs" />
-    <Compile Include="Trial\AsyncVolumeSliceSopDataSource.cs" />
-    <Compile Include="Trial\IAsyncSopFrameData.cs" />
-    <Compile Include="Utilities\DicomAttributeMethods.cs" />
     <Compile Include="Utilities\DicomImagePlane.cs" />
     <Compile Include="Tools\MprLineStretchControlGraphic.cs" />
     <Compile Include="Utilities\MouseImageViewerToolGroup.cs" />
@@ -141,13 +109,7 @@
     <Compile Include="Tools\MprMoveControlGraphic.cs" />
     <Compile Include="Utilities\ObservableDisposableList.cs" />
     <Compile Include="Utilities\ProgressTask.cs" />
-    <Compile Include="VolumeCache.cs" />
-    <Compile Include="VolumeReference.cs" />
-    <Compile Include="VolumeSlice.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="VolumeSlicerParams.cs" />
-    <Compile Include="VolumeUtilities.cs" />
     <Compile Include="MprSliceSet.cs" />
     <Compile Include="Tools\MprViewerTool.cs" />
     <Compile Include="LaunchMprTool.cs" />
@@ -156,18 +118,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>SR.resx</DependentUpon>
     </Compile>
-    <Compile Include="VolumeBuilder.cs" />
     <Compile Include="Utilities\Math3D.cs" />
     <Compile Include="VolumeSlicer.cs" />
     <Compile Include="MprViewerComponent.cs" />
-    <Compile Include="Volume.cs" />
-    <Compile Include="VolumeLoader.cs">
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VolumeSliceSopDataSource.cs" />
-    <Compile Include="VolumeSopDataSourcePrototype.cs" />
-    <Compile Include="Utilities\VtkHelper.cs" />
-    <Compile Include="VtkVolumeHandle.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Common\ClearCanvas.Common.csproj">
@@ -215,10 +170,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="Configuration\MprSettings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>MprSettings.Designer.cs</LastGenOutput>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Icons\ResetAllToolLarge.png" />

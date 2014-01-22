@@ -62,7 +62,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AuthorityTokens.cs" />
     <Compile Include="CoreTools\ClearFiltersTool.cs" />
     <Compile Include="Tests\StudyItemTesting.cs" />
     <Compile Include="Tests\TestTool.cs" />

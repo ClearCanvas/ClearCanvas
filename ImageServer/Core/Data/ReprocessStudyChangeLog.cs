@@ -23,10 +23,13 @@
 #endregion
 
 using System;
+using ClearCanvas.Common.Serialization;
+using ClearCanvas.ImageServer.Common.WorkQueue;
 
 namespace ClearCanvas.ImageServer.Core.Data
 {
-    public class ReprocessStudyChangeLog
+    [WorkQueueDataType("0579EBC2-44EA-4C0F-B30B-2B2D9647B1E1")]
+    public class ReprocessStudyChangeLog : DataContractBase
     {
         #region Private Members
 

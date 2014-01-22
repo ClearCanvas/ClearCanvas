@@ -7789,7 +7789,7 @@ namespace ClearCanvas.Dicom
         /// </summary>
         public const uint RescaleType = 2625620;
         /// <summary>
-        /// <para>(0028,1055) Window Center & Width Explanation</para>
+        /// <para>(0028,1055) Window Center &amp; Width Explanation</para>
         /// <para> VR: LO VM:1-n</para>
         /// </summary>
         public const uint WindowCenterWidthExplanation = 2625621;

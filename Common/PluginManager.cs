@@ -27,7 +27,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using ClearCanvas.Common.Utilities;
@@ -38,7 +37,7 @@ namespace ClearCanvas.Common
 	/// Loads plugin assemblies dynamically from disk and exposes meta-data about the set of installed
 	/// plugins, extension points, and extensions to the application.
 	/// </summary>
-	public class PluginManager
+	public sealed class PluginManager
 	{
 		#region BackgroundAssemblyLoader
 
@@ -117,6 +116,14 @@ namespace ClearCanvas.Common
 			string[] alternateCacheLocations;
 			_loader = new PluginLoader(pluginDir, GetMetadataCacheFilePath(out alternateCacheLocations), alternateCacheLocations);
 			_backgroundAssemblyLoader = new BackgroundAssemblyLoader(this);
+		}
+
+		/// <summary>
+		/// Gets the plugin manager instance in use by the framework.
+		/// </summary>
+		public static PluginManager Instance
+		{
+			get { return Platform.PluginManager; }
 		}
 
 		#region Public API

@@ -98,4 +98,12 @@ namespace ClearCanvas.ImageServer.Web.Common
 
         #endregion
     }
+
+	public static class HttpContextExtension
+	{
+		public static IReadContext GetSharedPersistentContext(this HttpContext ctx)
+		{
+			return HttpContextData.Current.ReadContext;
+		}
+	}
 }

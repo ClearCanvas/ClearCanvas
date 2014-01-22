@@ -22,6 +22,8 @@
 
 #endregion
 
+// ReSharper disable InconsistentNaming
+
 using System;
 using System.Drawing;
 
@@ -41,6 +43,17 @@ namespace ClearCanvas.ImageViewer.Rendering
 	public interface IRenderingSurface : IDisposable
 	{
 		/// <summary>
+		/// Gets the type of rendering surface.
+		/// </summary>
+		/// <remarks>
+		/// Advanced <see cref="IRenderer"/> implementations may need to provide different implementations of <see cref="IRenderingSurface"/>
+		/// depending on whether the intended rendering destination is an onscreen window or an offscreen bitmap.
+		/// For example, the onscreen surface may use a dynamic level-of-detail rendering in order to provide an update rate suitable for user interactivity.
+		/// In contrast, the offscreen surface would always render at the highest level-of-detail in order to export the image to a memory bitmap.
+		/// </remarks>
+		RenderingSurfaceType Type { get; }
+
+		/// <summary>
 		/// Gets or sets the window ID.
 		/// </summary>
 		/// <remarks>
@@ -49,11 +62,7 @@ namespace ClearCanvas.ImageViewer.Rendering
 		/// property is set by the Framework; you should never have to
 		/// set this property yourself.
 		/// </remarks>
-		IntPtr WindowID
-		{
-			get;
-			set;
-		}
+		IntPtr WindowID { get; set; }
 
 		/// <summary>
 		/// Gets or sets the context ID.
@@ -64,11 +73,7 @@ namespace ClearCanvas.ImageViewer.Rendering
 		/// property is set by the Framework; you should never have to
 		/// set this property yourself.
 		/// </remarks>
-		IntPtr ContextID
-		{
-			get;
-			set;
-		}
+		IntPtr ContextID { get; set; }
 
 		/// <summary>
 		/// Gets or sets the rectangle of the surface.
@@ -80,11 +85,7 @@ namespace ClearCanvas.ImageViewer.Rendering
 		/// aware that the rectangle can have a width or height of 0, and handle
 		/// that boundary case appropriately.
 		/// </remarks>
-		Rectangle ClientRectangle
-		{
-			get;
-			set;
-		}
+		Rectangle ClientRectangle { get; set; }
 
 		/// <summary>
 		/// Gets or sets the rectangle that requires repainting.
@@ -95,11 +96,41 @@ namespace ClearCanvas.ImageViewer.Rendering
 		/// This property is set by the Framework; you should never have to
 		/// set this property yourself.
 		/// </remarks>
-		Rectangle ClipRectangle
-		{ 
-			get; 
-			set;
-		}
+		Rectangle ClipRectangle { get; set; }
 
+		/// <summary>
+		/// Fired to notify that the contents of the surface have updated independently of the contents of the <see cref="ITile"/>.
+		/// </summary>
+		event EventHandler Invalidated;
+	}
+
+	/// <summary>
+	/// Describes the type of <see cref="IRenderingSurface"/>.
+	/// </summary>
+	public enum RenderingSurfaceType
+	{
+		/// <summary>
+		/// Indicates that the <see cref="IRenderingSurface"/> is suitable for onscreen use, and may have behaviours that only function correctly onscreen.
+		/// </summary>
+		/// <remarks>
+		/// Advanced <see cref="IRenderer"/> implementations may need to provide different implementations of <see cref="IRenderingSurface"/>
+		/// depending on whether the intended rendering destination is an onscreen window or an offscreen bitmap.
+		/// For example, the onscreen surface may use a dynamic level-of-detail rendering in order to provide an update rate suitable for user interactivity.
+		/// In contrast, the offscreen surface would always render at the highest level-of-detail in order to export the image to a memory bitmap.
+		/// </remarks>
+		Onscreen,
+
+		/// <summary>
+		/// Indicates that the <see cref="IRenderingSurface"/> is suitable for general purpose (offscreen) use.
+		/// </summary>
+		/// <remarks>
+		/// Advanced <see cref="IRenderer"/> implementations may need to provide different implementations of <see cref="IRenderingSurface"/>
+		/// depending on whether the intended rendering destination is an onscreen window or an offscreen bitmap.
+		/// For example, the onscreen surface may use a dynamic level-of-detail rendering in order to provide an update rate suitable for user interactivity.
+		/// In contrast, the offscreen surface would always render at the highest level-of-detail in order to export the image to a memory bitmap.
+		/// </remarks>
+		Offscreen
 	}
 }
+
+// ReSharper restore InconsistentNaming

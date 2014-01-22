@@ -29,15 +29,16 @@ using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Dicom.Utilities.Command;
 using ClearCanvas.Dicom.Utilities.Xml;
-using ClearCanvas.ImageServer.Common.Command;
 using ClearCanvas.ImageServer.Common.Utilities;
-using ClearCanvas.ImageServer.Core;
 using ClearCanvas.ImageServer.Core.Command;
 using ClearCanvas.ImageServer.Core.Edit;
+using ClearCanvas.ImageServer.Core.Helpers;
 using ClearCanvas.ImageServer.Core.Validation;
+using ClearCanvas.ImageServer.Enterprise.Command;
 using ClearCanvas.ImageServer.Model;
 using ClearCanvas.ImageServer.Rules;
 using ClearCanvas.ImageServer.Services.WorkQueue.DeleteStudy;
+using ClearCanvas.ImageServer.Services.WorkQueue.ProcessDuplicate;
 using DeleteDirectoryCommand = ClearCanvas.ImageServer.Core.Command.DeleteDirectoryCommand;
 
 namespace ClearCanvas.ImageServer.Services.WorkQueue.WebDeleteStudy
@@ -74,6 +75,9 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.WebDeleteStudy
 
                 case DeletionLevel.Series:
                     return StudyIntegrityValidationModes.Default;
+
+                case DeletionLevel.Instance:
+                    return StudyIntegrityValidationModes.Default;
             }
 
             return StudyIntegrityValidationModes.Default;
@@ -108,6 +112,8 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.WebDeleteStudy
                     break;
                 case DeletionLevel.Study: ProcessStudyLevelDelete(item);
                     break;
+                case DeletionLevel.Instance: ProcessInstanceLevelDelete(item);
+                    break;
 
                 default:
                     throw new NotImplementedException();
@@ -141,7 +147,7 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.WebDeleteStudy
         {
             Platform.CheckForNullReference(item.Data, "item.Data");
 
-            WebDeleteWorkQueueEntryData data = XmlUtils.Deserialize<WebDeleteWorkQueueEntryData>(item.Data);
+            var data = XmlUtils.Deserialize<WebDeleteWorkQueueEntryData>(item.Data);
             return data;
         }
 
@@ -164,7 +170,7 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.WebDeleteStudy
 
 				// Go through the list of series and add commands
 				// to delete each of them. It's all or nothing.                
-                using (ServerCommandProcessor processor = new ServerCommandProcessor(String.Format("Deleting Series from study {0}, A#:{1}, Patient: {2}, ID:{3}", study.StudyInstanceUid, study.AccessionNumber, study.PatientsName, study.PatientId)))
+                using (var processor = new ServerCommandProcessor(String.Format("Deleting Series from study {0}, A#:{1}, Patient: {2}, ID:{3}", study.StudyInstanceUid, study.AccessionNumber, study.PatientsName, study.PatientId)))
                 {
                     StudyXml studyXml = StorageLocation.LoadStudyXml();
                     IDictionary<string, Series> existingSeries = StorageLocation.Study.Series;
@@ -253,6 +259,99 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.WebDeleteStudy
             
         }
 
+        private void ProcessInstanceLevelDelete(Model.WorkQueue item)
+        {
+            // ensure the Study is loaded.
+            Study study = StorageLocation.Study;
+            Platform.CheckForNullReference(study, "Study record doesn't exist");
+
+            Platform.Log(LogLevel.Info, "Processing Instance Level Deletion for Study {0}, A#: {1}",
+                                         study.StudyInstanceUid, study.AccessionNumber);
+
+            bool completed = false;
+            try
+            {
+                // Load the list of Sop Instances to be deleted from the WorkQueueUid
+                LoadUids(item);
+
+                // Go through the list of series and add commands
+                // to delete each of them. It's all or nothing.                
+                using (var processor = new ServerCommandProcessor(String.Format("Deleting Series from study {0}, A#:{1}, Patient: {2}, ID:{3}", study.StudyInstanceUid, study.AccessionNumber, study.PatientsName, study.PatientId)))
+                {
+                    StudyXml studyXml = StorageLocation.LoadStudyXml();
+                    IDictionary<string, Series> existingSeries = StorageLocation.Study.Series;
+
+
+                    // Add commands to delete the folders and update the xml
+                    foreach (WorkQueueUid uid in WorkQueueUidList)
+                    {
+                        // Delete from study XML
+                        if (studyXml.Contains(uid.SeriesInstanceUid, uid.SopInstanceUid))
+                        {
+                            //Note: DeleteDirectoryCommand  doesn't throw exception if the folder doesn't exist
+                            var xmlUpdate = new RemoveInstanceFromStudyXmlCommand(StorageLocation, studyXml, uid.SeriesInstanceUid, uid.SopInstanceUid);
+                            processor.AddCommand(xmlUpdate);
+                        }
+
+                        // Delete from filesystem
+                        string path = StorageLocation.GetSopInstancePath(uid.SeriesInstanceUid, uid.SopInstanceUid);
+                        if (File.Exists(path))
+                        {
+                            var delDir = new FileDeleteCommand(path, true);
+                            processor.AddCommand(delDir);
+                        }
+                    }
+
+                    // flush the updated xml to disk
+                    processor.AddCommand(new SaveXmlCommand(studyXml, StorageLocation));
+
+
+                    // Update the db.. NOTE: these commands are executed at the end.
+                    foreach (WorkQueueUid uid in WorkQueueUidList)
+                    {
+                        // Delete from DB
+                        if (studyXml.Contains(uid.SeriesInstanceUid, uid.SopInstanceUid))
+                        {
+                            var delInstance = new UpdateInstanceCountCommand(StorageLocation, uid.SeriesInstanceUid, uid.SopInstanceUid);
+                            processor.AddCommand(delInstance);
+                            delInstance.Executing += DeleteSeriesFromDbExecuting;
+                        }                       
+                        else
+                        {
+                            // SOP doesn't exist 
+                            Platform.Log(LogLevel.Info, "SOP {0} is invalid or no longer exists", uid.SopInstanceUid);
+                        }
+
+                        // The WorkQueueUid must be cleared before the entry can be removed from the queue
+                        var deleteUid = new DeleteWorkQueueUidCommand(uid);
+                        processor.AddCommand(deleteUid);
+
+                        // Force a re-archival if necessary
+                        processor.AddCommand(new InsertArchiveQueueCommand(item.ServerPartitionKey, item.StudyStorageKey));
+                    }
+
+                    if (!processor.Execute())
+                        throw new ApplicationException(
+                            String.Format("Error occurred when series from Study {0}, A#: {1}",
+                                         study.StudyInstanceUid, study.AccessionNumber), processor.FailureException);                  
+                }
+
+                completed = true;
+            }
+            finally
+            {
+                if (completed)
+                {
+                    OnCompleted();
+                    PostProcessing(item, WorkQueueProcessorStatus.Complete, WorkQueueProcessorDatabaseUpdate.ResetQueueState);
+                }
+                else
+                {
+                    PostProcessing(item, WorkQueueProcessorStatus.Pending, WorkQueueProcessorDatabaseUpdate.None);
+                }
+            }
+        }
+
         private void OnCompleted()
         {
             EnsureWebDeleteExtensionsLoaded();
@@ -270,10 +369,9 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.WebDeleteStudy
             }
         }
 
-
         private void DeleteSeriesFromDbExecuting(object sender, EventArgs e)
         {
-            DeleteSeriesFromDBCommand cmd = sender as DeleteSeriesFromDBCommand;
+            var cmd = sender as DeleteSeriesFromDBCommand;
 			if (cmd!=null)
 				OnDeletingSeriesInDatabase(cmd.Series);
         }
@@ -285,7 +383,7 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.WebDeleteStudy
             {
                 try
                 {
-                    WebDeleteProcessorContext context = new WebDeleteProcessorContext(this, Level, StorageLocation, _reason, _userId, _userName);
+                    var context = new WebDeleteProcessorContext(this, Level, StorageLocation, _reason, _userId, _userName);
                     extension.OnSeriesDeleting(context, series);
                 }   
                 catch(Exception ex)
@@ -295,6 +393,7 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.WebDeleteStudy
             }
 
         }
+
         private void OnSeriesDeleted(Series seriesUid)
         {
             EnsureWebDeleteExtensionsLoaded();
@@ -302,7 +401,7 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.WebDeleteStudy
             {
                 try
                 {
-                    WebDeleteProcessorContext context = new WebDeleteProcessorContext(this, Level, StorageLocation, _reason, _userId, _userName);
+                    var context = new WebDeleteProcessorContext(this, Level, StorageLocation, _reason, _userId, _userName);
                     extension.OnSeriesDeleted(context, seriesUid);
                 }
                 catch (Exception ex)
@@ -316,7 +415,7 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.WebDeleteStudy
         {
             if (_extensions==null)
             {
-                WebDeleteProcessorExtensionPoint xp = new WebDeleteProcessorExtensionPoint();
+                var xp = new WebDeleteProcessorExtensionPoint();
                 _extensions = CollectionUtils.Cast<IWebDeleteProcessorExtension>(xp.CreateExtensions());    
             }
         }

@@ -23,10 +23,9 @@
 #endregion
 
 using System;
-using ClearCanvas.Dicom;
 using ClearCanvas.Dicom.Utilities.Command;
 using ClearCanvas.Enterprise.Core;
-using ClearCanvas.ImageServer.Common.Command;
+using ClearCanvas.ImageServer.Enterprise.Command;
 using ClearCanvas.ImageServer.Model;
 using ClearCanvas.ImageServer.Model.Brokers;
 using ClearCanvas.ImageServer.Model.Parameters;
@@ -39,17 +38,19 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.ProcessDuplicate
         #region Private Members
 
         private readonly StudyStorageLocation _studyLocation;
-        private readonly DicomFile _file;
+        private readonly string _seriesInstanceUid;
+        private readonly string _sopInstanceUid;
 
         #endregion
 
         #region Constructors
 
-        public UpdateInstanceCountCommand(StudyStorageLocation studyLocation, DicomFile file)
+        public UpdateInstanceCountCommand(StudyStorageLocation studyLocation, string seriesInstanceUid, string sopInstanceUid)
             :base("Update Study Count")
         {
             _studyLocation = studyLocation;
-            _file = file;
+            _seriesInstanceUid = seriesInstanceUid;
+            _sopInstanceUid = sopInstanceUid;
         }
 
         #endregion
@@ -58,15 +59,12 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.ProcessDuplicate
 
         protected override void OnExecute(CommandProcessor theProcessor, IUpdateContext updateContext)
         {
-            String seriesUid = _file.DataSet[DicomTags.SeriesInstanceUid].ToString();
-            String instanceUid = _file.DataSet[DicomTags.SopInstanceUid].ToString();
-            
             var deleteInstanceBroker = updateContext.GetBroker<IDeleteInstance>();
             var parameters = new DeleteInstanceParameters
                                                       {
                                                           StudyStorageKey = _studyLocation.GetKey(),
-                                                          SeriesInstanceUid = seriesUid,
-                                                          SOPInstanceUid = instanceUid
+                                                          SeriesInstanceUid = _seriesInstanceUid,
+                                                          SOPInstanceUid = _sopInstanceUid
                                                       };
             if (!deleteInstanceBroker.Execute(parameters))
             {

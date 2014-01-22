@@ -118,10 +118,13 @@
     <Compile Include="EntityBrokers\DeviceTypeEnumBroker.gen.cs" />
     <Compile Include="EntityBrokers\DuplicateSopEntryEntityBroker.cs" />
     <Compile Include="EntityBrokers\DuplicateSopPolicyEnumBroker.gen.cs" />
+    <Compile Include="EntityBrokers\ExternalRequestQueueEntityBroker.gen.cs" />
+    <Compile Include="EntityBrokers\ExternalRequestQueueStatusEnumBroker.gen.cs" />
     <Compile Include="EntityBrokers\FilesystemEntityBroker.gen.cs" />
     <Compile Include="EntityBrokers\FilesystemQueueEntityBroker.gen.cs" />
     <Compile Include="EntityBrokers\FilesystemQueueTypeEnumBroker.gen.cs" />
     <Compile Include="EntityBrokers\FilesystemTierEnumBroker.gen.cs" />
+    <Compile Include="EntityBrokers\NotificationQueueEntityBroker.gen.cs" />
     <Compile Include="EntityBrokers\PartitionArchiveEntityBroker.gen.cs" />
     <Compile Include="EntityBrokers\PartitionSopClassEntityBroker.gen.cs" />
     <Compile Include="EntityBrokers\PartitionTransferSyntaxEntityBroker.gen.cs" />
@@ -131,8 +134,10 @@
     <Compile Include="EntityBrokers\RestoreQueueEntityBroker.gen.cs" />
     <Compile Include="EntityBrokers\RestoreQueueStatusEnumBroker.gen.cs" />
     <Compile Include="EntityBrokers\SeriesEntityBroker.gen.cs" />
+    <Compile Include="EntityBrokers\ServerPartitionAlternateAeTitleEntityBroker.gen.cs" />
     <Compile Include="EntityBrokers\ServerPartitionDataAccessEntityBroker.gen.cs" />
     <Compile Include="EntityBrokers\ServerPartitionEntityBroker.gen.cs" />
+    <Compile Include="EntityBrokers\ServerPartitionTypeEnumBroker.gen.cs" />
     <Compile Include="EntityBrokers\ServerRuleApplyTimeEnumBroker.gen.cs" />
     <Compile Include="EntityBrokers\ServerRuleEntityBroker.gen.cs" />
     <Compile Include="EntityBrokers\ServerRuleTypeEnumBroker.gen.cs" />
@@ -166,6 +171,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RunSqlScriptApplication.cs" />
     <Compile Include="UpgradeScripts\UpgradeFrom_10_0_11128_314.cs" />
+    <Compile Include="UpgradeScripts\UpgradeFrom_10_1_13120_656.cs" />
     <Compile Include="UpgradeScripts\UpgradeFrom_4_0_5014_9549.cs" />
     <Compile Include="UpgradeScripts\UpgradeFrom_1_3_8146_27242.cs" />
     <Compile Include="UpgradeScripts\UpgradeFrom_1_4_9277_29698.cs" />
@@ -229,6 +235,9 @@
     <EmbeddedResource Include="UpgradeScripts\UpgradeFrom_NoOp.sql" />
     <EmbeddedResource Include="UpgradeScripts\UpgradeFrom_1_4_9277_29698.sql" />
     <EmbeddedResource Include="UpgradeScripts\UpgradeFrom_1_3_8146_27241.sql" />
+    <EmbeddedResource Include="UpgradeScripts\UpgradeFrom_6_1_7081_10268.sql" />
+    <EmbeddedResource Include="UpgradeScripts\UpgradeFrom_10_0_11128_314.sql" />
+    <EmbeddedResource Include="UpgradeScripts\UpgradeFrom_10_1_13120_656.sql" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
@@ -246,12 +255,6 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="UpgradeScripts\UpgradeFrom_6_1_7081_10268.sql" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="UpgradeScripts\UpgradeFrom_10_0_11128_314.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

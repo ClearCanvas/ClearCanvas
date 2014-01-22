@@ -32,13 +32,14 @@ using ClearCanvas.Dicom;
 using ClearCanvas.ImageViewer.Mathematics;
 using ClearCanvas.ImageViewer.StudyManagement;
 using ClearCanvas.ImageViewer.Volume.Mpr;
-using VolumeData = ClearCanvas.ImageViewer.Volume.Mpr.Volume;
+using ClearCanvas.ImageViewer.Volumes;
+using VolumeData = ClearCanvas.ImageViewer.Volumes.Volume;
 
 namespace ClearCanvas.ImageViewer.AdvancedImaging.Fusion.Tests
 {
 	public class TestDataFunction
 	{
-        /// <summary>
+		/// <summary>
 		/// The Threed function.
 		/// </summary>
 		/// <remarks>
@@ -65,7 +66,7 @@ namespace ClearCanvas.ImageViewer.AdvancedImaging.Fusion.Tests
 		/// </remarks>
 		public static TestDataFunction GradientY = new TestDataFunction("Gradient", (x, y, z) => y).Normalize(100);
 
-        internal delegate float TestDataFunctionDelegate(float x, float y, float z);
+		internal delegate float TestDataFunctionDelegate(float x, float y, float z);
 
 		private readonly TestDataFunctionDelegate _function;
 		private readonly string _name;
@@ -109,21 +110,21 @@ namespace ClearCanvas.ImageViewer.AdvancedImaging.Fusion.Tests
 		protected VolumeData CreateVolume(bool signed, Modality modality, Vector3D voxelSpacing)
 		{
 			Vector3D originPatient = new Vector3D(0, 0, 0);
-			Matrix orientationPatient = Matrix.GetIdentity(4);
+			Matrix3D orientationPatient = Matrix3D.GetIdentity();
 			int width, height, depth;
 			if (signed)
 			{
 				short[] data = CreateSignedArray(out width, out height, out depth, voxelSpacing);
 				DicomAttributeCollection dataset = CreateMockDataset(_name, _studyInstanceUid, _frameOfReferenceUid, modality, width, height, true, new SizeF(voxelSpacing.X, voxelSpacing.Y));
 				Size3D dimensions = new Size3D(width, height, depth);
-				return new VolumeData(data, dimensions, voxelSpacing, originPatient, orientationPatient, dataset, short.MinValue);
+				return new S16Volume(data, dimensions, voxelSpacing, originPatient, orientationPatient, dataset, short.MinValue);
 			}
 			else
 			{
 				ushort[] data = CreateUnsignedArray(out width, out height, out depth, voxelSpacing);
 				DicomAttributeCollection dataset = CreateMockDataset(_name, _studyInstanceUid, _frameOfReferenceUid, modality, width, height, false, new SizeF(voxelSpacing.X, voxelSpacing.Y));
 				Size3D dimensions = new Size3D(width, height, depth);
-				return new VolumeData(data, dimensions, voxelSpacing, originPatient, orientationPatient, dataset, ushort.MinValue);
+				return new U16Volume(data, dimensions, voxelSpacing, originPatient, orientationPatient, dataset, ushort.MinValue);
 			}
 		}
 

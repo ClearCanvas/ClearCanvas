@@ -12,7 +12,10 @@
     <null test="XXX"/>
     <not-null test="XXX"/>
     <regex test="XXX" pattern="XXX"/>
-    <equal test="XXX" refValue="XXX"/>
+		<starts-with test="XXX" pattern="XXX"/>
+		<ends-with test="XXX" pattern="XXX"/>
+		<contains test="XXX" pattern="XXX"/>
+		<equal test="XXX" refValue="XXX"/>
     <not-equal test="XXX" refValue="XXX"/>
     <greater-than test="XXX" refValue="XXX"/>
     <less-than test="XXX" refValue="XXX"/>
@@ -26,7 +29,10 @@
     <each test="XXX">
       <true/>
     </each>
-    <any test="XXX">
+		<all test="XXX">
+			<true/>
+		</all>
+		<any test="XXX">
       <true/>
     </any>
     <case test="XXX">
@@ -47,7 +53,10 @@
     <null failMessage="XXX"/>
     <not-null failMessage="XXX"/>
     <regex failMessage="XXX" pattern="XXX"/>
-    <equal failMessage="XXX" refValue="XXX"/>
+		<starts-with failMessage="XXX" pattern="XXX"/>
+		<ends-with failMessage="XXX" pattern="XXX"/>
+		<contains failMessage="XXX" pattern="XXX"/>
+		<equal failMessage="XXX" refValue="XXX"/>
     <not-equal failMessage="XXX" refValue="XXX"/>
     <greater-than failMessage="XXX" refValue="XXX"/>
     <less-than failMessage="XXX" refValue="XXX"/>
@@ -61,7 +70,10 @@
     <each failMessage="XXX">
       <true/>
     </each>
-    <any failMessage="XXX">
+		<all failMessage="XXX">
+			<true/>
+		</all>
+		<any failMessage="XXX">
       <true/>
     </any>
     <case failMessage="XXX">
@@ -100,8 +112,50 @@
   <spec id="regex_missingPattern">
     <regex ignoreCase="true" nullMatches="true"/>
   </spec>
-  
-  <!-- equal-->
+	
+	<!-- starts-with -->
+	<spec id="startsWith_default">
+		<starts-with pattern="XXX"/>
+	</spec>
+	<spec id="startsWith_options1">
+		<starts-with pattern="XXX" ignoreCase="false" nullMatches="false"/>
+	</spec>
+	<spec id="startsWith_options2">
+		<starts-with pattern="XXX" ignoreCase="true" nullMatches="true"/>
+	</spec>
+	<spec id="startsWith_missingPattern">
+		<starts-with ignoreCase="true" nullMatches="true"/>
+	</spec>
+	
+	<!-- ends-with -->
+	<spec id="endsWith_default">
+		<ends-with pattern="XXX"/>
+	</spec>
+	<spec id="endsWith_options1">
+		<ends-with pattern="XXX" ignoreCase="false" nullMatches="false"/>
+	</spec>
+	<spec id="endsWith_options2">
+		<ends-with pattern="XXX" ignoreCase="true" nullMatches="true"/>
+	</spec>
+	<spec id="endsWith_missingPattern">
+		<ends-with ignoreCase="true" nullMatches="true"/>
+	</spec>
+
+	<!-- contains -->
+	<spec id="contains_default">
+		<contains pattern="XXX"/>
+	</spec>
+	<spec id="contains_options1">
+		<contains pattern="XXX" ignoreCase="false" nullMatches="false"/>
+	</spec>
+	<spec id="contains_options2">
+		<contains pattern="XXX" ignoreCase="true" nullMatches="true"/>
+	</spec>
+	<spec id="contains_missingPattern">
+		<contains ignoreCase="true" nullMatches="true"/>
+	</spec>
+
+	<!-- equal-->
   <spec id="equal_default">
     <equal refValue="XXX"/>
   </spec>
@@ -210,8 +264,18 @@
   <spec id="each_missingElement">
     <each/>
   </spec>
-  
-  <!-- any -->
+	
+	<!-- all -->
+	<spec id="all_default">
+		<all>
+			<true/>
+		</all>
+	</spec>
+	<spec id="all_missingElement">
+		<all/>
+	</spec>
+
+	<!-- any -->
   <spec id="any_default">
     <any>
       <true/>

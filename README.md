@@ -1,7 +1,10 @@
 ClearCanvas
 ===========
 
-Open source RIS/PACS and DICOM viewer
+Open source code base for enabling software innovation in imaging. 
+The extensible and robust platform includes viewing, archiving, management, 
+workflow and distribution of images as well as an open architecture for 
+core competency tool development. 
 
 How to build using Github For Windows
 -------------------------------------

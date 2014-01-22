@@ -63,6 +63,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Dicom\AnnotationDataSourceContext.cs" />
+    <Compile Include="Dicom\ContrastBolusAnnotationItemProvider.cs" />
     <Compile Include="Dicom\DXImageAnnotationItemProvider.cs" />
     <Compile Include="Dicom\LateralityViewPositionAnnotationItem.cs" />
     <Compile Include="Dicom\ImagePlaneAnnotationItemProvider.cs" />

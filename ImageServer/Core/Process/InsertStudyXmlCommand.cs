@@ -53,6 +53,12 @@ namespace ClearCanvas.ImageServer.Core.Process
 		private static readonly StudyXmlOutputSettings _outputSettings = ImageServerCommonConfiguration.DefaultStudyXmlOutputSettings;
 		#endregion
 
+		#region Properties
+
+		public long FileSize { get; private set; }
+
+		#endregion
+
 		#region Constructors
 
 		public InsertStudyXmlCommand(DicomFile file, StudyXml stream, StudyStorageLocation storageLocation)
@@ -121,16 +127,16 @@ namespace ClearCanvas.ImageServer.Core.Process
 
 		protected override void OnExecute(CommandProcessor theProcessor)
 		{
-			long fileSize = 0;
+			FileSize = 0;
 			if (File.Exists(_file.Filename))
 			{
-				FileInfo finfo = new FileInfo(_file.Filename);
+				var finfo = new FileInfo(_file.Filename);
 
-				fileSize = finfo.Length;
+				FileSize = finfo.Length;
 			}
 
 			// Setup the insert parameters
-			if (false == _stream.AddFile(_file, fileSize, _outputSettings))
+			if (false == _stream.AddFile(_file, FileSize, _outputSettings))
 			{
 				Platform.Log(LogLevel.Error, "Unexpected error adding SOP to XML Study Descriptor for file {0}",
 				             _file.Filename);

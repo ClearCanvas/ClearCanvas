@@ -46,6 +46,44 @@ namespace ClearCanvas.ImageViewer.Shreds.DicomServer
 			: base(GetSupportedSops())
 		{}
 
+		public override bool ReceiveMessageAsFileStream(Dicom.Network.DicomServer server, ServerAssociationParameters association, byte presentationId,
+									   DicomMessage message)
+		{
+			var sopClassUid = message.AffectedSopClassUid;
+
+			if (sopClassUid.Equals(SopClass.BreastTomosynthesisImageStorageUid)
+				|| sopClassUid.Equals(SopClass.EnhancedCtImageStorageUid)
+				|| sopClassUid.Equals(SopClass.EnhancedMrColorImageStorageUid)
+				|| sopClassUid.Equals(SopClass.EnhancedMrImageStorageUid)
+				|| sopClassUid.Equals(SopClass.EnhancedPetImageStorageUid)
+				|| sopClassUid.Equals(SopClass.EnhancedUsVolumeStorageUid)
+				|| sopClassUid.Equals(SopClass.EnhancedXaImageStorageUid)
+				|| sopClassUid.Equals(SopClass.EnhancedXrfImageStorageUid)
+				|| sopClassUid.Equals(SopClass.UltrasoundMultiFrameImageStorageUid)
+				|| sopClassUid.Equals(SopClass.MultiFrameGrayscaleByteSecondaryCaptureImageStorageUid)
+				|| sopClassUid.Equals(SopClass.MultiFrameGrayscaleWordSecondaryCaptureImageStorageUid)
+				|| sopClassUid.Equals(SopClass.MultiFrameSingleBitSecondaryCaptureImageStorageUid)
+				|| sopClassUid.Equals(SopClass.MultiFrameTrueColorSecondaryCaptureImageStorageUid))
+			{
+				server.DimseDatasetStopTag = DicomTagDictionary.GetDicomTag(DicomTags.ReconstructionIndex); // Random tag at the end of group 20
+				server.StreamMessage = true;
+				return true;
+			}
+
+			return false;
+		}
+
+		public override IDicomFilestreamHandler OnStartFilestream(Dicom.Network.DicomServer server, ServerAssociationParameters association,
+																  byte presentationId, DicomMessage message)
+		{
+			if (_importContext == null)
+			{
+				LoadImportContext(association);
+			}
+
+			return new StorageFilestreamHandler(Context, _importContext);
+		}
+
 		private static IEnumerable<SupportedSop> GetSupportedSops()
 		{
             var extendedConfiguration = LocalDicomServer.GetExtendedConfiguration();
@@ -99,7 +137,7 @@ namespace ClearCanvas.ImageViewer.Shreds.DicomServer
 
 	public abstract class StoreScpExtension : ScpExtension
 	{
-	    private DicomReceiveImportContext _importContext;
+	    protected DicomReceiveImportContext _importContext;
 
 		protected StoreScpExtension(IEnumerable<SupportedSop> supportedSops)
 			: base(supportedSops)
@@ -159,44 +197,7 @@ namespace ClearCanvas.ImageViewer.Shreds.DicomServer
 
             if (_importContext == null)
             {
-                _importContext = new DicomReceiveImportContext(association.CallingAE, GetRemoteHostName(association), StudyStore.GetConfiguration(), EventSource.CurrentProcess);
-
-                // Publish new WorkItems as they're added to the context
-                lock (_importContext.StudyWorkItemsSyncLock)
-                {
-                    _importContext.StudyWorkItems.ItemAdded += delegate(object sender, DictionaryEventArgs<string,WorkItem> args)
-                                                                   {
-                                                                       Platform.GetService(
-                                                                           (IWorkItemActivityMonitorService service) =>
-                                                                           service.Publish(new WorkItemPublishRequest
-                                                                                               {
-                                                                                                   Item =
-                                                                                                       WorkItemDataHelper
-                                                                                                       .FromWorkItem(
-                                                                                                           args.Item)
-                                                                                               }));
-
-
-                                                                       var auditedInstances = new AuditedInstances();
-                                                                       var request =
-                                                                           args.Item.Request as DicomReceiveRequest;
-                                                                       if (request != null)
-                                                                       {
-                                                                           auditedInstances.AddInstance(request.Patient.PatientId, request.Patient.PatientsName,
-                                                                                                        request.Study.StudyInstanceUid);
-                                                                       }
-
-                                                                       AuditHelper.LogReceivedInstances(
-                                                                           association.CallingAE, GetRemoteHostName(association),
-                                                                           auditedInstances, EventSource.CurrentProcess,
-                                                                           EventResult.Success, EventReceiptAction.ActionUnknown);
-                                                                   }
-                ;
-
-                    _importContext.StudyWorkItems.ItemChanged += (sender, args) => Platform.GetService(
-                        (IWorkItemActivityMonitorService service) =>
-                        service.Publish(new WorkItemPublishRequest {Item = WorkItemDataHelper.FromWorkItem(args.Item)}));
-                }
+	            LoadImportContext(association);
             }
 
 		    var importer = new ImportFilesUtility(_importContext);
@@ -261,5 +262,42 @@ namespace ClearCanvas.ImageViewer.Shreds.DicomServer
 
             return remoteHostName;
         }
+
+		protected void LoadImportContext(ServerAssociationParameters association)
+		{
+			_importContext = new DicomReceiveImportContext(association.CallingAE, GetRemoteHostName(association), StudyStore.GetConfiguration(), EventSource.CurrentProcess);
+
+			// Publish new WorkItems as they're added to the context
+			lock (_importContext.StudyWorkItemsSyncLock)
+			{
+				_importContext.StudyWorkItems.ItemAdded += delegate(object sender, DictionaryEventArgs<string, WorkItem> args)
+					{
+						Platform.GetService(
+							(IWorkItemActivityMonitorService service) =>
+							service.Publish(new WorkItemPublishRequest
+								{
+									Item = WorkItemDataHelper.FromWorkItem(args.Item)
+								}));
+
+
+						var auditedInstances = new AuditedInstances();
+						var request = args.Item.Request as DicomReceiveRequest;
+						if (request != null)
+						{
+							auditedInstances.AddInstance(request.Patient.PatientId, request.Patient.PatientsName,
+							                             request.Study.StudyInstanceUid);
+						}
+
+						AuditHelper.LogReceivedInstances(
+							association.CallingAE, GetRemoteHostName(association),
+							auditedInstances, EventSource.CurrentProcess,
+							EventResult.Success, EventReceiptAction.ActionUnknown);
+					};
+
+				_importContext.StudyWorkItems.ItemChanged += (sender, args) => Platform.GetService(
+					(IWorkItemActivityMonitorService service) =>
+					service.Publish(new WorkItemPublishRequest { Item = WorkItemDataHelper.FromWorkItem(args.Item) }));
+			}
+		}
 	}
 }

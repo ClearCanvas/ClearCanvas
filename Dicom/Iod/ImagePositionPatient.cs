@@ -33,7 +33,7 @@ namespace ClearCanvas.Dicom.Iod
 	public class ImagePositionPatient : IEquatable<ImagePositionPatient>
 	{
 		#region Private Members
-		
+
 		private double _x;
 		private double _y;
 		private double _z;
@@ -53,9 +53,7 @@ namespace ClearCanvas.Dicom.Iod
 		/// <summary>
 		/// Protected constructor.
 		/// </summary>
-		protected ImagePositionPatient()
-		{
-		}
+		protected ImagePositionPatient() {}
 
 		#region Public Properties
 
@@ -64,7 +62,9 @@ namespace ClearCanvas.Dicom.Iod
 		/// </summary>
 		public bool IsNull
 		{
-			get { return _x == 0 && _y == 0 && _z == 0; }	
+// ReSharper disable CompareOfFloatsByEqualityOperator
+			get { return _x == 0 && _y == 0 && _z == 0; }
+// ReSharper restore CompareOfFloatsByEqualityOperator
 		}
 
 		/// <summary>
@@ -114,10 +114,11 @@ namespace ClearCanvas.Dicom.Iod
 		/// </returns>
 		public static ImagePositionPatient FromString(string multiValuedString)
 		{
+			if (string.IsNullOrEmpty(multiValuedString)) return null;
+
 			double[] values;
 			if (DicomStringHelper.TryGetDoubleArray(multiValuedString, out values) && values.Length == 3)
-					return new ImagePositionPatient(values[0], values[1], values[2]);
-
+				return new ImagePositionPatient(values[0], values[1], values[2]);
 			return null;
 		}
 
@@ -128,24 +129,23 @@ namespace ClearCanvas.Dicom.Iod
 			if (other == null)
 				return false;
 
-			return other._x	== _x && other._y == _y && other._z == _z;
+// ReSharper disable CompareOfFloatsByEqualityOperator
+			return other._x == _x && other._y == _y && other._z == _z;
+// ReSharper restore CompareOfFloatsByEqualityOperator
 		}
 
 		#endregion
 
 		public override bool Equals(object obj)
 		{
-			if (obj == null)
-				return false;
-
-			return Equals(obj as ImagePositionPatient);
+			return obj != null && Equals(obj as ImagePositionPatient);
 		}
 
 		public override int GetHashCode()
 		{
-			return base.GetHashCode();
+			return -0x0F17D26B; // use a constant value because the real values are mutable and otherwise certain equality comparisons won't work
 		}
-		
+
 		#endregion
 	}
 }

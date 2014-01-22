@@ -28,22 +28,24 @@
 
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
-using System.Runtime.InteropServices;
 using ClearCanvas.Common;
 using ClearCanvas.Dicom;
-using ClearCanvas.ImageViewer.Common;
 using ClearCanvas.ImageViewer.Mathematics;
 using ClearCanvas.ImageViewer.StudyManagement;
-using ClearCanvas.ImageViewer.Volume.Mpr.Configuration;
 using ClearCanvas.ImageViewer.Volume.Mpr.Utilities;
-using vtk;
+using ClearCanvas.ImageViewer.Volumes;
 
 namespace ClearCanvas.ImageViewer.Volume.Mpr
 {
 	/// <summary>
-	/// Factory for slices of a <see cref="Volume"/>.
+	/// Factory for slices of a <see cref="Volumes.Volume"/>.
 	/// </summary>
+	/// <remarks>
+	/// This factory type has been deprecated in favour of its equivalent in the core volume framework (<see cref="VolumeSliceFactory"/>).
+	/// </remarks>
+	[Obsolete("Use VolumeSliceFactory instead.")]
 	public class VolumeSlicer : IDisposable
 	{
 		private readonly IVolumeReference _volume;
@@ -51,9 +53,9 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 
 		private float _sliceSpacing;
 
-		public VolumeSlicer(Volume volume, IVolumeSlicerParams slicerParams)
+		public VolumeSlicer(Volumes.Volume volume, IVolumeSlicerParams slicerParams)
 		{
-			_volume = volume.CreateTransientReference();
+			_volume = volume.CreateReference();
 			_slicerParams = slicerParams;
 		}
 
@@ -63,7 +65,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 			_slicerParams = slicerParams;
 		}
 
-		public Volume Volume
+		public Volumes.Volume Volume
 		{
 			get { return _volume.Volume; }
 		}
@@ -77,7 +79,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 		{
 			try
 			{
-				this.Dispose(true);
+				Dispose(true);
 				GC.SuppressFinalize(this);
 			}
 			catch (Exception e)
@@ -98,12 +100,10 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 
 		private float GetSliceSpacing()
 		{
-			//TODO (cr Oct 2009): setting outside, let consumer set 'auto' or 'value'
-
-			if (_sliceSpacing == 0f)
+			if (FloatComparer.AreEqual(0, _sliceSpacing))
 			{
 				_sliceSpacing = _slicerParams.SliceSpacing;
-				if (_sliceSpacing == 0f)
+				if (FloatComparer.AreEqual(0, _sliceSpacing))
 					_sliceSpacing = GetDefaultSpacing();
 			}
 			return _sliceSpacing;
@@ -117,11 +117,6 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 		public IEnumerable<ISopDataSource> CreateSliceSops(string seriesInstanceUid)
 		{
 			return CreateSliceSopsCore(seriesInstanceUid, s => new VolumeSliceSopDataSource(s));
-		}
-
-		public IEnumerable<ISopDataSource> CreateAsyncSliceSops(string seriesInstanceUid)
-		{
-			return CreateSliceSopsCore(seriesInstanceUid, s => new AsyncVolumeSliceSopDataSource(s));
 		}
 
 		private IEnumerable<ISopDataSource> CreateSliceSopsCore(string seriesInstanceUid, Func<VolumeSlice, ISopDataSource> sopDataSourceConstructor)
@@ -160,7 +155,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 				var minSliceLocation = float.MaxValue;
 				var maxSliceLocation = float.MinValue;
 
-				var volumeDimensions = _volume.Volume.Dimensions;
+				var volumeDimensions = _volume.VolumeSize;
 				foreach (var corner in new[]
 				                       	{
 				                       		new Vector3D(0, 0, 0),
@@ -201,9 +196,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 			// generate the slice SOPs by computing additional through points
 			for (var n = 0; n < sliceCount; n++)
 			{
-				var slice = new VolumeSlice(_volume.Clone(), _slicerParams, initialThroughPoint - n*spacingVector);
-				slice[DicomTags.SliceThickness].SetFloat32(0, thicknessAndSpacing);
-				slice[DicomTags.SpacingBetweenSlices].SetFloat32(0, thicknessAndSpacing);
+				var slice = CreateSlice(_volume.Clone(), _slicerParams, thicknessAndSpacing, initialThroughPoint - n*spacingVector);
 				yield return slice;
 			}
 		}
@@ -212,9 +205,9 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 		{
 			Vector3D throughPoint;
 			if (_slicerParams.SliceThroughPointPatient != null)
-				throughPoint = _volume.Volume.ConvertToVolume(_slicerParams.SliceThroughPointPatient);
+				throughPoint = _volume.ConvertToVolume(_slicerParams.SliceThroughPointPatient);
 			else
-				throughPoint = _volume.Volume.CenterPoint;
+				throughPoint = _volume.VolumeCenter;
 			return throughPoint;
 		}
 
@@ -228,6 +221,113 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 		{
 			get { return ActualSliceSpacingVector.Magnitude; }
 		}
+
+		#region VolumeSlice helper methods
+
+		private static VolumeSlice CreateSlice(IVolumeReference volumeReference, IVolumeSlicerParams slicerParams, float thicknessAndSpacing, Vector3D throughPoint)
+		{
+			// compute Rows and Columns to reflect actual output size
+			var frameSize = GetSliceExtent(volumeReference, slicerParams);
+
+			// compute Pixel Spacing
+			var effectiveSpacing = GetEffectiveSpacing(volumeReference);
+
+			// compute Image Orientation (Patient)
+			var matrix = new Matrix(slicerParams.SlicingPlaneRotation);
+			matrix[3, 0] = throughPoint.X;
+			matrix[3, 1] = throughPoint.Y;
+			matrix[3, 2] = throughPoint.Z;
+			var resliceAxesPatientOrientation = volumeReference.RotateToPatientOrientation(matrix);
+
+			// compute Image Position (Patient)
+			var topLeftOfSlicePatient = GetTopLeftOfSlicePatient(frameSize, throughPoint, volumeReference, slicerParams);
+
+			var args = new VolumeSliceArgs(frameSize.Height, frameSize.Width, effectiveSpacing, effectiveSpacing,
+			                               new Vector3D(resliceAxesPatientOrientation[0, 0], resliceAxesPatientOrientation[0, 1], resliceAxesPatientOrientation[0, 2]),
+			                               new Vector3D(resliceAxesPatientOrientation[1, 0], resliceAxesPatientOrientation[1, 1], resliceAxesPatientOrientation[1, 2]),
+			                               thicknessAndSpacing, Convert(slicerParams.InterpolationMode));
+
+			return new VolumeSlice(volumeReference, true, args, topLeftOfSlicePatient, thicknessAndSpacing);
+		}
+
+		private static VolumeInterpolationMode Convert(VolumeSlicerInterpolationMode mode)
+		{
+			switch (mode)
+			{
+				case VolumeSlicerInterpolationMode.NearestNeighbor:
+					return VolumeInterpolationMode.NearestNeighbor;
+
+				case VolumeSlicerInterpolationMode.Linear:
+					return VolumeInterpolationMode.Linear;
+				case VolumeSlicerInterpolationMode.Cubic:
+					return VolumeInterpolationMode.Cubic;
+				default:
+					throw new ArgumentOutOfRangeException("mode");
+			}
+		}
+
+		// VTK treats the reslice point as the center of the output image. Given the plane orientation
+		//	and size of the output image, we can derive the top left of the output image in patient space
+		private static Vector3D GetTopLeftOfSlicePatient(Size frameSize, Vector3D throughPoint, IVolumeHeader volume, IVolumeSlicerParams slicerParams)
+		{
+			// This is the center of the output image
+			var centerImageCoord = new PointF(frameSize.Width/2f, frameSize.Height/2f);
+
+			// These offsets define the x and y vector magnitudes to arrive at our point
+			var effectiveSpacing = GetEffectiveSpacing(volume);
+			var offsetX = centerImageCoord.X*effectiveSpacing;
+			var offsetY = centerImageCoord.Y*effectiveSpacing;
+
+			// To determine top left of slice in volume, subtract offset vectors along x and y
+			//
+			// Our reslice plane x and y vectors
+			var resliceAxes = slicerParams.SlicingPlaneRotation;
+			var xVec = new Vector3D(resliceAxes[0, 0], resliceAxes[0, 1], resliceAxes[0, 2]);
+			var yVec = new Vector3D(resliceAxes[1, 0], resliceAxes[1, 1], resliceAxes[1, 2]);
+
+			// Offset along x and y from reslicePoint
+			var topLeftOfSliceVolume = throughPoint - (offsetX*xVec + offsetY*yVec);
+
+			// Convert volume point to patient space
+			return volume.ConvertToPatient(topLeftOfSliceVolume);
+		}
+
+		// Derived from either a specified extent in millimeters or from the volume dimensions (default)
+		private static Size GetSliceExtent(IVolumeHeader volume, IVolumeSlicerParams slicerParams)
+		{
+			var effectiveSpacing = GetEffectiveSpacing(volume);
+			var longOutputDimension = volume.GetLongAxisMagnitude()/effectiveSpacing;
+			var shortOutputDimenstion = volume.GetShortAxisMagnitude()/effectiveSpacing;
+			var diagonalDimension = (int) Math.Sqrt(longOutputDimension*longOutputDimension + shortOutputDimenstion*shortOutputDimenstion);
+
+			var columns = diagonalDimension;
+			if (!FloatComparer.AreEqual(slicerParams.SliceExtentXMillimeters, 0f))
+				columns = (int) (slicerParams.SliceExtentXMillimeters/effectiveSpacing + 0.5f);
+
+			var rows = diagonalDimension;
+			if (!FloatComparer.AreEqual(slicerParams.SliceExtentYMillimeters, 0f))
+				rows = (int) (slicerParams.SliceExtentYMillimeters/effectiveSpacing + 0.5f);
+
+			return new Size(columns, rows);
+		}
+
+		/// <summary>
+		/// The effective spacing defines output pixel spacing for slices generated by the VolumeSlicer.
+		/// </summary>
+		private static float GetEffectiveSpacing(IVolumeHeader volume)
+		{
+			// Because we supply the real spacing to the VTK reslicer, the slices are interpolated
+			//	as if the volume were isotropic. This results in an effective spacing that is the
+			//	minimum spacing for the volume.
+			//
+			// N.B.: this behaviour is different than if had asked VTK to render it, because we are
+			//  asking directly for pixel data out. If VTK renders it, then we scrape the rendering
+			//  for the pixel data, the spacing would be exactly 1mm because the interpolation would
+			//  happened during rendering.
+			return volume.GetMinimumSpacing();
+		}
+
+		#endregion
 
 		#endregion
 
@@ -244,8 +344,8 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 				Vector3D normalVec = GetSliceNormalVector();
 
 				// Normal components by spacing components
-				Vector3D actualSliceSpacingVector = new Vector3D(normalVec.X*_volume.Volume.VoxelSpacing.X,
-				                                                 normalVec.Y*_volume.Volume.VoxelSpacing.Y, normalVec.Z*_volume.Volume.VoxelSpacing.Z);
+				Vector3D actualSliceSpacingVector = new Vector3D(normalVec.X*_volume.VoxelSpacing.X,
+				                                                 normalVec.Y*_volume.VoxelSpacing.Y, normalVec.Z*_volume.VoxelSpacing.Z);
 
 				return actualSliceSpacingVector;
 			}
@@ -253,317 +353,16 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 
 		private float GetDefaultSpacing()
 		{
-			MprSettings settings = MprSettings.DefaultInstance;
-
 			Vector3D spacingVector = ActualSliceSpacingVector;
-			if (settings.AutoSliceSpacing)
 			{
 				// adjust magnitude of vector by whole factor based on max volume spacing
-				if (spacingVector.Magnitude < _volume.Volume.MaximumSpacing/2f)
+				if (spacingVector.Magnitude < _volume.GetMaximumSpacing()/2f)
 				{
-					int spacingFactor = (int) (_volume.Volume.MaximumSpacing/spacingVector.Magnitude);
+					int spacingFactor = (int) (_volume.GetMaximumSpacing()/spacingVector.Magnitude);
 					spacingVector *= spacingFactor;
 				}
 			}
-			else
-			{
-				// adjust magnitude by value specified by user
-				spacingVector *= settings.SliceSpacingFactor;
-			}
 			return spacingVector.Magnitude;
-		}
-
-		#endregion
-
-		#region Pixel Data Generation
-
-		// This method is used by the VolumeSlice to generate pixel data on demand
-		internal byte[] CreateSliceNormalizedPixelData(Vector3D throughPoint)
-		{
-			Matrix resliceAxes = new Matrix(_slicerParams.SlicingPlaneRotation);
-			resliceAxes[3, 0] = throughPoint.X;
-			resliceAxes[3, 1] = throughPoint.Y;
-			resliceAxes[3, 2] = throughPoint.Z;
-
-#if SLAB
-			using (vtkImageData imageData = GenerateVtkSlab(resliceAxes, 10))  // baked 10 voxels for testing
-			{
-				byte[] pixelData = MipPixelDataFromVtkSlab(imageData);
-				imageData.ReleaseData();
-
-				return pixelData;
-			}
-#else
-			using (vtkImageData imageData = GenerateVtkSlice(resliceAxes))
-			{
-				byte[] pixelData = CreatePixelDataFromVtkSlice(imageData);
-				imageData.ReleaseData();
-
-				return pixelData;
-			}
-#endif
-		}
-
-		// Extract slice in specified orientation
-		private vtkImageData GenerateVtkSlice(Matrix resliceAxes)
-		{
-			using (vtkImageReslice reslicer = new vtkImageReslice())
-			{
-				VtkHelper.RegisterVtkErrorEvents(reslicer);
-
-				// Obtain a pinned VTK volume for the reslicer. We'll release this when
-				//	VTK is done reslicing.
-				using (var volume = _volume.Volume.CreateVtkVolumeHandle())
-				{
-					reslicer.SetInput(volume.vtkImageData);
-					reslicer.SetInformationInput(volume.vtkImageData);
-
-					// Must instruct reslicer to output 2D images
-					reslicer.SetOutputDimensionality(2);
-
-					// Use the volume's padding value for all pixels that are outside the volume
-					reslicer.SetBackgroundLevel(_volume.Volume.PaddingValue);
-
-					// This ensures VTK obeys the real spacing, results in all VTK slices being isotropic.
-					//	Effective spacing is the minimum of these three.
-					reslicer.SetOutputSpacing(_volume.Volume.VoxelSpacing.X, _volume.Volume.VoxelSpacing.Y, _volume.Volume.VoxelSpacing.Z);
-
-					using (vtkMatrix4x4 resliceAxesMatrix = VtkHelper.ConvertToVtkMatrix(resliceAxes))
-					{
-						reslicer.SetResliceAxes(resliceAxesMatrix);
-
-						// Clamp the output based on the slice extent
-						int sliceExtentX = GetSliceExtentX();
-						int sliceExtentY = GetSliceExtentY();
-						reslicer.SetOutputExtent(0, sliceExtentX - 1, 0, sliceExtentY - 1, 0, 0);
-
-						// Set the output origin to reflect the slice through point. The slice extent is
-						//	centered on the slice through point.
-						// VTK output origin is derived from the center image being 0,0
-						float originX = -sliceExtentX*EffectiveSpacing/2;
-						float originY = -sliceExtentY*EffectiveSpacing/2;
-						reslicer.SetOutputOrigin(originX, originY, 0);
-
-						switch (_slicerParams.InterpolationMode)
-						{
-							case VolumeSlicerInterpolationMode.NearestNeighbor:
-								reslicer.SetInterpolationModeToNearestNeighbor();
-								break;
-							case VolumeSlicerInterpolationMode.Linear:
-								reslicer.SetInterpolationModeToLinear();
-								break;
-							case VolumeSlicerInterpolationMode.Cubic:
-								reslicer.SetInterpolationModeToCubic();
-								break;
-						}
-
-						using (vtkExecutive exec = reslicer.GetExecutive())
-						{
-							VtkHelper.RegisterVtkErrorEvents(exec);
-							exec.Update();
-						}
-
-						var output = reslicer.GetOutput();
-						//Just in case VTK uses the matrix internally.
-						return output;
-					}
-				}
-			}
-		}
-
-		private static byte[] CreatePixelDataFromVtkSlice(vtkImageData sliceImageData)
-		{
-			int[] sliceDimensions = sliceImageData.GetDimensions();
-			int sliceDataSize = sliceDimensions[0]*sliceDimensions[1];
-			IntPtr sliceDataPtr = sliceImageData.GetScalarPointer();
-
-			if (sliceDataPtr.Equals(IntPtr.Zero)) return null;
-
-			byte[] pixelData = MemoryManager.Allocate<byte>(sliceDataSize*sizeof (short));
-
-			Marshal.Copy(sliceDataPtr, pixelData, 0, sliceDataSize*sizeof (short));
-			return pixelData;
-		}
-
-		#region Slabbing Code
-
-#if SLAB
-
-	// Extract slab in specified orientation, if slabThickness is 1, this is identical
-	//	to GenerateVtkSlice above, so they should be collapsed at some point.
-	// TODO: Tie into Dicom for slice, will need to adjust thickness at least
-		private vtkImageData GenerateVtkSlab(Matrix resliceAxes, int slabThicknessInVoxels)
-		{
-            VtkHelper.StaticInitializationHack();
-
-			// Thickness should be at least 1
-			if (slabThicknessInVoxels < 1)
-				slabThicknessInVoxels = 1;
-
-			using (vtkImageReslice reslicer = new vtkImageReslice())
-			{
-				VtkHelper.RegisterVtkErrorEvents(reslicer);
-
-				// Obtain a pinned VTK volume for the reslicer. We'll release this when
-				//	VTK is done reslicing.
-				vtkImageData volumeVtkWrapper = _volume.ObtainPinnedVtkVolume();
-				reslicer.SetInput(volumeVtkWrapper);
-				reslicer.SetInformationInput(volumeVtkWrapper);
-
-				if (slabThicknessInVoxels > 1)
-					reslicer.SetOutputDimensionality(3);
-				else
-					reslicer.SetOutputDimensionality(3);
-
-				// Use the volume's padding value for all pixels that are outside the volume
-				reslicer.SetBackgroundLevel(_volume.PadValue);
-
-				// This ensures VTK obeys the real spacing, results in all VTK slices being isotropic.
-				//	Effective spacing is the minimum of these three.
-				reslicer.SetOutputSpacing(_volume.Spacing.X, _volume.Spacing.Y, _volume.Spacing.Z);
-
-				reslicer.SetResliceAxes(VtkHelper.ConvertToVtkMatrix(resliceAxes));
-
-				// Clamp the output based on the slice extent
-				int sliceExtentX = GetSliceExtentX();
-				int sliceExtentY = GetSliceExtentY();
-				reslicer.SetOutputExtent(0, sliceExtentX - 1, 0, sliceExtentY - 1, 0, slabThicknessInVoxels-1);
-
-				// Set the output origin to reflect the slice through point. The slice extent is
-				//	centered on the slice through point.
-				// VTK output origin is derived from the center image being 0,0
-				float originX = -sliceExtentX * EffectiveSpacing / 2;
-				float originY = -sliceExtentY * EffectiveSpacing / 2;
-				reslicer.SetOutputOrigin(originX, originY, 0);
-
-				switch (_slicing.InterpolationMode)
-				{
-					case InterpolationModes.NearestNeighbor:
-						reslicer.SetInterpolationModeToNearestNeighbor();
-						break;
-					case InterpolationModes.Linear:
-						reslicer.SetInterpolationModeToLinear();
-						break;
-					case InterpolationModes.Cubic:
-						reslicer.SetInterpolationModeToCubic();
-						break;
-				}
-
-				using (vtkExecutive exec = reslicer.GetExecutive())
-				{
-					VtkHelper.RegisterVtkErrorEvents(exec);
-
-					exec.Update();
-
-					_volume.ReleasePinnedVtkVolume();
-
-					return reslicer.GetOutput();
-				}
-			}
-		}
-
-		private static byte[] MipPixelDataFromVtkSlab(vtkImageData slabImageData)
-		{
-            VtkHelper.StaticInitializationHack();
-
-#if true // Do our own MIP, albeit slowly
-			int[] sliceDimensions = slabImageData.GetDimensions();
-			int sliceDataSize = sliceDimensions[0] * sliceDimensions[1];
-			IntPtr slabDataPtr = slabImageData.GetScalarPointer();
-
-			byte[] pixelData = MemoryManager.Allocate<byte>(sliceDataSize * sizeof(short));
-
-			// Init with first slice
-			Marshal.Copy(slabDataPtr, pixelData, 0, sliceDataSize * sizeof(short));
-
-			// Walk through other slices, finding maximum
-			unsafe
-			{
-				short* psSlab = (short*) slabDataPtr;
-
-				fixed (byte* pbFrame = pixelData)
-				{
-					short* psFrame = (short*)pbFrame;
-					for (int sliceIndex = 1; sliceIndex < sliceDimensions[2]; sliceIndex++)
-					{
-						for (int i = 0; i < sliceDataSize-1; ++i)
-						{
-							int slabIndex = sliceIndex * sliceDataSize + i;
-							if (psSlab[slabIndex] > psFrame[i])
-								psFrame[i] = psSlab[slabIndex];
-						}
-					}
-				}
-			}
-
-			return pixelData;
-
-#else // Ideally we'd use VTK to do the MIP (MinIP, Average...)
-				vtkVolumeRayCastMIPFunction mip = new vtkVolumeRayCastMIPFunction();
-				vtkVolumeRayCastMapper mapper = new vtkVolumeRayCastMapper();
-
-				mapper.SetVolumeRayCastFunction(mip);
-				mapper.SetInput(slabImageData);
-
-				//TODO: Need to figure out how to use mapper to output vtkImageData
-
-				vtkImageAlgorithm algo = new vtkImageAlgorithm();
-				algo.SetInput(mapper.GetOutputDataObject(0));
-				
-				using (vtkExecutive exec = mapper.GetExecutive())
-				{
-					VtkHelper.RegisterVtkErrorEvents(exec);
-					exec.Update();
-
-					// Note: These report no output port, must have to do something else to get mapper to give us data
-					//return exec.GetOutputData(0);
-					return mapper.GetOutputDataObject(0);
-				}
-#endif
-		}
-#endif
-
-		#endregion
-
-		// Derived frome either a specified extent in millimeters or from the volume dimensions (default)
-		private int GetSliceExtentX()
-		{
-			if (_slicerParams.SliceExtentXMillimeters != 0f)
-				return (int) (_slicerParams.SliceExtentXMillimeters/EffectiveSpacing + 0.5f);
-			else
-				return MaxOutputImageDimension;
-		}
-
-		// Derived frome either a specified extent in millimeters or from the volume dimensions (default)
-		private int GetSliceExtentY()
-		{
-			if (_slicerParams.SliceExtentYMillimeters != 0f)
-				return (int) (_slicerParams.SliceExtentYMillimeters/EffectiveSpacing + 0.5f);
-			else
-				return MaxOutputImageDimension;
-		}
-
-		private int MaxOutputImageDimension
-		{
-			get
-			{
-				// This doesn't give us enough extra room, so I decided to use the diagonal along long and short dimensions
-				//return (int)(LongAxisMagnitude / EffectiveSpacing + 0.5f);
-				float longOutputDimension = _volume.Volume.LongAxisMagnitude/EffectiveSpacing;
-				float shortOutputDimenstion = _volume.Volume.ShortAxisMagnitude/EffectiveSpacing;
-				return (int) Math.Sqrt(longOutputDimension*longOutputDimension + shortOutputDimenstion*shortOutputDimenstion);
-			}
-		}
-
-		/// <summary>
-		/// The effective spacing defines output spacing for slices generated by the VolumeSlicer.
-		/// </summary>
-		private float EffectiveSpacing
-		{
-			// Because we supply the real spacing to the VTK reslicer, the slices are interpolated
-			//	as if the volume were isotropic. This results in an effective spacing that is the
-			//	minimum spacing for the volume.
-			get { return _volume.Volume.MinimumSpacing; }
 		}
 
 		#endregion

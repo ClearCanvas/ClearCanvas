@@ -84,15 +84,7 @@ namespace ClearCanvas.Dicom.Tests
 
 			Assert.IsNotNull(collection.GetAttribute(tag));
 			Assert.IsNotNull(collection[tag]);
-	
-			try
-			{
-				DicomAttribute attrib = collection[tag.TagValue];
-				Assert.Fail("DicomAttributeCollection.GetAttribute failed");
-			}
-			catch (DicomException)
-			{
-			}
+			Assert.IsNotNull(collection[tag.TagValue]);
 
 			collection.IgnoreOutOfRangeTags = false;
 

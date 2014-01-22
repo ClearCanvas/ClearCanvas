@@ -25,7 +25,6 @@
 using System;
 using System.Linq;
 using ClearCanvas.Common;
-using ClearCanvas.Common.Utilities;
 using ClearCanvas.Desktop;
 using ClearCanvas.Desktop.Actions;
 using ClearCanvas.ImageViewer.Automation;
@@ -38,26 +37,26 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 	[MenuAction("activate", "global-menus/MenuTools/MenuStandard/MenuStack", "Select", Flags = ClickActionFlags.CheckAction)]
 	[MenuAction("activate", "imageviewer-contextmenu/MenuStack", "Select", Flags = ClickActionFlags.CheckAction)]
 	[DropDownButtonAction("activate", "global-toolbars/ToolbarStandard/ToolbarStack", "Select", "SortMenuModel", Flags = ClickActionFlags.CheckAction, KeyStroke = XKeys.S)]
-    [CheckedStateObserver("activate", "Active", "ActivationChanged")]
+	[CheckedStateObserver("activate", "Active", "ActivationChanged")]
 	[TooltipValueObserver("activate", "Tooltip", "TooltipChanged")]
 	[MouseButtonIconSet("activate", "Icons.StackToolSmall.png", "Icons.StackToolMedium.png", "Icons.StackToolLarge.png")]
 	[GroupHint("activate", "Tools.Image.Manipulation.Stacking.Standard")]
-
+	//
 	[MouseWheelHandler(ModifierFlags.None)]
 	[MouseToolButton(XMouseButtons.Left, true)]
-
+	//
 	[KeyboardAction("stackup", "imageviewer-keyboard/ToolsStandardStack/StackUp", "StackUp", KeyStroke = XKeys.PageUp)]
 	[KeyboardAction("stackdown", "imageviewer-keyboard/ToolsStandardStack/StackDown", "StackDown", KeyStroke = XKeys.PageDown)]
 	[KeyboardAction("jumptobeginning", "imageviewer-keyboard/ToolsStandardStack/JumpToBeginning", "JumpToBeginning", KeyStroke = XKeys.Home)]
 	[KeyboardAction("jumptoend", "imageviewer-keyboard/ToolsStandardStack/JumpToEnd", "JumpToEnd", KeyStroke = XKeys.End)]
-
-	[ExtensionOf(typeof(ImageViewerToolExtensionPoint))]
-	public partial class StackTool : MouseImageViewerTool
+	//
+	[ExtensionOf(typeof (ImageViewerToolExtensionPoint))]
+	public class StackTool : MouseImageViewerTool, IStack
 	{
 		private MemorableUndoableCommand _memorableCommand;
 		private int _initialPresentationImageIndex;
 		private IImageBox _currentImageBox;
-        private SimpleActionModel _sortMenuModel;
+		private SimpleActionModel _sortMenuModel;
 
 		public StackTool()
 			: base(SR.TooltipStack)
@@ -75,56 +74,56 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 		{
 			get
 			{
-                if (_sortMenuModel == null)
-                {
-                    _sortMenuModel = new SimpleActionModel(new ApplicationThemeResourceResolver(GetType().Assembly));
-                    foreach (var item in ImageComparerList.Items)
-                    {
-                        var itemVar = item;
-                        var action = _sortMenuModel.AddAction(GetActionKey(itemVar), itemVar.Description, null, itemVar.Description, () => Sort(itemVar));
-                        action.Checked = GetSortMenuItemCheckState(itemVar);
-                    }
-                }
+				if (_sortMenuModel == null)
+				{
+					_sortMenuModel = new SimpleActionModel(new ApplicationThemeResourceResolver(GetType().Assembly));
+					foreach (var item in ImageComparerList.Items)
+					{
+						var itemVar = item;
+						var action = _sortMenuModel.AddAction(GetActionKey(itemVar), itemVar.Description, null, itemVar.Description, () => Sort(itemVar));
+						action.Checked = GetSortMenuItemCheckState(itemVar);
+					}
+				}
 
-			    return _sortMenuModel;
+				return _sortMenuModel;
 			}
 		}
 
-        protected override void OnPresentationImageSelected(object sender, PresentationImageSelectedEventArgs e)
-        {
-            base.OnPresentationImageSelected(sender, e);
-            UpdateCheckState();
-        }
+		protected override void OnPresentationImageSelected(object sender, PresentationImageSelectedEventArgs e)
+		{
+			base.OnPresentationImageSelected(sender, e);
+			UpdateCheckState();
+		}
 
-        private static string GetActionKey(ImageComparerList.Item item)
-        {
-            return item.IsReverse ? string.Format("{0} (Reverse)", item.Name) : item.Name;
-        }
+		private static string GetActionKey(ImageComparerList.Item item)
+		{
+			return item.IsReverse ? string.Format("{0} (Reverse)", item.Name) : item.Name;
+		}
 
-        private void UpdateCheckState()
-        {
-            if (_sortMenuModel == null)
-                return;
+		private void UpdateCheckState()
+		{
+			if (_sortMenuModel == null)
+				return;
 
-            foreach (var item in ImageComparerList.Items)
-            {
-                var itemVar = item;
-                var actionKey = GetActionKey(itemVar);
-                var action = _sortMenuModel[actionKey] as ClickAction;
-                if (action == null)
-                    continue;
+			foreach (var item in ImageComparerList.Items)
+			{
+				var itemVar = item;
+				var actionKey = GetActionKey(itemVar);
+				var action = _sortMenuModel[actionKey] as ClickAction;
+				if (action == null)
+					continue;
 
-                action.Checked = GetSortMenuItemCheckState(itemVar);
-            }
-        }
+				action.Checked = GetSortMenuItemCheckState(itemVar);
+			}
+		}
 
-        private bool GetSortMenuItemCheckState(ImageComparerList.Item item)
+		private bool GetSortMenuItemCheckState(ImageComparerList.Item item)
 		{
 			return SelectedPresentationImage != null && SelectedPresentationImage.ParentDisplaySet != null &&
 			       item.Comparer.Equals(SelectedPresentationImage.ParentDisplaySet.PresentationImages.SortComparer);
 		}
 
-        private void Sort(ImageComparerList.Item item)
+		private void Sort(ImageComparerList.Item item)
 		{
 			IImageBox imageBox = ImageViewer.SelectedImageBox;
 			IDisplaySet displaySet;
@@ -139,7 +138,7 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 
 			var command = new MemorableUndoableCommand(imageBox) {BeginState = imageBox.CreateMemento()};
 
-            displaySet.PresentationImages.Sort(item.Comparer);
+			displaySet.PresentationImages.Sort(item.Comparer);
 			imageBox.TopLeftPresentationImage = topLeftImage;
 			imageBox.Draw();
 
@@ -147,18 +146,18 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 			if (!command.BeginState.Equals(command.EndState))
 			{
 				var historyCommand = new DrawableUndoableCommand(imageBox) {Name = SR.CommandSortImages};
-			    historyCommand.Enqueue(command);
+				historyCommand.Enqueue(command);
 				Context.Viewer.CommandHistory.AddCommand(historyCommand);
 			}
 
-            UpdateCheckState();
+			UpdateCheckState();
 		}
 
 		private void CaptureBeginState(IImageBox imageBox)
 		{
 			_memorableCommand = new MemorableUndoableCommand(imageBox) {BeginState = imageBox.CreateMemento()};
 			// Capture state before stack
-		    _currentImageBox = imageBox;
+			_currentImageBox = imageBox;
 
 			_initialPresentationImageIndex = imageBox.SelectedTile.PresentationImageIndex;
 		}
@@ -168,10 +167,10 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 			if (_memorableCommand == null || _currentImageBox == null)
 			{
 				_currentImageBox = null;
-                return false;
+				return false;
 			}
 
-            bool commandAdded = false;
+			bool commandAdded = false;
 
 			// If nothing's changed then just return
 			if (_initialPresentationImageIndex != _currentImageBox.SelectedTile.PresentationImageIndex)
@@ -181,90 +180,90 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 				if (!_memorableCommand.EndState.Equals(_memorableCommand.BeginState))
 				{
 					var historyCommand = new DrawableUndoableCommand(_currentImageBox) {Name = SR.CommandStack};
-				    historyCommand.Enqueue(_memorableCommand);
-                    Context.Viewer.CommandHistory.AddCommand(historyCommand);
-				    commandAdded = true;
+					historyCommand.Enqueue(_memorableCommand);
+					Context.Viewer.CommandHistory.AddCommand(historyCommand);
+					commandAdded = true;
 				}
 			}
 
 			_memorableCommand = null;
 			_currentImageBox = null;
 
-		    return commandAdded;
+			return commandAdded;
 		}
 
 		private void JumpToBeginning()
 		{
-            if (Context.Viewer.SelectedTile == null)
+			if (Context.Viewer.SelectedTile == null)
 				return;
 
 			if (this.SelectedPresentationImage == null)
 				return;
 
-            IImageBox imageBox = Context.Viewer.SelectedTile.ParentImageBox;
+			IImageBox imageBox = Context.Viewer.SelectedTile.ParentImageBox;
 
 			CaptureBeginState(imageBox);
 			imageBox.TopLeftPresentationImageIndex = 0;
 			if (CaptureEndState())
-                imageBox.Draw();
+				imageBox.Draw();
 		}
 
 		private void JumpToEnd()
 		{
-            if (Context.Viewer.SelectedTile == null)
+			if (Context.Viewer.SelectedTile == null)
 				return;
 
 			if (this.SelectedPresentationImage == null)
 				return;
 
-            IImageBox imageBox = Context.Viewer.SelectedTile.ParentImageBox;
+			IImageBox imageBox = Context.Viewer.SelectedTile.ParentImageBox;
 
 			if (imageBox.DisplaySet == null)
 				return;
 
 			CaptureBeginState(imageBox);
 			imageBox.TopLeftPresentationImageIndex = imageBox.DisplaySet.PresentationImages.Count - 1;
-            if (CaptureEndState())
-                imageBox.Draw();
-        }
+			if (CaptureEndState())
+				imageBox.Draw();
+		}
 
 		private void StackUp()
 		{
-            if (Context.Viewer.SelectedTile == null)
+			if (Context.Viewer.SelectedTile == null)
 				return;
 
 			if (this.SelectedPresentationImage == null)
 				return;
 
-            IImageBox imageBox = Context.Viewer.SelectedTile.ParentImageBox;
+			IImageBox imageBox = Context.Viewer.SelectedTile.ParentImageBox;
 			CaptureBeginState(imageBox);
 			AdvanceImage(-imageBox.Tiles.Count, imageBox);
-		    CaptureEndState();
-            //No draw - AdvanceImage has already done it.
-        }
+			CaptureEndState();
+			//No draw - AdvanceImage has already done it.
+		}
 
 		private void StackDown()
 		{
-            if (Context.Viewer.SelectedTile == null)
+			if (Context.Viewer.SelectedTile == null)
 				return;
 
 			if (this.SelectedPresentationImage == null)
 				return;
 
-            IImageBox imageBox = Context.Viewer.SelectedTile.ParentImageBox;
+			IImageBox imageBox = Context.Viewer.SelectedTile.ParentImageBox;
 			CaptureBeginState(imageBox);
 			AdvanceImage(+imageBox.Tiles.Count, imageBox);
-		    CaptureEndState();
-            //No draw - AdvanceImage has already done it.
+			CaptureEndState();
+			//No draw - AdvanceImage has already done it.
 		}
 
 		private static void AdvanceImage(int increment, IImageBox selectedImageBox)
 		{
-		    int prevTopLeftPresentationImageIndex = selectedImageBox.TopLeftPresentationImageIndex;
+			int prevTopLeftPresentationImageIndex = selectedImageBox.TopLeftPresentationImageIndex;
 			selectedImageBox.TopLeftPresentationImageIndex += increment;
 
-            if (selectedImageBox.TopLeftPresentationImageIndex != prevTopLeftPresentationImageIndex)
-                selectedImageBox.Draw(); 
+			if (selectedImageBox.TopLeftPresentationImageIndex != prevTopLeftPresentationImageIndex)
+				selectedImageBox.Draw();
 		}
 
 		public override bool Start(IMouseInformation mouseInformation)
@@ -329,13 +328,13 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 
 		public override void StartWheel()
 		{
-            if (Context.Viewer.SelectedTile == null)
+			if (Context.Viewer.SelectedTile == null)
 				return;
 
 			if (this.SelectedPresentationImage == null)
 				return;
 
-            IImageBox imageBox = Context.Viewer.SelectedTile.ParentImageBox;
+			IImageBox imageBox = Context.Viewer.SelectedTile.ParentImageBox;
 			if (imageBox == null)
 				return;
 
@@ -347,7 +346,7 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 			if (this.SelectedPresentationImage == null)
 				return;
 
-            AdvanceImage(1, Context.Viewer.SelectedTile.ParentImageBox);
+			AdvanceImage(1, Context.Viewer.SelectedTile.ParentImageBox);
 		}
 
 		protected override void WheelForward()
@@ -355,7 +354,7 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 			if (this.SelectedPresentationImage == null)
 				return;
 
-            AdvanceImage(-1, Context.Viewer.SelectedTile.ParentImageBox);
+			AdvanceImage(-1, Context.Viewer.SelectedTile.ParentImageBox);
 		}
 
 		public override void StopWheel()
@@ -365,54 +364,49 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 
 			CaptureEndState();
 		}
-    }
 
-    #region Oto
-    partial class StackTool : IStack
-    {
-        #region IViewerStackService Members
+		#region IStack Members
 
-        void IStack.StackBy(int delta)
-        {
-            if (Context.Viewer.SelectedTile == null)
-                throw new InvalidOperationException("No tile selected.");
+		void IStack.StackBy(int delta)
+		{
+			if (Context.Viewer.SelectedTile == null)
+				throw new InvalidOperationException("No tile selected.");
 
-            if (this.SelectedPresentationImage == null)
-                throw new InvalidOperationException("No image selected.");
+			if (this.SelectedPresentationImage == null)
+				throw new InvalidOperationException("No image selected.");
 
-            IImageBox imageBox = Context.Viewer.SelectedTile.ParentImageBox;
-            CaptureBeginState(imageBox);
-            AdvanceImage(delta, imageBox);
-            //No draw - AdvanceImage has already done it.
-            CaptureEndState();
-        }
+			IImageBox imageBox = Context.Viewer.SelectedTile.ParentImageBox;
+			CaptureBeginState(imageBox);
+			AdvanceImage(delta, imageBox);
+			//No draw - AdvanceImage has already done it.
+			CaptureEndState();
+		}
 
-        void IStack.StackTo(int instanceNumber, int? frameNumber)
-        {
-            if (Context.Viewer.SelectedTile == null)
-                throw new InvalidOperationException("No tile selected.");
+		void IStack.StackTo(int instanceNumber, int? frameNumber)
+		{
+			if (Context.Viewer.SelectedTile == null)
+				throw new InvalidOperationException("No tile selected.");
 
-            if (this.SelectedPresentationImage == null)
-                throw new InvalidOperationException("No image selected.");
+			if (this.SelectedPresentationImage == null)
+				throw new InvalidOperationException("No image selected.");
 
-            var displaySet = Context.Viewer.SelectedPresentationImage.ParentDisplaySet;
-            
-            //First will throw if no such image exists.
-            var image = (IPresentationImage)displaySet.PresentationImages.OfType<IImageSopProvider>().First(
-                i => i.ImageSop.InstanceNumber == instanceNumber 
-                        && (!frameNumber.HasValue || (i.ImageSop.NumberOfFrames > 1 && frameNumber.Value == i.Frame.FrameNumber)));
+			var displaySet = Context.Viewer.SelectedPresentationImage.ParentDisplaySet;
 
-            IImageBox imageBox = Context.Viewer.SelectedTile.ParentImageBox;
-            CaptureBeginState(imageBox);
-            imageBox.TopLeftPresentationImage = image;
-            if (!CaptureEndState())
-                return; /// TODO (CR Dec 2011): Should we still select the top-left??
+			//First will throw if no such image exists.
+			var image = (IPresentationImage) displaySet.PresentationImages.OfType<IImageSopProvider>().First(
+				i => i.ImageSop.InstanceNumber == instanceNumber
+				     && (!frameNumber.HasValue || (i.ImageSop.NumberOfFrames > 1 && frameNumber.Value == i.Frame.FrameNumber)));
 
-            imageBox.Draw();
-            imageBox.Tiles[0].Select();
-        }
+			IImageBox imageBox = Context.Viewer.SelectedTile.ParentImageBox;
+			CaptureBeginState(imageBox);
+			imageBox.TopLeftPresentationImage = image;
+			if (!CaptureEndState())
+				return; /// TODO (CR Dec 2011): Should we still select the top-left??
 
-        #endregion
-    }
-    #endregion
+			imageBox.Draw();
+			imageBox.Tiles[0].Select();
+		}
+
+		#endregion
+	}
 }

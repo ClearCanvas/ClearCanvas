@@ -40,6 +40,7 @@ namespace ClearCanvas.Enterprise.Common
 			Authenticated = authenticated;
 			MaxReceivedMessageSize = maxReceivedMessageSize;
 			CertificateSearchDirective = certificateSearchParams;
+			SendTimeoutSeconds = 0; //Treated as default (e.g. don't change)
 		}
 
 		/// <summary>
@@ -66,5 +67,11 @@ namespace ClearCanvas.Enterprise.Common
 		/// The maximum allowable size of received messages, in bytes.
 		/// </summary>
 		public int MaxReceivedMessageSize;
+
+		/// <summary>
+		/// The time, in seconds, in which a send operation must complete.
+		/// </summary>
+		/// <remarks>Value less than or equal to zero should be ignored.</remarks>
+		public int SendTimeoutSeconds;
 	}
 }

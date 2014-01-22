@@ -22,22 +22,20 @@
 
 #endregion
 
-using System;
 using System.Runtime.Serialization;
 using ClearCanvas.Common.Serialization;
-using ClearCanvas.Enterprise.Common;
 
 namespace ClearCanvas.Enterprise.Common.Admin.UserAdmin
 {
-    [DataContract]
-    public class LoadUserForEditResponse : DataContractBase
-    {
-        public LoadUserForEditResponse(UserDetail userDetail)
-        {
-            UserDetail = userDetail;
-        }
+	[DataContract]
+	public class LoadUserForEditResponse : DataContractBase
+	{
+		public LoadUserForEditResponse(UserDetail userDetail)
+		{
+			UserDetail = userDetail;
+		}
 
-        [DataMember]
-        public UserDetail UserDetail;
-    }
+		[DataMember]
+		public UserDetail UserDetail;
+	}
 }

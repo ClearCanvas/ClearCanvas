@@ -105,7 +105,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>SR.resx</DependentUpon>
     </Compile>
-    <Compile Include="Utilities\DicomImagePlane.cs" />
     <Compile Include="WindowLevelSynchronicityTool.cs" />
   </ItemGroup>
   <ItemGroup>

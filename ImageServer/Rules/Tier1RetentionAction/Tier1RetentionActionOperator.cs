@@ -33,9 +33,10 @@ using ClearCanvas.ImageServer.Model;
 
 namespace ClearCanvas.ImageServer.Rules.Tier1RetentionAction
 {
-    [ExtensionOf(typeof (XmlActionCompilerOperatorExtensionPoint<ServerActionContext,ServerRuleTypeEnum>))]
-    public class Tier1RetentionActionOperator : ActionOperatorCompilerBase,
-												IXmlActionCompilerOperator<ServerActionContext, ServerRuleTypeEnum>
+	[ExtensionOf(typeof(ServerRuleActionCompilerOperatorExtensionPoint))]
+	[ActionApplicability(ApplicableRuleType.Tier1Retention)]
+	public class Tier1RetentionActionOperator : ActionOperatorCompilerBase,
+												IXmlActionCompilerOperator<ServerActionContext>
     {
         public Tier1RetentionActionOperator()
             : base("tier1-retention")
@@ -80,11 +81,8 @@ namespace ClearCanvas.ImageServer.Rules.Tier1RetentionAction
             }
         }
 
-        public XmlSchemaElement GetSchema(ServerRuleTypeEnum ruleType)
+        public XmlSchemaElement GetSchema()
         {
-			if (!ruleType.Equals(ServerRuleTypeEnum.Tier1Retention))
-				return null;
-
             XmlSchemaSimpleType timeUnitType = new XmlSchemaSimpleType();
 
             XmlSchemaSimpleTypeRestriction restriction = new XmlSchemaSimpleTypeRestriction();

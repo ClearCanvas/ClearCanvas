@@ -245,7 +245,13 @@ namespace ClearCanvas.ImageViewer.InputManagement
 		private IMouseButtonHandler _captureHandler;
 		private int _startCount = 0;
 		private CursorToken _cursorToken;
-		
+
+		private int _mouseMovedToleranceInPixel = 2;
+		private int _contextMenuDelayInMilliseconds;
+		private int _mouseHoldDownForContextMenuInMilliseconds;
+		private long? _lastMouseDownProcessedTicks;
+		private XMouseButtons _buttonForContextMenu = XMouseButtons.Right;
+		private MouseButtonMessage.ButtonActions _buttonActionForContextMenu = MouseButtonMessage.ButtonActions.Up;
 		private bool _contextMenuEnabled; 
 		private IContextMenuProvider _contextMenuProvider;
 
@@ -276,7 +282,8 @@ namespace ClearCanvas.ImageViewer.InputManagement
             _selectedOnThisClick = false;
 			_capturedOnThisClick = false;
 			_shortcutManager = shortcutManager;
-			_delayedContextMenuRequestPublisher = new DelayedEventPublisher(ProcessDelayedContextMenuRequest, InputManagementSettings.Default.ContextMenuDelay);
+			_contextMenuDelayInMilliseconds = InputManagementSettings.Default.ContextMenuDelay;
+			_delayedContextMenuRequestPublisher = new DelayedEventPublisher(ProcessDelayedContextMenuRequest, _contextMenuDelayInMilliseconds);
 		}
 
 		public void Dispose()
@@ -495,6 +502,7 @@ namespace ClearCanvas.ImageViewer.InputManagement
 		private bool ProcessMouseButtonDownMessage(MouseButtonMessage buttonMessage)
 		{
 			this.CaptureMouseWheelHandler = null;
+			_lastMouseDownProcessedTicks = Environment.TickCount;
 
 			//don't allow multiple buttons, it's just cleaner and easier to manage behaviour.
 			if (_activeButton != 0)
@@ -510,7 +518,12 @@ namespace ClearCanvas.ImageViewer.InputManagement
 				return true;
 
 			_tile.Select();
-			_contextMenuEnabled = (buttonMessage.Shortcut.MouseButton == XMouseButtons.Right);
+			_contextMenuEnabled = _clickCount == 1 && _buttonForContextMenu == buttonMessage.Shortcut.MouseButton;
+			if (_contextMenuEnabled && _buttonActionForContextMenu == MouseButtonMessage.ButtonActions.Down)
+			{
+				_delayedContextMenuRequestPublisher.TimeoutMilliseconds = _mouseHoldDownForContextMenuInMilliseconds;
+				_delayedContextMenuRequestPublisher.Publish(this, new ItemEventArgs<Point>(buttonMessage.Location));
+			}
 
 			_startMousePoint = buttonMessage.Location;
 
@@ -608,26 +621,53 @@ namespace ClearCanvas.ImageViewer.InputManagement
 
 		private bool ProcessMouseButtonUpMessage(MouseButtonMessage buttonMessage)
 		{
+			var timeElapsedSinceMouseDown = _lastMouseDownProcessedTicks.HasValue
+				? TimeSpan.FromMilliseconds(Environment.TickCount - _lastMouseDownProcessedTicks.Value).TotalMilliseconds
+				: 0.0;
+			_lastMouseDownProcessedTicks = null;
+
 			if (_activeButton != buttonMessage.Shortcut.MouseButton)
 				return true;
 
 			_activeButton = 0;
 			_clickCount = 0;
 
+			var requestContextMenu = _buttonForContextMenu == buttonMessage.Shortcut.MouseButton &&
+					_buttonActionForContextMenu == MouseButtonMessage.ButtonActions.Up &&
+					!HasMoved(buttonMessage.Location) &&
+					(_mouseHoldDownForContextMenuInMilliseconds == 0 || timeElapsedSinceMouseDown >= _mouseHoldDownForContextMenuInMilliseconds);
+
 			if (this.CaptureHandler != null)
 			{
 				if (StopHandler(this.CaptureHandler))
 				{
-					if (_capturedOnThisClick && !HasMoved(buttonMessage.Location) && buttonMessage.Shortcut.MouseButton == XMouseButtons.Right)
+					if (_capturedOnThisClick && requestContextMenu)
+					{
+						_delayedContextMenuRequestPublisher.TimeoutMilliseconds = _contextMenuDelayInMilliseconds;
 						_delayedContextMenuRequestPublisher.Publish(this, new ItemEventArgs<Point>(buttonMessage.Location));
+					}
 
 					return true;
+				}
+
+				if (requestContextMenu)
+				{
+					// Request the context menu right away
+					_contextMenuEnabled = true;
+					EventsHelper.Fire(_contextMenuRequested, this, new ItemEventArgs<Point>(buttonMessage.Location));
 				}
 
                 //Trace.WriteLine(String.Format("Release capture {0}", this.CaptureHandler.GetType()));
 
 				ReleaseCapture(false);
 				return true;
+			}
+
+			if (requestContextMenu)
+			{
+				// Request the context menu right away
+				_contextMenuEnabled = true;
+				EventsHelper.Fire(_contextMenuRequested, this, new ItemEventArgs<Point>(buttonMessage.Location));
 			}
 
 			return false;
@@ -763,14 +803,14 @@ namespace ClearCanvas.ImageViewer.InputManagement
 		/// <summary>
 		/// Checks if <paramref name="point"/> has moved out of the tolerance zone from where the mouse button was pressed.
 		/// </summary>
-		private bool HasMoved(Point point)
+		public bool HasMoved(Point point)
 		{
-			return HasMoved(point, _startMousePoint);
+			return HasMoved(point, _startMousePoint, _mouseMovedToleranceInPixel);
 		}
 
-		private static bool HasMoved(Point testPoint, Point refPoint)
+		private static bool HasMoved(Point testPoint, Point refPoint, int tolerance)
 		{
-			return Math.Abs(refPoint.X - testPoint.X) > 2 || Math.Abs(refPoint.Y - testPoint.Y) > 2;
+			return Math.Abs(refPoint.X - testPoint.X) > tolerance || Math.Abs(refPoint.Y - testPoint.Y) > tolerance;
 		}
 
 		private void ProcessDelayedContextMenuRequest(object sender, EventArgs e)
@@ -779,11 +819,15 @@ namespace ClearCanvas.ImageViewer.InputManagement
 			if (eventArgs == null)
 				return;
 
-		    if (HasMoved(eventArgs.Item, _currentMousePoint))
+		    if (HasMoved(eventArgs.Item, _currentMousePoint, _mouseMovedToleranceInPixel))
                 return;
-		    
-            if (CaptureHandler != null)
-		        ReleaseCapture(true);
+
+			// Touch events are simulated as Left mouse button, which causes problem because the framework tools/graphics assumes right click will bring up RCCM.
+			// Release previous capture and re-capture using a simulated right click.
+			ReleaseCapture(true);
+			_activeButton = XMouseButtons.Right;
+			var simulatedRightMouseClick = new MouseButtonMessage(((ItemEventArgs<Point>)e).Item, XMouseButtons.Right, MouseButtonMessage.ButtonActions.Down, 1);
+			StartNewHandler(simulatedRightMouseClick);
 
 		    //When we show the context menu, reset the active button and start count,
             //because the user is going to have to start over again with a new click.
@@ -792,6 +836,10 @@ namespace ClearCanvas.ImageViewer.InputManagement
 
 		    _contextMenuEnabled = true;
 		    EventsHelper.Fire(_contextMenuRequested, this, eventArgs);
+
+			// Release capture only after firing context menu requested, so the ContextMenuProvider stays the same
+			if (CaptureHandler != null)
+				ReleaseCapture(true);
 		}
 
 	    private void ProcessExplicitContextMenuRequest(object sender, TileContextMenuRequestEventArgs e)
@@ -861,6 +909,51 @@ namespace ClearCanvas.ImageViewer.InputManagement
 		public bool ContextMenuEnabled
 		{
 			get { return _contextMenuEnabled; }
+		}
+
+		/// <summary>
+		/// Used by the view layer to tell this object which button to use for context menu.
+		/// </summary>
+		public XMouseButtons ButtonForContextMenu
+		{
+			get { return _buttonForContextMenu; }
+			set { _buttonForContextMenu = value; }
+		}
+
+		/// <summary>
+		/// Used by the view layer to tell this object whether the context menu will be shown on mouse down or up.
+		/// </summary>
+		public MouseButtonMessage.ButtonActions ButtonActionForContextMenu
+		{
+			get { return _buttonActionForContextMenu; }
+			set { _buttonActionForContextMenu = value; }
+		}
+
+		/// <summary>
+		/// Used by the view layer to tell this object the tolerance level for mouse moved.
+		/// </summary>
+		public int MouseMovedToleranceInPixel
+		{
+			get { return _mouseMovedToleranceInPixel; }
+			set { _mouseMovedToleranceInPixel = value; }
+		}
+
+		/// <summary>
+		/// Used by the view layer to tell this object how long the mouse has to be hold down in order to show the context menu. Default is 0.
+		/// </summary>
+		public int MouseHoldDownForContextMenuInMilliseconds
+		{
+			get { return _mouseHoldDownForContextMenuInMilliseconds; }
+			set { _mouseHoldDownForContextMenuInMilliseconds = value; }
+		}
+
+		/// <summary>
+		/// Used by the view layer to tell this object the delay between a mouse up and the context menu showing.  Not applicable if <see cref="ButtonActionForContextMenu"/> is down.
+		/// </summary>
+		public int ContextMenuDelayInMilliseconds
+		{
+			get { return _contextMenuDelayInMilliseconds; }
+			set { _contextMenuDelayInMilliseconds = value; }
 		}
 
 		/// <summary>

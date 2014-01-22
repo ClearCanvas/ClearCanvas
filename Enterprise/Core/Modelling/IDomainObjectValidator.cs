@@ -34,13 +34,13 @@ namespace ClearCanvas.Enterprise.Core.Modelling
 		/// </summary>
 		/// <param name="obj"></param>
 		/// <exception cref="EntityValidationException">Validation failed.</exception>
-		void Validate(DomainObject obj);
+		void Validate(object obj);
 
 		/// <summary>
 		/// Validates only that the specified object has required fields set.
 		/// </summary>
 		/// <param name="obj"></param>
-		void ValidateRequiredFieldsPresent(DomainObject obj);
+		void ValidateRequiredFieldsPresent(object obj);
 
 		/// <summary>
 		/// Validates the specified domain object, applying only "low-level" rules, subject to the specified filter.
@@ -53,7 +53,7 @@ namespace ClearCanvas.Enterprise.Core.Modelling
 		/// </remarks>
 		/// <param name="obj"></param>
 		/// <param name="ruleFilter"></param>
-		void ValidateLowLevel(DomainObject obj, Predicate<ISpecification> ruleFilter);
+		void ValidateLowLevel(object obj, Predicate<ISpecification> ruleFilter);
 
 		/// <summary>
 		/// Validates the specified domain object, applying only high-level rules.
@@ -62,7 +62,7 @@ namespace ClearCanvas.Enterprise.Core.Modelling
 		/// High-level rules include any rules that are not low-level rules.
 		/// </remarks>
 		/// <param name="obj"></param>
-		void ValidateHighLevel(DomainObject obj);
+		void ValidateHighLevel(object obj);
 	}
 
 }

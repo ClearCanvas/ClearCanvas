@@ -32,6 +32,10 @@ namespace ClearCanvas.ImageViewer
 	public class ViewerContextMenuFilterExtensionPoint : ExtensionPoint<IViewerActionFilter>
 	{}
 
+	[ExtensionPoint]
+	public class ViewerToolbarFilterExtensionPoint : ExtensionPoint<IViewerActionFilter>
+	{}
+
 	//TODO (CR Mar 2010): Predicate!
 	public interface IViewerActionFilter
 	{
@@ -82,6 +86,18 @@ namespace ClearCanvas.ImageViewer
 			try
 			{
 				return (IViewerActionFilter)new ViewerContextMenuFilterExtensionPoint().CreateExtension();
+			}
+			catch (NotSupportedException)
+			{
+				return Null;
+			}
+		}
+
+		public static IViewerActionFilter CreateToolbarFilter()
+		{
+			try
+			{
+				return (IViewerActionFilter)new ViewerToolbarFilterExtensionPoint().CreateExtension();
 			}
 			catch (NotSupportedException)
 			{

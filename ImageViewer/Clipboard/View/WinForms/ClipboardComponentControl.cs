@@ -23,41 +23,64 @@
 #endregion
 
 using System;
+using ClearCanvas.Desktop;
 using ClearCanvas.Desktop.View.WinForms;
 
 namespace ClearCanvas.ImageViewer.Clipboard.View.WinForms
 {
-    /// <summary>
-    /// Provides a Windows Forms user-interface for <see cref="ClipboardComponent"/>.
-    /// </summary>
-    public partial class ClipboardComponentControl : ApplicationComponentUserControl
-    {
-        private readonly ClipboardComponent _component;
+	/// <summary>
+	/// Provides a Windows Forms user-interface for <see cref="ClipboardComponent"/>.
+	/// </summary>
+	public partial class ClipboardComponentControl : ApplicationComponentUserControl
+	{
+		private readonly ClipboardComponent _component;
 
-        /// <summary>
-        /// Constructor.
-        /// </summary>
-        public ClipboardComponentControl(ClipboardComponent component)
-            :base(component)
-        {
+		/// <summary>
+		/// Constructor.
+		/// </summary>
+		public ClipboardComponentControl(ClipboardComponent component)
+			: base(component)
+		{
 			_component = component;
 
 			InitializeComponent();
 
-        	_component.DataSourceChanged += delegate { _galleryView.DataSource = _component.DataSource; };
-        	_galleryView.DataSource = _component.DataSource;
+			_component.DataSourceChanged += OnComponentOnDataSourceChanged;
+			_galleryView.DataSource = _component.DataSource;
+			_galleryView.ToolbarModel = _component.ToolbarModel;
+			_galleryView.ContextMenuModel = _component.ContextMenuModel;
+			_galleryView.SelectionChanged += OnSelectionChanged;
+			_galleryView.MultiSelect = true;
+			_galleryView.DragReorder = true;
+			_galleryView.ItemDrag += OnGalleryViewItemDrag;
+		}
 
-        	_galleryView.ToolbarModel = _component.ToolbarModel;
-        	_galleryView.ContextMenuModel = _component.ContextMenuModel;
-        	_galleryView.SelectionChanged += OnSelectionChanged;
-        	_galleryView.MultiSelect = true;
-        	_galleryView.DragReorder = true;
-			//_galleryView.DragOutside = true;
-        }
+		private void PerformDispose()
+		{
+			_component.DataSourceChanged -= OnComponentOnDataSourceChanged;
+		}
+
+		private void OnComponentOnDataSourceChanged(object sender, EventArgs e)
+		{
+			_galleryView.DataSource = _component.DataSource;
+		}
 
 		private void OnSelectionChanged(object sender, EventArgs e)
 		{
 			_component.SetSelection(_galleryView.Selection);
 		}
-    }
+
+		private void OnGalleryViewItemDrag(object sender, GalleryItemDragEventArgs e)
+		{
+			OnItemDrag(e);
+		}
+
+		protected virtual void OnItemDrag(GalleryItemDragEventArgs e) {}
+
+		protected bool AllowDragOutside
+		{
+			get { return _galleryView.DragOutside; }
+			set { _galleryView.DragOutside = value; }
+		}
+	}
 }

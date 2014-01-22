@@ -31,7 +31,7 @@ namespace ClearCanvas.ImageServer.Model.EntityBrokers
     using ClearCanvas.Dicom;
     using ClearCanvas.ImageServer.Enterprise;
 
-   public class StudyDeleteRecordUpdateColumns : EntityUpdateColumns
+   public partial class StudyDeleteRecordUpdateColumns : EntityUpdateColumns
    {
        public StudyDeleteRecordUpdateColumns()
        : base("StudyDeleteRecord")

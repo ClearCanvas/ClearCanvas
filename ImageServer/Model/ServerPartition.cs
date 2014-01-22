@@ -24,69 +24,39 @@
 
 using System.Linq;
 using System.Collections.Generic;
-using System.Threading;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Enterprise.Core;
 using ClearCanvas.ImageServer.Enterprise;
+using ClearCanvas.ImageServer.Enterprise.Command;
 using ClearCanvas.ImageServer.Model.EntityBrokers;
-using System;
 
 namespace ClearCanvas.ImageServer.Model
 {
     public class StudyCompareOptions
     {
-        private bool _matchIssuerOfPatientId;
-        private bool _matchPatientId;
-        private bool _matchPatientsName;
-        private bool _matchPatientsBirthDate;
-        private bool _matchPatientsSex;
-        private bool _matchAccessionNumber;
+        public bool MatchIssuerOfPatientId { get; set; }
 
-        public bool MatchIssuerOfPatientId
-        {
-            get { return _matchIssuerOfPatientId; }
-            set { _matchIssuerOfPatientId = value; }
-        }
+        public bool MatchPatientId { get; set; }
 
-        public bool MatchPatientId
-        {
-            get { return _matchPatientId; }
-            set { _matchPatientId = value; }
-        }
+        public bool MatchPatientsName { get; set; }
 
-        public bool MatchPatientsName
-        {
-            get { return _matchPatientsName; }
-            set { _matchPatientsName = value; }
-        }
+        public bool MatchPatientsBirthDate { get; set; }
 
-        public bool MatchPatientsBirthDate
-        {
-            get { return _matchPatientsBirthDate; }
-            set { _matchPatientsBirthDate = value; }
-        }
+        public bool MatchPatientsSex { get; set; }
 
-        public bool MatchPatientsSex
-        {
-            get { return _matchPatientsSex; }
-            set { _matchPatientsSex = value; }
-        }
-
-        public bool MatchAccessionNumber
-        {
-            get { return _matchAccessionNumber; }
-            set { _matchAccessionNumber = value; }
-        }
+        public bool MatchAccessionNumber { get; set; }
     }
 
     public partial class ServerPartition
     {
         private readonly object _syncLock = new object();
-        bool _dataAccessInfoloaded = false;
-        bool _rulesLoaded = false;
-        bool _archiveLoaded = false;
+        private bool _dataAccessInfoloaded = false;
+        private bool _rulesLoaded = false;
+        private bool _archiveLoaded = false;
+        private bool _aeTitlesLoaded = false;
         private IList<ServerRule> _rules = null;
         private IList<PartitionArchive> _archives = null;
+        private IList<ServerPartitionAlternateAeTitle> _alternateAeTitles = null;
 
         private Dictionary<DataAccessGroup, ServerEntityKey> _mapDataAccessGroupsAuthorityGroups = null;
 
@@ -122,13 +92,15 @@ namespace ClearCanvas.ImageServer.Model
 
         public StudyCompareOptions GetComparisonOptions()
         {
-            StudyCompareOptions options = new StudyCompareOptions();
-            options.MatchAccessionNumber = MatchAccessionNumber;
-            options.MatchIssuerOfPatientId = MatchIssuerOfPatientId;
-            options.MatchPatientId = MatchPatientId;
-            options.MatchPatientsBirthDate = MatchPatientsBirthDate;
-            options.MatchPatientsName = MatchPatientsName;
-            options.MatchPatientsSex = MatchPatientsSex;
+            var options = new StudyCompareOptions
+                {
+                    MatchAccessionNumber = MatchAccessionNumber,
+                    MatchIssuerOfPatientId = MatchIssuerOfPatientId,
+                    MatchPatientId = MatchPatientId,
+                    MatchPatientsBirthDate = MatchPatientsBirthDate,
+                    MatchPatientsName = MatchPatientsName,
+                    MatchPatientsSex = MatchPatientsSex
+                };
 
             return options;
         }
@@ -139,13 +111,22 @@ namespace ClearCanvas.ImageServer.Model
             {
                 if (_dataAccessGroups == null)
                 {
-                    using (var ctx = PersistentStoreRegistry.GetDefaultStore().OpenReadContext())
+                    using (var context = new ServerExecutionContext())
                     {
-                        LoadDataAcessInformation(ctx);
+                        LoadDataAcessInformation(context.ReadContext);
                     }
 
                 }
                 return _dataAccessGroups;
+            }
+        }
+
+        public IEnumerable<ServerPartitionAlternateAeTitle> RelatedServerPartitionAlternateAeTitles
+        {
+            get
+            {
+                LoadAlternateAes();
+                return _alternateAeTitles;
             }
         }
 
@@ -155,10 +136,9 @@ namespace ClearCanvas.ImageServer.Model
             {
                 if (_mapDataAccessGroupsAuthorityGroups == null)
                 {
-                    using (var ctx = PersistentStoreRegistry.GetDefaultStore().OpenReadContext())
+                    using (var context = new ServerExecutionContext())
                     {
-
-                        LoadAuthorityGroup(ctx);
+                        LoadAuthorityGroup(context.ReadContext);
                     }
 
                 }
@@ -192,15 +172,13 @@ namespace ClearCanvas.ImageServer.Model
                 if (_dataAccessInfoloaded)
                     return;
 
-                IServerPartitionDataAccessEntityBroker broker = context.GetBroker<IServerPartitionDataAccessEntityBroker>();
-                ServerPartitionDataAccessSelectCriteria criteria = new ServerPartitionDataAccessSelectCriteria();
+                var broker = context.GetBroker<IServerPartitionDataAccessEntityBroker>();
+                var criteria = new ServerPartitionDataAccessSelectCriteria();
                 criteria.ServerPartitionKey.EqualTo(this.Key);
                 _dataAccessGroups = broker.Find(criteria);
 
                 _dataAccessInfoloaded = true;
             }
-
-
         }
 
         private void LoadServerRules()
@@ -211,9 +189,9 @@ namespace ClearCanvas.ImageServer.Model
                 {
                     if (!_rulesLoaded)
                     {
-                        using (var ctx = PersistentStoreRegistry.GetDefaultStore().OpenReadContext())
+                        using (var context = new ServerExecutionContext())
                         {
-                            var broker = ctx.GetBroker<IServerRuleEntityBroker>();
+                            var broker = context.ReadContext.GetBroker<IServerRuleEntityBroker>();
                             var criteria = new ServerRuleSelectCriteria();
                             criteria.ServerPartitionKey.EqualTo(this.Key);
                             _rules = broker.Find(criteria);
@@ -223,7 +201,6 @@ namespace ClearCanvas.ImageServer.Model
                     }
                 }
             }
-
         }
 
         private void LoadArchiveInfo()
@@ -234,15 +211,37 @@ namespace ClearCanvas.ImageServer.Model
                 {
                     if (!_archiveLoaded)
                     {
-                        using (var ctx = PersistentStoreRegistry.GetDefaultStore().OpenReadContext())
+                        using (var context = new ServerExecutionContext())
                         {
-                            var broker = ctx.GetBroker<IPartitionArchiveEntityBroker>();
+                            var broker = context.ReadContext.GetBroker<IPartitionArchiveEntityBroker>();
                             var criteria = new PartitionArchiveSelectCriteria();
                             criteria.ServerPartitionKey.EqualTo(this.Key);
                             _archives = broker.Find(criteria);
                         }
 
                         _archiveLoaded = true;
+                    }
+                }
+            }
+        }
+
+        private void LoadAlternateAes()
+        {
+            if (!_aeTitlesLoaded)
+            {
+                lock (_syncLock)
+                {
+                    if (!_aeTitlesLoaded)
+                    {
+                        using (var context = new ServerExecutionContext())
+                        {
+                            var broker = context.ReadContext.GetBroker<IServerPartitionAlternateAeTitleEntityBroker>();
+                            var criteria = new ServerPartitionAlternateAeTitleSelectCriteria();
+                            criteria.ServerPartitionKey.EqualTo(this.Key);
+                            _alternateAeTitles = broker.Find(criteria);
+                        }
+
+                        _aeTitlesLoaded = true;
                     }
                 }
             }
@@ -265,8 +264,8 @@ namespace ClearCanvas.ImageServer.Model
             {
                 _mapDataAccessGroupsAuthorityGroups = new Dictionary<DataAccessGroup, ServerEntityKey>();
 
-                IDataAccessGroupEntityBroker dataAccessBroker = context.GetBroker<IDataAccessGroupEntityBroker>();
-                DataAccessGroupSelectCriteria all = new DataAccessGroupSelectCriteria();
+                var dataAccessBroker = context.GetBroker<IDataAccessGroupEntityBroker>();
+                var all = new DataAccessGroupSelectCriteria();
                 var dataAccessGroups = dataAccessBroker.Find(all);
 
                 foreach (var group in dataAccessGroups)

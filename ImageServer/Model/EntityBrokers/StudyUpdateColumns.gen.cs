@@ -31,7 +31,7 @@ namespace ClearCanvas.ImageServer.Model.EntityBrokers
     using ClearCanvas.Dicom;
     using ClearCanvas.ImageServer.Enterprise;
 
-   public class StudyUpdateColumns : EntityUpdateColumns
+   public partial class StudyUpdateColumns : EntityUpdateColumns
    {
        public StudyUpdateColumns()
        : base("Study")
@@ -85,6 +85,11 @@ namespace ClearCanvas.ImageServer.Model.EntityBrokers
         public XmlDocument QueryXml
         {
             set { SubParameters["QueryXml"] = new EntityUpdateColumn<XmlDocument>("QueryXml", value); }
+        }
+        [EntityFieldDatabaseMappingAttribute(TableName="Study", ColumnName="QCOutput")]
+        public String QCOutput
+        {
+            set { SubParameters["QCOutput"] = new EntityUpdateColumn<String>("QCOutput", value); }
         }
        [DicomField(DicomTags.SpecificCharacterSet, DefaultValue = DicomFieldDefault.Null)]
         [EntityFieldDatabaseMappingAttribute(TableName="Study", ColumnName="SpecificCharacterSet")]

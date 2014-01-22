@@ -26,46 +26,39 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Drawing;
+using System.Linq;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
-using ClearCanvas.Dicom.Utilities;
 using ClearCanvas.Desktop;
 using ClearCanvas.Desktop.Actions;
 using ClearCanvas.Desktop.Tools;
-using ClearCanvas.ImageViewer.Annotations.Utilities;
-using ClearCanvas.ImageViewer.StudyManagement;
 
 #pragma warning disable 0419,1574,1587,1591
 
 namespace ClearCanvas.ImageViewer.Clipboard
 {
 	[ExtensionPoint()]
-	public sealed class ClipboardToolExtensionPoint : ExtensionPoint<ITool>
-	{
-	}
+	public sealed class ClipboardToolExtensionPoint : ExtensionPoint<ITool> {}
 
 	/// <summary>
 	/// Extension point for views onto <see cref="ClipboardComponent"/>.
 	/// </summary>
 	[ExtensionPoint]
-	public sealed class ClipboardComponentViewExtensionPoint : ExtensionPoint<IApplicationComponentView>
-	{
-	}
+	public sealed class ClipboardComponentViewExtensionPoint : ExtensionPoint<IApplicationComponentView> {}
 
 	/// <summary>
 	/// ClipboardComponent class.
 	/// </summary>
-	[AssociateView(typeof(ClipboardComponentViewExtensionPoint))]
+	[AssociateView(typeof (ClipboardComponentViewExtensionPoint))]
 	public class ClipboardComponent : ApplicationComponent
 	{
 		#region Component
 
 		#region ClipboardToolContext class
 
-		private class ClipboardToolContext : ToolContext, IClipboardToolContext
+		protected class ClipboardToolContext : ToolContext, IClipboardToolContext
 		{
-			readonly ClipboardComponent _component;
+			private readonly ClipboardComponent _component;
 
 			public ClipboardToolContext(ClipboardComponent component)
 			{
@@ -76,6 +69,11 @@ namespace ClearCanvas.ImageViewer.Clipboard
 			public IDesktopWindow DesktopWindow
 			{
 				get { return _component.Host.DesktopWindow; }
+			}
+
+			public ClipboardComponent Component
+			{
+				get { return _component; }
 			}
 
 			public IList<IClipboardItem> ClipboardItems
@@ -124,38 +122,56 @@ namespace ClearCanvas.ImageViewer.Clipboard
 		private event EventHandler _selectedItemsChanged;
 		private event EventHandler _itemsChanged;
 
+		private Clipboard _clipboard;
+		private event EventHandler _clipboardChanged;
+
 		#endregion
 
-		public ClipboardComponent(string toolbarSite, string menuSite)
-			: this(toolbarSite, menuSite, new BindingList<IClipboardItem>(), true)
-		{
-		}
+		public ClipboardComponent(string toolbarSite, string menuSite, bool disposeItemsOnClose = true)
+			: this(toolbarSite, menuSite, null, disposeItemsOnClose) {}
 
-		public ClipboardComponent(string toolbarSite, string menuSite, BindingList<IClipboardItem> dataSource, bool disposeItemsOnClose)
+		public ClipboardComponent(string toolbarSite, string menuSite, Clipboard clipboard, bool disposeItemsOnClose)
 		{
 			Platform.CheckForEmptyString(toolbarSite, "toolbarSite");
 			Platform.CheckForEmptyString(menuSite, "menuSite");
-			Platform.CheckForNullReference(dataSource, "dataSource");
 
 			_toolbarSite = toolbarSite;
 			_menuSite = menuSite;
-			_items = new ClipboardItemList(dataSource);
+			_clipboard = clipboard;
+			_items = new ClipboardItemList(clipboard != null ? clipboard.Items : new BindingList<IClipboardItem>());
+			_items.BindingList.ListChanged += OnBindingListChanged;
 			_disposeItemsOnClose = disposeItemsOnClose;
-		}
-
-		internal ClipboardComponent()
-			: this(Clipboard.ClipboardSiteToolbar, Clipboard.ClipboardSiteMenu, Clipboard.Items, false)
-		{
 		}
 
 		#region Presentation Model
 
+		public Clipboard Clipboard
+		{
+			get { return _clipboard; }
+			set
+			{
+				if (!ReferenceEquals(_clipboard, value))
+				{
+					_clipboard = value;
+
+					DataSource = _clipboard != null ? _clipboard.Items : new BindingList<IClipboardItem>();
+
+					EventsHelper.Fire(_clipboardChanged, this, EventArgs.Empty);
+				}
+			}
+		}
+
+		public event EventHandler ClipboardChanged
+		{
+			add { _clipboardChanged += value; }
+			remove { _clipboardChanged -= value; }
+		}
+
 		public BindingList<IClipboardItem> DataSource
 		{
 			get { return _items.BindingList; }
-			set
+			private set
 			{
-				//TODO: make setting configurable, so it can be turned off.
 				Platform.CheckForNullReference(value, "value");
 
 				CheckForLockedItems();
@@ -216,12 +232,24 @@ namespace ClearCanvas.ImageViewer.Clipboard
 
 		private bool DeleteAllEnabled
 		{
-			get { return _items.Count > 0; }	
+			get { return _items.Count > 0; }
 		}
 
 		private bool DeleteEnabled
 		{
-			get { return SelectedItems.Count > 0; }	
+			get { return SelectedItems.Count > 0; }
+		}
+
+		protected virtual string ToolActionsNamespace
+		{
+			get { return typeof (ClipboardComponent).FullName; }
+		}
+
+		protected virtual IActionSet CreateToolActions()
+		{
+			if (_toolSet == null)
+				_toolSet = new ToolSet(new ClipboardToolExtensionPoint(), new ClipboardToolContext(this));
+			return new ActionSet(_toolSet.Actions);
 		}
 
 		#region Overrides
@@ -233,16 +261,13 @@ namespace ClearCanvas.ImageViewer.Clipboard
 		{
 			base.Start();
 
-			ClipboardToolContext toolContext = new ClipboardToolContext(this);
-			_toolSet = new ToolSet(new ClipboardToolExtensionPoint(), toolContext);
-
 			_resolver = new ApplicationThemeResourceResolver(GetType(), true);
-			ActionSet toolActions = new ActionSet(_toolSet.Actions);
 			ActionSet deleteToolActions = new ActionSet(GetDeleteActions());
-			IActionSet allActions = toolActions.Union(deleteToolActions);
+			var toolActions = CreateToolActions();
+			IActionSet allActions = toolActions != null ? toolActions.Union(deleteToolActions) : deleteToolActions;
 
-			_toolbarModel = ActionModelRoot.CreateModel(typeof(ClipboardComponent).FullName, _toolbarSite, allActions);
-			_contextMenuModel = ActionModelRoot.CreateModel(typeof(ClipboardComponent).FullName, _menuSite, allActions);
+			_toolbarModel = ActionModelRoot.CreateModel(ToolActionsNamespace, _toolbarSite, allActions);
+			_contextMenuModel = ActionModelRoot.CreateModel(ToolActionsNamespace, _menuSite, allActions);
 
 			_items.BindingList.ListChanged += OnBindingListChanged;
 		}
@@ -259,16 +284,19 @@ namespace ClearCanvas.ImageViewer.Clipboard
 				foreach (IClipboardItem item in _items)
 				{
 					if (item is IDisposable)
-						((IDisposable)item).Dispose();
+						((IDisposable) item).Dispose();
 				}
 			}
 
-			_toolSet.Dispose();
-			_toolSet = null;
+			if (_toolSet != null)
+			{
+				_toolSet.Dispose();
+				_toolSet = null;
+			}
 
 			base.Stop();
 		}
-		
+
 		#endregion
 
 		#region Delete Actions
@@ -288,13 +316,13 @@ namespace ClearCanvas.ImageViewer.Clipboard
 		{
 			_deleteAllMenuAction = CreateMenuAction("deleteAll", String.Format("{0}/MenuDeleteAllClipboardItems", _menuSite), SR.TooltipDeleteAllClipboardItems, CreateDeleteAllIconSet(), DeleteAll);
 			_deleteMenuAction = CreateMenuAction("delete", String.Format("{0}/MenuDeleteClipboardItem", _menuSite), SR.TooltipDeleteClipboardItem, CreateDeleteIconSet(), DeleteSelected);
-			_deleteAllButtonAction =  CreateToolbarAction("deleteAll", String.Format("{0}/ToolbarDeleteAllClipboardItems", _toolbarSite), SR.TooltipDeleteAllClipboardItems, CreateDeleteAllIconSet(), DeleteAll);
+			_deleteAllButtonAction = CreateToolbarAction("deleteAll", String.Format("{0}/ToolbarDeleteAllClipboardItems", _toolbarSite), SR.TooltipDeleteAllClipboardItems, CreateDeleteAllIconSet(), DeleteAll);
 			_deleteButtonAction = CreateToolbarAction("delete", String.Format("{0}/ToolbarDeleteClipboardItem", _toolbarSite), SR.TooltipDeleteClipboardItem, CreateDeleteIconSet(), DeleteSelected);
 		}
 
 		private MenuAction CreateMenuAction(string id, string path, string tooltip, IconSet iconSet, ClickHandlerDelegate clickHandler)
 		{
-			id = String.Format("{0}:{1}", typeof(ClipboardComponent).FullName, id);
+			id = String.Format("{0}:{1}", typeof (ClipboardComponent).FullName, id);
 			MenuAction action = new MenuAction(id, new ActionPath(path, _resolver), ClickActionFlags.None, _resolver);
 			action.IconSet = iconSet;
 			action.Tooltip = tooltip;
@@ -305,7 +333,7 @@ namespace ClearCanvas.ImageViewer.Clipboard
 
 		private ButtonAction CreateToolbarAction(string id, string path, string tooltip, IconSet iconSet, ClickHandlerDelegate clickHandler)
 		{
-			id = String.Format("{0}:{1}", typeof(ClipboardComponent).FullName, id);
+			id = String.Format("{0}:{1}", typeof (ClipboardComponent).FullName, id);
 			ButtonAction action = new ButtonAction(id, new ActionPath(path, _resolver), ClickActionFlags.None, _resolver);
 			action.IconSet = iconSet;
 			action.Tooltip = tooltip;
@@ -319,7 +347,7 @@ namespace ClearCanvas.ImageViewer.Clipboard
 			return new IconSet("Icons.DeleteAllClipboardItemsToolSmall.png",
 			                   "Icons.DeleteAllClipboardItemsToolSmall.png", "Icons.DeleteClipboardItemToolSmall.png");
 		}
-		
+
 		private static IconSet CreateDeleteIconSet()
 		{
 			return new IconSet("Icons.DeleteClipboardItemToolSmall.png",
@@ -343,11 +371,8 @@ namespace ClearCanvas.ImageViewer.Clipboard
 
 		private void CheckForLockedItems()
 		{
-			foreach (ClipboardItem item in _items)
-			{
-				if (item.Locked)
-					throw new InvalidOperationException("At least one item is currently locked.");
-			}
+			if (_items.Any(item => item.IsLocked))
+				throw new InvalidOperationException("At least one item is currently locked.");
 		}
 
 		#region Protected Methods
@@ -375,13 +400,13 @@ namespace ClearCanvas.ImageViewer.Clipboard
 			List<IClipboardItem> items = new List<IClipboardItem>(_items);
 			foreach (ClipboardItem item in items)
 			{
-				if (item.Locked)
+				if (item.IsLocked)
 				{
 					anyLocked = true;
 				}
 				else
 				{
-					((IDisposable)item).Dispose();
+					((IDisposable) item).Dispose();
 					_items.Remove(item);
 				}
 			}
@@ -394,15 +419,18 @@ namespace ClearCanvas.ImageViewer.Clipboard
 		{
 			bool anyLocked = false;
 
-			foreach (ClipboardItem item in this.SelectedItems)
+			//Shouldn't be possible for selected items to not be in the current list, but check anyway,
+			//because the user's selections can come from the Webstation, where the UI changes are not going
+			//to be totally in sync with the "current" state on the server.
+			foreach (ClipboardItem item in this.SelectedItems.Where(s => _items.Contains(s)))
 			{
-				if (item.Locked)
+				if (item.IsLocked)
 				{
 					anyLocked = true;
 				}
 				else
 				{
-					((IDisposable)item).Dispose();
+					((IDisposable) item).Dispose();
 					_items.Remove(item);
 				}
 			}
@@ -413,137 +441,21 @@ namespace ClearCanvas.ImageViewer.Clipboard
 
 		public virtual void AddPresentationImage(IPresentationImage presentationImage)
 		{
-			_items.Add(CreatePresentationImageItem(presentationImage));
+			_items.Add(_clipboard.CreatePresentationImageItem(presentationImage));
 		}
 
 		public virtual void AddDisplaySet(DisplaySet displaySet)
 		{
-			_items.Add(CreateDisplaySetItem(displaySet, null));
+			_items.Add(_clipboard.CreateDisplaySetItem(displaySet));
 		}
 
 		public virtual void AddDisplaySet(DisplaySet displaySet, IImageSelectionStrategy selectionStrategy)
 		{
-			_items.Add(CreateDisplaySetItem(displaySet, selectionStrategy));
+			_items.Add(_clipboard.CreateDisplaySetItem(displaySet, selectionStrategy));
 		}
 
 		#endregion
 
-		#region Static Helper Methods
-
-		public static IClipboardItem CreatePresentationImageItem(IPresentationImage image)
-		{
-			Rectangle clientRectangle = image.ClientRectangle;
-
-			// Must build description from the source image because the ParentDisplaySet info is lost in the cloned image.
-			var name = BuildClipboardItemName(image);
-			var description = BuildClipboardItemDescription(image);
-
-			image = ImageExport.ImageExporter.ClonePresentationImage(image);
-			Bitmap bmp = IconCreator.CreatePresentationImageIcon(image);
-
-			return new ClipboardItem(image, bmp, name, description, clientRectangle);
-		}
-
-		public static IClipboardItem CreateDisplaySetItem(IDisplaySet displaySet)
-		{
-			return CreateDisplaySetItem(displaySet, null);
-		}
-
-		public static IClipboardItem CreateDisplaySetItem(IDisplaySet displaySet, IImageSelectionStrategy selectionStrategy)
-		{
-			if (displaySet.ImageBox == null ||
-				displaySet.ImageBox.SelectedTile == null ||
-				displaySet.ImageBox.SelectedTile.PresentationImage == null)
-			{
-				throw new ArgumentException("DisplaySet must have a selected image.");
-			}
-
-			Rectangle clientRectangle = displaySet.ImageBox.SelectedTile.PresentationImage.ClientRectangle;
-			if (selectionStrategy == null)
-			{
-				if (displaySet.PresentationImages.Count == 1)
-				{
-					// Add as a single image.
-					return CreatePresentationImageItem(displaySet.PresentationImages[0]);
-				}
-				else
-				{
-					return CreateDisplaySetItem(displaySet.Clone(), clientRectangle);
-				}
-			}
-			else
-			{
-				List<IPresentationImage> images = new List<IPresentationImage>(selectionStrategy.GetImages(displaySet));
-				if (images.Count == 1)
-				{
-					// Add as a single image.
-					return CreatePresentationImageItem(images[0]);
-				}
-				else
-				{
-					string name = String.Format("{0} - {1}", selectionStrategy.Description, displaySet.Name);
-					displaySet = new DisplaySet(name, displaySet.Uid) {Description = displaySet.Description, Number = displaySet.Number};
-					images.ForEach(delegate(IPresentationImage image) { displaySet.PresentationImages.Add(image.Clone()); });
-					return CreateDisplaySetItem(displaySet, clientRectangle);
-				}
-			}
-		}
-
-		private static IClipboardItem CreateDisplaySetItem(IDisplaySet displaySet, Rectangle clientRectangle)
-		{
-			Bitmap bmp = IconCreator.CreateDisplaySetIcon(displaySet, clientRectangle);
-			return new ClipboardItem(displaySet, bmp, displaySet.Name, BuildClipboardItemDescription(displaySet), clientRectangle);
-		}
-
-		private static string BuildClipboardItemName(IPresentationImage image)
-		{
-			if (!(image is IImageSopProvider))
-				return string.Empty;
-
-			var imageSopProvider = (IImageSopProvider)image;
-
-			// This is unlikely to happen
-			if (image.ParentDisplaySet == null)
-				return string.Format(SR.MessageClipboardNameSingleImage, imageSopProvider.ImageSop.SeriesDescription, imageSopProvider.ImageSop.InstanceNumber);
-
-			// Multi-frame image, display image and frame number
-			if (imageSopProvider.ImageSop.NumberOfFrames > 1)
-				return string.Format(SR.MessageClipboardNameMultiframeImage, image.ParentDisplaySet.Name, imageSopProvider.ImageSop.InstanceNumber, imageSopProvider.Frame.FrameNumber);
-
-			// Single frame image in a display set of multiple images, display image number
-			if (image.ParentDisplaySet.PresentationImages.Count > 1)
-				return string.Format(SR.MessageClipboardNameSingleImage, image.ParentDisplaySet.Name, imageSopProvider.ImageSop.InstanceNumber);
-
-			// Only one image in the displayset, no need for image number
-			return image.ParentDisplaySet.Name;
-		}
-
-		private static string BuildClipboardItemDescription(IPresentationImage image)
-		{
-			if (!(image is IImageSopProvider))
-				return string.Empty;
-
-			var imageSopProvider = (IImageSopProvider)image;
-			var sop = imageSopProvider.ImageSop;
-
-			return string.Format(SR.MessageClipboardDescription
-				, sop.PatientId
-				, sop.PatientsName == null ? null : sop.PatientsName.FormattedName
-				, Format.Date(DateParser.Parse(sop.StudyDate))
-				, sop.StudyDescription
-				, sop.AccessionNumber
-				, sop.Modality
-				, TextOverlayVisibilityHelper.IsVisible(image, true) ? SR.LabelOn : SR.LabelOff);
-		}
-
-		private static string BuildClipboardItemDescription(IDisplaySet displaySet)
-		{
-			return displaySet.PresentationImages.Count == 0
-				? string.Empty
-				: BuildClipboardItemDescription(displaySet.PresentationImages[0]);
-		}
-
-		#endregion
 		#endregion
 	}
 }

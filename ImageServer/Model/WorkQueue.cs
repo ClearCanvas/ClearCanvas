@@ -24,8 +24,10 @@
 
 using System;
 using System.Collections.Generic;
-using ClearCanvas.Common;
 using ClearCanvas.Enterprise.Core;
+using ClearCanvas.ImageServer.Common;
+using ClearCanvas.ImageServer.Common.WorkQueue;
+using ClearCanvas.ImageServer.Enterprise.Command;
 using ClearCanvas.ImageServer.Model.EntityBrokers;
 
 namespace ClearCanvas.ImageServer.Model
@@ -37,26 +39,22 @@ namespace ClearCanvas.ImageServer.Model
         private Study _study;
         #endregion
 
-        
-
         private void LoadRelatedEntities()
         {
             if (_study==null || _studyStorage==null)
             {
-                using (IReadContext context = PersistentStoreRegistry.GetDefaultStore().OpenReadContext())
+                using (var context = new ServerExecutionContext())
                 {
                     lock (SyncRoot)
                     {
                         if (_study == null)
-                            _study = LoadStudy(context);
+                            _study = LoadStudy(context.ReadContext);
 
                         if (_studyStorage == null)
-                            _studyStorage = LoadStudyStorage(context);
+                            _studyStorage = LoadStudyStorage(context.ReadContext);
                     }
-
                 }    
             }
-            
         }
 
 
@@ -67,12 +65,12 @@ namespace ClearCanvas.ImageServer.Model
         /// <returns></returns>
         public bool Delete(IPersistenceContext context)
         {
-            IWorkQueueUidEntityBroker workQueueUidBroker = context.GetBroker<IWorkQueueUidEntityBroker>();
-            WorkQueueUidSelectCriteria criteria = new WorkQueueUidSelectCriteria();
+            var workQueueUidBroker = context.GetBroker<IWorkQueueUidEntityBroker>();
+            var criteria = new WorkQueueUidSelectCriteria();
             criteria.WorkQueueKey.EqualTo(GetKey());
             workQueueUidBroker.Delete(criteria);
 
-            IWorkQueueEntityBroker workQueueBroker = context.GetBroker<IWorkQueueEntityBroker>();
+            var workQueueBroker = context.GetBroker<IWorkQueueEntityBroker>();
             return workQueueBroker.Delete(GetKey());
         }
 
@@ -133,6 +131,25 @@ namespace ClearCanvas.ImageServer.Model
                 return _study;
             }
             set { _study = value; }
+        }
+
+        public WorkQueueData SerializeData
+        {
+            get
+            {
+                if (Data == null)
+                    return null;
+
+                try
+                {
+                    return ImageServerSerializer.DeserializeWorkQueueData(Data);
+                }
+                catch (Exception)
+                {
+                    return null;
+                }
+            }
+            set { Data = ImageServerSerializer.SerializeWorkQueueDataToXmlDocument(value); }
         }
     }
 }

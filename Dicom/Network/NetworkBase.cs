@@ -23,7 +23,6 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using ClearCanvas.Common;
@@ -116,10 +115,16 @@ namespace ClearCanvas.Dicom.Network
         public DicomStreamReader CommandReader;
         public DicomStreamReader DatasetReader;
         public bool IsNewDimse;
+	    public DicomReadStatus ParseDatasetStatus;
+	    public DicomTag DatasetStopTag;
+	    public bool StreamMessage;
 
         public DcmDimseInfo()
         {
             IsNewDimse = true;
+			ParseDatasetStatus = DicomReadStatus.NeedMoreData;
+	        DatasetStopTag = null;
+	        StreamMessage = false;
         }
     }
 
@@ -176,6 +181,26 @@ namespace ClearCanvas.Dicom.Network
     		}
     	}
 
+	    public bool StreamMessage
+	    {
+		    set
+		    {
+			    if (_dimse != null)
+				    _dimse.StreamMessage = value;
+		    }
+	    }
+		/// <summary>
+		/// When reading the dataset of a DIMSE message, set tag at which to stop parsing the data.
+		/// </summary>
+	    public DicomTag DimseDatasetStopTag
+	    {
+		    set
+		    {
+			    if (_dimse != null)
+				    _dimse.DatasetStopTag = value;
+		    }
+	    }
+
         /// <summary>
         /// The number of outstanding operations.  Used when asynchronous operations are negotiated.
         /// </summary>
@@ -218,7 +243,7 @@ namespace ClearCanvas.Dicom.Network
 
                 _processThread = new Thread(RunProcess);
                 _processThread.Name = String.Format("{0} Process [{1}]", name, _processThread.ManagedThreadId);
-                _processThread.Start();    
+                _processThread.Start();
             }
         }
 
@@ -386,32 +411,22 @@ namespace ClearCanvas.Dicom.Network
             throw new Exception("The method or operation is not implemented.");
         }
 
+		protected virtual void OnReceiveDimseRequest(byte pcid, DicomMessage msg)
+		{
+		}
 
-        protected virtual void OnReceiveDimseBegin(byte pcid, DicomAttributeCollection command,
-                                                   DicomAttributeCollection dataset)
-        {
-        }
+		protected virtual void OnReceiveDimseResponse(byte pcid, DicomMessage msg)
+		{
+		}
 
-        protected virtual void OnReceiveDimseProgress(byte pcid, DicomAttributeCollection command,
-                                                      DicomAttributeCollection dataset)
-        {
-        }
+		protected virtual void OnReceiveDimseCommand(byte pcid, DicomAttributeCollection command)
+		{
+		}
 
-        protected virtual void OnReceiveDimseRequest(byte pcid, DicomMessage msg)
-        {
-        }
-
-        protected virtual void OnReceiveDimseResponse(byte pcid, DicomMessage msg)
-        {
-        }
-
-        protected virtual void OnDimseRequestSent(byte pcid, DicomMessage msg)
-        {
-        }
-
-        protected virtual void OnDimseResponseSent(byte pcid, DicomMessage msg)
-        {
-        }
+		protected virtual bool OnReceiveFileStream(byte pcid, DicomAttributeCollection command, DicomAttributeCollection dataset, byte[] data, int offset, int count, bool isFirst, bool isLast)
+		{
+			return false;
+		}
 
         private bool OnReceiveDimse(byte pcid, DicomAttributeCollection command, DicomAttributeCollection dataset)
         {
@@ -461,16 +476,6 @@ namespace ClearCanvas.Dicom.Network
             return false;
         }
 
-        protected virtual void OnSendDimseBegin(byte pcid, DicomAttributeCollection command,
-                                                DicomAttributeCollection dataset)
-        {
-        }
-
-        protected virtual void OnSendDimseProgress(byte pcid, DicomAttributeCollection command,
-                                                   DicomAttributeCollection dataset)
-        {
-        }
-
         protected virtual void OnDimseSent(byte pcid, DicomAttributeCollection command, DicomAttributeCollection dataset)
         {
             var msg = new DicomMessage(command, dataset);
@@ -489,8 +494,6 @@ namespace ClearCanvas.Dicom.Network
                 || (commandField == DicomCommandField.NGetRequest)
                 || (commandField == DicomCommandField.NSetRequest))
             {
-                OnDimseRequestSent(pcid, msg);
-
                 if (MessageSent != null)
                     MessageSent(_assoc, msg);
             }
@@ -507,7 +510,6 @@ namespace ClearCanvas.Dicom.Network
                 || (commandField == DicomCommandField.NGetResponse)
                 || (commandField == DicomCommandField.NSetResponse))
             {
-                OnDimseResponseSent(pcid, msg);
                 if (MessageSent != null)
                     MessageSent(_assoc, msg);
             }
@@ -526,7 +528,8 @@ namespace ClearCanvas.Dicom.Network
         /// <summary>
         /// Defines an event handler  when an association has been rejected.
         /// </summary>
-        /// <param name="assoc"></param>
+		/// <param name="source"></param>
+		/// <param name="reason"></param>
         public delegate void AssociationRejectedEventHandler(DicomRejectSource source, DicomRejectReason reason);
 
         /// <summary>
@@ -555,7 +558,6 @@ namespace ClearCanvas.Dicom.Network
         /// <param name="presentationContextID"></param>
         /// <param name="command"></param>
         /// <param name="dataset"></param>
-        /// <param name="tranferStats"></param>
         public delegate void DimseMessageSendingEventHandler(
             AssociationParameters assoc, byte presentationContextID, DicomAttributeCollection command,
             DicomAttributeCollection dataset);
@@ -565,7 +567,6 @@ namespace ClearCanvas.Dicom.Network
         /// </summary>
         /// <param name="assoc"></param>
         /// <param name="presentationContextID"></param>
-        /// <param name="tranferStats"></param>
         public delegate void DimseMessageReceivingEventHandler(AssociationParameters assoc, byte presentationContextID);
 
         /// <summary>
@@ -585,7 +586,6 @@ namespace ClearCanvas.Dicom.Network
         /// <summary>
         /// Defines an event handler  when the network stream has been closed.
         /// </summary>
-        /// <param name="assoc"></param>
         /// <param name="data"></param>
         public delegate void NetworkClosedEventHandler(object data);
 
@@ -597,7 +597,6 @@ namespace ClearCanvas.Dicom.Network
         /// <summary>
         /// Defines an event handler  when a network error occurs
         /// </summary>
-        /// <param name="assoc"></param>
         /// <param name="data"/>
         public delegate void NetworkErrorEventHandler(object data);
 
@@ -1006,6 +1005,40 @@ namespace ClearCanvas.Dicom.Network
 
             SendDimse(presentationID, command, message.DataSet);
         }
+
+		/// <summary>
+		/// Method to send a DICOM C-STORE-RQ message.
+		/// </summary>
+		/// <param name="presentationID"></param>
+		/// <param name="messageID"></param>
+		/// <param name="priority"></param>
+		/// <param name="moveAE"></param>
+		/// <param name="moveMessageID"></param>
+		/// <param name="dataSetStream"></param>
+		public void SendCStoreRequest(byte presentationID, ushort messageID,
+									  DicomPriority priority, string moveAE, ushort moveMessageID, string sopInstanceUid, string sopClassUid, Stream dataSetStream)
+		{
+			DicomUid affectedClass = _assoc.GetAbstractSyntax(presentationID);
+
+			DicomMessage message = new DicomMessage();
+			DicomAttributeCollection command = message.MetaInfo;
+
+			message.MessageId = messageID;
+			message.CommandField = DicomCommandField.CStoreRequest;
+			message.AffectedSopClassUid = sopClassUid;
+			message.DataSetType = 0x0202;
+			message.Priority = priority;
+			message.AffectedSopInstanceUid = sopInstanceUid;
+
+
+			if (!string.IsNullOrEmpty(moveAE))
+			{
+				message.MoveOriginatorApplicationEntityTitle = moveAE;
+				message.MoveOriginatorMessageId = moveMessageID;
+			}
+
+			SendDimseDataSetStream(presentationID, command, dataSetStream);
+		}
 
         /// <summary>
         /// Method to send a DICOM C-STORE-RSP message.
@@ -1615,7 +1648,7 @@ namespace ClearCanvas.Dicom.Network
                         }
                     case 0x04:
                         {
-                            var pdu = new PDataTF();
+                            var pdu = new PDataTFRead();
                             pdu.Read(raw);
                             return ProcessPDataTF(pdu);
                         }
@@ -1681,29 +1714,48 @@ namespace ClearCanvas.Dicom.Network
         {
             var raw = new RawPDU(_network);
 
-            if (raw.Type == 0x04)
-            {
-                if (_dimse == null)
-                {
-                    _dimse = new DcmDimseInfo();
-                    _assoc.TotalDimseReceived++;
-                }
-            }
-
             raw.ReadPDU();
 
             if (_multiThreaded)
             {
                 _processingQueue.Enqueue(delegate
                                              {
-                                                 ProcessRawPDU(raw);
+
+												 if (raw.Type == 0x04)
+												 {
+													 if (_dimse == null)
+													 {
+														 _dimse = new DcmDimseInfo();
+														 _assoc.TotalDimseReceived++;
+													 }
+												 }
+
+	                                             if (!ProcessRawPDU(raw))
+	                                             {
+		                                             Platform.Log(LogLevel.Error,
+		                                                          "Unexpected error processing PDU.  Aborting Association from {0} to {1}",
+		                                                          _assoc.CallingAE, _assoc.CalledAE);
+		                                             SendAssociateAbort(DicomAbortSource.ServiceProvider,
+																		DicomAbortReason.InvalidPDUParameter);
+	                                             }
                                              });
                 return true;
             }
+
+
+			if (raw.Type == 0x04)
+			{
+				if (_dimse == null)
+				{
+					_dimse = new DcmDimseInfo();
+					_assoc.TotalDimseReceived++;
+				}
+			}
+
             return ProcessRawPDU(raw);
         }
 
-        private bool ProcessPDataTF(PDataTF pdu)
+        private bool ProcessPDataTF(PDataTFRead pdu)
         {
         	try
             {
@@ -1711,112 +1763,124 @@ namespace ClearCanvas.Dicom.Network
                 foreach (PDV pdv in pdu.PDVs)
                 {
                     pcid = pdv.PCID;
-                    if (pdv.IsCommand)
-                    {
-                        if (_dimse.CommandData == null)
-                            _dimse.CommandData = new ChunkStream();
+	                if (pdv.IsCommand)
+	                {
+		                if (_dimse.CommandData == null)
+			                _dimse.CommandData = new ChunkStream();
 
-                        _dimse.CommandData.AddChunk(pdv.Value);
+		                _dimse.CommandData.AddChunk(pdv.Value);
 
-                        if (_dimse.Command == null)
-                        {
-                            _dimse.Command = new DicomAttributeCollection(0x00000000, 0x0000FFFF);
-                        }
+		                if (_dimse.Command == null)
+		                {
+			                _dimse.Command = new DicomAttributeCollection(0x00000000, 0x0000FFFF);
+		                }
 
-                        if (_dimse.CommandReader == null)
-                        {
-                            _dimse.CommandReader = new DicomStreamReader(_dimse.CommandData)
-                                                   	{
-                                                   		TransferSyntax = TransferSyntax.ImplicitVrLittleEndian,
-                                                   		Dataset = _dimse.Command
-                                                   	};
-                        }
+		                if (_dimse.CommandReader == null)
+		                {
+			                _dimse.CommandReader = new DicomStreamReader(_dimse.CommandData)
+				                {
+					                TransferSyntax = TransferSyntax.ImplicitVrLittleEndian,
+					                Dataset = _dimse.Command
+				                };
+		                }
 
-                        DicomReadStatus stat =
-                            _dimse.CommandReader.Read(null, DicomReadOptions.UseDictionaryForExplicitUN);
-                        if (stat == DicomReadStatus.UnknownError)
-                        {
-							Platform.Log(LogLevel.Error, "Unexpected parsing error when reading command group elements.");
-                            return false;
-                        }
-                        _assoc.TotalBytesRead += (UInt64) pdv.PDVLength - 6;
+		                DicomReadStatus stat =
+			                _dimse.CommandReader.Read(null, DicomReadOptions.UseDictionaryForExplicitUN);
+		                if (stat == DicomReadStatus.UnknownError)
+		                {
+			                Platform.Log(LogLevel.Error, "Unexpected parsing error when reading command group elements.");
+			                return false;
+		                }
+		                _assoc.TotalBytesRead += (UInt64) pdv.PDVLength - 6;
+		                if (DimseMessageReceiving != null)
+			                DimseMessageReceiving(_assoc, pcid);
+
+		                if (pdv.IsLastFragment)
+		                {
+			                if (stat == DicomReadStatus.NeedMoreData)
+			                {
+				                Platform.Log(LogLevel.Error,
+				                             "Unexpected end of StreamReader.  More data needed ({0} bytes, last tag read {1}) after reading last PDV fragment.",
+				                             _dimse.CommandReader.BytesNeeded, _dimse.CommandReader.LastTagRead.ToString());
+				                return false;
+			                }
+			                _dimse.CommandData = null;
+			                _dimse.CommandReader = null;
+
+			                bool isLast = true;
+			                if (_dimse.Command.Contains(DicomTags.DataSetType))
+			                {
+				                if (_dimse.Command[DicomTags.DataSetType].GetUInt16(0, 0x0) != 0x0101)
+					                isLast = false;
+			                }
+
+			                OnReceiveDimseCommand(pcid, _dimse.Command);
+
+			                if (isLast)
+			                {
+				                bool ret = OnReceiveDimse(pcid, _dimse.Command, _dimse.Dataset);
+				                if (!ret)
+					                Platform.Log(LogLevel.Error, "Error with OnReceiveDimse");
+
+				                LogSendReceive(true, _dimse.Command, _dimse.Dataset);
+
+				                //_assoc.TotalBytesRead += (UInt64)total;
+
+				                _dimse = null;
+				                return ret;
+			                }
+		                }
+	                }
+	                else
+	                {
+		                if (_dimse.DatasetData == null)
+			                _dimse.DatasetData = new ChunkStream();
+
+		                if (_dimse.Dataset == null)
+			                _dimse.Dataset = new DicomAttributeCollection(0x00040000, 0xFFFFFFFF);
+
+		                if (_dimse.DatasetReader == null)
+		                {
+			                _dimse.DatasetReader = new DicomStreamReader(_dimse.DatasetData)
+				                {
+					                TransferSyntax = _assoc.GetAcceptedTransferSyntax(pdv.PCID),
+					                Dataset = _dimse.Dataset
+				                };
+		                }
+
+		                if (_dimse.ParseDatasetStatus != DicomReadStatus.Success)
+		                {
+			                _dimse.DatasetData.AddChunk(pdv.Value);
+
+			                _dimse.ParseDatasetStatus = _dimse.DatasetReader.Read(_dimse.DatasetStopTag, DicomReadOptions.UseDictionaryForExplicitUN);
+			                if (_dimse.ParseDatasetStatus == DicomReadStatus.UnknownError)
+			                {
+				                Platform.Log(LogLevel.Error, "Unexpected parsing error when reading DataSet.");
+				                return false;
+			                }
+		                }
+
+		                _assoc.TotalBytesRead += (UInt64) pdv.PDVLength - 6;
                         if (DimseMessageReceiving != null)
                             DimseMessageReceiving(_assoc, pcid);
 
-                        if (pdv.IsLastFragment)
-                        {
-                            if (stat == DicomReadStatus.NeedMoreData)
-                            {
-								Platform.Log(LogLevel.Error,
-                            	             "Unexpected end of StreamReader.  More data needed ({0} bytes, last tag read {1}) after reading last PDV fragment.",
-											 _dimse.CommandReader.BytesNeeded, _dimse.CommandReader.LastTagRead.ToString());
-                                return false;
-                            }
-                            _dimse.CommandData = null;
-                            _dimse.CommandReader = null;
+		                bool ret = true;
+						if (_dimse.StreamMessage)
+						{
+							if (_dimse.IsNewDimse)
+							{
+								byte[] fileGroup2 = CreateFileHeader(pcid, _dimse.Command);
+								ret = OnReceiveFileStream(pcid, _dimse.Command, _dimse.Dataset, fileGroup2, 0, fileGroup2.Length, _dimse.IsNewDimse, false);
+							}
 
-                            bool isLast = true;
-                            if (_dimse.Command.Contains(DicomTags.DataSetType))
-                            {
-                                if (_dimse.Command[DicomTags.DataSetType].GetUInt16(0, 0x0) != 0x0101)
-                                    isLast = false;
-                            }
-                            if (isLast)
-                            {
-                                if (_dimse.IsNewDimse)
-                                {
-                                    OnReceiveDimseBegin(pcid, _dimse.Command, _dimse.Dataset);
-                                }
-                                OnReceiveDimseProgress(pcid, _dimse.Command, _dimse.Dataset);
-                                bool ret = OnReceiveDimse(pcid, _dimse.Command, _dimse.Dataset);
-                                if (!ret)
-									Platform.Log(LogLevel.Error, "Error with OnReceiveDimse");
-
-                                LogSendReceive(true, _dimse.Command, _dimse.Dataset);
-                                
-                                //_assoc.TotalBytesRead += (UInt64)total;
-
-                                _dimse = null;
-                                return ret;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        if (_dimse.DatasetData == null)
-                            _dimse.DatasetData = new ChunkStream();
-
-                        _dimse.DatasetData.AddChunk(pdv.Value);
-
-                        if (_dimse.Dataset == null)
-                        {
-                            _dimse.Dataset = new DicomAttributeCollection(0x00040000, 0xFFFFFFFF);
-                        }
-
-                        if (_dimse.DatasetReader == null)
-                        {
-                            _dimse.DatasetReader = new DicomStreamReader(_dimse.DatasetData)
-                                                   	{
-                                                   		TransferSyntax = _assoc.GetAcceptedTransferSyntax(pdv.PCID),
-                                                   		Dataset = _dimse.Dataset
-                                                   	};
-                        }
-
-                        DicomReadStatus stat =
-                            _dimse.DatasetReader.Read(null, DicomReadOptions.UseDictionaryForExplicitUN);
-                        if (stat == DicomReadStatus.UnknownError)
-                        {
-							Platform.Log(LogLevel.Error, "Unexpected parsing error when reading DataSet.");
-                            return false;
-                        }
-
-                        _assoc.TotalBytesRead += (UInt64) pdv.PDVLength - 6;
-                        if (DimseMessageReceiving != null)
-                            DimseMessageReceiving(_assoc, pcid);
+							ret = ret && OnReceiveFileStream(pcid, _dimse.Command, _dimse.Dataset, pdv.Value.Array, pdv.Value.Index, pdv.Value.Count, false, pdv.IsLastFragment);
+							if (!ret)
+								Platform.Log(LogLevel.Error, "Error with OnReceiveFileStream");
+						}
 
                         if (pdv.IsLastFragment)
                         {
-                            if (stat == DicomReadStatus.NeedMoreData)
+							if (_dimse.ParseDatasetStatus == DicomReadStatus.NeedMoreData)
                             {
                             	Platform.Log(LogLevel.Error,
                             	             "Unexpected end of StreamReader.  More data needed ({0} bytes, last tag read {1}) after reading last PDV fragment.",
@@ -1828,29 +1892,24 @@ namespace ClearCanvas.Dicom.Network
 
                             LogSendReceive(true, _dimse.Command, _dimse.Dataset);
 
-                            if (_dimse.IsNewDimse)
-                            {
-                                OnReceiveDimseBegin(pcid, _dimse.Command, _dimse.Dataset);
-                            }
-                            OnReceiveDimseProgress(pcid, _dimse.Command, _dimse.Dataset);
-                            bool ret = OnReceiveDimse(pcid, _dimse.Command, _dimse.Dataset);
-                            if (!ret)
-								Platform.Log(LogLevel.Error, "Error with OnReceiveDimse");
+	                        if (!_dimse.StreamMessage)
+	                        {
+		                        ret = OnReceiveDimse(pcid, _dimse.Command, _dimse.Dataset);
+		                        if (!ret)
+			                        Platform.Log(LogLevel.Error, "Error with OnReceiveDimse");
+	                        }
 
-                            _dimse = null;
-                            return ret;
+							_dimse = null;
+							return ret;
                         }
-                    }
+
+						if (!ret) return false;
+	                }
                 }
 
                 if (_dimse.IsNewDimse)
                 {
-                    OnReceiveDimseBegin(pcid, _dimse.Command, _dimse.Dataset);
                     _dimse.IsNewDimse = false;
-                }
-                else
-                {
-                    OnReceiveDimseProgress(pcid, _dimse.Command, _dimse.Dataset);
                 }
 
                 return true;
@@ -1863,7 +1922,28 @@ namespace ClearCanvas.Dicom.Network
             }
         }
 
-    	private void SendRawPDU(RawPDU pdu)
+		private byte[] CreateFileHeader(byte pcid, DicomAttributeCollection command)
+	    {
+		    var msg = new DicomMessage(command, new DicomAttributeCollection());
+		    var file = new DicomFile
+			    {
+				    MediaStorageSopClassUid = msg.AffectedSopClassUid,
+				    MediaStorageSopInstanceUid = msg.AffectedSopInstanceUid,
+				    ImplementationClassUid = DicomImplementation.ClassUID.UID,
+				    ImplementationVersionName = DicomImplementation.Version,
+				    SourceApplicationEntityTitle = _assoc.CallingAE,
+				    TransferSyntax = _assoc.GetAcceptedTransferSyntax(pcid)
+			    };
+
+			var ms = new MemoryStream();
+			file.Save(ms,DicomWriteOptions.Default);
+			var byteArray = new byte[ms.Length];
+			var sourceArray = ms.GetBuffer();
+			Array.Copy(sourceArray, 0, byteArray, 0, ms.Length);
+			return byteArray;
+	    }
+
+	    private void SendRawPDU(RawPDU pdu)
         {
             ResetDimseTimeout();
 
@@ -1898,22 +1978,13 @@ namespace ClearCanvas.Dicom.Network
             {
                 TransferSyntax ts = _assoc.GetAcceptedTransferSyntax(pcid);
 
-                uint total =
-                    command.CalculateWriteLength(TransferSyntax.ImplicitVrLittleEndian,
-                                                 DicomWriteOptions.Default | DicomWriteOptions.CalculateGroupLengths);
-
-                if (dataset != null  && !dataset.IsEmpty())
-                    total += dataset.CalculateWriteLength(ts, DicomWriteOptions.Default);
-
                 PDataTFStream pdustream;
                 if (_assoc.RemoteMaximumPduLength == 0 || _assoc.RemoteMaximumPduLength > _assoc.LocalMaximumPduLength)
-					pdustream = new PDataTFStream(this, pcid, _assoc.LocalMaximumPduLength, total, NetworkSettings.Default.CombineCommandDataPdu);
+					pdustream = new PDataTFStream(this, pcid, _assoc.LocalMaximumPduLength, NetworkSettings.Default.CombineCommandDataPdu);
                 else
-					pdustream = new PDataTFStream(this, pcid, _assoc.RemoteMaximumPduLength, total, NetworkSettings.Default.CombineCommandDataPdu);
+					pdustream = new PDataTFStream(this, pcid, _assoc.RemoteMaximumPduLength, NetworkSettings.Default.CombineCommandDataPdu);
                 pdustream.OnTick += delegate
                                         {
-                                            OnSendDimseProgress(pcid, command, dataset);
-
                                             if (DimseMessageSending != null)
                                                 DimseMessageSending(_assoc, pcid, command, dataset);
                                         };
@@ -1924,9 +1995,6 @@ namespace ClearCanvas.Dicom.Network
                 lock (_writeSyncLock)
                 {
                     LogSendReceive(false, command, dataset);
-
-                    OnSendDimseBegin(pcid, command, dataset);
-
 
                     var dsw = new DicomStreamWriter(pdustream);
                     dsw.Write(TransferSyntax.ImplicitVrLittleEndian,
@@ -1942,7 +2010,7 @@ namespace ClearCanvas.Dicom.Network
                     pdustream.Flush(true);
                 }
 
-                _assoc.TotalBytesSent += total;
+                _assoc.TotalBytesSent += (ulong)pdustream.BytesWritten;
 
                 OnDimseSent(pcid, command, dataset);
             }
@@ -1961,6 +2029,72 @@ namespace ClearCanvas.Dicom.Network
                 //throw new DicomException("Unexpected exception when sending a DIMSE message",e);
             }
         }
+
+
+		/// <summary>
+		/// Method for sending a DIMSE mesage.
+		/// </summary>
+		/// <param name="pcid"></param>
+		/// <param name="command"></param>
+		/// <param name="dataset"></param>
+		private void SendDimseDataSetStream(byte pcid, DicomAttributeCollection command, Stream dataset)
+		{
+			try
+			{
+				TransferSyntax ts = _assoc.GetAcceptedTransferSyntax(pcid);
+
+				PDataTFStream pdustream;
+				if (_assoc.RemoteMaximumPduLength == 0 || _assoc.RemoteMaximumPduLength > _assoc.LocalMaximumPduLength)
+					pdustream = new PDataTFStream(this, pcid, _assoc.LocalMaximumPduLength, NetworkSettings.Default.CombineCommandDataPdu);
+				else
+					pdustream = new PDataTFStream(this, pcid, _assoc.RemoteMaximumPduLength, NetworkSettings.Default.CombineCommandDataPdu);
+				pdustream.OnTick += delegate
+				{
+					if (DimseMessageSending != null)
+						DimseMessageSending(_assoc, pcid, command, null);
+				};
+
+				// Introduced lock as risk mitigation for ticket #10147.  Note that a more thorough locking
+				// mechanism should be developed to work across PDU types, and also should take into account
+				// if we do end up using _multiThreaded = true
+				lock (_writeSyncLock)
+				{
+					LogSendReceive(false, command, null);
+
+					var dsw = new DicomStreamWriter(pdustream);
+					dsw.Write(TransferSyntax.ImplicitVrLittleEndian,
+							  command, DicomWriteOptions.Default | DicomWriteOptions.CalculateGroupLengths);
+
+					if (dataset != null)
+					{
+						pdustream.IsCommand = false;
+
+						pdustream.Write(dataset);
+					}
+
+					// flush last pdu
+					pdustream.Flush(true);
+				}
+
+				_assoc.TotalBytesSent += (ulong)pdustream.BytesWritten;
+
+				OnDimseSent(pcid, command, null);
+			}
+			catch (Exception e)
+			{
+				OnNetworkError(e, true);
+
+				// TODO
+				// Should we throw another exception here?  Should the user know there's an error?  They'll get
+				// the error reported to them through the OnNetworkError routine, and throwing an exception here
+				// might cause us to call OnNetworkError a second time, because the exception may be caught at a higher
+				// level
+				// Note, when fixing defect #8184, realized that throwing an exception here would cause
+				// failures in the ImageServer, because there are places where we wouldn't catch the 
+				// exception.  Should be careful if this is ever introduced back in.
+				//throw new DicomException("Unexpected exception when sending a DIMSE message",e);
+			}
+		}
 
 		/// <summary>
 		/// Helper for sending N-Create, N-Set, and N-Delete Response messages.

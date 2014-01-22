@@ -38,6 +38,7 @@ using ClearCanvas.ImageViewer.Common.StudyManagement;
 using ClearCanvas.ImageViewer.Common.WorkItem;
 using ClearCanvas.ImageViewer.Explorer.Dicom;
 using ClearCanvas.ImageViewer.StudyManagement;
+using AuthorityTokens = ClearCanvas.ImageViewer.AuthorityTokens;
 
 namespace ClearCanvas.Utilities.DicomEditor
 {

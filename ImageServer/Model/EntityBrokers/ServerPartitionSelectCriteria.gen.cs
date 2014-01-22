@@ -259,5 +259,17 @@ namespace ClearCanvas.ImageServer.Model.EntityBrokers
               return (ISearchCondition<Boolean>)SubCriteria["AcceptLatestReport"];
             } 
         }
+        [EntityFieldDatabaseMappingAttribute(TableName="ServerPartition", ColumnName="ServerPartitionTypeEnum")]
+        public ISearchCondition<ServerPartitionTypeEnum> ServerPartitionTypeEnum
+        {
+            get
+            {
+              if (!SubCriteria.ContainsKey("ServerPartitionTypeEnum"))
+              {
+                 SubCriteria["ServerPartitionTypeEnum"] = new SearchCondition<ServerPartitionTypeEnum>("ServerPartitionTypeEnum");
+              }
+              return (ISearchCondition<ServerPartitionTypeEnum>)SubCriteria["ServerPartitionTypeEnum"];
+            } 
+        }
     }
 }

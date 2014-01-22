@@ -185,18 +185,32 @@ namespace ClearCanvas.Dicom.Iod
 		}
 
 		/// <summary>
-		/// Creates a <see cref="PatientOrientation"/> object from a dicom multi-valued string.
+		/// Parses a <see cref="PatientOrientation"/> from a DICOM multi-valued string.
 		/// </summary>
+		/// <param name="multiValuedString">Patient orientation, defined in orientation of rows and orientation of columns, separated by a backslash.</param>
 		/// <returns>
-		/// Null if there are not exactly 2 parsed values in the input string.
+		/// NULL if there are not exactly 2 parsed values in the input string.
 		/// </returns>
 		public static PatientOrientation FromString(string multiValuedString)
 		{
-			string[] values = DicomStringHelper.GetStringArray(multiValuedString);
-			if (values != null && values.Length == 2)
-				return new PatientOrientation(values[0], values[1]);
+			if (string.IsNullOrEmpty(multiValuedString)) return null;
+			var values = DicomStringHelper.GetStringArray(multiValuedString);
+			return values != null && values.Length == 2 ? new PatientOrientation(values[0], values[1]) : null;
+		}
 
-			return null;
+		/// <summary>
+		/// Parses a <see cref="PatientOrientation"/> from a DICOM multi-valued string.
+		/// </summary>
+		/// <param name="multiValuedString">Patient orientation, defined in orientation of rows and orientation of columns, separated by a backslash.</param>
+		/// <param name="anatomicalOrientationType">The anatomical orientation type code.</param>
+		/// <returns>
+		/// NULL if there are not exactly 2 parsed values in the input string.
+		/// </returns>
+		public static PatientOrientation FromString(string multiValuedString, string anatomicalOrientationType)
+		{
+			if (string.IsNullOrEmpty(multiValuedString)) return null;
+			var values = DicomStringHelper.GetStringArray(multiValuedString);
+			return values != null && values.Length == 2 ? new PatientOrientation(values[0], values[1], anatomicalOrientationType) : null;
 		}
 
 		#region IEquatable<PatientOrientation> Members
@@ -213,15 +227,12 @@ namespace ClearCanvas.Dicom.Iod
 
 		public override bool Equals(object obj)
 		{
-			if (obj == null)
-				return false;
-
-			return Equals(obj as PatientOrientation);
+			return obj != null && Equals(obj as PatientOrientation);
 		}
 
 		public override int GetHashCode()
 		{
-			return base.GetHashCode();
+			return -0x7360AA3E;
 		}
 
 		#endregion

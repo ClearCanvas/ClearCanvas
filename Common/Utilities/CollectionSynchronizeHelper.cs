@@ -80,10 +80,10 @@ namespace ClearCanvas.Common.Utilities
         /// </summary>
         public delegate void RemoveItemDelegate(TDestItem destItem, ICollection<TDestItem> destList);
 
-        private readonly CompareItemsDelegate _compareItemsCallback;
-        private readonly AddItemDelegate _addItemCallback;
-        private readonly UpdateItemDelegate _updateItemCallback;
-        private readonly RemoveItemDelegate _removeItemCallback;
+        private readonly Func<TDestItem,TSourceItem,bool> _compareItemsCallback;
+        private readonly Action<TSourceItem, ICollection<TDestItem>>  _addItemCallback;
+		private readonly Action<TDestItem, TSourceItem, ICollection<TDestItem>> _updateItemCallback;
+		private readonly Action<TDestItem, ICollection<TDestItem>> _removeItemCallback;
 
         private readonly bool _allowUpdate = false;
         private readonly bool _allowRemove = false;
@@ -107,10 +107,10 @@ namespace ClearCanvas.Common.Utilities
         /// <param name="updateItemCallback">Delegate for updating items in the destination collection, or null if items should not be updated.</param>
         /// <param name="removeCallback">Delegate for removing items from the destination collection, or null if items should not be removed.</param>
         public CollectionSynchronizeHelper(
-            CompareItemsDelegate compareItemsCallback,
-            AddItemDelegate addItemCallback,
-            UpdateItemDelegate updateItemCallback,
-            RemoveItemDelegate removeCallback)
+			Func<TDestItem, TSourceItem, bool> compareItemsCallback,
+			Action<TSourceItem, ICollection<TDestItem>> addItemCallback,
+			Action<TDestItem, TSourceItem, ICollection<TDestItem>> updateItemCallback,
+			Action<TDestItem, ICollection<TDestItem>> removeCallback)
         {
             _compareItemsCallback = compareItemsCallback;
             _addItemCallback = addItemCallback;
@@ -121,22 +121,28 @@ namespace ClearCanvas.Common.Utilities
             _allowRemove = _removeItemCallback != null;
         }
 
-        /// <summary>
-        /// Synchronize the destination collection to match the source collection.
-        /// </summary>
-        /// <param name="dest"></param>
-        /// <param name="source"></param>
-        public void Synchronize(ICollection<TDestItem> dest, ICollection<TSourceItem> source)
+		public void Synchronize(ICollection<TDestItem> dest, ICollection<TSourceItem> source)
+		{
+         	Synchronize(dest, source, _allowUpdate, _allowRemove);
+		}
+
+    	/// <summary>
+    	/// Synchronize the destination collection to match the source collection.
+    	/// </summary>
+    	/// <param name="dest"></param>
+    	/// <param name="source"></param>
+    	/// <param name="allowUpdate"> </param>
+    	/// <param name="allowRemove"> </param>
+    	public void Synchronize(ICollection<TDestItem> dest, ICollection<TSourceItem> source, bool allowUpdate, bool allowRemove)
         {
-			List<TDestItem> existing = new List<TDestItem>(dest);
-			List<TDestItem> unProcessed = new List<TDestItem>(dest);
+			var existing = new List<TDestItem>(dest);
+			var unProcessed = new List<TDestItem>(dest);
 
             CollectionUtils.ForEach(source,
                     delegate(TSourceItem sourceItem)
                     {
                         // Find a pre-existing item that matches the source item
-						TDestItem existingItem = CollectionUtils.SelectFirst(existing,
-                            delegate(TDestItem destItem) { return CompareItems(destItem, sourceItem); });
+						var existingItem = CollectionUtils.SelectFirst(existing, destItem => CompareItems(destItem, sourceItem));
 
                         if (existingItem == null)
                         {
@@ -146,7 +152,7 @@ namespace ClearCanvas.Common.Utilities
                         else
                         {
                             // Update the existing attachment
-                            if (_allowUpdate)
+							if (allowUpdate)
                                 UpdateItem(existingItem, sourceItem, dest);
 
                             // and remove from un-processed list
@@ -157,13 +163,9 @@ namespace ClearCanvas.Common.Utilities
             // Any items in the dest list that are not in the source list are considered "deleted"
             if (unProcessed.Count > 0)
             {
-                if (_allowRemove)
+				if (allowRemove)
                 {
-                    CollectionUtils.ForEach(unProcessed,
-                                            delegate(TDestItem destItem)
-                                            {
-                                                RemoveItem(destItem, dest);
-                                            });
+                    CollectionUtils.ForEach(unProcessed, destItem => RemoveItem(destItem, dest));
                 }
             }
         }

@@ -33,6 +33,7 @@ using ClearCanvas.Dicom;
 using ClearCanvas.Dicom.Utilities.Xml;
 using ClearCanvas.Enterprise.Core;
 using ClearCanvas.ImageServer.Enterprise;
+using ClearCanvas.ImageServer.Enterprise.Command;
 using ClearCanvas.ImageServer.Model.Brokers;
 using ClearCanvas.ImageServer.Model.EntityBrokers;
 using ClearCanvas.ImageServer.Model.Parameters;
@@ -86,7 +87,7 @@ namespace ClearCanvas.ImageServer.Model
     	private IList<StudyIntegrityQueue> _integrityQueueItems;
 
         private ServerPartition _partition;
-        private Study _study;
+        private volatile Study _study;
         private StudyXml _studyXml;
         private string _studyUidFolder;
         private string _studyFolderRelativePath;
@@ -218,9 +219,9 @@ namespace ClearCanvas.ImageServer.Model
             {
                 if (_study==null)
                 {
-                    using(IPersistenceContext context = _store.OpenReadContext())
+                    using(var context = new ServerExecutionContext())
                     {
-                        _study = LoadStudy(context);
+                        _study = LoadStudy(context.ReadContext);
                     }
                 }
                 return _study;
@@ -251,11 +252,9 @@ namespace ClearCanvas.ImageServer.Model
 				{
 					lock (SyncRoot)
 					{
-						// TODO: Use ExecutionContext to re-use db connection if possible
-						// This however requires breaking the Common --> Model dependency.
-						using (IReadContext readContext = _store.OpenReadContext())
+						using (var context = new ServerExecutionContext())
 						{
-							_studyStorage = StudyStorage.Load(readContext, Key);
+                            _studyStorage = StudyStorage.Load(context.ReadContext, Key);
 						}
 					}
 				}
@@ -275,11 +274,9 @@ namespace ClearCanvas.ImageServer.Model
 				{
 					lock (SyncRoot)
 					{
-						// TODO: Use ExecutionContext to re-use db connection if possible
-						// This however requires breaking the Common --> Model dependency.
-						using (IReadContext readContext = _store.OpenReadContext())
-						{
-							_patient = Patient.Load(readContext, StudyStorage.GetStudy().PatientKey);
+                        using (var context = new ServerExecutionContext())
+                        {
+							_patient = Patient.Load(context.ReadContext, StudyStorage.GetStudy().PatientKey);
 						}
 					}
 				}
@@ -402,6 +399,59 @@ namespace ClearCanvas.ImageServer.Model
         }
 
         /// <summary>
+        /// Acquires a read lock on the study
+        /// </summary>
+        /// <returns>
+        /// <b>true</b> if the study is successfully locked.
+        /// <b>false</b> if the study cannot be locked or is being locked by another process.
+        /// </returns>
+        /// <remarks>
+        /// This method is non-blocking. Caller must check the return value to ensure the study has been
+        /// successfully locked.
+        /// </remarks>
+        public bool AcquireReadLock()
+        {
+            IUpdateContext context =
+                PersistentStoreRegistry.GetDefaultStore().OpenUpdateContext(UpdateContextSyncMode.Flush);
+            using (context)
+            {
+                var lockStudyBroker = context.GetBroker<ILockStudy>();
+                var parms = new LockStudyParameters { StudyStorageKey = GetKey(), ReadLock = true };
+                if (!lockStudyBroker.Execute(parms))
+                    return false;
+
+                context.Commit();
+                return parms.Successful;
+            }
+        }
+
+        /// <summary>
+        /// Releases a lock acquired via <see cref="AcquireReadLock"/>
+        /// </summary>
+        /// <returns>
+        /// <b>true</b> if the study is successfully unlocked.
+        /// </returns>
+        /// <remarks>
+        /// This method is non-blocking. Caller must check the return value to ensure the study has been
+        /// successfully unlocked.
+        /// </remarks>
+        public bool ReleaseReadLock()
+        {
+            IUpdateContext context =
+                PersistentStoreRegistry.GetDefaultStore().OpenUpdateContext(UpdateContextSyncMode.Flush);
+            using (context)
+            {
+                var lockStudyBroker = context.GetBroker<ILockStudy>();
+                var parms = new LockStudyParameters { StudyStorageKey = GetKey(), ReadLock = false };
+                if (!lockStudyBroker.Execute(parms))
+                    return false;
+
+                context.Commit();
+                return parms.Successful;
+            }
+        }
+
+        /// <summary>
         /// Return snapshot of all related items in the Study Integrity Queue.
         /// </summary>
         /// <returns></returns>
@@ -411,11 +461,11 @@ namespace ClearCanvas.ImageServer.Model
             {
                 if (_integrityQueueItems == null)
                 {
-                    using (IReadContext ctx = _store.OpenReadContext())
+                    using (var context = new ServerExecutionContext())
                     {
-                        IStudyIntegrityQueueEntityBroker integrityQueueBroker =
-                            ctx.GetBroker<IStudyIntegrityQueueEntityBroker>();
-                        StudyIntegrityQueueSelectCriteria parms = new StudyIntegrityQueueSelectCriteria();
+                        var integrityQueueBroker =
+                            context.ReadContext.GetBroker<IStudyIntegrityQueueEntityBroker>();
+                        var parms = new StudyIntegrityQueueSelectCriteria();
 
                         parms.StudyStorageKey.EqualTo(GetKey());
 
@@ -446,9 +496,9 @@ namespace ClearCanvas.ImageServer.Model
         public bool CanBeUsedForDiagnostics()
         {
             // TODO (CR Phoenix5 - Med): What if it has a failed entry? Will it be unusable until the work item is removed?
-            var allowed = this.QueueStudyStateEnum == QueueStudyStateEnum.Idle;
+            var allowed = QueueStudyStateEnum == QueueStudyStateEnum.Idle;
             if (!allowed)
-                Platform.Log(LogLevel.Error, "Study cannot be used for diagnostic purposes at this time because its state is ", QueueStudyStateEnum);
+                Platform.Log(LogLevel.Error, "Study cannot be used for diagnostic purposes at this time because its state is {0}", QueueStudyStateEnum.Description);
 
             return allowed;
         }
@@ -458,12 +508,12 @@ namespace ClearCanvas.ImageServer.Model
 		/// </summary>
 		public void LogFilesystemQueue()
 		{
-			FilesystemQueueSelectCriteria criteria = new FilesystemQueueSelectCriteria();
+			var criteria = new FilesystemQueueSelectCriteria();
 			criteria.StudyStorageKey.EqualTo(Key);
 
-			using (IReadContext read = PersistentStoreRegistry.GetDefaultStore().OpenReadContext())
-			{
-				IFilesystemQueueEntityBroker broker = read.GetBroker<IFilesystemQueueEntityBroker>();
+            using (var context = new ServerExecutionContext())
+            {
+				var broker = context.ReadContext.GetBroker<IFilesystemQueueEntityBroker>();
 
 				IList<FilesystemQueue> list = broker.Find(criteria);
 				foreach (FilesystemQueue queueItem in list)
@@ -589,6 +639,29 @@ namespace ClearCanvas.ImageServer.Model
 
         #endregion
 
+		#region Helper Methods
+
+		public delegate void SopInstanceProcessCallback(StudyStorageLocation location, SeriesXml seriesXml, InstanceXml instanceXml);
+
+		public void forEachSopInstanceInSeries(string seriesInstanceUid, SopInstanceProcessCallback callback)
+		{
+			var studyXml = this.LoadStudyXml();
+			var seriesXml = studyXml[seriesInstanceUid];
+			foreach (var instanceXml in seriesXml)
+			{
+				callback(this, seriesXml, instanceXml);
+			} 
+		}
+
+		public int GetNumberOfSeriesRelatedInstancesCount(string seriesInstanceUid)
+		{
+			var studyXml = this.LoadStudyXml();
+			var seriesXml = studyXml[seriesInstanceUid];
+			return seriesXml.NumberOfSeriesRelatedInstances;
+		}
+		
+		#endregion
+
 		#region Static Methods
 
 		/// <summary>
@@ -598,17 +671,17 @@ namespace ClearCanvas.ImageServer.Model
         /// <returns></returns>
         static public IList<StudyStorageLocation> FindStorageLocations(StudyStorage storage)
         {
-            using(IReadContext readContext = _store.OpenReadContext())
+            using (var context = new ServerExecutionContext())
             {
-                return FindStorageLocations(readContext, storage, null);
+                return FindStorageLocations(context.ReadContext, storage, null);
             }
         }
 
 		static public IList<StudyStorageLocation> FindStorageLocations(ServerEntityKey partitionKey, string studyInstanceUid)
 		{
-			using (IReadContext readContext = _store.OpenReadContext())
-			{
-				IQueryStudyStorageLocation locQuery = readContext.GetBroker<IQueryStudyStorageLocation>();
+            using (var context = new ServerExecutionContext())
+            {
+				IQueryStudyStorageLocation locQuery = context.ReadContext.GetBroker<IQueryStudyStorageLocation>();
 				StudyStorageLocationQueryParameters locParms = new StudyStorageLocationQueryParameters
 				                                               	{
 				                                               		StudyInstanceUid = studyInstanceUid,
@@ -621,10 +694,10 @@ namespace ClearCanvas.ImageServer.Model
 
         static public IList<StudyStorageLocation> FindStorageLocations(ServerEntityKey studyStorageKey)
 		{
-			using (var readContext = _store.OpenReadContext())
-			{
+            using (var context = new ServerExecutionContext())
+            {
                 var parms = new StudyStorageLocationQueryParameters { StudyStorageKey = studyStorageKey };
-                var broker = readContext.GetBroker<IQueryStudyStorageLocation>();
+                var broker = context.ReadContext.GetBroker<IQueryStudyStorageLocation>();
                 return broker.Find(parms);
 			}
 		}        
@@ -658,13 +731,13 @@ namespace ClearCanvas.ImageServer.Model
 		/// <returns>null if not found, else the value.</returns>
         static public IList<ArchiveStudyStorage> GetArchiveLocations(ServerEntityKey studyStorageKey)
         {
-            using (IReadContext readContext = _store.OpenReadContext())
+            using (var context = new ServerExecutionContext())
             {
                 ArchiveStudyStorageSelectCriteria archiveStudyStorageCriteria = new ArchiveStudyStorageSelectCriteria();
                 archiveStudyStorageCriteria.StudyStorageKey.EqualTo(studyStorageKey);
                 archiveStudyStorageCriteria.ArchiveTime.SortDesc(0);
 
-                IArchiveStudyStorageEntityBroker broker = readContext.GetBroker<IArchiveStudyStorageEntityBroker>();
+                IArchiveStudyStorageEntityBroker broker = context.ReadContext.GetBroker<IArchiveStudyStorageEntityBroker>();
 
                 return broker.Find(archiveStudyStorageCriteria);
             }

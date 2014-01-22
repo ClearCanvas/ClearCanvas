@@ -26,7 +26,9 @@
 
 using System;
 using System.IO;
+using ClearCanvas.Common;
 using ClearCanvas.Dicom;
+using ClearCanvas.Dicom.Iod.Sequences;
 using ClearCanvas.Dicom.Tests;
 using ClearCanvas.Dicom.Utilities;
 using NUnit.Framework;
@@ -75,8 +77,17 @@ namespace ClearCanvas.ImageServer.Core.Edit.Test
             SetTagCommand cmd = new SetTagCommand(tag, valueToSet);
 
             Assert.AreEqual(cmd.CanSaveInUnicode, UnicodeAllowed, "SetTagCommand.CanSaveInUnicode returns an incorrect value");
-            
-            Assert.IsTrue(cmd.Apply(file), "SetTagCommand.Apply failed");
+
+			var sq = new OriginalAttributesSequence
+			{
+				ModifiedAttributesSequence = new DicomSequenceItem(),
+				ModifyingSystem = ProductInformation.Component,
+				ReasonForTheAttributeModification = "CORRECT",
+				AttributeModificationDatetime = Platform.Time,
+				SourceOfPreviousValues = file.SourceApplicationEntityTitle
+			};
+
+            Assert.IsTrue(cmd.Apply(file, sq), "SetTagCommand.Apply failed");
 
             var filename = string.Format("Test-{0}.dcm", DicomTagDictionary.GetDicomTag(tag).Name);
             Assert.IsTrue(file.Save(filename), "Unable to save dicom file");
@@ -101,11 +112,20 @@ namespace ClearCanvas.ImageServer.Core.Edit.Test
             DicomFile file = new DicomFile("test", CreateMetaInfo(), dataset);
 
             Assert.AreEqual(originalCharacterSet, file.DataSet[DicomTags.SpecificCharacterSet].ToString());
+			
+			var sq = new OriginalAttributesSequence
+			{
+				ModifiedAttributesSequence = new DicomSequenceItem(),
+				ModifyingSystem = ProductInformation.Component,
+				ReasonForTheAttributeModification = "CORRECT",
+				AttributeModificationDatetime = Platform.Time,
+				SourceOfPreviousValues = file.SourceApplicationEntityTitle
+			};
 
             SetTagCommand cmd = new SetTagCommand(tag, valueToSet);
             try
             {
-                cmd.Apply(file);
+                cmd.Apply(file, sq);
                 Assert.Fail("DicomCharacterSetException is expected");
             }
             catch(DicomCharacterSetException)

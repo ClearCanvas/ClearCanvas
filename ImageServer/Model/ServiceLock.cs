@@ -23,7 +23,7 @@
 #endregion
 
 using System.Collections.Generic;
-using ClearCanvas.Enterprise.Core;
+using ClearCanvas.ImageServer.Enterprise.Command;
 using ClearCanvas.ImageServer.Model.EntityBrokers;
 namespace ClearCanvas.ImageServer.Model
 {
@@ -54,9 +54,9 @@ namespace ClearCanvas.ImageServer.Model
         /// <returns></returns>
         public static IList<ServiceLock> FindServicesOfType(ServiceLockTypeEnum type)
         {
-            using (var readCtx = PersistentStoreRegistry.GetDefaultStore().OpenReadContext())
+            using (var context = new ServerExecutionContext())
             {
-                var broker = readCtx.GetBroker<IServiceLockEntityBroker>();
+                var broker = context.ReadContext.GetBroker<IServiceLockEntityBroker>();
                 var criteria = new ServiceLockSelectCriteria();
                 criteria.ServiceLockTypeEnum.EqualTo(type);
                 return broker.Find(criteria);
