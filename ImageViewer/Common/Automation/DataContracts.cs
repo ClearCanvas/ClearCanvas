@@ -46,9 +46,11 @@ namespace ClearCanvas.ImageViewer.Common.Automation
 	/// Data contract for fault when there are no active viewers.
 	/// </summary>
 	[DataContract(Namespace = AutomationNamespace.Value)]
-	public class NoActiveViewersFault {}
+	public class NoActiveViewersFault
+	{
 		[Obsolete("Used only by the deprecated GetActiveViewers method. Replaced by NoViewersFault, which is thrown by the GetViewers method.")]
 		public NoActiveViewersFault() {}
+	}
 
 	/// <summary>
 	/// Data contract for fault when there are no active viewers.
