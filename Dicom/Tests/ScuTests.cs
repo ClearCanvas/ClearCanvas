@@ -113,11 +113,7 @@ namespace ClearCanvas.Dicom.Tests
 				scu.AddStorageInstance(new StorageInstance(file));
 			}
 
-			scu.ImageStoreCompleted += delegate(object o, StorageInstance instance)
-			                           	{
-											// Test abort
-			                           		scu.Abort();
-			                           	};
+			scu.ImageStoreCompleted += (s, e) => scu.Abort();
 
 			scu.Send();
 			scu.Join();

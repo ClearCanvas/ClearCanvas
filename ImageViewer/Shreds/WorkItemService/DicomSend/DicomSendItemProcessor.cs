@@ -271,9 +271,10 @@ namespace ClearCanvas.ImageViewer.Shreds.WorkItemService.DicomSend
             }
         }
 
-        private void OnImageSent(object sender, StorageInstance storageInstance)
+        private void OnImageSent(object sender, ImageStoreEventArgs ev)
         {
             var scu = sender as ImageViewerStorageScu;
+            var storageInstance = ev.StorageInstance;
             Progress.TotalImagesToSend = _scu.TotalSubOperations;
 
             if (storageInstance.SendStatus.Status == DicomState.Success)
