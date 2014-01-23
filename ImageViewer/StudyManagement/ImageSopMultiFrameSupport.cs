@@ -134,7 +134,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		/// The dimension is identified by the DICOM tag which has the value of the frame in this dimension,
 		/// and the DICOM tag of the parent functional group sequence.
 		/// </remarks>
-		/// <param name="frameNumber">The number of the frame for which the index value is to be retrieved (1-based index).</param>
+		/// <param name="frameNumber">The number of the frame for which the dimension is to be retrieved (1-based index).</param>
 		/// <param name="dimensionIndexTag">The DICOM tag of the dimension to retrieve (i.e. the Dimension Index Pointer).</param>
 		/// <param name="functionalGroupTag">The DICOM tag of the parent functional group sequence (i.e. the Functional Group Pointer).</param>
 		/// <returns>The index value of the frame in the specified dimension, or NULL if the image is not a multi-frame or does not contain the specified dimension.</returns>
@@ -153,6 +153,28 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 				}
 			}
 			return null;
+		}
+
+		/// <summary>
+		/// Gets the Dimension Organization UID of a specific dimension for the specified frame.
+		/// </summary>
+		/// <remarks>
+		/// The Dimension Organization UID identifies when the same dimension index values are valid
+		/// across multiple SOP instances.
+		/// </remarks>
+		/// <param name="frameNumber">The number of the frame for which the dimension is to be retrieved (1-based index).</param>
+		/// <param name="dimensionIndexTag">The DICOM tag of the dimension to retrieve (i.e. the Dimension Index Pointer).</param>
+		/// <param name="functionalGroupTag">The DICOM tag of the parent functional group sequence (i.e. the Functional Group Pointer).</param>
+		/// <returns>The Dimension Organization UID of the specified dimension, or empty if the image is not a multi-frame or does not contain the specified dimension.</returns>
+		public string GetFrameDimensionOrganizationUid(int frameNumber, uint dimensionIndexTag, uint functionalGroupTag)
+		{
+			if (frameNumber > 0 && IsMultiframe)
+			{
+				DimensionIndexSequenceItem dimension;
+				var dimensionIndex = new MultiFrameDimensionModuleIod(DataSource).FindDimensionIndexSequenceItemByTag(dimensionIndexTag, functionalGroupTag, out dimension);
+				if (dimensionIndex >= 0) return dimension.DimensionOrganizationUid;
+			}
+			return string.Empty;
 		}
 
 		#region Frame VOI Data LUTs

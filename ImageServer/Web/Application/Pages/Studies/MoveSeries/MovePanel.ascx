@@ -42,6 +42,7 @@
             }
         </script>
 
+        <asp:Panel ID="Panel2" runat="server" DefaultButton="SearchButton">
         <table cellpadding="0" cellspacing="0" width="100%">
             <tr>
                 <td class="MovePanelTd">
@@ -167,6 +168,7 @@
                 </td>
             </tr>
         </table>
+        </asp:Panel>
     </ContentTemplate>
 </asp:UpdatePanel>
 <ccAsp:MessageBox ID="MoveConfirmation" runat="server" Title="<%$Resources: Titles, MoveSeries_Dialog_Confirmation %>" />

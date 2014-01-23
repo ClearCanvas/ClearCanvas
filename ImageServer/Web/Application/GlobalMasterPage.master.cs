@@ -25,8 +25,8 @@
 using System;
 using System.Configuration;
 using System.Web.UI;
+using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
-using ClearCanvas.Common;
 using ClearCanvas.ImageServer.Web.Application.Controls;
 using ClearCanvas.ImageServer.Web.Application.Pages.Common;
 using ClearCanvas.ImageServer.Web.Common.Exceptions;
@@ -45,12 +45,35 @@ namespace ClearCanvas.ImageServer.Web.Application
             set { _displayUserInfo = value; }
         }
 
+		public bool RequiresLegacyIE { get; set; }
+
+		public GlobalMasterPage()
+		{
+			//TODO: in the future, it is best to revert this
+			RequiresLegacyIE = true;
+		}
+
         protected void Page_Load(object sender, EventArgs e)
         {
+			if (RequiresLegacyIE)
+			{
+				var meta = new HtmlMeta {Name = "IE7Compatible", HttpEquiv = "X-UA-Compatible", Content = "IE=7"};
+				Page.Header.Controls.Add(meta);
+			}
+			else
+			{
+				// Still need to force IE to use IE10 mode because Compatibility View may be turned on for intranet websites. 
+				// This will make IE to run in compatibility mode. Some pages designed for IE10+ will not be rendered properly in that case
+				var meta = new HtmlMeta { Name = "IE7Compatible", HttpEquiv = "X-UA-Compatible", Content = "IE=10" };
+				Page.Header.Controls.Add(meta);
+			}
+
             if (IsPostBack)
                 return;
-            
-            if (SessionManager.Current.User.WarningMessages.Count > 0)
+
+			LogoutLink.HRef = "~/Pages/Login/Logout.aspx" + "?ReturnUrl=" + this.Request.Url.AbsoluteUri;
+
+			if (SessionManager.Current != null && SessionManager.Current.User != null && SessionManager.Current.User.WarningMessages.Count > 0)
             {
                 if (!SessionManager.Current.User.WarningsDisplayed)
                 {
@@ -68,20 +91,13 @@ namespace ClearCanvas.ImageServer.Web.Application
             }
 
             AddIE6PngBugFixCSS();
-            if (SessionManager.Current != null)
+            if (SessionManager.Current != null && SessionManager.Current.User != null)
             {
                 var id = SessionManager.Current.User.Identity as CustomIdentity;
 
                 if (DisplayUserInformationPanel)
                 {
-                    if (id != null)
-                    {
-                        Username.Text = id.DisplayName;
-                    }
-                    else
-                    {
-                        Username.Text = "unknown";
-                    }
+                    Username.Text = id != null ? id.DisplayName : "unknown";
 
                     try
                     {
@@ -112,7 +128,6 @@ namespace ClearCanvas.ImageServer.Web.Application
                     MenuCell.Width = Unit.Percentage(100);
                 }
             }
-            
         }
 
         private void AddIE6PngBugFixCSS()
@@ -132,13 +147,6 @@ namespace ClearCanvas.ImageServer.Web.Application
                 );
             }
         ";
-        }
-
-        protected void Logout_Click(Object sender, EventArgs e)
-        {
-            Platform.Log(LogLevel.Info, "{0} has logged out.", SessionManager.Current.User.Identity.Name);
-            SessionManager.SignOut();
-            Response.Redirect(SessionManager.LoginUrl, false);
         }
 
         protected void GlobalScriptManager_AsyncPostBackError(object sender, AsyncPostBackErrorEventArgs e)

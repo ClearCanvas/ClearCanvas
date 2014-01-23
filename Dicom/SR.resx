@@ -455,4 +455,8 @@
   <data name="LabelPatientDirectionSeparator" xml:space="preserve">
     <value>-</value>
   </data>
+  <data name="FormatCodeSequenceValue" xml:space="preserve">
+    <value>{0} ({1})</value>
+    <comment>{0} - Code Value, {1} - Coding Scheme Designator</comment>
+  </data>
 </root>

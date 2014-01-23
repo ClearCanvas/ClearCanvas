@@ -26,6 +26,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Web.UI.WebControls;
+using ClearCanvas.ImageServer.Common.Authentication;
 using ClearCanvas.ImageServer.Web.Common.Data.DataSource;
 
 namespace ClearCanvas.ImageServer.Web.Application.Pages.Studies.StudyDetails.Controls
@@ -65,7 +66,7 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Studies.StudyDetails.Con
 
         public bool DisplayVetTags()
         {
-            return Thread.CurrentPrincipal.IsInRole(Enterprise.Authentication.AuthorityTokens.Study.VetTags);            
+            return Thread.CurrentPrincipal.IsInRole(AuthorityTokens.Study.VetTags);            
         }
 
 

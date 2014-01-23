@@ -228,7 +228,11 @@ namespace ClearCanvas.ImageServer.Web.Application.Services
             }
 
             string error;
-            if (false == Rule<ServerActionContext, ServerRuleTypeEnum>.ValidateRule(type, theDoc, out error))
+            if (false == Rule<ServerActionContext>.ValidateRule(
+				theDoc,
+				ServerRulesEngine.GetSpecificationCompiler(),
+				ServerRulesEngine.GetActionCompiler(type),
+				out error))
             {
                 result.ErrorText = error;
                 result.Success = false;

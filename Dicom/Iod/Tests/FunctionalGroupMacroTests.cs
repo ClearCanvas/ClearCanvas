@@ -222,21 +222,35 @@ namespace ClearCanvas.Dicom.Iod.Tests
 			{
 				var sopClass = SopClass.GetSopClass(uid).Name;
 				var functionalGroups = FunctionalGroupDescriptor.GetApplicableFunctionalGroups(uid).ToList();
-				var tagGroups = functionalGroups.Select(f => f.Create())
+				var nestedTagGroups = functionalGroups.Select(f => f.Create())
 					.SelectMany(f => f.NestedTags.Select(t => new {TagValue = t, FunctionalGroup = f}))
 					.GroupBy(u => u.TagValue).OrderBy(u => u.Key).ToList();
+				var rootSeqTags = functionalGroups.Select(f => f.Create())
+					.Select(f => new {TagValue = f.DefinedTags.Single(), FunctionalGroup = f})
+					.OrderBy(u => u.TagValue).ToList();
 
-				foreach (var group in tagGroups)
+				foreach (var group in rootSeqTags)
+				{
+					var dcmTag = DicomTagDictionary.GetDicomTag(group.TagValue);
+
+					// asserts that the root sequence tags of the functional groups map to the functional group itself
+					var fgType = FunctionalGroupDescriptor.GetFunctionalGroupByTag(uid, group.TagValue);
+					Assert.IsNotNull(fgType, "There should be at least one mapping for functional group with root SQ tag {0} for SOP class {1}", dcmTag, sopClass);
+					Assert.AreEqual(new FunctionalGroupDescriptor(group.FunctionalGroup.GetType()), fgType,
+					                "The root SQ tag {0} doesn't map to the expected functional group {1} for SOP class {2}", dcmTag, group.FunctionalGroup.GetType(), sopClass);
+				}
+
+				foreach (var group in nestedTagGroups)
 				{
 					var dcmTag = DicomTagDictionary.GetDicomTag(group.Key);
 
 					// asserts that any tag defined in 'singleton' functional groups (those whose sequence can have at most 1 item) should have at least some mapping
 					var fgType = FunctionalGroupDescriptor.GetFunctionalGroupByTag(uid, group.Key);
-					if (fgType == null)
+					if (fgType == null) // the method returns null if the nested tag only belongs to functional group(s) that allow multiple items
 					{
 						foreach (var entry in group)
 						{
-							Assert.IsTrue(entry.FunctionalGroup.CanHaveMultipleItems, "At least one singleton functional group defines tag {0} for SOP class {1}", dcmTag, sopClass);
+							Assert.IsTrue(entry.FunctionalGroup.CanHaveMultipleItems, "At least one singleton functional group defines nested tag {0} for SOP class {1}", dcmTag, sopClass);
 						}
 					}
 

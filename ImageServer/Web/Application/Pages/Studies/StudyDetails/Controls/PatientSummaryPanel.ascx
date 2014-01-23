@@ -24,8 +24,9 @@
 
 <%@ Control Language="C#" AutoEventWireup="true" Codebehind="PatientSummaryPanel.ascx.cs"
     Inherits="ClearCanvas.ImageServer.Web.Application.Pages.Studies.StudyDetails.Controls.PatientSummaryPanel" %>
+<%@ Register TagPrefix="asp" Namespace="System.Web.UI.HtmlControls" Assembly="System.Web, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" %>
 
-    <table width="100%">
+<table width="100%">
         <tr>
             <td colspan="4">
                 <ccUI:PersonNameLabel ID="personName" runat="server" PersonNameType="Dicom" CssClass="PatientName" /></td>
@@ -46,6 +47,10 @@
             <td>
                 <asp:Label ID="Label5" runat="server" Text="<%$Resources: Labels, PatientSummary_Gender %>" CssClass="PatientInfo"></asp:Label>
                 <asp:Label ID="PatientSex" runat="server" Text="PatientSex" CssClass="PatientInfo"></asp:Label>
+            </td>
+            <td>
+                <asp:Label ID="QCReportLabel" runat="server" Text="<%$Resources: Labels, PatientSummary_QCReport %>" CssClass="PatientInfo"></asp:Label>
+				<a runat="server" ID="QCReportLink" target="_blank" class="PatientInfo"></a>
             </td>
         </tr>
     </table>

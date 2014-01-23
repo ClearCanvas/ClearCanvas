@@ -27,7 +27,7 @@ using System.Collections.Generic;
 using System.Security.Permissions;
 using System.Threading;
 using System.Web.UI;
-using ClearCanvas.ImageServer.Enterprise.Authentication;
+using ClearCanvas.ImageServer.Common.Authentication;
 using ClearCanvas.ImageServer.Model;
 using ClearCanvas.ImageServer.Model.EntityBrokers;
 using ClearCanvas.ImageServer.Web.Application.Pages.Common;

@@ -291,16 +291,19 @@
 .DialogTabControl .ajax__tab_header					
 {
     margin-top: 8px;
+    white-space: normal!important;
 }
 .DialogTabControl .ajax__tab_outer
 {
 	background: url(../../images/Controls/Dialog/DialogInactiveTabRight.png) no-repeat right;
-	margin-right: 1px;
+	margin-left: 2px;
+	margin-right: 4px;
 }
 .DialogTabControl .ajax__tab_inner
 {
 	background: url(../../images/Controls/Dialog/DialogInactiveTabLeft.png) no-repeat;
-	padding-left: 3px;
+	padding-left: 2px;
+	padding-right: 2px;
 }
 .DialogTabControl .ajax__tab_tab
 {
@@ -326,12 +329,11 @@
 }
 .DialogTabControl .ajax__tab_active .ajax__tab_outer
 {
-	background: url(../../images/Controls/Dialog/DialogActiveTabRight.png) no-repeat right;
+	background: url(../../images/Controls/Dialog/DialogActiveTabLeft.png) no-repeat;
 }
 .DialogTabControl .ajax__tab_active .ajax__tab_inner
 {
-	background: url(../../images/Controls/Dialog/DialogActiveTabLeft.png) no-repeat;
-	
+	background: url(../../images/Controls/Dialog/DialogActiveTabRight.png) no-repeat right;	
 }
 .DialogTabControl .ajax__tab_active .ajax__tab_tab
 {

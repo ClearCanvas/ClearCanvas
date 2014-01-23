@@ -131,6 +131,8 @@ namespace ClearCanvas.Enterprise.Hibernate
 
 		public event EventHandler PreCommit;
 
+		public event EventHandler PostCommit;
+
 		#endregion
 
 		#region Protected overrides

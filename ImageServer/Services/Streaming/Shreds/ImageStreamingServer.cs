@@ -32,7 +32,6 @@ using System.Web;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Shreds;
 using ClearCanvas.Common.Utilities;
-using ClearCanvas.ImageServer.Common;
 using ClearCanvas.ImageServer.Common.Exceptions;
 using ClearCanvas.ImageServer.Core;
 using ClearCanvas.ImageServer.Model;
@@ -70,7 +69,13 @@ namespace ClearCanvas.ImageServer.Services.Streaming.Shreds
 	public class ImageStreamingServer : HttpServer
     {
         #region Private Fields
-        private readonly List<IPEndPoint> _currentRequests = new List<IPEndPoint>();
+		//For this use case, LinkedList is far more efficient, because we only ever:
+		//1. Add to the end.
+		//2. Remove from anywhere.
+		//3. Traverse the list from beginning to end.
+		//#1 and #2 take "constant time" for a LinkedList, but not for a List<> because it reshuffles data.
+		private readonly LinkedList<IPEndPoint> _currentRequests = new LinkedList<IPEndPoint>();
+		private readonly int _concurrencyWarningThreshold = ImageStreamingServerSettings.Default.ConcurrencyWarningThreshold;
         #endregion
 
 	    		
@@ -85,7 +90,6 @@ namespace ClearCanvas.ImageServer.Services.Streaming.Shreds
                 ImageStreamingServerSettings.Default.Path)
 		{
             HttpRequestReceived += OnHttpRequestReceived;
-            	
 		}
 
         
@@ -104,7 +108,6 @@ namespace ClearCanvas.ImageServer.Services.Streaming.Shreds
                     String.Format("Partition AE Title is required after {0}", ImageStreamingServerSettings.Default.Path));
             }
 
-
             ServerPartition partition = ServerPartitionMonitor.Instance.GetPartition(serverAE);
             if (partition == null)
             {
@@ -116,7 +119,6 @@ namespace ClearCanvas.ImageServer.Services.Streaming.Shreds
             {
                 throw new WADOException(HttpStatusCode.BadRequest, "RequestType parameter is missing");
             }
-
         }
 
         #endregion
@@ -124,21 +126,31 @@ namespace ClearCanvas.ImageServer.Services.Streaming.Shreds
         #region Private Methods
         void AddContext(HttpListenerContext ctx)
         {
-            lock (_currentRequests)
-            {
-                _currentRequests.Add(ctx.Request.RemoteEndPoint);
-                if (_currentRequests.Count > ImageStreamingServerSettings.Default.ConcurrencyWarningThreshold)
-                {
-                    StringBuilder log = new StringBuilder();
-                    log.AppendLine(String.Format("Concurrency threshold detected: {0} requests are being processed.", _currentRequests.Count));
-                    Dictionary<IPAddress, List<IPEndPoint>> map = CollectionUtils.GroupBy<IPEndPoint, IPAddress>(_currentRequests, delegate(IPEndPoint item) { return item.Address; });
-                    foreach (IPAddress client in map.Keys)
-                    {
-                        log.AppendLine(String.Format("From {0} : {1}", client, map[client].Count));
-                    }
-                    Platform.Log(LogLevel.Warn, log.ToString());
-                }
-            }
+			Dictionary<IPAddress, List<IPEndPoint>> map;
+        	var endpoint = ctx.Request.RemoteEndPoint;
+        	int requestCount;
+
+			lock (_currentRequests)
+			{
+				_currentRequests.AddLast(endpoint);
+				requestCount = _currentRequests.Count;
+				if (requestCount <= _concurrencyWarningThreshold)
+					return;
+
+				//Lock only until we get the "map" to minimize contention
+				map = CollectionUtils.GroupBy(_currentRequests, item => item.Address);
+			}
+
+			//Do the logging on a different thread so we don't hold up this one.
+        	Task.Factory.StartNew(() =>
+        	                      	{
+        	                      		var log = new StringBuilder();
+        	                      		log.AppendLine(String.Format("Concurrency threshold detected: {0} requests are being processed.", requestCount));
+        	                      		foreach (IPAddress client in map.Keys)
+        	                      			log.AppendLine(String.Format("From {0} : {1}", client, map[client].Count));
+
+        	                      		Platform.Log(LogLevel.Warn, log.ToString());
+        	                      	});
         }
 
         void RemoveContext(HttpListenerContext ctx)
@@ -160,17 +172,15 @@ namespace ClearCanvas.ImageServer.Services.Streaming.Shreds
 		/// <param name="args"></param>
 		protected void OnHttpRequestReceived(object sender, HttpRequestReceivedEventArg args)
 		{
-
 			// NOTE: This method is run under different threads for different http requests.
             HttpListenerContext context = args.Context;
-            if (string.IsNullOrEmpty(Thread.CurrentThread.Name))
-            Thread.CurrentThread.Name = String.Format("Streaming (client: {0}:{1})", context.Request.RemoteEndPoint.Address, context.Request.RemoteEndPoint.Port);
+            Platform.Log(LogLevel.Debug, "Received image streaming request from {0}:{1}", context.Request.RemoteEndPoint.Address, context.Request.RemoteEndPoint.Port);
 
-		    AddContext(context);
-
+        	AddContext(context);
+			
 			try
 			{
-			    Validate(context);
+				Validate(context);
 
                 WADORequestProcessor processor = new WADORequestProcessor();
                 processor.Process(context);
@@ -201,7 +211,6 @@ namespace ClearCanvas.ImageServer.Services.Streaming.Shreds
 			}
             finally
 			{
-               
                     // note: the connection might have been aborted or lost too
                     try
                     {
@@ -214,10 +223,9 @@ namespace ClearCanvas.ImageServer.Services.Streaming.Shreds
                     }
                     finally
                     {
-                        RemoveContext(context);
-                    }
+						RemoveContext(context);
+					}
 			}
-
 		}
 
         protected void SetResponseError(HttpListenerContext context, int code, string message)

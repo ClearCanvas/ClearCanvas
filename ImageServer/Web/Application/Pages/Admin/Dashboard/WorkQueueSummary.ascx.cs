@@ -23,15 +23,7 @@
 #endregion
 
 using System;
-using System.Data;
-using System.Configuration;
-using System.Collections;
-using System.Web;
-using System.Web.Security;
-using System.Web.UI;
 using System.Web.UI.WebControls;
-using System.Web.UI.WebControls.WebParts;
-using System.Web.UI.HtmlControls;
 using ClearCanvas.ImageServer.Web.Common.Data;
 using ClearCanvas.ImageServer.Web.Common.Data.Model;
 
@@ -41,7 +33,7 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Admin.Dashboard
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            WorkQueueController controller = new WorkQueueController();
+            var controller = new WorkQueueController();
             WorkQueueDataList.DataSource = controller.GetWorkQueueOverview();
             DataBind();
         }

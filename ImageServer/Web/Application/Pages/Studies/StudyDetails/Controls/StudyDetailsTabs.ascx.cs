@@ -28,7 +28,7 @@ using System.Threading;
 using System.Web.UI;
 using AjaxControlToolkit;
 using ClearCanvas.Common.Utilities;
-using ClearCanvas.ImageServer.Enterprise.Authentication;
+using ClearCanvas.ImageServer.Common.Authentication;
 using ClearCanvas.ImageServer.Model;
 using ClearCanvas.ImageServer.Web.Common.Data;
 using ClearCanvas.ImageServer.Web.Common.Data.DataSource;

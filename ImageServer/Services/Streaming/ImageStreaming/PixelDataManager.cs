@@ -99,7 +99,7 @@ namespace ClearCanvas.ImageServer.Services.Streaming.ImageStreaming
                 Stream preopenStream = HttpRuntime.Cache[key] as Stream;
                 if (preopenStream!=null)
                 {
-                    pd = DicomPixelData.CreateFrom(preopenStream);
+	                pd = DicomPixelData.CreateFrom(_storage.GetSopInstancePath(seriesInstanceUid, sopInstanceUid), preopenStream, DicomReadOptions.StorePixelDataReferences);
                     DicomPixelDataCache.Insert(_storage, _storage.StudyInstanceUid, seriesInstanceUid, sopInstanceUid, pd);
                     preopenStream.Close();
                     HttpRuntime.Cache.Remove(key);
@@ -109,7 +109,8 @@ namespace ClearCanvas.ImageServer.Services.Streaming.ImageStreaming
                 {
                     try
                     {
-                        pd = DicomPixelData.CreateFrom(_storage.GetSopInstancePath(seriesInstanceUid, sopInstanceUid));
+	                    pd = DicomPixelData.CreateFrom(_storage.GetSopInstancePath(seriesInstanceUid, sopInstanceUid),
+	                                                   DicomReadOptions.StorePixelDataReferences);
                         DicomPixelDataCache.Insert(_storage, _storage.StudyInstanceUid, seriesInstanceUid, sopInstanceUid, pd);
                         break;
                     }

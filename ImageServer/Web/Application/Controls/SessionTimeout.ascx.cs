@@ -38,7 +38,8 @@ namespace ClearCanvas.ImageServer.Web.Application.Controls
             {
                 double duration = 30; // seconds
                 double.TryParse(ConfigurationManager.AppSettings.Get("ClientTimeoutWarningMinDuration"), out duration);
-                duration = Math.Min(duration, (SessionManager.Current.Credentials.SessionToken.ExpiryTime - Platform.Time).TotalSeconds);
+				if (SessionManager.Current != null)
+					duration = Math.Min(duration, (SessionManager.Current.Credentials.SessionToken.ExpiryTime - Platform.Time).TotalSeconds);
 
                 return TimeSpan.FromSeconds(duration);
             }

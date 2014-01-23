@@ -55,6 +55,11 @@ namespace ClearCanvas.Enterprise.Hibernate
 		}
 
 		/// <summary>
+		/// Bool set true if a Shutdown of the process has been requested
+		/// </summary>
+		public bool ShutdownRequested { get; set; }
+
+		/// <summary>
 		/// Called by the framework to initialize the persistent store.
 		/// </summary>
 		public void Initialize()

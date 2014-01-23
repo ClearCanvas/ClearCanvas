@@ -29,15 +29,15 @@ using System.Web.UI.WebControls;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Dicom.Audit;
-using ClearCanvas.Enterprise.Common;
-using ClearCanvas.Enterprise.Core;
 using ClearCanvas.ImageServer.Common;
+using ClearCanvas.ImageServer.Common.Helpers;
 using ClearCanvas.ImageServer.Enterprise;
 using ClearCanvas.ImageServer.Model;
 using ClearCanvas.ImageServer.Model.EntityBrokers;
 using ClearCanvas.ImageServer.Web.Common;
 using ClearCanvas.ImageServer.Web.Common.Data;
 using ClearCanvas.ImageServer.Web.Common.Security;
+using AuthorityTokens = ClearCanvas.ImageServer.Common.Authentication.AuthorityTokens;
 using SR = Resources.SR;
 
 namespace ClearCanvas.ImageServer.Web.Application.Pages.Studies.StudyDetails.Controls
@@ -176,7 +176,7 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Studies.StudyDetails.Con
         protected override void OnInit(EventArgs e)
         {
             //Set up the control to handle custom reasons if the user has the authority.
-            if (!SessionManager.Current.User.IsInRole(Enterprise.Authentication.AuthorityTokens.Study.SaveReason))
+            if (!SessionManager.Current.User.IsInRole(AuthorityTokens.Study.SaveReason))
             {
                 ReasonSavePanel.Visible = false;
                 SaveReasonAsName.Attributes.Add("display", "none");
@@ -234,7 +234,7 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Studies.StudyDetails.Con
             criteria.Category.EqualTo(REASON_CANNEDTEXT_CATEGORY);
             IList<CannedText> list = broker.Find(criteria);
 
-            if (SessionManager.Current.User.IsInRole(Enterprise.Authentication.AuthorityTokens.Study.SaveReason))
+            if (SessionManager.Current.User.IsInRole(AuthorityTokens.Study.SaveReason))
             {
                 ReasonListBox.Items.Add(new ListItem(SR.CustomReason, SR.CustomReasonComment));
             }
@@ -282,7 +282,7 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Studies.StudyDetails.Con
                         	helper.AddStudyParticipantObject(new AuditStudyParticipantObject(
 																	study.StudyInstanceUid, 
 																	study.AccessionNumber ?? string.Empty));
-                        	ServerPlatform.LogAuditMessage(helper);
+                            ServerAuditHelper.LogAuditMessage(helper);
                         }
                         catch (Exception ex)
                         {

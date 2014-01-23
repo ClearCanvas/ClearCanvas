@@ -27,7 +27,7 @@ using System.Web.UI;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.ImageServer.Web.Application.Pages.Studies.StudyDetails.Code;
 using ClearCanvas.ImageServer.Web.Common.Data.DataSource;
-using AuthorityTokens=ClearCanvas.ImageServer.Enterprise.Authentication.AuthorityTokens;
+using AuthorityTokens=ClearCanvas.ImageServer.Common.Authentication.AuthorityTokens;
 
 namespace ClearCanvas.ImageServer.Web.Application.Pages.Studies.StudyDetails.Controls
 {
@@ -98,6 +98,7 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Studies.StudyDetails.Con
             if (Study != null)
             {
                 PatientSummaryPanel.PatientSummary = PatientSummaryAssembler.CreatePatientSummary(Study.TheStudy);
+	            PatientSummaryPanel.TheStudy = Study;
 
                 StudyDetailsTabs.Partition = Study.ThePartition;
                 StudyDetailsTabs.Study = Study;

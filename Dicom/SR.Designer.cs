@@ -619,6 +619,15 @@ namespace ClearCanvas.Dicom {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} ({1}).
+        /// </summary>
+        public static string FormatCodeSequenceValue {
+            get {
+                return ResourceManager.GetString("FormatCodeSequenceValue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0} {2} x {1} {2}.
         /// </summary>
         public static string FormatFilmSize {

@@ -161,6 +161,11 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 			if (_fullHeaderRetrieved)
 				return false;
 
+			// if it's a private tag and not already in the collection, we MUST retrieve full header
+			// early releases of the study XML functionality excluded private tags but also did not report their exclusion
+			if (DicomTag.IsPrivateTag(tag) && !AttributeCollection.Contains(tag))
+				return true;
+
 			if (AttributeCollection.IsTagExcluded(tag))
 				return true;
 

@@ -180,6 +180,7 @@ namespace ClearCanvas.ImageServer.Services.ServiceLock.FilesystemStudyProcess
 
 				foreach (ServerPartition partition in partitions)
 				{
+					//TODO CR (Jan 2014) - Cached engine not being used now, due to #11673
 					var engine = new ServerRulesEngine(ServerRuleApplyTimeEnum.StudyProcessed, partition.Key);
                     engine.Load();
                     _engines.Add(partition, engine);

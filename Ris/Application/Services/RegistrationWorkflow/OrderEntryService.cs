@@ -151,7 +151,7 @@ namespace ClearCanvas.Ris.Application.Services.RegistrationWorkflow
 			var diagnosticService = dsBroker.Load(request.DiagnosticServiceRef);
 
 			var assembler = new DiagnosticServiceAssembler();
-			return new LoadDiagnosticServicePlanResponse(assembler.CreatePlanDetail(diagnosticService, PersistenceContext));
+			return new LoadDiagnosticServicePlanResponse(assembler.CreatePlanDetail(diagnosticService, request.IncludeDeactivatedProcedures, PersistenceContext));
 		}
 
 		[ReadOperation]

@@ -31,5 +31,7 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Common
     interface IMasterProperties
     {
         bool DisplayUserInformationPanel { get; set; }
+
+		bool RequiresLegacyIE { get; set; }
     }
 }

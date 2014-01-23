@@ -60,6 +60,7 @@
 <ccUI:ToolbarButton runat="server" SkinID="CopyButton" EnabledImageURL="images/Buttons/CopyEnabled.png" DisabledImageURL="images/Buttons/CopyDisabled.png" HoverImageURL="images/Buttons/CopyHover.png"/>
 
 <asp:LinkButton runat="server" SkinId="CloseButton"  CssClass="CloseButton" />
+<asp:LinkButton runat="server" SkinId="RefreshButton"  CssClass="CloseButton" />
 
 <%-- Tables --%>
 
