@@ -101,7 +101,7 @@ namespace ClearCanvas.Dicom.IO
 
     	public DicomAttributeCollection Dataset { get; set; }
 
-    	public string Filename { get; set; }
+    	public Func<Stream> StreamOpener { get; set; }
 
     	public long BytesEstimated { get; private set; }
 
@@ -365,9 +365,8 @@ namespace ClearCanvas.Dicom.IO
 							if (Flags.IsSet(options, DicomReadOptions.StorePixelDataReferences)
 							    && _fragment.HasOffsetTable)
 							{
-								FileReference reference = new FileReference(Filename, _stream.Position, _len, _endian, DicomVr.OBvr);
-								DicomFragment fragment =
-									new DicomFragment(reference);
+								FileReference reference = new FileReference(StreamOpener, _stream.Position, _len, _endian, DicomVr.OBvr);
+								DicomFragment fragment = new DicomFragment(reference);
 								_fragment.AddFragment(fragment);
 								_stream.Seek(_len, SeekOrigin.Current);
 							}
@@ -466,7 +465,7 @@ namespace ClearCanvas.Dicom.IO
                                                          		TransferSyntax = rec.Tag.VR.Equals(DicomVr.UNvr)
                                                          		                 	? TransferSyntax.ImplicitVrLittleEndian
                                                          		                 	: _syntax,
-                                                         		Filename = Filename
+																StreamOpener = StreamOpener
                                                          	};
                             	DicomReadStatus stat = idsr.Read(null, options);
                                 if (stat != DicomReadStatus.Success)
@@ -590,9 +589,7 @@ namespace ClearCanvas.Dicom.IO
 								else if ((LastTagRead.TagValue == DicomTags.PixelData) &&
 								         Flags.IsSet(options, DicomReadOptions.StorePixelDataReferences))
 								{
-									FileReference reference =
-										new FileReference(Filename, _stream.Position, _len, _endian,
-										                  LastTagRead.VR);
+									FileReference reference = new FileReference(StreamOpener, _stream.Position, _len, _endian, LastTagRead.VR);
 									_stream.Seek((int) _len, SeekOrigin.Current);
 
 									if (LastTagRead.VR.Equals(DicomVr.OWvr))

@@ -23,6 +23,7 @@
 #endregion
 
 using System;
+using System.IO;
 using ClearCanvas.Common;
 
 namespace ClearCanvas.Dicom.Network.Scu
@@ -34,6 +35,7 @@ namespace ClearCanvas.Dicom.Network.Scu
 	{
 		#region Private Variables...
 		private string _filename;
+		private Func<Stream> _streamOpener = null;
 		private SopClass _sopClass;
 		private TransferSyntax _syntax;
 		private bool _infoLoaded = false;
@@ -43,13 +45,28 @@ namespace ClearCanvas.Dicom.Network.Scu
 		#endregion
 
 		#region Public Properties
+
 		/// <summary>
 		/// The filename of the storage instance.
 		/// </summary>
 		public string Filename
 		{
 			get { return _filename; }
-			set { _filename = value; }
+			set
+			{
+				_filename = value;
+				_streamOpener = null;
+			}
+		}
+
+		public Func<Stream> StreamOpener
+		{
+			get { return _streamOpener ?? (_streamOpener = () => File.OpenRead(_filename)); }
+			set
+			{
+				_streamOpener = value;
+				_filename = String.Empty;
+			}
 		}
 
 		/// <summary>
@@ -147,7 +164,7 @@ namespace ClearCanvas.Dicom.Network.Scu
 		public StorageInstance(DicomFile dicomFile)
 		{
 			_dicomFile = dicomFile;
-			
+
 			string sopClassInFile = _dicomFile.DataSet[DicomTags.SopClassUid].ToString();
 			if (!sopClassInFile.Equals(_dicomFile.SopClass.Uid))
 			{
@@ -165,7 +182,7 @@ namespace ClearCanvas.Dicom.Network.Scu
 
 			_syntax = _dicomFile.TransferSyntax;
 			SopInstanceUid = _dicomFile.MediaStorageSopInstanceUid;
-			_filename = dicomFile.Filename;
+			Filename = dicomFile.Filename;
 
 			StudyInstanceUid = _dicomFile.DataSet[DicomTags.StudyInstanceUid].GetString(0, string.Empty);
 			SeriesInstanceUid = _dicomFile.DataSet[DicomTags.SeriesInstanceUid].GetString(0, string.Empty);
@@ -194,7 +211,15 @@ namespace ClearCanvas.Dicom.Network.Scu
 		/// <param name="filename"></param>
 		public StorageInstance(string filename)
 		{
-			_filename = filename;
+			Filename = filename;
+			StudyInstanceUid = string.Empty;
+			SeriesInstanceUid = string.Empty;
+			SopInstanceUid = string.Empty;
+		}
+
+		public StorageInstance(Func<Stream> streamOpener)
+		{
+			StreamOpener = streamOpener;
 			StudyInstanceUid = string.Empty;
 			SeriesInstanceUid = string.Empty;
 			SopInstanceUid = string.Empty;
@@ -230,9 +255,8 @@ namespace ClearCanvas.Dicom.Network.Scu
 			if (_dicomFile != null)
 				return _dicomFile;
 
-			DicomFile theFile = new DicomFile(_filename);
-
-			theFile.Load(DicomReadOptions.StorePixelDataReferences | DicomReadOptions.Default);
+			var theFile = new DicomFile();
+			theFile.Load(StreamOpener, null, DicomReadOptions.StorePixelDataReferences | DicomReadOptions.Default);
 
 			StudyInstanceUid = theFile.DataSet[DicomTags.StudyInstanceUid].GetString(0, string.Empty);
 			_patientsName = theFile.DataSet[DicomTags.PatientsName].GetString(0, string.Empty);
@@ -250,9 +274,11 @@ namespace ClearCanvas.Dicom.Network.Scu
 			if (_infoLoaded)
 				return;
 
-			DicomFile theFile = new DicomFile(_filename);
+			var theFile = new DicomFile();
 
-			theFile.Load(DicomTags.RelatedGeneralSopClassUid, DicomReadOptions.Default);
+			const uint stopTag = DicomTags.RelatedGeneralSopClassUid;
+			theFile.Load(StreamOpener, DicomTagDictionary.GetDicomTag(stopTag), DicomReadOptions.Default);
+
 			string sopClassInFile = theFile.DataSet[DicomTags.SopClassUid].ToString();
 			if (!sopClassInFile.Equals(theFile.SopClass.Uid))
 			{

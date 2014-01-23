@@ -22,41 +22,26 @@
 
 #endregion
 
+using System;
+using System.IO;
+
 namespace ClearCanvas.Dicom
 {
 	internal class FileReference
 	{
 		#region Private Members
 
-		private readonly string _filename;
-		private readonly long _offset;
 		private readonly long _length;
-		private readonly Endian _endian;
-		private readonly DicomVr _vr;
 
 		#endregion
 
 		#region Public Properties
 
-		internal string Filename
-		{
-			get { return _filename; }
-		}
+		internal Func<Stream> StreamOpener { get; private set; }
 
-		internal long Offset
-		{
-			get { return _offset; }
-		}
-
-		internal Endian Endian
-		{
-			get { return _endian; }
-		}
-
-		internal DicomVr Vr
-		{
-			get { return _vr; }
-		}
+		internal long Offset { get; private set; }
+		internal Endian Endian { get; private set; }
+		internal DicomVr Vr { get; private set; }
 
 		public uint Length
 		{
@@ -67,13 +52,13 @@ namespace ClearCanvas.Dicom
 
 		#region Constructors
 
-		internal FileReference(string file, long offset, long length, Endian endian, DicomVr vr)
+		internal FileReference(Func<Stream> streamOpener, long offset, long length, Endian endian, DicomVr vr)
 		{
-			_filename = file;
-			_offset = offset;
+			StreamOpener = streamOpener;
+			Offset = offset;
 			_length = length;
-			_endian = endian;
-			_vr = vr;
+			Endian = endian;
+			Vr = vr;
 		}
 
 		#endregion

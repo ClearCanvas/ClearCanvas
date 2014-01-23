@@ -206,7 +206,7 @@ namespace ClearCanvas.Dicom
 		private DicomAttributeBinaryData<T> Load()
 		{
 			ByteBuffer bb;
-			using (FileStream fs = File.OpenRead(_reference.Filename))
+			using (var fs = _reference.StreamOpener())
 			{
 				fs.Seek(_reference.Offset, SeekOrigin.Begin);
 
@@ -268,7 +268,7 @@ namespace ClearCanvas.Dicom
 			ByteBuffer bb;
 			if (_reference != null)
 			{
-				using (FileStream fs = File.OpenRead(_reference.Filename))
+				using (var fs = _reference.StreamOpener())
 				{
 					fs.Seek(_reference.Offset, SeekOrigin.Begin);
 
@@ -3010,7 +3010,7 @@ namespace ClearCanvas.Dicom
 			ByteBuffer bb;
 			if (Reference != null)
 			{
-				using (FileStream fs = File.OpenRead(Reference.Filename))
+				using (var fs = Reference.StreamOpener())
 				{
 					fs.Seek(Reference.Offset, SeekOrigin.Begin);
 

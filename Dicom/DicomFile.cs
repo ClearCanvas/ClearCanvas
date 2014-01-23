@@ -44,6 +44,7 @@ namespace ClearCanvas.Dicom
         #region Private Members
 
         private String _filename = String.Empty;
+		private Func<Stream> _streamOpener;
 
         #endregion
 
@@ -162,7 +163,11 @@ namespace ClearCanvas.Dicom
         public String Filename
         {
             get { return _filename; }
-            set { _filename = value; }
+            set 
+			{ 
+				_filename = value;
+            	_streamOpener = null;
+            }
         }
 
         /// <summary>
@@ -206,7 +211,17 @@ namespace ClearCanvas.Dicom
             }
         }
 
-        #endregion
+    	internal Func<Stream> StreamOpener
+    	{
+    		get { return _streamOpener ?? (_streamOpener = () => File.OpenRead(_filename)); }
+    		set
+    		{
+    			_streamOpener = value;
+    			_filename = String.Empty;
+    		}
+    	}
+
+    	#endregion
 
         #region Meta Info Properties
         /// <summary>
@@ -407,11 +422,11 @@ namespace ClearCanvas.Dicom
         /// <param name="options">The options to use when reading the file.</param>
 		public void Load(DicomTag stopTag, DicomReadOptions options)
         {
-        	using (FileStream fs = File.OpenRead(Filename))
-        	{
-        		Load(fs, stopTag, options);
-				fs.Close();
-        	}
+			using (var stream = StreamOpener())
+			{
+				Load(stream, stopTag, options);
+				stream.Close();
+			}
         }
 
     	/// <summary>
@@ -427,11 +442,31 @@ namespace ClearCanvas.Dicom
         /// <param name="iStream">The input stream to read from.</param>
         public void Load(Stream iStream)
         {
-            DicomReadOptions options = DicomReadOptions.Default;
+            const DicomReadOptions options = DicomReadOptions.Default;
             Load(iStream, null, options);
         }
 
-        /// <summary>
+		/// <summary>
+		/// Load a DICOM file from an input stream, given a delegate to open the stream.
+		/// </summary>
+		/// <remarks>
+		/// Note:  If the file does not contain DICM encoded in it, and 
+		/// <see cref="Stream.CanSeek"/> is true for the stream returned by <paramref name="streamOpener"/>, 
+		/// the routine will assume the file is not a Part 10 format file, and is 
+		/// instead encoded as just a DataSet with the transfer syntax set to 
+		/// Implicit VR Little Endian.
+		/// </remarks>
+		/// <param name="streamOpener">The input stream to read from.</param>
+		/// <param name="stopTag">The dicom tag to stop the reading at.</param>
+		/// <param name="options">The dicom read options to consider.</param>
+		public void Load(Func<Stream> streamOpener, DicomTag stopTag, DicomReadOptions options)
+		{
+			StreamOpener = streamOpener;
+			using (var stream = streamOpener())
+				Load(stream, stopTag, options);
+		}
+
+    	/// <summary>
         /// Load a DICOM file from an input stream.
         /// </summary>
         /// <remarks>
@@ -440,6 +475,10 @@ namespace ClearCanvas.Dicom
         /// the routine will assume the file is not a Part 10 format file, and is 
         /// instead encoded as just a DataSet with the transfer syntax set to 
         /// Implicit VR Little Endian.
+        /// 
+        /// Also, this overload cannot be used with <see cref="DicomReadOptions.StorePixelDataReferences"/>,
+        /// as there must be a way to re-open the same stream at a later time. If the option is required,
+		/// use the <see cref="Load(Func{Stream}, DicomTag, DicomReadOptions)">overload</see> that accepts a delegate for opening the stream.
         /// </remarks>
         /// <param name="iStream">The input stream to read from.</param>
         /// <param name="stopTag">The dicom tag to stop the reading at.</param>
@@ -464,7 +503,7 @@ namespace ClearCanvas.Dicom
                     iStream.Seek(0, SeekOrigin.Begin);
                     dsr = new DicomStreamReader(iStream)
                               {
-                                  Filename = Filename,
+                                  StreamOpener = StreamOpener,
                                   TransferSyntax = TransferSyntax.ImplicitVrLittleEndian,
                                   Dataset = DataSet
                               };
@@ -498,7 +537,7 @@ namespace ClearCanvas.Dicom
             dsr = new DicomStreamReader(iStream)
                       {
                           TransferSyntax = TransferSyntax.ExplicitVrLittleEndian,
-                          Filename = Filename,
+                          StreamOpener = StreamOpener,
                           Dataset = MetaInfo
                       };
 
