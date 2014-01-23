@@ -387,29 +387,6 @@ namespace ClearCanvas.Dicom.Network.Scu
             }
         }
         #endregion
-
-        #region IDisposable Members
-
-        private bool _disposed = false;
-        /// <summary>
-        /// Disposes the specified disposing.
-        /// </summary>
-        /// <param name="disposing">if set to <c>true</c> [disposing].</param>
-        protected override void Dispose(bool disposing)
-        {
-            if (_disposed)
-                return;
-            if (disposing)
-            {
-                // Dispose of other Managed objects, ie
-
-            }
-            // FREE UNMANAGED RESOURCES
-            base.Dispose(true);
-            _disposed = true;
-        }
-        #endregion
-
     }
 
     #endregion

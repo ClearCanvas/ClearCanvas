@@ -44,7 +44,6 @@ namespace ClearCanvas.Dicom.Network.Scu
 	///    verificationScu.BeginVerify("localAe", "remoteAe", "remoteHost", 1000, new AsyncCallback(VerifyComplete), verificationScu);
 	///    m_WaitHandle.WaitOne();
 	/// }
-
 	/// private void VerifyComplete(IAsyncResult ar)
 	/// {
 	///     VerificationScu verificationScu = (VerificationScu)ar.AsyncState;
@@ -56,28 +55,34 @@ namespace ClearCanvas.Dicom.Network.Scu
 	public class VerificationScu : ScuBase
 	{
 		#region Public Events/Delegates...
+
 		public delegate VerificationResult VerifyDelegate(string clientAETitle, string remoteAE, string remoteHost, int remotePort);
+
 		#endregion
 
 		#region Private Members
+
 		/// <summary>Contains the verification result.</summary>
 		private VerificationResult _verificationResult;
+
 		#endregion
 
 		#region Constructors
+
 		/// <summary>
 		/// Initializes a new instance of the <see cref="VerificationScu"/> class.
 		/// </summary>
-		public VerificationScu()
-		{
-		}
+		public VerificationScu() {}
+
 		#endregion
 
 		#region Public Properties...
+
 		public VerificationResult Result
 		{
 			get { return _verificationResult; }
 		}
+
 		#endregion
 
 		#region Public Methods
@@ -110,8 +115,8 @@ namespace ClearCanvas.Dicom.Network.Scu
 				return VerificationResult.Canceled;
 			else if (base.Status == ScuOperationStatus.TimeoutExpired)
 				return VerificationResult.TimeoutExpired;
-            else if (Status == ScuOperationStatus.AssociationRejected)
-                return VerificationResult.AssociationRejected;
+			else if (Status == ScuOperationStatus.AssociationRejected)
+				return VerificationResult.AssociationRejected;
 			else
 				return _verificationResult;
 		}
@@ -140,7 +145,7 @@ namespace ClearCanvas.Dicom.Network.Scu
 		/// <returns></returns>
 		public VerificationResult EndVerify(IAsyncResult ar)
 		{
-			VerifyDelegate verifyDelegate = ((AsyncResult)ar).AsyncDelegate as VerifyDelegate;
+			VerifyDelegate verifyDelegate = ((AsyncResult) ar).AsyncDelegate as VerifyDelegate;
 			if (verifyDelegate != null)
 			{
 				return verifyDelegate.EndInvoke(ar);
@@ -148,9 +153,11 @@ namespace ClearCanvas.Dicom.Network.Scu
 			else
 				throw new InvalidOperationException("cannot get results, asynchresult is null");
 		}
+
 		#endregion
 
 		#region Private Methods
+
 		/// <summary>
 		/// Generic routine to send the next C-ECHO-RQ message.
 		/// </summary>
@@ -162,9 +169,11 @@ namespace ClearCanvas.Dicom.Network.Scu
 
 			client.SendCEchoRequest(pcid, client.NextMessageID());
 		}
+
 		#endregion
 
 		#region Overridden Methods...
+
 		/// <summary>
 		/// Called when received associate accept.  We send the verificationrequest.
 		/// </summary>
@@ -174,11 +183,10 @@ namespace ClearCanvas.Dicom.Network.Scu
 		{
 			base.OnReceiveAssociateAccept(client, association);
 			if (Canceled)
-				client.SendAssociateAbort(DicomAbortSource.ServiceUser,DicomAbortReason.NotSpecified);
+				client.SendAssociateAbort(DicomAbortSource.ServiceUser, DicomAbortReason.NotSpecified);
 			else
 				SendVerificationRequest(client, association);
 		}
-
 
 		/// <summary>
 		/// Called when received response message.  Sets the <see cref="Result"/> property as appropriate.
@@ -221,30 +229,8 @@ namespace ClearCanvas.Dicom.Network.Scu
 				base.AssociationParameters.AddTransferSyntax(pcid, TransferSyntax.ImplicitVrLittleEndian);
 			}
 		}
+
 		#endregion
-
-		#region IDisposable Members
-
-		private bool _disposed = false;
-		/// <summary>
-		/// Disposes the specified disposing.
-		/// </summary>
-		/// <param name="disposing">if set to <c>true</c> [disposing].</param>
-		protected override void Dispose(bool disposing)
-		{
-			if (_disposed)
-				return;
-			if (disposing)
-			{
-				// Dispose of other Managed objects, ie
-
-			}
-			// FREE UNMANAGED RESOURCES
-			base.Dispose(true);
-			_disposed = true;
-		}
-		#endregion
-
 	}
 
 	/// <summary>
@@ -264,6 +250,6 @@ namespace ClearCanvas.Dicom.Network.Scu
 		/// <summary></summary>
 		Canceled = 3,
 
-        AssociationRejected
+		AssociationRejected
 	}
 }

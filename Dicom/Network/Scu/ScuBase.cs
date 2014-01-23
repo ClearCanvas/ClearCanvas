@@ -30,6 +30,8 @@ using ClearCanvas.Dicom.Iod;
 
 namespace ClearCanvas.Dicom.Network.Scu
 {
+	// TODO CR (23 Jan 2014): Make this class abstract, if in fact the class could never be used without overriding OnReceiveResponse
+
 	/// <summary>
 	/// This is the base class for SCU classes.
 	/// </summary>
@@ -42,10 +44,11 @@ namespace ClearCanvas.Dicom.Network.Scu
 	public class ScuBase : IDicomClientHandler, IDisposable
 	{
 		#region Private Variables...
+
 		private string _clientAETitle;
 		protected ClientAssociationParameters _associationParameters = null;
 		protected DicomClient _dicomClient = null;
-		private readonly System.Threading.AutoResetEvent _progressEvent = new System.Threading.AutoResetEvent(false);
+		private readonly AutoResetEvent _progressEvent = new AutoResetEvent(false);
 		private string _remoteAE;
 		private string _remoteHost;
 		private int _remotePort;
@@ -53,21 +56,24 @@ namespace ClearCanvas.Dicom.Network.Scu
 		private int _readTimeout = NetworkSettings.Default.ReadTimeout;
 		private int _writeTimeout = NetworkSettings.Default.WriteTimeout;
 		private string _failureDescription = "";
-        private DicomState _resultStatus;
+		private DicomState _resultStatus;
 		private bool _logInformation = true;
+
 		#endregion
 
 		#region Protected Properties...
+
 		/// <summary>
 		/// Gets the progress event.
 		/// </summary>
 		/// <value>The progress event.</value>
-		protected System.Threading.AutoResetEvent ProgressEvent
+		protected AutoResetEvent ProgressEvent
 		{
 			get { return _progressEvent; }
 		}
 
 		#region AssociationParameters
+
 		/// <summary>
 		/// Gets or sets the association parameters.
 		/// </summary>
@@ -77,9 +83,11 @@ namespace ClearCanvas.Dicom.Network.Scu
 			get { return _associationParameters; }
 			set { _associationParameters = value; }
 		}
+
 		#endregion
 
 		#region Client
+
 		/// <summary>
 		/// Gets or sets the Dicom Client.
 		/// </summary>
@@ -89,9 +97,11 @@ namespace ClearCanvas.Dicom.Network.Scu
 			get { return _dicomClient; }
 			set { _dicomClient = value; }
 		}
+
 		#endregion
 
 		#region ClientAETitle
+
 		/// <summary>
 		/// Gets or sets the client AE title.
 		/// </summary>
@@ -101,9 +111,11 @@ namespace ClearCanvas.Dicom.Network.Scu
 			get { return _clientAETitle; }
 			set { _clientAETitle = value; }
 		}
+
 		#endregion
 
 		#region RemoteAE
+
 		/// <summary>
 		/// Gets or sets the remote AE.
 		/// </summary>
@@ -113,9 +125,11 @@ namespace ClearCanvas.Dicom.Network.Scu
 			get { return _remoteAE; }
 			set { _remoteAE = value; }
 		}
+
 		#endregion
 
 		#region RemoteHost
+
 		/// <summary>
 		/// Gets or sets the remote host.
 		/// </summary>
@@ -125,9 +139,11 @@ namespace ClearCanvas.Dicom.Network.Scu
 			get { return _remoteHost; }
 			set { _remoteHost = value; }
 		}
+
 		#endregion
 
 		#region RemotePort
+
 		/// <summary>
 		/// Gets or sets the remote port.
 		/// </summary>
@@ -137,17 +153,21 @@ namespace ClearCanvas.Dicom.Network.Scu
 			get { return _remotePort; }
 			set { _remotePort = value; }
 		}
+
 		#endregion
 
 		#region FailureDescription
+
 		public string FailureDescription
 		{
 			get { return _failureDescription; }
 			set { _failureDescription = value; }
 		}
+
 		#endregion
 
 		#region Status
+
 		/// <summary>
 		/// Gets or sets the operation status.
 		/// </summary>
@@ -157,9 +177,11 @@ namespace ClearCanvas.Dicom.Network.Scu
 			get { return _status; }
 			set { _status = value; }
 		}
+
 		#endregion
 
 		#region Timeout
+
 		/// <summary>
 		/// Gets or sets the read timeout.
 		/// </summary>
@@ -170,6 +192,7 @@ namespace ClearCanvas.Dicom.Network.Scu
 			get { return _readTimeout; }
 			set { _readTimeout = value; }
 		}
+
 		/// <summary>
 		/// Gets or sets the write timeout.
 		/// </summary>
@@ -180,9 +203,11 @@ namespace ClearCanvas.Dicom.Network.Scu
 			get { return _writeTimeout; }
 			set { _writeTimeout = value; }
 		}
+
 		#endregion
 
 		#region LogInformation
+
 		/// <summary>
 		/// Sets if informational logging should be done by the Scu.  
 		/// </summary>
@@ -198,6 +223,7 @@ namespace ClearCanvas.Dicom.Network.Scu
 					_dicomClient.LogInformation = LogInformation;
 			}
 		}
+
 		#endregion
 
 		/// <summary>
@@ -209,33 +235,37 @@ namespace ClearCanvas.Dicom.Network.Scu
 			get { return Status == ScuOperationStatus.Canceled; }
 		}
 
-        /// <summary>
-        /// Gets the result status.
-        /// </summary>
-        /// <value>The result status.</value>
-        public DicomState ResultStatus
-        {
-            get { return _resultStatus; }
-            protected set { _resultStatus = value; }
-        }
+		/// <summary>
+		/// Gets the result status.
+		/// </summary>
+		/// <value>The result status.</value>
+		public DicomState ResultStatus
+		{
+			get { return _resultStatus; }
+			protected set { _resultStatus = value; }
+		}
+
 		#endregion
 
 		#region Public Events/Delegates...
+
 		/// <summary>
 		/// Occurs when the association has been accepted.
 		/// </summary>
 		public event EventHandler<AssociationParameters> AssociationAccepted;
+
 		#endregion
 
 		#region Public Methods...
+
 		/// <summary>
 		/// Cancels the operation.
 		/// </summary>
 		public virtual void Cancel()
 		{
 			if (LogInformation)
-			    Platform.Log(LogLevel.Info, "Canceling Scu connected from {0} to {1}:{2}:{3}...", ClientAETitle, RemoteAE,
-			                 RemoteHost, RemotePort);
+				Platform.Log(LogLevel.Info, "Canceling Scu connected from {0} to {1}:{2}:{3}...", ClientAETitle, RemoteAE,
+				             RemoteHost, RemotePort);
 			Status = ScuOperationStatus.Canceled;
 			ProgressEvent.Set();
 		}
@@ -275,7 +305,7 @@ namespace ClearCanvas.Dicom.Network.Scu
 		/// <typeparam name="T">An <see cref="IodBase"/> derived class.</typeparam>
 		/// <param name="collectionList">The list of DICOM attribute collections to convert</param>
 		/// <returns>The list of IODs.</returns>
-		public static IList<T> GetResultsAsIod<T>(IList<DicomAttributeCollection> collectionList) where T:IodBase, new()
+		public static IList<T> GetResultsAsIod<T>(IList<DicomAttributeCollection> collectionList) where T : IodBase, new()
 		{
 			IList<T> iodList = new List<T>();
 
@@ -288,18 +318,18 @@ namespace ClearCanvas.Dicom.Network.Scu
 			return iodList;
 		}
 
-        public void Abort()
-        {
-            if (_dicomClient != null)
-            {
+		public void Abort()
+		{
+			if (_dicomClient != null)
+			{
 				// Force a 2.5 second timeout
-                _dicomClient.Abort(2500);
+				_dicomClient.Abort(2500);
 				_dicomClient.Dispose();
-            	_dicomClient = null;
-                Status = ScuOperationStatus.NetworkError;
-                ProgressEvent.Set();
-            }
-        }
+				_dicomClient = null;
+				Status = ScuOperationStatus.NetworkError;
+				ProgressEvent.Set();
+			}
+		}
 
 		#endregion
 
@@ -344,26 +374,25 @@ namespace ClearCanvas.Dicom.Network.Scu
 				Platform.Log(LogLevel.Error, ex, "Exception attempting connection to RemoteHost {0} ({1}:{2})", RemoteAE, RemoteHost, RemotePort);
 				throw;
 			}
-
 		}
 
-        protected void Connect(string clientAETitle, string remoteAE, string remoteHost, int remotePort)
-        {
+		protected void Connect(string clientAETitle, string remoteAE, string remoteHost, int remotePort)
+		{
 			if (LogInformation) Platform.Log(LogLevel.Info, "Preparing to connect to AE {0} on host {1} on port {2} for printer status request.", remoteAE, remoteHost, remotePort);
-            try
-            {
-                ClientAETitle = clientAETitle;
-                RemoteAE = remoteAE;
-                RemoteHost = remoteHost;
-                RemotePort = remotePort;
-                Connect();
-            }
-            catch (Exception e)
-            {
-                Platform.Log(LogLevel.Error, e, "Unexpected exception trying to connect to Remote AE {0} on host {1} on port {2}", remoteAE, remoteHost, remotePort);
-                throw;
-            }
-        }
+			try
+			{
+				ClientAETitle = clientAETitle;
+				RemoteAE = remoteAE;
+				RemoteHost = remoteHost;
+				RemotePort = remotePort;
+				Connect();
+			}
+			catch (Exception e)
+			{
+				Platform.Log(LogLevel.Error, e, "Unexpected exception trying to connect to Remote AE {0} on host {1} on port {2}", remoteAE, remoteHost, remotePort);
+				throw;
+			}
+		}
 
 		/// <summary>
 		/// Checks for canceled.  Throws a <see cref="OperationCanceledException"/> if the operation is canceled.
@@ -385,7 +414,6 @@ namespace ClearCanvas.Dicom.Network.Scu
 				throw new TimeoutException();
 		}
 
-
 		/// <summary>
 		/// Stops the running operation, by setting the Status to NotRunning, stopping the timer, and setting
 		/// the Progress Wait Event so execution can continue.
@@ -405,44 +433,46 @@ namespace ClearCanvas.Dicom.Network.Scu
 			ProgressEvent.Set();
 		}
 
-        /// <summary>
-        /// Adds the sop class to presentation context for Explicit and Implicit Vr Little Endian
-        /// </summary>
-        /// <param name="sopClass">The sop class.</param>
-        /// <exception cref="DicomException"/>
-        /// <exception cref="ArgumentNullException"/>
-        protected void AddSopClassToPresentationContext(SopClass sopClass)
-        {
-            if (sopClass == null)
-                throw new ArgumentNullException("sopClass");
+		/// <summary>
+		/// Adds the sop class to presentation context for Explicit and Implicit Vr Little Endian
+		/// </summary>
+		/// <param name="sopClass">The sop class.</param>
+		/// <exception cref="DicomException"/>
+		/// <exception cref="ArgumentNullException"/>
+		protected void AddSopClassToPresentationContext(SopClass sopClass)
+		{
+			if (sopClass == null)
+				throw new ArgumentNullException("sopClass");
 
-            byte pcid = AssociationParameters.FindAbstractSyntax(sopClass);
-            if (pcid == 0)
-            {
-                pcid = AssociationParameters.AddPresentationContext(sopClass);
+			byte pcid = AssociationParameters.FindAbstractSyntax(sopClass);
+			if (pcid == 0)
+			{
+				pcid = AssociationParameters.AddPresentationContext(sopClass);
 
-                AssociationParameters.AddTransferSyntax(pcid, TransferSyntax.ExplicitVrLittleEndian);
-                AssociationParameters.AddTransferSyntax(pcid, TransferSyntax.ImplicitVrLittleEndian);
-            }
-            else
-            {
-                throw new DicomException("Cannot find SopClass in association parameters: " + sopClass);
-            }
-        }
+				AssociationParameters.AddTransferSyntax(pcid, TransferSyntax.ExplicitVrLittleEndian);
+				AssociationParameters.AddTransferSyntax(pcid, TransferSyntax.ImplicitVrLittleEndian);
+			}
+			else
+			{
+				throw new DicomException("Cannot find SopClass in association parameters: " + sopClass);
+			}
+		}
 
-        /// <summary>
-        /// Releases the connection.
-        /// </summary>
-        /// <param name="client">The client.</param>
-        protected void ReleaseConnection(DicomClient client)
-        {
-            if (client != null)
-                client.SendReleaseRequest();
-            StopRunningOperation();
-        }
+		/// <summary>
+		/// Releases the connection.
+		/// </summary>
+		/// <param name="client">The client.</param>
+		protected void ReleaseConnection(DicomClient client)
+		{
+			if (client != null)
+				client.SendReleaseRequest();
+			StopRunningOperation();
+		}
+
 		#endregion
 
 		#region Protected Abstracts/Virtual Methods...
+
 		/// <summary>
 		/// Sets the presentation contexts that the association will attempt to connect on.
 		/// Note, this must be implemented in the subclass.
@@ -451,9 +481,11 @@ namespace ClearCanvas.Dicom.Network.Scu
 		{
 			throw new NotImplementedException();
 		}
+
 		#endregion
 
 		#region Private Methods...
+
 		/// <summary>
 		/// This (forcefully?) Closes the dicom client.
 		/// </summary>
@@ -464,10 +496,9 @@ namespace ClearCanvas.Dicom.Network.Scu
 				_dicomClient.Dispose();
 				_dicomClient = null;
 			}
-			catch (Exception)
-			{ }
-
+			catch (Exception) {}
 		}
+
 		#endregion
 
 		#region IDicomClientHandler Members
@@ -576,7 +607,7 @@ namespace ClearCanvas.Dicom.Network.Scu
 		/// <param name="reason">The reason.</param>
 		public void OnReceiveAbort(DicomClient client, ClientAssociationParameters association, DicomAbortSource source, DicomAbortReason reason)
 		{
-			FailureDescription = String.Format( "Unexpected association abort received from {0} to {1}", association.CallingAE, association.CalledAE);
+			FailureDescription = String.Format("Unexpected association abort received from {0} to {1}", association.CallingAE, association.CalledAE);
 			Platform.Log(LogLevel.Warn, FailureDescription);
 			StopRunningOperation(ScuOperationStatus.UnexpectedMessage);
 		}
@@ -610,7 +641,7 @@ namespace ClearCanvas.Dicom.Network.Scu
 			if (stopStatus == ScuOperationStatus.Running)
 				stopStatus = ScuOperationStatus.NetworkError;
 
-            ResultStatus = DicomState.Failure;
+			ResultStatus = DicomState.Failure;
 
 			StopRunningOperation(stopStatus);
 		}
@@ -623,9 +654,9 @@ namespace ClearCanvas.Dicom.Network.Scu
 		public virtual void OnDimseTimeout(DicomClient client, ClientAssociationParameters association)
 		{
 			Status = ScuOperationStatus.TimeoutExpired;
-            ResultStatus = DicomState.Failure;
+			ResultStatus = DicomState.Failure;
 			FailureDescription = String.Format("Timeout Expired for remote host {0}, aborting connection", RemoteAE);
-			if (LogInformation) Platform.Log(LogLevel.Info, FailureDescription );
+			if (LogInformation) Platform.Log(LogLevel.Info, FailureDescription);
 
 			try
 			{
@@ -643,13 +674,21 @@ namespace ClearCanvas.Dicom.Network.Scu
 		#endregion
 
 		#region IDisposable Members
+
 		/// <summary>
 		/// Releases unmanaged resources and performs other cleanup operations before the
 		/// <see cref="ScuBase"/> is reclaimed by garbage collection.
 		/// </summary>
 		~ScuBase()
 		{
-			Dispose(false);
+			try
+			{
+				Dispose(false);
+			}
+			catch (Exception ex)
+			{
+				Platform.Log(LogLevel.Debug, ex, "Exception thrown during finalizer");
+			}
 		}
 
 		/// <summary>
@@ -657,29 +696,43 @@ namespace ClearCanvas.Dicom.Network.Scu
 		/// </summary>
 		public void Dispose()
 		{
-			Dispose(true);
-			GC.SuppressFinalize(this);
+			try
+			{
+				Dispose(true);
+				GC.SuppressFinalize(this);
+			}
+			catch (Exception ex)
+			{
+				Platform.Log(LogLevel.Debug, ex, "Exception thrown during dispose");
+			}
 		}
 
 		private bool _disposed = false;
+
+		protected bool IsDisposed
+		{
+			get { return _disposed; }
+		}
+
 		/// <summary>
-		/// Disposes the specified disposing.
+		/// Called to perform tasks associated with freeing, releasing, or resetting managed and unmanaged resources.
 		/// </summary>
-		/// <param name="disposing">if set to <c>true</c> [disposing].</param>
+		/// <param name="disposing">Indicates whether or not the method is being called by <see cref="Dispose"/> or the object finalizer.</param>
 		protected virtual void Dispose(bool disposing)
 		{
-			if (_disposed)
-				return;
+			if (_disposed) return;
+
 			if (disposing)
 			{
 				// Dispose of other Managed objects, ie
 				CloseDicomClient();
 			}
+
 			// FREE UNMANAGED RESOURCES
 			_disposed = true;
 		}
-		#endregion
 
+		#endregion
 	}
 
 	/// <summary>
@@ -691,34 +744,42 @@ namespace ClearCanvas.Dicom.Network.Scu
 		/// 
 		/// </summary>
 		NotRunning = 0,
+
 		/// <summary>
 		/// 
 		/// </summary>
 		Running = 1,
+
 		/// <summary>
 		/// Dimse timeout expired.
 		/// </summary>
 		TimeoutExpired = 2,
+
 		/// <summary>
 		/// The scu operation was cancelled.
 		/// </summary>
 		Canceled = 3,
+
 		///<summary>
 		/// A failure occured
 		/// </summary>
 		Failed = 4,
+
 		///<summary>
 		/// A connection failure occured
 		/// </summary>
 		ConnectFailed = 5,
+
 		/// <summary>
 		/// The association was rejected.
 		/// </summary>
 		AssociationRejected = 6,
+
 		/// <summary>
 		/// An unexpected network error occurred.
 		/// </summary>
 		NetworkError = 7,
+
 		/// <summary>
 		/// An unexpected message was received and the association was aborted.
 		/// </summary>
