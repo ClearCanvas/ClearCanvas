@@ -51,18 +51,24 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 	public partial class StreamingSopDataSource : DicomMessageSopDataSource, IStreamingSopDataSource
 	{
 		private readonly Dictionary<uint, bool> _sequenceHasExcludedTags = new Dictionary<uint, bool>();
-		private readonly IDicomFileLoader _loader;
+		private readonly ISopDicomFileLoader _loader;
 		private volatile bool _fullHeaderRetrieved = false;
+
+		public StreamingSopDataSource(DicomFile file, ISopDicomFileLoader loader)
+			: base(file)
+		{
+			_loader = loader;
+			CheckLoaderCapabilities();
+			//Have to assume this to be the case.
+			_fullHeaderRetrieved = true;
+		}
 
 		public StreamingSopDataSource(DicomFile file, IDicomFileLoader loader)
 			: base(file)
 		{
-			if (!loader.CanLoadCompleteHeader)
-				throw new ArgumentException("Loader must be capable of retrieving the full image header.", "loader");
-			if (!loader.CanLoadFramePixelData)
-				throw new ArgumentException("Loader must be capable of loading frame pixel data.", "loader");
+			_loader = ConvertLoader(loader);
+			CheckLoaderCapabilities();
 
-			_loader = loader;
 			//Have to assume this to be the case.
 			_fullHeaderRetrieved = true;
 		}
@@ -70,21 +76,47 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		public StreamingSopDataSource(InstanceXml instanceXml, IDicomFileLoader loader)
 			: base(new DicomFile("", new DicomAttributeCollection(), instanceXml.Collection))
 		{
-			if (!loader.CanLoadCompleteHeader)
-				throw new ArgumentException("Loader must be capable of retrieving the full image header.", "loader");
-			if (!loader.CanLoadFramePixelData)
-				throw new ArgumentException("Loader must be capable of loading frame pixel data.", "loader");
+			_loader = ConvertLoader(loader);
+			CheckLoaderCapabilities();
 
+			InitFromXml(instanceXml);
+		}
+
+		public StreamingSopDataSource(InstanceXml instanceXml, ISopDicomFileLoader loader)
+			: base(new DicomFile("", new DicomAttributeCollection(), instanceXml.Collection))
+		{
 			_loader = loader;
+			CheckLoaderCapabilities();
+
+			InitFromXml(instanceXml);
+		}
+
+		private void CheckLoaderCapabilities()
+		{
+			if (!_loader.CanLoadCompleteHeader)
+				throw new ArgumentException("Loader must be capable of retrieving the full image header.", "loader");
+			if (!_loader.CanLoadFramePixelData)
+				throw new ArgumentException("Loader must be capable of loading frame pixel data.", "loader");
+		}
+
+		private ISopDicomFileLoader ConvertLoader(IDicomFileLoader loader)
+		{
+			return new SopDicomFileLoader(loader.CanLoadCompleteHeader, loader.CanLoadPixelData, loader.CanLoadFramePixelData,
+				(args) => loader.LoadDicomFile(new LoadDicomFileArgs(this.StudyInstanceUid, this.SeriesInstanceUid, this.SopInstanceUid, args.ForceCompleteHeader, args.IncludePixelData)),
+				(args) => loader.LoadFramePixelData(new LoadFramePixelDataArgs(this.StudyInstanceUid, this.SeriesInstanceUid, this.SopInstanceUid, args.FrameNumber)));
+		}
+
+		private void InitFromXml(InstanceXml instanceXml)
+		{
 			//These don't get set properly for instance xml.
-			var sourceFile = (DicomFile) SourceMessage;
+			var sourceFile = (DicomFile)SourceMessage;
 			sourceFile.TransferSyntaxUid = instanceXml.TransferSyntax.UidString;
 			sourceFile.MediaStorageSopInstanceUid = instanceXml.SopInstanceUid;
 
 			sourceFile.MetaInfo[DicomTags.SopClassUid].SetString(0,
-			                                                     instanceXml.SopClass == null
-			                                                     	? instanceXml[DicomTags.SopClassUid].ToString()
-			                                                     	: instanceXml.SopClass.Uid);
+																 instanceXml.SopClass == null
+																	? instanceXml[DicomTags.SopClassUid].ToString()
+																	: instanceXml.SopClass.Uid);
 		}
 
 		private InstanceXmlDicomAttributeCollection AttributeCollection

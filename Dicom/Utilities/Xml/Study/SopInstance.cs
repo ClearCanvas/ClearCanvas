@@ -36,7 +36,7 @@ namespace ClearCanvas.Dicom.Utilities.Xml.Study
     {
         private DicomAttributeCollection _metaInfo;
         private readonly InstanceXml _xml;
-        private DicomFile _fullHeader;
+		private DicomFile _fullHeader;
 
         public SopInstance(InstanceXml xml, Series parent)
         {
@@ -44,7 +44,6 @@ namespace ClearCanvas.Dicom.Utilities.Xml.Study
             ParentSeries = parent;
 
             _metaInfo = new DicomAttributeCollection();
-
             if (xml.TransferSyntax != null)
             {
                 string transferSyntax = xml.TransferSyntax.UidString;
@@ -120,7 +119,7 @@ namespace ClearCanvas.Dicom.Utilities.Xml.Study
 
 		private IFramePixelData LoadFramePixelData(int frameNumber)
 		{
-			var args = new LoadFramePixelDataArgs(this.StudyInstanceUid, this.SeriesInstanceUid, this.SopInstanceUid, frameNumber);
+			var args = new LoadFramePixelDataArgs(this.StudyInstanceUid, this.SeriesInstanceUid, this.SopInstanceUid, frameNumber, GetHeader(false));
 			return ParentSeries.ParentStudy.HeaderProvider.LoadFramePixelData(args);
 		}
 
@@ -211,9 +210,9 @@ namespace ClearCanvas.Dicom.Utilities.Xml.Study
             return LoadDicomFile(new LoadSopDicomFileArgs(forceComplete, false));
         }
 
-		public byte[] GetFramePixelData(int frameNumber)
+		public byte[] GetFramePixelData(int frameNumber, out string photometricInterpretation)
 		{
-			return LoadFramePixelData(frameNumber).GetPixelData();
+			return LoadFramePixelData(frameNumber).GetPixelData(out photometricInterpretation);
 		}
 
     	#endregion
