@@ -455,8 +455,12 @@ namespace ClearCanvas.Dicom
 		/// the routine will assume the file is not a Part 10 format file, and is 
 		/// instead encoded as just a DataSet with the transfer syntax set to 
 		/// Implicit VR Little Endian.
+		/// 
+		/// Also, if you are using the <see cref="DicomReadOptions.StorePixelDataReferences"/> option with
+		/// a <see cref="Stream"/> as opposed to simply a file name, you must use this method so that the
+		/// stream can be reopenened internally whenever pixel data is accessed.
 		/// </remarks>
-		/// <param name="streamOpener">The input stream to read from.</param>
+		/// <param name="streamOpener">A delegate that opens the stream to read from.</param>
 		/// <param name="stopTag">The dicom tag to stop the reading at.</param>
 		/// <param name="options">The dicom read options to consider.</param>
 		public void Load(Func<Stream> streamOpener, DicomTag stopTag, DicomReadOptions options)
@@ -476,7 +480,7 @@ namespace ClearCanvas.Dicom
         /// instead encoded as just a DataSet with the transfer syntax set to 
         /// Implicit VR Little Endian.
         /// 
-        /// Also, this overload cannot be used with <see cref="DicomReadOptions.StorePixelDataReferences"/>,
+        /// Also, this overload cannot be used directly with <see cref="DicomReadOptions.StorePixelDataReferences"/>,
         /// as there must be a way to re-open the same stream at a later time. If the option is required,
 		/// use the <see cref="Load(Func{Stream}, DicomTag, DicomReadOptions)">overload</see> that accepts a delegate for opening the stream.
         /// </remarks>
