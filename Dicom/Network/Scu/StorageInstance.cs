@@ -34,12 +34,14 @@ namespace ClearCanvas.Dicom.Network.Scu
 	public class StorageInstance
 	{
 		#region Private Variables...
+
 		private string _filename;
 		private Func<Stream> _streamOpener = null;
 		private SopClass _sopClass;
 		private TransferSyntax _syntax;
 		private bool _infoLoaded = false;
 		private DicomFile _dicomFile = null;
+
 		#endregion
 
 		#region Public Properties
@@ -125,10 +127,10 @@ namespace ClearCanvas.Dicom.Network.Scu
 		/// </summary>
 		public DicomStatus SendStatus { get; set; }
 
-        /// <summary>
-        /// The Message ID assigned to the instance when transferred.  Used to identify the response.
-        /// </summary>
-        public ushort SentMessageId { get; set; }
+		/// <summary>
+		/// The Message ID assigned to the instance when transferred.  Used to identify the response.
+		/// </summary>
+		public ushort SentMessageId { get; set; }
 
 		/// <summary>
 		/// An extended failure description if <see cref="SendStatus"/> is a failure status.
@@ -151,6 +153,7 @@ namespace ClearCanvas.Dicom.Network.Scu
 		#endregion
 
 		#region Constructors
+
 		/// <summary>
 		/// Constructor.
 		/// </summary>
@@ -163,7 +166,7 @@ namespace ClearCanvas.Dicom.Network.Scu
 			if (!sopClassInFile.Equals(_dicomFile.SopClass.Uid))
 			{
 				Platform.Log(LogLevel.Warn, "SOP Class in Meta Info ({0}) does not match SOP Class in DataSet ({1})",
-							 _dicomFile.SopClass.Uid, sopClassInFile);
+				             _dicomFile.SopClass.Uid, sopClassInFile);
 				_sopClass = SopClass.GetSopClass(sopClassInFile);
 				if (_sopClass == null)
 				{
@@ -238,9 +241,11 @@ namespace ClearCanvas.Dicom.Network.Scu
 			PatientId = string.Empty;
 			_filename = string.Empty;
 		}
+
 		#endregion
 
 		#region Public Methods
+
 		/// <summary>
 		/// Load a <see cref="DicomFile"/> for the storage instance.
 		/// </summary>
@@ -287,7 +292,7 @@ namespace ClearCanvas.Dicom.Network.Scu
 				_sopClass = SopClass.GetSopClass(sopClassInFile);
 				if (_sopClass == null)
 				{
-					Platform.Log(LogLevel.Warn,"Unknown SOP Class in dataset, reverting to meta info:  {0}", sopClassInFile);
+					Platform.Log(LogLevel.Warn, "Unknown SOP Class in dataset, reverting to meta info:  {0}", sopClassInFile);
 					_sopClass = theFile.SopClass;
 				}
 			}
@@ -299,6 +304,7 @@ namespace ClearCanvas.Dicom.Network.Scu
 			MetaInfoFileLength = theFile.MetaInfoFileLength;
 			_infoLoaded = true;
 		}
+
 		#endregion
 	}
 }
