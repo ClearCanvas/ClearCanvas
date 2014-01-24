@@ -305,6 +305,27 @@ namespace ClearCanvas.Dicom.Network.Scu
 			_infoLoaded = true;
 		}
 
+		/// <summary>
+		/// Ensures the offset of the data set in the source stream is determined.
+		/// </summary>
+		internal void ParseMetaInfo()
+		{
+			if (MetaInfoFileLength != 0) return;
+
+			var theFile = new DicomFile();
+
+			const uint stopTag = DicomTags.RelatedGeneralSopClassUid;
+			theFile.Load(StreamOpener, DicomTagDictionary.GetDicomTag(stopTag), DicomReadOptions.Default);
+
+			MetaInfoFileLength = theFile.MetaInfoFileLength;
+		}
+
+		public override string ToString()
+		{
+			if (_streamOpener != null) return string.Format("Stream [{0}]", !string.IsNullOrEmpty(SopInstanceUid) ? SopInstanceUid : "Unknown");
+			return Filename ?? string.Empty;
+		}
+
 		#endregion
 	}
 }

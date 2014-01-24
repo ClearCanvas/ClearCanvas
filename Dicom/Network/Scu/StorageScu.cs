@@ -617,14 +617,9 @@ namespace ClearCanvas.Dicom.Network.Scu
 		{
 			fileToSend.SentMessageId = client.NextMessageID();
 
-			if (fileToSend.MetaInfoFileLength == 0)
-			{
-				DicomFile theFile = new DicomFile(fileToSend.Filename);
-				theFile.Load(DicomTags.RelatedGeneralSopClassUid, DicomReadOptions.Default);
-				fileToSend.MetaInfoFileLength = theFile.MetaInfoFileLength;
-			}
+			fileToSend.ParseMetaInfo();
 
-			using (var fs = FileStreamOpener.OpenForRead(fileToSend.Filename, FileMode.Open))
+			using (var fs = fileToSend.StreamOpener())
 			{
 				// Seek to the Dataset
 				fs.Seek(fileToSend.MetaInfoFileLength, SeekOrigin.Begin);
@@ -662,7 +657,7 @@ namespace ClearCanvas.Dicom.Network.Scu
 			}
 			catch (DicomException e)
 			{
-				Platform.Log(LogLevel.Error, e, "Unexpected exception when loading DICOM file {0}", fileToSend.Filename);
+				Platform.Log(LogLevel.Error, e, "Unexpected exception when loading DICOM file {0}", fileToSend.ToString());
 
 				fileToSend.ExtendedFailureDescription = e.GetType().Name + " " + e.Message;
 				_failureSubOperations++;
@@ -719,7 +714,7 @@ namespace ClearCanvas.Dicom.Network.Scu
 			}
 			catch (DicomCodecException e)
 			{
-				Platform.Log(LogLevel.Error, e, "Unexpected exception when compressing or decompressing file before send {0}", fileToSend.Filename);
+				Platform.Log(LogLevel.Error, e, "Unexpected exception when compressing or decompressing file before send {0}", fileToSend.ToString());
 
 				fileToSend.SendStatus = DicomStatuses.ProcessingFailure;
 				fileToSend.ExtendedFailureDescription = string.Format("Error decompressing or compressing file before send: {0}", e.Message);
@@ -730,7 +725,7 @@ namespace ClearCanvas.Dicom.Network.Scu
 			}
 			catch (DicomException e)
 			{
-				Platform.Log(LogLevel.Error, e, "Unexpected exception while sending file {0}", fileToSend.Filename);
+				Platform.Log(LogLevel.Error, e, "Unexpected exception while sending file {0}", fileToSend.ToString());
 
 				fileToSend.SendStatus = DicomStatuses.ProcessingFailure;
 				fileToSend.ExtendedFailureDescription = string.Format("Unexpected exception while sending file: {0}", e.Message);

@@ -496,6 +496,7 @@ namespace ClearCanvas.Dicom
 		/// <param name="options">The dicom read options to consider.</param>
 		public void Load(Stream iStream, DicomTag stopTag, DicomReadOptions options)
 		{
+			// TODO CR (24 Jan 2014): DICOM stream read only uses tag value, so the real implementation should be the uint overload!
 			if (iStream == null) throw new ArgumentNullException("iStream");
 
 			if (stopTag == null)
