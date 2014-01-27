@@ -34,6 +34,7 @@ using ClearCanvas.ImageViewer.Common.StudyManagement;
 
 namespace ClearCanvas.ImageViewer.StudyManagement.Core.Storage
 {
+	// TODO (CR Jan 2014): use the interfaces from Dicom.Iod
 	internal class SopInstance : ISopInstance
 	{
 		private readonly Series _parentSeries;
@@ -188,7 +189,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement.Core.Storage
 			}
 
 			bool isBinary = tag.VR == DicomVr.OBvr || tag.VR == DicomVr.OWvr || tag.VR == DicomVr.OFvr;
-			//these tags are not stored in the xml.
+			//these tags are not usually stored in the xml.
 			if (isBinary || tag.IsPrivate || tag.VR == DicomVr.UNvr)
 				return false;
 

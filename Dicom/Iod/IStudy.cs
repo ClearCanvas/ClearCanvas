@@ -65,8 +65,8 @@ namespace ClearCanvas.Dicom.Iod
 	/// </summary>
 	public class LoadFramePixelDataArgs : LoadSopFramePixelDataArgs
 	{
-		public LoadFramePixelDataArgs(string studyInstanceUid, string seriesInstanceUid, string sopInstanceUid, int frameNumber, DicomMessageBase header = null)
-			: base(frameNumber, header)
+		public LoadFramePixelDataArgs(string studyInstanceUid, string seriesInstanceUid, string sopInstanceUid, int frameNumber)
+			: base(frameNumber)
 		{
 			StudyInstanceUid = studyInstanceUid;
 			SeriesInstanceUid = seriesInstanceUid;
@@ -83,21 +83,12 @@ namespace ClearCanvas.Dicom.Iod
 	/// </summary>
 	public class LoadSopFramePixelDataArgs
 	{
-		public LoadSopFramePixelDataArgs(int frameNumber, DicomMessageBase header = null)
+		public LoadSopFramePixelDataArgs(int frameNumber)
 		{
 			FrameNumber = frameNumber;
-			Header = header;
 		}
 
 		public readonly int FrameNumber;
-
-		/// <summary>
-		/// The header for the given SOP, if available.
-		/// </summary>
-		/// <remarks>Depending on how the header was originally loaded, it may already have pixel data
-		/// in it, or it may have stored the references to the pixel data. Whether or not this
-		/// value is provided is implementation dependent.</remarks>
-		public readonly DicomMessageBase Header;
 	}
 
 	/// <summary>
@@ -359,7 +350,7 @@ namespace ClearCanvas.Dicom.Iod
 	/// <summary>
 	/// Abstract representation of a sop instance, that provides <see cref="DicomAttribute"/> objects, or can construct and return an entire header.
 	/// </summary>
-	public interface ISopInstance : ISopInstanceData, ISopDicomFileLoader /*, IDicomAttributeProvider*/
+	public interface ISopInstance : ISopInstanceData
 	{
 		ISeries ParentSeries { get; }
 
@@ -370,7 +361,8 @@ namespace ClearCanvas.Dicom.Iod
 		DicomAttribute GetAttribute(uint dicomTag);
 		DicomAttribute GetAttribute(DicomTag dicomTag);
 
+		DicomFile GetCompleteSop();
 		DicomFile GetHeader(bool forceComplete);
-		byte[] GetFramePixelData(int frameNumber, out string photometricInterpretation);
+		IFramePixelData GetFramePixelData(int frameNumber);
 	}
 }

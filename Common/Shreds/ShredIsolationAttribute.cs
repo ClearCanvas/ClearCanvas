@@ -12,7 +12,7 @@ namespace ClearCanvas.Common.Shreds
 		/// The shred will be instantiated in the default AppDomain for the main shredhost service process.
 		/// </summary>
 		None
-		//NamedAppDomain?, NewProcess?
+		//NamedAppDomain?, OwnProcess?
 	}
 
 	/// <summary>

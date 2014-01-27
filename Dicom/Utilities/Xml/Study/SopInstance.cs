@@ -23,7 +23,9 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using ClearCanvas.Common;
 using ClearCanvas.Dicom.Iod;
 
 namespace ClearCanvas.Dicom.Utilities.Xml.Study
@@ -34,14 +36,16 @@ namespace ClearCanvas.Dicom.Utilities.Xml.Study
     //JR: made this class public so that Specifications using Jscript.NET can operate on it (JScript.NET can't see members on internal classes)
 	public class SopInstance : ISopInstance
     {
-        private DicomAttributeCollection _metaInfo;
+		private DicomAttributeCollection _metaInfo;
         private readonly InstanceXml _xml;
 		private DicomFile _fullHeader;
+		private readonly Dictionary<uint, bool> _sequenceHasExcludedTags;
 
         public SopInstance(InstanceXml xml, Series parent)
         {
             _xml = xml;
             ParentSeries = parent;
+			_sequenceHasExcludedTags = new Dictionary<uint, bool>();
 
             _metaInfo = new DicomAttributeCollection();
             if (xml.TransferSyntax != null)
@@ -60,6 +64,7 @@ namespace ClearCanvas.Dicom.Utilities.Xml.Study
         }
 
         internal Series ParentSeries { get; private set; }
+		private IDicomFileLoader HeaderProvider { get { return ParentSeries.ParentStudy.HeaderProvider; } }
 
     	public string SourceApplicationEntityTitle
     	{
@@ -79,49 +84,49 @@ namespace ClearCanvas.Dicom.Utilities.Xml.Study
 
         private bool IsStoredTag(DicomTag tag)
         {
-            if (_metaInfo.Contains(tag))
-                return true;
+			Platform.CheckForNullReference(tag, "tag");
 
-            //if it's meta info, just defer to the file.
-            if (tag.TagValue <= 0x0002FFFF)
-                return false;
+			if (_metaInfo.Contains(tag))
+				return true;
 
-            if (_xml.IsTagExcluded(tag.TagValue))
-                return false;
+			//if it's meta info, just defer to the file.
+			if (tag.TagValue <= 0x0002FFFF)
+				return false;
 
-            if (tag.VR == DicomVr.SQvr)
-            {
-                var items = _xml[tag].Values as DicomSequenceItem[];
-                if (items != null)
-                {
-                    if (items.OfType<InstanceXmlDicomSequenceItem>().Any(item => item.HasExcludedTags(true)))
-                        return false;
-                }
-            }
+			if (_xml.IsTagExcluded(tag.TagValue))
+				return false;
 
-            bool isBinary = tag.VR == DicomVr.OBvr || tag.VR == DicomVr.OWvr || tag.VR == DicomVr.OFvr;
-            //these tags are not stored in the xml.
-            if (isBinary || tag.IsPrivate || tag.VR == DicomVr.UNvr)
-                return false;
+			if (tag.VR == DicomVr.SQvr)
+			{
+				// cache the results for the recursive SQ item excluded tags check - it adds up if you've got a multiframe image and functional group sequences get accessed repeatedly
+				bool sequenceHasExcludedTags;
+				if (!_sequenceHasExcludedTags.TryGetValue(tag.TagValue, out sequenceHasExcludedTags))
+				{
+					var items = _xml[tag].Values as DicomSequenceItem[];
+					_sequenceHasExcludedTags[tag.TagValue] = sequenceHasExcludedTags = (items != null && items.OfType<InstanceXmlDicomSequenceItem>().Any(item => item.HasExcludedTags(true)));
+				}
 
-            return true;
-        }
+				if (sequenceHasExcludedTags)
+					return false;
+			}
 
-        private void LoadFullHeader(bool includePixelData)
+			bool isBinary = tag.VR == DicomVr.OBvr || tag.VR == DicomVr.OWvr || tag.VR == DicomVr.OFvr;
+			//these tags are not usually stored in the xml.
+			if (isBinary || tag.IsPrivate || tag.VR == DicomVr.UNvr)
+				return false;
+
+			return true;
+		}
+
+        private void LoadFullHeader()
         {
             if (_fullHeader != null)
-                return;
+                return; //We've already got it without the pixel data.
 
-            var args = new LoadDicomFileArgs(this.StudyInstanceUid, this.SeriesInstanceUid, this.SopInstanceUid, true, includePixelData);
-            _fullHeader = ParentSeries.ParentStudy.HeaderProvider.LoadDicomFile(args);
+            var args = new LoadDicomFileArgs(this.StudyInstanceUid, this.SeriesInstanceUid, this.SopInstanceUid, true, false);
+			_fullHeader = HeaderProvider.LoadDicomFile(args);
             _metaInfo = null;
         }
-
-		private IFramePixelData LoadFramePixelData(int frameNumber)
-		{
-			var args = new LoadFramePixelDataArgs(this.StudyInstanceUid, this.SeriesInstanceUid, this.SopInstanceUid, frameNumber, GetHeader(false));
-			return ParentSeries.ParentStudy.HeaderProvider.LoadFramePixelData(args);
-		}
 
         private DicomAttributeCollection MetaInfo
         {
@@ -178,7 +183,7 @@ namespace ClearCanvas.Dicom.Utilities.Xml.Study
         public DicomAttribute GetAttribute(uint dicomTag)
         {
             if (!IsStoredTag(dicomTag))
-                LoadFullHeader(false);
+                LoadFullHeader();
 
             DicomAttribute attribute;
             if (MetaInfo.TryGetAttribute(dicomTag, out attribute))
@@ -193,7 +198,7 @@ namespace ClearCanvas.Dicom.Utilities.Xml.Study
         public DicomAttribute GetAttribute(DicomTag dicomTag)
         {
             if (!IsStoredTag(dicomTag))
-                LoadFullHeader(false);
+                LoadFullHeader();
 
             DicomAttribute attribute;
             if (MetaInfo.TryGetAttribute(dicomTag, out attribute))
@@ -207,44 +212,25 @@ namespace ClearCanvas.Dicom.Utilities.Xml.Study
 
         public DicomFile GetHeader(bool forceComplete)
         {
-            return LoadDicomFile(new LoadSopDicomFileArgs(forceComplete, false));
-        }
+			if (forceComplete)
+				LoadFullHeader();//Make sure the full header's loaded.
 
-		public byte[] GetFramePixelData(int frameNumber, out string photometricInterpretation)
-		{
-			return LoadFramePixelData(frameNumber).GetPixelData(out photometricInterpretation);
+			//Return a copy of whatever we've got.
+			return new DicomFile(null, MetaInfo.Copy(), DataSet.Copy());
 		}
 
-    	#endregion
-        #region IHeaderProvider Members
+		public DicomFile GetCompleteSop()
+		{
+			//Just get the entire thing from the loader.
+			var args = new LoadDicomFileArgs(StudyInstanceUid, SeriesInstanceUid, SopInstanceUid, true, true);
+			return HeaderProvider.LoadDicomFile(args);
+		}
 
-        public bool CanLoadCompleteHeader
-        {
-            get { return ParentSeries.ParentStudy.HeaderProvider.CanLoadCompleteHeader; }
-        }
-
-        public bool CanLoadPixelData
-        {
-            get { return ParentSeries.ParentStudy.HeaderProvider.CanLoadPixelData; }
-        }
-
-    	public bool CanLoadFramePixelData
-    	{
-			get { return ParentSeries.ParentStudy.HeaderProvider.CanLoadFramePixelData; }
-    	}
-
-    	public DicomFile LoadDicomFile(LoadSopDicomFileArgs args)
-        {
-            if (args.ForceCompleteHeader)
-                LoadFullHeader(args.IncludePixelData);
-
-            return new DicomFile(null, MetaInfo.Copy(), DataSet.Copy());
-        }
-
-		public IFramePixelData LoadFramePixelData(LoadSopFramePixelDataArgs args)
-    	{
-    		return LoadFramePixelData(args.FrameNumber);
-    	}
+		public IFramePixelData GetFramePixelData(int frameNumber)
+		{
+			var args = new LoadFramePixelDataArgs(this.StudyInstanceUid, this.SeriesInstanceUid, this.SopInstanceUid, frameNumber);
+			return HeaderProvider.LoadFramePixelData(args);
+		}
 
     	#endregion
     }
