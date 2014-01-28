@@ -47,6 +47,7 @@ namespace ClearCanvas.Enterprise.Common.ServiceConfiguration.Server
 			binding.MaxReceivedMessageSize = args.MaxReceivedMessageSize;
 			if (args.SendTimeoutSeconds > 0)
 				binding.SendTimeout = TimeSpan.FromSeconds(args.SendTimeoutSeconds);
+			binding.TransferMode = args.TransferMode;
 
 			binding.ReaderQuotas.MaxStringContentLength = args.MaxReceivedMessageSize;
 			binding.ReaderQuotas.MaxArrayLength = args.MaxReceivedMessageSize;

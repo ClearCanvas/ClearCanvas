@@ -24,6 +24,7 @@
 
 using System;
 using System.Security.Cryptography.X509Certificates;
+using System.ServiceModel;
 using System.ServiceModel.Security;
 
 namespace ClearCanvas.Enterprise.Common
@@ -48,6 +49,7 @@ namespace ClearCanvas.Enterprise.Common
             this.CertificateValidationMode = certificateValidationMode;
             this.RevocationMode = revocationMode;
         	this.SendTimeoutSeconds = 0;
+			this.TransferMode = TransferMode.Buffered;
         }
 
 		/// <summary>
@@ -85,5 +87,10 @@ namespace ClearCanvas.Enterprise.Common
         /// Specifies the mode used to check for X509 certificate revocation.
         /// </summary>
         public X509RevocationMode RevocationMode;
+
+		/// <summary>
+		/// The TransferMode used for the service.
+		/// </summary>
+		public TransferMode TransferMode;
     }
 }
