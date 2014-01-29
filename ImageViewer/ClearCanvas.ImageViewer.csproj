@@ -271,6 +271,7 @@
     <Compile Include="StudyManagement\ActivityMonitorFailureWatcher.cs" />
     <Compile Include="StudyManagement\ActivityMonitorProgressBar.cs" />
     <Compile Include="StudyManagement\ActivityMonitorQuickLink.cs" />
+    <Compile Include="StudyManagement\XmlSopDataSource.cs" />
     <Compile Include="StudyManagement\IPatientCoordinateMapping.cs" />
     <Compile Include="StudyManagement\IPatientCoordinateMappingProvider.cs" />
     <Compile Include="StudyManagement\LocalServerWatcher.cs" />
@@ -299,6 +300,7 @@
     <Compile Include="StudyManagement\Tests\UnitTestStudyLoader.cs" />
     <Compile Include="StudyManagement\ViewerFrameEnumerator.cs" />
     <Compile Include="StudyManagement\WeightedWindowPrefetchingStrategy.cs" />
+    <Compile Include="StudyManagement\BasicXmlSopDataSource.cs" />
     <Compile Include="Tests\ImageSetGroupsTests.cs" />
     <Compile Include="Tests\ImageDiff.cs" />
     <Compile Include="Tests\MockScreenInfoProvider.cs" />

@@ -23,8 +23,6 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Dicom;
@@ -40,88 +38,44 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 	}
 
 	/// <summary>
-	/// <see cref="DicomMessageSopDataSource"/> for a <see cref="StudyXml"/>-based study,
-	/// where the complete header and per-frame pixel data can be retrieved on-demand via
-	/// an <see cref="IDicomFileLoader"/>.
+	/// A <see cref="XmlSopDataSource"/> where the complete header and per-frame pixel data 
+	/// can be retrieved on-demand via an <see cref="IDicomFileLoader"/>.
 	/// </summary>
 	/// <remarks>
 	/// This class is optimized for the remote case, like streaming from an ImageServer, 
 	/// as it has built-in mechanisms for retrying when pixel data fails to be retrieved.
 	/// </remarks>
-	public partial class StreamingSopDataSource : DicomMessageSopDataSource, IStreamingSopDataSource
+	public partial class StreamingSopDataSource : XmlSopDataSource, IStreamingSopDataSource
 	{
-		private readonly Dictionary<uint, bool> _sequenceHasExcludedTags = new Dictionary<uint, bool>();
 		private readonly ISopDicomFileLoader _loader;
-		private volatile bool _fullHeaderRetrieved = false;
-
-		public StreamingSopDataSource(DicomFile file, ISopDicomFileLoader loader)
-			: base(file)
-		{
-			_loader = loader;
-			CheckLoaderCapabilities();
-			//Have to assume this to be the case.
-			_fullHeaderRetrieved = true;
-		}
-
-		public StreamingSopDataSource(DicomFile file, IDicomFileLoader loader)
-			: base(file)
-		{
-			_loader = ConvertLoader(loader);
-			CheckLoaderCapabilities();
-
-			//Have to assume this to be the case.
-			_fullHeaderRetrieved = true;
-		}
 
 		public StreamingSopDataSource(InstanceXml instanceXml, IDicomFileLoader loader)
-			: base(new DicomFile("", new DicomAttributeCollection(), instanceXml.Collection))
+			: base(instanceXml)
 		{
 			_loader = ConvertLoader(loader);
 			CheckLoaderCapabilities();
-
-			InitFromXml(instanceXml);
 		}
 
 		public StreamingSopDataSource(InstanceXml instanceXml, ISopDicomFileLoader loader)
-			: base(new DicomFile("", new DicomAttributeCollection(), instanceXml.Collection))
+			: base(instanceXml)
 		{
 			_loader = loader;
 			CheckLoaderCapabilities();
-
-			InitFromXml(instanceXml);
 		}
 
 		private void CheckLoaderCapabilities()
 		{
 			if (!_loader.CanLoadCompleteHeader)
-				throw new ArgumentException("Loader must be capable of retrieving the full image header.", "loader");
+				throw new ArgumentException("Loader must be capable of retrieving the full image header.");
 			if (!_loader.CanLoadFramePixelData)
-				throw new ArgumentException("Loader must be capable of loading frame pixel data.", "loader");
+				throw new ArgumentException("Loader must be capable of loading frame pixel data.");
 		}
 
 		private ISopDicomFileLoader ConvertLoader(IDicomFileLoader loader)
 		{
 			return new SopDicomFileLoader(loader.CanLoadCompleteHeader, loader.CanLoadPixelData, loader.CanLoadFramePixelData,
-				(args) => loader.LoadDicomFile(new LoadDicomFileArgs(this.StudyInstanceUid, this.SeriesInstanceUid, this.SopInstanceUid, args.ForceCompleteHeader, args.IncludePixelData)),
-				(args) => loader.LoadFramePixelData(new LoadFramePixelDataArgs(this.StudyInstanceUid, this.SeriesInstanceUid, this.SopInstanceUid, args.FrameNumber)));
-		}
-
-		private void InitFromXml(InstanceXml instanceXml)
-		{
-			//These don't get set properly for instance xml.
-			var sourceFile = (DicomFile)SourceMessage;
-			sourceFile.TransferSyntaxUid = instanceXml.TransferSyntax.UidString;
-			sourceFile.MediaStorageSopInstanceUid = instanceXml.SopInstanceUid;
-
-			sourceFile.MetaInfo[DicomTags.SopClassUid].SetString(0,
-																 instanceXml.SopClass == null
-																	? instanceXml[DicomTags.SopClassUid].ToString()
-																	: instanceXml.SopClass.Uid);
-		}
-
-		private InstanceXmlDicomAttributeCollection AttributeCollection
-		{
-			get { return (InstanceXmlDicomAttributeCollection) SourceMessage.DataSet; }
+				args => loader.LoadDicomFile(new LoadDicomFileArgs(StudyInstanceUid, SeriesInstanceUid, SopInstanceUid, args.ForceCompleteHeader, args.IncludePixelData)),
+				args => loader.LoadFramePixelData(new LoadFramePixelDataArgs(StudyInstanceUid, SeriesInstanceUid, SopInstanceUid, args.FrameNumber)));
 		}
 
 		#region IStreamingSopDataSource Members
@@ -133,109 +87,19 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 
 		#endregion
 
-		public override DicomAttribute this[DicomTag tag]
-		{
-			get
-			{
-				lock (SyncLock)
-				{
-					if (NeedFullHeader(tag.TagValue))
-						GetFullHeader();
-
-					return base[tag];
-				}
-			}
-		}
-
-		public override DicomAttribute this[uint tag]
-		{
-			get
-			{
-				lock (SyncLock)
-				{
-					if (NeedFullHeader(tag))
-						GetFullHeader();
-
-					return base[tag];
-				}
-			}
-		}
-
-		public override bool TryGetAttribute(DicomTag tag, out DicomAttribute attribute)
-		{
-			lock (SyncLock)
-			{
-				if (NeedFullHeader(tag.TagValue))
-					GetFullHeader();
-
-				return base.TryGetAttribute(tag, out attribute);
-			}
-		}
-
-		public override bool TryGetAttribute(uint tag, out DicomAttribute attribute)
-		{
-			lock (SyncLock)
-			{
-				if (NeedFullHeader(tag))
-					GetFullHeader();
-
-				return base.TryGetAttribute(tag, out attribute);
-			}
-		}
-
 		protected override StandardSopFrameData CreateFrameData(int frameNumber)
 		{
 			return new StreamingSopFrameData(frameNumber, this);
 		}
 
-		private bool NeedFullHeader(uint tag)
+		protected override DicomFile GetFullHeader()
 		{
-			if (_fullHeaderRetrieved)
-				return false;
-
-			// if it's a private tag and not already in the collection, we MUST retrieve full header
-			// early releases of the study XML functionality excluded private tags but also did not report their exclusion
-			if (DicomTag.IsPrivateTag(tag) && !AttributeCollection.Contains(tag))
-				return true;
-
-			if (AttributeCollection.IsTagExcluded(tag))
-				return true;
-
-			DicomAttribute attribute = base[tag];
-			if (attribute is DicomAttributeSQ)
-			{
-				// cache the results for the recursive SQ item excluded tags check - it adds up if you've got a multiframe image and functional group sequences get accessed repeatedly
-				bool sequenceHasExcludedTags;
-				if (!_sequenceHasExcludedTags.TryGetValue(tag, out sequenceHasExcludedTags))
-				{
-					var items = attribute.Values as DicomSequenceItem[];
-					_sequenceHasExcludedTags[tag] = sequenceHasExcludedTags = (items != null && items.OfType<InstanceXmlDicomSequenceItem>().Any(item => item.HasExcludedTags(true)));
-				}
-
-				if (sequenceHasExcludedTags)
-					return true;
-			}
-
-			return false;
-		}
-
-		private void GetFullHeader()
-		{
-			if (!_fullHeaderRetrieved)
-			{
-				Exception retrieveException;
-				DicomFile imageHeader = TryClientRetrieveImageHeader(out retrieveException);
-
-				if (imageHeader != null)
-				{
-					base.SourceMessage = imageHeader;
-					_fullHeaderRetrieved = true;
-				}
-				else
-				{
-					throw retrieveException;
-				}
-			}
+			Exception retrieveException;
+			DicomFile imageHeader = TryClientRetrieveImageHeader(out retrieveException);
+			if (imageHeader != null)
+				return imageHeader;
+				
+			throw retrieveException;
 		}
 
 		private DicomFile TryClientRetrieveImageHeader(out Exception lastRetrieveException)
@@ -245,7 +109,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 			int retryDelay = 50;
 			int retryCounter = 0;
 
-			CodeClock timeoutClock = new CodeClock();
+			var timeoutClock = new CodeClock();
 			timeoutClock.Start();
 
 			lastRetrieveException = null;
@@ -255,9 +119,9 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 				try
 				{
 					if (retryCounter > 0)
-						Platform.Log(LogLevel.Info, "Retrying retrieve headers for Sop '{0}' (Attempt #{1})", this.SopInstanceUid, retryCounter);
+						Platform.Log(LogLevel.Info, "Retrying retrieve headers for Sop '{0}' (Attempt #{1})", SopInstanceUid, retryCounter);
 
-					return _loader.LoadDicomFile(new LoadDicomFileArgs(this.StudyInstanceUid, this.SeriesInstanceUid, this.SopInstanceUid, true, false));
+					return _loader.LoadDicomFile(new LoadDicomFileArgs(StudyInstanceUid, SeriesInstanceUid, SopInstanceUid, true, false));
 				}
 				catch (Exception ex)
 				{
@@ -267,9 +131,9 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 					if (timeoutClock.Seconds*1000 >= retryTimeout)
 					{
 						// log an alert that we are aborting (exception trace at debug level only)
-						int elapsed = (int) (1000*timeoutClock.Seconds);
-						Platform.Log(LogLevel.Warn, "Failed to retrieve headers for Sop '{0}'; Aborting after {1} attempts in {2} ms", this.SopInstanceUid, retryCounter, elapsed);
-						Platform.Log(LogLevel.Debug, ex, "[GetHeaders Fail-Abort] Sop: {0}, Retry Attempts: {1}, Elapsed: {2} ms", this.SopInstanceUid, retryCounter, elapsed);
+						var elapsed = (int) (1000*timeoutClock.Seconds);
+						Platform.Log(LogLevel.Warn, "Failed to retrieve headers for Sop '{0}'; Aborting after {1} attempts in {2} ms", SopInstanceUid, retryCounter, elapsed);
+						Platform.Log(LogLevel.Debug, ex, "[GetHeaders Fail-Abort] Sop: {0}, Retry Attempts: {1}, Elapsed: {2} ms", SopInstanceUid, retryCounter, elapsed);
 						break;
 					}
 					timeoutClock.Start();
@@ -277,8 +141,8 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 					retryCounter++;
 
 					// log the retry (exception trace at debug level only)
-					Platform.Log(LogLevel.Warn, "Failed to retrieve headers for Sop '{0}'; Retrying in {1} ms", this.SopInstanceUid, retryDelay);
-					Platform.Log(LogLevel.Debug, ex, "[GetHeaders Fail-Retry] Sop: {0}, Retry in: {1} ms", this.SopInstanceUid, retryDelay);
+					Platform.Log(LogLevel.Warn, "Failed to retrieve headers for Sop '{0}'; Retrying in {1} ms", SopInstanceUid, retryDelay);
+					Platform.Log(LogLevel.Debug, ex, "[GetHeaders Fail-Retry] Sop: {0}, Retry in: {1} ms", SopInstanceUid, retryDelay);
 
 					MemoryManager.Collect(retryDelay);
 					retryDelay *= 2;

@@ -29,8 +29,8 @@ using ClearCanvas.Dicom;
 namespace ClearCanvas.ImageViewer.StudyManagement
 {
 	/// <summary>
-	/// An <see cref="ISopDataSource"/> whose underlying data resides in a re-openable
-	/// <see cref="Stream">stream</see>.
+	/// A <see cref="DicomMessageSopDataSource"/> whose underlying data resides in 
+	/// a re-openable <see cref="Stream">stream</see>.
 	/// </summary>
 	/// <remarks>
 	/// The stream must be re-openable and always readable and seekable, as pixel
@@ -47,14 +47,9 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 			_streamOpener = streamOpener;
 		}
 
-		public DicomFile File
-		{
-			get { return (DicomFile)GetSourceMessage(true); }
-		}
-
 		protected override void EnsureLoaded()
 		{
-			File.Load(_streamOpener, null, DicomReadOptions.Default | DicomReadOptions.StorePixelDataReferences);
+			((DicomFile)SourceMessage).Load(_streamOpener, null, DicomReadOptions.Default | DicomReadOptions.StorePixelDataReferences);
 		}
 	}
 }
