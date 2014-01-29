@@ -45,7 +45,8 @@ namespace ClearCanvas.Enterprise.Common.ServiceConfiguration.Client
 			binding.Security.Mode = args.AuthenticationRequired ? SecurityMode.TransportWithMessageCredential : SecurityMode.Transport;
 			binding.Security.Message.ClientCredentialType =
 				args.AuthenticationRequired ? MessageCredentialType.UserName : MessageCredentialType.None;
-
+			binding.TransferMode = args.TransferMode;
+			
 			// turn off transport security altogether
 			binding.Security.Transport.ClientCredentialType = TcpClientCredentialType.None;
 

@@ -208,6 +208,7 @@
     <Compile Include="ServiceConfiguration\Server\NamedPipeConfiguration.cs" />
     <Compile Include="Setup\SetSettingApplication.cs" />
     <Compile Include="Setup\SetSettingCommandLine.cs" />
+    <Compile Include="ServiceTransferModeAttribute.cs" />
     <Compile Include="SystemAccounts\ISystemAccountLocalRegistry.cs" />
     <Compile Include="SystemAccounts\LocalRegistryManager.cs" />
     <Compile Include="SystemAccounts\SystemAccountCommandLine.cs" />

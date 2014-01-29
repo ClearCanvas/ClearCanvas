@@ -42,6 +42,7 @@ namespace ClearCanvas.Enterprise.Common.ServiceConfiguration.Server
 		public void ConfigureServiceHost(ServiceHost host, ServiceHostConfigurationArgs args)
 		{
 			var binding = new NetNamedPipeBinding();
+			binding.TransferMode = args.TransferMode;
 			//binding.MaxReceivedMessageSize = args.MaxReceivedMessageSize;
 			//binding.ReaderQuotas.MaxStringContentLength = args.MaxReceivedMessageSize;
 			//binding.ReaderQuotas.MaxArrayLength = args.MaxReceivedMessageSize;

@@ -45,6 +45,7 @@ namespace ClearCanvas.Enterprise.Common.ServiceConfiguration.Client
 		public ChannelFactory ConfigureChannelFactory(ServiceChannelConfigurationArgs args)
 		{
 			var binding = new NetNamedPipeBinding();
+			binding.TransferMode = args.TransferMode;
 			//binding.Security.Mode = args.AuthenticationRequired ? NetNamedPipeSecurityMode.Transport : NetNamedPipeSecurityMode.None;
 			//binding.Security.Transport.ProtectionLevel = args.AuthenticationRequired ? ProtectionLevel.EncryptAndSign : ProtectionLevel.None;
 
