@@ -26,6 +26,8 @@
 
 using System;
 using System.Collections.Generic;
+using ClearCanvas.Common.Configuration;
+using ClearCanvas.Enterprise.Common.Configuration;
 using NUnit.Framework;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Caching;
@@ -141,6 +143,7 @@ namespace ClearCanvas.Enterprise.Common.Tests
 		#region TestInvocation
 		class TestInvocation : IInvocation
 		{
+			private Type _targetType;
 			public object Request { get; set; }
 			public object Response { get; set; }
 			public object Target { get; set; }
@@ -167,7 +170,8 @@ namespace ClearCanvas.Enterprise.Common.Tests
 
 			public Type TargetType
 			{
-				get { return Target.GetType(); }
+				get { return _targetType ?? Target.GetType(); }
+				set { _targetType = value; }
 			}
 
 			public Type[] GenericArguments
@@ -223,7 +227,6 @@ namespace ClearCanvas.Enterprise.Common.Tests
 		{
 			private readonly ResponseCachingDirective _directive;
 
-
 			public void Intercept(IInvocation invocation)
 			{
 				ProcessInvocation(invocation, "foo");
@@ -239,12 +242,50 @@ namespace ClearCanvas.Enterprise.Common.Tests
 				return _directive;
 			}
 
-			protected override void CacheResponse(IInvocation invocation, ICacheClient cacheClient, string cacheKey, string region, ResponseCachingDirective directive)
+			protected override void CacheResponse(IInvocation invocation, object request, ICacheClient cacheClient, string region, ResponseCachingDirective directive)
 			{
-				PutResponseInCache(invocation, cacheClient, cacheKey, region, directive);
+				PutResponseInCache(invocation, request, cacheClient, region, directive);
 			}
 		}
 		#endregion
+
+		class TestConfigurationService : IConfigurationService
+		{
+			public ListSettingsGroupsResponse ListSettingsGroups(ListSettingsGroupsRequest request)
+			{
+				throw new NotImplementedException();
+			}
+
+			public ListSettingsPropertiesResponse ListSettingsProperties(ListSettingsPropertiesRequest request)
+			{
+				throw new NotImplementedException();
+			}
+
+			public ListConfigurationDocumentsResponse ListConfigurationDocuments(ListConfigurationDocumentsRequest request)
+			{
+				throw new NotImplementedException();
+			}
+
+			public GetConfigurationDocumentResponse GetConfigurationDocument(GetConfigurationDocumentRequest request)
+			{
+				throw new NotImplementedException();
+			}
+
+			public ImportSettingsGroupResponse ImportSettingsGroup(ImportSettingsGroupRequest request)
+			{
+				throw new NotImplementedException();
+			}
+
+			public SetConfigurationDocumentResponse SetConfigurationDocument(SetConfigurationDocumentRequest request)
+			{
+				throw new NotImplementedException();
+			}
+
+			public RemoveConfigurationDocumentResponse RemoveConfigurationDocument(RemoveConfigurationDocumentRequest request)
+			{
+				throw new NotImplementedException();
+			}
+		}
 
 		class MyService
 		{
@@ -279,6 +320,99 @@ namespace ClearCanvas.Enterprise.Common.Tests
 					new Dictionary<Type, Type> {{typeof (CacheProviderExtensionPoint), typeof (TestCacheProvider)}}
 				)
 			);
+		}
+
+		[Test]
+		public void TestCacheConfigurationDocument()
+		{
+			var cache = new TestCacheClient();
+			cache.ClearCache();
+
+			var documentKey = new ConfigurationDocumentKey("Test", new Version(1, 0), null, "");
+			var cacheKey = ((IDefinesCacheKey) documentKey).GetCacheKey();
+
+			var service = new TestConfigurationService();
+			object request = new GetConfigurationDocumentRequest(documentKey);
+			object response = new GetConfigurationDocumentResponse(documentKey, DateTime.Now, DateTime.Now, "Test");
+			var invocation = new TestInvocation
+			{
+				Target = service,
+				Method = typeof(IApplicationConfigurationReadService).GetMethod("GetConfigurationDocument", BindingFlags.FlattenHierarchy | BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public),
+				TargetType = typeof(IApplicationConfigurationReadService),
+				Request = request,
+				Response = response
+			};
+
+			var directive = new ResponseCachingDirective(true, TimeSpan.FromMinutes(1), ResponseCachingSite.Server);
+			var advice = new ConcreteResponseCachingAdvice(directive);
+			advice.Intercept(invocation);
+
+			var cacheEntry = cache.Get(cacheKey, new CacheGetOptions(""));
+			Assert.IsNotNull(cacheEntry);
+			Assert.AreEqual(response, cacheEntry);
+
+			request = new SetConfigurationDocumentRequest(documentKey, "Test");
+			response = new SetConfigurationDocumentResponse();
+
+			invocation = new TestInvocation
+			{
+				Target = service,
+				Method = typeof(IConfigurationService).GetMethod("SetConfigurationDocument", BindingFlags.FlattenHierarchy | BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public),
+				TargetType = typeof(IConfigurationService),
+				Request = request,
+				Response = response
+			};
+
+			advice = new ConcreteResponseCachingAdvice(null);
+			advice.Intercept(invocation);
+
+			cacheEntry = cache.Get(cacheKey, new CacheGetOptions(""));
+			Assert.IsNull(cacheEntry);
+		}
+
+		public void TestCacheListSettingsGroups()
+		{
+			var cache = new TestCacheClient();
+			cache.ClearCache();
+
+			var service = new TestConfigurationService();
+			object request = new ListSettingsGroupsRequest();
+			object response = new ListSettingsGroupsResponse(new List<SettingsGroupDescriptor>());
+			var invocation = new TestInvocation
+			{
+				Target = service,
+				Method = typeof(IApplicationConfigurationReadService).GetMethod("ListSettingsGroups", BindingFlags.FlattenHierarchy | BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public),
+				TargetType = typeof(IApplicationConfigurationReadService),
+				Request = request,
+				Response = response
+			};
+
+			var directive = new ResponseCachingDirective(true, TimeSpan.FromMinutes(1), ResponseCachingSite.Server);
+			var advice = new ConcreteResponseCachingAdvice(directive);
+			advice.Intercept(invocation);
+
+			var cacheEntry = cache.Get("ListSettingsGroups", new CacheGetOptions(""));
+			Assert.IsNotNull(cacheEntry);
+
+			request = new ImportSettingsGroupRequest(
+				new SettingsGroupDescriptor("Test", new Version(1,0), "Test", "Test", true), 
+				new List<SettingsPropertyDescriptor>(new[]{new SettingsPropertyDescriptor("Test", "Test", "Test", SettingScope.User, "Test") }));
+			response = new ImportSettingsGroupResponse();
+
+			invocation = new TestInvocation
+			{
+				Target = service,
+				Method = typeof(IConfigurationService).GetMethod("ImportSettingsGroup", BindingFlags.FlattenHierarchy | BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public),
+				TargetType = typeof(IConfigurationService),
+				Request = request,
+				Response = response
+			};
+
+			advice = new ConcreteResponseCachingAdvice(null);
+			advice.Intercept(invocation);
+
+			cacheEntry = cache.Get("ListSettingsGroups", new CacheGetOptions(""));
+			Assert.IsNull(cacheEntry);
 		}
 
 		[Test]

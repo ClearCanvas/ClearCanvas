@@ -51,10 +51,10 @@ namespace ClearCanvas.Enterprise.Common
 		/// <summary>
 		/// Implemented by the subclass to cache the response, based on the specified caching directive.
 		/// </summary>
-		protected override void CacheResponse(IInvocation invocation, ICacheClient cacheClient, string cacheKey, string region, ResponseCachingDirective directive)
+		protected override void CacheResponse(IInvocation invocation, object request, ICacheClient cacheClient, string region, ResponseCachingDirective directive)
 		{
 			// put the response in the local cache
-			PutResponseInCache(invocation, cacheClient, cacheKey, region, directive);
+			PutResponseInCache(invocation, request, cacheClient, region, directive);
 		}
 
 		/// <summary>

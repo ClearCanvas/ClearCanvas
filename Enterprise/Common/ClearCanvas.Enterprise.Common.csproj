@@ -157,8 +157,10 @@
     <Compile Include="Configuration\IApplicationConfigurationReadService.cs" />
     <Compile Include="Configuration\ImportSettingsGroupRequest.cs" />
     <Compile Include="Configuration\ImportSettingsGroupResponse.cs" />
+    <Compile Include="IResponseDataCachingStrategy.cs" />
     <Compile Include="Configuration\ListConfigurationDocumentsRequest.cs" />
     <Compile Include="Configuration\ListConfigurationDocumentsResponse.cs" />
+    <Compile Include="Configuration\ResponseCachingStrategies.cs" />
     <Compile Include="DefaultPrincipal.cs" />
     <Compile Include="EntityRefJsmlSerializerHook.cs" />
     <Compile Include="EnumValueInfo.cs" />

@@ -22,11 +22,7 @@
 
 #endregion
 
-using System;
-using System.Collections.Generic;
-using System.Text;
 using ClearCanvas.Common.Serialization;
-using ClearCanvas.Enterprise.Common;
 using System.Runtime.Serialization;
 using ClearCanvas.Common.Configuration;
 using ClearCanvas.Common.Caching;
