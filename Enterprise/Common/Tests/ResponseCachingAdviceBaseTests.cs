@@ -370,6 +370,7 @@ namespace ClearCanvas.Enterprise.Common.Tests
 			Assert.IsNull(cacheEntry);
 		}
 
+		[Test]
 		public void TestCacheListSettingsGroups()
 		{
 			var cache = new TestCacheClient();
