@@ -225,9 +225,7 @@ namespace ClearCanvas.Common
 		private static byte[] ComputeCheckSum(IEnumerable<string> pluginCandidatePaths)
 		{
 			// include config files in the check sum
-			var configFiles = Directory.EnumerateFiles(Platform.InstallDirectory, "*.exe.config", SearchOption.TopDirectoryOnly);
-			configFiles = configFiles.Concat(Directory.EnumerateFiles(Platform.InstallDirectory, "*.exe.critical.config", SearchOption.TopDirectoryOnly));
-
+			var configFiles = Directory.EnumerateFiles(Platform.InstallDirectory, "*.config", SearchOption.TopDirectoryOnly);
 			var orderedFiles = configFiles.Concat(pluginCandidatePaths).Select(f => new FileInfo(f)).OrderBy(fi => fi.FullName);
 
 			// generate a checksum based on the name, create time, and last write time of each file
