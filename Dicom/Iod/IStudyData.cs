@@ -35,13 +35,13 @@ namespace ClearCanvas.Dicom.Iod
 		[DicomField(DicomTags.StudyInstanceUid)]
 		string StudyInstanceUid { get; }
 
-        /// <summary>
-        /// Gets the sop classes in the identified study.
-        /// </summary>
-        [DicomField(DicomTags.SopClassesInStudy)]
-        string[] SopClassesInStudy { get; }
-        
-        /// <summary>
+		/// <summary>
+		/// Gets the sop classes in the identified study.
+		/// </summary>
+		[DicomField(DicomTags.SopClassesInStudy)]
+		string[] SopClassesInStudy { get; }
+
+		/// <summary>
 		/// Gets the modalities in the identified study.
 		/// </summary>
 		[DicomField(DicomTags.ModalitiesInStudy)]
@@ -77,10 +77,13 @@ namespace ClearCanvas.Dicom.Iod
 		[DicomField(DicomTags.AccessionNumber)]
 		string AccessionNumber { get; }
 
+		/// <summary>
+		/// Gets the referring physician's name for the study.
+		/// </summary>
 		[DicomField(DicomTags.ReferringPhysiciansName)]
 		string ReferringPhysiciansName { get; }
 
-		/// <summary>
+	/// <summary>
 		/// Gets the number of series belonging to the identified study.
 		/// </summary>
 		[DicomField(DicomTags.NumberOfStudyRelatedSeries)]

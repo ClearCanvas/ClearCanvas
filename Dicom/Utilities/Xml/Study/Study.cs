@@ -40,9 +40,6 @@ namespace ClearCanvas.Dicom.Utilities.Xml.Study
 
 		public Study(StudyXml xml, IDicomFileLoader headerProvider)
 		{
-			if (!headerProvider.CanLoadCompleteHeader || !headerProvider.CanLoadFramePixelData)
-				throw new ArgumentException("DICOM file loader must be capable of loading full header and per-frame pixel data.");
-
 			_xml = xml;
 			_headerProvider = headerProvider;
 		}
