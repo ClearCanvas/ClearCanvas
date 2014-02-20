@@ -1900,6 +1900,11 @@ namespace ClearCanvas.Dicom.Network
 		                        if (!ret)
 			                        Platform.Log(LogLevel.Error, "Error with OnReceiveDimse");
 	                        }
+	                        else
+	                        {
+								if (MessageReceived != null)
+									MessageReceived(_assoc, new DicomMessage(_dimse.Command, _dimse.Dataset));
+	                        }
 
 							_dimse = null;
 							return ret;

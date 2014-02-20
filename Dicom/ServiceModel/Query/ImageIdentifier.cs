@@ -23,6 +23,7 @@
 #endregion
 
 using System;
+using System.ComponentModel;
 using System.Runtime.Serialization;
 using ClearCanvas.Dicom.Iod;
 
@@ -42,9 +43,7 @@ namespace ClearCanvas.Dicom.ServiceModel.Query
     {
         #region Private Fields
 
-        private int? _instanceNumber;
-
-        #endregion
+	    #endregion
 
         #region Public Constructors
 
@@ -138,20 +137,51 @@ namespace ClearCanvas.Dicom.ServiceModel.Query
         [DataMember(IsRequired = true)]
         public string SopClassUid { get; set; }
 
-        /// <summary>
-        /// Gets or sets the Instance Number of the identified sop instance.
-        /// </summary>
-        [DicomField(DicomTags.InstanceNumber, CreateEmptyElement = true, SetNullValueIfEmpty = true)]
-        [DataMember(IsRequired = true)]
-        public int? InstanceNumber
-        {
-            get { return _instanceNumber; }
-            set { _instanceNumber = value; }
-        }
+	    /// <summary>
+	    /// Gets or sets the Instance Number of the identified sop instance.
+	    /// </summary>
+	    [DicomField(DicomTags.InstanceNumber, CreateEmptyElement = true, SetNullValueIfEmpty = true), DataMember(IsRequired = true)]
+	    public int? InstanceNumber { get; set; }
 
-        int ISopInstanceData.InstanceNumber
+		/// <summary>
+		/// Gets or sets the Columns of the identified sop instance.
+		/// </summary>
+		[DicomField(DicomTags.Rows, CreateEmptyElement = true, SetNullValueIfEmpty = true), DataMember(IsRequired = false)]
+		public ushort? Rows { get; set; }
+
+		/// <summary>
+		/// Gets or sets the Columns of the identified sop instance.
+		/// </summary>
+		[DicomField(DicomTags.Columns, CreateEmptyElement = true, SetNullValueIfEmpty = true), DataMember(IsRequired = false)]
+		public ushort? Columns { get; set; }
+
+		/// <summary>
+		/// Gets or sets the Bits Allocated of the identified sop instance.
+		/// </summary>
+		[DicomField(DicomTags.BitsAllocated, CreateEmptyElement = true, SetNullValueIfEmpty = true), DataMember(IsRequired = false)]
+		public ushort? BitsAllocated { get; set; }
+
+		/// <summary>
+		/// Gets or sets the NumberOfFrames of the identified sop instance.
+		/// </summary>
+		[DicomField(DicomTags.NumberOfFrames, CreateEmptyElement = true, SetNullValueIfEmpty = true), DataMember(IsRequired = false), DefaultValue(null)]
+		public string NumberOfFrames { get; set; }
+
+		/// <summary>
+		/// Gets or sets the ContentLabel of the identified sop instance.
+		/// </summary>
+		[DicomField(DicomTags.ContentLabel, CreateEmptyElement = true, SetNullValueIfEmpty = true), DataMember(IsRequired = false), DefaultValue(null)]
+		public string ContentLabel { get; set; }
+
+		/// <summary>
+		/// Gets or sets the ContentDescription of the identified sop instance.
+		/// </summary>
+		[DicomField(DicomTags.ContentDescription, CreateEmptyElement = true, SetNullValueIfEmpty = true), DataMember(IsRequired = false), DefaultValue(null)]
+		public string ContentDescription { get; set; }
+
+	    int ISopInstanceData.InstanceNumber
         {
-            get { return _instanceNumber ?? 0; }
+            get { return InstanceNumber ?? 0; }
         }
 
         #endregion
