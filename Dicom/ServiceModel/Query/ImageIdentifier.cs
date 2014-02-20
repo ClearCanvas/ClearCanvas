@@ -96,7 +96,7 @@ namespace ClearCanvas.Dicom.ServiceModel.Query
 
         public override string ToString()
         {
-            return String.Format("{0} | {1}", InstanceNumber, SopInstanceUid);
+            return String.Format("{0} | {1}", InstanceNumber ?? 0, SopInstanceUid);
         }
 
         #region Public Properties
@@ -140,7 +140,7 @@ namespace ClearCanvas.Dicom.ServiceModel.Query
 	    /// <summary>
 	    /// Gets or sets the Instance Number of the identified sop instance.
 	    /// </summary>
-	    [DicomField(DicomTags.InstanceNumber, CreateEmptyElement = true, SetNullValueIfEmpty = true), DataMember(IsRequired = true)]
+	    [DicomField(DicomTags.InstanceNumber, CreateEmptyElement = true, SetNullValueIfEmpty = true), DataMember(IsRequired = false)]
 	    public int? InstanceNumber { get; set; }
 
 		/// <summary>
