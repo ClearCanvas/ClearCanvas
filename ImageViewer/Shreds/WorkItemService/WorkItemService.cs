@@ -265,7 +265,7 @@ namespace ClearCanvas.ImageViewer.Shreds.WorkItemService
             {
                 var broker = context.GetWorkItemBroker();
  
-                var dbList = broker.GetWorkItems(request.Type, request.Status, request.StudyInstanceUid);
+                var dbList = broker.GetWorkItems(request.Type, request.Status, request.StudyInstanceUid, request.Identifier);
 
                 var results = new List<WorkItemData>();
 
