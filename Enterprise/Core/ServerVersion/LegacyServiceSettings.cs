@@ -1,6 +1,6 @@
 ﻿#region License
 
-// Copyright (c) 2013, ClearCanvas Inc.
+// Copyright (c) 2014, ClearCanvas Inc.
 // All rights reserved.
 // http://www.clearcanvas.ca
 //
@@ -23,25 +23,23 @@
 #endregion
 
 using System;
-using System.ServiceModel;
+using System.Configuration;
 
-namespace ClearCanvas.Enterprise.Common.ServerVersion
+namespace ClearCanvas.Enterprise.Core.ServerVersion
 {
-	[EnterpriseCoreService]
-	[ServiceContract]
-	[Authentication(false)]
-	public interface IVersionService : ICoreServiceLayer
+	/// <summary>
+	/// Specifies the compatibility version details to be reported by the <see cref="VersionService.GetVersion"/> service.
+	/// </summary>
+	[SettingsProvider(typeof (LocalFileSettingsProvider))]
+	internal sealed partial class LegacyServiceSettings
 	{
-		/// <summary>
-		/// Legacy version service method, which now returns the compatibility version of the server.
-		/// </summary>
-		[OperationContract, Obsolete("Use GetVersion2 instead. This service method now returns a fixed value indicating server compatibility version, rather than actual server version.")]
-		GetVersionResponse GetVersion(GetVersionRequest request);
+		private Version _compatibilityVersion;
 
-		/// <summary>
-		/// Gets the actual version of the server.
-		/// </summary>
-		[OperationContract]
-		GetVersionResponse GetVersion2(GetVersionRequest request);
+		public Version GetCompatibilityVersion()
+		{
+			if (_compatibilityVersion == null && !Version.TryParse(CompatibilityVersion, out _compatibilityVersion))
+				_compatibilityVersion = new Version(1, 0, 0, 0);
+			return _compatibilityVersion;
+		}
 	}
 }
