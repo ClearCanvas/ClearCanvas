@@ -22,30 +22,27 @@
 
 #endregion
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-using ClearCanvas.Common.Serialization;
-using ClearCanvas.Enterprise.Common;
 using System.Runtime.Serialization;
+using ClearCanvas.Common.Serialization;
 
 namespace ClearCanvas.Enterprise.Common.Authentication
 {
 	[DataContract]
 	public class InitiateSessionRequest : DataContractBase
 	{
-        public InitiateSessionRequest(string user, string application, string hostName, string password)
-            :this(user, application, hostName, password, false)
-        {
-        }
+		public InitiateSessionRequest() {}
+
+		public InitiateSessionRequest(string user, string application, string hostName, string password)
+			: this(user, application, hostName, password, false) {}
 
 		public InitiateSessionRequest(string user, string application, string hostName, string password, bool getAuthorizations)
 		{
-			this.UserName = user;
-			this.Password = password;
-			this.Application = application;
-			this.HostName = hostName;
-            this.GetAuthorizations = getAuthorizations;
+			UserName = user;
+			Password = password;
+			Application = application;
+			HostName = hostName;
+			GetAuthorizations = getAuthorizations;
+			Version = ApplicationVersion.GetCurrentVersion();
 		}
 
 		/// <summary>
@@ -59,6 +56,12 @@ namespace ClearCanvas.Enterprise.Common.Authentication
 		/// </summary>
 		[DataMember]
 		public string Application;
+
+		/// <summary>
+		/// Specifies client product and version information.
+		/// </summary>
+		[DataMember(IsRequired = false)]
+		public ApplicationVersion Version;
 
 		/// <summary>
 		/// Host computer name.
@@ -77,6 +80,5 @@ namespace ClearCanvas.Enterprise.Common.Authentication
 		/// </summary>
 		[DataMember]
 		public bool GetAuthorizations;
-
 	}
 }

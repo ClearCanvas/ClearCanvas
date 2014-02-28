@@ -176,6 +176,7 @@
     <Compile Include="PageRange.cs" />
     <Compile Include="PagedDataContractBase.cs" />
     <Compile Include="Ping\IPingService.cs" />
+    <Compile Include="ApplicationVersion.cs" />
     <Compile Include="RemoteCoreServiceProvider2.cs" />
     <Compile Include="ResponseCachingAdviceBase.cs" />
     <Compile Include="ResponseCachingClientSideAdvice.cs" />
