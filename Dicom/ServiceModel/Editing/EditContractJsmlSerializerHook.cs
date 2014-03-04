@@ -41,7 +41,7 @@ namespace ClearCanvas.Dicom.ServiceModel.Editing
 			var assemblies = Platform.PluginManager.Plugins.Select(p => p.Assembly.Resolve()).ToList();
 			assemblies.Add(typeof(Edit).Assembly);
 
-			_contractMap = (from t in assemblies.SelectMany(a => a.GetTypes())
+			_contractMap = (from t in assemblies.SelectMany(a => a.GetTypes()).Distinct()
 			                let a = AttributeUtils.GetAttribute<EditTypeAttribute>(t)
 							let b = AttributeUtils.GetAttribute<DataContractAttribute>(t)
 							where (a != null && b != null)
