@@ -172,6 +172,13 @@ namespace ClearCanvas.Dicom.ServiceModel.Query
          DataMember(IsRequired = false)]
         public string ReferringPhysiciansName { get; set; }
 
+		/// <summary>
+		/// Gets or sets the patient's age at the time of the identified study.
+		/// </summary>
+		[DicomField(DicomTags.PatientsAge, CreateEmptyElement = true, SetNullValueIfEmpty = true),
+		 DataMember(IsRequired = false)]
+		public string PatientsAge { get; set; }
+
         /// <summary>
         /// Gets or sets the number of series belonging to the identified study.
         /// </summary>

@@ -132,6 +132,11 @@ namespace ClearCanvas.Dicom.Utilities.Xml.Study
 			get { return FirstSopInstance.GetAttribute(DicomTags.AccessionNumber).ToString(); }
 		}
 
+		public string PatientsAge
+		{
+			get { return FirstSopInstance.GetAttribute(DicomTags.PatientsAge).ToString(); }
+		}
+
 		public string ReferringPhysiciansName
 		{
 			get { return FirstSopInstance.GetAttribute(DicomTags.ReferringPhysiciansName).ToString(); }

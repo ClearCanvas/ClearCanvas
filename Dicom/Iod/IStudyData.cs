@@ -83,7 +83,13 @@ namespace ClearCanvas.Dicom.Iod
 		[DicomField(DicomTags.ReferringPhysiciansName)]
 		string ReferringPhysiciansName { get; }
 
-	/// <summary>
+		/// <summary>
+		/// Gets the Patient's Age at the time of the study.
+		/// </summary>
+		[DicomField(DicomTags.PatientsAge)]
+		string PatientsAge { get; }
+
+		/// <summary>
 		/// Gets the number of series belonging to the identified study.
 		/// </summary>
 		[DicomField(DicomTags.NumberOfStudyRelatedSeries)]
