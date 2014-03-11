@@ -655,7 +655,9 @@ namespace ClearCanvas.Dicom.Network.Scu
 		{
 			Status = ScuOperationStatus.TimeoutExpired;
 			ResultStatus = DicomState.Failure;
-			FailureDescription = String.Format("Timeout Expired for remote host {0}, aborting connection", RemoteAE);
+
+			FailureDescription = String.Format("Timeout Expired ({0} seconds) for remote AE {1}, aborting connection", association.ReadTimeout / 1000,
+							  RemoteAE);
 			if (LogInformation) Platform.Log(LogLevel.Info, FailureDescription);
 
 			try

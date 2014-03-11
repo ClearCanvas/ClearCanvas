@@ -463,7 +463,7 @@ namespace ClearCanvas.Dicom.Network.Scu
 		{
 			Status = ScuOperationStatus.TimeoutExpired;
 			FailureDescription =
-				String.Format("Timeout Expired ({0} seconds) for remote host {1} when processing C-MOVE-RQ, aborting connection", association.ReadTimeout/1000,
+				String.Format("Timeout Expired ({0} seconds) for remote AE {1} when processing C-MOVE-RQ, aborting connection", association.ReadTimeout/1000,
 				              RemoteAE);
 			Platform.Log(LogLevel.Error, FailureDescription);
 

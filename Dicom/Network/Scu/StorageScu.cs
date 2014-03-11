@@ -252,16 +252,6 @@ namespace ClearCanvas.Dicom.Network.Scu
 		/// </summary>
 		public virtual void Send()
 		{
-			if (_storageInstanceList == null)
-			{
-				string message =
-					String.Format(
-						"Attempting to open a C-STORE SCU association from {0} to {1} without setting the files to send.",
-						ClientAETitle, RemoteAE);
-				Platform.Log(LogLevel.Error, message);
-				throw new ApplicationException(message);
-			}
-
 			if (_storageInstanceList.Count == 0)
 			{
 				string message =
@@ -381,6 +371,7 @@ namespace ClearCanvas.Dicom.Network.Scu
 		public void AddFile(string fileName)
 		{
 			AddStorageInstance(new StorageInstance(fileName));
+			_totalSubOperations = _storageInstanceList.Count;
 		}
 
 		/// <summary>
@@ -390,6 +381,7 @@ namespace ClearCanvas.Dicom.Network.Scu
 		public void AddStorageInstance(StorageInstance storageInstance)
 		{
 			StorageInstanceList.Add(storageInstance);
+			_totalSubOperations = _storageInstanceList.Count;
 		}
 
 		/// <summary>
@@ -400,6 +392,7 @@ namespace ClearCanvas.Dicom.Network.Scu
 		{
 			if (list != null)
 				_storageInstanceList.AddRange(list);
+			_totalSubOperations = _storageInstanceList.Count;
 		}
 
 		#endregion
