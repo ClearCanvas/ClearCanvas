@@ -423,7 +423,7 @@ namespace ClearCanvas.Dicom.Network
 		{
 		}
 
-		protected virtual bool OnReceiveFileStream(byte pcid, DicomAttributeCollection command, DicomAttributeCollection dataset, byte[] data, int offset, int count, bool isFirst, bool isLast)
+		protected virtual bool OnReceiveFileStream(byte pcid, DicomAttributeCollection command, DicomAttributeCollection dataset, byte[] data, int offset, int count, bool encounteredStopTag, bool isFirst, bool isLast)
 		{
 			return false;
 		}
@@ -1871,11 +1871,11 @@ namespace ClearCanvas.Dicom.Network
 							if (_dimse.IsNewDimse)
 							{
 								byte[] fileGroup2 = CreateFileHeader(pcid, _dimse.Command);
-								ret = OnReceiveFileStream(pcid, _dimse.Command, _dimse.Dataset, fileGroup2, 0, fileGroup2.Length, _dimse.IsNewDimse, false);
+								ret = OnReceiveFileStream(pcid, _dimse.Command, _dimse.Dataset, fileGroup2, 0, fileGroup2.Length, _dimse.DatasetReader.EncounteredStopTag, _dimse.IsNewDimse, false);
 								_dimse.IsNewDimse = false;
 							}
 
-							ret = ret && OnReceiveFileStream(pcid, _dimse.Command, _dimse.Dataset, pdv.Value.Array, pdv.Value.Index, pdv.Value.Count, false, pdv.IsLastFragment);
+							ret = ret && OnReceiveFileStream(pcid, _dimse.Command, _dimse.Dataset, pdv.Value.Array, pdv.Value.Index, pdv.Value.Count, _dimse.DatasetReader.EncounteredStopTag, false, pdv.IsLastFragment);
 							if (!ret)
 								Platform.Log(LogLevel.Error, "Error with OnReceiveFileStream");
 						}
