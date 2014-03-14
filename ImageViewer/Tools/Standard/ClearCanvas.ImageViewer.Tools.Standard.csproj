@@ -299,9 +299,7 @@
     <EmbeddedResource Include="Icons\ResetToolSmall.png" />
     <EmbeddedResource Include="Icons\ResetToolMedium.png" />
     <EmbeddedResource Include="ProbeCursor.png" />
-    <EmbeddedResource Include="PresetVoiLuts\DefaultPresetVoiLutConfiguration.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
+    <EmbeddedResource Include="PresetVoiLuts\DefaultPresetVoiLutConfiguration.xml" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
