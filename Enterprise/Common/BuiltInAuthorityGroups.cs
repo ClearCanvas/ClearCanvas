@@ -55,10 +55,10 @@ namespace ClearCanvas.Enterprise.Common
 					// System accounts may need to impersonate users
 					AuthorityTokens.Login.Impersonate,
 
-					// required by RPACS in order to obtain detailed information about a user's authorizations
+					// required by ImageDrive in order to obtain detailed information about a user's authorizations
 					AuthorityTokens.Admin.Security.User,
 
-					// required by RPACS in order to manage work-group accounts
+					// required by ImageDrive in order to manage work-group accounts
 					AuthorityTokens.Admin.Security.NonUserAccounts.Group,
 				},
 				true);
