@@ -30,61 +30,72 @@ using ClearCanvas.Dicom.Iod;
 
 namespace ClearCanvas.Dicom.Utilities.Xml.Study
 {
-    /// <summary>
-    /// Represents an <see cref="ISopInstance"/> whose main source of data is a <see cref="StudyXml"/> document.
-    /// </summary>
-    //JR: made this class public so that Specifications using Jscript.NET can operate on it (JScript.NET can't see members on internal classes)
+	/// <summary>
+	/// Represents an <see cref="ISopInstance"/> whose main source of data is a <see cref="StudyXml"/> document.
+	/// </summary>
+	//JR: made this class public so that Specifications using Jscript.NET can operate on it (JScript.NET can't see members on internal classes)
 	public class SopInstance : ISopInstance
-    {
+	{
 		private DicomAttributeCollection _metaInfo;
-        private readonly InstanceXml _xml;
+		private readonly InstanceXml _xml;
 		private DicomFile _fullHeader;
 		private readonly Dictionary<uint, bool> _sequenceHasExcludedTags;
 
-        public SopInstance(InstanceXml xml, Series parent)
-        {
-            _xml = xml;
-            ParentSeries = parent;
+		public SopInstance(InstanceXml xml, Series parent)
+		{
+			_xml = xml;
+			ParentSeries = parent;
 			_sequenceHasExcludedTags = new Dictionary<uint, bool>();
 
-            _metaInfo = new DicomAttributeCollection();
-            if (xml.TransferSyntax != null)
-            {
-                string transferSyntax = xml.TransferSyntax.UidString;
-                if (!String.IsNullOrEmpty(transferSyntax))
-                    _metaInfo[DicomTags.TransferSyntaxUid].SetString(0, transferSyntax);
-            }
+			_metaInfo = new DicomAttributeCollection();
+			if (xml.TransferSyntax != null)
+			{
+				string transferSyntax = xml.TransferSyntax.UidString;
+				if (!String.IsNullOrEmpty(transferSyntax))
+					_metaInfo[DicomTags.TransferSyntaxUid].SetString(0, transferSyntax);
+			}
 
-            if (xml.SopClass != null)
-            {
-                string sopClass = xml.SopClass.Uid;
-                if (!String.IsNullOrEmpty(sopClass))
-                    _metaInfo[DicomTags.SopClassUid].SetString(0, sopClass);
-            }
-        }
+			if (xml.SopClass != null)
+			{
+				string sopClass = xml.SopClass.Uid;
+				if (!String.IsNullOrEmpty(sopClass))
+					_metaInfo[DicomTags.SopClassUid].SetString(0, sopClass);
+			}
+		}
 
-        internal Series ParentSeries { get; private set; }
-		private IDicomFileLoader HeaderProvider { get { return ParentSeries.ParentStudy.HeaderProvider; } }
+		internal Series ParentSeries { get; private set; }
 
-    	public string SourceApplicationEntityTitle
-    	{
+		private IDicomFileLoader HeaderProvider
+		{
+			get { return ParentSeries.ParentStudy.HeaderProvider; }
+		}
+
+		public string SourceApplicationEntityTitle
+		{
 			get { return GetAttribute(DicomTags.SourceApplicationEntityTitle).ToString(); }
-    	}
+		}
 
-    	ISeries ISopInstance.ParentSeries { get { return ParentSeries; } }
+		ISeries ISopInstance.ParentSeries
+		{
+			get { return ParentSeries; }
+		}
 
-        private bool IsStoredTag(uint tag)
-        {
-            DicomTag dicomTag = DicomTagDictionary.GetDicomTag(tag);
-            if (dicomTag == null)
-                return false;
+		private bool IsStoredTag(uint tag)
+		{
+			DicomTag dicomTag = DicomTagDictionary.GetDicomTag(tag);
+			if (dicomTag == null)
+				return false;
 
-            return IsStoredTag(dicomTag);
-        }
+			return IsStoredTag(dicomTag);
+		}
 
-        private bool IsStoredTag(DicomTag tag)
-        {
+		private bool IsStoredTag(DicomTag tag)
+		{
 			Platform.CheckForNullReference(tag, "tag");
+
+			// if the full header has already been retrieved, all tags are considered "stored"
+			if (_fullHeader != null)
+				return true;
 
 			if (_metaInfo.Contains(tag))
 				return true;
@@ -118,102 +129,96 @@ namespace ClearCanvas.Dicom.Utilities.Xml.Study
 			return true;
 		}
 
-        private void LoadFullHeader()
-        {
-            if (_fullHeader != null)
-                return; //We've already got it without the pixel data.
+		private void LoadFullHeader()
+		{
+			if (_fullHeader != null)
+				return; //We've already got it without the pixel data.
 
-            var args = new LoadDicomFileArgs(this.StudyInstanceUid, this.SeriesInstanceUid, this.SopInstanceUid, true, false);
+			var args = new LoadDicomFileArgs(this.StudyInstanceUid, this.SeriesInstanceUid, this.SopInstanceUid, true, false);
 			_fullHeader = HeaderProvider.LoadDicomFile(args);
-            _metaInfo = null;
-        }
+			_metaInfo = null;
+		}
 
-        private DicomAttributeCollection MetaInfo
-        {
-            get
-            {
-                return _fullHeader != null ? _fullHeader.MetaInfo : _metaInfo;
-            }
-        }
-        
-        private DicomAttributeCollection DataSet
-        {
-            get
-            {
-                return _fullHeader != null ? _fullHeader.DataSet : _xml.Collection;
-            }
-        }
+		private DicomAttributeCollection MetaInfo
+		{
+			get { return _fullHeader != null ? _fullHeader.MetaInfo : _metaInfo; }
+		}
 
-        #region ISopInstanceData Members
+		private DicomAttributeCollection DataSet
+		{
+			get { return _fullHeader != null ? _fullHeader.DataSet : _xml.Collection; }
+		}
 
-        public string StudyInstanceUid
-        {
-            get { return ParentSeries.StudyInstanceUid; }
-        }
+		#region ISopInstanceData Members
 
-        public string SeriesInstanceUid
-        {
-            get { return ParentSeries.SeriesInstanceUid; }
-        }
+		public string StudyInstanceUid
+		{
+			get { return ParentSeries.StudyInstanceUid; }
+		}
 
-        public string SopInstanceUid
-        {
-            get { return _xml.SopInstanceUid; }
-        }
+		public string SeriesInstanceUid
+		{
+			get { return ParentSeries.SeriesInstanceUid; }
+		}
 
-        public string SopClassUid
-        {
-            get { return _xml.SopClass.Uid; }
-        }
+		public string SopInstanceUid
+		{
+			get { return _xml.SopInstanceUid; }
+		}
 
-        public int InstanceNumber
-        {
-            get { return DataSet[DicomTags.InstanceNumber].GetInt32(0, 0); }
-        }
+		public string SopClassUid
+		{
+			get { return _xml.SopClass.Uid; }
+		}
 
-        #endregion
-        
-        #region ISopInstance Members
+		public int InstanceNumber
+		{
+			get { return DataSet[DicomTags.InstanceNumber].GetInt32(0, 0); }
+		}
+
+		#endregion
+
+		#region ISopInstance Members
 
 		public SopClass SopClass
 		{
 			get { return SopClass.GetSopClass(_xml.SopClass.Uid); }
 		}
 
-        public DicomAttribute GetAttribute(uint dicomTag)
-        {
-            if (!IsStoredTag(dicomTag))
-                LoadFullHeader();
+		public DicomAttribute GetAttribute(uint dicomTag)
+		{
+			if (!IsStoredTag(dicomTag))
+				LoadFullHeader();
 
-            DicomAttribute attribute;
-            if (MetaInfo.TryGetAttribute(dicomTag, out attribute))
-                return attribute;
+			DicomAttribute attribute;
+			if (MetaInfo.TryGetAttribute(dicomTag, out attribute))
+				return attribute;
 
-            if (_fullHeader != null)
-                return _fullHeader.DataSet[dicomTag];
+			if (_fullHeader != null)
+				return _fullHeader.DataSet[dicomTag];
 
-            return _xml[dicomTag];
-        }
+			return _xml[dicomTag];
+		}
 
-        public DicomAttribute GetAttribute(DicomTag dicomTag)
-        {
-            if (!IsStoredTag(dicomTag))
-                LoadFullHeader();
+		public DicomAttribute GetAttribute(DicomTag dicomTag)
+		{
+			if (!IsStoredTag(dicomTag))
+				LoadFullHeader();
 
-            DicomAttribute attribute;
-            if (MetaInfo.TryGetAttribute(dicomTag, out attribute))
-                return attribute;
+			DicomAttribute attribute;
+			if (MetaInfo.TryGetAttribute(dicomTag, out attribute))
+				return attribute;
 
-            if (_fullHeader != null)
-                return _fullHeader.DataSet[dicomTag];
+			if (_fullHeader != null)
+				return _fullHeader.DataSet[dicomTag];
 
-            return _xml[dicomTag];
-        }
+			return _xml[dicomTag];
+		}
 
-        public DicomFile GetHeader(bool forceComplete)
-        {
+		public DicomFile GetHeader(bool forceComplete)
+		{
 			if (forceComplete)
-				LoadFullHeader();//Make sure the full header's loaded.
+				LoadFullHeader(); //Make sure the full header's loaded.
 
 			//Return a copy of whatever we've got.
 			return new DicomFile(null, MetaInfo.Copy(), DataSet.Copy());
@@ -232,6 +237,6 @@ namespace ClearCanvas.Dicom.Utilities.Xml.Study
 			return HeaderProvider.LoadFramePixelData(args);
 		}
 
-    	#endregion
-    }
+		#endregion
+	}
 }
