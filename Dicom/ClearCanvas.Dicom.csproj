@@ -288,6 +288,7 @@
     <Compile Include="Iod\Tests\HierarchicalSopInstanceReferenceDictionaryTests.cs" />
     <Compile Include="Iod\Tests\WindowTests.cs" />
     <Compile Include="Iod\Units.cs" />
+    <Compile Include="IO\DicomStreamOpener.cs" />
     <Compile Include="IO\IByteBuffer.cs" />
     <Compile Include="IO\Tests\ByteBufferHighCapacityTests.cs" />
     <Compile Include="IO\Tests\ByteBufferPerformanceTest.cs" />

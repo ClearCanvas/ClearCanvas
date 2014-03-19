@@ -22,9 +22,9 @@
 
 #endregion
 
-using System;
 using System.IO;
 using ClearCanvas.Dicom;
+using ClearCanvas.Dicom.IO;
 
 namespace ClearCanvas.ImageViewer.StudyManagement
 {
@@ -39,9 +39,9 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 	/// </remarks>
 	public class StreamSopDataSource : DicomMessageSopDataSource
 	{
-		private readonly Func<Stream> _streamOpener;
+		private readonly DicomStreamOpener _streamOpener;
 
-		public StreamSopDataSource(Func<Stream> streamOpener)
+		public StreamSopDataSource(DicomStreamOpener streamOpener)
 			: base(new DicomFile())
 		{
 			_streamOpener = streamOpener;
@@ -49,7 +49,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 
 		protected override void EnsureLoaded()
 		{
-			((DicomFile)SourceMessage).Load(_streamOpener, null, DicomReadOptions.Default | DicomReadOptions.StorePixelDataReferences);
+			((DicomFile) SourceMessage).Load(_streamOpener, null, DicomReadOptions.Default | DicomReadOptions.StorePixelDataReferences);
 		}
 	}
 }

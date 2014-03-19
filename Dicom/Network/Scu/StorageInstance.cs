@@ -23,8 +23,8 @@
 #endregion
 
 using System;
-using System.IO;
 using ClearCanvas.Common;
+using ClearCanvas.Dicom.IO;
 
 namespace ClearCanvas.Dicom.Network.Scu
 {
@@ -36,7 +36,7 @@ namespace ClearCanvas.Dicom.Network.Scu
 		#region Private Variables...
 
 		private string _filename;
-		private Func<Stream> _streamOpener = null;
+		private DicomStreamOpener _streamOpener = null;
 		private SopClass _sopClass;
 		private TransferSyntax _syntax;
 		private bool _infoLoaded = false;
@@ -59,9 +59,9 @@ namespace ClearCanvas.Dicom.Network.Scu
 			}
 		}
 
-		public Func<Stream> StreamOpener
+		public DicomStreamOpener StreamOpener
 		{
-			get { return _streamOpener ?? (_streamOpener = () => File.OpenRead(_filename)); }
+			get { return _streamOpener ?? (_streamOpener = !string.IsNullOrEmpty(_filename) ? DicomStreamOpener.Create(_filename) : null); }
 			set
 			{
 				_streamOpener = value;
@@ -216,7 +216,7 @@ namespace ClearCanvas.Dicom.Network.Scu
 			PatientId = string.Empty;
 		}
 
-		public StorageInstance(Func<Stream> streamOpener)
+		public StorageInstance(DicomStreamOpener streamOpener)
 		{
 			StreamOpener = streamOpener;
 			StudyInstanceUid = string.Empty;

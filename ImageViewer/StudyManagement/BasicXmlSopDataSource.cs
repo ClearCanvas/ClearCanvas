@@ -1,6 +1,5 @@
-﻿using System;
-using System.IO;
-using ClearCanvas.Dicom;
+﻿using ClearCanvas.Dicom;
+using ClearCanvas.Dicom.IO;
 using ClearCanvas.Dicom.Utilities.Xml;
 
 namespace ClearCanvas.ImageViewer.StudyManagement
@@ -15,14 +14,12 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 	/// it can be loaded more quickly at a later time.</remarks>
 	public class BasicXmlSopDataSource : XmlSopDataSource
 	{
-		private readonly Func<Stream> _streamOpener;
+		private readonly DicomStreamOpener _streamOpener;
 
 		public BasicXmlSopDataSource(InstanceXml instanceXml, string path)
-			: this(instanceXml, () => File.OpenRead(path))
-		{
-		}
+			: this(instanceXml, DicomStreamOpener.Create(path)) {}
 
-		public BasicXmlSopDataSource(InstanceXml instanceXml, Func<Stream> streamOpener)
+		public BasicXmlSopDataSource(InstanceXml instanceXml, DicomStreamOpener streamOpener)
 			: base(instanceXml)
 		{
 			_streamOpener = streamOpener;

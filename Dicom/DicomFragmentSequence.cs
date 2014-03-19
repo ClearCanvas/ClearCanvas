@@ -88,7 +88,7 @@ namespace ClearCanvas.Dicom
 			if (_reference != null)
 			{
 				ByteBuffer bb;
-				using (var fs = _reference.StreamOpener())
+				using (var fs = _reference.StreamOpener.Open())
 				{
 					fs.Seek(_reference.Offset, SeekOrigin.Begin);
 

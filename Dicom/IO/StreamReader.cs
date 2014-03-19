@@ -58,7 +58,7 @@ namespace ClearCanvas.Dicom.IO
 
 		#region Private Members
 
-		private const uint UndefinedLength = 0xFFFFFFFF;
+		private const uint _undefinedLength = 0xFFFFFFFF;
 
 		private readonly Stream _stream;
 		private BinaryReader _reader;
@@ -66,7 +66,7 @@ namespace ClearCanvas.Dicom.IO
 		private Endian _endian;
 
 		private DicomVr _vr;
-		private uint _len = UndefinedLength;
+		private uint _len = _undefinedLength;
 		private long _pos = 0;
 
 		private long _remain = 0;
@@ -107,7 +107,7 @@ namespace ClearCanvas.Dicom.IO
 
 		public DicomAttributeCollection Dataset { get; set; }
 
-		public Func<Stream> StreamOpener { get; set; }
+		public DicomStreamOpener StreamOpener { get; set; }
 
 		public long BytesEstimated { get; private set; }
 
@@ -282,7 +282,7 @@ namespace ClearCanvas.Dicom.IO
 											_reader.ReadUInt16();
 
 										uint l = _reader.ReadUInt32();
-										if (l == UndefinedLength)
+										if (l == _undefinedLength)
 											_vr = DicomVr.SQvr;
 									}
 									_stream.Position = pos;
@@ -294,7 +294,7 @@ namespace ClearCanvas.Dicom.IO
 						twoByteLength = _vr.Is16BitLengthField;
 
 					// Read the value length
-					if (_len == UndefinedLength)
+					if (_len == _undefinedLength)
 					{
 						if (_syntax.ExplicitVr)
 						{
@@ -347,7 +347,7 @@ namespace ClearCanvas.Dicom.IO
 							BytesRead += 4;
 						}
 
-						if ((_len != UndefinedLength)
+						if ((_len != _undefinedLength)
 						    && !_vr.Equals(DicomVr.SQvr)
 						    && !(LastTagRead.Equals(DicomTag.Item)
 						         && _fragment == null))
@@ -416,7 +416,7 @@ namespace ClearCanvas.Dicom.IO
 
 						if (LastTagRead.Equals(DicomTag.Item))
 						{
-							if (_len != UndefinedLength)
+							if (_len != _undefinedLength)
 							{
 								if (_len > _remain)
 									return NeedMoreData(_remain - _len);
@@ -458,7 +458,7 @@ namespace ClearCanvas.Dicom.IO
 							_sqrs.Pop();
 							_sqrs.Push(rec);
 
-							if (_len != UndefinedLength)
+							if (_len != _undefinedLength)
 							{
 								ByteBuffer data = new ByteBuffer(_endian, _len);
 								data.CopyFrom(_stream, (int) _len);
@@ -490,7 +490,7 @@ namespace ClearCanvas.Dicom.IO
 								rec2.Parent[rec.Tag].SetNullValue();
 						}
 
-						if (rec.Len != UndefinedLength)
+						if (rec.Len != _undefinedLength)
 						{
 							long end = rec.Pos + 8 + rec.Len;
 							if (_syntax.ExplicitVr)
@@ -503,7 +503,7 @@ namespace ClearCanvas.Dicom.IO
 					}
 					else
 					{
-						if (_len == UndefinedLength)
+						if (_len == _undefinedLength)
 						{
 							if (_vr.Equals(DicomVr.UNvr))
 							{
@@ -534,7 +534,7 @@ namespace ClearCanvas.Dicom.IO
 								                     		         	: Dataset,
 								                     		Current = null,
 								                     		Tag = LastTagRead,
-								                     		Len = UndefinedLength
+								                     		Len = _undefinedLength
 								                     	};
 
 								_sqrs.Push(rec);
@@ -675,7 +675,7 @@ namespace ClearCanvas.Dicom.IO
 										else
 											ds[LastTagRead] = elem;
 
-										if (rec.Curlen != UndefinedLength)
+										if (rec.Curlen != _undefinedLength)
 										{
 											long end = rec.Curpos + rec.Curlen;
 											if (_stream.Position >= end)
@@ -715,7 +715,7 @@ namespace ClearCanvas.Dicom.IO
 
 					LastTagRead = null;
 					_vr = null;
-					_len = UndefinedLength;
+					_len = _undefinedLength;
 				}
 				return DicomReadStatus.Success;
 			}

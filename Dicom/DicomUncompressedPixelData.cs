@@ -1114,7 +1114,7 @@ namespace ClearCanvas.Dicom
 				if (_obAttrib.Reference != null)
 				{
 					ByteBuffer bb;
-					using (var fs = _obAttrib.Reference.StreamOpener())
+					using (var fs = _obAttrib.Reference.StreamOpener.Open())
 					{
 						long offset = _obAttrib.Reference.Offset + _frameIndex*FrameSize;
 						fs.Seek(offset, SeekOrigin.Begin);
@@ -1169,7 +1169,7 @@ namespace ClearCanvas.Dicom
 						// For odd number frames, we get a byte before the frame
 						// and for even frames we get a byte after the frame.
 
-						using (var fs = _owAttrib.Reference.StreamOpener())
+						using (var fs = _owAttrib.Reference.StreamOpener.Open())
 						{
 							if (_frameIndex%2 == 1)
 								fs.Seek((_owAttrib.Reference.Offset + _frameIndex*FrameSize) - 1, SeekOrigin.Begin);
@@ -1192,7 +1192,7 @@ namespace ClearCanvas.Dicom
 						return;
 					}
 
-					using (var fs = _owAttrib.Reference.StreamOpener())
+					using (var fs = _owAttrib.Reference.StreamOpener.Open())
 					{
 						fs.Seek(_owAttrib.Reference.Offset + _frameIndex*FrameSize, SeekOrigin.Begin);
 

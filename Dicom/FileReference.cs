@@ -22,8 +22,7 @@
 
 #endregion
 
-using System;
-using System.IO;
+using ClearCanvas.Dicom.IO;
 
 namespace ClearCanvas.Dicom
 {
@@ -37,7 +36,7 @@ namespace ClearCanvas.Dicom
 
 		#region Public Properties
 
-		internal Func<Stream> StreamOpener { get; private set; }
+		internal DicomStreamOpener StreamOpener { get; private set; }
 
 		internal long Offset { get; private set; }
 		internal Endian Endian { get; private set; }
@@ -52,7 +51,7 @@ namespace ClearCanvas.Dicom
 
 		#region Constructors
 
-		internal FileReference(Func<Stream> streamOpener, long offset, long length, Endian endian, DicomVr vr)
+		internal FileReference(DicomStreamOpener streamOpener, long offset, long length, Endian endian, DicomVr vr)
 		{
 			StreamOpener = streamOpener;
 			Offset = offset;

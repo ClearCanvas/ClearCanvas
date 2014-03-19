@@ -612,7 +612,7 @@ namespace ClearCanvas.Dicom.Network.Scu
 
 			fileToSend.ParseMetaInfo();
 
-			using (var fs = fileToSend.StreamOpener())
+			using (var fs = fileToSend.StreamOpener.Open())
 			{
 				// Seek to the Dataset
 				fs.Seek(fileToSend.MetaInfoFileLength, SeekOrigin.Begin);
