@@ -68,6 +68,12 @@ namespace ClearCanvas.Enterprise.Common.Setup
 						return;
 					}
 
+					if (!string.IsNullOrEmpty(cmdLine.ConfigData))
+					{
+						SetupHelper.ImportConfigurations(cmdLine.ConfigData);
+						return;
+					}
+
 					var found = false;
 					var list = store.ListSettingsGroups();
 					foreach (var descriptor in list)

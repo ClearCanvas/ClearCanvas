@@ -154,6 +154,9 @@
     <Compile Include="Authentication\ValidateSessionResponse.cs" />
     <Compile Include="AuthorityGroupIsNotEmptyException.cs" />
     <Compile Include="BuiltInAuthorityGroups.cs" />
+    <Compile Include="Configuration\ConfigurationDefinition.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Configuration\IApplicationConfigurationReadService.cs" />
     <Compile Include="Configuration\ImportSettingsGroupRequest.cs" />
     <Compile Include="Configuration\ImportSettingsGroupResponse.cs" />
