@@ -1,4 +1,4 @@
-﻿#region License
+#region License
 
 // Copyright (c) 2013, ClearCanvas Inc.
 // All rights reserved.
