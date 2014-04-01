@@ -1401,8 +1401,10 @@ namespace ClearCanvas.Dicom.Network
 			message.CommandSet[DicomTags.MessageId].SetUInt16(0, messageID);
 			message.CommandSet[DicomTags.CommandField].SetUInt16(0, (ushort)DicomCommandField.NActionRequest);
 
-			//if (message.DataSet != null && !message.DataSet.IsEmpty())
-			message.CommandSet[DicomTags.DataSetType].SetUInt16(0, 0x101);
+			if (message.DataSet == null || message.DataSet.IsEmpty())
+				message.CommandSet[DicomTags.DataSetType].SetUInt16(0, 0x101);
+			else
+				message.CommandSet[DicomTags.DataSetType].SetUInt16(0, 0x102);
 
 			SendDimse(presentationID, message.CommandSet, message.DataSet);
 		}
