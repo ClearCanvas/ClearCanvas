@@ -145,6 +145,6 @@
     <value>The remote server was unable to process the request.</value>
   </data>
   <data name="UnknownHost" xml:space="preserve">
-    <value>No such host is known.</value>
+    <value>The hostname was not found.</value>
   </data>
 </root>

@@ -146,9 +146,9 @@ namespace ClearCanvas.Dicom.Network
 	            {
 					entry = Dns.GetHostEntry(_assoc.RemoteHostname);
 	            }
-	            catch (Exception x)
+	            catch (SocketException x)
 	            {
-					if (x.Message.Equals("The requested name is valid, but no data of the requested type was found"))
+					if (x.SocketErrorCode == SocketError.NoData || x.SocketErrorCode == SocketError.HostNotFound)
 						throw new DicomException(SR.UnknownHost, x);
 		            throw;
 	            }

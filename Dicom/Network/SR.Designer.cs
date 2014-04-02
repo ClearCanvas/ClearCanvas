@@ -142,7 +142,7 @@ namespace ClearCanvas.Dicom.Network {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to No such host is known..
+        ///   Looks up a localized string similar to The hostname was not found..
         /// </summary>
         internal static string UnknownHost {
             get {
