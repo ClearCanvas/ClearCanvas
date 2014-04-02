@@ -668,9 +668,9 @@ namespace ClearCanvas.Dicom.Network.Scu
 				if (pcid == 0)
 				{
 					fileToSend.SendStatus = DicomStatuses.SOPClassNotSupported;
-					fileToSend.ExtendedFailureDescription = string.Format(SR.ErrorSendSopClassNotSupported, msg.SopClass);
+					fileToSend.ExtendedFailureDescription = string.Format(SR.ErrorSendSopClassNotSupported, fileToSend.SopClass);
 
-					LogError(fileToSend, msg, DicomStatuses.SOPClassNotSupported);
+					LogError(fileToSend, fileToSend, DicomStatuses.SOPClassNotSupported);
 
 					_failureSubOperations++;
 					_remainingSubOperations--;
@@ -731,7 +731,7 @@ namespace ClearCanvas.Dicom.Network.Scu
 			return true;
 		}
 
-		private void LogError(StorageInstance instance, DicomMessage msg, DicomStatus dicomStatus)
+		private void LogError(StorageInstance instance, StorageInstance msg, DicomStatus dicomStatus)
 		{
 			if (dicomStatus == DicomStatuses.SOPClassNotSupported)
 			{
