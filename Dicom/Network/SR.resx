@@ -144,4 +144,7 @@
   <data name="UnableToProcess" xml:space="preserve">
     <value>The remote server was unable to process the request.</value>
   </data>
+  <data name="UnknownHost" xml:space="preserve">
+    <value>No such host is known.</value>
+  </data>
 </root>

@@ -370,7 +370,7 @@ namespace ClearCanvas.Dicom.Network.Scu
 			catch (Exception ex)
 			{
 				Status = ScuOperationStatus.ConnectFailed;
-				FailureDescription = ex.Message;
+				FailureDescription = string.Format("Error connecting to {0}: {1}", RemoteAE, ex.Message);
 				Platform.Log(LogLevel.Error, ex, "Exception attempting connection to RemoteHost {0} ({1}:{2})", RemoteAE, RemoteHost, RemotePort);
 				throw;
 			}
