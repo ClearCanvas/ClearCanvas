@@ -537,18 +537,47 @@ namespace ClearCanvas.Dicom
 						MediaStorageSopClassUid = DataSet[DicomTags.SopClassUid].ToString();
 					if (DataSet.Contains(DicomTags.SopInstanceUid))
 						MediaStorageSopInstanceUid = DataSet[DicomTags.SopInstanceUid].ToString();
+
+					Loaded = true;
 					return;
 				}
 			}
 			else
 			{
+				// TODO CR (04 Apr 2014): this code here is almost identical to the seekable stream above, except that we use the 4CC wrapper
+				// we can combine these two when we trust that the wrapper works in all cases
+				iStream = FourCcReadStream.Create(iStream);
+
 				// Read the 128 byte header first, then check for DICM
-				iStream.Read(new byte[128], 0, 128);
+				iStream.SeekEx(128, SeekOrigin.Begin);
 
 				if (!FileHasPart10Header(iStream))
 				{
-					Platform.Log(LogLevel.Error, "Reading DICOM file from stream, file does not have part 10 format header.");
-					throw new DicomException("File being read from stream is not a part 10 format file");
+					if (!Flags.IsSet(options, DicomReadOptions.ReadNonPart10Files))
+						throw new DicomException(String.Format("File is not part 10 format file: {0}", Filename));
+
+					iStream.Seek(0, SeekOrigin.Begin);
+					dsr = new DicomStreamReader(iStream)
+					      	{
+					      		StreamOpener = streamOpener,
+					      		TransferSyntax = TransferSyntax.ImplicitVrLittleEndian,
+					      		Dataset = DataSet
+					      	};
+					DicomReadStatus stat = dsr.Read(stopTag, options);
+					if (stat != DicomReadStatus.Success)
+					{
+						Platform.Log(LogLevel.Error, "Unexpected error when reading file: {0}", Filename);
+						throw new DicomException("Unexpected read error with file: " + Filename);
+					}
+
+					TransferSyntax = TransferSyntax.ImplicitVrLittleEndian;
+					if (DataSet.Contains(DicomTags.SopClassUid))
+						MediaStorageSopClassUid = DataSet[DicomTags.SopClassUid].ToString();
+					if (DataSet.Contains(DicomTags.SopInstanceUid))
+						MediaStorageSopInstanceUid = DataSet[DicomTags.SopInstanceUid].ToString();
+
+					Loaded = true;
+					return;
 				}
 			}
 
@@ -712,6 +741,122 @@ namespace ClearCanvas.Dicom
 			sb.AppendLine().Append(prefix).Append("DataSet:").AppendLine();
 			DataSet.Dump(sb, prefix, options);
 			sb.AppendLine();
+		}
+
+		#endregion
+
+		#region FourCcReadStream
+
+		/// <summary>
+		/// Used to buffer the first 132 bytes of an unseekable DICOM stream, so that we can reset if it turns out to not be a Part 10 file
+		/// </summary>
+		private class FourCcReadStream : Stream
+		{
+			private Stream _realStream;
+			private Stream _prefixStream;
+			private long _position;
+
+			public static FourCcReadStream Create(Stream realStream)
+			{
+				var prefixBuffer = new byte[132]; // 128 prefix + 4CC
+
+				var bytesRead = 0;
+				while (bytesRead < 132)
+				{
+					// fill the entire buffer - if Read returns 0, then we encountered an EOF and the stream is definitely not a part 10 file, but might still be valid!
+					var read = realStream.Read(prefixBuffer, bytesRead, prefixBuffer.Length - bytesRead);
+					if (read == 0) break;
+					bytesRead += read;
+				}
+
+				return new FourCcReadStream(new MemoryStream(prefixBuffer, 0, bytesRead, false), realStream);
+			}
+
+			private FourCcReadStream(Stream prefix, Stream realStream)
+			{
+				_prefixStream = prefix;
+				_realStream = realStream;
+				_position = 0;
+			}
+
+			protected override void Dispose(bool disposing)
+			{
+				if (!disposing) return;
+
+				if (_realStream != null)
+				{
+					_realStream.Dispose();
+					_realStream = null;
+				}
+
+				if (_prefixStream != null)
+				{
+					_prefixStream.Dispose();
+					_prefixStream = null;
+				}
+			}
+
+			public override bool CanRead
+			{
+				get { return true; }
+			}
+
+			public override bool CanSeek
+			{
+				get { return false; }
+			}
+
+			public override bool CanWrite
+			{
+				get { return false; }
+			}
+
+			public override long Length
+			{
+				get { return _realStream.Length; }
+			}
+
+			public override long Position
+			{
+				get { return _position; }
+				set { throw new NotSupportedException(); }
+			}
+
+			public override int Read(byte[] buffer, int offset, int count)
+			{
+				var bytesRead = (_position < _prefixStream.Length ? _prefixStream : _realStream).Read(buffer, offset, count);
+				_position += bytesRead;
+				return bytesRead;
+			}
+
+			public override int ReadByte()
+			{
+				var result = (_position < _prefixStream.Length ? _prefixStream : _realStream).ReadByte();
+				if (result >= 0) ++_position;
+				return result;
+			}
+
+			public override long Seek(long offset, SeekOrigin origin)
+			{
+				if (_position <= _prefixStream.Length && offset == 0 && origin == SeekOrigin.Begin)
+					return _position = _prefixStream.Position = 0;
+				throw new InvalidOperationException("Unable to reset stream when the position has already advanced past the prefix");
+			}
+
+			public override void Write(byte[] buffer, int offset, int count)
+			{
+				throw new NotSupportedException();
+			}
+
+			public override void Flush()
+			{
+				throw new NotSupportedException();
+			}
+
+			public override void SetLength(long value)
+			{
+				throw new NotSupportedException();
+			}
 		}
 
 		#endregion
