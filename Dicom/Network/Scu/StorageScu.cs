@@ -915,19 +915,6 @@ namespace ClearCanvas.Dicom.Network.Scu
 
 			OnImageStoreCompleted(_storageInstanceList[_fileListIndex]);
 
-			if (Status == ScuOperationStatus.Canceled || message.Status.Status == DicomState.Cancel)
-			{
-				FailRemaining(DicomStatuses.Cancel);
-				Platform.Log(LogLevel.Info, "Cancel requested by {0}, releasing association from {1} to {2}",
-				             (message.Status.Status == DicomState.Cancel) ? "remote host" : "client",
-				             association.CallingAE, association.CalledAE);
-
-				Status = ScuOperationStatus.Canceled;
-				client.SendReleaseRequest();
-				StopRunningOperation();
-				return;
-			}
-
 			_fileListIndex++;
 			if (_fileListIndex >= _storageInstanceList.Count)
 			{
@@ -936,6 +923,20 @@ namespace ClearCanvas.Dicom.Network.Scu
 				StopRunningOperation();
 				return;
 			}
+
+			if (Status == ScuOperationStatus.Canceled || message.Status.Status == DicomState.Cancel)
+			{
+				FailRemaining(DicomStatuses.Cancel);
+				Platform.Log(LogLevel.Info, "Cancel requested by {0}, releasing association from {1} to {2}",
+							 (message.Status.Status == DicomState.Cancel) ? "remote host" : "client",
+							 association.CallingAE, association.CalledAE);
+
+				Status = ScuOperationStatus.Canceled;
+				client.SendReleaseRequest();
+				StopRunningOperation();
+				return;
+			}
+
 			SendCStoreUntilSuccess(client, association);
 		}
 
