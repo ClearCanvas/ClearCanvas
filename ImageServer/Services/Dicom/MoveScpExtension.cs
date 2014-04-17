@@ -421,10 +421,11 @@ namespace ClearCanvas.ImageServer.Services.Dicom
                     // set the preferred syntax lists
                     _theScu.LoadPreferredSyntaxes(read);
 
-                	_theScu.ImageStoreCompleted += delegate(Object sender, StorageInstance instance)
+                	_theScu.ImageStoreCompleted += (sender, e) =>
                 	                               	{
                 	                               		var scu = (StorageScu) sender;
                 	                               		var msg = new DicomMessage();
+                	                               		var instance = e.StorageInstance;
                 	                               		DicomStatus status;
 
                                                         if (instance.SendStatus.Status == DicomState.Failure)

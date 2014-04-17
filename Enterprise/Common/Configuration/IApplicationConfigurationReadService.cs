@@ -38,28 +38,28 @@ namespace ClearCanvas.Enterprise.Common.Configuration
 		/// Lists settings groups installed in the local plugin base.
 		/// </summary>
 		[OperationContract]
+		[ResponseDataCachingStrategy(typeof(ResponseCachingStrategies.ListSettingsGroups))]
 		ListSettingsGroupsResponse ListSettingsGroups(ListSettingsGroupsRequest request);
 
 		/// <summary>
 		/// Lists the settings properties for the specified settings group.
 		/// </summary>
 		[OperationContract]
+		//Uses the default caching strategy, since the properties of a given group aren't going to change.
 		ListSettingsPropertiesResponse ListSettingsProperties(ListSettingsPropertiesRequest request);
 
 		/// <summary>
 		/// Lists configuration documents matching specified criteria.
 		/// </summary>
-		/// <param name="request"></param>
-		/// <returns></returns>
 		[OperationContract]
 		ListConfigurationDocumentsResponse ListConfigurationDocuments(ListConfigurationDocumentsRequest request);
-
 
 		/// <summary>
 		/// Gets the document specified by the name, version, user and instance key.
 		/// The user and instance key may be null.
 		/// </summary>
 		[OperationContract]
+		[ResponseDataCachingStrategy(typeof(ResponseCachingStrategies.GetConfigurationDocument))]
 		GetConfigurationDocumentResponse GetConfigurationDocument(GetConfigurationDocumentRequest request);
 	}
 }

@@ -206,7 +206,7 @@ namespace ClearCanvas.Dicom
 		private DicomAttributeBinaryData<T> Load()
 		{
 			ByteBuffer bb;
-			using (FileStream fs = File.OpenRead(_reference.Filename))
+			using (var fs = _reference.StreamOpener.Open())
 			{
 				fs.Seek(_reference.Offset, SeekOrigin.Begin);
 
@@ -268,7 +268,7 @@ namespace ClearCanvas.Dicom
 			ByteBuffer bb;
 			if (_reference != null)
 			{
-				using (FileStream fs = File.OpenRead(_reference.Filename))
+				using (var fs = _reference.StreamOpener.Open())
 				{
 					fs.Seek(_reference.Offset, SeekOrigin.Begin);
 
@@ -443,6 +443,18 @@ namespace ClearCanvas.Dicom
 
 			if (_values == null)
 				return String.Empty;
+
+			// TODO: this is horrible API design - accidentally putting a watch on a large binary attribute (e.g. pixel data of a mammo) will kill the IDE
+			// Put that kind of functionality in a GetStringValue() method (to match SetStringValue() method), and let ToString() follow the MSDN recommended guidelines:
+			// * The returned string should be friendly and readable by humans.
+			// * The returned string should uniquely identify the value of the object instance.
+			// * The returned string should be as short as possible so that it is suitable for display by a debugger.
+			// * Your ToString override should not return String.Empty or a null string.
+			// * Your ToString override should not throw an exception.
+			// * If the string representation of an instance is culture-sensitive or can be formatted in multiple ways, implement the IFormattable interface.
+			// * If the returned string includes sensitive information, you should first demand an appropriate permission. If the demand succeeds, you can return the sensitive information; otherwise, you should return a string that excludes the sensitive information.
+			// * Your ToString override should have no observable side effects to avoid complications in debugging. For example, a call to the ToString method should not change the value of instance fields.
+			// * If your type implements a parsing method (or Parse or TryParse method, a constructor, or some other static method that instantiates an instance of the type from a string), you should ensure that the string returned by the ToString method can be converted to an object instance. 
 
 			StringBuilder val = null;
 			foreach (T index in _values)
@@ -3010,7 +3022,7 @@ namespace ClearCanvas.Dicom
 			ByteBuffer bb;
 			if (Reference != null)
 			{
-				using (FileStream fs = File.OpenRead(Reference.Filename))
+				using (var fs = Reference.StreamOpener.Open())
 				{
 					fs.Seek(Reference.Offset, SeekOrigin.Begin);
 

@@ -43,8 +43,6 @@ namespace ClearCanvas.Dicom.ServiceModel.Editing
 	public interface IEditContext
 	{
 		DicomAttributeCollection DataSet { get; }
-		bool Excluded { get; }
-		void Exclude();
 	}
 
 	[KnownType("GetKnownTypes")]
@@ -73,14 +71,18 @@ namespace ClearCanvas.Dicom.ServiceModel.Editing
 					return _types;
 
 				var assemblies = (from plugin in Platform.PluginManager.Plugins select plugin.Assembly.Resolve()).ToList();
-				assemblies.Add(typeof (Edit).Assembly);
+				var editAssembly = typeof (Edit).Assembly;
+				if (!assemblies.Contains(editAssembly))
+					assemblies.Add(editAssembly);
 
-				return _types = (from assembly in assemblies
+				_types = (from assembly in assemblies
 				                 from type in assembly.GetTypes()
 				                 where typeof (DataContractBase).IsAssignableFrom(type)
 				                       && type.IsDefined(typeof (EditTypeAttribute), false)
 				                       && type.IsDefined(typeof (DataContractAttribute), false)
 				                 select type).ToList().AsReadOnly();
+
+				return _types;
 			}
 		}
 

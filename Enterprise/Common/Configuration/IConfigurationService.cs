@@ -40,6 +40,7 @@ namespace ClearCanvas.Enterprise.Common.Configuration
 		/// <param name="request"></param>
 		/// <returns></returns>
 		[OperationContract]
+		[ResponseDataCachingStrategy(typeof(ResponseCachingStrategies.ImportSettingsGroup))]
 		ImportSettingsGroupResponse ImportSettingsGroup(ImportSettingsGroupRequest request);
 
 		/// <summary>
@@ -47,6 +48,7 @@ namespace ClearCanvas.Enterprise.Common.Configuration
 		/// The user and instance key may be null.
 		/// </summary>
 		[OperationContract]
+		[ResponseDataCachingStrategy(typeof(ResponseCachingStrategies.SetConfigurationDocument))]
 		SetConfigurationDocumentResponse SetConfigurationDocument(SetConfigurationDocumentRequest request);
 
 		/// <summary>
@@ -54,7 +56,7 @@ namespace ClearCanvas.Enterprise.Common.Configuration
 		/// The user and instance key may be null.
 		/// </summary>
 		[OperationContract]
+		[ResponseDataCachingStrategy(typeof(ResponseCachingStrategies.RemoveConfigurationDocument))]
 		RemoveConfigurationDocumentResponse RemoveConfigurationDocument(RemoveConfigurationDocumentRequest request);
-
 	}
 }

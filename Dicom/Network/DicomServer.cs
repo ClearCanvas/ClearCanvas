@@ -83,7 +83,7 @@ namespace ClearCanvas.Dicom.Network
         private Dictionary<string, ListenerInfo> _appList;
         private bool _disposed;
 		private IDicomFilestreamHandler _filestreamHandler;
-
+	    private MemoryStream _bufferedFilestream = null;
 		#endregion
 
         #region Public Properties
@@ -428,12 +428,31 @@ namespace ClearCanvas.Dicom.Network
 			}
 		}
 
-		protected override bool OnReceiveFileStream(byte pcid, DicomAttributeCollection command, DicomAttributeCollection dataset, byte[] data, int offset, int count, bool isFirst, bool isLast)
+		protected override bool OnReceiveFileStream(byte pcid, DicomAttributeCollection command, DicomAttributeCollection dataset, byte[] data, int offset, int count, bool encounteredStopTag, bool isFirst, bool isLast)
 		{
 			try
 			{
-				if (isFirst)
+				if (!encounteredStopTag)
+				{
+					// Buffer data until we get to the stop tag so all the attributes expected are filled in.
+					if (_bufferedFilestream == null)
+						_bufferedFilestream = new MemoryStream();
+
+					_bufferedFilestream.Write(data, offset, count);
+					return true;
+				}
+
+				if (isFirst || _bufferedFilestream != null)
 					_filestreamHandler = _handler.OnStartFilestream(this, _assoc as ServerAssociationParameters, pcid, new DicomMessage(command, dataset));
+				
+				if (_bufferedFilestream != null)
+				{
+					var a = _bufferedFilestream.ToArray();
+					_bufferedFilestream = null;
+
+					if (!_filestreamHandler.SaveStreamData(new DicomMessage(command, dataset), a, 0, a.Length))
+						return false;
+				}
 
 				if (!_filestreamHandler.SaveStreamData(new DicomMessage(command, dataset), data, offset, count))
 					return false;

@@ -23,194 +23,249 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Shreds;
 
 namespace ClearCanvas.Server.ShredHost
 {
-    internal class ShredController : MarshalByRefObject
-    {
-        public ShredController(ShredStartupInfo startupInfo)
-        {
-            Platform.CheckForNullReference(startupInfo, "startupInfo");
+	internal class ShredController : MarshalByRefObject
+	{
 
-            _startupInfo = startupInfo;
-            _id = ShredController.NextId;
-            _runningState = RunningState.Stopped;
-        }
+		public ShredController(ShredStartupInfo startupInfo)
+		{
+			Platform.CheckForNullReference(startupInfo, "startupInfo");
 
-        static ShredController()
-        {
-            _nextId = 101;
-        }
+			_startupInfo = startupInfo;
+			_id = ShredController.NextId;
+			_runningState = RunningState.Stopped;
+		}
 
-        public bool Start()
-        {
-            lock (_lockRunningState)
-            {
-                if (RunningState.Running == _runningState || RunningState.Transition == _runningState)
-                    return (RunningState.Running == _runningState);
+		static ShredController()
+		{
+			_nextId = 101;
+		}
 
-                _runningState = RunningState.Transition;
-            }
+		public bool Start()
+		{
+			lock (_lockRunningState)
+			{
+				if (RunningState.Running == _runningState || RunningState.Transition == _runningState)
+					return (RunningState.Running == _runningState);
 
-            // create the AppDomain that the shred object will be instantiated in
-            _domain = AppDomain.CreateDomain(_startupInfo.ShredTypeName);
-            _shredObject = (IShred)_domain.CreateInstanceFromAndUnwrap(_startupInfo.AssemblyPath.LocalPath, _startupInfo.ShredTypeName);
-            
-            // cache the shred's details so that even if the shred is stopped and unloaded
-            // we still have it's display name 
-            _shredCacheObject = new ShredCacheObject(_shredObject.GetDisplayName(), _shredObject.GetDescription());
-            
-            // create the thread and start it
-            _thread = new Thread(new ParameterizedThreadStart(StartupShred));
-            _thread.Name = String.Format("{0}", _shredCacheObject.GetDisplayName());
-            _thread.Start(this);
+				_runningState = RunningState.Transition;
+			}
 
-            lock (_lockRunningState)
-            {
-                _runningState = RunningState.Running;
-            }
+			if (_startupInfo.IsolationLevel == ShredIsolationLevel.OwnAppDomain)
+			{
+				_domain = AppDomain.CreateDomain(_startupInfo.ShredTypeName);
+				_shredObject = (IShred) _domain.CreateInstanceFromAndUnwrap(_startupInfo.AssemblyPath.LocalPath, _startupInfo.ShredTypeName);
+			}
+			else
+			{
+				_shredObject = (IShred) AppDomain.CurrentDomain.CreateInstanceFromAndUnwrap(_startupInfo.AssemblyPath.LocalPath, _startupInfo.ShredTypeName);
+			}
 
-            return (RunningState.Running == _runningState);
-        }
+			// cache the shred's details so that even if the shred is stopped and unloaded
+			// we still have it's display name 
+			_shredCacheObject = new ShredCacheObject(_shredObject.GetDisplayName(), _shredObject.GetDescription());
+
+			// create the thread and start it
+			_thread = new Thread(StartupShred)
+			          	{
+			          		Name = String.Format("{0}", _shredCacheObject.GetDisplayName())
+			          	};
+
+			_thread.Start(this);
+
+			lock (_lockRunningState)
+			{
+				_runningState = RunningState.Running;
+			}
+
+			return (RunningState.Running == _runningState);
+		}
 
 
-        public bool Stop()
-        {
-            lock (_lockRunningState)
-            {
-                if (RunningState.Stopped == _runningState || RunningState.Transition == _runningState)
-                    return (RunningState.Running == _runningState);
+		public bool Stop()
+		{
+			lock (_lockRunningState)
+			{
+				if (RunningState.Stopped == _runningState || RunningState.Transition == _runningState)
+					return (RunningState.Running == _runningState);
 
-                _runningState = RunningState.Transition;
-            }
+				_runningState = RunningState.Transition;
+			}
 
-            _shredObject.Stop();
-            _thread.Join();
-            AppDomain.Unload(_domain);
-            _domain = null;         // need to explicity set to null, otherwise any references to it in the future will throw an exception
-            _shredObject = null;
-            _thread = null;
+			_shredObject.Stop();
+			_thread.Join();
+			if (_domain != null)
+			{
+				AppDomain.Unload(_domain);
+				_domain = null; // need to explicity set to null, otherwise any references to it in the future will throw an exception
+			}
 
-            lock (_lockRunningState)
-            {
-                _runningState = RunningState.Stopped;
-            }
+			_shredObject = null;
+			_thread = null;
 
-            return (RunningState.Running == _runningState);
-        }
+			lock (_lockRunningState)
+			{
+				_runningState = RunningState.Stopped;
+			}
 
-        private void StartupShred(object threadData)
-        {
-            ShredController shredController = threadData as ShredController;
-            IWcfShred wcfShred = shredController.Shred as IWcfShred;
-            try
-            {
-                if (wcfShred != null)
-                {
-                    wcfShred.SharedHttpPort = ShredHostServiceSettings.Instance.SharedHttpPort;
-                    wcfShred.SharedTcpPort = ShredHostServiceSettings.Instance.SharedTcpPort;
-                    wcfShred.ServiceAddressBase = ShredHostServiceSettings.Instance.ServiceAddressBase;
-                }
-                shredController.Shred.Start();
-            }
-            catch (Exception e)
-            {
-                Platform.Log(LogLevel.Error, e, "Unexpected exception when starting up Shred {0}",
-                             shredController.Shred.GetDescription());
-            }
-        }
+			return (RunningState.Running == _runningState);
+		}
 
-        private class ShredCacheObject : IShred
-        {
-            public ShredCacheObject(string displayName, string description)
-            {
-                _displayName = displayName;
-                _description = description;
-            }
+		private void StartupShred(object threadData)
+		{
+			ShredController shredController = threadData as ShredController;
+			IWcfShred wcfShred = shredController.Shred as IWcfShred;
 
-            #region Private fields
-            private string _displayName;
-            private string _description;
-            #endregion
+			try
+			{
+				if (wcfShred != null)
+				{
+					wcfShred.SharedHttpPort = ShredHostServiceSettings.Instance.SharedHttpPort;
+					wcfShred.SharedTcpPort = ShredHostServiceSettings.Instance.SharedTcpPort;
+					wcfShred.ServiceAddressBase = ShredHostServiceSettings.Instance.ServiceAddressBase;
+				}
 
-            #region IShred Members
+				BeginStartupTimer();
 
-            public void Start()
-            {
-                throw new Exception("The method or operation is not implemented.");
-            }
+				shredController.Shred.Start();
+			}
+			catch (Exception e)
+			{
+				Platform.Log(LogLevel.Error, e, "Unexpected exception when starting up Shred {0}",
+				             shredController.Shred.GetDescription());
+			}
+			finally
+			{
+				EndStartupTimer();
+			}
+		}
 
-            public void Stop()
-            {
-                throw new Exception("The method or operation is not implemented.");
-            }
+		private void BeginStartupTimer()
+		{
+			_startingUp = true;
+			TimerCallback callback = o =>
+			{
+				var shred = _shredObject;
+				if (_startingUp && shred != null)
+					Platform.Log(LogLevel.Warn, "The shred '{0}' has not returned from its Start() method after 30 seconds; shreds should start up and return quickly and should never block until Stop() is called.", shred.GetType().FullName);
 
-            public string GetDisplayName()
-            {
-                return _displayName;
-            }
+				EndStartupTimer();
+			};
 
-            public string GetDescription()
-            {
-                return _description;
-            }
+			//Use a timer on the thread pool to check that the shred's Start method returned after a reasonable startup time.
+			var thirtySeconds = TimeSpan.FromSeconds(30);
+			_startupTimer = new Timer(callback, null, thirtySeconds, thirtySeconds);
+		}
 
-            #endregion
-        }
+		private void EndStartupTimer()
+		{
+			try
+			{
+				_startingUp = false;
+				_startupTimer.Dispose();
+				_startupTimer = null;
+			}
+			catch
+			{
+			}
+		}
 
-        #region Private fields
-        private static object _lockShredId = new object();
-        private static object _lockRunningState = new object();
-        private RunningState _runningState;
-        #endregion
+		private class ShredCacheObject : IShred
+		{
+			public ShredCacheObject(string displayName, string description)
+			{
+				_displayName = displayName;
+				_description = description;
+			}
 
-        #region Properties
-        private Thread _thread;
-        private IShred _shredObject;
-        private ShredCacheObject _shredCacheObject;
-        private AppDomain _domain;
-        private ShredStartupInfo _startupInfo;
-        private int _id;
-        private static int _nextId;
-        protected static int NextId
-        {
-            get { return _nextId++; }
-        }
+			#region Private fields
 
-        public int Id
-        {
-            get { return _id; }
-        }
+			private string _displayName;
+			private string _description;
 
-        public ShredStartupInfo StartupInfo
-        {
-            get { return _startupInfo; }
-        }
+			#endregion
 
-        public IShred Shred
-        {
-            get 
-            {
-                if (null == _shredObject)
-                    return _shredCacheObject;
-                else
-                    return _shredObject; 
-            }
-        }
+			#region IShred Members
 
-        public WcfDataShred WcfDataShred
-        {
-            get
-            {
-                return new WcfDataShred(this.Id, this.Shred.GetDisplayName(), this.Shred.GetDescription(), (RunningState.Running == _runningState) ? true : false);
-            }
-        }
-	
-        #endregion
-    }
+			public void Start()
+			{
+				throw new Exception("The method or operation is not implemented.");
+			}
+
+			public void Stop()
+			{
+				throw new Exception("The method or operation is not implemented.");
+			}
+
+			public string GetDisplayName()
+			{
+				return _displayName;
+			}
+
+			public string GetDescription()
+			{
+				return _description;
+			}
+
+			#endregion
+		}
+
+		#region Private fields
+
+		private readonly object _lockRunningState = new object();
+		private RunningState _runningState;
+
+		#endregion
+
+		#region Properties
+
+		private Thread _thread;
+		private IShred _shredObject;
+		private ShredCacheObject _shredCacheObject;
+		private AppDomain _domain;
+		private ShredStartupInfo _startupInfo;
+		private int _id;
+		private static int _nextId;
+
+		private bool _startingUp;
+		private Timer _startupTimer;
+
+		protected static int NextId
+		{
+			get { return _nextId++; }
+		}
+
+		public int Id
+		{
+			get { return _id; }
+		}
+
+		public ShredStartupInfo StartupInfo
+		{
+			get { return _startupInfo; }
+		}
+
+		public IShred Shred
+		{
+			get
+			{
+				if (null == _shredObject)
+					return _shredCacheObject;
+				else
+					return _shredObject;
+			}
+		}
+
+		public WcfDataShred WcfDataShred
+		{
+			get { return new WcfDataShred(this.Id, this.Shred.GetDisplayName(), this.Shred.GetDescription(), (RunningState.Running == _runningState) ? true : false); }
+		}
+
+		#endregion
+	}
 }

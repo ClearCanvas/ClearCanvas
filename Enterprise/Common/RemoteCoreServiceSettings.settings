@@ -23,9 +23,6 @@
     <Setting Name="FailoverBaseUrl" Description="Optional failover base URL (see BaseURL property)" Type="System.String" Scope="Application">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="ConfigurationServiceResponseCachingEnabled" Type="System.Boolean" Scope="Application">
-      <Value Profile="(Default)">False</Value>
-    </Setting>
     <Setting Name="FailedEndpointBlackoutTime" Type="System.TimeSpan" Scope="Application">
       <Value Profile="(Default)">00:01:00</Value>
     </Setting>

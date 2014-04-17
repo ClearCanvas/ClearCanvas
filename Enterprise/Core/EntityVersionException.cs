@@ -23,8 +23,6 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace ClearCanvas.Enterprise.Core
 {
@@ -37,5 +35,10 @@ namespace ClearCanvas.Enterprise.Core
             : base(string.Format(SR.ExceptionEntityVersion, oid), inner)
         {
         }
-    }
+
+		public EntityVersionException(string message, Exception inner)
+			: base(message, inner)
+		{
+		}
+	}
 }

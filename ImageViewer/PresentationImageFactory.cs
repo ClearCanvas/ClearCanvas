@@ -114,7 +114,7 @@ namespace ClearCanvas.ImageViewer
 		/// </summary>
 		/// <param name="frame">The image frame from which a presentation image is to be created.</param>
 		/// <returns>The created presentation image.</returns>
-		protected virtual IPresentationImage CreateImage(Frame frame)
+		public virtual IPresentationImage CreateImage(Frame frame)
 		{
 			if (frame.PhotometricInterpretation == PhotometricInterpretation.Unknown)
 				throw new Exception("Photometric interpretation is unknown.");

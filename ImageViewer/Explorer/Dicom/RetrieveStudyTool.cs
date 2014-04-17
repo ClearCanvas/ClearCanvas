@@ -36,13 +36,13 @@ namespace ClearCanvas.ImageViewer.Explorer.Dicom
 {
 	[ButtonAction("activate", "dicomstudybrowser-toolbar/ToolbarRetrieveStudy", "RetrieveStudy")]
 	[MenuAction("activate", "dicomstudybrowser-contextmenu/MenuRetrieveStudy", "RetrieveStudy")]
-    [ActionFormerly("activate", "ClearCanvas.ImageViewer.Services.Tools.RetrieveStudyTool:activate")]
-    [EnabledStateObserver("activate", "Enabled", "EnabledChanged")]
-    [VisibleStateObserver("activate", "Visible", "VisibleChanged")]
-    [Tooltip("activate", "TooltipRetrieveStudy")]
+	[ActionFormerly("activate", "ClearCanvas.ImageViewer.Services.Tools.RetrieveStudyTool:activate")]
+	[EnabledStateObserver("activate", "Enabled", "EnabledChanged")]
+	[VisibleStateObserver("activate", "Visible", "VisibleChanged")]
+	[Tooltip("activate", "TooltipRetrieveStudy")]
 	[IconSet("activate", "Icons.RetrieveStudyToolSmall.png", "Icons.RetrieveStudyToolSmall.png", "Icons.RetrieveStudyToolSmall.png")]
-    [ViewerActionPermission("activate", ImageViewer.AuthorityTokens.Study.Retrieve)]
-	[ExtensionOf(typeof(StudyBrowserToolExtensionPoint))]
+	[ViewerActionPermission("activate", AuthorityTokens.Study.Retrieve)]
+	[ExtensionOf(typeof (StudyBrowserToolExtensionPoint))]
 	public class RetrieveStudyTool : StudyBrowserTool
 	{
 		public override void Initialize()
@@ -54,14 +54,12 @@ namespace ClearCanvas.ImageViewer.Explorer.Dicom
 
 		private void RetrieveStudy()
 		{
-		    //TODO (Marmot):Restore.
-         
-            if (!Enabled || Context.SelectedServers.IsLocalServer || Context.SelectedStudy == null)
-                return;
+			if (!Enabled || Context.SelectedServers.IsLocalServer || Context.SelectedStudy == null)
+				return;
 
-            try
-            {
-                var client = new DicomRetrieveBridge();
+			try
+			{
+				var client = new DicomRetrieveBridge();
 				if (Context.SelectedStudies.Count > 1)
 				{
 					var count = ProcessItemsAsync(Context.SelectedStudies, study => client.RetrieveStudy(study.Server, study), false);
@@ -73,15 +71,15 @@ namespace ClearCanvas.ImageViewer.Explorer.Dicom
 					client.RetrieveStudy(study.Server, study);
 					AlertStudyRetrieved(study);
 				}
-            }
-            catch (EndpointNotFoundException)
-            {
-                 Context.DesktopWindow.ShowMessageBox(SR.MessageRetrieveDicomServerServiceNotRunning, MessageBoxActions.Ok);
-            }
-            catch (Exception e)
-            {
-                ExceptionHandler.Report(e, SR.MessageErrorRetrievingStudies, Context.DesktopWindow);
-            }        
+			}
+			catch (EndpointNotFoundException)
+			{
+				Context.DesktopWindow.ShowMessageBox(SR.MessageRetrieveDicomServerServiceNotRunning, MessageBoxActions.Ok);
+			}
+			catch (Exception e)
+			{
+				ExceptionHandler.Report(e, SR.MessageErrorRetrievingStudies, Context.DesktopWindow);
+			}
 		}
 
 		private void AlertMultipleStudiesRetrieved(int count)
@@ -107,8 +105,8 @@ namespace ClearCanvas.ImageViewer.Explorer.Dicom
 
 		private bool GetAtLeastOneServerSupportsLoading()
 		{
-            return Context.SelectedServers.AnySupport<IStudyLoader>();
-        }
+			return Context.SelectedServers.AnySupport<IStudyLoader>();
+		}
 
 		private void SetDoubleClickHandler()
 		{
@@ -120,7 +118,7 @@ namespace ClearCanvas.ImageViewer.Explorer.Dicom
 		{
 			UpdateEnabled();
 		}
-		
+
 		protected override void OnSelectedServerChanged(object sender, EventArgs e)
 		{
 			UpdateEnabled();
@@ -129,11 +127,11 @@ namespace ClearCanvas.ImageViewer.Explorer.Dicom
 
 		private void UpdateEnabled()
 		{
-            Visible = !Context.SelectedServers.IsLocalServer;
+			Visible = !Context.SelectedServers.IsLocalServer;
 
 			Enabled = Context.SelectedStudies.Count > 0
-                        && !Context.SelectedServers.IsLocalServer
-                        && WorkItemActivityMonitor.IsRunning;
-    	}
+			          && !Context.SelectedServers.IsLocalServer
+			          && WorkItemActivityMonitor.IsRunning;
+		}
 	}
 }

@@ -23,18 +23,25 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
 using System.ServiceModel;
-using System.Text;
 
 namespace ClearCanvas.Enterprise.Common.ServerVersion
 {
-    [EnterpriseCoreService]
-    [ServiceContract]
-    [Authentication(false)]
-    public interface IVersionService:ICoreServiceLayer
-    {
-        [OperationContract]
-        GetVersionResponse GetVersion(GetVersionRequest request);
-    }
+	[EnterpriseCoreService]
+	[ServiceContract]
+	[Authentication(false)]
+	public interface IVersionService : ICoreServiceLayer
+	{
+		/// <summary>
+		/// Legacy version service method, which now returns the compatibility version of the server.
+		/// </summary>
+		[OperationContract, Obsolete("Use GetVersion2 instead. This service method now returns a fixed value indicating server compatibility version, rather than actual server version.")]
+		GetVersionResponse GetVersion(GetVersionRequest request);
+
+		/// <summary>
+		/// Gets the actual version of the server.
+		/// </summary>
+		[OperationContract]
+		GetVersionResponse GetVersion2(GetVersionRequest request);
+	}
 }

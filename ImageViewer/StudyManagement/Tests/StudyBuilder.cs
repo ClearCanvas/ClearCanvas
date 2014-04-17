@@ -144,6 +144,8 @@ namespace ClearCanvas.ImageViewer.StudyManagement.Tests
         public string AccessionNumber { get; set; }
         [DicomField(DicomTags.ReferringPhysiciansName, CreateEmptyElement = false, SetNullValueIfEmpty = true)]
         public string ReferringPhysiciansName { get; set; }
+		[DicomField(DicomTags.PatientsAge, CreateEmptyElement = false, SetNullValueIfEmpty = true)]
+		public string PatientsAge { get; set; }
 
         string[] IStudyData.SopClassesInStudy { get { return new string[] { "" }; } }
         string[] IStudyData.ModalitiesInStudy { get { return new string[]{""}; } }

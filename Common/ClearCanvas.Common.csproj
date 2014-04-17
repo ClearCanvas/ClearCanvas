@@ -173,6 +173,7 @@
     <Compile Include="PluginInfoCache.cs" />
     <Compile Include="PluginLoader.cs" />
     <Compile Include="Rest\RestClient.cs" />
+    <Compile Include="Shreds\ShredIsolationAttribute.cs" />
     <Compile Include="Specifications\CaseSpecification.cs" />
     <Compile Include="Specifications\ContainsSpecification.cs" />
     <Compile Include="Specifications\EndsWithSpecification.cs" />
@@ -318,6 +319,7 @@
     <Compile Include="Utilities\ItemEventArgs.cs" />
     <Compile Include="Utilities\PerformanceReportBroker.cs" />
     <Compile Include="Utilities\CryptoServiceFallbackHelper.cs" />
+    <Compile Include="Utilities\UrlQueryString.cs" />
     <Compile Include="Utilities\ReadOnlyDictionary.cs" />
     <Compile Include="Utilities\SynchronizedEventHelper.cs" />
     <Compile Include="Utilities\SystemResources.cs" />

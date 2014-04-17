@@ -95,7 +95,7 @@ namespace ClearCanvas.ImageServer.TestApp
                 {
                     StorageScu scu =
                         new StorageScu(LocalAE.Text + i, ServerAE.Text, ServerHost.Text, int.Parse(ServerPort.Text));
-                    scu.ImageStoreCompleted += new EventHandler<StorageInstance>(scu_ImageStoreCompleted);
+                    scu.ImageStoreCompleted += new EventHandler<ImageStoreEventArgs>(scu_ImageStoreCompleted);
                     scuClients.Add(scu);
                 }
 
@@ -148,12 +148,12 @@ namespace ClearCanvas.ImageServer.TestApp
                 
         }
 
-        void scu_ImageStoreCompleted(object sender, StorageInstance e)
+        void scu_ImageStoreCompleted(object sender, ImageStoreEventArgs e)
         {
             StorageScu scu = sender as StorageScu;
             Random rand = new Random();
             //Thread.Sleep(rand.Next(300, 1000));
-            textBox1.BeginInvoke(new LogDelegate(Log),  e.SopInstanceUid);
+            textBox1.BeginInvoke(new LogDelegate(Log),  e.StorageInstance.SopInstanceUid);
                                                      
         }
 
@@ -173,7 +173,7 @@ namespace ClearCanvas.ImageServer.TestApp
                         SetDicomFields(file);
                         scu.AddStorageInstance(new StorageInstance(file));
                     }
-                    scu.ImageStoreCompleted += new EventHandler<StorageInstance>(scu_ImageStoreCompleted);
+                    scu.ImageStoreCompleted += new EventHandler<ImageStoreEventArgs>(scu_ImageStoreCompleted);
                     scu.Send();
                     scu.Join();
                 }

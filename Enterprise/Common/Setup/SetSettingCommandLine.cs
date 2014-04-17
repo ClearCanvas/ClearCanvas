@@ -59,6 +59,12 @@ namespace ClearCanvas.Enterprise.Common.Setup
 		public string Value { get; set; }
 
 		/// <summary>
+		/// Specifies the name of a file or folder containing configuration data to be imported.
+		/// </summary>
+		[CommandLineParameter("configData", "Specifies the name of a file or folder containing configuration data to be imported.")]
+		public string ConfigData { get; set; }
+
+		/// <summary>
 		/// Specifies user name to connect to enterprise server.
 		/// </summary>
 		[CommandLineParameter("suid", "Specifies user name to connect to enterprise server. Default is 'sa'.")]

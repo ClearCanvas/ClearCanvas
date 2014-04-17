@@ -20,9 +20,9 @@ namespace ClearCanvas.ImageViewer.StudyLoaders.Streaming
 			get { return InternalResult.MetaData.ContentLength; }
 		}
 
-		public byte[] GetPixelData()
+		public byte[] GetPixelData(out string photometricInterpretation)
 		{
-			return InternalResult.GetPixelData();
+			return InternalResult.GetPixelData(out photometricInterpretation);
 		}
 
 		#endregion
@@ -84,9 +84,8 @@ namespace ClearCanvas.ImageViewer.StudyLoaders.Streaming
 		{
 			try
 			{
-				Uri uri = new Uri(string.Format(StreamingSettings.Default.FormatWadoUriPrefix, _hostName, _wadoServicePort));
-				StreamingClient client = new StreamingClient(uri);
-				var file = new DicomFile();
+				var uri = new Uri(string.Format(StreamingSettings.Default.FormatWadoUriPrefix, _hostName, _wadoServicePort));
+				var client = new StreamingClient(uri);
 				var result = client.RetrievePixelData(_aeTitle, args.StudyInstanceUid, args.SeriesInstanceUid, args.SopInstanceUid, args.FrameNumber - 1);
 				return new ImageServerFramePixelData(result);
 			}

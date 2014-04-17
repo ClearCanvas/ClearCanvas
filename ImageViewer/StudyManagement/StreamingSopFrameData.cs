@@ -95,20 +95,14 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 
 			protected override byte[] CreateNormalizedPixelData()
 			{
-				byte[] pixelData = _framePixelData.GetUncompressedPixelData();
+				string photometricInterpretation;
+				byte[] pixelData = _framePixelData.GetUncompressedPixelData(out photometricInterpretation);
 
-				string photometricInterpretationCode = this.Parent[DicomTags.PhotometricInterpretation].ToString();
+				string photometricInterpretationCode = photometricInterpretation ?? Parent[DicomTags.PhotometricInterpretation].ToString();
 				PhotometricInterpretation pi = PhotometricInterpretation.FromCodeString(photometricInterpretationCode);
 
-				TransferSyntax ts = TransferSyntax.GetTransferSyntax(this.Parent.TransferSyntaxUid);
 				if (pi.IsColor)
 				{
-					if (ts == TransferSyntax.Jpeg2000ImageCompression ||
-					    ts == TransferSyntax.Jpeg2000ImageCompressionLosslessOnly ||
-					    ts == TransferSyntax.JpegExtendedProcess24 ||
-					    ts == TransferSyntax.JpegBaselineProcess1)
-						pi = PhotometricInterpretation.Rgb;
-
 					pixelData = ToArgb(this.Parent, pixelData, pi);
 				}
 				else
@@ -220,18 +214,12 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 			public readonly string SopInstanceUid;
 			public readonly string TransferSyntaxUid;
 
-			private readonly string _studyInstanceUid;
-			private readonly string _seriesInstanceUid;
 			private readonly int _frameNumber;
-
-			private readonly IDicomFileLoader _loader;
+			private readonly ISopDicomFileLoader _loader;
 
 			public FramePixelDataRetriever(FramePixelData source)
 			{
 				_loader = source.Parent._loader;
-
-				_studyInstanceUid = source.Parent.StudyInstanceUid;
-				_seriesInstanceUid = source.Parent.SeriesInstanceUid;
 				SopInstanceUid = source.Parent.SopInstanceUid;
 				TransferSyntaxUid = source.Parent.TransferSyntaxUid;
 				_frameNumber = source.FrameNumber;
@@ -272,7 +260,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 						CodeClock statsClock = new CodeClock();
 						statsClock.Start();
 
-						result = _loader.LoadFramePixelData(new LoadFramePixelDataArgs(this._studyInstanceUid, this._seriesInstanceUid, this.SopInstanceUid, this._frameNumber));
+						result = _loader.LoadFramePixelData(new LoadSopFramePixelDataArgs(this._frameNumber));
 
 						statsClock.Stop();
 
@@ -381,7 +369,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 				}
 			}
 
-			public byte[] GetUncompressedPixelData()
+			public byte[] GetUncompressedPixelData(out string photometricInterpretation)
 			{
 				try
 				{
@@ -415,7 +403,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 
 						//synchronize the call to decompress; it's really already synchronized by
 						//the parent b/c it's only called from CreateFrameNormalizedPixelData, but it doesn't hurt.
-						byte[] pixelData = framePixelData.GetPixelData();
+						byte[] pixelData = framePixelData.GetPixelData(out photometricInterpretation);
 
 						clock.Stop();
 

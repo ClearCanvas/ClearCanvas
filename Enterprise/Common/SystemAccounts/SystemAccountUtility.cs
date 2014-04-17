@@ -141,8 +141,8 @@ namespace ClearCanvas.Enterprise.Common.SystemAccounts
 					AuthorityGroups = new List<AuthorityGroupSummary> { authGroup }
 				};
 
-				StdOut(string.Format("Creating account '{0}', password '{1}', authority group '{2}'.",
-					accountName, cmdLine.AccountPassword, authGroup.Name), cmdLine);
+				StdOut(string.Format("Creating account '{0}', authority group '{1}'.",
+					accountName, authGroup.Name), cmdLine);
 
 				StdOut(string.Format("Saving changes to Enterprise Server..."), cmdLine);
 				Platform.GetService<IUserAdminService>(

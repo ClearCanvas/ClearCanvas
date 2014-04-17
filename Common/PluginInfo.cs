@@ -73,9 +73,14 @@ namespace ClearCanvas.Common
 					}
 
 					var extensionPointClass = a.ExtensionPointClass;
-					var extensionInterface = GetExtensionInterface(extensionPointClass);
+					if(!IsValidExtensionPointClass(extensionPointClass))
+					{
+						Platform.Log(LogLevel.Error, SR.ExceptionExtensionDoesNotExtendValidExtensionPointClass, type.FullName);
+						continue;
+					}
 
 					// does the extension implement the required interface?
+					var extensionInterface = GetExtensionInterface(extensionPointClass);
 					if (!extensionInterface.IsAssignableFrom(type))
 					{
 						Platform.Log(LogLevel.Error, SR.ExceptionExtensionDoesNotImplementRequiredInterface,
@@ -101,7 +106,7 @@ namespace ClearCanvas.Common
 		private static Type GetExtensionInterface(Type extensionPointClass)
 		{
 			if (!IsValidExtensionPointClass(extensionPointClass))
-				throw new ArgumentException("Specified type does not appear to be a valid extension point class.");
+				throw new ArgumentException(string.Format("{0} does not appear to be a valid extension point class.", extensionPointClass.FullName));
 
 			return extensionPointClass.BaseType.GetGenericArguments()[0];
 		}
@@ -129,16 +134,16 @@ namespace ClearCanvas.Common
 		/// <summary>
 		/// Internal constructor.
 		/// </summary>
-		internal PluginInfo(AssemblyRef assembly, string name, string description, string icon)
+		internal PluginInfo(Assembly assembly, string name, string description, string icon)
 			: this(assembly, name, description, icon, new List<ExtensionPointInfo>(), new List<ExtensionInfo>())
 		{
-			DiscoverExtensionPointsAndExtensions(assembly.Resolve(), _extensionPoints, _extensions);
+			DiscoverExtensionPointsAndExtensions(assembly, _extensionPoints, _extensions);
 		}
 
 		/// <summary>
-		/// Internal constructor.
+		/// Private constructor.
 		/// </summary>
-		internal PluginInfo(AssemblyRef assembly, string name, string description, string icon, List<ExtensionPointInfo> extensionPoints, List<ExtensionInfo> extensions)
+		private PluginInfo(Assembly assembly, string name, string description, string icon, List<ExtensionPointInfo> extensionPoints, List<ExtensionInfo> extensions)
 		{
 			_name = name;
 			_description = description;

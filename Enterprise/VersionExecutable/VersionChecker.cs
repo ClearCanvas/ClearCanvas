@@ -94,7 +94,7 @@ namespace ClearCanvas.Enterprise.VersionExecutable
                 //ServicePointManager.ServerCertificateValidationCallback = new RemoteCertificateValidationCallback(RemoteCertificateValidationCallback);
 
                 GetVersionRequest request = new GetVersionRequest();
-                GetVersionResponse response = client.GetVersion(request);
+                GetVersionResponse response = client.GetVersion2(request);
 
                 String version = String.Format("{0}.{1}.{2}.{3}", response.VersionMajor, response.VersionMinor, response.VersionBuild, response.VersionRevision);
 

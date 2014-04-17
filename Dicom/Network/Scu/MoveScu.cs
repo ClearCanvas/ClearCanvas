@@ -463,7 +463,7 @@ namespace ClearCanvas.Dicom.Network.Scu
 		{
 			Status = ScuOperationStatus.TimeoutExpired;
 			FailureDescription =
-				String.Format("Timeout Expired ({0} seconds) for remote host {1} when processing C-MOVE-RQ, aborting connection", association.ReadTimeout/1000,
+				String.Format("Timeout Expired ({0} seconds) for remote AE {1} when processing C-MOVE-RQ, aborting connection", association.ReadTimeout/1000,
 				              RemoteAE);
 			Platform.Log(LogLevel.Error, FailureDescription);
 
@@ -482,29 +482,6 @@ namespace ClearCanvas.Dicom.Network.Scu
 		}
 
     	#endregion
-
-        #region IDisposable Members
-
-        private bool _disposed = false;
-        /// <summary>
-        /// Disposes the specified disposing.
-        /// </summary>
-        /// <param name="disposing">if set to <c>true</c> [disposing].</param>
-        protected override void Dispose(bool disposing)
-        {
-            if (_disposed)
-                return;
-            if (disposing)
-            {
-                // Dispose of other Managed objects, ie
-
-            }
-            // FREE UNMANAGED RESOURCES
-            base.Dispose(true);
-            _disposed = true;
-        }
-        #endregion
-
     }
 
     #region PatientRootFindScu Class

@@ -214,7 +214,7 @@ namespace ClearCanvas.Dicom
 				_hasDataVoiLuts = !attrib.IsEmpty && !attrib.IsNull;
 			}
 
-			if (PhotometricInterpretation.Equals(Iod.PhotometricInterpretation.PaletteColor.Code) && collection.Contains(DicomTags.RedPaletteColorLookupTableDescriptor))
+			if (!string.IsNullOrEmpty(PhotometricInterpretation) && PhotometricInterpretation.Equals(Iod.PhotometricInterpretation.PaletteColor.Code) && collection.Contains(DicomTags.RedPaletteColorLookupTableDescriptor))
 			{
 				_paletteColorLut = PaletteColorLut.Create(collection);
 				_hasPaletteColorLut = true;

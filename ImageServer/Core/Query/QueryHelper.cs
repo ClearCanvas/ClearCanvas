@@ -42,7 +42,7 @@ namespace ClearCanvas.ImageServer.Core.Query
                 return;
 
             if (vals.Length == 1)
-                cond.EqualTo(vals[0]);
+                SetStringCondition(cond, vals[0]);
             else
                 cond.In(vals);
         }

@@ -30,280 +30,296 @@ using ClearCanvas.Dicom.IO;
 
 namespace ClearCanvas.Dicom
 {
-    /// <summary>
-    /// Compressed DICOM fragment.
-    /// </summary>
-    public class DicomFragment
-    {
-        #region Private members
-        private readonly FileReference _reference = null;
-        private readonly ByteBuffer _bb = null;
-        #endregion
+	/// <summary>
+	/// Compressed DICOM fragment.
+	/// </summary>
+	public class DicomFragment
+	{
+		#region Private members
 
-        #region Constructors
-        internal DicomFragment(FileReference reference)
-        {
-            _reference = reference;
-        }
+		private readonly FileReference _reference = null;
+		private readonly ByteBuffer _bb = null;
 
-        internal DicomFragment(DicomFragment source)
-        {
-            if (source._reference != null)
-                _reference = source._reference;
-            else
-            {
-                _bb = source._bb;
-            }
-        }
+		#endregion
 
-        public DicomFragment(ByteBuffer bb)
-        {
-            _bb = bb;
-        }
-        #endregion
+		#region Constructors
 
-        #region Properties
-        public uint Length
-        {
-            get
-            {
-                if (_reference != null)
-                    return _reference.Length;
+		internal DicomFragment(FileReference reference)
+		{
+			_reference = reference;
+		}
 
-                return (uint)_bb.Length;
-            }
-        }
-        #endregion
+		internal DicomFragment(DicomFragment source)
+		{
+			if (source._reference != null)
+				_reference = source._reference;
+			else
+			{
+				_bb = source._bb;
+			}
+		}
 
-        #region Private Methods
-        private ByteBuffer Load()
-        {
-            if (_reference != null)
-            {
-                ByteBuffer bb;
-				using (FileStream fs = File.OpenRead(_reference.Filename))
-                {
-                    fs.Seek(_reference.Offset, SeekOrigin.Begin);
+		public DicomFragment(ByteBuffer bb)
+		{
+			_bb = bb;
+		}
 
-                    bb = new ByteBuffer();
-                    bb.Endian = _reference.Endian;
-                    bb.CopyFrom(fs, (int)_reference.Length);
+		#endregion
+
+		#region Properties
+
+		public uint Length
+		{
+			get
+			{
+				if (_reference != null)
+					return _reference.Length;
+
+				return (uint) _bb.Length;
+			}
+		}
+
+		#endregion
+
+		#region Private Methods
+
+		private ByteBuffer Load()
+		{
+			if (_reference != null)
+			{
+				ByteBuffer bb;
+				using (var fs = _reference.StreamOpener.Open())
+				{
+					fs.Seek(_reference.Offset, SeekOrigin.Begin);
+
+					bb = new ByteBuffer();
+					bb.Endian = _reference.Endian;
+					bb.CopyFrom(fs, (int) _reference.Length);
 					fs.Close();
-                }
-                return bb;
-            }
+				}
+				return bb;
+			}
 
-            return null;
-        }
-        #endregion
+			return null;
+		}
 
-        #region Public Methods
-        /// <summary>
-        /// Get a byte array for the frame's data.
-        /// </summary>
-        /// <returns></returns>
-        public byte[] GetByteArray()
-        {
-            if (_reference != null)
-                return Load().ToBytes();
+		#endregion
 
-            return _bb.ToBytes();
-        }
+		#region Public Methods
 
-        /// <summary>
-        /// Get a <see cref="ByteBuffer"/> for the frame's data.
-        /// </summary>
-        /// <returns></returns>
-        public ByteBuffer GetByteBuffer(TransferSyntax syntax)
-        {
-            if (_reference != null)
-                return Load(); // no need to swap, always OB
+		/// <summary>
+		/// Get a byte array for the frame's data.
+		/// </summary>
+		/// <returns></returns>
+		public byte[] GetByteArray()
+		{
+			if (_reference != null)
+				return Load().ToBytes();
 
-            return new ByteBuffer(GetByteArray(), ByteBuffer.LocalMachineEndian);
-        }
-        #endregion
+			return _bb.ToBytes();
+		}
 
-        #region Overrides
-        public override bool Equals(object obj)
-        {
-            if (obj == null || GetType() != obj.GetType()) return false;
+		/// <summary>
+		/// Get a <see cref="ByteBuffer"/> for the frame's data.
+		/// </summary>
+		/// <returns></returns>
+		public ByteBuffer GetByteBuffer(TransferSyntax syntax)
+		{
+			if (_reference != null)
+				return Load(); // no need to swap, always OB
 
-            DicomFragment frame = (DicomFragment)obj;
+			return new ByteBuffer(GetByteArray(), ByteBuffer.LocalMachineEndian);
+		}
 
-            byte[] source = this.GetByteArray();
-            byte[] dest = frame.GetByteArray();
+		#endregion
 
-            for (int index = 0; index < source.Length; index++)
-                if (!source[index].Equals(dest[index]))
-                    return false;
+		#region Overrides
 
-            return true;
-        }
+		public override bool Equals(object obj)
+		{
+			if (obj == null || GetType() != obj.GetType()) return false;
 
-        public override int GetHashCode()
-        {
-            byte[] source = this.GetByteArray();
-            int hash = 0;
-            for (int index = 0; index < source.Length; index++)
-            {
-                hash += (index + 1) * source[index].GetHashCode();
-            }
-            return hash;
-        }
-        #endregion
+			DicomFragment frame = (DicomFragment) obj;
 
-    }
+			byte[] source = this.GetByteArray();
+			byte[] dest = frame.GetByteArray();
 
-    /// <summary>
-    /// <see cref="DicomAttribute"/> representing compressed pixel data encoding rules.
-    /// </summary>
-    public class DicomFragmentSequence : DicomAttribute
-    {
-        #region Protected Members
-        protected List<uint> _table;
-        protected List<DicomFragment> _fragments = new List<DicomFragment>();
-        private bool _isNull = false;
-        #endregion
+			for (int index = 0; index < source.Length; index++)
+				if (!source[index].Equals(dest[index]))
+					return false;
 
-        #region Constructors
-        public DicomFragmentSequence(uint tag) : base(tag)
-        {
-        }
+			return true;
+		}
 
-        public DicomFragmentSequence(DicomTag tag) : base(tag)
-        {
-        }
+		public override int GetHashCode()
+		{
+			byte[] source = this.GetByteArray();
+			int hash = 0;
+			for (int index = 0; index < source.Length; index++)
+			{
+				hash += (index + 1)*source[index].GetHashCode();
+			}
+			return hash;
+		}
 
-        internal DicomFragmentSequence(DicomFragmentSequence attrib)
-            : base(attrib)
-        {
-            _isNull = attrib._isNull;
-            foreach (DicomFragment fragment in attrib._fragments)
-            {
-                _fragments.Add(new DicomFragment(fragment));
-            }
-        }
+		#endregion
+	}
 
-        #endregion
+	/// <summary>
+	/// <see cref="DicomAttribute"/> representing compressed pixel data encoding rules.
+	/// </summary>
+	public class DicomFragmentSequence : DicomAttribute
+	{
+		#region Protected Members
 
-        #region Public Properties
-        public bool HasOffsetTable
-        {
-            get { return _table != null; }
-        }
+		protected List<uint> _table;
+		protected List<DicomFragment> _fragments = new List<DicomFragment>();
+		private bool _isNull = false;
 
-        public ByteBuffer OffsetTableBuffer
-        {
-            get
-            {
-                ByteBuffer offsets = new ByteBuffer();
-                if (_table != null)
-                {
-                    foreach (uint offset in _table)
-                    {
-                        offsets.Writer.Write(offset);
-                    }
-                }
-                return offsets;
-            }
-        }
+		#endregion
 
-        public List<uint> OffsetTable
-        {
-            get
-            {
-                if (_table == null)
-                    _table = new List<uint>();
-                return _table;
-            }
-        }
+		#region Constructors
 
-        public IList<DicomFragment> Fragments
-        {
-            get { return _fragments; }
-        }
-        #endregion
+		public DicomFragmentSequence(uint tag) : base(tag) {}
 
-        #region Public Methods
-        public void SetOffsetTable(ByteBuffer table)
-        {
-            _table = new List<uint>();
-            _table.AddRange(table.ToUInt32s());
-        }
-        public void SetOffsetTable(List<uint> table)
-        {
-            _table = new List<uint>(table);
-        }
+		public DicomFragmentSequence(DicomTag tag) : base(tag) {}
 
-        public void AddFragment(DicomFragment fragment)
-        {
-            _fragments.Add(fragment);
-        }
-        #endregion
+		internal DicomFragmentSequence(DicomFragmentSequence attrib)
+			: base(attrib)
+		{
+			_isNull = attrib._isNull;
+			foreach (DicomFragment fragment in attrib._fragments)
+			{
+				_fragments.Add(new DicomFragment(fragment));
+			}
+		}
 
-        #region Overrides
-        public override string ToString()
-        {
-            return Tag + " Copmressed with " + _fragments.Count + " fragments";
-        }
+		#endregion
 
-        public override bool Equals(object obj)
-        {
-            if (obj == null || GetType() != obj.GetType()) return false;
+		#region Public Properties
 
-            DicomFragmentSequence sq = (DicomFragmentSequence)obj;
+		public bool HasOffsetTable
+		{
+			get { return _table != null; }
+		}
 
-            if (sq.Count != this.Count)
-                return false;
+		public ByteBuffer OffsetTableBuffer
+		{
+			get
+			{
+				ByteBuffer offsets = new ByteBuffer();
+				if (_table != null)
+				{
+					foreach (uint offset in _table)
+					{
+						offsets.Writer.Write(offset);
+					}
+				}
+				return offsets;
+			}
+		}
 
-            for (int i = 0; i < Count; i++)
-            {
-                if (!_fragments[i].Equals(sq._fragments[i]))
-                    return false;
-            }
-            return true;
-        }
+		public List<uint> OffsetTable
+		{
+			get
+			{
+				if (_table == null)
+					_table = new List<uint>();
+				return _table;
+			}
+		}
 
-        public override int GetHashCode()
-        {
-            throw new NotImplementedException();
-        }
+		public IList<DicomFragment> Fragments
+		{
+			get { return _fragments; }
+		}
 
-        public override bool IsNull
-        {
-            get { return _isNull; }
-        }
+		#endregion
 
-        public override bool IsEmpty
-        {
-            get { return _fragments.Count == 0; }
-        }
+		#region Public Methods
 
-        public override object Values
-        {
-            get { return _fragments.ToArray(); }
-            set
-            {
-                _fragments.Clear();
-                _fragments.AddRange((DicomFragment[])value);
-            }
-        }
+		public void SetOffsetTable(ByteBuffer table)
+		{
+			_table = new List<uint>();
+			_table.AddRange(table.ToUInt32s());
+		}
 
-        public override DicomAttribute Copy()
-        {
-            return new DicomFragmentSequence(this);
-        }
+		public void SetOffsetTable(List<uint> table)
+		{
+			_table = new List<uint>(table);
+		}
 
-        public override Type GetValueType()
-        {
-            return typeof (byte);
-        }
+		public void AddFragment(DicomFragment fragment)
+		{
+			_fragments.Add(fragment);
+		}
 
-        public override void SetNullValue()
-        {
-            _fragments.Clear();
-            _isNull = true;
-        }
+		#endregion
+
+		#region Overrides
+
+		public override string ToString()
+		{
+			return Tag + " Copmressed with " + _fragments.Count + " fragments";
+		}
+
+		public override bool Equals(object obj)
+		{
+			if (obj == null || GetType() != obj.GetType()) return false;
+
+			DicomFragmentSequence sq = (DicomFragmentSequence) obj;
+
+			if (sq.Count != this.Count)
+				return false;
+
+			for (int i = 0; i < Count; i++)
+			{
+				if (!_fragments[i].Equals(sq._fragments[i]))
+					return false;
+			}
+			return true;
+		}
+
+		public override int GetHashCode()
+		{
+			throw new NotImplementedException();
+		}
+
+		public override bool IsNull
+		{
+			get { return _isNull; }
+		}
+
+		public override bool IsEmpty
+		{
+			get { return _fragments.Count == 0; }
+		}
+
+		public override object Values
+		{
+			get { return _fragments.ToArray(); }
+			set
+			{
+				_fragments.Clear();
+				_fragments.AddRange((DicomFragment[]) value);
+			}
+		}
+
+		public override DicomAttribute Copy()
+		{
+			return new DicomFragmentSequence(this);
+		}
+
+		public override Type GetValueType()
+		{
+			return typeof (byte);
+		}
+
+		public override void SetNullValue()
+		{
+			_fragments.Clear();
+			_isNull = true;
+		}
 
 		public override void SetEmptyValue()
 		{
@@ -311,76 +327,79 @@ namespace ClearCanvas.Dicom
 			_isNull = false;
 		}
 
-        internal override ByteBuffer GetByteBuffer(TransferSyntax syntax, string specificCharacterSet)
-        {
-            throw new NotImplementedException();
-        }
+		internal override ByteBuffer GetByteBuffer(TransferSyntax syntax, string specificCharacterSet)
+		{
+			throw new NotImplementedException();
+		}
 
-        internal override DicomAttribute Copy(bool copyBinary)
-        {
-            return new DicomFragmentSequence(this);
-        }
+		internal override DicomAttribute Copy(bool copyBinary)
+		{
+			return new DicomFragmentSequence(this);
+		}
 
-        internal override uint CalculateWriteLength(TransferSyntax syntax, DicomWriteOptions options)
-        {
-            uint length = 0;
-            length += 4; // element tag
-            if (syntax.ExplicitVr)
-            {
-                length += 2; // vr
-                length += 6; // length
-            }
-            else
-            {
-                length += 4; // length
-            }
-            length += 4 + 4; // offset tag
-            if (Flags.IsSet(options, DicomWriteOptions.WriteFragmentOffsetTable) && _table != null)
-                length += (uint)(_table.Count * 4);
-            foreach (DicomFragment fragment in this._fragments)
-            {
-                length += 4; // item tag
-                length += 4; // fragment length
-                length += fragment.Length;
-            }    
-            return length;
-        }
-        #endregion
+		internal override uint CalculateWriteLength(TransferSyntax syntax, DicomWriteOptions options)
+		{
+			uint length = 0;
+			length += 4; // element tag
+			if (syntax.ExplicitVr)
+			{
+				length += 2; // vr
+				length += 6; // length
+			}
+			else
+			{
+				length += 4; // length
+			}
+			length += 4 + 4; // offset tag
+			if (Flags.IsSet(options, DicomWriteOptions.WriteFragmentOffsetTable) && _table != null)
+				length += (uint) (_table.Count*4);
+			foreach (DicomFragment fragment in this._fragments)
+			{
+				length += 4; // item tag
+				length += 4; // fragment length
+				length += fragment.Length;
+			}
+			return length;
+		}
 
-        #region Dump
-        /// <summary>
-        /// Method for dumping the contents of the attribute to a string.
-        /// </summary>
-        /// <param name="sb">The StringBuilder to write the attribute to.</param>
-        /// <param name="prefix">A prefix to place before the value.</param>
-        /// <param name="options">The <see cref="DicomDumpOptions"/> to use for the output string.</param>
-        public override void Dump(StringBuilder sb, string prefix, DicomDumpOptions options)
-        {
-            int ValueWidth = 40 - prefix.Length;
-            int SbLength = sb.Length;
+		#endregion
 
-            sb.Append(prefix);
-            sb.AppendFormat("({0:x4},{1:x4}) {2} ", Tag.Group, Tag.Element, Tag.VR.Name);
-            long length = 0;
-            foreach (DicomFragment frag in Fragments)
-            {
-                length += frag.Length;
-            }
-            
-            String value = string.Format("{0} encapsulated fragment{1} of {2} bytes", Fragments.Count, Fragments.Count > 1 ? "s" : "",length);
-            sb.Append(value.PadRight(ValueWidth, ' '));
+		#region Dump
 
-            sb.AppendFormat(" # {0,4} {2} {1}", StreamLength, Tag.VM, Tag.Name.Replace("&apos;", "'"));
+		/// <summary>
+		/// Method for dumping the contents of the attribute to a string.
+		/// </summary>
+		/// <param name="sb">The StringBuilder to write the attribute to.</param>
+		/// <param name="prefix">A prefix to place before the value.</param>
+		/// <param name="options">The <see cref="DicomDumpOptions"/> to use for the output string.</param>
+		public override void Dump(StringBuilder sb, string prefix, DicomDumpOptions options)
+		{
+			int ValueWidth = 40 - prefix.Length;
+			int SbLength = sb.Length;
 
-            if (Flags.IsSet(options, DicomDumpOptions.Restrict80CharactersPerLine))
-            {
-                if (sb.Length > (SbLength + 79))
-                {
-                    sb.Length = SbLength + 79;
-                    //sb.Append(">");
-                }
-            }
-        }
-        #endregion
-    }    
+			sb.Append(prefix);
+			sb.AppendFormat("({0:x4},{1:x4}) {2} ", Tag.Group, Tag.Element, Tag.VR.Name);
+			long length = 0;
+			foreach (DicomFragment frag in Fragments)
+			{
+				length += frag.Length;
+			}
+
+			String value = string.Format("{0} encapsulated fragment{1} of {2} bytes", Fragments.Count, Fragments.Count > 1 ? "s" : "", length);
+			sb.Append(value.PadRight(ValueWidth, ' '));
+
+			sb.AppendFormat(" # {0,4} {2} {1}", StreamLength, Tag.VM, Tag.Name.Replace("&apos;", "'"));
+
+			if (Flags.IsSet(options, DicomDumpOptions.Restrict80CharactersPerLine))
+			{
+				if (sb.Length > (SbLength + 79))
+				{
+					sb.Length = SbLength + 79;
+					//sb.Append(">");
+				}
+			}
+		}
+
+		#endregion
+	}
 }

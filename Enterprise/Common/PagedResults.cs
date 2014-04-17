@@ -8,22 +8,24 @@ namespace ClearCanvas.Enterprise.Common
 	public class PagedResults<TItem> : IEnumerable<TItem>
 	{
 		private readonly List<TItem> _items;
-		private readonly string _nextPageToken;
+		private readonly string _positionToken;
+		private readonly bool _hasNextPage;
 
-		public PagedResults(List<TItem> items, string positionToken)
+		public PagedResults(List<TItem> items, string positionToken, bool hasNextPage)
 		{
 			_items = items;
-			_nextPageToken = positionToken;
+			_positionToken = positionToken;
+			_hasNextPage = hasNextPage;
 		}
 
 		public bool HasNextPage
 		{
-			get { return _nextPageToken != null; }
+			get { return _hasNextPage; }
 		}
 
-		public string NextPageToken
+		public string PositionToken
 		{
-			get { return _nextPageToken; }
+			get { return _positionToken; }
 		}
 
 		public int Count
@@ -49,7 +51,7 @@ namespace ClearCanvas.Enterprise.Common
 		public PagedResults<TSubclass> Downcast<TSubclass>()
 			where TSubclass : TItem
 		{
-			return new PagedResults<TSubclass>(_items.Cast<TSubclass>().ToList(), _nextPageToken);
+			return new PagedResults<TSubclass>(_items.Cast<TSubclass>().ToList(), _positionToken, _hasNextPage);
 		}
 	}
 }

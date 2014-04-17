@@ -331,7 +331,7 @@ namespace ClearCanvas.Enterprise.Common
 				interceptors.Add(interceptor);
 			}
 
-			if (ClearCanvas.Common.Caching.Cache.IsSupported() && IsResponseCachingEnabled(serviceType))
+			if (ClearCanvas.Common.Caching.Cache.IsSupported())
 			{
 				// add response-caching client-side advice
 				interceptors.Add(_responseCachingAdvice);
@@ -400,13 +400,6 @@ namespace ClearCanvas.Enterprise.Common
 					options,
 					aopChain);
 			}
-		}
-
-		private static bool IsResponseCachingEnabled(Type serviceType)
-		{
-			//TODO (CR Sept 2010): Temporary hack to disable configuration document caching on the client side (#7179).
-			bool isConfigurationService = typeof (IApplicationConfigurationReadService).IsAssignableFrom(serviceType);
-			return !isConfigurationService || RemoteCoreServiceSettings.Default.ConfigurationServiceResponseCachingEnabled;
 		}
 
 		#endregion

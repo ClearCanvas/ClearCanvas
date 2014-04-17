@@ -339,4 +339,7 @@
   <data name="FormatProcessingPlugin" xml:space="preserve">
     <value>Processing plugin: {0}</value>
   </data>
+	<data name="ExceptionExtensionDoesNotExtendValidExtensionPointClass">
+		<value xml:space="preserve">Extension class {0} does not extend a valid extension point class.</value>
+	</data>
 </root>

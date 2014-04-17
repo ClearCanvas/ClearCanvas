@@ -187,6 +187,15 @@ namespace ClearCanvas.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Extension class {0} does not extend a valid extension point class..
+        /// </summary>
+        public static string ExceptionExtensionDoesNotExtendValidExtensionPointClass {
+            get {
+                return ResourceManager.GetString("ExceptionExtensionDoesNotExtendValidExtensionPointClass", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Extension class {0} does not implement required interface {1}..
         /// </summary>
         public static string ExceptionExtensionDoesNotImplementRequiredInterface {

@@ -22,27 +22,13 @@
 
 #endregion
 
-using System;
-using System.Collections.Generic;
-using System.Text;
 using ClearCanvas.Common.Serialization;
-using ClearCanvas.Enterprise.Common;
 using System.Runtime.Serialization;
-using ClearCanvas.Common.Caching;
 
 namespace ClearCanvas.Enterprise.Common.Configuration
 {
 	[DataContract]
-	public class ListSettingsGroupsRequest : DataContractBase, IDefinesCacheKey
+	public class ListSettingsGroupsRequest : DataContractBase
 	{
-        #region IDefinesCacheKey Members
-
-        public string GetCacheKey()
-        {
-            // this request has no parameters, therefore all requests are identical
-            return "";
-        }
-
-        #endregion
     }
 }

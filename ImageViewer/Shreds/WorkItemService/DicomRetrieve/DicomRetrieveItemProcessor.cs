@@ -23,159 +23,172 @@
 #endregion
 
 using System;
-using ClearCanvas.Dicom.Network.Scu;
+using ClearCanvas.Common;
+using ClearCanvas.Dicom.ServiceModel;
+using ClearCanvas.ImageViewer.Common;
 using ClearCanvas.ImageViewer.Common.DicomServer;
 using ClearCanvas.ImageViewer.Common.ServerDirectory;
-using ClearCanvas.ImageViewer.Common.StudyManagement;
 using ClearCanvas.ImageViewer.Common.WorkItem;
 using ClearCanvas.ImageViewer.StudyManagement.Core;
 using ClearCanvas.ImageViewer.StudyManagement.Core.WorkItemProcessor;
-using ClearCanvas.ImageViewer.Common;
-using ClearCanvas.Common;
 
 namespace ClearCanvas.ImageViewer.Shreds.WorkItemService.DicomRetrieve
 {
-    /// <summary>
-    ///  Class for procesing DICOM Retrieves.
-    /// </summary>
-    internal class DicomRetrieveItemProcessor : BaseItemProcessor<DicomRetrieveRequest, DicomRetrieveProgress>
-    {
-        #region Private Members
+	/// <summary>
+	///  Class for procesing DICOM Retrieves.
+	/// </summary>
+	internal class DicomRetrieveItemProcessor : BaseItemProcessor<DicomRetrieveRequest, DicomRetrieveProgress>
+	{
+		#region Private Members
 
-        private ImageViewerMoveScu _scu;
-        private bool _cancelDueToDiskSpace = false;
-        #endregion
+		private ImageViewerMoveScu _scu;
+		private bool _cancelDueToDiskSpace = false;
 
-        #region Public Properties
+		#endregion
 
-        public DicomRetrieveStudyRequest RetrieveStudy
-        {
-            get { return Request as DicomRetrieveStudyRequest; }
-        }
+		#region Public Properties
 
-        public DicomRetrieveSeriesRequest RetrieveSeries
-        {
-            get { return Request as DicomRetrieveSeriesRequest; }
-        }
+		public DicomRetrieveStudyRequest RetrieveStudy
+		{
+			get { return Request as DicomRetrieveStudyRequest; }
+		}
 
-        #endregion
+		public DicomRetrieveSeriesRequest RetrieveSeries
+		{
+			get { return Request as DicomRetrieveSeriesRequest; }
+		}
 
-        #region Public Methods
+		#endregion
 
-        /// <summary>
-        /// Override of Cancel() routine.
-        /// </summary>
-        /// <remarks>
-        /// The Cancel must be overriden to call the SCU's Cancel routine.
-        /// </remarks>
-        public override void Cancel()
-        {
-            base.Cancel();
-            _scu.Cancel();
-        }
+		#region Public Methods
 
-        /// <summary>
-        /// Override of Stop() routine.
-        /// </summary>
-        /// <remarks>
-        /// The Stop must be override to call the SCU's Cancel routine.
-        /// </remarks>
-        public override void Stop()
-        {
-            _scu.Cancel();
-            base.Stop();
-        }
+		/// <summary>
+		/// Override of Cancel() routine.
+		/// </summary>
+		/// <remarks>
+		/// The Cancel must be overriden to call the SCU's Cancel routine.
+		/// </remarks>
+		public override void Cancel()
+		{
+			base.Cancel();
+			_scu.Cancel();
+		}
 
-        public override void Process()
-        {
-            EnsureMaxUsedSpaceNotExceeded();
+		/// <summary>
+		/// Override of Stop() routine.
+		/// </summary>
+		/// <remarks>
+		/// The Stop must be override to call the SCU's Cancel routine.
+		/// </remarks>
+		public override void Stop()
+		{
+			_scu.Cancel();
+			base.Stop();
+		}
 
-            DicomServerConfiguration configuration = GetServerConfiguration();
-            var remoteAE = ServerDirectory.GetRemoteServerByName(Request.ServerName);
-            if (remoteAE == null)
-            {
-                Proxy.Fail(string.Format("Unknown destination: {0}", Request.ServerName), WorkItemFailureType.Fatal);
-                return;
-            }
+		public override void Process()
+		{
+			EnsureMaxUsedSpaceNotExceeded();
 
-            if (RetrieveStudy != null)
-                _scu = new ImageViewerMoveScu(configuration.AETitle, remoteAE, RetrieveStudy.Patient, RetrieveStudy.Study);
-            else if (RetrieveSeries != null)
-                _scu = new ImageViewerMoveScu(configuration.AETitle, remoteAE, RetrieveSeries.Patient, RetrieveSeries.Study, RetrieveSeries.SeriesInstanceUids);
-            else
-            {
-                Proxy.Fail("Invalid request type.", WorkItemFailureType.Fatal);
-                return;
-            }
-            
-            Progress.ImagesToRetrieve = _scu.TotalSubOperations;
-            Progress.FailureSubOperations = 0;
-            Progress.WarningSubOperations = 0;
-            Progress.SuccessSubOperations = 0;
-            Progress.IsCancelable = false;
-            Proxy.UpdateProgress();
+			DicomServerConfiguration configuration = GetServerConfiguration();
+			var remoteAE = ServerDirectory.GetRemoteServerByName(Request.ServerName);
+			if (remoteAE == null)
+			{
+				if (!string.IsNullOrEmpty(Request.ServerAETitle) && !string.IsNullOrEmpty(Request.ServerHostname) && Request.ServerPort > 0)
+				{
+					var device = new ApplicationEntity
+					             	{
+					             		Name = string.Format("{0}/{1}", Request.ServerAETitle, Request.ServerHostname),
+					             		AETitle = Request.ServerAETitle,
+					             		ScpParameters = new ScpParameters(Request.ServerHostname, Request.ServerPort)
+					             	};
+					remoteAE = new DicomServiceNode(new ServerDirectoryEntry(device));
+				}
+				else
+				{
+					Proxy.Fail(string.Format("Unknown remote device: {0}", Request.ServerName), WorkItemFailureType.Fatal);
+					return;
+				}
+			}
 
-            _scu.ImageMoveCompleted += OnMoveImage;
-            
-            _scu.Retrieve();
+			if (RetrieveStudy != null)
+				_scu = new ImageViewerMoveScu(configuration.AETitle, remoteAE, RetrieveStudy.Patient, RetrieveStudy.Study);
+			else if (RetrieveSeries != null)
+				_scu = new ImageViewerMoveScu(configuration.AETitle, remoteAE, RetrieveSeries.Patient, RetrieveSeries.Study, RetrieveSeries.SeriesInstanceUids);
+			else
+			{
+				Proxy.Fail("Invalid request type.", WorkItemFailureType.Fatal);
+				return;
+			}
 
-            Progress.ImagesToRetrieve = _scu.TotalSubOperations;
-            Progress.SuccessSubOperations = _scu.SuccessSubOperations;
-            Progress.FailureSubOperations = _scu.FailureSubOperations;
-            Progress.WarningSubOperations = _scu.WarningSubOperations;
-            Progress.StatusDetails = !string.IsNullOrEmpty(_scu.ErrorDescriptionDetails) ? _scu.ErrorDescriptionDetails : _scu.FailureDescription;            
+			Progress.ImagesToRetrieve = _scu.TotalSubOperations;
+			Progress.FailureSubOperations = 0;
+			Progress.WarningSubOperations = 0;
+			Progress.SuccessSubOperations = 0;
+			Progress.IsCancelable = false;
+			Proxy.UpdateProgress();
 
-            if (_scu.Canceled)
-            {
-                if (_cancelDueToDiskSpace)
-                {
-                    var study = RetrieveStudy.Study ?? RetrieveSeries.Study;
+			_scu.ImageMoveCompleted += OnMoveImage;
 
-                    Platform.Log(LogLevel.Info, "Dicom Retrieve for {0} from {1} was cancelled because disk space has been exceeded", study, remoteAE.AETitle);
-                    Progress.IsCancelable = true;
-                    throw new NotEnoughStorageException(); // item will be failed
-                }
-                else if (StopPending)
-                {
-                    Progress.IsCancelable = true;
-                    Proxy.Postpone();
-                }
-                else
-                {
-                    Proxy.Cancel();
-                }
-            }
-            else if (_scu.FailureSubOperations > 0 || _scu.Failed)
-            {
-                Progress.IsCancelable = true;
-                Proxy.Fail(!string.IsNullOrEmpty(_scu.ErrorDescriptionDetails) ? _scu.ErrorDescriptionDetails : _scu.FailureDescription, WorkItemFailureType.NonFatal);
-            }
-            else
-            {
-                Proxy.Complete();
-            }
-        }
+			_scu.Retrieve();
 
-        #endregion
+			Progress.ImagesToRetrieve = _scu.TotalSubOperations;
+			Progress.SuccessSubOperations = _scu.SuccessSubOperations;
+			Progress.FailureSubOperations = _scu.FailureSubOperations;
+			Progress.WarningSubOperations = _scu.WarningSubOperations;
+			Progress.StatusDetails = !string.IsNullOrEmpty(_scu.ErrorDescriptionDetails) ? _scu.ErrorDescriptionDetails : _scu.FailureDescription;
 
-        #region Private Methods
+			if (_scu.Canceled)
+			{
+				if (_cancelDueToDiskSpace)
+				{
+					var study = RetrieveStudy.Study ?? RetrieveSeries.Study;
 
-        private void OnMoveImage(object sender, EventArgs storageInstance)
-        {
-            Progress.ImagesToRetrieve = _scu.TotalSubOperations;
-            Progress.SuccessSubOperations = _scu.SuccessSubOperations;
-            Progress.FailureSubOperations = _scu.FailureSubOperations;
-            Progress.WarningSubOperations = _scu.WarningSubOperations;
-            Progress.StatusDetails = !string.IsNullOrEmpty(_scu.ErrorDescriptionDetails) ? _scu.ErrorDescriptionDetails : _scu.FailureDescription;
-            Proxy.UpdateProgress();
+					Platform.Log(LogLevel.Info, "Dicom Retrieve for {0} from {1} was cancelled because disk space has been exceeded", study, remoteAE.AETitle);
+					Progress.IsCancelable = true;
+					throw new NotEnoughStorageException(); // item will be failed
+				}
+				else if (StopPending)
+				{
+					Progress.IsCancelable = true;
+					Proxy.Postpone();
+				}
+				else
+				{
+					Proxy.Cancel();
+				}
+			}
+			else if (_scu.FailureSubOperations > 0 || _scu.Failed)
+			{
+				Progress.IsCancelable = true;
+				Proxy.Fail(!string.IsNullOrEmpty(_scu.ErrorDescriptionDetails) ? _scu.ErrorDescriptionDetails : _scu.FailureDescription, WorkItemFailureType.NonFatal);
+			}
+			else
+			{
+				Proxy.Complete();
+			}
+		}
 
-            if (LocalStorageMonitor.IsMaxUsedSpaceExceeded)
-            {
-                _cancelDueToDiskSpace = true;
-                _scu.Cancel();
-            }
-        }
+		#endregion
 
-        #endregion
-    }
+		#region Private Methods
+
+		private void OnMoveImage(object sender, EventArgs storageInstance)
+		{
+			Progress.ImagesToRetrieve = _scu.TotalSubOperations;
+			Progress.SuccessSubOperations = _scu.SuccessSubOperations;
+			Progress.FailureSubOperations = _scu.FailureSubOperations;
+			Progress.WarningSubOperations = _scu.WarningSubOperations;
+			Progress.StatusDetails = !string.IsNullOrEmpty(_scu.ErrorDescriptionDetails) ? _scu.ErrorDescriptionDetails : _scu.FailureDescription;
+			Proxy.UpdateProgress();
+
+			if (LocalStorageMonitor.IsMaxUsedSpaceExceeded)
+			{
+				_cancelDueToDiskSpace = true;
+				_scu.Cancel();
+			}
+		}
+
+		#endregion
+	}
 }
