@@ -97,8 +97,7 @@ namespace ClearCanvas.Desktop.View.WinForms
         /// </summary>
         public override void Open()
         {
-            IApplicationComponentView componentView = (IApplicationComponentView)ViewFactory.CreateAssociatedView(_shelf.Component.GetType());
-            componentView.SetComponent((IApplicationComponent)_shelf.Component);
+            IApplicationComponentView componentView = _shelf.ComponentView;
 
         	XmlDocument restoreDocument;
         	if (DesktopViewSettings.Default.GetShelfState(_desktopView.DesktopWindowName, _shelf.Name, out restoreDocument))

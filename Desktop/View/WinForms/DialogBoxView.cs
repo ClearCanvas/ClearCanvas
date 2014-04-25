@@ -59,8 +59,7 @@ namespace ClearCanvas.Desktop.View.WinForms
         /// <param name="owner"></param>
         protected internal DialogBoxView(DialogBox dialogBox, DesktopWindowView owner)
         {
-            IApplicationComponentView componentView = (IApplicationComponentView)ViewFactory.CreateAssociatedView(dialogBox.Component.GetType());
-            componentView.SetComponent((IApplicationComponent)dialogBox.Component);
+            IApplicationComponentView componentView = dialogBox.ComponentView;
 
             // cache the app component - we'll need it later to get the ExitCode
             _component = (IApplicationComponent)dialogBox.Component;

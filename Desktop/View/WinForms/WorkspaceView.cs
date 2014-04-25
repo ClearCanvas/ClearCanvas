@@ -64,8 +64,7 @@ namespace ClearCanvas.Desktop.View.WinForms
 		/// <param name="desktopView"></param>
 		protected internal WorkspaceView(Workspace workspace, DesktopWindowView desktopView)
 		{
-			var componentView = (IApplicationComponentView)ViewFactory.CreateAssociatedView(workspace.Component.GetType());
-			componentView.SetComponent((IApplicationComponent)workspace.Component);
+			var componentView = workspace.ComponentView;
 
 			_control = (Control)componentView.GuiElement;
 			_tabPage = new Crownwood.DotNetMagic.Controls.TabPage { Control = _control, Tag = this };

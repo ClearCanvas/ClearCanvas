@@ -45,8 +45,7 @@ namespace ClearCanvas.Desktop.View.WinForms
 		{
 			_owner = owner;
 
-			var componentView = (IApplicationComponentView)ViewFactory.CreateAssociatedView(dialogBox.Component.GetType());
-			componentView.SetComponent((IApplicationComponent)dialogBox.Component);
+			var componentView = dialogBox.ComponentView;
 
 			_content = (Control) componentView.GuiElement;
 			_form = CreateDialogBoxForm(dialogBox, _content);

@@ -125,6 +125,11 @@ namespace ClearCanvas.Desktop
 			get { return _component; }
 		}
 
+		public IApplicationComponentView ComponentView
+		{
+			get { return _host.ComponentView; }
+		}
+
 		/// <summary>
 		/// Gets the dialog size hint.
 		/// </summary>

@@ -98,6 +98,11 @@ namespace ClearCanvas.Desktop
 			get { return _host.Component; }
 		}
 
+		public IApplicationComponentView ComponentView
+		{
+			get { return _host.ComponentView; }
+		}
+
 		/// <summary>
 		/// Gets the workspace that owns this dialog box.
 		/// </summary>

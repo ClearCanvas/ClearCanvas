@@ -94,6 +94,11 @@ namespace ClearCanvas.Desktop
             get { return _host.Component; }
         }
 
+        public IApplicationComponentView ComponentView
+        {
+            get { return _host.ComponentView; }
+        }
+
         /// <summary>
         /// Gets the desktop window that owns this shelf.
         /// </summary>
