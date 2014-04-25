@@ -23,14 +23,17 @@
 #endregion
 
 using System;
+using System.Drawing;
 using ClearCanvas.ImageViewer.Graphics;
 using ClearCanvas.ImageViewer.Rendering;
 using ClearCanvas.ImageViewer.StudyManagement;
+using ClearCanvas.ImageViewer.Vtk;
+using ClearCanvas.ImageViewer.Vtk.Rendering;
 using vtk;
 
 namespace ClearCanvas.ImageViewer.Tools.Volume.VTK
 {
-	public class VolumePresentationImage : PresentationImage, IAssociatedTissues
+	public class VolumePresentationImage : BasicPresentationImage3D, IAssociatedTissues, IVtkPresentationImage
 	{
 		#region Private fields
 
@@ -41,6 +44,7 @@ namespace ClearCanvas.ImageViewer.Tools.Volume.VTK
 		#endregion
 
 		public VolumePresentationImage(IDisplaySet displaySet)
+            : base(1,1,1)
 		{
 			_displaySet = displaySet;
 
@@ -64,7 +68,7 @@ namespace ClearCanvas.ImageViewer.Tools.Volume.VTK
 			get 
 			{
 				if (base.ImageRenderer == null)
-					base.ImageRenderer = new VolumePresentationImageRenderer();
+                    base.ImageRenderer = new VtkPresentationImageRenderer();
 
 				return base.ImageRenderer;
 			}
@@ -118,7 +122,7 @@ namespace ClearCanvas.ImageViewer.Tools.Volume.VTK
 
 		#endregion
 
-		public override IPresentationImage CreateFreshCopy()
+	    public override IPresentationImage CreateFreshCopy()
 		{
 			return new VolumePresentationImage(_displaySet);
 		}
@@ -274,7 +278,12 @@ namespace ClearCanvas.ImageViewer.Tools.Volume.VTK
 			}
 		}
 
-		protected override void Dispose(bool disposing)
+	    protected override IRenderer CreateImageRenderer()
+	    {
+	        return new VtkPresentationImageRenderer();
+	    }
+
+	    protected override void Dispose(bool disposing)
 		{
 			if (disposing && _vtkImageData != null)
 			{
@@ -284,5 +293,20 @@ namespace ClearCanvas.ImageViewer.Tools.Volume.VTK
 			base.Dispose(disposing);
 		}
 
+        private class Scene : VtkSceneGraph<VolumePresentationImage>
+        {
+            public Scene(VolumePresentationImage owner) : base(owner)
+            {
+            }
+
+            public override void InitializeSceneGraph(vtkRenderer vtkRenderer)
+            {
+            }
+        }
+
+	    public VtkSceneGraph CreateSceneGraph()
+	    {
+	        return new Scene(this);
+	    }
 	}
 }

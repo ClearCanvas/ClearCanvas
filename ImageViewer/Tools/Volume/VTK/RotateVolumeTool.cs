@@ -33,7 +33,7 @@ using ClearCanvas.Desktop.Actions;
 using vtk;
 using ClearCanvas.ImageViewer.InputManagement;
 using ClearCanvas.ImageViewer.BaseTools;
-
+/*
 namespace ClearCanvas.ImageViewer.Tools.Volume.VTK
 {
 	[MouseToolButton(XMouseButtons.Left, false)]
@@ -140,3 +140,4 @@ namespace ClearCanvas.ImageViewer.Tools.Volume.VTK
 		#endregion
 	}
 }
+*/

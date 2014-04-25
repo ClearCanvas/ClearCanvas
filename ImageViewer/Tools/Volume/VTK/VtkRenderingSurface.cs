@@ -30,7 +30,7 @@ using ClearCanvas.ImageViewer.Rendering;
 using vtk;
 using System.Windows.Forms;
 using ClearCanvas.Common;
-
+/*
 namespace ClearCanvas.ImageViewer.Tools.Volume.VTK
 {
 	public class VtkRenderingSurface : IRenderingSurface
@@ -244,3 +244,4 @@ namespace ClearCanvas.ImageViewer.Tools.Volume.VTK
 		#endregion
 	}
 }
+*/

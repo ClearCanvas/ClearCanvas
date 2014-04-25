@@ -34,7 +34,7 @@ namespace ClearCanvas.ImageViewer.TestTools
 	[ButtonAction("apply", "global-toolbars/Performance Analysis", "Apply")]
 	[IconSet("apply", "PerformanceAnalysisToolSmall.png", "PerformanceAnalysisToolMedium.png", "PerformanceAnalysisToolLarge.png")]
 
-	[ExtensionOf(typeof(DesktopToolExtensionPoint))]
+	[ExtensionOf(typeof(DesktopToolExtensionPoint), Enabled=false)]
 	public class PerformanceAnalysisTool : Tool<IDesktopToolContext>
 	{
 		private IShelf _shelf;
