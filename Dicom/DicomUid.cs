@@ -27,7 +27,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Net.NetworkInformation;
-using System.Numerics;
 using System.Text;
 
 namespace ClearCanvas.Dicom
@@ -274,6 +273,101 @@ namespace ClearCanvas.Dicom
             }
         }
 
+    // The following method was contributed by Peter O. and
+    // is released to the public domain.  It can also be
+    // found at:
+    // <https://gist.github.com/peteroupc/c55d330d72c51d267eb4>  
+    public static string GuidToDecimalString(Guid guid) {
+      byte[] bytes = guid.ToByteArray();
+      int[] tempReg = new int[8];
+      // Arrange the GUID to 16-bit integers in least-significant-integer first,
+      // to conform to how they would appear if the result
+      // guid.ToString(), with the hyphens removed, were converted
+      // to a BigDecimal
+      unchecked {
+        tempReg[7] = ((((int)bytes[3]) & 0xFF) << 8) | (((int)bytes[2]) & 0xFF);
+        tempReg[6] = ((((int)bytes[1]) & 0xFF) << 8) | (((int)bytes[0]) & 0xFF);
+        tempReg[5] = ((((int)bytes[5]) & 0xFF) << 8) | (((int)bytes[4]) & 0xFF);
+        tempReg[4] = ((((int)bytes[7]) & 0xFF) << 8) | (((int)bytes[6]) & 0xFF);
+        tempReg[3] = ((((int)bytes[8]) & 0xFF) << 8) | (((int)bytes[9]) & 0xFF);
+        tempReg[2] = ((((int)bytes[10]) & 0xFF) << 8) | (((int)bytes[11]) & 0xFF);
+        tempReg[1] = ((((int)bytes[12]) & 0xFF) << 8) | (((int)bytes[13]) & 0xFF);
+        tempReg[0] = ((((int)bytes[14]) & 0xFF) << 8) | (((int)bytes[15]) & 0xFF);
+      }
+      int wordCount = tempReg.Length;
+      while (wordCount != 0 && tempReg[wordCount - 1] == 0) {
+        --wordCount;
+      }
+      int i = 0;
+      // Set "characters" to be big enough for any 128-bit
+      // integer (2^128-1 uses 39 decimal digits)
+      char[] characters = new char[40];
+      // Extract each digit of the 128-bit integer
+      while (wordCount != 0) {
+        if (wordCount == 1 && tempReg[0] > 0 && tempReg[0] <= 0x7fff) {
+          int rest = tempReg[0];
+          while (rest != 0) {
+            // accurate approximation to rest/10 up to 43698,
+            // and rest can go up to 32767
+            int newrest = (rest * 26215) >> 18;
+            characters[i++] = (char)(0x30 + rest - (newrest * 10));
+            rest = newrest;
+          }
+          break;
+        } else if (wordCount == 2 && tempReg[1] > 0 && tempReg[1] <= 0x7fff) {
+          int rest = ((int)tempReg[0]) & 0xffff;
+          rest |= (((int)tempReg[1]) & 0xffff) << 16;
+          while (rest != 0) {
+            int newrest = rest / 10;
+            characters[i++] = (char)(0x30 + rest - (newrest * 10));
+            rest = newrest;
+          }
+          break;
+        } else {
+          int wci = wordCount;
+          int remainderShort = 0;
+          int quo, rem;
+          // Divide by 10000
+          while ((wci--) > 0) {
+            int currentDividend = unchecked((int)((((int)tempReg[wci]) & 0xffff) |
+                                                  ((int)remainderShort << 16)));
+            quo = currentDividend / 10000;
+            tempReg[wci] = (quo & 0xFFFF);
+            rem = currentDividend - (10000 * quo);
+            remainderShort = rem;
+          }
+          int remainderSmall = remainderShort;
+          // Recalculate word count
+          while (wordCount != 0 && tempReg[wordCount - 1] == 0) {
+            --wordCount;
+          }
+          // accurate approximation to rest/10 up to 16388,
+          // and rest can go up to 9999
+          int newrest = (remainderSmall * 3277) >> 15;
+          characters[i++] = (char)(0x30 + remainderSmall - (newrest * 10));
+          remainderSmall = newrest;
+          newrest = (remainderSmall * 3277) >> 15;
+          characters[i++] = (char)(0x30 + remainderSmall - (newrest * 10));
+          remainderSmall = newrest;
+          newrest = (remainderSmall * 3277) >> 15;
+          characters[i++] = (char)(0x30 + remainderSmall - (newrest * 10));
+          remainderSmall = newrest;
+          characters[i++] = (char)(0x30 + remainderSmall);
+        }
+      }
+      // Reverse the characters, since they were
+      // written least-significant digit first
+      int half = i >> 1;
+      int right = i - 1;
+      for (int j = 0; j < half; j++, right--) {
+        char value = characters[j];
+        characters[j] = characters[right];
+        characters[right] = value;
+      }
+      // Return the generated string
+      return new String(characters, 0, i);
+    }
+
         /// <summary>
         /// This routine generates a DICOM Unique Identifier.
         /// </summary>
@@ -310,10 +404,9 @@ namespace ClearCanvas.Dicom
         /// <returns></returns>
         public static DicomUid GenerateUid()
         {
-            var guidBytes = string.Format("0{0:N}", Guid.NewGuid());
-            var bigInteger = BigInteger.Parse(guidBytes, NumberStyles.HexNumber);
-
-            return new DicomUid(string.Format(CultureInfo.InvariantCulture, "2.25.{0}", bigInteger), "Instance UID", UidType.SOPInstance);
+            var guidString = GuidToDecimalString(Guid.NewGuid());
+        
+            return new DicomUid(string.Format(CultureInfo.InvariantCulture, "2.25.{0}", guidString), "Instance UID", UidType.SOPInstance);
         }
 
         #endregion
