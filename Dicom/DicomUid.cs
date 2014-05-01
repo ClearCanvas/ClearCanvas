@@ -295,7 +295,9 @@ namespace ClearCanvas.Dicom
         --wordCount;
       }
       int i = 0;
-      char[] characters = new char[(wordCount << 4) + 1];
+      // Set "characters" to be big enough for any 128-bit
+      // integer (2^128-1 uses 39 decimal digits)
+      char[] characters = new char[40];
       // Extract each digit of the 128-bit integer
       while (wordCount != 0) {
         if (wordCount == 1 && tempReg[0] > 0 && tempReg[0] <= 0x7fff) {
