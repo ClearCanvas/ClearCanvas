@@ -273,6 +273,10 @@ namespace ClearCanvas.Dicom
             }
         }
 
+    // The following method was contributed by Peter O. and
+    // is released to the public domain.  It can also be
+    // found at:
+    // <https://gist.github.com/peteroupc/c55d330d72c51d267eb4>  
     public static string GuidToDecimalString(Guid guid) {
       byte[] bytes = guid.ToByteArray();
       int[] tempReg = new int[8];
