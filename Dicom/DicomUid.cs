@@ -273,9 +273,7 @@ namespace ClearCanvas.Dicom
             }
         }
 
-    private const string HexChars = "0123456789ABCDEF";
-
-    private static string GuidToDecimalString(Guid guid) {
+    public static string GuidToDecimalString(Guid guid) {
       byte[] bytes = guid.ToByteArray();
       int[] tempReg = new int[8];
       // Arrange the GUID to 16-bit integers in least-significant-integer first,
@@ -306,7 +304,7 @@ namespace ClearCanvas.Dicom
             // accurate approximation to rest/10 up to 43698,
             // and rest can go up to 32767
             int newrest = (rest * 26215) >> 18;
-            characters[i++] = HexChars[rest - (newrest * 10)];
+            characters[i++] = (char)(0x30 + rest - (newrest * 10));
             rest = newrest;
           }
           break;
@@ -315,7 +313,7 @@ namespace ClearCanvas.Dicom
           rest |= (((int)tempReg[1]) & 0xffff) << 16;
           while (rest != 0) {
             int newrest = rest / 10;
-            characters[i++] = HexChars[rest - (newrest * 10)];
+            characters[i++] = (char)(0x30 + rest - (newrest * 10));
             rest = newrest;
           }
           break;
@@ -340,15 +338,15 @@ namespace ClearCanvas.Dicom
           // accurate approximation to rest/10 up to 16388,
           // and rest can go up to 9999
           int newrest = (remainderSmall * 3277) >> 15;
-          characters[i++] = HexChars[(int)(remainderSmall - (newrest * 10))];
+          characters[i++] = (char)(0x30 + remainderSmall - (newrest * 10));
           remainderSmall = newrest;
           newrest = (remainderSmall * 3277) >> 15;
-          characters[i++] = HexChars[(int)(remainderSmall - (newrest * 10))];
+          characters[i++] = (char)(0x30 + remainderSmall - (newrest * 10));
           remainderSmall = newrest;
           newrest = (remainderSmall * 3277) >> 15;
-          characters[i++] = HexChars[(int)(remainderSmall - (newrest * 10))];
+          characters[i++] = (char)(0x30 + remainderSmall - (newrest * 10));
           remainderSmall = newrest;
-          characters[i++] = HexChars[remainderSmall];
+          characters[i++] = (char)(0x30 + remainderSmall);
         }
       }
       // Reverse the characters, since they were
