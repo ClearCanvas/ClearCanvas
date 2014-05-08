@@ -32,6 +32,7 @@ namespace ClearCanvas.ImageServer.Services.ServiceLock.Shreds
 	/// Plugin to handle ServiceLock processing for the ImageServer.
 	/// </summary>
 	[ExtensionOf(typeof(ShredExtensionPoint))]
+	[ShredIsolationAttribute(Level = ShredIsolationLevel.None)]
 	public class ServiceLockServerExtension : Shred
 	{
 		private readonly string _className;

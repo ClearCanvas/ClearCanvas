@@ -66,6 +66,7 @@ namespace ClearCanvas.ImageServer.Services.Streaming.Shreds
 	/// Represents an image streaming server.
 	/// </summary>
 	[ExtensionOf(typeof(ShredExtensionPoint))]
+	[ShredIsolationAttribute(Level = ShredIsolationLevel.None)]
 	public class ImageStreamingServer : HttpServer
     {
         #region Private Fields
