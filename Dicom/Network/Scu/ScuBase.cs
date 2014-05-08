@@ -349,7 +349,7 @@ namespace ClearCanvas.Dicom.Network.Scu
 
         protected void Connect(string clientAETitle, string remoteAE, string remoteHost, int remotePort)
         {
-			if (LogInformation) Platform.Log(LogLevel.Info, "Preparing to connect to AE {0} on host {1} on port {2} for printer status request.", remoteAE, remoteHost, remotePort);
+			if (LogInformation) Platform.Log(LogLevel.Info, "Preparing to connect to AE {0} on host {1} on port {2}.", remoteAE, remoteHost, remotePort);
             try
             {
                 ClientAETitle = clientAETitle;
