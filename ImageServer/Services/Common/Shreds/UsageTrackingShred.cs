@@ -34,7 +34,8 @@ namespace ClearCanvas.ImageServer.Services.Common.Shreds
     /// Plugin to host Usage Tracking service.
     /// </summary>
     [ExtensionOf(typeof(ShredExtensionPoint))]
-    public class UsageTrackingShred : Shred
+	[ShredIsolation(Level = ShredIsolationLevel.None)]
+	public class UsageTrackingShred : Shred
     {
         #region Private Members
 

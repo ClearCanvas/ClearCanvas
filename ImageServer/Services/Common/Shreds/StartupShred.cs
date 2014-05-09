@@ -41,6 +41,7 @@ namespace ClearCanvas.ImageServer.Services.Common.Shreds
 	/// stuck in a loop attempting to reconnect to the database.
 	/// </remarks>
 	[ExtensionOf(typeof(ShredExtensionPoint))]
+	[ShredIsolation(Level = ShredIsolationLevel.None)]
 	public class StartupShred : Shred
 	{
 		#region Private Members

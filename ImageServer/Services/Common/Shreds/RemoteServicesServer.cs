@@ -35,6 +35,7 @@ namespace ClearCanvas.ImageServer.Services.Common.Shreds
 	/// Plugin to host ImageServer-specific web services.
 	/// </summary>
 	[ExtensionOf(typeof (ShredExtensionPoint))]
+	[ShredIsolation(Level = ShredIsolationLevel.None)]
 	public class RemoteServicesServer : WcfShred
 	{
 
