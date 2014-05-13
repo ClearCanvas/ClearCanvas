@@ -28,6 +28,7 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DescriptiveSpinControl));
 			this._textBox = new System.Windows.Forms.TextBox();
 			this._numericUpDown = new System.Windows.Forms.NumericUpDown();
 			((System.ComponentModel.ISupportInitialize)(this._numericUpDown)).BeginInit();
@@ -35,30 +36,22 @@
 			// 
 			// _textBox
 			// 
-			this._textBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
-			this._textBox.Location = new System.Drawing.Point(0, 0);
+			resources.ApplyResources(this._textBox, "_textBox");
 			this._textBox.Name = "_textBox";
 			this._textBox.ReadOnly = true;
-			this._textBox.Size = new System.Drawing.Size(100, 20);
-			this._textBox.TabIndex = 0;
 			// 
 			// _numericUpDown
 			// 
-			this._numericUpDown.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this._numericUpDown.Location = new System.Drawing.Point(99, 0);
+			resources.ApplyResources(this._numericUpDown, "_numericUpDown");
 			this._numericUpDown.Name = "_numericUpDown";
-			this._numericUpDown.Size = new System.Drawing.Size(18, 20);
-			this._numericUpDown.TabIndex = 1;
 			// 
 			// DescriptiveSpinControl
 			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+			resources.ApplyResources(this, "$this");
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.Controls.Add(this._numericUpDown);
 			this.Controls.Add(this._textBox);
 			this.Name = "DescriptiveSpinControl";
-			this.Size = new System.Drawing.Size(119, 22);
 			((System.ComponentModel.ISupportInitialize)(this._numericUpDown)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();

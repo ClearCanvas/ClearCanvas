@@ -59,10 +59,12 @@ namespace ClearCanvas.Ris.Client.View.WinForms
         /// </summary>
         private void InitializeComponent()
         {
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(BiographyOrderHistoryComponentControl));
 			this._orderList = new ClearCanvas.Desktop.View.WinForms.TableView();
 			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
 			this._banner = new System.Windows.Forms.Label();
 			this._tabHostPanel = new System.Windows.Forms.Panel();
+			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
 			this.splitContainer1.SuspendLayout();
@@ -70,21 +72,16 @@ namespace ClearCanvas.Ris.Client.View.WinForms
 			// 
 			// _orderList
 			// 
-			this._orderList.Dock = System.Windows.Forms.DockStyle.Fill;
+			resources.ApplyResources(this._orderList, "_orderList");
 			this._orderList.FilterTextBoxVisible = true;
-			this._orderList.Location = new System.Drawing.Point(0, 0);
 			this._orderList.MultiSelect = false;
 			this._orderList.Name = "_orderList";
-			this._orderList.Padding = new System.Windows.Forms.Padding(4, 2, 0, 7);
 			this._orderList.ReadOnly = false;
-			this._orderList.Size = new System.Drawing.Size(465, 592);
-			this._orderList.TabIndex = 0;
 			// 
 			// splitContainer1
 			// 
-			this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+			resources.ApplyResources(this.splitContainer1, "splitContainer1");
 			this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
-			this.splitContainer1.Location = new System.Drawing.Point(0, 0);
 			this.splitContainer1.Name = "splitContainer1";
 			// 
 			// splitContainer1.Panel1
@@ -93,48 +90,32 @@ namespace ClearCanvas.Ris.Client.View.WinForms
 			// 
 			// splitContainer1.Panel2
 			// 
-			this.splitContainer1.Panel2.AutoScroll = true;
+			resources.ApplyResources(this.splitContainer1.Panel2, "splitContainer1.Panel2");
 			this.splitContainer1.Panel2.Controls.Add(this._banner);
 			this.splitContainer1.Panel2.Controls.Add(this._tabHostPanel);
-			this.splitContainer1.Size = new System.Drawing.Size(948, 592);
-			this.splitContainer1.SplitterDistance = 465;
-			this.splitContainer1.TabIndex = 1;
 			this.splitContainer1.TabStop = false;
 			// 
 			// _banner
 			// 
-			this._banner.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
+			resources.ApplyResources(this._banner, "_banner");
 			this._banner.BackColor = System.Drawing.Color.Transparent;
-			this._banner.Font = new System.Drawing.Font("Arial", 15.75F, System.Drawing.FontStyle.Bold);
-			this._banner.Location = new System.Drawing.Point(2, 4);
 			this._banner.Name = "_banner";
-			this._banner.Size = new System.Drawing.Size(473, 69);
-			this._banner.TabIndex = 3;
-			this._banner.Text = "Banner Message";
 			// 
 			// _tabHostPanel
 			// 
-			this._tabHostPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-						| System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
-			this._tabHostPanel.Location = new System.Drawing.Point(3, 78);
-			this._tabHostPanel.Margin = new System.Windows.Forms.Padding(0);
+			resources.ApplyResources(this._tabHostPanel, "_tabHostPanel");
 			this._tabHostPanel.Name = "_tabHostPanel";
-			this._tabHostPanel.Size = new System.Drawing.Size(473, 511);
-			this._tabHostPanel.TabIndex = 2;
 			// 
 			// BiographyOrderHistoryComponentControl
 			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+			resources.ApplyResources(this, "$this");
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.SystemColors.Control;
 			this.Controls.Add(this.splitContainer1);
-			this.Margin = new System.Windows.Forms.Padding(0);
 			this.Name = "BiographyOrderHistoryComponentControl";
-			this.Size = new System.Drawing.Size(948, 592);
 			this.splitContainer1.Panel1.ResumeLayout(false);
 			this.splitContainer1.Panel2.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
 			this.splitContainer1.ResumeLayout(false);
 			this.ResumeLayout(false);
 

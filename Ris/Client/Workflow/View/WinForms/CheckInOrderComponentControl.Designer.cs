@@ -59,6 +59,7 @@ namespace ClearCanvas.Ris.Client.Workflow.View.WinForms
         /// </summary>
         private void InitializeComponent()
         {
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CheckInOrderComponentControl));
 			this._okButton = new System.Windows.Forms.Button();
 			this._cancelButton = new System.Windows.Forms.Button();
 			this._orderTableView = new ClearCanvas.Desktop.View.WinForms.TableView();
@@ -68,66 +69,47 @@ namespace ClearCanvas.Ris.Client.Workflow.View.WinForms
 			// 
 			// _okButton
 			// 
-			this._okButton.Location = new System.Drawing.Point(325, 254);
+			resources.ApplyResources(this._okButton, "_okButton");
 			this._okButton.Name = "_okButton";
-			this._okButton.Size = new System.Drawing.Size(75, 23);
-			this._okButton.TabIndex = 1;
-			this._okButton.Text = "Check-In";
 			this._okButton.UseVisualStyleBackColor = true;
 			this._okButton.Click += new System.EventHandler(this._okButton_Click);
 			// 
 			// _cancelButton
 			// 
-			this._cancelButton.Location = new System.Drawing.Point(401, 254);
+			resources.ApplyResources(this._cancelButton, "_cancelButton");
 			this._cancelButton.Name = "_cancelButton";
-			this._cancelButton.Size = new System.Drawing.Size(75, 23);
-			this._cancelButton.TabIndex = 2;
-			this._cancelButton.Text = "Cancel";
 			this._cancelButton.UseVisualStyleBackColor = true;
 			this._cancelButton.Click += new System.EventHandler(this._cancelButton_Click);
 			// 
 			// _orderTableView
 			// 
-			this._orderTableView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-						| System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
-			this._orderTableView.Location = new System.Drawing.Point(4, 4);
+			resources.ApplyResources(this._orderTableView, "_orderTableView");
 			this._orderTableView.Name = "_orderTableView";
 			this._orderTableView.ReadOnly = false;
 			this._orderTableView.ShowToolbar = false;
-			this._orderTableView.Size = new System.Drawing.Size(477, 231);
-			this._orderTableView.TabIndex = 3;
 			// 
 			// _checkInDate
 			// 
-			this._checkInDate.LabelText = "Check-in Date";
-			this._checkInDate.Location = new System.Drawing.Point(4, 237);
-			this._checkInDate.Margin = new System.Windows.Forms.Padding(2);
+			resources.ApplyResources(this._checkInDate, "_checkInDate");
 			this._checkInDate.Maximum = new System.DateTime(9998, 12, 31, 0, 0, 0, 0);
 			this._checkInDate.Minimum = new System.DateTime(1753, 1, 1, 0, 0, 0, 0);
 			this._checkInDate.Name = "_checkInDate";
-			this._checkInDate.Size = new System.Drawing.Size(150, 41);
-			this._checkInDate.TabIndex = 4;
 			this._checkInDate.Value = new System.DateTime(2008, 8, 5, 10, 14, 18, 62);
 			// 
 			// _checkInTime
 			// 
-			this._checkInTime.LabelText = "Check-in Time";
-			this._checkInTime.Location = new System.Drawing.Point(158, 236);
-			this._checkInTime.Margin = new System.Windows.Forms.Padding(2);
+			resources.ApplyResources(this._checkInTime, "_checkInTime");
 			this._checkInTime.Maximum = new System.DateTime(9998, 12, 31, 0, 0, 0, 0);
 			this._checkInTime.Minimum = new System.DateTime(1753, 1, 1, 0, 0, 0, 0);
 			this._checkInTime.Name = "_checkInTime";
 			this._checkInTime.ShowDate = false;
 			this._checkInTime.ShowTime = true;
-			this._checkInTime.Size = new System.Drawing.Size(150, 41);
-			this._checkInTime.TabIndex = 5;
 			this._checkInTime.Value = new System.DateTime(2008, 8, 5, 10, 14, 18, 62);
 			// 
 			// CheckInOrderComponentControl
 			// 
 			this.AcceptButton = this._okButton;
-			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+			resources.ApplyResources(this, "$this");
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.CancelButton = this._cancelButton;
 			this.Controls.Add(this._checkInTime);
@@ -136,7 +118,6 @@ namespace ClearCanvas.Ris.Client.Workflow.View.WinForms
 			this.Controls.Add(this._cancelButton);
 			this.Controls.Add(this._okButton);
 			this.Name = "CheckInOrderComponentControl";
-			this.Size = new System.Drawing.Size(484, 280);
 			this.ResumeLayout(false);
 
         }

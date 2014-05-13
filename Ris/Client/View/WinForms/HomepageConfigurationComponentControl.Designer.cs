@@ -59,38 +59,30 @@ namespace ClearCanvas.Ris.Client.View.WinForms
         /// </summary>
         private void InitializeComponent()
         {
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(HomepageConfigurationComponentControl));
 			this._showHomepageOnStartup = new System.Windows.Forms.CheckBox();
 			this._preventHompageClosing = new System.Windows.Forms.CheckBox();
 			this.SuspendLayout();
 			// 
 			// _showHomepageOnStartup
 			// 
-			this._showHomepageOnStartup.AutoSize = true;
-			this._showHomepageOnStartup.Location = new System.Drawing.Point(48, 41);
+			resources.ApplyResources(this._showHomepageOnStartup, "_showHomepageOnStartup");
 			this._showHomepageOnStartup.Name = "_showHomepageOnStartup";
-			this._showHomepageOnStartup.Size = new System.Drawing.Size(165, 17);
-			this._showHomepageOnStartup.TabIndex = 0;
-			this._showHomepageOnStartup.Text = "Show Homepage on Start-Up";
 			this._showHomepageOnStartup.UseVisualStyleBackColor = true;
 			// 
 			// _preventHompageClosing
 			// 
-			this._preventHompageClosing.AutoSize = true;
-			this._preventHompageClosing.Location = new System.Drawing.Point(48, 89);
+			resources.ApplyResources(this._preventHompageClosing, "_preventHompageClosing");
 			this._preventHompageClosing.Name = "_preventHompageClosing";
-			this._preventHompageClosing.Size = new System.Drawing.Size(204, 17);
-			this._preventHompageClosing.TabIndex = 1;
-			this._preventHompageClosing.Text = "Prevent Homepage from being closed";
 			this._preventHompageClosing.UseVisualStyleBackColor = true;
 			// 
 			// HomepageConfigurationComponentControl
 			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+			resources.ApplyResources(this, "$this");
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.Controls.Add(this._preventHompageClosing);
 			this.Controls.Add(this._showHomepageOnStartup);
 			this.Name = "HomepageConfigurationComponentControl";
-			this.Size = new System.Drawing.Size(380, 191);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
