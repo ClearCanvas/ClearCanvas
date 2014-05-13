@@ -40,7 +40,7 @@ namespace ClearCanvas.Healthcare {
         /// <summary>
         /// Pre-Admit
         /// </summary>
-        [EnumValue("Pre-Admit")]
+        [EnumValue("PreAdmit")]
         PA,
 
         /// <summary>
@@ -52,7 +52,7 @@ namespace ClearCanvas.Healthcare {
         /// <summary>
         /// Active/Admitted
         /// </summary>
-        [EnumValue("Active/Admitted")]
+        [EnumValue("ActiveAdmitted")]
         AA,
 
         /// <summary>
@@ -70,7 +70,7 @@ namespace ClearCanvas.Healthcare {
         /// <summary>
         /// Pre-Admit - Cancelled
         /// </summary>
-        [EnumValue("Pre-Admit - Cancelled")]
+        [EnumValue("PreAdmitCancelled")]
         PC
     }
 }
