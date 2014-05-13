@@ -28,29 +28,26 @@ namespace ClearCanvas.Ris.Client.View.WinForms
         /// </summary>
         private void InitializeComponent()
         {
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CannedTextSummaryComponentControl));
 			this._cannedTexts = new ClearCanvas.Desktop.View.WinForms.TableView();
 			this.SuspendLayout();
 			// 
 			// _cannedTexts
 			// 
-			this._cannedTexts.Dock = System.Windows.Forms.DockStyle.Fill;
+			resources.ApplyResources(this._cannedTexts, "_cannedTexts");
 			this._cannedTexts.FilterTextBoxVisible = true;
-			this._cannedTexts.Location = new System.Drawing.Point(0, 0);
 			this._cannedTexts.Name = "_cannedTexts";
 			this._cannedTexts.ReadOnly = false;
-			this._cannedTexts.Size = new System.Drawing.Size(785, 291);
-			this._cannedTexts.TabIndex = 0;
 			this._cannedTexts.TabStop = false;
-			this._cannedTexts.ItemDrag += new System.EventHandler<System.Windows.Forms.ItemDragEventArgs>(this._cannedTexts_ItemDrag);
 			this._cannedTexts.ItemDoubleClicked += new System.EventHandler(this._cannedTexts_ItemDoubleClicked);
+			this._cannedTexts.ItemDrag += new System.EventHandler<System.Windows.Forms.ItemDragEventArgs>(this._cannedTexts_ItemDrag);
 			// 
 			// CannedTextSummaryComponentControl
 			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+			resources.ApplyResources(this, "$this");
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.Controls.Add(this._cannedTexts);
 			this.Name = "CannedTextSummaryComponentControl";
-			this.Size = new System.Drawing.Size(785, 291);
 			this.ResumeLayout(false);
 
         }

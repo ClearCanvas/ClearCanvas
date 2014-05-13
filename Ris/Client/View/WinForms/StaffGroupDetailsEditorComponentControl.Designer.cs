@@ -59,6 +59,7 @@ namespace ClearCanvas.Ris.Client.View.WinForms
         /// </summary>
         private void InitializeComponent()
         {
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(StaffGroupDetailsEditorComponentControl));
 			this._electiveCheckbox = new System.Windows.Forms.CheckBox();
 			this._description = new ClearCanvas.Desktop.View.WinForms.TextField();
 			this._name = new ClearCanvas.Desktop.View.WinForms.TextField();
@@ -66,49 +67,32 @@ namespace ClearCanvas.Ris.Client.View.WinForms
 			// 
 			// _electiveCheckbox
 			// 
-			this._electiveCheckbox.AutoSize = true;
-			this._electiveCheckbox.Location = new System.Drawing.Point(8, 114);
+			resources.ApplyResources(this._electiveCheckbox, "_electiveCheckbox");
 			this._electiveCheckbox.Name = "_electiveCheckbox";
-			this._electiveCheckbox.Size = new System.Drawing.Size(64, 17);
-			this._electiveCheckbox.TabIndex = 2;
-			this._electiveCheckbox.Text = "Elective";
 			this._electiveCheckbox.UseVisualStyleBackColor = true;
 			// 
 			// _description
 			// 
-			this._description.LabelText = "Description";
-			this._description.Location = new System.Drawing.Point(2, 57);
-			this._description.Margin = new System.Windows.Forms.Padding(2);
+			resources.ApplyResources(this._description, "_description");
 			this._description.Mask = "";
 			this._description.Name = "_description";
-			this._description.PasswordChar = '\0';
-			this._description.Size = new System.Drawing.Size(424, 41);
-			this._description.TabIndex = 1;
-			this._description.ToolTip = null;
 			this._description.Value = null;
 			// 
 			// _name
 			// 
-			this._name.LabelText = "Name";
-			this._name.Location = new System.Drawing.Point(2, 2);
-			this._name.Margin = new System.Windows.Forms.Padding(2);
+			resources.ApplyResources(this._name, "_name");
 			this._name.Mask = "";
 			this._name.Name = "_name";
-			this._name.PasswordChar = '\0';
-			this._name.Size = new System.Drawing.Size(424, 41);
-			this._name.TabIndex = 0;
-			this._name.ToolTip = null;
 			this._name.Value = null;
 			// 
 			// StaffGroupDetailsEditorComponentControl
 			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+			resources.ApplyResources(this, "$this");
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.Controls.Add(this._electiveCheckbox);
 			this.Controls.Add(this._description);
 			this.Controls.Add(this._name);
 			this.Name = "StaffGroupDetailsEditorComponentControl";
-			this.Size = new System.Drawing.Size(434, 144);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 

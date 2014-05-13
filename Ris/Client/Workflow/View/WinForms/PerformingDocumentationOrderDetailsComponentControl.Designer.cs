@@ -28,6 +28,7 @@ namespace ClearCanvas.Ris.Client.Workflow.View.WinForms
         /// </summary>
         private void InitializeComponent()
         {
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PerformingDocumentationOrderDetailsComponentControl));
 			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
 			this.splitContainer2 = new System.Windows.Forms.SplitContainer();
 			this._protocolsPanel = new System.Windows.Forms.Panel();
@@ -47,28 +48,22 @@ namespace ClearCanvas.Ris.Client.Workflow.View.WinForms
 			// 
 			// splitContainer1
 			// 
-			this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.splitContainer1.Location = new System.Drawing.Point(4, 0);
+			resources.ApplyResources(this.splitContainer1, "splitContainer1");
 			this.splitContainer1.Name = "splitContainer1";
 			// 
 			// splitContainer1.Panel1
 			// 
 			this.splitContainer1.Panel1.Controls.Add(this.splitContainer2);
-			this.splitContainer1.Panel1.Padding = new System.Windows.Forms.Padding(0, 7, 0, 1);
+			resources.ApplyResources(this.splitContainer1.Panel1, "splitContainer1.Panel1");
 			// 
 			// splitContainer1.Panel2
 			// 
 			this.splitContainer1.Panel2.Controls.Add(this._rightHandPanel);
-			this.splitContainer1.Size = new System.Drawing.Size(813, 525);
-			this.splitContainer1.SplitterDistance = 389;
-			this.splitContainer1.TabIndex = 0;
 			// 
 			// splitContainer2
 			// 
-			this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.splitContainer2.Location = new System.Drawing.Point(0, 7);
+			resources.ApplyResources(this.splitContainer2, "splitContainer2");
 			this.splitContainer2.Name = "splitContainer2";
-			this.splitContainer2.Orientation = System.Windows.Forms.Orientation.Horizontal;
 			// 
 			// splitContainer2.Panel1
 			// 
@@ -77,53 +72,35 @@ namespace ClearCanvas.Ris.Client.Workflow.View.WinForms
 			// splitContainer2.Panel2
 			// 
 			this.splitContainer2.Panel2.Controls.Add(this._orderNotesGroupBox);
-			this.splitContainer2.Size = new System.Drawing.Size(389, 517);
-			this.splitContainer2.SplitterDistance = 248;
-			this.splitContainer2.TabIndex = 0;
 			// 
 			// _protocolsPanel
 			// 
-			this._protocolsPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-			this._protocolsPanel.Location = new System.Drawing.Point(0, 0);
+			resources.ApplyResources(this._protocolsPanel, "_protocolsPanel");
 			this._protocolsPanel.Name = "_protocolsPanel";
-			this._protocolsPanel.Padding = new System.Windows.Forms.Padding(3);
-			this._protocolsPanel.Size = new System.Drawing.Size(389, 248);
-			this._protocolsPanel.TabIndex = 0;
 			// 
 			// _orderNotesGroupBox
 			// 
-			this._orderNotesGroupBox.Dock = System.Windows.Forms.DockStyle.Fill;
-			this._orderNotesGroupBox.Location = new System.Drawing.Point(0, 0);
+			resources.ApplyResources(this._orderNotesGroupBox, "_orderNotesGroupBox");
 			this._orderNotesGroupBox.Name = "_orderNotesGroupBox";
-			this._orderNotesGroupBox.Size = new System.Drawing.Size(389, 265);
-			this._orderNotesGroupBox.TabIndex = 0;
 			this._orderNotesGroupBox.TabStop = false;
-			this._orderNotesGroupBox.Text = "Order Notes";
 			// 
 			// _rightHandPanel
 			// 
-			this._rightHandPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-			this._rightHandPanel.Location = new System.Drawing.Point(0, 0);
+			resources.ApplyResources(this._rightHandPanel, "_rightHandPanel");
 			this._rightHandPanel.Name = "_rightHandPanel";
-			this._rightHandPanel.Size = new System.Drawing.Size(420, 525);
-			this._rightHandPanel.TabIndex = 0;
 			// 
 			// _borderPanel
 			// 
 			this._borderPanel.Controls.Add(this.splitContainer1);
-			this._borderPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-			this._borderPanel.Location = new System.Drawing.Point(1, 1);
+			resources.ApplyResources(this._borderPanel, "_borderPanel");
 			this._borderPanel.Name = "_borderPanel";
-			this._borderPanel.Size = new System.Drawing.Size(821, 529);
-			this._borderPanel.TabIndex = 1;
 			// 
 			// PerformingDocumentationOrderDetailsComponentControl
 			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+			resources.ApplyResources(this, "$this");
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.Controls.Add(this._borderPanel);
 			this.Name = "PerformingDocumentationOrderDetailsComponentControl";
-			this.Size = new System.Drawing.Size(823, 531);
 			this.splitContainer1.Panel1.ResumeLayout(false);
 			this.splitContainer1.Panel2.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();

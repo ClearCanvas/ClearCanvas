@@ -40,76 +40,47 @@ namespace ClearCanvas.Ris.Client.View.WinForms
 			// 
 			// _searchField
 			// 
-			this._searchField.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
-			this._searchField.LabelText = "Enter Patient Search Criteria:";
-			this._searchField.Location = new System.Drawing.Point(2, 2);
-			this._searchField.Margin = new System.Windows.Forms.Padding(2);
+			resources.ApplyResources(this._searchField, "_searchField");
 			this._searchField.Mask = "";
 			this._searchField.Name = "_searchField";
-			this._searchField.PasswordChar = '\0';
-			this._searchField.Size = new System.Drawing.Size(333, 41);
-			this._searchField.TabIndex = 0;
-			this._searchField.ToolTip = "Enter search criteria (MRN#, Name, or Healthcard ID)";
 			this._searchField.Value = null;
 			// 
 			// _searchResults
 			// 
+			resources.ApplyResources(this._searchResults, "_searchResults");
 			this.tableLayoutPanel1.SetColumnSpan(this._searchResults, 2);
-			this._searchResults.Dock = System.Windows.Forms.DockStyle.Fill;
-			this._searchResults.Location = new System.Drawing.Point(3, 53);
 			this._searchResults.Name = "_searchResults";
 			this._searchResults.ReadOnly = false;
-			this._searchResults.Size = new System.Drawing.Size(361, 234);
-			this._searchResults.TabIndex = 2;
 			this._searchResults.ItemDoubleClicked += new System.EventHandler(this._searchResults_ItemDoubleClicked);
 			// 
 			// tableLayoutPanel1
 			// 
-			this.tableLayoutPanel1.ColumnCount = 2;
-			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 30F));
+			resources.ApplyResources(this.tableLayoutPanel1, "tableLayoutPanel1");
 			this.tableLayoutPanel1.Controls.Add(this._searchResults, 0, 1);
 			this.tableLayoutPanel1.Controls.Add(this._searchField, 0, 0);
 			this.tableLayoutPanel1.Controls.Add(this.panel1, 1, 0);
-			this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
 			this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-			this.tableLayoutPanel1.RowCount = 2;
-			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 50F));
-			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.tableLayoutPanel1.Size = new System.Drawing.Size(367, 290);
-			this.tableLayoutPanel1.TabIndex = 0;
 			// 
 			// panel1
 			// 
 			this.panel1.Controls.Add(this._searchButton);
-			this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.panel1.Location = new System.Drawing.Point(337, 0);
-			this.panel1.Margin = new System.Windows.Forms.Padding(0);
+			resources.ApplyResources(this.panel1, "panel1");
 			this.panel1.Name = "panel1";
-			this.panel1.Size = new System.Drawing.Size(30, 50);
-			this.panel1.TabIndex = 1;
 			// 
 			// _searchButton
 			// 
-			this._searchButton.Image = ((System.Drawing.Image)(resources.GetObject("_searchButton.Image")));
-			this._searchButton.Location = new System.Drawing.Point(4, 17);
-			this._searchButton.Margin = new System.Windows.Forms.Padding(2);
+			resources.ApplyResources(this._searchButton, "_searchButton");
 			this._searchButton.Name = "_searchButton";
-			this._searchButton.Size = new System.Drawing.Size(24, 24);
-			this._searchButton.TabIndex = 0;
 			this._searchButton.UseVisualStyleBackColor = true;
 			this._searchButton.Click += new System.EventHandler(this._searchButton_Click);
 			// 
 			// PatientSearchComponentControl
 			// 
 			this.AcceptButton = this._searchButton;
-			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+			resources.ApplyResources(this, "$this");
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.Controls.Add(this.tableLayoutPanel1);
 			this.Name = "PatientSearchComponentControl";
-			this.Size = new System.Drawing.Size(367, 290);
 			this.tableLayoutPanel1.ResumeLayout(false);
 			this.panel1.ResumeLayout(false);
 			this.ResumeLayout(false);

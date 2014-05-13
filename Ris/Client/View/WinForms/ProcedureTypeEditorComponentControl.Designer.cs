@@ -59,6 +59,7 @@ namespace ClearCanvas.Ris.Client.View.WinForms
         /// </summary>
         private void InitializeComponent()
         {
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ProcedureTypeEditorComponentControl));
 			this._acceptButton = new System.Windows.Forms.Button();
 			this._cancelButton = new System.Windows.Forms.Button();
 			this._id = new ClearCanvas.Desktop.View.WinForms.TextField();
@@ -71,50 +72,30 @@ namespace ClearCanvas.Ris.Client.View.WinForms
 			// 
 			// _acceptButton
 			// 
-			this._acceptButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this._acceptButton.Location = new System.Drawing.Point(268, 156);
+			resources.ApplyResources(this._acceptButton, "_acceptButton");
 			this._acceptButton.Name = "_acceptButton";
-			this._acceptButton.Size = new System.Drawing.Size(75, 23);
-			this._acceptButton.TabIndex = 5;
-			this._acceptButton.Text = "OK";
 			this._acceptButton.UseVisualStyleBackColor = true;
 			this._acceptButton.Click += new System.EventHandler(this._acceptButton_Click);
 			// 
 			// _cancelButton
 			// 
-			this._cancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this._cancelButton.Location = new System.Drawing.Point(349, 156);
+			resources.ApplyResources(this._cancelButton, "_cancelButton");
 			this._cancelButton.Name = "_cancelButton";
-			this._cancelButton.Size = new System.Drawing.Size(75, 23);
-			this._cancelButton.TabIndex = 6;
-			this._cancelButton.Text = "Cancel";
 			this._cancelButton.UseVisualStyleBackColor = true;
 			this._cancelButton.Click += new System.EventHandler(this._cancelButton_Click);
 			// 
 			// _id
 			// 
-			this._id.LabelText = "ID";
-			this._id.Location = new System.Drawing.Point(11, 7);
-			this._id.Margin = new System.Windows.Forms.Padding(2);
+			resources.ApplyResources(this._id, "_id");
 			this._id.Mask = "";
 			this._id.Name = "_id";
-			this._id.PasswordChar = '\0';
-			this._id.Size = new System.Drawing.Size(413, 41);
-			this._id.TabIndex = 0;
-			this._id.ToolTip = null;
 			this._id.Value = null;
 			// 
 			// _name
 			// 
-			this._name.LabelText = "Name";
-			this._name.Location = new System.Drawing.Point(11, 53);
-			this._name.Margin = new System.Windows.Forms.Padding(2);
+			resources.ApplyResources(this._name, "_name");
 			this._name.Mask = "";
 			this._name.Name = "_name";
-			this._name.PasswordChar = '\0';
-			this._name.Size = new System.Drawing.Size(413, 41);
-			this._name.TabIndex = 1;
-			this._name.ToolTip = null;
 			this._name.Value = null;
 			// 
 			// _defaultDuration
@@ -124,42 +105,32 @@ namespace ClearCanvas.Ris.Client.View.WinForms
             0,
             0,
             0});
-			this._defaultDuration.Location = new System.Drawing.Point(313, 117);
+			resources.ApplyResources(this._defaultDuration, "_defaultDuration");
 			this._defaultDuration.Maximum = new decimal(new int[] {
             1000,
             0,
             0,
             0});
 			this._defaultDuration.Name = "_defaultDuration";
-			this._defaultDuration.Size = new System.Drawing.Size(105, 20);
-			this._defaultDuration.TabIndex = 4;
 			// 
 			// label2
 			// 
-			this.label2.AutoSize = true;
-			this.label2.Location = new System.Drawing.Point(310, 99);
+			resources.ApplyResources(this.label2, "label2");
 			this.label2.Name = "label2";
-			this.label2.Size = new System.Drawing.Size(109, 13);
-			this.label2.TabIndex = 3;
-			this.label2.Text = "Default Duration (min)";
 			// 
 			// _defaultModality
 			// 
 			this._defaultModality.DataSource = null;
 			this._defaultModality.DisplayMember = "";
 			this._defaultModality.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this._defaultModality.LabelText = "Default Modality";
-			this._defaultModality.Location = new System.Drawing.Point(11, 98);
-			this._defaultModality.Margin = new System.Windows.Forms.Padding(2);
+			resources.ApplyResources(this._defaultModality, "_defaultModality");
 			this._defaultModality.Name = "_defaultModality";
-			this._defaultModality.Size = new System.Drawing.Size(282, 41);
-			this._defaultModality.TabIndex = 2;
 			this._defaultModality.Value = null;
 			// 
 			// ProcedureTypeEditorComponentControl
 			// 
 			this.AcceptButton = this._acceptButton;
-			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+			resources.ApplyResources(this, "$this");
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.CancelButton = this._cancelButton;
 			this.Controls.Add(this._defaultModality);
@@ -170,7 +141,6 @@ namespace ClearCanvas.Ris.Client.View.WinForms
 			this.Controls.Add(this._cancelButton);
 			this.Controls.Add(this._acceptButton);
 			this.Name = "ProcedureTypeEditorComponentControl";
-			this.Size = new System.Drawing.Size(458, 191);
 			((System.ComponentModel.ISupportInitialize)(this._defaultDuration)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();

@@ -28,32 +28,24 @@ namespace ClearCanvas.Ris.Client.View.WinForms
         /// </summary>
         private void InitializeComponent()
         {
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AttachedDocumentPreviewComponentControl));
 			this._attachments = new ClearCanvas.Desktop.View.WinForms.TableView();
 			this.SuspendLayout();
 			// 
 			// _attachments
 			// 
-			this._attachments.ColumnHeaderTooltip = null;
-			this._attachments.Dock = System.Windows.Forms.DockStyle.Fill;
-			this._attachments.Location = new System.Drawing.Point(4, 2);
-			this._attachments.MinimumSize = new System.Drawing.Size(0, 100);
+			resources.ApplyResources(this._attachments, "_attachments");
 			this._attachments.MultiSelect = false;
 			this._attachments.Name = "_attachments";
 			this._attachments.ReadOnly = false;
-			this._attachments.Size = new System.Drawing.Size(475, 500);
-			this._attachments.SortButtonTooltip = null;
-			this._attachments.TabIndex = 0;
 			this._attachments.ItemDoubleClicked += new System.EventHandler(this._attachments_ItemDoubleClicked);
 			// 
 			// AttachedDocumentPreviewComponentControl
 			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+			resources.ApplyResources(this, "$this");
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
 			this.Controls.Add(this._attachments);
 			this.Name = "AttachedDocumentPreviewComponentControl";
-			this.Padding = new System.Windows.Forms.Padding(4, 2, 2, 7);
-			this.Size = new System.Drawing.Size(481, 509);
 			this.Load += new System.EventHandler(this.AttachedDocumentPreviewComponentControl_Load);
 			this.ResumeLayout(false);
 

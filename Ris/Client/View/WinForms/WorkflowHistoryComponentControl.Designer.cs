@@ -59,9 +59,11 @@ namespace ClearCanvas.Ris.Client.View.WinForms
         /// </summary>
         private void InitializeComponent()
         {
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(WorkflowHistoryComponentControl));
 			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
 			this._procedureTableView = new ClearCanvas.Desktop.View.WinForms.TableView();
 			this._historyPanel = new System.Windows.Forms.Panel();
+			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
 			this.splitContainer1.SuspendLayout();
@@ -69,10 +71,8 @@ namespace ClearCanvas.Ris.Client.View.WinForms
 			// 
 			// splitContainer1
 			// 
-			this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.splitContainer1.Location = new System.Drawing.Point(0, 0);
+			resources.ApplyResources(this.splitContainer1, "splitContainer1");
 			this.splitContainer1.Name = "splitContainer1";
-			this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
 			// 
 			// splitContainer1.Panel1
 			// 
@@ -81,37 +81,28 @@ namespace ClearCanvas.Ris.Client.View.WinForms
 			// splitContainer1.Panel2
 			// 
 			this.splitContainer1.Panel2.Controls.Add(this._historyPanel);
-			this.splitContainer1.Size = new System.Drawing.Size(504, 494);
-			this.splitContainer1.SplitterDistance = 126;
-			this.splitContainer1.TabIndex = 0;
 			// 
 			// _procedureTableView
 			// 
-			this._procedureTableView.Dock = System.Windows.Forms.DockStyle.Fill;
-			this._procedureTableView.Location = new System.Drawing.Point(0, 0);
+			resources.ApplyResources(this._procedureTableView, "_procedureTableView");
 			this._procedureTableView.Name = "_procedureTableView";
 			this._procedureTableView.ReadOnly = false;
 			this._procedureTableView.ShowToolbar = false;
-			this._procedureTableView.Size = new System.Drawing.Size(504, 126);
-			this._procedureTableView.TabIndex = 0;
 			// 
 			// _historyPanel
 			// 
-			this._historyPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-			this._historyPanel.Location = new System.Drawing.Point(0, 0);
+			resources.ApplyResources(this._historyPanel, "_historyPanel");
 			this._historyPanel.Name = "_historyPanel";
-			this._historyPanel.Size = new System.Drawing.Size(504, 364);
-			this._historyPanel.TabIndex = 0;
 			// 
 			// WorkflowHistoryComponentControl
 			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+			resources.ApplyResources(this, "$this");
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.Controls.Add(this.splitContainer1);
 			this.Name = "WorkflowHistoryComponentControl";
-			this.Size = new System.Drawing.Size(504, 494);
 			this.splitContainer1.Panel1.ResumeLayout(false);
 			this.splitContainer1.Panel2.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
 			this.splitContainer1.ResumeLayout(false);
 			this.ResumeLayout(false);
 

@@ -59,6 +59,7 @@ namespace ClearCanvas.Ris.Client.View.WinForms
         /// </summary>
         private void InitializeComponent()
         {
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PatientNoteEditorComponentControl));
 			this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
 			this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
 			this._category = new ClearCanvas.Desktop.View.WinForms.ComboBoxField();
@@ -77,136 +78,87 @@ namespace ClearCanvas.Ris.Client.View.WinForms
 			// 
 			// tableLayoutPanel1
 			// 
-			this.tableLayoutPanel1.ColumnCount = 1;
-			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			resources.ApplyResources(this.tableLayoutPanel1, "tableLayoutPanel1");
 			this.tableLayoutPanel1.Controls.Add(this.flowLayoutPanel1, 0, 0);
 			this.tableLayoutPanel1.Controls.Add(this.flowLayoutPanel2, 0, 1);
 			this.tableLayoutPanel1.Controls.Add(this.flowLayoutPanel3, 0, 3);
 			this.tableLayoutPanel1.Controls.Add(this._expiryDate, 0, 2);
-			this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
 			this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-			this.tableLayoutPanel1.RowCount = 4;
-			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel1.Size = new System.Drawing.Size(341, 364);
-			this.tableLayoutPanel1.TabIndex = 0;
 			// 
 			// flowLayoutPanel1
 			// 
-			this.flowLayoutPanel1.AutoSize = true;
-			this.flowLayoutPanel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+			resources.ApplyResources(this.flowLayoutPanel1, "flowLayoutPanel1");
 			this.flowLayoutPanel1.Controls.Add(this._category);
 			this.flowLayoutPanel1.Controls.Add(this._description);
-			this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.flowLayoutPanel1.Location = new System.Drawing.Point(3, 3);
 			this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-			this.flowLayoutPanel1.Size = new System.Drawing.Size(335, 118);
-			this.flowLayoutPanel1.TabIndex = 0;
 			// 
 			// _category
 			// 
 			this._category.DataSource = null;
 			this._category.DisplayMember = "";
 			this._category.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this._category.LabelText = "Category";
-			this._category.Location = new System.Drawing.Point(2, 2);
-			this._category.Margin = new System.Windows.Forms.Padding(2);
+			resources.ApplyResources(this._category, "_category");
 			this._category.Name = "_category";
-			this._category.Size = new System.Drawing.Size(314, 41);
-			this._category.TabIndex = 0;
 			this._category.Value = null;
 			// 
 			// _description
 			// 
-			this._description.LabelText = "Description";
-			this._description.Location = new System.Drawing.Point(2, 47);
-			this._description.Margin = new System.Windows.Forms.Padding(2);
+			resources.ApplyResources(this._description, "_description");
 			this._description.Name = "_description";
 			this._description.ReadOnly = true;
-			this._description.Size = new System.Drawing.Size(314, 69);
-			this._description.TabIndex = 1;
 			this._description.TabStop = false;
 			this._description.Value = null;
 			// 
 			// flowLayoutPanel2
 			// 
-			this.flowLayoutPanel2.AutoSize = true;
-			this.flowLayoutPanel2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+			resources.ApplyResources(this.flowLayoutPanel2, "flowLayoutPanel2");
 			this.flowLayoutPanel2.Controls.Add(this._comment);
-			this.flowLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.flowLayoutPanel2.Location = new System.Drawing.Point(3, 127);
 			this.flowLayoutPanel2.Name = "flowLayoutPanel2";
-			this.flowLayoutPanel2.Size = new System.Drawing.Size(335, 153);
-			this.flowLayoutPanel2.TabIndex = 1;
 			// 
 			// _comment
 			// 
-			this._comment.LabelText = "Comment";
-			this._comment.Location = new System.Drawing.Point(2, 2);
-			this._comment.Margin = new System.Windows.Forms.Padding(2);
+			resources.ApplyResources(this._comment, "_comment");
 			this._comment.Name = "_comment";
-			this._comment.Size = new System.Drawing.Size(314, 149);
-			this._comment.TabIndex = 0;
 			this._comment.Value = null;
 			// 
 			// flowLayoutPanel3
 			// 
-			this.flowLayoutPanel3.AutoSize = true;
-			this.flowLayoutPanel3.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+			resources.ApplyResources(this.flowLayoutPanel3, "flowLayoutPanel3");
 			this.flowLayoutPanel3.Controls.Add(this._cancelButton);
 			this.flowLayoutPanel3.Controls.Add(this._acceptButton);
-			this.flowLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.flowLayoutPanel3.Location = new System.Drawing.Point(3, 331);
 			this.flowLayoutPanel3.Name = "flowLayoutPanel3";
-			this.flowLayoutPanel3.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-			this.flowLayoutPanel3.Size = new System.Drawing.Size(335, 30);
-			this.flowLayoutPanel3.TabIndex = 3;
 			// 
 			// _cancelButton
 			// 
-			this._cancelButton.Location = new System.Drawing.Point(257, 3);
+			resources.ApplyResources(this._cancelButton, "_cancelButton");
 			this._cancelButton.Name = "_cancelButton";
-			this._cancelButton.Size = new System.Drawing.Size(75, 23);
-			this._cancelButton.TabIndex = 1;
-			this._cancelButton.Text = "Cancel";
 			this._cancelButton.UseVisualStyleBackColor = true;
 			this._cancelButton.Click += new System.EventHandler(this._cancelButton_Click);
 			// 
 			// _acceptButton
 			// 
-			this._acceptButton.Location = new System.Drawing.Point(176, 3);
+			resources.ApplyResources(this._acceptButton, "_acceptButton");
 			this._acceptButton.Name = "_acceptButton";
-			this._acceptButton.Size = new System.Drawing.Size(75, 23);
-			this._acceptButton.TabIndex = 0;
-			this._acceptButton.Text = "OK";
 			this._acceptButton.UseVisualStyleBackColor = true;
 			this._acceptButton.Click += new System.EventHandler(this._acceptButton_Click);
 			// 
 			// _expiryDate
 			// 
-			this._expiryDate.LabelText = "Expiry Date";
-			this._expiryDate.Location = new System.Drawing.Point(2, 285);
-			this._expiryDate.Margin = new System.Windows.Forms.Padding(2);
+			resources.ApplyResources(this._expiryDate, "_expiryDate");
 			this._expiryDate.Maximum = new System.DateTime(9998, 12, 31, 0, 0, 0, 0);
 			this._expiryDate.Minimum = new System.DateTime(1753, 1, 1, 0, 0, 0, 0);
 			this._expiryDate.Name = "_expiryDate";
 			this._expiryDate.Nullable = true;
-			this._expiryDate.Size = new System.Drawing.Size(150, 41);
-			this._expiryDate.TabIndex = 2;
 			this._expiryDate.Value = new System.DateTime(2008, 4, 16, 12, 51, 2, 187);
 			// 
 			// PatientNoteEditorComponentControl
 			// 
 			this.AcceptButton = this._acceptButton;
-			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+			resources.ApplyResources(this, "$this");
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.CancelButton = this._cancelButton;
 			this.Controls.Add(this.tableLayoutPanel1);
 			this.Name = "PatientNoteEditorComponentControl";
-			this.Size = new System.Drawing.Size(341, 364);
 			this.tableLayoutPanel1.ResumeLayout(false);
 			this.tableLayoutPanel1.PerformLayout();
 			this.flowLayoutPanel1.ResumeLayout(false);

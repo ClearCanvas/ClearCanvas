@@ -29,6 +29,7 @@ namespace ClearCanvas.Ris.Client.View.WinForms
 		private void InitializeComponent()
 		{
 			this.components = new System.ComponentModel.Container();
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ListBoxView));
 			this._listBox = new ClearCanvas.Ris.Client.View.WinForms.ListBoxWithDragSupport();
 			this._contextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
 			this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
@@ -41,50 +42,35 @@ namespace ClearCanvas.Ris.Client.View.WinForms
 			this._listBox.AllowDrop = true;
 			this._listBox.BackColor = System.Drawing.SystemColors.Window;
 			this._listBox.ContextMenuStrip = this._contextMenu;
-			this._listBox.Dock = System.Windows.Forms.DockStyle.Fill;
+			resources.ApplyResources(this._listBox, "_listBox");
 			this._listBox.FormattingEnabled = true;
-			this._listBox.Location = new System.Drawing.Point(3, 28);
 			this._listBox.Name = "_listBox";
-			this._listBox.Size = new System.Drawing.Size(343, 225);
-			this._listBox.TabIndex = 1;
 			// 
 			// _contextMenu
 			// 
 			this._contextMenu.Name = "_contextMenu";
-			this._contextMenu.Size = new System.Drawing.Size(61, 4);
+			resources.ApplyResources(this._contextMenu, "_contextMenu");
 			this._contextMenu.Opening += new System.ComponentModel.CancelEventHandler(this._contextMenu_Opening);
 			// 
 			// tableLayoutPanel1
 			// 
-			this.tableLayoutPanel1.ColumnCount = 1;
-			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			resources.ApplyResources(this.tableLayoutPanel1, "tableLayoutPanel1");
 			this.tableLayoutPanel1.Controls.Add(this._listBox, 0, 1);
 			this.tableLayoutPanel1.Controls.Add(this._toolStrip, 0, 0);
-			this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
 			this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-			this.tableLayoutPanel1.RowCount = 2;
-			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-			this.tableLayoutPanel1.Size = new System.Drawing.Size(349, 267);
-			this.tableLayoutPanel1.TabIndex = 2;
 			// 
 			// _toolStrip
 			// 
 			this._toolStrip.ImageScalingSize = new System.Drawing.Size(24, 24);
-			this._toolStrip.Location = new System.Drawing.Point(0, 0);
+			resources.ApplyResources(this._toolStrip, "_toolStrip");
 			this._toolStrip.Name = "_toolStrip";
-			this._toolStrip.Size = new System.Drawing.Size(349, 25);
-			this._toolStrip.TabIndex = 2;
-			this._toolStrip.Text = "toolStrip1";
 			// 
 			// ListBoxView
 			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+			resources.ApplyResources(this, "$this");
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.Controls.Add(this.tableLayoutPanel1);
 			this.Name = "ListBoxView";
-			this.Size = new System.Drawing.Size(349, 267);
 			this.Load += new System.EventHandler(this.ListBoxView_Load);
 			this.tableLayoutPanel1.ResumeLayout(false);
 			this.tableLayoutPanel1.PerformLayout();

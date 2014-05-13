@@ -59,6 +59,7 @@ namespace ClearCanvas.Ris.Client.Admin.View.WinForms
         /// </summary>
         private void InitializeComponent()
         {
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DataImportComponentControl));
 			this._browseButton = new System.Windows.Forms.Button();
 			this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
 			this._startButton = new System.Windows.Forms.Button();
@@ -69,11 +70,8 @@ namespace ClearCanvas.Ris.Client.Admin.View.WinForms
 			// 
 			// _browseButton
 			// 
-			this._browseButton.Location = new System.Drawing.Point(309, 86);
+			resources.ApplyResources(this._browseButton, "_browseButton");
 			this._browseButton.Name = "_browseButton";
-			this._browseButton.Size = new System.Drawing.Size(57, 23);
-			this._browseButton.TabIndex = 2;
-			this._browseButton.Text = "Browse";
 			this._browseButton.UseVisualStyleBackColor = true;
 			this._browseButton.Click += new System.EventHandler(this._browseButton_Click);
 			// 
@@ -83,11 +81,8 @@ namespace ClearCanvas.Ris.Client.Admin.View.WinForms
 			// 
 			// _startButton
 			// 
-			this._startButton.Location = new System.Drawing.Point(28, 148);
+			resources.ApplyResources(this._startButton, "_startButton");
 			this._startButton.Name = "_startButton";
-			this._startButton.Size = new System.Drawing.Size(75, 23);
-			this._startButton.TabIndex = 3;
-			this._startButton.Text = "Import";
 			this._startButton.UseVisualStyleBackColor = true;
 			this._startButton.Click += new System.EventHandler(this._startButton_Click);
 			// 
@@ -96,35 +91,23 @@ namespace ClearCanvas.Ris.Client.Admin.View.WinForms
 			this._importer.DataSource = null;
 			this._importer.DisplayMember = "";
 			this._importer.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this._importer.LabelText = "Import Type";
-			this._importer.Location = new System.Drawing.Point(28, 15);
-			this._importer.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+			resources.ApplyResources(this._importer, "_importer");
 			this._importer.Name = "_importer";
-			this._importer.Size = new System.Drawing.Size(275, 50);
-			this._importer.TabIndex = 0;
 			this._importer.Value = null;
 			// 
 			// _dataFile
 			// 
-			this._dataFile.Location = new System.Drawing.Point(28, 89);
-			this._dataFile.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+			resources.ApplyResources(this._dataFile, "_dataFile");
 			this._dataFile.Name = "_dataFile";
-			this._dataFile.Size = new System.Drawing.Size(276, 20);
-			this._dataFile.TabIndex = 1;
 			// 
 			// label1
 			// 
-			this.label1.AutoSize = true;
-			this.label1.Location = new System.Drawing.Point(33, 72);
-			this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+			resources.ApplyResources(this.label1, "label1");
 			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(49, 13);
-			this.label1.TabIndex = 4;
-			this.label1.Text = "Data File";
 			// 
 			// DataImportComponentControl
 			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+			resources.ApplyResources(this, "$this");
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.Controls.Add(this.label1);
 			this.Controls.Add(this._dataFile);
@@ -132,7 +115,6 @@ namespace ClearCanvas.Ris.Client.Admin.View.WinForms
 			this.Controls.Add(this._startButton);
 			this.Controls.Add(this._browseButton);
 			this.Name = "DataImportComponentControl";
-			this.Size = new System.Drawing.Size(439, 203);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 

@@ -47,16 +47,14 @@ namespace ClearCanvas.Ris.Client.View.WinForms
 			this._toolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this._searchTextBox,
             this._searchButton});
-			this._toolStrip.Location = new System.Drawing.Point(0, 0);
+			resources.ApplyResources(this._toolStrip, "_toolStrip");
 			this._toolStrip.Name = "_toolStrip";
-			this._toolStrip.Size = new System.Drawing.Size(252, 31);
-			this._toolStrip.TabIndex = 0;
 			// 
 			// _searchTextBox
 			// 
 			this._searchTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
 			this._searchTextBox.Name = "_searchTextBox";
-			this._searchTextBox.Size = new System.Drawing.Size(100, 31);
+			resources.ApplyResources(this._searchTextBox, "_searchTextBox");
 			this._searchTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this._searchTextBox_KeyDown);
 			// 
 			// _searchButton
@@ -64,43 +62,34 @@ namespace ClearCanvas.Ris.Client.View.WinForms
 			this._searchButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
 			this._searchButton.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this._advancedSearch});
-			this._searchButton.Image = ((System.Drawing.Image)(resources.GetObject("_searchButton.Image")));
-			this._searchButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+			resources.ApplyResources(this._searchButton, "_searchButton");
 			this._searchButton.Name = "_searchButton";
-			this._searchButton.Size = new System.Drawing.Size(40, 28);
-			this._searchButton.Text = "Search";
 			this._searchButton.ButtonClick += new System.EventHandler(this._searchButton_ButtonClick);
 			// 
 			// _advancedSearch
 			// 
-			this._advancedSearch.Image = ((System.Drawing.Image)(resources.GetObject("_advancedSearch.Image")));
+			resources.ApplyResources(this._advancedSearch, "_advancedSearch");
 			this._advancedSearch.Name = "_advancedSearch";
-			this._advancedSearch.Size = new System.Drawing.Size(177, 22);
-			this._advancedSearch.Text = "Advanced Search ...";
 			this._advancedSearch.Click += new System.EventHandler(this._advancedSearch_Click);
 			// 
 			// _groupPanel
 			// 
 			this._groupPanel.ContextMenuStrip = this._contextMenu;
-			this._groupPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-			this._groupPanel.Location = new System.Drawing.Point(0, 31);
+			resources.ApplyResources(this._groupPanel, "_groupPanel");
 			this._groupPanel.Name = "_groupPanel";
-			this._groupPanel.Size = new System.Drawing.Size(252, 281);
-			this._groupPanel.TabIndex = 1;
 			// 
 			// _contextMenu
 			// 
 			this._contextMenu.Name = "_contextMenu";
-			this._contextMenu.Size = new System.Drawing.Size(61, 4);
+			resources.ApplyResources(this._contextMenu, "_contextMenu");
 			// 
 			// FolderExplorerGroupComponentControl
 			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+			resources.ApplyResources(this, "$this");
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.Controls.Add(this._groupPanel);
 			this.Controls.Add(this._toolStrip);
 			this.Name = "FolderExplorerGroupComponentControl";
-			this.Size = new System.Drawing.Size(252, 312);
 			this.Load += new System.EventHandler(this.FolderExplorerGroupComponentControl_Load);
 			this._toolStrip.ResumeLayout(false);
 			this._toolStrip.PerformLayout();
