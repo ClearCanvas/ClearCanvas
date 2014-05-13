@@ -36,7 +36,7 @@ using ClearCanvas.Ris.Application.Common.Admin.ModalityAdmin;
 
 namespace ClearCanvas.Ris.Client.Admin
 {
-    [MenuAction("launch", "global-menus/Admin/Modalities", "Launch")]
+    [MenuAction("launch", "global-menus/MenuAdmin/MenuModalities", "Launch")]
     [ActionPermission("launch", ClearCanvas.Ris.Application.Common.AuthorityTokens.Admin.Data.Modality)]
 	[ExtensionOf(typeof(DesktopToolExtensionPoint), FeatureToken = FeatureTokens.RIS.Core)]
     public class ModalitySummaryTool : Tool<IDesktopToolContext>

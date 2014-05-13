@@ -37,31 +37,31 @@ namespace ClearCanvas.Ris.Client
     /// <summary>
     /// Allows users to add/edit/delete user-defined worklists directly in the folder explorer.
     /// </summary>
-	[ButtonAction("add", "folderexplorer-folders-toolbar/New Worklist", "Add")]
-	[MenuAction("add", "folderexplorer-folders-contextmenu/New Worklist", "Add")]
+	[ButtonAction("add", "folderexplorer-folders-toolbar/MenuNewWorklist", "Add")]
+	[MenuAction("add", "folderexplorer-folders-contextmenu/MenuNewWorklist", "Add")]
 	[IconSet("add", CrudActionModel.IconAddResource)]
-	[Tooltip("add", "Add a new worklist")]
+	[Tooltip("add", "TooltipNewWorklist")]
 	[EnabledStateObserver("add", "AddEnabled", "EnablementChanged")]
     [VisibleStateObserver("add", "Visible", "VisibleChanged")]
 
-	[ButtonAction("edit", "folderexplorer-folders-toolbar/Edit Worklist", "Edit")]
-	[MenuAction("edit", "folderexplorer-folders-contextmenu/Edit Worklist", "Edit")]
+	[ButtonAction("edit", "folderexplorer-folders-toolbar/MenuEditWorklist", "Edit")]
+	[MenuAction("edit", "folderexplorer-folders-contextmenu/MenuEditWorklist", "Edit")]
 	[IconSet("edit", CrudActionModel.IconEditResource)]
-	[Tooltip("edit", "Edit worklist")]
+	[Tooltip("edit", "TooltipEditWorklist")]
 	[EnabledStateObserver("edit", "EditEnabled", "EnablementChanged")]
     [VisibleStateObserver("edit", "Visible", "VisibleChanged")]
 
-    [ButtonAction("duplicate", "folderexplorer-folders-toolbar/Duplicate Worklist", "Duplicate")]
-    [MenuAction("duplicate", "folderexplorer-folders-contextmenu/Duplicate Worklist", "Duplicate")]
+	[ButtonAction("duplicate", "folderexplorer-folders-toolbar/MenuDuplicateWorklist", "Duplicate")]
+	[MenuAction("duplicate", "folderexplorer-folders-contextmenu/MenuDuplicateWorklist", "Duplicate")]
 	[IconSet("duplicate", "Icons.DuplicateSmall.png")]
-	[Tooltip("duplicate", "Duplicate worklist")]
+	[Tooltip("duplicate", "TooltipDuplicateWorklist")]
     [EnabledStateObserver("duplicate", "DuplicateEnabled", "EnablementChanged")]
     [VisibleStateObserver("duplicate", "Visible", "VisibleChanged")]
 
-	[ButtonAction("delete", "folderexplorer-folders-toolbar/Delete Worklist", "Delete")]
-	[MenuAction("delete", "folderexplorer-folders-contextmenu/Delete Worklist", "Delete")]
+	[ButtonAction("delete", "folderexplorer-folders-toolbar/MenuDeleteWorklist", "Delete")]
+	[MenuAction("delete", "folderexplorer-folders-contextmenu/MenuDeleteWorklist", "Delete")]
 	[IconSet("delete", CrudActionModel.IconDeleteResource)]
-	[Tooltip("delete", "Delete worklist")]
+	[Tooltip("delete", "TooltipDeleteWorklist")]
 	[EnabledStateObserver("delete", "DeleteEnabled", "EnablementChanged")]
     [VisibleStateObserver("delete", "Visible", "VisibleChanged")]
 

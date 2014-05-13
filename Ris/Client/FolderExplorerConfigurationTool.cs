@@ -31,8 +31,8 @@ using ClearCanvas.Desktop.Tools;
 
 namespace ClearCanvas.Ris.Client
 {
-	[ButtonAction("apply", "folderexplorer-folders-toolbar/Configure", "Configure")]
-	[Tooltip("apply", "Organize Folders")]
+	[ButtonAction("apply", "folderexplorer-folders-toolbar/MenuConfigure", "Configure")]
+	[Tooltip("apply", "TooltipOrganizeFolders")]
 	[IconSet("apply", "Icons.OptionsToolSmall.png", "Icons.OptionsToolSmall.png", "Icons.OptionsToolSmall.png")]
 	[ActionPermission("apply", Application.Common.AuthorityTokens.Desktop.FolderOrganization)]
 	[ExtensionOf(typeof(FolderExplorerGroupToolExtensionPoint))]

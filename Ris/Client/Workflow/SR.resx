@@ -797,4 +797,133 @@ Do you want to save it to your Drafts folder and open the transcription for {1}?
   <data name="MessageNoProceduresCanBeCheckedIn" xml:space="preserve">
     <value>All active procedures for this order have already been checked-in.</value>
   </data>
+  <data name="MenuAddAddendum" xml:space="preserve">
+    <value>Add Addendum</value>
+  </data>
+  <data name="MenuCancelOrder" xml:space="preserve">
+    <value>Cancel Order</value>
+  </data>
+  <data name="MenuCheckIn" xml:space="preserve">
+    <value>Check-in</value>
+  </data>
+  <data name="MenuComplete" xml:space="preserve">
+    <value>Complete</value>
+  </data>
+  <data name="MenuDiscardReport" xml:space="preserve">
+    <value>Discard Report</value>
+  </data>
+  <data name="MenuEditPatient" xml:space="preserve">
+    <value>Edit Patient</value>
+  </data>
+  <data name="MenuMergeOrders" xml:space="preserve">
+    <value>Merge Orders</value>
+  </data>
+  <data name="MenuNewPatient" xml:space="preserve">
+    <value>New Patient</value>
+  </data>
+  <data name="MenuPatientBiography" xml:space="preserve">
+    <value>Patient Biography</value>
+  </data>
+  <data name="MenuPatientSearch" xml:space="preserve">
+    <value>Patient Search</value>
+  </data>
+  <data name="MenuRandomOrder" xml:space="preserve">
+    <value>Random Order</value>
+  </data>
+  <data name="MenuSendToTranscription" xml:space="preserve">
+    <value>Send to Transcription</value>
+  </data>
+  <data name="MenuSubmitForReview" xml:space="preserve">
+    <value>Submit for Review</value>
+  </data>
+  <data name="MenuUndoMergeOrders" xml:space="preserve">
+    <value>Undo Merge Orders</value>
+  </data>
+  <data name="MenuViewImages" xml:space="preserve">
+    <value>View Images</value>
+  </data>
+  <data name="MenuWorkflowHistory" xml:space="preserve">
+    <value>Workflow History</value>
+  </data>
+  <data name="TooltipEditPatient" xml:space="preserve">
+    <value>Edit Patient Information</value>
+  </data>
+  <data name="TooltipMergeOrders" xml:space="preserve">
+    <value>Merge Orders</value>
+  </data>
+  <data name="TooltipNewPatient" xml:space="preserve">
+    <value>Create a new patient record</value>
+  </data>
+  <data name="TooltipPatientBiography" xml:space="preserve">
+    <value>Open patient biography</value>
+  </data>
+  <data name="TooltipPatientSearch" xml:space="preserve">
+    <value>Patient Search</value>
+  </data>
+  <data name="TooltipRandomOrder" xml:space="preserve">
+    <value>Random Order</value>
+  </data>
+  <data name="TooltipUndoMergeOrders" xml:space="preserve">
+    <value>Undo Merge Orders</value>
+  </data>
+  <data name="TooltipViewImages" xml:space="preserve">
+    <value>View Images</value>
+  </data>
+  <data name="TooltipWorkflowHistory" xml:space="preserve">
+    <value>View workflow history</value>
+  </data>
+  <data name="TooltipDiscardAddendum" xml:space="preserve">
+    <value>Discard Addendum</value>
+  </data>
+  <data name="TooltipDiscardReport" xml:space="preserve">
+    <value>Discard Report</value>
+  </data>
+  <data name="MenuCancelAndReplaceOrder" xml:space="preserve">
+    <value>Cancel and Replace Order</value>
+  </data>
+  <data name="MenuCompleteDowntimeRecovery" xml:space="preserve">
+    <value>Complete Downtime Recovery...</value>
+  </data>
+  <data name="MenuEditReport" xml:space="preserve">
+    <value>Edit Report</value>
+  </data>
+  <data name="MenuEditReportAndOpenImages" xml:space="preserve">
+    <value>Edit Report and Open Images</value>
+  </data>
+  <data name="MenuModifyOrder" xml:space="preserve">
+    <value>Modify Order</value>
+  </data>
+  <data name="MenuNewOrder" xml:space="preserve">
+    <value>New Order</value>
+  </data>
+  <data name="MenuOpenDocumentation" xml:space="preserve">
+    <value>Open Documentation</value>
+  </data>
+  <data name="MenuOpenReport" xml:space="preserve">
+    <value>Open Report</value>
+  </data>
+  <data name="MenuPrintDowntimeForms" xml:space="preserve">
+    <value>Print Downtime Forms</value>
+  </data>
+  <data name="MenuPrintReport" xml:space="preserve">
+    <value>Print Report</value>
+  </data>
+  <data name="MenuPublish" xml:space="preserve">
+    <value>Publish</value>
+  </data>
+  <data name="MenuReassign" xml:space="preserve">
+    <value>Reassign</value>
+  </data>
+  <data name="MenuReject" xml:space="preserve">
+    <value>Reject</value>
+  </data>
+  <data name="MenuReturnToInterpreter" xml:space="preserve">
+    <value>Return to Interpreter</value>
+  </data>
+  <data name="MenuReviseReport" xml:space="preserve">
+    <value>Revise Report</value>
+  </data>
+  <data name="MenuVerify" xml:space="preserve">
+    <value>Verify</value>
+  </data>
 </root>

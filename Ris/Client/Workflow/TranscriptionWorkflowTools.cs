@@ -34,8 +34,8 @@ using ClearCanvas.Ris.Application.Common.TranscriptionWorkflow;
 
 namespace ClearCanvas.Ris.Client.Workflow
 {
-	[MenuAction("apply", "folderexplorer-items-contextmenu/Complete", "Apply")]
-	[ButtonAction("apply", "folderexplorer-items-toolbar/Complete", "Apply")]
+	[MenuAction("apply", "folderexplorer-items-contextmenu/MenuComplete", "Apply")]
+	[ButtonAction("apply", "folderexplorer-items-toolbar/MenuComplete", "Apply")]
 	[IconSet("apply", "Icons.VerifyReportSmall.png", "Icons.VerifyReportMedium.png", "Icons.VerifyReportLarge.png")]
 	[EnabledStateObserver("apply", "Enabled", "EnabledChanged")]
 	[ActionPermission("apply", ClearCanvas.Ris.Application.Common.AuthorityTokens.Workflow.Transcription.Create)]
@@ -68,8 +68,8 @@ namespace ClearCanvas.Ris.Client.Workflow
 		}
 	}
 
-	[MenuAction("apply", "folderexplorer-items-contextmenu/Reject", "Apply")]
-	[ButtonAction("apply", "folderexplorer-items-toolbar/Reject", "Apply")]
+	[MenuAction("apply", "folderexplorer-items-contextmenu/MenuReject", "Apply")]
+	[ButtonAction("apply", "folderexplorer-items-toolbar/MenuReject", "Apply")]
 	[IconSet("apply", "Icons.RejectTranscriptionSmall.png", "Icons.RejectTranscriptionMedium.png", "Icons.RejectTranscriptionLarge.png")]
 	[EnabledStateObserver("apply", "Enabled", "EnabledChanged")]
 	[ActionPermission("apply", ClearCanvas.Ris.Application.Common.AuthorityTokens.Workflow.Transcription.Create)]
@@ -109,8 +109,8 @@ namespace ClearCanvas.Ris.Client.Workflow
 		}
 	}
 
-	[MenuAction("apply", "folderexplorer-items-contextmenu/Submit for Review", "Apply")]
-	[ButtonAction("apply", "folderexplorer-items-toolbar/Submit for Review", "Apply")]
+	[MenuAction("apply", "folderexplorer-items-contextmenu/MenuSubmitForReview", "Apply")]
+	[ButtonAction("apply", "folderexplorer-items-toolbar/MenuSubmitForReview", "Apply")]
 	[IconSet("apply", "Icons.VerifyReportSmall.png", "Icons.VerifyReportMedium.png", "Icons.VerifyReportLarge.png")]
 	[EnabledStateObserver("apply", "Enabled", "EnabledChanged")]
 	[VisibleStateObserver("apply", "Visible")]
@@ -151,8 +151,8 @@ namespace ClearCanvas.Ris.Client.Workflow
 		}
 	}
 
-	[MenuAction("apply", "folderexplorer-items-contextmenu/Open Report", "Apply")]
-	[ButtonAction("apply", "folderexplorer-items-toolbar/Open Report", "Apply")]
+	[MenuAction("apply", "folderexplorer-items-contextmenu/MenuOpenReport", "Apply")]
+	[ButtonAction("apply", "folderexplorer-items-toolbar/MenuOpenReport", "Apply")]
 	[IconSet("apply", "Icons.EditReportToolSmall.png", "Icons.EditReportToolMedium.png", "Icons.EditReportToolLarge.png")]
 	[EnabledStateObserver("apply", "Enabled", "EnabledChanged")]
 	[ActionPermission("apply", ClearCanvas.Ris.Application.Common.AuthorityTokens.Workflow.Transcription.Create)]

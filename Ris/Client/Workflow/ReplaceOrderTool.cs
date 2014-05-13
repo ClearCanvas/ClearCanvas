@@ -35,8 +35,8 @@ using ClearCanvas.Common.Utilities;
 
 namespace ClearCanvas.Ris.Client.Workflow
 {
-	[MenuAction("apply", "folderexplorer-items-contextmenu/Cancel and Replace Order", "Apply")]
-	[ButtonAction("apply", "folderexplorer-items-toolbar/Cancel and Replace Order", "Apply")]
+	[MenuAction("apply", "folderexplorer-items-contextmenu/MenuCancelAndReplaceOrder", "Apply")]
+	[ButtonAction("apply", "folderexplorer-items-toolbar/MenuCancelAndReplaceOrder", "Apply")]
 	[IconSet("apply", "ReplaceOrderSmall.png", "ReplaceOrderMedium.png", "ReplaceOrderLarge.png")]
 	[EnabledStateObserver("apply", "Enabled", "EnabledChanged")]
 	[ActionPermission("apply", Application.Common.AuthorityTokens.Workflow.Order.Replace)]

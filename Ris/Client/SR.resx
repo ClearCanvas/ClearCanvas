@@ -1209,4 +1209,109 @@
   <data name="MessageHomeDescription" xml:space="preserve">
     <value>Shows the RIS user homepage.</value>
   </data>
+  <data name="MenuPrintFaxReport" xml:space="preserve">
+    <value>Print/Fax Report</value>
+  </data>
+  <data name="FormatPrintReport" xml:space="preserve">
+    <value>Print Report {0}</value>
+  </data>
+  <data name="MenuAdd" xml:space="preserve">
+    <value>Add</value>
+  </data>
+  <data name="MenuAdmin" xml:space="preserve">
+    <value>Admin</value>
+  </data>
+  <data name="MenuAdvancedSearch" xml:space="preserve">
+    <value>Advanced Search ...</value>
+  </data>
+  <data name="MenuCannedText" xml:space="preserve">
+    <value>Canned Text</value>
+  </data>
+  <data name="MenuChangePassword" xml:space="preserve">
+    <value>Change Password</value>
+  </data>
+  <data name="MenuConfigure" xml:space="preserve">
+    <value>Configure</value>
+  </data>
+  <data name="MenuDeleteWorklist" xml:space="preserve">
+    <value>Delete Worklist</value>
+  </data>
+  <data name="MenuDuplicateWorklist" xml:space="preserve">
+    <value>Duplicate Worklist</value>
+  </data>
+  <data name="MenuEditWorklist" xml:space="preserve">
+    <value>Edit Worklist</value>
+  </data>
+  <data name="MenuExternalPractitioners" xml:space="preserve">
+    <value>External Practitioners</value>
+  </data>
+  <data name="MenuImagingServices" xml:space="preserve">
+    <value>Imaging Services</value>
+  </data>
+  <data name="MenuNewWorklist" xml:space="preserve">
+    <value>New Worklist</value>
+  </data>
+  <data name="MenuProcedureTypes" xml:space="preserve">
+    <value>Procedure Types</value>
+  </data>
+  <data name="MenuRefreshAll" xml:space="preserve">
+    <value>Refresh All</value>
+  </data>
+  <data name="MenuRemove" xml:space="preserve">
+    <value>Remove</value>
+  </data>
+  <data name="MenuSearch" xml:space="preserve">
+    <value>Search</value>
+  </data>
+  <data name="MenuStaffGroups" xml:space="preserve">
+    <value>Staff Groups</value>
+  </data>
+  <data name="MenuStaffProfile" xml:space="preserve">
+    <value>Staff Profile</value>
+  </data>
+  <data name="MenuView" xml:space="preserve">
+    <value>View</value>
+  </data>
+  <data name="MessagePasswordChanged" xml:space="preserve">
+    <value>Password changed.</value>
+  </data>
+  <data name="TooltipDeleteWorklist" xml:space="preserve">
+    <value>Delete worklist</value>
+  </data>
+  <data name="TooltipDuplicateWorklist" xml:space="preserve">
+    <value>Duplicate worklist</value>
+  </data>
+  <data name="TooltipEditWorklist" xml:space="preserve">
+    <value>Edit worklist</value>
+  </data>
+  <data name="TooltipNewWorklist" xml:space="preserve">
+    <value>Add a new worklist</value>
+  </data>
+  <data name="TooltipOrganizeFolders" xml:space="preserve">
+    <value>Organize Folders</value>
+  </data>
+  <data name="TooltipRefreshFolders" xml:space="preserve">
+    <value>Refresh Folders</value>
+  </data>
+  <data name="TooltipSearch" xml:space="preserve">
+    <value>Search</value>
+  </data>
+  <data name="MessageFeatureRequiresWorkstationRestart" xml:space="preserve">
+    <value>This feature will be available the next time you start the workstation.</value>
+  </data>
+  <data name="FormatUserHasNoStaffProfile" xml:space="preserve">
+    <value>There is no staff profile associated with the user '{0}'</value>
+  </data>
+  <data name="MenuProperties" xml:space="preserve">
+    <value>Properties</value>
+  </data>
+  <data name="MenuStaff" xml:space="preserve">
+    <value>Staff</value>
+  </data>
+  <data name="TooltipFolderProperties" xml:space="preserve">
+    <value>Folder Properties</value>
+  </data>
+  <data name="TooltipGoToHomepage" xml:space="preserve">
+    <value>Go to home page</value>
+  </data>
 </root>

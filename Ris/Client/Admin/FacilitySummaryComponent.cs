@@ -36,7 +36,7 @@ using ClearCanvas.Ris.Application.Common.Admin.FacilityAdmin;
 
 namespace ClearCanvas.Ris.Client.Admin
 {
-	[MenuAction("launch", "global-menus/Admin/Facilities", "Launch")]
+	[MenuAction("launch", "global-menus/MenuAdmin/MenuFacilities", "Launch")]
 	[ActionPermission("launch", Application.Common.AuthorityTokens.Admin.Data.Facility)]
 	[ExtensionOf(typeof(DesktopToolExtensionPoint), FeatureToken = FeatureTokens.RIS.Core)]
 	public class FacilitySummaryTool : Tool<IDesktopToolContext>
