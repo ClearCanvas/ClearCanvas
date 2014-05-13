@@ -150,7 +150,7 @@ SR({
 	
 	ReportPreview: {
 		Report: "Report",
-		AddendumNumber: "Addendum",
+		Addendum: "Addendum",
 
 		ReportNotFinalized: "*** THIS REPORT HAS NOT BEEN FINALIZED ***",
 		AddendumNotFinalized: "*** THIS ADDENDUM HAS NOT BEEN FINALIZED ***",

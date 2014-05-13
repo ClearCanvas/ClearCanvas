@@ -272,7 +272,7 @@ Preview.ProceduresTableHelper = function () {
 				return SR.Procedures.StatusCheckedIn;
 			
 			if (status.Code == 'IP' && checkOutTime)
-				return SR.Procedures.Performed;
+				return SR.Procedures.StatusPerformed;
 				
 			return status.Value; 
 		},
@@ -1204,8 +1204,7 @@ Preview.ReportPreview = function () {
 	{
 		var timePropertyMap = {X: 'CancelledTime', D: 'CreationTime', P: 'PreliminaryTime', F: 'CompletedTime'};
 		var timeText = Ris.formatDateTime(report[timePropertyMap[report.Status.Code]]);
-		var warningText = " *** THIS " + (isAddendum ? "ADDENDUM" : "REPORT") + " HAS NOT BEEN FINALIZED ***";
-		var warningText = isAddendum ? SR.ReportPreview.AddendumNotFinalized : SR.ReportPreview.ReportNotFinalized;
+		var warningText = " " + (isAddendum ? SR.ReportPreview.AddendumNotFinalized : SR.ReportPreview.ReportNotFinalized);
 
 		var statusText = report.Status.Value + " - " + timeText;
 
@@ -1264,7 +1263,7 @@ Preview.ReportPreview = function () {
 					if (parsedReportContent)
 					{
 						formattedReport += "<div class='reportPreview'>";
-						formattedReport += "<b>" + SR.ReportPreview.Addendum + " " + _formatReportStatus(addendumPart, true) + ": </b><br><br>";
+						formattedReport += "<b>" + SR.ReportPreview.Addendum + " " + _formatReportStatus(addendumPart, true) + "</b><br><br>";
 						formattedReport += parsedReportContent;
 						formattedReport += _formatReportPerformer(addendumPart);
 						formattedReport += "<br><br>";
