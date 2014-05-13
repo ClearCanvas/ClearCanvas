@@ -251,6 +251,22 @@ if(!String.prototype.escapeHTML)
     }
 }
 
+// Utility to perform string variable interpolation (kind of)
+// returns a new string with the values plugged in:
+// e.g.		"Hi %0, today is %1".interp("Bob", new Date()) -> "Hi Bob, today is 2014-05-12 ..."
+if (!String.prototype.interp)
+{
+	String.prototype.interp = function(/* arguments */)
+	{
+		var result = this;
+		for(var i = 0; i < arguments.length; i++) {
+			var value = arguments[i];
+			result = result.replace("%" + i, value);
+		}
+		return result;
+	};
+}
+
 if(!String.replaceLineBreak)
 {
 	String.replaceLineBreak = function(value)
@@ -283,6 +299,7 @@ if (!String.combine)
 			});
 	};
 }
+
 
 // add some decent date serialization support
 if(!Date.prototype.toISOString)
