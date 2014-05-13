@@ -112,8 +112,7 @@ namespace ClearCanvas.Ris.Client.Workflow
 
 		Path IExtensionPage.Path
 		{
-			//todo: loc
-			get { return new Path("MPPS Documentation", new ResourceResolver(this.GetType().Assembly)); }
+			get { return new Path("TitleMppsDocumentation", new ResourceResolver(this.GetType().Assembly)); }
 		}
 
 		IApplicationComponent IExtensionPage.GetComponent()

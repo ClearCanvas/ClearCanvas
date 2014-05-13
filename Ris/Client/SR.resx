@@ -1314,4 +1314,7 @@
   <data name="TooltipGoToHomepage" xml:space="preserve">
     <value>Go to home page</value>
   </data>
+  <data name="MessageGeneratingPdf">
+    <value xml:space="preserve">Generating PDF...</value>
+  </data>
 </root>

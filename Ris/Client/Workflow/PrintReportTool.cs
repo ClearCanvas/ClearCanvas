@@ -62,8 +62,7 @@ namespace ClearCanvas.Ris.Client.Workflow
 
 			try
 			{
-				//todo: loc
-				var title = string.Format("Print Report for {0} {1} -  {2}",
+				var title = string.Format(SR.FormatPrintReportMessage,
 										  Formatting.MrnFormat.Format(item.Mrn),
 										  Formatting.PersonNameFormat.Format(item.PatientName),
 										  Formatting.AccessionFormat.Format(item.AccessionNumber));

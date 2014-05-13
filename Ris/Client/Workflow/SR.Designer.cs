@@ -799,6 +799,15 @@ namespace ClearCanvas.Ris.Client.Workflow {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Print Report for {0} {1} -  {2}.
+        /// </summary>
+        internal static string FormatPrintReportMessage {
+            get {
+                return ResourceManager.GetString("FormatPrintReportMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Protocolling from the &quot;{0}&quot; worklist.
         /// </summary>
         internal static string FormatProtocolFolderName {
@@ -1191,6 +1200,15 @@ namespace ClearCanvas.Ris.Client.Workflow {
         internal static string MessageDeleteSelectedVisit {
             get {
                 return ResourceManager.GetString("MessageDeleteSelectedVisit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Generating PDF....
+        /// </summary>
+        internal static string MessageGeneratingPdf {
+            get {
+                return ResourceManager.GetString("MessageGeneratingPdf", resourceCulture);
             }
         }
         
@@ -1863,6 +1881,15 @@ namespace ClearCanvas.Ris.Client.Workflow {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to DICOM Series.
+        /// </summary>
+        internal static string TitleDicomSeries {
+            get {
+                return ResourceManager.GetString("TitleDicomSeries", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Discontinue.
         /// </summary>
         internal static string TitleDiscontinueMpps {
@@ -2025,6 +2052,15 @@ namespace ClearCanvas.Ris.Client.Workflow {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to MPPS Documentation.
+        /// </summary>
+        internal static string TitleMppsDocumentation {
+            get {
+                return ResourceManager.GetString("TitleMppsDocumentation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to New Order for {0} {1}.
         /// </summary>
         internal static string TitleNewOrder {
@@ -2111,6 +2147,15 @@ namespace ClearCanvas.Ris.Client.Workflow {
         internal static string TitlePerformedProcedureComponent {
             get {
                 return ResourceManager.GetString("TitlePerformedProcedureComponent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Performing Documentation.
+        /// </summary>
+        internal static string TitlePerformingDocumentation {
+            get {
+                return ResourceManager.GetString("TitlePerformingDocumentation", resourceCulture);
             }
         }
         

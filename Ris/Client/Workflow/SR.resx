@@ -926,4 +926,20 @@ Do you want to save it to your Drafts folder and open the transcription for {1}?
   <data name="MenuVerify" xml:space="preserve">
     <value>Verify</value>
   </data>
+  <data name="MessageGeneratingPdf">
+    <value xml:space="preserve">Generating PDF...</value>
+  </data>
+  <data name="TitleMppsDocumentation">
+    <value xml:space="preserve">MPPS Documentation</value>
+  </data>
+  <data name="FormatPrintReportMessage">
+    <value xml:space="preserve">Print Report for {0} {1} -  {2}</value>
+    <comment>{0} - MRN, {1} - Patient's Name, {2} - Acc#</comment>
+  </data>
+  <data name="TitleDicomSeries">
+    <value xml:space="preserve">DICOM Series</value>
+  </data>
+  <data name="TitlePerformingDocumentation">
+    <value xml:space="preserve">Performing Documentation</value>
+  </data>
 </root>

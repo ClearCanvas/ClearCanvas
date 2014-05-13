@@ -2230,6 +2230,15 @@ namespace ClearCanvas.Ris.Client {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Generating PDF....
+        /// </summary>
+        internal static string MessageGeneratingPdf {
+            get {
+                return ResourceManager.GetString("MessageGeneratingPdf", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Getting folder items....
         /// </summary>
         internal static string MessageGettingFolderItems {
