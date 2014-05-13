@@ -59,6 +59,7 @@ namespace ClearCanvas.Ris.Client.View.WinForms
         /// </summary>
         private void InitializeComponent()
         {
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PrintReportComponentControl));
 			this._contactPoint = new ClearCanvas.Desktop.View.WinForms.ComboBoxField();
 			this.groupBox2 = new System.Windows.Forms.GroupBox();
 			this._practitionerLookup = new ClearCanvas.Ris.Client.View.WinForms.LookupField();
@@ -73,68 +74,47 @@ namespace ClearCanvas.Ris.Client.View.WinForms
 			this._contactPoint.DataSource = null;
 			this._contactPoint.DisplayMember = "";
 			this._contactPoint.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this._contactPoint.LabelText = "Contact Point";
-			this._contactPoint.Location = new System.Drawing.Point(5, 76);
-			this._contactPoint.Margin = new System.Windows.Forms.Padding(2);
+			resources.ApplyResources(this._contactPoint, "_contactPoint");
 			this._contactPoint.Name = "_contactPoint";
-			this._contactPoint.Size = new System.Drawing.Size(498, 44);
-			this._contactPoint.TabIndex = 1;
 			this._contactPoint.Value = null;
 			// 
 			// groupBox2
 			// 
 			this.groupBox2.Controls.Add(this._practitionerLookup);
 			this.groupBox2.Controls.Add(this._contactPoint);
-			this.groupBox2.Location = new System.Drawing.Point(3, 3);
+			resources.ApplyResources(this.groupBox2, "groupBox2");
 			this.groupBox2.Name = "groupBox2";
-			this.groupBox2.Size = new System.Drawing.Size(537, 132);
-			this.groupBox2.TabIndex = 0;
 			this.groupBox2.TabStop = false;
-			this.groupBox2.Text = "Address the report to";
 			// 
 			// _practitionerLookup
 			// 
-			this._practitionerLookup.LabelText = "Practitioner";
-			this._practitionerLookup.Location = new System.Drawing.Point(5, 23);
-			this._practitionerLookup.Margin = new System.Windows.Forms.Padding(2);
+			resources.ApplyResources(this._practitionerLookup, "_practitionerLookup");
 			this._practitionerLookup.Name = "_practitionerLookup";
-			this._practitionerLookup.Size = new System.Drawing.Size(498, 41);
-			this._practitionerLookup.TabIndex = 0;
 			this._practitionerLookup.Value = null;
 			// 
 			// _printButton
 			// 
-			this._printButton.Location = new System.Drawing.Point(384, 147);
+			resources.ApplyResources(this._printButton, "_printButton");
 			this._printButton.Name = "_printButton";
-			this._printButton.Size = new System.Drawing.Size(75, 23);
-			this._printButton.TabIndex = 2;
-			this._printButton.Text = "Print";
 			this._printButton.UseVisualStyleBackColor = true;
 			this._printButton.Click += new System.EventHandler(this._printButton_Click);
 			// 
 			// _closeButton
 			// 
-			this._closeButton.Location = new System.Drawing.Point(465, 147);
+			resources.ApplyResources(this._closeButton, "_closeButton");
 			this._closeButton.Name = "_closeButton";
-			this._closeButton.Size = new System.Drawing.Size(75, 23);
-			this._closeButton.TabIndex = 3;
-			this._closeButton.Text = "Close";
 			this._closeButton.UseVisualStyleBackColor = true;
 			this._closeButton.Click += new System.EventHandler(this._closeButton_Click);
 			// 
 			// _closeOnPrint
 			// 
-			this._closeOnPrint.AutoSize = true;
-			this._closeOnPrint.Location = new System.Drawing.Point(279, 151);
+			resources.ApplyResources(this._closeOnPrint, "_closeOnPrint");
 			this._closeOnPrint.Name = "_closeOnPrint";
-			this._closeOnPrint.Size = new System.Drawing.Size(90, 17);
-			this._closeOnPrint.TabIndex = 1;
-			this._closeOnPrint.Text = "Close on print";
 			this._closeOnPrint.UseVisualStyleBackColor = true;
 			// 
 			// PrintReportComponentControl
 			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+			resources.ApplyResources(this, "$this");
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.CancelButton = this._closeButton;
 			this.Controls.Add(this._closeOnPrint);
@@ -142,7 +122,6 @@ namespace ClearCanvas.Ris.Client.View.WinForms
 			this.Controls.Add(this._closeButton);
 			this.Controls.Add(this._printButton);
 			this.Name = "PrintReportComponentControl";
-			this.Size = new System.Drawing.Size(545, 178);
 			this.groupBox2.ResumeLayout(false);
 			this.ResumeLayout(false);
 			this.PerformLayout();

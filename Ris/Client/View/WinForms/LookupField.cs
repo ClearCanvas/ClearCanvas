@@ -59,6 +59,7 @@ namespace ClearCanvas.Ris.Client.View.WinForms
 
         #region Design-time properties
 
+		[Localizable(true)]
         public string LabelText
         {
             get { return _inputField.LabelText; }

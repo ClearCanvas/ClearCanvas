@@ -59,38 +59,26 @@ namespace ClearCanvas.Ris.Client.Workflow.View.WinForms
         /// </summary>
         private void InitializeComponent()
         {
-            ClearCanvas.Desktop.Selection selection3 = new ClearCanvas.Desktop.Selection();
-            this._locations = new ClearCanvas.Desktop.View.WinForms.TableView();
-            this.SuspendLayout();
-            // 
-            // _locations
-            // 
-            this._locations.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this._locations.AutoSize = true;
-            this._locations.Location = new System.Drawing.Point(0, 3);
-            this._locations.MenuModel = null;
-            this._locations.MultiLine = true;
-            this._locations.Name = "_locations";
-            this._locations.ReadOnly = false;
-            this._locations.Selection = selection3;
-            this._locations.Size = new System.Drawing.Size(179, 146);
-            this._locations.TabIndex = 0;
-            this._locations.Table = null;
-            this._locations.ToolbarModel = null;
-            this._locations.SelectionChanged += new System.EventHandler(this._locations_SelectionChanged);
-            // 
-            // VisitLocationsSummaryComponentControl
-            // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.AutoSize = true;
-            this.Controls.Add(this._locations);
-            this.Name = "VisitLocationsSummaryComponentControl";
-            this.Size = new System.Drawing.Size(180, 150);
-            this.ResumeLayout(false);
-            this.PerformLayout();
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(VisitLocationsSummaryComponentControl));
+			this._locations = new ClearCanvas.Desktop.View.WinForms.TableView();
+			this.SuspendLayout();
+			// 
+			// _locations
+			// 
+			resources.ApplyResources(this._locations, "_locations");
+			this._locations.MultiLine = true;
+			this._locations.Name = "_locations";
+			this._locations.ReadOnly = false;
+			this._locations.SelectionChanged += new System.EventHandler(this._locations_SelectionChanged);
+			// 
+			// VisitLocationsSummaryComponentControl
+			// 
+			resources.ApplyResources(this, "$this");
+			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+			this.Controls.Add(this._locations);
+			this.Name = "VisitLocationsSummaryComponentControl";
+			this.ResumeLayout(false);
+			this.PerformLayout();
 
         }
 

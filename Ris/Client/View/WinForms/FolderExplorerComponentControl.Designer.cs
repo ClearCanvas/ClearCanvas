@@ -61,34 +61,29 @@ namespace ClearCanvas.Ris.Client.View.WinForms
         /// </summary>
         private void InitializeComponent()
         {
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FolderExplorerComponentControl));
 			this._folderTreeView = new ClearCanvas.Desktop.View.WinForms.BindingTreeView();
 			this.SuspendLayout();
 			// 
 			// _folderTreeView
 			// 
 			this._folderTreeView.AllowDrop = true;
-			this._folderTreeView.Dock = System.Windows.Forms.DockStyle.Fill;
-			this._folderTreeView.IconColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit;
+			resources.ApplyResources(this._folderTreeView, "_folderTreeView");
+			this._folderTreeView.IconResourceSize = ClearCanvas.Desktop.IconSize.Medium;
 			this._folderTreeView.IconSize = new System.Drawing.Size(24, 24);
-			this._folderTreeView.Location = new System.Drawing.Point(0, 0);
-			this._folderTreeView.Margin = new System.Windows.Forms.Padding(2);
 			this._folderTreeView.Name = "_folderTreeView";
 			this._folderTreeView.ShowLines = false;
 			this._folderTreeView.ShowToolbar = false;
-			this._folderTreeView.Size = new System.Drawing.Size(183, 500);
-			this._folderTreeView.TabIndex = 1;
 			this._folderTreeView.TreeBackColor = System.Drawing.SystemColors.Window;
 			this._folderTreeView.TreeForeColor = System.Drawing.SystemColors.WindowText;
 			this._folderTreeView.TreeLineColor = System.Drawing.Color.Black;
 			// 
 			// FolderExplorerComponentControl
 			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+			resources.ApplyResources(this, "$this");
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.Controls.Add(this._folderTreeView);
-			this.Margin = new System.Windows.Forms.Padding(2);
 			this.Name = "FolderExplorerComponentControl";
-			this.Size = new System.Drawing.Size(183, 500);
 			this.ResumeLayout(false);
 
         }
