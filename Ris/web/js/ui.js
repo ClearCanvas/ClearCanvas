@@ -1205,11 +1205,27 @@ function NewLineField() {
 	this.setValue = function(item, value) { return; };
 }
 
+var Label = 
+{
+	setValues: function(idValueMap) {
+		for(var id in idValueMap) {
+			var element = document.getElementById(id);
+			if(element) {
+				var value = idValueMap[id];
+				element.innerHTML = (value === undefined || value === null) ? "" : value;
+			}
+		}
+	}
+};
+
 var Field = 
 {
 	setValue: function(element, value)
 	{
 		element.innerHTML = (value === undefined || value === null) ? "" : (value + "").escapeHTML();
+	},
+	
+	setValues: function(idValueMap) {
 	},
 
 	setTooltip: function(element, tooltip)

@@ -97,13 +97,30 @@ SR({
 	},
 	
 	PatientDemographics: {
+		Name: "Name",
+		Mrn: "MRN",
 		DateOfBirth: "Date of Birth",
 		Age: "Age",
 		Sex: "Sex",
 		Healthcard: "Healthcard #",
 		BillingInformation: "Billing Information",
 		HomePhone: "Home Phone", 
-		HomeAddress: "Home Address"
+		HomeAddress: "Home Address",
+		Alerts: "Alerts",
+		Language: "Language",
+		Religion: "Religion",
+		AddressType: "Type",
+		Address: "Address",
+		ExpiryDate: "Expiry Date",
+		PhoneType: "Type",
+		PhoneNumber: "Number",
+		EmailAddress: "Email",
+		ContactType: "Type",
+		ContactRelationship: "Relationship",
+		ContactName: "Name",
+		ContactHomePhone: "Home #",
+		ContactWorkPhone: "Work #",
+		ContactAddress: "Address"
 	},
 	
 	Procedures: {
@@ -174,5 +191,99 @@ SR({
 		FaxNumber: "Fax Number",
 		NotEntered: "Not entered",
 		PhoneNumber: "Phone Number"
+	},
+	
+	HL7Queue: {
+		MessageDetails: "Message Details",
+		Peer: "Peer",
+		Direction: "Direction",
+		Type: "Type",
+		Version: "Version",
+		Status: "Status",
+		Created: "Created",
+		Processed: "Processed",
+		ErrorDetails: "Error Details",
+		MessageText: "Message Text",
+		ShowHideClipboardVersion: "Show/hide clipboard-friendly version."
+	},
+	
+	ReportEditor: {
+		Addendum: "Addendum"
+	},
+	
+	AttachedDocumentPreview: {
+		PluginError: "Embedded PDF viewer is not available on this computer.  Double-click on the selected item to open it in an external application.",
+		Sender: "Sender",
+		SenderNumber: "Sender Number",
+		ReceivedAt: "Received At",
+		ReceivedAtNumber: "Received At Number"
+	},
+	
+	PatientBanner: {
+		Healthcard: "Healthcard #",
+		DateOfBirth: "Date of Birth",
+		AgeSex: "Age / Sex",
+		Accession: "Accession #",
+		ImagingService: "Imaging Service",
+		OrderingPhysician: "Ordering Physician",
+		Procedures: "Procedures",
+		Priority: "Priority"
+	},
+	
+	WorkQueue: {
+		Overview: "Overwiew",
+		CreationTime: "Creation Time",
+		ExpirationTime: "Expiration Time",
+		ScheduledTime: "Scheduled Time",
+		ProcessedTime: "Processed Time",
+		FailureCount: "Failure Count",
+		User: "User",
+		FailureDescription: "Failure Description",
+		Properties: "Properties",
+		Name: "Name",
+		Value: "Value"
+	},
+	
+	Worklists: {
+		Worklist: "Worklist",
+		Name: "Name",
+		Description: "Description",
+		Class: "Class",
+		Owner: "Owner",
+		Worklists: "Worklists",
+		Category: "Category",
+		Subscribers: "Subscribers",
+		Groups: "Groups",
+		Staff: "Staff",
+		Filters: "Filterados",
+		Time: "Time",
+		PerformingFacility: "Performing Facility",
+		PerformingDepartment: "Performing Department",
+		PatientClasses: "Patient Classes",
+		OrderPriorities: "Order Priorities",
+		Portable: "Portable",
+		OrderedBy: "Ordered By",
+		ProcedureTypes: "Procedure Types",
+		ProcedureTypeGroups: "Procedure Type Groups",
+		PatientLocations: "Patient Locations",
+		InterpretedBy: "Interpreted By",
+		TranscribedBy: "Transcribed By",
+		VerifiedBy: "Verified By",
+		SupervisedBy: "Supervised By",
+		
+		AdminOwner: "admin",
+		GroupOwner: "%0 staff group",
+		SelfOwner: "me",
+		WorkingFacility: "(Working Facility",
+		CurrentUser: "(Current User)",
+		PortableYes: "Yes",
+		PortableNo: "No",
+		
+		FromStartOfDay: "from start of %0",
+		FromTime: "from %0",
+		FromAnytime: "anytime",
+		ToEndOfDay: "to end of %0",
+		ToTime: "to %0",
+		ToAnytime: "to anytime"
 	}
 });

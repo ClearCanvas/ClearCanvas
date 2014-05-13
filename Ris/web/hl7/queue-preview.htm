@@ -25,6 +25,20 @@ contact ClearCanvas, Inc. at info@clearcanvas.ca
 			{
 				if(!Ris)
 					return;
+					
+				Label.setValues({
+					labelMessageDetails: SR.HL7Queue.MessageDetails,
+					labelPeer: SR.HL7Queue.Peer,
+					labelDirection: SR.HL7Queue.Direction,
+					labelType: SR.HL7Queue.Type,
+					labelVersion: SR.HL7Queue.Version,
+					labelStatus: SR.HL7Queue.Status,
+					labelCreated: SR.HL7Queue.Created,
+					labelProcessed: SR.HL7Queue.Processed,
+					labelErrorDetails: SR.HL7Queue.ErrorDetails,
+					labelMessageText: SR.HL7Queue.MessageText,
+					labelShowHideClipboardVersion: SR.HL7Queue.ShowHideClipboardVersion				
+				});
 
 				try
 				{
@@ -177,40 +191,40 @@ contact ClearCanvas, Inc. at info@clearcanvas.ca
 	</head>
 	<body onload="javascript: onBodyLoad()">
 		<form id="myForm">
-			<p class="sectionheading">Message Details</p>
+			<p class="sectionheading" id="labelMessageDetails">Message Details</p>
 			<table border="0" class="fixedTableLayout" width="660px" id="orderTable">
 				<tr>
-					<td class="propertyname" width="80x">Peer</td>
+					<td class="propertyname" width="80x" id="labelMessageDetails">Peer</td>
 					<td class="propertyvalue" width="200px"><div id="peer"/></td>
-					<td class="propertyname" width="80px">Direction</td>
+					<td class="propertyname" width="80px" id="labelMessageDetails">Direction</td>
 					<td class="propertyvalue"><div id="direction" /></td>
 				</tr>
 				<tr>
-					<td class="propertyname">Type</td>
+					<td class="propertyname" id="labelType">Type</td>
 					<td class="propertyvalue"><div id="type" /></td>
-					<td class="propertyname">Version</td>
+					<td class="propertyname" id="labelVersion">Version</td>
 					<td class="propertyvalue"><div id="version"/></td>
 				</tr>
 				<tr>
-					<td class="propertyname">Status</td>
+					<td class="propertyname" id="labelStatus">Status</td>
 					<td class="propertyvalue"><div id="status"/></td>
 				</tr>
 				<tr>
-					<td class="propertyname">Created</td>
+					<td class="propertyname" id="labelCreated">Created</td>
 					<td class="propertyvalue"><div id="created"/></td>
-					<td class="propertyname">Processed</td>
+					<td class="propertyname" id="labelProcessed">Processed</td>
 					<td class="propertyvalue"><div id="processed"/></td>
 				</tr>
 			</table>
 
 			<div id="error">
-				<p class="sectionheading">Error Detail</p>
+				<p class="sectionheading" id="labelErrorDetails">Error Details</p>
 				<div id="errorMessage"></div>
 			</div>
-			<p class="sectionheading">Message Text</p>
+			<p class="sectionheading" id="labelMessageText">Message Text</p>
 			<div id="messageTree" class="message">
 				<div id="messageTreeContainer"></div>
-				<div id="copyToClipboard" onclick="javascript: showClipboard()">Show/hide clipboard-friendly version.</div>
+				<div id="copyToClipboard" onclick="javascript: showClipboard()" id="labelShowHideClipboardVersion">Show/hide clipboard-friendly version.</div>
 			</div>
 			<div id="messagePlain" class="message"></div>
 		</form>
