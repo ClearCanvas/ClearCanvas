@@ -38,6 +38,7 @@ var SR = function(resources) {
 	
 	var script = document.createElement("script");
 	script.type = "text/javascript";
+	script.charset = "UTF-8";
 	script.src = String(thisScript.src).replace(/\/[^\/]+\.js$/i, "/resources/" + lang + ".js");
 	
 	// insert SR script right after this script

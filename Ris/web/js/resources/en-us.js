@@ -255,7 +255,7 @@ SR({
 		Subscribers: "Subscribers",
 		Groups: "Groups",
 		Staff: "Staff",
-		Filters: "Filterados",
+		Filters: "Filters",
 		Time: "Time",
 		PerformingFacility: "Performing Facility",
 		PerformingDepartment: "Performing Department",
