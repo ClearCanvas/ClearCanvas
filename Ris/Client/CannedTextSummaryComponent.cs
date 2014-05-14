@@ -39,7 +39,7 @@ using Action = ClearCanvas.Desktop.Actions.Action;
 
 namespace ClearCanvas.Ris.Client
 {
-	[MenuAction("launch", "global-menus/MenuTools/Canned Text", "Launch")]
+	[MenuAction("launch", "global-menus/MenuTools/MenuCannedText", "Launch")]
 	[ActionPermission("launch", Application.Common.AuthorityTokens.Workflow.CannedText.Personal)]
 	[ActionPermission("launch", Application.Common.AuthorityTokens.Workflow.CannedText.Group)]
 	[ExtensionOf(typeof(DesktopToolExtensionPoint), FeatureToken = FeatureTokens.RIS.Core)]

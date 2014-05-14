@@ -35,8 +35,8 @@ using ClearCanvas.Ris.Client.Formatting;
 
 namespace ClearCanvas.Ris.Client.Workflow
 {
-	[MenuAction("apply", "folderexplorer-items-contextmenu/Undo Merge Orders", "Apply")]
-	[Tooltip("apply", "Undo Merge Orders")]
+	[MenuAction("apply", "folderexplorer-items-contextmenu/MenuUndoMergeOrders", "Apply")]
+	[Tooltip("apply", "TooltipUndoMergeOrders")]
 	[IconSet("apply", "UnmergeOrdersSmall.png", "UnmergeOrdersMedium.png", "UnmergeOrdersLarge.png")]
 	[EnabledStateObserver("apply", "Enabled", "EnabledChanged")]
 	[ActionPermission("apply", Application.Common.AuthorityTokens.Workflow.Order.Unmerge)]

@@ -36,7 +36,7 @@ using ClearCanvas.Ris.Application.Common.Admin.EnumerationAdmin;
 
 namespace ClearCanvas.Ris.Client.Admin
 {
-	[MenuAction("launch", "global-menus/Admin/Enumerations", "Launch")]
+	[MenuAction("launch", "global-menus/MenuAdmin/MenuEnumerations", "Launch")]
 	[ActionPermission("launch", Application.Common.AuthorityTokens.Admin.Data.Enumeration)]
 	[ExtensionOf(typeof(DesktopToolExtensionPoint), FeatureToken = FeatureTokens.RIS.Core)]
 	public class EnumerationAdminTool : Tool<IDesktopToolContext>

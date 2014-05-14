@@ -36,7 +36,7 @@ using ClearCanvas.Ris.Application.Common.Admin.NoteCategoryAdmin;
 
 namespace ClearCanvas.Ris.Client.Admin
 {
-    [MenuAction("launch", "global-menus/Admin/Patient Note Categories", "Launch")]
+    [MenuAction("launch", "global-menus/MenuAdmin/MenuPatientNoteCategories", "Launch")]
     [ActionPermission("launch", ClearCanvas.Ris.Application.Common.AuthorityTokens.Admin.Data.PatientNoteCategory)]
 
 	[ExtensionOf(typeof(DesktopToolExtensionPoint), FeatureToken = FeatureTokens.RIS.Core)]

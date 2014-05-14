@@ -34,12 +34,12 @@ using ClearCanvas.Ris.Application.Common.RegistrationWorkflow;
 
 namespace ClearCanvas.Ris.Client.Workflow
 {
-    [ButtonAction("edit", "folderexplorer-items-toolbar/Edit Patient", "Apply")]
-    [MenuAction("edit", "folderexplorer-items-contextmenu/Edit Patient", "Apply")]
-    [ButtonAction("edit", "patientsearch-items-toolbar/Edit Patient", "Apply")]
-    [MenuAction("edit", "patientsearch-items-contextmenu/Edit Patient", "Apply")]
+	[ButtonAction("edit", "folderexplorer-items-toolbar/MenuEditPatient", "Apply")]
+	[MenuAction("edit", "folderexplorer-items-contextmenu/MenuEditPatient", "Apply")]
+	[ButtonAction("edit", "patientsearch-items-toolbar/MenuEditPatient", "Apply")]
+	[MenuAction("edit", "patientsearch-items-contextmenu/MenuEditPatient", "Apply")]
     [EnabledStateObserver("edit", "Enabled", "EnabledChanged")]
-    [Tooltip("edit", "Edit Patient Information")]
+	[Tooltip("edit", "TooltipEditPatient")]
     [IconSet("edit", "Icons.EditPatientToolSmall.png", "Icons.EditPatientToolMedium.png", "Icons.EditPatientToolLarge.png")]
     [ActionPermission("edit", ClearCanvas.Ris.Application.Common.AuthorityTokens.Workflow.Patient.Update)]
 	[ActionPermission("edit", ClearCanvas.Ris.Application.Common.AuthorityTokens.Workflow.PatientProfile.Update)]

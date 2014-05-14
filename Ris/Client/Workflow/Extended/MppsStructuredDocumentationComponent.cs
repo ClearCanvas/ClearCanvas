@@ -116,7 +116,7 @@ namespace ClearCanvas.Ris.Client.Workflow.Extended
 
 		Path IExtensionPage.Path
 		{
-			get { return new Path("Details", new ResourceResolver(this.GetType().Assembly)); }
+			get { return new Path("TitleDetails", new ResourceResolver(this.GetType().Assembly)); }
 		}
 
 		IApplicationComponent IExtensionPage.GetComponent()

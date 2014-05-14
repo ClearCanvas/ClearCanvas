@@ -224,8 +224,7 @@ namespace ClearCanvas.Ris.Client
 					{
 						try
 						{
-							// todo: loc
-							taskContext.ReportProgress(new BackgroundTaskProgress(0, "Generating PDF..."));
+							taskContext.ReportProgress(new BackgroundTaskProgress(0, SR.MessageGeneratingPdf));
 							Platform.GetService<IReportingWorkflowService>(
 								service =>
 								{

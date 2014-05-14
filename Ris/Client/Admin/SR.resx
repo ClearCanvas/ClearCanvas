@@ -414,4 +414,40 @@
   <data name="ValidationAETitleLengthIncorrect" xml:space="preserve">
     <value>The AE Title must be 16 characters or less.</value>
   </data>
+  <data name="MenuAdmin" xml:space="preserve">
+    <value>Admin</value>
+  </data>
+  <data name="MenuDepartments" xml:space="preserve">
+    <value>Departments</value>
+  </data>
+  <data name="MenuEditValidationRules" xml:space="preserve">
+    <value>Edit Validation Rules</value>
+  </data>
+  <data name="MenuEnumerations" xml:space="preserve">
+    <value>Enumerations</value>
+  </data>
+  <data name="MenuFacilities" xml:space="preserve">
+    <value>Facilities</value>
+  </data>
+  <data name="MenuImportData" xml:space="preserve">
+    <value>Import Data</value>
+  </data>
+  <data name="MenuLocations" xml:space="preserve">
+    <value>Locations</value>
+  </data>
+  <data name="MenuModalities" xml:space="preserve">
+    <value>Modalities</value>
+  </data>
+  <data name="MenuPatientNoteCategories" xml:space="preserve">
+    <value>Patient Note Categories</value>
+  </data>
+  <data name="MenuProcedureTypeGroups" xml:space="preserve">
+    <value>Procedure Type Groups</value>
+  </data>
+  <data name="MenuWorklists" xml:space="preserve">
+    <value>Worklists</value>
+  </data>
+  <data name="MenuWorkQueue" xml:space="preserve">
+    <value>Work Queue</value>
+  </data>
 </root>

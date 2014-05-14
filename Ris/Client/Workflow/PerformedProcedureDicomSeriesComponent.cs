@@ -220,7 +220,7 @@ namespace ClearCanvas.Ris.Client.Workflow
 
 		public Path Path
 		{
-			get { return new Path("DICOM Series", new ResourceResolver(this.GetType().Assembly)); }
+			get { return new Path("TitleDicomSeries", new ResourceResolver(this.GetType().Assembly)); }
 		}
 
 		public IApplicationComponent GetComponent()

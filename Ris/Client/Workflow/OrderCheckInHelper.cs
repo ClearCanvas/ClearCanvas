@@ -34,7 +34,7 @@ namespace ClearCanvas.Ris.Client.Workflow
 {
 	public static class OrderCheckInHelper
 	{
-		public static bool CheckIn(EntityRef orderRef, string description, IDesktopWindow desktopWindow)
+		public static bool CheckIn(EntityRef orderRef, string title, IDesktopWindow desktopWindow)
 		{
 			List<ProcedureSummary> procedures = null;
 			Platform.GetService((IRegistrationWorkflowService service) =>
@@ -50,7 +50,7 @@ namespace ClearCanvas.Ris.Client.Workflow
 			var exitCode = ApplicationComponent.LaunchAsDialog(
 				desktopWindow,
 				checkInComponent,
-				String.Format("Checking in {0}", description));
+				title);
 
 			return (exitCode == ApplicationComponentExitCode.Accepted);
 		}

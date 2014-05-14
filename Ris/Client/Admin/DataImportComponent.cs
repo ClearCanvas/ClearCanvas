@@ -40,7 +40,7 @@ using ClearCanvas.Desktop.Validation;
 
 namespace ClearCanvas.Ris.Client.Admin
 {
-    [MenuAction("launch", "global-menus/Admin/Import Data", "Launch")]
+	[MenuAction("launch", "global-menus/MenuAdmin/MenuImportData", "Launch")]
 
 	// JR (may 2008): this tool is not terribly useful or usable - arguably all importing should be done via command line on server
     //[ExtensionOf(typeof(DesktopToolExtensionPoint))]

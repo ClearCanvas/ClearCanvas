@@ -33,8 +33,8 @@ using ClearCanvas.Ris.Client.Formatting;
 
 namespace ClearCanvas.Ris.Client.Workflow
 {
-	[MenuAction("apply", "folderexplorer-items-contextmenu/Cancel Order", "Apply")]
-	[ButtonAction("apply", "folderexplorer-items-toolbar/Cancel Order", "Apply")]
+	[MenuAction("apply", "folderexplorer-items-contextmenu/MenuCancelOrder", "Apply")]
+	[ButtonAction("apply", "folderexplorer-items-toolbar/MenuCancelOrder", "Apply")]
 	[IconSet("apply", "Icons.CancelOrderSmall.png", "Icons.CancelOrderMedium.png", "Icons.CancelOrderLarge.png")]
 	[EnabledStateObserver("apply", "Enabled", "EnabledChanged")]
 	[ActionPermission("apply", Application.Common.AuthorityTokens.Workflow.Order.Cancel)]
