@@ -135,7 +135,7 @@ namespace ClearCanvas.Ris.Application.Services.Admin.EnumerationAdmin
 		{
 			var enumClass = Type.GetType(enumerationName);
 			if (enumClass == null)
-				throw new RequestValidationException("Invalid enumeration name.");
+				throw new RequestValidationException(SR.InvalidRequest_InvalidEnumerationName);
 
 			return enumClass;
 		}
@@ -153,7 +153,7 @@ namespace ClearCanvas.Ris.Application.Services.Admin.EnumerationAdmin
 			// get insertAfter value, which may be null if the value is to be inserted at the beginning
 			var insertAfter = insertAfterCode == null ? null : broker.Find(enumValueClass, insertAfterCode);
 			if (insertAfter != null && insertAfter.Code == code)
-				throw new RequestValidationException("Value cannot be inserted after itself.");
+				throw new RequestValidationException(SR.InvalidRequest_EnumerationValueCannotInsertAfterSelf);
 
 			// get the insertBefore value (the value immediately following insertAfter)
 			// this may be null if insertAfter is the last value in the set
