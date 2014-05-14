@@ -36,6 +36,7 @@ namespace ClearCanvas.ImageServer.Services.Streaming.Shreds
 	/// Plugin to handle DICOM File import requests for the ImageServer.
 	/// </summary>
 	[ExtensionOf(typeof(ShredExtensionPoint))]
+	[ShredIsolationAttribute(Level = ShredIsolationLevel.None)]
 	public class DicomImportServer : WcfShred
 	{
 		#region Private Members

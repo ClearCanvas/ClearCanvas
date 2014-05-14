@@ -34,6 +34,7 @@ namespace ClearCanvas.Ris.Server
 {
 	[ExtensionOf(typeof(ApplicationRootExtensionPoint))]
 	[ExtensionOf(typeof(ShredExtensionPoint))]
+	[ShredIsolation(Level = ShredIsolationLevel.None)]
 	public class Application : Shred, IApplicationRoot
 	{
         private ServiceMount _serviceMount;
