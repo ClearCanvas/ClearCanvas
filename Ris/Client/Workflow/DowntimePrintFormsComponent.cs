@@ -136,7 +136,7 @@ namespace ClearCanvas.Ris.Client.Workflow
 					{
 						taskContext.Error(e);
 					}
-				}, false);
+				}, false) { ThreadUICulture = Desktop.Application.CurrentUICulture };
 
 			ProgressDialog.Show(task, this.Host.DesktopWindow, true, ProgressBarStyle.Marquee);
 

@@ -167,7 +167,7 @@ namespace ClearCanvas.Ris.Client.Admin
                 delegate(IBackgroundTaskContext context)
                 {
                     DoImport(context);
-                }, true);
+				}, true) { ThreadUICulture = Desktop.Application.CurrentUICulture };
 
             try
             {

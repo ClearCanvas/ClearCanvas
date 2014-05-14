@@ -337,6 +337,8 @@ namespace ClearCanvas.Enterprise.Common
 				interceptors.Add(_responseCachingAdvice);
 			}
 
+			interceptors.Add(new CultureClientSideAdvice());
+
 			// if failover was defined, add fail-over advice at the end of the list, closest the target call
 			if(_failoverAdvice != null)
 			{

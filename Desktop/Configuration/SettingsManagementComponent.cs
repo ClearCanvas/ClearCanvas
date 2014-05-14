@@ -539,7 +539,7 @@ namespace ClearCanvas.Desktop.Configuration
 						_settingsStore.ImportSettingsGroup(group, props);
 					}
 				},
-				true);
+				true) { ThreadUICulture = Desktop.Application.CurrentUICulture };
 
 			ProgressDialog.Show(task, this.Host.DesktopWindow);
 		}

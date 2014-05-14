@@ -95,6 +95,7 @@
     <Compile Include="AuditLogEntry.cs" />
     <Compile Include="Audit\AuditLogEntryAssembler.cs" />
     <Compile Include="Audit\AuditService.cs" />
+    <Compile Include="CultureServerSideAdvice.cs" />
     <Compile Include="DeadlockException.cs" />
     <Compile Include="DeadlockRetryAdvice.cs" />
     <Compile Include="DeadlockRetryManager.cs" />

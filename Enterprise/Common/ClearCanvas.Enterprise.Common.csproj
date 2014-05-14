@@ -160,6 +160,8 @@
     <Compile Include="Configuration\IApplicationConfigurationReadService.cs" />
     <Compile Include="Configuration\ImportSettingsGroupRequest.cs" />
     <Compile Include="Configuration\ImportSettingsGroupResponse.cs" />
+    <Compile Include="CultureAdviceBase.cs" />
+    <Compile Include="CultureClientSideAdvice.cs" />
     <Compile Include="IResponseDataCachingStrategy.cs" />
     <Compile Include="Configuration\ListConfigurationDocumentsRequest.cs" />
     <Compile Include="Configuration\ListConfigurationDocumentsResponse.cs" />

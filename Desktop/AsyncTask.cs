@@ -40,6 +40,12 @@ namespace ClearCanvas.Desktop
 		private Action _continuationCode;
 		private Action<Exception> _errorHandler;
 
+		public AsyncTask()
+		{
+			// default ThreadUICulture to the value of the desktop application
+			ThreadUICulture = Desktop.Application.CurrentUICulture;
+		}
+
 		/// <summary>
 		/// Runs specified code asynchronously, executing the continuation code when the asynchronous code completes.
 		/// </summary>
