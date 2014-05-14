@@ -79,7 +79,7 @@ SR({
 		
 		OrderedProcedures: "Ordered Procedures",
 		Status: "Status",
-		PerformingFacility: "Performring Facility",
+		PerformingFacility: "Performing Facility",
 		ScheduledStartTime: "Scheduled Start Time",
 		SchedulingCode: "Scheduled Code",
 		CheckInTime: "Check-In Time",
@@ -231,7 +231,7 @@ SR({
 	},
 	
 	WorkQueue: {
-		Overview: "Overwiew",
+		Overview: "Overview",
 		CreationTime: "Creation Time",
 		ExpirationTime: "Expiration Time",
 		ScheduledTime: "Scheduled Time",
