@@ -36,7 +36,7 @@ using ClearCanvas.Ris.Application.Common.Admin.DepartmentAdmin;
 
 namespace ClearCanvas.Ris.Client.Admin
 {
-	[MenuAction("launch", "global-menus/Admin/Departments", "Launch")]
+	[MenuAction("launch", "global-menus/MenuAdmin/MenuDepartments", "Launch")]
 	[ActionPermission("launch", ClearCanvas.Ris.Application.Common.AuthorityTokens.Admin.Data.Department)]
 	[ExtensionOf(typeof(DesktopToolExtensionPoint), FeatureToken = FeatureTokens.RIS.Core)]
 	public class DepartmentAdminTool : Tool<IDesktopToolContext>

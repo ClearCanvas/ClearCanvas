@@ -31,9 +31,8 @@ using ClearCanvas.Ris.Application.Common.ReportingWorkflow;
 
 namespace ClearCanvas.Ris.Client.Workflow
 {
-	//todo: loc
-	[MenuAction("apply", "folderexplorer-items-contextmenu/Print Report", "Apply")]
-	[ButtonAction("apply", "folderexplorer-items-toolbar/Print Report", "Apply")]
+	[MenuAction("apply", "folderexplorer-items-contextmenu/MenuPrintReport", "Apply")]
+	[ButtonAction("apply", "folderexplorer-items-toolbar/MenuPrintReport", "Apply")]
 	[IconSet("apply", "Icons.PrintSmall.png", "Icons.PrintMedium.png", "Icons.PrintLarge.png")]
 	[EnabledStateObserver("apply", "Enabled", "EnabledChanged")]
 	[ExtensionOf(typeof(ReportingWorkflowItemToolExtensionPoint))]
@@ -63,8 +62,7 @@ namespace ClearCanvas.Ris.Client.Workflow
 
 			try
 			{
-				//todo: loc
-				var title = string.Format("Print Report for {0} {1} -  {2}",
+				var title = string.Format(SR.FormatPrintReportMessage,
 										  Formatting.MrnFormat.Format(item.Mrn),
 										  Formatting.PersonNameFormat.Format(item.PatientName),
 										  Formatting.AccessionFormat.Format(item.AccessionNumber));

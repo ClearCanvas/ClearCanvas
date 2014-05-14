@@ -35,7 +35,7 @@ using ClearCanvas.Ris.Application.Common.Admin.ProcedureTypeAdmin;
 
 namespace ClearCanvas.Ris.Client
 {
-	[MenuAction("launch", "global-menus/Admin/Procedure Types", "Launch")]
+	[MenuAction("launch", "global-menus/MenuAdmin/MenuProcedureTypes", "Launch")]
 	[ActionPermission("launch", ClearCanvas.Ris.Application.Common.AuthorityTokens.Admin.Data.ProcedureType)]
 	[ExtensionOf(typeof(DesktopToolExtensionPoint), FeatureToken = FeatureTokens.RIS.Core)]
 	public class ProcedureTypeAdminTool : Tool<IDesktopToolContext>

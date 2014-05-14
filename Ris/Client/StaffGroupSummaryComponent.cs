@@ -37,7 +37,7 @@ using ClearCanvas.Common.Utilities;
 
 namespace ClearCanvas.Ris.Client
 {
-    [MenuAction("launch", "global-menus/Admin/Staff Groups", "Launch")]
+	[MenuAction("launch", "global-menus/MenuAdmin/MenuStaffGroups", "Launch")]
 	[ActionPermission("launch", Application.Common.AuthorityTokens.Admin.Data.StaffGroup)]
 	[ExtensionOf(typeof(DesktopToolExtensionPoint), FeatureToken = FeatureTokens.RIS.Core)]
     public class StaffGroupAdminTool : Tool<IDesktopToolContext>

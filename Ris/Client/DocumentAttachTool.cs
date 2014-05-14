@@ -31,8 +31,8 @@ using ClearCanvas.Desktop.Tools;
 
 namespace ClearCanvas.Ris.Client
 {
-	[MenuAction("apply", "attached-document-items/Add", "Apply")]
-	[ButtonAction("apply", "attached-document-items/Add", "Apply")]
+	[MenuAction("apply", "attached-document-items/MenuAdd", "Apply")]
+	[ButtonAction("apply", "attached-document-items/MenuAdd", "Apply")]
 	[IconSet("apply", "Icons.AddToolSmall.png", "Icons.AddToolSmall.png", "Icons.AddToolSmall.png")]
 	[VisibleStateObserver("apply", "Visible")]
 	[ExtensionOf(typeof(AttachedDocumentToolExtensionPoint))]

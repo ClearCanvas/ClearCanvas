@@ -3,6 +3,7 @@
 	<head>
 		<title>Attached Document Preview Page</title>
 		<link href="./css/default.css" rel="stylesheet" type="text/css" />
+		<script type="text/javascript" src="./js/SR.js"></script>
 		<script type="text/javascript" src="./js/jsx.js"></script>
 		<script type="text/javascript" src="./js/jsml.js"></script>
 		<script type="text/javascript" src="./js/ui.js"></script>
@@ -18,6 +19,16 @@
 				{
 					if(!Ris)
 						return;
+						
+					Label.setValues({
+						pdfPluginError: SR.AttachedDocumentPreview.PluginError,
+						labelSender: SR.AttachedDocumentPreview.Sender,
+						labelSenderNumber: SR.AttachedDocumentPreview.SenderNumber,
+						labelReceivedAt: SR.AttachedDocumentPreview.ReceivedAt,
+						labelReceivedAtNumber: SR.AttachedDocumentPreview.ReceivedAtNumber,
+					});
+	
+						
 
 					var document = Ris.getHealthcareContext();
 					if(!document) {
@@ -92,12 +103,12 @@
 		<div id="faxPreviewInfo">
 			<table border="0" cellspacing="0" cellpadding="0" class="PatientDemographicsTable">
 				<tr>
-					<td valign="top" class="DemographicsLabel" nowrap="nowrap">Sender: </td><td valign="top" class="DemographicsCell" nowrap="nowrap"><div id="senderName"/></td>
-					<td valign="top" class="DemographicsLabel" nowrap="nowrap">Sender Number: </td><td valign="top" class="DemographicsCell" nowrap="nowrap"><div id="senderNumber"/></td>
+					<td valign="top" class="DemographicsLabel" nowrap="nowrap" id="labelSender">Sender: </td><td valign="top" class="DemographicsCell" nowrap="nowrap"><div id="senderName"/></td>
+					<td valign="top" class="DemographicsLabel" nowrap="nowrap" id="labelSenderNumber">Sender Number: </td><td valign="top" class="DemographicsCell" nowrap="nowrap"><div id="senderNumber"/></td>
 				</tr>
 				<tr>
-					<td valign="top" class="DemographicsLabel" nowrap="nowrap">Received At: </td><td valign="top" class="DemographicsCell" nowrap="nowrap"><div id="receivedAt"/></td>
-					<td valign="top" class="DemographicsLabel" nowrap="nowrap">Received At Number: </td><td valign="top" class="DemographicsCell" nowrap="nowrap"><div id="receivedAtNumber"/></td>
+					<td valign="top" class="DemographicsLabel" nowrap="nowrap" id="labelReceivedAt">Received At: </td><td valign="top" class="DemographicsCell" nowrap="nowrap"><div id="receivedAt"/></td>
+					<td valign="top" class="DemographicsLabel" nowrap="nowrap" id="labelReceivedAtNumber">Received At Number: </td><td valign="top" class="DemographicsCell" nowrap="nowrap"><div id="receivedAtNumber"/></td>
 				</tr>
 			</table>
 		</div>

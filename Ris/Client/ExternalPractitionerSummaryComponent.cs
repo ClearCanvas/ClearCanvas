@@ -38,7 +38,7 @@ using Action = ClearCanvas.Desktop.Actions.Action;
 
 namespace ClearCanvas.Ris.Client
 {
-	[MenuAction("launch", "global-menus/Admin/External Practitioners", "Launch")]
+	[MenuAction("launch", "global-menus/MenuAdmin/MenuExternalPractitioners", "Launch")]
 	[ActionPermission("launch", ClearCanvas.Ris.Application.Common.AuthorityTokens.Admin.Data.ExternalPractitioner)]
 	[ExtensionOf(typeof(DesktopToolExtensionPoint), FeatureToken = FeatureTokens.RIS.Core)]
 	public class ExternalPractitionerSummaryTool : Tool<IDesktopToolContext>

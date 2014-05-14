@@ -37,7 +37,7 @@ using ClearCanvas.Ris.Application.Common.Admin.LocationAdmin;
 
 namespace ClearCanvas.Ris.Client.Admin
 {
-    [MenuAction("launch", "global-menus/Admin/Locations", "Launch")]
+    [MenuAction("launch", "global-menus/MenuAdmin/MenuLocations", "Launch")]
     [VisibleStateObserver("launch", "Visible")]
 	[ActionPermission("launch", ClearCanvas.Ris.Application.Common.AuthorityTokens.Admin.Data.Location)]
 	[ExtensionOf(typeof(DesktopToolExtensionPoint), FeatureToken = FeatureTokens.RIS.Core)]

@@ -514,7 +514,4 @@ You can configure this item, but you do not have permission to use it.</value>
   <data name="MessageDisplayLanguageChangedRestartRequired" xml:space="preserve">
     <value>The application must restart in order to apply the new display language. Would you like to restart now?</value>
   </data>
-  <data name="MessageConfirmImportSettingsMetaData" xml:space="preserve">
-    <value>Import settings meta-data defined in locally installed plugins?</value>
-  </data>
 </root>

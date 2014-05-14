@@ -31,6 +31,7 @@ using System.Xml;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Enterprise.Core;
+using ClearCanvas.Enterprise.Core.Modelling;
 using NHibernate.Mapping;
 using NHibernate.Cfg;
 
@@ -138,8 +139,8 @@ namespace ClearCanvas.Enterprise.Hibernate.Ddl
 						EnumValueAttribute attr = AttributeUtils.GetAttribute<EnumValueAttribute>(fi);
 						return new EnumerationMemberInfo(
 							code,
-							attr != null ? attr.Value : null,
-							attr != null ? attr.Description : null,
+							attr != null ? TerminologyTranslator.Translate(enumType, attr.Value) : null,
+							attr != null ? TerminologyTranslator.Translate(enumType, attr.Description) : null,
 							displayOrder++,
 							false);
 					}));

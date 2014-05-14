@@ -3,6 +3,7 @@
 	<head>
         <title>Default Addendum Editor</title>
         <link href="../css/default.css" rel="stylesheet" type="text/css" />
+		<script type="text/javascript" src="../js/SR.js"></script>
         <script type="text/javascript" src="../js/jsx.js"></script>
 	    <script type="text/javascript" src="../js/jsml.js"></script>
 	    <script type="text/javascript" src="../js/ui.js"></script>
@@ -12,7 +13,11 @@
 		    {		        
 		        if(!Ris)
 		            return;
-
+				
+				Label.setValues({
+					labelAddendum: SR.ReportEditor.Addendum
+				});
+				
 	            try
 	            {
                     var content = Ris.getTag("ReportContent");
@@ -35,7 +40,7 @@
 	</head>
 	<body onload="javascript: onBodyLoad()" style="padding-top:0">
 		<form id="myForm" style="padding-top:0">
-		    <p class="sectionheading">Addendum</p>
+		    <p class="sectionheading" id="labelAddendum">Addendum</p>
 			<textarea style="width:99%" rows="5" border="0" id="addendum"></textarea>
 		</form>
 	</body>

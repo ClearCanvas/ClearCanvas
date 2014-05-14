@@ -509,7 +509,9 @@ namespace ClearCanvas.Ris.Client
 		/// <param name="url"></param>
 		public void SetUrl(string url)
 		{
-			this.HtmlPageUrl = string.IsNullOrEmpty(url) ? null : new Uri(url);
+			this.HtmlPageUrl = string.IsNullOrEmpty(url)
+				? null
+				: new Uri(string.Format("{0}?{1}", url, UrlQueryString.Build(new {lang = InstalledLocales.Instance.Selected.Culture})));
 		}
 
 		/// <summary>
@@ -560,7 +562,7 @@ namespace ClearCanvas.Ris.Client
 		public Uri HtmlPageUrl
 		{
 			get { return _htmlPageUrl; }
-			protected set
+			private set
 			{
 				// Do not assume same url implies page should not be reloaded
 				_htmlPageUrl = value;
