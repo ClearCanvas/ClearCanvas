@@ -52,3 +52,6 @@ Therefore,
 You are now ready to make changes to the code in your private fork/clone.
 
 
+Community-contributed plugins
+-----------------------------------------
+A separate [repository] (https://github.com/ClearCanvas/ClearCanvas-Contrib) now exists to provide a central location for ClearCanvas plugin developers to share plugins with the ClearCanvas development community.
