@@ -34,7 +34,8 @@ var SR = function(resources) {
 	
 	// get language from query string, defaulting to en-us if not specified
 	var qsMap = parseQueryString(String(window.location));
-	var lang = qsMap["lang"] || "en-us"; 
+	var lang = qsMap["lang"] || "en-us";
+  if (lang == "en") lang = "en-us";
 	
 	var script = document.createElement("script");
 	script.type = "text/javascript";
