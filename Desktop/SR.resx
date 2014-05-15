@@ -529,4 +529,7 @@ You can configure this item, but you do not have permission to use it.</value>
   <data name="FormatDateInPastDays">
     <value xml:space="preserve">{0} days ago</value>
   </data>
+  <data name="ColumnWorkspace">
+    <value xml:space="preserve">Workspace</value>
+  </data>
 </root>
