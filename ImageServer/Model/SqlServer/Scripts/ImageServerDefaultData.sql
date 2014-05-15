@@ -1252,3 +1252,35 @@ INSERT INTO [ImageServer].[dbo].[ExternalRequestQueueStatusEnum]
      VALUES
            (newid(),203,'Failed','Failed','The Queue entry has failed.')
 GO
+
+
+-- OrderStatusEnum inserts
+INSERT INTO [ImageServer].[dbo].[OrderStatusEnum]
+           ([GUID],[Enum],[Lookup],[Description],[LongDescription])
+     VALUES
+           (newid(),101,'NW','New','New Order')
+GO
+
+INSERT INTO [ImageServer].[dbo].[OrderStatusEnum]
+           ([GUID],[Enum],[Lookup],[Description],[LongDescription])
+     VALUES
+           (newid(),102,'OC','Canceled','Order Cancelled')
+GO
+
+INSERT INTO [ImageServer].[dbo].[OrderStatusEnum]
+           ([GUID],[Enum],[Lookup],[Description],[LongDescription])
+     VALUES
+           (newid(),103,'DC','Discontinued','Order Discontinued')
+GO
+
+INSERT INTO [ImageServer].[dbo].[OrderStatusEnum]
+           ([GUID],[Enum],[Lookup],[Description],[LongDescription])
+     VALUES
+           (newid(),104,'CM','Completed','Order Completed')
+GO
+
+INSERT INTO [ImageServer].[dbo].[OrderStatusEnum]
+           ([GUID],[Enum],[Lookup],[Description],[LongDescription])
+     VALUES
+           (newid(),105,'IP','In Process','Order In Process')
+GO

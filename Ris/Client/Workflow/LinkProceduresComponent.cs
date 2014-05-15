@@ -74,7 +74,8 @@ namespace ClearCanvas.Ris.Client.Workflow
 		public override void Start()
 		{
 			_candidateTable = new Table<Checkable<ReportingWorklistItemSummary>>();
-			_candidateTable.Columns.Add(new TableColumn<Checkable<ReportingWorklistItemSummary>, bool>(".",
+			const string checkedColumnName = ".";
+			_candidateTable.Columns.Add(new TableColumn<Checkable<ReportingWorklistItemSummary>, bool>(checkedColumnName,
 				delegate(Checkable<ReportingWorklistItemSummary> item) { return item.IsChecked; },
 				delegate(Checkable<ReportingWorklistItemSummary> item, bool value) { item.IsChecked = value; }, 0.20f));
 			_candidateTable.Columns.Add(new TableColumn<Checkable<ReportingWorklistItemSummary>, string>(SR.ColumnProcedure,

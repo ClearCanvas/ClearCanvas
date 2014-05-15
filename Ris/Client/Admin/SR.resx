@@ -450,4 +450,49 @@
   <data name="MenuWorkQueue" xml:space="preserve">
     <value>Work Queue</value>
   </data>
+  <data name="FormatTitleSubtitle">
+    <value xml:space="preserve">{0} - {1}</value>
+  </data>
+  <data name="ColumnOwner">
+    <value xml:space="preserve">Owner</value>
+  </data>
+  <data name="ColumnClass">
+    <value xml:space="preserve">Class</value>
+  </data>
+  <data name="ColumnNamespace">
+    <value xml:space="preserve">Namespace</value>
+  </data>
+  <data name="ColumnComponent">
+    <value xml:space="preserve">Component</value>
+  </data>
+  <data name="TitleUiValidationManagement">
+    <value xml:space="preserve">UI Validation Management</value>
+  </data>
+  <data name="MessageSyntaxErrorInOneOrMoreRules">
+    <value xml:space="preserve">One or more rules have syntax errors which must be corrected first.</value>
+  </data>
+  <data name="FormatMessageRuleNotBoundToValidProperty">
+    <value xml:space="preserve">Rule {0} is not bound to a valid property.</value>
+  </data>
+  <data name="FormatMessageErrorParsingRule">
+    <value xml:space="preserve">Error parsing rule {0}</value>
+  </data>
+  <data name="ColumnTestResult">
+    <value xml:space="preserve">Test Result</value>
+  </data>
+  <data name="ColumnBoundProperty">
+    <value xml:space="preserve">Bound Property</value>
+  </data>
+  <data name="FormatTitleSubtitleCategory">
+    <value xml:space="preserve">{0} - {1} ({2})</value>
+  </data>
+  <data name="FormatTitleCodeSubtitle">
+    <value xml:space="preserve">{0} - ({1}) {2}</value>
+  </data>
+  <data name="TitleDepartments">
+    <value xml:space="preserve">Departments</value>
+  </data>
+  <data name="MessageImportFailed">
+    <value xml:space="preserve">Import failed</value>
+  </data>
 </root>

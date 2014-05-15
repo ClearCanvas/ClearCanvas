@@ -160,7 +160,7 @@ namespace ClearCanvas.Ris.Client.Admin
 
 			NoteCategoryEditorComponent editor = new NoteCategoryEditorComponent(item.NoteCategoryRef);
 			ApplicationComponentExitCode exitCode = ApplicationComponent.LaunchAsDialog(
-				this.Host.DesktopWindow, editor, SR.TitleUpdateNoteCategory + " - " + item.Name);
+				this.Host.DesktopWindow, editor, string.Format(SR.FormatTitleSubtitle, SR.TitleUpdateNoteCategory, item.Name));
 			if (exitCode == ApplicationComponentExitCode.Accepted)
 			{
 				editedItems.Add(editor.NoteCategorySummary);

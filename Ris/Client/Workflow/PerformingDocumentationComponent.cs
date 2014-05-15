@@ -364,7 +364,7 @@ namespace ClearCanvas.Ris.Client.Workflow
 					checkedItems,
 					item => item.ModalityProcedureStep.Modality.Id != firstItem.ModalityProcedureStep.Modality.Id))
 				{
-					this.Host.ShowMessageBox("Cannot start procedure steps of different modalities at the same time.",
+					this.Host.ShowMessageBox(SR.MessageCannotStartDifferentModalityProcedureStepsAtSameTime,
 											 MessageBoxActions.Ok);
 					return;
 				}
@@ -378,7 +378,7 @@ namespace ClearCanvas.Ris.Client.Workflow
 					DateTime? startTime = Platform.Time;
 					if (DowntimeRecovery.InDowntimeRecoveryMode)
 					{
-						if (!DateTimeEntryComponent.PromptForTime(this.Host.DesktopWindow, "Start Time", false, ref startTime))
+						if (!DateTimeEntryComponent.PromptForTime(this.Host.DesktopWindow, SR.TitleStartTime, false, ref startTime))
 							return;
 					}
 
@@ -413,12 +413,12 @@ namespace ClearCanvas.Ris.Client.Workflow
 
 				if (checkedMpsRefs.Count > 0)
 				{
-					if (this.Host.DesktopWindow.ShowMessageBox("Are you sure you want to discontinue the selected procedure(s)?", MessageBoxActions.YesNo) != DialogBoxAction.No)
+					if (this.Host.DesktopWindow.ShowMessageBox(SR.MessageConfirmDiscontinueSelectedProcedures, MessageBoxActions.YesNo) != DialogBoxAction.No)
 					{
 						DateTime? discontinueTime = Platform.Time;
 						if (DowntimeRecovery.InDowntimeRecoveryMode)
 						{
-							if (!DateTimeEntryComponent.PromptForTime(this.Host.DesktopWindow, "Cancel Time", false, ref discontinueTime))
+							if (!DateTimeEntryComponent.PromptForTime(this.Host.DesktopWindow, SR.TitleCancelTime, false, ref discontinueTime))
 								return;
 						}
 

@@ -102,7 +102,7 @@ namespace ClearCanvas.Ris.Client.Workflow
 			ApplicationComponent.LaunchAsDialog(
 				window,
 				new WorkflowHistoryComponent(orderRef),
-				"Workflow History");
+				SR.TitleWorkflowHistory);
 		}
 	}
 }

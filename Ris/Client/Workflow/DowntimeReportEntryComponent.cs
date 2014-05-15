@@ -89,7 +89,7 @@ namespace ClearCanvas.Ris.Client.Workflow
 			var exitCode = ApplicationComponent.LaunchAsDialog(
 				this.Context.DesktopWindow,
 				new DowntimeReportEntryComponent(item.ProcedureRef),
-				"Complete Downtime Recovery");
+				SR.TitleCompleteDowntimeRecovery);
 
 			if (exitCode == ApplicationComponentExitCode.Accepted)
 			{

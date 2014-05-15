@@ -233,7 +233,7 @@ namespace ClearCanvas.Ris.Client.Workflow
 			if (!ViewImagesHelper.IsSupported)
 			{
 				// this should not happen because the tool will be invisible
-				desktopWindow.ShowMessageBox("No image viewing support.", MessageBoxActions.Ok);
+				desktopWindow.ShowMessageBox(SR.MessageNoViewerSupport, MessageBoxActions.Ok);
 				return false;
 			}
 			return true;

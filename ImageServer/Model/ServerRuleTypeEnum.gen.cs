@@ -97,7 +97,7 @@ public partial class ServerRuleTypeEnum : ServerEnum
           get { return _DataAccess; }
       }
       /// <summary>
-      /// StudyQualityControl
+      /// A rule for quality control purposes when studies are received
       /// </summary>
       public static ServerRuleTypeEnum StudyQualityControl
       {

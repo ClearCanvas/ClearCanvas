@@ -156,7 +156,7 @@ namespace ClearCanvas.Ris.Client.Admin
 			var item = CollectionUtils.FirstElement(items);
 			var editor = new FacilityEditorComponent(item.FacilityRef);
 			if (ApplicationComponentExitCode.Accepted == 
-				LaunchAsDialog(this.Host.DesktopWindow, editor, SR.TitleUpdateFacility + " - " + item.Name))
+				LaunchAsDialog(this.Host.DesktopWindow, editor, string.Format(SR.FormatTitleSubtitle, SR.TitleUpdateFacility, item.Name)))
 			{
 				editedItems.Add(editor.FacilitySummary);
 				return true;

@@ -84,7 +84,7 @@ namespace ClearCanvas.Ris.Client.Workflow
 		protected override bool Execute(ReportingWorklistItemSummary item)
 		{
 			TranscriptionRejectReasonComponent component = new TranscriptionRejectReasonComponent();
-			if (this.Context.DesktopWindow.ShowDialogBox(component, "Reason") == DialogBoxAction.Ok)
+			if (this.Context.DesktopWindow.ShowDialogBox(component, SR.TitleReason) == DialogBoxAction.Ok)
 			{
 				Platform.GetService<ITranscriptionWorkflowService>(
 					delegate(ITranscriptionWorkflowService service)

@@ -70,6 +70,15 @@ namespace ClearCanvas.Ris.Client.Admin {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Bound Property.
+        /// </summary>
+        internal static string ColumnBoundProperty {
+            get {
+                return ResourceManager.GetString("ColumnBoundProperty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Building.
         /// </summary>
         internal static string ColumnBuilding {
@@ -88,11 +97,29 @@ namespace ClearCanvas.Ris.Client.Admin {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Class.
+        /// </summary>
+        internal static string ColumnClass {
+            get {
+                return ResourceManager.GetString("ColumnClass", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Code.
         /// </summary>
         internal static string ColumnCode {
             get {
                 return ResourceManager.GetString("ColumnCode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Component.
+        /// </summary>
+        internal static string ColumnComponent {
+            get {
+                return ResourceManager.GetString("ColumnComponent", resourceCulture);
             }
         }
         
@@ -268,6 +295,24 @@ namespace ClearCanvas.Ris.Client.Admin {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Namespace.
+        /// </summary>
+        internal static string ColumnNamespace {
+            get {
+                return ResourceManager.GetString("ColumnNamespace", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Owner.
+        /// </summary>
+        internal static string ColumnOwner {
+            get {
+                return ResourceManager.GetString("ColumnOwner", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Peer.
         /// </summary>
         internal static string ColumnPeer {
@@ -345,6 +390,15 @@ namespace ClearCanvas.Ris.Client.Admin {
         internal static string ColumnSuffix {
             get {
                 return ResourceManager.GetString("ColumnSuffix", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Test Result.
+        /// </summary>
+        internal static string ColumnTestResult {
+            get {
+                return ResourceManager.GetString("ColumnTestResult", resourceCulture);
             }
         }
         
@@ -480,6 +534,51 @@ namespace ClearCanvas.Ris.Client.Admin {
         internal static string ExceptionSaveValidationRules {
             get {
                 return ResourceManager.GetString("ExceptionSaveValidationRules", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error parsing rule {0}.
+        /// </summary>
+        internal static string FormatMessageErrorParsingRule {
+            get {
+                return ResourceManager.GetString("FormatMessageErrorParsingRule", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rule {0} is not bound to a valid property..
+        /// </summary>
+        internal static string FormatMessageRuleNotBoundToValidProperty {
+            get {
+                return ResourceManager.GetString("FormatMessageRuleNotBoundToValidProperty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} - ({1}) {2}.
+        /// </summary>
+        internal static string FormatTitleCodeSubtitle {
+            get {
+                return ResourceManager.GetString("FormatTitleCodeSubtitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} - {1}.
+        /// </summary>
+        internal static string FormatTitleSubtitle {
+            get {
+                return ResourceManager.GetString("FormatTitleSubtitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} - {1} ({2}).
+        /// </summary>
+        internal static string FormatTitleSubtitleCategory {
+            get {
+                return ResourceManager.GetString("FormatTitleSubtitleCategory", resourceCulture);
             }
         }
         
@@ -673,6 +772,15 @@ namespace ClearCanvas.Ris.Client.Admin {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Import failed.
+        /// </summary>
+        internal static string MessageImportFailed {
+            get {
+                return ResourceManager.GetString("MessageImportFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The Staff person {0} is already associated with user {1}.  You must edit that user and clear the association..
         /// </summary>
         internal static string MessageStaffAlreadyAssociated {
@@ -687,6 +795,15 @@ namespace ClearCanvas.Ris.Client.Admin {
         internal static string MessageStaffChangeAssociation {
             get {
                 return ResourceManager.GetString("MessageStaffChangeAssociation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to One or more rules have syntax errors which must be corrected first..
+        /// </summary>
+        internal static string MessageSyntaxErrorInOneOrMoreRules {
+            get {
+                return ResourceManager.GetString("MessageSyntaxErrorInOneOrMoreRules", resourceCulture);
             }
         }
         
@@ -844,6 +961,15 @@ namespace ClearCanvas.Ris.Client.Admin {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Departments.
+        /// </summary>
+        internal static string TitleDepartments {
+            get {
+                return ResourceManager.GetString("TitleDepartments", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Duplicate.
         /// </summary>
         internal static string TitleDuplicate {
@@ -948,6 +1074,15 @@ namespace ClearCanvas.Ris.Client.Admin {
         internal static string TitleProcedureTypeGroup {
             get {
                 return ResourceManager.GetString("TitleProcedureTypeGroup", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to UI Validation Management.
+        /// </summary>
+        internal static string TitleUiValidationManagement {
+            get {
+                return ResourceManager.GetString("TitleUiValidationManagement", resourceCulture);
             }
         }
         

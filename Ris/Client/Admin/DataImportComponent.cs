@@ -177,7 +177,7 @@ namespace ClearCanvas.Ris.Client.Admin
             catch (Exception e)
             {
                 // we know that the background task has wrapped up an inner exception, so extract it
-                ExceptionHandler.Report(e, "Import failed", this.Host.DesktopWindow);
+                ExceptionHandler.Report(e, SR.MessageImportFailed, this.Host.DesktopWindow);
             }
         }
 
