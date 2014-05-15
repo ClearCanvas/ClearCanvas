@@ -181,7 +181,7 @@
     <value>0</value>
   </data>
   <data name="_buttonOk.Text" xml:space="preserve">
-    <value>Ok</value>
+    <value>OK</value>
   </data>
   <data name="&gt;&gt;_buttonOk.Name" xml:space="preserve">
     <value>_buttonOk</value>
@@ -703,7 +703,7 @@
     <value>_outputDpi</value>
   </data>
   <data name="&gt;&gt;_outputDpi.Type" xml:space="preserve">
-    <value>System.Windows.Forms.NumericUpDown, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>ClearCanvas.Desktop.View.WinForms.NonEmptyNumericUpDown, ClearCanvas.Desktop.View.WinForms, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;_outputDpi.Parent" xml:space="preserve">
     <value>_groupDpi</value>
