@@ -844,6 +844,231 @@ namespace ClearCanvas.Ris.Client.Workflow {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Active.
+        /// </summary>
+        internal static string FolderActive {
+            get {
+                return ResourceManager.GetString("FolderActive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Active Reporting Items.
+        /// </summary>
+        internal static string FolderActiveReportingItems {
+            get {
+                return ResourceManager.GetString("FolderActiveReportingItems", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Awaiting Review.
+        /// </summary>
+        internal static string FolderAwaitingReview {
+            get {
+                return ResourceManager.GetString("FolderAwaitingReview", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Canceled.
+        /// </summary>
+        internal static string FolderCanceled {
+            get {
+                return ResourceManager.GetString("FolderCanceled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Checked In.
+        /// </summary>
+        internal static string FolderCheckedIn {
+            get {
+                return ResourceManager.GetString("FolderCheckedIn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Completed.
+        /// </summary>
+        internal static string FolderCompleted {
+            get {
+                return ResourceManager.GetString("FolderCompleted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Corrected.
+        /// </summary>
+        internal static string FolderCorrected {
+            get {
+                return ResourceManager.GetString("FolderCorrected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Draft.
+        /// </summary>
+        internal static string FolderDraft {
+            get {
+                return ResourceManager.GetString("FolderDraft", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Finalized.
+        /// </summary>
+        internal static string FolderFinalized {
+            get {
+                return ResourceManager.GetString("FolderFinalized", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Incomplete Documentation.
+        /// </summary>
+        internal static string FolderIncompleteDocumentation {
+            get {
+                return ResourceManager.GetString("FolderIncompleteDocumentation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to InProgress.
+        /// </summary>
+        internal static string FolderInProgress {
+            get {
+                return ResourceManager.GetString("FolderInProgress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to In Transcription.
+        /// </summary>
+        internal static string FolderInTranscription {
+            get {
+                return ResourceManager.GetString("FolderInTranscription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to My Items.
+        /// </summary>
+        internal static string FolderMyItems {
+            get {
+                return ResourceManager.GetString("FolderMyItems", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Performed.
+        /// </summary>
+        internal static string FolderPerformed {
+            get {
+                return ResourceManager.GetString("FolderPerformed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Preliminary.
+        /// </summary>
+        internal static string FolderPreliminary {
+            get {
+                return ResourceManager.GetString("FolderPreliminary", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Review Transcription.
+        /// </summary>
+        internal static string FolderReviewTranscription {
+            get {
+                return ResourceManager.GetString("FolderReviewTranscription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Scheduled.
+        /// </summary>
+        internal static string FolderScheduled {
+            get {
+                return ResourceManager.GetString("FolderScheduled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Search Results.
+        /// </summary>
+        internal static string FolderSearchResults {
+            get {
+                return ResourceManager.GetString("FolderSearchResults", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to To be Reported.
+        /// </summary>
+        internal static string FolderToBeReported {
+            get {
+                return ResourceManager.GetString("FolderToBeReported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to To be Reviewed.
+        /// </summary>
+        internal static string FolderToBeReviewed {
+            get {
+                return ResourceManager.GetString("FolderToBeReviewed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to To be Transcribed.
+        /// </summary>
+        internal static string FolderToBeTranscribed {
+            get {
+                return ResourceManager.GetString("FolderToBeTranscribed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to To be Transcribed Items.
+        /// </summary>
+        internal static string FolderToBeTranscribedItems {
+            get {
+                return ResourceManager.GetString("FolderToBeTranscribedItems", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tracking.
+        /// </summary>
+        internal static string FolderTracking {
+            get {
+                return ResourceManager.GetString("FolderTracking", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unreported Items.
+        /// </summary>
+        internal static string FolderUnreportedItems {
+            get {
+                return ResourceManager.GetString("FolderUnreportedItems", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Verified.
+        /// </summary>
+        internal static string FolderVerified {
+            get {
+                return ResourceManager.GetString("FolderVerified", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0} from the &quot;{1}&quot; worklist.
         /// </summary>
         internal static string FormatContinuousWorkflowDescription {
