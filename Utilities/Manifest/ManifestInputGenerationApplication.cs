@@ -76,7 +76,8 @@ namespace ClearCanvas.Utilities.Manifest
             }
             catch (Exception e)
             {
-                Console.WriteLine("Unexpected exception when generating manifest input: {0}", e.Message);
+            	const string message = "Unexpected exception when generating manifest input: {0}";
+            	Console.WriteLine(message, e.Message);
                 Environment.ExitCode = -1;
             }
         }

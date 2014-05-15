@@ -358,6 +358,15 @@ namespace ClearCanvas.Ris.Client.Workflow {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Number of Images.
+        /// </summary>
+        internal static string ColumnNumberOfImages {
+            get {
+                return ResourceManager.GetString("ColumnNumberOfImages", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Ordering Facility.
         /// </summary>
         internal static string ColumnOrderingFacility {
@@ -390,6 +399,15 @@ namespace ClearCanvas.Ris.Client.Workflow {
         internal static string ColumnPatientType {
             get {
                 return ResourceManager.GetString("ColumnPatientType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Performed Date.
+        /// </summary>
+        internal static string ColumnPerformedDate {
+            get {
+                return ResourceManager.GetString("ColumnPerformedDate", resourceCulture);
             }
         }
         
@@ -448,6 +466,15 @@ namespace ClearCanvas.Ris.Client.Workflow {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Report Status.
+        /// </summary>
+        internal static string ColumnReportStatus {
+            get {
+                return ResourceManager.GetString("ColumnReportStatus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Role.
         /// </summary>
         internal static string ColumnRole {
@@ -471,6 +498,24 @@ namespace ClearCanvas.Ris.Client.Workflow {
         internal static string ColumnScheduledStep {
             get {
                 return ResourceManager.GetString("ColumnScheduledStep", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Series Instance UID.
+        /// </summary>
+        internal static string ColumnSeriesInstanceUid {
+            get {
+                return ResourceManager.GetString("ColumnSeriesInstanceUid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Series Number.
+        /// </summary>
+        internal static string ColumnSeriesNumber {
+            get {
+                return ResourceManager.GetString("ColumnSeriesNumber", resourceCulture);
             }
         }
         
@@ -516,6 +561,15 @@ namespace ClearCanvas.Ris.Client.Workflow {
         internal static string ColumnStatus {
             get {
                 return ResourceManager.GetString("ColumnStatus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Study Instance UID.
+        /// </summary>
+        internal static string ColumnStudyInstanceUid {
+            get {
+                return ResourceManager.GetString("ColumnStudyInstanceUid", resourceCulture);
             }
         }
         
@@ -799,6 +853,17 @@ namespace ClearCanvas.Ris.Client.Workflow {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0}
+        ///
+        ///Are you sure you want to cancel and replace this order?.
+        /// </summary>
+        internal static string FormatMessageConfirmReplaceOrder {
+            get {
+                return ResourceManager.GetString("FormatMessageConfirmReplaceOrder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Print Report for {0} {1} -  {2}.
         /// </summary>
         internal static string FormatPrintReportMessage {
@@ -840,6 +905,15 @@ namespace ClearCanvas.Ris.Client.Workflow {
         internal static string FormatReportingStatusText {
             get {
                 return ResourceManager.GetString("FormatReportingStatusText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Replace Order {0} - {1} {2}.
+        /// </summary>
+        internal static string FormatTitleReplaceOrder {
+            get {
+                return ResourceManager.GetString("FormatTitleReplaceOrder", resourceCulture);
             }
         }
         
@@ -1132,6 +1206,15 @@ namespace ClearCanvas.Ris.Client.Workflow {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cannot start procedure steps of different modalities at the same time..
+        /// </summary>
+        internal static string MessageCannotStartDifferentModalityProcedureStepsAtSameTime {
+            get {
+                return ResourceManager.GetString("MessageCannotStartDifferentModalityProcedureStepsAtSameTime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The following procedure(s) are unscheduled.  Please schedule them before checking-in..
         /// </summary>
         internal static string MessageCheckInProceduresNotScheduled {
@@ -1195,11 +1278,29 @@ namespace ClearCanvas.Ris.Client.Workflow {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Are you sure you want to discontinue the selected procedure(s)?.
+        /// </summary>
+        internal static string MessageConfirmDiscontinueSelectedProcedures {
+            get {
+                return ResourceManager.GetString("MessageConfirmDiscontinueSelectedProcedures", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Are you sure you want to delete this visit?.
         /// </summary>
         internal static string MessageDeleteSelectedVisit {
             get {
                 return ResourceManager.GetString("MessageDeleteSelectedVisit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enter 0 or a number greater than 5000.
+        /// </summary>
+        internal static string MessageEnterNumber0OrOver5000 {
+            get {
+                return ResourceManager.GetString("MessageEnterNumber0OrOver5000", resourceCulture);
             }
         }
         
@@ -1236,6 +1337,15 @@ namespace ClearCanvas.Ris.Client.Workflow {
         internal static string MessageNoReconciliationCandidate {
             get {
                 return ResourceManager.GetString("MessageNoReconciliationCandidate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No image viewing support..
+        /// </summary>
+        internal static string MessageNoViewerSupport {
+            get {
+                return ResourceManager.GetString("MessageNoViewerSupport", resourceCulture);
             }
         }
         
@@ -1827,11 +1937,38 @@ namespace ClearCanvas.Ris.Client.Workflow {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cancel Time.
+        /// </summary>
+        internal static string TitleCancelTime {
+            get {
+                return ResourceManager.GetString("TitleCancelTime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Choose Radiologist.
         /// </summary>
         internal static string TitleChooseRadiologist {
             get {
                 return ResourceManager.GetString("TitleChooseRadiologist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Complete Downtime Recovery.
+        /// </summary>
+        internal static string TitleCompleteDowntimeRecovery {
+            get {
+                return ResourceManager.GetString("TitleCompleteDowntimeRecovery", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Completed Time.
+        /// </summary>
+        internal static string TitleCompletedTime {
+            get {
+                return ResourceManager.GetString("TitleCompletedTime", resourceCulture);
             }
         }
         
@@ -1886,6 +2023,15 @@ namespace ClearCanvas.Ris.Client.Workflow {
         internal static string TitleDicomSeries {
             get {
                 return ResourceManager.GetString("TitleDicomSeries", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Discontinued Time.
+        /// </summary>
+        internal static string TitleDiscontinuedTime {
+            get {
+                return ResourceManager.GetString("TitleDiscontinuedTime", resourceCulture);
             }
         }
         
@@ -2250,6 +2396,15 @@ namespace ClearCanvas.Ris.Client.Workflow {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Reason.
+        /// </summary>
+        internal static string TitleReason {
+            get {
+                return ResourceManager.GetString("TitleReason", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Reassign Item.
         /// </summary>
         internal static string TitleReassignItem {
@@ -2340,6 +2495,15 @@ namespace ClearCanvas.Ris.Client.Workflow {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Start Time.
+        /// </summary>
+        internal static string TitleStartTime {
+            get {
+                return ResourceManager.GetString("TitleStartTime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Performed.
         /// </summary>
         internal static string TitleStopMpps {
@@ -2381,6 +2545,15 @@ namespace ClearCanvas.Ris.Client.Workflow {
         internal static string TitleVisitSummaryComponent {
             get {
                 return ResourceManager.GetString("TitleVisitSummaryComponent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Workflow History.
+        /// </summary>
+        internal static string TitleWorkflowHistory {
+            get {
+                return ResourceManager.GetString("TitleWorkflowHistory", resourceCulture);
             }
         }
         

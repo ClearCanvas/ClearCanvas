@@ -942,4 +942,63 @@ Do you want to save it to your Drafts folder and open the transcription for {1}?
   <data name="TitlePerformingDocumentation">
     <value xml:space="preserve">Performing Documentation</value>
   </data>
+  <data name="TitleWorkflowHistory">
+    <value xml:space="preserve">Workflow History</value>
+  </data>
+  <data name="MessageNoViewerSupport">
+    <value xml:space="preserve">No image viewing support.</value>
+  </data>
+  <data name="TitleReason">
+    <value xml:space="preserve">Reason</value>
+  </data>
+  <data name="FormatMessageConfirmReplaceOrder">
+    <value xml:space="preserve">{0}
+
+Are you sure you want to cancel and replace this order?</value>
+  </data>
+  <data name="FormatTitleReplaceOrder">
+    <value xml:space="preserve">Replace Order {0} - {1} {2}</value>
+  </data>
+  <data name="ColumnPerformedDate">
+    <value xml:space="preserve">Performed Date</value>
+  </data>
+  <data name="ColumnReportStatus">
+    <value xml:space="preserve">Report Status</value>
+  </data>
+  <data name="MessageConfirmDiscontinueSelectedProcedures">
+    <value xml:space="preserve">Are you sure you want to discontinue the selected procedure(s)?</value>
+  </data>
+  <data name="TitleCancelTime">
+    <value xml:space="preserve">Cancel Time</value>
+  </data>
+  <data name="MessageCannotStartDifferentModalityProcedureStepsAtSameTime">
+    <value xml:space="preserve">Cannot start procedure steps of different modalities at the same time.</value>
+  </data>
+  <data name="TitleStartTime">
+    <value xml:space="preserve">Start Time</value>
+  </data>
+  <data name="ColumnSeriesInstanceUid">
+    <value xml:space="preserve">Series Instance UID</value>
+  </data>
+  <data name="ColumnStudyInstanceUid">
+    <value xml:space="preserve">Study Instance UID</value>
+  </data>
+  <data name="ColumnNumberOfImages">
+    <value xml:space="preserve">Number of Images</value>
+  </data>
+  <data name="ColumnSeriesNumber">
+    <value xml:space="preserve">Series Number</value>
+  </data>
+  <data name="TitleCompleteDowntimeRecovery">
+    <value xml:space="preserve">Complete Downtime Recovery</value>
+  </data>
+  <data name="MessageEnterNumber0OrOver5000">
+    <value xml:space="preserve">Enter 0 or a number greater than 5000</value>
+  </data>
+  <data name="TitleCompletedTime">
+    <value xml:space="preserve">Completed Time</value>
+  </data>
+  <data name="TitleDiscontinuedTime">
+    <value xml:space="preserve">Discontinued Time</value>
+  </data>
 </root>

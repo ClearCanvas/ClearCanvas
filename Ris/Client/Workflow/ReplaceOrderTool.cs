@@ -70,13 +70,13 @@ namespace ClearCanvas.Ris.Client.Workflow
 			{
 				var warn = CollectionUtils.FirstElement(warnings);
 				var action = this.Context.DesktopWindow.ShowMessageBox(
-					warn + "\n\nAre you sure you want to cancel and replace this order?",
+					string.Format(SR.FormatMessageConfirmReplaceOrder, warn),
 					MessageBoxActions.YesNo);
 				if(action == DialogBoxAction.No)
 					return false;
 			}
 
-			var title = string.Format("Replace Order {0} - {1} {2}",
+			var title = string.Format(SR.FormatTitleReplaceOrder,
 				AccessionFormat.Format(item.AccessionNumber),
 				PersonNameFormat.Format(item.PatientName),
 				MrnFormat.Format(item.Mrn));

@@ -23,9 +23,7 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
-using System.Text;
-
+using System.ComponentModel;
 using ClearCanvas.Common;
 using ClearCanvas.Desktop;
 
@@ -35,14 +33,12 @@ namespace ClearCanvas.Ris.Client
 	/// Extension point for views onto <see cref="DateTimeEntryComponent"/>
 	/// </summary>
 	[ExtensionPoint]
-	public class DateTimeEntryComponentViewExtensionPoint : ExtensionPoint<IApplicationComponentView>
-	{
-	}
+	public class DateTimeEntryComponentViewExtensionPoint : ExtensionPoint<IApplicationComponentView> {}
 
 	/// <summary>
 	/// DateTimeEntryComponent class
 	/// </summary>
-	[AssociateView(typeof(DateTimeEntryComponentViewExtensionPoint))]
+	[AssociateView(typeof (DateTimeEntryComponentViewExtensionPoint))]
 	public class DateTimeEntryComponent : ApplicationComponent
 	{
 		/// <summary>
@@ -53,11 +49,11 @@ namespace ClearCanvas.Ris.Client
 		/// <param name="time"></param>
 		/// <param name="allowNull"></param>
 		/// <returns></returns>
-		public static bool PromptForTime(IDesktopWindow desktopWindow, string title, bool allowNull, ref DateTime? time)
+		public static bool PromptForTime(IDesktopWindow desktopWindow, [param : Localizable(true)] string title, bool allowNull, ref DateTime? time)
 		{
 			DateTimeEntryComponent component = new DateTimeEntryComponent(time, allowNull);
 			if (LaunchAsDialog(desktopWindow, component, title)
-				== ApplicationComponentExitCode.Accepted)
+			    == ApplicationComponentExitCode.Accepted)
 			{
 				time = component.DateAndTime;
 				return true;
@@ -65,11 +61,8 @@ namespace ClearCanvas.Ris.Client
 			return false;
 		}
 
-
-
 		private DateTime? _dateAndTime;
 		private readonly bool _allowNull;
-
 
 		/// <summary>
 		/// Constructor
@@ -85,7 +78,7 @@ namespace ClearCanvas.Ris.Client
 		public DateTime? DateAndTime
 		{
 			get { return _dateAndTime; }
-			set { _dateAndTime = value;  }
+			set { _dateAndTime = value; }
 		}
 
 		public bool AllowNull

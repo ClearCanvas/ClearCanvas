@@ -160,7 +160,7 @@ namespace ClearCanvas.Ris.Client.Admin
 
 			ModalityEditorComponent editor = new ModalityEditorComponent(item.ModalityRef);
 			ApplicationComponentExitCode exitCode = ApplicationComponent.LaunchAsDialog(
-				this.Host.DesktopWindow, editor, SR.TitleUpdateModality + " - " + "("+item.Id+") "+ item.Name);
+				this.Host.DesktopWindow, editor, string.Format(SR.FormatTitleCodeSubtitle, SR.TitleUpdateModality, item.Id, item.Name));
 			if (exitCode == ApplicationComponentExitCode.Accepted)
 			{
 				editedItems.Add(editor.ModalitySummary);
