@@ -43,11 +43,15 @@ namespace ClearCanvas.Common.Utilities
 	public class UnitTestExtensionFactory : IExtensionFactory, IDictionary<Type, Type>
 	{
 		private readonly Dictionary<Type, List<Type>> _extensionMap = new Dictionary<Type, List<Type>>();
+		private string _exceptionMustImplementInterface;
 
 		/// <summary>
 		/// Instantiates an empty <see cref="UnitTestExtensionFactory"/>.
 		/// </summary>
-		public UnitTestExtensionFactory() {}
+		public UnitTestExtensionFactory()
+		{
+			_exceptionMustImplementInterface = "Extension point class must implement IExtensionPoint";
+		}
 
 		/// <summary>
 		/// Instantiates an <see cref="UnitTestExtensionFactory"/> with the provided <paramref name="extensionMap">extensions map</paramref>.
@@ -62,6 +66,7 @@ namespace ClearCanvas.Common.Utilities
 						Define(entry.Key, type);
 				}
 			}
+			_exceptionMustImplementInterface = "Extension point class must implement IExtensionPoint";
 		}
 
 		/// <summary>
@@ -74,6 +79,7 @@ namespace ClearCanvas.Common.Utilities
 				foreach (var entry in extensionMap)
 					Define(entry.Key, entry.Value);
 			}
+			_exceptionMustImplementInterface = "Extension point class must implement IExtensionPoint";
 		}
 
 		/// <summary>
@@ -84,7 +90,7 @@ namespace ClearCanvas.Common.Utilities
 		public void Define(Type extensionPoint, Type extension)
 		{
 			if (!typeof (IExtensionPoint).IsAssignableFrom(extensionPoint))
-				throw new ArgumentException("Extension point class must implement IExtensionPoint", "extensionPoint");
+				throw new ArgumentException(_exceptionMustImplementInterface, "extensionPoint");
 
 			if (!_extensionMap.ContainsKey(extensionPoint))
 				_extensionMap.Add(extensionPoint, new List<Type>());
@@ -99,7 +105,7 @@ namespace ClearCanvas.Common.Utilities
 		public bool UndefineAll(Type extensionPoint)
 		{
 			if (!typeof (IExtensionPoint).IsAssignableFrom(extensionPoint))
-				throw new ArgumentException("Extension point class must implement IExtensionPoint", "extensionPoint");
+				throw new ArgumentException(_exceptionMustImplementInterface, "extensionPoint");
 			return _extensionMap.Remove(extensionPoint);
 		}
 
@@ -111,7 +117,7 @@ namespace ClearCanvas.Common.Utilities
 		public bool HasExtensions(Type extensionPoint)
 		{
 			if (!typeof (IExtensionPoint).IsAssignableFrom(extensionPoint))
-				throw new ArgumentException("Extension point class must implement IExtensionPoint", "extensionPoint");
+				throw new ArgumentException(_exceptionMustImplementInterface, "extensionPoint");
 			return _extensionMap.ContainsKey(extensionPoint);
 		}
 

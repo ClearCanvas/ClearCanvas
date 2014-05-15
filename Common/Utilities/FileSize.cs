@@ -45,7 +45,8 @@ namespace ClearCanvas.Common.Utilities
 				return 1;
 			if (obj is FileSize)
 				return this.CompareTo((FileSize) obj);
-			throw new ArgumentException("Parameter must be a FileSize.", "obj");
+			const string message = "Parameter must be a FileSize.";
+			throw new ArgumentException(message, "obj");
 		}
 
 		public int CompareTo(FileSize other)
