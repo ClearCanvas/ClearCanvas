@@ -23,15 +23,14 @@
 #endregion
 
 using System;
+using System.ComponentModel;
 using System.Threading;
 using ClearCanvas.Common;
 
 namespace ClearCanvas.Desktop
 {
 	[ExtensionPoint]
-	public sealed class ExceptionDialogFactoryExtensionPoint : ExtensionPoint<IExceptionDialogFactory>
-	{
-	}
+	public sealed class ExceptionDialogFactoryExtensionPoint : ExtensionPoint<IExceptionDialogFactory> {}
 
 	[Flags]
 	public enum ExceptionDialogAction
@@ -55,7 +54,7 @@ namespace ClearCanvas.Desktop
 
 	public interface IExceptionDialog
 	{
-		ExceptionDialogAction Show(string title, string message, Exception e, ExceptionDialogActions actions);
+		ExceptionDialogAction Show([param : Localizable(true)] string title, [param : Localizable(true)] string message, Exception e, ExceptionDialogActions actions);
 	}
 
 	public abstract class ExceptionDialog : IExceptionDialog
@@ -77,7 +76,7 @@ namespace ClearCanvas.Desktop
 
 			private void ShowAsync()
 			{
-				var displayThread = new Thread(ignored => ShowReal()) { IsBackground = false };
+				var displayThread = new Thread(ignored => ShowReal()) {IsBackground = false};
 				displayThread.SetApartmentState(ApartmentState.STA);
 				displayThread.Start();
 				displayThread.Join();
@@ -136,18 +135,16 @@ namespace ClearCanvas.Desktop
 		private static IExceptionDialog Create()
 		{
 			CheckCanShow();
-			return new MarshallingProxy(_factory.CreateExceptionDialog()); 
+			return new MarshallingProxy(_factory.CreateExceptionDialog());
 		}
 
 		private static IExceptionDialogFactory CreateFactory()
 		{
 			try
 			{
-				return (IExceptionDialogFactory)new ExceptionDialogFactoryExtensionPoint().CreateExtension();
+				return (IExceptionDialogFactory) new ExceptionDialogFactoryExtensionPoint().CreateExtension();
 			}
-			catch (NotSupportedException)
-			{
-			}
+			catch (NotSupportedException) {}
 			catch (Exception e)
 			{
 				Platform.Log(LogLevel.Debug, e);
@@ -163,7 +160,7 @@ namespace ClearCanvas.Desktop
 				Application.Shutdown();
 		}
 
-		internal static void Show(string message, Exception e, ExceptionDialogActions actions)
+		internal static void Show([param : Localizable(true)] string message, Exception e, ExceptionDialogActions actions)
 		{
 			Show(Application.Name, message, e, actions);
 		}

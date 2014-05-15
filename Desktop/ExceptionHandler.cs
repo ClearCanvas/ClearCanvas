@@ -23,11 +23,12 @@
 #endregion
 
 using System;
+using System.ComponentModel;
 using ClearCanvas.Common;
 
 namespace ClearCanvas.Desktop
 {
-	[ExtensionOf(typeof(FatalExceptionHandlerExtensionPoint))]
+	[ExtensionOf(typeof (FatalExceptionHandlerExtensionPoint))]
 	internal class DummyFatalExceptionHandler : FatalExceptionHandler
 	{
 		public DummyFatalExceptionHandler()
@@ -46,18 +47,18 @@ namespace ClearCanvas.Desktop
 	}
 
 	///<summary>
-    /// Provides an <see cref="IExceptionPolicy"/> with a callback to abort the Exception-causing operation.
-    ///</summary>
+	/// Provides an <see cref="IExceptionPolicy"/> with a callback to abort the Exception-causing operation.
+	///</summary>
 	///<remarks>
 	/// Each individual <see cref="IExceptionPolicy"/> will determine if this is appropriate to be called.
 	/// </remarks>
 	public delegate void AbortOperationDelegate();
 
-    /// <summary>
-    /// Contains static methods used to report exceptions to the user.
-    /// </summary>
-    public static class ExceptionHandler
-    {
+	/// <summary>
+	/// Contains static methods used to report exceptions to the user.
+	/// </summary>
+	public static class ExceptionHandler
+	{
 		private static readonly object _syncLock = new object();
 		private static bool _fatalExceptionReported;
 
@@ -79,7 +80,7 @@ namespace ClearCanvas.Desktop
 			}
 		}
 
-    	/// <summary>
+		/// <summary>
 		/// Reports an exception that was not handled in code to the user.
 		/// </summary>
 		/// <remarks>
@@ -88,7 +89,7 @@ namespace ClearCanvas.Desktop
 		/// will be shut down automatically by this method.
 		/// </remarks>
 		public static void ReportUnhandled(Exception e)
-    	{
+		{
 			Platform.Log(LogLevel.Fatal, e);
 
 			lock (_syncLock)
@@ -104,32 +105,32 @@ namespace ClearCanvas.Desktop
 		}
 
 		/// <summary>
-        /// Reports the specified exception to the user, using the <see cref="Exception.Message"/> property value as the
-        /// message.
-        /// </summary>
-        /// <remarks>
-		/// The exception is also automatically logged.
-		/// </remarks>
-        /// <param name="e">Exception to report.</param>
-        /// <param name="desktopWindow">Desktop window that parents the exception dialog.</param>
-        public static void Report(Exception e, IDesktopWindow desktopWindow)
-        {
-            Report(e, null, desktopWindow);
-        }
-
-        /// <summary>
-        /// Reports the specified exception to the user, displaying the specified user message first.
-        /// </summary>
+		/// Reports the specified exception to the user, using the <see cref="Exception.Message"/> property value as the
+		/// message.
+		/// </summary>
 		/// <remarks>
 		/// The exception is also automatically logged.
 		/// </remarks>
 		/// <param name="e">Exception to report.</param>
-        /// <param name="userMessage">User-friendly message to display, instead of the message contained in the exception.</param>
-        /// <param name="desktopWindow">Desktop window that parents the exception dialog.</param>
-        public static void Report(Exception e, string userMessage, IDesktopWindow desktopWindow)
-        {
-            Report(e, userMessage, desktopWindow, null);
-        }
+		/// <param name="desktopWindow">Desktop window that parents the exception dialog.</param>
+		public static void Report(Exception e, IDesktopWindow desktopWindow)
+		{
+			Report(e, null, desktopWindow);
+		}
+
+		/// <summary>
+		/// Reports the specified exception to the user, displaying the specified user message first.
+		/// </summary>
+		/// <remarks>
+		/// The exception is also automatically logged.
+		/// </remarks>
+		/// <param name="e">Exception to report.</param>
+		/// <param name="userMessage">User-friendly message to display, instead of the message contained in the exception.</param>
+		/// <param name="desktopWindow">Desktop window that parents the exception dialog.</param>
+		public static void Report(Exception e, [param : Localizable(true)] string userMessage, IDesktopWindow desktopWindow)
+		{
+			Report(e, userMessage, desktopWindow, null);
+		}
 
 		/// <summary>
 		/// Reports the specified exception to the user, displaying the specified user message first.
@@ -142,8 +143,8 @@ namespace ClearCanvas.Desktop
 		/// <param name="desktopWindow">Desktop window that parents the exception dialog.</param>
 		/// <param name="abortDelegate">A callback delegate for aborting the exception-causing operation.  Decision as to whether or
 		/// not the callback is called is up to the individual <see cref="IExceptionPolicy"/>.</param>
-		public static void Report(Exception e, string contextualMessage, IDesktopWindow desktopWindow, AbortOperationDelegate abortDelegate)
-        {
+		public static void Report(Exception e, [param : Localizable(true)] string contextualMessage, IDesktopWindow desktopWindow, AbortOperationDelegate abortDelegate)
+		{
 			ExceptionPolicyFactory.GetPolicy(e.GetType()).
 				Handle(e, new ExceptionHandlingContext(e, contextualMessage, desktopWindow, abortDelegate));
 		}

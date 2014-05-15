@@ -23,6 +23,7 @@
 #endregion
 
 using System;
+using System.ComponentModel;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
 
@@ -93,6 +94,7 @@ namespace ClearCanvas.Desktop
 		/// <summary>
 		/// Gets the title that is presented to the user on the screen.
 		/// </summary>
+		[Localizable(true)]
 		public string Title
 		{
 			get { return _title; }

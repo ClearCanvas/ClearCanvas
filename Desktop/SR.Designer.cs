@@ -367,6 +367,24 @@ namespace ClearCanvas.Desktop {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} days from now.
+        /// </summary>
+        public static string FormatDateInFutureDays {
+            get {
+                return ResourceManager.GetString("FormatDateInFutureDays", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} days ago.
+        /// </summary>
+        public static string FormatDateInPastDays {
+            get {
+                return ResourceManager.GetString("FormatDateInPastDays", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0} [{1}].
         /// </summary>
         public static string FormatDesktopWindowTitle {
@@ -426,6 +444,33 @@ namespace ClearCanvas.Desktop {
         public static string FormatRangeCharactersRequired {
             get {
                 return ResourceManager.GetString("FormatRangeCharactersRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Today {0}.
+        /// </summary>
+        public static string FormatTimeToday {
+            get {
+                return ResourceManager.GetString("FormatTimeToday", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tomorrow {0}.
+        /// </summary>
+        public static string FormatTimeTomorrow {
+            get {
+                return ResourceManager.GetString("FormatTimeTomorrow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Yesterday {0}.
+        /// </summary>
+        public static string FormatTimeYesterday {
+            get {
+                return ResourceManager.GetString("FormatTimeYesterday", resourceCulture);
             }
         }
         

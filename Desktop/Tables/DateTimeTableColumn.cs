@@ -23,6 +23,7 @@
 #endregion
 
 using System;
+using System.ComponentModel;
 
 namespace ClearCanvas.Desktop.Tables
 {
@@ -33,44 +34,42 @@ namespace ClearCanvas.Desktop.Tables
 	/// <typeparam name="TItem">The type of item on which the table is based.</typeparam>
 	public class DateTimeTableColumn<TItem> : TableColumn<TItem, DateTime?>
 	{
-        /// <summary>
-        /// Constructs a read-only single-cellrow DateTime table column.
-        /// </summary>
-        /// <param name="columnName">The name of the column.</param>
-        /// <param name="valueGetter">A delegate that accepts an item and pulls the column value from the item.</param>
-		public DateTimeTableColumn(string columnName, GetColumnValueDelegate<TItem, DateTime?> valueGetter)
-            : this(columnName, valueGetter, 1.0f)
-        {
-		}
+		/// <summary>
+		/// Constructs a read-only single-cellrow DateTime table column.
+		/// </summary>
+		/// <param name="columnName">The name of the column.</param>
+		/// <param name="valueGetter">A delegate that accepts an item and pulls the column value from the item.</param>
+		public DateTimeTableColumn([param : Localizable(true)] string columnName, GetColumnValueDelegate<TItem, DateTime?> valueGetter)
+			: this(columnName, valueGetter, 1.0f) {}
 
-        /// <summary>
-        /// Constructs a read-only single-cellrow DateTime table column with specific width factor.
-        /// </summary>
-        /// <param name="columnName">The name of the column.</param>
-        /// <param name="valueGetter">A delegate that accepts an item and pulls the column value from the item.</param>
-        /// <param name="widthFactor">A weighting factor that is applied to the width of the column.</param>
-        public DateTimeTableColumn(string columnName, GetColumnValueDelegate<TItem, DateTime?> valueGetter, float widthFactor)
-            : this(columnName, columnName, valueGetter, widthFactor) {}
+		/// <summary>
+		/// Constructs a read-only single-cellrow DateTime table column with specific width factor.
+		/// </summary>
+		/// <param name="columnName">The name of the column.</param>
+		/// <param name="valueGetter">A delegate that accepts an item and pulls the column value from the item.</param>
+		/// <param name="widthFactor">A weighting factor that is applied to the width of the column.</param>
+		public DateTimeTableColumn([param : Localizable(true)] string columnName, GetColumnValueDelegate<TItem, DateTime?> valueGetter, float widthFactor)
+			: this(columnName, columnName, valueGetter, widthFactor) {}
 
-        /// <summary>
-        /// Constructs a read-only single-cellrow DateTime table column.
-        /// </summary>
-        /// <param name="columnName">The identifying name of the column.</param>
-        /// <param name="columnDisplayName">The display name of the column.</param>
-        /// <param name="valueGetter">A delegate that accepts an item and pulls the column value from the item.</param>
-        public DateTimeTableColumn(string columnName, string columnDisplayName, GetColumnValueDelegate<TItem, DateTime?> valueGetter)
-            : this(columnName, columnDisplayName, valueGetter, 1.0f) {}
+		/// <summary>
+		/// Constructs a read-only single-cellrow DateTime table column.
+		/// </summary>
+		/// <param name="columnName">The identifying name of the column.</param>
+		/// <param name="columnDisplayName">The display name of the column.</param>
+		/// <param name="valueGetter">A delegate that accepts an item and pulls the column value from the item.</param>
+		public DateTimeTableColumn(string columnName, [param : Localizable(true)] string columnDisplayName, GetColumnValueDelegate<TItem, DateTime?> valueGetter)
+			: this(columnName, columnDisplayName, valueGetter, 1.0f) {}
 
-        /// <summary>
-        /// Constructs a read-only single-cellrow DateTime table column with specific width factor.
-        /// </summary>
-        /// <param name="columnName">The identifying name of the column.</param>
-        /// <param name="columnDisplayName">The display name of the column.</param>
-        /// <param name="valueGetter">A delegate that accepts an item and pulls the column value from the item.</param>
-        /// <param name="widthFactor">A weighting factor that is applied to the width of the column.</param>
-        public DateTimeTableColumn(string columnName, string columnDisplayName, GetColumnValueDelegate<TItem, DateTime?> valueGetter, float widthFactor)
-            : base(columnName, columnDisplayName, valueGetter, widthFactor)
-        {
+		/// <summary>
+		/// Constructs a read-only single-cellrow DateTime table column with specific width factor.
+		/// </summary>
+		/// <param name="columnName">The identifying name of the column.</param>
+		/// <param name="columnDisplayName">The display name of the column.</param>
+		/// <param name="valueGetter">A delegate that accepts an item and pulls the column value from the item.</param>
+		/// <param name="widthFactor">A weighting factor that is applied to the width of the column.</param>
+		public DateTimeTableColumn(string columnName, [param : Localizable(true)] string columnDisplayName, GetColumnValueDelegate<TItem, DateTime?> valueGetter, float widthFactor)
+			: base(columnName, columnDisplayName, valueGetter, widthFactor)
+		{
 			this.ValueFormatter = delegate(DateTime? value) { return Format.DateTime(value); };
 			this.Comparison = delegate(TItem item1, TItem item2) { return Nullable.Compare(valueGetter(item1), valueGetter(item2)); };
 		}
