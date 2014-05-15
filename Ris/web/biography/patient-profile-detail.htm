@@ -33,12 +33,12 @@
 					labelReligion: SR.PatientDemographics.Religion,
 					labelAddressType: SR.PatientDemographics.AddressType,
 					labelAddress: SR.PatientDemographics.Address,
-					labelExpiryDate: SR.PatientDemographics.ExpiryDate,
+					labelAddressExpiryDate: SR.PatientDemographics.ExpiryDate,
 					labelPhoneType: SR.PatientDemographics.PhoneType,
 					labelPhoneNumber: SR.PatientDemographics.PhoneNumber,
-					labelExpiryDate: SR.PatientDemographics.ExpiryDate,
+					labelPhoneExpiryDate: SR.PatientDemographics.ExpiryDate,
 					labelEmailAddress: SR.PatientDemographics.EmailAddress,
-					labelExpiryDate: SR.PatientDemographics.ExpiryDate,
+					labelEmailExpiryDate: SR.PatientDemographics.ExpiryDate,
 					labelContactType: SR.PatientDemographics.ContactType,
 					labelContactRelationship: SR.PatientDemographics.ContactRelationship,
 					labelContactName: SR.PatientDemographics.ContactName,
@@ -101,24 +101,24 @@
 					Field.setValue($("billingInformation"), patientProfile.BillingInformation);
 					Field.setValue($("currentHomePhone"), Ris.formatTelephone(patientProfile.CurrentHomePhone));
 					Field.setValue($("currentHomeAddress"), Ris.formatAddress(patientProfile.CurrentHomeAddress));
-					Preview.SectionContainer.create($("PrimaryDemographicsSection"), "Primary Demographics");
+					Preview.SectionContainer.create($("PrimaryDemographicsSection"), SR.PatientDemographics.PrimaryDemographics);
 
-					Preview.SectionContainer.create($("CultureSection"), "Culture");
+					Preview.SectionContainer.create($("CultureSection"), SR.PatientDemographics.Culture);
 					if(patientProfile.PrimaryLanguage)
 						Field.setValue($("primaryLanguage"), patientProfile.PrimaryLanguage.Value);
 					if(patientProfile.Religion)
 						Field.setValue($("religion"), patientProfile.Religion.Value);
 
-					Preview.SectionContainer.create($("AddressesSection"), "Addresses");
+					Preview.SectionContainer.create($("AddressesSection"), SR.PatientDemographics.Addresses);
 					initAddressTable($("addressTable"), patientProfile.Addresses); 
 
-					Preview.SectionContainer.create($("PhoneNumbersSection"), "Phone Numbers");
+					Preview.SectionContainer.create($("PhoneNumbersSection"), SR.PatientDemographics.PhoneNumbers);
 					initPhoneTable($("phoneTable"), patientProfile.TelephoneNumbers); 
 
-					Preview.SectionContainer.create($("EmailAddressesSection"), "Email Addresses");
+					Preview.SectionContainer.create($("EmailAddressesSection"), SR.PatientDemographics.EmailAddresses);
 					initEmailTable($("emailTable"), patientProfile.EmailAddresses); 
 
-					Preview.SectionContainer.create($("ContactsSection"), "Contacts");
+					Preview.SectionContainer.create($("ContactsSection"), SR.PatientDemographics.Contacts);
 					initContactTable($("contactTable"), patientProfile.ContactPersons);
 				}
 
@@ -296,7 +296,7 @@
 						<tr class="tableheading">
 							<td width="75" id="labelAddressType">Type</td>
 							<td id="labelAddress">Address</td>
-							<td width="120" id="labelExpiryDate">Expiry Date</td>
+							<td width="120" id="labelAddressExpiryDate">Expiry Date</td>
 						</tr>
 					</table>
 				</div>
@@ -305,7 +305,7 @@
 						<tr class="tableheading">
 							<td width="75" id="labelPhoneType">Type</td>
 							<td id="labelPhoneNumber">Phone Number</td>
-							<td width="120" id="labelExpiryDate">Expiry Date</td>
+							<td width="120" id="labelPhoneExpiryDate">Expiry Date</td>
 						</tr>
 					</table>
 				</div>
@@ -313,7 +313,7 @@
 					<table style="{margin-bottom:2em}" id="emailTable">
 						<tr class="tableheading">
 							<td id="labelEmailAddress">Address</td>
-							<td width="120" id="labelExpiryDate">Expiry Date</td>
+							<td width="120" id="labelEmailExpiryDate">Expiry Date</td>
 						</tr>
 					</table>
 				</div>
