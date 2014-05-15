@@ -67,7 +67,7 @@ namespace ClearCanvas.Ris.Client
 				var defaultColumn = new TableColumn<ExternalPractitionerContactPointDetail, bool>(SR.ColumnDefault,
 					cp => cp.IsDefaultContactPoint, MakeDefaultContactPoint, 0.1f);
 
-				var nameColumn = new TableColumn<ExternalPractitionerContactPointDetail, string>(SR.ColumnName,
+				var nameColumn = new TableColumn<ExternalPractitionerContactPointDetail, string>(SR.ColumnContactPointName,
 					cp => cp.Name, 0.3f);
 
 				var descriptionColumn = new TableColumn<ExternalPractitionerContactPointDetail, string>(SR.ColumnDescription,

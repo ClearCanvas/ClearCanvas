@@ -53,7 +53,7 @@ namespace ClearCanvas.Ris.Client
                     _workspace = ApplicationComponent.LaunchAsWorkspace(
                         this.Context.DesktopWindow,
                         component,
-                        "Procedure Types");
+                        SR.TitleProcedureTypes);
                     _workspace.Closed += delegate { _workspace = null; };
 
                 }
@@ -185,7 +185,7 @@ namespace ClearCanvas.Ris.Client
 
 			ProcedureTypeEditorComponent editor = new ProcedureTypeEditorComponent(item.ProcedureTypeRef);
 			ApplicationComponentExitCode exitCode = ApplicationComponent.LaunchAsDialog(
-				this.Host.DesktopWindow, editor, SR.TitleUpdateProcedureType + " - " + "("+item.Id+") " +item.Name);
+				this.Host.DesktopWindow, editor, string.Format("{0} - ({1}) {2}", SR.TitleUpdateProcedureType, item.Id, item.Name));
 			if (exitCode == ApplicationComponentExitCode.Accepted)
 			{
 				editedItems.Add(editor.ProcedureTypeSummary);

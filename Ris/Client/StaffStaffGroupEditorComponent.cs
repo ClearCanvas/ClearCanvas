@@ -52,7 +52,7 @@ namespace ClearCanvas.Ris.Client
         {
             public StaffGroupTable()
             {
-                this.Columns.Add(new TableColumn<StaffGroupSummary, string>("Name",
+                this.Columns.Add(new TableColumn<StaffGroupSummary, string>(SR.ColumnStaffGroupName,
                     delegate(StaffGroupSummary item) { return item.Name; }));
             }
         }

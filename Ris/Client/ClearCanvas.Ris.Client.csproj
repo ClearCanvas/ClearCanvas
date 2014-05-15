@@ -311,7 +311,6 @@
     <Compile Include="DocumentManager.cs" />
     <Compile Include="ExceptionPolicies.cs" />
     <Compile Include="LookupHandler.cs" />
-    <Compile Include="OrderSummaryTable.cs" />
     <Compile Include="PatientBiographyDocument.cs" />
     <Compile Include="ProcedurePlanSummaryTable.cs" />
     <Compile Include="PatientProfileTable.cs" />
@@ -387,7 +386,6 @@
     </Compile>
     <Compile Include="StorageFolder.cs" />
     <Compile Include="TelephoneNumberTable.cs" />
-    <Compile Include="TestStorageFolders.cs" />
     <Compile Include="TextFieldMasks.cs" />
     <Compile Include="WorkflowFolder.cs" />
     <Compile Include="LoginDialogSettings.cs" />

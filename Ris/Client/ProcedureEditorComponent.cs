@@ -96,7 +96,7 @@ namespace ClearCanvas.Ris.Client
 				delegate
 				{
 					return new ValidationResult(IsModalityValidForFacility(this.SelectedModality, this.SelectedFacility),
-						"This modality is not valid for this performing facility.");
+						SR.MessageModalityNotValidForPerformingFacility);
 				}));
 
 			base.Start();

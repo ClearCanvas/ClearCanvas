@@ -1314,7 +1314,202 @@
   <data name="TooltipGoToHomepage" xml:space="preserve">
     <value>Go to home page</value>
   </data>
-  <data name="MessageGeneratingPdf">
-    <value xml:space="preserve">Generating PDF...</value>
+  <data name="MessageGeneratingPdf" xml:space="preserve">
+    <value>Generating PDF...</value>
+  </data>
+  <data name="FileExtensionPdfFilterDescription" xml:space="preserve">
+    <value>PDF files (*.pdf)</value>
+  </data>
+  <data name="TitleAttachFile" xml:space="preserve">
+    <value>Attach File</value>
+  </data>
+  <data name="TitleOrderDetails" xml:space="preserve">
+    <value>Order Details</value>
+  </data>
+  <data name="VisitDetails" xml:space="preserve">
+    <value>Visit Details</value>
+  </data>
+  <data name="TitleReports" xml:space="preserve">
+    <value>Reports</value>
+  </data>
+  <data name="TitleOrderAttachments" xml:space="preserve">
+    <value>Order Attachments</value>
+  </data>
+  <data name="MessageConfirmCancelOrder" xml:space="preserve">
+    <value>Are you sure you want to cancel this order?</value>
+  </data>
+  <data name="TooltipCancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="TitleAddProcedure" xml:space="preserve">
+    <value>Add Procedure</value>
+  </data>
+  <data name="TitleModifyProcedure" xml:space="preserve">
+    <value>Modify Procedure</value>
+  </data>
+  <data name="TitleModifyMultipleProcedures" xml:space="preserve">
+    <value>Modify Multiple Procedures</value>
+  </data>
+  <data name="TitlePatients" xml:space="preserve">
+    <value>Patients</value>
+  </data>
+  <data name="MessageModalityNotValidForPerformingFacility" xml:space="preserve">
+    <value>This modality is not valid for this performing facility.</value>
+  </data>
+  <data name="TitleProcedure" xml:space="preserve">
+    <value>Procedure</value>
+  </data>
+  <data name="TitleFacility" xml:space="preserve">
+    <value>Facility</value>
+  </data>
+  <data name="ColumnScheduledDuration" xml:space="preserve">
+    <value>Scheduled Duration</value>
+  </data>
+  <data name="TitleProcedureTypes" xml:space="preserve">
+    <value>Procedure Types</value>
+  </data>
+  <data name="ColumnCode" xml:space="preserve">
+    <value>Code</value>
+  </data>
+  <data name="MessageRisServerUnreachable" xml:space="preserve">
+    <value>Unable to connect to RIS server.  The workstation may be configured incorrectly, or the server may be unreachable.</value>
+  </data>
+  <data name="ColumnClass" xml:space="preserve">
+    <value>Class</value>
+  </data>
+  <data name="ErrorUnableToSaveStaffGroup" xml:space="preserve">
+    <value>Unable to save Staff Group</value>
+  </data>
+  <data name="ColumnElective" xml:space="preserve">
+    <value>Elective</value>
+  </data>
+  <data name="TitleAddStaffGroup" xml:space="preserve">
+    <value>Add Staff Group</value>
+  </data>
+  <data name="TitleEditStaffGroup" xml:space="preserve">
+    <value>Edit Staff Group - </value>
+  </data>
+  <data name="TitleNewWorklist" xml:space="preserve">
+    <value>New Worklist</value>
+  </data>
+  <data name="TitleEditWorklist" xml:space="preserve">
+    <value>Edit Worklist</value>
+  </data>
+  <data name="MessageConfirmDeleteSelectedWorklist" xml:space="preserve">
+    <value>Are you sure you want to delete the selected worklist?</value>
+  </data>
+  <data name="MessageValueRequired" xml:space="preserve">
+    <value>Value Required</value>
+  </data>
+  <data name="ColumnCreate" xml:space="preserve">
+    <value>Create</value>
+  </data>
+  <data name="ColumnWorklistName" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="ColumnWorklistDescription" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="TitleWorklistProperties" xml:space="preserve">
+    <value>Worklist Properties</value>
+  </data>
+  <data name="ColumnCannedTextName" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="ColumnCannedTextCategory" xml:space="preserve">
+    <value>Category</value>
+  </data>
+  <data name="ColumnCannedTextText" xml:space="preserve">
+    <value>Text</value>
+  </data>
+  <data name="ColumnContactPersonName" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="ColumnDiagnosticServiceName" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="ColulmnPractitionerName" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="ColumnContactPointName" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="ColumnProcedureName" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="ColumnStaffGroupName" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="ColumnProcedureTypeGroupName" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="ColumnDepartmentName" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="ColumnLocationName" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="ColumnProcedureTypeName" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="ColumnStaffName" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="ColumnStaffRole" xml:space="preserve">
+    <value>Role</value>
+  </data>
+  <data name="NodeAddresses" xml:space="preserve">
+    <value>Addresses</value>
+  </data>
+  <data name="NodeAttachments" xml:space="preserve">
+    <value>Attachments</value>
+  </data>
+  <data name="NodeContactPersons" xml:space="preserve">
+    <value>Contact Persons</value>
+  </data>
+  <data name="NodeContactPoint" xml:space="preserve">
+    <value>Contact Point</value>
+  </data>
+  <data name="NodeContactPoints" xml:space="preserve">
+    <value>Contact Points</value>
+  </data>
+  <data name="NodeCulture" xml:space="preserve">
+    <value>Culture</value>
+  </data>
+  <data name="NodeElective" xml:space="preserve">
+    <value>Elective</value>
+  </data>
+  <data name="NodeEmailAddresses" xml:space="preserve">
+    <value>Email Addresses</value>
+  </data>
+  <data name="NodeExternalPractitioner" xml:space="preserve">
+    <value>External Practitioner</value>
+  </data>
+  <data name="NodeGroups" xml:space="preserve">
+    <value>Groups</value>
+  </data>
+  <data name="NodeMembers" xml:space="preserve">
+    <value>Members</value>
+  </data>
+  <data name="NodeNonElective" xml:space="preserve">
+    <value>Non-elective</value>
+  </data>
+  <data name="NodeNotes" xml:space="preserve">
+    <value>Notes</value>
+  </data>
+  <data name="NodePatient" xml:space="preserve">
+    <value>Patient</value>
+  </data>
+  <data name="NodePhoneNumbers" xml:space="preserve">
+    <value>Phone Numbers</value>
+  </data>
+  <data name="NodeStaffGroup" xml:space="preserve">
+    <value>Staff Group</value>
+  </data>
+  <data name="NodeSubscribedWorklists" xml:space="preserve">
+    <value>Subscribed Worklists</value>
+  </data>
+  <data name="NodeSubscribedWorklistsReadOnly" xml:space="preserve">
+    <value>Subscribed Worklists (read only)</value>
   </data>
 </root>

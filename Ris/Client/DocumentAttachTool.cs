@@ -47,7 +47,7 @@ namespace ClearCanvas.Ris.Client
 		public void Apply()
 		{
 			var component = new AttachDocumentComponent(this.Context.Site);
-			var exitCode = ApplicationComponent.LaunchAsDialog(this.Context.DesktopWindow, component, "Attach File");
+			var exitCode = ApplicationComponent.LaunchAsDialog(this.Context.DesktopWindow, component, SR.TitleAttachFile);
 			if(exitCode == ApplicationComponentExitCode.Accepted)
 			{
 				this.Context.AddAttachment(component.Document, component.Category);

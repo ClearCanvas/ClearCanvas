@@ -131,7 +131,7 @@ namespace ClearCanvas.Ris.Client
                 var editor = new WorklistEditorComponent(false, fs.SupportedWorklistClasses, initialWorklistClassName);
                 var exitCode = ApplicationComponent.LaunchAsDialog(
                     this.Context.DesktopWindow,
-                    new DialogBoxCreationArgs(editor, "New Worklist", null, DialogSizeHint.Large));
+                    new DialogBoxCreationArgs(editor, SR.TitleNewWorklist, null, DialogSizeHint.Large));
 				if (exitCode == ApplicationComponentExitCode.Accepted)
 				{
 					AddNewWorklistsToFolderSystem(editor.EditedWorklistSummaries, fs);
@@ -155,7 +155,7 @@ namespace ClearCanvas.Ris.Client
 				var editor = new WorklistEditorComponent(folder.WorklistRef, false);
 				var exitCode = ApplicationComponent.LaunchAsDialog(
                     this.Context.DesktopWindow,
-					new DialogBoxCreationArgs(editor, "Edit Worklist" + " - " + folder.Name, null, DialogSizeHint.Large));
+					new DialogBoxCreationArgs(editor, string.Format("{0} - {1}", SR.TitleEditWorklist, folder.Name), null, DialogSizeHint.Large));
                 if (exitCode == ApplicationComponentExitCode.Accepted)
 				{
 					var worklist = CollectionUtils.FirstElement(editor.EditedWorklistSummaries);
@@ -189,7 +189,7 @@ namespace ClearCanvas.Ris.Client
 				var editor = new WorklistEditorComponent(folder.WorklistRef, false, fs.SupportedWorklistClasses, initialWorklistClassName);
 				var exitCode = ApplicationComponent.LaunchAsDialog(
                     this.Context.DesktopWindow,
-					new DialogBoxCreationArgs(editor, "New Worklist", null, DialogSizeHint.Large));
+					new DialogBoxCreationArgs(editor, SR.TitleNewWorklist, null, DialogSizeHint.Large));
                 if (exitCode == ApplicationComponentExitCode.Accepted)
 				{
 					AddNewWorklistsToFolderSystem(editor.EditedWorklistSummaries, fs);
@@ -209,7 +209,7 @@ namespace ClearCanvas.Ris.Client
 
             // confirm deletion
             if (this.Context.DesktopWindow.ShowMessageBox(
-                "Are you sure you want to delete the selected worklist?", MessageBoxActions.OkCancel)
+                SR.MessageConfirmDeleteSelectedWorklist, MessageBoxActions.OkCancel)
                 != DialogBoxAction.Ok)
                 return;
 

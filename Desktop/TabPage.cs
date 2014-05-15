@@ -22,6 +22,8 @@
 
 #endregion
 
+using System.ComponentModel;
+
 namespace ClearCanvas.Desktop
 {
     /// <summary>
@@ -29,14 +31,14 @@ namespace ClearCanvas.Desktop
     /// </summary>
     public class TabPage : ContainerPage
     {
-		private string _name;
+		private readonly string _name;
 		
         /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="name">The name of the page.</param>
         /// <param name="component">The <see cref="IApplicationComponent"/> to be hosted in this page.</param>
-        public TabPage(string name, IApplicationComponent component)
+        public TabPage([Localizable(true)]string name, IApplicationComponent component)
             :base(component)
         {
 			_name = name;
@@ -47,7 +49,7 @@ namespace ClearCanvas.Desktop
 		/// </summary>
 		/// <param name="path"></param>
 		/// <param name="component"></param>
-    	public TabPage(Path path, IApplicationComponent component)
+		public TabPage(Path path, IApplicationComponent component)
 			:this(path.LastSegment.LocalizedText, component)
     	{
     	}

@@ -107,7 +107,7 @@ namespace ClearCanvas.Ris.Client
 					}
 				}
 
-				ApplicationComponent.LaunchAsDialog(this.Context.DesktopWindow, component, "Worklist Properties");
+				ApplicationComponent.LaunchAsDialog(this.Context.DesktopWindow, component, SR.TitleWorklistProperties);
 			}
 			catch (Exception e)
 			{

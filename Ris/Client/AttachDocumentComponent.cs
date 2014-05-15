@@ -90,7 +90,7 @@ namespace ClearCanvas.Ris.Client
 			try
 			{
 				var args = new FileDialogCreationArgs();
-				args.Filters.Add(new FileExtensionFilter("*.pdf", "PDF files (*.pdf)"));
+				args.Filters.Add(new FileExtensionFilter("*.pdf", SR.FileExtensionPdfFilterDescription));
 
 				var result = this.Host.DesktopWindow.ShowOpenFileDialogBox(args);
 				if (result.Action == DialogBoxAction.Ok)

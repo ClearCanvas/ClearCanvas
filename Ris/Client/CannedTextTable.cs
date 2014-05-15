@@ -31,9 +31,9 @@ namespace ClearCanvas.Ris.Client
 	{
 		public CannedTextTable()
 		{
-			this.Columns.Add(new TableColumn<CannedTextSummary, string>(SR.ColumnName, c => c.Name, 1.0f));
-			this.Columns.Add(new TableColumn<CannedTextSummary, string>(SR.ColumnCategory, c => c.Category, 1.0f));
-			this.Columns.Add(new TableColumn<CannedTextSummary, string>(SR.ColumnText, c => FormatCannedTextSnippet(c.TextSnippet), 3.0f));
+			this.Columns.Add(new TableColumn<CannedTextSummary, string>(SR.ColumnCannedTextName, c => c.Name, 1.0f));
+			this.Columns.Add(new TableColumn<CannedTextSummary, string>(SR.ColumnCannedTextCategory, c => c.Category, 1.0f));
+			this.Columns.Add(new TableColumn<CannedTextSummary, string>(SR.ColumnCannedTextText, c => FormatCannedTextSnippet(c.TextSnippet), 3.0f));
 			this.Columns.Add(new TableColumn<CannedTextSummary, string>(SR.ColumnCannedTextOwner,
 				item => item.IsPersonal ? SR.ColumnPersonal : item.StaffGroup.Name, 1.0f));
 
