@@ -43,6 +43,18 @@ namespace ClearCanvas.ImageServer.Model.EntityBrokers
         {
             return new ProcedureCodeSelectCriteria(this);
         }
+        [EntityFieldDatabaseMappingAttribute(TableName="ProcedureCode", ColumnName="ServerPartitionGUID")]
+        public ISearchCondition<ServerEntityKey> ServerPartitionKey
+        {
+            get
+            {
+              if (!SubCriteria.ContainsKey("ServerPartitionKey"))
+              {
+                 SubCriteria["ServerPartitionKey"] = new SearchCondition<ServerEntityKey>("ServerPartitionKey");
+              }
+              return (ISearchCondition<ServerEntityKey>)SubCriteria["ServerPartitionKey"];
+            } 
+        }
         [EntityFieldDatabaseMappingAttribute(TableName="ProcedureCode", ColumnName="Identifier")]
         public ISearchCondition<String> Identifier
         {

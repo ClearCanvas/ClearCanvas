@@ -819,34 +819,28 @@
   <data name="ServerPartitionTypeEnum_VFS_LongDescription" xml:space="preserve">
     <value>An ImageServer Virtual File System Partition</value>
   </data>
-  <data name="OrderStatusEnum_NW_Description" xml:space="preserve">
+  <data name="OrderStatusEnum_New_Description" xml:space="preserve">
     <value>New</value>
   </data>
-  <data name="OrderStatusEnum_NW_LongDescription" xml:space="preserve">
+  <data name="OrderStatusEnum_New_LongDescription" xml:space="preserve">
     <value>New Order</value>
   </data>
-  <data name="OrderStatusEnum_OC_Description" xml:space="preserve">
+  <data name="OrderStatusEnum_Canceled_Description" xml:space="preserve">
     <value>Canceled</value>
   </data>
-  <data name="OrderStatusEnum_OC_LongDescription" xml:space="preserve">
+  <data name="OrderStatusEnum_Canceled_LongDescription" xml:space="preserve">
     <value>Order Cancelled</value>
   </data>
-  <data name="OrderStatusEnum_DC_Description" xml:space="preserve">
-    <value>Discontinued</value>
+  <data name="OrderStatusEnum_Complete_Description" xml:space="preserve">
+    <value>Complete</value>
   </data>
-  <data name="OrderStatusEnum_DC_LongDescription" xml:space="preserve">
-    <value>Order Discontinued</value>
-  </data>
-  <data name="OrderStatusEnum_CM_Description" xml:space="preserve">
-    <value>Completed</value>
-  </data>
-  <data name="OrderStatusEnum_CM_LongDescription" xml:space="preserve">
+  <data name="OrderStatusEnum_Complete_LongDescription" xml:space="preserve">
     <value>Order Completed</value>
   </data>
-  <data name="OrderStatusEnum_IP_Description" xml:space="preserve">
+  <data name="OrderStatusEnum_InProcess_Description" xml:space="preserve">
     <value>In Process</value>
   </data>
-  <data name="OrderStatusEnum_IP_LongDescription" xml:space="preserve">
+  <data name="OrderStatusEnum_InProcess_LongDescription" xml:space="preserve">
     <value>Order In Process</value>
   </data>
   <data name="StudyIntegrityReasonEnum_InconsistentData_Description" xml:space="preserve">

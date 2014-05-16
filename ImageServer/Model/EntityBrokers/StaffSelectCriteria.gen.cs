@@ -43,6 +43,18 @@ namespace ClearCanvas.ImageServer.Model.EntityBrokers
         {
             return new StaffSelectCriteria(this);
         }
+        [EntityFieldDatabaseMappingAttribute(TableName="Staff", ColumnName="ServerPartitionGUID")]
+        public ISearchCondition<ServerEntityKey> ServerPartitionKey
+        {
+            get
+            {
+              if (!SubCriteria.ContainsKey("ServerPartitionKey"))
+              {
+                 SubCriteria["ServerPartitionKey"] = new SearchCondition<ServerEntityKey>("ServerPartitionKey");
+              }
+              return (ISearchCondition<ServerEntityKey>)SubCriteria["ServerPartitionKey"];
+            } 
+        }
         [EntityFieldDatabaseMappingAttribute(TableName="Staff", ColumnName="Identifier")]
         public ISearchCondition<String> Identifier
         {

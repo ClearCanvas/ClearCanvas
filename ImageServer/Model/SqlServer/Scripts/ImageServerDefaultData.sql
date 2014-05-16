@@ -1258,29 +1258,23 @@ GO
 INSERT INTO [ImageServer].[dbo].[OrderStatusEnum]
            ([GUID],[Enum],[Lookup],[Description],[LongDescription])
      VALUES
-           (newid(),101,'NW','New','New Order')
+           (newid(),101,'New','New','New Order')
 GO
 
 INSERT INTO [ImageServer].[dbo].[OrderStatusEnum]
            ([GUID],[Enum],[Lookup],[Description],[LongDescription])
      VALUES
-           (newid(),102,'OC','Canceled','Order Cancelled')
+           (newid(),102,'Canceled','Canceled','Order Cancelled')
 GO
 
 INSERT INTO [ImageServer].[dbo].[OrderStatusEnum]
            ([GUID],[Enum],[Lookup],[Description],[LongDescription])
      VALUES
-           (newid(),103,'DC','Discontinued','Order Discontinued')
+           (newid(),103,'Complete','Complete','Order Completed')
 GO
 
 INSERT INTO [ImageServer].[dbo].[OrderStatusEnum]
            ([GUID],[Enum],[Lookup],[Description],[LongDescription])
      VALUES
-           (newid(),104,'CM','Completed','Order Completed')
-GO
-
-INSERT INTO [ImageServer].[dbo].[OrderStatusEnum]
-           ([GUID],[Enum],[Lookup],[Description],[LongDescription])
-     VALUES
-           (newid(),105,'IP','In Process','Order In Process')
+           (newid(),104,'InProcess','In Process','Order In Process')
 GO

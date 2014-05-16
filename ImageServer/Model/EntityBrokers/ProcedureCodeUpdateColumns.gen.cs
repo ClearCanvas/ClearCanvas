@@ -35,6 +35,11 @@ namespace ClearCanvas.ImageServer.Model.EntityBrokers
        public ProcedureCodeUpdateColumns()
        : base("ProcedureCode")
        {}
+        [EntityFieldDatabaseMappingAttribute(TableName="ProcedureCode", ColumnName="ServerPartitionGUID")]
+        public ServerEntityKey ServerPartitionKey
+        {
+            set { SubParameters["ServerPartitionKey"] = new EntityUpdateColumn<ServerEntityKey>("ServerPartitionKey", value); }
+        }
         [EntityFieldDatabaseMappingAttribute(TableName="ProcedureCode", ColumnName="Identifier")]
         public String Identifier
         {

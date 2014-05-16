@@ -17,191 +17,230 @@ PRINT N'Create ProcedureCode, Staff, Order, and OrderStatusEnum table'
 GO
 BEGIN TRANSACTION
 GO
-CREATE TABLE dbo.[ProcedureCode]
-	(
-	GUID uniqueidentifier NOT NULL ROWGUIDCOL,
-	Identifier varchar(20) NOT NULL,
-	Text nvarchar(199) NULL,
-	CodingSystem varchar(20) NULL
-	)  ON STATIC
+
+
+/****** Object:  Table [dbo].[Order]    Script Date: 5/15/2014 6:47:33 PM ******/
+SET ANSI_NULLS ON
 GO
-ALTER TABLE dbo.[ProcedureCode] ADD CONSTRAINT
-	DF_ProcedureCode_GUID DEFAULT (newid()) FOR GUID
+SET QUOTED_IDENTIFIER ON
 GO
-ALTER TABLE dbo.[ProcedureCode] ADD CONSTRAINT
-	PK_ProcedureCode PRIMARY KEY CLUSTERED 
-	(
-	GUID
-	) WITH( STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON STATIC
+SET ANSI_PADDING ON
+GO
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Order]') AND type in (N'U'))
+BEGIN
+CREATE TABLE [dbo].[Order](
+	[GUID] [uniqueidentifier] ROWGUIDCOL  NOT NULL,
+	[ServerPartitionGUID] [uniqueidentifier] NOT NULL,
+	[OrderStatusEnum] [smallint] NOT NULL,
+	[InsertTime] [datetime] NOT NULL,
+	[UpdatedTime] [datetime] NOT NULL,
+	[PatientGUID] [uniqueidentifier] NOT NULL,
+	[AccessionNumber] [varchar](64) NOT NULL,
+	[ScheduledDateTime] [datetime] NOT NULL,
+	[RequestedProcedureCodeGUID] [uniqueidentifier] NOT NULL,
+	[EnteredByStaffGUID] [uniqueidentifier] NULL,
+	[ReferringStaffGUID] [uniqueidentifier] NULL,
+	[Priority] [varchar](2) NOT NULL,
+	[PatientClass] [varchar](1) NULL,
+	[ReasonForStudy] [nvarchar](199) NULL,
+	[PointOfCare] [nvarchar](20) NULL,
+	[Room] [nvarchar](20) NULL,
+	[Bed] [nvarchar](20) NULL,
+	[StudyInstanceUid] [varchar](64) NULL,
+ CONSTRAINT [PK_Order] PRIMARY KEY CLUSTERED 
+(
+	[GUID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+END
+GO
+SET ANSI_PADDING OFF
+GO
+/****** Object:  Table [dbo].[OrderStatusEnum]    Script Date: 5/15/2014 6:47:33 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[OrderStatusEnum]') AND type in (N'U'))
+BEGIN
+CREATE TABLE [dbo].[OrderStatusEnum](
+	[GUID] [uniqueidentifier] ROWGUIDCOL  NOT NULL,
+	[Enum] [smallint] NOT NULL,
+	[Lookup] [varchar](32) NOT NULL,
+	[Description] [nvarchar](32) NOT NULL,
+	[LongDescription] [nvarchar](512) NOT NULL,
+ CONSTRAINT [PK_OrderStatusEnum] PRIMARY KEY CLUSTERED 
+(
+	[Enum] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [STATIC]
+) ON [STATIC]
+END
+GO
+SET ANSI_PADDING OFF
+GO
+/****** Object:  Table [dbo].[ProcedureCode]    Script Date: 5/15/2014 6:47:33 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[ProcedureCode]') AND type in (N'U'))
+BEGIN
+CREATE TABLE [dbo].[ProcedureCode](
+	[GUID] [uniqueidentifier] ROWGUIDCOL  NOT NULL,
+	[ServerPartitionGUID] [uniqueidentifier] NOT NULL,
+	[Identifier] [varchar](20) NOT NULL,
+	[Text] [nvarchar](199) NULL,
+	[CodingSystem] [varchar](20) NULL,
+ CONSTRAINT [PK_Procedure] PRIMARY KEY CLUSTERED 
+(
+	[GUID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [STATIC]
+) ON [STATIC]
+END
+GO
+SET ANSI_PADDING OFF
+GO
+/****** Object:  Table [dbo].[Staff]    Script Date: 5/15/2014 6:47:33 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Staff]') AND type in (N'U'))
+BEGIN
+CREATE TABLE [dbo].[Staff](
+	[GUID] [uniqueidentifier] ROWGUIDCOL  NOT NULL,
+	[ServerPartitionGUID] [uniqueidentifier] NOT NULL,
+	[Identifier] [nvarchar](15) NOT NULL,
+	[FamilyName] [nvarchar](194) NOT NULL,
+	[GivenName] [nvarchar](30) NOT NULL,
+	[MiddleName] [nvarchar](3) NULL,
+	[Suffix] [nvarchar](20) NULL,
+	[Prefix] [nvarchar](20) NULL,
+ CONSTRAINT [PK_Staff] PRIMARY KEY CLUSTERED 
+(
+	[GUID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+END
+GO
+SET ANSI_PADDING ON
 
 GO
-CREATE NONCLUSTERED INDEX IX_ProcedureCode_Identifier ON dbo.[ProcedureCode]
-	(
-	Identifier
-	) WITH( STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON INDEXES
+/****** Object:  Index [IX_Order_AccessionNumber]    Script Date: 5/15/2014 6:47:33 PM ******/
+IF NOT EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[Order]') AND name = N'IX_Order_AccessionNumber')
+CREATE NONCLUSTERED INDEX [IX_Order_AccessionNumber] ON [dbo].[Order]
+(
+	[AccessionNumber] ASC,
+	[ServerPartitionGUID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [INDEXES]
 GO
-ALTER TABLE dbo.[ProcedureCode] SET (LOCK_ESCALATION = TABLE)
+/****** Object:  Index [IX_Order_ScheduledDateTime]    Script Date: 5/15/2014 6:47:33 PM ******/
+IF NOT EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[Order]') AND name = N'IX_Order_ScheduledDateTime')
+CREATE NONCLUSTERED INDEX [IX_Order_ScheduledDateTime] ON [dbo].[Order]
+(
+	[ScheduledDateTime] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [INDEXES]
 GO
-COMMIT
-select Has_Perms_By_Name(N'dbo.[ProcedureCode]', 'Object', 'ALTER') as ALT_Per, Has_Perms_By_Name(N'dbo.[ProcedureCode]', 'Object', 'VIEW DEFINITION') as View_def_Per, Has_Perms_By_Name(N'dbo.[ProcedureCode]', 'Object', 'CONTROL') as Contr_Per BEGIN TRANSACTION
-GO
-CREATE TABLE dbo.Staff
-	(
-	GUID uniqueidentifier NOT NULL ROWGUIDCOL,
-	Identifier nvarchar(15) NOT NULL,
-	FamilyName nvarchar(194) NOT NULL,
-	GivenName nvarchar(30) NOT NULL,
-	MiddleName nvarchar(3) NULL,
-	Suffix nvarchar(20) NULL,
-	Prefix nvarchar(20) NULL
-	)  ON [PRIMARY]
-GO
-ALTER TABLE dbo.Staff ADD CONSTRAINT
-	DF_Staff_GUID DEFAULT (newid()) FOR GUID
-GO
-ALTER TABLE dbo.Staff ADD CONSTRAINT
-	PK_Staff PRIMARY KEY CLUSTERED 
-	(
-	GUID
-	) WITH( STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+SET ANSI_PADDING ON
 
 GO
-ALTER TABLE dbo.Staff SET (LOCK_ESCALATION = TABLE)
+/****** Object:  Index [IX_Procedure_Identifier]    Script Date: 5/15/2014 6:47:33 PM ******/
+IF NOT EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[ProcedureCode]') AND name = N'IX_Procedure_Identifier')
+CREATE UNIQUE NONCLUSTERED INDEX [IX_Procedure_Identifier] ON [dbo].[ProcedureCode]
+(
+	[Identifier] ASC,
+	[ServerPartitionGUID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [INDEXES]
 GO
-COMMIT
-select Has_Perms_By_Name(N'dbo.Staff', 'Object', 'ALTER') as ALT_Per, Has_Perms_By_Name(N'dbo.Staff', 'Object', 'VIEW DEFINITION') as View_def_Per, Has_Perms_By_Name(N'dbo.Staff', 'Object', 'CONTROL') as Contr_Per BEGIN TRANSACTION
-GO
-ALTER TABLE dbo.ServerPartition SET (LOCK_ESCALATION = TABLE)
-GO
-COMMIT
-select Has_Perms_By_Name(N'dbo.ServerPartition', 'Object', 'ALTER') as ALT_Per, Has_Perms_By_Name(N'dbo.ServerPartition', 'Object', 'VIEW DEFINITION') as View_def_Per, Has_Perms_By_Name(N'dbo.ServerPartition', 'Object', 'CONTROL') as Contr_Per BEGIN TRANSACTION
-GO
-CREATE TABLE dbo.OrderStatusEnum
-	(
-	GUID uniqueidentifier NOT NULL ROWGUIDCOL,
-	Enum smallint NOT NULL,
-	Lookup varchar(32) NOT NULL,
-	Description nvarchar(32) NOT NULL,
-	LongDescription nvarchar(512) NOT NULL
-	)  ON STATIC
-GO
-ALTER TABLE dbo.OrderStatusEnum ADD CONSTRAINT
-	DF_OrderStatusEnum_GUID DEFAULT (newid()) FOR GUID
-GO
-ALTER TABLE dbo.OrderStatusEnum ADD CONSTRAINT
-	PK_OrderStatusEnum PRIMARY KEY CLUSTERED 
-	(
-	Enum
-	) WITH( STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON STATIC
+SET ANSI_PADDING ON
 
 GO
-ALTER TABLE dbo.OrderStatusEnum SET (LOCK_ESCALATION = TABLE)
+/****** Object:  Index [IX_Staff_Identifier]    Script Date: 5/15/2014 6:47:33 PM ******/
+IF NOT EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[Staff]') AND name = N'IX_Staff_Identifier')
+CREATE UNIQUE NONCLUSTERED INDEX [IX_Staff_Identifier] ON [dbo].[Staff]
+(
+	[ServerPartitionGUID] ASC,
+	[Identifier] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
-COMMIT
-select Has_Perms_By_Name(N'dbo.OrderStatusEnum', 'Object', 'ALTER') as ALT_Per, Has_Perms_By_Name(N'dbo.OrderStatusEnum', 'Object', 'VIEW DEFINITION') as View_def_Per, Has_Perms_By_Name(N'dbo.OrderStatusEnum', 'Object', 'CONTROL') as Contr_Per BEGIN TRANSACTION
-GO
-CREATE TABLE dbo.[Order]
-	(
-	GUID uniqueidentifier NOT NULL ROWGUIDCOL,
-	ServerPartitionGUID uniqueidentifier NOT NULL,
-	OrderStatusEnum smallint NOT NULL,
-	InsertTime datetime NOT NULL,
-	UpdatedTime datetime NOT NULL,
-	PatientGUID uniqueidentifier NOT NULL,
-	AccessionNumber varchar(64) NOT NULL,
-	ScheduledDateTime datetime NOT NULL,
-	RequestedProcedureCodeGUID uniqueidentifier NOT NULL,
-	EnteredByStaffGUID uniqueidentifier NULL,
-	ReferringStaffGUID uniqueidentifier NULL,
-	Priority varchar(2) NOT NULL,
-	PatientClass varchar(1) NULL,
-	ReasonForStudy nvarchar(199) NULL,
-	PointOfCare nvarchar(20) NULL,
-	Room nvarchar(20) NULL,
-	Bed nvarchar(20) NULL,
-	StudyInstanceUid varchar(64) NULL
-	)  ON [PRIMARY]
-GO
-ALTER TABLE dbo.[Order] ADD CONSTRAINT
-	DF_Order_GUID DEFAULT (newid()) FOR GUID
-GO
-ALTER TABLE dbo.[Order] ADD CONSTRAINT
-	PK_Order PRIMARY KEY CLUSTERED 
-	(
-	GUID
-	) WITH( STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = OBJECT_ID(N'[dbo].[DF_Order_GUID]') AND type = 'D')
+BEGIN
+ALTER TABLE [dbo].[Order] ADD  CONSTRAINT [DF_Order_GUID]  DEFAULT (newid()) FOR [GUID]
+END
 
 GO
-CREATE NONCLUSTERED INDEX IX_Order_ScheduledDateTime ON dbo.[Order]
-	(
-	ScheduledDateTime
-	) WITH( STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON INDEXES
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = OBJECT_ID(N'[dbo].[DF_OrderStatusEnum_GUID]') AND type = 'D')
+BEGIN
+ALTER TABLE [dbo].[OrderStatusEnum] ADD  CONSTRAINT [DF_OrderStatusEnum_GUID]  DEFAULT (newid()) FOR [GUID]
+END
+
 GO
-CREATE NONCLUSTERED INDEX IX_Order_AccessionNumber ON dbo.[Order]
-	(
-	AccessionNumber,
-	ServerPartitionGUID
-	) WITH( STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON INDEXES
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = OBJECT_ID(N'[dbo].[DF_Procedure_GUID]') AND type = 'D')
+BEGIN
+ALTER TABLE [dbo].[ProcedureCode] ADD  CONSTRAINT [DF_Procedure_GUID]  DEFAULT (newid()) FOR [GUID]
+END
+
 GO
-ALTER TABLE dbo.[Order] ADD CONSTRAINT
-	FK_Order_OrderStatusEnum FOREIGN KEY
-	(
-	OrderStatusEnum
-	) REFERENCES dbo.OrderStatusEnum
-	(
-	Enum
-	) ON UPDATE  NO ACTION 
-	 ON DELETE  NO ACTION 
-	
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = OBJECT_ID(N'[dbo].[DF_Staff_GUID]') AND type = 'D')
+BEGIN
+ALTER TABLE [dbo].[Staff] ADD  CONSTRAINT [DF_Staff_GUID]  DEFAULT (newid()) FOR [GUID]
+END
+
 GO
-ALTER TABLE dbo.[Order] ADD CONSTRAINT
-	FK_Order_ServerPartition FOREIGN KEY
-	(
-	ServerPartitionGUID
-	) REFERENCES dbo.ServerPartition
-	(
-	GUID
-	) ON UPDATE  NO ACTION 
-	 ON DELETE  NO ACTION 
-	
+IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_Order_OrderStatusEnum]') AND parent_object_id = OBJECT_ID(N'[dbo].[Order]'))
+ALTER TABLE [dbo].[Order]  WITH CHECK ADD  CONSTRAINT [FK_Order_OrderStatusEnum] FOREIGN KEY([OrderStatusEnum])
+REFERENCES [dbo].[OrderStatusEnum] ([Enum])
 GO
-ALTER TABLE dbo.[Order] ADD CONSTRAINT
-	FK_Order_Staff_ReferringStaff FOREIGN KEY
-	(
-	ReferringStaffGUID
-	) REFERENCES dbo.Staff
-	(
-	GUID
-	) ON UPDATE  NO ACTION 
-	 ON DELETE  NO ACTION 
-	
+IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_Order_OrderStatusEnum]') AND parent_object_id = OBJECT_ID(N'[dbo].[Order]'))
+ALTER TABLE [dbo].[Order] CHECK CONSTRAINT [FK_Order_OrderStatusEnum]
 GO
-ALTER TABLE dbo.[Order] ADD CONSTRAINT
-	FK_Order_Staff_EnteredBy FOREIGN KEY
-	(
-	EnteredByStaffGUID
-	) REFERENCES dbo.Staff
-	(
-	GUID
-	) ON UPDATE  NO ACTION 
-	 ON DELETE  NO ACTION 
-	
+IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_Order_Procedure]') AND parent_object_id = OBJECT_ID(N'[dbo].[Order]'))
+ALTER TABLE [dbo].[Order]  WITH CHECK ADD  CONSTRAINT [FK_Order_Procedure] FOREIGN KEY([RequestedProcedureCodeGUID])
+REFERENCES [dbo].[ProcedureCode] ([GUID])
 GO
-ALTER TABLE dbo.[Order] ADD CONSTRAINT
-	FK_Order_ProcedureCode FOREIGN KEY
-	(
-	RequestedProcedureCodeGUID
-	) REFERENCES dbo.[ProcedureCode]
-	(
-	GUID
-	) ON UPDATE  NO ACTION 
-	 ON DELETE  NO ACTION 
-	
+IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_Order_Procedure]') AND parent_object_id = OBJECT_ID(N'[dbo].[Order]'))
+ALTER TABLE [dbo].[Order] CHECK CONSTRAINT [FK_Order_Procedure]
 GO
-ALTER TABLE dbo.[Order] SET (LOCK_ESCALATION = TABLE)
+IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_Order_ServerPartition]') AND parent_object_id = OBJECT_ID(N'[dbo].[Order]'))
+ALTER TABLE [dbo].[Order]  WITH CHECK ADD  CONSTRAINT [FK_Order_ServerPartition] FOREIGN KEY([ServerPartitionGUID])
+REFERENCES [dbo].[ServerPartition] ([GUID])
 GO
-COMMIT
-select Has_Perms_By_Name(N'dbo.[Order]', 'Object', 'ALTER') as ALT_Per, Has_Perms_By_Name(N'dbo.[Order]', 'Object', 'VIEW DEFINITION') as View_def_Per, Has_Perms_By_Name(N'dbo.[Order]', 'Object', 'CONTROL') as Contr_Per 
+IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_Order_ServerPartition]') AND parent_object_id = OBJECT_ID(N'[dbo].[Order]'))
+ALTER TABLE [dbo].[Order] CHECK CONSTRAINT [FK_Order_ServerPartition]
+GO
+IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_Order_Staff_EnteredBy]') AND parent_object_id = OBJECT_ID(N'[dbo].[Order]'))
+ALTER TABLE [dbo].[Order]  WITH CHECK ADD  CONSTRAINT [FK_Order_Staff_EnteredBy] FOREIGN KEY([EnteredByStaffGUID])
+REFERENCES [dbo].[Staff] ([GUID])
+GO
+IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_Order_Staff_EnteredBy]') AND parent_object_id = OBJECT_ID(N'[dbo].[Order]'))
+ALTER TABLE [dbo].[Order] CHECK CONSTRAINT [FK_Order_Staff_EnteredBy]
+GO
+IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_Order_Staff_ReferringStaff]') AND parent_object_id = OBJECT_ID(N'[dbo].[Order]'))
+ALTER TABLE [dbo].[Order]  WITH CHECK ADD  CONSTRAINT [FK_Order_Staff_ReferringStaff] FOREIGN KEY([ReferringStaffGUID])
+REFERENCES [dbo].[Staff] ([GUID])
+GO
+IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_Order_Staff_ReferringStaff]') AND parent_object_id = OBJECT_ID(N'[dbo].[Order]'))
+ALTER TABLE [dbo].[Order] CHECK CONSTRAINT [FK_Order_Staff_ReferringStaff]
+GO
+IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_ProcedureCode_ServerPartition]') AND parent_object_id = OBJECT_ID(N'[dbo].[ProcedureCode]'))
+ALTER TABLE [dbo].[ProcedureCode]  WITH CHECK ADD  CONSTRAINT [FK_ProcedureCode_ServerPartition] FOREIGN KEY([ServerPartitionGUID])
+REFERENCES [dbo].[ServerPartition] ([GUID])
+GO
+IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_ProcedureCode_ServerPartition]') AND parent_object_id = OBJECT_ID(N'[dbo].[ProcedureCode]'))
+ALTER TABLE [dbo].[ProcedureCode] CHECK CONSTRAINT [FK_ProcedureCode_ServerPartition]
+GO
+IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_Staff_ServerPartition]') AND parent_object_id = OBJECT_ID(N'[dbo].[Staff]'))
+ALTER TABLE [dbo].[Staff]  WITH CHECK ADD  CONSTRAINT [FK_Staff_ServerPartition] FOREIGN KEY([ServerPartitionGUID])
+REFERENCES [dbo].[ServerPartition] ([GUID])
+GO
+IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_Staff_ServerPartition]') AND parent_object_id = OBJECT_ID(N'[dbo].[Staff]'))
+ALTER TABLE [dbo].[Staff] CHECK CONSTRAINT [FK_Staff_ServerPartition]
+GO
+
 
 IF @@ERROR<>0 AND @@TRANCOUNT>0 ROLLBACK TRANSACTION
 GO
@@ -214,32 +253,27 @@ GO
 INSERT INTO [ImageServer].[dbo].[OrderStatusEnum]
            ([GUID],[Enum],[Lookup],[Description],[LongDescription])
      VALUES
-           (newid(),101,'NW','New','New Order')
+           (newid(),101,'New','New','New Order')
 GO
 
 INSERT INTO [ImageServer].[dbo].[OrderStatusEnum]
            ([GUID],[Enum],[Lookup],[Description],[LongDescription])
      VALUES
-           (newid(),102,'OC','Canceled','Order Cancelled')
+           (newid(),102,'Canceled','Canceled','Order Cancelled')
 GO
 
 INSERT INTO [ImageServer].[dbo].[OrderStatusEnum]
            ([GUID],[Enum],[Lookup],[Description],[LongDescription])
      VALUES
-           (newid(),103,'DC','Discontinued','Order Discontinued')
+           (newid(),103,'Complete','Complete','Order Completed')
 GO
 
 INSERT INTO [ImageServer].[dbo].[OrderStatusEnum]
            ([GUID],[Enum],[Lookup],[Description],[LongDescription])
      VALUES
-           (newid(),104,'CM','Completed','Order Completed')
+           (newid(),104,'InProcess','In Process','Order In Process')
 GO
 
-INSERT INTO [ImageServer].[dbo].[OrderStatusEnum]
-           ([GUID],[Enum],[Lookup],[Description],[LongDescription])
-     VALUES
-           (newid(),105,'IP','In Process','Order In Process')
-GO
 
 IF @@ERROR<>0 AND @@TRANCOUNT>0 ROLLBACK TRANSACTION
 GO
