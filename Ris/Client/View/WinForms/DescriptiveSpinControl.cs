@@ -31,6 +31,9 @@ namespace ClearCanvas.Ris.Client.View.WinForms
 {
 	public partial class DescriptiveSpinControl : UserControl
 	{
+		// Default formatting is to return the numeric value.
+		private Converter<decimal, string> _defaultFormatter = value => value.ToString();
+
 		public DescriptiveSpinControl()
 		{
 			InitializeComponent();
@@ -44,9 +47,6 @@ namespace ClearCanvas.Ris.Client.View.WinForms
 
 			// The textbox is always in read-only mode.  Therefore manually change colour with enablement.
 			this.EnabledChanged += delegate { SetTextBoxBackColour(); };
-
-			// Default formatting is to return the numeric value.
-			this.Format = delegate(decimal value) { return value.ToString(); };
 
 			// Set initial textBox back colour.
 			SetTextBoxBackColour();
@@ -75,7 +75,7 @@ namespace ClearCanvas.Ris.Client.View.WinForms
 			set
 			{
 				_numericUpDown.Value = value;
-				_textBox.Text = this.Format(value);
+				_textBox.Text = FormatValue(value);
 			}
 		}
 
@@ -88,6 +88,11 @@ namespace ClearCanvas.Ris.Client.View.WinForms
 		private void SetTextBoxBackColour()
 		{
 			_textBox.BackColor = this.Enabled ? SystemColors.Window : SystemColors.Control;
+		}
+
+		private string FormatValue(decimal value)
+		{
+			return (this.Format ?? _defaultFormatter)(value);
 		}
 	}
 }

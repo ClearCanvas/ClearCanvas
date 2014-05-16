@@ -3274,6 +3274,96 @@ namespace ClearCanvas.Ris.Client {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} days ago.
+        /// </summary>
+        internal static string RelativeTimeInDays_DaysAgo {
+            get {
+                return ResourceManager.GetString("RelativeTimeInDays_DaysAgo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} days from now.
+        /// </summary>
+        internal static string RelativeTimeInDays_DaysFromNow {
+            get {
+                return ResourceManager.GetString("RelativeTimeInDays_DaysFromNow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Today.
+        /// </summary>
+        internal static string RelativeTimeInDays_Today {
+            get {
+                return ResourceManager.GetString("RelativeTimeInDays_Today", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tomorrow.
+        /// </summary>
+        internal static string RelativeTimeInDays_Tomorrow {
+            get {
+                return ResourceManager.GetString("RelativeTimeInDays_Tomorrow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Yesterday.
+        /// </summary>
+        internal static string RelativeTimeInDays_Yesterday {
+            get {
+                return ResourceManager.GetString("RelativeTimeInDays_Yesterday", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} hours ago.
+        /// </summary>
+        internal static string RelativeTimeInHours_HoursAgo {
+            get {
+                return ResourceManager.GetString("RelativeTimeInHours_HoursAgo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} hours from now.
+        /// </summary>
+        internal static string RelativeTimeInHours_HoursFromNow {
+            get {
+                return ResourceManager.GetString("RelativeTimeInHours_HoursFromNow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Now.
+        /// </summary>
+        internal static string RelativeTimeInHours_Now {
+            get {
+                return ResourceManager.GetString("RelativeTimeInHours_Now", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 1 hour ago.
+        /// </summary>
+        internal static string RelativeTimeInHours_OneHourAgo {
+            get {
+                return ResourceManager.GetString("RelativeTimeInHours_OneHourAgo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 1 hour from now.
+        /// </summary>
+        internal static string RelativeTimeInHours_OneHourFromNow {
+            get {
+                return ResourceManager.GetString("RelativeTimeInHours_OneHourFromNow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Add.
         /// </summary>
         internal static string TitleAdd {

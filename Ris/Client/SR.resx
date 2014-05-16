@@ -1512,4 +1512,34 @@
   <data name="NodeSubscribedWorklistsReadOnly" xml:space="preserve">
     <value>Subscribed Worklists (read only)</value>
   </data>
+	<data name="RelativeTimeInDays_Today">
+		<value xml:space="preserve">Today</value>
+	</data>
+	<data name="RelativeTimeInDays_Tomorrow">
+		<value xml:space="preserve">Tomorrow</value>
+	</data>
+	<data name="RelativeTimeInDays_Yesterday">
+		<value xml:space="preserve">Yesterday</value>
+	</data>
+	<data name="RelativeTimeInDays_DaysFromNow">
+		<value xml:space="preserve">{0} days from now</value>
+	</data>
+	<data name="RelativeTimeInDays_DaysAgo">
+		<value xml:space="preserve">{0} days ago</value>
+	</data>
+	<data name="RelativeTimeInHours_Now">
+		<value xml:space="preserve">Now</value>
+	</data>
+	<data name="RelativeTimeInHours_OneHourFromNow">
+		<value xml:space="preserve">1 hour from now</value>
+	</data>
+	<data name="RelativeTimeInHours_OneHourAgo">
+		<value xml:space="preserve">1 hour ago</value>
+	</data>
+	<data name="RelativeTimeInHours_HoursFromNow">
+		<value xml:space="preserve">{0} hours from now</value>
+	</data>
+	<data name="RelativeTimeInHours_HoursAgo">
+		<value xml:space="preserve">{0} hours ago</value>
+	</data>
 </root>
