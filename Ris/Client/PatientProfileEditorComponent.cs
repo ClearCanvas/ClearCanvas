@@ -144,7 +144,7 @@ namespace ClearCanvas.Ris.Client
 						|| Thread.CurrentPrincipal.IsInRole(ClearCanvas.Ris.Application.Common.AuthorityTokens.Workflow.Patient.Create))
 					{
 						this.Pages.Add(
-							new NavigatorPage(new Path("NodePatient"),
+							new NavigatorPage("NodePatient",
 								_patientEditor =
 								new PatientProfileDetailsEditorComponent(
 									_isNew,
@@ -153,20 +153,20 @@ namespace ClearCanvas.Ris.Client
 									formData.MrnAssigningAuthorityChoices,
 									formData.HealthcardAssigningAuthorityChoices)));
 						this.Pages.Add(
-							new NavigatorPage(new Path("NodePatient/NodeAddresses"),
+							new NavigatorPage("NodePatient/NodeAddresses",
 								_addressesSummary = new AddressesSummaryComponent(formData.AddressTypeChoices)));
 						this.Pages.Add(
-							new NavigatorPage(new Path("NodePatient/NodePhoneNumbers"),
+							new NavigatorPage("NodePatient/NodePhoneNumbers",
 								_phoneNumbersSummary = new PhoneNumbersSummaryComponent(formData.PhoneTypeChoices)));
 						this.Pages.Add(
-							new NavigatorPage(new Path("NodePatient/NodeEmailAddresses"),
+							new NavigatorPage("NodePatient/NodeEmailAddresses",
 								_emailAddressesSummary = new EmailAddressesSummaryComponent()));
 						this.Pages.Add(
-							new NavigatorPage(new Path("NodePatient/NodeContactPersons"),
+							new NavigatorPage("NodePatient/NodeContactPersons",
 								_contactPersonsSummary =
 								new ContactPersonsSummaryComponent(formData.ContactPersonTypeChoices, formData.ContactPersonRelationshipChoices)));
 						this.Pages.Add(
-							new NavigatorPage(new Path("NodePatient/NodeCulture"),
+							new NavigatorPage("NodePatient/NodeCulture",
 								_additionalPatientInfoSummary =
 								new PatientProfileAdditionalInfoEditorComponent(formData.ReligionChoices, formData.PrimaryLanguageChoices)));
 
@@ -189,11 +189,11 @@ namespace ClearCanvas.Ris.Client
 						|| Thread.CurrentPrincipal.IsInRole(ClearCanvas.Ris.Application.Common.AuthorityTokens.Workflow.Patient.Update))
 					{
 						this.Pages.Add(
-							new NavigatorPage(new Path("NodePatient/NodeNotes"),
+							new NavigatorPage("NodePatient/NodeNotes",
 								_notesSummary = new PatientNoteSummaryComponent(_profile.Notes, formData.NoteCategoryChoices)));
 						_notesSummary.SetModifiedOnListChange = true;
 
-						var patientDocumentsPage = new NavigatorPage(new Path("NodePatient/NodeAttachments"),
+						var patientDocumentsPage = new NavigatorPage("NodePatient/NodeAttachments",
 							_documentSummary =
 							new AttachedDocumentPreviewComponent(false, AttachmentSite.Patient));
 						this.Pages.Add(patientDocumentsPage);
