@@ -35,6 +35,11 @@ namespace ClearCanvas.ImageServer.Model.EntityBrokers
        public StaffUpdateColumns()
        : base("Staff")
        {}
+        [EntityFieldDatabaseMappingAttribute(TableName="Staff", ColumnName="ServerPartitionGUID")]
+        public ServerEntityKey ServerPartitionKey
+        {
+            set { SubParameters["ServerPartitionKey"] = new EntityUpdateColumn<ServerEntityKey>("ServerPartitionKey", value); }
+        }
         [EntityFieldDatabaseMappingAttribute(TableName="Staff", ColumnName="Identifier")]
         public String Identifier
         {

@@ -40,11 +40,13 @@ namespace ClearCanvas.ImageServer.Model
         public ProcedureCode():base("ProcedureCode")
         {}
         public ProcedureCode(
-             String _identifier_
+             ServerEntityKey _serverPartitionKey_
+            ,String _identifier_
             ,String _text_
             ,String _codingSystem_
             ):base("ProcedureCode")
         {
+            ServerPartitionKey = _serverPartitionKey_;
             Identifier = _identifier_;
             Text = _text_;
             CodingSystem = _codingSystem_;
@@ -52,6 +54,9 @@ namespace ClearCanvas.ImageServer.Model
         #endregion
 
         #region Public Properties
+        [EntityFieldDatabaseMappingAttribute(TableName="ProcedureCode", ColumnName="ServerPartitionGUID")]
+        public ServerEntityKey ServerPartitionKey
+        { get; set; }
         [EntityFieldDatabaseMappingAttribute(TableName="ProcedureCode", ColumnName="Identifier")]
         public String Identifier
         { get; set; }
@@ -90,6 +95,7 @@ namespace ClearCanvas.ImageServer.Model
         {
             var broker = update.GetBroker<IProcedureCodeEntityBroker>();
             var updateColumns = new ProcedureCodeUpdateColumns();
+            updateColumns.ServerPartitionKey = entity.ServerPartitionKey;
             updateColumns.Identifier = entity.Identifier;
             updateColumns.Text = entity.Text;
             updateColumns.CodingSystem = entity.CodingSystem;

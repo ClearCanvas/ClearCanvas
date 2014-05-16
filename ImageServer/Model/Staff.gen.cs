@@ -40,7 +40,8 @@ namespace ClearCanvas.ImageServer.Model
         public Staff():base("Staff")
         {}
         public Staff(
-             String _identifier_
+             ServerEntityKey _serverPartitionKey_
+            ,String _identifier_
             ,String _familyName_
             ,String _givenName_
             ,String _middleName_
@@ -48,6 +49,7 @@ namespace ClearCanvas.ImageServer.Model
             ,String _prefix_
             ):base("Staff")
         {
+            ServerPartitionKey = _serverPartitionKey_;
             Identifier = _identifier_;
             FamilyName = _familyName_;
             GivenName = _givenName_;
@@ -58,6 +60,9 @@ namespace ClearCanvas.ImageServer.Model
         #endregion
 
         #region Public Properties
+        [EntityFieldDatabaseMappingAttribute(TableName="Staff", ColumnName="ServerPartitionGUID")]
+        public ServerEntityKey ServerPartitionKey
+        { get; set; }
         [EntityFieldDatabaseMappingAttribute(TableName="Staff", ColumnName="Identifier")]
         public String Identifier
         { get; set; }
@@ -105,6 +110,7 @@ namespace ClearCanvas.ImageServer.Model
         {
             var broker = update.GetBroker<IStaffEntityBroker>();
             var updateColumns = new StaffUpdateColumns();
+            updateColumns.ServerPartitionKey = entity.ServerPartitionKey;
             updateColumns.Identifier = entity.Identifier;
             updateColumns.FamilyName = entity.FamilyName;
             updateColumns.GivenName = entity.GivenName;

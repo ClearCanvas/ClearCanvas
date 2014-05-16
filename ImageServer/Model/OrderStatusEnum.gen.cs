@@ -36,48 +36,40 @@ namespace ClearCanvas.ImageServer.Model
 public partial class OrderStatusEnum : ServerEnum
 {
       #region Private Static Members
-      private static readonly OrderStatusEnum _NW = GetEnum("NW");
-      private static readonly OrderStatusEnum _OC = GetEnum("OC");
-      private static readonly OrderStatusEnum _DC = GetEnum("DC");
-      private static readonly OrderStatusEnum _CM = GetEnum("CM");
-      private static readonly OrderStatusEnum _IP = GetEnum("IP");
+      private static readonly OrderStatusEnum _New = GetEnum("New");
+      private static readonly OrderStatusEnum _Canceled = GetEnum("Canceled");
+      private static readonly OrderStatusEnum _Complete = GetEnum("Complete");
+      private static readonly OrderStatusEnum _InProcess = GetEnum("InProcess");
       #endregion
 
       #region Public Static Properties
       /// <summary>
       /// New Order
       /// </summary>
-      public static OrderStatusEnum NW
+      public static OrderStatusEnum New
       {
-          get { return _NW; }
+          get { return _New; }
       }
       /// <summary>
       /// Order Cancelled
       /// </summary>
-      public static OrderStatusEnum OC
+      public static OrderStatusEnum Canceled
       {
-          get { return _OC; }
-      }
-      /// <summary>
-      /// Order Discontinued
-      /// </summary>
-      public static OrderStatusEnum DC
-      {
-          get { return _DC; }
+          get { return _Canceled; }
       }
       /// <summary>
       /// Order Completed
       /// </summary>
-      public static OrderStatusEnum CM
+      public static OrderStatusEnum Complete
       {
-          get { return _CM; }
+          get { return _Complete; }
       }
       /// <summary>
       /// Order In Process
       /// </summary>
-      public static OrderStatusEnum IP
+      public static OrderStatusEnum InProcess
       {
-          get { return _IP; }
+          get { return _InProcess; }
       }
 
       #endregion
