@@ -64,12 +64,12 @@ namespace ClearCanvas.Ris.Client.Admin.View.WinForms
 			// 
 			// panel1
 			// 
+			resources.ApplyResources(this.panel1, "panel1");
 			this.panel1.Controls.Add(this._includeUserDefinedWorklists);
 			this.panel1.Controls.Add(this._clearButton);
 			this.panel1.Controls.Add(this._searchButton);
 			this.panel1.Controls.Add(this._classComboBox);
 			this.panel1.Controls.Add(this._name);
-			resources.ApplyResources(this.panel1, "panel1");
 			this.panel1.Name = "panel1";
 			// 
 			// _includeUserDefinedWorklists

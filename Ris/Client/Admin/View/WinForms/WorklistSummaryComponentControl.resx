@@ -136,7 +136,7 @@
     <value>4, 4, 4, 4</value>
   </data>
   <data name="_worklistTableView.Size" type="System.Drawing.Size, System.Drawing">
-    <value>637, 385</value>
+    <value>881, 385</value>
   </data>
   <data name="_worklistTableView.SortButtonTooltip" type="System.Resources.ResXNullRef, System.Windows.Forms">
     <value />
@@ -155,6 +155,9 @@
   </data>
   <data name="&gt;&gt;_worklistTableView.ZOrder" xml:space="preserve">
     <value>0</value>
+  </data>
+  <data name="panel1.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Left, Right</value>
   </data>
   <data name="_includeUserDefinedWorklists.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -322,7 +325,7 @@
     <value>3, 3</value>
   </data>
   <data name="panel1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>639, 54</value>
+    <value>883, 54</value>
   </data>
   <data name="panel1.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -343,7 +346,7 @@
     <value>Top, Left, Right</value>
   </data>
   <data name="_cancelButton.Location" type="System.Drawing.Point, System.Drawing">
-    <value>564, 2</value>
+    <value>808, 2</value>
   </data>
   <data name="_cancelButton.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>2, 2, 2, 2</value>
@@ -370,7 +373,7 @@
     <value>0</value>
   </data>
   <data name="_okButton.Location" type="System.Drawing.Point, System.Drawing">
-    <value>485, 2</value>
+    <value>729, 2</value>
   </data>
   <data name="_okButton.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>2, 2, 2, 2</value>
@@ -406,7 +409,7 @@
     <value>2, 2, 2, 2</value>
   </data>
   <data name="flowLayoutPanel1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>641, 30</value>
+    <value>885, 30</value>
   </data>
   <data name="flowLayoutPanel1.TabIndex" type="System.Int32, mscorlib">
     <value>2</value>
@@ -436,7 +439,7 @@
     <value>3</value>
   </data>
   <data name="tableLayoutPanel1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>645, 487</value>
+    <value>889, 487</value>
   </data>
   <data name="tableLayoutPanel1.TabIndex" type="System.Int32, mscorlib">
     <value>2</value>
@@ -463,7 +466,7 @@
     <value>6, 13</value>
   </data>
   <data name="$this.Size" type="System.Drawing.Size, System.Drawing">
-    <value>645, 487</value>
+    <value>889, 487</value>
   </data>
   <data name="&gt;&gt;toolTip1.Name" xml:space="preserve">
     <value>toolTip1</value>
