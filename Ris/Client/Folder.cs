@@ -125,8 +125,6 @@ namespace ClearCanvas.Ris.Client
 		/// </summary>
 		protected Folder()
 		{
-			// establish default resource resolver on this assembly (not the assembly of the derived class)
-			//_resourceResolver = new ResourceResolver(typeof(Folder).Assembly);
 			_resourceResolver = new ResourceResolver(this.GetType(), true);
 			
 			// Initialize folder Path
@@ -152,8 +150,7 @@ namespace ClearCanvas.Ris.Client
 		/// <param name="startExpanded"></param>
 		protected Folder(Path path, bool startExpanded)
 		{
-			// establish default resource resolver on this assembly (not the assembly of the derived class)
-			_resourceResolver = new ResourceResolver(typeof(Folder).Assembly);
+			_resourceResolver = new ResourceResolver(this.GetType(), true);
 			_folderPath = path;
 			_startExpanded = startExpanded;
 		}

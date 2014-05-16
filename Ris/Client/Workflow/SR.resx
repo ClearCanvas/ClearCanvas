@@ -1032,7 +1032,7 @@ Are you sure you want to cancel and replace this order?</value>
     <value>Incomplete Documentation</value>
   </data>
   <data name="FolderInProgress" xml:space="preserve">
-    <value>InProgress</value>
+    <value>In Progress</value>
   </data>
   <data name="FolderInTranscription" xml:space="preserve">
     <value>In Transcription</value>

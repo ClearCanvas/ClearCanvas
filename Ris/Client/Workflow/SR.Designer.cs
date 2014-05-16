@@ -934,7 +934,7 @@ namespace ClearCanvas.Ris.Client.Workflow {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to InProgress.
+        ///   Looks up a localized string similar to In Progress.
         /// </summary>
         internal static string FolderInProgress {
             get {
