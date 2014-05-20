@@ -66,6 +66,17 @@ namespace ClearCanvas.Ris.Client
 			}
 
 			/// <summary>
+			/// Handle uncaught script errors from the browser.
+			/// </summary>
+			/// <param name="message"></param>
+			/// <param name="url"></param>
+			/// <param name="lineNumber"></param>
+			public void OnScriptError(string message, string url, int lineNumber)
+			{
+				Platform.Log(LogLevel.Error, "WebBrowser JScript Error: {0} ({1} line {2})", message, url, lineNumber);
+			}
+
+			/// <summary>
 			/// Surrogate for the browser's window.alert method.
 			/// </summary>
 			/// <param name="message"></param>
