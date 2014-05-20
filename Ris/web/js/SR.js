@@ -35,13 +35,13 @@ var SR = function(resources) {
 	// get language from query string, defaulting to en-us if not specified
 	var qsMap = parseQueryString(String(window.location));
 	var lang = qsMap["lang"] || "en-us";
-  if (lang == "en") lang = "en-us";
+	if (lang == "en") lang = "en-us";
 	
 	var script = document.createElement("script");
+	// insert SR script right after this script
+	thisScript.parentNode.insertBefore(script, thisScript.nextSibling);
 	script.type = "text/javascript";
 	script.charset = "UTF-8";
 	script.src = String(thisScript.src).replace(/\/[^\/]+\.js$/i, "/resources/" + lang + ".js");
 	
-	// insert SR script right after this script
-	thisScript.parentNode.insertBefore(script, thisScript.nextSibling);
 })();
