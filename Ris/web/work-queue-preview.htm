@@ -3,11 +3,11 @@
 	<head>
 		<title>Work Queue Item Preview</title>
 		<link href="css/default.css" rel="stylesheet" type="text/css" />
-		<script type="text/javascript" src="js/SR.js"></script>
 		<script type="text/javascript" src="js/jsx.js"></script>
 		<script type="text/javascript" src="js/jsml.js"></script>
 		<script type="text/javascript" src="js/ui.js"></script>
 		<script type="text/javascript" src="js/ris.js"></script>
+		<script type="text/javascript" src="js/SR.js"></script>
 		<script type="text/javascript" src="js/preview.js"></script>
 		<script type="text/javascript" src="js/layout.js"></script>
 		<script type="text/javascript" >
@@ -34,33 +34,24 @@
 				});
 
 
-				try
+				var context = Ris.getHealthcareContext();
+				if (context == null)
 				{
-					var context = Ris.getHealthcareContext();
-					if (context == null)
-					{
-						Field.setValue($("myForm"), "");
-						return;
-					}
-
-					Field.setValue($("CreationTime"), Ris.formatDateTime(context.CreationTime));
-					Field.setValue($("ScheduledTime"), Ris.formatDateTime(context.ScheduledTime));
-					Field.setValue($("ExpirationTime"), Ris.formatDateTime(context.ExpirationTime));
-					Field.setValue($("ProcessedTime"), Ris.formatDateTime(context.ProcessedTime));
-					Field.setValue($("User"), context.User);
-					Field.setValue($("Type"), context.Type);
-					Field.setValue($("Status"), context.Status.Value);
-					Field.setValue($("FailureCount"), context.FailureCount);
-					Field.setValue($("FailureDescription"), context.FailureDescription);
-
-					createExtendedPropertiesTable($("extendedPropertiesTable"), context.ExtendedProperties);
+					Field.setValue($("myForm"), "");
+					return;
 				}
-				catch(e)
-				{
-					var message = "Failed to load editor page.  An exception occurred in the script. Error name: " + e.name + ". Error message: " + e.message;
-					Field.setValue($("myForm"), message);
-				}
-				
+
+				Field.setValue($("CreationTime"), Ris.formatDateTime(context.CreationTime));
+				Field.setValue($("ScheduledTime"), Ris.formatDateTime(context.ScheduledTime));
+				Field.setValue($("ExpirationTime"), Ris.formatDateTime(context.ExpirationTime));
+				Field.setValue($("ProcessedTime"), Ris.formatDateTime(context.ProcessedTime));
+				Field.setValue($("User"), context.User);
+				Field.setValue($("Type"), context.Type);
+				Field.setValue($("Status"), context.Status.Value);
+				Field.setValue($("FailureCount"), context.FailureCount);
+				Field.setValue($("FailureDescription"), context.FailureDescription);
+
+				createExtendedPropertiesTable($("extendedPropertiesTable"), context.ExtendedProperties);
 			}
 
 			function createExtendedPropertiesTable(htmlTable, extendedProperties)

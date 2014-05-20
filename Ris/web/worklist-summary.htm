@@ -3,11 +3,11 @@
 	<head>
 		<title>Worklist Summary</title>
 		<link href="css/default.css" rel="stylesheet" type="text/css" />
-		<script type="text/javascript" src="js/SR.js"></script>
 		<script type="text/javascript" src="js/jsx.js"></script>
 		<script type="text/javascript" src="js/jsml.js"></script>
 		<script type="text/javascript" src="js/ui.js"></script>
 		<script type="text/javascript" src="js/ris.js"></script>
+		<script type="text/javascript" src="js/SR.js"></script>
 		<script type="text/javascript" src="js/preview.js"></script>
 		<script type="text/javascript" src="js/layout.js"></script>
 		<script type="text/javascript" >
@@ -47,66 +47,57 @@
 					labelSupervisedBy: SR.Worklists.SupervisedBy
 				});				
 
-				try
+				var context = Ris.getHealthcareContext();
+				if (context == null)
 				{
-					var context = Ris.getHealthcareContext();
-					if (context == null)
-					{
-						Field.setValue($("myForm"), "");
-						return;
-					}
-					var worklist = context.Worklist;
-					Field.show($("SingleWorklistDetailSection"), !context.HasMultipleWorklists);
-					Field.show($("MultipleWorklistDetailSection"), context.HasMultipleWorklists);
-
-					if (context.HasMultipleWorklists)
-					{
-						Field.setPreFormattedValue($("Category"), context.WorklistClasses[0].CategoryName);
-						MultipleWorklistsTable.create($("MultipleWorklistsTable"), context.WorklistNames, context.WorklistDescriptions, context.WorklistClasses);				
-					}
-					else
-					{
-						Field.setPreFormattedValue($("Name"), worklist.Name);
-						Field.setPreFormattedValue($("Description"), worklist.Description);
-						var formattedClass = worklist.WorklistClass ? worklist.WorklistClass.CategoryName + " - " + worklist.WorklistClass.DisplayName : "";
-						Field.setPreFormattedValue($("Class"), formattedClass);
-						updateOwnerFilter(worklist.OwnerStaff, worklist.OwnerGroup, context.IsAdmin);
-					}
-					
-					// Subscribers
-					rowCycleIndex = 0;
-					var showSubscriberSection = false;
-					showSubscriberSection |= updateFilter(worklist.GroupSubscribers, $("RowGroupSubscribers"), $("GroupSubscribers"), function(staffGroup) { return staffGroup.Name; });
-					showSubscriberSection |= updateFilter(worklist.StaffSubscribers, $("RowStaffSubscribers"), $("StaffSubscribers"), function(staff) { return Ris.formatPersonName(staff.Name); });
-					if (!showSubscriberSection)
-						Field.show($("SubscriberSection"), false);
-					
-					// Filters
-					rowCycleIndex = 0;
-					var showFilterSection = false;
-					showFilterSection |= updateTimeWindow(worklist.StartTime, worklist.EndTime);
-					showFilterSection |= updateFacilityFilter(worklist.Facilities, worklist.FilterByWorkingFacility);
-					showFilterSection |= updateFilter(worklist.Departments, $("RowDepartments"), $("Departments"), function(department) { return department.Name; });
-					showFilterSection |= updateFilter(worklist.PatientClasses, $("RowPatientClasses"), $("PatientClasses"), function(patientClass) { return patientClass.Value; });
-					showFilterSection |= updateFilter(worklist.OrderPriorities, $("RowOrderPriorities"), $("OrderPriorities"), function(orderPriority) { return orderPriority.Value; });
-					showFilterSection |= updatePortableFilter(worklist.Portabilities, $("RowPortable"), $("Portable"));
-					showFilterSection |= updateFilter(worklist.OrderingPractitioners, $("RowOrderingPractitioners"), $("OrderingPractitioners"), function(practitioner) { return Ris.formatPersonName(practitioner.Name); });
-					showFilterSection |= updateFilter(worklist.ProcedureTypes, $("RowProcedureTypes"), $("ProcedureTypes"), function(type) { return type.Name; });
-					showFilterSection |= updateFilter(worklist.ProcedureTypeGroups, $("RowProcedureTypeGroups"), $("ProcedureTypeGroups"), function(group) { return group.Name; });
-					showFilterSection |= updateFilter(worklist.PatientLocations, $("RowPatientLocations"), $("PatientLocations"), function(location) { return location.Name; });
-					showFilterSection |= updateStaffFilter(worklist.InterpretedByStaff, $("RowInterpretedBy"), $("InterpretedBy"));
-					showFilterSection |= updateStaffFilter(worklist.TranscribedByStaff, $("RowTranscribedBy"), $("TranscribedBy"));
-					showFilterSection |= updateStaffFilter(worklist.VerifiedByStaff, $("RowVerifiedBy"), $("VerifiedBy"));
-					showFilterSection |= updateStaffFilter(worklist.SupervisedByStaff, $("RowSupervisedBy"), $("SupervisedBy"));
-					if (!showFilterSection)
-						Field.show($("FilterSection"), false);
+					Field.setValue($("myForm"), "");
+					return;
 				}
-				catch(e)
+				var worklist = context.Worklist;
+				Field.show($("SingleWorklistDetailSection"), !context.HasMultipleWorklists);
+				Field.show($("MultipleWorklistDetailSection"), context.HasMultipleWorklists);
+
+				if (context.HasMultipleWorklists)
 				{
-					var message = "Failed to load editor page.  An exception occurred in the script. Error name: " + e.name + ". Error message: " + e.message;
-					Field.setValue($("myForm"), message);
+					Field.setPreFormattedValue($("Category"), context.WorklistClasses[0].CategoryName);
+					MultipleWorklistsTable.create($("MultipleWorklistsTable"), context.WorklistNames, context.WorklistDescriptions, context.WorklistClasses);				
+				}
+				else
+				{
+					Field.setPreFormattedValue($("Name"), worklist.Name);
+					Field.setPreFormattedValue($("Description"), worklist.Description);
+					var formattedClass = worklist.WorklistClass ? worklist.WorklistClass.CategoryName + " - " + worklist.WorklistClass.DisplayName : "";
+					Field.setPreFormattedValue($("Class"), formattedClass);
+					updateOwnerFilter(worklist.OwnerStaff, worklist.OwnerGroup, context.IsAdmin);
 				}
 				
+				// Subscribers
+				rowCycleIndex = 0;
+				var showSubscriberSection = false;
+				showSubscriberSection |= updateFilter(worklist.GroupSubscribers, $("RowGroupSubscribers"), $("GroupSubscribers"), function(staffGroup) { return staffGroup.Name; });
+				showSubscriberSection |= updateFilter(worklist.StaffSubscribers, $("RowStaffSubscribers"), $("StaffSubscribers"), function(staff) { return Ris.formatPersonName(staff.Name); });
+				if (!showSubscriberSection)
+					Field.show($("SubscriberSection"), false);
+				
+				// Filters
+				rowCycleIndex = 0;
+				var showFilterSection = false;
+				showFilterSection |= updateTimeWindow(worklist.StartTime, worklist.EndTime);
+				showFilterSection |= updateFacilityFilter(worklist.Facilities, worklist.FilterByWorkingFacility);
+				showFilterSection |= updateFilter(worklist.Departments, $("RowDepartments"), $("Departments"), function(department) { return department.Name; });
+				showFilterSection |= updateFilter(worklist.PatientClasses, $("RowPatientClasses"), $("PatientClasses"), function(patientClass) { return patientClass.Value; });
+				showFilterSection |= updateFilter(worklist.OrderPriorities, $("RowOrderPriorities"), $("OrderPriorities"), function(orderPriority) { return orderPriority.Value; });
+				showFilterSection |= updatePortableFilter(worklist.Portabilities, $("RowPortable"), $("Portable"));
+				showFilterSection |= updateFilter(worklist.OrderingPractitioners, $("RowOrderingPractitioners"), $("OrderingPractitioners"), function(practitioner) { return Ris.formatPersonName(practitioner.Name); });
+				showFilterSection |= updateFilter(worklist.ProcedureTypes, $("RowProcedureTypes"), $("ProcedureTypes"), function(type) { return type.Name; });
+				showFilterSection |= updateFilter(worklist.ProcedureTypeGroups, $("RowProcedureTypeGroups"), $("ProcedureTypeGroups"), function(group) { return group.Name; });
+				showFilterSection |= updateFilter(worklist.PatientLocations, $("RowPatientLocations"), $("PatientLocations"), function(location) { return location.Name; });
+				showFilterSection |= updateStaffFilter(worklist.InterpretedByStaff, $("RowInterpretedBy"), $("InterpretedBy"));
+				showFilterSection |= updateStaffFilter(worklist.TranscribedByStaff, $("RowTranscribedBy"), $("TranscribedBy"));
+				showFilterSection |= updateStaffFilter(worklist.VerifiedByStaff, $("RowVerifiedBy"), $("VerifiedBy"));
+				showFilterSection |= updateStaffFilter(worklist.SupervisedByStaff, $("RowSupervisedBy"), $("SupervisedBy"));
+				if (!showFilterSection)
+					Field.show($("FilterSection"), false);
 			}
 			
 			function applyRowCycleClassNames(htmlRow)
