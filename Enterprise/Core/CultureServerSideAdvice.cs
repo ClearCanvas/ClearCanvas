@@ -24,12 +24,11 @@ namespace ClearCanvas.Enterprise.Core
 			CultureInfo clientCulture, clientUiCulture;
 			var cultureDirective = ReadMessageHeaders(OperationContext.Current);
 
-			Platform.Log(LogLevel.Debug, "Client Culture Header [{0}]: Culture={1}, UICulture={2}",
-				invocation.MethodInvocationTarget.Name, cultureDirective.Culture, cultureDirective.UICulture);
-
 			// if a culture directive was specified, use it
 			if (ParseCultureDirective(cultureDirective, out clientCulture, out clientUiCulture))
 			{
+				Platform.Log(LogLevel.Debug, "Client Culture Header [{0}]: Culture={1}, UICulture={2}",
+					invocation.MethodInvocationTarget.Name, cultureDirective.Culture, cultureDirective.UICulture);
 				try
 				{
 					Thread.CurrentThread.CurrentCulture = clientCulture;
