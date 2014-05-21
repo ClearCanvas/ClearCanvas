@@ -45,9 +45,6 @@ namespace ClearCanvas.ImageViewer.Layout.Basic.OverlayManagers
 		[CloneIgnore]
 		private LinePrimitive _baseLine;
 
-		[CloneIgnore]
-		private readonly List<LinePrimitive> _ticklines = new List<LinePrimitive>();
-
 		private PointF _point1, _point2;
 		private bool _isMirrored;
 		private bool _isDirty;
@@ -80,7 +77,6 @@ namespace ClearCanvas.ImageViewer.Layout.Basic.OverlayManagers
 		private void OnCloneComplete()
 		{
 			_baseLine = Graphics.OfType<LinePrimitive>().FirstOrDefault(g => g.Name == _baseLineName);
-			_ticklines.AddRange(Graphics.OfType<LinePrimitive>().Where(g => g.Name == _tickLineName));
 			_isDirty = true;
 		}
 
@@ -261,51 +257,6 @@ namespace ClearCanvas.ImageViewer.Layout.Basic.OverlayManagers
 		}
 
 		/// <summary>
-		/// Formats the scale's base line segment.
-		/// </summary>
-		/// <param name="baseLine">A reference to the <see cref="LinePrimitive"/> that is the base line segment.</param>
-		/// <param name="endpoint1">One endpoint where the base line segment should be drawn.</param>
-		/// <param name="endpoint2">The other endpoint where the base line segment should be drawn.</param>
-		private void FormatBaseLine(LinePrimitive baseLine, PointF endpoint1, PointF endpoint2)
-		{
-			baseLine.Point1 = endpoint1;
-			baseLine.Point2 = endpoint2;
-			baseLine.Color = Color.White;
-		}
-
-		/// <summary>
-		/// Formats the scale's major ticks.
-		/// </summary>
-		/// <param name="tickLine">A reference to the <see cref="LinePrimitive"/> that is the tick.</param>
-		/// <param name="point">The point along the base line segment where the tick begins.</param>
-		/// <param name="unitNormal">A unit normal vector that is perpendicular to the base line segment.</param>
-		private void FormatMajorTick(LinePrimitive tickLine, PointF point, SizeF unitNormal)
-		{
-			float length = _majorTickLength;
-			if (_isMirrored)
-				length = -length;
-			tickLine.Point1 = point;
-			tickLine.Point2 = new PointF(point.X + length*unitNormal.Width, point.Y + length*unitNormal.Height);
-			tickLine.Color = Color.White;
-		}
-
-		/// <summary>
-		/// Formats the scale's minor ticks.
-		/// </summary>
-		/// <param name="tickLine">A reference to the <see cref="LinePrimitive"/> that is the tick.</param>
-		/// <param name="point">The point along the base line segment where the tick begins.</param>
-		/// <param name="unitNormal">A unit normal vector that is perpendicular to the base line segment.</param>
-		private void FormatMinorTick(LinePrimitive tickLine, PointF point, SizeF unitNormal)
-		{
-			float length = _minorTickLength;
-			if (_isMirrored)
-				length = -length;
-			tickLine.Point1 = point;
-			tickLine.Point2 = new PointF(point.X + length*unitNormal.Width, point.Y + length*unitNormal.Height);
-			tickLine.Color = Color.White;
-		}
-
-		/// <summary>
 		/// Recomputes and reformats the graphics that comprise the scale.
 		/// </summary>
 		private void UpdateScale()
@@ -313,54 +264,80 @@ namespace ClearCanvas.ImageViewer.Layout.Basic.OverlayManagers
 			// no point recomputing the scale if client code has made us invisible or we aren't on screen
 			if (!Visible || (ParentPresentationImage != null && ParentPresentationImage.ClientRectangle.IsEmpty))
 			{
+				// force a recalculation when we become visible again
 				_isDirty = true;
 				return;
 			}
 
+			// determine locations of ticks
+			var ticks = ComputeTickMarks();
+
+			// if there are no ticks to show, exit now
+			if (ticks == null || ticks.Length < 2)
+			{
+				AllocateTickLines(0);
+				_baseLine.Visible = false;
+				_isDirty = false;
+				return;
+			}
+
+			// compute the tick vectors
+			SizeF minorTickVector, majorTickVector;
+			GetTickVectors(out majorTickVector, out minorTickVector);
+
+			CoordinateSystem = CoordinateSystem.Source;
+			try
+			{
+				// update base line
+				_baseLine.Point1 = Point1;
+				_baseLine.Point2 = Point2;
+				_baseLine.Color = Color.White;
+				_baseLine.Visible = true;
+
+				// update ticks
+				var n = 0;
+				var tickLines = AllocateTickLines(ticks.Length);
+				foreach (var tick in ticks)
+				{
+					var tickLine = tickLines[n++];
+					tickLine.Point1 = tick.Location;
+					tickLine.Point2 = tick.Location + (tick.IsMajorTick ? majorTickVector : minorTickVector);
+					tickLine.Color = Color.White;
+					tickLine.Visible = true;
+				}
+
+				_isDirty = false;
+			}
+			finally
+			{
+				ResetCoordinateSystem();
+			}
+		}
+
+		/// <summary>
+		/// Gets the vectors describing the tick marks in source coordinates.
+		/// </summary>
+		private void GetTickVectors(out SizeF majorTickVector, out SizeF minorTickVector)
+		{
+			// compute tick vectors in display coordinates (since they are effectively invariant graphics)
+			// but then convert them back to source coordinates because the graphics all use source coordinates
 			CoordinateSystem = CoordinateSystem.Destination;
 			try
 			{
-				PointF pt0 = Point1;
-				PointF pt1 = Point2;
-
-				// draw base line
-				FormatBaseLine(_baseLine, pt0, pt1);
+				var pt0 = Point1;
+				var pt1 = Point2;
 
 				// compute normal to the base line
 				var normalX = (double) pt0.Y - pt1.Y;
 				var normalY = (double) pt1.X - pt0.X;
 				var normalMagnitude = Math.Sqrt(normalX*normalX + normalY*normalY);
-				var unitNormal = new SizeF((float) (Math.Abs(normalX)/normalMagnitude), (float) (Math.Abs(normalY)/normalMagnitude));
+				var normalUnit = new SizeF((float) (Math.Abs(normalX)/normalMagnitude), (float) (Math.Abs(normalY)/normalMagnitude));
 
-				// compute tick locations
-				var ticks = ComputeTickMarks(pt0, pt1);
-				if (ticks == null)
-				{
-					_baseLine.Visible = false;
-					return;
-				}
+				var majorTickLength = _isMirrored ? -_majorTickLength : _majorTickLength;
+				var minorTickLength = _isMirrored ? -_minorTickLength : _minorTickLength;
 
-				// draw tick marks
-				if (ticks.Length > 1) // must be at least 2 ticks for this to be useful
-				{
-					var n = 0;
-					var tickLines = AllocateTickLines(ticks.Length);
-					foreach (var tick in ticks)
-					{
-						if (tick.IsMajorTick)
-							FormatMajorTick(tickLines[n++], tick.Location, unitNormal);
-						else
-							FormatMinorTick(tickLines[n++], tick.Location, unitNormal);
-					}
-					_baseLine.Visible = true;
-				}
-				else
-				{
-					AllocateTickLines(0);
-					_baseLine.Visible = false;
-				}
-
-				_isDirty = false;
+				majorTickVector = SpatialTransform.ConvertToSource(new SizeF(majorTickLength*normalUnit.Width, majorTickLength*normalUnit.Height));
+				minorTickVector = SpatialTransform.ConvertToSource(new SizeF(minorTickLength*normalUnit.Width, minorTickLength*normalUnit.Height));
 			}
 			finally
 			{
@@ -375,21 +352,23 @@ namespace ClearCanvas.ImageViewer.Layout.Basic.OverlayManagers
 		/// <returns></returns>
 		private IList<LinePrimitive> AllocateTickLines(int tickCount)
 		{
-			LinePrimitive tick;
-			while (_ticklines.Count < tickCount)
+			var ticklines = Graphics.OfType<LinePrimitive>().Where(g => g.Name == _tickLineName).ToList();
+			if (ticklines.Count < tickCount)
 			{
-				tick = new LinePrimitive {Name = _tickLineName};
-				_ticklines.Add(tick);
-				Graphics.Add(tick);
+				var newTicks = Enumerable.Range(0, tickCount - ticklines.Count).Select(n => new LinePrimitive {Name = _tickLineName}).ToList();
+				ticklines.AddRange(newTicks);
+				Graphics.AddRange(newTicks);
 			}
-			while (_ticklines.Count > tickCount)
+			else if (ticklines.Count > tickCount)
 			{
-				tick = _ticklines[0];
-				_ticklines.RemoveAt(0);
-				Graphics.Remove(tick);
-				tick.Dispose();
+				foreach (var oldTick in ticklines.Skip(tickCount))
+				{
+					Graphics.Remove(oldTick);
+					oldTick.Dispose();
+				}
+				ticklines = ticklines.Take(tickCount).ToList();
 			}
-			return _ticklines.AsReadOnly();
+			return ticklines;
 		}
 
 		protected override void OnParentPresentationImageChanged(IPresentationImage oldParentPresentationImage, IPresentationImage newParentPresentationImage)
@@ -415,63 +394,66 @@ namespace ClearCanvas.ImageViewer.Layout.Basic.OverlayManagers
 
 		private void OnNormalizedPixelSpacingCalibrated(object sender, EventArgs e)
 		{
-			_isDirty = true;
+			FlagAsDirty();
 			Draw();
 		}
 
 		/// <summary>
-		/// Computes positions of major and minor tick marks along the specified line segment.
+		/// Computes positions of tick marks along the base line.
 		/// </summary>
-		/// <remarks>
-		/// <para>
-		/// For performance reasons the arguments are <b>not</b> validated. In particular, the line segment specified by the two points
-		/// must be valid and non-trivial - specifying the same point (or close to the same point) for both end points produces indeterminate
-		/// results.
-		/// </para>
-		/// </remarks>
-		/// <param name="linePoint1">One endpoint of the line segment along which to compute tick positions.</param>
-		/// <param name="linePoint2">The other endpoint of the line segment along which to compute tick positions.</param>
-		private Tick[] ComputeTickMarks(PointF linePoint1, PointF linePoint2)
+		private Tick[] ComputeTickMarks()
 		{
-			// get the pixel dimensions of the image - if it's not calibrated, there's nothing to show!
-			double pxW, pxH;
-			bool isCalibrated = TryGetPixelDimensions(out pxW, out pxH);
-			if (!isCalibrated)
-				return null;
-
-			// convert the given end points in screen coordinates to image coordinates
-			// then figure out how long the base line is in mm, and thus how many ticks apart they are
-			var src1 = SpatialTransform.ConvertToSource(linePoint1);
-			var src2 = SpatialTransform.ConvertToSource(linePoint2);
-			var mmLength = GetDistance(src1.X*pxW, src1.Y*pxH, src2.X*pxW, src2.Y*pxH);
-			var numTicks = mmLength/_minorTick;
-
-			// get the total distance between the end points in screen units
-			var dstLength = Vector.Distance(linePoint1, linePoint2);
-
-			// compute number of screen pixels between consecutive ticks
-			// if the effective spacing is less than 3 pixels, the ticks will not render distinctly so we can stop here
-			// additionally, if there isn't at least one full tick of spacing along the line, there's also nothing to show
-			if (dstLength/numTicks < 3 || numTicks < 1)
-				return null;
-
-			// only distinguish between major/minor ticks if there are at least 6 ticks of spacing
-			var useMajorTicks = numTicks >= 6;
-
-			var dst1 = new Vector3D(linePoint1.X, linePoint1.Y, 0);
-			var dst2 = new Vector3D(linePoint2.X, linePoint2.Y, 0);
-			var dirVector = dst2 - dst1;
-
-			var countTicks = (int) numTicks;
-			var ticks = new Tick[countTicks];
-			for (var n = 0; n < countTicks; ++n)
+			// compute tick locations in source coordinates because all the underlying graphics use source coordinates, so we save on a ton of ridiculous back-and-forth conversions
+			CoordinateSystem = CoordinateSystem.Source;
+			try
 			{
-				var dstLocation = dst1 + dirVector*(float) (n/numTicks);
-				var point = new PointF(dstLocation.X, dstLocation.Y);
-				ticks[n] = new Tick(point, useMajorTicks && n%_majorTickFrequency == 0);
-			}
+				var srcPoint1 = Point1;
+				var srcPoint2 = Point2;
 
-			return ticks;
+				// get the pixel dimensions of the image - if it's not calibrated, there's nothing to show!
+				double pxW, pxH;
+				bool isCalibrated = TryGetPixelDimensions(out pxW, out pxH);
+				if (!isCalibrated)
+					return null;
+
+				// figure out how long the base line is in mm, and thus how many ticks apart they are
+				var mmLength = GetDistance(srcPoint1.X*pxW, srcPoint1.Y*pxH, srcPoint2.X*pxW, srcPoint2.Y*pxH);
+				var countTickUnits = mmLength/_minorTick;
+
+				// round down and add 1 to get the number of tick marks displayable on the given base line
+				var countTickMarks = 1 + (int) countTickUnits;
+
+				// get the total distance between the end points in screen units
+				var dstLength = Vector.Distance(SpatialTransform.ConvertToDestination(srcPoint1),
+				                                SpatialTransform.ConvertToDestination(srcPoint2));
+
+				// compute number of screen pixels between consecutive ticks
+				// if the effective spacing is less than 3 pixels, the ticks will not render distinctly so we can stop here
+				// additionally, we need at least two tick visible tick marks in order to have anything to show
+				if (dstLength/countTickUnits < 3 || countTickMarks < 2)
+					return null;
+
+				// only distinguish between major/minor ticks if there are at least MAJOR_TICK_FREQ+1 ticks of spacing (i.e. at least two major ticks)
+				var useMajorTicks = countTickMarks >= _majorTickFrequency + 1;
+
+				var src1 = new Vector3D(srcPoint1.X, srcPoint1.Y, 0);
+				var src2 = new Vector3D(srcPoint2.X, srcPoint2.Y, 0);
+				var srcV = src2 - src1; // vector from point2 to point1
+
+				var ticks = new Tick[countTickMarks];
+				for (var n = 0; n < countTickMarks; ++n)
+				{
+					// compute location for each tick from point1 + the vector scaled appropriately by index and the number of tick units along the line
+					// don't just compute one offset and keep adding it, as the floating point errors would then be cumulative
+					var location = src1 + srcV*(float) (n/countTickUnits);
+					ticks[n] = new Tick(location.X, location.Y, useMajorTicks && n%_majorTickFrequency == 0);
+				}
+				return ticks;
+			}
+			finally
+			{
+				ResetCoordinateSystem();
+			}
 		}
 
 		private static double GetDistance(double x1, double y1, double x2, double y2)
@@ -509,9 +491,9 @@ namespace ClearCanvas.ImageViewer.Layout.Basic.OverlayManagers
 			private readonly PointF _location;
 			private readonly bool _isMajorTick;
 
-			public Tick(PointF location, bool isMajorTick)
+			public Tick(float x, float y, bool isMajorTick)
 			{
-				_location = location;
+				_location = new PointF(x, y);
 				_isMajorTick = isMajorTick;
 			}
 
