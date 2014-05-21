@@ -112,10 +112,6 @@
       <Name>ClearCanvas.ImageServer.Core</Name>
       <Private>False</Private>
     </ProjectReference>
-    <ProjectReference Include="..\Executable\ClearCanvas.ImageServer.Executable.csproj">
-      <Project>{5B86516B-203F-4AEB-82BA-CD54144581FA}</Project>
-      <Name>ClearCanvas.ImageServer.Executable</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
@@ -149,6 +145,6 @@
     </CreateProperty>
   </Target>
   <PropertyGroup>
-    <PostBuildEvent>$(MSBuildBinPath)\Msbuild $(ProjectDir)\PostBuild_dist.proj /p:SolutionDir=$(SolutionDir);SolutionName=$(SolutionName);TargetPlatform=$(TargetPlatform);Configuration=$(ConfigurationName);ProjectName=$(ProjectName);ProjectDir=$(ProjectDir);OutDir=$(OutDir);StrongNameKeyFile=$(AssemblyOriginatorKeyFile);DistributionDir=$(DistributionDir);Options=$(Options);Localizations=$(Localizations);ReleaseType=$(ReleaseType);EditionName=$(EditionName)</PostBuildEvent>
+    <PostBuildEvent>"$(MSBuildBinPath)\Msbuild" $(ProjectDir)\PostBuild_dist.proj /p:SolutionDir=$(SolutionDir);SolutionName=$(SolutionName);TargetPlatform=$(TargetPlatform);Configuration=$(ConfigurationName);ProjectName=$(ProjectName);ProjectDir=$(ProjectDir);OutDir=$(OutDir);StrongNameKeyFile=$(AssemblyOriginatorKeyFile);DistributionDir=$(DistributionDir);Options=$(Options);Localizations=$(Localizations);ReleaseType=$(ReleaseType);EditionName=$(EditionName)</PostBuildEvent>
   </PropertyGroup>
 </Project>
