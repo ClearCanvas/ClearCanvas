@@ -227,6 +227,7 @@
     <Compile Include="EntityBrokers\IWorkQueueUidEntityBroker.gen.cs" />
     <Compile Include="EntityBrokers\NotificationQueueSelectCriteria.gen.cs" />
     <Compile Include="EntityBrokers\NotificationQueueUpdateColumns.gen.cs" />
+    <Compile Include="EntityBrokers\OrderSelectCriteria.cs" />
     <Compile Include="EntityBrokers\OrderSelectCriteria.gen.cs" />
     <Compile Include="EntityBrokers\OrderUpdateColumns.gen.cs" />
     <Compile Include="EntityBrokers\PartitionArchiveSelectCriteria.gen.cs" />
