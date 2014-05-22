@@ -2048,7 +2048,7 @@ CREATE TABLE [dbo].[Order](
 	[EnteredByStaffGUID] [uniqueidentifier] NULL,
 	[ReferringStaffGUID] [uniqueidentifier] NULL,
 	[Priority] [varchar](2) NOT NULL,
-	[PatientClass] [varchar](1) NULL,
+	[PatientClass] [varchar](2) NULL,
 	[ReasonForStudy] [nvarchar](199) NULL,
 	[PointOfCare] [nvarchar](20) NULL,
 	[Room] [nvarchar](20) NULL,
