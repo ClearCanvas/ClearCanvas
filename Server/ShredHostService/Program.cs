@@ -24,6 +24,7 @@
 
 using System.ServiceProcess;
 using System;
+using ClearCanvas.Common;
 using ClearCanvas.Common.Configuration;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Server.ShredHost;
@@ -50,6 +51,8 @@ namespace ClearCanvas.Server.ShredHostService
         /// </summary>
         static void Main(string[] args)
         {
+			Platform.Log(LogLevel.Info, ProductInformation.GetNameAndVersion(true,true,true,true));
+
 			var commandLine = new CommandLine(args);
 
 			if (commandLine.RunAsService)

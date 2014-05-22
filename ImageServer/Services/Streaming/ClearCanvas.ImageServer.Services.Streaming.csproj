@@ -143,14 +143,6 @@
       <Project>{431E9444-9915-4D49-B92D-9B7EC086622A}</Project>
       <Name>ClearCanvas.Enterprise.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\ImageViewer\ClearCanvas.ImageViewer.csproj">
-      <Project>{85100D3E-471C-47C9-9687-ABF25F617ED7}</Project>
-      <Name>ClearCanvas.ImageViewer</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\ImageViewer\Thumbnails\ClearCanvas.ImageViewer.Thumbnails.csproj">
-      <Project>{4741DBA1-D9EC-443F-BF37-C3AAE89B1913}</Project>
-      <Name>ClearCanvas.ImageViewer.Thumbnails</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\..\Server\ShredHost\ClearCanvas.Server.ShredHost.csproj">
       <Project>{8347B928-805E-42E7-B980-08D8AF1A0671}</Project>
       <Name>ClearCanvas.Server.ShredHost</Name>

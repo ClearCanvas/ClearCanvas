@@ -44,8 +44,12 @@ namespace ClearCanvas.Ris.Client.View.WinForms
 			_component = component;
 
 #if DEBUG
+			// in dev, show script error dialogs and browser context menu
+			_webBrowser.ScriptErrorsSuppressed = false;
 			_webBrowser.IsWebBrowserContextMenuEnabled = true;
 #else
+			// in production, suppress script error dialogs and browser context menu
+			_webBrowser.ScriptErrorsSuppressed = true;
 			_webBrowser.IsWebBrowserContextMenuEnabled = false;
 #endif
 

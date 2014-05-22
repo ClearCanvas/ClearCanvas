@@ -3,11 +3,11 @@
 	<head>
 		<title>Banner</title>
 		<link href="css/banner.css" rel="stylesheet" type="text/css" />
-		<script type="text/javascript" src="js/SR.js"></script>
 		<script type="text/javascript" src="js/jsx.js"></script>
 		<script type="text/javascript" src="js/jsml.js"></script>
 		<script type="text/javascript" src="js/ui.js"></script>
 		<script type="text/javascript" src="js/ris.js"></script>
+		<script type="text/javascript" src="js/SR.js"></script>
 		<script type="text/javascript" src="js/preview.js"></script>
 		<script type="text/javascript" src="js/layout.js"></script>
 		<script type="text/javascript" >
@@ -29,22 +29,14 @@
 					labelPriority: SR.PatientBanner.Priority
 				});
 
-				try
+				var worklistItem = Ris.getHealthcareContext();
+				if (worklistItem == null)
 				{
-					var worklistItem = Ris.getHealthcareContext();
-					if (worklistItem == null)
-					{
-						Field.setValue($("myForm"), "");
-						return;
-					}
+					Field.setValue($("myForm"), "");
+					return;
+				}
 
-					Ris.getPatientDataService().getDataAsync(CreateRequest(worklistItem), OnPatientDataLoaded);
-				}
-				catch(e)
-				{
-					var message = "Failed to load editor page.  An exception occurred in the script. Error name: " + e.name + ". Error message: " + e.message;
-					Field.setValue($("myForm"), message);
-				}
+				Ris.getPatientDataService().getDataAsync(CreateRequest(worklistItem), OnPatientDataLoaded);
 			}
 
 			function CreateRequest(worklistItem)

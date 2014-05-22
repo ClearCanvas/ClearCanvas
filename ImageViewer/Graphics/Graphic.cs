@@ -429,19 +429,28 @@ namespace ClearCanvas.ImageViewer.Graphics
 		/// <param name="propertyKind">The kind of the property whose value changed.</param>
 		protected void NotifyVisualStateChanged(string propertyName, VisualStatePropertyKind propertyKind = VisualStatePropertyKind.Unspecified)
 		{
-			this.OnVisualStateChanged(propertyName);
-			EventsHelper.Fire(_visualStateChanged, this, new VisualStateChangedEventArgs(this, propertyName, propertyKind));
+			OnVisualStateChanged(propertyName);
+			FireVisualStateChanged(new VisualStateChangedEventArgs(this, propertyName, propertyKind));
 		}
 
 		/// <summary>
 		/// Forwards the <see cref="VisualStateChanged"/> event from a child graphic to listeners of a parent graphic.
 		/// </summary>
 		/// <param name="e">Data for the <see cref="VisualStateChanged"/> event.</param>
-		internal void NotifyVisualStateChanged(VisualStateChangedEventArgs e)
+		private void ForwardVisualStateChanged(VisualStateChangedEventArgs e)
 		{
 			if (ReferenceEquals(e.Graphic, this))
 				OnVisualStateChanged(e.PropertyName);
+			FireVisualStateChanged(e);
+		}
+
+		private void FireVisualStateChanged(VisualStateChangedEventArgs e)
+		{
 			EventsHelper.Fire(_visualStateChanged, this, e);
+
+			var parentGraphic = ParentGraphic as Graphic;
+			if (parentGraphic != null)
+				parentGraphic.ForwardVisualStateChanged(e);
 		}
 
 		/// <summary>
