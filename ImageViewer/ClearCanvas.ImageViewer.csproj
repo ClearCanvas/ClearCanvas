@@ -189,8 +189,11 @@
     <Compile Include="Graphics\ProtractorGraphic.cs" />
     <Compile Include="Graphics\Tests\ImageGraphicTests.cs" />
     <Compile Include="Imaging\ILutPipelineProvider.cs" />
+    <Compile Include="Imaging\IPresentationLut.cs" />
+    <Compile Include="Imaging\LutFunctions.cs" />
     <Compile Include="Imaging\MinMaxPixelLinearLut.cs" />
     <Compile Include="Imaging\PresentationLut.cs" />
+    <Compile Include="Imaging\PresentationLutLinear.cs" />
     <Compile Include="Imaging\Tests\PresentationLutLinearTests.cs" />
     <Compile Include="Imaging\Tests\VoiWindowTests.cs" />
     <Compile Include="InputManagement\MouseWheelCaptureChangedEventArgs.cs" />

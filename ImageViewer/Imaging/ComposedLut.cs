@@ -32,51 +32,51 @@ namespace ClearCanvas.ImageViewer.Imaging
 	{
 		private readonly int _minInputValue;
 		private readonly int _maxInputValue;
-        private readonly int _minOutputValue;
-        private readonly int _maxOutputValue;
-        private readonly int _length;
+		private readonly int _minOutputValue;
+		private readonly int _maxOutputValue;
+		private readonly int _length;
 		private readonly int[] _data;
 
-        public ComposedLut(IComposableLut[] luts)
-            : this(luts, null)
-		{
-		}
+		public ComposedLut(IComposableLut[] luts)
+			: this(luts, null) {}
 
-        public ComposedLut(IComposableLut[] luts, BufferCache<int> cache)
+		public ComposedLut(IComposableLut[] luts, BufferCache<int> cache)
 		{
 			//luts.Validate();
 			int lutCount;
 			IComposableLut firstLut, lastLut;
-            GetFirstAndLastLut(luts, out firstLut, out lastLut, out lutCount);
+			GetFirstAndLastLut(luts, out firstLut, out lastLut, out lutCount);
 
-			_minInputValue = (int)Math.Round(firstLut.MinInputValue);
-			_maxInputValue = (int)Math.Round(firstLut.MaxInputValue);
-            _minOutputValue = (int)Math.Round(lastLut.MinOutputValue);
-            _maxOutputValue = (int)Math.Round(lastLut.MaxOutputValue);
+			_minInputValue = (int) Math.Round(firstLut.MinInputValue);
+			_maxInputValue = (int) Math.Round(firstLut.MaxInputValue);
+			_minOutputValue = (int) Math.Round(lastLut.MinOutputValue);
+			_maxOutputValue = (int) Math.Round(lastLut.MaxOutputValue);
 
-            _length = _maxInputValue - _minInputValue + 1;
+			_length = _maxInputValue - _minInputValue + 1;
 			_data = cache != null ? cache.Allocate(_length) : MemoryManager.Allocate<int>(_length);
 
 			//copy to array because accessing ObservableList's indexer in a tight loop is very expensive
 
 			unsafe
 			{
+				var intermediateData = new double[_length];
+				fixed (double* intermediateLutData = intermediateData)
 				fixed (int* composedLutData = _data)
 				{
-					int* pLutData = composedLutData;
-					int min = _minInputValue;
-					int max = _maxInputValue + 1;
+					var min = _minInputValue;
+					var max = _maxInputValue + 1;
 
-					for (int i = min; i < max; ++i)
-					{
-						double val = i;
+					var pIntermediate = intermediateLutData;
+					for (var i = min; i < max; ++i)
+						*pIntermediate++ = i;
 
-						for (int j = 0; j < lutCount; ++j)
-							val = luts[j][val];
+					for (var j = 0; j < lutCount; ++j)
+						luts[j].LookupValues(intermediateData, intermediateData, _length);
 
-						*pLutData = (int) Math.Round(val);
-						++pLutData;
-					}
+					var pComposed = composedLutData;
+					pIntermediate = intermediateLutData;
+					for (var i = 0; i < _length; ++i)
+						*pComposed++ = (int) Math.Round(*pIntermediate++);
 				}
 			}
 		}
@@ -101,15 +101,16 @@ namespace ClearCanvas.ImageViewer.Imaging
 		{
 			get { return _maxInputValue; }
 		}
-        
+
 		public int MinOutputValue
 		{
 			get { return _minOutputValue; }
 		}
+
 		public int MaxOutputValue
 		{
-            get { return _maxOutputValue; }
-        }
+			get { return _maxOutputValue; }
+		}
 
 		public int this[int index]
 		{

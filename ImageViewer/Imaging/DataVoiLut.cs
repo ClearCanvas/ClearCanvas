@@ -24,6 +24,7 @@
 
 using System;
 using ClearCanvas.Common.Utilities;
+using ClearCanvas.ImageViewer.Core.Functions;
 
 namespace ClearCanvas.ImageViewer.Imaging
 {
@@ -58,6 +59,11 @@ namespace ClearCanvas.ImageViewer.Imaging
 		double IComposableLut.this[double input]
 		{
 			get { return this[(int) Math.Round(input)]; }
+		}
+
+		void IComposableLut.LookupValues(double[] input, double[] output, int count)
+		{
+			LutFunctions.LookupLut(input, output, count, Data, FirstMappedPixelValue, LastMappedPixelValue);
 		}
 
 		public new IVoiLut Clone()

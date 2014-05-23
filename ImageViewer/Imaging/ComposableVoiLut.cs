@@ -23,6 +23,7 @@
 #endregion
 
 using ClearCanvas.Common.Utilities;
+using ClearCanvas.ImageViewer.Core.Functions;
 
 namespace ClearCanvas.ImageViewer.Imaging
 {
@@ -37,8 +38,13 @@ namespace ClearCanvas.ImageViewer.Imaging
 		public abstract double MinInputValue { get; set; }
 		public abstract double MaxInputValue { get; set; }
 		public abstract double MinOutputValue { get; protected set; }
-        public abstract double MaxOutputValue { get; protected set; }
-        public abstract double this[double input] { get; }
+		public abstract double MaxOutputValue { get; protected set; }
+		public abstract double this[double input] { get; }
+
+		public virtual void LookupValues(double[] input, double[] output, int count)
+		{
+			LutFunctions.LookupLut(input, output, count, this);
+		}
 
 		internal override sealed double MinInputValueCore
 		{
@@ -62,9 +68,14 @@ namespace ClearCanvas.ImageViewer.Imaging
 			get { return MaxOutputValue; }
 		}
 
-		internal override sealed double Lookup(double input)
+		internal override sealed double LookupCore(double input)
 		{
 			return this[input];
+		}
+
+		internal override sealed void LookupCore(double[] input, double[] output, int count)
+		{
+			LookupValues(input, output, count);
 		}
 
 		public new IVoiLut Clone()

@@ -24,6 +24,7 @@
 
 using System;
 using ClearCanvas.Common.Utilities;
+using ClearCanvas.ImageViewer.Core.Functions;
 
 namespace ClearCanvas.ImageViewer.Imaging
 {
@@ -77,6 +78,11 @@ namespace ClearCanvas.ImageViewer.Imaging
 		public override double this[double input]
 		{
 			get { return (input - _rescaleIntercept)/_rescaleSlope; }
+		}
+
+		public override void LookupValues(double[] input, double[] output, int count)
+		{
+			LutFunctions.LookupLinearInverse(input, output, count, _rescaleIntercept, _rescaleSlope);
 		}
 
 		public override string GetKey()

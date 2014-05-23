@@ -65,6 +65,14 @@ namespace ClearCanvas.ImageViewer.Imaging
 		double this[double input] { get; }
 
 		/// <summary>
+		/// Performs bulk lookup for a set of input values.
+		/// </summary>
+		/// <param name="input">Source array of input values to be transformed.</param>
+		/// <param name="output">Destination array where transformed output values will be written (may be same array as <paramref name="input"/>).</param>
+		/// <param name="count">Number of values in the arrays to transform (contiguous entries from start of array).</param>
+		void LookupValues(double[] input, double[] output, int count);
+
+		/// <summary>
 		/// Fired when the lookup table has changed in some way.
 		/// </summary>
 		event EventHandler LutChanged;

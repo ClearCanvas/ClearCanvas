@@ -25,6 +25,7 @@
 using System;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Dicom;
+using ClearCanvas.ImageViewer.Core.Functions;
 
 namespace ClearCanvas.ImageViewer.Imaging
 {
@@ -114,6 +115,11 @@ namespace ClearCanvas.ImageViewer.Imaging
 					return MaxOutputValue;
 				return input;
 			}
+		}
+
+		public override void LookupValues(double[] input, double[] output, int count)
+		{
+			LutFunctions.LookupClampValue(input, output, count, MinInputValue, MaxInputValue);
 		}
 
 		/// <summary>
