@@ -90,7 +90,7 @@ namespace ClearCanvas.ImageServer.Enterprise.SqlServer
             // recurse on subCriteria
             foreach (SearchCriteria subCriteria in criteria.EnumerateSubCriteria())
             {
-                string variable = string.Format("{0}.{1}", entity, subCriteria.GetKey());
+                string variable = string.Format("[{0}].{1}", entity, subCriteria.GetKey());
                 var sc = subCriteria as SearchConditionBase;
                 if (sc != null)
                 {
@@ -414,11 +414,11 @@ namespace ClearCanvas.ImageServer.Enterprise.SqlServer
             else
             {
                 if (orderBy.Length > 0)
-                    sb.AppendFormat("SELECT {0}.*,ROW_NUMBER() OVER({1}) as RowNum FROM [{0}]", entityName, orderBy);
+                    sb.AppendFormat("SELECT [{0}].*,ROW_NUMBER() OVER({1}) as RowNum FROM [{0}]", entityName, orderBy);
                 else
                 {
                     // no OrderBy clause to sort the list, just assign row number to 1 to keep their order as is
-                    sb.AppendFormat("SELECT {0}.*,ROW_NUMBER() OVER( ORDER BY {0}.GUID ) as RowNum FROM [{0}]", entityName);
+                    sb.AppendFormat("SELECT [{0}].*,ROW_NUMBER() OVER( ORDER BY [{0}].GUID ) as RowNum FROM [{0}]", entityName);
                 }
             }
             // Generate an array of the WHERE clauses to be used.
