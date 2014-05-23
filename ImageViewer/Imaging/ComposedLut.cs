@@ -38,9 +38,9 @@ namespace ClearCanvas.ImageViewer.Imaging
 		private readonly int[] _data;
 
 		public ComposedLut(IComposableLut[] luts)
-			: this(luts, null) {}
+			: this(luts, null, null) {}
 
-		public ComposedLut(IComposableLut[] luts, BufferCache<int> cache)
+		public unsafe ComposedLut(IComposableLut[] luts, BufferCache<int> cache, BufferCache<double> doubleCache)
 		{
 			//luts.Validate();
 			int lutCount;
@@ -55,27 +55,31 @@ namespace ClearCanvas.ImageViewer.Imaging
 			_length = _maxInputValue - _minInputValue + 1;
 			_data = cache != null ? cache.Allocate(_length) : MemoryManager.Allocate<int>(_length);
 
-			//copy to array because accessing ObservableList's indexer in a tight loop is very expensive
+			const int intermediateDataSize = 8192; // each double entry is 8 bytes so the entire array is 64kB - just small enough to stay off the large object heap
+			var intermediateData = doubleCache != null ? doubleCache.Allocate(intermediateDataSize) : MemoryManager.Allocate<double>(intermediateDataSize);
 
-			unsafe
+			fixed (double* intermediateLutData = intermediateData)
+			fixed (int* composedLutData = _data)
 			{
-				var intermediateData = new double[_length];
-				fixed (double* intermediateLutData = intermediateData)
-				fixed (int* composedLutData = _data)
+				var min = _minInputValue;
+				var max = _maxInputValue + 1;
+				var pComposed = composedLutData;
+
+				// performs the bulk lookups in 64kB chunks (8k entries @ 8 bytes per) in order to keep the intermediate buffer off the large object heap
+				for (var start = min; start < max; start += intermediateDataSize)
 				{
-					var min = _minInputValue;
-					var max = _maxInputValue + 1;
+					var stop = Math.Min(max, start + intermediateDataSize);
+					var count = stop - start;
 
 					var pIntermediate = intermediateLutData;
-					for (var i = min; i < max; ++i)
+					for (var i = start; i < stop; ++i)
 						*pIntermediate++ = i;
 
 					for (var j = 0; j < lutCount; ++j)
-						luts[j].LookupValues(intermediateData, intermediateData, _length);
+						luts[j].LookupValues(intermediateData, intermediateData, count);
 
-					var pComposed = composedLutData;
 					pIntermediate = intermediateLutData;
-					for (var i = 0; i < _length; ++i)
+					for (var i = 0; i < count; ++i)
 						*pComposed++ = (int) Math.Round(*pIntermediate++);
 				}
 			}

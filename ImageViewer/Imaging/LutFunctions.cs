@@ -37,7 +37,7 @@ namespace ClearCanvas.ImageViewer.Core.Functions
 				const string msg = "Size of output array must be equal to the size of input array.";
 				throw new ArgumentException(msg, "output");
 			}
-			if (count >= countValues)
+			if (count > countValues)
 			{
 				const string msg = "Count must be less than or equal to size of arrays.";
 				throw new ArgumentOutOfRangeException("count", msg);
