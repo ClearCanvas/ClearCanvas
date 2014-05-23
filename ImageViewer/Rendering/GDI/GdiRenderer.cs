@@ -49,6 +49,7 @@ namespace ClearCanvas.ImageViewer.Rendering.GDI
 		private SolidBrush _brush;
 
 		private FontFactory _fontFactory;
+	    private static Color _lastNamedColor;
 
 		/// <summary>
 		/// Default constructor.
@@ -141,17 +142,19 @@ namespace ClearCanvas.ImageViewer.Rendering.GDI
 		/// </summary>
 		protected override void DrawImageGraphic(ImageGraphic imageGraphic)
 		{
-			CodeClock clock = new CodeClock();
+#if DEBUG
+            CodeClock clock = new CodeClock();
 			clock.Start();
-
+#endif
 			Surface.ImageBuffer.Graphics.Clear(Color.FromArgb(0x0, 0xFF, 0xFF, 0xFF));
 
 			DrawImageGraphic(Surface.ImageBuffer, imageGraphic);
 
 			Surface.FinalBuffer.RenderImage(Surface.ImageBuffer);
-
+#if DEBUG
 			clock.Stop();
 			PerformanceReportBroker.PublishReport("GDIRenderer", "DrawImageGraphic", clock.Seconds);
+#endif
 		}
 
 		/// <summary>
@@ -376,7 +379,7 @@ namespace ClearCanvas.ImageViewer.Rendering.GDI
 					clientRectangle,
 					format);
 
-				brush.Color = Color.FromName(annotationBox.Color);
+				brush.Color = GetNamedColor(annotationBox.Color);
 				clientRectangle.Offset(-1, -1);
 
 				buffer.Graphics.DrawString(
@@ -388,7 +391,16 @@ namespace ClearCanvas.ImageViewer.Rendering.GDI
 			}
 		}
 
-		/// <summary>
+	    private static Color GetNamedColor(string name)
+	    {
+            //So often, the last color used was the same.
+	        if (_lastNamedColor.Name == name)
+	            return _lastNamedColor;
+
+	        return _lastNamedColor = Color.FromName(name);
+	    }
+
+	    /// <summary>
 		/// Draws a text primitive to the specified destination buffer.
 		/// </summary>
 		/// <param name="buffer">The destination buffer.</param>

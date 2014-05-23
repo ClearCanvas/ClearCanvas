@@ -441,8 +441,20 @@ namespace ClearCanvas.ImageViewer.Graphics
 		{
 			if (ReferenceEquals(e.Graphic, this))
 				OnVisualStateChanged(e.PropertyName);
-			EventsHelper.Fire(_visualStateChanged, this, e);
-		}
+
+		    if (_visualStateChanged == null) return;
+
+            //NOTE: don't use EventsHelper because it will use DynamicInvoke.
+            try
+            {
+                _visualStateChanged(this, e);
+            }
+            catch (Exception ex)
+            {
+                Platform.Log(LogLevel.Error, ex);
+                throw;
+            }
+        }
 
 		/// <summary>
 		/// Called when the visual state changes on the current graphic, before notification of other handlers observing the <see cref="VisualStateChanged"/> event.

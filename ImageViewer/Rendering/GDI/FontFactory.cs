@@ -37,13 +37,18 @@ namespace ClearCanvas.ImageViewer.Rendering.GDI
 	{
 		private class ItemKey
 		{
+            private readonly int _hash;
+		    private readonly int _sizeEquality;
+
 			public ItemKey(string name, float size, FontStyle style, GraphicsUnit unit)
 			{
 				Name = name;
 				//So we don't end up with an insane # of items.
-				Size = (float) Math.Round(size*10)/10;
+			    _sizeEquality = (int)Math.Round(size*10);
+				Size = _sizeEquality/10F;
 				Style = style;
 				Unit = unit;
+			    _hash = ComputeHash();
 			}
 
 			public readonly string Name;
@@ -53,14 +58,19 @@ namespace ClearCanvas.ImageViewer.Rendering.GDI
 
 			public override int GetHashCode()
 			{
-				var hash = 0x75417862;
-				if (Name != null)
-					hash ^= Name.GetHashCode();
-				hash ^= Size.GetHashCode();
-				hash ^= Style.GetHashCode();
-				hash ^= Unit.GetHashCode();
-				return hash;
+			    return _hash;
 			}
+
+            private int ComputeHash()
+            {
+                var hash = 0x75417862;
+                if (Name != null)
+                    hash ^= Name.GetHashCode();
+                hash ^= Size.GetHashCode();
+                hash ^= Style.GetHashCode();
+                hash ^= Unit.GetHashCode();
+                return hash;
+            }
 
 			public override bool Equals(object obj)
 			{
@@ -68,7 +78,8 @@ namespace ClearCanvas.ImageViewer.Rendering.GDI
 				return other.Name == Name
 				       && other.Style == Style
 				       && other.Unit == Unit
-				       && FloatComparer.AreEqual(other.Size, Size);
+                       //More efficient than constantly using FloatComparer on the size.
+				       && other._sizeEquality == _sizeEquality;
 			}
 		}
 

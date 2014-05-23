@@ -50,28 +50,31 @@ namespace ClearCanvas.ImageViewer.Rendering
 			if (imageGraphic.SizeInBytes != imageGraphic.PixelData.Raw.Length)
 				throw new InvalidOperationException(String.Format(SR.ExceptionIncorrectPixelDataSize, imageGraphic.SizeInBytes, imageGraphic.PixelData.Raw.Length));
 
+#if DEBUG
 			CodeClock clock = new CodeClock();
 			clock.Start();
-
+#endif
 			RectangleF srcViewableRectangle;
 			Rectangle dstViewableRectangle;
 
 			CalculateVisibleRectangles(imageGraphic, clientRectangle, out dstViewableRectangle, out srcViewableRectangle);
 
-			if (imageGraphic is GrayscaleImageGraphic)
+		    var grayGraphic = imageGraphic as GrayscaleImageGraphic;
+		    ColorImageGraphic colorGraphic;
+            if (grayGraphic != null)
 			{
 				RenderGrayscale(
-					imageGraphic as GrayscaleImageGraphic,
+                    grayGraphic,
 					srcViewableRectangle,
 					dstViewableRectangle,
 					pDstPixelData,
 					dstWidth,
 					dstBytesPerPixel);
 			}
-			else if (imageGraphic is ColorImageGraphic)
+            else if (null != (colorGraphic = imageGraphic as ColorImageGraphic))
 			{
 				RenderColor(
-					imageGraphic as ColorImageGraphic,
+                    colorGraphic,
 					srcViewableRectangle,
 					dstViewableRectangle,
 					pDstPixelData,
@@ -82,9 +85,10 @@ namespace ClearCanvas.ImageViewer.Rendering
 			{
 				throw new Exception("Unknown ImageGraphic.");
 			}
-
+#if DEBUG
 			clock.Stop();
 			PerformanceReportBroker.PublishReport("ImageRenderer", "Render", clock.Seconds);
+#endif
 		}
 
 		private static void RenderGrayscale(
