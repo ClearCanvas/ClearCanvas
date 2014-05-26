@@ -23,10 +23,12 @@
 #endregion
 
 using System;
-using ClearCanvas.ImageViewer.Imaging;
 
-namespace ClearCanvas.ImageViewer.Core.Functions
+namespace ClearCanvas.ImageViewer.Imaging
 {
+	/// <summary>
+	/// Methods for batch computing various LUTs.
+	/// </summary>
 	public static unsafe class LutFunctions
 	{
 		private static int CheckArraySize(Array input, Array output, int count)
@@ -54,12 +56,12 @@ namespace ClearCanvas.ImageViewer.Core.Functions
 		/// output = input*slope + intercept
 		/// </code>
 		/// </remarks>
-		/// <param name="input"></param>
-		/// <param name="output"></param>
-		/// <param name="count"> </param>
-		/// <param name="intercept"></param>
-		/// <param name="slope"></param>
-		public static void LookupLinear(double[] input, double[] output, int count, double intercept, double slope)
+		/// <param name="input">Source array of input values to be transformed.</param>
+		/// <param name="output">Destination array where transformed output values will be written (may be same array as <paramref name="input"/>).</param>
+		/// <param name="count">Number of values in the arrays to transform (contiguous entries from start of array).</param>
+		/// <param name="slope">The slope of the linear function.</param>
+		/// <param name="intercept">The intercept of the linear function.</param>
+		public static void LookupLinear(double[] input, double[] output, int count, double slope, double intercept)
 		{
 			var countValues = CheckArraySize(input, output, count);
 
@@ -83,12 +85,12 @@ namespace ClearCanvas.ImageViewer.Core.Functions
 		/// output = (input - intercept)/slope
 		/// </code>
 		/// </remarks>
-		/// <param name="input"></param>
-		/// <param name="output"></param>
-		/// <param name="count"> </param>
-		/// <param name="intercept"></param>
-		/// <param name="slope"></param>
-		public static void LookupLinearInverse(double[] input, double[] output, int count, double intercept, double slope)
+		/// <param name="input">Source array of input values to be transformed.</param>
+		/// <param name="output">Destination array where transformed output values will be written (may be same array as <paramref name="input"/>).</param>
+		/// <param name="count">Number of values in the arrays to transform (contiguous entries from start of array).</param>
+		/// <param name="slope">The slope of the linear function.</param>
+		/// <param name="intercept">The intercept of the linear function.</param>
+		public static void LookupLinearInverse(double[] input, double[] output, int count, double slope, double intercept)
 		{
 			var countValues = CheckArraySize(input, output, count);
 
@@ -104,19 +106,19 @@ namespace ClearCanvas.ImageViewer.Core.Functions
 		}
 
 		/// <summary>
-		/// Performs batch LUT value lookup by scaling the input by a multiplier.
+		/// Performs batch LUT value lookup by multiplying the input by a scalar.
 		/// </summary>
 		/// <remarks>
 		/// <para>The values are transformed according to the following function:</para>
 		/// <code>
-		/// output = input*multiplier
+		/// output = input*scalar
 		/// </code>
 		/// </remarks>
-		/// <param name="input"></param>
-		/// <param name="output"></param>
-		/// <param name="count"> </param>
-		/// <param name="multiplier"></param>
-		public static void LookupScaleValue(double[] input, double[] output, int count, double multiplier)
+		/// <param name="input">Source array of input values to be transformed.</param>
+		/// <param name="output">Destination array where transformed output values will be written (may be same array as <paramref name="input"/>).</param>
+		/// <param name="count">Number of values in the arrays to transform (contiguous entries from start of array).</param>
+		/// <param name="scalar">The scalar applied to each input value.</param>
+		public static void LookupScaleValue(double[] input, double[] output, int count, double scalar)
 		{
 			var countValues = CheckArraySize(input, output, count);
 
@@ -127,7 +129,7 @@ namespace ClearCanvas.ImageViewer.Core.Functions
 				var pOut = pOutput;
 
 				for (var n = 0; n < countValues; ++n)
-					*pOut++ = *pIn++*multiplier;
+					*pOut++ = *pIn++*scalar;
 			}
 		}
 
@@ -140,10 +142,10 @@ namespace ClearCanvas.ImageViewer.Core.Functions
 		/// instead of calling this method in order to take advantage of the knowledge of the lookup's
 		/// internal details.
 		/// </remarks>
-		/// <param name="input"></param>
-		/// <param name="output"></param>
-		/// <param name="count"> </param>
-		/// <param name="lut"></param>
+		/// <param name="input">Source array of input values to be transformed.</param>
+		/// <param name="output">Destination array where transformed output values will be written (may be same array as <paramref name="input"/>).</param>
+		/// <param name="count">Number of values in the arrays to transform (contiguous entries from start of array).</param>
+		/// <param name="lut">The <see cref="IComposableLut"/> with which to transform the input values.</param>
 		public static void LookupLut(double[] input, double[] output, int count, IComposableLut lut)
 		{
 			var countValues = CheckArraySize(input, output, count);
@@ -173,12 +175,12 @@ namespace ClearCanvas.ImageViewer.Core.Functions
 		///		output = lutData[input - firstMappedInputValue]
 		/// </code>
 		/// </remarks>
-		///<param name="input"></param>
-		///<param name="output"></param>
-		///<param name="count"> </param>
-		///<param name="lutData"> </param>
-		///<param name="firstMappedInputValue"> </param>
-		///<param name="lastMappedInputValue"> </param>
+		/// <param name="input">Source array of input values to be transformed (values are rounded to nearest integer).</param>
+		/// <param name="output">Destination array where transformed output values will be written (may be same array as <paramref name="input"/>).</param>
+		/// <param name="count">Number of values in the arrays to transform (contiguous entries from start of array).</param>
+		///<param name="lutData">LUT table mapping input values to output values.</param>
+		///<param name="firstMappedInputValue">The input value corresponding to the first element of <paramref name="lutData"/>.</param>
+		///<param name="lastMappedInputValue">The input value corresponding to the last element of <paramref name="lutData"/>.</param>
 		public static void LookupLut(double[] input, double[] output, int count, int[] lutData, int firstMappedInputValue, int lastMappedInputValue)
 		{
 			var countValues = CheckArraySize(input, output, count);
@@ -221,12 +223,12 @@ namespace ClearCanvas.ImageViewer.Core.Functions
 		///		output = lutData[input - firstMappedInputValue]
 		/// </code>
 		/// </remarks>
-		///<param name="input"></param>
-		///<param name="output"></param>
-		///<param name="count"> </param>
-		///<param name="lutData"> </param>
-		///<param name="firstMappedInputValue"> </param>
-		///<param name="lastMappedInputValue"> </param>
+		/// <param name="input">Source array of input values to be transformed (values are rounded to nearest integer).</param>
+		/// <param name="output">Destination array where transformed output values will be written (may be same array as <paramref name="input"/>).</param>
+		/// <param name="count">Number of values in the arrays to transform (contiguous entries from start of array).</param>
+		///<param name="lutData">LUT table mapping input values to output values.</param>
+		///<param name="firstMappedInputValue">The input value corresponding to the first element of <paramref name="lutData"/>.</param>
+		///<param name="lastMappedInputValue">The input value corresponding to the last element of <paramref name="lutData"/>.</param>
 		public static void LookupLut(double[] input, double[] output, int count, double[] lutData, int firstMappedInputValue, int lastMappedInputValue)
 		{
 			var countValues = CheckArraySize(input, output, count);
@@ -269,6 +271,13 @@ namespace ClearCanvas.ImageViewer.Core.Functions
 		///		output = Round((input - minInputValue)*(maxOutputValue - minOutputValue)/(maxInputValue - minInputValue) + minOutputValue)
 		/// </code>
 		/// </remarks>
+		/// <param name="input">Source array of input values to be transformed.</param>
+		/// <param name="output">Destination array where transformed output values will be written (may be same array as <paramref name="input"/>).</param>
+		/// <param name="count">Number of values in the arrays to transform (contiguous entries from start of array).</param>
+		/// <param name="minInputValue">Specifies the lower bound of the range of input values.</param>
+		/// <param name="maxInputValue">Specifies the upper bound of the range of input values.</param>
+		/// <param name="minOutputValue">Specifies the lower bound of the range of output values.</param>
+		/// <param name="maxOutputValue">Specifies the upper bound of the range of output values.</param>
 		public static void LookupLinearRescale(double[] input, double[] output, int count, double minInputValue, double maxInputValue, int minOutputValue, int maxOutputValue)
 		{
 			var countValues = CheckArraySize(input, output, count);
@@ -312,6 +321,13 @@ namespace ClearCanvas.ImageViewer.Core.Functions
 		///		output = ((input - (center - 0.5))/(width - 1) + 0.5)*(maxOutputValue - minOutputValue) + minOutputValue
 		/// </code>
 		/// </remarks>
+		/// <param name="input">Source array of input values to be transformed.</param>
+		/// <param name="output">Destination array where transformed output values will be written (may be same array as <paramref name="input"/>).</param>
+		/// <param name="count">Number of values in the arrays to transform (contiguous entries from start of array).</param>
+		/// <param name="windowCenter">The centre value of the VOI window.</param>
+		/// <param name="windowWidth">The width of the VOI window.</param>
+		/// <param name="minOutputValue">Specifies the lower bound of the range of output values.</param>
+		/// <param name="maxOutputValue">Specifies the upper bound of the range of output values.</param>
 		public static void LookupVoiWindowLinear(double[] input, double[] output, int count, double windowCenter, double windowWidth, double minOutputValue, double maxOutputValue)
 		{
 			var countValues = CheckArraySize(input, output, count);
@@ -357,11 +373,11 @@ namespace ClearCanvas.ImageViewer.Core.Functions
 		///		output = input
 		/// </code>
 		/// </remarks>
-		///<param name="input"></param>
-		///<param name="output"></param>
-		///<param name="count"> </param>
-		///<param name="minValue"></param>
-		///<param name="maxValue"></param>
+		/// <param name="input">Source array of input values to be transformed.</param>
+		/// <param name="output">Destination array where transformed output values will be written (may be same array as <paramref name="input"/>).</param>
+		/// <param name="count">Number of values in the arrays to transform (contiguous entries from start of array).</param>
+		/// <param name="minValue">Specifies the lower bound of the range of values.</param>
+		/// <param name="maxValue">Specifies the upper bound of the range of values.</param>
 		public static void LookupClampValue(double[] input, double[] output, int count, double minValue, double maxValue)
 		{
 			var countValues = CheckArraySize(input, output, count);

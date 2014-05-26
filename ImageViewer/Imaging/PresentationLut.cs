@@ -23,7 +23,6 @@
 #endregion
 
 using ClearCanvas.Common.Utilities;
-using ClearCanvas.ImageViewer.Core.Functions;
 using ClearCanvas.ImageViewer.Mathematics;
 
 namespace ClearCanvas.ImageViewer.Imaging

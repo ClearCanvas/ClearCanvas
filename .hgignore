@@ -47,6 +47,7 @@ ImageViewer/ClearCanvas.ImageViewer.xml
 # VC++ Intellisense db files
 Dicom/ClearCanvas.Dicom.sdf
 ImageViewer/Core/Functions/ViewerCoreFunctions.sdf
+ImageViewer/Core/Functions/ViewerCoreFunctions.opensdf
 
 # Viewer local datastore files
 dicom_datastore/*.sdf

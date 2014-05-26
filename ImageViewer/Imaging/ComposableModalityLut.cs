@@ -24,7 +24,6 @@
 
 using System;
 using ClearCanvas.Common.Utilities;
-using ClearCanvas.ImageViewer.Core.Functions;
 
 namespace ClearCanvas.ImageViewer.Imaging
 {

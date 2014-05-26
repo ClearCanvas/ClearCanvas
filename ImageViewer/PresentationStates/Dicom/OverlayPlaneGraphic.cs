@@ -29,7 +29,6 @@ using ClearCanvas.Common.Utilities;
 using ClearCanvas.Dicom;
 using ClearCanvas.Dicom.Iod.Modules;
 using ClearCanvas.ImageViewer.Common;
-using ClearCanvas.ImageViewer.Core.Functions;
 using ClearCanvas.ImageViewer.Graphics;
 using ClearCanvas.ImageViewer.Imaging;
 
