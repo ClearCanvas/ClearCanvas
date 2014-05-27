@@ -8,35 +8,28 @@
     </TypeIdentifier>
   </Interface>
   <Interface Name="ClearCanvas.ImageViewer.Imaging.IComposableLut" Collapsed="true">
-    <Position X="2" Y="2" Width="1.5" />
+    <Position X="3" Y="2" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>IEAAAAAQAAAAAAAAKAAAAAQAAAAAAAAAAAQAAAAAABA=</HashCode>
+      <HashCode>IEAAAAAQAAAAAAAAKAAAAAQAAAAAAAAAAAQAAQAAABA=</HashCode>
       <FileName>Imaging\IComposableLut.cs</FileName>
     </TypeIdentifier>
   </Interface>
-  <Interface Name="ClearCanvas.ImageViewer.Imaging.IComposedLut" Collapsed="true">
-    <Position X="8.25" Y="2" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AEAAAAAQAAAAAAAACAAAAAAAAAAAABAAAAQAAAAAABA=</HashCode>
-      <FileName>Imaging\IComposedLut.cs</FileName>
-    </TypeIdentifier>
-  </Interface>
   <Interface Name="ClearCanvas.ImageViewer.Imaging.IDataLut" Collapsed="true">
-    <Position X="3.75" Y="5" Width="1.5" />
+    <Position X="3.5" Y="6" Width="1.5" />
     <TypeIdentifier>
       <HashCode>IEAAAAAQAAAAAAAAKAAAAAQAAAAAABAAAAQBAAAAABA=</HashCode>
       <FileName>Imaging\IDataLut.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Interface Name="ClearCanvas.ImageViewer.Imaging.IGeneratedDataLut" Collapsed="true">
-    <Position X="3.75" Y="6.25" Width="1.75" />
+    <Position X="3.5" Y="7.25" Width="1.75" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAA=</HashCode>
       <FileName>Imaging\IGeneratedDataLut.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Interface Name="ClearCanvas.ImageViewer.Imaging.IVoiLutLinear" Collapsed="true">
-    <Position X="0.75" Y="5" Width="1.75" />
+    <Position X="0.75" Y="4.75" Width="1.75" />
     <TypeIdentifier>
       <HashCode>AAAAgAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Imaging\IVoiLutLinear.cs</FileName>
@@ -45,30 +38,29 @@
   <Interface Name="ClearCanvas.ImageViewer.Imaging.IModalityLut" Collapsed="true">
     <Position X="3.25" Y="3.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
-      <FileName>Imaging\ILut.cs</FileName>
+      <HashCode>AEAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAQAAAAAABA=</HashCode>
+      <FileName>Imaging\IModalityLut.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Interface Name="ClearCanvas.ImageViewer.Imaging.IVoiLut" Collapsed="true">
-    <Position X="1" Y="3.5" Width="1.5" />
+    <Position X="0.75" Y="3.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
-      <FileName>Imaging\ILut.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Imaging\IVoiLut.cs</FileName>
     </TypeIdentifier>
   </Interface>
-  <Interface Name="ClearCanvas.ImageViewer.Imaging.IColorMap" Collapsed="true">
-    <Position X="6.5" Y="2" Width="1.5" />
+  <Interface Name="ClearCanvas.ImageViewer.Imaging.IDataModalityLut" Collapsed="true">
+    <Position X="3.25" Y="4.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>IEAAAAAAAAAAAAAAKAAAAAQAAAAAABAAAAQBAAAAABA=</HashCode>
-      <FileName>Imaging\IColorMap.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAABAAAAABA=</HashCode>
+      <FileName>Imaging\IDataModalityLut.cs</FileName>
     </TypeIdentifier>
   </Interface>
-  <Interface Name="ClearCanvas.ImageViewer.Imaging.IDLModalityLut" Collapsed="true">
-    <Position X="6.5" Y="2.75" Width="1.5" />
+  <Interface Name="ClearCanvas.ImageViewer.Imaging.IPresentationLut" Collapsed="true">
+    <Position X="5.5" Y="3.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>IEAAAAAQAAAAAAAAKAAAAAQAAAAAABAAAAQBAAAAABA=</HashCode>
-      <FileName>Imaging\ILut.cs</FileName>
-      <NewMemberFileName>Imaging\IDataLut.cs</NewMemberFileName>
+      <HashCode>AAAAAAAQAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Imaging\PresentationLut.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Font Name="Tahoma" Size="8.25" />

@@ -24,6 +24,7 @@
 
 using System;
 using System.Net;
+using System.Threading;
 using System.Web;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
@@ -59,7 +60,7 @@ namespace ClearCanvas.ImageServer.Core
         #region Private Members
 
         private readonly string _name;
-        private event HttpListenerHandlerDelegate _httpRequestReceived;
+    	private event HttpListenerHandlerDelegate _httpRequestReceived;
         #endregion
 
         #region Events
@@ -93,36 +94,13 @@ namespace ClearCanvas.ImageServer.Core
 
         public override void Start()
         {
-            try
-            {
-                StartListening(ListenerCallback);
-            }
-            catch(HttpListenerException e)
-            {
-                // When the port is tied up by another process, the system throws HttpListenerException with error code = 32 
-                // and the message "The process cannot access the file because it is being used by another process". 
-                // For clarity, we make the error message more informative in this case
-                if (e.ErrorCode == WindowsErrorCodes.ERROR_SHARING_VIOLATION)
-                {
-                    string errorMessage = string.Format("Unable to start {0} on port {1}. The port is being used by another process", _name, Port);
-                    Platform.Log(LogLevel.Fatal, errorMessage);
-                    ServerPlatform.Alert(AlertCategory.Application, AlertLevel.Critical, _name, AlertTypeCodes.UnableToStart, null, TimeSpan.Zero, errorMessage);
-                }
-                else
-                {
-                    string errorMessage = string.Format("Unable to start {0}. System Error Code={1}", _name, e.ErrorCode);
-                    Platform.Log(LogLevel.Fatal, e, errorMessage);
-                    ServerPlatform.Alert(AlertCategory.Application, AlertLevel.Critical, _name, AlertTypeCodes.UnableToStart, null, TimeSpan.Zero, errorMessage);
-                }
-            }
-            catch(Exception e)
-            {
-                Platform.Log(LogLevel.Fatal, e, "Unable to start {0}", _name);
-                ServerPlatform.Alert(AlertCategory.Application, AlertLevel.Critical, _name, AlertTypeCodes.UnableToStart,
-                                        null, TimeSpan.Zero, "Unable to start {0}: {1}", _name, e.Message);
-            }
-            
+        	StartListeningAsync(ListenerCallback);
         }
+
+		protected override void OnStartError(string message)
+		{
+			ServerPlatform.Alert(AlertCategory.Application, AlertLevel.Critical, GetDisplayName(), AlertTypeCodes.UnableToStart, null, TimeSpan.Zero, message);
+		}
 
         #endregion
 

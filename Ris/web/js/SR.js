@@ -42,6 +42,6 @@ var SR = function(resources) {
 	thisScript.parentNode.insertBefore(script, thisScript.nextSibling);
 	script.type = "text/javascript";
 	script.charset = "UTF-8";
-	script.src = String(thisScript.src).replace(/\/[^\/]+\.js$/i, "/resources/" + lang + ".js");
+	script.src = String(thisScript.src).replace(/\/[^\/]+\.js$/i, "/resources/resources." + lang + ".js");
 	
 })();

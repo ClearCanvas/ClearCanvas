@@ -35,10 +35,20 @@ namespace ClearCanvas.Server.ShredHost
     /// </summary>
     public abstract class HttpListenerShred : Shred
     {
+		/// <summary>
+		/// Lists of Windows error codes
+		/// (See http://msdn.microsoft.com/en-us/library/ms681382(v=vs.85).aspx)
+		/// </summary>
+		class WindowsErrorCodes
+		{
+			public static int ERROR_SHARING_VIOLATION = 32;
+		}
+
         #region Private Members
         private HttpListener _listener;
-        
-        #endregion
+    	private Thread _backgroundThread;
+
+    	#endregion
 
         #region Constructors
 
@@ -90,21 +100,97 @@ namespace ClearCanvas.Server.ShredHost
         protected string UriSubPath { get; set; }
 
 
+
         #endregion
 
         #region Protected Methods
 
-        protected void StartListening(Action<HttpListenerContext> callback)
-        {
-            Platform.Log(LogLevel.Info, "Started listening at {0}", BaseUri);
+		protected void StartListeningAsync(Action<HttpListenerContext> callback)
+		{
+			Platform.Log(LogLevel.Info, "Started listening at {0}", BaseUri);
+			
+			// start the listener on a separate thread
+			_backgroundThread = new Thread(() =>
+			{
+				try
+				{
+					StartListener(callback);
+				}
+				catch (HttpListenerException e)
+				{
+					// When the port is tied up by another process, the system throws HttpListenerException with error code = 32 
+					// and the message "The process cannot access the file because it is being used by another process". 
+					// For clarity, we make the error message more informative in this case
+					if (e.ErrorCode == WindowsErrorCodes.ERROR_SHARING_VIOLATION)
+					{
+						string errorMessage = string.Format("Unable to start {0} on port {1}. The port is being used by another process", GetDisplayName(), Port);
+						Platform.Log(LogLevel.Fatal, errorMessage);
+						OnStartError(errorMessage);
+					}
+					else
+					{
+						string errorMessage = string.Format("Unable to start {0}. System Error Code={1}", GetDisplayName(), e.ErrorCode);
+						Platform.Log(LogLevel.Fatal, e, errorMessage);
+						OnStartError(errorMessage);
+					}
+				}
+				catch (Exception e)
+				{
+					Platform.Log(LogLevel.Fatal, e, "Unable to start {0}", GetDisplayName());
+					OnStartError(e.Message);
+				}
+			});
 
-            _listener = new HttpListener();
-            _listener.Prefixes.Add(BaseUri);
-            _listener.Start();
+			_backgroundThread.Name = GetDisplayName();
+			_backgroundThread.Start();
+		}
+
+		protected virtual void OnStartError(string errorMessage) { }
+
+    	#endregion
+
+        #region Overridden Public Methods
+
+		protected virtual void OnStarted()
+		{
+		}
+
+    	public override void Stop()
+    	{
+    		StopListener();
+
+			// wait for the background thread to complete. Ideally it should have been terminated by now
+			if (_backgroundThread != null && _backgroundThread.IsAlive)
+			{
+				if (_backgroundThread.Join(3000))
+				{
+					Platform.Log(LogLevel.Info, "{0} has stopped gracefully", GetDisplayName());
+				}
+				else
+				{
+					Platform.Log(LogLevel.Warn, "{0} failed to stop gracefully", GetDisplayName());
+				}
+			}
+			else
+			{
+				Platform.Log(LogLevel.Info, "{0} has stopped gracefully", GetDisplayName());
+			}
+		}
+
+    	
+    	#endregion
+
+		#region Private Methods
+
+		private void StartListener(Action<HttpListenerContext> callback)
+		{
+			_listener = new HttpListener();
+			_listener.Prefixes.Add(BaseUri);
+			_listener.Start();
 
 			OnStarted();
 
-			while(_listener.IsListening)
+			while (_listener.IsListening)
 			{
 				try
 				{
@@ -117,22 +203,15 @@ namespace ClearCanvas.Server.ShredHost
 						Platform.Log(LogLevel.Warn, e, "Unexpected error in HttpListenerShred.");
 				}
 			}
-        }
-
-    	#endregion
-
-        #region Overridden Public Methods
-
-		protected virtual void OnStarted()
-		{
 		}
 
-    	public override void Stop()
-        {
-            _listener.Stop();
-        }
+    	private void StopListener()
+    	{
+    		if (_listener!=null)
+				_listener.Stop();
+    	}
 
-        #endregion
+		#endregion
 
-    }
+	}
 }

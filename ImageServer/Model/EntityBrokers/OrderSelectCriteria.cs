@@ -49,5 +49,26 @@ namespace ClearCanvas.ImageServer.Model.EntityBrokers
 				return (IRelatedEntityCondition<EntitySelectCriteria>)SubCriteria["StudyRelatedEntityCondition"];
 			}
 		}
+
+        /// <summary>
+        /// Used for EXISTS or NOT EXISTS subselects against the Patient table.
+        /// </summary>
+        /// <remarks>
+        /// A <see cref="PatientSelectCriteria"/> instance is created with the subselect parameters, 
+        /// and assigned to this Sub-Criteria.  Note that the link between the <see cref="Order"/>
+        /// and <see cref="Patient"/> tables is automatically added into the <see cref="OrderSelectCriteria"/>
+        /// instance by the broker.
+        /// </remarks>
+        public IRelatedEntityCondition<EntitySelectCriteria> PatientRelatedEntityCondition
+        {
+            get
+            {
+                if (!SubCriteria.ContainsKey("PatientRelatedEntityCondition"))
+                {
+                    SubCriteria["PatientRelatedEntityCondition"] = new RelatedEntityCondition<EntitySelectCriteria>("PatientRelatedEntityCondition", "PatientKey", "Key");
+                }
+                return (IRelatedEntityCondition<EntitySelectCriteria>)SubCriteria["PatientRelatedEntityCondition"];
+            }
+        }
 	}
 }

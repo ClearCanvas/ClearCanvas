@@ -429,31 +429,40 @@ namespace ClearCanvas.ImageViewer.Graphics
 		/// <param name="propertyKind">The kind of the property whose value changed.</param>
 		protected void NotifyVisualStateChanged(string propertyName, VisualStatePropertyKind propertyKind = VisualStatePropertyKind.Unspecified)
 		{
-			this.OnVisualStateChanged(propertyName);
-			EventsHelper.Fire(_visualStateChanged, this, new VisualStateChangedEventArgs(this, propertyName, propertyKind));
+			OnVisualStateChanged(propertyName);
+			FireVisualStateChanged(new VisualStateChangedEventArgs(this, propertyName, propertyKind));
 		}
 
 		/// <summary>
 		/// Forwards the <see cref="VisualStateChanged"/> event from a child graphic to listeners of a parent graphic.
 		/// </summary>
 		/// <param name="e">Data for the <see cref="VisualStateChanged"/> event.</param>
-		internal void NotifyVisualStateChanged(VisualStateChangedEventArgs e)
+		private void ForwardVisualStateChanged(VisualStateChangedEventArgs e)
 		{
 			if (ReferenceEquals(e.Graphic, this))
 				OnVisualStateChanged(e.PropertyName);
+			FireVisualStateChanged(e);
+		}
 
-		    if (_visualStateChanged == null) return;
+		private void FireVisualStateChanged(VisualStateChangedEventArgs e)
+		{
+			if (_visualStateChanged != null)
+			{
+	            //NOTE: don't use EventsHelper because it will use DynamicInvoke.
+	            try
+	            {
+	                _visualStateChanged(this, e);
+	            }
+	            catch (Exception ex)
+	            {
+	                Platform.Log(LogLevel.Error, ex);
+	                throw;
+	            }
+			}
 
-            //NOTE: don't use EventsHelper because it will use DynamicInvoke.
-            try
-            {
-                _visualStateChanged(this, e);
-            }
-            catch (Exception ex)
-            {
-                Platform.Log(LogLevel.Error, ex);
-                throw;
-            }
+			var parentGraphic = ParentGraphic as Graphic;
+			if (parentGraphic != null)
+				parentGraphic.ForwardVisualStateChanged(e);
         }
 
 		/// <summary>

@@ -116,6 +116,11 @@ namespace ClearCanvas.ImageViewer.Imaging
 			}
 		}
 
+		public override void LookupValues(double[] input, double[] output, int count)
+		{
+			LutFunctions.LookupClampValue(input, output, count, MinInputValue, MaxInputValue);
+		}
+
 		/// <summary>
 		/// Gets the window width.
 		/// </summary>

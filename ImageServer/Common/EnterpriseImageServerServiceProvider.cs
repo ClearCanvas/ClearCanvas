@@ -24,6 +24,7 @@
 
 using System;
 using ClearCanvas.Common;
+using ClearCanvas.Common.Caching;
 using ClearCanvas.Enterprise.Common;
 
 namespace ClearCanvas.ImageServer.Common
@@ -31,18 +32,26 @@ namespace ClearCanvas.ImageServer.Common
 	[ExtensionOf(typeof (ServiceProviderExtensionPoint), Enabled = false)]
 	public class EnterpriseImageServerServiceProvider : IServiceProvider
 	{
-		private readonly object _object = new object();
-
-		private volatile ImageServerServiceProvider _provider;
+		readonly ICacheClient _cache = Cache.CreateClient("EnterpriseImageServerServiceProvider");
+		readonly TimeSpan _cacheDuration = TimeSpan.FromMinutes(3);
 
 		public object GetService(Type serviceType)
 		{
-			if (_provider == null)
-				lock (_object)
-					if (_provider == null)
-						_provider = new ImageServerServiceProvider();
+			// Note: The object is cached for performance purpose.
+			// For servicibility, cache is invalidated periodically so that changing the settings (EnterpriseImageServerServiceSettings)
+			// will not require restarting all services/IIS in the farm.
+			lock (_cache)
+			{
+				const string cacheId = "Settings";
+				var provider = _cache.Get(cacheId, new CacheGetOptions("Default")) as ImageServerServiceProvider;
+				if (provider==null)
+				{
+					provider = new ImageServerServiceProvider();
+					_cache.Put(cacheId, provider, new CachePutOptions("Default", _cacheDuration, false));
+				}
 
-			return _provider.GetService(serviceType);
+				return provider.GetService(serviceType);
+			}
 		}
 
 		/// <summary>
@@ -61,15 +70,15 @@ namespace ClearCanvas.ImageServer.Common
 
 			private static RemoteServiceProviderArgs GetSettings()
 			{
-				return new RemoteServiceProviderArgs(
-					EnterpriseImageServerServiceSettings.Default.BaseUrl,
-					EnterpriseImageServerServiceSettings.Default.FailoverBaseUrl,
-					EnterpriseImageServerServiceSettings.Default.ConfigurationClass,
-					EnterpriseImageServerServiceSettings.Default.MaxReceivedMessageSize,
-					EnterpriseImageServerServiceSettings.Default.CertificateValidationMode,
-					EnterpriseImageServerServiceSettings.Default.RevocationMode,
-					EnterpriseImageServerServiceSettings.Default.UserCredentialsProviderClass
-					) { SendTimeoutSeconds = EnterpriseImageServerServiceSettings.Default.SendTimeoutSeconds };
+				var settings = new EnterpriseImageServerServiceSettings();
+				return new RemoteServiceProviderArgs(settings.BaseUrl,
+					settings.FailoverBaseUrl,
+					settings.ConfigurationClass,
+					settings.MaxReceivedMessageSize,
+					settings.CertificateValidationMode,
+					settings.RevocationMode,
+					settings.UserCredentialsProviderClass
+					) { SendTimeoutSeconds = settings.SendTimeoutSeconds };
 			}
 		}
 	}
