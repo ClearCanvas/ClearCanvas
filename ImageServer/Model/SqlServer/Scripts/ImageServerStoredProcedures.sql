@@ -2060,12 +2060,13 @@ BEGIN
 EXEC dbo.sp_executesql @statement = N'-- =============================================
 -- Author:		Steve Wranovsky
 -- Create date: November 19, 2007
--- Update date: Sep 05, 2012
+-- Update date: May 25, 2014
 -- Description:	Completely delete a Study from the database
 -- History
 --	Oct 06, 2009:  Delete StudyHistory record if DestStudyStorageGUID matches
 --  Aug 18, 2011:  Delete StudyDataAccess
 --  Sep 05, 2012:  Move updating ServerPartition count to end of procedure
+--  May 25, 2014:  Add check for existing Orders attached to the patient
 -- =============================================
 CREATE PROCEDURE [dbo].[DeleteStudyStorage] 
 	-- Add the parameters for the stored procedure here
@@ -2083,6 +2084,7 @@ BEGIN
 	declare @NumberOfStudyRelatedSeries int
 	declare @NumberOfStudyRelatedInstances int
 	declare @NumberOfPatientRelatedStudies int
+	declare @NumberOfPatientRelatedOrders int
 
 	-- Select key values
 	SELECT @StudyInstanceUid = StudyInstanceUid FROM StudyStorage WHERE GUID = @StudyStorageGUID
@@ -2163,7 +2165,11 @@ BEGIN
 	FROM Patient
 	WHERE GUID = @PatientGUID
 
-	if @NumberOfPatientRelatedStudies = 0
+	SELECT @NumberOfPatientRelatedOrders = count(*) 
+	FROM [Order]
+	WHERE PatientGUID = @PatientGUID
+
+	if @NumberOfPatientRelatedStudies = 0 AND @NumberOfPatientRelatedOrders = 0
 	BEGIN
 		DELETE FROM Patient
 		WHERE GUID = @PatientGUID
@@ -2578,7 +2584,7 @@ BEGIN
 EXEC dbo.sp_executesql @statement = N'-- =============================================
 -- Author:		Thanh Huynh
 -- Create date: April 24, 2008
--- Update date: April 24, 2008
+-- Update date: May 27, 2014
 -- Description:	Completely delete a Server Partition from the database.
 --				This involves deleting devies, rules, 
 -- =============================================
@@ -2664,7 +2670,10 @@ BEGIN
 		delete dbo.RequestAttributes where SeriesGUID in (Select GUID from dbo.Series where ServerPartitionGUID=@ServerPartitionGUID)
 		delete dbo.Series where ServerPartitionGUID=@ServerPartitionGUID
 		delete dbo.Study where ServerPartitionGUID=@ServerPartitionGUID
-		delete dbo.Patient where ServerPartitionGUID=@ServerPartitionGUID		
+		delete dbo.[Order] where ServerPartitionGUID=@ServerPartitionGUID
+		delete dbo.Patient where ServerPartitionGUID=@ServerPartitionGUID
+		delete dbo.Staff where ServerPartitionGUID=@ServerPartitionGUID
+		delete dbo.ProcedureCode where ServerPartitionGUID=@ServerPartitionGUID
 	END
 
 	--PRINT ''Deleting ServerPartition''
@@ -3972,6 +3981,7 @@ BEGIN
 EXEC dbo.sp_executesql @statement = N'-- =============================================
 -- Author:		Thanh Huynh
 -- Create date: Oct 09, 2008
+-- Update date: May 27, 2014, Updates to take into account new Order table might have reference to Patient
 -- Description:	Attach a study to a new patient and update all object counts for the old and new patient.
 --
 -- =============================================
@@ -3988,7 +3998,7 @@ BEGIN
 	DECLARE @ServerPartitionGUID uniqueidentifier
 	DECLARE @CurrentPatientGUID uniqueidentifier
 	DECLARE @StudyInstanceUid varchar(64)
-
+	
 	SELECT @ServerPartitionGUID=Study.ServerPartitionGUID,
 		   @StudyInstanceUid = Study.StudyInstanceUid, @CurrentPatientGUID=PatientGUID
 	FROM Study WHERE Study.GUID=@StudyGUID
@@ -4019,12 +4029,18 @@ BEGIN
 
 	
 	DECLARE @StudyCount int
+	DECLARE @NumberOfStudyRelatedOrders int
 
 	SELECT @StudyCount =NumberOfPatientRelatedStudies
 	FROM Patient WHERE GUID=@CurrentPatientGUID
 
+	SELECT @NumberOfStudyRelatedOrders = count(*)
+	FROM [Order] WHERE PatientGUID=@CurrentPatientGUID
+
 	PRINT @StudyCount
-	IF @StudyCount<=1
+	PRINT @NumberOfStudyRelatedOrders
+
+	IF @StudyCount<=1 AND @NumberOfStudyRelatedOrders = 0
 	BEGIN
 		DELETE Patient WHERE GUID=@CurrentPatientGUID
 	END
@@ -4050,6 +4066,7 @@ EXEC dbo.sp_executesql @statement = N'-- =======================================
 -- Author:		Thanh Huynh
 -- Create date: Oct 09, 2008
 -- Updated:     Jan 14, 2014, Bug fix when concurrency issues occur with removing the old Patient
+-- Updated:     May 27, 2014, Updated to take into account if order exists for Patient when deleting
 -- Description:	Create a new Patient for a study
 -- =============================================
 CREATE PROCEDURE [dbo].[CreatePatientForStudy]
@@ -4070,6 +4087,7 @@ BEGIN
 	DECLARE @CurrentPatientGUID uniqueidentifier
 	DECLARE @StudyInstanceUid varchar(64)
 	DECLARE @NumStudiesOwnedByCurrentPatient int
+	DECLARE @NumOrdersOwnedByCurrentPatient int
 	DECLARE @NumSeries int
 	DECLARE @NumInstances int
 
@@ -4111,12 +4129,14 @@ BEGIN
 		[NumberOfPatientRelatedInstances]=[NumberOfPatientRelatedInstances]-@NumInstances
 	WHERE GUID=@CurrentPatientGUID
 
+
+	SELECT @NumOrdersOwnedByCurrentPatient=count(*) FROM [Order] WHERE PatientGUID=@CurrentPatientGUID
 	SELECT @NumStudiesOwnedByCurrentPatient=NumberOfPatientRelatedStudies FROM Patient WHERE GUID=@CurrentPatientGUID
 
 	-- CR (Jan 2014): Although unlikely, an error may be thrown here if another process somehow inserted a study for this patient but hasn''t updated the count.
 	-- Instead of relying on the count, it is safer to delete the Patient record only if it is not being referenced in the Study table:
 	--    DELETE Patient WHERE GUID =@CurrentPatientGUID and NOT EXISTS(SELECT COUNT(*) FROM Study WITH (NOLOCK) WHERE Study.PatientGUID = Patient.GUID )		
-	IF @NumStudiesOwnedByCurrentPatient<=0
+	IF @NumStudiesOwnedByCurrentPatient<=0 AND @NumOrdersOwnedByCurrentPatient = 0
 	BEGIN
 		DELETE Patient WHERE GUID = @CurrentPatientGUID
 	END
@@ -4309,7 +4329,7 @@ BEGIN
 	UPDATE Patient SET 	NumberOfPatientRelatedInstances=NumberOfPatientRelatedInstances-@NumInstances WHERE GUID=@PatientGUID
 	UPDATE Patient SET 	NumberOfPatientRelatedSeries=NumberOfPatientRelatedSeries-@NumSeries WHERE GUID=@PatientGUID
 	UPDATE Patient SET 	NumberOfPatientRelatedStudies=NumberOfPatientRelatedStudies-1 WHERE GUID=@PatientGUID
-	DELETE Patient WHERE GUID=@PatientGUID AND NumberOfPatientRelatedStudies=0
+	DELETE Patient WHERE GUID=@PatientGUID AND NumberOfPatientRelatedStudies=0 AND NOT EXISTS (SELECT GUID FROM [Order] where PatientGUID=@PatientGUID)
 
 
 	UPDATE ServerPartition SET StudyCount=StudyCount-1 WHERE GUID=@ServerPartitionGUID	
