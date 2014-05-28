@@ -16,13 +16,13 @@ using ClearCanvas.Enterprise.Core.Upgrade;
 namespace ClearCanvas.Healthcare.Hibernate.UpgradeScripts
 {
     /// <summary>
-    /// Upgrade from the Bennu milestone to the Rigel milestone.
+    /// Upgrade from the Rigel milestone to the Orion milestone.
     /// </summary>
     [ExtensionOf(typeof(PersistentStoreUpgradeScriptExtensionPoint))]
-    internal class UpgradeFrom_10_1_13120_656 : BaseUpgradeScript
+    internal class UpgradeFrom_11_0_14821_1095 : BaseUpgradeScript
     {
-        public UpgradeFrom_10_1_13120_656()
-            : base(new Version(10, 1, 13120, 656), new Version(11, 0, 14821, 1095), "UpgradeFrom_10_1_13120_656.sql")
+        public UpgradeFrom_11_0_14821_1095()
+            : base(new Version(11, 0, 14821, 1095), null, "UpgradeFrom_NoOp.sql")
         {
         }
     }
