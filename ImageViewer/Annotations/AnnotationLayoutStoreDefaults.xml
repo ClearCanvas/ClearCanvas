@@ -328,9 +328,21 @@
             <annotation-box normalized-rectangle="0.000000\0.800000\0.500000\0.825000" annotation-item-id="" />
             <annotation-box normalized-rectangle="0.000000\0.825000\0.500000\0.850000" annotation-item-id="" />
             <annotation-box normalized-rectangle="0.000000\0.850000\0.500000\0.875000" annotation-item-id="" />
-            <annotation-box normalized-rectangle="0.000000\0.875000\0.500000\0.900000" annotation-item-id="" />
-            <annotation-box normalized-rectangle="0.000000\0.900000\0.500000\0.925000" annotation-item-id="" />
-            <annotation-box normalized-rectangle="0.000000\0.925000\0.500000\0.950000" annotation-item-id="" />
+            <annotation-box normalized-rectangle="0.000000\0.875000\0.500000\0.900000" annotation-item-id="Dicom.DXImage.KVP">
+              <box-settings>
+                <configuration-settings show-label="true" show-label-if-empty="true" />
+              </box-settings>
+            </annotation-box>
+            <annotation-box normalized-rectangle="0.000000\0.900000\0.500000\0.925000" annotation-item-id="Dicom.DXImage.Exposure">
+              <box-settings>
+                <configuration-settings show-label="true" show-label-if-empty="true" />
+              </box-settings>
+            </annotation-box>
+            <annotation-box normalized-rectangle="0.000000\0.925000\0.500000\0.950000" annotation-item-id="Dicom.DXImage.FilterMaterial">
+              <box-settings>
+                <configuration-settings show-label="true" show-label-if-empty="true" />
+              </box-settings>
+            </annotation-box>
             <annotation-box normalized-rectangle="0.000000\0.950000\0.500000\0.975000" annotation-item-id="Presentation.Zoom">
               <box-settings>
                 <configuration-settings show-label="true" show-label-if-empty="true" />
