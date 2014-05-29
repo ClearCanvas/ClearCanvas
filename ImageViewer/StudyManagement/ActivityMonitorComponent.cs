@@ -1121,6 +1121,8 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 
 		private void WorkItemsChanged(object sender, WorkItemsChangedEventArgs e)
 		{
+			Platform.Log(LogLevel.Info, "WorkItemsChanged");
+
 			var workItems = e.ChangedItems;
 			if (workItems.Any(item => item.Request.ConcurrencyType == WorkItemConcurrency.StudyUpdate
 									|| item.Request.ConcurrencyType == WorkItemConcurrency.StudyDelete

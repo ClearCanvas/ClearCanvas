@@ -30,6 +30,11 @@ namespace ClearCanvas.ImageViewer.Imaging
 	[Cloneable(true)]
 	public class PresentationLutLinear : PresentationLut
 	{
+		public PresentationLutLinear() {}
+
+		public PresentationLutLinear(int minOutputValue, int maxOutputValue)
+			: base(minOutputValue, maxOutputValue) {}
+
 		public override int this[double value]
 		{
 			get

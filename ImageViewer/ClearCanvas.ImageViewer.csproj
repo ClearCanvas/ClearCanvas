@@ -194,6 +194,10 @@
     <Compile Include="Imaging\MinMaxPixelLinearLut.cs" />
     <Compile Include="Imaging\PresentationLut.cs" />
     <Compile Include="Imaging\PresentationLutLinear.cs" />
+    <Compile Include="Imaging\Tests\ComposableLutTests.cs" />
+    <Compile Include="Imaging\Tests\ComposedLutTests.cs" />
+    <Compile Include="Imaging\Tests\DataVoiLutTests.cs" />
+    <Compile Include="Imaging\Tests\LutTestHelper.cs" />
     <Compile Include="Imaging\Tests\PresentationLutLinearTests.cs" />
     <Compile Include="Imaging\Tests\VoiWindowTests.cs" />
     <Compile Include="InputManagement\MouseWheelCaptureChangedEventArgs.cs" />
@@ -339,7 +343,7 @@
     <Compile Include="ImageSetFactory.cs" />
     <Compile Include="Imaging\IColorMapInstaller.cs" />
     <Compile Include="Imaging\IdentityVoiLinearLut.cs" />
-    <Compile Include="Imaging\Tests\IdentityVoiLinearLutTest.cs" />
+    <Compile Include="Imaging\Tests\IdentityVoiLinearLutTests.cs" />
     <Compile Include="Imaging\IVoiLutInstaller.cs" />
     <Compile Include="Rendering\Tests\ImageRendererVoiLutTests.cs" />
     <Compile Include="Tests\DisplaySetFactoryTests.cs" />
@@ -500,7 +504,7 @@
     <Compile Include="Imaging\DataLut.cs" />
     <Compile Include="Imaging\PaletteColorMap.cs" />
     <Compile Include="Imaging\SimpleDataLut.cs" />
-    <Compile Include="Imaging\Tests\MiscellaneousLutTests.cs" />
+    <Compile Include="Imaging\Tests\DataModalityLutTests.cs" />
     <Compile Include="InteractiveGraphics\StretchCursorTokenStrategy.cs" />
     <Compile Include="RoiGraphics\RoiTransformPolicy.cs" />
     <Compile Include="InteractiveGraphics\Tests\EllipseIntersectionTests.cs" />
@@ -755,10 +759,10 @@
     <Compile Include="Imaging\ComposableLut.cs" />
     <Compile Include="Imaging\ComposableLutBase.cs" />
     <Compile Include="Imaging\ModalityLutLinear.cs" />
-    <Compile Include="Imaging\Tests\CompositeLUTTest.cs" />
-    <Compile Include="Imaging\Tests\ModalityLUTLinearTest.cs" />
+    <Compile Include="Imaging\Tests\LutComposerTests.cs" />
+    <Compile Include="Imaging\Tests\ModalityLutLinearTests.cs" />
     <Compile Include="Imaging\Tests\NormalizationLutLinearTests.cs" />
-    <Compile Include="Imaging\Tests\VoiLutLinearTests.cs" />
+    <Compile Include="Imaging\Tests\BasicVoiLutLinearTests.cs" />
     <Compile Include="Annotations\AnnotationBox.cs" />
     <Compile Include="Graphics\GraphicCollection.cs" />
     <Compile Include="Graphics\VectorGraphic.cs" />

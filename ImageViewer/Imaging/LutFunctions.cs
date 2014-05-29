@@ -44,7 +44,7 @@ namespace ClearCanvas.ImageViewer.Imaging
 				const string msg = "Count must be less than or equal to size of arrays.";
 				throw new ArgumentOutOfRangeException("count", msg);
 			}
-			return countValues;
+			return count;
 		}
 
 		/// <summary>
@@ -393,7 +393,7 @@ namespace ClearCanvas.ImageViewer.Imaging
 					var value = *pIn++;
 					if (value < minValue)
 						*pOut++ = minValue;
-					if (value > maxValue)
+					else if (value > maxValue)
 						*pOut++ = maxValue;
 					else
 						*pOut++ = value;

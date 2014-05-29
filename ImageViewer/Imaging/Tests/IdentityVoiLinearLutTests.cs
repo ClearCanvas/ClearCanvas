@@ -31,12 +31,13 @@ using NUnit.Framework;
 namespace ClearCanvas.ImageViewer.Imaging.Tests
 {
 	[TestFixture]
-	public class IdentityVoiLinearLutTest
+	internal class IdentityVoiLinearLutTests
 	{
 		[Test]
 		public void TestConstruction()
 		{
 			IdentityVoiLinearLut lut = new IdentityVoiLinearLut();
+			Assert.NotNull(lut);
 		}
 
 		[Test]
@@ -81,9 +82,17 @@ namespace ClearCanvas.ImageViewer.Imaging.Tests
 			TestIdentityLut(new IdentityVoiLinearLut(bitDepth, false), bitDepth);
 		}
 
+		[Test]
+		public void TestLookupValues()
+		{
+			var lut = new IdentityVoiLinearLut(13, false);
+
+			lut.AssertLookupValues(-1, 1 << 13);
+		}
+
 		private static void TestIdentityLut(IdentityVoiLinearLut lut, int bitDepth)
 		{
-			int max = (int) (Math.Pow(2, bitDepth) - 1);
+			double max = Math.Pow(2, bitDepth) - 1;
 
 			Assert.AreEqual(0, lut.MinInputValue, "Minimum Input Value is wrong!");
 			Assert.AreEqual(max, lut.MaxInputValue, "Maximum Input Value is wrong!");
@@ -94,7 +103,7 @@ namespace ClearCanvas.ImageViewer.Imaging.Tests
 
 			if (bitDepth <= 8)
 			{
-				for (int n = 0; n <= max; n++)
+				for (double n = 0; n <= max; n += 0.5)
 				{
 					Assert.AreEqual(n, lut[n], "LUT Value {0} is wrong!", n);
 				}

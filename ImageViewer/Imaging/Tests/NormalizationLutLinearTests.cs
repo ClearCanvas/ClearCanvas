@@ -29,7 +29,7 @@ using NUnit.Framework;
 namespace ClearCanvas.ImageViewer.Imaging.Tests
 {
 	[TestFixture]
-	public class NormalizationLutLinearTests
+	internal class NormalizationLutLinearTests
 	{
 		[Test]
 		public void TestTrivialRescale()
@@ -43,14 +43,14 @@ namespace ClearCanvas.ImageViewer.Imaging.Tests
 			var composer = new LutComposer(bitsStored, signed);
 			composer.ModalityLut = new ModalityLutLinear(bitsStored, signed, rescaleSlope, rescaleIntercept);
 			composer.NormalizationLut = new NormalizationLutLinear(rescaleSlope, rescaleIntercept);
-		    //The composed LUT outputs "Presentation Values", so just trick it into being "identity".
-            var output = composer.GetOutputLut(0, 4095);
+			//The composed LUT outputs "Presentation Values", so just trick it into being "identity".
+			var output = composer.GetOutputLut(0, 4095);
 			Assert.AreEqual(0, output[0]);
-            Assert.AreEqual(101, output[101]);
-            Assert.AreEqual(2047, output[2047]);
-            Assert.AreEqual(2048, output[2048]);
-            Assert.AreEqual(3993, output[3993]);
-            Assert.AreEqual(4095, output[4095]);
+			Assert.AreEqual(101, output[101]);
+			Assert.AreEqual(2047, output[2047]);
+			Assert.AreEqual(2048, output[2048]);
+			Assert.AreEqual(3993, output[3993]);
+			Assert.AreEqual(4095, output[4095]);
 		}
 
 		[Test]
@@ -65,14 +65,14 @@ namespace ClearCanvas.ImageViewer.Imaging.Tests
 			var composer = new LutComposer(bitsStored, signed);
 			composer.ModalityLut = new ModalityLutLinear(bitsStored, signed, rescaleSlope, rescaleIntercept);
 			composer.NormalizationLut = new NormalizationLutLinear(rescaleSlope, rescaleIntercept);
-            var output = composer.GetOutputLut(0, 4095);
+			var output = composer.GetOutputLut(0, 4095);
 
 			Assert.AreEqual(0, output[0]);
-            Assert.AreEqual(101, output[101]);
-            Assert.AreEqual(2047, output[2047]);
-            Assert.AreEqual(2048, output[2048]);
-            Assert.AreEqual(3993, output[3993]);
-            Assert.AreEqual(4095, output[4095]);
+			Assert.AreEqual(101, output[101]);
+			Assert.AreEqual(2047, output[2047]);
+			Assert.AreEqual(2048, output[2048]);
+			Assert.AreEqual(3993, output[3993]);
+			Assert.AreEqual(4095, output[4095]);
 		}
 
 		[Test]
@@ -87,14 +87,14 @@ namespace ClearCanvas.ImageViewer.Imaging.Tests
 			var composer = new LutComposer(bitsStored, signed);
 			composer.ModalityLut = new ModalityLutLinear(bitsStored, signed, rescaleSlope, rescaleIntercept);
 			composer.NormalizationLut = new NormalizationLutLinear(rescaleSlope, rescaleIntercept);
-            var output = composer.GetOutputLut(0, 4095);
+			var output = composer.GetOutputLut(0, 4095);
 
 			Assert.AreEqual(0, output[0]);
-            Assert.AreEqual(101, output[101]);
-            Assert.AreEqual(2047, output[2047]);
-            Assert.AreEqual(2048, output[2048]);
-            Assert.AreEqual(3993, output[3993]);
-            Assert.AreEqual(4095, output[4095]);
+			Assert.AreEqual(101, output[101]);
+			Assert.AreEqual(2047, output[2047]);
+			Assert.AreEqual(2048, output[2048]);
+			Assert.AreEqual(3993, output[3993]);
+			Assert.AreEqual(4095, output[4095]);
 		}
 
 		[Test]
@@ -109,14 +109,14 @@ namespace ClearCanvas.ImageViewer.Imaging.Tests
 			var composer = new LutComposer(bitsStored, signed);
 			composer.ModalityLut = new ModalityLutLinear(bitsStored, signed, rescaleSlope, rescaleIntercept);
 			composer.NormalizationLut = new NormalizationLutLinear(rescaleSlope, rescaleIntercept);
-            var output = composer.GetOutputLut(0, 4095);
+			var output = composer.GetOutputLut(0, 4095);
 
 			Assert.AreEqual(0, output[0]);
-            Assert.AreEqual(101, output[101]);
-            Assert.AreEqual(2047, output[2047]);
-            Assert.AreEqual(2048, output[2048]);
-            Assert.AreEqual(3993, output[3993]);
-            Assert.AreEqual(4095, output[4095]);
+			Assert.AreEqual(101, output[101]);
+			Assert.AreEqual(2047, output[2047]);
+			Assert.AreEqual(2048, output[2048]);
+			Assert.AreEqual(3993, output[3993]);
+			Assert.AreEqual(4095, output[4095]);
 		}
 
 		[Test]
@@ -131,14 +131,14 @@ namespace ClearCanvas.ImageViewer.Imaging.Tests
 			var composer = new LutComposer(bitsStored, signed);
 			composer.ModalityLut = new ModalityLutLinear(bitsStored, signed, rescaleSlope, rescaleIntercept);
 			composer.NormalizationLut = new NormalizationLutLinear(rescaleSlope, rescaleIntercept);
-            var output = composer.GetOutputLut(0, 4095);
+			var output = composer.GetOutputLut(0, 4095);
 
 			Assert.AreEqual(0, output[0]);
-            Assert.AreEqual(101, output[101]);
-            Assert.AreEqual(2047, output[2047]);
-            Assert.AreEqual(2048, output[2048]);
-            Assert.AreEqual(3993, output[3993]);
-            Assert.AreEqual(4095, output[4095]);
+			Assert.AreEqual(101, output[101]);
+			Assert.AreEqual(2047, output[2047]);
+			Assert.AreEqual(2048, output[2048]);
+			Assert.AreEqual(3993, output[3993]);
+			Assert.AreEqual(4095, output[4095]);
 		}
 
 		[Test]
@@ -153,14 +153,25 @@ namespace ClearCanvas.ImageViewer.Imaging.Tests
 			var composer = new LutComposer(bitsStored, signed);
 			composer.ModalityLut = new ModalityLutLinear(bitsStored, signed, rescaleSlope, rescaleIntercept);
 			composer.NormalizationLut = new NormalizationLutLinear(rescaleSlope, rescaleIntercept);
-            var output = composer.GetOutputLut(0, 4095);
-            
-            Assert.AreEqual(0, output[0]);
-            Assert.AreEqual(101, output[101]);
-            Assert.AreEqual(2047, output[2047]);
-            Assert.AreEqual(2048, output[2048]);
-            Assert.AreEqual(3993, output[3993]);
-            Assert.AreEqual(4095, output[4095]);
+			var output = composer.GetOutputLut(0, 4095);
+
+			Assert.AreEqual(0, output[0]);
+			Assert.AreEqual(101, output[101]);
+			Assert.AreEqual(2047, output[2047]);
+			Assert.AreEqual(2048, output[2048]);
+			Assert.AreEqual(3993, output[3993]);
+			Assert.AreEqual(4095, output[4095]);
+		}
+
+		[Test]
+		public void TestLookupValues()
+		{
+			const double rescaleSlope = 1.5e-9;
+			const double rescaleIntercept = 351;
+
+			var lut = new NormalizationLutLinear(rescaleSlope, rescaleIntercept);
+
+			lut.AssertLookupValues(-65536, 65536);
 		}
 	}
 }
