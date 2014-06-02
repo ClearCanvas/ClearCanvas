@@ -44,7 +44,9 @@
                 <configuration-settings show-label="true" show-label-if-empty="true" />
               </box-settings>
             </annotation-box>
-            <annotation-box normalized-rectangle="0.500000\0.150000\1.000000\0.175000" annotation-item-id="" />
+            <annotation-box normalized-rectangle="0.500000\0.150000\1.000000\0.175000" annotation-item-id="HangingProtocols.StudyRelation" >
+              <box-settings color="Orange" fit-width="true" />
+            </annotation-box>
             <annotation-box normalized-rectangle="0.500000\0.175000\1.000000\0.200000" annotation-item-id="" />
             <annotation-box normalized-rectangle="0.500000\0.200000\1.000000\0.225000" annotation-item-id="" />
             <annotation-box normalized-rectangle="0.500000\0.225000\1.000000\0.250000" annotation-item-id="" />
@@ -175,7 +177,9 @@
                 <configuration-settings show-label="true" show-label-if-empty="true" />
               </box-settings>
             </annotation-box>
-            <annotation-box normalized-rectangle="0.500000\0.175000\1.000000\0.200000" annotation-item-id="" />
+            <annotation-box normalized-rectangle="0.500000\0.175000\1.000000\0.200000" annotation-item-id="HangingProtocols.StudyRelation" >
+              <box-settings color="Orange" fit-width="true" />
+            </annotation-box>
             <annotation-box normalized-rectangle="0.500000\0.200000\1.000000\0.225000" annotation-item-id="" />
             <annotation-box normalized-rectangle="0.500000\0.225000\1.000000\0.250000" annotation-item-id="" />
             <annotation-box normalized-rectangle="0.500000\0.250000\1.000000\0.275000" annotation-item-id="" />
@@ -305,7 +309,9 @@
                 <configuration-settings show-label="true" show-label-if-empty="true" />
               </box-settings>
             </annotation-box>
-            <annotation-box normalized-rectangle="0.500000\0.175000\1.000000\0.200000" annotation-item-id="" />
+            <annotation-box normalized-rectangle="0.500000\0.175000\1.000000\0.200000" annotation-item-id="HangingProtocols.StudyRelation" >
+              <box-settings color="Orange" fit-width="true" />
+            </annotation-box>
             <annotation-box normalized-rectangle="0.500000\0.200000\1.000000\0.225000" annotation-item-id="" />
             <annotation-box normalized-rectangle="0.500000\0.225000\1.000000\0.250000" annotation-item-id="" />
             <annotation-box normalized-rectangle="0.500000\0.250000\1.000000\0.275000" annotation-item-id="" />
@@ -457,7 +463,9 @@
                 <configuration-settings show-label="true" show-label-if-empty="false" />
               </box-settings>
             </annotation-box>
-            <annotation-box normalized-rectangle="0.500000\0.225000\1.000000\0.250000" annotation-item-id="" />
+            <annotation-box normalized-rectangle="0.500000\0.225000\1.000000\0.250000" annotation-item-id="HangingProtocols.StudyRelation" >
+              <box-settings color="Orange" fit-width="true" />
+            </annotation-box>
             <annotation-box normalized-rectangle="0.500000\0.250000\1.000000\0.275000" annotation-item-id="" />
             <annotation-box normalized-rectangle="0.500000\0.275000\1.000000\0.300000" annotation-item-id="" />
             <annotation-box normalized-rectangle="0.500000\0.300000\1.000000\0.325000" annotation-item-id="" />
@@ -611,7 +619,9 @@
                 <configuration-settings show-label="true" show-label-if-empty="false" />
               </box-settings>
             </annotation-box>
-            <annotation-box normalized-rectangle="0.000000\0.165000\0.400000\0.180000" annotation-item-id="" />
+            <annotation-box normalized-rectangle="0.000000\0.165000\0.400000\0.180000" annotation-item-id="HangingProtocols.StudyRelation" >
+              <box-settings color="Orange" fit-width="true" />
+            </annotation-box>
             <annotation-box normalized-rectangle="0.000000\0.180000\0.400000\0.195000" annotation-item-id="" />
             <annotation-box normalized-rectangle="0.000000\0.195000\0.400000\0.210000" annotation-item-id="" />
             <annotation-box normalized-rectangle="0.000000\0.210000\0.400000\0.225000" annotation-item-id="" />
@@ -730,7 +740,9 @@
                 <configuration-settings show-label="true" show-label-if-empty="false" />
               </box-settings>
             </annotation-box>
-            <annotation-box normalized-rectangle="0.600000\0.165000\1.000000\0.180000" annotation-item-id="" />
+            <annotation-box normalized-rectangle="0.600000\0.165000\1.000000\0.180000" annotation-item-id="HangingProtocols.StudyRelation" >
+              <box-settings color="Orange" fit-width="true" />
+            </annotation-box>
             <annotation-box normalized-rectangle="0.600000\0.180000\1.000000\0.195000" annotation-item-id="" />
             <annotation-box normalized-rectangle="0.600000\0.195000\1.000000\0.210000" annotation-item-id="" />
             <annotation-box normalized-rectangle="0.600000\0.210000\1.000000\0.225000" annotation-item-id="" />
@@ -849,7 +861,9 @@
                 <configuration-settings show-label="true" show-label-if-empty="false" />
               </box-settings>
             </annotation-box>
-            <annotation-box normalized-rectangle="0.000000\0.165000\0.400000\0.180000" annotation-item-id="" />
+            <annotation-box normalized-rectangle="0.000000\0.165000\0.400000\0.180000" annotation-item-id="HangingProtocols.StudyRelation" >
+              <box-settings color="Orange" fit-width="true" />
+            </annotation-box>
             <annotation-box normalized-rectangle="0.000000\0.180000\0.400000\0.195000" annotation-item-id="" />
             <annotation-box normalized-rectangle="0.000000\0.195000\0.400000\0.210000" annotation-item-id="" />
             <annotation-box normalized-rectangle="0.000000\0.210000\0.400000\0.225000" annotation-item-id="" />
@@ -937,7 +951,9 @@
             <annotation-box normalized-rectangle="0.000000\0.775000\0.400000\0.790000" annotation-item-id="" />
             <annotation-box normalized-rectangle="0.000000\0.790000\0.400000\0.805000" annotation-item-id="" />
             <annotation-box normalized-rectangle="0.000000\0.805000\0.400000\0.820000" annotation-item-id="" />
-            <annotation-box normalized-rectangle="0.000000\0.820000\0.400000\0.835000" annotation-item-id="" />
+            <annotation-box normalized-rectangle="0.000000\0.820000\0.400000\0.835000" annotation-item-id="HangingProtocols.StudyRelation" >
+              <box-settings color="Orange" fit-width="true" />
+            </annotation-box>
             <annotation-box normalized-rectangle="0.000000\0.835000\0.400000\0.850000" annotation-item-id="Dicom.ImagePlane.SliceLocation">
               <box-settings>
                 <configuration-settings show-label="true" show-label-if-empty="false" />
@@ -1096,8 +1112,9 @@
                 <configuration-settings show-label="true" show-label-if-empty="true" />
               </box-settings>
             </annotation-box>
-            <annotation-box normalized-rectangle="0.500000\0.175000\1.000000\0.200000" annotation-item-id="" />
-            <annotation-box normalized-rectangle="0.500000\0.175000\1.000000\0.200000" annotation-item-id="" />
+            <annotation-box normalized-rectangle="0.500000\0.175000\1.000000\0.200000" annotation-item-id="HangingProtocols.StudyRelation" >
+              <box-settings color="Orange" fit-width="true" />
+            </annotation-box>
             <annotation-box normalized-rectangle="0.500000\0.200000\1.000000\0.225000" annotation-item-id="" />
             <annotation-box normalized-rectangle="0.500000\0.225000\1.000000\0.250000" annotation-item-id="" />
             <annotation-box normalized-rectangle="0.500000\0.250000\1.000000\0.275000" annotation-item-id="" />
@@ -1240,7 +1257,9 @@
                 <configuration-settings show-label="true" show-label-if-empty="true" />
               </box-settings>
             </annotation-box>
-            <annotation-box normalized-rectangle="0.500000\0.200000\1.000000\0.225000" annotation-item-id="" />
+            <annotation-box normalized-rectangle="0.500000\0.200000\1.000000\0.225000" annotation-item-id="HangingProtocols.StudyRelation" >
+              <box-settings color="Orange" fit-width="true" />
+            </annotation-box>
             <annotation-box normalized-rectangle="0.500000\0.225000\1.000000\0.250000" annotation-item-id="" />
             <annotation-box normalized-rectangle="0.500000\0.250000\1.000000\0.275000" annotation-item-id="" />
             <annotation-box normalized-rectangle="0.500000\0.275000\1.000000\0.300000" annotation-item-id="" />
@@ -1396,8 +1415,9 @@
                 <configuration-settings show-label="true" show-label-if-empty="true" />
               </box-settings>
             </annotation-box>
-            <annotation-box normalized-rectangle="0.500000\0.150000\1.000000\0.175000" annotation-item-id="" />
-            <annotation-box normalized-rectangle="0.500000\0.175000\1.000000\0.200000" annotation-item-id="" />
+            <annotation-box normalized-rectangle="0.500000\0.150000\1.000000\0.175000" annotation-item-id="HangingProtocols.StudyRelation" >
+              <box-settings color="Orange" fit-width="true" />
+            </annotation-box>
             <annotation-box normalized-rectangle="0.500000\0.175000\1.000000\0.200000" annotation-item-id="" />
             <annotation-box normalized-rectangle="0.500000\0.200000\1.000000\0.225000" annotation-item-id="" />
             <annotation-box normalized-rectangle="0.500000\0.225000\1.000000\0.250000" annotation-item-id="" />
@@ -1519,8 +1539,9 @@
                 <configuration-settings show-label="true" show-label-if-empty="true" />
               </box-settings>
             </annotation-box>
-            <annotation-box normalized-rectangle="0.500000\0.150000\1.000000\0.175000" annotation-item-id="" />
-            <annotation-box normalized-rectangle="0.500000\0.175000\1.000000\0.200000" annotation-item-id="" />
+            <annotation-box normalized-rectangle="0.500000\0.150000\1.000000\0.175000" annotation-item-id="HangingProtocols.StudyRelation" >
+              <box-settings color="Orange" fit-width="true" />
+            </annotation-box>
             <annotation-box normalized-rectangle="0.500000\0.175000\1.000000\0.200000" annotation-item-id="" />
             <annotation-box normalized-rectangle="0.500000\0.200000\1.000000\0.225000" annotation-item-id="" />
             <annotation-box normalized-rectangle="0.500000\0.225000\1.000000\0.250000" annotation-item-id="" />
@@ -1642,7 +1663,9 @@
                 <configuration-settings show-label="true" show-label-if-empty="true" />
               </box-settings>
             </annotation-box>
-            <annotation-box normalized-rectangle="0.500000\0.150000\1.000000\0.175000" annotation-item-id="" />
+            <annotation-box normalized-rectangle="0.500000\0.150000\1.000000\0.175000" annotation-item-id="HangingProtocols.StudyRelation" >
+              <box-settings color="Orange" fit-width="true" />
+            </annotation-box>
             <annotation-box normalized-rectangle="0.500000\0.175000\1.000000\0.200000" annotation-item-id="" />
             <annotation-box normalized-rectangle="0.500000\0.200000\1.000000\0.225000" annotation-item-id="" />
             <annotation-box normalized-rectangle="0.500000\0.225000\1.000000\0.250000" annotation-item-id="" />
@@ -1792,8 +1815,9 @@
             <annotation-box normalized-rectangle="0.500000\0.175000\1.000000\0.200000" annotation-item-id="AdvancedImaging.Fusion.MismatchedFrameOfReference">
               <box-settings bold="true" color="Yellow" fit-width="true" always-visible="false" />
             </annotation-box>
-            <annotation-box normalized-rectangle="0.500000\0.175000\1.000000\0.200000" annotation-item-id="" />
-            <annotation-box normalized-rectangle="0.500000\0.200000\1.000000\0.225000" annotation-item-id="" />
+            <annotation-box normalized-rectangle="0.500000\0.200000\1.000000\0.225000" annotation-item-id="HangingProtocols.StudyRelation" >
+              <box-settings color="Orange" fit-width="true" />
+            </annotation-box>
             <annotation-box normalized-rectangle="0.500000\0.225000\1.000000\0.250000" annotation-item-id="" />
             <annotation-box normalized-rectangle="0.500000\0.250000\1.000000\0.275000" annotation-item-id="" />
             <annotation-box normalized-rectangle="0.500000\0.275000\1.000000\0.300000" annotation-item-id="" />
