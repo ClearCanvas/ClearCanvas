@@ -191,6 +191,7 @@
     <Compile Include="EntityBrokers\IPatientEntityBroker.gen.cs" />
     <Compile Include="EntityBrokers\IProcedureCodeEntityBroker.gen.cs" />
     <Compile Include="EntityBrokers\IProcessDuplicateSopWorkQueueEntryBroker.cs" />
+    <Compile Include="EntityBrokers\IQCStatusEnumBroker.gen.cs" />
     <Compile Include="EntityBrokers\IQueueStudyStateEnumBroker.gen.cs" />
     <Compile Include="EntityBrokers\IRequestAttributesEntityBroker.gen.cs" />
     <Compile Include="EntityBrokers\IRestoreQueueEntityBroker.gen.cs" />
@@ -344,6 +345,7 @@
     <Compile Include="ProcedureCode.gen.cs" />
     <Compile Include="ProcessDuplicateAction.cs" />
     <Compile Include="ProcessDuplicateQueueEntryQueueData.cs" />
+    <Compile Include="QCStatusEnum.gen.cs" />
     <Compile Include="QueueStudyStateEnum.gen.cs" />
     <Compile Include="ReconcileStudyQueueDescription.cs" />
     <Compile Include="ReconcileStudyWorkQueue.cs" />

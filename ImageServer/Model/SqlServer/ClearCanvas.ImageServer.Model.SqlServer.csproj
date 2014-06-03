@@ -132,6 +132,7 @@
     <Compile Include="EntityBrokers\PartitionTransferSyntaxEntityBroker.gen.cs" />
     <Compile Include="EntityBrokers\PatientEntityBroker.gen.cs" />
     <Compile Include="EntityBrokers\ProcedureCodeEntityBroker.gen.cs" />
+    <Compile Include="EntityBrokers\QCStatusEnumBroker.cs" />
     <Compile Include="EntityBrokers\QueueStudyStateEnumBroker.gen.cs" />
     <Compile Include="EntityBrokers\RequestAttributesEntityBroker.gen.cs" />
     <Compile Include="EntityBrokers\RestoreQueueEntityBroker.gen.cs" />
