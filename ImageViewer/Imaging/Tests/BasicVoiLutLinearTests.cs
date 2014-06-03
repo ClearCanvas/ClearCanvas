@@ -25,14 +25,24 @@
 #if	UNIT_TESTS
 #pragma warning disable 1591,0419,1574,1587
 
-using System;
 using NUnit.Framework;
 
 namespace ClearCanvas.ImageViewer.Imaging.Tests
 {
 	[TestFixture]
-	public class VoiLutLinearTests
+	internal class BasicVoiLutLinearTests
 	{
+		[Test]
+		public void TestLookupValues()
+		{
+			const double windowWidth = 4096;
+			const double windowLevel = -2047;
+
+			var lut = new BasicVoiLutLinear(windowWidth, windowLevel);
+
+			lut.AssertLookupValues(-10000, 10000);
+		}
+
 		[Test]
 		public void BasicTest()
 		{
@@ -64,7 +74,7 @@ namespace ClearCanvas.ImageViewer.Imaging.Tests
 			lut.WindowWidth = windowWidth;
 			lut.WindowCenter = windowLevel;
 
-            const double delta = 0.0001;
+			const double delta = 0.0001;
 
 			Assert.AreEqual(1.0, lut[0], delta);
 			Assert.AreEqual(2048.0, lut[2047], delta);
@@ -74,8 +84,8 @@ namespace ClearCanvas.ImageViewer.Imaging.Tests
 			lut.WindowCenter = 1023;
 
 			Assert.AreEqual(512, lut.WindowWidth, delta);
-            Assert.AreEqual(1023, lut.WindowCenter, delta);
-            Assert.AreEqual(0, lut[767], delta);
+			Assert.AreEqual(1023, lut.WindowCenter, delta);
+			Assert.AreEqual(0, lut[767], delta);
 			Assert.AreEqual(4095, lut[1279]);
 		}
 
@@ -108,18 +118,18 @@ namespace ClearCanvas.ImageViewer.Imaging.Tests
 			Assert.AreEqual(lut.MinInputValue, lut.MinOutputValue, "LUT output range min");
 			Assert.AreEqual(lut.MaxInputValue, lut.MaxOutputValue, "LUT output range max");
 
-            Assert.AreEqual(DicomReferenceFunction(0 - 1e-6, windowWidth, windowCentre, lut.MinOutputValue, lut.MaxOutputValue), lut[0 - 1e-6], "LUT output for value X < C-0.5 - (W-1)/2");
-            Assert.AreEqual(DicomReferenceFunction(0, windowWidth, windowCentre, lut.MinOutputValue, lut.MaxOutputValue), lut[0], "LUT output for value X == C-0.5 - (W-1)/2");
+			Assert.AreEqual(DicomReferenceFunction(0 - 1e-6, windowWidth, windowCentre, lut.MinOutputValue, lut.MaxOutputValue), lut[0 - 1e-6], "LUT output for value X < C-0.5 - (W-1)/2");
+			Assert.AreEqual(DicomReferenceFunction(0, windowWidth, windowCentre, lut.MinOutputValue, lut.MaxOutputValue), lut[0], "LUT output for value X == C-0.5 - (W-1)/2");
 
-            Assert.AreEqual(DicomReferenceFunction(4095 + 1e-6, windowWidth, windowCentre, lut.MinOutputValue, lut.MaxOutputValue), lut[4095 + 1e-6], "LUT output for value X > C-0.5 + (W-1)/2");
+			Assert.AreEqual(DicomReferenceFunction(4095 + 1e-6, windowWidth, windowCentre, lut.MinOutputValue, lut.MaxOutputValue), lut[4095 + 1e-6], "LUT output for value X > C-0.5 + (W-1)/2");
 
-            Assert.AreEqual(DicomReferenceFunction(0.1, windowWidth, windowCentre, lut.MinOutputValue, lut.MaxOutputValue), lut[0.1], "LUT output for value between C-0.5 - (W-1)/2 and C-0.5 + (W-1)/2");
-            Assert.AreEqual(DicomReferenceFunction(1, windowWidth, windowCentre, lut.MinOutputValue, lut.MaxOutputValue), lut[1], "LUT output for value between C-0.5 - (W-1)/2 and C-0.5 + (W-1)/2");
-            Assert.AreEqual(DicomReferenceFunction(5, windowWidth, windowCentre, lut.MinOutputValue, lut.MaxOutputValue), lut[5], "LUT output for value between C-0.5 - (W-1)/2 and C-0.5 + (W-1)/2");
-            Assert.AreEqual(DicomReferenceFunction(2048, windowWidth, windowCentre, lut.MinOutputValue, lut.MaxOutputValue), lut[2048], "LUT output for value between C-0.5 - (W-1)/2 and C-0.5 + (W-1)/2");
-            Assert.AreEqual(DicomReferenceFunction(4090, windowWidth, windowCentre, lut.MinOutputValue, lut.MaxOutputValue), lut[4090], "LUT output for value between C-0.5 - (W-1)/2 and C-0.5 + (W-1)/2");
-            Assert.AreEqual(DicomReferenceFunction(4094.9, windowWidth, windowCentre, lut.MinOutputValue, lut.MaxOutputValue), lut[4094.9], "LUT output for value between C-0.5 - (W-1)/2 and C-0.5 + (W-1)/2");
-            Assert.AreEqual(DicomReferenceFunction(4095, windowWidth, windowCentre, lut.MinOutputValue, lut.MaxOutputValue), lut[4095], "LUT output for value between C-0.5 - (W-1)/2 and C-0.5 + (W-1)/2");
+			Assert.AreEqual(DicomReferenceFunction(0.1, windowWidth, windowCentre, lut.MinOutputValue, lut.MaxOutputValue), lut[0.1], "LUT output for value between C-0.5 - (W-1)/2 and C-0.5 + (W-1)/2");
+			Assert.AreEqual(DicomReferenceFunction(1, windowWidth, windowCentre, lut.MinOutputValue, lut.MaxOutputValue), lut[1], "LUT output for value between C-0.5 - (W-1)/2 and C-0.5 + (W-1)/2");
+			Assert.AreEqual(DicomReferenceFunction(5, windowWidth, windowCentre, lut.MinOutputValue, lut.MaxOutputValue), lut[5], "LUT output for value between C-0.5 - (W-1)/2 and C-0.5 + (W-1)/2");
+			Assert.AreEqual(DicomReferenceFunction(2048, windowWidth, windowCentre, lut.MinOutputValue, lut.MaxOutputValue), lut[2048], "LUT output for value between C-0.5 - (W-1)/2 and C-0.5 + (W-1)/2");
+			Assert.AreEqual(DicomReferenceFunction(4090, windowWidth, windowCentre, lut.MinOutputValue, lut.MaxOutputValue), lut[4090], "LUT output for value between C-0.5 - (W-1)/2 and C-0.5 + (W-1)/2");
+			Assert.AreEqual(DicomReferenceFunction(4094.9, windowWidth, windowCentre, lut.MinOutputValue, lut.MaxOutputValue), lut[4094.9], "LUT output for value between C-0.5 - (W-1)/2 and C-0.5 + (W-1)/2");
+			Assert.AreEqual(DicomReferenceFunction(4095, windowWidth, windowCentre, lut.MinOutputValue, lut.MaxOutputValue), lut[4095], "LUT output for value between C-0.5 - (W-1)/2 and C-0.5 + (W-1)/2");
 		}
 
 		[Test(Description = "Compares the VOI LUT output against the second example provided in DICOM 2011 PS 3.3 Section C.11.2.1.2 Note 3")]
@@ -181,7 +191,7 @@ namespace ClearCanvas.ImageViewer.Imaging.Tests
 		/// <summary>
 		/// The VOI linear window function as defined in DICOM 2011 PS 3.3 Section C.11.2.1.2
 		/// </summary>
-        private static double DicomReferenceFunction(double value, double windowWidth, double windowCentre, double minOutput, double maxOutput)
+		private static double DicomReferenceFunction(double value, double windowWidth, double windowCentre, double minOutput, double maxOutput)
 		{
 			if (value <= windowCentre - 0.5 - (windowWidth - 1)/2)
 				return minOutput;

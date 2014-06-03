@@ -25,6 +25,7 @@
 #if UNIT_TESTS
 
 using System;
+using System.Runtime.InteropServices;
 
 namespace ClearCanvas.Common.Utilities.Tests
 {
@@ -38,14 +39,25 @@ namespace ClearCanvas.Common.Utilities.Tests
 	{
 		private int _currentValue;
 
+		/// <summary>
+		/// Initializes a new pseudorandom number sequence using the current time as the seed.
+		/// </summary>
 		public PseudoRandom()
 			: this(Environment.TickCount) {}
 
+		/// <summary>
+		///  Initializes a new pseudorandom number sequence using the specified sequence seed.
+		/// </summary>
+		/// <param name="seed">A non-zero number to use as the sequence seed. Typically, this should be constant for any given test, in order to ensure reproducibility between runs.</param>
 		public PseudoRandom(int seed)
 		{
 			_currentValue = seed != 0 ? seed : 1;
 		}
 
+		/// <summary>
+		/// Gets the next 32-bit signed integer in the sequence.
+		/// </summary>
+		/// <returns>A pseudorandom 32-bit signed integer.</returns>
 		public int Next()
 		{
 			// a 32-bit linear feedback shift register implementation - taps at 31, 21, 1, and 0 will produce a maximal length sequence
@@ -53,6 +65,12 @@ namespace ClearCanvas.Common.Utilities.Tests
 			return _currentValue = ((_currentValue >> 1) & int.MaxValue) | (bit << 31);
 		}
 
+		/// <summary>
+		/// Gets the next integer in the sequence rescaled to the specified range.
+		/// </summary>
+		/// <param name="minValue">The minimum possible value that this method should return.</param>
+		/// <param name="maxValue">The maximum possible value that this method should return.</param>
+		/// <returns>A pseudorandom 32-bit signed integer between <paramref name="minValue"/> and <paramref name="maxValue"/>, inclusive.</returns>
 		public int Next(int minValue, int maxValue)
 		{
 			const string message = "minValue must be less than or equal to maxValue.";
@@ -62,6 +80,11 @@ namespace ClearCanvas.Common.Utilities.Tests
 			return (int) (NextDouble()*range) + minValue;
 		}
 
+		/// <summary>
+		/// Gets the next non-negative integer in the sequence rescaled to the specified range.
+		/// </summary>
+		/// <param name="maxValue">The maximum possible value that this method should return.</param>
+		/// <returns>A pseudorandom 32-bit signed integer between 0 and <paramref name="maxValue"/>, inclusive.</returns>
 		public int Next(int maxValue)
 		{
 			const string message = "maxValue must be greater than or equal to zero.";
@@ -70,6 +93,10 @@ namespace ClearCanvas.Common.Utilities.Tests
 			return (int) (NextDouble()*maxValue);
 		}
 
+		/// <summary>
+		/// Fills the given buffer with random bytes from the sequence.
+		/// </summary>
+		/// <param name="buffer">The buffer to be filled with random bytes.</param>
 		public void NextBytes(byte[] buffer)
 		{
 			if (buffer == null)
@@ -78,6 +105,27 @@ namespace ClearCanvas.Common.Utilities.Tests
 				buffer[n] = (byte) (Next()%256);
 		}
 
+		/// <summary>
+		/// Fills the given buffer with random bytes from the sequence.
+		/// </summary>
+		/// <param name="buffer">Pointer to the buffer to be filled with random bytes.</param>
+		/// <param name="bufferSize">Size of the buffer in bytes.</param>
+		public void NextBytes(IntPtr buffer, int bufferSize)
+		{
+			if (buffer == IntPtr.Zero)
+				throw new ArgumentNullException("buffer");
+			if (bufferSize < 0)
+				throw new ArgumentOutOfRangeException("bufferSize");
+
+			var byteBuffer = new byte[bufferSize];
+			NextBytes(byteBuffer);
+			Marshal.Copy(byteBuffer, 0, buffer, bufferSize);
+		}
+
+		/// <summary>
+		/// Gets the next 64-bit floating-point number in the sequence.
+		/// </summary>
+		/// <returns>A pseudorandom 64-bit floating-point number.</returns>
 		public double NextDouble()
 		{
 			return ((uint) Next())/(double) (1L + uint.MaxValue);

@@ -25,41 +25,26 @@
 #if	UNIT_TESTS
 #pragma warning disable 1591,0419,1574,1587
 
-using System;
 using ClearCanvas.Dicom;
 using NUnit.Framework;
 
 namespace ClearCanvas.ImageViewer.Imaging.Tests
 {
 	[TestFixture]
-	public class ModalityLUTLinearTest
+	internal class ModalityLutLinearTests
 	{
-		public ModalityLUTLinearTest()
-		{
-		}
-
-		[TestFixtureSetUp]
-		public void Init()
-		{
-		}
-		
-		[TestFixtureTearDown]
-		public void Cleanup()
-		{
-		}
-
 		[Test]
 		public void Unsigned1()
 		{
-			int bitsStored = 1;
-			bool isSigned = false;
-			double rescaleSlope = 1;
-			double rescaleIntercept = 100;
+			const int bitsStored = 1;
+			const bool isSigned = false;
+			const double rescaleSlope = 1;
+			const double rescaleIntercept = 100;
 
 			ModalityLutLinear lut = new ModalityLutLinear(
 				bitsStored,
-				isSigned, 
-				rescaleSlope, 
+				isSigned,
+				rescaleSlope,
 				rescaleIntercept);
 
 			Assert.AreEqual(2, lut.Length);
@@ -70,15 +55,15 @@ namespace ClearCanvas.ImageViewer.Imaging.Tests
 		[Test]
 		public void Signed1()
 		{
-			int bitsStored = 1;
-			bool isSigned = true;
-			double rescaleSlope = 1;
-			double rescaleIntercept = 100;
+			const int bitsStored = 1;
+			const bool isSigned = true;
+			const double rescaleSlope = 1;
+			const double rescaleIntercept = 100;
 
 			ModalityLutLinear lut = new ModalityLutLinear(
-				bitsStored, 
-				isSigned, 
-				rescaleSlope, 
+				bitsStored,
+				isSigned,
+				rescaleSlope,
 				rescaleIntercept);
 
 			Assert.AreEqual(2, lut.Length);
@@ -89,15 +74,15 @@ namespace ClearCanvas.ImageViewer.Imaging.Tests
 		[Test]
 		public void Unsigned12()
 		{
-			int bitsStored = 12;
-			bool isSigned = false;
-			double rescaleSlope = 0.5;
-			double rescaleIntercept = 100;
+			const int bitsStored = 12;
+			const bool isSigned = false;
+			const double rescaleSlope = 0.5;
+			const double rescaleIntercept = 100;
 
 			ModalityLutLinear lut = new ModalityLutLinear(
-				bitsStored, 
-				isSigned, 
-				rescaleSlope, 
+				bitsStored,
+				isSigned,
+				rescaleSlope,
 				rescaleIntercept);
 
 			Assert.AreEqual(4096, lut.Length);
@@ -109,15 +94,15 @@ namespace ClearCanvas.ImageViewer.Imaging.Tests
 		[Test]
 		public void Signed12()
 		{
-			int bitsStored = 12;
-			bool isSigned = true;
-			double rescaleSlope = 0.5;
-			double rescaleIntercept = 100;
+			const int bitsStored = 12;
+			const bool isSigned = true;
+			const double rescaleSlope = 0.5;
+			const double rescaleIntercept = 100;
 
 			ModalityLutLinear lut = new ModalityLutLinear(
-				bitsStored, 
-				isSigned, 
-				rescaleSlope, 
+				bitsStored,
+				isSigned,
+				rescaleSlope,
 				rescaleIntercept);
 
 			Assert.AreEqual(4096, lut.Length);
@@ -127,19 +112,29 @@ namespace ClearCanvas.ImageViewer.Imaging.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof(DicomDataException))]
+		[ExpectedException(typeof (DicomDataException))]
 		public void BitsStoredInvalid()
 		{
-			int bitsStored = 0;
-			bool isSigned = false;
-			double rescaleSlope = 0.5;
-			double rescaleIntercept = 100;
+			const int bitsStored = 0;
+			const bool isSigned = false;
+			const double rescaleSlope = 0.5;
+			const double rescaleIntercept = 100;
 
 			ModalityLutLinear lut = new ModalityLutLinear(
-				bitsStored, 
-				isSigned, 
-				rescaleSlope, 
+				bitsStored,
+				isSigned,
+				rescaleSlope,
 				rescaleIntercept);
+
+			Assert.IsNull(lut);
+		}
+
+		[Test]
+		public void TestLookupValues()
+		{
+			var lut = new ModalityLutLinear(15, true, 1.2345, -67.890);
+
+			lut.AssertLookupValues(short.MinValue - 1, short.MaxValue + 1);
 		}
 	}
 }
