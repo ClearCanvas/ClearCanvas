@@ -35,6 +35,14 @@ namespace ClearCanvas.ImageViewer.Imaging
 		private int _minOutputValue = int.MinValue;
 		private int _maxOutputValue = int.MaxValue;
 
+		protected PresentationLut() {}
+
+		protected PresentationLut(int minOutputValue, int maxOutputValue)
+		{
+			_minOutputValue = minOutputValue;
+			_maxOutputValue = maxOutputValue;
+		}
+
 		#region Overrides of ComposableLutBase
 
 		internal override sealed double MinInputValueCore

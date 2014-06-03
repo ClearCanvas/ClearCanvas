@@ -15,9 +15,6 @@ GO
 
 PRINT N'Create ProcedureCode, Staff, Order, and OrderStatusEnum table'
 GO
-BEGIN TRANSACTION
-GO
-
 
 /****** Object:  Table [dbo].[Order]    Script Date: 5/15/2014 6:47:33 PM ******/
 SET ANSI_NULLS ON

@@ -25,20 +25,13 @@
 #if	UNIT_TESTS
 #pragma warning disable 1591,0419,1574,1587
 
-using System;
-using System.Collections.Generic;
-using System.Text;
 using NUnit.Framework;
 
 namespace ClearCanvas.ImageViewer.Imaging.Tests
 {
 	[TestFixture]
-	public class MinMaxPixelCalculatedLutTests
+	internal class MinMaxPixelCalculatedLutTests
 	{
-		public MinMaxPixelCalculatedLutTests()
-		{
-		}
-
 		[Test]
 		public void TestSimple()
 		{
@@ -53,8 +46,10 @@ namespace ClearCanvas.ImageViewer.Imaging.Tests
 			lut.MinInputValue = 0;
 			lut.MaxInputValue = 255;
 
-			Assert.AreEqual(lut.WindowWidth, 24);
-			Assert.AreEqual(lut.WindowCenter, 12);
+			Assert.AreEqual(24, lut.WindowWidth, "WindowWidth");
+			Assert.AreEqual(12, lut.WindowCenter, "WindowCenter");
+
+			lut.AssertLookupValues(-300, 300);
 		}
 
 		[Test]
@@ -72,8 +67,10 @@ namespace ClearCanvas.ImageViewer.Imaging.Tests
 			lut.MinInputValue = 0;
 			lut.MaxInputValue = 255;
 
-			Assert.AreEqual(lut.WindowWidth, 24);
-			Assert.AreEqual(lut.WindowCenter, 2);
+			Assert.AreEqual(24, lut.WindowWidth, "WindowWidth");
+			Assert.AreEqual(2, lut.WindowCenter, "WindowCenter");
+
+			lut.AssertLookupValues(-300, 300);
 		}
 	}
 }

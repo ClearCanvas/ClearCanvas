@@ -4198,8 +4198,8 @@ BEGIN
 				AND GroupID = @GroupID
 			AND siq.GUID NOT IN (	
 				SELECT StudyIntegrityQueueGUID FROM StudyIntegrityQueueUid uid2
-				WHERE uid2.SeriesInstanceUID=@SeriesInstanceUid
-				AND uid2.SopInstanceUID=@SopInstanceUid
+				WHERE uid2.SeriesInstanceUid=@SeriesInstanceUid
+				AND uid2.SopInstanceUid=@SopInstanceUid
 			)			
 	GROUP BY siq.GUID
 	ORDER BY MAX(siq.InsertTime) DESC
@@ -4489,7 +4489,7 @@ EXEC dbo.sp_executesql @statement = N'
 CREATE PROCEDURE [dbo].[DeleteSeries] 
 	-- Add the parameters for the stored procedure here
 	@StudyStorageGUID uniqueidentifier, 
-	@SeriesInstanceUID varchar(64)	
+	@SeriesInstanceUid varchar(64)	
 AS
 BEGIN
 	-- SET NOCOUNT ON added to prevent extra result sets from
@@ -4505,7 +4505,7 @@ BEGIN
 	DECLARE @InstanceCount int
 	
 	SELECT @SeriesGUID=GUID, @InstanceCount = NumberOfSeriesRelatedInstances
-	FROM Series WHERE StudyGUID=@StudyGUID AND SeriesInstanceUid =@SeriesInstanceUID
+	FROM Series WHERE StudyGUID=@StudyGUID AND SeriesInstanceUid =@SeriesInstanceUid
 
 
 	IF @SeriesGUID IS NOT NULL
@@ -4670,7 +4670,7 @@ BEGIN
 	select @InProgressStatusEnum = Enum from WorkQueueStatusEnum where Lookup = ''In Progress''
 
 	SELECT * FROM WorkQueue WITH(NOLOCK)
-	WHERE DEVICEGUID=@DeviceGUID and WorkQueueStatusEnum=@InProgressStatusEnum	
+	WHERE DeviceGUID=@DeviceGUID and WorkQueueStatusEnum=@InProgressStatusEnum	
 	ORDER BY ScheduledTime ASC
 END
 '

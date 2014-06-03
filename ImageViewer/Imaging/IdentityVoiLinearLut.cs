@@ -45,6 +45,13 @@ namespace ClearCanvas.ImageViewer.Imaging
 
 #if UNIT_TESTS
 
+		/// <summary>
+		/// Constructor for unit testing
+		/// </summary>
+		/// <remarks>
+		/// This overload is just for convenience, as all it does is initialize <see cref="MaxInputValue"/> and <see cref="MinInputValue"/>.
+		/// In the actual image display pipeline, the input range would be automatically set to the output range of the modality LUT.
+		/// </remarks>
 		internal IdentityVoiLinearLut(int bitsStored, bool signed)
 		{
 			MinInputValue = DicomPixelData.GetMinPixelValue(bitsStored, signed);
