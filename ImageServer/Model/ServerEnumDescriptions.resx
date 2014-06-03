@@ -669,6 +669,12 @@
   <data name="ServerRuleTypeEnum_StudyQualityControl_LongDescription" xml:space="preserve">
     <value>A rule for quality control purposes when studies are received</value>
   </data>
+  <data name="QCStatusEnum_Checking_Description" xml:space="preserve">
+    <value>Checking</value>
+  </data>
+  <data name="QCStatusEnum_Checking_LongDescription" xml:space="preserve">
+    <value>Checking</value>
+  </data>
   <data name="QCStatusEnum_NA_Description" xml:space="preserve">
     <value>Not Applicable</value>
   </data>

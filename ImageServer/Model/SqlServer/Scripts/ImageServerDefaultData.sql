@@ -1280,23 +1280,30 @@ INSERT INTO [ImageServer].[dbo].[OrderStatusEnum]
 GO
 
 
+
+
 --  QCStatusEnum inserts
 INSERT INTO [ImageServer].[dbo].QCStatusEnum
            ([GUID],[Enum],[Lookup],[Description],[LongDescription])
-VALUES     (newid(),100,'NA','Not Applicable','Not Applicable')
+VALUES     (newid(),100,'Checking','Checking','Checking')
 GO
 
 INSERT INTO [ImageServer].[dbo].QCStatusEnum
            ([GUID],[Enum],[Lookup],[Description],[LongDescription])
-VALUES     (newid(),200,'Passed','Passed','Passed')
+VALUES     (newid(),200,'NA','Not Applicable','Not Applicable')
 GO
 
 INSERT INTO [ImageServer].[dbo].QCStatusEnum
            ([GUID],[Enum],[Lookup],[Description],[LongDescription])
-VALUES     (newid(),300,'Failed','Failed','Failed')
+VALUES     (newid(),300,'Passed','Passed','Passed')
 GO
 
 INSERT INTO [ImageServer].[dbo].QCStatusEnum
            ([GUID],[Enum],[Lookup],[Description],[LongDescription])
-VALUES     (newid(),400,'Incomplete','Incomplete','Incomplete (Missing required scans)')
+VALUES     (newid(),400,'Failed','Failed','Failed')
+GO
+
+INSERT INTO [ImageServer].[dbo].QCStatusEnum
+           ([GUID],[Enum],[Lookup],[Description],[LongDescription])
+VALUES     (newid(),500,'Incomplete','Incomplete','Incomplete (Missing required scans)')
 GO
