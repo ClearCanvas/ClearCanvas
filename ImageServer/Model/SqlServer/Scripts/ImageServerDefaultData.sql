@@ -747,7 +747,7 @@ VALUES (newid(), '1.2.840.10008.5.1.4.1.1.481.6', 'RT Brachy Treatment Record St
 GO
 
 INSERT INTO [ImageServer].[dbo].[ServerSopClass] ([GUID],[SopClassUid],[Description],[NonImage])
-VALUES (newid(), '1.2.840.10008.5.1.4.1.1.481.2', 'RT Dose Storage', 1)
+VALUES (newid(), '1.2.840.10008.5.1.4.1.1.481.2', 'RT Dose Storage', 0)
 GO
 
 INSERT INTO [ImageServer].[dbo].[ServerSopClass] ([GUID],[SopClassUid],[Description],[NonImage])
