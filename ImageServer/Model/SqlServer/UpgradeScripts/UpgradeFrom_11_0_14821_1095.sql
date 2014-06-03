@@ -297,3 +297,8 @@ ELSE PRINT 'The database update failed'
 GO
 DROP TABLE #tmpErrors
 GO
+
+
+UPDATE [ImageServer].[dbo].[ServerSopClass] SET [NonImage] = 0
+WHERE [SopClassUid] = '1.2.840.10008.5.1.4.1.1.481.2' -- 'RT Dose Storage'
+GO
