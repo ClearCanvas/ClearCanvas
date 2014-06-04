@@ -277,9 +277,56 @@ GO
 IF @@TRANCOUNT=0 BEGIN INSERT INTO #tmpErrors (Error) SELECT 1 BEGIN TRANSACTION END
 GO
 
-PRINT N'Adding '
+PRINT N'Adding QCStatusEnum to Study Table'
+
+GO
+ALTER TABLE dbo.Study ADD
+	QCStatusEnum smallint NULL
+GO
+IF NOT EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[Study]') AND name = N'IX_Study_StudyDate')
+CREATE NONCLUSTERED INDEX [IX_Study_StudyDate] ON [dbo].[Study] 
+(
+	[StudyDate] ASC,
+	[QCStatusEnum] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [INDEXES]
+GO
+
+/****** Object:  Table [dbo].[QCStatusEnum]    Script Date: 06/03/2014 12:48:31 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[QCStatusEnum]') AND type in (N'U'))
+BEGIN
+CREATE TABLE [dbo].[QCStatusEnum](
+	[GUID] [uniqueidentifier] ROWGUIDCOL  NOT NULL CONSTRAINT [DF_QCStatusEnum_GUID]  DEFAULT (newid()),
+	[Enum] [smallint] NOT NULL,
+	[Lookup] [varchar](32) NOT NULL,
+	[Description] [nvarchar](32) NOT NULL,
+	[LongDescription] [nvarchar](512) NOT NULL,
+ CONSTRAINT [PK_QCStatusEnum] PRIMARY KEY CLUSTERED 
+(
+	[Enum] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [STATIC]
+) ON [STATIC]
+END
+GO
+SET ANSI_PADDING OFF
+GO
 
 
+IF @@ERROR<>0 AND @@TRANCOUNT>0 ROLLBACK TRANSACTION
+GO
+IF @@TRANCOUNT=0 BEGIN INSERT INTO #tmpErrors (Error) SELECT 1 BEGIN TRANSACTION END
+GO
+
+PRINT N'Updating RT Dose Storage to be an Image SOP Class'
+
+UPDATE [ImageServer].[dbo].[ServerSopClass] SET [NonImage] = 0
+WHERE [SopClassUid] = '1.2.840.10008.5.1.4.1.1.481.2' -- 'RT Dose Storage'
+GO
 
 GO
 IF @@ERROR<>0 AND @@TRANCOUNT>0 ROLLBACK TRANSACTION
@@ -299,6 +346,4 @@ DROP TABLE #tmpErrors
 GO
 
 
-UPDATE [ImageServer].[dbo].[ServerSopClass] SET [NonImage] = 0
-WHERE [SopClassUid] = '1.2.840.10008.5.1.4.1.1.481.2' -- 'RT Dose Storage'
-GO
+
