@@ -175,6 +175,18 @@ namespace ClearCanvas.ImageServer.Model.EntityBrokers
               return (ISearchCondition<XmlDocument>)SubCriteria["QueryXml"];
             } 
         }
+        [EntityFieldDatabaseMappingAttribute(TableName="Study", ColumnName="QCOutput")]
+        public ISearchCondition<String> QCOutput
+        {
+            get
+            {
+              if (!SubCriteria.ContainsKey("QCOutput"))
+              {
+                 SubCriteria["QCOutput"] = new SearchCondition<String>("QCOutput");
+              }
+              return (ISearchCondition<String>)SubCriteria["QCOutput"];
+            } 
+        }
         [EntityFieldDatabaseMappingAttribute(TableName="Study", ColumnName="QCStatusEnum")]
         public ISearchCondition<QCStatusEnum> QCStatusEnum
         {
@@ -187,16 +199,16 @@ namespace ClearCanvas.ImageServer.Model.EntityBrokers
               return (ISearchCondition<QCStatusEnum>)SubCriteria["QCStatusEnum"];
             } 
         }
-        [EntityFieldDatabaseMappingAttribute(TableName="Study", ColumnName="QCOutput")]
-        public ISearchCondition<String> QCOutput
+        [EntityFieldDatabaseMappingAttribute(TableName="Study", ColumnName="OrderGUID")]
+        public ISearchCondition<ServerEntityKey> OrderKey
         {
             get
             {
-              if (!SubCriteria.ContainsKey("QCOutput"))
+              if (!SubCriteria.ContainsKey("OrderKey"))
               {
-                 SubCriteria["QCOutput"] = new SearchCondition<String>("QCOutput");
+                 SubCriteria["OrderKey"] = new SearchCondition<ServerEntityKey>("OrderKey");
               }
-              return (ISearchCondition<String>)SubCriteria["QCOutput"];
+              return (ISearchCondition<ServerEntityKey>)SubCriteria["OrderKey"];
             } 
         }
         [EntityFieldDatabaseMappingAttribute(TableName="Study", ColumnName="PatientsName")]

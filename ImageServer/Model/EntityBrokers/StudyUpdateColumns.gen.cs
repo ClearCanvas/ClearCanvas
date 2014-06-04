@@ -97,15 +97,20 @@ namespace ClearCanvas.ImageServer.Model.EntityBrokers
         {
             set { SubParameters["QueryXml"] = new EntityUpdateColumn<XmlDocument>("QueryXml", value); }
         }
+        [EntityFieldDatabaseMappingAttribute(TableName="Study", ColumnName="QCOutput")]
+        public String QCOutput
+        {
+            set { SubParameters["QCOutput"] = new EntityUpdateColumn<String>("QCOutput", value); }
+        }
         [EntityFieldDatabaseMappingAttribute(TableName="Study", ColumnName="QCStatusEnum")]
         public QCStatusEnum QCStatusEnum
         {
             set { SubParameters["QCStatusEnum"] = new EntityUpdateColumn<QCStatusEnum>("QCStatusEnum", value); }
         }
-        [EntityFieldDatabaseMappingAttribute(TableName="Study", ColumnName="QCOutput")]
-        public String QCOutput
+        [EntityFieldDatabaseMappingAttribute(TableName="Study", ColumnName="OrderGUID")]
+        public ServerEntityKey OrderKey
         {
-            set { SubParameters["QCOutput"] = new EntityUpdateColumn<String>("QCOutput", value); }
+            set { SubParameters["OrderKey"] = new EntityUpdateColumn<ServerEntityKey>("OrderKey", value); }
         }
        [DicomField(DicomTags.PatientsName, DefaultValue = DicomFieldDefault.Null)]
         [EntityFieldDatabaseMappingAttribute(TableName="Study", ColumnName="PatientsName")]
