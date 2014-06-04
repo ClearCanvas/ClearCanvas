@@ -72,7 +72,7 @@ namespace ClearCanvas.ImageServer.Web.Common.Data.DataSource
 
         public OrderStatusEnum OrderStatusEnum { get; set; }
 
-        public string StudyStatusEnumString
+        public string OrderStatusEnumString
         {
             get
             {
