@@ -317,6 +317,48 @@ SET ANSI_PADDING OFF
 GO
 
 
+
+--  QCStatusEnum inserts
+INSERT INTO [ImageServer].[dbo].QCStatusEnum
+           ([GUID],[Enum],[Lookup],[Description],[LongDescription])
+VALUES     (newid(),100,'Checking','Checking','Checking')
+GO
+
+INSERT INTO [ImageServer].[dbo].QCStatusEnum
+           ([GUID],[Enum],[Lookup],[Description],[LongDescription])
+VALUES     (newid(),200,'NA','Not Applicable','Not Applicable')
+GO
+
+INSERT INTO [ImageServer].[dbo].QCStatusEnum
+           ([GUID],[Enum],[Lookup],[Description],[LongDescription])
+VALUES     (newid(),300,'Passed','Passed','Passed')
+GO
+
+INSERT INTO [ImageServer].[dbo].QCStatusEnum
+           ([GUID],[Enum],[Lookup],[Description],[LongDescription])
+VALUES     (newid(),400,'Failed','Failed','Failed')
+GO
+
+INSERT INTO [ImageServer].[dbo].QCStatusEnum
+           ([GUID],[Enum],[Lookup],[Description],[LongDescription])
+VALUES     (newid(),500,'Incomplete','Incomplete','Incomplete (Missing required scans)')
+GO
+
+declare @na as smallint
+declare @failed as smallint
+declare @pass as smallint
+
+select @na=[Enum] from QCStatusEnum where Lookup='NA'
+select @failed=[Enum] from QCStatusEnum where Lookup='Failed'
+select @pass=[Enum] from QCStatusEnum where Lookup='Passed'
+
+update Study set QCStatusEnum = @na where QCOutput is null
+update Study set QCStatusEnum = @failed where QCOutput like '%Status_:_Failed%'
+update Study set QCStatusEnum = @pass where QCOutput like '%Status_:_Pass%'
+update Study set QCStatusEnum = @na where QCStatusEnum is null
+
+ALTER TABLE Study ALTER COLUMN QCStatusEnum smallint NOT NULL
+
 IF @@ERROR<>0 AND @@TRANCOUNT>0 ROLLBACK TRANSACTION
 GO
 IF @@TRANCOUNT=0 BEGIN INSERT INTO #tmpErrors (Error) SELECT 1 BEGIN TRANSACTION END

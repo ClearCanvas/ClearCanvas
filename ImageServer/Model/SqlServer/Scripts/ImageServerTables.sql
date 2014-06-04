@@ -621,7 +621,7 @@ CREATE TABLE [dbo].[Study](
 	ResponsiblePerson nvarchar(64) NULL,
 	ResponsibleOrganization nvarchar(64) NULL,
 	QueryXml xml NULL,
-	QCStatusEnum [smallint] NULL,
+	QCStatusEnum [smallint] NOT NULL,
 	QCOutput varchar(max) NULL,
 	OrderGUID uniqueidentifier NULL,
  CONSTRAINT [PK_Study] PRIMARY KEY NONCLUSTERED 
