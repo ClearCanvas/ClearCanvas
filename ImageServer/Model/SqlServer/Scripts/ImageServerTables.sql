@@ -2765,3 +2765,7 @@ GO
 ALTER TABLE dbo.Study ADD CONSTRAINT FK_Study_Order FOREIGN KEY	( OrderGUID	) 
 REFERENCES dbo.[Order] (GUID)
 GO
+
+ALTER TABLE dbo.Study ADD CONSTRAINT FK_Study_QCStatusEnum FOREIGN KEY ( QCStatusEnum ) 
+REFERENCES dbo.QCStatusEnum	( Enum )
+GO

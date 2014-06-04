@@ -352,12 +352,16 @@ select @na=[Enum] from QCStatusEnum where Lookup='NA'
 select @failed=[Enum] from QCStatusEnum where Lookup='Failed'
 select @pass=[Enum] from QCStatusEnum where Lookup='Passed'
 
-update Study set QCStatusEnum = @na where QCOutput is null
 update Study set QCStatusEnum = @failed where QCOutput like '%Status_:_Failed%'
 update Study set QCStatusEnum = @pass where QCOutput like '%Status_:_Pass%'
 update Study set QCStatusEnum = @na where QCStatusEnum is null
 
 ALTER TABLE Study ALTER COLUMN QCStatusEnum smallint NOT NULL
+
+ALTER TABLE dbo.Study ADD CONSTRAINT FK_Study_QCStatusEnum FOREIGN KEY ( QCStatusEnum ) 
+REFERENCES dbo.QCStatusEnum	( Enum )
+
+
 
 IF @@ERROR<>0 AND @@TRANCOUNT>0 ROLLBACK TRANSACTION
 GO
