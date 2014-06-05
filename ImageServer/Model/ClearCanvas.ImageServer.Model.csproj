@@ -74,6 +74,7 @@
     <Compile Include="ArchiveTypeEnum.gen.cs" />
     <Compile Include="Brokers\IPostponeWorkQueue.cs" />
     <Compile Include="Brokers\IQueryCurrentStudyMove.cs" />
+    <Compile Include="Brokers\IQueryQCStatistics.cs" />
     <Compile Include="Brokers\IWebResetWorkQueue.cs" />
     <Compile Include="Brokers\IWorkQueueProcessorIDs.cs" />
     <Compile Include="Brokers\ICreatePatientForStudy.cs" />
@@ -307,6 +308,7 @@
     <Compile Include="OrderStatusEnum.gen.cs" />
     <Compile Include="Parameters\PostponeWorkQueueParameters.cs" />
     <Compile Include="Parameters\QueryCurrentStudyMoveParameters.cs" />
+    <Compile Include="Parameters\QueryQCStatisticsParameters.cs" />
     <Compile Include="Parameters\WebResetWorkQueueParameters.cs" />
     <Compile Include="Parameters\WorkQueueProcessordIDsParameters.cs" />
     <Compile Include="Parameters\CreatePatientForStudyParameters.cs" />
@@ -345,6 +347,7 @@
     <Compile Include="ProcedureCode.gen.cs" />
     <Compile Include="ProcessDuplicateAction.cs" />
     <Compile Include="ProcessDuplicateQueueEntryQueueData.cs" />
+    <Compile Include="QCStatistics.cs" />
     <Compile Include="QCStatusEnum.gen.cs" />
     <Compile Include="QueueStudyStateEnum.gen.cs" />
     <Compile Include="ReconcileStudyQueueDescription.cs" />

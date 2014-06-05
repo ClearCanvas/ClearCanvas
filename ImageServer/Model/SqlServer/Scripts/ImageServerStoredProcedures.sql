@@ -4757,3 +4757,80 @@ END
 '
 END
 GO
+
+
+
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[QueryQCStatistics]') AND type in (N'P', N'PC'))
+BEGIN
+EXEC dbo.sp_executesql @statement = N'
+-- =============================================
+-- Author:		Thanh Huynh
+-- Create date: 2014-06-05
+-- Description:	Query QC Statistics
+-- =============================================
+ALTER PROCEDURE QueryQCStatistics
+	@StartTime datetime,
+	@EndTime datetime
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	SET NOCOUNT ON;
+
+	Declare @CheckingCount int
+	Declare @PassedCount int
+	Declare @FailedCount int
+	Declare @IncompleteCount int
+	Declare @NotApplicableCount int
+	Declare @OrdersForQC int
+	Declare @OrderStatusCancelled smallint
+
+	Declare @QCStatusChecking smallint
+	Declare @QCStatusNA smallint
+	Declare @QCStatusPassed smallint
+	Declare @QCStatusFailed smallint
+	Declare @QCStatusIncomplete smallint
+
+
+	SELECT @OrderStatusCancelled=Enum FROM [dbo].[OrderStatusEnum] WHERE Lookup=''Canceled''
+	SELECT @QCStatusChecking=Enum FROM [dbo].[OrderStatusEnum] WHERE Lookup=''Checking''
+	SELECT @QCStatusNA=Enum FROM [dbo].[OrderStatusEnum] WHERE Lookup=''NA''
+	SELECT @QCStatusPassed=Enum FROM [dbo].[OrderStatusEnum] WHERE Lookup=''Passed''
+	SELECT @QCStatusFailed=Enum FROM [dbo].[OrderStatusEnum] WHERE Lookup=''Failed''
+	SELECT @QCStatusIncomplete=Enum FROM [dbo].[OrderStatusEnum] WHERE Lookup=''Incomplete''
+
+	SELECT 
+		@CheckingCount=SUM(case when [QCStatusEnum] = @QCStatusChecking then 1 else 0 end),
+		@NotApplicableCount=SUM(case when [QCStatusEnum] =@QCStatusNA OR [QCStatusEnum] IS NULL then 1 else 0 end),
+		@PassedCount=SUM(case when [QCStatusEnum] = @QCStatusPassed then 1 else 0 end),
+		@FailedCount=SUM(case when [QCStatusEnum] = @QCStatusFailed then 1 else 0 end),
+		@IncompleteCount=SUM(case when [QCStatusEnum] = @QCStatusIncomplete then 1 else 0 end)
+		FROM  [dbo].[Study] s WITH (NOLOCK)
+		JOIN [dbo].[StudyStorage] ss ON ss.[GUID] = s.[StudyStorageGUID]
+		WHERE ss.[InsertTime] >= @StartTime and ss.[InsertTime]<=@EndTime
+
+	-- Find orders that are SCHEDULED within this window
+	SELECT @OrdersForQC = COUNT(*) 
+	FROM [dbo].[Order] WITH(NOLOCK)
+	WHERE [OrderStatusEnum]<>@OrderStatusCancelled
+		AND [ScheduledDateTime] >= @StartTime AND [ScheduledDateTime]<=@EndTime
+
+
+	SET NOCOUNT OFF;
+
+	SELECT @CheckingCount as Checking,
+		   @PassedCount as Passed,
+		   @FailedCount as Failed,
+		   @IncompleteCount as Incomplete,
+		   @NotApplicableCount as NotApplicable,
+		   @OrdersForQC as OrdersForQC
+
+END
+GO'
+END
+GO
+

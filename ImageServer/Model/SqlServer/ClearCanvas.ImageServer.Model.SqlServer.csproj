@@ -62,6 +62,7 @@
   <ItemGroup>
     <Compile Include="Brokers\PostponeWorkQueue.cs" />
     <Compile Include="Brokers\QueryCurrentStudyMove.cs" />
+    <Compile Include="Brokers\QueryQCStatistics.cs" />
     <Compile Include="Brokers\WebResetWorkQueue.cs" />
     <Compile Include="Brokers\WorkQueueProcessorIDs.cs" />
     <Compile Include="Brokers\CreatePatientForStudy.cs" />
