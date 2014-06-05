@@ -24,16 +24,14 @@
 
 using System;
 using System.Collections.Generic;
-using System.Threading;
-using ClearCanvas.Dicom.Iod;
+using System.Linq;
 using ClearCanvas.Enterprise.Core;
-using ClearCanvas.ImageServer.Common.Authentication;
 using ClearCanvas.ImageServer.Core;
-using ClearCanvas.ImageServer.Core.Helpers;
 using ClearCanvas.ImageServer.Core.Query;
 using ClearCanvas.ImageServer.Enterprise;
 using ClearCanvas.ImageServer.Model;
 using ClearCanvas.ImageServer.Model.EntityBrokers;
+
 namespace ClearCanvas.ImageServer.Web.Common.Data.DataSource
 {
     /// <summary>
@@ -74,7 +72,7 @@ namespace ClearCanvas.ImageServer.Web.Common.Data.DataSource
 
         public OrderStatusEnum OrderStatusEnum { get; set; }
 
-        public string StudyStatusEnumString
+        public string OrderStatusEnumString
         {
             get
             {
@@ -92,7 +90,11 @@ namespace ClearCanvas.ImageServer.Web.Common.Data.DataSource
 
         public Patient ThePatient { get; set; }
 
+        public ProcedureCode TheRequestedProcedure { get; set; }
+
         public string StudyInstanceUid { get; set; }
+
+        public string RequestedProcedure { get; set; }
 
         #endregion Public Properties
 
@@ -196,6 +198,16 @@ namespace ClearCanvas.ImageServer.Web.Common.Data.DataSource
                 criteria.ScheduledDateTime.MoreThanOrEqualTo(fromKey);
             }
 
+            if (Statuses != null && Statuses.Length > 0)
+            {
+                if (Statuses.Length == 1)
+                    criteria.OrderStatusEnum.EqualTo(OrderStatusEnum.GetEnum(Statuses[0]));
+                else
+                {
+                    var statusList = Statuses.Select(OrderStatusEnum.GetEnum).ToList();
+                    criteria.OrderStatusEnum.In(statusList);
+                }
+            }
 
             return criteria;
         }
@@ -256,23 +268,44 @@ namespace ClearCanvas.ImageServer.Web.Common.Data.DataSource
                 return null;
             }
 
-            var orderSummary = new OrderSummary();
-            
-            orderSummary.ThePatient = Patient.Load(read, order.PatientKey);
-            orderSummary.TheOrder = order;
+            var orderSummary = new OrderSummary
+                {
+                    ThePatient = Patient.Load(read, order.PatientKey),
+                    TheRequestedProcedure = ProcedureCode.Load(order.RequestedProcedureCodeKey),
+                    TheOrder = order,
+                    ScheduledDate = order.ScheduledDateTime,
+                    StudyInstanceUid = order.StudyInstanceUid,
+                    AccessionNumber = order.AccessionNumber,
+                    Room = order.Room,
+                    OrderStatusEnum = order.OrderStatusEnum,
+                    ReasonForStudy = order.ReasonForStudy,
+                    Bed = order.Bed,
+                    InsertedTime = order.InsertTime,
+                    UpdatedTime = order.UpdatedTime,
+                    Key = order.Key,
+                    PatientClass = order.PatientClass,
+                    PointOfCare = order.PointOfCare,
+                    Priority = order.Priority
+                };
+
+            if (order.Priority.Equals("S"))
+                orderSummary.Priority = SR.Priority_Stat;
+            else if (order.Priority.Equals("A"))
+                orderSummary.Priority = SR.Priority_Asap;
+            else if (order.Priority.Equals("R"))
+                orderSummary.Priority = SR.Priority_Routine;
+            else if (order.Priority.Equals("P"))
+                orderSummary.Priority = SR.Priority_PreOp;
+            else if (order.Priority.Equals("C"))
+                orderSummary.Priority = SR.Priority_Callback;
+            else if (order.Priority.Equals("T"))
+                orderSummary.Priority = SR.Priority_Timing;
 
             orderSummary.Key = order.GetKey();
-            orderSummary.AccessionNumber = order.AccessionNumber;
-            orderSummary.Room = order.Room;
-            orderSummary.OrderStatusEnum = order.OrderStatusEnum;
-            orderSummary.ReasonForStudy = order.ReasonForStudy;
-            orderSummary.Bed = order.Bed;
-            orderSummary.InsertedTime = orderSummary.InsertedTime;
-            orderSummary.UpdatedTime = orderSummary.UpdatedTime;
-            orderSummary.Key = order.Key;
-            orderSummary.PatientClass = order.PatientClass;
-            orderSummary.PointOfCare = order.PointOfCare;
-            orderSummary.Priority = order.Priority;
+
+            orderSummary.PatientId = orderSummary.ThePatient.PatientId;
+            orderSummary.PatientsName = orderSummary.ThePatient.PatientsName;
+            orderSummary.RequestedProcedure = orderSummary.TheRequestedProcedure.Text;
 
             var referStaff = Staff.Load(order.ReferringStaffKey);
             orderSummary.ReferringStaff = string.Format("{0}^{1}^{2}^{3}^{4}", referStaff.FamilyName,
@@ -284,10 +317,6 @@ namespace ClearCanvas.ImageServer.Web.Common.Data.DataSource
                                                         enteredByStaff.GivenName, enteredByStaff.MiddleName,
                                                         enteredByStaff.Prefix, enteredByStaff.Suffix);
             
-            orderSummary.PatientId = orderSummary.ThePatient.PatientId;
-            orderSummary.PatientsName = orderSummary.ThePatient.PatientsName;
-            orderSummary.ScheduledDate = order.ScheduledDateTime;
-            orderSummary.StudyInstanceUid = order.StudyInstanceUid;
            
             orderSummary.ThePartition = ServerPartitionMonitor.Instance.FindPartition(order.ServerPartitionKey) ??
                                         ServerPartition.Load(read, order.ServerPartitionKey);

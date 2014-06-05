@@ -747,7 +747,7 @@ VALUES (newid(), '1.2.840.10008.5.1.4.1.1.481.6', 'RT Brachy Treatment Record St
 GO
 
 INSERT INTO [ImageServer].[dbo].[ServerSopClass] ([GUID],[SopClassUid],[Description],[NonImage])
-VALUES (newid(), '1.2.840.10008.5.1.4.1.1.481.2', 'RT Dose Storage', 1)
+VALUES (newid(), '1.2.840.10008.5.1.4.1.1.481.2', 'RT Dose Storage', 0)
 GO
 
 INSERT INTO [ImageServer].[dbo].[ServerSopClass] ([GUID],[SopClassUid],[Description],[NonImage])
@@ -1277,4 +1277,33 @@ INSERT INTO [ImageServer].[dbo].[OrderStatusEnum]
            ([GUID],[Enum],[Lookup],[Description],[LongDescription])
      VALUES
            (newid(),104,'InProcess','In Process','Order In Process')
+GO
+
+
+
+
+--  QCStatusEnum inserts
+INSERT INTO [ImageServer].[dbo].QCStatusEnum
+           ([GUID],[Enum],[Lookup],[Description],[LongDescription])
+VALUES     (newid(),100,'Checking','Checking','Checking')
+GO
+
+INSERT INTO [ImageServer].[dbo].QCStatusEnum
+           ([GUID],[Enum],[Lookup],[Description],[LongDescription])
+VALUES     (newid(),200,'NA','Not Applicable','Not Applicable')
+GO
+
+INSERT INTO [ImageServer].[dbo].QCStatusEnum
+           ([GUID],[Enum],[Lookup],[Description],[LongDescription])
+VALUES     (newid(),300,'Passed','Passed','Passed')
+GO
+
+INSERT INTO [ImageServer].[dbo].QCStatusEnum
+           ([GUID],[Enum],[Lookup],[Description],[LongDescription])
+VALUES     (newid(),400,'Failed','Failed','Failed')
+GO
+
+INSERT INTO [ImageServer].[dbo].QCStatusEnum
+           ([GUID],[Enum],[Lookup],[Description],[LongDescription])
+VALUES     (newid(),500,'Incomplete','Incomplete','Incomplete (Missing required scans)')
 GO

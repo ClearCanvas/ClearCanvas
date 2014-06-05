@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using ClearCanvas.Enterprise.Core;
 using ClearCanvas.ImageServer.Common.Authentication;
@@ -449,6 +450,8 @@ namespace ClearCanvas.ImageServer.Web.Common.Data.DataSource
 
 		public string[] Statuses { get; set; }
 
+		public QCStatusEnum[] QCStatuses { get; set; }
+
 		#endregion
 
 		#region Private Methods
@@ -516,6 +519,12 @@ namespace ClearCanvas.ImageServer.Web.Common.Data.DataSource
                 criteria.StudyStorageRelatedEntityCondition.Exists(storageCriteria);
             }
 
+
+			if (QCStatuses != null && QCStatuses.Length > 0)
+			{
+				criteria.QCStatusEnum.In(QCStatuses);
+			}
+
 			return criteria;
 		}
 
@@ -554,7 +563,6 @@ namespace ClearCanvas.ImageServer.Web.Common.Data.DataSource
 
 
 		#endregion
-
 	}
 
 	public class StudySummaryAssembler

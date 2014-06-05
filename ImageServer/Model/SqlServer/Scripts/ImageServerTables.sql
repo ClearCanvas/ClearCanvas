@@ -621,7 +621,9 @@ CREATE TABLE [dbo].[Study](
 	ResponsiblePerson nvarchar(64) NULL,
 	ResponsibleOrganization nvarchar(64) NULL,
 	QueryXml xml NULL,
+	QCStatusEnum [smallint] NOT NULL,
 	QCOutput varchar(max) NULL,
+	OrderGUID uniqueidentifier NULL,
  CONSTRAINT [PK_Study] PRIMARY KEY NONCLUSTERED 
 (
 	[GUID] ASC
@@ -664,7 +666,8 @@ GO
 IF NOT EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[Study]') AND name = N'IX_Study_StudyDate')
 CREATE NONCLUSTERED INDEX [IX_Study_StudyDate] ON [dbo].[Study] 
 (
-	[StudyDate] ASC
+	[StudyDate] ASC,
+	[QCStatusEnum] ASC
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [INDEXES]
 GO
 IF NOT EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[Study]') AND name = N'IX_Study_StudyDescription')
@@ -1502,6 +1505,30 @@ GO
 SET ANSI_PADDING OFF
 GO
 
+/****** Object:  Table [dbo].[QCStatusEnum]    Script Date: 06/03/2014 12:48:31 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[QCStatusEnum]') AND type in (N'U'))
+BEGIN
+CREATE TABLE [dbo].[QCStatusEnum](
+	[GUID] [uniqueidentifier] ROWGUIDCOL  NOT NULL CONSTRAINT [DF_QCStatusEnum_GUID]  DEFAULT (newid()),
+	[Enum] [smallint] NOT NULL,
+	[Lookup] [varchar](32) NOT NULL,
+	[Description] [nvarchar](32) NOT NULL,
+	[LongDescription] [nvarchar](512) NOT NULL,
+ CONSTRAINT [PK_QCStatusEnum] PRIMARY KEY CLUSTERED 
+(
+	[Enum] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [STATIC]
+) ON [STATIC]
+END
+GO
+SET ANSI_PADDING OFF
+GO
 
 /****** Object:  Table [dbo].[ApplicationLog]    Script Date: 01/12/2009 15:36:19 ******/
 SET ANSI_NULLS ON
@@ -2733,4 +2760,12 @@ REFERENCES [dbo].[ExternalRequestQueueStatusEnum] ([Enum])
 GO
 IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_ExternalRequestQueue_ExternalRequestQueueStatusEnum]') AND parent_object_id = OBJECT_ID(N'[dbo].[ExternalRequestQueue]'))
 ALTER TABLE [dbo].[ExternalRequestQueue] CHECK CONSTRAINT [FK_ExternalRequestQueue_ExternalRequestQueueStatusEnum]
+GO
+
+ALTER TABLE dbo.Study ADD CONSTRAINT FK_Study_Order FOREIGN KEY	( OrderGUID	) 
+REFERENCES dbo.[Order] (GUID)
+GO
+
+ALTER TABLE dbo.Study ADD CONSTRAINT FK_Study_QCStatusEnum FOREIGN KEY ( QCStatusEnum ) 
+REFERENCES dbo.QCStatusEnum	( Enum )
 GO
