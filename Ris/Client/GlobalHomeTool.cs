@@ -42,7 +42,7 @@ namespace ClearCanvas.Ris.Client
 	[VisibleStateObserver("launch", "Visible", "VisibleChanged")]
 	[ActionPermission("launch", ClearCanvas.Ris.Application.Common.AuthorityTokens.Workflow.HomePage.View)]
 
-	[MenuAction("toggleDowntimeMode", "global-menus/MenuTools/MenuDowntimeRecoveryMode", "ToggleDowntimeMode", Flags = ClickActionFlags.CheckAction)]
+	[MenuAction("toggleDowntimeMode", "global-menus/MenuTools/MenuDowntime/MenuDowntimeRecoveryMode", "ToggleDowntimeMode", Flags = ClickActionFlags.CheckAction)]
 	[CheckedStateObserver("toggleDowntimeMode", "DowntimeModeChecked", "DowntimeModeCheckedChanged")]
 	[ActionPermission("toggleDowntimeMode", ClearCanvas.Ris.Application.Common.AuthorityTokens.Workflow.HomePage.View,
 		ClearCanvas.Ris.Application.Common.AuthorityTokens.Workflow.Downtime.RecoveryOperations)]

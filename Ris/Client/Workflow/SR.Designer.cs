@@ -1206,6 +1206,15 @@ namespace ClearCanvas.Ris.Client.Workflow {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Downtime.
+        /// </summary>
+        internal static string MenuDowntime {
+            get {
+                return ResourceManager.GetString("MenuDowntime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Edit Patient.
         /// </summary>
         internal static string MenuEditPatient {

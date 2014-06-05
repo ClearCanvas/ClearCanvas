@@ -1870,6 +1870,15 @@ namespace ClearCanvas.Ris.Client {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Downtime.
+        /// </summary>
+        internal static string MenuDowntime {
+            get {
+                return ResourceManager.GetString("MenuDowntime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Downtime Recovery Mode.
         /// </summary>
         internal static string MenuDowntimeRecoveryMode {
@@ -2019,6 +2028,15 @@ namespace ClearCanvas.Ris.Client {
         internal static string MenuStaffProfile {
             get {
                 return ResourceManager.GetString("MenuStaffProfile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to User Profile.
+        /// </summary>
+        internal static string MenuUserProfile {
+            get {
+                return ResourceManager.GetString("MenuUserProfile", resourceCulture);
             }
         }
         

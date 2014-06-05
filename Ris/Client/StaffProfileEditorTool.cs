@@ -34,7 +34,7 @@ namespace ClearCanvas.Ris.Client
 	/// <summary>
 	/// Allows a user to edit his own staff profile.
 	/// </summary>
-	[MenuAction("launch", "global-menus/MenuTools/MenuStaffProfile", "Launch")]
+	[MenuAction("launch", "global-menus/MenuTools/MenuUserProfile/MenuStaffProfile", "Launch")]
 	[ActionPermission("launch", ClearCanvas.Ris.Application.Common.AuthorityTokens.Workflow.StaffProfile.View)]
 	[ActionPermission("launch", ClearCanvas.Ris.Application.Common.AuthorityTokens.Workflow.StaffProfile.Update)]
 	[ExtensionOf(typeof(DesktopToolExtensionPoint), FeatureToken = FeatureTokens.RIS.Core)]

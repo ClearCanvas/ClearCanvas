@@ -35,7 +35,7 @@ using ClearCanvas.Ris.Application.Common;
 
 namespace ClearCanvas.Ris.Client
 {
-	[MenuAction("changePassword", "global-menus/MenuTools/MenuChangePassword", "ChangePassword")]
+	[MenuAction("changePassword", "global-menus/MenuTools/MenuUserProfile/MenuChangePassword", "ChangePassword")]
 	[ExtensionOf(typeof(ClearCanvas.Desktop.DesktopToolExtensionPoint), FeatureToken = FeatureTokens.RIS.Core)]
     public class SessionManagerTool : Tool<ClearCanvas.Desktop.IDesktopToolContext>
     {
