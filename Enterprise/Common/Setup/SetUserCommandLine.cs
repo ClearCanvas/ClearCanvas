@@ -1,4 +1,4 @@
-#region License
+﻿#region License
 
 // Copyright (c) 2013, ClearCanvas Inc.
 // All rights reserved.
@@ -22,33 +22,34 @@
 
 #endregion
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
-using ClearCanvas.Desktop;
-using ClearCanvas.Desktop.Tools;
-using ClearCanvas.Desktop.Actions;
-using ClearCanvas.Ris.Application.Common;
 
-namespace ClearCanvas.Ris.Client
+namespace ClearCanvas.Enterprise.Common.Setup
 {
-	[MenuAction("changePassword", "global-menus/MenuTools/MenuUserProfile/MenuChangePassword", "ChangePassword")]
-	[ExtensionOf(typeof(ClearCanvas.Desktop.DesktopToolExtensionPoint), FeatureToken = FeatureTokens.RIS.Core)]
-    public class SessionManagerTool : Tool<ClearCanvas.Desktop.IDesktopToolContext>
-    {
-        public SessionManagerTool()
-        {
-        }
+    class SetUserCommandLine : CommandLine
+	{
+		public SetUserCommandLine()
+		{
+			Password = "clearcanvas";
+			UserName = "sa";
+		}
 
-        public void ChangePassword()
-        {
-            if(SessionManager.ChangePassword())
-            {
-				this.Context.DesktopWindow.ShowMessageBox(SR.MessagePasswordChanged, MessageBoxActions.Ok);
-            }
-        }
-    }
+		/// <summary>
+		/// Specifies the name of a file or folder containing user data to be imported.
+		/// </summary>
+		[CommandLineParameter("userData", "Specifies the name of a file or folder containing user data to be imported.")]
+		public string UserData { get; set; }
+
+		/// <summary>
+		/// Specifies user name to connect to enterprise server.
+		/// </summary>
+		[CommandLineParameter("suid", "Specifies user name to connect to enterprise server. Default is 'sa'.")]
+		public string UserName { get; set; }
+
+		/// <summary>
+		/// Specifies password to connect to enterprise server.
+		/// </summary>
+		[CommandLineParameter("spwd", "Specifies password to connect to enterprise server. Default is 'clearcanvas'.")]
+		public string Password { get; set; }
+	}
 }

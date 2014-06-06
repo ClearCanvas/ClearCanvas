@@ -1512,34 +1512,40 @@
   <data name="NodeSubscribedWorklistsReadOnly" xml:space="preserve">
     <value>Subscribed Worklists (read only)</value>
   </data>
-	<data name="RelativeTimeInDays_Today">
-		<value xml:space="preserve">Today</value>
-	</data>
-	<data name="RelativeTimeInDays_Tomorrow">
-		<value xml:space="preserve">Tomorrow</value>
-	</data>
-	<data name="RelativeTimeInDays_Yesterday">
-		<value xml:space="preserve">Yesterday</value>
-	</data>
-	<data name="RelativeTimeInDays_DaysFromNow">
-		<value xml:space="preserve">{0} days from now</value>
-	</data>
-	<data name="RelativeTimeInDays_DaysAgo">
-		<value xml:space="preserve">{0} days ago</value>
-	</data>
-	<data name="RelativeTimeInHours_Now">
-		<value xml:space="preserve">Now</value>
-	</data>
-	<data name="RelativeTimeInHours_OneHourFromNow">
-		<value xml:space="preserve">1 hour from now</value>
-	</data>
-	<data name="RelativeTimeInHours_OneHourAgo">
-		<value xml:space="preserve">1 hour ago</value>
-	</data>
-	<data name="RelativeTimeInHours_HoursFromNow">
-		<value xml:space="preserve">{0} hours from now</value>
-	</data>
-	<data name="RelativeTimeInHours_HoursAgo">
-		<value xml:space="preserve">{0} hours ago</value>
-	</data>
+  <data name="RelativeTimeInDays_Today" xml:space="preserve">
+    <value>Today</value>
+  </data>
+  <data name="RelativeTimeInDays_Tomorrow" xml:space="preserve">
+    <value>Tomorrow</value>
+  </data>
+  <data name="RelativeTimeInDays_Yesterday" xml:space="preserve">
+    <value>Yesterday</value>
+  </data>
+  <data name="RelativeTimeInDays_DaysFromNow" xml:space="preserve">
+    <value>{0} days from now</value>
+  </data>
+  <data name="RelativeTimeInDays_DaysAgo" xml:space="preserve">
+    <value>{0} days ago</value>
+  </data>
+  <data name="RelativeTimeInHours_Now" xml:space="preserve">
+    <value>Now</value>
+  </data>
+  <data name="RelativeTimeInHours_OneHourFromNow" xml:space="preserve">
+    <value>1 hour from now</value>
+  </data>
+  <data name="RelativeTimeInHours_OneHourAgo" xml:space="preserve">
+    <value>1 hour ago</value>
+  </data>
+  <data name="RelativeTimeInHours_HoursFromNow" xml:space="preserve">
+    <value>{0} hours from now</value>
+  </data>
+  <data name="RelativeTimeInHours_HoursAgo" xml:space="preserve">
+    <value>{0} hours ago</value>
+  </data>
+  <data name="MenuDowntime" xml:space="preserve">
+    <value>Downtime</value>
+  </data>
+  <data name="MenuUserProfile" xml:space="preserve">
+    <value>User Profile</value>
+  </data>
 </root>

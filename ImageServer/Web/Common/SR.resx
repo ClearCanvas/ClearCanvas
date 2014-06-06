@@ -150,6 +150,24 @@
   <data name="MessageCurrentSessionNoLongerValid" xml:space="preserve">
     <value>The current session is no longer valid.</value>
   </data>
+  <data name="Priority_Asap" xml:space="preserve">
+    <value>ASAP</value>
+  </data>
+  <data name="Priority_Callback" xml:space="preserve">
+    <value>Callback</value>
+  </data>
+  <data name="Priority_PreOp" xml:space="preserve">
+    <value>Pre-Op</value>
+  </data>
+  <data name="Priority_Routine" xml:space="preserve">
+    <value>Routine</value>
+  </data>
+  <data name="Priority_Stat" xml:space="preserve">
+    <value>Stat</value>
+  </data>
+  <data name="Priority_Timing" xml:space="preserve">
+    <value>Timing</value>
+  </data>
   <data name="WebGUILogHeader" xml:space="preserve">
     <value>Web (@{0},{1} {2}, User:{3})</value>
     <comment>{0} = ip, {1} {2} = browser info,  {3}=user name/id</comment>

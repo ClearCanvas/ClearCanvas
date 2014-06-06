@@ -621,8 +621,9 @@ CREATE TABLE [dbo].[Study](
 	ResponsiblePerson nvarchar(64) NULL,
 	ResponsibleOrganization nvarchar(64) NULL,
 	QueryXml xml NULL,
-	QCStatusEnum [smallint] NULL,
+	QCStatusEnum [smallint] NOT NULL,
 	QCOutput varchar(max) NULL,
+	OrderGUID uniqueidentifier NULL,
  CONSTRAINT [PK_Study] PRIMARY KEY NONCLUSTERED 
 (
 	[GUID] ASC
@@ -2759,4 +2760,12 @@ REFERENCES [dbo].[ExternalRequestQueueStatusEnum] ([Enum])
 GO
 IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_ExternalRequestQueue_ExternalRequestQueueStatusEnum]') AND parent_object_id = OBJECT_ID(N'[dbo].[ExternalRequestQueue]'))
 ALTER TABLE [dbo].[ExternalRequestQueue] CHECK CONSTRAINT [FK_ExternalRequestQueue_ExternalRequestQueueStatusEnum]
+GO
+
+ALTER TABLE dbo.Study ADD CONSTRAINT FK_Study_Order FOREIGN KEY	( OrderGUID	) 
+REFERENCES dbo.[Order] (GUID)
+GO
+
+ALTER TABLE dbo.Study ADD CONSTRAINT FK_Study_QCStatusEnum FOREIGN KEY ( QCStatusEnum ) 
+REFERENCES dbo.QCStatusEnum	( Enum )
 GO

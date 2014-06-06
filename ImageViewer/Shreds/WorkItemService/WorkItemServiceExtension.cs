@@ -26,11 +26,11 @@ using System;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Shreds;
 using ClearCanvas.ImageViewer.Common.WorkItem;
-using ClearCanvas.ImageViewer.StudyManagement.Core.Storage;
 using ClearCanvas.Server.ShredHost;
 
 namespace ClearCanvas.ImageViewer.Shreds.WorkItemService
 {
+    [ShredIsolation(Level = ShredIsolationLevel.None)]
     [ExtensionOf(typeof(ShredExtensionPoint))]
     public class WorkItemServiceExtension : WcfShred
     {

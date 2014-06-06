@@ -1,4 +1,4 @@
-#region License
+﻿#region License
 
 // Copyright (c) 2013, ClearCanvas Inc.
 // All rights reserved.
@@ -23,32 +23,39 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
-using System.Text;
-
+using System.Net;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
-using ClearCanvas.Desktop;
-using ClearCanvas.Desktop.Tools;
-using ClearCanvas.Desktop.Actions;
-using ClearCanvas.Ris.Application.Common;
 
-namespace ClearCanvas.Ris.Client
+namespace ClearCanvas.Enterprise.Common.Setup
 {
-	[MenuAction("changePassword", "global-menus/MenuTools/MenuUserProfile/MenuChangePassword", "ChangePassword")]
-	[ExtensionOf(typeof(ClearCanvas.Desktop.DesktopToolExtensionPoint), FeatureToken = FeatureTokens.RIS.Core)]
-    public class SessionManagerTool : Tool<ClearCanvas.Desktop.IDesktopToolContext>
-    {
-        public SessionManagerTool()
-        {
-        }
+	/// <summary>
+	/// Application root for creating/updating specific user in the enterprise server.
+	/// </summary>
+	[ExtensionOf(typeof (ApplicationRootExtensionPoint))]
+	public class SetUserApplication : IApplicationRoot
+	{
+		#region IApplicationRoot Members
 
-        public void ChangePassword()
-        {
-            if(SessionManager.ChangePassword())
-            {
-				this.Context.DesktopWindow.ShowMessageBox(SR.MessagePasswordChanged, MessageBoxActions.Ok);
-            }
-        }
-    }
+		public void RunApplication(string[] args)
+		{
+			var cmdLine = new SetUserCommandLine();
+			try
+			{
+				cmdLine.Parse(args);
+
+				using (new AuthenticationScope(cmdLine.UserName, "setup", Dns.GetHostName(), cmdLine.Password))
+				{
+					SetupHelper.ImportUsers(cmdLine.UserData);
+				}
+			}
+			catch (CommandLineException e)
+			{
+				Console.WriteLine(e.Message);
+				Platform.Log(LogLevel.Error, e, "Command line error.");
+			}
+		}
+
+		#endregion
+	}
 }

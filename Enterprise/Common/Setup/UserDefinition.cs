@@ -1,4 +1,4 @@
-#region License
+﻿#region License
 
 // Copyright (c) 2013, ClearCanvas Inc.
 // All rights reserved.
@@ -23,32 +23,41 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Runtime.Serialization;
 
-using ClearCanvas.Common;
-using ClearCanvas.Common.Utilities;
-using ClearCanvas.Desktop;
-using ClearCanvas.Desktop.Tools;
-using ClearCanvas.Desktop.Actions;
-using ClearCanvas.Ris.Application.Common;
-
-namespace ClearCanvas.Ris.Client
+namespace ClearCanvas.Enterprise.Common.Setup
 {
-	[MenuAction("changePassword", "global-menus/MenuTools/MenuUserProfile/MenuChangePassword", "ChangePassword")]
-	[ExtensionOf(typeof(ClearCanvas.Desktop.DesktopToolExtensionPoint), FeatureToken = FeatureTokens.RIS.Core)]
-    public class SessionManagerTool : Tool<ClearCanvas.Desktop.IDesktopToolContext>
-    {
-        public SessionManagerTool()
-        {
-        }
+	/// <summary>
+	/// Helper class for providing user definitions to be imported at deployment time.
+	/// </summary>
+	[DataContract]
+	public class UserDefinition
+	{
+		/// <summary>
+		/// Default constructor.
+		/// </summary>
+		// Required for JSML deserialization - do not remove
+		public UserDefinition()
+		{
+			AuthorityGroups = new string[0];
+		}
 
-        public void ChangePassword()
-        {
-            if(SessionManager.ChangePassword())
-            {
-				this.Context.DesktopWindow.ShowMessageBox(SR.MessagePasswordChanged, MessageBoxActions.Ok);
-            }
-        }
-    }
+		[DataMember]
+		public string UserName;
+
+		[DataMember]
+		public string DisplayName;
+
+		[DataMember]
+		public bool Enabled;
+
+		[DataMember]
+		public string EmailAddress;
+
+		/// <summary>
+		/// Gets the set the authority groups which this user belongs to.
+		/// </summary>
+		[DataMember]
+		public string[] AuthorityGroups { get; set; }
+	}
 }

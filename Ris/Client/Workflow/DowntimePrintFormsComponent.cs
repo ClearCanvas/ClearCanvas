@@ -35,7 +35,7 @@ using ClearCanvas.Ris.Application.Common.RegistrationWorkflow.OrderEntry;
 
 namespace ClearCanvas.Ris.Client.Workflow
 {
-	[MenuAction("launch", "global-menus/MenuTools/MenuPrintDowntimeForms", "Launch")]
+	[MenuAction("launch", "global-menus/MenuTools/MenuDowntime/MenuPrintDowntimeForms", "Launch")]
 	[IconSet("launch", "Icons.PrintSmall.png", "Icons.PrintMedium.png", "Icons.PrintLarge.png")]
 	[ActionPermission("launch", ClearCanvas.Ris.Application.Common.AuthorityTokens.Workflow.Downtime.PrintForms)]
 	[ExtensionOf(typeof(DesktopToolExtensionPoint), FeatureToken = FeatureTokens.RIS.Core)]

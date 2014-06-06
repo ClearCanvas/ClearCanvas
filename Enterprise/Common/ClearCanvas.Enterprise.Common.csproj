@@ -214,9 +214,12 @@
     <Compile Include="ServiceConfiguration\Client\NamedPipeConfiguration.cs" />
     <Compile Include="ServiceConfiguration\Server\CertificateSearchDirective.cs" />
     <Compile Include="ServiceConfiguration\Server\NamedPipeConfiguration.cs" />
+    <Compile Include="Setup\SetUserApplication.cs" />
+    <Compile Include="Setup\SetUserCommandLine.cs" />
     <Compile Include="Setup\SetSettingApplication.cs" />
     <Compile Include="Setup\SetSettingCommandLine.cs" />
     <Compile Include="ServiceTransferModeAttribute.cs" />
+    <Compile Include="Setup\UserDefinition.cs" />
     <Compile Include="SystemAccounts\ISystemAccountLocalRegistry.cs" />
     <Compile Include="SystemAccounts\LocalRegistryManager.cs" />
     <Compile Include="SystemAccounts\SystemAccountCommandLine.cs" />

@@ -31,12 +31,87 @@ using ClearCanvas.Common.Authorization;
 using ClearCanvas.Common.Configuration;
 using ClearCanvas.Common.Serialization;
 using ClearCanvas.Enterprise.Common.Admin.AuthorityGroupAdmin;
+using ClearCanvas.Enterprise.Common.Admin.UserAdmin;
 using ClearCanvas.Enterprise.Common.Configuration;
 
 namespace ClearCanvas.Enterprise.Common.Setup
 {
 	public static class SetupHelper
 	{
+		/// <summary>
+		/// Import authority groups defined in XML files located at the specified path.
+		/// </summary>
+		/// <param name="dataFileOrFolderPath"></param>
+		public static void ImportUsers(string dataFileOrFolderPath)
+		{
+			// determine list of source files to import
+			var fileList = new List<string>();
+			if (File.Exists(dataFileOrFolderPath))
+			{
+				fileList.Add(dataFileOrFolderPath);
+			}
+			else if (Directory.Exists(dataFileOrFolderPath))
+			{
+				fileList.AddRange(Directory.GetFiles(dataFileOrFolderPath, "*.xml"));
+			}
+			else
+				throw new ArgumentException(string.Format("{0} is not a valid data file or directory.", dataFileOrFolderPath));
+
+			Platform.Log(LogLevel.Info, "importing users from {0} files", fileList.Count);
+
+			var users = from file in fileList
+							 let xml = File.ReadAllText(file)
+							 from user in JsmlSerializer.Deserialize<UserDefinition[]>(xml)
+							 select user;
+
+			ImportUsers(users, dataFileOrFolderPath);
+		}
+
+		private static void ImportUsers(IEnumerable<UserDefinition> users, string source)
+		{
+			var existingUsers = new List<UserSummary>();
+			Platform.GetService<IUserReadService>(
+				s => existingUsers = s.ListUsers(new ListUsersRequest()).Users);
+
+			var authorityGroups = new List<AuthorityGroupSummary>();
+			Platform.GetService<IAuthorityGroupReadService>(
+				s => authorityGroups = s.ListAuthorityGroups(new ListAuthorityGroupsRequest()).AuthorityGroups);
+
+			var service = Platform.GetService<IUserAdminService>();
+			foreach (var user in users)
+			{
+				var userSummary = existingUsers.Find(u => u.UserName == user.UserName);
+				if (userSummary == null)
+				{
+					var userDetail = new UserDetail
+										{
+											UserName = user.UserName,
+											DisplayName = user.DisplayName,
+											Enabled = user.Enabled,
+											EmailAddress = user.EmailAddress,
+											AuthorityGroups = user.AuthorityGroups.Select(
+												newAGName => authorityGroups.Find(existingAG => newAGName == existingAG.Name)).ToList()
+										};
+
+					service.AddUser(new AddUserRequest(userDetail));
+					LogImportedUsers(userDetail, source);
+				}
+				else
+				{
+					var userDetail = service.LoadUserForEdit(new LoadUserForEditRequest(user.UserName)).UserDetail;
+					userDetail.DisplayName = user.DisplayName;
+					userDetail.Enabled = user.Enabled;
+					userDetail.EmailAddress = user.EmailAddress;
+					userDetail.AuthorityGroups.Clear();
+					userDetail.AuthorityGroups = user.AuthorityGroups.Select(
+						newAGName => authorityGroups.Find(existingAG => newAGName == existingAG.Name)).ToList();
+
+					service.UpdateUser(new UpdateUserRequest(userDetail));
+					LogImportedUsers(userDetail, source);
+				}
+			}
+		}
+
 		/// <summary>
 		/// Import authority tokens defined in local plugins.
 		/// </summary>
@@ -169,5 +244,11 @@ namespace ClearCanvas.Enterprise.Common.Setup
 				Platform.Log(LogLevel.Info, "Imported authority token '{0}' from {1}", token.Token, token.DefiningAssembly);
 			}
 		}
+
+		private static void LogImportedUsers(UserDetail u, string source)
+		{
+			Platform.Log(LogLevel.Info, "Imported user {0} from {1}", u.UserName, source);
+		}
+
 	}
 }

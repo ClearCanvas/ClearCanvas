@@ -52,8 +52,9 @@ namespace ClearCanvas.ImageServer.Model
             ,String _responsiblePerson_
             ,String _responsibleOrganization_
             ,XmlDocument _queryXml_
-            ,QCStatusEnum _qCStatusEnum_
             ,String _qCOutput_
+            ,QCStatusEnum _qCStatusEnum_
+            ,ServerEntityKey _orderKey_
             ,String _patientsName_
             ,String _patientId_
             ,String _issuerOfPatientId_
@@ -79,8 +80,9 @@ namespace ClearCanvas.ImageServer.Model
             ResponsiblePerson = _responsiblePerson_;
             ResponsibleOrganization = _responsibleOrganization_;
             QueryXml = _queryXml_;
-            QCStatusEnum = _qCStatusEnum_;
             QCOutput = _qCOutput_;
+            QCStatusEnum = _qCStatusEnum_;
+            OrderKey = _orderKey_;
             PatientsName = _patientsName_;
             PatientId = _patientId_;
             IssuerOfPatientId = _issuerOfPatientId_;
@@ -138,11 +140,14 @@ namespace ClearCanvas.ImageServer.Model
         { get { return _QueryXml; } set { _QueryXml = value; } }
         [NonSerialized]
         private XmlDocument _QueryXml;
+        [EntityFieldDatabaseMappingAttribute(TableName="Study", ColumnName="QCOutput")]
+        public String QCOutput
+        { get; set; }
         [EntityFieldDatabaseMappingAttribute(TableName="Study", ColumnName="QCStatusEnum")]
         public QCStatusEnum QCStatusEnum
         { get; set; }
-        [EntityFieldDatabaseMappingAttribute(TableName="Study", ColumnName="QCOutput")]
-        public String QCOutput
+        [EntityFieldDatabaseMappingAttribute(TableName="Study", ColumnName="OrderGUID")]
+        public ServerEntityKey OrderKey
         { get; set; }
         [DicomField(DicomTags.PatientsName, DefaultValue = DicomFieldDefault.Null)]
         [EntityFieldDatabaseMappingAttribute(TableName="Study", ColumnName="PatientsName")]
@@ -232,8 +237,9 @@ namespace ClearCanvas.ImageServer.Model
             updateColumns.ResponsiblePerson = entity.ResponsiblePerson;
             updateColumns.ResponsibleOrganization = entity.ResponsibleOrganization;
             updateColumns.QueryXml = entity.QueryXml;
-            updateColumns.QCStatusEnum = entity.QCStatusEnum;
             updateColumns.QCOutput = entity.QCOutput;
+            updateColumns.QCStatusEnum = entity.QCStatusEnum;
+            updateColumns.OrderKey = entity.OrderKey;
             updateColumns.PatientsName = entity.PatientsName;
             updateColumns.PatientId = entity.PatientId;
             updateColumns.IssuerOfPatientId = entity.IssuerOfPatientId;

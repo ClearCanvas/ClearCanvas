@@ -1076,4 +1076,7 @@ Are you sure you want to cancel and replace this order?</value>
   <data name="FolderVerified" xml:space="preserve">
     <value>Verified</value>
   </data>
+  <data name="MenuDowntime" xml:space="preserve">
+    <value>Downtime</value>
+  </data>
 </root>
