@@ -4772,7 +4772,7 @@ EXEC dbo.sp_executesql @statement = N'
 -- Create date: 2014-06-05
 -- Description:	Query QC Statistics
 -- =============================================
-ALTER PROCEDURE QueryQCStatistics
+CREATE PROCEDURE QueryQCStatistics
 	@StartTime datetime,
 	@EndTime datetime
 AS
