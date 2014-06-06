@@ -347,8 +347,8 @@
     <Compile Include="ProcedureCode.gen.cs" />
     <Compile Include="ProcessDuplicateAction.cs" />
     <Compile Include="ProcessDuplicateQueueEntryQueueData.cs" />
-    <Compile Include="QCStatistics.cs" />
     <Compile Include="QCStatusEnum.gen.cs" />
+    <Compile Include="QueryQCStatisticsResult.cs" />
     <Compile Include="QueueStudyStateEnum.gen.cs" />
     <Compile Include="ReconcileStudyQueueDescription.cs" />
     <Compile Include="ReconcileStudyWorkQueue.cs" />
