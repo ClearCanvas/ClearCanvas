@@ -4797,11 +4797,11 @@ BEGIN
 
 
 	SELECT @OrderStatusCancelled=Enum FROM [dbo].[OrderStatusEnum] WHERE Lookup=''Canceled''
-	SELECT @QCStatusChecking=Enum FROM [dbo].[OrderStatusEnum] WHERE Lookup=''Checking''
-	SELECT @QCStatusNA=Enum FROM [dbo].[OrderStatusEnum] WHERE Lookup=''NA''
-	SELECT @QCStatusPassed=Enum FROM [dbo].[OrderStatusEnum] WHERE Lookup=''Passed''
-	SELECT @QCStatusFailed=Enum FROM [dbo].[OrderStatusEnum] WHERE Lookup=''Failed''
-	SELECT @QCStatusIncomplete=Enum FROM [dbo].[OrderStatusEnum] WHERE Lookup=''Incomplete''
+	SELECT @QCStatusChecking=Enum FROM [dbo].[QCStatusEnum] WHERE Lookup=''Checking''
+	SELECT @QCStatusNA=Enum FROM [dbo].[QCStatusEnum] WHERE Lookup=''NA''
+	SELECT @QCStatusPassed=Enum FROM [dbo].[QCStatusEnum] WHERE Lookup=''Passed''
+	SELECT @QCStatusFailed=Enum FROM [dbo].[QCStatusEnum] WHERE Lookup=''Failed''
+	SELECT @QCStatusIncomplete=Enum FROM [dbo].[QCStatusEnum] WHERE Lookup=''Incomplete''
 
 	SELECT 
 		@CheckingCount=SUM(case when [QCStatusEnum] = @QCStatusChecking then 1 else 0 end),

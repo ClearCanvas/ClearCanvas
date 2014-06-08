@@ -128,6 +128,7 @@
       <DependentUpon>SR.resx</DependentUpon>
     </Compile>
     <Compile Include="ServerPlatform.cs" />
+    <Compile Include="Utilities\DateTimeHelpers.cs" />
     <Compile Include="WorkQueueManagerExtensionPoint.cs" />
     <Compile Include="Helpers\ServerAuditHelper.cs" />
     <Compile Include="ServiceModel\IFilesystemService.cs" />
