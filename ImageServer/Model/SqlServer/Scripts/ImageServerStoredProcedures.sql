@@ -2360,10 +2360,13 @@ BEGIN
 	declare @InsertPatient bit
 	declare @InsertStudy bit
 	declare @InsertSeries bit
+	declare @QCStatusNA smallint
 
 	set @InsertPatient = 0
 	set @InsertStudy = 0
 	set @InsertSeries = 0
+
+	select @QCStatusNA = Enum from QCStatusEnum where Lookup=''NA''
 
 	BEGIN TRANSACTION
 
@@ -2418,12 +2421,12 @@ BEGIN
 				StudyInstanceUid, PatientsName, PatientId, IssuerOfPatientId, PatientsBirthDate, PatientsAge,
 				PatientsSex, StudyDate, StudyTime, AccessionNumber, StudyId,
 				StudyDescription, ReferringPhysiciansName, NumberOfStudyRelatedSeries,
-				NumberOfStudyRelatedInstances,SpecificCharacterSet, ResponsiblePerson, ResponsibleOrganization, QueryXml)
+				NumberOfStudyRelatedInstances,SpecificCharacterSet, ResponsiblePerson, ResponsibleOrganization, QueryXml, QCStatusEnum)
 		VALUES
 				(@StudyGUID, @ServerPartitionGUID, @StudyStorageGUID, @PatientGUID, 
 				@StudyInstanceUid, @PatientsName, @PatientId, @IssuerOfPatientId, @PatientsBirthDate, @PatientsAge,
 				@PatientsSex, @StudyDate, @StudyTime, @AccessionNumber, @StudyId,
-				@StudyDescription, @ReferringPhysiciansName, 0, 1,@SpecificCharacterSet, @ResponsiblePerson, @ResponsibleOrganization, @QueryXml)
+				@StudyDescription, @ReferringPhysiciansName, 0, 1,@SpecificCharacterSet, @ResponsiblePerson, @ResponsibleOrganization, @QueryXml, @QCStatusNA)
 
 		UPDATE dbo.ServerPartition SET StudyCount=StudyCount+1
 		WHERE GUID=@ServerPartitionGUID
@@ -4830,7 +4833,7 @@ BEGIN
 		   @OrdersForQC as OrdersForQC
 
 END
-GO'
+'
 END
 GO
 
