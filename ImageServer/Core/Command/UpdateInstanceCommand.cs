@@ -120,11 +120,11 @@ namespace ClearCanvas.ImageServer.Core.Command
 			_patientInfoIsNotChanged = _newPatientInfo.Equals(_oldPatientInfo);
 		}
 
-		private static Patient FindPatient(PatientInfo patientInfo, IPersistenceContext context)
+		private Patient FindPatient(PatientInfo patientInfo, IPersistenceContext context)
 		{
 			var patientFindBroker = context.GetBroker<IPatientEntityBroker>();
 			var criteria = new PatientSelectCriteria();
-
+            criteria.ServerPartitionKey.EqualTo(_partition.Key);
 			if (!String.IsNullOrEmpty(patientInfo.PatientId))
 				criteria.PatientId.EqualTo(patientInfo.PatientId);
 			else
@@ -214,7 +214,7 @@ namespace ClearCanvas.ImageServer.Core.Command
 			var ep = new ProcessorInsertExtensionPoint();
 			var extensions = ep.CreateExtensions();
 			foreach (IInsertExtension e in extensions)
-				e.UpdateExtension(patientUpdate,studyUpdate,seriesUpdate, _file);
+				e.UpdateExtension(_partition.Key, patientUpdate,studyUpdate,seriesUpdate, _file);
 
 			UpdatePatientEncoding(_newPatient, patientUpdate);
 			SetStudyEncoding(_study, studyUpdate);
