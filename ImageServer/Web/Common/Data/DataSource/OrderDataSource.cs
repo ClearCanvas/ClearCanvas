@@ -209,6 +209,8 @@ namespace ClearCanvas.ImageServer.Web.Common.Data.DataSource
                 }
             }
 
+            criteria.ScheduledDateTime.SortDesc(0);
+
             return criteria;
         }
 
