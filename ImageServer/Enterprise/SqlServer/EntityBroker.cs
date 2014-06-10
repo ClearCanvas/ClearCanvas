@@ -642,7 +642,7 @@ namespace ClearCanvas.ImageServer.Enterprise.SqlServer
                 {
                     var p = parm as EntityUpdateColumn<ServerEntityKey>;
                     ServerEntityKey key = p.Value;
-                    command.Parameters.AddWithValue("@" + sqlParmName, key.Key);
+                    command.Parameters.AddWithValue("@" + sqlParmName, key == null ? DBNull.Value : key.Key);
                 }
                 else if (parm is EntityUpdateColumn<DateTime?>)
                 {

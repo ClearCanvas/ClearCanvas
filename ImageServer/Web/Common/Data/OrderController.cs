@@ -36,16 +36,27 @@ namespace ClearCanvas.ImageServer.Web.Common.Data
 
         public bool DeleteOrderItem(Order item)
         {
-            return DeleteOrderItem(item.Key);
+            return DeleteOrderItem(item.ServerPartitionKey, item.Key);
         }
 
-        public bool DeleteOrderItem(ServerEntityKey key)
+        public bool DeleteOrderItem(ServerEntityKey partitionKey, ServerEntityKey orderKey)
         {
             using (IUpdateContext updateContext = PersistentStoreRegistry.GetDefaultStore().OpenUpdateContext(UpdateContextSyncMode.Flush))
             {
-                // TODO, Disconnect studies from order
+                // Disconnect studies from order
+                var studyBroker = updateContext.GetBroker<IStudyEntityBroker>();
+                
+                var criteria = new StudySelectCriteria();
+                criteria.OrderKey.EqualTo(orderKey);
+                criteria.ServerPartitionKey.EqualTo(partitionKey);
+                
+                var updateColumns = new StudyUpdateColumns
+                    {
+                        OrderKey = null
+                    };
+                studyBroker.Update(criteria, updateColumns);
 
-                bool retValue = _adaptor.Delete(updateContext, key);
+                bool retValue = _adaptor.Delete(updateContext, orderKey);
 
                 updateContext.Commit();
 
