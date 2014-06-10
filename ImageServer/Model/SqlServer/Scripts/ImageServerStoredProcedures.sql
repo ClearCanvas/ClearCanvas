@@ -2347,7 +2347,8 @@ CREATE PROCEDURE [dbo].[InsertInstance]
 	@PatientsAge varchar(4) = null,
 	@ResponsiblePerson nvarchar(64) = null,
 	@ResponsibleOrganization nvarchar(64) = null,
-	@QueryXml xml = null
+	@QueryXml xml = null,
+	@OrderGUID uniqueidentifier = null
 AS
 BEGIN
 	-- SET NOCOUNT ON added to prevent extra result sets from
@@ -2421,12 +2422,12 @@ BEGIN
 				StudyInstanceUid, PatientsName, PatientId, IssuerOfPatientId, PatientsBirthDate, PatientsAge,
 				PatientsSex, StudyDate, StudyTime, AccessionNumber, StudyId,
 				StudyDescription, ReferringPhysiciansName, NumberOfStudyRelatedSeries,
-				NumberOfStudyRelatedInstances,SpecificCharacterSet, ResponsiblePerson, ResponsibleOrganization, QueryXml, QCStatusEnum)
+				NumberOfStudyRelatedInstances,SpecificCharacterSet, ResponsiblePerson, ResponsibleOrganization, QueryXml, QCStatusEnum, OrderGUID)
 		VALUES
 				(@StudyGUID, @ServerPartitionGUID, @StudyStorageGUID, @PatientGUID, 
 				@StudyInstanceUid, @PatientsName, @PatientId, @IssuerOfPatientId, @PatientsBirthDate, @PatientsAge,
 				@PatientsSex, @StudyDate, @StudyTime, @AccessionNumber, @StudyId,
-				@StudyDescription, @ReferringPhysiciansName, 0, 1,@SpecificCharacterSet, @ResponsiblePerson, @ResponsibleOrganization, @QueryXml, @QCStatusNA)
+				@StudyDescription, @ReferringPhysiciansName, 0, 1,@SpecificCharacterSet, @ResponsiblePerson, @ResponsibleOrganization, @QueryXml, @QCStatusNA, @OrderGUID)
 
 		UPDATE dbo.ServerPartition SET StudyCount=StudyCount+1
 		WHERE GUID=@ServerPartitionGUID
@@ -2445,7 +2446,8 @@ BEGIN
 
 		-- Update Study, Patient TablesNext, the Study Table
 		UPDATE Study 
-		SET NumberOfStudyRelatedInstances = NumberOfStudyRelatedInstances + 1
+		SET NumberOfStudyRelatedInstances = NumberOfStudyRelatedInstances + 1,
+		OrderGUID = @OrderGUID
 		WHERE GUID = @StudyGUID
 
 	END
