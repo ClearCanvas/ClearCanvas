@@ -33,13 +33,14 @@ namespace ClearCanvas.ImageServer.Web.Common.Data
     public class OrderController
     {
         private readonly OrderAdaptor _adaptor = new OrderAdaptor();
+        private readonly PatientAdaptor _patientAdaptor = new PatientAdaptor();
 
         public bool DeleteOrderItem(Order item)
         {
-            return DeleteOrderItem(item.ServerPartitionKey, item.Key);
+            return DeleteOrderItem(item.ServerPartitionKey, item.Key, item.PatientKey);
         }
 
-        public bool DeleteOrderItem(ServerEntityKey partitionKey, ServerEntityKey orderKey)
+        public bool DeleteOrderItem(ServerEntityKey partitionKey, ServerEntityKey orderKey, ServerEntityKey patientKey)
         {
             using (IUpdateContext updateContext = PersistentStoreRegistry.GetDefaultStore().OpenUpdateContext(UpdateContextSyncMode.Flush))
             {
@@ -57,6 +58,13 @@ namespace ClearCanvas.ImageServer.Web.Common.Data
                 studyBroker.Update(criteria, updateColumns);
 
                 bool retValue = _adaptor.Delete(updateContext, orderKey);
+
+                // Delete a patient with no related Study/Order rows
+                var patientCriteria = new PatientSelectCriteria();
+                patientCriteria.StudyRelatedEntityCondition.NotExists(new StudySelectCriteria());
+                patientCriteria.OrderRelatedEntityCondition.NotExists(new OrderSelectCriteria());
+                patientCriteria.Key.EqualTo(patientKey);
+                _patientAdaptor.Delete(updateContext, patientCriteria);
 
                 updateContext.Commit();
 
