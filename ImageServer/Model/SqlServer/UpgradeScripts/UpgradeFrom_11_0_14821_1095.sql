@@ -308,7 +308,8 @@ GO
 ALTER TABLE dbo.Study ADD
 	QCStatusEnum smallint NULL
 GO
-IF NOT EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[Study]') AND name = N'IX_Study_StudyDate')
+IF EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[Study]') AND name = N'IX_Study_StudyDate')
+	DROP INDEX [IX_Study_StudyDate] ON [dbo].[Study] 
 CREATE NONCLUSTERED INDEX [IX_Study_StudyDate] ON [dbo].[Study] 
 (
 	[StudyDate] ASC,
