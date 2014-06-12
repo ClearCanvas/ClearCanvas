@@ -46,6 +46,8 @@ namespace ClearCanvas.ImageServer.Web.Common.Data.DataSource
 
         public ServerEntityKey Key { get; set; }
 
+        public string IssuerOfPatientId { get; set; }
+
         public string PatientId { get; set; }
 
         public string PatientsName { get; set; }
@@ -305,8 +307,9 @@ namespace ClearCanvas.ImageServer.Web.Common.Data.DataSource
 
             orderSummary.Key = order.GetKey();
 
-            orderSummary.PatientId = orderSummary.ThePatient.PatientId;
-            orderSummary.PatientsName = orderSummary.ThePatient.PatientsName;
+            orderSummary.PatientId = order.PatientId;
+            orderSummary.PatientsName = order.PatientsName;
+            orderSummary.IssuerOfPatientId = order.IssuerOfPatientId;
             orderSummary.RequestedProcedure = orderSummary.TheRequestedProcedure.Text;
 
             var referStaff = Staff.Load(order.ReferringStaffKey);

@@ -58,6 +58,9 @@ namespace ClearCanvas.ImageServer.Model
             ,String _studyInstanceUid_
             ,ServerEntityKey _enteredByStaffKey_
             ,ServerEntityKey _referringStaffKey_
+            ,String _patientsName_
+            ,String _patientId_
+            ,String _issuerOfPatientId_
             ):base("Order")
         {
             ServerPartitionKey = _serverPartitionKey_;
@@ -77,6 +80,9 @@ namespace ClearCanvas.ImageServer.Model
             StudyInstanceUid = _studyInstanceUid_;
             EnteredByStaffKey = _enteredByStaffKey_;
             ReferringStaffKey = _referringStaffKey_;
+            PatientsName = _patientsName_;
+            PatientId = _patientId_;
+            IssuerOfPatientId = _issuerOfPatientId_;
         }
         #endregion
 
@@ -135,6 +141,18 @@ namespace ClearCanvas.ImageServer.Model
         [EntityFieldDatabaseMappingAttribute(TableName="Order", ColumnName="ReferringStaffGUID")]
         public ServerEntityKey ReferringStaffKey
         { get; set; }
+        [DicomField(DicomTags.PatientsName, DefaultValue = DicomFieldDefault.Null)]
+        [EntityFieldDatabaseMappingAttribute(TableName="Order", ColumnName="PatientsName")]
+        public String PatientsName
+        { get; set; }
+        [DicomField(DicomTags.PatientId, DefaultValue = DicomFieldDefault.Null)]
+        [EntityFieldDatabaseMappingAttribute(TableName="Order", ColumnName="PatientId")]
+        public String PatientId
+        { get; set; }
+        [DicomField(DicomTags.IssuerOfPatientId, DefaultValue = DicomFieldDefault.Null)]
+        [EntityFieldDatabaseMappingAttribute(TableName="Order", ColumnName="IssuerOfPatientId")]
+        public String IssuerOfPatientId
+        { get; set; }
         #endregion
 
         #region Static Methods
@@ -181,6 +199,9 @@ namespace ClearCanvas.ImageServer.Model
             updateColumns.StudyInstanceUid = entity.StudyInstanceUid;
             updateColumns.EnteredByStaffKey = entity.EnteredByStaffKey;
             updateColumns.ReferringStaffKey = entity.ReferringStaffKey;
+            updateColumns.PatientsName = entity.PatientsName;
+            updateColumns.PatientId = entity.PatientId;
+            updateColumns.IssuerOfPatientId = entity.IssuerOfPatientId;
             Order newEntity = broker.Insert(updateColumns);
             return newEntity;
         }

@@ -2053,7 +2053,7 @@ END
 GO
 
 
-/****** Object:  Table [dbo].[Order]    Script Date: 5/15/2014 6:47:33 PM ******/
+/****** Object:  Table [dbo].[Order]    Script Date: 6/11/2014 5:19:13 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2069,6 +2069,9 @@ CREATE TABLE [dbo].[Order](
 	[InsertTime] [datetime] NOT NULL,
 	[UpdatedTime] [datetime] NOT NULL,
 	[PatientGUID] [uniqueidentifier] NOT NULL,
+	[PatientsName] [nvarchar](64) NOT NULL,
+	[PatientId] [nvarchar](64) NOT NULL,
+	[IssuerOfPatientId] [nvarchar](64) NULL,
 	[AccessionNumber] [varchar](64) NOT NULL,
 	[ScheduledDateTime] [datetime] NOT NULL,
 	[RequestedProcedureCodeGUID] [uniqueidentifier] NOT NULL,
@@ -2081,7 +2084,7 @@ CREATE TABLE [dbo].[Order](
 	[Room] [nvarchar](20) NULL,
 	[Bed] [nvarchar](20) NULL,
 	[StudyInstanceUid] [varchar](64) NULL,
- CONSTRAINT [PK_Order] PRIMARY KEY CLUSTERED 
+ CONSTRAINT [PK_Order] PRIMARY KEY NONCLUSTERED 
 (
 	[GUID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
@@ -2090,7 +2093,7 @@ END
 GO
 SET ANSI_PADDING OFF
 GO
-/****** Object:  Table [dbo].[OrderStatusEnum]    Script Date: 5/15/2014 6:47:33 PM ******/
+/****** Object:  Table [dbo].[OrderStatusEnum]    Script Date: 6/11/2014 5:19:13 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2114,7 +2117,7 @@ END
 GO
 SET ANSI_PADDING OFF
 GO
-/****** Object:  Table [dbo].[ProcedureCode]    Script Date: 5/15/2014 6:47:33 PM ******/
+/****** Object:  Table [dbo].[ProcedureCode]    Script Date: 6/11/2014 5:19:13 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2138,7 +2141,7 @@ END
 GO
 SET ANSI_PADDING OFF
 GO
-/****** Object:  Table [dbo].[Staff]    Script Date: 5/15/2014 6:47:33 PM ******/
+/****** Object:  Table [dbo].[Staff]    Script Date: 6/11/2014 5:19:13 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2161,10 +2164,18 @@ CREATE TABLE [dbo].[Staff](
 ) ON [PRIMARY]
 END
 GO
+/****** Object:  Index [IXC_Order_ScheduledDateTime]    Script Date: 6/11/2014 5:19:13 PM ******/
+IF NOT EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[Order]') AND name = N'IXC_Order_ScheduledDateTime')
+CREATE CLUSTERED INDEX [IXC_Order_ScheduledDateTime] ON [dbo].[Order]
+(
+	[ServerPartitionGUID] ASC,
+	[ScheduledDateTime] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
 SET ANSI_PADDING ON
 
 GO
-/****** Object:  Index [IX_Order_AccessionNumber]    Script Date: 5/15/2014 6:47:33 PM ******/
+/****** Object:  Index [IX_Order_AccessionNumber]    Script Date: 6/11/2014 5:19:13 PM ******/
 IF NOT EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[Order]') AND name = N'IX_Order_AccessionNumber')
 CREATE NONCLUSTERED INDEX [IX_Order_AccessionNumber] ON [dbo].[Order]
 (
@@ -2172,17 +2183,31 @@ CREATE NONCLUSTERED INDEX [IX_Order_AccessionNumber] ON [dbo].[Order]
 	[ServerPartitionGUID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [INDEXES]
 GO
-/****** Object:  Index [IX_Order_ScheduledDateTime]    Script Date: 5/15/2014 6:47:33 PM ******/
-IF NOT EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[Order]') AND name = N'IX_Order_ScheduledDateTime')
-CREATE NONCLUSTERED INDEX [IX_Order_ScheduledDateTime] ON [dbo].[Order]
+SET ANSI_PADDING ON
+
+GO
+/****** Object:  Index [IX_Order_PatientId]    Script Date: 6/11/2014 5:19:13 PM ******/
+IF NOT EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[Order]') AND name = N'IX_Order_PatientId')
+CREATE NONCLUSTERED INDEX [IX_Order_PatientId] ON [dbo].[Order]
 (
-	[ScheduledDateTime] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [INDEXES]
+	[PatientId] ASC,
+	[IssuerOfPatientId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
 SET ANSI_PADDING ON
 
 GO
-/****** Object:  Index [IX_Procedure_Identifier]    Script Date: 5/15/2014 6:47:33 PM ******/
+/****** Object:  Index [IX_Order_PatientsName]    Script Date: 6/11/2014 5:19:13 PM ******/
+IF NOT EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[Order]') AND name = N'IX_Order_PatientsName')
+CREATE NONCLUSTERED INDEX [IX_Order_PatientsName] ON [dbo].[Order]
+(
+	[PatientsName] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
+SET ANSI_PADDING ON
+
+GO
+/****** Object:  Index [IX_Procedure_Identifier]    Script Date: 6/11/2014 5:19:13 PM ******/
 IF NOT EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[ProcedureCode]') AND name = N'IX_Procedure_Identifier')
 CREATE UNIQUE NONCLUSTERED INDEX [IX_Procedure_Identifier] ON [dbo].[ProcedureCode]
 (
@@ -2193,7 +2218,7 @@ GO
 SET ANSI_PADDING ON
 
 GO
-/****** Object:  Index [IX_Staff_Identifier]    Script Date: 5/15/2014 6:47:33 PM ******/
+/****** Object:  Index [IX_Staff_Identifier]    Script Date: 6/11/2014 5:19:13 PM ******/
 IF NOT EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[Staff]') AND name = N'IX_Staff_Identifier')
 CREATE UNIQUE NONCLUSTERED INDEX [IX_Staff_Identifier] ON [dbo].[Staff]
 (
