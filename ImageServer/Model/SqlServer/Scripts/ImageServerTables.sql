@@ -2053,7 +2053,7 @@ END
 GO
 
 
-/****** Object:  Table [dbo].[Order]    Script Date: 6/11/2014 5:19:13 PM ******/
+/****** Object:  Table [dbo].[Order]    Script Date: 6/12/2014 12:59:57 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2068,7 +2068,6 @@ CREATE TABLE [dbo].[Order](
 	[OrderStatusEnum] [smallint] NOT NULL,
 	[InsertTime] [datetime] NOT NULL,
 	[UpdatedTime] [datetime] NOT NULL,
-	[PatientGUID] [uniqueidentifier] NOT NULL,
 	[PatientsName] [nvarchar](64) NOT NULL,
 	[PatientId] [nvarchar](64) NOT NULL,
 	[IssuerOfPatientId] [nvarchar](64) NULL,
@@ -2093,7 +2092,7 @@ END
 GO
 SET ANSI_PADDING OFF
 GO
-/****** Object:  Table [dbo].[OrderStatusEnum]    Script Date: 6/11/2014 5:19:13 PM ******/
+/****** Object:  Table [dbo].[OrderStatusEnum]    Script Date: 6/12/2014 12:59:57 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2117,7 +2116,7 @@ END
 GO
 SET ANSI_PADDING OFF
 GO
-/****** Object:  Table [dbo].[ProcedureCode]    Script Date: 6/11/2014 5:19:13 PM ******/
+/****** Object:  Table [dbo].[ProcedureCode]    Script Date: 6/12/2014 12:59:57 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2141,7 +2140,7 @@ END
 GO
 SET ANSI_PADDING OFF
 GO
-/****** Object:  Table [dbo].[Staff]    Script Date: 6/11/2014 5:19:13 PM ******/
+/****** Object:  Table [dbo].[Staff]    Script Date: 6/12/2014 12:59:57 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2164,7 +2163,7 @@ CREATE TABLE [dbo].[Staff](
 ) ON [PRIMARY]
 END
 GO
-/****** Object:  Index [IXC_Order_ScheduledDateTime]    Script Date: 6/11/2014 5:19:13 PM ******/
+/****** Object:  Index [IXC_Order_ScheduledDateTime]    Script Date: 6/12/2014 12:59:57 PM ******/
 IF NOT EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[Order]') AND name = N'IXC_Order_ScheduledDateTime')
 CREATE CLUSTERED INDEX [IXC_Order_ScheduledDateTime] ON [dbo].[Order]
 (
@@ -2175,7 +2174,7 @@ GO
 SET ANSI_PADDING ON
 
 GO
-/****** Object:  Index [IX_Order_AccessionNumber]    Script Date: 6/11/2014 5:19:13 PM ******/
+/****** Object:  Index [IX_Order_AccessionNumber]    Script Date: 6/12/2014 12:59:57 PM ******/
 IF NOT EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[Order]') AND name = N'IX_Order_AccessionNumber')
 CREATE NONCLUSTERED INDEX [IX_Order_AccessionNumber] ON [dbo].[Order]
 (
@@ -2186,7 +2185,7 @@ GO
 SET ANSI_PADDING ON
 
 GO
-/****** Object:  Index [IX_Order_PatientId]    Script Date: 6/11/2014 5:19:13 PM ******/
+/****** Object:  Index [IX_Order_PatientId]    Script Date: 6/12/2014 12:59:57 PM ******/
 IF NOT EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[Order]') AND name = N'IX_Order_PatientId')
 CREATE NONCLUSTERED INDEX [IX_Order_PatientId] ON [dbo].[Order]
 (
@@ -2197,7 +2196,7 @@ GO
 SET ANSI_PADDING ON
 
 GO
-/****** Object:  Index [IX_Order_PatientsName]    Script Date: 6/11/2014 5:19:13 PM ******/
+/****** Object:  Index [IX_Order_PatientsName]    Script Date: 6/12/2014 12:59:57 PM ******/
 IF NOT EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[Order]') AND name = N'IX_Order_PatientsName')
 CREATE NONCLUSTERED INDEX [IX_Order_PatientsName] ON [dbo].[Order]
 (
@@ -2207,7 +2206,7 @@ GO
 SET ANSI_PADDING ON
 
 GO
-/****** Object:  Index [IX_Procedure_Identifier]    Script Date: 6/11/2014 5:19:13 PM ******/
+/****** Object:  Index [IX_Procedure_Identifier]    Script Date: 6/12/2014 12:59:57 PM ******/
 IF NOT EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[ProcedureCode]') AND name = N'IX_Procedure_Identifier')
 CREATE UNIQUE NONCLUSTERED INDEX [IX_Procedure_Identifier] ON [dbo].[ProcedureCode]
 (
@@ -2218,7 +2217,7 @@ GO
 SET ANSI_PADDING ON
 
 GO
-/****** Object:  Index [IX_Staff_Identifier]    Script Date: 6/11/2014 5:19:13 PM ******/
+/****** Object:  Index [IX_Staff_Identifier]    Script Date: 6/12/2014 12:59:57 PM ******/
 IF NOT EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[Staff]') AND name = N'IX_Staff_Identifier')
 CREATE UNIQUE NONCLUSTERED INDEX [IX_Staff_Identifier] ON [dbo].[Staff]
 (

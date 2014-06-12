@@ -91,18 +91,6 @@ namespace ClearCanvas.ImageServer.Model.EntityBrokers
               return (ISearchCondition<DateTime>)SubCriteria["UpdatedTime"];
             } 
         }
-        [EntityFieldDatabaseMappingAttribute(TableName="Order", ColumnName="PatientGUID")]
-        public ISearchCondition<ServerEntityKey> PatientKey
-        {
-            get
-            {
-              if (!SubCriteria.ContainsKey("PatientKey"))
-              {
-                 SubCriteria["PatientKey"] = new SearchCondition<ServerEntityKey>("PatientKey");
-              }
-              return (ISearchCondition<ServerEntityKey>)SubCriteria["PatientKey"];
-            } 
-        }
         [EntityFieldDatabaseMappingAttribute(TableName="Order", ColumnName="AccessionNumber")]
         public ISearchCondition<String> AccessionNumber
         {

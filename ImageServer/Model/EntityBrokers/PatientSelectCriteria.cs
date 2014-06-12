@@ -44,44 +44,24 @@ namespace ClearCanvas.ImageServer.Model.EntityBrokers
 			{
 				if (!SubCriteria.ContainsKey("StudyRelatedEntityCondition"))
 				{
-					SubCriteria["StudyRelatedEntityCondition"] = new RelatedEntityCondition<EntitySelectCriteria>("StudyRelatedEntityCondition", "Key", "PatientKey");
+					SubCriteria["StudyRelatedEntityCondition"] =
+						new RelatedEntityCondition<EntitySelectCriteria>("StudyRelatedEntityCondition", "Key", "PatientKey");
 				}
-				return (IRelatedEntityCondition<EntitySelectCriteria>)SubCriteria["StudyRelatedEntityCondition"];
+				return (IRelatedEntityCondition<EntitySelectCriteria>) SubCriteria["StudyRelatedEntityCondition"];
 			}
 		}
 
-        /// <summary>
-        /// Used for EXISTS or NOT EXISTS subselects against the Order table.
-        /// </summary>
-        /// <remarks>
-        /// A <see cref="OrderSelectCriteria"/> instance is created with the subselect parameters, 
-        /// and assigned to this Sub-Criteria.  Note that the link between the <see cref="Patient"/>
-        /// and <see cref="Study"/> tables is automatically added into the <see cref="StudySelectCriteria"/>
-        /// instance by the broker.
-        /// </remarks>
-        public IRelatedEntityCondition<EntitySelectCriteria> OrderRelatedEntityCondition
-        {
-            get
-            {
-                if (!SubCriteria.ContainsKey("OrderRelatedEntityCondition"))
-                {
-                    SubCriteria["OrderRelatedEntityCondition"] = new RelatedEntityCondition<EntitySelectCriteria>("OrderRelatedEntityCondition", "Key", "PatientKey");
-                }
-                return (IRelatedEntityCondition<EntitySelectCriteria>)SubCriteria["OrderRelatedEntityCondition"];
-            }
-        }
-
-        [EntityFieldDatabaseMappingAttribute(TableName = "Patient", ColumnName = "GUID")]
-        public ISearchCondition<ServerEntityKey> Key
-        {
-            get
-            {
-                if (!SubCriteria.ContainsKey("Key"))
-                {
-                    SubCriteria["Key"] = new SearchCondition<ServerEntityKey>("Key");
-                }
-                return (ISearchCondition<ServerEntityKey>)SubCriteria["Key"];
-            }
-        }
+		[EntityFieldDatabaseMappingAttribute(TableName = "Patient", ColumnName = "GUID")]
+		public ISearchCondition<ServerEntityKey> Key
+		{
+			get
+			{
+				if (!SubCriteria.ContainsKey("Key"))
+				{
+					SubCriteria["Key"] = new SearchCondition<ServerEntityKey>("Key");
+				}
+				return (ISearchCondition<ServerEntityKey>) SubCriteria["Key"];
+			}
+		}
 	}
 }

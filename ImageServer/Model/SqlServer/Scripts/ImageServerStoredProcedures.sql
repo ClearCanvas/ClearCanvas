@@ -2084,7 +2084,6 @@ BEGIN
 	declare @NumberOfStudyRelatedSeries int
 	declare @NumberOfStudyRelatedInstances int
 	declare @NumberOfPatientRelatedStudies int
-	declare @NumberOfPatientRelatedOrders int
 
 	-- Select key values
 	SELECT @StudyInstanceUid = StudyInstanceUid FROM StudyStorage WHERE GUID = @StudyStorageGUID
@@ -2165,11 +2164,7 @@ BEGIN
 	FROM Patient
 	WHERE GUID = @PatientGUID
 
-	SELECT @NumberOfPatientRelatedOrders = count(*) 
-	FROM [Order]
-	WHERE PatientGUID = @PatientGUID
-
-	if @NumberOfPatientRelatedStudies = 0 AND @NumberOfPatientRelatedOrders = 0
+	if @NumberOfPatientRelatedStudies = 0 
 	BEGIN
 		DELETE FROM Patient
 		WHERE GUID = @PatientGUID
@@ -4034,18 +4029,13 @@ BEGIN
 
 	
 	DECLARE @StudyCount int
-	DECLARE @NumberOfStudyRelatedOrders int
 
 	SELECT @StudyCount =NumberOfPatientRelatedStudies
 	FROM Patient WHERE GUID=@CurrentPatientGUID
 
-	SELECT @NumberOfStudyRelatedOrders = count(*)
-	FROM [Order] WHERE PatientGUID=@CurrentPatientGUID
-
 	PRINT @StudyCount
-	PRINT @NumberOfStudyRelatedOrders
 
-	IF @StudyCount<=1 AND @NumberOfStudyRelatedOrders = 0
+	IF @StudyCount<=1
 	BEGIN
 		DELETE Patient WHERE GUID=@CurrentPatientGUID
 	END
@@ -4092,7 +4082,6 @@ BEGIN
 	DECLARE @CurrentPatientGUID uniqueidentifier
 	DECLARE @StudyInstanceUid varchar(64)
 	DECLARE @NumStudiesOwnedByCurrentPatient int
-	DECLARE @NumOrdersOwnedByCurrentPatient int
 	DECLARE @NumSeries int
 	DECLARE @NumInstances int
 
@@ -4135,13 +4124,12 @@ BEGIN
 	WHERE GUID=@CurrentPatientGUID
 
 
-	SELECT @NumOrdersOwnedByCurrentPatient=count(*) FROM [Order] WHERE PatientGUID=@CurrentPatientGUID
 	SELECT @NumStudiesOwnedByCurrentPatient=NumberOfPatientRelatedStudies FROM Patient WHERE GUID=@CurrentPatientGUID
 
 	-- CR (Jan 2014): Although unlikely, an error may be thrown here if another process somehow inserted a study for this patient but hasn''t updated the count.
 	-- Instead of relying on the count, it is safer to delete the Patient record only if it is not being referenced in the Study table:
 	--    DELETE Patient WHERE GUID =@CurrentPatientGUID and NOT EXISTS(SELECT COUNT(*) FROM Study WITH (NOLOCK) WHERE Study.PatientGUID = Patient.GUID )		
-	IF @NumStudiesOwnedByCurrentPatient<=0 AND @NumOrdersOwnedByCurrentPatient = 0
+	IF @NumStudiesOwnedByCurrentPatient<=0 
 	BEGIN
 		DELETE Patient WHERE GUID = @CurrentPatientGUID
 	END
@@ -4334,7 +4322,7 @@ BEGIN
 	UPDATE Patient SET 	NumberOfPatientRelatedInstances=NumberOfPatientRelatedInstances-@NumInstances WHERE GUID=@PatientGUID
 	UPDATE Patient SET 	NumberOfPatientRelatedSeries=NumberOfPatientRelatedSeries-@NumSeries WHERE GUID=@PatientGUID
 	UPDATE Patient SET 	NumberOfPatientRelatedStudies=NumberOfPatientRelatedStudies-1 WHERE GUID=@PatientGUID
-	DELETE Patient WHERE GUID=@PatientGUID AND NumberOfPatientRelatedStudies=0 AND NOT EXISTS (SELECT GUID FROM [Order] where PatientGUID=@PatientGUID)
+	DELETE Patient WHERE GUID=@PatientGUID AND NOT EXISTS (SELECT GUID FROM [Study] where PatientGUID=@PatientGUID)
 
 
 	UPDATE ServerPartition SET StudyCount=StudyCount-1 WHERE GUID=@ServerPartitionGUID	

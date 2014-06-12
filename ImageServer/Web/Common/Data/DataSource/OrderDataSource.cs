@@ -90,8 +90,6 @@ namespace ClearCanvas.ImageServer.Web.Common.Data.DataSource
 
         public ServerPartition ThePartition { get; set; }
 
-        public Patient ThePatient { get; set; }
-
         public ProcedureCode TheRequestedProcedure { get; set; }
 
         public string StudyInstanceUid { get; set; }
@@ -274,7 +272,6 @@ namespace ClearCanvas.ImageServer.Web.Common.Data.DataSource
 
             var orderSummary = new OrderSummary
                 {
-                    ThePatient = Patient.Load(read, order.PatientKey),
                     TheRequestedProcedure = ProcedureCode.Load(order.RequestedProcedureCodeKey),
                     TheOrder = order,
                     ScheduledDate = order.ScheduledDateTime,

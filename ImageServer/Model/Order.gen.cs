@@ -45,7 +45,6 @@ namespace ClearCanvas.ImageServer.Model
             ,OrderStatusEnum _orderStatusEnum_
             ,DateTime _insertTime_
             ,DateTime _updatedTime_
-            ,ServerEntityKey _patientKey_
             ,String _accessionNumber_
             ,DateTime _scheduledDateTime_
             ,ServerEntityKey _requestedProcedureCodeKey_
@@ -67,7 +66,6 @@ namespace ClearCanvas.ImageServer.Model
             OrderStatusEnum = _orderStatusEnum_;
             InsertTime = _insertTime_;
             UpdatedTime = _updatedTime_;
-            PatientKey = _patientKey_;
             AccessionNumber = _accessionNumber_;
             ScheduledDateTime = _scheduledDateTime_;
             RequestedProcedureCodeKey = _requestedProcedureCodeKey_;
@@ -98,9 +96,6 @@ namespace ClearCanvas.ImageServer.Model
         { get; set; }
         [EntityFieldDatabaseMappingAttribute(TableName="Order", ColumnName="UpdatedTime")]
         public DateTime UpdatedTime
-        { get; set; }
-        [EntityFieldDatabaseMappingAttribute(TableName="Order", ColumnName="PatientGUID")]
-        public ServerEntityKey PatientKey
         { get; set; }
         [DicomField(DicomTags.AccessionNumber, DefaultValue = DicomFieldDefault.Null)]
         [EntityFieldDatabaseMappingAttribute(TableName="Order", ColumnName="AccessionNumber")]
@@ -186,7 +181,6 @@ namespace ClearCanvas.ImageServer.Model
             updateColumns.OrderStatusEnum = entity.OrderStatusEnum;
             updateColumns.InsertTime = entity.InsertTime;
             updateColumns.UpdatedTime = entity.UpdatedTime;
-            updateColumns.PatientKey = entity.PatientKey;
             updateColumns.AccessionNumber = entity.AccessionNumber;
             updateColumns.ScheduledDateTime = entity.ScheduledDateTime;
             updateColumns.RequestedProcedureCodeKey = entity.RequestedProcedureCodeKey;

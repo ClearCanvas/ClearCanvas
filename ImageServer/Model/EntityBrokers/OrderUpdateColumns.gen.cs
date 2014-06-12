@@ -56,11 +56,6 @@ namespace ClearCanvas.ImageServer.Model.EntityBrokers
         {
             set { SubParameters["UpdatedTime"] = new EntityUpdateColumn<DateTime>("UpdatedTime", value); }
         }
-        [EntityFieldDatabaseMappingAttribute(TableName="Order", ColumnName="PatientGUID")]
-        public ServerEntityKey PatientKey
-        {
-            set { SubParameters["PatientKey"] = new EntityUpdateColumn<ServerEntityKey>("PatientKey", value); }
-        }
        [DicomField(DicomTags.AccessionNumber, DefaultValue = DicomFieldDefault.Null)]
         [EntityFieldDatabaseMappingAttribute(TableName="Order", ColumnName="AccessionNumber")]
         public String AccessionNumber
