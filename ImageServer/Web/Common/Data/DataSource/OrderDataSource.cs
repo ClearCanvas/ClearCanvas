@@ -72,6 +72,8 @@ namespace ClearCanvas.ImageServer.Web.Common.Data.DataSource
 
         public string Bed { get; set; }
 
+		public int RelatedStudies { get; set; }
+		
         public OrderStatusEnum OrderStatusEnum { get; set; }
 
         public string OrderStatusEnumString
@@ -323,7 +325,13 @@ namespace ClearCanvas.ImageServer.Web.Common.Data.DataSource
             orderSummary.ThePartition = ServerPartitionMonitor.Instance.FindPartition(order.ServerPartitionKey) ??
                                         ServerPartition.Load(read, order.ServerPartitionKey);
 
-         
+			// Count of related studies
+	        var broker = read.GetBroker<IStudyEntityBroker>();
+	        var studySelect = new StudySelectCriteria();
+	        studySelect.ServerPartitionKey.EqualTo(order.ServerPartitionKey);
+	        studySelect.OrderKey.EqualTo(order.Key);
+	        orderSummary.RelatedStudies = broker.Count(studySelect);
+
             return orderSummary;
         }
     }
