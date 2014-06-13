@@ -308,14 +308,6 @@ GO
 ALTER TABLE dbo.Study ADD
 	QCStatusEnum smallint NULL
 GO
-IF EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[Study]') AND name = N'IX_Study_StudyDate')
-	DROP INDEX [IX_Study_StudyDate] ON [dbo].[Study] 
-CREATE NONCLUSTERED INDEX [IX_Study_StudyDate] ON [dbo].[Study] 
-(
-	[StudyDate] ASC,
-	[QCStatusEnum] ASC
-)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [INDEXES]
-GO
 
 /****** Object:  Table [dbo].[QCStatusEnum]    Script Date: 06/03/2014 12:48:31 ******/
 SET ANSI_NULLS ON
@@ -386,8 +378,17 @@ ALTER TABLE Study ALTER COLUMN QCStatusEnum smallint NOT NULL
 
 ALTER TABLE dbo.Study ADD CONSTRAINT FK_Study_QCStatusEnum FOREIGN KEY ( QCStatusEnum ) 
 REFERENCES dbo.QCStatusEnum	( Enum )
+GO
 
-
+IF EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[Study]') AND name = N'IX_Study_StudyDate')
+	DROP INDEX [IX_Study_StudyDate] ON [dbo].[Study]
+GO	 
+CREATE NONCLUSTERED INDEX [IX_Study_StudyDate] ON [dbo].[Study] 
+(
+	[StudyDate] ASC,
+	[QCStatusEnum] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [INDEXES]
+GO
 
 IF @@ERROR<>0 AND @@TRANCOUNT>0 ROLLBACK TRANSACTION
 GO
