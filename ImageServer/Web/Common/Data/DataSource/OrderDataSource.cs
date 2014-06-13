@@ -173,13 +173,8 @@ namespace ClearCanvas.ImageServer.Web.Common.Data.DataSource
             // only query for device in this partition
             criteria.ServerPartitionKey.EqualTo(Partition.Key);
 
-            if (!string.IsNullOrEmpty(PatientName) || !string.IsNullOrEmpty(PatientId))
-            {
-                var patientCriteria = new PatientSelectCriteria();
-                QueryHelper.SetGuiStringCondition(patientCriteria.PatientId, PatientId);
-                QueryHelper.SetGuiStringCondition(patientCriteria.PatientsName, PatientName);
-                criteria.PatientRelatedEntityCondition.Exists(patientCriteria);
-            }
+            QueryHelper.SetGuiStringCondition(criteria.PatientId, PatientId);
+			QueryHelper.SetGuiStringCondition(criteria.PatientsName, PatientName);
 
             QueryHelper.SetGuiStringCondition(criteria.AccessionNumber, AccessionNumber);
 
