@@ -36,7 +36,8 @@ namespace ClearCanvas.ImageServer.Rules
 		StudyCompress,
 		SopCompress,
 		DataAccess,
-		StudyQualityControl
+		StudyQualityControl,
+		StudyAutoRoute,
 	}
 
 	public static class ApplicableRuleTypeExtensions
@@ -47,6 +48,8 @@ namespace ClearCanvas.ImageServer.Rules
 			{
 				case ApplicableRuleType.AutoRoute:
 					return ServerRuleTypeEnum.AutoRoute;
+				case ApplicableRuleType.StudyAutoRoute:
+					return ServerRuleTypeEnum.StudyAutoRoute;
 				case ApplicableRuleType.StudyDelete:
 					return ServerRuleTypeEnum.StudyDelete;
 				case ApplicableRuleType.Tier1Retention:
