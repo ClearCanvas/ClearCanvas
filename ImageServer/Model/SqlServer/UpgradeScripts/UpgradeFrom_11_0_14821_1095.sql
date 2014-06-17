@@ -440,6 +440,19 @@ GO
 IF @@TRANCOUNT=0 BEGIN INSERT INTO #tmpErrors (Error) SELECT 1 BEGIN TRANSACTION END
 GO
 
+PRINT N'Adding [ServerRuleTypeEnum] of StudyAutoRoute'
+
+INSERT INTO [ImageServer].[dbo].[ServerRuleTypeEnum]
+           ([GUID],[Enum],[Lookup],[Description],[LongDescription])
+     VALUES
+           (newid(),108,'StudyAutoRoute','Study Auto Routing','A DICOM auto-routing rule for studies')
+GO
+
+
+IF @@ERROR<>0 AND @@TRANCOUNT>0 ROLLBACK TRANSACTION
+GO
+IF @@TRANCOUNT=0 BEGIN INSERT INTO #tmpErrors (Error) SELECT 1 BEGIN TRANSACTION END
+GO
 
 
 IF EXISTS (SELECT * FROM #tmpErrors) ROLLBACK TRANSACTION

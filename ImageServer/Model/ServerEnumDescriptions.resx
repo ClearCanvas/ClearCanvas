@@ -525,6 +525,12 @@
   <data name="ServerRuleTypeEnum_StudyQualityControl_LongDescription" xml:space="preserve">
     <value>A rule for quality control purposes when studies are received</value>
   </data>
+  <data name="ServerRuleTypeEnum_StudyAutoRoute_Description" xml:space="preserve">
+    <value>Study Auto Routing</value>
+  </data>
+  <data name="ServerRuleTypeEnum_StudyAutoRoute_LongDescription" xml:space="preserve">
+    <value>A DICOM auto-routing rule for studies</value>
+  </data>
   <data name="ServerRuleApplyTimeEnum_SopReceived_Description" xml:space="preserve">
     <value>SOP Received</value>
   </data>

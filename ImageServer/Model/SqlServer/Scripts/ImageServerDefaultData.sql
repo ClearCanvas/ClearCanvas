@@ -384,6 +384,12 @@ INSERT INTO [ImageServer].[dbo].[ServerRuleTypeEnum]
            (newid(),107,'StudyQualityControl','Study Quality Control','A rule for quality control purposes when studies are received')
 GO
 
+INSERT INTO [ImageServer].[dbo].[ServerRuleTypeEnum]
+           ([GUID],[Enum],[Lookup],[Description],[LongDescription])
+     VALUES
+           (newid(),108,'StudyAutoRoute','Study Auto Routing','A DICOM auto-routing rule for studies')
+GO
+
 
 -- ServerRuleApplyTimeEnum inserts
 INSERT INTO [ImageServer].[dbo].[ServerRuleApplyTimeEnum]
