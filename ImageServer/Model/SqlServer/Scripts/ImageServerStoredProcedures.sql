@@ -4765,9 +4765,10 @@ EXEC dbo.sp_executesql @statement = N'
 -- Create date: 2014-06-05
 -- Description:	Query QC Statistics
 -- =============================================
-CREATE PROCEDURE QueryQCStatistics
+ALTER PROCEDURE QueryQCStatistics
 	@StartTime datetime,
-	@EndTime datetime
+	@EndTime datetime,
+	@PartitionAE varchar(16) = NULL
 AS
 BEGIN
 	-- SET NOCOUNT ON added to prevent extra result sets from
@@ -4787,6 +4788,7 @@ BEGIN
 	Declare @QCStatusPassed smallint
 	Declare @QCStatusFailed smallint
 	Declare @QCStatusIncomplete smallint
+	Declare @PartitionGUID uniqueidentifier
 
 
 	SELECT @OrderStatusCancelled=Enum FROM [dbo].[OrderStatusEnum] WHERE Lookup=''Canceled''
@@ -4796,22 +4798,50 @@ BEGIN
 	SELECT @QCStatusFailed=Enum FROM [dbo].[QCStatusEnum] WHERE Lookup=''Failed''
 	SELECT @QCStatusIncomplete=Enum FROM [dbo].[QCStatusEnum] WHERE Lookup=''Incomplete''
 
-	SELECT 
-		@CheckingCount=SUM(case when [QCStatusEnum] = @QCStatusChecking then 1 else 0 end),
-		@NotApplicableCount=SUM(case when [QCStatusEnum] =@QCStatusNA OR [QCStatusEnum] IS NULL then 1 else 0 end),
-		@PassedCount=SUM(case when [QCStatusEnum] = @QCStatusPassed then 1 else 0 end),
-		@FailedCount=SUM(case when [QCStatusEnum] = @QCStatusFailed then 1 else 0 end),
-		@IncompleteCount=SUM(case when [QCStatusEnum] = @QCStatusIncomplete then 1 else 0 end)
-		FROM  [dbo].[Study] s WITH (NOLOCK)
-		JOIN [dbo].[StudyStorage] ss ON ss.[GUID] = s.[StudyStorageGUID]
-		WHERE ss.[InsertTime] >= @StartTime and ss.[InsertTime]<=@EndTime
+	IF @PartitionAE IS NULL or @PartitionAE=''
+	BEGIN
+		SELECT 
+			@CheckingCount=SUM(case when [QCStatusEnum] = @QCStatusChecking then 1 else 0 end),
+			@NotApplicableCount=SUM(case when [QCStatusEnum] =@QCStatusNA OR [QCStatusEnum] IS NULL then 1 else 0 end),
+			@PassedCount=SUM(case when [QCStatusEnum] = @QCStatusPassed then 1 else 0 end),
+			@FailedCount=SUM(case when [QCStatusEnum] = @QCStatusFailed then 1 else 0 end),
+			@IncompleteCount=SUM(case when [QCStatusEnum] = @QCStatusIncomplete then 1 else 0 end)
+			FROM  [dbo].[Study] s WITH (NOLOCK)
+			JOIN [dbo].[StudyStorage] ss ON ss.[GUID] = s.[StudyStorageGUID]
+			WHERE ss.[InsertTime] >= @StartTime and ss.[InsertTime]<=@EndTime
 
-	-- Find orders that are SCHEDULED within this window
-	SELECT @OrdersForQC = COUNT(*) 
-	FROM [dbo].[Order] WITH(NOLOCK)
-	WHERE [OrderStatusEnum]<>@OrderStatusCancelled
-		AND [ScheduledDateTime] >= @StartTime AND [ScheduledDateTime]<=@EndTime
+		-- Find orders that are SCHEDULED within this window
+		SELECT @OrdersForQC = COUNT(*) 
+		FROM [dbo].[Order] WITH(NOLOCK)
+		WHERE [OrderStatusEnum]<>@OrderStatusCancelled
+			AND [ScheduledDateTime] >= @StartTime AND [ScheduledDateTime]<=@EndTime
 
+	END
+	ELSE
+	BEGIN
+		SELECT @PartitionGUID=GUID from [dbo].[ServerPartition] WHERE AeTitle=@PartitionAE COLLATE Latin1_General_CS_AS  /* case-sensitive */
+
+		SELECT 
+			@CheckingCount=SUM(case when [QCStatusEnum] = @QCStatusChecking then 1 else 0 end),
+			@NotApplicableCount=SUM(case when [QCStatusEnum] =@QCStatusNA OR [QCStatusEnum] IS NULL then 1 else 0 end),
+			@PassedCount=SUM(case when [QCStatusEnum] = @QCStatusPassed then 1 else 0 end),
+			@FailedCount=SUM(case when [QCStatusEnum] = @QCStatusFailed then 1 else 0 end),
+			@IncompleteCount=SUM(case when [QCStatusEnum] = @QCStatusIncomplete then 1 else 0 end)
+			FROM  [dbo].[Study] s WITH (NOLOCK)
+			JOIN [dbo].[StudyStorage] ss ON ss.[GUID] = s.[StudyStorageGUID]
+			WHERE ss.[InsertTime] >= @StartTime and ss.[InsertTime]<=@EndTime
+				AND ss.[ServerPartitionGUID]=@PartitionGUID
+
+		-- Find orders that are SCHEDULED within this window
+		SELECT @OrdersForQC = COUNT(*) 
+		FROM [dbo].[Order] WITH(NOLOCK)
+		WHERE [OrderStatusEnum]<>@OrderStatusCancelled
+			AND [ScheduledDateTime] >= @StartTime AND [ScheduledDateTime]<=@EndTime
+			AND [ServerPartitionGUID]=@PartitionGUID
+
+	END
+
+	
 
 	SET NOCOUNT OFF;
 

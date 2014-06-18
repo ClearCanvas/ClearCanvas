@@ -18,5 +18,9 @@ namespace ClearCanvas.ImageServer.Model.Parameters
 		{
 			set { SubCriteria["EndTime"] = new ProcedureParameter<DateTime>("EndTime", value); }
 		}
+        public string PartitionAE
+        {
+            set { SubCriteria["PartitionAE"] = new ProcedureParameter<string>("PartitionAE", value); }
+        }
 	}
 }
