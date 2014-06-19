@@ -1,6 +1,6 @@
 ﻿#region License
 
-// Copyright (c) 2013, ClearCanvas Inc.
+// Copyright (c) 2014, ClearCanvas Inc.
 // All rights reserved.
 // http://www.clearcanvas.ca
 //
@@ -22,35 +22,22 @@
 
 #endregion
 
-using ClearCanvas.Dicom.Utilities.Command;
-using ClearCanvas.ImageViewer.StudyManagement.Core.Storage;
+using System.Data.Linq;
 
-namespace ClearCanvas.ImageViewer.StudyManagement.Core.Command
+namespace ClearCanvas.ImageViewer.StudyManagement.Core.Storage
 {
-	/// <summary>
-	/// Complete a specific <see cref="WorkItemUid"/> record in the database.
-	/// </summary>
-	public class CompleteWorkItemUidCommand : DataAccessCommand
+	partial class WorkItemUid : ILinq2SqlEntity
 	{
-		private WorkItemUid _uid;
-
-		public CompleteWorkItemUidCommand(WorkItemUid uid)
-			: base("Complete WorkItemUid")
+		long ILinq2SqlEntity.RowId
 		{
-			_uid = uid;
+			get { return Oid; }
+			set { Oid = value; }
 		}
 
-		protected override void OnExecute(CommandProcessor theProcessor)
+		Binary ILinq2SqlEntity.RowVersion
 		{
-			var broker = DataAccessContext.GetWorkItemUidBroker();
-			_uid = broker.GetWorkItemUid(_uid.Oid);
-			_uid.Complete = true;
-		}
-
-		protected override void OnUndo()
-		{
-			// TODO (CR Jun 2012): Possible for it to have already been true when OnExecute fired?
-			_uid.Complete = false;
+			get { return Version; }
+			set { Version = value; }
 		}
 	}
 }

@@ -26,7 +26,7 @@ using System;
 using System.Data;
 using System.Data.Linq;
 using System.Data.Linq.Mapping;
-using System.Threading;
+using System.IO;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.ImageViewer.StudyManagement.Core.Storage.DicomQuery;
@@ -43,14 +43,14 @@ namespace ClearCanvas.ImageViewer.StudyManagement.Core.Storage
 	/// </remarks>
 	public class DataAccessContext : IDisposable
 	{
-        private static IDbConnection _staticConnection;
-	    private static readonly object _syncLock = new object();
+		private static IDbConnection _staticConnection;
+		private static readonly object _syncLock = new object();
 
 		public const string WorkItemMutex = "WorkItem";
 
-		private const string DefaultDatabaseFileName = "dicom_store.sdf";
+		private const string _defaultDatabaseFileName = "dicom_store.sdf";
 
-        private readonly string _databaseFilename;
+		private readonly string _databaseFilename;
 		private readonly DicomStoreDataContext _context;
 		private readonly IDbConnection _connection;
 		private readonly IDbTransaction _transaction;
@@ -59,69 +59,71 @@ namespace ClearCanvas.ImageViewer.StudyManagement.Core.Storage
 		private ExclusiveLock _mutex;
 
 		public DataAccessContext()
-			:this(null)
-		{
-			
-		}
+			: this(null) {}
 
-        public DataAccessContext(string mutexName)
-			:this(mutexName, DefaultDatabaseFileName)
-        {
-        }
+		public DataAccessContext(string mutexName)
+			: this(mutexName, _defaultDatabaseFileName) {}
 
 		internal DataAccessContext(string mutexName, string databaseFilename)
 		{
-		    if (!string.IsNullOrEmpty(mutexName))
-            {
-                _mutex = ExclusiveLock.CreateFileSystemLock(SqlCeDatabaseHelper<DicomStoreDataContext>.GetDatabaseFilePath(mutexName + databaseFilename));
-                _mutex.Lock();
-            }
+			if (!string.IsNullOrEmpty(mutexName))
+			{
+				_mutex = ExclusiveLock.CreateFileSystemLock(SqlCeDatabaseHelper<DicomStoreDataContext>.GetDatabaseFilePath(mutexName + databaseFilename));
+				_mutex.Lock();
+			}
 
-            try
-            {
-                // initialize a connection and transaction
-                _databaseFilename = databaseFilename;
-                _connection = CreateConnection();
-                _transaction = _connection.BeginTransaction(IsolationLevel.ReadCommitted);
-                _context = new DicomStoreDataContext(_connection);
-                //_context.Log = Console.Out;
-            }
-            catch
-            {
-                _mutex.Unlock();
-                _mutex.Dispose();
-                _mutex = null;
+			try
+			{
+				// initialize a connection and transaction
+				_databaseFilename = databaseFilename;
+				_connection = CreateConnection();
+				_transaction = _connection.BeginTransaction(IsolationLevel.ReadCommitted);
+				_context = new DicomStoreDataContext(_connection);
+				//_context.Log = Console.Out;
+			}
+			catch
+			{
+				_mutex.Unlock();
+				_mutex.Dispose();
+				_mutex = null;
 
-                throw;
-            }
+				throw;
+			}
 
-            lock (_syncLock)
-            {
-                if (_staticConnection == null)
-                {
-                    // This is done for performance reasons.  It forces a connection to remain open while the 
-                    // the app domain is running, so that the database is kept in memory.
-                    try
-                    {
-                        _staticConnection = CreateConnection();
-                    }
-                    catch (Exception)
-                    {
-                    }
-                }
-            }
+			lock (_syncLock)
+			{
+				if (_staticConnection == null)
+				{
+					// This is done for performance reasons.  It forces a connection to remain open while the 
+					// the app domain is running, so that the database is kept in memory.
+					try
+					{
+						_staticConnection = CreateConnection();
+					}
+					catch (Exception ex)
+					{
+						Platform.Log(LogLevel.Debug, ex, "Failed to initialize static connection to data store database");
+					}
+				}
+			}
 		}
 
-	    #region Implementation of IDisposable
+		public TextWriter Logger
+		{
+			get { return _context.Log; }
+			set { _context.Log = value; }
+		}
+
+		#region Implementation of IDisposable
 
 		public void Dispose()
 		{
-			if(_disposed)
+			if (_disposed)
 				throw new InvalidOperationException("Already disposed.");
 
 			_disposed = true;
 
-			if(!_transactionCommitted && _transaction != null)
+			if (!_transactionCommitted && _transaction != null)
 			{
 				_transaction.Rollback();
 			}
@@ -130,19 +132,19 @@ namespace ClearCanvas.ImageViewer.StudyManagement.Core.Storage
 			_connection.Close();
 			_connection.Dispose();
 
-            if (_mutex != null)
-            {
-                _mutex.Unlock();
-                _mutex.Dispose();
-                _mutex = null;
-            }
+			if (_mutex != null)
+			{
+				_mutex.Unlock();
+				_mutex.Dispose();
+				_mutex = null;
+			}
 		}
 
 		#endregion
 
-        public DeviceBroker GetDeviceBroker()
+		public DeviceBroker GetDeviceBroker()
 		{
-            return new DeviceBroker(_context);
+			return new DeviceBroker(_context);
 		}
 
 		public WorkItemBroker GetWorkItemBroker()
@@ -150,22 +152,22 @@ namespace ClearCanvas.ImageViewer.StudyManagement.Core.Storage
 			return new WorkItemBroker(_context);
 		}
 
-        public WorkItemUidBroker GetWorkItemUidBroker()
-        {
-            return new WorkItemUidBroker(_context);
-        }
+		public WorkItemUidBroker GetWorkItemUidBroker()
+		{
+			return new WorkItemUidBroker(_context);
+		}
 
 		public StudyBroker GetStudyBroker()
 		{
 			return new StudyBroker(_context);
 		}
 
-        public StudyStoreQuery GetStudyStoreQuery()
-        {
-            return new StudyStoreQuery(_context);
-        }
+		public StudyStoreQuery GetStudyStoreQuery()
+		{
+			return new StudyStoreQuery(_context);
+		}
 
-	    /// <summary>
+		/// <summary>
 		/// Commits the transaction.
 		/// </summary>
 		/// <remarks>
@@ -173,49 +175,49 @@ namespace ClearCanvas.ImageViewer.StudyManagement.Core.Storage
 		/// </remarks>
 		public void Commit()
 		{
-            try
-            {
-                if (_transactionCommitted)
-                    throw new InvalidOperationException("Transaction already committed.");
-                _context.SubmitChanges();
-                if (_transaction != null)
-                    _transaction.Commit();
-                _transactionCommitted = true;
-            }
-            catch (ChangeConflictException)
-            {
-                foreach (ObjectChangeConflict occ in _context.ChangeConflicts)
-                {
-                    MetaTable metatable = _context.Mapping.GetTable(occ.Object.GetType());
-                    Platform.Log(LogLevel.Warn, "Change Conflict with update to table: {0}",  metatable.TableName);
-                }
-                throw;
-            }
-            finally
-            {
-                if (_mutex != null)
-                {
-                    _mutex.Unlock();
-                    _mutex.Dispose();
-                    _mutex = null;
-                }
-            }
+			try
+			{
+				if (_transactionCommitted)
+					throw new InvalidOperationException("Transaction already committed.");
+				_context.SubmitChanges();
+				if (_transaction != null)
+					_transaction.Commit();
+				_transactionCommitted = true;
+			}
+			catch (ChangeConflictException)
+			{
+				foreach (ObjectChangeConflict occ in _context.ChangeConflicts)
+				{
+					MetaTable metatable = _context.Mapping.GetTable(occ.Object.GetType());
+					Platform.Log(LogLevel.Warn, "Change Conflict with update to table: {0}", metatable.TableName);
+				}
+				throw;
+			}
+			finally
+			{
+				if (_mutex != null)
+				{
+					_mutex.Unlock();
+					_mutex.Dispose();
+					_mutex = null;
+				}
+			}
 		}
 
-	    private IDbConnection CreateConnection()
+		private IDbConnection CreateConnection()
 		{
 			return CreateConnection(_databaseFilename);
 		}
 
-	    /// <summary>
+		/// <summary>
 		/// Creates a connection to the specified database file, creating the database
 		/// if it does not exist.
 		/// </summary>
 		/// <param name="databaseFile"></param>
 		/// <returns></returns>
 		private IDbConnection CreateConnection(string databaseFile)
-	    {
-	    	return SqlCeDatabaseHelper<DicomStoreDataContext>.CreateConnection(databaseFile);
+		{
+			return SqlCeDatabaseHelper<DicomStoreDataContext>.CreateConnection(databaseFile);
 		}
 	}
 }
