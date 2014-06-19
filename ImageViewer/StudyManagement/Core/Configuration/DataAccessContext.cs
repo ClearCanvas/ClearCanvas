@@ -41,7 +41,10 @@ namespace ClearCanvas.ImageViewer.StudyManagement.Core.Configuration
 	/// </remarks>
 	internal class DataAccessContext : IDisposable
 	{
-		private const string DefaultDatabaseFileName = "configuration.sdf";
+		private static IDbConnection _staticConnection;
+		private static readonly object _syncLock = new object();
+
+		private const string _defaultDatabaseFileName = "configuration.sdf";
 
 		private readonly string _databaseFilename;
 		private readonly ConfigurationDataContext _context;
@@ -51,10 +54,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement.Core.Configuration
 		private bool _disposed;
 
 		public DataAccessContext()
-			: this(DefaultDatabaseFileName)
-		{
-
-		}
+			: this(_defaultDatabaseFileName) {}
 
 		internal DataAccessContext(string databaseFilename)
 		{
@@ -62,8 +62,25 @@ namespace ClearCanvas.ImageViewer.StudyManagement.Core.Configuration
 			_databaseFilename = databaseFilename;
 			_connection = CreateConnection();
 			_transaction = _connection.BeginTransaction(IsolationLevel.ReadCommitted);
-            _context = new ConfigurationDataContext(_connection);
+			_context = new ConfigurationDataContext(_connection);
 			//_context.Log = Console.Out;
+
+			lock (_syncLock)
+			{
+				if (_staticConnection == null)
+				{
+					// This is done for performance reasons.  It forces a connection to remain open while the 
+					// the app domain is running, so that the database is kept in memory.
+					try
+					{
+						_staticConnection = CreateConnection();
+					}
+					catch (Exception ex)
+					{
+						Platform.Log(LogLevel.Debug, ex, "Failed to initialize static connection to configuration database");
+					}
+				}
+			}
 		}
 
 		#region Implementation of IDisposable
@@ -87,10 +104,9 @@ namespace ClearCanvas.ImageViewer.StudyManagement.Core.Configuration
 
 		#endregion
 
-
 		public ConfigurationDocumentBroker GetConfigurationDocumentBroker()
 		{
-            return new ConfigurationDocumentBroker(_context);
+			return new ConfigurationDocumentBroker(_context);
 		}
 
 		/// <summary>
@@ -101,24 +117,24 @@ namespace ClearCanvas.ImageViewer.StudyManagement.Core.Configuration
 		/// </remarks>
 		public void Commit()
 		{
-            try
-            {
-                if (_transactionCommitted)
-                    throw new InvalidOperationException("Transaction already committed.");
-                _context.SubmitChanges();
-                if (_transaction != null)
-                    _transaction.Commit();
-                _transactionCommitted = true;
-            }
-            catch (ChangeConflictException)
-            {
-                foreach (ObjectChangeConflict occ in _context.ChangeConflicts)
-                {
-                    MetaTable metatable = _context.Mapping.GetTable(occ.Object.GetType());
-                    Platform.Log(LogLevel.Warn, "Change Conflict with update to table: {0}", metatable.TableName);
-                }
-                throw;
-            }
+			try
+			{
+				if (_transactionCommitted)
+					throw new InvalidOperationException("Transaction already committed.");
+				_context.SubmitChanges();
+				if (_transaction != null)
+					_transaction.Commit();
+				_transactionCommitted = true;
+			}
+			catch (ChangeConflictException)
+			{
+				foreach (ObjectChangeConflict occ in _context.ChangeConflicts)
+				{
+					MetaTable metatable = _context.Mapping.GetTable(occ.Object.GetType());
+					Platform.Log(LogLevel.Warn, "Change Conflict with update to table: {0}", metatable.TableName);
+				}
+				throw;
+			}
 		}
 
 		private IDbConnection CreateConnection()

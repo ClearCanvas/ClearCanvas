@@ -1,6 +1,6 @@
 ﻿#region License
 
-// Copyright (c) 2013, ClearCanvas Inc.
+// Copyright (c) 2014, ClearCanvas Inc.
 // All rights reserved.
 // http://www.clearcanvas.ca
 //
@@ -24,64 +24,49 @@
 
 using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
+using System.Xml;
 using ClearCanvas.Common.Utilities;
 
 namespace ClearCanvas.Common.Serialization
 {
-	public class PolymorphicDataContractHook<T> : IJsmlSerializerHook
+	public class PolymorphicDataContractResolver<T> : DataContractResolver
 		where T : PolymorphicDataContractAttribute
 	{
 // ReSharper disable StaticFieldInGenericType
 		private static readonly Dictionary<string, Type> _contractMap = PolymorphicDataContractAttribute.GetContractMap(typeof (T));
 // ReSharper restore StaticFieldInGenericType
 
-		public static void RegisterKnownType(Type type)
+		private const string _contractNamespace = "http://www.clearcanvas.ca";
+		private const string _contractNamePrefix = "c_";
+		private readonly int _contractNamePrefixLength = _contractNamePrefix.Length;
+
+		public override bool TryResolveType(Type type, Type declaredType, DataContractResolver knownTypeResolver, out XmlDictionaryString typeName, out XmlDictionaryString typeNamespace)
 		{
 			var a = AttributeUtils.GetAttribute<T>(type);
-			if (a == null)
-				throw new ArgumentException(string.Format("Specified type must be decorated with {0}", typeof (T).FullName));
-			_contractMap.Add(a.ContractId, type);
-		}
-
-		public static IEnumerable<Type> DataContracts
-		{
-			get { return _contractMap.Values; }
-		}
-
-		#region IJsmlSerializerHook
-
-		bool IJsmlSerializerHook.Serialize(IJsmlSerializationContext context)
-		{
-			var data = context.Data;
-			if (data != null)
+			if (a != null)
 			{
-				// if we have an attribute, write out the contract ID as an XML attribute
-				var a = AttributeUtils.GetAttribute<T>(data.GetType());
-				if (a != null)
+				var dictionary = new XmlDictionary();
+				typeName = dictionary.Add(_contractNamePrefix + a.ContractId);
+				typeNamespace = dictionary.Add(_contractNamespace);
+				return true;
+			}
+			return knownTypeResolver.TryResolveType(type, declaredType, knownTypeResolver, out typeName, out typeNamespace);
+		}
+
+		public override Type ResolveName(string typeName, string typeNamespace, Type declaredType, DataContractResolver knownTypeResolver)
+		{
+			if (typeNamespace == _contractNamespace && typeName.StartsWith(_contractNamePrefix))
+			{
+				var contract = typeName.Substring(_contractNamePrefixLength);
+				if (!string.IsNullOrEmpty(contract))
 				{
-					context.Attributes.Add("contract", a.ContractId);
+					// get the data type by the contract id
+					return GetDataContract(contract);
 				}
 			}
-
-			// always return false - we don't handle serialization ourselves
-			return false;
+			return knownTypeResolver.ResolveName(typeName, typeNamespace, declaredType, knownTypeResolver);
 		}
-
-		bool IJsmlSerializerHook.Deserialize(IJsmlDeserializationContext context)
-		{
-			// if we have an XML attribute for the contract ID, change the data type to use the correct contract
-			var contract = context.XmlElement.GetAttribute("contract");
-			if (!string.IsNullOrEmpty(contract))
-			{
-				// constrain the data type by the contract id
-				context.DataType = GetDataContract(contract);
-			}
-
-			// always return false - we don't handle serialization ourselves
-			return false;
-		}
-
-		#endregion
 
 		private static Type GetDataContract(string contractId)
 		{
@@ -91,18 +76,5 @@ namespace ClearCanvas.Common.Serialization
 
 			return contract;
 		}
-
-		#region
-
-#if UNIT_TESTS
-
-		internal static void ClearKnownTypes()
-		{
-			_contractMap.Clear();
-		}
-
-#endif
-
-		#endregion
 	}
 }
