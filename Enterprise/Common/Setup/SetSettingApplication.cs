@@ -23,6 +23,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.Net;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Configuration;
@@ -55,58 +56,36 @@ namespace ClearCanvas.Enterprise.Common.Setup
 						//If there is a store, and it is not online, then settings can't be edited.
 						if (!store.IsOnline)
 						{
-							Platform.Log(LogLevel.Error, "Settings Store is not online, cannot update configuration option: {0}/{1} to {2} ",
-							             cmdLine.SettingGroup, cmdLine.SettingName, cmdLine.Value);
+							Platform.Log(LogLevel.Error, "Settings Store is not online, cannot update configuration");
 							return;
 						}
 					}
 					catch (NotSupportedException)
 					{
 						// There is no central settings store; all settings will be treated as though they were local.
-						Platform.Log(LogLevel.Error, "No Enterprise settings store, cannot update configuration option: {0}/{1} to {2} ",
-									 cmdLine.SettingGroup, cmdLine.SettingName, cmdLine.Value);
+						Platform.Log(LogLevel.Error, "No Enterprise settings store, cannot update configuration");
 						return;
 					}
 
-					if (!string.IsNullOrEmpty(cmdLine.ConfigData))
+					if (!string.IsNullOrEmpty(cmdLine.SettingData))
 					{
-						SetupHelper.ImportConfigurations(cmdLine.ConfigData);
-						return;
-					}
-
-					var found = false;
-					var list = store.ListSettingsGroups();
-					foreach (var descriptor in list)
+						SetupHelper.ImportSettingsDefinition(store, cmdLine.SettingData, cmdLine.Overwrite);
+					} 
+					else
 					{
-						if (descriptor.Name.Equals(cmdLine.SettingGroup))
-						{
-							if (!string.IsNullOrEmpty(cmdLine.Version))
-								if (!descriptor.Version.ToString().Equals(cmdLine.Version))
-									continue;
+						var settings = new List<SettingDefinition>
+									{
+										new SettingDefinition
+											{
+												Group = cmdLine.SettingGroup,
+												Property = cmdLine.SettingName,
+												Version = cmdLine.Version,
+												Value = cmdLine.Value
+											}
+									};
 
-							var properties = store.ListSettingsProperties(descriptor);
-							foreach (var property in properties)
-							{
-								if (property.Name.Equals(cmdLine.SettingName))
-								{
-									// Note, we're not checking version information, so all settings are updated here that
-									// match, regardless of version.
-									var settings = store.GetSettingsValues(descriptor, null, null);
-									settings[cmdLine.SettingName] = cmdLine.Value;
-									store.PutSettingsValues(descriptor, null, null, settings);
-
-									Platform.Log(LogLevel.Info, "Updated setting: {0}/{1}/{2} to {3} ",
-									 cmdLine.SettingGroup, cmdLine.SettingName, descriptor.Version, cmdLine.Value);
-
-									found = true;
-								}
-							}
-						}
+						SetupHelper.ImportSettingsDefinition(store, settings, cmdLine.Overwrite);
 					}
-
-					if (!found)
-						Platform.Log(LogLevel.Error, "Settings stored did not have {0}/{1} set in it, cannot update setting to {2} ",
-						             cmdLine.SettingGroup, cmdLine.SettingName, cmdLine.Value);
 				}
 			}
 			catch (CommandLineException e)

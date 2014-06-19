@@ -180,7 +180,76 @@ namespace ClearCanvas.Enterprise.Common.Setup
 			LogImportedGroups(groups, source);
 		}
 
-		public static void ImportConfigurations(string dataFileOrFolderPath)
+		public static void ImportSettingsDefinition(ISettingsStore store, string dataFileOrFolderPath, bool overwrite)
+		{
+			// determine list of source files to import
+			var fileList = new List<string>();
+			if (File.Exists(dataFileOrFolderPath))
+			{
+				fileList.Add(dataFileOrFolderPath);
+			}
+			else if (Directory.Exists(dataFileOrFolderPath))
+			{
+				fileList.AddRange(Directory.GetFiles(dataFileOrFolderPath, "*.xml"));
+			}
+			else
+				throw new ArgumentException(string.Format("{0} is not a valid data file or directory.", dataFileOrFolderPath));
+
+			Platform.Log(LogLevel.Info, "Loading settings from {0}...", dataFileOrFolderPath);
+
+			var configurations = from file in fileList
+								 let xml = File.ReadAllText(file)
+								 from config in JsmlSerializer.Deserialize<SettingDefinition[]>(xml)
+								 select config;
+
+			ImportSettingsDefinition(store, configurations, overwrite);
+		}
+
+		public static void ImportSettingsDefinition(ISettingsStore store, IEnumerable<SettingDefinition> settingDefinitions, bool overwrite)
+		{
+			var allSettingsGroups = store.ListSettingsGroups();
+			const int maxCharDisplayed = 50;
+
+			foreach (var s in settingDefinitions)
+			{
+				var found = false;
+				var setting = s;
+				var version = string.IsNullOrEmpty(setting.Version) ? null : new Version(setting.Version);
+				var value = s.Value.Length <= maxCharDisplayed ? s.Value : s.Value.Substring(0, maxCharDisplayed) + "...";
+				value = value.Replace('\r', ' ');
+				value = value.Replace('\n', ' ');
+
+				var groups = version == null
+									? allSettingsGroups.Where(g => g.Name.Equals(setting.Group))
+									: allSettingsGroups.Where(g => g.Name.Equals(setting.Group) && g.Version.Equals(version));
+
+				foreach (var g in groups)
+				{
+					var property = store.ListSettingsProperties(g).SingleOrDefault(p => p.Name.Equals(s.Property));
+					if (property == null)
+						continue;
+
+					found = true;
+					var settings = store.GetSettingsValues(g, null, null);
+					if (!overwrite && settings.ContainsKey(s.Property))
+					{
+						Platform.Log(LogLevel.Info, "Setting unchanged: {0}/{1}/{2} {3}", s.Group, s.Property, s.Version, value);
+					}
+					else 
+					{
+						settings[s.Property] = s.Value;
+						store.PutSettingsValues(g, null, null, settings);
+
+						Platform.Log(LogLevel.Info, "Setting updated: {0}/{1}/{2} {3}", s.Group, s.Property, s.Version, value);
+					}
+				}
+
+				if (!found)
+					Platform.Log(LogLevel.Error, "Setting not found: {0}/{1}/{2}", s.Group, s.Property, s.Version);
+			}
+		}
+
+		public static void ImportConfigurationsDefinition(string dataFileOrFolderPath)
 		{
 			// determine list of source files to import
 			var fileList = new List<string>();
@@ -196,14 +265,14 @@ namespace ClearCanvas.Enterprise.Common.Setup
 				throw new ArgumentException(string.Format("{0} is not a valid data file or directory.", dataFileOrFolderPath));
 
 			var configurations = from file in fileList
-							 let xml = File.ReadAllText(file)
-							 from config in JsmlSerializer.Deserialize<ConfigurationDefinition[]>(xml)
-							 select config;
+								 let xml = File.ReadAllText(file)
+								 from config in JsmlSerializer.Deserialize<ConfigurationDefinition[]>(xml)
+								 select config;
 
-			ImportConfigurations(configurations, dataFileOrFolderPath);
+			ImportConfigurationsDefinition(configurations, dataFileOrFolderPath);
 		}
 
-		private static void ImportConfigurations(IEnumerable<ConfigurationDefinition> configurations, string source)
+		private static void ImportConfigurationsDefinition(IEnumerable<ConfigurationDefinition> configurations, string source)
 		{
 			var requests = configurations.Select(c =>
 				new SetConfigurationDocumentRequest(
@@ -218,10 +287,10 @@ namespace ClearCanvas.Enterprise.Common.Setup
 					service => service.SetConfigurationDocument(request));
 			}
 
-			LogImportedSetting(configurations, source);
+			LogImportedConfiguration(configurations, source);
 		}
 
-		private static void LogImportedSetting(IEnumerable<ConfigurationDefinition> configurations, string source)
+		private static void LogImportedConfiguration(IEnumerable<ConfigurationDefinition> configurations, string source)
 		{
 			foreach (var c in configurations.Distinct())
 			{

@@ -37,13 +37,13 @@ namespace ClearCanvas.Enterprise.Common.Setup
 		/// <summary>
 		/// Specifies the settings group to updates.
 		/// </summary>
-		[CommandLineParameter("settingGroup", "g", "Specifies the settings group update.")]
+		[CommandLineParameter("settingGroup", "g", "Specifies the settings group to update.")]
 		public string SettingGroup { get; set; }
 
 		/// <summary>
 		/// Specifies the setting name with the group to update.
 		/// </summary>
-		[CommandLineParameter("settingName", "s", "Specifies the setting name withint he group update.")]
+		[CommandLineParameter("settingName", "s", "Specifies the setting name within the group to update.")]
 		public string SettingName { get; set; }
 
 		/// <summary>
@@ -61,8 +61,14 @@ namespace ClearCanvas.Enterprise.Common.Setup
 		/// <summary>
 		/// Specifies the name of a file or folder containing configuration data to be imported.
 		/// </summary>
-		[CommandLineParameter("configData", "Specifies the name of a file or folder containing configuration data to be imported.")]
-		public string ConfigData { get; set; }
+		[CommandLineParameter("overwrite", "o", "Specifies whether to overwrite existing setting if it has already been modified.")]
+		public bool Overwrite { get; set; }
+
+		/// <summary>
+		/// Specifies the name of a file or folder containing configuration data to be imported.
+		/// </summary>
+		[CommandLineParameter("settingData", "Specifies the name of a file or folder containing settings to be imported.")]
+		public string SettingData { get; set; }
 
 		/// <summary>
 		/// Specifies user name to connect to enterprise server.
