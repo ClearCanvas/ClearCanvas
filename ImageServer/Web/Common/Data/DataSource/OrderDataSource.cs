@@ -25,6 +25,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ClearCanvas.Dicom.Iod;
 using ClearCanvas.Enterprise.Core;
 using ClearCanvas.ImageServer.Core;
 using ClearCanvas.ImageServer.Core.Query;
@@ -194,6 +195,32 @@ namespace ClearCanvas.ImageServer.Web.Common.Data.DataSource
                 var fromKey = DateTime.ParseExact(FromStudyDate, DateFormats, null);
                 criteria.ScheduledDateTime.MoreThanOrEqualTo(fromKey);
             }
+
+			if (!string.IsNullOrEmpty(ReferringPhysiciansName))
+			{
+				if (ReferringPhysiciansName.Contains(","))
+				{
+					var splitName = ReferringPhysiciansName.Split(new [] {','});
+					var staffCriteria = new StaffSelectCriteria();
+					if (splitName.Length > 0)
+						QueryHelper.SetGuiStringCondition(staffCriteria.FamilyName, splitName[0].Trim() + "*");
+					if (splitName.Length > 1)
+						QueryHelper.SetGuiStringCondition(staffCriteria.GivenName, splitName[1].Trim() + "*");
+
+					criteria.ReferringStaffRelatedEntityCondition.Exists(staffCriteria);
+				}
+				else
+				{
+					var staffCriteria = new StaffSelectCriteria();
+					var pn = new PersonName(ReferringPhysiciansName);
+					if (!string.IsNullOrEmpty(pn.LastName))
+						QueryHelper.SetGuiStringCondition(staffCriteria.FamilyName, pn.LastName + "*");
+					if (!string.IsNullOrEmpty(pn.FirstName))
+						QueryHelper.SetGuiStringCondition(staffCriteria.GivenName, pn.FirstName + "*");
+
+					criteria.ReferringStaffRelatedEntityCondition.Exists(staffCriteria);
+				}
+			}
 
             if (Statuses != null && Statuses.Length > 0)
             {
