@@ -49,5 +49,47 @@ namespace ClearCanvas.ImageServer.Model.EntityBrokers
 				return (IRelatedEntityCondition<EntitySelectCriteria>)SubCriteria["StudyRelatedEntityCondition"];
 			}
 		}
+
+		/// <summary>
+		/// Used for EXISTS or NOT EXISTS subselects against the Staff table from the ReferringStaffKey column.
+		/// </summary>
+		/// <remarks>
+		/// A <see cref="StudySelectCriteria"/> instance is created with the subselect parameters, 
+		/// and assigned to this Sub-Criteria.  Note that the link between the <see cref="Order"/>
+		/// and <see cref="Staff"/> tables is automatically added into the <see cref="StaffSelectCriteria"/>
+		/// instance by the broker.
+		/// </remarks>
+		public IRelatedEntityCondition<EntitySelectCriteria> ReferringStaffRelatedEntityCondition
+		{
+			get
+			{
+				if (!SubCriteria.ContainsKey("ReferringStaffRelatedEntityCondition"))
+				{
+					SubCriteria["ReferringStaffRelatedEntityCondition"] = new RelatedEntityCondition<EntitySelectCriteria>("ReferringStaffRelatedEntityCondition", "ReferringStaffKey", "Key");
+				}
+				return (IRelatedEntityCondition<EntitySelectCriteria>)SubCriteria["ReferringStaffRelatedEntityCondition"];
+			}
+		}
+
+		/// <summary>
+		/// Used for EXISTS or NOT EXISTS subselects against the Staff table from the EnteredByStaffKey column.
+		/// </summary>
+		/// <remarks>
+		/// A <see cref="StudySelectCriteria"/> instance is created with the subselect parameters, 
+		/// and assigned to this Sub-Criteria.  Note that the link between the <see cref="Order"/>
+		/// and <see cref="Staff"/> tables is automatically added into the <see cref="StaffSelectCriteria"/>
+		/// instance by the broker.
+		/// </remarks>
+		public IRelatedEntityCondition<EntitySelectCriteria> EnteredByStaffRelatedEntityCondition
+		{
+			get
+			{
+				if (!SubCriteria.ContainsKey("EnteredByStaffRelatedEntityCondition"))
+				{
+					SubCriteria["EnteredByStaffRelatedEntityCondition"] = new RelatedEntityCondition<EntitySelectCriteria>("EnteredByStaffRelatedEntityCondition", "EnteredByStaffKey", "Key");
+				}
+				return (IRelatedEntityCondition<EntitySelectCriteria>)SubCriteria["EnteredByStaffRelatedEntityCondition"];
+			}
+		}
 	}
 }
