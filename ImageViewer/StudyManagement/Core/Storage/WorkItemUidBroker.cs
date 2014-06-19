@@ -90,9 +90,18 @@ namespace ClearCanvas.ImageViewer.StudyManagement.Core.Storage
 			Context.WorkItemUids.DeleteOnSubmit(entity);
 		}
 
+		internal void DeleteAll()
+		{
+			Context.WorkItemUids.DeleteAllOnSubmit(Context.WorkItemUids);
+		}
+
+		#region Compiled Queries
+
 		private static readonly Func<DicomStoreDataContext, long, IQueryable<WorkItemUid>> _getWorkItemUidByOid =
 			CompiledQuery.Compile<DicomStoreDataContext, long, IQueryable<WorkItemUid>>((context, oid) => (from w in context.WorkItemUids
 			                                                                                               where w.Oid == oid
 			                                                                                               select w).Take(1));
+
+		#endregion
 	}
 }
