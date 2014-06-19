@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Data.Linq;
 using System.Linq;
 using ClearCanvas.ImageViewer.Common.WorkItem;
 
@@ -173,13 +174,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement.Core.Storage
 		/// <returns></returns>
 		public WorkItem GetWorkItem(long oid)
 		{
-			var list = (from w in Context.WorkItems
-			            where w.Oid == oid
-			            select w);
-
-			if (!list.Any()) return null;
-
-			return list.First();
+			return _getWorkItemByOid(Context, oid).FirstOrDefault();
 		}
 
 		/// <summary>
@@ -199,5 +194,10 @@ namespace ClearCanvas.ImageViewer.StudyManagement.Core.Storage
 		{
 			Context.WorkItems.DeleteOnSubmit(entity);
 		}
+
+		private static readonly Func<DicomStoreDataContext, long, IQueryable<WorkItem>> _getWorkItemByOid =
+			CompiledQuery.Compile<DicomStoreDataContext, long, IQueryable<WorkItem>>((context, oid) => (from w in context.WorkItems
+			                                                                                            where w.Oid == oid
+			                                                                                            select w).Take(1));
 	}
 }
