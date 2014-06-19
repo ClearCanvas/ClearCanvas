@@ -26,6 +26,7 @@ using System;
 using System.Data;
 using System.Data.Linq;
 using System.Data.Linq.Mapping;
+using System.IO;
 using ClearCanvas.Common;
 using ClearCanvas.ImageViewer.StudyManagement.Core.Storage;
 
@@ -81,6 +82,12 @@ namespace ClearCanvas.ImageViewer.StudyManagement.Core.Configuration
 					}
 				}
 			}
+		}
+
+		public TextWriter Log
+		{
+			get { return _context.Log; }
+			set { _context.Log = value; }
 		}
 
 		#region Implementation of IDisposable

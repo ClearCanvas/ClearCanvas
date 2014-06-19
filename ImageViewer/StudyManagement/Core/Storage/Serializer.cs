@@ -47,6 +47,8 @@ namespace ClearCanvas.ImageViewer.StudyManagement.Core.Storage
 
 		public static string SerializeWorkItemRequest(WorkItemRequest data)
 		{
+			if (data == null) return null;
+
 			var sb = new StringBuilder();
 			using (var sw = XmlWriter.Create(sb))
 			{
@@ -57,6 +59,8 @@ namespace ClearCanvas.ImageViewer.StudyManagement.Core.Storage
 
 		public static WorkItemRequest DeserializeWorkItemRequest(string data)
 		{
+			if (string.IsNullOrEmpty(data)) return null;
+
 			try
 			{
 				using (var tr = new StringReader(data))
@@ -74,6 +78,8 @@ namespace ClearCanvas.ImageViewer.StudyManagement.Core.Storage
 
 		public static string SerializeWorkItemProgress(WorkItemProgress data)
 		{
+			if (data == null) return null;
+
 			var sb = new StringBuilder();
 			using (var sw = XmlWriter.Create(sb))
 			{
@@ -84,6 +90,8 @@ namespace ClearCanvas.ImageViewer.StudyManagement.Core.Storage
 
 		public static WorkItemProgress DeserializeWorkItemProgress(string data)
 		{
+			if (string.IsNullOrEmpty(data)) return null;
+
 			try
 			{
 				using (var tr = new StringReader(data))

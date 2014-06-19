@@ -57,21 +57,25 @@ namespace ClearCanvas.ImageViewer.StudyManagement.Core.Configuration
 			return GetConfigurationDocument(documentKey, true);
 		}
 
-		private static readonly Func<ConfigurationDataContext, string, string, string, string, IQueryable<ConfigurationDocument>> _queryCurrentVersion =
+		private static readonly Func<ConfigurationDataContext, string, string, string, string, IQueryable<ConfigurationDocument>> _queryPriorVersion =
 			CompiledQuery.Compile<ConfigurationDataContext, string, string, string, string, IQueryable<ConfigurationDocument>>(
 				(context, documentName, instanceKey, user, paddedVersionString) =>
 				(from d in context.ConfigurationDocuments
-				 where d.InstanceKey == instanceKey && d.User == user && d.DocumentName == documentName
+				 where ((instanceKey == null && d.InstanceKey == null) || d.InstanceKey == instanceKey)
+				       && ((user == null && d.User == null) || d.User == user)
+				       && d.DocumentName == documentName
 				       && string.Compare(d.DocumentVersionString, paddedVersionString, StringComparison.InvariantCulture) < 0
 				 orderby d.DocumentVersionString descending
 				 select d
 				).Take(1));
 
-		private static readonly Func<ConfigurationDataContext, string, string, string, string, IQueryable<ConfigurationDocument>> _queryPriorVersion =
+		private static readonly Func<ConfigurationDataContext, string, string, string, string, IQueryable<ConfigurationDocument>> _queryCurrentVersion =
 			CompiledQuery.Compile<ConfigurationDataContext, string, string, string, string, IQueryable<ConfigurationDocument>>(
 				(context, documentName, instanceKey, user, paddedVersionString) =>
 				(from d in context.ConfigurationDocuments
-				 where d.InstanceKey == instanceKey && d.User == user && d.DocumentName == documentName
+				 where ((instanceKey == null && d.InstanceKey == null) || d.InstanceKey == instanceKey)
+				       && ((user == null && d.User == null) || d.User == user)
+				       && d.DocumentName == documentName
 				       && d.DocumentVersionString == paddedVersionString
 				 select d
 				).Take(1));
