@@ -249,12 +249,10 @@ namespace ClearCanvas.ImageServer.Services.ServiceLock.FilesystemReinventory
 						}
 
 					    string studyXml = location.GetStudyXmlPath();
-						if (File.Exists(studyXml))
-							FileUtils.Delete(studyXml);
+						FileUtils.Delete(studyXml);
 
                         string studyGZipXml = location.GetCompressedStudyXmlPath();
-                        if (File.Exists(studyGZipXml))
-                            FileUtils.Delete(studyGZipXml);
+                        FileUtils.Delete(studyGZipXml);
 
 
 						foreach (FileInfo sopFile in fileList)

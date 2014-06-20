@@ -97,8 +97,7 @@ namespace ClearCanvas.ImageServer.Services.Archiving.Hsm
 		/// </summary>
 		protected override void OnUndo()
 		{
-			if (File.Exists(_zipFile))
-				File.Delete(_zipFile);
+			File.Delete(_zipFile);
 		}
 	}
 }

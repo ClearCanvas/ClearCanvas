@@ -79,12 +79,10 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue
         	string seriesInstanceUid = _file.DataSet[DicomTags.SeriesInstanceUid].GetString(0, string.Empty);
         	string sopinstanceUid = _file.MediaStorageSopInstanceUid;
         	FileSize = 0;
-			if (File.Exists(_file.Filename))
-			{
-				var finfo = new FileInfo(_file.Filename);
 
+			var finfo = new FileInfo(_file.Filename);
+			if (finfo.Exists)
 				FileSize = finfo.Length;
-			}
 
 			// Save the collection for undo purposes
         	SeriesXml seriesXml = _stream[seriesInstanceUid];
@@ -121,18 +119,16 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue
         {
             _stream.RemoveFile(_file);
 
-			if (_saveCollection != null)
-			{
-				var file = new DicomFile(_file.Filename, new DicomAttributeCollection(), _saveCollection);
-				long fileSize = 0;
-				if (File.Exists(file.Filename))
-				{
-					var finfo = new FileInfo(file.Filename);
-					fileSize = finfo.Length;
-				}
-				_stream.AddFile(file, fileSize, _outputSettings);
-			}
-            WriteStudyStream(
+	        if (_saveCollection != null)
+	        {
+		        var file = new DicomFile(_file.Filename, new DicomAttributeCollection(), _saveCollection);
+		        long fileSize = 0;
+		        var finfo = new FileInfo(file.Filename);
+		        if (finfo.Exists)
+			        fileSize = finfo.Length;
+		        _stream.AddFile(file, fileSize, _outputSettings);
+	        }
+	        WriteStudyStream(
                 Path.Combine(_studyStorageLocation.GetStudyPath(), _studyStorageLocation.StudyInstanceUid + ".xml"),
 				Path.Combine(_studyStorageLocation.GetStudyPath(), _studyStorageLocation.StudyInstanceUid + ".xml.gz"),
                 _stream);
@@ -149,10 +145,8 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue
 			for (int i = 0; ; i++)
 				try
 				{
-					if (File.Exists(tmpStreamFile))
-						FileUtils.Delete(tmpStreamFile);
-					if (File.Exists(tmpGzStreamFile))
-						FileUtils.Delete(tmpGzStreamFile);
+					FileUtils.Delete(tmpStreamFile);
+					FileUtils.Delete(tmpGzStreamFile);
 
 					using (FileStream xmlStream = FileStreamOpener.OpenForSoleUpdate(tmpStreamFile, FileMode.CreateNew),
 									  gzipStream = FileStreamOpener.OpenForSoleUpdate(tmpGzStreamFile, FileMode.CreateNew))
@@ -162,11 +156,9 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue
 						gzipStream.Close();
 					}
 
-					if (File.Exists(streamFile))
-						FileUtils.Delete(streamFile);
+					FileUtils.Delete(streamFile);
 					File.Move(tmpStreamFile, streamFile);
-					if (File.Exists(gzStreamFile))
-						FileUtils.Delete(gzStreamFile);
+					FileUtils.Delete(gzStreamFile);
 					File.Move(tmpGzStreamFile, gzStreamFile);
 					return;
 				}

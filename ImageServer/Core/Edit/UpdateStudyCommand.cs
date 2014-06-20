@@ -549,11 +549,9 @@ namespace ClearCanvas.ImageServer.Core.Edit
 
 						// Add into the temporary study xml
 						long fileSize = 0;
-						if (File.Exists(file.Filename))
-						{
-							var finfo = new FileInfo(file.Filename);
+						var finfo = new FileInfo(file.Filename);
+						if (finfo.Exists)
 							fileSize = finfo.Length;
-						}
 						newStudyXml.AddFile(file, fileSize, outputSettings);
 
 
@@ -574,7 +572,7 @@ namespace ClearCanvas.ImageServer.Core.Edit
 					}
 					catch (Exception)
 					{
-						File.Delete(Path.Combine(_backupDir, instanceXml.SopInstanceUid) + ".bak"); //dont' need to restore this file
+						FileUtils.Delete(Path.Combine(_backupDir, instanceXml.SopInstanceUid) + ".bak"); //dont' need to restore this file
 						throw;
 					}
 				}

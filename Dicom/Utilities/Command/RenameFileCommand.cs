@@ -78,8 +78,8 @@ namespace ClearCanvas.Dicom.Utilities.Command
 		    catch (Exception)
 		    { }
 
-            if (File.Exists(_sourceFile))
-                FileUtils.Delete(_sourceFile);
+            // Will check for existance
+            FileUtils.Delete(_sourceFile);
             
 		    _sourceRenamed = true;
 		}
@@ -133,16 +133,25 @@ namespace ClearCanvas.Dicom.Utilities.Command
 
         #region IDisposable Members
 
-        public void Dispose()
-        {
-            if (File.Exists(_srcBackupFile))
-                File.Delete(_srcBackupFile); 
-            
-            if (File.Exists(_destBackupFile))
-                File.Delete(_destBackupFile);
+		public void Dispose()
+		{
+			try
+			{
+				FileUtils.Delete(_srcBackupFile);
+			}
+			catch (Exception)
+			{
+			}
 
-        }
+			try
+			{
+				FileUtils.Delete(_destBackupFile);
+			}
+			catch (Exception)
+			{
+			}
+		}
 
-        #endregion
+		#endregion
     }
 }
