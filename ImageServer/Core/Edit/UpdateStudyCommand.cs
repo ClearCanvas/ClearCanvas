@@ -466,6 +466,7 @@ namespace ClearCanvas.ImageServer.Core.Edit
 			var select = new OrderSelectCriteria();
 			select.ServerPartitionKey.EqualTo(_study.ServerPartitionKey);
 			select.AccessionNumber.EqualTo(_study.AccessionNumber);
+			select.PatientId.EqualTo(_study.PatientId);
 
 			var broker = UpdateContext.GetBroker<IOrderEntityBroker>();
 			return broker.FindOne(select);
