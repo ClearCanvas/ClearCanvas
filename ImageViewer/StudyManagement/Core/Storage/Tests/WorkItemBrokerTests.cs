@@ -133,7 +133,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement.Core.Storage.Tests
 		{
 			DeleteAllWorkItems();
 
-			var time = DateTime.Now;
+			var time = DateTime.Now.Truncate();
 			var pastTime = time.AddMinutes(-30);
 			var futureTime = time.AddMinutes(30);
 
@@ -200,7 +200,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement.Core.Storage.Tests
 		{
 			DeleteAllWorkItems();
 
-			var time = DateTime.Now;
+			var time = DateTime.Now.Truncate();
 			var pastTime = time.AddMinutes(-30);
 			var futureTime = time.AddMinutes(30);
 
@@ -265,7 +265,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement.Core.Storage.Tests
 		{
 			DeleteAllWorkItems();
 
-			var time = DateTime.Now;
+			var time = DateTime.Now.Truncate();
 			var pastTime = time.AddMinutes(-30);
 			var futureTime = time.AddMinutes(30);
 
@@ -331,7 +331,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement.Core.Storage.Tests
 		{
 			DeleteAllWorkItems();
 
-			var time = DateTime.Now;
+			var time = DateTime.Now.Truncate();
 			var pastTime = time.AddMinutes(-30);
 			var futureTime = time.AddMinutes(30);
 
@@ -407,7 +407,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement.Core.Storage.Tests
 		{
 			DeleteAllWorkItems();
 
-			var time = DateTime.Now;
+			var time = DateTime.Now.Truncate();
 			var pastTime = time.AddMinutes(-30);
 			var futureTime = time.AddMinutes(30);
 
@@ -491,7 +491,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement.Core.Storage.Tests
 		{
 			DeleteAllWorkItems();
 
-			var time = DateTime.Now;
+			var time = DateTime.Now.Truncate();
 			var pastTime = time.AddMinutes(-30);
 			var futureTime = time.AddMinutes(30);
 
@@ -602,7 +602,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement.Core.Storage.Tests
 		                                        string requestData = null,
 		                                        string progressData = null)
 		{
-			var requestedTimeValue = requestedTime.GetValueOrDefault(DateTime.Now);
+			var requestedTimeValue = requestedTime.GetValueOrDefault(DateTime.Now.Truncate());
 			var scheduledTimeValue = scheduledTime.GetValueOrDefault(requestedTimeValue);
 			var processTimeValue = processTime.GetValueOrDefault(scheduledTimeValue.AddSeconds(10));
 			var expirationTimeValue = expirationTime.GetValueOrDefault(processTimeValue.AddSeconds(10));
