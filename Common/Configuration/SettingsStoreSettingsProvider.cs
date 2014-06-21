@@ -238,32 +238,42 @@ namespace ClearCanvas.Common.Configuration
 
 		private Dictionary<string, string> GetPreviousSettingsValues(SettingsGroupDescriptor group, string user, string settingsKey)
 		{
-			group = _store.GetPreviousSettingsGroup(group);
-			if (group == null)
+			var allGroups = _store.ListSettingsGroups();
+			var lessEqualGroups = CollectionUtils.Select(allGroups, 
+				other => other.AssemblyQualifiedTypeName == group.AssemblyQualifiedTypeName && other.Version < group.Version);
+
+			// sort descending
+			lessEqualGroups.Sort((other1, other2) => other2.Version.CompareTo(other1.Version));
+			if (lessEqualGroups.Count == 0)
 				return null;
 
-		    Dictionary<string, string> userValues = null;
-            if (!String.IsNullOrEmpty(user))
-            {
-                userValues = _store.GetSettingsValues(group, user, settingsKey);
-                if (userValues == null || userValues.Count == 0)
-                    return null;
-            }
-
-			var values = new Dictionary<string, string>();
-			foreach (var binaryDefault in _store.ListSettingsProperties(group))
-				values[binaryDefault.Name] = binaryDefault.DefaultValue;
-
-			foreach (var userDefault in _store.GetSettingsValues(group, null, settingsKey))
-				values[userDefault.Key] = userDefault.Value;
-
-            if (userValues != null)
+			foreach (var g in lessEqualGroups)
 			{
-                foreach (var userValue in userValues)
-				values[userValue.Key] = userValue.Value;
-            }
-			
-			return values;
+				Dictionary<string, string> userValues = null;
+				if (!String.IsNullOrEmpty(user))
+				{
+					userValues = _store.GetSettingsValues(g, user, settingsKey);
+					if (userValues == null || userValues.Count == 0)
+						continue;
+				}
+
+				var values = new Dictionary<string, string>();
+				foreach (var binaryDefault in _store.ListSettingsProperties(group))
+					values[binaryDefault.Name] = binaryDefault.DefaultValue;
+
+				foreach (var userDefault in _store.GetSettingsValues(group, null, settingsKey))
+					values[userDefault.Key] = userDefault.Value;
+
+				if (userValues != null)
+				{
+					foreach (var userValue in userValues)
+						values[userValue.Key] = userValue.Value;
+				}
+
+				return values;
+			}
+
+			return null;
 		}
 
         private SettingsPropertyValueCollection GetSharedPropertyValues(SettingsGroupDescriptor group, string settingsKey, SettingsPropertyCollection properties)
