@@ -316,7 +316,7 @@ namespace ClearCanvas.ImageViewer.Imaging
 		/// </remarks>
 		public override string GetKey()
 		{
-			return String.Format("{0}:{1}", _dataLut.GetKey(), _linearLut.GetKey());
+			return String.Format("{0}:{1}", ((IComposableLut)_dataLut).GetKey(), ((IComposableLut)_linearLut).GetKey());
 		}
 
 		/// <summary>

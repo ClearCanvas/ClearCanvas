@@ -237,9 +237,10 @@ namespace ClearCanvas.ImageViewer.Rendering
 
 		private static int[] ConstructFinalLut(IComposedLut outputLut, IColorMap colorMap, bool invert)
 		{
+#if DEBUG
 			CodeClock clock = new CodeClock();
 			clock.Start();
-
+#endif
 			colorMap.MinInputValue = outputLut.MinOutputValue;
 			colorMap.MaxInputValue = outputLut.MaxOutputValue;
 
@@ -272,17 +273,19 @@ namespace ClearCanvas.ImageViewer.Rendering
 				}
 			}
 
+#if DEBUG
 			clock.Stop();
 			PerformanceReportBroker.PublishReport("ImageRenderer", "ConstructFinalLut", clock.Seconds);
-
+#endif
 			return _finalLutBuffer;
 		}
 
 		private static int[] ConstructFinalLut(IComposedLut outputLut, bool invert)
 		{
+#if DEBUG
 			CodeClock clock = new CodeClock();
 			clock.Start();
-
+#endif
 			int[] outputLutData = outputLut.Data;
 
 			if (_finalLutBuffer == null || _finalLutBuffer.Length != outputLutData.Length)
@@ -310,9 +313,10 @@ namespace ClearCanvas.ImageViewer.Rendering
 				}
 			}
 
+#if DEBUG
 			clock.Stop();
 			PerformanceReportBroker.PublishReport("ImageRenderer", "ConstructFinalLut", clock.Seconds);
-
+#endif
 			return _finalLutBuffer;
 		}
 	}

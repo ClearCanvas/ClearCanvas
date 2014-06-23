@@ -104,14 +104,16 @@ namespace ClearCanvas.ImageViewer.Rendering.GDI
 		/// </summary>
 		protected override void Render()
 		{
+#if DEBUG
 			CodeClock clock = new CodeClock();
 			clock.Start();
-
+#endif
 			Surface.FinalBuffer.Graphics.Clear(Color.Black);
 			base.Render();
-
+#if DEBUG
 			clock.Stop();
 			PerformanceReportBroker.PublishReport("GDIRenderer", "Render", clock.Seconds);
+#endif
 		}
 
 		/// <summary>

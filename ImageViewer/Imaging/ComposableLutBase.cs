@@ -43,9 +43,10 @@ namespace ClearCanvas.ImageViewer.Imaging
 	[Cloneable(true)]
 	public abstract class ComposableLutBase : IComposableLut
 	{
-		#region Private Fields
+	    #region Private Fields
 
-		private event EventHandler _lutChanged;
+        private string _key;
+        private event EventHandler _lutChanged;
 
 		#endregion
 
@@ -68,6 +69,7 @@ namespace ClearCanvas.ImageViewer.Imaging
 		/// </remarks>
 		protected virtual void OnLutChanged()
 		{
+		    _key = null;
 			EventsHelper.Fire(_lutChanged, this, EventArgs.Empty);
 		}
 
@@ -163,6 +165,14 @@ namespace ClearCanvas.ImageViewer.Imaging
 		/// dependent upon the actual image to which it belongs.
 		/// </remarks>
 		public abstract string GetKey();
+
+	    string IComposableLut.GetKey()
+	    {
+            if (String.IsNullOrWhiteSpace(_key))
+	            _key = GetKey();
+	        
+            return _key;
+	    }
 
 		/// <summary>
 		/// Gets an abbreviated description of the lookup table.

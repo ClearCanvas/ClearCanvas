@@ -487,9 +487,10 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		/// </summary>
 		protected static byte[] ToArgb(IDicomAttributeProvider dicomAttributeProvider, byte[] pixelData, PhotometricInterpretation photometricInterpretation)
 		{
+#if DEBUG
 			CodeClock clock = new CodeClock();
 			clock.Start();
-
+#endif
 			int rows = dicomAttributeProvider[DicomTags.Rows].GetInt32(0, 0);
 			int columns = dicomAttributeProvider[DicomTags.Columns].GetInt32(0, 0);
 			int sizeInBytes = rows*columns*4;
@@ -521,9 +522,10 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 					argbPixelData);
 			}
 
+#if DEBUG
 			clock.Stop();
 			PerformanceReportBroker.PublishReport("DicomMessageSopDataSource", "ToArgb", clock.Seconds);
-
+#endif
 			return argbPixelData;
 		}
 
