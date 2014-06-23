@@ -22,83 +22,87 @@
 
 #endregion
 
+using System;
+using System.Data.Linq;
 using System.Linq;
 using ClearCanvas.Common.Configuration;
 
 namespace ClearCanvas.ImageViewer.StudyManagement.Core.Configuration
 {
-    /// <summary>
-    /// Internal configuration document broker.
-    /// </summary>
-    internal class ConfigurationDocumentBroker : Broker
-    {
-        internal ConfigurationDocumentBroker(ConfigurationDataContext context)
-            : base(context)
-        {
-        }
+	/// <summary>
+	/// Internal configuration document broker.
+	/// </summary>
+	internal class ConfigurationDocumentBroker : Broker
+	{
+		internal ConfigurationDocumentBroker(ConfigurationDataContext context)
+			: base(context) {}
 
-        /// <summary>
-        /// Get the specified ConfigurationDocument or null if not found
-        /// </summary>
-        /// <param name="documentKey"></param>
-        /// <returns></returns>
-        public ConfigurationDocument GetConfigurationDocument(ConfigurationDocumentKey documentKey)
-        {
-            return GetConfigurationDocument(documentKey, false);
-        }
+		/// <summary>
+		/// Get the specified ConfigurationDocument or null if not found
+		/// </summary>
+		/// <param name="documentKey"></param>
+		/// <returns></returns>
+		public ConfigurationDocument GetConfigurationDocument(ConfigurationDocumentKey documentKey)
+		{
+			return GetConfigurationDocument(documentKey, false);
+		}
 
-        /// <summary>
-        /// Get the specified ConfigurationDocument or null if not found
-        /// </summary>
-        /// <param name="documentKey"></param>
-        /// <returns></returns>
-        public ConfigurationDocument GetPriorConfigurationDocument(ConfigurationDocumentKey documentKey)
-        {
-            return GetConfigurationDocument(documentKey, true);
-        }
+		/// <summary>
+		/// Get the specified ConfigurationDocument or null if not found
+		/// </summary>
+		/// <param name="documentKey"></param>
+		/// <returns></returns>
+		public ConfigurationDocument GetPriorConfigurationDocument(ConfigurationDocumentKey documentKey)
+		{
+			return GetConfigurationDocument(documentKey, true);
+		}
 
-        private ConfigurationDocument GetConfigurationDocument(ConfigurationDocumentKey documentKey, bool prior)
-        {
-            IQueryable<ConfigurationDocument> query = from d in Context.ConfigurationDocuments select d;
+		private static readonly Func<ConfigurationDataContext, string, string, string, string, IQueryable<ConfigurationDocument>> _queryPriorVersion =
+			CompiledQuery.Compile<ConfigurationDataContext, string, string, string, string, IQueryable<ConfigurationDocument>>(
+				(context, documentName, instanceKey, user, paddedVersionString) =>
+				(from d in context.ConfigurationDocuments
+				 where ((instanceKey == null && d.InstanceKey == null) || d.InstanceKey == instanceKey)
+				       && ((user == null && d.User == null) || d.User == user)
+				       && d.DocumentName == documentName
+				       && string.Compare(d.DocumentVersionString, paddedVersionString, StringComparison.InvariantCulture) < 0
+				 orderby d.DocumentVersionString descending
+				 select d
+				).Take(1));
 
-            query = !string.IsNullOrEmpty(documentKey.InstanceKey) 
-                ? query.Where(d => d.InstanceKey == documentKey.InstanceKey)
-                : query.Where(d => d.InstanceKey == null);
+		private static readonly Func<ConfigurationDataContext, string, string, string, string, IQueryable<ConfigurationDocument>> _queryCurrentVersion =
+			CompiledQuery.Compile<ConfigurationDataContext, string, string, string, string, IQueryable<ConfigurationDocument>>(
+				(context, documentName, instanceKey, user, paddedVersionString) =>
+				(from d in context.ConfigurationDocuments
+				 where ((instanceKey == null && d.InstanceKey == null) || d.InstanceKey == instanceKey)
+				       && ((user == null && d.User == null) || d.User == user)
+				       && d.DocumentName == documentName
+				       && d.DocumentVersionString == paddedVersionString
+				 select d
+				).Take(1));
 
-            query = !string.IsNullOrEmpty(documentKey.User) 
-                ? query.Where(d => d.User == documentKey.User) 
-                : query.Where(d => d.User == null);
+		private ConfigurationDocument GetConfigurationDocument(ConfigurationDocumentKey documentKey, bool prior)
+		{
+			var query = prior ? _queryPriorVersion : _queryCurrentVersion;
 
-            query = query.Where(d => d.DocumentName == documentKey.DocumentName);
+			return query(Context,
+			             documentKey.DocumentName,
+			             !string.IsNullOrEmpty(documentKey.InstanceKey) ? documentKey.InstanceKey : null,
+			             !string.IsNullOrEmpty(documentKey.User) ? documentKey.User : null,
+			             VersionUtils.ToPaddedVersionString(documentKey.Version, false, false)).FirstOrDefault();
+		}
 
-            var paddedVersionString = VersionUtils.ToPaddedVersionString(documentKey.Version, false, false);
+		/// <summary>
+		/// Insert a ConfigurationDocument
+		/// </summary>
+		/// <param name="entity"></param>
+		public void AddConfigurationDocument(ConfigurationDocument entity)
+		{
+			Context.ConfigurationDocuments.InsertOnSubmit(entity);
+		}
 
-            if (prior)
-            {
-                query = query.Where(d => d.DocumentVersionString.CompareTo(paddedVersionString) < 0);
-                //You want the most recent prior version.
-                query = query.OrderByDescending(d => d.DocumentVersionString);
-            }
-            else
-            {
-                query = query.Where(d => d.DocumentVersionString == paddedVersionString);
-            }
-
-            return query.FirstOrDefault();
-        }
-
-        /// <summary>
-        /// Insert a ConfigurationDocument
-        /// </summary>
-        /// <param name="entity"></param>
-        public void AddConfigurationDocument(ConfigurationDocument entity)
-        {
-            Context.ConfigurationDocuments.InsertOnSubmit(entity);
-        }
-
-        internal void DeleteAllDocuments()
-        {
-            Context.ConfigurationDocuments.DeleteAllOnSubmit(Context.ConfigurationDocuments);
-        }
-    }
+		internal void DeleteAllDocuments()
+		{
+			Context.ConfigurationDocuments.DeleteAllOnSubmit(Context.ConfigurationDocuments);
+		}
+	}
 }

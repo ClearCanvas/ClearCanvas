@@ -66,8 +66,7 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.DeleteStudy.Extensions
             if (File.Exists(_dest))
             {
                 _destBackup = _dest + ".bak";
-                if (File.Exists(_destBackup))
-                    FileUtils.Delete(_destBackup);
+                FileUtils.Delete(_destBackup);
 
                 FileUtils.Copy(_dest, _destBackup, true);
             }
@@ -75,10 +74,7 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.DeleteStudy.Extensions
 
         protected override void OnUndo()
         {
-            if (File.Exists(_dest))
-            {
-				FileUtils.Delete(_dest);
-            }
+			FileUtils.Delete(_dest);
 
             // restore backup
             if (File.Exists(_destBackup))

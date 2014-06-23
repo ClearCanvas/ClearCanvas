@@ -45,7 +45,6 @@ namespace ClearCanvas.ImageServer.Model
             ,OrderStatusEnum _orderStatusEnum_
             ,DateTime _insertTime_
             ,DateTime _updatedTime_
-            ,ServerEntityKey _patientKey_
             ,String _accessionNumber_
             ,DateTime _scheduledDateTime_
             ,ServerEntityKey _requestedProcedureCodeKey_
@@ -58,13 +57,15 @@ namespace ClearCanvas.ImageServer.Model
             ,String _studyInstanceUid_
             ,ServerEntityKey _enteredByStaffKey_
             ,ServerEntityKey _referringStaffKey_
+            ,String _patientsName_
+            ,String _patientId_
+            ,String _issuerOfPatientId_
             ):base("Order")
         {
             ServerPartitionKey = _serverPartitionKey_;
             OrderStatusEnum = _orderStatusEnum_;
             InsertTime = _insertTime_;
             UpdatedTime = _updatedTime_;
-            PatientKey = _patientKey_;
             AccessionNumber = _accessionNumber_;
             ScheduledDateTime = _scheduledDateTime_;
             RequestedProcedureCodeKey = _requestedProcedureCodeKey_;
@@ -77,6 +78,9 @@ namespace ClearCanvas.ImageServer.Model
             StudyInstanceUid = _studyInstanceUid_;
             EnteredByStaffKey = _enteredByStaffKey_;
             ReferringStaffKey = _referringStaffKey_;
+            PatientsName = _patientsName_;
+            PatientId = _patientId_;
+            IssuerOfPatientId = _issuerOfPatientId_;
         }
         #endregion
 
@@ -92,9 +96,6 @@ namespace ClearCanvas.ImageServer.Model
         { get; set; }
         [EntityFieldDatabaseMappingAttribute(TableName="Order", ColumnName="UpdatedTime")]
         public DateTime UpdatedTime
-        { get; set; }
-        [EntityFieldDatabaseMappingAttribute(TableName="Order", ColumnName="PatientGUID")]
-        public ServerEntityKey PatientKey
         { get; set; }
         [DicomField(DicomTags.AccessionNumber, DefaultValue = DicomFieldDefault.Null)]
         [EntityFieldDatabaseMappingAttribute(TableName="Order", ColumnName="AccessionNumber")]
@@ -135,6 +136,18 @@ namespace ClearCanvas.ImageServer.Model
         [EntityFieldDatabaseMappingAttribute(TableName="Order", ColumnName="ReferringStaffGUID")]
         public ServerEntityKey ReferringStaffKey
         { get; set; }
+        [DicomField(DicomTags.PatientsName, DefaultValue = DicomFieldDefault.Null)]
+        [EntityFieldDatabaseMappingAttribute(TableName="Order", ColumnName="PatientsName")]
+        public String PatientsName
+        { get; set; }
+        [DicomField(DicomTags.PatientId, DefaultValue = DicomFieldDefault.Null)]
+        [EntityFieldDatabaseMappingAttribute(TableName="Order", ColumnName="PatientId")]
+        public String PatientId
+        { get; set; }
+        [DicomField(DicomTags.IssuerOfPatientId, DefaultValue = DicomFieldDefault.Null)]
+        [EntityFieldDatabaseMappingAttribute(TableName="Order", ColumnName="IssuerOfPatientId")]
+        public String IssuerOfPatientId
+        { get; set; }
         #endregion
 
         #region Static Methods
@@ -168,7 +181,6 @@ namespace ClearCanvas.ImageServer.Model
             updateColumns.OrderStatusEnum = entity.OrderStatusEnum;
             updateColumns.InsertTime = entity.InsertTime;
             updateColumns.UpdatedTime = entity.UpdatedTime;
-            updateColumns.PatientKey = entity.PatientKey;
             updateColumns.AccessionNumber = entity.AccessionNumber;
             updateColumns.ScheduledDateTime = entity.ScheduledDateTime;
             updateColumns.RequestedProcedureCodeKey = entity.RequestedProcedureCodeKey;
@@ -181,6 +193,9 @@ namespace ClearCanvas.ImageServer.Model
             updateColumns.StudyInstanceUid = entity.StudyInstanceUid;
             updateColumns.EnteredByStaffKey = entity.EnteredByStaffKey;
             updateColumns.ReferringStaffKey = entity.ReferringStaffKey;
+            updateColumns.PatientsName = entity.PatientsName;
+            updateColumns.PatientId = entity.PatientId;
+            updateColumns.IssuerOfPatientId = entity.IssuerOfPatientId;
             Order newEntity = broker.Insert(updateColumns);
             return newEntity;
         }

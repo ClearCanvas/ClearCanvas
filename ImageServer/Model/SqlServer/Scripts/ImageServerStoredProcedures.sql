@@ -2084,7 +2084,6 @@ BEGIN
 	declare @NumberOfStudyRelatedSeries int
 	declare @NumberOfStudyRelatedInstances int
 	declare @NumberOfPatientRelatedStudies int
-	declare @NumberOfPatientRelatedOrders int
 
 	-- Select key values
 	SELECT @StudyInstanceUid = StudyInstanceUid FROM StudyStorage WHERE GUID = @StudyStorageGUID
@@ -2165,11 +2164,7 @@ BEGIN
 	FROM Patient
 	WHERE GUID = @PatientGUID
 
-	SELECT @NumberOfPatientRelatedOrders = count(*) 
-	FROM [Order]
-	WHERE PatientGUID = @PatientGUID
-
-	if @NumberOfPatientRelatedStudies = 0 AND @NumberOfPatientRelatedOrders = 0
+	if @NumberOfPatientRelatedStudies = 0 
 	BEGIN
 		DELETE FROM Patient
 		WHERE GUID = @PatientGUID
@@ -2347,7 +2342,8 @@ CREATE PROCEDURE [dbo].[InsertInstance]
 	@PatientsAge varchar(4) = null,
 	@ResponsiblePerson nvarchar(64) = null,
 	@ResponsibleOrganization nvarchar(64) = null,
-	@QueryXml xml = null
+	@QueryXml xml = null,
+	@OrderGUID uniqueidentifier = null
 AS
 BEGIN
 	-- SET NOCOUNT ON added to prevent extra result sets from
@@ -2360,10 +2356,13 @@ BEGIN
 	declare @InsertPatient bit
 	declare @InsertStudy bit
 	declare @InsertSeries bit
+	declare @QCStatusNA smallint
 
 	set @InsertPatient = 0
 	set @InsertStudy = 0
 	set @InsertSeries = 0
+
+	select @QCStatusNA = Enum from QCStatusEnum where Lookup=''NA''
 
 	BEGIN TRANSACTION
 
@@ -2418,12 +2417,12 @@ BEGIN
 				StudyInstanceUid, PatientsName, PatientId, IssuerOfPatientId, PatientsBirthDate, PatientsAge,
 				PatientsSex, StudyDate, StudyTime, AccessionNumber, StudyId,
 				StudyDescription, ReferringPhysiciansName, NumberOfStudyRelatedSeries,
-				NumberOfStudyRelatedInstances,SpecificCharacterSet, ResponsiblePerson, ResponsibleOrganization, QueryXml)
+				NumberOfStudyRelatedInstances,SpecificCharacterSet, ResponsiblePerson, ResponsibleOrganization, QueryXml, QCStatusEnum, OrderGUID)
 		VALUES
 				(@StudyGUID, @ServerPartitionGUID, @StudyStorageGUID, @PatientGUID, 
 				@StudyInstanceUid, @PatientsName, @PatientId, @IssuerOfPatientId, @PatientsBirthDate, @PatientsAge,
 				@PatientsSex, @StudyDate, @StudyTime, @AccessionNumber, @StudyId,
-				@StudyDescription, @ReferringPhysiciansName, 0, 1,@SpecificCharacterSet, @ResponsiblePerson, @ResponsibleOrganization, @QueryXml)
+				@StudyDescription, @ReferringPhysiciansName, 0, 1,@SpecificCharacterSet, @ResponsiblePerson, @ResponsibleOrganization, @QueryXml, @QCStatusNA, @OrderGUID)
 
 		UPDATE dbo.ServerPartition SET StudyCount=StudyCount+1
 		WHERE GUID=@ServerPartitionGUID
@@ -2442,7 +2441,8 @@ BEGIN
 
 		-- Update Study, Patient TablesNext, the Study Table
 		UPDATE Study 
-		SET NumberOfStudyRelatedInstances = NumberOfStudyRelatedInstances + 1
+		SET NumberOfStudyRelatedInstances = NumberOfStudyRelatedInstances + 1,
+		OrderGUID = @OrderGUID
 		WHERE GUID = @StudyGUID
 
 	END
@@ -4029,18 +4029,13 @@ BEGIN
 
 	
 	DECLARE @StudyCount int
-	DECLARE @NumberOfStudyRelatedOrders int
 
 	SELECT @StudyCount =NumberOfPatientRelatedStudies
 	FROM Patient WHERE GUID=@CurrentPatientGUID
 
-	SELECT @NumberOfStudyRelatedOrders = count(*)
-	FROM [Order] WHERE PatientGUID=@CurrentPatientGUID
-
 	PRINT @StudyCount
-	PRINT @NumberOfStudyRelatedOrders
 
-	IF @StudyCount<=1 AND @NumberOfStudyRelatedOrders = 0
+	IF @StudyCount<=1
 	BEGIN
 		DELETE Patient WHERE GUID=@CurrentPatientGUID
 	END
@@ -4087,7 +4082,6 @@ BEGIN
 	DECLARE @CurrentPatientGUID uniqueidentifier
 	DECLARE @StudyInstanceUid varchar(64)
 	DECLARE @NumStudiesOwnedByCurrentPatient int
-	DECLARE @NumOrdersOwnedByCurrentPatient int
 	DECLARE @NumSeries int
 	DECLARE @NumInstances int
 
@@ -4130,13 +4124,12 @@ BEGIN
 	WHERE GUID=@CurrentPatientGUID
 
 
-	SELECT @NumOrdersOwnedByCurrentPatient=count(*) FROM [Order] WHERE PatientGUID=@CurrentPatientGUID
 	SELECT @NumStudiesOwnedByCurrentPatient=NumberOfPatientRelatedStudies FROM Patient WHERE GUID=@CurrentPatientGUID
 
 	-- CR (Jan 2014): Although unlikely, an error may be thrown here if another process somehow inserted a study for this patient but hasn''t updated the count.
 	-- Instead of relying on the count, it is safer to delete the Patient record only if it is not being referenced in the Study table:
 	--    DELETE Patient WHERE GUID =@CurrentPatientGUID and NOT EXISTS(SELECT COUNT(*) FROM Study WITH (NOLOCK) WHERE Study.PatientGUID = Patient.GUID )		
-	IF @NumStudiesOwnedByCurrentPatient<=0 AND @NumOrdersOwnedByCurrentPatient = 0
+	IF @NumStudiesOwnedByCurrentPatient<=0 
 	BEGIN
 		DELETE Patient WHERE GUID = @CurrentPatientGUID
 	END
@@ -4329,7 +4322,7 @@ BEGIN
 	UPDATE Patient SET 	NumberOfPatientRelatedInstances=NumberOfPatientRelatedInstances-@NumInstances WHERE GUID=@PatientGUID
 	UPDATE Patient SET 	NumberOfPatientRelatedSeries=NumberOfPatientRelatedSeries-@NumSeries WHERE GUID=@PatientGUID
 	UPDATE Patient SET 	NumberOfPatientRelatedStudies=NumberOfPatientRelatedStudies-1 WHERE GUID=@PatientGUID
-	DELETE Patient WHERE GUID=@PatientGUID AND NumberOfPatientRelatedStudies=0 AND NOT EXISTS (SELECT GUID FROM [Order] where PatientGUID=@PatientGUID)
+	DELETE Patient WHERE GUID=@PatientGUID AND NOT EXISTS (SELECT GUID FROM [Study] where PatientGUID=@PatientGUID)
 
 
 	UPDATE ServerPartition SET StudyCount=StudyCount-1 WHERE GUID=@ServerPartitionGUID	
@@ -4772,9 +4765,10 @@ EXEC dbo.sp_executesql @statement = N'
 -- Create date: 2014-06-05
 -- Description:	Query QC Statistics
 -- =============================================
-CREATE PROCEDURE QueryQCStatistics
+ALTER PROCEDURE QueryQCStatistics
 	@StartTime datetime,
-	@EndTime datetime
+	@EndTime datetime,
+	@PartitionAE varchar(16) = NULL
 AS
 BEGIN
 	-- SET NOCOUNT ON added to prevent extra result sets from
@@ -4794,6 +4788,7 @@ BEGIN
 	Declare @QCStatusPassed smallint
 	Declare @QCStatusFailed smallint
 	Declare @QCStatusIncomplete smallint
+	Declare @PartitionGUID uniqueidentifier
 
 
 	SELECT @OrderStatusCancelled=Enum FROM [dbo].[OrderStatusEnum] WHERE Lookup=''Canceled''
@@ -4803,22 +4798,50 @@ BEGIN
 	SELECT @QCStatusFailed=Enum FROM [dbo].[QCStatusEnum] WHERE Lookup=''Failed''
 	SELECT @QCStatusIncomplete=Enum FROM [dbo].[QCStatusEnum] WHERE Lookup=''Incomplete''
 
-	SELECT 
-		@CheckingCount=SUM(case when [QCStatusEnum] = @QCStatusChecking then 1 else 0 end),
-		@NotApplicableCount=SUM(case when [QCStatusEnum] =@QCStatusNA OR [QCStatusEnum] IS NULL then 1 else 0 end),
-		@PassedCount=SUM(case when [QCStatusEnum] = @QCStatusPassed then 1 else 0 end),
-		@FailedCount=SUM(case when [QCStatusEnum] = @QCStatusFailed then 1 else 0 end),
-		@IncompleteCount=SUM(case when [QCStatusEnum] = @QCStatusIncomplete then 1 else 0 end)
-		FROM  [dbo].[Study] s WITH (NOLOCK)
-		JOIN [dbo].[StudyStorage] ss ON ss.[GUID] = s.[StudyStorageGUID]
-		WHERE ss.[InsertTime] >= @StartTime and ss.[InsertTime]<=@EndTime
+	IF @PartitionAE IS NULL or @PartitionAE=''
+	BEGIN
+		SELECT 
+			@CheckingCount=SUM(case when [QCStatusEnum] = @QCStatusChecking then 1 else 0 end),
+			@NotApplicableCount=SUM(case when [QCStatusEnum] =@QCStatusNA OR [QCStatusEnum] IS NULL then 1 else 0 end),
+			@PassedCount=SUM(case when [QCStatusEnum] = @QCStatusPassed then 1 else 0 end),
+			@FailedCount=SUM(case when [QCStatusEnum] = @QCStatusFailed then 1 else 0 end),
+			@IncompleteCount=SUM(case when [QCStatusEnum] = @QCStatusIncomplete then 1 else 0 end)
+			FROM  [dbo].[Study] s WITH (NOLOCK)
+			JOIN [dbo].[StudyStorage] ss ON ss.[GUID] = s.[StudyStorageGUID]
+			WHERE ss.[InsertTime] >= @StartTime and ss.[InsertTime]<=@EndTime
 
-	-- Find orders that are SCHEDULED within this window
-	SELECT @OrdersForQC = COUNT(*) 
-	FROM [dbo].[Order] WITH(NOLOCK)
-	WHERE [OrderStatusEnum]<>@OrderStatusCancelled
-		AND [ScheduledDateTime] >= @StartTime AND [ScheduledDateTime]<=@EndTime
+		-- Find orders that are SCHEDULED within this window
+		SELECT @OrdersForQC = COUNT(*) 
+		FROM [dbo].[Order] WITH(NOLOCK)
+		WHERE [OrderStatusEnum]<>@OrderStatusCancelled
+			AND [ScheduledDateTime] >= @StartTime AND [ScheduledDateTime]<=@EndTime
 
+	END
+	ELSE
+	BEGIN
+		SELECT @PartitionGUID=GUID from [dbo].[ServerPartition] WHERE AeTitle=@PartitionAE COLLATE Latin1_General_CS_AS  /* case-sensitive */
+
+		SELECT 
+			@CheckingCount=SUM(case when [QCStatusEnum] = @QCStatusChecking then 1 else 0 end),
+			@NotApplicableCount=SUM(case when [QCStatusEnum] =@QCStatusNA OR [QCStatusEnum] IS NULL then 1 else 0 end),
+			@PassedCount=SUM(case when [QCStatusEnum] = @QCStatusPassed then 1 else 0 end),
+			@FailedCount=SUM(case when [QCStatusEnum] = @QCStatusFailed then 1 else 0 end),
+			@IncompleteCount=SUM(case when [QCStatusEnum] = @QCStatusIncomplete then 1 else 0 end)
+			FROM  [dbo].[Study] s WITH (NOLOCK)
+			JOIN [dbo].[StudyStorage] ss ON ss.[GUID] = s.[StudyStorageGUID]
+			WHERE ss.[InsertTime] >= @StartTime and ss.[InsertTime]<=@EndTime
+				AND ss.[ServerPartitionGUID]=@PartitionGUID
+
+		-- Find orders that are SCHEDULED within this window
+		SELECT @OrdersForQC = COUNT(*) 
+		FROM [dbo].[Order] WITH(NOLOCK)
+		WHERE [OrderStatusEnum]<>@OrderStatusCancelled
+			AND [ScheduledDateTime] >= @StartTime AND [ScheduledDateTime]<=@EndTime
+			AND [ServerPartitionGUID]=@PartitionGUID
+
+	END
+
+	
 
 	SET NOCOUNT OFF;
 
@@ -4830,7 +4853,7 @@ BEGIN
 		   @OrdersForQC as OrdersForQC
 
 END
-GO'
+'
 END
 GO
 

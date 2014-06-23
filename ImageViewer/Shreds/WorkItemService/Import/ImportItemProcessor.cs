@@ -25,6 +25,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Dicom;
@@ -37,243 +38,238 @@ using ClearCanvas.ImageViewer.StudyManagement.Core.WorkItemProcessor;
 
 namespace ClearCanvas.ImageViewer.Shreds.WorkItemService.Import
 {
-    /// <summary>
-    /// Processor for import of files.
-    /// </summary>
-    internal class ImportItemProcessor : BaseItemProcessor<ImportFilesRequest, ImportFilesProgress>
-    {
-        #region Public Methods
+	/// <summary>
+	/// Processor for import of files.
+	/// </summary>
+	internal class ImportItemProcessor : BaseItemProcessor<ImportFilesRequest, ImportFilesProgress>
+	{
+		private readonly object _syncLock = new object();
+		private IWorkItemActivityMonitorService _workItemActivityMonitorService;
 
-        public override bool Initialize(WorkItemStatusProxy proxy)
-        {
-            bool initResult = base.Initialize(proxy);
+		private IWorkItemActivityMonitorService WorkItemActivityMonitorService
+		{
+			get
+			{
+				if (_workItemActivityMonitorService != null) return _workItemActivityMonitorService;
+				lock (_syncLock)
+				{
+					if (_workItemActivityMonitorService != null) return _workItemActivityMonitorService;
+					return _workItemActivityMonitorService = Platform.GetService<IWorkItemActivityMonitorService>();
+				}
+			}
+		}
 
-            return initResult;
-        }
+		#region Public Methods
 
-        public override void Process()
-        {
-            Progress.TotalFilesToImport = 0;
-            Progress.NumberOfFilesImported = 0;
-            Progress.NumberOfImportFailures = 0;
-            Progress.PathsImported = 0;
-            Progress.PathsToImport = 0;
-            Progress.CompletedEnumeration = null;
+		public override bool Initialize(WorkItemStatusProxy proxy)
+		{
+			bool initResult = base.Initialize(proxy);
 
-            Progress.StatusDetails = Request.FilePaths.Count > 1
-                                       ? String.Format(SR.FormatMultipleFilesDescription, Request.FilePaths[0])
-                                       : Request.FilePaths[0];
-            Proxy.UpdateProgress();
+			return initResult;
+		}
 
-            if (CancelPending)
-            {
-                Proxy.Cancel();
-                return;
-            }
-            if (StopPending)
-            {
-                Proxy.Postpone();
-                return;
-            }
+		public override void Dispose()
+		{
+			var disposableService = _workItemActivityMonitorService as IDisposable;
+			if (disposableService != null) disposableService.Dispose();
 
-            bool fatalError = false;
+			base.Dispose();
+		}
 
-            //it's ok to read this property unsynchronized because this is the only thread that is adding to the queue for the particular job.
-            if (Request.FilePaths.Count == 0)
-            {
-                Progress.StatusDetails = SR.MessageNoFilesToImport;
-                Progress.IsCancelable = false;
-            }
-            else
-            {
-                using (UserIdentityCache.Get(Proxy.Item.Oid).Impersonate())
-                {
-                    string failureReason;
-                    if (!ValidateRequest(Request, out failureReason))
-                    {
-                        Proxy.Fail(failureReason, WorkItemFailureType.Fatal);
-                        return;
-                    }
+		public override void Process()
+		{
+			Progress.TotalFilesToImport = 0;
+			Progress.NumberOfFilesImported = 0;
+			Progress.NumberOfImportFailures = 0;
+			Progress.PathsImported = 0;
+			Progress.PathsToImport = 0;
+			Progress.CompletedEnumeration = null;
 
-                    fatalError = ImportFiles(Request.FilePaths, Request.FileExtensions, Request.Recursive);
-                }
+			Progress.StatusDetails = Request.FilePaths.Count > 1
+			                         	? String.Format(SR.FormatMultipleFilesDescription, Request.FilePaths[0])
+			                         	: Request.FilePaths[0];
+			Proxy.UpdateProgress();
 
-                GC.Collect();
-            }
+			if (CancelPending)
+			{
+				Proxy.Cancel();
+				return;
+			}
+			if (StopPending)
+			{
+				Proxy.Postpone();
+				return;
+			}
 
-            if (CancelPending)
-                Proxy.Cancel();
-            else if (StopPending)
-                Proxy.Postpone();
-            else if (fatalError || Progress.NumberOfImportFailures > 0)
-                Proxy.Fail(string.Format(SR.ImportFailedPartialStudies, Progress.StatusDetails), WorkItemFailureType.Fatal);
-            else
-                Proxy.Complete();
-        }
+			bool fatalError = false;
 
-        #endregion
+			//it's ok to read this property unsynchronized because this is the only thread that is adding to the queue for the particular job.
+			if (Request.FilePaths.Count == 0)
+			{
+				Progress.StatusDetails = SR.MessageNoFilesToImport;
+				Progress.IsCancelable = false;
+			}
+			else
+			{
+				using (UserIdentityCache.Get(Proxy.Item.Oid).Impersonate())
+				{
+					string failureReason;
+					if (!ValidateRequest(Request, out failureReason))
+					{
+						Proxy.Fail(failureReason, WorkItemFailureType.Fatal);
+						return;
+					}
 
-        #region Private Methods
+					fatalError = ImportFiles(Request.FilePaths, Request.FileExtensions, Request.Recursive);
+				}
 
-        private bool ValidateRequest(ImportFilesRequest filesRequest, out string reason)
-        {
-            reason = string.Empty;
+				GC.Collect();
+			}
 
-            if (filesRequest == null)
-            {
-                reason = SR.ExceptionNoFilesHaveBeenSpecifiedToImport;
-                return false;
-            }
+			if (CancelPending)
+				Proxy.Cancel();
+			else if (StopPending)
+				Proxy.Postpone();
+			else if (fatalError || Progress.NumberOfImportFailures > 0)
+				Proxy.Fail(string.Format(SR.ImportFailedPartialStudies, Progress.StatusDetails), WorkItemFailureType.Fatal);
+			else
+				Proxy.Complete();
+		}
 
-            if (filesRequest.FilePaths == null)
-            {
-                reason = SR.ExceptionNoFilesHaveBeenSpecifiedToImport;                
-                return false;
-            }
+		#endregion
 
-            int paths = 0;
+		#region Private Methods
 
-            foreach (string path in filesRequest.FilePaths)
-            {
-                if (Directory.Exists(path) || File.Exists(path))
-                    ++paths;
-            }
+		private bool ValidateRequest(ImportFilesRequest filesRequest, out string reason)
+		{
+			reason = string.Empty;
 
-            if (paths == 0)
-            {
-                reason = SR.ExceptionInvalidFilesHaveBeenSpecifiedToImport;
-                return false;
-            }
+			if (filesRequest == null)
+			{
+				reason = SR.ExceptionNoFilesHaveBeenSpecifiedToImport;
+				return false;
+			}
 
-            return true;
-        }
+			if (filesRequest.FilePaths == null)
+			{
+				reason = SR.ExceptionNoFilesHaveBeenSpecifiedToImport;
+				return false;
+			}
 
-        private void ImportFile(string file, ImportStudyContext context)
-        {
-            // Note, we're not doing impersonation of the user's identity, so we may have failures here
-            // which would be new in Marmot.
-            try
-            {
-                EnsureMaxUsedSpaceNotExceeded();
+			if (!filesRequest.FilePaths.Any(path => Directory.Exists(path) || File.Exists(path)))
+			{
+				reason = SR.ExceptionInvalidFilesHaveBeenSpecifiedToImport;
+				return false;
+			}
 
-                var dicomFile = new DicomFile(file);
+			return true;
+		}
 
-                DicomReadOptions readOptions = Request.FileImportBehaviour == FileImportBehaviourEnum.Save
-                                                   ? DicomReadOptions.Default
-                                                   : DicomReadOptions.Default | DicomReadOptions.StorePixelDataReferences;
-                
-                dicomFile.Load(readOptions);
+		private void ImportFile(string file, ImportStudyContext context)
+		{
+			// Note, we're not doing impersonation of the user's identity, so we may have failures here
+			// which would be new in Marmot.
+			try
+			{
+				EnsureMaxUsedSpaceNotExceeded();
 
-                var importer = new ImportFilesUtility(context);
+				var dicomFile = new DicomFile(file);
 
-                DicomProcessingResult result = importer.Import(dicomFile, Request.BadFileBehaviour, Request.FileImportBehaviour);
+				DicomReadOptions readOptions = Request.FileImportBehaviour == FileImportBehaviourEnum.Save
+				                               	? DicomReadOptions.Default
+				                               	: DicomReadOptions.Default | DicomReadOptions.StorePixelDataReferences;
 
-                if (result.DicomStatus == DicomStatuses.Success)
-                {
-                    Progress.NumberOfFilesImported++;
-                }
-                else
-                {
-                    Progress.NumberOfImportFailures++;
-                    Progress.StatusDetails = result.ErrorMessage;
-                }
-            }
-            catch (NotEnoughStorageException)
-            {
-                Progress.NumberOfImportFailures++;
-                Progress.StatusDetails = SR.ExceptionNotEnoughStorage;
-                context.FatalError = true;
-            }
-            catch (Exception e)
-            {
-                Platform.Log(LogLevel.Warn, "Unable to import DICOM File ({0}): {1}", file, e.Message);
-                Progress.NumberOfImportFailures++;
-                Progress.StatusDetails = string.Format("{0}: {1}", file, e.Message);
-            }
-        }
+				dicomFile.Load(readOptions);
 
+				var importer = new ImportFilesUtility(context);
 
-        private bool ImportFiles(IList<string> filePaths,
-            IEnumerable<string> fileExtensions,
-            bool recursive)
-        {
-            var configuration = GetServerConfiguration();
+				DicomProcessingResult result = importer.Import(dicomFile, Request.BadFileBehaviour, Request.FileImportBehaviour);
 
-            var context = new ImportStudyContext(configuration.AETitle, StudyStore.GetConfiguration(),string.IsNullOrEmpty(Request.UserName) ? EventSource.CurrentProcess : EventSource.GetUserEventSource(Request.UserName) );
+				if (result.DicomStatus == DicomStatuses.Success)
+				{
+					Progress.NumberOfFilesImported++;
+				}
+				else
+				{
+					Progress.NumberOfImportFailures++;
+					Progress.StatusDetails = result.ErrorMessage;
+				}
+			}
+			catch (NotEnoughStorageException)
+			{
+				Progress.NumberOfImportFailures++;
+				Progress.StatusDetails = SR.ExceptionNotEnoughStorage;
+				context.FatalError = true;
+			}
+			catch (Exception e)
+			{
+				Platform.Log(LogLevel.Warn, "Unable to import DICOM File ({0}): {1}", file, e.Message);
+				Progress.NumberOfImportFailures++;
+				Progress.StatusDetails = string.Format("{0}: {1}", file, e.Message);
+			}
+		}
 
-            // Publish the creation of the StudyImport WorkItems
-            lock (context.StudyWorkItemsSyncLock)
-            {
-                context.StudyWorkItems.ItemAdded += (sender, args) => Platform.GetService(
-                    (IWorkItemActivityMonitorService service) =>
-                    service.Publish(new WorkItemPublishRequest {Item = WorkItemDataHelper.FromWorkItem(args.Item)}));
-                context.StudyWorkItems.ItemChanged += (sender, args) => Platform.GetService(
-                    (IWorkItemActivityMonitorService service) =>
-                    service.Publish(new WorkItemPublishRequest { Item = WorkItemDataHelper.FromWorkItem(args.Item) }));
-            }
+		private bool ImportFiles(IList<string> filePaths,
+		                         IEnumerable<string> fileExtensions,
+		                         bool recursive)
+		{
+			var configuration = GetServerConfiguration();
 
-            var extensions = new List<string>();
+			var context = new ImportStudyContext(configuration.AETitle, StudyStore.GetConfiguration(), string.IsNullOrEmpty(Request.UserName) ? EventSource.CurrentProcess : EventSource.GetUserEventSource(Request.UserName));
 
-            if (fileExtensions != null)
-                foreach (string extension in fileExtensions)
-                {
-                    if (String.IsNullOrEmpty(extension))
-                        continue;
+			// Publish the creation of the StudyImport WorkItems
+			lock (context.StudyWorkItemsSyncLock)
+			{
+				context.StudyWorkItems.ItemAdded += (sender, args) => WorkItemActivityMonitorService.Publish(new WorkItemPublishRequest {Item = WorkItemDataHelper.FromWorkItem(args.Item)});
+				context.StudyWorkItems.ItemChanged += (sender, args) => WorkItemActivityMonitorService.Publish(new WorkItemPublishRequest {Item = WorkItemDataHelper.FromWorkItem(args.Item)});
+			}
 
-                    extensions.Add(extension);
-                }
+			var extensions = new List<string>();
 
-            Progress.PathsToImport = filePaths.Count;
+			if (fileExtensions != null)
+				extensions.AddRange(fileExtensions.Where(extension => !String.IsNullOrEmpty(extension)));
 
-            bool completedEnumeration = true;
-            foreach (string path in filePaths)
-            {
-                FileProcessor.Process(path, string.Empty,
-                                      delegate(string file, out bool cancel)
-                                      {
-                                          cancel = false;
+			Progress.PathsToImport = filePaths.Count;
 
-                                          if (CancelPending || StopPending || context.FatalError)
-                                          {
-                                              cancel = true;
-                                              return;
-                                          }
+			bool completedEnumeration = true;
+			foreach (string path in filePaths)
+			{
+				FileProcessor.Process(path, string.Empty,
+				                      delegate(string file, out bool cancel)
+				                      	{
+				                      		cancel = false;
 
-                                          bool enqueue = false;
-                                          foreach (string extension in extensions)
-                                          {
-                                              if (file.EndsWith(extension))
-                                              {
-                                                  enqueue = true;
-                                                  break;
-                                              }
-                                          }
+				                      		if (CancelPending || StopPending || context.FatalError)
+				                      		{
+				                      			cancel = true;
+				                      			return;
+				                      		}
 
-                                          enqueue = enqueue || extensions.Count == 0;
+				                      		if (extensions.Count == 0 || extensions.Any(file.EndsWith))
+				                      		{
+				                      			++Progress.TotalFilesToImport;
 
-                                          if (enqueue)
-                                          {
-                                              ++Progress.TotalFilesToImport;
-                                              
-                                              Proxy.UpdateProgress();
+				                      			Proxy.UpdateProgress();
 
-                                              ImportFile(file, context);                                                                                                                                                                                        
-                                          }
+				                      			ImportFile(file, context);
+				                      		}
+				                      	}, recursive);
 
-                                      }, recursive);
+				Progress.PathsImported++;
+				Proxy.UpdateProgress();
 
-                Progress.PathsImported++;
-                Proxy.UpdateProgress();
+				if (CancelPending || StopPending || context.FatalError)
+					completedEnumeration = false;
+			}
 
-                if (CancelPending || StopPending || context.FatalError)
-                    completedEnumeration = false;
-            }
+			// pulses any idle study process work items related to the files we imported
+			new ImportFilesUtility(context).PulseStudyWorkItems();
 
-            Progress.CompletedEnumeration = completedEnumeration;
+			Progress.CompletedEnumeration = completedEnumeration;
 
-            return context.FatalError;
-        }
+			return context.FatalError;
+		}
 
-        #endregion
-    }
+		#endregion
+	}
 }

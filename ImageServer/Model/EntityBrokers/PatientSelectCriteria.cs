@@ -44,9 +44,23 @@ namespace ClearCanvas.ImageServer.Model.EntityBrokers
 			{
 				if (!SubCriteria.ContainsKey("StudyRelatedEntityCondition"))
 				{
-					SubCriteria["StudyRelatedEntityCondition"] = new RelatedEntityCondition<EntitySelectCriteria>("StudyRelatedEntityCondition", "Key", "PatientKey");
+					SubCriteria["StudyRelatedEntityCondition"] =
+						new RelatedEntityCondition<EntitySelectCriteria>("StudyRelatedEntityCondition", "Key", "PatientKey");
 				}
-				return (IRelatedEntityCondition<EntitySelectCriteria>)SubCriteria["StudyRelatedEntityCondition"];
+				return (IRelatedEntityCondition<EntitySelectCriteria>) SubCriteria["StudyRelatedEntityCondition"];
+			}
+		}
+
+		[EntityFieldDatabaseMappingAttribute(TableName = "Patient", ColumnName = "GUID")]
+		public ISearchCondition<ServerEntityKey> Key
+		{
+			get
+			{
+				if (!SubCriteria.ContainsKey("Key"))
+				{
+					SubCriteria["Key"] = new SearchCondition<ServerEntityKey>("Key");
+				}
+				return (ISearchCondition<ServerEntityKey>) SubCriteria["Key"];
 			}
 		}
 	}

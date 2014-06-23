@@ -86,8 +86,7 @@ namespace ClearCanvas.ImageServer.Services.Archiving.Hsm
 
 		public void Dispose()
 		{
-			if (File.Exists(_backupFile))
-				File.Delete(_backupFile);
+			File.Delete(_backupFile);
 		}
 	}
 }

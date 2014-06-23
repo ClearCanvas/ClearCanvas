@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Data.Linq;
 using System.Linq;
 using ClearCanvas.ImageViewer.Common.WorkItem;
 
@@ -42,17 +43,9 @@ namespace ClearCanvas.ImageViewer.StudyManagement.Core.Storage
 		/// <returns></returns>
 		public List<WorkItem> GetWorkItemsForProcessing(int n, WorkItemPriorityEnum? priority = null)
 		{
-			IQueryable<WorkItem> query = from w in Context.WorkItems select w;
-			query = WorkItemStatusFilter.WaitingToProcess.Apply(query);
-			query = query.Where(w => w.ProcessTime < DateTime.Now);
-			if (priority.HasValue)
-				query = query.Where(w => w.Priority == priority.Value);
-
-			query = query.OrderBy(w => w.ProcessTime);
-			if (!priority.HasValue)
-				query = query.OrderBy(w => w.Priority);
-
-			return query.Take(n).ToList();
+			return priority.HasValue
+			       	? _getWorkItemsForProcessingByPriority(Context, n, DateTime.Now, priority.Value).ToList()
+			       	: _getWorkItemsForProcessing(Context, n, DateTime.Now).ToList();
 		}
 
 		/// <summary>
@@ -61,10 +54,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement.Core.Storage
 		/// <returns></returns>
 		public List<WorkItem> GetWorkItemsToDelete(int n)
 		{
-			return (from w in Context.WorkItems
-			        where (w.Status == WorkItemStatusEnum.Complete)
-			              && w.DeleteTime < DateTime.Now
-			        select w).Take(n).ToList();
+			return _getWorkItemsToDelete(Context, n, DateTime.Now).ToList();
 		}
 
 		/// <summary>
@@ -73,9 +63,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement.Core.Storage
 		/// <returns></returns>
 		public List<WorkItem> GetWorkItemsDeleted(int n)
 		{
-			return (from w in Context.WorkItems
-			        where (w.Status == WorkItemStatusEnum.Deleted)
-			        select w).Take(n).ToList();
+			return _getWorkItemsDeleted(Context, n).ToList();
 		}
 
 		public IEnumerable<WorkItem> GetWorkItems(WorkItemConcurrency concurrency, WorkItemStatusFilter statusFilter, string studyInstanceUid, long? identifier = null)
@@ -173,13 +161,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement.Core.Storage
 		/// <returns></returns>
 		public WorkItem GetWorkItem(long oid)
 		{
-			var list = (from w in Context.WorkItems
-			            where w.Oid == oid
-			            select w);
-
-			if (!list.Any()) return null;
-
-			return list.First();
+			return _getWorkItemByOid(Context, oid).FirstOrDefault();
 		}
 
 		/// <summary>
@@ -199,5 +181,44 @@ namespace ClearCanvas.ImageViewer.StudyManagement.Core.Storage
 		{
 			Context.WorkItems.DeleteOnSubmit(entity);
 		}
+
+		internal void DeleteAll()
+		{
+			Context.WorkItems.DeleteAllOnSubmit(Context.WorkItems);
+		}
+
+		#region Compiled Queries
+
+		private static readonly Func<DicomStoreDataContext, int, DateTime, IQueryable<WorkItem>> _getWorkItemsForProcessing =
+			CompiledQuery.Compile<DicomStoreDataContext, int, DateTime, IQueryable<WorkItem>>((context, n, now) => (from w in context.WorkItems
+			                                                                                                        where w.ProcessTime < now
+			                                                                                                              && (w.Status == WorkItemStatusEnum.Pending || w.Status == WorkItemStatusEnum.Idle)
+			                                                                                                        orderby w.Priority , w.ProcessTime
+			                                                                                                        select w).Take(n));
+
+		private static readonly Func<DicomStoreDataContext, int, DateTime, WorkItemPriorityEnum, IQueryable<WorkItem>> _getWorkItemsForProcessingByPriority =
+			CompiledQuery.Compile<DicomStoreDataContext, int, DateTime, WorkItemPriorityEnum, IQueryable<WorkItem>>((context, n, now, priority) => (from w in context.WorkItems
+			                                                                                                                                        where w.ProcessTime < now && w.Priority == priority
+			                                                                                                                                              && (w.Status == WorkItemStatusEnum.Pending || w.Status == WorkItemStatusEnum.Idle)
+			                                                                                                                                        orderby w.ProcessTime
+			                                                                                                                                        select w).Take(n));
+
+		private static readonly Func<DicomStoreDataContext, int, DateTime, IQueryable<WorkItem>> _getWorkItemsToDelete =
+			CompiledQuery.Compile<DicomStoreDataContext, int, DateTime, IQueryable<WorkItem>>((context, n, now) => (from w in context.WorkItems
+			                                                                                                        where w.Status == WorkItemStatusEnum.Complete
+			                                                                                                              && w.DeleteTime < now
+			                                                                                                        select w).Take(n));
+
+		private static readonly Func<DicomStoreDataContext, int, IQueryable<WorkItem>> _getWorkItemsDeleted =
+			CompiledQuery.Compile<DicomStoreDataContext, int, IQueryable<WorkItem>>((context, n) => (from w in context.WorkItems
+			                                                                                         where w.Status == WorkItemStatusEnum.Deleted
+			                                                                                         select w).Take(n));
+
+		private static readonly Func<DicomStoreDataContext, long, IQueryable<WorkItem>> _getWorkItemByOid =
+			CompiledQuery.Compile<DicomStoreDataContext, long, IQueryable<WorkItem>>((context, oid) => (from w in context.WorkItems
+			                                                                                            where w.Oid == oid
+			                                                                                            select w).Take(1));
+
+		#endregion
 	}
 }

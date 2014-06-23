@@ -56,7 +56,7 @@ namespace ClearCanvas.Dicom.Utilities.Command
 
 			if (File.Exists(_originalFile))
 			{
-			    File.Delete(_originalFile);
+			    FileUtils.Delete(_originalFile);
 			}
             else
 			{
@@ -97,14 +97,12 @@ namespace ClearCanvas.Dicom.Utilities.Command
 
         #region IDisposable Members
 
-        public void Dispose()
-        {
-            if (File.Exists(_backupFile))
-            {
-                FileUtils.Delete(_backupFile);
-            }
-        }
+		public void Dispose()
+		{
+			// Will check for existance
+			FileUtils.Delete(_backupFile);
+		}
 
-        #endregion
+		#endregion
     }
 }

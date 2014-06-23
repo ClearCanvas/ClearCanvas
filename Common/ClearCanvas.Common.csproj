@@ -168,6 +168,7 @@
     <Compile Include="PluginInfoCache.cs" />
     <Compile Include="PluginLoader.cs" />
     <Compile Include="Rest\RestClient.cs" />
+    <Compile Include="Serialization\PolymorphicDataContractResolver.cs" />
     <Compile Include="Shreds\ShredIsolationAttribute.cs" />
     <Compile Include="Specifications\CaseSpecification.cs" />
     <Compile Include="Specifications\ContainsSpecification.cs" />

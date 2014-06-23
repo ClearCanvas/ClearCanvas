@@ -291,10 +291,10 @@ namespace ClearCanvas.ImageServer.Enterprise.SqlServer
                         string sql;
                         if (String.Format("{0}GUID", notExistsSubCriteria.GetKey()).Equals(relatedTableColumn))
                             sql = GetSelectSql(notExistsSubCriteria.GetKey(), command, notExistsSubCriteria, null, null,
-                                               String.Format("{0}.{2} = {1}.GUID", variable, notExistsSubCriteria.GetKey(), baseTableColumn));
+                                               String.Format("[{0}].{2} = [{1}].GUID", variable, notExistsSubCriteria.GetKey(), baseTableColumn));
                         else
                             sql = GetSelectSql(notExistsSubCriteria.GetKey(), command, notExistsSubCriteria, null, null,
-                                               String.Format("{0}.{2} = {1}.{3}", variable, notExistsSubCriteria.GetKey(), baseTableColumn, relatedTableColumn));
+                                               String.Format("[{0}].{2} = [{1}].{3}", variable, notExistsSubCriteria.GetKey(), baseTableColumn, relatedTableColumn));
 
                         sb.AppendFormat("NOT EXISTS ({0})", sql);
                         break;
@@ -316,11 +316,11 @@ namespace ClearCanvas.ImageServer.Enterprise.SqlServer
                         string existsSql;
                         if (String.Format("{0}GUID",existsSubCriteria.GetKey()).Equals(relatedTableColumn))
                             existsSql = GetSelectSql(existsSubCriteria.GetKey(), command, existsSubCriteria, null, null,
-                                                     String.Format("{0}.{2} = {1}.GUID", variable, existsSubCriteria.GetKey(),
+                                                     String.Format("[{0}].{2} = [{1}].GUID", variable, existsSubCriteria.GetKey(),
                                                                    baseTableColumn));
                         else
                             existsSql = GetSelectSql(existsSubCriteria.GetKey(), command, existsSubCriteria, null, null,
-                                                     String.Format("{0}.{2} = {1}.{3}", variable, existsSubCriteria.GetKey(),
+                                                     String.Format("[{0}].{2} = [{1}].{3}", variable, existsSubCriteria.GetKey(),
                                                                    baseTableColumn, relatedTableColumn));
                         sb.AppendFormat("EXISTS ({0})", existsSql);
                         break;
@@ -366,7 +366,7 @@ namespace ClearCanvas.ImageServer.Enterprise.SqlServer
                     string subQualifier;
                     if (subCriteria is RelatedEntityCondition<EntitySelectCriteria>)
                     {
-                        subQualifier = qualifier;   
+                        subQualifier = qualifier;
                     }
                     else
                         subQualifier = string.Format("[{0}].{1}", qualifier, subCriteria.GetKey());
@@ -642,7 +642,7 @@ namespace ClearCanvas.ImageServer.Enterprise.SqlServer
                 {
                     var p = parm as EntityUpdateColumn<ServerEntityKey>;
                     ServerEntityKey key = p.Value;
-                    command.Parameters.AddWithValue("@" + sqlParmName, key.Key);
+                    command.Parameters.AddWithValue("@" + sqlParmName, key == null ? DBNull.Value : key.Key);
                 }
                 else if (parm is EntityUpdateColumn<DateTime?>)
                 {

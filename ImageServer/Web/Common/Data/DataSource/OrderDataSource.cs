@@ -25,6 +25,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ClearCanvas.Dicom.Iod;
 using ClearCanvas.Enterprise.Core;
 using ClearCanvas.ImageServer.Core;
 using ClearCanvas.ImageServer.Core.Query;
@@ -45,6 +46,8 @@ namespace ClearCanvas.ImageServer.Web.Common.Data.DataSource
         #region Public Properties
 
         public ServerEntityKey Key { get; set; }
+
+        public string IssuerOfPatientId { get; set; }
 
         public string PatientId { get; set; }
 
@@ -70,6 +73,8 @@ namespace ClearCanvas.ImageServer.Web.Common.Data.DataSource
 
         public string Bed { get; set; }
 
+		public int RelatedStudies { get; set; }
+		
         public OrderStatusEnum OrderStatusEnum { get; set; }
 
         public string OrderStatusEnumString
@@ -87,8 +92,6 @@ namespace ClearCanvas.ImageServer.Web.Common.Data.DataSource
         public Order TheOrder { get; set; }
 
         public ServerPartition ThePartition { get; set; }
-
-        public Patient ThePatient { get; set; }
 
         public ProcedureCode TheRequestedProcedure { get; set; }
 
@@ -171,13 +174,8 @@ namespace ClearCanvas.ImageServer.Web.Common.Data.DataSource
             // only query for device in this partition
             criteria.ServerPartitionKey.EqualTo(Partition.Key);
 
-            if (!string.IsNullOrEmpty(PatientName) || !string.IsNullOrEmpty(PatientId))
-            {
-                var patientCriteria = new PatientSelectCriteria();
-                QueryHelper.SetGuiStringCondition(patientCriteria.PatientId, PatientId);
-                QueryHelper.SetGuiStringCondition(patientCriteria.PatientsName, PatientName);
-                criteria.PatientRelatedEntityCondition.Exists(patientCriteria);
-            }
+            QueryHelper.SetGuiStringCondition(criteria.PatientId, PatientId);
+			QueryHelper.SetGuiStringCondition(criteria.PatientsName, PatientName);
 
             QueryHelper.SetGuiStringCondition(criteria.AccessionNumber, AccessionNumber);
 
@@ -198,6 +196,32 @@ namespace ClearCanvas.ImageServer.Web.Common.Data.DataSource
                 criteria.ScheduledDateTime.MoreThanOrEqualTo(fromKey);
             }
 
+			if (!string.IsNullOrEmpty(ReferringPhysiciansName))
+			{
+				if (ReferringPhysiciansName.Contains(","))
+				{
+					var splitName = ReferringPhysiciansName.Split(new [] {','});
+					var staffCriteria = new StaffSelectCriteria();
+					if (splitName.Length > 0)
+						QueryHelper.SetGuiStringCondition(staffCriteria.FamilyName, splitName[0].Trim() + "*");
+					if (splitName.Length > 1)
+						QueryHelper.SetGuiStringCondition(staffCriteria.GivenName, splitName[1].Trim() + "*");
+
+					criteria.ReferringStaffRelatedEntityCondition.Exists(staffCriteria);
+				}
+				else
+				{
+					var staffCriteria = new StaffSelectCriteria();
+					var pn = new PersonName(ReferringPhysiciansName);
+					if (!string.IsNullOrEmpty(pn.LastName))
+						QueryHelper.SetGuiStringCondition(staffCriteria.FamilyName, pn.LastName + "*");
+					if (!string.IsNullOrEmpty(pn.FirstName))
+						QueryHelper.SetGuiStringCondition(staffCriteria.GivenName, pn.FirstName + "*");
+
+					criteria.ReferringStaffRelatedEntityCondition.Exists(staffCriteria);
+				}
+			}
+
             if (Statuses != null && Statuses.Length > 0)
             {
                 if (Statuses.Length == 1)
@@ -208,6 +232,8 @@ namespace ClearCanvas.ImageServer.Web.Common.Data.DataSource
                     criteria.OrderStatusEnum.In(statusList);
                 }
             }
+
+            criteria.ScheduledDateTime.SortDesc(0);
 
             return criteria;
         }
@@ -270,7 +296,6 @@ namespace ClearCanvas.ImageServer.Web.Common.Data.DataSource
 
             var orderSummary = new OrderSummary
                 {
-                    ThePatient = Patient.Load(read, order.PatientKey),
                     TheRequestedProcedure = ProcedureCode.Load(order.RequestedProcedureCodeKey),
                     TheOrder = order,
                     ScheduledDate = order.ScheduledDateTime,
@@ -303,8 +328,9 @@ namespace ClearCanvas.ImageServer.Web.Common.Data.DataSource
 
             orderSummary.Key = order.GetKey();
 
-            orderSummary.PatientId = orderSummary.ThePatient.PatientId;
-            orderSummary.PatientsName = orderSummary.ThePatient.PatientsName;
+            orderSummary.PatientId = order.PatientId;
+            orderSummary.PatientsName = order.PatientsName;
+            orderSummary.IssuerOfPatientId = order.IssuerOfPatientId;
             orderSummary.RequestedProcedure = orderSummary.TheRequestedProcedure.Text;
 
             var referStaff = Staff.Load(order.ReferringStaffKey);
@@ -321,7 +347,13 @@ namespace ClearCanvas.ImageServer.Web.Common.Data.DataSource
             orderSummary.ThePartition = ServerPartitionMonitor.Instance.FindPartition(order.ServerPartitionKey) ??
                                         ServerPartition.Load(read, order.ServerPartitionKey);
 
-         
+			// Count of related studies
+	        var broker = read.GetBroker<IStudyEntityBroker>();
+	        var studySelect = new StudySelectCriteria();
+	        studySelect.ServerPartitionKey.EqualTo(order.ServerPartitionKey);
+	        studySelect.OrderKey.EqualTo(order.Key);
+	        orderSummary.RelatedStudies = broker.Count(studySelect);
+
             return orderSummary;
         }
     }

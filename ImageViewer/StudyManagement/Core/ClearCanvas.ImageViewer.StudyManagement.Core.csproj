@@ -156,6 +156,9 @@
     <Compile Include="Storage\Broker.cs" />
     <Compile Include="Storage\DataAccessContext.cs" />
     <Compile Include="Storage\DeviceBroker.cs" />
+    <Compile Include="Storage\DicomStoreDataContext.cs">
+      <DependentUpon>DicomStoreDataContext.dbml</DependentUpon>
+    </Compile>
     <Compile Include="Storage\DicomStoreDataContext.designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -171,7 +174,13 @@
     <Compile Include="Storage\StudyBroker.cs" />
     <Compile Include="Storage\StudyLocation.cs" />
     <Compile Include="Storage\Tests\SerializationTests.cs" />
+    <Compile Include="Storage\Tests\StudyBrokerTests.cs" />
+    <Compile Include="Storage\Tests\TestHelper.cs" />
+    <Compile Include="Storage\Tests\WorkItemBrokerTests.cs" />
+    <Compile Include="Storage\Tests\WorkItemUidBrokerTests.cs" />
+    <Compile Include="Storage\Utilities.cs" />
     <Compile Include="Storage\WorkItemStatusFilter.cs" />
+    <Compile Include="Storage\WorkItemUid.cs" />
     <Compile Include="Utilities.cs" />
     <Compile Include="Storage\WorkItem.cs" />
     <Compile Include="Storage\WorkItemBroker.cs" />

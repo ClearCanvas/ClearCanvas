@@ -81,6 +81,10 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>SR.resx</DependentUpon>
     </Compile>
+    <Compile Include="StudyAutoRouteAction\InsertStudyAutoRouteCommand.cs" />
+    <Compile Include="StudyAutoRouteAction\StudyAutoRouteActionItem.cs" />
+    <Compile Include="StudyAutoRouteAction\StudyAutoRouteActionOperator.cs" />
+    <Compile Include="StudyAutoRouteAction\SudyAutoRouteSamples.cs" />
     <Compile Include="StudyDeleteAction\StudyDeleteActionItem.cs" />
     <Compile Include="StudyDeleteAction\StudyDeleteActionOperator.cs" />
     <Compile Include="StudyDeleteAction\Sample_StudyDelete.cs" />
@@ -161,6 +165,12 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="GrantAccessAction\Sample_GrantAccessInstitution.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="StudyAutoRouteAction\Sample_StudyAutoRouteDelay.xml" />
+    <EmbeddedResource Include="StudyAutoRouteAction\Sample_StudyAutoRouteQcStatus.xml" />
+    <EmbeddedResource Include="StudyAutoRouteAction\Sample_StudyAutoRouteSchedule.xml" />
+    <EmbeddedResource Include="StudyAutoRouteAction\Sample_StudyAutoRouteSimple.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

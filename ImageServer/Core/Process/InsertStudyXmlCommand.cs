@@ -88,10 +88,8 @@ namespace ClearCanvas.ImageServer.Core.Process
 			for (int i = 0; ; i++)
 				try
 				{
-					if (File.Exists(tmpStreamFile))
-						FileUtils.Delete(tmpStreamFile);
-					if (File.Exists(tmpGzStreamFile))
-						FileUtils.Delete(tmpGzStreamFile);
+					FileUtils.Delete(tmpStreamFile);
+					FileUtils.Delete(tmpGzStreamFile);
 
 					using (FileStream xmlStream = FileStreamOpener.OpenForSoleUpdate(tmpStreamFile, FileMode.CreateNew),
 					                  gzipStream = FileStreamOpener.OpenForSoleUpdate(tmpGzStreamFile, FileMode.CreateNew))
@@ -101,11 +99,9 @@ namespace ClearCanvas.ImageServer.Core.Process
 						gzipStream.Close();
 					}
 
-					if (File.Exists(streamFile))
-						FileUtils.Delete(streamFile);
+					FileUtils.Delete(streamFile);
 					File.Move(tmpStreamFile, streamFile);
-					if (File.Exists(gzStreamFile))
-						FileUtils.Delete(gzStreamFile);
+					FileUtils.Delete(gzStreamFile);
 					File.Move(tmpGzStreamFile,gzStreamFile);
 					return;
 				}
@@ -128,12 +124,9 @@ namespace ClearCanvas.ImageServer.Core.Process
 		protected override void OnExecute(CommandProcessor theProcessor)
 		{
 			FileSize = 0;
-			if (File.Exists(_file.Filename))
-			{
-				var finfo = new FileInfo(_file.Filename);
-
+			var finfo = new FileInfo(_file.Filename);
+			if (finfo.Exists)
 				FileSize = finfo.Length;
-			}
 
 			// Setup the insert parameters
 			if (false == _stream.AddFile(_file, FileSize, _outputSettings))

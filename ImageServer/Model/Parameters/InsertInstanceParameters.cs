@@ -200,5 +200,10 @@ namespace ClearCanvas.ImageServer.Model.Parameters
                 return null;
             }
         }
+
+        public ServerEntityKey OrderKey
+        {
+            set { SubCriteria["OrderKey"] = new ProcedureParameter<ServerEntityKey>("OrderKey", value); }
+        }
     }
 }

@@ -56,11 +56,6 @@ namespace ClearCanvas.ImageServer.Model.EntityBrokers
         {
             set { SubParameters["UpdatedTime"] = new EntityUpdateColumn<DateTime>("UpdatedTime", value); }
         }
-        [EntityFieldDatabaseMappingAttribute(TableName="Order", ColumnName="PatientGUID")]
-        public ServerEntityKey PatientKey
-        {
-            set { SubParameters["PatientKey"] = new EntityUpdateColumn<ServerEntityKey>("PatientKey", value); }
-        }
        [DicomField(DicomTags.AccessionNumber, DefaultValue = DicomFieldDefault.Null)]
         [EntityFieldDatabaseMappingAttribute(TableName="Order", ColumnName="AccessionNumber")]
         public String AccessionNumber
@@ -123,6 +118,24 @@ namespace ClearCanvas.ImageServer.Model.EntityBrokers
         public ServerEntityKey ReferringStaffKey
         {
             set { SubParameters["ReferringStaffKey"] = new EntityUpdateColumn<ServerEntityKey>("ReferringStaffKey", value); }
+        }
+       [DicomField(DicomTags.PatientsName, DefaultValue = DicomFieldDefault.Null)]
+        [EntityFieldDatabaseMappingAttribute(TableName="Order", ColumnName="PatientsName")]
+        public String PatientsName
+        {
+            set { SubParameters["PatientsName"] = new EntityUpdateColumn<String>("PatientsName", value); }
+        }
+       [DicomField(DicomTags.PatientId, DefaultValue = DicomFieldDefault.Null)]
+        [EntityFieldDatabaseMappingAttribute(TableName="Order", ColumnName="PatientId")]
+        public String PatientId
+        {
+            set { SubParameters["PatientId"] = new EntityUpdateColumn<String>("PatientId", value); }
+        }
+       [DicomField(DicomTags.IssuerOfPatientId, DefaultValue = DicomFieldDefault.Null)]
+        [EntityFieldDatabaseMappingAttribute(TableName="Order", ColumnName="IssuerOfPatientId")]
+        public String IssuerOfPatientId
+        {
+            set { SubParameters["IssuerOfPatientId"] = new EntityUpdateColumn<String>("IssuerOfPatientId", value); }
         }
     }
 }
