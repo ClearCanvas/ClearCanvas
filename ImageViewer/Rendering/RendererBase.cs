@@ -225,28 +225,30 @@ namespace ClearCanvas.ImageViewer.Rendering
 		/// </summary>
 		protected void DrawTextOverlay(IPresentationImage presentationImage)
 		{
-			CodeClock clock = new CodeClock();
+#if DEBUG
+            CodeClock clock = new CodeClock();
 			clock.Start();
-
-			if (presentationImage == null || !(presentationImage is IAnnotationLayoutProvider))
+#endif
+		    var layoutProvider = presentationImage as IAnnotationLayoutProvider;
+			if (layoutProvider == null)
 				return;
 
-			IAnnotationLayout layout = ((IAnnotationLayoutProvider) presentationImage).AnnotationLayout;
+            var layout = layoutProvider.AnnotationLayout;
 			if (layout == null || !layout.Visible)
 				return;
 
 			foreach (AnnotationBox annotationBox in layout.AnnotationBoxes)
 			{
-				if (annotationBox.Visible)
-				{
-					string annotationText = annotationBox.GetAnnotationText(presentationImage);
-					if (!String.IsNullOrEmpty(annotationText))
-						DrawAnnotationBox(annotationText, annotationBox);
-				}
-			}
+			    if (!annotationBox.Visible) continue;
 
+			    string annotationText = annotationBox.GetAnnotationText(presentationImage);
+			    if (!String.IsNullOrEmpty(annotationText))
+			        DrawAnnotationBox(annotationText, annotationBox);
+			}
+#if DEBUG
 			clock.Stop();
 			PerformanceReportBroker.PublishReport(_rendererTypeId, "DrawTextOverlay", clock.Seconds);
+#endif
 		}
 
 		/// <summary>
