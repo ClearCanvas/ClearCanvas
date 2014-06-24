@@ -31,7 +31,6 @@ using ClearCanvas.Desktop.Actions;
 using ClearCanvas.Desktop.Tools;
 using ClearCanvas.ImageViewer.BaseTools;
 using ClearCanvas.ImageViewer.InputManagement;
-using ClearCanvas.Common.Utilities;
 
 namespace ClearCanvas.ImageViewer
 {
@@ -39,6 +38,15 @@ namespace ClearCanvas.ImageViewer
 	{
 		private readonly Dictionary<ITool, ITool> _tools;
 		private readonly ImageViewerComponent _viewer;
+
+        private const string _globalMenusActionSite = "global-menus";
+        private const string _globalToolbarActionSite = "global-toolbars";
+
+	    private static readonly string[] _defaultSites =
+	    {
+	        _globalMenusActionSite, _globalToolbarActionSite,
+	        ImageViewerComponent.KeyboardSite, ImageViewerComponent.ContextMenuSite
+	    };
 
 		public ViewerShortcutManager(ImageViewerComponent viewer)
 		{
@@ -183,73 +191,43 @@ namespace ClearCanvas.ImageViewer
                     select mouseTool).FirstOrDefault();
         }
 
-		/// <summary>
-		/// Gets the <see cref="IClickAction"/> associated with a shortcut.
-		/// </summary>
-		/// <param name="shortcut">The shortcut for which an <see cref="IClickAction"/> is to be found.</param>
-		/// <returns>An <see cref="IClickAction"/> or null.</returns>
-		public IClickAction GetKeyboardAction(KeyboardButtonShortcut shortcut)
+	    /// <summary>
+	    /// Gets the <see cref="IClickAction"/> associated with a shortcut.
+	    /// </summary>
+	    /// <param name="shortcut">The shortcut for which an <see cref="IClickAction"/> is to be found.</param>
+	    /// <returns>An <see cref="IClickAction"/> or null.</returns>
+	    public IClickAction GetKeyboardAction(KeyboardButtonShortcut shortcut)
+	    {
+	        if (shortcut == null || shortcut.IsEmpty)
+	            return null;
+
+	        var actions = (IActionSet) new ActionSet();
+	        foreach (var tool in _tools.Keys)
+	            actions = actions.Union(tool.Actions);
+
+	        var clickActions = actions.OfType<IClickAction>().ToList();
+	        // precedence is given to actions on the viewer keyboard site
+	        return ((FindClickAction(shortcut, ImageViewerComponent.KeyboardSite, clickActions)
+	                    // if not defined, give consideration to the viewer context menu
+                        ?? FindClickAction(shortcut, ImageViewerComponent.ContextMenuSite, clickActions))
+	                    // if still not found, search the global toolbars
+	                    ?? FindClickAction(shortcut, _globalToolbarActionSite, clickActions))
+	                    // then the global menus
+	                    ?? FindClickAction(shortcut, _globalMenusActionSite, clickActions)
+	                    // and finally any other site in our toolset that hasn't already been covered
+	                    //TODO (CR Orion): do we even have to order by site? Free-for-all is probably ok at this point.
+	                    ?? clickActions.Where(a => !_defaultSites.Contains(a.Path.Site))
+                            .OrderBy(a => a.Path.Site)
+	                        .FirstOrDefault(a => shortcut.Equals(a.KeyStroke));
+	    }
+
+	    private static IClickAction FindClickAction(KeyboardButtonShortcut shortcut, string site, IEnumerable<IClickAction> actionSet)
 		{
-			if (shortcut == null || shortcut.IsEmpty)
-				return null;
-
-            const string globalMenusActionSite = "global-menus";
-            const string globalToolbarActionSite = "global-toolbars";
-
-			var actions = (IActionSet) new ActionSet();
-			foreach (var tool in _tools.Keys)
-				actions = actions.Union(tool.Actions);
-
-			// precedence is given to actions on the viewer keyboard site
-			var action = FindClickAction(shortcut, _viewer.ActionsNamespace, ImageViewerComponent.KeyboardSite, actions);
-
-			// if not defined, give consideration to the viewer context menu
-			if (action == null)
-				action = FindClickAction(shortcut, _viewer.ActionsNamespace, ImageViewerComponent.ContextMenuSite, actions);
-
-			// if still not found, search the global toolbars
-			if (action == null)
-				action = FindClickAction(shortcut, _viewer.GlobalActionsNamespace, globalToolbarActionSite, actions);
-
-			// then the global menus
-			if (action == null)
-				action = FindClickAction(shortcut, _viewer.GlobalActionsNamespace, globalMenusActionSite, actions);
-
-			// and finally any other site in our toolset that hasn't already been covered
-			// it's done in this way so that we don't unnecessarily execute the collection mapping and unique finding,
-			// as most actions will be on one of the explicitly searched sites
-			if (action == null)
-			{
-				foreach (var site in CollectionUtils.Unique(CollectionUtils.Map<IAction, string>(actions, a => a.Path.Site)))
-				{
-					if (site != globalMenusActionSite
-					    && site != globalToolbarActionSite
-					    && site != ImageViewerComponent.KeyboardSite
-					    && site != ImageViewerComponent.ContextMenuSite)
-					{
-						action = FindClickAction(shortcut, _viewer.ActionsNamespace, site, actions);
-						if (action != null)
-							break;
-					}
-				}
-			}
-
-			return action;
+            //This used to use the ActionModel to create them in the right order, but a properly configured action model
+            //shouldn't have repeated keyboard shortcuts, at least not within the same site.
+            return actionSet.FirstOrDefault(a => a.Path.Site == site && shortcut.Equals(a.KeyStroke));
 		}
 
-		private static IClickAction FindClickAction(KeyboardButtonShortcut shortcut, string @namespace, string site, IActionSet actionSet)
-		{
-			var actions = ActionModelRoot.CreateModel(@namespace, site, actionSet).GetActionsInOrder();
-			foreach (var action in actions)
-			{
-				var clickAction = action as IClickAction;
-				if (clickAction != null && shortcut.Equals(clickAction.KeyStroke))
-						return clickAction;
-			}
-
-			return null;
-		}
-
-		#endregion
+	    #endregion
 	}
 }
