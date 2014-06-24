@@ -26,6 +26,7 @@ using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Threading;
+using System.Threading.Tasks;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Dicom;
@@ -740,7 +741,6 @@ namespace ClearCanvas.ImageServer.Services.Dicom
             var finalResponse = new DicomMessage();
             server.SendCFindResponse(presentationId, message.MessageId, finalResponse, DicomStatuses.Success);
 			AuditLog(server.AssociationParams, EventIdentificationContentsEventOutcomeIndicator.Success, message);
-        	return;
         }
 
         /// <summary>
@@ -1280,49 +1280,17 @@ namespace ClearCanvas.ImageServer.Services.Dicom
 					// to the main message loop, and continue to look for cancel request messages coming
 					// in.  There's a small chance this may cause delays in responding to query requests if
 					// the .NET Thread pool fills up.
-                	ThreadPool.QueueUserWorkItem(delegate
-													{
-													    try
-													    {
                                                             OnReceiveStudyLevelQuery(server, presentationId, message);
-													    }
-													    catch (Exception x)
-													    {
-                                                            Platform.Log(LogLevel.Error, x, "Unexpected exception in OnReceiveStudyLevelQuery.");
-													    }
-													});
                 	return true;
                 }
             	if (level.Equals("SERIES"))
             	{
-            		ThreadPool.QueueUserWorkItem(delegate
-            		                             	{
-                                                        try
-                                                        {
                                                             OnReceiveSeriesLevelQuery(server, presentationId, message);
-                                                        }
-                                                        catch (Exception x)
-                                                        {
-                                                            Platform.Log(LogLevel.Error, x,
-                                                                         "Unexpected exception in OnReceiveSeriesLevelQuery.");
-                                                        }
-            		                             	});
             		return true;
             	}
             	if (level.Equals("IMAGE"))
             	{
-            	    ThreadPool.QueueUserWorkItem(delegate
-            	                                     {
-            	                                         try
-            	                                         {
             	                                             OnReceiveImageLevelQuery(server, presentationId, message);
-            	                                         }
-            	                                         catch (Exception x)
-            	                                         {
-            	                                             Platform.Log(LogLevel.Error, x,
-            	                                                          "Unexpected exception in OnReceiveImageLevelQuery.");
-            	                                         }
-            	                                     });
             		return true;
             	}
             	Platform.Log(LogLevel.Error, "Unexpected Study Root Query/Retrieve level: {0}", level);
@@ -1331,81 +1299,36 @@ namespace ClearCanvas.ImageServer.Services.Dicom
             	                         DicomStatuses.QueryRetrieveIdentifierDoesNotMatchSOPClass);
             	return true;
             }
-        	if (message.AffectedSopClassUid.Equals(SopClass.PatientRootQueryRetrieveInformationModelFindUid))
-        	{
-        		if (level.Equals("PATIENT"))
-        		{
-        		    ThreadPool.QueueUserWorkItem(delegate
-        		                                     {
-        		                                         try
-        		                                         {
-        		                                             OnReceivePatientQuery(server, presentationId, message);
-        		                                         }
-        		                                         catch (Exception x)
-        		                                         {
-        		                                             Platform.Log(LogLevel.Error, x,
-        		                                                          "Unexpected exception in OnReceivePatientQuery.");
-        		                                         }
-        		                                     });
+	        if (message.AffectedSopClassUid.Equals(SopClass.PatientRootQueryRetrieveInformationModelFindUid))
+	        {
+		        if (level.Equals("PATIENT"))
+		        {
+			        OnReceivePatientQuery(server, presentationId, message);
+			        return true;
+		        }
+		        if (level.Equals("STUDY"))
+		        {
+			        OnReceiveStudyLevelQuery(server, presentationId, message);
+			        return true;
+		        }
+		        if (level.Equals("SERIES"))
+		        {
+			        OnReceiveSeriesLevelQuery(server, presentationId, message);
+			        return true;
+		        }
+		        if (level.Equals("IMAGE"))
+		        {
+			        OnReceiveImageLevelQuery(server, presentationId, message);
+			        return true;
+		        }
+		        Platform.Log(LogLevel.Error, "Unexpected Patient Root Query/Retrieve level: {0}", level);
 
-        			return true;
-        		}
-        		if (level.Equals("STUDY"))
-        		{
-        		    ThreadPool.QueueUserWorkItem(delegate
-        		                                     {
-        		                                         try
-        		                                         {
-        		                                             OnReceiveStudyLevelQuery(server, presentationId, message);
-        		                                         }
-        		                                         catch (Exception x)
-        		                                         {
-        		                                             Platform.Log(LogLevel.Error, x,
-        		                                                          "Unexpected exception in OnReceiveStudyLevelQuery.");
-        		                                         }
-        		                                     });
-        			return true;
-        		}
-        		if (level.Equals("SERIES"))
-        		{
-        		    ThreadPool.QueueUserWorkItem(delegate
-        		                                     {
-        		                                         try
-        		                                         {
-        		                                             OnReceiveSeriesLevelQuery(server, presentationId, message);
-        		                                         }
-        		                                         catch (Exception x)
-        		                                         {
-        		                                             Platform.Log(LogLevel.Error, x,
-        		                                                          "Unexpected exception in OnReceiveSeriesLevelQuery.");
-        		                                         }
-        		                                     });
-        			return true;
-        		}
-        		if (level.Equals("IMAGE"))
-        		{
-        		    ThreadPool.QueueUserWorkItem(delegate
-        		                                     {
-        		                                         try
-        		                                         {
-        		                                             OnReceiveImageLevelQuery(server, presentationId, message);
-        		                                         }
-        		                                         catch (Exception x)
-        		                                         {
-        		                                             Platform.Log(LogLevel.Error, x,
-        		                                                          "Unexpected exception in OnReceiveImageLevelQuery.");
-        		                                         }
-        		                                     });
-        			return true;
-        		}
-        		Platform.Log(LogLevel.Error, "Unexpected Patient Root Query/Retrieve level: {0}", level);
+		        server.SendCFindResponse(presentationId, message.MessageId, new DicomMessage(),
+		                                 DicomStatuses.QueryRetrieveIdentifierDoesNotMatchSOPClass);
+		        return true;
+	        }
 
-        		server.SendCFindResponse(presentationId, message.MessageId, new DicomMessage(),
-        		                         DicomStatuses.QueryRetrieveIdentifierDoesNotMatchSOPClass);
-        		return true;
-        	}
-
-        	// Not supported message type, send a failure status.
+	        // Not supported message type, send a failure status.
             server.SendCFindResponse(presentationId, message.MessageId, new DicomMessage(),
                                      DicomStatuses.QueryRetrieveIdentifierDoesNotMatchSOPClass);
             return true;

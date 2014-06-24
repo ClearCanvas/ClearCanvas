@@ -225,6 +225,7 @@
     <Compile Include="InteractiveGraphics\IAnnotationGraphic.cs" />
     <Compile Include="InteractiveGraphics\Tests\InteractiveGraphicsDemoTool.cs" />
     <Compile Include="KeyObjects\SopInstanceReference.cs" />
+    <Compile Include="LaunchImageViewerArgs.cs" />
     <Compile Include="Layout\HpDataContractAttribute.cs" />
     <Compile Include="Layout\HpExtensionPoints.cs" />
     <Compile Include="Layout\HpApplicabilityResult.cs" />
@@ -845,6 +846,7 @@
     <Compile Include="Volumes\VolumeSlice.cs" />
     <Compile Include="Volumes\VolumeSliceFactory.cs" />
     <Compile Include="Volumes\VolumeSliceArgs.cs" />
+    <Compile Include="WindowBehaviour.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\ClearCanvas.Common.csproj">

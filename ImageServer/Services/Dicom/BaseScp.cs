@@ -98,8 +98,7 @@ namespace ClearCanvas.ImageServer.Services.Dicom
         public DicomPresContextResult VerifyAssociation(AssociationParameters association, byte pcid)
         {
             bool isNew;
-
-            Device = DeviceManager.LookupDevice(Partition, association, out isNew);
+			Device = Context.Device ?? DeviceManager.LookupDevice(Partition, association, out isNew);
 
             // Let the subclass perform the verification
             DicomPresContextResult result = OnVerifyAssociation(association, pcid);

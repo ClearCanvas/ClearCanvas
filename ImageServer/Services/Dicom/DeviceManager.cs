@@ -52,13 +52,13 @@ namespace ClearCanvas.ImageServer.Services.Dicom
     			IUpdateContext updateContext =
     				PersistentStoreRegistry.GetDefaultStore().OpenUpdateContext(UpdateContextSyncMode.Flush))
     		{
-    			var queryDevice = updateContext.GetBroker<IDeviceEntityBroker>();
+    			var deviceEntityBroker = updateContext.GetBroker<IDeviceEntityBroker>();
 
     			// Setup the select parameters.
     			var queryParameters = new DeviceSelectCriteria();
     			queryParameters.AeTitle.EqualTo(association.CallingAE);
     			queryParameters.ServerPartitionKey.EqualTo(partition.GetKey());
-                var devices = queryDevice.Find(queryParameters);
+                var devices = deviceEntityBroker.Find(queryParameters);
                 foreach (var d in devices)
                 {                    
                     if (string.Compare(d.AeTitle,association.CallingAE,false,CultureInfo.InvariantCulture) == 0)
@@ -115,9 +115,7 @@ namespace ClearCanvas.ImageServer.Services.Dicom
     				                                LastAccessedTime = Platform.Time
     				                            };
 
-    				    var update = updateContext.GetBroker<IDeviceEntityBroker>();
-
-    					if (!update.Update(device.GetKey(), updateColumns))
+						if (!deviceEntityBroker.Update(device.GetKey(), updateColumns))
     						Platform.Log(LogLevel.Error,
     						             "Unable to update IP Address for DHCP device {0} on partition '{1}'",
     						             device.AeTitle, partition.Description);
@@ -128,9 +126,7 @@ namespace ClearCanvas.ImageServer.Services.Dicom
     				{
     				    var updateColumns = new DeviceUpdateColumns {LastAccessedTime = Platform.Time};
 
-    				    var update = updateContext.GetBroker<IDeviceEntityBroker>();
-
-    					if (!update.Update(device.GetKey(), updateColumns))
+						if (!deviceEntityBroker.Update(device.GetKey(), updateColumns))
     						Platform.Log(LogLevel.Error,
     						             "Unable to update LastAccessedTime device {0} on partition '{1}'",
     						             device.AeTitle, partition.Description);

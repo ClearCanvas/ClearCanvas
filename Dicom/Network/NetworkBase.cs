@@ -24,6 +24,8 @@
 
 using System;
 using System.IO;
+using System.Net;
+using System.Net.Sockets;
 using System.Threading;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
@@ -139,14 +141,13 @@ namespace ClearCanvas.Dicom.Network
     {
 
         #region Protected Members
-
+		private int _readLength;
 		private const int Timeout = 60; // Default timeout when none set
 		private ushort _messageId;
         private Stream _network;
         protected AssociationParameters _assoc;
         private DcmDimseInfo _dimse;
         private Thread _processThread;
-        private Thread _readThread;
         private Thread _writeThread;
         private bool _stop;
         internal DicomAssociationState State = DicomAssociationState.Sta1_Idle;
@@ -229,9 +230,11 @@ namespace ClearCanvas.Dicom.Network
         {
             _network = network;
             _stop = false;
-            _readThread = new Thread(RunRead);
-            _readThread.Name = String.Format("{0} Read [{1}]", name, _readThread.ManagedThreadId);
-            _readThread.Start();
+            //_readThread = new Thread(RunRead);
+            //_readThread.Name = String.Format("{0} Read [{1}]", name, _readThread.ManagedThreadId);
+            //_readThread.Start();
+			
+			BeginReadPDUHeader();
 
             _multiThreaded = multiThreaded;
 
@@ -253,15 +256,6 @@ namespace ClearCanvas.Dicom.Network
         protected void ShutdownNetworkThread(int millisecondsTimeout)
         {
             _stop = true;
-            if (_readThread != null)
-            {
-                if (!Thread.CurrentThread.Equals(_readThread))
-                {
-                    _readThread.Join(millisecondsTimeout);
-                    _readThread = null;
-                }
-            }
-
             if (_writeThread != null)
             {
                 _pduQueue.ContinueBlocking = false;
@@ -328,8 +322,6 @@ namespace ClearCanvas.Dicom.Network
             else
                 SendRawPDU(pdu);
         }
-
-        protected abstract bool NetworkHasData();
 
         protected virtual void OnUserException(Exception e, String description)
         {
@@ -1043,40 +1035,40 @@ namespace ClearCanvas.Dicom.Network
         /// <summary>
         /// Method to send a DICOM C-STORE-RSP message.
         /// </summary>
-        /// <param name="presentationID"></param>
+        /// <param name="presentationId"></param>
         /// <param name="messageID"></param>
         /// <param name="affectedInstance"></param>
         /// <param name="status"></param>
-        public void SendCStoreResponse(byte presentationID, ushort messageID, string affectedInstance, DicomStatus status)
+        public void SendCStoreResponse(byte presentationId, ushort messageID, string affectedInstance, DicomStatus status)
         {
             var msg = new DicomMessage
                           {
                               MessageIdBeingRespondedTo = messageID,
                               CommandField = DicomCommandField.CStoreResponse,
-                              AffectedSopClassUid = _assoc.GetAbstractSyntax(presentationID).UID,
+                              AffectedSopClassUid = _assoc.GetAbstractSyntax(presentationId).UID,
                               AffectedSopInstanceUid = affectedInstance,
                               DataSetType = 0x0101,
                               Status = status
                           };
 
-        	SendDimse(presentationID, msg.CommandSet, null);
+        	SendDimse(presentationId, msg.CommandSet, null);
         }
 
         /// <summary>
         /// Method to send a DICOM C-STORE-RSP message.
         /// </summary>
-        /// <param name="presentationID"></param>
+        /// <param name="presentationId"></param>
         /// <param name="messageID"></param>
         /// <param name="affectedInstance"></param>
         /// <param name="status"></param>
         /// <param name="errorComment">An extended textual error comment on failure. The comment will be truncated to 64 characters.</param>
-        public void SendCStoreResponse(byte presentationID, ushort messageID, string affectedInstance, DicomStatus status, string errorComment)
+        public void SendCStoreResponse(byte presentationId, ushort messageID, string affectedInstance, DicomStatus status, string errorComment)
         {
             var msg = new DicomMessage
             {
                 MessageIdBeingRespondedTo = messageID,
                 CommandField = DicomCommandField.CStoreResponse,
-                AffectedSopClassUid = _assoc.GetAbstractSyntax(presentationID).UID,
+                AffectedSopClassUid = _assoc.GetAbstractSyntax(presentationId).UID,
                 AffectedSopInstanceUid = affectedInstance,
                 DataSetType = 0x0101,
                 Status = status,
@@ -1087,7 +1079,7 @@ namespace ClearCanvas.Dicom.Network
                 msg.ErrorComment = errorComment.Substring(0, (int)Math.Min(DicomVr.LOvr.MaximumLength, errorComment.Length));
             }
 
-            SendDimse(presentationID, msg.CommandSet, null);
+            SendDimse(presentationId, msg.CommandSet, null);
         }
 
         /// <summary>
@@ -1454,92 +1446,255 @@ namespace ClearCanvas.Dicom.Network
 
         #region Private Methods
 
-        /// <summary>
-        /// Main processing routine for processing a network connection.
-        /// </summary>
-        private void RunRead()
-        {
-            try
-            {
+		private void BeginReadPDUHeader()
+		{
+			try
+			{
+				_readLength = 6;
+
+				byte[] buffer = new byte[6];
+				_network.BeginRead(buffer, 0, 6, EndReadPDUHeader, buffer);
+			}
+			catch (ObjectDisposedException x)
+			{
+				// silently ignore
+				OnNetworkError(x, true);
+			}
+			catch (NullReferenceException x)
+			{
+				// connection already closed; silently ignore
+				OnNetworkError(null, true);
+			}
+			catch (IOException e)
+			{
+				int error = 0;
+				if (e.InnerException is SocketException)
+				{
+					error = (e.InnerException as SocketException).ErrorCode;
+					Platform.Log(LogLevel.Error, "Socket error while reading PDU: {0} [{1}]", (e.InnerException as SocketException).SocketErrorCode, (e.InnerException as SocketException).ErrorCode);
+				}
+				else if (!(e.InnerException is ObjectDisposedException))
+					Platform.Log(LogLevel.Error, "IO exception while reading PDU: {0}", e.ToString());
+
+				OnNetworkError(e, true);
+			}
+		}
+
+		private void EndReadPDUHeader(IAsyncResult result)
+		{
+			try
+			{
 				ResetDimseTimeout();
 
-				while (!_stop)
-                {
-                    if (NetworkHasData())
-                    {
-                        ResetDimseTimeout();
+				byte[] buffer = (byte[])result.AsyncState;
 
-                        bool success = ProcessNextPDU();
-                        if (!success)
-                        {
-                            // Start the Abort process, not much else we can do
-                            Platform.Log(LogLevel.Error,
-                                "Unexpected error processing PDU.  Aborting Association from {0} to {1}",
-                                _assoc.CallingAE, _assoc.CalledAE);
-                            SendAssociateAbort(DicomAbortSource.ServiceProvider, DicomAbortReason.InvalidPDUParameter);
-                        }
-                    }
-                    else if (DateTime.Now > GetDimseTimeout())
-                    {
-                    	string errorMessage;
-                    	switch (State)
-                        {
-                        	case DicomAssociationState.Sta6_AssociationEstablished:
-                        		OnDimseTimeout();
-								ResetDimseTimeout();
-                        		break;
-                        	case DicomAssociationState.Sta2_TransportConnectionOpen:
-                        		errorMessage = "ARTIM timeout when waiting for AAssociate Request PDU, closing connection.";
-                        		Platform.Log(LogLevel.Error, errorMessage);
-                        		State = DicomAssociationState.Sta13_AwaitingTransportConnectionClose;
-                        		OnNetworkError(new DicomNetworkException(errorMessage), true);
-                        		if (NetworkClosed != null)
-                        			NetworkClosed(errorMessage);
-                        		break;
-                        	case DicomAssociationState.Sta5_AwaitingAAssociationACOrReject:
-                        		errorMessage = "ARTIM timeout when waiting for AAssociate AC or RJ PDU, closing connection.";
-                        		Platform.Log(LogLevel.Error,errorMessage );
-                        		State = DicomAssociationState.Sta13_AwaitingTransportConnectionClose;
-								OnNetworkError(new DicomNetworkException(errorMessage), true);
-                        		if (NetworkClosed != null)
-                        			NetworkClosed(errorMessage);
-                        		break;
-                        	case DicomAssociationState.Sta13_AwaitingTransportConnectionClose:
-                        		errorMessage = string.Format(
-                        				"Timeout when waiting for transport connection to close from {0} to {1}.  Dropping Connection.",
-                        				_assoc.CallingAE, _assoc.CalledAE);
-                        		Platform.Log(LogLevel.Error, errorMessage);
-								OnNetworkError(new DicomNetworkException(errorMessage), true);
-                        		if (NetworkClosed != null)
-                        			NetworkClosed(errorMessage);
-                        		break;
-                        	default:
-                        		Platform.Log(LogLevel.Error, "DIMSE timeout in unexpected state: {0}", State.ToString());
-                        		OnDimseTimeout();
-								ResetDimseTimeout();
-                        		break;
-                        }
-                    }
-					//else
-					//{
-					//    Thread.Sleep(0);
-					//}
-                }
-                _network.Close();
-                _network.Dispose();
-                _network = null;
-            }
-            catch (Exception e)
-            {
-                OnNetworkError(e, true);
+				int count = _network.EndRead(result);
+				if (count == 0)
+				{
+					// disconnected
+					OnNetworkError(null, true);
+					return;
+				}
 
-                if (NetworkError != null)
-                    NetworkError(e);
-            }
-        }
+				_readLength -= count;
+
+				if (_readLength > 0)
+				{
+					_network.BeginRead(buffer, 6 - _readLength, _readLength, EndReadPDUHeader, buffer);
+					return;
+				}
+
+				int length = BitConverter.ToInt32(buffer, 2);
+				length = IPAddress.NetworkToHostOrder(length);
+
+				_readLength = length;
+
+				Array.Resize(ref buffer, length + 6);
+
+				_network.BeginRead(buffer, 6, length, EndReadPDU, buffer);
+			}
+			catch (ObjectDisposedException)
+			{
+				// silently ignore
+				OnNetworkError(null, true);
+			}
+			catch (NullReferenceException)
+			{
+				// connection already closed; silently ignore
+				OnNetworkError(null, true);
+			}
+			catch (IOException e)
+			{
+				int error = 0;
+				if (e.InnerException is SocketException)
+				{
+					error = (e.InnerException as SocketException).ErrorCode;
+					Platform.Log(LogLevel.Error, "Socket error while reading PDU: {0} [{1}]", (e.InnerException as SocketException).SocketErrorCode, (e.InnerException as SocketException).ErrorCode);
+				}
+				else if (!(e.InnerException is ObjectDisposedException))
+					Platform.Log(LogLevel.Error, "IO exception while reading PDU: {0}", e.ToString());
+
+				OnNetworkError(e, true);
+			}
+			catch (Exception e)
+			{
+				Platform.Log(LogLevel.Error, "Exception processing PDU header: {0}", e.ToString());
+			}
+		}
+
+		private void EndReadPDU(IAsyncResult result)
+		{
+			try
+			{
+				ResetDimseTimeout();
+
+				byte[] buffer = (byte[])result.AsyncState;
+
+				int count = _network.EndRead(result);
+				if (count == 0)
+				{
+					// disconnected
+					OnNetworkError(null, true);
+					return;
+				}
+
+				_readLength -= count;
+
+				if (_readLength > 0)
+				{
+					_network.BeginRead(buffer, buffer.Length - _readLength, _readLength, EndReadPDU, buffer);
+					return;
+				}
+
+				var raw = new RawPDU(buffer);
+				
+				if (raw.Type == 0x04)
+				{
+					if (_dimse == null)
+					{
+						_dimse = new DcmDimseInfo();
+						_assoc.TotalDimseReceived++;
+					}
+				}
+				if (_multiThreaded)
+				{
+					_processingQueue.Enqueue(delegate
+						{
+
+							if (raw.Type == 0x04)
+							{
+								if (_dimse == null)
+								{
+									_dimse = new DcmDimseInfo();
+									_assoc.TotalDimseReceived++;
+								}
+							}
+
+							if (!ProcessRawPDU(raw))
+							{
+								Platform.Log(LogLevel.Error,
+								             "Unexpected error processing PDU.  Aborting Association from {0} to {1}",
+								             _assoc.CallingAE, _assoc.CalledAE);
+								SendAssociateAbort(DicomAbortSource.ServiceProvider,
+								                   DicomAbortReason.InvalidPDUParameter);
+							}
+						});
+				}
+				else
+				{
+					if (!ProcessRawPDU(raw))
+					{
+						Platform.Log(LogLevel.Error,
+						             "Unexpected error processing PDU.  Aborting Association from {0} to {1}",
+						             _assoc.CallingAE, _assoc.CalledAE);
+						SendAssociateAbort(DicomAbortSource.ServiceProvider,
+						                   DicomAbortReason.InvalidPDUParameter);
+					}
+				}
+				BeginReadPDUHeader();
+			}
+			catch (IOException e)
+			{
+				if (e.InnerException is SocketException)
+				{
+					Platform.Log(LogLevel.Error, "Socket error while reading PDU: {0} [{1}]", (e.InnerException as SocketException).SocketErrorCode, (e.InnerException as SocketException).ErrorCode);
+				}
+				else if (!(e.InnerException is ObjectDisposedException))
+					Platform.Log(LogLevel.Error, "IO exception while reading PDU: {0}", e.ToString());
+
+				OnNetworkError(e, true);
+			}
+			catch (NullReferenceException)
+			{
+				// connection already closed; silently ignore
+				OnNetworkError(null, true);
+			}
+			catch (Exception e)
+			{
+				OnNetworkError(e, true);
+			}
+		}
+
+	    /// <summary>
+	    /// Main processing routine for checking for a Dimse Timeout
+	    /// </summary>
+	    private void CheckDimseTimeout()
+	    {
+		    try
+		    {
+			    if (DateTime.Now > GetDimseTimeout())
+			    {
+				    string errorMessage;
+				    switch (State)
+				    {
+					    case DicomAssociationState.Sta6_AssociationEstablished:
+						    OnDimseTimeout();
+						    ResetDimseTimeout();
+						    break;
+					    case DicomAssociationState.Sta2_TransportConnectionOpen:
+						    errorMessage = "ARTIM timeout when waiting for AAssociate Request PDU, closing connection.";
+						    Platform.Log(LogLevel.Error, errorMessage);
+						    State = DicomAssociationState.Sta13_AwaitingTransportConnectionClose;
+						    OnNetworkError(new DicomNetworkException(errorMessage), true);
+						    if (NetworkClosed != null)
+							    NetworkClosed(errorMessage);
+						    break;
+					    case DicomAssociationState.Sta5_AwaitingAAssociationACOrReject:
+						    errorMessage = "ARTIM timeout when waiting for AAssociate AC or RJ PDU, closing connection.";
+						    Platform.Log(LogLevel.Error, errorMessage);
+						    State = DicomAssociationState.Sta13_AwaitingTransportConnectionClose;
+						    OnNetworkError(new DicomNetworkException(errorMessage), true);
+						    if (NetworkClosed != null)
+							    NetworkClosed(errorMessage);
+						    break;
+					    case DicomAssociationState.Sta13_AwaitingTransportConnectionClose:
+						    errorMessage = string.Format(
+							    "Timeout when waiting for transport connection to close from {0} to {1}.  Dropping Connection.",
+							    _assoc.CallingAE, _assoc.CalledAE);
+						    Platform.Log(LogLevel.Error, errorMessage);
+						    OnNetworkError(new DicomNetworkException(errorMessage), true);
+						    if (NetworkClosed != null)
+							    NetworkClosed(errorMessage);
+						    break;
+					    default:
+						    Platform.Log(LogLevel.Error, "DIMSE timeout in unexpected state: {0}", State.ToString());
+						    OnDimseTimeout();
+						    ResetDimseTimeout();
+						    break;
+				    }
+			    }
+		    }
+		    catch (Exception e)
+		    {
+			    OnNetworkError(e, true);
+
+			    if (NetworkError != null)
+				    NetworkError(e);
+		    }
+	    }
 
 
-        /// <summary>
+	    /// <summary>
         /// Main processing routine for processing a network connection.
         /// </summary>
         private void RunWrite()
