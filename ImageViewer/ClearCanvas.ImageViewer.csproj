@@ -250,8 +250,10 @@
     <Compile Include="PresentationStates\Dicom\Tests\OverlayPlanePresentationTests.cs" />
     <Compile Include="PresentationStates\GeometricShutterCache.cs" />
     <Compile Include="Rendering\GDI\FontFactory.cs" />
+    <Compile Include="Rendering\GDI\GdiObjectFactory.cs" />
     <Compile Include="Rendering\GDI\GdiRendererFactory.cs" />
     <Compile Include="Rendering\GDI\IGdiBuffer.cs" />
+    <Compile Include="Rendering\GDI\MruFactory.cs" />
     <Compile Include="Rendering\RendererBase2.cs" />
     <Compile Include="Rendering\RenderingSurfaceBase.cs" />
     <Compile Include="RoiGraphics\Analyzers\ProtractorAnalyzers.cs" />
