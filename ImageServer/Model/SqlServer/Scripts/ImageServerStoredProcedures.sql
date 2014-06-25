@@ -4798,7 +4798,7 @@ BEGIN
 	SELECT @QCStatusFailed=Enum FROM [dbo].[QCStatusEnum] WHERE Lookup=''Failed''
 	SELECT @QCStatusIncomplete=Enum FROM [dbo].[QCStatusEnum] WHERE Lookup=''Incomplete''
 
-	IF @PartitionAE IS NULL or @PartitionAE=''
+	IF @PartitionAE IS NULL or @PartitionAE=''''
 	BEGIN
 		SELECT 
 			@CheckingCount=SUM(case when [QCStatusEnum] = @QCStatusChecking then 1 else 0 end),
