@@ -72,11 +72,11 @@ namespace ClearCanvas.Dicom.Network.Scp
             // First set the user parms for each of the extensions before we do anything with them.
             foreach (object obj in scps)
             {
-                var scp = obj as IDicomScp<TContext>;
-                scp.SetContext(_context);
+	            var scp = obj as IDicomScp<TContext>;
+	            if (scp != null) scp.SetContext(_context);
             }
 
-            // Now, create a dictionary with the extension to be used for each presentation context.
+	        // Now, create a dictionary with the extension to be used for each presentation context.
             foreach (byte pcid in parameters.GetPresentationContextIDs())
             {
                 if (parameters.GetPresentationContextResult(pcid) == DicomPresContextResult.Accept)
@@ -86,6 +86,7 @@ namespace ClearCanvas.Dicom.Network.Scp
                     foreach (object obj in scps)
                     {
                         var scp = obj as IDicomScp<TContext>;
+	                    if (scp == null) continue;
 
                         IList<SupportedSop> sops = scp.GetSupportedSopClasses();
                         foreach (SupportedSop sop in sops)
@@ -178,11 +179,11 @@ namespace ClearCanvas.Dicom.Network.Scp
                 server.SendAssociateReject(DicomRejectResult.Permanent, DicomRejectSource.ServiceUser, DicomRejectReason.NoReasonGiven);
                 return;
             }
-           
 
             server.SendAssociateAccept(association);
 
-            Platform.Log(LogLevel.Info, "Received association:\r\n{0}", association.ToString());
+			// Optimization to speed query performance
+	        Task.Factory.StartNew(() => Platform.Log(LogLevel.Info, "Received association:\r\n{0}", association.ToString()));
         }
 
 	    void IDicomServerHandler.OnReceiveRequestMessage(DicomServer server, ServerAssociationParameters association,
