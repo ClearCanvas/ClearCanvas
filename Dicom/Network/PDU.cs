@@ -42,7 +42,6 @@ namespace ClearCanvas.Dicom.Network
         private readonly Stack<long> _m16;
         private readonly Stack<long> _m32;
 		private readonly Stack<long> _mb;
-		private readonly uint _length = 0;
         #endregion
 
         #region Public Constructors
@@ -116,17 +115,6 @@ namespace ClearCanvas.Dicom.Network
         {
             _is = s;
         }
-
-		public RawPDU(byte[] pdu)
-		{
-			_ms = new MemoryStream(pdu, 0, pdu.Length, false, true);
-			_br = EndianBinaryReader.Create(_ms, Endian.Big);
-
-			_type = _br.ReadByte();
-			_br.ReadByte();
-			_length = _br.ReadUInt32();	// PDU-Length
-		}
-
         #endregion
 
         #region Public Properties
@@ -136,7 +124,7 @@ namespace ClearCanvas.Dicom.Network
         }
         public uint Length
         {
-            get { return _length != 0 ? _length : (uint) _ms.Length; }
+            get { return (uint)_ms.Length; }
         }
         #endregion
 
@@ -167,7 +155,7 @@ namespace ClearCanvas.Dicom.Network
         #region Public Methods
         public void Save(String file)
         {
-            var f = new FileInfo(file);
+            FileInfo f = new FileInfo(file);
             DirectoryInfo d = f.Directory;
 
             if (!d.Exists)
