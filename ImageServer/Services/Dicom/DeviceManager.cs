@@ -35,6 +35,8 @@ namespace ClearCanvas.ImageServer.Services.Dicom
 {
     class DeviceManager
     {
+	    private static ServerCache<string, Device> _deviceCache = new ServerCache<string, Device>(TimeSpan.FromSeconds(150), TimeSpan.FromSeconds(30)); 
+
     	/// <summary>
     	/// Lookup the device entity in the database corresponding to the remote AE of the association.
     	/// </summary>
@@ -47,6 +49,10 @@ namespace ClearCanvas.ImageServer.Services.Dicom
     		isNew = false;
 
     		Device device = null;
+			if (_deviceCache.TryGetValue(association.CallingAE, out device))
+			{
+				return device;
+			}
 
     		using (
     			IUpdateContext updateContext =
@@ -133,6 +139,8 @@ namespace ClearCanvas.ImageServer.Services.Dicom
     					else
     						updateContext.Commit();
     				}
+
+    				_deviceCache.Add(device.AeTitle, device);
     			}
     		}
 
