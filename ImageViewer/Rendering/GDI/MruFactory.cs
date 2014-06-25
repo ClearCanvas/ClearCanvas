@@ -8,62 +8,52 @@ namespace ClearCanvas.ImageViewer.Rendering.GDI
     {
         private readonly int _maxObjects;
         private readonly Func<TKey, TObject> _createObject;
-
-        private readonly Dictionary<TKey, TObject> _objects = new Dictionary<TKey, TObject>();
-        private readonly LinkedList<TKey> _mruKeys = new LinkedList<TKey>();
-        private KeyValuePair<TKey, TObject>? _last;
+        private readonly LinkedList<KeyValuePair<TKey, TObject>> _objects;
 
         public MruFactory(int maxObjects, Func<TKey, TObject> createObject)
         {
             _maxObjects = maxObjects;
             _createObject = createObject;
+            _objects = new LinkedList<KeyValuePair<TKey, TObject>>();
         }
 
         public TObject Create(TKey key)
         {
-            if (_last.HasValue && _last.Value.Key.Equals(key))
-                return _last.Value.Value;
+            var entry = _objects.First;
+            while (entry != null && !entry.Value.Key.Equals(key))
+                entry = entry.Next;
 
-            TObject obj;
-            if (!_objects.TryGetValue(key, out obj))
+            if (entry == null)
             {
-                obj = _createObject(key);
-                _objects[key] = obj;
+                var value = _createObject(key);
+                entry = _objects.AddFirst(new KeyValuePair<TKey, TObject>(key, value));
             }
             else
             {
-                _mruKeys.Remove(key);
+                //Put most recently used at the front of the list.
+                _objects.Remove(entry);
+                _objects.AddFirst(entry.Value);
             }
 
-            _mruKeys.AddFirst(key);
-            _last = new KeyValuePair<TKey, TObject>(key, obj);
             Cleanup();
-            return obj;
+            return entry.Value.Value;
         }
 
         private void Cleanup()
         {
-            if (_mruKeys.Count <= _maxObjects)
-                return;
-
-            _last = null;
-
-            do
+            while (_objects.Count > _maxObjects)
             {
-                var lastKey = _mruKeys.Last.Value;
-                TObject last = _objects[lastKey];
-                _mruKeys.RemoveLast();
-                _objects.Remove(lastKey);
-
+                var lastEntry = _objects.Last.Value;
+                _objects.RemoveLast();
                 try
                 {
-                    last.Dispose();
+                    lastEntry.Value.Dispose();
                 }
                 catch (Exception e)
                 {
                     Platform.Log(LogLevel.Error, e);
                 }
-            } while (_mruKeys.Count > _maxObjects);
+            }
         }
 
         private void Dispose(bool disposing)
@@ -71,11 +61,11 @@ namespace ClearCanvas.ImageViewer.Rendering.GDI
             if (!disposing)
                 return;
 
-            foreach (var obj in _objects.Values)
+            foreach (var entry in _objects)
             {
                 try
                 {
-                    obj.Dispose();
+                    entry.Value.Dispose();
                 }
                 catch (Exception e)
                 {
