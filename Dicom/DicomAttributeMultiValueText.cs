@@ -24,7 +24,6 @@
 
 using System;
 using System.Globalization;
-using System.Text;
 using ClearCanvas.Dicom.IO;
 using ClearCanvas.Dicom.Utilities;
 using ClearCanvas.Dicom.Validation;
@@ -188,7 +187,7 @@ namespace ClearCanvas.Dicom
                 }
                     
 
-                if (ParentCollection!=null && ParentCollection.SpecificCharacterSet != null)
+                if (ParentCollection!=null && !string.IsNullOrEmpty(ParentCollection.SpecificCharacterSet))
                 {
                     return (uint)GetByteBuffer(TransferSyntax.ExplicitVrBigEndian, ParentCollection.SpecificCharacterSet).Length;
                 }
@@ -197,28 +196,17 @@ namespace ClearCanvas.Dicom
 			protected set { base.StreamLength = value; }
         }
 
-        public override string ToString()
-        {
-            if (_values == null)
-                return "";
+	    public override string ToString()
+	    {
+			if (_values == null)
+				return string.Empty;
 
-            //TODO: verify that the following is the same as (and replace if so): return string.Join("\\", _values);
-            StringBuilder value = null;
+			if (_values.Length == 0) return string.Empty;
 
-            foreach (string val in _values)
-            {
-                if (value == null)
-                    value = new StringBuilder(val);
-                else
-                    value.AppendFormat("\\{0}", val);
-            }
+			return string.Join("\\", _values);
+		}
 
-            if (value == null) return "";
-
-            return value.ToString();
-        }
-
-        public override bool Equals(object obj)
+	    public override bool Equals(object obj)
         {
             //Check for null and compare run-time types.
             if (obj == null || GetType() != obj.GetType()) return false;
@@ -304,7 +292,7 @@ namespace ClearCanvas.Dicom
 
         internal override ByteBuffer GetByteBuffer(TransferSyntax syntax, string specificCharacterSet)
         {
-            ByteBuffer bb = new ByteBuffer(syntax.Endian);
+            var bb = new ByteBuffer(syntax.Endian);
 
             if (Tag.VR.SpecificCharacterSet)
                 bb.SpecificCharacterSet = specificCharacterSet;
@@ -2257,7 +2245,7 @@ namespace ClearCanvas.Dicom
 
         internal override ByteBuffer GetByteBuffer(TransferSyntax syntax, string specificCharacterSet)
         {
-            ByteBuffer bb = new ByteBuffer(syntax.Endian);
+            var bb = new ByteBuffer(syntax.Endian);
 
             bb.SetString(ToString(), 0x00);
 

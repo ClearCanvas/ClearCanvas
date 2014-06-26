@@ -51,9 +51,9 @@ namespace ClearCanvas.Dicom
         private readonly uint _startTag = 0x00000000;
         private readonly uint _endTag = 0xFFFFFFFF;
 
-        private bool _validateVrLengths = DicomSettings.Default.ValidateVrLengths;
-		private bool _validateVrValues = DicomSettings.Default.ValidateVrValues;
-    	private bool _ignoreOutOfRangeTags = DicomSettings.Default.IgnoreOutOfRangeTags;
+        private static bool _validateVrLengths = DicomSettings.Default.ValidateVrLengths;
+		private static bool _validateVrValues = DicomSettings.Default.ValidateVrValues;
+    	private static bool _ignoreOutOfRangeTags = DicomSettings.Default.IgnoreOutOfRangeTags;
 		#endregion
 
         #region Constructors
