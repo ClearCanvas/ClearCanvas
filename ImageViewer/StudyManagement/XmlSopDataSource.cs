@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Linq;
 using ClearCanvas.Dicom;
@@ -68,6 +69,10 @@ namespace ClearCanvas.ImageViewer.StudyManagement
             {
                 lock (SyncLock)
                 {
+                    DicomAttribute dicomAttribute;
+                    if (SourceMessage.DataSet.TryGetAttribute(tag, out dicomAttribute))
+                        return dicomAttribute;
+
                     if (NeedFullHeader(tag.TagValue))
 						LoadFullHeader();
 
@@ -82,8 +87,12 @@ namespace ClearCanvas.ImageViewer.StudyManagement
             {
                 lock (SyncLock)
                 {
+                    DicomAttribute dicomAttribute;
+                    if (SourceMessage.DataSet.TryGetAttribute(tag, out dicomAttribute))
+                        return dicomAttribute;
+
                     if (NeedFullHeader(tag))
-						LoadFullHeader();
+                        LoadFullHeader();
 
                     return base[tag];
                 }
@@ -94,8 +103,11 @@ namespace ClearCanvas.ImageViewer.StudyManagement
         {
             lock (SyncLock)
             {
+                if (SourceMessage.DataSet.TryGetAttribute(tag, out attribute))
+                    return true;
+
                 if (NeedFullHeader(tag.TagValue))
-					LoadFullHeader();
+                    LoadFullHeader();
 
                 return base.TryGetAttribute(tag, out attribute);
             }
@@ -105,8 +117,11 @@ namespace ClearCanvas.ImageViewer.StudyManagement
         {
             lock (SyncLock)
             {
+                if (SourceMessage.DataSet.TryGetAttribute(tag, out attribute))
+                    return true;
+
                 if (NeedFullHeader(tag))
-					LoadFullHeader();
+                    LoadFullHeader();
 
                 return base.TryGetAttribute(tag, out attribute);
             }
@@ -124,9 +139,9 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 
 			var xmlDataSet = (InstanceXmlDicomAttributeCollection) SourceMessage.DataSet;
 
-			// if it's a private tag and not already in the collection, we MUST retrieve full header
+			// if it's a private tag and not already in the collection (which has been checked already), we MUST retrieve full header
 			// early releases of the study XML functionality excluded private tags but also did not report their exclusion
-			if (DicomTag.IsPrivateTag(tag) && !xmlDataSet.Contains(tag))
+			if (DicomTag.IsPrivateTag(tag))
 				return true;
 
 			if (xmlDataSet.IsTagExcluded(tag))
