@@ -323,7 +323,7 @@ namespace ClearCanvas.ImageViewer.Vtk
 				vol = new S16Volume(new short[width*height*depth],
 				                    new Size3D(width, height, depth), new Vector3D(1, 1, 1),
 				                    new Vector3D(0, 0, 0), Matrix3D.GetIdentity(),
-				                    new DicomAttributeCollection(),
+				                    new DicomAttributeCollection(){ValidateVrLengths = false, ValidateVrValues = false},
 				                    short.MinValue);
 			}
 			else

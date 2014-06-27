@@ -41,7 +41,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
     	private volatile bool _fullHeaderLoaded;
 
 		protected XmlSopDataSource(InstanceXml instanceXml)
-			: base(new DicomFile("", new DicomAttributeCollection(), instanceXml.Collection))
+			: base(new DicomFile("", new DicomAttributeCollection{ValidateVrLengths = false, ValidateVrValues = false}, instanceXml.Collection))
         {
 			//These don't get set properly for instance xml.
 			var sourceFile = (DicomFile)SourceMessage;

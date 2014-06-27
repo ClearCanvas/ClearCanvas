@@ -25,6 +25,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using ClearCanvas.Dicom;
 using ClearCanvas.Dicom.Iod;
 using ClearCanvas.Dicom.Iod.ContextGroups;
@@ -35,6 +36,7 @@ using ClearCanvas.Dicom.Validation;
 
 namespace ClearCanvas.ImageViewer.StudyManagement
 {
+
 	/// <summary>
 	/// A DICOM SOP Instance.
 	/// </summary>
@@ -51,8 +53,55 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 	/// </remarks>
 	public partial class Sop : IDisposable, IDicomAttributeProvider, ISopInstanceData, ISeriesData, IStudyData, IPatientData
 	{
+        //Cached property values where the returned object will be immutable.
+        private struct CachedValues
+        {
+            public string TransferSyntaxUid;
+            public string StudyInstanceUid;
+            public string SeriesInstanceUid;
+            public string SopInstanceUid;
+            public string SopClassUid;
+            public int? InstanceNumber;
+
+            public string ContentDate;
+            public string ContentTime;
+
+            public string PatientsName;
+            public string PatientId;
+            public string PatientsBirthDate;
+            public string PatientsBirthTime;
+            public string PatientsSex;
+            public string PatientsAge;
+            public string PatientSpeciesDescription;
+
+            public string StudyDate;
+            public string StudyTime;
+            public string StudyDescription;
+            public string AccessionNumber;
+            public string StudyId;
+            public string ReferringPhysiciansName;
+
+            public string Modality;
+            public int? SeriesNumber;
+            public string Laterality;
+            public string SeriesDate;
+            public string SeriesTime;
+
+            public string ProtocolName;
+            public string SeriesDescription;
+            public string Manufacturer;
+            public string ManufacturersModelName;
+            public string InstitutionName;
+            public string InstitutionalDepartmentName;
+            public string StationName;
+
+            public string BodyPartExamined;
+            public string PatientPosition;
+        }
+
 		private volatile Series _parentSeries;
 		private ISopDataSource _dataSource;
+	    private CachedValues _cache;
 
 		/// <summary>
 		/// Creates a new instance of <see cref="Sop"/> from a local file.
@@ -161,7 +210,13 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		/// </summary>
 		public virtual string TransferSyntaxUid
 		{
-			get { return DataSource.TransferSyntaxUid; }
+		    get
+		    {
+		        var value = _cache.TransferSyntaxUid;
+                if (value == null)
+                    _cache.TransferSyntaxUid = value = DataSource.TransferSyntaxUid;
+                return value;
+		    }
 		}
 
 		#endregion
@@ -173,7 +228,13 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		/// </summary>
 		public virtual string SopInstanceUid
 		{
-			get { return DataSource.SopInstanceUid; }
+		    get
+		    {
+                var value = _cache.SopInstanceUid;
+                if (value == null)
+                    _cache.SopInstanceUid = value = DataSource.SopInstanceUid;
+                return value;
+            }
 		}
 
 		/// <summary>
@@ -181,7 +242,13 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		/// </summary>
 		public virtual string SopClassUid
 		{
-			get { return DataSource.SopClassUid; }
+		    get
+		    {
+                var value = _cache.SopClassUid;
+                if (value == null)
+                    _cache.SopClassUid = value = DataSource.SopClassUid;
+                return value;
+            }
 		}
 
 		/// <summary>
@@ -191,19 +258,11 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		{
 			get
 			{
-				string specificCharacterSet;
-				specificCharacterSet = this[DicomTags.SpecificCharacterSet].ToString();
+				var specificCharacterSet = this[DicomTags.SpecificCharacterSet].ToString();
+			    if (!string.IsNullOrEmpty(specificCharacterSet))
+			        return DicomStringHelper.GetStringArray(specificCharacterSet);
 
-				if (!string.IsNullOrEmpty(specificCharacterSet))
-				{
-					string[] values;
-					values = DicomStringHelper.GetStringArray(specificCharacterSet);
-					return values;
-				}
-				else
-				{
-					return new string[0];
-				}
+			    return new string[0];
 			}
 		}
 
@@ -216,7 +275,13 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		/// </summary>
 		public virtual int InstanceNumber
 		{
-			get { return DataSource.InstanceNumber; }
+		    get
+		    {
+                var value = _cache.InstanceNumber;
+                if (value == null)
+                    _cache.InstanceNumber = value = DataSource.InstanceNumber;
+                return value.Value;
+		    }
 		}
 
 		/// <summary>
@@ -224,7 +289,13 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		/// </summary>
 		public virtual string ContentDate
 		{
-			get { return this[DicomTags.ContentDate].GetString(0, null) ?? ""; }
+		    get
+		    {
+                var value = _cache.ContentDate;
+                if (value == null)
+                    _cache.ContentDate = value = this[DicomTags.ContentDate].GetString(0, String.Empty);
+                return value;
+		    }
 		}
 
 		/// <summary>
@@ -232,7 +303,13 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		/// </summary>
 		public virtual string ContentTime
 		{
-			get { return this[DicomTags.ContentTime].GetString(0, null) ?? ""; }
+		    get
+		    {
+                var value = _cache.ContentTime;
+                if (value == null)
+                    _cache.ContentTime = value = this[DicomTags.ContentTime].GetString(0, String.Empty);
+                return value;
+            }
 		}
 
 		#endregion
@@ -246,9 +323,10 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		{
 			get
 			{
-				string patientsName;
-				patientsName = this[DicomTags.PatientsName].GetString(0, null);
-				return new PersonName(patientsName ?? "");
+                var value = _cache.PatientsName;
+			    if (value == null)
+			        _cache.PatientsName = value = this[DicomTags.PatientsName].GetString(0, String.Empty);
+				return new PersonName(value);
 			}
 		}
 
@@ -259,9 +337,10 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		{
 			get
 			{
-				string patientId;
-				patientId = this[DicomTags.PatientId].GetString(0, null);
-				return patientId ?? "";
+                var value = _cache.PatientId;
+			    if (value == null)
+                    _cache.PatientId = value = this[DicomTags.PatientId].GetString(0, String.Empty);
+				return value;
 			}
 		}
 
@@ -272,10 +351,11 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		{
 			get
 			{
-				string patientsBirthDate;
-				patientsBirthDate = this[DicomTags.PatientsBirthDate].GetString(0, null);
-				return patientsBirthDate ?? "";
-			}
+                var value = _cache.PatientsBirthDate;
+                if (value == null)
+                    _cache.PatientsBirthDate = value = this[DicomTags.PatientsBirthDate].GetString(0, String.Empty);
+                return value;
+            }
 		}
 
 		/// <summary>
@@ -285,10 +365,11 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		{
 			get
 			{
-				string patientsBirthTime;
-				patientsBirthTime = this[DicomTags.PatientsBirthTime].GetString(0, null);
-				return patientsBirthTime ?? "";
-			}
+                var value = _cache.PatientsBirthTime;
+                if (value == null)
+                    _cache.PatientsBirthTime = value = this[DicomTags.PatientsBirthTime].GetString(0, String.Empty);
+                return value;
+            }
 		}
 
 		/// <summary>
@@ -298,10 +379,11 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		{
 			get
 			{
-				string patientsSex;
-				patientsSex = this[DicomTags.PatientsSex].GetString(0, null);
-				return patientsSex ?? "";
-			}
+                var value = _cache.PatientsSex;
+                if (value == null)
+                    _cache.PatientsSex = value = this[DicomTags.PatientsSex].GetString(0, String.Empty);
+                return value;
+            }
 		}
 
 		#region Species
@@ -311,7 +393,13 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		/// </summary>
 		public virtual string PatientSpeciesDescription
 		{
-			get { return this[DicomTags.PatientSpeciesDescription].GetString(0, null); }
+		    get
+		    {
+                var value = _cache.PatientSpeciesDescription;
+                if (value == null)
+                    _cache.PatientSpeciesDescription = value = this[DicomTags.PatientSpeciesDescription].GetString(0, String.Empty);
+                return value;
+		    }
 		}
 
 		/// <summary>
@@ -387,7 +475,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		/// </summary>
 		public virtual string PatientBreedDescription
 		{
-			get { return this[DicomTags.PatientBreedDescription].GetString(0, null); }
+			get { return this[DicomTags.PatientBreedDescription].GetString(0, String.Empty); }
 		}
 
 		/// <summary>
@@ -465,9 +553,8 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		{
 			get
 			{
-				string responsiblePerson;
-				responsiblePerson = this[DicomTags.ResponsiblePerson].GetString(0, null);
-				return new PersonName(responsiblePerson ?? "");
+				var responsiblePerson = this[DicomTags.ResponsiblePerson].GetString(0, String.Empty);
+				return new PersonName(responsiblePerson);
 			}
 		}
 
@@ -476,7 +563,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		/// </summary>
 		public virtual string ResponsiblePersonRole
 		{
-			get { return this[DicomTags.ResponsiblePersonRole].GetString(0, null); }
+			get { return this[DicomTags.ResponsiblePersonRole].GetString(0, String.Empty); }
 		}
 
 		/// <summary>
@@ -484,7 +571,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		/// </summary>
 		public virtual string ResponsibleOrganization
 		{
-			get { return this[DicomTags.ResponsibleOrganization].GetString(0, null); }
+            get { return this[DicomTags.ResponsibleOrganization].GetString(0, String.Empty); }
 		}
 
 		#endregion
@@ -508,7 +595,13 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		/// </summary>
 		public virtual string StudyInstanceUid
 		{
-			get { return DataSource.StudyInstanceUid; }
+		    get
+		    {
+                var value = _cache.StudyInstanceUid;
+                if (value == null)
+                    _cache.StudyInstanceUid = value = DataSource.StudyInstanceUid;
+                return value;
+            }
 		}
 
 		/// <summary>
@@ -518,9 +611,10 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		{
 			get
 			{
-				string studyDate;
-				studyDate = this[DicomTags.StudyDate].GetString(0, null);
-				return studyDate ?? "";
+                var value = _cache.StudyDate;
+                if (value == null)
+                    _cache.StudyDate = value = this[DicomTags.StudyDate].GetString(0, String.Empty);
+                return value;
 			}
 		}
 
@@ -531,10 +625,11 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		{
 			get
 			{
-				string studyTime;
-				studyTime = this[DicomTags.StudyTime].GetString(0, null);
-				return studyTime ?? "";
-			}
+                var value = _cache.StudyTime;
+                if (value == null)
+                    _cache.StudyTime = value = this[DicomTags.StudyTime].GetString(0, String.Empty);
+                return value;
+            }
 		}
 
 		/// <summary>
@@ -544,10 +639,11 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		{
 			get
 			{
-				string referringPhysiciansName;
-				referringPhysiciansName = this[DicomTags.ReferringPhysiciansName].GetString(0, null);
-				return new PersonName(referringPhysiciansName ?? "");
-			}
+                var value = _cache.ReferringPhysiciansName;
+                if (value == null)
+                    _cache.ReferringPhysiciansName = value = this[DicomTags.ReferringPhysiciansName].GetString(0, String.Empty);
+                return new PersonName(value);
+            }
 		}
 
 		/// <summary>
@@ -557,10 +653,11 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		{
 			get
 			{
-				string accessionNumber;
-				accessionNumber = this[DicomTags.AccessionNumber].GetString(0, null);
-				return accessionNumber ?? "";
-			}
+                var value = _cache.AccessionNumber;
+                if (value == null)
+                    _cache.AccessionNumber = value = this[DicomTags.AccessionNumber].GetString(0, String.Empty);
+                return value;
+            }
 		}
 
 		/// <summary>
@@ -570,10 +667,11 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		{
 			get
 			{
-				string studyDescription;
-				studyDescription = this[DicomTags.StudyDescription].GetString(0, null);
-				return studyDescription ?? "";
-			}
+                var value = _cache.StudyDescription;
+                if (value == null)
+                    _cache.StudyDescription = value = this[DicomTags.StudyDescription].GetString(0, String.Empty);
+                return value;
+            }
 		}
 
 		/// <summary>
@@ -583,10 +681,11 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		{
 			get
 			{
-				string studyId;
-				studyId = this[DicomTags.StudyId].GetString(0, null);
-				return studyId ?? "";
-			}
+                var value = _cache.StudyId;
+                if (value == null)
+                    _cache.StudyId = value = this[DicomTags.StudyId].GetString(0, String.Empty);
+                return value;
+            }
 		}
 
 		/// <summary>
@@ -596,8 +695,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		{
 			get
 			{
-				string nameOfPhysiciansReadingStudy;
-				nameOfPhysiciansReadingStudy = this[DicomTags.NameOfPhysiciansReadingStudy].ToString();
+				var nameOfPhysiciansReadingStudy = this[DicomTags.NameOfPhysiciansReadingStudy].ToString();
 				return DicomStringHelper.GetPersonNameArray(nameOfPhysiciansReadingStudy);
 			}
 		}
@@ -628,7 +726,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 
 		string IStudyData.ReferringPhysiciansName
 		{
-			get { return this.ReferringPhysiciansName.ToString(); }
+			get { return ReferringPhysiciansName.ToString(); }
 		}
 
 		int? IStudyData.NumberOfStudyRelatedSeries
@@ -662,8 +760,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		{
 			get
 			{
-				string admittingDiagnosesDescription;
-				admittingDiagnosesDescription = this[DicomTags.AdmittingDiagnosesDescription].ToString();
+				var admittingDiagnosesDescription = this[DicomTags.AdmittingDiagnosesDescription].ToString();
 				return DicomStringHelper.GetStringArray(admittingDiagnosesDescription);
 			}
 		}
@@ -675,9 +772,10 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		{
 			get
 			{
-				string patientsAge;
-				patientsAge = this[DicomTags.PatientsAge].GetString(0, null);
-				return patientsAge ?? "";
+			    var value = _cache.PatientsAge;
+			    if (value == null)
+                    _cache.PatientsAge = value = this[DicomTags.PatientsAge].GetString(0, String.Empty);
+				return value;
 			}
 		}
 
@@ -688,9 +786,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		{
 			get
 			{
-				string additionalPatientsHistory;
-				additionalPatientsHistory = this[DicomTags.AdditionalPatientHistory].GetString(0, null);
-				return additionalPatientsHistory ?? "";
+				return this[DicomTags.AdditionalPatientHistory].GetString(0, String.Empty);
 			}
 		}
 
@@ -705,9 +801,10 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		{
 			get
 			{
-				string manufacturer;
-				manufacturer = this[DicomTags.Manufacturer].GetString(0, null);
-				return manufacturer ?? "";
+			    var value = _cache.Manufacturer;
+			    if (value == null)
+				    _cache.Manufacturer = value = this[DicomTags.Manufacturer].GetString(0, String.Empty);
+			    return value;
 			}
 		}
 
@@ -718,10 +815,11 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		{
 			get
 			{
-				string institutionName;
-				institutionName = this[DicomTags.InstitutionName].GetString(0, null);
-				return institutionName ?? "";
-			}
+                var value = _cache.InstitutionName;
+                if (value == null)
+                    _cache.InstitutionName = value = this[DicomTags.InstitutionName].GetString(0, String.Empty);
+                return value;
+            }
 		}
 
 		/// <summary>
@@ -731,10 +829,11 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		{
 			get
 			{
-				string stationName;
-				stationName = this[DicomTags.StationName].GetString(0, null);
-				return stationName ?? "";
-			}
+                var value = _cache.StationName;
+                if (value == null)
+                    _cache.StationName = value = this[DicomTags.StationName].GetString(0, String.Empty);
+                return value;
+            }
 		}
 
 		/// <summary>
@@ -744,10 +843,11 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		{
 			get
 			{
-				string institutionalDepartmentName;
-				institutionalDepartmentName = this[DicomTags.InstitutionalDepartmentName].GetString(0, null);
-				return institutionalDepartmentName ?? "";
-			}
+                var value = _cache.InstitutionalDepartmentName;
+                if (value == null)
+                    _cache.InstitutionalDepartmentName = value = this[DicomTags.InstitutionalDepartmentName].GetString(0, String.Empty);
+                return value;
+            }
 		}
 
 		/// <summary>
@@ -757,10 +857,11 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		{
 			get
 			{
-				string manufacturersModelName;
-				manufacturersModelName = this[DicomTags.ManufacturersModelName].GetString(0, null);
-				return manufacturersModelName ?? "";
-			}
+                var value = _cache.ManufacturersModelName;
+                if (value == null)
+                    _cache.ManufacturersModelName = value = this[DicomTags.ManufacturersModelName].GetString(0, String.Empty);
+                return value;
+            }
 		}
 
 		#endregion
@@ -774,10 +875,11 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		{
 			get
 			{
-				string modality;
-				modality = this[DicomTags.Modality].GetString(0, null);
-				return modality ?? "";
-			}
+                var value = _cache.Modality;
+                if (value == null)
+                    _cache.Modality = value = this[DicomTags.Modality].GetString(0, String.Empty);
+                return value;
+            }
 		}
 
 		/// <summary>
@@ -785,7 +887,13 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		/// </summary>
 		public virtual string SeriesInstanceUid
 		{
-			get { return DataSource.SeriesInstanceUid; }
+		    get
+		    {
+                var value = _cache.SeriesInstanceUid;
+		        if (value == null)
+		            _cache.SeriesInstanceUid = value = DataSource.SeriesInstanceUid;
+                return value;
+		    }
 		}
 
 		/// <summary>
@@ -795,9 +903,10 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		{
 			get
 			{
-				int seriesNumber;
-				seriesNumber = this[DicomTags.SeriesNumber].GetInt32(0, 0);
-				return seriesNumber;
+                var value = _cache.SeriesNumber;
+                if (!value.HasValue)
+                    _cache.SeriesNumber = value = this[DicomTags.SeriesNumber].GetInt32(0, 0);
+                return value.Value;
 			}
 		}
 
@@ -808,10 +917,11 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		{
 			get
 			{
-				string laterality;
-				laterality = this[DicomTags.Laterality].GetString(0, null);
-				return laterality ?? "";
-			}
+                var value = _cache.Laterality;
+                if (value == null)
+                    _cache.Laterality = value = this[DicomTags.Laterality].GetString(0, String.Empty);
+                return value;
+            }
 		}
 
 		/// <summary>
@@ -821,10 +931,11 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		{
 			get
 			{
-				string seriesDate;
-				seriesDate = this[DicomTags.SeriesDate].GetString(0, null);
-				return seriesDate ?? "";
-			}
+                var value = _cache.SeriesDate;
+			    if (value == null)
+			        _cache.SeriesDate = value = this[DicomTags.SeriesDate].GetString(0, String.Empty);
+                return value;
+            }
 		}
 
 		/// <summary>
@@ -834,10 +945,11 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		{
 			get
 			{
-				string seriesTime;
-				seriesTime = this[DicomTags.SeriesTime].GetString(0, null);
-				return seriesTime ?? "";
-			}
+                var value = _cache.SeriesTime;
+                if (value == null)
+                    _cache.SeriesTime = value = this[DicomTags.SeriesTime].GetString(0, String.Empty);
+                return value;
+            }
 		}
 
 		/// <summary>
@@ -847,8 +959,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		{
 			get
 			{
-				string performingPhysiciansNames;
-				performingPhysiciansNames = this[DicomTags.PerformingPhysiciansName].ToString();
+				var performingPhysiciansNames = this[DicomTags.PerformingPhysiciansName].ToString();
 				return DicomStringHelper.GetPersonNameArray(performingPhysiciansNames);
 			}
 		}
@@ -860,10 +971,11 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		{
 			get
 			{
-				string protocolName;
-				protocolName = this[DicomTags.ProtocolName].GetString(0, null);
-				return protocolName ?? "";
-			}
+                var value = _cache.ProtocolName;
+                if (value == null)
+                    _cache.ProtocolName = value = this[DicomTags.ProtocolName].GetString(0, String.Empty);
+                return value;
+            }
 		}
 
 		/// <summary>
@@ -873,10 +985,11 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		{
 			get
 			{
-				string seriesDescription;
-				seriesDescription = this[DicomTags.SeriesDescription].GetString(0, null);
-				return seriesDescription ?? "";
-			}
+                var value = _cache.SeriesDescription;
+                if (value == null)
+                    _cache.SeriesDescription = value = this[DicomTags.SeriesDescription].GetString(0, String.Empty);
+                return value;
+            }
 		}
 
 		/// <summary>
@@ -886,8 +999,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		{
 			get
 			{
-				string operatorsNames;
-				operatorsNames = this[DicomTags.OperatorsName].ToString();
+				var operatorsNames = this[DicomTags.OperatorsName].ToString();
 				return DicomStringHelper.GetPersonNameArray(operatorsNames);
 			}
 		}
@@ -899,10 +1011,11 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		{
 			get
 			{
-				string bodyPartExamined;
-				bodyPartExamined = this[DicomTags.BodyPartExamined].GetString(0, null);
-				return bodyPartExamined ?? "";
-			}
+                var value = _cache.BodyPartExamined;
+                if (value == null)
+                    _cache.BodyPartExamined = value = this[DicomTags.BodyPartExamined].GetString(0, String.Empty);
+                return value;
+            }
 		}
 
 		/// <summary>
@@ -912,10 +1025,11 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		{
 			get
 			{
-				string patientPosition;
-				patientPosition = this[DicomTags.PatientPosition].GetString(0, null);
-				return patientPosition ?? "";
-			}
+                var value = _cache.PatientPosition;
+                if (value == null)
+                    _cache.PatientPosition = value = this[DicomTags.PatientPosition].GetString(0, String.Empty);
+                return value;
+            }
 		}
 
 		#endregion
@@ -931,215 +1045,6 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		}
 
 		#region Dicom Tag Retrieval Methods
-
-		private delegate void GetTagDelegate<T>(DicomAttribute attribute, uint position, out T value);
-
-		/// <summary>
-		/// Gets a DICOM tag (16 bit, unsigned).
-		/// when a tag
-		/// </summary>
-		/// <remarks>
-		/// GetTag methods should make no assumptions about what to return in the <paramref name="value"/> parameter
-		/// when a tag does not exist.  It should simply return the default value for <paramref name="value"/>'s Type,
-		/// which is either null, 0 or "" depending on whether it is a reference or value Type.  Similarly, no data validation
-		/// should be done in these methods either.  It is expected that the unaltered tag value will be returned.
-		/// </remarks>
-		/// <param name="tag"></param>
-		/// <param name="value"></param>
-		/// <param name="tagExists"></param>
-		/// <seealso cref="this[DicomTag]"/>
-		/// <seealso cref="this[uint]"/>
-		[Obsolete("This method is now obsolete - use the indexers instead.")]
-		public virtual void GetTag(uint tag, out ushort value, out bool tagExists)
-		{
-			GetTag(tag, out value, 0, out tagExists);
-		}
-
-		/// <summary>
-		/// Gets a DICOM tag with value multiplicity (16 bit, unsigned).
-		/// </summary>
-		/// <remarks>
-		/// GetTag methods should make no assumptions about what to return in the <paramref name="value"/> parameter
-		/// when a tag does not exist.  It should simply return the default value for <paramref name="value"/>'s Type,
-		/// which is either null, 0 or "" depending on whether it is a reference or value Type.  Similarly, no data validation
-		/// should be done in these methods either.  It is expected that the unaltered tag value will be returned.
-		/// </remarks>
-		/// <param name="tag"></param>
-		/// <param name="value"></param>
-		/// <param name="position"></param>
-		/// <param name="tagExists"></param>
-		/// <seealso cref="this[DicomTag]"/>
-		/// <seealso cref="this[uint]"/>
-		[Obsolete("This method is now obsolete - use the indexers instead.")]
-		public virtual void GetTag(uint tag, out ushort value, uint position, out bool tagExists)
-		{
-			GetTag<ushort>(tag, out value, position, out tagExists, GetUint16FromAttribute);
-		}
-
-		/// <summary>
-		/// Gets a DICOM tag (integer).
-		/// </summary>
-		/// <remarks>
-		/// GetTag methods should make no assumptions about what to return in the <paramref name="value"/> parameter
-		/// when a tag does not exist.  It should simply return the default value for <paramref name="value"/>'s Type,
-		/// which is either null, 0 or "" depending on whether it is a reference or value Type.  Similarly, no data validation
-		/// should be done in these methods either.  It is expected that the unaltered tag value will be returned.
-		/// </remarks>
-		/// <param name="tag"></param>
-		/// <param name="value"></param>
-		/// <param name="tagExists"></param>
-		/// <seealso cref="this[DicomTag]"/>
-		/// <seealso cref="this[uint]"/>
-		[Obsolete("This method is now obsolete - use the indexers instead.")]
-		public virtual void GetTag(uint tag, out int value, out bool tagExists)
-		{
-			GetTag(tag, out value, 0, out tagExists);
-		}
-
-		/// <summary>
-		/// Gets a DICOM tag with value multiplicity (integer).
-		/// </summary>
-		/// <remarks>
-		/// GetTag methods should make no assumptions about what to return in the <paramref name="value"/> parameter
-		/// when a tag does not exist.  It should simply return the default value for <paramref name="value"/>'s Type,
-		/// which is either null, 0 or "" depending on whether it is a reference or value Type.  Similarly, no data validation
-		/// should be done in these methods either.  It is expected that the unaltered tag value will be returned.
-		/// </remarks>
-		/// <param name="tag"></param>
-		/// <param name="value"></param>
-		/// <param name="position"></param>
-		/// <param name="tagExists"></param>
-		/// <seealso cref="this[DicomTag]"/>
-		/// <seealso cref="this[uint]"/>
-		[Obsolete("This method is now obsolete - use the indexers instead.")]
-		public virtual void GetTag(uint tag, out int value, uint position, out bool tagExists)
-		{
-			GetTag<int>(tag, out value, position, out tagExists, GetInt32FromAttribute);
-		}
-
-		/// <summary>
-		/// Gets a DICOM tag (double).
-		/// </summary>
-		/// <remarks>
-		/// GetTag methods should make no assumptions about what to return in the <paramref name="value"/> parameter
-		/// when a tag does not exist.  It should simply return the default value for <paramref name="value"/>'s Type,
-		/// which is either null, 0 or "" depending on whether it is a reference or value Type.  Similarly, no data validation
-		/// should be done in these methods either.  It is expected that the unaltered tag value will be returned.
-		/// </remarks>
-		/// <param name="tag"></param>
-		/// <param name="value"></param>
-		/// <param name="tagExists"></param>
-		/// <seealso cref="this[DicomTag]"/>
-		/// <seealso cref="this[uint]"/>
-		[Obsolete("This method is now obsolete - use the indexers instead.")]
-		public virtual void GetTag(uint tag, out double value, out bool tagExists)
-		{
-			GetTag(tag, out value, 0, out tagExists);
-		}
-
-		/// <summary>
-		/// Gets a DICOM tag with value multiplicity (double).
-		/// </summary>
-		/// <remarks>
-		/// GetTag methods should make no assumptions about what to return in the <paramref name="value"/> parameter
-		/// when a tag does not exist.  It should simply return the default value for <paramref name="value"/>'s Type,
-		/// which is either null, 0 or "" depending on whether it is a reference or value Type.  Similarly, no data validation
-		/// should be done in these methods either.  It is expected that the unaltered tag value will be returned.
-		/// </remarks>
-		/// <param name="tag"></param>
-		/// <param name="value"></param>
-		/// <param name="position"></param>
-		/// <param name="tagExists"></param>
-		/// <seealso cref="this[DicomTag]"/>
-		/// <seealso cref="this[uint]"/>
-		[Obsolete("This method is now obsolete - use the indexers instead.")]
-		public virtual void GetTag(uint tag, out double value, uint position, out bool tagExists)
-		{
-			GetTag<double>(tag, out value, position, out tagExists, GetFloat64FromAttribute);
-		}
-
-		/// <summary>
-		/// Gets a DICOM tag (string).
-		/// </summary>
-		/// <remarks>
-		/// GetTag methods should make no assumptions about what to return in the <paramref name="value"/> parameter
-		/// when a tag does not exist.  It should simply return the default value for <paramref name="value"/>'s Type,
-		/// which is either null, 0 or "" depending on whether it is a reference or value Type.  Similarly, no data validation
-		/// should be done in these methods either.  It is expected that the unaltered tag value will be returned.
-		/// </remarks>
-		/// <param name="tag"></param>
-		/// <param name="value"></param>
-		/// <param name="tagExists"></param>
-		/// <seealso cref="this[DicomTag]"/>
-		/// <seealso cref="this[uint]"/>
-		[Obsolete("This method is now obsolete - use the indexers instead.")]
-		public virtual void GetTag(uint tag, out string value, out bool tagExists)
-		{
-			GetTag(tag, out value, 0, out tagExists);
-		}
-
-		/// <summary>
-		/// Gets a DICOM tag with value multiplicity (string).
-		/// </summary>
-		/// <remarks>
-		/// GetTag methods should make no assumptions about what to return in the <paramref name="value"/> parameter
-		/// when a tag does not exist.  It should simply return the default value for <paramref name="value"/>'s Type,
-		/// which is either null, 0 or "" depending on whether it is a reference or value Type.  Similarly, no data validation
-		/// should be done in these methods either.  It is expected that the unaltered tag value will be returned.
-		/// </remarks>
-		/// <param name="tag"></param>
-		/// <param name="value"></param>
-		/// <param name="position"></param>
-		/// <param name="tagExists"></param>
-		/// <seealso cref="this[DicomTag]"/>
-		/// <seealso cref="this[uint]"/>
-		[Obsolete("This method is now obsolete - use the indexers instead.")]
-		public virtual void GetTag(uint tag, out string value, uint position, out bool tagExists)
-		{
-			GetTag<string>(tag, out value, position, out tagExists, GetStringFromAttribute);
-			value = value ?? "";
-		}
-
-		/// <summary>
-		/// Gets a DICOM OB or OW tag (byte[]), not including encapsulated pixel data.
-		/// </summary>
-		/// <remarks>
-		/// GetTag methods should make no assumptions about what to return in the <paramref name="value"/> parameter
-		/// when a tag does not exist.  It should simply return the default value for <paramref name="value"/>'s Type,
-		/// which is either null, 0 or "" depending on whether it is a reference or value Type.  Similarly, no data validation
-		/// should be done in these methods either.  It is expected that the unaltered tag value will be returned.
-		/// </remarks>
-		/// <param name="tag"></param>
-		/// <param name="value"></param>
-		/// <param name="tagExists"></param>
-		/// <seealso cref="this[DicomTag]"/>
-		/// <seealso cref="this[uint]"/>
-		[Obsolete("This method is now obsolete - use the indexers instead.")]
-		public virtual void GetTag(uint tag, out byte[] value, out bool tagExists)
-		{
-			GetTag<byte[]>(tag, out value, 0, out tagExists, GetAttributeValueOBOW);
-		}
-
-		/// <summary>
-		/// Gets an entire DICOM tag to a string, encoded as a Dicom array if VM > 1.
-		/// </summary>
-		/// <remarks>
-		/// GetTag methods should make no assumptions about what to return in the <paramref name="value"/> parameter
-		/// when a tag does not exist.  It should simply return the default value for <paramref name="value"/>'s Type,
-		/// which is either null, 0 or "" depending on whether it is a reference or value Type.  Similarly, no data validation
-		/// should be done in these methods either.  It is expected that the unaltered tag value will be returned.
-		/// </remarks>
-		/// <param name="tag"></param>
-		/// <param name="value"></param>
-		/// <param name="tagExists"></param>
-		/// <seealso cref="this[DicomTag]"/>
-		/// <seealso cref="this[uint]"/>
-		[Obsolete("This method is now obsolete - use the indexers instead.")]
-		public virtual void GetMultiValuedTagRaw(uint tag, out string value, out bool tagExists)
-		{
-			GetTag<string>(tag, out value, 0, out tagExists, GetStringArrayFromAttribute);
-			value = value ?? "";
-		}
 
 		#region IDicomAttributeProvider Implementation
 
@@ -1214,54 +1119,6 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		}
 
 		#endregion
-
-		private static void GetUint16FromAttribute(DicomAttribute attribute, uint position, out ushort value)
-		{
-			attribute.TryGetUInt16((int) position, out value);
-		}
-
-		private static void GetInt32FromAttribute(DicomAttribute attribute, uint position, out int value)
-		{
-			attribute.TryGetInt32((int) position, out value);
-		}
-
-		private static void GetFloat64FromAttribute(DicomAttribute attribute, uint position, out double value)
-		{
-			attribute.TryGetFloat64((int) position, out value);
-		}
-
-		private static void GetStringFromAttribute(DicomAttribute attribute, uint position, out string value)
-		{
-			attribute.TryGetString((int) position, out value);
-		}
-
-		private static void GetStringArrayFromAttribute(DicomAttribute attribute, uint position, out string value)
-		{
-			value = attribute.ToString();
-		}
-
-		private static void GetAttributeValueOBOW(DicomAttribute attribute, uint position, out byte[] value)
-		{
-			if (attribute is DicomAttributeOW || attribute is DicomAttributeOB)
-				value = (byte[]) attribute.Values;
-			else
-				value = null;
-		}
-
-		private void GetTag<T>(uint tag, out T value, uint position, out bool tagExists, GetTagDelegate<T> getter)
-		{
-			value = default(T);
-			tagExists = false;
-
-			DicomAttribute dicomAttribute = this[tag];
-			if (dicomAttribute != null)
-			{
-				tagExists = !dicomAttribute.IsEmpty && dicomAttribute.Count > position;
-				if (tagExists)
-					getter(dicomAttribute, position, out value);
-			}
-		}
-
 		#endregion
 
 		#region Static Helpers
@@ -1272,13 +1129,10 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		/// </summary>
 		public static Sop Create(ISopDataSource dataSource)
 		{
-			if (dataSource.IsImage)
-				return new ImageSop(dataSource);
-			else
-				return new Sop(dataSource);
+		    return dataSource.IsImage ? new ImageSop(dataSource) : new Sop(dataSource);
 		}
 
-		/// <summary>
+	    /// <summary>
 		/// Creates either a <see cref="Sop"/> or <see cref="ImageSop"/> based
 		/// on the <see cref="SopClass"/> of the SOP instance specified by <paramref name="filename"/>.
 		/// </summary>
@@ -1397,12 +1251,9 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 
 		public void ValidateAllowableTransferSyntax()
 		{
-			var mySyntax = this.TransferSyntaxUid;
-			foreach (var syntax in GetAllowableTransferSyntaxes())
-			{
-				if (mySyntax == syntax.UidString)
-					return;
-			}
+			var mySyntax = TransferSyntaxUid;
+			if (GetAllowableTransferSyntaxes().Any(syntax => mySyntax == syntax.UidString))
+			    return;
 
 			throw new SopValidationException(String.Format("Unsupported transfer syntax: {0}", TransferSyntaxUid));
 		}
@@ -1427,12 +1278,24 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 			if (ValidationSettings.Default.DisableSopValidation)
 				return;
 
-			DicomValidator.ValidateSOPInstanceUID(this.SopInstanceUid);
-			DicomValidator.ValidateSeriesInstanceUID(this.SeriesInstanceUid);
-			DicomValidator.ValidateStudyInstanceUID(this.StudyInstanceUid);
+			DicomValidator.ValidateSOPInstanceUID(SopInstanceUid, false);
+            DicomValidator.ValidateSeriesInstanceUID(SeriesInstanceUid, false);
+            DicomValidator.ValidateStudyInstanceUID(StudyInstanceUid, false);
 		}
 
 		#endregion
+
+        /// <summary>
+        /// Resets any values that were cached after reading from <see cref="DataSource"/>.
+        /// </summary>
+        /// <remarks>
+        /// Many of the property values are cached for performance reasons, as they generally never change, 
+        /// and parsing values from the image header can be expensive, especially when done repeatedly.
+        /// </remarks>
+        public virtual void ResetCache()
+        {
+            _cache = new CachedValues();
+        }
 
 		/// <summary>
 		/// Disposes all resources being used by this <see cref="Sop"/>.
@@ -1453,7 +1316,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		/// <returns></returns>
 		public override string ToString()
 		{
-			return String.Format("{0} | {1}", this.InstanceNumber, this.SopInstanceUid);
+			return String.Format("{0} | {1}", InstanceNumber, SopInstanceUid);
 		}
 	}
 }
