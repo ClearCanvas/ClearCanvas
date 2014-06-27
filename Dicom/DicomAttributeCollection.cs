@@ -51,9 +51,9 @@ namespace ClearCanvas.Dicom
         private readonly uint _startTag = 0x00000000;
         private readonly uint _endTag = 0xFFFFFFFF;
 
-        private static bool _validateVrLengths = DicomSettings.Default.ValidateVrLengths;
-		private static bool _validateVrValues = DicomSettings.Default.ValidateVrValues;
-    	private static bool _ignoreOutOfRangeTags = DicomSettings.Default.IgnoreOutOfRangeTags;
+        private static readonly bool ValidateVrLengthsDefault = DicomSettings.Default.ValidateVrLengths;
+		private static readonly bool ValidateVrValuesDefault = DicomSettings.Default.ValidateVrValues;
+		private static readonly bool IgnoreOutOfRangeTagsDefault = DicomSettings.Default.IgnoreOutOfRangeTags;
 		#endregion
 
         #region Constructors
@@ -63,6 +63,9 @@ namespace ClearCanvas.Dicom
         /// </summary>
         public DicomAttributeCollection()
         {
+	        ValidateVrLengths = ValidateVrLengthsDefault;
+	        ValidateVrValues = ValidateVrValuesDefault;
+	        IgnoreOutOfRangeTags = IgnoreOutOfRangeTagsDefault;
         }
 
         /// <summary>
@@ -85,6 +88,9 @@ namespace ClearCanvas.Dicom
         {
             _startTag = startTag;
             _endTag = endTag;
+			ValidateVrLengths = ValidateVrLengthsDefault;
+			ValidateVrValues = ValidateVrValuesDefault;
+			IgnoreOutOfRangeTags = IgnoreOutOfRangeTagsDefault;
         }
 
 		/// <summary>
@@ -102,6 +108,10 @@ namespace ClearCanvas.Dicom
 
         internal DicomAttributeCollection(DicomAttributeCollection source, bool copyBinary, bool copyPrivate, bool copyUnknown, uint stopTag)
         {
+			ValidateVrLengths = ValidateVrLengthsDefault;
+			ValidateVrValues = ValidateVrValuesDefault;
+			IgnoreOutOfRangeTags = IgnoreOutOfRangeTagsDefault;
+
         	_startTag = source.StartTagValue;
         	_endTag = source.EndTagValue;
         	_specificCharacterSet = source.SpecificCharacterSet;
@@ -181,23 +191,12 @@ namespace ClearCanvas.Dicom
             get { return Dump(String.Empty, DicomDumpOptions.None); }
         }
 
-		public bool ValidateVrLengths
-		{
-			get { return _validateVrLengths; }
-			set { _validateVrLengths = value; }
-		}
+		public bool ValidateVrLengths { get; set; }
 		
-		public bool ValidateVrValues
-    	{
-			get { return _validateVrValues; }
-			set { _validateVrValues = value; }
-    	}
+		public bool ValidateVrValues { get; set; }
 
-		public bool IgnoreOutOfRangeTags
-		{
-			get { return _ignoreOutOfRangeTags; }
-			set { _ignoreOutOfRangeTags = value; }
-		}
+		public bool IgnoreOutOfRangeTags { get; set; }
+
         #endregion
 
         #region Public Methods
@@ -287,7 +286,7 @@ namespace ClearCanvas.Dicom
             DicomAttribute attr;
 			if (!_attributeList.TryGetValue(tag, out attr))
 			{
-                if (((tag < _startTag) || (tag > _endTag)) && !_ignoreOutOfRangeTags)
+                if (((tag < _startTag) || (tag > _endTag)) && !IgnoreOutOfRangeTags)
                     throw new DicomException("Tag is out of range for collection: " + tag.ToString("X8"));
 
                 DicomTag dicomTag = DicomTagDictionary.GetDicomTag(tag);
@@ -321,11 +320,11 @@ namespace ClearCanvas.Dicom
             DicomAttribute attr;
 
             if (tag == null)
-                throw new NullReferenceException("Null DicomTa parameter");
+                throw new NullReferenceException("Null DicomTag parameter");
 
 			if (!_attributeList.TryGetValue(tag.TagValue, out attr))
 			{
-				if (((tag.TagValue < _startTag) || (tag.TagValue > _endTag)) && !_ignoreOutOfRangeTags)
+				if (((tag.TagValue < _startTag) || (tag.TagValue > _endTag)) && !IgnoreOutOfRangeTags)
 					throw new DicomException("Tag is out of range for collection: " + tag);
 
 				attr = tag.CreateDicomAttribute();
@@ -392,7 +391,7 @@ namespace ClearCanvas.Dicom
 					attr = dicomTag.CreateDicomAttribute();
 					if ((tag < _startTag) || (tag > _endTag))
 					{
-						if (!_ignoreOutOfRangeTags)
+						if (!IgnoreOutOfRangeTags)
 							throw new DicomException("Tag is out of range for collection: " + tag);
 					}
 					else
@@ -422,7 +421,7 @@ namespace ClearCanvas.Dicom
 					
 					if ((tag < _startTag) || (tag > _endTag))
 					{
-						if (!_ignoreOutOfRangeTags)
+						if (!IgnoreOutOfRangeTags)
 							throw new DicomException("Tag is out of range for collection: " + tag);
 					}
 					else
@@ -460,7 +459,7 @@ namespace ClearCanvas.Dicom
 					}
 					if ((tag.TagValue < _startTag) || (tag.TagValue > _endTag))
 					{
-						if (!_ignoreOutOfRangeTags)
+						if (!IgnoreOutOfRangeTags)
 							throw new DicomException("Tag is out of range for collection: " + tag);
 					}
 					else
@@ -491,7 +490,7 @@ namespace ClearCanvas.Dicom
 				
 					if ((tagValue < _startTag) || (tagValue > _endTag))
 					{
-						if (!_ignoreOutOfRangeTags)
+						if (!IgnoreOutOfRangeTags)
 							throw new DicomException("Tag is out of range for collection: " + tag);
 					}
 					else
