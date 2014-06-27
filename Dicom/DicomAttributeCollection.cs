@@ -895,7 +895,7 @@ namespace ClearCanvas.Dicom
         	}
         	if (elem != null)
         	{
-        		if (elem.StreamLength == 0 && udzl)
+        		if ((elem.IsNull || elem.IsEmpty) && udzl)
         		{
         			return GetDefaultValue(vtype, deflt);
         		}
@@ -1036,8 +1036,8 @@ namespace ClearCanvas.Dicom
                             if (TryGetAttribute(dfa.Tag, out elem))
                             {
                                 if (dfa.DefaultValue == DicomFieldDefault.None 
-									&& dfa.UseDefaultForZeroLength 
-									&& (elem.StreamLength == 0 ) )
+									&& dfa.UseDefaultForZeroLength
+									&& (elem.IsNull || elem.IsEmpty))
                                 {
                                     // do nothing
                                 }
@@ -1065,13 +1065,13 @@ namespace ClearCanvas.Dicom
                 {
                     try
                     {
-                        DicomFieldAttribute dfa = (DicomFieldAttribute)property.GetCustomAttributes(typeof(DicomFieldAttribute), true)[0];
+                        var dfa = (DicomFieldAttribute)property.GetCustomAttributes(typeof(DicomFieldAttribute), true)[0];
                     	DicomAttribute elem;
                         if (TryGetAttribute(dfa.Tag, out elem))
                         {
                             if (dfa.DefaultValue == DicomFieldDefault.None
-								&& dfa.UseDefaultForZeroLength 
-								&& (elem.StreamLength == 0) )
+								&& dfa.UseDefaultForZeroLength
+								&& (elem.IsNull || elem.IsEmpty))
                             {
                                 // do nothing
                             }
