@@ -33,8 +33,8 @@ namespace ClearCanvas.Dicom.IO
     public class EndianBinaryReader : BinaryReader
     {
         #region Private Members
-        private bool SwapBytes = false;
-        private byte[] InternalBuffer = new byte[8];
+        private bool _swapBytes;
+        private byte[] _internalBuffer = new byte[8];
         #endregion
 
         #region Public Constructors
@@ -61,26 +61,17 @@ namespace ClearCanvas.Dicom.IO
         {
             if (BitConverter.IsLittleEndian)
             {
-                if (Endian.Little == e)
+	            if (Endian.Little == e)
                 {
                     return new BinaryReader(s);
                 }
-                else
-                {
-                    return new EndianBinaryReader(s, e);
-                }
+	            return new EndianBinaryReader(s, e);
             }
-            else
-            {
-                if (Endian.Big == e)
-                {
-                    return new BinaryReader(s);
-                }
-                else
-                {
-                    return new EndianBinaryReader(s, e);
-                }
-            }
+	        if (Endian.Big == e)
+	        {
+		        return new BinaryReader(s);
+	        }
+	        return new EndianBinaryReader(s, e);
         }
         #endregion
 
@@ -89,43 +80,35 @@ namespace ClearCanvas.Dicom.IO
         {
             get
             {
-                if (BitConverter.IsLittleEndian)
+	            if (BitConverter.IsLittleEndian)
                 {
-                    return SwapBytes ? Endian.Big : Endian.Little;
+                    return _swapBytes ? Endian.Big : Endian.Little;
                 }
-                else
-                {
-                    return SwapBytes ? Endian.Little : Endian.Big;
-                }
+	            return _swapBytes ? Endian.Little : Endian.Big;
             }
-            set
-            {
-                if (BitConverter.IsLittleEndian)
-                {
-                    SwapBytes = (Endian.Big == value);
-                }
-                else
-                {
-                    SwapBytes = (Endian.Little == value);
-                }
-            }
+			set
+			{
+				_swapBytes = BitConverter.IsLittleEndian
+					            ? Endian.Big == value
+					            : Endian.Little == value;
+			}
         }
 
         public bool UseInternalBuffer
         {
             get
             {
-                return (InternalBuffer != null);
+                return (_internalBuffer != null);
             }
             set
             {
-                if (value && (InternalBuffer == null))
+                if (value && (_internalBuffer == null))
                 {
-                    InternalBuffer = new byte[8];
+                    _internalBuffer = new byte[8];
                 }
                 else
                 {
-                    InternalBuffer = null;
+                    _internalBuffer = null;
                 }
             }
         }
@@ -134,28 +117,28 @@ namespace ClearCanvas.Dicom.IO
         #region Private Methods
         private byte[] ReadBytesInternal(int count)
         {
-            byte[] Buffer = null;
-            if (InternalBuffer != null)
+            byte[] buffer;
+            if (_internalBuffer != null)
             {
-                base.Read(InternalBuffer, 0, count);
-                Buffer = InternalBuffer;
+                base.Read(_internalBuffer, 0, count);
+                buffer = _internalBuffer;
             }
             else
             {
-                Buffer = base.ReadBytes(count);
+                buffer = base.ReadBytes(count);
             }
-            if (SwapBytes)
+            if (_swapBytes)
             {
-                Array.Reverse(Buffer, 0, count);
+                Array.Reverse(buffer, 0, count);
             }
-            return Buffer;
+            return buffer;
         }
         #endregion
 
         #region BinaryReader Overrides
         public override short ReadInt16()
         {
-            if (SwapBytes)
+            if (_swapBytes)
             {
                 return IPAddress.NetworkToHostOrder(base.ReadInt16());
             }
@@ -164,7 +147,7 @@ namespace ClearCanvas.Dicom.IO
 
         public override int ReadInt32()
         {
-            if (SwapBytes)
+            if (_swapBytes)
             {
                 return IPAddress.NetworkToHostOrder(base.ReadInt32());
             }
@@ -173,7 +156,7 @@ namespace ClearCanvas.Dicom.IO
 
         public override long ReadInt64()
         {
-            if (SwapBytes)
+            if (_swapBytes)
             {
                 return IPAddress.NetworkToHostOrder(base.ReadInt64());
             }
@@ -182,7 +165,7 @@ namespace ClearCanvas.Dicom.IO
 
         public override float ReadSingle()
         {
-            if (SwapBytes)
+            if (_swapBytes)
             {
                 byte[] b = ReadBytesInternal(4);
                 return BitConverter.ToSingle(b, 0);
@@ -192,7 +175,7 @@ namespace ClearCanvas.Dicom.IO
 
         public override double ReadDouble()
         {
-            if (SwapBytes)
+            if (_swapBytes)
             {
                 byte[] b = ReadBytesInternal(8);
                 return BitConverter.ToDouble(b, 0);
@@ -202,7 +185,7 @@ namespace ClearCanvas.Dicom.IO
 
         public override ushort ReadUInt16()
         {
-            if (SwapBytes)
+            if (_swapBytes)
             {
                 ushort u = base.ReadUInt16();
                 return unchecked((ushort)((u >> 8) | (u << 8)));
@@ -212,7 +195,7 @@ namespace ClearCanvas.Dicom.IO
 
         public override uint ReadUInt32()
         {
-            if (SwapBytes)
+            if (_swapBytes)
             {
                 uint u = base.ReadUInt32();
                 return unchecked((u >> 24) | ((u >> 8) & 0xFF00) | ((u << 8) & 0xFF0000) | (u << 24));
@@ -222,7 +205,7 @@ namespace ClearCanvas.Dicom.IO
 
         public override ulong ReadUInt64()
         {
-            if (SwapBytes)
+            if (_swapBytes)
             {
                 byte[] b = ReadBytesInternal(8);
                 return BitConverter.ToUInt64(b, 0);
@@ -237,7 +220,7 @@ namespace ClearCanvas.Dicom.IO
     public class EndianBinaryWriter : BinaryWriter
     {
         #region Private Members
-        private bool SwapBytes = false;
+        private bool _swapBytes;
         #endregion
 
         #region Public Constructors
@@ -262,74 +245,63 @@ namespace ClearCanvas.Dicom.IO
 
         public static BinaryWriter Create(Stream s, Endian e)
         {
-            if (BitConverter.IsLittleEndian)
+	        if (BitConverter.IsLittleEndian)
             {
-                if (Endian.Little == e)
+	            if (Endian.Little == e)
                 {
                     return new BinaryWriter(s);
                 }
-                else
-                {
-                    return new EndianBinaryWriter(s, e);
-                }
+	            return new EndianBinaryWriter(s, e);
             }
-            else
-            {
-                if (Endian.Big == e)
-                {
-                    return new BinaryWriter(s);
-                }
-                else
-                {
-                    return new EndianBinaryWriter(s, e);
-                }
-            }
+	        if (Endian.Big == e)
+	        {
+		        return new BinaryWriter(s);
+	        }
+	        return new EndianBinaryWriter(s, e);
         }
-        #endregion
+
+	    #endregion
 
         #region Public Properties
         public Endian Endian
         {
             get
             {
-                if (BitConverter.IsLittleEndian)
+	            if (BitConverter.IsLittleEndian)
                 {
-                    return SwapBytes ? Endian.Big : Endian.Little;
+                    return _swapBytes ? Endian.Big : Endian.Little;
                 }
-                else
-                {
-                    return SwapBytes ? Endian.Little : Endian.Big;
-                }
+	            return _swapBytes ? Endian.Little : Endian.Big;
             }
-            set
+	        set
             {
                 if (BitConverter.IsLittleEndian)
                 {
-                    SwapBytes = (Endian.Big == value);
+                    _swapBytes = (Endian.Big == value);
                 }
                 else
                 {
-                    SwapBytes = (Endian.Little == value);
+                    _swapBytes = (Endian.Little == value);
                 }
             }
         }
         #endregion
 
         #region Private Methods
-        private void WriteInternal(byte[] Buffer)
+        private void WriteInternal(byte[] buffer)
         {
-            if (SwapBytes)
+            if (_swapBytes)
             {
-                Array.Reverse(Buffer);
+                Array.Reverse(buffer);
             }
-            base.Write(Buffer);
+            base.Write(buffer);
         }
         #endregion
 
         #region BinaryWriter Overrides
         public override void Write(double value)
         {
-            if (SwapBytes)
+            if (_swapBytes)
             {
                 byte[] b = BitConverter.GetBytes(value);
                 WriteInternal(b);
@@ -342,7 +314,7 @@ namespace ClearCanvas.Dicom.IO
 
         public override void Write(float value)
         {
-            if (SwapBytes)
+            if (_swapBytes)
             {
                 byte[] b = BitConverter.GetBytes(value);
                 WriteInternal(b);
@@ -355,7 +327,7 @@ namespace ClearCanvas.Dicom.IO
 
         public override void Write(int value)
         {
-            if (SwapBytes)
+            if (_swapBytes)
             {
                 byte[] b = BitConverter.GetBytes(value);
                 WriteInternal(b);
@@ -368,7 +340,7 @@ namespace ClearCanvas.Dicom.IO
 
         public override void Write(long value)
         {
-            if (SwapBytes)
+            if (_swapBytes)
             {
                 byte[] b = BitConverter.GetBytes(value);
                 WriteInternal(b);
@@ -381,7 +353,7 @@ namespace ClearCanvas.Dicom.IO
 
         public override void Write(short value)
         {
-            if (SwapBytes)
+            if (_swapBytes)
             {
                 byte[] b = BitConverter.GetBytes(value);
                 WriteInternal(b);
@@ -394,7 +366,7 @@ namespace ClearCanvas.Dicom.IO
 
         public override void Write(uint value)
         {
-            if (SwapBytes)
+            if (_swapBytes)
             {
                 byte[] b = BitConverter.GetBytes(value);
                 WriteInternal(b);
@@ -407,7 +379,7 @@ namespace ClearCanvas.Dicom.IO
 
         public override void Write(ulong value)
         {
-            if (SwapBytes)
+            if (_swapBytes)
             {
                 byte[] b = BitConverter.GetBytes(value);
                 WriteInternal(b);
@@ -420,7 +392,7 @@ namespace ClearCanvas.Dicom.IO
 
         public override void Write(ushort value)
         {
-            if (SwapBytes)
+            if (_swapBytes)
             {
                 byte[] b = BitConverter.GetBytes(value);
                 WriteInternal(b);

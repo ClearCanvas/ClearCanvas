@@ -37,9 +37,9 @@ namespace ClearCanvas.Dicom.IO
         #region Private Members
         private const uint UndefinedLength = 0xFFFFFFFF;
 
-        private Stream _stream = null;
-        private BinaryWriter _writer = null;
-        private TransferSyntax _syntax = null;
+        private readonly Stream _stream;
+        private BinaryWriter _writer;
+        private TransferSyntax _syntax;
         private Endian _endian;
 
         private ushort _group = 0xffff;
@@ -49,7 +49,6 @@ namespace ClearCanvas.Dicom.IO
         public DicomStreamWriter(Stream stream)
         {
             _stream = stream;
-            TransferSyntax = TransferSyntax.ExplicitVrLittleEndian;
         }
         #endregion
 
@@ -76,11 +75,11 @@ namespace ClearCanvas.Dicom.IO
 
             foreach (DicomAttribute item in dataset)
             {
-                if (item.Tag.Element == 0x0000)
-                    continue;
+				if (item.IsEmpty)
+					continue;
 
-                if (item.IsEmpty)
-                    continue;
+	            if (item.Tag.Element == 0x0000)
+		            continue;
 
                 if (Flags.IsSet(options, DicomWriteOptions.CalculateGroupLengths)
                     && item.Tag.Group != _group && item.Tag.Group <= 0x7fe0)
@@ -112,7 +111,7 @@ namespace ClearCanvas.Dicom.IO
 
                 if (item is DicomAttributeSQ)
                 {
-                    DicomAttributeSQ sq = item as DicomAttributeSQ;
+                    var sq = item as DicomAttributeSQ;
 
                     if (_syntax.ExplicitVr)
                         _writer.Write((ushort)0x0000);
@@ -141,7 +140,7 @@ namespace ClearCanvas.Dicom.IO
                             _writer.Write((uint)UndefinedLength);
                         }
 
-                        Write(this.TransferSyntax, ids, options & ~DicomWriteOptions.CalculateGroupLengths);
+                        Write(TransferSyntax, ids, options & ~DicomWriteOptions.CalculateGroupLengths);
 
                         if (!Flags.IsSet(options, DicomWriteOptions.ExplicitLengthSequenceItem))
                         {
@@ -161,7 +160,7 @@ namespace ClearCanvas.Dicom.IO
 
                 else if (item is DicomFragmentSequence)
                 {
-                    DicomFragmentSequence fs = item as DicomFragmentSequence;
+                    var fs = item as DicomFragmentSequence;
 
                     if (_syntax.ExplicitVr)
                         _writer.Write((ushort)0x0000);
