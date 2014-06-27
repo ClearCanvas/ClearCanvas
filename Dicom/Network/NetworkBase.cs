@@ -1947,7 +1947,7 @@ namespace ClearCanvas.Dicom.Network
 
 	    private void SendRawPDU(RawPDU pdu)
         {
-            ResetDimseTimeout();
+            //ResetDimseTimeout();
 
             // If the try/catch is reintroduced here, it must
             // throw an exception, if the exception is just eaten, 

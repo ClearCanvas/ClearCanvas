@@ -51,9 +51,9 @@ namespace ClearCanvas.Dicom
         private readonly uint _startTag = 0x00000000;
         private readonly uint _endTag = 0xFFFFFFFF;
 
-        private bool _validateVrLengths = DicomSettings.Default.ValidateVrLengths;
-		private bool _validateVrValues = DicomSettings.Default.ValidateVrValues;
-    	private bool _ignoreOutOfRangeTags = DicomSettings.Default.IgnoreOutOfRangeTags;
+        private static bool _validateVrLengths = DicomSettings.Default.ValidateVrLengths;
+		private static bool _validateVrValues = DicomSettings.Default.ValidateVrValues;
+    	private static bool _ignoreOutOfRangeTags = DicomSettings.Default.IgnoreOutOfRangeTags;
 		#endregion
 
         #region Constructors
@@ -895,7 +895,7 @@ namespace ClearCanvas.Dicom
         	}
         	if (elem != null)
         	{
-        		if (elem.StreamLength == 0 && udzl)
+        		if ((elem.IsNull || elem.IsEmpty) && udzl)
         		{
         			return GetDefaultValue(vtype, deflt);
         		}
@@ -1036,8 +1036,8 @@ namespace ClearCanvas.Dicom
                             if (TryGetAttribute(dfa.Tag, out elem))
                             {
                                 if (dfa.DefaultValue == DicomFieldDefault.None 
-									&& dfa.UseDefaultForZeroLength 
-									&& (elem.StreamLength == 0 ) )
+									&& dfa.UseDefaultForZeroLength
+									&& (elem.IsNull || elem.IsEmpty))
                                 {
                                     // do nothing
                                 }
@@ -1065,13 +1065,13 @@ namespace ClearCanvas.Dicom
                 {
                     try
                     {
-                        DicomFieldAttribute dfa = (DicomFieldAttribute)property.GetCustomAttributes(typeof(DicomFieldAttribute), true)[0];
+                        var dfa = (DicomFieldAttribute)property.GetCustomAttributes(typeof(DicomFieldAttribute), true)[0];
                     	DicomAttribute elem;
                         if (TryGetAttribute(dfa.Tag, out elem))
                         {
                             if (dfa.DefaultValue == DicomFieldDefault.None
-								&& dfa.UseDefaultForZeroLength 
-								&& (elem.StreamLength == 0) )
+								&& dfa.UseDefaultForZeroLength
+								&& (elem.IsNull || elem.IsEmpty))
                             {
                                 // do nothing
                             }
