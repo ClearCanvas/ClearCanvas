@@ -44,20 +44,12 @@ namespace ClearCanvas.Common.Utilities
 	/// </remarks>
 	public sealed class Timer : IDisposable
 	{
-		private enum State
-		{
-			Starting,
-			Started,
-			Stopping,
-			Stopped
-		} 
-
 		private readonly SynchronizationContext _synchronizationContext;
 		private readonly object _stateObject;
 		private readonly TimerDelegate _elapsedDelegate;
 
-		private readonly object _startStopLock;
-		private volatile State _state;
+	    private System.Threading.Timer _timer;
+	    private int _processing;
 		private volatile int _intervalMilliseconds;
 		
 		/// <summary>
@@ -100,8 +92,6 @@ namespace ClearCanvas.Common.Utilities
 			_stateObject = stateObject; 
 			_elapsedDelegate = elapsedDelegate;
 
-			_startStopLock = new object();
-			_state = State.Stopped;
 			_intervalMilliseconds = intervalMilliseconds;
 		}
 
@@ -110,7 +100,7 @@ namespace ClearCanvas.Common.Utilities
 		/// </summary>
 		public bool Enabled
 		{
-			get { return _state != State.Stopped; }	
+            get { return _timer != null; }
 		}
 
 		/// <summary>
@@ -130,15 +120,8 @@ namespace ClearCanvas.Common.Utilities
 		/// </summary>
 		public void Start()
 		{
-			lock (_startStopLock)
-			{
-				if (_state != State.Stopped)
-					return;
-
-				_state = State.Starting;
-				ThreadPool.QueueUserWorkItem(RunThread);
-				Monitor.Wait(_startStopLock);
-			}
+		    if (_timer == null)
+                _timer = new System.Threading.Timer(OnTimer, _stateObject, _intervalMilliseconds, _intervalMilliseconds);
 		}
 
 		/// <summary>
@@ -146,15 +129,9 @@ namespace ClearCanvas.Common.Utilities
 		/// </summary>
 		public void Stop()
 		{
-			lock(_startStopLock)
-			{
-				if (_state != State.Started)
-					return;
-
-				_state = State.Stopping;
-				Monitor.Pulse(_startStopLock);
-				Monitor.Wait(_startStopLock);
-			}
+            if (_timer == null)return;
+		    _timer.Dispose();
+		    _timer = null;
 		}
 
 		#region IDisposable Members
@@ -167,7 +144,6 @@ namespace ClearCanvas.Common.Utilities
 			try
 			{
 				Stop();
-				GC.SuppressFinalize(this);
 			}
 			catch (Exception e)
 			{
@@ -182,30 +158,20 @@ namespace ClearCanvas.Common.Utilities
 			if (!Enabled)
 				return;
 
-			_elapsedDelegate(_stateObject);
+		    try
+		    {
+                _elapsedDelegate(_stateObject);
+		    }
+		    finally
+		    {
+		        Interlocked.Exchange(ref _processing, 0);
+		    }
 		}
 
-		private void RunThread(object nothing)
+		private void OnTimer(object nothing)
 		{
-			lock (_startStopLock)
-			{
-				_state = State.Started;
-				//Signal started.
-				Monitor.Pulse(_startStopLock);
-
-				while (_state != State.Stopping)
-				{
-					Monitor.Wait(_startStopLock, _intervalMilliseconds);
-					if (_state == State.Stopping)
-						break;
-
-					_synchronizationContext.Post(OnElapsed, null);
-				}
-
-				_state = State.Stopped;
-				//Signal stopped.
-				Monitor.Pulse(_startStopLock);
-			}
+		    if (0 == Interlocked.Exchange(ref _processing, 1))
+                _synchronizationContext.Post(OnElapsed, null);
 		}
 	}
 }
