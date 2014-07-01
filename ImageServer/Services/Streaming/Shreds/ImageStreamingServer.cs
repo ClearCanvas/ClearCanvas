@@ -42,15 +42,15 @@ namespace ClearCanvas.ImageServer.Services.Streaming.Shreds
 {
     internal static class UriHelper
     {
-        private static int SegmentCount
+        static UriHelper()
         {
-            get
-            {
-                String testUrl = String.Format("http://localhost:{0}{1}", ImageStreamingServerSettings.Default.Port, ImageStreamingServerSettings.Default.Path);
-                UriBuilder builder = new UriBuilder(testUrl);
-                return builder.Uri.Segments.Length;
-            }
+            var settings = ImageStreamingServerSettings.Default;
+            var testUrl = String.Format("http://localhost:{0}{1}", settings.Port, settings.Path);
+            var builder = new UriBuilder(testUrl);
+            SegmentCount = builder.Uri.Segments.Length;
         }
+
+        private static readonly int SegmentCount;
 
         public static string GetServerAE(HttpListenerContext context)
         {
