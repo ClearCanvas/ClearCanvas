@@ -22,6 +22,7 @@
 
 #endregion
 
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -32,7 +33,25 @@ namespace ClearCanvas.Dicom
     /// </summary>
     public class SpecificCharacterSetParser : IDicomCharacterSetParser
     {
-    	#region IDicomCharacterSetParser Members
+        private class Last
+        {
+            public Last(string specificCharacterSet, CharacterSetInfo defaultRepertoire, 
+                Dictionary<string, CharacterSetInfo> extensionRepertoires)
+            {
+                SpecificCharacterSet = specificCharacterSet;
+                DefaultRepertoire = defaultRepertoire;
+                ExtensionRepertoires = extensionRepertoires;
+            }
+
+            public readonly string SpecificCharacterSet;
+            public readonly CharacterSetInfo DefaultRepertoire;
+            public readonly Dictionary<string, CharacterSetInfo> ExtensionRepertoires;
+        }
+
+        [ThreadStatic]
+        private static Last _last;
+
+        #region IDicomCharacterSetParser Members
 
         public byte[] Encode(string dataInUnicode, string specificCharacterSet)
         {
@@ -326,6 +345,16 @@ namespace ClearCanvas.Dicom
 
         private static void GetRepertoires(string specificCharacterSet, out CharacterSetInfo defaultRepertoire, out Dictionary<string, CharacterSetInfo> extensionRepertoires)
         {
+            //Most of the time, especially on the same thread, the specific character set will be the same.
+            //This simple check avoids having to figure it out over and over again, which gets expensive.
+            var last = _last;
+            if (last != null && specificCharacterSet == last.SpecificCharacterSet)
+            {
+                defaultRepertoire = last.DefaultRepertoire;
+                extensionRepertoires = last.ExtensionRepertoires;
+                return;
+            }
+
             // TODO:
             // Specific Character Set may have up to n values if 
             // Code Extensions are used. We accomodate for that here
@@ -385,9 +414,11 @@ namespace ClearCanvas.Dicom
                     // we put in the default repertoire. Technically, it may
                     // not be ISO 2022 IR 6, but ISO_IR 6, but the information
                     // we want to use is the same
-                    extensionRepertoires.Add(value, SpecificCharacterSetParser.CharacterSetDatabase["ISO 2022 IR 6"]);
+                    extensionRepertoires.Add(value, CharacterSetDatabase["ISO 2022 IR 6"]);
                 }
             }
+
+            _last = new Last(specificCharacterSet, defaultRepertoire, extensionRepertoires);
         }
 
         /// <summary>
