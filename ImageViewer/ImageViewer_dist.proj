@@ -246,6 +246,7 @@
   <ItemGroup>
     <TestToolPluginFiles Include="$(TrunkDirectory)\ImageViewer\TestTools\bin\$(Configuration)\ClearCanvas.ImageViewer.TestTools.dll" />
     <TestToolPluginFiles Include="$(TrunkDirectory)\ImageViewer\TestTools\View\WinForms\bin\$(Configuration)\ClearCanvas.ImageViewer.TestTools.View.WinForms.dll" />
+    <TestToolCommonFiles Include="$(TrunkDirectory)\ReferencedAssemblies\NPlot.dll" />
   </ItemGroup>
 
   <ItemGroup Condition="$(DesktopBuild)">
@@ -380,6 +381,7 @@
   </Target>
   <Target Name="Copy Test Tool Files">
     <Copy SourceFiles="@(TestToolPluginFiles)" DestinationFolder="$(PluginsDirectory)" />
+    <Copy SourceFiles="@(TestToolCommonFiles)" DestinationFolder="$(CommonDirectory)" />
   </Target>
 
   <Target Name="Copy Optional Viewer Plugins" Condition="$(DesktopBuild)">
