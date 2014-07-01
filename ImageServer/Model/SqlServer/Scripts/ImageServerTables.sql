@@ -2083,6 +2083,7 @@ CREATE TABLE [dbo].[Order](
 	[Room] [nvarchar](20) NULL,
 	[Bed] [nvarchar](20) NULL,
 	[StudyInstanceUid] [varchar](64) NULL,
+	[QCExpected] bit NOT NULL CONSTRAINT DF_Order_QC DEFAULT 0,
  CONSTRAINT [PK_Order] PRIMARY KEY NONCLUSTERED 
 (
 	[GUID] ASC

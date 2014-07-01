@@ -139,6 +139,18 @@ namespace ClearCanvas.ImageServer.Model.EntityBrokers
               return (ISearchCondition<String>)SubCriteria["Priority"];
             } 
         }
+        [EntityFieldDatabaseMappingAttribute(TableName="Order", ColumnName="QCExpected")]
+        public ISearchCondition<Boolean> QCExpected
+        {
+            get
+            {
+              if (!SubCriteria.ContainsKey("QCExpected"))
+              {
+                 SubCriteria["QCExpected"] = new SearchCondition<Boolean>("QCExpected");
+              }
+              return (ISearchCondition<Boolean>)SubCriteria["QCExpected"];
+            } 
+        }
         [EntityFieldDatabaseMappingAttribute(TableName="Order", ColumnName="PatientClass")]
         public ISearchCondition<String> PatientClass
         {

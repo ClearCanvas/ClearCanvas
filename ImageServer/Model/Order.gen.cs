@@ -49,6 +49,7 @@ namespace ClearCanvas.ImageServer.Model
             ,DateTime _scheduledDateTime_
             ,ServerEntityKey _requestedProcedureCodeKey_
             ,String _priority_
+            ,Boolean _qCExpected_
             ,String _patientClass_
             ,String _reasonForStudy_
             ,String _pointOfCare_
@@ -70,6 +71,7 @@ namespace ClearCanvas.ImageServer.Model
             ScheduledDateTime = _scheduledDateTime_;
             RequestedProcedureCodeKey = _requestedProcedureCodeKey_;
             Priority = _priority_;
+            QCExpected = _qCExpected_;
             PatientClass = _patientClass_;
             ReasonForStudy = _reasonForStudy_;
             PointOfCare = _pointOfCare_;
@@ -110,6 +112,9 @@ namespace ClearCanvas.ImageServer.Model
         [DicomField(DicomTags.Priority, DefaultValue = DicomFieldDefault.Null)]
         [EntityFieldDatabaseMappingAttribute(TableName="Order", ColumnName="Priority")]
         public String Priority
+        { get; set; }
+        [EntityFieldDatabaseMappingAttribute(TableName="Order", ColumnName="QCExpected")]
+        public Boolean QCExpected
         { get; set; }
         [EntityFieldDatabaseMappingAttribute(TableName="Order", ColumnName="PatientClass")]
         public String PatientClass
@@ -185,6 +190,7 @@ namespace ClearCanvas.ImageServer.Model
             updateColumns.ScheduledDateTime = entity.ScheduledDateTime;
             updateColumns.RequestedProcedureCodeKey = entity.RequestedProcedureCodeKey;
             updateColumns.Priority = entity.Priority;
+            updateColumns.QCExpected = entity.QCExpected;
             updateColumns.PatientClass = entity.PatientClass;
             updateColumns.ReasonForStudy = entity.ReasonForStudy;
             updateColumns.PointOfCare = entity.PointOfCare;
