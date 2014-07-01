@@ -4838,6 +4838,7 @@ BEGIN
 		WHERE [OrderStatusEnum]<>@OrderStatusCancelled
 			AND [ScheduledDateTime] >= @StartTime AND [ScheduledDateTime]<=@EndTime
 			AND [ServerPartitionGUID]=@PartitionGUID
+			AND [QCExpected]=1
 
 	END
 

@@ -78,6 +78,11 @@ namespace ClearCanvas.ImageServer.Model.EntityBrokers
         {
             set { SubParameters["Priority"] = new EntityUpdateColumn<String>("Priority", value); }
         }
+        [EntityFieldDatabaseMappingAttribute(TableName="Order", ColumnName="QCExpected")]
+        public Boolean QCExpected
+        {
+            set { SubParameters["QCExpected"] = new EntityUpdateColumn<Boolean>("QCExpected", value); }
+        }
         [EntityFieldDatabaseMappingAttribute(TableName="Order", ColumnName="PatientClass")]
         public String PatientClass
         {

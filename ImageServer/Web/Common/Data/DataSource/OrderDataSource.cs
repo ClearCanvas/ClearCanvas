@@ -74,7 +74,9 @@ namespace ClearCanvas.ImageServer.Web.Common.Data.DataSource
         public string Bed { get; set; }
 
 		public int RelatedStudies { get; set; }
-		
+
+		public bool QCExpected { get; set; }
+
         public OrderStatusEnum OrderStatusEnum { get; set; }
 
         public string OrderStatusEnumString
@@ -164,6 +166,7 @@ namespace ClearCanvas.ImageServer.Web.Common.Data.DataSource
 
         public string[] Statuses { get; set; }
 
+		public bool? QCExpected { get; set; }
         #endregion
 
         #region Private Methods
@@ -234,6 +237,9 @@ namespace ClearCanvas.ImageServer.Web.Common.Data.DataSource
             }
 
             criteria.ScheduledDateTime.SortDesc(0);
+
+	        if (QCExpected.HasValue)
+		        criteria.QCExpected.EqualTo(QCExpected.Value);
 
             return criteria;
         }
@@ -310,7 +316,8 @@ namespace ClearCanvas.ImageServer.Web.Common.Data.DataSource
                     Key = order.Key,
                     PatientClass = order.PatientClass,
                     PointOfCare = order.PointOfCare,
-                    Priority = order.Priority
+                    Priority = order.Priority,
+					QCExpected = order.QCExpected
                 };
 
             if (order.Priority.Equals("S"))
