@@ -59,11 +59,12 @@ namespace ClearCanvas.Server.ShredHost
         {
             Port = port;
             UriSubPath = uriSubPath;
+            UseCompletionPorts = false;
+            MaxCompletionPortCount = 10;
         }
 
         
         #endregion
-
 
         #region Protected Properties
 
@@ -99,7 +100,9 @@ namespace ClearCanvas.Server.ShredHost
 
         protected string UriSubPath { get; set; }
 
+        protected bool UseCompletionPorts { get; set; }
 
+        protected int MaxCompletionPortCount { get; set; }
 
         #endregion
 
@@ -110,42 +113,11 @@ namespace ClearCanvas.Server.ShredHost
 			Platform.Log(LogLevel.Info, "Started listening at {0}", BaseUri);
 			
 			// start the listener on a separate thread
-			_backgroundThread = new Thread(() =>
-			{
-				try
-				{
-					StartListener(callback);
-				}
-				catch (HttpListenerException e)
-				{
-					// When the port is tied up by another process, the system throws HttpListenerException with error code = 32 
-					// and the message "The process cannot access the file because it is being used by another process". 
-					// For clarity, we make the error message more informative in this case
-					if (e.ErrorCode == WindowsErrorCodes.ERROR_SHARING_VIOLATION)
-					{
-						string errorMessage = string.Format("Unable to start {0} on port {1}. The port is being used by another process", GetDisplayName(), Port);
-						Platform.Log(LogLevel.Fatal, errorMessage);
-						OnStartError(errorMessage);
-					}
-					else
-					{
-						string errorMessage = string.Format("Unable to start {0}. System Error Code={1}", GetDisplayName(), e.ErrorCode);
-						Platform.Log(LogLevel.Fatal, e, errorMessage);
-						OnStartError(errorMessage);
-					}
-				}
-				catch (Exception e)
-				{
-					Platform.Log(LogLevel.Fatal, e, "Unable to start {0}", GetDisplayName());
-					OnStartError(e.Message);
-				}
-			});
-
-			_backgroundThread.Name = GetDisplayName();
-			_backgroundThread.Start();
+			_backgroundThread = new Thread(StartListening) {Name = GetDisplayName()};
+		    _backgroundThread.Start(callback);
 		}
 
-		protected virtual void OnStartError(string errorMessage) { }
+        protected virtual void OnStartError(string errorMessage) { }
 
     	#endregion
 
@@ -182,34 +154,114 @@ namespace ClearCanvas.Server.ShredHost
 
 		#region Private Methods
 
-		private void StartListener(Action<HttpListenerContext> callback)
-		{
+        private void StartListening(object callback)
+        {
+            try
+            {
+                StartListener((Action<HttpListenerContext>)callback);
+            }
+            catch (HttpListenerException e)
+            {
+                // When the port is tied up by another process, the system throws HttpListenerException with error code = 32 
+                // and the message "The process cannot access the file because it is being used by another process". 
+                // For clarity, we make the error message more informative in this case
+                if (e.ErrorCode == WindowsErrorCodes.ERROR_SHARING_VIOLATION)
+                {
+                    string errorMessage = string.Format("Unable to start {0} on port {1}. The port is being used by another process", GetDisplayName(), Port);
+                    Platform.Log(LogLevel.Fatal, errorMessage);
+                    OnStartError(errorMessage);
+                }
+                else
+                {
+                    string errorMessage = string.Format("Unable to start {0}. System Error Code={1}", GetDisplayName(), e.ErrorCode);
+                    Platform.Log(LogLevel.Fatal, e, errorMessage);
+                    OnStartError(errorMessage);
+                }
+            }
+            catch (Exception e)
+            {
+                Platform.Log(LogLevel.Fatal, e, "Unable to start {0}", GetDisplayName());
+                OnStartError(e.Message);
+            }
+        }
+
+        private void StartListener(Action<HttpListenerContext> callback)
+        {
 			_listener = new HttpListener();
 			_listener.Prefixes.Add(BaseUri);
 			_listener.Start();
 
 			OnStarted();
 
-			while (_listener.IsListening)
-			{
-				try
-				{
-					var context = _listener.GetContext();
-					ThreadPool.QueueUserWorkItem(n => callback(context));
-				}
-				catch (Exception e)
-				{
-					if (_listener.IsListening)
-						Platform.Log(LogLevel.Warn, e, "Unexpected error in HttpListenerShred.");
-				}
-			}
-		}
+            if (!UseCompletionPorts)
+            {
+                while (_listener.IsListening)
+                {
+                    try
+                    {
+                        var context = _listener.GetContext();
+                        ThreadPool.QueueUserWorkItem(o => ProcessAsync(context, callback));
+                    }
+                    catch (Exception e)
+                    {
+                        if (_listener.IsListening)
+                            Platform.Log(LogLevel.Warn, e, "Unexpected error in HttpListenerShred.");
+                    }
+                }
+            }
+            else
+            {
+                using (var semaphore = new Semaphore(MaxCompletionPortCount, MaxCompletionPortCount))
+                {
+                    while (_listener.IsListening)
+                    {
+                        try
+                        {
+                            if (semaphore.WaitOne())
+                                _listener.BeginGetContext((ar) =>
+                                {
+                                    try
+                                    {
+                                        var context = _listener.EndGetContext(ar);
+                                        // ReSharper disable once AccessToDisposedClosure
+                                        semaphore.Release();
+                                        // ReSharper enable once AccessToDisposedClosure
+                                        ProcessAsync(context, callback);
+                                    }
+                                    catch (Exception e)
+                                    {
+                                        if (_listener.IsListening)
+                                            Platform.Log(LogLevel.Warn, e, "Unexpected error in HttpListenerShred.");
+                                    }
+                                }, null);
+                        }
+                        catch (Exception e)
+                        {
+                            if (_listener.IsListening)
+                                Platform.Log(LogLevel.Warn, e, "Unexpected error in HttpListenerShred.");
+                        }
+                    }
+                }
+            }
+        }
 
-    	private void StopListener()
+        private void ProcessAsync(HttpListenerContext context, Action<HttpListenerContext> callback)
+        {
+            try
+            {
+                callback(context);
+            }
+            catch (Exception e)
+            {
+                Platform.Log(LogLevel.Error, e);
+            }
+        }
+
+        private void StopListener()
     	{
-    		if (_listener!=null)
-				_listener.Stop();
-    	}
+            if (_listener != null)
+                _listener.Stop();
+        }
 
 		#endregion
 

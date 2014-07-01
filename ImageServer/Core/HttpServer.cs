@@ -24,56 +24,22 @@
 
 using System;
 using System.Net;
-using System.Threading;
 using System.Web;
 using ClearCanvas.Common;
-using ClearCanvas.Common.Utilities;
 using ClearCanvas.ImageServer.Common;
 using ClearCanvas.Server.ShredHost;
 
 namespace ClearCanvas.ImageServer.Core
 {
     /// <summary>
-    /// Represents the argument associated with the event fired when a http request is received.
-    /// </summary>
-    public class HttpRequestReceivedEventArg : EventArgs
-    {
-        public HttpRequestReceivedEventArg(HttpListenerContext context)
-        {
-            Context = context;
-        }
-
-        public HttpListenerContext Context { get; set; }
-    }
-
-
-    /// <summary>
     /// Represents a http server that accepts and processes http requests.
     /// </summary>
     public abstract class HttpServer : HttpListenerShred
     {
 
-        #region Public Delegates
-        public delegate void HttpListenerHandlerDelegate(object sender, HttpRequestReceivedEventArg args);
-        #endregion
-
         #region Private Members
 
         private readonly string _name;
-    	private event HttpListenerHandlerDelegate _httpRequestReceived;
-        #endregion
-
-        #region Events
-
-        /// <summary>
-        /// Occurs when a http request is received.
-        /// </summary>
-        public event HttpListenerHandlerDelegate HttpRequestReceived
-        {
-            add { _httpRequestReceived += value; }
-            remove { _httpRequestReceived -= value; }
-        }
-        
         #endregion
 
         #region Constructors
@@ -102,6 +68,8 @@ namespace ClearCanvas.ImageServer.Core
 			ServerPlatform.Alert(AlertCategory.Application, AlertLevel.Critical, GetDisplayName(), AlertTypeCodes.UnableToStart, null, TimeSpan.Zero, message);
 		}
 
+        protected abstract void HandleRequest(HttpListenerContext context);
+
         #endregion
 
         #region Private Methods
@@ -118,7 +86,7 @@ namespace ClearCanvas.ImageServer.Core
 					Platform.Log(LogLevel.Debug, "{0}", context.Request.Url.AbsoluteUri);
 				}
 
-				EventsHelper.Fire(_httpRequestReceived, this, new HttpRequestReceivedEventArg(context));
+                HandleRequest(context);
             }
             catch (Exception e)
             {

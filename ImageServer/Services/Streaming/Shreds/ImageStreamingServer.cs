@@ -26,7 +26,6 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using ClearCanvas.Common;
@@ -90,9 +89,10 @@ namespace ClearCanvas.ImageServer.Services.Streaming.Shreds
                 ImageStreamingServerSettings.Default.Port,
                 ImageStreamingServerSettings.Default.Path)
 		{
-            HttpRequestReceived += OnHttpRequestReceived;
+            var maxConnections = ImageStreamingServerSettings.Default.MaxConcurrentConnections;
+            UseCompletionPorts = maxConnections > 0;
+            MaxCompletionPortCount = maxConnections;
 		}
-
         
 	    #endregion
 
@@ -166,15 +166,9 @@ namespace ClearCanvas.ImageServer.Services.Streaming.Shreds
 
         #region Protected Methods
 
-        /// <summary>
-		/// Event handler for <see cref="HttpServer.HttpRequestReceived"/> events.
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="args"></param>
-		protected void OnHttpRequestReceived(object sender, HttpRequestReceivedEventArg args)
-		{
-			// NOTE: This method is run under different threads for different http requests.
-            HttpListenerContext context = args.Context;
+	    protected override void HandleRequest(HttpListenerContext context)
+        {
+            // NOTE: This method is run under different threads for different http requests.
             Platform.Log(LogLevel.Debug, "Received image streaming request from {0}:{1}", context.Request.RemoteEndPoint.Address, context.Request.RemoteEndPoint.Port);
 
         	AddContext(context);
