@@ -1297,12 +1297,12 @@ GO
 --  QCStatusEnum inserts
 INSERT INTO [ImageServer].[dbo].QCStatusEnum
            ([GUID],[Enum],[Lookup],[Description],[LongDescription])
-VALUES     (newid(),100,'Checking','Checking','Checking')
+VALUES     (newid(),100,'Processing','Processing','Processing')
 GO
 
 INSERT INTO [ImageServer].[dbo].QCStatusEnum
            ([GUID],[Enum],[Lookup],[Description],[LongDescription])
-VALUES     (newid(),200,'NA','Not Applicable','Not Applicable')
+VALUES     (newid(),200,'NA','N/A','Not Applicable')
 GO
 
 INSERT INTO [ImageServer].[dbo].QCStatusEnum

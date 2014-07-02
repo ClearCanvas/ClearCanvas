@@ -36,7 +36,7 @@ namespace ClearCanvas.ImageServer.Model
 public partial class QCStatusEnum : ServerEnum
 {
       #region Private Static Members
-      private static readonly QCStatusEnum _Checking = GetEnum("Checking");
+    private static readonly QCStatusEnum _Processing = GetEnum("Processing");
       private static readonly QCStatusEnum _NA = GetEnum("NA");
       private static readonly QCStatusEnum _Passed = GetEnum("Passed");
       private static readonly QCStatusEnum _Failed = GetEnum("Failed");
@@ -47,9 +47,9 @@ public partial class QCStatusEnum : ServerEnum
       /// <summary>
       /// Checking
       /// </summary>
-      public static QCStatusEnum Checking
+      public static QCStatusEnum Processing
       {
-          get { return _Checking; }
+          get { return _Processing; }
       }
       /// <summary>
       /// Not Applicable

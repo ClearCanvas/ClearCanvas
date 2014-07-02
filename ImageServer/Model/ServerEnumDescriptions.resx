@@ -327,14 +327,14 @@
   <data name="WorkQueueTypeEnum_ExternalEdit_LongDescription" xml:space="preserve">
     <value>Edit request trigger by an external application.</value>
   </data>
-  <data name="QCStatusEnum_Checking_Description" xml:space="preserve">
-    <value>Checking</value>
+  <data name="QCStatusEnum_Processing_Description" xml:space="preserve">
+    <value>Processing</value>
   </data>
-  <data name="QCStatusEnum_Checking_LongDescription" xml:space="preserve">
-    <value>Checking</value>
+  <data name="QCStatusEnum_Processing_LongDescription" xml:space="preserve">
+    <value>Processing</value>
   </data>
   <data name="QCStatusEnum_NA_Description" xml:space="preserve">
-    <value>Not Applicable</value>
+    <value>N/A</value>
   </data>
   <data name="QCStatusEnum_NA_LongDescription" xml:space="preserve">
     <value>Not Applicable</value>
