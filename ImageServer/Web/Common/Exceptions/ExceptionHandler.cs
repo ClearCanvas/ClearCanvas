@@ -57,8 +57,11 @@ namespace ClearCanvas.ImageServer.Web.Common.Exceptions
 			if (context.Items.Contains(ImageServerConstants.ContextKeys.StackTrace))
 				context.Items.Remove(ImageServerConstants.ContextKeys.StackTrace);
 
-            StringBuilder sb = new StringBuilder();
-            sb.AppendLine(e.Message);
+            var sb = new StringBuilder();
+			if (e is HttpRequestValidationException)
+				sb.AppendLine("A potentially dangerous Request.QueryString value was detected from the client");
+			else
+				sb.AppendLine(e.Message);
 
 			context.Items.Add(ImageServerConstants.ContextKeys.ErrorMessage, sb.ToString());
 			context.Items.Add(ImageServerConstants.ContextKeys.StackTrace, e.StackTrace);
