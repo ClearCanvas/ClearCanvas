@@ -234,7 +234,7 @@ namespace ClearCanvas.Server.ShredHost
 
                     //Signals that we should quit.
                     if (_completionPortCount < 0) break;
-                    
+
                     ++_completionPortCount;
                 }
 
@@ -242,12 +242,6 @@ namespace ClearCanvas.Server.ShredHost
                 {
                     _listener.BeginGetContext(asyncResult =>
                     {
-                        lock (_completionPortLock)
-                        {
-                            --_completionPortCount;
-                            Monitor.Pulse(_completionPortLock);
-                        }
-
                         try
                         {
                             var context = _listener.EndGetContext(asyncResult);
@@ -258,6 +252,13 @@ namespace ClearCanvas.Server.ShredHost
                             if (_listener.IsListening)
                                 Platform.Log(LogLevel.Warn, e, "Unexpected error in HttpListenerShred.");
                         }
+
+                        lock (_completionPortLock)
+                        {
+                            --_completionPortCount;
+                            Monitor.Pulse(_completionPortLock);
+                        }
+
                     }, null);
                 }
                 catch (Exception e)
