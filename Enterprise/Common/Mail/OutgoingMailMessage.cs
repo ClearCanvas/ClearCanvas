@@ -22,29 +22,37 @@
 
 #endregion
 
+using System.Linq;
+using System.Runtime.Serialization;
 using ClearCanvas.Common;
+using ClearCanvas.Common.Serialization;
 
-namespace ClearCanvas.Enterprise.Core.Mail
+namespace ClearCanvas.Enterprise.Common.Mail
 {
 	/// <summary>
 	/// Represents an outgoing email message.
 	/// </summary>
-	public class OutgoingMailMessage
+	[DataContract]
+	public class OutgoingMailMessage : DataContractBase
 	{
 		/// <summary>
 		/// Constructor.
 		/// </summary>
-		public OutgoingMailMessage()
-		{
-		}
+		public OutgoingMailMessage() {}
 
 		/// <summary>
 		/// Constructor.
 		/// </summary>
 		public OutgoingMailMessage(string sender, string recipient, string subject, string body, bool isHtml)
+			: this(sender, new[] {recipient}, subject, body, isHtml) {}
+
+		/// <summary>
+		/// Constructor.
+		/// </summary>
+		public OutgoingMailMessage(string sender, string[] recipients, string subject, string body, bool isHtml)
 		{
 			Sender = sender;
-			Recipient = recipient;
+			Recipients = recipients;
 			Subject = subject;
 			Body = body;
 			IsHtml = isHtml;
@@ -53,26 +61,40 @@ namespace ClearCanvas.Enterprise.Core.Mail
 		/// <summary>
 		/// Gets or sets the sender address.
 		/// </summary>
+		[DataMember]
 		public string Sender { get; set; }
 
 		/// <summary>
-		/// Gets or sets the recipient address.
+		/// Gets or sets a single recipient address.
 		/// </summary>
-		public string Recipient { get; set; }
+		public string Recipient
+		{
+			get { return Recipients != null ? Recipients.SingleOrDefault() : null; }
+			set { Recipients = new[] {value}; }
+		}
+
+		/// <summary>
+		/// Gets or sets the recipient addresses.
+		/// </summary>
+		[DataMember]
+		public string[] Recipients { get; set; }
 
 		/// <summary>
 		/// Gets or sets the subject line.
 		/// </summary>
+		[DataMember]
 		public string Subject { get; set; }
 
 		/// <summary>
 		/// Gets or sets the content of the message body.
 		/// </summary>
+		[DataMember]
 		public string Body { get; set; }
 
 		/// <summary>
 		/// Gets or sets a value indicating whether the <see cref="Body"/> text is HTML.
 		/// </summary>
+		[DataMember]
 		public bool IsHtml { get; set; }
 
 		/// <summary>
@@ -82,9 +104,9 @@ namespace ClearCanvas.Enterprise.Core.Mail
 		/// This method is a convenience method and is equivalent to calling
 		/// <see cref="IMailQueueService.EnqueueMessage"/> directly.
 		/// </remarks>
-		public void Enqueue()
+		public void Enqueue(OutgoingMailClassification classification = OutgoingMailClassification.Default)
 		{
-			Platform.GetService<IMailQueueService>(service => service.EnqueueMessage(this));
+			Platform.GetService<IMailQueueService>(service => service.EnqueueMessage(new EnqueueMessageRequest {Message = this, Classification = classification}));
 		}
 	}
 }

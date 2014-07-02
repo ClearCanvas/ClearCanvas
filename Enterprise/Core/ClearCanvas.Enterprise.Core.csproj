@@ -108,8 +108,6 @@
     <Compile Include="ExtendedPropertyUtils.cs" />
     <Compile Include="IEntityChangeSetListener.cs" />
     <Compile Include="IPersistenceBrokerFactory.cs" />
-    <Compile Include="Mail\IMailQueueService.cs" />
-    <Compile Include="Mail\OutgoingMailMessage.cs" />
     <Compile Include="Manifest\ManifestService.cs" />
     <Compile Include="Modelling\IDomainObjectValidator.cs" />
     <Compile Include="Modelling\PublishInChangeSetsAttribute.cs" />

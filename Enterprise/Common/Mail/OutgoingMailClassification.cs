@@ -1,6 +1,6 @@
-﻿#region License
+#region License
 
-// Copyright (c) 2013, ClearCanvas Inc.
+// Copyright (c) 2014, ClearCanvas Inc.
 // All rights reserved.
 // http://www.clearcanvas.ca
 //
@@ -22,17 +22,32 @@
 
 #endregion
 
-namespace ClearCanvas.Enterprise.Core.Mail
+using System.Runtime.Serialization;
+
+namespace ClearCanvas.Enterprise.Common.Mail
 {
 	/// <summary>
-	/// Defines an interface to a service that provides and outgoing mail queue.
+	/// Identifies outgoing message classification of contents.
 	/// </summary>
-	public interface IMailQueueService
+	[DataContract(Name = "Classification")]
+	public enum OutgoingMailClassification
 	{
 		/// <summary>
-		/// Enqueues the specified message for transmission.
+		/// Indicates that the outgoing message contains normal content.
 		/// </summary>
-		/// <param name="message"></param>
-		void EnqueueMessage(OutgoingMailMessage message);
+		[EnumMember]
+		Normal = 0,
+
+		/// <summary>
+		/// Indicates that the outgoing message contains restricted content (such as PHI or other sensitive information).
+		/// </summary>
+		[EnumMember]
+		Restricted = 1,
+
+		/// <summary>
+		/// Default outgoing message classification is to err on side of caustion and classify as restricted anyway.
+		/// </summary>
+		[EnumMember]
+		Default = Restricted
 	}
 }
