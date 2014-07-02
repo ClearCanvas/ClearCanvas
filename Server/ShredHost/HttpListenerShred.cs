@@ -30,6 +30,8 @@ using ClearCanvas.Common.Shreds;
 
 namespace ClearCanvas.Server.ShredHost
 {
+    //TODO (CR Orion): this should not need to be abstract - it's usable as-is without the need to inherit.
+
     /// <summary>
     /// Represents a shred that listens to and handles http requests.
     /// </summary>
@@ -48,6 +50,9 @@ namespace ClearCanvas.Server.ShredHost
         private HttpListener _listener;
     	private Thread _backgroundThread;
 
+        private readonly object _completionPortLock = new object();
+        private int _completionPortCount;
+
     	#endregion
 
         #region Constructors
@@ -62,12 +67,10 @@ namespace ClearCanvas.Server.ShredHost
             UseCompletionPorts = false;
             MaxCompletionPortCount = 10;
         }
-
         
         #endregion
 
         #region Protected Properties
-
 
         /// <summary>
         /// Gets the URI where the shred is listening at for incoming http requests.
@@ -121,7 +124,7 @@ namespace ClearCanvas.Server.ShredHost
 
     	#endregion
 
-        #region Overridden Public Methods
+        #region Public Methods
 
 		protected virtual void OnStarted()
 		{
@@ -194,58 +197,78 @@ namespace ClearCanvas.Server.ShredHost
 			OnStarted();
 
             if (!UseCompletionPorts)
+                ListenSync(callback);
+            else
+                ListenAsync(callback);
+        }
+
+        private void ListenSync(Action<HttpListenerContext> callback)
+        {
+            Platform.Log(LogLevel.Info, "Starting HttpListener in Synchronous mode.");
+
+            while (_listener.IsListening)
             {
-                while (_listener.IsListening)
+                try
                 {
-                    try
-                    {
-                        var context = _listener.GetContext();
-                        ThreadPool.QueueUserWorkItem(o => ProcessAsync(context, callback));
-                    }
-                    catch (Exception e)
-                    {
-                        if (_listener.IsListening)
-                            Platform.Log(LogLevel.Warn, e, "Unexpected error in HttpListenerShred.");
-                    }
+                    var context = _listener.GetContext();
+                    ThreadPool.QueueUserWorkItem(o => ProcessRequest(context, callback));
+                }
+                catch (Exception e)
+                {
+                    if (_listener.IsListening)
+                        Platform.Log(LogLevel.Warn, e, "Unexpected error in HttpListenerShred.");
                 }
             }
-            else
+        }
+
+        private void ListenAsync(Action<HttpListenerContext> callback)
+        {
+            Platform.Log(LogLevel.Info, "Starting HttpListener in asynchronous mode.");
+
+            while (_listener.IsListening)
             {
-                using (var semaphore = new Semaphore(MaxCompletionPortCount, MaxCompletionPortCount))
+                lock (_completionPortLock)
                 {
-                    while (_listener.IsListening)
+                    if (_completionPortCount >= MaxCompletionPortCount)
+                        Monitor.Wait(_completionPortLock);
+
+                    //Signals that we should quit.
+                    if (_completionPortCount < 0) break;
+                    
+                    ++_completionPortCount;
+                }
+
+                try
+                {
+                    _listener.BeginGetContext(asyncResult =>
                     {
+                        lock (_completionPortLock)
+                        {
+                            --_completionPortCount;
+                            Monitor.Pulse(_completionPortLock);
+                        }
+
                         try
                         {
-                            if (semaphore.WaitOne())
-                                _listener.BeginGetContext((ar) =>
-                                {
-                                    try
-                                    {
-                                        var context = _listener.EndGetContext(ar);
-                                        // ReSharper disable once AccessToDisposedClosure
-                                        semaphore.Release();
-                                        // ReSharper enable once AccessToDisposedClosure
-                                        ProcessAsync(context, callback);
-                                    }
-                                    catch (Exception e)
-                                    {
-                                        if (_listener.IsListening)
-                                            Platform.Log(LogLevel.Warn, e, "Unexpected error in HttpListenerShred.");
-                                    }
-                                }, null);
+                            var context = _listener.EndGetContext(asyncResult);
+                            ProcessRequest(context, callback);
                         }
                         catch (Exception e)
                         {
                             if (_listener.IsListening)
                                 Platform.Log(LogLevel.Warn, e, "Unexpected error in HttpListenerShred.");
                         }
-                    }
+                    }, null);
+                }
+                catch (Exception e)
+                {
+                    if (_listener.IsListening)
+                        Platform.Log(LogLevel.Warn, e, "Unexpected error in HttpListenerShred.");
                 }
             }
         }
 
-        private void ProcessAsync(HttpListenerContext context, Action<HttpListenerContext> callback)
+        private void ProcessRequest(HttpListenerContext context, Action<HttpListenerContext> callback)
         {
             try
             {
@@ -259,11 +282,17 @@ namespace ClearCanvas.Server.ShredHost
 
         private void StopListener()
     	{
+            lock (_completionPortLock)
+            {
+                //Signals we should quit.
+                _completionPortCount = -1;
+                Monitor.Pulse(_completionPortLock);    
+            }
+
             if (_listener != null)
                 _listener.Stop();
         }
 
 		#endregion
-
 	}
 }

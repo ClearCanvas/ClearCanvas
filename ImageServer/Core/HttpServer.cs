@@ -36,13 +36,8 @@ namespace ClearCanvas.ImageServer.Core
     /// </summary>
     public abstract class HttpServer : HttpListenerShred
     {
-
-        #region Private Members
-
         private readonly string _name;
-        #endregion
-
-        #region Constructors
+        
         /// <summary>
         /// Creates an instance of <see cref="HttpServer"/> on a specified address.
         /// </summary>
@@ -54,7 +49,6 @@ namespace ClearCanvas.ImageServer.Core
         {
             _name = serverName;
         }
-        #endregion
 
         #region Overridden Public Methods
 

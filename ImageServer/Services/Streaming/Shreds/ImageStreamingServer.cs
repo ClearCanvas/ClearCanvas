@@ -91,7 +91,8 @@ namespace ClearCanvas.ImageServer.Services.Streaming.Shreds
 		{
             var maxConnections = ImageStreamingServerSettings.Default.MaxConcurrentConnections;
             UseCompletionPorts = maxConnections > 0;
-            MaxCompletionPortCount = maxConnections;
+            if (UseCompletionPorts)
+                MaxCompletionPortCount = maxConnections;
 		}
         
 	    #endregion
