@@ -682,11 +682,11 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.ReprocessStudy
 
         private void SaveStudyXml(StudyXml studyXml)
         {
-            XmlDocument doc = studyXml.GetMemento(new StudyXmlOutputSettings());
+            var theMemento = studyXml.GetMemento(new StudyXmlOutputSettings());
             using (FileStream xmlStream = FileStreamOpener.OpenForSoleUpdate(StorageLocation.GetStudyXmlPath(), FileMode.Create),
                                       gzipStream = FileStreamOpener.OpenForSoleUpdate(StorageLocation.GetCompressedStudyXmlPath(), FileMode.Create))
             {
-                StudyXmlIo.WriteXmlAndGzip(doc, xmlStream, gzipStream);
+                StudyXmlIo.WriteXmlAndGzip(theMemento, xmlStream, gzipStream);
                 xmlStream.Close();
                 gzipStream.Close();
             }

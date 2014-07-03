@@ -349,7 +349,7 @@ namespace ClearCanvas.Dicom.Utilities.Xml
 		/// in the generated XmlDocument.
 		/// </remarks>
 		/// <returns></returns>
-		public XmlDocument GetMemento(StudyXmlOutputSettings settings)
+		public StudyXmlMemento GetMemento(StudyXmlOutputSettings settings)
 		{
 			if (_doc == null)
 				_doc = new XmlDocument();
@@ -376,15 +376,17 @@ namespace ClearCanvas.Dicom.Utilities.Xml
 			clearCanvas.AppendChild(study);
 			_doc.AppendChild(clearCanvas);
 
-			return _doc;
+			return new StudyXmlMemento {Document = _doc};
 		}
 
 		/// <summary>
 		/// Populate this <see cref="StudyXml"/> object based on the supplied XML document.
 		/// </summary>
-		/// <param name="theDocument"></param>
-		public void SetMemento(XmlDocument theDocument)
+		/// <param name="theMemento"></param>
+		public void SetMemento(StudyXmlMemento theMemento)
 		{
+			XmlDocument theDocument = theMemento.Document;
+
 			if (!theDocument.HasChildNodes)
 				return;
 

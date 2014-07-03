@@ -27,7 +27,6 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Threading;
 using System.IO;
-using System.Xml;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Serialization;
 using ClearCanvas.Common.Statistics;
@@ -1106,7 +1105,7 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue
         /// <returns>The <see cref="StudyXml"/> instance for <paramref name="location"/></returns>
         protected virtual StudyXml LoadStudyXml(StudyStorageLocation location)
         {
-            StudyXml theXml = new StudyXml();
+            var theXml = new StudyXml();
 
             StudyXmlLoadTime.Add(
                 delegate
@@ -1116,11 +1115,11 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue
                         {
                             using (Stream fileStream = FileStreamOpener.OpenForRead(streamFile, FileMode.Open))
                             {
-                                XmlDocument theDoc = new XmlDocument();
+                                var theMemento = new StudyXmlMemento();
 
-                                StudyXmlIo.Read(theDoc, fileStream);
+                                StudyXmlIo.Read(theMemento, fileStream);
 
-                                theXml.SetMemento(theDoc);
+                                theXml.SetMemento(theMemento);
 
                                 fileStream.Close();
                             }

@@ -24,7 +24,6 @@
 
 using System.Collections.Generic;
 using System.IO;
-using System.Xml;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Dicom;
@@ -55,12 +54,12 @@ namespace ClearCanvas.ImageServer.Services.ServiceLock.PartitionReapplyRules
 			}
 
 			FileStream stream = FileStreamOpener.OpenForRead(studyXml, FileMode.Open);
-			var theDoc = new XmlDocument();
-			StudyXmlIo.Read(theDoc, stream);
+			var theMemento = new StudyXmlMemento();
+			StudyXmlIo.Read(theMemento, stream);
 			stream.Close();
 			stream.Dispose();
 			var xml = new StudyXml();
-			xml.SetMemento(theDoc);
+			xml.SetMemento(theMemento);
             
 			IEnumerator<SeriesXml> seriesEnumerator = xml.GetEnumerator();
 			if (seriesEnumerator.MoveNext())

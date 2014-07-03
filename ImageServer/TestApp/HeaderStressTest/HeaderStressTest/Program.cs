@@ -190,9 +190,9 @@ namespace HeaderStressTest
 
                             using (FileStream output = new FileStream(temp, FileMode.Open))
                             {
-                                XmlDocument doc = new XmlDocument();
+                                var theMemento = new StudyXmlMemento();
                                 Console.WriteLine("Reading into xml");
-                                StudyXmlIo.Read(doc, output);
+                                StudyXmlIo.Read(theMemento, output);
                                 Console.WriteLine("Done");
                             }
                                 
