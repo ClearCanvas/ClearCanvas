@@ -1886,7 +1886,7 @@ CREATE NONCLUSTERED INDEX [IX_ServerPartitionDataAccess_ServerPartitionGUID] ON 
 )WITH (SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF) ON [PRIMARY]
 
 
-/****** Object:  Table [dbo].[ExternalRequestQueue]    Script Date: 5/14/2013 4:36:19 PM ******/
+/****** Object:  Table [dbo].[ExternalRequestQueue]    Script Date: 7/3/2014 3:01:08 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1905,7 +1905,8 @@ CREATE TABLE [dbo].[ExternalRequestQueue](
 	[StateXml] [xml] NULL,
 	[InsertTime] [datetime] NOT NULL,
 	[DeletionTime] [datetime] NULL,
-	[Revision] [int] NOT NULL CONSTRAINT DF_ExternalRequestQueue_Revision DEFAULT 1
+	[Revision] [int] NOT NULL,
+	[ScheduledTime] [datetime] NOT NULL,
  CONSTRAINT [PK_ExternalRequestQueue] PRIMARY KEY NONCLUSTERED 
 (
 	[GUID] ASC
@@ -1939,11 +1940,11 @@ END
 GO
 SET ANSI_PADDING OFF
 GO
-/****** Object:  Index [IXC_ExternalRequestQueue_InsertTime]    Script Date: 5/14/2013 4:36:19 PM ******/
-IF NOT EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[ExternalRequestQueue]') AND name = N'IXC_ExternalRequestQueue_InsertTime')
-CREATE CLUSTERED INDEX [IXC_ExternalRequestQueue_InsertTime] ON [dbo].[ExternalRequestQueue]
+/****** Object:  Index [IXC_ExternalRequestQueue_ScheduledTime]    Script Date: 7/3/2014 3:01:08 PM ******/
+IF NOT EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[ExternalRequestQueue]') AND name = N'IXC_ExternalRequestQueue_ScheduledTime')
+CREATE CLUSTERED INDEX [IXC_ExternalRequestQueue_ScheduledTime] ON [dbo].[ExternalRequestQueue]
 (
-	[InsertTime] DESC
+	[ScheduledTime] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [QUEUES]
 GO
 SET ANSI_PADDING ON
