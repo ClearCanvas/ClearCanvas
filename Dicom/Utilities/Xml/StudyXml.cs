@@ -25,6 +25,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Xml;
 using ClearCanvas.Common;
 
@@ -351,32 +352,59 @@ namespace ClearCanvas.Dicom.Utilities.Xml
 		/// <returns></returns>
 		public StudyXmlMemento GetMemento(StudyXmlOutputSettings settings)
 		{
+			var memento = new StudyXmlMemento();
 			if (_doc == null)
 				_doc = new XmlDocument();
 			else
 			{
 				_doc.RemoveAll();
 			}
+			memento.Document = _doc;
 
-			XmlElement clearCanvas = _doc.CreateElement("ClearCanvasStudyXml");
-
-			XmlElement study = _doc.CreateElement("Study");
-
-			XmlAttribute studyInstanceUid = _doc.CreateAttribute("UID");
-			studyInstanceUid.Value = _studyInstanceUid;
-			study.Attributes.Append(studyInstanceUid);
-
-			foreach (SeriesXml series in this)
+			if (settings.OptimizedMemento)
 			{
-				XmlElement seriesElement = series.GetMemento(_doc, settings);
+				memento.RootNode = new StudyXmlMemento.StudyXmlNode
+					{
+						ElementName = "ClearCanvasStudyXml",
+					};
 
-				study.AppendChild(seriesElement);
+				var studyElement = new StudyXmlMemento.StudyXmlNode
+					{
+						ElementName = "Study",
+					};
+				studyElement.AddAttribute("UID", _studyInstanceUid);
+
+				memento.RootNode.AddChild(studyElement);
+
+				foreach (SeriesXml series in this)
+				{
+					var seriesElement = series.GetMemento(memento, settings);
+
+					studyElement.AddChild(seriesElement);
+				}
+			}
+			else
+			{
+				XmlElement clearCanvas = _doc.CreateElement("ClearCanvasStudyXml");
+
+				XmlElement study = _doc.CreateElement("Study");
+
+				XmlAttribute studyInstanceUid = _doc.CreateAttribute("UID");
+				studyInstanceUid.Value = _studyInstanceUid;
+				study.Attributes.Append(studyInstanceUid);
+
+				foreach (SeriesXml series in this)
+				{
+					XmlElement seriesElement = series.GetMemento(_doc, settings);
+
+					study.AppendChild(seriesElement);
+				}
+
+				clearCanvas.AppendChild(study);
+				_doc.AppendChild(clearCanvas);
 			}
 
-			clearCanvas.AppendChild(study);
-			_doc.AppendChild(clearCanvas);
-
-			return new StudyXmlMemento {Document = _doc};
+			return memento;
 		}
 
 		/// <summary>
@@ -385,6 +413,18 @@ namespace ClearCanvas.Dicom.Utilities.Xml
 		/// <param name="theMemento"></param>
 		public void SetMemento(StudyXmlMemento theMemento)
 		{
+			// This should only happen in unit tests, but force the stream into a 
+			// memory stream, and then load in the xml document from there.
+			if (theMemento.RootNode != null)
+			{
+				using (var ms = new MemoryStream())
+				{
+					StudyXmlIo.Write(theMemento, ms);
+					using (var ms2 = new MemoryStream(ms.ToArray()))
+						theMemento.Document.Load(ms2);
+				}
+			}
+
 			XmlDocument theDocument = theMemento.Document;
 
 			if (!theDocument.HasChildNodes)

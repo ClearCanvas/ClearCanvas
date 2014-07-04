@@ -66,8 +66,15 @@ namespace ClearCanvas.Dicom.Utilities.Xml
 
         #endregion
 
-        #region Public Static Properties
-        /// <summary>
+		#region Constructors
+		public StudyXmlOutputSettings()
+		{
+			OptimizedMemento = true;
+		}
+		#endregion
+
+		#region Public Static Properties
+		/// <summary>
         /// Represents an empty settings. This field is readonly.
         /// </summary>
         static public StudyXmlOutputSettings None
@@ -130,6 +137,8 @@ namespace ClearCanvas.Dicom.Utilities.Xml
 			get { return _includeSourceFileName; }
 			set { _includeSourceFileName = value; }
     	}
+
+		public bool OptimizedMemento { get; set; }
 
         #endregion
     }

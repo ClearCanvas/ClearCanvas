@@ -26,6 +26,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Text;
 using System.Xml;
+using ClearCanvas.Common.Utilities;
 
 namespace ClearCanvas.Dicom.Utilities.Xml
 {
@@ -36,60 +37,65 @@ namespace ClearCanvas.Dicom.Utilities.Xml
 	{
 		public static void Write(StudyXmlMemento theMemento, Stream theStream)
 		{
-		    var xmlSettings = new XmlWriterSettings
-		                          {
-		                              Encoding = Encoding.UTF8,
-		                              ConformanceLevel = ConformanceLevel.Document,
-		                              Indent = false,
-		                              NewLineOnAttributes = false,
-		                              CheckCharacters = true,
-		                              IndentChars = string.Empty
-		                          };
+			if (theMemento.RootNode != null)
+			{
+				var sw = new StreamWriter(theStream, Encoding.UTF8);
+				sw.Write("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
+				theMemento.RootNode.WriteTo(sw);
+				sw.Flush();
+			}
+			else
+			{
+				var xmlSettings = new XmlWriterSettings
+					{
+						Encoding = Encoding.UTF8,
+						ConformanceLevel = ConformanceLevel.Document,
+						Indent = false,
+						NewLineOnAttributes = false,
+						CheckCharacters = true,
+						IndentChars = string.Empty
+					};
 
 
-		    XmlWriter tw = XmlWriter.Create(theStream, xmlSettings);
-			theMemento.Document.WriteTo(tw);
-			tw.Flush();
-			tw.Close();
+				XmlWriter tw = XmlWriter.Create(theStream, xmlSettings);
+				theMemento.Document.WriteTo(tw);
+				tw.Flush();
+				tw.Close();
+			}
 		}
 
 		public static void Write(StudyXmlMemento theMemento, string filename)
         {
-            var xmlSettings = new XmlWriterSettings
-            {
-                Encoding = Encoding.UTF8,
-                ConformanceLevel = ConformanceLevel.Document,
-                Indent = false,
-                NewLineOnAttributes = false,
-                CheckCharacters = true,
-                IndentChars = string.Empty
-            };
+			if (theMemento.RootNode != null)
+			{
+				using (var fs = FileStreamOpener.OpenForSoleUpdate(filename, FileMode.CreateNew))
+				{
+					Write(theMemento, fs);
+				}
+			}
+			else
+			{
+				var xmlSettings = new XmlWriterSettings
+					{
+						Encoding = Encoding.UTF8,
+						ConformanceLevel = ConformanceLevel.Document,
+						Indent = false,
+						NewLineOnAttributes = false,
+						CheckCharacters = true,
+						IndentChars = string.Empty
+					};
 
-            XmlWriter tw = XmlWriter.Create(filename, xmlSettings);
-            theMemento.Document.WriteTo(tw);
-            tw.Flush();
-            tw.Close();
+				XmlWriter tw = XmlWriter.Create(filename, xmlSettings);
+				theMemento.Document.WriteTo(tw);
+				tw.Flush();
+				tw.Close();
+			}
         }
 
 		public static void WriteGzip(StudyXmlMemento theMemento, Stream theStream)
 		{
 			var ms = new MemoryStream();
-		    var xmlSettings = new XmlWriterSettings
-		                          {
-		                              Encoding = Encoding.UTF8,
-		                              ConformanceLevel = ConformanceLevel.Document,
-		                              Indent = false,
-		                              NewLineOnAttributes = false,
-		                              CheckCharacters = true,
-		                              IndentChars = string.Empty
-		                          };
-
-
-		    XmlWriter tw = XmlWriter.Create(ms, xmlSettings);
-
-			theMemento.Document.WriteTo(tw);
-			tw.Flush();
-			tw.Close();
+			Write(theMemento, ms);
 
 			byte[] buffer = ms.GetBuffer();
 
@@ -107,22 +113,8 @@ namespace ClearCanvas.Dicom.Utilities.Xml
 		{
 			// Write to a memory stream, then flush to disk and to gzip file
 			var ms = new MemoryStream();
-			var xmlSettings = new XmlWriterSettings
-				{
-					Encoding = Encoding.UTF8,
-					ConformanceLevel = ConformanceLevel.Document,
-					Indent = false,
-					NewLineOnAttributes = false,
-					CheckCharacters = true,
-					IndentChars = ""
-				};
 
-			XmlWriter tw = XmlWriter.Create(ms, xmlSettings);
-
-			theMemento.Document.WriteTo(tw);
-
-			tw.Flush();
-			tw.Close();
+			Write(theMemento, ms);
 
 			byte[] buffer = ms.GetBuffer();
 			
