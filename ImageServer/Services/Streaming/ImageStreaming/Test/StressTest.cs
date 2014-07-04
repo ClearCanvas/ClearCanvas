@@ -29,7 +29,6 @@ using System.ServiceModel;
 using System.ServiceModel.Channels;
 using System.Text;
 using System.Threading;
-using System.Xml;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Statistics;
 using ClearCanvas.Common.Utilities;
@@ -89,10 +88,10 @@ namespace ClearCanvas.ImageServer.Services.Streaming.ImageStreaming.Test
                 parms.ServerAETitle = "ImageServer";
                 Stream stream = headerClient.GetStudyHeader("TEST", parms);
                 
-                XmlDocument doc = new XmlDocument();
-                StudyXmlIo.ReadGzip(doc, stream);
+                var theMemento = new StudyXmlMemento();
+                StudyXmlIo.ReadGzip(theMemento, stream);
                 _studyXml = new StudyXml(studyInstanceUid);
-                _studyXml.SetMemento(doc);
+                _studyXml.SetMemento(theMemento);
                 stream.Close();
                 headerClient.Close();
             }

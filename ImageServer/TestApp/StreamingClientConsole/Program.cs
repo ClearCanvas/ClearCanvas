@@ -82,7 +82,7 @@ namespace StreamingClientConsole
 
                         Console.WriteLine("Streaming images for Study: {0}", s.StudyUid);
                         StudyXml studyXml = new StudyXml(s.StudyUid);
-                        studyXml.SetMemento(doc);
+                        studyXml.SetMemento(new StudyXmlMemento {Document = doc});
 
                         foreach (SeriesXml seriesXml in studyXml)
                         {

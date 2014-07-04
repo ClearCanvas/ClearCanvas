@@ -25,7 +25,6 @@
 using System;
 using System.IO;
 using System.Threading;
-using System.Xml;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Dicom;
@@ -79,7 +78,7 @@ namespace ClearCanvas.ImageServer.Core.Process
 
 		private static void WriteStudyStream(string streamFile, string gzStreamFile, StudyXml theStream)
 		{
-			XmlDocument doc = theStream.GetMemento(_outputSettings);
+			var theMemento = theStream.GetMemento(_outputSettings);
 
 			// allocate the random number generator here, in case we need it below
 			Random rand = new Random();
@@ -94,7 +93,7 @@ namespace ClearCanvas.ImageServer.Core.Process
 					using (FileStream xmlStream = FileStreamOpener.OpenForSoleUpdate(tmpStreamFile, FileMode.CreateNew),
 					                  gzipStream = FileStreamOpener.OpenForSoleUpdate(tmpGzStreamFile, FileMode.CreateNew))
 					{
-						StudyXmlIo.WriteXmlAndGzip(doc, xmlStream, gzipStream);
+						StudyXmlIo.WriteXmlAndGzip(theMemento, xmlStream, gzipStream);
 						xmlStream.Close();
 						gzipStream.Close();
 					}

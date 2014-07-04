@@ -25,7 +25,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Xml;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Dicom.Utilities.Command;
@@ -95,18 +94,18 @@ namespace ClearCanvas.ImageServer.Core.Command
 		/// <returns>The <see cref="StudyXml"/> instance for the study</returns>
 		private StudyXml LoadStudyXml()
 		{
-			StudyXml theXml = new StudyXml();
+			var theXml = new StudyXml();
 
 			String streamFile = Path.Combine(_rootPath, _studyInstanceUid + ".xml");
 			if (File.Exists(streamFile))
 			{
 				using (Stream fileStream = FileStreamOpener.OpenForRead(streamFile, FileMode.Open))
 				{
-					XmlDocument theDoc = new XmlDocument();
+					var theMemento = new StudyXmlMemento();
 
-					StudyXmlIo.Read(theDoc, fileStream);
+					StudyXmlIo.Read(theMemento, fileStream);
 
-					theXml.SetMemento(theDoc);
+					theXml.SetMemento(theMemento);
 
 					fileStream.Close();
 				}

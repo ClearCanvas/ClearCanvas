@@ -79,12 +79,12 @@ namespace ClearCanvas.ImageServer.Services.Archiving.Hsm
 		{
 			using (Stream fileStream = FileStreamOpener.OpenForRead(studyXmlFile, FileMode.Open))
 			{
-				XmlDocument theDoc = new XmlDocument();
+				var theMemento = new StudyXmlMemento();
 
-				StudyXmlIo.Read(theDoc, fileStream);
+				StudyXmlIo.Read(theMemento, fileStream);
 
 				_studyXml = new StudyXml(_storageLocation.StudyInstanceUid);
-				_studyXml.SetMemento(theDoc);
+				_studyXml.SetMemento(theMemento);
 
 				fileStream.Close();
 			}

@@ -65,12 +65,15 @@ namespace ClearCanvas.Dicom.Utilities.Xml
 
 		internal void Cleanup()
 		{
+		    if (_excludedTags.Count == 0)
+		        return;
+
             //Set the capacity right away so adding is faster.
 			var tagsToRemove = new List<uint>(_excludedTags.Count);
 			foreach (var tag in _excludedTags.Keys)
 			{
 				DicomAttribute attribute;
-				if (_parent.TryGetAttribute(tag, out attribute) && !attribute.IsEmpty)
+				if (_parent.TryGetAttribute(tag, out attribute))
 					tagsToRemove.Add(tag);
 			}
 
@@ -96,6 +99,12 @@ namespace ClearCanvas.Dicom.Utilities.Xml
 
 		public bool IsTagExcluded(uint tag)
 		{
+		    if (_excludedTags.Count == 0)
+		        return false;
+
+		    if (_excludedTags.Count == 1)
+		        return ExcludedTags[0].TagValue == tag;
+
 			return ExcludedTags.Any(dicomTag => dicomTag.TagValue == tag);
 		}
 

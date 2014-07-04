@@ -54,8 +54,9 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 	public partial class Sop : IDisposable, IDicomAttributeProvider, ISopInstanceData, ISeriesData, IStudyData, IPatientData
 	{
         //Cached property values where the returned object will be immutable.
-        private struct CachedValues
+        private class CachedValues
         {
+            public string[] SpecificCharacterSet;
             public string TransferSyntaxUid;
             public string StudyInstanceUid;
             public string SeriesInstanceUid;
@@ -101,7 +102,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 
 		private volatile Series _parentSeries;
 		private ISopDataSource _dataSource;
-	    private CachedValues _cache;
+	    private CachedValues _cache = new CachedValues();
 
 		/// <summary>
 		/// Creates a new instance of <see cref="Sop"/> from a local file.
@@ -258,11 +259,16 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		{
 			get
 			{
-				var specificCharacterSet = this[DicomTags.SpecificCharacterSet].ToString();
-			    if (!string.IsNullOrEmpty(specificCharacterSet))
-			        return DicomStringHelper.GetStringArray(specificCharacterSet);
+			    var value = _cache.SpecificCharacterSet;
+                if (value != null)
+                    return value.ToArray();
 
-			    return new string[0];
+			    DicomAttribute attribute;
+				var specificCharacterSet = TryGetAttribute(DicomTags.SpecificCharacterSet, out attribute) ? attribute.ToString() : String.Empty;
+			    value = !string.IsNullOrEmpty(specificCharacterSet) ? DicomStringHelper.GetStringArray(specificCharacterSet) : new string[0];
+			    _cache.SpecificCharacterSet = value;
+			    
+                return value.ToArray();
 			}
 		}
 
@@ -292,9 +298,11 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		    get
 		    {
                 var value = _cache.ContentDate;
-                if (value == null)
-                    _cache.ContentDate = value = this[DicomTags.ContentDate].GetString(0, String.Empty);
-                return value;
+		        if (value != null) return value;
+
+		        DicomAttribute attribute;
+		        _cache.ContentDate = value = TryGetAttribute(DicomTags.ContentDate, out attribute) ? attribute.ToString() : String.Empty;
+		        return value;
 		    }
 		}
 
@@ -306,9 +314,11 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		    get
 		    {
                 var value = _cache.ContentTime;
-                if (value == null)
-                    _cache.ContentTime = value = this[DicomTags.ContentTime].GetString(0, String.Empty);
-                return value;
+		        if (value != null) return value;
+
+		        DicomAttribute attribute;
+		        _cache.ContentTime = value = TryGetAttribute(DicomTags.ContentTime, out attribute) ? attribute.ToString() : String.Empty;
+		        return value;
             }
 		}
 
@@ -324,9 +334,11 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 			get
 			{
                 var value = _cache.PatientsName;
-			    if (value == null)
-			        _cache.PatientsName = value = this[DicomTags.PatientsName].GetString(0, String.Empty);
-				return new PersonName(value);
+			    if (value != null) return new PersonName(value);
+
+			    DicomAttribute attribute;
+                _cache.PatientsName = value = TryGetAttribute(DicomTags.PatientsName, out attribute) ? attribute.ToString() : String.Empty;
+			    return new PersonName(value);
 			}
 		}
 
@@ -338,9 +350,11 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 			get
 			{
                 var value = _cache.PatientId;
-			    if (value == null)
-                    _cache.PatientId = value = this[DicomTags.PatientId].GetString(0, String.Empty);
-				return value;
+			    if (value != null) return value;
+
+			    DicomAttribute attribute;
+                _cache.PatientId = value = TryGetAttribute(DicomTags.PatientId, out attribute) ? attribute.ToString() : String.Empty;
+			    return value;
 			}
 		}
 
@@ -352,9 +366,11 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 			get
 			{
                 var value = _cache.PatientsBirthDate;
-                if (value == null)
-                    _cache.PatientsBirthDate = value = this[DicomTags.PatientsBirthDate].GetString(0, String.Empty);
-                return value;
+			    if (value != null) return value;
+			    
+                DicomAttribute attribute;
+                _cache.PatientsBirthDate = value = TryGetAttribute(DicomTags.PatientsBirthDate, out attribute) ? attribute.ToString() : String.Empty;
+			    return value;
             }
 		}
 
@@ -366,9 +382,11 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 			get
 			{
                 var value = _cache.PatientsBirthTime;
-                if (value == null)
-                    _cache.PatientsBirthTime = value = this[DicomTags.PatientsBirthTime].GetString(0, String.Empty);
-                return value;
+			    if (value != null) return value;
+			    
+                DicomAttribute attribute;
+                _cache.PatientsBirthTime = value = TryGetAttribute(DicomTags.PatientsBirthTime, out attribute) ? attribute.ToString() : String.Empty;
+			    return value;
             }
 		}
 
@@ -380,9 +398,11 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 			get
 			{
                 var value = _cache.PatientsSex;
-                if (value == null)
-                    _cache.PatientsSex = value = this[DicomTags.PatientsSex].GetString(0, String.Empty);
-                return value;
+			    if (value != null) return value;
+			    
+                DicomAttribute attribute;
+                _cache.PatientsSex = value = TryGetAttribute(DicomTags.PatientsSex, out attribute) ? attribute.ToString() : String.Empty;
+			    return value;
             }
 		}
 
@@ -396,9 +416,11 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		    get
 		    {
                 var value = _cache.PatientSpeciesDescription;
-                if (value == null)
-                    _cache.PatientSpeciesDescription = value = this[DicomTags.PatientSpeciesDescription].GetString(0, String.Empty);
-                return value;
+		        if (value != null) return value;
+
+		        DicomAttribute attribute;
+                _cache.PatientSpeciesDescription = value = TryGetAttribute(DicomTags.PatientSpeciesDescription, out attribute) ? attribute.ToString() : String.Empty;
+		        return value;
 		    }
 		}
 
@@ -409,8 +431,8 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		{
 			get
 			{
-				var attribute = this[DicomTags.PatientSpeciesCodeSequence];
-				if (attribute.IsEmpty || attribute.IsNull || attribute.Count == 0)
+			    DicomAttribute attribute;
+				if (!TryGetAttribute(DicomTags.PatientSpeciesCodeSequence, out attribute) || attribute.IsNull || attribute.Count == 0)
 					return null;
 
 				Species species;
@@ -425,9 +447,9 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		{
 			get
 			{
-				var attribute = this[DicomTags.PatientSpeciesCodeSequence];
-				if (attribute.IsEmpty || attribute.IsNull || attribute.Count == 0)
-					return null;
+                DicomAttribute attribute;
+                if (!TryGetAttribute(DicomTags.PatientSpeciesCodeSequence, out attribute) || attribute.IsNull || attribute.Count == 0)
+                    return null;
 
 				var codeSquenceMacro = new CodeSequenceMacro(((DicomSequenceItem[]) attribute.Values)[0]);
 				return codeSquenceMacro.CodingSchemeDesignator;
@@ -441,9 +463,9 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		{
 			get
 			{
-				var attribute = this[DicomTags.PatientSpeciesCodeSequence];
-				if (attribute.IsEmpty || attribute.IsNull || attribute.Count == 0)
-					return null;
+                DicomAttribute attribute;
+                if (!TryGetAttribute(DicomTags.PatientSpeciesCodeSequence, out attribute) || attribute.IsNull || attribute.Count == 0)
+                    return null;
 
 				var codeSquenceMacro = new CodeSequenceMacro(((DicomSequenceItem[]) attribute.Values)[0]);
 				return codeSquenceMacro.CodeValue;
@@ -457,9 +479,9 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		{
 			get
 			{
-				var attribute = this[DicomTags.PatientSpeciesCodeSequence];
-				if (attribute.IsEmpty || attribute.IsNull || attribute.Count == 0)
-					return null;
+                DicomAttribute attribute;
+                if (!TryGetAttribute(DicomTags.PatientSpeciesCodeSequence, out attribute) || attribute.IsNull || attribute.Count == 0)
+                    return null;
 
 				var codeSquenceMacro = new CodeSequenceMacro(((DicomSequenceItem[]) attribute.Values)[0]);
 				return codeSquenceMacro.CodeMeaning;
@@ -475,7 +497,11 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		/// </summary>
 		public virtual string PatientBreedDescription
 		{
-			get { return this[DicomTags.PatientBreedDescription].GetString(0, String.Empty); }
+		    get
+		    {
+		        DicomAttribute attribute;
+		        return TryGetAttribute(DicomTags.PatientBreedDescription, out attribute) ? attribute.ToString() : String.Empty;
+		    }
 		}
 
 		/// <summary>
@@ -485,9 +511,9 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		{
 			get
 			{
-				var attribute = this[DicomTags.PatientBreedCodeSequence];
-				if (attribute.IsEmpty || attribute.IsNull || attribute.Count == 0)
-					return null;
+                DicomAttribute attribute;
+                if (!TryGetAttribute(DicomTags.PatientBreedCodeSequence, out attribute) || attribute.IsNull || attribute.Count == 0)
+                    return null;
 
 				Breed breed;
 				return Breed.TryParse(new CodeSequenceMacro(((DicomSequenceItem[]) attribute.Values)[0]), out breed) ? breed : null;
@@ -501,9 +527,9 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		{
 			get
 			{
-				var attribute = this[DicomTags.PatientBreedCodeSequence];
-				if (attribute.IsEmpty || attribute.IsNull || attribute.Count == 0)
-					return null;
+                DicomAttribute attribute;
+                if (!TryGetAttribute(DicomTags.PatientBreedCodeSequence, out attribute) || attribute.IsNull || attribute.Count == 0)
+                    return null;
 
 				var codeSquenceMacro = new CodeSequenceMacro(((DicomSequenceItem[]) attribute.Values)[0]);
 				return codeSquenceMacro.CodingSchemeDesignator;
@@ -517,9 +543,9 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		{
 			get
 			{
-				var attribute = this[DicomTags.PatientBreedCodeSequence];
-				if (attribute.IsEmpty || attribute.IsNull || attribute.Count == 0)
-					return null;
+                DicomAttribute attribute;
+                if (!TryGetAttribute(DicomTags.PatientBreedCodeSequence, out attribute) || attribute.IsNull || attribute.Count == 0)
+                    return null;
 
 				var codeSquenceMacro = new CodeSequenceMacro(((DicomSequenceItem[]) attribute.Values)[0]);
 				return codeSquenceMacro.CodeValue;
@@ -533,9 +559,9 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		{
 			get
 			{
-				var attribute = this[DicomTags.PatientBreedCodeSequence];
-				if (attribute.IsEmpty || attribute.IsNull || attribute.Count == 0)
-					return null;
+                DicomAttribute attribute;
+                if (!TryGetAttribute(DicomTags.PatientBreedCodeSequence, out attribute) || attribute.IsNull || attribute.Count == 0)
+                    return null;
 
 				var codeSquenceMacro = new CodeSequenceMacro(((DicomSequenceItem[]) attribute.Values)[0]);
 				return codeSquenceMacro.CodeMeaning;
@@ -553,7 +579,8 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		{
 			get
 			{
-				var responsiblePerson = this[DicomTags.ResponsiblePerson].GetString(0, String.Empty);
+			    DicomAttribute attribute;
+                var responsiblePerson = TryGetAttribute(DicomTags.ResponsiblePerson, out attribute) ? attribute.ToString() : String.Empty;
 				return new PersonName(responsiblePerson);
 			}
 		}
@@ -563,7 +590,11 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		/// </summary>
 		public virtual string ResponsiblePersonRole
 		{
-			get { return this[DicomTags.ResponsiblePersonRole].GetString(0, String.Empty); }
+		    get
+		    {
+                DicomAttribute attribute;
+                return TryGetAttribute(DicomTags.ResponsiblePersonRole, out attribute) ? attribute.ToString() : String.Empty;
+		    }
 		}
 
 		/// <summary>
@@ -571,7 +602,11 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		/// </summary>
 		public virtual string ResponsibleOrganization
 		{
-            get { return this[DicomTags.ResponsibleOrganization].GetString(0, String.Empty); }
+		    get
+		    {
+                DicomAttribute attribute;
+                return TryGetAttribute(DicomTags.ResponsibleOrganization, out attribute) ? attribute.ToString() : String.Empty;
+		    }
 		}
 
 		#endregion
@@ -612,9 +647,11 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 			get
 			{
                 var value = _cache.StudyDate;
-                if (value == null)
-                    _cache.StudyDate = value = this[DicomTags.StudyDate].GetString(0, String.Empty);
-                return value;
+			    if (value != null) return value;
+			    
+                DicomAttribute attribute;
+			    _cache.StudyDate = value = TryGetAttribute(DicomTags.StudyDate, out attribute) ? attribute.ToString() : String.Empty;
+			    return value;
 			}
 		}
 
@@ -626,9 +663,11 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 			get
 			{
                 var value = _cache.StudyTime;
-                if (value == null)
-                    _cache.StudyTime = value = this[DicomTags.StudyTime].GetString(0, String.Empty);
-                return value;
+			    if (value != null) return value;
+			    
+                DicomAttribute attribute;
+			    _cache.StudyTime = value = TryGetAttribute(DicomTags.StudyTime, out attribute) ? attribute.ToString() : String.Empty;
+			    return value;
             }
 		}
 
@@ -640,9 +679,12 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 			get
 			{
                 var value = _cache.ReferringPhysiciansName;
-                if (value == null)
-                    _cache.ReferringPhysiciansName = value = this[DicomTags.ReferringPhysiciansName].GetString(0, String.Empty);
-                return new PersonName(value);
+			    if (value == null)
+			    {
+                    DicomAttribute attribute;
+                    _cache.ReferringPhysiciansName = value = TryGetAttribute(DicomTags.ReferringPhysiciansName, out attribute) ? attribute.ToString() : String.Empty;
+			    }
+			    return new PersonName(value);
             }
 		}
 
@@ -654,9 +696,11 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 			get
 			{
                 var value = _cache.AccessionNumber;
-                if (value == null)
-                    _cache.AccessionNumber = value = this[DicomTags.AccessionNumber].GetString(0, String.Empty);
-                return value;
+			    if (value != null) return value;
+			    
+                DicomAttribute attribute;
+			    _cache.AccessionNumber = value = TryGetAttribute(DicomTags.AccessionNumber, out attribute) ? attribute.ToString() : String.Empty;
+			    return value;
             }
 		}
 
@@ -668,9 +712,11 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 			get
 			{
                 var value = _cache.StudyDescription;
-                if (value == null)
-                    _cache.StudyDescription = value = this[DicomTags.StudyDescription].GetString(0, String.Empty);
-                return value;
+			    if (value != null) return value;
+			    
+                DicomAttribute attribute;
+			    _cache.StudyDescription = value = TryGetAttribute(DicomTags.StudyDescription, out attribute) ? attribute.ToString() : String.Empty;
+			    return value;
             }
 		}
 
@@ -682,8 +728,10 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 			get
 			{
                 var value = _cache.StudyId;
-                if (value == null)
-                    _cache.StudyId = value = this[DicomTags.StudyId].GetString(0, String.Empty);
+                if (value != null) return value;
+
+                DicomAttribute attribute;
+                _cache.StudyId = value = TryGetAttribute(DicomTags.StudyId, out attribute) ? attribute.ToString() : String.Empty;
                 return value;
             }
 		}
@@ -695,7 +743,8 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		{
 			get
 			{
-				var nameOfPhysiciansReadingStudy = this[DicomTags.NameOfPhysiciansReadingStudy].ToString();
+			    DicomAttribute attribute;
+				var nameOfPhysiciansReadingStudy = TryGetAttribute(DicomTags.NameOfPhysiciansReadingStudy, out attribute) ? attribute.ToString() : String.Empty;
 				return DicomStringHelper.GetPersonNameArray(nameOfPhysiciansReadingStudy);
 			}
 		}
@@ -760,7 +809,8 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		{
 			get
 			{
-				var admittingDiagnosesDescription = this[DicomTags.AdmittingDiagnosesDescription].ToString();
+			    DicomAttribute attribute;
+				var admittingDiagnosesDescription = TryGetAttribute(DicomTags.AdmittingDiagnosesDescription, out attribute)? attribute.ToString() : String.Empty;
 				return DicomStringHelper.GetStringArray(admittingDiagnosesDescription);
 			}
 		}
@@ -773,9 +823,11 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 			get
 			{
 			    var value = _cache.PatientsAge;
-			    if (value == null)
-                    _cache.PatientsAge = value = this[DicomTags.PatientsAge].GetString(0, String.Empty);
-				return value;
+			    if (value != null) return value;
+			    
+                DicomAttribute attribute;
+			    _cache.PatientsAge = value = TryGetAttribute(DicomTags.PatientsAge, out attribute) ? attribute.ToString() : String.Empty;
+			    return value;
 			}
 		}
 
@@ -786,7 +838,8 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		{
 			get
 			{
-				return this[DicomTags.AdditionalPatientHistory].GetString(0, String.Empty);
+			    DicomAttribute attribute;
+			    return TryGetAttribute(DicomTags.AdditionalPatientHistory, out attribute) ? attribute.ToString() : String.Empty;
 			}
 		}
 
@@ -802,8 +855,10 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 			get
 			{
 			    var value = _cache.Manufacturer;
-			    if (value == null)
-				    _cache.Manufacturer = value = this[DicomTags.Manufacturer].GetString(0, String.Empty);
+			    if (value != null) return value;
+			    
+                DicomAttribute attribute;
+			    _cache.Manufacturer = value = TryGetAttribute(DicomTags.Manufacturer, out attribute) ? attribute.ToString() : String.Empty;
 			    return value;
 			}
 		}
@@ -816,9 +871,11 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 			get
 			{
                 var value = _cache.InstitutionName;
-                if (value == null)
-                    _cache.InstitutionName = value = this[DicomTags.InstitutionName].GetString(0, String.Empty);
-                return value;
+			    if (value != null) return value;
+			    
+                DicomAttribute attribute;
+			    _cache.InstitutionName = value = TryGetAttribute(DicomTags.InstitutionName, out attribute) ? attribute.ToString() : String.Empty;
+			    return value;
             }
 		}
 
@@ -830,8 +887,10 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 			get
 			{
                 var value = _cache.StationName;
-                if (value == null)
-                    _cache.StationName = value = this[DicomTags.StationName].GetString(0, String.Empty);
+                if (value != null) return value;
+
+                DicomAttribute attribute;
+                _cache.StationName = value = TryGetAttribute(DicomTags.StationName, out attribute) ? attribute.ToString() : String.Empty;
                 return value;
             }
 		}
@@ -844,8 +903,10 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 			get
 			{
                 var value = _cache.InstitutionalDepartmentName;
-                if (value == null)
-                    _cache.InstitutionalDepartmentName = value = this[DicomTags.InstitutionalDepartmentName].GetString(0, String.Empty);
+                if (value != null) return value;
+
+                DicomAttribute attribute;
+                _cache.InstitutionalDepartmentName = value = TryGetAttribute(DicomTags.InstitutionalDepartmentName, out attribute) ? attribute.ToString() : String.Empty;
                 return value;
             }
 		}
@@ -858,8 +919,10 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 			get
 			{
                 var value = _cache.ManufacturersModelName;
-                if (value == null)
-                    _cache.ManufacturersModelName = value = this[DicomTags.ManufacturersModelName].GetString(0, String.Empty);
+                if (value != null) return value;
+
+                DicomAttribute attribute;
+                _cache.ManufacturersModelName = value = TryGetAttribute(DicomTags.ManufacturersModelName, out attribute) ? attribute.ToString() : String.Empty;
                 return value;
             }
 		}
@@ -876,8 +939,10 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 			get
 			{
                 var value = _cache.Modality;
-                if (value == null)
-                    _cache.Modality = value = this[DicomTags.Modality].GetString(0, String.Empty);
+                if (value != null) return value;
+
+                DicomAttribute attribute;
+                _cache.Modality = value = TryGetAttribute(DicomTags.Modality, out attribute) ? attribute.ToString() : String.Empty;
                 return value;
             }
 		}
@@ -904,10 +969,12 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 			get
 			{
                 var value = _cache.SeriesNumber;
-                if (!value.HasValue)
-                    _cache.SeriesNumber = value = this[DicomTags.SeriesNumber].GetInt32(0, 0);
+			    if (value.HasValue) return value.Value;
+
+                DicomAttribute attribute;
+                _cache.SeriesNumber = value = TryGetAttribute(DicomTags.SeriesNumber, out attribute) ? attribute.GetInt32(0, 0) : 0;
                 return value.Value;
-			}
+            }
 		}
 
 		/// <summary>
@@ -918,8 +985,10 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 			get
 			{
                 var value = _cache.Laterality;
-                if (value == null)
-                    _cache.Laterality = value = this[DicomTags.Laterality].GetString(0, String.Empty);
+                if (value != null) return value;
+
+                DicomAttribute attribute;
+                _cache.Laterality = value = TryGetAttribute(DicomTags.Laterality, out attribute) ? attribute.ToString() : String.Empty;
                 return value;
             }
 		}
@@ -932,8 +1001,10 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 			get
 			{
                 var value = _cache.SeriesDate;
-			    if (value == null)
-			        _cache.SeriesDate = value = this[DicomTags.SeriesDate].GetString(0, String.Empty);
+                if (value != null) return value;
+
+                DicomAttribute attribute;
+                _cache.SeriesDate = value = TryGetAttribute(DicomTags.SeriesDate, out attribute) ? attribute.ToString() : String.Empty;
                 return value;
             }
 		}
@@ -946,8 +1017,10 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 			get
 			{
                 var value = _cache.SeriesTime;
-                if (value == null)
-                    _cache.SeriesTime = value = this[DicomTags.SeriesTime].GetString(0, String.Empty);
+                if (value != null) return value;
+
+                DicomAttribute attribute;
+                _cache.SeriesTime = value = TryGetAttribute(DicomTags.SeriesTime, out attribute) ? attribute.ToString() : String.Empty;
                 return value;
             }
 		}
@@ -959,7 +1032,8 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		{
 			get
 			{
-				var performingPhysiciansNames = this[DicomTags.PerformingPhysiciansName].ToString();
+			    DicomAttribute attribute;
+				var performingPhysiciansNames = TryGetAttribute(DicomTags.PerformingPhysiciansName, out attribute) ? attribute.ToString() : String.Empty;
 				return DicomStringHelper.GetPersonNameArray(performingPhysiciansNames);
 			}
 		}
@@ -972,8 +1046,10 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 			get
 			{
                 var value = _cache.ProtocolName;
-                if (value == null)
-                    _cache.ProtocolName = value = this[DicomTags.ProtocolName].GetString(0, String.Empty);
+                if (value != null) return value;
+
+                DicomAttribute attribute;
+                _cache.ProtocolName = value = TryGetAttribute(DicomTags.ProtocolName, out attribute) ? attribute.ToString() : String.Empty;
                 return value;
             }
 		}
@@ -986,8 +1062,10 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 			get
 			{
                 var value = _cache.SeriesDescription;
-                if (value == null)
-                    _cache.SeriesDescription = value = this[DicomTags.SeriesDescription].GetString(0, String.Empty);
+                if (value != null) return value;
+
+                DicomAttribute attribute;
+                _cache.SeriesDescription = value = TryGetAttribute(DicomTags.SeriesDescription, out attribute) ? attribute.ToString() : String.Empty;
                 return value;
             }
 		}
@@ -999,7 +1077,8 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		{
 			get
 			{
-				var operatorsNames = this[DicomTags.OperatorsName].ToString();
+			    DicomAttribute attribute;
+				var operatorsNames = TryGetAttribute(DicomTags.OperatorsName, out attribute) ? attribute.ToString() : String.Empty;
 				return DicomStringHelper.GetPersonNameArray(operatorsNames);
 			}
 		}
@@ -1012,8 +1091,10 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 			get
 			{
                 var value = _cache.BodyPartExamined;
-                if (value == null)
-                    _cache.BodyPartExamined = value = this[DicomTags.BodyPartExamined].GetString(0, String.Empty);
+                if (value != null) return value;
+
+                DicomAttribute attribute;
+                _cache.BodyPartExamined = value = TryGetAttribute(DicomTags.BodyPartExamined, out attribute) ? attribute.ToString() : String.Empty;
                 return value;
             }
 		}
@@ -1026,8 +1107,10 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 			get
 			{
                 var value = _cache.PatientPosition;
-                if (value == null)
-                    _cache.PatientPosition = value = this[DicomTags.PatientPosition].GetString(0, String.Empty);
+                if (value != null) return value;
+
+                DicomAttribute attribute;
+                _cache.PatientPosition = value = TryGetAttribute(DicomTags.PatientPosition, out attribute) ? attribute.ToString() : String.Empty;
                 return value;
             }
 		}
@@ -1154,8 +1237,9 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		}
 
 		private static readonly ReadOnlyCollection<SopClass> _imageSopClasses = new List<SopClass>(GetImageSopClasses()).AsReadOnly();
+        private static readonly bool _disableSopValidation = ValidationSettings.Default.DisableSopValidation;
 
-		private static IEnumerable<SopClass> GetImageSopClasses()
+	    private static IEnumerable<SopClass> GetImageSopClasses()
 		{
 			yield return SopClass.BreastTomosynthesisImageStorage;
 
@@ -1275,7 +1359,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		/// <exception cref="SopValidationException">Thrown when validation fails.</exception>
 		protected virtual void ValidateInternal()
 		{
-			if (ValidationSettings.Default.DisableSopValidation)
+			if (_disableSopValidation)
 				return;
 
 			DicomValidator.ValidateSOPInstanceUID(SopInstanceUid, false);

@@ -26,6 +26,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Text;
 using System.Xml;
+using ClearCanvas.Common.Utilities;
 
 namespace ClearCanvas.Dicom.Utilities.Xml
 {
@@ -34,62 +35,67 @@ namespace ClearCanvas.Dicom.Utilities.Xml
 	/// </summary>
 	public static class StudyXmlIo
 	{
-		public static void Write(XmlDocument theDoc, Stream theStream)
+		public static void Write(StudyXmlMemento theMemento, Stream theStream)
 		{
-		    var xmlSettings = new XmlWriterSettings
-		                          {
-		                              Encoding = Encoding.UTF8,
-		                              ConformanceLevel = ConformanceLevel.Document,
-		                              Indent = false,
-		                              NewLineOnAttributes = false,
-		                              CheckCharacters = true,
-		                              IndentChars = string.Empty
-		                          };
+			if (theMemento.RootNode != null)
+			{
+				var sw = new StreamWriter(theStream, Encoding.UTF8);
+				sw.Write("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
+				theMemento.RootNode.WriteTo(sw);
+				sw.Flush();
+			}
+			else
+			{
+				var xmlSettings = new XmlWriterSettings
+					{
+						Encoding = Encoding.UTF8,
+						ConformanceLevel = ConformanceLevel.Document,
+						Indent = false,
+						NewLineOnAttributes = false,
+						CheckCharacters = true,
+						IndentChars = string.Empty
+					};
 
 
-		    XmlWriter tw = XmlWriter.Create(theStream, xmlSettings);
-			theDoc.WriteTo(tw);
-			tw.Flush();
-			tw.Close();
+				XmlWriter tw = XmlWriter.Create(theStream, xmlSettings);
+				theMemento.Document.WriteTo(tw);
+				tw.Flush();
+				tw.Close();
+			}
 		}
 
-        public static void Write(XmlDocument theDoc, string filename)
+		public static void Write(StudyXmlMemento theMemento, string filename)
         {
-            var xmlSettings = new XmlWriterSettings
-            {
-                Encoding = Encoding.UTF8,
-                ConformanceLevel = ConformanceLevel.Document,
-                Indent = false,
-                NewLineOnAttributes = false,
-                CheckCharacters = true,
-                IndentChars = string.Empty
-            };
+			if (theMemento.RootNode != null)
+			{
+				using (var fs = FileStreamOpener.OpenForSoleUpdate(filename, FileMode.CreateNew))
+				{
+					Write(theMemento, fs);
+				}
+			}
+			else
+			{
+				var xmlSettings = new XmlWriterSettings
+					{
+						Encoding = Encoding.UTF8,
+						ConformanceLevel = ConformanceLevel.Document,
+						Indent = false,
+						NewLineOnAttributes = false,
+						CheckCharacters = true,
+						IndentChars = string.Empty
+					};
 
-            XmlWriter tw = XmlWriter.Create(filename, xmlSettings);
-            theDoc.WriteTo(tw);
-            tw.Flush();
-            tw.Close();
+				XmlWriter tw = XmlWriter.Create(filename, xmlSettings);
+				theMemento.Document.WriteTo(tw);
+				tw.Flush();
+				tw.Close();
+			}
         }
 
-		public static void WriteGzip(XmlDocument theDoc, Stream theStream)
+		public static void WriteGzip(StudyXmlMemento theMemento, Stream theStream)
 		{
 			var ms = new MemoryStream();
-		    var xmlSettings = new XmlWriterSettings
-		                          {
-		                              Encoding = Encoding.UTF8,
-		                              ConformanceLevel = ConformanceLevel.Document,
-		                              Indent = false,
-		                              NewLineOnAttributes = false,
-		                              CheckCharacters = true,
-		                              IndentChars = string.Empty
-		                          };
-
-
-		    XmlWriter tw = XmlWriter.Create(ms, xmlSettings);
-
-			theDoc.WriteTo(tw);
-			tw.Flush();
-			tw.Close();
+			Write(theMemento, ms);
 
 			byte[] buffer = ms.GetBuffer();
 
@@ -103,29 +109,16 @@ namespace ClearCanvas.Dicom.Utilities.Xml
 			theStream.Flush();
 		}
 
-		public static void WriteXmlAndGzip(XmlDocument theDoc, Stream theXmlStream, Stream theGzipStream)
+		public static void WriteXmlAndGzip(StudyXmlMemento theMemento, Stream theXmlStream, Stream theGzipStream)
 		{
 			// Write to a memory stream, then flush to disk and to gzip file
-			MemoryStream ms = new MemoryStream();
-			XmlWriterSettings xmlSettings = new XmlWriterSettings();
+			var ms = new MemoryStream();
 
-			xmlSettings.Encoding = Encoding.UTF8;
-			xmlSettings.ConformanceLevel = ConformanceLevel.Document;
-			xmlSettings.Indent = false;
-			xmlSettings.NewLineOnAttributes = false;
-			xmlSettings.CheckCharacters = true;
-			xmlSettings.IndentChars = "";
-
-			XmlWriter tw = XmlWriter.Create(ms, xmlSettings);
-
-			theDoc.WriteTo(tw);
-
-			tw.Flush();
-			tw.Close();
+			Write(theMemento, ms);
 
 			byte[] buffer = ms.GetBuffer();
 			
-			GZipStream compressedzipStream = new GZipStream(theGzipStream, CompressionMode.Compress, true);
+			var compressedzipStream = new GZipStream(theGzipStream, CompressionMode.Compress, true);
 			compressedzipStream.Write(buffer, 0, (int)ms.Length);
 
 			// Close the stream.
@@ -139,18 +132,21 @@ namespace ClearCanvas.Dicom.Utilities.Xml
 			theGzipStream.Flush();
 		}
 
-		public static void ReadGzip(XmlDocument theDoc, Stream theStream)
+		public static void ReadGzip(StudyXmlMemento theMemento, Stream theStream)
 		{
-			GZipStream zipStream = new GZipStream(theStream, CompressionMode.Decompress);
+			var zipStream = new GZipStream(theStream, CompressionMode.Decompress);
 
-			theDoc.Load(zipStream);
+			if (theMemento.Document == null)
+				theMemento.Document = new XmlDocument();
 
-			return;
+			theMemento.Document.Load(zipStream);
 		}
 
-		public static void Read(XmlDocument theDoc, Stream theStream)
+		public static void Read(StudyXmlMemento theMemento, Stream theStream)
 		{
-			theDoc.Load(theStream);
+			if (theMemento.Document == null)
+				theMemento.Document = new XmlDocument();
+			theMemento.Document.Load(theStream);
 		}
 	}
 }

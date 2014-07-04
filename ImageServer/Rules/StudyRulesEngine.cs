@@ -183,10 +183,10 @@ namespace ClearCanvas.ImageServer.Rules
 
 				using (FileStream stream = FileStreamOpener.OpenForRead(studyXml, FileMode.Open))
 				{
-					var theDoc = new XmlDocument();
-					StudyXmlIo.Read(theDoc, stream);
+					var theMemento = new StudyXmlMemento();
+					StudyXmlIo.Read(theMemento, stream);
 					stream.Close();
-					_studyXml.SetMemento(theDoc);
+					_studyXml.SetMemento(theMemento);
 				}
 			}
 
