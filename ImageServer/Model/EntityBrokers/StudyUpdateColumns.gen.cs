@@ -107,6 +107,11 @@ namespace ClearCanvas.ImageServer.Model.EntityBrokers
         {
             set { SubParameters["QCStatusEnum"] = new EntityUpdateColumn<QCStatusEnum>("QCStatusEnum", value); }
         }
+		[EntityFieldDatabaseMappingAttribute(TableName = "Study", ColumnName = "QCUpdateTimeUtc")]
+		public DateTime QCUpdateTimeUtc
+		{
+			set { SubParameters["QCUpdateTimeUtc"] = new EntityUpdateColumn<DateTime>("QCUpdateTimeUtc", value); }
+		}
         [EntityFieldDatabaseMappingAttribute(TableName="Study", ColumnName="OrderGUID")]
         public ServerEntityKey OrderKey
         {

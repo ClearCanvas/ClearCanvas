@@ -623,6 +623,7 @@ CREATE TABLE [dbo].[Study](
 	QueryXml xml NULL,
 	QCStatusEnum [smallint] NOT NULL,
 	QCOutput varchar(max) NULL,
+	QCUpdateTimeUtc datetime NULL,
 	OrderGUID uniqueidentifier NULL,
  CONSTRAINT [PK_Study] PRIMARY KEY NONCLUSTERED 
 (
@@ -689,6 +690,14 @@ CREATE NONCLUSTERED INDEX [IX_Study_StudyStorageGUID] ON [dbo].[Study]
 	[StudyStorageGUID] ASC
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [INDEXES]
 GO
+IF NOT EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[Study]') AND name = N'IX_Study_QCUpdateTime')
+CREATE NONCLUSTERED INDEX [IX_Study_QCUpdateTime] ON [dbo].[Study]
+(
+	[QCUpdateTimeUtc] DESC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [INDEXES]
+GO
+
+
 /****** Object:  Table [dbo].[PartitionSopClass]    Script Date: 01/09/2008 15:03:39 ******/
 SET ANSI_NULLS ON
 GO
