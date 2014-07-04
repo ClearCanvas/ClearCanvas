@@ -455,6 +455,24 @@ GO
 IF @@TRANCOUNT=0 BEGIN INSERT INTO #tmpErrors (Error) SELECT 1 BEGIN TRANSACTION END
 GO
 
+PRINT N'Adding ScheduledTime to ExternalRequestQueue and updating ExternalRequestQueue clustered index'
+
+ALTER TABLE dbo.ExternalRequestQueue ADD
+	ScheduledTime datetime NOT NULL CONSTRAINT DF_ExternalRequestQueue_ScheduledTime DEFAULT getdate()
+GO
+DROP INDEX IXC_ExternalRequestQueue_InsertTime ON dbo.ExternalRequestQueue
+GO
+CREATE CLUSTERED INDEX IXC_ExternalRequestQueue_ScheduledTime ON dbo.ExternalRequestQueue
+	(
+	ScheduledTime
+	) WITH( STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON QUEUES
+GO
+
+IF @@ERROR<>0 AND @@TRANCOUNT>0 ROLLBACK TRANSACTION
+GO
+IF @@TRANCOUNT=0 BEGIN INSERT INTO #tmpErrors (Error) SELECT 1 BEGIN TRANSACTION END
+GO
+
 
 IF EXISTS (SELECT * FROM #tmpErrors) ROLLBACK TRANSACTION
 GO
