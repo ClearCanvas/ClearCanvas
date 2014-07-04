@@ -47,7 +47,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 	/// </remarks>
 	public partial class ImageSop : Sop
 	{
-	    private struct CachedValues
+	    private class CachedValues
 	    {
 	        public string AnatomicalOrientationType;
             public string PresentationIntentType;
@@ -59,7 +59,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 	    private readonly object _syncLock = new object();
 		private volatile FrameCollection _frames;
 
-	    private CachedValues _cache;
+	    private CachedValues _cache = new CachedValues();
 
 		/// <summary>
 		/// Constructs a new instance of <see cref="ImageSop"/> from a local file.
@@ -125,8 +125,10 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		    get
 		    {
 		        var value = _cache.AnatomicalOrientationType;
-                if (value == null)
-                    _cache.AnatomicalOrientationType = value = this[DicomTags.AnatomicalOrientationType].ToString();
+		        if (value != null) return value;
+		        
+                DicomAttribute attribute;
+		        _cache.AnatomicalOrientationType = value = TryGetAttribute(DicomTags.AnatomicalOrientationType, out attribute) ? attribute.ToString() : String.Empty;
 		        return value;
 		    }
 		}
@@ -143,9 +145,11 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		    get
 		    {
                 var value = _cache.PresentationIntentType;
-                if (value == null)
-                    _cache.PresentationIntentType = value = this[DicomTags.PresentationIntentType].ToString();
-                return value;
+		        if (value != null) return value;
+		        
+                DicomAttribute attribute;
+		        _cache.PresentationIntentType = value = TryGetAttribute(DicomTags.PresentationIntentType, out attribute) ? attribute.ToString() : String.Empty;
+		        return value;
 		    }
 		}
 
@@ -166,8 +170,10 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		    get
 		    {
 		        var value = _cache.NumberOfFrames;
-                if (!value.HasValue)
-                    _cache.NumberOfFrames = value = Math.Max(this[DicomTags.NumberOfFrames].GetInt32(0, 1), 1);
+		        if (value.HasValue) return value.Value;
+		        
+                DicomAttribute attribute;
+		        _cache.NumberOfFrames = value = Math.Max(TryGetAttribute(DicomTags.NumberOfFrames, out attribute) ? attribute.GetInt32(0, 1) : 1, 1);
 		        return value.Value;
 		    }
 		}
@@ -185,8 +191,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
         {
             base.ResetCache();
             _cache = new CachedValues();
-            var frames = Frames;
-            foreach (var frame in frames)
+            foreach (var frame in Frames)
                 frame.ResetCache();
         }
 

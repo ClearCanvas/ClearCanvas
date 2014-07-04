@@ -108,7 +108,7 @@ namespace ClearCanvas.Dicom.Utilities
 		{
 			string[] stringValues = GetStringArray(dicomStringArray);
 
-			List<double> doubleValues = new List<double>();
+            var doubleValues = new List<double>(stringValues.Length);
 			foreach (string value in stringValues)
 			{
 				double outValue;
@@ -136,7 +136,7 @@ namespace ClearCanvas.Dicom.Utilities
 		{
 			string[] stringValues = GetStringArray(dicomStringArray);
 
-			List<float> floatValues = new List<float>();
+            var floatValues = new List<float>(stringValues.Length);
 			foreach (string value in stringValues)
 			{
 				float outValue;
@@ -164,7 +164,7 @@ namespace ClearCanvas.Dicom.Utilities
 		{
 			string[] stringValues = GetStringArray(dicomStringArray);
 
-			List<int> intValues = new List<int>();
+			var intValues = new List<int>(stringValues.Length);
 			foreach (string value in stringValues)
 			{
 				int outValue;

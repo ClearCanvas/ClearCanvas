@@ -854,15 +854,18 @@ namespace ClearCanvas.Dicom.Utilities.Xml
 			return result;
 		}
 
-		private static string XmlUnescapeString(string input)
+        private static readonly Regex _unescapeRegex1 = new Regex("&#[Xx]([0-9A-Fa-f]+);", RegexOptions.Compiled);
+        private static readonly Regex _unescapeRegex2 = new Regex("&#([0-9]+);", RegexOptions.Compiled);
+		
+        private static string XmlUnescapeString(string input)
 		{
 			string result = input ?? string.Empty;
 
 			// unescape any value-encoded XML entities
-			result = Regex.Replace(result, "&#[Xx]([0-9A-Fa-f]+);", m => ((char) int.Parse(m.Groups[1].Value, NumberStyles.AllowHexSpecifier)).ToString());
-			result = Regex.Replace(result, "&#([0-9]+);", m => ((char) int.Parse(m.Groups[1].Value)).ToString());
-
-			// unescape any entities encoded by SecurityElement.Escape (only <>'"&)
+            result = _unescapeRegex1.Replace(result, m => ((char)int.Parse(m.Groups[1].Value, NumberStyles.AllowHexSpecifier)).ToString());
+            result = _unescapeRegex2.Replace(result, m => ((char)int.Parse(m.Groups[1].Value)).ToString());
+			
+            // unescape any entities encoded by SecurityElement.Escape (only <>'"&)
 			result = result.Replace("&lt;", "<").
 				Replace("&gt;", ">").
 				Replace("&quot;", "\"").

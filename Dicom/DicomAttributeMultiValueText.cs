@@ -90,12 +90,10 @@ namespace ClearCanvas.Dicom
         internal DicomAttributeMultiValueText(DicomAttributeMultiValueText attrib)
             : base(attrib)
         {
-            string[] values = (string[])attrib.Values;
-
+            var values = (string[])attrib.Values;
             _values = new string[values.Length];
-
-            for (int i = 0; i < values.Length; i++)
-                _values[i] = string.Copy(values[i]);
+            for (int i = 0; i < values.Length; ++i)
+                _values[i] = values[i];
         }
 
         #endregion
