@@ -22,8 +22,11 @@
 
 #endregion
 
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
+using System.Text.RegularExpressions;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Serialization;
 
@@ -108,5 +111,67 @@ namespace ClearCanvas.Enterprise.Common.Mail
 		{
 			Platform.GetService<IMailQueueService>(service => service.EnqueueMessage(new EnqueueMessageRequest {Message = this, Classification = classification}));
 		}
+
+		#region Static Helpers
+
+		private static readonly Regex _templateParameterRegex = new Regex(@"\$([a-z]*)\$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
+		/// <summary>
+		/// Processes a parameterized string to resolve parameter variables of form $paramName$.
+		/// </summary>
+		/// <remarks>
+		/// This overload requires that all resolved parameters be determined up-front. If the resolution of some
+		/// parameters is costly and the corresponding variables are potentially not present in the template, consider
+		/// using the <see cref="ResolveParameters{T}"/> overload, which allows for lazy resolution of parameters.
+		/// </remarks>
+		/// <param name="s">Template string containing parameter variables of form $paramName$ (use $$ for literal '$' character).</param>
+		/// <param name="args">Dictionary of arguments with parameter names as the key (e.g. paramName for the variable $paramName$)</param>
+		/// <returns>The resolved string.</returns>
+		public static string ResolveParameters(string s, IDictionary<string, string> args)
+		{
+			Platform.CheckForEmptyString(s, "s");
+			Platform.CheckForNullReference(args, "args");
+
+			return _templateParameterRegex.Replace(s, m =>
+			{
+				string value;
+				var key = m.Groups[1].Value;
+				if (key == "") return "$";
+				return args.TryGetValue(key, out value) ? value : string.Concat("$", key, "$");
+			});
+		}
+
+		/// <summary>
+		/// Processes a parameterized string to resolve parameter variables of form $paramName$.
+		/// </summary>
+		/// <remarks>
+		/// This overload allows for lazy resolution of parameters (i.e. only when the corresponding
+		/// variable is encountered in the template). If the parameters are constant or trivially constructed,
+		/// or all variables would typically be present in the template, consider using the <see cref="ResolveParameters"/>
+		/// overload to eliminate the overhead of the lazy resolution.
+		/// </remarks>
+		/// <typeparam name="T">Type of state object to be passed to parameter resolution function.</typeparam>
+		/// <param name="s">Template string containing parameter variables of form $paramName$ (use $$ for literal '$' character).</param>
+		/// <param name="state">State object to be passed to parameter resolution function.</param>
+		/// <param name="args">Dictionary of parameter resolution function with parameter names as the key (e.g. paramName for the variable $paramName$)</param>
+		/// <returns>The resolved string.</returns>
+		public static string ResolveParameters<T>(string s, T state, IDictionary<string, Func<T, string>> args)
+		{
+			Platform.CheckForEmptyString(s, "s");
+			Platform.CheckForNullReference(args, "args");
+
+			var resolvedArgs = new Dictionary<string, string> {{"", "$"}};
+			return _templateParameterRegex.Replace(s, m =>
+			{
+				string value;
+				var key = m.Groups[1].Value;
+				if (resolvedArgs.TryGetValue(key, out value)) return value;
+
+				Func<T, string> valueGetter;
+				return resolvedArgs[key] = (args.TryGetValue(key, out valueGetter) ? valueGetter.Invoke(state) : string.Concat("$", key, "$"));
+			});
+		}
+
+		#endregion
 	}
 }

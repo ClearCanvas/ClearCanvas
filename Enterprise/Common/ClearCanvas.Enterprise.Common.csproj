@@ -234,6 +234,7 @@
     <Compile Include="StaticChannelProvider.cs" />
     <Compile Include="Tests\AopInterceptorChainTests.cs" />
     <Compile Include="Tests\EntityRefJsmlSerializerHookTests.cs" />
+    <Compile Include="Mail\Tests\OutgoingMailMessageTests.cs" />
     <Compile Include="Tests\ResponseCachingAdviceBaseTests.cs" />
     <Compile Include="UserAccessDeniedException.cs" />
     <Compile Include="InvalidUserSessionException.cs" />
