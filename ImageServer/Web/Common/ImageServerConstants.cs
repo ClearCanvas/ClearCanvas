@@ -205,6 +205,7 @@ public class ImageServerConstants
             public const string DashboardPage = "~/Pages/Admin/Dashboard/Default.aspx";
             public const string ErrorPage = "~/Pages/Error/ErrorPage.aspx";
             public const string JavascriptErrorPage = "~/Pages/Error/JavascriptRequired.aspx";
+			public const string InvalidRequestErrorPage = "~/Pages/Error/InvalidRequestErrorPage.aspx";
             public const string LoginPage = "~/Pages/Login/Default.aspx";
 			public const string LogoutPage = "~/Pages/Login/Logout.aspx?ReturnUrl={0}";
             public const string MoveSeriesPage = "~/Pages/Studies/MoveSeries/Default.aspx";

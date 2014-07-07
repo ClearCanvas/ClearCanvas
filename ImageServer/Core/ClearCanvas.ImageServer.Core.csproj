@@ -105,6 +105,7 @@
     <Compile Include="Events\ServerPartitionAddedArgs.cs" />
     <Compile Include="Events\SopEventArgs.cs" />
     <Compile Include="Events\StudyEditedEventArgs.cs" />
+    <Compile Include="Events\UpdateOrderEventArgs.cs" />
     <Compile Include="Events\UpdateSopEventArgs.cs" />
     <Compile Include="FilesystemDynamicPath.cs" />
     <Compile Include="FileSystemMonitor.cs" />

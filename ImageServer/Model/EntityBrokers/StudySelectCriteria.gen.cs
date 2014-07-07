@@ -199,6 +199,18 @@ namespace ClearCanvas.ImageServer.Model.EntityBrokers
               return (ISearchCondition<QCStatusEnum>)SubCriteria["QCStatusEnum"];
             } 
         }
+		[EntityFieldDatabaseMappingAttribute(TableName = "Study", ColumnName = "QCUpdateTimeUtc")]
+		public ISearchCondition<DateTime> QCUpdateTimeUtc
+		{
+			get
+			{
+				if (!SubCriteria.ContainsKey("QCUpdateTimeUtc"))
+				{
+					SubCriteria["QCUpdateTimeUtc"] = new SearchCondition<DateTime>("QCUpdateTimeUtc");
+				}
+				return (ISearchCondition<DateTime>)SubCriteria["QCUpdateTimeUtc"];
+			}
+		}
         [EntityFieldDatabaseMappingAttribute(TableName="Study", ColumnName="OrderGUID")]
         public ISearchCondition<ServerEntityKey> OrderKey
         {

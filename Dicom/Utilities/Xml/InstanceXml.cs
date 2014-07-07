@@ -132,6 +132,8 @@ namespace ClearCanvas.Dicom.Utilities.Xml
 			get { return _transferSyntax; }
 		}
 
+		public string XmlFragment { get; set; }
+
 		/// <summary>
 		/// Gets the underlying data as a <see cref="DicomAttributeCollection"/>.
 		/// </summary>
@@ -301,6 +303,7 @@ namespace ClearCanvas.Dicom.Utilities.Xml
 			{
 				// force the element to be regenerated when GetMemento() is called
 				_cachedElement = null;
+				XmlFragment = null;
 			}
 
 			_baseInstance = baseInstance;

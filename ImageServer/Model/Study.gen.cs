@@ -146,7 +146,10 @@ namespace ClearCanvas.ImageServer.Model
         [EntityFieldDatabaseMappingAttribute(TableName="Study", ColumnName="QCStatusEnum")]
         public QCStatusEnum QCStatusEnum
         { get; set; }
-        [EntityFieldDatabaseMappingAttribute(TableName="Study", ColumnName="OrderGUID")]
+		[EntityFieldDatabaseMappingAttribute(TableName = "Study", ColumnName = "QCUpdateTimeUtc")]
+		public DateTime QCUpdateTimeUtc
+		{ get; set; }
+		[EntityFieldDatabaseMappingAttribute(TableName = "Study", ColumnName = "OrderGUID")]
         public ServerEntityKey OrderKey
         { get; set; }
         [DicomField(DicomTags.PatientsName, DefaultValue = DicomFieldDefault.Null)]
