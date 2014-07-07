@@ -125,10 +125,8 @@ namespace ClearCanvas.ImageServer.Core.SharpZipLib
 
         public void AddFileStream(string directoryPathInArchive, Stream sourceFile, string comment)
         {
+            sourceFile.Position = 0;
             _zipFile.Add(new FileStreamDataSource(sourceFile), directoryPathInArchive, ForceCompress ? CompressionMethod.Deflated : CompressionMethod.Stored);
-
-            var entry = _zipFile.GetEntry(directoryPathInArchive);
-            entry.Comment = comment;
         }
 
         public void AddDirectory(string sourceDirectory)
