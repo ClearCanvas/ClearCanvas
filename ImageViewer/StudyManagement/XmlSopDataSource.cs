@@ -39,7 +39,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
     public abstract class XmlSopDataSource : DicomMessageSopDataSource
     {
         private readonly Dictionary<uint, bool> _sequenceHasExcludedTags = new Dictionary<uint, bool>();
-        private volatile bool _fullHeaderLoaded;
+        internal volatile bool _fullHeaderLoaded;
 
 		protected XmlSopDataSource(InstanceXml instanceXml)
 			: base(new DicomFile("", new DicomAttributeCollection{ValidateVrLengths = false, ValidateVrValues = false}, instanceXml.Collection))

@@ -276,6 +276,7 @@
     <Compile Include="StudyManagement\ActivityMonitorFailureWatcher.cs" />
     <Compile Include="StudyManagement\ActivityMonitorProgressBar.cs" />
     <Compile Include="StudyManagement\ActivityMonitorQuickLink.cs" />
+    <Compile Include="StudyManagement\Tests\XmlSopDataSourceTests.cs" />
     <Compile Include="StudyManagement\XmlSopDataSource.cs" />
     <Compile Include="StudyManagement\IPatientCoordinateMapping.cs" />
     <Compile Include="StudyManagement\IPatientCoordinateMappingProvider.cs" />
