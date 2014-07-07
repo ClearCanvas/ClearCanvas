@@ -29,6 +29,6 @@ namespace ClearCanvas.ImageServer.Core.Events
 	[ImageServerEvent]
 	public class UpdateOrderEventArgs : ImageServerEventArgs
 	{
-		public Order OriginalOrder { get; set; }
+		public Order Order { get; set; }
 	}
 }
