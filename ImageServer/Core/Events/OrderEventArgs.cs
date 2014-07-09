@@ -22,8 +22,12 @@
 
 #endregion
 
+using ClearCanvas.ImageServer.Model;
+
 namespace ClearCanvas.ImageServer.Core.Events
 {
-	[ImageServerEvent]
-	public class UpdateOrderEventArgs : OrderEventArgs {}
+	public abstract class OrderEventArgs : ImageServerEventArgs
+	{
+		public Order Order { get; set; }
+	}
 }
