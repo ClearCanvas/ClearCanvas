@@ -101,6 +101,7 @@
     <Compile Include="Events\IEventHandler.cs" />
     <Compile Include="Events\ImageServerEventArgs.cs" />
     <Compile Include="Events\ImageServerEventAttribute.cs" />
+    <Compile Include="Events\NewOrderEventArgs.cs" />
     <Compile Include="Events\NewSopEventArgs.cs" />
     <Compile Include="Events\ServerPartitionAddedArgs.cs" />
     <Compile Include="Events\SopEventArgs.cs" />
