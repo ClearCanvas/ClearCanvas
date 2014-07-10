@@ -94,9 +94,33 @@ namespace ClearCanvas.ImageServer.Enterprise.Command
         public ServerCommandProcessor(string description)
             :this(Guid.NewGuid().ToString(), description)
         { }
-
+		
 	    #endregion
 
+		/// <summary>
+		/// Gets or sets the reference key of the server partition of the primary study being used in the process
+		/// </summary>
+		/// <remarks>
+		/// Because command processor can be part of a bigger transaction, the information is stored in /retrieved from the <seealso cref="ServerExecutionContext"/>
+		/// and can be accessed from any where using <seealso cref="ServerExecutionContext.Current"/>
+		/// </remarks>
+		public ServerEntityKey PrimaryServerPartitionKey
+	    {
+			get { return (ProcessorContext as ServerExecutionContext).PrimaryServerPartitionKey; }
+			set { (ProcessorContext as ServerExecutionContext).PrimaryServerPartitionKey = value; }
+	    }
+
+		/// <summary>
+		/// Gets or sets the reference key of the primary study being used in the process
+		/// </summary>
+		public ServerEntityKey PrimaryStudyKey
+	    {
+			get { return (ProcessorContext as ServerExecutionContext).PrimaryStudyKey; }
+			set
+			{
+				(ProcessorContext as ServerExecutionContext).PrimaryStudyKey = value;
+			}
+	    }
 
 		#region IDisposable Members
 

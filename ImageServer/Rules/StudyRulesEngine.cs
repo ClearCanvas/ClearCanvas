@@ -92,7 +92,11 @@ namespace ClearCanvas.ImageServer.Rules
 		public void Apply(ServerRuleApplyTimeEnum applyTime)
 		{
 
-			using(var theProcessor = new ServerCommandProcessor("Study Rule Processor"))
+			using(var theProcessor = new ServerCommandProcessor("Study Rule Processor")
+			{
+				PrimaryServerPartitionKey = _partition.GetKey(),
+				PrimaryStudyKey = _location.Study.GetKey()
+			})
 			{
                 Apply(applyTime, theProcessor);
 
