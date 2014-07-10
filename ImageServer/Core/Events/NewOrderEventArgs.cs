@@ -25,5 +25,5 @@
 namespace ClearCanvas.ImageServer.Core.Events
 {
 	[ImageServerEvent]
-	public class UpdateOrderEventArgs : OrderEventArgs {}
+	public class NewOrderEventArgs : OrderEventArgs {}
 }

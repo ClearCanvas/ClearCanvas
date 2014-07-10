@@ -32,7 +32,7 @@ namespace ClearCanvas.Enterprise.Common.Mail
 	/// Defines an interface to a service that provides and outgoing mail queue.
 	/// </summary>
 	[ServiceContract]
-	[EnterpriseCoreService, Authentication(true)]
+	[EnterpriseCoreService, Authentication(false)]
 	public interface IMailQueueService
 	{
 		/// <summary>

@@ -1914,7 +1914,7 @@ CREATE TABLE [dbo].[ExternalRequestQueue](
 	[StateXml] [xml] NULL,
 	[InsertTime] [datetime] NOT NULL,
 	[DeletionTime] [datetime] NULL,
-	[Revision] [int] NOT NULL,
+	[Revision] [int] NOT NULL DEFAULT 1,
 	[ScheduledTime] [datetime] NOT NULL,
  CONSTRAINT [PK_ExternalRequestQueue] PRIMARY KEY NONCLUSTERED 
 (

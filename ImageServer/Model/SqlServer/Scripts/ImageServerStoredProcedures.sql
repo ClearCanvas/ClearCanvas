@@ -4808,7 +4808,7 @@ BEGIN
 			@IncompleteCount=SUM(case when [QCStatusEnum] = @QCStatusIncomplete then 1 else 0 end)
 			FROM  [dbo].[Study] s WITH (NOLOCK)
 			JOIN [dbo].[StudyStorage] ss ON ss.[GUID] = s.[StudyStorageGUID]
-			WHERE ss.[InsertTime] >= @StartTime and ss.[InsertTime]<=@EndTime
+			WHERE CONVERT(datetime, s.[StudyDate], 112) >= @StartTime and CONVERT(datetime, s.[StudyDate], 112)<=@EndTime
 
 		-- Find orders that are SCHEDULED within this window
 		SELECT @OrdersForQC = COUNT(*) 
@@ -4829,7 +4829,7 @@ BEGIN
 			@IncompleteCount=SUM(case when [QCStatusEnum] = @QCStatusIncomplete then 1 else 0 end)
 			FROM  [dbo].[Study] s WITH (NOLOCK)
 			JOIN [dbo].[StudyStorage] ss ON ss.[GUID] = s.[StudyStorageGUID]
-			WHERE ss.[InsertTime] >= @StartTime and ss.[InsertTime]<=@EndTime
+			WHERE CONVERT(datetime, s.[StudyDate], 112) >= @StartTime and CONVERT(datetime, s.[StudyDate], 112)<=@EndTime
 				AND ss.[ServerPartitionGUID]=@PartitionGUID
 
 		-- Find orders that are SCHEDULED within this window
