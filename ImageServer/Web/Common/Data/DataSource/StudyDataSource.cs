@@ -323,7 +323,13 @@ namespace ClearCanvas.ImageServer.Web.Common.Data.DataSource
         }
 
 	    public bool CanScheduleRestore(out string reason)
-		{
+	    {
+		    if (IsNearline)
+		    {
+			    reason = String.Empty;
+				return true;
+			} 
+			
 			if (IsArchiving)
 			{
 				reason = SR.ActionNotAllowed_StudyIsBeingArchived;
