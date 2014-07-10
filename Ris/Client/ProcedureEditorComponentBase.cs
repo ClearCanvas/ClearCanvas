@@ -42,8 +42,10 @@ namespace ClearCanvas.Ris.Client
 		private readonly List<FacilitySummary> _facilityChoices;
 		private readonly List<DepartmentSummary> _allDepartments;
 		private List<DepartmentSummary> _departmentChoices;
+		private readonly List<ModalitySummary> _allModalities;
 		private List<ModalitySummary> _modalityChoices;
 		private readonly DepartmentSummary _departmentNone = new DepartmentSummary(null, SR.DummyItemNone, null, null, null, true);
+		private readonly ModalitySummary _modalityNone = new ModalitySummary(null, SR.DummyItemNone, null, null, null, null, true);
 		private readonly List<EnumValueInfo> _lateralityChoices;
 		private readonly List<EnumValueInfo> _schedulingCodeChoices;
 		private readonly EnumValueInfo _schedulingCodeNone = new EnumValueInfo(null, SR.DummyItemNone);
@@ -74,7 +76,7 @@ namespace ClearCanvas.Ris.Client
 			_facilityChoices = facilityChoices;
 			_allDepartments = departmentChoices;
 			_lateralityChoices = lateralityChoices;
-			_modalityChoices = modalityChoices;
+			_allModalities = modalityChoices;
 
 			_schedulingCodeChoices = new List<EnumValueInfo> {_schedulingCodeNone};
 			_schedulingCodeChoices.AddRange(schedulingCodeChoices);
@@ -176,6 +178,9 @@ namespace ClearCanvas.Ris.Client
 				UpdateDepartmentChoices();
 				NotifyPropertyChanged("DepartmentChoicesChanged");
 
+				UpdateModalityChoices();
+				NotifyPropertyChanged("ModalityChoicesChanged");
+
 				// clear selection
 				this.SelectedDepartment = null;
 			}
@@ -213,7 +218,7 @@ namespace ClearCanvas.Ris.Client
 
 		public string FormatModality(object modality)
 		{
-			return modality == null ? null : ((ModalitySummary)modality).Name;
+			return modality == null || Equals(modality, _modalityNone) ? "" : ((ModalitySummary)modality).Name;
 		}
 
 		public ModalitySummary SelectedModality
@@ -224,7 +229,9 @@ namespace ClearCanvas.Ris.Client
 				if (Equals(value, _selectedModality))
 					return;
 
-				_selectedModality =value;
+				// It's important to convert _modalityNone to null here, in order for "not-null" custom validation rules
+				// to behave as expected
+				_selectedModality = Equals(value, _modalityNone) ? null : value;
 				NotifyPropertyChanged("SelectedModality");
 			}
 		}
@@ -352,6 +359,7 @@ namespace ClearCanvas.Ris.Client
 		protected static bool IsModalityValidForFacility(ModalitySummary modality, FacilitySummary facility)
 		{
 			return modality == null
+				   || facility == null
 				   || modality.Facility == null
 				   || modality.Facility.Code == facility.Code;
 		}
@@ -366,6 +374,18 @@ namespace ClearCanvas.Ris.Client
 
 			var departmentsForSelectedFacility = CollectionUtils.Select(_allDepartments, d => d.FacilityCode == _selectedFacility.Code);
 			_departmentChoices.AddRange(departmentsForSelectedFacility);
+		}
+
+		private void UpdateModalityChoices()
+		{
+			_modalityChoices = new List<ModalitySummary>{_modalityNone};
+
+			// limit department choices to those that are associated with the selected performing facility
+			if (_selectedFacility == null)
+				return;
+
+			var modalitiesForSelectedFacility = CollectionUtils.Select(_allModalities, m => IsModalityValidForFacility(m, _selectedFacility));
+			_modalityChoices.AddRange(modalitiesForSelectedFacility);
 		}
 
 	}

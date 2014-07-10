@@ -1318,7 +1318,11 @@ namespace ClearCanvas.Ris.Client
 
 		private ProcedureRequisition NewProcedureRequisition(ProcedureTypeDetail procedureType)
 		{
-			var requisition = new ProcedureRequisition(procedureType != null ? procedureType.GetSummary() : null, _orderingFacility);
+			var performingFacility = _orderingFacility;
+			if (procedureType != null && procedureType.DefaultModality != null && procedureType.DefaultModality.Facility != null)
+				performingFacility = procedureType.DefaultModality.Facility;
+
+			var requisition = new ProcedureRequisition(procedureType != null ? procedureType.GetSummary() : null, performingFacility);
 			if (procedureType != null)
 			{
 				requisition.ScheduledDuration = procedureType.DefaultDuration;
