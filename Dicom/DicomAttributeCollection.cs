@@ -1094,14 +1094,15 @@ namespace ClearCanvas.Dicom
             if (value != null && value != DBNull.Value)
             {
                 Type vtype = value.GetType();
+                DicomSequenceItem sq;
                 if (vtype == this[tag].GetType())
                 {
                     this[tag] = (DicomAttribute)value;
                 }
-                else if (vtype.IsSubclassOf(typeof(DicomSequenceItem)))
+                else if (null != (sq = value as DicomSequenceItem))
                 {
                     DicomAttribute elem = this[tag];
-                    elem.AddSequenceItem((DicomSequenceItem)value);
+                    elem.AddSequenceItem(sq);
                 }
                 else
                 {
@@ -1179,16 +1180,17 @@ namespace ClearCanvas.Dicom
             }
             else
             {
+                DicomAttribute attr;
 				if (createEmpty)
                 {
                     // force the element creation
-                    DicomAttribute attr = this[tag];
+                    attr = this[tag];
 					if (setNullIfEmpty)
 						attr.SetNullValue();
                 }
-                else if (Contains(tag))
+                else if (TryGetAttribute(tag, out attr))
                 {
-                    this[tag].Values = null;
+                    attr.Values = null;
                 }
             }
         }
