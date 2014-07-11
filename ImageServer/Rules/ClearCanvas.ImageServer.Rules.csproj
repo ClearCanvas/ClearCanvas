@@ -65,7 +65,7 @@
     <Compile Include="OnlineRetentionAction\OnlineRetentionActionItem.cs" />
     <Compile Include="OnlineRetentionAction\OnlineRetentionActionOperator.cs" />
     <Compile Include="OnlineRetentionAction\Sample_OnlineRetention.cs" />
-    <Compile Include="Specifications\OrderIntendedForQCSpecification.cs" />
+    <Compile Include="Specifications\RequiresOrderIntendedForQCSpecification.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RuleSettings.Designer.cs">
       <AutoGen>True</AutoGen>
