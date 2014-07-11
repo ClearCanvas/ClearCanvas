@@ -94,7 +94,13 @@ namespace ClearCanvas.Ris.Client
 			this.Validation.Add(new ValidationRule("SelectedModality",
 				delegate
 				{
-					return this.IsModalityEditable ? ValidateModalityAndFacility("Modality is not valid for performing facility.") : new ValidationResult(true, "");
+					if (!this.IsModalityEditable)
+						return new ValidationResult(true, "");
+
+					if (this.SelectedModality == null)
+						return new ValidationResult(false, SR.MessageValueRequired);
+
+					return ValidateModalityAndFacility("Modality is not valid for performing facility.");
 				}));
 
 			// This validation shows the icon beside the facility if it's being edited

@@ -68,7 +68,6 @@ namespace ClearCanvas.Ris.Client.View.WinForms
 			this._enableLaterality = new System.Windows.Forms.CheckBox();
 			this._enablePortable = new System.Windows.Forms.CheckBox();
 			this._enableCheckIn = new System.Windows.Forms.CheckBox();
-			this._performingFacility = new ClearCanvas.Desktop.View.WinForms.ComboBoxField();
 			this._performingDepartment = new ClearCanvas.Desktop.View.WinForms.ComboBoxField();
 			this._laterality = new ClearCanvas.Desktop.View.WinForms.ComboBoxField();
 			this._portable = new System.Windows.Forms.CheckBox();
@@ -80,8 +79,9 @@ namespace ClearCanvas.Ris.Client.View.WinForms
 			this.panel1 = new System.Windows.Forms.Panel();
 			this._duration = new System.Windows.Forms.NumericUpDown();
 			this.label1 = new System.Windows.Forms.Label();
-			this._modality = new ClearCanvas.Desktop.View.WinForms.ComboBoxField();
 			this._enableModality = new System.Windows.Forms.CheckBox();
+			this._modality = new ClearCanvas.Desktop.View.WinForms.ComboBoxField();
+			this._performingFacility = new ClearCanvas.Desktop.View.WinForms.ComboBoxField();
 			this._acceptButton = new System.Windows.Forms.Button();
 			this._cancelButton = new System.Windows.Forms.Button();
 			this.tableLayoutPanel1.SuspendLayout();
@@ -93,13 +93,11 @@ namespace ClearCanvas.Ris.Client.View.WinForms
 			// 
 			resources.ApplyResources(this.tableLayoutPanel1, "tableLayoutPanel1");
 			this.tableLayoutPanel1.Controls.Add(this._enableScheduledDuration, 0, 1);
-			this.tableLayoutPanel1.Controls.Add(this._enablePerformingFacility, 0, 3);
 			this.tableLayoutPanel1.Controls.Add(this._scheduledTime, 2, 0);
 			this.tableLayoutPanel1.Controls.Add(this._enablePerformingDepartment, 0, 4);
 			this.tableLayoutPanel1.Controls.Add(this._enableLaterality, 0, 5);
 			this.tableLayoutPanel1.Controls.Add(this._enablePortable, 0, 7);
 			this.tableLayoutPanel1.Controls.Add(this._enableCheckIn, 0, 8);
-			this.tableLayoutPanel1.Controls.Add(this._performingFacility, 1, 3);
 			this.tableLayoutPanel1.Controls.Add(this._performingDepartment, 1, 4);
 			this.tableLayoutPanel1.Controls.Add(this._laterality, 1, 5);
 			this.tableLayoutPanel1.Controls.Add(this._portable, 1, 7);
@@ -109,8 +107,10 @@ namespace ClearCanvas.Ris.Client.View.WinForms
 			this.tableLayoutPanel1.Controls.Add(this._enableSchedulingCode, 0, 6);
 			this.tableLayoutPanel1.Controls.Add(this._scheduledDate, 1, 0);
 			this.tableLayoutPanel1.Controls.Add(this.panel1, 1, 1);
-			this.tableLayoutPanel1.Controls.Add(this._modality, 1, 2);
-			this.tableLayoutPanel1.Controls.Add(this._enableModality, 0, 2);
+			this.tableLayoutPanel1.Controls.Add(this._modality, 1, 3);
+			this.tableLayoutPanel1.Controls.Add(this._performingFacility, 1, 2);
+			this.tableLayoutPanel1.Controls.Add(this._enablePerformingFacility, 0, 2);
+			this.tableLayoutPanel1.Controls.Add(this._enableModality, 0, 3);
 			this.tableLayoutPanel1.Name = "tableLayoutPanel1";
 			// 
 			// _enableScheduledDuration
@@ -159,16 +159,6 @@ namespace ClearCanvas.Ris.Client.View.WinForms
 			resources.ApplyResources(this._enableCheckIn, "_enableCheckIn");
 			this._enableCheckIn.Name = "_enableCheckIn";
 			this._enableCheckIn.UseVisualStyleBackColor = true;
-			// 
-			// _performingFacility
-			// 
-			this.tableLayoutPanel1.SetColumnSpan(this._performingFacility, 2);
-			this._performingFacility.DataSource = null;
-			this._performingFacility.DisplayMember = "";
-			resources.ApplyResources(this._performingFacility, "_performingFacility");
-			this._performingFacility.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this._performingFacility.Name = "_performingFacility";
-			this._performingFacility.Value = null;
 			// 
 			// _performingDepartment
 			// 
@@ -262,21 +252,31 @@ namespace ClearCanvas.Ris.Client.View.WinForms
 			resources.ApplyResources(this.label1, "label1");
 			this.label1.Name = "label1";
 			// 
-			// _modality
-			// 
-			this.tableLayoutPanel1.SetColumnSpan(this._modality, 2);
-			this._modality.DataSource = null;
-			this._modality.DisplayMember = "";
-			this._modality.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			resources.ApplyResources(this._modality, "_modality");
-			this._modality.Name = "_modality";
-			this._modality.Value = null;
-			// 
 			// _enableModality
 			// 
 			resources.ApplyResources(this._enableModality, "_enableModality");
 			this._enableModality.Name = "_enableModality";
 			this._enableModality.UseVisualStyleBackColor = true;
+			// 
+			// _modality
+			// 
+			this.tableLayoutPanel1.SetColumnSpan(this._modality, 2);
+			this._modality.DataSource = null;
+			this._modality.DisplayMember = "";
+			resources.ApplyResources(this._modality, "_modality");
+			this._modality.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this._modality.Name = "_modality";
+			this._modality.Value = null;
+			// 
+			// _performingFacility
+			// 
+			this.tableLayoutPanel1.SetColumnSpan(this._performingFacility, 2);
+			this._performingFacility.DataSource = null;
+			this._performingFacility.DisplayMember = "";
+			resources.ApplyResources(this._performingFacility, "_performingFacility");
+			this._performingFacility.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this._performingFacility.Name = "_performingFacility";
+			this._performingFacility.Value = null;
 			// 
 			// _acceptButton
 			// 
@@ -325,7 +325,6 @@ namespace ClearCanvas.Ris.Client.View.WinForms
 		private System.Windows.Forms.CheckBox _checkedIn;
 		private System.Windows.Forms.CheckBox _enablePerformingFacility;
 		private ClearCanvas.Desktop.View.WinForms.DateTimeField _scheduledTime;
-		private ClearCanvas.Desktop.View.WinForms.ComboBoxField _performingFacility;
 		private ClearCanvas.Desktop.View.WinForms.ComboBoxField _performingDepartment;
 		private ClearCanvas.Desktop.View.WinForms.ComboBoxField _laterality;
 		private ClearCanvas.Desktop.View.WinForms.ComboBoxField _schedulingCode;
@@ -337,5 +336,6 @@ namespace ClearCanvas.Ris.Client.View.WinForms
 		private Desktop.View.WinForms.ComboBoxField _modality;
 		private System.Windows.Forms.CheckBox _enableScheduledDuration;
 		private System.Windows.Forms.CheckBox _enableModality;
+		private Desktop.View.WinForms.ComboBoxField _performingFacility;
     }
 }
