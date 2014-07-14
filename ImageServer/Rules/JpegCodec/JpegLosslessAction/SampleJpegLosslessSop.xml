@@ -18,6 +18,9 @@ CR and DX studies that have not been compressed already.
 	  <!-- JPEG 2000 Lossless/Lossy -->
 	  <not-equal test="$TransferSyntaxUid" refValue="1.2.840.10008.1.2.4.91" />
 
+		<!-- MR Spectroscopy SOP Class has no pixel data -->
+		<not-equal test="$SopClassUid" refValue="1.2.840.10008.5.1.4.1.1.4.2"/>
+
 	  <or>
 		<equal test="$Modality" refValue="CR" />
 		<equal test="$Modality" refValue="DX" />
