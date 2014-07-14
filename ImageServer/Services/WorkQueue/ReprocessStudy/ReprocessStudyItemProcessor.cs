@@ -472,6 +472,10 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.ReprocessStudy
                     }
                     else
                     {
+						// Reload the record from the database because referenced entities have been modified since the beginning.
+						// Need to reload because we are passing the location to the rule engine.
+						StorageLocation = CollectionUtils.FirstElement<StudyStorageLocation>(StudyStorageLocation.FindStorageLocations(item.ServerPartitionKey, StorageLocation.StudyInstanceUid), null);
+
                         LogHistory();
 
                         // Run Study / Series Rules Engine.

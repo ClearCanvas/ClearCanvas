@@ -16,19 +16,20 @@ namespace ClearCanvas.ImageServer.Rules.Specifications
 		
 		protected override TestResult InnerTest(object data, object root)
 		{
-			var study = Study.Load(ServerExecutionContext.Current.PrimaryStudyKey);
-
-			if (study!=null)
+			if (ServerExecutionContext.Current.PrimaryStudyKey != null)
 			{
+				var study = Study.Load(ServerExecutionContext.Current.PrimaryStudyKey);
+				Platform.CheckForNullReference(study, "The referenced study does not exist in the database");
+
 				if (study.OrderKey != null)
 				{
 					var order = Order.Load(study.OrderKey);
 					if (order.QCExpected)
 						return DefaultTestResult(true);
 				}
+				Platform.Log("QC", LogLevel.Info, "Study does not have an order or the order is not intended for QC.");
 			}
-
-			Platform.Log("QC", LogLevel.Info, "Study does not have an order or the order is not intended for QC.");
+			
 			return DefaultTestResult(false);
 		}
 	}
