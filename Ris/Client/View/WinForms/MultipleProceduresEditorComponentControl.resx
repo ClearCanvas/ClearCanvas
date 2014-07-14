@@ -183,33 +183,6 @@
   <data name="&gt;&gt;_scheduledTime.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
-  <data name="_enablePerformingDepartment.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="_enablePerformingDepartment.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Fill</value>
-  </data>
-  <data name="_enablePerformingDepartment.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 186</value>
-  </data>
-  <data name="_enablePerformingDepartment.Size" type="System.Drawing.Size, System.Drawing">
-    <value>19, 39</value>
-  </data>
-  <data name="_enablePerformingDepartment.TabIndex" type="System.Int32, mscorlib">
-    <value>9</value>
-  </data>
-  <data name="&gt;&gt;_enablePerformingDepartment.Name" xml:space="preserve">
-    <value>_enablePerformingDepartment</value>
-  </data>
-  <data name="&gt;&gt;_enablePerformingDepartment.Type" xml:space="preserve">
-    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;_enablePerformingDepartment.Parent" xml:space="preserve">
-    <value>tableLayoutPanel1</value>
-  </data>
-  <data name="&gt;&gt;_enablePerformingDepartment.ZOrder" xml:space="preserve">
-    <value>2</value>
-  </data>
   <data name="_enableLaterality.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
@@ -235,7 +208,7 @@
     <value>tableLayoutPanel1</value>
   </data>
   <data name="&gt;&gt;_enableLaterality.ZOrder" xml:space="preserve">
-    <value>3</value>
+    <value>2</value>
   </data>
   <data name="_enablePortable.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -262,7 +235,7 @@
     <value>tableLayoutPanel1</value>
   </data>
   <data name="&gt;&gt;_enablePortable.ZOrder" xml:space="preserve">
-    <value>4</value>
+    <value>3</value>
   </data>
   <data name="_enableCheckIn.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -289,37 +262,7 @@
     <value>tableLayoutPanel1</value>
   </data>
   <data name="&gt;&gt;_enableCheckIn.ZOrder" xml:space="preserve">
-    <value>5</value>
-  </data>
-  <data name="_performingDepartment.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Fill</value>
-  </data>
-  <data name="_performingDepartment.LabelText" xml:space="preserve">
-    <value>Performing Department</value>
-  </data>
-  <data name="_performingDepartment.Location" type="System.Drawing.Point, System.Drawing">
-    <value>27, 185</value>
-  </data>
-  <data name="_performingDepartment.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 2, 2, 2</value>
-  </data>
-  <data name="_performingDepartment.Size" type="System.Drawing.Size, System.Drawing">
-    <value>450, 41</value>
-  </data>
-  <data name="_performingDepartment.TabIndex" type="System.Int32, mscorlib">
-    <value>10</value>
-  </data>
-  <data name="&gt;&gt;_performingDepartment.Name" xml:space="preserve">
-    <value>_performingDepartment</value>
-  </data>
-  <data name="&gt;&gt;_performingDepartment.Type" xml:space="preserve">
-    <value>ClearCanvas.Desktop.View.WinForms.ComboBoxField, ClearCanvas.Desktop.View.WinForms, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</value>
-  </data>
-  <data name="&gt;&gt;_performingDepartment.Parent" xml:space="preserve">
-    <value>tableLayoutPanel1</value>
-  </data>
-  <data name="&gt;&gt;_performingDepartment.ZOrder" xml:space="preserve">
-    <value>6</value>
+    <value>4</value>
   </data>
   <data name="_laterality.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Fill</value>
@@ -349,7 +292,7 @@
     <value>tableLayoutPanel1</value>
   </data>
   <data name="&gt;&gt;_laterality.ZOrder" xml:space="preserve">
-    <value>7</value>
+    <value>5</value>
   </data>
   <data name="_portable.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -382,7 +325,7 @@
     <value>tableLayoutPanel1</value>
   </data>
   <data name="&gt;&gt;_portable.ZOrder" xml:space="preserve">
-    <value>8</value>
+    <value>6</value>
   </data>
   <data name="_enableScheduledDateTime.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -409,7 +352,7 @@
     <value>tableLayoutPanel1</value>
   </data>
   <data name="&gt;&gt;_enableScheduledDateTime.ZOrder" xml:space="preserve">
-    <value>9</value>
+    <value>7</value>
   </data>
   <data name="_schedulingCode.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Fill</value>
@@ -439,7 +382,7 @@
     <value>tableLayoutPanel1</value>
   </data>
   <data name="&gt;&gt;_schedulingCode.ZOrder" xml:space="preserve">
-    <value>10</value>
+    <value>8</value>
   </data>
   <data name="_checkedIn.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -472,7 +415,7 @@
     <value>tableLayoutPanel1</value>
   </data>
   <data name="&gt;&gt;_checkedIn.ZOrder" xml:space="preserve">
-    <value>11</value>
+    <value>9</value>
   </data>
   <data name="_enableSchedulingCode.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -499,7 +442,7 @@
     <value>tableLayoutPanel1</value>
   </data>
   <data name="&gt;&gt;_enableSchedulingCode.ZOrder" xml:space="preserve">
-    <value>12</value>
+    <value>10</value>
   </data>
   <data name="_scheduledDate.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Fill</value>
@@ -529,7 +472,7 @@
     <value>tableLayoutPanel1</value>
   </data>
   <data name="&gt;&gt;_scheduledDate.ZOrder" xml:space="preserve">
-    <value>13</value>
+    <value>11</value>
   </data>
   <data name="panel1.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Top, Left, Right</value>
@@ -601,37 +544,7 @@
     <value>tableLayoutPanel1</value>
   </data>
   <data name="&gt;&gt;panel1.ZOrder" xml:space="preserve">
-    <value>14</value>
-  </data>
-  <data name="_modality.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Fill</value>
-  </data>
-  <data name="_modality.LabelText" xml:space="preserve">
-    <value>Modality</value>
-  </data>
-  <data name="_modality.Location" type="System.Drawing.Point, System.Drawing">
-    <value>27, 141</value>
-  </data>
-  <data name="_modality.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 2, 2, 2</value>
-  </data>
-  <data name="_modality.Size" type="System.Drawing.Size, System.Drawing">
-    <value>450, 40</value>
-  </data>
-  <data name="_modality.TabIndex" type="System.Int32, mscorlib">
-    <value>8</value>
-  </data>
-  <data name="&gt;&gt;_modality.Name" xml:space="preserve">
-    <value>_modality</value>
-  </data>
-  <data name="&gt;&gt;_modality.Type" xml:space="preserve">
-    <value>ClearCanvas.Desktop.View.WinForms.ComboBoxField, ClearCanvas.Desktop.View.WinForms, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</value>
-  </data>
-  <data name="&gt;&gt;_modality.Parent" xml:space="preserve">
-    <value>tableLayoutPanel1</value>
-  </data>
-  <data name="&gt;&gt;_modality.ZOrder" xml:space="preserve">
-    <value>15</value>
+    <value>12</value>
   </data>
   <data name="_performingFacility.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Fill</value>
@@ -661,7 +574,7 @@
     <value>tableLayoutPanel1</value>
   </data>
   <data name="&gt;&gt;_performingFacility.ZOrder" xml:space="preserve">
-    <value>16</value>
+    <value>13</value>
   </data>
   <data name="_enablePerformingFacility.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -688,7 +601,67 @@
     <value>tableLayoutPanel1</value>
   </data>
   <data name="&gt;&gt;_enablePerformingFacility.ZOrder" xml:space="preserve">
-    <value>17</value>
+    <value>14</value>
+  </data>
+  <data name="_performingDepartment.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="_performingDepartment.LabelText" xml:space="preserve">
+    <value>Performing Department</value>
+  </data>
+  <data name="_performingDepartment.Location" type="System.Drawing.Point, System.Drawing">
+    <value>27, 141</value>
+  </data>
+  <data name="_performingDepartment.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 2, 2, 2</value>
+  </data>
+  <data name="_performingDepartment.Size" type="System.Drawing.Size, System.Drawing">
+    <value>450, 41</value>
+  </data>
+  <data name="_performingDepartment.TabIndex" type="System.Int32, mscorlib">
+    <value>8</value>
+  </data>
+  <data name="&gt;&gt;_performingDepartment.Name" xml:space="preserve">
+    <value>_performingDepartment</value>
+  </data>
+  <data name="&gt;&gt;_performingDepartment.Type" xml:space="preserve">
+    <value>ClearCanvas.Desktop.View.WinForms.ComboBoxField, ClearCanvas.Desktop.View.WinForms, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;_performingDepartment.Parent" xml:space="preserve">
+    <value>tableLayoutPanel1</value>
+  </data>
+  <data name="&gt;&gt;_performingDepartment.ZOrder" xml:space="preserve">
+    <value>15</value>
+  </data>
+  <data name="_modality.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="_modality.LabelText" xml:space="preserve">
+    <value>Modality</value>
+  </data>
+  <data name="_modality.Location" type="System.Drawing.Point, System.Drawing">
+    <value>27, 186</value>
+  </data>
+  <data name="_modality.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 2, 2, 2</value>
+  </data>
+  <data name="_modality.Size" type="System.Drawing.Size, System.Drawing">
+    <value>450, 40</value>
+  </data>
+  <data name="_modality.TabIndex" type="System.Int32, mscorlib">
+    <value>10</value>
+  </data>
+  <data name="&gt;&gt;_modality.Name" xml:space="preserve">
+    <value>_modality</value>
+  </data>
+  <data name="&gt;&gt;_modality.Type" xml:space="preserve">
+    <value>ClearCanvas.Desktop.View.WinForms.ComboBoxField, ClearCanvas.Desktop.View.WinForms, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;_modality.Parent" xml:space="preserve">
+    <value>tableLayoutPanel1</value>
+  </data>
+  <data name="&gt;&gt;_modality.ZOrder" xml:space="preserve">
+    <value>16</value>
   </data>
   <data name="_enableModality.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -697,13 +670,13 @@
     <value>Fill</value>
   </data>
   <data name="_enableModality.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 142</value>
+    <value>3, 187</value>
   </data>
   <data name="_enableModality.Size" type="System.Drawing.Size, System.Drawing">
     <value>19, 38</value>
   </data>
   <data name="_enableModality.TabIndex" type="System.Int32, mscorlib">
-    <value>7</value>
+    <value>9</value>
   </data>
   <data name="&gt;&gt;_enableModality.Name" xml:space="preserve">
     <value>_enableModality</value>
@@ -715,6 +688,33 @@
     <value>tableLayoutPanel1</value>
   </data>
   <data name="&gt;&gt;_enableModality.ZOrder" xml:space="preserve">
+    <value>17</value>
+  </data>
+  <data name="_enablePerformingDepartment.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="_enablePerformingDepartment.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="_enablePerformingDepartment.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 142</value>
+  </data>
+  <data name="_enablePerformingDepartment.Size" type="System.Drawing.Size, System.Drawing">
+    <value>19, 39</value>
+  </data>
+  <data name="_enablePerformingDepartment.TabIndex" type="System.Int32, mscorlib">
+    <value>7</value>
+  </data>
+  <data name="&gt;&gt;_enablePerformingDepartment.Name" xml:space="preserve">
+    <value>_enablePerformingDepartment</value>
+  </data>
+  <data name="&gt;&gt;_enablePerformingDepartment.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_enablePerformingDepartment.Parent" xml:space="preserve">
+    <value>tableLayoutPanel1</value>
+  </data>
+  <data name="&gt;&gt;_enablePerformingDepartment.ZOrder" xml:space="preserve">
     <value>18</value>
   </data>
   <data name="tableLayoutPanel1.Location" type="System.Drawing.Point, System.Drawing">
@@ -745,7 +745,7 @@
     <value>2</value>
   </data>
   <data name="tableLayoutPanel1.LayoutSettings" type="System.Windows.Forms.TableLayoutSettings, System.Windows.Forms">
-    <value>&lt;?xml version="1.0" encoding="utf-16"?&gt;&lt;TableLayoutSettings&gt;&lt;Controls&gt;&lt;Control Name="_enableScheduledDuration" Row="1" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="_scheduledTime" Row="0" RowSpan="1" Column="2" ColumnSpan="1" /&gt;&lt;Control Name="_enablePerformingDepartment" Row="4" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="_enableLaterality" Row="5" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="_enablePortable" Row="7" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="_enableCheckIn" Row="8" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="_performingDepartment" Row="4" RowSpan="1" Column="1" ColumnSpan="2" /&gt;&lt;Control Name="_laterality" Row="5" RowSpan="1" Column="1" ColumnSpan="2" /&gt;&lt;Control Name="_portable" Row="7" RowSpan="1" Column="1" ColumnSpan="2" /&gt;&lt;Control Name="_enableScheduledDateTime" Row="0" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="_schedulingCode" Row="6" RowSpan="1" Column="1" ColumnSpan="2" /&gt;&lt;Control Name="_checkedIn" Row="8" RowSpan="1" Column="1" ColumnSpan="2" /&gt;&lt;Control Name="_enableSchedulingCode" Row="6" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="_scheduledDate" Row="0" RowSpan="1" Column="1" ColumnSpan="1" /&gt;&lt;Control Name="panel1" Row="1" RowSpan="1" Column="1" ColumnSpan="1" /&gt;&lt;Control Name="_modality" Row="3" RowSpan="1" Column="1" ColumnSpan="2" /&gt;&lt;Control Name="_performingFacility" Row="2" RowSpan="1" Column="1" ColumnSpan="2" /&gt;&lt;Control Name="_enablePerformingFacility" Row="2" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="_enableModality" Row="3" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;/Controls&gt;&lt;Columns Styles="Absolute,25,Percent,50,Percent,50" /&gt;&lt;Rows Styles="AutoSize,0,AutoSize,0,AutoSize,0,AutoSize,0,AutoSize,0,AutoSize,0,AutoSize,0,AutoSize,0,AutoSize,0" /&gt;&lt;/TableLayoutSettings&gt;</value>
+    <value>&lt;?xml version="1.0" encoding="utf-16"?&gt;&lt;TableLayoutSettings&gt;&lt;Controls&gt;&lt;Control Name="_enableScheduledDuration" Row="1" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="_scheduledTime" Row="0" RowSpan="1" Column="2" ColumnSpan="1" /&gt;&lt;Control Name="_enableLaterality" Row="5" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="_enablePortable" Row="7" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="_enableCheckIn" Row="8" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="_laterality" Row="5" RowSpan="1" Column="1" ColumnSpan="2" /&gt;&lt;Control Name="_portable" Row="7" RowSpan="1" Column="1" ColumnSpan="2" /&gt;&lt;Control Name="_enableScheduledDateTime" Row="0" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="_schedulingCode" Row="6" RowSpan="1" Column="1" ColumnSpan="2" /&gt;&lt;Control Name="_checkedIn" Row="8" RowSpan="1" Column="1" ColumnSpan="2" /&gt;&lt;Control Name="_enableSchedulingCode" Row="6" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="_scheduledDate" Row="0" RowSpan="1" Column="1" ColumnSpan="1" /&gt;&lt;Control Name="panel1" Row="1" RowSpan="1" Column="1" ColumnSpan="1" /&gt;&lt;Control Name="_performingFacility" Row="2" RowSpan="1" Column="1" ColumnSpan="2" /&gt;&lt;Control Name="_enablePerformingFacility" Row="2" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="_performingDepartment" Row="3" RowSpan="1" Column="1" ColumnSpan="2" /&gt;&lt;Control Name="_modality" Row="4" RowSpan="1" Column="1" ColumnSpan="2" /&gt;&lt;Control Name="_enableModality" Row="4" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="_enablePerformingDepartment" Row="3" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;/Controls&gt;&lt;Columns Styles="Absolute,25,Percent,50,Percent,50" /&gt;&lt;Rows Styles="AutoSize,0,AutoSize,0,AutoSize,0,AutoSize,0,AutoSize,0,AutoSize,0,AutoSize,0,AutoSize,0,AutoSize,0" /&gt;&lt;/TableLayoutSettings&gt;</value>
   </data>
   <data name="_acceptButton.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Bottom, Right</value>

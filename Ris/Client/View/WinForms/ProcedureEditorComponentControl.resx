@@ -358,7 +358,7 @@
     <value>Performing Department</value>
   </data>
   <data name="_performingDepartment.Location" type="System.Drawing.Point, System.Drawing">
-    <value>15, 259</value>
+    <value>15, 206</value>
   </data>
   <data name="_performingDepartment.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>2, 2, 2, 2</value>
@@ -367,7 +367,7 @@
     <value>485, 41</value>
   </data>
   <data name="_performingDepartment.TabIndex" type="System.Int32, mscorlib">
-    <value>7</value>
+    <value>6</value>
   </data>
   <data name="&gt;&gt;_performingDepartment.Name" xml:space="preserve">
     <value>_performingDepartment</value>
@@ -412,7 +412,7 @@
     <value>Modality</value>
   </data>
   <data name="_modality.Location" type="System.Drawing.Point, System.Drawing">
-    <value>15, 204</value>
+    <value>15, 263</value>
   </data>
   <data name="_modality.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>2, 2, 2, 2</value>
@@ -421,7 +421,7 @@
     <value>485, 41</value>
   </data>
   <data name="_modality.TabIndex" type="System.Int32, mscorlib">
-    <value>6</value>
+    <value>7</value>
   </data>
   <data name="&gt;&gt;_modality.Name" xml:space="preserve">
     <value>_modality</value>
@@ -511,7 +511,7 @@
     <value>_procedureType</value>
   </data>
   <data name="&gt;&gt;_procedureType.Type" xml:space="preserve">
-    <value>ClearCanvas.Ris.Client.View.WinForms.LookupField, ClearCanvas.Ris.Client.View.WinForms, Version=1.0.5304.25681, Culture=neutral, PublicKeyToken=null</value>
+    <value>ClearCanvas.Ris.Client.View.WinForms.LookupField, ClearCanvas.Ris.Client.View.WinForms, Version=1.0.5308.17244, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;_procedureType.Parent" xml:space="preserve">
     <value>$this</value>

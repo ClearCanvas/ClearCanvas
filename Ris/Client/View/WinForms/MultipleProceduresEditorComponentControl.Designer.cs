@@ -62,7 +62,6 @@ namespace ClearCanvas.Ris.Client.View.WinForms
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MultipleProceduresEditorComponentControl));
 			this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
 			this._enableScheduledDuration = new System.Windows.Forms.CheckBox();
-			this._enablePerformingFacility = new System.Windows.Forms.CheckBox();
 			this._scheduledTime = new ClearCanvas.Desktop.View.WinForms.DateTimeField();
 			this._enablePerformingDepartment = new System.Windows.Forms.CheckBox();
 			this._enableLaterality = new System.Windows.Forms.CheckBox();
@@ -79,9 +78,10 @@ namespace ClearCanvas.Ris.Client.View.WinForms
 			this.panel1 = new System.Windows.Forms.Panel();
 			this._duration = new System.Windows.Forms.NumericUpDown();
 			this.label1 = new System.Windows.Forms.Label();
-			this._enableModality = new System.Windows.Forms.CheckBox();
 			this._modality = new ClearCanvas.Desktop.View.WinForms.ComboBoxField();
 			this._performingFacility = new ClearCanvas.Desktop.View.WinForms.ComboBoxField();
+			this._enablePerformingFacility = new System.Windows.Forms.CheckBox();
+			this._enableModality = new System.Windows.Forms.CheckBox();
 			this._acceptButton = new System.Windows.Forms.Button();
 			this._cancelButton = new System.Windows.Forms.Button();
 			this.tableLayoutPanel1.SuspendLayout();
@@ -94,11 +94,9 @@ namespace ClearCanvas.Ris.Client.View.WinForms
 			resources.ApplyResources(this.tableLayoutPanel1, "tableLayoutPanel1");
 			this.tableLayoutPanel1.Controls.Add(this._enableScheduledDuration, 0, 1);
 			this.tableLayoutPanel1.Controls.Add(this._scheduledTime, 2, 0);
-			this.tableLayoutPanel1.Controls.Add(this._enablePerformingDepartment, 0, 4);
 			this.tableLayoutPanel1.Controls.Add(this._enableLaterality, 0, 5);
 			this.tableLayoutPanel1.Controls.Add(this._enablePortable, 0, 7);
 			this.tableLayoutPanel1.Controls.Add(this._enableCheckIn, 0, 8);
-			this.tableLayoutPanel1.Controls.Add(this._performingDepartment, 1, 4);
 			this.tableLayoutPanel1.Controls.Add(this._laterality, 1, 5);
 			this.tableLayoutPanel1.Controls.Add(this._portable, 1, 7);
 			this.tableLayoutPanel1.Controls.Add(this._enableScheduledDateTime, 0, 0);
@@ -107,10 +105,12 @@ namespace ClearCanvas.Ris.Client.View.WinForms
 			this.tableLayoutPanel1.Controls.Add(this._enableSchedulingCode, 0, 6);
 			this.tableLayoutPanel1.Controls.Add(this._scheduledDate, 1, 0);
 			this.tableLayoutPanel1.Controls.Add(this.panel1, 1, 1);
-			this.tableLayoutPanel1.Controls.Add(this._modality, 1, 3);
 			this.tableLayoutPanel1.Controls.Add(this._performingFacility, 1, 2);
 			this.tableLayoutPanel1.Controls.Add(this._enablePerformingFacility, 0, 2);
-			this.tableLayoutPanel1.Controls.Add(this._enableModality, 0, 3);
+			this.tableLayoutPanel1.Controls.Add(this._performingDepartment, 1, 3);
+			this.tableLayoutPanel1.Controls.Add(this._modality, 1, 4);
+			this.tableLayoutPanel1.Controls.Add(this._enableModality, 0, 4);
+			this.tableLayoutPanel1.Controls.Add(this._enablePerformingDepartment, 0, 3);
 			this.tableLayoutPanel1.Name = "tableLayoutPanel1";
 			// 
 			// _enableScheduledDuration
@@ -118,12 +118,6 @@ namespace ClearCanvas.Ris.Client.View.WinForms
 			resources.ApplyResources(this._enableScheduledDuration, "_enableScheduledDuration");
 			this._enableScheduledDuration.Name = "_enableScheduledDuration";
 			this._enableScheduledDuration.UseVisualStyleBackColor = true;
-			// 
-			// _enablePerformingFacility
-			// 
-			resources.ApplyResources(this._enablePerformingFacility, "_enablePerformingFacility");
-			this._enablePerformingFacility.Name = "_enablePerformingFacility";
-			this._enablePerformingFacility.UseVisualStyleBackColor = true;
 			// 
 			// _scheduledTime
 			// 
@@ -252,12 +246,6 @@ namespace ClearCanvas.Ris.Client.View.WinForms
 			resources.ApplyResources(this.label1, "label1");
 			this.label1.Name = "label1";
 			// 
-			// _enableModality
-			// 
-			resources.ApplyResources(this._enableModality, "_enableModality");
-			this._enableModality.Name = "_enableModality";
-			this._enableModality.UseVisualStyleBackColor = true;
-			// 
 			// _modality
 			// 
 			this.tableLayoutPanel1.SetColumnSpan(this._modality, 2);
@@ -277,6 +265,18 @@ namespace ClearCanvas.Ris.Client.View.WinForms
 			this._performingFacility.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this._performingFacility.Name = "_performingFacility";
 			this._performingFacility.Value = null;
+			// 
+			// _enablePerformingFacility
+			// 
+			resources.ApplyResources(this._enablePerformingFacility, "_enablePerformingFacility");
+			this._enablePerformingFacility.Name = "_enablePerformingFacility";
+			this._enablePerformingFacility.UseVisualStyleBackColor = true;
+			// 
+			// _enableModality
+			// 
+			resources.ApplyResources(this._enableModality, "_enableModality");
+			this._enableModality.Name = "_enableModality";
+			this._enableModality.UseVisualStyleBackColor = true;
 			// 
 			// _acceptButton
 			// 
