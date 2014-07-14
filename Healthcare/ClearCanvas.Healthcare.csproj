@@ -136,6 +136,7 @@
     <Compile Include="OrderMergeHistoryVirtualOrderNoteProvider.cs" />
     <Compile Include="OrderMergeInfo.cs" />
     <Compile Include="OrderRules.cs" />
+    <Compile Include="Printing\LetterheadHelper.cs" />
     <Compile Include="Printing\PrintTemplateSettings.cs" />
     <Compile Include="Printing\DowntimeFormPageModel.cs" />
     <Compile Include="Printing\PageModel.cs" />
