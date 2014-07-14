@@ -127,7 +127,11 @@ namespace ClearCanvas.ImageServer.Services.ServiceLock.PartitionReapplyRules
 						filesystemDeleteExists = filesystemQueueBroker.Count(filesystemQueueCriteria) > 0;
 					}
 
-					using (var commandProcessor = new ServerCommandProcessor("Study Rule Processor"))
+					using (var commandProcessor = new ServerCommandProcessor("Study Rule Processor")
+					{
+						PrimaryServerPartitionKey = partition.GetKey(),
+						PrimaryStudyKey = location.Study.GetKey()
+					})
 					{
 						var context = new ServerActionContext(msg, location.FilesystemKey, partition, location.Key, commandProcessor);
 					
