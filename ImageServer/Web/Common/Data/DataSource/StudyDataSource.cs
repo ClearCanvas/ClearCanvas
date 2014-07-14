@@ -615,7 +615,7 @@ namespace ClearCanvas.ImageServer.Web.Common.Data.DataSource
 			{
 				var order = Order.Load(study.OrderKey);
 				studySummary.OrderRequiresQC = order.QCExpected;
-				studySummary.StudyIsQCed = (study.QCStatusEnum == null && study.QCStatusEnum != QCStatusEnum.NA);
+				studySummary.StudyIsQCed = (study.QCStatusEnum != null && study.QCStatusEnum != QCStatusEnum.NA);
 			}
 			
 			
