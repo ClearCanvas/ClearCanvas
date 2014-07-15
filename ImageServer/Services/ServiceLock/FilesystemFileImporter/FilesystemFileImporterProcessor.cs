@@ -105,16 +105,19 @@ namespace ClearCanvas.ImageServer.Services.ServiceLock.FilesystemFileImporter
                     }
                 }
 
-                // start the processes.
-                for (int n = 0; n < settings.MaxConcurrency && n < _queue.Count; n++)
-                {
-                    LaunchNextBackgroundProcess();
-                }
+	            if (_queue.Count > 0)
+	            {
+		            // start the processes.
+		            for (int n = 0; n < settings.MaxConcurrency && n < _queue.Count; n++)
+		            {
+			            LaunchNextBackgroundProcess();
+		            }
 
-                _allCompleted.WaitOne();
+		            _allCompleted.WaitOne();
 
-                if (CancelPending)
-                    Platform.Log(LogLevel.Info, "All import processes have completed gracefully.");
+		            if (CancelPending)
+			            Platform.Log(LogLevel.Info, "All import processes have completed gracefully.");
+	            }
             }
 
             if (_restoreTriggered)
