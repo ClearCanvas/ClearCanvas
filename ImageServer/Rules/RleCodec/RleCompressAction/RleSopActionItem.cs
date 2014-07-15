@@ -56,7 +56,7 @@ namespace ClearCanvas.ImageServer.Rules.RleCodec.RleCompressAction
 			syntaxAttribute.Value = _convertFromPalette.ToString();
 			element.Attributes.Append(syntaxAttribute);
 
-			context.CommandProcessor.AddCommand(new DicomCompressCommand(context.Message, doc));
+			context.CommandProcessor.AddCommand(new DicomCompressCommand(context.Message, doc, false));
 
 			return true;
 		}
