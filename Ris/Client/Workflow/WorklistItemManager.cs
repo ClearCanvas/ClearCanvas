@@ -23,6 +23,7 @@
 #endregion
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using ClearCanvas.Common;
@@ -215,6 +216,18 @@ namespace ClearCanvas.Ris.Client.Workflow
 
 				return _worklistItem;
 			}
+		}
+
+		// This function is used for swapping primary reporting step with a linkable step before any of the UI components are updated.
+		// Use of this function in other places may have unintended effect.
+		public void SwapCurentItem(TWorklistItem newCurrentItem)
+		{
+			if (Equals(_worklistItem, newCurrentItem))
+				return;
+
+			CollectionUtils.Remove(_visitedItems as IList, item => Equals(item, newCurrentItem));
+			_worklistLocalItemQueue.Enqueue(_worklistItem);
+			_worklistItem = newCurrentItem;
 		}
 
 		public void ProceedToNextWorklistItem(WorklistItemCompletedResult result)
