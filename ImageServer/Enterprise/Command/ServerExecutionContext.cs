@@ -199,6 +199,9 @@ namespace ClearCanvas.ImageServer.Enterprise.Command
             }
         }
 
+		public ServerEntityKey PrimaryServerPartitionKey { get; set; }
+		public ServerEntityKey PrimaryStudyKey { get; set; }
+
         #region IDisposable Members
 
         public void Dispose()

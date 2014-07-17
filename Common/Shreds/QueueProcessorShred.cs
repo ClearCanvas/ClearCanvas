@@ -24,7 +24,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace ClearCanvas.Common.Shreds
 {
@@ -44,6 +46,7 @@ namespace ClearCanvas.Common.Shreds
 		private readonly List<Thread> _processorThreads = new List<Thread>();
 
 		private readonly TimeSpan _shutDownTimeOut = new TimeSpan(0, 0, 60);
+		private bool _stopRequested;
 
 		/// <summary>
 		/// Obtains a set of processors to be executed by this shred.
@@ -54,6 +57,16 @@ namespace ClearCanvas.Common.Shreds
 		/// </remarks>
 		/// <returns></returns>
 		protected abstract IList<QueueProcessor> GetProcessors();
+
+		/// <summary>
+		/// Indicates if the shred <see cref="ShutDown"></see> has been called.
+		/// </summary>
+		protected bool StopRequested
+		{
+			get { return _stopRequested; }
+		}
+
+		protected ManualResetEvent StopRequestedEvent = new ManualResetEvent(false);
 
 		#region Shred overrides
 
@@ -98,31 +111,62 @@ namespace ClearCanvas.Common.Shreds
 
 			Platform.Log(LogLevel.Info, string.Format(SR.ShredStarting, this.GetDisplayName()));
 
-			_processorThreads.Clear();
-			_processors.Clear();
+			// Start the processors in a background thread.
+			// If the database server is not ready yet, we want to try starting up the processors some time later. 
+			// But we don't want to block the current thread.
+			Task.Factory.StartNew(() =>
+			        {
+						_processorThreads.Clear();
+						_processors.Clear();
 
-			try
-			{
+			        	IList<QueueProcessor> processors = null;
+						while(!StopRequested)
+						{
+							try
+							{
+								processors = GetProcessors();
+								break;
+							}
+							catch (SqlException e)
+							{
+								Platform.Log(LogLevel.Error, e.Message);
+								Sleep(30);
+							}
+						}
 
-				// attempt to start all processors - if any throws an exception, abort
-				foreach (QueueProcessor processor in GetProcessors())
-				{
-					Thread thread = StartProcessorThread(processor);
+						if (!StopRequested && processors != null)
+						{
+							try
+							{
+								// attempt to start all processors - if any throws an exception, abort
+								foreach (QueueProcessor processor in processors)
+								{
+									Thread thread = StartProcessorThread(processor);
 
-					// if thread started successfully, add to lists
-					_processorThreads.Add(thread);
-					_processors.Add(processor);
-				}
+									// if thread started successfully, add to lists
+									_processorThreads.Add(thread);
+									_processors.Add(processor);
+								}
+								Platform.Log(LogLevel.Info, string.Format(SR.ShredStartedSuccessfully, this.GetDisplayName()));
+							}
+							catch (Exception e)
+							{
+								Platform.Log(LogLevel.Error, e, string.Format(SR.ShredFailedToStart, this.GetDisplayName()));
 
-				Platform.Log(LogLevel.Info, string.Format(SR.ShredStartedSuccessfully, this.GetDisplayName()));
-			}
-			catch (Exception e)
-			{
-				Platform.Log(LogLevel.Error, e, string.Format(SR.ShredFailedToStart, this.GetDisplayName()));
+								// stop any processors that have already started
+								ShutDown();
+							}
+						}
+			        });
+			
+		}
 
-				// stop any processors that have already started
-				ShutDown();
-			}
+		/// <summary>
+		/// Block the current thread for the specified duration unless <see cref="StopRequested"/> is set
+		/// </summary>
+		private void Sleep(int seconds)
+		{
+			StopRequestedEvent.WaitOne(seconds*1000);
 		}
 
 		/// <summary>
@@ -133,8 +177,11 @@ namespace ClearCanvas.Common.Shreds
 		/// </summary>
 		private void ShutDown()
 		{
-			if (!_isStarted)
+			if (!_isStarted || _stopRequested)
 				return;
+
+			StopRequestedEvent.Set();
+			_stopRequested = true;
 
 			Platform.Log(LogLevel.Info, string.Format(SR.ShredStopping, this.GetDisplayName()));
 

@@ -72,10 +72,8 @@ namespace ClearCanvas.ImageServer.Core.Edit
         public static WorkQueue DeleteStudy(IUpdateContext context, ServerPartition partition, string studyInstanceUid,
                                              string reason)
         {
-            StudyStorageLocation location;
+			StudyStorageLocation location = FindStudyStorageLocation(context, partition, studyInstanceUid);
 
-            FilesystemMonitor.Instance.GetWritableStudyStorageLocation(partition.Key, studyInstanceUid,
-                                                                       StudyRestore.False, StudyCache.True, out location);
             string failureReason;
 
             try
@@ -106,7 +104,8 @@ namespace ClearCanvas.ImageServer.Core.Edit
                 String.Format("Unable to lock storage location {0} for deletion : {1}", location.Key, failureReason));
         }
 
-        /// <summary>
+	    
+	    /// <summary>
         /// Inserts delete request(s) to delete a series in a study.
         /// </summary>
         /// <param name="context">The persistence context used for database connection.</param>
@@ -119,10 +118,8 @@ namespace ClearCanvas.ImageServer.Core.Edit
         public static WorkQueue DeleteSeries(IUpdateContext context, ServerPartition partition, string studyInstanceUid,
                                              List<string> seriesInstanceUids, string reason)
         {
-            StudyStorageLocation location;
+			StudyStorageLocation location = FindStudyStorageLocation(context, partition, studyInstanceUid);
 
-            FilesystemMonitor.Instance.GetWritableStudyStorageLocation(partition.Key, studyInstanceUid,
-                                                                       StudyRestore.False, StudyCache.True, out location);
             string failureReason;
             
             try
@@ -332,5 +329,17 @@ namespace ClearCanvas.ImageServer.Core.Edit
 
             return insertWorkQueue.FindOne(insertParms);
         }
+
+		private static StudyStorageLocation FindStudyStorageLocation(IUpdateContext context, ServerPartition partition, string studyInstanceUid)
+		{
+			var procedure = context.GetBroker<IQueryStudyStorageLocation>();
+			var parms = new StudyStorageLocationQueryParameters
+			{
+				ServerPartitionKey = partition.GetKey(),
+				StudyInstanceUid = studyInstanceUid
+			};
+			return procedure.FindOne(parms);
+		}
+
     } 
 }

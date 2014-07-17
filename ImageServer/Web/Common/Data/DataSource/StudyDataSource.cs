@@ -169,7 +169,11 @@ namespace ClearCanvas.ImageServer.Web.Common.Data.DataSource
 
                 return _requiresWorkQueueAttention.Value;
             }
-        } 
+        }
+
+		public bool HasOrder { get; set; }
+		public bool OrderRequiresQC { get; set; }
+		public bool StudyIsQCed { get; set; }
 
 		public bool CanScheduleDelete(out string reason)
 		{
@@ -274,7 +278,8 @@ namespace ClearCanvas.ImageServer.Web.Common.Data.DataSource
             get { return TheArchiveLocation != null && TheArchiveLocation.ServerTransferSyntax.Lossless; }
 	    }
 
-	    public bool CanScheduleMove(out string reason)
+
+		public bool CanScheduleMove(out string reason)
 		{
 			if (IsLocked)
 			{
@@ -587,6 +592,8 @@ namespace ClearCanvas.ImageServer.Web.Common.Data.DataSource
 			var studySummary = new StudySummary();
 			var controller = new StudyController();
 
+			studySummary.TheStudy = study;
+
 			studySummary.Key = study.GetKey();
 			studySummary.AccessionNumber = study.AccessionNumber;
 			studySummary.NumberOfStudyRelatedInstances = study.NumberOfStudyRelatedInstances;
@@ -602,7 +609,16 @@ namespace ClearCanvas.ImageServer.Web.Common.Data.DataSource
 		    studySummary.ResponsiblePerson = study.ResponsiblePerson;
 			studySummary.StudyTime = study.StudyTime;
 			studySummary.StudyId = study.StudyId;
-			studySummary.TheStudy = study;
+			studySummary.HasOrder = study.OrderKey != null;
+
+			if (study.OrderKey != null)
+			{
+				var order = Order.Load(study.OrderKey);
+				studySummary.OrderRequiresQC = order.QCExpected;
+				studySummary.StudyIsQCed = (study.QCStatusEnum != null && study.QCStatusEnum != QCStatusEnum.NA);
+			}
+			
+			
 
 			studySummary.ThePartition = ServerPartitionMonitor.Instance.FindPartition(study.ServerPartitionKey) ??
 			                            ServerPartition.Load(read, study.ServerPartitionKey);

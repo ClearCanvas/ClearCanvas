@@ -3,7 +3,10 @@ This rule instructs the server to use JPEG lossless compression
 on CT and MR studies.
 -->
 <rule>
-	<condition  expressionLanguage="dicom">		
+	<condition  expressionLanguage="dicom">
+		<!-- MR Spectroscopy SOP Class has no pixel data -->
+		<not-equal test="$SopClassUid" refValue="1.2.840.10008.5.1.4.1.1.4.2"/>
+
 		<or>
 			<equal test="$Modality"  refValue="CT" />
 			<equal test="$Modality"  refValue="MR" />

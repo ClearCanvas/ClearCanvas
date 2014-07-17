@@ -28,12 +28,15 @@ namespace ClearCanvas.Ris.Client.Workflow.View.WinForms
         /// </summary>
         private void InitializeComponent()
         {
+			this.components = new System.ComponentModel.Container();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LinkProceduresComponentControl));
 			this._worklistItemTableView = new ClearCanvas.Desktop.View.WinForms.TableView();
 			this._okButton = new System.Windows.Forms.Button();
 			this._instructionsLabel = new System.Windows.Forms.Label();
 			this._heading = new System.Windows.Forms.Label();
 			this._sourceWorklistItem = new ClearCanvas.Desktop.View.WinForms.TableView();
+			this._makePrimaryButton = new System.Windows.Forms.Button();
+			this._toolTip = new System.Windows.Forms.ToolTip(this.components);
 			this.SuspendLayout();
 			// 
 			// _worklistItemTableView
@@ -69,11 +72,21 @@ namespace ClearCanvas.Ris.Client.Workflow.View.WinForms
 			this._sourceWorklistItem.ShowToolbar = false;
 			this._sourceWorklistItem.TabStop = false;
 			// 
+			// _makePrimaryButton
+			// 
+			resources.ApplyResources(this._makePrimaryButton, "_makePrimaryButton");
+			this._makePrimaryButton.Image = global::ClearCanvas.Ris.Client.Workflow.View.WinForms.SR.SwapSmall;
+			this._makePrimaryButton.Name = "_makePrimaryButton";
+			this._toolTip.SetToolTip(this._makePrimaryButton, resources.GetString("_makePrimaryButton.ToolTip"));
+			this._makePrimaryButton.UseVisualStyleBackColor = true;
+			this._makePrimaryButton.Click += new System.EventHandler(this._makePrimaryButton_Click);
+			// 
 			// LinkProceduresComponentControl
 			// 
 			this.AcceptButton = this._okButton;
 			resources.ApplyResources(this, "$this");
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+			this.Controls.Add(this._makePrimaryButton);
 			this.Controls.Add(this._sourceWorklistItem);
 			this.Controls.Add(this._heading);
 			this.Controls.Add(this._instructionsLabel);
@@ -92,5 +105,7 @@ namespace ClearCanvas.Ris.Client.Workflow.View.WinForms
         private System.Windows.Forms.Label _instructionsLabel;
 		private System.Windows.Forms.Label _heading;
 		private ClearCanvas.Desktop.View.WinForms.TableView _sourceWorklistItem;
+		private System.Windows.Forms.Button _makePrimaryButton;
+		private System.Windows.Forms.ToolTip _toolTip;
     }
 }
