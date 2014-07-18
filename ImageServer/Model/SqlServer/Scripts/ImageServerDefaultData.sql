@@ -131,7 +131,7 @@ INSERT INTO [ImageServer].[dbo].[WorkQueueTypeProperties]
            [PostponeDelaySeconds],[ExpireDelaySeconds],[MaxBatchSize], [QueueStudyStateEnum], [QueueStudyStateOrder],
            [ReadLock],[WriteLock])
      VALUES
-           (100,300,1,1,3,10,180,60,120,120,3000,105,5,0,1)
+           (100,300,1,1,3,5,60,60,120,30,3000,105,5,0,1)
 GO
   -- AutoRoute
 INSERT INTO [ImageServer].[dbo].[WorkQueueTypeProperties]

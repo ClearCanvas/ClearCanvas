@@ -480,6 +480,27 @@ GO
 IF @@TRANCOUNT=0 BEGIN INSERT INTO #tmpErrors (Error) SELECT 1 BEGIN TRANSACTION END
 GO
 
+PRINT N'Update ProcessStudy default WorkQueueTypeProperties table'
+GO
+
+Update dbo.WorkQueueTypeProperties
+set ProcessDelaySeconds=5
+where WorkQueueTypeEnum=100 and ProcessDelaySeconds=10
+
+Update dbo.WorkQueueTypeProperties
+set ExpireDelaySeconds=30
+where WorkQueueTypeEnum=100 and ExpireDelaySeconds=120
+
+Update dbo.WorkQueueTypeProperties
+set FailureDelaySeconds=60
+where WorkQueueTypeEnum=100 and FailureDelaySeconds=180
+
+
+IF @@ERROR<>0 AND @@TRANCOUNT>0 ROLLBACK TRANSACTION
+GO
+IF @@TRANCOUNT=0 BEGIN INSERT INTO #tmpErrors (Error) SELECT 1 BEGIN TRANSACTION END
+GO
+
 
 IF EXISTS (SELECT * FROM #tmpErrors) ROLLBACK TRANSACTION
 GO
