@@ -254,16 +254,6 @@ namespace ClearCanvas.ImageServer.Web.Common.Security
                 {
                     Platform.Log(LogLevel.Warn, e, "Failed to log user out.");
                 }
-
-                UserAuthenticationAuditHelper audit = new UserAuthenticationAuditHelper(
-                    ServerPlatform.AuditSource,
-                    EventIdentificationContentsEventOutcomeIndicator.Success,
-                    UserAuthenticationEventType.Logout);
-                audit.AddUserParticipant(new AuditPersonActiveParticipant(
-                                             session.Credentials.UserName,
-                                             null,
-                                             session.Credentials.DisplayName));
-                ServerAuditHelper.LogAuditMessage(audit);
             }
         }
 

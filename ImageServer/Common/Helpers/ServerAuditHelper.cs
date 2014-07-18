@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Security.Principal;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -117,6 +118,36 @@ namespace ClearCanvas.ImageServer.Common.Helpers
             LogAuditMessage(helper);
         }
 
+		/// <summary>
+		/// Gets the session token ID of the current thread or null if not established.
+		/// </summary>
+		/// <returns></returns>
+		private static string GetUserSessionId()
+		{
+			var p = Thread.CurrentPrincipal as IUserCredentialsProvider;
+			return (p != null) ? p.SessionTokenId : null;
+		}
+
+		/// <summary>
+		/// Gets the identity of the current thread or null if not established.
+		/// </summary>
+		/// <returns></returns>
+		private static string GetUserName()
+		{
+			var p = Thread.CurrentPrincipal;
+
+			if (p == null || p.Identity == null)
+				return null;
+
+			//TODO (CR September 2011) - this is not a robust solution.
+			// Check if it's being called in a service.
+			if (p.Identity is WindowsIdentity)
+				return null;
+
+			return p.Identity.Name;
+		}
+
+
         /// <summary>
         /// Log an Audit message.
         /// </summary>
@@ -125,6 +156,7 @@ namespace ClearCanvas.ImageServer.Common.Helpers
         {
 			// Found doing this on the local thread had a performance impact with some DICOM operations,
 			// make run as a task in the background to make it work faster.
+	        
 	        Task.Factory.StartNew(delegate
 		        {
 			        lock (_syncLock)
@@ -136,7 +168,7 @@ namespace ClearCanvas.ImageServer.Common.Helpers
 				        try
 				        {
 					        serializeText = helper.Serialize(false);
-					        _log.WriteEntry(helper.Operation, serializeText);
+							_log.WriteEntry(helper.Operation, serializeText, GetUserName(), GetUserSessionId());
 				        }
 				        catch (Exception ex)
 				        {
