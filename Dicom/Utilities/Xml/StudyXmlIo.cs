@@ -112,20 +112,20 @@ namespace ClearCanvas.Dicom.Utilities.Xml
 		public static void WriteXmlAndGzip(StudyXmlMemento theMemento, Stream theXmlStream, Stream theGzipStream)
 		{
 			// Write to a memory stream, then flush to disk and to gzip file
-			var ms = new MemoryStream();
+			var ms = new LargeMemoryStream();
 
 			Write(theMemento, ms);
 
-			byte[] buffer = ms.GetBuffer();
-			
 			var compressedzipStream = new GZipStream(theGzipStream, CompressionMode.Compress, true);
-			compressedzipStream.Write(buffer, 0, (int)ms.Length);
+			ms.Seek(0,SeekOrigin.Begin);
+			ms.WriteTo(compressedzipStream);
 
 			// Close the stream.
 			compressedzipStream.Flush();
 			compressedzipStream.Close();
 
-			theXmlStream.Write(buffer, 0, (int)ms.Length);
+			ms.Seek(0, SeekOrigin.Begin); 
+			ms.WriteTo(theXmlStream);
 
 			// Force a flush.
 			theXmlStream.Flush();

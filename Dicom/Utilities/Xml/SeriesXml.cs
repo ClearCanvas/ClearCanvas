@@ -179,12 +179,20 @@ namespace ClearCanvas.Dicom.Utilities.Xml
 			// and just have the entire image be stored.
 			if (_instanceList.Count > 1)
 			{
-				XmlElement baseElement = theDocument.Document.CreateElement("BaseInstance");
-				XmlElement baseInstance = _seriesTagsStream.GetMemento(theDocument.Document, settings);
-				baseElement.AppendChild(baseInstance);
+				if (!string.IsNullOrEmpty(_seriesTagsStream.XmlFragment))
+				{
+					seriesElement.AddChild(new StudyXmlMemento.StudyXmlNode(_seriesTagsStream.XmlFragment));
+				}
+				else
+				{
+					XmlElement baseElement = theDocument.Document.CreateElement("BaseInstance");
+					XmlElement baseInstance = _seriesTagsStream.GetMemento(theDocument.Document, settings);
+					baseElement.AppendChild(baseInstance);
 
-				var baseNode = new StudyXmlMemento.StudyXmlNode(baseElement);
-				seriesElement.AddChild(baseNode);
+					var baseNode = new StudyXmlMemento.StudyXmlNode(baseElement);
+					_seriesTagsStream.XmlFragment = baseNode.XmlElementFragment;
+					seriesElement.AddChild(baseNode);
+				}
 			}
 			else
 			{
