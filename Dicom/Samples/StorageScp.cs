@@ -186,6 +186,10 @@ namespace ClearCanvas.Dicom.Samples
 			assoc.AddTransferSyntax(pcid, TransferSyntax.ExplicitVrLittleEndian);
 			assoc.AddTransferSyntax(pcid, TransferSyntax.ImplicitVrLittleEndian);
 
+			pcid = assoc.AddPresentationContext(SopClass.MammographyCadSrStorage);
+			assoc.AddTransferSyntax(pcid, TransferSyntax.ExplicitVrLittleEndian);
+			assoc.AddTransferSyntax(pcid, TransferSyntax.ImplicitVrLittleEndian);
+
 
             pcid = assoc.AddPresentationContext(SopClass.MrImageStorage);
             SetImageTransferSyntaxes(pcid, assoc);

@@ -131,10 +131,13 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.AutoRoute
 			if (instance.SendStatus.Status == DicomState.Failure)
 			{
 				WorkQueueItem.FailureDescription = instance.SendStatus.Description;
-				foreach (WorkQueueUid uid in foundUids)
+				if (foundUids != null)
 				{
-					uid.FailureCount++;
-					UpdateWorkQueueUid(uid);
+					foreach (WorkQueueUid uid in foundUids)
+					{
+						uid.FailureCount++;
+						UpdateWorkQueueUid(uid);
+					}
 				}
 			}
 			else if (foundUids != null)

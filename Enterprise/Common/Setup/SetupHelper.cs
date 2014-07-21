@@ -180,6 +180,30 @@ namespace ClearCanvas.Enterprise.Common.Setup
 			LogImportedGroups(groups, source);
 		}
 
+		public static void ExportSettingsDefinition(ISettingsStore store, SettingDefinition request, string dataFile)
+		{
+			var version = new Version(request.Version);
+			var allSettingsGroups = store.ListSettingsGroups();
+			var group = allSettingsGroups.SingleOrDefault(g => g.Name.Equals(request.Group) && g.Version.Equals(version));
+			if (group == null)
+			{
+				Platform.Log(LogLevel.Info, "Cannot find settings group: {0}/{1}", request.Group, request.Version);
+				return;
+			}
+
+			var settings = store.GetSettingsValues(group, null, null);
+			if (!settings.ContainsKey(request.Property))
+			{
+				Platform.Log(LogLevel.Info, "Cannot find settings property: {0}/{1}/{2}", request.Group, request.Version, request.Group);
+				return;
+			}
+
+			var value = settings[request.Property];
+			File.WriteAllText(dataFile, value);
+
+			Platform.Log(LogLevel.Info, "Setting value written to {0}", value);
+		}
+
 		public static void ImportSettingsDefinition(ISettingsStore store, string dataFileOrFolderPath, bool overwrite)
 		{
 			// determine list of source files to import
