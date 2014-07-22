@@ -57,31 +57,38 @@ namespace ClearCanvas.ImageViewer.Imaging
 
 			const int intermediateDataSize = 8192; // each double entry is 8 bytes so the entire array is 64kB - just small enough to stay off the large object heap
 			var intermediateData = doubleCache != null ? doubleCache.Allocate(intermediateDataSize) : MemoryManager.Allocate<double>(intermediateDataSize);
-
-			fixed (double* intermediateLutData = intermediateData)
-			fixed (int* composedLutData = _data)
+			try
 			{
-				var min = _minInputValue;
-				var max = _maxInputValue + 1;
-				var pComposed = composedLutData;
-
-				// performs the bulk lookups in 64kB chunks (8k entries @ 8 bytes per) in order to keep the intermediate buffer off the large object heap
-				for (var start = min; start < max; start += intermediateDataSize)
+				fixed (double* intermediateLutData = intermediateData)
+				fixed (int* composedLutData = _data)
 				{
-					var stop = Math.Min(max, start + intermediateDataSize);
-					var count = stop - start;
+					var min = _minInputValue;
+					var max = _maxInputValue + 1;
+					var pComposed = composedLutData;
 
-					var pIntermediate = intermediateLutData;
-					for (var i = start; i < stop; ++i)
-						*pIntermediate++ = i;
+					// performs the bulk lookups in 64kB chunks (8k entries @ 8 bytes per) in order to keep the intermediate buffer off the large object heap
+					for (var start = min; start < max; start += intermediateDataSize)
+					{
+						var stop = Math.Min(max, start + intermediateDataSize);
+						var count = stop - start;
 
-					for (var j = 0; j < lutCount; ++j)
-						luts[j].LookupValues(intermediateData, intermediateData, count);
+						var pIntermediate = intermediateLutData;
+						for (var i = start; i < stop; ++i)
+							*pIntermediate++ = i;
 
-					pIntermediate = intermediateLutData;
-					for (var i = 0; i < count; ++i)
-						*pComposed++ = (int) Math.Round(*pIntermediate++);
+						for (var j = 0; j < lutCount; ++j)
+							luts[j].LookupValues(intermediateData, intermediateData, count);
+
+						pIntermediate = intermediateLutData;
+						for (var i = 0; i < count; ++i)
+							*pComposed++ = (int) Math.Round(*pIntermediate++);
+					}
 				}
+			}
+			finally
+			{
+				if (doubleCache != null)
+					doubleCache.Return(intermediateData);
 			}
 		}
 
