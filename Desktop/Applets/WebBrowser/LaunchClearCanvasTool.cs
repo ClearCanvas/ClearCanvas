@@ -38,8 +38,8 @@ namespace ClearCanvas.Desktop.Applets.WebBrowser
 	[Tooltip("activate1", "Launch ClearCanvas")]
 	[IconSet("activate1", IconScheme.Colour, "Icons.ClearCanvasToolSmall.png", "Icons.ClearCanvasToolSmall.png", "Icons.ClearCanvasToolSmall.png")]
 
-	[ButtonAction("activate2", "webbrowser-toolbar/Discussion Forum", "LaunchDiscussionForum")]
-	[Tooltip("activate2", "Launch ClearCanvas Discussion Forum")]
+	[ButtonAction("activate2", "webbrowser-toolbar/GitHub (ClearCanvas)", "LaunchGitHub")]
+	[Tooltip("activate2", "Launch GitHub (ClearCanvas)")]
 	[IconSet("activate2", IconScheme.Colour, "Icons.ClearCanvasToolSmall.png", "Icons.ClearCanvasToolSmall.png", "Icons.ClearCanvasToolSmall.png")]
 
 	[ExtensionOf(typeof(WebBrowserToolExtensionPoint))]
@@ -56,9 +56,9 @@ namespace ClearCanvas.Desktop.Applets.WebBrowser
 			this.Context.Go();
 		}
 
-		private void LaunchDiscussionForum()
+        private void LaunchGitHub()
 		{
-			this.Context.Url = "http://www.clearcanvas.ca/dnn/Community/Forums/tabid/69/Default.aspx";
+            this.Context.Url = "https://github.com/ClearCanvas/ClearCanvas";
 			this.Context.Go();
 		}
 	}

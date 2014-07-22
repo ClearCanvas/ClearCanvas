@@ -42,7 +42,7 @@ namespace ClearCanvas.ImageViewer.Tools.Volume.VTK
 	[IconSet("show", IconScheme.Colour, "Icons.CreateVolumeToolSmall.png", "Icons.CreateVolumeToolMedium.png", "Icons.CreateVolumeToolLarge.png")]
 	[GroupHint("show", "Tools.VolumeImage.Create")]
 
-	[ExtensionOf(typeof(ImageViewerToolExtensionPoint))]
+	[ExtensionOf(typeof(ImageViewerToolExtensionPoint), Enabled = false)]
 	public class CreateVolumeTool : ImageViewerTool
 	{
 		private static VolumeComponent _volumeComponent;
