@@ -139,13 +139,6 @@
     <Compile Include="ImageServerCommonConfiguration.cs" />
     <Compile Include="ImageServerLogWriter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RemoteImageServerServiceProvider.cs" />
-    <Compile Include="RemoteImageServerServiceSettings.cs" />
-    <Compile Include="RemoteImageServerServiceSettings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-      <DependentUpon>RemoteImageServerServiceSettings.settings</DependentUpon>
-    </Compile>
     <Compile Include="ServerAddress.cs" />
     <Compile Include="ServerCache.cs" />
     <Compile Include="Settings.cs" />
@@ -201,10 +194,6 @@
     <None Include="ProductManifestServiceSettings.settings">
       <Generator>PublicSettingsSingleFileGenerator</Generator>
       <LastGenOutput>ProductManifestServiceSettings.Designer.cs</LastGenOutput>
-    </None>
-    <None Include="RemoteImageServerServiceSettings.settings">
-      <Generator>PublicSettingsSingleFileGenerator</Generator>
-      <LastGenOutput>RemoteImageServerServiceSettings.Designer.cs</LastGenOutput>
     </None>
     <None Include="Settings.settings">
       <Generator>PublicSettingsSingleFileGenerator</Generator>

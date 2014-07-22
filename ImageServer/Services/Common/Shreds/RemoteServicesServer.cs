@@ -75,8 +75,8 @@ namespace ClearCanvas.ImageServer.Services.Common.Shreds
 		{
 			_serviceMount = new ServiceMount(new Uri(WebServicesSettings.Default.BaseUri), typeof (ServerWsHttpConfiguration).AssemblyQualifiedName)
 			                	{
-			                		MaxReceivedMessageSize = WebServicesSettings.Default.MaxReceivedMessageSize,
-			                		SendTimeoutSeconds = WebServicesSettings.Default.SendTimeoutSeconds
+			                		MaxReceivedMessageSize = EnterpriseImageServerServiceSettings.Default.MaxReceivedMessageSize,
+									SendTimeoutSeconds = EnterpriseImageServerServiceSettings.Default.SendTimeoutSeconds
 			                	};
 
 			_serviceMount.AddServices(new ApplicationServiceExtensionPoint());
