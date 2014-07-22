@@ -504,7 +504,7 @@ CREATE TABLE [dbo].[WorkQueue](
 	[FailureCount] [int] NOT NULL CONSTRAINT [DF_WorkQueue_FailureCount]  DEFAULT ((0)),
 	[FailureDescription] [nvarchar](512) NULL,
 	[Data] [xml] NULL,
-	[ExternalRequestQueueGUID] [uniqueidentifier] NULL,
+	[ExternalRequestQueueGUID] [uniqueidentifier] NULL DEFAULT (getdate()),
  CONSTRAINT [PK_WorkQueue] PRIMARY KEY CLUSTERED 
 (
 	[GUID] ASC
