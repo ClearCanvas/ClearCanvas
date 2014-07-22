@@ -49,8 +49,11 @@
                 <asp:Label ID="PatientSex" runat="server" Text="PatientSex" CssClass="PatientInfo"></asp:Label>
             </td>
             <td>
-                <asp:Label ID="QCReportLabel" runat="server" Text="<%$Resources: Labels, PatientSummary_QCReport %>" CssClass="PatientInfo"></asp:Label>
-				<a runat="server" ID="QCReportLink" target="_blank" class="PatientInfo"></a>
+                <asp:Panel runat="server" ID="QCPanel">
+                    <asp:Label ID="QCReportLabel" runat="server" Text="<%$Resources: Labels, PatientSummary_QCReport %>" CssClass="PatientInfo"></asp:Label>
+				    <a runat="server" ID="QCReportLink" target="_blank" class="PatientInfo"></a>
+                    <asp:Image runat="server" Visible="False" ID="RequiresQCWarningIcon" SkinID="WarningSmall" ToolTip="This study is expected to be QC'ed" />
+                </asp:Panel>
             </td>
         </tr>
     </table>

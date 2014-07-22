@@ -1,12 +1,13 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build-Configs", "Build-Configs", "{8CBB6D60-FA3F-4DF8-A1F1-47C00311ACF2}"
 	ProjectSection(SolutionItems) = preProject
 		ImageServer_ConnectionString_dist.config = ImageServer_ConnectionString_dist.config
 		ImageServer_ProductSettings_dist.config = ImageServer_ProductSettings_dist.config
 		ImageServer_Shreds_dist.config = ImageServer_Shreds_dist.config
 		ImageServer_Web.config = ImageServer_Web.config
+		ImageServer_web_critical.config = ImageServer_web_critical.config
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{4414BB29-0923-4507-AE57-5A3B622F34C8}"

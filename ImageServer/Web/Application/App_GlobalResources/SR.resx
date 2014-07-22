@@ -867,4 +867,37 @@ At least one server partition is required. Please add a new server partition.</v
   <data name="SingleExternalRequestQueueReset" xml:space="preserve">
     <value>Are you sure you want to reset this External Request Queue item?</value>
   </data>
+  <data name="GridPagerOrderMultipleItems" xml:space="preserve">
+    <value>Orders Found</value>
+  </data>
+  <data name="GridPagerOrderSingleItem" xml:space="preserve">
+    <value>Order Found</value>
+  </data>
+  <data name="NoOrdersFound" xml:space="preserve">
+    <value>No orders were found using the provided criteria.</value>
+  </data>
+  <data name="PleaseEnterSearchCriteriaToFindOrders" xml:space="preserve">
+    <value>Please enter search criteria to find orders.</value>
+  </data>
+  <data name="OrdersRelatedStudies" xml:space="preserve">
+    <value>{0} Studies</value>
+  </data>
+  <data name="OrdersRelatedStudy" xml:space="preserve">
+    <value>{0} Study</value>
+  </data>
+  <data name="Report" xml:space="preserve">
+    <value>Report</value>
+  </data>
+  <data name="ReportTimeRange" xml:space="preserve">
+    <value>Time</value>
+  </data>
+  <data name="NoMatchingOrdersFound" xml:space="preserve">
+    <value>An order matching the study was not found.</value>
+  </data>
+  <data name="Expected" xml:space="preserve">
+    <value>Expected</value>
+  </data>
+  <data name="NotExpected" xml:space="preserve">
+    <value>Not Expected</value>
+  </data>
 </root>
