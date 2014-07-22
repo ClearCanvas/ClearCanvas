@@ -294,10 +294,10 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 			protected override byte[] CreateNormalizedPixelData()
 			{
 				DicomMessageBase message = Parent.SourceMessage;
-
+#if DEBUG
 				CodeClock clock = new CodeClock();
 				clock.Start();
-
+#endif
 				PhotometricInterpretation photometricInterpretation;
 				byte[] rawPixelData = null;
 
@@ -327,10 +327,10 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 					rawPixelData = ToArgb(message.DataSet, rawPixelData, photometricInterpretation);
 				else
 					NormalizeGrayscalePixels(message.DataSet, rawPixelData);
-
+#if DEBUG
 				clock.Stop();
 				PerformanceReportBroker.PublishReport("DicomMessageSopDataSource", "CreateFrameNormalizedPixelData", clock.Seconds);
-
+#endif
 				return rawPixelData;
 			}
 
@@ -449,6 +449,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		/// <param name="pixelData">The pixel data buffer to normalize (for 16-bit samples, the data should be in machine order).</param>
 		protected internal static void NormalizeGrayscalePixels(IDicomAttributeProvider dicomAttributeProvider, byte[] pixelData)
 		{
+            //TODO (CR Orion): these are retrieved again with default values directly below.
 			if (dicomAttributeProvider[DicomTags.BitsAllocated].IsEmpty)
 			{
 				const string msg = "BitsAllocated must not be empty.";

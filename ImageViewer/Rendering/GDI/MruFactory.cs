@@ -72,6 +72,8 @@ namespace ClearCanvas.ImageViewer.Rendering.GDI
                     Platform.Log(LogLevel.Error, e);
                 }
             }
+
+            _objects.Clear();
         }
 
         public void Dispose()

@@ -139,11 +139,13 @@ namespace ClearCanvas.ImageViewer.StudyManagement.Tests
         }
 
         [Test]
+        [Ignore("See #12459.")]
         public void Test_Excluded_PrivateSequenceAttribute()
         {
             DicomFile real;
             var outputSettings = new StudyXmlOutputSettings
             {
+                //If this were enabled, it would work.
                 //IncludePrivateValues = StudyXmlTagInclusion.IncludeTagExclusion
             };
 

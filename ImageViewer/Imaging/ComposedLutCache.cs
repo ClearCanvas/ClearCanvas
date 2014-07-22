@@ -261,6 +261,7 @@ namespace ClearCanvas.ImageViewer.Imaging
 
 					//Trace.WriteLine(String.Format("Creating Composed Lut '{0}'", Key), "LUT");
 
+                    //TODO (CR Orion): double buffer cache objects are never "returned".
 					_realComposedLut = new ComposedLut(sourceLuts.ToArray(), _bufferCache, _doubleBufferCache);
 					//just use the creation time as the "last access time", otherwise it can get expensive when called in a tight loop.
 					_largeObjectData.UpdateLastAccessTime();
