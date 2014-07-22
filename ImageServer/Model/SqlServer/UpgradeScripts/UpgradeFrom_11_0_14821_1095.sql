@@ -303,11 +303,14 @@ GO
 IF @@TRANCOUNT=0 BEGIN INSERT INTO #tmpErrors (Error) SELECT 1 BEGIN TRANSACTION END
 GO
 
-PRINT N'Adding QCStatusEnum to Study Table'
+PRINT N'Adding QCStatusEnum and QCUpdateTimeUtc to Study Table'
 
 GO
 ALTER TABLE dbo.Study ADD
 	QCStatusEnum smallint NULL
+GO
+ALTER TABLE dbo.Study ADD
+	QCUpdateTimeUtc datetime NULL
 GO
 
 /****** Object:  Table [dbo].[QCStatusEnum]    Script Date: 06/03/2014 12:48:31 ******/
