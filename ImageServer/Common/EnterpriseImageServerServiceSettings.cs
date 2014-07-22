@@ -28,7 +28,7 @@ namespace ClearCanvas.ImageServer.Common
 {
 	[SettingsGroupDescription("Settings that configure web service communication with the ImageServer.")]
 	[SettingsProvider(typeof (ClearCanvas.Common.Configuration.StandardSettingsProvider))]
-	internal sealed partial class EnterpriseImageServerServiceSettings
+	public sealed partial class EnterpriseImageServerServiceSettings
 	{
 	}
 }

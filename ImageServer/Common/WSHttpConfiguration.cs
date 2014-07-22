@@ -39,15 +39,18 @@ namespace ClearCanvas.ImageServer.Common
 
 		public void ConfigureServiceHost(ServiceHost host, ServiceHostConfigurationArgs args)
 		{
-			WSHttpBinding binding = new WSHttpBinding();
-			binding.MaxReceivedMessageSize = args.MaxReceivedMessageSize;
+			var settings = new EnterpriseImageServerServiceSettings();
+			var binding = new WSHttpBinding
+				{
+					MaxReceivedMessageSize = args.MaxReceivedMessageSize
+				};
 
 			if (args.SendTimeoutSeconds > 0)
 				binding.SendTimeout = TimeSpan.FromSeconds(args.SendTimeoutSeconds);
 
 			binding.ReaderQuotas.MaxStringContentLength = args.MaxReceivedMessageSize;
 			binding.ReaderQuotas.MaxArrayLength = args.MaxReceivedMessageSize;
-			binding.Security.Mode = WebServicesSettings.Default.SecurityMode;
+			binding.Security.Mode = settings.SecurityMode;
 			binding.Security.Message.ClientCredentialType = args.Authenticated
 			                                                	? MessageCredentialType.UserName
 			                                                	: MessageCredentialType.None;
@@ -55,11 +58,13 @@ namespace ClearCanvas.ImageServer.Common
 			host.AddServiceEndpoint(args.ServiceContract, binding, "");
 
 			// expose meta-data via HTTP GET
-			ServiceMetadataBehavior metadataBehavior = host.Description.Behaviors.Find<ServiceMetadataBehavior>();
+			var metadataBehavior = host.Description.Behaviors.Find<ServiceMetadataBehavior>();
 			if (metadataBehavior == null)
 			{
-				metadataBehavior = new ServiceMetadataBehavior();
-				metadataBehavior.HttpGetEnabled = true;
+				metadataBehavior = new ServiceMetadataBehavior
+					{
+						HttpGetEnabled = true
+					};
 				host.Description.Behaviors.Add(metadataBehavior);
 			}
 
@@ -69,8 +74,8 @@ namespace ClearCanvas.ImageServer.Common
 					operation.Behaviors.Find<DataContractSerializerOperationBehavior>().MaxItemsInObjectGraph = args.MaxReceivedMessageSize;
 
 			// set up the certificate 
-			if (WebServicesSettings.Default.SecurityMode == SecurityMode.Message
-			    || WebServicesSettings.Default.SecurityMode == SecurityMode.TransportWithMessageCredential)
+			if (settings.SecurityMode == SecurityMode.Message
+				|| settings.SecurityMode == SecurityMode.TransportWithMessageCredential)
 			{
 				host.Credentials.ServiceCertificate.SetCertificate(
 					StoreLocation.LocalMachine, StoreName.My, X509FindType.FindBySubjectName, args.HostUri.Host);
@@ -95,10 +100,18 @@ namespace ClearCanvas.ImageServer.Common
 		/// <returns></returns>
 		public ChannelFactory ConfigureChannelFactory(ServiceChannelConfigurationArgs args)
 		{
-			WSHttpBinding binding = new WSHttpBinding();
-			binding.Security.Mode = WebServicesSettings.Default.SecurityMode;
-			binding.Security.Message.ClientCredentialType =
-				args.AuthenticationRequired ? MessageCredentialType.UserName : MessageCredentialType.None;
+			var settings = new EnterpriseImageServerServiceSettings();
+			var binding = new WSHttpBinding
+				{
+					Security =
+						{
+							Mode = settings.SecurityMode,
+							Message =
+								{
+									ClientCredentialType = args.AuthenticationRequired ? MessageCredentialType.UserName : MessageCredentialType.None
+								}
+						}
+				};
 			binding.MaxReceivedMessageSize = args.MaxReceivedMessageSize;
 
 			if (args.SendTimeoutSeconds > 0)
@@ -111,7 +124,7 @@ namespace ClearCanvas.ImageServer.Common
 			//binding.ReceiveTimeout = new TimeSpan(0, 0 , 20);
 			//binding.SendTimeout = new TimeSpan(0, 0, 10);
 
-			ChannelFactory channelFactory = (ChannelFactory) Activator.CreateInstance(args.ChannelFactoryClass, binding,
+			var channelFactory = (ChannelFactory) Activator.CreateInstance(args.ChannelFactoryClass, binding,
 			                                                                          new EndpointAddress(args.ServiceUri));
 			channelFactory.Credentials.ServiceCertificate.Authentication.CertificateValidationMode = args.CertificateValidationMode;
 			channelFactory.Credentials.ServiceCertificate.Authentication.RevocationMode = args.RevocationMode;

@@ -29,6 +29,12 @@ using ClearCanvas.Enterprise.Common;
 
 namespace ClearCanvas.ImageServer.Common
 {
+	/// <summary>
+	///  Marks an interface as Image Server service interface (as opposed to an Enterpise service).
+	/// </summary>
+	[AttributeUsage(AttributeTargets.Interface, AllowMultiple = false, Inherited = false)]
+	public class ImageServerServiceAttribute : Attribute { }
+
 	[ExtensionOf(typeof (ServiceProviderExtensionPoint), Enabled = false)]
 	public class EnterpriseImageServerServiceProvider : IServiceProvider
 	{
