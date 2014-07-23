@@ -25,9 +25,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using ClearCanvas.ImageViewer.Common;
-using ClearCanvas.ImageViewer.Common.Auditing;
 
 namespace ClearCanvas.ImageViewer.StudyManagement
 {

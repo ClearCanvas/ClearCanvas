@@ -378,7 +378,7 @@ namespace ClearCanvas.Dicom.Network.Scu
 
 		protected void Connect(string clientAETitle, string remoteAE, string remoteHost, int remotePort)
 		{
-			if (LogInformation) Platform.Log(LogLevel.Info, "Preparing to connect to AE {0} on host {1} on port {2} for printer status request.", remoteAE, remoteHost, remotePort);
+			if (LogInformation) Platform.Log(LogLevel.Info, "Preparing to connect to AE {0} on host {1} on port {2}", remoteAE, remoteHost, remotePort);
 			try
 			{
 				ClientAETitle = clientAETitle;
@@ -656,8 +656,8 @@ namespace ClearCanvas.Dicom.Network.Scu
 			Status = ScuOperationStatus.TimeoutExpired;
 			ResultStatus = DicomState.Failure;
 
-			FailureDescription = String.Format("Timeout Expired ({0} seconds) for remote AE {1}, aborting connection", association.ReadTimeout / 1000,
-							  RemoteAE);
+			FailureDescription = String.Format("Timeout Expired ({0} seconds) for remote AE {1}, aborting connection", association.ReadTimeout/1000,
+			                                   RemoteAE);
 			if (LogInformation) Platform.Log(LogLevel.Info, FailureDescription);
 
 			try

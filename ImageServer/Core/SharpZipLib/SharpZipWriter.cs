@@ -29,128 +29,119 @@ using ICSharpCode.SharpZipLib.Zip;
 
 namespace ClearCanvas.ImageServer.Core.SharpZipLib
 {
-    internal class SharpZipWriter : IZipServiceWriter
-    {
-        #region Internal Classes
+	internal class SharpZipWriter : IZipServiceWriter
+	{
+		#region Internal Classes
 
-        private class FileStreamDataSource : IStaticDataSource
-        {
-            private readonly Stream _inputStream;
+		private class FileStreamDataSource : IStaticDataSource
+		{
+			private readonly Stream _inputStream;
 
-            public FileStreamDataSource(Stream inputStream)
-            {
-                _inputStream = inputStream;
-            }
+			public FileStreamDataSource(Stream inputStream)
+			{
+				_inputStream = inputStream;
+			}
 
-            public Stream GetSource()
-            {
-                return _inputStream;
-            }
-        }
+			public Stream GetSource()
+			{
+				return _inputStream;
+			}
+		}
 
-        #endregion Internal Classes
+		#endregion Internal Classes
 
-        #region Private Members
+		#region Private Members
 
-        private ZipFile _zipFile;
+		private ZipFile _zipFile;
 
-        #endregion Private Members
+		#endregion Private Members
 
-        #region Public Properties
+		#region Public Properties
 
-        public bool ForceCompress { get; set; }
+		public bool ForceCompress { get; set; }
 
-        public string Comment
-        {
-            get
-            {
-                return _zipFile.ZipFileComment;
-            }
-            set
-            {
-                _zipFile.SetComment(value);
-            }
-        }
+		public string Comment
+		{
+			get { return _zipFile.ZipFileComment; }
+			set { _zipFile.SetComment(value); }
+		}
 
-        public string TempFileFolder { get; set; }
+		public string TempFileFolder { get; set; }
 
-        public ICollection<string> EntryFileNames
-        {
-            get
-            {
-                var list = new List<string>();
-                foreach (var zip in _zipFile)
-                {
-                    var zipEntry = zip as ZipEntry;
-                    if (zipEntry != null)
-                        list.Add(zipEntry.Name);
-                }
-                return list;
-            }
-        }
+		public ICollection<string> EntryFileNames
+		{
+			get
+			{
+				var list = new List<string>();
+				foreach (var zip in _zipFile)
+				{
+					var zipEntry = zip as ZipEntry;
+					if (zipEntry != null)
+						list.Add(zipEntry.Name);
+				}
+				return list;
+			}
+		}
 
-        #endregion Public Properties
+		#endregion Public Properties
 
-        #region Constructors
+		#region Constructors
 
-        internal SharpZipWriter(string zipFile)
-        {
-            if (File.Exists(zipFile))
-            {
-                _zipFile = new ZipFile(zipFile)
-                {
-                    UseZip64 = UseZip64.Dynamic
-                };
-                _zipFile.BeginUpdate();
-            }
-            else
-            {
+		internal SharpZipWriter(string zipFile)
+		{
+			if (File.Exists(zipFile))
+			{
+				_zipFile = new ZipFile(zipFile)
+				           {
+					           UseZip64 = UseZip64.Dynamic
+				           };
+				_zipFile.BeginUpdate();
+			}
+			else
+			{
+				_zipFile = ZipFile.Create(zipFile);
+				_zipFile.UseZip64 = UseZip64.Dynamic;
+				_zipFile.BeginUpdate();
+			}
+		}
 
-                _zipFile = ZipFile.Create(zipFile);
-                _zipFile.UseZip64 = UseZip64.Dynamic;
-                _zipFile.BeginUpdate();
-            }
-        }
+		#endregion Constructors
 
-        #endregion Constructors
+		#region Methods
 
-        #region Methods
+		public void AddFile(string sourceFile, string directoryPathInArchive)
+		{
+			_zipFile.Add(new StaticDiskDataSource(sourceFile),
+			             Path.Combine(directoryPathInArchive, Path.GetFileName(sourceFile)),
+			             ForceCompress ? CompressionMethod.Deflated : CompressionMethod.Stored);
+		}
 
-        public void AddFile(string sourceFile, string directoryPathInArchive)
-        {
-            _zipFile.Add(new StaticDiskDataSource(sourceFile),
-                         Path.Combine(directoryPathInArchive, Path.GetFileName(sourceFile)),
-                         ForceCompress ? CompressionMethod.Deflated : CompressionMethod.Stored);
-        }
+		public void AddFileStream(string directoryPathInArchive, Stream sourceFile, string comment)
+		{
+			sourceFile.Position = 0;
 
-        public void AddFileStream(string directoryPathInArchive, Stream sourceFile, string comment)
-        {
-            _zipFile.Add(new FileStreamDataSource(sourceFile), directoryPathInArchive, ForceCompress ? CompressionMethod.Deflated : CompressionMethod.Stored);
+			_zipFile.Add(new FileStreamDataSource(sourceFile), directoryPathInArchive, ForceCompress ? CompressionMethod.Deflated : CompressionMethod.Stored);
+		}
 
-            var entry = _zipFile.GetEntry(directoryPathInArchive);
-            entry.Comment = comment;
-        }
+		public void AddDirectory(string sourceDirectory)
+		{
+			_zipFile.AddDirectory(sourceDirectory);
+		}
 
-        public void AddDirectory(string sourceDirectory)
-        {
-            _zipFile.AddDirectory(sourceDirectory);
-        }
+		public void Save()
+		{
+			_zipFile.CommitUpdate();
+		}
 
+		public void Dispose()
+		{
+			if (_zipFile != null)
+			{
+				_zipFile.Close();
+				_zipFile = null;
+			}
+		}
 
-        public void Save()
-        {
-            _zipFile.CommitUpdate();
-        }
-
-        public void Dispose()
-        {
-            if (_zipFile != null)
-            {
-                _zipFile.Close();
-                _zipFile = null;
-            }
-        }
-
-        #endregion Methods
-    }
+		#endregion Methods
+	}
 }
