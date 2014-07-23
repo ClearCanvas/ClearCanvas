@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading;
 using ClearCanvas.Enterprise.Core;
@@ -473,21 +474,21 @@ namespace ClearCanvas.ImageServer.Web.Common.Data.DataSource
 			criteria.PatientsName.SortAsc(0);
 
             QueryHelper.SetGuiStringCondition(criteria.AccessionNumber, AccessionNumber);
-
+			
             if (!String.IsNullOrEmpty(ToStudyDate) && !String.IsNullOrEmpty(FromStudyDate))
 			{
-                string toKey = DateTime.ParseExact(ToStudyDate, DateFormats, null).ToString(STUDYDATE_DATEFORMAT) + " 23:59:59.997";
-                string fromKey = DateTime.ParseExact(FromStudyDate, DateFormats, null).ToString(STUDYDATE_DATEFORMAT);
+				string toKey = DateTime.ParseExact(ToStudyDate, DateFormats, null).ToString(STUDYDATE_DATEFORMAT, CultureInfo.InvariantCulture) + " 23:59:59.997";
+				string fromKey = DateTime.ParseExact(FromStudyDate, DateFormats, null).ToString(STUDYDATE_DATEFORMAT, CultureInfo.InvariantCulture);
 				criteria.StudyDate.Between(fromKey, toKey);
             }
             else if (!String.IsNullOrEmpty(ToStudyDate))
             {
-                string toKey = DateTime.ParseExact(ToStudyDate, DateFormats, null).ToString(STUDYDATE_DATEFORMAT);
+				string toKey = DateTime.ParseExact(ToStudyDate, DateFormats, null).ToString(STUDYDATE_DATEFORMAT, CultureInfo.InvariantCulture);
                 criteria.StudyDate.LessThanOrEqualTo(toKey);
             }
             else if (!String.IsNullOrEmpty(FromStudyDate))
             {
-                string fromKey = DateTime.ParseExact(FromStudyDate, DateFormats, null).ToString(STUDYDATE_DATEFORMAT);
+				string fromKey = DateTime.ParseExact(FromStudyDate, DateFormats, null).ToString(STUDYDATE_DATEFORMAT, CultureInfo.InvariantCulture);
                 criteria.StudyDate.MoreThanOrEqualTo(fromKey);
             }
 
