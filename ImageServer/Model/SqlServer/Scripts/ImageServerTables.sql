@@ -504,7 +504,7 @@ CREATE TABLE [dbo].[WorkQueue](
 	[FailureCount] [int] NOT NULL CONSTRAINT [DF_WorkQueue_FailureCount]  DEFAULT ((0)),
 	[FailureDescription] [nvarchar](512) NULL,
 	[Data] [xml] NULL,
-	[ExternalRequestQueueGUID] [uniqueidentifier] NULL DEFAULT (getdate()),
+	[ExternalRequestQueueGUID] [uniqueidentifier] NULL,
  CONSTRAINT [PK_WorkQueue] PRIMARY KEY CLUSTERED 
 (
 	[GUID] ASC
@@ -1915,7 +1915,7 @@ CREATE TABLE [dbo].[ExternalRequestQueue](
 	[InsertTime] [datetime] NOT NULL,
 	[DeletionTime] [datetime] NULL,
 	[Revision] [int] NOT NULL CONSTRAINT DF_ExternalRequestQueue_Revision DEFAULT 1,
-	[ScheduledTime] [datetime] NOT NULL,
+	[ScheduledTime] [datetime] NOT NULL CONSTRAINT [DF_ExternalRequestQueue_ScheduledTime]  DEFAULT (getdate()),
  CONSTRAINT [PK_ExternalRequestQueue] PRIMARY KEY NONCLUSTERED 
 (
 	[GUID] ASC
