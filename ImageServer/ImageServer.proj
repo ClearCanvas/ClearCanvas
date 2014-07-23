@@ -50,7 +50,7 @@
     <When Condition="$(DistributionBuild)">
       <PropertyGroup>
         <DeploymentOutputPath>..\Distribution\Build\ImageServer$(BuildSuffix)\$(PlatformSubFolder)\$(Configuration)\Web</DeploymentOutputPath>
-        <DistributionDir>$(MSBuildProjectDirectory)\$(DeploymentOutputPath)</DistributionDir>
+        <DistributionDir>$(MSBuildProjectDirectory)\..\Distribution\Build\ImageServer$(BuildSuffix)\$(PlatformSubFolder)\$(Configuration)</DistributionDir>
       </PropertyGroup>
     </When>
     <Otherwise>
@@ -76,7 +76,7 @@
 
   <Target Name="Build JScript">
     <MSBuild Projects="$(MSBuildProjectDirectory)\..\JScript\Build.proj" Properties="Configuration=$(Configuration);KeyFile=$(KeyFile)"/>
-  </Target> 
+  </Target>
 
   <Target Name="BuildSolution" DependsOnTargets="Build JScript">
     <RemoveDir Condition="$(DistributionBuild)" Directories="$(DistributionDir)" />
