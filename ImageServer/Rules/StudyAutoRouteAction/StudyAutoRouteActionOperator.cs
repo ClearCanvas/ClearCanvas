@@ -141,19 +141,19 @@ namespace ClearCanvas.ImageServer.Rules.StudyAutoRouteAction
 
 			restriction.Facets.Add(new XmlSchemaEnumerationFacet
 				{
-					Value = "Passed"
+					Value = QCStatusEnum.Passed.Description
 				});
 			restriction.Facets.Add(new XmlSchemaEnumerationFacet
 				{
-					Value = "Failed"
+					Value = QCStatusEnum.Failed.Description
 				});
 			restriction.Facets.Add(new XmlSchemaEnumerationFacet
 				{
-					Value = "Incomplete"
+					Value = QCStatusEnum.Incomplete.Description
 				});
 			restriction.Facets.Add(new XmlSchemaEnumerationFacet
 				{
-					Value = "Not Applicable"
+					Value = QCStatusEnum.NA.Description
 				});
 			var qcStatusType = new XmlSchemaSimpleType
 				{
