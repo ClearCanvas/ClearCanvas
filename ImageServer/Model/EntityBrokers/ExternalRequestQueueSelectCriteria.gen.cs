@@ -104,15 +104,15 @@ namespace ClearCanvas.ImageServer.Model.EntityBrokers
             } 
         }
         [EntityFieldDatabaseMappingAttribute(TableName="ExternalRequestQueue", ColumnName="DeletionTime")]
-        public ISearchCondition<DateTime> DeletionTime
+        public ISearchCondition<DateTime?> DeletionTime
         {
             get
             {
               if (!SubCriteria.ContainsKey("DeletionTime"))
               {
-                 SubCriteria["DeletionTime"] = new SearchCondition<DateTime>("DeletionTime");
+                 SubCriteria["DeletionTime"] = new SearchCondition<DateTime?>("DeletionTime");
               }
-              return (ISearchCondition<DateTime>)SubCriteria["DeletionTime"];
+              return (ISearchCondition<DateTime?>)SubCriteria["DeletionTime"];
             } 
         }
         [EntityFieldDatabaseMappingAttribute(TableName="ExternalRequestQueue", ColumnName="StateXml")]

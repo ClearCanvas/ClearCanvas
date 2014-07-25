@@ -45,7 +45,7 @@ namespace ClearCanvas.ImageServer.Model
             ,DateTime _insertTime_
             ,Int32 _revision_
             ,DateTime _scheduledTime_
-            ,DateTime _deletionTime_
+            ,DateTime? _deletionTime_
             ,XmlDocument _stateXml_
             ,String _operationToken_
             ,String _requestId_
@@ -84,7 +84,7 @@ namespace ClearCanvas.ImageServer.Model
         public DateTime ScheduledTime
         { get; set; }
         [EntityFieldDatabaseMappingAttribute(TableName="ExternalRequestQueue", ColumnName="DeletionTime")]
-        public DateTime DeletionTime
+        public DateTime? DeletionTime
         { get; set; }
         [EntityFieldDatabaseMappingAttribute(TableName="ExternalRequestQueue", ColumnName="StateXml")]
         public XmlDocument StateXml

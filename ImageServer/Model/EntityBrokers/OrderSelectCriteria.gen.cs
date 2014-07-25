@@ -91,6 +91,30 @@ namespace ClearCanvas.ImageServer.Model.EntityBrokers
               return (ISearchCondition<DateTime>)SubCriteria["UpdatedTime"];
             } 
         }
+        [EntityFieldDatabaseMappingAttribute(TableName="Order", ColumnName="PatientsName")]
+        public ISearchCondition<String> PatientsName
+        {
+            get
+            {
+              if (!SubCriteria.ContainsKey("PatientsName"))
+              {
+                 SubCriteria["PatientsName"] = new SearchCondition<String>("PatientsName");
+              }
+              return (ISearchCondition<String>)SubCriteria["PatientsName"];
+            } 
+        }
+        [EntityFieldDatabaseMappingAttribute(TableName="Order", ColumnName="PatientId")]
+        public ISearchCondition<String> PatientId
+        {
+            get
+            {
+              if (!SubCriteria.ContainsKey("PatientId"))
+              {
+                 SubCriteria["PatientId"] = new SearchCondition<String>("PatientId");
+              }
+              return (ISearchCondition<String>)SubCriteria["PatientId"];
+            } 
+        }
         [EntityFieldDatabaseMappingAttribute(TableName="Order", ColumnName="AccessionNumber")]
         public ISearchCondition<String> AccessionNumber
         {
@@ -245,30 +269,6 @@ namespace ClearCanvas.ImageServer.Model.EntityBrokers
                  SubCriteria["ReferringStaffKey"] = new SearchCondition<ServerEntityKey>("ReferringStaffKey");
               }
               return (ISearchCondition<ServerEntityKey>)SubCriteria["ReferringStaffKey"];
-            } 
-        }
-        [EntityFieldDatabaseMappingAttribute(TableName="Order", ColumnName="PatientsName")]
-        public ISearchCondition<String> PatientsName
-        {
-            get
-            {
-              if (!SubCriteria.ContainsKey("PatientsName"))
-              {
-                 SubCriteria["PatientsName"] = new SearchCondition<String>("PatientsName");
-              }
-              return (ISearchCondition<String>)SubCriteria["PatientsName"];
-            } 
-        }
-        [EntityFieldDatabaseMappingAttribute(TableName="Order", ColumnName="PatientId")]
-        public ISearchCondition<String> PatientId
-        {
-            get
-            {
-              if (!SubCriteria.ContainsKey("PatientId"))
-              {
-                 SubCriteria["PatientId"] = new SearchCondition<String>("PatientId");
-              }
-              return (ISearchCondition<String>)SubCriteria["PatientId"];
             } 
         }
         [EntityFieldDatabaseMappingAttribute(TableName="Order", ColumnName="IssuerOfPatientId")]

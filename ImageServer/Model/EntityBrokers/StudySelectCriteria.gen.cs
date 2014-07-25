@@ -55,30 +55,6 @@ namespace ClearCanvas.ImageServer.Model.EntityBrokers
               return (ISearchCondition<String>)SubCriteria["StudyInstanceUid"];
             } 
         }
-        [EntityFieldDatabaseMappingAttribute(TableName="Study", ColumnName="NumberOfStudyRelatedSeries")]
-        public ISearchCondition<Int32> NumberOfStudyRelatedSeries
-        {
-            get
-            {
-              if (!SubCriteria.ContainsKey("NumberOfStudyRelatedSeries"))
-              {
-                 SubCriteria["NumberOfStudyRelatedSeries"] = new SearchCondition<Int32>("NumberOfStudyRelatedSeries");
-              }
-              return (ISearchCondition<Int32>)SubCriteria["NumberOfStudyRelatedSeries"];
-            } 
-        }
-        [EntityFieldDatabaseMappingAttribute(TableName="Study", ColumnName="NumberOfStudyRelatedInstances")]
-        public ISearchCondition<Int32> NumberOfStudyRelatedInstances
-        {
-            get
-            {
-              if (!SubCriteria.ContainsKey("NumberOfStudyRelatedInstances"))
-              {
-                 SubCriteria["NumberOfStudyRelatedInstances"] = new SearchCondition<Int32>("NumberOfStudyRelatedInstances");
-              }
-              return (ISearchCondition<Int32>)SubCriteria["NumberOfStudyRelatedInstances"];
-            } 
-        }
         [EntityFieldDatabaseMappingAttribute(TableName="Study", ColumnName="ServerPartitionGUID")]
         public ISearchCondition<ServerEntityKey> ServerPartitionKey
         {
@@ -103,28 +79,76 @@ namespace ClearCanvas.ImageServer.Model.EntityBrokers
               return (ISearchCondition<ServerEntityKey>)SubCriteria["PatientKey"];
             } 
         }
-        [EntityFieldDatabaseMappingAttribute(TableName="Study", ColumnName="SpecificCharacterSet")]
-        public ISearchCondition<String> SpecificCharacterSet
+        [EntityFieldDatabaseMappingAttribute(TableName="Study", ColumnName="NumberOfStudyRelatedSeries")]
+        public ISearchCondition<Int32> NumberOfStudyRelatedSeries
         {
             get
             {
-              if (!SubCriteria.ContainsKey("SpecificCharacterSet"))
+              if (!SubCriteria.ContainsKey("NumberOfStudyRelatedSeries"))
               {
-                 SubCriteria["SpecificCharacterSet"] = new SearchCondition<String>("SpecificCharacterSet");
+                 SubCriteria["NumberOfStudyRelatedSeries"] = new SearchCondition<Int32>("NumberOfStudyRelatedSeries");
               }
-              return (ISearchCondition<String>)SubCriteria["SpecificCharacterSet"];
+              return (ISearchCondition<Int32>)SubCriteria["NumberOfStudyRelatedSeries"];
             } 
         }
-        [EntityFieldDatabaseMappingAttribute(TableName="Study", ColumnName="StudyStorageGUID")]
-        public ISearchCondition<ServerEntityKey> StudyStorageKey
+        [EntityFieldDatabaseMappingAttribute(TableName="Study", ColumnName="NumberOfStudyRelatedInstances")]
+        public ISearchCondition<Int32> NumberOfStudyRelatedInstances
         {
             get
             {
-              if (!SubCriteria.ContainsKey("StudyStorageKey"))
+              if (!SubCriteria.ContainsKey("NumberOfStudyRelatedInstances"))
               {
-                 SubCriteria["StudyStorageKey"] = new SearchCondition<ServerEntityKey>("StudyStorageKey");
+                 SubCriteria["NumberOfStudyRelatedInstances"] = new SearchCondition<Int32>("NumberOfStudyRelatedInstances");
               }
-              return (ISearchCondition<ServerEntityKey>)SubCriteria["StudyStorageKey"];
+              return (ISearchCondition<Int32>)SubCriteria["NumberOfStudyRelatedInstances"];
+            } 
+        }
+        [EntityFieldDatabaseMappingAttribute(TableName="Study", ColumnName="QCStatusEnum")]
+        public ISearchCondition<QCStatusEnum> QCStatusEnum
+        {
+            get
+            {
+              if (!SubCriteria.ContainsKey("QCStatusEnum"))
+              {
+                 SubCriteria["QCStatusEnum"] = new SearchCondition<QCStatusEnum>("QCStatusEnum");
+              }
+              return (ISearchCondition<QCStatusEnum>)SubCriteria["QCStatusEnum"];
+            } 
+        }
+        [EntityFieldDatabaseMappingAttribute(TableName="Study", ColumnName="QCOutput")]
+        public ISearchCondition<String> QCOutput
+        {
+            get
+            {
+              if (!SubCriteria.ContainsKey("QCOutput"))
+              {
+                 SubCriteria["QCOutput"] = new SearchCondition<String>("QCOutput");
+              }
+              return (ISearchCondition<String>)SubCriteria["QCOutput"];
+            } 
+        }
+        [EntityFieldDatabaseMappingAttribute(TableName="Study", ColumnName="QCUpdateTimeUtc")]
+        public ISearchCondition<DateTime?> QCUpdateTimeUtc
+        {
+            get
+            {
+              if (!SubCriteria.ContainsKey("QCUpdateTimeUtc"))
+              {
+                 SubCriteria["QCUpdateTimeUtc"] = new SearchCondition<DateTime?>("QCUpdateTimeUtc");
+              }
+              return (ISearchCondition<DateTime?>)SubCriteria["QCUpdateTimeUtc"];
+            } 
+        }
+        [EntityFieldDatabaseMappingAttribute(TableName="Study", ColumnName="OrderGUID")]
+        public ISearchCondition<ServerEntityKey> OrderKey
+        {
+            get
+            {
+              if (!SubCriteria.ContainsKey("OrderKey"))
+              {
+                 SubCriteria["OrderKey"] = new SearchCondition<ServerEntityKey>("OrderKey");
+              }
+              return (ISearchCondition<ServerEntityKey>)SubCriteria["OrderKey"];
             } 
         }
         [EntityFieldDatabaseMappingAttribute(TableName="Study", ColumnName="StudySizeInKB")]
@@ -175,52 +199,28 @@ namespace ClearCanvas.ImageServer.Model.EntityBrokers
               return (ISearchCondition<XmlDocument>)SubCriteria["QueryXml"];
             } 
         }
-        [EntityFieldDatabaseMappingAttribute(TableName="Study", ColumnName="QCOutput")]
-        public ISearchCondition<String> QCOutput
+        [EntityFieldDatabaseMappingAttribute(TableName="Study", ColumnName="SpecificCharacterSet")]
+        public ISearchCondition<String> SpecificCharacterSet
         {
             get
             {
-              if (!SubCriteria.ContainsKey("QCOutput"))
+              if (!SubCriteria.ContainsKey("SpecificCharacterSet"))
               {
-                 SubCriteria["QCOutput"] = new SearchCondition<String>("QCOutput");
+                 SubCriteria["SpecificCharacterSet"] = new SearchCondition<String>("SpecificCharacterSet");
               }
-              return (ISearchCondition<String>)SubCriteria["QCOutput"];
+              return (ISearchCondition<String>)SubCriteria["SpecificCharacterSet"];
             } 
         }
-        [EntityFieldDatabaseMappingAttribute(TableName="Study", ColumnName="QCStatusEnum")]
-        public ISearchCondition<QCStatusEnum> QCStatusEnum
+        [EntityFieldDatabaseMappingAttribute(TableName="Study", ColumnName="StudyStorageGUID")]
+        public ISearchCondition<ServerEntityKey> StudyStorageKey
         {
             get
             {
-              if (!SubCriteria.ContainsKey("QCStatusEnum"))
+              if (!SubCriteria.ContainsKey("StudyStorageKey"))
               {
-                 SubCriteria["QCStatusEnum"] = new SearchCondition<QCStatusEnum>("QCStatusEnum");
+                 SubCriteria["StudyStorageKey"] = new SearchCondition<ServerEntityKey>("StudyStorageKey");
               }
-              return (ISearchCondition<QCStatusEnum>)SubCriteria["QCStatusEnum"];
-            } 
-        }
-		[EntityFieldDatabaseMappingAttribute(TableName = "Study", ColumnName = "QCUpdateTimeUtc")]
-		public ISearchCondition<DateTime> QCUpdateTimeUtc
-		{
-			get
-			{
-				if (!SubCriteria.ContainsKey("QCUpdateTimeUtc"))
-				{
-					SubCriteria["QCUpdateTimeUtc"] = new SearchCondition<DateTime>("QCUpdateTimeUtc");
-				}
-				return (ISearchCondition<DateTime>)SubCriteria["QCUpdateTimeUtc"];
-			}
-		}
-        [EntityFieldDatabaseMappingAttribute(TableName="Study", ColumnName="OrderGUID")]
-        public ISearchCondition<ServerEntityKey> OrderKey
-        {
-            get
-            {
-              if (!SubCriteria.ContainsKey("OrderKey"))
-              {
-                 SubCriteria["OrderKey"] = new SearchCondition<ServerEntityKey>("OrderKey");
-              }
-              return (ISearchCondition<ServerEntityKey>)SubCriteria["OrderKey"];
+              return (ISearchCondition<ServerEntityKey>)SubCriteria["StudyStorageKey"];
             } 
         }
         [EntityFieldDatabaseMappingAttribute(TableName="Study", ColumnName="PatientsName")]
