@@ -88,6 +88,15 @@ namespace ClearCanvas.Enterprise.Hibernate
 			get { return _changeSetRecorder; }
 			set { _changeSetRecorder = value; }
 		}
+		
+		/// <summary>
+		/// Gets the set of entities that are affected by this update context, along with the type of change for each entity.
+		/// </summary>
+		/// <remarks>Not supported by this implementation.</remarks>
+		public IDictionary<object, EntityChangeType> GetAffectedEntities()
+		{
+			throw new NotSupportedException();
+		}
 
 		/// <summary>
 		/// Attempts to flush and commit all changes made within this update context to the persistent store.
