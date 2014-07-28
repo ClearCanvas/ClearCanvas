@@ -40,6 +40,15 @@ namespace ClearCanvas.ImageServer.Common
 		public void ConfigureServiceHost(ServiceHost host, ServiceHostConfigurationArgs args)
 		{
 			var settings = new EnterpriseImageServerServiceSettings();
+
+			// Per MSDN: Transport security is provided externally to WCF. If you are creating a self-hosted WCF application, you can bind an SSL certificate to the address using the HttpCfg.exe tool.
+			// The service may appears running but client will not be able to connect. For this reason, it's best to explicitly disallow this mode.
+			if (settings.SecurityMode == SecurityMode.Transport)
+			{
+				throw new Exception("Transport security is not supported. Please change EnterpriseImageServerServiceSettings.SecurityMode");
+			}
+			
+
 			var binding = new WSHttpBinding
 				{
 					MaxReceivedMessageSize = args.MaxReceivedMessageSize
@@ -54,6 +63,16 @@ namespace ClearCanvas.ImageServer.Common
 			binding.Security.Message.ClientCredentialType = args.Authenticated
 			                                                	? MessageCredentialType.UserName
 			                                                	: MessageCredentialType.None;
+
+
+			// TransportWithMessageCredential cannot be used in conjuction with ClientCredentialType=None
+			if (binding.Security.Mode == SecurityMode.TransportWithMessageCredential &&
+			    binding.Security.Message.ClientCredentialType == MessageCredentialType.None)
+			{
+				throw new Exception(string.Format("TransportWithMessageCredential is not supported for '{0}' service. Please change EnterpriseImageServerServiceSettings.SecurityMode", args.ServiceContract.Name));
+			}
+			
+
 			// establish endpoint
 			host.AddServiceEndpoint(args.ServiceContract, binding, "");
 
