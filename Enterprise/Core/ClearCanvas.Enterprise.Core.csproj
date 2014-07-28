@@ -133,6 +133,7 @@
     <Compile Include="Msmq\MsmqFactory.cs" />
     <Compile Include="Msmq\MsmqName.cs" />
     <Compile Include="Msmq\NativeMethods.cs" />
+    <Compile Include="Msmq\QueueHandle.cs" />
     <Compile Include="ObjectExtensions.cs" />
     <Compile Include="Ping\PingService.cs" />
     <Compile Include="Printing\IPageModel.cs" />
