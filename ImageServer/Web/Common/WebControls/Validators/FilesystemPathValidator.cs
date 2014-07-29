@@ -93,7 +93,9 @@ namespace ClearCanvas.ImageServer.Web.Common.WebControls.Validators
             {
                 FilesystemInfo fsInfo = ServerUtility.GetFilesystemInfo(path);
 
-                return fsInfo != null && fsInfo.Exists;
+                var r = fsInfo != null && fsInfo.Exists;
+				if (!r) ErrorMessage = String.Format(ValidationErrors.FilesystemPathInvalidOrUnreachable, path);
+	            return r;
             }
             catch (EndpointNotFoundException e)
             {
