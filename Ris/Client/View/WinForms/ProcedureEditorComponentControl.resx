@@ -486,12 +486,6 @@
   <data name="&gt;&gt;label1.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
-  <data name="_procedureType.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="_procedureType.AutoSizeMode" type="System.Windows.Forms.AutoSizeMode, System.Windows.Forms">
-    <value>GrowAndShrink</value>
-  </data>
   <data name="_procedureType.LabelText" xml:space="preserve">
     <value>Procedure Type</value>
   </data>
@@ -502,7 +496,7 @@
     <value>2, 2, 2, 2</value>
   </data>
   <data name="_procedureType.Size" type="System.Drawing.Size, System.Drawing">
-    <value>176, 43</value>
+    <value>485, 43</value>
   </data>
   <data name="_procedureType.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -511,7 +505,7 @@
     <value>_procedureType</value>
   </data>
   <data name="&gt;&gt;_procedureType.Type" xml:space="preserve">
-    <value>ClearCanvas.Ris.Client.View.WinForms.LookupField, ClearCanvas.Ris.Client.View.WinForms, Version=1.0.5308.17244, Culture=neutral, PublicKeyToken=null</value>
+    <value>ClearCanvas.Ris.Client.View.WinForms.LookupField, ClearCanvas.Ris.Client.View.WinForms, Version=1.0.5323.20819, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;_procedureType.Parent" xml:space="preserve">
     <value>$this</value>
