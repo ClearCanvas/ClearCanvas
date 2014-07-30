@@ -28,6 +28,7 @@ using System.Data;
 using System.Data.SqlClient;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
+using ClearCanvas.Enterprise.Common;
 using ClearCanvas.Enterprise.Core;
 
 namespace ClearCanvas.ImageServer.Enterprise.SqlServer
