@@ -89,6 +89,35 @@ namespace ClearCanvas.Healthcare.Printing
 		}
 
 		/// <summary>
+		/// Healthcard facade.
+		/// </summary>
+		public class HealthcardFacade
+		{
+			private readonly HealthcardNumber _healthcard;
+
+			public HealthcardFacade(HealthcardNumber healthcard)
+			{
+				_healthcard = healthcard;
+			}
+
+			public string Id
+			{
+				get { return _healthcard.Id; }
+			}
+
+			public string AssigningAuthority
+			{
+
+				get { return _healthcard.AssigningAuthority.Code; }
+			}
+
+			public override string ToString()
+			{
+				return string.IsNullOrEmpty(_healthcard.Id) ? string.Empty : _healthcard.ToString();
+			}
+		}
+
+		/// <summary>
 		/// Address facade.
 		/// </summary>
 		public class AddressFacade
@@ -216,6 +245,16 @@ namespace ClearCanvas.Healthcare.Printing
 			public IdentifierFacade Mrn
 			{
 				get { return new IdentifierFacade(_patientProfile.Mrn); }
+			}
+
+			public HealthcardFacade Healthcard
+			{
+				get { return new HealthcardFacade(_patientProfile.Healthcard); }
+			}
+
+			public string BillingInformation
+			{
+				get { return _patientProfile.BillingInformation; }
 			}
 
 			public string DateOfBirth
