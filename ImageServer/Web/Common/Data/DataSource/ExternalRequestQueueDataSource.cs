@@ -51,6 +51,11 @@ namespace ClearCanvas.ImageServer.Web.Common.Data.DataSource
             get { return _theExternalRequestQueue.InsertTime; }
         }
 
+		public DateTime ScheduledDateTime
+		{
+			get { return _theExternalRequestQueue.ScheduledTime; }
+		}
+
         public string StatusString
         {
             get { return ServerEnumDescription.GetLocalizedDescription(_theExternalRequestQueue.ExternalRequestQueueStatusEnum); }
